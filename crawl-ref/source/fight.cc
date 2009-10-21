@@ -1879,6 +1879,8 @@ void melee_attack::player_check_weapon_effects()
             did_god_conduct(DID_HOLY, 1);
         else if (is_demonic(*weapon))
             did_god_conduct(DID_UNHOLY, 1);
+        else if (get_weapon_brand(*weapon) == SPWPN_SPEED)
+            did_god_conduct(DID_HASTY, 1);
     }
 }
 

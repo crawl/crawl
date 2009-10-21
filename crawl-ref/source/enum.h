@@ -783,6 +783,7 @@ enum conduct_type
     DID_KILL_SLIME,                     // Jiyva
     DID_KILL_PLANT,                     // Feawn
     DID_ALLY_KILLED_PLANT,              // Feawn
+    DID_HASTY,                          // Chronos
 
     NUM_CONDUCTS
 };

@@ -3505,6 +3505,22 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_HASTY:
+            if (you.religion == GOD_CHRONOS)
+            {
+                if (!known)
+                {
+                    simple_god_message(" forgives your accidental hurry, just this once.");
+                    break;
+                }
+                simple_god_message(" thinks you should slow down.");
+                piety_change = -level;
+                if (level > 5)
+                    penance = level - 5;
+                retval = true;
+            }
+            break;
+
         case DID_NOTHING:
         case DID_STABBING:                          // unused
         case DID_STIMULANTS:                        // unused
@@ -3979,6 +3995,43 @@ bool is_chaotic_item(const item_def& item)
     return (retval);
 }
 
+bool is_hasty_item(const item_def& item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        {
+        const int item_brand = get_weapon_brand(item);
+        if (item_brand == SPWPN_SPEED)
+            return true;
+        }
+        break;
+    case OBJ_ARMOUR:
+        {
+        const int item_brand = get_armour_ego_type(item);
+        if (item_brand == SPARM_RUNNING)
+            return true;
+        }
+        break;
+    case OBJ_WANDS:
+        if (item.sub_type == WAND_HASTING)
+            return true;
+        break;
+    case OBJ_POTIONS:
+        if (item.sub_type == POT_SPEED || item.sub_type == POT_BERSERK_RAGE)
+            return true;
+        break;
+    case OBJ_JEWELLERY:
+        // should this include AMU_RESIST_SLOWING?
+        if (item.sub_type == AMU_RAGE)
+            return true;
+        break;
+    default:
+        break;
+    }
+    return false;
+}
+
 bool is_holy_discipline(int discipline)
 {
     return (discipline & SPTYP_HOLY);
@@ -4015,6 +4068,15 @@ bool is_chaotic_spell(spell_type spell, god_type god)
     return (spell == SPELL_POLYMORPH_OTHER
             || spell == SPELL_ALTER_SELF
             || spell == SPELL_SUMMON_UGLY_THING);
+}
+
+bool is_hasty_spell(spell_type spell, god_type god)
+{
+    UNUSED(god);
+
+    return (spell == SPELL_HASTE
+            || spell == SPELL_SWIFTNESS
+            || spell == SPELL_BERSERKER_RAGE);
 }
 
 // The default suitable() function for is_spellbook_type().
@@ -4188,6 +4250,11 @@ conduct_type god_hates_item_handling(const item_def &item)
         }
         break;
 
+    case GOD_CHRONOS:
+        if (item_type_known(item) && is_hasty_item(item))
+            return (DID_HASTY);
+        break;
+
     default:
         break;
     }
@@ -4226,6 +4293,11 @@ bool god_hates_spell_type(spell_type spell, god_type god)
 
     case GOD_YREDELEMNUL:
         if (is_holy_spell(spell))
+            return (true);
+        break;
+
+    case GOD_CHRONOS:
+        if (is_hasty_spell(spell))
             return (true);
         break;
 

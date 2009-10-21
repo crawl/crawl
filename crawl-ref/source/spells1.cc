@@ -1427,6 +1427,7 @@ void cast_swiftness(int power)
     // you're levitating, for instance.
     _increase_duration(DUR_SWIFTNESS, 20 + random2(power), 100,
                        "You feel quick.");
+    did_god_conduct(DID_HASTY, 8, true);
 }
 
 void cast_fly(int power)

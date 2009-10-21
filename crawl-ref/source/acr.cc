@@ -3928,6 +3928,12 @@ static void _move_player(coord_def move)
     }
 
     apply_berserk_penalty = !attacking;
+
+    if (!attacking && you.religion == GOD_CHRONOS && one_chance_in(10)
+        && player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
+    {
+        did_god_conduct(DID_HASTY, 1, true);
+    }
 }
 
 

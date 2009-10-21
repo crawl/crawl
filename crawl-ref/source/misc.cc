@@ -2653,6 +2653,7 @@ bool go_berserk(bool intentional)
 
     you.duration[DUR_MIGHT] += you.duration[DUR_BERSERKER];
     haste_player( you.duration[DUR_BERSERKER] );
+    did_god_conduct(DID_HASTY, 8, intentional);
 
     if (you.berserk_penalty != NO_BERSERK_PENALTY)
         you.berserk_penalty = 0;

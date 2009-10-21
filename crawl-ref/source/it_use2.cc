@@ -138,6 +138,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
     case POT_SPEED:
         haste_player((40 + random2(pow)) / factor);
+        did_god_conduct(DID_HASTY, 10, was_known);
         break;
 
     case POT_MIGHT:
