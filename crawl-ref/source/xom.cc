@@ -14,6 +14,7 @@
 #include "database.h"
 #include "delay.h"
 #include "effects.h"
+#include "goditem.h"
 #include "it_use2.h"
 #include "items.h"
 #include "kills.h"

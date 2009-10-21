@@ -29,6 +29,7 @@
 #include "effects.h"
 #include "fight.h"
 #include "food.h"
+#include "goditem.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "it_use3.h"

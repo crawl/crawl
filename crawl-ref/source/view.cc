@@ -33,6 +33,7 @@
 #include "dungeon.h"
 #include "format.h"
 #include "ghost.h"
+#include "goditem.h"
 #include "itemprop.h"
 #include "los.h"
 #include "macro.h"
@@ -3646,11 +3647,11 @@ void init_feature_table( void )
             break;
 
         case DNGN_ALTAR_CHRONOS:
-            Feature[i].colour      = DARKGREY;
+            Feature[i].colour      = LIGHTCYAN;
             Feature[i].dchar       = DCHAR_ALTAR;
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
-            Feature[i].seen_colour = DARKGREY;
+            Feature[i].seen_colour = LIGHTCYAN;
             Feature[i].minimap     = MF_FEATURE;
             break;
 
