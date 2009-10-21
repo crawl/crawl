@@ -2310,6 +2310,10 @@ static void _do_god_gift(bool prayed_for)
                     if (thing_created == NON_ITEM)
                         return;
 
+                    // Mark the book type as known to avoid duplicate gifts
+                    // if players don't read their gifts for some reason
+                    mark_had_book(gift);
+
                     move_item_to_grid( &thing_created, you.pos() );
 
                     if (thing_created != NON_ITEM)
