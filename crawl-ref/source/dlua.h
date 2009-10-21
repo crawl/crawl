@@ -72,8 +72,6 @@ public:
 
 void init_dungeon_lua();
 
-int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s);
-
 void print_dlua_stack();
 
 //////////////////////////////////////////////////////////////////////////

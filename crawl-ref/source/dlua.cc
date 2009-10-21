@@ -13,28 +13,6 @@
 
 #include "tags.h"
 
-template <typename list, typename lpush>
-static int dlua_gentable(lua_State *ls, const list &strings, lpush push)
-{
-    lua_newtable(ls);
-    for (int i = 0, size = strings.size(); i < size; ++i)
-    {
-        push(ls, strings[i]);
-        lua_rawseti(ls, -2, i + 1);
-    }
-    return (1);
-}
-
-inline static void dlua_pushcxxstring(lua_State *ls, const std::string &s)
-{
-    lua_pushstring(ls, s.c_str());
-}
-
-int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s)
-{
-    return dlua_gentable(ls, s, dlua_pushcxxstring);
-}
-
 static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
                                       size_t sz, void *ud)
 {

@@ -57,6 +57,8 @@ void clua_register_metatable(lua_State *ls, const char *tn,
                              const luaL_reg *lr,
                              int (*gcfn)(lua_State *ls) = NULL);
 
+int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s);
+
 /*
  * User-data templates.
  * TODO: Consolidate these.
