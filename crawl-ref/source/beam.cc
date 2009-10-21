@@ -3044,8 +3044,12 @@ void bolt::affect_ground()
         && mons_class_can_pass(MONS_FUNGUS, env.grid(pos()))
         && !actor_at(pos()))
     {
+        // Half the fungi in arena mode are friendly.
+        beh_type beh = (crawl_state.arena && coinflip()) ? BEH_FRIENDLY
+                                                         : BEH_HOSTILE;
+
         int rc = create_monster(mgen_data(MONS_FUNGUS,
-                                          BEH_HOSTILE,
+                                          beh,
                                           0,
                                           0,
                                           pos(),
