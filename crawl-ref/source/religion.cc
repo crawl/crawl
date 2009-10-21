@@ -4003,33 +4003,33 @@ bool is_hasty_item(const item_def& item)
         {
         const int item_brand = get_weapon_brand(item);
         if (item_brand == SPWPN_SPEED)
-            return true;
+            return (true);
         }
         break;
     case OBJ_ARMOUR:
         {
         const int item_brand = get_armour_ego_type(item);
         if (item_brand == SPARM_RUNNING)
-            return true;
+            return (true);
         }
         break;
     case OBJ_WANDS:
         if (item.sub_type == WAND_HASTING)
-            return true;
+            return (true);
         break;
     case OBJ_POTIONS:
         if (item.sub_type == POT_SPEED || item.sub_type == POT_BERSERK_RAGE)
-            return true;
+            return (true);
         break;
     case OBJ_JEWELLERY:
         // should this include AMU_RESIST_SLOWING?
         if (item.sub_type == AMU_RAGE)
-            return true;
+            return (true);
         break;
     default:
         break;
     }
-    return false;
+    return (false);
 }
 
 bool is_holy_discipline(int discipline)

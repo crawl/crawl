@@ -115,7 +115,7 @@ bool remove_curse(bool suppress_msg)
 {
     bool success = false;
 
-    // Only cursed *weapons* in hand count as cursed -- bwr
+    // Only cursed *weapons* in hand count as cursed. - bwr
     if (you.weapon()
         && you.weapon()->base_type == OBJ_WEAPONS
         && item_cursed(*you.weapon()))
@@ -1184,7 +1184,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     // the average will be approximately 10 * pow (or about 1000
     // at the practical maximum).  That's the same as the mass
     // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
-    // material components are far more important to this spell. -- bwr
+    // material components are far more important to this spell. - bwr
     total_mass += roll_dice(20, pow);
 
 #if DEBUG_DIAGNOSTICS
