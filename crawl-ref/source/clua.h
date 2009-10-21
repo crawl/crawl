@@ -298,10 +298,6 @@ template <class T> T *clua_new_userdata(
     return static_cast<T*>( udata );
 }
 
-void clua_register_metatable(lua_State *ls, const char *tn,
-                             const luaL_reg *lr,
-                             int (*gcfn)(lua_State *ls) = NULL);
-
 void print_clua_stack();
 
 #endif

@@ -653,31 +653,6 @@ void CLua::remove_shutdown_listener(lua_shutdown_listener *listener)
         shutdown_listeners.erase(i);
 }
 
-/////////////////////////////////////////////////////////////////////
-
-void clua_register_metatable(lua_State *ls, const char *tn,
-                             const luaL_reg *lr,
-                             int (*gcfn)(lua_State *ls))
-{
-    lua_stack_cleaner clean(ls);
-    luaL_newmetatable(ls, tn);
-    lua_pushstring(ls, "__index");
-    lua_pushvalue(ls, -2);
-    lua_settable(ls, -3);
-
-    if (gcfn)
-    {
-        lua_pushstring(ls, "__gc");
-        lua_pushcfunction(ls, gcfn);
-        lua_settable(ls, -3);
-    }
-
-    if (lr)
-    {
-        luaL_openlib(ls, NULL, lr, 0);
-    }
-}
-
 ////////////////////////////////////////////////////////////////////////
 // lua_text_pattern
 

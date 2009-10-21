@@ -6,21 +6,31 @@
 #ifndef CLUAUTIL_H
 #define CLUAUTIL_H
 
+extern "C" {
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+}
+
 /*
  * Function definitions.
  */
 #define LUAFN(name) static int name(lua_State *ls)
 
 
+// FIXME: remove one of these.
 void luaopen_setmeta(lua_State *ls,
                      const char *global,
                      const luaL_reg *lua_lib,
                      const char *meta);
 
+void clua_register_metatable(lua_State *ls, const char *tn,
+                             const luaL_reg *lr,
+                             int (*gcfn)(lua_State *ls) = NULL);
+
 /*
  * Passing objects from and to Lua.
  */
-struct lua_State;
 
 struct activity_interrupt_data;
 int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t);
