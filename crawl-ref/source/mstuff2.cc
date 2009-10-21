@@ -884,7 +884,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (silent)
             return;
 
-        noisy(noise, monster->pos());
+        noisy(noise, monster->pos(), monster->mindex());
         return;
     }
 
@@ -1086,7 +1086,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     if (silent)
         mons_speaks_msg(monster, msg, chan, true);
-    else if (noisy(noise, monster->pos()) || !unseen)
+    else if (noisy(noise, monster->pos(), monster->mindex()) || !unseen)
     {
         // noisy() returns true if the player heard the noise.
         mons_speaks_msg(monster, msg, chan);
@@ -2636,7 +2636,7 @@ bool orc_battle_cry(monsters *chief)
             }
 
             // The yell happens whether you happen to see it or not.
-            noisy(15, chief->pos());
+            noisy(15, chief->pos(), chief->mindex());
 
             // Disabling detailed frenzy announcement because it's so spammy.
             const msg_channel_type channel =

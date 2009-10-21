@@ -415,8 +415,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             const char* message_here = "An alarm trap emits a blaring wail!";
             const char* message_near = "You hear a blaring wail!";
             const char* message_far  = "You hear a distant blaring wail!";
-            noisy(12, this->pos, (you_trigger ? message_here :
-                                  (in_sight ? message_near : message_far)));
+            const char* msg = (you_trigger ? message_here :
+                                 (in_sight ? message_near : message_far));
+            // Monsters of normal or greater intelligence will realize that
+            // they were the one to set off the trap.
+            int source = !m ? you.mindex() :
+                         mons_intel(m) >= I_NORMAL ? m->mindex() : -1;
+
+            noisy(12, this->pos, msg, source);
         }
         break;
 

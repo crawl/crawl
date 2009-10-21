@@ -72,8 +72,10 @@ void find_features(const std::vector<coord_def>& features,
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false);
 
-bool noisy(int loudness, const coord_def& where, const char *msg = NULL,
+bool noisy(int loudness, const coord_def& where, int who,
            bool mermaid = false);
+bool noisy(int loudness, const coord_def& where, const char *msg = NULL,
+           int who = -1, bool mermaid = false);
 void blood_smell( int strength, const coord_def& where);
 void handle_monster_shouts(monsters* monster, bool force = false);
 

@@ -2647,7 +2647,7 @@ void melee_attack::chaos_affects_attacker()
         if (!msg.empty())
         {
             mpr(msg.c_str(), MSGCH_SOUND);
-            noisy(15, attacker->pos());
+            noisy(15, attacker->pos(), attacker->mindex());
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
             take_note(Note(NOTE_MESSAGE, 0, 0,
                            "CHAOS affects attacker: noise"), true);

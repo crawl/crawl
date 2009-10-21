@@ -467,7 +467,14 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
     mpr(msg.c_str(), msg_ch);
 
     if (msg_ch == MSGCH_SOUND)
-        noisy(sound_loudness, target->pos());
+    {
+        // Those monsters of normal or greater intelligence will realize that they
+        // were the source of the sound.
+        int source = target->atype() == ACT_PLAYER ? you.mindex()
+                   : mons_intel(target_as_monster()) >= I_NORMAL ? target->mindex()
+                   : -1;
+        noisy(sound_loudness, target->pos(), source);
+    }
 }
 
 bool MiscastEffect::_ouch(int dam, beam_type flavour)

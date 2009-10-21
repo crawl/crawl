@@ -1287,7 +1287,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     }
 
     const int  noise_level = get_shout_noise_level(s_type);
-    const bool heard       = noisy(noise_level, monster->pos());
+    const bool heard       = noisy(noise_level, monster->pos(), monster->mindex());
 
     if (Options.tutorial_left && (heard || you.can_see(monster)))
         learned_something_new(TUT_MONSTER_SHOUT, monster->pos());
@@ -1726,7 +1726,8 @@ void cloud_grid(void)
 // player is appropriate.
 //
 // Returns true if the PC heard the noise.
-bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
+bool noisy(int loudness, const coord_def& where, const char *msg, int who,
+           bool mermaid)
 {
     bool ret = false;
 
@@ -1767,6 +1768,12 @@ bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
         if (!monster->alive())
             continue;
 
+        // Monsters arent' affected by their own noise.  We don't check
+        // where == monster->pos() since it might be caused by the
+        // Projected Noise spell.
+        if (p == who)
+            continue;
+
         if (distance(monster->pos(), where) <= dist
             && !silenced(monster->pos()))
         {
@@ -1786,6 +1793,12 @@ bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
     }
 
     return (ret);
+}
+
+bool noisy(int loudness, const coord_def& where, int who,
+           bool mermaid)
+{
+    return noisy(loudness, where, NULL, who, mermaid);
 }
 
 static const char* _player_vampire_smells_blood(int dist)

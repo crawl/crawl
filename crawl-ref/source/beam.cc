@@ -5497,7 +5497,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 #endif
 
     // make a noise
-    noisy(10 + 5 * r, pos());
+    noisy(10 + 5 * r, pos(), beam_source);
 
     // Run DFS to determine which cells are influenced
     explosion_map exp_map;

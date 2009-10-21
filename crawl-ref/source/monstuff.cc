@@ -6306,7 +6306,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (one_chance_in(5)
             || monster->foe == MHITYOU && !already_mesmerised && coinflip())
         {
-            noisy(12, monster->pos(), NULL, true);
+            noisy(12, monster->pos(), monster->mindex(), true);
 
             bool did_resist = false;
             if (you.can_see(monster))
@@ -9086,14 +9086,14 @@ static bool _monster_move(monsters *monster)
                     mprf(MSGCH_TALK_VISUAL, "%s rages.",
                          monster->name(DESC_CAP_THE).c_str());
                 }
-                noisy(noise_level, monster->pos());
+                noisy(noise_level, monster->pos(), monster->mindex());
             }
             else if (one_chance_in(5))
                 handle_monster_shouts(monster, true);
             else
             {
                 // Just be noisy without messaging the player.
-                noisy(noise_level, monster->pos());
+                noisy(noise_level, monster->pos(), monster->mindex());
             }
         }
     }
