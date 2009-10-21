@@ -1,7 +1,8 @@
 
-The Dungeon Crawl Stone Soup team (Peter Berger, Matthew Cline, Paul Du Bois,
-Eino Keskitalo, Nat Lanza, Haran Pilpel, David Ploog, Johanna Ploog, David
-Lawrence Ramsey, Enne Walker) would like to thank:
+The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Matthew Cline,
+Paul Du Bois, Eino Keskitalo, Nat Lanza, Steven Noonan, Haran Pilpel, David 
+Ploog, Johanna Ploog, Charles Otto, David Lawrence Ramsey, Robert Vollmert, 
+Enne Walker) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -15,30 +16,30 @@ Lawrence Ramsey, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              Benoit Hudson             Stefan O'Rear
-Juha Arpiainen               Iainuki                   Yuuma Oohara
-Roy Axenov                   Ilyak                     Charles Otto
-Max Bane                     Mitsuhiro Itakura         Erik Piper
-Bill Beher                   Mikko Juola               Lemuel Pitkin
-Alexander Beisig             Jarmo Kielosto            Derek Ray
-Erik Inge Bolsø              Kornel Kisielewicz        Remsleep
-Peter Borgmann               Vambola Kotkas            David Rose
-Adam Borowski                Vsevolod Kozlov           Sebastian Salman
-Jude Brown                   Ryan Kusnery              Brett Scarborough
-Trent W. Buck                Jukka Kuusisto            Darshan Shaligram
-Terje Bø                     Maciej Lapinski           Robert Shimmin
-Aaron Curtis                 Jordan Lewis              Sigurd
-Denzi                        Icy Lich                  Edgar Simo
-Rachel Elizabeth Dillon      Jesse Luehrs              Solf
-Mike Drinen                  Markus Maier              Johan Strandell
-Kieron Dunbar                Arien Malec               Roman Sêk
-Christopher Evenstar         Neil 'Mu' Middleton       Marc H. Thoben
-Ben Goetter                  Shawn M Moore             Matt Titus
-Rob Grant                    Eva Myers                 Robert Vollmert
-John Greenberg               Wille Mäntylä             Steven Wheeler
-GreyKnight                   Onia Ninara               Jeremey Wilson
-Shayne Halvorson             Erkki Nurmi               Yelve Yakut
-Ciaran Hamilton              Mattias Nyberg            Zooko
-Chris Hamons                 nyra
-R. Dan Henry                 Dylan O'Donnell
+Warwick Allison              R. Dan Henry              nyra
+Juha Arpiainen               Brendan Hickey            Dylan O'Donnell
+Roy Axenov                   Benoit Hudson             Stefan O'Rear
+Max Bane                     Iainuki                   Yuuma Oohara
+Bill Beher                   Ilyak                     Erik Piper
+Alexander Beisig             Mitsuhiro Itakura         Lemuel Pitkin
+Stu Black                    Mikko Juola               Derek Ray
+Erik Inge Bolsø              Jarmo Kielosto            Remsleep
+Peter Borgmann               Kornel Kisielewicz        David Rose
+Jude Brown                   Daniel Klein              Sebastian Salman
+Trent W. Buck                Vambola Kotkas            Brett Scarborough
+Terje Bø                     Vsevolod Kozlov           Darshan Shaligram
+Aaron Curtis                 Ryan Kusnery              Robert Shimmin
+Denzi                        Jukka Kuusisto            Sigurd
+Rachel Elizabeth Dillon      Maciej Lapinski           Edgar Simo
+Mike Drinen                  Jordan Lewis              Solf
+Kieron Dunbar                Icy Lich                  Johan Strandell
+Micha Elsner                 Jesse Luehrs              Roman Sêk
+Christopher Evenstar         Markus Maier              Marc H. Thoben
+Ben Goetter                  Arien Malec               Matt Titus
+Rob Grant                    Neil 'Mu' Middleton       Steven Wheeler
+John Greenberg               Shawn M Moore             Jeremey Wilson
+GreyKnight                   Eva Myers                 Yelve Yakut
+Shayne Halvorson             Wille Mäntylä             Zooko
+Ciaran Hamilton              Onia Ninara
+Chris Hamons                 Erkki Nurmi
 
