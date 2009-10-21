@@ -568,7 +568,7 @@ depend: $(OBJECTS:.o=.cc)
 	rm -f $(DEPENDENCY_MKF).tmp
 	@for i in $^; do \
 		echo '   ' DEP $$i; \
-	    $(CXX) -MM $(CFLAGS) $$i >>$(DEPENDENCY_MKF).tmp 2>/dev/null; \
+	    $(CXX) -MM $(CFLAGS) $(CFLAGS_L) $$i >>$(DEPENDENCY_MKF).tmp 2>/dev/null; \
 	done
 	mv -f $(DEPENDENCY_MKF).tmp $(DEPENDENCY_MKF)
 else
