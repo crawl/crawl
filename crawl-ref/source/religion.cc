@@ -2310,8 +2310,9 @@ static void _do_god_gift(bool prayed_for)
                     if (thing_created == NON_ITEM)
                         return;
 
-                    // Mark the book type as known to avoid duplicate gifts
-                    // if players don't read their gifts for some reason
+                    // Mark the book type as known to avoid duplicate
+                    // gifts if players don't read their gifts for some
+                    // reason.
                     mark_had_book(gift);
 
                     move_item_to_grid( &thing_created, you.pos() );
@@ -2330,7 +2331,7 @@ static void _do_god_gift(bool prayed_for)
 
                     // HACK: you.num_gifts keeps track of Necronomicon
                     // and weapon blessing for Kiku, so don't increase
-                    // it. Also, timeouts are meaningles for Kiku. evk
+                    // it.  Also, timeouts are meaningless for Kiku. evk
                     if (you.religion != GOD_KIKUBAAQUDGHA)
                     {
                         _inc_gift_timeout(40 + random2avg(19, 2));
@@ -2339,7 +2340,7 @@ static void _do_god_gift(bool prayed_for)
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
 
-                // Vehumet gives books less readily
+                // Vehumet gives books less readily.
                 if (you.religion == GOD_VEHUMET && success)
                     _inc_gift_timeout(10 + random2(10));
             }                   // End of giving books.
