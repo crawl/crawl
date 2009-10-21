@@ -1,7 +1,7 @@
 #include "AppHdr.h"
 
-#include "dlua.h"
 #include "l_libs.h"
+#include "cluautil.h"
 
 #include <cmath>
 

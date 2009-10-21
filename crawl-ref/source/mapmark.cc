@@ -11,9 +11,11 @@
 #include "mapmark.h"
 
 #include "clua.h"
+#include "cluautil.h"
 #include "directn.h"
 #include "dlua.h"
 #include "libutil.h"
+#include "l_libs.h"
 #include "stuff.h"
 #include "tags.h"
 

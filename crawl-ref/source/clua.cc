@@ -5,49 +5,15 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-#include <sstream>
-
 #include "clua.h"
+
+#include "cluautil.h"
+#include "dlua.h"
 #include "l_libs.h"
 
-#include "abl-show.h"
-#include "artefact.h"
-#include "command.h"
-#include "chardump.h"
-#include "cio.h"
-#include "delay.h"
-#include "dgnevent.h"
-#include "dungeon.h"
 #include "files.h"
-#include "food.h"
-#include "invent.h"
-#include "initfile.h"
-#include "itemname.h"
-#include "itemprop.h"
-#include "items.h"
-#include "item_use.h"
-#include "libutil.h"
-#include "macro.h"
-#include "mapdef.h"
-#include "message.h"
-#include "monstuff.h"
-#include "mon-util.h"
-#include "newgame.h"
-#include "notes.h"
-#include "output.h"
-#include "player.h"
-#include "religion.h"
-#include "skills2.h"
-#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
-#include "transfor.h"
-#include "travel.h"
-
-#include <cstring>
-#include <map>
-#include <cctype>
 
 #define BUGGY_PCALL_ERROR  "667: Malformed response to guarded pcall."
 #define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."
@@ -392,7 +358,6 @@ void CLua::vfnreturns(const char *format, va_list args)
     lua_pop(ls, nrets);
 }
 
-static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t);
 int CLua::push_args(lua_State *ls, const char *format, va_list args,
                     va_list *targ)
 {
@@ -712,65 +677,6 @@ void clua_register_metatable(lua_State *ls, const char *tn,
         luaL_openlib(ls, NULL, lr, 0);
     }
 }
-
-
-
-// Pushing various objects.
-
-static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
-{
-    if (!t->data)
-    {
-        lua_pushnil(ls);
-        return 0;
-    }
-
-    switch (t->apt)
-    {
-    case AIP_HP_LOSS:
-        {
-            const ait_hp_loss *ahl = (const ait_hp_loss *) t->data;
-            lua_pushnumber(ls, ahl->hp);
-            lua_pushnumber(ls, ahl->hurt_type);
-            return 1;
-        }
-    case AIP_INT:
-        lua_pushnumber(ls, *(const int *) t->data);
-        break;
-    case AIP_STRING:
-        lua_pushstring(ls, (const char *) t->data);
-        break;
-    case AIP_MONSTER:
-        // FIXME: We're casting away the const...
-        push_monster(ls, (monsters *) t->data);
-        break;
-    default:
-        lua_pushnil(ls);
-        break;
-    }
-    return 0;
-}
-
-void clua_push_map(lua_State *ls, map_def *map)
-{
-    map_def **mapref = clua_new_userdata<map_def *>(ls, MAP_METATABLE);
-    *mapref = map;
-}
-
-void clua_push_coord(lua_State *ls, const coord_def &c)
-{
-    lua_pushnumber(ls, c.x);
-    lua_pushnumber(ls, c.y);
-}
-
-void clua_push_dgn_event(lua_State *ls, const dgn_event *devent)
-{
-    const dgn_event **de =
-        clua_new_userdata<const dgn_event *>(ls, DEVENT_METATABLE);
-    *de = devent;
-}
-
-
 
 ////////////////////////////////////////////////////////////////////////
 // lua_text_pattern

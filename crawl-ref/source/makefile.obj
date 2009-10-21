@@ -115,4 +115,5 @@ view.o \
 xom.o \
 kills.o \
 mt19937ar.o \
-clua.o
+clua.o \
+cluautil.o

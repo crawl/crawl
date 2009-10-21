@@ -24,8 +24,18 @@ void cluaopen_you(lua_State *ls);
 void cluaopen_globals(lua_State *ls);
 
 /*
+ * (Shared) metatable names.
+ */
+
+#define MAP_METATABLE "dgn.mtmap"
+#define DEVENT_METATABLE "dgn.devent"
+#define MAPMARK_METATABLE "dgn.mapmark"
+#define MAPGRD_METATABLE "dgn.mapgrd"
+#define MAPGRD_COL_METATABLE "dgn.mapgrdcol"
+
+/*
  * Libraries and loaders for dlua, accessed from init_dungeon_lua().
- * TODO: Move these to dluaopen_*.
+ * TODO: Rename these to dluaopen_*.
  */
 
 extern const struct luaL_reg debug_dlib[];
@@ -55,6 +65,7 @@ void dluaopen_you(lua_State *ls);
 
 /*
  * Macros for processing object arguments.
+ * TODO: Collect these in cluautil.{h,cc}.
  */
 #define GETCOORD(c, p1, p2, boundfn)                      \
     coord_def c;                                          \

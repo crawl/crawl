@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "clua.h"
+#include "cluautil.h"
 #include "l_libs.h"
 
 #include "artefact.h"

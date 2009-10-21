@@ -16,6 +16,7 @@
 #include "skills2.h"
 #include "spells3.h"
 #include "spl-util.h"
+#include "stuff.h"
 #include "transfor.h"
 
 /////////////////////////////////////////////////////////////////////

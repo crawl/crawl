@@ -9,6 +9,7 @@
 #include "l_libs.h"
 
 #include "directn.h"
+#include "stuff.h"
 #include "terrain.h"
 
 const char *dngn_feature_names[] =

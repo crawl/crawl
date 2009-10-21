@@ -4,11 +4,10 @@
  *  Created by: dshaligram on Sat Jun 23 20:02:09 2007 UTC
  */
 
-#ifndef LUADGN_H
-#define LUADGN_H
+#ifndef DLUA_H
+#define DLUA_H
 
 #include "clua.h"
-#include "stuff.h" // for COORDS macro
 
 // Defined in acr.cc
 extern CLua dlua;

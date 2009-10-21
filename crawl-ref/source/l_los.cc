@@ -11,6 +11,7 @@
 
 #include "los.h"
 #include "ray.h"
+#include "stuff.h"
 
 #define RAY_METATABLE "dgn.ray"
 

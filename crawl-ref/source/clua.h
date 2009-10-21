@@ -19,9 +19,6 @@ extern "C" {
 #include <map>
 #include <set>
 
-#include "libutil.h"
-#include "externs.h"
-
 #ifndef CLUA_MAX_MEMORY_USE
 #define CLUA_MAX_MEMORY_USE (6 * 1024)
 #endif
@@ -292,14 +289,6 @@ static int lua_object_gc(lua_State *ls)
 
 std::string quote_lua_string(const std::string &s);
 
-class map_def;
-class dgn_event;
-void clua_push_map(lua_State *ls, map_def *map);
-void clua_push_coord(lua_State *ls, const coord_def &c);
-void clua_push_dgn_event(lua_State *ls, const dgn_event *devent);
-
-void lua_push_items(lua_State *ls, int link);
-
 template <class T> T *clua_new_userdata(
         lua_State *ls, const char *mt)
 {
@@ -309,18 +298,10 @@ template <class T> T *clua_new_userdata(
     return static_cast<T*>( udata );
 }
 
-void push_monster(lua_State *ls, monsters *mons);
-
 void clua_register_metatable(lua_State *ls, const char *tn,
                              const luaL_reg *lr,
                              int (*gcfn)(lua_State *ls) = NULL);
 
 void print_clua_stack();
-
-#define MAP_METATABLE "dgn.mtmap"
-#define DEVENT_METATABLE "dgn.devent"
-#define MAPMARK_METATABLE "dgn.mapmark"
-#define MAPGRD_METATABLE "dgn.mapgrd"
-#define MAPGRD_COL_METATABLE "dgn.mapgrdcol"
 
 #endif
