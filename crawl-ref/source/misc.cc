@@ -3014,6 +3014,9 @@ void setup_environment_effects()
 static void apply_environment_effect(const coord_def &c)
 {
     const dungeon_feature_type grid = grd(c);
+    // Don't apply if if the feature doesn't want it.
+    if (testbits(env.map(c).property, FPROP_NO_CLOUD_GEN))
+        return;
     if (grid == DNGN_LAVA)
         check_place_cloud(CLOUD_BLACK_SMOKE, c, random_range(4, 8), KC_OTHER);
     else if (grid == DNGN_SHALLOW_WATER)
