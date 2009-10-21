@@ -924,6 +924,19 @@ KMASK:    Z = no_monster_gen
           would make it so that monsters are only randomly generated on shallow
           water squares.
 
+KPROP:    x = bloody
+          KPROP: allows you to assign a specific property to a feature. Like
+          KFEAT: and KMONS:, it can be combined with these for the same place-
+          holder.
+
+          Available properties are: 
+          
+          * "bloody": Causes features to appear as though splattered with
+             blood. This should be used very, very sparingly!   
+          * "force_exclude": Forces a single grid square or feature to be an 
+             exclusion in auto-explore and automatic travel. Will be coloured
+             red in the overmap.
+
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the
           placeholder. It can be combined with KFEAT: and KMONS: lines for

@@ -362,6 +362,10 @@ static bool _is_excluded(const coord_def &p,
 
 bool is_excluded(const coord_def &p)
 {
+    // We can force a travel exclusion by using the "force_exclude"
+    // KPROP feature property in vaults. {due}
+    if (testbits(env.map(p).property, FPROP_FORCE_EXCLUDE)) 
+        return (true);
     return _is_excluded(p, curr_excludes);
 }
 

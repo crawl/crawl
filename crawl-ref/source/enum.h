@@ -910,13 +910,14 @@ enum level_flag_type
 
 enum feature_property_type
 {
-    FPROP_NONE = 0,
-    FPROP_SANCTUARY_1 = (1 << 0),
-    FPROP_SANCTUARY_2 = (1 << 2),
-    FPROP_BLOODY      = (1 << 3),
-    FPROP_VAULT       = (1 << 4),
-    FPROP_HIGHLIGHT   = (1 << 5)  // Highlight grids on the X map for debugging.
+    FPROP_NONE          = 0,
+    FPROP_SANCTUARY_1   = (1 << 0),
+    FPROP_SANCTUARY_2   = (1 << 2),
+    FPROP_BLOODY        = (1 << 3),
+    FPROP_VAULT         = (1 << 4),
+    FPROP_HIGHLIGHT     = (1 << 5),  // Highlight grids on the X map for debugging.
     // NOTE: Bloody floor and sanctuary are exclusive.
+    FPROP_FORCE_EXCLUDE = (1 << 6)
 };
 
 // NOTE: The order of these is very important to their usage!

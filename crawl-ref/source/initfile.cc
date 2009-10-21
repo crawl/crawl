@@ -327,6 +327,8 @@ int str_to_fprop ( const std::string &str)
 {
     if (str == "bloody")
         return (FPROP_BLOODY);
+    if (str == "force_exclude")
+        return (FPROP_FORCE_EXCLUDE);
 
     return (FPROP_NONE);
 }
