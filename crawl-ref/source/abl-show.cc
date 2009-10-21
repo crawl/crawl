@@ -23,6 +23,7 @@
 #include "abyss.h"
 #include "artefact.h"
 #include "beam.h"
+#include "cloud.h"
 #include "database.h"
 #include "decks.h"
 #include "delay.h"
@@ -81,6 +82,7 @@ static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil);
 static std::string _describe_talent(const talent& tal);
+static void _chronos_time_step(int pow);
 
 // this all needs to be split into data/util/show files
 // and the struct mechanism here needs to be rewritten (again)
@@ -2096,7 +2098,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_CHRONOS_TIME_STEP:
-        mpr("You step out of the flow of time.");
+        _chronos_time_step(you.skills[SK_INVOCATIONS]*you.piety/10);
         break;
 
     case ABIL_CHRONOS_TIME_BEND:
@@ -2750,4 +2752,35 @@ static void _lugonu_bends_space()
 int generic_cost::cost() const
 {
     return (base + (add > 0 ? random2avg(add, rolls) : 0));
+}
+
+static void _chronos_time_step(int pow) // pow is the number of turns to skip
+{
+    coord_def old_pos = you.pos();
+
+    mpr("You step out of the flow of time.");
+    you.flash_colour = LIGHTCYAN;
+    viewwindow(true, true);
+    you.moveto(coord_def(0, 0));
+    you.duration[DUR_TIME_STEP] = pow;
+
+    you.time_taken = 10;
+    while(you.duration[DUR_TIME_STEP]-- > 0)
+    {
+        run_environment_effects();
+        handle_monsters();
+        manage_clouds();
+    }
+    // Update corpses, etc.  This does also shift monsters, but only by a tiny bit.
+    update_level(pow*10);
+
+#ifndef USE_TILE
+    delay(1000);
+#endif
+
+    you.flash_colour = 0;
+    you.moveto(old_pos);
+    you.duration[DUR_TIME_STEP] = 0;
+    viewwindow(true, false);
+    mpr("You return into the normal time flow.");
 }

@@ -6569,7 +6569,7 @@ bool ponderousify_armour(){
     return true;
 }
 
-int _slouch_monsters(coord_def where, int pow, int, actor* agent)
+static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
 {
     monsters* mon = monster_at(where);
     if (mon == NULL)

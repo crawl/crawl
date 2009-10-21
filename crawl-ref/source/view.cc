@@ -4077,6 +4077,8 @@ static void _debug_pane_bounds()
 //---------------------------------------------------------------
 void viewwindow(bool draw_it, bool do_updates)
 {
+    if (you.duration[DUR_TIME_STEP])
+        return;
     flush_prev_message();
 
 #ifdef USE_TILE

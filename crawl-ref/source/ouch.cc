@@ -915,6 +915,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux, bool see_source)
 {
     ASSERT(!crawl_state.arena);
+    if (you.duration[DUR_TIME_STEP])
+        return;
 
     if (dam != INSTANT_DEATH && you.species == SP_DEEP_DWARF)
     {

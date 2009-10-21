@@ -1269,6 +1269,7 @@ enum duration_type
     DUR_REPEL_STAIRS_MOVE,
     DUR_REPEL_STAIRS_CLIMB,
     DUR_SLIMIFY,
+    DUR_TIME_STEP,
 
     NUM_DURATIONS
 };
