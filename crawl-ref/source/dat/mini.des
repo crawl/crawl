@@ -2488,3 +2488,37 @@ cv.nnn.vc
 cv.....vc
 cvvv+vvvc
 ENDMAP
+
+##############################################################################
+# The Horrible House of Horrid Horrors (by Mu.)
+#
+NAME:   horrible_house_mu
+DEPTH:  D:16-25, Vault
+KMONS:  g = boggart
+KMONS:  h = unseen horror
+KMONS:  R = rakshasa
+KMONS:  V = vampire knight
+KMONS:  8 = orange crystal statue
+KMONS:  P = plant
+SUBST:  p = P.
+MAP
+.....................
+.pp...............pp.
+.pcccccccccccccccccp.
+..c.$$$|||.|||$$$.c..
+..c..$$$.....$$$..c..
+..c.g....lVl....g.c..
+..c...llll.llll...c..
+..c...lnll.llnl...c..
+..c.hlllc.8.clllh.c..
+..c...llcccccll...c..
+..c...lllllllll...c..
+..c.R..hlllllh..R.c..
+..c.......l.......c..
+..c...............c..
+..c...............c..
+.pccnnnccc+cccnnnccp.
+.pp.....pPPPp.....pp.
+.........ppp.........
+ENDMAP
+

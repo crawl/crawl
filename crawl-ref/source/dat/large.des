@@ -1141,3 +1141,110 @@ xxxxxxxcxxxxxx...x....xxxxxxcccccccxxxxxxccccccccx..ccccxxxxxxxxx
 xxxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+#############################################################################
+# The Lair of the Golden Dragon (by Mu.)
+#
+NAME:   gold_lair_mu
+ORIENT: southeast
+TAGS:   no_monster_gen
+DEPTH:  D:20-26
+MONS:   golden dragon, any draconian, fungus, plant, oklob plant
+KMONS:  6 = firedrake / swamp drake / lindwurm
+KMONS:  D = firedrake w:5 / swamp drake w:5 / death drake / lindwurm w:5
+KITEM:  D = $
+SUBST:  $ = $|
+SUBST:  f : A B
+SUBST:  A = 3:30 .:90 5:1
+SUBST:  B = 4:30 .:120 5:1
+SUBST:  m = W:20 w:10
+KFEAT:  o = granite_statue
+MAP
+        ...........ffffmmmmmmmxxx
+       ..........ffmmmwwwwwwwmxxx
+      .........ffmmwwwwwwwwwxxxxx
+     ..6....ffffmmwwwwwxxxxxxxxxx
+    ..9...ffffmmwwwwwxxxxxxxxxxxx
+   ..9..ffffmmwwwwwwxxxxxxxxxxxxx
+  ..6..fffmmwwwwwwwxxxxx.2x.2xxxx
+ .....fffmwwwwwwwwxxx........xxxx
+......ffmwwwwwwwwxxx.....xx...xxx
+.....fffmwwwwwwxxxxx...xxxxx..xxx
+.....ffmwwwwwwxxxxxx..xxxxxxx..xx
+....fffmwwwwwxxxx.....xxxoxxxx.xx
+....ffmwwwwwxxxx..6..xx....xx..xx
+...fffmwwwwxxxxx..xxxx...6....cxx
+...ffmwwwwwxxxx..xxxxx..xxxx2xxxx
+..fffmwwwwxxxx...xxxx...ccccccccx
+.fffmwwwwwxxx....xxx..ccccccccccx
+..ffmwwwwxxxx..x..xx.cccc.6..cccx
+.fffmwwwxxxxx..xx..xc.c.......ocx
+.fffmwwwxxxx..xxx..ccc....lllllcx
+..ffmwwxxxx..xxxx.xcc....llllllcx
+.fffwwxxxx..xxxxx.ccc...llll$$Dcx
+.fffwwxxx..x..2xx.cc...llll$$$$cx
+..ffwwxxx....xxx..cc6.llll$$$$$cx
+.ffffwxxxx..xxx..xcc..lll$$$$$$cx
+..8ffwwxxx...xx2xxcc..ll$$$$$$$cx
+.6.fffwwxxx..xxxxxccc.ll$$$$$1ccx
+....fffmwwwxxxxxxxcccollD$$$$cccx
+.....fffmmwwwwwwwwccccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# The Golem Gauntlet (by Mu.)
+#
+# Each room is progressively more challenging; both the golems, and their
+# creators.
+#
+NAME:   golem_gauntlet_mu
+DEPTH:  D:16-26
+FLAGS:  no_monster_gen no_item_gen no_pool_fixup
+ORIENT: east
+MARKER: m = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 1, size_buildup_amnt = 1, \
+                size_buildup_time = 25, cloud_type = "flame" \
+            }
+MARKER: z = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 1, size_buildup_amnt = 1, \
+                size_buildup_time = 25, cloud_type = "freezing vapour" \
+            }
+MONS:   wood golem, clay golem, toenail golem, stone golem, iron golem, crystal golem
+KFEAT:  o = granite_statue
+KFEAT:  m = .
+KFEAT:  z = .
+KMONS:  A = orc sorcerer / Nergalle, orc sorcerer
+KMONS:  B = wizard
+KMONS:  C = ogre-mage / Erolcha, ogre-mage
+KMONS:  D = deep elf sorcerer
+KMONS:  E = lich / Boris, lich
+KMONS:  F = ancient lich
+MAP
+ cccccccccccccccccccccccccccccc
+ cccccccccccccccccccccccccccccc
+ cc......=.....cc......=....$cc
+ ccmcccccc..5..cczcccccc.6.6$cc
+ cc.....cc*5E5.cc.....cc..F.$cc
+ ccccccmcc|.5..cccccczcc.6.6$cc
+ cc.....cc*$$..=......cc|||||cc
+ cc.ccccccccccccccccccccccccccc
+ cc=ccccccccccccccccccccccccccc
+ cc.....cllllllcc%$$..cwwwwwwcc
+ cc.4.4.clcccclcc$.3..cwccccwcc
+ cc..D..=.cllllcc$3C3.=.cwwwwcc
+ cc%4.4.ccclccccc..3..cccwccccc
+ cc$$$%%ccclllll=.....cccwwwwcc
+ cccccccccccccccccccccccccccwcc
+ ccccccccccccccccccccccccccc=cc
+.cc......=...$$ccWWWWWW=.....cc
+.cc.cccccc..1.$ccWcccccc.2.2.cc
+.cc.....cc.1A1.ccWWWWWWc..B..cc
+occcccc.cc..1..cccccccWc.2.2$cc
+@=......cc.....=WWWWWWWc...$%cc
+occcccccccccccccccccccccccccccc
+ cccccccccccccccccccccccccccccc
+ENDMAP
