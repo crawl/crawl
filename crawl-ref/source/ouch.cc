@@ -1056,7 +1056,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         && death_type != KILLED_BY_WINNING
         && death_type != KILLED_BY_LEAVING)
     {
-        if (you.wizard)
+        if (crawl_state.test || you.wizard)
         {
             const std::string death_desc
                 = se.death_description(scorefile_entry::DDV_VERBOSE);
@@ -1066,7 +1066,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             mprf(MSGCH_DIAGNOSTICS, "Damage: %d; Hit points: %d", dam, you.hp);
 #endif
 
-            if (!yesno("Die?", false, 'n'))
+            if (crawl_state.test || !yesno("Die?", false, 'n'))
             {
                 take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);
