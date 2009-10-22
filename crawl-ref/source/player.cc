@@ -3820,6 +3820,17 @@ static void _attribute_increase()
 
         switch (keyin)
         {
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE)
+        case ESCAPE:
+        case -1:
+            // [ds] It's safe to save the game here; when the player
+            // reloads, the game will re-prompt for their level-up
+            // stat gain.
+            if (crawl_state.seen_hups)
+                sighup_save_and_exit();
+            break;
+#endif
+
         case 's':
         case 'S':
             modify_stat(STAT_STRENGTH, 1, false, "level gain");
