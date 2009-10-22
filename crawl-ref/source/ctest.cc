@@ -30,6 +30,8 @@ namespace crawl_tests
 {
     const std::string test_dir = "test";
     const std::string test_player_name = "Superbug99";
+    const species_type test_player_species = SP_HUMAN;
+    const job_type test_player_job = JOB_FIGHTER;
 
     int ntests = 0;
     int nsuccess = 0;
@@ -45,6 +47,8 @@ namespace crawl_tests
         // XXX: Good grief, you.your_name is still not a C++ string?!
         strncpy(you.your_name, test_player_name.c_str(), kNameLen);
         you.your_name[kNameLen - 1] = 0;
+        you.species = test_player_species;
+        you.char_class = test_player_job;
     }
 
     int crawl_begin_test(lua_State *ls)
