@@ -11,6 +11,17 @@
 #endif
 
 #if defined(UNIX)
+	#define BACKTRACE_SUPPORTED
+#endif
+
+#ifdef BACKTRACE_SUPPORTED
+#if defined(TARGET_CPU_MIPS) || \
+    defined(TARGET_COMPILER_CYGWIN)
+	#undef BACKTRACE_SUPPORTED
+#endif
+#endif
+
+#ifdef BACKTRACE_SUPPORTED
 
 #include <cxxabi.h>
 
@@ -160,7 +171,7 @@ void dump_crash_info(FILE* file)
 #endif
 }
 
-#if defined(UNIX) && !defined(TARGET_COMPILER_CYGWIN)
+#if defined(BACKTRACE_SUPPORTED)
 void write_stack_trace(FILE* file, int ignore_count)
 {
     void* frames[50];
