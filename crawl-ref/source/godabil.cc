@@ -565,18 +565,19 @@ void chronos_time_step(int pow) // pow is the number of turns to skip
     coord_def old_pos = you.pos();
 
     mpr("You step out of the flow of time.");
-    you.flash_colour = LIGHTCYAN;
+    you.flash_colour = LIGHTBLUE;
     viewwindow(true, true);
     you.moveto(coord_def(0, 0));
     you.duration[DUR_TIME_STEP] = pow;
 
     you.time_taken = 10;
-    while(you.duration[DUR_TIME_STEP]-- > 0)
+    do
     {
         run_environment_effects();
         handle_monsters();
         manage_clouds();
     }
+    while (--you.duration[DUR_TIME_STEP] > 0);
     // Update corpses, etc.  This does also shift monsters, but only by a tiny bit.
     update_level(pow*10);
 
