@@ -1816,7 +1816,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                                  || _is_butcher_delay(atype)))
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
-        if (!mon->visible())
+        if (!you.can_see(mon))
             return (false);
         if (at.context == "already seen" || at.context == "uncharm")
         {

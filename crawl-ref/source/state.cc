@@ -179,7 +179,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
     if (ai == AI_SEE_MONSTER)
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
-        if (!mon->visible())
+        if (!you.can_see(mon))
             return (false);
 
         if (crawl_state.cmd_repeat_started_unsafe

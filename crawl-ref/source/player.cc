@@ -6926,7 +6926,7 @@ int player::armour_class() const
 int player::melee_evasion(const actor *act) const
 {
     return (player_evasion()
-            - ((!act || act->visible()) ? 0 : 10)
+            - ((!act || act->visible_to(&you)) ? 0 : 10)
             - (you_are_delayed()
                && !is_run_delay(current_delay_action())? 5 : 0));
 }

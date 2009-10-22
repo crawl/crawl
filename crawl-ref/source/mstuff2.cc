@@ -1636,7 +1636,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     }
     msg += ".";
 
-    if (monster->visible())
+    if (monster->observable())
     {
         mpr(msg.c_str());
 

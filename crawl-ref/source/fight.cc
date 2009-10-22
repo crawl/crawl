@@ -389,10 +389,9 @@ void melee_attack::init_attack()
         defender_shield = defender->shield();
 
     water_attack       = is_water_attack(attacker, defender);
-    attacker_visible   = attacker->visible() || crawl_state.arena;
+    attacker_visible   = attacker->observable();
     attacker_invisible = (!attacker_visible && see_cell(attacker->pos()));
-    defender_visible   = (defender && (defender->visible()
-                                       || crawl_state.arena));
+    defender_visible   = defender && defender->observable();
     defender_invisible = (!defender_visible && defender
                           && see_cell(defender->pos()));
     needs_message      = (attacker_visible || defender_visible);

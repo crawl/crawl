@@ -101,9 +101,20 @@ public:
     virtual bool can_go_berserk() const = 0;
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
+
+    // Would looker be able to see the actor when in LOS?
     virtual bool visible_to(const actor *looker) const = 0;
+
+    // Is the given cell within LOS of the actor?
     virtual bool see_cell(const coord_def &c) const = 0;
+
+    // Can the actor actually see the target?
     virtual bool can_see(const actor *target) const = 0;
+
+    // Visibility as required by messaging. In usual play:
+    //   Does the player know what's happening to the actor?
+    virtual bool observable();
+
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;
     virtual void go_berserk(bool intentional) = 0;

@@ -2,6 +2,7 @@ OBJECTS = \
 abl-show.o \
 abyss.o \
 acr.o \
+actor.o \
 arena.o \
 artefact.o \
 beam.o \
