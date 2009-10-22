@@ -564,7 +564,7 @@ PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 all: $(GAME)
 
 test:
-	./$(GAME) -test
+	./$(GAME) -test > /dev/null
 
 ##########################################################################
 # Dependencies
