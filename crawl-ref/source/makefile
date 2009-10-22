@@ -253,6 +253,8 @@ $(warning Using this makefile to build a tiles build on Mac OS X is NOT OFFICIAL
 $(warning You should have no expectation of stability if you choose to continue anyway!)
 $(warning Please use the Xcode project instead.)
 $(error To build anyway, add the flag UNSUPPORTED_BUILD=y to the command-line)
+else
+EXTRA_LIBS += -framework OpenGL -framework AppKit
 endif
 endif
 
@@ -306,7 +308,7 @@ LIB += -lSDL_image $(SDL_LDFLAGS) $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
-ifneq ($(OSNAME),MacOS)
+ifneq ($(uname_S),Darwin)
 ifeq (,$(findstring MINGW,$(uname_S)))
 LIB += -lGL -lGLU
 else
