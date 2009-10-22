@@ -1543,7 +1543,8 @@ int monster_die(monsters *monster, killer_type killer,
                 }
 
                 // Chronos hates fast monsters
-                if( monster->speed > player_movement_speed()){
+                if (mons_is_fast(monster))
+                {
                     did_god_conduct(DID_KILL_FAST, monster->hit_dice,
                                     true, monster);
                 }

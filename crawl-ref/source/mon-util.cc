@@ -513,6 +513,10 @@ bool mons_is_stationary(const monsters *mon)
 
 bool mons_is_fast(const monsters *mon)
 {
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Your delay: %d, your speed: %d, mon speed: %d",
+        player_movement_speed(), 100/player_movement_speed(), mon->speed);
+#endif
     return (mon->speed > 100/player_movement_speed());
 }
 
