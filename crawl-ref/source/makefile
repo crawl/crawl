@@ -555,14 +555,14 @@ PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o \
 		$(UTIL)*.tab.cc $(UTIL)*.tab.h $(UTIL)*.lex.cc *.ixx
 PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
-.PHONY: all install clean clean-contrib distclean debug profile wizard
+.PHONY: all test install clean clean-contrib distclean debug profile wizard
 
 ##########################################################################
 
 all: $(GAME)
 
 test:
-	$(GAME) -test
+	./$(GAME) -test
 
 ##########################################################################
 # Dependencies
