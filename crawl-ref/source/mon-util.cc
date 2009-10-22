@@ -5366,7 +5366,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
 bool monsters::need_message(int &near) const
 {
     return (near != -1 ? near
-                       : (near = visible()));
+                       : (near = observable()));
 }
 
 void monsters::swap_weapons(int near)
@@ -5932,11 +5932,6 @@ bool monsters::has_damage_type(int dam_type)
     }
 
     return (false);
-}
-
-bool monsters::visible() const
-{
-    return (mons_near(this) && visible_to(&you));
 }
 
 bool monsters::confused() const

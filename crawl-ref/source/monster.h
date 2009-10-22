@@ -278,7 +278,6 @@ public:
     bool mutate();
     void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
-    bool visible() const;
 
     int mons_species() const;
 

@@ -113,7 +113,7 @@ public:
 
     // Visibility as required by messaging. In usual play:
     //   Does the player know what's happening to the actor?
-    virtual bool observable();
+    virtual bool observable() const;
 
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;
