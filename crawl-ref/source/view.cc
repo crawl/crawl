@@ -914,7 +914,7 @@ static void _good_god_follower_attitude_change(monsters *monster)
         && mons_is_holy(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_wont_attack(monster)
-        && mons_player_visible(monster) && !mons_is_sleeping(monster)
+        && monster->can_see_invisible() && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
@@ -954,7 +954,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
         && !mons_is_shapeshifter(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_friendly(monster)
-        && mons_player_visible(monster) && !mons_is_sleeping(monster)
+        && monster->can_see_invisible() && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
@@ -989,7 +989,7 @@ void slime_convert(monsters* monster)
         && !mons_neutral(monster)
         && !mons_friendly(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
-        && mons_player_visible(monster) && !mons_is_sleeping(monster)
+        && monster->can_see_invisible() && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
@@ -1481,7 +1481,7 @@ bool check_awaken(monsters* monster)
     if (mons_is_wandering(monster) && monster->foe == MHITYOU)
         mons_perc += 15;
 
-    if (!mons_player_visible(monster))
+    if (!monster->can_see_invisible())
     {
         mons_perc -= 75;
         unnatural_stealthy = true;
@@ -1506,7 +1506,7 @@ bool check_awaken(monsters* monster)
 
     // If you've been tagged with Corona or are Glowing, the glow
     // makes you extremely unstealthy.
-    if (you.backlit() && mons_player_visible(monster))
+    if (you.backlit() && monster->can_see_invisible())
         mons_perc += 50;
 
     if (mons_perc < 0)

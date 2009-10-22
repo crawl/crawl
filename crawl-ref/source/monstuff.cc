@@ -4388,7 +4388,7 @@ static void _handle_behaviour(monsters *mon)
     // in shallow water.
     if (proxPlayer && you.invisible())
     {
-        if (!mons_player_visible( mon ))
+        if (!mon->can_see_invisible())
             proxPlayer = false;
         // Must be able to see each other.
         else if (!see_cell(mon->pos()))
@@ -4832,7 +4832,7 @@ static bool _mons_check_set_foe(monsters *mon, const coord_def& p,
         return (false);
 
     if (!friendly && !neutral && p == you.pos()
-        && mons_player_visible(mon) && !is_sanctuary(p))
+        && mon->can_see_invisible() && !is_sanctuary(p))
     {
         mon->foe = MHITYOU;
         return (true);
@@ -5961,7 +5961,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!mons_player_visible(monster))
+        if (!monster->can_see_invisible())
             break;
 
         if (coinflip())
@@ -5996,7 +5996,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!mons_player_visible( monster ))
+        if (!monster->can_see_invisible())
             break;
 
         if (coinflip())
@@ -6155,7 +6155,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!mons_player_visible( monster ))
+        if (!monster->can_see_invisible())
             break;
 
         // The fewer spikes the manticore has left, the less
@@ -6231,7 +6231,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!mons_player_visible( monster ))
+        if (!monster->can_see_invisible())
             break;
 
         if (monster->type != MONS_HELL_HOUND && x_chance_in_y(3, 13)
@@ -7077,7 +7077,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                         // use ME_ALERT to target (we should really have
                         // a measure of time instead of peeking to see
                         // if the player is still there). -- bwr
-                        if (!mons_player_visible(monster)
+                        if (!monster->can_see_invisible()
                             && (monster->target != you.pos() || coinflip()))
                         {
                             spellOK = false;

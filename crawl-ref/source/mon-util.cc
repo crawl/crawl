@@ -919,24 +919,6 @@ bool mons_monster_visible(const monsters *mon, const monsters *targ)
     return (true);
 }
 
-// This does NOT do line of sight!  It checks the player's visibility
-// with respect to mon's perception, but doesn't do walls or range.
-bool mons_player_visible(const monsters *mon)
-{
-    if (you.invisible())
-    {
-        if (player_in_water())
-            return (true);
-
-        if (mon->can_see_invisible() || mons_sense_invis(mon))
-            return (true);
-
-        return (false);
-    }
-
-    return (true);
-}
-
 unsigned mons_char(int mc)
 {
     return monster_symbols[mc].glyph;

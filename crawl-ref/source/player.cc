@@ -7359,7 +7359,8 @@ bool player::visible_to(const actor *looker) const
         return (can_see_invisible() || !invisible());
 
     const monsters* mon = dynamic_cast<const monsters*>(looker);
-    return mons_player_visible(mon);
+    return (!you.invisible() || player_in_water() ||
+            mon->can_see_invisible() || mons_sense_invis(mon));
 }
 
 bool player::see_cell(const coord_def &c) const

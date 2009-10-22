@@ -5654,7 +5654,7 @@ static bool _beogh_followers_abandon_you()
             {
                 num_followers++;
 
-                if (mons_player_visible(monster)
+                if (monster->can_see_invisible()
                     && !mons_is_sleeping(monster)
                     && !mons_is_confused(monster)
                     && !mons_cannot_act(monster))
@@ -7457,7 +7457,7 @@ int get_tension(god_type god, bool count_travelling)
 
         if (att != ATT_FRIENDLY)
         {
-            if (!mons_player_visible(mons))
+            if (!mons->can_see_invisible())
                 exper /= 2;
             if (!player_monster_visible(mons))
                 exper *= 2;
