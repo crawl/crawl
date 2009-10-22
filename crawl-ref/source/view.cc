@@ -893,7 +893,7 @@ int get_mons_colour(const monsters *mons)
     }
 
     // Backlit monsters are fuzzy and override brands.
-    if (!player_see_invis() && mons->has_ench(ENCH_INVIS)
+    if (!you.can_see_invisible() && mons->has_ench(ENCH_INVIS)
         && mons->backlit())
     {
         col = DARKGREY;
@@ -1172,7 +1172,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     // false for submerged monsters, but submerged monsters will be forced
     // to surface before they shout, thus removing that source of
     // non-visibility.
-    if (mons_near(monster) && (!monster->invisible() || player_see_invis()))
+    if (mons_near(monster) && (!monster->invisible() || you.can_see_invisible()))
         suffix = " seen";
     else
         suffix = " unseen";

@@ -551,7 +551,7 @@ void cast_toxic_radiance()
                 if (affected)
                     _record_monster_by_name(affected_monsters, monster);
             }
-            else if (player_see_invis())
+            else if (you.can_see_invisible())
             {
                 // message player re:"miss" where appropriate {dlb}
                 mprf("The light passes through %s.",

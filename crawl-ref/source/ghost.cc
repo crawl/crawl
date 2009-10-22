@@ -332,7 +332,7 @@ void ghost_demon::init_player_ghost()
     if (ev > MAX_GHOST_EVASION)
         ev = MAX_GHOST_EVASION;
 
-    see_invis      = player_see_invis();
+    see_invis      = you.can_see_invisible();
     resists.fire   = player_res_fire();
     resists.cold   = player_res_cold();
     resists.elec   = player_res_electricity();

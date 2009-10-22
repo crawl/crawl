@@ -2213,7 +2213,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     // Messaging.
     bool can_see     = you.can_see(monster);
-    bool can_see_new = !mons_class_flag(targetc, M_INVIS) || player_see_invis();
+    bool can_see_new = !mons_class_flag(targetc, M_INVIS) || you.can_see_invisible();
 
     bool need_note = false;
     std::string old_name = monster->full_name(DESC_CAP_A);
@@ -6690,7 +6690,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
     case WAND_INVISIBILITY:
         if (!monster->has_ench(ENCH_INVIS)
             && !monster->has_ench(ENCH_SUBMERGED)
-            && (!mons_friendly(monster) || player_see_invis(false)))
+            && (!mons_friendly(monster) || you.can_see_invisible(false)))
         {
             beem.target = monster->pos();
             niceWand = true;

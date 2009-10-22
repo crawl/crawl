@@ -2702,40 +2702,12 @@ int player_shield_class(void)   //jmf: changes for new spell
     return (base_shield);
 }
 
-int player_see_invis(bool calc_unid)
-{
-    int si = 0;
-
-    si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE, calc_unid );
-
-    // armour: (checks head armour only)
-    si += player_equip_ego_type( EQ_HELMET, SPARM_SEE_INVISIBLE );
-
-    if (player_mutation_level(MUT_ACUTE_VISION) > 0)
-        si += player_mutation_level(MUT_ACUTE_VISION);
-
-    //jmf: added see_invisible spell
-    if (you.duration[DUR_SEE_INVISIBLE] > 0)
-        si++;
-
-    // randart wpns
-    int artefacts = scan_artefacts(ARTP_EYESIGHT, calc_unid);
-
-    if (artefacts > 0)
-        si += artefacts;
-
-    if (si > 1)
-        si = 1;
-
-    return (si);
-}
-
 // This does NOT do line of sight!  It checks the monster's visibility
 // with respect to the players perception, but doesn't do walls or
 // range.  To find if the square the monster is in LOS, see mons_near().
 bool player_monster_visible(const monsters *mon)
 {
-    if (!player_see_invis() && mon->invisible())
+    if (!you.can_see_invisible() && mon->invisible())
         return (false);
 
     if (!mons_is_submerged(mon))
@@ -7343,9 +7315,37 @@ bool player::sicken(int amount)
     return (true);
 }
 
+bool player::can_see_invisible(bool calc_unid) const
+{
+    int si = 0;
+
+    si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE, calc_unid );
+
+    // armour: (checks head armour only)
+    si += player_equip_ego_type( EQ_HELMET, SPARM_SEE_INVISIBLE );
+
+    if (player_mutation_level(MUT_ACUTE_VISION) > 0)
+        si += player_mutation_level(MUT_ACUTE_VISION);
+
+    //jmf: added see_invisible spell
+    if (you.duration[DUR_SEE_INVISIBLE] > 0)
+        si++;
+
+    // randart wpns
+    int artefacts = scan_artefacts(ARTP_EYESIGHT, calc_unid);
+
+    if (artefacts > 0)
+        si += artefacts;
+
+    if (si > 1)
+        si = 1;
+
+    return (si);
+}
+
 bool player::can_see_invisible() const
 {
-    return (player_see_invis() > 0);
+    return (can_see_invisible(true));
 }
 
 bool player::invisible() const

@@ -601,7 +601,7 @@ bool stinking_cloud( int pow, bolt &beem )
     {
         // Fire tracer.
         beem.source            = you.pos();
-        beem.can_see_invis     = player_see_invis();
+        beem.can_see_invis     = you.can_see_invisible();
         beem.smart_monster     = true;
         beem.attitude          = ATT_FRIENDLY;
         beem.friend_info.count = 0;

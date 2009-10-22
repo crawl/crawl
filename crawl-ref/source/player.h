@@ -300,6 +300,7 @@ public:
     bool cannot_speak() const;
     bool invisible() const;
     bool can_see_invisible() const;
+    bool can_see_invisible(bool unid) const;
     bool visible_to(const actor *looker) const;
     bool see_cell(const coord_def &c) const;
     bool can_see(const actor *target) const;
@@ -760,7 +761,6 @@ int slaying_bonus(char which_affected);
  *              items - monstuff - mon-util - mstuff2 - spells1 - spells2 -
  *              spells3
  * *********************************************************************** */
-int player_see_invis(bool calc_unid = true);
 bool player_monster_visible(const monsters *mon);
 
 bool player_mesmerised_by(const monsters *mon);

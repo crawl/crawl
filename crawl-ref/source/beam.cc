@@ -243,7 +243,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
 
     pbolt.is_tracer      = true;
     pbolt.source         = you.pos();
-    pbolt.can_see_invis  = player_see_invis();
+    pbolt.can_see_invis  = you.can_see_invisible();
     pbolt.smart_monster  = true;
     pbolt.attitude       = ATT_FRIENDLY;
     pbolt.thrower        = KILL_YOU_MISSILE;

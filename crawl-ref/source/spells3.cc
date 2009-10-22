@@ -1290,7 +1290,7 @@ bool cast_haunt(int pow, const coord_def& where, god_type god)
                             (chance >  2) ? MONS_FREEZING_WRAITH    // 20%/16%
                                           : MONS_SPECTRAL_WARRIOR); // 12%
 
-        if ((chance == 3 || chance == 8) && player_see_invis())
+        if ((chance == 3 || chance == 8) && you.can_see_invisible())
             mon = MONS_SHADOW_WRAITH;                               //  0%/8%
 
         const int monster =

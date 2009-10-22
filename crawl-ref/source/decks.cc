@@ -2723,7 +2723,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     do
         result = flytypes[random2(4) + power_level];
     while (friendly && mons_class_flag(result, M_INVIS)
-           && !player_see_invis());
+           && !you.can_see_invisible());
 
     for (int i = 0; i < power_level * 5 + 2; ++i)
     {

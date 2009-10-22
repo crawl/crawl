@@ -585,7 +585,7 @@ void unwear_armour(int slot)
         break;
 
     case SPARM_SEE_INVISIBLE:
-        if (!player_see_invis())
+        if (!you.can_see_invisible())
             mpr("You feel less perceptive.");
         break;
 

@@ -2233,7 +2233,7 @@ static void _decrement_durations()
         you.redraw_evasion = true;
     }
 
-    if (_decrement_a_duration(DUR_SEE_INVISIBLE) && !player_see_invis())
+    if (_decrement_a_duration(DUR_SEE_INVISIBLE) && !you.can_see_invisible())
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
 
     _decrement_a_duration(DUR_TELEPATHY, "You feel less empathic.");

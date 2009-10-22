@@ -346,7 +346,7 @@ void cast_phase_shift(int pow)
 
 void cast_see_invisible(int pow)
 {
-    if (player_see_invis())
+    if (you.can_see_invisible())
         mpr("Nothing seems to happen.");
     else
     {
@@ -1178,7 +1178,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 
     // Fire tracer. FIXME: use player_tracer() here!
     beem.source         = you.pos();
-    beem.can_see_invis  = player_see_invis();
+    beem.can_see_invis  = you.can_see_invisible();
     beem.smart_monster  = true;
     beem.attitude       = ATT_FRIENDLY;
     beem.beam_cancelled = false;

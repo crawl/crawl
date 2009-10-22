@@ -3134,7 +3134,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
     case SPELL_INVISIBILITY:
         if (mon->has_ench(ENCH_INVIS)
-            || mons_friendly(mon) && !player_see_invis(false))
+            || mons_friendly(mon) && !you.can_see_invisible(false))
         {
             ret = true;
         }
@@ -7034,7 +7034,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // Invisible monsters stay invisible.
         if (mons_class_flag(type, M_INVIS))
             add_ench(mon_enchant(ENCH_INVIS));
-        else if (mons_near(this) && !player_see_invis()
+        else if (mons_near(this) && !you.can_see_invisible()
                  && !has_ench(ENCH_SUBMERGED))
         {
             if (!quiet)
@@ -8412,7 +8412,7 @@ bool monsters::should_drink_potion(potion_type ptype) const
         // We're being nice: friendlies won't go invisible if the player
         // won't be able to see them.
         return (!has_ench(ENCH_INVIS)
-                && (player_see_invis(false) || !mons_friendly(this)));
+                && (you.can_see_invisible(false) || !mons_friendly(this)));
     default:
         break;
     }
