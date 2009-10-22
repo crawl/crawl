@@ -338,10 +338,10 @@ static const ability_def Ability_List[] =
     { ABIL_FEAWN_EVOLUTION, "Evolution", 4, 0, 0, 2, ABFLAG_FRUIT},
 
     // Chronos
-    { ABIL_CHRONOS_PONDEROUSIFY, "Make Ponderous", 1, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_CHRONOS_TIME_STEP, "Step From Time", 1, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_CHRONOS_TIME_BEND, "Bend Time", 1, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_CHRONOS_SLOUCH, "Ruinous Time", 1, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_CHRONOS_PONDEROUSIFY, "Make Ponderous", 2, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_CHRONOS_TIME_BEND, "Bend Time", 3, 0, 50, 1, ABFLAG_NONE },
+    { ABIL_CHRONOS_SLOUCH, "Ruinous Time", 5, 0, 100, 5, ABFLAG_NONE },
+    { ABIL_CHRONOS_TIME_STEP, "Step From Time", 10, 0, 200, 10, ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
@@ -726,6 +726,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS:
+    case ABIL_CHRONOS_PONDEROUSIFY:
         invoc = true;
         failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
         break;
@@ -753,6 +754,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
+    case ABIL_CHRONOS_TIME_BEND:
         invoc = true;
         failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -766,6 +768,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_FEAWN_SPAWN_SPORES:
     case ABIL_FEAWN_RAIN:
     case ABIL_YRED_DRAIN_LIFE:
+    case ABIL_CHRONOS_SLOUCH:
         invoc = true;
         failure = 60 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -786,6 +789,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_DIVINE_VIGOUR:
     case ABIL_LUGONU_ABYSS_ENTER:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
+    case ABIL_CHRONOS_TIME_STEP:
         invoc = true;
         failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -815,15 +819,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         invoc = true;
         perfect = true;         // Tactically important to allow perfection
         failure = 50 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
-        break;
-
-    case ABIL_CHRONOS_PONDEROUSIFY:
-    case ABIL_CHRONOS_TIME_STEP:
-    case ABIL_CHRONOS_TIME_BEND:
-    case ABIL_CHRONOS_SLOUCH:
-        invoc = true;
-        perfect = true;
-        failure = 0;
         break;
 
     case ABIL_RENOUNCE_RELIGION:

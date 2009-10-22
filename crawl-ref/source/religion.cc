@@ -299,7 +299,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Chronos
     { "make your items ponderous",
-      "Chronos slows your biology",
+      "Chronos slows your biology.",
       "",
       "",
       ""
@@ -406,7 +406,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Chronos
     { "make your items ponderous",
-      "Chronos slows your biology",
+      "Chronos no longer slows your biology.",
       "",
       "",
       ""
