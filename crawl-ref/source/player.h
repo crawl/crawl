@@ -129,7 +129,7 @@ public:
   game_direction_type char_direction;
   bool opened_zot;
   bool royal_jelly_dead;
-  bool transform_cancellable;
+  bool transform_uncancellable;
 
   unsigned short pet_target;
 
