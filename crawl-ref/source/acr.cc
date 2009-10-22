@@ -1778,6 +1778,11 @@ void process_command( command_type cmd )
         break;
 
     case CMD_EXPLORE:
+        if (you.hunger_state == HS_STARVING && !you_min_hunger())
+        {
+            mpr("You need to eat something NOW!");
+            break;
+        }
         // Start exploring
         start_explore(Options.explore_greedy);
         break;
