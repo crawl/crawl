@@ -2086,7 +2086,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_CHRONOS_PONDEROUSIFY:
-        mprf(MSGCH_DIAGNOSTICS, "Making something ponderous.");
         ponderousify_armour();
         break;
 
@@ -2102,7 +2101,9 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_CHRONOS_SLOUCH:
         mpr("You can feel time thicken.");
-        mprf(MSGCH_GOD, "your speed is %d", player_movement_speed());
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "your speed is %d", player_movement_speed());
+#endif
         chronos_slouch(0); //TODO make pow not a dummy value.
         break;
 
