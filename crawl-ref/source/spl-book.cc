@@ -1570,7 +1570,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
     if (num_race > 0)
     {
-        more_str += make_stringf(", <lightred>%u spell%s unmemorizable"
+        more_str += make_stringf(", <lightred>%u spell%s unmemorisable"
                                    "</lightred>",
                                  num_race,
                                  num_race > 1 ? "s" : "");
