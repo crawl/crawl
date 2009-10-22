@@ -898,18 +898,6 @@ bool mons_sense_invis(const monsters *mon)
     return (mons_class_flag(mon->type, M_SENSE_INVIS));
 }
 
-bool mons_see_invis(const monsters *mon)
-{
-    if (mons_is_ghost_demon(mon->type))
-        return (mon->ghost->see_invis);
-    else if (mons_class_flag(mon->type, M_SEE_INVIS))
-        return (true);
-    else if (_scan_mon_inv_randarts(mon, ARTP_EYESIGHT) > 0)
-        return (true);
-
-    return (false);
-}
-
 bool mon_can_see_monster(const monsters *mon, const monsters *targ)
 {
     if (!mon->mon_see_cell(targ->pos()))
@@ -923,7 +911,7 @@ bool mon_can_see_monster(const monsters *mon, const monsters *targ)
 bool mons_monster_visible(const monsters *mon, const monsters *targ)
 {
     if (targ->has_ench(ENCH_SUBMERGED)
-        || targ->invisible() && !mons_see_invis(mon))
+        || targ->invisible() && !mon->can_see_invisible())
     {
         return (false);
     }
@@ -940,7 +928,7 @@ bool mons_player_visible(const monsters *mon)
         if (player_in_water())
             return (true);
 
-        if (mons_see_invis(mon) || mons_sense_invis(mon))
+        if (mon->can_see_invisible() || mons_sense_invis(mon))
             return (true);
 
         return (false);
@@ -8006,7 +7994,13 @@ bool monsters::needs_berserk(bool check_spells) const
 
 bool monsters::can_see_invisible() const
 {
-    return (mons_see_invis(this));
+    if (mons_is_ghost_demon(this->type))
+        return (this->ghost->see_invis);
+    else if (mons_class_flag(this->type, M_SEE_INVIS))
+        return (true);
+    else if (_scan_mon_inv_randarts(this, ARTP_EYESIGHT) > 0)
+        return (true);
+    return (false);
 }
 
 bool monsters::invisible() const

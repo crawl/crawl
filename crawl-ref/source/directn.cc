@@ -3148,14 +3148,14 @@ static std::string _get_monster_desc(const monsters *mon)
     // invisible creatures.
     if (mons_behaviour_perceptible(mon) && !mons_is_sleeping(mon)
         && !mons_is_confused(mon)
-        && (mons_see_invis(mon) || mons_sense_invis(mon)))
+        && (mon->can_see_invisible() || mons_sense_invis(mon)))
     {
         const actor* foe = mon->get_foe();
         if (foe && foe->invisible() && !mons_is_fleeing(mon))
         {
             if (!you.can_see(foe))
                 text += pronoun + " is looking at something unseen.\n";
-            else if (mons_see_invis(mon))
+            else if (mon->can_see_invisible())
             {
                 text += pronoun + " is watching "
                         + foe->name(DESC_NOCAP_THE)

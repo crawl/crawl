@@ -2792,7 +2792,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
     pbolt.is_tracer     = true;
     pbolt.source        = monster->pos();
     pbolt.beam_source   = monster->mindex();
-    pbolt.can_see_invis = mons_see_invis(monster);
+    pbolt.can_see_invis = monster->can_see_invisible();
     pbolt.smart_monster = (mons_intel(monster) >= I_NORMAL);
     pbolt.attitude      = mons_attitude(monster);
 
