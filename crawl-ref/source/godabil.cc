@@ -490,7 +490,7 @@ static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
     if (mon == NULL)
         return (0);
 
-    int dmg = (mon->speed - 100/player_movement_speed());
+    int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
     dmg = (dmg > 0 ? dmg * dmg : 0);
 
     mon->hurt(agent, dmg, BEAM_MMISSILE, true);

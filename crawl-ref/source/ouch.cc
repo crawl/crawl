@@ -787,7 +787,7 @@ static void _xom_checks_damage(kill_method_type death_type,
         if (!player_monster_visible(monster))
             amusementvalue += 10;
 
-        if (monster->speed < (int)player_movement_speed())
+        if (monster->speed < 100/player_movement_speed())
             amusementvalue += 8;
 
         if (death_type != KILLED_BY_BEAM
