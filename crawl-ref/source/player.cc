@@ -3820,7 +3820,7 @@ static void _attribute_increase()
 
         switch (keyin)
         {
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE)
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
         case ESCAPE:
         case -1:
             // [ds] It's safe to save the game here; when the player
