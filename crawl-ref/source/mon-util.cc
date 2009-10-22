@@ -511,8 +511,9 @@ bool mons_is_stationary(const monsters *mon)
     return (mons_class_is_stationary(mon->type));
 }
 
-bool mons_is_fast(const monsters *mon){
-    return (mon->speed > 10);
+bool mons_is_fast(const monsters *mon)
+{
+    return (mon->speed > 100/player_movement_speed());
 }
 
 bool mons_is_insubstantial(int mc)
