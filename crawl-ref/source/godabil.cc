@@ -447,7 +447,7 @@ bool ponderousify_armour()
         if (item_slot == -1)
         {
             item_slot = prompt_invent_item("Make which item ponderous?",
-                            MT_INVLIST, OSEL_ENCH_ARM, true, true, false);
+                            MT_INVLIST, OSEL_PONDER_ARM, true, true, false);
         }
 
         if (prompt_failed(item_slot))
@@ -456,7 +456,8 @@ bool ponderousify_armour()
         item_def& arm(you.inv[item_slot]);
 
         if (!is_enchantable_armour(arm, true, true)
-            || get_armour_ego_type(arm) != SPARM_NORMAL)
+            || get_armour_ego_type(arm) != SPARM_NORMAL
+            || get_armour_slot(arm) != EQ_BODY_ARMOUR)
         {
             mpr("Choose some type of armour to enchant, or Esc to abort.");
             if (Options.auto_list)

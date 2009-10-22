@@ -28,7 +28,8 @@ enum object_selector
     OSEL_BUTCHERY    = -10,
     OSEL_EVOKABLE    = -11,
     OSEL_WORN_ARMOUR = -12,
-    OSEL_FRUIT       = -13
+    OSEL_FRUIT       = -13,
+    OSEL_PONDER_ARM  = -14
 };
 
 #define PROMPT_ABORT         -1

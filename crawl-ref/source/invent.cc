@@ -461,6 +461,8 @@ static std::string _no_selectables_message(int item_selector)
         return("You aren't carrying any items that can be evoked.");
     case OSEL_FRUIT:
         return("You aren't carrying any fruit.");
+    case OSEL_PONDER_ARM:
+        return("You aren't carrying any armour which can be made ponderous.");
     }
 
     return("You aren't carrying any such object.");
@@ -1044,6 +1046,9 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OSEL_EVOKABLE:
         return (item_is_evokable(i, true, true));
 
+    case OSEL_PONDER_ARM:
+        if (itype != OBJ_ARMOUR || get_armour_slot(i) != EQ_BODY_ARMOUR)
+            return (false);
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true, true));
 
