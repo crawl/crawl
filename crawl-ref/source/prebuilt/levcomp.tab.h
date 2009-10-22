@@ -47,40 +47,41 @@
      KITEM = 263,
      KMONS = 264,
      KMASK = 265,
-     NAME = 266,
-     DEPTH = 267,
-     ORIENT = 268,
-     PLACE = 269,
-     CHANCE = 270,
-     WEIGHT = 271,
-     MONS = 272,
-     ITEM = 273,
-     MARKER = 274,
-     COLOUR = 275,
-     PRELUDE = 276,
-     MAIN = 277,
-     VALIDATE = 278,
-     VETO = 279,
-     NSUBST = 280,
-     WELCOME = 281,
-     LFLAGS = 282,
-     BFLAGS = 283,
-     LFLOORCOL = 284,
-     LROCKCOL = 285,
-     LFLOORTILE = 286,
-     LROCKTILE = 287,
-     FTILE = 288,
-     RTILE = 289,
-     COMMA = 290,
-     COLON = 291,
-     PERC = 292,
-     INTEGER = 293,
-     CHARACTER = 294,
-     STRING = 295,
-     MAP_LINE = 296,
-     MONSTER_NAME = 297,
-     ITEM_INFO = 298,
-     LUA_LINE = 299
+     KPROP = 266,
+     NAME = 267,
+     DEPTH = 268,
+     ORIENT = 269,
+     PLACE = 270,
+     CHANCE = 271,
+     WEIGHT = 272,
+     MONS = 273,
+     ITEM = 274,
+     MARKER = 275,
+     COLOUR = 276,
+     PRELUDE = 277,
+     MAIN = 278,
+     VALIDATE = 279,
+     VETO = 280,
+     NSUBST = 281,
+     WELCOME = 282,
+     LFLAGS = 283,
+     BFLAGS = 284,
+     LFLOORCOL = 285,
+     LROCKCOL = 286,
+     LFLOORTILE = 287,
+     LROCKTILE = 288,
+     FTILE = 289,
+     RTILE = 290,
+     COMMA = 291,
+     COLON = 292,
+     PERC = 293,
+     INTEGER = 294,
+     CHARACTER = 295,
+     STRING = 296,
+     MAP_LINE = 297,
+     MONSTER_NAME = 298,
+     ITEM_INFO = 299,
+     LUA_LINE = 300
    };
 #endif
 /* Tokens.  */
@@ -92,54 +93,55 @@
 #define KITEM 263
 #define KMONS 264
 #define KMASK 265
-#define NAME 266
-#define DEPTH 267
-#define ORIENT 268
-#define PLACE 269
-#define CHANCE 270
-#define WEIGHT 271
-#define MONS 272
-#define ITEM 273
-#define MARKER 274
-#define COLOUR 275
-#define PRELUDE 276
-#define MAIN 277
-#define VALIDATE 278
-#define VETO 279
-#define NSUBST 280
-#define WELCOME 281
-#define LFLAGS 282
-#define BFLAGS 283
-#define LFLOORCOL 284
-#define LROCKCOL 285
-#define LFLOORTILE 286
-#define LROCKTILE 287
-#define FTILE 288
-#define RTILE 289
-#define COMMA 290
-#define COLON 291
-#define PERC 292
-#define INTEGER 293
-#define CHARACTER 294
-#define STRING 295
-#define MAP_LINE 296
-#define MONSTER_NAME 297
-#define ITEM_INFO 298
-#define LUA_LINE 299
+#define KPROP 266
+#define NAME 267
+#define DEPTH 268
+#define ORIENT 269
+#define PLACE 270
+#define CHANCE 271
+#define WEIGHT 272
+#define MONS 273
+#define ITEM 274
+#define MARKER 275
+#define COLOUR 276
+#define PRELUDE 277
+#define MAIN 278
+#define VALIDATE 279
+#define VETO 280
+#define NSUBST 281
+#define WELCOME 282
+#define LFLAGS 283
+#define BFLAGS 284
+#define LFLOORCOL 285
+#define LROCKCOL 286
+#define LFLOORTILE 287
+#define LROCKTILE 288
+#define FTILE 289
+#define RTILE 290
+#define COMMA 291
+#define COLON 292
+#define PERC 293
+#define INTEGER 294
+#define CHARACTER 295
+#define STRING 296
+#define MAP_LINE 297
+#define MONSTER_NAME 298
+#define ITEM_INFO 299
+#define LUA_LINE 300
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 46 "levcomp.ypp"
+#line 45 "levcomp.ypp"
 {
     int i;
     const char *text;
     raw_range range;
 }
 /* Line 1489 of yacc.c.  */
-#line 143 "levcomp.tab.h"
+#line 145 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
