@@ -1,4 +1,5 @@
-#The shrines are thematic portal vaults which offer early religion in exchange for ones safety.
+# The shrines are thematic portal vaults which offer early religion in
+# exchange for one's safety.
 
 {{
 function shrine_milestone(e)
