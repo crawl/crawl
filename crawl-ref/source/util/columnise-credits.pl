@@ -63,7 +63,7 @@ sub pad_column {
 sub resplit {
   my ($ncols, @names) = @_;
 
-  my $colsize = @names / $ncols;
+  my $colsize = int(@names / $ncols);
   $colsize++ if @names % $ncols;
 
   my @columns;
