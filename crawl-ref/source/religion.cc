@@ -251,7 +251,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "tap ambient magical fields",
       "freely open your mind to new spells",
       "",
-      "Sif Muna is protecting you from some side-effects of spellcasting.",
+      "Sif Muna is protecting you from miscast magic.",
       "" },
     // Trog
     { "go berserk at will",
@@ -299,7 +299,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Chronos
     { "make your items ponderous",
-      "Chronos slows your biology.",
+      "Chronos is slowing your biology.",
       "",
       "",
       ""
@@ -358,7 +358,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "tap ambient magical fields",
       "forget spells at will",
       "",
-      "Sif Muna is no longer protecting you from miscast magic.",
+      "Sif Muna will no longer protect you from miscast magic.",
       "" },
     // Trog
     { "go berserk at will",
@@ -406,7 +406,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Chronos
     { "make your items ponderous",
-      "Chronos no longer slows your biology.",
+      "Chronos will no longer slow your biology.",
       "",
       "",
       ""
