@@ -636,7 +636,7 @@ static void cprintf_aux(const char *s)
     // early out -- not initted yet
     if (outbuf == NULL)
     {
-        printf(s);
+        printf("%s", s);
         return;
     }
 
