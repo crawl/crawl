@@ -298,11 +298,11 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "induce evolution"
     },
     // Chronos
-    { "make your items ponderous",
+    { "",
       "Chronos is slowing your biology.",
-      "",
-      "",
-      ""
+      "bend time to slow others",
+      "inflict damage to those overly hasty",
+      "step out of the time flow"
     }
 };
 
@@ -405,11 +405,11 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "induce evolution"
     },
     // Chronos
-    { "make your items ponderous",
+    { "",
       "Chronos will no longer slow your biology.",
-      "",
-      "",
-      ""
+      "bend time to slow others",
+      "inflict damage to those overly hasty",
+      "step out of the time flow"
     }
 };
 
@@ -6904,6 +6904,11 @@ void god_pitch(god_type which_god)
         mpr("You can call upon Feawn to speed up the decay of corpses.",
             MSGCH_GOD);
         mpr("The plants of the dungeon cease their hostilities.", MSGCH_GOD);
+    }
+    else if (you.religion == GOD_CHRONOS)
+    {
+        mpr("You can now call upon Chronos to make your armour ponderous.",
+            MSGCH_GOD);
     }
 
     if (you.worshipped[you.religion] < 100)

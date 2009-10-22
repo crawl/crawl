@@ -148,7 +148,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_FEAWN_SUNLIGHT, ABIL_FEAWN_PLANT_RING, ABIL_FEAWN_RAIN,
       ABIL_FEAWN_SPAWN_SPORES, ABIL_FEAWN_EVOLUTION },
     // Chronos
-    { ABIL_CHRONOS_PONDEROUSIFY, ABIL_NON_ABILITY, ABIL_CHRONOS_TIME_BEND,
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_CHRONOS_TIME_BEND,
       ABIL_CHRONOS_SLOUCH, ABIL_CHRONOS_TIME_STEP },
 };
 
@@ -2425,6 +2425,8 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
     else if (you.religion == GOD_FEAWN)
         _add_talent(talents, ABIL_FEAWN_FUNGAL_BLOOM, check_confused);
+    else if (you.religion == GOD_CHRONOS)
+        _add_talent(talents, ABIL_CHRONOS_PONDEROUSIFY, check_confused);
 
     // Gods take abilities away until penance completed. -- bwr
     // God abilities generally don't work while silenced (they require
