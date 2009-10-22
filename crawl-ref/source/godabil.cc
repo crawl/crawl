@@ -7,18 +7,21 @@
 
 #include "cloud.h"
 #include "database.h"
+#include "effects.h"
 #include "files.h"
 #include "godabil.h"
 #include "invent.h"
 #include "items.h"
 #include "kills.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "monstuff.h"
 #include "mstuff2.h"
 #include "mutation.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spells1.h"
 #include "spells3.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -496,4 +499,94 @@ static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
 int chronos_slouch(int pow)
 {
     return (apply_area_visible(_slouch_monsters, pow));
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
+{
+    if (!in_bounds(where))
+        return (0);
+
+    monsters* mon = monster_at(where);
+    if (mon == NULL)
+        return (0);
+
+    if (!mons_friendly(mon))
+        behaviour_event(mon, ME_ANNOY, MHITYOU);
+
+    if (check_mons_resist_magic(mon, pow * 2))
+    {
+        mprf("%s %s.",
+             mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
+        return (1);
+    }
+
+    const int damage = 1 + random2(pow / 6);
+    if (mon->type == MONS_BLINK_FROG)
+        mon->heal(damage, false);
+    else if (!check_mons_resist_magic(mon, pow))
+    {
+        mon->hurt(&you, damage);
+        if (!mon->alive())
+            return (1);
+    }
+
+    mon->blink();
+
+    return (1);
+}
+
+static void _lugonu_warp_area(int pow)
+{
+    apply_area_around_square( _lugonu_warp_monster, you.pos(), pow );
+}
+
+void lugonu_bends_space()
+{
+    const int pow = 4 + skill_bump(SK_INVOCATIONS);
+    const bool area_warp = random2(pow) > 9;
+
+    mprf("Space bends %saround you!", area_warp? "sharply " : "");
+
+    if (area_warp)
+        _lugonu_warp_area(pow);
+
+    random_blink(false, true);
+
+    const int damage = roll_dice(1, 4);
+    ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "a spatial distortion");
+}
+
+////////////////////////////////////////////////////////////////////////
+
+void chronos_time_step(int pow) // pow is the number of turns to skip
+{
+    coord_def old_pos = you.pos();
+
+    mpr("You step out of the flow of time.");
+    you.flash_colour = LIGHTCYAN;
+    viewwindow(true, true);
+    you.moveto(coord_def(0, 0));
+    you.duration[DUR_TIME_STEP] = pow;
+
+    you.time_taken = 10;
+    while(you.duration[DUR_TIME_STEP]-- > 0)
+    {
+        run_environment_effects();
+        handle_monsters();
+        manage_clouds();
+    }
+    // Update corpses, etc.  This does also shift monsters, but only by a tiny bit.
+    update_level(pow*10);
+
+#ifndef USE_TILE
+    delay(1000);
+#endif
+
+    you.flash_colour = 0;
+    you.moveto(old_pos);
+    you.duration[DUR_TIME_STEP] = 0;
+    viewwindow(true, false);
+    mpr("You return into the normal time flow.");
 }

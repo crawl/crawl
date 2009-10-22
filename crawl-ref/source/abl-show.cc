@@ -77,13 +77,11 @@ enum ability_flag_type
     ABFLAG_FRUIT        = 0x00000200  // ability requires fruit
 };
 
-static void _lugonu_bends_space();
 static int  _find_ability_slot( ability_type which_ability );
 static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil);
 static std::string _describe_talent(const talent& tal);
-static void _chronos_time_step(int pow);
 
 // this all needs to be split into data/util/show files
 // and the struct mechanism here needs to be rewritten (again)
@@ -1872,7 +1870,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_BEND_SPACE:
-        _lugonu_bends_space();
+        lugonu_bends_space();
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
@@ -2099,7 +2097,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_CHRONOS_TIME_STEP:
-        _chronos_time_step(you.skills[SK_INVOCATIONS]*you.piety/10);
+        chronos_time_step(you.skills[SK_INVOCATIONS]*you.piety/10);
         exercise(SK_INVOCATIONS, 5 + random2(5));
         break;
 
@@ -2691,98 +2689,10 @@ static int _find_ability_slot(ability_type which_ability)
     return (-1);
 }
 
-////////////////////////////////////////////////////////////////////////////
-
-static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
-{
-    if (!in_bounds(where))
-        return (0);
-
-    monsters* mon = monster_at(where);
-    if (mon == NULL)
-        return (0);
-
-    if (!mons_friendly(mon))
-        behaviour_event(mon, ME_ANNOY, MHITYOU);
-
-    if (check_mons_resist_magic(mon, pow * 2))
-    {
-        mprf("%s %s.",
-             mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
-        return (1);
-    }
-
-    const int damage = 1 + random2(pow / 6);
-    if (mon->type == MONS_BLINK_FROG)
-        mon->heal(damage, false);
-    else if (!check_mons_resist_magic(mon, pow))
-    {
-        mon->hurt(&you, damage);
-        if (!mon->alive())
-            return (1);
-    }
-
-    mon->blink();
-
-    return (1);
-}
-
-static void _lugonu_warp_area(int pow)
-{
-    apply_area_around_square( _lugonu_warp_monster, you.pos(), pow );
-}
-
-static void _lugonu_bends_space()
-{
-    const int pow = 4 + skill_bump(SK_INVOCATIONS);
-    const bool area_warp = random2(pow) > 9;
-
-    mprf("Space bends %saround you!", area_warp? "sharply " : "");
-
-    if (area_warp)
-        _lugonu_warp_area(pow);
-
-    random_blink(false, true);
-
-    const int damage = roll_dice(1, 4);
-    ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "a spatial distortion");
-}
-
 ////////////////////////////////////////////////////////////////////////
 // generic_cost
 
 int generic_cost::cost() const
 {
     return (base + (add > 0 ? random2avg(add, rolls) : 0));
-}
-
-static void _chronos_time_step(int pow) // pow is the number of turns to skip
-{
-    coord_def old_pos = you.pos();
-
-    mpr("You step out of the flow of time.");
-    you.flash_colour = LIGHTCYAN;
-    viewwindow(true, true);
-    you.moveto(coord_def(0, 0));
-    you.duration[DUR_TIME_STEP] = pow;
-
-    you.time_taken = 10;
-    while(you.duration[DUR_TIME_STEP]-- > 0)
-    {
-        run_environment_effects();
-        handle_monsters();
-        manage_clouds();
-    }
-    // Update corpses, etc.  This does also shift monsters, but only by a tiny bit.
-    update_level(pow*10);
-
-#ifndef USE_TILE
-    delay(1000);
-#endif
-
-    you.flash_colour = 0;
-    you.moveto(old_pos);
-    you.duration[DUR_TIME_STEP] = 0;
-    viewwindow(true, false);
-    mpr("You return into the normal time flow.");
 }

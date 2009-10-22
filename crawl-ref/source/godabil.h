@@ -28,4 +28,7 @@ bool feawn_passthrough(const monsters * target);
 bool vehumet_supports_spell(spell_type spell);
 
 bool trog_burn_spellbooks();
+
+void lugonu_bends_space();
+void chronos_time_step(int pow);
 #endif
