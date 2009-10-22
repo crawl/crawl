@@ -331,6 +331,8 @@ int str_to_fprop ( const std::string &str)
         return (FPROP_FORCE_EXCLUDE);
     if (str == "no_cloud_gen")
         return (FPROP_NO_CLOUD_GEN);
+    if (str == "no_rtele_into")
+        return (FPROP_NO_RTELE_INTO);
 
     return (FPROP_NONE);
 }

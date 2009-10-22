@@ -1576,7 +1576,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
                        || grd(newpos) != DNGN_DEEP_WATER)
                || monster_at(newpos)
                || env.cgrid(newpos) != EMPTY_CLOUD
-               || need_distance_check && (newpos - centre).abs() < 34*34);
+               || need_distance_check && (newpos - centre).abs() < 34*34
+               || testbits(env.map(newpos).property, FPROP_NO_RTELE_INTO));
 
         if ( newpos == you.pos() )
             mpr("Your surroundings flicker for a moment.");

@@ -939,6 +939,8 @@ KPROP:    x = bloody
           * "no_cloud_gen": Prevents clouds from being generated over this
              feature (usually lava).  Does not stop fog generators or clouds
              entering from nearby squares.
+          * "no_rtele_into": Prevents random teleport from chosing to use this
+             square. Should be used sparingly.
 
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the
