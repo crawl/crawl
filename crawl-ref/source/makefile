@@ -561,8 +561,8 @@ PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
 all: $(GAME)
 
-test: profile
-	$(PWD)/$(GAME) -test
+test:
+	$(GAME) -test
 
 ##########################################################################
 # Dependencies
