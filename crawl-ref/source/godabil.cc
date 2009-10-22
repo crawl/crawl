@@ -23,6 +23,7 @@
 #include "shopping.h"
 #include "spells1.h"
 #include "spells3.h"
+#include "spells4.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -560,6 +561,31 @@ void lugonu_bends_space()
 }
 
 ////////////////////////////////////////////////////////////////////////
+
+void chronos_time_bend(int pow)
+{
+    mpr("The flow of time bends around you.");
+
+    for (adjacent_iterator ai; ai; ++ai)
+    {
+        monsters* mon = monster_at(*ai);
+        if (mon != NULL)
+        {
+            if (roll_dice(mon->hit_dice, 3) > random2avg(pow, 2))
+            {
+                mprf("%s %s.",
+                 mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
+                continue;
+            }
+
+            simple_god_message(
+                make_stringf(" rebukes %s.",
+                             mon->name(DESC_NOCAP_THE).c_str()).c_str(),
+                             GOD_CHRONOS);
+            do_slow_monster(mon, KC_YOU);
+        }
+    }
+}
 
 void chronos_time_step(int pow) // pow is the number of turns to skip
 {

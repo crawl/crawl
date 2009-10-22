@@ -2096,28 +2096,9 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_CHRONOS_TIME_BEND:
-    {
-        mpr("The flow of time bends around you.");
-
-        // TODO perhaps make power dependent on invocation?
-        // if so, this spell must train invocations too
-        // currently, has one-size-fits-all power level and duration,
-        // as if a wand of slow monster was zapped at each target
-        for (adjacent_iterator ai; ai; ++ai)
-        {
-            // Tile occupied by monster
-            monsters* mon = monster_at(*ai);
-            if (mon != NULL)
-            {
-                simple_god_message(
-                    make_stringf(" rebukes %s.",
-                                 mon->name(DESC_NOCAP_THE).c_str()).c_str(),
-                                 GOD_CHRONOS);
-                do_slow_monster(mon, KC_YOU);
-            }
-        }
+        chronos_time_bend(16 + you.skills[SK_INVOCATIONS] * 8);
+        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
-    }
 
     case ABIL_CHRONOS_SLOUCH:
         mpr("You can feel time thicken.");
