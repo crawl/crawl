@@ -134,17 +134,6 @@ namespace arena
 
     void adjust_monsters()
     {
-        if (!allow_summons || !allow_animate)
-        {
-            for (int m = 0; m < MAX_MONSTERS; ++m)
-            {
-                monsters *mons(&menv[m]);
-                if (!mons->alive())
-                    continue;
-                adjust_spells(mons, !allow_summons, !allow_animate);
-            }
-        }
-
         for (int i = 0; i < MAX_MONSTERS; i++)
         {
             monsters *mon = &menv[i];
@@ -1170,6 +1159,10 @@ void arena_placed_monster(monsters *monster)
         more();
     }
 
+    if (!arena::allow_summons || !arena::allow_animate)
+        arena::adjust_spells(monster, !arena::allow_summons,
+                             !arena::allow_animate);
+
     if (monster->type == MONS_TEST_SPAWNER)
     {
         if (monster->attitude == ATT_FRIENDLY)
@@ -1222,9 +1215,8 @@ void arena_placed_monster(monsters *monster)
         if (arena::move_summons)
             monster_teleport(monster, true, true);
 
-        if (!arena::allow_chain_summons || !arena::allow_animate)
-            arena::adjust_spells(monster, !arena::allow_chain_summons,
-                                 !arena::allow_animate);
+        if (!arena::allow_chain_summons)
+            arena::adjust_spells(monster, true, false);
     }
 }
 
