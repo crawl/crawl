@@ -514,8 +514,6 @@ mon_itemeat_type mons_itemeat(const monsters *mon);
  * called from: beam - fight - monstuff - view
  * *********************************************************************** */
 bool mons_sense_invis(const monsters *mon);
-bool mon_can_see_monster(const monsters *mon, const monsters *targ);
-bool mons_monster_visible(const monsters *mon, const monsters *targ);
 
 
 // last updated 12may2000 {dlb}

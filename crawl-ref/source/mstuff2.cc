@@ -1217,7 +1217,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
         {
             monsters *targ = &menv[i];
 
-            if (!mon_can_see_monster(monster, targ))
+            if (!monster->can_see(targ))
                 continue;
 
             hog_type = MONS_HOG;

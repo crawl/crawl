@@ -4496,7 +4496,7 @@ static void _handle_behaviour(monsters *mon)
             {
                 proxFoe = mons_near(mon, mon->foe);
 
-                if (!mon_can_see_monster(mon, &menv[mon->foe]))
+                if (!mon->can_see( &menv[mon->foe]))
                     proxFoe = false;
 
                 foepos = menv[mon->foe].pos();
@@ -4841,7 +4841,7 @@ static bool _mons_check_set_foe(monsters *mon, const coord_def& p,
     if (monsters *foe = monster_at(p))
     {
         if (foe != mon
-            && mon_can_see_monster(mon, foe)
+            && mon->can_see(foe)
             && (friendly || !is_sanctuary(p))
             && (mons_friendly(foe) != friendly
                 || (neutral && !mons_neutral(foe))))
@@ -7083,8 +7083,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                             spellOK = false;
                         }
                     }
-                    else if (!mon_can_see_monster(monster,
-                                                  &menv[monster->foe]))
+                    else if (!monster->can_see(&menv[monster->foe]))
                     {
                         spellOK = false;
                     }

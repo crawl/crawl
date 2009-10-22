@@ -898,27 +898,6 @@ bool mons_sense_invis(const monsters *mon)
     return (mons_class_flag(mon->type, M_SENSE_INVIS));
 }
 
-bool mon_can_see_monster(const monsters *mon, const monsters *targ)
-{
-    if (!mon->mon_see_cell(targ->pos()))
-        return (false);
-
-    return (mons_monster_visible(mon, targ));
-}
-
-// This does NOT do line of sight!  It checks the targ's visibility
-// with respect to mon's perception, but doesn't do walls or range.
-bool mons_monster_visible(const monsters *mon, const monsters *targ)
-{
-    if (targ->has_ench(ENCH_SUBMERGED)
-        || targ->invisible() && !mon->can_see_invisible())
-    {
-        return (false);
-    }
-
-    return (true);
-}
-
 unsigned mons_char(int mc)
 {
     return monster_symbols[mc].glyph;
@@ -7992,17 +7971,8 @@ bool monsters::invisible() const
 
 bool monsters::visible_to(const actor *looker) const
 {
-    if (this == looker)
-        return (true);
-
-    if (looker->atype() == ACT_PLAYER)
-        return player_monster_visible(this);
-    else
-    {
-        const monsters* mon = dynamic_cast<const monsters*>(looker);
-
-        return mons_monster_visible(mon, this);
-    }
+    bool vis = !invisible() || looker->can_see_invisible();
+    return (vis && (this == looker || !has_ench(ENCH_SUBMERGED)));
 }
 
 bool monsters::mon_see_cell(const coord_def& p, bool reach) const
