@@ -383,6 +383,22 @@ Evolution
 
 Use fruit to turn some plants and fungi in your line of sight into stronger species.
 %%%%
+Make Ponderous
+
+Alter a piece of body armour so it slows the wearer down.  This is generally bad for hasty people, those who appreciate taking the time may benefit from Chronos' favour when they are not so fast.
+%%%%
+Bend Time
+
+Slow down everyone who's standing just next to you.
+%%%%
+Ruinous Time
+
+Cause damage to everyone in sight who is moving faster than you.  Those magically hasted will be hurt particularly painfully.
+%%%%
+Step From Time
+
+Remove yourself from the flow of time.  Things around you will happen at their usual busy pace, monsters will wander, perishable items will decay, plants will grow.  After some time has passed, you will return in the same state as the very second you departed.
+%%%%
 Renounce Religion
 
 Renounce your faith. This will make your character leave your god (and usually anger said god).
