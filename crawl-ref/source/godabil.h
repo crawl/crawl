@@ -10,7 +10,7 @@
 #include "externs.h"
 
 bool ponderousify_armour();
-int chronos_slouch(int);
+int chronos_slouch(int pow);
 bool zin_sustenance(bool actual = true);
 bool zin_remove_all_mutations();
 bool yred_injury_mirror(bool actual = true);

@@ -2105,7 +2105,8 @@ static bool _do_ability(const ability_def& abil)
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "your speed is %d", player_movement_speed());
 #endif
-        chronos_slouch(0); //TODO make pow not a dummy value.
+        exercise(SK_INVOCATIONS, 4 + random2(4));
+        chronos_slouch(0);
         break;
 
 
