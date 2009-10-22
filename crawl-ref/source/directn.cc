@@ -278,7 +278,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 {
     if (const monsters *mons = monster_at(pos))
     {
-        if (mons->alive() && player_monster_visible(mons))
+        if (mons->alive() && mons->visible_to(&you))
         {
             glych  = get_screen_glyph(pos);
             colour = mcol;
@@ -300,7 +300,7 @@ static bool _mon_submerged_in_water(const monsters *mon)
 
     return (grd(mon->pos()) == DNGN_SHALLOW_WATER
             && see_cell(mon->pos())
-            && !player_monster_visible(mon)
+            && !mon->visible_to(&you)
             && !mons_flies(mon));
 }
 
@@ -1812,7 +1812,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     const monsters* mons = monster_at(c);
     const int oid = igrd(c);
 
-    if (mons && player_monster_visible(mons))
+    if (mons && mons->visible_to(&you))
     {
         // First priority: monsters.
         if (examine_mons && !mons_is_unknown_mimic(mons))
@@ -1855,7 +1855,7 @@ void full_describe_square(const coord_def &c)
     const monsters* mons = monster_at(c);
     const int oid = igrd(c);
 
-    if (mons && player_monster_visible(mons))
+    if (mons && mons->visible_to(&you))
     {
         // First priority: monsters.
         describe_monsters(*mons);
@@ -1955,7 +1955,7 @@ static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
     }
 
     // Don't usually target unseen monsters...
-    if (!player_monster_visible(mon))
+    if (!mon->visible_to(&you))
     {
         // ...unless it creates a "disturbance in the water".
         // Since you can't see the monster, assume it's not a friend.
@@ -2094,7 +2094,7 @@ static bool _find_object(const coord_def& where, int mode,
     bool is_mimic = false;
     const monsters* m = monster_at(where);
     if (m
-        && player_monster_visible(m)
+        && m->visible_to(&you)
         && mons_is_mimic(m->type)
         && !(m->flags & MF_KNOWN_MIMIC))
     {
@@ -3368,10 +3368,10 @@ static void _describe_cell(const coord_def& where, bool in_range)
         }
 
 #if DEBUG_DIAGNOSTICS
-        if (!player_monster_visible(mon))
+        if (!mon->visible_to(&you))
             mpr("There is a non-visible monster here.", MSGCH_DIAGNOSTICS);
 #else
-        if (!player_monster_visible(mon))
+        if (!mon->visible_to(&you))
             goto look_clouds;
 #endif
 

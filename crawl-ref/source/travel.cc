@@ -568,7 +568,7 @@ static bool _is_monster_blocked(const coord_def& c)
 {
     const monsters *mons = monster_at(c);
     return (mons
-            && player_monster_visible(mons)
+            && mons->visible_to(&you)
             && mons_is_stationary(mons)
             && mons_was_seen(mons)
             && !mons_is_unknown_mimic(mons));

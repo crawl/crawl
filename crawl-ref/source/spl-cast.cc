@@ -645,7 +645,7 @@ static int _get_dist_to_nearest_monster()
         if (mon == NULL)
             continue;
 
-        if (!player_monster_visible(mon)
+        if (!mon->visible_to(&you)
             || mons_is_unknown_mimic(mon))
         {
             continue;

@@ -756,13 +756,6 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 int slaying_bonus(char which_affected);
 
 
-/* ***********************************************************************
- * called from: beam - decks - direct - effects - fight - files - it_use2 -
- *              items - monstuff - mon-util - mstuff2 - spells1 - spells2 -
- *              spells3
- * *********************************************************************** */
-bool player_monster_visible(const monsters *mon);
-
 bool player_mesmerised_by(const monsters *mon);
 void update_beholders(const monsters *mon, bool force = false);
 void check_beholders();

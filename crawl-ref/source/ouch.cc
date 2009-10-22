@@ -784,7 +784,7 @@ static void _xom_checks_damage(kill_method_type death_type,
         // creature of lower level than yourself.
         amusementvalue += leveldif * leveldif * dam;
 
-        if (!player_monster_visible(monster))
+        if (!monster->visible_to(&you))
             amusementvalue += 10;
 
         if (monster->speed < 100/player_movement_speed())

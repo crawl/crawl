@@ -2702,30 +2702,6 @@ int player_shield_class(void)   //jmf: changes for new spell
     return (base_shield);
 }
 
-// This does NOT do line of sight!  It checks the monster's visibility
-// with respect to the players perception, but doesn't do walls or
-// range.  To find if the square the monster is in LOS, see mons_near().
-bool player_monster_visible(const monsters *mon)
-{
-    if (!you.can_see_invisible() && mon->invisible())
-        return (false);
-
-    if (!mons_is_submerged(mon))
-        return (true);
-
-    const dungeon_feature_type feat = grd(mon->pos());
-
-    // Treat monsters who are submerged due to drowning as visible, so
-    // we get proper messages when they die.  Monsters can only drown in
-    // lava or deep water, so monsters that are "submerged" in other
-    // features (air elementals in air, trapdoor spiders in the floor)
-    // are exempt from this check.
-    if (feat != DNGN_LAVA && feat != DNGN_DEEP_WATER)
-        return (false);
-
-    return (mon->can_drown());
-}
-
 // Returns true if player is mesmerised by a given monster.
 bool player_mesmerised_by(const monsters *mon)
 {
@@ -7173,7 +7149,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     {
         const monsters *mon = dynamic_cast<const monsters*>(agent);
         ouch(amount, mon->mindex(),
-             KILLED_BY_MONSTER, "", player_monster_visible(mon));
+             KILLED_BY_MONSTER, "", mon->visible_to(&you));
     }
     else
     {

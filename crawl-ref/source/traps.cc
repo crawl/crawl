@@ -257,7 +257,7 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
 
     if (!mons_is_caught(mon) && mon->add_ench(ENCH_HELD))
     {
-        if (mons_near(mon) && !player_monster_visible(mon))
+        if (mons_near(mon) && !mon->visible_to(&you))
             mpr("Something gets caught in the net!");
         else
             simple_monster_message(mon, " is caught in the net!");
@@ -311,7 +311,7 @@ void check_net_will_hold_monster(monsters *mons)
 
         if (see_cell(mons->pos()))
         {
-            if (player_monster_visible(mons))
+            if (mons->visible_to(&you))
             {
                 mprf("The net rips apart, and %s comes free!",
                      mons->name(DESC_NOCAP_THE).c_str());
@@ -472,7 +472,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (in_sight)
                 {
                     std::string msg = "A huge blade swings out";
-                    if (player_monster_visible( m ))
+                    if (m->visible_to(&you))
                     {
                         msg += " and slices into ";
                         msg += m->name(DESC_NOCAP_THE);
@@ -559,7 +559,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (in_sight)
                 {
                     msg::stream << "A large net falls down";
-                    if (player_monster_visible(m))
+                    if (m->visible_to(&you))
                         msg::stream << " onto " << m->name(DESC_NOCAP_THE);
                     msg::stream << "!" << std::endl;
                 }
@@ -830,7 +830,7 @@ void remove_net_from(monsters *mon)
         paralys = random2(5);
 
     int invis = 0;
-    if (!player_monster_visible(mon)) // makes this harder
+    if (!mon->visible_to(&you)) // makes this harder
         invis = 3 + random2(5);
 
     bool net_destroyed = false;
@@ -852,7 +852,7 @@ void remove_net_from(monsters *mon)
 
         if (!net_destroyed)
         {
-            if (player_monster_visible(mon))
+            if (mon->visible_to(&you))
             {
                 mprf("You fail to remove the net from %s.",
                      mon->name(DESC_NOCAP_THE).c_str());
@@ -869,7 +869,7 @@ void remove_net_from(monsters *mon)
     mon->del_ench(ENCH_HELD, true);
     remove_item_stationary(mitm[net]);
 
-    if (player_monster_visible(mon))
+    if (mon->visible_to(&you))
         mprf("You free %s.", mon->name(DESC_NOCAP_THE).c_str());
     else
         mpr("You loosen the net.");

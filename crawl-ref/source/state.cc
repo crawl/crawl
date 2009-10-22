@@ -241,7 +241,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         const monsters* mon = static_cast<const monsters*>(at.data);
 
         if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && player_monster_visible(mon))
+            && mon->visible_to(&you))
         {
             return (false);
         }

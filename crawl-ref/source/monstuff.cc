@@ -1436,7 +1436,7 @@ int monster_die(monsters *monster, killer_type killer,
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(monster)
-                               && (player_monster_visible(monster)
+                               && (monster->visible_to(&you)
                                    || crawl_state.arena);
 
     const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
@@ -1975,7 +1975,7 @@ int monster_die(monsters *monster, killer_type killer,
     }
 
     // If we kill an invisible monster reactivate autopickup.
-    if (mons_near(monster) && !player_monster_visible(monster))
+    if (mons_near(monster) && !monster->visible_to(&you))
         autotoggle_autopickup(false);
 
     crawl_state.dec_mon_acting(monster);
@@ -4960,7 +4960,7 @@ bool simple_monster_message(const monsters *monster, const char *event,
 
     if ((mons_near(monster) || crawl_state.arena)
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
-            || player_monster_visible(monster) || crawl_state.arena))
+            || monster->visible_to(&you) || crawl_state.arena))
     {
         std::string msg = monster->name(descrip);
         msg += event;

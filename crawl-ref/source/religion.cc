@@ -7459,7 +7459,7 @@ int get_tension(god_type god, bool count_travelling)
         {
             if (!mons->can_see_invisible())
                 exper /= 2;
-            if (!player_monster_visible(mons))
+            if (!mons->visible_to(&you))
                 exper *= 2;
         }
 

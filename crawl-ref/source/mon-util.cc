@@ -5936,7 +5936,7 @@ bool monsters::has_damage_type(int dam_type)
 
 bool monsters::visible() const
 {
-    return (mons_near(this) && player_monster_visible(this));
+    return (mons_near(this) && visible_to(&you));
 }
 
 bool monsters::confused() const
@@ -7001,7 +7001,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(this, " is no longer charmed.");
 
-        if (mons_near(this) && player_monster_visible(this))
+        if (you.can_see(this))
         {
             // and fire activity interrupts
             interrupt_activity(AI_SEE_MONSTER,
@@ -7022,7 +7022,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_BACKLIGHT:
         if (!quiet)
         {
-            if (player_monster_visible(this))
+            if (visible_to(&you))
                 simple_monster_message(this, " stops glowing.");
             else if (has_ench(ENCH_INVIS) && mons_near(this))
             {
@@ -7421,7 +7421,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (mon_size < random2(SIZE_BIG)  // BIG = 5
             && !has_ench(ENCH_BERSERK) && type != MONS_DANCING_WEAPON)
         {
-            if (mons_near(this) && !player_monster_visible(this))
+            if (mons_near(this) && !visible_to(&you))
                 mpr("Something wriggles in the net.");
             else
                 simple_monster_message(this, " struggles to escape the net.");
@@ -7439,7 +7439,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         else // Large (and above) monsters always thrash the net and destroy it
         {    // e.g. ogre, large zombie (large); centaur, naga, hydra (big).
 
-            if (mons_near(this) && !player_monster_visible(this))
+            if (mons_near(this) && !visible_to(&you))
                 mpr("Something wriggles in the net.");
             else
                 simple_monster_message(this, " struggles against the net.");
@@ -7497,7 +7497,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             {
                 if (mons_near(this))
                 {
-                    if (player_monster_visible(this))
+                    if (visible_to(&you))
                     {
                         mprf("The net rips apart, and %s comes free!",
                              name(DESC_NOCAP_THE).c_str());
@@ -7626,7 +7626,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     {
         if (feat_is_watery(grd(pos())))
         {
-            if (mons_near(this) && player_monster_visible(this))
+            if (mons_near(this) && visible_to(&you))
                 mprf("The flames covering %s go out.",
                      this->name(DESC_NOCAP_THE, false).c_str());
             del_ench(ENCH_STICKY_FLAME);
@@ -8185,7 +8185,7 @@ bool monsters::do_shaft()
         {
             if (mons_near(this))
             {
-                if (player_monster_visible(this))
+                if (visible_to(&you))
                 {
                     mprf("A shaft briefly opens up underneath %s!",
                          name(DESC_NOCAP_THE).c_str());
@@ -8471,7 +8471,7 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
         }
 
         const bool needs_message = spawned && mons_near(this)
-                                   && player_monster_visible(this);
+                                   && visible_to(&you);
 
         if (needs_message)
         {

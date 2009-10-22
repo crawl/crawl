@@ -1080,7 +1080,7 @@ void handle_monster_shouts(monsters* monster, bool force)
 
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
-    if (s_type == S_SILENT && !player_monster_visible(monster)
+    if (s_type == S_SILENT && !monster->visible_to(&you)
         || s_type != S_SILENT && !player_can_hear(monster->pos()))
     {
         return;
@@ -1306,7 +1306,7 @@ inline static bool _update_monster_grid(const monsters *monster)
 {
     const coord_def e = grid2show(monster->pos());
 
-    if (!player_monster_visible( monster ))
+    if (!monster->visible_to(&you))
     {
         // ripple effect?
         if (grd(monster->pos()) == DNGN_SHALLOW_WATER
@@ -1426,7 +1426,7 @@ void update_monsters_in_view()
                 // FIXME: is this correct?
                 monster->flags |= MF_WAS_IN_VIEW;
             }
-            else if (player_monster_visible(monster))
+            else if (monster->visible_to(&you))
             {
                 handle_seen_interrupt(monster);
                 seen_monster(monster);

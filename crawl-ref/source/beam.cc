@@ -137,7 +137,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
 
     if (mon)
     {
-        if (!force && !player_monster_visible(mon))
+        if (!force && !mon->visible_to(&you))
             return;
 
         p = mon->pos();
@@ -5204,10 +5204,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             {
                 mprf("%s flickers %s",
                      monster_name.c_str(),
-                     player_monster_visible(mon) ? "for a moment."
+                     mon->visible_to(&you) ? "for a moment."
                                                  : "and vanishes!" );
 
-                if (!player_monster_visible(mon))
+                if (!mon->visible_to(&you))
                     autotoggle_autopickup(true);
             }
 

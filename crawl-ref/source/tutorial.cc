@@ -4455,7 +4455,7 @@ static bool _water_is_disturbed(int x, int y)
     if (mon == NULL || grd(c) != DNGN_SHALLOW_WATER || !see_cell(c))
         return (false);
 
-    return (!player_monster_visible(mon) && !mons_flies(mon));
+    return (!mon->visible_to(&you) && !mons_flies(mon));
 }
 
 bool tutorial_monster_interesting(const monsters *mons)

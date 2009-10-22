@@ -918,7 +918,7 @@ int place_monster(mgen_data mg, bool force_pos)
     {
         std::string msg;
 
-        if (player_monster_visible( &menv[id] ))
+        if (menv[id].visible_to(&you))
             msg = menv[id].name(DESC_CAP_A);
         else if (shoved)
             msg = "Something";

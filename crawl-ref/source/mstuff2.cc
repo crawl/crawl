@@ -1348,7 +1348,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         }
     }
 
-    if (player_monster_visible(monster) && now_visible)
+    if (monster->visible_to(&you) && now_visible)
         handle_seen_interrupt(monster);
 
     // Leave a purple cloud.
