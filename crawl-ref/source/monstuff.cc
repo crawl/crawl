@@ -30,6 +30,7 @@
 #include "fight.h"
 #include "files.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "hiscores.h"
 #include "it_use2.h"
 #include "itemname.h"

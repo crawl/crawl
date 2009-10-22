@@ -30,6 +30,7 @@
 #include "describe.h"
 #include "effects.h"
 #include "food.h"
+#include "godabil.h"
 #include "it_use2.h"
 #include "itemprop.h"
 #include "macro.h"

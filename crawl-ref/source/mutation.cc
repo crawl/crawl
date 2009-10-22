@@ -29,6 +29,7 @@
 #include "defines.h"
 #include "effects.h"
 #include "format.h"
+#include "godabil.h"
 #include "itemprop.h"
 #include "macro.h"
 #include "menu.h"

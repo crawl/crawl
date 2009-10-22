@@ -18,6 +18,7 @@
 #include "effects.h"
 #include "food.h"
 #include "format.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "invent.h"
 #include "it_use2.h"

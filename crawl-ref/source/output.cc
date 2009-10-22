@@ -24,6 +24,7 @@
 #include "directn.h"
 #include "format.h"
 #include "fight.h"
+#include "godabil.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"

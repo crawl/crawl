@@ -63,6 +63,7 @@
 #include "fight.h"
 #include "files.h"
 #include "food.h"
+#include "godabil.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"

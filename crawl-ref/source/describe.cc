@@ -29,6 +29,7 @@
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "invent.h"
 #include "itemname.h"

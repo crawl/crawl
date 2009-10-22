@@ -21,6 +21,7 @@
 #include "beam.h"
 #include "directn.h"
 #include "debug.h"
+#include "godabil.h"
 #include "stuff.h"
 #include "los.h"
 #include "macro.h"

@@ -39,6 +39,7 @@
 #include "effects.h"
 #include "files.h"
 #include "fight.h"
+#include "godabil.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "itemname.h"

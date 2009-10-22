@@ -33,6 +33,7 @@
 #include "dungeon.h"
 #include "format.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "itemprop.h"
 #include "los.h"
