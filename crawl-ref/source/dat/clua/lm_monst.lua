@@ -3,11 +3,12 @@
 -- Create a monster on certain events
 --------------------------------------------------------------------------
 
---------------------------------------------------------------------------------------
--- This marker creates a monster on certain events.  It uses the following parameters:
+-------------------------------------------------------------------------------
+-- This marker creates a monster on certain events.  It uses the following
+-- parameters:
 --
--- * death_monster: The name of the monster who's death triggers the creation of
---       the new monster.
+-- * death_monster: The name of the monster who's death triggers the creation
+--       of the new monster.
 --
 -- * new_monster: The name of the monster to create.
 --
@@ -20,29 +21,20 @@
 --
 -- NOTE: If the feature where the marker is isn't habitable by the new monster,
 -- the feature will be changed to the monster's primary habitat.
---------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 -- TODO:
 --  * Place more than one monster.
 --  * Place monster displaced from marker.
+--  * Be triggered more than once.
 
-MonsterOnTrigger = { CLASS = "MonsterOnTrigger" }
-MonsterOnTrigger.__index = MonsterOnTrigger
+require('clua/lm_trig.lua')
 
-function MonsterOnTrigger:_new()
-  local pm = { }
-  setmetatable(pm, self)
-  self.__index = self
-
-  return pm
-end
+MonsterOnTrigger       = util.subclass(Triggerable)
+MonsterOnTrigger.CLASS = "MonsterOnTrigger"
 
 function MonsterOnTrigger:new(pars)
   pars = pars or { }
-
-  if not pars.death_monster or pars.death_monster == "" then
-    error("Must provide death_monster")
-  end
 
   if not pars.new_monster or pars.new_monster == "" then
     error("Must provide new_monster")
@@ -51,14 +43,15 @@ function MonsterOnTrigger:new(pars)
   pars.message_seen   = pars.message_seen or pars.message or ""
   pars.message_unseen = pars.message_unseen or pars.message or ""
 
-  local pm = self:_new()
-  pm.message_seen    = pars.message_seen
-  pm.message_unseen  = pars.message_unseen
-  pm.death_monster   = pars.death_monster
-  pm.new_monster     = pars.new_monster
-  pm.props           = pars
+  local mot = self.super.new(self)
 
-  return pm
+  mot.message_seen    = pars.message_seen
+  mot.message_unseen  = pars.message_unseen
+  mot.death_monster   = pars.death_monster
+  mot.new_monster     = pars.new_monster
+  mot.props           = pars
+
+  return mot
 end
 
 function MonsterOnTrigger:property(marker, pname)
@@ -66,53 +59,71 @@ function MonsterOnTrigger:property(marker, pname)
 end
 
 function MonsterOnTrigger:write(marker, th)
-  lmark.marshall_table(th, self)
+  MonsterOnTrigger.super.write(self, marker, th)
+
+  file.marshall(th, self.message_seen)
+  file.marshall(th, self.message_unseen)
+  file.marshall(th, self.new_monster)
+  lmark.marshall_table(th, self.props)
 end
 
 function MonsterOnTrigger:read(marker, th)
-  return MonsterOnTrigger:new(lmark.unmarshall_table(th))
+  MonsterOnTrigger.super.read(self, marker, th)
+
+  self.message_seen   = file.unmarshall_string(th)
+  self.message_unseen = file.unmarshall_string(th)
+  self.new_monster    = file.unmarshall_string(th)
+  self.props          = lmark.unmarshall_table(th)
+
+  setmetatable(self, MonsterOnTrigger) 
+
+  return self
 end
 
-function MonsterOnTrigger:activate(marker)
-  dgn.register_listener(dgn.dgn_event_type('monster_dies'), marker)
-end
+function MonsterOnTrigger:on_trigger(triggerer, marker, ev)
+  local x,     y     = marker:pos()
+  local you_x, you_y = you.pos()
 
-function MonsterOnTrigger:event(marker, ev)
-  local midx = ev:arg1()
-  local mons = dgn.mons_from_index(midx)
-
-  if not mons then
-    error("MonsterOnTrigger:event() didn't get a valid monster index")
+  if x == you_x and y == you_y then
+    return
   end
 
-  if mons.name == self.death_monster then
-    local x,     y     = marker:pos()
-    local you_x, you_y = you.pos()
-
-    if x == you_x and y == you_y then
-      return
-    end
-
-    -- you.losight() seems to be necessary if the player has been moved by
-    -- a wizard command and then the marker triggered by another wizard
-    -- command, since then no turns will have been taken and the LOS info
-    -- won't have been updated.
-    you.losight()
-    local see_cell = you.see_cell(x, y)
-
-    if (not dgn.create_monster(x, y, self.new_monster)) then
-      return
-    elseif self.message_seen ~= "" and see_cell then
-      crawl.mpr(self.message_seen)
-    elseif self.message_unseen ~= "" and not see_cell then
-      crawl.mpr(self.message_unseen)
-    end
-
-    dgn.remove_listener(marker)
-    dgn.remove_marker(marker)
+  if dgn.mons_at(x, y) then
+    return
   end
+
+  -- you.losight() seems to be necessary if the player has been moved by
+  -- a wizard command and then the marker triggered by another wizard
+  -- command, since then no turns will have been taken and the LOS info
+  -- won't have been updated.
+  you.losight()
+  local see_cell = you.see_cell(x, y)
+
+  if (not dgn.create_monster(x, y, self.new_monster)) then
+    return
+  elseif self.message_seen ~= "" and see_cell then
+    crawl.mpr(self.message_seen)
+  elseif self.message_unseen ~= "" and not see_cell then
+    crawl.mpr(self.message_unseen)
+  end
+
+  self:remove(marker)
 end
 
-function monster_on_trigger(pars)
-  return MonsterOnTrigger:new(pars)
+function monster_on_death(pars)
+  local death_monster = pars.death_monster or pars.target
+
+  pars.death_monster = nil
+  pars.target        = nil
+
+  local mod = MonsterOnTrigger:new(pars)
+
+  mod:add_triggerer(
+                     DgnTriggerer:new {
+                       type   = "monster_dies",
+                       target = death_monster
+                     }
+                   )
+
+  return mod
 end

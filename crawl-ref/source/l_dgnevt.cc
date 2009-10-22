@@ -119,9 +119,33 @@ static int dgn_dgn_event(lua_State *ls)
     return (retvals);
 }
 
+static dgn_event_type dgn_param_to_event_type(lua_State *ls, int n)
+{
+    if (lua_isnumber(ls, n))
+        return (static_cast<dgn_event_type>(luaL_checkint(ls, n)));
+    else if (lua_isstring(ls, n))
+        return dgn_event_type_by_name(lua_tostring(ls, n));
+    else
+        return (DET_NONE);
+}
+
+static int dgn_dgn_event_is_global(lua_State *ls)
+{
+    lua_pushboolean(ls, dgn_param_to_event_type(ls, 1) & DET_GLOBAL_MASK);
+    return (1);
+}
+
+static int dgn_dgn_event_is_position(lua_State *ls)
+{
+    lua_pushboolean(ls, dgn_param_to_event_type(ls, 1) & DET_POSITION_MASK);
+    return (1);
+}
+
 const struct luaL_reg dgn_event_dlib[] =
 {
-{ "dgn_event_type", dgn_dgn_event },
+{ "dgn_event_type",        dgn_dgn_event },
+{ "dgn_event_is_global",   dgn_dgn_event_is_global },
+{ "dgn_event_is_position", dgn_dgn_event_is_position},
 
 { NULL, NULL }
 };

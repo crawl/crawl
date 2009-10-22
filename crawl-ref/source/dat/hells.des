@@ -454,7 +454,7 @@ SUBST:   4 = 4:20 7
 SUBST:   8 = 8o
 COLOUR:  o : cyan
 : dis_setup(_G)
-MARKER:  o = lua:monster_on_trigger { \
+MARKER:  o = lua:monster_on_death { \
             death_monster="Dispater", new_monster="generate_awake iron golem", \
             message_seen="The iron statue comes to life!", \
             message_unseen="You hear a grinding sound.", \

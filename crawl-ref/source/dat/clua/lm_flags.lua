@@ -53,50 +53,42 @@
 --        "item", which is the plain name of the item its watching
 --        (i.e., "Orb of Zot" and "golden rune of Zot" rather than
 --         "the Orb of Zot" or "a golden rune of Zot").
+--
+-- ChangeFlags is a Triggerable subclass, and the above three functions
+-- are just convenience functions which add a single triggerer.  Other
+-- triggerers (or more than one) can be added.
 --------------------------------------------------------------------------
- 
-ChangeFlags = { CLASS = "ChangeFlags" }
-ChangeFlags.__index = ChangeFlags
 
-function ChangeFlags:_new()
-  local cf = { }
-  setmetatable(cf, self)
-  self.__index = self
+require('clua/lm_trig.lua')
 
-  return cf
-end
+ChangeFlags       = util.subclass(Triggerable)
+ChangeFlags.CLASS = "ChangeFlags"
 
 function ChangeFlags:new(pars)
   pars = pars or { }
+
+  local cf = self.super.new(self)
 
   pars.level_flags  = pars.level_flags  or ""
   pars.branch_flags = pars.branch_flags or ""
   pars.msg          = pars.msg          or ""
 
-  if pars.level_flags == "" and pars.branch_flags == ""
-    and not pars.trigger
-  then
-    error("Must provide at least one of level_flags, branch_flags, or trigger.")
+  if pars.level_flags == "" and pars.branch_flags == "" then
+    error("Must provide at least one of level_flags or branch_flags.")
   end
 
-  local cf = self:_new()
   cf.level_flags  = pars.level_flags
   cf.branch_flags = pars.branch_flags
   cf.msg          = pars.msg
-  cf.trigger      = pars.trigger
   cf.props        = { flag_group = pars.group }
 
   return cf
 end
 
-function ChangeFlags:do_change(marker)
+function ChangeFlags:on_trigger(triggerer, marker, ev)
   local did_change1 = false
   local did_change2 = false
   local silent      = self.msg and self.msg ~= ""
-
-  if self.trigger then
-    self.trigger(marker)
-  end
 
   if self.props.flag_group and self.props.flag_group ~= "" then
     local num_markers = dgn.num_matching_markers("flag_group",
@@ -115,6 +107,8 @@ function ChangeFlags:do_change(marker)
     did_change2 = dgn.change_branch_flags(self.branch_flags, silent)
   end
 
+  self:remove(marker)
+
   if did_change1 or did_change2 then
     if self.msg and self.msg ~= "" then
       crawl.mpr(self.smg)
@@ -131,19 +125,22 @@ function ChangeFlags:property(marker, pname)
 end
 
 function ChangeFlags:write(marker, th)
+  ChangeFlags.super.write(self, marker, th)
+
   file.marshall(th, self.level_flags)
   file.marshall(th, self.branch_flags)
   file.marshall(th, self.msg)
-  file.marshall_meta(th, self.trigger)
   lmark.marshall_table(th, self.props)
 end
 
 function ChangeFlags:read(marker, th)
+  ChangeFlags.super.read(self, marker, th)
+
   self.level_flags  = file.unmarshall_string(th)
   self.branch_flags = file.unmarshall_string(th)
   self.msg          = file.unmarshall_string(th)
-  self.trigger      = file.unmarshall_meta(th)
   self.props        = lmark.unmarshall_table(th)
+
   setmetatable(self, ChangeFlags) 
 
   return self
@@ -152,214 +149,56 @@ end
 --------------------------------------------------------------------------
 --------------------------------------------------------------------------
 
-MonDiesChangeFlags = ChangeFlags:_new()
-MonDiesChangeFlags.__index = MonDiesChangeFlags
-
-function MonDiesChangeFlags:_new(pars)
-  local mdcf
-
-  if pars then
-    mdcf = ChangeFlags:new(pars)
-  else
-    mdcf = ChangeFlags:_new()
-  end
-    
-  setmetatable(mdcf, self)
-  self.__index = self
-
-  return mdcf
-end
-
-function MonDiesChangeFlags:new(pars)
-  pars = pars or { }
-
-  if not pars.mon_name then
-    error("No monster name provided.")
-  end
-
-  local mdcf = self:_new(pars)
-  mdcf.mon_name = pars.mon_name
-
-  return mdcf
-end
-
-function MonDiesChangeFlags:activate(marker)
-  dgn.register_listener(dgn.dgn_event_type('monster_dies'), marker)
-end
-
-function MonDiesChangeFlags:event(marker, ev)
-  local midx = ev:arg1()
-  local mons = dgn.mons_from_index(midx)
-
-  if not mons then
-    error("MonDiesChangeFlags:event() didn't get a valid monster index")
-  end
-
-  if mons.name == self.mon_name then
-    ChangeFlags.do_change(self, marker)
-    dgn.remove_listener(marker)
-    dgn.remove_marker(marker)
-  end
-end
-
-function MonDiesChangeFlags:write(marker, th)
-  ChangeFlags.write(self, marker, th)
-  file.marshall(th, self.mon_name)
-end
-
-function MonDiesChangeFlags:read(marker, th)
-  ChangeFlags.read(self, marker, th)
-  self.mon_name  = file.unmarshall_string(th)
-  setmetatable(self, MonDiesChangeFlags) 
-
-  return self
-end
-
 function mons_dies_change_flags(pars)
-  return MonDiesChangeFlags:new(pars)
-end
+  local mon_name = pars.mon_name or pars.target
 
------------------------------------------------------------------------------
------------------------------------------------------------------------------
-FeatChangeChangeFlags = ChangeFlags:_new()
-FeatChangeChangeFlags.__index = FeatChangeChangeFlags
+  pars.mon_name = nil
+  pars.target   = nil
 
-function FeatChangeChangeFlags:_new(pars)
-  local fccf
+  local cf = ChangeFlags:new(pars)
 
-  if pars then
-    fccf = ChangeFlags:new(pars)
-  else
-    fccf = ChangeFlags:_new()
-  end
-    
-  setmetatable(fccf, self)
-  self.__index = self
+  cf:add_triggerer(
+                    DgnTriggerer:new {
+                      type   = "monster_dies",
+                      target = mon_name
+                    }
+                  )
 
-  return fccf
-end
-
-function FeatChangeChangeFlags:new(pars)
-  pars = pars or { }
-
-  local fccf = self:_new(pars)
-
-  fccf.final_feat = pars.final_feat
-
-  return fccf
-end
-
-function FeatChangeChangeFlags:activate(marker)
-  dgn.register_listener(dgn.dgn_event_type('feat_change'), marker,
-                        marker:pos())
-end
-
-function FeatChangeChangeFlags:event(marker, ev)
-  if self.final_feat and self.final_feat ~= "" then
-    local feat = dgn.feature_name(dgn.grid(ev:pos()))
-    if not string.find(feat, self.final_feat) then
-      return
-    end
-  end
-
-  ChangeFlags.do_change(self, marker)
-  dgn.remove_listener(marker, marker:pos())
-  dgn.remove_marker(marker)
-end
-
-function FeatChangeChangeFlags:write(marker, th)
-  ChangeFlags.write(self, marker, th)
-  file.marshall(th, self.final_feat)
-end
-
-function FeatChangeChangeFlags:read(marker, th)
-  ChangeFlags.read(self, marker, th)
-  self.final_feat = file.unmarshall_string(th)
-  setmetatable(self, FeatChangeChangeFlags) 
-
-  return self
+  return cf
 end
 
 function feat_change_change_flags(pars)
-  return FeatChangeChangeFlags:new(pars)
-end
+  local final_feat = pars.final_feat or pars.target
 
---------------------------------------------------------------------------
---------------------------------------------------------------------------
+  pars.final_feat = nil
+  pars.target     = nil
 
-ItemPickupChangeFlags = ChangeFlags:_new()
-ItemPickupChangeFlags.__index = ItemPickupChangeFlags
+  local cf = ChangeFlags:new(pars)
 
-function ItemPickupChangeFlags:_new(pars)
-  local ipcf
+  cf:add_triggerer(
+                    DgnTriggerer:new {
+                      type   = "feat_change",
+                      target = final_feat
+                    }
+                  )
 
-  if pars then
-    ipcf = ChangeFlags:new(pars)
-  else
-    ipcf = ChangeFlags:_new()
-  end
-    
-  setmetatable(ipcf, self)
-  self.__index = self
-
-  return ipcf
-end
-
-function ItemPickupChangeFlags:new(pars)
-  pars = pars or { }
-
-  if not pars.item then
-    error("No item name provided.")
-  end
-
-  local ipcf = self:_new(pars)
-  ipcf.item = pars.item
-
-  return ipcf
-end
-
-function ItemPickupChangeFlags:activate(marker)
-  dgn.register_listener(dgn.dgn_event_type('item_pickup'), marker,
-                        marker:pos())
-  dgn.register_listener(dgn.dgn_event_type('item_moved'), marker,
-                        marker:pos())
-end
-
-function ItemPickupChangeFlags:event(marker, ev)
-  local obj_idx  = ev:arg1()
-  local it       = dgn.item_from_index(obj_idx)
-
-  if not it then
-    error("ItemPickupChangeFlags:event() didn't get a valid item index")
-  end
-
-  if item.name(it) == self.item then
-    local picked_up = ev:type() == dgn.dgn_event_type('item_pickup')
-    if picked_up then
-      ChangeFlags.do_change(self, marker)
-      dgn.remove_listener(marker, marker:pos())
-      dgn.remove_marker(marker)
-    else
-      dgn.remove_listener(marker, marker:pos())
-      marker:move(ev:dest())
-      self:activate(marker)
-    end
-  end
-end
-
-function ItemPickupChangeFlags:write(marker, th)
-  ChangeFlags.write(self, marker, th)
-  file.marshall(th, self.item)
-end
-
-function ItemPickupChangeFlags:read(marker, th)
-  ChangeFlags.read(self, marker, th)
-  self.item  = file.unmarshall_string(th)
-  setmetatable(self, ItemPickupChangeFlags) 
-
-  return self
+  return cf
 end
 
 function item_pickup_change_flags(pars)
-  return ItemPickupChangeFlags:new(pars)
+  local item = pars.item or pars.target
+
+  pars.item   = nil
+  pars.target = nil
+
+  local cf = ChangeFlags:new(pars)
+
+  cf:add_triggerer(
+                    DgnTriggerer:new {
+                      type   = "item_pickup",
+                      target = item
+                    }
+                  )
+
+  return cf
 end

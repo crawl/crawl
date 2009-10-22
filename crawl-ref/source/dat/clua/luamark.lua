@@ -3,6 +3,8 @@
 -- Lua map marker handling.
 ------------------------------------------------------------------------------
 
+require('clua/lm_trig.lua')
+
 require('clua/lm_pdesc.lua')
 require('clua/lm_1way.lua')
 require('clua/lm_timed.lua')
