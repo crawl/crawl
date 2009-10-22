@@ -11,6 +11,7 @@
 #include "los.h"
 #include "mon-util.h"
 #include "newgame.h"
+#include "ouch.h"
 #include "player.h"
 #include "religion.h"
 #include "skills2.h"
@@ -271,6 +272,8 @@ static int _you_gold(lua_State *ls)
     PLUARET(number, you.gold);
 }
 
+LUAWRAP(_you_die,ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_SOMETHING))
+
 static const struct luaL_reg you_dlib[] =
 {
 { "hear_pos",           you_can_hear_pos },
@@ -284,6 +287,7 @@ static const struct luaL_reg you_dlib[] =
 { "losight",            you_losight },
 { "gold",               _you_gold },
 { "uniques",            _you_uniques },
+{ "die",               _you_die },
 
 { NULL, NULL }
 };
