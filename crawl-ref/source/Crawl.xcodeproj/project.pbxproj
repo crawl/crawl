@@ -379,6 +379,29 @@
 		B0C9CF87108DF38200E7FA35 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = B02C576010670ED2006AC96D /* SDLMain.m */; };
 		B0C9CFE0108E014800E7FA35 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B082656F10731A95006EEC5A /* libSQLite.a */; };
 		B0CFB315106DF67F005F9CC3 /* ctest.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0CFB313106DF67F005F9CC3 /* ctest.cc */; };
+		B0D189C81090B28D0071AF40 /* l_food.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C21090B28D0071AF40 /* l_food.cc */; };
+		B0D189C91090B28D0071AF40 /* l_global.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C31090B28D0071AF40 /* l_global.cc */; };
+		B0D189CA1090B28D0071AF40 /* l_item.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C41090B28D0071AF40 /* l_item.cc */; };
+		B0D189CB1090B28D0071AF40 /* l_mapgrd.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C51090B28D0071AF40 /* l_mapgrd.cc */; };
+		B0D189CC1090B28D0071AF40 /* l_mons.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C61090B28D0071AF40 /* l_mons.cc */; };
+		B0D189CD1090B28D0071AF40 /* l_option.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C71090B28D0071AF40 /* l_option.cc */; };
+		B0D189CE1090B28D0071AF40 /* l_food.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C21090B28D0071AF40 /* l_food.cc */; };
+		B0D189CF1090B28D0071AF40 /* l_global.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C31090B28D0071AF40 /* l_global.cc */; };
+		B0D189D01090B28D0071AF40 /* l_item.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C41090B28D0071AF40 /* l_item.cc */; };
+		B0D189D11090B28D0071AF40 /* l_mapgrd.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C51090B28D0071AF40 /* l_mapgrd.cc */; };
+		B0D189D21090B28D0071AF40 /* l_mons.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C61090B28D0071AF40 /* l_mons.cc */; };
+		B0D189D31090B28D0071AF40 /* l_option.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C71090B28D0071AF40 /* l_option.cc */; };
+		B0D189D61090B2AD0071AF40 /* l_defs.h in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C11090B28D0071AF40 /* l_defs.h */; };
+		B0D189D71090B2AD0071AF40 /* l_libs.h in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2E108DDEBF00A53656 /* l_libs.h */; };
+		B0D189D81090B2AD0071AF40 /* l_los.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F7E17710876503008FFA70 /* l_los.cc */; };
+		B0D189DB1090B2C80071AF40 /* l_defs.h in Sources */ = {isa = PBXBuildFile; fileRef = B0D189C11090B28D0071AF40 /* l_defs.h */; };
+		B0D189DC1090B2C80071AF40 /* l_libs.h in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D2E108DDEBF00A53656 /* l_libs.h */; };
+		B0D189FB1090B44D0071AF40 /* cluautil.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189F51090B44D0071AF40 /* cluautil.cc */; };
+		B0D189FC1090B44D0071AF40 /* godabil.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189F71090B44D0071AF40 /* godabil.cc */; };
+		B0D189FD1090B44D0071AF40 /* goditem.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189F91090B44D0071AF40 /* goditem.cc */; };
+		B0D189FE1090B44D0071AF40 /* cluautil.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189F51090B44D0071AF40 /* cluautil.cc */; };
+		B0D189FF1090B44D0071AF40 /* godabil.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189F71090B44D0071AF40 /* godabil.cc */; };
+		B0D18A001090B44D0071AF40 /* goditem.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0D189F91090B44D0071AF40 /* goditem.cc */; };
 		B0F01D31108DDEBF00A53656 /* dlua.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D20108DDEBF00A53656 /* dlua.cc */; };
 		B0F01D32108DDEBF00A53656 /* l_crawl.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D22108DDEBF00A53656 /* l_crawl.cc */; };
 		B0F01D33108DDEBF00A53656 /* l_debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D23108DDEBF00A53656 /* l_debug.cc */; };
@@ -475,28 +498,28 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = B0F7DEF91086EE79008FFA70 /* SDL.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = BECDF5FE0761BA81005FE872 /* Framework */;
+			remoteGlobalIDString = BECDF5FE0761BA81005FE872;
 			remoteInfo = Framework;
 		};
 		B0C9CF65108DF24C00E7FA35 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B0F7DFE61086F4EA008FFA70 /* libpng.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8D07F2BC0486CC7A007CD1D0 /* libpng */;
+			remoteGlobalIDString = 8D07F2BC0486CC7A007CD1D0;
 			remoteInfo = libpng;
 		};
 		B0C9CF67108DF24C00E7FA35 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B0F7DF7B1086F0CB008FFA70 /* SDL_image.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = BE1FA71807AF4C44004B6283 /* Framework */;
+			remoteGlobalIDString = BE1FA71807AF4C44004B6283;
 			remoteInfo = Framework;
 		};
 		B0C9CF69108DF26100E7FA35 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = B0C9CF45108DF1AF00E7FA35 /* tilegen */;
+			remoteGlobalIDString = B0C9CF45108DF1AF00E7FA35;
 			remoteInfo = tilegen;
 		};
 		B0F7DEF21086EDE5008FFA70 /* PBXContainerItemProxy */ = {
@@ -1066,6 +1089,19 @@
 		B0C9CFD6108DFF0F00E7FA35 /* tilegen-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "tilegen-Info.plist"; path = "rltiles/tilegen-Info.plist"; sourceTree = "<group>"; };
 		B0CFB313106DF67F005F9CC3 /* ctest.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ctest.cc; sourceTree = "<group>"; };
 		B0CFB314106DF67F005F9CC3 /* ctest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ctest.h; sourceTree = "<group>"; };
+		B0D189C11090B28D0071AF40 /* l_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = l_defs.h; sourceTree = "<group>"; };
+		B0D189C21090B28D0071AF40 /* l_food.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_food.cc; sourceTree = "<group>"; };
+		B0D189C31090B28D0071AF40 /* l_global.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_global.cc; sourceTree = "<group>"; };
+		B0D189C41090B28D0071AF40 /* l_item.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_item.cc; sourceTree = "<group>"; };
+		B0D189C51090B28D0071AF40 /* l_mapgrd.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_mapgrd.cc; sourceTree = "<group>"; };
+		B0D189C61090B28D0071AF40 /* l_mons.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_mons.cc; sourceTree = "<group>"; };
+		B0D189C71090B28D0071AF40 /* l_option.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_option.cc; sourceTree = "<group>"; };
+		B0D189F51090B44D0071AF40 /* cluautil.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cluautil.cc; sourceTree = "<group>"; };
+		B0D189F61090B44D0071AF40 /* cluautil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cluautil.h; sourceTree = "<group>"; };
+		B0D189F71090B44D0071AF40 /* godabil.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godabil.cc; sourceTree = "<group>"; };
+		B0D189F81090B44D0071AF40 /* godabil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = godabil.h; sourceTree = "<group>"; };
+		B0D189F91090B44D0071AF40 /* goditem.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = goditem.cc; sourceTree = "<group>"; };
+		B0D189FA1090B44D0071AF40 /* goditem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = goditem.h; sourceTree = "<group>"; };
 		B0F01D20108DDEBF00A53656 /* dlua.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlua.cc; sourceTree = "<group>"; };
 		B0F01D21108DDEBF00A53656 /* dlua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlua.h; sourceTree = "<group>"; };
 		B0F01D22108DDEBF00A53656 /* l_crawl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_crawl.cc; sourceTree = "<group>"; };
@@ -1307,6 +1343,12 @@
 		7B352EF00B001F5B00CABB32 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
+				B0D189F51090B44D0071AF40 /* cluautil.cc */,
+				B0D189F61090B44D0071AF40 /* cluautil.h */,
+				B0D189F71090B44D0071AF40 /* godabil.cc */,
+				B0D189F81090B44D0071AF40 /* godabil.h */,
+				B0D189F91090B44D0071AF40 /* goditem.cc */,
+				B0D189FA1090B44D0071AF40 /* goditem.h */,
 				7B237E0D0A8EC9D000580F30 /* abl-show.cc */,
 				7B237E290A8EC9D000580F30 /* abl-show.h */,
 				7B237E280A8EC9D000580F30 /* abyss.cc */,
@@ -1392,6 +1434,7 @@
 				7B237E4E0A8EC9D000580F30 /* kills.h */,
 				B0F01D22108DDEBF00A53656 /* l_crawl.cc */,
 				B0F01D23108DDEBF00A53656 /* l_debug.cc */,
+				B0D189C11090B28D0071AF40 /* l_defs.h */,
 				B0F01D25108DDEBF00A53656 /* l_dgn.cc */,
 				B0F01D24108DDEBF00A53656 /* l_dgn_bf.cc */,
 				B0F01D26108DDEBF00A53656 /* l_dgnbld.cc */,
@@ -1402,9 +1445,15 @@
 				B0F01D2B108DDEBF00A53656 /* l_dgnmon.cc */,
 				B0F01D2C108DDEBF00A53656 /* l_dgntil.cc */,
 				B0F01D2D108DDEBF00A53656 /* l_file.cc */,
+				B0D189C21090B28D0071AF40 /* l_food.cc */,
+				B0D189C31090B28D0071AF40 /* l_global.cc */,
+				B0D189C41090B28D0071AF40 /* l_item.cc */,
 				B0F01D2E108DDEBF00A53656 /* l_libs.h */,
 				B0F7E17710876503008FFA70 /* l_los.cc */,
+				B0D189C51090B28D0071AF40 /* l_mapgrd.cc */,
 				B0F01D2F108DDEBF00A53656 /* l_mapmrk.cc */,
+				B0D189C61090B28D0071AF40 /* l_mons.cc */,
+				B0D189C71090B28D0071AF40 /* l_option.cc */,
 				B0F01D30108DDEBF00A53656 /* l_you.cc */,
 				7B237DF70A8EC9D000580F30 /* lev-pand.cc */,
 				7B237DF60A8EC9D000580F30 /* lev-pand.h */,
@@ -1756,6 +1805,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Crawl-cmd" */;
 			buildPhases = (
+				B0D189EE1090B3490071AF40 /* Generate Headers */,
 				8DD76FAB0486AB0100D96B5E /* Sources */,
 				8DD76FAD0486AB0100D96B5E /* Frameworks */,
 				8DD76FAF0486AB0100D96B5E /* CopyFiles */,
@@ -1822,7 +1872,7 @@
 				B0C9CF43108DF1AF00E7FA35 /* Sources */,
 				B0C9CF44108DF1AF00E7FA35 /* Frameworks */,
 				B0C9CF7A108DF28700E7FA35 /* Copy Frameworks */,
-				B0C9CF6C108DF27000E7FA35 /* ShellScript */,
+				B0C9CF6C108DF27000E7FA35 /* Generate Tiledefs */,
 			);
 			buildRules = (
 			);
@@ -2017,20 +2067,35 @@
 			shellPath = /bin/sh;
 			shellScript = "cp \"$BUILT_PRODUCTS_DIR/crawl\" \"$BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/\"";
 		};
-		B0C9CF6C108DF27000E7FA35 /* ShellScript */ = {
+		B0C9CF6C108DF27000E7FA35 /* Generate Tiledefs */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Generate Tiledefs";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui; do\n\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\ndone";
+			shellScript = "cd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
 		};
 		B0C9CFB4108DFA1200E7FA35 /* Generate Headers */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Headers";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\ncd \"$PROJECT_DIR\"\nutil/gen_ver.pl build.h\nutil/gen-cflg.pl compflag.h \"<unavailable>\" \"<unavailable>\" \"<unavailable>\"";
+		};
+		B0D189EE1090B3490071AF40 /* Generate Headers */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2099,6 +2164,7 @@
 				7BF855620C9C912B00B7C520 /* cio.cc in Sources */,
 				7B237EE00A8EC9D000580F30 /* cloud.cc in Sources */,
 				7B237EDE0A8EC9D000580F30 /* clua.cc in Sources */,
+				B0D189FE1090B44D0071AF40 /* cluautil.cc in Sources */,
 				7B237E8B0A8EC9D000580F30 /* command.cc in Sources */,
 				D274AC550FE66EEC00C9C1AE /* crash-u.cc in Sources */,
 				E1424F74107FAE1100E2A9CD /* ctest.cc in Sources */,
@@ -2117,6 +2183,8 @@
 				7B237EDB0A8EC9D000580F30 /* food.cc in Sources */,
 				7BDEBB360BB4CB93008DF39F /* format.cc in Sources */,
 				7BDEBB2B0BB4CB1D008DF39F /* ghost.cc in Sources */,
+				B0D189FF1090B44D0071AF40 /* godabil.cc in Sources */,
+				B0D18A001090B44D0071AF40 /* goditem.cc in Sources */,
 				7B237E7A0A8EC9D000580F30 /* hiscores.cc in Sources */,
 				7B237E780A8EC9D000580F30 /* initfile.cc in Sources */,
 				7B237EE80A8EC9D000580F30 /* invent.cc in Sources */,
@@ -2139,7 +2207,14 @@
 				B0F01D4A108DDEBF00A53656 /* l_dgnmon.cc in Sources */,
 				B0F01D4B108DDEBF00A53656 /* l_dgntil.cc in Sources */,
 				B0F01D4C108DDEBF00A53656 /* l_file.cc in Sources */,
+				B0D189CE1090B28D0071AF40 /* l_food.cc in Sources */,
+				B0D189CF1090B28D0071AF40 /* l_global.cc in Sources */,
+				B0D189D01090B28D0071AF40 /* l_item.cc in Sources */,
+				B0D189D81090B2AD0071AF40 /* l_los.cc in Sources */,
+				B0D189D11090B28D0071AF40 /* l_mapgrd.cc in Sources */,
 				B0F01D4D108DDEBF00A53656 /* l_mapmrk.cc in Sources */,
+				B0D189D21090B28D0071AF40 /* l_mons.cc in Sources */,
+				B0D189D31090B28D0071AF40 /* l_option.cc in Sources */,
 				B0F01D4E108DDEBF00A53656 /* l_you.cc in Sources */,
 				7B237E7E0A8EC9D000580F30 /* lev-pand.cc in Sources */,
 				7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */,
@@ -2202,6 +2277,8 @@
 				93B134650F25595F007DB230 /* version.cc in Sources */,
 				7B237E9B0A8EC9D000580F30 /* view.cc in Sources */,
 				4CEF158A0C128CA5002C7D7A /* xom.cc in Sources */,
+				B0D189D61090B2AD0071AF40 /* l_defs.h in Sources */,
+				B0D189D71090B2AD0071AF40 /* l_libs.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2221,6 +2298,7 @@
 				B032D6E5106C02150002D70D /* cio.cc in Sources */,
 				B032D6D0106C02150002D70D /* cloud.cc in Sources */,
 				B032D6CF106C02150002D70D /* clua.cc in Sources */,
+				B0D189FB1090B44D0071AF40 /* cluautil.cc in Sources */,
 				B032D6A7106C02150002D70D /* command.cc in Sources */,
 				B032D6F1106C02150002D70D /* crash-u.cc in Sources */,
 				B0CFB315106DF67F005F9CC3 /* ctest.cc in Sources */,
@@ -2239,6 +2317,8 @@
 				B032D6CE106C02150002D70D /* food.cc in Sources */,
 				B032D6E1106C02150002D70D /* format.cc in Sources */,
 				B032D6DF106C02150002D70D /* ghost.cc in Sources */,
+				B0D189FC1090B44D0071AF40 /* godabil.cc in Sources */,
+				B0D189FD1090B44D0071AF40 /* goditem.cc in Sources */,
 				B032D69E106C02150002D70D /* hiscores.cc in Sources */,
 				B032D69D106C02150002D70D /* initfile.cc in Sources */,
 				B032D6D4106C02150002D70D /* invent.cc in Sources */,
@@ -2261,8 +2341,14 @@
 				B0F01D3B108DDEBF00A53656 /* l_dgnmon.cc in Sources */,
 				B0F01D3C108DDEBF00A53656 /* l_dgntil.cc in Sources */,
 				B0F01D3D108DDEBF00A53656 /* l_file.cc in Sources */,
+				B0D189C81090B28D0071AF40 /* l_food.cc in Sources */,
+				B0D189C91090B28D0071AF40 /* l_global.cc in Sources */,
+				B0D189CA1090B28D0071AF40 /* l_item.cc in Sources */,
 				B0F7E17910876503008FFA70 /* l_los.cc in Sources */,
+				B0D189CB1090B28D0071AF40 /* l_mapgrd.cc in Sources */,
 				B0F01D3E108DDEBF00A53656 /* l_mapmrk.cc in Sources */,
+				B0D189CC1090B28D0071AF40 /* l_mons.cc in Sources */,
+				B0D189CD1090B28D0071AF40 /* l_option.cc in Sources */,
 				B0F01D3F108DDEBF00A53656 /* l_you.cc in Sources */,
 				B032D6A0106C02150002D70D /* lev-pand.cc in Sources */,
 				B032D690106C02150002D70D /* levcomp.lpp in Sources */,
@@ -2338,6 +2424,8 @@
 				B032D6F0106C02150002D70D /* version.cc in Sources */,
 				B032D6AD106C02150002D70D /* view.cc in Sources */,
 				B032D6E4106C02150002D70D /* xom.cc in Sources */,
+				B0D189DB1090B2C80071AF40 /* l_defs.h in Sources */,
+				B0D189DC1090B2C80071AF40 /* l_libs.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
