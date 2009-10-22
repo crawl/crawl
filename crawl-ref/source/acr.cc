@@ -1392,6 +1392,11 @@ void process_command( command_type cmd )
     case CMD_MOVE_RIGHT:      _move_player( 1,  0); break;
 
     case CMD_REST:
+        if (you.hunger_state == HS_STARVING && !you_min_hunger())
+        {
+            mpr("You are too hungry to rest.");
+            break;
+        }
         if (i_feel_safe())
         {
             if ((you.hp == you.hp_max || you.species == SP_VAMPIRE
