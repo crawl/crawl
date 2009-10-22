@@ -1160,8 +1160,10 @@ void arena_placed_monster(monsters *monster)
     }
 
     if (!arena::allow_summons || !arena::allow_animate)
+    {
         arena::adjust_spells(monster, !arena::allow_summons,
                              !arena::allow_animate);
+    }
 
     if (monster->type == MONS_TEST_SPAWNER)
     {
