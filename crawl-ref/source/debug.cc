@@ -6497,7 +6497,7 @@ void do_crash_dump()
 
     fprintf(stderr, EOL "Writing crash info to %s" EOL, name);
     errno = 0;
-    FILE* file = freopen(name, "w+", stderr);
+    FILE* file = crawl_state.test ? stderr : freopen(name, "w+", stderr);
 
     if (file == NULL || errno != 0)
     {
