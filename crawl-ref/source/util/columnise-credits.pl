@@ -94,5 +94,6 @@ sub extract_names {
   for my $line (@cols) {
     push @names, ($line =~ /((?:\S+ )*\S+)/g);
   }
-  @names
+  my %dupe;
+  grep(!$dupe{$_}++, @names)
 }
