@@ -2086,7 +2086,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_CHRONOS_PONDEROUSIFY:
-        ponderousify_armour();
+        if (!ponderousify_armour())
+            return (false);
         break;
 
     case ABIL_CHRONOS_TIME_STEP:
