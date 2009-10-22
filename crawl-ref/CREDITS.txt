@@ -24,6 +24,7 @@ Bill Beher                   Ilyak                     Erik Piper
 Alexander Beisig             Mitsuhiro Itakura         Lemuel Pitkin
 Stu Black                    Mikko Juola               Derek Ray
 Erik Inge Bolsø              Jarmo Kielosto            Remsleep
+                                                       Will Rogers
 Peter Borgmann               Kornel Kisielewicz        David Rose
 Jude Brown                   Daniel Klein              Sebastian Salman
 Trent W. Buck                Vambola Kotkas            Brett Scarborough
