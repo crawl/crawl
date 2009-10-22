@@ -10,7 +10,6 @@
 #include "cloud.h"
 #include "externs.h"
 #include "los.h"
-#include "stuff.h"
 #include "terrain.h"
 
 opacity_type opacity_default::operator()(const coord_def& p) const

@@ -39,7 +39,6 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "monplace.h"
-#include "monstuff.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"

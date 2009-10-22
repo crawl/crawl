@@ -25,7 +25,6 @@
 #include "artefact.h"
 #include "beam.h"
 #include "chardump.h"
-#include "cloud.h"
 #include "database.h"
 #include "debug.h"
 #include "decks.h"

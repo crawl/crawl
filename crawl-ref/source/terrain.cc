@@ -27,7 +27,6 @@
 #include "ouch.h"
 #include "overmap.h"
 #include "player.h"
-#include "religion.h"
 #include "spells3.h"
 #include "stuff.h"
 #include "transfor.h"

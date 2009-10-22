@@ -34,7 +34,6 @@
 #include "terrain.h"
 #include "transfor.h"
 #include "tutorial.h"
-#include "view.h"
 #include "xom.h"
 
 // From an actual potion, pow == 40 -- bwr
