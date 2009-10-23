@@ -240,7 +240,7 @@ void wizard_change_species( void )
 
     species_type sp = SP_UNKNOWN;
 
-    for (i = SP_HUMAN; i < NUM_SPECIES; ++i)
+    for (i = 0; i < NUM_SPECIES; ++i)
     {
         const species_type si = static_cast<species_type>(i);
         const std::string sp_name =

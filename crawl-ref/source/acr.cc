@@ -4283,21 +4283,22 @@ static void _compile_time_asserts()
     // disturbed accidentally.
     COMPILE_CHECK(SK_UNARMED_COMBAT == 19       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 39           , c2);
-    COMPILE_CHECK(SP_VAMPIRE == 31              , c3);
+    COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 103    , c4);
     COMPILE_CHECK(SPELL_PETRIFY == 156          , c5);
     COMPILE_CHECK(NUM_SPELLS == 201             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
-    COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c7);
+    COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);
+    COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN        , c8);
 
     // Make sure there's enough room in you.unique_items to hold all
     // the unrandarts.
-    COMPILE_CHECK(NO_UNRANDARTS < MAX_UNRANDARTS, c8);
+    COMPILE_CHECK(NO_UNRANDARTS < MAX_UNRANDARTS, c9);
 
     // Non-artefact brands and unrandart indexes both go into
     // item.special, so make sure they don't overlap.
-    COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START, c9);
+    COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START, c10);
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

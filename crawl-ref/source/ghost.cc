@@ -870,7 +870,7 @@ bool debug_check_ghosts()
             return (false);
         if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_PAN_LORD_BRANDS)
             return (false);
-        if (ghost.species < SP_HUMAN || ghost.species >= NUM_SPECIES)
+        if (ghost.species < 0 || ghost.species >= NUM_SPECIES)
             return (false);
         if (ghost.job < JOB_FIGHTER || ghost.job >= NUM_JOBS)
             return (false);

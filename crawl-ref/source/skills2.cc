@@ -146,7 +146,7 @@ const char *martial_arts_titles[6] =
 // Traditionally, Spellcasting and In/Evocations formed the exceptions here:
 // Spellcasting skill was more expensive with about 130%, the other two got
 // a discount with about 75%.
-const int spec_skills[ NUM_SPECIES ][40] =
+const int spec_skills[NUM_SPECIES][40] =
 {
     {                           // SP_HUMAN
      100,                       // SK_FIGHTING
@@ -2145,7 +2145,7 @@ unsigned int skill_exp_needed(int lev)
 
 int species_skills(int skill, species_type species)
 {
-    return spec_skills[species - 1][skill];
+    return spec_skills[species][skill];
 }
 
 void wield_warning(bool newWeapon)

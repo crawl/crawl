@@ -2664,7 +2664,7 @@ enum speed_type
 
 enum species_type
 {
-    SP_HUMAN = 1,
+    SP_HUMAN,
     SP_HIGH_ELF,
     SP_DEEP_ELF,
     SP_SLUDGE_ELF,

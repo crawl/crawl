@@ -248,7 +248,7 @@ static void _pick_random_species_and_class( bool unrestricted_only )
     job_type job = JOB_UNKNOWN;
 
     // For each valid (species, class) choose one randomly.
-    for (int sp = SP_HUMAN; sp < NUM_SPECIES; sp++)
+    for (int sp = 0; sp < NUM_SPECIES; sp++)
     {
         // We only want draconians counted once in this loop...
         // We'll add the variety lower down -- bwr
