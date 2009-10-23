@@ -3624,7 +3624,7 @@ void handle_time(long time_delta)
         // not actually do anything.
         if (one_chance_in(30)
             && !(you.religion == GOD_CHEIBRIADOS
-                 && piety_rank(you.piety) >= 1
+                 && you.piety >= piety_breakpoint(1)
                  && coinflip()))
         {
             mpr("Your disease is taking its toll.", MSGCH_WARN);
