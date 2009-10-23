@@ -303,8 +303,9 @@ int travel_exclude::radius_sq() const
 
 void travel_exclude::set_los()
 {
-    los.init(pos, opc_excl, bounds_radius_sq(radius_sq()));
     uptodate = true;
+    if (radius > 0)
+        los.init(pos, opc_excl, bounds_radius_sq(radius_sq()));
 }
 
 bool travel_exclude::affects(const coord_def& p) const
@@ -312,6 +313,8 @@ bool travel_exclude::affects(const coord_def& p) const
     if (!uptodate)
         mprf(MSGCH_ERROR, "exclusion not up-to-date: e (%d,%d) p (%d,%d)",
              pos.x, pos.y, p.x, p.y);
+    if (radius == 0)
+        return (p == pos);
     return (los.see_cell(p));
 }
 
