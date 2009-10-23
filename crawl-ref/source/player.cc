@@ -1200,7 +1200,7 @@ int player_hunger_rate(void)
     // If Cheibriados has slowed your life processes, there's a
     // chance you'll hunger a bit less.
     if (GOD_CHEIBRIADOS == you.religion
-        && you.piety >= piety_breakpoint(1)
+        && you.piety >= piety_breakpoint(0)
         && coinflip())
         hunger--;
 
@@ -5297,7 +5297,7 @@ void dec_poison_player()
     // chance that your poison level is simply unaffected and
     // you aren't hurt by poison.
     if (GOD_CHEIBRIADOS == you.religion
-        && you.piety >= piety_breakpoint(1)
+        && you.piety >= piety_breakpoint(0)
         && coinflip())
         return;
 
@@ -5568,7 +5568,7 @@ void dec_disease_player()
         // If Cheibriados has slowed your life processes, there's a
         // chance that your disease level is unaffected.
         if (GOD_CHEIBRIADOS == you.religion
-            && you.piety >= piety_breakpoint(1)
+            && you.piety >= piety_breakpoint(0)
             && coinflip())
         {
           return;

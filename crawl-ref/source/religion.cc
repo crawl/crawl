@@ -298,9 +298,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "induce evolution"
     },
     // Cheibriados
-    { "",
-      "Cheibriados is slowing your biology.",
+    { "Cheibriados is slowing your biology.",
       "bend time to slow others",
+      "",
       "inflict damage to those overly hasty",
       "step out of the time flow"
     }
@@ -405,9 +405,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "induce evolution"
     },
     // Cheibriados
-    { "",
-      "Cheibriados will no longer slow your biology.",
+    { "Cheibriados will no longer slow your biology.",
       "bend time to slow others",
+      "",
       "inflict damage to those overly hasty",
       "step out of the time flow"
     }
