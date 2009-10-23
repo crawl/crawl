@@ -3495,47 +3495,13 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_DEMONSPAWN:
-                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 0
-                    && (you.experience_level == 4
-                        || (you.experience_level < 4 && one_chance_in(3))))
-                {
-                    demonspawn();
-                }
+                // We want 17 (6*3 - 1) random attemps to raise or add a
+                // mutation in the 26 level ups.  The following check is
+                // equivalent to taking a string of 17 1s and 9 0s and
+                // shuffling it.
 
-                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 1
-                    && you.experience_level > 4
-                    && (you.experience_level == 9
-                        || (you.experience_level < 9 && one_chance_in(3))))
-                {
-                    demonspawn();
-                }
-
-                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 2
-                    && you.experience_level > 9
-                    && (you.experience_level == 14
-                        || (you.experience_level < 14 && one_chance_in(3))))
-                {
-                    demonspawn();
-                }
-
-                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 3
-                    && you.experience_level > 14
-                    && (you.experience_level == 19
-                        || (you.experience_level < 19 && one_chance_in(3))))
-                {
-                    demonspawn();
-                }
-
-                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 4
-                    && you.experience_level > 19
-                    && (you.experience_level == 24
-                        || (you.experience_level < 24 && one_chance_in(3))))
-                {
-                    demonspawn();
-                }
-
-                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 5
-                    && you.experience_level == 27)
+                if (x_chance_in_y(17 - you.attribute[ATTR_NUM_DEMONIC_POWERS],
+                            28 - you.experience_level))
                 {
                     demonspawn();
                 }
