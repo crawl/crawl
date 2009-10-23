@@ -2133,8 +2133,12 @@ autopickup = $?+"/
 autopickup = $?+"/!%
 : end
 
-: if you.race() == "Hill Orc" then
-priest = Beogh
-: else
-priest = Yredelemnul
-: end
+Note that none of the options listed under "Starting Screen" (section 1)
+can be set conditionally.  This is because the options files are
+actually read in twice: once before character creation with Lua turned
+off, and a second time after character creation with Lua turned on.  If
+you attempt to set a starting-screen option conditionally then the value
+furthest down in the options file will be used regardless of what
+conditions you set.
+
+The above caveat applies to the "wiz_mode" option as well.
