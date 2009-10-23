@@ -185,6 +185,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_DEEP_ELF_MASTER_ARCHER;
 
     // fungi ('f')
+    case MONS_BALLISTOMYCETE:
+        return TILEP_MONS_FUNGUS;
     case MONS_TOADSTOOL:
         return TILEP_MONS_TOADSTOOL;
     case MONS_FUNGUS:

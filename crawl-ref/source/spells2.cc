@@ -2045,7 +2045,8 @@ void path_distance(coord_def & origin,
                 if (!temp || (temp->attitude == ATT_HOSTILE
                               && temp->mons_species() != MONS_PLANT
                               && temp->mons_species() != MONS_TOADSTOOL
-                              && temp->mons_species() != MONS_FUNGUS))
+                              && temp->mons_species() != MONS_FUNGUS
+                              && temp->mons_species() != MONS_BALLISTOMYCETE))
                 {
                     fringe.push(point_distance(*adj_it, current.second+1));
                 }
@@ -2416,13 +2417,14 @@ bool _possible_evolution(monsters * input,
         break;
 
     case MONS_FUNGUS:
+    case MONS_BALLISTOMYCETE:
         possible_monster.cost = fungus_cost;
         possible_monster.new_type = MONS_WANDERING_MUSHROOM;
         break;
 
     case MONS_TOADSTOOL:
         possible_monster.cost = toadstool_cost;
-        possible_monster.new_type = MONS_FUNGUS;
+        possible_monster.new_type = MONS_BALLISTOMYCETE;
         break;
 
     default:
@@ -2503,6 +2505,7 @@ bool evolve_flora()
             break;
 
         case MONS_FUNGUS:
+        case MONS_BALLISTOMYCETE:
             fungi_evolved++;
             break;
 
@@ -2523,7 +2526,7 @@ bool evolve_flora()
         current_plant->del_ench(ENCH_SLOWLY_DYING);
         current_plant->del_ench(ENCH_SPORE_PRODUCTION);
 
-        if (current_plant->mons_species() == MONS_FUNGUS)
+        if (current_plant->mons_species() == MONS_BALLISTOMYCETE)
             current_plant->add_ench(ENCH_SPORE_PRODUCTION);
 
         // Maybe we can upgrade it again?

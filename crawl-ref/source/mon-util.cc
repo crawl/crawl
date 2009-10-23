@@ -7664,7 +7664,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(me))
         {
-            if (see_cell(this->position))
+            if (::see_cell(this->position))
             {
                 mprf("A nearby %s withers and dies.",
                      this->name(DESC_PLAIN, false).c_str());
@@ -7704,7 +7704,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                     {
                         env.mons[rc].behaviour = BEH_WANDER;
 
-                        if (see_cell(adjacent) && see_cell(pos()))
+                        if (::see_cell(adjacent) && ::see_cell(pos()))
                             mpr("A nearby fungus spawns a giant spore.");
                     }
                     break;

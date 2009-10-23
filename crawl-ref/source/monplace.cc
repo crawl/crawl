@@ -1155,10 +1155,9 @@ static int _place_monster_aux(const mgen_data &mg,
         menv[id].add_ench(ENCH_SLOWLY_DYING);
     }
 
-    if (mg.cls == MONS_FUNGUS && you.your_level > 0)
+    if (mg.cls == MONS_BALLISTOMYCETE)
     {
-        // This enchantment causes rare production of giant spores.
-        // It's disabled on D:1 to avoid issues with entry vaults.
+        // This enchantment causes giant spore production.
         menv[id].add_ench(ENCH_SPORE_PRODUCTION);
     }
 
