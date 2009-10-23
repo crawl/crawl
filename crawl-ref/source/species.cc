@@ -61,8 +61,7 @@ species_type random_draconian_player_species()
 
 species_type get_species(const int index)
 {
-    if (index < 0 || (unsigned int) index >= ARRAYSZ(old_species_order))
-        return (SP_UNKNOWN);
+    ASSERT(index >= 0 && index < ARRAYSZ(old_species_order));
 
     return (Options.use_old_selection_order ? old_species_order[index]
                                             : new_species_order[index]);
@@ -127,7 +126,7 @@ int get_species_index_by_name( const char *name )
     return (sp);
 }
 
-const char *get_species_abbrev( int which_species )
+const char *get_species_abbrev(int which_species)
 {
     ASSERT( which_species > 0 && which_species < NUM_SPECIES );
 
@@ -135,7 +134,7 @@ const char *get_species_abbrev( int which_species )
 }
 
 // Needed for debug.cc and hiscores.cc.
-int get_species_by_abbrev( const char *abbrev )
+int get_species_by_abbrev(const char *abbrev)
 {
     int i;
     COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES, c1);
