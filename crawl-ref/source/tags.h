@@ -47,32 +47,16 @@ enum tag_major_version
 // the dungeon Lua changes.
 enum tag_minor_version
 {
-    TAG_MINOR_PIETY    =  2,     // Added piety_hysteresis
-    TAG_MINOR_QUIVER   =  3,     // Added quiver
-    TAG_MINOR_MAPMARK  =  4,     // Added sizes to map markers
-    TAG_MINOR_MONNAM   =  5,     // Monsters get individual names
-    TAG_MINOR_MONBASE  =  6,     // Zombie base monster gets its own field.
-    TAG_MINOR_FPICKUP  =  7,     // Added pickup option for allied monsters.
-    TAG_MINOR_MPATROL  =  8,     // Added monster patrol points.
-    TAG_MINOR_PATHFIND =  9,     // Added monster pathfinding.
-    TAG_MINOR_TRTARGET = 10,     // Added travel target.
-    TAG_MINOR_LUADGN   = 11,     // Allow dungeon Lua to persist data.
-    // Bump version past 12.
-    TAG_MINOR_SVNREV   = 13,     // Added SVN revision
-    TAG_MINOR_PORTEXT  = 14,     // Keep track of portal vault extensions.
-    TAG_MINOR_RELIGION = 15,     // Keep track of ghosts' religions.
-    // XXX: Release 0.5 -> switch to major version 6
-    // Does that mean we can remove all the above minor version checks?
-    TAG_MINOR_ARTEFACT = 16,     // Turned fixed arts into unrandarts.
-    TAG_MINOR_JIYVA    = 17,     // Added some player bits for Jiyva.
-    TAG_MINOR_ZOT_OPEN = 18,     // Remember whether Zot was opened.
-    TAG_MINOR_JELLY    = 19,     // Remember whether the royal jelly is dead.
-    TAG_ANNOTATE_EXCL  = 20,     // Store exclusion information for annotations.
-    TAG_MINOR_UGLY     = 21,     // More ghost bits for (very) ugly things.
-    TAG_MINOR_ROTTING  = 22,     // Added monster-specific rotting resistance.
-    TAG_MINOR_TRANS    = 23,     // Keep track of cancellable transformations.
-    TAG_MINOR_GITREV   = 24,     // Removed SVN revision and added Git revision.
-    TAG_MINOR_VERSION  = 24      // Current version.  (Keep equal to max.)
+    TAG_MINOR_ARTEFACT =  0,     // Turned fixed arts into unrandarts.
+    TAG_MINOR_JIYVA    =  1,     // Added some player bits for Jiyva.
+    TAG_MINOR_ZOT_OPEN =  2,     // Remember whether Zot was opened.
+    TAG_MINOR_JELLY    =  3,     // Remember whether the royal jelly is dead.
+    TAG_ANNOTATE_EXCL  =  4,     // Store exclusion information for annotations.
+    TAG_MINOR_UGLY     =  5,     // More ghost bits for (very) ugly things.
+    TAG_MINOR_ROTTING  =  6,     // Added monster-specific rotting resistance.
+    TAG_MINOR_TRANS    =  7,     // Keep track of cancellable transformations.
+    TAG_MINOR_GITREV   =  8,     // Removed SVN revision and added Git revision.
+    TAG_MINOR_VERSION  =  8      // Current version.  (Keep equal to max.)
 };
 
 

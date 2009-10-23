@@ -1958,8 +1958,11 @@ bool apply_to_all_dungeons(bool (*applicator)())
     return (success);
 }
 
-static bool _get_and_validate_version(FILE *restoreFile, char &major, char &minor,
-                                      std::string* reason)
+// XXX: Minor version renumbering hack.
+bool _minor_renumbering_correction = false;
+
+static bool _get_and_validate_version(FILE *restoreFile, char &major,
+                                      char &minor, std::string* reason)
 {
     std::string dummy;
     if (reason == 0)
@@ -1985,15 +1988,26 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major, char &mino
         return (false);
     }
 
-    // NOTE: This is a hacky replacement for what should have been caught
-    // by MAJOR_VERSION above. Once the next major version update happens
-    // (preferably when saves break with 0.5 -> 0.6) this check will need
-    // to be removed.
-    if (minor < TAG_MINOR_RELIGION)
+    if (minor < 0)
     {
-        *reason = "Sorry, but 0.4.x save and bones files are incompatible "
-                  "with 0.5!";
+        *reason = make_stringf("Minor version %d is negative!",
+                               minor);
         return (false);
+    }
+
+    // XXX: Temporary hack to avoid breaking savefile compatibility because
+    // of simply renumbering the minor-versions.  Should be removed before
+    // 0.6 is released.  16 is the minor version which was introduced when
+    // the major version was bumped from 5 to 6.
+    COMPILE_CHECK(TAG_MINOR_VERSION < 16, c1);
+    if (minor >= 16)
+    {
+        mprf(MSGCH_WARN,
+             "Savefile minor version being changed from %d to %d "
+             "because of renumbering of minor versions after removing "
+             "0.5 minor versions.", minor, minor - 16);
+        minor -= 16;
+        _minor_renumbering_correction = true;
     }
 
     if (minor > TAG_MINOR_VERSION)

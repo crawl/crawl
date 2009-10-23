@@ -804,21 +804,19 @@ void map_markers::write(writer &outf) const
 
 void map_markers::read(reader &inf, int minorVersion)
 {
+    UNUSED(minorVersion);
+
     clear();
 
-    if (minorVersion >= TAG_MINOR_MAPMARK)
-    {
-        const long cooky = unmarshallLong(inf);
-        ASSERT(cooky == MARKERS_COOKY);
-        UNUSED(cooky);
-    }
+    const long cooky = unmarshallLong(inf);
+    ASSERT(cooky == MARKERS_COOKY);
+    UNUSED(cooky);
 
     const int nmarkers = unmarshallShort(inf);
     for (int i = 0; i < nmarkers; ++i)
     {
         // used by tools
-        if (minorVersion >= TAG_MINOR_MAPMARK)
-            unmarshallLong(inf);
+        unmarshallLong(inf);
         if (map_marker *mark = map_marker::read_marker(inf))
         {
             add(mark);

@@ -931,9 +931,6 @@ static void tag_construct_you(writer &th)
     for (j = 0; j < NUM_ATTRIBUTES; ++j)
         marshallLong(th, you.attribute[j]);
 
-    // Was: remembered quiver items.
-    marshallByte(th, 0);
-
     // Sacrifice values.
     marshallByte(th, NUM_OBJECT_CLASSES);
     for (j = 0; j < NUM_OBJECT_CLASSES; ++j)
@@ -1003,20 +1000,15 @@ static void tag_construct_you(writer &th)
     for (unsigned int k = 0; k < you.mesmerised_by.size(); k++)
          marshallByte(th, you.mesmerised_by[k]);
 
-    // minorVersion TAG_MINOR_PIETY starts here
     marshallByte(th, you.piety_hysteresis);
 
-    // minorVersion TAG_MINOR_QUIVER starts here
     you.m_quiver->save(th);
 
-    // minorVersion TAG_MINOR_FPICKUP starts here
     marshallByte(th, you.friendly_pickup);
 
-    // minorVersion TAG_MINOR_LUADGN starts here
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
-    // minorVersion TAG_MINOR_GITREV starts here
     // Write a human-readable string out on the off chance that
     // we fail to be able to read this file back in using some later version.
     std::string revision = "Git:";
@@ -1228,6 +1220,9 @@ static void tag_construct_lost_items(writer &th)
                  marshall_item_list );
 }
 
+// XXX: Minor version renumbering hack.
+extern bool _minor_renumbering_correction;
+
 static void tag_read_you(reader &th, char minorVersion)
 {
     char buff[20];      // For birth date.
@@ -1270,15 +1265,10 @@ static void tag_read_you(reader &th, char minorVersion)
     you.level_type        = static_cast<level_area_type>( unmarshallByte(th) );
     you.level_type_name   = unmarshallString(th);
 
-    if (minorVersion >= TAG_MINOR_LUADGN)
-    {
-        you.level_type_name_abbrev = unmarshallString(th);
-        you.level_type_origin      = unmarshallString(th);
-        you.level_type_tag         = unmarshallString(th);
-
-        if (minorVersion >= TAG_MINOR_PORTEXT)
-            you.level_type_ext = unmarshallString(th);
-    }
+    you.level_type_name_abbrev = unmarshallString(th);
+    you.level_type_origin      = unmarshallString(th);
+    you.level_type_tag         = unmarshallString(th);
+    you.level_type_ext         = unmarshallString(th);
 
     you.entry_cause     = static_cast<entry_cause_type>( unmarshallByte(th) );
     you.entry_cause_god = static_cast<god_type>( unmarshallByte(th) );
@@ -1376,13 +1366,14 @@ static void tag_read_you(reader &th, char minorVersion)
     for (j = 0; j < count_c; ++j)
         you.attribute[j] = unmarshallLong(th);
 
-    // old: quiver info.  Discard it.
-    count_c = unmarshallByte(th);
-    if (minorVersion >= TAG_MINOR_QUIVER)
+    // XXX: Hack to preserve compatibility despite renumbering the
+    // minor versions.
+    if (_minor_renumbering_correction)
+    {
+        // old: quiver info.  Discard it.
+        count_c = unmarshallByte(th);
         ASSERT(count_c == 0);
-
-    for (j = 0; j < count_c; ++j)
-        unmarshallByte(th);
+    }
 
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
@@ -1440,24 +1431,17 @@ static void tag_read_you(reader &th, char minorVersion)
     for (i = 0; i < count_c; i++)
          you.mesmerised_by.push_back(unmarshallByte(th));
 
-    if (minorVersion >= TAG_MINOR_PIETY)
-        you.piety_hysteresis = unmarshallByte(th);
+    you.piety_hysteresis = unmarshallByte(th);
 
-    if (minorVersion >= TAG_MINOR_QUIVER)
-        you.m_quiver->load(th);
+    you.m_quiver->load(th);
 
-    if (minorVersion >= TAG_MINOR_FPICKUP)
-        you.friendly_pickup = unmarshallByte(th);
+    you.friendly_pickup = unmarshallByte(th);
 
-    if (minorVersion >= TAG_MINOR_LUADGN)
-    {
-        if (!dlua.callfn("dgn_load_data", "u", &th))
-            mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
-                 dlua.error.c_str());
-    }
+    if (!dlua.callfn("dgn_load_data", "u", &th))
+        mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
+             dlua.error.c_str());
 
-    if (minorVersion >= TAG_MINOR_SVNREV &&
-        minorVersion <  TAG_MINOR_GITREV)
+    if (minorVersion <  TAG_MINOR_GITREV)
     {
         std::string rev_str = unmarshallString(th);
         int rev_int = unmarshallLong(th);
@@ -2131,9 +2115,7 @@ static void unmarshall_monster(reader &th, monsters &m)
 {
     m.reset();
 
-    if (_tag_minor_version >= TAG_MINOR_MONNAM)
-        m.mname = unmarshallString(th, 100);
-
+    m.mname           = unmarshallString(th, 100);
     m.ac              = unmarshallByte(th);
     m.ev              = unmarshallByte(th);
     m.hit_dice        = unmarshallByte(th);
@@ -2146,28 +2128,21 @@ static void unmarshall_monster(reader &th, monsters &m)
     m.target.x        = unmarshallByte(th);
     m.target.y        = unmarshallByte(th);
 
-    if (_tag_minor_version >= TAG_MINOR_MPATROL)
-        unmarshallCoord(th, m.patrol_point);
+    unmarshallCoord(th, m.patrol_point);
 
-    if (_tag_minor_version >= TAG_MINOR_TRTARGET)
+    int help = unmarshallByte(th);
+    m.travel_target = static_cast<montravel_target_type>(help);
+
+    const int len = unmarshallShort(th);
+    for (int i = 0; i < len; ++i)
     {
-        int help = unmarshallByte(th);
-        m.travel_target = static_cast<montravel_target_type>(help);
+        coord_def c;
+        unmarshallCoord(th, c);
+        m.travel_path.push_back(c);
     }
 
-    if (_tag_minor_version >= TAG_MINOR_PATHFIND)
-    {
-        const int len = unmarshallShort(th);
-        for (int i = 0; i < len; ++i)
-        {
-            coord_def c;
-            unmarshallCoord(th, c);
-            m.travel_path.push_back(c);
-        }
-    }
-
-    m.flags           = unmarshallLong(th);
-    m.experience      = static_cast<unsigned long>(unmarshallLong(th));
+    m.flags      = unmarshallLong(th);
+    m.experience = static_cast<unsigned long>(unmarshallLong(th));
 
     m.enchantments.clear();
     const int nenchs = unmarshallShort(th);
@@ -2182,11 +2157,7 @@ static void unmarshall_monster(reader &th, monsters &m)
     m.hit_points     = unmarshallShort(th);
     m.max_hit_points = unmarshallShort(th);
     m.number         = unmarshallShort(th);
-    if (_tag_minor_version >= TAG_MINOR_MONBASE)
-        m.base_monster = static_cast<monster_type>(unmarshallShort(th));
-    else
-        m.base_monster = static_cast<monster_type>(m.number);
-
+    m.base_monster   = static_cast<monster_type>(unmarshallShort(th));
     m.colour         = unmarshallShort(th);
 
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
@@ -2482,13 +2453,9 @@ static ghost_demon unmarshallGhost(reader &th, char minorVersion)
     ghost_demon ghost;
 
     ghost.name             = unmarshallString(th, 20);
-
     ghost.species          = static_cast<species_type>( unmarshallShort(th) );
     ghost.job              = static_cast<job_type>( unmarshallShort(th) );
-
-    if (minorVersion >= TAG_MINOR_RELIGION)
-        ghost.religion     = static_cast<god_type>( unmarshallByte(th) );
-
+    ghost.religion         = static_cast<god_type>( unmarshallByte(th) );
     ghost.best_skill       = static_cast<skill_type>( unmarshallShort(th) );
     ghost.best_skill_level = unmarshallShort(th);
     ghost.xl               = unmarshallShort(th);
