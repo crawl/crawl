@@ -21,6 +21,7 @@
 #include <algorithm>
 
 #include "externs.h"
+#include "species.h"
 
 #include "artefact.h"
 #include "beam.h"

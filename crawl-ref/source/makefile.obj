@@ -86,6 +86,8 @@ mt19937ar.o \
 mtransit.o \
 mutation.o \
 newgame.o \
+jobs.o \
+species.o \
 notes.o \
 ouch.o \
 output.o \

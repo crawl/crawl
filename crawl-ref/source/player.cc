@@ -50,6 +50,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
+#include "species.h"
 #include "spells1.h"
 #include "spells3.h"
 #include "spells4.h"
@@ -4292,128 +4293,6 @@ void display_char_status()
 #if DEBUG_DIAGNOSTICS
     mprf("stealth: %d", ustealth);
 #endif
-}
-
-// Does a case-sensitive lookup of the species name supplied.
-int str_to_species(const std::string &species)
-{
-    if (species.empty())
-        return SP_HUMAN;
-
-    // first look for full name (e.g. Green Draconian)
-    for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
-    {
-        if (species == species_name(static_cast<species_type>(i), 10))
-            return (i);
-    }
-
-    // nothing found, try again with plain name
-    for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
-    {
-        if (species == species_name(static_cast<species_type>(i), 1))
-            return (i);
-    }
-
-    return (SP_HUMAN);
-}
-
-std::string species_name(species_type speci, int level, bool genus, bool adj)
-// defaults:                                            false       false
-{
-    std::string res;
-
-    if (player_genus( GENPC_DRACONIAN, speci ))
-    {
-        if (adj || genus)  // adj doesn't care about exact species
-            res = "Draconian";
-        else
-        {
-            if (level < 7)
-                res = "Draconian";
-            else
-            {
-                switch (speci)
-                {
-                case SP_RED_DRACONIAN:     res = "Red Draconian";     break;
-                case SP_WHITE_DRACONIAN:   res = "White Draconian";   break;
-                case SP_GREEN_DRACONIAN:   res = "Green Draconian";   break;
-                case SP_YELLOW_DRACONIAN:  res = "Yellow Draconian";  break;
-                case SP_GREY_DRACONIAN:    res = "Grey Draconian";    break;
-                case SP_BLACK_DRACONIAN:   res = "Black Draconian";   break;
-                case SP_PURPLE_DRACONIAN:  res = "Purple Draconian";  break;
-                case SP_MOTTLED_DRACONIAN: res = "Mottled Draconian"; break;
-                case SP_PALE_DRACONIAN:    res = "Pale Draconian";    break;
-
-                case SP_BASE_DRACONIAN:
-                default:
-                    res = "Draconian";
-                    break;
-                }
-            }
-        }
-    }
-    else if (player_genus( GENPC_ELVEN, speci ))
-    {
-        if (adj)  // doesn't care about species/genus
-            res = "Elven";
-        else if (genus)
-            res = "Elf";
-        else
-        {
-            switch (speci)
-            {
-            case SP_HIGH_ELF:   res = "High Elf";   break;
-            case SP_DEEP_ELF:   res = "Deep Elf";   break;
-            case SP_SLUDGE_ELF: res = "Sludge Elf"; break;
-            default:            res = "Elf";        break;
-            }
-        }
-    }
-    else if (player_genus(GENPC_DWARVEN, speci))
-    {
-        if (adj)  // doesn't care about species/genus
-            res = "Dwarven";
-        else if (genus)
-            res = "Dwarf";
-        else
-        {
-            switch (speci)
-            {
-            case SP_MOUNTAIN_DWARF: res = "Mountain Dwarf";            break;
-            case SP_DEEP_DWARF:     res = "Deep Dwarf";                break;
-            default:                res = "Dwarf";                     break;
-            }
-        }
-    }
-    else
-    {
-        switch (speci)
-        {
-        case SP_HUMAN:      res = "Human";                             break;
-        case SP_HALFLING:   res = "Halfling";                          break;
-        case SP_KOBOLD:     res = "Kobold";                            break;
-        case SP_MUMMY:      res = "Mummy";                             break;
-        case SP_NAGA:       res = "Naga";                              break;
-        case SP_CENTAUR:    res = "Centaur";                           break;
-        case SP_SPRIGGAN:   res = "Spriggan";                          break;
-        case SP_MINOTAUR:   res = "Minotaur";                          break;
-        case SP_KENKU:      res = "Kenku";                             break;
-
-        case SP_HILL_ORC:
-            res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
-            break;
-
-        case SP_OGRE:       res = (adj ? "Ogreish"    : "Ogre");       break;
-        case SP_TROLL:      res = (adj ? "Trollish"   : "Troll");      break;
-        case SP_DEMIGOD:    res = (adj ? "Divine"     : "Demigod");    break;
-        case SP_DEMONSPAWN: res = (adj ? "Demonic"    : "Demonspawn"); break;
-        case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");      break;
-        case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
-        case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
-        default:            res = (adj ? "Yakish"     : "Yak");        break;
-        }
-    }
-    return res;
 }
 
 bool player_item_conserve(bool calc_unid)

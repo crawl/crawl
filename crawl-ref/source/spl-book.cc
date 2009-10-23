@@ -20,6 +20,7 @@
 
 #include "artefact.h"
 #include "externs.h"
+#include "species.h"
 #include "cio.h"
 #include "database.h"
 #include "debug.h"

@@ -44,6 +44,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "newgame.h"
+#include "jobs.h"
 #include "notes.h"
 #include "output.h"
 #include "overmap.h"

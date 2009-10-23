@@ -15,6 +15,7 @@
 #include <algorithm>
 
 #include "externs.h"
+#include "species.h"
 
 #include "database.h"
 #include "describe.h"

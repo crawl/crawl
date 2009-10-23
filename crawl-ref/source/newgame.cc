@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include "newgame.h"
+#include "jobs.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -27,6 +28,7 @@
 #endif
 
 #include "externs.h"
+#include "species.h"
 
 #include "abl-show.h"
 #include "artefact.h"
@@ -96,332 +98,6 @@ static int  ng_book;
 static int  ng_wand;
 static god_type ng_pr;
 
-// March 2008: change order of species and jobs on character selection
-// screen as suggested by Markus Maier. Summarizing comments below are
-// copied directly from Markus' SourceForge comments. (jpeg)
-//
-// These are listed in two columns to match the selection screen output.
-// Take care to list all valid species here, or they cannot be directly
-// chosen.
-//
-// The red draconian is later replaced by a random variant.
-// The old and new lists are expected to have the same length.
-static species_type old_species_order[] = {
-    SP_HUMAN,          SP_HIGH_ELF,
-    SP_DEEP_ELF,       SP_SLUDGE_ELF,
-    SP_MOUNTAIN_DWARF, SP_HALFLING,
-    SP_HILL_ORC,       SP_KOBOLD,
-    SP_MUMMY,          SP_NAGA,
-    SP_OGRE,           SP_TROLL,
-    SP_RED_DRACONIAN,  SP_CENTAUR,
-    SP_DEMIGOD,        SP_SPRIGGAN,
-    SP_MINOTAUR,       SP_DEMONSPAWN,
-    SP_GHOUL,          SP_KENKU,
-    SP_MERFOLK,        SP_VAMPIRE,
-    SP_DEEP_DWARF
-};
-
-// Fantasy staples and humanoid creatures come first, then diminutive and
-// stealthy creatures, then monstrous creatures, then planetouched and after
-// all living creatures finally the undead. (MM)
-static species_type new_species_order[] = {
-    // comparatively human-like looks
-    SP_HUMAN,          SP_HIGH_ELF,
-    SP_DEEP_ELF,       SP_SLUDGE_ELF,
-    SP_MOUNTAIN_DWARF, SP_DEEP_DWARF,
-    SP_HILL_ORC,       SP_MERFOLK,
-    // small species
-    SP_HALFLING,       SP_KOBOLD,
-    SP_SPRIGGAN,
-    // significantly different body type from human
-    SP_NAGA,           SP_CENTAUR,
-    SP_OGRE,           SP_TROLL,
-    SP_MINOTAUR,       SP_KENKU,
-    SP_RED_DRACONIAN,
-    // celestial species
-    SP_DEMIGOD,        SP_DEMONSPAWN,
-    // undead species
-    SP_MUMMY,          SP_GHOUL,
-    SP_VAMPIRE
-};
-
-static species_type _random_draconian_player_species()
-{
-    const int num_drac = SP_PALE_DRACONIAN - SP_RED_DRACONIAN + 1;
-    return static_cast<species_type>(SP_RED_DRACONIAN + random2(num_drac));
-}
-
-static species_type _get_species(const int index)
-{
-    if (index < 0 || (unsigned int) index >= ARRAYSZ(old_species_order))
-        return (SP_UNKNOWN);
-
-    return (Options.use_old_selection_order ? old_species_order[index]
-                                            : new_species_order[index]);
-}
-
-// Listed in two columns to match the selection screen output.
-// Take care to list all valid classes here, or they cannot be directly chosen.
-// The old and new lists are expected to have the same length.
-static job_type old_jobs_order[] = {
-    JOB_FIGHTER,            JOB_WIZARD,
-    JOB_PRIEST,             JOB_THIEF,
-    JOB_GLADIATOR,          JOB_NECROMANCER,
-    JOB_PALADIN,            JOB_ASSASSIN,
-    JOB_BERSERKER,          JOB_HUNTER,
-    JOB_CONJURER,           JOB_ENCHANTER,
-    JOB_FIRE_ELEMENTALIST,  JOB_ICE_ELEMENTALIST,
-    JOB_SUMMONER,           JOB_AIR_ELEMENTALIST,
-    JOB_EARTH_ELEMENTALIST, JOB_CRUSADER,
-    JOB_DEATH_KNIGHT,       JOB_VENOM_MAGE,
-    JOB_CHAOS_KNIGHT,       JOB_TRANSMUTER,
-    JOB_HEALER,             JOB_REAVER,
-    JOB_STALKER,            JOB_MONK,
-    JOB_WARPER,             JOB_WANDERER,
-    JOB_ARTIFICER
-};
-
-// First plain fighters, then religious fighters, then spell-casting
-// fighters, then primary spell-casters, then stabbers and shooters. (MM)
-static job_type new_jobs_order[] = {
-    // fighters
-    JOB_FIGHTER,            JOB_GLADIATOR,
-    JOB_MONK,               JOB_BERSERKER,
-    // religious professions (incl. Berserker above)
-    JOB_PALADIN,            JOB_PRIEST,
-    JOB_HEALER,             JOB_CHAOS_KNIGHT,
-    JOB_DEATH_KNIGHT,       JOB_CRUSADER,
-    // general and niche spellcasters (incl. Crusader above)
-    JOB_REAVER,             JOB_WARPER,
-    JOB_WIZARD,             JOB_CONJURER,
-    JOB_ENCHANTER,          JOB_SUMMONER,
-    JOB_NECROMANCER,        JOB_TRANSMUTER,
-    JOB_FIRE_ELEMENTALIST,  JOB_ICE_ELEMENTALIST,
-    JOB_AIR_ELEMENTALIST,   JOB_EARTH_ELEMENTALIST,
-    // poison specialists and stabbers
-    JOB_VENOM_MAGE,         JOB_STALKER,
-    JOB_THIEF,              JOB_ASSASSIN,
-    JOB_HUNTER,             JOB_ARTIFICER,
-    JOB_WANDERER
-};
-
-static job_type _get_class(const int index)
-{
-    if (index < 0 || (unsigned int) index >= ARRAYSZ(old_jobs_order))
-       return (JOB_UNKNOWN);
-
-    return (Options.use_old_selection_order? old_jobs_order[index]
-                                           : new_jobs_order[index]);
-}
-
-static const char * Species_Abbrev_List[ NUM_SPECIES ] =
-    { "XX", "Hu", "HE", "DE", "SE", "MD", "Ha",
-      "HO", "Ko", "Mu", "Na", "Og", "Tr",
-      // the draconians
-      "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
-      "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp", "DD",
-      // placeholders
-      "El", "HD", "OM", "GE", "Gn" };
-
-int get_species_index_by_abbrev( const char *abbrev )
-{
-    COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES, c1);
-
-    for (unsigned i = 0; i < ARRAYSZ(old_species_order); i++)
-    {
-        const int sp = (Options.use_old_selection_order ? old_species_order[i]
-                                                        : new_species_order[i]);
-
-        if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[sp][0] )
-            && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[sp][1] ))
-        {
-            return (i);
-        }
-    }
-
-    return (-1);
-}
-
-int get_species_index_by_name( const char *name )
-{
-    unsigned int i;
-    int sp = -1;
-
-    std::string::size_type pos = std::string::npos;
-    char lowered_buff[80];
-
-    strncpy( lowered_buff, name, sizeof( lowered_buff ) );
-    strlwr( lowered_buff );
-
-    for (i = 0; i < ARRAYSZ(old_species_order); i++)
-    {
-        const species_type real_sp
-                   = (Options.use_old_selection_order ? old_species_order[i]
-                                                      : new_species_order[i]);
-
-        const std::string lowered_species =
-            lowercase_string(species_name(real_sp,1));
-        pos = lowered_species.find( lowered_buff );
-        if (pos != std::string::npos)
-        {
-            sp = i;
-            if (pos == 0)  // prefix takes preference
-                break;
-        }
-    }
-
-    return (sp);
-}
-
-const char *get_species_abbrev( int which_species )
-{
-    ASSERT( which_species > 0 && which_species < NUM_SPECIES );
-
-    return (Species_Abbrev_List[ which_species ]);
-}
-
-// Needed for debug.cc and hiscores.cc.
-int get_species_by_abbrev( const char *abbrev )
-{
-    int i;
-    COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES, c1);
-    for (i = SP_HUMAN; i < NUM_SPECIES; i++)
-    {
-        if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[i][0] )
-            && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[i][1] ))
-        {
-            break;
-        }
-    }
-
-    return ((i < NUM_SPECIES) ? i : -1);
-}
-
-static const char * Class_Abbrev_List[ NUM_JOBS ] =
-    { "Fi", "Wz", "Pr", "Th", "Gl", "Ne", "Pa", "As", "Be", "Hu",
-      "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr", "DK", "VM",
-      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar" };
-
-static const char * Class_Name_List[ NUM_JOBS ] =
-    { "Fighter", "Wizard", "Priest", "Thief", "Gladiator", "Necromancer",
-      "Paladin", "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
-      "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
-      "Earth Elementalist", "Crusader", "Death Knight", "Venom Mage",
-      "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
-      "Monk", "Warper", "Wanderer", "Artificer" };
-
-int get_class_index_by_abbrev( const char *abbrev )
-{
-    COMPILE_CHECK(ARRAYSZ(Class_Abbrev_List) == NUM_JOBS, c1);
-
-    unsigned int job;
-    for (unsigned int i = 0; i < ARRAYSZ(old_jobs_order); i++)
-    {
-        job = (Options.use_old_selection_order ? old_jobs_order[i]
-                                               : new_jobs_order[i]);
-
-        if (tolower( abbrev[0] ) == tolower( Class_Abbrev_List[job][0] )
-            && tolower( abbrev[1] ) == tolower( Class_Abbrev_List[job][1] ))
-        {
-            return i;
-        }
-    }
-
-    return (-1);
-}
-
-const char *get_class_abbrev( int which_job )
-{
-    ASSERT( which_job < NUM_JOBS );
-
-    return (Class_Abbrev_List[ which_job ]);
-}
-
-int get_class_by_abbrev( const char *abbrev )
-{
-    int i;
-
-    for (i = 0; i < NUM_JOBS; i++)
-    {
-        if (tolower( abbrev[0] ) == tolower( Class_Abbrev_List[i][0] )
-            && tolower( abbrev[1] ) == tolower( Class_Abbrev_List[i][1] ))
-        {
-            break;
-        }
-    }
-
-    return ((i < NUM_JOBS) ? i : -1);
-}
-
-int get_class_index_by_name( const char *name )
-{
-    COMPILE_CHECK(ARRAYSZ(Class_Name_List)   == NUM_JOBS, c1);
-
-    char *ptr;
-    char lowered_buff[80];
-    char lowered_class[80];
-
-    strncpy( lowered_buff, name, sizeof( lowered_buff ) );
-    strlwr( lowered_buff );
-
-    int cl = -1;
-    unsigned int job;
-    for (unsigned int i = 0; i < ARRAYSZ(old_jobs_order); i++)
-    {
-        job = (Options.use_old_selection_order ? old_jobs_order[i]
-                                               : new_jobs_order[i]);
-
-        strncpy( lowered_class, Class_Name_List[job], sizeof( lowered_class ) );
-        strlwr( lowered_class );
-
-        ptr = strstr( lowered_class, lowered_buff );
-        if (ptr != NULL)
-        {
-            cl = i;
-            if (ptr == lowered_class)  // prefix takes preference
-                break;
-        }
-    }
-
-    return (cl);
-}
-
-const char *get_class_name( int which_job )
-{
-    ASSERT( which_job < NUM_JOBS );
-
-    return (Class_Name_List[ which_job ]);
-}
-
-int get_class_by_name( const char *name )
-{
-    int i;
-    int cl = -1;
-
-    char *ptr;
-    char lowered_buff[80];
-    char lowered_class[80];
-
-    strncpy( lowered_buff, name, sizeof( lowered_buff ) );
-    strlwr( lowered_buff );
-
-    for (i = 0; i < NUM_JOBS; i++)
-    {
-        strncpy( lowered_class, Class_Name_List[i], sizeof( lowered_class ) );
-        strlwr( lowered_class );
-
-        ptr = strstr( lowered_class, lowered_buff );
-        if (ptr != NULL)
-        {
-            cl = i;
-            if (ptr == lowered_class)  // prefix takes preference
-                break;
-        }
-    }
-
-    return (cl);
-}
-
 static void _reset_newgame_options(void)
 {
     ng_race   = ng_cls = 0;
@@ -472,13 +148,13 @@ static bool _prev_startup_options_set(void)
 
 static std::string _get_opt_race_name(char race)
 {
-    species_type prace = _get_species(letter_to_index(race));
+    species_type prace = get_species(letter_to_index(race));
     return (prace == SP_UNKNOWN? "Random" : species_name(prace, 1));
 }
 
 static std::string _get_opt_class_name(char oclass)
 {
-    job_type pclass = _get_class(letter_to_index(oclass));
+    job_type pclass = get_class(letter_to_index(oclass));
     return (pclass == JOB_UNKNOWN? "Random" : get_class_name(pclass));
 }
 
@@ -600,7 +276,7 @@ static void _pick_random_species_and_class( bool unrestricted_only )
 
     // Return draconian variety here.
     if (species == SP_RED_DRACONIAN)
-        you.species = _random_draconian_player_species();
+        you.species = random_draconian_player_species();
     else
         you.species = species;
 
@@ -1216,8 +892,8 @@ game_start:
     {
         if (Options.race != 0 && Options.cls != 0
             && Options.race != '*' && Options.cls != '*'
-            && !_class_allowed(_get_species(letter_to_index(Options.race)),
-                               _get_class(letter_to_index(Options.cls))))
+            && !_class_allowed(get_species(letter_to_index(Options.race)),
+                               get_class(letter_to_index(Options.cls))))
         {
             end(1, false,
                 "Incompatible species and job specified in options file.");
@@ -1228,7 +904,7 @@ game_start:
 
     // Pick random draconian type.
     if (you.species == SP_RED_DRACONIAN)
-        you.species = _random_draconian_player_species();
+        you.species = random_draconian_player_species();
 
     strcpy( you.class_name, get_class_name(you.char_class) );
 
@@ -4458,20 +4134,12 @@ bool choose_race()
 
     if (Options.cls)
     {
-        you.char_class = _get_class(letter_to_index(Options.cls));
+        you.char_class = get_class(letter_to_index(Options.cls));
         ng_cls = Options.cls;
     }
 
     if (Options.race != 0)
         printed = true;
-
-    // The list musn't be longer than the number of actual species.
-    COMPILE_CHECK(ARRAYSZ(old_species_order) <= NUM_SPECIES, c1);
-
-    // Check whether the two lists have the same size.
-    COMPILE_CHECK(ARRAYSZ(old_species_order) == ARRAYSZ(new_species_order), c2);
-
-    const int num_species = ARRAYSZ(old_species_order);
 
 spec_query:
     bool prevraceok = (Options.prev_race == '*');
@@ -4521,9 +4189,9 @@ spec_query:
         textcolor( LIGHTGREY );
 
         int j = 0;
-        for (int i = 0; i < num_species; ++i)
+        for (int i = 0; i < ng_num_species(); ++i)
         {
-            const species_type si = _get_species(i);
+            const species_type si = get_species(i);
 
             if (!_is_species_valid_choice(si))
                 continue;
@@ -4680,18 +4348,18 @@ spec_query:
         int index;
         do
         {
-            index = random2(num_species);
+            index = random2(ng_num_species());
         }
-        while (!_is_species_valid_choice(_get_species(index), false)
+        while (!_is_species_valid_choice(get_species(index), false)
                || you.char_class != JOB_UNKNOWN
-                  && !_is_good_combination(_get_species(index), you.char_class,
+                  && !_is_good_combination(get_species(index), you.char_class,
                                            good_randrace));
 
         keyn = index_to_letter(index);
     }
 
     if (keyn >= 'a' && keyn <= 'z' || keyn >= 'A' && keyn <= 'Z')
-        you.species = _get_species(letter_to_index(keyn));
+        you.species = get_species(letter_to_index(keyn));
 
     if (!_is_species_valid_choice( you.species ))
     {
@@ -4732,14 +4400,6 @@ bool choose_class(void)
 
     ng_cls = 0;
 
-    // The list musn't be longer than the number of actual classes.
-    COMPILE_CHECK(ARRAYSZ(old_jobs_order) <= NUM_JOBS, c1);
-
-    // Check whether the two lists have the same size.
-    COMPILE_CHECK(ARRAYSZ(old_jobs_order) == ARRAYSZ(new_jobs_order), c2);
-
-    const int num_classes = ARRAYSZ(old_jobs_order);
-
 job_query:
     bool prevclassok = (Options.prev_cls == '*');
     if (!printed)
@@ -4771,9 +4431,9 @@ job_query:
 
         int j = 0;
         job_type which_job;
-        for (int i = 0; i < num_classes; i++)
+        for (int i = 0; i < ng_num_classes(); i++)
         {
-            which_job = _get_class(i);
+            which_job = get_class(i);
 
             // Dim text for restricted classes.
             // Thief and wanderer are general challenge classes in that there's
@@ -4951,7 +4611,7 @@ job_query:
         ASSERT( chosen_job != JOB_UNKNOWN );
     }
     else if (keyn >= 'a' && keyn <= 'z' || keyn >= 'A' && keyn <= 'Z')
-        chosen_job = _get_class(letter_to_index(keyn));
+        chosen_job = get_class(letter_to_index(keyn));
 
     if (chosen_job == JOB_UNKNOWN)
     {

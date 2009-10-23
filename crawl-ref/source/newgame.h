@@ -8,6 +8,9 @@
 #ifndef NEWGAME_H
 #define NEWGAME_H
 
+
+#include "itemprop.h"
+
 enum death_knight_type
 {
     DK_NO_SELECTION,
@@ -36,26 +39,6 @@ enum startup_wand_type
     SWT_STRIKING, // actually a rod
     SWT_RANDOM
 };
-
-/* ***********************************************************************
- * called from: initfile
- * *********************************************************************** */
-int get_species_index_by_abbrev(const char *abbrev);
-int get_species_index_by_name(const char *name);
-const char *get_species_abbrev(int which_species);
-
-int get_class_index_by_abbrev(const char *abbrev);
-int get_class_index_by_name(const char *name);
-const char *get_class_abbrev(int which_job);
-const char *get_class_name(int which_job);
-
-/* ***********************************************************************
- * called from: debug and hiscores
- * *********************************************************************** */
-int get_species_by_abbrev( const char *abbrev );
-int get_species_by_name( const char *name );
-int get_class_by_abbrev( const char *abbrev  );
-int get_class_by_name( const char *name );
 
 undead_state_type get_undead_state(const species_type sp);
 

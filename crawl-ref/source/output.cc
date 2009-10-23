@@ -16,6 +16,7 @@
 #endif
 
 #include "externs.h"
+#include "species.h"
 
 #include "abl-show.h"
 #include "branch.h"
@@ -35,6 +36,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "newgame.h"
+#include "jobs.h"
 #include "ouch.h"
 #include "player.h"
 #include "place.h"

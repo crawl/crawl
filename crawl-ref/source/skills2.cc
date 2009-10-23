@@ -28,6 +28,7 @@
 #include "itemprop.h"
 #include "menu.h"
 #include "player.h"
+#include "species.h"
 #include "stuff.h"
 #include "tutorial.h"
 

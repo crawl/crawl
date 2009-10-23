@@ -20,6 +20,7 @@
 #endif
 
 #include "externs.h"
+#include "species.h"
 
 #include "abl-show.h"
 #include "artefact.h"
@@ -42,6 +43,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "newgame.h"
+#include "jobs.h"
 #include "player.h"
 #include "religion.h"
 #include "skills2.h"

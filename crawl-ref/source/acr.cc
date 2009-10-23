@@ -39,6 +39,7 @@
 #endif
 
 #include "externs.h"
+#include "species.h"
 
 #include "abl-show.h"
 #include "abyss.h"

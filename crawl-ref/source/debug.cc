@@ -23,6 +23,7 @@
 #endif
 
 #include "externs.h"
+#include "species.h"
 
 #include "artefact.h"
 #include "beam.h"
@@ -60,6 +61,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
+#include "jobs.h"
 #include "ouch.h"
 #include "output.h"
 #include "place.h"
