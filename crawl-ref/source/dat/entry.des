@@ -4886,7 +4886,8 @@ TAGS:   entry no_rotate no_pool_fixup
 ORIENT: northwest
 MONS:   plant
 FTILE:  .t1 = floor_lair
-KMASK:  wW = no_monster_gen
+KMASK:  w = no_monster_gen
+KMASK:  W = no_monster_gen
 MAP
 ttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttt1ttttttwwtttttttttttttttttttttt
