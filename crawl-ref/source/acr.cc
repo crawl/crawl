@@ -392,7 +392,7 @@ static void _god_greeting_message(bool game_start)
     case GOD_FEAWN:
         simple_god_message(" says: Spread life and death.");
         break;
-    case GOD_CHRONOS:
+    case GOD_CHEIBRIADOS:
         simple_god_message(" says: Take it easy.");
         break;
 
@@ -3941,7 +3941,7 @@ static void _move_player(coord_def move)
 
     apply_berserk_penalty = !attacking;
 
-    if (!attacking && you.religion == GOD_CHRONOS && one_chance_in(10)
+    if (!attacking && you.religion == GOD_CHEIBRIADOS && one_chance_in(10)
         && player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
     {
         did_god_conduct(DID_HASTY, 1, true);

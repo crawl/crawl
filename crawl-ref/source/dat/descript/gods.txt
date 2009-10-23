@@ -78,9 +78,9 @@ Feawn
 
 Feawn is the god of plant and fungal life.
 %%%%
-Chronos
+Cheibriados
 
-Chronos is a god who meditates on the mystery of time. Those who choose to follow his path will learn to eschew unnecessary haste, slowing down both themselves and others, and hurt those who refuse to slow down. Especially devout followers may even temporarily abandon the flow of time and its needless disturbations.
+Cheibriados is a god who meditates on the mystery of time. Those who choose to follow his path will learn to eschew unnecessary haste, slowing down both themselves and others, and hurt those who refuse to slow down. Especially devout followers may even temporarily abandon the flow of time and its needless disturbations.
 %%%%
 Zin powers
 
@@ -140,7 +140,7 @@ Feawn powers
 
 Feawn encourages followers to promote the growth of plant life.
 %%%%
-Chronos powers
+Cheibriados powers
 
 Followers are rewarded for moving slowly and killing creatures which are faster than they are.  Moving too quickly or using magically hastened weapons is frowned upon.  He rewards his faithful with a slowed metabolism, the power to slow other creatures, harm those who move more quickly than you do and finally, the ability to step out of the flow of time.
 %%%%

@@ -414,7 +414,7 @@ conduct_type god_hates_item_handling(const item_def &item)
         }
         break;
 
-    case GOD_CHRONOS:
+    case GOD_CHEIBRIADOS:
         if (item_type_known(item) && is_hasty_item(item))
             return (DID_HASTY);
         break;
@@ -460,7 +460,7 @@ bool god_hates_spell_type(spell_type spell, god_type god)
             return (true);
         break;
 
-    case GOD_CHRONOS:
+    case GOD_CHEIBRIADOS:
         if (is_hasty_spell(spell))
             return (true);
         break;

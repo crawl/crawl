@@ -2534,9 +2534,8 @@ int tileidx_feature(int object, int gx, int gy)
         return TILE_DNGN_ALTAR_JIYVA;
     case DNGN_ALTAR_FEAWN:
         return TILE_DNGN_ALTAR_FEAWN;
-    case DNGN_ALTAR_CHRONOS:
-        return TILE_DNGN_ALTAR_CHRONOS;
-
+    case DNGN_ALTAR_CHEIBRIADOS:
+        return TILE_DNGN_ALTAR_CHEIBRIADOS;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:

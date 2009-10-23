@@ -1196,9 +1196,9 @@ int player_hunger_rate(void)
     if (you.duration[DUR_REGENERATION])
         hunger += 4;
 
-    // If Chronos has slowed your life processes, there's a
+    // If Cheibriados has slowed your life processes, there's a
     // chance you'll hunger a bit less.
-    if (GOD_CHRONOS == you.religion
+    if (GOD_CHEIBRIADOS == you.religion
         && piety_rank(you.piety) >= 1
         && coinflip())
         hunger--;
@@ -5448,10 +5448,10 @@ bool poison_player(int amount, bool force)
 
 void dec_poison_player()
 {
-    // If Chronos has slowed your life processes, there's a
+    // If Cheibriados has slowed your life processes, there's a
     // chance that your poison level is simply unaffected and
     // you aren't hurt by poison.
-    if (GOD_CHRONOS == you.religion
+    if (GOD_CHEIBRIADOS == you.religion
         && piety_rank(you.piety) >= 1
         && coinflip())
         return;
@@ -5720,9 +5720,9 @@ void dec_disease_player()
 {
     if (you.disease > 0)
     {
-        // If Chronos has slowed your life processes, there's a
+        // If Cheibriados has slowed your life processes, there's a
         // chance that your disease level is unaffected.
-        if (GOD_CHRONOS == you.religion
+        if (GOD_CHEIBRIADOS == you.religion
             && piety_rank(you.piety) >= 1
             && coinflip())
         {

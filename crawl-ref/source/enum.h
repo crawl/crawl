@@ -110,10 +110,10 @@ enum ability_type
     ABIL_FEAWN_PLANT_RING,
     ABIL_FEAWN_SPAWN_SPORES,
     ABIL_FEAWN_EVOLUTION,
-    ABIL_CHRONOS_PONDEROUSIFY,              // 250
-    ABIL_CHRONOS_TIME_STEP,
-    ABIL_CHRONOS_TIME_BEND,
-    ABIL_CHRONOS_SLOUCH,
+    ABIL_CHEIBRIADOS_PONDEROUSIFY,          // 250
+    ABIL_CHEIBRIADOS_TIME_STEP,
+    ABIL_CHEIBRIADOS_TIME_BEND,
+    ABIL_CHEIBRIADOS_SLOUCH,
 
     ABIL_TRAN_BAT = 260,
     ABIL_HARM_PROTECTION,
@@ -754,7 +754,7 @@ enum conduct_type
     DID_KILL_WIZARD,
     DID_KILL_PRIEST,
     DID_KILL_HOLY,
-    DID_KILL_FAST,                      // Chronos
+    DID_KILL_FAST,                      // Cheibriados
     DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
     DID_LIVING_KILLED_BY_SERVANT,
     DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE,
@@ -783,7 +783,7 @@ enum conduct_type
     DID_KILL_SLIME,                     // Jiyva
     DID_KILL_PLANT,                     // Feawn
     DID_ALLY_KILLED_PLANT,              // Feawn
-    DID_HASTY,                          // Chronos
+    DID_HASTY,                          // Cheibriados
 
     NUM_CONDUCTS
 };
@@ -1158,8 +1158,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_BEOGH,
     DNGN_ALTAR_JIYVA,
     DNGN_ALTAR_FEAWN,
-    DNGN_ALTAR_CHRONOS,
-    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_CHRONOS,
+    DNGN_ALTAR_CHEIBRIADOS,
+    DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_CHEIBRIADOS,
 
     DNGN_FOUNTAIN_BLUE = 200,          //  200
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
@@ -1412,7 +1412,7 @@ enum god_type
     GOD_BEOGH,
     GOD_JIYVA,                         //   15
     GOD_FEAWN,
-    GOD_CHRONOS,
+    GOD_CHEIBRIADOS,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,

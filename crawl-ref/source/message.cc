@@ -238,7 +238,7 @@ static char god_message_altar_colour( god_type god )
     case GOD_LUGONU:
         return (LIGHTRED);
 
-    case GOD_CHRONOS:
+    case GOD_CHEIBRIADOS:
         return (LIGHTCYAN);
 
     case GOD_JIYVA:

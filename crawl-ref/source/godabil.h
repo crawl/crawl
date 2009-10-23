@@ -10,7 +10,6 @@
 #include "externs.h"
 
 bool ponderousify_armour();
-int chronos_slouch(int pow);
 bool zin_sustenance(bool actual = true);
 bool zin_remove_all_mutations();
 bool yred_injury_mirror(bool actual = true);
@@ -30,6 +29,8 @@ bool vehumet_supports_spell(spell_type spell);
 bool trog_burn_spellbooks();
 
 void lugonu_bends_space();
-void chronos_time_bend(int pow);
-void chronos_time_step(int pow);
+
+int cheibriados_slouch(int pow);
+void cheibriados_time_bend(int pow);
+void cheibriados_time_step(int pow);
 #endif

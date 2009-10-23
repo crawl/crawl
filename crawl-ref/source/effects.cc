@@ -3620,10 +3620,10 @@ void handle_time(long time_delta)
     }
     else
     {
-        // If Chronos has slowed your biology, disease might
+        // If Cheibriados has slowed your biology, disease might
         // not actually do anything.
         if (one_chance_in(30)
-            && !(you.religion == GOD_CHRONOS
+            && !(you.religion == GOD_CHEIBRIADOS
                  && piety_rank(you.piety) >= 1
                  && coinflip()))
         {

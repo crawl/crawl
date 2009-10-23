@@ -1976,7 +1976,7 @@ bool is_feature(int feature, const coord_def& where)
         case DNGN_ALTAR_BEOGH:
         case DNGN_ALTAR_JIYVA:
         case DNGN_ALTAR_FEAWN:
-        case DNGN_ALTAR_CHRONOS:
+        case DNGN_ALTAR_CHEIBRIADOS:
             return (true);
         default:
             return (false);
@@ -3647,7 +3647,7 @@ void init_feature_table( void )
             Feature[i].minimap     = MF_FEATURE;
             break;
 
-        case DNGN_ALTAR_CHRONOS:
+        case DNGN_ALTAR_CHEIBRIADOS:
             Feature[i].colour      = LIGHTCYAN;
             Feature[i].dchar       = DCHAR_ALTAR;
             Feature[i].flags      |= FFT_NOTABLE;

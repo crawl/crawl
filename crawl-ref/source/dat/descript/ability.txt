@@ -385,7 +385,7 @@ Use fruit to turn some plants and fungi in your line of sight into stronger spec
 %%%%
 Make Ponderous
 
-Alter a piece of body armour so it slows the wearer down.  This is generally bad for hasty people, those who appreciate taking the time may benefit from Chronos' favour when they are not so fast.
+Alter a piece of body armour so it slows the wearer down.  This is generally bad for hasty people, those who appreciate taking the time may benefit from Cheibriados's favour when they are not so fast.
 %%%%
 Bend Time
 

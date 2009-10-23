@@ -147,9 +147,9 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     // Feawn
     { ABIL_FEAWN_SUNLIGHT, ABIL_FEAWN_PLANT_RING, ABIL_FEAWN_RAIN,
       ABIL_FEAWN_SPAWN_SPORES, ABIL_FEAWN_EVOLUTION },
-    // Chronos
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_CHRONOS_TIME_BEND,
-      ABIL_CHRONOS_SLOUCH, ABIL_CHRONOS_TIME_STEP },
+    // Cheibriados
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_TIME_BEND,
+      ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -337,11 +337,11 @@ static const ability_def Ability_List[] =
     { ABIL_FEAWN_SPAWN_SPORES, "Reproduction", 4, 0, 50, 2, ABFLAG_NONE},
     { ABIL_FEAWN_EVOLUTION, "Evolution", 4, 0, 0, 2, ABFLAG_FRUIT},
 
-    // Chronos
-    { ABIL_CHRONOS_PONDEROUSIFY, "Make Ponderous", 2, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_CHRONOS_TIME_BEND, "Bend Time", 3, 0, 50, 1, ABFLAG_NONE },
-    { ABIL_CHRONOS_SLOUCH, "Ruinous Time", 5, 0, 100, 5, ABFLAG_NONE },
-    { ABIL_CHRONOS_TIME_STEP, "Step From Time", 10, 0, 200, 10, ABFLAG_NONE },
+    // Cheibriados
+    { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous", 2, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time", 3, 0, 50, 1, ABFLAG_NONE },
+    { ABIL_CHEIBRIADOS_SLOUCH, "Ruinous Time", 5, 0, 100, 5, ABFLAG_NONE },
+    { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time", 10, 0, 200, 10, ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
@@ -726,7 +726,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS:
-    case ABIL_CHRONOS_PONDEROUSIFY:
+    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
         invoc = true;
         failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
         break;
@@ -754,7 +754,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
-    case ABIL_CHRONOS_TIME_BEND:
+    case ABIL_CHEIBRIADOS_TIME_BEND:
         invoc = true;
         failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -768,7 +768,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_FEAWN_SPAWN_SPORES:
     case ABIL_FEAWN_RAIN:
     case ABIL_YRED_DRAIN_LIFE:
-    case ABIL_CHRONOS_SLOUCH:
+    case ABIL_CHEIBRIADOS_SLOUCH:
         invoc = true;
         failure = 60 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -789,7 +789,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_DIVINE_VIGOUR:
     case ABIL_LUGONU_ABYSS_ENTER:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
-    case ABIL_CHRONOS_TIME_STEP:
+    case ABIL_CHEIBRIADOS_TIME_STEP:
         invoc = true;
         failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -2085,28 +2085,28 @@ static bool _do_ability(const ability_def& abil)
         // Activated via prayer elsewhere.
         break;
 
-    case ABIL_CHRONOS_PONDEROUSIFY:
+    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
         if (!ponderousify_armour())
             return (false);
         break;
 
-    case ABIL_CHRONOS_TIME_STEP:
-        chronos_time_step(you.skills[SK_INVOCATIONS]*you.piety/10);
+    case ABIL_CHEIBRIADOS_TIME_STEP:
+        cheibriados_time_step(you.skills[SK_INVOCATIONS]*you.piety/10);
         exercise(SK_INVOCATIONS, 5 + random2(5));
         break;
 
-    case ABIL_CHRONOS_TIME_BEND:
-        chronos_time_bend(16 + you.skills[SK_INVOCATIONS] * 8);
+    case ABIL_CHEIBRIADOS_TIME_BEND:
+        cheibriados_time_bend(16 + you.skills[SK_INVOCATIONS] * 8);
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
-    case ABIL_CHRONOS_SLOUCH:
+    case ABIL_CHEIBRIADOS_SLOUCH:
         mpr("You can feel time thicken.");
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "your speed is %d", player_movement_speed());
 #endif
         exercise(SK_INVOCATIONS, 4 + random2(4));
-        chronos_slouch(0);
+        cheibriados_slouch(0);
         break;
 
 
@@ -2409,8 +2409,8 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
     else if (you.religion == GOD_FEAWN)
         _add_talent(talents, ABIL_FEAWN_FUNGAL_BLOOM, check_confused);
-    else if (you.religion == GOD_CHRONOS)
-        _add_talent(talents, ABIL_CHRONOS_PONDEROUSIFY, check_confused);
+    else if (you.religion == GOD_CHEIBRIADOS)
+        _add_talent(talents, ABIL_CHEIBRIADOS_PONDEROUSIFY, check_confused);
 
     // Gods take abilities away until penance completed. -- bwr
     // God abilities generally don't work while silenced (they require

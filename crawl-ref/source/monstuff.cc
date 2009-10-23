@@ -1542,7 +1542,7 @@ int monster_die(monsters *monster, killer_type killer,
                                     true, monster);
                 }
 
-                // Chronos hates fast monsters
+                // Cheibriados hates fast monsters
                 if (mons_is_fast(monster))
                 {
                     did_god_conduct(DID_KILL_FAST, monster->hit_dice,

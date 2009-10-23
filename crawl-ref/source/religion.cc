@@ -297,9 +297,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "spawn explosive spores",
       "induce evolution"
     },
-    // Chronos
+    // Cheibriados
     { "",
-      "Chronos is slowing your biology.",
+      "Cheibriados is slowing your biology.",
       "bend time to slow others",
       "inflict damage to those overly hasty",
       "step out of the time flow"
@@ -404,9 +404,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "spawn explosive spores",
       "induce evolution"
     },
-    // Chronos
+    // Cheibriados
     { "",
-      "Chronos will no longer slow your biology.",
+      "Cheibriados will no longer slow your biology.",
       "bend time to slow others",
       "inflict damage to those overly hasty",
       "step out of the time flow"
@@ -570,7 +570,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back(info);
         break;
 
-    case GOD_CHRONOS:
+    case GOD_CHEIBRIADOS:
         snprintf(info, INFO_SIZE, "you kill fast things%s",
                  verbose ? ", relative to your current speed"
                          : "");
@@ -869,7 +869,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("you kill slimes");
         break;
 
-    case GOD_CHRONOS:
+    case GOD_CHEIBRIADOS:
         dislikes.push_back("you hasten yourself");
         dislikes.push_back("use unnaturally quick items");
         break;
@@ -2558,8 +2558,8 @@ std::string god_name(god_type which_god, bool long_name)
         return (long_name ? god_name_jiyva(true) + " the Shapeless"
                           : god_name_jiyva(false));
     }
-    case GOD_FEAWN:    return (long_name ? "Feawn the Arboreal" : "Feawn");
-    case GOD_CHRONOS:  return (long_name ? "Chronos the Contemplative" : "Chronos");
+    case GOD_FEAWN:        return (long_name ? "Feawn the Arboreal" : "Feawn");
+    case GOD_CHEIBRIADOS:  return (long_name ? "Cheibriados the Contemplative" : "Cheibriados");
     case GOD_XOM:
         if (!long_name)
             return "Xom";
@@ -3082,7 +3082,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_KILL_FAST:
-            if (you.religion == GOD_CHRONOS
+            if (you.religion == GOD_CHEIBRIADOS
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 simple_god_message(" appreciates the change of pace.");
@@ -3465,7 +3465,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_HASTY:
-            if (you.religion == GOD_CHRONOS)
+            if (you.religion == GOD_CHEIBRIADOS)
             {
                 if (!known)
                 {
@@ -4280,10 +4280,10 @@ static bool _elyvilon_retribution()
     return (true);
 }
 
-static bool _chronos_retribution()
+static bool _cheibriados_retribution()
 {
     // time god/slowness theme
-    const god_type god = GOD_CHRONOS;
+    const god_type god = GOD_CHEIBRIADOS;
     simple_god_message(" bends time around you.", god);
     switch (random2(5))
     {
@@ -5069,7 +5069,7 @@ bool divine_retribution(god_type god)
     case GOD_ELYVILON:      do_more = _elyvilon_retribution(); break;
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
     case GOD_FEAWN:         do_more = _feawn_retribution(); break;
-    case GOD_CHRONOS:       do_more = _chronos_retribution(); break;
+    case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
 
     default:
 #if DEBUG_DIAGNOSTICS || DEBUG_RELIGION
@@ -6905,9 +6905,9 @@ void god_pitch(god_type which_god)
             MSGCH_GOD);
         mpr("The plants of the dungeon cease their hostilities.", MSGCH_GOD);
     }
-    else if (you.religion == GOD_CHRONOS)
+    else if (you.religion == GOD_CHEIBRIADOS)
     {
-        mpr("You can now call upon Chronos to make your armour ponderous.",
+        mpr("You can now call upon Cheibriados to make your armour ponderous.",
             MSGCH_GOD);
     }
 
@@ -7221,7 +7221,7 @@ void handle_god_time()
                 gain_piety(1);
             return;
 
-        case GOD_CHRONOS:
+        case GOD_CHEIBRIADOS:
         case GOD_SHINING_ONE:
             if (_need_free_piety() && one_chance_in(15))
                 gain_piety(1);
@@ -7330,7 +7330,7 @@ int god_colour(god_type god) // mv - added
     case GOD_JIYVA:
         return (GREEN);
 
-    case GOD_CHRONOS:
+    case GOD_CHEIBRIADOS:
         return (LIGHTCYAN);
 
     case GOD_NO_GOD:

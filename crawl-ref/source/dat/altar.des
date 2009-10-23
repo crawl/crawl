@@ -341,22 +341,22 @@ tttt.C.ttttttt
       ttttttt 
 ENDMAP
 
-NAME:   chronos_altar_1
+NAME:   cheibriados_altar_1
 DEPTH:  D:2-7
 PLACE:  D:8
 WEIGHT: 75
-KFEAT:  C = altar_chronos
+KFEAT:  C = altar_cheibriados
 MAP
 ...
 .C.
 ...
 ENDMAP
 
-NAME:    chronos_altar_2
+NAME:    cheibriados_altar_2
 DEPTH:   D:2-7
 PLACE:   D:8
 WEIGHT:  75
-KFEAT:   C = altar_chronos
+KFEAT:   C = altar_cheibriados
 MONS:    giant slug, giant snail, elephant slug
 SUBST:   1 : 1:50 2:30 3:10 4:10
 NSUBST:  4 = 1:1 / 1:2 / 1:3
@@ -372,11 +372,11 @@ MAP
 .......
 ENDMAP
 
-NAME:   chronos_altar_3
+NAME:   cheibriados_altar_3
 DEPTH:  D:2-7
 PLACE:  D:8
 WEIGHT: 75
-KFEAT:  C = altar_chronos
+KFEAT:  C = altar_cheibriados
 ITEM:   potion of slowing
 ITEM:   apple, pear, orange, banana
 SUBST:  e : efgh

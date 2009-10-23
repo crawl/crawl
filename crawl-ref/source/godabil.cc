@@ -498,7 +498,7 @@ static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
     return (1);
 }
 
-int chronos_slouch(int pow)
+int cheibriados_slouch(int pow)
 {
     return (apply_area_visible(_slouch_monsters, pow));
 }
@@ -562,7 +562,7 @@ void lugonu_bends_space()
 
 ////////////////////////////////////////////////////////////////////////
 
-void chronos_time_bend(int pow)
+void cheibriados_time_bend(int pow)
 {
     mpr("The flow of time bends around you.");
 
@@ -581,13 +581,13 @@ void chronos_time_bend(int pow)
             simple_god_message(
                 make_stringf(" rebukes %s.",
                              mon->name(DESC_NOCAP_THE).c_str()).c_str(),
-                             GOD_CHRONOS);
+                             GOD_CHEIBRIADOS);
             do_slow_monster(mon, KC_YOU);
         }
     }
 }
 
-void chronos_time_step(int pow) // pow is the number of turns to skip
+void cheibriados_time_step(int pow) // pow is the number of turns to skip
 {
     coord_def old_pos = you.pos();
 
