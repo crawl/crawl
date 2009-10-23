@@ -61,7 +61,8 @@ species_type random_draconian_player_species()
 
 species_type get_species(const int index)
 {
-    ASSERT(index >= 0 && index < ARRAYSZ(old_species_order));
+    if(index < 0 || index >= ng_num_species())
+        return (SP_UNKNOWN);
 
     return (Options.use_old_selection_order ? old_species_order[index]
                                             : new_species_order[index]);
@@ -126,28 +127,28 @@ int get_species_index_by_name( const char *name )
     return (sp);
 }
 
-const char *get_species_abbrev(int which_species)
+const char *get_species_abbrev(species_type which_species)
 {
-    ASSERT( which_species > 0 && which_species < NUM_SPECIES );
+    ASSERT(which_species > 0 && which_species < NUM_SPECIES);
 
-    return (Species_Abbrev_List[ which_species ]);
+    return (Species_Abbrev_List[which_species]);
 }
 
 // Needed for debug.cc and hiscores.cc.
-int get_species_by_abbrev(const char *abbrev)
+species_type get_species_by_abbrev(const char *abbrev)
 {
     int i;
     COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES, c1);
     for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
-        if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[i][0] )
-            && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[i][1] ))
+        if (tolower(abbrev[0]) == tolower(Species_Abbrev_List[i][0])
+            && tolower(abbrev[1]) == tolower(Species_Abbrev_List[i][1]))
         {
             break;
         }
     }
 
-    return ((i < NUM_SPECIES) ? i : -1);
+    return ((i < NUM_SPECIES) ? static_cast<species_type>(i) : SP_UNKNOWN);
 }
 
 int ng_num_species()
@@ -160,26 +161,29 @@ int ng_num_species()
 }
 
 // Does a case-sensitive lookup of the species name supplied.
-int str_to_species(const std::string &species)
+species_type str_to_species(const std::string &species)
 {
+    species_type sp;
     if (species.empty())
-        return SP_HUMAN;
+        return SP_UNKNOWN;
 
     // first look for full name (e.g. Green Draconian)
     for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
     {
-        if (species == species_name(static_cast<species_type>(i), 10))
-            return (i);
+        sp = static_cast<species_type>(i);
+        if (species == species_name(sp, 10))
+            return (sp);
     }
 
     // nothing found, try again with plain name
     for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
     {
-        if (species == species_name(static_cast<species_type>(i), 1))
-            return (i);
+        sp = static_cast<species_type>(i);
+        if (species == species_name(sp, 1))
+            return (sp);
     }
 
-    return (SP_HUMAN);
+    return (SP_UNKNOWN);
 }
 
 std::string species_name(species_type speci, int level, bool genus, bool adj)
@@ -187,7 +191,7 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
 {
     std::string res;
 
-    if (player_genus( GENPC_DRACONIAN, speci ))
+    if (player_genus(GENPC_DRACONIAN, speci))
     {
         if (adj || genus)  // adj doesn't care about exact species
             res = "Draconian";

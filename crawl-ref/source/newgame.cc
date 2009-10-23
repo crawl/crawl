@@ -149,13 +149,13 @@ static bool _prev_startup_options_set(void)
 static std::string _get_opt_race_name(char race)
 {
     species_type prace = get_species(letter_to_index(race));
-    return (prace == SP_UNKNOWN? "Random" : species_name(prace, 1));
+    return (prace == SP_UNKNOWN ? "Random" : species_name(prace, 1));
 }
 
 static std::string _get_opt_class_name(char oclass)
 {
     job_type pclass = get_class(letter_to_index(oclass));
-    return (pclass == JOB_UNKNOWN? "Random" : get_class_name(pclass));
+    return (pclass == JOB_UNKNOWN ? "Random" : get_class_name(pclass));
 }
 
 static std::string _prev_startup_description(void)

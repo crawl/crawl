@@ -84,8 +84,8 @@ public:
     long        points;
     std::string name;
     long        uid;                // for multiuser systems
-    char        race;
-    char        cls;
+    species_type race;
+    job_type    cls;
     std::string race_class_name;    // overrides race & cls if non-empty.
     char        lvl;                // player level.
     char        best_skill;         // best skill #

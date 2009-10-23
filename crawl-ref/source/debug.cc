@@ -596,11 +596,10 @@ void wizard_create_spec_monster_name()
         mpr("Make player ghost which species? (case-sensitive) ", MSGCH_PROMPT);
         get_input_line( input_str, sizeof( input_str ) );
 
-        int sp_id = get_species_by_abbrev(input_str);
-        if (sp_id == -1)
+        species_type sp_id = get_species_by_abbrev(input_str);
+        if (sp_id == SP_UNKNOWN)
             sp_id = str_to_species(input_str);
-
-        if (sp_id == -1)
+        if (sp_id == SP_UNKNOWN)
         {
             mpr("No such species, making it Human.");
             sp_id = SP_HUMAN;

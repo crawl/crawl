@@ -639,8 +639,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("uid",  "%d", uid);
     fields->add_field("race", "%s",
-                      species_name(static_cast<species_type>(race),
-                                   lvl).c_str());
+                      species_name(race, lvl).c_str());
     fields->add_field("cls",  "%s", get_class_name(cls));
     fields->add_field("char", "%s%s",
                       get_species_abbrev(race), get_class_abbrev(cls));
@@ -648,8 +647,8 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("sk",    "%s", skill_name(best_skill));
     fields->add_field("sklev", "%d", best_skill_lvl);
     fields->add_field("title", "%s",
-                      skill_title( best_skill, best_skill_lvl,
-                                   race, str, dex, god ).c_str() );
+                      skill_title(best_skill, best_skill_lvl,
+                                  race, str, dex, god).c_str());
 
     // "place" is a human readable place name, and it is write-only,
     // so we can write place names like "Bazaar" that Crawl cannot
@@ -861,8 +860,8 @@ void scorefile_entry::reset()
     points               = -1;
     name.clear();
     uid                  = 0;
-    race                 = 0;
-    cls                  = 0;
+    race                 = SP_UNKNOWN;
+    cls                  = JOB_UNKNOWN;
     lvl                  = 0;
     race_class_name.clear();
     best_skill           = 0;
