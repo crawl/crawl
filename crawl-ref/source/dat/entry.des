@@ -4886,6 +4886,7 @@ TAGS:   entry no_rotate no_pool_fixup
 ORIENT: northwest
 MONS:   plant
 FTILE:  .t1 = floor_lair
+KMASK:  wW = no_monster_gen
 MAP
 ttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttt1ttttttwwtttttttttttttttttttttt
@@ -4920,7 +4921,7 @@ ENDMAP
 #
 NAME:   enne_octagon_isle
 ORIENT: float
-TAGS:   entry
+TAGS:   entry no_monster_gen
 FTILE:  '[({ = floor_sand_stone
 SUBST:  ' = .
 {{
