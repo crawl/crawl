@@ -7222,6 +7222,8 @@ void handle_god_time()
             return;
 
         case GOD_CHEIBRIADOS:
+            if (you.hunger_state < HS_FULL)
+                return;
         case GOD_SHINING_ONE:
             if (_need_free_piety() && one_chance_in(15))
                 gain_piety(1);
