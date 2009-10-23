@@ -4085,6 +4085,10 @@ static void _fsim_set_melee_skill(int skill, const item_def *item)
 {
     you.skills[_fsim_melee_skill(item)] = skill;
     you.skills[SK_FIGHTING]            = skill * 15 / 27;
+    you.skills[SK_ARMOUR]              = skill * 15 / 27;
+    you.skills[SK_SHIELDS]              = skill;
+    for(int i=0; i<15; i++)
+        you.skills[SK_SPELLCASTING+i]  = skill;
 }
 
 static void _fsim_set_ranged_skill(int skill, const item_def *item)
@@ -4102,17 +4106,17 @@ static void _fsim_item(FILE *out,
                        int maxdam, unsigned long time)
 {
     double hitdam = hits? double(damage) / hits : 0.0;
-    int avspeed = static_cast<int>(time / iterations);
+    double avspeed = ((double) time / (double)  iterations);
     fprintf(out,
             " %-5s|  %3ld%%    |  %5.2f |    %5.2f  |"
-            "   %5.2f |   %3d   |   %2ld\n",
+            "   %5.2f |   %3d   |   %5.2g\n",
             wskill,
             100 * hits / iterations,
             double(damage) / iterations,
             hitdam,
             double(damage) * player_speed() / avspeed / iterations,
             maxdam,
-            time / iterations);
+            avspeed);
 }
 
 static void _fsim_defence_item(FILE *out, long cum, int hits, int max,
