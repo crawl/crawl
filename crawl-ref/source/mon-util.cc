@@ -8069,8 +8069,8 @@ bool monsters::has_action_energy() const
 
 void monsters::check_redraw(const coord_def &old) const
 {
-    const bool see_new = see_cell(pos());
-    const bool see_old = see_cell(old);
+    const bool see_new = ::see_cell(pos());
+    const bool see_old = ::see_cell(old);
     if ((see_new || see_old) && !view_update())
     {
         if (see_new)
