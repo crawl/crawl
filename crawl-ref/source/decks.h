@@ -6,6 +6,10 @@
  *
  *  Change History (most recent first):
  *
+ *               <2>     april2009      Cha             some functions in
+                                                         decks.cc declared here
+                                                         as they're no longer
+                                                         static
  *               <1>     -/--/--        LRH             Created
  */
 
@@ -148,7 +152,10 @@ void init_deck(item_def &item);
 int cards_in_deck(const item_def &deck);
 card_type get_card_and_flags(const item_def& deck, int idx,
                              unsigned char& _flags);
+void _create_pond(const coord_def& center, int radius, bool allow_deep); // //
+void _sage_card(int power, deck_rarity_type rarity); // //
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck);
 
 #endif
+ 

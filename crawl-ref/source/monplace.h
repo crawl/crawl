@@ -361,4 +361,6 @@ protected:
     FixedVector<std::vector<coord_def>, GXM * GYM> hash;
 };
 
+int retarded_branch_counting_function(int branchnumber);
+
 #endif  // MONPLACE_H

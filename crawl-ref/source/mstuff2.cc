@@ -7,6 +7,9 @@
  *
  *  Change History (most recent first):
  *
+ *      <6>       april 2009   Cha      gave useful abilities to friendly silver
+                                         statues and friendly orange crystal
+                                         statues
  *      <5>     31 July 2000   JDJ      Fixed mon_throw to use lnchType.
  *      <4>     29 July 2000   JDJ      Tweaked mons_throw so it doesn't index past
  *                                      the end of the array when monsters don't have
@@ -2372,7 +2375,7 @@ static int _monster_abjuration(const monsters *caster, bool actual)
 
 bool silver_statue_effects(monsters *mons)
 {
-    if ((mons_player_visible(mons) || one_chance_in(3)) && !one_chance_in(3))
+    if ((mons->attitude == ATT_HOSTILE) && ((mons_player_visible(mons) || one_chance_in(3)) && !one_chance_in(3)))
     {
         const std::string msg =
             "'s eyes glow " + weird_glowing_colour() + '.';
@@ -2385,13 +2388,26 @@ bool silver_statue_effects(monsters *mons)
                 BEH_HOSTILE, 5, you.pos(), MHITYOU));
         return (true);
     }
+    if ((mons->attitude == ATT_FRIENDLY) && one_chance_in(3))
+    {
+        const std::string msg =
+            "'s eyes glow " + weird_glowing_colour() + '.';
+        simple_monster_message(mons, msg.c_str(), MSGCH_WARN);
+
+        create_monster(
+            mgen_data(
+                summon_any_demon((coinflip() ? DEMON_COMMON
+                                             : DEMON_LESSER)),
+                BEH_FRIENDLY, 5, mons->pos() )); // //
+        return (true);
+    }
     return (false);
 }
 
 bool orange_statue_effects(monsters *mons)
 {
-    if ((mons_player_visible(mons) || one_chance_in(3))
-        && !one_chance_in(3))
+    if ((mons->attitude == ATT_HOSTILE) && ((mons_player_visible(mons) || one_chance_in(3))
+					  && !one_chance_in(3)))
     {
         mpr("A hostile presence attacks your mind!", MSGCH_WARN);
 
@@ -2400,6 +2416,22 @@ bool orange_statue_effects(monsters *mons)
         return (true);
     }
 
+    // // this is new
+    if (mons->attitude == ATT_FRIENDLY)
+    {
+        for (int stupidcounter = 0; stupidcounter < 20; stupidcounter++)
+	{
+            int randomindex = random_range(1,MAX_MONSTERS-1);
+            if (((abs(menv[randomindex].x - mons->x) < 8) && (abs(menv[randomindex].y - mons->y) < 8)) && ((mons_class_is_confusable(menv[randomindex].type)) && menv[randomindex].attitude == ATT_HOSTILE))
+	    {
+	      if (menv[randomindex].add_ench( mon_enchant(ENCH_CONFUSION, 10)) && mons_player_visible(mons))
+	      {
+                  simple_monster_message( &menv[randomindex], " appears confused.");
+              }
+	    }
+
+	}
+    }
     return (false);
 }
 

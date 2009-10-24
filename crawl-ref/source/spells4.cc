@@ -2360,6 +2360,12 @@ int cast_apportation(int pow)
         return (0);
     }
 
+    if ((beam.tx == (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)) && (beam.ty == (find_floor_item(OBJ_ORBS,ORB_ZOT)->y)))
+    {
+        mpr( "You cannot apport the sacred Orb." );
+        return(0);
+    }
+
     // Let's look at the top item in that square...
     const int item = igrd[ beam.tx ][ beam.ty ];
     if (item == NON_ITEM)

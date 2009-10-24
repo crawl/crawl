@@ -7,6 +7,8 @@
  *
  *  Change History (most recent first):
  *
+ *               <2>     april2009      Cha             runes_in_pack now
+                                                         declared here
  *               <1>     -/--/--        LRH             Created
  */
 
@@ -129,6 +131,9 @@ coord_def pick_adjacent_free_square(const coord_def& p);
 int speed_to_duration(int speed);
 
 bool scramble(void);
+
+// // this used to be static 
+int runes_in_pack();
 
 bool interrupt_cmd_repeat( activity_interrupt_type ai,
                            const activity_interrupt_data &at );

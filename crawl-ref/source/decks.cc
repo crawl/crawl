@@ -6,6 +6,8 @@
  *
  *  Change History (most recent first):
  *
+ *               <2>     april2009      Cha             some functions no longer
+                                                         static
  *               <1>     -/--/--        LRH             Created
  */
 
@@ -2165,7 +2167,8 @@ static void _helix_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _sage_card(int power, deck_rarity_type rarity)
+// // no longer static
+void _sage_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     int c;                      // how much to weight your skills
@@ -2207,7 +2210,8 @@ static void _sage_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _create_pond(const coord_def& center, int radius, bool allow_deep)
+// // _create_pond used to be static -- hope it's okay that we changed that
+void _create_pond(const coord_def& center, int radius, bool allow_deep)
 {
     radius_iterator ri(center, radius, false);
     for ( ; ri; ++ri )
@@ -2229,6 +2233,7 @@ static void _create_pond(const coord_def& center, int radius, bool allow_deep)
         }
     }
 }
+
 
 static void _deepen_water(const coord_def& center, int radius)
 {

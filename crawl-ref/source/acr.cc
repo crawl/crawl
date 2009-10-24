@@ -7,6 +7,9 @@
  *
  *  Change History (most recent first):
  *
+ * <19> april2009       Cha             added code for placing end-of-wave
+                                         bosses and new method for calling
+                                         spawn_random_monsters
  * <18> 7/29/00         JDJ             values.h isn't included on Macs
  * <17> 19jun2000       GDL             added Windows console support
  * <16> 06mar2000       bwr             changes to berserk
@@ -1383,6 +1386,36 @@ static void _center_cursor()
     cgotoxy(cwhere.x, cwhere.y);
 }
 
+void bosses_check()
+{
+    if ((you.num_turns + 1) % CYCLE_LENGTH == 0)
+    {
+        int urinecounter = 0;
+        int mon = -1;
+        while (urinecounter++ < 100 && mon == -1)
+	{
+            mgen_data mg(BOSS_MONSTER, BEH_SEEK, 0, coord_def(), MHITYOU); // //
+            mg.proximity = PROX_NEAR_STAIRS;
+            mon = mons_place( mg );
+            if (mon > -1)
+	    {
+	        mpr( "You sense that a powerful threat has arrived." , MSGCH_DANGER );
+	        if ((((you.num_turns + 1)/CYCLE_LENGTH) % FREQUENCY_OF_RUNES) == 0)
+                {
+                    int urinaryitempointer = items( 1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, retarded_rune_counting_function( ((you.num_turns + 1)/CYCLE_LENGTH) % FREQUENCY_OF_RUNES ), retarded_rune_counting_function( ((you.num_turns + 1)/CYCLE_LENGTH) % FREQUENCY_OF_RUNES )); // //
+	            int *const item_made = &urinaryitempointer; // //
+                    if (*item_made != NON_ITEM && *item_made != -1)
+                    {
+                        move_item_to_grid( item_made, menv[mon].x, menv[mon].y );
+                    }
+	        }
+	    }
+            // // else
+	    // // mpr("mon = -1");
+        }
+    }
+}
+
 //
 //  This function handles the player's input. It's called from main(),
 //  from inside an endless loop.
@@ -1405,6 +1438,7 @@ static void _input()
     }
 
     you.turn_is_over = false;
+
     _prep_input();
 
     fire_monster_alerts();
@@ -3081,6 +3115,8 @@ static void _check_sanctuary()
 
 static void _world_reacts()
 {
+
+
     crawl_state.clear_god_acting();
 
     if (you.num_turns != -1)
@@ -3203,13 +3239,20 @@ static void _world_reacts()
 
         // Call spawn_random_monsters() more often than the rest of
         // handle_time() so the spawning rates work out correctly.
-        if (old_synch_time >= 150 && you.synch_time < 150
-            || old_synch_time >= 100 && you.synch_time < 100
-            || old_synch_time >= 50 && you.synch_time < 50)
-        {
-            spawn_random_monsters();
-        }
+
+	// //        if (old_synch_time >= 150 && you.synch_time < 150
+        // //    || old_synch_time >= 100 && you.synch_time < 100
+        // //    || old_synch_time >= 50 && you.synch_time < 50)
+        // // {
+	    // // }
     }
+
+            if (you.num_turns > 100)
+            {
+                bosses_check(); // //
+                for (int pisscounter = 0; pisscounter < SPAWN_SIZE; pisscounter++)
+                    spawn_random_monsters();
+            }
 
     manage_clouds();
 

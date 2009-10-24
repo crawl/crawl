@@ -7,6 +7,7 @@
  *
  *  Change History (most recent first):
  *
+ *      <12>   april2009 Cha    Zot Defense abilities added
  *      <11>   7 Aug 01  MV     Changed MSLOT_UNASSIGNED_I to MSLOT_MISCELLANY
  *                              added NUM_MISCELLANY, changed MONS_ANOTHER_
  *                              LAVA_THING to MONS_SALAMANDER
@@ -73,6 +74,35 @@ enum ability_type
     ABIL_EVOKE_LEVITATE,
     ABIL_EVOKE_STOP_LEVITATING,
     ABIL_END_TRANSFORMATION,           //   55
+
+    // // zot defense abilities
+    ABIL_MAKE_FUNGUS = 57,             //   57
+    ABIL_MAKE_PLANT,
+    ABIL_MAKE_OKLOB_PLANT,
+    ABIL_MAKE_DART_TRAP,               // // 60
+    ABIL_MAKE_ICE_STATUE,
+    ABIL_MAKE_OCS,
+    ABIL_MAKE_SILVER_STATUE,
+    ABIL_MAKE_CURSE_SKULL,
+    ABIL_MAKE_TELEPORT,                // // 65
+    ABIL_MAKE_ARROW_TRAP,
+    ABIL_MAKE_BOLT_TRAP,
+    ABIL_MAKE_SPEAR_TRAP,
+    ABIL_MAKE_AXE_TRAP,
+    ABIL_MAKE_NEEDLE_TRAP,             // // 70
+    ABIL_MAKE_NET_TRAP,
+    ABIL_MAKE_TELEPORT_TRAP,
+    ABIL_MAKE_ALARM_TRAP,
+    ABIL_MAKE_BLADE_TRAP,
+    ABIL_MAKE_OKLOB_CIRCLE,            // // 75
+    ABIL_MAKE_ACQUIRE_GOLD,
+    ABIL_MAKE_ACQUIREMENT,
+    ABIL_MAKE_WATER,
+    ABIL_MAKE_ELECTRIC_EEL,
+    ABIL_MAKE_BAZAAR,                  // // 80
+    ABIL_MAKE_ALTAR,
+    ABIL_MAKE_GRENADES,
+    ABIL_MAKE_SAGE,
 
     // Divine abilities
     ABIL_ZIN_RECITE = 110,                  //  110
@@ -1890,7 +1920,8 @@ enum monster_type                      // (int) menv[].type
     // Any random specialised draconian, such as a draconian knight.
     RANDOM_NONBASE_DRACONIAN,
 
-    WANDERING_MONSTER = 2500 // only used in monster placement routines - forced limit checks {dlb}
+    WANDERING_MONSTER = 2500, // only used in monster placement routines - forced limit checks {dlb}
+    BOSS_MONSTER = 2501
 
 };
 

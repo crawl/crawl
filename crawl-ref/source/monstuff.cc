@@ -7,6 +7,11 @@
  *
  *  Change History (most recent first):
  *
+ *      <9>       april 2009   Cha     added Orb rot damage, getting XP for
+                                        trap kills, adapted monster AI for
+                                        seeking Orb on Zot:5, made distant
+                                        allies smarter with their special 
+                                        abilities
  *      <8>      7 Aug  2001   MV      Intelligent monsters now pick up gold
  *      <7>     26 Mar  2001   GDL     Fixed monster reaching
  *      <6>     13 Mar  2001   GDL     Rewrite of monster AI
@@ -455,8 +460,8 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
             mpr("You feel a bit more experienced.");
         }
     }
-    else if (pet_kill && !already_got_half_xp)
-        gain_exp( experience / 2 + 1, exp_gain, avail_gain );
+    else  // // if (pet_kill && !already_got_half_xp)
+	  gain_exp( experience / 2 + 1, exp_gain, avail_gain ); 
 
     if (MON_KILL(killer) && !no_xp)
         _give_monster_experience( monster, killer_index, experience,
@@ -2328,8 +2333,8 @@ static void _check_lava_water_in_sight()
     // to avoid unnecessary pathfinding later.
     you.lava_in_sight = you.water_in_sight = 0;
     coord_def gp;
-    for (gp.y = (you.y_pos - 8); (gp.y <= you.y_pos + 8); gp.y++)
-        for (gp.x = (you.x_pos - 8); (gp.x <= you.x_pos + 8); gp.x++)
+    for (gp.y = ((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - 8); (gp.y <= (find_floor_item(OBJ_ORBS,ORB_ZOT)->y) + 8); gp.y++)
+        for (gp.x = ((find_floor_item(OBJ_ORBS,ORB_ZOT)->x) - 8); (gp.x <= (find_floor_item(OBJ_ORBS,ORB_ZOT)->x) + 8); gp.x++)
         {
             if (!in_bounds(gp))
                 continue;
@@ -2552,6 +2557,13 @@ static void _handle_behaviour(monsters *mon)
     bool patrolling = mon->is_patrolling();
     static std::vector<level_exit> e;
     static int                     e_index = -1;
+
+    if ((!isFriendly && !isNeutral) && (find_floor_item(OBJ_ORBS,ORB_ZOT)->x == mon->x) && (find_floor_item(OBJ_ORBS,ORB_ZOT)->y == mon->y))
+    {
+      mpr("Your flesh rots away as the Orb of Zot is desecrated.", MSGCH_DANGER ); // //
+        rot_hp(random_range(1,1)); // //
+        ouch(1,0,KILLED_BY_ROTTING); // //
+    }
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
@@ -2583,7 +2595,7 @@ static void _handle_behaviour(monsters *mon)
         const int intel = mons_intel(mon->type);
         // Now, the corollary to that is that sometimes, if a
         // player is right next to a monster, they will 'see'.
-        if (grid_distance( you.x_pos, you.y_pos, mon->x, mon->y ) == 1
+        if (grid_distance( (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0), (find_floor_item(OBJ_ORBS,ORB_ZOT)->y), mon->x, mon->y ) == 1
             && one_chance_in(3))
         {
             proxPlayer = true;
@@ -2605,7 +2617,24 @@ static void _handle_behaviour(monsters *mon)
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
         && !mon->has_ench(ENCH_BERSERK))
     {
-        mon->foe = you.pet_target;
+        if (proxPlayer)
+        {
+	  // //            mpr("setting pet target (proxPlayer)"); // //
+            mon->foe = you.pet_target;
+        }
+        else
+	{
+	    // // this is all new, for out-of-sight friendlies to do something useful
+	    for (int uticounter = 0; uticounter < NUM_MONSTERS; uticounter++)
+            {
+                if (mon_can_see_monster(mon, &menv[uticounter]))
+		{
+                    mon->foe = uticounter;
+		    // //                    mpr("setting pet target (!proxPlayer)"); // //
+                    break;
+		}
+            }
+	}
     }
 
     // Instead, berserkers attack nearest monsters.
@@ -2648,7 +2677,7 @@ static void _handle_behaviour(monsters *mon)
     if (!isFriendly && !isNeutral
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !(mon->has_ench(ENCH_BERSERK)) && isHealthy
-        && !one_chance_in(3))
+        && one_chance_in(4))  // // 2/3 chance of retargeting changed to 1/4
     {
         mon->foe = MHITYOU;
     }
@@ -2662,18 +2691,18 @@ static void _handle_behaviour(monsters *mon)
 
     while (changed)
     {
-        int foe_x = you.x_pos;
-        int foe_y = you.y_pos;
+        int foe_x = (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0);
+        int foe_y = (find_floor_item(OBJ_ORBS,ORB_ZOT)->y);
 
         // Evaluate these each time; they may change.
         if (mon->foe == MHITNOT)
             proxFoe = false;
         else
         {
-            if (mon->foe == MHITYOU)
+	    if ((mon->foe == MHITYOU) && !isFriendly)
             {
-                foe_x   = you.x_pos;
-                foe_y   = you.y_pos;
+                foe_x   = (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0);
+                foe_y   = (find_floor_item(OBJ_ORBS,ORB_ZOT)->y); // //
                 proxFoe = proxPlayer;   // Take invis into account.
             }
             else
@@ -2712,13 +2741,13 @@ static void _handle_behaviour(monsters *mon)
                 else
                 {
                     new_foe = MHITYOU;
-                    mon->target_x = you.x_pos;
-                    mon->target_y = you.y_pos;
+                    mon->target_x = (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0);
+                    mon->target_y = (find_floor_item(OBJ_ORBS,ORB_ZOT)->y); // //
                 }
                 break;
             }
-
-            // Foe gone out of LOS?
+	    
+	    /* // Foe gone out of LOS?
             if (!proxFoe)
             {
                 if (mon->foe == MHITYOU && mon->is_travelling()
@@ -2745,9 +2774,9 @@ static void _handle_behaviour(monsters *mon)
                         mon->target_x = foe_x;
                         mon->target_y = foe_y;
                     }
-                    break;
+                    break; // //
                 }
-
+		
                 if (mon->foe_memory > 0 && mon->foe != MHITNOT)
                 {
                     // If we've arrived at our target x,y
@@ -2757,14 +2786,14 @@ static void _handle_behaviour(monsters *mon)
                     // but only for a few moves (smell and
                     // intuition only go so far).
 
-                    if (mon->x == mon->target_x && mon->y == mon->target_y)
+		    if ((mon->x == mon->target_x && mon->y == mon->target_y) && !isFriendly)
                     {
                         if (mon->foe == MHITYOU)
                         {
                             if (one_chance_in(you.skills[SK_STEALTH]/3))
                             {
-                                mon->target_x = you.x_pos;
-                                mon->target_y = you.y_pos;
+                                mon->target_x = (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0);
+                                mon->target_y = (find_floor_item(OBJ_ORBS,ORB_ZOT)->y);
                             }
                             else
                                 mon->foe_memory = 1;
@@ -2811,7 +2840,7 @@ static void _handle_behaviour(monsters *mon)
 
                 mon->foe_memory = memory;
                 break;  // switch/case BEH_SEEK
-            }
+	    } */
 
             // Monster can see foe: continue 'tracking'
             // by updating target x,y.
@@ -2845,7 +2874,7 @@ static void _handle_behaviour(monsters *mon)
                 // is already adjacent to you.
                 if (potentially_blocking && mons_intel(mon->type) >= I_NORMAL
                         && mons_has_los_ability(mon->type)
-                    || grid_distance(mon->x, mon->y, you.x_pos, you.y_pos) == 1)
+                    || grid_distance(mon->x, mon->y, (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0), (find_floor_item(OBJ_ORBS,ORB_ZOT)->y)) == 1)
                 {
                     potentially_blocking = false;
                 }
@@ -2876,7 +2905,7 @@ static void _handle_behaviour(monsters *mon)
                 }
 
                 if (!potentially_blocking
-                    || grid_see_grid(mon->x, mon->y, you.x_pos, you.y_pos,
+                    || grid_see_grid(mon->x, mon->y, (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0), (find_floor_item(OBJ_ORBS,ORB_ZOT)->y),
                                      can_move))
                 {
                     if (mon->travel_target != MTRAV_PATROL
@@ -2900,7 +2929,7 @@ static void _handle_behaviour(monsters *mon)
                     {
                         int len = mon->travel_path.size();
                         coord_def targ = mon->travel_path[len - 1];
-                        if (grid_see_grid(targ.x, targ.y, you.x_pos, you.y_pos,
+                        if (grid_see_grid(targ.x, targ.y, (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0), (find_floor_item(OBJ_ORBS,ORB_ZOT)->y),
                                           can_move))
                         {
                             // Current target still valid?
@@ -2932,7 +2961,7 @@ static void _handle_behaviour(monsters *mon)
 
                     // Use pathfinding to find a (new) path to the player.
                     const int dist = grid_distance(mon->x, mon->y,
-                                                   you.x_pos, you.y_pos);
+                                                   (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0), (find_floor_item(OBJ_ORBS,ORB_ZOT)->y));
 
 #ifdef DEBUG_PATHFIND
                     mprf("Need to calculate a path... (dist = %d)", dist);
@@ -2982,14 +3011,14 @@ static void _handle_behaviour(monsters *mon)
                         mprf("Need a path for %s from (%d, %d) to (%d, %d), "
                              "max. dist = %d",
                              mon->name(DESC_PLAIN).c_str(), mon->x, mon->y,
-                             you.x_pos, you.y_pos, range);
+                             (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0), (find_floor_item(OBJ_ORBS,ORB_ZOT)->y), range);
 #endif
                         monster_pathfind mp;
                         if (range > 0)
                             mp.set_range(range);
 
-                        if (mp.start_pathfind(mon, coord_def(you.x_pos,
-                                                             you.y_pos)))
+                        if (mp.start_pathfind(mon, coord_def((find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0),
+                                                             (find_floor_item(OBJ_ORBS,ORB_ZOT)->y))))
                         {
                             mon->travel_path = mp.calc_waypoints();
                             if (!mon->travel_path.empty())
@@ -3035,8 +3064,8 @@ static void _handle_behaviour(monsters *mon)
                 }
                 else
                 {
-                    mon->target_x = you.x_pos;
-                    mon->target_y = you.y_pos;
+                    mon->target_x = (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0);
+                    mon->target_y = (find_floor_item(OBJ_ORBS,ORB_ZOT)->y);
                 }
             }
             else
@@ -3103,7 +3132,7 @@ static void _handle_behaviour(monsters *mon)
 
                 // If a pacified monster is far enough away from the
                 // player, make it leave the level.
-                if (grid_distance(mon->x, mon->y, you.x_pos, you.y_pos)
+                if (grid_distance(mon->x, mon->y, (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)+((abs((find_floor_item(OBJ_ORBS,ORB_ZOT)->y) - (mon->y)) > 8) ? (((mon->hit_dice) % 2) ? -22 + random_range(-4,4) : 22 + random_range(-4,4)) : 0), (find_floor_item(OBJ_ORBS,ORB_ZOT)->y))
                         >= LOS_RADIUS * 4)
                 {
                     make_mons_leave_level(mon);
@@ -3926,8 +3955,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                                   ? draco_subspecies( monster )
                                   : static_cast<monster_type>( monster->type );
 
-    if (!mons_near(monster)
-        || mons_is_sleeping(monster)
+    // // removed !mons_near(monster) check
+    if (mons_is_sleeping(monster)
         || monster->has_ench(ENCH_SUBMERGED))
     {
         return (false);
@@ -4045,8 +4074,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!mons_player_visible( monster ))
-            break;
+        // // if (!mons_player_visible( monster ))
+        // //    break;
 
         if (coinflip())
             break;
@@ -4075,6 +4104,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             simple_monster_message(monster,
                                    " shoots out a bolt of electricity!");
             fire_beam(beem);
+	    // //	    mpr("electric eel firing"); // //
             used = true;
         }
         break;
@@ -4089,8 +4119,10 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             break;
 
         if (one_chance_in(3))
+	{
+	  // // 	    mpr("acid shot");
             used = _plant_spit(monster, beem);
-
+	}
         break;
 
     case MONS_MOTH_OF_WRATH:
@@ -5184,8 +5216,8 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                     }
                 }
             }
-            else if (monster->foe == MHITYOU && !monsterNearby)
-                return (false);
+            // // else if (monster->foe == MHITYOU && !monsterNearby)
+            // //    return (false);
         }
 
         // Monsters caught in a net try to get away.
@@ -5416,7 +5448,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
         {
             if (spell_needs_foe(spell_cast))
                 _make_mons_stop_fleeing(monster);
-
+	    // //            mpr("monster casting"); // //
             mons_cast(monster, beem, spell_cast);
             mmov_x = 0;
             mmov_y = 0;
@@ -6152,6 +6184,7 @@ static void _handle_monster_move(int i, monsters *monster)
                 // Figure out if they fight.
                 else if (monsters_fight(i, targmon))
                 {
+		  // //		    if (!mons_friendly(monster)) mpr("hostile vs ally monsters_fight returned true"); else mpr("ally vs hostile monsters_fight returned true"); // //
                     if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
@@ -7457,7 +7490,10 @@ forget_it:
                 ret = _monster_swaps_places(monster, mmov_x, mmov_y);
             else
             {
-                monsters_fight(monster_index(monster), targmon);
+	        if (monsters_fight(monster_index(monster), targmon))
+		{ 
+		  // //                    if (!mons_friendly(monster)) mpr("hostile vs ally monsters_fight returned true"); else mpr("ally vs hostile monsters_fight returned true"); // //
+		}
                 ret = true;
             }
 

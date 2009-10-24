@@ -7,6 +7,7 @@
  *
  *  Change History (most recent first):
  *
+ *   <4>   april2009     Cha    runes_in_pack no longer static
  *   <3>   11/14/99      cdl    evade with random40(ev) vice random2(ev)
  *   <2>    5/20/99      BWR    Multi-user support, new berserk code.
  *   <1>    -/--/--      LRH    Created
@@ -1421,7 +1422,8 @@ static void set_entry_cause(entry_cause_type default_cause,
     }
 }
 
-static int runes_in_pack()
+// // not static anymore
+int runes_in_pack()
 {
     int num_runes = 0;
 

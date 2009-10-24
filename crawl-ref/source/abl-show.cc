@@ -7,6 +7,7 @@
  *
  *  Change History (most recent first):
  *
+ *  <7>    april2009     Cha    added Zot abilities and flags
  *  <6>    19mar2000     jmf    added elvish Glamour
  *  <5>     11/06/99     cdl    reduced power of minor destruction
  *
@@ -42,11 +43,14 @@
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
+#include "dungeon.h" // // for place_specific_stair
 #include "effects.h"
 #include "food.h"
 #include "it_use2.h"
 #include "itemprop.h"
+#include "items.h"  // // for AQ_SCROLL
 #include "macro.h"
+#include "maps.h" // // for random_map_for_tag
 #include "message.h"
 #include "menu.h"
 #include "misc.h"
@@ -88,7 +92,22 @@ enum ability_flag_type
     ABFLAG_INSTANT      = 0x00000020, // doesn't take time to use
     ABFLAG_PERMANENT_HP = 0x00000040, // costs permanent HPs
     ABFLAG_PERMANENT_MP = 0x00000080, // costs permanent MPs
-    ABFLAG_CONF_OK      = 0x00000100  // can use even if confused
+    ABFLAG_CONF_OK      = 0x00000100, // can use even if confused
+    ABFLAG_TWO_XP       = 0x00000200, // // costs 2 XP
+    ABFLAG_TEN_XP       = 0X00000400, // // costs 10 XP
+    ABFLAG_HUNDRED_XP   = 0X00000800, // // costs 100 XP
+    ABFLAG_THOUSAND_XP  = 0X00001000, // // costs 1000 XP
+    ABFLAG_THREE_THOUSAND_XP = 0X00002000, // // costs 3000 XP
+    ABFLAG_TEN_THOUSAND_XP = 0X00004000, // // costs 10,000 XP
+    ABFLAG_THIRTY_XP = 0X00008000, // // costs 30 XP
+    ABFLAG_THREE_HUNDRED_XP = 0X00010000, // // costs 300 XP
+    ABFLAG_ENCH_MISCAST = 0X00020000, // // severity 3 enchantment miscast
+    ABFLAG_TLOC_MISCAST = 0X00040000, // // severity 3 translocation miscast
+    ABFLAG_NECRO_MISCAST_MINOR = 0X00080000, // // severity 2 necro miscast
+    ABFLAG_NECRO_MISCAST = 0X00100000, // // severity 3 necro miscast
+    ABFLAG_TMIG_MISCAST = 0X00200000, // // severity 3 transmigration miscast
+    ABFLAG_LEVEL_DRAIN = 0X00400000, // // drains 2 levels
+    ABFLAG_FIFTY_XP = 0X00800000 // // costs 50 XP
 };
 
 static void _lugonu_bends_space();
@@ -320,6 +339,35 @@ static const ability_def Ability_List[] =
     { ABIL_ROTTING, "Rotting", 4, 4, 0, 2, ABFLAG_NONE },
     { ABIL_TORMENT_II, "Call Torment", 9, 0, 0, 3, ABFLAG_PAIN },
 
+    // // zot defense abilities
+    { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, ABFLAG_TEN_XP },
+    { ABIL_MAKE_PLANT, "Make plant", 0, 0, 0, 0, ABFLAG_TWO_XP },
+    { ABIL_MAKE_OKLOB_PLANT, "Make oklob plant", 0, 0, 0, 0, ABFLAG_HUNDRED_XP},
+    { ABIL_MAKE_DART_TRAP, "Make dart trap", 0, 0, 0, 0, ABFLAG_TEN_XP },
+    { ABIL_MAKE_ICE_STATUE, "Make ice statue", 0, 0, 50, 0, ABFLAG_THOUSAND_XP },
+    { ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 200, 0, ABFLAG_THOUSAND_XP },
+    { ABIL_MAKE_SILVER_STATUE, "Make silver statue", 0, 0, 400, 0, ABFLAG_THREE_THOUSAND_XP },
+    { ABIL_MAKE_CURSE_SKULL, "Make curse skull", 0, 0, 600, 0, ABFLAG_TEN_THOUSAND_XP | ABFLAG_NECRO_MISCAST_MINOR }, 
+    { ABIL_MAKE_TELEPORT, "Zot-teleport", 0, 0, 0, 0, ABFLAG_TWO_XP },
+    { ABIL_MAKE_ARROW_TRAP, "Make arrow trap", 0, 0, 0, 0, ABFLAG_THIRTY_XP },
+    { ABIL_MAKE_BOLT_TRAP, "Make bolt trap", 0, 0, 0, 0, ABFLAG_FIFTY_XP },
+    { ABIL_MAKE_SPEAR_TRAP, "Make spear trap", 0, 0, 0, 0, ABFLAG_FIFTY_XP },
+    { ABIL_MAKE_AXE_TRAP, "Make axe trap", 0, 0, 0, 0, ABFLAG_HUNDRED_XP },
+    { ABIL_MAKE_NEEDLE_TRAP, "Make needle trap", 0, 0, 0, 0, ABFLAG_THIRTY_XP },
+    { ABIL_MAKE_NET_TRAP, "Make net trap", 0, 0, 0, 0, ABFLAG_TWO_XP },
+    { ABIL_MAKE_TELEPORT_TRAP, "Make teleport trap", 0, 0, 0, 0, ABFLAG_TEN_THOUSAND_XP | ABFLAG_TLOC_MISCAST }, 
+    { ABIL_MAKE_ALARM_TRAP, "Make alarm trap", 0, 0, 0, 0, ABFLAG_TWO_XP },
+    { ABIL_MAKE_BLADE_TRAP, "Make blade trap", 0, 0, 0, 0, ABFLAG_THREE_HUNDRED_XP },
+    { ABIL_MAKE_OKLOB_CIRCLE, "Make oklob circle", 0, 0, 0, 0, ABFLAG_THOUSAND_XP },
+    { ABIL_MAKE_ACQUIRE_GOLD, "Acquire gold", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN },
+    { ABIL_MAKE_ACQUIREMENT, "Acquirement", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN },
+    { ABIL_MAKE_WATER, "Make water", 0, 0, 0, 0, ABFLAG_TEN_XP },
+    { ABIL_MAKE_ELECTRIC_EEL, "Make electric eel", 0, 0, 0, 0, ABFLAG_HUNDRED_XP },
+    { ABIL_MAKE_BAZAAR, "Make bazaar", 0, 0, 0, 0, ABFLAG_HUNDRED_XP },
+    { ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, 0, ABFLAG_TWO_XP },
+    { ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, 0, ABFLAG_TWO_XP },
+    { ABIL_MAKE_SAGE, "Sage", 0, 0, 300, 0,  ABFLAG_INSTANT },
+
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
 
@@ -436,6 +484,78 @@ const std::string make_cost_description( ability_type ability )
         ret << "Instant"; // not really a cost, more of a bonus -bwr
     }
 
+    if (abil.flags & ABFLAG_TWO_XP)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "2 XP";      // //
+    }
+    if (abil.flags & ABFLAG_TEN_XP)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "10 XP";      // //
+    }
+    if (abil.flags & ABFLAG_HUNDRED_XP)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "100 XP";      // //
+    }
+    if (abil.flags & ABFLAG_THOUSAND_XP)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "1,000 XP";      // //
+    }
+    if (abil.flags & ABFLAG_THREE_THOUSAND_XP)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "3,000 XP";      // //
+    }
+    if (abil.flags & ABFLAG_TEN_THOUSAND_XP)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "10,000 XP";      // //
+    }
+    if (abil.flags & ABFLAG_THIRTY_XP)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "30 XP";      // //
+    }
+    if (abil.flags & ABFLAG_THREE_HUNDRED_XP)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "300 XP";      // //
+    }
+    if (abil.flags & ABFLAG_FIFTY_XP)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "50 XP";      // //
+    }
+    if (abil.flags & ABFLAG_LEVEL_DRAIN)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "Level drain";      // //
+    }
+
+
     // If we haven't output anything so far, then the effect has no cost
     if (ret.str().empty())
         ret << "None";
@@ -477,6 +597,38 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // begin spell abilities
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
+        perfect = true;
+        failure = 0;
+        break;
+
+    // // begin zot defense abilities
+    case ABIL_MAKE_FUNGUS:
+    case ABIL_MAKE_PLANT:
+    case ABIL_MAKE_OKLOB_PLANT:
+    case ABIL_MAKE_DART_TRAP:
+    case ABIL_MAKE_ICE_STATUE:
+    case ABIL_MAKE_OCS:
+    case ABIL_MAKE_SILVER_STATUE:
+    case ABIL_MAKE_CURSE_SKULL:
+    case ABIL_MAKE_TELEPORT:
+    case ABIL_MAKE_ARROW_TRAP:
+    case ABIL_MAKE_BOLT_TRAP:
+    case ABIL_MAKE_SPEAR_TRAP:
+    case ABIL_MAKE_AXE_TRAP:
+    case ABIL_MAKE_NEEDLE_TRAP:
+    case ABIL_MAKE_NET_TRAP:
+    case ABIL_MAKE_TELEPORT_TRAP:
+    case ABIL_MAKE_ALARM_TRAP:
+    case ABIL_MAKE_BLADE_TRAP:
+    case ABIL_MAKE_OKLOB_CIRCLE:
+    case ABIL_MAKE_ACQUIRE_GOLD:
+    case ABIL_MAKE_ACQUIREMENT:
+    case ABIL_MAKE_WATER:
+    case ABIL_MAKE_ELECTRIC_EEL:
+    case ABIL_MAKE_BAZAAR:
+    case ABIL_MAKE_ALTAR:
+    case ABIL_MAKE_GRENADES:
+    case ABIL_MAKE_SAGE:
         perfect = true;
         failure = 0;
         break;
@@ -1012,6 +1164,67 @@ static bool _activate_talent(const talent& tal)
         crawl_state.zero_turns_taken();
         return (false);
     }
+   
+    if ((abil.flags & ABFLAG_TWO_XP) && (you.exp_available < 2))
+    {
+        mpr("That ability requires more experience in your experience pool."); // //
+	crawl_state.zero_turns_taken(); // //
+        return (false); // //
+    }
+
+    if ((abil.flags & ABFLAG_TEN_XP) && (you.exp_available < 10))
+    {
+        mpr("That ability requires more experience in your experience pool."); // //
+	crawl_state.zero_turns_taken(); // //
+        return (false); // //
+    }
+
+    if ((abil.flags & ABFLAG_HUNDRED_XP) && (you.exp_available < 100))
+    {
+        mpr("That ability requires more experience in your experience pool."); // //
+	crawl_state.zero_turns_taken(); // //
+        return (false); // //
+    }
+
+    if ((abil.flags & ABFLAG_FIFTY_XP) && (you.exp_available < 50))
+    {
+        mpr("That ability requires more experience in your experience pool."); // //
+	crawl_state.zero_turns_taken(); // //
+        return (false); // //
+    }
+
+    if ((abil.flags & ABFLAG_THOUSAND_XP) && (you.exp_available < 1000))
+    {
+        mpr("That ability requires more experience in your experience pool."); // //
+	crawl_state.zero_turns_taken(); // //
+        return (false); // //
+    }
+
+    if ((abil.flags & ABFLAG_THREE_THOUSAND_XP) && (you.exp_available < 3000))
+    {
+        mpr("That ability requires more experience in your experience pool."); // //
+	crawl_state.zero_turns_taken(); // //
+        return (false); // //
+    }
+
+    if ((abil.flags & ABFLAG_TEN_THOUSAND_XP) && (you.exp_available < 10000))
+    {
+        mpr("That ability requires more experience in your experience pool."); // //
+	crawl_state.zero_turns_taken(); // //
+        return (false); // //
+    }
+    if ((abil.flags & ABFLAG_THIRTY_XP) && (you.exp_available < 30))
+    {
+        mpr("That ability requires more experience in your experience pool."); // //
+	crawl_state.zero_turns_taken(); // //
+        return (false); // //
+    }
+    if ((abil.flags & ABFLAG_THREE_HUNDRED_XP) && (you.exp_available < 300))
+    {
+        mpr("That ability requires more experience in your experience pool."); // //
+	crawl_state.zero_turns_taken(); // //
+        return (false); // //
+    }
 
     if (tal.which == ABIL_ZIN_SANCTUARY && env.sanctuary_time)
     {
@@ -1072,6 +1285,246 @@ static bool _do_ability(const ability_def& abil)
     // statement... it's assumed that only failures have returned! -- bwr
     switch (abil.ability)
     {
+    case ABIL_MAKE_FUNGUS:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Center fungus circle where?");
+        place_monster( mgen_data(MONS_FUNGUS, BEH_FRIENDLY, 0, coord_def(beam.tx + 1, beam.ty), you.pet_target), true);
+        place_monster( mgen_data(MONS_FUNGUS, BEH_FRIENDLY, 0, coord_def(beam.tx - 1, beam.ty), you.pet_target), true);
+        place_monster( mgen_data(MONS_FUNGUS, BEH_FRIENDLY, 0, coord_def(beam.tx + 1, beam.ty + 1), you.pet_target), true);
+        place_monster( mgen_data(MONS_FUNGUS, BEH_FRIENDLY, 0, coord_def(beam.tx - 1, beam.ty + 1), you.pet_target), true);
+        place_monster( mgen_data(MONS_FUNGUS, BEH_FRIENDLY, 0, coord_def(beam.tx + 1, beam.ty - 1), you.pet_target), true);
+        place_monster( mgen_data(MONS_FUNGUS, BEH_FRIENDLY, 0, coord_def(beam.tx - 1, beam.ty - 1), you.pet_target), true);
+        place_monster( mgen_data(MONS_FUNGUS, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty + 1), you.pet_target), true);
+        place_monster( mgen_data(MONS_FUNGUS, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty - 1), you.pet_target), true);
+        break; // //
+    }
+    case ABIL_MAKE_PLANT:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make plant where?");
+        if (place_monster( mgen_data(MONS_PLANT, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty), you.pet_target), true) != -1)
+	  mpr("Tendrils and shoots erupt from the earth and gnarl into the form of a plant.");
+
+        break; // //
+    }
+    case ABIL_MAKE_OKLOB_PLANT:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make oklob plant where?");
+        if (place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty), you.pet_target), true) != -1)
+	  mpr("A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere.");
+
+        break; // //
+    }
+    case ABIL_MAKE_DART_TRAP:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make trap where?");
+        place_specific_trap(beam.tx, beam.ty, TRAP_DART);
+        break; // //
+    }
+    case ABIL_MAKE_ICE_STATUE:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make ice statue where?");
+        if (place_monster( mgen_data(MONS_ICE_STATUE, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty), you.pet_target), true) != -1)
+	  mpr("Water vapor collects and crystallizes into an icy humanoid shape.");
+        break; // //
+    }
+    case ABIL_MAKE_OCS:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make orange crystal statue where?");
+        if (place_monster( mgen_data(MONS_ORANGE_STATUE, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty), you.pet_target), true) != -1)
+	  mpr("Quartz juts from the ground and forms a humanoid shape. You smell citrus.");
+        break; // //
+    }
+    case ABIL_MAKE_SILVER_STATUE:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make silver statue where?");
+        if (place_monster( mgen_data(MONS_SILVER_STATUE, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty), you.pet_target), true) != -1)
+	  mpr("Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape.");
+        break; // //
+    }
+    case ABIL_MAKE_CURSE_SKULL:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make curse skull where?");
+        if (place_monster( mgen_data(MONS_CURSE_SKULL, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty), you.pet_target), true) != -1)
+	  mpr("You sculpt a terrible being from the primitive principle of evil.");
+        break; // //
+    }
+    case ABIL_MAKE_TELEPORT:
+    {
+        you_teleport_now( true, true ); 
+        break; // //
+    }
+    case ABIL_MAKE_ARROW_TRAP:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make trap where?");
+        place_specific_trap(beam.tx, beam.ty, TRAP_ARROW);
+        break; // //
+    }
+    case ABIL_MAKE_BOLT_TRAP:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make trap where?");
+        place_specific_trap(beam.tx, beam.ty, TRAP_BOLT);
+        break; // //
+    }
+    case ABIL_MAKE_SPEAR_TRAP:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make trap where?");
+        place_specific_trap(beam.tx, beam.ty, TRAP_SPEAR);
+        break; // //
+    }
+    case ABIL_MAKE_AXE_TRAP:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make trap where?");
+        place_specific_trap(beam.tx, beam.ty, TRAP_AXE);
+        break; // //
+    }
+    case ABIL_MAKE_NEEDLE_TRAP:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make trap where?");
+        place_specific_trap(beam.tx, beam.ty, TRAP_NEEDLE);
+        break; // //
+    }
+    case ABIL_MAKE_NET_TRAP:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make trap where?");
+        place_specific_trap(beam.tx, beam.ty, TRAP_NET);
+        break; // //
+    }
+    case ABIL_MAKE_TELEPORT_TRAP:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make trap where?");
+        place_specific_trap(beam.tx, beam.ty, TRAP_TELEPORT);
+        break; // //
+    }
+    case ABIL_MAKE_ALARM_TRAP:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make trap where?");
+        place_specific_trap(beam.tx, beam.ty, TRAP_ALARM);
+        break; // //
+    }
+    case ABIL_MAKE_BLADE_TRAP:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make trap where?");
+        place_specific_trap(beam.tx, beam.ty, TRAP_BLADE);
+        break; // //
+    }
+    case ABIL_MAKE_OKLOB_CIRCLE:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Center oklob circle where?");
+        place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, 0, coord_def(beam.tx + 1, beam.ty), you.pet_target), true);
+        place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, 0, coord_def(beam.tx - 1, beam.ty), you.pet_target), true);
+        place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, 0, coord_def(beam.tx + 1, beam.ty + 1), you.pet_target), true);
+        place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, 0, coord_def(beam.tx - 1, beam.ty + 1), you.pet_target), true);
+        place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, 0, coord_def(beam.tx + 1, beam.ty - 1), you.pet_target), true);
+        place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, 0, coord_def(beam.tx - 1, beam.ty - 1), you.pet_target), true);
+        place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty + 1), you.pet_target), true);
+        place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty - 1), you.pet_target), true);
+        break; // //
+    }
+    case ABIL_MAKE_ACQUIRE_GOLD:
+    {
+        acquirement(OBJ_GOLD, AQ_SCROLL); // //
+        break;
+    }
+    case ABIL_MAKE_ACQUIREMENT:
+    {
+        acquirement(OBJ_RANDOM, AQ_SCROLL); // //
+        break;
+    }
+    case ABIL_MAKE_WATER:
+    {
+        _create_pond(you.pos(), 3, false); // //
+        break;
+    }
+    case ABIL_MAKE_ELECTRIC_EEL:
+    {
+        dist beam;
+        direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false, false, "Make electric eel where?");
+        if (place_monster( mgen_data(MONS_ELECTRICAL_EEL, BEH_FRIENDLY, 0, coord_def(beam.tx, beam.ty), you.pet_target), true) != -1)
+	  mpr("You make an electric eel.");
+        break; // //
+    }
+    case ABIL_MAKE_BAZAAR:
+    {
+    // Early exit: don't clobber important features.
+        if (is_critical_feature(grd[you.x_pos][you.y_pos]))
+        {
+            mpr("The dungeon trembles momentarily.");
+            return (false);
+        }
+
+        // Generate a portal to something.
+        const int mapidx = random_map_for_tag("trowel_portal", false, false);
+        if (mapidx == -1)
+        {
+            mpr("A buggy portal flickers into view, then vanishes.");
+        }
+        else
+        {
+            {
+                no_messages n;
+                dgn_place_map(mapidx, false, true, true, you.pos());
+            }
+            mpr("A mystic portal forms.");
+        }
+
+        break;
+    }
+    case ABIL_MAKE_ALTAR:
+    {
+        // Generate an altar.
+        if (grd[you.x_pos][you.y_pos] == DNGN_FLOOR)
+        {
+            // Might get GOD_NO_GOD and no altar.
+            god_type rgod = static_cast<god_type>(random2(NUM_GODS));
+            grd[you.x_pos][you.y_pos] = altar_for_god(rgod);
+
+            if (grd[you.x_pos][you.y_pos] != DNGN_FLOOR)
+            {
+                mprf("An altar to %s grows from the floor before you!",
+                     god_name(rgod).c_str());
+            }
+        }
+        break;
+    }
+    case ABIL_MAKE_GRENADES:
+    { 
+        if (create_monster(
+               mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, 6,
+                         you.pos(), you.pet_target,
+                         0)) != -1)
+	    mpr( "You create a living grenade." );
+        if (create_monster(
+               mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, 6,
+                         you.pos(), you.pet_target,
+                         0)) != -1)
+	    mpr( "You create a living grenade." );
+        break;
+    }
+    case ABIL_MAKE_SAGE:
+    {
+        _sage_card( 20, DECK_RARITY_RARE);
+	break;
+    }
+
+
     case ABIL_MUMMY_RESTORATION:
     {
         mpr( "You infuse your body with magical energy." );
@@ -1940,6 +2393,78 @@ static void _pay_ability_costs(const ability_def& abil)
         if (abil.flags & ABFLAG_PERMANENT_HP)
             rot_hp(1);
     }
+   
+    if (abil.flags & ABFLAG_TWO_XP)
+    {
+        you.exp_available -= 2; // //
+        you.redraw_experience = true;
+    }
+    if (abil.flags & ABFLAG_TEN_XP)
+    {
+        you.exp_available -= 10; // //
+        you.redraw_experience = true;
+    }
+    if (abil.flags & ABFLAG_HUNDRED_XP)
+    {
+        you.exp_available -= 100; // //
+        you.redraw_experience = true;
+    }
+    if (abil.flags & ABFLAG_FIFTY_XP)
+    {
+        you.exp_available -= 50; // //
+        you.redraw_experience = true;
+    }
+    if (abil.flags & ABFLAG_THOUSAND_XP)
+    {
+        you.exp_available -= 1000; // //
+        you.redraw_experience = true;
+    }
+    if (abil.flags & ABFLAG_THREE_THOUSAND_XP)
+    {
+        you.exp_available -= 3000; // //
+        you.redraw_experience = true;
+    }
+    if (abil.flags & ABFLAG_TEN_THOUSAND_XP)
+    {
+        you.exp_available -= 10000; // //
+        you.redraw_experience = true;
+    }
+    if (abil.flags & ABFLAG_THIRTY_XP)
+    {
+        you.exp_available -= 30; // //
+        you.redraw_experience = true;
+    }
+    if (abil.flags & ABFLAG_THREE_HUNDRED_XP)
+    {
+        you.exp_available -= 300; // //
+        you.redraw_experience = true;
+    }
+    if (abil.flags & ABFLAG_ENCH_MISCAST)
+    {
+        miscast_effect( SPTYP_ENCHANTMENT, 10, 90, 100, "power out of control");
+    }
+    if (abil.flags & ABFLAG_NECRO_MISCAST)
+    {
+        miscast_effect( SPTYP_NECROMANCY, 10, 90, 100, "power out of control");
+    }
+    if (abil.flags & ABFLAG_NECRO_MISCAST_MINOR)
+    {
+        miscast_effect( SPTYP_NECROMANCY, 5, 90, 100, "power out of control");
+    }
+    if (abil.flags & ABFLAG_TLOC_MISCAST)
+    {
+        miscast_effect( SPTYP_TRANSLOCATION, 10, 90, 100, "power out of control");
+    }
+    if (abil.flags & ABFLAG_TMIG_MISCAST)
+    {
+        miscast_effect( SPTYP_TRANSMIGRATION, 10, 90, 100, "power out of control");
+    }
+    if (abil.flags & ABFLAG_LEVEL_DRAIN)
+    {
+        lose_level();
+        lose_level();
+    }
+
 
     if (food_cost)
         make_hungry( food_cost, false, true );
@@ -2051,7 +2576,64 @@ static void _add_talent(std::vector<talent>& vec, const ability_type ability,
 std::vector<talent> your_talents( bool check_confused )
 {
     std::vector<talent> talents;
+    // // zot defense abilities; must also be updated in player.cc when these levels are changed
+    if (you.experience_level >= 12)
+        _add_talent(talents, ABIL_MAKE_FUNGUS, check_confused);
+    if (you.experience_level >= 4)
+        _add_talent(talents, ABIL_MAKE_PLANT, check_confused);
+    if (you.experience_level >= 2)
+        _add_talent(talents, ABIL_MAKE_OKLOB_PLANT, check_confused);
+    if (you.experience_level >= 1)
+        _add_talent(talents, ABIL_MAKE_DART_TRAP, check_confused);
+    if (you.experience_level >= 8)
+        _add_talent(talents, ABIL_MAKE_ICE_STATUE, check_confused);
+    if (you.experience_level >= 14)
+        _add_talent(talents, ABIL_MAKE_OCS, check_confused);
+    if (you.experience_level >= 20)
+        _add_talent(talents, ABIL_MAKE_SILVER_STATUE, check_confused);
+    if (you.experience_level >= 26)
+        _add_talent(talents, ABIL_MAKE_CURSE_SKULL, check_confused);
+    if (you.experience_level >= 16)
+        _add_talent(talents, ABIL_MAKE_TELEPORT, check_confused);
+    if (you.experience_level >= 3)
+        _add_talent(talents, ABIL_MAKE_ARROW_TRAP, check_confused);
+    if (you.experience_level >= 18)
+        _add_talent(talents, ABIL_MAKE_BOLT_TRAP, check_confused);
+    if (you.experience_level >= 9)
+        _add_talent(talents, ABIL_MAKE_SPEAR_TRAP, check_confused);
+    if (you.experience_level >= 13)
+        _add_talent(talents, ABIL_MAKE_AXE_TRAP, check_confused);
+    if (you.experience_level >= 15)
+        _add_talent(talents, ABIL_MAKE_NEEDLE_TRAP, check_confused);
+    if (you.experience_level >= 7)
+        _add_talent(talents, ABIL_MAKE_NET_TRAP, check_confused);
+    if (you.experience_level >= 27)
+        _add_talent(talents, ABIL_MAKE_TELEPORT_TRAP, check_confused);
+    if (you.experience_level >= 11)
+        _add_talent(talents, ABIL_MAKE_ALARM_TRAP, check_confused);
+    if (you.experience_level >= 24)
+        _add_talent(talents, ABIL_MAKE_BLADE_TRAP, check_confused);
+    if (you.experience_level >= 22)
+        _add_talent(talents, ABIL_MAKE_OKLOB_CIRCLE, check_confused);
+    if (you.experience_level >= 10)
+        _add_talent(talents, ABIL_MAKE_ACQUIRE_GOLD, check_confused);
+    if (you.experience_level >= 25)
+        _add_talent(talents, ABIL_MAKE_ACQUIREMENT, check_confused);
+    if (you.experience_level >= 17)
+        _add_talent(talents, ABIL_MAKE_WATER, check_confused);
+    if (you.experience_level >= 19)
+        _add_talent(talents, ABIL_MAKE_ELECTRIC_EEL, check_confused);
+    if (you.experience_level >= 5)
+        _add_talent(talents, ABIL_MAKE_ALTAR, check_confused);
+    if (you.experience_level >= 21)
+        _add_talent(talents, ABIL_MAKE_BAZAAR, check_confused);
+    if (you.experience_level >= 6)
+        _add_talent(talents, ABIL_MAKE_GRENADES, check_confused);
+    if (you.experience_level >= 23)
+        _add_talent(talents, ABIL_MAKE_SAGE, check_confused);
 
+
+  
     // Species-based abilities
     if (you.species == SP_MUMMY && you.experience_level >= 13)
         _add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);

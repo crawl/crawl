@@ -7,6 +7,8 @@
  *
  *  Change History (most recent first):
  *
+ *               <2>     april2009      Cha             _place_specific_stair
+                                                         now declared here
  *               <1>     -/--/--        LRH             Created
  */
 
@@ -140,6 +142,12 @@ class dgn_region
                   const map_mask &dgn_map_mask) const;
     bool overlaps(const map_mask &dgn_map_mask) const;
 };
+
+// // this used to be static
+void _place_specific_stair(dungeon_feature_type stair,
+                                  const std::string &tag = "",
+                                  int dl = 0, bool vault_only = false);
+
 
 //////////////////////////////////////////////////////////////////////////
 template <typename fgrd, typename bound_check>
@@ -368,6 +376,7 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
 int count_antifeature_in_box(int x0, int y0, int x1, int y1,
                              dungeon_feature_type feat);
 int count_neighbours(int x, int y, dungeon_feature_type feat);
+int retarded_rune_counting_function( int runenumber );
 
 
 #endif

@@ -7,6 +7,8 @@
  *
  *  Change History (most recent first):
  *
+ *               <2>     april2009      Cha             monster generation code
+                                                         adapted for Zot Def.
  *               <1>     -/--/--        LRH             Created
  */
 
@@ -20,6 +22,7 @@
 #include "directn.h" // for the Compass
 #include "externs.h"
 #include "ghost.h"
+#include "items.h" // // for find_floor_item
 #include "lev-pand.h"
 #include "makeitem.h"
 #include "monstuff.h"
@@ -239,19 +242,18 @@ void spawn_random_monsters()
     // Place normal dungeon monsters,  but not in player LOS.
     if (you.level_type == LEVEL_DUNGEON
         && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
-        && x_chance_in_y(5, (you.char_direction == GDT_DESCENDING) ? 240 : 8))
+        && x_chance_in_y((you.num_turns % CYCLE_LENGTH) ,CYCLE_LENGTH)) // //
     {
 #ifdef DEBUG_MON_CREATION
         mpr("Create wandering monster...", MSGCH_DIAGNOSTICS);
 #endif
-        proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS
-                                                 : PROX_AWAY_FROM_PLAYER);
+        proximity_type prox = PROX_NEAR_STAIRS; // //
 
         // The rules change once the player has picked up the Orb...
-        if (you.char_direction == GDT_ASCENDING)
-            prox = (one_chance_in(6) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
+        /* if (you.char_direction == GDT_ASCENDING)
+	   prox = (one_chance_in(6) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE); */
 
-        mgen_data mg(WANDERING_MONSTER);
+        mgen_data mg(WANDERING_MONSTER, BEH_SEEK, 0, coord_def(), MHITYOU); // //
         mg.proximity = prox;
         mons_place( mg );
         viewwindow(true, false);
@@ -293,13 +295,13 @@ monster_type pick_random_monster(const level_id &place, int power,
     lev_mons = power;
 
     if (place == BRANCH_MAIN_DUNGEON
-        && lev_mons != 51 && one_chance_in(4))
+        && lev_mons != 51 && one_chance_in(4) && power > 0)
     {
         lev_mons = random2(power);
     }
 
     if (place == BRANCH_MAIN_DUNGEON
-        && lev_mons <= 27)
+        && lev_mons <= 27 && lev_mons > 0)
     {
         // If on D:1, allow moderately out-of-depth monsters only after
         // a certain elapsed turn count on the level (currently 700 turns).
@@ -318,6 +320,10 @@ monster_type pick_random_monster(const level_id &place, int power,
         lev_mons = std::min(27, lev_mons);
     }
 
+    if (lev_mons == -1)
+    {
+        lev_mons = (you.num_turns / CYCLE_LENGTH) + BOSS_MONSTER_EXTRA_POWER; // //
+    }
     // Abyss or Pandemonium. Almost never called from Pan; probably only
     // if a random demon gets summon anything spell.
     if (lev_mons == 51
@@ -404,6 +410,71 @@ bool drac_colour_incompatible(int drac, int colour)
     return (drac == MONS_DRACONIAN_SCORCHER && colour == MONS_WHITE_DRACONIAN);
 }
 
+int retarded_branch_counting_function(int branchnumber)
+{
+    switch (branchnumber)
+    {
+        case 0:
+	    return BRANCH_MAIN_DUNGEON;
+	    break;
+        case 1:
+            return BRANCH_ECUMENICAL_TEMPLE;
+	    break;
+        case 2:
+            return BRANCH_ORCISH_MINES;
+	    break;
+        case 3:
+            return BRANCH_ELVEN_HALLS;
+	    break;
+        case 4:
+            return BRANCH_LAIR;
+	    break;
+        case 5:
+  	    return BRANCH_SWAMP;
+	    break;
+        case 6:
+            return BRANCH_SHOALS;
+	    break;
+        case 7:
+            return BRANCH_SLIME_PITS;
+	    break;
+        case 8:
+            return BRANCH_HIVE;
+	    break;
+        case 9:
+            return BRANCH_VAULTS;
+	    break;
+        case 10:
+            return BRANCH_HALL_OF_BLADES;
+	    break;
+        case 11:
+            return BRANCH_CRYPT;
+	    break;
+        case 12:
+            return BRANCH_TOMB;
+	    break;
+        case 13:
+            return BRANCH_VESTIBULE_OF_HELL;
+	    break;
+        case 14:
+            return BRANCH_FIRST_HELL;
+	    break;
+        case 15:
+            return BRANCH_DIS;
+	    break;
+        case 16:
+            return BRANCH_GEHENNA;
+	    break;
+        case 17:
+            return BRANCH_COCYTUS;
+	    break;
+        case 18:
+            return BRANCH_TARTARUS;
+	    break;
+    }
+}
+
+
 static monster_type _resolve_monster_type(monster_type mon_type,
                                           proximity_type proximity,
                                           monster_type base_type,
@@ -444,10 +515,30 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     else if (mon_type == RANDOM_MONSTER)
     {
         level_id place = level_id::current();
-
+        // // fudge the branch appropriately
+        if (*lev_mons > 9)
+        {
+	switch ((you.num_turns / CYCLE_LENGTH) % 3)
+        {
+            case 0:
+	        break;
+            case 1:
+                {
+		  // //		  place.branch = retarded_branch_counting_function(2+((you.num_turns/CYCLE_LENGTH)% 18));
+		    place.branch = static_cast<branch_type> (2+((you.num_turns/CYCLE_LENGTH)% 18));
+                    break;
+		}
+            case 2:
+                {
+		  // //		  place.branch = retarded_branch_counting_function(random_range(2, (you.num_turns % 20)));
+		    place.branch = static_cast<branch_type> (random_range(2, (you.num_turns % 20)));
+		    break;
+		}
+        }
+        } 
         // Respect destination level for staircases.
         if (proximity == PROX_NEAR_STAIRS)
-        {
+        { 
             int tries = 0;
             int pval  = 0;
             while (++tries <= 320)
@@ -485,9 +576,10 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             if (tries > 320)
             {
                 // Give up and try somewhere else.
-                proximity = PROX_AWAY_FROM_PLAYER;
+                // // proximity = PROX_AWAY_FROM_PLAYER;
+	        return (MONS_PROGRAM_BUG);
             }
-            else
+            /* else
             {
                 if (*stair_type == DCHAR_STAIRS_DOWN) // deeper level
                     ++*lev_mons;
@@ -502,7 +594,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                     else
                         --*lev_mons;
                 }
-            }
+	    } */
         } // end proximity check
 
         if (place == BRANCH_HALL_OF_BLADES)
@@ -632,18 +724,15 @@ int place_monster(mgen_data mg, bool force_pos)
     }
 
     // Returns 2 if the monster is placed near player-occupied stairs.
-    int pval = _is_near_stairs(mg.pos);
-    if (mg.proximity == PROX_NEAR_STAIRS)
-    {
+        int pval = _is_near_stairs(mg.pos); 
+	// // if (mg.proximity == PROX_NEAR_STAIRS)
+    
         // For some cases disallow monsters on stairs.
-        if (mons_class_is_stationary( mg.cls )
-            || (pval == 2 // Stairs occupied by player.
-                && (mons_speed(mg.cls) == 0 || grd(mg.pos) == DNGN_LAVA
-                    || grd(mg.pos) == DNGN_DEEP_WATER)))
+	if (mg.proximity == PROX_NEAR_STAIRS && (mons_class_is_stationary( mg.cls ) || (mons_speed(mg.cls) == 0)))
         {
-            mg.proximity = PROX_AWAY_FROM_PLAYER;
+  	    return (-1);
         }
-    }
+       
 
     // (4) For first monster, choose location.  This is pretty intensive.
     bool proxOK;
@@ -686,24 +775,24 @@ int place_monster(mgen_data mg, bool force_pos)
             switch (mg.proximity)
             {
             case PROX_ANYWHERE:
-                if (grid_distance( you.x_pos, you.y_pos,
-                                   mg.pos.x, mg.pos.y ) < 2 + random2(3))
-                {
+               if (grid_distance( you.x_pos, you.y_pos,
+                     mg.pos.x, mg.pos.y ) < 2 + random2(3))
+  {
                     proxOK = false;
-                }
+  }
                 break;
 
             case PROX_CLOSE_TO_PLAYER:
             case PROX_AWAY_FROM_PLAYER:
-                close_to_player = (distance(you.x_pos, you.y_pos,
-                                            mg.pos.x, mg.pos.y) < 64);
+  close_to_player = (distance(you.x_pos, you.y_pos,
+                              mg.pos.x, mg.pos.y) < 64);
 
-                if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
-                    || mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
-                {
+  if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
+      || mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
+  {
                     proxOK = false;
-                }
-                break;
+  }
+               break;
 
             case PROX_NEAR_STAIRS:
                 if (pval == 2) // player on stairs
@@ -730,6 +819,11 @@ int place_monster(mgen_data mg, bool force_pos)
                 proxOK = (pval > 0);
                 break;
             }
+            
+
+            // // check that monster is not randomly generated and too far from stairs
+            if (  mg.behaviour == BEH_SEEK && ((abs(mg.pos.x - (find_floor_item(OBJ_ORBS,ORB_ZOT)->x)) > 5) || (abs(mg.pos.y - (find_floor_item(OBJ_ORBS,ORB_ZOT)->y)) < 13)))
+                proxOK = false;
 
             if (!proxOK)
                 continue;
@@ -743,7 +837,7 @@ int place_monster(mgen_data mg, bool force_pos)
         // Sanity check that the specified position is valid.
         return (-1);
     }
-
+    
     id = _place_monster_aux(mg, true, force_pos);
 
     // Bail out now if we failed.
@@ -1930,8 +2024,13 @@ int mons_place( mgen_data mg )
             break;
         case LEVEL_DUNGEON:
         default:
-            mg.power = you.your_level;
+  	    mg.power =  you.num_turns/(CYCLE_LENGTH * 3); // //
             break;
+    }
+    if (mg.cls == BOSS_MONSTER)
+    {
+        mg.cls = RANDOM_MONSTER;
+        mg.power = -1; // //
     }
 
     int mid = place_monster(mg);

@@ -7,6 +7,8 @@
  *
  *  Change History (most recent first):
  *
+ * <7>april2009Cha   added messages on level change to tell player of new zot
+                      defense abilities
  * <6> 7/30/99 BWR   Added player_spell_levels()
  * <5> 7/13/99 BWR   Added player_res_electricity()
  *                   and player_hunger_rate()
@@ -3508,6 +3510,63 @@ void level_change(bool skip_attribute_increase)
                 break;
             }
         }
+
+    // // zot defense abilities; must also be updated in abil-show.cc when these levels are changed
+    if (you.experience_level == 12)
+        mpr("Your Zot abilities now extend through the making of mushroom circles.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 4)
+        mpr("Your Zot abilities now extend through the making of plants.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 2)
+        mpr("Your Zot abilities now extend through the making of oklob plants.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 1)
+        mpr("Your Zot abilities now extend through the making of dart traps.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 8)
+        mpr("Your Zot abilities now extend through the making of ice statues.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 14) 
+        mpr("Your Zot abilities now extend through the making of orange crystal statues.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 20) 
+        mpr("Your Zot abilities now extend through the making of silver statues.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 26)
+        mpr("Your Zot abilities now extend through the making of curse skulls.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 16) 
+        mpr("Your Zot abilities now extend through self-teleportation.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 3)
+        mpr("Your Zot abilities now extend through the making of arrow traps.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 18)
+        mpr("Your Zot abilities now extend through the making of bolt traps.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 9)
+        mpr("Your Zot abilities now extend through the making of spear traps.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 13)
+        mpr("Your Zot abilities now extend through the making of axe traps.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 15)
+        mpr("Your Zot abilities now extend through the making of needle traps.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 7)
+        mpr("Your Zot abilities now extend through the making of net traps.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 27)
+        mpr("Your Zot abilities now extend through the making of teleport traps.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 11)
+        mpr("Your Zot abilities now extend through the making of alarm traps.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 24)
+        mpr("Your Zot abilities now extend through the making of blade traps.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 22)
+        mpr("Your Zot abilities now extend through the making of oklob circles.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 10)
+        mpr("Your Zot abilities now extend through acquiring gold.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 25)
+        mpr("Your Zot abilities now extend through acquirement.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 17)
+        mpr("Your Zot abilities now extend through making water.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 19)
+        mpr("Your Zot abilities now extend through the making of electric eels.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 5)
+        mpr("Your Zot abilities now extend through the making of altars.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 21)
+        mpr("Your Zot abilities now extend through the making of bazaars.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 6)
+        mpr("Your Zot abilities now extend through the making of grenades.", MSGCH_INTRINSIC_GAIN);
+    if (you.experience_level == 23)
+        mpr("Your Zot abilities now extend through invoking Sage effects.", MSGCH_INTRINSIC_GAIN);
+
 
         // add hp and mp adjustments - GDL
         inc_max_hp( hp_adjust );

@@ -147,6 +147,9 @@
 #line 1 "levcomp.ypp"
 
 
+#include <map>
+#include <algorithm>
+
 #include "AppHdr.h"
 #include "clua.h"
 #include "libutil.h"
@@ -154,7 +157,6 @@
 #include "mapdef.h"
 #include "maps.h"
 #include "stuff.h"
-#include <map>
 
 #define YYERROR_VERBOSE 1
 
@@ -209,14 +211,14 @@ level_range set_range(const char *s, int start, int end)
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 46 "levcomp.ypp"
+#line 48 "levcomp.ypp"
 {
     int i;
     const char *text;
     raw_range range;
 }
 /* Line 187 of yacc.c.  */
-#line 220 "levcomp.tab.c"
+#line 222 "levcomp.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -229,7 +231,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 233 "levcomp.tab.c"
+#line 235 "levcomp.tab.c"
 
 #ifdef short
 # undef short
@@ -554,19 +556,19 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    67,    67,    70,    71,    74,    75,    78,    84,    85,
-      88,    98,   120,   121,   124,   125,   128,   152,   153,   154,
-     155,   156,   157,   158,   159,   160,   161,   162,   163,   164,
-     165,   166,   167,   168,   169,   170,   171,   172,   173,   174,
-     175,   176,   177,   180,   182,   183,   186,   191,   193,   194,
-     197,   202,   204,   205,   208,   213,   215,   216,   219,   224,
-     226,   227,   230,   235,   236,   244,   245,   253,   254,   262,
-     263,   271,   274,   275,   278,   286,   289,   290,   293,   302,
-     311,   321,   320,   331,   333,   334,   337,   349,   352,   353,
-     361,   362,   370,   371,   374,   383,   386,   387,   390,   399,
-     402,   403,   406,   415,   416,   419,   420,   423,   431,   432,
-     435,   436,   439,   448,   457,   458,   467,   475,   476,   485,
-     494,   497,   498,   501
+       0,    69,    69,    72,    73,    76,    77,    80,    86,    87,
+      90,   100,   122,   123,   126,   127,   130,   154,   155,   156,
+     157,   158,   159,   160,   161,   162,   163,   164,   165,   166,
+     167,   168,   169,   170,   171,   172,   173,   174,   175,   176,
+     177,   178,   179,   182,   184,   185,   188,   193,   195,   196,
+     199,   204,   206,   207,   210,   215,   217,   218,   221,   226,
+     228,   229,   232,   237,   238,   246,   247,   255,   256,   264,
+     265,   273,   276,   277,   280,   288,   291,   292,   295,   304,
+     313,   323,   322,   333,   335,   336,   339,   351,   354,   355,
+     363,   364,   372,   373,   376,   385,   388,   389,   392,   401,
+     404,   405,   408,   417,   418,   421,   422,   425,   433,   434,
+     437,   438,   441,   450,   459,   460,   469,   477,   478,   487,
+     496,   499,   500,   503
 };
 #endif
 
@@ -1576,49 +1578,49 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 67 "levcomp.ypp"
+#line 69 "levcomp.ypp"
     { }
     break;
 
   case 3:
-#line 70 "levcomp.ypp"
+#line 72 "levcomp.ypp"
     {}
     break;
 
   case 4:
-#line 71 "levcomp.ypp"
+#line 73 "levcomp.ypp"
     {}
     break;
 
   case 5:
-#line 74 "levcomp.ypp"
+#line 76 "levcomp.ypp"
     {}
     break;
 
   case 6:
-#line 75 "levcomp.ypp"
+#line 77 "levcomp.ypp"
     {}
     break;
 
   case 7:
-#line 79 "levcomp.ypp"
+#line 81 "levcomp.ypp"
     {
                     yyerror("Unexpected character sequence.");
                 }
     break;
 
   case 8:
-#line 84 "levcomp.ypp"
+#line 86 "levcomp.ypp"
     {}
     break;
 
   case 9:
-#line 85 "levcomp.ypp"
+#line 87 "levcomp.ypp"
     {}
     break;
 
   case 10:
-#line 89 "levcomp.ypp"
+#line 91 "levcomp.ypp"
     {
                     dgn_reset_default_depth();
                     std::string err = dgn_set_default_depth((yyvsp[(2) - (2)].text));
@@ -1629,10 +1631,10 @@ yyreduce:
     break;
 
   case 11:
-#line 99 "levcomp.ypp"
+#line 101 "levcomp.ypp"
     {
                     lc_map.set_file(lc_desfile);
-                    
+
                     if (lc_run_global_prelude && !lc_global_prelude.empty())
                     {
                         lc_global_prelude.set_file(lc_desfile);
@@ -1652,32 +1654,32 @@ yyreduce:
     break;
 
   case 12:
-#line 120 "levcomp.ypp"
+#line 122 "levcomp.ypp"
     { }
     break;
 
   case 13:
-#line 121 "levcomp.ypp"
+#line 123 "levcomp.ypp"
     { }
     break;
 
   case 14:
-#line 124 "levcomp.ypp"
+#line 126 "levcomp.ypp"
     { }
     break;
 
   case 15:
-#line 125 "levcomp.ypp"
+#line 127 "levcomp.ypp"
     { }
     break;
 
   case 16:
-#line 129 "levcomp.ypp"
+#line 131 "levcomp.ypp"
     {
                     lc_map.init();
                     lc_map.name = (yyvsp[(2) - (2)].text);
 
-                    map_load_info_t::const_iterator i = 
+                    map_load_info_t::const_iterator i =
                         lc_loaded_maps.find((yyvsp[(2) - (2)].text));
 
                     if (i != lc_loaded_maps.end())
@@ -1697,212 +1699,212 @@ yyreduce:
     break;
 
   case 42:
-#line 177 "levcomp.ypp"
+#line 179 "levcomp.ypp"
     {}
     break;
 
   case 43:
-#line 180 "levcomp.ypp"
-    { }
-    break;
-
-  case 44:
 #line 182 "levcomp.ypp"
     { }
     break;
 
+  case 44:
+#line 184 "levcomp.ypp"
+    { }
+    break;
+
   case 45:
-#line 183 "levcomp.ypp"
+#line 185 "levcomp.ypp"
     { }
     break;
 
   case 46:
-#line 187 "levcomp.ypp"
+#line 189 "levcomp.ypp"
     {
                     lc_global_prelude.add(yylineno, (yyvsp[(1) - (1)].text));
                 }
     break;
 
   case 47:
-#line 191 "levcomp.ypp"
-    { }
-    break;
-
-  case 48:
 #line 193 "levcomp.ypp"
     { }
     break;
 
+  case 48:
+#line 195 "levcomp.ypp"
+    { }
+    break;
+
   case 49:
-#line 194 "levcomp.ypp"
+#line 196 "levcomp.ypp"
     { }
     break;
 
   case 50:
-#line 198 "levcomp.ypp"
+#line 200 "levcomp.ypp"
     {
                     lc_map.main.add(yylineno, (yyvsp[(1) - (1)].text));
                 }
     break;
 
   case 51:
-#line 202 "levcomp.ypp"
-    { }
-    break;
-
-  case 52:
 #line 204 "levcomp.ypp"
     { }
     break;
 
+  case 52:
+#line 206 "levcomp.ypp"
+    { }
+    break;
+
   case 53:
-#line 205 "levcomp.ypp"
+#line 207 "levcomp.ypp"
     { }
     break;
 
   case 54:
-#line 209 "levcomp.ypp"
+#line 211 "levcomp.ypp"
     {
                     lc_map.validate.add(yylineno, (yyvsp[(1) - (1)].text));
                 }
     break;
 
   case 55:
-#line 213 "levcomp.ypp"
-    { }
-    break;
-
-  case 56:
 #line 215 "levcomp.ypp"
     { }
     break;
 
+  case 56:
+#line 217 "levcomp.ypp"
+    { }
+    break;
+
   case 57:
-#line 216 "levcomp.ypp"
+#line 218 "levcomp.ypp"
     { }
     break;
 
   case 58:
-#line 220 "levcomp.ypp"
+#line 222 "levcomp.ypp"
     {
                     lc_map.veto.add(yylineno, (yyvsp[(1) - (1)].text));
                 }
     break;
 
   case 59:
-#line 224 "levcomp.ypp"
-    { }
-    break;
-
-  case 60:
 #line 226 "levcomp.ypp"
     { }
     break;
 
+  case 60:
+#line 228 "levcomp.ypp"
+    { }
+    break;
+
   case 61:
-#line 227 "levcomp.ypp"
+#line 229 "levcomp.ypp"
     { }
     break;
 
   case 62:
-#line 231 "levcomp.ypp"
+#line 233 "levcomp.ypp"
     {
                     lc_map.prelude.add(yylineno, (yyvsp[(1) - (1)].text));
                 }
     break;
 
   case 63:
-#line 235 "levcomp.ypp"
+#line 237 "levcomp.ypp"
     { }
     break;
 
   case 64:
-#line 237 "levcomp.ypp"
+#line 239 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("kfeat(\"%s\")", 
+                        yylineno,
+                        make_stringf("kfeat(\"%s\")",
                             quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
                 }
     break;
 
   case 65:
-#line 244 "levcomp.ypp"
+#line 246 "levcomp.ypp"
     { }
     break;
 
   case 66:
-#line 246 "levcomp.ypp"
+#line 248 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("kmons(\"%s\")", 
+                        yylineno,
+                        make_stringf("kmons(\"%s\")",
                             quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
                 }
     break;
 
   case 67:
-#line 253 "levcomp.ypp"
+#line 255 "levcomp.ypp"
     { }
     break;
 
   case 68:
-#line 255 "levcomp.ypp"
+#line 257 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("kitem(\"%s\")", 
+                        yylineno,
+                        make_stringf("kitem(\"%s\")",
                             quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
                 }
     break;
 
   case 69:
-#line 262 "levcomp.ypp"
+#line 264 "levcomp.ypp"
     { }
     break;
 
   case 70:
-#line 264 "levcomp.ypp"
+#line 266 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("kmask(\"%s\")", 
+                        yylineno,
+                        make_stringf("kmask(\"%s\")",
                             quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
                 }
     break;
 
   case 71:
-#line 271 "levcomp.ypp"
+#line 273 "levcomp.ypp"
     {}
     break;
 
   case 74:
-#line 279 "levcomp.ypp"
+#line 281 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("shuffle(\"%s\")", 
+                        yylineno,
+                        make_stringf("shuffle(\"%s\")",
                             quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
                 }
     break;
 
   case 75:
-#line 286 "levcomp.ypp"
+#line 288 "levcomp.ypp"
     {}
     break;
 
   case 78:
-#line 294 "levcomp.ypp"
+#line 296 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("tags(\"%s\")", 
+                        yylineno,
+                        make_stringf("tags(\"%s\")",
                             quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
                 }
     break;
 
   case 79:
-#line 303 "levcomp.ypp"
+#line 305 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno,
@@ -1912,7 +1914,7 @@ yyreduce:
     break;
 
   case 80:
-#line 312 "levcomp.ypp"
+#line 314 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno,
@@ -1922,7 +1924,7 @@ yyreduce:
     break;
 
   case 81:
-#line 321 "levcomp.ypp"
+#line 323 "levcomp.ypp"
     {
                     lc_map.main.add(yylineno, "marker(");
                     start_marker_segment = true;
@@ -1930,17 +1932,17 @@ yyreduce:
     break;
 
   case 82:
-#line 326 "levcomp.ypp"
+#line 328 "levcomp.ypp"
     {
                     lc_map.main.add(yylineno, ")");
                 }
     break;
 
   case 86:
-#line 338 "levcomp.ypp"
+#line 340 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
+                        yylineno,
                         make_stringf(
                             "%s\"%s\"",
                             start_marker_segment? "" : " .. ",
@@ -1950,17 +1952,17 @@ yyreduce:
     break;
 
   case 87:
-#line 349 "levcomp.ypp"
+#line 351 "levcomp.ypp"
     { }
     break;
 
   case 88:
-#line 352 "levcomp.ypp"
+#line 354 "levcomp.ypp"
     { }
     break;
 
   case 89:
-#line 354 "levcomp.ypp"
+#line 356 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno,
@@ -1970,12 +1972,12 @@ yyreduce:
     break;
 
   case 90:
-#line 361 "levcomp.ypp"
+#line 363 "levcomp.ypp"
     { }
     break;
 
   case 91:
-#line 363 "levcomp.ypp"
+#line 365 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno,
@@ -1985,17 +1987,17 @@ yyreduce:
     break;
 
   case 92:
-#line 370 "levcomp.ypp"
+#line 372 "levcomp.ypp"
     { }
     break;
 
   case 93:
-#line 371 "levcomp.ypp"
+#line 373 "levcomp.ypp"
     { }
     break;
 
   case 94:
-#line 375 "levcomp.ypp"
+#line 377 "levcomp.ypp"
     {
                       lc_map.main.add(
                           yylineno,
@@ -2005,136 +2007,136 @@ yyreduce:
     break;
 
   case 95:
-#line 383 "levcomp.ypp"
+#line 385 "levcomp.ypp"
     { }
     break;
 
   case 96:
-#line 386 "levcomp.ypp"
+#line 388 "levcomp.ypp"
     { }
     break;
 
   case 97:
-#line 387 "levcomp.ypp"
+#line 389 "levcomp.ypp"
     { }
     break;
 
   case 98:
-#line 391 "levcomp.ypp"
+#line 393 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("nsubst(\"%s\")", 
+                        yylineno,
+                        make_stringf("nsubst(\"%s\")",
                             quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
                 }
     break;
 
   case 99:
-#line 399 "levcomp.ypp"
+#line 401 "levcomp.ypp"
     { }
     break;
 
   case 102:
-#line 407 "levcomp.ypp"
+#line 409 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("subst(\"%s\")", 
+                        yylineno,
+                        make_stringf("subst(\"%s\")",
                             quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
                 }
     break;
 
   case 103:
-#line 415 "levcomp.ypp"
+#line 417 "levcomp.ypp"
     {}
     break;
 
   case 104:
-#line 416 "levcomp.ypp"
+#line 418 "levcomp.ypp"
     {}
     break;
 
   case 107:
-#line 424 "levcomp.ypp"
+#line 426 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("item(\"%s\")", 
+                        yylineno,
+                        make_stringf("item(\"%s\")",
                             quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
                 }
     break;
 
   case 108:
-#line 431 "levcomp.ypp"
+#line 433 "levcomp.ypp"
     {}
     break;
 
   case 109:
-#line 432 "levcomp.ypp"
+#line 434 "levcomp.ypp"
     {}
     break;
 
   case 112:
-#line 440 "levcomp.ypp"
+#line 442 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("mons(\"%s\")", 
+                        yylineno,
+                        make_stringf("mons(\"%s\")",
                             quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
                 }
     break;
 
   case 113:
-#line 449 "levcomp.ypp"
+#line 451 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("place(\"%s\")", 
+                        yylineno,
+                        make_stringf("place(\"%s\")",
                             quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
                 }
     break;
 
   case 114:
-#line 457 "levcomp.ypp"
+#line 459 "levcomp.ypp"
     {}
     break;
 
   case 115:
-#line 459 "levcomp.ypp"
+#line 461 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("depth(\"%s\")", 
+                        yylineno,
+                        make_stringf("depth(\"%s\")",
                             quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
                 }
     break;
 
   case 116:
-#line 468 "levcomp.ypp"
+#line 470 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
+                        yylineno,
                         make_stringf("chance(\"%d\")", (yyvsp[(2) - (2)].i)));
                 }
     break;
 
   case 117:
-#line 475 "levcomp.ypp"
+#line 477 "levcomp.ypp"
     {}
     break;
 
   case 118:
-#line 477 "levcomp.ypp"
+#line 479 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("orient(\"%s\")", 
+                        yylineno,
+                        make_stringf("orient(\"%s\")",
                                      quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
                 }
     break;
 
   case 119:
-#line 486 "levcomp.ypp"
+#line 488 "levcomp.ypp"
     {
                     lc_map.main.add(
                         yylineno,
@@ -2144,18 +2146,18 @@ yyreduce:
     break;
 
   case 123:
-#line 502 "levcomp.ypp"
+#line 504 "levcomp.ypp"
     {
                     lc_map.main.add(
-                        yylineno, 
-                        make_stringf("map(\"%s\")", 
+                        yylineno,
+                        make_stringf("map(\"%s\")",
                                      quote_lua_string((yyvsp[(1) - (1)].text)).c_str()));
                 }
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 2159 "levcomp.tab.c"
+#line 2161 "levcomp.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2369,6 +2371,6 @@ yyreturn:
 }
 
 
-#line 510 "levcomp.ypp"
+#line 512 "levcomp.ypp"
 
 

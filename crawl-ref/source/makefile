@@ -1,5 +1,5 @@
 #
-# Modified for Crawl Reference by $Author$ on $Date$
+# Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-07-17 17:28:28 -0400 (Thu, 17 Jul 2008) $
 #
 
 #Makefile chooser.  Choose one:

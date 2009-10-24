@@ -7,6 +7,8 @@
  *
  *  Change History (most recent first):
  *
+ *  <12>   april2009     Cha    friendly monsters now able to switch targets 
+                                 to their unseen attackers
  *  <11>   07-jul-2000   JDJ    Fixed some of the code in you_attack so it doesn't
  *                              index past the end of arrays for unarmed attacks.
  *  <10>   03-mar-2000   bwr    changes for new spells, no stave magic
@@ -3176,12 +3178,12 @@ bool melee_attack::mons_attack_mons()
     // If an enemy attacked a friend, set the pet target if it isn't set
     // already, but not if sanctuary is in effect (pet target must be
     // set explicitly by the player during sanctuary).
-    if (perceived_attack && atk->alive() && mons_friendly(def)
+    if (atk->alive() && mons_friendly(def)
         && !mons_wont_attack(atk) && you.pet_target == MHITNOT
         && env.sanctuary_time <= 0)
     {
         you.pet_target = monster_index(atk);
-    }
+    }  // // remove perceived_attack from if conditions
 
     return (did_hit);
 }
@@ -4200,6 +4202,8 @@ bool monsters_fight(int monster_attacking, int monster_attacked,
     monsters *attacker = &menv[monster_attacking];
     monsters *defender = &menv[monster_attacked];
 
+    // //    if (!mons_friendly(attacker)) mpr("hostile vs ally monsters_fight called"); else mpr("ally vs hostile monsters_fight called"); // //
+    
     melee_attack attk(attacker, defender, allow_unarmed);
     return attk.attack();
 }

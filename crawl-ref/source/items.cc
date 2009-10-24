@@ -7,6 +7,7 @@
  *
  *  Change History (most recent first):
  *
+ *<10> april2009 Cha  got-the-Orb notes and messages suppressed
  * <9> 7/08/01   MV   Added messages for chunks/corpses rotting
  * <8> 8/07/99   BWR  Added Rune stacking
  * <7> 6/13/99   BWR  Added auto staff detection
@@ -1448,9 +1449,15 @@ static void _got_item(item_def& item, int quant)
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet )
 {
+
     if (item_is_stationary(mitm[obj]))
     {
         mpr("You cannot pick up the net that holds you!");
+        return (1);
+    }
+    if (mitm[obj].base_type == OBJ_ORBS && runes_in_pack() < 15)
+    {
+        mpr("You must possess at least fifteen runes to touch the sacred Orb which you defend.");
         return (1);
     }
 
@@ -1619,17 +1626,17 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
             learned_something_new(TUT_SEEN_RANDART);
     }
 
-    if (item.base_type == OBJ_ORBS
-        && you.char_direction == GDT_DESCENDING)
-    {
+    // //    if (item.base_type == OBJ_ORBS
+    // //    && you.char_direction == GDT_DESCENDING)
+    // // {
         // Take a note!
-        _check_note_item(item);
-
-        if (!quiet)
-            mpr("Now all you have to do is get back out of the dungeon!");
-        you.char_direction = GDT_ASCENDING;
-        xom_is_stimulated(255, XM_INTRIGUED);
-    }
+    // //    _check_note_item(item);
+// //
+     // //   if (!quiet)
+    // //        mpr("Now all you have to do is get back out of the dungeon!");
+    // //    you.char_direction = GDT_ASCENDING;
+    // //    xom_is_stimulated(255, XM_INTRIGUED);
+    // //}
 
     if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
         unset_branch_flags(BFLAG_HAS_ORB);

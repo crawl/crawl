@@ -14,6 +14,7 @@
  *
  *  Change History (most recent first):
  *
+ *       <5>     april2009      Cha     added Zot Defense defines
  *       <4>     7/29/00        JDJ     Renamed MNG NON_MONSTER, MNST MAX_MONSTERS, ITEMS MAX_ITEMS,
  *                                      ING NON_ITEM, CLOUDS MAX_CLOUDS, CNG EMPTY_CLOUD, NTRAPS MAX_TRAPS.
  *       <3>     9/25/99        CDL     linuxlib -> liblinux
@@ -40,6 +41,14 @@
     #endif
 #endif
 
+// // length of a single zot defense cycle
+#define CYCLE_LENGTH 200
+// // peak size of a random spawn
+#define SPAWN_SIZE 1
+// // 
+#define BOSS_MONSTER_EXTRA_POWER 5
+// // number of waves to pass between bosses generated with a rune
+#define FREQUENCY_OF_RUNES 9
 
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
@@ -51,7 +60,7 @@
 #define MAX_GHOSTS   10
 
 // max size of monter array {dlb}:
-#define MAX_MONSTERS     350
+#define MAX_MONSTERS     500
 // number of monster enchantments
 #define NUM_MON_ENCHANTS 6
 // non-monster for mgrd[][] -- (MNST + 1) {dlb}:
@@ -65,9 +74,9 @@
 #define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
-#define MAX_ITEMS 500
+#define MAX_ITEMS 2000   // //
 // non-item -- (ITEMS + 1) {dlb}
-#define NON_ITEM 501
+#define NON_ITEM 2001    // //
 
 // max size of cloud array {dlb}:
 #define MAX_CLOUDS 180

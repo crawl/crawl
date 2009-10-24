@@ -7,6 +7,8 @@
  *
  *  Change History (most recent first):
  *
+ *     <17>       april 2009    Cha   you now begin with teleport control and
+                                       120 XP in pool; changed intro message
  *     <16>      19-Jun-2000    GDL   changed handle to FILE *
  *     <15>      06-Mar-2000    bwr   changes to berserer, paladin, enchanter
  *     <14>      10-Jan-2000    DLB   class_allowed() lists excluded
@@ -1220,8 +1222,8 @@ game_start:
 
     // Before we get into the inventory init, set light radius based
     // on species vision. Currently, all species see out to 8 squares.
-    you.normal_vision  = 8;
-    you.current_vision = 8;
+    you.normal_vision  = 8; // //
+    you.current_vision = 8; // // 
 
     _jobs_stat_init( you.char_class );
     _give_last_paycheck( you.char_class );
@@ -2748,6 +2750,8 @@ static void _jobs_stat_init(job_type which_job)
 
 void give_basic_mutations(species_type speci)
 {
+    you.mutation[MUT_TELEPORT_CONTROL] = 1; // //
+
     // We should switch over to a size-based system
     // for the fast/slow metabolism when we get around to it.
     switch (speci)
@@ -2944,8 +2948,9 @@ static void _opening_screen(void)
 #endif
 
     std::string msg =
-        "<yellow>Hello, welcome to " CRAWL " " VERSION "!</yellow>" EOL
-        "<brown>(c) Copyright 1997-2002 Linley Henzell, "
+      "<yellow>Hello, welcome to Zot Defense 0.1.</yellow>" EOL // //
+      "<brown>Zot Defense is based on " CRAWL " " VERSION "," EOL // //
+        "(c) Copyright 1997-2002 Linley Henzell, "
         "2002-2008 Crawl DevTeam" EOL
         "Please consult crawl_manual.txt for instructions and legal details."
         "</brown>" EOL;
@@ -4187,6 +4192,8 @@ bool _needs_butchering_tool()
 
 bool _give_items_skills()
 {
+    you.exp_available = 120; // //
+
     char keyn;
     int weap_skill = 0;
     int to_hit_bonus = 0;       // used for assigning primary weapons {dlb}
