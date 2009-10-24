@@ -477,7 +477,9 @@ bool unwield_item(bool showMsgs)
 
     item_def& item = *you.weapon();
 
-    if (!safe_to_remove_or_wear(item, true))
+    const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
+
+    if (is_weapon && !safe_to_remove_or_wear(item, true))
         return (false);
 
     you.equip[EQ_WEAPON] = -1;
@@ -486,7 +488,7 @@ bool unwield_item(bool showMsgs)
 
     // Call this first, so that the unrandart func can set showMsgs to
     // false if it does its own message handling.
-    if (is_artefact( item ))
+    if (is_weapon && is_artefact( item ))
         unuse_artefact(item, &showMsgs);
 
     if (item.base_type == OBJ_MISCELLANY

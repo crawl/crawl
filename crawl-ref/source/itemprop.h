@@ -735,6 +735,7 @@ bool gives_resistance(const item_def &item);
 int item_mass(const item_def &item);
 size_type item_size(const item_def &item);
 equipment_type get_item_slot(object_class_type type, int sub_type);
+equipment_type get_item_slot(const item_def& item);
 
 bool is_colourful_item(const item_def &item);
 

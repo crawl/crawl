@@ -2733,6 +2733,11 @@ size_type item_size(const item_def &item)
     return (static_cast<size_type>(size));
 }
 
+equipment_type get_item_slot(const item_def& item)
+{
+    return get_item_slot(item.base_type, item.sub_type);
+}
+
 equipment_type get_item_slot(object_class_type type, int sub_type)
 {
     switch(type)
