@@ -2609,7 +2609,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case POT_INVISIBILITY:
             // If you're Corona'd or a TSO-ite, this is always useless.
-            return (you.backlit(true));
+            return (temp ? you.backlit(true) : you.haloed());
         }
 
         return (false);
@@ -2669,7 +2669,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return (player_control_teleport(true, temp, false));
 
         case RING_INVISIBILITY:
-            return (you.backlit(true));
+            return (temp && you.backlit(true));
 
         default:
             return (false);
