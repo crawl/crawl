@@ -260,6 +260,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="cd $(ProjectDir)\..&#x0D;&#x0A;perl util/gen-cflg.pl compflag.h &quot;&lt;unavailable&gt;&quot; &quot;&lt;unavailable&gt;&quot; &quot;&lt;unavailable&gt;&quot;&#x0D;&#x0A;perl util/gen_ver.pl build.h"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -351,6 +352,14 @@
 		</File>
 		<File
 			RelativePath="..\acr.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\actor.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\actor.h"
 			>
 		</File>
 		<File
@@ -466,6 +475,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\cluautil.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\cluautil.h"
+			>
+		</File>
+		<File
 			RelativePath="..\command.cc"
 			>
 		</File>
@@ -570,6 +587,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\dlua.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\dlua.h"
+			>
+		</File>
+		<File
 			RelativePath="..\dungeon.cc"
 			>
 		</File>
@@ -639,6 +664,22 @@
 		</File>
 		<File
 			RelativePath="..\ghost.h"
+			>
+		</File>
+		<File
+			RelativePath="..\godabil.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\godabil.h"
+			>
+		</File>
+		<File
+			RelativePath="..\goditem.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\goditem.h"
 			>
 		</File>
 		<File
@@ -714,6 +755,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\jobs.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\jobs.h"
+			>
+		</File>
+		<File
 			RelativePath="..\kills.cc"
 			>
 		</File>
@@ -722,11 +771,99 @@
 			>
 		</File>
 		<File
+			RelativePath="..\l_crawl.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_debug.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_defs.h"
+			>
+		</File>
+		<File
+			RelativePath="..\l_dgn.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_dgn_bf.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_dgnbld.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_dgnevt.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_dgngrd.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_dgnit.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_dgnlvl.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_dgnmon.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_dgntil.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_file.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_food.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_global.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_item.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_libs.h"
+			>
+		</File>
+		<File
 			RelativePath="..\l_los.cc"
 			>
 		</File>
 		<File
 			RelativePath="..\l_los.h"
+			>
+		</File>
+		<File
+			RelativePath="..\l_mapgrd.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_mapmrk.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_mons.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_option.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_you.cc"
 			>
 		</File>
 		<File
@@ -886,14 +1023,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\luadgn.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\luadgn.h"
-			>
-		</File>
-		<File
 			RelativePath="..\macro.cc"
 			>
 		</File>
@@ -967,14 +1096,6 @@
 		</File>
 		<File
 			RelativePath="..\mon-data.h"
-			>
-		</File>
-		<File
-			RelativePath="..\mon-los.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\mon-los.h"
 			>
 		</File>
 		<File
@@ -1102,6 +1223,22 @@
 			>
 		</File>
 		<File
+			RelativePath="..\ng-input.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\ng-input.h"
+			>
+		</File>
+		<File
+			RelativePath="..\ng-restr.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\ng-restr.h"
+			>
+		</File>
+		<File
 			RelativePath="..\notes.cc"
 			>
 		</File>
@@ -1195,6 +1332,14 @@
 		</File>
 		<File
 			RelativePath="..\skills2.h"
+			>
+		</File>
+		<File
+			RelativePath="..\species.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\species.h"
 			>
 		</File>
 		<File

@@ -24,6 +24,8 @@
 #ifdef TARGET_COMPILER_VC
 /* Disable warning about the way VC handles the throw() specifier */
 #pragma warning (disable: 4290)
+/* Don't define min and max as macros, define them via STL */
+#define NOMINMAX
 #endif
 
 // The maximum memory that the user-script Lua interpreter can
