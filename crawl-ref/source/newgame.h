@@ -59,4 +59,9 @@ void give_basic_mutations(species_type speci);
 
 bool validate_player_name(const char *name, bool verbose);
 
+/* ***********************************************************************
+ * called from: files.cc
+ * *********************************************************************** */
+int get_class_by_name(const char *name);
+
 #endif
