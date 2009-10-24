@@ -13,6 +13,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "format.h"
+#include "hiscores.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "macro.h"
