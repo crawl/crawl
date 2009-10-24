@@ -3850,6 +3850,26 @@ int _max_wand_range()
     return (8);
 }
 
+static bool _dont_use_invis()
+{
+    if (!you.backlit())
+        return (false);
+
+    if (you.haloed())
+    {
+        mpr("You can't turn invisible.");
+        return (true);
+    }
+    else if (get_contamination_level() > 0
+             && !yesno("Invisibility will do you no good right now; "
+                       "use anyways?"))
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
 void zap_wand(int slot)
 {
     if (player_in_bat_form())
@@ -3964,12 +3984,19 @@ void zap_wand(int slot)
         return;
     }
 
-    if (alreadyknown && wand.sub_type == WAND_TELEPORTATION
-        && zap_wand.target == you.pos()
-        && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+    if (alreadyknown && zap_wand.target == you.pos())
     {
-        mpr("You cannot teleport right now.");
-        return;
+        if (wand.sub_type == WAND_TELEPORTATION
+            && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+        {
+            mpr("You cannot teleport right now.");
+            return;
+        }
+        else if (wand.sub_type == WAND_INVISIBILITY
+                 && _dont_use_invis())
+        {
+            return;
+        }
     }
 
     if (!has_charges)
@@ -4154,6 +4181,12 @@ void drink(int slot)
         && (is_blood_potion(potion) || potion.sub_type == POT_PORRIDGE))
     {
         mpr("You are much too full right now.");
+        return;
+    }
+
+    if (alreadyknown && potion.sub_type == POT_INVISIBILITY
+        && _dont_use_invis())
+    {
         return;
     }
 

@@ -5179,6 +5179,12 @@ void contaminate_player(int change, bool controlled, bool status_only)
 
         if (change > 0)
             xom_is_stimulated(new_level * 32);
+
+        if (new_level == 0 && you.duration[DUR_INVIS] && !you.backlit())
+        {
+            mpr("You fade completely from view now that you are no longer "
+                "glowing from magical contamination.");
+        }
     }
     else if (old_level == 0 && old_amount > 0 && you.magic_contamination == 0)
         mpr("Your magical contamination has completely faded away.");

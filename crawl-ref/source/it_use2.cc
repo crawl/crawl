@@ -296,9 +296,32 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
 
     case POT_INVISIBILITY:
-        mpr(!you.duration[DUR_INVIS] ? "You fade into invisibility!"
-                                     : "You fade further into invisibility.",
+        if (you.haloed())
+        {
+            // You can't turn invisible while haloed, but identify the
+            // effect anyways.
+            mpr("You briefly turn translucent.");
+
+            // And also cancel backlight (for whatever good that will
+            // do).
+            you.duration[DUR_BACKLIGHT] = 0;
+            return (true);
+        }
+
+        if (get_contamination_level() > 0)
+        {
+            mprf(MSGCH_DURATION,
+                 "You become %stransparent, but the glow from your "
+                 "magical contamination prevents you from becoming "
+                 "completely invisible.",
+                 you.duration[DUR_INVIS] ? "further " : "");
+        }
+        else
+        {
+            mpr(!you.duration[DUR_INVIS] ? "You fade into invisibility!"
+                                       : "You fade further into invisibility.",
             MSGCH_DURATION);
+        }
 
         // Invisibility cancels backlight.
         you.duration[DUR_BACKLIGHT] = 0;
@@ -311,8 +334,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
         if (you.duration[DUR_INVIS] > 100)
             you.duration[DUR_INVIS] = 100;
-
-        you.duration[DUR_BACKLIGHT] = 0;
         break;
 
     case POT_PORRIDGE:          // oatmeal - always gluggy white/grey?
