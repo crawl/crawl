@@ -234,6 +234,14 @@
 		7BF855680C9C914D00B7C520 /* mapmark.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF855660C9C914D00B7C520 /* mapmark.h */; };
 		7BF8556B0C9C916800B7C520 /* dgnevent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BF855690C9C916800B7C520 /* dgnevent.cc */; };
 		7BF8556C0C9C916800B7C520 /* dgnevent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BF8556A0C9C916800B7C520 /* dgnevent.h */; };
+		938E7C291093598C008B4DB5 /* jobs.cc in Sources */ = {isa = PBXBuildFile; fileRef = 938E7C271093598C008B4DB5 /* jobs.cc */; };
+		938E7C2A1093598C008B4DB5 /* jobs.cc in Sources */ = {isa = PBXBuildFile; fileRef = 938E7C271093598C008B4DB5 /* jobs.cc */; };
+		938E7C31109359A2008B4DB5 /* ng-input.cc in Sources */ = {isa = PBXBuildFile; fileRef = 938E7C2D109359A2008B4DB5 /* ng-input.cc */; };
+		938E7C32109359A2008B4DB5 /* ng-restr.cc in Sources */ = {isa = PBXBuildFile; fileRef = 938E7C2F109359A2008B4DB5 /* ng-restr.cc */; };
+		938E7C33109359A2008B4DB5 /* ng-input.cc in Sources */ = {isa = PBXBuildFile; fileRef = 938E7C2D109359A2008B4DB5 /* ng-input.cc */; };
+		938E7C34109359A2008B4DB5 /* ng-restr.cc in Sources */ = {isa = PBXBuildFile; fileRef = 938E7C2F109359A2008B4DB5 /* ng-restr.cc */; };
+		938E7C39109359B1008B4DB5 /* species.cc in Sources */ = {isa = PBXBuildFile; fileRef = 938E7C37109359B1008B4DB5 /* species.cc */; };
+		938E7C3A109359B1008B4DB5 /* species.cc in Sources */ = {isa = PBXBuildFile; fileRef = 938E7C37109359B1008B4DB5 /* species.cc */; };
 		93B134650F25595F007DB230 /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134610F255926007DB230 /* version.cc */; };
 		93B134C30F256113007DB230 /* arena.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93B134C20F256113007DB230 /* arena.cc */; };
 		93E89F8110913D35007AFD24 /* actor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93E89F7210913D35007AFD24 /* actor.cc */; };
@@ -1040,6 +1048,14 @@
 		7BF855690C9C916800B7C520 /* dgnevent.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = dgnevent.cc; sourceTree = SOURCE_ROOT; };
 		7BF8556A0C9C916800B7C520 /* dgnevent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dgnevent.h; sourceTree = SOURCE_ROOT; };
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
+		938E7C271093598C008B4DB5 /* jobs.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jobs.cc; sourceTree = "<group>"; };
+		938E7C281093598C008B4DB5 /* jobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jobs.h; sourceTree = "<group>"; };
+		938E7C2D109359A2008B4DB5 /* ng-input.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ng-input.cc"; sourceTree = "<group>"; };
+		938E7C2E109359A2008B4DB5 /* ng-input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ng-input.h"; sourceTree = "<group>"; };
+		938E7C2F109359A2008B4DB5 /* ng-restr.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ng-restr.cc"; sourceTree = "<group>"; };
+		938E7C30109359A2008B4DB5 /* ng-restr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ng-restr.h"; sourceTree = "<group>"; };
+		938E7C37109359B1008B4DB5 /* species.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = species.cc; sourceTree = "<group>"; };
+		938E7C38109359B1008B4DB5 /* species.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = species.h; sourceTree = "<group>"; };
 		93B134610F255926007DB230 /* version.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = version.cc; sourceTree = SOURCE_ROOT; };
 		93B134C20F256113007DB230 /* arena.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = arena.cc; sourceTree = "<group>"; };
 		93E89F7210913D35007AFD24 /* actor.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = actor.cc; sourceTree = "<group>"; };
@@ -1240,21 +1256,6 @@
 		08FB7794FE84155DC02AAC07 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
-				93E89F7210913D35007AFD24 /* actor.cc */,
-				93E89F7310913D35007AFD24 /* actor.h */,
-				93E89F7410913D35007AFD24 /* art-data.h */,
-				93E89F7510913D35007AFD24 /* art-func.h */,
-				93E89F7610913D35007AFD24 /* build.h */,
-				93E89F7710913D35007AFD24 /* cmd-keys.h */,
-				93E89F7810913D35007AFD24 /* cmd-name.h */,
-				93E89F7910913D35007AFD24 /* compflag.h */,
-				93E89F7A10913D35007AFD24 /* enum.h */,
-				93E89F7B10913D35007AFD24 /* env.h */,
-				93E89F7C10913D35007AFD24 /* externs.h */,
-				93E89F7D10913D35007AFD24 /* mon-data.h */,
-				93E89F7E10913D35007AFD24 /* mon-spll.h */,
-				93E89F7F10913D35007AFD24 /* monster.h */,
-				93E89F8010913D35007AFD24 /* platform.h */,
 				B0F7DFE61086F4EA008FFA70 /* libpng.xcodeproj */,
 				B0F7DF7B1086F0CB008FFA70 /* SDL_image.xcodeproj */,
 				B0F7DEF91086EE79008FFA70 /* SDL.xcodeproj */,
@@ -1372,6 +1373,29 @@
 		7B352EF00B001F5B00CABB32 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
+				938E7C37109359B1008B4DB5 /* species.cc */,
+				938E7C38109359B1008B4DB5 /* species.h */,
+				938E7C2D109359A2008B4DB5 /* ng-input.cc */,
+				938E7C2E109359A2008B4DB5 /* ng-input.h */,
+				938E7C2F109359A2008B4DB5 /* ng-restr.cc */,
+				938E7C30109359A2008B4DB5 /* ng-restr.h */,
+				938E7C271093598C008B4DB5 /* jobs.cc */,
+				938E7C281093598C008B4DB5 /* jobs.h */,
+				93E89F7210913D35007AFD24 /* actor.cc */,
+				93E89F7310913D35007AFD24 /* actor.h */,
+				93E89F7410913D35007AFD24 /* art-data.h */,
+				93E89F7510913D35007AFD24 /* art-func.h */,
+				93E89F7610913D35007AFD24 /* build.h */,
+				93E89F7710913D35007AFD24 /* cmd-keys.h */,
+				93E89F7810913D35007AFD24 /* cmd-name.h */,
+				93E89F7910913D35007AFD24 /* compflag.h */,
+				93E89F7A10913D35007AFD24 /* enum.h */,
+				93E89F7B10913D35007AFD24 /* env.h */,
+				93E89F7C10913D35007AFD24 /* externs.h */,
+				93E89F7D10913D35007AFD24 /* mon-data.h */,
+				93E89F7E10913D35007AFD24 /* mon-spll.h */,
+				93E89F7F10913D35007AFD24 /* monster.h */,
+				93E89F8010913D35007AFD24 /* platform.h */,
 				B0D189F51090B44D0071AF40 /* cluautil.cc */,
 				B0D189F61090B44D0071AF40 /* cluautil.h */,
 				B0D189F71090B44D0071AF40 /* godabil.cc */,
@@ -2308,6 +2332,10 @@
 				4CEF158A0C128CA5002C7D7A /* xom.cc in Sources */,
 				93E89F8210913D35007AFD24 /* actor.cc in Sources */,
 				93E89F8510913D48007AFD24 /* bitary.cc in Sources */,
+				938E7C2A1093598C008B4DB5 /* jobs.cc in Sources */,
+				938E7C33109359A2008B4DB5 /* ng-input.cc in Sources */,
+				938E7C34109359A2008B4DB5 /* ng-restr.cc in Sources */,
+				938E7C3A109359B1008B4DB5 /* species.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2454,6 +2482,10 @@
 				B032D6AD106C02150002D70D /* view.cc in Sources */,
 				B032D6E4106C02150002D70D /* xom.cc in Sources */,
 				93E89F8110913D35007AFD24 /* actor.cc in Sources */,
+				938E7C291093598C008B4DB5 /* jobs.cc in Sources */,
+				938E7C31109359A2008B4DB5 /* ng-input.cc in Sources */,
+				938E7C32109359A2008B4DB5 /* ng-restr.cc in Sources */,
+				938E7C39109359B1008B4DB5 /* species.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
