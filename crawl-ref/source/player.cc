@@ -446,42 +446,13 @@ bool player_under_penance(void)
         return (false);
 }
 
+// TODO: get rid of this.
 bool player_genus(genus_type which_genus, species_type species)
 {
     if (species == SP_UNKNOWN)
         species = you.species;
 
-    switch (species)
-    {
-    case SP_RED_DRACONIAN:
-    case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-    case SP_PALE_DRACONIAN:
-    case SP_BASE_DRACONIAN:
-        return (which_genus == GENPC_DRACONIAN);
-
-    case SP_HIGH_ELF:
-    case SP_DEEP_ELF:
-    case SP_SLUDGE_ELF:
-        return (which_genus == GENPC_ELVEN);
-
-    case SP_MOUNTAIN_DWARF:
-    case SP_DEEP_DWARF:
-        return (which_genus == GENPC_DWARVEN);
-
-    case SP_OGRE:
-        return (which_genus == GENPC_OGRE);
-
-    default:
-        break;
-    }
-
-    return (false);
+    return (species_genus(species) == which_genus);
 }
 
 // If transform is true, compare with current transformation instead
@@ -683,7 +654,7 @@ bool you_tran_can_wear(const item_def &item)
             return (true);
         }
 
-        if (fit_armour_size(item, player_size()) != 0)
+        if (fit_armour_size(item, you.body_size()) != 0)
             return (false);
 
         return you_tran_can_wear(get_armour_slot(item), true);
@@ -795,7 +766,7 @@ bool player_weapon_wielded()
     // should never have a bad "shape" weapon in hand
     ASSERT( check_weapon_shape( you.inv[wpn], false ) );
 
-    if (!check_weapon_wieldable_size( you.inv[wpn], player_size() ))
+    if (!check_weapon_wieldable_size( you.inv[wpn], you.body_size() ))
         return (false);
     */
 
@@ -2385,21 +2356,12 @@ bool player_is_shapechanged(void)
     return (true);
 }
 
-// psize defaults to PSIZE_TORSO, which checks the part of the body
-// that wears armour and wields weapons (which is different for some hybrids).
-// base defaults to "false", meaning consider our current size, not our
-// natural one.
-size_type player_size(int psize, bool base)
-{
-    return you.body_size(psize, base);
-}
-
 // New and improved 4.1 evasion model, courtesy Brent Ross.
 int player_evasion()
 {
-    // XXX: player_size() implementations are incomplete, fix.
-    const size_type size  = player_size(PSIZE_BODY);
-    const size_type torso = player_size(PSIZE_TORSO);
+    // XXX: you.body_size() implementations are incomplete, fix.
+    const size_type size  = you.body_size(PSIZE_BODY);
+    const size_type torso = you.body_size(PSIZE_TORSO);
 
     const int size_factor = SIZE_MEDIUM - size;
     int ev = 10 + 2 * size_factor;
@@ -6140,48 +6102,16 @@ bool player::can_pass_through_feat(dungeon_feature_type grid) const
     return !feat_is_solid(grid);
 }
 
-size_type player::body_size(int psize, bool base) const
+size_type player::body_size(size_part_type psize, bool base) const
 {
-    size_type ret = base ? SIZE_CHARACTER : transform_size(psize);
-
-    if (ret == SIZE_CHARACTER)
+    if (base)
+        return species_size(species, psize);
+    else
     {
-        // Transformation has size of character's species.
-        switch (species)
-        {
-        case SP_OGRE:
-        case SP_TROLL:
-            ret = SIZE_LARGE;
-            break;
-
-        case SP_NAGA:
-            // Most of their body is on the ground giving them a low profile.
-            if (psize == PSIZE_TORSO || psize == PSIZE_PROFILE)
-                ret = SIZE_MEDIUM;
-            else
-                ret = SIZE_LARGE;
-            break;
-
-        case SP_CENTAUR:
-            ret = (psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_LARGE;
-            break;
-
-        case SP_SPRIGGAN:
-            ret = SIZE_LITTLE;
-            break;
-
-        case SP_HALFLING:
-        case SP_KOBOLD:
-            ret = SIZE_SMALL;
-            break;
-
-        default:
-            ret = SIZE_MEDIUM;
-            break;
-        }
+        size_type tf_size = transform_size(psize);
+        return (tf_size == SIZE_CHARACTER ? species_size(species, psize)
+                                          : tf_size);
     }
-
-    return (ret);
 }
 
 int player::body_weight() const
@@ -7102,11 +7032,10 @@ int player::has_claws(bool allow_tran) const
         }
     }
 
-    // these are the only other sources for claws
-    if (species == SP_TROLL)
-        return (3);
-    if (species == SP_GHOUL)
-        return (1);
+    // XXX: Some assumptions about mutations and species in here.
+    int sp_claws = species_has_claws(species);
+    if (sp_claws > 0)
+        return (sp_claws);
 
     return (player_mutation_level(MUT_CLAWS));
 }

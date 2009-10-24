@@ -1178,7 +1178,7 @@ static bool _try_give_mundane_armour(item_def &arm)
             else
             {
                 const item_def weapon = you.inv[you.equip[EQ_WEAPON]];
-                const hands_reqd_type hand = hands_reqd(weapon, player_size());
+                const hands_reqd_type hand = hands_reqd(weapon, you.body_size());
                 if (hand == HANDS_TWO || item_is_rod(weapon)
                     || is_range_weapon(weapon))
                 {

@@ -191,8 +191,9 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
 {
     std::string res;
 
-    if (player_genus(GENPC_DRACONIAN, speci))
+    switch (species_genus(speci))
     {
+    case GENPC_DRACONIAN:
         if (adj || genus)  // adj doesn't care about exact species
             res = "Draconian";
         else
@@ -221,9 +222,8 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
                 }
             }
         }
-    }
-    else if (player_genus( GENPC_ELVEN, speci ))
-    {
+        break;
+    case GENPC_ELVEN:
         if (adj)  // doesn't care about species/genus
             res = "Elven";
         else if (genus)
@@ -238,9 +238,8 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
             default:            res = "Elf";        break;
             }
         }
-    }
-    else if (player_genus(GENPC_DWARVEN, speci))
-    {
+        break;
+    case GENPC_DWARVEN:
         if (adj)  // doesn't care about species/genus
             res = "Dwarven";
         else if (genus)
@@ -254,9 +253,9 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
             default:                res = "Dwarf";                     break;
             }
         }
-    }
-    else
-    {
+        break;
+    case GENPC_NONE:
+    default:
         switch (speci)
         {
         case SP_HUMAN:      res = "Human";                             break;
@@ -284,4 +283,77 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
         }
     }
     return res;
+}
+
+int species_has_claws(species_type species)
+{
+    if (species == SP_TROLL)
+        return (3);
+    if (species == SP_GHOUL)
+        return (1);
+    return (0);
+}
+
+genus_type species_genus(species_type species)
+{
+    switch (species)
+    {
+    case SP_RED_DRACONIAN:
+    case SP_WHITE_DRACONIAN:
+    case SP_GREEN_DRACONIAN:
+    case SP_YELLOW_DRACONIAN:
+    case SP_GREY_DRACONIAN:
+    case SP_BLACK_DRACONIAN:
+    case SP_PURPLE_DRACONIAN:
+    case SP_MOTTLED_DRACONIAN:
+    case SP_PALE_DRACONIAN:
+    case SP_BASE_DRACONIAN:
+        return (GENPC_DRACONIAN);
+
+    case SP_HIGH_ELF:
+    case SP_DEEP_ELF:
+    case SP_SLUDGE_ELF:
+        return (GENPC_ELVEN);
+
+    case SP_MOUNTAIN_DWARF:
+    case SP_DEEP_DWARF:
+        return (GENPC_DWARVEN);
+
+    case SP_OGRE:
+        return (GENPC_OGRE);
+
+    default:
+        return (GENPC_NONE);
+    }
+}
+
+size_type species_size(species_type species, size_part_type psize)
+{
+    switch (species)
+    {
+    case SP_OGRE:
+    case SP_TROLL:
+        return (SIZE_LARGE);
+    case SP_NAGA:
+        // Most of their body is on the ground giving them a low profile.
+        if (psize == PSIZE_TORSO || psize == PSIZE_PROFILE)
+            return (SIZE_MEDIUM);
+        else
+            return (SIZE_LARGE);
+    case SP_CENTAUR:
+        return ((psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_LARGE);
+    case SP_SPRIGGAN:
+        return (SIZE_LITTLE);
+    case SP_HALFLING:
+    case SP_KOBOLD:
+        return (SIZE_SMALL);
+
+    default:
+        return(SIZE_MEDIUM);
+    }
+}
+
+bool is_valid_species(species_type species)
+{
+    return (species >= 0 && species < NUM_SPECIES);
 }

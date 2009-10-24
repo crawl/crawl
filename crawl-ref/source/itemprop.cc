@@ -2121,7 +2121,7 @@ int get_inv_hand_tool( void )
         // assuring that bad "shape" weapons aren't in hand
         ASSERT( check_weapon_shape( you.inv[tool], false ) );
 
-        if (!check_weapon_tool_size( you.inv[tool], player_size() ))
+        if (!check_weapon_tool_size( you.inv[tool], you.body_size() ))
             return (-1);
     }
     */
@@ -2799,7 +2799,7 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
     if (!shield && !(shield = player_shield()))
         return (false);
 
-    hands_reqd_type hand = hands_reqd(weapon, player_size());
+    hands_reqd_type hand = hands_reqd(weapon, you.body_size());
     return (hand == HANDS_TWO
             && !item_is_rod(weapon)
             && !is_range_weapon(weapon));

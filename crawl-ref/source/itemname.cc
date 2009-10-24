@@ -2502,7 +2502,7 @@ bool is_useless_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (!check_weapon_wieldable_size(item, player_size(PSIZE_BODY, !temp))
+        if (!check_weapon_wieldable_size(item, you.body_size(PSIZE_BODY, !temp))
             && !is_throwable(&you, item))
         {
             // Weapon is too large (or small) to be wielded and cannot be
@@ -2528,11 +2528,11 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case MI_LARGE_ROCK:
-            return (player_size(PSIZE_BODY, !temp) < SIZE_LARGE
+            return (you.body_size(PSIZE_BODY, !temp) < SIZE_LARGE
                     || !you.can_throw_large_rocks());
         case MI_JAVELIN:
         case MI_THROWING_NET:
-            return (player_size(PSIZE_BODY, !temp) < SIZE_MEDIUM);
+            return (you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM);
         }
 
         return (false);

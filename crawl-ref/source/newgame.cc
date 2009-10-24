@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include "newgame.h"
+#include "ng-restr.h"
 #include "jobs.h"
 
 #include <stdlib.h>
@@ -61,17 +62,6 @@ extern std::string init_file_error;
 
 #define MIN_START_STAT       3
 
-enum char_choice_restriction
-{
-    CC_BANNED = 0,
-    CC_RESTRICTED,
-    CC_UNRESTRICTED
-};
-
-static char_choice_restriction _class_allowed(species_type speci,
-                                              job_type char_class);
-static bool _is_good_combination( species_type spc, job_type cls,
-                                  bool good = false);
 static bool _validate_player_name(bool verbose);
 static void _enter_player_name(bool blankOK);
 static void _give_basic_knowledge(job_type which_job);
@@ -89,6 +79,15 @@ static void _fix_up_god_name(void);
 ////////////////////////////////////////////////////////////////////////
 // Remember player's startup options
 //
+
+static newgame_def ng;
+
+// XXX: temporary to get data to ng-restr.cc.
+void newgame_def::init(const player &p)
+{
+    species = p.species;
+    job = p.char_class;
+}
 
 static char ng_race, ng_cls;
 static bool ng_random;
@@ -257,7 +256,7 @@ static void _pick_random_species_and_class( bool unrestricted_only )
 
         for (int cl = JOB_FIGHTER; cl < NUM_JOBS; cl++)
         {
-            if (_is_good_combination(static_cast<species_type>(sp),
+            if (is_good_combination(static_cast<species_type>(sp),
                                      static_cast<job_type>(cl),
                                      unrestricted_only))
             {
@@ -892,7 +891,7 @@ game_start:
     {
         if (Options.race != 0 && Options.cls != 0
             && Options.race != '*' && Options.cls != '*'
-            && !_class_allowed(get_species(letter_to_index(Options.race)),
+            && !class_allowed(get_species(letter_to_index(Options.race)),
                                get_class(letter_to_index(Options.cls))))
         {
             end(1, false,
@@ -1075,567 +1074,6 @@ game_start:
     return (true);
 }
 
-static char_choice_restriction _class_allowed(species_type speci,
-                                              job_type char_class)
-{
-    switch (char_class)
-    {
-    case JOB_FIGHTER:
-        switch (speci)
-        {
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
-        case SP_DEEP_DWARF:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_OGRE:
-        case SP_RED_DRACONIAN:
-        case SP_MUMMY:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_GLADIATOR:
-        switch (speci)
-        {
-        case SP_DEEP_ELF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_RED_DRACONIAN:
-        case SP_GHOUL:
-        case SP_MUMMY:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_MONK:
-        switch (speci)
-        {
-        case SP_HUMAN:
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_RED_DRACONIAN:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_BERSERKER:
-        switch (speci)
-        {
-        case SP_DEMIGOD:
-            return (CC_BANNED);
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_RED_DRACONIAN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_PALADIN:
-        switch (speci)
-        {
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_BANNED);
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_KENKU:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_PRIEST:
-        switch (speci)
-        {
-        case SP_DEMIGOD:
-            return (CC_BANNED);
-        case SP_DEEP_ELF:
-        case SP_DEEP_DWARF:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_KENKU:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_CHAOS_KNIGHT:
-        switch (speci)
-        {
-        case SP_DEMIGOD:
-            return (CC_BANNED);
-        case SP_DEEP_ELF:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_KENKU:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_DEATH_KNIGHT:
-        switch (speci)
-        {
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_KENKU:
-        case SP_GHOUL:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_HEALER:
-        switch (speci)
-        {
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_BANNED);
-        case SP_DEEP_ELF:
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_CRUSADER:
-        switch (speci)
-        {
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_KENKU:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_REAVER:
-        switch (speci)
-        {
-        case SP_HUMAN:
-        case SP_SLUDGE_ELF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_KENKU:
-        case SP_RED_DRACONIAN:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_WIZARD:
-        switch (speci)
-        {
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_OGRE:
-        case SP_MINOTAUR:
-        case SP_GHOUL:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_CONJURER:
-        switch (speci)
-        {
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_ENCHANTER:
-        switch (speci)
-        {
-        case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_KENKU:
-        case SP_RED_DRACONIAN:
-        case SP_DEMONSPAWN:
-        case SP_GHOUL:
-        case SP_MUMMY:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_SUMMONER:
-        switch (speci)
-        {
-        case SP_HUMAN:
-        case SP_HIGH_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_RED_DRACONIAN:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_GHOUL:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_NECROMANCER:
-        switch (speci)
-        {
-        case SP_HIGH_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_GHOUL:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_WARPER:
-        switch (speci)
-        {
-        case SP_HUMAN:
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_KENKU:
-        case SP_RED_DRACONIAN:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_TRANSMUTER:
-        switch (speci)
-        {
-        case SP_HUMAN:
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_KENKU:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_FIRE_ELEMENTALIST:
-        switch (speci)
-        {
-        case SP_DEEP_DWARF:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_ICE_ELEMENTALIST:
-        switch (speci)
-        {
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_AIR_ELEMENTALIST:
-        switch (speci)
-        {
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_EARTH_ELEMENTALIST:
-        switch (speci)
-        {
-        case SP_HIGH_ELF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_KENKU:
-        case SP_RED_DRACONIAN:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_VENOM_MAGE:
-        switch (speci)
-        {
-        case SP_HIGH_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_HALFLING:
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_STALKER:
-        switch (speci)
-        {
-        case SP_HIGH_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_RED_DRACONIAN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_THIEF:
-        return (CC_RESTRICTED);
-
-    case JOB_ASSASSIN:
-        switch (speci)
-        {
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_RED_DRACONIAN:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_HUNTER:
-        switch (speci)
-        {
-        case SP_DEEP_DWARF:
-        case SP_KOBOLD:
-        case SP_NAGA:
-        case SP_RED_DRACONIAN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_ARTIFICER:
-        switch (speci)
-        {
-        case SP_CENTAUR:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_OGRE:
-        case SP_MUMMY:
-        case SP_GHOUL:
-            return (CC_RESTRICTED);
-        default:
-            return (CC_UNRESTRICTED);
-        }
-
-    case JOB_WANDERER:
-        return (CC_RESTRICTED);
-
-    default:
-        return (CC_BANNED);
-    }
-}
-
-static bool _is_good_combination( species_type spc, job_type cls, bool good)
-{
-    const char_choice_restriction restrict = _class_allowed(spc, cls);
-
-    if (good)
-        return (restrict == CC_UNRESTRICTED);
-
-    return (restrict != CC_BANNED);
-}
-
 static startup_book_type _book_to_start(int book)
 {
     switch (book)
@@ -1694,86 +1132,11 @@ static int _start_to_book(int firstbook, int booktype)
     }
 }
 
-static char_choice_restriction _book_restriction(startup_book_type booktype)
-{
-    switch (booktype)
-    {
-    case SBT_FIRE: // Fire
-        switch (you.species)
-        {
-        case SP_HUMAN:
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_HILL_ORC:
-        case SP_KOBOLD:
-        case SP_NAGA:
-        case SP_OGRE:
-        case SP_KENKU:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-            return (CC_UNRESTRICTED);
-
-        default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
-            return (CC_RESTRICTED);
-        }
-        break;
-
-    case SBT_COLD: // Ice
-        switch (you.species)
-        {
-        case SP_HUMAN:
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_KOBOLD:
-        case SP_NAGA:
-        case SP_OGRE:
-        case SP_KENKU:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-            return (CC_UNRESTRICTED);
-
-        default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
-            return (CC_RESTRICTED);
-        }
-        break;
-
-    case SBT_SUMM: // Summoning
-        switch (you.species)
-        {
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
-        case SP_KOBOLD:
-        case SP_NAGA:
-        case SP_OGRE:
-        case SP_KENKU:
-        case SP_MUMMY:
-        case SP_VAMPIRE:
-            return (CC_UNRESTRICTED);
-
-        default:
-            return (CC_RESTRICTED);
-        }
-        break;
-
-    default:
-        return (CC_RESTRICTED);
-    }
-}
-
 static bool _choose_book( int slot, int firstbook, int numbooks )
 {
     clrscr();
+
+    ng.init(you); // XXX
 
     item_def &book(you.inv[slot]);
     book.base_type = OBJ_BOOKS;
@@ -1789,8 +1152,8 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
     char_choice_restriction book_restrictions[3];
     for (int i = 0; i < numbooks; i++)
     {
-        book_restrictions[i] = _book_restriction(
-                                   _book_to_start(firstbook + i));
+        book_restrictions[i] = book_restriction(
+                                   _book_to_start(firstbook + i), ng);
     }
 
     if (Options.book)
@@ -1906,7 +1269,7 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
         {
             for (int i = 0; i < numbooks; i++)
             {
-                if (_book_restriction(_book_to_start(firstbook + i))
+                if (book_restriction(_book_to_start(firstbook + i), ng)
                             == CC_UNRESTRICTED
                         && one_chance_in(++good_choices))
                 {
@@ -1927,129 +1290,17 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
     return (true);
 }
 
-static char_choice_restriction _weapon_restriction(weapon_type wpn)
-{
-    switch (wpn)
-    {
-    case WPN_UNARMED:
-        if (you.has_claws())
-            return (CC_UNRESTRICTED);
-        return (CC_BANNED);
-
-    case WPN_SHORT_SWORD:
-        switch (you.species)
-        {
-        case SP_NAGA:
-        case SP_VAMPIRE:
-            // The fighter's heavy armour hinders stabbing.
-            if (you.char_class == JOB_FIGHTER)
-                return (CC_RESTRICTED);
-            // else fall through
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
-        // Sludge elves have bad aptitudes with short swords (110) but are
-        // still better with them than any other starting weapon.
-        case SP_SLUDGE_ELF:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-            return (CC_UNRESTRICTED);
-
-        default:
-            return (CC_RESTRICTED);
-        }
-
-    // Maces and hand axes usually share the same restrictions.
-    case WPN_MACE:
-        if (you.species == SP_TROLL)
-            return (CC_UNRESTRICTED);
-        if (you.species == SP_VAMPIRE)
-            return (CC_RESTRICTED);
-        // else fall-through
-    case WPN_HAND_AXE:
-        switch (you.species)
-        {
-        case SP_HUMAN:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_MUMMY:
-        case SP_CENTAUR:
-        case SP_NAGA:
-        case SP_MINOTAUR:
-        case SP_KENKU:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_VAMPIRE:
-            return (CC_UNRESTRICTED);
-
-        default:
-            return (player_genus(GENPC_DRACONIAN) ? CC_UNRESTRICTED
-                                                  : CC_RESTRICTED);
-        }
-
-    case WPN_SPEAR:
-        switch (you.species)
-        {
-        case SP_HUMAN:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_MINOTAUR:
-        case SP_KENKU:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-            return (CC_UNRESTRICTED);
-
-        default:
-            return (player_genus(GENPC_DRACONIAN) ? CC_UNRESTRICTED
-                                                  : CC_RESTRICTED);
-        }
-
-    case WPN_TRIDENT:
-        if (you.species != SP_MERFOLK
-            && (you.char_class != JOB_GLADIATOR
-                || player_size(PSIZE_BODY) < SIZE_MEDIUM))
-        {
-            return (CC_BANNED);
-        }
-
-        // Tridents are strictly better than spears, so unrestrict them
-        // for some species whose Polearm aptitudes are not too bad.
-        switch (you.species)
-        {
-        case SP_MOUNTAIN_DWARF:
-        case SP_OGRE:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_UNRESTRICTED);
-        default:
-            break;
-        }
-
-        // Both are polearms, right?
-        return (_weapon_restriction(WPN_SPEAR));
-
-    case WPN_ANKUS:
-        if (player_genus(GENPC_OGRE))
-            return (CC_UNRESTRICTED);
-        // intentional fall-through
-    default:
-        return (CC_BANNED);
-    }
-}
-
 static bool _choose_weapon()
 {
     weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
                                 WPN_HAND_AXE, WPN_SPEAR, WPN_UNKNOWN };
 
+    ng.init(you);
+
     // Gladiators that are at least medium sized get to choose a trident
     // rather than a spear
     if (you.char_class == JOB_GLADIATOR
-        && player_size(PSIZE_BODY) >= SIZE_MEDIUM)
+        && you.body_size(PSIZE_BODY) >= SIZE_MEDIUM)
     {
         startwep[3] = WPN_TRIDENT;
     }
@@ -2083,7 +1334,7 @@ static bool _choose_weapon()
     const int num_choices = (claws_allowed ? 5 : 4);
 
     for (int i = 0; i < num_choices; i++)
-        startwep_restrictions[i] = _weapon_restriction(startwep[i]);
+        startwep_restrictions[i] = weapon_restriction(startwep[i], ng);
 
     if (Options.weapon == WPN_UNARMED && claws_allowed)
     {
@@ -2211,7 +1462,7 @@ static bool _choose_weapon()
         {
             for (int i = 0; i < num_choices; i++)
             {
-                if (_weapon_restriction(startwep[i]) == CC_UNRESTRICTED
+                if (weapon_restriction(startwep[i], ng) == CC_UNRESTRICTED
                     && one_chance_in(++good_choices))
                 {
                     keyin = i;
@@ -2233,156 +1484,6 @@ static bool _choose_weapon()
         you.inv[0].sub_type = startwep[keyin - 'a'];
 
     return (true);
-}
-
-// Gods are not restricted but there are some choices that are banned (false).
-// Everything else will be unrestricted.
-static char_choice_restriction _religion_restriction(god_type god)
-{
-    // Sanity check.
-    if (you.species == SP_DEMIGOD)
-        return (CC_BANNED);
-
-    switch (god)
-    {
-    case GOD_BEOGH:
-        if (you.species == SP_HILL_ORC)
-            return (CC_UNRESTRICTED);
-        return (CC_BANNED);
-
-    case GOD_ZIN:
-        switch (you.species)
-        {
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_BANNED);
-        case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_SPRIGGAN:
-        case SP_CENTAUR:
-        case SP_MINOTAUR:
-        case SP_OGRE:
-            return (CC_UNRESTRICTED);
-        default:
-            return (CC_RESTRICTED);
-        }
-
-    case GOD_YREDELEMNUL:
-        switch (you.species)
-        {
-        case SP_HILL_ORC:
-            // Restrict in favour of Beogh, else unrestricted.
-            if (you.char_class == JOB_PRIEST)
-                return (CC_RESTRICTED);
-            return (CC_UNRESTRICTED);
-
-        case SP_DEEP_ELF:
-        case SP_KENKU:
-            // Unrestrict these only for Priests as Zin is worse, but
-            // Necromancy (DK) the better choice.
-            if (you.char_class == JOB_PRIEST)
-                return (CC_UNRESTRICTED);
-            return (CC_RESTRICTED);
-
-        case SP_HUMAN:
-        case SP_HIGH_ELF:
-        case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_UNRESTRICTED);
-        default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
-            return (CC_RESTRICTED);
-        }
-
-    case GOD_XOM:
-        switch (you.species)
-        {
-        case SP_MOUNTAIN_DWARF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_KENKU:
-        case SP_DEMONSPAWN:
-            return (CC_UNRESTRICTED);
-        default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
-            return (CC_RESTRICTED);
-        }
-
-    case GOD_MAKHLEB:
-        switch (you.species)
-        {
-        case SP_HUMAN:
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_UNRESTRICTED);
-        default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
-            return (CC_RESTRICTED);
-        }
-
-    case GOD_LUGONU:
-        switch (you.species)
-        {
-        case SP_HUMAN:
-        case SP_MOUNTAIN_DWARF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-        case SP_SPRIGGAN:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_DEMONSPAWN:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return (CC_UNRESTRICTED);
-        default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
-            return (CC_RESTRICTED);
-        }
-
-    default:
-        return (CC_RESTRICTED);
-    }
 }
 
 static bool _necromancy_okay()
@@ -3094,7 +2195,7 @@ static void _newgame_make_item(int slot, equipment_type eqslot,
         // Don't replace shields with bucklers for large races or
         // draconians.
         if (sub_type != ARM_SHIELD
-            || player_size(PSIZE_TORSO) < SIZE_LARGE
+            || you.body_size(PSIZE_TORSO) < SIZE_LARGE
                && !player_genus(GENPC_DRACONIAN))
         {
             item.sub_type = replacement;
@@ -4198,7 +3299,7 @@ spec_query:
 
             // Dim text for restricted species
             if (you.char_class == JOB_UNKNOWN
-                || _class_allowed(si, you.char_class) == CC_UNRESTRICTED)
+                || class_allowed(si, you.char_class) == CC_UNRESTRICTED)
             {
                 textcolor(LIGHTGREY);
             }
@@ -4207,7 +3308,7 @@ spec_query:
 
             // Show banned races as "unavailable".
             if (you.char_class != JOB_UNKNOWN
-                && _class_allowed(si, you.char_class) == CC_BANNED)
+                && class_allowed(si, you.char_class) == CC_BANNED)
             {
                 cprintf("    %s N/A", species_name(si, 1).c_str());
             }
@@ -4350,7 +3451,7 @@ spec_query:
         }
         while (!_is_species_valid_choice(get_species(index), false)
                || you.char_class != JOB_UNKNOWN
-                  && !_is_good_combination(get_species(index), you.char_class,
+                  && !is_good_combination(get_species(index), you.char_class,
                                            good_randrace));
 
         keyn = index_to_letter(index);
@@ -4370,7 +3471,7 @@ spec_query:
     }
 
     if (you.species != SP_UNKNOWN && you.char_class != JOB_UNKNOWN
-        && !_class_allowed(you.species, you.char_class))
+        && !class_allowed(you.species, you.char_class))
     {
         goto spec_query;
     }
@@ -4439,7 +3540,7 @@ job_query:
             if (you.species == SP_UNKNOWN
                    && which_job != JOB_THIEF && which_job != JOB_WANDERER
                 || you.species != SP_UNKNOWN
-                   && _class_allowed(you.species, which_job) == CC_UNRESTRICTED)
+                   && class_allowed(you.species, which_job) == CC_UNRESTRICTED)
             {
                 textcolor(LIGHTGREY);
             }
@@ -4447,7 +3548,7 @@ job_query:
                 textcolor(DARKGREY);
 
             // Show banned races as "unavailable".
-            if (_class_allowed(you.species, which_job) == CC_BANNED)
+            if (class_allowed(you.species, which_job) == CC_BANNED)
             {
                 cprintf("    %s N/A", get_class_name(which_job));
             }
@@ -4599,7 +3700,7 @@ job_query:
                 continue;
 
             if (you.species == SP_UNKNOWN
-                || _is_good_combination(you.species, job, good_random))
+                || is_good_combination(you.species, job, good_random))
             {
                 job_count++;
                 if (one_chance_in( job_count ))
@@ -4622,7 +3723,7 @@ job_query:
     }
 
     if (you.species != SP_UNKNOWN
-        && !_class_allowed(you.species, chosen_job))
+        && !class_allowed(you.species, chosen_job))
     {
         if (Options.cls != 0)
         {
@@ -4911,6 +4012,8 @@ bool _give_items_skills()
     int weap_skill = 0;
     int choice;                 // used for third-screen choices
 
+    ng.init(you); // XXX
+
     switch (you.char_class)
     {
     case JOB_FIGHTER:
@@ -4959,7 +4062,7 @@ bool _give_items_skills()
         }
 
         // Small races get stones, the others nets.
-        if (player_size(PSIZE_BODY) < SIZE_MEDIUM)
+        if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
             _newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
         else
         {
@@ -5058,7 +4161,7 @@ bool _give_items_skills()
             const god_type gods[3] = { GOD_ZIN, GOD_YREDELEMNUL, GOD_BEOGH };
 
             // Disallow invalid choices.
-            if (_religion_restriction(Options.priest) == CC_BANNED)
+            if (religion_restriction(Options.priest, ng) == CC_BANNED)
                 Options.priest = GOD_NO_GOD;
 
             if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
@@ -5071,10 +4174,10 @@ bool _give_items_skills()
                     int count = 0;
                     for (int i = 0; i < 3; i++)
                     {
-                        if (_religion_restriction(gods[i]) == CC_BANNED)
+                        if (religion_restriction(gods[i], ng) == CC_BANNED)
                             continue;
 
-                        if (_religion_restriction(gods[i]) == CC_UNRESTRICTED
+                        if (religion_restriction(gods[i], ng) == CC_UNRESTRICTED
                             && one_chance_in(++count))
                         {
                             you.religion = gods[i];
@@ -5106,10 +4209,10 @@ bool _give_items_skills()
 
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_religion_restriction(gods[i]) == CC_BANNED)
+                    if (religion_restriction(gods[i], ng) == CC_BANNED)
                         continue;
 
-                    if (_religion_restriction(gods[i]) == CC_UNRESTRICTED)
+                    if (religion_restriction(gods[i], ng) == CC_UNRESTRICTED)
                         textcolor(LIGHTGREY);
                     else
                         textcolor(DARKGREY);
@@ -5123,7 +4226,7 @@ bool _give_items_skills()
                             "Bksp - Back to species and class selection; "
                             "X - Quit" EOL);
 
-                if (_religion_restriction(Options.prev_pr) == CC_BANNED)
+                if (religion_restriction(Options.prev_pr, ng) == CC_BANNED)
                     Options.prev_pr = GOD_NO_GOD;
 
                 if (Options.prev_pr != GOD_NO_GOD)
@@ -5173,10 +4276,10 @@ bool _give_items_skills()
                             int count = 0;
                             for (int i = 0; i < 3; i++)
                             {
-                                if (_religion_restriction(gods[i]) == CC_BANNED)
+                                if (religion_restriction(gods[i], ng) == CC_BANNED)
                                     continue;
 
-                                if (_religion_restriction(gods[i])
+                                if (religion_restriction(gods[i], ng)
                                         == CC_UNRESTRICTED
                                     && one_chance_in(++count))
                                 {
@@ -5254,10 +4357,10 @@ bool _give_items_skills()
                 int count = 0;
                 for (int i = 0; i < 3; i++)
                 {
-                    if (_religion_restriction(gods[i]) == CC_BANNED)
+                    if (religion_restriction(gods[i], ng) == CC_BANNED)
                         continue;
 
-                    if (_religion_restriction(gods[i]) == CC_UNRESTRICTED
+                    if (religion_restriction(gods[i], ng) == CC_UNRESTRICTED
                         && one_chance_in(++count))
                     {
                         you.religion = gods[i];
@@ -5287,10 +4390,10 @@ bool _give_items_skills()
 
             for (int i = 0; i < 3; i++)
             {
-                if (_religion_restriction(gods[i]) == CC_BANNED)
+                if (religion_restriction(gods[i], ng) == CC_BANNED)
                     continue;
 
-                if (_religion_restriction(gods[i]) == CC_UNRESTRICTED)
+                if (religion_restriction(gods[i], ng) == CC_UNRESTRICTED)
                     textcolor(LIGHTGREY);
                 else
                     textcolor(DARKGREY);
@@ -5347,10 +4450,10 @@ bool _give_items_skills()
                         int count = 0;
                         for (int i = 0; i < 3; i++)
                         {
-                            if (_religion_restriction(gods[i]) == CC_BANNED)
+                            if (religion_restriction(gods[i], ng) == CC_BANNED)
                                 continue;
 
-                            if (_religion_restriction(gods[i])
+                            if (religion_restriction(gods[i], ng)
                                     == CC_UNRESTRICTED
                                 && one_chance_in(++count))
                             {
@@ -5462,7 +4565,7 @@ bool _give_items_skills()
                     did_chose = true;
                 }
 
-                if (_religion_restriction(GOD_YREDELEMNUL) == CC_UNRESTRICTED)
+                if (religion_restriction(GOD_YREDELEMNUL, ng) == CC_UNRESTRICTED)
                 {
                     if (!did_chose || coinflip())
                         choice = DK_YREDELEMNUL;
@@ -5483,7 +4586,7 @@ bool _give_items_skills()
             cprintf("a - Necromantic magic" EOL);
 
             // Yredelemnul is an okay choice for everyone.
-            if (_religion_restriction(GOD_YREDELEMNUL) == CC_UNRESTRICTED)
+            if (religion_restriction(GOD_YREDELEMNUL, ng) == CC_UNRESTRICTED)
                 textcolor(LIGHTGREY);
             else
                 textcolor(DARKGREY);
@@ -5540,7 +4643,7 @@ bool _give_items_skills()
                             did_chose = true;
                         }
 
-                        if (_religion_restriction(GOD_YREDELEMNUL)
+                        if (religion_restriction(GOD_YREDELEMNUL, ng)
                                 == CC_UNRESTRICTED)
                         {
                             if (!did_chose || coinflip())

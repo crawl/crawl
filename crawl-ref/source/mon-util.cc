@@ -3789,7 +3789,7 @@ bool monsters::can_drown() const
             || mons_holiness(this) == MH_DEMONIC);
 }
 
-size_type monsters::body_size(int /* psize */, bool /* base */) const
+size_type monsters::body_size(size_part_type /* psize */, bool /* base */) const
 {
     const monsterentry *e = get_monster_data(type);
     return (e ? e->size : SIZE_MEDIUM);

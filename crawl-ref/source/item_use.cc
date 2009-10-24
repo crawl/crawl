@@ -129,15 +129,15 @@ bool can_wield(item_def *weapon, bool say_reason,
             return (true);
     }
 
-    if (player_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(*weapon) >= 300)
+    if (you.body_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(*weapon) >= 300)
     {
         SAY(mpr("That's too large and heavy for you to wield."));
         return (false);
     }
 
     // Small species wielding large weapons...
-    if (player_size(PSIZE_BODY) < SIZE_MEDIUM
-        && !check_weapon_wieldable_size(*weapon, player_size(PSIZE_BODY)))
+    if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM
+        && !check_weapon_wieldable_size(*weapon, you.body_size(PSIZE_BODY)))
     {
         SAY(mpr("That's too large for you to wield."));
         return (false);
@@ -800,7 +800,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     else
     {
         can_wear = (fit_armour_size(item,
-                        player_size(PSIZE_TORSO, ignore_temporary)) == 0);
+                        you.body_size(PSIZE_TORSO, ignore_temporary)) == 0);
     }
 
     if (!can_wear)
@@ -900,7 +900,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     // Giant races and draconians.
-    if (player_size(PSIZE_TORSO, ignore_temporary) >= SIZE_LARGE
+    if (you.body_size(PSIZE_TORSO, ignore_temporary) >= SIZE_LARGE
         || player_genus(GENPC_DRACONIAN))
     {
         if (sub_type >= ARM_LEATHER_ARMOUR
@@ -919,7 +919,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     // Tiny races.
-    if (player_size(PSIZE_TORSO, ignore_temporary) <= SIZE_LITTLE)
+    if (you.body_size(PSIZE_TORSO, ignore_temporary) <= SIZE_LITTLE)
     {
         if ((sub_type >= ARM_LEATHER_ARMOUR
                 && sub_type <= ARM_PLATE_MAIL)
@@ -1523,7 +1523,7 @@ int launcher_shield_slowdown(const item_def &launcher, const item_def *shield)
         return (speed_adjust);
 
     const int shield_type = shield->sub_type;
-    hands_reqd_type hands = hands_reqd(launcher, player_size());
+    hands_reqd_type hands = hands_reqd(launcher, you.body_size());
 
     switch (hands)
     {
@@ -2296,7 +2296,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
         else if (wepType == MI_THROWING_NET)
         {
-            max_range = range = 2 + player_size(PSIZE_BODY);
+            max_range = range = 2 + you.body_size(PSIZE_BODY);
         }
         else
         {

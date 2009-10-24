@@ -884,7 +884,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
 
         if (!launcher)
         {
-            switch (hands_reqd(item, player_size()))
+            switch (hands_reqd(item, you.body_size()))
             {
             case HANDS_ONE:
                 description += "It is a one handed weapon";
@@ -914,8 +914,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 description += ", and it is better for the dexterous";
             description += ".";
         }
-        if (player_size(PSIZE_BODY) < SIZE_MEDIUM
-            && !check_weapon_wieldable_size(item, player_size(PSIZE_BODY)))
+        if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM
+            && !check_weapon_wieldable_size(item, you.body_size(PSIZE_BODY)))
         {
             description += "$It is too large for you to wield.";
         }

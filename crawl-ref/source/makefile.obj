@@ -86,6 +86,7 @@ mt19937ar.o \
 mtransit.o \
 mutation.o \
 newgame.o \
+ng-restr.o \
 jobs.o \
 species.o \
 notes.o \

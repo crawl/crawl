@@ -45,6 +45,7 @@
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
+#include "species.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "spells1.h"

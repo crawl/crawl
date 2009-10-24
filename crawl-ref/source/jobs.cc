@@ -190,3 +190,7 @@ int ng_num_classes()
     return ARRAYSZ(old_jobs_order);
 }
 
+bool is_valid_job(job_type job)
+{
+    return (job >= 0 && job < NUM_JOBS);
+}

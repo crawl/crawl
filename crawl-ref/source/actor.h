@@ -38,7 +38,7 @@ public:
     virtual bool is_habitable_feat(dungeon_feature_type actual_grid) const = 0;
             bool is_habitable(const coord_def &pos) const;
 
-    virtual size_type body_size(int psize = PSIZE_TORSO,
+    virtual size_type body_size(size_part_type psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
     virtual int       body_weight() const = 0;
     virtual int       total_weight() const = 0;

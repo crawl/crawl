@@ -9,6 +9,7 @@
 #define NEWGAME_H
 
 
+#include "enum.h"
 #include "itemprop.h"
 
 enum death_knight_type
@@ -38,6 +39,16 @@ enum startup_wand_type
     SWT_FLAME,
     SWT_STRIKING, // actually a rod
     SWT_RANDOM
+};
+
+class player;
+struct newgame_def
+{
+    species_type species;
+    job_type job;
+    // TODO: fill in
+
+    void init(const player &p);
 };
 
 undead_state_type get_undead_state(const species_type sp);

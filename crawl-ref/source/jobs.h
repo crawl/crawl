@@ -10,4 +10,7 @@ int get_class_index_by_name(const char *name);
 const char *get_class_name(int which_job);
 job_type get_class_by_name(const char *name);
 
+// job_type bounds checking.
+bool is_valid_job(job_type job);
+
 #endif

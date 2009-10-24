@@ -201,7 +201,7 @@ public:
     bool      extra_balanced() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
-    size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
+    size_type body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
     int       damage_brand(int which_attack = -1);

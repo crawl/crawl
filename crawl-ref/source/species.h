@@ -1,6 +1,20 @@
 #ifndef SPECIES_H
 #define SPECIES_H
 
+enum genus_type
+{
+    GENPC_DRACONIAN,
+    GENPC_ELVEN,
+    GENPC_DWARVEN,
+    GENPC_OGRE,
+    GENPC_NONE
+};
+
+genus_type species_genus(species_type species);
+int species_has_claws(species_type species);
+size_type species_size(species_type species,
+                       size_part_type psize = PSIZE_TORSO);
+
 // from newgame.cc
 species_type get_species(const int index);
 species_type random_draconian_player_species();
@@ -14,6 +28,10 @@ int get_species_index_by_name(const char *name);
 std::string species_name(species_type speci, int level, bool genus = false,
                          bool adj = false);
 species_type str_to_species(const std::string &species);
+
+
+// species_type bounds checking.
+bool is_valid_species(species_type);
 
 #endif
 

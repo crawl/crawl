@@ -10,6 +10,7 @@
 
 #include "actor.h"
 #include "itemprop.h"
+#include "species.h"
 
 #ifdef USE_TILE
 // This used to be in tiles.h. (jpeg)
@@ -335,7 +336,7 @@ public:
     bool      extra_balanced() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
-    size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
+    size_type body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
     int       damage_brand(int which_attack = -1);
@@ -495,14 +496,6 @@ struct player_save_info
 
 class monsters;
 struct item_def;
-
-enum genus_type
-{
-    GENPC_DRACONIAN,                   //    0
-    GENPC_ELVEN,                       //    1
-    GENPC_DWARVEN,                     //    2
-    GENPC_OGRE
-};
 
 bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                           bool force, bool swapping = false );
@@ -874,7 +867,6 @@ void dec_disease_player();
 bool rot_player(int amount);
 
 bool player_has_spell(spell_type spell);
-size_type player_size(int psize = PSIZE_TORSO, bool base = false);
 
 item_def *player_slot_item(equipment_type eq);
 
