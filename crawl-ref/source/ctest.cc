@@ -45,7 +45,6 @@ namespace crawl_tests
         nsuccess = 0;
         failures.clear();
         you.your_name = test_player_name;
-        you.your_name[kNameLen - 1] = 0;
         you.species = test_player_species;
         you.char_class = test_player_job;
     }
