@@ -51,6 +51,7 @@
 #include "initfile.h"
 #include "itemprop.h"
 #include "items.h"
+#include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
 #include "los.h"
@@ -649,7 +650,7 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
 
     if (!success) // Use default doll instead.
     {
-        int job = get_class_by_name(p.class_name.c_str());
+        job_type job = get_class_by_name(p.class_name.c_str());
         if (job == -1)
             job = JOB_FIGHTER;
 
