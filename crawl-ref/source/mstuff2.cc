@@ -2533,7 +2533,12 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
                 }
 
                 if (coinflip())
+                {
                     mon_mutate_chance++;
+
+                    if (coinflip() && ugly->colour != ugly_near->colour)
+                        mon_colour = ugly_near->colour;
+                }
 
                 if (ugly_near->type == MONS_VERY_UGLY_THING)
                 {
@@ -2541,7 +2546,7 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
                     {
                         mon_mutate_chance++;
 
-                        if (ugly->colour != ugly_near->colour)
+                        if (coinflip() && ugly->colour != ugly_near->colour)
                             mon_colour = ugly_near->colour;
                     }
                 }
