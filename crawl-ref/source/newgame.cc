@@ -223,7 +223,7 @@ int give_first_conjuration_book()
 // primarily used to suppress the display of the draconian variants.
 static bool _is_species_valid_choice(species_type species, bool display = true)
 {
-    if (!species) // Species only start at 1.
+    if (species < 0 || species > NUM_SPECIES)
         return (false);
 
     if (species >= SP_ELF) // These are all invalid.
@@ -4188,8 +4188,8 @@ spec_query:
 
         textcolor( LIGHTGREY );
 
-        int j = 0;
-        for (int i = 0; i < ng_num_species(); ++i)
+        int i = -1;
+        for (i = 0; i < ng_num_species(); ++i)
         {
             const species_type si = get_species(i);
 
@@ -4221,17 +4221,15 @@ spec_query:
                 cprintf("%c - %s", sletter, species_name(si, 1).c_str());
             }
 
-            if (j % 2)
+            if (i % 2)
                 cprintf(EOL);
             else
                 cgotoxy(31, wherey());
 
             textcolor(LIGHTGREY); // Reset text colour.
-
-            j++;
         }
 
-        if (j % 2)
+        if (i % 2)
             cprintf(EOL);
 
         textcolor( BROWN );
