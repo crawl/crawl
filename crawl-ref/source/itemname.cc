@@ -2606,6 +2606,10 @@ bool is_useless_item(const item_def &item, bool temp)
             // Spriggans could argue, but it's too small gain for possible
             // player confusion.
             return (player_res_poison(false));
+
+        case POT_INVISIBILITY:
+            // If you're Corona'd or a TSO-ite, this is always useless.
+            return (you.backlit(true));
         }
 
         return (false);
@@ -2663,6 +2667,9 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_TELEPORT_CONTROL:
             return (player_control_teleport(true, temp, false));
+
+        case RING_INVISIBILITY:
+            return (you.backlit(true));
 
         default:
             return (false);
