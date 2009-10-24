@@ -347,12 +347,12 @@ void item_colour(item_def &item)
         if (is_unrandom_artefact(item))
             break;              // unrandarts already coloured
 
-        if (is_demonic( item ))
+        if (is_demonic(item))
             item.colour = random_uncommon_colour();
         else
             item.colour = _weapon_colour(item);
 
-        if (is_random_artefact( item ) && one_chance_in(5)
+        if (is_random_artefact(item) && one_chance_in(5)
             && Options.classic_item_colours)
         {
             item.colour = random_colour();
@@ -364,42 +364,42 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_ARMOUR:
-        if (is_unrandom_artefact( item ))
-            break;              /* unrandarts have already been coloured */
+        if (is_unrandom_artefact(item))
+            break;              // unrandarts have already been coloured
 
         switch (item.sub_type)
         {
         case ARM_DRAGON_HIDE:
         case ARM_DRAGON_ARMOUR:
-            item.colour = mons_class_colour( MONS_DRAGON );
+            item.colour = mons_class_colour(MONS_DRAGON);
             break;
         case ARM_TROLL_HIDE:
         case ARM_TROLL_LEATHER_ARMOUR:
-            item.colour = mons_class_colour( MONS_TROLL );
+            item.colour = mons_class_colour(MONS_TROLL);
             break;
         case ARM_ICE_DRAGON_HIDE:
         case ARM_ICE_DRAGON_ARMOUR:
-            item.colour = mons_class_colour( MONS_ICE_DRAGON );
+            item.colour = mons_class_colour(MONS_ICE_DRAGON);
             break;
         case ARM_STEAM_DRAGON_HIDE:
         case ARM_STEAM_DRAGON_ARMOUR:
-            item.colour = mons_class_colour( MONS_STEAM_DRAGON );
+            item.colour = mons_class_colour(MONS_STEAM_DRAGON);
             break;
         case ARM_MOTTLED_DRAGON_HIDE:
         case ARM_MOTTLED_DRAGON_ARMOUR:
-            item.colour = mons_class_colour( MONS_MOTTLED_DRAGON );
+            item.colour = mons_class_colour(MONS_MOTTLED_DRAGON);
             break;
         case ARM_STORM_DRAGON_HIDE:
         case ARM_STORM_DRAGON_ARMOUR:
-            item.colour = mons_class_colour( MONS_STORM_DRAGON );
+            item.colour = mons_class_colour(MONS_STORM_DRAGON);
             break;
         case ARM_GOLD_DRAGON_HIDE:
         case ARM_GOLD_DRAGON_ARMOUR:
-            item.colour = mons_class_colour( MONS_GOLDEN_DRAGON );
+            item.colour = mons_class_colour(MONS_GOLDEN_DRAGON);
             break;
         case ARM_SWAMP_DRAGON_HIDE:
         case ARM_SWAMP_DRAGON_ARMOUR:
-            item.colour = mons_class_colour( MONS_SWAMP_DRAGON );
+            item.colour = mons_class_colour(MONS_SWAMP_DRAGON);
             break;
         default:
             item.colour = _armour_colour(item);
@@ -407,7 +407,7 @@ void item_colour(item_def &item)
         }
 
         // I don't think this is ever done -- see start of case {dlb}:
-        if (is_random_artefact( item ) && one_chance_in(5))
+        if (is_random_artefact(item) && one_chance_in(5))
             item.colour = random_colour();
         break;
 
@@ -537,7 +537,7 @@ void item_colour(item_def &item)
             break;
         case FOOD_CHUNK:
             // Set the appropriate colour of the meat:
-            temp_value  = mons_class_colour( item.plus );
+            temp_value  = mons_class_colour(item.plus);
             item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
             break;
         default:
@@ -547,9 +547,9 @@ void item_colour(item_def &item)
 
     case OBJ_JEWELLERY:
         // unrandarts have already been coloured
-        if (is_unrandom_artefact( item ))
+        if (is_unrandom_artefact(item))
             break;
-        else if (is_random_artefact( item ))
+        else if (is_random_artefact(item))
         {
             item.colour = random_colour();
             break;
@@ -598,36 +598,36 @@ void item_colour(item_def &item)
         {
             switch (switchnum)
             {
-            case 0:             //"zirconium amulet"
-            case 9:             //"ivory amulet"
-            case 11:            //"platinum amulet"
+            case 0:             // "zirconium amulet"
+            case 9:             // "ivory amulet"
+            case 11:            // "platinum amulet"
                 item.colour = WHITE;
                 break;
-            case 1:             //"sapphire amulet"
+            case 1:             // "sapphire amulet"
                 item.colour = LIGHTBLUE;
                 break;
-            case 2:             //"golden amulet"
-            case 6:             //"brass amulet"
+            case 2:             // "golden amulet"
+            case 6:             // "brass amulet"
                 item.colour = YELLOW;
                 break;
-            case 3:             //"emerald amulet"
+            case 3:             // "emerald amulet"
                 item.colour = GREEN;
                 break;
-            case 4:             //"garnet amulet"
-            case 8:             //"ruby amulet"
+            case 4:             // "garnet amulet"
+            case 8:             // "ruby amulet"
                 item.colour = RED;
                 break;
-            case 5:             //"bronze amulet"
-            case 7:             //"copper amulet"
+            case 5:             // "bronze amulet"
+            case 7:             // "copper amulet"
                 item.colour = BROWN;
                 break;
-            case 10:            //"bone amulet"
+            case 10:            // "bone amulet"
                 item.colour = LIGHTGREY;
                 break;
-            case 12:            //"jade amulet"
+            case 12:            // "jade amulet"
                 item.colour = GREEN;
                 break;
-            case 13:            //"fluorescent amulet"
+            case 13:            // "fluorescent amulet"
                 item.colour = random_colour();
             }
         }
@@ -793,7 +793,7 @@ void item_colour(item_def &item)
 
     case OBJ_CORPSES:
         // Set the appropriate colour of the body:
-        temp_value  = mons_class_colour( item.plus );
+        temp_value  = mons_class_colour(item.plus);
         item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
         break;
 
