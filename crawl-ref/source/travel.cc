@@ -365,10 +365,6 @@ static bool _is_excluded(const coord_def &p,
 
 bool is_excluded(const coord_def &p)
 {
-    // We can force a travel exclusion by using the "force_exclude"
-    // KPROP feature property in vaults. {due}
-    if (testbits(env.map(p).property, FPROP_FORCE_EXCLUDE)) 
-        return (true);
     return _is_excluded(p, curr_excludes);
 }
 
@@ -493,7 +489,7 @@ void del_exclude(const coord_def &p)
 }
 
 // Set or update an exclude.
-void set_exclude(const coord_def &p, int radius, bool autoexcl)
+void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
 {
     // Sanity checks; excludes can be set in Pan and regular dungeon
     // levels only.
@@ -515,7 +511,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl)
         if (m && mons_near(m) && you.can_see(m))
             montype = m->type;
 
-        curr_excludes.push_back(travel_exclude(p, radius, autoexcl, montype));
+        curr_excludes.push_back(travel_exclude(p, radius, autoexcl, montype, vaultexcl));
     }
 
     _exclude_update(p);

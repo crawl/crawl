@@ -63,7 +63,7 @@ void travel_init_new_level();
 void cycle_exclude_radius(const coord_def &p);
 void del_exclude(const coord_def &p);
 void set_exclude(const coord_def &p, int radius = LOS_RADIUS,
-                 bool autoexcl = false);
+                 bool autoexcl = false, bool vaultexcl = false);
 void maybe_remove_autoexclusion(const coord_def &p);
 std::string get_exclusion_desc();
 void clear_excludes();
@@ -352,20 +352,22 @@ void update_exclusion_los(std::vector<coord_def> changed);
 
 struct travel_exclude
 {
-    coord_def     pos;         // exclusion centre
-    int           radius;      // exclusion radius
-    bool          autoexclude; // Was set automatically.
-    int           mon;         // Monster around which exclusion is centered.
-    los_def       los;         // los from exclusion centre
-    bool          uptodate;    // Is los up to date?
+    coord_def     pos;          // exclusion centre
+    int           radius;       // exclusion radius
+    bool          autoexclude;  // Was set automatically.
+    int           mon;          // Monster around which exclusion is centered.
+    los_def       los;          // los from exclusion centre
+    bool          uptodate;     // Is los up to date?
+    bool          vaultexclude; // Is this exclusion set by a vault?
 
     int radius_sq() const;
     void set_los();
     bool affects(const coord_def& p) const;
 
     travel_exclude(const coord_def &p, int r = LOS_RADIUS,
-                   bool autoexcl = false, int mons = NON_MONSTER)
-        : pos(p), radius(r), autoexclude(autoexcl), mon(mons)
+                   bool autoexcl = false, int mons = NON_MONSTER,
+                   bool vaultexcl = false)
+        : pos(p), radius(r), autoexclude(autoexcl), mon(mons), vaultexclude(vaultexcl)
     {
         set_los();
     }
