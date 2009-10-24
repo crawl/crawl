@@ -1144,6 +1144,12 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
 
+    // Slime creature attacks are multiplied by the number merged.
+    if(mon->mons_species() == MONS_SLIME_CREATURE)
+    {
+        attk.damage *= mon->number;
+    }
+
     return (zombified ? downscale_zombie_attack(mon, attk) : attk);
 }
 
@@ -1621,8 +1627,18 @@ int exper_value(const monsters *monster)
 
     // These four are the original arguments.
     const int  mclass      = monster->type;
-    const int  mHD         = monster->hit_dice;
-    const int  maxhp       = monster->max_hit_points;
+    int  mHD         = monster->hit_dice;
+    int  maxhp       = monster->max_hit_points;
+
+    // Hacks to make merged slime creatures not worth so much
+    // exp. We will calculate the experience we would get for 1
+    // blob then just multiply it so that exp is linear with blobs
+    // merged. -cao
+    if(monster->mons_species() == MONS_SLIME_CREATURE)
+    {
+        mHD /= monster->number;
+        maxhp /= monster->number;
+    }
 
     // These are some values we care about.
     const int  speed       = mons_base_speed(monster);
@@ -1735,6 +1751,13 @@ int exper_value(const monsters *monster)
     {
         x_val *= modifier;
         x_val /= 10;
+    }
+
+    // Slime creature exp hack part 2, scale exp back up by the
+    // number of blobs merged. -cao
+    if(monster->mons_species() == MONS_SLIME_CREATURE)
+    {
+        x_val *= monster->number;
     }
 
     // Reductions for big values. -- bwr
@@ -2182,6 +2205,19 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         break;
     }
 
+    if(mon.mons_species() == MONS_SLIME_CREATURE && desc != DESC_DBNAME)
+    {
+        if (mon.number < 11)
+        {
+            const char* cardinals[] = {"one", "two", "three", "four", "five",
+                                       "six", "seven", "eight", "nine", "ten"};
+            result += cardinals[mon.number - 1];
+        }
+        else
+            result += make_stringf("%d", mon.number);
+
+        result += "-blob ";
+    }
     // Done here to cover cases of undead versions of hydras.
     if (mons_species(nametype) == MONS_HYDRA
         && mon.number > 0 && desc != DESC_DBNAME)

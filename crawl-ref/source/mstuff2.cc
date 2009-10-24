@@ -2588,6 +2588,130 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
     return (false);
 }
 
+// Calculate slime creature Hp and hd based on how many are merged.
+static void _stats_from_blob_count(monsters * slime, float hp_per_blob)
+{
+    int hd_per_blob = 11;
+
+    slime->max_hit_points = int(slime->number * hp_per_blob);
+    slime->hit_points = slime->max_hit_points;
+
+    slime->hit_dice = slime->number * hd_per_blob;
+}
+
+static bool _split_slime(monsters * thing, coord_def & target)
+{
+    mprf("Splitting slime at pos %d, %d", thing->pos().x, thing->pos().y);
+    mprf("splitting to %d, %d", target.x, target.y);
+
+    // create a new slime
+    int slime_idx = create_monster(mgen_data(MONS_SLIME_CREATURE,
+                                             thing->behaviour,
+                                             0,
+                                             0,
+                                             target,
+                                             thing->foe,
+                                             MG_FORCE_PLACE));
+
+    if(slime_idx == -1)
+        return false;
+
+    monsters * new_slime = &env.mons[slime_idx];
+
+    if(!new_slime)
+        return false;
+
+    int split_off = thing->number / 2;
+    float hp_per_blob = thing->max_hit_points / float(thing->number);
+
+    thing->number -= split_off;
+    new_slime->number = split_off;
+
+    _stats_from_blob_count(thing, hp_per_blob);
+    _stats_from_blob_count(new_slime, hp_per_blob);
+
+    return true;
+}
+
+static bool _merge_slimes(monsters * initial_slime, monsters * merge_to)
+{
+    mprf("Merging slimes, inital at %d, %d", initial_slime->pos().x, initial_slime->pos().y);
+    mprf("Merging to %d, %d", merge_to->pos().x, merge_to->pos().y);
+
+    merge_to->number += initial_slime->number;
+    merge_to->max_hit_points += initial_slime->max_hit_points;
+    merge_to->hit_points += initial_slime->max_hit_points;
+    merge_to->hit_dice += initial_slime->hit_dice;
+
+    // have to 'kill' the slime doing the merging
+    monster_die(initial_slime, KILL_MISC, NON_MONSTER, true);
+
+    return true;
+}
+
+bool slime_split_merge(monsters * thing)
+{
+    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6 ,7};
+    std::random_shuffle(compass_idx, compass_idx+8);
+
+    coord_def origin = thing->pos();
+
+    int max_slime_merge = 8;
+
+    // We can split if in an 'inactive' state (wandering or sleeping for now)
+    if (mons_is_sleeping(thing) || mons_is_wandering(thing)
+        || thing->foe == MHITNOT)
+    {
+        if(thing->number > 1 && thing->hit_points == thing->max_hit_points)
+        {
+            // Anywhere we can place a offspring?
+            // If so split.
+            for (int i = 0; i < 8; i++)
+            {
+                coord_def target=origin + Compass[i];
+
+                if(mons_class_can_pass(MONS_SLIME_CREATURE,
+                                       env.grid(target))
+                   && !actor_at(target))
+                {
+
+                    return _split_slime(thing, target);
+                }
+            } // end adjacent squares check
+        }// end non singular check
+    }
+    // Otherwise see if a merge is viable.
+    else if(!mons_is_fleeing(thing))
+    {
+        // Check for adjacent slime creatures.
+        for(int i=0;i<8;i++)
+        {
+            coord_def target=origin + Compass[i];
+            monsters * other_thing = monster_at(target);
+
+            // We can merge if we find another adjacent slime which isn't
+            // already at the merge cap and is closer to the target than
+            // our current position.
+            if(other_thing
+               && other_thing->mons_species() == MONS_SLIME_CREATURE
+               && other_thing->attitude == thing->attitude)
+            {
+                int new_blob_count = other_thing->number + thing->number;
+
+                if(new_blob_count < max_slime_merge
+                   && grid_distance(thing->target, thing->pos()) >
+                      grid_distance(thing->target, target))
+                {
+                    return _merge_slimes(thing, other_thing);
+                }
+            }
+        } // end check adjacent
+    }// end merge check
+
+    // Couldn't merge or split
+    return false;
+}
+
 bool orc_battle_cry(monsters *chief)
 {
     const actor *foe = chief->get_foe();

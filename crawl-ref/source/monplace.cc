@@ -1221,6 +1221,10 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.cls == MONS_MANTICORE)
         menv[id].number = 8 + random2(9);
 
+    // Slime creatures start off as only a single merged blob.
+    if (mg.cls == MONS_SLIME_CREATURE)
+        menv[id].number = 1;
+
     // Set attitude, behaviour and target.
     menv[id].attitude  = ATT_HOSTILE;
     menv[id].behaviour = mg.behaviour;

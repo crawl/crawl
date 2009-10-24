@@ -28,6 +28,7 @@ bool monster_random_space(monster_type mon, coord_def& target,
                           bool forbid_sanctuary = false);
 void monster_teleport(monsters *monster, bool instan, bool silent = false);
 bool ugly_thing_mutate(monsters *ugly, bool proximity = false);
+bool slime_split_merge(monsters * thing);
 bool orc_battle_cry(monsters *chief);
 bool orange_statue_effects(monsters *mons);
 bool silver_statue_effects(monsters *mons);

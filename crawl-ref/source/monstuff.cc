@@ -5883,6 +5883,13 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         used = ugly_thing_mutate(monster, true);
         break;
 
+    case MONS_SLIME_CREATURE:
+        // Slime creatures may split or merge depending on the situation
+        used = slime_split_merge(monster);
+        if(!monster->alive())
+            return true;
+        break;
+
     case MONS_ORC_KNIGHT:
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
@@ -7843,7 +7850,9 @@ static void _handle_monster_move(monsters *monster)
         if (!mons_is_sleeping(monster) && !mons_is_wandering(monster)
             // Berserking monsters are limited to running up and
             // hitting their foes.
-            && !monster->has_ench(ENCH_BERSERK))
+            && !monster->has_ench(ENCH_BERSERK)
+            // Slime creatures can split while wandering or resting
+            || monster->type == MONS_SLIME_CREATURE)
         {
             bolt beem;
 
@@ -7855,7 +7864,9 @@ static void _handle_monster_move(monsters *monster)
                 mons_friendly(monster) || monster->near_foe();
             // Prevents unfriendlies from nuking you from offscreen.
             // How nice!
-            if (friendly_or_near || monster->type == MONS_TEST_SPAWNER)
+            // Slime creatures can split when offscreen
+            if (friendly_or_near || monster->type == MONS_TEST_SPAWNER
+                || monster->type == MONS_SLIME_CREATURE)
             {
                 // [ds] Special abilities shouldn't overwhelm spellcasting
                 // in monsters that have both. This aims to give them both
