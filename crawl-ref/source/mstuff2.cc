@@ -2508,6 +2508,8 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
 
     std::string src = "";
 
+    unsigned char mon_colour = BLACK;
+
     if (!proximity)
         success = true;
     else if (one_chance_in(8))
@@ -2536,7 +2538,12 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
                 if (ugly_near->type == MONS_VERY_UGLY_THING)
                 {
                     if (coinflip())
+                    {
                         mon_mutate_chance++;
+
+                        if (ugly->colour != ugly_near->colour)
+                            mon_colour = ugly_near->colour;
+                    }
                 }
             }
         }
@@ -2563,7 +2570,7 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
             make_stringf(" basks in the mutagenic energy%s and changes!",
                          src.c_str()).c_str());
 
-        ugly->uglything_mutate();
+        ugly->uglything_mutate(mon_colour);
 
         return (true);
     }

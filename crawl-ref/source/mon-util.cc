@@ -6386,9 +6386,9 @@ void monsters::uglything_init(bool only_mutate)
     colour          = ghost->colour;
 }
 
-void monsters::uglything_mutate()
+void monsters::uglything_mutate(unsigned char force_colour)
 {
-    ghost->init_ugly_thing(type == MONS_VERY_UGLY_THING, true);
+    ghost->init_ugly_thing(type == MONS_VERY_UGLY_THING, true, force_colour);
     uglything_init(true);
 }
 

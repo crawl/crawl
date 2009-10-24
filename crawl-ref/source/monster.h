@@ -179,7 +179,7 @@ public:
     void ghost_init();
     void pandemon_init();
     void uglything_init(bool only_mutate = false);
-    void uglything_mutate();
+    void uglything_mutate(unsigned char force_colour = BLACK);
     void uglything_upgrade();
     void destroy_inventory();
     void load_spells(mon_spellbook_type spellbook);
