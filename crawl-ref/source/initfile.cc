@@ -1307,6 +1307,15 @@ std::string read_init_file(bool runscript)
 {
     Options.reset_options();
 
+    Options.filename     = "extra opts first";
+    Options.basefilename = "extra opts first";
+    Options.line_num     = 0;
+    for (unsigned int i = 0; i < SysEnv.extra_opts_first.size(); i++)
+    {
+        Options.line_num++;
+        Options.read_option_line(SysEnv.extra_opts_first[i], true);
+    }
+
     const std::string init_file_name( _find_crawlrc() );
 
     FILE* f = fopen(init_file_name.c_str(), "r");
@@ -1333,9 +1342,18 @@ std::string read_init_file(bool runscript)
     read_options(f, runscript);
     fclose(f);
 
-    Options.filename    = "unknown";
+    Options.filename     = "extra opts last";
+    Options.basefilename = "extra opts last";
+    Options.line_num     = 0;
+    for (unsigned int i = 0; i < SysEnv.extra_opts_last.size(); i++)
+    {
+        Options.line_num++;
+        Options.read_option_line(SysEnv.extra_opts_last[i], false);
+    }
+
+    Options.filename     = "unknown";
     Options.basefilename = "unknown";
-    Options.line_num    = -1;
+    Options.line_num     = -1;
 
     return ("");
 }
@@ -3533,6 +3551,8 @@ enum commandline_option_type {
     CLO_TEST,
     CLO_HELP,
     CLO_VERSION,
+    CLO_EXTRA_OPT_FIRST,
+    CLO_EXTRA_OPT_LAST,
 
     CLO_NOPS
 };
@@ -3540,7 +3560,8 @@ enum commandline_option_type {
 static const char *cmd_ops[] = {
     "scores", "name", "species", "job", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "arena", "test", "help", "version"
+    "mapstat", "arena", "test", "help", "version", "extra-opt-first",
+    "extra-opt-last"
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3578,6 +3599,44 @@ static void _print_version()
     printf("Crawl version %s" EOL, Version::Long().c_str());
 
     printf("%s", compilation_info().c_str());
+}
+
+static bool _check_extra_opt(char* _opt)
+{
+    std::string opt(_opt);
+    trim_string(opt);
+
+    if (opt[0] == ':' || opt[0] == '<' || opt[0] == '{'
+        || starts_with(opt, "L<") || starts_with(opt, "Lua{"))
+    {
+        fprintf(stderr, "An extra option can't use Lua (%s)\n",
+                _opt);
+        return (false);
+    }
+
+    if (opt[0] == '#')
+    {
+        fprintf(stderr, "An extra option can't be a comment (%s)\n",
+                _opt);
+        return (false);
+    }
+
+    if (opt.find_first_of('=') == std::string::npos)
+    {
+        fprintf(stderr, "An extra opt must contain a '=' (%s)\n",
+                _opt);
+        return (false);
+    }
+
+    std::vector<std::string> parts = split_string(opt, "=");
+    if (opt.find_first_of('=') == 0 || parts[0].length() == 0)
+    {
+        fprintf(stderr, "An extra opt must have an option name (%s)\n",
+                _opt);
+        return (false);
+    }
+
+    return (true);
 }
 
 bool parse_args( int argc, char **argv, bool rc_only )
@@ -3828,6 +3887,34 @@ bool parse_args( int argc, char **argv, bool rc_only )
         case CLO_VERSION:
             _print_version();
             end(0);
+
+        case CLO_EXTRA_OPT_FIRST:
+            if (!next_is_param)
+                return (false);
+
+            if (!_check_extra_opt(next_arg))
+                // Don't print the help message if the opt was wrong
+                return (true);
+            SysEnv.extra_opts_first.push_back(next_arg);
+            nextUsed = true;
+
+            // Can be used multiple times.
+            arg_seen[o] = false;
+            break;
+
+        case CLO_EXTRA_OPT_LAST:
+            if (!next_is_param)
+                return false;
+
+            if (!_check_extra_opt(next_arg))
+                // Don't print the help message if the opt was wrong
+                return (true);
+            SysEnv.extra_opts_last.push_back(next_arg);
+            nextUsed = true;
+
+            // Can be used multiple times.
+            arg_seen[o] = false;
+            break;
         }
 
         // Update position.

@@ -74,6 +74,9 @@ public:
 
     std::string arena_teams;
 
+    std::vector<std::string> extra_opts_first;
+    std::vector<std::string> extra_opts_last;
+
 public:
     void add_rcdir(const std::string &dir);
 };

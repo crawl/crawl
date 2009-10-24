@@ -10,8 +10,9 @@ The contents of this text are:
 
 0-  Generalities.
 0-a     Standard and additional option files.
-0-b     Options and how to set them.
-0-c     Aliases and variables.
+0-b     Options on the command line
+0-c     Options and how to set them.
+0-d     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, use_old_selection_order,
                 weapon, book, wand, chaos_knight, death_knight, priest,
@@ -125,7 +126,7 @@ The contents of this text are:
 7-  Inline Lua.
 7-a     Executing lua.
 7-b     Conditional options.
-7-c     Including external files.
+7-c     Conditional option caveats.
 
 ------------------------------------------------------------------------
 
@@ -162,7 +163,21 @@ additional option files coming with this release; these allow to set
 many options to old defaults, i.e. those of Crawl 0.3.4 and before.
 See the header of the default init.txt for more details.
 
-0-b     Options and how to set them.
+0-b     Options on the command line
+-----------------------------------
+
+A quick way to make small changes to the options, without having to
+switch to a different option file, is to use the command line options
+-extra-opt-first or -extra-opt-last, which make it as if the given
+option was (repsecitvely) at the top or bottom of the option file.  For
+example,
+
+    -extra-opt-last wiz_mode=yes
+
+will cause any new game to start in wizard mode.  -extra-opt-first and
+-extra-opt-last can be used multiple times on the same command line.
+
+0-c     Options and how to set them.
 ------------------------------------
 
 There are three broad types of Crawl options: true/false values
@@ -208,7 +223,7 @@ are as follows:
 and, for Tiles,
    tile_tag_pref       = tutorial
 
-0-c     Aliases and variables.
+0-d     Aliases and variables.
 ------------------------------
 
 For long option names, you can define option aliases by doing:
@@ -2125,13 +2140,34 @@ function ch_autopickup(it) [ ... body omitted ... ] end
 You can use Lua to selectively include parts of your init.txt (based
 on character type, for instance) using the same syntax.
 
-Examples:
+Example:
 
 : if you.race() == "Mummy" then
 autopickup = $?+"/
 : else
 autopickup = $?+"/!%
 : end
+
+Options can be rerefenced by lua via "options.option_name".  For
+example:
+
+:if string.find(options.autopickup, "!") then
+# Do something here if potions are included in autopickup
+:end
+
+"options.option_name" can even be used for options that crawl itself
+doesn't recognize.  This can be combined with setting options on the
+command line (see section 0-b) to use the command line to control
+conditionalization of options in the options files.  For example, on the
+command line you could set the option "foobar" with "-extra-opt-first
+foobar=true", and then do:
+
+:if options.foobar then
+# Do things here
+:end
+
+7-c     Conditional option caveats.
+-----------------------------------
 
 Note that none of the options listed under "Starting Screen" (section 1)
 can be set conditionally.  This is because the options files are
@@ -2141,4 +2177,7 @@ you attempt to set a starting-screen option conditionally then the value
 furthest down in the options file will be used regardless of what
 conditions you set.
 
-The above caveat applies to the "wiz_mode" option as well.
+The above caveat applies to the "wiz_mode" option as well.  Instead of
+conditionalized wiz_mode, you can add to the command line
+"-extra-opt-last wiz_mode=yes" to make any new game start in wizard
+mode.

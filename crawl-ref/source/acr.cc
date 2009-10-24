@@ -309,6 +309,14 @@ static void _show_commandline_options_help()
     puts("Command line options override init file options, which override");
     puts("environment options (CRAWL_NAME, CRAWL_DIR, CRAWL_RC).");
     puts("");
+
+    puts("  -extra-opt-first optname=optval");
+    puts("  -extra-opt-last  optname=optval");
+    puts("");
+    puts("Acts as if 'optname=optval' was at the top or bottom of the init");
+    puts("file.  Can be used multiple times.");
+    puts("");
+
     puts("Highscore list options: (Can be redirected to more, etc.)");
     puts("  -scores [N]            highscore list");
     puts("  -tscores [N]           terse highscore list");
