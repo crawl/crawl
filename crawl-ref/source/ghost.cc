@@ -14,7 +14,7 @@
 #include "externs.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "newgame.h"
+#include "ng-input.h"
 #include "skills2.h"
 #include "stuff.h"
 #include "mtransit.h"

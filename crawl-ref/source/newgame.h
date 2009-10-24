@@ -44,11 +44,15 @@ enum startup_wand_type
 class player;
 struct newgame_def
 {
+    std::string name;
+
     species_type species;
     job_type job;
+
     // TODO: fill in
 
     void init(const player &p);
+    void save(player &p);
 };
 
 undead_state_type get_undead_state(const species_type sp);
@@ -67,7 +71,5 @@ bool choose_class(void);
  * called from: debug newgame
  * *********************************************************************** */
 void give_basic_mutations(species_type speci);
-
-bool validate_player_name(const std::string &name, bool verbose);
 
 #endif
