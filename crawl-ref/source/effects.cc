@@ -1634,7 +1634,7 @@ static int _spell_weight(spell_type spell)
 // weights of all unknown spells in the book.
 static int _book_weight(int book)
 {
-    ASSERT(book >= 0 && book <= MAX_NORMAL_BOOK);
+    ASSERT(book >= 0 && book <= MAX_FIXED_BOOK);
 
     int total_weight = 0;
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
@@ -1746,9 +1746,14 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int total_weights = 0;
 
         // Pick a random spellbook according to unknown spells contained.
-        int weights[MAX_NORMAL_BOOK+1];
-        for (int bk = 0; bk <= MAX_NORMAL_BOOK; bk++)
+        int weights[MAX_FIXED_BOOK+1];
+        for (int bk = 0; bk <= MAX_FIXED_BOOK; bk++)
         {
+            if (bk > MAX_NORMAL_BOOK && agent == GOD_SIF_MUNA)
+            {
+                weights[bk] = 0;
+                continue;
+            }
             weights[bk]    = _book_weight(bk);
             total_weights += weights[bk];
         }
