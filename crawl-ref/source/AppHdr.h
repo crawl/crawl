@@ -22,8 +22,11 @@
 #include "platform.h"
 
 #ifdef TARGET_COMPILER_VC
-/* Disable warning about the way VC handles the throw() specifier */
-#pragma warning (disable: 4290)
+/* Disable warning about:
+   4290: the way VC handles the throw() specifier
+   4267: "possible loss of data" when switching data types without a cast
+ */
+#pragma warning (disable: 4290 4267)
 /* Don't define min and max as macros, define them via STL */
 #define NOMINMAX
 #endif

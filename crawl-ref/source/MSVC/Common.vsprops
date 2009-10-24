@@ -11,4 +11,8 @@
 		PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
 		MinimalRebuild="true"
 	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalLibraryDirectories="&quot;$(ProjectDir)\..\contrib\bin\8.0\$(PlatformName)&quot;"
+	/>
 </VisualStudioPropertySheet>
