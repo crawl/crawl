@@ -1354,6 +1354,14 @@ LUAFN(dgn_map_by_tag)
     return (0);
 }
 
+LUAFN(dgn_map_by_name)
+{
+    if (const char *name = luaL_checkstring(ls, 1))
+        return _lua_push_map(ls, find_map_by_name(name));
+
+    return (0);
+}
+
 LUAFN(dgn_map_in_depth)
 {
     const level_id lid = dlua_level_id(ls, 1);
@@ -1567,6 +1575,7 @@ const struct luaL_reg dgn_dlib[] =
 { "with_map_anchors", dgn_with_map_anchors },
 
 { "map_by_tag", dgn_map_by_tag },
+{ "map_by_name", dgn_map_by_name },
 { "map_in_depth", dgn_map_in_depth },
 { "map_by_place", dgn_map_by_place },
 { "place_map", _dgn_place_map },
