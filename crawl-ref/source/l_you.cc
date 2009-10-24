@@ -50,7 +50,7 @@ static const char *transform_name()
 }
 
 LUARET1(you_turn_is_over, boolean, you.turn_is_over)
-LUARET1(you_name, string, you.your_name)
+LUARET1(you_name, string, you.your_name.c_str())
 LUARET1(you_race, string,
         species_name(you.species, you.experience_level).c_str())
 LUARET1(you_class, string, get_class_name(you.char_class))

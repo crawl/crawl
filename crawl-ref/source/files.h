@@ -115,8 +115,8 @@ void save_ghost( bool force = false );
 /* ***********************************************************************
  * called from: files hiscores
  * *********************************************************************** */
-std::string make_filename( const char *prefix, int level, branch_type branch,
-                           level_area_type lt, bool isGhost );
+std::string make_filename(std::string prefix, int level, branch_type branch,
+                          level_area_type lt, bool isGhost );
 
 FILE *lk_open(const char *mode, const std::string &file);
 void lk_close(FILE *handle, const char *mode, const std::string &file);

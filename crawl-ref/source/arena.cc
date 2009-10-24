@@ -480,7 +480,7 @@ namespace arena
         you.moveto(yplace);
         crawl_state.arena = true;
 
-        strcpy(you.your_name, "Arena");
+        you.your_name = "Arena";
 
         you.hp = you.hp_max = 99;
 

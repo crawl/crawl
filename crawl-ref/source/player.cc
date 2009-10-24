@@ -161,7 +161,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
 
                     mprf(MSGCH_WARN,
                          "Wait a moment, %s! Do you really want to step there?",
-                         you.your_name);
+                         you.your_name.c_str());
 
                     if (!you.running.is_any_travel())
                         more();
@@ -5852,7 +5852,7 @@ void player::init()
     wizard = false;
 #endif
 
-    your_name[0] = 0;
+    your_name = "";
 
     banished = false;
     banished_by.clear();

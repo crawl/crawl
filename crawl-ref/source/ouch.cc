@@ -1128,7 +1128,7 @@ static std::string morgue_name(time_t when_crawl_got_even)
 #ifdef SHORT_FILE_NAMES
     return "morgue";
 #else  // !SHORT_FILE_NAMES
-    std::string name = "morgue-" + std::string(you.your_name);
+    std::string name = "morgue-" + you.your_name;
 
     if (tm *loc = TIME_FN(&when_crawl_got_even))
     {
@@ -1180,11 +1180,11 @@ void end_game( scorefile_entry &se )
     {
         const level_id &place(*i);
         unlink(
-            make_filename( you.your_name,
-                           place.absdepth(),
-                           place.branch,
-                           place.level_type,
-                           false ).c_str() );
+            make_filename(you.your_name,
+                          place.absdepth(),
+                          place.branch,
+                          place.level_type,
+                          false).c_str());
     }
 
     // temp levels, if any
@@ -1198,7 +1198,7 @@ void end_game( scorefile_entry &se )
                            LEVEL_PORTAL_VAULT, false ).c_str() );
 
     // create base file name
-    std::string basename = get_savedir_filename( you.your_name, "", "" );
+    std::string basename = get_savedir_filename(you.your_name, "", "");
 
     const char* suffixes[] = {
 #ifdef CLUA_BINDINGS
@@ -1245,7 +1245,7 @@ void end_game( scorefile_entry &se )
     clrscr();
 
     clrscr();
-    cprintf( "Goodbye, %s.", you.your_name );
+    cprintf("Goodbye, %s.", you.your_name.c_str());
     cprintf( EOL EOL "    " ); // Space padding where # would go in list format
 
     std::string hiscore = hiscores_format_single_long( se, true );

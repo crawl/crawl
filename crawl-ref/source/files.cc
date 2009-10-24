@@ -821,12 +821,12 @@ static std::string _get_level_suffix(int level, branch_type where,
     }
 }
 
-std::string make_filename( const char *prefix, int level, branch_type where,
-                           level_area_type ltype, bool isGhost )
+std::string make_filename(std::string prefix, int level, branch_type where,
+                          level_area_type ltype, bool isGhost)
 {
-    return get_savedir_filename( prefix, "",
-                                 _get_level_suffix(level, where, ltype),
-                                 isGhost );
+    return get_savedir_filename(prefix, "",
+                                _get_level_suffix(level, where, ltype),
+                                isGhost );
 }
 
 static void _write_version( FILE *dataFile, int majorVersion, int minorVersion,
@@ -1537,7 +1537,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     unwind_bool saving_game(crawl_state.saving_game, true);
 
     /* Stashes */
-    std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
+    std::string stashFile = get_savedir_filename(you.your_name, "", "st");
     FILE *stashf = fopen(stashFile.c_str(), "wb");
     if (stashf)
     {
@@ -1549,14 +1549,14 @@ void save_game(bool leave_game, const char *farewellmsg)
 
 #ifdef CLUA_BINDINGS
     /* lua */
-    std::string luaFile = get_savedir_filename( you.your_name, "", "lua" );
+    std::string luaFile = get_savedir_filename(you.your_name, "", "lua");
     clua.save(luaFile.c_str());
     // Note that luaFile may not exist.
     DO_CHMOD_PRIVATE(luaFile.c_str());
 #endif
 
     /* kills */
-    std::string killFile = get_savedir_filename( you.your_name, "", "kil" );
+    std::string killFile = get_savedir_filename(you.your_name, "", "kil");
     FILE *killf = fopen(killFile.c_str(), "wb");
     if (killf)
     {
@@ -1671,7 +1671,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     whereis_record("saved");
 #endif
     end(0, false, farewellmsg? "%s" : "See you soon, %s!",
-        farewellmsg? farewellmsg : you.your_name);
+        farewellmsg? farewellmsg : you.your_name.c_str());
 }                               // end save_game()
 
 // Saves the game without exiting.

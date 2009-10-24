@@ -1925,11 +1925,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_CHARACTER_DUMP:
-        char name_your[kNameLen+1];
-
-        strncpy(name_your, you.your_name, kNameLen);
-        name_your[kNameLen] = 0;
-        if (dump_char( name_your, false ))
+        if (dump_char(you.your_name, false))
             mpr("Char dumped successfully.");
         else
             mpr("Char dump unsuccessful! Sorry about that.");
@@ -3611,11 +3607,10 @@ static bool _initialise(void)
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
-    std::string yname = you.your_name;
+    std::string yname = you.your_name; // XXX: what's this for?
     read_init_file(true);
     Options.fixup_options();
-    strncpy(you.your_name, yname.c_str(), kNameLen);
-    you.your_name[kNameLen - 1] = 0;
+    you.your_name = yname;
 
     // In case Lua changed the character set.
     init_char_table(Options.char_set);

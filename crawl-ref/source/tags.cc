@@ -821,7 +821,7 @@ static void tag_construct_you(writer &th)
 {
     int i, j;
 
-    marshallString(th, you.your_name, 30);
+    marshallString(th, you.your_name, kNameLen);
 
     marshallByte(th, you.religion);
     marshallString(th, you.second_god_name);
@@ -1230,7 +1230,7 @@ static void tag_read_you(reader &th, char minorVersion)
     char count_c;
     short count_s;
 
-    unmarshallCString(th, you.your_name, 30);
+    you.your_name         = unmarshallString(th, kNameLen);
 
     you.religion          = static_cast<god_type>(unmarshallByte(th));
 

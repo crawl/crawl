@@ -62,7 +62,6 @@ extern std::string init_file_error;
 
 #define MIN_START_STAT       3
 
-static bool _validate_player_name(bool verbose);
 static void _enter_player_name(bool blankOK);
 static void _give_basic_knowledge(job_type which_job);
 static void _give_basic_spells(job_type which_job);
@@ -178,12 +177,12 @@ static void _print_character_info()
     clrscr();
 
     // At this point all of name, species and class should be decided.
-    if (strlen(you.your_name) > 0
+    if (!you.your_name.empty()
         && you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN)
     {
         cprintf("Welcome, ");
         textcolor( YELLOW );
-        cprintf("%s the %s %s." EOL, you.your_name, species_name(you.species, 1).c_str(),
+        cprintf("%s the %s %s." EOL, you.your_name.c_str(), species_name(you.species, 1).c_str(),
                 get_class_name(you.char_class));
     }
 }
@@ -286,7 +285,7 @@ static bool _check_saved_game(void)
 {
     FILE *handle;
 
-    std::string basename = get_savedir_filename( you.your_name, "", "" );
+    std::string basename = get_savedir_filename(you.your_name, "", "");
     std::string savename = basename + ".sav";
 
 #ifdef LOAD_UNPACKAGE_CMD
@@ -852,10 +851,7 @@ bool new_game(void)
     }
 
     if (!Options.player_name.empty())
-    {
-        strncpy(you.your_name, Options.player_name.c_str(), kNameLen);
-        you.your_name[kNameLen - 1] = 0;
-    }
+        you.your_name = Options.player_name;
 
     textcolor(LIGHTGREY);
 
@@ -863,15 +859,12 @@ bool new_game(void)
     // note that you.your_name could already be set from init.txt.
     // This, clearly, will overwrite such information. {dlb}
     if (!SysEnv.crawl_name.empty())
-    {
-        strncpy( you.your_name, SysEnv.crawl_name.c_str(), kNameLen );
-        you.your_name[ kNameLen - 1 ] = 0;
-    }
+        you.your_name = SysEnv.crawl_name;
 
     _opening_screen();
     _enter_player_name(true);
 
-    if (you.your_name[0] != 0)
+    if (!you.your_name.empty())
     {
         if (_check_saved_game())
         {
@@ -930,7 +923,7 @@ game_start:
     }
 
     // New: pick name _after_ race and class choices.
-    if (you.your_name[0] == 0)
+    if (you.your_name.empty())
     {
         clrscr();
 
@@ -953,7 +946,7 @@ game_start:
                 textcolor( BROWN );
                 cprintf(EOL EOL "Welcome back, ");
                 textcolor( YELLOW );
-                cprintf("%s!", you.your_name);
+                cprintf("%s!", you.your_name.c_str());
                 textcolor( LIGHTGREY );
 
                 return (false);
@@ -999,9 +992,7 @@ game_start:
 
         Options.reset_startup_options();
 
-        // Restore old name.
-        strncpy(you.your_name, old_name.c_str(), kNameLen);
-        you.your_name[kNameLen - 1] = 0;
+        you.your_name = old_name;
 
         // Choose new character.
         goto game_start;
@@ -1924,26 +1915,28 @@ static void _show_name_prompt(int where, bool blankOK,
     textcolor( LIGHTGREY );
 }
 
-static void _preprocess_character_name(char *name, bool blankOK)
+static void _preprocess_character_name(std::string &name, bool blankOK)
 {
-    if (!*name && blankOK && Options.prev_name.length()
+    if (name.empty() && blankOK && Options.prev_name.length()
         && Options.remember_name)
     {
-        strncpy(name, Options.prev_name.c_str(), kNameLen);
-        name[kNameLen - 1] = 0;
+        name = Options.prev_name;
     }
 
     // '.', '?' and '*' are blanked.
-    if (!name[1] && (*name == '.' || *name == '*' || *name == '?'))
-        *name = 0;
+    if (name.length() == 1
+        && (name[0] == '.' || name[0] == '*' || name[0] == '?'))
+    {
+        name = "";
+    }
 }
 
-static bool _is_good_name(char *name, bool blankOK, bool verbose)
+static bool _is_good_name(std::string &name, bool blankOK, bool verbose)
 {
     _preprocess_character_name(name, blankOK);
 
     // verification begins here {dlb}:
-    if (you.your_name[0] == 0)
+    if (name.empty())
     {
         if (blankOK)
             return (true);
@@ -1961,14 +1954,14 @@ static bool _is_good_name(char *name, bool blankOK, bool verbose)
     // ... having the name "bones" of course! The problem comes from
     // the fact that bones files would have the exact same filename
     // as level files for a character named "bones".  -- bwr
-    if (stricmp(you.your_name, "bones") == 0)
+    if (stricmp(name.c_str(), "bones") == 0)
     {
         if (verbose)
             cprintf(EOL "That's a silly name!" EOL);
         return (false);
     }
 #endif
-    return (_validate_player_name(verbose));
+    return (validate_player_name(name, verbose));
 }
 
 static int newname_keyfilter(int &ch)
@@ -1979,16 +1972,20 @@ static int newname_keyfilter(int &ch)
     return 1;
 }
 
-static bool _read_player_name( char *name, int len,
-                               const std::vector<player_save_info> &existing,
-                               slider_menu &menu)
+static bool _read_player_name(std::string &name,
+                              const std::vector<player_save_info> &existing,
+                              slider_menu &menu)
 {
     const int name_x = wherex(), name_y = wherey();
     int (*keyfilter)(int &) = newname_keyfilter;
     if (existing.empty())
         keyfilter = NULL;
-
-    line_reader reader(name, len);
+    char buf[kNameLen];
+    // XXX: Prompt displays garbage otherwise, but don't really know why.
+    //      Other places don't do this. --rob
+    buf[0] = '\0';
+    line_reader reader(buf, sizeof(buf));
+ 
     reader.set_keyproc(keyfilter);
 
     while (true)
@@ -2000,7 +1997,10 @@ static bool _read_player_name( char *name, int len,
         cgotoxy(name_x, name_y);
         int ret = reader.read_line(false);
         if (!ret)
+        {
+            name = buf;
             return (true);
+        }
 
         if (ret == CK_ESCAPE)
             return (false);
@@ -2014,8 +2014,7 @@ static bool _read_player_name( char *name, int len,
             {
                 const player_save_info &p =
                     *static_cast<player_save_info*>( sel->data );
-                strncpy(name, p.name.c_str(), kNameLen);
-                name[kNameLen - 1] = 0;
+                name = p.name;
                 return (true);
             }
         }
@@ -2028,11 +2027,10 @@ static void _enter_player_name(bool blankOK)
 {
     int prompt_start = wherey();
     bool ask_name = true;
-    char *name = you.your_name;
     std::vector<player_save_info> existing_chars;
     slider_menu char_menu(MF_SINGLESELECT | MF_NOWRAP, false);
 
-    if (you.your_name[0] != 0)
+    if (!you.your_name.empty())
         ask_name = false;
 
     if (blankOK && (ask_name || !_is_good_name(you.your_name, false, false)))
@@ -2077,32 +2075,22 @@ static void _enter_player_name(bool blankOK)
             _show_name_prompt(prompt_start, blankOK, existing_chars, char_menu);
 
             // If the player wants out, we bail out.
-            if (!_read_player_name(name, kNameLen, existing_chars, char_menu))
+            if (!_read_player_name(you.your_name, existing_chars, char_menu))
                 end(0);
-
-            // Laboriously trim the damn thing.
-            std::string read_name = name;
-            trim_string(read_name);
-            strncpy(name, read_name.c_str(), kNameLen);
-            name[kNameLen - 1] = 0;
+            trim_string(you.your_name);
         }
     }
     while (ask_name = !_is_good_name(you.your_name, blankOK, true));
 }
 
-static bool _validate_player_name(bool verbose)
-{
-    return validate_player_name(you.your_name, verbose);
-}
-
-bool validate_player_name(const char* name, bool verbose)
+bool validate_player_name(const std::string &name, bool verbose)
 {
 #if defined(TARGET_OS_DOS) || defined(TARGET_OS_WINDOWS)
     // Quick check for CON -- blows up real good under DOS/Windows.
-    if (stricmp(name, "con") == 0
-        || stricmp(name, "nul") == 0
-        || stricmp(name, "prn") == 0
-        || strnicmp(name, "LPT", 3) == 0)
+    if (stricmp(name.c_str(), "con") == 0
+        || stricmp(name.c_str(), "nul") == 0
+        || stricmp(name.c_str(), "prn") == 0
+        || strnicmp(name.c_str(), "LPT", 3) == 0)
     {
         if (verbose)
             cprintf(EOL "Sorry, that name gives your OS a headache." EOL);
@@ -2110,9 +2098,9 @@ bool validate_player_name(const char* name, bool verbose)
     }
 #endif
 
-    for (const char *pn = name; *pn; ++pn)
+    for (unsigned int i = 0; i < name.length(); i++)
     {
-        char c = *pn;
+        char c = name[i];
         // Note that this includes systems which may be using the
         // packaging system.  The packaging system is very simple
         // and doesn't take the time to escape every character that
@@ -3252,7 +3240,7 @@ spec_query:
         {
             textcolor( BROWN );
             bool shortgreet = false;
-            if (strlen(you.your_name) || you.char_class != JOB_UNKNOWN)
+            if (!you.your_name.empty() || you.char_class != JOB_UNKNOWN)
                 cprintf("Welcome, ");
             else
             {
@@ -3261,9 +3249,9 @@ spec_query:
             }
 
             textcolor( YELLOW );
-            if (strlen(you.your_name) > 0)
+            if (!you.your_name.empty())
             {
-                cprintf("%s", you.your_name);
+                cprintf("%s", you.your_name.c_str());
                 if (you.char_class != JOB_UNKNOWN)
                     cprintf(" the ");
             }
@@ -3510,8 +3498,8 @@ job_query:
             textcolor( BROWN );
             cprintf("Welcome, ");
             textcolor( YELLOW );
-            if (you.your_name[0])
-                cprintf("%s the ", you.your_name);
+            if (!you.your_name.empty())
+                cprintf("%s the ", you.your_name.c_str());
             cprintf("%s.", species_name(you.species, 1).c_str());
             textcolor( WHITE );
         }

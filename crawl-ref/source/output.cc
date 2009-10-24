@@ -1882,7 +1882,7 @@ static std::string _overview_screen_title()
                  you.num_turns, make_time_string(curr, true).c_str() );
     }
 
-    int linelength = strlen(you.your_name) + strlen(title)
+    int linelength = you.your_name.length() + strlen(title)
                      + strlen(race_class) + strlen(time_turns);
     for (int count = 0; linelength >= get_number_of_cols() && count < 2;
          count++)
@@ -1901,7 +1901,7 @@ static std::string _overview_screen_title()
           default:
               break;
         }
-        linelength = strlen(you.your_name) + strlen(title)
+        linelength = you.your_name.length() + strlen(title)
                      + strlen(race_class) + strlen(time_turns);
     }
 

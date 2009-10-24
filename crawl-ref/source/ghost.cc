@@ -894,7 +894,7 @@ bool debug_check_ghosts()
             return (false);
 
         // Name validation.
-        if (!validate_player_name(ghost.name.c_str(), false))
+        if (!validate_player_name(ghost.name, false))
             return (false);
         if (ghost.name.length() > (kNameLen - 1) || ghost.name.length() == 0)
             return (false);

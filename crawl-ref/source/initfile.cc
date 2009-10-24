@@ -1388,7 +1388,7 @@ void read_startup_prefs()
 static void write_newgame_options(FILE *f)
 {
     // Write current player name
-    fprintf(f, "name = %s\n", you.your_name);
+    fprintf(f, "name = %s\n", you.your_name.c_str());
 
     if (Options.prev_randpick)
         Options.prev_race = Options.prev_cls = '*';

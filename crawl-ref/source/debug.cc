@@ -6109,22 +6109,6 @@ static void _dump_player(FILE *file)
     fprintf(file, "{{{{{{{{{{{" EOL);
 
     bool name_overrun = true;
-    for (int i = 0; i < kNameLen; ++i)
-    {
-        if (you.your_name[i] == '\0')
-        {
-            name_overrun = false;
-            break;
-        }
-    }
-
-    if (name_overrun)
-    {
-        fprintf(file, "Player name runs past end of your_name buffer." EOL);
-        you.your_name[kNameLen - 1] = '\0';
-    }
-
-    name_overrun = true;
     for (int i = 0; i < 30; ++i)
     {
         if (you.class_name[i] == '\0')
@@ -6140,7 +6124,7 @@ static void _dump_player(FILE *file)
         you.class_name[29] = '\0';
     }
 
-    fprintf(file, "Name:       [%s]" EOL, you.your_name);
+    fprintf(file, "Name:       [%s]" EOL, you.your_name.c_str());
     fprintf(file, "Species:    %s" EOL, species_name(you.species, 27).c_str());
     fprintf(file, "Class:      %s" EOL EOL, get_class_name(you.char_class));
     fprintf(file, "class_name: %s" EOL EOL, you.class_name);
@@ -6498,7 +6482,7 @@ void do_crash_dump()
     char name[180];
 
     sprintf(name, "%scrash-%s-%d.txt", dir.c_str(),
-            you.your_name, (int) time(NULL));
+            you.your_name.c_str(), (int) time(NULL));
 
     fprintf(stderr, EOL "Writing crash info to %s" EOL, name);
     errno = 0;

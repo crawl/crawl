@@ -44,8 +44,7 @@ namespace crawl_tests
         ntests = 0;
         nsuccess = 0;
         failures.clear();
-        // XXX: Good grief, you.your_name is still not a C++ string?!
-        strncpy(you.your_name, test_player_name.c_str(), kNameLen);
+        you.your_name = test_player_name;
         you.your_name[kNameLen - 1] = 0;
         you.species = test_player_species;
         you.char_class = test_player_job;

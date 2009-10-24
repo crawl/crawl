@@ -41,8 +41,8 @@ public:
 
   unsigned short prev_targ;
   coord_def      prev_grd_targ;
-  char your_name[kNameLen];
 
+  std::string your_name;
   species_type species;
   job_type char_class;
 
