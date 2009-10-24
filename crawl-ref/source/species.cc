@@ -96,7 +96,7 @@ int get_species_index_by_abbrev(const char *abbrev)
     return (-1);
 }
 
-int get_species_index_by_name( const char *name )
+int get_species_index_by_name(const char *name)
 {
     unsigned int i;
     int sp = -1;
@@ -115,7 +115,7 @@ int get_species_index_by_name( const char *name )
 
         const std::string lowered_species =
             lowercase_string(species_name(real_sp,1));
-        pos = lowered_species.find( lowered_buff );
+        pos = lowered_species.find(lowered_buff);
         if (pos != std::string::npos)
         {
             sp = i;
