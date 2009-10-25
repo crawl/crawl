@@ -13,7 +13,11 @@ clean distclean:
 
 $(SUBDIRS):
 	@if [ ! -x $@ ]; then \
+	    echo "*******************************************************************************"; \
+		echo; \
 	    echo "The '$@' folder is missing. Have you run 'git submodule update --init'?"; \
+		echo; \
+	    echo "*******************************************************************************"; \
 	    exit 1; \
 	fi
 	@cd $@ && \
