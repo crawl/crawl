@@ -7,9 +7,6 @@
 #define TRAVEL_H
 
 #include "externs.h"
-
-#include "los.h"
-
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -355,16 +352,16 @@ void update_exclusion_los(std::vector<coord_def> changed);
 
 struct travel_exclude
 {
-    coord_def     pos;          // exclusion centre
-    int           radius;       // exclusion radius
-    bool          autoexclude;  // Was set automatically.
-    int           mon;          // Monster around which exclusion is centered.
-    los_def       los;          // los from exclusion centre
-    bool          uptodate;     // Is los up to date?
+    coord_def     pos;         // exclusion centre
+    int           radius;      // exclusion radius
+    bool          autoexclude; // Was set automatically.
+    int           mon;         // Monster around which exclusion is centered.
+    env_show_grid show;        // los from exclusion centre
+    bool          uptodate;    // Is show up to date?
     bool          vaultexclude; // Is this exclusion set by a vault?
 
     int radius_sq() const;
-    void set_los();
+    void set_exclude_show();
     bool affects(const coord_def& p) const;
 
     travel_exclude(const coord_def &p, int r = LOS_RADIUS,
@@ -372,7 +369,7 @@ struct travel_exclude
                    bool vaultexcl = false)
         : pos(p), radius(r), autoexclude(autoexcl), mon(mons), vaultexclude(vaultexcl)
     {
-        set_los();
+        set_exclude_show();
     }
 };
 
