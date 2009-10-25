@@ -651,6 +651,9 @@ SUBST:   z = c:20 o:4
 SUBST:   y = c:20 o:1
 SUBST:   $ = 1:10 2:1
 KFEAT:   L = =
+MARKER:  L = lua:function_machine( {marker_type="player_at", \
+             func=(function(marker) crawl.mpr("Something ancient and \
+             evil stirs ahead...", "warning") end) } )
 : ossuary_setup_features(_G)
 : ossuary_milestone(_G)
 MAP
