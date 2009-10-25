@@ -2207,17 +2207,12 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     if(mon.mons_species() == MONS_SLIME_CREATURE && desc != DESC_DBNAME)
     {
-        if (mon.number < 11)
-        {
-            const char* cardinals[] = {"one", "two", "three", "four", "five",
-                                       "six", "seven", "eight", "nine", "ten"};
-            result += cardinals[mon.number - 1];
-        }
-        else
-            result += make_stringf("%d", mon.number);
-
-        result += "-blob ";
+        ASSERT(mon.number <=5);
+        const char* cardinals[] = {"", "large ", "very large ",
+                                   "enormous ", "titanic "};
+        result += cardinals[mon.number - 1];
     }
+
     // Done here to cover cases of undead versions of hydras.
     if (mons_species(nametype) == MONS_HYDRA
         && mon.number > 0 && desc != DESC_DBNAME)

@@ -5861,9 +5861,11 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                                   ? draco_subspecies( monster )
                                   : static_cast<monster_type>( monster->type );
 
-    if (!mons_near(monster)
-        || mons_is_sleeping(monster)
-        || mons_is_submerged(monster))
+    // Slime creatures can split while out of sight.
+    if ((!mons_near(monster)
+         || mons_is_sleeping(monster)
+         || mons_is_submerged(monster))
+         && monster->mons_species() != MONS_SLIME_CREATURE)
     {
         return (false);
     }
