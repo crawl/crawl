@@ -1,6 +1,6 @@
 Install instructions for Dungeon Crawl Stone Soup (DCSS)
 --------------------------------------------------------
-(Last updated on 20090728 for Dungeon Crawl Stone Soup 0.5.1.)
+(Last updated on 20091025 for Dungeon Crawl Stone Soup 0.6.0.)
 
 Getting DCSS to run
 -------------------
@@ -56,6 +56,28 @@ standard C++ library, in particular <string>, the collection classes and
 <algorithm> is necessary) and the curses library.
 
 
+Source Code Checkout
+--------------------
+
+If you don't already have the source code downloaded (in the form of a .zip or
+.tbz2 file), you can obtain the latest source code from Git. MinGW users can
+obtain Git by installing msysgit (described in the MinGW section). Linux users
+can just install the 'git' or 'git-core' package with whatever package manager
+they use. Note that there is another package called 'git' going around which
+stands for 'GNU interactive tools'. This is not what you want.
+
+Once you have Git installed, you just need to do:
+
+    git clone git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+
+And then to get the contributing libraries, enter the newly cloned repository
+via 'cd crawl-ref' and type:
+
+    git submodule update --init
+
+This should get you all you need to build Crawl from source.
+
+
 Optional libraries
 ------------------
 
@@ -77,7 +99,7 @@ Unixes or WINMM_PLAY_SOUNDS on Windows).
 Regular expressions require libpcre on non-Unix operating systems. On Unixes,
 the standard POSIX regular expression support is adequate for Crawl's needs.
 
-Stone Soup 0.3 includes Lua 5.1.2 in its source tree. Crawl uses Lua for dungeon
+Stone Soup 0.6 includes Lua 5.1.4 in its source tree. Crawl uses Lua for dungeon
 generation. In addition, Crawl has a (rudimentary) Lua interface for users to
 run scripts which can do things such as conditionalise parts of the
 .crawlrc/init.txt. Such user Lua scripts are enabled by default, but can be
@@ -122,6 +144,7 @@ understands Unicode characters, usually named libncursesw (the development
 headers for libncursesw are usually in /usr/include/ncursesw.) You also need to
 have a UTF-8 locale installed. You can then build Crawl with support for Unicode
 by setting USE_UNICODE on the 'make' command line.
+
 
 Building:
 
@@ -227,16 +250,6 @@ NT/2k/XP system (the binary will run on 9x), or build a DOS binary.
 
   NOTE: Do NOT get any of the versions that do not have 'netinstall' in the
         filename. The 'netinstall' is the only one used by the Crawl team.
-
-* If you intend to build a graphical (tiled) build of Crawl, you will need to
-  upgrade the version of GNU Make included with MinGW. FreeType's build system
-  requires a minimum of GNU Make v3.80. You can obtain this from here, under the
-  GNU Make category:
-
-    https://sourceforge.net/projects/mingw/files/
-
-  To install it, simply extract it with an unarchiver (such as WinRAR) to
-  c:\msysgit (or wherever you installed msysgit).
 
 * Start msys by running 'c:\msysgit\msys.bat'. Now you're in a MinGW build
   environment.
