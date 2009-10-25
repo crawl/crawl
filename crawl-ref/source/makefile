@@ -368,7 +368,7 @@ ifdef FULLDEBUG
 DEFINES += -DFULLDEBUG
 endif
 ifdef DEBUG
-EXTRA_FLAGS += -ggdb
+CFOTHERS := -ggdb $(CFOTHERS)
 DEFINES += -DDEBUG
 endif
 ifdef WIZARD
