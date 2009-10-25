@@ -12,6 +12,7 @@ require('clua/lm_flags.lua')
 require('clua/lm_fog.lua')
 require('clua/lm_props.lua')
 require('clua/lm_monst.lua')
+require('clua/lm_func.lua')
 
 function dlua_marker_function(table, name)
   return table[name]
