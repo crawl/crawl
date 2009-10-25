@@ -32,7 +32,6 @@ CFOPTIMIZE := -O2
 CFOTHERS := -fno-strict-aliasing -pipe $(EXTERNAL_FLAGS)
 CFOTHERS_L := -fsigned-char
 CFWARN := -Wall
-MAKEFLAGS := --no-print-directory
 
 #
 # The GCC and GXX variables are set later.
@@ -276,10 +275,6 @@ endif
 # CFLAGS and LDFLAGS.
 #
 
-ifneq (,$(findstring MINGW,$(uname_S)))
-CONTRIB_DEPENDS += $(LIBSDL) $(LIBSDLIMAGE) $(LIBFREETYPE)
-endif
-
 ifndef NO_PKGCONFIG
 ifneq ($(shell which pkg-config 2> /dev/null),)
 PKGCONFIG = YesPlease
@@ -516,37 +511,37 @@ OBJECTS += $(TILEDEFOBJS)
 endif
 
 ifdef BUILD_PCRE
-CONTRIB_DEPENDS += $(LIBPCRE)
+CONTRIBS += pcre
 LIBS += $(LIBPCRE)
 endif
 ifdef BUILD_FREETYPE
-CONTRIB_DEPENDS += $(LIBFREETYPE)
+CONTRIBS += freetype
 LIBS += $(LIBFREETYPE)
 endif
 ifdef BUILD_SDLIMAGE
-CONTRIB_DEPENDS += $(LIBSDLIMAGE)
+CONTRIBS += sdl-image
 LIBS += $(LIBSDLIMAGE)
 endif
 ifdef BUILD_SDL
-CONTRIB_DEPENDS += $(LIBSDL)
+CONTRIBS += sdl
 LIBS += $(LIBSDL)
 endif
 ifdef BUILD_LIBPNG
-CONTRIB_DEPENDS += $(LIBPNG)
+CONTRIBS += libpng
 LIBS += $(LIBPNG)
 endif
 ifdef BUILD_ZLIB
-CONTRIB_DEPENDS += $(LIBZ)
+CONTRIBS += zlib
 LIBS += $(LIBZ)
 endif
 
-CONTRIB_DEPENDS += $(LIBLUA) $(LIBSQLITE)
+CONTRIBS += lua/src sqlite
 LIBS += $(LIBLUA) $(LIBSQLITE)
 
 EXTRA_OBJECTS += version.o
 
 LIBS += $(EXTRA_LIBS)
-GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_DEPENDS)
+GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) contrib
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell git describe --tags --long)
 PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
@@ -610,8 +605,8 @@ version.cc: build.h compflag.h
 # The level compiler
 #
 
-$(UTIL)levcomp.tab.cc: $(CONTRIB_DEPENDS)
-$(UTIL)levcomp.lex.cc: $(CONTRIB_DEPENDS)
+$(UTIL)levcomp.tab.cc: contrib
+$(UTIL)levcomp.lex.cc: contrib
 
 ifndef NO_YACC
 
@@ -673,7 +668,7 @@ endif
 
 clean:
 	+$(MAKE) -C $(UTIL) clean
-	$(RM) *.o *.ixx build.h compflag.h
+	$(RM) *.o *.ixx build.h compflag.h .contrib-libs .contrib-ok
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
@@ -711,7 +706,7 @@ ifdef PCH
 CC_DEP := AppHdr.h.gch
 endif
 
-$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_DEPENDS)
+$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS)
 
 %.o: %.m
 	$(QUIET_CXX)$(CC) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
@@ -722,36 +717,13 @@ $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_DEPENDS)
 #
 # Contribs
 #
-.PHONY: pcre lua sqlite sdl sdl-image freetype
+.contrib-libs: .contrib-ok
+	+@$(MAKE) -C contrib $(CONTRIBS)
+	touch .contrib-libs
 
-$(LIBPCRE): .contrib-ok
-	+@$(MAKE) -C contrib pcre
-pcre: $(LIBPCRE)
+contrib: .contrib-libs
 
-$(LIBLUA): .contrib-ok
-	+@$(MAKE) -C contrib lua
-lua: $(LIBLUA)
-
-$(LIBSQLITE): .contrib-ok
-	+@$(MAKE) -C contrib sqlite
-sqlite: $(LIBSQLITE)
-
-$(LIBFREETYPE): .contrib-ok
-	+@$(MAKE) -C contrib freetype
-freetype: $(LIBFREETYPE)
-
-$(LIBSDL): .contrib-ok
-	+@$(MAKE) -C contrib sdl
-sdl: $(LIBSDL)
-
-$(LIBSDLIMAGE): .contrib-ok
-	+@$(MAKE) -C contrib sdl-image
-sdl-image: $(LIBSDLIMAGE)
-
-$(LIBPNG): .contrib-ok
-	+@$(MAKE) -C contrib libpng
-libpng: $(LIBPNG)
-
+.PHONY: contrib
 
 #############################################################################
 # Build unrandart data
@@ -763,7 +735,7 @@ art-data.h: art-data.txt util/art-data.pl art-func.h
 #
 
 .PHONY: rltile-build
-rltile-build: $(CONTRIB_DEPENDS)
+rltile-build:: contrib
 	$(MAKE) -C $(RLTILES) -f makefile.unix all
 
 $(TILEDEFSRCS): rltile-build
