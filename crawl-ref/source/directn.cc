@@ -2887,7 +2887,7 @@ std::string feature_description(const coord_def& where, bool bloody,
                                 description_level_type dtype, bool add_stop,
                                 bool base_desc)
 {
-    std::string marker_desc = 
+    std::string marker_desc =
         env.markers.property_at(where, MAT_ANY, "feature_description");
 
     if (!marker_desc.empty())
@@ -2915,7 +2915,7 @@ std::string feature_description(const coord_def& where, bool bloody,
             desc += "detected secret ";
         desc += noun;
 
-        const std::string door_desc_suffix = 
+        const std::string door_desc_suffix =
             env.markers.property_at(where, MAT_ANY,
                                     "door_description_suffix");
         desc += door_desc_suffix;
