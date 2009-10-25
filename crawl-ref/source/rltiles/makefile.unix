@@ -40,6 +40,7 @@ TILEGEN := $(TOOLDIR)/tilegen.elf
 INPUTS := main dngn player gui
 INPUTFILES := $(INPUTS:%=dc-%.txt)
 HEADERS := $(INPUTS:%=tiledef-%.h)
+HTML := $(INPUTS:%=tile-%.html)
 SOURCE := $(INPUTS:%=tiledef-%.cc)
 IMAGES := $(INPUTS:%=%.png)
 
@@ -61,7 +62,7 @@ tiledef-%.h tiledef-%.cc %.png: dc-%.txt $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) $<
 
 clean:
-	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES)
+	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML)
 
 distclean: clean
 

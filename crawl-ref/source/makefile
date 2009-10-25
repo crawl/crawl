@@ -120,6 +120,10 @@ endif
 #
 include makefile.obj
 
+ifneq (,$(findstring clean,$(MAKECMDGOALS)))
+TILES := YesPlease
+endif
+
 # Works for Mac OS X and Linux.
 OBJECTS += crash-u.o
 
@@ -699,13 +703,14 @@ endif
 
 clean:
 	+$(MAKE) -C $(UTIL) clean
-	$(RM) $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-ok
+	+$(MAKE) -C $(RLTILES) -f makefile.unix clean
+	$(RM) $(GAME) $(GAME).exe $(EXTRA_OBJECTS) $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-ok .contrib-libs
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
 
 distclean: clean clean-contrib clean-rltiles
-	$(RM) bones.* morgue.txt scores $(GAME) *.sav core *.0* *.lab $(DEPENDENCY_MKF)
+	$(RM) morgue saves scores $(GAME) core *.0* *.lab $(DEPENDENCY_MKF)
 
 .contrib-ok:
 	@for a in contrib/lua/src/Makefile contrib/sqlite/Makefile contrib/pcre/Makefile; do \
@@ -779,6 +784,7 @@ dat/tiles/%.png: $(RLTILES)/%.png
 	$(QUIET_COPY)$(COPY) $< $@
 
 clean-rltiles:
+	$(RM) $(DESTTILEFILES)
 	+$(MAKE) -C $(RLTILES) -f makefile.unix distclean
 
 #############################################################################
