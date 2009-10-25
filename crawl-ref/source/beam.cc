@@ -1772,7 +1772,8 @@ void bolt::nuke_wall_effect()
 
     if (feat == DNGN_ROCK_WALL
         || feat == DNGN_WAX_WALL
-        || feat == DNGN_CLEAR_ROCK_WALL)
+        || feat == DNGN_CLEAR_ROCK_WALL
+        || feat == DNGN_GRANITE_STATUE)
     {
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
@@ -1785,7 +1786,7 @@ void bolt::nuke_wall_effect()
             obvious_effect = true;
         }
     }
-    else if (feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE)
+    else if (feat == DNGN_ORCISH_IDOL)
     {
         grd(pos()) = DNGN_FLOOR;
 
@@ -1799,14 +1800,14 @@ void bolt::nuke_wall_effect()
                 mpr("You hear a hideous screaming!", MSGCH_SOUND);
             else
             {
-                mpr("The statue screams as its substance crumbles away!",
+                mpr("The idol screams as its substance crumbles away!",
                     MSGCH_SOUND);
             }
         }
         else if (see_cell(pos()))
-            mpr("The statue twists and shakes as its substance crumbles away!");
+            mpr("The idol twists and shakes as its substance crumbles away!");
 
-        if (feat == DNGN_ORCISH_IDOL && beam_source == NON_MONSTER)
+        if (beam_source == NON_MONSTER)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
 
         obvious_effect = true;
