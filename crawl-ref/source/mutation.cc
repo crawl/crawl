@@ -2656,15 +2656,15 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
 
 void roll_demonspawn_mutations()
 {
-    // First try for a body mutation; every DS has exactly one of these, as
-    // they result in the loss or crippling of one slot, and we don't want to
-    // deal with the balance issues of a variable-slot race.
+    // First try for a body mutation; every DS has exactly one of these,
+    // as they result in the loss or crippling of one slot, and we don't
+    // want to deal with the balance issues of a variable-slot race.
     static const mutation_type body_muts[] = {
         MUT_CLAWS, MUT_HORNS
     };
 
-    // "Awesome" mutations are character defining; they have a major effect
-    // on strategy in at least one branch.
+    // "Awesome" mutations are character defining; they have a major
+    // effect on strategy in at least one branch.
     static const mutation_type awesome_muts[] = {
         MUT_HEAT_RESISTANCE, MUT_FAST, MUT_TELEPORT_AT_WILL, MUT_MAPPING,
         MUT_ROBUST, MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_BLACK_SCALES,
@@ -2683,7 +2683,6 @@ void roll_demonspawn_mutations()
 
     // "Good" mutations are rarely noticed; they improve your character
     // in ways that affect most fights.
-
     static const mutation_type good_muts[] = {
         MUT_TOUGH_SKIN,  MUT_GREY_SCALES, MUT_BONEY_PLATES,
         MUT_SLOW_METABOLISM, MUT_SPIT_POISON, MUT_BLINK, MUT_SHAGGY_FUR,
@@ -2748,10 +2747,9 @@ try_again:
 
     for (int level = 2; level <= 27; ++level)
     {
-        // We want 18 (6*3) random attemps to raise or add a
-        // mutation in the 26 level ups.  The following check is
-        // equivalent to taking a string of 18 1s and 8 0s and
-        // shuffling it.
+        // We want 18 (6*3) random attempts to raise or add a mutation
+        // in the 26 level ups.  The following check is equivalent to
+        // taking a string of 18 1s and 8 0s and shuffling it.
 
         if (x_chance_in_y(18 - ngiven, 28 - level))
         {
