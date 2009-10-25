@@ -1,5 +1,8 @@
 #include "tile.h"
 
+#include <stdio.h>
+#include <memory.h>
+
 #include <assert.h>
 #include <SDL.h>
 #include <SDL_image.h>
