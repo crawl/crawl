@@ -321,8 +321,8 @@ void cast_shatter(int pow)
 
     apply_area_within_radius(_shatter_items, you.pos(), pow, rad, 0);
     apply_area_within_radius(_shatter_monsters, you.pos(), pow, rad, 0);
-    int dest = apply_area_within_radius( _shatter_walls, you.pos(),
-                                         pow, rad, 0 );
+    int dest = apply_area_within_radius(_shatter_walls, you.pos(),
+                                        pow, rad, 0);
 
     if (dest && !silence)
         mpr("Ka-crash!", MSGCH_SOUND);
@@ -576,19 +576,19 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
     int damage = dam_dice.roll();
     if (damage > 0)
     {
-        damage = mons_adjust_flavoured( mon, beam, damage );
+        damage = mons_adjust_flavoured(mon, beam, damage);
         simple_monster_message(mon, " seems to burn from within!");
 
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Dice: %dd%d; Damage: %d",
-             dam_dice.num, dam_dice.size, damage );
+             dam_dice.num, dam_dice.size, damage);
 #endif
 
         if (!_player_hurt_monster(*mon, damage))
         {
             // Monster survived, remove any poison.
             mon->del_ench(ENCH_POISON);
-            behaviour_event( mon, ME_ALERT );
+            behaviour_event(mon, ME_ALERT);
         }
 
         return (1);
