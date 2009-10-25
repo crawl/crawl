@@ -921,6 +921,7 @@ void dgn_reset_level()
     // Blank level with DNGN_ROCK_WALL.
     grd.init(DNGN_ROCK_WALL);
     env.grid_colours.init(BLACK);
+    env.map.init(map_cell());
 
     // Delete all traps.
     for (int i = 0; i < MAX_TRAPS; i++)
