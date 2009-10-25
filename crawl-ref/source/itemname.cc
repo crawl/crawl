@@ -2502,7 +2502,7 @@ bool is_useless_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (!check_weapon_wieldable_size(item, you.body_size(PSIZE_BODY, !temp))
+        if (!you.could_wield(item, true)
             && !is_throwable(&you, item))
         {
             // Weapon is too large (or small) to be wielded and cannot be

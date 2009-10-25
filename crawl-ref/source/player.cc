@@ -761,15 +761,6 @@ bool player_weapon_wielded()
         return (false);
     }
 
-    // FIXME: This needs to go in eventually.
-    /*
-    // should never have a bad "shape" weapon in hand
-    ASSERT( check_weapon_shape( you.inv[wpn], false ) );
-
-    if (!check_weapon_wieldable_size( you.inv[wpn], you.body_size() ))
-        return (false);
-    */
-
     return (true);
 }
 
@@ -6311,7 +6302,12 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool /* ignore_transform */) const
 {
-    if (!check_weapon_wieldable_size(item, body_size()))
+    if (body_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(item) >= 300)
+        return (false);
+
+    // Small species wielding large weapons...
+    if (body_size(PSIZE_BODY) < SIZE_MEDIUM
+        && !check_weapon_wieldable_size(item, body_size(PSIZE_BODY)))
         return (false);
 
     if (!ignore_brand)

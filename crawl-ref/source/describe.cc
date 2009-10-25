@@ -914,11 +914,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 description += ", and it is better for the dexterous";
             description += ".";
         }
-        if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM
-            && !check_weapon_wieldable_size(item, you.body_size(PSIZE_BODY)))
-        {
+        if (!you.could_wield(item, true))
             description += "$It is too large for you to wield.";
-        }
     }
 
     if (verbose)
