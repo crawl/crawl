@@ -655,7 +655,7 @@ static monsterentry mondata[] = {
 {
     MONS_TOADSTOOL, 'f', BROWN, "toadstool",
     M_NO_EXP_GAIN | M_STATIONARY,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ASPHYX,
     0, 10, MONS_FUNGUS, MONS_TOADSTOOL, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 2, 2, 0 },
@@ -666,7 +666,7 @@ static monsterentry mondata[] = {
 {
     MONS_FUNGUS, 'f', LIGHTGREY, "fungus",
     M_NO_EXP_GAIN | M_STATIONARY,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ASPHYX,
     0, 10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
@@ -677,7 +677,7 @@ static monsterentry mondata[] = {
 {
     MONS_BALLISTOMYCETE, 'f', LIGHTRED, "ballistomycete",
     M_NO_EXP_GAIN | M_STATIONARY,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ASPHYX,
     0, 10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 5, 3, 0 },
@@ -688,7 +688,7 @@ static monsterentry mondata[] = {
 {
     MONS_WANDERING_MUSHROOM, 'f', RED, "wandering mushroom",
     M_NO_FLAGS,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ASPHYX,
     0, 10, MONS_FUNGUS, MONS_WANDERING_MUSHROOM, MH_PLANT, -3,
     { {AT_SPORE, AF_CONFUSE, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
@@ -2512,7 +2512,7 @@ static monsterentry mondata[] = {
 {
     MONS_PLANT, 'P', GREEN, "plant",
     M_NO_EXP_GAIN | M_STATIONARY,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ASPHYX,
     0, 10, MONS_PLANT, MONS_PLANT, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 3, 5, 0 },
@@ -2523,7 +2523,7 @@ static monsterentry mondata[] = {
 {
     MONS_OKLOB_PLANT, 'P', LIGHTGREEN, "oklob plant",
     M_SPECIAL_ABILITY | M_STATIONARY,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ASPHYX,
     0, 10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 3, 5, 0 },
@@ -2534,7 +2534,7 @@ static monsterentry mondata[] = {
 {
     MONS_BUSH, 'P', BROWN, "bush",
     M_NO_EXP_GAIN | M_STATIONARY,
-    MR_RES_POISON | MR_VUL_FIRE | MR_RES_ASPHYX,
+    MR_RES_POISON | MR_RES_ASPHYX | MR_VUL_FIRE,
     0, 10, MONS_PLANT, MONS_BUSH, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 20, 3, 5, 0 },
