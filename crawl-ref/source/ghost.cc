@@ -575,12 +575,8 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
     switch (u_att_flav)
     {
     case AF_FIRE:
-        resists.fire = 1;
-        resists.sticky_flame = true;
-        break;
-
     case AF_NAPALM:
-        resists.fire = 2;
+        resists.fire = (very_ugly ? 2 : 1);
         resists.sticky_flame = true;
         break;
 
@@ -589,11 +585,8 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
         break;
 
     case AF_POISON_NASTY:
-        resists.poison = 1;
-        break;
-
     case AF_POISON_MEDIUM:
-        resists.poison = 2;
+        resists.poison = (very_ugly ? 2 : 1);
         break;
 
     case AF_ELEC:
