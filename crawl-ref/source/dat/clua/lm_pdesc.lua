@@ -32,15 +32,13 @@ function PortalDescriptor:unmangle(x)
   end
 end
 
-function PortalDescriptor:feature_description(marker)
-  return self:unmangle(self.props.desc)
-end
-
-function PortalDescriptor:feature_description_long(marker)
-  return self:unmangle(self.props.desc_long)
-end
-
 function PortalDescriptor:property(marker, pname)
+  if pname == 'feature_description' then
+    return self:unmangle(self.props.desc)
+  elseif pname == 'feature_description_long' then
+    return self:unmangle(self.props.desc_long)
+  end
+
   return self:unmangle(self.props and self.props[pname] or '')
 end
 

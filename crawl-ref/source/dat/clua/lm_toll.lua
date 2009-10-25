@@ -61,6 +61,10 @@ function TollStair:property(marker, pname)
     return self:check_veto(marker, pname)
   end
 
+  if pname == 'feature_description_long' then
+    return self:feature_description_long(marker)
+  end
+
   return self.super.property(self, marker, pname)
 end
 

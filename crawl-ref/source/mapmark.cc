@@ -65,16 +65,6 @@ void map_marker::read(reader &inf)
     unmarshallCoord(inf, pos);
 }
 
-std::string map_marker::feature_description() const
-{
-    return ("");
-}
-
-std::string map_marker::feature_description_long() const
-{
-    return ("");
-}
-
 std::string map_marker::property(const std::string &pname) const
 {
     return ("");
@@ -381,16 +371,6 @@ std::string map_lua_marker::debug_describe() const
     return (call_str_fn("describe"));
 }
 
-std::string map_lua_marker::feature_description() const
-{
-    return (call_str_fn("feature_description"));
-}
-
-std::string map_lua_marker::feature_description_long() const
-{
-    return (call_str_fn("feature_description_long"));
-}
-
 std::string map_lua_marker::property(const std::string &pname) const
 {
     lua_stack_cleaner cln(dlua);
@@ -533,13 +513,11 @@ void map_wiz_props_marker::read(reader &inf)
     }
 }
 
-std::string map_wiz_props_marker::feature_description() const
-{
-    return property("desc");
-}
-
 std::string map_wiz_props_marker::property(const std::string &pname) const
 {
+    if (pname == "desc")
+        return property("feature_description");
+
     std::map<std::string, std::string>::const_iterator
         i = properties.find(pname);
 
@@ -577,7 +555,7 @@ map_marker *map_wiz_props_marker::parse(
 
 std::string map_wiz_props_marker::debug_describe() const
 {
-    return make_stringf("wizard props: ") + feature_description();
+    return "Wizard props: " + property("feature_description");
 }
 
 //////////////////////////////////////////////////////////////////////////

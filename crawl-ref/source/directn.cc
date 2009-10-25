@@ -2873,18 +2873,6 @@ void setup_feature_descs_short()
         base_desc_to_short[i->first] = i->second.get_string();
 }
 
-static std::string _marker_feature_description(const coord_def &p)
-{
-    std::vector<map_marker*> markers = env.markers.get_markers_at(p);
-    for (int i = 0, size = markers.size(); i < size; ++i)
-    {
-        const std::string desc = markers[i]->feature_description();
-        if (!desc.empty())
-            return (desc);
-    }
-    return ("");
-}
-
 #ifndef DEBUG_DIAGNOSTICS
 // Is a feature interesting enough to 'v'iew it, even if a player normally
 // doesn't care about descriptions, i.e. does the description hold important
@@ -2899,6 +2887,17 @@ std::string feature_description(const coord_def& where, bool bloody,
                                 description_level_type dtype, bool add_stop,
                                 bool base_desc)
 {
+    std::string marker_desc = 
+        env.markers.property_at(where, MAT_ANY, "feature_description");
+
+    if (!marker_desc.empty())
+    {
+        if (bloody)
+            marker_desc += ", spattered with blood";
+
+        return thing_do_grammar(dtype, add_stop, false, marker_desc);
+    }
+
     dungeon_feature_type grid = grd(where);
     if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(where);
@@ -2915,6 +2914,11 @@ std::string feature_description(const coord_def& where, bool bloody,
         if (grid == DNGN_DETECTED_SECRET_DOOR)
             desc += "detected secret ";
         desc += noun;
+
+        const std::string door_desc_suffix = 
+            env.markers.property_at(where, MAT_ANY,
+                                    "door_description_suffix");
+        desc += door_desc_suffix;
 
         if (bloody)
             desc += ", spattered with blood";
@@ -2946,9 +2950,10 @@ std::string feature_description(const coord_def& where, bool bloody,
         return shop_name(where, add_stop);
 
     case DNGN_ENTER_PORTAL_VAULT:
+        // Should have been handled at the top of the function.
         return (thing_do_grammar(
                     dtype, add_stop, false,
-                    _marker_feature_description(where)));
+                    "UNAMED PORTAL VAULT ENTRY"));
     default:
         return (feature_description(grid, NUM_TRAPS, bloody, dtype, add_stop,
                                     base_desc));
