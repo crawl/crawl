@@ -162,7 +162,7 @@ prefix   := /usr/games/crawl
 # DATADIR := data/
 
 INCLUDES_L += -Icontrib/install/include
-LIB += -Lcontrib/install/lib
+LIBS += -Lcontrib/install/lib
 
 INCLUDES_L += -Iutil -I.
 
@@ -304,15 +304,15 @@ SDL_INCLUDE := $(shell pkg-config sdl --cflags-only-I)
 SDL_CFLAGS  := $(shell pkg-config sdl --cflags-only-other)
 SDL_LDFLAGS := $(shell pkg-config sdl --libs-only-L) $(shell pkg-config sdl --libs-only-l)
 
-LIB += -lSDL_image $(SDL_LDFLAGS) $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS)
+LIBS += -lSDL_image $(SDL_LDFLAGS) $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
 ifneq ($(uname_S),Darwin)
 ifeq (,$(findstring MINGW,$(uname_S)))
-LIB += -lGL -lGLU
+LIBS += -lGL -lGLU
 else
-LIB += -lopengl32 -lglu32
+LIBS += -lopengl32 -lglu32
 endif
 endif
 
@@ -443,20 +443,20 @@ endif
 
 endif
 
-LIB += -L$(NC_PREFIX)/lib -l$(NC_LIB)
+LIBS += -L$(NC_PREFIX)/lib -l$(NC_LIB)
 
 endif
 
 ifdef BUILD_PCRE
 DEFINES += -DREGEX_PCRE
-LIB += -lpcre
+LIBS += -lpcre
 endif
 
 ifdef USE_ICC
 GCC := icc
 GXX := icpc
 AR  := xiar rcu
-LIB += -lguide -lpthread
+LIBS += -lguide -lpthread
 CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
 endif
@@ -517,35 +517,35 @@ endif
 
 ifdef BUILD_PCRE
 CONTRIB_DEPENDS += $(LIBPCRE)
-LIB += $(LIBPCRE)
+LIBS += $(LIBPCRE)
 endif
 ifdef BUILD_FREETYPE
 CONTRIB_DEPENDS += $(LIBFREETYPE)
-LIB += $(LIBFREETYPE)
+LIBS += $(LIBFREETYPE)
 endif
 ifdef BUILD_SDLIMAGE
 CONTRIB_DEPENDS += $(LIBSDLIMAGE)
-LIB += $(LIBSDLIMAGE)
+LIBS += $(LIBSDLIMAGE)
 endif
 ifdef BUILD_SDL
 CONTRIB_DEPENDS += $(LIBSDL)
-LIB += $(LIBSDL)
+LIBS += $(LIBSDL)
 endif
 ifdef BUILD_LIBPNG
 CONTRIB_DEPENDS += $(LIBPNG)
-LIB += $(LIBPNG)
+LIBS += $(LIBPNG)
 endif
 ifdef BUILD_ZLIB
 CONTRIB_DEPENDS += $(LIBZ)
-LIB += $(LIBZ)
+LIBS += $(LIBZ)
 endif
 
 CONTRIB_DEPENDS += $(LIBLUA) $(LIBSQLITE)
-LIB += $(LIBLUA) $(LIBSQLITE)
+LIBS += $(LIBLUA) $(LIBSQLITE)
 
 EXTRA_OBJECTS += version.o
 
-LIB += $(EXTRA_LIBS)
+LIBS += $(EXTRA_LIBS)
 GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_DEPENDS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell git describe --tags --long)
@@ -691,7 +691,7 @@ distclean: clean clean-contrib clean-rltiles
 	@touch .contrib-ok
 
 $(GAME): $(GAME_DEPENDS)
-	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIB)
+	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 debug: $(GAME)
 profile: $(GAME)
