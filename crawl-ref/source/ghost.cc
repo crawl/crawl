@@ -150,7 +150,7 @@ void ghost_demon::init_random_demon()
     name = make_name(random_int(), false);
 
     // hp - could be defined below (as could ev, AC, etc.). Oh well, too late:
-    max_hp = 100 + roll_dice( 3, 50 );
+    max_hp = 100 + roll_dice(3, 50);
 
     ev = 5 + random2(20);
     ac = 5 + random2(20);
@@ -206,7 +206,7 @@ void ghost_demon::init_random_demon()
 
     // Is demon a spellcaster?
     // Upped from one_chance_in(3)... spellcasters are more interesting
-    // and I expect named demons to typically have a trick or two -- bwr
+    // and I expect named demons to typically have a trick or two. - bwr
     spellcaster = !one_chance_in(10);
 
     // Does demon fly?
@@ -255,8 +255,8 @@ void ghost_demon::init_random_demon()
             spells[5] = SPELL_TELEPORT_SELF;
 
         // Convert the player spell indices to monster spell ones.
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-            spells[i] = translate_spell( spells[i] );
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+            spells[i] = translate_spell(spells[i]);
 
         // Give demon a chance for some monster-only spells.
         // Demon-summoning should be fairly common.
@@ -301,8 +301,8 @@ void ghost_demon::init_random_demon()
     }
 }
 
-// Returns the movement speed for a player ghost. Note that this is a real
-// speed, not a movement cost, so higher is better.
+// Returns the movement speed for a player ghost.  Note that this is a
+// real speed, not a movement cost, so higher is better.
 static int _player_ghost_base_movement_speed()
 {
     int speed = (you.species == SP_NAGA ? 8 : 10);
@@ -390,8 +390,9 @@ void ghost_demon::init_player_ghost()
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
 
-    colour = mons_class_colour(MONS_PLAYER_GHOST);
-    fly = mons_class_flies(MONS_PLAYER_GHOST);
+    // These are the same as in mon-data.h.
+    colour = WHITE;
+    fly = FL_LEVITATE;
 
     add_spells();
 }
@@ -610,7 +611,7 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
 static spell_type search_first_list(int ignore_spell)
 {
     for (unsigned i = 0;
-         i < sizeof(search_order_conj) / sizeof(*search_order_conj); i++)
+         i < sizeof(search_order_conj) / sizeof(*search_order_conj); ++i)
      {
         if (search_order_conj[i] == SPELL_NO_SPELL)
             return (SPELL_NO_SPELL);
@@ -628,7 +629,7 @@ static spell_type search_first_list(int ignore_spell)
 static spell_type search_second_list(int ignore_spell)
 {
     for (unsigned i = 0;
-         i < sizeof(search_order_third) / sizeof(*search_order_third); i++)
+         i < sizeof(search_order_third) / sizeof(*search_order_third); ++i)
     {
         if (search_order_third[i] == SPELL_NO_SPELL)
             return (SPELL_NO_SPELL);
@@ -646,7 +647,7 @@ static spell_type search_second_list(int ignore_spell)
 static spell_type search_third_list(int ignore_spell)
 {
     for (unsigned i = 0;
-         i < sizeof(search_order_misc) / sizeof(*search_order_misc); i++)
+         i < sizeof(search_order_misc) / sizeof(*search_order_misc); ++i)
     {
         if (search_order_misc[i] == SPELL_NO_SPELL)
             return (SPELL_NO_SPELL);
@@ -666,38 +667,36 @@ static spell_type search_third_list(int ignore_spell)
 // remember a few spells.
 void ghost_demon::add_spells()
 {
-    int i = 0;
-
     spells.init(SPELL_NO_SPELL);
 
-    spells[ 0 ] = search_first_list(SPELL_NO_SPELL);
-    spells[ 1 ] = search_first_list(spells[0]);
-    spells[ 2 ] = search_second_list(SPELL_NO_SPELL);
-    spells[ 3 ] = search_third_list(SPELL_DIG);
+    spells[0] = search_first_list(SPELL_NO_SPELL);
+    spells[1] = search_first_list(spells[0]);
+    spells[2] = search_second_list(SPELL_NO_SPELL);
+    spells[3] = search_third_list(SPELL_DIG);
 
-    if (spells[ 3 ] == SPELL_NO_SPELL)
-        spells[ 3 ] = search_first_list(SPELL_NO_SPELL);
+    if (spells[3] == SPELL_NO_SPELL)
+        spells[3] = search_first_list(SPELL_NO_SPELL);
 
-    spells[ 4 ] = search_third_list(spells[3]);
+    spells[4] = search_third_list(spells[3]);
 
-    if (spells[ 4 ] == SPELL_NO_SPELL)
-        spells[ 4 ] = search_first_list(spells[3]);
+    if (spells[4] == SPELL_NO_SPELL)
+        spells[4] = search_first_list(spells[3]);
 
-    if (player_has_spell( SPELL_DIG ))
-        spells[ 4 ] = SPELL_DIG;
+    if (player_has_spell(SPELL_DIG))
+        spells[4] = SPELL_DIG;
 
     // Look for Blink or Teleport Self for the emergency slot.
-    if (player_has_spell( SPELL_CONTROLLED_BLINK )
-        || player_has_spell( SPELL_BLINK ))
+    if (player_has_spell(SPELL_CONTROLLED_BLINK)
+        || player_has_spell(SPELL_BLINK))
     {
-        spells[ 5 ] = SPELL_CONTROLLED_BLINK;
+        spells[5] = SPELL_CONTROLLED_BLINK;
     }
 
-    if (player_has_spell( SPELL_TELEPORT_SELF ))
-        spells[ 5 ] = SPELL_TELEPORT_SELF;
+    if (player_has_spell(SPELL_TELEPORT_SELF))
+        spells[5] = SPELL_TELEPORT_SELF;
 
-    for (i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-        spells[i] = translate_spell( spells[i] );
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        spells[i] = translate_spell(spells[i]);
 }
 
 // When passed the number for a player spell, returns the equivalent
