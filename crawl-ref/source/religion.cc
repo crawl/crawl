@@ -3957,11 +3957,12 @@ void lose_piety(int pgn)
 
             if (you.religion == GOD_ZIN)
                 simple_god_message(" is no longer ready to cure all your mutations.");
-            else if (you.religion == GOD_SHINING_ONE
-                    || you.religion == GOD_LUGONU)
-            {
+            else if (you.religion == GOD_SHINING_ONE)
                 simple_god_message(" is no longer ready to bless your weapon.");
-            }
+            else if (you.religion == GOD_KIKUBAAQUDGHA)
+                simple_god_message(" is no longer ready to enhance your necromancy.");
+            else if (you.religion == GOD_LUGONU)
+                simple_god_message(" is no longer ready to corrupt your weapon.");
         }
 
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
@@ -6130,7 +6131,16 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     if (is_artefact(wpn) || is_range_weapon(wpn))
         return (false);
 
-    if (!yesno("Do you wish to have your weapon blessed?", true, 'n'))
+    std::string prompt = "Do you wish to have your weapon ";
+    if (brand == SPWPN_PAIN)
+        prompt += "bloodied with pain";
+    else if (brand == SPWPN_DISTORTION)
+        prompt += "corrupted";
+    else
+        prompt += "blessed";
+    prompt += "?";
+
+    if (!yesno(prompt.c_str(), true, 'n'))
         return (false);
 
     you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
@@ -6326,7 +6336,7 @@ static bool _altar_prayer()
         && you.piety > 160)
     {
         simple_god_message(
-        " will bless your weapon with pain or grant you the Necronomicon.");
+            " will bloody your weapon with pain or grant you the Necronomicon.");
 
         bool kiku_did_bless_weapon = false;
 
