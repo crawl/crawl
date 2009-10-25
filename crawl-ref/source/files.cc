@@ -717,8 +717,7 @@ std::vector<player_save_info> find_saved_characters()
                 if (Options.tile_menu_icons)
                 {
  #ifndef LOAD_UNPACKAGE_CMD
-        std::string basename =
-            filename.substr(0,
+                    basename = filename.substr(0,
                             filename.length() - strlen(".sav"));
  #endif
                     std::string dollname = basename + ".tdl";
