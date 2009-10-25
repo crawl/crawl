@@ -13,6 +13,7 @@ Contents:  A. Introduction
            I. Lua reference
            J. Feature names
            K. Map statistics
+           L. Map generation
 
 
 A.   Introduction
@@ -2008,3 +2009,32 @@ Will generate 10 dungeons. If you merely want statistics on the
 probabilities of the random map on each level, use:
 
 crawl -mapstat 1
+
+L.   Map Generation
+===================
+
+Full-debug Crawl builds (see above for more information) include a test for
+generating specific vaults and outputting a copy of the map to a text file for
+inspection. This is most useful for portal and other encompass vaults which 
+use randomisation heavily.
+
+To use the test, you must edit source/test/vault_generation.lua. Fill in the
+following variables:
+
+ * map_to_test: The exact name of the vault you want to generate.
+ * checks: How many times to generate the vault. Default value is 10.
+ * output_to: The basic filename to output the results of generation to. This
+        will have ".<iteration>" appended. For example, "volcano.map" will 
+        result in files named "volcano.map.1", "volcano.map.2", etc.
+ * need_to_load_des: If the file is not included in one of the .des files that
+        are listed in source/dat/clua/loadmaps.lua, this should be set to true,
+        and the following variable should be set.
+ * des_file: The name of the file to load. The file should be located in the
+        source/dat folder.
+
+Once you have saved your changes, run crawl:
+
+ crawl -test
+
+Once all of the tests have been finished successfully (this may take some time)
+you should find the relevant files in your working directory.
