@@ -569,7 +569,7 @@ void cheibriados_time_bend(int pow)
     for (adjacent_iterator ai; ai; ++ai)
     {
         monsters* mon = monster_at(*ai);
-        if (mon != NULL)
+        if (mon != NULL && !mons_is_stationary(mon))
         {
             if (roll_dice(mon->hit_dice, 3) > random2avg(pow, 2))
             {
