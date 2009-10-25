@@ -1298,14 +1298,26 @@ static int _acquirement_weapon_subtype()
     count = 0;
     item_def item_considered;
     item_considered.base_type = OBJ_WEAPONS;
+    int want_shield = you.skills[SK_SHIELDS] + 10;
+    int dont_shield = you.experience_level - want_shield + 20;
+    if (dont_shield < 5)
+        dont_shield = 5;
+    // At XL 10, weapons of the handedness you want get weight *2, those of
+    // opposite handedness 1/2, assuming your shields skill is respectively
+    // 0 or equal to the experience level.  At XL 25 that's *3.5 .
     for (int i = 0; i < NUM_WEAPONS; ++i)
     {
         item_considered.sub_type = i;
 
-        const int acqweight = property(item_considered, PWPN_ACQ_WEIGHT);
+        int acqweight = property(item_considered, PWPN_ACQ_WEIGHT);
 
         if (!acqweight)
             continue;
+
+        if (hands_reqd(item_considered, you.body_size()) >= HANDS_TWO) // HANDS_DOUBLE > HANDS_TWO
+            acqweight = acqweight * dont_shield / want_shield;
+        else
+            acqweight = acqweight * want_shield / dont_shield;
 
         int wskill = range_skill(OBJ_WEAPONS, i);
         if (wskill == SK_THROWING)
