@@ -1868,6 +1868,10 @@ bool randart_is_bad( const item_def &item, artefact_properties_t &proprt )
     if (_artefact_num_props( proprt ) == 0)
         return (true);
 
+    if ((item.base_type == OBJ_WEAPONS)
+            && (proprt[ARTP_BRAND] == SPWPN_NORMAL))
+        return (true);
+
     return (_randart_is_redundant( item, proprt )
             || _randart_is_conflicting( item, proprt ));
 }
