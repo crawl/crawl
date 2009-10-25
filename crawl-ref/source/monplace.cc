@@ -1113,6 +1113,12 @@ static int _place_monster_aux(const mgen_data &mg,
         else
             menv[id].god = GOD_XOM;
     }
+    // 6 out of 7 demons in the Abyss belong to Lugonu.
+    else if (mons_class_holiness(mg.cls) == MH_DEMONIC)
+    {
+        if (mg.level_type == LEVEL_ABYSS && !one_chance_in(7))
+            menv[id].god = GOD_LUGONU;
+    }
 
     // If the caller requested a specific colour for this monster, apply
     // it now.
