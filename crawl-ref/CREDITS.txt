@@ -36,12 +36,12 @@ Kieron Dunbar                Jordan Lewis              Edgar Simo
 Micha Elsner                 Icy Lich                  Solf
 Christopher Evenstar         Jesse Luehrs              Johan Strandell
 Ben Goetter                  Markus Maier              Roman Sêk
-Rob Grant                    Arien Malec               Marc H. Thoben
-John Greenberg               Paul Maloney              Matt Titus
-GreyKnight                   Neil 'Mu' Middleton       Steven Wheeler
-Joshua Gross                 Shawn M Moore             Jeremey Wilson
-Brian Haase                  Eva Myers                 Yelve Yakut
-Shayne Halvorson             Wille Mäntylä             Zooko
-Ciaran Hamilton              Erkki Nurmi
+Rob Grant                    Arien Malec               William Tanksley, Jr.
+John Greenberg               Paul Maloney              Marc H. Thoben
+GreyKnight                   Neil 'Mu' Middleton       Matt Titus
+Joshua Gross                 Shawn M Moore             Steven Wheeler
+Brian Haase                  Eva Myers                 Jeremey Wilson
+Shayne Halvorson             Wille Mäntylä             Yelve Yakut
+Ciaran Hamilton              Erkki Nurmi               Zooko
 Chris Hamons                 Mattias Nyberg
 
