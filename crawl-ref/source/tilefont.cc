@@ -478,7 +478,7 @@ unsigned int FTFont::string_width(const char *text)
 
     unsigned int width = base_width;
     unsigned int adjust = 0;
-    for (const char *itr = text; *itr; itr++)
+    for (const unsigned char *itr = (unsigned const char *)text; *itr; itr++)
     {
         if (*itr == '\n')
         {
@@ -503,7 +503,7 @@ int FTFont::find_index_before_width(const char *text, int max_width)
 
     for (int i = 0; text[i]; i++)
     {
-        char c = text[i];
+        unsigned char c = text[i];
         width += m_glyphs[c].advance;
         int adjust = std::max(0, m_glyphs[c].width - m_glyphs[c].advance);
         if (width + adjust > max_width)
@@ -705,7 +705,7 @@ void FTFont::store(FontBuffer &buf, float &x, float &y,
 }
 
 void FTFont::store(FontBuffer &buf, float &x, float &y,
-                   char c, const VColour &col)
+                   unsigned char c, const VColour &col)
 {
     if (!m_glyphs[c].renderable)
     {

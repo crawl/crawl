@@ -49,7 +49,7 @@ public:
     void store(FontBuffer &buf, float &x, float &y,
                const std::string &s, const VColour &c);
     void store(FontBuffer &buf, float &x, float &y, const formatted_string &fs);
-    void store(FontBuffer &buf, float &x, float &y, char c, const VColour &col);
+    void store(FontBuffer &buf, float &x, float &y, unsigned char c, const VColour &col);
 
     unsigned int char_width() const { return m_max_advance.x; }
     unsigned int char_height() const { return m_max_advance.y; }
