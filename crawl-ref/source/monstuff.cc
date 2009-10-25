@@ -3263,13 +3263,13 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     const int  rad      = (intel >= I_ANIMAL || !patrol_seen) ? LOS_RADIUS : 5;
     const bool is_smart = (intel >= I_NORMAL);
 
-    los_def patrol = los_def(mon->patrol_point, opacity_monmove(*mon),
-                                                bounds_radius(rad));
-    los_def lm;
+    los_def patrol(mon->patrol_point, opacity_monmove(*mon), bounds_radius(rad));
+    patrol.update();
+    los_def lm(mon->pos(), opacity_monmove(*mon));
     if (is_smart || !patrol_seen)
     {
         // For stupid monsters, don't bother if the patrol point is in sight.
-        lm.init(mon->pos(), opacity_monmove(*mon));
+        lm.update();
     }
 
     int count_grids = 0;

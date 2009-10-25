@@ -643,6 +643,8 @@ struct opacity_trans : opacity_func
     {
     }
 
+    CLONE(opacity_trans)
+
     opacity_type operator()(const coord_def &l) const
     {
         return orig(transform(l));
@@ -921,41 +923,74 @@ void losight(env_show_grid& sh, const coord_def& center,
 }
 
 
-// class los
-// TODO: lazy update?
-
-los_def::los_def() {}
+// class los_def
 
 los_def::los_def(const coord_def& c, const opacity_func &o,
-                             const bounds_func &b)
+                                     const bounds_func &b)
+    : center(c), opc(o.clone()), bds(b.clone())
 {
-    init(c, o, b);
 }
 
-void los_def::init(const coord_def& c, const opacity_func &o,
-                                   const bounds_func &b)
+los_def::los_def(const los_def& los)
+    : show(los.show), center(los.center),
+      opc(los.opc->clone()), bds(los.bds->clone())
 {
-    center = &c;
-    opc = &o;
-    bds = &b;
-    update();
+}
+
+los_def& los_def::operator=(const los_def& los)
+{
+    init(los.center, *los.opc, *los.bds);
+    show = los.show;
+    return (*this);
+}
+
+void los_def::init(const coord_def &c, const opacity_func &o,
+                   const bounds_func &b)
+{
+    set_center(c);
+    set_opacity(o);
+    set_bounds(b);
+}
+
+los_def::~los_def()
+{
+    delete opc;
+    delete bds; 
 }
 
 void los_def::update()
 {
-    losight(show, *center, *opc, *bds);
+    losight(show, center, *opc, *bds);
 }
 
 void los_def::set_center(const coord_def& c)
 {
-    center = &c;
-    update();
+    center = c;
+}
+
+void los_def::set_opacity(const opacity_func &o)
+{
+    delete opc;
+    opc = o.clone();
+}
+
+void los_def::set_bounds(const bounds_func &b)
+{
+    delete bds;
+    bds = b.clone();
+}
+
+bool los_def::in_bounds(const coord_def& p) const
+{
+    return ((*bds)(p));
 }
 
 bool los_def::see_cell(const coord_def& p) const
 {
-    return (::see_cell(show, *center, p));
+    return (::see_cell(show, center, p));
 }
+
+// end los_def
 
 
 void losight_permissive(env_show_grid &sh, const coord_def& center)

@@ -19,8 +19,9 @@ enum opacity_type
 
 struct opacity_func
 {
-    virtual ~opacity_func() {}
     virtual opacity_type operator()(const coord_def& p) const = 0;
+    virtual ~opacity_func() {}
+    virtual opacity_func* clone() const = 0;
 
     // XXX: to be able to call from gdb.
     virtual opacity_type call(const coord_def& p) const
@@ -33,6 +34,7 @@ struct bounds_func
 {
     virtual ~bounds_func() {}
     virtual bool operator()(const coord_def& p) const = 0;
+    virtual bounds_func* clone() const = 0;
 
     // XXX: to be able to call from gdb.
     virtual bool call(const coord_def& p) const
@@ -41,9 +43,18 @@ struct bounds_func
     }
 };
 
+#define CLONE(typename) \
+    typename* clone() const \
+    { \
+        return (new typename(*this)); \
+    }
+
+
 // Default LOS rules.
 struct opacity_default : opacity_func
 {
+    CLONE(opacity_default)
+
     opacity_type operator()(const coord_def& p) const;
 };
 static opacity_default opc_default;
@@ -52,6 +63,8 @@ static opacity_default opc_default;
 // In particular, clouds don't affect the result.
 struct opacity_fullyopaque : opacity_func
 {
+    CLONE(opacity_fullyopaque)
+
     opacity_type operator()(const coord_def& p) const;
 };
 static opacity_fullyopaque opc_fullyopaque;
@@ -60,6 +73,8 @@ static opacity_fullyopaque opc_fullyopaque;
 // XXX: Are trees, bushes solid?
 struct opacity_solid : opacity_func
 {
+    CLONE(opacity_solid)
+
     opacity_type operator()(const coord_def& p) const;
 };
 static opacity_solid opc_solid;
@@ -74,6 +89,8 @@ struct opacity_monmove : opacity_func
     {
     }
 
+    CLONE(opacity_monmove)
+
     opacity_type operator()(const coord_def& p) const;
 };
 
@@ -83,6 +100,9 @@ struct bounds_radius_sq : bounds_func
     int radius_sq;
     bounds_radius_sq(int r_sq)
         : radius_sq(r_sq) {}
+
+    CLONE(bounds_radius_sq)
+
     bool operator()(const coord_def& p) const;
 };
 
@@ -93,6 +113,8 @@ struct bounds_radius : bounds_radius_sq
         : bounds_radius_sq(r * r + 1)
     {
     }
+
+    CLONE(bounds_radius)
 };
 
 static bounds_radius bds_deflos = bounds_radius(LOS_RADIUS);
@@ -101,6 +123,8 @@ static bounds_radius bds_maxlos = bounds_radius(LOS_MAX_RADIUS);
 // LOS bounded by current global LOS radius.
 struct bounds_cur_los_radius : bounds_func
 {
+    CLONE(bounds_cur_los_radius)
+
     bool operator()(const coord_def& p) const;
 };
 static bounds_cur_los_radius bds_default;

@@ -84,7 +84,8 @@ TravelCache travel_cache;
 static std::vector<stair_info> curr_stairs;
 
 // Squares that are not safe to travel to on the current level.
-static std::vector<travel_exclude> curr_excludes;
+typedef std::vector<travel_exclude> exclvec;
+static exclvec curr_excludes;
 
 // This is where we last tried to take a stair during interlevel travel.
 // Note that last_stair.depth should be set to -1 before initiating interlevel
@@ -278,6 +279,8 @@ opacity_type _feat_opacity(dungeon_feature_type feat)
 // opaque.
 struct opacity_excl : opacity_func
 {
+    CLONE(opacity_excl)    
+
     opacity_type operator()(const coord_def& p) const
     {
         if (!is_terrain_seen(p))
@@ -294,18 +297,31 @@ struct opacity_excl : opacity_func
         }
     }
 };
-opacity_excl opc_excl;
+static opacity_excl opc_excl;
 
-int travel_exclude::radius_sq() const
+// Note: bounds_radius gives a circle with square radius r*r+1;
+// this doesn't work well for radius 0, but then we want to
+// skip LOS calculation in that case anyway since it doesn't
+// currently short-cut for small bounds. So radius 0 is special-cased.
+
+travel_exclude::travel_exclude(const coord_def &p, int r,
+                               bool autoex, int mons, bool vault)
+        : pos(p), radius(r),
+          los(los_def(p, opc_excl, bounds_radius(r))),
+          uptodate(false), autoexclude(autoex), vaultexclude(vault)
 {
-    return (radius > 0 ? radius*radius + 1 : 0);
+    set_los();
 }
 
-void travel_exclude::set_exclude_show()
+void travel_exclude::set_los()
 {
     uptodate = true;
     if (radius > 0)
-        losight(show, pos, opc_excl, bounds_radius_sq(radius_sq()));
+    {
+        // Radius might have been changed, and this is cheap.
+        los.set_bounds(bounds_radius(radius));
+        los.update();
+    }
 }
 
 bool travel_exclude::affects(const coord_def& p) const
@@ -315,27 +331,38 @@ bool travel_exclude::affects(const coord_def& p) const
              pos.x, pos.y, p.x, p.y);
     if (radius == 0)
         return (p == pos);
-    return (see_cell(show, pos, p));
+    return (los.see_cell(p));
+}
+
+bool travel_exclude::in_bounds(const coord_def &p) const
+{
+    return (radius == 0 && p == pos
+            || los.in_bounds(p));
 }
 
 void init_exclusion_los()
 {
     for (unsigned int i = 0; i < curr_excludes.size(); i++)
-        curr_excludes[i].set_exclude_show();
+        curr_excludes[i].set_los();
 }
 
 void _mark_excludes_non_updated(const coord_def &p)
 {
-    for (unsigned int i = 0; i < curr_excludes.size(); i++)
-        curr_excludes[i].uptodate = curr_excludes[i].uptodate &&
-            (curr_excludes[i].pos - p).abs() <= curr_excludes[i].radius_sq();
+    for (exclvec::iterator it = curr_excludes.begin();
+                           it != curr_excludes.end(); ++it)
+    {
+        it->uptodate = it->uptodate && it->in_bounds(p);
+    }
 }
 
 void _update_exclusion_los(bool all=false)
 {
-    for (unsigned int i = 0; i < curr_excludes.size(); i++)
-        if (all || !curr_excludes[i].uptodate)
-            curr_excludes[i].set_exclude_show();
+    for (exclvec::iterator it = curr_excludes.begin();
+                           it != curr_excludes.end(); ++it)
+    {
+        if (all || !it->uptodate)
+            it->set_los();
+    }
 }
 
 /*
@@ -355,7 +382,7 @@ void update_exclusion_los(std::vector<coord_def> changed)
 }
 
 static bool _is_excluded(const coord_def &p,
-                         const std::vector<travel_exclude> &exc)
+                         const exclvec &exc)
 {
     for (unsigned int i = 0; i < exc.size(); ++i)
         if (exc[i].affects(p))
@@ -502,7 +529,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
     if (travel_exclude *exc = _find_exclude_root(p))
     {
         exc->radius = radius;
-        exc->set_exclude_show();
+        exc->set_los();
     }
     else
     {
