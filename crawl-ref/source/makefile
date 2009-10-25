@@ -552,11 +552,6 @@ PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o \
 		$(UTIL)*.tab.cc $(UTIL)*.tab.h $(UTIL)*.lex.cc *.ixx
 PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
-sp :=
-sp +=
-sentinel = .sentinel.$(subst $(sp),_,$(subst /,_,$1))
-atomic = $(eval $1: $(call sentinel,$1) ; @:)$(call sentinel,$1): $2 ; @touch $$@ $(foreach t,$1,$(if $(wildcard $t),,$(shell rm -f $(call sentinel,$1))))
-
 .PHONY: all test install clean clean-contrib distclean debug profile wizard
 
 ##########################################################################
@@ -731,8 +726,12 @@ $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 # Contribs
 #
 
-$(call atomic,$(CONTRIB_LIBS),.contrib-ok)
+$(CONTRIB_LIBS): .contrib-libs
+	@:
+
+.contrib-libs:
 	+@$(MAKE) -C contrib $(CONTRIBS)
+	@touch .contrib-libs
 
 #############################################################################
 # Build unrandart data
