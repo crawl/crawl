@@ -90,6 +90,18 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         }
         break;
 
+    case GOD_CHEIBRIADOS:
+        // Slow god: no quick blades, no berserking, no resist slowing.
+        if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_QUICK_BLADE)
+            type_bad = true;
+
+        if (item.base_type == OBJ_JEWELLERY && (item.sub_type == AMU_RAGE
+            || item.sub_type == AMU_RESIST_SLOW))
+        {
+            type_bad = true;
+        }
+        break;
+
     default:
         break;
     }
@@ -107,6 +119,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         return (false);
 
     const int brand = get_weapon_brand(item);
+    const int ego = get_armour_ego_type(item);
 
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return (false);
@@ -182,6 +195,21 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         // necromantic spell use.
         if (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
              || brand == SPWPN_VAMPIRICISM)
+        {
+            return (false);
+        }
+        break;
+
+    case GOD_CHEIBRIADOS:
+        // Slow god: no speed, no berserking.
+        if (brand == SPWPN_SPEED)
+            return (false);
+
+        if (ego == SPARM_RUNNING)
+            return (false);
+
+        if (artefact_wpn_property(item, ARTP_ANGRY)
+            || artefact_wpn_property(item, ARTP_BERSERK))
         {
             return (false);
         }
