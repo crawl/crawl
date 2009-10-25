@@ -2532,23 +2532,26 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
                     continue;
                 }
 
-                if (coinflip())
-                {
-                    mon_mutate_chance++;
-
-                    if (coinflip() && ugly->colour != ugly_near->colour)
-                        mon_colour = ugly_near->colour;
-                }
-
-                if (ugly_near->type == MONS_VERY_UGLY_THING)
+                for (int i = 0; i < 2; ++i)
                 {
                     if (coinflip())
                     {
                         mon_mutate_chance++;
 
-                        if (coinflip() && ugly->colour != ugly_near->colour)
-                            mon_colour = ugly_near->colour;
+                        if (coinflip())
+                        {
+                            const int ugly_colour =
+                                make_low_colour(ugly->colour);
+                            const int ugly_near_colour =
+                                make_low_colour(ugly_near->colour);
+
+                            if (ugly_colour != ugly_near_colour)
+                                mon_colour = ugly_near_colour;
+                        }
                     }
+
+                    if (ugly_near->type != MONS_VERY_UGLY_THING)
+                        break;
                 }
             }
         }
