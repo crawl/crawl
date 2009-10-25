@@ -2529,6 +2529,27 @@ bool delete_all_mutations()
     return (!how_mutated());
 }
 
+static const mutation_type _all_scales[] = {
+    MUT_SHAGGY_FUR,
+
+    MUT_BONEY_PLATES,      MUT_GREEN_SCALES,    MUT_BLACK_SCALES,
+    MUT_GREY_SCALES,       MUT_RED_SCALES,      MUT_NACREOUS_SCALES,
+    MUT_GREY2_SCALES,      MUT_METALLIC_SCALES, MUT_BLACK2_SCALES,
+    MUT_WHITE_SCALES,      MUT_YELLOW_SCALES,   MUT_BROWN_SCALES,
+    MUT_BLUE_SCALES,       MUT_PURPLE_SCALES,   MUT_SPECKLED_SCALES,
+    MUT_ORANGE_SCALES,     MUT_INDIGO_SCALES,   MUT_RED2_SCALES,
+    MUT_IRIDESCENT_SCALES, MUT_PATTERNED_SCALES
+};
+
+static int _is_covering(mutation_type mut)
+{
+    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
+        if (_all_scales[i] == mut)
+            return 1;
+
+    return 0;
+}
+
 static int _body_covered()
 {
     // Check how much of your body is covered by scales, etc.
@@ -2540,20 +2561,9 @@ static int _body_covered()
     if (player_genus(GENPC_DRACONIAN))
         covered += 3;
 
-    const mutation_type scales[] = {
-        MUT_SHAGGY_FUR,
 
-        MUT_BONEY_PLATES,      MUT_GREEN_SCALES,    MUT_BLACK_SCALES,
-        MUT_GREY_SCALES,       MUT_RED_SCALES,      MUT_NACREOUS_SCALES,
-        MUT_GREY2_SCALES,      MUT_METALLIC_SCALES, MUT_BLACK2_SCALES,
-        MUT_WHITE_SCALES,      MUT_YELLOW_SCALES,   MUT_BROWN_SCALES,
-        MUT_BLUE_SCALES,       MUT_PURPLE_SCALES,   MUT_SPECKLED_SCALES,
-        MUT_ORANGE_SCALES,     MUT_INDIGO_SCALES,   MUT_RED2_SCALES,
-        MUT_IRIDESCENT_SCALES, MUT_PATTERNED_SCALES
-    };
-
-    for (unsigned i = 0; i < ARRAYSZ(scales); ++i)
-        covered += you.mutation[scales[i]];
+    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
+        covered += you.mutation[_all_scales[i]];
 
     return (covered);
 }
@@ -2644,326 +2654,126 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
-static mutation_type _demonspawn(FixedVector<int, NUM_MUTATIONS>& muts, int& powers,
-        int level)
-{
-    mutation_type whichm = NUM_MUTATIONS;
-    int counter = 0;
-
-    powers++;
-
-    // A demonspawn logically has six mutation slots, like [cold res,
-    // negative res, teleport, black scales, mapping, repulsion field].
-    // They all start at 0 levels.  For a smooth power-up, when this
-    // function is called we increase one mutation slot (which is not
-    // already at 3) by 1 level only.
-
-    // Look through the existing demon powers to find the slot.  Note
-    // that this will not find powers at level 0; if a new power needs
-    // to be given, we will fall off the loop.
-
-    int increasable_muts_seen = 0;
-    int muts_seen = 0;
-    mutation_type mut_to_increase = NUM_MUTATIONS;
-
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        whichm = static_cast<mutation_type>(i);
-
-        if (! muts[whichm])
-        {
-            continue;
-        }
-
-        ++muts_seen;
-
-        if (muts[whichm] < mutation_defs[whichm].levels)
-        {
-            ++increasable_muts_seen;
-
-            if (one_chance_in(increasable_muts_seen))
-            {
-                mut_to_increase = whichm;
-            }
-        }
-    }
-
-    // If you have less than 6 mutations, add chances to gain a new one
-    if (muts_seen < 6)
-    {
-        int chances_to_get_new = 6 - muts_seen;
-
-        increasable_muts_seen += chances_to_get_new;
-
-        if (x_chance_in_y(chances_to_get_new, increasable_muts_seen))
-        {
-            mut_to_increase = NUM_MUTATIONS;
-        }
-    }
-
-    // If you already have 6 demon powers, but there are no candidates
-    // for increasing, then this function has been called too many times.
-    // XXX right now, there are 1-level mutations on the demonspawn list,
-    // so this will be reached - give a bonus power.
-
-    if (increasable_muts_seen == 0)
-    {
-        mut_to_increase = NUM_MUTATIONS;
-    }
-
-    if (mut_to_increase != NUM_MUTATIONS)
-    {
-        ASSERT(muts[mut_to_increase] < mutation_defs[mut_to_increase].levels);
-
-        return mut_to_increase;
-    }
-
-    // Otherwise we're adding a brand new mutation
-
-    // Merged the demonspawn lists into a single loop.  Now a high-level
-    // character can potentially get mutations from the low-level list
-    // if it's having trouble with the high level list.
-    do
-    {
-        if (level >= 10)
-        {
-            if (1)
-            {                       // good conjurers don't get bolt of draining
-                whichm = MUT_SMITE;
-            }
-
-            if (one_chance_in(4))
-            {                       // good conjurers don't get hellfire
-                whichm = MUT_HURL_HELLFIRE;
-            }
-
-            // Makhlebites have the summonings invocation
-            if (one_chance_in(3))
-            {                       // good summoners don't get summon demon
-                whichm = MUT_SUMMON_DEMONS;
-            }
-
-            if (one_chance_in(8))
-            {
-                whichm = MUT_MAGIC_RESISTANCE;
-            }
-
-            if (one_chance_in(12))
-            {
-                whichm = MUT_FAST;
-            }
-
-            if (one_chance_in(7))
-            {
-                whichm = MUT_TELEPORT_AT_WILL;
-            }
-
-            if (one_chance_in(10))
-            {
-                whichm = MUT_REGENERATION;
-            }
-
-            if (one_chance_in(12))
-            {
-                whichm = MUT_SHOCK_RESISTANCE;
-            }
-
-            if (!muts[MUT_CALL_TORMENT] && one_chance_in(15))
-            {
-                whichm = MUT_TORMENT_RESISTANCE;
-            }
-
-            if (one_chance_in(12))
-            {
-                whichm = MUT_NEGATIVE_ENERGY_RESISTANCE;
-            }
-
-            if (!muts[MUT_TORMENT_RESISTANCE] && one_chance_in(20))
-            {
-                whichm = MUT_CALL_TORMENT;
-            }
-
-            if (one_chance_in(12))
-            {
-                whichm = MUT_CONTROL_DEMONS;
-            }
-
-            if (one_chance_in(11))
-            {
-                whichm = MUT_DEATH_STRENGTH;
-            }
-
-            if (one_chance_in(11))
-            {
-                whichm = MUT_CHANNEL_HELL;
-            }
-
-            if (one_chance_in(10))
-            {
-                whichm = MUT_RAISE_DEAD;
-            }
-
-            if (one_chance_in(25))
-            {
-                whichm = MUT_DRAIN_LIFE;
-            }
-        }
-
-        // check here so we can see if we need to extend our options
-        if (whichm != NUM_MUTATIONS && muts[whichm] != 0)
-            whichm = NUM_MUTATIONS;
-
-        if (level < 10
-            || (counter > 0 && whichm == NUM_MUTATIONS))
-        {
-            if (!muts[MUT_THROW_FROST]         // only one of these
-                    && !muts[MUT_THROW_FLAMES]
-                    && !muts[MUT_BREATHE_FLAMES])
-            {
-                whichm = (coinflip() ? MUT_THROW_FLAMES : MUT_THROW_FROST);
-            }
-
-            // summoners and Makhlebites don't get summon imp
-            if (one_chance_in(3))
-            {
-                whichm = (level < 10) ? MUT_SUMMON_MINOR_DEMONS
-                                      : MUT_SUMMON_DEMONS;
-            }
-
-            if (one_chance_in(4))
-            {
-                whichm = MUT_POISON_RESISTANCE;
-            }
-
-            if (one_chance_in(4))
-            {
-                whichm = MUT_COLD_RESISTANCE;
-            }
-
-            if (one_chance_in(4))
-            {
-                whichm = MUT_HEAT_RESISTANCE;
-            }
-
-            if (one_chance_in(5))
-            {
-                whichm = MUT_ACUTE_VISION;
-            }
-
-            if (one_chance_in(7))
-            {
-                whichm = MUT_SPIT_POISON;
-            }
-
-            if (one_chance_in(10))
-            {
-                whichm = MUT_MAPPING;
-            }
-
-            if (one_chance_in(12))
-            {
-                whichm = MUT_TELEPORT_CONTROL;
-            }
-
-            if (!muts[MUT_THROW_FROST]         // not with these
-                && !muts[MUT_THROW_FLAMES]
-                && !muts[MUT_BREATHE_FLAMES]
-                && one_chance_in(5))
-            {
-                whichm = MUT_BREATHE_FLAMES;
-            }
-
-            if (one_chance_in(12))
-            {
-                whichm = (level < 10) ? MUT_BLINK
-                                      : MUT_TELEPORT_AT_WILL;
-            }
-
-            if (1)
-            {
-                if (one_chance_in(10))
-                {
-                    whichm = MUT_TOUGH_SKIN;
-                }
-
-                if (one_chance_in(24))
-                {
-                    whichm = MUT_GREEN_SCALES;
-                }
-
-                if (one_chance_in(24))
-                {
-                    whichm = MUT_BLACK_SCALES;
-                }
-
-                if (one_chance_in(24))
-                {
-                    whichm = MUT_GREY_SCALES;
-                }
-
-                if (one_chance_in(12))
-                {
-                    whichm = static_cast<mutation_type>(MUT_RED_SCALES +
-                                                        random2(16));
-                }
-
-                if (one_chance_in(30))
-                {
-                    whichm = MUT_BONEY_PLATES;
-                }
-            }
-
-            if (one_chance_in(25))
-            {
-                whichm = MUT_REPULSION_FIELD;
-            }
-
-            if (one_chance_in( (level < 10) ? 5 : 20 ))
-            {
-                whichm = MUT_HORNS;
-            }
-        }
-
-        if (whichm != NUM_MUTATIONS && muts[whichm] != 0)
-            whichm = NUM_MUTATIONS;
-
-        counter++;
-    }
-    while (whichm == NUM_MUTATIONS && counter < 5000);
-
-    if (whichm == NUM_MUTATIONS)
-    {
-        return MUT_STRONG;
-    }
-
-    return whichm;
-}
-
 void roll_demonspawn_mutations()
 {
-    FixedVector<int, NUM_MUTATIONS> muts;
-    int npowers = 0;
+    // First try for a body mutation; every DS has exactly one of these, as
+    // they result in the loss or crippling of one slot, and we don't want to
+    // deal with the balance issues of a variable-slot race.
+    static const mutation_type body_muts[] = {
+        MUT_CLAWS, MUT_HORNS
+    };
 
-    muts.init(0);
+    // "Awesome" mutations are character defining; they have a major effect
+    // on strategy in at least one branch.
+    static const mutation_type awesome_muts[] = {
+        MUT_HEAT_RESISTANCE, MUT_FAST, MUT_TELEPORT_AT_WILL, MUT_MAPPING,
+        MUT_ROBUST, MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_BLACK_SCALES,
+        MUT_METALLIC_SCALES, MUT_RED2_SCALES
+    };
+
+    // "Great" mutations define strategy in common encounters, but not
+    // universal.
+    static const mutation_type great_muts[] = {
+        MUT_REGENERATION, MUT_GREEN_SCALES, MUT_BLACK_SCALES,
+        MUT_REPULSION_FIELD, MUT_MAGIC_RESISTANCE, MUT_BREATHE_FLAMES,
+        MUT_NACREOUS_SCALES, MUT_GREY2_SCALES, MUT_BLACK2_SCALES,
+        MUT_WHITE_SCALES, MUT_YELLOW_SCALES, MUT_BROWN_SCALES,
+        MUT_PURPLE_SCALES, MUT_INDIGO_SCALES, MUT_COLD_RESISTANCE
+    };
+
+    // "Good" mutations are rarely noticed; they improve your character
+    // in ways that affect most fights.
+
+    static const mutation_type good_muts[] = {
+        MUT_TOUGH_SKIN,  MUT_GREY_SCALES, MUT_BONEY_PLATES,
+        MUT_SLOW_METABOLISM, MUT_SPIT_POISON, MUT_BLINK, MUT_SHAGGY_FUR,
+        MUT_HIGH_MAGIC, MUT_RED_SCALES, MUT_BLUE_SCALES,
+        MUT_SPECKLED_SCALES, MUT_ORANGE_SCALES, MUT_IRIDESCENT_SCALES,
+        MUT_PATTERNED_SCALES
+    };
+
+    bool good_enough = false;
+
+    typedef mutation_type facet_type[3];
+    facet_type facets[6];
+
+try_again:
+    while (!good_enough)
+    {
+        mutation_type muts[6];
+
+        muts[0] = RANDOM_ELEMENT(body_muts);
+        muts[1] = RANDOM_ELEMENT(awesome_muts);
+        muts[2] = RANDOM_ELEMENT(great_muts);
+        muts[3] = RANDOM_ELEMENT(great_muts);
+        muts[4] = RANDOM_ELEMENT(good_muts);
+        muts[5] = RANDOM_ELEMENT(good_muts);
+
+        // Check for conflicting mutations
+        for (int i = 0; i < 6; ++i)
+        {
+            for (int j = 0; j < i; ++j)
+            {
+                // No redundancy, please
+                if (muts[i] == muts[j])
+                    goto try_again;
+
+                // Prevent excessive scales
+                if (_is_covering(muts[i]) && _is_covering(muts[j]))
+                    goto try_again;
+
+                // Physiology conflict
+                if ((muts[i] == MUT_SLOW_METABOLISM && muts[j] == MUT_REGENERATION)
+                        || (muts[i] == MUT_REGENERATION && muts[j] == MUT_SLOW_METABOLISM))
+                    goto try_again;
+            }
+        }
+
+        good_enough = true;
+
+        for (int i = 0; i < 6; ++i)
+        {
+            facets[i][0] = facets[i][1] = facets[i][2] = muts[i];
+        }
+    }
+
     you.demon_trait.init(NUM_MUTATIONS);
+
+    // Now give mutations from the facets in some order, consistent
+    // with the internal order of the facets.
+
+    FixedVector<int, 6> given;
+    given.init(0);
+    int ngiven = 0;
 
     for (int level = 2; level <= 27; ++level)
     {
-        // We want 17 (6*3 - 1) random attemps to raise or add a
+        // We want 18 (6*3) random attemps to raise or add a
         // mutation in the 26 level ups.  The following check is
-        // equivalent to taking a string of 17 1s and 9 0s and
+        // equivalent to taking a string of 18 1s and 8 0s and
         // shuffling it.
 
-        if (x_chance_in_y(17 - npowers, 28 - level))
+        if (x_chance_in_y(18 - ngiven, 28 - level))
         {
-            mutation_type newmut = _demonspawn(muts, npowers, level);
+            int available_facets[6];
+            int navailable_facets = 0;
+
+            for (int i = 0; i < 6; ++i)
+                if (given[i] != 3)
+                    available_facets[navailable_facets++] = i;
+
+            int which_facet = available_facets[random2(navailable_facets)];
+
+            mutation_type newmut = facets[which_facet][given[which_facet]];
 
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Demonspawn will gain %s at level %d",
                     get_mutation_def(newmut).wizname, level);
 #endif
             you.demon_trait[level-2] = newmut;
-            muts[newmut]++;
+
+            ++given[which_facet];
+            ++ngiven;
         }
     }
 }
