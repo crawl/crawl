@@ -13,7 +13,7 @@ clean distclean:
 
 $(SUBDIRS):
 	@cd $@; \
-	$(MAKE) all prefix=$(PREFIX); \
+	$(MAKE) all prefix=$(PREFIX) && \
 	$(MAKE) install prefix=$(PREFIX)
 
 libpng freetype: zlib
