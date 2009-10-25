@@ -2713,9 +2713,7 @@ static mutation_type _demonspawn(FixedVector<int, NUM_MUTATIONS>& muts, int& pow
 
     if (mut_to_increase != NUM_MUTATIONS)
     {
-        const mutation_def& mdef = mutation_defs[mut_to_increase];
-
-        ASSERT(muts[mut_to_increase] < mdef.levels);
+        ASSERT(muts[mut_to_increase] < mutation_defs[mut_to_increase].levels);
 
         return mut_to_increase;
     }
