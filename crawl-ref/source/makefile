@@ -541,7 +541,7 @@ LIBS += $(LIBLUA) $(LIBSQLITE)
 EXTRA_OBJECTS += version.o
 
 LIBS += $(EXTRA_LIBS)
-GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) contrib
+GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell git describe --tags --long)
 PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
@@ -613,8 +613,8 @@ version.cc: build.h compflag.h
 # The level compiler
 #
 
-$(UTIL)levcomp.tab.cc: contrib
-$(UTIL)levcomp.lex.cc: contrib
+$(UTIL)levcomp.tab.cc: .contrib-libs
+$(UTIL)levcomp.lex.cc: .contrib-libs
 
 ifndef NO_YACC
 
@@ -714,7 +714,7 @@ ifdef PCH
 CC_DEP := AppHdr.h.gch
 endif
 
-$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) contrib
+$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) .contrib-libs
 
 %.o: %.m
 	$(QUIET_CXX)$(CC) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
@@ -732,9 +732,6 @@ $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) contrib
 	+@$(MAKE) -C contrib $(CONTRIBS)
 	touch .contrib-libs
 
-contrib: .contrib-libs
-
-.PHONY: contrib
 
 #############################################################################
 # Build unrandart data
