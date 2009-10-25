@@ -4191,6 +4191,27 @@ void explore_discoveries::found_feature(const coord_def &pos,
             altars.push_back(altar);
         es_flags |= ES_ALTAR;
     }
+    // Would checking for a makrer for all discovered cells slow things
+    // down too much?
+    else if (feat_is_statue_or_idol(feat))
+    {
+        const std::string feat_stop_msg =
+            env.markers.property_at(pos, MAT_ANY, "stop_explore_msg");
+        if (!feat_stop_msg.empty())
+        {
+            marker_msgs.push_back(feat_stop_msg);
+            return;
+        }
+
+        const std::string feat_stop =
+            env.markers.property_at(pos, MAT_ANY, "stop_explore");
+        if (!feat_stop.empty())
+        {
+            std::string desc = lowercase_first(feature_description(pos));
+            marked_feats.push_back(desc);
+            return;
+        }
+    }
 }
 
 void explore_discoveries::add_stair(
@@ -4333,8 +4354,16 @@ std::vector<std::string> explore_discoveries::apply_quantities(
 
 bool explore_discoveries::prompt_stop() const
 {
+    const bool marker_stop = !marker_msgs.empty() || !marked_feats.empty();
+
+    for (unsigned int i = 0; i < marker_msgs.size(); i++)
+        mprf("%s", marker_msgs[i].c_str());
+
+    for (unsigned int i = 0; i < marked_feats.size(); i++)
+        mprf("Found %s", marked_feats[i].c_str());
+
     if (!es_flags)
-        return (false);
+        return (marker_stop);
 
     say_any(items, "Found %s items.");
     say_any(shops, "Found %s shops.");
@@ -4343,5 +4372,6 @@ bool explore_discoveries::prompt_stop() const
     say_any(apply_quantities(stairs), "Found %s stairs.");
 
     return ((Options.explore_stop_prompt & es_flags) != es_flags
+            || marker_stop
             || prompt_stop_explore(es_flags));
 }

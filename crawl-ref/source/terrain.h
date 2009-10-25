@@ -26,6 +26,7 @@ bool feat_is_opaque(dungeon_feature_type feat);
 bool feat_is_solid(dungeon_feature_type feat);
 bool feat_is_closed_door(dungeon_feature_type feat);
 bool feat_is_secret_door(dungeon_feature_type feat);
+bool feat_is_statue_or_idol(dungeon_feature_type feat);
 bool feat_is_rock(dungeon_feature_type feat);
 bool feat_is_permarock(dungeon_feature_type feat);
 bool feat_is_stone_stair(dungeon_feature_type feat);

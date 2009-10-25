@@ -328,6 +328,11 @@ bool feat_is_secret_door(dungeon_feature_type feat)
     return (feat == DNGN_SECRET_DOOR || feat == DNGN_DETECTED_SECRET_DOOR);
 }
 
+bool feat_is_statue_or_idol(dungeon_feature_type feat)
+{
+    return (feat >= DNGN_ORCISH_IDOL && feat <= DNGN_STATUE_RESERVED);
+}
+
 bool feat_is_rock(dungeon_feature_type feat)
 {
     return (feat == DNGN_ORCISH_IDOL

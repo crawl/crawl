@@ -298,6 +298,9 @@ private:
     std::vector< named_thing<int> > shops;
     std::vector< named_thing<int> > altars;
 
+    std::vector<std::string> marker_msgs;
+    std::vector<std::string> marked_feats;
+
 private:
     template <class C> void say_any(const C &coll, const char *stub) const;
     template <class citer> bool has_duplicates(citer, citer) const;
