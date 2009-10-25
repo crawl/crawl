@@ -206,11 +206,6 @@ public:
         return (0);
     }
 
-    virtual bool visible() const
-    {
-        return (true);
-    }
-
     virtual bool has_spell(spell_type spell) const = 0;
 
     virtual bool     will_trigger_shaft() const;
