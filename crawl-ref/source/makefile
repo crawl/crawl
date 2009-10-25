@@ -608,8 +608,6 @@ DEPENDENCY_MKF := makefile.dep
 
 depend: $(DEPENDENCY_MKF)
 
-makefile.dep: .contrib-ok
-
 %.dep: $(OBJECTS:.o=.cc)
 	$(QUIET_DEPEND)fastdep $(DEFINES) $(INCLUDES) $(OBJECTS:.o=.cc) > $@
 
@@ -704,7 +702,7 @@ endif
 clean:
 	+$(MAKE) -C $(UTIL) clean
 	+$(MAKE) -C $(RLTILES) -f makefile.unix clean
-	$(RM) $(GAME) $(GAME).exe $(EXTRA_OBJECTS) $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-ok .contrib-libs
+	$(RM) $(GAME) $(GAME).exe $(EXTRA_OBJECTS) $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-libs
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
@@ -712,15 +710,6 @@ clean-contrib:
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
 	$(RM) scores $(GAME) core *.0* *.lab $(DEPENDENCY_MKF)
-
-.contrib-ok:
-	@for a in contrib/lua/src/Makefile contrib/sqlite/Makefile contrib/pcre/Makefile; do \
-	    if [ ! -f $$a ]; then \
-	        echo "The '$$a' file is missing. Have you run 'git submodule update --init'?"; \
-			exit 1; \
-	    fi \
-	done
-	@touch .contrib-ok
 
 $(GAME): $(GAME_DEPENDS)
 	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)

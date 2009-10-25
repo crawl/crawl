@@ -12,7 +12,11 @@ clean distclean:
 	rm -rf $(PREFIX)
 
 $(SUBDIRS):
-	@cd $@; \
+	@if [ ! -x $@ ]; then \
+	    echo "The '$@' folder is missing. Have you run 'git submodule update --init'?"; \
+	    exit 1; \
+	fi
+	@cd $@ && \
 	$(MAKE) all prefix=$(PREFIX) && \
 	$(MAKE) install prefix=$(PREFIX)
 
