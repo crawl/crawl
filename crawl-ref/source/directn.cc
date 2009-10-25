@@ -1267,6 +1267,7 @@ void direction(dist& moves, targetting_type restricts,
                 moves.target   = you.pos() + moves.delta;
                 moves.isValid  = true;
                 moves.isTarget = false;
+                have_beam      = false;
                 show_beam      = false;
                 moves.choseRay = false;
                 loop_done      = true;
