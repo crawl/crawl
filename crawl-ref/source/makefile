@@ -564,30 +564,38 @@ test:
 ##########################################################################
 # Dependencies
 
+ifeq ($(shell which fastdep 2> /dev/null),)
+
+%.d: %.cc
+	$(QUIET_DEPEND)$(CXX) -MM $(CFLAGS) $(CFLAGS_L) $< > $@
+
+depend: $(OBJECTS:.o=.d)
+
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(MAKECMDGOALS),distclean)
+-include $(OBJECTS:.o=.d)
+endif
+endif
+
+else
+
 DEPENDENCY_MKF := makefile.dep
 
-ifeq ($(shell which fastdep 2> /dev/null),)
-depend: $(OBJECTS:.o=.cc)
-	rm -f $(DEPENDENCY_MKF).tmp
-	@for i in $^; do \
-		echo '   ' DEP $$i; \
-	    $(CXX) -MM $(CFLAGS) $(CFLAGS_L) $$i >>$(DEPENDENCY_MKF).tmp 2>/dev/null; \
-	done
-	mv -f $(DEPENDENCY_MKF).tmp $(DEPENDENCY_MKF)
-else
 depend: $(DEPENDENCY_MKF)
 
 makefile.dep: .contrib-ok
 
 %.dep: $(OBJECTS:.o=.cc)
 	$(QUIET_DEPEND)fastdep $(DEFINES) $(INCLUDES) $(OBJECTS:.o=.cc) > $@
-endif
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),distclean)
 -include $(DEPENDENCY_MKF)
 endif
 endif
+
+endif
+
 
 .PHONY: compflag.h build.h version.cc
 
@@ -668,7 +676,7 @@ endif
 
 clean:
 	+$(MAKE) -C $(UTIL) clean
-	$(RM) *.o *.ixx build.h compflag.h .contrib-libs .contrib-ok
+	$(RM) $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-libs .contrib-ok
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
