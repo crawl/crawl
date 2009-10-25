@@ -155,7 +155,8 @@ MCHMOD_SAVEDIR := 775
 # The user:group to install the game as.
 INSTALL_UGRP := games:games
 
-prefix   := /usr/games/crawl
+prefix        := /usr/games/crawl
+chroot_prefix :=
 
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
@@ -389,12 +390,28 @@ CFWARN_L += -Wno-uninitialized
 endif
 endif
 
+ifneq ($(strip $(chroot_prefix)),)
+	USE_CHROOT=YesPlease
+endif
+
+ifdef USE_DGAMELAUNCH
+CFOTHERS_L += -DDGAMELAUNCH
+endif
+
+ifdef USE_CHROOT
+prefix_fp := $(abspath $(strip $(chroot_prefix))/$(strip $(prefix)))
+else
+prefix_fp := $(abspath $(strip $(prefix)))
+endif
+
 ifneq ($(strip $(SAVEDIR)),)
-CFOTHERS_L += -DSAVE_DIR_PATH=\"$(strip $(prefix))/$(strip $(SAVEDIR))\"
+CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(strip $(prefix))/$(strip $(SAVEDIR)))\"
+savedir_fp := $(abspath $(strip $(prefix_fp))/$(strip $(SAVEDIR)))
 endif
 
 ifneq ($(strip $(DATADIR)),)
-CFOTHERS_L += -DDATA_DIR_PATH=\"$(strip $(prefix))/$(strip $(DATADIR))\"
+CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(strip $(prefix))/$(strip $(DATADIR)))\"
+datadir_fp := $(abspath $(strip $(prefix_fp))/$(strip $(DATADIR)))
 endif
 
 ifndef NO_NCURSES
@@ -611,7 +628,9 @@ compflag.h:
 build.h:
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
+ifneq ($(MAKECMDGOALS),install)
 version.cc: build.h compflag.h
+endif
 
 ##########################################################################
 # The level compiler
@@ -654,28 +673,32 @@ install: $(GAME)
 ifeq ($(DATADIR),)
 	$(error DATADIR not set! Set DATADIR and run make clean install again)
 endif
-	[ -d $(prefix) ] || mkdir -p $(prefix)
-	$(COPY) $(GAME) $(prefix)
-	chown $(INSTALL_UGRP) $(prefix)/$(GAME)
-	chmod $(MCHMOD) $(prefix)/$(GAME)
-	mkdir -p $(prefix)/$(DATADIR)/dat/lua
-	mkdir -p $(prefix)/$(DATADIR)/dat/clua
-	mkdir -p $(prefix)/$(DATADIR)/dat/descript
-	mkdir -p $(prefix)/$(DATADIR)/dat/database
-	$(COPY) dat/*.des $(prefix)/$(DATADIR)/dat
-	$(COPY) dat/lua/*.lua $(prefix)/$(DATADIR)/dat/lua
-	$(COPY) dat/clua/*.lua $(prefix)/$(DATADIR)/dat/clua
-	$(COPY) dat/descript/*.txt $(prefix)/$(DATADIR)/dat/descript
-	$(COPY) dat/database/*.txt $(prefix)/$(DATADIR)/dat/database
-	mkdir -p $(DATADIR)/settings
-	$(COPY) ../settings/* $(prefix)/$(DATADIR)/settings/
-	mkdir -p $(DATADIR)/docs
-	$(COPY) ../docs/*.txt $(prefix)/$(DATADIR)/docs
-	chown -R $(INSTALL_UGRP) $(prefix)/$(DATADIR)
+	[ -d $(prefix_fp)/bin ] || mkdir -p $(prefix_fp)/bin
+	$(COPY) $(GAME) $(prefix_fp)/bin/
+	chown -R $(INSTALL_UGRP) $(prefix_fp)/bin
+	chmod $(MCHMOD) $(prefix_fp)/bin/$(GAME)
+	mkdir -p $(datadir_fp)/dat/clua
+	mkdir -p $(datadir_fp)/dat/lua
+	mkdir -p $(datadir_fp)/dat/database
+	mkdir -p $(datadir_fp)/dat/descript
+	mkdir -p $(datadir_fp)/docs/develop
+	mkdir -p $(datadir_fp)/docs/license
+	mkdir -p $(datadir_fp)/settings
+	$(COPY) dat/*.des $(datadir_fp)/dat/
+	$(COPY) dat/clua/*.lua $(datadir_fp)/dat/clua/
+	$(COPY) dat/lua/*.lua $(datadir_fp)/dat/lua/
+	$(COPY) dat/database/*.txt $(datadir_fp)/dat/database/
+	$(COPY) dat/descript/*.txt $(datadir_fp)/dat/descript/
+	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
+	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
+	$(COPY) ../docs/license/*.txt $(datadir_fp)/docs/license/
+	$(COPY) ../settings/* $(datadir_fp)/settings/
+	chown -R $(INSTALL_UGRP) $(datadir_fp)
 ifneq ($(SAVEDIR),)
-	mkdir -p $(prefix)/$(SAVEDIR)
-	chown $(INSTALL_UGRP) $(prefix)/$(SAVEDIR)
-	chmod $(MCHMOD_SAVEDIR) $(prefix)/$(SAVEDIR)
+	mkdir -p $(savedir_fp)/saves
+	mkdir -p $(savedir_fp)/morgue
+	chown -R $(INSTALL_UGRP) $(savedir_fp)
+	chmod $(MCHMOD_SAVEDIR) $(savedir_fp)
 endif
 
 clean:
