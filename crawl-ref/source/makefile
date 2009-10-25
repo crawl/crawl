@@ -512,36 +512,36 @@ endif
 
 ifdef BUILD_PCRE
 CONTRIBS += pcre
-LIBS += $(LIBPCRE)
+CONTRIB_LIBS += $(LIBPCRE)
 endif
 ifdef BUILD_FREETYPE
 CONTRIBS += freetype
-LIBS += $(LIBFREETYPE)
+CONTRIB_LIBS += $(LIBFREETYPE)
 endif
 ifdef BUILD_SDLIMAGE
 CONTRIBS += sdl-image
-LIBS += $(LIBSDLIMAGE)
+CONTRIB_LIBS += $(LIBSDLIMAGE)
 endif
 ifdef BUILD_SDL
 CONTRIBS += sdl
-LIBS += $(LIBSDL)
+CONTRIB_LIBS += $(LIBSDL)
 endif
 ifdef BUILD_LIBPNG
 CONTRIBS += libpng
-LIBS += $(LIBPNG)
+CONTRIB_LIBS += $(LIBPNG)
 endif
 ifdef BUILD_ZLIB
 CONTRIBS += zlib
-LIBS += $(LIBZ)
+CONTRIB_LIBS += $(LIBZ)
 endif
 
 CONTRIBS += lua/src sqlite
-LIBS += $(LIBLUA) $(LIBSQLITE)
+CONTRIB_LIBS += $(LIBLUA) $(LIBSQLITE)
 
 EXTRA_OBJECTS += version.o
 
-LIBS += $(EXTRA_LIBS)
-GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) contrib
+LIBS += $(EXTRA_LIBS) $(CONTRIB_LIBS)
+GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell git describe --tags --long)
 PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
@@ -551,6 +551,11 @@ SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
 PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o \
 		$(UTIL)*.tab.cc $(UTIL)*.tab.h $(UTIL)*.lex.cc *.ixx
 PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
+
+sp :=
+sp +=
+sentinel = .sentinel.$(subst $(sp),_,$(subst /,_,$1))
+atomic = $(eval $1: $(call sentinel,$1) ; @:)$(call sentinel,$1): $2 ; @touch $$@ $(foreach t,$1,$(if $(wildcard $t),,$(shell rm -f $(call sentinel,$1))))
 
 .PHONY: all test install clean clean-contrib distclean debug profile wizard
 
@@ -613,8 +618,8 @@ version.cc: build.h compflag.h
 # The level compiler
 #
 
-$(UTIL)levcomp.tab.cc: contrib
-$(UTIL)levcomp.lex.cc: contrib
+$(UTIL)levcomp.tab.cc: $(CONTRIB_LIBS)
+$(UTIL)levcomp.lex.cc: $(CONTRIB_LIBS)
 
 ifndef NO_YACC
 
@@ -676,7 +681,7 @@ endif
 
 clean:
 	+$(MAKE) -C $(UTIL) clean
-	$(RM) $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-libs .contrib-ok
+	$(RM) $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-ok
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
@@ -714,7 +719,7 @@ ifdef PCH
 CC_DEP := AppHdr.h.gch
 endif
 
-$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) contrib
+$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
 %.o: %.m
 	$(QUIET_CXX)$(CC) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
@@ -726,15 +731,8 @@ $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) contrib
 # Contribs
 #
 
-.INTERMEDIATE: .contrib-libs
-
-.contrib-libs: .contrib-ok
+$(call atomic,$(CONTRIB_LIBS),.contrib-ok)
 	+@$(MAKE) -C contrib $(CONTRIBS)
-	touch .contrib-libs
-
-contrib: .contrib-libs
-
-.PHONY: contrib
 
 #############################################################################
 # Build unrandart data
