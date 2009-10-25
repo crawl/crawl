@@ -41,6 +41,7 @@ item_use.o \
 itemname.o \
 itemprop.o \
 items.o \
+jobs.o \
 kills.o \
 l_crawl.o \
 l_debug.o \
@@ -88,8 +89,6 @@ mutation.o \
 newgame.o \
 ng-input.o \
 ng-restr.o \
-jobs.o \
-species.o \
 notes.o \
 ouch.o \
 output.o \
@@ -103,6 +102,7 @@ sha256.o \
 shopping.o \
 skills.o \
 skills2.o \
+species.o \
 spells1.o \
 spells2.o \
 spells3.o \
