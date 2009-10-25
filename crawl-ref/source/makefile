@@ -717,6 +717,9 @@ $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS)
 #
 # Contribs
 #
+
+.INTERMEDIATE: .contrib-libs
+
 .contrib-libs: .contrib-ok
 	+@$(MAKE) -C contrib $(CONTRIBS)
 	touch .contrib-libs
