@@ -618,19 +618,15 @@ endif
 endif
 
 
-.PHONY: compflag.h build.h version.cc
-
 # This information is included in crash reports, and is printed with
 # "crawl -version"
-compflag.h:
+compflag.h: $(OBJECTS:.o=.cc)
 	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(CFLAGS)" "$(CFLAGS_L)" "$(LDFLAGS)"
 
-build.h:
+build.h: $(OBJECTS:.o=.cc)
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
-ifneq ($(MAKECMDGOALS),install)
 version.cc: build.h compflag.h
-endif
 
 ##########################################################################
 # The level compiler
