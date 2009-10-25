@@ -228,7 +228,7 @@ SHUFFLE: XZ
 NSUBST:  Z = ) / ]
 NSUBST:  X = ( / [
 MAP
-          ... 
+          ...
        ccc===ccc
       cc..aaa..cc
       c.aaaAaaa.c
