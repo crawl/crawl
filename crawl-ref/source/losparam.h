@@ -21,12 +21,24 @@ struct opacity_func
 {
     virtual ~opacity_func() {}
     virtual opacity_type operator()(const coord_def& p) const = 0;
+
+    // XXX: to be able to call from gdb.
+    virtual opacity_type call(const coord_def& p) const
+    {
+        return (*this)(p);
+    }
 };
 
 struct bounds_func
 {
     virtual ~bounds_func() {}
     virtual bool operator()(const coord_def& p) const = 0;
+
+    // XXX: to be able to call from gdb.
+    virtual bool call(const coord_def& p) const
+    {
+        return (*this)(p);
+    }
 };
 
 // Default LOS rules.
