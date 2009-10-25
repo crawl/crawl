@@ -710,7 +710,8 @@ clean-contrib:
 	+$(MAKE) -C contrib clean
 
 distclean: clean clean-contrib clean-rltiles
-	$(RM) morgue saves scores $(GAME) core *.0* *.lab $(DEPENDENCY_MKF)
+	$(RM) -r morgue saves
+	$(RM) scores $(GAME) core *.0* *.lab $(DEPENDENCY_MKF)
 
 .contrib-ok:
 	@for a in contrib/lua/src/Makefile contrib/sqlite/Makefile contrib/pcre/Makefile; do \
