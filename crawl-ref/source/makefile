@@ -142,6 +142,10 @@ ifdef NEED_STATIC
 LDFLAGS += -static
 endif
 
+ifdef USE_MERGE_BASE
+MERGE_BASE := $(shell git merge-base HEAD $(USE_MERGE_BASE))
+endif
+
 # Permissions to set on the game executable.
 MCHMOD := 2755
 
@@ -605,7 +609,7 @@ compflag.h:
 	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(CFLAGS)" "$(CFLAGS_L)" "$(LDFLAGS)"
 
 build.h:
-	$(QUIET_GEN)util/gen_ver.pl $@
+	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
 version.cc: build.h compflag.h
 

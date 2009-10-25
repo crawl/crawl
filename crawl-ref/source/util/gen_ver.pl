@@ -11,6 +11,11 @@ my $cwd = cwd;
 my $in_git = 1;
 my $scriptpath = dirname($0);
 my $outfile = $ARGV[0];
+my $mergebase = $ARGV[1];
+
+if (!$mergebase) {
+	$mergebase = "";
+}
 
 my $releasever;
 
@@ -22,7 +27,7 @@ mkdir dirname($outfile);
 
 my $verstring = "";
 
-$verstring = `git describe --tags --long 2> /dev/null || git describe --tags 2> /dev/null`;
+$verstring = `git describe --tags --long $mergebase 2> /dev/null || git describe --tags $mergebase 2> /dev/null`;
 
 if (!$verstring) {
 	print STDERR "WARNING: Couldn't get revision information from Git. Using $scriptpath/release_ver.\n";
@@ -80,7 +85,7 @@ if ( !$build ) {
 # Old versions of git omit the commits-since-tag number,
 # so we can try 'git rev-list' to get this instead.
 if ( $commit == 0 && $in_git ) {
-	$commit = `git rev-list $tag.. | wc -l`
+	$commit = `git rev-list $tag..$mergebase | wc -l`
 }
 
 if ( $commit == 0 ) {
