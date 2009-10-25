@@ -1885,7 +1885,7 @@ MARKER: * = lua:fog_machine { cloud_type="flame", \
             size = 2, walk_dist = 0, spread_rate= 40 }
 COLOUR: * = red
 SUBST:  * = .
-SUBST:  $ : $$c
+SUBST:  $ : $$*|.c
 MAP
 ccccccccccccccccccccccc
 ccxxx*xxxxx*xxxxx*xxxxc
