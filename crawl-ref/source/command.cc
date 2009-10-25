@@ -2378,7 +2378,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-L</w> : change experience level\n"
                        "<w>$</w>      : get 1000 gold\n"
                        "<w>]</w>      : get a mutation\n"
-                       "<w>[</w>      : get a demonspawn mutation\n"
                        "<w>^</w>      : gain piety\n"
                        "<w>_</w>      : gain religion\n"
                        "<w>@</w>      : set Str Int Dex\n"

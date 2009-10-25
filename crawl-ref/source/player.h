@@ -222,6 +222,9 @@ public:
 
   FixedVector<unsigned char, NUM_MUTATIONS> mutation;
   FixedVector<unsigned char, NUM_MUTATIONS> demon_pow;
+  // demon_trait[i] is the mutation increased at the i'th
+  // levellup, or NUM_MUTATIONS
+  FixedVector<mutation_type, 26> demon_trait;
   unsigned char magic_contamination;
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;

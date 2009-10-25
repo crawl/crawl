@@ -2644,17 +2644,13 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
-// Use an attribute counter for how many demonic mutations a demonspawn has.
-void demonspawn()
+static mutation_type _demonspawn(FixedVector<int, NUM_MUTATIONS>& muts, int& powers,
+        int level)
 {
     mutation_type whichm = NUM_MUTATIONS;
     int counter = 0;
 
-    const int covered = _body_covered();
-
-    you.attribute[ATTR_NUM_DEMONIC_POWERS]++;
-
-    mpr("Your demonic ancestry asserts itself...", MSGCH_INTRINSIC_GAIN);
+    powers++;
 
     // A demonspawn logically has six mutation slots, like [cold res,
     // negative res, teleport, black scales, mapping, repulsion field].
@@ -2674,14 +2670,14 @@ void demonspawn()
     {
         whichm = static_cast<mutation_type>(i);
 
-        if (! you.demon_pow[whichm])
+        if (! muts[whichm])
         {
             continue;
         }
 
         ++muts_seen;
 
-        if (you.demon_pow[whichm] < mutation_defs[whichm].levels)
+        if (muts[whichm] < mutation_defs[whichm].levels)
         {
             ++increasable_muts_seen;
 
@@ -2719,28 +2715,9 @@ void demonspawn()
     {
         const mutation_def& mdef = mutation_defs[mut_to_increase];
 
-        ASSERT(you.demon_pow[mut_to_increase] < mdef.levels);
+        ASSERT(muts[mut_to_increase] < mdef.levels);
 
-        if (you.mutation[mut_to_increase] == mdef.levels)
-        {
-            // The player has our mutation as a temporary thing.  Make
-            // it permanent.  I want to put something like NetHack's "Your
-            // quickness feels more natural" here, but there doesn't seem
-            // to be a good way to do that.
-            mpr(mdef.gain[you.demon_pow[mut_to_increase]], MSGCH_MUTATION);
-            ++you.demon_pow[mut_to_increase];
-        }
-        else
-        {
-            // None of the current demonspawn mutations is capable of
-            // failing.  Be very careful if others are added; for instance,
-            // talons can fail to mutate if the player already has hooves.
-            // You'll need to add a case for clearing mutations in
-            // _handle_conflicting_mutations above.
-            ASSERT(perma_mutate(mut_to_increase, 1));
-        }
-
-        return;
+        return mut_to_increase;
     }
 
     // Otherwise we're adding a brand new mutation
@@ -2750,22 +2727,20 @@ void demonspawn()
     // if it's having trouble with the high level list.
     do
     {
-        if (you.experience_level >= 10)
+        if (level >= 10)
         {
-            if (you.skills[SK_CONJURATIONS] < 5)
+            if (1)
             {                       // good conjurers don't get bolt of draining
                 whichm = MUT_SMITE;
             }
 
-            if (you.skills[SK_CONJURATIONS] < 10 && one_chance_in(4))
+            if (one_chance_in(4))
             {                       // good conjurers don't get hellfire
                 whichm = MUT_HURL_HELLFIRE;
             }
 
             // Makhlebites have the summonings invocation
-            if ((you.religion != GOD_MAKHLEB ||
-                you.piety < piety_breakpoint(3)) &&
-                you.skills[SK_SUMMONINGS] < 5 && one_chance_in(3))
+            if (one_chance_in(3))
             {                       // good summoners don't get summon demon
                 whichm = MUT_SUMMON_DEMONS;
             }
@@ -2795,7 +2770,7 @@ void demonspawn()
                 whichm = MUT_SHOCK_RESISTANCE;
             }
 
-            if (!you.mutation[MUT_CALL_TORMENT] && one_chance_in(15))
+            if (!muts[MUT_CALL_TORMENT] && one_chance_in(15))
             {
                 whichm = MUT_TORMENT_RESISTANCE;
             }
@@ -2805,89 +2780,56 @@ void demonspawn()
                 whichm = MUT_NEGATIVE_ENERGY_RESISTANCE;
             }
 
-            if (!you.mutation[MUT_TORMENT_RESISTANCE] && one_chance_in(20))
+            if (!muts[MUT_TORMENT_RESISTANCE] && one_chance_in(20))
             {
                 whichm = MUT_CALL_TORMENT;
             }
 
-            if (you.skills[SK_SUMMONINGS] < 5 && you.skills[SK_NECROMANCY] < 5
-                && one_chance_in(12))
+            if (one_chance_in(12))
             {
                 whichm = MUT_CONTROL_DEMONS;
             }
 
-            if (you.religion != GOD_MAKHLEB && one_chance_in(11))
+            if (one_chance_in(11))
             {
                 whichm = MUT_DEATH_STRENGTH;
             }
 
-            // Theoretically, you could use this with Trog (for rods and
-            // some misc. items), but in general it's going to be much more
-            // useful for someone capable of casting spells.
-            if (you.religion != GOD_TROG
-                && you.religion != GOD_SIF_MUNA && one_chance_in(11))
+            if (one_chance_in(11))
             {
                 whichm = MUT_CHANNEL_HELL;
             }
 
-            // Yredelemnulites have the raise dead invocation
-            if (you.religion != GOD_YREDELEMNUL
-                && you.skills[SK_SUMMONINGS] < 3
-                && you.skills[SK_NECROMANCY] < 3 && one_chance_in(10))
+            if (one_chance_in(10))
             {
                 whichm = MUT_RAISE_DEAD;
             }
 
-            if (you.skills[SK_UNARMED_COMBAT] > 5)
+            if (one_chance_in(25))
             {
-                // Drain Life only works if you're unarmed, so only
-                // give it if unarmed is your best attacking skill.
-                skill_type wpn_skill = best_skill(SK_SHORT_BLADES, SK_STAVES);
-                if ((you.skills[SK_UNARMED_COMBAT] > you.skills[wpn_skill])
-                    && one_chance_in(14))
-                {
-                    whichm = MUT_DRAIN_LIFE;
-                }
+                whichm = MUT_DRAIN_LIFE;
             }
         }
 
         // check here so we can see if we need to extend our options
-        if (whichm != NUM_MUTATIONS && you.mutation[whichm] != 0)
+        if (whichm != NUM_MUTATIONS && muts[whichm] != 0)
             whichm = NUM_MUTATIONS;
 
-        if (you.experience_level < 10
+        if (level < 10
             || (counter > 0 && whichm == NUM_MUTATIONS))
         {
-            if ((!you.mutation[MUT_THROW_FROST]         // only one of these
-                    && !you.mutation[MUT_THROW_FLAMES]
-                    && !you.mutation[MUT_BREATHE_FLAMES])
-                && (!you.skills[SK_CONJURATIONS]        // conjurers seldomly
-                    || one_chance_in(5))
-                // Makhlebites seldom
-                && (you.religion != GOD_MAKHLEB || one_chance_in(4))
-                && (!you.skills[SK_ICE_MAGIC]           // already ice & fire?
-                    || !you.skills[SK_FIRE_MAGIC]))
+            if (!muts[MUT_THROW_FROST]         // only one of these
+                    && !muts[MUT_THROW_FLAMES]
+                    && !muts[MUT_BREATHE_FLAMES])
             {
-                // try to give the flavour the character doesn't have
-
-                // neither
-                if (!you.skills[SK_FIRE_MAGIC] && !you.skills[SK_ICE_MAGIC])
-                    whichm = (coinflip() ? MUT_THROW_FLAMES : MUT_THROW_FROST);
-                else if (!you.skills[SK_FIRE_MAGIC])
-                    whichm = MUT_THROW_FLAMES;
-                else if (!you.skills[SK_ICE_MAGIC])
-                    whichm = MUT_THROW_FROST;
-                // both
-                else
-                    whichm = (coinflip() ? MUT_THROW_FLAMES : MUT_THROW_FROST);
+                whichm = (coinflip() ? MUT_THROW_FLAMES : MUT_THROW_FROST);
             }
 
             // summoners and Makhlebites don't get summon imp
-            if (!you.skills[SK_SUMMONINGS] && you.religion != GOD_MAKHLEB
-                && one_chance_in(3))
+            if (one_chance_in(3))
             {
-                whichm = (you.experience_level < 10) ? MUT_SUMMON_MINOR_DEMONS
-                                                     : MUT_SUMMON_DEMONS;
+                whichm = (level < 10) ? MUT_SUMMON_MINOR_DEMONS
+                                      : MUT_SUMMON_DEMONS;
             }
 
             if (one_chance_in(4))
@@ -2910,7 +2852,7 @@ void demonspawn()
                 whichm = MUT_ACUTE_VISION;
             }
 
-            if (!you.skills[SK_POISON_MAGIC] && one_chance_in(7))
+            if (one_chance_in(7))
             {
                 whichm = MUT_SPIT_POISON;
             }
@@ -2925,22 +2867,21 @@ void demonspawn()
                 whichm = MUT_TELEPORT_CONTROL;
             }
 
-            if (!you.mutation[MUT_THROW_FROST]         // not with these
-                && !you.mutation[MUT_THROW_FLAMES]
-                && !you.mutation[MUT_BREATHE_FLAMES]
-                && !you.skills[SK_FIRE_MAGIC]          // or with fire already
+            if (!muts[MUT_THROW_FROST]         // not with these
+                && !muts[MUT_THROW_FLAMES]
+                && !muts[MUT_BREATHE_FLAMES]
                 && one_chance_in(5))
             {
                 whichm = MUT_BREATHE_FLAMES;
             }
 
-            if (!you.skills[SK_TRANSLOCATIONS] && one_chance_in(12))
+            if (one_chance_in(12))
             {
-                whichm = (you.experience_level < 10) ? MUT_BLINK
-                                                     : MUT_TELEPORT_AT_WILL;
+                whichm = (level < 10) ? MUT_BLINK
+                                      : MUT_TELEPORT_AT_WILL;
             }
 
-            if (covered < 3 && one_chance_in( 1 + covered * 5 ))
+            if (1)
             {
                 if (one_chance_in(10))
                 {
@@ -2979,26 +2920,53 @@ void demonspawn()
                 whichm = MUT_REPULSION_FIELD;
             }
 
-            if (one_chance_in( (you.experience_level < 10) ? 5 : 20 ))
+            if (one_chance_in( (level < 10) ? 5 : 20 ))
             {
                 whichm = MUT_HORNS;
             }
         }
 
-        if (whichm != NUM_MUTATIONS && you.mutation[whichm] != 0)
+        if (whichm != NUM_MUTATIONS && muts[whichm] != 0)
             whichm = NUM_MUTATIONS;
 
         counter++;
     }
     while (whichm == NUM_MUTATIONS && counter < 5000);
 
-    if (whichm == NUM_MUTATIONS || !perma_mutate( whichm, 1 ))
+    if (whichm == NUM_MUTATIONS)
     {
-        // Unlikely but remotely possible; I know this is a cop-out.
-        modify_stat(STAT_STRENGTH, 1, true, "demonspawn mutation");
-        modify_stat(STAT_INTELLIGENCE, 1, true, "demonspawn mutation");
-        modify_stat(STAT_DEXTERITY, 1, true, "demonspawn mutation");
-        mpr("You feel much better now.", MSGCH_INTRINSIC_GAIN);
+        return MUT_STRONG;
+    }
+
+    return whichm;
+}
+
+void roll_demonspawn_mutations()
+{
+    FixedVector<int, NUM_MUTATIONS> muts;
+    int npowers = 0;
+
+    muts.init(0);
+    you.demon_trait.init(NUM_MUTATIONS);
+
+    for (int level = 2; level <= 27; ++level)
+    {
+        // We want 17 (6*3 - 1) random attemps to raise or add a
+        // mutation in the 26 level ups.  The following check is
+        // equivalent to taking a string of 17 1s and 9 0s and
+        // shuffling it.
+
+        if (x_chance_in_y(17 - npowers, 28 - level))
+        {
+            mutation_type newmut = _demonspawn(muts, npowers, level);
+
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Demonspawn will gain %s at level %d",
+                    get_mutation_def(newmut).wizname, level);
+#endif
+            you.demon_trait[level-2] = newmut;
+            muts[newmut]++;
+        }
     }
 }
 

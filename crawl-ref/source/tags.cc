@@ -944,6 +944,12 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.demon_pow[j]);
     }
 
+    marshallByte(th, 26);
+    for (j = 0; j < 26; j++)
+    {
+        marshallShort(th, you.demon_trait[j]);
+    }
+
     // how many penances?
     marshallByte(th, MAX_NUM_GODS);
     for (i = 0; i < MAX_NUM_GODS; i++)
@@ -1385,6 +1391,13 @@ static void tag_read_you(reader &th, char minorVersion)
     {
         you.mutation[j]  = unmarshallByte(th);
         you.demon_pow[j] = unmarshallByte(th);
+    }
+
+    if (minorVersion >= TAG_MINOR_DSTRAITS)
+    {
+        count_c = unmarshallByte(th);
+        for (j = 0; j < count_c; ++j)
+            you.demon_trait[j] = static_cast<mutation_type>(unmarshallShort(th));
     }
 
     // how many penances?

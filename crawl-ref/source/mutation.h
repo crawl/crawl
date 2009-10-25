@@ -53,7 +53,7 @@ std::string mutation_name(mutation_type which_mutat, int level = -1,
 bool give_bad_mutation(bool failMsg = true, bool force_mutation = false,
                        bool non_fatal = false);
 
-void demonspawn();
+void roll_demonspawn_mutations();
 
 bool perma_mutate(mutation_type which_mut, int how_much);
 int how_mutated(bool all = false, bool levels = false);

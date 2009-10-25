@@ -514,7 +514,6 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'Z': wizard_cast_spec_spell_name();         break;
     case '(': wizard_create_feature_number();        break;
     case ')': wizard_create_feature_name();          break;
-    case '[': demonspawn();                          break;
     case ':': wizard_list_branches();                break;
     case '{': wizard_map_level();                    break;
     case '@': wizard_set_stats();                    break;

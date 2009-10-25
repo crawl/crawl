@@ -3458,15 +3458,10 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_DEMONSPAWN:
-                // We want 17 (6*3 - 1) random attemps to raise or add a
-                // mutation in the 26 level ups.  The following check is
-                // equivalent to taking a string of 17 1s and 9 0s and
-                // shuffling it.
-
-                if (x_chance_in_y(17 - you.attribute[ATTR_NUM_DEMONIC_POWERS],
-                            28 - you.experience_level))
+                if (you.demon_trait[you.experience_level - 2] != NUM_MUTATIONS)
                 {
-                    demonspawn();
+                    mpr("Your demonic ancestry asserts itself...", MSGCH_INTRINSIC_GAIN);
+                    perma_mutate(you.demon_trait[you.experience_level - 2], 1);
                 }
 
                 if (!(you.experience_level % 4))
@@ -5945,6 +5940,8 @@ void player::init()
 
     mutation.init(0);
     demon_pow.init(0);
+
+    demon_trait.init(NUM_MUTATIONS);
 
     had_book.init(false);
 
