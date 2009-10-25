@@ -577,6 +577,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
     if (damage > 0)
     {
         damage = mons_adjust_flavoured( mon, beam, damage );
+        simple_monster_message(mon, " seems to burn from within!");
 
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Dice: %dd%d; Damage: %d",
