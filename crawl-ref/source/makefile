@@ -706,7 +706,7 @@ ifdef PCH
 CC_DEP := AppHdr.h.gch
 endif
 
-$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS)
+$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) contrib
 
 %.o: %.m
 	$(QUIET_CXX)$(CC) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
