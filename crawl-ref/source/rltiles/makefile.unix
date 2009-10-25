@@ -1,6 +1,11 @@
+uname_S := $(shell uname -s)
 
 ifneq (,$(findstring MINGW,$(uname_S)))
 LDFLAGS += -lmingw32
+endif
+
+ifndef CROSSHOST
+LDFLAGS += -L../contrib/install/lib
 endif
 
 SDL_CFLAGS := -I../contrib/install/include/SDL $(shell pkg-config sdl --cflags 2> /dev/null)
@@ -10,7 +15,7 @@ PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null)
 PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "-lpng -lz")
 
 CFLAGS := -I../contrib/install/include $(SDL_CFLAGS) $(PNG_INCLUDE)
-LDFLAGS += -L../contrib/install/lib $(SDL_LDFLAGS) -lSDL_image $(PNG_LIB)
+LDFLAGS += $(SDL_LDFLAGS) -lSDL_image $(PNG_LIB)
 
 ifneq (,$(findstring MINGW,$(uname_S)))
 LDFLAGS += -lgdi32 -lwinmm
