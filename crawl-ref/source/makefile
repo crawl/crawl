@@ -735,7 +735,9 @@ $(CONTRIB_LIBS): .contrib-libs
 
 .contrib-libs:
 	+@$(MAKE) -C contrib $(CONTRIBS)
-	@touch .contrib-libs
+	@touch $@
+
+$(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 
 #############################################################################
 # Build unrandart data
