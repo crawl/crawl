@@ -20,6 +20,9 @@ LDFLAGS += $(SDL_LDFLAGS) -lSDL_image $(PNG_LIB)
 ifneq (,$(findstring MINGW,$(uname_S)))
 LDFLAGS += -lgdi32 -lwinmm
 endif
+ifeq ($(uname_S),Darwin)
+LDFLAGS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL
+endif
 
 # Attempt to use a full compiler name, to make
 # distcc builds work nicely.
@@ -31,6 +34,9 @@ ifeq ($(shell which $(LMACH)gcc 2> /dev/null),)
 LMACH :=
 endif
 CXX = $(LMACH)g++
+ifdef ARCHS
+CXX += $(ARCHS)
+endif
 
 DELETE = rm -f
 

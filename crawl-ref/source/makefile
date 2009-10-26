@@ -102,6 +102,17 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 		BUILD_ZLIB = YesPlease
 	endif
 endif
+ifeq ($(uname_S),Darwin)
+	NO_PKGCONFIG = Yes
+	ifdef TILES
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/lib/libSDLmain.a
+		BUILD_FREETYPE = YesPlease
+		BUILD_SDL = YesPlease
+		BUILD_SDLIMAGE = YesPlease
+		BUILD_LIBPNG = YesPlease
+		BUILD_ZLIB = YesPlease
+	endif
+endif
 ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
 	NO_RDYNAMIC = YesPlease
@@ -188,6 +199,7 @@ GCC_VER := 4.0
 #   SDL 1.2.14 is available
 #
 ARCHS := -arch i386
+export ARCHS
 
 # Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
 # else is much easier to predict the name of.
@@ -257,17 +269,6 @@ RLTILES = rltiles
 # Tiles build stuff
 #
 ifdef TILES
-
-ifeq ($(uname_S),Darwin)
-ifndef UNSUPPORTED_BUILD
-$(warning Using this makefile to build a tiles build on Mac OS X is NOT OFFICIALLY SUPPORTED.)
-$(warning You should have no expectation of stability if you choose to continue anyway!)
-$(warning Please use the Xcode project instead.)
-$(error To build anyway, add the flag UNSUPPORTED_BUILD=y to the command-line)
-else
-EXTRA_LIBS += -framework OpenGL -framework AppKit
-endif
-endif
 
 DEFINES_L += -DUSE_TILE
 INCLUDES_L += -I$(RLTILES)
