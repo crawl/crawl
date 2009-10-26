@@ -186,6 +186,19 @@ bool overmap_knows_portal(dungeon_feature_type portal)
     return (false);
 }
 
+int overmap_knows_num_portals(dungeon_feature_type portal)
+{
+    int num = 0;
+    for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
+          pl_iter != portals_present.end(); ++pl_iter )
+    {
+        if (portal_to_feature(pl_iter->second) == portal)
+            num++;
+    }
+
+    return (num);
+}
+
 static std::string _portals_description_string()
 {
     std::string disp;

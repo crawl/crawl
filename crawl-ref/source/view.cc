@@ -262,14 +262,6 @@ void set_terrain_changed( int x, int y )
 
 void set_terrain_mapped( int x, int y )
 {
-    if (!(env.map[x][y].flags & (MAP_MAGIC_MAPPED_FLAG | MAP_SEEN_FLAG))
-        && grd[x][y] == DNGN_ENTER_LABYRINTH)
-    {
-        coord_def pos(x, y);
-        take_note(Note(NOTE_SEEN_FEAT, 0, 0,
-                       feature_description(pos, false, DESC_NOCAP_A).c_str()));
-    }
-
     env.map[x][y].flags &= (~MAP_CHANGED_FLAG);
     env.map[x][y].flags |= MAP_MAGIC_MAPPED_FLAG;
 #ifdef USE_TILE
@@ -279,23 +271,35 @@ void set_terrain_mapped( int x, int y )
 
 void set_terrain_seen( int x, int y )
 {
-    if (!(env.map[x][y].flags & (MAP_MAGIC_MAPPED_FLAG | MAP_SEEN_FLAG))
-        && grd[x][y] == DNGN_ENTER_LABYRINTH)
-    {
-        coord_def pos(x, y);
-        take_note(Note(NOTE_SEEN_FEAT, 0, 0,
-                       feature_description(pos, false, DESC_NOCAP_A).c_str()));
-    }
+    const dungeon_feature_type feat = grd[x][y];
 
-    // Magic mapping doesn't reveal the description of the portal vault
-    // entrance.
-    if (!(env.map[x][y].flags & MAP_SEEN_FLAG)
-        && grd[x][y] == DNGN_ENTER_PORTAL_VAULT
-        && you.level_type != LEVEL_PORTAL_VAULT)
+    // First time we've seen a notable feature.
+    if (!(env.map[x][y].flags & MAP_SEEN_FLAG) && is_notable_terrain(feat))
     {
-        coord_def pos(x, y);
-        take_note(Note(NOTE_SEEN_FEAT, 0, 0,
-                       feature_description(pos, false, DESC_NOCAP_A).c_str()));
+        const bool boring =
+            // A portal deeper into the Zigguart is boring.
+            (feat == DNGN_ENTER_PORTAL_VAULT
+             && you.level_type == LEVEL_PORTAL_VAULT)
+            // Altars in the temple are boring.
+            || (feat_is_altar(feat)
+                && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+            // Only note the first entrance to the Abyss/Pan/Hell
+            // which is found.
+            || ((feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM
+                 || feat == DNGN_ENTER_HELL)
+                && overmap_knows_num_portals(feat) > 1)
+            // There are at least three Zot entrances, and they're always
+            // on D:27, so ignore them.
+            || feat == DNGN_ENTER_ZOT;
+
+        if (!boring)
+        {
+            coord_def pos(x, y);
+            std::string desc = 
+                feature_description(pos, false, DESC_NOCAP_A);
+
+            take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc.c_str()));
+        }
     }
 
 #ifdef USE_TILE
@@ -2875,6 +2879,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const int very_far = (map_radius * 9) / 10;
 
     bool did_map = false;
+    int  num_altars        = 0;
+    int  num_shops_portals = 0;
     for (radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri)
     {
         if (proportion < 100 && random2(100) >= proportion)
@@ -2897,9 +2903,11 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (!wizard_map && (is_terrain_seen(*ri) || is_terrain_mapped(*ri)))
             continue;
 
+        const dungeon_feature_type feat = grd(*ri);
+
         bool open = true;
 
-        if (feat_is_solid(grd(*ri)) && !feat_is_closed_door(grd(*ri)))
+        if (feat_is_solid(feat) && !feat_is_closed_door(feat))
         {
             open = false;
             for (adjacent_iterator ai(*ri); ai; ++ai)
@@ -2920,6 +2928,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
             if (wizard_map)
             {
+                if (is_notable_terrain(feat))
+                    seen_notable_thing(feat, *ri);
+
                 set_terrain_seen(*ri);
 #ifdef USE_TILE
                 // Can't use set_envmap_obj because that would
@@ -2929,7 +2940,14 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 #endif
             }
             else
+            {
                 set_terrain_mapped(*ri);
+
+                if (get_feature_dchar(feat) == DCHAR_ALTAR)
+                    num_altars++;
+                else if (get_feature_dchar(feat) == DCHAR_ARCH)
+                    num_shops_portals++;
+            }
 
             did_map = true;
         }
@@ -2939,6 +2957,22 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     {
         mpr(did_map ? "You feel aware of your surroundings."
                     : "You feel momentarily disoriented.");
+
+        std::vector<std::string> sensed;
+
+        if (num_altars > 0)
+            sensed.push_back(make_stringf("%d altar%s", num_altars,
+                                          num_altars > 1 ? "s" : ""));
+
+        if (num_shops_portals > 0)
+        {
+            const char* plur = num_shops_portals > 1 ? "s" : "";
+            sensed.push_back(make_stringf("%d shop%s/portal%s",
+                                          num_shops_portals, plur, plur));
+        }
+
+        if (!sensed.empty())
+            mpr_comma_separated_list("You sensed ", sensed);
     }
 
     return (did_map);
