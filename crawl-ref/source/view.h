@@ -8,9 +8,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-
 #include "externs.h"
-#include "player.h"
 
 // various elemental colour schemes... used for abstracting random
 // short lists. When adding colours, please also add their names in
