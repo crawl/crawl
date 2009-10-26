@@ -2701,10 +2701,10 @@ try_again:
     {
         mutation_type muts[6];
 
-        muts[0] = RANDOM_ELEMENT(body_muts);
-        muts[1] = RANDOM_ELEMENT(awesome_muts);
+        muts[0] = RANDOM_ELEMENT(awesome_muts);
+        muts[1] = RANDOM_ELEMENT(great_muts);
         muts[2] = RANDOM_ELEMENT(great_muts);
-        muts[3] = RANDOM_ELEMENT(great_muts);
+        muts[3] = RANDOM_ELEMENT(body_muts);
         muts[4] = RANDOM_ELEMENT(good_muts);
         muts[5] = RANDOM_ELEMENT(good_muts);
 
@@ -2747,16 +2747,29 @@ try_again:
 
     for (int level = 2; level <= 27; ++level)
     {
+        // To reduce variance a bit, cap mutations per level at 0.75.
+        // This has the side effect of forcing no mutation at XL2.
+        if ((ngiven + 1) * 4 > (level - 1) * 3)
+            continue;
+
         // We want 18 (6*3) random attempts to raise or add a mutation
         // in the 26 level ups.  The following check is equivalent to
         // taking a string of 18 1s and 8 0s and shuffling it.
-
         if (x_chance_in_y(18 - ngiven, 28 - level))
         {
             int available_facets[6];
             int navailable_facets = 0;
 
-            for (int i = 0; i < 6; ++i)
+            int first_facet;
+
+            if (level >= 12)
+                first_facet = 0; // At or above 12 all mutations are available
+            else if (level >= 6)
+                first_facet = 1; // The awesome mutation does not show up before 12
+            else
+                first_facet = 3; // Only body and good mutations are eligible at start
+
+            for (int i = first_facet; i < 6; ++i)
                 if (given[i] != 3)
                     available_facets[navailable_facets++] = i;
 
