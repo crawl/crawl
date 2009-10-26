@@ -74,7 +74,6 @@ uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 
 ifdef CROSSHOST
 	NO_PKGCONFIG = YesPlease
-	NO_SDLCONFIG = YesPlease
 	NO_AUTO_OPT = YesPlease
 	NEED_STATIC = YesPlease
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
