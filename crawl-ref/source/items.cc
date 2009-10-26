@@ -1483,14 +1483,14 @@ void note_inscribe_item(item_def &item)
 
 // Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
-int move_item_to_player( int obj, int quant_got, bool quiet,
-                         bool ignore_burden )
+int move_item_to_player(int obj, int quant_got, bool quiet,
+                        bool ignore_burden)
 {
     if (item_is_stationary(mitm[obj]))
     {
         mpr("You cannot pick up the net that holds you!");
-        // Fake a successful pickup (return 1), so we can continue to pick up
-        // anything else that might be on this square.
+        // Fake a successful pickup (return 1), so we can continue to
+        // pick up anything else that might be on this square.
         return (1);
     }
 
@@ -1501,12 +1501,12 @@ int move_item_to_player( int obj, int quant_got, bool quiet,
     {
         you.attribute[ATTR_GOLD_FOUND] += quant_got;
         you.gold += quant_got;
-        dec_mitm_item_quantity( obj, quant_got );
+        dec_mitm_item_quantity(obj, quant_got);
 
         if (!quiet)
         {
             mprf("You now have %d gold piece%s.",
-                 you.gold, you.gold > 1 ? "s" : "");
+                 you.gold, you.gold != 1 ? "s" : "");
         }
 
         learned_something_new(TUT_SEEN_GOLD);

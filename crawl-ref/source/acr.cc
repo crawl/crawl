@@ -538,7 +538,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '$':
         you.gold += 1000;
         if (!Options.show_gold_turns)
-            mprf("You now have %d gold.", you.gold);
+        {
+            mprf("You now have %d gold piece%s.",
+                 you.gold, you.gold != 1 ? "s" : "");
+        }
         break;
 
     case 'B':
@@ -1975,7 +1978,7 @@ void process_command( command_type cmd )
 
     case CMD_LIST_GOLD:
         mprf("You have %d gold piece%s.",
-             you.gold, you.gold > 1 ? "s" : "");
+             you.gold, you.gold != 1 ? "s" : "");
         break;
 
     case CMD_INSCRIBE_ITEM:
