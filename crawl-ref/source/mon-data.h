@@ -47,7 +47,7 @@
                         damage from holy wrath/disruption; affected by
                         repel undead and holy word
        MH_DEMONIC    - similar to undead, but repel undead effects are
-                        ignored -- *no* automatic hellfire resistance
+                        ignored - *no* automatic hellfire resistance
        MH_NONLIVING  - golems and other constructs
        MH_PLANT      - plants
 
@@ -299,7 +299,7 @@ static monsterentry mondata[] = {
 },
 
 // draconians ('d')
-{   // Base draconian -- for use like MONS_HUMAN, MONS_ELF although we
+{   // Base draconian - for use like MONS_HUMAN, MONS_ELF although we
     // now store the draconian subspecies in base_monster for those
     // listed as species MONS_DRACONIAN.
     MONS_DRACONIAN, 'd', BROWN, "draconian",
@@ -980,11 +980,11 @@ static monsterentry mondata[] = {
     HT_LAND, 12, DEFAULT_ENERGY, MONUSE_NOTHING, MONEAT_NOTHING, SIZE_HUGE
 },
 
-// Used to be "lindworm" and a GREEN 'l'...  I'm hoping that by
-// making it a 'd' and using an alternate spelling people will
-// more intuitively know that this isn't a regular lizard. -- bwr
-// Changed back to 'l' for differentiation as the 'd' glyph is
-// packed with draconians already, and a lightcyan l is unique -- jpeg, Feb 08
+// Used to be "lindworm" and a GREEN 'l'...  I'm hoping that by making
+// it a 'd' and using an alternate spelling, people will more
+// intuitively know that this isn't a regular lizard. - bwr
+// Changed back to 'l' for differentiation, as the 'd' glyph is packed
+// with draconians already, and a lightcyan l is unique. - jpeg, Feb 08
 {
     MONS_LINDWURM, 'l', LIGHTCYAN, "lindwurm",
     M_SPECIAL_ABILITY | M_WARM_BLOOD,
@@ -2484,7 +2484,7 @@ static monsterentry mondata[] = {
 },
 
 // These guys get understated because the experience code can't see
-// that they wield two weapons... I'm raising their xp modifier. -- bwr
+// that they wield two weapons... I'm raising their xp modifier. - bwr
 {
     MONS_TWO_HEADED_OGRE, 'O', LIGHTRED, "two-headed ogre",
     M_WARM_BLOOD | M_TWOWEAPON | M_SPEAKS,
@@ -3200,7 +3200,7 @@ static monsterentry mondata[] = {
 
 // mimics
 {
-    // Gold mimics are the only mimics that actually use their name. -- bwr
+    // Gold mimics are the only mimics that actually use their name. - bwr
     MONS_GOLD_MIMIC, '$', YELLOW, "pile of gold coins",
     M_NO_SKELETON | M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
@@ -3959,7 +3959,7 @@ static monsterentry mondata[] = {
     HT_LAND, 8, DEFAULT_ENERGY, MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_GIANT
 },
 
-// Antaeus is now demonic so that he'll resist torment. -- bwr
+// Antaeus is now demonic so that he'll resist torment. - bwr
 {
     MONS_ANTAEUS, 'C', LIGHTCYAN, "Antaeus",
     M_UNIQUE | M_FIGHTER | M_SPELLCASTER | M_EVIL | M_SPEAKS,
