@@ -2236,7 +2236,7 @@ static monsterentry mondata[] = {
 {
     MONS_SLIME_CREATURE, 'J', GREEN, "slime creature",
     M_NO_FLAGS,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ASPHYX,
     0, 5, MONS_JELLY, MONS_SLIME_CREATURE, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 5, 0 },
@@ -2258,7 +2258,7 @@ static monsterentry mondata[] = {
 {
     MONS_GIANT_AMOEBA, 'J', BLUE, "giant amoeba",
     M_NO_SKELETON | M_SENSE_INVIS,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ASPHYX,
     1000, 10, MONS_JELLY, MONS_GIANT_AMOEBA, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 12, 3, 5, 0 },
@@ -2280,7 +2280,7 @@ static monsterentry mondata[] = {
 {
     MONS_AZURE_JELLY, 'J', LIGHTBLUE, "azure jelly",
     M_NO_SKELETON | M_SENSE_INVIS,
-    MR_RES_POISON | MR_RES_COLD | MR_VUL_FIRE | MR_RES_ELEC | MR_RES_ASPHYX
+    MR_RES_POISON | MR_RES_ASPHYX | MR_RES_COLD | MR_VUL_FIRE | MR_RES_ELEC
         | MR_RES_ACID,
     0, 11, MONS_JELLY, MONS_AZURE_JELLY, MH_NATURAL, -4,
     { {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_PLAIN, 12},
@@ -2293,7 +2293,7 @@ static monsterentry mondata[] = {
 {
     MONS_DEATH_OOZE, 'J', MAGENTA, "death ooze",
     M_NO_SKELETON | M_SENSE_INVIS | M_EVIL,
-    MR_RES_POISON | MR_RES_COLD | MR_RES_ASPHYX | MR_RES_ACID,
+    MR_RES_POISON | MR_RES_ASPHYX | MR_RES_COLD | MR_RES_ACID,
     0, 13, MONS_JELLY, MONS_DEATH_OOZE, MH_UNDEAD, -8,
     { {AT_HIT, AF_ROT, 32}, {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 3, 0 },
