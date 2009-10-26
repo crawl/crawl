@@ -6108,6 +6108,7 @@ void excommunication(god_type new_god)
         divine_retribution(old_god);
         break;
 
+    case GOD_CHEIBRIADOS:
     default:
         _inc_penance(old_god, 25);
         break;
