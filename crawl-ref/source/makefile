@@ -766,7 +766,7 @@ art-data.h: art-data.txt util/art-data.pl art-func.h
 #
 
 .PHONY: rltile-build
-rltile-build:: contrib
+rltile-build: .contrib-libs
 	$(MAKE) -C $(RLTILES) -f makefile.unix all
 
 $(TILEDEFSRCS): rltile-build
