@@ -172,12 +172,12 @@ static int Weapon_index[NUM_WEAPONS];
 static weapon_def Weapon_prop[NUM_WEAPONS] =
 {
     // Maces & Flails
-    { WPN_WHIP,              "whip",                4,  2, 11,  30,  2,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLASHING, 0 },
     { WPN_CLUB,              "club",                5,  3, 13,  50,  7,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, true,
         DAMV_CRUSHING, 0 },
+    { WPN_WHIP,              "whip",                6,  2, 11,  30,  2,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        DAMV_SLASHING, 0 },
     { WPN_HAMMER,            "hammer",              7,  3, 13,  90,  7,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING, 0 },

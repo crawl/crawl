@@ -1345,6 +1345,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_WHIP:
+            if (one_chance_in(10))
+                rc = SPWPN_PAIN;
+
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
 
@@ -1354,7 +1357,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(6))
                 rc = SPWPN_VENOM;
 
-            if (coinflip())
+            if (one_chance_in(3))
                 rc = SPWPN_REACHING;
 
             if (one_chance_in(5))
@@ -3208,7 +3211,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = random_choose(WPN_DAGGER,      WPN_DAGGER,
                                            WPN_SHORT_SWORD, WPN_SHORT_SWORD,
-                                           WPN_CLUB,        -1);
+                                           WPN_CLUB,        WPN_WHIP,       -1);
         }
         else
             return (item_race);

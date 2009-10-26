@@ -398,8 +398,8 @@ enum stave_type
 
 enum weapon_type
 {
-    WPN_WHIP,                          //    0
-    WPN_CLUB,
+    WPN_CLUB,                          //    0
+    WPN_WHIP,
     WPN_HAMMER,
     WPN_MACE,
     WPN_FLAIL,
