@@ -3509,6 +3509,8 @@ MONS:    w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
 ORIENT:  float
 FTILE:   1234+ABCDEabcde = floor_dirt
 SHUFFLE: abcde / fghij
+# Don't let auto-explore open the door and unleash the caged monsters.
+KPROP:   + = force_exclude
 SUBST:   f=A, g=B, h=C, i=D, j=E
 SUBST:   a=mx, b=mx, c=mx, d=mx, e=mx
 SUBST:   A:mx, B:mx, C:mx, D:mx, E:mx
