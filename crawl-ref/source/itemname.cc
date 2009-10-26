@@ -2569,7 +2569,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return (false);
         }
     case OBJ_WANDS:
-        return (item.plus2 == ZAPCOUNT_EMPTY);
+        return (item.plus2 == ZAPCOUNT_EMPTY)
+               || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
 
     case OBJ_POTIONS:
     {
