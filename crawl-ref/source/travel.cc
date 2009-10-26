@@ -305,7 +305,7 @@ static opacity_excl opc_excl;
 // currently short-cut for small bounds. So radius 0 is special-cased.
 
 travel_exclude::travel_exclude(const coord_def &p, int r,
-                               bool autoexcl, int mons, bool vaultexcl)
+                               bool autoexcl, monster_type mons, bool vaultexcl)
         : pos(p), radius(r),
           los(los_def(p, opc_excl, bounds_radius(r))),
           uptodate(false), autoex(autoex), vault(vaultexcl)
@@ -536,7 +536,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
         monster_type montype = NUM_MONSTERS;
         const monsters *m = monster_at(p);
         if (m && mons_near(m) && you.can_see(m))
-            montype = m->type;
+            montype = static_cast<monster_type>(m->type);
 
         curr_excludes.push_back(travel_exclude(p, radius, autoexcl,
                                                montype, vaultexcl));
@@ -565,7 +565,8 @@ std::string get_exclusion_desc()
     for (unsigned int i = 0; i < curr_excludes.size(); ++i)
     {
         if (curr_excludes[i].mon != NON_MONSTER)
-            monsters.push_back(mondata[curr_excludes[i].mon].name);
+            monsters.push_back("unknown monster");
+               // FIXME: mondata[curr_excludes[i].mon].name);
         else
             count_other++;
     }
@@ -3662,7 +3663,7 @@ void LevelInfo::load(reader& inf, char minorVersion)
             if (minorVersion >= TAG_ANNOTATE_EXCL)
             {
                 autoexcl = unmarshallBoolean(inf);
-                mon      = unmarshallShort(inf);
+                mon      = static_cast<monster_type>(unmarshallShort(inf));
             }
             excludes.push_back(travel_exclude(c, radius, autoexcl, mon));
         }
