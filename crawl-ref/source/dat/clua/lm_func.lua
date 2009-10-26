@@ -21,10 +21,12 @@
 --    * "player_at": Calls the function whenever the player is at the
 --       same position as the marker. Takes the same "repeated"
 --       parameter as "in_los".
+--  marker_table: Table to be passed to the function when called. Defaults to {}.
 --
 -- Specific markers take specific parameters, as listed under marker_type.
 --
--- The function will be called with the "marker" object as its only parameter.
+-- The function will be called with the "marker" object and the table
+-- marker_params.
 --
 ------------------------------------------------------------------------------
 
@@ -78,6 +80,7 @@ function FunctionMachine:new(pars)
   m.turns_min       = pars.turns_min        or pars.turns or 0
   m.turns_max       = pars.turns_max        or pars.turns or 0
   m.repeated        = pars.repeated         or false
+  m.marker_params   = pars.marker_params    or {}
 
   -- Some arithmetic to make these make sense in terms of actual turns
   -- versus ticks.
@@ -89,13 +92,13 @@ end
 
 function FunctionMachine:do_function(marker)
   local _x, _y = marker:pos()
-  self.func(marker)
+  self.func(marker, self.marker_params)
 end
 
 function FunctionMachine:activate(marker, verbose)
   local _x, _y = marker:pos()
   dgn.register_listener(dgn.dgn_event_type('turn'), marker)
-  dgn.register_listener(dgn.dgn_event_type('entered_level'), marker)
+  --dgn.register_listener(dgn.dgn_event_type('entered_level'), marker)
 end
 
 function FunctionMachine:event(marker, ev)
@@ -137,6 +140,7 @@ function FunctionMachine:write(marker, th)
   file.marshall_meta(th, self.turns_min)
   file.marshall_meta(th, self.turns_max)
   file.marshall_meta(th, self.repeated)
+  lmark.marshall_table(th, self.marker_params)
 end
 
 function FunctionMachine:read(marker, th)
@@ -147,6 +151,7 @@ function FunctionMachine:read(marker, th)
   self.turns_min           = file.unmarshall_meta(th)
   self.turns_max           = file.unmarshall_meta(th)
   self.repeated            = file.unmarshall_meta(th)
+  self.marker_params       = lmark.unmarshall_table(th)
 
   setmetatable(self, FunctionMachine)
 
@@ -154,5 +159,13 @@ function FunctionMachine:read(marker, th)
 end
 
 function function_machine(pars)
+  return FunctionMachine:new(pars)
+end
+
+function message_machine (pars)
+  local channel = pars.channel or false
+  local mtable = {message = pars.message, channel = pars.channel}
+  pars.func = (function(marker, mtable) crawl.mpr(mtable.message, mtable.channel) end)
+  pars.marker_params = mtable
   return FunctionMachine:new(pars)
 end
