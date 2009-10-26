@@ -2290,7 +2290,8 @@ bool is_interesting_item( const item_def& item )
     return (false);
 }
 
-// Returns true if an item is a potential life saver in an emergency situation.
+// Returns true if an item is a potential life saver in an emergency
+// situation.
 bool is_emergency_item(const item_def &item)
 {
     if (!item_type_known(item))
@@ -2394,9 +2395,9 @@ bool is_bad_item(const item_def &item, bool temp)
         case SCR_CURSE_WEAPON:
             return (true);
         case SCR_SUMMONING:
-            // Summoning will always produce hostile monsters if you worship
-            // a good god. (Use temp to allow autopickup to prevent monsters
-            // from reading it.)
+            // Summoning will always produce hostile monsters if you
+            // worship a good god. (Use temp to allow autopickup to
+            // prevent monsters from reading it.)
             return (temp && is_good_god(you.religion));
         default:
             return (false);
@@ -2445,7 +2446,8 @@ bool is_bad_item(const item_def &item, bool temp)
     }
 }
 
-// Returns true if using an item is risky but may occasionally be worthwhile.
+// Returns true if using an item is risky but may occasionally be
+// worthwhile.
 bool is_dangerous_item(const item_def &item, bool temp)
 {
     if (!item_type_known(item))
@@ -2511,8 +2513,8 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!you.could_wield(item, true)
             && !is_throwable(&you, item))
         {
-            // Weapon is too large (or small) to be wielded and cannot be
-            // thrown either.
+            // Weapon is too large (or small) to be wielded and cannot
+            // be thrown either.
             return (true);
         }
 
@@ -2529,8 +2531,8 @@ bool is_useless_item(const item_def &item, bool temp)
         return (false);
 
     case OBJ_MISSILES:
-        // These are the same checks as in_throwable except we don't take
-        // into account launchers.
+        // These are the same checks as in is_throwable(), except that
+        // we don't take launchers into account.
         switch (item.sub_type)
         {
         case MI_LARGE_ROCK:
@@ -2609,8 +2611,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_POISON:
         case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.
-            // Spriggans could argue, but it's too small gain for possible
-            // player confusion.
+            // Spriggans could argue, but it's too small of a gain for
+            // possible player confusion.
             return (player_res_poison(false));
 
         case POT_INVISIBILITY:
@@ -2736,14 +2738,13 @@ static const std::string _item_prefix(const item_def &item, bool temp,
     {
         if (get_ident_type(item) == ID_KNOWN_TYPE)
         {
-            // Wands are only fully identified if we know the
-            // number of charges.
+            // Wands are only fully identified if we know the number of
+            // charges.
             if (item.base_type == OBJ_WANDS)
                 prefixes.push_back("known");
 
-            // Rings are fully identified simply by knowing their
-            // type, unless the ring has plusses, like a ring of
-            // dexterity.
+            // Rings are fully identified simply by knowing their type,
+            // unless the ring has plusses, like a ring of dexterity.
             else if (item.base_type == OBJ_JEWELLERY
                      && !jewellery_is_amulet(item))
             {
@@ -2753,7 +2754,7 @@ static const std::string _item_prefix(const item_def &item, bool temp,
                     prefixes.push_back("known");
             }
             // All other types of magical items are fully identified
-            // simply by knowing the type
+            // simply by knowing the type.
             else
                 prefixes.push_back("identified");
         }
