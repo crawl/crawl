@@ -10,6 +10,7 @@
 
 
 #include "externs.h"
+#include "player.h"
 
 // various elemental colour schemes... used for abstracting random
 // short lists. When adding colours, please also add their names in
@@ -70,7 +71,9 @@ void find_features(const std::vector<coord_def>& features,
         unsigned char feature, std::vector<coord_def> *found);
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
-                   bool force = false);
+                   bool force = false, bool deterministic = false,
+                   coord_def origin = coord_def(-1, -1));
+void reautomap_level();
 
 bool noisy(int loudness, const coord_def& where, int who,
            bool mermaid = false);

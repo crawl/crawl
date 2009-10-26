@@ -28,6 +28,7 @@
 #include "delay.h"
 #include "defines.h"
 #include "effects.h"
+#include "files.h"
 #include "format.h"
 #include "godabil.h"
 #include "itemprop.h"
@@ -41,6 +42,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
+#include "view.h"
 #include "xom.h"
 
 static int _body_covered();
@@ -1194,6 +1196,21 @@ mutation_def mutation_defs[] = {
       {"","",""},
 
       "stochastic torment resistance"},
+    { MUT_PASSIVE_MAPPING,            3,  3, false, false,
+      {"You sense your immediate surroundings while exploring..",
+       "You sense your surroundings while exploring.",
+       "You sense a large area of your surroundings while exploring."},
+
+      {"You feel aware of your new surroundings.",
+       "You feel more aware of your new surroundings.",
+       "You feel even more aware of your new surroundings."},
+
+      {"You feel slightly disoriented.",
+       "You feel slightly disoriented.",
+       "You feel slightly disoriented."},
+
+      "passive mapping"
+    },
 };
 
 const mutation_def& get_mutation_def(mutation_type mut)
@@ -2068,6 +2085,12 @@ static bool _physiology_mutation_conflict(mutation_type mutat)
     return (false);
 }
 
+static bool _reautomap_callback()
+{
+    reautomap_level();
+    return true;
+}
+
 bool mutate(mutation_type which_mutation, bool failMsg,
             bool force_mutation, bool god_gift, bool stat_gain_potion,
             bool demonspawn, bool non_fatal)
@@ -2362,6 +2385,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         calc_hp();
     if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
         calc_mp();
+    if (mutat == MUT_PASSIVE_MAPPING)
+        apply_to_all_dungeons(_reautomap_callback);
 
     // Amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor.
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
@@ -2690,7 +2715,8 @@ void roll_demonspawn_mutations()
         MUT_REPULSION_FIELD, MUT_MAGIC_RESISTANCE, MUT_BREATHE_FLAMES,
         MUT_NACREOUS_SCALES, MUT_GREY2_SCALES, MUT_BLACK2_SCALES,
         MUT_WHITE_SCALES, MUT_YELLOW_SCALES, MUT_BROWN_SCALES,
-        MUT_PURPLE_SCALES, MUT_INDIGO_SCALES, MUT_COLD_RESISTANCE
+        MUT_PURPLE_SCALES, MUT_INDIGO_SCALES, MUT_COLD_RESISTANCE,
+        MUT_PASSIVE_MAPPING
     };
 
     // "Good" mutations are rarely noticed; they improve your character

@@ -269,17 +269,36 @@ void set_terrain_mapped( int x, int y )
 #endif
 }
 
+static void _automap_from( int x, int y, int mutated )
+{
+    if (mutated)
+        magic_mapping(8 * mutated, 5 * mutated, true, false,
+                      true, coord_def(x,y));
+}
+
+void reautomap_level( )
+{
+    int passive = player_mutation_level(MUT_PASSIVE_MAPPING);
+
+    for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+            if (env.map[x][y].flags & MAP_SEEN_FLAG)
+                _automap_from(x, y, passive);
+}
+
 void set_terrain_seen( int x, int y )
 {
     const dungeon_feature_type feat = grd[x][y];
 
     // First time we've seen a notable feature.
-    if (!(env.map[x][y].flags & MAP_SEEN_FLAG) && is_notable_terrain(feat))
+    if (!(env.map[x][y].flags & MAP_SEEN_FLAG))
     {
-        const bool boring =
+        _automap_from(x, y, player_mutation_level(MUT_PASSIVE_MAPPING));
+
+        const bool boring = !is_notable_terrain(feat)
             // A portal deeper into the Zigguart is boring.
-            (feat == DNGN_ENTER_PORTAL_VAULT
-             && you.level_type == LEVEL_PORTAL_VAULT)
+            || (feat == DNGN_ENTER_PORTAL_VAULT
+                && you.level_type == LEVEL_PORTAL_VAULT)
             // Altars in the temple are boring.
             || (feat_is_altar(feat)
                 && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
@@ -295,7 +314,7 @@ void set_terrain_seen( int x, int y )
         if (!boring)
         {
             coord_def pos(x, y);
-            std::string desc = 
+            std::string desc =
                 feature_description(pos, false, DESC_NOCAP_A);
 
             take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc.c_str()));
@@ -2851,10 +2870,57 @@ void show_map( coord_def &spec_place, bool travel_mode )
     }
 }
 
+// We logically associate a difficulty parameter with each tile on each level,
+// to make deterministic magic mapping work.  This function returns the
+// difficulty parameters for each tile on the current level, whose difficulty
+// is less than a certain amount.
+//
+// Random difficulties are used in the few cases where we want repeated maps
+// to give different results; scrolls and cards, since they are a finite
+// resource.
+static const FixedArray<char, GXM, GYM>& _tile_difficulties(bool random)
+{
+    // We will often be called with the same level parameter and cutoff, so
+    // cache this (DS with passive mapping autoexploring could be 5000 calls
+    // in a second or so).
+    static FixedArray<char, GXM, GYM> cache;
+    static int cache_seed = -1;
+
+    int seed = random ? -1 :
+        (static_cast<int>(you.where_are_you) << 8) + you.your_level - 1731813538;
+
+    if (seed == cache_seed && !random)
+    {
+        return cache;
+    }
+
+    if (!random)
+    {
+        push_rng_state();
+        seed_rng(cache_seed);
+    }
+
+    cache_seed = seed;
+
+    for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+        for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+            cache[x][y] = random2(100);
+
+    if (!random)
+    {
+        pop_rng_state();
+    }
+
+    return cache;
+}
+
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
-                   bool force)
+                   bool force, bool deterministic, coord_def pos)
 {
+    if (!in_bounds(pos))
+        pos = you.pos();
+
     if (!force
         && (testbits(env.level_flags, LFLAG_NO_MAGIC_MAP)
             || testbits(get_branch_flags(), BFLAG_NO_MAGIC_MAP)))
@@ -2882,19 +2948,24 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     bool did_map = false;
     int  num_altars        = 0;
     int  num_shops_portals = 0;
-    for (radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri)
-    {
-        if (proportion < 100 && random2(100) >= proportion)
-            continue;       // note that proportion can be over 100
 
+    const FixedArray<char, GXM, GYM>& difficulty =
+        _tile_difficulties(!deterministic);
+
+    for (radius_iterator ri(pos, map_radius, true, false); ri; ++ri)
+    {
         if (!wizard_map)
         {
+            int threshold = proportion;
+
             const int dist = grid_distance( you.pos(), *ri );
 
-            if (dist > pfar && one_chance_in(3))
-                continue;
+            if (dist > very_far)
+                threshold = threshold / 3;
+            else if (dist > pfar)
+                threshold = threshold * 2 / 3;
 
-            if (dist > very_far && coinflip())
+            if (difficulty(*ri) > threshold)
                 continue;
         }
 
@@ -4808,4 +4879,3 @@ void handle_terminal_resize(bool redraw)
     if (redraw)
         redraw_screen();
 }
-
