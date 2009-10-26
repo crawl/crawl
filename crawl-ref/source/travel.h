@@ -359,13 +359,13 @@ struct travel_exclude
     int           radius;       // exclusion radius
     los_def       los;          // los from exclusion centre
     bool          uptodate;     // Is los up to date?
-    bool          autoexclude;  // Was set automatically.
+    bool          autoex;       // Was set automatically.
     int           mon;          // Monster around which exclusion is centered.
-    bool          vaultexclude; // Is this exclusion set by a vault?
+    bool          vault;        // Is this exclusion set by a vault?
 
     travel_exclude(const coord_def &p, int r = LOS_RADIUS,
-                   bool autoexcl = false, int mons = NON_MONSTER,
-                   bool vaultexcl = false);
+                   bool autoex = false, int mons = NON_MONSTER,
+                   bool vault = false);
 
     int radius_sq() const;
     void set_los();

@@ -305,10 +305,10 @@ static opacity_excl opc_excl;
 // currently short-cut for small bounds. So radius 0 is special-cased.
 
 travel_exclude::travel_exclude(const coord_def &p, int r,
-                               bool autoex, int mons, bool vault)
+                               bool autoexcl, int mons, bool vaultexcl)
         : pos(p), radius(r),
           los(los_def(p, opc_excl, bounds_radius(r))),
-          uptodate(false), autoexclude(autoex), vaultexclude(vault)
+          uptodate(false), autoex(autoex), vault(vaultexcl)
 {
     set_los();
 }
@@ -551,7 +551,7 @@ void maybe_remove_autoexclusion(const coord_def &p)
     if (travel_exclude *exc = _find_exclude_root(p))
     {
         const monsters *m = monster_at(p);
-        if (exc->autoexclude && (!m || !you.can_see(m) || m->type != exc->mon))
+        if (exc->autoex && (!m || !you.can_see(m) || m->type != exc->mon))
             del_exclude(p);
     }
 }
@@ -3614,7 +3614,7 @@ void LevelInfo::save(writer& outf) const
         {
             marshallCoord(outf, excludes[i].pos);
             marshallShort(outf, excludes[i].radius);
-            marshallBoolean(outf, excludes[i].autoexclude);
+            marshallBoolean(outf, excludes[i].autoex);
             marshallShort(outf, excludes[i].mon);
         }
     }
