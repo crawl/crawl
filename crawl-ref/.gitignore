@@ -39,6 +39,7 @@ mapgen.log
 # Makefile-generated junk
 makefile.dep
 /source/*.d
+/source/rltiles/*.d
 /source/.contrib-ok
 /source/.contrib-libs
 /source/compflag.h
