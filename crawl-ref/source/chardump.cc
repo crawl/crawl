@@ -28,6 +28,7 @@
 #include "artefact.h"
 #include "debug.h"
 #include "describe.h"
+#include "dungeon.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "itemprop.h"
@@ -80,6 +81,7 @@ static void _sdump_newline(dump_params &);
 static void _sdump_overview(dump_params &);
 static void _sdump_hiscore(dump_params &);
 static void _sdump_monster_list(dump_params &);
+static void _sdump_vault_list(dump_params &);
 static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
@@ -133,6 +135,7 @@ static dump_section_handler dump_handlers[] = {
     { "overview",       _sdump_overview      },
     { "hiscore",        _sdump_hiscore       },
     { "monlist",        _sdump_monster_list  },
+    { "vaults",         _sdump_vault_list    },
 
     // Conveniences for the .crawlrc artist.
     { "",               _sdump_newline       },
@@ -1140,6 +1143,19 @@ static void _sdump_monster_list(dump_params &par)
     trim_string(monlist);
     par.text += monlist;
     par.text += "\n\n";
+}
+
+static void _sdump_vault_list(dump_params &par)
+{
+    if (par.full_id || par.se
+#ifdef WIZARD
+        || you.wizard
+#endif
+       )
+    {
+        par.text += "Vault maps used:\n\n";
+        par.text += dump_vault_maps();
+    }
 }
 
 static void _sdump_mutations(dump_params &par)

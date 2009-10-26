@@ -238,7 +238,7 @@ ENDMAP
 #
 # Shoal:$ is hand-hacked to force lots of minivaults.
 NAME:      shoalhut_rune
-TAGS:      shoal_rune water_ok
+TAGS:      shoal_rune water_ok no_dump
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x=, D=+
 LROCKTILE:  wall_vines
@@ -258,7 +258,7 @@ ENDMAP
 # Shoal:$ is hand-hacked to force lots of minivaults.
 NAME:    shoalhut_norune
 DEPTH:   Shoal:$
-TAGS:    allow_dup water_ok shoal
+TAGS:    allow_dup water_ok shoal no_dump
 SHUFFLE: ABCD
 SUBST:   A:x, B:x, C:x=, D=+
 MAP

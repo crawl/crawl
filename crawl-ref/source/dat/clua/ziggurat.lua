@@ -119,6 +119,7 @@ end
 function ziggurat_level(e)
   e.tags("ziggurat")
   e.tags("allow_dup")
+  e.tags("no_dump")
   e.orient("encompass")
 
   if crawl.game_started() then

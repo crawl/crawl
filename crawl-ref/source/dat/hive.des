@@ -476,6 +476,7 @@ ENDMAP
 NAME:   beehive
 PLACE:  Hive:2
 ORIENT: encompass
+TAGS:   no_dump
 MONS:   queen bee, killer bee, killer bee larva, plant, yellow wasp
 MONS:   random, random
 KITEM:  R = w:2 honeycomb / w:1 royal jelly

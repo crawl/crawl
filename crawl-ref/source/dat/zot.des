@@ -330,6 +330,7 @@ ENDMAP
 NAME:       hall_of_Zot
 PLACE:      Zot:5
 ORIENT:     north
+TAGS:       no_dump
 LFLAGS:     no_tele_control
 MARKER:     Z = lua:item_pickup_change_flags { \
                 level_flags="!no_tele_control", item="Orb of Zot" \
@@ -410,7 +411,7 @@ ENDMAP
 
 NAME:       hall_of_Zot_1
 PLACE:      Zot:1
-TAGS:       transparent
+TAGS:       transparent no_dump
 ORIENT:     float
 LFLOORCOL:  lightgrey
 LROCKCOL:   lightgrey
@@ -422,7 +423,7 @@ ENDMAP
 
 NAME:       hall_of_Zot_2
 PLACE:      Zot:2
-TAGS:       transparent
+TAGS:       transparent no_dump
 ORIENT:     float
 LFLOORCOL:  lightgrey
 LROCKCOL:   blue
@@ -434,7 +435,7 @@ ENDMAP
 
 NAME:       hall_of_Zot_3
 PLACE:      Zot:3
-TAGS:       transparent
+TAGS:       transparent no_dump
 ORIENT:     float
 LFLOORCOL:  blue
 LROCKCOL:   lightblue
@@ -446,7 +447,7 @@ ENDMAP
 
 NAME:       hall_of_Zot_4
 PLACE:      Zot:4
-TAGS:       transparent
+TAGS:       transparent no_dump
 ORIENT:     float
 LFLOORCOL:  lightblue
 LROCKCOL:   magenta

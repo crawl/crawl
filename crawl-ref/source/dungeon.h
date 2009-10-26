@@ -27,6 +27,8 @@
 #define LEVEL_EXTRAS_KEY "level_extras_key"
 #define LEVEL_ID_KEY     "level_id_key"
 
+#define YOU_PORTAL_VAULT_NAMES_KEY  "you_portal_vault_names_key"
+
 enum portal_type
 {
     PORTAL_NONE = 0,
@@ -423,4 +425,6 @@ inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
 }
 
 void remember_vault_placement(std::string key, vault_placement &place);
+
+std::string dump_vault_maps();
 #endif

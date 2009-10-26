@@ -784,6 +784,7 @@ PLACE:   Tomb:1
 BFLAGS:  no_tele_control
 
 ORIENT:  encompass
+TAGS:    no_dump
 #
 SHUFFLE: ([{, AB), ]}, FIJKL/fijkl, _-
 SUBST:   A=|*, B=|*
@@ -885,6 +886,7 @@ NAME:    tomb_2
 PLACE:   Tomb:2
 # Can be rotated!
 ORIENT:  encompass
+TAGS:    no_dump
 #
 NSUBST:  A = [ / '
 SHUFFLE: Ww/Yy/Zz, Uu/Vv, Qq/Rr/Ss
@@ -992,7 +994,7 @@ ENDMAP
 NAME:    tomb_3
 PLACE:   Tomb:3
 ORIENT:  encompass
-TAGS:    no_rotate
+TAGS:    no_rotate no_dump
 #
 SUBST:   ' : " $ ':80
 SUBST:   ' = " $

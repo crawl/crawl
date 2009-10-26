@@ -281,7 +281,7 @@ ENDMAP
 NAME:    vaults_vault
 PLACE:   Vault:8
 ORIENT:  encompass
-TAGS:    no_rotate
+TAGS:    no_rotate no_dump
 #
 # the rune's spot, occassionally put nasty on the rune
 NSUBST:  O = O / o
@@ -408,7 +408,7 @@ ENDMAP
 NAME:    hall_of_blades
 PLACE:   Blade
 ORIENT:  north
-TAGS:    no_rotate
+TAGS:    no_rotate no_dump
 MONS:    dancing weapon
 SHUFFLE: cv
 MAP

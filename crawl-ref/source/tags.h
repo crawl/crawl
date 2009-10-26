@@ -57,7 +57,8 @@ enum tag_minor_version
     TAG_MINOR_TRANS    =  7,     // Keep track of cancellable transformations.
     TAG_MINOR_GITREV   =  8,     // Removed SVN revision and added Git revision.
     TAG_MINOR_DSTRAITS =  9,     // Pre-calculate demonspawn mutations
-    TAG_MINOR_VERSION  =  9      // Current version.  (Keep equal to max.)
+    TAG_MINOR_YOU_PROP = 10,     // Player class has CrawlHashTable
+    TAG_MINOR_VERSION  = 10      // Current version.  (Keep equal to max.)
 };
 
 

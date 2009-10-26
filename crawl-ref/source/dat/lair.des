@@ -716,7 +716,7 @@ ENDMAP
 NAME:    slime_pit
 PLACE:   Slime:6
 ORIENT:  encompass
-TAGS:    no_rotate
+TAGS:    no_rotate no_dump
 MONS:    the royal jelly
 MONS:    acid blob
 MONS:    great orb of eyes / nothing

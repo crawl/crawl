@@ -317,7 +317,7 @@ ENDMAP
 NAME:   vestibule_of_hell
 PLACE:  Hell
 ORIENT: encompass
-TAGS:   no_rotate
+TAGS:   no_rotate no_dump
 MARKER: D=feat:enter_dis
 MARKER: G=feat:enter_gehenna
 MARKER: C=feat:enter_cocytus

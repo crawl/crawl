@@ -1020,6 +1020,8 @@ static void tag_construct_you(writer &th)
     std::string revision = "Git:";
     revision += Version::Long();
     marshallString(th, revision);
+
+    you.props.write(th);
 }
 
 static void tag_construct_you_items(writer &th)
@@ -1467,6 +1469,12 @@ static void tag_read_you(reader &th, char minorVersion)
     {
         std::string rev_str = unmarshallString(th);
         UNUSED(rev_str);
+    }
+
+    if (minorVersion >= TAG_MINOR_YOU_PROP)
+    {
+        you.props.clear();
+        you.props.read(th);
     }
 }
 

@@ -198,3 +198,16 @@ bool level_type_is_stash_trackable(level_area_type type)
 {
     return (type != LEVEL_ABYSS && type != LEVEL_LABYRINTH);
 }
+
+std::vector<level_id> all_dungeon_ids()
+{
+    std::vector<level_id> out;
+    for (int i = 0; i < NUM_BRANCHES; i++)
+    {
+        const Branch &branch = branches[i];
+
+        for (int depth = 1; depth <= branch.depth; depth++)
+            out.push_back(level_id(branch.id, depth));
+    }
+    return (out);
+}

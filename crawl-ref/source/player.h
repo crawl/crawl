@@ -278,6 +278,8 @@ public:
   int         escaped_death_cause;
   std::string escaped_death_aux;
 
+  CrawlHashTable props;
+
 protected:
   FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
   FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;

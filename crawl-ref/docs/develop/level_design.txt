@@ -489,6 +489,10 @@ TAGS:     Tags go an a TAGS: line and are space-separated. You can have several
              This tag should be used exclusively for the generic (one tile)
              entries to portal vaults, like bazaars and labyrinths. Other
              portal vaults may be eligible for Trowel, too.
+          * "no_dump": Don't dump out this vault's name in the list of
+             vaults generated during the game.  Use this if the vault
+             is predictable (like the Vault:8 and Slime:6 vaults) or
+             are for weird internal uses (like the shoalhut vaults).
 
 LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
           (FLAGS just controls how the vault is placed); should only be used

@@ -48,4 +48,6 @@ bool level_type_exits_down(level_area_type type);
 bool level_type_allows_followers(level_area_type type);
 bool level_type_is_stash_trackable(level_area_type type);
 
+std::vector<level_id> all_dungeon_ids();
+
 #endif

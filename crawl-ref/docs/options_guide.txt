@@ -1782,11 +1782,17 @@ dump_order += monlist,kills
         dump_order lines - all lines but the first must use
              dump_order +=
 
-        Two optional dump sections are turns_by_place and
-        kills_by_place, which add detailed statistics to where turns
+        Two optional dump sections are "turns_by_place" and
+        "kills_by_place", which add detailed statistics to where turns
         were spent and monsters were killed. You can add them to your
         dump as:
              dump_order += turns_by_place, kills_by_place
+
+        Another optional dump section is "vaults", which will list the
+        locations and names of all the vaults that have been generated
+        in the game.  This will only be included in the final dump
+        which happens when you die, quit or win (or in ordinary dumps
+        while in wizard mode).
 
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their

@@ -56,6 +56,9 @@
 #include "cio.h" // for cancelable_get_line()
 #endif
 
+#define YOU_DUNGEON_VAULTS_KEY    "you_dungeon_vaults_key"
+#define YOU_PORTAL_VAULT_MAPS_KEY "you_portal_vault_maps_key"
+
 spec_room lua_special_room_spec;
 int       lua_special_room_level;
 
@@ -235,6 +238,9 @@ static bool use_random_maps  = true;
 static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
 
+static CrawlHashTable _you_vault_list;
+static std::string    _portal_vault_map_name;
+
 struct coloured_feature
 {
     dungeon_feature_type feature;
@@ -311,9 +317,36 @@ bool builder(int level_number, int level_type)
             if (dgn_Build_Method.size() > 0 && dgn_Build_Method[0] == ' ')
                 dgn_Build_Method = dgn_Build_Method.substr(1);
 
+            // Save information in the level's properties hash table
+            // so we can inlcude it in crash reports.
             env.properties[BUILD_METHOD_KEY] = dgn_Build_Method;
             env.properties[LAYOUT_TYPE_KEY]  = dgn_Layout_Type;
             env.properties[LEVEL_ID_KEY]     = level_id::current().describe();
+
+            // Save information in the player's properties has table so
+            // we can include it in the character dump.
+            if (!_you_vault_list.empty())
+            {
+                const std::string lev = level_id::current().describe();
+                CrawlHashTable &all_vaults =
+                    you.props[YOU_DUNGEON_VAULTS_KEY].get_table();
+
+                CrawlHashTable &this_level = all_vaults[lev].get_table();
+                this_level = _you_vault_list;
+            }
+            else if (!_portal_vault_map_name.empty())
+            {
+                CrawlVector &vault_maps =
+                    you.props[YOU_PORTAL_VAULT_MAPS_KEY].get_vector();
+                vault_maps.push_back(_portal_vault_map_name);
+            }
+
+            if (you.level_type == LEVEL_PORTAL_VAULT)
+            {
+                CrawlVector &vault_names =
+                    you.props[YOU_PORTAL_VAULT_NAMES_KEY].get_vector();
+                vault_names.push_back(you.level_type_name);
+            }
 
             dgn_Layout_Type.clear();
             Level_Unique_Maps.clear();
@@ -900,6 +933,8 @@ void dgn_reset_level()
     Level_Unique_Maps.clear();
     Level_Unique_Tags.clear();
 
+    _portal_vault_map_name.clear();
+    _you_vault_list.clear();
     dgn_Build_Method.clear();
     dgn_Layout_Type.clear();
     level_clear_vault_memory();
@@ -4317,7 +4352,9 @@ static bool _build_vaults(int level_number, const map_def *vault,
     // Must do this only after target_connections is finalised, or the vault
     // exits will not be correctly set.
     Level_Vaults.push_back(place);
-    remember_vault_placement(LEVEL_VAULTS_KEY, place);
+    remember_vault_placement(vault->has_tag("extra")
+                             ? LEVEL_EXTRAS_KEY: LEVEL_VAULTS_KEY,
+                             place);
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
@@ -8343,6 +8380,9 @@ void vault_placement::draw_at(const coord_def &c)
 
 void remember_vault_placement(std::string key, vault_placement &place)
 {
+    // First we store some info on the vault into the level's properties
+    // hash table, so that if there's a crash the crash report can list
+    // them all.
     CrawlHashTable &table = env.properties[key].get_table();
 
     std::string name = make_stringf("%s [%d]", place.map.name.c_str(),
@@ -8356,4 +8396,88 @@ void remember_vault_placement(std::string key, vault_placement &place)
                        place.num_runes, place.rune_subst);
 
     table[name] = place_str;
+
+    // Second we setup some info to be saved in the player's properties
+    // hash table, so the information can be included in the character
+    // dump when the player dies/quits/wins.
+    if (you.level_type == LEVEL_DUNGEON
+        && !place.map.has_tag("layout")
+        && !place.map.has_tag_suffix("dummy")
+        && !place.map.has_tag("no_dump"))
+    {
+        const std::string type = place.map.has_tag("extra")
+            ? "extra" : "normal";
+
+        _you_vault_list[type].get_vector().push_back(place.map.name);
+    }
+    else if (you.level_type == LEVEL_PORTAL_VAULT
+             && place.map.orient == MAP_ENCOMPASS
+             && !place.map.has_tag("no_dump"))
+    {
+        _portal_vault_map_name = place.map.name;
+    }
 }
+
+std::string dump_vault_maps()
+{
+    std::string out = "";
+
+    std::vector<level_id> levels = all_dungeon_ids();
+
+    CrawlHashTable &vaults = you.props[YOU_DUNGEON_VAULTS_KEY].get_table();
+    for (unsigned int i = 0; i < levels.size(); i++)
+    {
+        level_id    &lid = levels[i];
+        std::string  lev = lid.describe();
+
+        if (!vaults.exists(lev))
+            continue;
+
+        out += lid.describe() + ":\n";
+
+        CrawlHashTable &lists = vaults[lev].get_table();
+
+        const char *types[] = {"normal", "extra"};
+        for (int j = 0; j < 2; j++)
+        {
+            if (!lists.exists(types[j]))
+                continue;
+
+            out += "  ";
+            out += types[j];
+            out += ": ";
+
+            CrawlVector &vec = lists[types[j]].get_vector();
+
+            for (unsigned int k = 0, size = vec.size(); k < size; k++)
+            {
+                out += vec[k].get_string();
+                if (k < (size - 1))
+                    out += ", ";
+            }
+
+            out += "\n";
+        }
+        out += "\n";
+    }
+    CrawlVector &portals = you.props[YOU_PORTAL_VAULT_MAPS_KEY].get_vector();
+
+    if (!portals.empty())
+    {
+        out += "\n";
+
+        out += "Portal vault maps: ";
+
+        for (unsigned int i = 0, size = portals.size(); i < size; i++)
+        {
+            out += portals[i].get_string();
+
+            if (i < (size - 1))
+                out += ", ";
+        }
+
+        out += "\n\n";
+    }
+    return (out);
+}
+
