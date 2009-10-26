@@ -321,11 +321,64 @@ static void _sdump_visits(dump_params &par)
     place_info = you.get_place_info(LEVEL_PORTAL_VAULT);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited %ld portal chamber",
-                             have.c_str(), place_info.num_visits);
-        if (place_info.num_visits > 1)
-            text += "s";
-        text += " (including bazaars).\n";
+        CrawlVector &vaults =
+            you.props[YOU_PORTAL_VAULT_NAMES_KEY].get_vector();
+
+        int num_bazaars = 0;
+        int num_zigs    = 0;
+        int zig_levels  = 0;
+        std::vector<std::string> misc_portals;
+
+        for (unsigned int i = 0; i < vaults.size(); i++)
+        {
+            std::string name = vaults[i].get_string();
+
+            if (name.find("Ziggurat") != std::string::npos)
+            {
+                zig_levels++;
+
+                if (name == "Ziggurat:1")
+                    num_zigs++;
+            }
+            else if (name == "bazaar")
+                num_bazaars++;
+            else
+                misc_portals.push_back(name);
+        }
+
+        if (num_bazaars > 0)
+        {
+            text += make_stringf("You %svisited %d bazaar",
+                                 have.c_str(), num_bazaars);
+
+            if (num_bazaars > 1)
+                text += "s";
+            text += ".\n";
+        }
+
+        if (num_zigs > 0)
+        {
+            text += make_stringf("You %svisited %ld Ziggurat",
+                                 have.c_str(), num_zigs);
+            if (num_zigs > 1)
+                text += "s";
+            text += make_stringf(", and %s %ld of %s levels.\n",
+                                 seen.c_str(), zig_levels,
+                                 num_zigs > 1 ? "their" : "its");
+        }
+
+        if (!misc_portals.empty())
+        {
+            text += make_stringf("You %svisited %ld portal chamber",
+                                 have.c_str(), misc_portals.size());
+            if (misc_portals.size() > 1)
+                text += "s";
+            text += ": ";
+            text += comma_separated_line(misc_portals.begin(),
+                                         misc_portals.end(),
+                                         ", ");
+            text += ".\n";
+        }
     }
 
     text += "\n";
