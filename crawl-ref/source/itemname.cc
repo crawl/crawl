@@ -2302,6 +2302,8 @@ bool is_emergency_item(const item_def &item)
         switch (item.sub_type)
         {
         case WAND_HASTING:
+            if (you.religion == GOD_CHEIBRIADOS)
+                return (false);
         case WAND_HEALING:
         case WAND_TELEPORTATION:
             return (true);
@@ -2325,6 +2327,8 @@ bool is_emergency_item(const item_def &item)
         switch (item.sub_type)
         {
         case POT_SPEED:
+            if (you.religion == GOD_CHEIBRIADOS)
+                return (false);
         case POT_HEALING:
         case POT_HEAL_WOUNDS:
         case POT_RESISTANCE:
@@ -2353,13 +2357,15 @@ bool is_good_item(const item_def &item)
     case OBJ_POTIONS:
         switch (item.sub_type)
         {
+        case POT_BERSERK_RAGE:
+            if (you.religion == GOD_CHEIBRIADOS)
+                return (false);
         case POT_CURE_MUTATION:
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
         case POT_EXPERIENCE:
         case POT_MAGIC:
-        case POT_BERSERK_RAGE:
         case POT_MIGHT:
         case POT_AGILITY:
         case POT_BRILLIANCE:
