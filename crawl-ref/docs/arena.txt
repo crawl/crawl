@@ -105,7 +105,7 @@ There are four arena parameters that you can set in your crawl options file:
       Defaults to false.
 
 * arena_list_eq:  Dump to the file arena.result the equipment of the
-      monsters placed at the begining of each round.
+      monsters placed at the beginning of each round.
 
 
 The are also a number a parameters you can use by putting them in the
