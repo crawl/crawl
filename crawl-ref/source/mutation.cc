@@ -1181,7 +1181,19 @@ mutation_def mutation_defs[] = {
        "Your patterned scales recede somewhat."},
 
       "patterned scales"
-    }
+    },
+    { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 3, false, false,
+      {"You are somewhat able to resist unholy torments (1 in 5 success).",
+       "You are decently able to resist unholy torments (2 in 5 success).",
+       "You are rather able to resist unholy torments (3 in 5 success)."},
+
+      {"You feel a slight anaesthesia.",
+       "You feel a slight anaesthesia.",
+       "You feel a strange anaesthesia."},
+
+      {"","",""},
+
+      "stochastic torment resistance"},
 };
 
 const mutation_def& get_mutation_def(mutation_type mut)
@@ -2668,7 +2680,7 @@ void roll_demonspawn_mutations()
     static const mutation_type awesome_muts[] = {
         MUT_HEAT_RESISTANCE, MUT_FAST, MUT_TELEPORT_AT_WILL, MUT_MAPPING,
         MUT_ROBUST, MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_BLACK_SCALES,
-        MUT_METALLIC_SCALES, MUT_RED2_SCALES
+        MUT_METALLIC_SCALES, MUT_RED2_SCALES, MUT_STOCHASTIC_TORMENT_RESISTANCE
     };
 
     // "Great" mutations define strategy in common encounters, but not

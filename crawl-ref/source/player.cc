@@ -1615,11 +1615,12 @@ bool player_control_teleport(bool calc_unid, bool temp, bool items)
             || player_mutation_level(MUT_TELEPORT_CONTROL));
 }
 
-int player_res_torment(bool)
+int player_res_torment(bool, bool temp)
 {
     return (player_mutation_level(MUT_TORMENT_RESISTANCE)
             || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
-            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING);
+            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
+            || temp && (20 * player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE) >= random2(100)));
 }
 
 // Funny that no races are susceptible to poisons. {dlb}

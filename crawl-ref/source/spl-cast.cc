@@ -1014,7 +1014,7 @@ static bool _spell_is_uncastable(spell_type spell)
         return (true);
     }
 
-    if (spell == SPELL_SYMBOL_OF_TORMENT && player_res_torment())
+    if (spell == SPELL_SYMBOL_OF_TORMENT && player_res_torment(true, false))
     {
         mpr("To torment others, one must first know what torment means. ");
         return (true);

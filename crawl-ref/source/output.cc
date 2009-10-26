@@ -2954,6 +2954,10 @@ std::string _status_mut_abilities()
             case MUT_TORMENT_RESISTANCE:
                 current = "torment resistance";
                 break;
+            case MUT_STOCHASTIC_TORMENT_RESISTANCE:
+                snprintf(info, INFO_SIZE, "%d%% torment resistance", level*20);
+                current = info;
+                break;
             case MUT_NEGATIVE_ENERGY_RESISTANCE:
                 snprintf(info, INFO_SIZE, "life protection %d", level);
                 current = info;

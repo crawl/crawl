@@ -194,7 +194,7 @@ int torment_player(int pow, int caster)
     // correctly.
     int hploss = 0;
 
-    if (!player_res_torment())
+    if (!player_res_torment(false))
     {
         // Negative energy resistance can alleviate torment.
         hploss = std::max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
@@ -203,14 +203,13 @@ int torment_player(int pow, int caster)
     // Kiku protects you from torment to a degree.
     bool kiku_shielding_player =
         (you.religion == GOD_KIKUBAAQUDGHA
-        && !player_res_torment()
         && !player_under_penance()
         && you.piety > 80
         && you.gift_timeout == 0); // no protection during pain branding weapon
 
     if (kiku_shielding_player)
     {
-        if (!player_res_torment())
+        if (hploss > 0)
         {
             if (random2(600) < you.piety) // 13.33% to 33.33% chance
             {
