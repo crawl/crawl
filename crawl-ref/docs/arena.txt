@@ -85,7 +85,7 @@ There are a very limited number of command you can issue to the arena:
 
 * You can look around the arena like in a normal game ('x').
 
-* You can suspended the arena like in a normal game (Control-Z).
+* You can suspend the arena like in a normal game (Control-Z).
 
 If the arena has lots of monsters it might take a few seconds before it
 responds.
