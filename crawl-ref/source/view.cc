@@ -445,7 +445,8 @@ static void _get_symbol( const coord_def& where,
         *ch = magic_mapped? fdef.magic_symbol
                           : fdef.symbol;
 
-        if (colour)
+        // Don't recolor items
+        if (colour && object < NUM_REAL_FEATURES)
         {
             const int colmask = *colour & COLFLAG_MASK;
 
