@@ -1,4 +1,4 @@
-PREFIX:=$(shell pwd)/install
+PREFIX := install
 
 SUBDIRS = lua/src sqlite sdl sdl-image freetype libpng pcre zlib
 
@@ -31,8 +31,8 @@ $(SUBDIRS):
 	    exit 1; \
 	fi
 	@cd $@ && \
-	$(MAKE) all prefix=$(PREFIX) && \
-	$(MAKE) install prefix=$(PREFIX)
+	$(MAKE) all prefix=$(shell echo $@ | sed 's/[^/]*/../g')/$(PREFIX) && \
+	$(MAKE) install prefix=$(shell echo $@ | sed 's/[^/]*/../g')/$(PREFIX)
 
 libpng freetype: zlib
 sdl-image: sdl libpng
