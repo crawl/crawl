@@ -120,8 +120,11 @@ endif
 #
 include makefile.obj
 
+# Just a quick hack to make it clean up
+# tiles-specific object files too.
 ifneq (,$(findstring clean,$(MAKECMDGOALS)))
 TILES := YesPlease
+UNSUPPORTED_BUILD := YesPlease
 endif
 
 # Works for Mac OS X and Linux.
