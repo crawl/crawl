@@ -6425,9 +6425,9 @@ std::string player::arm_name(bool plural, bool *can_plural) const
     return (str);
 }
 
-int player::id() const
+monster_type player::id() const
 {
-    return (-1);
+    return (MONS_PLAYER);
 }
 
 int player::mindex() const

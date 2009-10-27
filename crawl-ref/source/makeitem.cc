@@ -4044,6 +4044,9 @@ static void _give_ammo(monsters *mon, int level,
                 qty += random2(4);
 
             break;
+
+        default:
+            break;
         }
 
         if (weap_type == -1)

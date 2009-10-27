@@ -2174,7 +2174,7 @@ static void unmarshall_monster(reader &th, monsters &m)
     }
     m.ench_countdown = unmarshallByte(th);
 
-    m.type           = unmarshallShort(th);
+    m.type           = static_cast<monster_type>(unmarshallShort(th));
     m.hit_points     = unmarshallShort(th);
     m.max_hit_points = unmarshallShort(th);
     m.number         = unmarshallShort(th);
@@ -2217,7 +2217,7 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
         monsters &m = menv[i];
         unmarshall_monster(th, m);
         // place monster
-        if (m.type != -1)
+        if (m.type != MONS_NO_MONSTER)
         {
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
             int midx = mgrd(m.pos());

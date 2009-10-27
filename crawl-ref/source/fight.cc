@@ -5114,8 +5114,6 @@ void melee_attack::mons_perform_attack_rounds()
             mons_announce_hit(attk);
             check_defender_train_armour();
 
-            const int type = defender->id();
-
             if (defender->can_bleed()
                 && !defender->is_summoned()
                 && !defender->submerged())
@@ -5126,7 +5124,7 @@ void melee_attack::mons_perform_attack_rounds()
                 if (blood > defender->stat_hp())
                     blood = defender->stat_hp();
 
-                bleed_onto_floor(pos, type, blood, true);
+                bleed_onto_floor(pos, defender->id(), blood, true);
             }
 
             if (decapitate_hydra(damage_done,

@@ -4011,7 +4011,7 @@ void bolt::affect_player()
     {
         // assumes DVORP_PIERCING, factor: 0.5
         int blood = std::min(you.hp, hurted / 2);
-        bleed_onto_floor(you.pos(), -1, blood, true);
+        bleed_onto_floor(you.pos(), MONS_PLAYER, blood, true);
     }
 
     hurted = check_your_resists(hurted, flavour);

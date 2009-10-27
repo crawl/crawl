@@ -442,7 +442,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 const int damage = (you.your_level * 2) + random2avg(29, 2)
                     - random2(1 + player_AC());
                 ouch(damage, NON_MONSTER, KILLED_BY_TRAP, "blade");
-                bleed_onto_floor(you.pos(), -1, damage, true);
+                bleed_onto_floor(you.pos(), MONS_PLAYER, damage, true);
             }
         }
         else if (m)

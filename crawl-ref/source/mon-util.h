@@ -842,7 +842,7 @@ bool mons_has_blood(int mc);
 bool mons_is_submerged(const monsters *m);
 
 bool invalid_monster(const monsters *mon);
-bool invalid_monster_class(int mclass);
+bool invalid_monster_type(monster_type mt);
 bool invalid_monster_index(int i);
 
 bool monster_shover(const monsters *m);

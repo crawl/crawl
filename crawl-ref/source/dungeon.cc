@@ -4685,7 +4685,7 @@ int dgn_place_monster(mons_spec &mspec,
 {
     if (mspec.mid != -1)
     {
-        const int  mid = mspec.mid;
+        const monster_type mid = static_cast<monster_type>(mspec.mid);
         const bool m_generate_awake = (generate_awake || mspec.generate_awake);
         const bool m_patrolling     = (patrolling || mspec.patrolling);
         const bool m_band           = mspec.band;
@@ -4711,7 +4711,8 @@ int dgn_place_monster(mons_spec &mspec,
                 return (-1);
             }
 
-            const int montype = mons_class_is_zombified(mid) ? mspec.monbase
+            const monster_type montype = mons_class_is_zombified(mid)
+                                                             ? mspec.monbase
                                                              : mid;
 
             const habitat_type habitat = mons_class_primary_habitat(montype);
@@ -4720,7 +4721,7 @@ int dgn_place_monster(mons_spec &mspec,
                 dungeon_terrain_changed(where, habitat2grid(habitat));
         }
 
-        mgen_data mg(static_cast<monster_type>(mid));
+        mgen_data mg(mid);
 
         if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
         {
@@ -5116,19 +5117,19 @@ static void _vault_grid( vault_placement &place,
         if (vgrid != '8' && vgrid != '9' && vgrid != '0')
         {
             monster_type_thing = place.map.mons.get_monster(vgrid - '1');
+            monster_type mt = static_cast<monster_type>(monster_type_thing.mid);
             // Is a map for a specific place trying to place a unique which
             // somehow already got created?
             if (place.map.place.is_valid()
-                && !invalid_monster_class(monster_type_thing.mid)
-                && mons_is_unique(monster_type_thing.mid)
-                && you.unique_creatures[monster_type_thing.mid])
+                && !invalid_monster_type(mt)
+                && mons_is_unique(mt)
+                && you.unique_creatures[mt])
             {
                 mprf(MSGCH_ERROR, "ERROR: %s already generated somewhere "
                      "else; please file a bug report.",
-                     mons_type_name(monster_type_thing.mid,
-                                    DESC_CAP_THE).c_str());
+                     mons_type_name(mt, DESC_CAP_THE).c_str());
                 // Force it to be generated anyway.
-                you.unique_creatures[monster_type_thing.mid] = false;
+                you.unique_creatures[mt] = false;
             }
         }
 

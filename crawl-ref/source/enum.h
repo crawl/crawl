@@ -2094,6 +2094,9 @@ enum monster_type                      // (int) menv[].type
     MONS_TEST_SPAWNER,
 
     NUM_MONSTERS,                      // used for polymorph
+    MONS_NO_MONSTER,
+    MONS_PLAYER,
+
     RANDOM_MONSTER = 1000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
 
     // A random draconian, either base coloured drac or specialised.

@@ -319,7 +319,7 @@ bool feat_compatible(dungeon_feature_type grid_wanted,
                      dungeon_feature_type actual_grid);
 bool monster_habitable_grid(const monsters *m,
                             dungeon_feature_type actual_grid);
-bool monster_habitable_grid(int monster_class,
+bool monster_habitable_grid(monster_type montype,
                             dungeon_feature_type actual_grid,
                             int flies = -1,
                             bool paralysed = false);

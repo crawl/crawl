@@ -364,7 +364,7 @@ struct travel_exclude
     bool          vault;        // Is this exclusion set by a vault?
 
     travel_exclude(const coord_def &p, int r = LOS_RADIUS,
-                   bool autoex = false, monster_type mons = NUM_MONSTERS,
+                   bool autoex = false, monster_type mons = MONS_NO_MONSTER,
                    bool vault = false);
 
     int radius_sq() const;

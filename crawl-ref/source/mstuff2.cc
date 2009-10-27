@@ -1319,11 +1319,12 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
     mgrd(monster->pos()) = monster_index(monster);
 
     // Mimics change form/colour when teleported.
-    if (mons_is_mimic( monster->type ))
+    if (mons_is_mimic(monster->type))
     {
-        int old_type    = monster->type;
-        monster->type   = MONS_GOLD_MIMIC + random2(5);
-        monster->colour = get_mimic_colour( monster );
+        monster_type old_type = monster->type;
+        monster->type   = static_cast<monster_type>(
+                                         MONS_GOLD_MIMIC + random2(5));
+        monster->colour = get_mimic_colour(monster);
 
         // If it's changed form, you won't recognise it.
         // This assumes that a non-gold mimic turning into another item of

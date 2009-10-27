@@ -111,8 +111,8 @@ bool monster_habitable_grid(const monsters *m,
                             dungeon_feature_type actual_grid)
 {
     // Zombified monsters enjoy the same habitat as their original.
-    const int montype = mons_is_zombified(m) ? mons_zombie_base(m)
-                                             : m->type;
+    const monster_type montype = mons_is_zombified(m) ? mons_zombie_base(m)
+                                                      : m->type;
 
     return (monster_habitable_grid(montype, actual_grid, mons_flies(m),
                                    mons_cannot_move(m)));
@@ -133,7 +133,7 @@ inline static bool _mons_airborne(int mcls, int flies, bool paralysed)
 // one check, so we no longer care if a water elemental springs into existence
 // on dry land, because they're supposed to be able to move onto dry land
 // anyway.
-bool monster_habitable_grid(int monster_class,
+bool monster_habitable_grid(monster_type montype,
                             dungeon_feature_type actual_grid,
                             int flies, bool paralysed)
 {
@@ -142,17 +142,17 @@ bool monster_habitable_grid(int monster_class,
         return (false);
 
     const dungeon_feature_type feat_preferred =
-        habitat2grid(mons_class_primary_habitat(monster_class));
+        habitat2grid(mons_class_primary_habitat(montype));
     const dungeon_feature_type feat_nonpreferred =
-        habitat2grid(mons_class_secondary_habitat(monster_class));
+        habitat2grid(mons_class_secondary_habitat(montype));
 
     // Special check for fire elementals since their habitat is floor which
     // is generally considered compatible with shallow water.
-    if (monster_class == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
+    if (montype == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return (false);
 
     // Krakens are too large for shallow water.
-    if (monster_class == MONS_KRAKEN && actual_grid == DNGN_SHALLOW_WATER)
+    if (montype == MONS_KRAKEN && actual_grid == DNGN_SHALLOW_WATER)
         return (false);
 
     if (feat_compatible(feat_preferred, actual_grid)
@@ -165,7 +165,7 @@ bool monster_habitable_grid(int monster_class,
     // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
     // only have to check for the additional valid grids of deep
     // water and lava.
-    if (_mons_airborne(monster_class, flies, paralysed)
+    if (_mons_airborne(montype, flies, paralysed)
         && (actual_grid == DNGN_LAVA || actual_grid == DNGN_DEEP_WATER))
     {
         return (true);
@@ -695,8 +695,8 @@ static bool _valid_monster_generation_location(
     if (!in_bounds(mg_pos) || actor_at(mg_pos))
         return (false);
 
-    const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                         : mg.cls);
+    const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
+                                                                  : mg.cls);
     if (!monster_habitable_grid(montype, grd(mg_pos),
                                 mons_class_flies(montype), false)
         || (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos)))
@@ -1003,7 +1003,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
     // Gotta be able to pick an ID.
     for (id = 0; id < MAX_MONSTERS; id++)
-        if (menv[id].type == -1)
+        if (menv[id].type == MONS_NO_MONSTER)
             break;
 
     // Too many monsters on level?
@@ -1012,8 +1012,8 @@ static int _place_monster_aux(const mgen_data &mg,
 
     menv[id].reset();
 
-    const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                         : mg.cls);
+    const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
+                                                                  : mg.cls);
 
     // Setup habitat and placement.
     // If the space is occupied, try some neighbouring square instead.
@@ -3215,8 +3215,8 @@ bool monster_pathfind::traversable(const coord_def p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def p)
 {
-    const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
-                                                : mons->type;
+    const monster_type montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
+                                                         : mons->type;
 
     if (!monster_habitable_grid(montype, grd(p)))
         return (false);

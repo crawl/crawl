@@ -124,8 +124,8 @@ static void _create_monster_hide(const item_def corpse)
         break;
     }
 
-    int mtype = corpse.orig_monnum - 1;
-    if (!invalid_monster_class(mtype) && mons_is_unique(mtype))
+    monster_type mtype = static_cast<monster_type>(corpse.orig_monnum - 1);
+    if (!invalid_monster_type(mtype) && mons_is_unique(mtype))
         item.inscription = mons_type_name(mtype, DESC_PLAIN);
 
     move_item_to_grid(&o, you.pos());
@@ -156,12 +156,12 @@ void turn_corpse_into_skeleton(item_def &item)
 void turn_corpse_into_chunks(item_def &item)
 {
     ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
-
-    const int max_chunks = mons_weight(item.plus) / 150;
+    const monster_type montype = static_cast<monster_type>(item.plus);
+    const int max_chunks = mons_weight(montype) / 150;
 
     // Only fresh corpses bleed enough to colour the ground.
     if (!food_is_rotten(item))
-        bleed_onto_floor(you.pos(), item.plus, max_chunks, true);
+        bleed_onto_floor(you.pos(), montype, max_chunks, true);
 
     item.base_type = OBJ_FOOD;
     item.sub_type  = FOOD_CHUNK;
@@ -1126,15 +1126,15 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
 // Currently flavour only: colour ground (and possibly adjacent squares) red.
 // "damage" depends on damage taken (or hitpoints, if damage higher),
 // or, for sacrifices, on the number of chunks possible to get out of a corpse.
-void bleed_onto_floor(const coord_def& where, int montype,
+void bleed_onto_floor(const coord_def& where, monster_type montype,
                       int damage, bool spatter, bool smell_alert)
 {
     ASSERT(in_bounds(where));
 
-    if (montype == -1 && !you.can_bleed())
+    if (montype == MONS_PLAYER && !you.can_bleed())
         return;
 
-    if (montype != -1)
+    if (montype != NUM_MONSTERS)
     {
         monsters m;
         m.type = montype;

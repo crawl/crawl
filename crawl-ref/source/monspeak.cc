@@ -358,7 +358,7 @@ static bool _polyd_can_speak(const monsters* monster)
 // Returns true if something is said.
 bool mons_speaks(monsters *monster)
 {
-    ASSERT(!invalid_monster_class(monster->type));
+    ASSERT(!invalid_monster_type(monster->type));
 
     // Monsters always talk on death, even if invisible/silenced/etc.
     int duration = 1;

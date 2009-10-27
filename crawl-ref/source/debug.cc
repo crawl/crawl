@@ -167,7 +167,7 @@ void DEBUGSTR(const char *format, ...)
 }
 #endif
 
-static int _debug_prompt_for_monster( void )
+static monster_type _debug_prompt_for_monster(void)
 {
     char  specs[80];
 
@@ -175,11 +175,11 @@ static int _debug_prompt_for_monster( void )
     if (!cancelable_get_line_autohist(specs, sizeof specs))
     {
         if (specs[0] == '\0')
-            return (-1);
+            return (MONS_NO_MONSTER);
 
         return (get_monster_by_name(specs));
     }
-    return (-1);
+    return (MONS_NO_MONSTER);
 }
 
 //---------------------------------------------------------------
@@ -1202,7 +1202,7 @@ void wizard_create_spec_object()
 {
     char           specs[80];
     char           keyin;
-    int            mon;
+    monster_type   mon;
 
     object_class_type class_wanted   = OBJ_UNASSIGNED;
 
@@ -1289,7 +1289,7 @@ void wizard_create_spec_object()
     {
         mon = _debug_prompt_for_monster();
 
-        if (mon == -1 || mon == MONS_PROGRAM_BUG)
+        if (mon == MONS_NO_MONSTER || mon == MONS_PROGRAM_BUG)
         {
             mpr("No such monster.");
             return;
@@ -5655,16 +5655,16 @@ void wizard_make_monster_summoned(monsters* mon)
 
 void wizard_polymorph_monster(monsters* mon)
 {
-    int old_type =  mon->type;
-    int type     = _debug_prompt_for_monster();
+    monster_type old_type =  mon->type;
+    monster_type type     = _debug_prompt_for_monster();
 
-    if (type == -1)
+    if (type == NUM_MONSTERS)
     {
         canned_msg( MSG_OK );
         return;
     }
 
-    if (invalid_monster_class(type) || type == MONS_PROGRAM_BUG)
+    if (invalid_monster_type(type))
     {
         mpr("Invalid monster type.", MSGCH_PROMPT);
         return;
@@ -5682,7 +5682,7 @@ void wizard_polymorph_monster(monsters* mon)
         return;
     }
 
-    monster_polymorph(mon, (monster_type) type, PPT_SAME, true);
+    monster_polymorph(mon, type, PPT_SAME, true);
 
     if (!mon->alive())
     {
@@ -6609,7 +6609,7 @@ std::string debug_mon_str(const monsters* mon)
 void debug_dump_mon(const monsters* mon, bool recurse)
 {
     const int midx = monster_index(mon);
-    if (invalid_monster_index(midx) || invalid_monster_class(mon->type))
+    if (invalid_monster_index(midx) || invalid_monster_type(mon->type))
         return;
 
     fprintf(stderr, "<<<<<<<<<" EOL);
@@ -6781,7 +6781,7 @@ void debug_dump_mon(const monsters* mon, bool recurse)
         return;
 
     if (!invalid_monster_index(mon->foe) && mon->foe != midx
-        && !invalid_monster_class(menv[mon->foe].type))
+        && !invalid_monster_type(menv[mon->foe].type))
     {
         fprintf(stderr, "Foe:" EOL);
         debug_dump_mon(&menv[mon->foe], false);
@@ -6789,7 +6789,7 @@ void debug_dump_mon(const monsters* mon, bool recurse)
 
     if (!invalid_monster_index(target) && target != midx
         && target != mon->foe
-        && !invalid_monster_class(menv[target].type))
+        && !invalid_monster_type(menv[target].type))
     {
         fprintf(stderr, "Target:" EOL);
         debug_dump_mon(&menv[target], false);

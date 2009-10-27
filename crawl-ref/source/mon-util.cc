@@ -132,11 +132,12 @@ static void _initialise_randmons()
 
         for (int m = 0; m < NUM_MONSTERS; ++m)
         {
-            if (invalid_monster_class(m))
+            monster_type mt = static_cast<monster_type>(m);
+            if (invalid_monster_type(mt))
                 continue;
 
-            if (monster_habitable_grid(m, grid))
-                monsters_by_habitat[i].push_back(static_cast<monster_type>(m));
+            if (monster_habitable_grid(mt, grid))
+                monsters_by_habitat[i].push_back(mt);
         }
     }
     initialised_randmons = true;
@@ -694,12 +695,11 @@ bool invalid_monster(const monsters *mon)
     return (!mon || mon->type == -1);
 }
 
-bool invalid_monster_class(int mclass)
+bool invalid_monster_type(monster_type mt)
 {
-    return (mclass < 0
-            || mclass >= NUM_MONSTERS
-            || mon_entry[mclass] == -1
-            || mon_entry[mclass] == mon_entry[MONS_PROGRAM_BUG]);
+    return (mt < 0 || mt >= NUM_MONSTERS
+            || mon_entry[mt] == -1
+            || mon_entry[mt] == mon_entry[MONS_PROGRAM_BUG]);
 }
 
 bool invalid_monster_index(int i)
@@ -2035,9 +2035,9 @@ monster_type draconian_colour_by_name(const std::string &name)
 static std::string _str_monam(const monsters& mon, description_level_type desc,
                               bool force_seen)
 {
-    if (mon.type == -1)
+    if (mon.type == MONS_NO_MONSTER)
         return ("DEAD MONSTER");
-    else if (invalid_monster_class(mon.type) && mon.type != MONS_PROGRAM_BUG)
+    else if (invalid_monster_type(mon.type) && mon.type != MONS_PROGRAM_BUG)
         return make_stringf("INVALID MONSTER (#%d)", mon.type);
 
     const bool arena_submerged = crawl_state.arena && !force_seen
@@ -2091,7 +2091,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         return (apostrophise(mon.mname) + " ghost");
 
     // Some monsters might want the name of a different creature.
-    int nametype = mon.type;
+    monster_type nametype = mon.type;
 
     // Tack on other prefixes.
     switch (mon.type)
@@ -2207,7 +2207,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     else
     {
         // Add the base name.
-        if (invalid_monster_class(nametype) && nametype != MONS_PROGRAM_BUG)
+        if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
             result += make_stringf("INVALID MONSTER (#%d)", nametype);
         else
             result += get_monster_data(nametype)->name;
@@ -3560,7 +3560,7 @@ bool monster_senior(const monsters *m1, const monsters *m2, bool fleeing)
 // monsters methods
 
 monsters::monsters()
-    : type(-1), hit_points(0), max_hit_points(0), hit_dice(0),
+    : type(MONS_NO_MONSTER), hit_points(0), max_hit_points(0), hit_dice(0),
       ac(0), ev(0), speed(0), speed_increment(0),
       target(), patrol_point(), travel_target(MTRAV_NONE),
       inv(NON_ITEM), spells(), attitude(ATT_HOSTILE), behaviour(BEH_WANDER),
@@ -3597,7 +3597,7 @@ void monsters::reset()
 
     flags           = 0;
     experience      = 0L;
-    type            = -1;
+    type            = MONS_NO_MONSTER;
     base_monster    = MONS_PROGRAM_BUG;
     hit_points      = 0;
     max_hit_points  = 0;
@@ -5802,7 +5802,7 @@ std::string monsters::arm_name(bool plural, bool *can_plural) const
    return (str);
 }
 
-int monsters::id() const
+monster_type monsters::id() const
 {
     return (type);
 }
@@ -6176,7 +6176,7 @@ void monsters::teleport(bool now, bool)
 
 bool monsters::alive() const
 {
-    return (hit_points > 0 && type != -1);
+    return (hit_points > 0 && type != MONS_NO_MONSTER);
 }
 
 god_type monsters::deity() const

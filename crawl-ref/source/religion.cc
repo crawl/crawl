@@ -7154,7 +7154,7 @@ void offer_and_butcher_corpse(int corpse)
     did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
 
     // ritual sacrifice can also bloodify the ground
-    const int mons_class = mitm[corpse].plus;
+    const monster_type mons_class = static_cast<monster_type>(mitm[corpse].plus);
     const int max_chunks = mons_weight(mons_class) / 150;
     bleed_onto_floor(you.pos(), mons_class, max_chunks, true);
     destroy_item(corpse);

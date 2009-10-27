@@ -326,7 +326,7 @@ public:
     item_def *slot_item(equipment_type eq);
 
     // actor
-    int id() const;
+    monster_type id() const;
     int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }

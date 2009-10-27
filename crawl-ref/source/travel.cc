@@ -533,10 +533,10 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
     }
     else
     {
-        monster_type montype = NUM_MONSTERS;
+        monster_type montype = MONS_NO_MONSTER;
         const monsters *m = monster_at(p);
-        if (m && mons_near(m) && you.can_see(m))
-            montype = static_cast<monster_type>(m->type);
+        if (m && you.can_see(m))
+            montype = m->type;
 
         curr_excludes.push_back(travel_exclude(p, radius, autoexcl,
                                                montype, vaultexcl));
@@ -564,9 +564,8 @@ std::string get_exclusion_desc()
     int count_other = 0;
     for (unsigned int i = 0; i < curr_excludes.size(); ++i)
     {
-        if (curr_excludes[i].mon != NON_MONSTER)
-            monsters.push_back("unknown monster");
-               // FIXME: mondata[curr_excludes[i].mon].name);
+        if (!invalid_monster_type(curr_excludes[i].mon))
+            monsters.push_back(mons_type_name(curr_excludes[i].mon, DESC_PLAIN));
         else
             count_other++;
     }
@@ -3659,7 +3658,7 @@ void LevelInfo::load(reader& inf, char minorVersion)
             unmarshallCoord(inf, c);
             const int radius = unmarshallShort(inf);
             bool autoexcl    = false;
-            monster_type mon = NUM_MONSTERS;
+            monster_type mon = MONS_NO_MONSTER;
             if (minorVersion >= TAG_ANNOTATE_EXCL)
             {
                 autoexcl = unmarshallBoolean(inf);

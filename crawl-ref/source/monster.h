@@ -62,7 +62,7 @@ public:
 public:
     std::string mname;
 
-    int type;
+    monster_type type;
     int hit_points;
     int max_hit_points;
     int hit_dice;
@@ -187,7 +187,7 @@ public:
     actor *get_foe() const;
 
     // actor interface
-    int id() const;
+    monster_type id() const;
     int mindex() const;
     int       get_experience_level() const;
     god_type  deity() const;

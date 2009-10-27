@@ -1667,7 +1667,7 @@ int monster_die(monsters *monster, killer_type killer,
 
                     // If the killer is already dead treat it like an
                     // anonymous monster.
-                    if (killer_mon->type == -1)
+                    if (killer_mon->type == MONS_NO_MONSTER)
                         anon = true;
                 }
 
@@ -1991,6 +1991,7 @@ int monster_die(monsters *monster, killer_type killer,
     return (corpse);
 }
 
+// Clean up after a dead monster.
 void monster_cleanup(monsters *monster)
 {
     crawl_state.mon_gone(monster);
@@ -2093,7 +2094,7 @@ void alert_nearby_monsters(void)
     }
 }
 
-static bool _valid_morph(monsters *monster, int new_mclass)
+static bool _valid_morph(monsters *monster, monster_type new_mclass)
 {
     const dungeon_feature_type current_tile = grd(monster->pos());
 
@@ -8217,9 +8218,10 @@ static bool _monster_eat_single_corpse(monsters *monster, item_def& item,
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return (false);
 
+    monster_type mt = static_cast<monster_type>(item.plus);
     if (do_heal)
     {
-        monster->hit_points += 1 + random2(mons_weight(item.plus)) / 100;
+        monster->hit_points += 1 + random2(mons_weight(mt)) / 100;
 
         // Limited growth factor here - should 77 really be the cap? {dlb}:
         monster->hit_points = std::min(100, monster->hit_points);
@@ -8237,13 +8239,13 @@ static bool _monster_eat_single_corpse(monsters *monster, item_def& item,
     // from misc.cc:turn_corpse_into_chunks() and the butchery-related
     // delays in delay.cc:stop_delay().
 
-    const int max_chunks = mons_weight(item.plus) / 150;
+    const int max_chunks = mons_weight(mt) / 150;
 
     // Only fresh corpses bleed enough to colour the ground.
     if (!food_is_rotten(item))
-        bleed_onto_floor(monster->pos(), item.plus, max_chunks, true);
+        bleed_onto_floor(monster->pos(), mt, max_chunks, true);
 
-    if (mons_skeleton(item.plus) && one_chance_in(3))
+    if (mons_skeleton(mt) && one_chance_in(3))
         turn_corpse_into_skeleton(item);
     else
         destroy_item(item.index());
