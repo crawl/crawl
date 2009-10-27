@@ -18,6 +18,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "enum.h"
+#include "exclude.h"
 #include "food.h"
 #include "invent.h"
 #include "items.h"

@@ -27,6 +27,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "dgnevent.h"
+#include "exclude.h"
 #include "fight.h"
 #include "files.h"
 #include "ghost.h"

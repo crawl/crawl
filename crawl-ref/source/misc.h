@@ -69,9 +69,6 @@ std::string weird_sound();
 
 bool mons_is_safe(const monsters *mon, bool want_move = false,
                   bool consider_user_options = true);
-bool need_auto_exclude(const monsters *mon, bool sleepy = false);
-void set_auto_exclude(const monsters *mon);
-void remove_auto_exclude(const monsters *mon, bool sleepy = false);
 
 std::vector<monsters*> get_nearby_monsters(bool want_move = false,
                                            bool just_check = false,

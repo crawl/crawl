@@ -25,6 +25,7 @@ directn.o \
 dlua.o \
 dungeon.o \
 effects.o \
+exclude.o \
 fight.o \
 files.o \
 food.o \
