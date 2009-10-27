@@ -1627,7 +1627,7 @@ int exper_value(const monsters *monster)
 
     // These four are the original arguments.
     const int  mclass      = monster->type;
-    int  mHD         = monster->hit_dice;
+    const int  mHD         = monster->hit_dice;
     int  maxhp       = monster->max_hit_points;
 
     // Hacks to make merged slime creatures not worth so much
@@ -1636,7 +1636,6 @@ int exper_value(const monsters *monster)
     // merged. -cao
     if(monster->mons_species() == MONS_SLIME_CREATURE)
     {
-        mHD /= monster->number;
         maxhp /= monster->number;
     }
 

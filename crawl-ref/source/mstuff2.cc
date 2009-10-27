@@ -2648,13 +2648,8 @@ static void _merge_ench_durations(monsters * initial_slime, monsters * merge_to)
 // Calculate slime creature Hp and hd based on how many are merged.
 static void _stats_from_blob_count(monsters * slime, float hp_per_blob)
 {
-    monsterentry* entry = get_monster_data(slime->type);
-    int base_hd = entry->hpdice[0];
-
     slime->max_hit_points = int(slime->number * hp_per_blob);
     slime->hit_points = slime->max_hit_points;
-
-    slime->hit_dice = slime->number * base_hd;
 }
 
 static bool _split_slime(monsters * thing, coord_def & target)
@@ -2676,6 +2671,7 @@ static bool _split_slime(monsters * thing, coord_def & target)
     // Inflict the new slime with any enchantments on the parent
     _split_ench_durations(thing, new_slime);
     new_slime->attitude = thing->attitude;
+    new_slime->flags = thing->flags;
 
     if(!new_slime)
         return false;
@@ -2691,6 +2687,8 @@ static bool _split_slime(monsters * thing, coord_def & target)
     thing->number -= split_off;
     new_slime->number = split_off;
 
+    new_slime->hit_dice = thing->hit_dice;
+
     _stats_from_blob_count(thing, hp_per_blob);
     _stats_from_blob_count(new_slime, hp_per_blob);
 
@@ -2705,7 +2703,28 @@ static bool _merge_slimes(monsters * initial_slime, monsters * merge_to)
     merge_to->number += initial_slime->number;
     merge_to->max_hit_points += initial_slime->max_hit_points;
     merge_to->hit_points += initial_slime->max_hit_points;
-    merge_to->hit_dice += initial_slime->hit_dice;
+
+    // Merge monster flags (mostly so that MF_CREATUED_NEUTRAL etc. are
+    // passed on if the merged slime subsequently splits. Hopefully
+    // this won't do anything weird.
+    merge_to->flags |= initial_slime->flags;
+
+    // Merging costs the combined slime some energy.
+    monsterentry* entry = get_monster_data(merge_to->type);
+
+    merge_to->speed_increment -= entry->energy_usage.move;
+
+    // This is dumb. With that said, the idea is that if 2 slimes merge
+    // you can gain a space by moving away the turn after (maybe this
+    // is too nice but there will probably be a lot of complaints about
+    // the damage on higher level slimes). So we subtracted some energy
+    // above but if merge_to hasn't moved yet this turn that will just
+    // cancel its turn in this round of world_reacts. So we are going
+    // to see if merge_to has gone already by checking its mindex
+    // (this works because handle_monsters just iterates over env.mons
+    // in ascending order)
+    if(initial_slime->mindex() < merge_to->mindex())
+        merge_to->speed_increment -= entry->energy_usage.move;
 
     // Overwrite the state of the slime getting merged into because
     // it might have been resting or something.
@@ -2758,13 +2777,12 @@ bool slime_split_merge(monsters * thing)
             // If so split.
             for (int i = 0; i < 8; i++)
             {
-                coord_def target=origin + Compass[i];
+                coord_def target=origin + Compass[compass_idx[i]];
 
                 if(mons_class_can_pass(MONS_SLIME_CREATURE,
                                        env.grid(target))
                    && !actor_at(target))
                 {
-
                     return _split_slime(thing, target);
                 }
             } // end adjacent squares check
@@ -2776,7 +2794,7 @@ bool slime_split_merge(monsters * thing)
         // Check for adjacent slime creatures.
         for(int i=0;i<8;i++)
         {
-            coord_def target=origin + Compass[i];
+            coord_def target=origin + Compass[compass_idx[i]];
             monsters * other_thing = monster_at(target);
 
             // We can merge if we find another adjacent slime which isn't
@@ -2785,7 +2803,8 @@ bool slime_split_merge(monsters * thing)
             if(other_thing
                && other_thing->mons_species() == MONS_SLIME_CREATURE
                && other_thing->attitude == thing->attitude
-               && other_thing->is_summoned() == thing->is_summoned())
+               && other_thing->is_summoned() == thing->is_summoned()
+               && !mons_is_shapeshifter(other_thing))
             {
                 int new_blob_count = other_thing->number + thing->number;
 
