@@ -60,28 +60,5 @@ void print_overview_screen(void);
 
 std::string dump_overview_screen(bool full_id);
 
-// Monster info used by the pane; precomputes some data
-// to help with sorting and rendering.
-class monster_pane_info
-{
- public:
-    static bool less_than(const monster_pane_info& m1,
-                          const monster_pane_info& m2, bool zombified = true);
-
-    static bool less_than_wrapper(const monster_pane_info& m1,
-                                  const monster_pane_info& m2);
-
-    monster_pane_info(const monsters* m);
-
-    void to_string(int count, std::string& desc, int& desc_color) const;
-
-    const monsters* m_mon;
-    mon_attitude_type m_attitude;
-    int m_difficulty;
-    int m_brands;
-    bool m_fullname;
-};
-
-void get_monster_pane_info(std::vector<monster_pane_info>& mons);
 
 #endif

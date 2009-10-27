@@ -78,6 +78,7 @@ menu.o \
 message.o \
 mgrow.o \
 misc.o \
+mon-info.o \
 mon-pick.o \
 mon-util.o \
 monplace.o \

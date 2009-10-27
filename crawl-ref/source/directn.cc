@@ -39,6 +39,7 @@
 #include "menu.h"
 #include "misc.h"
 #include "monstuff.h"
+#include "mon-info.h"
 #include "mon-util.h"
 #include "player.h"
 #include "shopping.h"
@@ -515,10 +516,10 @@ void full_describe_view()
         }
     }
 
-    // Get monsters via the monster_pane_info, sorted by difficulty.
-    std::vector<monster_pane_info> mons;
-    get_monster_pane_info(mons);
-    std::sort(mons.begin(), mons.end(), monster_pane_info::less_than_wrapper);
+    // Get monsters via the monster_info, sorted by difficulty.
+    std::vector<monster_info> mons;
+    get_monster_info(mons);
+    std::sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
 
     for (unsigned int i = 0; i < mons.size(); ++i)
         list_mons.push_back(mons[i].m_mon);
@@ -827,11 +828,11 @@ void full_describe_view()
 #ifndef USE_TILE
 // XXX: Hack - can't pass mlist entries into _find_mlist().
 bool mlist_full_info;
-std::vector<monster_pane_info> mlist;
+std::vector<monster_info> mlist;
 static void _fill_monster_list(bool full_info)
 {
-    std::vector<monster_pane_info> temp;
-    get_monster_pane_info(temp);
+    std::vector<monster_info> temp;
+    get_monster_info(temp);
     mlist_full_info = full_info;
 
     // Get the unique entries.
@@ -842,7 +843,7 @@ static void _fill_monster_list(bool full_info)
         mlist.push_back(temp[start]);
         for (end = start + 1; end < temp.size(); ++end)
         {
-            if (monster_pane_info::less_than(temp[start], temp[end],
+            if (monster_info::less_than(temp[start], temp[end],
                                              full_info))
             {
                   break;
@@ -1994,7 +1995,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
         }
 
         // While the monsters are identical, don't increase real_idx.
-        if (!monster_pane_info::less_than(mlist[i], mlist[i+1], mlist_full_info))
+        if (!monster_info::less_than(mlist[i], mlist[i+1], mlist_full_info))
             continue;
 
         real_idx++;
