@@ -308,7 +308,7 @@ travel_exclude::travel_exclude(const coord_def &p, int r,
                                bool autoexcl, monster_type mons, bool vaultexcl)
         : pos(p), radius(r),
           los(los_def(p, opc_excl, bounds_radius(r))),
-          uptodate(false), autoex(autoex), vault(vaultexcl)
+          uptodate(false), autoex(autoex), mon(mons), vault(vaultexcl)
 {
     set_los();
 }
