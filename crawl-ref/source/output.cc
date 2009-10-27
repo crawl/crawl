@@ -1233,7 +1233,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         if (idx >= 0)
         {
             textcolor(WHITE);
-            cprintf( stringize_glyph(_mlist_index_to_letter(idx)).c_str() );
+            cprintf(stringize_glyph(_mlist_index_to_letter(idx)).c_str());
             cprintf(" - ");
             printed += 4;
         }
@@ -1241,15 +1241,13 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         // One glyph for each monster.
         for (unsigned int i_mon = start; i_mon < end; i_mon++)
         {
-            unsigned int glyph;
-            unsigned short glyph_color;
-            get_mons_glyph(mons[i_mon].m_mon, &glyph, &glyph_color);
-            textcolor(glyph_color);
+            monster_info mi = mons[i_mon];
+            textcolor(mi.m_glyph_colour);
             // XXX: Hack to make the death cob (%) show up correctly.
-            if (glyph == '%')
+            if (mi.m_glyph == '%')
                 cprintf("%%");
             else
-                cprintf(stringize_glyph(glyph).c_str());
+                cprintf(stringize_glyph(mi.m_glyph).c_str());
             ++printed;
 
             // Printing too many looks pretty bad, though.
@@ -1263,18 +1261,10 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         if (count == 1)
         {
             // Print an "icon" representing damage level.
-            const monsters *mon = mons[start].m_mon;
-            std::string damage_desc;
-
-            mon_dam_level_type damage_level;
-            mons_get_damage_level(mon, damage_desc, damage_level);
-
-            // If no messages about wounds, don't display damage level either.
-            if (monster_descriptor(mon->type, MDSC_NOMSG_WOUNDS))
-                damage_level = MDAM_OKAY;
+            monster_info mi = mons[start];
 
             int dam_color;
-            switch (damage_level)
+            switch (mi.m_damage_level)
             {
             // NOTE: In os x, light versions of foreground colors are OK,
             //       but not background colors.  So stick wth standards.
