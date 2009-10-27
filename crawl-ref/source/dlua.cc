@@ -271,6 +271,7 @@ void init_dungeon_lua()
     dluaopen_crawl(dlua);
     dluaopen_file(dlua);
     dluaopen_mapgrd(dlua);
+    dluaopen_monsters(dlua);
     dluaopen_you(dlua);
 
     luaL_openlib(dlua, "dgn", dgn_dlib, 0);

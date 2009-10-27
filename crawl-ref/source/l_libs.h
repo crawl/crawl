@@ -17,7 +17,6 @@ void cluaopen_file(lua_State *ls);
 void cluaopen_food(lua_State *ls);
 void cluaopen_item(lua_State *ls);
 void cluaopen_kills(lua_State *ls);     // defined in kills.cc
-void cluaopen_monsters(lua_State *ls);
 void cluaopen_options(lua_State *ls);
 void cluaopen_you(lua_State *ls);
 
@@ -61,6 +60,7 @@ void register_builder_funcs(lua_State *ls);
 void dluaopen_crawl(lua_State *ls);
 void dluaopen_file(lua_State *ls);
 void dluaopen_mapgrd(lua_State *ls);
+void dluaopen_monsters(lua_State *ls);
 void dluaopen_you(lua_State *ls);
 
 

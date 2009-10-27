@@ -227,7 +227,7 @@ static const struct luaL_reg mons_lib[] =
     { NULL, NULL }
 };
 
-void cluaopen_monsters(lua_State *ls)
+void dluaopen_monsters(lua_State *ls)
 {
     luaL_newmetatable(ls, MONS_METATABLE);
     lua_pushstring(ls, "__index");
