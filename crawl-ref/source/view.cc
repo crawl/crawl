@@ -3051,27 +3051,12 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     return (did_map);
 }
 
-// Is the given monster near (in LOS of) the given foe's
-// position (the player by default)?
-bool mons_near(const monsters *monster, unsigned short foe)
+// Is the given monster near (in LOS of) the player?
+bool mons_near(const monsters *monster)
 {
-    // Early out -- no foe!
-    if (foe == MHITNOT)
-        return (false);
-
-    if (foe == MHITYOU)
-    {
-        if (crawl_state.arena || crawl_state.arena_suspended)
-            return (true);
-        return (see_cell(monster->pos()));
-    }
-
-    // Must be a monster.
-    const monsters *foemons = &menv[foe];
-    if (foemons->alive())
-        return (monster->mon_see_cell(foemons->pos()));
-
-    return (false);
+    if (crawl_state.arena || crawl_state.arena_suspended)
+        return (true);
+    return (see_cell(monster->pos()));
 }
 
 bool mon_enemies_around(const monsters *monster)

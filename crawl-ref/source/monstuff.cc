@@ -4496,9 +4496,9 @@ static void _handle_behaviour(monsters *mon)
             }
             else
             {
-                proxFoe = mons_near(mon, mon->foe);
+                proxFoe = mon->near_foe();
 
-                if (!mon->can_see( &menv[mon->foe]))
+                if (!mon->can_see(&menv[mon->foe]))
                     proxFoe = false;
 
                 foepos = menv[mon->foe].pos();
@@ -5660,7 +5660,6 @@ static void _handle_nearby_ability(monsters *monster)
 {
     actor *foe = monster->get_foe();
     if (!foe
-        || !mons_near(monster, monster->foe)
         || !monster->can_see(foe)
         || mons_is_sleeping(monster)
         || mons_is_submerged(monster))
@@ -7863,7 +7862,7 @@ static void _handle_monster_move(monsters *monster)
             beem.beam_source = monster->mindex();
 
             const bool friendly_or_near =
-                mons_friendly(monster) || mons_near(monster, monster->foe);
+                mons_friendly(monster) || monster->near_foe();
             // Prevents unfriendlies from nuking you from offscreen.
             // How nice!
             if (friendly_or_near || monster->type == MONS_TEST_SPAWNER)

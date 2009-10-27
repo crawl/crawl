@@ -8000,6 +8000,12 @@ bool monsters::can_see(const actor *targ) const
     return (targ->visible_to(this) && see_cell(targ->pos()));
 }
 
+bool monsters::near_foe() const
+{
+    const actor *afoe = get_foe();
+    return (afoe && see_cell(afoe->pos()));
+}
+
 bool monsters::can_mutate() const
 {
     return (holiness() == MH_NATURAL || holiness() == MH_PLANT);
