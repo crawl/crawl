@@ -4388,18 +4388,13 @@ static void _handle_behaviour(monsters *mon)
 
     // Change proxPlayer depending on invisibility and standing
     // in shallow water.
-    if (proxPlayer && you.invisible())
+    if (proxPlayer && !you.visible_to(mon))
     {
-        if (!you.visible_to(mon))
-            proxPlayer = false;
-        // Must be able to see each other.
-        else if (!see_cell(mon->pos()))
-            proxPlayer = false;
+        proxPlayer = false;
 
         const int intel = mons_intel(mon);
-        // Now, the corollary to that is that sometimes, if a
-        // player is right next to a monster, they will 'see'.
-        if (grid_distance( you.pos(), mon->pos() ) == 1
+        // Sometimes, if a player is right next to a monster, they will 'see'.
+        if (grid_distance(you.pos(), mon->pos()) == 1
             && one_chance_in(3))
         {
             proxPlayer = true;
@@ -4407,7 +4402,7 @@ static void _handle_behaviour(monsters *mon)
 
         // [dshaligram] Very smart monsters have a chance of clueing in to
         // invisible players in various ways.
-        else if (intel == I_NORMAL && one_chance_in(13)
+        if (intel == I_NORMAL && one_chance_in(13)
                  || intel == I_HIGH && one_chance_in(6))
         {
             proxPlayer = true;
