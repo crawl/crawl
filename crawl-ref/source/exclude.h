@@ -44,5 +44,10 @@ extern exclvec curr_excludes; // in travel.cc
 
 bool is_excluded(const coord_def &p, const exclvec &exc = curr_excludes);
 
+class writer;
+class reader;
+void marshallExcludes(writer& outf, const exclvec& excludes);
+void unmarshallExcludes(reader& inf, char minorVersion, exclvec& excludes);
+
 #endif
 

@@ -3314,17 +3314,7 @@ void LevelInfo::save(writer& outf) const
         }
     }
 
-    marshallShort(outf, excludes.size());
-    if (excludes.size())
-    {
-        for (int i = 0, count = excludes.size(); i < count; ++i)
-        {
-            marshallCoord(outf, excludes[i].pos);
-            marshallShort(outf, excludes[i].radius);
-            marshallBoolean(outf, excludes[i].autoex);
-            marshallShort(outf, excludes[i].mon);
-        }
-    }
+    marshallExcludes(outf, excludes);
 }
 
 void LevelInfo::load(reader& inf, char minorVersion)
@@ -3354,25 +3344,7 @@ void LevelInfo::load(reader& inf, char minorVersion)
             stair_distances.push_back( unmarshallShort(inf) );
     }
 
-    excludes.clear();
-    int nexcludes = unmarshallShort(inf);
-    if (nexcludes)
-    {
-        for (int i = 0; i < nexcludes; ++i)
-        {
-            coord_def c;
-            unmarshallCoord(inf, c);
-            const int radius = unmarshallShort(inf);
-            bool autoexcl    = false;
-            monster_type mon = MONS_NO_MONSTER;
-            if (minorVersion >= TAG_ANNOTATE_EXCL)
-            {
-                autoexcl = unmarshallBoolean(inf);
-                mon      = static_cast<monster_type>(unmarshallShort(inf));
-            }
-            excludes.push_back(travel_exclude(c, radius, autoexcl, mon));
-        }
-    }
+    unmarshallExcludes(inf, minorVersion, excludes);
 }
 
 void LevelInfo::fixup()
