@@ -149,6 +149,9 @@ level_id dlua_level_id(lua_State *ls, int ndx);
 #define COORDS(c, p1, p2)                                \
     GETCOORD(c, p1, p2, in_bounds)
 
+#define COORDSHOW(c, p1, p2) \
+    GETCOORD(c, p1, p2, in_show_bounds)
+
 #define FEAT(f, pos) \
 dungeon_feature_type f = check_lua_feature(ls, pos)
 

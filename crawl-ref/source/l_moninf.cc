@@ -58,23 +58,20 @@ bool in_show_bounds(const coord_def &s)
     return (s.rdist() <= ENV_SHOW_OFFSET);
 }
 
-coord_def _show2grid(const coord_def &s)
+coord_def player2grid(const coord_def &s)
 {
     return (you.pos() + s);
 }
 
-coord_def _grid2show(const coord_def &g)
+coord_def grid2player(const coord_def &g)
 {
     return (g - you.pos());
 }
 
-#define COORDSHOW(c, p1, p2) \
-    GETCOORD(c, p1, p2, in_show_bounds)
-
 LUAFN(mi_get_monster_at)
 {
     COORDSHOW(s, 1, 2)
-    coord_def p = _show2grid(s);
+    coord_def p = player2grid(s);
     if (!you.see_cell(p))
         return (0);
     if (env.mgrid(p) == NON_MONSTER)

@@ -19,6 +19,7 @@ void cluaopen_item(lua_State *ls);
 void cluaopen_kills(lua_State *ls);     // defined in kills.cc
 void cluaopen_moninf(lua_State *ls);
 void cluaopen_options(lua_State *ls);
+void cluaopen_view(lua_State *ls);
 void cluaopen_you(lua_State *ls);
 
 void cluaopen_globals(lua_State *ls);
