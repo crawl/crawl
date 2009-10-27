@@ -6175,9 +6175,11 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
             origin_acquired(wpn, GOD_SHINING_ONE);
             make_item_blessed_blade(wpn);
         }
-
-        burden_change();
     }
+    else if (is_evil_god(god))
+        convert2bad(wpn);
+
+    burden_change();
 
     you.wield_change = true;
     you.num_gifts[god]++;
