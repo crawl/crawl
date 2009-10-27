@@ -10,6 +10,7 @@
 
 #include "delay.h"
 #include "directn.h"
+#include "exclude.h"
 #include "los.h"
 #include "macro.h"
 #include "misc.h"
