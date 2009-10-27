@@ -10,6 +10,7 @@
 #include "cluautil.h"
 #include "env.h"
 #include "l_defs.h"
+#include "player.h"
 
 coord_def player2show(const coord_def &s)
 {
@@ -20,7 +21,8 @@ LUAFN(view_feature_at)
 {
     COORDSHOW(s, 1, 2)
     const coord_def p = player2show(s);
-    lua_pushnumber(ls, env.show(p));
+    if (env.show(p))
+        lua_pushnumber(ls, env.grid(s + you.pos()));
     return (1);
 }
 
