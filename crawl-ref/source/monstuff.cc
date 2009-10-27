@@ -4437,7 +4437,8 @@ static void _handle_behaviour(monsters *mon)
     }
 
     // Pacified monsters leaving the level prefer not to attack.
-    if (isNeutral && !isPacified && mon->foe == MHITNOT)
+    // Others choose the nearest foe.
+    if (!isPacified && mon->foe == MHITNOT)
         _set_nearest_monster_foe(mon);
 
     // Monsters do not attack themselves. {dlb}
@@ -4841,7 +4842,7 @@ static bool _mons_check_set_foe(monsters *mon, const coord_def& p,
     return (false);
 }
 
-// Choose random nearest monster as a foe.  (Used for berserking monsters.)
+// Choose random nearest monster as a foe.
 void _set_nearest_monster_foe(monsters *mon)
 {
     const bool friendly = mons_friendly_real(mon);
