@@ -1,6 +1,8 @@
 #ifndef MON_INFO_H
 #define MON_INFO_H
 
+#include "monstuff.h"
+
 // Monster info used by the pane; precomputes some data
 // to help with sorting and rendering.
 class monster_info
@@ -21,6 +23,10 @@ class monster_info
     int m_difficulty;
     int m_brands;
     bool m_fullname;
+    unsigned int m_glyph;
+    unsigned short m_glyph_colour;
+    std::string m_damage_desc;
+    mon_dam_level_type m_damage_level;
 };
 
 void get_monster_info(std::vector<monster_info>& mons);

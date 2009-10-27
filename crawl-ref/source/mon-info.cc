@@ -1,3 +1,10 @@
+/*
+ * File:     mon-info.cc
+ * Summary:  Monster information that may be passed to the user.
+ *
+ * Used to fill the monster pane and to pass monster info to Lua.
+ */
+
 #include "AppHdr.h"
 
 #include "mon-info.h"
@@ -7,6 +14,7 @@
 #include "mon-util.h"
 #include "monster.h"
 #include "religion.h"
+#include "view.h"
 
 #include <sstream>
 
@@ -37,6 +45,13 @@ monster_info::monster_info(const monsters *m)
     if (mons_looks_stabbable(m))   m_brands |= (1 << MB_STABBABLE);
     if (mons_looks_distracted(m))  m_brands |= (1 << MB_DISTRACTED);
     if (m->has_ench(ENCH_BERSERK)) m_brands |= (1 << MB_BERSERK);
+
+    get_mons_glyph(m_mon, &m_glyph, &m_glyph_colour);
+
+    mons_get_damage_level(m_mon, m_damage_desc, m_damage_level);
+    // If no messages about wounds, don't display damage level either.
+    if (monster_descriptor(m_mon->type, MDSC_NOMSG_WOUNDS))
+        m_damage_level = MDAM_OKAY;
 }
 
 // Needed because gcc 4.3 sort does not like comparison functions that take
