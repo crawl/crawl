@@ -4313,7 +4313,11 @@ static void _handle_behaviour(monsters *mon)
     bool isFriendly = mons_friendly(mon);
     bool isNeutral  = mons_neutral(mon);
     bool wontAttack = mons_wont_attack_real(mon);
+
+    // Whether the player is in LOS of the monster and can see
+    // or has guessed the player's location.
     bool proxPlayer = mons_near(mon) && !crawl_state.arena;
+
     bool trans_wall_block = trans_wall_blocking(mon->pos());
 
 #ifdef WIZARD
@@ -4477,28 +4481,15 @@ static void _handle_behaviour(monsters *mon)
 
     while (changed)
     {
-        coord_def foepos = you.pos();
+        actor* afoe = mon->get_foe();
+        proxFoe = afoe && mon->can_see(afoe);
 
-        // Evaluate these each time; they may change.
-        if (mon->foe == MHITNOT)
-            proxFoe = false;
-        else
-        {
-            if (mon->foe == MHITYOU)
-            {
-                foepos = you.pos();
-                proxFoe = proxPlayer;   // Take invis into account.
-            }
-            else
-            {
-                proxFoe = mon->near_foe();
+        coord_def foepos = coord_def(-1, -1);
+        if (afoe)
+            foepos = afoe->pos();
 
-                if (!mon->can_see(&menv[mon->foe]))
-                    proxFoe = false;
-
-                foepos = menv[mon->foe].pos();
-            }
-        }
+        if (mon->foe == MHITYOU)
+            proxFoe = proxPlayer;   // Take invis into account.
 
         // Track changes to state; attitude never changes here.
         beh_type new_beh       = mon->behaviour;
