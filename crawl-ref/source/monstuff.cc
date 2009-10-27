@@ -4551,7 +4551,8 @@ static void _handle_behaviour(monsters *mon)
                     break;
                 }
 
-                if (mon->foe_memory > 0 && mon->foe != MHITNOT)
+                ASSERT(mon->foe != MHITNOT);
+                if (mon->foe_memory > 0)
                 {
                     // If we've arrived at our target x,y
                     // do a stealth check.  If the foe
@@ -4567,14 +4568,14 @@ static void _handle_behaviour(monsters *mon)
                             if (one_chance_in(you.skills[SK_STEALTH]/3))
                                 mon->target = you.pos();
                             else
-                                mon->foe_memory = 1;
+                                mon->foe_memory = 0;
                         }
                         else
                         {
                             if (coinflip())     // XXX: cheesy!
                                 mon->target = menv[mon->foe].pos();
                             else
-                                mon->foe_memory = 1;
+                                mon->foe_memory = 0;
                         }
                     }
 
@@ -4587,29 +4588,28 @@ static void _handle_behaviour(monsters *mon)
                     break;
                 }
 
+                ASSERT(mon->foe_memory == 0);
                 // Hack: smarter monsters will tend to pursue the player longer.
-                int memory = 0;
                 switch (mons_intel(mon))
                 {
                 case I_HIGH:
-                    memory = 100 + random2(200);
+                    mon->foe_memory = 100 + random2(200);
                     break;
                 case I_NORMAL:
-                    memory = 50 + random2(100);
+                    mon->foe_memory = 50 + random2(100);
                     break;
                 case I_ANIMAL:
                 case I_INSECT:
-                    memory = 25 + random2(75);
+                    mon->foe_memory = 25 + random2(75);
                     break;
                 case I_PLANT:
-                    memory = 10 + random2(50);
+                    mon->foe_memory = 10 + random2(50);
                     break;
                 }
-
-                mon->foe_memory = memory;
                 break;  // switch/case BEH_SEEK
             }
 
+            ASSERT(proxFoe && mon->foe != MHITNO);
             // Monster can see foe: continue 'tracking'
             // by updating target x,y.
             if (mon->foe == MHITYOU)
