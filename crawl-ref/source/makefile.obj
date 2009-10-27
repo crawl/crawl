@@ -62,6 +62,7 @@ l_item.o \
 l_los.o \
 l_mapgrd.o \
 l_mapmrk.o \
+l_moninf.o \
 l_mons.o \
 l_option.o \
 l_you.o \
