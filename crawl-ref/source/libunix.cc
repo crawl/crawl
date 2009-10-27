@@ -417,7 +417,7 @@ static void unix_handle_terminal_resize()
 
 void clear_message_window()
 {
-    wattrset( Message_Window, curs_fg_attr(LIGHTGREY) );
+    (void)wattrset( Message_Window, curs_fg_attr(LIGHTGREY) );
     werase( Message_Window );
     wrefresh( Message_Window );
 }
@@ -425,7 +425,7 @@ void clear_message_window()
 void message_out(int which_line, int color, const char *s, int firstcol,
                  bool newline)
 {
-    wattrset( Message_Window, curs_fg_attr(color) );
+    (void)wattrset( Message_Window, curs_fg_attr(color) );
 
     if (!firstcol)
         firstcol = Options.delay_message_clear? 1 : 0;
@@ -953,7 +953,7 @@ static int curs_fg_attr(int col)
 
 void textcolor(int col)
 {
-    attrset( Current_Colour = curs_fg_attr(col) );
+    (void)attrset( Current_Colour = curs_fg_attr(col) );
 }
 
 static int curs_bg_attr(int col)
@@ -1012,7 +1012,7 @@ static int curs_bg_attr(int col)
 
 void textbackground(int col)
 {
-    attrset( Current_Colour = curs_bg_attr(col) );
+    (void)attrset( Current_Colour = curs_bg_attr(col) );
 }
 
 
