@@ -655,7 +655,7 @@ static monsterentry mondata[] = {
 {
     MONS_TOADSTOOL, 'f', BROWN, "toadstool",
     M_NO_EXP_GAIN | M_STATIONARY,
-    MR_RES_POISON | MR_RES_ASPHYX,
+    MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_TOADSTOOL, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 2, 2, 0 },
@@ -666,7 +666,7 @@ static monsterentry mondata[] = {
 {
     MONS_FUNGUS, 'f', LIGHTGREY, "fungus",
     M_NO_EXP_GAIN | M_STATIONARY,
-    MR_RES_POISON | MR_RES_ASPHYX,
+    MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
@@ -677,7 +677,7 @@ static monsterentry mondata[] = {
 {
     MONS_BALLISTOMYCETE, 'f', LIGHTRED, "ballistomycete",
     M_NO_EXP_GAIN | M_STATIONARY,
-    MR_RES_POISON | MR_RES_ASPHYX,
+    MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 5, 3, 0 },
@@ -688,7 +688,7 @@ static monsterentry mondata[] = {
 {
     MONS_WANDERING_MUSHROOM, 'f', RED, "wandering mushroom",
     M_NO_FLAGS,
-    MR_RES_POISON | MR_RES_ASPHYX,
+    MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_WANDERING_MUSHROOM, MH_PLANT, -3,
     { {AT_SPORE, AF_CONFUSE, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
@@ -2061,7 +2061,7 @@ static monsterentry mondata[] = {
 {
     MONS_GIANT_SPORE, 'G', GREEN, "giant spore",
     M_LEVITATE | M_INSUBSTANTIAL,
-    MR_RES_POISON | MR_RES_ASPHYX | MR_RES_STICKY_FLAME,
+    MR_RES_POISON | MR_RES_STICKY_FLAME,
     0, 10, MONS_PLANT, MONS_GIANT_SPORE, MH_PLANT, -3,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1, 0, 0, 1 },
@@ -2293,7 +2293,7 @@ static monsterentry mondata[] = {
 {
     MONS_DEATH_OOZE, 'J', MAGENTA, "death ooze",
     M_NO_SKELETON | M_SENSE_INVIS | M_EVIL,
-    MR_RES_POISON | MR_RES_ASPHYX | MR_RES_COLD | MR_RES_ACID,
+    MR_RES_POISON | MR_RES_COLD | MR_RES_ACID,
     0, 13, MONS_JELLY, MONS_DEATH_OOZE, MH_UNDEAD, -8,
     { {AT_HIT, AF_ROT, 32}, {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 3, 0 },
@@ -2512,7 +2512,7 @@ static monsterentry mondata[] = {
 {
     MONS_PLANT, 'P', GREEN, "plant",
     M_NO_EXP_GAIN | M_STATIONARY,
-    MR_RES_POISON | MR_RES_ASPHYX,
+    MR_RES_POISON,
     0, 10, MONS_PLANT, MONS_PLANT, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 3, 5, 0 },
@@ -2523,7 +2523,7 @@ static monsterentry mondata[] = {
 {
     MONS_OKLOB_PLANT, 'P', LIGHTGREEN, "oklob plant",
     M_SPECIAL_ABILITY | M_STATIONARY,
-    MR_RES_POISON | MR_RES_ASPHYX,
+    MR_RES_POISON,
     0, 10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 3, 5, 0 },
@@ -2534,7 +2534,7 @@ static monsterentry mondata[] = {
 {
     MONS_BUSH, 'P', BROWN, "bush",
     M_NO_EXP_GAIN | M_STATIONARY,
-    MR_RES_POISON | MR_RES_ASPHYX | MR_VUL_FIRE,
+    MR_RES_POISON | MR_VUL_FIRE,
     0, 10, MONS_PLANT, MONS_BUSH, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 20, 3, 5, 0 },
@@ -4692,8 +4692,7 @@ static monsterentry mondata[] = {
     MONS_TEST_SPAWNER, 'X', WHITE, "test spawner",
     M_SPELLCASTER | M_STATIONARY | M_REGEN | M_INSUBSTANTIAL,
     mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_HELLFIRE
-        | MR_RES_COLD | MR_RES_ASPHYX | MR_RES_ACID | MR_RES_STICKY_FLAME
-        | MR_RES_STEAM, 127),
+        | MR_RES_COLD | MR_RES_ACID | MR_RES_STICKY_FLAME | MR_RES_STEAM, 127),
     0, 15, MONS_TEST_SPAWNER, MONS_TEST_SPAWNER, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1000, 1000, 0, 0 },
