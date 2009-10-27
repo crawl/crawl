@@ -8,6 +8,7 @@
 
 #include "externs.h"
 
+#include "exclude.h"
 #include "los.h"
 
 #include <stdio.h>
@@ -60,23 +61,14 @@ void initialise_travel();
 void init_travel_terrain_check(bool check_race_equip = true);
 void stop_running(void);
 void travel_init_new_level();
-void cycle_exclude_radius(const coord_def &p);
-void del_exclude(const coord_def &p);
-void set_exclude(const coord_def &p, int radius = LOS_RADIUS,
-                 bool autoexcl = false, bool vaultexcl = false);
-void maybe_remove_autoexclusion(const coord_def &p);
-std::string get_exclusion_desc();
-void clear_excludes();
 
 unsigned char is_waypoint(const coord_def &p);
-bool is_exclude_root(const coord_def &p);
 command_type direction_to_command(char x, char y);
 bool is_resting(void);
 #ifdef CLUA_BINDINGS
 const char *trap_name(const coord_def &p);
 #endif
 void explore_pickup_event(int did_pickup, int tried_pickup);
-bool is_excluded(const coord_def &p);
 bool feat_is_traversable(dungeon_feature_type feat);
 bool is_unknown_stair(const coord_def &p,
     dungeon_feature_type remembered_feat = NUM_REAL_FEATURES);
@@ -348,29 +340,6 @@ public:
     std::string describe() const;
 
     bool can_travel() const { return (type == PHYSICAL); }
-};
-
-void init_exclusion_los();
-void update_exclusion_los(std::vector<coord_def> changed);
-
-struct travel_exclude
-{
-    coord_def     pos;          // exclusion centre
-    int           radius;       // exclusion radius
-    los_def       los;          // los from exclusion centre
-    bool          uptodate;     // Is los up to date?
-    bool          autoex;       // Was set automatically.
-    monster_type  mon;          // Monster around which exclusion is centered.
-    bool          vault;        // Is this exclusion set by a vault?
-
-    travel_exclude(const coord_def &p, int r = LOS_RADIUS,
-                   bool autoex = false, monster_type mons = MONS_NO_MONSTER,
-                   bool vault = false);
-
-    int radius_sq() const;
-    void set_los();
-    bool in_bounds(const coord_def& p) const;
-    bool affects(const coord_def& p) const;
 };
 
 // Information on a level that interlevel travel needs.
