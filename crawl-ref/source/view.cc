@@ -31,6 +31,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "exclude.h"
 #include "format.h"
 #include "ghost.h"
 #include "godabil.h"
