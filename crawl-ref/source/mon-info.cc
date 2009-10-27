@@ -16,6 +16,7 @@
 #include "religion.h"
 #include "view.h"
 
+#include <algorithm>
 #include <sstream>
 
 enum monster_info_brands
