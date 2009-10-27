@@ -11,6 +11,7 @@
 #include "stuff.h"
 #include "travel.h"
 #include "tutorial.h"
+#include "view.h"
 
 // TODO: move other exclusion code here.
 
