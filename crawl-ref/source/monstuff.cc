@@ -4610,7 +4610,7 @@ static void _handle_behaviour(monsters *mon)
                 break;  // switch/case BEH_SEEK
             }
 
-            ASSERT(proxFoe && mon->foe != MHITNO);
+            ASSERT(proxFoe && mon->foe != MHITNOT);
             // Monster can see foe: continue 'tracking'
             // by updating target x,y.
             if (mon->foe == MHITYOU)
