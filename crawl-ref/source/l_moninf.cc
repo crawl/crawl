@@ -8,6 +8,7 @@
 #include "l_libs.h"
 
 #include "cluautil.h"
+#include "env.h"
 #include "mon-info.h"
 
 #define MONINF_METATABLE "monster.info"
@@ -50,8 +51,52 @@ static const struct luaL_reg moninf_lib[] =
     { NULL, NULL }
 };
 
+// XXX: unify with directn.cc/h
+// This uses relative coordinates with origin the player.
+bool in_show_bounds(const coord_def &s)
+{
+    return (s.rdist() <= ENV_SHOW_OFFSET);
+}
+
+coord_def _show2grid(const coord_def &s)
+{
+    return (you.pos() + s);
+}
+
+coord_def _grid2show(const coord_def &g)
+{
+    return (g - you.pos());
+}
+
+#define COORDSHOW(c, p1, p2) \
+    GETCOORD(c, p1, p2, in_show_bounds)
+
+LUAFN(mi_get_monster_at)
+{
+    COORDSHOW(s, 1, 2)
+    coord_def p = _show2grid(s);
+    if (!you.see_cell(p))
+        return (0);
+    if (env.mgrid(p) == NON_MONSTER)
+        return (0);
+    monsters* m = &env.mons[env.mgrid(p)];
+    if (!m->visible_to(&you))
+        return (0);
+    monster_info *mi = new monster_info(m);
+    lua_push_moninf(ls, mi);
+    return (1);
+}
+
+static const struct luaL_reg mon_lib[] =
+{
+    { "get_monster_at", mi_get_monster_at },
+
+    { NULL, NULL }
+};
+
 void cluaopen_moninf(lua_State *ls)
 {
     clua_register_metatable(ls, MONINF_METATABLE, moninf_lib,
                             lua_object_gc<monster_info>);
+    luaL_openlib(ls, "monster", mon_lib, 0);
 }
