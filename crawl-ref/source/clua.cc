@@ -579,6 +579,7 @@ void CLua::init_lua()
     cluaopen_food(_state);
     cluaopen_crawl(_state);
     cluaopen_file(_state);
+    cluaopen_moninf(_state);
     cluaopen_options(_state);
 
     cluaopen_globals(_state);
