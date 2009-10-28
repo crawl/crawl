@@ -61,7 +61,6 @@ undead_state_type get_undead_state(const species_type sp);
  * called from: acr
  * *********************************************************************** */
 bool new_game();
-void initialise_item_descriptions();
 
 int give_first_conjuration_book();
 bool choose_race(void);

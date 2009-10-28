@@ -87,6 +87,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
+#include "ng-init.h"
 #include "notes.h"
 #include "ouch.h"
 #include "output.h"

@@ -92,6 +92,7 @@ mt19937ar.o \
 mtransit.o \
 mutation.o \
 newgame.o \
+ng-init.o \
 ng-input.o \
 ng-restr.o \
 notes.o \
