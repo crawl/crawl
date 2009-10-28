@@ -1631,7 +1631,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     dist target;
     zap_type ztype = ZAP_DEBUGGING_RAY;
     const zap_type firezaps[3]   = { ZAP_FLAME, ZAP_STICKY_FLAME, ZAP_FIRE };
-    const zap_type frostzaps[3]  = { ZAP_FROST, ZAP_ICE_BOLT, ZAP_COLD };
+    const zap_type frostzaps[3]  = { ZAP_FROST, ZAP_FLING_ICICLE, ZAP_COLD };
     const zap_type hammerzaps[3] = { ZAP_STRIKING, ZAP_STONE_ARROW,
                                      ZAP_CRYSTAL_SPEAR };
     const zap_type venomzaps[3]  = { ZAP_STING, ZAP_VENOM_BOLT,

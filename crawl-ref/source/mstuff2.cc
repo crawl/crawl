@@ -1959,8 +1959,8 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.is_beam  = true;
         break;
 
-    case SPELL_ICE_BOLT:
-        beam.name     = "bolt of ice";
+    case SPELL_FLING_ICICLE:
+        beam.name     = "shard of ice";
         beam.damage   = dice_def( 3, 8 + power / 11 );
         beam.colour   = WHITE;
         beam.flavour  = BEAM_ICE;
@@ -2147,9 +2147,9 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.flavour  = BEAM_POISON;
         break;
 
-    case SPELL_BOLT_OF_IRON:
+    case SPELL_IRON_SHOT:
         beam.colour   = LIGHTCYAN;
-        beam.name     = "iron bolt";
+        beam.name     = "iron shot";
         beam.damage   = dice_def( 3, 8 + (power / 9) );
         beam.hit      = 20 + (power / 25);
         beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);

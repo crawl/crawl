@@ -1416,8 +1416,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_BOLT_OF_IRON:
-        if (!zapping(ZAP_IRON_BOLT, powc, beam, true))
+    case SPELL_IRON_SHOT:
+        if (!zapping(ZAP_IRON_SHOT, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1481,8 +1481,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_ICE_BOLT:
-        if (!zapping(ZAP_ICE_BOLT, powc, beam, true))
+    case SPELL_FLING_ICICLE:
+        if (!zapping(ZAP_FLING_ICICLE, powc, beam, true))
             return (SPRET_ABORT);
         break;
 

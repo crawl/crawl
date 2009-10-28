@@ -1670,7 +1670,7 @@ int exper_value(const monsters *monster)
             case SPELL_SUMMON_GREATER_DEMON:
             case SPELL_BANISHMENT:
             case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
-            case SPELL_BOLT_OF_IRON:
+            case SPELL_IRON_SHOT:
             case SPELL_TELEPORT_SELF:
             case SPELL_TELEPORT_OTHER:
             case SPELL_PORKALATOR:

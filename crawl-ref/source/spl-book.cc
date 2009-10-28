@@ -125,7 +125,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_FREEZE,
      SPELL_THROW_FROST,
      SPELL_OZOCUBUS_ARMOUR,
-     SPELL_ICE_BOLT,
+     SPELL_FLING_ICICLE,
      SPELL_SUMMON_ICE_BEAST,
      SPELL_FREEZING_CLOUD,
      SPELL_NO_SPELL,
@@ -445,7 +445,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_MAXWELLS_SILVER_HAMMER,
      SPELL_DIG,
      SPELL_STATUE_FORM,
-     SPELL_BOLT_OF_IRON,
+     SPELL_IRON_SHOT,
      SPELL_SHATTER,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -467,7 +467,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_ANIMATE_DEAD,
      SPELL_TELEPORT_OTHER,
      SPELL_VENOM_BOLT,
-     SPELL_BOLT_OF_IRON,
+     SPELL_IRON_SHOT,
      SPELL_INVISIBILITY,
      SPELL_MASS_CONFUSION,
      SPELL_POISONOUS_CLOUD,
@@ -643,7 +643,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // 53 - Rod of destruction (ice)
     {SPELL_THROW_FROST,
-     SPELL_ICE_BOLT,
+     SPELL_FLING_ICICLE,
      SPELL_FREEZING_CLOUD,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -654,7 +654,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // 54 - Rod of destruction (lightning, iron, fireball)
     {SPELL_LIGHTNING_BOLT,
-     SPELL_BOLT_OF_IRON,
+     SPELL_IRON_SHOT,
      SPELL_FIREBALL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,

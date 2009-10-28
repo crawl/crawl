@@ -63,9 +63,9 @@ Bolt of Inaccuracy
 
 This spell inflicts enormous damage upon any creature struck by the bolt of incandescent energy conjured into existence. Unfortunately, it is very difficult to aim and very rarely hits anything. Pity, that.
 %%%%
-Bolt of Iron
+Iron Shot
 
-This spell hurls a large and heavy metal bolt at the caster's foes.
+This spell hurls a large and heavy metal bolt at the caster's foe.
 %%%%
 Bolt of Magma
 
@@ -286,9 +286,9 @@ Hellfire
 
 This spell should only be available from Dispater's staff. So how are you reading this?
 %%%%
-Ice Bolt
+Fling Icicle
 
-This spell throws forth a chunk of ice. It is particularly effective against those creatures not immune to the effects of freezing. But as most of its destructive potential comes from strong impact and cutting edges, even cold-resistant creatures are notably affected.
+This spell throws forth a shard of ice. It is particularly effective against those creatures not immune to the effects of freezing. But as most of its destructive potential comes from strong impact and cutting edges, even cold-resistant creatures are notably affected.
 %%%%
 Ice Form
 

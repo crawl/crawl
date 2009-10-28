@@ -1273,7 +1273,7 @@
 },
 
 {
-    SPELL_BOLT_OF_IRON, "Bolt of Iron",
+    SPELL_IRON_SHOT, "Iron Shot",
      SPTYP_CONJURATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      6,
@@ -1663,7 +1663,7 @@
 },
 
 {
-    SPELL_ICE_BOLT, "Ice Bolt",
+    SPELL_FLING_ICICLE, "Fling Icicle",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
      4,

@@ -824,8 +824,8 @@ const zap_info zap_data[] = {
     },
 
     {
-        ZAP_IRON_BOLT,
-        "iron bolt",
+        ZAP_IRON_SHOT,
+        "iron shot",
         200,
         new calcdice_calculator<9, 15, 3, 4>,
         new tohit_calculator<7, 1, 15>,
@@ -1126,8 +1126,8 @@ const zap_info zap_data[] = {
     },
 
     {
-        ZAP_ICE_BOLT,
-        "bolt of ice",
+        ZAP_FLING_ICICLE,
+        "shard of ice",
         100,
         new calcdice_calculator<3, 10, 1, 2>,
         new tohit_calculator<9, 1, 12>,

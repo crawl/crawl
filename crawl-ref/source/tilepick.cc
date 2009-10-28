@@ -2766,7 +2766,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_DIG:                      return TILEG_DIG;
     case SPELL_BOLT_OF_MAGMA:            return TILEG_BOLT_OF_MAGMA;
     case SPELL_FRAGMENTATION:            return TILEG_LEES_RAPID_DECONSTRUCTION;
-    case SPELL_BOLT_OF_IRON:             return TILEG_BOLT_OF_IRON;
+    case SPELL_IRON_SHOT:                return TILEG_IRON_SHOT;
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:   return TILEG_LEHUDIBS_CRYSTAL_SPEAR;
     case SPELL_SHATTER:                  return TILEG_SHATTER;
 
@@ -2790,7 +2790,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_FREEZING_AURA:            return TILEG_FREEZING_AURA;
     case SPELL_SLEEP:                    return TILEG_ENSORCELLED_HIBERNATION;
     case SPELL_OZOCUBUS_ARMOUR:          return TILEG_OZOCUBUS_ARMOUR;
-    case SPELL_ICE_BOLT:                 return TILEG_ICE_BOLT;
+    case SPELL_FLING_ICICLE:             return TILEG_FLING_ICICLE;
     case SPELL_CONDENSATION_SHIELD:      return TILEG_CONDENSATION_SHIELD;
     case SPELL_OZOCUBUS_REFRIGERATION:   return TILEG_OZOCUBUS_REFRIGERATION;
     case SPELL_BOLT_OF_COLD:             return TILEG_BOLT_OF_COLD;
