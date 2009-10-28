@@ -4700,9 +4700,9 @@ void bolt::affect_monster(monsters* mon)
     if (mon->type == MONS_KIRKE)  // deflect missiles
         beam_hit = random2(beam_hit * 2) / 3;
 
-    // FIXME We're randomising mon->evasion, which is further
-    // randomised inside test_beam_hit. This is so we stay close to the 4.0
-    // to-hit system (which had very little love for monsters).
+    // FIXME: We're randomising mon->evasion, which is further
+    // randomised inside test_beam_hit.  This is so we stay close to the
+    // 4.0 to-hit system (which had very little love for monsters).
     if (!engulfs && !test_beam_hit(beam_hit, random2(mon->ev)))
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
@@ -4740,10 +4740,8 @@ void bolt::affect_monster(monsters* mon)
     if (mons_near(mon))
     {
         if (hit_verb.empty())
-        {
-            hit_verb = (is_explosion || is_big_cloud)
-                    ? "engulfs" : "hits";
-        }
+            hit_verb = engulfs ? "engulfs" : "hits";
+
         mprf("The %s %s %s.",
              name.c_str(),
              hit_verb.c_str(),

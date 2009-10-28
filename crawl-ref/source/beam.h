@@ -84,13 +84,13 @@ struct bolt
     std::string name;
     std::string short_name;
     std::string hit_verb;              // The verb to use when this beam hits
-                                       // something. If not set, will use
+                                       // something.  If not set, will use
                                        // "engulfs" if an explosion or cloud
                                        // and "hits" otherwise.
-    bool        is_beam;               // beams? (can hits multiple targets?)
+    bool        is_beam;               // beam? (can hit multiple targets?)
     bool        is_explosion;
     bool        is_big_cloud;          // expands into big_cloud at endpoint
-    bool        aimed_at_spot;         // aimed at (x,y), should not cross
+    bool        aimed_at_spot;         // aimed at (x, y), should not cross
     std::string aux_source;            // source of KILL_MISC beams
 
     bool        affects_nothing;       // should not hit monsters or features
