@@ -408,8 +408,6 @@ static bool _conduct_electricity_aoe(bolt& beam, const coord_def& target)
 
 void conduct_electricity(coord_def where, actor *attacker)
 {
-    const char *aux = "arcing electricity";
-
     bolt beam;
 
     beam.flavour       = BEAM_ELECTRICITY;
@@ -417,8 +415,9 @@ void conduct_electricity(coord_def where, actor *attacker)
     beam.damage        = dice_def(1, 15);
     beam.target        = where;
     beam.name          = "electric current";
-    beam.colour        = LIGHTCYAN;
-    beam.aux_source    = aux;
+    beam.hit_verb      = "shocks";
+    beam.colour        = ETC_ELECTRICITY;
+    beam.aux_source    = "arcing electricity";
     beam.ex_size       = 1;
     beam.is_explosion  = true;
     beam.effect_known  = true;

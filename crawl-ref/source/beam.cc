@@ -3953,9 +3953,12 @@ void bolt::affect_player()
     if (misses_player())
         return;
 
-    const bool engulfs = (is_explosion || is_big_cloud);
-    mprf("The %s %s you!",
-         name.c_str(), engulfs ? "engulfs" : "hits");
+    const bool engulfs = is_explosion || is_big_cloud;
+    if (hit_verb.empty())
+    {
+        hit_verb = engulfs ? "engulfs" : "hits";
+    }
+    mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
 
     // FIXME: Lots of duplicated code here (compare handling of
     // monsters)
@@ -4736,9 +4739,14 @@ void bolt::affect_monster(monsters* mon)
     // The beam hit.
     if (mons_near(mon))
     {
+        if (hit_verb.empty())
+        {
+            hit_verb = (is_explosion || is_big_cloud)
+                    ? "engulfs" : "hits";
+        }
         mprf("The %s %s %s.",
              name.c_str(),
-             engulfs ? "engulfs" : "hits",
+             hit_verb.c_str(),
              you.can_see(mon) ?
                  mon->name(DESC_NOCAP_THE).c_str() : "something");
 
@@ -5788,7 +5796,7 @@ bolt::bolt() : range(-2), type('*'),
                flavour(BEAM_MAGIC), real_flavour(BEAM_MAGIC), drop_item(false),
                item(NULL), source(), target(), damage(0, 0),
                ench_power(0), hit(0), thrower(KILL_MISC), ex_size(0),
-               beam_source(MHITNOT), name(), short_name(), is_beam(false),
+               beam_source(MHITNOT), name(), short_name(), hit_verb(), is_beam(false),
                is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
                aux_source(), affects_nothing(false), affects_items(true),
                effect_known(true), draw_delay(15), special_explosion(NULL),
