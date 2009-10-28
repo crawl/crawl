@@ -3,6 +3,13 @@
  * Summary:  An interactive lua interpreter.
  *
  * Based heavily on lua.c from the Lua distribution.
+ *
+ * Deficiencies:
+ * - Currently requires defining a global function __echo
+ *   to echo results.
+ * - Currently requires prefixing with '=' if you want results echoed.
+ * - Appears to require delay_message_clear = true.
+ * - Old input lines are not visible.
  */
 
 #include "AppHdr.h"
@@ -122,8 +129,7 @@ void run_clua_interpreter(lua_State *ls)
     lua_settop(ls, 0); // clear stack
 }
 
-void debug_call_dlua()
+void debug_terp_dlua()
 {
     run_clua_interpreter(dlua);
 }
-
