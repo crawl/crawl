@@ -382,6 +382,65 @@ void immolation(int pow, int caster, coord_def where, bool known,
     beam.explode();
 }
 
+static bool _conduct_electricity_hit(bolt& beam, actor* victim, int dmg, int corpse)
+{
+    if (!victim->alive() || victim->res_elec() > 0 || victim->airborne())
+        return (false);
+
+    return (true);
+}
+
+static bool _conduct_electricity_damage(bolt &beam, actor* victim,
+                                        int &dmg, std::string &dmg_msg)
+{
+    dmg = (10 + random2(15)) / 2;
+
+    return false;
+}
+
+static bool _conduct_electricity_aoe(bolt& beam, const coord_def& target)
+{
+    if (feat_is_water(grd(target)))
+        return true;
+
+    return false;
+}
+
+void conduct_electricity(coord_def where, actor *attacker)
+{
+    const char *aux = "arcing electricity";
+
+    bolt beam;
+
+    beam.flavour       = BEAM_ELECTRICITY;
+    beam.type          = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.damage        = dice_def(1, 15);
+    beam.target        = where;
+    beam.name          = "electric current";
+    beam.colour        = LIGHTCYAN;
+    beam.aux_source    = aux;
+    beam.ex_size       = 1;
+    beam.is_explosion  = true;
+    beam.effect_known  = true;
+    beam.affects_items = false;
+    beam.aoe_funcs.push_back(_conduct_electricity_aoe);
+    beam.hit_funcs.push_back(_conduct_electricity_hit);
+    beam.damage_funcs.push_back(_conduct_electricity_damage);
+
+    if (attacker == &you)
+    {
+        beam.thrower     = KILL_YOU;
+        beam.beam_source = NON_MONSTER;
+    }
+    else
+    {
+        beam.thrower     = KILL_MON;
+        beam.beam_source = attacker->mindex();
+    }
+
+    beam.explode(false, true);
+}
+
 void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker)
 {

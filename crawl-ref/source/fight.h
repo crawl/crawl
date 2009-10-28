@@ -37,6 +37,16 @@ enum unchivalric_attack_type
     UCAT_SLEEPING
 };
 
+enum attack_final_effect_flavor
+{
+    FINEFF_LIGHTNING_DISCHARGE
+};
+struct attack_final_effect
+{
+    attack_final_effect_flavor flavor;
+    coord_def location;
+};
+
 struct mon_attack_def;
 
 int effective_stat_bonus( int wepType = -1 );
@@ -197,6 +207,8 @@ private:
     int  random_chaos_brand();
     void do_miscast();
 
+    std::vector<attack_final_effect> final_effects;
+
 private:
     // Monster-attack specific stuff
     bool mons_attack_you();
@@ -248,6 +260,7 @@ private:
     int  player_calc_base_unarmed_damage();
     bool player_hurt_monster();
     void player_exercise_combat_skills();
+    bool player_monattk_final_hit_effects(bool mondied);
     bool player_monattk_hit_effects(bool mondied);
     void player_sustain_passive_damage();
     int  player_staff_damage(int skill);

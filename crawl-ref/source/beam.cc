@@ -5661,8 +5661,15 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     if (feat_is_solid(dngn_feat) && !feat_is_wall(dngn_feat) && stop_at_statues)
         return;
 
-    // Hmm, I think we're OK.
-    m(delta + centre) = std::min(count, m(delta + centre));
+    // Check if it passes the callback functions.
+    bool hits = true;
+    for (unsigned int i = 0; i < aoe_funcs.size(); ++i)
+        hits = (*aoe_funcs[i])(*this, loc) && hits;
+
+    if (hits) {
+        // Hmm, I think we're OK.
+        m(delta + centre) = std::min(count, m(delta + centre));
+    }
 
     // Now recurse in every direction.
     for (int i = 0; i < 8; ++i)
@@ -5785,7 +5792,7 @@ bolt::bolt() : range(-2), type('*'),
                is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
                aux_source(), affects_nothing(false), affects_items(true),
                effect_known(true), draw_delay(15), special_explosion(NULL),
-               range_funcs(), damage_funcs(), hit_funcs(),
+               range_funcs(), damage_funcs(), hit_funcs(), aoe_funcs(),
                obvious_effect(false), seen(false), path_taken(), range_used(0),
                is_tracer(false), aimed_at_feet(false), msg_generated(false),
                passed_target(false), in_explosion_phase(false),

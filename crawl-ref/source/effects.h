@@ -144,6 +144,8 @@ int torment_monsters(coord_def where, int pow, int caster,
 void immolation(int pow, int caster, coord_def where, bool known = false,
                 actor *attacker = NULL);
 
+void conduct_electricity(coord_def where, actor *attacker);
+
 void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker = NULL);
 

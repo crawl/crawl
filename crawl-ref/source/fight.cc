@@ -353,7 +353,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
       shield(NULL), defender_shield(NULL),
       heavy_armour_penalty(0), can_do_unarmed(false),
       water_attack(false), miscast_level(-1), miscast_type(SPTYP_NONE),
-      miscast_target(NULL)
+      miscast_target(NULL), final_effects()
 {
     init_attack();
 }
@@ -1887,6 +1887,29 @@ void melee_attack::player_check_weapon_effects()
     }
 }
 
+// Effects that occur after all other effects, even if the monster is dead.
+// For example, explosions that would hit other creatures, but we want
+// to deal with only one creature at a time, so that's handled last.
+// You probably want to call player_monattk_hit_effects instead, as that
+// function calls this one.
+// Returns true if the combat round should end here.
+bool melee_attack::player_monattk_final_hit_effects(bool mondied)
+{
+    for (unsigned int i = 0; i < final_effects.size(); ++i)
+    {
+        switch (final_effects[i].flavor)
+        {
+        case FINEFF_LIGHTNING_DISCHARGE:
+            if (see_cell(final_effects[i].location))
+                mpr("Electricity arcs through the water!");
+            conduct_electricity(final_effects[i].location, attacker);
+            break;
+        }
+    }
+
+    return mondied;
+}
+
 // Returns true if the combat round should end here.
 bool melee_attack::player_monattk_hit_effects(bool mondied)
 {
@@ -1932,7 +1955,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     }
 
     if (mondied)
-        return (true);
+        return player_monattk_final_hit_effects(true);
 
     // These effects apply only to monsters that are still alive:
 
@@ -1943,14 +1966,14 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     // Also returns true if the hydra's last head was cut off, in which
     // case nothing more should be done to the hydra.
     if (decapitate_hydra(damage_done))
-        return (!defender->alive());
+        return player_monattk_final_hit_effects(!defender->alive());
 
     // These two (staff damage and damage brand) are mutually exclusive!
     player_apply_staff_damage();
 
     // Returns true if the monster croaked.
     if (!special_damage && apply_damage_brand())
-        return (true);
+        return player_monattk_final_hit_effects(true);
 
     if (!no_damage_message.empty())
     {
@@ -1984,10 +2007,10 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     {
         _monster_die(defender_as_monster(), KILL_YOU, NON_MONSTER);
 
-        return (true);
+        return player_monattk_final_hit_effects(true);
     }
 
-    return (false);
+    return player_monattk_final_hit_effects(false);
 }
 
 void melee_attack::_monster_die(monsters* monster, killer_type killer,
@@ -3073,7 +3096,21 @@ bool melee_attack::apply_damage_brand()
                    "You are electrocuted!"
                 :  "There is a sudden explosion of sparks!";
             special_damage = 10 + random2(15);
+
+            // Check for arcing in water, and add the final effect.
+            const coord_def& pos = defender->pos();
+
+            // We know the defender is neither airborne nor electricity
+            // resistant, from above, but is it on water?
+            if (feat_is_water(grd(pos)))
+            {
+                attack_final_effect effect;
+                effect.flavor = FINEFF_LIGHTNING_DISCHARGE;
+                effect.location = pos;
+                final_effects.push_back(effect);
+            }
         }
+
         break;
 
     case SPWPN_ORC_SLAYING:

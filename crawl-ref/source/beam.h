@@ -56,6 +56,7 @@ typedef bool (*beam_damage_func)(bolt& beam, actor* victim, int &dmg,
                                  std::string &dmg_msg);
 typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg,
                               int corpse);
+typedef bool (*explosion_aoe_func)(bolt& beam, const coord_def& target);
 
 struct bolt
 {
@@ -103,6 +104,9 @@ struct bolt
     std::vector<range_used_func>  range_funcs;
     std::vector<beam_damage_func> damage_funcs;
     std::vector<beam_hit_func>    hit_funcs;
+    std::vector<explosion_aoe_func> aoe_funcs; // Function for if the
+                                               // explosion only affects
+                                               // certain grid positions.
 
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
