@@ -35,10 +35,11 @@ static int _pushline(lua_State *ls, int firstline)
     char *b = buffer;
     size_t l;
     mpr(firstline ? "> " : ". ", MSGCH_PROMPT);
-    get_input_line(buffer, sizeof(buffer));  
+    if (cancelable_get_line_autohist(buffer, sizeof(buffer)))
+        return (0);
     l = strlen(b);
     if (l == 0)
-        return (0);
+        return (1);
 
     if (l > 0 && b[l-1] == '\n')   // line ends with newline?
         b[l-1] = '\0';             // remove it
@@ -46,7 +47,7 @@ static int _pushline(lua_State *ls, int firstline)
         lua_pushfstring(ls, "return %s", b+1);  // change it to `return'
     else
         lua_pushstring(ls, b);
-    return 1;
+    return (1);
 }
 
 static int _loadline(lua_State *ls)
