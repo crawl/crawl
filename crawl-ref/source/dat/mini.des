@@ -36,7 +36,7 @@ default-depth: D:8-27
 # Minivault balancer
 #
 NAME: mini_dummy
-DEPTH: 1-50, !D:8-27
+DEPTH: 1-50, !D:1-27
 TAGS: dummy
 WEIGHT: 90
 MAP
