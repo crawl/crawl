@@ -5888,7 +5888,7 @@ void monsters::expose_to_element(beam_type flavour, int strength)
     switch (flavour)
     {
     case BEAM_COLD:
-        if (mons_class_flag(this->type, M_COLD_BLOOD) && coinflip())
+        if (mons_class_flag(this->type, M_COLD_BLOOD) && this->res_cold() <= 0 && coinflip())
             slow_down(this, strength);
         break;
     default:
