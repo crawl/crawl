@@ -71,6 +71,7 @@ lev-pand.o \
 libutil.o \
 los.o \
 losparam.o \
+luaterp.o \
 macro.o \
 makeitem.o \
 mapdef.o \
