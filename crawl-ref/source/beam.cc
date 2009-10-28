@@ -3954,10 +3954,10 @@ void bolt::affect_player()
         return;
 
     const bool engulfs = is_explosion || is_big_cloud;
+
     if (hit_verb.empty())
-    {
         hit_verb = engulfs ? "engulfs" : "hits";
-    }
+
     mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
 
     // FIXME: Lots of duplicated code here (compare handling of
