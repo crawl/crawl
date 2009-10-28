@@ -319,7 +319,8 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
 int fill_out_corpse(const monsters* monster, item_def& corpse,
                     bool allow_weightless)
 {
-    ASSERT(monster->type != -1 && monster->type != MONS_PROGRAM_BUG);
+    ASSERT(monster->type >= 0 && monster->type != MONS_PROGRAM_BUG
+           && monster->type < NUM_MONSTERS);
     corpse.clear();
 
     int summon_type;
@@ -2347,7 +2348,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     // deal with mons_sec
     monster->type         = targetc;
-    monster->base_monster = MONS_PROGRAM_BUG;
+    monster->base_monster = MONS_NO_MONSTER;
     monster->number       = 0;
 
     // Note: define_monster() will clear out all enchantments! - bwr
@@ -5919,7 +5920,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         {
             monsters *targ = &menv[i];
 
-            if (targ->type == -1 || targ->type == MONS_PROGRAM_BUG)
+            if (targ->type == MONS_NO_MONSTER)
                 continue;
 
             if (distance(monster->pos(), targ->pos()) >= 5)
@@ -7678,7 +7679,7 @@ static void _handle_monster_move(monsters *monster)
 
             _mons_in_cloud(monster);
 
-            if (monster->type == -1)
+            if (monster->type == MONS_NO_MONSTER)
             {
                 monster->speed_increment = 1;
                 break;
@@ -7978,7 +7979,7 @@ static void _handle_monster_move(monsters *monster)
         }
     }
 
-    if (monster->type != -1 && monster->hit_points < 1)
+    if (monster->type != MONS_NO_MONSTER && monster->hit_points < 1)
         monster_die(monster, KILL_MISC, NON_MONSTER);
 }
 

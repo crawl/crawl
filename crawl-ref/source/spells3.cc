@@ -1218,7 +1218,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
                       0, 0,
                       you.pos(), MHITYOU,
                       MG_FORCE_BEH, god,
-                      MONS_PROGRAM_BUG, 0, colour));
+                      MONS_NO_MONSTER, 0, colour));
 
     if (monster == -1)
     {
@@ -2113,7 +2113,7 @@ bool recall(char type_recalled)
     {
         monster = &menv[loopy];
 
-        if (monster->type == -1)
+        if (monster->type == MONS_NO_MONSTER)
             continue;
 
         if (!mons_friendly(monster))

@@ -108,7 +108,7 @@ static void _do_high_level_summon(monsters *monster, bool monsterNearby,
     {
         monster_type which_mons = mpicker();
 
-        if (which_mons == MONS_PROGRAM_BUG)
+        if (which_mons == MONS_NO_MONSTER)
             continue;
 
         create_monster(
@@ -311,7 +311,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             if (create_monster(
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster),
                           3, spell_cast, monster->pos(), monster->foe, 0, god,
-                          MONS_PROGRAM_BUG, kraken_index, monster->colour,
+                          MONS_NO_MONSTER, kraken_index, monster->colour,
                           you.your_level, PROX_CLOSE_TO_PLAYER,
                           you.level_type)) == -1)
             {
@@ -922,7 +922,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     else if (monster->foe == MHITNOT && !monster->confused())
         target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(monster->foe)
-             && menv[monster->foe].type == -1)
+             && menv[monster->foe].type == MONS_NO_MONSTER)
     {
         target = "DEAD FOE";
     }
@@ -2826,7 +2826,7 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
     // Is there an open slot in menv?
     int midx = NON_MONSTER;
     for (int i = 0; i < MAX_MONSTERS; i++)
-        if (menv[i].type == -1)
+        if (menv[i].type == MONS_NO_MONSTER)
         {
             midx = i;
             break;

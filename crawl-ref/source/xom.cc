@@ -1194,7 +1194,7 @@ static int _xom_confuse_monsters(int sever, bool debug = false)
     {
         monster = &menv[i];
 
-        if (monster->type == -1 || !mons_near(monster)
+        if (monster->type == MONS_NO_MONSTER || !mons_near(monster)
             || mons_wont_attack(monster)
             || !mons_class_is_confusable(monster->type)
             || one_chance_in(20))

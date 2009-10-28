@@ -762,7 +762,7 @@ struct mon_display
     unsigned     glyph;
     unsigned     colour;
 
-    mon_display(monster_type m = MONS_PROGRAM_BUG,
+    mon_display(monster_type m = MONS_NO_MONSTER,
                 unsigned gly = 0,
                 unsigned col = 0) : type(m), glyph(gly), colour(col) { }
 };

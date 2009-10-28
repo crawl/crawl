@@ -2795,7 +2795,7 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
 // NOTE: Isn't called if monster dies from poisoning caused by chaos.
 void melee_attack::chaos_killed_defender(monsters* mon)
 {
-    ASSERT(mon->type != -1 && mon->type != MONS_PROGRAM_BUG);
+    ASSERT(mon->type != -1 && mon->type != MONS_NO_MONSTER);
     ASSERT(in_bounds(mon->pos()));
     ASSERT(!defender->alive());
 

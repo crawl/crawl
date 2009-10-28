@@ -1043,7 +1043,7 @@ static void _try_monster_cast(spell_type spell, int powc,
     int midx;
 
     for (midx = 0; midx < MAX_MONSTERS; midx++)
-        if (menv[midx].type == -1)
+        if (menv[midx].type == MONS_NO_MONSTER)
             break;
 
     if (midx == MAX_MONSTERS)

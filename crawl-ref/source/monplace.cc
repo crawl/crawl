@@ -736,7 +736,7 @@ int place_monster(mgen_data mg, bool force_pos)
                                    mg.pos, mg.map_mask,
                                    &stair_type, &mg.power);
 
-    if (mg.cls == MONS_PROGRAM_BUG)
+    if (mg.cls == MONS_NO_MONSTER)
         return (-1);
 
     // (3) Decide on banding (good lord!)
@@ -967,7 +967,7 @@ int place_monster(mgen_data mg, bool force_pos)
     // (5) For each band monster, loop call to place_monster_aux().
     for (int i = 1; i < band_size; i++)
     {
-        if (band_monsters[i] == MONS_PROGRAM_BUG)
+        if (band_monsters[i] == MONS_NO_MONSTER)
             break;
 
         band_template.cls = band_monsters[i];
@@ -1408,7 +1408,7 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     }
 
     // That is, random creature from which to fashion undead.
-    if (ztype == MONS_PROGRAM_BUG)
+    if (ztype == MONS_NO_MONSTER)
     {
         // How OOD this zombie can be.
         int relax = 5;
@@ -2317,7 +2317,7 @@ int mons_place(mgen_data mg)
 #endif
     int mon_count = 0;
     for (int il = 0; il < MAX_MONSTERS; il++)
-        if (menv[il].type != -1)
+        if (menv[il].type != MONS_NO_MONSTER)
             mon_count++;
 
     if (mg.cls == WANDERING_MONSTER)

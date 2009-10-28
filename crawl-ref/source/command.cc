@@ -1355,12 +1355,12 @@ static bool _do_description(std::string key, std::string type,
                     mon.base_monster = mon_num;
                     break;
                 default:
-                    mon.base_monster = MONS_PROGRAM_BUG;
+                    mon.base_monster = MONS_NO_MONSTER;
                     break;
                 }
             }
             else
-                mon.base_monster = MONS_PROGRAM_BUG;
+                mon.base_monster = MONS_NO_MONSTER;
 
             describe_monsters(mon, true);
             return (false);

@@ -970,7 +970,7 @@ void dgn_reset_level()
     for (int i = 0; i < MAX_MONSTERS; i++)
         menv[i].reset();
 
-    env.mons_alloc.init(MONS_PROGRAM_BUG);
+    env.mons_alloc.init(MONS_NO_MONSTER);
 
     // Zap clouds
     env.cgrid.init(EMPTY_CLOUD);
@@ -1711,7 +1711,7 @@ static char _fix_black_colour(char incol)
 
 void dgn_set_colours_from_monsters()
 {
-    if (env.mons_alloc[9] < 0 || env.mons_alloc[9] == MONS_PROGRAM_BUG
+    if (env.mons_alloc[9] < 0 || env.mons_alloc[9] == MONS_NO_MONSTER
         || env.mons_alloc[9] >= NUM_MONSTERS)
     {
         if (env.floor_colour == BLACK)
@@ -1723,7 +1723,7 @@ void dgn_set_colours_from_monsters()
             _fix_black_colour(mons_class_colour(env.mons_alloc[9]));
     }
 
-    if (env.mons_alloc[8] < 0 || env.mons_alloc[8] == MONS_PROGRAM_BUG
+    if (env.mons_alloc[8] < 0 || env.mons_alloc[8] == MONS_NO_MONSTER
         || env.mons_alloc[8] >= NUM_MONSTERS)
     {
         if (env.rock_colour == BLACK)
@@ -3380,7 +3380,7 @@ static monster_type _pick_unique(int lev)
         if (player_branch_depth() > 1 && one_chance_in(3))
             return MONS_DISSOLUTION;
 
-        return MONS_PROGRAM_BUG;
+        return MONS_NO_MONSTER;
     }
     else if (player_in_branch(BRANCH_LAIR))
     {
@@ -3389,7 +3389,7 @@ static monster_type _pick_unique(int lev)
         else if (player_branch_depth() < 3 && one_chance_in(4))
             return MONS_PRINCE_RIBBIT;
         else
-            return MONS_PROGRAM_BUG;
+            return MONS_NO_MONSTER;
     }
 
     // First, pick generic unique depending on depth.
@@ -3406,7 +3406,7 @@ static monster_type _pick_unique(int lev)
     if (which_unique == MONS_AZRAEL
         && (player_in_branch(BRANCH_SWAMP) || player_in_branch(BRANCH_SHOALS)))
     {
-        return MONS_PROGRAM_BUG;
+        return MONS_NO_MONSTER;
     }
 
     // If applicable, replace it with one of the uniques appearing
@@ -3454,30 +3454,30 @@ static int _place_uniques(int level_number, char level_type)
 
     while (one_chance_in(3))
     {
-        monster_type which_unique = MONS_PROGRAM_BUG;
+        monster_type which_unique = MONS_NO_MONSTER;
 
-        while (which_unique == MONS_PROGRAM_BUG
+        while (which_unique == MONS_NO_MONSTER
                || you.unique_creatures[which_unique])
         {
             which_unique = _pick_unique(level_number);
 
             // Sometimes, we just quit if a unique is already placed.
-            if (which_unique == MONS_PROGRAM_BUG
+            if (which_unique == MONS_NO_MONSTER
                 || you.unique_creatures[which_unique] && !one_chance_in(3))
             {
-                which_unique = MONS_PROGRAM_BUG;
+                which_unique = MONS_NO_MONSTER;
                 break;
             }
         }
 
         // Usually, we'll have quit after a few tries. Make sure we have
         // a valid unique.
-        if (which_unique == MONS_PROGRAM_BUG)
+        if (which_unique == MONS_NO_MONSTER)
             break;
 
         mgen_data mg(which_unique, BEH_SLEEP, 0, 0,
                      coord_def(), MHITNOT, MG_PERMIT_BANDS,
-                     GOD_NO_GOD, MONS_PROGRAM_BUG, 0, BLACK,
+                     GOD_NO_GOD, MONS_NO_MONSTER, 0, BLACK,
                      level_number, PROX_ANYWHERE);
         mg.map_mask = MMT_NO_MONS;
 
@@ -3520,7 +3520,7 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
 static void _place_aquatic_monsters(int level_number, char level_type)
 {
     int lava_spaces = 0, water_spaces = 0;
-    std::vector<monster_type> swimming_things(4u, MONS_PROGRAM_BUG);
+    std::vector<monster_type> swimming_things(4u, MONS_NO_MONSTER);
 
     // Count the number of lava and water tiles {dlb}:
     for (int x = 0; x < GXM; x++)
@@ -4735,12 +4735,12 @@ int dgn_place_monster(mons_spec &mspec,
             int tries = 100;
             do
                 mg.cls = pick_random_monster(mspec.place, lev, lev);
-            while (mg.cls != MONS_PROGRAM_BUG
+            while (mg.cls != MONS_NO_MONSTER
                      && mons_class_is_zombified(mspec.monbase)
                      && !mons_zombie_size(mg.cls)
                      && tries-- > 0);
 
-            if (mg.cls == MONS_PROGRAM_BUG
+            if (mg.cls == MONS_NO_MONSTER
                 || (mons_class_is_zombified(mspec.monbase)
                     && !mons_zombie_size(mg.cls)))
             {
@@ -4786,7 +4786,7 @@ int dgn_place_monster(mons_spec &mspec,
         if (mons_class_is_zombified(mg.base_type))
         {
             if (mons_class_is_zombified(mg.cls))
-                mg.base_type = MONS_PROGRAM_BUG;
+                mg.base_type = MONS_NO_MONSTER;
             else
                 std::swap(mg.base_type, mg.cls);
         }

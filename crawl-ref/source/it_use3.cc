@@ -584,7 +584,7 @@ static bool _box_of_beasts(item_def &box)
 
     if (x_chance_in_y(60 + you.skills[SK_EVOCATIONS], 100))
     {
-        monster_type beasty = MONS_PROGRAM_BUG;
+        monster_type beasty = MONS_NO_MONSTER;
 
         // If you worship a good god, don't summon an evil beast (in
         // this case, the hell hound).

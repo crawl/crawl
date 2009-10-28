@@ -2527,7 +2527,7 @@ mons_spec mons_list::get_hydra_spec(const std::string &name) const
         nheads = 20;
     }
 
-    return mons_spec(MONS_HYDRA, MONS_PROGRAM_BUG, nheads);
+    return mons_spec(MONS_HYDRA, MONS_NO_MONSTER, nheads);
 }
 
 // Handle draconians specified as:

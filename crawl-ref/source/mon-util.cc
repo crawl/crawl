@@ -692,13 +692,12 @@ bool mons_is_skeletal(int mc)
 
 bool invalid_monster(const monsters *mon)
 {
-    return (!mon || mon->type == -1);
+    return (!mon || invalid_monster_type(mon->type));
 }
 
 bool invalid_monster_type(monster_type mt)
 {
     return (mt < 0 || mt >= NUM_MONSTERS
-            || mon_entry[mt] == -1
             || mon_entry[mt] == mon_entry[MONS_PROGRAM_BUG]);
 }
 
@@ -1950,7 +1949,7 @@ void define_monster(monsters &mons)
     mons.speed           = speed;
     mons.speed_increment = 70;
 
-    if (mons.base_monster == MONS_PROGRAM_BUG)
+    if (mons.base_monster == MONS_NO_MONSTER)
         mons.base_monster = monbase;
 
     if (mons.number == 0)
@@ -2173,7 +2172,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_KNIGHT:
     case MONS_DRACONIAN_SCORCHER:
-        if (mon.base_monster != MONS_PROGRAM_BUG) // database search
+        if (mon.base_monster != MONS_NO_MONSTER) // database search
             result += _draconian_colour_name(mon.base_monster) + " ";
         break;
 
@@ -3598,7 +3597,7 @@ void monsters::reset()
     flags           = 0;
     experience      = 0L;
     type            = MONS_NO_MONSTER;
-    base_monster    = MONS_PROGRAM_BUG;
+    base_monster    = MONS_NO_MONSTER;
     hit_points      = 0;
     max_hit_points  = 0;
     hit_dice        = 0;
@@ -4498,7 +4497,7 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
                      name(DESC_PLAIN, true).c_str());
             }
         }
-        else if (other_mon->type == -1)
+        else if (other_mon->type == MONS_NO_MONSTER)
         {
             mprf(MSGCH_DIAGNOSTICS, "Item %s, held by dead monster, being "
                                     "picked up by monster %s.",
@@ -6358,7 +6357,7 @@ void monsters::ghost_init()
     foe             = MHITNOT;
     foe_memory      = 0;
     colour          = ghost->colour;
-    number          = MONS_PROGRAM_BUG;
+    number          = MONS_NO_MONSTER;
     load_spells(MST_GHOST);
 
     inv.init(NON_ITEM);
@@ -6804,13 +6803,15 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     {
         monsters* other_mon = &menv[mgrd(mon->pos())];
 
-        if (other_mon->type == -1 || other_mon->type == MONS_PROGRAM_BUG)
+        if (other_mon->type == MONS_NO_MONSTER
+            || other_mon->type == MONS_PROGRAM_BUG)
         {
             mgrd(mon->pos()) = midx;
 
-            mprf(MSGCH_ERROR, "mgrd(%d,%d) points to dead monster, even "
+            mprf(MSGCH_ERROR, "mgrd(%d,%d) points to %s monster, even "
                  "though it contains submerged monster %s (see bug 2293518)",
                  mon->pos().x, mon->pos().y,
+                 other_mon->type == MONS_NO_MONSTER ? "dead" : "buggy",
                  mon->name(DESC_PLAIN, true).c_str());
 
             if (mon->pos() != you.pos())
@@ -8240,7 +8241,7 @@ void monsters::check_awaken(int)
 
 const monsterentry *monsters::find_monsterentry() const
 {
-    return (type == -1 || type == MONS_PROGRAM_BUG) ? NULL
+    return (type == MONS_NO_MONSTER || type == MONS_PROGRAM_BUG) ? NULL
                                                     : get_monster_data(type);
 }
 

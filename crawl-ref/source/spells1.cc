@@ -1100,7 +1100,7 @@ void abjuration(int pow)
     {
         monsters* const monster = &menv[i];
 
-        if (monster->type == -1 || !mons_near(monster))
+        if (monster->type == MONS_NO_MONSTER || !mons_near(monster))
             continue;
 
         if (mons_wont_attack(monster))

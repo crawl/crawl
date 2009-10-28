@@ -500,7 +500,7 @@ void wizard_create_spec_monster_name()
     {
         // Try again with habitat HT_LAND.
         // (Will be changed to the necessary terrain type in dgn_place_monster.)
-        place = find_newmons_square(MONS_PROGRAM_BUG, you.pos());
+        place = find_newmons_square(MONS_NO_MONSTER, you.pos());
     }
 
     if (!in_bounds(place))
@@ -2625,8 +2625,8 @@ void debug_stethoscope(int mon)
          mons.ac, mons.ev,
          mons_resist_magic( &mons ),
          mons.speed, mons.speed_increment,
-         mons.base_monster != MONS_PROGRAM_BUG ? " base=" : "",
-         mons.base_monster != MONS_PROGRAM_BUG ?
+         mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
+         mons.base_monster != MONS_NO_MONSTER ?
          get_monster_data(mons.base_monster)->name : "",
          mons.number, mons.flags );
 
@@ -2651,9 +2651,9 @@ void debug_stethoscope(int mon)
           mons_is_lurking(&mons)         ? "lurk"
                                          : "unknown"),
          mons.behaviour,
-         ((mons.foe == MHITYOU)            ? "you" :
-          (mons.foe == MHITNOT)            ? "none" :
-          (menv[mons.foe].type == -1)      ? "unassigned monster"
+         ((mons.foe == MHITYOU)                    ? "you" :
+          (mons.foe == MHITNOT)                    ? "none" :
+          (menv[mons.foe].type == MONS_NO_MONSTER) ? "unassigned monster"
           : menv[mons.foe].name(DESC_PLAIN, true).c_str()),
          mons.foe,
          mons.foe_memory,
@@ -2815,7 +2815,7 @@ void debug_item_scan( void )
             mpr("Unlinked temporary item:", MSGCH_ERROR);
             _dump_item( name, i, mitm[i] );
         }
-        else if (mon != NULL && mon->type == -1)
+        else if (mon != NULL && mon->type == MONS_NO_MONSTER)
         {
             mpr("Unlinked item held by dead monster:", MSGCH_ERROR);
             _dump_item( name, i, mitm[i] );
@@ -2901,7 +2901,7 @@ void debug_item_scan( void )
     {
         const monsters& monster = menv[i];
 
-        if (monster.type == -1)
+        if (monster.type == MONS_NO_MONSTER)
             continue;
 
         if (monster.name(DESC_PLAIN, true).find("questionable") !=
@@ -4566,7 +4566,7 @@ int fsim_kit_equip(const std::string &kit)
 void debug_fight_statistics(bool use_defaults, bool defence)
 {
     int punching_bag = get_monster_by_name(Options.fsim_mons);
-    if (punching_bag == -1 || punching_bag == MONS_PROGRAM_BUG)
+    if (punching_bag == -1 || punching_bag == MONS_NO_MONSTER)
         punching_bag = MONS_WORM;
 
     int mindex = _create_fsim_monster(punching_bag, 500);

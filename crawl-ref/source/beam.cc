@@ -4812,7 +4812,7 @@ void bolt::affect_monster(monsters* mon)
     }
 
     // Give the callbacks a dead-but-valid monster object.
-    if (mon->type == -1)
+    if (mon->type == MONS_NO_MONSTER)
     {
         orig.hit_points = -1;
         mon = &orig;

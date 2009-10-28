@@ -1244,7 +1244,7 @@ bool cast_summon_elemental(int pow, god_type god,
     dist smove;
 
     const int dur = std::min(2 + (random2(pow) / 5), 6);
-    const bool any_elemental = (restricted_type == MONS_PROGRAM_BUG);
+    const bool any_elemental = (restricted_type == MONS_NO_MONSTER);
 
     while (true)
     {
@@ -1795,7 +1795,7 @@ int fungal_bloom()
                                           MHITNOT,
                                           MG_FORCE_PLACE,
                                           GOD_NO_GOD,
-                                          MONS_PROGRAM_BUG,
+                                          MONS_NO_MONSTER,
                                           0,
                                           colour),
                                           false);

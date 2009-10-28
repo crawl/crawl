@@ -114,7 +114,7 @@ struct mgen_data
 
     // If the monster is zombie-like, or a specialised draconian, this
     // is the base monster that the monster is based on - should be
-    // set to MONS_PROGRAM_BUG when not used.
+    // set to MONS_NO_MONSTER when not used.
     monster_type    base_type;
 
     // Determines the behaviour of the monster after it is generated. This
@@ -191,7 +191,7 @@ struct mgen_data
               unsigned short mfoe = MHITNOT,
               unsigned monflags = 0,
               god_type which_god = GOD_NO_GOD,
-              monster_type base = MONS_PROGRAM_BUG,
+              monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
               int moncolour = BLACK,
               int monpower = you.your_level,

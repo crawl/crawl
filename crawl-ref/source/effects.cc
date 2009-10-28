@@ -2703,7 +2703,7 @@ static void _hell_effects()
     int temp_rand = random2(17);
     spschool_flag_type which_miscast = SPTYP_RANDOM;
     bool summon_instead = false;
-    monster_type which_beastie = MONS_PROGRAM_BUG;
+    monster_type which_beastie = MONS_NO_MONSTER;
 
     mpr((temp_rand ==  0) ? "\"You will not leave this place.\"" :
         (temp_rand ==  1) ? "\"Die, mortal!\"" :
@@ -4409,7 +4409,7 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
                    MHITNOT,
                    MG_FORCE_PLACE,
                    GOD_NO_GOD,
-                   MONS_PROGRAM_BUG,
+                   MONS_NO_MONSTER,
                    0,
                    corpse.colour);
 
@@ -4502,7 +4502,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
                                   MHITNOT,
                                   MG_FORCE_PLACE,
                                   GOD_NO_GOD,
-                                  MONS_PROGRAM_BUG,
+                                  MONS_NO_MONSTER,
                                   0,
                                   corpse.colour),
                                   false);

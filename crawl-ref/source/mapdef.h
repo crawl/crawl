@@ -461,7 +461,7 @@ class mons_spec
     std::string monname;
 
     mons_spec(int id = RANDOM_MONSTER,
-              monster_type base = MONS_PROGRAM_BUG,
+              monster_type base = MONS_NO_MONSTER,
               int num = 0,
               int gw = 10, int ml = 0,
               bool _fixmons = false, bool awaken = false, bool patrol = false)
