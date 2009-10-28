@@ -3213,6 +3213,20 @@ static void _open_door(coord_def move, bool check_confused)
     int skill = you.dex
                 + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
+    if (is_exclude_root(doorpos) && !(check_confused && you.confused()))
+    {
+        std::string prompt =
+            make_stringf("This %s%s is marked as excluded!  Open it "
+                         "anyways?", adj, noun);
+
+        if (!yesno(prompt.c_str(), true, 'n', true, false))
+        {
+            canned_msg(MSG_OK);
+            interrupt_activity( AI_FORCE_INTERRUPT );
+            return;
+        }
+    }
+
     if (you.duration[DUR_BERSERKER])
     {
         // XXX: Better flavour for larger doors?
