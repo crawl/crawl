@@ -316,21 +316,20 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
         mprf(MSGCH_SOUND, feat_item_destruction_message(grd(monster->pos())));
 }
 
-int fill_out_corpse(const monsters* monster, item_def& corpse,
-                    bool allow_weightless)
+monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
+                             bool allow_weightless)
 {
-    ASSERT(monster->type >= 0 && monster->type != MONS_PROGRAM_BUG
-           && monster->type < NUM_MONSTERS);
+    ASSERT(!invalid_monster_type(monster->type));
     corpse.clear();
 
     int summon_type;
     if (mons_is_summoned(monster, NULL, &summon_type)
         || (monster->flags & (MF_BANISHED | MF_HARD_RESET)))
     {
-        return (-1);
+        return (MONS_NO_MONSTER);
     }
 
-    int corpse_class = mons_species(monster->type);
+    monster_type corpse_class = mons_species(monster->type);
 
     // If this was a corpse that was temporarily animated then turn the
     // monster back into a corpse.
@@ -357,7 +356,7 @@ int fill_out_corpse(const monsters* monster, item_def& corpse,
 
     // Doesn't leave a corpse.
     if (mons_weight(corpse_class) == 0 && !allow_weightless)
-        return (-1);
+        return (MONS_NO_MONSTER);
 
     corpse.flags       = 0;
     corpse.base_type   = OBJ_CORPSES;
@@ -384,6 +383,7 @@ int fill_out_corpse(const monsters* monster, item_def& corpse,
     return (corpse_class);
 }
 
+// Returns the item slot of a generated corpse, or -1 if no corpse.
 int place_monster_corpse(const monsters *monster, bool silent,
                          bool force)
 {
@@ -400,14 +400,14 @@ int place_monster_corpse(const monsters *monster, bool silent,
         return (-1);
 
     item_def corpse;
-    const int corpse_class = fill_out_corpse(monster, corpse);
+    const monster_type corpse_class = fill_out_corpse(monster, corpse);
 
     // Don't place a corpse?  If a zombified monster is somehow capable
     // of leaving a corpse, then always place it.
     if (mons_class_is_zombified(monster->type))
         force = true;
 
-    if (corpse_class == -1 || (!force && coinflip()))
+    if (corpse_class == MONS_NO_MONSTER || (!force && coinflip()))
         return (-1);
 
     if (feat_destroys_items(grd(monster->pos())))
@@ -1256,6 +1256,7 @@ static int _destroy_tentacles(monsters *head)
     return tent;
 }
 
+// Returns the slot of a possibly generated corpse or -1.
 int monster_die(monsters *monster, killer_type killer,
                 int killer_index, bool silent, bool wizard)
 {
@@ -7562,7 +7563,7 @@ static void _handle_monster_move(monsters *monster)
         // giant spores and ball lightning exploding at the end of the
         // function, but do return if the monster's data has been
         // reset, since then the monster type is invalid.
-        if (monster->type == -1)
+        if (monster->type == MONS_NO_MONSTER)
             return;
         else if (monster->hit_points < 1)
             break;
@@ -7670,7 +7671,7 @@ static void _handle_monster_move(monsters *monster)
                     break;
                 }
 
-                if (monster->type == -1)
+                if (monster->type == MONS_NO_MONSTER)
                 {
                     monster->speed_increment -= entry->energy_usage.move;
                     break;  // problem with vortices
