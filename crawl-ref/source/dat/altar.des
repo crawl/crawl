@@ -279,7 +279,6 @@ ENDMAP
 
 NAME:   feawn_altar_1
 DEPTH:  D:2-7
-PLACE:  D:8
 WEIGHT: 75
 KFEAT:  C = altar_feawn
 MONS:   plant
@@ -293,7 +292,6 @@ ENDMAP
 
 NAME:   feawn_altar_2
 DEPTH:  D:2-7
-PLACE:  D:8
 WEIGHT: 75
 KFEAT:  C = altar_feawn
 NSUBST: w = 2:W / *:w
@@ -310,7 +308,6 @@ ENDMAP
 NAME:   feawn_altar_3
 DEPTH:  D:2-7
 WEIGHT: 75
-PLACE:  D:8
 KFEAT:  C = altar_feawn
 NSUBST: b = 1:. / *:1
 MONS:   plant w:5 / fungus / nothing w:3
@@ -325,7 +322,6 @@ ENDMAP
 NAME:   feawn_altar_4
 DEPTH:  D:2-7
 WEIGHT: 75
-PLACE:  D:8
 KFEAT:  C = altar_feawn
 FTILE:  . = floor_lair
 FTILE:  t = floor_lair
@@ -341,10 +337,21 @@ tttt.C.ttttttt
       ttttttt 
 ENDMAP
 
+NAME:  feawn_altar_5
+PLACE: D:8
+KFEAT: C = altar_feawn
+MONS:  centaur, bush
+MAP
+...... 
+.2222..
+.21222.
+.22C22.
+...22..
+.222.. 
+ENDMAP
+
 NAME:   cheibriados_altar_1
-DEPTH:  D:2-6
 PLACE:  D:7
-WEIGHT: 100
 KFEAT:  C = altar_cheibriados
 MAP
 ...
@@ -354,7 +361,6 @@ ENDMAP
 
 NAME:    cheibriados_altar_2
 DEPTH:   D:2-6
-PLACE:   D:7
 WEIGHT:  100
 KFEAT:   C = altar_cheibriados
 MONS:    giant slug, giant snail, elephant slug
@@ -374,7 +380,6 @@ ENDMAP
 
 NAME:   cheibriados_altar_3
 DEPTH:  D:2-6
-PLACE:  D:7
 WEIGHT: 100
 KFEAT:  C = altar_cheibriados
 ITEM:   potion of slowing
