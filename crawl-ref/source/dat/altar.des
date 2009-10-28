@@ -278,6 +278,7 @@ ENDMAP
 #       more than 12 gods.
 
 NAME:   feawn_altar_1
+TAGS:   uniq_altar_feawn
 DEPTH:  D:2-7
 WEIGHT: 75
 KFEAT:  C = altar_feawn
@@ -291,6 +292,7 @@ MAP
 ENDMAP
 
 NAME:   feawn_altar_2
+TAGS:   uniq_altar_feawn
 DEPTH:  D:2-7
 WEIGHT: 75
 KFEAT:  C = altar_feawn
@@ -306,6 +308,7 @@ MAP
 ENDMAP
 
 NAME:   feawn_altar_3
+TAGS:   uniq_altar_feawn
 DEPTH:  D:2-7
 WEIGHT: 75
 KFEAT:  C = altar_feawn
@@ -320,6 +323,7 @@ MAP
 ENDMAP
 
 NAME:   feawn_altar_4
+TAGS:   uniq_altar_feawn
 DEPTH:  D:2-7
 WEIGHT: 75
 KFEAT:  C = altar_feawn
@@ -338,6 +342,7 @@ tttt.C.ttttttt
 ENDMAP
 
 NAME:  feawn_altar_5
+TAGS:  uniq_altar_feawn
 PLACE: D:8
 KFEAT: C = altar_feawn
 MONS:  centaur, bush
@@ -351,6 +356,7 @@ MAP
 ENDMAP
 
 NAME:   cheibriados_altar_1
+TAGS:   uniq_altar_cheibriados
 PLACE:  D:7
 KFEAT:  C = altar_cheibriados
 MAP
@@ -360,6 +366,7 @@ MAP
 ENDMAP
 
 NAME:    cheibriados_altar_2
+TAGS:    uniq_altar_cheibriados
 DEPTH:   D:2-6
 WEIGHT:  100
 KFEAT:   C = altar_cheibriados
@@ -379,6 +386,7 @@ MAP
 ENDMAP
 
 NAME:   cheibriados_altar_3
+TAGS:   uniq_altar_cheibriados
 DEPTH:  D:2-6
 WEIGHT: 100
 KFEAT:  C = altar_cheibriados
