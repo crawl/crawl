@@ -606,7 +606,7 @@ ENDMAP
 #
 # There's no pyramid as such, but it was originally supposed to be a pyramid!
 # Instead, we have randomly placed loot in little rooms off the central chamber.
-# Nice place to take a holiday, wouldn't want to leave here...
+# Nice place to take a holiday, wouldn't want to live here...
 NAME:       volcano_pools
 WEIGHT:     60
 ORIENT:     encompass
@@ -672,7 +672,7 @@ ENDMAP
 ###############################################################################
 # "Volcano tomb"
 #
-# Some forgotten emperor was burried here! His tomb is guarded by mummies, flying
+# Some forgotten emperor was buried here! His tomb is guarded by mummies, flying
 # skulls and clouds of flame. Perhaps there is loot!
 NAME:       volcano_tomb
 WEIGHT:     30
@@ -789,7 +789,7 @@ ENDMAP
 ###############################################################################
 # Hidden bunker!
 #
-# There are scientists about, beware, as they may wish to experiment on you! The
+# There are scientists about; beware, as they may wish to experiment on you! The
 # idea was by Zaba, and the execution by due!
 NAME:       volcano_bunker
 WEIGHT:     30
@@ -921,7 +921,7 @@ ENDMAP
 # Zaba's village!
 #
 # These stupid humans have built their village right next to a dormant volcano.
-# It has erupted! Most have fleed, but some have stayed behind to guard their
+# It has erupted! Most have fled, but some have stayed behind to guard their
 # hard-earned loot. Idea kinda by dpeg, execution by Zaba.
 NAME:       volcano_village
 WEIGHT:     30
