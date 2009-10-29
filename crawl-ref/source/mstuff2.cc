@@ -2526,7 +2526,7 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
             {
                 monsters *ugly_near = monster_at(*ri);
 
-                if (ugly_near == NULL
+                if (!ugly_near
                     || ugly_near->type != MONS_UGLY_THING
                         && ugly_near->type != MONS_VERY_UGLY_THING)
                 {
