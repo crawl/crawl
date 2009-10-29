@@ -293,7 +293,8 @@ void spawn_random_monsters()
     // the player is unlikely to meet all of them and notice this.)
     if (you.level_type == LEVEL_ABYSS
         && (you.char_direction != GDT_GAME_START
-            || x_chance_in_y(5, rate)))
+            || x_chance_in_y(5, rate))
+        && (you.religion != GOD_CHEIBRIADOS || coinflip()))
     {
         mons_place(mgen_data(WANDERING_MONSTER));
         viewwindow(true, false);
