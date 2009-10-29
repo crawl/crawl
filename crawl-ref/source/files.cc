@@ -92,6 +92,8 @@
 #endif
 #endif
 
+static std::vector<SavefileCallback::callback>* _callback_list = NULL;
+
 static void _save_level( int level_saved, level_area_type lt,
                          branch_type where_were_you);
 
@@ -1535,6 +1537,8 @@ void save_game(bool leave_game, const char *farewellmsg)
 {
     unwind_bool saving_game(crawl_state.saving_game, true);
 
+    SavefileCallback::pre_save();
+
     /* Stashes */
     std::string stashFile = get_savedir_filename(you.your_name, "", "st");
     FILE *stashf = fopen(stashFile.c_str(), "wb");
@@ -1669,6 +1673,13 @@ void save_game(bool leave_game, const char *farewellmsg)
 #ifdef DGL_WHEREIS
     whereis_record("saved");
 #endif
+
+    if (_callback_list != NULL)
+    {
+        delete _callback_list;
+        _callback_list = NULL;
+    }
+
     end(0, false, farewellmsg? "%s" : "See you soon, %s!",
         farewellmsg? farewellmsg : you.your_name.c_str());
 }                               // end save_game()
@@ -1863,6 +1874,8 @@ void restore_game(void)
         load_messages(inf);
         fclose(msgf);
     }
+
+    SavefileCallback::post_restore();
 }
 
 static void _restore_level(const level_id &original)
@@ -2269,4 +2282,60 @@ file_lock::~file_lock()
     if (handle)
         lk_close(handle, mode, filename);
 #endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// SavefileCallback
+//
+// Callbacks which are called before a save and after a restore.  Can be used
+// to move stuff in and out of you.props, or on a restore to recalculate data
+// which isn't stored in the savefile.  Declare a SavefileCallback variable
+// using a C++ global constructor to register the callback.
+//
+// XXX: Due to some weirdness with C++ global constructors (see below) I'm
+// not sure if this will work for all compiler/system combos, so make any
+// code which uses this fail gracefully if the callbacks aren't called.
+
+SavefileCallback::SavefileCallback(callback func)
+{
+    ASSERT(func != NULL);
+
+    // XXX: For some reason (at least with GCC 4.3.2 on Linux) if the
+    // callback list is made with a global contructor then it gets emptied
+    // out by the time that pre_save() or post_restore() is called,
+    // probably having something to do with the fact that global
+    // contructors are also used to add the callbacks.  Thus we have to do
+    // it this way.
+    if (_callback_list == NULL)
+        _callback_list = new std::vector<SavefileCallback::callback>();
+
+    _callback_list->push_back(func);
+}
+
+void SavefileCallback::pre_save()
+{
+    ASSERT(crawl_state.saving_game);
+
+    if (_callback_list == NULL)
+        return;
+
+    for (unsigned int i = 0; i < _callback_list->size(); i++)
+    {
+        callback func = (*_callback_list)[i];
+        (*func)(true);
+    }
+}
+
+void SavefileCallback::post_restore()
+{
+    ASSERT(!crawl_state.saving_game);
+
+    if (_callback_list == NULL)
+        return;
+
+    for (unsigned int i = 0; i < _callback_list->size(); i++)
+    {
+        callback func = (*_callback_list)[i];
+        (*func)(false);
+    }
 }

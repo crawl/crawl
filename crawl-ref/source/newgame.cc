@@ -898,6 +898,11 @@ game_start:
     fix_up_jiyva_name();
 
     _save_newgame_options();
+
+    // Pretend that a savefile was just loaded, in order to
+    // get things setup properly.
+    SavefileCallback::post_restore();
+
     return (true);
 }
 

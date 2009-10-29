@@ -145,4 +145,15 @@ private:
     std::string filename;
 };
 
+class SavefileCallback
+{
+public:
+    typedef void (*callback)(bool saving);
+
+    SavefileCallback(callback func);
+
+    static void pre_save();
+    static void post_restore();
+};
+
 #endif
