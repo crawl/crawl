@@ -230,10 +230,6 @@ bool feat_is_gate(dungeon_feature_type feat)
     }
 }
 
-
-
-
-
 command_type feat_stair_direction(dungeon_feature_type feat)
 {
     switch (feat)
