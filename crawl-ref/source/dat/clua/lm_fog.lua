@@ -48,6 +48,12 @@
 -- start_clouds: The number of clouds to lay when the level containing
 --     the cloud machine is entered.  This is necessary since clouds
 --     are cleared when the player leaves a level.
+-- helper: A FunctionMachine helper marker. Will be called whenever the countdown
+--     is activated, and whenever the fog machine is reset. It will be called
+--     with the FogMachine's marker, a string containing the event ("decrement",
+--     "trigger"), the actual event object, and a copy of the FogMachine itself.
+--     See the section "Messages for fog machines" at the end of the file.
+--
 ------------------------------------------------------------------------------
 
 FogMachine = { CLASS = "FogMachine" }
@@ -90,13 +96,14 @@ function FogMachine:new(pars)
   m.size_max     = pars.size_max     or pars.size
   m.spread_rate  = pars.spread_rate  or -1
   m.start_clouds = pars.start_clouds or 1
+  m.helper       = pars.helper       or nil
 
   m.size_buildup_amnt   = pars.size_buildup_amnt   or 0
   m.size_buildup_time   = pars.size_buildup_time   or 1
   m.spread_buildup_amnt = pars.spread_buildup_amnt or 0
   m.spread_buildup_time = pars.spread_buildup_time or 1
 
-  m.buildup_turns = 0
+  m.buildup_turns      = 0
   m.countdown          = 0
 
   return m
@@ -157,14 +164,23 @@ function FogMachine:event(marker, ev)
       self.buildup_turns = self.size_buildup_time
     end
 
+    if self.helper ~= nil and self.countdown > 0 then
+      self.helper:do_function(marker, "decrement", ev, self)
+    elseif self.helper ~= nil and self.countdown <= 0 then
+      self.helper:do_function(marker, "trigger", ev, self)
+    end
+
     while self.countdown <= 0 do
-      self:do_fog(marker)
-      self.countdown = self.countdown +
+     self:do_fog(marker)
+     self.countdown = self.countdown +
         crawl.random_range(self.delay_min, self.delay_max, 1)
     end
   elseif ev:type() == dgn.dgn_event_type('entered_level') then
     for i = 1, self.start_clouds do
       self:do_fog(marker)
+      if self.helper ~= nil then
+        self.helper:do_function(marker, "trigger", ev, self)
+      end
       self.countdown = crawl.random_range(self.delay_min, self.delay_max, 1)
       self.buildup_turns = 0
     end
@@ -190,6 +206,12 @@ function FogMachine:write(marker, th)
   file.marshall(th, self.spread_buildup_time)
   file.marshall(th, self.buildup_turns)
   file.marshall(th, self.countdown)
+  if self.helper ~= nil then
+    file.marshall_meta(th, true)
+    self.helper:write(marker, th)
+  else
+    file.marshall_meta(th, false)
+  end
 end
 
 function FogMachine:read(marker, th)
@@ -211,6 +233,13 @@ function FogMachine:read(marker, th)
   self.spread_buildup_time = file.unmarshall_number(th)
   self.buildup_turns       = file.unmarshall_number(th)
   self.countdown           = file.unmarshall_number(th)
+  got_helper               = file.unmarshall_meta(th)
+  if got_helper == true then
+    self.helper = function_machine ({marker_type = "helper", func = (function() end)})
+    self.helper:read(marker, th)
+  else
+    self.helper = nil
+  end
 
   setmetatable(self, FogMachine)
 
@@ -246,4 +275,112 @@ function fog_machine_brownian(cloud_type, size, power)
     cloud_type = cloud_type, size = 1, pow_max = power,
     walk_dist = size, delay_min = 1, delay_max = power / size
   }
+end
+
+-------------------------------------------------------------------------------
+-- Messages for fog machines.
+--
+--  * warning_machine: Takes three parameters: turns, cantsee_message, and,
+--      optionally, see_message. Turns is the value of player turns before to
+--      trigger the message before the fog machine is fired. If only see_message
+--      is provided, the message will only be printed if the player can see the
+--      fog machine. If only cantsee_mesage is provided, the message will be
+--      displayed regardless. In combination, the message will be different
+--      depending on whether or not the player can see the marker. By default, the
+--      message will be displaying using the "warning" channel.
+--
+--  * trigger_machine: Takes three parameters: cantsee_message, see_message, and,
+--      optionally, channel. The functionality is identical to a warning_machine,
+--      only the message is instead displayed (or not displayed) when the fog machine
+--      is triggered. The message channel can be provided.
+--
+--  * tw_machine: Combines the above two message machines, providing warning messages
+--      as well as messages when triggered. Takes the parameters: warn_turns,
+--      warning_cantsee_message, trigger_cantsee_message, trigger_channel,
+--      trigger_see_message, warning_see_message. Parameters work as described above.
+--
+-- In all instances, the "cantsee" form of the message parameter cannot be null,
+-- and for warning and dual trigger/warning machines, the turns parameter cannot
+-- be null. All other parameters are considered optional.
+
+function warning_machine (trns, cantsee_mesg, see_mesg)
+  if trns == nil or (see_mesg == nil and cantsee_mesg == nil) then
+    error("WarningMachine requires turns and message!")
+  end
+  local function warning_func (marker, mtable, m2, event_name, event, fm)
+    local countdown = fm.countdown
+    if event_name == "decrement" and countdown <= mtable.turns then
+      if mtable.warning_done ~= true then
+        if mtable.see_message ~= nil and you.see_cell(marker:pos()) then
+            crawl.mpr(mtable.see_message, "warning")
+        elseif mtable.cantsee_message ~= nil then
+            crawl.mpr(mtable.cantsee_message, "warning")
+        end
+        mtable.warning_done = true
+      end
+    elseif event_name == "trigger" then
+      mtable.warning_done = false
+    end
+  end
+  pars = {marker_type = "helper"}
+  pars.marker_params = {see_message = see_mesg, cantsee_message = cantsee_mesg,
+                        turns = trns * 10, warning_done = false}
+  pars.func = warning_func
+  return FunctionMachine:new(pars)
+end
+
+function trigger_machine (cantsee_mesg, see_mesg, chan)
+  if see_mesg == nil and cantsee_mesg == nil then
+    error("Triggermachine requires a message!")
+  end
+  local function trigger_func (marker, mtable, m2, event_name, event, fm)
+    local countdown = fm.countdown
+    if event_name == "trigger" then
+      channel = mtable.channel or ""
+      if mtable.see_message ~= nil and you.see_cell(marker:pos()) then
+        crawl.mpr(mtable.see_message, channel)
+      elseif mtable.cantsee_message ~= nil then
+        crawl.mpr(mtable.cantsee_message, channel)
+      end
+    end
+  end
+  pars = {marker_type = "helper"}
+  pars.marker_params = {channel = chan or nil, see_message = see_mesg, cantsee_message = cantsee_mesg}
+  pars.func = trigger_func
+  return FunctionMachine:new(pars)
+end
+
+function tw_machine (warn_turns, warn_cantsee_message, trig_cantsee_message, trig_channel,
+                     trig_see_message, warn_see_message)
+  if warn_turns == nil or (warn_see_message == nil and warn_cantsee_message == nil)
+                       or (trig_see_message == nil and trig_cantsee_message == nil) then
+    error("TWMachine needs warning turns, warning message and triggeing message.")
+  end
+  local function tw_func (marker, mtable, m2, event_name, event, fm)
+    local countdown = fm.countdown
+    if event_name == "decrement" and countdown <= mtable.warning_turns then
+      if mtable.warning_done ~= true then
+        if mtable.warning_see_message ~= nil and you.see_cell(marker:pos()) then
+          crawl.mpr(mtable.warning_see_message, "warning")
+        elseif mtable.warning_cantsee_message ~= nil then
+          crawl.mpr(mtable.warning_cantsee_message, "warning")
+        end
+        mtable.warning_done = true
+      end
+    elseif event_name == "trigger" then
+      mtable.warning_done = false
+      channel = mtable.trigger_channel or ""
+      if mtable.trigger_see_message ~= nil and you.see_cell(marker:pos()) then
+        crawl.mpr(mtable.trigger_see_message, channel)
+      elseif mtable.trigger_cantsee_message ~= nil then
+        crawl.mpr(mtable.trigger_cantsee_message, channel)
+      end
+    end
+  end
+  pars = {marker_type = "helper"}
+  pars.marker_params = {warning_see_message = warn_see_message, warning_cantsee_message = warn_cantsee_message,
+                        warning_turns = warn_turns * 10, warning_done = false, trigger_see_message = trig_see_message,
+                        trigger_cantsee_message = trig_cantsee_message, trigger_channel = trig_channel or nil}
+  pars.func = tw_func
+  return FunctionMachine:new(pars)
 end
