@@ -336,7 +336,7 @@ void maybe_remove_autoexclusion(const coord_def &p)
                 mprf(MSGCH_DIAGNOSTICS, "maybe_remove_autoexclusion(): "
                      "exclusion at (%d, %d) not really an auto-exclude "
                      "[bug #2887690]; fixing",
-                     (int) exc->mon, exc->pos.x, exc->pos.y);
+                     exc->pos.x, exc->pos.y);
                 exc->autoex = false;
                 return;
             }
