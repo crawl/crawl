@@ -197,6 +197,9 @@ struct level_pos
         pos.x = pos.y = -1;
     }
 
+    // Returns the level_pos of where the player is standing.
+    static level_pos current();
+
     bool operator == ( const level_pos &lp ) const
     {
         return id == lp.id && pos == lp.pos;
@@ -215,6 +218,11 @@ struct level_pos
     bool is_valid() const
     {
         return id.depth > -1 && pos.x != -1 && pos.y != -1;
+    }
+
+    bool is_on( const level_id _id)
+    {
+        return id == _id;
     }
 
     void clear()

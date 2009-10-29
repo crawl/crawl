@@ -2934,6 +2934,11 @@ void level_id::load(reader& inf)
     level_type = static_cast<level_area_type>(unmarshallShort(inf));
 }
 
+level_pos level_pos::current()
+{
+    return level_pos(level_id::current(), you.pos());
+}
+
 // NOTE: see also marshall_level_pos
 void level_pos::save(writer& outf) const
 {
