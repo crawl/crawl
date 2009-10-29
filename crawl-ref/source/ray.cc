@@ -117,47 +117,6 @@ void ray_def::advance_and_bounce()
     set_reflect_point(oldaccx, oldaccy, blocked_x, blocked_y);
 }
 
-double ray_def::get_degrees() const
-{
-    if (slope > 100.0)
-        return (quadx < 0 ? 90.0 : 270.0);
-    else if (double_is_zero(slope))
-        return (quady > 0 ? 0.0  : 180.0);
-
-    // 0 < deg < 90
-    double deg = atan(slope) * 180.0 / M_PI;
-    if (quadx < 0)
-        deg = 180.0 - deg;
-    if (quady < 0)
-        deg = 360.0 - deg;
-    return (deg);
-}
-
-void ray_def::set_degrees(double deg)
-{
-    while (deg < 0.0)
-        deg += 360.0;
-    while (deg >= 360.0)
-        deg -= 360.0;
-
-    if (deg > 180.0)
-    {
-        quady = -1;
-        deg = 360 - deg;
-    }
-    if (deg > 90.0)
-    {
-        quadx = -1;
-        deg = 180 - deg;
-    }
-
-    slope = tan(deg / 180.0 * M_PI);
-    if (double_is_zero(slope))
-        slope = 0.0;
-    if (slope > 1000.0)
-        slope = 1000.0;
-}
-
 void ray_def::regress()
 {
     quadx = -quadx; quady= -quady;

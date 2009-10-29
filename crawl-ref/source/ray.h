@@ -39,11 +39,6 @@ public:
     void advance_and_bounce();
     void regress();
 
-    // Gets/sets the slope in terms of degrees, with 0 = east, 90 = north,
-    // 180 = west, 270 = south, 360 = east, -90 = south, etc
-    double get_degrees() const;
-    void   set_degrees(double deg);
-
 protected:
     adv_type raw_advance_pos();
     void flip();
