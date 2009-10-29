@@ -3150,7 +3150,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             else
                 setTarget = true;
         }
-        else if (mons_friendly(mon))
+        else if (mons_friendly(mon) && !crawl_state.arena)
             mon->foe = MHITYOU;
 
         if (see_cell(mon->pos()))
@@ -3169,7 +3169,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         // Just set behaviour... foe doesn't change.
         if (!mons_is_cornered(mon))
         {
-            if (mons_friendly(mon))
+            if (mons_friendly(mon) && !crawl_state.arena)
             {
                 mon->foe = MHITYOU;
                 simple_monster_message(mon, " returns to your side!");
@@ -4512,7 +4512,7 @@ static void _handle_behaviour(monsters *mon)
             // No foe? Then wander or seek the player.
             if (mon->foe == MHITNOT)
             {
-                if (!proxPlayer || isNeutral || patrolling)
+                if (crawl_state.arena || !proxPlayer || isNeutral || patrolling)
                     new_beh = BEH_WANDER;
                 else
                 {
@@ -4541,7 +4541,7 @@ static void _handle_behaviour(monsters *mon)
 
                 if (isFriendly)
                 {
-                    if (patrolling)
+                    if (patrolling || crawl_state.arena)
                     {
                         new_foe = MHITNOT;
                         new_beh = BEH_WANDER;

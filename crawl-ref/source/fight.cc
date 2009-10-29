@@ -4123,6 +4123,7 @@ bool melee_attack::mons_attack_mons()
     // set explicitly by the player during sanctuary).
     if (perceived_attack && attacker->alive()
         && mons_friendly(defender_as_monster())
+        && !crawl_state.arena
         && !mons_wont_attack(attacker_as_monster())
         && you.pet_target == MHITNOT
         && env.sanctuary_time <= 0)

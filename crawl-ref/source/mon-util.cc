@@ -2614,9 +2614,6 @@ mon_attitude_type monsters::temp_attitude() const
 
 bool mons_friendly(const monsters *m)
 {
-    if (crawl_state.arena)
-        return (false);
-
     return (m->attitude == ATT_FRIENDLY || m->has_ench(ENCH_CHARM));
 }
 
