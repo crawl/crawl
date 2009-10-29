@@ -125,7 +125,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         return (false);
     else if (is_good_god(which_god)
              && (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-                 || brand == SPWPN_VAMPIRICISM
+                 || brand == SPWPN_VAMPIRICISM || brand == SPWPN_SHADOW
                  || is_demonic(item)
                  || artefact_wpn_property(item, ARTP_CURSED) != 0))
     {
@@ -194,7 +194,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         // Anti-necromancy god: nothing involving necromancy or
         // necromantic spell use.
         if (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-             || brand == SPWPN_VAMPIRICISM)
+             || brand == SPWPN_VAMPIRICISM || brand == SPWPN_SHADOW)
         {
             return (false);
         }
@@ -704,9 +704,9 @@ void static _get_randart_properties(const item_def &item,
     const int atype = item.sub_type;
     int power_level = 0;
 
-    const long seed = _calc_seed( item );
+    const long seed = _calc_seed(item);
     rng_save_excursion exc;
-    seed_rng( seed );
+    seed_rng(seed);
 
     if (aclass == OBJ_ARMOUR)
         power_level = item.plus / 2 + 2;
@@ -826,7 +826,7 @@ void static _get_randart_properties(const item_def &item,
 
     if (!one_chance_in(5))
     {
-        // AC mod - not for armours or rings of protection
+        // AC mod - not for armours or rings of protection.
         if (one_chance_in(4 + power_level)
             && aclass != OBJ_ARMOUR
             && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION))
@@ -840,7 +840,7 @@ void static _get_randart_properties(const item_def &item,
             }
         }
 
-        // ev mod - not for rings of evasion
+        // EV mod - not for rings of evasion.
         if (one_chance_in(4 + power_level)
             && (aclass != OBJ_JEWELLERY || atype != RING_EVASION))
         {
@@ -854,7 +854,7 @@ void static _get_randart_properties(const item_def &item,
             }
         }
 
-        // str mod - not for rings of strength
+        // Str mod - not for rings of strength.
         if (one_chance_in(4 + power_level)
             && (aclass != OBJ_JEWELLERY || atype != RING_STRENGTH))
         {
@@ -863,12 +863,12 @@ void static _get_randart_properties(const item_def &item,
             if (one_chance_in(4))
             {
                 proprt[ARTP_STRENGTH] -= 1 + random2(3) + random2(3)
-                                          + random2(3);
+                                           + random2(3);
                 power_level--;
             }
         }
 
-        // int mod - not for rings of intelligence
+        // Int mod - not for rings of intelligence.
         if (one_chance_in(4 + power_level)
             && (aclass != OBJ_JEWELLERY || atype != RING_INTELLIGENCE))
         {
@@ -877,12 +877,12 @@ void static _get_randart_properties(const item_def &item,
             if (one_chance_in(4))
             {
                 proprt[ARTP_INTELLIGENCE] -= 1 + random2(3) + random2(3)
-                                              + random2(3);
+                                               + random2(3);
                 power_level--;
             }
         }
 
-        // dex mod - not for rings of dexterity
+        // Dex mod - not for rings of dexterity.
         if (one_chance_in(4 + power_level)
             && (aclass != OBJ_JEWELLERY || atype != RING_DEXTERITY))
         {
@@ -891,7 +891,7 @@ void static _get_randart_properties(const item_def &item,
             if (one_chance_in(4))
             {
                 proprt[ARTP_DEXTERITY] -= 1 + random2(3) + random2(3)
-                                           + random2(3);
+                                            + random2(3);
                 power_level--;
             }
         }
@@ -908,7 +908,7 @@ void static _get_randart_properties(const item_def &item,
             if (one_chance_in(4))
             {
                 proprt[ARTP_ACCURACY] -= 1 + random2(3) + random2(3)
-                                          + random2(3);
+                                           + random2(3);
                 power_level--;
             }
         }
@@ -919,7 +919,8 @@ void static _get_randart_properties(const item_def &item,
             power_level++;
             if (one_chance_in(4))
             {
-                proprt[ARTP_DAMAGE] -= 1 + random2(3) + random2(3) + random2(3);
+                proprt[ARTP_DAMAGE] -= 1 + random2(3) + random2(3)
+                                         + random2(3);
                 power_level--;
             }
         }
@@ -1000,7 +1001,8 @@ void static _get_randart_properties(const item_def &item,
         && (aclass != OBJ_JEWELLERY || atype != RING_LIFE_PROTECTION)
         && proprt[ARTP_BRAND] != SPWPN_DRAINING
         && proprt[ARTP_BRAND] != SPWPN_VAMPIRICISM
-        && proprt[ARTP_BRAND] != SPWPN_PAIN)
+        && proprt[ARTP_BRAND] != SPWPN_PAIN
+        && proprt[ARTP_BRAND] != SPWPN_SHADOW)
     {
         proprt[ARTP_NEGATIVE_ENERGY] = 1;
         power_level++;
@@ -1086,8 +1088,8 @@ void static _get_randart_properties(const item_def &item,
         power_level++;
     }
 
-    // Armours get fewer powers, and are also less likely to be
-    // cursed than weapons
+    // Armours get fewer powers, and are also less likely to be cursed
+    // than weapons.
     if (aclass == OBJ_ARMOUR)
         power_level -= 4;
 
@@ -1162,7 +1164,7 @@ void static _get_randart_properties(const item_def &item,
             break;
         case 8:
             // emits mutagenic radiation - increases
-            // magic_contamination.  property is chance (1 in ...) of
+            // magic_contamination; property is chance (1 in ...) of
             // increasing magic_contamination
             proprt[ARTP_MUTAGENIC] = 2 + random2(4);
             break;
