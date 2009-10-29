@@ -3617,6 +3617,7 @@ void monsters::reset()
     travel_target = MTRAV_NONE;
     travel_path.clear();
     ghost.reset(NULL);
+    seen_context = "";
 }
 
 void monsters::init_with(const monsters &mon)
