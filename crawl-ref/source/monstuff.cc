@@ -4816,8 +4816,8 @@ static void _handle_behaviour(monsters *mon)
     }
 }
 
-static bool _mons_check_set_foe(monsters *mon, const coord_def& p,
-                                bool friendly, bool neutral)
+static bool _mons_check_foe(monsters *mon, const coord_def& p,
+                            bool friendly, bool neutral)
 {
     if (!inside_level_bounds(p))
         return (false);
@@ -4825,7 +4825,6 @@ static bool _mons_check_set_foe(monsters *mon, const coord_def& p,
     if (!friendly && !neutral && p == you.pos()
         && you.visible_to(mon) && !is_sanctuary(p))
     {
-        mon->foe = MHITYOU;
         return (true);
     }
 
@@ -4837,7 +4836,6 @@ static bool _mons_check_set_foe(monsters *mon, const coord_def& p,
             && (mons_friendly(foe) != friendly
                 || (neutral && !mons_neutral(foe))))
         {
-            mon->foe = foe->mindex();
             return (true);
         }
     }
@@ -4852,21 +4850,23 @@ void _set_nearest_monster_foe(monsters *mon)
 
     for (int k = 1; k <= LOS_RADIUS; ++k)
     {
-        int count = 0;
-        bool success = false;
+        std::vector<coord_def> monster_pos;
         for (int i = -k; i <= k; ++i)
             for (int j = -k; j <= k; (abs(i) == k ? j++ : j += 2*k))
             {
                 const coord_def p = mon->pos() + coord_def(i, j);
-                if (one_chance_in(++count)
-                    && _mons_check_set_foe(mon, p, friendly, neutral))
-                {
-                    success = true;
-                }
+                if (_mons_check_foe(mon, p, friendly, neutral))
+                    monster_pos.push_back(p);
             }
+        if (monster_pos.empty())
+            continue;
 
-        if (success)
-            break;
+        const coord_def mpos = monster_pos[random2(monster_pos.size())];
+        if (mpos == you.pos())
+            mon->foe = MHITYOU;
+        else
+            mon->foe = env.mgrid(mpos);
+        return;
     }
 }
 
