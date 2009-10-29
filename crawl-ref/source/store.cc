@@ -11,6 +11,9 @@
 
 #include "externs.h"
 #include "tags.h"
+#include "travel.h"
+
+#include <algorithm>
 
 CrawlStoreValue::CrawlStoreValue()
     : type(SV_NONE), flags(SFLAG_UNSET)
@@ -83,6 +86,22 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
         CrawlVector* tmp = static_cast<CrawlVector*>(other.val.ptr);
         vec = new CrawlVector(*tmp);
         val.ptr = static_cast<void*>(vec);
+        break;
+    }
+
+    case SV_LEV_ID:
+    {
+        level_id* id;
+        id = new level_id(*static_cast<level_id*>(other.val.ptr));
+        val.ptr = static_cast<void*>(id);
+        break;
+    }
+
+    case SV_LEV_POS:
+    {
+        level_pos* pos;
+        pos = new level_pos(*static_cast<level_pos*>(other.val.ptr));
+        val.ptr = static_cast<void*>(pos);
         break;
     }
 
@@ -175,6 +194,20 @@ CrawlStoreValue::CrawlStoreValue(const CrawlVector &_val)
     get_vector() = _val;
 }
 
+CrawlStoreValue::CrawlStoreValue(const level_id &_val)
+    : type(SV_LEV_ID), flags(SFLAG_UNSET)
+{
+    val.ptr = NULL;
+    get_level_id() = _val;
+}
+
+CrawlStoreValue::CrawlStoreValue(const level_pos &_val)
+    : type(SV_LEV_POS), flags(SFLAG_UNSET)
+{
+    val.ptr = NULL;
+    get_level_pos() = _val;
+}
+
 CrawlStoreValue::~CrawlStoreValue()
 {
     unset(true);
@@ -252,6 +285,22 @@ void CrawlStoreValue::unset(bool force)
         break;
     }
 
+    case SV_LEV_ID:
+    {
+        level_id* id = static_cast<level_id*>(val.ptr);
+        delete id;
+        val.ptr = NULL;
+        break;
+    }
+
+    case SV_LEV_POS:
+    {
+        level_pos* pos = static_cast<level_pos*>(val.ptr);
+        delete pos;
+        val.ptr = NULL;
+        break;
+    }
+
     case SV_NONE:
         ASSERT(false);
 
@@ -320,7 +369,15 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         COPY_PTR(CrawlVector);
         break;
 
-    case NUM_STORE_VAL_TYPES:
+    case SV_LEV_ID:
+        COPY_PTR(level_id);
+        break;
+
+     case SV_LEV_POS:
+        COPY_PTR(level_pos);
+        break;
+
+     case NUM_STORE_VAL_TYPES:
         DEBUGSTR("CrawlStoreValue has type NUM_STORE_VAL_TYPES");
         break;
     }
@@ -418,6 +475,20 @@ void CrawlStoreValue::write(writer &th) const
         break;
     }
 
+    case SV_LEV_ID:
+    {
+        level_id* id = static_cast<level_id*>(val.ptr);
+        id->save(th);
+        break;
+    }
+
+    case SV_LEV_POS:
+    {
+        level_pos* pos = static_cast<level_pos*>(val.ptr);
+        pos->save(th);
+        break;
+    }
+
     case SV_NONE:
         ASSERT(false);
 
@@ -494,6 +565,24 @@ void CrawlStoreValue::read(reader &th)
         CrawlVector* vec = new CrawlVector();
         vec->read(th);
         val.ptr = (void*) vec;
+
+        break;
+    }
+
+    case SV_LEV_ID:
+    {
+        level_id* id = new level_id();
+        id->load(th);
+        val.ptr = (void*) id;
+
+        break;
+    }
+
+    case SV_LEV_POS:
+    {
+        level_pos* pos = new level_pos();
+        pos->load(th);
+        val.ptr = (void*) pos;
 
         break;
     }
@@ -686,6 +775,17 @@ CrawlVector &CrawlStoreValue::get_vector()
     GET_VAL_PTR(SV_VEC, CrawlVector*, new CrawlVector());
 }
 
+level_id &CrawlStoreValue::get_level_id()
+{
+    GET_VAL_PTR(SV_LEV_ID, level_id*, new level_id());
+}
+
+level_pos &CrawlStoreValue::get_level_pos()
+{
+    GET_VAL_PTR(SV_LEV_POS, level_pos*, new level_pos());
+}
+
+
 CrawlStoreValue &CrawlStoreValue::operator [] (const std::string &key)
 {
     return get_table()[key];
@@ -762,6 +862,18 @@ const CrawlVector& CrawlStoreValue::get_vector() const
     return *((CrawlVector*)val.ptr);
 }
 
+level_id CrawlStoreValue::get_level_id() const
+{
+    GET_CONST_SETUP(SV_LEV_ID);
+    return *((level_id*)val.ptr);
+}
+
+level_pos CrawlStoreValue::get_level_pos() const
+{
+    GET_CONST_SETUP(SV_LEV_POS);
+    return *((level_pos*)val.ptr);
+}
+
 const CrawlStoreValue &CrawlStoreValue::operator
     [] (const std::string &key) const
 {
@@ -777,16 +889,18 @@ const CrawlStoreValue &CrawlStoreValue::operator
 /////////////////////
 // Typecast operators
 #ifdef TARGET_COMPILER_VC
-CrawlStoreValue::operator bool&()                       { return get_bool();   }
-CrawlStoreValue::operator char&()                       { return get_byte();   }
-CrawlStoreValue::operator short&()                      { return get_short();  }
-CrawlStoreValue::operator float&()                      { return get_float();  }
-CrawlStoreValue::operator long&()                       { return get_long();   }
-CrawlStoreValue::operator std::string&()                { return get_string(); }
-CrawlStoreValue::operator coord_def&()                  { return get_coord();  }
-CrawlStoreValue::operator CrawlHashTable&()             { return get_table();  }
-CrawlStoreValue::operator CrawlVector&()                { return get_vector(); }
-CrawlStoreValue::operator item_def&()                   { return get_item();   }
+CrawlStoreValue::operator bool&()                   { return get_bool();      }
+CrawlStoreValue::operator char&()                   { return get_byte();      }
+CrawlStoreValue::operator short&()                  { return get_short();     }
+CrawlStoreValue::operator float&()                  { return get_float();     }
+CrawlStoreValue::operator long&()                   { return get_long();      }
+CrawlStoreValue::operator std::string&()            { return get_string();    }
+CrawlStoreValue::operator coord_def&()              { return get_coord();     }
+CrawlStoreValue::operator CrawlHashTable&()         { return get_table();     }
+CrawlStoreValue::operator CrawlVector&()            { return get_vector();    }
+CrawlStoreValue::operator item_def&()               { return get_item();      }
+CrawlStoreValue::operator level_id&()               { return get_level_id();  }
+CrawlStoreValue::operator level_pos&()              { return get_level_pos(); }
 #else
 &CrawlStoreValue::operator bool()
 {
@@ -836,6 +950,16 @@ CrawlStoreValue::operator item_def&()                   { return get_item();   }
 &CrawlStoreValue::operator item_def()
 {
     return get_item();
+}
+
+&CrawlStoreValue::operator level_id()
+{
+    return get_level_id();
+}
+
+&CrawlStoreValue::operator level_pos()
+{
+    return get_level_pos();
 }
 #endif
 
@@ -888,6 +1012,16 @@ CrawlStoreValue::operator std::string() const
 CrawlStoreValue::operator coord_def() const
 {
     return get_coord();
+}
+
+CrawlStoreValue::operator level_id() const
+{
+    return get_level_id();
+}
+
+CrawlStoreValue::operator level_pos() const
+{
+    return get_level_pos();
 }
 
 ///////////////////////
@@ -955,6 +1089,18 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlVector &_val)
 CrawlStoreValue &CrawlStoreValue::operator = (const item_def &_val)
 {
     get_item() = _val;
+    return (*this);
+}
+
+CrawlStoreValue &CrawlStoreValue::operator = (const level_id &_val)
+{
+    get_level_id() = _val;
+    return (*this);
+}
+
+CrawlStoreValue &CrawlStoreValue::operator = (const level_pos &_val)
+{
+    get_level_pos() = _val;
     return (*this);
 }
 
@@ -1159,11 +1305,16 @@ void CrawlHashTable::assert_validity() const
         ASSERT(val.type != SV_NONE);
         ASSERT(!(val.flags & SFLAG_UNSET));
 
+        if (type != SV_NONE)
+            ASSERT(type == val.type);
+
         switch (val.type)
         {
         case SV_STR:
         case SV_COORD:
         case SV_ITEM:
+        case SV_LEV_ID:
+        case SV_LEV_POS:
             ASSERT(val.val.ptr != NULL);
             break;
 
@@ -1173,6 +1324,17 @@ void CrawlHashTable::assert_validity() const
 
             CrawlHashTable* nested;
             nested = static_cast<CrawlHashTable*>(val.val.ptr);
+
+            nested->assert_validity();
+            break;
+        }
+
+        case SV_VEC:
+        {
+            ASSERT(val.val.ptr != NULL);
+
+            CrawlVector* nested;
+            nested = static_cast<CrawlVector*>(val.val.ptr);
 
             nested->assert_validity();
             break;
@@ -1430,6 +1592,9 @@ void CrawlVector::assert_validity() const
     {
         const CrawlStoreValue &val = vector[i];
 
+        if (type != SV_NONE)
+            ASSERT(val.type == SV_NONE || val.type == type);
+
         // A vector might be resize()'d and filled up with unset
         // values, which are then set one by one, so we can't
         // assert over that here.
@@ -1441,6 +1606,8 @@ void CrawlVector::assert_validity() const
         case SV_STR:
         case SV_COORD:
         case SV_ITEM:
+        case SV_LEV_ID:
+        case SV_LEV_POS:
             ASSERT(val.val.ptr != NULL);
             break;
 
@@ -1448,8 +1615,8 @@ void CrawlVector::assert_validity() const
         {
             ASSERT(val.val.ptr != NULL);
 
-            CrawlVector* nested;
-            nested = static_cast<CrawlVector*>(val.val.ptr);
+            CrawlHashTable* nested;
+            nested = static_cast<CrawlHashTable*>(val.val.ptr);
 
             nested->assert_validity();
             break;
@@ -1486,7 +1653,6 @@ vec_size CrawlVector::get_max_size() const
 {
     return max_size;
 }
-
 
 ////////////////////////////////
 // Accessors to contained values
@@ -1545,6 +1711,47 @@ CrawlStoreValue& CrawlVector::pop_back()
 
 void CrawlVector::push_back(CrawlStoreValue val)
 {
+#ifdef DEBUG
+    if (type != SV_NONE)
+        ASSERT(type == val.type);
+
+    switch (val.type)
+    {
+    case SV_STR:
+    case SV_COORD:
+    case SV_ITEM:
+    case SV_LEV_ID:
+    case SV_LEV_POS:
+        ASSERT(val.val.ptr != NULL);
+        break;
+
+    case SV_HASH:
+    {
+        ASSERT(val.val.ptr != NULL);
+
+        CrawlHashTable* nested;
+        nested = static_cast<CrawlHashTable*>(val.val.ptr);
+
+        nested->assert_validity();
+        break;
+    }
+
+    case SV_VEC:
+    {
+        ASSERT(val.val.ptr != NULL);
+
+        CrawlVector* nested;
+        nested = static_cast<CrawlVector*>(val.val.ptr);
+
+        nested->assert_validity();
+        break;
+    }
+
+    default:
+        break;
+    }
+#endif
+
     assert_validity();
     ASSERT(vector.size() < max_size);
     ASSERT(type == SV_NONE
@@ -1557,6 +1764,7 @@ void CrawlVector::push_back(CrawlStoreValue val)
         val.flags |= SFLAG_CONST_TYPE;
     }
     vector.push_back(val);
+    assert_validity();
 }
 
 void CrawlVector::insert(const vec_size index, CrawlStoreValue val)

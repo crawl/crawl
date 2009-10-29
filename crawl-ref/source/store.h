@@ -19,6 +19,8 @@ class  CrawlHashTable;
 class  CrawlVector;
 struct item_def;
 struct coord_def;
+struct level_pos;
+class level_id;
 
 typedef unsigned char hash_size;
 typedef unsigned char vec_size;
@@ -42,6 +44,8 @@ enum store_val_type
     SV_ITEM,
     SV_HASH,
     SV_VEC,
+    SV_LEV_ID,
+    SV_LEV_POS,
     NUM_STORE_VAL_TYPES
 };
 
@@ -88,6 +92,8 @@ public:
     CrawlStoreValue(const item_def &val);
     CrawlStoreValue(const CrawlHashTable &val);
     CrawlStoreValue(const CrawlVector &val);
+    CrawlStoreValue(const level_id &val);
+    CrawlStoreValue(const level_pos &val);
 
     // Only needed for doing some assertion checking.
     CrawlStoreValue &operator = (const CrawlStoreValue &other);
@@ -121,14 +127,18 @@ public:
     CrawlHashTable &get_table();
     CrawlVector    &get_vector();
     item_def       &get_item();
+    level_id       &get_level_id();
+    level_pos      &get_level_pos();
 
-    bool           get_bool()   const;
-    char           get_byte()   const;
-    short          get_short()  const;
-    long           get_long()   const;
-    float          get_float()  const;
-    std::string    get_string() const;
-    coord_def      get_coord()  const;
+    bool           get_bool()      const;
+    char           get_byte()      const;
+    short          get_short()     const;
+    long           get_long()      const;
+    float          get_float()     const;
+    std::string    get_string()    const;
+    coord_def      get_coord()     const;
+    level_id       get_level_id()  const;
+    level_pos      get_level_pos() const;
 
     const CrawlHashTable& get_table()  const;
     const CrawlVector&    get_vector() const;
@@ -177,6 +187,8 @@ public:
     operator CrawlHashTable&();
     operator CrawlVector&();
     operator item_def&();
+    operator level_id&();
+    operator level_pos&();
 #else
     &operator bool();
     &operator char();
@@ -188,15 +200,19 @@ public:
     &operator CrawlHashTable();
     &operator CrawlVector();
     &operator item_def();
+    &operator level_id();
+    &operator level_pos();
 #endif
 
-    operator bool() const;
-    operator char() const;
-    operator short() const;
-    operator long() const;
-    operator float() const;
+    operator bool()        const;
+    operator char()        const;
+    operator short()       const;
+    operator long()        const;
+    operator float()       const;
     operator std::string() const;
-    operator coord_def() const;
+    operator coord_def()   const;
+    operator level_id()    const;
+    operator level_pos()   const;
 
     // Assignment operators
     CrawlStoreValue &operator = (const bool &val);
@@ -210,6 +226,8 @@ public:
     CrawlStoreValue &operator = (const CrawlHashTable &val);
     CrawlStoreValue &operator = (const CrawlVector &val);
     CrawlStoreValue &operator = (const item_def &val);
+    CrawlStoreValue &operator = (const level_id &val);
+    CrawlStoreValue &operator = (const level_pos &val);
 
     // Misc operators
     std::string &operator += (const std::string &val);
