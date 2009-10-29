@@ -70,6 +70,7 @@ void find_features(const std::vector<coord_def>& features,
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,
+                   bool circular = false,
                    coord_def origin = coord_def(-1, -1));
 void reautomap_level();
 

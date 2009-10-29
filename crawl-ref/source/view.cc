@@ -274,7 +274,7 @@ static void _automap_from( int x, int y, int mutated )
 {
     if (mutated)
         magic_mapping(8 * mutated, 5 * mutated, true, false,
-                      true, coord_def(x,y));
+                      true, true, coord_def(x,y));
 }
 
 void reautomap_level( )
@@ -2917,7 +2917,8 @@ static const FixedArray<char, GXM, GYM>& _tile_difficulties(bool random)
 
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
-                   bool force, bool deterministic, coord_def pos)
+                   bool force, bool deterministic, bool circular,
+                   coord_def pos)
 {
     if (!in_bounds(pos))
         pos = you.pos();
@@ -2953,7 +2954,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<char, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
-    for (radius_iterator ri(pos, map_radius, true, false); ri; ++ri)
+    for (radius_iterator ri(pos, map_radius, !circular, false); ri; ++ri)
     {
         if (!wizard_map)
         {
