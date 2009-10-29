@@ -633,8 +633,10 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_BLINK:
-        failure = 30 - (10 * player_mutation_level(MUT_BLINK))
-                  - you.experience_level;
+        // Allowing perfection makes the third level matter much more
+        perfect = true;
+        failure = 48 - (12 * player_mutation_level(MUT_BLINK))
+                  - you.experience_level / 2;
         break;
 
     case ABIL_TELEPORTATION:
