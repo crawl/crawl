@@ -33,6 +33,7 @@ fight.o \
 files.o \
 food.o \
 format.o \
+geom2d.o \
 ghost.o \
 godabil.o \
 goditem.o \
