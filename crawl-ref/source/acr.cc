@@ -163,7 +163,7 @@ static int  _check_adjacent(dungeon_feature_type feat, coord_def& delta);
 static void _open_door(coord_def move, bool check_confused = true);
 static void _open_door(int x, int y, bool check_confused = true)
 {
-    _open_door(coord_def(x,y), check_confused);
+    _open_door(coord_def(x, y), check_confused);
 }
 static void _close_door(coord_def move);
 static void _start_running( int dir, int mode );
@@ -341,11 +341,10 @@ static void _wanderer_startup_message()
 
     if (skill_levels <= 2)
     {
-        // Demigods and Demonspawn wanderers stand to not be
-        // able to see any of their skills at the start of
-        // the game (one or two skills should be easily guessed
-        // from starting equipment)... Anyways, we'll give the
-        // player a message to warn them (and give a reason why). -- bwr
+        // Some wanderers stand to not be able to see any of their
+        // skills at the start of the game (one or two skills should be
+        // easily guessed from starting equipment).  Anyway, we'll give
+        // the player a message to warn them (and a reason why). - bwr
         mpr("You wake up in a daze, and can't recall much.");
     }
 }
@@ -3102,7 +3101,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     return (false);
 }
 
-// Opens doors and may also handle untrapping/attacking etc.
+// Opens doors and may also handle untrapping/attacking, etc.
 // If either move_x or move_y are non-zero, the pair carries a specific
 // direction for the door to be opened (eg if you type ctrl + dir).
 static void _open_door(coord_def move, bool check_confused)
