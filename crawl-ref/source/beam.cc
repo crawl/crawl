@@ -1379,6 +1379,7 @@ static beam_type _chaos_beam_flavour()
 static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
                                 ray_def &old_ray, ray_def &new_ray)
 {
+#if 0
     if (new_bolt.real_flavour != BEAM_CHAOS)
         return;
 
@@ -1427,6 +1428,7 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     // ping-pong balls on caffeine.
     int range_spent = new_bolt.range_used - old_bolt.range_used;
     new_bolt.range += range_spent;
+#endif
 }
 
 bool bolt::invisible() const
