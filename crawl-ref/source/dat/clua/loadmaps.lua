@@ -19,7 +19,7 @@ local des_files = {
 
   -- Portal vaults.
   "bazaar.des", "bailey.des", "icecave.des", "lab.des", "ossuary.des",
-  "sewer.des", "trove.des", "shrine.des", "ziggurat.des",
+  "sewer.des", "trove.des", "shrine.des", "volcano.des", "ziggurat.des",
 
   -- Normal vaults.
   "altar.des", "entry.des", "elf.des", "float.des", "hells.des", "hive.des",
