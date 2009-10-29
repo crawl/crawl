@@ -1197,13 +1197,13 @@ mutation_def mutation_defs[] = {
 
       "stochastic torment resistance"},
     { MUT_PASSIVE_MAPPING,            3,  3, false, false,
-      {"You sense your immediate surroundings while exploring..",
-       "You sense your surroundings while exploring.",
-       "You sense a large area of your surroundings while exploring."},
+      {"You passively map a small area around you.",
+       "You passively map the area around you.",
+       "You passively map a large area around you."},
 
-      {"You feel aware of your new surroundings.",
-       "You feel more aware of your new surroundings.",
-       "You feel even more aware of your new surroundings."},
+      {"You feel a strange attunement to the structure of the dungeons.",
+       "Your attunement to dungeon structure grows.",
+       "Your attunement to dungeon structure grows further."},
 
       {"You feel slightly disoriented.",
        "You feel slightly disoriented.",
