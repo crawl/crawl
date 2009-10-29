@@ -1992,7 +1992,8 @@ static int _xom_change_scenery(bool debug = false)
         if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN_BLOOD)
             candidates.push_back(*ri);
         else if (feat >= DNGN_CLOSED_DOOR && feat <= DNGN_SECRET_DOOR
-                 || feat == DNGN_OPEN_DOOR && you.pos() != *ri)
+                 || feat == DNGN_OPEN_DOOR && you.pos() != *ri
+                     && !monster_at(*ri) && igrd(*ri) == NON_ITEM)
         {
             candidates.push_back(*ri);
         }
