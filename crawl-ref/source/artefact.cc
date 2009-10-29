@@ -125,7 +125,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         return (false);
     else if (is_good_god(which_god)
              && (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-                 || brand == SPWPN_VAMPIRICISM || brand == SPWPN_SHADOW
+                 || brand == SPWPN_VAMPIRICISM || brand == SPWPN_REAPING
                  || is_demonic(item)
                  || artefact_wpn_property(item, ARTP_CURSED) != 0))
     {
@@ -194,7 +194,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         // Anti-necromancy god: nothing involving necromancy or
         // necromantic spell use.
         if (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-             || brand == SPWPN_VAMPIRICISM || brand == SPWPN_SHADOW)
+             || brand == SPWPN_VAMPIRICISM || brand == SPWPN_REAPING)
         {
             return (false);
         }
@@ -1002,7 +1002,7 @@ void static _get_randart_properties(const item_def &item,
         && proprt[ARTP_BRAND] != SPWPN_DRAINING
         && proprt[ARTP_BRAND] != SPWPN_VAMPIRICISM
         && proprt[ARTP_BRAND] != SPWPN_PAIN
-        && proprt[ARTP_BRAND] != SPWPN_SHADOW)
+        && proprt[ARTP_BRAND] != SPWPN_REAPING)
     {
         proprt[ARTP_NEGATIVE_ENERGY] = 1;
         power_level++;
