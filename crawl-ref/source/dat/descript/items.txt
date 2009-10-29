@@ -59,10 +59,9 @@ or her actions.
 %%%%
 amulet of the gourmand
 
-This amulet protects its wearer from sickness from eating fresh raw
-meat and allows them to digest it when not hungry, but its effects on
-the wearer's digestion are cumulative over time, and are initially
-small.
+This amulet protects its wearer from sickness due to eating fresh raw
+meat and allows them to digest it when not hungry, but these effects on
+the wearer's digestion are cumulative over time and are initially small.
 %%%%
 amulet of warding
 
