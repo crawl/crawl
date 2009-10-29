@@ -1541,8 +1541,8 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         break;
     case SP_DEEP_DWARF:
-        you.mutation[MUT_SLOW_HEALING] = 3;
-        you.mutation[MUT_MAPPING]      = 2;
+        you.mutation[MUT_SLOW_HEALING]    = 3;
+        you.mutation[MUT_PASSIVE_MAPPING] = 1;
         break;
     case SP_GHOUL:
         you.mutation[MUT_TORMENT_RESISTANCE]         = 1;

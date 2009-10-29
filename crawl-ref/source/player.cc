@@ -3131,6 +3131,12 @@ void level_change(bool skip_attribute_increase)
                     perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1);
                 }
 
+                if ((you.experience_level == 9)
+                    || (you.experience_level == 18))
+                {
+                    perma_mutate(MUT_PASSIVE_MAPPING, 1);
+                }
+
                 if (!(you.experience_level % 4))
                 {
                     modify_stat(coinflip() ? STAT_STRENGTH
