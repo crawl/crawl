@@ -326,22 +326,7 @@ void maybe_remove_autoexclusion(const coord_def &p)
     {
         const monsters *m = monster_at(p);
         if (exc->autoex && (!m || !you.can_see(m) || m->type != exc->mon))
-        {
-            if (invalid_monster_type(exc->mon))
-            {
-                // Bug 2887690: for some reason -O1 or -O2 with gcc
-                // 4.3.2 causes exc->autoex to always be true when a
-                // game is saved and then restored.  This hack fixes
-                // things until we can figure out the root cause.
-                mprf(MSGCH_DIAGNOSTICS, "maybe_remove_autoexclusion(): "
-                     "exclusion at (%d, %d) not really an auto-exclude "
-                     "[bug #2887690]; fixing",
-                     exc->pos.x, exc->pos.y);
-                exc->autoex = false;
-                return;
-            }
             del_exclude(p);
-        }
     }
 }
 
