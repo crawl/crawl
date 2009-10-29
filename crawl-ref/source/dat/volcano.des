@@ -80,7 +80,7 @@ function volcano_portal (e)
 
     e.lua_marker('O',
       timed_marker {
-        disappear = "There is a deep roar from within the tunnel. Moments later, a river of lava pours forth, sealing it permanantly.",
+        disappear = "There is a deep roar from within the tunnel. Moments later, a river of lava pours forth, sealing it permanently.",
         desc = "A dark tunnel",
         desc_long = desc_long,
         entity = 'tunnel',
