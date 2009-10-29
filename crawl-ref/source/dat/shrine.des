@@ -8,7 +8,7 @@ end
 }}
 
 NAME: shrine_entry_a
-TAGS: uniq_shrine
+TAGS: luniq_shrine
 DEPTH: D:2-6
 ORIENT: float
 MARKER: O = lua:one_way_stair { desc = "A portal to a shrine", \
@@ -25,7 +25,7 @@ x   x
 ENDMAP
 
 NAME: shrine_entry_b
-TAGS: uniq_shrine
+TAGS: luniq_shrine
 DEPTH: D:2-6
 ORIENT: float
 MARKER: O = lua:one_way_stair { desc = "A portal to a shrine", \
@@ -76,6 +76,7 @@ SUBST: Z = .
 COLOUR: x = darkgrey
 MONS: place:D:4 zombie, place:D:5 skeleton, place:D:6 zombie, place:D:7 skeleton
 ITEM: any wand w:5 / wand of enslavement / q:1-3 any scroll w:2 / scroll of torment w:2
+: shrine_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxx
@@ -119,6 +120,7 @@ COLOUR: Z = darkgrey
 SUBST: Z = .
 COLOUR: x = darkgrey
 ITEM: any wand w:5 / wand of enslavement / q:1-3 any scroll w:2 / scroll of torment w:2
+: shrine_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.............SSSx............x
@@ -146,6 +148,7 @@ KFEAT: Z = altar_makhleb
 MONS: imp / shadow imp / white imp
 NSUBST: M = 5:1 / *:.
 ITEM: tome of destruction / q:1-3 scroll of summoning / q:2-3 scroll of immolation / q:1-3 any scroll / wand of flame w:5 / wand of frost w:5 / wand of lightning w:5 / any wand w:3
+: shrine_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.........www.........www...x
@@ -171,6 +174,7 @@ KFEAT: X = altar_makhleb
 KFEAT: Y = altar_vehumet
 KMONS: 1 = neqoxec
 ITEM: tome of destruction / q:1-3 scroll of summoning / q:2-3 scroll of immolation / q:1-3 any scroll / wand of flame w:5 / wand of frost w:5 / wand of lightning w:5 / any wand w:3
+: shrine_milestone(_G)
 MAP
 xxxxxxxxxxxxx
 xxxxx...xxxxx
@@ -220,6 +224,7 @@ MONS: gnoll; falchion / gnoll; falchion ego:holy_wrath w:1 / gnoll; quarterstaff
 MONS: orc; falchion / orc; falchion ego:holy_wrath w:1 / orc; quarterstaff / orc; quarterstaff ego:holy_wrath w:1 / orc
 #this one has really boring enemies. need more holy stuff.
 SUBST: M = 1222333
+: shrine_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxaaaaaaaaaaaxxxxxxxx
@@ -251,12 +256,13 @@ MONS: moth of wrath
 MONS: orc warrior; nothing w:15 / ogre; nothing w:15 / ogre / orc warrior
 NSUBST: M = 1:2 / *:.
 ITEM: any weapon
-NSUBST: . = 8:d *:.
+NSUBST: . = 8:d / *:.
+: shrine_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxx...xxxxxxxx
 xxxxxx..MMM..xxxxxx
-xxxxx..MYMZ...xxxxx
+xxxxx..YMM.Z...xxxxx
 xxxxx.M..o....xxxxx
 xxxx....ooo....xxxx
 xxxx...oo1oo...xxxx
@@ -283,8 +289,9 @@ SUBST: . = ....................~~~~~~~WWWWWWwwwwwxxxxxxxxvnnnnnnnnbvlZTUMM
 SUBST: Z = **%%%|C
 SUBST: M = 123333.
 SUBST: S = ...W
-SUBST: R = . = ....................~~~~~~~WWWWWWwwwwwxxxxxxxxvnnnnnnnnbvlTU
+SUBST: R = ....................~~~~~~~WWWWWWwwwwwxxxxxxxxvnnnnnnnnbvlTU
 COLOUR: . = random
+: shrine_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxx...........................xxxx
@@ -320,6 +327,7 @@ SUBST: . = ..Z
 COLOUR: Z = blue
 SUBST: Z = .
 ITEM: potion of gain intelligence / q:2 potion of gain intelligence w:5 / q:2 potion of magic / any book w:2 / nothing
+: shrine_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx...xxxxxxxxx
@@ -363,6 +371,7 @@ SUBST: d = dd.
 SHUFFLE: A>
 SUBST: 6 = 112
 ITEM: apple / apricot / orange / pear / grape / sultana / strawberry / nothing w:30
+: shrine_milestone(_G)
 MAP
 yyyyyyyyyyyyyyyyyyyyyyy
 yxxxxxxxxxxxxxxxxxxxxxy
