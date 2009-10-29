@@ -45,12 +45,12 @@ static int _pushline(lua_State *ls, int firstline)
     if (cancelable_get_line_autohist(buffer, sizeof(buffer)))
         return (0);
     l = strlen(b);
-    if (l == 0)
-        return (1);
 
+    // XXX: get line doesn't return newline?
     if (l > 0 && b[l-1] == '\n')   // line ends with newline?
         b[l-1] = '\0';             // remove it
-    if (firstline && b[0] == '=')  // first line starts with `=' ?
+
+    if (firstline && l > 0 && b[0] == '=')  // first line starts with `=' ?
         lua_pushfstring(ls, "return %s", b+1);  // change it to `return'
     else
         lua_pushstring(ls, b);
