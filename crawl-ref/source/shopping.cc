@@ -21,6 +21,7 @@
 #include "artefact.h"
 #include "cio.h"
 #include "describe.h"
+#include "files.h"
 #include "food.h"
 #include "invent.h"
 #include "items.h"
@@ -34,6 +35,8 @@
 #include "spl-book.h"
 #include "stash.h"
 #include "stuff.h"
+
+ShoppingList shopping_list;
 
 static bool _purchase( int shop, int item_got, int cost, bool id);
 
@@ -87,7 +90,8 @@ static std::string _purchase_keys(const std::string &s)
 }
 
 static void _list_shop_keys(const std::string &purchasable, bool viewing,
-                            int total_stock)
+                            int total_stock, int num_selected,
+                            int num_in_list)
 {
     ASSERT(total_stock > 0);
 
@@ -109,6 +113,18 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
     else
         pkeys = _purchase_keys(purchasable);
 
+    std::string shop_list = "";
+    if (!viewing)
+    {
+        shop_list = "[<w>@</w>] ";
+        if (num_selected > 0)
+            shop_list += "Selected -> shopping list";
+        else if (num_in_list > 0)
+            shop_list += "Shopping list -> selected";
+        else
+            shop_list = "";
+    }
+
     if (!pkeys.empty())
     {
         pkeys = "[" + pkeys + "] Select Item to "
@@ -119,9 +135,10 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
 #ifdef USE_TILE
             "/<w>R-Click</w>"
 #endif
-            "] exit            [<w>!</w>] %s   %s",
+            "] exit            [<w>!</w>] %s   %s%s",
             (viewing ? "to select items " : "to examine items"),
-            pkeys.c_str());
+            pkeys.c_str(),
+            shop_list.c_str());
 
     formatted_string fs = formatted_string::parse_string(buf);
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
@@ -150,10 +167,11 @@ static std::vector<int> _shop_get_stock(int shopidx)
     return result;
 }
 
-static int _shop_get_item_value(const item_def& item, int greed, bool id)
+static int _shop_get_item_value(const item_def& item, int greed, bool id,
+                                bool ignore_bargain = false)
 {
     int result = (greed * item_value(item, id) / 10);
-    if (you.duration[DUR_BARGAIN]) // 20% discount
+    if (you.duration[DUR_BARGAIN] && !ignore_bargain) // 20% discount
     {
         result *= 8;
         result /= 10;
@@ -167,6 +185,7 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
 
 static std::string _shop_print_stock( const std::vector<int>& stock,
                                       const std::vector<bool>& selected,
+                                      const std::vector<bool>& in_list,
                                       const shop_struct& shop,
                                       int total_cost )
 {
@@ -185,6 +204,7 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
             purchasable += c;
 
         // Colour stock as follows:
+        //  * lightcyan, if on the shopping list.
         //  * lightred, if you can't buy all you selected.
         //  * lightgreen, if this item is purchasable along with your selections
         //  * red, if this item is not purchasable even by itself.
@@ -193,7 +213,9 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
 
         // Is this too complicated? (jpeg)
 
-        if (total_cost > you.gold && selected[i])
+        if (in_list[i])
+            textcolor(LIGHTCYAN);
+        else if (total_cost > you.gold && selected[i])
             textcolor(LIGHTRED);
         else if (gp_value <= you.gold - total_cost || selected[i] && can_afford)
             textcolor(LIGHTGREEN);
@@ -202,11 +224,12 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
         else
             textcolor(YELLOW);
 
-        if (selected[i])
+        if (in_list[i])
+            cprintf("%c @ ", c);
+        else if (selected[i])
             cprintf("%c + ", c);
         else
             cprintf("%c - ", c);
-
 
         if (Options.menu_colour_shops)
         {
@@ -229,7 +252,6 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
 
     return (purchasable);
 }
-
 
 //  Rather than prompting for each individual item, shopping now works more
 //  like multi-pickup, in that pressing a letter only "selects" an item
@@ -260,31 +282,54 @@ static bool _in_a_shop( int shopidx )
     bool first = true;
     int total_cost = 0;
 
-    const bool id_stock = shoptype_identifies_stock(shop.type);
+    std::vector<int> stock = _shop_get_stock(shopidx);
+
+    // Autoinscribe randarts in the shop.
+    for (unsigned int i = 0; i < stock.size(); i++)
+    {
+        item_def& item = mitm[stock[i]];
+        if (Options.autoinscribe_artefacts && is_artefact(item))
+            item.inscription = artefact_auto_inscription(item);
+    }
+ 
     std::vector<bool> selected;
-    bool bought_something = false;
-    bool viewing = false;
+    std::vector<bool> in_list;
+
+    const bool id_stock = shoptype_identifies_stock(shop.type);
+          bool bought_something = false;
+          bool viewing = false;
     while (true)
     {
+        ASSERT(total_cost >= 0);
+
         StashTrack.get_shop(shop.pos).reset();
 
-        std::vector<int> stock = _shop_get_stock(shopidx);
+        stock = _shop_get_stock(shopidx);
 
-        // Autoinscribe randarts in the shop.
-        for (unsigned int i = 0; i < stock.size(); i++)
-        {
-            item_def& item = mitm[stock[i]];
-            if (Options.autoinscribe_artefacts && is_artefact(item))
-                item.inscription = artefact_auto_inscription(item);
-        }
-
-        // Deselect all.
+        // Deselect all, recompute what's in the shopping list.
         if (stock.size() != selected.size())
         {
             total_cost = 0;
             selected.resize(stock.size());
             for (unsigned int i = 0; i < selected.size(); ++i)
                 selected[i] = false;
+
+            in_list.resize(stock.size());
+            for (unsigned int i = 0; i < stock.size(); i++)
+            {
+                const item_def& item = mitm[stock[i]];
+                in_list[i] = shopping_list.is_on_list(item);
+            }
+        }
+
+        int num_in_list  = 0;
+        int num_selected = 0;
+        for (unsigned int i = 0; i < stock.size(); i++)
+        {
+            if (in_list[i])
+                num_in_list++;
+            if (selected[i])
+                num_selected++;
         }
 
         clrscr();
@@ -295,9 +340,11 @@ static bool _in_a_shop( int shopidx )
             return (bought_something);
         }
 
-        const std::string purchasable = _shop_print_stock(stock, selected, shop,
+        const std::string purchasable = _shop_print_stock(stock, selected,
+                                                          in_list, shop,
                                                           total_cost);
-        _list_shop_keys(purchasable, viewing, stock.size());
+        _list_shop_keys(purchasable, viewing, stock.size(), num_selected,
+                        num_in_list);
 
         if (!total_cost)
         {
@@ -407,6 +454,10 @@ static bool _in_a_shop( int shopidx )
                                 // knapsack.
                                 outside_items += quant;
                             }
+
+                            // Remove from shopping list.
+                            if (in_list[i])
+                                shopping_list.del_thing(item);
                         }
                     }
 
@@ -430,6 +481,45 @@ static bool _in_a_shop( int shopidx )
         }
         else if (key == '?' || key == '*')
             browse_inventory(false);
+        else if (key == '@')
+        {
+            if (viewing || (num_selected == 0 && num_in_list == 0))
+            {
+                _shop_print("Huh?", 1);
+                _shop_more();
+                continue;
+            }
+
+            if (num_selected > 0)
+            {
+                // Move selected to shopping list.
+                for (unsigned int i = 0; i < stock.size(); i++)
+                {
+                    if (selected[i])
+                    {
+                        in_list[i]  = true;
+                        selected[i] = false;
+                    }
+                }
+                total_cost = 0;
+            }
+            else
+            {
+                // Move shopping list to selected.
+                for (unsigned int i = 0; i < stock.size(); i++)
+                {
+                    if (in_list[i])
+                    {
+                        in_list[i]  = false;
+                        selected[i] = true;
+
+                        const item_def& item = mitm[stock[i]];
+                        total_cost += _shop_get_item_value(item, shop.greed,
+                                                           id_stock);
+                    }
+                }
+            }
+        }
         else if (!isalpha(key))
         {
             _shop_print("Huh?", 1);
@@ -470,14 +560,68 @@ static bool _in_a_shop( int shopidx )
                 const int gp_value = _shop_get_item_value(item, shop.greed,
                                                           id_stock);
 
+                if (in_list[key])
+                {
+                    if (gp_value > you.gold)
+                    {
+                        _shop_print("Remove from shopping list? (y/N)",
+                                    1);
+
+                        if ( yesno(NULL, true, 'n', false, false, true) )
+                        {
+                            in_list[key]  = false;
+                            selected[key] = false;
+                        }
+                        continue;
+                    }
+                    else
+                    {
+                        _shop_print("Remove item from shopping list and buy "
+                                    "it? (Y/n)", 1);
+
+                        if ( yesno(NULL, true, 'y', false, false, true) )
+                        {
+                            in_list[key] = false;
+                            // Will be toggled to true later
+                            selected[key] = false;
+                        }
+                        else
+                            continue;
+                    }
+                }
+ 
                 selected[key] = !selected[key];
                 if (selected[key])
                     total_cost += gp_value;
                 else
                     total_cost -= gp_value;
+
+                ASSERT(total_cost > 0);
             }
         }
     }
+
+    // Actually change shopping list.
+    for (unsigned int i = 0; i < stock.size(); i++)
+    {
+        const item_def& item = mitm[stock[i]];
+        bool on_list = shopping_list.is_on_list(item);
+
+        if (on_list != in_list[i])
+        {
+            if (in_list[i])
+            {
+                // Ignore Bargaining.
+                const int cost = _shop_get_item_value(item, shop.greed,
+                                                      id_stock, false);
+
+                shopping_list.add_thing(item, cost);
+            }
+            else
+                shopping_list.del_thing(item);
+        }
+    }
+
     return (bought_something);
 }
 
@@ -490,7 +634,7 @@ bool shoptype_identifies_stock(shop_type type)
 
 static bool _purchase( int shop, int item_got, int cost, bool id )
 {
-    you.gold -= cost;
+    you.del_gold(cost);
 
     you.attribute[ATTR_PURCHASES] += cost;
 
@@ -1839,4 +1983,327 @@ std::string shop_name(const coord_def& where)
 bool is_shop_item(const item_def &item)
 {
     return (item.pos.x == 0 && item.pos.y >= 5 && item.pos.y < (MAX_SHOPS + 5));
+}
+
+////////////////////////////////////////////////////////////////////////
+
+// Setup shopping list after restoring savefile.
+static void _callback(bool saving)
+{
+    if (!saving)
+        shopping_list.refresh();
+}
+static SavefileCallback _register_callback(_callback);
+
+// TODO:
+//   * Let shopping list be modified from with the stash lister.
+//   * Warn if buying something not on the shopping list would put
+//     something on shopping list out of your reach.
+
+#define SHOPPING_LIST_KEY       "shopping_list_key"
+#define SHOPPING_THING_COST_KEY "cost_key"
+#define SHOPPING_THING_ITEM_KEY "item_key"
+#define SHOPPING_THING_POS_KEY  "pos_key"
+
+ShoppingList::ShoppingList()
+{
+}
+
+#define SETUP_POS()                 \
+    if (list == NULL) \
+    { \
+        mpr("SavefileCallback global constructor weirdness!", MSGCH_ERROR); \
+        return (false); \
+    } \
+    level_pos pos;                  \
+    if (_pos != NULL)               \
+        pos = *_pos;                \
+    else                            \
+        pos = level_pos::current(); \
+    ASSERT(pos.is_valid());
+
+#define SETUP_THING()                             \
+    CrawlHashTable *thing = new CrawlHashTable();  \
+    (*thing)[SHOPPING_THING_COST_KEY] = (long) cost; \
+    (*thing)[SHOPPING_THING_POS_KEY]  = pos;
+
+bool ShoppingList::add_thing(const item_def &item, int cost,
+                             level_pos* _pos)
+{
+    ASSERT(is_valid_item(item));
+    ASSERT(cost > 0);
+
+    SETUP_POS();
+
+    if (find_thing(item, pos) != -1)
+    {
+        mprf(MSGCH_ERROR, "%s is already on the shopping list.",
+             item.name(DESC_CAP_THE).c_str());
+        return (false);
+    }
+
+    SETUP_THING();
+    (*thing)[SHOPPING_THING_ITEM_KEY] = item;
+    list->push_back(*thing);
+    refresh();
+
+    return (true);
+}
+
+bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
+                             level_pos* _pos)
+{
+    ASSERT(false); // Not implemented yet
+
+    SETUP_POS();
+
+    return (false);
+}
+
+#undef SETUP_THING
+
+bool ShoppingList::is_on_list(const item_def &item, level_pos* _pos) const
+{
+    SETUP_POS();
+
+    return (find_thing(item, pos) != -1);
+}
+
+bool ShoppingList::is_on_list(std::string desc, level_pos* _pos) const
+{
+    ASSERT(false); // Not implemented yet
+
+    SETUP_POS();
+
+    return (false);
+}
+
+bool ShoppingList::del_thing(const item_def &item, level_pos* _pos)
+{
+    SETUP_POS();
+
+    int idx = find_thing(item, pos);
+
+    if (idx == -1)
+    {
+        mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
+             item.name(DESC_CAP_THE).c_str());
+        return (false);
+    }
+
+    list->erase(idx);
+    refresh();
+
+    return (true);
+}
+
+bool ShoppingList::del_thing(std::string desc, level_pos* _pos)
+{
+    ASSERT(false); // Not implemented yet
+
+    SETUP_POS();
+
+    return (false);
+}
+
+#undef SETUP_POS
+
+int ShoppingList::size() const
+{
+    if (list == NULL)
+    {
+        mpr("SavefileCallback global constructor weirdness!", MSGCH_ERROR);
+        return (0);
+    }
+
+    return ( list->size() );
+}
+
+void ShoppingList::move_things(const coord_def &src, const coord_def &dst)
+{
+    ASSERT(false); // Not implemented yet
+}
+
+void ShoppingList::gold_changed(int old_amount, int new_amount)
+{
+    if (list == NULL)
+    {
+        mpr("SavefileCallback global constructor weirdness!", MSGCH_ERROR);
+        return;
+    }
+
+    if (new_amount > old_amount && new_amount >= min_unbuyable_cost)
+    {
+        ASSERT(min_unbuyable_idx < list->size());
+
+        std::vector<std::string> descs;
+        for (unsigned int i = min_unbuyable_idx; i < list->size(); i++)
+        {
+            const CrawlHashTable &thing = (*list)[i];
+            const long           cost   = thing_cost(thing);
+
+            if (cost > new_amount)
+            {
+                ASSERT(i > (unsigned int) min_unbuyable_idx);
+                break;
+            }
+
+            std::string desc;
+
+            if (thing_is_item(thing))
+                desc = "buy ";
+
+            desc += describe_thing(thing);
+
+            descs.push_back(desc);
+        }
+        ASSERT(!descs.empty());
+
+        mpr_comma_separated_list("You now have enough gold to ", descs,
+                                 ", or ");
+
+        // Reset max_buyable and min_unbuyable info
+        refresh();
+    }
+    else if (new_amount < old_amount && new_amount < max_buyable_cost)
+    {
+        // Reset max_buyable and min_unbuyable info
+        refresh();
+    }
+}
+
+void ShoppingList::display_list()
+{
+    ASSERT(false); // Not implemented yet
+}
+
+bool _compare_shopping_things(const CrawlStoreValue& a,
+                              const CrawlStoreValue& b)
+{
+    const CrawlHashTable& hash_a = a.get_table();
+    const CrawlHashTable& hash_b = b.get_table();
+
+    const long a_cost = hash_a[SHOPPING_THING_COST_KEY];
+    const long b_cost = hash_b[SHOPPING_THING_COST_KEY];
+
+    return (a_cost < b_cost);
+}
+
+void ShoppingList::refresh()
+{
+    if (!you.props.exists(SHOPPING_LIST_KEY))
+        you.props[SHOPPING_LIST_KEY].new_vector(SV_HASH, SFLAG_CONST_TYPE);
+    list = &you.props[SHOPPING_LIST_KEY].get_vector();
+
+    std::sort(list->begin(), list->end(), _compare_shopping_things);
+
+    min_unbuyable_cost = INT_MAX;
+    min_unbuyable_idx  = -1;
+    max_buyable_cost   = -1;
+    max_buyable_idx    = -1;
+
+    for (unsigned int i = 0; i < list->size(); i++)
+    {
+        const CrawlHashTable &thing = (*list)[i];
+
+        const long cost = thing_cost(thing);
+
+        if (cost <= you.gold)
+        {
+            max_buyable_cost = cost;
+            max_buyable_idx  = i;
+        }
+        else
+        {
+            min_unbuyable_cost = cost;
+            min_unbuyable_idx  = i;
+            break;
+        }
+    }
+}
+
+int ShoppingList::find_thing(const item_def &item,
+                             const level_pos &pos) const
+{
+    for (unsigned int i = 0; i < list->size(); i++)
+    {
+        const CrawlHashTable &thing = (*list)[i];
+        const level_pos      _pos    = thing_pos(thing);
+
+        if (pos != _pos)
+            continue;
+
+        if (item.name(DESC_NOCAP_A) == name_thing(thing))
+            return (i);
+    }
+
+    return (-1);
+}
+
+int ShoppingList::find_thing(const std::string &desc,
+                             const level_pos &pos) const
+{
+    ASSERT(false); // Not implemented yet
+    return (-1);
+}
+
+bool ShoppingList::thing_is_item(const CrawlHashTable& thing)
+{
+    return thing.exists(SHOPPING_THING_ITEM_KEY);
+}
+
+const item_def& ShoppingList::get_thing_item(const CrawlHashTable& thing)
+{
+    ASSERT(thing.exists(SHOPPING_THING_ITEM_KEY));
+
+    const item_def &item = thing[SHOPPING_THING_ITEM_KEY].get_item();
+    ASSERT(is_valid_item(item));
+
+    return (item);
+}
+
+std::string ShoppingList::get_thing_desc(const CrawlHashTable& thing)
+{
+    ASSERT(false); // Not implemented yet
+    return("");
+}
+
+long ShoppingList::thing_cost(const CrawlHashTable& thing)
+{
+    ASSERT(thing.exists(SHOPPING_THING_COST_KEY));
+    return (thing[SHOPPING_THING_COST_KEY].get_long());
+}
+
+level_pos ShoppingList::thing_pos(const CrawlHashTable& thing)
+{
+    ASSERT(thing.exists(SHOPPING_THING_POS_KEY));
+    return (thing[SHOPPING_THING_POS_KEY].get_level_pos());
+}
+
+std::string ShoppingList::name_thing(const CrawlHashTable& thing)
+{
+    if (thing_is_item(thing))
+    {
+        const item_def &item = get_thing_item(thing);
+
+        return item.name(DESC_NOCAP_A);
+    }
+    else
+        ASSERT(false);
+
+    return ("");
+}
+
+std::string ShoppingList::describe_thing(const CrawlHashTable& thing)
+{
+    const level_pos pos = thing_pos(thing);
+
+    std::string desc = name_thing(thing) + " on ";
+
+    if (pos.id == level_id::current())
+        desc += "this level";
+    else
+        desc += pos.id.describe();
+
+    return (desc);
 }

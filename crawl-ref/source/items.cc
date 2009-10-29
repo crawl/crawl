@@ -1500,7 +1500,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (mitm[obj].base_type == OBJ_GOLD)
     {
         you.attribute[ATTR_GOLD_FOUND] += quant_got;
-        you.gold += quant_got;
+        you.add_gold(quant_got);
         dec_mitm_item_quantity(obj, quant_got);
 
         if (!quiet)

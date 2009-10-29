@@ -6651,7 +6651,7 @@ void offer_items()
 
         you.attribute[ATTR_DONATIONS] += donation_cost;
 
-        you.gold -= donation_cost;
+        you.del_gold(donation_cost);
 
         if (donation < 1)
         {

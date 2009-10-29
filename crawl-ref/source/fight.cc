@@ -4688,7 +4688,8 @@ static void _steal_item_from_player(monsters *mon)
              stolen_amount == you.gold ? "all" : "some of");
 
         you.attribute[ATTR_GOLD_FOUND] -= stolen_amount;
-        you.gold                       -= stolen_amount;
+
+        you.del_gold(stolen_amount);
         return;
     }
 

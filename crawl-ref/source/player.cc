@@ -48,6 +48,7 @@
 #include "output.h"
 #include "quiver.h"
 #include "religion.h"
+#include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
@@ -7586,4 +7587,25 @@ void player::reset_escaped_death()
 {
     escaped_death_cause = NUM_KILLBY;
     escaped_death_aux   = "";
+}
+
+void player::add_gold(int delta)
+{
+    set_gold(gold + delta);
+}
+
+void player::del_gold(int delta)
+{
+    add_gold(gold - delta);
+}
+
+void player::set_gold(int amount)
+{
+    ASSERT(amount >= 0);
+
+    if (amount != gold)
+    {
+        shopping_list.gold_changed(gold, amount);
+        gold = amount;
+    }
 }

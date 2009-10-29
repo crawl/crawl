@@ -263,7 +263,7 @@ static int _you_gold(lua_State *ls)
     {
         const int new_gold = luaL_checkint(ls, 1);
         const int old_gold = you.gold;
-        you.gold = std::max(new_gold, 0);
+        you.set_gold( std::max(new_gold, 0) );
         if (new_gold > old_gold)
             you.attribute[ATTR_GOLD_FOUND] += new_gold - old_gold;
         else if (old_gold > new_gold)

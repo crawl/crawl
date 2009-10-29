@@ -539,7 +539,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case '$':
-        you.gold += 1000;
+        you.add_gold(1000);
         if (!Options.show_gold_turns)
         {
             mprf("You now have %d gold piece%s.",

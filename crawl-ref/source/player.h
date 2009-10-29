@@ -457,6 +457,10 @@ public:
     void exercise(skill_type skill, int qty);
     int  skill(skill_type skill, bool skill_bump = false) const;
 
+    bool do_shaft();
+
+    ////////////////////////////////////////////////////////////////
+
     PlaceInfo& get_place_info() const ; // Current place info
     PlaceInfo& get_place_info(branch_type branch,
                               level_area_type level_type2) const;
@@ -469,10 +473,13 @@ public:
     std::vector<PlaceInfo> get_all_place_info(bool visited_only = false,
                                               bool dungeon_only = false) const;
 
-    bool do_shaft();
-
     bool did_escape_death() const;
     void reset_escaped_death();
+
+    void add_gold(int delta);
+    void del_gold(int delta);
+    void set_gold(int amount);
+
 protected:
     void base_moveto(const coord_def &c);
 };
