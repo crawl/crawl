@@ -1093,6 +1093,12 @@ unsigned int item_value( item_def item, bool ident )
                 break;
 
             case SPMSL_CURARE:
+	    case SPMSL_PENETRATION:
+	    case SPMSL_REAPING:
+	    case SPMSL_SILVER:
+	    case SPMSL_STEEL:
+	    case SPMSL_DISPERSAL:
+	    case SPMSL_EXPLODING:
                 valued *= 30;
                 break;
 
