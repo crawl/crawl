@@ -3220,12 +3220,12 @@ static void _open_door(coord_def move, bool check_confused)
     {
         std::string prompt =
             make_stringf("This %s%s is marked as excluded!  Open it "
-                         "anyways?", adj, noun);
+                         "anyway?", adj, noun);
 
         if (!yesno(prompt.c_str(), true, 'n', true, false))
         {
             canned_msg(MSG_OK);
-            interrupt_activity( AI_FORCE_INTERRUPT );
+            interrupt_activity(AI_FORCE_INTERRUPT);
             return;
         }
     }
@@ -3316,9 +3316,7 @@ static void _close_door(coord_def move)
             return;
         }
         else if (num == 1)
-        {
             door_move.delta = move;
-        }
         else
         {
             mpr("Which direction? ", MSGCH_PROMPT);
@@ -3364,8 +3362,8 @@ static void _close_door(coord_def move)
             const coord_def& dc = *i;
             if (monsters* mon = monster_at(dc))
             {
-                // Need to make sure that turn_is_over is set if creature is
-                // invisible.
+                // Need to make sure that turn_is_over is set if
+                // creature is invisible.
                 if (!you.can_see(mon))
                 {
                     mprf("Something is blocking the %sway!", noun);
@@ -3428,9 +3426,9 @@ static void _close_door(coord_def move)
             // Once opened, formerly secret doors become normal doors.
             grd(dc) = DNGN_CLOSED_DOOR;
 
-            // Even if some of the door is out of LOS once it's closed (or even
-            // if some of it is out of LOS when it's open), we want the entire
-            // door to be updated.
+            // Even if some of the door is out of LOS once it's closed
+            // (or even if some of it is out of LOS when it's open), we
+            // want the entire door to be updated.
             if (is_terrain_seen(dc))
             {
                 set_envmap_obj(dc, DNGN_CLOSED_DOOR);
@@ -3463,7 +3461,7 @@ static void _close_door(coord_def move)
     }
 }
 
-// Initialise whole lot of stuff...
+// Initialise a whole lot of stuff...
 // Returns true if a new character.
 static bool _initialise(void)
 {
