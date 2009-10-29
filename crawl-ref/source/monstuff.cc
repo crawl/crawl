@@ -4487,7 +4487,7 @@ static void _handle_behaviour(monsters *mon)
         actor* afoe = mon->get_foe();
         proxFoe = afoe && mon->can_see(afoe);
 
-        coord_def foepos = coord_def(-1, -1);
+        coord_def foepos = coord_def(0,0);
         if (afoe)
             foepos = afoe->pos();
 
