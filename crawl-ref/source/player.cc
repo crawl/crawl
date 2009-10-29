@@ -7596,7 +7596,7 @@ void player::add_gold(int delta)
 
 void player::del_gold(int delta)
 {
-    add_gold(gold - delta);
+    set_gold(gold - delta);
 }
 
 void player::set_gold(int amount)
