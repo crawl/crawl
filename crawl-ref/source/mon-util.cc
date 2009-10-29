@@ -4277,7 +4277,7 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
                  hand_name(true).c_str(),
                  pronoun(PRONOUN_NOCAP).c_str());
             break;
-        case SPWPN_SHADOW:
+        case SPWPN_REAPING:
             mpr("It is briefly surrounded by shifting shadows.");
             break;
 

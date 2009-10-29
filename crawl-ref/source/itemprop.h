@@ -111,7 +111,7 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
 
     SPWPN_CONFUSE,                     //   20
     SPWPN_PENETRATION,
-    SPWPN_SHADOW,
+    SPWPN_REAPING,
     SPWPN_DEBUG_RANDART = 25,          //   25
     NUM_SPECIAL_WEAPONS,
     SPWPN_DUMMY_CRUSHING         // ONLY TEMPORARY USAGE -- converts to VORPAL
@@ -350,7 +350,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_RETURNING,                   //    5
     SPMSL_CHAOS,
     SPMSL_PENETRATION,
-    SPMSL_SHADOW,
+    SPMSL_REAPING,
     SPMSL_DISPERSAL,
     SPMSL_EXPLODING,                   //   10
     SPMSL_STEEL,

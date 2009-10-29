@@ -845,7 +845,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 "targets it hits, potentially hitting all targets in "
                 "its path until it reaches maximum range.";
             break;
-        case SPWPN_SHADOW:
+        case SPWPN_REAPING:
             description += "If ammo fired by it kills a monster, "
                 "causing it to leave a corpse, the corpse will be "
                 "animated as a zombie friendly to the one who fired it.";
@@ -1065,7 +1065,7 @@ static std::string _describe_ammo( const item_def &item )
             description += "A skilled user can throw it in such a way "
                 "that it will return to its owner.";
             break;
-        case SPMSL_SHADOW:
+        case SPMSL_REAPING:
             description += "If it kills a monster, causing it to leave a "
                 "corpse, the corpse will be animated as a zombie friendly "
                 "to the one who " + threw_or_fired + " it.";

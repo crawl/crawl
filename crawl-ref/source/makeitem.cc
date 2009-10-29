@@ -1428,7 +1428,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             else if (tmp < 650)
                 rc = SPWPN_PENETRATION;
             else if (tmp < 800)
-                rc = SPWPN_SHADOW;
+                rc = SPWPN_REAPING;
             else if (tmp < 920)
                 rc = SPWPN_PROTECTION;
             else if (tmp < 980)

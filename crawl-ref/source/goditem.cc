@@ -74,13 +74,13 @@ bool is_evil_item(const item_def& item)
                   || item_brand == SPWPN_DRAINING
                   || item_brand == SPWPN_PAIN
                   || item_brand == SPWPN_VAMPIRICISM
-                  || item_brand == SPWPN_SHADOW);
+                  || item_brand == SPWPN_REAPING);
         }
         break;
     case OBJ_MISSILES:
     {
         const int item_brand = get_ammo_brand(item);
-        retval = is_demonic(item) || item_brand == SPMSL_SHADOW;
+        retval = is_demonic(item) || item_brand == SPMSL_REAPING;
         break;
     }
     case OBJ_WANDS:

@@ -340,7 +340,7 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_FLAME: return ((terse) ? " (flame)" : " of flame");
     case SPWPN_FROST: return ((terse) ? " (frost)" : " of frost");
     case SPWPN_PENETRATION: return ((terse) ? " (penet)" : " of penetration");
-    case SPWPN_SHADOW: return ((terse) ? " (shadow)" : " of shadows");
+    case SPWPN_REAPING: return ((terse) ? " (reap)" : " of reaping");
 
     // both ranged and non-ranged
     case SPWPN_CHAOS: return ((terse) ? " (chaos)" : " of chaos");
@@ -1165,8 +1165,8 @@ std::string item_def::name_aux(description_level_type desc,
             case SPMSL_PENETRATION:
                 buff << ((terse) ? " (penet)" : " of penetration");
                 break;
-            case SPMSL_SHADOW:
-                buff << ((terse) ? " (shadow)" : " of shadows");
+            case SPMSL_REAPING:
+                buff << ((terse) ? " (reap)" : " of reaping");
                 break;
             case SPMSL_DISPERSAL:
                 buff << ((terse) ? " (disperse)" : " of dispersal");
