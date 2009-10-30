@@ -1916,49 +1916,6 @@ bool randart_is_bad( const item_def &item )
     return randart_is_bad( item, proprt);
 }
 
-bool make_item_blessed_blade( item_def &item )
-{
-    if (item.base_type != OBJ_WEAPONS)
-        return (false);
-
-    // already is an artefact
-    if (is_artefact(item))
-        return (false);
-
-    // mark as a random artefact
-    item.flags |= ISFLAG_RANDART;
-
-    ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
-    item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
-    CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
-    known.set_max_size(ART_PROPERTIES);
-    for (vec_size i = 0; i < ART_PROPERTIES; i++)
-        known[i] = (bool) false;
-
-    ASSERT(!item.props.exists( ARTEFACT_PROPS_KEY ));
-    item.props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT).resize(ART_PROPERTIES);
-    CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
-    rap.set_max_size(ART_PROPERTIES);
-    for (vec_size i = 0; i < ART_PROPERTIES; i++)
-        rap[i] = (short) 0;
-
-    // blessed blade of the Shining One
-    rap[ARTP_BRAND] = (short) SPWPN_HOLY_WRATH;
-
-    // set artefact name
-    ASSERT(!item.props.exists( ARTEFACT_NAME_KEY ));
-    item.props[ARTEFACT_NAME_KEY].get_string() = "Blessed Blade";
-
-    // set artefact appearance
-    ASSERT(!item.props.exists( ARTEFACT_APPEAR_KEY ));
-    item.props[ARTEFACT_APPEAR_KEY].get_string() = "brightly glowing blade";
-
-    // in case this is ever needed anywhere
-    item.special = (random_int() & RANDART_SEED_MASK);
-
-    return (true);
-}
-
 bool make_item_randart( item_def &item )
 {
     if (item.base_type != OBJ_WEAPONS

@@ -247,7 +247,6 @@ bool artefact_wpn_known_prop( const item_def &item, artefact_prop_type prop );
 /* ***********************************************************************
  * called from: dungeon
  * *********************************************************************** */
-bool make_item_blessed_blade( item_def &item );
 bool make_item_randart( item_def &item );
 bool make_item_unrandart( item_def &item, int unrand_index );
 

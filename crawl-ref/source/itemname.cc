@@ -1060,6 +1060,12 @@ std::string item_def::name_aux(description_level_type desc,
             buff << get_artefact_name(*this);
             break;
         }
+        else if (flags & ISFLAG_BLESSED_BLADE && !dbname)
+        {   // since Daevas can get blessed base items, we need a separate
+            // flag for this, so they can still have their eudemon blades
+            buff << "Blessed Blade";
+            break;
+        }
 
         // Now that we can have "glowing elven" weapons, it's
         // probably a good idea to cut out the descriptive

@@ -6183,7 +6183,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         if (is_blessed_blade_convertible(wpn))
         {
             origin_acquired(wpn, GOD_SHINING_ONE);
-            make_item_blessed_blade(wpn);
+            wpn.flags |= ISFLAG_BLESSED_BLADE;
         }
 
         burden_change();
