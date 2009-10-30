@@ -922,16 +922,15 @@ int get_ammo_brand( const item_def &item )
 
 special_armour_type get_armour_ego_type( const item_def &item )
 {
-    // Artefact armours have no ego type, must look up powers separately.
+    // Artefact armours have no ego type, must look up powers
+    // separately.
     if (item.base_type != OBJ_ARMOUR || is_artefact( item ))
         return (SPARM_NORMAL);
 
     return (static_cast<special_armour_type>(item.special));
 }
 
-//
 // Armour information and checking functions.
-//
 bool hide2armour( item_def &item )
 {
     if (item.base_type != OBJ_ARMOUR)
@@ -1056,7 +1055,7 @@ bool armour_not_shiny( const item_def &item )
 
 int armour_str_required( const item_def &arm )
 {
-    ASSERT (arm.base_type == OBJ_ARMOUR );
+    ASSERT( arm.base_type == OBJ_ARMOUR );
 
     int ret = 0;
 
