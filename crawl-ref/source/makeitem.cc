@@ -1184,7 +1184,8 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             continue;
         }
 
-        // We are not guaranteed to have a special set by the end of this
+        // We are not guaranteed to have a special set by the end of
+        // this.
         switch (item.sub_type)
         {
         case WPN_EVENINGSTAR:
