@@ -1144,7 +1144,7 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
 
 static void _weapon_add_racial_modifiers(item_def& item)
 {
-    switch (get_equip_race( item ))
+    switch (get_equip_race(item))
     {
     case ISFLAG_ORCISH:
         if (coinflip())
@@ -3304,8 +3304,9 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (!one_chance_in(5))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = random_choose(WPN_SPEAR,   WPN_SPEAR, WPN_FLAIL,
-                                           WPN_HALBERD, WPN_CLUB,  -1);
+            item.sub_type  = random_choose(WPN_SPEAR,   WPN_SPEAR, WPN_TRIDENT,
+                                           WPN_HALBERD, WPN_CLUB,  WPN_FLAIL,
+                                           -1);
         }
         break;
 
@@ -4253,7 +4254,7 @@ void give_armour(monsters *mon, int level)
 
     case MONS_GRUM:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_ANIMAL_SKIN;
+        item.sub_type  = coinflip() ? ARM_ANIMAL_SKIN : ARM_ROBE;
         break;
 
     case MONS_URUG:
