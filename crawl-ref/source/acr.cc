@@ -2792,8 +2792,11 @@ void world_reacts()
 
     viewwindow(true, false);
 
-    if (you.cannot_act() && any_messages())
+    if (you.cannot_act() && any_messages()
+        && crawl_state.repeat_cmd != CMD_WIZARD)
+    {
         more();
+    }
 
 #if defined(DEBUG_TENSION) || defined(DEBUG_RELIGION)
     if (you.religion != GOD_NO_GOD)

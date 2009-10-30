@@ -86,6 +86,23 @@ void game_state::cancel_cmd_repeat(std::string reason)
     if (!is_repeating_cmd())
         return;
 
+    if (repeat_cmd == CMD_WIZARD)
+    {
+        // Don't interrupt wizard testing of religion.
+        if (is_god_acting())
+            return;
+
+        // Don't interrupt wizard testing just because we can't
+        // move.
+        if (you.cannot_act())
+            return;
+
+        // We've probably just recovered from being unable to act;
+        // again, don't interrupt.
+        if (you.turn_is_over)
+            return;
+    }
+
     if (is_replaying_keys() || cmd_repeat_start)
         flush_input_buffer(FLUSH_KEY_REPLAY_CANCEL);
 
