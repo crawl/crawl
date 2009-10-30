@@ -480,7 +480,7 @@ bool ponderousify_armour()
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
 
-        simple_god_message(" says: Dude, use this wisely!");
+        simple_god_message(" says: Use this wisely!");
 
         return (true);
     }
