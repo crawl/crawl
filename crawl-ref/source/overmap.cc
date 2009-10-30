@@ -20,6 +20,8 @@
 
 #include "branch.h"
 #include "cio.h"
+#include "colour.h"
+#include "coord.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"

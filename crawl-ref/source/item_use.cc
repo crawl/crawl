@@ -20,6 +20,7 @@
 #include "beam.h"
 #include "cio.h"
 #include "cloud.h"
+#include "colour.h"
 #include "command.h"
 #include "debug.h"
 #include "decks.h"

@@ -42,6 +42,7 @@
 #include "notes.h"
 #include "place.h"
 #include "player.h"
+#include "random.h"
 #include "religion.h"
 #include "spells3.h"
 #include "state.h"

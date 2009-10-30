@@ -9,6 +9,7 @@
 #include "l_libs.h"
 
 #include "cluautil.h"
+#include "coord.h"
 #include "los.h"
 #include "ray.h"
 #include "stuff.h"

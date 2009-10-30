@@ -14,6 +14,8 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "coord.h"
+#include "coordit.h"
 #include "describe.h"
 #include "effects.h"
 #include "food.h"

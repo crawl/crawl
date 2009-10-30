@@ -14,7 +14,7 @@
 #include "dungeon.h"
 #include "monplace.h"
 #include "mon-pick.h"
-#include "stuff.h"
+#include "random.h"
 
 void init_pandemonium(void)
 {

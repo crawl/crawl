@@ -6,6 +6,7 @@
 #include "l_libs.h"
 
 #include "artefact.h"
+#include "colour.h"
 #include "command.h"
 #include "initfile.h"
 #include "invent.h"

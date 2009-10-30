@@ -4,6 +4,7 @@
 
 #include "artefact.h"
 #include "cio.h"
+#include "coord.h"
 #include "itemname.h"
 #include "items.h"
 #include "itemprop.h"

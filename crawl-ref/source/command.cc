@@ -14,12 +14,12 @@
 #include <ctype.h>
 
 #include "externs.h"
-#include "species.h"
 
 #include "abl-show.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cio.h"
+#include "colour.h"
 #include "database.h"
 #include "debug.h"
 #include "decks.h"
@@ -41,6 +41,7 @@
 #include "quiver.h"
 #include "religion.h"
 #include "skills2.h"
+#include "species.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"

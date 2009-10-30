@@ -26,6 +26,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
+#include "colour.h"
 #include "database.h"
 #include "debug.h"
 #include "delay.h"
@@ -45,6 +46,7 @@
 #include "mstuff2.h"
 #include "mtransit.h"
 #include "player.h"
+#include "random.h"
 #include "religion.h"
 #include "shopping.h" // for item values
 #include "spells3.h"

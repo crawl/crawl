@@ -21,6 +21,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
+#include "colour.h"
 #include "decks.h"
 #include "delay.h"
 #include "directn.h"

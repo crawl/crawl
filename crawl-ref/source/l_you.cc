@@ -5,6 +5,7 @@
 
 #include "abl-show.h"
 #include "chardump.h"
+#include "coord.h"
 #include "delay.h"
 #include "food.h"
 #include "initfile.h"

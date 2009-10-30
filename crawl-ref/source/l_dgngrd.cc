@@ -9,8 +9,9 @@
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "coord.h"
 #include "directn.h"
-#include "stuff.h"
+#include "env.h"
 #include "terrain.h"
 
 const char *dngn_feature_names[] =

@@ -22,6 +22,7 @@
 #include "items.h"
 #include "output.h"
 #include "player.h"
+#include "random.h"
 #include "skills2.h"
 #include "state.h"
 #include "stuff.h"

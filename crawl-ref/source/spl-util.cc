@@ -19,6 +19,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "coordit.h"
 #include "directn.h"
 #include "debug.h"
 #include "godabil.h"

@@ -12,7 +12,7 @@
 #include "describe.h"
 #include "itemname.h"
 #include "player.h"
-#include "stuff.h"
+#include "random.h"
 
 static unsigned char _random_potion_description()
 {

@@ -15,6 +15,7 @@
 
 #include "chardump.h"
 #include "clua.h"
+#include "colour.h"
 #include "dlua.h"
 #include "delay.h"
 #include "directn.h"
@@ -79,118 +80,6 @@ god_type str_to_god(std::string god)
             return (static_cast<god_type>(i));
 
     return (GOD_NO_GOD);
-}
-
-#ifdef USE_TILE
-static std::string tile_cols[24] =
-{
-    "black", "darkgrey", "grey", "lightgrey", "white",
-    "blue", "lightblue", "darkblue",
-    "green", "lightgreen", "darkgreen",
-    "cyan", "lightcyan", "darkcyan",
-    "red", "lightred", "darkred",
-    "magenta", "lightmagenta", "darkmagenta",
-    "yellow", "lightyellow", "darkyellow", "brown"
-};
-
-static unsigned int _str_to_tile_colour(std::string colour)
-{
-    if (colour.empty())
-        return (0);
-
-    lowercase(colour);
-
-    if (colour == "darkgray")
-        colour = "darkgrey";
-    else if (colour == "gray")
-        colour = "grey";
-    else if (colour == "lightgray")
-        colour = "lightgrey";
-
-    for (unsigned int i = 0; i < 24; i++)
-    {
-         if (tile_cols[i] == colour)
-             return (i);
-    }
-    return (0);
-}
-#endif
-
-const std::string cols[16] =
-{
-    "black", "blue", "green", "cyan", "red", "magenta", "brown",
-    "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
-    "lightred", "lightmagenta", "yellow", "white"
-};
-
-const std::string colour_to_str(unsigned char colour)
-{
-    if ( colour >= 16 )
-        return "lightgrey";
-    else
-        return cols[colour];
-}
-
-// Returns -1 if unmatched else returns 0-15.
-int str_to_colour( const std::string &str, int default_colour,
-                   bool accept_number )
-{
-    int ret;
-
-    static const std::string element_cols[] =
-    {
-        "fire", "ice", "earth", "electricity", "air", "poison",
-        "water", "magic", "mutagenic", "warp", "enchant", "heal",
-        "holy", "dark", "death", "necro", "unholy", "vehumet",
-        "beogh", "crystal", "blood", "smoke", "slime", "jewel",
-        "elven", "dwarven", "orcish", "gila", "floor", "rock",
-        "stone", "mist", "shimmer_blue", "decay", "silver", "gold",
-        "iron", "bone", "random"
-    };
-
-    ASSERT(ARRAYSZ(element_cols) == (ETC_RANDOM - ETC_FIRE) + 1);
-
-    for (ret = 0; ret < 16; ++ret)
-    {
-        if (str == cols[ret])
-            break;
-    }
-
-    // Check for alternate spellings.
-    if (ret == 16)
-    {
-        if (str == "lightgray")
-            ret = 7;
-        else if (str == "darkgray")
-            ret = 8;
-    }
-
-    if (ret == 16)
-    {
-        // Maybe we have an element colour attribute.
-        for (unsigned i = 0; i < sizeof(element_cols) / sizeof(*element_cols);
-                ++i)
-        {
-            if (str == element_cols[i])
-            {
-                // Ugh.
-                ret = element_type(ETC_FIRE + i);
-                break;
-            }
-        }
-    }
-
-    if (ret == 16 && accept_number)
-    {
-        // Check if we have a direct colour index.
-        const char *s = str.c_str();
-        char *es = NULL;
-        const int ci = static_cast<int>(strtol(s, &es, 10));
-        if (s != (const char *) es && es && ci >= 0 && ci < 16)
-            ret = ci;
-    }
-
-    return ((ret == 16) ? default_colour : ret);
 }
 
 // Returns -1 if unmatched else returns 0-15.
@@ -3165,102 +3054,102 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "tile_player_col")
     {
         tile_player_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_monster_col")
     {
         tile_monster_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_neutral_col")
     {
         tile_neutral_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_friendly_col")
     {
         tile_friendly_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_plant_col")
     {
         tile_plant_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_item_col")
     {
         tile_item_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_unseen_col")
     {
         tile_unseen_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_floor_col")
     {
         tile_floor_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_wall_col")
     {
         tile_wall_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_mapped_wall_col")
     {
         tile_mapped_wall_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_door_col")
     {
         tile_door_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_downstairs_col")
     {
         tile_downstairs_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_upstairs_col")
     {
         tile_upstairs_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_feature_col")
     {
         tile_feature_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_trap_col")
     {
         tile_trap_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_water_col")
     {
         tile_water_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_lava_col")
     {
         tile_lava_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_excluded_col")
     {
         tile_excluded_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_excl_centre_col" || key == "tile_excl_center_col")
     {
         tile_excl_centre_col =
-               _str_to_tile_colour(field);
+               str_to_tile_colour(field);
     }
     else if (key == "tile_window_col")
     {
         tile_window_col =
-                _str_to_tile_colour(field);
+                str_to_tile_colour(field);
     }
     else if (key == "tile_font_crt_file")
     {

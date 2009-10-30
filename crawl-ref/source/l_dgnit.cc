@@ -8,6 +8,7 @@
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "coord.h"
 #include "dungeon.h"
 #include "items.h"
 #include "mapdef.h"

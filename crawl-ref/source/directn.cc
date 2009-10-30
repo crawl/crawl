@@ -24,7 +24,9 @@
 
 #include "cio.h"
 #include "cloud.h"
+#include "colour.h"
 #include "command.h"
+#include "coord.h"
 #include "debug.h"
 #include "describe.h"
 #include "dungeon.h"

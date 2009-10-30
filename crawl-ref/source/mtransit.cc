@@ -15,7 +15,7 @@
 #include "items.h"
 #include "monplace.h"
 #include "mon-util.h"
-#include "stuff.h"
+#include "random.h"
 
 #define MAX_LOST 100
 

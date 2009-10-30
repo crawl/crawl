@@ -7,6 +7,7 @@
 
 #include "exclude.h"
 
+#include "coord.h"
 #include "mon-util.h"
 #include "overmap.h"
 #include "stuff.h"

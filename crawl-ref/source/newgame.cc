@@ -52,6 +52,7 @@
 #include "mutation.h"
 #include "misc.h"
 #include "player.h"
+#include "random.h"
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"

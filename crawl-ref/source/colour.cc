@@ -1,0 +1,378 @@
+#include "AppHdr.h"
+
+#include "colour.h"
+
+#include "env.h"
+#include "player.h"
+#include "random.h"
+
+unsigned char random_colour(void)
+{
+    return (1 + random2(15));
+}
+
+unsigned char random_uncommon_colour()
+{
+    unsigned char result;
+
+    do
+        result = random_colour();
+    while (result == LIGHTCYAN || result == CYAN || result == BROWN);
+
+    return (result);
+}
+
+unsigned char make_low_colour(unsigned char colour)
+{
+    if (colour >= 8 && colour <= 15)
+        return (colour - 8);
+
+    return (colour);
+}
+
+unsigned char make_high_colour(unsigned char colour)
+{
+    if (colour <= 7)
+        return (colour + 8);
+
+    return (colour);
+}
+
+// returns if a colour is one of the special element colours (ie not regular)
+bool is_element_colour( int col )
+{
+    // stripping any COLFLAGS (just in case)
+    return ((col & 0x007f) >= ETC_FIRE);
+}
+
+int element_colour( int element, bool no_random )
+{
+    // Doing this so that we don't have to do recursion here at all
+    // (these were the only cases which had possible double evaluation):
+    if (element == ETC_FLOOR)
+        element = env.floor_colour;
+    else if (element == ETC_ROCK)
+        element = env.rock_colour;
+
+    // pass regular colours through for safety.
+    if (!is_element_colour( element ))
+        return (element);
+
+    int ret = BLACK;
+
+    // Setting no_random to true will get the first colour in the cases
+    // below.  This is potentially useful for calls to this function
+    // which might want a consistent result.
+    int tmp_rand = (no_random ? 0 : random2(120));
+
+    switch (element & 0x007f)   // strip COLFLAGs just in case
+    {
+    case ETC_FIRE:
+        ret = (tmp_rand < 40) ? RED :
+              (tmp_rand < 80) ? YELLOW
+                              : LIGHTRED;
+        break;
+
+    case ETC_ICE:
+        ret = (tmp_rand < 40) ? LIGHTBLUE :
+              (tmp_rand < 80) ? BLUE
+                              : WHITE;
+        break;
+
+    case ETC_EARTH:
+        ret = (tmp_rand < 60) ? BROWN : LIGHTRED;
+        break;
+
+    case ETC_AIR:
+        ret = (tmp_rand < 60) ? LIGHTGREY : WHITE;
+        break;
+
+    case ETC_ELECTRICITY:
+        ret = (tmp_rand < 40) ? LIGHTCYAN :
+              (tmp_rand < 80) ? LIGHTBLUE
+                              : CYAN;
+        break;
+
+    case ETC_POISON:
+        ret = (tmp_rand < 60) ? LIGHTGREEN : GREEN;
+        break;
+
+    case ETC_WATER:
+        ret = (tmp_rand < 60) ? BLUE : CYAN;
+        break;
+
+    case ETC_MAGIC:
+        ret = (tmp_rand < 30) ? LIGHTMAGENTA :
+              (tmp_rand < 60) ? LIGHTBLUE :
+              (tmp_rand < 90) ? MAGENTA
+                              : BLUE;
+        break;
+
+    case ETC_MUTAGENIC:
+    case ETC_WARP:
+        ret = (tmp_rand < 60) ? LIGHTMAGENTA : MAGENTA;
+        break;
+
+    case ETC_ENCHANT:
+        ret = (tmp_rand < 60) ? LIGHTBLUE : BLUE;
+        break;
+
+    case ETC_HEAL:
+        ret = (tmp_rand < 60) ? LIGHTBLUE : YELLOW;
+        break;
+
+    case ETC_BLOOD:
+        ret = (tmp_rand < 60) ? RED : DARKGREY;
+        break;
+
+    case ETC_DEATH:      // assassin
+    case ETC_NECRO:      // necromancer
+        ret = (tmp_rand < 80) ? DARKGREY : MAGENTA;
+        break;
+
+    case ETC_UNHOLY:     // ie demonology
+        ret = (tmp_rand < 80) ? DARKGREY : RED;
+        break;
+
+    case ETC_DARK:
+        ret = (tmp_rand < 80) ? DARKGREY : LIGHTGREY;
+        break;
+
+    case ETC_HOLY:
+        ret = (tmp_rand < 60) ? YELLOW : WHITE;
+        break;
+
+    case ETC_VEHUMET:
+        ret = (tmp_rand < 40) ? LIGHTRED :
+              (tmp_rand < 80) ? LIGHTMAGENTA
+                              : LIGHTBLUE;
+        break;
+
+    case ETC_BEOGH:
+        ret = (tmp_rand < 60) ? LIGHTRED // plain Orc colour
+                              : BROWN;   // Orcish mines wall/idol colour
+        break;
+
+    case ETC_CRYSTAL:
+        ret = (tmp_rand < 40) ? LIGHTGREY :
+              (tmp_rand < 80) ? GREEN
+                              : LIGHTRED;
+        break;
+
+    case ETC_SLIME:
+        ret = (tmp_rand < 40) ? GREEN :
+              (tmp_rand < 80) ? BROWN
+                              : LIGHTGREEN;
+        break;
+
+    case ETC_SMOKE:
+        ret = (tmp_rand < 30) ? LIGHTGREY :
+              (tmp_rand < 60) ? DARKGREY :
+              (tmp_rand < 90) ? LIGHTBLUE
+                              : MAGENTA;
+        break;
+
+    case ETC_JEWEL:
+        ret = (tmp_rand <  12) ? WHITE :
+              (tmp_rand <  24) ? YELLOW :
+              (tmp_rand <  36) ? LIGHTMAGENTA :
+              (tmp_rand <  48) ? LIGHTRED :
+              (tmp_rand <  60) ? LIGHTGREEN :
+              (tmp_rand <  72) ? LIGHTBLUE :
+              (tmp_rand <  84) ? MAGENTA :
+              (tmp_rand <  96) ? RED :
+              (tmp_rand < 108) ? GREEN
+                               : BLUE;
+        break;
+
+    case ETC_ELVEN:
+        ret = (tmp_rand <  40) ? LIGHTGREEN :
+              (tmp_rand <  80) ? GREEN :
+              (tmp_rand < 100) ? LIGHTBLUE
+                               : BLUE;
+        break;
+
+    case ETC_DWARVEN:
+        ret = (tmp_rand <  40) ? BROWN :
+              (tmp_rand <  80) ? LIGHTRED :
+              (tmp_rand < 100) ? LIGHTGREY
+                               : CYAN;
+        break;
+
+    case ETC_ORCISH:
+        ret = (tmp_rand <  40) ? DARKGREY :
+              (tmp_rand <  80) ? RED :
+              (tmp_rand < 100) ? BROWN
+                               : MAGENTA;
+        break;
+
+    case ETC_GILA:
+        ret = (tmp_rand <  30) ? LIGHTMAGENTA :
+              (tmp_rand <  60) ? MAGENTA :
+              (tmp_rand <  90) ? YELLOW :
+              (tmp_rand < 105) ? LIGHTRED
+                               : RED;
+        break;
+
+    case ETC_STONE:
+        if (player_in_branch( BRANCH_HALL_OF_ZOT ))
+            ret = env.rock_colour;
+        else
+            ret = LIGHTGREY;
+        break;
+
+    case ETC_MIST:
+        ret = tmp_rand < 100? CYAN : BLUE;
+        break;
+
+    case ETC_SHIMMER_BLUE:
+        ret = random_choose_weighted(80, BLUE, 20, LIGHTBLUE, 5, CYAN, 0);
+        break;
+
+    case ETC_DECAY:
+        ret = (tmp_rand < 60) ? BROWN : GREEN;
+        break;
+
+    case ETC_SILVER:
+        ret = (tmp_rand < 90) ? LIGHTGREY : WHITE;
+        break;
+
+    case ETC_GOLD:
+        ret = (tmp_rand < 60) ? YELLOW : BROWN;
+        break;
+
+    case ETC_IRON:
+        ret = (tmp_rand < 40) ? CYAN :
+              (tmp_rand < 80) ? LIGHTGREY :
+                                DARKGREY;
+        break;
+
+    case ETC_BONE:
+        ret = (tmp_rand < 90) ? WHITE : LIGHTGREY;
+        break;
+
+    case ETC_RANDOM:
+        ret = 1 + random2(15);              // always random
+        break;
+
+    case ETC_FLOOR: // should already be handled
+    case ETC_ROCK:  // should already be handled
+    default:
+        break;
+    }
+
+    ASSERT( !is_element_colour( ret ) );
+
+    return ((ret == BLACK) ? GREEN : ret);
+}
+
+#ifdef USE_TILE
+static std::string tile_cols[24] =
+{
+    "black", "darkgrey", "grey", "lightgrey", "white",
+    "blue", "lightblue", "darkblue",
+    "green", "lightgreen", "darkgreen",
+    "cyan", "lightcyan", "darkcyan",
+    "red", "lightred", "darkred",
+    "magenta", "lightmagenta", "darkmagenta",
+    "yellow", "lightyellow", "darkyellow", "brown"
+};
+
+unsigned int str_to_tile_colour(std::string colour)
+{
+    if (colour.empty())
+        return (0);
+
+    lowercase(colour);
+
+    if (colour == "darkgray")
+        colour = "darkgrey";
+    else if (colour == "gray")
+        colour = "grey";
+    else if (colour == "lightgray")
+        colour = "lightgrey";
+
+    for (unsigned int i = 0; i < 24; i++)
+    {
+         if (tile_cols[i] == colour)
+             return (i);
+    }
+    return (0);
+}
+#endif
+
+const std::string cols[16] =
+{
+    "black", "blue", "green", "cyan", "red", "magenta", "brown",
+    "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
+    "lightred", "lightmagenta", "yellow", "white"
+};
+
+const std::string colour_to_str(unsigned char colour)
+{
+    if ( colour >= 16 )
+        return "lightgrey";
+    else
+        return cols[colour];
+}
+
+// Returns -1 if unmatched else returns 0-15.
+int str_to_colour( const std::string &str, int default_colour,
+                   bool accept_number )
+{
+    int ret;
+
+    static const std::string element_cols[] =
+    {
+        "fire", "ice", "earth", "electricity", "air", "poison",
+        "water", "magic", "mutagenic", "warp", "enchant", "heal",
+        "holy", "dark", "death", "necro", "unholy", "vehumet",
+        "beogh", "crystal", "blood", "smoke", "slime", "jewel",
+        "elven", "dwarven", "orcish", "gila", "floor", "rock",
+        "stone", "mist", "shimmer_blue", "decay", "silver", "gold",
+        "iron", "bone", "random"
+    };
+
+    ASSERT(ARRAYSZ(element_cols) == (ETC_RANDOM - ETC_FIRE) + 1);
+    for (ret = 0; ret < 16; ++ret)
+    {
+        if (str == cols[ret])
+            break;
+    }
+
+    // Check for alternate spellings.
+    if (ret == 16)
+    {
+        if (str == "lightgray")
+            ret = 7;
+        else if (str == "darkgray")
+            ret = 8;
+    }
+
+    if (ret == 16)
+    {
+        // Maybe we have an element colour attribute.
+        for (unsigned i = 0; i < sizeof(element_cols) / sizeof(*element_cols);
+                ++i)
+        {
+            if (str == element_cols[i])
+            {
+                // Ugh.
+                ret = element_type(ETC_FIRE + i);
+                break;
+            }
+        }
+    }
+
+    if (ret == 16 && accept_number)
+    {
+        // Check if we have a direct colour index.
+        const char *s = str.c_str();
+        char *es = NULL;
+        const int ci = static_cast<int>(strtol(s, &es, 10));
+        if (s != (const char *) es && es && ci >= 0 && ci < 16)
+            ret = ci;
+    }
+
+    return ((ret == 16) ? default_colour : ret);
+}

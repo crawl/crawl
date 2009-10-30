@@ -7,8 +7,8 @@
 
 #include "cluautil.h"
 #include "l_libs.h"
-
 #include "mapdef.h"
+#include "random.h"
 
 // Return the integer stored in the table (on the stack) with the key name.
 // If the key doesn't exist or the value is the wrong type, return defval.

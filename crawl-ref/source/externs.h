@@ -231,15 +231,6 @@ struct coord_def
 
 typedef bool (*coord_predicate)(const coord_def &c);
 
-struct dice_def
-{
-    int         num;
-    int         size;
-
-    dice_def( int n = 0, int s = 0 ) : num(n), size(s) {}
-    int roll() const;
-};
-
 struct run_check_dir
 {
     dungeon_feature_type grid;

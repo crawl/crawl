@@ -14,9 +14,11 @@
 
 #include "branch.h"
 #include "cloud.h"
+#include "coord.h"
 #include "mapmark.h"
 #include "ouch.h"
 #include "player.h"
+#include "random.h"
 #include "spells4.h"
 #include "stuff.h"
 #include "terrain.h"

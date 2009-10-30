@@ -20,6 +20,8 @@
 #include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
+#include "coord.h"
+#include "coordit.h"
 #include "describe.h"
 #include "directn.h"
 #include "effects.h"

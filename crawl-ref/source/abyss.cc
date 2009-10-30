@@ -11,10 +11,9 @@
 #include <stdlib.h>
 #include <algorithm>
 
-#include "externs.h"
-
 #include "artefact.h"
 #include "cloud.h"
+#include "colour.h"
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
@@ -28,6 +27,7 @@
 #include "l_defs.h"
 #include "lev-pand.h"
 #include "los.h"
+#include "random.h"
 #include "religion.h"
 #include "stuff.h"
 #include "spells3.h"

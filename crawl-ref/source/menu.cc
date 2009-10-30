@@ -12,20 +12,19 @@
 #include "menu.h"
 #include "macro.h"
 #include "message.h"
+#include "player.h"
+#include "tutorial.h"
+#include "view.h"
+
 #ifdef USE_TILE
+ #include "coord.h"
  #include "monstuff.h"
  #include "mon-util.h"
  #include "newgame.h"
-#endif
-#include "player.h"
-#ifdef USE_TILE
- #include "stuff.h"
  #include "terrain.h"
  #include "tiles.h"
  #include "travel.h"
 #endif
-#include "tutorial.h"
-#include "view.h"
 
 MenuDisplay::MenuDisplay(Menu *menu) : m_menu(menu)
 {

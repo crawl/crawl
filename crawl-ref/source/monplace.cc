@@ -23,6 +23,7 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "player.h"
+#include "random.h"
 #include "religion.h"
 #include "state.h"
 #include "stuff.h"

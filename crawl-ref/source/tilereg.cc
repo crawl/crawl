@@ -10,6 +10,7 @@
 #ifdef USE_TILE
 
 #include "cio.h"
+#include "coord.h"
 #include "debug.h"
 #include "describe.h"
 #include "files.h"

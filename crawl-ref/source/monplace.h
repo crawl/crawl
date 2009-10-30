@@ -8,6 +8,7 @@
 #ifndef MONPLACE_H
 #define MONPLACE_H
 
+#include "coord.h"
 #include "enum.h"
 #include "dungeon.h"
 #include "fixvec.h"

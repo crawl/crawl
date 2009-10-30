@@ -15,8 +15,8 @@
 #include <algorithm>
 
 #include "externs.h"
-#include "species.h"
 
+#include "colour.h"
 #include "database.h"
 #include "describe.h"
 #include "itemname.h"
@@ -24,7 +24,9 @@
 #include "items.h"
 #include "place.h"
 #include "player.h"
+#include "random.h"
 #include "religion.h"
+#include "species.h"
 #include "spl-book.h"
 #include "stuff.h"
 #include "view.h" // Elemental colours for unrandarts

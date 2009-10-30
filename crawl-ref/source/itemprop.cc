@@ -31,6 +31,7 @@
 #include "notes.h"
 #include "player.h"
 #include "quiver.h"
+#include "random.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "xom.h"

@@ -21,6 +21,7 @@
 #include "externs.h"
 
 #include "artefact.h"
+#include "colour.h"
 #include "decks.h"
 #include "food.h"
 #include "goditem.h"

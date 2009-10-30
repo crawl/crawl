@@ -18,9 +18,9 @@
 #include "notes.h"
 #include "output.h"
 #include "player.h"
+#include "random.h"
 #include "skills2.h"
 #include "spl-cast.h"
-#include "stuff.h"
 #include "tutorial.h"
 
 

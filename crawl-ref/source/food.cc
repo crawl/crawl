@@ -40,6 +40,7 @@
 #include "mutation.h"
 #include "output.h"
 #include "player.h"
+#include "random.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spells2.h"

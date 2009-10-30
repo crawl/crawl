@@ -13,6 +13,8 @@
 #include "makeitem.h"
 
 #include "artefact.h"
+#include "colour.h"
+#include "coord.h"
 #include "decks.h"
 #include "describe.h"
 #include "dungeon.h"
@@ -22,8 +24,8 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "player.h"
+#include "random.h"
 #include "spl-book.h"
-#include "stuff.h"
 #include "travel.h"
 #include "view.h"
 

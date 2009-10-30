@@ -11,6 +11,7 @@
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
+#include "coord.h"
 #include "describe.h"
 #include "directn.h"
 #include "food.h"

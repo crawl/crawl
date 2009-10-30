@@ -10,7 +10,9 @@
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "coord.h"
 #include "dungeon.h"
+#include "random.h"
 
 // Return a metatable for a point on the map_lines grid.
 static int dgn_mapgrd_table(lua_State *ls)

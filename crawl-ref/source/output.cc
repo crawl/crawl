@@ -21,6 +21,8 @@
 #include "abl-show.h"
 #include "branch.h"
 #include "cio.h"
+#include "colour.h"
+#include "coord.h"
 #include "describe.h"
 #include "directn.h"
 #include "format.h"

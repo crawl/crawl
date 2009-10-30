@@ -68,6 +68,7 @@
 #include "overmap.h"
 #include "place.h"
 #include "player.h"
+#include "random.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"

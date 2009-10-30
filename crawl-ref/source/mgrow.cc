@@ -10,7 +10,7 @@
 #include "mgrow.h"
 #include "mon-util.h"
 #include "monstuff.h"
-#include "stuff.h"
+#include "random.h"
 
 // Base experience required by a monster to reach HD 1.
 const int monster_xp_base       = 15;

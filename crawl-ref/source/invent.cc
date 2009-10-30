@@ -22,6 +22,7 @@
 
 #include "artefact.h"
 #include "clua.h"
+#include "colour.h"
 #include "decks.h"
 #include "describe.h"
 #include "food.h"

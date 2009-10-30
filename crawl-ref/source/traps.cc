@@ -14,6 +14,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "coord.h"
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"

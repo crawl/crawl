@@ -23,8 +23,8 @@
 #include "message.h"
 #include "monplace.h"
 #include "mapdef.h"
+#include "random.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 
 static bool _safe_vault_place(const map_def &md,

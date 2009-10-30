@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "initfile.h"
+#include "colour.h"
 #include "format.h"
 #include "view.h"
 

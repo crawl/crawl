@@ -15,6 +15,8 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "colour.h"
+#include "coord.h"
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -31,6 +33,7 @@
 #include "monplace.h"
 #include "mon-util.h"
 #include "place.h"
+#include "random.h"
 #include "religion.h"
 #include "stuff.h"
 #include "tags.h"

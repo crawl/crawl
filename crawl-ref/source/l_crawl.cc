@@ -20,6 +20,7 @@
 #include "message.h"
 #include "notes.h"
 #include "player.h"
+#include "random.h"
 #include "stuff.h"
 #include "view.h"
 

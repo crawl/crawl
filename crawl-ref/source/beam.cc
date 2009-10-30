@@ -26,6 +26,7 @@
 
 #include "cio.h"
 #include "cloud.h"
+#include "colour.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "effects.h"
@@ -286,31 +287,6 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     // Set to non-tracing for actual firing.
     pbolt.is_tracer = false;
     return (true);
-}
-
-dice_def calc_dice( int num_dice, int max_damage )
-{
-    dice_def    ret( num_dice, 0 );
-
-    if (num_dice <= 1)
-    {
-        ret.num  = 1;
-        ret.size = max_damage;
-    }
-    else if (max_damage <= num_dice)
-    {
-        ret.num  = max_damage;
-        ret.size = 1;
-    }
-    else
-    {
-        // Divide the damage among the dice, and add one
-        // occasionally to make up for the fractions. -- bwr
-        ret.size  = max_damage / num_dice;
-        ret.size += x_chance_in_y(max_damage % num_dice, num_dice);
-    }
-
-    return (ret);
 }
 
 template<typename T>

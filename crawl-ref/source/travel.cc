@@ -9,6 +9,8 @@
  */
 #include "AppHdr.h"
 
+#include "coord.h"
+#include "coordit.h"
 #include "files.h"
 #include "fixary.h"
 #include "branch.h"

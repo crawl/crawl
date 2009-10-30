@@ -21,6 +21,7 @@
 #include "database.h"
 #include "files.h"
 #include "libutil.h"
+#include "random.h"
 #include "stuff.h"
 
 // TextDB handles dependency checking the db vs text files, creating the

@@ -48,6 +48,8 @@
 #include <algorithm>
 
 #include "bitary.h"
+#include "coord.h"
+#include "coordit.h"
 #include "debug.h"
 #include "directn.h"
 #include "externs.h"

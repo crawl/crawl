@@ -6,6 +6,9 @@
 #include "AppHdr.h"
 
 #include "cloud.h"
+#include "colour.h"
+#include "coord.h"
+#include "coordit.h"
 #include "database.h"
 #include "effects.h"
 #include "files.h"
@@ -19,6 +22,7 @@
 #include "monstuff.h"
 #include "mstuff2.h"
 #include "mutation.h"
+#include "random.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spells1.h"

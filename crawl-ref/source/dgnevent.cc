@@ -7,7 +7,8 @@
 #include "AppHdr.h"
 
 #include "dgnevent.h"
-#include "stuff.h"
+
+#include "coord.h"
 #include <algorithm>
 
 dgn_event_dispatcher dungeon_events;

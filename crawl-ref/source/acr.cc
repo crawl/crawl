@@ -94,6 +94,7 @@
 #include "overmap.h"
 #include "player.h"
 #include "quiver.h"
+#include "random.h"
 #include "religion.h"
 #include "shopping.h"
 #include "skills.h"

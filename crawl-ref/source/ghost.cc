@@ -11,16 +11,18 @@
 #include "ghost.h"
 
 #include "artefact.h"
+#include "colour.h"
 #include "externs.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "ng-input.h"
+#include "random.h"
 #include "skills2.h"
-#include "stuff.h"
 #include "mtransit.h"
 #include "place.h"
 #include "player.h"
 #include "religion.h"
+
 #include <vector>
 
 #define MAX_GHOST_DAMAGE     50

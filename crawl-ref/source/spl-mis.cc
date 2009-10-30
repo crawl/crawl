@@ -12,6 +12,7 @@
 
 #include <sstream>
 
+#include "colour.h"
 #include "cloud.h"
 #include "effects.h"
 #include "it_use2.h"

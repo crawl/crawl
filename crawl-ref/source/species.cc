@@ -2,7 +2,7 @@
 
 #include "species.h"
 
-#include "stuff.h"
+#include "random.h"
 
 // March 2008: change order of species and jobs on character selection
 // screen as suggested by Markus Maier. Summarizing comments below are

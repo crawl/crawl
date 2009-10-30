@@ -15,6 +15,7 @@
 #include <cstdio>
 #include <memory>
 
+#include "coordit.h"
 #include "dlua.h"
 #include "enum.h"
 #include "externs.h"

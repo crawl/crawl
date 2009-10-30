@@ -13,7 +13,10 @@ cio.o \
 cloud.o \
 clua.o \
 cluautil.o \
+colour.o \
 command.o \
+coord.o \
+coordit.o \
 ctest.o \
 database.o \
 debug.o \
@@ -102,8 +105,10 @@ overmap.o \
 place.o \
 player.o \
 quiver.o \
+random.o \
 ray.o \
 religion.o \
+rng.o \
 sha256.o \
 shopping.o \
 skills.o \

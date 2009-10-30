@@ -20,6 +20,7 @@
 #include "externs.h"
 
 #include "cio.h"
+#include "colour.h"
 #include "delay.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -27,6 +28,7 @@
 #include "message.h"
 #include "monstuff.h"
 #include "notes.h"
+#include "random.h"
 #include "religion.h"
 #include "stash.h"
 #include "state.h"

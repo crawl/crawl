@@ -9,6 +9,7 @@
 #include "arena.h"
 #include "artefact.h"
 #include "cio.h"
+#include "colour.h"
 #include "command.h"
 #include "dungeon.h"
 #include "initfile.h"

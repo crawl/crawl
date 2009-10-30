@@ -19,6 +19,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
+#include "colour.h"
 #include "database.h"
 #include "debug.h"
 #include "delay.h"

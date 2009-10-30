@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include "artefact.h"
 #include "decks.h"
+#include "colour.h"
+#include "coord.h"
+#include "coordit.h"
 #include "directn.h"
 #include "externs.h"
 #include "food.h"
