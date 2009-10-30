@@ -921,7 +921,7 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
 
 static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                            unsigned short hitting, god_type god, bool actual,
-                           int* mon_index)
+                           bool force_beh, int* mon_index)
 {
     if (mon_index != NULL)
         *mon_index = -1;
@@ -967,7 +967,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     int monster = create_monster(
                             mgen_data(mon, beha,
                                       0, 0, pos, hitting,
-                                      0, god,
+                                      MG_FORCE_BEH, god,
                                       zombie_type, number));
 
     if (mon_index != NULL)
@@ -985,6 +985,9 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     destroy_item(corps);
 
+    if (!force_beh)
+        player_angers_monster(&menv[monster]);
+
     return (true);
 }
 
@@ -993,7 +996,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
                     god_type god, bool actual,
-                    bool quiet, int* mon_index)
+                    bool quiet, bool force_beh,
+                    int* mon_index)
 {
     if (is_sanctuary(a))
         return (0);
@@ -1016,7 +1020,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             const bool was_butchering = is_being_butchered(*si);
 
             success = _raise_remains(a, si.link(), beha, hitting, god, actual,
-                                     mon_index);
+                                     force_beh, mon_index);
 
             if (actual && success)
             {

@@ -1762,17 +1762,19 @@ static bool _reaping_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
 
     int midx = NON_MONSTER;
     if (animate_remains(victim->pos(), CORPSE_BODY, beh, hitting, GOD_NO_GOD,
-                        true, true, &midx) <= 0)
+                        true, true, true, &midx) <= 0)
     {
         return (false);
     }
 
-    monsters *zomb = &menv[midx];
+    monsters *zombie = &menv[midx];
 
     if (you.can_see(victim))
         mprf("%s turns into a zombie!", victim->name(DESC_CAP_THE).c_str());
-    else if (you.can_see(zomb))
-        mprf("%s appears out of thin air!", zomb->name(DESC_CAP_THE).c_str());
+    else if (you.can_see(zombie))
+        mprf("%s appears out of thin air!", zombie->name(DESC_CAP_THE).c_str());
+
+    player_angers_monster(zombie);
 
     return (true);
 }

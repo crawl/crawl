@@ -2770,7 +2770,7 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
         mitm[last_item].link = idx;
 
         animate_remains(mon->pos(), CORPSE_BODY, mon->behaviour,
-                        mon->foe, mon->god, true, true, &zombie_index);
+                        mon->foe, mon->god, true, true, true, &zombie_index);
     }
 
     // No equipment to get, or couldn't get it for some reason.
@@ -2781,7 +2781,7 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
         zombie_index = create_monster(
                            mgen_data(type, mon->behaviour, 0, 0, mon->pos(),
                                      mon->foe, MG_FORCE_PLACE, mon->god,
-                                     (monster_type) mon->type, mon->number));
+                                     mon->type, mon->number));
     }
 
     if (zombie_index == -1)
@@ -2808,6 +2808,8 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
         simple_monster_message(zombie, " appears from thin air!");
         autotoggle_autopickup(false);
     }
+
+    player_angers_monster(zombie);
 
     return (true);
 }
