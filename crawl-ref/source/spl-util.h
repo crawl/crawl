@@ -8,8 +8,7 @@
 #ifndef SPL_UTIL_H
 #define SPL_UTIL_H
 
-#include "enum.h"    // just for NUM_SPELL_TYPES and TARG_ENEMY
-#include "directn.h"  // just for DIR_NONE
+#include "enum.h"
 
 enum spschool_flag_type
 {
