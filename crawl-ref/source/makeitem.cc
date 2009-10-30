@@ -4506,14 +4506,14 @@ static jewellery_type _get_raw_random_ring_type()
 jewellery_type get_random_ring_type()
 {
     const jewellery_type j = _get_raw_random_ring_type();
-    // Adjusted distribution here -- bwr
+    // Adjusted distribution here. - bwr
     if ((j == RING_INVISIBILITY
            || j == RING_REGENERATION
            || j == RING_TELEPORT_CONTROL
            || j == RING_SLAYING)
         && !one_chance_in(3))
     {
-        return _get_raw_random_ring_type();
+        return (_get_raw_random_ring_type());
     }
 
     return (j);
