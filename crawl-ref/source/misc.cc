@@ -1731,14 +1731,23 @@ void up_stairs(dungeon_feature_type force_stair,
     const branch_type     old_where      = you.where_are_you;
     const level_area_type old_level_type = you.level_type;
 
+    // Up and down both work for shops.
     if (stair_find == DNGN_ENTER_SHOP)
     {
         shop();
         return;
     }
 
+    // Up and down both work for portals.
+    if (get_feature_dchar(stair_find) == DCHAR_ARCH
+        && feat_stair_direction(stair_find) != CMD_NO_CMD
+        && stair_find != DNGN_ENTER_ZOT)
+    {
+        down_stairs(you.your_level, force_stair, entry_cause);
+        return;
+    }
     // Probably still need this check here (teleportation) -- bwr
-    if (feat_stair_direction(stair_find) != CMD_GO_UPSTAIRS)
+    else if (feat_stair_direction(stair_find) != CMD_GO_UPSTAIRS)
     {
         if (stair_find == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
@@ -2063,11 +2072,27 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     level_id shaft_dest;
     int      shaft_level = -1;
 
+    // Up and down both work for shops.
+    if (stair_find == DNGN_ENTER_SHOP)
+    {
+        shop();
+        return;
+    }
+
+    // Up and down both work for portals.
+    if (get_feature_dchar(stair_find) == DCHAR_ARCH
+        && feat_stair_direction(stair_find) != CMD_NO_CMD
+        && stair_find != DNGN_ENTER_ZOT)
+    {
+        ;
+    }
     // Probably still need this check here (teleportation) -- bwr
-    if (feat_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)
+    else if (feat_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)
     {
         if (stair_find == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
+        else if (stair_find == DNGN_ABANDONED_SHOP)
+            mpr("This shop appears to be closed.");
         else
             mpr( "You can't go down here!" );
         return;

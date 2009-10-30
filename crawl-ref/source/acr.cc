@@ -1221,6 +1221,13 @@ static void _go_upstairs()
             shop();
         return;
     }
+    // Up and down both work for portals.
+    else if (get_feature_dchar(ygrd) == DCHAR_ARCH
+             && feat_stair_direction(ygrd) != CMD_NO_CMD
+             && ygrd != DNGN_ENTER_ZOT)
+    {
+        ;
+    }
     else if (feat_stair_direction(ygrd) != CMD_GO_UPSTAIRS)
     {
         if (ygrd == DNGN_STONE_ARCH)
@@ -1248,8 +1255,10 @@ static void _go_downstairs()
 {
     ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
 
+    const dungeon_feature_type ygrd = grd(you.pos());
+
     const bool shaft = (get_trap_type(you.pos()) == TRAP_SHAFT
-                        && grd(you.pos()) != DNGN_UNDISCOVERED_TRAP);
+                        && ygrd != DNGN_UNDISCOVERED_TRAP);
 
     if (_stairs_check_mesmerised())
         return;
@@ -1260,11 +1269,29 @@ static void _go_downstairs()
         return;
     }
 
-    if (feat_stair_direction(grd(you.pos())) != CMD_GO_DOWNSTAIRS
-        && !shaft)
+    // Up and down both work for shops.
+    if (ygrd == DNGN_ENTER_SHOP)
     {
-        if (grd(you.pos()) == DNGN_STONE_ARCH)
+        if (you.duration[DUR_BERSERKER])
+            canned_msg(MSG_TOO_BERSERK);
+        else
+            shop();
+        return;
+    }
+    // Up and down both work for portals.
+    else if (get_feature_dchar(ygrd) == DCHAR_ARCH
+             && feat_stair_direction(ygrd) != CMD_NO_CMD
+             && ygrd != DNGN_ENTER_ZOT)
+    {
+        ;
+    }
+    else if (feat_stair_direction(ygrd) != CMD_GO_DOWNSTAIRS
+             && !shaft)
+    {
+        if (ygrd == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
+        else if (ygrd == DNGN_ABANDONED_SHOP)
+            mpr("This shop appears to be closed.");
         else
             mpr( "You can't go down here!" );
         return;
