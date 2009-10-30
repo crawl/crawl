@@ -330,15 +330,17 @@ KFEAT:  C = altar_feawn
 FTILE:  . = floor_lair
 FTILE:  t = floor_lair
 MAP
-  ttttttt     
- ttttttttt    
-tttt.tttttt   
-tttt.C.ttttttt
- tttt...ttttt.
- tttttt.......
-   ttttttttt..
-     tttttttt 
-      ttttttt 
+xxxxxxxxxxxxxxx
+xxxtttttttxxxxx
+xxtttttttttxxxx
+xtttt.ttttttxxx
+xtttt.C.ttttttt
+xxtttt...ttttt.
+xxtttttt.......
+xxxxttttttttt..
+xxxxxxttttttttx
+xxxxxxxtttttttx
+xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:  feawn_altar_5
