@@ -1,50 +1,26 @@
 /*
  *  File:       ray.h
  *  Summary:    Ray definition
- *  Written by: Linley Henzell
  */
 
 #ifndef RAY_H
 #define RAY_H
 
-// direction of advance:
-enum adv_type
-{
-    ADV_X  = 0, // changed x
-    ADV_Y  = 1, // changed y
-    ADV_XY = 2  // changed x and y (diagonal)
-};
+#include "geom2d.h"
 
 struct ray_def
 {
-public:
-    double accx;
-    double accy;
-    double slope;
-    // Quadrant by sign of x/y coordinate.
-    int quadx;
-    int quady;
-    // For cycling: where did we come from?
+    geom::ray r;
     int cycle_idx;
 
-public:
-    ray_def(double accx = 0.0, double accy = 0.0, double slope = 0.0,
-            int quadx = 1, int quady = 1, int fullray_idx = -1);
-    int x() const;
-    int y() const;
-    coord_def pos() const;
+    ray_def() {}
+    ray_def(const geom::ray& _r)
+        : r(_r), cycle_idx(0) {}
 
-    // returns the direction taken
-    adv_type advance();
+    coord_def pos() const;
+    bool advance();
     void advance_and_bounce();
     void regress();
-
-protected:
-    adv_type raw_advance_pos();
-    void flip();
-    double reflect(bool x, double oldc, double newc) const;
-    void set_reflect_point(const double oldx, const double oldy,
-                           bool blocked_x, bool blocked_y);
 };
 
 #endif
