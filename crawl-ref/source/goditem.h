@@ -11,6 +11,7 @@
 #include "spl-util.h"
 
 bool is_holy_item(const item_def& item);
+bool is_potentially_evil_item(const item_def& item);
 bool is_evil_item(const item_def& item);
 bool is_chaotic_item(const item_def& item);
 bool is_holy_discipline(int discipline);

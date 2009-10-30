@@ -17,7 +17,6 @@
 
 #include "externs.h"
 
-
 bool is_holy_item(const item_def& item)
 {
     bool retval = false;
@@ -52,6 +51,35 @@ bool is_holy_item(const item_def& item)
     return (retval);
 }
 
+bool is_potentially_evil_item(const item_def& item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        {
+        const int item_brand = get_weapon_brand(item);
+        if (item_brand == SPWPN_CHAOS)
+            return (true);
+        }
+        break;
+    case OBJ_MISSILES:
+        {
+        const int item_brand = get_ammo_brand(item);
+        if (item_brand == SPMSL_CHAOS)
+            return (true);
+        }
+        break;
+    case OBJ_WANDS:
+        if (item.sub_type == WAND_RANDOM_EFFECTS)
+            return (true);
+        break;
+    default:
+        break;
+    }
+
+    return (false);
+}
+
 bool is_evil_item(const item_def& item)
 {
     bool retval = false;
@@ -69,7 +97,6 @@ bool is_evil_item(const item_def& item)
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-
         retval = (is_demonic(item)
                   || item_brand == SPWPN_DRAINING
                   || item_brand == SPWPN_PAIN
@@ -80,7 +107,7 @@ bool is_evil_item(const item_def& item)
     case OBJ_MISSILES:
     {
         const int item_brand = get_ammo_brand(item);
-        retval = is_demonic(item) || item_brand == SPMSL_REAPING;
+        retval = (item_brand == SPMSL_REAPING);
         break;
     }
     case OBJ_WANDS:
@@ -193,6 +220,7 @@ bool is_hasty_item(const item_def& item)
     default:
         break;
     }
+
     return (false);
 }
 
@@ -335,12 +363,8 @@ conduct_type good_god_hates_item_handling(const item_def &item)
     if (is_demonic(item))
         return (DID_UNHOLY);
 
-    if (item_type_known(item)
-        || item.base_type == OBJ_WEAPONS
-            && get_weapon_brand(item) == SPWPN_CHAOS)
-    {
+    if (item_type_known(item))
         return (DID_NECROMANCY);
-    }
 
     return (DID_NOTHING);
 }
@@ -350,20 +374,14 @@ conduct_type god_hates_item_handling(const item_def &item)
     switch (you.religion)
     {
     case GOD_ZIN:
-        if (item_type_known(item) && is_chaotic_item(item))
-            return (DID_CHAOS);
-        break;
-
-    case GOD_FEAWN:
         if (!item_type_known(item))
             return (DID_NOTHING);
 
-        if (is_evil_item(item)
-            || item.base_type == OBJ_WEAPONS
-                && get_weapon_brand(item) == SPWPN_CHAOS)
-        {
+        if (is_chaotic_item(item))
+            return (DID_CHAOS);
+
+        if (is_potentially_evil_item(item))
             return (DID_NECROMANCY);
-        }
         break;
 
     case GOD_SHINING_ONE:
@@ -397,8 +415,16 @@ conduct_type god_hates_item_handling(const item_def &item)
         default:
             break;
         }
+
+        if (is_potentially_evil_item(item))
+            return (DID_NECROMANCY);
         break;
     }
+
+    case GOD_ELYVILON:
+        if (item_type_known(item) && is_potentially_evil_item(item))
+            return (DID_NECROMANCY);
+        break;
 
     case GOD_YREDELEMNUL:
         if (item_type_known(item) && is_holy_item(item))
@@ -411,6 +437,14 @@ conduct_type god_hates_item_handling(const item_def &item)
             && item.sub_type != BOOK_DESTRUCTION)
         {
             return (DID_SPELL_MEMORISE);
+        }
+        break;
+
+    case GOD_FEAWN:
+        if (item_type_known(item)
+            && is_potentially_evil_item(item) || is_evil_item(item))
+        {
+            return (DID_NECROMANCY);
         }
         break;
 
