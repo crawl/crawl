@@ -35,8 +35,7 @@ public:
     coord_def pos() const;
 
     // returns the direction taken
-    adv_type advance(bool shorten = false, const coord_def *p = NULL);
-    adv_type advance_through(const coord_def &point);
+    adv_type advance();
     void advance_and_bounce();
     void regress();
 
@@ -48,7 +47,6 @@ public:
 protected:
     adv_type raw_advance_pos();
     void flip();
-    adv_type raw_advance();
     double reflect(bool x, double oldc, double newc) const;
     void set_reflect_point(const double oldx, const double oldy,
                            bool blocked_x, bool blocked_y);

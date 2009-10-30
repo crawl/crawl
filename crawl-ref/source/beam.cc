@@ -1408,7 +1408,7 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
         // Don't bounce straight into another wall.  Can happen if the beam
         // is shot into an inside corner.
         ray_def test_ray = temp_ray;
-        test_ray.advance(true);
+        test_ray.advance();
         if (in_bounds(test_ray.pos()) && !cell_is_solid(test_ray.pos()))
             break;
 
@@ -2112,11 +2112,7 @@ void bolt::do_fire()
         // the cell.
         draw(pos());
 
-        // A bounce takes away the meaning from the target.
-        if (bounces == 0)
-            ray.advance_through(target);
-        else
-            ray.advance(true);
+        ray.advance();
 
         avoid_self = false;
     }

@@ -1175,8 +1175,7 @@ void direction(dist& moves, targetting_type restricts,
                         ray_def raycopy = ray;
                         int l = 0;
                         while (raycopy.pos() != moves.target && range > l++)
-                            raycopy.advance_through(moves.target);
-
+                            raycopy.advance();
                         moves.target = raycopy.pos();
                     }
 #endif
@@ -1731,7 +1730,7 @@ void direction(dist& moves, targetting_type restricts,
                                         bcol | COLFLAG_REVERSE, in_range);
 #endif
                     }
-                    raycopy.advance_through(moves.target);
+                    raycopy.advance();
                 }
                 textcolor(LIGHTGREY);
 #ifdef USE_TILE

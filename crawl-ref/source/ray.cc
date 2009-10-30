@@ -84,7 +84,7 @@ void ray_def::advance_and_bounce()
 {
     int oldx = x(), oldy = y();
     const double oldaccx = accx, oldaccy = accy;
-    adv_type rc = advance(false);
+    adv_type rc = advance();
     int newx = x(), newy = y();
     ASSERT(feat_is_solid(grd[newx][newy]));
 
@@ -161,43 +161,8 @@ void ray_def::set_degrees(double deg)
 void ray_def::regress()
 {
     quadx = -quadx; quady= -quady;
-    advance(false);
+    advance();
     quadx = -quadx; quady= -quady;
-}
-
-adv_type ray_def::advance_through(const coord_def &target)
-{
-    return (advance(true, &target));
-}
-
-adv_type ray_def::advance(bool shortest_possible, const coord_def *target)
-{
-    if (!shortest_possible)
-        return (raw_advance());
-
-    // If we want to minimise the number of moves on the ray, look one
-    // step ahead and see if we can get a diagonal.
-
-    const coord_def old = pos();
-    const adv_type ret = raw_advance();
-
-    if (ret == ADV_XY || (target && pos() == *target))
-        return (ret);
-
-    const double maccx = accx, maccy = accy;
-    if (raw_advance() != ADV_XY)
-    {
-        const coord_def second = pos();
-        // If we can convert to a diagonal, do so.
-        if ((second - old).abs() == 2)
-            return (ADV_XY);
-    }
-
-    // No diagonal, so roll back.
-    accx = maccx;
-    accy = maccy;
-
-    return (ret);
 }
 
 // Advance a ray in the positive quadrant.
@@ -276,7 +241,7 @@ void ray_def::flip()
     accy = 0.5 + quady * (accy - 0.5);
 }
 
-adv_type ray_def::raw_advance()
+adv_type ray_def::advance()
 {
     adv_type rc;
     flip();

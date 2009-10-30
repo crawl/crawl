@@ -253,7 +253,11 @@ bool _is_better(const cellray& a, const cellray& b)
     ASSERT(a.target() == b.target());
     // calc_params() has been called.
     ASSERT(a.imbalance >= 0 && b.imbalance >= 0);
-    if (a.imbalance < b.imbalance)
+    if (a.end < b.end)
+        return (true);
+    else if (a.end > b.end)
+        return (false);
+    else if (a.imbalance < b.imbalance)
         return (true);
     else if (a.imbalance > b.imbalance)
         return (false);
@@ -558,7 +562,7 @@ static int _imbalance(ray_def ray, const coord_def& target)
     int diags = 0, straights = 0;
     while (ray.pos() != target)
     {
-        adv_type adv = ray.advance_through(target);
+        adv_type adv = ray.advance();
         if (adv == ADV_XY)
         {
             straights = 0;
@@ -714,14 +718,14 @@ dungeon_feature_type ray_blocker(const coord_def& source,
         return (NUM_REAL_FEATURES);
     }
 
-    ray.advance(false); // Must not cut corners!
+    ray.advance();
     int blocked = 0;
     while (ray.pos() != target)
     {
         blocked += opc_solid(ray.pos());
         if (blocked >= OPC_OPAQUE)
             return (env.grid(ray.pos()));
-        ray.advance(false);
+        ray.advance();
     }
     ASSERT (false);
     return (NUM_REAL_FEATURES);
@@ -760,7 +764,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
 
     if (exclude_endpoints && ray.pos() == source)
     {
-        ray.advance(true);
+        ray.advance();
         max_dist--;
     }
 
@@ -785,7 +789,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
         if (reached_target)
             break;
 
-        ray.advance(true);
+        ray.advance();
     }
 
     return (count);
