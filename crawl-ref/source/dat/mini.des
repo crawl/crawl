@@ -906,14 +906,8 @@ ENDMAP
 #
 NAME: minivault_13
 SHUFFLE: AB, CD, EH/FG
-KFEAT: A = any trap
-KFEAT: C = any trap
-KFEAT: E = any trap
-KFEAT: H = any trap
-KITEM: A = gold / nothing
-KITEM: B = gold / nothing
-KITEM: C = gold / nothing
-KITEM: D = gold / nothing
+KFEAT: ACEH = any trap
+KITEM: ABCD = gold / nothing
 SUBST: F = G:100 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
 MAP

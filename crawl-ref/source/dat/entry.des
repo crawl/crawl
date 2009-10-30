@@ -51,10 +51,7 @@ KFEAT:   T = net trap
 # ("Ack! Now I'm trapped too! Help!") so I coded it in. ^.^
 NSUBST:  M = 2=E / *=M E:2
 KFEAT:   E = teleport trap
-KFEAT:   M = shallow_water
-KFEAT:   N = shallow_water
-KFEAT:   O = shallow_water
-KFEAT:   Q = shallow_water
+KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
 SUBST:   P = MNO
 #
@@ -3507,13 +3504,13 @@ MONS:    w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
 # There is a very slight chance that a jelly or an intelligent monster
 # (hobgoblin) might spawn inside near the door. This is okay; added an exit.
 ORIENT:  float
-FTILE:   1234+ABCDEabcde = floor_dirt
+FTILE:   1234+ABCDEabcdem = floor_dirt
 SHUFFLE: abcde / fghij
 # Don't let auto-explore open the door and unleash the caged monsters.
 KPROP:   + = force_exclude
 SUBST:   f=A, g=B, h=C, i=D, j=E
-SUBST:   a=mx, b=mx, c=mx, d=mx, e=mx
-SUBST:   A:mx, B:mx, C:mx, D:mx, E:mx
+SUBST:   abcde = mx
+SUBST:   ABCDE : mx
 SUBST:   ===++
 SHUFFLE: xc, 123
 KMASK:   T = no_monster_gen
@@ -4898,8 +4895,7 @@ TAGS:   entry no_rotate no_pool_fixup
 ORIENT: northwest
 MONS:   plant
 FTILE:  .t1 = floor_lair
-KMASK:  w = no_monster_gen
-KMASK:  W = no_monster_gen
+KMASK:  Ww = no_monster_gen
 MAP
 ttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttt1ttttttwwtttttttttttttttttttttt
@@ -4945,7 +4941,7 @@ SUBST:  ' = .
         inside  = '.'
     })
     if crawl.coinflip() then
-        map_smear({iterations=20, smear='x', onto='.W', boxy = true})
+        map_smear({iterations=20, smear='x', onto='.W', boxy=true})
     end
 }}
 SUBST: W:xw

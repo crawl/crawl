@@ -753,11 +753,8 @@ FTILE:    . = floor_grass:20 / floor_dirt / none
           underneath it will be the tile that was specified.
 
           If a feature that normally covers the floor (e.g. rock walls) is
-          destroyed, this floor tile will be used in place of the normal floor.
-          Thus, it can be useful even for non-floor features.
-
-          For convenience, multiple glyphs can be specified together as a
-          group, e.g. ".[{( = floor_orc".
+          destroyed, this floor tile will be used in place of the normal
+          floor. Thus, it can be useful even for non-floor features.
 
           Like COLOUR, this should be used sparingly.
 
@@ -1009,6 +1006,9 @@ MARKER:   A = feat:<feature_name> or lua:<marker_expr>
           SHUFFLE: Oa/|c
           MARKER: O = lua:<expr>
 
+Handling long lines
+-------------------
+
 For most map headers, you can split long lines by ending the line that will be
 continued on the next line with \ as:
 
@@ -1040,6 +1040,39 @@ ITEM: potion of\
 
 Crawl will see "potion ofhealing", not "potion of healing".
 
+Assigning multiple glyphs at once
+---------------------------------
+
+Declarations that modify glyphs allow multiple glyphs to be assigned
+simultaneously as a convenience.  For example, the following declaration will
+assign floor_orc as the tile to be used for all up stair cases and floor:
+
+    FTILE: .[{( = floor_orc
+
+This case is identical to the longer syntax:
+
+    FTILE: . = floor_orc
+    FTILE: [ = floor_orc
+    FTILE: { = floor_orc
+    FTILE: ( = floor_orc
+
+Using : instead of = while assigning glyphs will assign the same value to all
+glyphs.  In the following example, the glyphs A, B, and C will either all
+contain gold or all contain nothing:
+
+    KITEM: ABC : gold / nothing
+
+Note: The number of items assigned in an NSUBST expression applies to the
+entire group of glyphs being assigned.  For example:
+
+    # Among all A, B, and C glyphs, make one a floor and the rest walls.
+    NSUBST: ABC = 1:. / *:x
+
+    # Make one A glyph floor, one B glyph floor, and one C glyph floor.
+    # Make the rest of the A, B, and C glyphs walls.
+    NSUBST: A = 1:. / *:x
+    NSUBST: B = 1:. / *:x
+    NSUBST: C = 1:. / *:x
 
 E.    Conditionalising levels
 =============================

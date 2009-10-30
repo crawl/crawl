@@ -423,11 +423,11 @@ std::string map_lines::add_feature_marker(const std::string &s)
 {
     std::string key, arg;
     int sep = 0;
-    std::string err = mapdef_split_key_item(s, &key, &sep, &arg);
+    std::string err = mapdef_split_key_item(s, &key, &sep, &arg, -1);
     if (!err.empty())
         return (err);
 
-    map_marker_spec spec(key[0], arg);
+    map_marker_spec spec(key, arg);
     spec.apply_transform(*this);
 
     return ("");
@@ -436,7 +436,7 @@ std::string map_lines::add_feature_marker(const std::string &s)
 std::string map_lines::add_lua_marker(const std::string &key,
                                       const lua_datum &function)
 {
-    map_marker_spec spec(key[0], function);
+    map_marker_spec spec(key, function);
     spec.apply_transform(*this);
     return ("");
 }
@@ -628,7 +628,7 @@ std::string map_lines::add_colour(const std::string &sub)
     std::string key;
     std::string substitute;
 
-    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute);
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
     if (!err.empty())
         return (err);
 
@@ -637,7 +637,7 @@ std::string map_lines::add_colour(const std::string &sub)
     if (!err.empty())
         return (err);
 
-    colour_spec spec(key[0], sep == ':', colours);
+    colour_spec spec(key, sep == ':', colours);
     overlay_colours(spec);
 
     return ("");
@@ -664,7 +664,7 @@ std::string map_lines::add_fproperty(const std::string &sub)
     std::string key;
     std::string substitute;
 
-    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute);
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
     if (!err.empty())
         return (err);
 
@@ -673,7 +673,7 @@ std::string map_lines::add_fproperty(const std::string &sub)
     if (!err.empty())
         return (err);
 
-    fprop_spec spec(key[0], sep == ':', fprops);
+    fprop_spec spec(key, sep == ':', fprops);
     overlay_fprops(spec);
 
     return ("");
@@ -690,7 +690,7 @@ std::string map_lines::add_subst(const std::string &sub)
     std::string key;
     std::string substitute;
 
-    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute);
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
     if (!err.empty())
         return (err);
 
@@ -699,7 +699,7 @@ std::string map_lines::add_subst(const std::string &sub)
     if (!err.empty())
         return (err);
 
-    subst_spec spec(key[0], sep == ':', repl);
+    subst_spec spec(key, sep == ':', repl);
     subst(spec);
 
     return ("");
@@ -713,8 +713,8 @@ std::string map_lines::parse_nsubst_spec(const std::string &s,
     std::string err = mapdef_split_key_item(s, &key, &sep, &arg, -1);
     if (!err.empty())
         return err;
-    const int keyval = key == "*"? -1 : atoi(key.c_str());
-    if (!keyval)
+    const int count = key == "*"? -1 : atoi(key.c_str());
+    if (!count)
         return make_stringf("Illegal spec: %s", s.c_str());
 
     glyph_replacements_t repl;
@@ -722,7 +722,7 @@ std::string map_lines::parse_nsubst_spec(const std::string &s,
     if (!err.empty())
         return (err);
 
-    spec = subst_spec(keyval, sep == ':', repl);
+    spec = subst_spec(count, sep == ':', repl);
     return ("");
 }
 
@@ -733,7 +733,7 @@ std::string map_lines::add_nsubst(const std::string &s)
     int sep;
     std::string key, arg;
 
-    std::string err = mapdef_split_key_item(s, &key, &sep, &arg);
+    std::string err = mapdef_split_key_item(s, &key, &sep, &arg, -1);
     if (!err.empty())
         return (err);
 
@@ -757,7 +757,7 @@ std::string map_lines::add_nsubst(const std::string &s)
         substs.push_back(spec);
     }
 
-    nsubst_spec spec(key[0], substs);
+    nsubst_spec spec(key, substs);
     nsubst(spec);
 
     return ("");
@@ -903,12 +903,13 @@ void map_lines::clear()
 void map_lines::subst(std::string &s, subst_spec &spec)
 {
     std::string::size_type pos = 0;
-    while ((pos = s.find(spec.key(), pos)) != std::string::npos)
+    while ((pos = s.find_first_of(spec.key, pos)) != std::string::npos)
         s[pos++] = spec.value();
 }
 
 void map_lines::subst(subst_spec &spec)
 {
+    ASSERT(!spec.key.empty());
     for (int y = 0, ysize = lines.size(); y < ysize; ++y)
         subst(lines[y], spec);
 }
@@ -921,7 +922,7 @@ void map_lines::overlay_colours(colour_spec &spec)
     for (int y = 0, ysize = lines.size(); y < ysize; ++y)
     {
         std::string::size_type pos = 0;
-        while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
+        while ((pos = lines[y].find_first_of(spec.key, pos)) != std::string::npos)
         {
             (*overlay)(pos, y).colour = spec.get_colour();
             ++pos;
@@ -937,7 +938,7 @@ void map_lines::overlay_fprops(fprop_spec &spec)
     for (int y = 0, ysize = lines.size(); y < ysize; ++y)
     {
         std::string::size_type pos = 0;
-        while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
+        while ((pos = lines[y].find_first_of(spec.key, pos)) != std::string::npos)
         {
             (*overlay)(pos, y).property |= spec.get_property();
             ++pos;
@@ -972,7 +973,7 @@ void map_lines::nsubst(nsubst_spec &spec)
     for (int y = 0, ysize = lines.size(); y < ysize; ++y)
     {
         std::string::size_type pos = 0;
-        while ((pos = lines[y].find(spec.key, pos)) != std::string::npos)
+        while ((pos = lines[y].find_first_of(spec.key, pos)) != std::string::npos)
             positions.push_back(coord_def(pos++, y));
     }
     std::random_shuffle(positions.begin(), positions.end(), random2);
@@ -982,7 +983,7 @@ void map_lines::nsubst(nsubst_spec &spec)
     for (int i = 0, vsize = spec.specs.size();
          i < vsize && pcount < psize; ++i)
     {
-        const int nsubsts = spec.specs[i].key();
+        const int nsubsts = spec.specs[i].count;
         pcount += apply_nsubst(positions, pcount, nsubsts, spec.specs[i]);
     }
 }
@@ -1206,6 +1207,21 @@ std::vector<coord_def> map_lines::find_glyph(int gly) const
         {
             const coord_def c(x, y);
             if ((*this)(c) == gly)
+                points.push_back(c);
+        }
+    }
+    return (points);
+}
+
+std::vector<coord_def> map_lines::find_glyph(const std::string &glyphs) const
+{
+    std::vector<coord_def> points;
+    for (int y = height() - 1; y >= 0; --y)
+    {
+        for (int x = width() - 1; x >= 0; --x)
+        {
+            const coord_def c(x, y);
+            if (glyphs.find((*this)(c)) != std::string::npos)
                 points.push_back(c);
         }
     }
@@ -2087,38 +2103,55 @@ keyed_mapspec *map_def::mapspec_for_key(int key)
 
 std::string map_def::add_key_field(
     const std::string &s,
-    std::string (keyed_mapspec::*set_field)(const std::string &s, bool fixed))
+    std::string (keyed_mapspec::*set_field)(const std::string &s, bool fixed),
+    void (keyed_mapspec::*copy_field)(keyed_mapspec &spec))
 {
     int separator = 0;
     std::string key, arg;
 
-    std::string err = mapdef_split_key_item(s, &key, &separator, &arg);
+    std::string err = mapdef_split_key_item(s, &key, &separator, &arg, -1);
     if (!err.empty())
         return (err);
 
-    keyed_mapspec &km = keyspecs[key[0]];
-    km.key_glyph = key[0];
-    return ((km.*set_field)(arg, separator == ':'));
+    keyed_mapspec &kmbase = keyspecs[key[0]];
+    kmbase.key_glyph = key[0];
+    err = ((kmbase.*set_field)(arg, separator == ':'));
+    if (!err.empty())
+        return (err);
+
+    size_t len = key.length();
+    for (size_t i = 1; i < len; i++)
+    {
+        keyed_mapspec &km = keyspecs[key[i]];
+        km.key_glyph = key[i];
+        ((km.*copy_field)(kmbase));
+    }
+
+    return (err);
 }
 
 std::string map_def::add_key_item(const std::string &s)
 {
-    return add_key_field(s, &keyed_mapspec::set_item);
+    return add_key_field(s, &keyed_mapspec::set_item,
+                         &keyed_mapspec::copy_item);
 }
 
 std::string map_def::add_key_feat(const std::string &s)
 {
-    return add_key_field(s, &keyed_mapspec::set_feat);
+    return add_key_field(s, &keyed_mapspec::set_feat,
+                         &keyed_mapspec::copy_feat);
 }
 
 std::string map_def::add_key_mons(const std::string &s)
 {
-    return add_key_field(s, &keyed_mapspec::set_mons);
+    return add_key_field(s, &keyed_mapspec::set_mons,
+                         &keyed_mapspec::copy_mons);
 }
 
 std::string map_def::add_key_mask(const std::string &s)
 {
-    return add_key_field(s, &keyed_mapspec::set_mask);
+    return add_key_field(s, &keyed_mapspec::set_mask,
+                         &keyed_mapspec::copy_mask);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -2413,7 +2446,10 @@ std::string mons_list::add_mons(const std::string &s, bool fix)
         return (error);
 
     if (fix)
+    {
         slotmons.fix_slot = true;
+        pick_monster(slotmons);
+    }
 
     mons.push_back( slotmons );
 
@@ -2723,7 +2759,11 @@ std::string item_list::add_item(const std::string &spec, bool fix)
     if (error.empty())
     {
         if (fix)
+        {
             sp.fix_slot = true;
+            pick_item(sp);
+        }
+
         items.push_back(sp);
     }
 
@@ -3164,8 +3204,13 @@ item_list::item_spec_slot item_list::parse_item_spec(std::string spec)
 /////////////////////////////////////////////////////////////////////////
 // subst_spec
 
-subst_spec::subst_spec(int torepl, bool dofix, const glyph_replacements_t &g)
-    : foo(torepl), fix(dofix), frozen_value(0), repl(g)
+subst_spec::subst_spec(std::string _k, bool _f, const glyph_replacements_t &g)
+    : key(_k), count(-1), fix(_f), frozen_value(0), repl(g)
+{
+}
+
+subst_spec::subst_spec(int _count, bool dofix, const glyph_replacements_t &g)
+    : key(""), count(_count), fix(dofix), frozen_value(0), repl(g)
 {
 }
 
@@ -3189,7 +3234,7 @@ int subst_spec::value()
 //////////////////////////////////////////////////////////////////////////
 // nsubst_spec
 
-nsubst_spec::nsubst_spec(int _key, const std::vector<subst_spec> &_specs)
+nsubst_spec::nsubst_spec(std::string _key, const std::vector<subst_spec> &_specs)
     : key(_key), specs(_specs)
 {
 }
@@ -3329,7 +3374,17 @@ std::string keyed_mapspec::set_feat(const std::string &s, bool fix)
     err.clear();
     parse_features(s);
     feat.fix_slot = fix;
+
+    // Fix this feature.
+    if (fix)
+        get_feat();
+
     return (err);
+}
+
+void keyed_mapspec::copy_feat(keyed_mapspec &spec)
+{
+    feat = spec.feat;
 }
 
 void keyed_mapspec::parse_features(const std::string &s)
@@ -3433,6 +3488,7 @@ std::string keyed_mapspec::set_mons(const std::string &s, bool fix)
         if (!error.empty())
             return (error);
     }
+
     return ("");
 }
 
@@ -3449,6 +3505,7 @@ std::string keyed_mapspec::set_item(const std::string &s, bool fix)
         if (!err.empty())
             return (err);
     }
+
     return (err);
 }
 
@@ -3480,6 +3537,21 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
     }
 
     return (err);
+}
+
+void keyed_mapspec::copy_mons(keyed_mapspec &spec)
+{
+    mons = spec.mons;
+}
+
+void keyed_mapspec::copy_item(keyed_mapspec &spec)
+{
+    item = spec.item;
+}
+
+void keyed_mapspec::copy_mask(keyed_mapspec &spec)
+{
+    map_mask = spec.map_mask;
 }
 
 feature_spec keyed_mapspec::get_feat()

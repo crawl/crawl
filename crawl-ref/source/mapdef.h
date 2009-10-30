@@ -105,19 +105,19 @@ class map_lines;
 class subst_spec
 {
 public:
-    subst_spec(int torepl, bool fix, const glyph_replacements_t &repls);
-    subst_spec() : foo(0), fix(false), frozen_value(0), repl() { }
-
-    int key() const
-    {
-        return (foo);
-    }
+    subst_spec(std::string torepl, bool fix, const glyph_replacements_t &repls);
+    subst_spec(int count, bool fix, const glyph_replacements_t &repls);
+    subst_spec() : key(""), count(-1), fix(false), frozen_value(0), repl() { }
 
     int value();
 
-private:
-    int foo;        // The thing to replace.
-    bool fix;       // If true, the first replacement fixes the value.
+public:
+    std::string key;
+    // If this is part of an nsubst spec, how many to replace.
+    // -1 corresponds to all (i.e. '*')
+    int count;      
+
+    bool fix;
     int frozen_value;
 
     glyph_replacements_t repl;
@@ -126,9 +126,9 @@ private:
 class nsubst_spec
 {
 public:
-    nsubst_spec(int key, const std::vector<subst_spec> &specs);
+    nsubst_spec(std::string key, const std::vector<subst_spec> &specs);
 public:
-    int key;
+    std::string key;
     std::vector<subst_spec> specs;
 };
 
@@ -141,7 +141,7 @@ public:
 class colour_spec
 {
 public:
-    colour_spec(int _key, bool _fix, const map_colour_list &clist)
+    colour_spec(std::string _key, bool _fix, const map_colour_list &clist)
         : key(_key), fix(_fix), fixed_colour(BLACK), colours(clist)
     {
     }
@@ -149,7 +149,7 @@ public:
     int get_colour();
 
 public:
-    int key;
+    std::string key;
     bool fix;
     int fixed_colour;
     map_colour_list colours;
@@ -164,7 +164,7 @@ public:
 class fprop_spec
 {
 public:
-    fprop_spec(int _key, bool _fix, const map_fprop_list &flist)
+    fprop_spec(std::string _key, bool _fix, const map_fprop_list &flist)
         : key(_key), fix(_fix), fixed_prop(FPROP_NONE), fprops(flist)
     {
     }
@@ -172,7 +172,7 @@ public:
     int get_property();
 
 public:
-    int key;
+    std::string key;
     bool fix;
     int fixed_prop;
     map_fprop_list fprops;
@@ -180,7 +180,7 @@ public:
 
 #ifdef USE_TILE
 typedef std::pair<int, int> map_weighted_tile;
-class map_tile_list : public std::vector<map_weighted_colour>
+class map_tile_list : public std::vector<map_weighted_tile>
 {
 public:
     bool parse(const std::string &s, int weight);
@@ -210,16 +210,16 @@ public:
 class map_marker_spec
 {
 public:
-    int key;
+    std::string key;
     std::string marker;
 
     // Special handling for Lua markers:
     std::auto_ptr<lua_datum> lua_fn;
 
-    map_marker_spec(int _key, const std::string &mark)
+    map_marker_spec(std::string _key, const std::string &mark)
         : key(_key), marker(mark), lua_fn() { }
 
-    map_marker_spec(int _key, const lua_datum &fn)
+    map_marker_spec(std::string _key, const lua_datum &fn)
         : key(_key), marker(), lua_fn(new lua_datum(fn)) { }
 
     std::string apply_transform(map_lines &map);
@@ -253,6 +253,7 @@ public:
     std::string add_rocktile(const std::string &s);
 #endif
 
+    std::vector<coord_def> find_glyph(const std::string &glyphs) const;
     std::vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
     coord_def find_first_glyph(const std::string &glyphs) const;
@@ -576,10 +577,20 @@ public:
 public:
     keyed_mapspec();
 
+    // Parse the string and set the given entry.  If fix is true,
+    // then whatever is selected for the first feature will be
+    // permanently fixed.
     std::string set_feat(const std::string &s, bool fix);
     std::string set_mons(const std::string &s, bool fix);
     std::string set_item(const std::string &s, bool fix);
     std::string set_mask(const std::string &s, bool garbage);
+
+    // Copy from the given mapspec.  If that entry is fixed,
+    // it should be pre-selected prior to the copy.
+    void copy_feat(keyed_mapspec &spec);
+    void copy_mons(keyed_mapspec &spec);
+    void copy_item(keyed_mapspec &spec);
+    void copy_mask(keyed_mapspec &spec);
 
     feature_spec get_feat();
     mons_list   &get_monsters();
@@ -805,7 +816,8 @@ private:
     std::string add_key_field(
         const std::string &s,
         std::string (keyed_mapspec::*set_field)(
-            const std::string &s, bool fixed));
+            const std::string &s, bool fixed),
+        void (keyed_mapspec::*copy_field)(keyed_mapspec &spec));
 };
 
 const int CHANCE_ROLL = 10000;
