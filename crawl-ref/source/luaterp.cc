@@ -120,10 +120,9 @@ void run_clua_interpreter(lua_State *ls)
             lua_insert(ls, 1);
             if (lua_pcall(ls, lua_gettop(ls) - 1, 0, 0) != 0)
             {
-                mprf(MSGCH_ERROR, "error calling crawl.mpr (%s)", 
+                mprf(MSGCH_ERROR, "error calling __echo (%s)", 
                                   lua_tostring(ls, -1));
             }
-//              mpr("got return values");
         }
     }
     lua_settop(ls, 0); // clear stack
