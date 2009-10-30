@@ -68,10 +68,10 @@ static double tdist(const ray &r, const lineseq &ls)
 }
 
 // Shoot the ray inside the next cell.
-// Returns whether it hit a corner of the grid.
+// Returns true if succesfully advanced, false if aborted due to corner.
 bool nextcell(ray &r, const grid &g, bool pass_corner)
 {
-    // XXX: ASSERT(!parallel(g.vert, g.horiz));
+    // ASSERT(!parallel(g.vert, g.horiz));
     lineseq ls;
     if (parallel(r.dir, g.ls1.f))
         ls = g.ls2;
@@ -84,29 +84,16 @@ bool nextcell(ray &r, const grid &g, bool pass_corner)
         double sd = tdist(r, g.ls1);
         double td = tdist(r, g.ls2);
         if (double_is_zero(s - t))
-        {
-            // Hitting the corner.
-            r.advance(s);
-            double u = std::min(sd, td);
-            if (pass_corner)
-                r.advance(0.5 * u);
-            else
-            {
-                // XXX: fudge ray into off-diagonal cell.
-                r.start.x +=  0.001 * u * r.dir.y;
-                r.start.y += -0.001 * u * r.dir.x;
-            }
-            return (true);
-        }
+            return (false);
         double dmin = std::min(s,t);
         double dnext = std::min(std::max(s,t), dmin + std::min(sd, td));
         r.advance((dmin + dnext) / 2.0);
-        return (false);
+        return (true);
     }
-    // advance an extra half
+    // parallel: just advance an extra half
     double s = nextintersect(r, ls);
     r.advance(s + 0.5 * tdist(r, ls));
-    return (false);
+    return (true);
 }
 
 
