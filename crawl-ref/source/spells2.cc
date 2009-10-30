@@ -1670,8 +1670,8 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     menv[monster].colour = mitm[i].colour;
     burden_change();
 
-    if ((why = god_hates_item_handling(you.inv[wpn]))
-        || (why = good_god_hates_item_handling(you.inv[wpn])))
+    if ((why = good_god_hates_item_handling(you.inv[wpn]))
+        || (why = god_hates_item_handling(you.inv[wpn])))
     {
         simple_god_message(" booms: How dare you animate that foul thing!");
         did_god_conduct(why, 10, true, &menv[monster]);
