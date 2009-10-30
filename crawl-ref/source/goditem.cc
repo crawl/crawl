@@ -374,14 +374,8 @@ conduct_type god_hates_item_handling(const item_def &item)
     switch (you.religion)
     {
     case GOD_ZIN:
-        if (!item_type_known(item))
-            return (DID_NOTHING);
-
-        if (is_chaotic_item(item))
+        if (item_type_known(item) && is_chaotic_item(item))
             return (DID_CHAOS);
-
-        if (is_potentially_evil_item(item))
-            return (DID_NECROMANCY);
         break;
 
     case GOD_SHINING_ONE:
@@ -415,16 +409,8 @@ conduct_type god_hates_item_handling(const item_def &item)
         default:
             break;
         }
-
-        if (is_potentially_evil_item(item))
-            return (DID_NECROMANCY);
         break;
     }
-
-    case GOD_ELYVILON:
-        if (item_type_known(item) && is_potentially_evil_item(item))
-            return (DID_NECROMANCY);
-        break;
 
     case GOD_YREDELEMNUL:
         if (item_type_known(item) && is_holy_item(item))
@@ -455,6 +441,12 @@ conduct_type god_hates_item_handling(const item_def &item)
 
     default:
         break;
+    }
+
+    if (item_type_known(item)
+        && is_good_god(you.religion) && is_potentially_evil_item(item))
+    {
+        return (DID_NECROMANCY);
     }
 
     if (item_type_known(item)
