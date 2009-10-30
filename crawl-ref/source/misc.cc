@@ -2094,7 +2094,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         else if (stair_find == DNGN_ABANDONED_SHOP)
             mpr("This shop appears to be closed.");
         else
-            mpr( "You can't go down here!" );
+            mpr("You can't go down here!");
         return;
     }
 
