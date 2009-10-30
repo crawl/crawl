@@ -22,6 +22,10 @@ local function sgn(x)
   end
 end
 
+function point_metatable:xy()
+  return self.x, self.y
+end
+
 point_metatable.sgn = function (p)
                         return dgn.point(sgn(p.x), sgn(p.y))
                       end

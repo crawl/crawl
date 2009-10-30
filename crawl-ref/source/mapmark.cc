@@ -824,16 +824,59 @@ bool feature_marker_at(const coord_def &pos, dungeon_feature_type feat)
     return (false);
 }
 
-const coord_def find_marker_prop(const std::string &prop,
-                                 const std::string &expected)
+coord_def find_marker_position_by_prop(const std::string &prop,
+                                       const std::string &expected)
 {
+    const std::vector<coord_def> markers =
+        find_marker_positions_by_prop(prop, expected, 1);
+    if (markers.empty())
+    {
+        const coord_def nowhere(-1, -1);
+        return (nowhere);
+    }
+    return markers[0];
+}
+
+std::vector<coord_def> find_marker_positions_by_prop(
+    const std::string &prop,
+    const std::string &expected,
+    unsigned maxresults)
+{
+    std::vector<coord_def> marker_positions;
     for (rectangle_iterator i(0, 0); i; ++i)
     {
         const std::string value =
             env.markers.property_at(*i, MAT_ANY, prop);
         if (!value.empty() && (expected.empty() || value == expected))
-            return (*i);
+        {
+            marker_positions.push_back(*i);
+            if (maxresults && marker_positions.size() >= maxresults)
+                return (marker_positions);
+        }
     }
-    const coord_def nowhere(-1, -1);
-    return (nowhere);
+    return (marker_positions);
+}
+
+std::vector<map_marker*> find_markers_by_prop(
+    const std::string &prop,
+    const std::string &expected,
+    unsigned maxresults)
+{
+    std::vector<map_marker*> markers;
+    for (rectangle_iterator pos(0, 0); pos; ++pos)
+    {
+        const std::vector<map_marker*> markers_here =
+            env.markers.get_markers_at(*pos);
+        for (unsigned i = 0, size = markers_here.size(); i < size; ++i)
+        {
+            const std::string value(markers_here[i]->property(prop));
+            if (!value.empty() && (expected.empty() || value == expected))
+            {
+                markers.push_back(markers_here[i]);
+                if (maxresults && markers.size() >= maxresults)
+                    return (markers);
+            }
+        }
+    }
+    return (markers);
 }

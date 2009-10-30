@@ -99,25 +99,24 @@ void clua_register_metatable(lua_State *ls, const char *tn,
     }
 }
 
-
-template <typename list, typename lpush>
-static int dlua_gentable(lua_State *ls, const list &strings, lpush push)
+int clua_pushcxxstring(lua_State *ls, const std::string &s)
 {
-    lua_newtable(ls);
-    for (int i = 0, size = strings.size(); i < size; ++i)
-    {
-        push(ls, strings[i]);
-        lua_rawseti(ls, -2, i + 1);
-    }
+    lua_pushstring(ls, s.c_str());
     return (1);
 }
 
-inline static void dlua_pushcxxstring(lua_State *ls, const std::string &s)
+int clua_stringtable(lua_State *ls, const std::vector<std::string> &s)
 {
-    lua_pushstring(ls, s.c_str());
+    return clua_gentable(ls, s, clua_pushcxxstring);
 }
 
-int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s)
+int clua_pushpoint(lua_State *ls, const coord_def &pos)
 {
-    return dlua_gentable(ls, s, dlua_pushcxxstring);
+    lua_pushnumber(ls, pos.x);
+    lua_pushnumber(ls, pos.y);
+    CLua &vm(CLua::get_vm(ls));
+    if (!vm.callfn("dgn.point", 2, 1))
+        luaL_error(ls, "dgn.point(%d,%d) failed: %s",
+                   pos.x, pos.y, vm.error.c_str());
+    return (1);
 }

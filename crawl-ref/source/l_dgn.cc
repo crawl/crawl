@@ -356,7 +356,7 @@ static int dgn_map(lua_State *ls)
 {
     MAP(ls, 1, map);
     if (lua_gettop(ls) == 1)
-        return dlua_stringtable(ls, map->map.get_lines());
+        return clua_stringtable(ls, map->map.get_lines());
 
     if (lua_isnil(ls, 2))
     {
@@ -1407,12 +1407,12 @@ LUAFN(_dgn_in_vault)
     return (1);
 }
 
-LUAFN(_dgn_find_marker_prop)
+LUAFN(_dgn_find_marker_position_by_prop)
 {
     const char *prop = luaL_checkstring(ls, 1);
     const std::string value(
                             lua_gettop(ls) >= 2 ? luaL_checkstring(ls, 2) : "");
-    const coord_def place = find_marker_prop(prop, value);
+    const coord_def place = find_marker_position_by_prop(prop, value);
     if (map_bounds(place))
         clua_push_coord(ls, place);
     else
@@ -1421,6 +1421,36 @@ LUAFN(_dgn_find_marker_prop)
         lua_pushnil(ls);
     }
     return (2);
+}
+
+LUAFN(_dgn_find_marker_positions_by_prop)
+{
+    const char *prop = luaL_checkstring(ls, 1);
+    const std::string value(
+                            lua_gettop(ls) >= 2 ? luaL_checkstring(ls, 2) : "");
+    const unsigned limit(lua_gettop(ls) >= 3 ? luaL_checkint(ls, 3) : 0);
+    const std::vector<coord_def> places =
+        find_marker_positions_by_prop(prop, value, limit);
+    clua_gentable(ls, places, clua_pushpoint);
+    return (1);
+}
+
+static int _push_mapmarker(lua_State *ls, map_marker *marker)
+{
+    dlua_push_userdata(ls, marker, MAPMARK_METATABLE);
+    return (1);
+}
+
+LUAFN(_dgn_find_markers_by_prop)
+{
+    const char *prop = luaL_checkstring(ls, 1);
+    const std::string value(
+                            lua_gettop(ls) >= 2 ? luaL_checkstring(ls, 2) : "");
+    const unsigned limit(lua_gettop(ls) >= 3 ? luaL_checkint(ls, 3) : 0);
+    const std::vector<map_marker*> places =
+        find_markers_by_prop(prop, value, limit);
+    clua_gentable(ls, places, _push_mapmarker);
+    return (1);
 }
 
 extern spec_room lua_special_room_spec;
@@ -1588,7 +1618,9 @@ const struct luaL_reg dgn_dlib[] =
 { "resolve_map", _dgn_resolve_map },
 { "in_vault", _dgn_in_vault },
 
-{ "find_marker_prop", _dgn_find_marker_prop },
+{ "find_marker_position_by_prop", _dgn_find_marker_position_by_prop },
+{ "find_marker_positions_by_prop", _dgn_find_marker_positions_by_prop },
+{ "find_markers_by_prop", _dgn_find_markers_by_prop },
 
 { "get_special_room_info", dgn_get_special_room_info },
 

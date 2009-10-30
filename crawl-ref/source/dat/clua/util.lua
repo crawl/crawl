@@ -326,3 +326,11 @@ function util.copy_table(object)
   return _copy(object)
 end
 
+-- Initialises a namespace that has functions spread across multiple files.
+-- If the namespace table does not exist, it is created. If it already exists,
+-- it is not modified.
+function util.namespace(table_name)
+  if _G[table_name] == nil then
+    _G[table_name] = { }
+  end
+end

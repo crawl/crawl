@@ -156,28 +156,28 @@ function place_large_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
                                    delay = 300, size = 10000, spread_rate = 30,
-                                   helper = large_warning})
+                                   listener = large_warning})
 end
 
 function place_medium_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
                                    delay = 300, size = 3000, spread_rate = 30,
-                                   helper = small_warning})
+                                   listener = small_warning})
 end
 
 function place_small_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
                                    delay = 300, size = 800, spread_rate = 30,
-                                   helper = small_warning})
+                                   listener = small_warning})
 end
 
 function place_tiny_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=10, pow_max=6,
                                    delay = 800, size = 80, spread_rate = 10,
-                                   helper = large_warning})
+                                   listener = large_warning})
 end
 
 function place_medium_flame_cloud (e, glyph, nolava)
@@ -389,6 +389,33 @@ default-depth: Lair:1-8, Orc:1-4, Hive:1
 
 ###############################################################################
 # Entries:
+
+# [ds] A dummy entry that's a proof-of-concept for synchronized fog machines
+# that trigger at multiple places at the same instant, but still have a random
+# delay.
+NAME: enter_volcano_snarktest101
+TAGS: uniq_volcano
+ORIENT: float
+WEIGHT: 0
+{{
+  local fog = fog_machine { cloud_type = 'flame',
+                            size = 3, pow_min=2,
+                            pow_max = 5, delay_min = 22, delay_max = 120,
+                          }
+  lua_marker('m', lmark.synchronized_markers(fog, 'do_fog'))
+}}
+SUBST: m = .
+:           volcano_portal(_G)
+MAP
+.......
+...m...
+.......
+.m.O.m.
+.......
+...m...
+.......
+ENDMAP
+
 NAME:       enter_volcano_1
 TAGS:       uniq_volcano
 ORIENT:     float
@@ -841,8 +868,8 @@ LFLAGS:     no_tele_control
 {{
 local mytable = { total_doorways=8, total_collapsed=0, ac = {} }
 
-local function collapse_doorways (marker, mytable)
-    local x, y = marker:pos()
+local function collapse_doorways (point, mytable)
+    local x, y = point:xy()
     local you_x, you_y = you.pos()
     if mytable.total_collapsed == mytable.total_doorways then
         return
@@ -856,7 +883,7 @@ local function collapse_doorways (marker, mytable)
     local ack = x .. "/" .. y
     if mytable.ac[ack] ~= true then
         mytable.ac[ack] = true
-        if you.see_cell(marker:pos()) then
+        if you.see_cell(x, y) then
             crawl.mpr("The volcano erupts! Nearby, a roof collapses.", "warning")
         else
             crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
@@ -868,8 +895,14 @@ local function collapse_doorways (marker, mytable)
     end
 end
 
-local collapse_marker = function_machine ( {marker_type = "random", turns_min=30,
-                        turns_max=40, func=collapse_doorways, marker_params=mytable } )
+local collapse_marker = function_machine {
+  marker_type = "random",
+  turns_min=30,
+  turns_max=40,
+  func=collapse_doorways,
+  marker_params=mytable
+}
+
 }}
 KPROP:      RXZ12< = no_rtele_into
 SUBST:      X = .

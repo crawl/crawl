@@ -13,6 +13,7 @@
 #include "dlua.h"
 #include <map>
 #include <string>
+#include <vector>
 #include <memory>
 
 //////////////////////////////////////////////////////////////////////////
@@ -23,8 +24,16 @@ class writer;
 
 bool marker_vetoes_operation(const char *op);
 bool feature_marker_at(const coord_def &pos, dungeon_feature_type feat);
-const coord_def find_marker_prop(const std::string &prop,
-                                 const std::string &expected = "");
+coord_def find_marker_position_by_prop(const std::string &prop,
+                                       const std::string &expected = "");
+std::vector<coord_def> find_marker_positions_by_prop(
+    const std::string &prop,
+    const std::string &expected = "",
+    unsigned maxresults = 0);
+std::vector<map_marker*> find_markers_by_prop(
+    const std::string &prop,
+    const std::string &expected = "",
+    unsigned maxresults = 0);
 
 class map_marker
 {

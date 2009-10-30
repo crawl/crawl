@@ -57,7 +57,7 @@ void clua_register_metatable(lua_State *ls, const char *tn,
                              const luaL_reg *lr,
                              int (*gcfn)(lua_State *ls) = NULL);
 
-int dlua_stringtable(lua_State *ls, const std::vector<std::string> &s);
+int clua_stringtable(lua_State *ls, const std::vector<std::string> &s);
 
 /*
  * User-data templates.
@@ -174,5 +174,21 @@ map_def *var = *(map_def **) luaL_checkudata(ls, n, MAP_METATABLE)
 dgn_event *var = *(dgn_event **) luaL_checkudata(ls, n, DEVENT_METATABLE)
 #define MAPMARKER(ls, n, var) \
 map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE)
+
+
+template <typename list, typename lpush>
+static int clua_gentable(lua_State *ls, const list &strings, lpush push)
+{
+    lua_newtable(ls);
+    for (int i = 0, size = strings.size(); i < size; ++i)
+    {
+        push(ls, strings[i]);
+        lua_rawseti(ls, -2, i + 1);
+    }
+    return (1);
+}
+
+int clua_pushcxxstring(lua_State *ls, const std::string &s);
+int clua_pushpoint(lua_State *ls, const coord_def &pos);
 
 #endif

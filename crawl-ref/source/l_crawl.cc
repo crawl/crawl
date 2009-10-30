@@ -603,7 +603,7 @@ void cluaopen_crawl(lua_State *ls)
 
 LUAFN(_crawl_args)
 {
-    return dlua_stringtable(ls, SysEnv.cmd_args);
+    return clua_stringtable(ls, SysEnv.cmd_args);
 }
 
 LUAFN(_crawl_milestone)

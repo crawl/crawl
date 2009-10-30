@@ -126,6 +126,8 @@ public:
     int execfile(const char *filename, bool trusted = false,
                  bool die_on_fail = false);
 
+    void pushglobal(const std::string &name);
+
     bool callbooleanfn(bool defval, const char *fn, const char *params, ...);
     bool callfn(const char *fn, int nargs, int nret = 1);
     bool callfn(const char *fn, const char *params, ...);

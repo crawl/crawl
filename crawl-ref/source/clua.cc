@@ -12,6 +12,7 @@
 #include "l_libs.h"
 
 #include "files.h"
+#include "libutil.h"
 #include "state.h"
 #include "stuff.h"
 
@@ -275,7 +276,7 @@ bool CLua::runhook(const char *hook, const char *params, ...)
 
     // Remember top of stack, for debugging porpoises
     int stack_top = lua_gettop(ls);
-    lua_getglobal(ls, hook);
+    pushglobal(hook);
     if (!lua_istable(ls, -1))
     {
         lua_pop(ls, 1);
@@ -475,7 +476,7 @@ bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
 
     int stacktop = lua_gettop(ls);
 
-    lua_getglobal(ls, fn);
+    pushglobal(fn);
     if (!lua_isfunction(ls, -1))
     {
         lua_pop(ls, 1);
@@ -497,6 +498,46 @@ bool CLua::proc_returns(const char *par) const
     return (strchr(par, '>') != NULL);
 }
 
+// Identical to lua_getglobal for simple names, but will look up
+// "a.b.c" names in tables, so you can pushglobal("dgn.point") and get
+// _G['dgn']['point'], as expected.
+//
+// Guarantees to push exactly one value onto the stack.
+//
+void CLua::pushglobal(const std::string &name)
+{
+    std::vector<std::string> pieces = split_string(".", name);
+    lua_State *ls(state());
+
+    if (pieces.empty())
+        lua_pushnil(ls);
+
+    for (unsigned i = 0, size = pieces.size(); i < size; ++i)
+    {
+        if (!i)
+            lua_getglobal(ls, pieces[i].c_str());
+        else
+        {
+            if (lua_istable(ls, -1))
+            {
+                lua_pushstring(ls, pieces[i].c_str());
+                lua_gettable(ls, -2);
+                // Swap the value we just found with the table itself.
+                lua_insert(ls, -2);
+                // And remove the table.
+                lua_pop(ls, 1);
+            }
+            else
+            {
+                // We expected a table here, but got something else. Fail.
+                lua_pop(ls, 1);
+                lua_pushnil(ls);
+                break;
+            }
+        }
+    }
+}
+
 bool CLua::callfn(const char *fn, const char *params, ...)
 {
     error.clear();
@@ -504,7 +545,7 @@ bool CLua::callfn(const char *fn, const char *params, ...)
     if (!ls)
         return (false);
 
-    lua_getglobal(ls, fn);
+    pushglobal(fn);
     if (!lua_isfunction(ls, -1))
     {
         lua_pop(ls, 1);
@@ -536,7 +577,7 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
     // If a function is not provided on the stack, get the named function.
     if (fn)
     {
-        lua_getglobal(ls, fn);
+        pushglobal(fn);
         if (!lua_isfunction(ls, -1))
         {
             lua_settop(ls, -nargs - 2);
@@ -1139,4 +1180,3 @@ bool lua_datum::is_udata() const
 {
     LUA_CHECK_TYPE(lua_isuserdata);
 }
-

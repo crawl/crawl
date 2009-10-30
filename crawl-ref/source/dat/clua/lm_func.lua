@@ -21,12 +21,14 @@
 --    * "player_at": Calls the function whenever the player is at the
 --       same position as the marker. Takes the same "repeated"
 --       parameter as "in_los".
---    * "helper": A function machine that can be linked into other lua markers
---       and machines. It is not triggered independantly, but called by the "parent"
---       marker, though always with the same marker_table parameter as other
---       machines. May take further parameters, see the parent's documentation.
+--    * "helper": A function machine that can be linked into other lua
+--       markers and machines. It is not triggered independantly, but
+--       called by the "parent" marker, though always with the same
+--       marker_table parameter as other machines. May take further
+--       parameters, see the parent's documentation.
 --
---  marker_table: Table to be passed to the function when called. Defaults to {}.
+--  marker_table: Table to be passed to the function when called.
+--  Defaults to {}.
 --
 -- Specific markers take specific parameters, as listed under marker_type.
 --
@@ -95,13 +97,12 @@ function FunctionMachine:new(pars)
   return m
 end
 
-function FunctionMachine:do_function(...)
-  marker = arg[1]
-  local _x, _y = marker:pos()
-  if #arg == 1 then
-    self.func(marker, self.marker_params)
+function FunctionMachine:do_function(position, ...)
+  local largs = { ... }
+  if #largs == 0 then
+    self.func(position, self.marker_params)
   else
-    self.func(marker, self.marker_params, unpack(arg))
+    self.func(position, self.marker_params, unpack(largs))
   end
 end
 
@@ -121,7 +122,7 @@ function FunctionMachine:event(marker, ev)
       self.countdown = self.countdown - ev:ticks()
 
       while self.countdown <= 0 do
-        self:do_function(marker)
+        self:do_function(dgn.point(marker:pos()))
         self.activated = true
         self.countdown = self.countdown +
           crawl.random_range(self.turns_min, self.turns_max, 1)
@@ -129,7 +130,7 @@ function FunctionMachine:event(marker, ev)
     elseif self.marker_type == "in_los" then
       if you.see_cell(x, y) then
         if not self.activated or self.repeated then
-          self:do_function(marker)
+          self:do_function(dgn.point(marker:pos()))
           self.activated = true
         end
       end
@@ -137,7 +138,7 @@ function FunctionMachine:event(marker, ev)
       you_x, you_y = you.pos()
       if you_x == x and you_y == y then
         if not self.activated or self.repeated then
-          self:do_function(marker)
+          self:do_function(dgn.point(marker:pos()))
           self.activated = true
         end
       end
@@ -178,7 +179,9 @@ end
 function message_machine (pars)
   local channel = pars.channel or false
   local mtable = {message = pars.message, channel = pars.channel}
-  pars.func = (function(marker, mtable) crawl.mpr(mtable.message, mtable.channel) end)
+  pars.func = function (position, mtable)
+                crawl.mpr(mtable.message, mtable.channel)
+              end
   pars.marker_params = mtable
   return FunctionMachine:new(pars)
 end

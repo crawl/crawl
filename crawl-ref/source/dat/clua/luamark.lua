@@ -13,6 +13,7 @@ require('clua/lm_fog.lua')
 require('clua/lm_props.lua')
 require('clua/lm_monst.lua')
 require('clua/lm_func.lua')
+require('clua/lm_mslav.lua')
 
 function dlua_marker_function(table, name)
   return table[name]
@@ -28,7 +29,7 @@ function dlua_marker_read(fn, marker, th)
   return fn({ }, marker, th)
 end
 
-lmark = { }
+util.namespace('lmark')
 
 -- Marshalls a table comprising of keys that are strings or numbers only,
 -- and values that are strings, numbers, functions, or tables only. The table

@@ -600,7 +600,7 @@ local function ziggurat_create_loot_vault(entry, exit)
     return exit
   else
     -- Find the square to drop the loot.
-    local lootx, looty = dgn.find_marker_prop("ziggurat_loot")
+    local lootx, looty = dgn.find_marker_position_by_prop("ziggurat_loot")
 
     if lootx and looty then
       return dgn.point(lootx, looty)
