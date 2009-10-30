@@ -6846,12 +6846,12 @@ void god_pitch(god_type which_god)
         return;
     }
 
-    describe_god( which_god, false );
+    describe_god(which_god, false);
 
-    snprintf( info, INFO_SIZE, "Do you wish to %sjoin this religion?",
-              (you.worshipped[which_god]) ? "re" : "" );
+    snprintf(info, INFO_SIZE, "Do you wish to %sjoin this religion?",
+             (you.worshipped[which_god]) ? "re" : "");
 
-    if (!yesno( info, false, 'n' ) || !yesno("Are you sure?", false, 'n'))
+    if (!yesno(info, false, 'n') || !yesno("Are you sure?", false, 'n'))
     {
         you.turn_is_over = false; // Okay, opt out.
         redraw_screen();
@@ -6859,7 +6859,6 @@ void god_pitch(god_type which_god)
     }
 
     // OK, so join the new religion.
-
     redraw_screen();
 
     const int old_piety = you.piety;
