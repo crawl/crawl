@@ -115,7 +115,7 @@ public:
     std::string key;
     // If this is part of an nsubst spec, how many to replace.
     // -1 corresponds to all (i.e. '*')
-    int count;      
+    int count;
 
     bool fix;
     int frozen_value;
