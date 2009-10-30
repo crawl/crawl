@@ -597,6 +597,11 @@ bool item_is_mundane(const item_def &item)
         }
         break;
 
+    case OBJ_ARMOUR:
+        if (item.sub_type == ARM_ANIMAL_SKIN)
+            return (true);
+        break;
+
     default:
         break;
     }

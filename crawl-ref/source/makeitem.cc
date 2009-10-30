@@ -2219,11 +2219,10 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (force_good)
         hide2armour(item);
 
-    // Skin armours and crystal plate mail normally don't get egos, but
+    // Hide armours and crystal plate mail normally don't get egos, but
     // can be randarts.
     if (armour_is_hide(item, true)
-        || item.sub_type == ARM_CRYSTAL_PLATE_MAIL
-        || item.sub_type == ARM_ANIMAL_SKIN)
+        || item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
     {
         if (!forced_ego)
             set_item_ego_type(item, OBJ_ARMOUR, SPARM_NORMAL);
