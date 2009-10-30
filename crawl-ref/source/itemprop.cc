@@ -585,21 +585,23 @@ bool item_is_critical(const item_def &item)
 // Is item something that no one would bother enchanting?
 bool item_is_mundane(const item_def &item)
 {
-    bool retval = false;
-
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        retval = (item.sub_type == WPN_CLUB
-                     || item.sub_type == WPN_GIANT_CLUB
-                     || item.sub_type == WPN_GIANT_SPIKED_CLUB
-                     || item.sub_type == WPN_KNIFE);
+        if (item.sub_type == WPN_CLUB
+            || item.sub_type == WPN_GIANT_CLUB
+            || item.sub_type == WPN_GIANT_SPIKED_CLUB
+            || item.sub_type == WPN_KNIFE)
+        {
+            return (true);
+        }
         break;
+
     default:
         break;
     }
 
-    return (retval);
+    return (false);
 }
 
 void set_ident_flags( item_def &item, unsigned long flags )

@@ -1548,7 +1548,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     const bool no_brand   = item.special == SPWPN_FORBID_BRAND;
 
     if (no_brand)
-        set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
 
     // If it's forced to be a good item, upgrade the worst weapons.
     if (force_good
@@ -1565,9 +1565,9 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
 
     // If we allow acquirement-type items to be orcish, then there's a
     // good chance that we'll just strip them of their ego type at the
-    // bottom of this function. -- bwr
-    if (force_good && !forced_ego && get_equip_race( item ) == ISFLAG_ORCISH)
-        set_equip_race( item, ISFLAG_NO_RACE );
+    // bottom of this function. - bwr
+    if (force_good && !forced_ego && get_equip_race(item) == ISFLAG_ORCISH)
+        set_equip_race(item, ISFLAG_NO_RACE);
 
     _weapon_add_racial_modifiers(item);
 
@@ -1580,8 +1580,8 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
             set_item_ego_type(item, OBJ_WEAPONS,
                               _determine_weapon_brand(item, 2+2*you.your_level));
         }
-        item.plus  -= 1+random2(3);
-        item.plus2 -= 1+random2(3);
+        item.plus  -= 1 + random2(3);
+        item.plus2 -= 1 + random2(3);
 
         if (item_level == -5)
             do_curse_item(item);
@@ -1629,10 +1629,10 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         if (one_chance_in(12))
         {
             // Make a cursed item.
-            do_curse_item( item );
+            do_curse_item(item);
             item.plus  -= random2(4);
             item.plus2 -= random2(4);
-            set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
         }
     }
 
@@ -1904,7 +1904,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         && one_chance_in(12)
         && x_chance_in_y(31 + item_level * 3, 3000))
     {
-        return _try_make_item_special_unrand(item, force_type, item_level);
+        return (_try_make_item_special_unrand(item, force_type, item_level));
     }
 
     return (false);
@@ -2134,7 +2134,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
 
     // If we get here the item is not an artefact.
-
     if (is_helmet(item) && one_chance_in(3))
         set_helmet_random_desc(item);
 
@@ -2169,7 +2168,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
                 _determine_armour_ego(item, item.sub_type, 2+2*you.your_level));
         }
 
-        item.plus -= 1+random2(3);
+        item.plus -= 1 + random2(3);
 
         if (item_level == -5)
             do_curse_item(item);
@@ -2726,7 +2725,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         }
     }
 
-    // All jewellery base types should now work. -- bwr
+    // All jewellery base types should now work. - bwr
     if (allow_uniques && item_level > 2
         && x_chance_in_y(101 + item_level * 3, 4000))
     {
@@ -2742,8 +2741,8 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     else if (item.sub_type == RING_HUNGER || item.sub_type == RING_TELEPORTATION
              || one_chance_in(50))
     {
-        // rings of hunger and teleportation are always cursed {dlb}:
-        do_curse_item( item );
+        // Rings of hunger and teleportation are always cursed {dlb}:
+        do_curse_item(item);
     }
 }
 
@@ -2754,9 +2753,7 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
     else
     {
         do
-        {
             item.sub_type = random2(NUM_MISCELLANY);
-        }
         while
             // never randomly generated
             (item.sub_type == MISC_RUNE_OF_ZOT

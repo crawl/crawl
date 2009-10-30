@@ -1122,7 +1122,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
     // Now we'll randomly pick a body armour up to plate mail (light
     // only in the case of robes or animal skins).  Unlike before, now
     // we're only giving out the finished products here, never the
-    // hides.  -- bwr
+    // hides. - bwr
     if (result == NUM_ARMOURS || result == ARM_ROBE)
     {
         // Start with normal base armour.
@@ -1131,8 +1131,9 @@ static armour_type _acquirement_armour_subtype(bool divine)
             // Animal skins don't get egos, so make them less likely.
             result = (one_chance_in(4) ? ARM_ANIMAL_SKIN : ARM_ROBE);
 
-            // Armour-restricted species get a bonus chance at troll/dragon
-            // armour. (In total, the chance is almost 10%.)
+            // Armour-restricted species get a bonus chance at
+            // troll/dragon armour.  (In total, the chance is almost
+            // 10%.)
             if (one_chance_in(20))
             {
                 result = static_cast<armour_type>(
@@ -1171,9 +1172,10 @@ static armour_type _acquirement_armour_subtype(bool divine)
                 const int num_arms = ARRAYSZ(armours);
 
                 // Weight sub types relative to (armour skill + 3).
-                // Actually, the AC improvement is not linear, and we might
-                // also want to take into account Dodging/Stealth and Strength,
-                // but this is definitely better than the random chance above.
+                // Actually, the AC improvement is not linear, and we
+                // might also want to take into account Dodging/Stealth
+                // and Strength, but this is definitely better than the
+                // random chance above.
                 const int skill = std::min(27, you.skills[SK_ARMOUR] + 3);
                 int total = 0;
                 for (int i = 0; i < num_arms; ++i)
