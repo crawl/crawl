@@ -3829,7 +3829,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_GERYON:
         //mv: Probably should be moved out of this switch, but it's not
-        //worth of it, unless we have more monsters with misc. items.
+        //worth it, unless we have more monsters with misc. items.
         item.base_type = OBJ_MISCELLANY;
         item.sub_type  = MISC_HORN_OF_GERYON;
         break;
