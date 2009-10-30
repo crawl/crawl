@@ -4254,7 +4254,7 @@ void give_armour(monsters *mon, int level)
 
     case MONS_GRUM:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = coinflip() ? ARM_ANIMAL_SKIN : ARM_ROBE;
+        item.sub_type  = ARM_ANIMAL_SKIN;
         break;
 
     case MONS_URUG:

@@ -294,8 +294,8 @@ local edmund = "Edmund ; trident ego:flaming . leather armour ego:fire_resistanc
 local michael = "Michael ; dagger ego:flaming . robe ego:fire_resistance"
 local sonja = "Sonja" -- We don't touch her equips.
 local ijyb = "Ijyb ; dagger ego:flaming . ring mail ego:fire_resistance race:orcish"
-local grum  = "Grum ; robe ego:fire_resistance"
-local menkaure = "Menkaure" -- Or his
+local grum = "Grum" -- Or his.
+local menkaure = "Menkaure" -- Or his.
 local hellknight = "hell knight w:1 ; hand axe ego:flaming . ring mail ego:fire_resistance"
 
 function fiery_humans (e)
