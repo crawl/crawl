@@ -4853,7 +4853,8 @@ static bool _jiyva_retribution()
             mon = choose_random_nearby_monster(0);
 
             if (!mon || !mon_can_be_slimified(mon)
-                || mon->attitude != ATT_HOSTILE)
+                || mon->attitude != ATT_HOSTILE
+                || (mon->god != GOD_NO_GOD && mon->god != GOD_JIYVA))
             {
                 tries++;
                 continue;
