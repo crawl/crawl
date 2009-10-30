@@ -1732,18 +1732,18 @@ static special_missile_type _determine_missile_brand(const item_def& item,
             rc = SPMSL_FROST;
         else if (temp_rand < 80)
             rc = SPMSL_POISONED;
-	else if (temp_rand < 90)
-	    rc = SPMSL_PENETRATION;
-	else if (temp_rand < 100)
-	    rc = SPMSL_REAPING;
-	else if (temp_rand < 110)
-	    rc = SPMSL_SILVER;
-	else if (temp_rand < 120)
-	    rc = SPMSL_STEEL;
-	else if (temp_rand < 130)
-	    rc = SPMSL_DISPERSAL;
-	else if (temp_rand < 150)
-	    rc = SPMSL_EXPLODING;
+        else if (temp_rand < 90)
+            rc = SPMSL_PENETRATION;
+        else if (temp_rand < 100)
+            rc = SPMSL_REAPING;
+        else if (temp_rand < 110)
+            rc = SPMSL_SILVER;
+        else if (temp_rand < 120)
+            rc = SPMSL_STEEL;
+        else if (temp_rand < 130)
+            rc = SPMSL_DISPERSAL;
+        else if (temp_rand < 150)
+            rc = SPMSL_EXPLODING;
         else
             rc = SPMSL_NORMAL;
     }
