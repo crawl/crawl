@@ -2042,7 +2042,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
 
     if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc)
     {
-        long_desc = "UNDESCRIBE PORTAL VAULT ENTRANCE.";
+        long_desc = "UNDESCRIBED PORTAL VAULT ENTRANCE.";
         custom_desc = true;
     }
 
