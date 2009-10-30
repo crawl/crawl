@@ -14,6 +14,8 @@
 #include "ray.h"
 #include "stuff.h"
 
+#if 0
+
 #define RAY_METATABLE "dgn.ray"
 
 void lua_push_ray(lua_State *ls, ray_def *ray)
@@ -43,12 +45,17 @@ LUAFN(los_cell_see_cell)
     PLUARET(number, cell_see_cell(p, q));
 }
 
+#endif
+
 const struct luaL_reg los_dlib[] =
 {
+#if 0
     { "findray", los_find_ray },
     { "cell_see_cell", los_cell_see_cell },
+#endif
     { NULL, NULL }
 };
+#if 0
 
 #define RAY(ls, n, var) \
     ray_def *var = *(ray_def **) luaL_checkudata(ls, n, RAY_METATABLE)
@@ -99,8 +106,11 @@ static const struct luaL_reg ray_dlib[] =
     { "pos", ray_pos },
     { NULL, NULL }
 };
+#endif
 
 void luaopen_ray(lua_State *ls)
 {
+#if 0
     clua_register_metatable(ls, RAY_METATABLE, ray_dlib, lua_object_gc<ray_def>);
+#endif
 }
