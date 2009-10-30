@@ -53,6 +53,7 @@
 #include "debug.h"
 #include "directn.h"
 #include "externs.h"
+#include "geom2d.h"
 #include "losparam.h"
 #include "player.h"
 #include "ray.h"
@@ -158,27 +159,40 @@ struct los_ray : public ray_def
     unsigned int start;
     unsigned int length;
 
-    los_ray(double ax, double ay, double s)
-        : ray_def(ax, ay, s), length(0)
+    los_ray(geom::ray _r)
+        : ray_def(_r), length(0)
     {
     }
 
     // Shoot a ray from the given start point (accx, accy) with the given
     // slope, bounded by the pre-calc bounds function.
     // Returns the cells it travels through, excluding the origin.
+    // Returns an empty vector if this was a bad ray.
     std::vector<coord_def> footprint()
     {
         std::vector<coord_def> cs;
         los_ray copy = *this;
         coord_def c;
+        coord_def old;
         int cellnum;
         for (cellnum = 0; true; ++cellnum)
         {
-            copy.raw_advance_pos();
+            old = c;
+            if (!copy.advance())
+            {
+//#ifdef DEBUG_DIAGNOSTICS
+//                mprf(MSGCH_DIAGNOSTICS,
+//                     "discarding corner ray (%f,%f) + t*(%f,%f)",
+//                     r.start.x, r.start.y, r.dir.x, r.dir.y);
+//#endif
+                cs.clear();
+                break;
+            }
             c = copy.pos();
             if (!bds_precalc(c))
                 break;
             cs.push_back(c);
+            ASSERT((c - old).rdist() == 1);
         }
         return cs;
     }
@@ -218,7 +232,7 @@ struct cellray
     unsigned int end; // Relative index (inside ray) of end cell.
 
     cellray(const los_ray& r, unsigned int e)
-        : ray(r), end(e), imbalance(-1), slope_diff(-1)
+        : ray(r), end(e), imbalance(-1), first_diag(false)
     {
     }
 
@@ -238,7 +252,7 @@ struct cellray
     // Parameters used in find_ray. These need to be calculated
     // only for the minimal cellrays.
     int imbalance;
-    double slope_diff;
+    bool first_diag;
 
     void calc_params();
 };
@@ -253,16 +267,12 @@ bool _is_better(const cellray& a, const cellray& b)
     ASSERT(a.target() == b.target());
     // calc_params() has been called.
     ASSERT(a.imbalance >= 0 && b.imbalance >= 0);
-    if (a.end < b.end)
-        return (true);
-    else if (a.end > b.end)
-        return (false);
-    else if (a.imbalance < b.imbalance)
+    if (a.imbalance < b.imbalance)
         return (true);
     else if (a.imbalance > b.imbalance)
         return (false);
     else
-        return (a.slope_diff < b.slope_diff);
+        return (a.first_diag);
 }
 
 enum compare_type
@@ -381,12 +391,12 @@ static std::vector<int> _find_minimal_cellrays()
 }
 
 // Create and register the ray defined by the arguments.
-static void _register_ray(double accx, double accy, double slope)
+static void _register_ray(geom::ray r)
 {
-    los_ray ray = los_ray(accx, accy, slope);
+    los_ray ray = los_ray(r);
     std::vector<coord_def> coords = ray.footprint();
 
-    if (_is_duplicate_ray(coords))
+    if (coords.empty() || _is_duplicate_ray(coords))
         return;
 
     ray.start = ray_coords.size();
@@ -482,8 +492,8 @@ void raycast()
 
     // register perpendiculars FIRST, to make them top choice
     // when selecting beams
-    _register_ray(0.5, 0.5, 1000.0);
-    _register_ray(0.5, 0.5, 0.0);
+    _register_ray(geom::ray(0.6, 0.5, 0.0, 1.0));
+    _register_ray(geom::ray(0.5, 0.6, 1.0, 0.0));
 
     // For a slope of M = y/x, every x we move on the X axis means
     // that we move y on the y axis. We want to look at the resolution
@@ -507,53 +517,19 @@ void raycast()
         const int xangle = xyangles[i].first;
         const int yangle = xyangles[i].second;
 
-        const double slope = ((double)(yangle)) / xangle;
-        const double rslope = ((double)(xangle)) / yangle;
-        for (int intercept = 1; intercept <= LOS_INTERCEPT_MULT*yangle; ++intercept )
+        for (int intercept = 1; intercept < LOS_INTERCEPT_MULT*yangle; ++intercept )
         {
             double xstart = ((double)intercept) / (LOS_INTERCEPT_MULT*yangle);
-            double ystart = 1;
+            double ystart = 0.5;
 
-            // now move back just inside the cell
-            // y should be "about to change"
-            xstart -= EPSILON_VALUE * xangle;
-            ystart -= EPSILON_VALUE * yangle;
-
-            _register_ray(xstart, ystart, slope);
+            _register_ray(geom::ray(xstart, ystart, xangle, yangle));
             // also draw the identical ray in octant 2
-            _register_ray(ystart, xstart, rslope);
+            _register_ray(geom::ray(ystart, xstart, yangle, xangle));
         }
     }
 
     // Now create the appropriate blockrays array
     _create_blockrays();
-}
-
-static void _set_ray_quadrant(ray_def& ray, int sx, int sy, int tx, int ty)
-{
-    ray.quadx = tx >= sx ? 1 : -1;
-    ray.quady = ty >= sy ? 1 : -1;
-}
-
-static const double VERTICAL_SLOPE = 10000.0;
-static double _calc_slope(double x, double y)
-{
-    if (double_is_zero(x))
-        return (VERTICAL_SLOPE);
-
-    const double slope = y / x;
-    return (slope > VERTICAL_SLOPE ? VERTICAL_SLOPE : slope);
-}
-
-static double _slope_factor(const ray_def &ray)
-{
-    double xdiff = fabs(ray.accx - 0.5), ydiff = fabs(ray.accy - 0.5);
-
-    if (double_is_zero(xdiff) && double_is_zero(ydiff))
-        return ray.slope;
-
-    const double slope = _calc_slope(ydiff, xdiff);
-    return (slope + ray.slope) / 2.0;
 }
 
 static int _imbalance(ray_def ray, const coord_def& target)
@@ -562,19 +538,24 @@ static int _imbalance(ray_def ray, const coord_def& target)
     int diags = 0, straights = 0;
     while (ray.pos() != target)
     {
-        adv_type adv = ray.advance();
-        if (adv == ADV_XY)
+        coord_def old = ray.pos();
+        if (!ray.advance())
+            ASSERT(false);
+        switch((ray.pos() - old).abs())
         {
-            straights = 0;
-            if (++diags > imb)
-                imb = diags;
-            diags++;
-        }
-        else
-        {
+        case 1:
             diags = 0;
             if (++straights > imb)
                 imb = straights;
+            break;
+        case 2:
+            straights = 0;
+            if (++diags > imb)
+                imb = diags;
+            break;
+        default:
+            ASSERT(false);
+            break;
         }
     }
     return imb;
@@ -584,7 +565,7 @@ void cellray::calc_params()
 {
     coord_def trg = target();
     imbalance = _imbalance(ray, trg);
-    slope_diff = _slope_factor(ray) - _calc_slope(trg.x, trg.y);
+    first_diag = ((*this)[0].abs() == 2);
 }
 
 // Find ray in positive quadrant.
@@ -687,14 +668,14 @@ bool find_ray(const coord_def& source, const coord_def& target,
         return (false);
 
     if (signx < 0)
-        ray.accx = 1.0 - ray.accx;
+        ray.r.start.x = 1.0 - ray.r.start.x;
     if (signy < 0)
-        ray.accy = 1.0 - ray.accy;
+        ray.r.start.y = 1.0 - ray.r.start.y;
+    ray.r.dir.x *= signx;
+    ray.r.dir.y *= signy;
 
-    ray.accx += source.x;
-    ray.accy += source.y;
-
-    _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
+    ray.r.start.x += source.x;
+    ray.r.start.y += source.y;
 
     return (true);
 }
@@ -735,11 +716,11 @@ dungeon_feature_type ray_blocker(const coord_def& source,
 void fallback_ray(const coord_def& source, const coord_def& target,
                   ray_def& ray)
 {
-    ray.accx = source.x + 0.5;
-    ray.accy = source.y + 0.5;
+    ray.r.start.x = source.x + 0.5;
+    ray.r.start.y = source.y + 0.5;
     coord_def diff = target - source;
-    ray.slope = _calc_slope(std::abs(diff.x), std::abs(diff.y));
-    _set_ray_quadrant(ray, source.x, source.y, target.x, target.y);
+    ray.r.dir.x = diff.x;
+    ray.r.dir.y = diff.y;
 }
 
 // Count the number of matching features between two points along
