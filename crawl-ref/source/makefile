@@ -583,12 +583,31 @@ PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
 .PHONY: all test install clean clean-contrib distclean debug profile wizard
 
-##########################################################################
-
 all: $(GAME)
 
 test:
 	./$(GAME) -test > /dev/null
+
+#
+# CFLAGS difference check
+#
+# Check for flag changes between the previous build and the current one,
+# because any CFLAGS change could result in an inconsistent build if the
+# person building it isn't careful.
+#
+# This should eliminate an annoying need to use 'make clean' every time.
+#
+
+TRACK_CFLAGS = $(subst ','\'',$(ALL_CFLAGS))
+
+.cflags: .force-cflags
+	@FLAGS='$(TRACK_CFLAGS)'; \
+    if test x"$$FLAGS" != x"`cat .cflags 2>/dev/null`" ; then \
+        echo "    * new build flags or prefix"; \
+        echo "$$FLAGS" > .cflags; \
+    fi
+
+.PHONY: .force-cflags
 
 ##########################################################################
 # Dependencies
@@ -738,10 +757,10 @@ endif
 
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
-%.o: %.m
+%.o: %.m .cflags
 	$(QUIET_CXX)$(CC) $(ALL_CFLAGS) -c $< -o $@
 
-%.o: %.cc
+%.o: %.cc .cflags
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -c $< -o $@
 
 #
