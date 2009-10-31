@@ -516,6 +516,7 @@ private:
     mons_spec drac_monspec(std::string name) const;
     void get_zombie_type(std::string s, mons_spec &spec) const;
     mons_spec get_hydra_spec(const std::string &name) const;
+    mons_spec get_slime_spec(const std::string &name) const;
     mons_spec get_zombified_monster(const std::string &name,
                                     monster_type zomb) const;
     mons_spec_slot parse_mons_spec(std::string spec);

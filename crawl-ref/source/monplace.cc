@@ -1221,9 +1221,19 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.cls == MONS_MANTICORE)
         menv[id].number = 8 + random2(9);
 
-    // Slime creatures start off as only a single merged blob.
     if (mg.cls == MONS_SLIME_CREATURE)
-        menv[id].number = 1;
+    {
+        if (mg.number == 0)
+            // Slime creatures start off as only a single un-merged blob.
+            menv[id].number = 1;
+        else
+        {
+            // Boost HP to what it would have been if it grown this big
+            // by merging.
+            menv[id].hit_points     *= mg.number;
+            menv[id].max_hit_points *= mg.number;
+        }
+    }
 
     // Set attitude, behaviour and target.
     menv[id].attitude  = ATT_HOSTILE;

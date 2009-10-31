@@ -2569,6 +2569,31 @@ mons_spec mons_list::get_hydra_spec(const std::string &name) const
     return mons_spec(MONS_HYDRA, MONS_NO_MONSTER, nheads);
 }
 
+mons_spec mons_list::get_slime_spec(const std::string &name) const
+{
+    std::string prefix = name.substr(0, name.find(" slime creature"));
+
+    int slime_size = 1;
+
+    if (prefix == "large")
+        slime_size = 2;
+    else if (prefix == "very large")
+        slime_size = 3;
+    else if (prefix == "enormous")
+        slime_size = 4;
+    else if (prefix == "titanic")
+        slime_size = 5;
+    else
+    {
+#if DEBUG || DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Slime spec wants invalid size '%s'",
+             prefix.c_str());
+#endif
+     }
+
+    return mons_spec(MONS_SLIME_CREATURE, MONS_NO_MONSTER, slime_size);
+}
+
 // Handle draconians specified as:
 // Exactly as in mon-data.h:
 //    yellow draconian or draconian knight - the monster specified.
@@ -2701,6 +2726,9 @@ mons_spec mons_list::mons_by_name(std::string name) const
 
     if (ends_with(name, "-headed hydra") && !starts_with(name, "spectral "))
         return get_hydra_spec(name);
+
+    if (ends_with(name, " slime creature"))
+        return get_slime_spec(name);
 
     mons_spec spec;
     get_zombie_type(name, spec);
