@@ -330,47 +330,48 @@ ITEM:    potion of resistance w:5 / potion of gain strength / \
          potion of might / potion of confusion / potion of levitation / \
          potion of experience w:2
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx..xxxxxxxxxx12....xxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx...xx...xxxx...2xxx...xxxxxxxxxxxxx
-xxxxxxxxxx......1..xxxxx..x212.xxxxxxx...1xxxxxxxxxx
-xxxxxxx.......1..1.xxxxxx....xxxxxxxxxxxx21..xxxxxxx
-xxxxxx...xxxx.3.1....xxxxxxxxxxxxxwwwxxxxxx....xxxxx
-xxxx...xxxfgxx.1..1...xxxxxxxxxxwwwwwxxxxxxxx....xxx
-xxx...xxdegefxx..1.....xxxxxwwwwwwwwwwwwwxxxxxx....x
-xxx...x$$$$gdex.......xxxxxwwwwwwwwwwwwwwwwwxxxxx..x
-xxx...x....$$xx.....xxxxwwwwxxwwwwwwwwwwwwxxxxxx11xx
-xxxx.......xxx.....xxwwwwxxxxxxxxxwwwwwwxxxxx...2xxx
-xxxxx............xxxwwwwxxxxxxxxxxxwwwxxxx......xxxx
-xxxx"xx.........x'wwwwwxxxxxxxxxxxxwxxxx...xxxxxxxxx
-xxwwxxxxxxxxxxxxxxwwwxxxxxxxxxxxxxxxxxx..xxxxxxxxxxx
-xxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxx
-xxwwwwwwwwwwwwwwwwwx'xxxxxxxxxxxxxxx5...xxxxxxxxxxxx
-xxwwwxxxxxxxxxxwwxx'x'xxxxxxxxxxxxx.......xxxxxxxxxx
-xxwwxxxxxxxxxxxwwxxx'xxxxxxxxxxxxxxxx.......xxxxxxxx
-x"xxxxxxxxxxxxxxwxx'xxxxxx"xxxxxxxxxxx....2...xxxxxx
-xx"xxxxxxxxxxxxxxx'xxxxxxx""""x..xxxxxxx2......xxxxx
-xxx"xxxxxxxxxxxxx'xxxxxxx"xxxx.......xxx.......xxxxx
-xxx"xxxxxxxxxxxxx''xxxxx"xxx''xx......21x.....xxxxxx
-xxxx""xxxxxxxxxxxxx'xxx"xxx'xxxxx....1..2....xxxxxxx
-xxxxxx""""xxxxxxxxxx'xx"xxx'xxwwxx.1......1.xxxxxxxx
-xxxxxxxxxx"xxxxxxxxx'xxx"xxx'xxwwxx.x....x.xxxxxxxxx
-xxxxxxxxx"xxxxxxxxx'xxx"xxxxx'xxwwxxxx..xxxxxxxxxxxx
-xxxxxxx""xxxxxxxxx'xxx"xxxxxx'xxxwwxxx..xxxwwxxxxxxx
-xxxxxx"xxxxxxxxxxx''xxx"xxxxxx'xxwwxx..xxxwwxxxxxxxx
-xxxxx"xxxxxxxxxxxxx'xxxx""xxxx'xxwxx..xxxwwxxxxxxxxx
-xxxx"xxxxxxxxxxxxxxx'xxxx"xxx'xxxwwx...xxwwxxxxxxxxx
-xxx"xxxxxxxxxxxxxxxxx'xxxx"x'xxxxwwxx...xxwwxxxxxxxx
-xxx"xxxxxxxxxxxxxxxxx'xxxxx2xxxxxwwxxx44.xwwxxxxxxxx
-xxx"xxxxxxxxxxxxxxxxx'x..x.xxxxxwwxxxx4.4xxwwxxxxxxx
-xx"xxxxxxxxxxxxxxxxxxx.hx.xxxxxxwwxxx...xxxwwxxxxxxx
-xx"xxxxxxxxxxxxxxxx.1xhxhx.xxxxwwwxxx...xxxwwwxxxxxx
-x"xxxxxxxxxxxxxxxxx.xhxhxh.xxxwwwxxx.....xxxwwxxxxxx
-xx"xxxxxxxxx"xxxxxxx1.....xxxxxwwxx...A...xxxwxxxxxx
-xxx"""xxx"""x""xxx""xxxxxxxxxxxwwxx.......xxwwxxxxxx
-xxxxxx"""xxxxxx"""xxxxxxxxxxxxxwwxxx..<..xxxwwxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwxxxx...xxxwwwxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                   xxxx        xxxxxxxx
+                xxxx..xxxx  xxxx12....xx
+         xxxxxxxx...xx...xxxx...2xxx...xxxx
+      xxxx......1..xxxxx..x212.xxxxxxx...1xxxx
+     xx.......1..1.xxxxxx....xxxxxxxxxxxx21..xxx
+   xxx...xxxx.3.1....xxxxxxxxxxxxxwwwxxxxxx....xxx
+  xx...xxxfgxx.1..1...xxxxxxxxxxwwwwwxxxxxxxx....xxx
+  x...xxdegefxx..1.....xxxxxwwwwwwwwwwwwwxxxxxx....x
+  x...x$$$$gdex.......xxxxxwwwwwwwwwwwwwwwwwxxxxx..x
+  x...x....$$xx.....xxxxwwwwxxwwwwwwwwwwwwxxxxxx11xx
+  xx.......xxx.....xxwwwwxxxxxxxxxwwwwwwxxxxx...2xx
+   xx............xxxwwwwxxxxxxxxxxxwwwxxxx......xx
+ xxx"xx.........x'wwwwwxxxxxxxxxxxxwxxxx...xxxxxx
+xxwwxxxxxxxxxxxxxxwwwxxxxxxxxxxxxxxxxxx..xxx
+ xxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx..xx
+ xwwwwwwwwwwwwwwwwwx'xxxxxxxxxxxxxxx5...xxx
+ xwwwxxxxxxxxxxwwxx'x'xxxxxxxxxxxxx.......xxx
+xxwwxxxxxxxxxxxwwxxx'xxxxxxxxxxxxxxxx.......xxx
+x"xxxxxxxxxxxxxxwxx'xxxxxx"xxxxxxxxxxx....2...xx
+xx"xxxxxxxxxxxxxxx'xxxxxxx""""x..xxxxxxx2......x
+ xx"xxxxxxxxxxxxx'xxxxxxx"xxxx.......xxx.......x
+  x"xxxxxxxxxxxxx''xxxxx"xxx''xx......21x.....xx
+  xx""xxxxxxxxxxxxx'xxx"xxx'xxxxx....1..2....xx
+   xxx""""xxxxxxxxxx'xx"xxx'xxwwxx.1......1.xx
+     xxxxx"xxxxxxxxx'xxx"xxx'xxwwxx.x....x.xx
+      xxx"xxxxxxxxx'xxx"xxxxx'xxwwxxxx..xxxx
+     xx""xxxxxxxxx'xxx"xxxxxx'xxxwwxxx..x
+    xx"xxxxxxxxxxx''xxx"xxxxxx'xxwwxx..xx
+   xx"xxxxxxxxxxxxx'xxxx""xxxx'xxwxx..xx
+  xx"xxxxxxxxxxxxxxx'xxxx"xxx'xxxwwx...xx
+  x"xxxxxxxxxxxxxxxxx'xxxx"x'xxxxwwxx...xx
+  x"xxxxxxxxxxxxxxxxx'xxxxx2xxxxxwwxxx44.x
+ xx"xxxxxxxxxxxxxxxxx'x..x.xxxxxwwxxxx4.4x
+ x"xxxxxxxxxxxxxxxxxxx.hx.xxxxxxwwxxx...xx
+xx"xxxxxxxxxxxxxxxx.1xhxhx.xxxxwwwxxx...xx
+x"xxxxxxxxxxxxxxxxx.xhxhxh.xxxwwwxxx.....xx
+xx"xxxxxxxxx"xxxxxxx1.....xx xxwwxx...A...x
+ xx"""xxx"""x""xxx""xxxxxxx   xwwxx.......x
+  xxxx"""xxxxxx"""xxx        xxwwxxx..<..xx
+     xxxxx    xxxxx          xwwwx xx...xx
+                             xxwxx  xxxxx
+                              xxx
 ENDMAP
 
 # Foes: ice beasts, ice dragons & ice statues.
@@ -392,47 +393,46 @@ MONS:    ice statue
 ITEM:    any jewellery / gold w:15 / nothing w:5
 ITEM:    any jewellery good_item / gold w:5 / nothing w:5
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx......xxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxx.....xxx....xxxxxx
-xxxxxxxxxxxxxxxxxxxxxx..xxxxxxx...2..xxxx
-xxxxwwwxxxxxxxxxxxxxxxxx.xxxx$$.2....dexx
-xxwwwwwxxxxxxxxxxxxxx..xx.xx$$$$....deddx
-xwwwwwwwwwwxxxxxxxxx.xx..xx$$$$$$..deddxx
-xxxwwwwwwwwwwwxxxxx..xxxxxxxx$$$$$$$xxx'x
-xwwwwwwwwwwwxxxxxx11xxxxwwwxxxxxxxxxxwx'x
-xxxxwwwwwwxxxxx...1xxwwwwwwwwwwwwwwwwwwxx
-xxxxxwwwxxxx......xxwwwwwwwwwwwwwwwwwwwxx
-xxxxxwxxxx...xxxxxxxxxxxxxxxxxxxwwwwwwxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxx'xxxx
-xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
-xxxxxx....xxxxxxxxxxxxxxxxxxx"""x..$$xxxx
-xxxx........xxxxxxxx""xxxxx""xxx.xxx$xxxx
-xxx...........xxxxx"xx""x""xxxxxx'xxx"xxx
-xx..............x""xxxxx"xxxxxxxxx'xxx"xx
+                         xxxxxxxx
+                      xxxx......xxxx
+                     xx.....xxx....xxx
+                     x..xxxxxxx...2..xxx
+                    xxxx.xxxx$$.2....dexx
+                   xx..xx.xx$$$$....deddx
+                  xx.xx..xx$$$$$$..deddxx
+                 xx..xxxxxxxx$$$$$$$xxx'x
+              xxxx11xxxxwwwxxxxxxxxxxwx'x
+           xxxx...1xxwwwwwwwwwwwwwwwwwwxxx
+         xxx......xxwwwwwwwwwwwwwwwwwwwwwxx
+        xx...xxxxxxxxwwwwwwwwwxxwwwwwwwwwwx
+       xx..xxxxxxxxxxxxwwwwwxxxxxxxx'xwwxxx
+     xxx..xxxxxxxxxxxxxxxxxxxxxxxxx.xxwwwx
+   xxx....xxxxxxxxxxxxxxxxxxx"""x..$$xxwxx
+  xx........xxxxxxxx""xxxxx""xxx.xxx$xxxx
+ xx...........xxxxx"xx""x""xxxxxx'xxx"xx
+xx..............x""xxxxx"xxxxxxxxx'xxx"x
 x................xxxxxxxxxxxxxxxxxx'xx"xx
 x.................xxxxxxxxxxxxxxxxxx'xx"x
 xx...1.111.1....xx'xxxxxxxxxxxxxxxxx'xx"x
-xxx...1.1.1.....xxx'xxx''xxxxx''x'x'xx"xx
-xwxx..........xxxxxx'''xx'xxx'xx'x'xx"xxx
-xwwxx4x....x4xxxxxxxxxxxxx''$xxxxxxx"xxxx
-xxwwxxxx..xxxxxxxxxxxxxxxxx$$$xxxx""xxxxx
-xxxwwxxx..xxxxxxxxxxxxxx"xx$$$$xx"xxxxxxx
-xxxwwxx..xxxxxxxxxxxxxx"x""x$$"xxx"xxxxxx
-xxxwxx..xxxxxxxxxxxxxxx"xxxxxxx"x"xxxxxxx
-xxxwwx...x""x"xxxxxxxxxx"xxxxxxx"xxxxxxxx
-xxxwwxx...xx"x""xxxxxxxxx"xxxxxxxxxxxxxxx
-xxxwwxxx33.xxxxx""xxxxx""xxxxxxxxxxxxxxxx
-xxwwxxxx3.3xxxxxxx"""x"xxxxxxxxxxxxxxxxxx
-xxwwxxx...xxxxxxxxxxx"xxxxxxxxxxxxxxxxxxx
-xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xwwxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xwwxx...A...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xwwxx.......xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xwwxxx..<..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xwwxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ xx...1.1.1.....xxx'xxx''xxxxx''x'x'xx"xx
+  xx..........xxxxxx'''xx'xxx'xx'x'xx"xx
+   xx4x....x4xxxxxxxxxxxxx''$xxxxxxx"xx
+    xxxx..xxxxxxxxxxxxxxxxx$$$xxxx""xx
+      xx..xxxxxxxxxxxxxx"xx$$$$xx"xxx
+     xx..xxxxxxxxxxxxxx"x""x$$"xxx"x
+     x..xxxxxxxxxxxxxxx"xxxxxxx"x"xx
+     x...x""x"xxxxxxxxxx"xx   xx"xx
+     xx...xx"x""xxxxxxxxx"x    xxx
+      xx33.xxxxx""xxxxx""xx
+      xx3.3x   xxx"""x"xxx
+      x...xx     xxxx"xx
+     xx...xx        xxx
+    xx.....xx
+    x...A...x
+    x.......x
+    xx..<..xx
+     xx...xx
+      xxxxx
 ENDMAP
 
 # Foes: mostly in the undead vein, plus a necromancer and an ice statue.
@@ -478,37 +478,39 @@ ITEM:    cap ego:cold_resistance w:9 / \
          cloak ego:resistance w:1 / \
          buckler ego:cold_resistance / helmet ego:cold_resistance
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxwwwxxxxxx....xxxxwxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxwwwwwxxx.......xxwxxxxxxxxxxxxxxxx
-xxwwxxxxxxxxxxxxxxwwwxxx...xxx..xxxxxxxxxxxxxxxxxxxx
-xxxwwwwwwwwwwwwwwwwwxxx...xxx..xxxxxxxxxxxxxxxxxxxxx
-xxwwwwwwwwwwwwwwwwwxxx...xxx..xxxxxxxxxxxxxxxxxxxxxx
-xxwwwxxxxxxxxxxwwxxxx3..xxx...xxxxxxxxxxxxxxxxxxxxxx
-xxwwxx.G...G.xxwwxx..33xxxx..xxxxxxxxxxxxxxxxxxxxxxx
-xxxxx.........xxwx....xxxxx...xxxxxxx...xxxxxxxxxxxx
-xxdx....2_424..xxx..xxxxxxxx....xxx...2....xxxxxxxxx
-xx*+.....44..2..xx...xxxxxxxx.......2.1.2...xxxxxxxx
-xxdx....423.342.xxx.33xxxxxxxxxx...1.....1...xxxxxxx
-xxxxx..4...324xxxxxxx3..xxxxxxxxx............xxxxxxx
-xxxxxxxG4.2G...xxxxxxxx...xxxxwwxx2........2xxxxxxxx
-xxxxxxxxxxxx....xxxxxxxx....xxxwwxx1x....x1xxxxxxxxx
-xxxxxxxxxxxxxx...xx.xxxxxx....xxwwxxxx..xxxxxxxxxxxx
-xxxxxxxxxxxx....xx...xxxxxxx...xxwwxxx..xxxwwxxxxxxx
-xxxxxlm..xxx..xxx..x..xxxxxxxx..xwwxx..xxxwwxxxxxxxx
-xxxxxxxx+xxxx.....xxx.....xxx..xxwxx..xxxwwxxxxxxxxx
-xxxxx444544xxx...xxxxx........xxxwwx...xxwwxxxxxxxxx
-xxxx.444444.xxxxxxxxx..3..3...xxxwwxx...xxwwxxxxxxxx
-xxx..xgdegx..xxxxxx*%...3.....xxxwwxxx.66xwwxxxxxxxx
-xx...xxffxx...xxxxx*%....3.3..xxwwxxxx6.6xxwwxxxxxxx
-xx....xxxx...xxxxxxxxx.......xxxwwxxx...xxxwwxxxxxxx
-xxxx.........xxxxxxxxxxx...xxxxwwwxxx...xxxwwwxxxxxx
-xxxx...7....xxxxxxxxxxxxx..xxxwwwxxx.....xxxwwxxxxxx
-xxxxx------xxxxxxxxxxxxxxxx..xxwwxx...A...xxxwxxxxxx
-xxxxxx----xxxxxx...xxxxxxxx...xwwxx.......xxwwxxxxxx
-xxxxxx---xxxx...xx...xx.....xxxwwxxx..<..xxxwwxxxxxx
-xxxxxxx.......xxxxxx....xxxxxxwwwxxxx...xxxwwwxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                          xxxxxx
+                        xxx....xx
+                      xxx.......x
+              xxxxxx xx...xxx..xx
+             xxwwwwxxx...xxx..xx
+            xxwwwwxxx...xxx..xx
+    xxxxxxxxxwwwxxxx3..xxx...x
+   xx.G...G.xxwwxx..33xxxx..xx     xxxxx
+xxxx.........xwwx....xxxxx...xxx xxx...xxxx
+xdx....2_424.xwwx..xxxxxxxx....xxx...2....xx
+x*+.....44..2xxwx...xxxxxxxx.......2.1.2...xx
+xdx....423.342xwxx.33xxxxxxxxxx...1.....1...x
+xxxx..4...324xxwwxxx3..xxxxxxxxx............x
+   xxxG4.2G...xxwwwxxx...xxxxwwxx2........2xx
+     xxxxxx....xxxxxxxx....xxxwwxx1x....x1xx
+          xxx...xx.xxxxxx....xxwwxxxx..xxxx
+   xxxxxxxx....xx...xxxxxxx...xxwwxxx..x
+   xlm..xxx..xxx..x..xxxxxxxx..xwwxx..xx
+   xxxx+xxxx.....xxx.....xxx..xxwxx..xx
+  xx444544xxx...xxxxx........xxxwwx...xx
+ xx.444444.xxxxxxxxx..3..3...xxwwwxx...xx
+xx..xgdegx..xxxxxx*%...3.....xxwwwxxx.66x
+x...xxffxx...xxxxx*%....3.3..xwwwwwxx6.6x
+x....xxxx...xxxxxxxxx.......xxxwwwxx...xx
+xxx.........xxxxxxxxxxx...xxxxwwwxxx...xx
+  x...7....xxxxxxxxxxxxx..xxxwwwxxx.....xx
+  xx------xxxxxxxxxxxxxxxx..xxwwxx...A...x
+   xx----xxxxxx...xxxxxxxx...xwwxx.......x
+    x---xxxx...xx...xx.....xxxwwxxx..<..xx
+    xx.......xxxxxx....xxxxxxwwwwxxx...xx
+     xxxxxxxxx    xxxxxx    xxwwwxxxxxxx
+                             xwwxx
+                             xxxx
 ENDMAP
 
 # Foes: ice & blue devils, white imps & ufetubi, an ice statue.
@@ -567,36 +569,36 @@ ITEM: crystal plate mail ego:cold_resistance / \
       crystal plate mail ego:cold_resistance good_item / \
       troll leather armour ego:cold_resistance good_item
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx........xxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx...xxx....xxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx..xxx4xxx...xxxxxxxx
-xxxxxx...xxxxxxxxxxx...xx44..xxxx..xxxxxx
-xxxx..1..1...xxxxxxxx...xx.....xx...xxxxx
-xxx.1......1...xxxxxxx........dxxx..xxxxx
-xxx..........1..xxxx.....xx..dxx...xxxxxx
-xxx..1..1..1....xx.....xxxxxxxx...xxxxxxx
-xxxx................xxxxxxxxxx...xxxxxxxx
-xxxxx.........x...xxxxxxxxxxq..xxxxxxxxxx
-xxxxx1x....x3xxxxxxxxxx....Q..xxxxxxxxxxx
-xxxxxxxx..xxxxwwwxxx......QqQ..xxxxxxxxxx
-xxxxxxxx..xxxwwxxx....xx.........xxxxxxxx
-xxxxxxx..xxxwwxx.....xx..xxxx..z...xxxxxx
-xxxxxx..xxxwwxx4.b.x.....N..x...Z...xxxxx
-xxxxxx...xxwwxx..B.xxx..n.N.xx.ZzZ..4xxxx
-xxxxxxx...xxwwx4BbB..xx..N...xx.......xxx
-xxxxxxxx.-.xwwxx.........x.n........4xxxx
-xxxxxxxx---xxwwxx...xxx..x..xxx.....xxxxx
-xxxxxxx---xxwwwwxxxxx....x.....x..xxxxxxx
-xxxxxxx---xxwwwwwwx.....mx.....xxxxxxxxxx
-xxxxxx-----xxwwwwwxx.xx.M.m..xxxxxxxxxxxx
-xxxxx---A---xxwwwccccc.M.M.cccccxxxxxxxxx
-xxxxx-------xwwwwc...ccc.ccc...cxxxxxxxxx
-xxxxxx--<--xxwwwwc.e.........f.cxxxxxxxxx
-xxxxxxx---xxwwwwwc...cc*|*cc...cxxxxxxxxx
-xxxxxxxxxxxxxxxxxcccccccccccccccxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    xxxxxx
+                  xxx....xxx
+                 xx........xxx
+                xx....xxx....xx
+  xxxxx         x...xxx4xxx...xxx
+ xx...xxxxx     x...xx44..xxxx..xx
+xx.1..1...xx xxxxxx..xx.....xx...x
+x1......1..xxx.x...........dxxx..x
+xx........1.x.........xx..dxx...xx
+x.1..1..1........xxxxxxxxxxx...xx
+xx............xxxxwwwwwwxxx...xx
+ x..........xxxwwwwxxxxxxq..xxx
+ x1x....x3xxxwwwxxxx....Q..xx
+ xxxx..xxxxwwwxxx......QqQ..xxx
+   xx..xxxwwxxx....xx.........xxx
+  xx..xxxwwxx.....xx..xxxx..z...xx
+  x..xxxwwxx4.b.x.....N..x...Z...xx
+  x...xxwwxx..B.xxx..n.N.xx.ZzZ..4xx
+  xx...xxwwx4BbB..xx..N...xx.......x
+   xx.-.xwwxx.........x.n........4xx
+   xx---xxwwxx...xxx..x..xxx.....xx
+   x---xxwwwwxxxxx....x.....x..xxx
+  xx---xxwwwwwwx.....mx.....xxxx
+ xx-----xxwwwwwxx.xx.M.m..xxx
+ x---A---xxwwwccccc.M.M.ccccc
+ x-------xwwwwc...ccc.ccc...c
+ xx--<--xxwwwwc.e.........f.c
+  xx---xxwwwwwc...cc*|*cc...c
+   xxxxxxxwwwxccccccccccccccc
+         xxxxx
 ENDMAP
 
 NAME: ice_cave_tombish
@@ -720,31 +722,31 @@ ITEM: ring of ice / ring of protection from fire / wand of cold / \
 : end
 ITEM: any wand / any potion w:5 / any scroll w:5
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx.xxxxxxxxxxx-'xxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx....xxxxxxxxx....xxxxxxxxxwwwxxxx*xxx$$xxxxxxxx...xx...xxxxxxxxgxxxx
-x...A.xxxxxx....xx....xxxxxxxwwwwx*x*xxx$$x-.x...xx...xx...xxxxxgxgxxx
-x.<....'-....xxxxxxx...xxxxxwwwwxxx*x.xxxx.'x..xxxxxxxxxx....xxxx.xxxx
-xx..xx....xxxxxxxx1111xxxxwwwwwwxxxxxx...xxxxx..xxxxxxxxxx..3..x.xxxxx
-xxxxxxxxxxxxxxx....xxxxxxxxwwwwxxxx11..x...x..xxxxwwwxxxxxx.....xxxxxx
-xxwxxwxwxxx.....xxxx______xxwwxxxx51xxxxxx..xxxwwwwxwxxxxx..6xxxxxxxxx
-xxxwxxxxx..xxxxxx___xx_____xxxx...xxxxwxxxxxxwwwxxxxxxxxx.66xxxwwwxxxx
-xwxxxx....xxwxx__xxxxxxxx___xx..xxxwwwxwxxxwwwxxxxxxxx....xxxxwwwxxxxx
-xxxx...xxxxwxx_xxxx....xxx__xxx..xxxxxwwwwwwxxxx....x...xxxxwwwxwwwxxx
-xxx..xxxwwwwx-xxx...xx...xxx_xxx..xxwwwwwxxxx...xx....xxxwwwxxxxxxwwxx
-x...xxwwwwwwxx-...x.xxxx...xx_x..xxxxwwwwxxx..xxxxxxxxxwxxxxxx.xxxxwxx
-x..xxxwwwwwxxx141xxxgxxxx...x_xx.11xxxwwwwxxx...xxxwwwwxx...x.x.xxxxxx
-xx..xxxwwwwxx...xxxgxxx...xxx_xxxx51xxxwwwxxxx..1.xxxwwx.U...xxx..xxxx
-xxx..xwwwwxxxx....xxxx5.xxxwxx_xx...xxxxxwwwxxxx.1.5xxxxx.x.xxx..xxxxx
-xx..xxxwwwwxx'x.xxxxx5..5xxwwxx_xxx1.xxxxxwwxxxxx5415.xxxxxx.xx...xxxx
-xx...xxwwwxx..'xxxxwxx15.5xxwwxx_xxx51xxxxwwxxxxxx5.41.xxxx..xxx454xxx
-xxx..-xxxxx..xxxwxwwwxxx5.1xxwwxx_--x1xxxxxwwwxxxxxx.5..x...xxx5.7.5xx
-xxx...-xx-..xxxwxwwxxwxx-x1.xxwwxx'''xxxxxxwwwwxxxxxxx'...xxxxxx5.5xxx
-xxx...x--xx..1xxxxxwxx--x-..'xxwx'x'xxxxxwxxwwwwxxxx*.xxxxx.xxx..xxx|x
-xxx222x''x''x..xx1xxx----xxxx'xx'''xxxxwxxxwwwwwwxxxx*xxxx.<.xxx.$defx
-xxxx'.'xx'xx1.x.1...2xxxxxxxxx'''xxxxwxxwwxwwwwwwwwxxx--........x|fedx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'xxxxwxwwwxwwwwwxwxxxxxxxxxx.xxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   xxx         xxxx        xxx
+ xxx.xx       xx-'xx       xwxxx  xxx xxxx      xxxxxxxxxx      xxx
+xx....x    xxxx....xxxx    xwwwxxxx*xxx$$xxxxxxxx...xx...xxxxxxxxgxx
+x...A.xxxxxx....xx....xx   xxwwwwx*x*xxx$$x-.x...xx...xx...xxxxxgxgx
+x.<....'-....xxxxxxx...x xxxwwwwxxx*x.xxxx.'x..xxxxxxxxxx....xxxx.xx
+xx..xx....xxxxxxxx1111xx xwwwwwwxxxxxx...xxxxx..xxxxxxxxxx..3..x.xx
+xxxxxxxxxxxxxxx....xxxxxxxxwwwwxxxx11..x...x..xxxxwwwxxxxxx.....xx
+ xwxwwwwxxx.....xxxx______xxwwxxxx51xxxxxx..xxxwwwwxwxxxxx..6xxxxxx
+xxwwwxxxx..xxxxxx___xx_____xxxx...xxxxwxxxxxxwwwxxxxxxxxx.66xxxwwwx
+xwwxxx....xxwxx__xxxxxxxx___xx..xxxwwwxwxxxwwwxxxxxxxx....xxxxwwwxxx
+xxxx...xxxxwxx_xxxx....xxx__xxx..xxxxxwwwwwwxxxx....x...xxxxwwwxwwwxx
+xxx..xxxwwwwx-xxx...xx...xxx_xxx..xxwwwwwxxxx...xx....xxxwwwxxxxxxwwx
+x...xxwwwwwwxx-...x.xxxx...xx_x..xxxxwwwwxxx..xxxxxxxxxwxxxxxx.xxxxwx
+x..xxxwwwwwxxx141xxxgxxxx...x_xx.11xxxwwwwxxx...xxxwwwwxx...x.x.xxxxx
+xx..xxxwwwwxx...xxxgxxx...xxx_xxxx51xxxwwwxxxx..1.xxxwwx.U...xxx..x
+xx..xwwwwxxxx....xxxx5.xxxwxx_xx...xxxxxwwwxxxx.1.5xxxxx.x.xxx..xxx
+ x..xxxwwwwxx'x.xxxxx5..5xxwwxx_xxx1.xxxxxwwxxxxx5415.xxxxxx.xx...xx
+ x...xxwwwxx..'xxxxwxx15.5xxwwxx_xxx51xxxxwwxxxxxx5.41.xxxx..xxx454xx
+ xx..-xxxxx..xxxwxwwwxxx5.1xxwwxx_--x1xxxxxwwwxxxxxx.5..x...xxx5.7.5x
+  x...-xx-..xxxwxwwxxwxx-x1.xxwwxx'''xxxxxxwwwwxxxxxxx'...xxxxxx5.5xxx
+  x...x--xx..1xxxxxwxx--x-..'xxwx'x'xxxxxwxxwwwwxxxx*.xxxxx.xxx..xxx|x
+  x222x''x''x..xx1xxx----xxxx'xx'''xxxxwxxxwwwwwwxxxx*xxxx.<.xxx.$defx
+  xx'.'xx'xx1.x.1...2xxxxx  xx'''xxxxwxxwwxwwwwwwwwxxx--........x|fedx
+   xxxxxxxxxxxxxxxxxxx       xx'xx xwxwwwxwwwwwxwxxx xxxxxx.xxxxxxxxxx
+                              xxx  xxxxxxxxxxxxxxx        xxx
 ENDMAP
 
 NAME:   ice_cave_caverns_02
@@ -803,29 +805,29 @@ SUBST: '=. , -=x
 : ice_cave_colours(_G)
 : ice_cave_milestone(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx::xxwwwwxxx.x.'x-;x5;;5xxwwwwwxxx1;;;x;Wxxxxxx15415;xxxxxx......xxxx
-xx:<:xwwwwxx...x.x;x;x15;5xxwwxxx''';;x;xxWWxx15xx5;41;xxxx..xxx...xxx
-xxx::xxwwxx..xxx-;'xx;xx5;1xxxx'''xxx.-xxxxWWWxxxxxx;;;;x...xxx..U..xx
-xxx:A:xxwx..xxxwxxxwwwwxxx1;x'''xxwwx---xxxxWWwxwwwxxx'...xxxxxx...xxx
-xxx:::xwwxx;;;xxxxxwwwwwxx;;'xxxxxxxxxx--xxwwwwwwwxx*.xxxxxxxxx..xxxxx
-xxx:::xxwxxxx;;xx1-'xxwwxxx--xxxxx'''x--xxwwwwwwwxx.x*xxxx..xxxx..xxxx
-xxxx:11xwwxx1;x;1;1;2xxwx---xx.*.*.xx..xxxwwwwwwwwww-x-x..xx.x..xxxxxx
-xxx11:xxwwwxxx1xxxxx1;xxxx--x.g.T.g.xxx;;xwwwwwwwwx-xx..xxxxx.xxxxxxxx
-xxxx::xwwwwwxx2;;1x11;;xxxx-...*.*..xx;;;xxwwwwwwx'...xxxxxxxxxxxxxxxx
-xxxxx:xxwxxxxxxxxx;xxx;;xwxx...xxxxxxxxx;;xxwwwxxx.-xxxxxxxxxxxxxxxxxx
-xxxxx;;xxxx.x....xxxx;;;xxwxxx.-xwwwxxx1xxxxwwwxx..xxxxxxxxxxxxxxxxxxx
-x*x$xx..xx.*..-'..xxxxx..xxx''.-xwwwx15xxxwwwwxxxx;;xxxxxxxxxxxxxxxxxx
-xx$x.xx..xx..xxxx..xwwxxx;;''xx--xxxx115xxwwwwwxxxx;;;xxxxxxxxxxxxxxxx
-x$x..x.!..xx..xxx..xwwwwxx--xxxx-xx;1;xxxwwwwwwxxxxx;;;;xxxxxxxxxxxxxx
-xx.xx;x;;xxx..xx...xxwwwwxx1;xxxx.;;xxxxxwwwwwwxxxxxx;2;2;xxxxxxxxxxxx
-xxxxxx;;xxxx...xx.3.xxwwxx'-;1x'''xxxxxwwwwwwwwxxxxxx;54;2;xxxxxxxxxxx
-xxxxx;;xxxx...xxxx...xxxx;;x;;''xxxxxxwwwwwwwxxxx$$x;2475;;;xxxxxxxxxx
-xxxx5;5xx...xxxx.x.xxxxx..;x;xxxxxxwwwwwwwwxxxxdf$$;;;;;;;xx;xxxxxxxxx
-xxxx;;xx;..xxwwxx|x.xx...xx;xxxxxwwwwwwwwwwwxxed|$$$;;;xxxxxx..xxxxxxx
-xxxx122;;.xxwwwwxx....xxxxxxxxxxwwwwwwwwwwwwwxxfe|$$$$.xxxxxxxx....xxx
-xxxxx1;;xxxwwwwwxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx...<x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ xxxxxxxxxx xxxxxxxxxxxxxxxxxxxxx xxxxxxxxx    xxxxxxxx    xxxxxxxx
+ x::xxwwwwxxx.x.'x-;x5;;5xxwwwwwxxx1;;;x;Wxxxxxx15415;xx  xx......xx
+ x:<:xwwwwxx...x.x;x;x15;5xxwwxxx''';;x;xxWWxx15xx5;41;xxxx..xxx...xx
+ xx::xxwwxx..xxx-;'xx;xx5;1xxxx'''xxx.-xxxxWWWxxxxxx;;;;x...xxx..U..x
+  x:A:xxwx..xxxwxxxwwwwxxx1;x'''xxwwx---xxxxWWwxwwwxxx'...xxxxxx...xx
+  x:::xwwxx;;;xxxxxwwwwwxx;;'xxxxxxxxxx--xxwwwwwwwxx*.xxxxxxxxx..xxx
+  x:::xxwxxxx;;xx1-'xxwwxxx--xxxxx'''x--xxwwwwwwwxx.x*xxxx..xxxx..x
+  xx:11xwwxx1;x;1;1;2xxwx---xx.*.*.xx..xxxwwwwwwwwww-x-x..xx.x..xxx
+  x11:xxwwwxxx1xxxxx1;xxxx--x.g.T.g.xxx;;xwwwwwwwwx-xx..xxxxx.xxx
+  xx::xwwwwwxx2;;1x11;;xxxx-...*.*..xx;;;xxwwwwwwx'...xxx   xxx
+   xx:xxwxxxxxxxxx;xxx;;xwxx...xxxxxxxxx;;xxwwwxxx.-xxx
+xxxxx;;xxxx.x....xxxx;;;xxwxxx.-xwwwxxx1xxxxwwwxx..xx
+x*x$xx..xx.*..-'..xxxxx..xxx''.-xwwwx15xxxwwwwxxxx;;xxx
+xx$x.xx..xx..xxxx..xwwxxx;;''xx--xxxx115xxwwwwwxxxx;;;xxx
+x$x..x.!..xx..xxx..xwwwwxx--xxxx-xx;1;xxxwwwwwwxxxxx;;;;xxx
+xx.xx;x;;xxx..xx...xxwwwwxx1;xxxx.;;xxxxxwwwwwwxxxxxx;2;2;xx
+xxxxxx;;xxxx...xx.3.xxwwxx'-;1x'''xxxxxwwwwwwwwxxxxxx;54;2;xx
+   xx;;xxxx...xxxx...xxxx;;x;;''xxxxxxwwwwwwwxxxx$$x;2475;;;xx
+   x5;5xx...xxxx.x.xxxxx..;x;xxxxxxwwwwwwwwxxxxdf$$;;;;;;;xx;xxx
+   x;;xx;..xxwwxx|x.xx...xx;xx xxwwwwwwwwwwwxxed|$$$;;;xxxxxx..xxxxx
+   x122;;.xxwwwwxx....xxxxxxx  xwwwwwwwwwwwwwxxfe|$$$$.x    xxx....xxx
+   xx1;;xxxwwwwwxxxxxxx        xxwwwwwwwwwwwwwxxxxxxxxxx      xxx...<x
+    xxxxx xxxxxxx               xxxxxxxxxxxxxxx                 xxxxxx
 ENDMAP
 
 NAME: ice_cave_caverns_03
@@ -885,42 +887,42 @@ SUBST: '=. , -=x
 : ice_cave_colours(_G)
 : ice_cave_milestone(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.x.xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.U.x$xxxxxxxx...xx;;;xxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwxxx.xxx$x..x...xx...xx;55xxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxwwwwxWWWxxxxxxx..x..xxxxxxxxxx;554xxx
-xxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxWwWxWW.xxxxx..xxwwwwwwxx;2525x
-xxxxxxxxxxxxxxxxxxxxxwwxxxxxxxxxWWWWxW..xx..xxwwwwwwwwxx427;x
-xxxxxxxxxxxxxxxxxxxwwwwwxxxxxxxWWxwWwxx...xxxwwwwwwwxxx;;5xxx
-xxxxxxxxxxxxxxxxxxxxwwwwwxxx.WWxxxxwwwxxxxxwwwwwwxxxxx;;;xxxx
-xxxxxxxxxxxxxxxxxxxxxxwwwxx."xxxwwwwwxwwxwwwxxxxxxx....xxxxxx
-xxxxxxxxxxxxxxxx;...xxxwwwxx..xxxwwwwwwwwwwxx<..!x...xx.xfxxx
-xxxxxxxxxxxxxx;;;xx...xxxwwxx..xxxxwwwwwwwwxxxx....xxxxxex|xx
-xxxxxxxxxxxx;44x;xxxx...xxwx..xxxxxxwwxwxwwwwxxxxxxxxxxdx$xdx
-xxxxxxxxxxx;4;xxx$xxxx;;;xwxx"..xxxxxwwwwwxwwwxxxxxxxxxx|xexx
-xxxxxxxxxx;;;xxx$xxx;;;xxxwwxxx..xxxwwwxxwwwwxwxxxxxxxxxxfxxx
-xxxxxxxxxxx;;..xxxx5;xxxwwwwxx...xxxxxwwwwwwwxxxxxxxxxxxxxxxx
-xxxxxxxxxx.x.xxxxx51;5xxwwwwxxxx..xxxxxwwxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx;;;xxxxxxx15;5xxwwxxx'''".xxxxwwxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx;;xxxxxxxxxxx5;1xxxx''xxxx.-xxxxwwwxxxxxxxxxxxxxxxxxx
-xxxxxxx;1xxxxxxxxxxxxxx;;x'''xxxxx---xxxwwwwxxxxxxxxxxxxxxxxx
-xxxxxxxx;11xxxxxxxxxxxx;;''xxxxx'xxx--xxxwwwwxxxxxxxxxxxxxxxx
-xxxxxxxxxx1;xx.xxxxxxxxx--xxxxx''''--xxxwwwwwwxxxxxxxxxxxxxxx
-xxxxxxxxx;;x;;....xxxx---xx.*.*.xx..xxxxwwwwwwwwxxxxxxxxxxxxx
-xxxxxxxxxxx;xxxxx.;xxxx--x.g.T.g.xxx..xxxwwwwxxxxxxxxxxxxxxxx
-xxxxxxxxxxx2;;2x;;;;xxxx-...*.*..xx.;;xxwwwwwwxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx;xxx;1xxxx...xxxxxxxxx;;xxwwwxxxxxxxxxxxxxxxxx
-xxxxxxxx.x;;;'xxxx;1;xxxxxx.-xxxxxxx1xxxxwwwxxxxxxxxxxxxxxxxx
-xxxxxxx;*66-x..xxxxx11xxxx'.--x---15xxxwwwwxxxxxxxxxxxxxxxxxx
-xxx::<xx;;xxxx..xxxxxx;;''xx-x-xxx115xxwwwwwxxxxxxxxxxxxxxxxx
-xxA::xxxx;.xxx..xxxxxxx--xxxx-xx.11xxxwwwwwwxxxxxxxxxxxxxxxxx
-xx::::xxx;,xx...xxxxxxxx1;xxx-;;;xxxxxwwwwwwxxxxxxxxxxxxxxxxx
-xx:::xxxx;;;xx.3.xxxxxxxx;1x'''xxxxxwwwwwwwwxxxxxxxxxxxxxxxxx
-xx::xxxx21;xxxx...xxxx..x;;''xxxxxxwwwwwwwxxxxxxxxxxxxxxxxxxx
-x:::xx;12xxxx.x.xxxxx...x;xxxxxxwwwwwwwwxxxxxxxxxxxxxxxxxxxxx
-x::xx;;;xxxxxx|x.xx...xx;xxxxxwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxx
-x:::..;xxxxxxxx....xxxxxxxxxxwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
-xx:..xxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                                 xxxxx
+                                xx.x.xx      xxxxxxxxxx
+                      xxxxxxxxxxx.U.x$xxxxxxxx...xx;;;xxx
+                      xwwwwwwwwxxx.xxx$x..x...xx...xx;55xxx
+                     xxxwwwwxWWWxxxxxxx..x..xxxxxxxxxx;554xxx
+                    xxxxxwxxxxxWwWxWW.xxxxx..xxwwwwwwxx;2525x
+                  xxxwwxxxxxxxxxWWWWxW..xx..xxwwwwwwwwxx427;x
+                  xwwwwwxxxxxxxWWxwWwxx...xxxwwwwwwwxxx;;5xxx
+                  xxwwwwwxxx.WWxxxxwwwxxxxxwwwwwwxxxxx;;;xx
+               xxxxxxxwwwxx."xxxwwwwwxwwxwwwxxxxxxx....xxxx
+             xxx;...xxxwwwxx..xxxwwwwwwwwwwxx<..!x...xx.xfxx
+           xxx;;;xx...xxxwwxx..xxxxwwwwwwwwxxxx....xxxxxex|x
+          xx;44x;xxxx...xxwx..xxxxxxwwxwxwwwwxxxxxxx  xdx$xdx
+         xx;4;xxx$xxxx;;;xwxx"..xxxxxwwwwwxwwwxx      xx|xexx
+         x;;;xxx$xxx;;;xxxwwxxx..xxxwwwxxwwwwxwx       xxfxx
+         xx;;..xxxx5;xxxwwwwxx...xxxxxwwwwwwwxxx        xxx
+        xx.x.xxxxx51;5xxwwwwxxxx..xxxxxwwxxxxx
+       xx;;;xxxxxxx15;5xxwwxxx'''".xxxxwwxxx
+      xx;;xxxxxxxxxxx5;1xxxx''xxxx.-xxxxwwwxx
+      x;1xxxxxxxxxxxxxx;;x'''xxxxx---xxxwwwwxx
+      xx;11xxxxxxxxxxxx;;''xxxxx'xxx--xxxwwwwxx
+       xxx1;xx.xxxxxxxxx--xxxxx''''--xxxwwwwwwxxx
+        x;;x;;....xxxx---xx.*.*.xx..xxxxwwwwwwwwx
+        xxx;xxxxx.;xxxx--x.g.T.g.xxx..xxxwwwwxxxx
+          x2;;2x;;;;xxxx-...*.*..xx.;;xxwwwwwwx
+       xxxxxxxx;xxx;1xxxx...xxxxxxxxx;;xxwwwxxx
+      xx.x;;;'xxxx;1;xxxxxx.-xxxxxxx1xxxxxxxx
+  xxxxx;*66-x..xxxxx11xxxx'.--x---15xx
+ xx::<xx;;xxxx..xxxxxx;;''xx-x-xxx115x
+ xA::xxxx;.xxx..xxxxxxx--xxxx-xx.11xxx
+ x::::xxx;,xx...xxxxxxxx1;xxx-;;;xxx
+ x:::xxxx;;;xx.3.xxxxxxxx;1x'''xxx
+xx::xxxx21;xxxx...xxxx..x;;''xxx
+x:::xx;12xxxx.x.xxxxx...x;xxxx
+x::xx;;;xx  xx|x.xx...xx;xx
+x:::..;xx   xxx....xxxxxxx
+xx:..xxx     xxxxxxx
+ xxxxxx
 ENDMAP
