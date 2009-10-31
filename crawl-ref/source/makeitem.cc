@@ -3307,8 +3307,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = random_choose(WPN_SPEAR,   WPN_SPEAR, WPN_TRIDENT,
-                                           WPN_HALBERD, WPN_CLUB,  WPN_FLAIL,
-                                           -1);
+                                           WPN_HALBERD, WPN_CLUB,  WPN_WHIP,
+                                           WPN_FLAIL,   -1);
         }
         break;
 
@@ -3316,7 +3316,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         force_item = true; // guaranteed reaching
         item_race  = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_SPEAR, WPN_WHIP, WPN_WHIP,
+        item.sub_type  = random_choose(WPN_WHIP,    WPN_WHIP,   WPN_SPEAR,
                                        WPN_HALBERD, WPN_GLAIVE, -1);
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_REACHING);
         item.plus  += -2 + random2(4);
