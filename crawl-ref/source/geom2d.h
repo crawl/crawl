@@ -70,6 +70,8 @@ struct lineseq
     lineseq() {}
     lineseq(double a, double b, double o, double d)
         : f(a,b), offset(o), dist(d) {}
+
+    double index(const vector &v) const;
 };
 
 struct grid

@@ -44,6 +44,11 @@ double intersect(const ray &r, const line &l)
     return (t);
 }
 
+double lineseq::index(const vector &v) const
+{
+    return ((f(v) - offset) / dist);
+}
+
 // Find the next intersection of r with a line in ls.
 double nextintersect(const ray &r, const lineseq &ls)
 {
@@ -129,6 +134,9 @@ vector reflect(const vector &v, const form &f)
     return (v - 2 * f(v)/f(n) * n);
 }
 
+
+
+//////////////////////////////////////////////////
 // vector space implementation
 
 const vector& vector::operator+=(const vector &v)

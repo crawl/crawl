@@ -17,9 +17,9 @@ struct ray_def
     bool on_corner;
     int cycle_idx;
 
-    ray_def() {}
+    ray_def() : on_corner(false), cycle_idx(-1) {}
     ray_def(const geom::ray& _r)
-        : r(_r), on_corner(false), cycle_idx(0) {}
+        : r(_r), on_corner(false), cycle_idx(-1) {}
 
     coord_def pos() const;
     bool advance();
