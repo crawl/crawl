@@ -46,7 +46,7 @@ struct ray
 
     vector shoot(double t) const;
     void advance(double t);
-    void move_half_cell(const grid &g);
+    bool to_grid(const grid& g, bool half);
     bool to_next_cell(const grid& g);
 };
 

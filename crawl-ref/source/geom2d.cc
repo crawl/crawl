@@ -56,10 +56,12 @@ double nextintersect(const ray &r, const lineseq &ls)
     ASSERT(!parallel(r.dir, ls.f));
     double fp = ls.f(r.start);
     double fd = ls.f(r.dir);
-    // want smallest positive t with
+    // want smallest positive t > 0 with
     // fp + t*fd = ls.offset + k*ls.dist, k integral
     double a = (fp - ls.offset) / ls.dist;
     double k = (ls.dist*fd) > 0 ? ceil(a) : floor(a);
+    if (double_is_zero(k - a))
+        k += (ls.dist*fd > 0 ? 1 : -1);
     double t = (k - a) * ls.dist / fd;
     return (t);
 }
@@ -72,55 +74,37 @@ static double tdist(const ray &r, const lineseq &ls)
     return (std::abs(ls.dist / ls.f(r.dir)));
 }
 
-// Shoot the ray inside the next cell.
-// Returns true if successfully advanced into a new cell,
-// false if it hit a corner.
-bool ray::to_next_cell(const grid &g)
+// Move the ray towards the next grid line.
+// Half way there if "half" is true, else all the way there
+// Returns whether it hit a corner.
+bool ray::to_grid(const grid &g, bool half)
 {
     // ASSERT(!parallel(g.vert, g.horiz));
-    lineseq ls;
+    bool corner = false;
+    double t = 0;
     if (parallel(dir, g.ls1.f))
-        ls = g.ls2;
+        t = nextintersect(*this, g.ls2);
     else if (parallel(dir, g.ls2.f))
-        ls = g.ls1;
+        t = nextintersect(*this, g.ls1);
     else
     {
-        double s = nextintersect(*this, g.ls1);
-        double t = nextintersect(*this, g.ls2);
-        double sd = tdist(*this, g.ls1);
-        double td = tdist(*this, g.ls2);
-        if (double_is_zero(s - t))
-        {
-            // Move onto the corner. The fact that we're on a corner
-            // should be tracked externally.
-            advance(s);
-            return (false);
-        }
-        double dmin = std::min(s,t);
-        double dnext = std::min(std::max(s,t), dmin + std::min(sd, td));
-        advance((dmin + dnext) / 2.0);
-        return (true);
+        double r = nextintersect(*this, g.ls1);
+        double s = nextintersect(*this, g.ls2);
+        t = std::min(r, s);
+        corner = double_is_zero(r - s);
     }
-    // parallel: just advance an extra half
-    double s = nextintersect(*this, ls);
-    advance(s + 0.5 * tdist(*this, ls));
-    return (true);
+    advance(half ? 0.5 * t : t);
+    return (corner && !half);
 }
 
-// Move a ray by half a cell: starting at a corner of the grid,
-// it ends up within the next cell.
-void ray::move_half_cell(const grid &g)
+// Shoot the ray inside the next cell, stopping at corners.
+// Returns true if it hit a corner.
+bool ray::to_next_cell(const grid &g)
 {
-    // ASSERT(!parallel(g.vert, g.horiz));
-    lineseq ls;
-    double t;
-    if (parallel(dir, g.ls1.f))
-        t = tdist(*this, g.ls2);
-    else if (parallel(dir, g.ls2.f))
-        t = tdist(*this, g.ls1);
-    else
-        t = std::min(tdist(*this, g.ls1), tdist(*this, g.ls2));
-    advance(0.5 * t);
+    if (to_grid(g, false))
+        return (true);
+    to_grid(g, true);
+    return (false);
 }
 
 vector normal(const form &f)

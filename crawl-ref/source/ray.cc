@@ -65,7 +65,8 @@ coord_def ray_def::pos() const
     return (coord_def(x, y));
 }
 
-// Return false if we passed or hit a corner.
+// Return true if we didn't hit a corner, hence if this
+// is a good ray so far.
 bool ray_def::advance()
 {
     ASSERT(on_corner || in_diamond_int(r.start));
@@ -73,17 +74,17 @@ bool ray_def::advance()
     {
         ASSERT (is_corner(r.start));
         on_corner = false;
-        r.move_half_cell(diamonds);
+        r.to_grid(diamonds, true);
     }
     else
     {
         // Starting inside a diamond.
-        bool c = !r.to_next_cell(diamonds);
+        bool c = r.to_next_cell(diamonds);
 
         if (c)
         {
             // r is now on a corner, going from diamond to diamond.
-            r.move_half_cell(diamonds);
+            r.to_grid(diamonds, true);
             return (false);
         }
     }
@@ -91,7 +92,7 @@ bool ray_def::advance()
     // Now inside a non-diamond.
     ASSERT(!in_diamond(r.start));
 
-    if (r.to_next_cell(diamonds))
+    if (!r.to_next_cell(diamonds))
     {
         ASSERT(in_diamond_int(r.start));
         return (true);
