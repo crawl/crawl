@@ -55,7 +55,7 @@ syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth
 syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float
 syn keyword desOrientation no_hmirror no_vmirror no_rotate
 syn keyword desOrientation entry pan lab bazaar allow_dup dummy mini_float minotaur
-syn keyword desOrientation no_pool_fixup no_wall_fixup no_monster_gen generate_awake no_item_gen no_tele_control not_mappable no_magic_map no_secret_doors generate_loot no_dump
+syn keyword desOrientation no_pool_fixup no_wall_fixup no_monster_gen generate_awake no_item_gen no_tele_control not_mappable no_magic_map no_secret_doors generate_loot no_dump patrolling
 syn keyword desOrientation Temple Orc Elf Lair Swamp Shoal Slime Snake Hive Vault Blade Crypt Tomb Hell Dis Geh Coc Tar
 syn keyword desOrientation D: contained
 
