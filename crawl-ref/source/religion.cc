@@ -2172,7 +2172,7 @@ static void _do_god_gift(bool prayed_for)
                     if (item != NON_ITEM)
                     {
                         for (stack_iterator si(*ri); si; ++si)
-                            if (si != NON_ITEM && one_chance_in(7))
+                            if (one_chance_in(7))
                                 jelly_count++;
                     }
                 }
