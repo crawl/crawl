@@ -10,6 +10,7 @@
 #include "geom2d.h"
 
 typedef FixedArray<bool,3,3> reflect_grid;
+const coord_def rg_o = coord_def(1,1);
 
 struct ray_def
 {
@@ -23,6 +24,7 @@ struct ray_def
 
     coord_def pos() const;
     bool advance();
+    coord_def move_to_side();
     void bounce(const reflect_grid &rg);
     void regress();
 };
