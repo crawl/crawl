@@ -232,10 +232,10 @@ extern "C" int stricmp(const char *str1, const char *str2)
     {
         unsigned char c1 = tolower(*str1);
         unsigned char c2 = tolower(*str2);
-        
+
         ret = c1 - c2;
         str1++;
-        str2++; 
+        str2++;
     }
 
     if (ret < 0)
