@@ -3209,7 +3209,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     switch (mon->type)
     {
     case MONS_KOBOLD:
-        // a few of the smarter kobolds have blowguns.
+        // A few of the smarter kobolds have blowguns.
         if (one_chance_in(10) && level > 1)
         {
             item.base_type = OBJ_WEAPONS;
