@@ -4900,6 +4900,8 @@ bool monsters::visible_to(const actor *looker) const
 
 bool monsters::mon_see_cell(const coord_def& p, bool reach) const
 {
+    if (p == pos())
+        return (true);
     if (distance(pos(), p) > LOS_RADIUS * LOS_RADIUS + 1)
         return (false);
 
