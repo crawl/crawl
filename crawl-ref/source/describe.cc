@@ -753,8 +753,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             break;
         case SPWPN_HOLY_WRATH:
             description += "It has been blessed by the Shining One "
-                "to cause great damage to the undead and the unholy "
-                "creatures of Hell or Pandemonium.";
+                "to cause great damage to the undead and demons.";
             break;
         case SPWPN_ELECTROCUTION:
             description += "Occasionally upon striking a foe "
