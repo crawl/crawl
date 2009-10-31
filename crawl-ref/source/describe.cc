@@ -1068,9 +1068,9 @@ static std::string _describe_ammo( const item_def &item )
                 "that it will return to its owner.";
             break;
         case SPMSL_REAPING:
-            description += "If it kills a monster, causing it to leave a "
-                "corpse, the corpse will be animated as a zombie friendly "
-                "to the one who " + threw_or_fired + " it.";
+            description += "If it kills a monster, causing it to leave "
+                "a corpse, the corpse will be animated as a zombie "
+                "friendly to the one who " + threw_or_fired + " it.";
             break;
         case SPMSL_PENETRATION:
             description += "It will pass through any targets it hits, "
@@ -1079,24 +1079,24 @@ static std::string _describe_ammo( const item_def &item )
             break;
         case SPMSL_DISPERSAL:
             description += "Any target it hits will blink, with a "
-                "tendancy towards blinking further away from the one who "
-                + threw_or_fired + " it.";
+                "tendency towards blinking further away from the one "
+                "who " + threw_or_fired + " it.";
             break;
         case SPMSL_EXPLODING:
-            description += "It will explode into fragemnets upon hitting "
-                "a target, hitting an obstruction, or reaching the end of "
-                "its range.";
+            description += "It will explode into fragments upon "
+                "hitting a target, hitting an obstruction, or reaching "
+                "the end of its range.";
             always_destroyed = true;
             break;
         case SPMSL_STEEL:
-            description += "Compared to normal ammo it does 50% more damage, "
-                "is destroyed only 1/10th upon impact, and weighs "
-                "three times as much.";
+            description += "Compared to normal ammo, it does 50% more "
+                "damage, is destroyed upon impact only 1/10th of the "
+                "time, and weighs three three times as much.";
             break;
         case SPMSL_SILVER:
-            description += "Compared to normal ammo it does twice as much "
-                "damage to the undead, demons and shapeshifters, and "
-                "weighs twice as much.";
+            description += "Compared to normal ammo, it does twice as "
+                "much damage to the undead, demons and shapeshifters, "
+                "and weighs twice as much.";
             break;
         }
 
