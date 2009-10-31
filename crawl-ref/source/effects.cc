@@ -1209,10 +1209,10 @@ static armour_type _acquirement_armour_subtype(bool divine)
 }
 
 // If armour acquirement turned up a non-ego non-artefact armour item,
-// see whether the player has any unfilled equipment slots. If so,
-// hand out a mundane (and possibly negatively enchanted) item of that
-// type. Otherwise, keep the original armour.
-static bool _try_give_mundane_armour(item_def &arm)
+// see whether the player has any unfilled equipment slots.  If so,
+// hand out a plain (and possibly negatively enchanted) item of that
+// type.  Otherwise, keep the original armour.
+static bool _try_give_plain_armour(item_def &arm)
 {
     static const equipment_type armour_slots[] =
         {  EQ_SHIELD, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS  };
@@ -1951,7 +1951,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
         item_def &doodad(mitm[thing_created]);
 
-        // For mundane armour, try to change the subtype to something
+        // For plain armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.
         if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad))
         {
@@ -1985,7 +1985,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
                 if (is_plain || is_redundant)
                 {
-                    if (_try_give_mundane_armour(doodad))
+                    if (_try_give_plain_armour(doodad))
                     {
                         // Make sure the item is plain.
                         doodad.special = SPARM_NORMAL;
