@@ -18,6 +18,7 @@
 #include "database.h"
 #include "delay.h"
 #include "describe.h"
+#include "directn.h"
 #include "enum.h"
 #include "exclude.h"
 #include "food.h"
