@@ -503,11 +503,12 @@ std::string canonicalise_file_separator(const std::string &path)
 
 std::string datafile_path(std::string basename,
                           bool croak_on_fail,
-                          bool test_base_path)
+                          bool test_base_path,
+                          bool (*thing_exists)(const std::string&))
 {
     basename = canonicalise_file_separator(basename);
 
-    if (test_base_path && file_exists(basename))
+    if (test_base_path && thing_exists(basename))
         return (basename);
 
     const std::string rawbases[] = {
@@ -562,7 +563,7 @@ std::string datafile_path(std::string basename,
         for (unsigned p = 0; p < sizeof(prefixes) / sizeof(*prefixes); ++p)
         {
             std::string name = bases[b] + prefixes[p] + basename;
-            if (file_exists(name))
+            if (thing_exists(name))
                 return (name);
         }
 

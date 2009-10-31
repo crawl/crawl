@@ -41,9 +41,12 @@ std::vector<std::string> get_dir_files(const std::string &dir);
 std::vector<std::string> get_dir_files_ext(const std::string &dir,
                                            const std::string &ext);
 
-std::string datafile_path(std::string basename,
-                          bool croak_on_fail = true,
-                          bool test_base_path = false);
+std::string datafile_path(
+    std::string basename,
+    bool croak_on_fail = true,
+    bool test_base_path = false,
+    bool (*thing_exists)(const std::string&) = file_exists);
+
 
 bool get_dos_compatible_file_name(std::string *fname);
 std::string get_parent_directory(const std::string &filename);
