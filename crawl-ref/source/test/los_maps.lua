@@ -52,8 +52,9 @@ local function test_los_map(map)
 end
 
 local function test_los_maps()
-  dgn.load_des_file("debug-los.des")
+  dgn.load_des_file("test/des/debug-los.des")
   local map = dgn.map_by_tag("debug_los")
+  assert(map, "Could not find debug-los maps (tag 'debug_los')")
   while map do
     test_los_map(map)
     checks = checks + 1
