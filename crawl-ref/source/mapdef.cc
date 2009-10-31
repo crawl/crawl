@@ -2172,7 +2172,7 @@ int mons_list::fix_demon(int demon) const
 
     demon = -100 - demon;
 
-    return (summon_any_demon( static_cast<demon_class_type>(demon) ));
+    return (summon_any_demon(static_cast<demon_class_type>(demon)));
 }
 
 mons_spec mons_list::pick_monster(mons_spec_slot &slot)
@@ -2199,7 +2199,7 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
     if (slot.fix_slot)
     {
         slot.mlist.clear();
-        slot.mlist.push_back( pick );
+        slot.mlist.push_back(pick);
         slot.fix_slot = false;
     }
 
@@ -2211,23 +2211,23 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
 
 mons_spec mons_list::get_monster(int index)
 {
-    if (index < 0 || index >= (int) mons.size())
-        return mons_spec(RANDOM_MONSTER);
+    if (index < 0 || index >= (int)mons.size())
+        return (mons_spec(RANDOM_MONSTER));
 
-    return (pick_monster( mons[index] ));
+    return (pick_monster(mons[index]));
 }
 
 mons_spec mons_list::get_monster(int slot_index, int list_index) const
 {
-    if (slot_index < 0 || slot_index >= (int) mons.size())
-        return mons_spec(RANDOM_MONSTER);
+    if (slot_index < 0 || slot_index >= (int)mons.size())
+        return (mons_spec(RANDOM_MONSTER));
 
     const mons_spec_list &list = mons[slot_index].mlist;
 
-    if (list_index < 0 || list_index >= (int) list.size())
-        return mons_spec(RANDOM_MONSTER);
+    if (list_index < 0 || list_index >= (int)list.size())
+        return (mons_spec(RANDOM_MONSTER));
 
-    return list[list_index];
+    return (list[list_index]);
 }
 
 void mons_list::clear()
@@ -2547,7 +2547,7 @@ mons_spec mons_list::get_hydra_spec(const std::string &name) const
     else
     {
         // Might be "two-headed hydra" type string.
-        for (int i = 0; i <= 20; i++)
+        for (int i = 0; i <= 20; ++i)
             if (number_in_words(i) == prefix)
             {
                 nheads = i;
@@ -2566,7 +2566,7 @@ mons_spec mons_list::get_hydra_spec(const std::string &name) const
         nheads = 20;
     }
 
-    return mons_spec(MONS_HYDRA, MONS_NO_MONSTER, nheads);
+    return (mons_spec(MONS_HYDRA, MONS_NO_MONSTER, nheads));
 }
 
 mons_spec mons_list::get_slime_spec(const std::string &name) const
@@ -2591,7 +2591,7 @@ mons_spec mons_list::get_slime_spec(const std::string &name) const
 #endif
      }
 
-    return mons_spec(MONS_SLIME_CREATURE, MONS_NO_MONSTER, slime_size);
+    return (mons_spec(MONS_SLIME_CREATURE, MONS_NO_MONSTER, slime_size));
 }
 
 // Handle draconians specified as:
