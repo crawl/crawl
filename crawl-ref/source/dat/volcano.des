@@ -89,7 +89,7 @@ function volcano_portal (e)
         dstorigin = "in a volcano",
         overmap = "dark tunnel",
         turns = timeout_turns,
-        floor = "lava",
+        floor = "floor",
         msg = messager })
     e.kfeat("O = enter_portal_vault")
     e.kfeat("S = .")
@@ -126,6 +126,10 @@ function volcano_setup (e, metal)
         e.lfloorcol("red")
         e.lfloortile("floor_rough_red")
     end
+    e.set_random_mon_list([[hog / fire elemental / fire vortex / giant ant / bumblebee /
+                            firedrake / lindwurm / imp / redback / manticore / hell hound /
+                            hell-hog / ghoul / flayed ghost / pulsating lump / toenail golem /
+                            efreet / vampire]])
     crawl.mark_milestone("br.enter", "entered a Volcano.")
 end
 
@@ -194,7 +198,7 @@ function make_fiery_armour (e, armour)
     for _, at in ipairs(armour) do
         armour_string = armour_string .. " / " .. at .. " ego:fire_resistance good_item"
     end
-    return string.gsub(armour_string, "\s*\/$", "")
+    return string.gsub(armour_string, "%s*\/$", "")
 end
 
 function make_fiery_weapon (e, weapon)
@@ -202,7 +206,7 @@ function make_fiery_weapon (e, weapon)
     for _, wt in ipairs(weapon) do
         weapon_string = weapon_string .. " / " .. wt .. " ego:flaming good_item"
     end
-    local n_weapon = string.gsub(weapon_string, "\s*\/$", "")
+    local n_weapon = string.gsub(weapon_string, "%s*\/$", "")
     e.item(n_weapon)
 end
 
@@ -251,7 +255,7 @@ function make_fiery_mons (e, monster, weapons, armours)
         end
     end
 
-    return string.gsub(monstring, "\s*\|$", "")
+    return string.gsub(monstring, "%s*\|$", "")
 end
 
 -- This function sets up two slots of monsters: in general, the first
@@ -398,7 +402,7 @@ function fiery_guardians (e, tomb)
 end
 }}
 
-default-depth: Lair:5-8, Orc:2-4, Hive:1
+default-depth: Lair:1-8, Orc:1-4, Hive:1
 
 ###############################################################################
 # Entries:
@@ -737,7 +741,7 @@ NSUBST:     R = 1:1 / 1:L / 1:l / 1:.
 NSUBST:     Y = 8:3 / 6:J / *:.
 SUBST:      X = lx
 KPROP:      l = no_cloud_gen
-COLOUR:     m = red
+COLOUR:     m = blue
 TAGS:       volcano no_item_gen no_monster_gen
 :           volcano_setup(_G)
 :           place_small_volcano(_G)
@@ -883,16 +887,9 @@ end
 local collapse_marker = function_machine ( {marker_type = "random", turns_min=30,
                         turns_max=40, func=collapse_doorways, marker_params=mytable } )
 }}
-#           FIX: Smushing these together does nothing. Enne is working on it!
-KPROP:      R = no_rtele_into
-KPROP:      X = no_rtele_into
-KPROP:      Z = no_rtele_into
-KPROP:      1 = no_rtele_into
-KPROP:      2 = no_rtele_into
-KPROP:      < = no_rtele_into
+KPROP:      RXZ12< = no_rtele_into
 SUBST:      X = .
-SUBST:      Z = c.
-SUBST:      Y = c.
+SUBST:      ZY = c.
 SUBST:      R = defg$
 :           fiery_guardians(_G)
 :           lua_marker("M", collapse_marker)
