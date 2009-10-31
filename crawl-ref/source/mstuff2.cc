@@ -2770,10 +2770,9 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
 // Slime creatures can split but not merge under these conditions.
 static bool _unoccupied_slime(monsters *thing)
 {
-     return (mons_is_sleeping(thing)
+     return (thing->asleep()
             || mons_is_wandering(thing)
             || thing->foe == MHITNOT);
-
 }
 
 // Slime creatures cannot split or merge under these conditions.
