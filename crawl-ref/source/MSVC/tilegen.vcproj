@@ -91,84 +91,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="cd &quot;$(SolutionDir)\..\rltiles&quot;&#x0D;&#x0A;echo Generating main.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-main.txt&#x0D;&#x0A;echo Generating dngn.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-dngn.txt&#x0D;&#x0A;echo Generating player.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-player.txt&#x0D;&#x0A;echo Generating gui.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-gui.txt&#x0D;&#x0A;copy *.png ..\dat\tiles\&#x0D;&#x0A;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)\.."
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			InheritedPropertySheets=".\Common.vsprops;.\Tiles.vsprops;.\Release.vsprops"
-			CharacterSet="1"
-			WholeProgramOptimization="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(SolutionDir)\..\contrib\sdl\include;$(SolutionDir)\..\contrib\sdl-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\zlib"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDL_image.lib libpng.lib"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories=""
-				GenerateDebugInformation="true"
-				SubSystem="1"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
 				CommandLine="cd &quot;$(SolutionDir)\..\rltiles&quot;&#x0D;&#x0A;echo Generating main.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-main.txt&#x0D;&#x0A;echo Generating dngn.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-dngn.txt&#x0D;&#x0A;echo Generating player.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-player.txt&#x0D;&#x0A;echo Generating gui.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-gui.txt&#x0D;&#x0A;copy *.png ..\dat\tiles\&#x0D;&#x0A;"
 			/>
 		</Configuration>
@@ -248,6 +170,84 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="cd &quot;$(SolutionDir)\..\rltiles&quot;&#x0D;&#x0A;echo Generating main.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-main.txt&#x0D;&#x0A;echo Generating dngn.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-dngn.txt&#x0D;&#x0A;echo Generating player.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-player.txt&#x0D;&#x0A;echo Generating gui.png...&#x0D;&#x0A;&quot;$(SolutionDir)\bin\$(ProjectName)\$(ConfigurationName)\$(ProjectName).exe&quot; dc-gui.txt&#x0D;&#x0A;copy *.png ..\dat\tiles\&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)\.."
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			InheritedPropertySheets=".\Common.vsprops;.\Tiles.vsprops;.\Release.vsprops"
+			CharacterSet="1"
+			WholeProgramOptimization="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="$(SolutionDir)\..\contrib\sdl\include;$(SolutionDir)\..\contrib\sdl-image;$(SolutionDir)\..\contrib\libpng;$(SolutionDir)\..\contrib\zlib"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="SDL.lib SDL_image.lib libpng.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories=""
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="cd &quot;$(SolutionDir)\..\rltiles&quot;&#x0D;&#x0A;echo Generating main.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-main.txt&#x0D;&#x0A;echo Generating dngn.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-dngn.txt&#x0D;&#x0A;echo Generating player.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-player.txt&#x0D;&#x0A;echo Generating gui.png...&#x0D;&#x0A;&quot;$(TargetPath)&quot; dc-gui.txt&#x0D;&#x0A;copy *.png ..\dat\tiles\&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
