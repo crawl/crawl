@@ -5850,7 +5850,7 @@ int monsters::res_fire() const
         u += _scan_mon_inv_randarts(this, ARTP_FIRE);
 
         const int armour = inv[MSLOT_ARMOUR];
-        const int shield = inv[MSLOT_SHIELD];
+        const int shld = inv[MSLOT_SHIELD];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
@@ -5869,10 +5869,10 @@ int monsters::res_fire() const
                 u += 1;
         }
 
-        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
         {
             // check ego resistance
-            const int ego = get_armour_ego_type(mitm[shield]);
+            const int ego = get_armour_ego_type(mitm[shld]);
             if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
                 u += 1;
         }
@@ -5903,7 +5903,7 @@ int monsters::res_cold() const
         u += _scan_mon_inv_randarts(this, ARTP_COLD);
 
         const int armour = inv[MSLOT_ARMOUR];
-        const int shield = inv[MSLOT_SHIELD];
+        const int shld = inv[MSLOT_SHIELD];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
@@ -5922,10 +5922,10 @@ int monsters::res_cold() const
                 u += 1;
         }
 
-        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
         {
             // check ego resistance
-            const int ego = get_armour_ego_type(mitm[shield]);
+            const int ego = get_armour_ego_type(mitm[shld]);
             if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
                 u += 1;
         }
@@ -5968,10 +5968,10 @@ int monsters::res_elec() const
 int monsters::res_asphyx() const
 {
     int res = get_mons_resists(this).asphyx;
-    const mon_holy_type holiness = mons_holiness(this);
+    const mon_holy_type holi = mons_holiness(this);
     if (mons_is_unholy(this)
-        || holiness == MH_NONLIVING
-        || holiness == MH_PLANT)
+        || holi == MH_NONLIVING
+        || holi == MH_PLANT)
     {
         res += 1;
     }
@@ -5986,8 +5986,8 @@ int monsters::res_poison() const
     {
         u += _scan_mon_inv_randarts( this, ARTP_POISON );
 
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        const int shield = mon->inv[MSLOT_SHIELD];
+        const int armour = this->inv[MSLOT_ARMOUR];
+        const int shld = this->inv[MSLOT_SHIELD];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
@@ -6004,10 +6004,10 @@ int monsters::res_poison() const
                 u += 1;
         }
 
-        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
         {
             // ego armour resistance
-            if (get_armour_ego_type(mitm[shield]) == SPARM_POISON_RESISTANCE)
+            if (get_armour_ego_type(mitm[shld]) == SPARM_POISON_RESISTANCE)
                 u += 1;
         }
     }
@@ -6067,8 +6067,8 @@ int monsters::res_negative_energy() const
     {
         u += _scan_mon_inv_randarts(this, ARTP_NEGATIVE_ENERGY);
 
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        const int shield = mon->inv[MSLOT_SHIELD];
+        const int armour = this->inv[MSLOT_ARMOUR];
+        const int shld = this->inv[MSLOT_SHIELD];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
@@ -6077,10 +6077,10 @@ int monsters::res_negative_energy() const
                 u += 1;
         }
 
-        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
         {
             // check for ego resistance
-            if (get_armour_ego_type(mitm[shield]) == SPARM_POSITIVE_ENERGY)
+            if (get_armour_ego_type(mitm[shld]) == SPARM_POSITIVE_ENERGY)
                 u += 1;
         }
     }
