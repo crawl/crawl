@@ -68,53 +68,56 @@ static double tdist(const ray &r, const lineseq &ls)
 }
 
 // Shoot the ray inside the next cell.
-// Returns true if succesfully advanced into a new cell,
+// Returns true if successfully advanced into a new cell,
 // false if it hit a corner.
-bool nextcell(ray &r, const grid &g)
+bool ray::to_next_cell(const grid &g)
 {
     // ASSERT(!parallel(g.vert, g.horiz));
     lineseq ls;
-    if (parallel(r.dir, g.ls1.f))
+    if (parallel(dir, g.ls1.f))
         ls = g.ls2;
-    else if (parallel(r.dir, g.ls2.f))
+    else if (parallel(dir, g.ls2.f))
         ls = g.ls1;
     else
     {
-        double s = nextintersect(r, g.ls1);
-        double t = nextintersect(r, g.ls2);
-        double sd = tdist(r, g.ls1);
-        double td = tdist(r, g.ls2);
+        double s = nextintersect(*this, g.ls1);
+        double t = nextintersect(*this, g.ls2);
+        double sd = tdist(*this, g.ls1);
+        double td = tdist(*this, g.ls2);
         if (double_is_zero(s - t))
         {
             // Move onto the corner. The fact that we're on a corner
             // should be tracked externally.
-            r.advance(s);
+            advance(s);
             return (false);
         }
         double dmin = std::min(s,t);
         double dnext = std::min(std::max(s,t), dmin + std::min(sd, td));
-        r.advance((dmin + dnext) / 2.0);
+        advance((dmin + dnext) / 2.0);
         return (true);
     }
     // parallel: just advance an extra half
-    double s = nextintersect(r, ls);
-    r.advance(s + 0.5 * tdist(r, ls));
+    double s = nextintersect(*this, ls);
+    advance(s + 0.5 * tdist(*this, ls));
     return (true);
 }
 
-void movehalfcell(ray &r, const grid &g)
+// Move a ray by half a cell: starting at a corner of the grid,
+// it ends up within the next cell.
+void ray::move_half_cell(const grid &g)
 {
     // ASSERT(!parallel(g.vert, g.horiz));
     lineseq ls;
     double t;
-    if (parallel(r.dir, g.ls1.f))
-        t = tdist(r, g.ls2);
-    else if (parallel(r.dir, g.ls2.f))
-        t = tdist(r, g.ls1);
+    if (parallel(dir, g.ls1.f))
+        t = tdist(*this, g.ls2);
+    else if (parallel(dir, g.ls2.f))
+        t = tdist(*this, g.ls1);
     else
-        t = std::min(tdist(r, g.ls1), tdist(r, g.ls2));
-    r.advance(0.5 * t);
+        t = std::min(tdist(*this, g.ls1), tdist(*this, g.ls2));
+    advance(0.5 * t);
 }
+
 
 // vector space implementation
 

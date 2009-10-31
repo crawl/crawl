@@ -40,23 +40,23 @@ bool ray_def::advance()
     if (on_corner)
     {
         on_corner = false;
-        geom::movehalfcell(r, diamonds);
+        r.move_half_cell(diamonds);
     }
     else
     {
         // Starting inside a diamond.
-        bool c = !geom::nextcell(r, diamonds);
+        bool c = !r.to_next_cell(diamonds);
 
         if (c)
         {
             // r is now on a corner, going from diamond to diamond.
-            geom::movehalfcell(r, diamonds);
+            r.move_half_cell(diamonds);
             return (false);
         }
     }
     // Now inside a non-diamond.
 
-    if (geom::nextcell(r, diamonds))
+    if (r.to_next_cell(diamonds))
         return (true);
     else
     {

@@ -31,6 +31,7 @@ struct form
 // A ray in two-dimensional space given by starting point
 // and direction vector.
 // The points of R are start + t*dir.
+struct grid;
 struct ray
 {
     vector start;
@@ -42,6 +43,8 @@ struct ray
 
     vector shoot(double t) const;
     void advance(double t);
+    void move_half_cell(const grid &g);
+    bool to_next_cell(const grid& g);
 };
 
 // A line in two-dimensional space as the preimage of a number
@@ -76,8 +79,6 @@ struct grid
 
 double intersect(const ray &r, const line &l);
 double nextintersect(const ray &r, const lineseq &ls);
-bool nextcell(ray &r, const grid &g);
-void movehalfcell(ray &r, const grid &g);
 
 }
 
