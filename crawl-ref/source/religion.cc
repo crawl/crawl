@@ -1431,7 +1431,7 @@ static bool _is_yred_enslaved_body_and_soul(const monsters* mon)
 
 bool is_undead_slave(const monsters* mon)
 {
-    return (mon->alive() && mons_holiness(mon) == MH_UNDEAD
+    return (mon->alive() && mon->holiness() == MH_UNDEAD
             && mon->attitude == ATT_FRIENDLY);
 }
 
@@ -6811,7 +6811,7 @@ bool player_can_join_god(god_type which_god)
     if (you.species == SP_DEMIGOD)
         return (false);
 
-    if (player_is_unholy() && is_good_god(which_god))
+    if (you.is_unholy() && is_good_god(which_god))
         return (false);
 
     // Feawn hates undead, but will accept demonspawn.

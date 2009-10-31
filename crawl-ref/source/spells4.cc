@@ -393,7 +393,7 @@ static int _sleep_monsters(coord_def where, int pow, int, actor *)
     if (monster == NULL)
         return (0);
 
-    if (mons_holiness(monster) != MH_NATURAL)
+    if (monster->holiness() != MH_NATURAL)
         return (0);
     if (check_mons_resist_magic(monster, pow))
         return (0);
@@ -1002,7 +1002,7 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
     monsters *monster = monster_at(where);
     if (monster == NULL
         || mons_intel(monster) < I_NORMAL
-        || mons_holiness(monster) != MH_NATURAL
+        || monster->holiness() != MH_NATURAL
         || monster->res_poison() > 0)
     {
         return 0;

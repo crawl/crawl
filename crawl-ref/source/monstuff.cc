@@ -66,7 +66,7 @@
 #include "stash.h"
 #include "xom.h"
 
-static bool _wounded_damaged(int wound_class);
+static bool _wounded_damaged(monster_type mon_type);
 static bool _handle_special_ability(monsters *monster, bolt & beem);
 static bool _handle_pickup(monsters *monster);
 static void _handle_behaviour(monsters *monster);
@@ -606,8 +606,8 @@ static bool _ely_protect_ally(monsters *monster)
     if (you.religion != GOD_ELYVILON)
         return (false);
 
-    if (mons_holiness(monster) != MH_NATURAL
-            && mons_holiness(monster) != MH_HOLY
+    if (monster->holiness() != MH_NATURAL
+            && monster->holiness() != MH_HOLY
         || !mons_friendly(monster)
         || !you.can_see(monster) // for simplicity
         || !one_chance_in(20))
@@ -1446,7 +1446,7 @@ int monster_die(monsters *monster, killer_type killer,
 
     const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
           bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
-    const mon_holy_type targ_holy = mons_holiness(monster);
+    const mon_holy_type targ_holy = monster->holiness();
 
     switch (killer)
     {
@@ -1465,13 +1465,13 @@ int monster_die(monsters *monster, killer_type killer,
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          monster->name(DESC_CAP_THE).c_str(),
                          _wounded_damaged(monster->type) ?
-                         "destroyed" : "killed");
+                             "destroyed" : "killed");
                 }
                 else
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
                          _wounded_damaged(monster->type) ? "destroy" : "kill",
-                         monster->name(DESC_NOCAP_THE).c_str());
+                             monster->name(DESC_NOCAP_THE).c_str());
                 }
 
                 if ((created_friendly || was_neutral) && gives_xp)
@@ -1600,7 +1600,7 @@ int monster_die(monsters *monster, killer_type killer,
             }
 
             if (you.duration[DUR_DEATH_CHANNEL]
-                && mons_holiness(monster) == MH_NATURAL
+                && monster->holiness() == MH_NATURAL
                 && mons_can_be_zombified(monster)
                 && gives_xp)
             {
@@ -1634,7 +1634,7 @@ int monster_die(monsters *monster, killer_type killer,
             {
                 simple_monster_message(monster,
                                        _wounded_damaged(monster->type) ?
-                                       " is destroyed!" : " dies!",
+                                           " is destroyed!" : " dies!",
                                        MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
@@ -1677,7 +1677,7 @@ int monster_die(monsters *monster, killer_type killer,
                 }
 
                 const mon_holy_type killer_holy =
-                    anon ? MH_NATURAL : mons_holiness(killer_mon);
+                    anon ? MH_NATURAL : killer_mon->holiness();
 
                 if (you.religion == GOD_SHINING_ONE
                     || you.religion == GOD_YREDELEMNUL
@@ -1833,7 +1833,7 @@ int monster_die(monsters *monster, killer_type killer,
             {
                 simple_monster_message(monster,
                                        _wounded_damaged(monster->type) ?
-                                       " is destroyed!" : " dies!",
+                                           " is destroyed!" : " dies!",
                                        MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
@@ -2117,7 +2117,7 @@ static bool _valid_morph(monsters *monster, monster_type new_mclass)
     }
 
     // Various inappropriate polymorph targets.
-    if (mons_class_holiness(new_mclass) != mons_holiness(monster)
+    if (mons_class_holiness(new_mclass) != monster->holiness()
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
         || new_mclass == mons_species(monster->type)  // must be different
@@ -2545,40 +2545,42 @@ bool monster_blink(monsters *monster, bool quiet)
 
 bool mon_can_be_slimified(monsters *monster)
 {
-    return (mons_holiness(monster) == MH_UNDEAD
-            || mons_holiness(monster) == MH_NATURAL
+    const mon_holy_type holi = monster->holiness();
+
+    return (holi == MH_UNDEAD
+            || holi == MH_NATURAL
                 && !mons_is_slime(monster));
 }
 
 void slimify_monster(monsters *mon, bool hostile)
 {
-        if (mons_holiness(mon) == MH_UNDEAD)
-            monster_polymorph(mon, MONS_DEATH_OOZE);
+    if (mon->holiness() == MH_UNDEAD)
+        monster_polymorph(mon, MONS_DEATH_OOZE);
+    else
+    {
+        const int x = mon->hit_dice + (coinflip() ? 1 : -1) * random2(5);
+
+        if (x < 3)
+            monster_polymorph(mon, MONS_OOZE);
+        else if (x >= 3 && x < 5)
+            monster_polymorph(mon, MONS_JELLY);
+        else if (x >= 5 && x < 7)
+            monster_polymorph(mon, MONS_BROWN_OOZE);
+        else if (x >= 7 && x <= 11)
+        {
+            if (coinflip())
+                monster_polymorph(mon, MONS_SLIME_CREATURE);
+            else
+                monster_polymorph(mon, MONS_GIANT_AMOEBA);
+        }
         else
         {
-            const int x = mon->hit_dice + (coinflip() ? 1 : -1) * random2(5);
-
-            if (x < 3)
-                monster_polymorph(mon, MONS_OOZE);
-            else if (x >= 3 && x < 5)
-                monster_polymorph(mon, MONS_JELLY);
-            else if (x >= 5 && x < 7)
-                monster_polymorph(mon, MONS_BROWN_OOZE);
-            else if (x >= 7 && x <= 11)
-            {
-                if (coinflip())
-                    monster_polymorph(mon, MONS_SLIME_CREATURE);
-                else
-                    monster_polymorph(mon, MONS_GIANT_AMOEBA);
-            }
+            if (coinflip())
+                monster_polymorph(mon, MONS_ACID_BLOB);
             else
-            {
-                if (coinflip())
-                    monster_polymorph(mon, MONS_ACID_BLOB);
-                else
-                    monster_polymorph(mon, MONS_AZURE_JELLY);
-            }
+                monster_polymorph(mon, MONS_AZURE_JELLY);
         }
+    }
 
     if (!mons_eats_items(mon))
         mon->add_ench(ENCH_EAT_ITEMS);
@@ -2593,10 +2595,10 @@ void slimify_monster(monsters *mon, bool hostile)
 
 static void _set_random_target(monsters* mon)
 {
-    mon->target = random_in_bounds(); // If we don't find anything better
+    mon->target = random_in_bounds(); // If we don't find anything better.
     for (int tries = 0; tries < 150; ++tries)
     {
-        coord_def delta = coord_def(random2(13), random2(13)) - coord_def(6,6);
+        coord_def delta = coord_def(random2(13), random2(13)) - coord_def(6, 6);
         if (delta.origin())
             continue;
 
@@ -2948,10 +2950,10 @@ void print_wounds(const monsters *monster)
 
 // (true == 'damaged') [constructs, undead, etc.]
 // and (false == 'wounded') [living creatures, etc.] {dlb}
-static bool _wounded_damaged(int monster_type)
+static bool _wounded_damaged(monster_type mon_type)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    const mon_holy_type holy = mons_class_holiness(monster_type);
+    const mon_holy_type holy = mons_class_holiness(mon_type);
     if (holy == MH_UNDEAD || holy == MH_NONLIVING || holy == MH_PLANT)
         return (true);
 
@@ -3125,8 +3127,8 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         }
 
         // Neither do plants or nonliving beings.
-        if (mons_class_holiness(mon->type) == MH_PLANT
-            || mons_class_holiness(mon->type) == MH_NONLIVING)
+        if (mon->holiness() == MH_PLANT
+            || mon->holiness() == MH_NONLIVING)
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;
@@ -4656,8 +4658,8 @@ static void _handle_behaviour(monsters *mon)
             // things, plants, and nonliving monsters cannot flee.
             if (isHurt && !isSmart && isMobile
                 && (!mons_is_zombified(mon) || mon->type == MONS_SPECTRAL_THING)
-                && mons_class_holiness(mon->type) != MH_PLANT
-                && mons_class_holiness(mon->type) != MH_NONLIVING)
+                && mon->holiness() != MH_PLANT
+                && mon->holiness() != MH_NONLIVING)
             {
                 new_beh = BEH_FLEE;
             }
@@ -4771,8 +4773,8 @@ static void _handle_behaviour(monsters *mon)
 
         case BEH_CORNERED:
             // Plants and nonliving monsters cannot fight back.
-            if (mons_class_holiness(mon->type) == MH_PLANT
-                || mons_class_holiness(mon->type) == MH_NONLIVING)
+            if (mon->holiness() == MH_PLANT
+                || mon->holiness() == MH_NONLIVING)
             {
                 break;
             }

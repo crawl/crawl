@@ -932,7 +932,7 @@ int get_mons_colour(const monsters *mons)
 
 static void _good_god_follower_attitude_change(monsters *monster)
 {
-    if (player_is_unholy() || crawl_state.arena)
+    if (you.is_unholy() || crawl_state.arena)
         return;
 
     // For followers of good gods, decide whether holy beings will be
@@ -1517,7 +1517,7 @@ bool check_awaken(monsters* monster)
 
     if (monster->asleep())
     {
-        if (mons_holiness(monster) == MH_NATURAL)
+        if (monster->holiness() == MH_NATURAL)
         {
             // Monster is "hibernating"... reduce chance of waking.
             if (monster->has_ench(ENCH_SLEEP_WARY))

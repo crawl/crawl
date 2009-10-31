@@ -408,6 +408,7 @@ public:
     int mons_species() const;
 
     mon_holy_type holiness() const;
+    bool is_unholy() const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;
@@ -657,7 +658,6 @@ bool player_likes_chunks(bool permanently = false);
 bool player_can_swim();
 bool player_likes_water(bool permanently = false);
 
-bool player_is_unholy();
 int player_mutation_level(mutation_type mut);
 
 /* ***********************************************************************

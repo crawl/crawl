@@ -154,31 +154,31 @@ static std::string _verbose_info(const monsters* m)
     if (mons_behaviour_perceptible(m))
     {
         if (mons_is_petrified(m))
-            return(" (petrified)");
+            return (" (petrified)");
         if (mons_is_paralysed(m))
-            return(" (paralysed)");
+            return (" (paralysed)");
         if (mons_is_petrifying(m))
-            return(" (petrifying)");
+            return (" (petrifying)");
         if (mons_is_confused(m))
-            return(" (confused)");
+            return (" (confused)");
         if (mons_is_fleeing(m))
-            return(" (fleeing)");
+            return (" (fleeing)");
         if (m->asleep())
         {
-            if (mons_holiness(m) == MH_UNDEAD
-                || mons_holiness(m) == MH_NONLIVING
-                || mons_holiness(m) == MH_PLANT)
+            if (m->holiness() == MH_UNDEAD
+                || m->holiness() == MH_NONLIVING
+                || m->holiness() == MH_PLANT)
             {
-                return(" (dormant)");
+                return (" (dormant)");
             }
             else
-                return(" (sleeping)");
+                return (" (sleeping)");
         }
         if (mons_is_wandering(m) && !mons_is_batty(m)
             && !(m->attitude == ATT_STRICT_NEUTRAL))
         {
             // Labeling strictly neutral monsters as fellow slimes is more important.
-            return(" (wandering)");
+            return (" (wandering)");
         }
         if (m->foe == MHITNOT && !mons_is_batty(m) && !mons_neutral(m)
             && !mons_friendly(m))

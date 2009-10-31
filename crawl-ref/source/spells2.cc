@@ -680,7 +680,7 @@ void drain_life(int pow)
         monsters* monster = &menv[i];
 
         if (!monster->alive()
-            || mons_holiness(monster) != MH_NATURAL
+            || monster->holiness() != MH_NATURAL
             || monster->res_negative_energy())
         {
             continue;
@@ -746,14 +746,14 @@ bool vampiric_drain(int pow, const dist &vmove)
             return (false);
         }
 
-        if (mons_is_unholy(monster))
+        if (monster->is_unholy())
         {
             mpr("Aaaarggghhhhh!");
             dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
             return (false);
         }
 
-        if (mons_holiness(monster) != MH_NATURAL
+        if (monster->holiness() != MH_NATURAL
             || monster->res_negative_energy())
         {
             canned_msg(MSG_NOTHING_HAPPENS);

@@ -1222,9 +1222,9 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
                 continue;
 
             hog_type = MONS_HOG;
-            if (mons_holiness(targ) == MH_DEMONIC)
+            if (targ->holiness() == MH_DEMONIC)
                 hog_type = MONS_HELL_HOG;
-            else if (mons_holiness(targ) != MH_NATURAL)
+            else if (targ->holiness() != MH_NATURAL)
                 continue;
 
             if (targ->type != hog_type

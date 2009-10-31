@@ -282,6 +282,7 @@ public:
     int mons_species() const;
 
     mon_holy_type holiness() const;
+    bool is_unholy() const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;

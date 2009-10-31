@@ -1001,7 +1001,7 @@ static bool _vampire_cannot_cast(spell_type spell)
 
 static bool _spell_is_uncastable(spell_type spell)
 {
-    if (player_is_unholy() && spell_typematch(spell, SPTYP_HOLY))
+    if (you.is_unholy() && spell_typematch(spell, SPTYP_HOLY))
     {
         mpr("You can't use this type of magic!");
         return (true);

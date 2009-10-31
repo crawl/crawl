@@ -186,7 +186,6 @@ private:
                                      int res,
                                      const char *verb);
     int fire_res_apply_cerebov_downgrade(int res);
-    bool defender_is_unholy();
     void drain_defender();
     void rot_defender(int amount, int immediate = 0);
     void check_defender_train_armour();

@@ -2479,7 +2479,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
         if (mons_friendly(monster))
             return (true);
 
-        if (mons_holiness(monster) != MH_UNDEAD)
+        if (monster->holiness() != MH_UNDEAD)
             return (true);
 
         if (check_mons_resist_magic(monster, pow))
@@ -2491,7 +2491,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
         }
     }
     else if (wh_enchant == ENCH_CONFUSION
-             || mons_holiness(monster) == MH_NATURAL)
+             || monster->holiness() == MH_NATURAL)
     {
         if (wh_enchant == ENCH_CONFUSION
             && !mons_class_is_confusable(monster->type))
@@ -4836,25 +4836,24 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
         break;
 
     case BEAM_DEGENERATE:
-        rc = (mons_holiness(mon) == MH_NATURAL
+        rc = (mon->holiness() == MH_NATURAL
               && mon->type != MONS_PULSATING_LUMP);
         break;
 
     case BEAM_ENSLAVE_UNDEAD:
-        rc = (mons_holiness(mon) == MH_UNDEAD && mon->attitude != ATT_FRIENDLY);
+        rc = (mon->holiness() == MH_UNDEAD && mon->attitude != ATT_FRIENDLY);
         break;
 
     case BEAM_ENSLAVE_SOUL:
-        rc = (mons_holiness(mon) == MH_NATURAL
-              && mon->attitude != ATT_FRIENDLY);
+        rc = (mon->holiness() == MH_NATURAL && mon->attitude != ATT_FRIENDLY);
         break;
 
     case BEAM_DISPEL_UNDEAD:
-        rc = (mons_holiness(mon) == MH_UNDEAD);
+        rc = (mon->holiness() == MH_UNDEAD);
         break;
 
     case BEAM_ENSLAVE_DEMON:
-        rc = (mons_holiness(mon) == MH_DEMONIC && !mons_friendly(mon));
+        rc = (mon->holiness() == MH_DEMONIC && !mons_friendly(mon));
         break;
 
     case BEAM_PAIN:
@@ -4862,14 +4861,14 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
         break;
 
     case BEAM_SLEEP:
-        rc = !mon->has_ench(ENCH_SLEEP_WARY)      // slept recently
-             && mons_holiness(mon) == MH_NATURAL  // no unnatural
+        rc = !mon->has_ench(ENCH_SLEEP_WARY)   // slept recently
+             && mon->holiness() == MH_NATURAL  // no unnatural
              && mon->res_cold() <= 0;          // can't be hibernated
         break;
 
     case BEAM_PORKALATOR:
-        rc = (mons_holiness(mon) == MH_DEMONIC && mon->type != MONS_HELL_HOG)
-              || (mons_holiness(mon) == MH_NATURAL && mon->type != MONS_HOG);
+        rc = (mon->holiness() == MH_DEMONIC && mon->type != MONS_HELL_HOG)
+              || (mon->holiness() == MH_NATURAL && mon->type != MONS_HOG);
         break;
 
     default:
@@ -5214,7 +5213,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         return (MON_AFFECTED);
 
     case BEAM_PORKALATOR:
-        if (monster_polymorph(mon, (mons_holiness(mon) == MH_DEMONIC ?
+        if (monster_polymorph(mon, (mon->holiness() == MH_DEMONIC ?
                                         MONS_HELL_HOG : MONS_HOG)))
         {
             obvious_effect = true;
@@ -5714,12 +5713,12 @@ bool bolt::nasty_to(const monsters *mon) const
         || flavour == BEAM_SLEEP
         || flavour == BEAM_ENSLAVE_SOUL)
     {
-        return (mons_holiness(mon) == MH_NATURAL);
+        return (mon->holiness() == MH_NATURAL);
     }
 
     // dispel undead / control undead
     if (flavour == BEAM_DISPEL_UNDEAD || flavour == BEAM_ENSLAVE_UNDEAD)
-        return (mons_holiness(mon) == MH_UNDEAD);
+        return (mon->holiness() == MH_UNDEAD);
 
     // pain / agony
     if (flavour == BEAM_PAIN)
@@ -5727,7 +5726,7 @@ bool bolt::nasty_to(const monsters *mon) const
 
     // control demon
     if (flavour == BEAM_ENSLAVE_DEMON)
-        return (mons_holiness(mon) == MH_DEMONIC);
+        return (mon->holiness() == MH_DEMONIC);
 
     // everything else is considered nasty by everyone
     return (true);

@@ -64,7 +64,7 @@
 
 int holy_word_player(int pow, int caster, actor *attacker)
 {
-    if (!player_is_unholy())
+    if (!you.is_unholy())
         return (0);
 
     int hploss;
@@ -126,7 +126,7 @@ int holy_word_monsters(coord_def where, int pow, int caster,
     if (monster == NULL)
         return (retval);
 
-    if (!monster->alive() || !mons_is_unholy(monster))
+    if (!monster->alive() || !monster->is_unholy())
         return (retval);
 
     int hploss;
@@ -296,7 +296,7 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
     if (monster == NULL)
         return (retval);
 
-    if (!monster->alive() || monster->res_negative_energy() == 3)
+    if (!monster->alive() || monster->res_torment())
         return (retval);
 
     int hploss = std::max(0, monster->hit_points / 2 - 1);

@@ -64,7 +64,7 @@ static void _finish_delay(const delay_queue_item &delay);
 //  note that berserk monsters are also hasted.)
 static bool _recite_mons_useless(const monsters *mon)
 {
-    const mon_holy_type holiness = mons_holiness(mon);
+    const mon_holy_type holiness = mon->holiness();
 
     return (mons_intel(mon) < I_NORMAL
             || holiness != MH_HOLY
@@ -85,25 +85,25 @@ static bool _recite_mons_useless(const monsters *mon)
 // Power is maximum 50.
 static int _recite_to_monsters(coord_def where, int pow, int, actor *)
 {
-    monsters *mons = monster_at(where);
+    monsters *mon = monster_at(where);
 
-    if (mons == NULL)
+    if (mon == NULL)
         return (0);
 
-    if (_recite_mons_useless(mons))
+    if (_recite_mons_useless(mon))
         return (0);
 
     if (coinflip()) // nothing happens
         return (0);
 
     int resist;
-    const mon_holy_type holiness = mons_holiness(mons);
+    const mon_holy_type holiness = mon->holiness();
 
     if (holiness == MH_HOLY)
         resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
     else
     {
-        resist = mons_resist_magic(mons);
+        resist = mons_resist_magic(mon);
 
         if (holiness == MH_UNDEAD)
             pow -= 2 + random2(3);
@@ -122,16 +122,17 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
             return (0);  // nothing happens, whew!
 
         if (!one_chance_in(4) &&
-             mons->add_ench(mon_enchant(ENCH_HASTE, 0, KC_YOU,
-                            (16 + random2avg(13, 2)) * 10)))
+             mon->add_ench(mon_enchant(ENCH_HASTE, 0, KC_YOU,
+                                       (16 + random2avg(13, 2)) * 10)))
         {
-            simple_monster_message(mons, " speeds up in annoyance!");
+
+            simple_monster_message(mon, " speeds up in annoyance!");
         }
         else if (!one_chance_in(3)
-                 && mons->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, KC_YOU,
+                 && mon->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, KC_YOU,
                                               (16 + random2avg(13, 2)) * 10)))
         {
-            simple_monster_message(mons, " goes into a battle-frenzy!");
+            simple_monster_message(mon, " goes into a battle-frenzy!");
         }
         else
             return (0); // nothing happens
@@ -149,66 +150,66 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
         case 2:
         case 3:
         case 4:
-            if (!mons_class_is_confusable(mons->type)
-                || !mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
-                                               (16 + random2avg(13, 2)) * 10)))
+            if (!mons_class_is_confusable(mon->type)
+                || !mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
+                                              (16 + random2avg(13, 2)) * 10)))
             {
                 return (0);
             }
-            simple_monster_message(mons, " looks confused.");
+            simple_monster_message(mon, " looks confused.");
             break;
         case 5:
         case 6:
         case 7:
         case 8:
-            mons->put_to_sleep();
-            simple_monster_message(mons, " falls asleep!");
+            mon->put_to_sleep();
+            simple_monster_message(mon, " falls asleep!");
             break;
         case 9:
         case 10:
         case 11:
         case 12:
-            if (!mons->add_ench(mon_enchant(ENCH_NEUTRAL, 0, KC_YOU,
-                                (16 + random2avg(13, 2)) * 10)))
+            if (!mon->add_ench(mon_enchant(ENCH_NEUTRAL, 0, KC_YOU,
+                               (16 + random2avg(13, 2)) * 10)))
             {
                 return (0);
             }
-            simple_monster_message(mons, " seems impressed!");
+            simple_monster_message(mon, " seems impressed!");
             break;
         case 13:
         case 14:
         case 15:
-            if (!mons->add_ench(ENCH_FEAR))
+            if (!mon->add_ench(ENCH_FEAR))
                 return (0);
-            simple_monster_message(mons, " turns to flee.");
+            simple_monster_message(mon, " turns to flee.");
             break;
         case 16:
         case 17:
-            if (!mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
-                                (16 + random2avg(13, 2)) * 10)))
+            if (!mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
+                               (16 + random2avg(13, 2)) * 10)))
             {
                 return (0);
             }
-            simple_monster_message(mons, " freezes in fright!");
+            simple_monster_message(mon, " freezes in fright!");
             break;
         default:
             if (holiness == MH_HOLY)
-                good_god_holy_attitude_change(mons);
+                good_god_holy_attitude_change(mon);
             else
             {
                 if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
                 {
-                    if (!mons->add_ench(mon_enchant(ENCH_NEUTRAL, 0, KC_YOU,
-                                        (16 + random2avg(13, 2)) * 10)))
+                    if (!mon->add_ench(mon_enchant(ENCH_NEUTRAL, 0, KC_YOU,
+                                       (16 + random2avg(13, 2)) * 10)))
                     {
                         return (0);
                     }
-                    simple_monster_message(mons, " seems impressed!");
+                    simple_monster_message(mon, " seems impressed!");
                 }
                 else
                 {
-                    simple_monster_message(mons, " seems fully impressed!");
-                    mons_pacify(mons);
+                    simple_monster_message(mon, " seems fully impressed!");
+                    mons_pacify(mon);
                 }
             }
             break;

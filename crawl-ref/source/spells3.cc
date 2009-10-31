@@ -2131,11 +2131,8 @@ bool recall(char type_recalled)
 
         if (type_recalled == 1) // undead
         {
-            if (monster->type != MONS_REAPER
-                && mons_holiness(monster) != MH_UNDEAD)
-            {
+            if (monster->holiness() != MH_UNDEAD)
                 continue;
-            }
         }
         else if (type_recalled == 2) // Beogh
         {

@@ -2084,7 +2084,7 @@ bool check_weapon_shape( const item_def &item, bool quiet, bool check_id )
         && ((item.base_type == OBJ_WEAPONS
                 && is_blessed_blade(item))
             || brand == SPWPN_HOLY_WRATH)
-        && player_is_unholy())
+        && you.is_unholy())
     {
         if (!quiet)
             mpr("This weapon will not allow you to wield it.");

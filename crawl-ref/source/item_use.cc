@@ -144,7 +144,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    if (player_is_unholy() && is_holy_item(*weapon))
+    if (you.is_unholy() && is_holy_item(*weapon))
     {
         if (say_reason)
         {
@@ -1720,9 +1720,7 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
     else
         shifter = transform_changed_physiology();
 
-    mon_holy_type holiness = victim->holiness();
-
-    if (shifter || holiness == MH_UNDEAD || holiness == MH_DEMONIC)
+    if (shifter || victim->is_unholy())
     {
         dmg *= 2;
 

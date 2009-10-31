@@ -580,7 +580,6 @@ int mons_unusable_items(const monsters *mon);
  *              spells3 - spells4
  * *********************************************************************** */
 mon_holy_type mons_class_holiness(int mc);
-mon_holy_type mons_holiness(const monsters *mon);
 
 bool mons_is_mimic( int mc );
 bool mons_is_statue( int mc, bool allow_disintegrate = false );
@@ -787,7 +786,6 @@ bool mons_is_known_mimic(const monsters *m);
 bool mons_is_unknown_mimic(const monsters *m);
 bool mons_is_holy(const monsters *mon);
 bool mons_is_evil(const monsters *mon);
-bool mons_is_unholy(const monsters *mon);
 bool mons_is_evil_or_unholy(const monsters *mon);
 bool mons_is_icy(int mc);
 bool mons_is_skeletal(int mc);

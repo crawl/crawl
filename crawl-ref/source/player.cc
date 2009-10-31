@@ -6323,7 +6323,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
     if (!ignore_brand)
     {
-        if (player_is_unholy() && is_holy_item(item))
+        if (is_unholy() && is_holy_item(item))
             return (false);
     }
 
@@ -6732,11 +6732,11 @@ mon_holy_type player::holiness() const
     return (MH_NATURAL);
 }
 
-bool player_is_unholy()
+bool player::is_unholy() const
 {
-    const mon_holy_type holiness = you.holiness();
+    const mon_holy_type holi = holiness();
 
-    return (holiness == MH_UNDEAD || holiness == MH_DEMONIC);
+    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
 }
 
 // Output active level of player mutation.
@@ -6810,7 +6810,7 @@ int player::res_holy_energy(const actor *attacker) const
     if (is_evil_god(you.religion))
         return (-1);
 
-    if (player_is_unholy())
+    if (is_unholy())
         return (-2);
 
     if (is_good_god(you.religion))

@@ -2147,14 +2147,6 @@ int melee_attack::fire_res_apply_cerebov_downgrade(int res)
     return (res);
 }
 
-bool melee_attack::defender_is_unholy()
-{
-    if (defender->atype() == ACT_PLAYER)
-        return (player_is_unholy());
-    else
-        return (mons_is_unholy(defender_as_monster()));
-}
-
 void melee_attack::drain_defender()
 {
     if (defender->atype() == ACT_MONSTER && one_chance_in(3))
@@ -2319,8 +2311,7 @@ void melee_attack::chaos_affects_defender()
 {
     const bool mon        = defender->atype() == ACT_MONSTER;
     const bool immune     = mon && mons_immune_magic(defender_as_monster());
-    const bool is_natural = mon && mons_holiness(defender_as_monster())
-                                       == MH_NATURAL;
+    const bool is_natural = mon && defender->holiness() == MH_NATURAL;
     const bool is_shifter = mon && mons_is_shapeshifter(defender_as_monster());
     const bool can_clone  = mon && !mons_is_holy(defender_as_monster())
                             && mons_clonable(defender_as_monster(), true);
@@ -3074,7 +3065,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_HOLY_WRATH:
-        if (defender_is_unholy())
+        if (defender->is_unholy())
             special_damage = 1 + (random2(damage_done * 15) / 10);
 
         if (special_damage && defender_visible)

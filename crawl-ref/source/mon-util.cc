@@ -464,15 +464,12 @@ int mons_unusable_items(const monsters *mon)
 
     if (mons_is_holy(mon))
         ret += _scan_mon_inv_items(mon, is_evil_item) > 0;
-    else if (mons_is_unholy(mon))
+    else if (mon->is_unholy())
     {
         ret += _scan_mon_inv_items(mon, is_holy_item) > 0;
 
-        if (mons_holiness(mon) == MH_UNDEAD
-            && _mons_has_undrinkable_potion(mon))
-        {
+        if (mon->holiness() == MH_UNDEAD && _mons_has_undrinkable_potion(mon))
             ret++;
-        }
     }
 
     return (ret);
@@ -482,14 +479,6 @@ mon_holy_type mons_class_holiness(int mc)
 {
     ASSERT(smc);
     return (smc->holiness);
-}
-
-mon_holy_type mons_holiness(const monsters *mon)
-{
-    if (testbits(mon->flags, MF_HONORARY_UNDEAD))
-        return (MH_UNDEAD);
-
-    return (mons_class_holiness(mon->type));
 }
 
 bool mons_class_is_confusable(int mc)
@@ -579,7 +568,7 @@ bool mons_is_native_in_branch(const monsters *monster,
                 || monster->type == MONS_DEATH_COB);
 
     case BRANCH_CRYPT:
-        return (mons_holiness(monster) == MH_UNDEAD);
+        return (monster->holiness() == MH_UNDEAD);
 
     case BRANCH_TOMB:
         return (mons_genus(monster->type) == MONS_MUMMY);
@@ -1249,7 +1238,7 @@ bool check_mons_resist_magic( const monsters *monster, int pow )
 
 bool mons_is_holy(const monsters *mon)
 {
-    return (mons_holiness(mon) == MH_HOLY);
+    return (mon->holiness() == MH_HOLY);
 }
 
 bool mons_is_evil(const monsters *mon)
@@ -1257,21 +1246,14 @@ bool mons_is_evil(const monsters *mon)
     return (mons_class_flag(mon->type, M_EVIL));
 }
 
-bool mons_is_unholy(const monsters *mon)
-{
-    const mon_holy_type holiness = mons_holiness(mon);
-
-    return (holiness == MH_UNDEAD || holiness == MH_DEMONIC);
-}
-
 bool mons_is_evil_or_unholy(const monsters *mon)
 {
-    return (mons_is_evil(mon) || mons_is_unholy(mon));
+    return (mons_is_evil(mon) || mon->is_unholy());
 }
 
 bool mons_has_lifeforce(const monsters *mon)
 {
-    const mon_holy_type holiness = mons_holiness(mon);
+    const mon_holy_type holiness = mon->holiness();
 
     return (holiness == MH_NATURAL || holiness == MH_PLANT);
 }
@@ -2547,7 +2529,7 @@ bool mons_is_lurking(const monsters *m)
 bool mons_is_influenced_by_sanctuary(const monsters *m)
 {
     return (!mons_wont_attack(m)
-            && (mons_holiness(m) != MH_PLANT || mons_is_stationary(m)));
+            && (m->holiness() != MH_PLANT || mons_is_stationary(m)));
 }
 
 bool mons_is_fleeing_sanctuary(const monsters *m)
@@ -3579,7 +3561,7 @@ bool monsters::can_drown() const
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
             || mons_genus(type) == MONS_VAMPIRE
-            || mons_holiness(this) == MH_DEMONIC);
+            || holiness() == MH_DEMONIC);
 }
 
 size_type monsters::body_size(size_part_type /* psize */, bool /* base */) const
@@ -3911,7 +3893,7 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
             return (false);
 
         // Demonic/undead monsters won't use holy weapons.
-        if (mons_is_unholy(this) && is_holy_item(item))
+        if (is_unholy() && is_holy_item(item))
             return (false);
 
         // Holy monsters and monsters that are gifts of good gods won't
@@ -5836,7 +5818,17 @@ void monsters::heal(int amount, bool max_too)
 
 mon_holy_type monsters::holiness() const
 {
-    return (mons_holiness(this));
+    if (testbits(flags, MF_HONORARY_UNDEAD))
+        return (MH_UNDEAD);
+
+    return (mons_class_holiness(type));
+}
+
+bool monsters::is_unholy() const
+{
+    const mon_holy_type holi = holiness();
+
+    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
 }
 
 int monsters::res_fire() const
@@ -5968,8 +5960,8 @@ int monsters::res_elec() const
 int monsters::res_asphyx() const
 {
     int res = get_mons_resists(this).asphyx;
-    const mon_holy_type holi = mons_holiness(this);
-    if (mons_is_unholy(this)
+    const mon_holy_type holi = holiness();
+    if (is_unholy()
         || holi == MH_NONLIVING
         || holi == MH_PLANT)
     {
@@ -6028,7 +6020,7 @@ int monsters::res_sticky_flame() const
 int monsters::res_rotting() const
 {
     int res = get_mons_resists(this).rotting;
-    if (mons_holiness(this) != MH_NATURAL)
+    if (holiness() != MH_NATURAL)
         res += 1;
     return (res);
 }
@@ -6038,7 +6030,7 @@ int monsters::res_holy_energy(const actor *attacker) const
     if (mons_is_evil(this))
         return (-1);
 
-    if (mons_is_unholy(this))
+    if (is_unholy())
         return (-2);
 
     if (is_good_god(god)
@@ -6055,7 +6047,7 @@ int monsters::res_holy_energy(const actor *attacker) const
 
 int monsters::res_negative_energy() const
 {
-    if (mons_holiness(this) != MH_NATURAL
+    if (holiness() != MH_NATURAL
         || type == MONS_SHADOW_DRAGON)
     {
         return (3);
@@ -6093,7 +6085,7 @@ int monsters::res_negative_energy() const
 
 int monsters::res_torment() const
 {
-    const mon_holy_type holy = mons_holiness(this);
+    const mon_holy_type holy = holiness();
     if (holy == MH_UNDEAD
         || holy == MH_DEMONIC
         || holy == MH_NONLIVING)
@@ -7504,7 +7496,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_INVIS:
-        if (!mons_class_flag( type, M_INVIS ))
+        if (!mons_class_flag(type, M_INVIS))
             decay_enchantment(me);
         break;
 
@@ -7514,8 +7506,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (env.cgrid(pos()) != EMPTY_CLOUD)
             break;
 
-        // Air elementals are a special case, as their
-        // submerging in air isn't up to choice. -- bwr
+        // Air elementals are a special case, as their submerging in air
+        // isn't up to choice. - bwr
         if (type == MONS_AIR_ELEMENTAL)
         {
             heal_monster( this, 1, one_chance_in(5) );

@@ -671,7 +671,7 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     if (mons_intel(mon) <= I_PLANT) // no self-awareness
         return (false);
 
-    const mon_holy_type holiness = mons_holiness(mon);
+    const mon_holy_type holiness = mon->holiness();
 
     if (holiness != MH_HOLY
         && holiness != MH_NATURAL
