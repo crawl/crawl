@@ -69,13 +69,13 @@ bool ray_def::advance()
 void ray_def::advance_and_bounce()
 {
     // XXX
-    r.dir *= -1;
+    r.dir = -r.dir;
 }
 
 void ray_def::regress()
 {
-    r.dir *= -1;
+    r.dir = -r.dir;
     advance();
-    r.dir *= -1;
+    r.dir = -r.dir;
 }
 

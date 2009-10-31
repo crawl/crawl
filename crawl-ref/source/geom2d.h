@@ -13,9 +13,12 @@ struct vector
 
     const vector& operator+=(const vector &v);
     vector operator+(const vector &v) const;
-    const vector& operator*=(double t);
-    vector operator*(double t) const;
+    vector operator-() const;
+    const vector& operator-=(const vector &v);
+    vector operator-(const vector &v) const;
 };
+
+vector operator*(double t, const vector &v);
 
 struct form
 {
@@ -79,6 +82,7 @@ struct grid
 
 double intersect(const ray &r, const line &l);
 double nextintersect(const ray &r, const lineseq &ls);
+vector reflect(const vector& v, const form &f);
 
 }
 

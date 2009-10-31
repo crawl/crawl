@@ -24,7 +24,7 @@ static bool parallel(vector v, form f)
 
 vector ray::shoot(double t) const
 {
-    return (start + dir * t);
+    return (start + t*dir);
 }
 
 void ray::advance(double t)
@@ -118,6 +118,16 @@ void ray::move_half_cell(const grid &g)
     advance(0.5 * t);
 }
 
+vector normal(const form &f)
+{
+    return (vector(f.a, f.b));
+}
+
+vector reflect(const vector &v, const form &f)
+{
+    vector n = normal(f);
+    return (v - 2 * f(v)/f(n) * n);
+}
 
 // vector space implementation
 
@@ -135,18 +145,24 @@ vector vector::operator+(const vector &v) const
     return (copy);
 }
 
-const vector& vector::operator*=(double t)
+vector vector::operator-() const
 {
-    x *= t;
-    y *= t;
-    return (*this);
+    return ((-1) * (*this));
 }
 
-vector vector::operator*(double t) const
+const vector& vector::operator-=(const vector &v)
 {
-    vector copy = *this;
-    copy *= t;
-    return (copy);
+    return (*this += -v);
+}
+
+vector vector::operator-(const vector &v) const
+{
+    return (*this + (-v));
+}
+
+vector operator*(double t, const vector &v)
+{
+    return (vector(t*v.x, t*v.y));
 }
 
 double form::operator()(const vector& v) const
