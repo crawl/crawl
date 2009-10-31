@@ -2394,7 +2394,7 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_BOLT_OF_DRAINING, check_confused);
 
     if (you.duration[DUR_TRANSFORMATION]
-        && you.transform_uncancellable)
+        && !you.transform_uncancellable)
     {
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
     }
