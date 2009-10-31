@@ -44,6 +44,8 @@
 
 */
 
+#include "AppHdr.h"
+
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>            // for memcpy
@@ -56,8 +58,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #endif
-
-#include "AppHdr.h"
 
 #include "artefact.h"
 #include "branch.h"
