@@ -2091,7 +2091,7 @@ void alert_nearby_monsters(void)
         // calling noisy() before calling this function. -- bwr
         if (monster->alive()
             && mons_near(monster)
-            && !mons_is_sleeping(monster))
+            && !monster->asleep())
         {
             behaviour_event(monster, ME_ALERT, MHITYOU);
         }
@@ -2979,7 +2979,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     bool sourceWontAttack = false;
     bool setTarget        = false;
     bool breakCharm       = false;
-    bool was_sleeping     = mons_is_sleeping(mon);
+    bool was_sleeping     = mon->asleep();
 
     if (src == MHITYOU)
         sourceWontAttack = true;
@@ -2998,7 +2998,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     {
     case ME_DISTURB:
         // Assumes disturbed by noise...
-        if (mons_is_sleeping(mon))
+        if (mon->asleep())
         {
             mon->behaviour = BEH_WANDER;
 
@@ -3049,7 +3049,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
 
             mon->foe = src;
 
-            if (mons_is_sleeping(mon) && mons_near(mon))
+            if (mon->asleep() && mons_near(mon))
                 remove_auto_exclude(mon, true);
 
             if (!mons_is_cornered(mon))
@@ -3072,12 +3072,12 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         // Allow monsters falling asleep while patrolling (can happen if
         // they're left alone for a long time) to be woken by this event.
         if (mons_friendly(mon) && mon->is_patrolling()
-            && !mons_is_sleeping(mon))
+            && !mon->asleep())
         {
             break;
         }
 
-        if (mons_is_sleeping(mon) && mons_near(mon))
+        if (mon->asleep() && mons_near(mon))
             remove_auto_exclude(mon, true);
 
         // Will alert monster to <src> and turn them
@@ -3206,7 +3206,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     ASSERT(in_bounds(mon->target) || mon->target.origin());
 
     // If it woke up and you're its new foe, it might shout.
-    if (was_sleeping && !mons_is_sleeping(mon) && allow_shout
+    if (was_sleeping && !mon->asleep() && allow_shout
         && mon->foe == MHITYOU && !mons_wont_attack(mon))
     {
         handle_monster_shouts(mon);
@@ -5651,7 +5651,7 @@ static void _handle_nearby_ability(monsters *monster)
     actor *foe = monster->get_foe();
     if (!foe
         || !monster->can_see(foe)
-        || mons_is_sleeping(monster)
+        || monster->asleep()
         || mons_is_submerged(monster))
     {
         return;
@@ -5802,7 +5802,7 @@ static bool _siren_movement_effect(const monsters *monster)
                 if (mons_wont_attack(mon)
                     && !mons_is_stationary(mon)
                     && !mons_cannot_act(mon)
-                    && !mons_is_sleeping(mon)
+                    && !mon->asleep()
                     && swap_check(mon, you.pos(), true))
                 {
                     swapping = true;
@@ -5863,7 +5863,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 
     // Slime creatures can split while out of sight.
     if ((!mons_near(monster)
-         || mons_is_sleeping(monster)
+         || monster->asleep()
          || mons_is_submerged(monster))
              && monster->mons_species() != MONS_SLIME_CREATURE)
     {
@@ -6399,7 +6399,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 //---------------------------------------------------------------
 static bool _handle_potion(monsters *monster, bolt & beem)
 {
-    if (mons_is_sleeping(monster)
+    if (monster->asleep()
         || monster->inv[MSLOT_POTION] == NON_ITEM
         || !one_chance_in(3))
     {
@@ -6501,7 +6501,7 @@ static bool _handle_reaching(monsters *monster)
 static bool _handle_scroll(monsters *monster)
 {
     // Yes, there is a logic to this ordering {dlb}:
-    if (mons_is_sleeping(monster)
+    if (monster->asleep()
         || mons_is_confused(monster)
         || mons_is_submerged(monster)
         || monster->inv[MSLOT_SCROLL] == NON_ITEM
@@ -6600,7 +6600,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (!mons_near(monster)
-        || mons_is_sleeping(monster)
+        || monster->asleep()
         || monster->has_ench(ENCH_SUBMERGED)
         || monster->inv[MSLOT_WAND] == NON_ITEM
         || mitm[monster->inv[MSLOT_WAND]].plus <= 0
@@ -6843,7 +6843,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
         return (false);
 
     // Yes, there is a logic to this ordering {dlb}:
-    if (mons_is_sleeping(monster)
+    if (monster->asleep()
         || mons_is_submerged(monster)
         || !mons_class_flag(monster->type, M_SPELLCASTER)
            && !spellcasting_poly
@@ -7850,7 +7850,7 @@ static void _handle_monster_move(monsters *monster)
             && monster->hit_points==monster->max_hit_points)
             _khufu_drop_tomb(monster);
 
-        if (!mons_is_sleeping(monster) && !mons_is_wandering(monster)
+        if (!monster->asleep() && !mons_is_wandering(monster)
             // Berserking monsters are limited to running up and
             // hitting their foes.
             && !monster->has_ench(ENCH_BERSERK)
@@ -8338,7 +8338,7 @@ static bool _monster_eat_food(monsters *monster, bool nearby)
 //---------------------------------------------------------------
 static bool _handle_pickup(monsters *monster)
 {
-    if (mons_is_sleeping(monster) || mons_is_submerged(monster))
+    if (monster->asleep() || mons_is_submerged(monster))
         return (false);
 
     const bool nearby = mons_near(monster);
@@ -8426,7 +8426,7 @@ static bool _mons_can_displace(const monsters *mpusher, const monsters *mpushee)
     if (mons_is_confused(mpusher)      || mons_is_confused(mpushee)
         || mons_cannot_move(mpusher)   || mons_cannot_move(mpushee)
         || mons_is_stationary(mpusher) || mons_is_stationary(mpushee)
-        || mons_is_sleeping(mpusher))
+        || mpusher->asleep())
     {
         return (false);
     }
@@ -8458,7 +8458,7 @@ static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
     if (!_mons_can_displace(mon, m2))
         return (false);
 
-    if (mons_is_sleeping(m2))
+    if (m2->asleep())
     {
         if (coinflip())
         {
@@ -9534,7 +9534,7 @@ static void _mons_in_cloud(monsters *monster)
     }
 
     // A sleeping monster that sustains damage will wake up.
-    if ((wake || hurted > 0) && mons_is_sleeping(monster))
+    if ((wake || hurted > 0) && monster->asleep())
     {
         // We have no good coords to give the monster as the source of the
         // disturbance other than the cloud itself.

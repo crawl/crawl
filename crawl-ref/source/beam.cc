@@ -4368,7 +4368,7 @@ void bolt::enchantment_affect_monster(monsters* mon)
 
             if (you.religion == GOD_BEOGH
                 && mons_species(mon->type) == MONS_ORC
-                && mons_is_sleeping(mon) && !player_under_penance()
+                && mon->asleep() && !player_under_penance()
                 && you.piety >= piety_breakpoint(2) && mons_near(mon))
             {
                 hit_woke_orc = true;
@@ -4652,7 +4652,7 @@ void bolt::affect_monster(monsters* mon)
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
-            && mons_is_sleeping(mon) && YOU_KILL(thrower)
+            && mon->asleep() && YOU_KILL(thrower)
             && !player_under_penance() && you.piety >= piety_breakpoint(2)
             && mons_near(mon))
         {

@@ -2696,7 +2696,7 @@ static bool _mons_has_path_to_player(const monsters *mon)
 {
     // Don't consider sleeping monsters safe, in case the player would
     // rather retreat and try another path for maximum stabbing chances.
-    if (mons_is_sleeping(mon))
+    if (mon->asleep())
         return (true);
 
     // If the monster is awake and knows a path towards the player

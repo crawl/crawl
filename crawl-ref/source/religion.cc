@@ -5666,7 +5666,7 @@ static bool _beogh_followers_abandon_you()
                 num_followers++;
 
                 if (you.visible_to(monster)
-                    && !mons_is_sleeping(monster)
+                    && !monster->asleep()
                     && !mons_is_confused(monster)
                     && !mons_cannot_act(monster))
                 {

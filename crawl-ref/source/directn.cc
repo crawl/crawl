@@ -3118,7 +3118,7 @@ static std::string _get_monster_desc(const monsters *mon)
 
     if (!mons_is_mimic(mon->type) && mons_behaviour_perceptible(mon))
     {
-        if (mons_is_sleeping(mon))
+        if (mon->asleep())
         {
             text += pronoun + " appears to be "
                     + (mons_is_confused(mon, true) ? "sleepwalking"
@@ -3155,7 +3155,7 @@ static std::string _get_monster_desc(const monsters *mon)
 
     // Give an indication of monsters being capable of seeing/sensing
     // invisible creatures.
-    if (mons_behaviour_perceptible(mon) && !mons_is_sleeping(mon)
+    if (mons_behaviour_perceptible(mon) && !mon->asleep()
         && !mons_is_confused(mon)
         && (mon->can_see_invisible() || mons_sense_invis(mon)))
     {

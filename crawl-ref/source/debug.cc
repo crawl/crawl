@@ -2642,7 +2642,7 @@ void debug_stethoscope(int mon)
           (hab == HT_LAVA)                       ? "lava" :
           (hab == HT_ROCK)                       ? "rock"
                                                  : "unknown"),
-         (mons_is_sleeping(&mons)        ? "sleep" :
+         (mons.asleep()        ? "sleep" :
           mons_is_wandering(&mons)       ? "wander" :
           mons_is_seeking(&mons)         ? "seek" :
           mons_is_fleeing(&mons)         ? "flee" :

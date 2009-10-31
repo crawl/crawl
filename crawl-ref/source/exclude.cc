@@ -29,7 +29,7 @@ static bool _mon_needs_auto_exclude(const monsters *mon, bool sleepy = false)
                 || testbits(mon->flags, MF_KNOWN_MIMIC));
     }
     // Auto exclusion only makes sense if the monster is still asleep.
-    return (mons_is_sleeping(mon));
+    return (mon->asleep());
 }
 
 // Check whether a given monster is listed in the auto_exclude option.

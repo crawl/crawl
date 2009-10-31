@@ -684,7 +684,7 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     if (mons_is_stationary(mon)) // not able to leave the level
         return (false);
 
-    if (mons_is_sleeping(mon)) // not aware of what is happening
+    if (mon->asleep()) // not aware of what is happening
         return (false);
 
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals

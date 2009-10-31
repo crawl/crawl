@@ -785,7 +785,6 @@ bool mons_is_chaotic(const monsters *mon);
 bool mons_is_poisoner(const monsters *mon);
 bool mons_is_confused(const monsters *m, bool class_too = false);
 bool mons_is_caught(const monsters *m);
-bool mons_is_sleeping(const monsters *m);
 bool mons_is_wandering(const monsters *m);
 bool mons_is_seeking(const monsters *m);
 bool mons_is_fleeing(const monsters *m);

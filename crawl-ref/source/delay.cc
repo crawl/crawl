@@ -72,7 +72,7 @@ static bool _recite_mons_useless(const monsters *mon)
                && holiness != MH_DEMONIC
             || mons_is_stationary(mon)
             || mons_is_fleeing(mon)
-            || mons_is_sleeping(mon)
+            || mon->asleep()
             || mons_wont_attack(mon)
             || mons_neutral(mon)
             || mons_is_confused(mon)

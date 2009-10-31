@@ -942,7 +942,7 @@ static void _good_god_follower_attitude_change(monsters *monster)
         && mons_is_holy(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_wont_attack(monster)
-        && you.visible_to(monster) && !mons_is_sleeping(monster)
+        && you.visible_to(monster) && !monster->asleep()
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
@@ -982,7 +982,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
         && !mons_is_shapeshifter(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_friendly(monster)
-        && you.visible_to(monster) && !mons_is_sleeping(monster)
+        && you.visible_to(monster) && !monster->asleep()
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
@@ -1017,7 +1017,7 @@ void slime_convert(monsters* monster)
         && !mons_neutral(monster)
         && !mons_friendly(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
-        && you.visible_to(monster) && !mons_is_sleeping(monster)
+        && you.visible_to(monster) && !monster->asleep()
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
@@ -1392,7 +1392,7 @@ void monster_grid(bool do_updates)
 
         if (monster->alive() && mons_near(monster))
         {
-            if (do_updates && (mons_is_sleeping(monster)
+            if (do_updates && (monster->asleep()
                                || mons_is_wandering(monster))
                 && check_awaken(monster))
             {
@@ -1515,7 +1515,7 @@ bool check_awaken(monsters* monster)
         unnatural_stealthy = true;
     }
 
-    if (mons_is_sleeping(monster))
+    if (monster->asleep())
     {
         if (mons_holiness(monster) == MH_NATURAL)
         {
@@ -1900,7 +1900,7 @@ void blood_smell( int strength, const coord_def& where )
         if (distance(monster->pos(), where) <= range)
         {
             // Let sleeping hounds lie.
-            if (mons_is_sleeping(monster)
+            if (monster->asleep()
                 && mons_species(monster->type) != MONS_VAMPIRE
                 && monster->type != MONS_SHARK)
             {

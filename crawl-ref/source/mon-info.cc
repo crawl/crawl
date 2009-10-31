@@ -163,7 +163,7 @@ static std::string _verbose_info(const monsters* m)
             return(" (confused)");
         if (mons_is_fleeing(m))
             return(" (fleeing)");
-        if (mons_is_sleeping(m))
+        if (m->asleep())
         {
             if (mons_holiness(m) == MH_UNDEAD
                 || mons_holiness(m) == MH_NONLIVING

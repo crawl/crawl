@@ -2750,11 +2750,6 @@ bool mons_is_caught(const monsters *m)
     return (m->has_ench(ENCH_HELD));
 }
 
-bool mons_is_sleeping(const monsters *m)
-{
-    return (m->behaviour == BEH_SLEEP);
-}
-
 bool mons_is_wandering(const monsters *m)
 {
     return (m->behaviour == BEH_WANDER);
@@ -5988,7 +5983,7 @@ bool monsters::cannot_move() const
 
 bool monsters::asleep() const
 {
-    return (mons_is_sleeping(this));
+    return (behaviour == BEH_SLEEP);
 }
 
 bool monsters::backlit(bool check_haloed) const
@@ -7415,7 +7410,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_HELD:
     {
         if (mons_is_stationary(this) || mons_cannot_act(this)
-            || mons_is_sleeping(this))
+            || asleep())
         {
             break;
         }
