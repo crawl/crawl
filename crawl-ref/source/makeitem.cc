@@ -3307,7 +3307,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = random_choose(WPN_SPEAR, WPN_SPEAR, WPN_HALBERD,
-                                           WPN_WHIP,  WPN_FLAIL, -1);
+                                           WPN_CLUB,  WPN_WHIP,  WPN_FLAIL, -1);
         }
         break;
 
