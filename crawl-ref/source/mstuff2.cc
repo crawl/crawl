@@ -2645,7 +2645,7 @@ static void _merge_ench_durations(monsters *initial_slime, monsters *merge_to)
 }
 
 
-// Calculate slime creature Hp and hd based on how many are merged.
+// Calculate slime creature hp and hd based on how many are merged.
 static void _stats_from_blob_count(monsters *slime, float hp_per_blob)
 {
     slime->max_hit_points = (int)(slime->number * hp_per_blob);
