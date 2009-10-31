@@ -1710,17 +1710,17 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
-    bool shifter;
+    bool shifter_or_chaotic;
 
     if (victim->atype() == ACT_MONSTER)
     {
         monsters* mon = dynamic_cast<monsters*>(victim);
-        shifter = mons_is_shapeshifter(mon);
+        shifter_or_chaotic = mons_is_chaotic(mon); // Includes shapeshifters.
     }
     else
-        shifter = transform_changed_physiology();
+        shifter_or_chaotic = transform_changed_physiology();
 
-    if (shifter || victim->is_unholy())
+    if (shifter_or_chaotic || victim->is_unholy())
     {
         dmg *= 2;
 
