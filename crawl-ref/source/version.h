@@ -122,12 +122,6 @@ namespace Version
      */
     std::string CFLAGS();
 
-    //! The CFLAGS_L.
-    /*!
-     * Returns the CFLAGS_L the executable was compiled with.
-     */
-    std::string CFLAGS_L();
-
     //! The LDFLAGS.
     /*!
      * Returns the flags the executable was linked with.

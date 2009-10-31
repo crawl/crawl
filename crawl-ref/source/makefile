@@ -490,7 +490,8 @@ endif
 
 CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
 CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
-YCFLAGS  := -w -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
+ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
+YACC_CFLAGS  := $(ALL_CFLAGS) -w -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
 
 UTIL = util/
 
@@ -595,7 +596,7 @@ test:
 ifeq ($(shell which fastdep 2> /dev/null),)
 
 %.d: %.cc
-	$(QUIET_DEPEND)$(CXX) -MM $(CFLAGS) $(CFLAGS_L) $< > $@
+	$(QUIET_DEPEND)$(CXX) -MM $(ALL_CFLAGS) $< > $@
 
 depend: $(OBJECTS:.o=.d)
 
@@ -626,7 +627,7 @@ endif
 # This information is included in crash reports, and is printed with
 # "crawl -version"
 compflag.h: $(OBJECTS:.o=.cc)
-	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(CFLAGS)" "$(CFLAGS_L)" "$(LDFLAGS)"
+	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)"
 
 build.h: $(OBJECTS:.o=.cc)
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
@@ -726,11 +727,11 @@ wizard: $(GAME)
 # test.
 
 $(UTIL)%.o: $(UTIL)%.cc
-	$(QUIET_CXX)$(CXX) $(CFLAGS) $(CFLAGS_L) $(YCFLAGS) -o $@ -c $<
+	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -o $@ -c $<
 
 ifdef PCH
 %.h.gch: %.h
-	$(QUIET_PCH)$(CXX) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
+	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
@@ -738,10 +739,10 @@ endif
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
 %.o: %.m
-	$(QUIET_CXX)$(CC) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
+	$(QUIET_CXX)$(CC) $(ALL_CFLAGS) -c $< -o $@
 
 %.o: %.cc
-	$(QUIET_CXX)$(CXX) $(CFLAGS) $(CFLAGS_L) -c $< -o $@
+	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -c $< -o $@
 
 #
 # Contribs

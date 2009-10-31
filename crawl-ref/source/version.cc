@@ -95,11 +95,6 @@ namespace Version
         return CRAWL_CFLAGS;
     }
 
-    std::string CFLAGS_L()
-    {
-        return CRAWL_CFLAGS_L;
-    }
-
     std::string LDFLAGS()
     {
         return CRAWL_LDFLAGS;
@@ -121,7 +116,6 @@ std::string compilation_info()
                         Version::BuildProcessor().c_str());
 
     out += make_stringf("CLFAGS: %s" EOL, Version::CFLAGS().c_str());
-    out += make_stringf("CFLAGS_L: %s" EOL, Version::CFLAGS_L().c_str());
     out += make_stringf("LDFLAGS: %s" EOL, Version::LDFLAGS().c_str());
 
     return (out);
