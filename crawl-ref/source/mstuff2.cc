@@ -2782,7 +2782,7 @@ bool slime_split_merge(monsters *thing)
     if (mons_is_sleeping(thing) || mons_is_wandering(thing)
         || thing->foe == MHITNOT)
     {
-        if(thing->number > 1 && thing->hit_points == thing->max_hit_points)
+        if (thing->number > 1 && thing->hit_points == thing->max_hit_points)
         {
             // Anywhere we can place am offspring?  If so, split.
             for (int i = 0; i < 8; ++i)
