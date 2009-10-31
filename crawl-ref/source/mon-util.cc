@@ -2044,11 +2044,10 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     if ((mon.flags & MF_KNOWN_MIMIC) && mons_is_shapeshifter(&mon))
     {
-        // If momentarily in original form, don't display "shaped shifter".
+        // If momentarily in original form, don't display "shaped
+        // shifter".
         if (mons_genus(mon.type) != MONS_SHAPESHIFTER)
-        {
             result += " shaped shifter";
-        }
     }
 
     // All done.
@@ -7692,18 +7691,20 @@ void monsters::apply_enchantment(const mon_enchant &me)
         }
         break;
 
-    case ENCH_GLOWING_SHAPESHIFTER:    // This ench never runs out!
-        // Number of actions is fine for shapeshifters.
-        // Don't change shape while taking the stairs because
-        // monster_polymorph has an assert about it. -cao
-        if (!(this->flags & MF_TAKING_STAIRS)
+    case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
+        // Number of actions is fine for shapeshifters.  Don't change
+        // shape while taking the stairs because monster_polymorph() has
+        // an assert about it. -cao
+        if (!(this->flags & MF_TAKING_STAIRS) && !asleep()
             && (type == MONS_GLOWING_SHAPESHIFTER
                 || one_chance_in(4)))
+        {
             monster_polymorph(this, RANDOM_MONSTER);
+        }
         break;
 
-    case ENCH_SHAPESHIFTER:    // This ench never runs out!
-        if (!(this->flags & MF_TAKING_STAIRS)
+    case ENCH_SHAPESHIFTER:         // This ench never runs out!
+        if (!(this->flags & MF_TAKING_STAIRS) && !asleep()
             && (type == MONS_SHAPESHIFTER
                 || x_chance_in_y(1000 / (15 * hit_dice / 5), 1000)))
         {
