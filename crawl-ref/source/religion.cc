@@ -5025,7 +5025,7 @@ static bool _feawn_retribution()
 
             unsigned i = radius_points[0].size() - target_count;
 
-            for(; i < radius_points[0].size(); ++i)
+            for (; i < radius_points[0].size(); ++i)
             {
                 temp.pos = radius_points[0].at(i);
                 temp.cls = coinflip() ?

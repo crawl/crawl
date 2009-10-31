@@ -147,13 +147,13 @@ struct mgen_data
     // Generation flags from mgen_flag_type.
     unsigned        flags;
 
-    // What god the monster worships, if any.  Used for monsters that are god
-    // gifts, to indicate which god sent them, and by priest monsters, to
-    // indicate whose priest they are.
+    // What god the monster worships, if any.  Used for monsters that
+    // are god gifts, to indicate which god sent them, and by priest
+    // monsters, to indicate whose priest they are.
     god_type        god;
 
     // The number of hydra heads, manticore attack volleys, or merged
-    // slime creatures. Note: in older version this field was used for
+    // slime creatures.  Note: in older versions this field was used for
     // both this and for base_type.
     int             number;
 

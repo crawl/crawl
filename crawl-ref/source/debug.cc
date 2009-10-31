@@ -4068,11 +4068,11 @@ static skill_type _fsim_melee_skill(const item_def *item)
 static void _fsim_set_melee_skill(int skill, const item_def *item)
 {
     you.skills[_fsim_melee_skill(item)] = skill;
-    you.skills[SK_FIGHTING]            = skill * 15 / 27;
-    you.skills[SK_ARMOUR]              = skill * 15 / 27;
+    you.skills[SK_FIGHTING]             = skill * 15 / 27;
+    you.skills[SK_ARMOUR]               = skill * 15 / 27;
     you.skills[SK_SHIELDS]              = skill;
-    for(int i=0; i<15; i++)
-        you.skills[SK_SPELLCASTING+i]  = skill;
+    for (int i = 0; i < 15; ++i)
+        you.skills[SK_SPELLCASTING + i] = skill;
 }
 
 static void _fsim_set_ranged_skill(int skill, const item_def *item)
