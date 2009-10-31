@@ -518,7 +518,7 @@ void map_lines::add_line(const std::string &s)
 
 std::string map_lines::clean_shuffle(std::string s)
 {
-    return replace_all_of(s, " \t", "");
+    return (replace_all_of(s, " \t", ""));
 }
 
 std::string map_lines::check_block_shuffle(const std::string &s)
@@ -614,10 +614,10 @@ bool map_colour_list::parse(const std::string &col, int weight)
 {
     const int colour = col == "none" ? BLACK : str_to_colour(col, -1);
     if (colour == -1)
-        return false;
+        return (false);
 
     push_back(map_weighted_colour(colour, weight));
-    return true;
+    return (true);
 }
 
 std::string map_lines::add_colour(const std::string &sub)
@@ -2725,10 +2725,10 @@ mons_spec mons_list::mons_by_name(std::string name) const
         return (MONS_ABOMINATION_LARGE);
 
     if (ends_with(name, "-headed hydra") && !starts_with(name, "spectral "))
-        return get_hydra_spec(name);
+        return (get_hydra_spec(name));
 
     if (ends_with(name, " slime creature"))
-        return get_slime_spec(name);
+        return (get_slime_spec(name));
 
     mons_spec spec;
     get_zombie_type(name, spec);

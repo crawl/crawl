@@ -1804,8 +1804,10 @@ monster_type draconian_colour_by_name(const std::string &name)
                   == (MONS_PALE_DRACONIAN - MONS_DRACONIAN), c1);
 
     for (unsigned i = 0; i < ARRAYSZ(drac_colour_names); ++i)
+    {
         if (name == drac_colour_names[i])
             return (static_cast<monster_type>(i + MONS_BLACK_DRACONIAN));
+    }
 
     return (MONS_PROGRAM_BUG);
 }

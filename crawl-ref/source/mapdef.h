@@ -450,7 +450,7 @@ class mons_spec
     level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
     mon_attitude_type attitude;
-    int  number;              // Head count for hydras
+    int  number;              // Head count for hydras, etc.
     int  quantity;            // Number of monsters (usually 1).
     int  genweight, mlevel;
     bool fix_mons;
