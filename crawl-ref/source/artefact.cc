@@ -128,6 +128,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     else if (is_good_god(which_god)
              && (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
                  || brand == SPWPN_VAMPIRICISM || brand == SPWPN_REAPING
+                 || brand == SPWPN_CHAOS
                  || is_demonic(item)
                  || artefact_wpn_property(item, ARTP_CURSED) != 0))
     {
@@ -152,10 +153,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_ZIN:
-        // Lawful god: no chaos, no mutagenics.
-        if (brand == SPWPN_CHAOS)
-            return (false);
-
+        // Lawful god: no mutagenics.
         if (artefact_wpn_property(item, ARTP_MUTAGENIC))
             return (false);
         break;
