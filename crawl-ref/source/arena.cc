@@ -1140,6 +1140,8 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
             || arena::banned_glyphs[mons_char(mg.cls)]);
 }
 
+// XXX: We sometimes get a book-keeping error when a slime creature
+// splits.
 void arena_placed_monster(monsters *monster)
 {
     if (monster->attitude == ATT_FRIENDLY)
@@ -1264,7 +1266,12 @@ void arena_monster_died(monsters *monster, killer_type killer,
     // Only respawn those monsers which were initally placed in the
     // arena.
     const int midx = monster->mindex();
-    if (arena::respawn && arena::to_respawn[midx] != -1)
+    if (arena::respawn && arena::to_respawn[midx] != -1
+        // Don't respawn when a slime 'dies' from merging with another
+        // slime.
+        && !(monster->type == MONS_SLIME_CREATURE && silent
+             && killer == KILL_MISC
+             && killer_index == NON_MONSTER))
     {
         arena::faction *fac = NULL;
         if (monster->attitude == ATT_FRIENDLY)
@@ -1276,6 +1283,17 @@ void arena_monster_died(monsters *monster, killer_type killer,
         {
             fac->respawn_list.push_back(arena::to_respawn[midx]);
             fac->respawn_pos.push_back(monster->pos());
+
+            // Un-merge slime when it respawns.
+            // XXX: We're still losing slimes here.
+            if (monster->type == MONS_SLIME_CREATURE)
+            {
+                for (unsigned int i = 1; i < monster->number; i++)
+                {
+                    fac->respawn_list.push_back(arena::to_respawn[midx]);
+                    fac->respawn_pos.push_back(monster->pos());
+                }
+            }
 
             arena::to_respawn[midx] = -1;
         }
