@@ -6,7 +6,10 @@
 #ifndef RAY_H
 #define RAY_H
 
+#include "fixary.h"
 #include "geom2d.h"
+
+typedef FixedArray<bool,3,3> reflect_grid;
 
 struct ray_def
 {
@@ -20,7 +23,7 @@ struct ray_def
 
     coord_def pos() const;
     bool advance();
-    void advance_and_bounce();
+    void bounce(const reflect_grid &rg);
     void regress();
 };
 

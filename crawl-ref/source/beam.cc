@@ -1634,7 +1634,10 @@ void bolt::bounce()
         while (feat_is_solid(grd(ray.pos())));
 
         bounce_pos = ray.pos();
-        ray.advance_and_bounce();
+        reflect_grid rg;
+        for (adjacent_iterator ai(ray.pos()); ai; ++ai)
+            rg(*ai) = feat_is_solid(grd(ray.pos()));
+        ray.bounce(rg);
         range_used += 2;
     }
     while (range_used < range && feat_is_solid(grd(ray.pos())));

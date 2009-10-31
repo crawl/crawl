@@ -66,7 +66,7 @@ bool ray_def::advance()
     }
 }
 
-void ray_def::advance_and_bounce()
+void ray_def::bounce(const reflect_grid &rg)
 {
     // XXX
     r.dir = -r.dir;
