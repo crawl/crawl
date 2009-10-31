@@ -2651,7 +2651,7 @@ static void _stats_from_blob_count(monsters *slime, float hp_per_blob)
     slime->hit_points = slime->max_hit_points;
 }
 
-// Create a new slime creature at 'target' and split 'thing''s HP and
+// Create a new slime creature at 'target', and split 'thing''s hp and
 // merge count with the new monster.
 static bool _do_split(monsters *thing, coord_def & target)
 {
@@ -2694,8 +2694,8 @@ static bool _do_split(monsters *thing, coord_def & target)
     return (true);
 }
 
-// Actually merge two slime creature pooling their HP etc.
-// intial_slime is the one that get's killed off by this process.
+// Actually merge two slime creature, pooling their hp, etc.
+// initial_slime is the one that gets killed off by this process.
 static bool _do_merge(monsters *initial_slime, monsters *merge_to)
 {
     // Combine enchantment durations.
@@ -2767,7 +2767,7 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
     return (true);
 }
 
-// Slime creatures can split but not merge under these conditions
+// Slime creatures can split but not merge under these conditions.
 static bool _unoccupied_slime(monsters *thing)
 {
      return (mons_is_sleeping(thing)
@@ -2776,8 +2776,7 @@ static bool _unoccupied_slime(monsters *thing)
 
 }
 
-// Slime things cannot split or merge if they have any of these
-// conditions.
+// Slime creatures cannot split or merge under these conditions.
 static bool _disabled_slime(monsters *thing)
 {
     return (!thing
@@ -2786,12 +2785,12 @@ static bool _disabled_slime(monsters *thing)
             || mons_is_paralysed(thing));
 }
 
-// See if there are any appropriate adjacent slime creatures for
-// 'thing' to merge with, if so carry out the merge.
+// See if there are any appropriate adjacent slime creatures for 'thing'
+// to merge with.  If so, carry out the merge.
 static bool _slime_merge(monsters *thing)
 {
-    if(!thing || _disabled_slime(thing) || _unoccupied_slime(thing))
-        return false;
+    if (!thing || _disabled_slime(thing) || _unoccupied_slime(thing))
+        return (false);
 
     int max_slime_merge = 5;
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -2799,84 +2798,87 @@ static bool _slime_merge(monsters *thing)
     coord_def origin = thing->pos();
 
     // Check for adjacent slime creatures.
-    for(int i=0;i<8;i++)
+    for (int i = 0; i < 8; ++i)
     {
-        coord_def target=origin + Compass[compass_idx[i]];
-        monsters * other_thing = monster_at(target);
+        coord_def target = origin + Compass[compass_idx[i]];
+        monsters *other_thing = monster_at(target);
 
-        // We found an adjacent monster, is it another slime creature
+        // We found an adjacent monster.  Is it another slime creature
         // we can consider merging with?
-        if(other_thing
-           && other_thing->mons_species() == MONS_SLIME_CREATURE
-           && other_thing->attitude == thing->attitude
-           && other_thing->is_summoned() == thing->is_summoned()
-           && !mons_is_shapeshifter(other_thing)
-           && !_disabled_slime(other_thing))
+        if (other_thing
+            && other_thing->mons_species() == MONS_SLIME_CREATURE
+            && other_thing->attitude == thing->attitude
+            && other_thing->is_summoned() == thing->is_summoned()
+            && !mons_is_shapeshifter(other_thing)
+            && !_disabled_slime(other_thing))
         {
             // We can actually merge if doing so won't take us over the
-            // merge cap and the 'movement' would bring us closer to
-            // our target.
+            // merge cap and the 'movement' would bring us closer to our
+            // target.
             int new_blob_count = other_thing->number + thing->number;
-            if(new_blob_count <= max_slime_merge
-               && grid_distance(thing->target, thing->pos()) >
-                  grid_distance(thing->target, target))
+            if (new_blob_count <= max_slime_merge
+                && grid_distance(thing->target, thing->pos()) >
+                   grid_distance(thing->target, target))
             {
-                return _do_merge(thing, other_thing);
+                return (_do_merge(thing, other_thing));
             }
         }
     }
 
     // No adjacent slime creatures we could merge with.
-    return false;
+    return (false);
 }
 
 // See if slime creature 'thing' can split, and carry out the split if
 // we can find a square to place the new slime creature on.
 static bool _slime_split(monsters *thing)
 {
-    if(!thing
-       || !_unoccupied_slime(thing)
-       || _disabled_slime(thing)
-       || thing->number <= 1)
-        return false;
+    if (!thing
+        || !_unoccupied_slime(thing)
+        || _disabled_slime(thing)
+        || thing->number <= 1)
+    {
+        return (false);
+    }
 
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    std::random_shuffle(compass_idx, compass_idx+8);
+    std::random_shuffle(compass_idx, compass_idx + 8);
     coord_def origin = thing->pos();
 
     // Anywhere we can place an offspring?
-   for (int i = 0; i < 8; i++)
-   {
-       coord_def target=origin + Compass[compass_idx[i]];
+    for (int i = 0; i < 8; ++i)
+    {
+        coord_def target = origin + Compass[compass_idx[i]];
 
-       if(mons_class_can_pass(MONS_SLIME_CREATURE,
-                              env.grid(target))
-          && !actor_at(target))
-       {
-           // This can fail if placing a new monster fails. That
-           // probably means we have too many monsters on the level
-           // so just return in that case.
-           return _do_split(thing, target);
-       }
-   }
+        if (mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target))
+            && !actor_at(target))
+        {
+            // This can fail if placing a new monster fails.  That
+            // probably means we have too many monsters on the level,
+            // so just return in that case.
+            return (_do_split(thing, target));
+        }
+    }
 
-   // No free squares
-   return false;
+   // No free squares.
+   return (false);
 }
 
 // See if a given slime creature can split or merge.
-bool slime_split_merge(monsters * thing)
+bool slime_split_merge(monsters *thing)
 {
-    // No merging/splitting shapeshifters
-    if(!thing
-       || mons_is_shapeshifter(thing)
-       || thing->mons_species() != MONS_SLIME_CREATURE)
-        return false;
+    // No merging/splitting shapeshifters.
+    if (!thing
+        || mons_is_shapeshifter(thing)
+        || thing->mons_species() != MONS_SLIME_CREATURE)
+    {
+        return (false);
+    }
 
     if (_slime_split(thing))
-        return true;
+        return (true);
 
-    return _slime_merge(thing);
+    return (_slime_merge(thing));
 }
 
 bool orc_battle_cry(monsters *chief)
