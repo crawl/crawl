@@ -76,7 +76,8 @@ struct grid
 
 double intersect(const ray &r, const line &l);
 double nextintersect(const ray &r, const lineseq &ls);
-bool nextcell(ray &r, const grid &g, bool pass_corner);
+bool nextcell(ray &r, const grid &g);
+void movehalfcell(ray &r, const grid &g);
 
 }
 

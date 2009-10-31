@@ -68,8 +68,9 @@ static double tdist(const ray &r, const lineseq &ls)
 }
 
 // Shoot the ray inside the next cell.
-// Returns true if succesfully advanced, false if aborted due to corner.
-bool nextcell(ray &r, const grid &g, bool pass_corner)
+// Returns true if succesfully advanced into a new cell,
+// false if it hit a corner.
+bool nextcell(ray &r, const grid &g)
 {
     // ASSERT(!parallel(g.vert, g.horiz));
     lineseq ls;
@@ -84,7 +85,12 @@ bool nextcell(ray &r, const grid &g, bool pass_corner)
         double sd = tdist(r, g.ls1);
         double td = tdist(r, g.ls2);
         if (double_is_zero(s - t))
+        {
+            // Move onto the corner. The fact that we're on a corner
+            // should be tracked externally.
+            r.advance(s);
             return (false);
+        }
         double dmin = std::min(s,t);
         double dnext = std::min(std::max(s,t), dmin + std::min(sd, td));
         r.advance((dmin + dnext) / 2.0);
@@ -96,6 +102,19 @@ bool nextcell(ray &r, const grid &g, bool pass_corner)
     return (true);
 }
 
+void movehalfcell(ray &r, const grid &g)
+{
+    // ASSERT(!parallel(g.vert, g.horiz));
+    lineseq ls;
+    double t;
+    if (parallel(r.dir, g.ls1.f))
+        t = tdist(r, g.ls2);
+    else if (parallel(r.dir, g.ls2.f))
+        t = tdist(r, g.ls1);
+    else
+        t = std::min(tdist(r, g.ls1), tdist(r, g.ls2));
+    r.advance(0.5 * t);
+}
 
 // vector space implementation
 

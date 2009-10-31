@@ -20,16 +20,42 @@ static int ifloor(double d)
 
 coord_def ray_def::pos() const
 {
-    // TODO: Assert we're in a central diamond.
+    // XXX: pretty arbitrary if we're just on a corner.
     int x = ifloor(r.start.x);
     int y = ifloor(r.start.y);
     return (coord_def(x, y));
 }
 
+// Return false if we passed or hit a corner.
 bool ray_def::advance()
 {
-    return (geom::nextcell(r, diamonds, true)
-            && geom::nextcell(r, diamonds, false));
+    if (on_corner)
+    {
+        on_corner = false;
+        geom::movehalfcell(r, diamonds);
+    }
+    else
+    {
+        // Starting inside a diamond.
+        bool c = !geom::nextcell(r, diamonds);
+
+        if (c)
+        {
+            // r is now on a corner, going from diamond to diamond.
+            geom::movehalfcell(r, diamonds);
+            return (false);
+        }
+    }
+    // Now inside a non-diamond.
+
+    if (geom::nextcell(r, diamonds))
+        return (true);
+    else
+    {
+        // r is now on a corner, going from non-diamond to non-diamond.
+        on_corner = true;
+        return (false);
+    }
 }
 
 void ray_def::advance_and_bounce()
