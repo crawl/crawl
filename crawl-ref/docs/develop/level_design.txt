@@ -26,6 +26,7 @@ use:
 
  altar.des    - minivaults containing altars
  arena.des    - arenas for the arena mode
+ bailey.des   - the bailey portal vault
  bazaar.des   - entrances to bazaar portal vaults, and bazaars proper
  crypt.des    - random vaults for Crypt, the Crypt:5 branch ends, and the
                 predefined maps for Tomb:1, Tomb:2 and Tomb:3
@@ -50,9 +51,11 @@ use:
  pan.des      - vaults of the Pan demon lords, Pan minivaults
  rooms.des    - special monster rooms, such as orc, kobold and jelly rooms
  sewer.des    - the sewer portal vault
+ shrine.des   - the shrine portal vault
  temple.des   - Ecumenical Temples, and Temple entrances
  vaults.des   - entrances for the Vaults, Vaults-specific vaults, the
                 Hall of Blades, and Vaults:8
+ volcano.des  - the volcano portal vault
  ziggurat.des - the ziggurat entry vaults, pillars and arenas
  zot.des      - vaults for the Zot branch and the maps for Zot:5
 
