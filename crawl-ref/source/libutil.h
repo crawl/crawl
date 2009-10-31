@@ -35,6 +35,10 @@ std::string upcase_first(std::string);
 
 bool ends_with(const std::string &s, const std::string &suffix);
 
+#ifdef UNIX
+extern "C" int stricmp(const char *str1, const char *str2);
+#endif
+
 // String "tags"
 #define TAG_UNFOUND -20404
 bool strip_tag(std::string &s, const std::string &tag, bool nopad = false);

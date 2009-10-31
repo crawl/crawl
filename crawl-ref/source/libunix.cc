@@ -1129,13 +1129,6 @@ int wherey()
     return (y + 1);
 }
 
-
-extern "C" int stricmp( const char *str1, const char *str2 )
-{
-    return (strcmp(str1, str2));
-}
-
-
 void delay( unsigned long time )
 {
     usleep( time * 1000 );

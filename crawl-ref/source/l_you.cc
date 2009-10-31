@@ -4,6 +4,7 @@
 #include "l_libs.h"
 
 #include "abl-show.h"
+#include "branch.h"
 #include "chardump.h"
 #include "coord.h"
 #include "delay.h"
@@ -275,7 +276,39 @@ static int _you_gold(lua_State *ls)
 
 LUAWRAP(_you_die,ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_SOMETHING))
 
-LUARET1(you_where_are_you, number, you.where_are_you)
+LUAFN(you_in_branch)
+{
+    const char* name = luaL_checkstring(ls, 1);
+
+    int br = NUM_BRANCHES;
+
+    for (int i = 0; i < NUM_BRANCHES; i++)
+    {
+        if (stricmp(name, branches[i].shortname) == 0
+            || stricmp(name, branches[i].longname) == 0
+            || stricmp(name, branches[i].abbrevname) == 0)
+        {
+            if (br != NUM_BRANCHES)
+            {
+                std::string err = make_stringf(
+                    "'%s' matches both branch '%s' and '%s'",
+                    name, branches[br].abbrevname,
+                    branches[i].abbrevname);
+                return (luaL_argerror(ls, 1, err.c_str()));
+            }
+            br = i;
+        }
+    }
+
+    if (br == NUM_BRANCHES)
+    {
+        std::string err = make_stringf("'%s' matches no branches.", name);
+        return (luaL_argerror(ls, 1, err.c_str()));
+    }
+
+    bool in_branch = (br == you.where_are_you);
+    PLUARET(boolean, in_branch);
+}
 
 static const struct luaL_reg you_dlib[] =
 {
@@ -291,7 +324,7 @@ static const struct luaL_reg you_dlib[] =
 { "gold",               _you_gold },
 { "uniques",            _you_uniques },
 { "die",                _you_die },
-{ "where_are_you",      you_where_are_you },
+{ "in_branch",          you_in_branch },
 
 { NULL, NULL }
 };

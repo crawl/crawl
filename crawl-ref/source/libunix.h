@@ -40,7 +40,6 @@ int kbhit(void);
 int putch(unsigned char chr);
 int putwch(unsigned chr);
 void put_colour_ch(int colour, unsigned ch);
-extern "C" int stricmp(const char *str1, const char *str2);
 int translate_keypad(int keyin);
 int wherex(void);
 int wherey(void);

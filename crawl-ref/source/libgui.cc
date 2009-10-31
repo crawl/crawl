@@ -405,10 +405,5 @@ char *strlwr(char *str)
     return (str);
 }
 
-int stricmp(const char *str1, const char *str2)
-{
-    return (strcmp(str1, str2));
-}
-
 #endif // #ifdef UNIX
 #endif // #ifdef USE_TILE

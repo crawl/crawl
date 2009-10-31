@@ -282,7 +282,7 @@ local hellknight = "hell knight w:1 ; hand axe ego:flaming . ring mail ego:fire_
 
 function fiery_humans (e)
     -- This is for the village! Wargs and orcs if you came from orc
-    if you.where_are_you() == 2 then
+    if you.in_branch("orc") then
         local orc = "orc warrior ; ring mail ego:fire_resistance race:orcish | leather armour ego:fire_resistance \
                      race:orcish"
         e.mons("warg / " .. orc)
@@ -299,7 +299,7 @@ function fiery_guardians (e)
     local guard_type = ""
     local main_guard = ""
     -- If we came from orc, we expect to only see orcs.
-    if you.where_are_you() == 2 then
+    if you.in_branch("orc") then
         -- We did, and maybe we'll place a unique.
         if crawl.one_chance_in(9) then
             e.mons("orc warrior ; spear race:orcish ego:flaming . leather armour ego:fire_resistance")
@@ -325,7 +325,7 @@ function fiery_guardians (e)
     end
 
     -- No unique, orcs!
-    if you.where_are_you() == 2 then
+    if you.in_branch("orc") then
         e.mons("orc warrior ; spear race:orcish ego:flaming . leather armour ego:fire_resistance")
         e.mons("orc warrior ; trident race:orcish ego:flaming . ring mail ego:fire_resistance / \
                 orc knight ; scythe race:orcish ego:flaming . banded mail ego:fire_resistance")
