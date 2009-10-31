@@ -812,9 +812,7 @@ static int kill_lualc_holiness(lua_State *ls)
     {
         const char *verdict = "strange";
         if (ke->monnum == -1)
-        {
             verdict = is_ghost(ke)? "undead" : "demonic";
-        }
         else
         {
             switch (mons_class_holiness(ke->monnum))

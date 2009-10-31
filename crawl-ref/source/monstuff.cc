@@ -2953,11 +2953,9 @@ void print_wounds(const monsters *monster)
 static bool _wounded_damaged(monster_type mon_type)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    const mon_holy_type holy = mons_class_holiness(mon_type);
-    if (holy == MH_UNDEAD || holy == MH_NONLIVING || holy == MH_PLANT)
-        return (true);
+    const mon_holy_type holi = mons_class_holiness(mon_type);
 
-    return (false);
+    return (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT);
 }
 
 //---------------------------------------------------------------

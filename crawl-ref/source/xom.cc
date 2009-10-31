@@ -1257,11 +1257,11 @@ static int _xom_send_allies(int sever, bool debug = false)
 
     for (int i = 0; i < numdemons; ++i)
     {
-        monster_type monster = _xom_random_demon(sever);
+        monster_type mon_type = _xom_random_demon(sever);
 
         summons[i] =
             create_monster(
-                mgen_data(monster, BEH_FRIENDLY,
+                mgen_data(mon_type, BEH_FRIENDLY,
                           3, MON_SUMM_AID,
                           you.pos(), MHITYOU,
                           MG_FORCE_BEH, GOD_XOM));
@@ -1269,7 +1269,7 @@ static int _xom_send_allies(int sever, bool debug = false)
         if (summons[i] != -1)
         {
             num_actually_summoned++;
-            is_demonic[i] = (mons_class_holiness(monster) == MH_DEMONIC);
+            is_demonic[i] = (mons_class_holiness(mon_type) == MH_DEMONIC);
 
             // If it's not a demon, Xom got it someplace else, so use
             // different messages below.
@@ -1351,8 +1351,8 @@ static int _xom_send_one_ally(int sever, bool debug = false)
     if (debug)
         return (XOM_GOOD_SINGLE_ALLY);
 
-    const monster_type mon = _xom_random_demon(sever);
-    const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
+    const monster_type mon_type = _xom_random_demon(sever);
+    const bool is_demonic = (mons_class_holiness(mon_type) == MH_DEMONIC);
 
     // If we have a non-demon, Xom got it someplace else, so use
     // different messages below.
@@ -1366,7 +1366,7 @@ static int _xom_send_one_ally(int sever, bool debug = false)
 
     const int summons =
         create_monster(
-            mgen_data(mon, beha, 6, MON_SUMM_AID, you.pos(), MHITYOU,
+            mgen_data(mon_type, beha, 6, MON_SUMM_AID, you.pos(), MHITYOU,
                       MG_FORCE_BEH, GOD_XOM));
 
     if (summons != -1)
@@ -1866,8 +1866,8 @@ static int _xom_send_major_ally(int sever, bool debug = false)
     if (debug)
         return (XOM_GOOD_MAJOR_ALLY);
 
-    const monster_type mon = _xom_random_demon(sever);
-    const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
+    const monster_type mon_type = _xom_random_demon(sever);
+    const bool is_demonic = (mons_class_holiness(mon_type) == MH_DEMONIC);
 
     beh_type beha = BEH_FRIENDLY;
 

@@ -1906,8 +1906,8 @@ void bolt::affect_cell(bool avoid_self)
     const coord_def old_pos = pos();
     const bool was_solid = feat_is_solid(grd(pos()));
 
-    bool avoid_monster = (avoid_self && this->thrower == KILL_MON_MISSILE);
-    bool avoid_player  = (avoid_self && this->thrower != KILL_MON_MISSILE);
+    bool avoid_monster = (avoid_self && thrower == KILL_MON_MISSILE);
+    bool avoid_player  = (avoid_self && thrower != KILL_MON_MISSILE);
 
     if (was_solid)
     {
@@ -1943,7 +1943,7 @@ void bolt::affect_cell(bool avoid_self)
     // We don't want to hit a monster in a wall square twice.  Also,
     // stop single target beams from affecting a monster if they already
     // affected the player on this square. -cao
-    if ((!hit_player || this->is_beam || this->is_explosion)
+    if ((!hit_player || is_beam || is_explosion)
          && !still_wall && !avoid_monster)
     {
         if (monsters* m = monster_at(pos()) )
@@ -3016,7 +3016,7 @@ void bolt::affect_ground()
     // Spore explosions might spawn a fungus.  The spore explosion
     // covers 21 tiles in open space, so the expected number of spores
     // produced is the x in x_chance_in_y() in the conditional below.
-    if (is_explosion && this->flavour == BEAM_SPORE
+    if (is_explosion && flavour == BEAM_SPORE
         && x_chance_in_y(2, 21)
         && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
         && !actor_at(pos()))
@@ -4166,21 +4166,21 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
 bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
 {
-    // Feawn worshippers can fire through monsters of the same alignment.
-    // This means Feawn-worshipping players can fire through allied plants,
-    // and also means that feawn worshiping oklob plants can fire through
-    // plants with the same attitude.
-    bool originator_worships_feawn=false;
+    // Feawn worshippers can fire through monsters of the same
+    // alignment.  This means Feawn-worshipping players can fire through
+    // allied plants, and also means that Feawn-worshipping oklob plants
+    // can fire through plants with the same attitude.
+    bool originator_worships_feawn = false;
 
     // Checking beam_source to decide whether the player or a monster
-    // fired the beam (so we can check their religion).  This is complicated
-    // by the fact that this beam may in fact be an explosion caused by a
-    // miscast effect.  In that case the value of beam_source may be negative
-    // (god induced miscast) or greater than NON_MONSTER (various other miscast
-    // sources).  So we check whether or not this is an explosion, and also the
-    // range of beam_source before attempting to reference env.mons with it.
-    // -cao
-    if (!is_explosion && this->beam_source == NON_MONSTER)
+    // fired the beam (so we can check their religion).  This is
+    // complicated by the fact that this beam may in fact be an
+    // explosion caused by a miscast effect.  In that case, the value of
+    // beam_source may be negative (god-induced miscast) or greater than
+    // NON_MONSTER (various other miscast sources).  So we check whether
+    // or not this is an explosion, and also the range of beam_source
+    // before attempting to reference env.mons with it. -cao
+    if (!is_explosion && beam_source == NON_MONSTER)
         originator_worships_feawn = (you.religion == GOD_FEAWN);
     else if (!is_explosion && beam_source >= 0 && beam_source < MAX_MONSTERS)
         originator_worships_feawn = (env.mons[beam_source].god == GOD_FEAWN);
@@ -4475,7 +4475,7 @@ bool bolt::attempt_block(monsters* mon)
         {
             rc = true;
             item_def *shield = mon->mslot_item(MSLOT_SHIELD);
-            if (this->is_reflectable(shield))
+            if (is_reflectable(shield))
             {
                 if (you.can_see(mon))
                 {
@@ -4663,15 +4663,15 @@ void bolt::affect_monster(monsters* mon)
     // Explosions always 'hit'.
     const bool engulfs = (is_explosion || is_big_cloud);
 
-    if (engulfs && this->flavour == BEAM_SPORE
-        && mons_class_holiness(mon->type) == MH_NATURAL)
+    if (engulfs && flavour == BEAM_SPORE
+        && mon->holiness() == MH_NATURAL)
     {
         apply_enchantment_to_monster(mon);
     }
 
     // Make a copy of the to-hit before we modify it.
     int beam_hit = hit;
-    if (mon->invisible() && !this->can_see_invis)
+    if (mon->invisible() && !can_see_invis)
         beam_hit /= 2;
     if (mon->type == MONS_KIRKE)  // deflect missiles
         beam_hit = random2(beam_hit * 2) / 3;
@@ -4775,17 +4775,17 @@ void bolt::affect_monster(monsters* mon)
         monster_post_hit(mon, final);
     else
     {
-        // Prevent spore explosions killing plants from being registered as
-        // a feawn misconduct. Deaths can trigger the ally dying or plant
-        // dying conducts, but spore explosions shouldn't count for either of
-        // those.
+        // Prevent spore explosions killing plants from being registered
+        // as a Feawn misconduct.  Deaths can trigger the ally dying or
+        // plant dying conducts, but spore explosions shouldn't count
+        // for either of those.
         //
-        // FIXME: Should be a better way of doing this. For now we are just
-        // falsifying the death report... -cao
-        if(you.religion == GOD_FEAWN && this->flavour == BEAM_SPORE
-           && feawn_protects(mon))
+        // FIXME: Should be a better way of doing this.  For now, we are
+        // just falsifying the death report... -cao
+        if (you.religion == GOD_FEAWN && flavour == BEAM_SPORE
+            && feawn_protects(mon))
         {
-            if (mon->attitude==ATT_FRIENDLY)
+            if (mon->attitude == ATT_FRIENDLY)
                 mon->attitude = ATT_HOSTILE;
             corpse = monster_die(mon, KILL_MON, beam_source_as_target());
         }
@@ -5854,7 +5854,7 @@ void bolt::set_agent(actor *actor)
 
 actor* bolt::agent() const
 {
-    if (YOU_KILL(this->thrower))
+    if (YOU_KILL(thrower))
         return (&you);
     else if (!invalid_monster_index(beam_source))
         return (&menv[beam_source]);
@@ -5864,8 +5864,8 @@ actor* bolt::agent() const
 
 bool bolt::is_enchantment() const
 {
-    return (this->flavour >= BEAM_FIRST_ENCHANTMENT
-            && this->flavour <= BEAM_LAST_ENCHANTMENT);
+    return (flavour >= BEAM_FIRST_ENCHANTMENT
+            && flavour <= BEAM_LAST_ENCHANTMENT);
 }
 
 std::string bolt::get_short_name() const
