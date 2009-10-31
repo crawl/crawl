@@ -1145,10 +1145,8 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
     }
 
     // Slime creature attacks are multiplied by the number merged.
-    if(mon->mons_species() == MONS_SLIME_CREATURE)
-    {
+    if (mon->mons_species() == MONS_SLIME_CREATURE)
         attk.damage *= mon->number;
-    }
 
     return (zombified ? downscale_zombie_attack(mon, attk) : attk);
 }
@@ -1630,14 +1628,11 @@ int exper_value(const monsters *monster)
     const int  mHD         = monster->hit_dice;
     int  maxhp       = monster->max_hit_points;
 
-    // Hacks to make merged slime creatures not worth so much
-    // exp. We will calculate the experience we would get for 1
-    // blob then just multiply it so that exp is linear with blobs
-    // merged. -cao
-    if(monster->mons_species() == MONS_SLIME_CREATURE)
-    {
+    // Hacks to make merged slime creatures not worth so much exp.  We
+    // will calculate the experience we would get for 1 blob, and then
+    // just multiply it so that exp is linear with blobs merged. -cao
+    if (monster->mons_species() == MONS_SLIME_CREATURE)
         maxhp /= monster->number;
-    }
 
     // These are some values we care about.
     const int  speed       = mons_base_speed(monster);
@@ -1741,7 +1736,7 @@ int exper_value(const monsters *monster)
 
     // Slow monsters without spells and items often have big HD which
     // cause the experience value to be overly large... this tries
-    // to reduce the inappropriate amount of XP that results. -- bwr
+    // to reduce the inappropriate amount of XP that results. - bwr
     if (speed < 10 && !spellcaster && item_usage < MONUSE_STARTING_EQUIPMENT)
         x_val /= 2;
 
@@ -1752,14 +1747,12 @@ int exper_value(const monsters *monster)
         x_val /= 10;
     }
 
-    // Slime creature exp hack part 2, scale exp back up by the
-    // number of blobs merged. -cao
-    if(monster->mons_species() == MONS_SLIME_CREATURE)
-    {
+    // Slime creature exp hack part 2: Scale exp back up by the number
+    // of blobs merged. -cao
+    if (monster->mons_species() == MONS_SLIME_CREATURE)
         x_val *= monster->number;
-    }
 
-    // Reductions for big values. -- bwr
+    // Reductions for big values. - bwr
     if (x_val > 100)
         x_val = 100 + ((x_val - 100) * 3) / 4;
     if (x_val > 1000)
@@ -2204,9 +2197,9 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         break;
     }
 
-    if(mon.mons_species() == MONS_SLIME_CREATURE && desc != DESC_DBNAME)
+    if (mon.mons_species() == MONS_SLIME_CREATURE && desc != DESC_DBNAME)
     {
-        ASSERT(mon.number <=5);
+        ASSERT(mon.number <= 5);
         const char* cardinals[] = {"", "large ", "very large ",
                                    "enormous ", "titanic "};
         result += cardinals[mon.number - 1];
@@ -3680,7 +3673,7 @@ void monsters::init_with(const monsters &mon)
     god               = mon.god;
 
     if (mon.ghost.get())
-        ghost.reset(new ghost_demon( *mon.ghost ));
+        ghost.reset(new ghost_demon(*mon.ghost));
     else
         ghost.reset(NULL);
 }
@@ -3693,10 +3686,10 @@ bool monsters::swimming() const
 
 static bool _player_near_water()
 {
-    for(adjacent_iterator ai(you.pos()); ai; ++ai)
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
         if (feat_is_water(grd(*ai)))
-            return true;
-    return false;
+            return (true);
+    return (false);
 }
 
 bool monsters::wants_submerge() const

@@ -644,7 +644,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_TOMB_OF_DOROKLOHE:
     {
         sumcount = 0;
-        for(adjacent_iterator ai(monster->pos()); ai; ++ai)
+        for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
             // we can blink away the crowd, but only our allies
             if (mgrd(*ai) != NON_MONSTER
@@ -664,7 +664,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
 
         sumcount = 0;
-        for(adjacent_iterator ai(monster->pos()); ai; ++ai)
+        for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
             if (mgrd(*ai) != NON_MONSTER && monster_at(*ai) != monster)
             {
@@ -2589,22 +2589,22 @@ bool ugly_thing_mutate(monsters *ugly, bool proximity)
 }
 
 // Inflict any enchantments the parent slime has on its offspring,
-// leaving durations unchanged I guess. -cao
-static void _split_ench_durations(monsters * initial_slime, monsters * split_off)
+// leaving durations unchanged, I guess. -cao
+static void _split_ench_durations(monsters *initial_slime, monsters *split_off)
 {
     mon_enchant_list::iterator i;
 
-    for( i=initial_slime->enchantments.begin();
-        i!=initial_slime->enchantments.end(); ++i)
+    for (i = initial_slime->enchantments.begin();
+         i != initial_slime->enchantments.end(); ++i)
     {
         split_off->add_ench(i->second);
     }
 
 }
 
-// What to do about any enchantments these two slimes may have?
-// For now we are averaging the durations -cao
-static void _merge_ench_durations(monsters * initial_slime, monsters * merge_to)
+// What to do about any enchantments these two slimes may have?  For
+// now, we are averaging the durations. -cao
+static void _merge_ench_durations(monsters *initial_slime, monsters *merge_to)
 {
     mon_enchant_list::iterator i;
 
@@ -2615,16 +2615,16 @@ static void _merge_ench_durations(monsters * initial_slime, monsters * merge_to)
     for (i = initial_slime->enchantments.begin();
          i != initial_slime->enchantments.end(); ++i)
     {
-        // does the other slime have this enchantment as well?
+        // Does the other slime have this enchantment as well?
         mon_enchant temp = merge_to->get_ench(i->first);
-        // If not use duration 0 for their part of the average.
+        // If not, use duration 0 for their part of the average.
         int duration = temp.ench == ENCH_NONE ? 0 : temp.duration;
 
         i->second.duration = (i->second.duration * initial_count
                               + duration * merge_to_count)/total_count;
 
-        if(!i->second.duration)
-            i->second.duration=1;
+        if (!i->second.duration)
+            i->second.duration = 1;
 
         merge_to->add_ench(i->second);
     }
@@ -2632,12 +2632,12 @@ static void _merge_ench_durations(monsters * initial_slime, monsters * merge_to)
     for (i = merge_to->enchantments.begin();
          i != merge_to->enchantments.end(); ++i)
     {
-        if(initial_slime->enchantments.find(i->first)
-           != initial_slime->enchantments.end()
-           && i->second.duration > 1)
+        if (initial_slime->enchantments.find(i->first)
+                != initial_slime->enchantments.end()
+            && i->second.duration > 1)
         {
             i->second.duration = (merge_to_count * i->second.duration)
-                                  /total_count;
+                                  / total_count;
 
             merge_to->update_ench(i->second);
         }
@@ -2646,15 +2646,15 @@ static void _merge_ench_durations(monsters * initial_slime, monsters * merge_to)
 
 
 // Calculate slime creature Hp and hd based on how many are merged.
-static void _stats_from_blob_count(monsters * slime, float hp_per_blob)
+static void _stats_from_blob_count(monsters *slime, float hp_per_blob)
 {
-    slime->max_hit_points = int(slime->number * hp_per_blob);
+    slime->max_hit_points = (int)(slime->number * hp_per_blob);
     slime->hit_points = slime->max_hit_points;
 }
 
-static bool _split_slime(monsters * thing, coord_def & target)
+static bool _split_slime(monsters *thing, coord_def& target)
 {
-    // create a new slime
+    // Create a new slime.
     int slime_idx = create_monster(mgen_data(MONS_SLIME_CREATURE,
                                              thing->behaviour,
                                              0,
@@ -2663,23 +2663,21 @@ static bool _split_slime(monsters * thing, coord_def & target)
                                              thing->foe,
                                              MG_FORCE_PLACE));
 
-    if(slime_idx == -1)
-        return false;
+    if (slime_idx == -1)
+        return (false);
 
-    monsters * new_slime = &env.mons[slime_idx];
+    monsters *new_slime = &env.mons[slime_idx];
 
-    // Inflict the new slime with any enchantments on the parent
+    // Inflict the new slime with any enchantments on the parent.
     _split_ench_durations(thing, new_slime);
     new_slime->attitude = thing->attitude;
     new_slime->flags = thing->flags;
 
-    if(!new_slime)
-        return false;
+    if (!new_slime)
+        return (false);
 
-    if(you.can_see(thing))
-    {
+    if (you.can_see(thing))
         mprf("%s splits.", thing->name(DESC_CAP_A).c_str());
-    }
 
     int split_off = thing->number / 2;
     float hp_per_blob = thing->max_hit_points / float(thing->number);
@@ -2692,20 +2690,20 @@ static bool _split_slime(monsters * thing, coord_def & target)
     _stats_from_blob_count(thing, hp_per_blob);
     _stats_from_blob_count(new_slime, hp_per_blob);
 
-    return true;
+    return (true);
 }
 
-static bool _merge_slimes(monsters * initial_slime, monsters * merge_to)
+static bool _merge_slimes(monsters *initial_slime, monsters *merge_to)
 {
-    // Combine enchantment durations
+    // Combine enchantment durations.
     _merge_ench_durations(initial_slime, merge_to);
 
     merge_to->number += initial_slime->number;
     merge_to->max_hit_points += initial_slime->max_hit_points;
     merge_to->hit_points += initial_slime->max_hit_points;
 
-    // Merge monster flags (mostly so that MF_CREATUED_NEUTRAL etc. are
-    // passed on if the merged slime subsequently splits. Hopefully
+    // Merge monster flags (mostly so that MF_CREATED_NEUTRAL, etc. are
+    // passed on if the merged slime subsequently splits.  Hopefully
     // this won't do anything weird.
     merge_to->flags |= initial_slime->flags;
 
@@ -2713,36 +2711,36 @@ static bool _merge_slimes(monsters * initial_slime, monsters * merge_to)
     monsterentry* entry = get_monster_data(merge_to->type);
     merge_to->speed_increment -= entry->energy_usage.move;
 
-    // This is dumb. With that said, the idea is that if 2 slimes merge
-    // you can gain a space by moving away the turn after (maybe this
-    // is too nice but there will probably be a lot of complaints about
-    // the damage on higher level slimes). So we subtracted some energy
-    // above but if merge_to hasn't moved yet this turn that will just
-    // cancel its turn in this round of world_reacts. So we are going
-    // to see if merge_to has gone already by checking its mindex
-    // (this works because handle_monsters just iterates over env.mons
-    // in ascending order)
-    if(initial_slime->mindex() < merge_to->mindex())
+    // This is dumb.  With that said, the idea is that if 2 slimes merge
+    // you can gain a space by moving away the turn after (maybe this is
+    // too nice but there will probably be a lot of complaints about the
+    // damage on higher level slimes).  So we subtracted some energy
+    // above, but if merge_to hasn't moved yet this turn, that will just
+    // cancel its turn in this round of world_reacts().  So we are going
+    // to see if merge_to has gone already by checking its mindex (this
+    // works because handle_monsters just iterates over env.mons in
+    // ascending order).
+    if (initial_slime->mindex() < merge_to->mindex())
         merge_to->speed_increment -= entry->energy_usage.move;
 
-    // Overwrite the state of the slime getting merged into because
-    // it might have been resting or something.
+    // Overwrite the state of the slime getting merged into, because it
+    // might have been resting or something.
     merge_to->behaviour = initial_slime->behaviour;
     merge_to->foe = initial_slime->foe;
 
     behaviour_event(merge_to, ME_EVAL);
 
-    // Messaging
-    if(you.can_see(merge_to))
+    // Messaging.
+    if (you.can_see(merge_to))
     {
-        if(you.can_see(initial_slime))
+        if (you.can_see(initial_slime))
         {
             mprf("Two slime creatures merge to form %s.",
                  merge_to->name(DESC_NOCAP_A).c_str());
         }
         else
         {
-            mprf("A slime creatures suddenly becomes %s.",
+            mprf("A slime creature suddenly becomes %s.",
                  merge_to->name(DESC_NOCAP_A).c_str());
         }
 
@@ -2760,78 +2758,78 @@ static bool _merge_slimes(monsters * initial_slime, monsters * merge_to)
         delay(flash_delay);
     }
 
-    // have to 'kill' the slime doing the merging
+    // Have to 'kill' the slime doing the merging.
     monster_die(initial_slime, KILL_MISC, NON_MONSTER, true);
 
-    return true;
+    return (true);
 }
 
-bool slime_split_merge(monsters * thing)
+bool slime_split_merge(monsters *thing)
 {
-    // No merging/splitting shapeshifters
-    if(mons_is_shapeshifter(thing))
-        return false;
+    // No merging/splitting shapeshifters.
+    if (mons_is_shapeshifter(thing))
+        return (false);
 
-    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6 ,7};
-    std::random_shuffle(compass_idx, compass_idx+8);
+    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    std::random_shuffle(compass_idx, compass_idx + 8);
 
     coord_def origin = thing->pos();
 
     int max_slime_merge = 5;
 
-    // We can split if in an 'inactive' state (wandering or sleeping for now)
+    // We can split if in an 'inactive' state (wandering or sleeping for
+    // now).
     if (mons_is_sleeping(thing) || mons_is_wandering(thing)
         || thing->foe == MHITNOT)
     {
         if(thing->number > 1 && thing->hit_points == thing->max_hit_points)
         {
-            // Anywhere we can place a offspring?
-            // If so split.
-            for (int i = 0; i < 8; i++)
+            // Anywhere we can place am offspring?  If so, split.
+            for (int i = 0; i < 8; ++i)
             {
                 coord_def target=origin + Compass[compass_idx[i]];
 
-                if(mons_class_can_pass(MONS_SLIME_CREATURE,
-                                       env.grid(target))
-                   && !actor_at(target))
+                if (mons_class_can_pass(MONS_SLIME_CREATURE,
+                                        env.grid(target))
+                    && !actor_at(target))
                 {
-                    return _split_slime(thing, target);
+                    return (_split_slime(thing, target));
                 }
             } // end adjacent squares check
         }// end non singular check
     }
     // Otherwise see if a merge is viable.
-    else if(!mons_is_fleeing(thing))
+    else if (!mons_is_fleeing(thing))
     {
         // Check for adjacent slime creatures.
-        for(int i=0;i<8;i++)
+        for (int i = 0; i < 8; ++i)
         {
-            coord_def target=origin + Compass[compass_idx[i]];
-            monsters * other_thing = monster_at(target);
+            coord_def target = origin + Compass[compass_idx[i]];
+            monsters *other_thing = monster_at(target);
 
-            // We can merge if we find another adjacent slime which isn't
-            // already at the merge cap and is closer to the target than
-            // our current position.
-            if(other_thing
-               && other_thing->mons_species() == MONS_SLIME_CREATURE
-               && other_thing->attitude == thing->attitude
-               && other_thing->is_summoned() == thing->is_summoned()
-               && !mons_is_shapeshifter(other_thing))
+            // We can merge if we find another adjacent slime which
+            // isn't already at the merge cap and is closer to the
+            // target than our current position.
+            if (other_thing
+                && other_thing->mons_species() == MONS_SLIME_CREATURE
+                && other_thing->attitude == thing->attitude
+                && other_thing->is_summoned() == thing->is_summoned()
+                && !mons_is_shapeshifter(other_thing))
             {
                 int new_blob_count = other_thing->number + thing->number;
 
-                if(new_blob_count <= max_slime_merge
-                   && grid_distance(thing->target, thing->pos()) >
-                      grid_distance(thing->target, target))
+                if (new_blob_count <= max_slime_merge
+                    && grid_distance(thing->target, thing->pos()) >
+                       grid_distance(thing->target, target))
                 {
-                    return _merge_slimes(thing, other_thing);
+                    return (_merge_slimes(thing, other_thing));
                 }
             }
         } // end check adjacent
     }// end merge check
 
-    // Couldn't merge or split
-    return false;
+    // Couldn't merge or split.
+    return (false);
 }
 
 bool orc_battle_cry(monsters *chief)

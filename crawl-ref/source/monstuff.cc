@@ -5865,7 +5865,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     if ((!mons_near(monster)
          || mons_is_sleeping(monster)
          || mons_is_submerged(monster))
-         && monster->mons_species() != MONS_SLIME_CREATURE)
+             && monster->mons_species() != MONS_SLIME_CREATURE)
     {
         return (false);
     }
@@ -5886,10 +5886,11 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         break;
 
     case MONS_SLIME_CREATURE:
-        // Slime creatures may split or merge depending on the situation
+        // Slime creatures may split or merge depending on the
+        // situation.
         used = slime_split_merge(monster);
-        if(!monster->alive())
-            return true;
+        if (!monster->alive())
+            return (true);
         break;
 
     case MONS_ORC_KNIGHT:
@@ -7509,7 +7510,7 @@ static void _khufu_drop_tomb(monsters *monster)
     int count = 0;
 
     monster->behaviour = BEH_SEEK; // don't wander on duty!
-    for(adjacent_iterator ai(monster->pos()); ai; ++ai)
+    for (adjacent_iterator ai(monster->pos()); ai; ++ai)
     {
         if (grd(*ai) == DNGN_ROCK_WALL)
         {
@@ -7853,8 +7854,8 @@ static void _handle_monster_move(monsters *monster)
             // Berserking monsters are limited to running up and
             // hitting their foes.
             && !monster->has_ench(ENCH_BERSERK)
-            // Slime creatures can split while wandering or resting
-            || monster->type == MONS_SLIME_CREATURE)
+                // Slime creatures can split while wandering or resting.
+                || monster->type == MONS_SLIME_CREATURE)
         {
             bolt beem;
 
@@ -7862,18 +7863,18 @@ static void _handle_monster_move(monsters *monster)
             beem.target      = monster->target;
             beem.beam_source = monster->mindex();
 
-            const bool friendly_or_near =
-                mons_friendly(monster) || monster->near_foe();
             // Prevents unfriendlies from nuking you from offscreen.
             // How nice!
-            // Slime creatures can split when offscreen
-            if (friendly_or_near || monster->type == MONS_TEST_SPAWNER
+            const bool friendly_or_near =
+                mons_friendly(monster) || monster->near_foe();
+            if (friendly_or_near
+                || monster->type == MONS_TEST_SPAWNER
+                // Slime creatures can split when offscreen.
                 || monster->type == MONS_SLIME_CREATURE)
             {
-                // [ds] Special abilities shouldn't overwhelm spellcasting
-                // in monsters that have both. This aims to give them both
-                // roughly the same weight.
-
+                // [ds] Special abilities shouldn't overwhelm
+                // spellcasting in monsters that have both.  This aims
+                // to give them both roughly the same weight.
                 if (coinflip() ? _handle_special_ability(monster, beem)
                                  || _handle_monster_spell(monster, beem)
                                : _handle_monster_spell(monster, beem)
