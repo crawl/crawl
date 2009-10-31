@@ -111,6 +111,11 @@ bool monster_info::less_than(const monster_info& m1,
     if (m1type == MONS_DANCING_WEAPON)
         return (false);
 
+    if(m1type == MONS_SLIME_CREATURE)
+    {
+        return (m1.m_mon->number > m2.m_mon->number);
+    }
+
     if (zombified)
     {
         // Because of the type checks above, if one of the two is zombified, so
