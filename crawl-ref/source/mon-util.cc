@@ -1735,42 +1735,31 @@ void define_monster(monsters &mons)
     mons.ench_countdown = 0;
 }
 
-unsigned char ugly_thing_random_colour()
-{
-    const unsigned char colours[] =
-    {
-        RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
-    };
-
-    return (RANDOM_ELEMENT(colours));
-}
+static const unsigned char ugly_colour_values[] = {
+    RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
+};
 
 static const char *ugly_colour_names[] = {
     "red", "brown", "green", "cyan", "purple", "white"
 };
+
+unsigned char ugly_thing_random_colour()
+{
+    return (RANDOM_ELEMENT(ugly_colour_values));
+}
 
 int ugly_thing_colour_offset(const monsters *mon)
 {
     if (mon->type != MONS_UGLY_THING && mon->type != MONS_VERY_UGLY_THING)
         return (-1);
 
-    switch (make_low_colour(mon->colour))
+    for (unsigned i = 0; i < ARRAYSZ(ugly_colour_values); ++i)
     {
-        case RED:
-            return (0);
-        case BROWN:
-            return (1);
-        case GREEN:
-            return (2);
-        case CYAN:
-            return (3);
-        case MAGENTA:
-            return (4);
-        case LIGHTGREY:
-            return (5);
-        default:
-            return (-1);
+        if (make_low_colour(mon->colour) == ugly_colour_values[i])
+            return (i);
     }
+
+    return (-1);
 }
 
 static std::string _ugly_thing_colour_name(const monsters *mon)
