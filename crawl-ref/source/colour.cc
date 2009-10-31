@@ -258,12 +258,12 @@ int element_colour( int element, bool no_random )
     case ETC_UGLY:
     case ETC_VERY_UGLY:
         ret = ugly_thing_random_colour();
-        if (element == ETC_VERY_UGLY)
-            ret = make_high_colour(ret);
+        ret = (element == ETC_VERY_UGLY) ? make_high_colour(ret)
+                                         : make_low_colour(ret);
         break;
 
     case ETC_RANDOM:
-        ret = 1 + random2(15);              // always random
+        ret = random_colour();              // always random
         break;
 
     case ETC_FLOOR: // should already be handled
