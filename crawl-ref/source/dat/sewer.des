@@ -199,43 +199,43 @@ ITEM:     potion of restore abilities w:7 / potion of cure mutation / \
           potion of gain dexterity
 MONS:     rat / grey rat / green rat w:2 / nothing w:3
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcccCCCCCCCCCCCCxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcwXvvvvvvvvvvvCCCxxxxxxxxxCCCxxxxxxxxxxx
-xxxxxxxxcwccCCCCCCCCCvvVCCCCxxxxxxC*CCCxxxxxxxxx
-xxxxxxxxcwwcxxxxxxxxCCCvvvvCCCCxxCCvvvCxxxxxxxxx
-xxxxxxxxccwcxxxxxxxxxxCCCCvvvvCCCCvvvvCxxxxxxxxx
-xxxxxxxxxcwccxxxxxxxxxxxxCCCCvvvvvvvvvCxxxxxxxxx
-xxxxxxxxccwwcxxxxxxxxxxxxxxxCCCCCCCCCCCxxxxxxxxx
-xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcWwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxccWwWccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxccc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxc<..WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxccc.Www'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxcc'WwW'ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc.'WwW''cccccccccccccccccccccccccccccccccx
-xxxxxxc''WwWWWWWWWWWWWWWWWWWWWWWW..444.A.<..44cx
-xxxxxxc''WwW''cccccccccccccccccccccccccccccccccx
-xxxxxxc.'WwW''cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc.WWwWW'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc'WwwwW'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc'WwqwW'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc'WwwwW'cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc.'WWW''cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc..''''.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxcccc1ccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xefExxxx.122...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xdexxxx.2232.y..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx?.?xxx....yYy.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx?.xxx?....y.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx?x..?.?....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx???.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          xxxxxxxxxxxxxx
+        cccCCCCCCCCCCCCxxx       xxxxx
+        cwXvvvvvvvvvvvCCCxxxx   xxCCCxxx
+        cwccCCCCCCCCCvvVCCCCxxxxxxC*CCCx
+        cwwcxxxxxxxxCCCvvvvCCCCxxCCvvvCx
+        ccwc       xxxCCCCvvvvCCCCvvvvCx
+         cwcc        xxxxCCCCvvvvvvvvvCx
+        ccwwc           xxxxCCCCCCCCCCCx
+        cwwwc              xxxxxxxxxxxxx
+        cwwwc
+        cwwwc
+        cWwwc
+       ccWwWcc
+       c.WwW.c
+     ccc.WwW.c
+     c<..WwW.c
+     ccc.Www'c
+       c.WwW.c
+      cc'WwW'cc
+      c.'WwW''ccccccccccccccccccccccccccccccccc
+      c''WwWWWWWWWWWWWWWWWWWWWWWW..444.A.<..44c
+      c''WwW''ccccccccccccccccccccccccccccccccc
+      c.'WwW''c
+      c.WWwWW'c
+      c'WwwwW'c
+      c'WwqwW'c
+      c'WwwwW'c
+      c.'WWW''c
+      c..''''.c
+xxxxxxcccc1ccccx
+xefExxxx.122...xx
+xdexxxx.2232.y..x
+xx?.?xxx....yYy.x
+ xx?.xxx?....y.xx
+  x?x..?.?....xx
+  xx???.xxxxxxx
+   xxxxxx
 ENDMAP
 
 ############################################################################
@@ -262,38 +262,36 @@ KMONS:    ! = giant frog / nothing w:2
 : sewer_random_monster_list(_G)
 : sewer_milestone(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xcccccccccccccccccccccccccccccccccccxxxxxx
-xc.11---------.................1111cxxxxxx
-xc1WWW-ccccccccccccccccccccccc1WWW1cxxxxxx
-xc1WwWWcxxxxxxxxxxxxxxxxxxxxxc1WwW.cxxxxxx
-xc1WwwWcxxxxxxxxxxxxxxxxxxxxxc.WwW.cxxxxxx
-xc.WwW1cxxxxxccccccccxxxxxxxxc.WwW-cxxxxxx
-xc.WwwWcxxcccc!!!!!!ccccxxxxxc-WwW-cxxxxxx
-xc.Wwwwccccwwwwwwwww!!!ccxxxxc-WwW-cxxxxxx
-xc-WwwwccwwwWwwwwwwwwww!ccxxxc-WwW-cxxxxxx
-xc-WwwwcwwWW<-wwwwwwwwww!ccxxc-WwW-cxxxxxx
-xc-Wwwwwwww-..-ww.--wwwww!cxxc-WwW-cxxxxxx
-xc-WwWwwWww---.-.*.--wwwwwcxxc-WwW-cxxxxxx
-xc-WwWWWwWww-.--*|*.wwwwwwcxxc-WwW.cxxxxxx
-xc-WwWWwwwWww.---d-wwwwwwwcxxc-WwW.cxxxxxx
-xc-WwWWWwwwW------wwwwwwwwcxxc.WwW.cxxxxxx
-xc-WwWWWwwwwW---wwwwwwWwwccxxc.WwW.cxxxxxx
-xc-WwW.WwwwwwwwwwwwwwWwwwcxxxc-WwW.cxxxxxx
-xc.WwW.WwwwwwWWwwwwwwwWccccccc-WwW-cxxxxxx
-xc.WwWW..WWWWwwWwWW.........---Www-cxxxxxx
-xc.WwwWWWWwwwWWwWWWWWWWWWWWWWWWWwW-cxxxxxx
-xc.WWwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.cxxxxxx
-xc..WWWWWWWWWWWWWWWWWWWWWWWWWWWWwW-cxxxxxx
-xcc........................----WwW-cxxxxxx
-xxcccccccccccccccccccccccccccc-WwW-cxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxcccccccc-WwW-cxxxxxx
-xxxxxxxxxxxxxxxcccccccc.----WWWWwW.ccccxxx
-xxxxxxxxxxxxxxxc.<.A..--W-WWWWWWwwwwwwwwwx
-xxxxxxxxxxxxxxxcccccccc.-..WW-.WWW1cccccxx
-xxxxxxxxxxxxxxxxxxxxxxcccccccc11111cxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ccccccccccccccccccccccccccccccccccc
+c.11---------.................1111c
+c1WWW-ccccccccccccccccccccccc1WWW1c
+c1WwWWccccccccccccccccccccccc1WwW.c
+c1WwwWccccccccccccccccccccccc.WwW.c
+c.WwW1ccccccccccccccccccccccc.WwW-c
+c.WwwWccccccc!!!!!!cccccccccc-WwW-c
+c.Wwwwccccwwwwwwwww!!!ccccccc-WwW-c
+c-WwwwccwwwWwwwwwwwwww!cccccc-WwW-c
+c-WwwwcwwWW<-wwwwwwwwww!ccccc-WwW-c
+c-Wwwwwwww-..-ww.--wwwww!cccc-WwW-c
+c-WwWwwWww---.-.*.--wwwwwcccc-WwW-c
+c-WwWWWwWww-.--*|*.wwwwwwcccc-WwW.c
+c-WwWWwwwWww.---d-wwwwwwwcccc-WwW.c
+c-WwWWWwwwW------wwwwwwwwcccc.WwW.c
+c-WwWWWwwwwW---wwwwwwWwwccccc.WwW.c
+c-WwW.WwwwwwwwwwwwwwWwwwccccc-WwW.c
+c.WwW.WwwwwwWWwwwwwwwWccccccc-WwW-c
+c.WwWW..WWWWwwWwWW.........---Www-c
+c.WwwWWWWwwwWWwWWWWWWWWWWWWWWWWwW-c
+c.WWwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.c
+c..WWWWWWWWWWWWWWWWWWWWWWWWWWWWwW-c
+cc........................----WwW-c
+ cccccccccccccccccccccccccccc-WwW-c
+                     cccccccc-WwW-c
+              cccccccc.----WWWWwW.ccccxxx
+              c.<.A..--W-WWWWWWwwwwwwwwwx
+              cccccccc.-..WW-.WWW1cccccxx
+                     cccccccc11111c
+                            ccccccc
 ENDMAP
 
 NAME:     sewer_frog_island_02
@@ -317,34 +315,32 @@ ITEM:     nothing, nothing
 : sewer_random_monster_list(_G)
 : sewer_milestone(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxcccccccccccccxxxxxxxxxxx
-xxxxxxxxxcccc-----------ccccxxxxxxxx
-xxxxxxcccc-----------------ccccxxxxx
-xxxxxcc-------ccccccccc-------ccxxxx
-xxxxcc-----cccc-------cccc-----ccxxx
-xxxcc----ccc-------------ccc----ccxx
-xxxc----cc-----ccccccc-----cc----cxx
-xxcc---cc----ccc!!!!!ccc----cc---ccx
-xxc----c----cc!w---ww!!cc----c----cx
-xcc---cc---ccw--..---ww!cc---cc---cx
-xc.---c----cw--.gh|.---w!c----c---cx
-xc<.--c----c--.edf.-----!c----c---cx
-xc.---c----c----$------w!c----c---cx
-xcc---cc---c---.------w!cc---cc---cx
-xxc----c---c--.------w!cc----c----cx
-xxcc---cc--cc--c---wwccc----cc---ccx
-xxxc----cc--c--ccccccc-----cc----cxx
-xxxcc----c--cc-..--------ccc----ccxx
-xxxxcc-------c..------cccc-----ccxxx
-xxxxxcccc---ccccccc-<-c-------ccxxxx
-xxxxxxxxcc--c-----ccccc----cccccxxxx
-xxxxxxxxxcccc-----------cccc--<cxxxx
-xxxxxxxxxxxxc---ccccccccc-...-ccxxxx
-xxxxxxxxxxxxc-----------..A.cccxxxxx
-xxxxxxxxxxxxc----------.cccccxxxxxxx
-xxxxxxxxxxxxcccccccccccccxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+           ccccccccccccc
+        cccc-----------cccc
+     cccc-----------------cccc
+    cc-------ccccccccc-------cc
+   cc-----cccc-------cccc-----cc
+  cc----ccc-------------ccc----cc
+  c----cc-----ccccccc-----cc----c
+ cc---cc----ccc!!!!!ccc----cc---cc
+ c----c----cc!w---ww!!cc----c----c
+cc---cc---ccw--..---ww!cc---cc---c
+c.---c----cw--.gh|.---w!c----c---c
+c<.--c----c--.edf.-----!c----c---c
+c.---c----c----$------w!c----c---c
+cc---cc---c---.------w!cc---cc---c
+ c----c---c--.------w!cc----c----c
+ cc---cc--cc--c---wwccc----cc---cc
+  c----cc--c--ccccccc-----cc----c
+  cc----c--cc-..--------ccc----cc
+   cc-------c..------cccc-----cc
+    cccc---ccccccc-<-c-------cc
+       cc--c-----ccccc----ccccc
+        cccc-----------cccc--<c
+           c---ccccccccc-...-cc
+           c-----------..A.ccc
+           c----------.ccccc
+           ccccccccccccc
 ENDMAP
 
 ############################################################################
@@ -362,32 +358,30 @@ KMONS:    3 = Purgy, giant lizard
 ITEM:     potion of berserk rage / potion of speed w:5
 MONS:     giant bat / giant mosquito w:2
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxx
-xxcccccccxxxxxxxxxxxxxxxx
-xcc$*|*$ccxxxxxxxxxxxxxxx
-xc..$*$..cxxxxxxxxxxxxxxx
-xc.......cxxxxxxxxxxxxxxx
-xc...2...cxxxxxxxxxxxxxxx
-xc.......cxxxxxxxxxxxxxxx
-xc.......cxxxxxxxxxxxxxxx
-xcc.....ccxxxxxxxxxxxxxxx
-xxccc.cccxxxxxcccccccxxxx
-xxxxc.cxxxxxxcc1.1..ccxxx
-xxxxc.cxxxxxcc1..w...ccxx
-xxxxc.ccccccc...www...ccx
-xxxxc..........wwwww.A.cx
-xxxxc.ccccccc1..www...ccx
-xxxxc.cxxxxxcc...w...ccxx
-xxxxc.cxxxxxxcc1....ccxxx
-xxxxc.cxxxxxxxcccccccxxxx
-xxxxc.cxxxxxxxxxxxxxxxxxx
-xxxxc.cxxxxxxxxxxxxxxxxxx
-xxxxc.cxxxxxxxxxxxxxxxxxx
-xxxxc<cxxxxxxxxxxxxxxxxxx
-xxxxc.cxxxxxxxxxxxxxxxxxx
-xxxxcdcxxxxxxxxxxxxxxxxxx
-xxxxcccxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxx
+ ccccccc
+:c$*|*$cc
+c..$*$..c
+c.......c
+c...2...c
+c.......c
+c.......c
+cc.....cc
+ ccc.ccc     ccccccc
+   c.c      cc1.1..cc
+   c.c     cc1..w...cc
+   c.ccccccc...www...cc
+   c..........wwwww.A.c
+   c.ccccccc1..www...cc
+   c.c     cc...w...cc
+   c.c      cc1....cc
+   c.c       ccccccc
+   c.c
+   c.c
+   c.c
+   c<c
+   c.c
+   cdc
+   ccc
 ENDMAP
 
 ###############################################################################
@@ -446,28 +440,28 @@ KITEM:    ' = scroll of paper w:50 / scroll of random uselessness w:30 / \
               potion of mutation / potion of levitation / \
               wizard hat / buckler / pair of gloves w:5 / pair of boots w:5
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwxxx
-xwwwwwwwwwww-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww-wwwwwwwwwwwxxx
-xwwwwwwwwwwwWwWW----WWWWWWWW-W-WWW-W-WW-WW-W-WWwWwwwwwwwwwwwxxx
-xxxxxxxxxxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
-xxxxxxxxxxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxx.1.xxx
-xxxxxxxxxxxx-wWxxxxQQQQxxxDDDDxxxxxxxxWwWxxxxx-wWxxxx1xx....1xx
-xxxxxxxxxxxxWwWxxxxx++xxxxx++xxxxxxxxx-wWxxxxxWwW--W-.........x
-xxxxxxxxxxxx-wWW-W..............<xxxxxWw-xxxxxWwWWW-1....A...1x
-xxxxxxxxxxxx-wWWW--.............<xxxxxWwWxxxxxWwWW-.xxxx......x
-xxxxxxxxxxxxWwWxxxxx++xxxxx++xxxxxxxxxWwWxxxxx-wWxxxxxxxxx.<xxx
-xxxxxxxxxxxx-wWxxxxEEEExxxSSSSxxxxxxxx-w-xxxxxWw--xxxxxxxxxxxxx
-xxxxxxxxxxxx-wWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWw-xxxxxxxxxxxxxx
-xxxx.d..dxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWxxxxxxxxx.exxx
-xx.3...d.dxxWwWWWWWW---WW-W-WW-W-WWWW--wWxxxxxWwWxxxxxxxx-22exx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwx
+xwwwwwwwwwww-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww-wwwwwwwwwwwx
+xwwwwwwwwwwwWwWW----WWWWWWWW-W-WWW-W-WW-WW-W-WWwWwwwwwwwwwwwx
+xxxxxxxxxxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxx
+           xWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxx.1.xx
+           x-wWxxxxQQQQxxxDDDDxxxxxxxxWwWxxxxx-wWxxxx1xx....1xx
+           xWwWxxxxx++xxxxx++xxxxxxxxx-wWxxxxxWwW--W-.........x
+           x-wWW-W..............<xxxxxWw-xxxxxWwWWW-1....A...1x
+           x-wWWW--.............<xxxxxWwWxxxxxWwWW-.xxxx......x
+           xWwWxxxxx++xxxxx++xxxxxxxxxWwWxxxxx-wWxxxxxxxxx.<xxx
+           x-wWxxxxEEEExxxSSSSxxxxxxxx-w-xxxxxWw--xxxxxxxxxxx
+   xxxxxxx x-wWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWw-xxxxxxxxxxxx
+ xxx.d..dxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWxxxxxxxxx.exx
+xx.3...d.dxxWwWWWWWW---WW-W-WW-W-WWWW--wWxxxxxWwWxxxxxxxx-22ex
 x.3....dxxxx-w-wwwwwwwwwwwwwwwwwwwwwww-w-xxxxxWwWWWWWWWW---2.ex
 xx3...xxxxxxWwWW-W-WWW-W-W-WWWWW-WWWWWWw-xxxxxWw-wwwwwwww---2.x
-xx3-...-xxxx-w-xxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWWWWWWW-----..x
-xxxx------xxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx-.exx
-xxxxxx------WwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
-xwwwwww--WWwwwWWWW-W-W-W-W-WWWW-W-W-W-W-WW---WWwwwwwwwwwwwwwxxx
-xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
-xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ x3-...-xxxx-w-xxxxxxxxxxxxxxxxxxxxxxxWwWxxxxx-wWWWWWWW-----..x
+ xxx------xxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx-.exx
+xxxxxx------WwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxx
+xwwwwww--WWwwwWWWW-W-W-W-W-WWWW-W-W-W-W-WW---WWwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
