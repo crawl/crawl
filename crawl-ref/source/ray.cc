@@ -1,6 +1,14 @@
 /*
- *  File:       .cc
- *  Summary:
+ *  File:       ray.cc
+ *  Summary:    Diamond grid wrapper around geom::ray.
+ *
+ * The geom::grid diamonds is a checkerboard grid rotated
+ * by 45 degrees such that the black cells ("diamonds") lie just
+ * within the normal crawl map cells.
+ *
+ * ray_def provides for advancing and reflecting rays in
+ * map coordinates, where a ray touches a given cell if it
+ * meets the diamond.
  */
 
 #include "AppHdr.h"
