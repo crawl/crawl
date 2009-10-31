@@ -187,41 +187,46 @@ bool is_chaotic_item(const item_def& item)
 
 bool is_hasty_item(const item_def& item)
 {
+    bool retval = false;
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_SPEED)
-            return (true);
-        if (item.sub_type == WPN_QUICK_BLADE)
-            return (true);
+        retval = (item_brand == SPWPN_SPEED
+                  || item.sub_type == WPN_QUICK_BLADE);
         }
         break;
     case OBJ_ARMOUR:
         {
         const int item_brand = get_armour_ego_type(item);
-        if (item_brand == SPARM_RUNNING)
-            return (true);
+        retval = (item_brand == SPARM_RUNNING);
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_HASTING)
-            return (true);
+        retval = (item.sub_type == WAND_HASTING);
         break;
     case OBJ_POTIONS:
-        if (item.sub_type == POT_SPEED || item.sub_type == POT_BERSERK_RAGE)
-            return (true);
+        retval = (item.sub_type == POT_SPEED
+                  || item.sub_type == POT_BERSERK_RAGE);
         break;
     case OBJ_JEWELLERY:
-        if (item.sub_type == AMU_RAGE || item.sub_type == AMU_RESIST_SLOW)
-            return (true);
+        retval = (item.sub_type == AMU_RAGE
+                  || item.sub_type == AMU_RESIST_SLOW);
         break;
     default:
         break;
     }
 
-    return (false);
+    if (is_artefact(item)
+        && artefact_wpn_property(item, ARTP_ANGRY)
+            || artefact_wpn_property(item, ARTP_BERSERK))
+    {
+        retval = true;
+    }
+
+    return (retval);
 }
 
 bool is_holy_discipline(int discipline)
