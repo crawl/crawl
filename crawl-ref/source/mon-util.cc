@@ -599,7 +599,8 @@ bool mons_is_chaotic(const monsters *mon)
 
     if (mon->has_attack_flavour(AF_MUTATE)
         || mon->has_attack_flavour(AF_ROT)
-        || mon->has_attack_flavour(AF_CHAOS))
+        || mon->has_attack_flavour(AF_CHAOS)
+        || mon->has_attack_flavour(AF_KLOWN))
     {
         return (true);
     }
