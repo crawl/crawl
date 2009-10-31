@@ -1620,6 +1620,9 @@ void bolt::draw(const coord_def& p)
     }
 }
 
+// Bounce a bolt off a solid feature.
+// The ray is assumed to have just been advanced into
+// the feature.
 void bolt::bounce()
 {
     ray_def old_ray  = ray;
@@ -3441,6 +3444,8 @@ static void _ident_reflector(item_def *item)
         set_ident_flags(*item, ISFLAG_KNOW_TYPE);
 }
 
+// Reflect a beam back the direction it came. This is used
+// by shields of reflection.
 void bolt::reflect()
 {
     reflections++;
