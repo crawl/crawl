@@ -173,7 +173,7 @@ end
 # Entries ##########################################
 
 NAME:   portal_ice_cave_entry_animals_and_master
-TAGS:   uniq_ice_cave
+TAGS:   uniq_ice_cave patrolling
 DEPTH:  D:16-20, Lair:6-
 ORIENT: float
 : ice_cave_portal(_G)
@@ -201,7 +201,7 @@ xXX@XXxx
 ENDMAP
 
 NAME:   portal_ice_cave_entry_horrid_things
-TAGS:   uniq_ice_cave
+TAGS:   uniq_ice_cave patrolling
 DEPTH:  D:14-20, Elf:2-6
 ORIENT: float
 : ice_cave_portal(_G)
@@ -223,7 +223,7 @@ xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   portal_ice_cave_demonic_guard
-TAGS:   uniq_ice_cave
+TAGS:   uniq_ice_cave patrolling
 DEPTH:  D:14-20, Elf:2-6
 ORIENT: float
 : ice_cave_portal(_G)
