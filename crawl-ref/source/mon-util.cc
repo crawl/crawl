@@ -2058,7 +2058,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         return make_stringf("INVALID MONSTER (#%d)", mon.type);
 
     const bool arena_submerged = crawl_state.arena && !force_seen
-                                     && mons_is_submerged(&mon);
+                                     && mon.submerged();
 
     // Handle non-visible case first.
     if (!force_seen && !you.can_see(&mon) && !arena_submerged)
@@ -2697,21 +2697,6 @@ mon_attitude_type mons_attitude(const monsters *m)
         return ATT_NEUTRAL;
     else
         return ATT_HOSTILE;
-}
-
-bool mons_is_submerged(const monsters *m)
-{
-    // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
-    if (m->has_ench(ENCH_SUBMERGED))
-        return (true);
-
-    if (grd(m->pos()) == DNGN_DEEP_WATER
-        && !monster_habitable_grid(m, DNGN_DEEP_WATER))
-    {
-        return (true);
-    }
-
-    return (false);
 }
 
 bool mons_is_paralysed(const monsters *m)
@@ -3732,7 +3717,19 @@ bool monsters::wants_submerge() const
 
 bool monsters::submerged() const
 {
-    return (mons_is_submerged(this));
+    // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
+    // Can't find any reference to MF_SUBMERGED anywhere. Don't know what
+    // this means. - abrahamwl
+    if (has_ench(ENCH_SUBMERGED))
+        return (true);
+
+    if (grd(pos()) == DNGN_DEEP_WATER
+        && !monster_habitable_grid(this, DNGN_DEEP_WATER))
+    {
+        return (true);
+    }
+
+    return (false);
 }
 
 bool monsters::extra_balanced() const
@@ -5854,14 +5851,14 @@ bool monsters::fumbles_attack(bool verbose)
                 mprf("%s splashes around in the water.",
                      this->name(DESC_CAP_THE).c_str());
             }
-            else if (player_can_hear(this->pos()))
+            else if (player_can_hear(pos()))
                 mpr("You hear a splashing noise.", MSGCH_SOUND);
         }
 
         return (true);
     }
 
-    if (mons_is_submerged(this))
+    if (submerged())
         return (true);
 
     return (false);

@@ -2860,7 +2860,7 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
 // monster has tentacles).
 bool monster_can_hit_monster(monsters *monster, const monsters *targ)
 {
-    if (!mons_is_submerged(targ) || monster->has_damage_type(DVORP_TENTACLE))
+    if (!targ->submerged() || monster->has_damage_type(DVORP_TENTACLE))
         return (true);
 
     if (grd(targ->pos()) != DNGN_SHALLOW_WATER)
@@ -5653,7 +5653,7 @@ static void _handle_nearby_ability(monsters *monster)
     if (!foe
         || !monster->can_see(foe)
         || monster->asleep()
-        || mons_is_submerged(monster))
+        || monster->submerged())
     {
         return;
     }
@@ -5808,7 +5808,7 @@ static bool _siren_movement_effect(const monsters *monster)
                 {
                     swapping = true;
                 }
-                else if (!mons_is_submerged(mon))
+                else if (!mon->submerged())
                     do_resist = true;
             }
 
@@ -5865,7 +5865,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     // Slime creatures can split while out of sight.
     if ((!mons_near(monster)
          || monster->asleep()
-         || mons_is_submerged(monster))
+         || monster->submerged())
              && monster->mons_species() != MONS_SLIME_CREATURE)
     {
         return (false);
@@ -6442,7 +6442,7 @@ static bool _handle_reaching(monsters *monster)
     bool       ret = false;
     const int  wpn = monster->inv[MSLOT_WEAPON];
 
-    if (mons_is_submerged(monster))
+    if (monster->submerged())
         return (false);
 
     if (mons_aligned(monster_index(monster), monster->foe))
@@ -6504,7 +6504,7 @@ static bool _handle_scroll(monsters *monster)
     // Yes, there is a logic to this ordering {dlb}:
     if (monster->asleep()
         || mons_is_confused(monster)
-        || mons_is_submerged(monster)
+        || monster->submerged()
         || monster->inv[MSLOT_SCROLL] == NON_ITEM
         || !one_chance_in(3))
     {
@@ -6845,7 +6845,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
 
     // Yes, there is a logic to this ordering {dlb}:
     if (monster->asleep()
-        || mons_is_submerged(monster)
+        || monster->submerged()
         || !mons_class_flag(monster->type, M_SPELLCASTER)
            && !spellcasting_poly
            && draco_breath == SPELL_NO_SPELL)
@@ -7557,7 +7557,7 @@ static void _handle_monster_move(monsters *monster)
     // Handle clouds on nonmoving monsters.
     if (monster->speed == 0
         && env.cgrid(monster->pos()) != EMPTY_CLOUD
-        && !mons_is_submerged(monster))
+        && !monster->submerged())
     {
         _mons_in_cloud( monster );
     }
@@ -7677,7 +7677,7 @@ static void _handle_monster_move(monsters *monster)
         {
             if (avoid_cloud)
             {
-                if (mons_is_submerged(monster))
+                if (monster->submerged())
                 {
                     monster->speed_increment -= entry->energy_usage.swim;
                     break;
@@ -7768,7 +7768,7 @@ static void _handle_monster_move(monsters *monster)
             if (monster->foe != MHITNOT
                 && grid_distance(monster->target, monster->pos()) <= 1)
             {
-                if (mons_is_submerged(monster))
+                if (monster->submerged())
                 {
                     // Don't unsubmerge if the monster is too damaged or
                     // if the monster is afraid, or if it's avoiding the
@@ -7809,7 +7809,7 @@ static void _handle_monster_move(monsters *monster)
 
             if (mons_is_confused(monster)
                 || monster->type == MONS_AIR_ELEMENTAL
-                   && mons_is_submerged(monster))
+                   && monster->submerged())
             {
                 mmov.reset();
                 int pfound = 0;
@@ -8339,7 +8339,7 @@ static bool _monster_eat_food(monsters *monster, bool nearby)
 //---------------------------------------------------------------
 static bool _handle_pickup(monsters *monster)
 {
-    if (monster->asleep() || mons_is_submerged(monster))
+    if (monster->asleep() || monster->submerged())
         return (false);
 
     const bool nearby = mons_near(monster);
@@ -9060,7 +9060,7 @@ static bool _monster_move(monsters *monster)
 
     if (monster->type == MONS_TRAPDOOR_SPIDER)
     {
-        if (mons_is_submerged(monster))
+        if (monster->submerged())
             return (false);
 
         // Trapdoor spiders hide if they can't see their foe.

@@ -2799,7 +2799,7 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
         {
             if (mon->alive()
                 && (!require_visible || mon->visible_to(&you))
-                && !mons_is_submerged(mon)
+                && !mon->submerged()
                 && !mons_is_unknown_mimic(mon)
                 && (!dangerous_only || !mons_is_safe(mon, want_move,
                                                      consider_user_options)))

@@ -1277,7 +1277,7 @@ void handle_monster_shouts(monsters* monster, bool force)
             channel = MSGCH_SOUND;
 
         // Monster must come up from being submerged if it wants to shout.
-        if (mons_is_submerged(monster))
+        if (monster->submerged())
         {
             if (!monster->del_ench(ENCH_SUBMERGED))
             {

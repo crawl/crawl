@@ -1933,7 +1933,7 @@ static bool _paranoid_option_disable( activity_interrupt_type ai,
     if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
-        if (mon && !mon->visible_to(&you) && !mons_is_submerged(mon))
+        if (mon && !mon->visible_to(&you) && !mon->submerged())
             autotoggle_autopickup(true);
         return (true);
     }

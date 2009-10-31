@@ -2409,7 +2409,7 @@ int tileidx_feature(int object, int gx, int gy)
         {
             monsters *mon = &menv[mgrd[gx][gy]];
             // Add disturbance to tile.
-            if (mons_is_submerged(mon))
+            if (mon->submerged())
                 t += tile_dngn_count(t);
         }
 

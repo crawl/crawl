@@ -119,7 +119,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     // Better not be an unsubmerged monster either.
     ASSERT(swapping && mgrd(p) != NON_MONSTER
            || !swapping && (mgrd(p) == NON_MONSTER
-                            || mons_is_submerged( &menv[ mgrd(p) ])
+                            || menv[ mgrd(p) ].submerged()
                             || feawn_passthrough(&menv[mgrd(p)])));
 
     // Don't prompt if force is true.
@@ -1053,7 +1053,7 @@ int player_damage_type(void)
 // the player has a polearm).
 bool player_can_hit_monster(const monsters *mon)
 {
-    if (!mons_is_submerged(mon))
+    if (!mon->submerged())
         return (true);
 
     if (grd(mon->pos()) != DNGN_SHALLOW_WATER)
@@ -2729,7 +2729,7 @@ void check_beholders()
     {
         const monsters* mon = &menv[you.mesmerised_by[i]];
         if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID
-            || mons_is_submerged(mon))
+            || mon->submerged())
         {
 #ifdef DEBUG
             if (!mon->alive())

@@ -3892,7 +3892,7 @@ static void _move_player(coord_def move)
 
     coord_def mon_swap_dest;
 
-    if (targ_monst && !mons_is_submerged(targ_monst))
+    if (targ_monst && !targ_monst->submerged())
     {
         if (can_swap_places && !beholder)
         {

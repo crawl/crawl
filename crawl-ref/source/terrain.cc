@@ -705,7 +705,7 @@ void _dgn_check_terrain_player(const coord_def pos)
         // there aren't any adjacent squares where it can stay
         // submerged then move it.
         monsters* mon = monster_at(pos);
-        if (mon && !mons_is_submerged(mon))
+        if (mon && !mon->submerged())
             monster_teleport(mon, true, false);
         move_player_to_grid(pos, false, true, true);
     }

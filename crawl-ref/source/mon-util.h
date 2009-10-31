@@ -838,7 +838,6 @@ bool mons_is_fast( const monsters *mon );
 
 bool mons_is_insubstantial(int mc);
 bool mons_has_blood(int mc);
-bool mons_is_submerged(const monsters *m);
 
 bool invalid_monster(const monsters *mon);
 bool invalid_monster_type(monster_type mt);

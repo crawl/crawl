@@ -867,7 +867,7 @@ static int _xom_give_item(int power, bool debug = false)
 static bool _choose_mutatable_monster(const monsters* mon)
 {
     return (mon->alive() && mon->can_safely_mutate()
-            && !mons_is_submerged(mon));
+            && !mon->submerged());
 }
 
 static bool _is_chaos_upgradeable(const item_def &item,
