@@ -5944,6 +5944,11 @@ void excommunication(god_type new_god)
 
     redraw_skill(you.your_name, player_title());
 
+    // Renouncing may have changed the conducts on our wielded or
+    // quivered weapons so refresh the display.
+    you.wield_change = true;
+    you.redraw_quiver = true;
+
     mpr("You have lost your religion!");
     more();
 
@@ -6984,6 +6989,11 @@ void god_pitch(god_type which_god)
             simple_god_message(" grants you a jelly!");
         }
     }
+
+    // Refresh wielded/quivered weapons in case we have a new conduct
+    // on them.
+    you.wield_change = true;
+    you.redraw_quiver = true;
 
     redraw_skill(you.your_name, player_title());
 
