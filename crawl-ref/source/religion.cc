@@ -4243,7 +4243,7 @@ static void _ely_dull_inventory_weapons()
             if (wielded)
                 you.wield_change = true;
             if (quivered)
-                you.m_quiver->on_item_fired(you.inv[i]);
+                you.redraw_quiver = true;
 
             chance += item_value(you.inv[i], true) / 50;
             num_dulled++;
@@ -5945,7 +5945,7 @@ void excommunication(god_type new_god)
     redraw_skill(you.your_name, player_title());
 
     // Renouncing may have changed the conducts on our wielded or
-    // quivered weapons so refresh the display.
+    // quivered weapons, so refresh the display.
     you.wield_change = true;
     you.redraw_quiver = true;
 
