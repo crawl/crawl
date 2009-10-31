@@ -15,7 +15,7 @@
 
 void lua_push_moninf(lua_State *ls, monster_info *mi)
 {
-    monster_info **miref = 
+    monster_info **miref =
         clua_new_userdata<monster_info *>(ls, MONINF_METATABLE);
     *miref = mi;
 }

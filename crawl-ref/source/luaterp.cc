@@ -71,7 +71,7 @@ static int _loadline(lua_State *ls)
         status = luaL_loadbuffer(ls, lua_tostring(ls, 1),
                                      lua_strlen(ls, 1), "=terp");
 
-        if (!_incomplete(ls, status)) 
+        if (!_incomplete(ls, status))
             break;
         if (!_pushline(ls, 0))
             return -1;
@@ -120,7 +120,7 @@ void run_clua_interpreter(lua_State *ls)
             lua_insert(ls, 1);
             if (lua_pcall(ls, lua_gettop(ls) - 1, 0, 0) != 0)
             {
-                mprf(MSGCH_ERROR, "error calling __echo (%s)", 
+                mprf(MSGCH_ERROR, "error calling __echo (%s)",
                                   lua_tostring(ls, -1));
             }
         }

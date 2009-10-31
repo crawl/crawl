@@ -957,7 +957,7 @@ void los_def::init(const coord_def &c, const opacity_func &o,
 los_def::~los_def()
 {
     delete opc;
-    delete bds; 
+    delete bds;
 }
 
 void los_def::update()

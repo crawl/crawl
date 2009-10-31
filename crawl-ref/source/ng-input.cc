@@ -18,21 +18,21 @@ void opening_screen(void)
     if (Options.tile_title_screen)
         tiles.draw_title();
 #endif
-    
+
     std::string msg =
     "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>" EOL
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
     "2002-2009 Crawl DevTeam" EOL
     "Please consult crawl_manual.txt for instructions and legal details."
     "</brown>" EOL;
-    
+
     const bool init_found = init_file_error.empty();
-    
+
     if (!init_found)
         msg += "<lightred>No init file ";
     else
         msg += "<lightgrey>(Read options from ";
-    
+
     if (init_found)
     {
 #ifdef DGAMELAUNCH
@@ -50,9 +50,9 @@ void opening_screen(void)
         msg += init_file_error;
         msg += ", using defaults.";
     }
-    
+
     msg += EOL;
-    
+
     formatted_string::parse_string(msg).display();
     textcolor( LIGHTGREY );
 }
@@ -79,9 +79,9 @@ static void _show_name_prompt(int where, bool blankOK,
                     "job are chosen." EOL);
         }
     }
-    
+
     cprintf(EOL "What is your name today? ");
-    
+
     if (!existing_chars.empty())
     {
         const int name_x = wherex(), name_y = wherey();
@@ -89,7 +89,7 @@ static void _show_name_prompt(int where, bool blankOK,
         menu.display();
         cgotoxy(name_x, name_y);
     }
-    
+
     textcolor( LIGHTGREY );
 }
 
@@ -100,7 +100,7 @@ static void _preprocess_character_name(std::string &name, bool blankOK)
     {
         name = Options.prev_name;
     }
-    
+
     // '.', '?' and '*' are blanked.
     if (name.length() == 1
         && (name[0] == '.' || name[0] == '*' || name[0] == '?'))
@@ -112,18 +112,18 @@ static void _preprocess_character_name(std::string &name, bool blankOK)
 static bool _is_good_name(std::string &name, bool blankOK, bool verbose)
 {
     _preprocess_character_name(name, blankOK);
-    
+
     // verification begins here {dlb}:
     if (name.empty())
     {
         if (blankOK)
             return (true);
-        
+
         if (verbose)
             cprintf(EOL "That's a silly name!" EOL);
         return (false);
     }
-    
+
     // If MULTIUSER is defined, userid will be tacked onto the end
     // of each character's files, making bones a valid player name.
 #ifndef MULTIUSER
@@ -146,7 +146,7 @@ static int newname_keyfilter(int &ch)
 {
     if (ch == CK_DOWN || ch == CK_PGDN || ch == '\t')
         return -1;
-    
+
     return 1;
 }
 
@@ -163,15 +163,15 @@ static bool _read_player_name(std::string &name,
     //      Other places don't do this. --rob
     buf[0] = '\0';
     line_reader reader(buf, sizeof(buf));
-    
+
     reader.set_keyproc(keyfilter);
-    
+
     while (true)
     {
         cgotoxy(name_x, name_y);
         if (name_x <= 80)
             cprintf("%-*s", 80 - name_x + 1, "");
-        
+
         cgotoxy(name_x, name_y);
         int ret = reader.read_line(false);
         if (!ret)
@@ -179,10 +179,10 @@ static bool _read_player_name(std::string &name,
             name = buf;
             return (true);
         }
-        
+
         if (ret == CK_ESCAPE)
             return (false);
-        
+
         if (ret != CK_ESCAPE && existing.size())
         {
             menu.set_search(name);
@@ -196,7 +196,7 @@ static bool _read_player_name(std::string &name,
                 return (true);
             }
         }
-        
+
         // Go back and prompt the user.
     }
 }
@@ -208,10 +208,10 @@ void enter_player_name(newgame_def &ng, bool blankOK)
     bool ask_name = true;
     std::vector<player_save_info> existing_chars;
     slider_menu char_menu(MF_SINGLESELECT | MF_NOWRAP, false);
-    
+
     if (!ng.name.empty())
         ask_name = false;
-    
+
     if (blankOK && (ask_name || !_is_good_name(ng.name, false, false)))
     {
         existing_chars = find_saved_characters();
@@ -234,7 +234,7 @@ void enter_player_name(newgame_def &ng, bool blankOK)
                 std::string desc = " " + existing_chars[i].short_desc();
                 if (static_cast<int>(desc.length()) >= get_number_of_cols())
                     desc = desc.substr(0, get_number_of_cols() - 1);
-                
+
 #ifdef USE_TILE
                 MenuEntry *me = new PlayerMenuEntry(desc);
 #else
@@ -245,14 +245,14 @@ void enter_player_name(newgame_def &ng, bool blankOK)
             }
         }
     }
-    
+
     do
     {
         // Prompt for a new name if current one unsatisfactory {dlb}:
         if (ask_name)
         {
             _show_name_prompt(prompt_start, blankOK, existing_chars, char_menu);
-            
+
             // If the player wants out, we bail out.
             if (!_read_player_name(ng.name, existing_chars, char_menu))
                 end(0);
@@ -276,7 +276,7 @@ bool validate_player_name(const std::string &name, bool verbose)
         return (false);
     }
 #endif
-    
+
     for (unsigned int i = 0; i < name.length(); i++)
     {
         char c = name[i];
@@ -297,6 +297,6 @@ bool validate_player_name(const std::string &name, bool verbose)
             return (false);
         }
     }
-    
+
     return (true);
 }

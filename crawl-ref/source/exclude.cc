@@ -63,7 +63,7 @@ void set_auto_exclude(const monsters *mon)
         learned_something_new(TUT_AUTO_EXCLUSION, mon->pos());
     }
 }
-        
+
 // Clear auto exclusion if the monster is killed or wakes up with the
 // player in sight. If sleepy is true, stationary monsters are ignored.
 void remove_auto_exclude(const monsters *mon, bool sleepy)
@@ -383,7 +383,7 @@ void marshallExcludes(writer& outf, const exclvec& excludes)
 }
 
 void unmarshallExcludes(reader& inf, char minorVersion, exclvec &excludes)
-{ 
+{
     excludes.clear();
     int nexcludes = unmarshallShort(inf);
     if (nexcludes)

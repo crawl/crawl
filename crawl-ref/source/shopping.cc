@@ -319,7 +319,7 @@ static bool _in_a_shop( int shopidx )
         if (Options.autoinscribe_artefacts && is_artefact(item))
             item.inscription = artefact_auto_inscription(item);
     }
- 
+
     std::vector<bool> selected;
     std::vector<bool> in_list;
 
@@ -674,7 +674,7 @@ static bool _in_a_shop( int shopidx )
                             continue;
                     }
                 }
- 
+
                 selected[key] = !selected[key];
                 if (selected[key])
                     total_cost += gp_value;

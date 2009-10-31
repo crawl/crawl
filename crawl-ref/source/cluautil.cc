@@ -67,7 +67,7 @@ void luaopen_setmeta(lua_State *ls,
 {
     luaL_newmetatable(ls, meta);
     lua_setglobal(ls, global);
- 
+
     luaL_openlib(ls, global, lua_lib, 0);
 
     // Do <global>.__index = <global>
