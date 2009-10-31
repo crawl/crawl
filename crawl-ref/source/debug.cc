@@ -1485,7 +1485,7 @@ bool get_item_by_name(item_def *item, char* specs,
             case OBJ_ARMOUR:
             case OBJ_JEWELLERY:
             {
-                for (int unrand = 0; unrand < NO_UNRANDARTS; unrand++)
+                for (int unrand = 0; unrand < NO_UNRANDARTS; ++unrand)
                 {
                     int index = unrand + UNRAND_START;
                     unrandart_entry* entry = get_unrand_entry(index);
