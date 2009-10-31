@@ -2760,6 +2760,8 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
 
         delay(flash_delay);
     }
+    else if (you.can_see(initial_slime))
+        mpr("A slime creature suddenly disappears!");
 
     // Have to 'kill' the slime doing the merging.
     monster_die(initial_slime, KILL_MISC, NON_MONSTER, true);
