@@ -3292,7 +3292,7 @@ const char *divine_title[NUM_GODS][8] =
      "Nimbus",             "Sporadic Warrior",      "Green Death",              "Force of Nature"},
 
     // Cheibriados -- slow theme
-    {"Hurried",            "Slacker",               "Procrastinator",           "Watchdog",
+    {"Hurried",            "Slacker",               "Procrastinator",           "Laid-Back",
      "Ticktocktomancer",   "Time Lord",             "The End All And Be All",   "Alpha Omega"}
 };
 
