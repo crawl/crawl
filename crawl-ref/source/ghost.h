@@ -64,7 +64,6 @@ private:
                                    mon_attack_flavour u_att_flav);
 };
 
-unsigned char ugly_thing_random_colour();
 bool debug_check_ghosts();
 
 extern std::vector<ghost_demon> ghosts;

@@ -1984,6 +1984,16 @@ void define_monster(monsters &mons)
     mons.ench_countdown = 0;
 }
 
+unsigned char ugly_thing_random_colour()
+{
+    const unsigned char colours[] =
+    {
+        RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
+    };
+
+    return (RANDOM_ELEMENT(colours));
+}
+
 static const char *ugly_colour_names[] = {
     "red", "brown", "green", "cyan", "purple", "white"
 };

@@ -38,12 +38,14 @@ enum element_type
     ETC_ROCK,           // colour of the area's rock
     ETC_STONE,          // colour of the area's stone
     ETC_MIST,           // colour of mist
-    ETC_SHIMMER_BLUE,   // shimmering colours of blue.
+    ETC_SHIMMER_BLUE,   // shimmering colours of blue
     ETC_DECAY,          // colour of decay/swamp
     ETC_SILVER,         // colour of silver
     ETC_GOLD,           // colour of gold
     ETC_IRON,           // colour of iron
     ETC_BONE,           // colour of bone
+    ETC_UGLY,           // random ugly thing colour
+    ETC_VERY_UGLY,      // random very ugly thing colour
     ETC_RANDOM          // any colour (except BLACK)
 };
 

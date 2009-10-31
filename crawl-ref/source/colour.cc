@@ -3,6 +3,7 @@
 #include "colour.h"
 
 #include "env.h"
+#include "mon-util.h"
 #include "player.h"
 #include "random.h"
 
@@ -65,7 +66,10 @@ int element_colour( int element, bool no_random )
     // which might want a consistent result.
     int tmp_rand = (no_random ? 0 : random2(120));
 
-    switch (element & 0x007f)   // strip COLFLAGs just in case
+    // Strip COLFLAGs just in case.
+    element &= 0x007f;
+
+    switch (element)
     {
     case ETC_FIRE:
         ret = (tmp_rand < 40) ? RED :
@@ -251,6 +255,13 @@ int element_colour( int element, bool no_random )
         ret = (tmp_rand < 90) ? WHITE : LIGHTGREY;
         break;
 
+    case ETC_UGLY:
+    case ETC_VERY_UGLY:
+        ret = ugly_thing_random_colour();
+        if (element == ETC_VERY_UGLY)
+            ret = make_high_colour(ret);
+        break;
+
     case ETC_RANDOM:
         ret = 1 + random2(15);              // always random
         break;
@@ -261,7 +272,7 @@ int element_colour( int element, bool no_random )
         break;
     }
 
-    ASSERT( !is_element_colour( ret ) );
+    ASSERT(!is_element_colour(ret));
 
     return ((ret == BLACK) ? GREEN : ret);
 }
@@ -330,7 +341,7 @@ int str_to_colour( const std::string &str, int default_colour,
         "beogh", "crystal", "blood", "smoke", "slime", "jewel",
         "elven", "dwarven", "orcish", "gila", "floor", "rock",
         "stone", "mist", "shimmer_blue", "decay", "silver", "gold",
-        "iron", "bone", "random"
+        "iron", "bone", "ugly", "very_ugly", "random"
     };
 
     ASSERT(ARRAYSZ(element_cols) == (ETC_RANDOM - ETC_FIRE) + 1);

@@ -18,6 +18,7 @@
 #include "ng-input.h"
 #include "random.h"
 #include "skills2.h"
+#include "mon-util.h"
 #include "mtransit.h"
 #include "place.h"
 #include "player.h"
@@ -397,16 +398,6 @@ void ghost_demon::init_player_ghost()
     fly = FL_LEVITATE;
 
     add_spells();
-}
-
-unsigned char ugly_thing_random_colour()
-{
-    const unsigned char colours[] =
-    {
-        RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
-    };
-
-    return (RANDOM_ELEMENT(colours));
 }
 
 static unsigned char _ugly_thing_assign_colour(unsigned char force_colour,
