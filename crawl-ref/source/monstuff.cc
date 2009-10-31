@@ -2136,10 +2136,6 @@ static bool _valid_morph(monsters *monster, monster_type new_mclass)
         // Only for use by game testers or in the arena.
         || new_mclass == MONS_TEST_SPAWNER
 
-        // Avoid having to set up number member (slime size).
-        // How is it done for hydras??
-        || new_mclass == MONS_SLIME_CREATURE
-
         // Other poly-unsuitable things.
         || new_mclass == MONS_ORB_GUARDIAN
         || mons_is_statue(new_mclass))
