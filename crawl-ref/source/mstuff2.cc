@@ -2711,7 +2711,6 @@ static bool _merge_slimes(monsters * initial_slime, monsters * merge_to)
 
     // Merging costs the combined slime some energy.
     monsterentry* entry = get_monster_data(merge_to->type);
-
     merge_to->speed_increment -= entry->energy_usage.move;
 
     // This is dumb. With that said, the idea is that if 2 slimes merge
@@ -2746,6 +2745,19 @@ static bool _merge_slimes(monsters * initial_slime, monsters * merge_to)
             mprf("A slime creatures suddenly becomes %s.",
                  merge_to->name(DESC_NOCAP_A).c_str());
         }
+
+        you.flash_colour = LIGHTGREEN;
+        viewwindow(true, false);
+
+        int flash_delay = 150;
+        // Scale delay to match change in arena_delay.
+        if (crawl_state.arena)
+        {
+            flash_delay *= Options.arena_delay;
+            flash_delay /= 600;
+        }
+
+        delay(flash_delay);
     }
 
     // have to 'kill' the slime doing the merging
