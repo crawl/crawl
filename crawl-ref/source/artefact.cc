@@ -152,7 +152,10 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_ZIN:
-        // Lawful god: no mutagenics.
+        // Lawful god: no chaos, no mutagenics.
+        if (brand == SPWPN_CHAOS)
+            return (false);
+
         if (artefact_wpn_property(item, ARTP_MUTAGENIC))
             return (false);
         break;
