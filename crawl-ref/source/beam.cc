@@ -2266,7 +2266,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
 
     case BEAM_ACID:
         hurted = resist_adjust_damage(monster, pbolt.flavour,
-                                      mons_res_acid(monster),
+                                      monster->res_acid(),
                                       hurted, true);
         if (!hurted)
         {
@@ -2281,7 +2281,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
 
     case BEAM_POISON:
     {
-        int res = mons_res_poison(monster);
+        int res = monster->res_poison();
         hurted  = resist_adjust_damage(monster, pbolt.flavour, res,
                                        hurted, true);
         if (!hurted && res > 0)
@@ -2301,7 +2301,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
 
     case BEAM_POISON_ARROW:
         hurted = resist_adjust_damage(monster, pbolt.flavour,
-                                      mons_res_poison(monster),
+                                      monster->res_poison(),
                                       hurted);
         if (hurted < original)
         {
@@ -2321,7 +2321,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_NEG:
-        if (mons_res_negative_energy(monster) == 3)
+        if (monster->res_negative_energy() == 3)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " completely resists.");
@@ -2345,7 +2345,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_MIASMA:
-        if (mons_res_rotting(monster))
+        if (monster->res_rotting())
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " completely resists.");
@@ -2425,7 +2425,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_HELLFIRE:
-        resist = mons_res_fire(monster);
+        resist = monster->res_fire();
         if (resist > 2)
         {
             if (doFlavouredEffects)
@@ -2641,12 +2641,12 @@ bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
 
     int hurted = 0;
 
-    if (!mons_res_asphyx(monster))
+    if (!monster->res_asphyx())
     {
         hurted = roll_dice(2, 6);
 
         // Note that the hurtage is halved by poison resistance.
-        if (mons_res_poison(monster) > 0)
+        if (monster->res_poison() > 0)
             hurted /= 2;
 
         if (hurted)
@@ -2673,7 +2673,7 @@ bool poison_monster(monsters *monster, kill_category who, int levels,
     if (!monster->alive())
         return (false);
 
-    if ((!force && mons_res_poison(monster) > 0) || levels <= 0)
+    if ((!force && monster->res_poison() > 0) || levels <= 0)
         return (false);
 
     const mon_enchant old_pois = monster->get_ench(ENCH_POISON);
@@ -2706,7 +2706,7 @@ bool miasma_monster(monsters *monster, kill_category who)
     if (!monster->alive())
         return (false);
 
-    if (mons_res_rotting(monster))
+    if (monster->res_rotting())
         return (false);
 
     bool success = poison_monster(monster, who);
@@ -2737,7 +2737,7 @@ bool napalm_monster(monsters *monster, kill_category who, int levels,
     if (!monster->alive())
         return (false);
 
-    if (mons_res_sticky_flame(monster) || levels <= 0)
+    if (monster->res_sticky_flame() || levels <= 0)
         return (false);
 
     const mon_enchant old_flame = monster->get_ench(ENCH_STICKY_FLAME);
@@ -3351,28 +3351,28 @@ bool bolt::is_harmless(const monsters *mon) const
         return (mon->res_holy_energy(agent()) > 0);
 
     case BEAM_STEAM:
-        return (mons_res_steam(mon) >= 3);
+        return (mon->res_steam() >= 3);
 
     case BEAM_FIRE:
-        return (mons_res_fire(mon) >= 3);
+        return (mon->res_fire() >= 3);
 
     case BEAM_COLD:
-        return (mons_res_cold(mon) >= 3);
+        return (mon->res_cold() >= 3);
 
     case BEAM_MIASMA:
-        return (mons_res_rotting(mon));
+        return (mon->res_rotting());
 
     case BEAM_NEG:
-        return (mons_res_negative_energy(mon) == 3);
+        return (mon->res_negative_energy() == 3);
 
     case BEAM_ELECTRICITY:
-        return (mons_res_elec(mon) >= 3);
+        return (mon->res_elec() >= 3);
 
     case BEAM_POISON:
-        return (mons_res_poison(mon) >= 3);
+        return (mon->res_poison() >= 3);
 
     case BEAM_ACID:
-        return (mons_res_acid(mon) >= 3);
+        return (mon->res_acid() >= 3);
 
     default:
         return (false);
@@ -4858,13 +4858,13 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
         break;
 
     case BEAM_PAIN:
-        rc = !mons_res_negative_energy(mon);
+        rc = !mon->res_negative_energy();
         break;
 
     case BEAM_SLEEP:
         rc = !mon->has_ench(ENCH_SLEEP_WARY)      // slept recently
              && mons_holiness(mon) == MH_NATURAL  // no unnatural
-             && mons_res_cold(mon) <= 0;          // can't be hibernated
+             && mon->res_cold() <= 0;          // can't be hibernated
         break;
 
     case BEAM_PORKALATOR:
@@ -5723,7 +5723,7 @@ bool bolt::nasty_to(const monsters *mon) const
 
     // pain / agony
     if (flavour == BEAM_PAIN)
-        return (!mons_res_negative_energy(mon));
+        return (!mon->res_negative_energy());
 
     // control demon
     if (flavour == BEAM_ENSLAVE_DEMON)

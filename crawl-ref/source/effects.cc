@@ -296,7 +296,7 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
     if (monster == NULL)
         return (retval);
 
-    if (!monster->alive() || mons_res_negative_energy(monster) == 3)
+    if (!monster->alive() || monster->res_negative_energy() == 3)
         return (retval);
 
     int hploss = std::max(0, monster->hit_points / 2 - 1);

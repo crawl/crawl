@@ -293,6 +293,7 @@ public:
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;
     int res_torment() const;
+    int res_acid() const;
 
     flight_type flight_mode() const;
     bool is_levitating() const;

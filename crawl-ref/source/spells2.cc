@@ -681,7 +681,7 @@ void drain_life(int pow)
 
         if (!monster->alive()
             || mons_holiness(monster) != MH_NATURAL
-            || mons_res_negative_energy(monster))
+            || monster->res_negative_energy())
         {
             continue;
         }
@@ -754,7 +754,7 @@ bool vampiric_drain(int pow, const dist &vmove)
         }
 
         if (mons_holiness(monster) != MH_NATURAL
-            || mons_res_negative_energy(monster))
+            || monster->res_negative_energy())
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
@@ -842,7 +842,7 @@ bool burn_freeze(int pow, beam_type flavour, monsters *monster)
 
             if (flavour == BEAM_COLD)
             {
-                const int cold_res = mons_res_cold( monster );
+                const int cold_res = monster->res_cold();
                 if (cold_res <= 0)
                 {
                     const int stun = (1 - cold_res) * random2(2 + pow/5);

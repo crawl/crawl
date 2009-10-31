@@ -5488,17 +5488,17 @@ bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
     {
     case CLOUD_MIASMA:
         // Even the dumbest monsters will avoid miasma if they can.
-        return (!mons_res_rotting(monster));
+        return (!monster->res_rotting());
 
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
-        if (mons_res_fire(monster) > 1)
+        if (monster->res_fire() > 1)
             return (false);
 
         if (extra_careful)
             return (true);
 
-        if (mons_intel(monster) >= I_ANIMAL && mons_res_fire(monster) < 0)
+        if (mons_intel(monster) >= I_ANIMAL && monster->res_fire() < 0)
             return (true);
 
         if (monster->hit_points >= 15 + random2avg(46, 5))
@@ -5506,13 +5506,13 @@ bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
         break;
 
     case CLOUD_STINK:
-        if (mons_res_poison(monster) > 0)
+        if (monster->res_poison() > 0)
             return (false);
 
         if (extra_careful)
             return (true);
 
-        if (mons_intel(monster) >= I_ANIMAL && mons_res_poison(monster) < 0)
+        if (mons_intel(monster) >= I_ANIMAL && monster->res_poison() < 0)
             return (true);
 
         if (x_chance_in_y(monster->hit_dice - 1, 5))
@@ -5523,13 +5523,13 @@ bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
         break;
 
     case CLOUD_COLD:
-        if (mons_res_cold(monster) > 1)
+        if (monster->res_cold() > 1)
             return (false);
 
         if (extra_careful)
             return (true);
 
-        if (mons_intel(monster) >= I_ANIMAL && mons_res_cold(monster) < 0)
+        if (mons_intel(monster) >= I_ANIMAL && monster->res_cold() < 0)
             return (true);
 
         if (monster->hit_points >= 15 + random2avg(46, 5))
@@ -5537,13 +5537,13 @@ bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
         break;
 
     case CLOUD_POISON:
-        if (mons_res_poison(monster) > 0)
+        if (monster->res_poison() > 0)
             return (false);
 
         if (extra_careful)
             return (true);
 
-        if (mons_intel(monster) >= I_ANIMAL && mons_res_poison(monster) < 0)
+        if (mons_intel(monster) >= I_ANIMAL && monster->res_poison() < 0)
             return (true);
 
         if (monster->hit_points >= random2avg(37, 4))
@@ -5558,7 +5558,7 @@ bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
         if (mons_intel(monster) > I_ANIMAL || coinflip())
             return (false);
 
-        if (mons_res_fire(monster) > 0)
+        if (monster->res_fire() > 0)
             return (false);
 
         if (monster->hit_points >= random2avg(19, 2))
@@ -8579,7 +8579,7 @@ void mons_check_pool(monsters *monster, const coord_def &oldpos,
                  grid == DNGN_LAVA ? "lava" : "water");
         }
 
-        if (grid == DNGN_LAVA && mons_res_fire(monster) >= 2)
+        if (grid == DNGN_LAVA && monster->res_fire() >= 2)
             grid = DNGN_DEEP_WATER;
 
         // Even fire resistant monsters perish in lava, but inanimate
@@ -9428,7 +9428,7 @@ static void _mons_in_cloud(monsters *monster)
     case CLOUD_STINK:
         simple_monster_message(monster, " is engulfed in noxious gasses!");
 
-        if (mons_res_poison(monster) > 0)
+        if (monster->res_poison() > 0)
             return;
 
         beam.flavour = BEAM_CONFUSION;
@@ -9461,7 +9461,7 @@ static void _mons_in_cloud(monsters *monster)
     case CLOUD_POISON:
         simple_monster_message(monster, " is engulfed in a cloud of poison!");
 
-        if (mons_res_poison(monster) > 0)
+        if (monster->res_poison() > 0)
             return;
 
         poison_monster(monster, cloud.whose);
@@ -9470,7 +9470,7 @@ static void _mons_in_cloud(monsters *monster)
 
         hurted += (random2(8) * 10) / speed;
 
-        if (mons_res_poison(monster) < 0)
+        if (monster->res_poison() < 0)
             hurted += (random2(4) * 10) / speed;
         break;
 
@@ -9495,7 +9495,7 @@ static void _mons_in_cloud(monsters *monster)
     case CLOUD_MIASMA:
         simple_monster_message(monster, " is engulfed in a dark miasma!");
 
-        if (mons_res_rotting(monster))
+        if (monster->res_rotting())
             return;
 
         miasma_monster(monster, cloud.whose);
@@ -9523,7 +9523,7 @@ static void _mons_in_cloud(monsters *monster)
         // mutate, aren't res asphyx, and pass the same check as meph cloud.
         if (monster->can_mutate() && !mons_immune_magic(monster)
                 && 1 + random2(27) >= monster->hit_dice
-                && !mons_res_asphyx(monster))
+                && !monster->res_asphyx())
         {
             if (monster->mutate())
                 wake = true;

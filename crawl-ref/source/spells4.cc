@@ -401,7 +401,7 @@ static int _sleep_monsters(coord_def where, int pow, int, actor *)
     // Works on friendlies too, so no check for that.
 
     //jmf: Now that sleep == hibernation:
-    const int res = mons_res_cold(monster);
+    const int res = monster->res_cold();
     if (res > 0 && one_chance_in(std::max(4 - res, 1)))
         return (0);
     if (monster->has_ench(ENCH_SLEEP_WARY) && !one_chance_in(3))
@@ -791,7 +791,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
     }
     else if (monster == NULL)
         return (0);
-    else if (mons_res_elec(monster) > 0 || mons_flies(monster))
+    else if (monster->res_elec() > 0 || mons_flies(monster))
         return (0);
     else
     {
@@ -1003,7 +1003,7 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
     if (monster == NULL
         || mons_intel(monster) < I_NORMAL
         || mons_holiness(monster) != MH_NATURAL
-        || mons_res_poison(monster) > 0)
+        || monster->res_poison() > 0)
     {
         return 0;
     }

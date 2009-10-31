@@ -219,7 +219,7 @@ enum mon_resist_flags
 
     // resistances
     // Notes:
-    // - negative energy is mostly handled via mons_res_negative_energy()
+    // - negative energy is mostly handled via monsters::res_negative_energy()
     MR_RES_ELEC          = (1<< 0),
     MR_RES_POISON        = (1<< 1),
     MR_RES_FIRE          = (1<< 2),
@@ -610,18 +610,6 @@ habitat_type mons_class_secondary_habitat(int mc);
 habitat_type mons_secondary_habitat(const monsters *mon);
 
 bool intelligent_ally(const monsters *mon);
-
-int mons_res_cold(const monsters *mon);
-int mons_res_elec(const monsters *mon);
-int mons_res_fire(const monsters *mon);
-int mons_res_steam(const monsters *mon);
-int mons_res_poison(const monsters *mon);
-int mons_res_asphyx(const monsters *mon);
-int mons_res_sticky_flame(const monsters *mon);
-int mons_res_rotting(const monsters *mon);
-int mons_res_acid(const monsters *mon);
-int mons_res_negative_energy(const monsters *mon);
-
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

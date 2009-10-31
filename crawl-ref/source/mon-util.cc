@@ -1247,243 +1247,6 @@ bool check_mons_resist_magic( const monsters *monster, int pow )
     return (mrch2 < mrchance);
 }
 
-int mons_res_elec(const monsters *mon)
-{
-    // This is a variable, not a player_xx() function, so can be above 1.
-    int u = 0;
-
-    u += get_mons_resists(mon).elec;
-
-    // Don't bother checking equipment if the monster can't use it.
-    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
-    {
-        u += _scan_mon_inv_randarts(mon, ARTP_ELECTRICITY);
-
-        // No ego armour, but storm dragon.
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
-            && mitm[armour].sub_type == ARM_STORM_DRAGON_ARMOUR)
-        {
-            u += 1;
-        }
-    }
-
-    // Monsters can legitimately get multiple levels of electricity resistance.
-
-    return (u);
-}
-
-int mons_res_acid(const monsters *mon)
-{
-    return (get_mons_resists(mon).acid);
-}
-
-int mons_res_poison(const monsters *mon)
-{
-    int u = get_mons_resists(mon).poison;
-
-    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
-    {
-        u += _scan_mon_inv_randarts( mon, ARTP_POISON );
-
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        const int shield = mon->inv[MSLOT_SHIELD];
-
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-        {
-            // intrinsic armour abilities
-            switch (mitm[armour].sub_type)
-            {
-            case ARM_SWAMP_DRAGON_ARMOUR: u += 1; break;
-            case ARM_GOLD_DRAGON_ARMOUR:  u += 1; break;
-            default:                              break;
-            }
-
-            // ego armour resistance
-            if (get_armour_ego_type(mitm[armour]) == SPARM_POISON_RESISTANCE)
-                u += 1;
-        }
-
-        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
-        {
-            // ego armour resistance
-            if (get_armour_ego_type(mitm[shield]) == SPARM_POISON_RESISTANCE)
-                u += 1;
-        }
-    }
-
-    // Monsters can legitimately get multiple levels of poison resistance.
-
-    return (u);
-}
-
-int mons_res_asphyx(const monsters *mon)
-{
-    int res = get_mons_resists(mon).asphyx;
-    const mon_holy_type holiness = mons_holiness(mon);
-    if (mons_is_unholy(mon)
-        || holiness == MH_NONLIVING
-        || holiness == MH_PLANT)
-    {
-        res += 1;
-    }
-    return (res);
-}
-
-int mons_res_sticky_flame(const monsters *mon)
-{
-    int res = get_mons_resists(mon).sticky_flame;
-    if (mon->has_equipped(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
-        res += 1;
-    return (res);
-}
-
-int mons_res_rotting(const monsters *mon)
-{
-    int res = get_mons_resists(mon).rotting;
-    if (mons_holiness(mon) != MH_NATURAL)
-        res += 1;
-    return (res);
-}
-
-int mons_res_steam(const monsters *mon)
-{
-    int res = get_mons_resists(mon).steam;
-    if (mon->has_equipped(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
-        res += 3;
-    return (res + mons_res_fire(mon) / 2);
-}
-
-int mons_res_fire(const monsters *mon)
-{
-    const mon_resist_def res = get_mons_resists(mon);
-
-    int u = std::min(res.fire + res.hellfire * 3, 3);
-
-    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
-    {
-        u += _scan_mon_inv_randarts(mon, ARTP_FIRE);
-
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        const int shield = mon->inv[MSLOT_SHIELD];
-
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-        {
-            // intrinsic armour abilities
-            switch (mitm[armour].sub_type)
-            {
-            case ARM_DRAGON_ARMOUR:      u += 2; break;
-            case ARM_GOLD_DRAGON_ARMOUR: u += 1; break;
-            case ARM_ICE_DRAGON_ARMOUR:  u -= 1; break;
-            default:                             break;
-            }
-
-            // check ego resistance
-            const int ego = get_armour_ego_type(mitm[armour]);
-            if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
-                u += 1;
-        }
-
-        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
-        {
-            // check ego resistance
-            const int ego = get_armour_ego_type(mitm[shield]);
-            if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
-                u += 1;
-        }
-    }
-
-    if (u < -3)
-        u = -3;
-    else if (u > 3)
-        u = 3;
-
-    return (u);
-}
-
-int mons_res_cold(const monsters *mon)
-{
-    int u = get_mons_resists(mon).cold;
-
-    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
-    {
-        u += _scan_mon_inv_randarts(mon, ARTP_COLD);
-
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        const int shield = mon->inv[MSLOT_SHIELD];
-
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-        {
-            // intrinsic armour abilities
-            switch (mitm[armour].sub_type)
-            {
-            case ARM_ICE_DRAGON_ARMOUR:  u += 2; break;
-            case ARM_GOLD_DRAGON_ARMOUR: u += 1; break;
-            case ARM_DRAGON_ARMOUR:      u -= 1; break;
-            default:                             break;
-            }
-
-            // check ego resistance
-            const int ego = get_armour_ego_type(mitm[armour]);
-            if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
-                u += 1;
-        }
-
-        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
-        {
-            // check ego resistance
-            const int ego = get_armour_ego_type(mitm[shield]);
-            if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
-                u += 1;
-        }
-    }
-
-    if (u < -3)
-        u = -3;
-    else if (u > 3)
-        u = 3;
-
-    return (u);
-}
-
-int mons_res_negative_energy(const monsters *mon)
-{
-    if (mons_holiness(mon) != MH_NATURAL
-        || mon->type == MONS_SHADOW_DRAGON)
-    {
-        return (3);
-    }
-
-    int u = 0;
-
-    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
-    {
-        u += _scan_mon_inv_randarts(mon, ARTP_NEGATIVE_ENERGY);
-
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        const int shield = mon->inv[MSLOT_SHIELD];
-
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
-        {
-            // check for ego resistance
-            if (get_armour_ego_type(mitm[armour]) == SPARM_POSITIVE_ENERGY)
-                u += 1;
-        }
-
-        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
-        {
-            // check for ego resistance
-            if (get_armour_ego_type(mitm[shield]) == SPARM_POSITIVE_ENERGY)
-                u += 1;
-        }
-    }
-
-    if (u > 3)
-        u = 3;
-
-    return (u);
-}
-
 bool mons_is_holy(const monsters *mon)
 {
     return (mons_holiness(mon) == MH_HOLY);
@@ -3812,7 +3575,7 @@ bool monsters::can_drown() const
     // Mummies can fall apart in water or be incinerated in lava.
     // Ghouls, vampires, and demons can drown in water or lava.  Others
     // just "sink like a rock", to never be seen again.
-    return (!mons_res_asphyx(this)
+    return (!res_asphyx()
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
             || mons_genus(type) == MONS_VAMPIRE
@@ -6078,42 +5841,196 @@ mon_holy_type monsters::holiness() const
 
 int monsters::res_fire() const
 {
-    return (mons_res_fire(this));
+    const mon_resist_def res = get_mons_resists(this);
+
+    int u = std::min(res.fire + res.hellfire * 3, 3);
+
+    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    {
+        u += _scan_mon_inv_randarts(this, ARTP_FIRE);
+
+        const int armour = inv[MSLOT_ARMOUR];
+        const int shield = inv[MSLOT_SHIELD];
+
+        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
+        {
+            // intrinsic armour abilities
+            switch (mitm[armour].sub_type)
+            {
+            case ARM_DRAGON_ARMOUR:      u += 2; break;
+            case ARM_GOLD_DRAGON_ARMOUR: u += 1; break;
+            case ARM_ICE_DRAGON_ARMOUR:  u -= 1; break;
+            default:                             break;
+            }
+
+            // check ego resistance
+            const int ego = get_armour_ego_type(mitm[armour]);
+            if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
+                u += 1;
+        }
+
+        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        {
+            // check ego resistance
+            const int ego = get_armour_ego_type(mitm[shield]);
+            if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
+                u += 1;
+        }
+    }
+
+    if (u < -3)
+        u = -3;
+    else if (u > 3)
+        u = 3;
+
+    return (u);
 }
 
 int monsters::res_steam() const
 {
-    return (mons_res_steam(this));
+    int res = get_mons_resists(this).steam;
+    if (has_equipped(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
+        res += 3;
+    return (res + res_fire() / 2);
 }
 
 int monsters::res_cold() const
 {
-    return (mons_res_cold(this));
+    int u = get_mons_resists(this).cold;
+
+    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    {
+        u += _scan_mon_inv_randarts(this, ARTP_COLD);
+
+        const int armour = inv[MSLOT_ARMOUR];
+        const int shield = inv[MSLOT_SHIELD];
+
+        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
+        {
+            // intrinsic armour abilities
+            switch (mitm[armour].sub_type)
+            {
+            case ARM_ICE_DRAGON_ARMOUR:  u += 2; break;
+            case ARM_GOLD_DRAGON_ARMOUR: u += 1; break;
+            case ARM_DRAGON_ARMOUR:      u -= 1; break;
+            default:                             break;
+            }
+
+            // check ego resistance
+            const int ego = get_armour_ego_type(mitm[armour]);
+            if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
+                u += 1;
+        }
+
+        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        {
+            // check ego resistance
+            const int ego = get_armour_ego_type(mitm[shield]);
+            if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
+                u += 1;
+        }
+    }
+
+    if (u < -3)
+        u = -3;
+    else if (u > 3)
+        u = 3;
+
+    return (u);
 }
 
 int monsters::res_elec() const
 {
-    return (mons_res_elec(this));
+    // This is a variable, not a player_xx() function, so can be above 1.
+    int u = 0;
+
+    u += get_mons_resists(this).elec;
+
+    // Don't bother checking equipment if the monster can't use it.
+    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    {
+        u += _scan_mon_inv_randarts(this, ARTP_ELECTRICITY);
+
+        // No ego armour, but storm dragon.
+        const int armour = inv[MSLOT_ARMOUR];
+        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
+            && mitm[armour].sub_type == ARM_STORM_DRAGON_ARMOUR)
+        {
+            u += 1;
+        }
+    }
+
+    // Monsters can legitimately get multiple levels of electricity resistance.
+
+    return (u);
 }
 
 int monsters::res_asphyx() const
 {
-    return (mons_res_asphyx(this));
+    int res = get_mons_resists(this).asphyx;
+    const mon_holy_type holiness = mons_holiness(this);
+    if (mons_is_unholy(this)
+        || holiness == MH_NONLIVING
+        || holiness == MH_PLANT)
+    {
+        res += 1;
+    }
+    return (res);
 }
 
 int monsters::res_poison() const
 {
-    return (mons_res_poison(this));
+    int u = get_mons_resists(this).poison;
+
+    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    {
+        u += _scan_mon_inv_randarts( this, ARTP_POISON );
+
+        const int armour = mon->inv[MSLOT_ARMOUR];
+        const int shield = mon->inv[MSLOT_SHIELD];
+
+        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
+        {
+            // intrinsic armour abilities
+            switch (mitm[armour].sub_type)
+            {
+            case ARM_SWAMP_DRAGON_ARMOUR: u += 1; break;
+            case ARM_GOLD_DRAGON_ARMOUR:  u += 1; break;
+            default:                              break;
+            }
+
+            // ego armour resistance
+            if (get_armour_ego_type(mitm[armour]) == SPARM_POISON_RESISTANCE)
+                u += 1;
+        }
+
+        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        {
+            // ego armour resistance
+            if (get_armour_ego_type(mitm[shield]) == SPARM_POISON_RESISTANCE)
+                u += 1;
+        }
+    }
+
+    // Monsters can legitimately get multiple levels of poison resistance.
+
+    return (u);
 }
 
 int monsters::res_sticky_flame() const
 {
-    return (mons_res_sticky_flame(this));
+    int res = get_mons_resists(this).sticky_flame;
+    if (has_equipped(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
+        res += 1;
+    return (res);
 }
 
 int monsters::res_rotting() const
 {
-    return (mons_res_rotting(this));
+    int res = get_mons_resists(this).rotting;
+    if (mons_holiness(this) != MH_NATURAL)
+        res += 1;
+    return (res);
 }
 
 int monsters::res_holy_energy(const actor *attacker) const
@@ -6138,7 +6055,40 @@ int monsters::res_holy_energy(const actor *attacker) const
 
 int monsters::res_negative_energy() const
 {
-    return (mons_res_negative_energy(this));
+    if (mons_holiness(this) != MH_NATURAL
+        || type == MONS_SHADOW_DRAGON)
+    {
+        return (3);
+    }
+
+    int u = 0;
+
+    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
+    {
+        u += _scan_mon_inv_randarts(this, ARTP_NEGATIVE_ENERGY);
+
+        const int armour = mon->inv[MSLOT_ARMOUR];
+        const int shield = mon->inv[MSLOT_SHIELD];
+
+        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
+        {
+            // check for ego resistance
+            if (get_armour_ego_type(mitm[armour]) == SPARM_POSITIVE_ENERGY)
+                u += 1;
+        }
+
+        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
+        {
+            // check for ego resistance
+            if (get_armour_ego_type(mitm[shield]) == SPARM_POSITIVE_ENERGY)
+                u += 1;
+        }
+    }
+
+    if (u > 3)
+        u = 3;
+
+    return (u);
 }
 
 int monsters::res_torment() const
@@ -6152,6 +6102,11 @@ int monsters::res_torment() const
     }
 
     return (0);
+}
+
+int monsters::res_acid() const
+{
+    return (get_mons_resists(this).acid);
 }
 
 flight_type monsters::flight_mode() const
@@ -7609,7 +7564,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (coinflip())
             dam += roll_dice(1, poisonval + 1);
 
-        if (mons_res_poison(this) < 0)
+        if (res_poison() < 0)
             dam += roll_dice(2, poisonval) - 1;
 
         if (dam > 0)
@@ -7649,7 +7604,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
     }
 
-    // Assumption: mons_res_fire has already been checked.
+    // Assumption: monsters::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
         if (feat_is_watery(grd(pos())))
