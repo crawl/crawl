@@ -1962,7 +1962,7 @@ int acquirement_create_item(object_class_type class_wanted,
             if (eq == EQ_BODY_ARMOUR || you.equip[eq] != -1)
             {
                 const special_armour_type sparm = get_armour_ego_type(doodad);
-                bool is_mundane   = (sparm == SPARM_NORMAL);
+                bool is_plain     = (sparm == SPARM_NORMAL);
                 bool is_redundant = false;
 
                 // If the created item is an ego item, check whether we're
@@ -1970,7 +1970,7 @@ int acquirement_create_item(object_class_type class_wanted,
                 // whether the enchantment is worse than that of the current
                 // item. (For armour, only consider items of the same subtype.)
                 // If so, try filling an unfilled equipment slot after all.
-                if (!is_mundane && agent != GOD_XOM)
+                if (!is_plain && agent != GOD_XOM)
                 {
                     if (you.equip[eq] != -1
                         && (eq != EQ_BODY_ARMOUR
@@ -1983,23 +1983,23 @@ int acquirement_create_item(object_class_type class_wanted,
                     }
                 }
 
-                if (is_mundane || is_redundant)
+                if (is_plain || is_redundant)
                 {
                     if (_try_give_mundane_armour(doodad))
                     {
-                        // Make sure the item is mundane.
+                        // Make sure the item is plain.
                         doodad.special = SPARM_NORMAL;
 
                         // Okawaru shouldn't hand out negatively enchanted
-                        // mundane items.
+                        // plain items.
                         if (agent == GOD_OKAWARU && doodad.plus < 0)
                             doodad.plus = 0;
                         else if (agent == GOD_XOM && doodad.plus > 0)
                             doodad.plus *= -1;
                     }
-                    else if (is_mundane && agent != GOD_XOM && one_chance_in(3))
+                    else if (is_plain && agent != GOD_XOM && one_chance_in(3))
                     {
-                        // If the item is mundane and there aren't any
+                        // If the item is plain and there aren't any
                         // unfilled slots, we might want to roll again.
                         destroy_item(thing_created, true);
                         thing_created = NON_ITEM;

@@ -584,7 +584,7 @@ bool item_is_critical(const item_def &item)
             && item.plus != RUNE_ABYSSAL);
 }
 
-// Is item something that no one would bother enchanting?
+// Is item something that no one would usually bother enchanting?
 bool item_is_mundane(const item_def &item)
 {
     switch (item.base_type)

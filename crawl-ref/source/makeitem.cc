@@ -937,14 +937,14 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
 
         if (one_chance_in(4))
         {
-            do_curse_item( item );
+            do_curse_item(item);
             item.plus  = -random2(6);
             item.plus2 = -random2(6);
         }
         else if ((item.plus < 0 || item.plus2 < 0)
                  && !one_chance_in(3))
         {
-            do_curse_item( item );
+            do_curse_item(item);
         }
         return (true);
     }
@@ -954,7 +954,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         && one_chance_in(12)
         && x_chance_in_y(31 + item_level * 3, 3000))
     {
-        return _try_make_item_special_unrand(item, force_type, item_level);
+        return (_try_make_item_special_unrand(item, force_type, item_level));
     }
 
     return (false);
@@ -2222,9 +2222,10 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (force_good)
         hide2armour(item);
 
-    // Hide armours and crystal plate mail normally don't get egos, but
+    // Skin armours and crystal plate mail normally don't get egos, but
     // can be randarts.
     if (armour_is_hide(item, true)
+        || item.sub_type == ARM_ANIMAL_SKIN
         || item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
     {
         if (!forced_ego)
@@ -3007,14 +3008,14 @@ static bool _weapon_is_visibly_special(const item_def &item)
     const int brand = get_weapon_brand(item);
     const bool visibly_branded = (brand != SPWPN_NORMAL);
 
-    if (item_is_mundane(item))
-        return (false);
-
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return (false);
 
     if (visibly_branded || is_artefact(item))
         return (true);
+
+    if (item_is_mundane(item))
+        return (false);
 
     if ((item.plus || item.plus2)
         && (one_chance_in(3) || get_equip_race(item) && one_chance_in(7)))
@@ -3030,14 +3031,14 @@ static bool _armour_is_visibly_special(const item_def &item)
     const int brand = get_armour_ego_type(item);
     const bool visibly_branded = (brand != SPARM_NORMAL);
 
-    if (item_is_mundane(item))
-        return (false);
-
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
         return (false);
 
     if (visibly_branded || is_artefact(item))
         return (true);
+
+    if (item_is_mundane(item))
+        return (false);
 
     if (item.plus && !one_chance_in(3))
         return (true);

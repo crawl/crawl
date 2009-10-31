@@ -1945,16 +1945,16 @@ bool make_item_randart( item_def &item )
     if (item.flags & ISFLAG_UNRANDART)
         return (false);
 
-    if (item_is_mundane(item))
+    if (item_is_mundane(item) && !one_chance_in(4))
         return (false);
 
-    ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
-    ASSERT(!item.props.exists( ARTEFACT_NAME_KEY ));
-    ASSERT(!item.props.exists( ARTEFACT_APPEAR_KEY ));
+    ASSERT(!item.props.exists(KNOWN_PROPS_KEY));
+    ASSERT(!item.props.exists(ARTEFACT_NAME_KEY));
+    ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
     item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
     CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
     known.set_max_size(ART_PROPERTIES);
-    for (vec_size i = 0; i < ART_PROPERTIES; i++)
+    for (vec_size i = 0; i < ART_PROPERTIES; ++i)
         known[i] = (bool) false;
 
     item.flags |= ISFLAG_RANDART;
