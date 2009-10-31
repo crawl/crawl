@@ -6,6 +6,7 @@
 
 #include "artefact.h"
 #include "itemname.h"
+#include "player.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"

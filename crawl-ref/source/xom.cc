@@ -13,6 +13,7 @@
 #include "branch.h"
 #include "database.h"
 #include "delay.h"
+#include "directn.h"
 #include "effects.h"
 #include "goditem.h"
 #include "it_use2.h"
