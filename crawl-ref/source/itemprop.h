@@ -714,7 +714,8 @@ bool item_is_rod( const item_def &item );
 bool item_is_staff( const item_def &item );
 
 // ring functions:
-int ring_has_pluses( const item_def &item );
+int  ring_has_pluses( const item_def &item );
+bool ring_has_stackable_effect( const item_def &item );
 
 // food functions:
 bool food_is_meat(const item_def &item);

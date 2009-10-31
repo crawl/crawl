@@ -46,15 +46,17 @@ public:
     bool del_thing(const item_def &item, level_pos* pos = NULL);
     bool del_thing(std::string desc, level_pos* pos = NULL);
 
-    int size() const;
-
-    void move_things(const coord_def &src, const coord_def &dst);
+    unsigned int cull_identical_items(const item_def& item, long cost = -1);
 
     void gold_changed(int old_amount, int new_amount);
+
+    void move_things(const coord_def &src, const coord_def &dst);
 
     void display_list();
 
     void refresh();
+
+    int size() const;
 
 private:
     CrawlVector* list;
@@ -75,8 +77,12 @@ private:
     static long      thing_cost(const CrawlHashTable& thing);
     static level_pos thing_pos(const CrawlHashTable& thing);
 
-    static std::string name_thing(const CrawlHashTable& thing);
-    static std::string describe_thing(const CrawlHashTable& thing);
+    static std::string name_thing(const CrawlHashTable& thing,
+                                  description_level_type descrip = DESC_PLAIN);
+    static std::string describe_thing(const CrawlHashTable& thing,
+                                  description_level_type descrip = DESC_PLAIN);
+    static std::string item_name_simple(const item_def& item,
+                                        bool ident = false);
 };
 
 extern ShoppingList shopping_list;

@@ -37,6 +37,7 @@
 #include "player.h"
 #include "religion.h"
 #include "quiver.h"
+#include "shopping.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "state.h"
@@ -1812,6 +1813,9 @@ void set_ident_type( item_def &item, item_type_id_state_type setting,
 
     item_type_id_state_type old_setting = get_ident_type(item);
     set_ident_type(item.base_type, item.sub_type, setting, force);
+
+    if (in_inventory(item))
+        shopping_list.cull_identical_items(item);
 
     if (setting == ID_KNOWN_TYPE && old_setting != ID_KNOWN_TYPE
         && notes_are_active() && is_interesting_item(item)

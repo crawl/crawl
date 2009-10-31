@@ -32,6 +32,7 @@
 #include "player.h"
 #include "quiver.h"
 #include "random.h"
+#include "shopping.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "xom.h"
@@ -617,6 +618,9 @@ void set_ident_flags( item_def &item, unsigned long flags )
     {
         item.flags |= flags;
         request_autoinscribe();
+
+        if (in_inventory(item))
+            shopping_list.cull_identical_items(item);
     }
 
     if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
@@ -2260,7 +2264,7 @@ bool item_is_staff( const item_def &item )
 
 //
 // Ring functions:
-//
+
 // Returns number of pluses on jewellery (always none for amulets yet).
 int ring_has_pluses( const item_def &item )
 {
@@ -2287,6 +2291,37 @@ int ring_has_pluses( const item_def &item )
     }
 
     return (0);
+}
+
+// Returns true if having two rings of the same type on at the same
+// has more effect than just having one on.
+bool ring_has_stackable_effect( const item_def &item )
+{
+    ASSERT (item.base_type == OBJ_JEWELLERY);
+    ASSERT (!jewellery_is_amulet(item));
+
+    if (!item_type_known(item))
+        return (false);
+
+    if (ring_has_pluses(item))
+        return (true);
+
+    switch (item.sub_type)
+    {
+    case RING_PROTECTION_FROM_FIRE:
+    case RING_PROTECTION_FROM_COLD:
+    case RING_LIFE_PROTECTION:
+    case RING_SUSTENANCE:
+    case RING_WIZARDRY:
+    case RING_FIRE:
+    case RING_ICE:
+        return (true);
+
+    default:
+        break;
+    }
+
+    return (false);
 }
 
 //

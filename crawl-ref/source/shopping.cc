@@ -38,6 +38,8 @@
 
 ShoppingList shopping_list;
 
+static bool _in_shop_now = false;
+
 static bool _purchase( int shop, int item_got, int cost, bool id);
 
 static void _shop_print( const char *shoppy, int line )
@@ -52,6 +54,30 @@ static void _shop_more()
     cgotoxy(65, 20, GOTO_CRT);
     cprintf("-more-");
     get_ch();
+}
+
+static bool _shop_yesno(const char* prompt, int safeanswer)
+{
+    if (_in_shop_now)
+    {
+        textcolor(channel_to_colour(MSGCH_PROMPT));
+        _shop_print(prompt, 1);
+
+        return yesno(NULL, true, safeanswer, false, false, true);
+    }
+    else
+        return yesno(prompt, true, safeanswer, false, false, false);
+}
+
+static void _shop_mpr(const char* msg)
+{
+    if (_in_shop_now)
+    {
+        _shop_print(msg, 1);
+        _shop_more();
+    }
+    else
+        mpr(msg);
 }
 
 static std::string _hyphenated_suffix(char prev, char last)
@@ -114,7 +140,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
         pkeys = _purchase_keys(purchasable);
 
     std::string shop_list = "";
-    if (!viewing)
+    if (!viewing && you.level_type == LEVEL_DUNGEON)
     {
         shop_list = "[<w>@</w>] ";
         if (num_selected > 0)
@@ -274,6 +300,8 @@ static bool _in_a_shop( int shopidx )
 {
     const shop_struct& shop = env.shop[shopidx];
 
+    unwind_bool in_shop(_in_shop_now, true);
+
     cursor_control coff(false);
 
     clrscr();
@@ -295,9 +323,11 @@ static bool _in_a_shop( int shopidx )
     std::vector<bool> selected;
     std::vector<bool> in_list;
 
-    const bool id_stock = shoptype_identifies_stock(shop.type);
+    const bool id_stock         = shoptype_identifies_stock(shop.type);
           bool bought_something = false;
-          bool viewing = false;
+          bool viewing          = false;
+          bool first_iter       = true;
+
     while (true)
     {
         ASSERT(total_cost >= 0);
@@ -345,6 +375,38 @@ static bool _in_a_shop( int shopidx )
                                                           total_cost);
         _list_shop_keys(purchasable, viewing, stock.size(), num_selected,
                         num_in_list);
+
+        // Cull shopping list after shop contents have been displayed, but
+        // only once.
+        if (first_iter)
+        {
+            first_iter = false;
+
+            unsigned int culled = 0;
+
+            for (unsigned int i = 0; i < stock.size(); i++)
+            {
+                const item_def& item = mitm[stock[i]];
+                const int cost = _shop_get_item_value(item, shop.greed,
+                                                      id_stock);
+
+                unsigned int num = shopping_list.cull_identical_items(item,
+                                                             (long) cost);
+                if (num > 0)
+                {
+                    in_list[i] = true;
+                    num_in_list++;
+                }
+                culled += num;
+            }
+            if (culled > 0)
+            {
+                // Some shopping list items have been moved to this store,
+                // so refresh the display.
+                mesclr();
+                continue;
+            }
+        }
 
         if (!total_cost)
         {
@@ -407,29 +469,59 @@ static bool _in_a_shop( int shopidx )
             break;
         else if (key == '\r' || key == CK_MOUSE_CLICK)
         {
+            std::vector<bool> to_buy;
+            int total_purchase = 0;
+
+            if (num_selected == 0 && num_in_list > 0)
+            {
+                if (_shop_yesno("Buy items on shopping list? (Y/n)", 'y'))
+                {
+                    to_buy = in_list;
+
+                    for (unsigned int i = 0; i < to_buy.size(); i++)
+                    {
+                        if (to_buy[i])
+                        {
+                            const item_def& item = mitm[stock[i]];
+
+                            total_purchase +=
+                                _shop_get_item_value(item, shop.greed,
+                                                     id_stock);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                to_buy         = selected;
+                total_purchase = total_cost;
+            }
+
             // Do purchase.
-            if (total_cost > you.gold)
+            if (total_purchase > you.gold)
             {
                 _shop_print("I'm sorry, you don't seem to have enough money.",
                             1);
             }
-            else if (!total_cost) // Nothing selected.
+            else if (!total_purchase) // Nothing selected.
                 continue;
             else
             {
-                textcolor(channel_to_colour(MSGCH_PROMPT));
                 snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n) ",
-                         total_cost);
-                _shop_print(info, 1);
+                         total_purchase);
 
-                if ( yesno(NULL, true, 'n', false, false, true) )
+                if ( _shop_yesno(info, 'n') )
                 {
                     int num_items = 0, outside_items = 0, quant;
-                    for (int i = selected.size() - 1; i >= 0; --i)
+                    for (int i = to_buy.size() - 1; i >= 0; --i)
                     {
-                        if (selected[i])
+                        if (to_buy[i])
                         {
                             item_def& item = mitm[stock[i]];
+
+                            // Remove from shopping list.
+                            if (in_list[i])
+                                shopping_list.del_thing(item);
 
                             const int gp_value = _shop_get_item_value(item,
                                                         shop.greed, id_stock);
@@ -454,10 +546,6 @@ static bool _in_a_shop( int shopidx )
                                 // knapsack.
                                 outside_items += quant;
                             }
-
-                            // Remove from shopping list.
-                            if (in_list[i])
-                                shopping_list.del_thing(item);
                         }
                     }
 
@@ -483,7 +571,8 @@ static bool _in_a_shop( int shopidx )
             browse_inventory(false);
         else if (key == '@')
         {
-            if (viewing || (num_selected == 0 && num_in_list == 0))
+            if (viewing || (num_selected == 0 && num_in_list == 0)
+                || you.level_type != LEVEL_DUNGEON)
             {
                 _shop_print("Huh?", 1);
                 _shop_more();
@@ -564,10 +653,8 @@ static bool _in_a_shop( int shopidx )
                 {
                     if (gp_value > you.gold)
                     {
-                        _shop_print("Remove from shopping list? (y/N)",
-                                    1);
-
-                        if ( yesno(NULL, true, 'n', false, false, true) )
+                        if ( _shop_yesno("Remove from shopping list? (y/N)",
+                                         'n') )
                         {
                             in_list[key]  = false;
                             selected[key] = false;
@@ -576,10 +663,8 @@ static bool _in_a_shop( int shopidx )
                     }
                     else
                     {
-                        _shop_print("Remove item from shopping list and buy "
-                                    "it? (Y/n)", 1);
-
-                        if ( yesno(NULL, true, 'y', false, false, true) )
+                        if ( _shop_yesno("Remove item from shopping list and "
+                                         "buy it? (Y/n)",  'y') )
                         {
                             in_list[key] = false;
                             // Will be toggled to true later
@@ -2041,6 +2126,13 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     SETUP_POS();
 
+    if (pos.id.level_type != LEVEL_DUNGEON)
+    {
+        mprf("The shopping list can only contain things in the dungeon.",
+             MSGCH_ERROR);
+        return (false);
+    }
+
     if (find_thing(item, pos) != -1)
     {
         mprf(MSGCH_ERROR, "%s is already on the shopping list.",
@@ -2114,6 +2206,145 @@ bool ShoppingList::del_thing(std::string desc, level_pos* _pos)
 
 #undef SETUP_POS
 
+#define REMOVE_PROMPTED_KEY  "remove_prompted_key"
+#define REPLACE_PROMPTED_KEY "replace_prompted_key"
+
+// TODO:
+//
+// * If you get a randart which lets you turn invisible, then remove
+//   any ordinary rings of invisiblity from the shopping list.
+//
+// * If you collected enough spellbooks that all the spells in a
+//   shopping list book are covered, then auto-remove it.
+unsigned int ShoppingList::cull_identical_items(const item_def& item,
+                                                long cost)
+{
+    // Can't put items in Bazaar shops in the shopping list, so
+    // don't bother transfering shopping list items to Bazaar shops.
+    if (cost != -1 && you.level_type != LEVEL_DUNGEON)
+        return (0);
+
+    switch(item.base_type)
+    {
+    case OBJ_JEWELLERY:
+    case OBJ_BOOKS:
+    case OBJ_STAVES:
+        // Only these are really interchangable.
+        break;
+
+    default:
+        return (0);
+    }
+
+    if (!item_type_known(item) || is_artefact(item))
+        return (0);
+
+    // Ignore stat-modification rings which reduce a stat, since they're
+    // worthless.
+    if (item.plus < 0 && item.base_type == OBJ_JEWELLERY)
+        return (0);
+
+    // Item is already on shopping-list.
+    const bool on_list = find_thing(item, level_pos::current()) != -1;
+
+    const bool do_prompt =
+        (item.base_type == OBJ_JEWELLERY && !jewellery_is_amulet(item)
+         && ring_has_stackable_effect(item))
+     // Manuals and tomes of destruction are consumable.
+     || (item.base_type == OBJ_BOOKS
+         && (item.sub_type == BOOK_MANUAL
+             || item.sub_type == BOOK_DESTRUCTION));
+
+    bool add_item = false;
+
+    std::vector<level_pos> to_del;
+
+    // NOTE: Don't modify the shopping list while iterating over it.
+    for (unsigned int i = 0; i < list->size(); i++)
+    {
+        if (_in_shop_now)
+            mesclr();
+
+        CrawlHashTable &thing = (*list)[i];
+
+        if (!thing_is_item(thing))
+            continue;
+
+        const item_def& list_item = get_thing_item(thing);
+
+        if (list_item.base_type != item.base_type
+            || list_item.sub_type != item.sub_type)
+        {
+            continue;
+        }
+
+        if (!item_type_known(list_item) || is_artefact(list_item))
+            continue;
+
+        const level_pos list_pos = thing_pos(thing);
+
+        // cost = -1, we just found a shop item which is cheaper than
+        // one on the shopping list.
+        if (cost != -1)
+        {
+            long list_cost = thing_cost(thing);
+
+            if (cost >= list_cost)
+                continue;
+
+            // Only prompt once.
+            if (thing.exists(REPLACE_PROMPTED_KEY))
+                continue;
+            thing[REPLACE_PROMPTED_KEY] = (bool) true;
+
+            std::string prompt =
+                make_stringf("Shopping-list: replace %dgp %s with cheaper "
+                             "one? (Y/n)", list_cost,
+                             describe_thing(thing).c_str());
+
+            if (_shop_yesno(prompt.c_str(), 'y'))
+            {
+                add_item = true;
+                to_del.push_back(list_pos);
+            }
+            continue;
+        }
+
+        // cost == -1, we just got an item which is on the shopping list.
+        if (do_prompt)
+        {
+            // Only prompt once.
+            if (thing.exists(REMOVE_PROMPTED_KEY))
+                continue;
+            thing[REMOVE_PROMPTED_KEY] = (bool) true;
+
+            std::string prompt =
+                make_stringf("Shopping-list: remove %s? (Y/n)",
+                             describe_thing(thing, DESC_NOCAP_A).c_str());
+
+            if (_shop_yesno(prompt.c_str(), 'y'))
+                to_del.push_back(list_pos);
+        }
+        else
+        {
+            std::string str =
+                make_stringf("Shopping-list: removing %s",
+                             describe_thing(thing, DESC_NOCAP_A).c_str());
+
+            _shop_mpr(str.c_str());
+            to_del.push_back(list_pos);
+        }
+    }
+
+    for (unsigned int i = 0; i < to_del.size(); i++)
+        del_thing(item, &to_del[i]);
+
+    if (add_item && !on_list)
+        add_thing(item, cost);
+
+    return (to_del.size());
+}
+
 int ShoppingList::size() const
 {
     if (list == NULL)
@@ -2159,7 +2390,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
             if (thing_is_item(thing))
                 desc = "buy ";
 
-            desc += describe_thing(thing);
+            desc += describe_thing(thing, DESC_NOCAP_A);
 
             descs.push_back(desc);
         }
@@ -2234,12 +2465,13 @@ int ShoppingList::find_thing(const item_def &item,
     for (unsigned int i = 0; i < list->size(); i++)
     {
         const CrawlHashTable &thing = (*list)[i];
-        const level_pos      _pos    = thing_pos(thing);
+        const item_def       &_item = get_thing_item(thing);
+        const level_pos       _pos  = thing_pos(thing);
 
         if (pos != _pos)
             continue;
 
-        if (item.name(DESC_NOCAP_A) == name_thing(thing))
+        if (item_name_simple(item) == item_name_simple(_item))
             return (i);
     }
 
@@ -2286,13 +2518,14 @@ level_pos ShoppingList::thing_pos(const CrawlHashTable& thing)
     return (thing[SHOPPING_THING_POS_KEY].get_level_pos());
 }
 
-std::string ShoppingList::name_thing(const CrawlHashTable& thing)
+std::string ShoppingList::name_thing(const CrawlHashTable& thing,
+                                     description_level_type descrip)
 {
     if (thing_is_item(thing))
     {
         const item_def &item = get_thing_item(thing);
 
-        return item.name(DESC_NOCAP_A);
+        return item.name(descrip);
     }
     else
         ASSERT(false);
@@ -2300,11 +2533,12 @@ std::string ShoppingList::name_thing(const CrawlHashTable& thing)
     return ("");
 }
 
-std::string ShoppingList::describe_thing(const CrawlHashTable& thing)
+std::string ShoppingList::describe_thing(const CrawlHashTable& thing,
+                                         description_level_type descrip)
 {
     const level_pos pos = thing_pos(thing);
 
-    std::string desc = name_thing(thing) + " on ";
+    std::string desc = name_thing(thing, descrip) + " on ";
 
     if (pos.id == level_id::current())
         desc += "this level";
@@ -2312,4 +2546,11 @@ std::string ShoppingList::describe_thing(const CrawlHashTable& thing)
         desc += pos.id.describe();
 
     return (desc);
+}
+
+// Item name without plusses, curse-status or inscription.
+std::string ShoppingList::item_name_simple(const item_def& item, bool ident)
+{
+    return item.name(DESC_PLAIN, false, ident, false, false,
+                     ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
 }
