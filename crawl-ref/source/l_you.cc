@@ -275,6 +275,8 @@ static int _you_gold(lua_State *ls)
 
 LUAWRAP(_you_die,ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_SOMETHING))
 
+LUARET1(you_where_are_you, number, you.where_are_you)
+
 static const struct luaL_reg you_dlib[] =
 {
 { "hear_pos",           you_can_hear_pos },
@@ -288,7 +290,8 @@ static const struct luaL_reg you_dlib[] =
 { "losight",            you_losight },
 { "gold",               _you_gold },
 { "uniques",            _you_uniques },
-{ "die",               _you_die },
+{ "die",                _you_die },
+{ "where_are_you",      you_where_are_you },
 
 { NULL, NULL }
 };

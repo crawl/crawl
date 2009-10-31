@@ -238,26 +238,6 @@ end
 -- ###
 -- # Monster functions:
 
-function make_fiery_mons (e, monster, weapons, armours)
-    -- Converts a "normal" monster to a fire-themed one through ego weapons and armour.
-    -- syntax: make_fiery_mons(_G, "monster", {"weapon chance 1", "weapon chance 2"}, {"armour chance 1", "armour chance 2"}) etc.
-    local monstring = "" .. monster
-    if weapons ~= False then
-        monstring = monstring .. " ; "
-        for _, weapon in ipairs(weapons) do
-            monstring = monstring .. weapon .. " ego:flaming |"
-        end
-    end
-    if armours ~= False then
-        monstring = monstring .. " . "
-        for _, armour in ipairs(armours) do
-            monstring = monstring .. armour .. " ego:fire_resistance |"
-        end
-    end
-
-    return string.gsub(monstring, "%s*\|$", "")
-end
-
 -- This function sets up two slots of monsters: in general, the first
 -- slot (say, 1) is the "surrounding" guardians, while the third slot
 -- is a "levelled" up version of the 1s. It's currently balanced for
@@ -265,18 +245,19 @@ end
 --
 -- Packs are basically as follows:
 --  ("intelligent" packs; packs involving uniques)
---  orc, orc, orc, Urug; orc, orc, orc, Blork the orc; orc, orc, orc,
---  orc warrior.
+--  orc warrior, orc warrior, orc warrior, Urug; orc warrior, orc warrior,
+--  orc warrior, Blork the orc; orc warrior, orc warrior, orc warrior,
+--  orc warrior/orc knight.
 --  human, human, human, Edmund; human, human, human, Michael; human,
 --  human, human, human.
---  kobold, kobold, kobold, Sonja; kobold, kobold, kobold, big kobold.
---  goblin, goblin, goblin, Ijyb; goblin, goblin, goblin, hobgoblin.
+--  big kobold, big kobold, big kobold, Sonja; big kobold, big kobold, 
+--  big kobold, big kobold.
 --  gnoll, gnoll, gnoll, Grum + war dogs; gnoll, gnoll, gnoll, gnoll.
 --  (in "Tomb") mummy, mummy, mummy, Menkaure; mummy, mummy, mummy,
 --  guardian mummy.
 --  (no-unique packs, but still "intelligent")
---  deep elf soldier, deep elf soldier, deep elf soldier, deep elf
---  fighter;
+--  deep elf fighter, deep elf fighter, deep elf fighter, deep elf
+--  knight;
 --  nothing, minotuar (all on its lonesome)
 --
 -- Natural "packs" usually consist of a few fire/red-themed monsters
@@ -296,81 +277,83 @@ local urug = "Urug ; spear ego:flaming race:orcish . leather armour ego:fire_res
 local blork = "Blork the orc ; short sword race:orcish ego:flaming . leather armour ego:fire_resistance race:orcish"
 local edmund = "Edmund ; flail ego:flaming . leather armour ego:fire_resistance"
 local michael = "Michael ; dagger ego:flaming . robe ego:fire_resistance"
-local sonja = "Sonja" -- We don't touch her equips.
-local ijyb = "Ijyb ; club ego:flaming | dagger ego:flaming . ring mail ego:fire_resistance race:orcish"
 local grum  = "Grum ; animal skin ego:fire_resistance"
-local menkaure = "Menkaure" -- Or his.
 local hellknight = "hell knight w:1 ; hand axe ego:flaming . ring mail ego:fire_resistance"
 
 function fiery_humans (e)
-    local human = "human ; short sword ego:flaming | long sword ego:flaming . ring mail ego:fire_resistance"
-    e.mons("hog / " .. human)
-    e.mons(human)
+    -- This is for the village! Wargs and orcs if you came from orc
+    if you.where_are_you() == 2 then
+        local orc = "orc warrior ; ring mail ego:fire_resistance race:orcish | leather armour ego:fire_resistance \
+                     race:orcish"
+        e.mons("warg / " .. orc)
+        e.mons(orc)
+    -- But hogs and humans if you came from anywhere else.
+    else
+        local human = "human ; short sword ego:flaming | long sword ego:flaming . ring mail ego:fire_resistance"
+        e.mons("hog / " .. human)
+        e.mons(human)
+    end
 end
 
-function fiery_guardians (e, tomb)
-    local found_guard = false
+function fiery_guardians (e)
     local guard_type = ""
     local main_guard = ""
-    if crawl.one_chance_in(9) then
+    -- If we came from orc, we expect to only see orcs.
+    if you.where_are_you() == 2 then
+        -- We did, and maybe we'll place a unique.
+        if crawl.one_chance_in(9) then
+            e.mons("orc warrior ; spear race:orcish ego:flaming . leather armour ego:fire_resistance")
+            e.mons(urug .. " / " .. blork .. " / orc warrior ; trident race:orcish ego:flaming . ring mail ego:fire_resistance")
+            return
+        end
+    -- We didn't, and maybe we'll place a unique.
+    elseif crawl.one_chance_in(9) then
         -- We decided to use a unique.
-        local unq_weight = crawl.random2(50)
-        found_guard = true;
+        local unq_weight = crawl.random2(40)
         if unq_weight < 10 then
-            guard_type = "orc warrior"
-            main_guard = urug .. " / " .. blork .. " / orc warrior ; trident race:orcish ego:flaming . ring mail ego:fire_resistance"
+            e.mons("human ; scimitar ego:flaming . leather armour ego:fire_resistance")
+            e.mons(edmund .. " / " .. michael .. " / human ; falchion ego:flaming . scale mail ego:fire_resistance")
         elseif unq_weight < 20 then
-            guard_type = "human"
-            main_guard = edmund .. " / " .. michael .. " / human ; falchion ego:flaming . leather armour ego:fire_resistance"
-        elseif unq_weight < 30 then
-            guard_type = "big kobold"
-            main_guard = sonja .. " / big kobold ; long sword ego:flaming . ring mail ego:fire_resistance"
-        elseif unq_weight <= 50 then
-            guard_type = "gnoll"
-            main_guard = grum .. " / gnoll ; halberd ego:flaming"
+            e.mons("big kobold ; short sword ego:flaming . leather armour ego:fire_resistance")
+            e.mons("Sonja / big kobold ; long sword ego:flaming . ring mail ego:fire_resistance")
+        elseif unq_weight <= 40 then
+            e.mons("gnoll ; halberd ego:flaming | w:2 scythe ego:flaming . scale mail ego:fire_resistance | \ 
+                    banded mail ego:fire_resistance")
+            e.mons(grum .. " / gnoll ; glaive ego:flaming . banded mail \
+                            ego:fire_resistance | plate mail ego:fire_resistance")
         end
     end
 
-    if tomb then
-        guard_type = "mummy"
-        main_guard = menkaure .. " / guardian mummy"
-        found_guard = true
-    end
-
-    -- If we've reached this stage, we've maybe already found a guardian.
-    if found_guard then
-        e.mons(guard_type)
-        e.mons(main_guard)
+    -- No unique, orcs!
+    if you.where_are_you() == 2 then
+        e.mons("orc warrior ; spear race:orcish ego:flaming . leather armour ego:fire_resistance")
+        e.mons("orc warrior ; trident race:orcish ego:flaming . ring mail ego:fire_resistance / \
+                orc knight ; scythe race:orcish ego:flaming . banded mail ego:fire_resistance")
         return
     end
-
-    -- If not, we still have to decide what we're going to use.
+ 
+    -- No unique, minotaur!
     if crawl.one_chance_in(10) then
         -- It's a lone minotaur! labyrinth-esque.
         e.mons("nothing")
-        e.mons("minotaur ; trident ego:flaming . ring mail ego:fire_resistance")
+        e.mons("minotaur ; trident ego:flaming . banded mail ego:fire_resistance")
         return
     end
 
     if crawl.one_chance_in(4) then
-        -- We're still going to use a pack of "intelligents".
-        local pack_weight = crawl.random2(30)
-        -- "Plain" flavour packs are orcs+orc warrior (maybe an orc knight)
-        -- kobolds + big kobold (maybe a kobold demonologist), or deep elf
-        -- soldiers + deep elf fighter.
-        if pack_weight < 10 then
-            e.mons("orc warrior")
-            e.mons("orc warrior / orc knight w:1")
-        elseif pack_weight < 20 then
-            e.mons("big kobold")
-            e.mons("big kobold / kobold demonologist w:2")
-        elseif pack_weight <= 30 then
-            e.mons("deep elf fighter" )
-            e.mons("deep elf fighter / deep elf knight w:3")
+        if crawl.coinflip() then
+            e.mons("big kobold ; short sword ego:flaming . leather armour ego:fire_resistance")
+            e.mons("big kobold ; long sword ego:flaming . ring mail ego:fire_resistance / kobold demonologist w:2")
+        else
+            e.mons("deep elf fighter ; sabre ego:flaming race:elven")
+            e.mons("deep elf fighter ; sabre ego:flaming race:elven . chain mail ego:fire_resistance \ 
+                    race:elven / deep elf knight w:3 ; sabre ego:flaming race:elven . chain mail \
+                    ego:fire_resistance race:elven")
         end
         return
     end
 
+    -- Unintelligent map!
     -- We are now going to use a mixed pack.
     if crawl.one_chance_in(3) then
         -- "Lair"-esque fire-themed monster pack.
@@ -689,7 +672,8 @@ TAGS:       volcano no_item_gen no_monster_gen no_rotate
 KFEAT:      u = lava
 KMONS:      u = flying skull
 #           We have a specific monster set for this vault.
-:           fiery_guardians(_G, true)
+MONS:       mummy
+MONS:       menkaure / guardian mummy
 MONS:       firedrake skeleton w:5 / lindwurm skeleton w:1 / hog skeleton / hound skeleton
 MONS:       mummy
 #           Loot: 4 gold, 8 items.
