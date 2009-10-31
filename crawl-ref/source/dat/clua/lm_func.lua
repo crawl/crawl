@@ -21,8 +21,8 @@
 --    * "player_at": Calls the function whenever the player is at the
 --       same position as the marker. Takes the same "repeated"
 --       parameter as "in_los".
---    * "helper": A function machine that can be linked into other lua
---       markers and machines. It is not triggered independantly, but
+--    * "listener": A function machine that can be linked into other lua
+--       markers and machines. It is not triggered independently, but
 --       called by the "parent" marker, though always with the same
 --       marker_table parameter as other machines. May take further
 --       parameters, see the parent's documentation.
@@ -108,7 +108,7 @@ end
 
 function FunctionMachine:activate(marker, verbose)
   local _x, _y = marker:pos()
-  if (self.marker_type == "helper") then
+  if (self.marker_type == "listener") then
     return
   else
     dgn.register_listener(dgn.dgn_event_type('turn'), marker)
