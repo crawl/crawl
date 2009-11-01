@@ -40,22 +40,24 @@
 #
 ###
 # Index:
-#   volcano_grotto  - forgotten grotto "temple" volcano; a temple to
-#                     the side of a volcano, line 472-523
-#   volcano_lake    - lava lake "temple" volcano; a temple suspended
-#                     in the middle of a volcano, line 531-591
-#   volcano_pools   - many pools "pyramid"; some caves off a central
-#                     chamber, but no pyramid?, line 599-658
-#   volcano_tomb    - volcano "tomb"; based of Tutankhamun's burial
-#                     chamber, has mummies and fire. Line 666-709.
-#   volcano_aerie   - "aerie"; two paths to the loot, including lindwurm
-#                     island! Line 717-775.
-#   volcano_bunker  - "hidden bunker"; "science"-ish portal vault with
-#                     golems and a "conservatory". Line 783-823.
-#   volcano_caves   - "collapsing caverns", you can choose which one you
-#                     want! maybe more than one? Line 830-902.
-#   volcano_village - by zaba! villagerrs are kinda scary, actually!
-#                     Line 912-967.
+#   volcano_grotto   - forgotten grotto "temple" volcano; a temple to
+#                      the side of a volcano, line 472-523
+#   volcano_lake     - lava lake "temple" volcano; a temple suspended
+#                      in the middle of a volcano, line 531-591
+#   volcano_pools    - many pools "pyramid"; some caves off a central
+#                      chamber, but no pyramid?, line 599-658
+#   volcano_tomb     - volcano "tomb"; based of Tutankhamun's burial
+#                      chamber, has mummies and fire. Line 666-709.
+#   volcano_aerie    - "aerie"; two paths to the loot, including lindwurm
+#                      island! Line 717-775.
+#   volcano_bunker   - "hidden bunker"; "science"-ish portal vault with
+#                      golems and a "conservatory". Line 783-823.
+#   volcano_caves    - "collapsing caverns", you can choose which one you
+#                      want! maybe more than one? Line 830-902.
+#   volcano_village  - by zaba! villagerrs are kinda scary, actually!
+#                      Line 912-967.
+#   volcano_overflow - overflowing lava! idea by dpeg, code by Jude.
+#                      Line 1034+.
 ###
 
 {{
@@ -915,6 +917,7 @@ local function collapse_doorways (position, mytable)
     mytable.total_collapsed = mytable.total_collapsed + 1
     dgn.terrain_changed(x, y, "stone_wall", false, false, false)
     dgn.colour_at(x, y, "lightred")
+    dgn.apply_area_cloud(x, y, 1, 6, 1, 10, "grey smoke", "other", -1)
   end
 end
 
@@ -1017,5 +1020,112 @@ MAP
        xRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRx
        xRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRx
        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+###############################################################################
+
+###############################################################################
+
+###############################################################################
+# Let's go, Overflow!
+#
+# You don't have much time to get the loot, as the Volcano is spitting out lava
+# like there's no tomorrow! Of course, if you can levitate or fly, you've got a
+# good chance of getting everything. If you get stuck, you can just wait it out.
+#
+# No monsters, only lava and loot. Original idea by dpeg.
+#
+# TODO: Come up with a better way to indicate to the player that the lava does
+#       eventually recede.
+NAME:       volcano_overflow
+WEIGHT:     10
+ORIENT:     encompass
+TAGS:       volcano no_item_gen no_monster_gen no_rotate
+MONS:       nothing, nothing, nothing
+{{
+
+local mtable = {lava_phase=0}
+
+function convert_lava (position, mytable)
+  mytable.lava_phase = mytable.lava_phase + 1
+  local lp = mytable.lava_phase
+  local my_slaves = {}
+
+  -- So we don't have to duplicate code too much.
+  local function convert_slaves_to_lava (mslaves, opposite)
+   local yp = dgn.point(you.pos())
+    for _, pos in ipairs(mslaves) do
+      if pos ~= yp then
+        if opposite then
+          dgn.terrain_changed(pos.x, pos.y, "floor", false, false, false)
+        else
+          dgn.terrain_changed(pos.x, pos.y, "lava", false, false, false)
+        end
+      end
+    end
+  end
+
+  if lp == 1 then
+    crawl.mpr("The ground shudders ominously.", "warning")
+  elseif lp == 2 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 2)
+    crawl.mpr("In the distance, the volano explodes with a roar! Lava spreads "
+               .. "onto the path.", "warning")
+    convert_slaves_to_lava(my_slaves)
+  elseif lp == 3 then
+    crawl.mpr("The air is thick with the scent of sulphur.", "warning")
+  elseif lp == 4 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 4)
+    crawl.mpr("There is another distant roar. More lava overflows!", "warning")
+    convert_slaves_to_lava(my_slaves)
+  elseif lp == 5 then
+    crawl.mpr("The ground moves violently!", "warning")
+  elseif lp == 6 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
+    crawl.mpr("The volcano erupts again! A thin layer of lava overflows to " ..
+              "fill the cavern.", "warning")
+    convert_slaves_to_lava(my_slaves)
+  elseif lp == 7 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
+    crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
+              "over!", "warning")
+    convert_slaves_to_lava(my_slaves, true)
+  end
+end
+
+-- So we know what to convert.
+lua_marker("1", portal_desc { lava_phase=2 })
+lua_marker("2", portal_desc { lava_phase=4 })
+lua_marker("3", portal_desc { lava_phase=6 })
+
+-- And finially, let's convert it
+lua_marker("M", function_machine ( {
+  marker_type="random",
+  turns_min=5,
+  turns_max=20,
+  func = convert_lava,
+  marker_params = mtable } ) )
+}}
+SUBST:      M = c
+NSUBST:     123 = 8:d / 8:e / 8:f / 8:g / 8:h / *:.
+:           volcano_setup(_G)
+MAP
+                xxxx         xxx xxx                   xxx
+        xxxxx  xx33xxx     xxx3xxx3xxxx xxxxx xxx     xx3xx
+       xx333xxxx32233xxx xxx3323332333xxxx33xxx3xxx xxx323xx
+     xxx321133332112233xxx332211221121333322333233xxx332123xx
+   xxx3321l122221ll11133333311ll111l111222212211223332211123xx
+ xxx3321llll1111llllll111111lllllllllll11111111111222111123xx
+xx3321llllllllllllllllllllllllllllllllllll11233321111ll123xx
+ xx3321lllllllllllllllllllllllllllllllllll123xxx3321lll123xx
+  xxx321lllllllllllllllllllllllllllllllll123xxAxxx321lll123xx
+    xx321lllllllllllllllll111lllllllllll123xx<...xx3211ll123xx
+     xx321lll11llllllll122333221lllllllll123xxx...xx321lll123x
+      x321ll1221llllll1223xxx3211llllllll11233x....3321llll13xx
+    xxx321l133321llll1233xx xx3221llllllll123xx...xx321ll1123xx
+   xx3321133xxx33211123xxx   xx3321llll11233333.xxx322111233xx
+   x332233xxx xxx33233xx      xxx332111233xxxxxxx xx332233xxx
+   xxx33xxx     xxx3xxx    M    xxx33233xxx        xxx33xxx
+     xxxx         xxx             xxx3xxx            xxxx
+                                    xxx
 ENDMAP
 ###############################################################################
