@@ -632,7 +632,7 @@ int mons_weight(int mc);
 int mons_class_base_speed(int mc);
 int mons_class_zombie_base_speed(int zombie_base_mc);
 int mons_base_speed(const monsters *mon);
-
+int mons_real_base_speed(int mc);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -841,6 +841,7 @@ bool monster_senior(const monsters *first, const monsters *second,
 monster_type draco_subspecies(const monsters *mon);
 unsigned char ugly_thing_random_colour();
 int ugly_thing_colour_offset(const monsters *mon);
+std::string  draconian_colour_name(monster_type mtype);
 monster_type draconian_colour_by_name(const std::string &colour);
 
 monster_type random_monster_at_grid(const coord_def& p);
@@ -890,4 +891,7 @@ bool mons_can_pass(const monsters *mon, dungeon_feature_type grid);
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq);
 mon_inv_type item_to_mslot(const item_def &item);
+
+int scan_mon_inv_randarts(const monsters *mon,
+                          artefact_prop_type ra_prop);
 #endif

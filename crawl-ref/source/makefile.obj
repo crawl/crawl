@@ -89,6 +89,7 @@ mon-pick.o \
 mon-util.o \
 monplace.o \
 monspeak.o \
+monster.o \
 monstuff.o \
 mstuff2.o \
 mt19937ar.o \
