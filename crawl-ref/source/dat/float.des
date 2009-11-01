@@ -712,12 +712,10 @@ NAME:    protected_by_tso
 ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   18-27
-
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
-
 KFEAT:   A = altar_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
-
+#
 : if crawl.one_chance_in(3) then
 SUBST:   | = .
 SUBST:   % = |
@@ -726,17 +724,15 @@ SUBST:   ? = =
 SUBST:   % = X
 SUBST:   ? = X
 : end
-
+#
 COLOUR:  _ : yellow
 SUBST:   _ : .
 SUBST:   T = T F:1
 KMASK:   + = no_secret_doors
-
 MARKER:  ! = lua:message_machine({marker_type="player_at", message="You almost \
              think you hear a voice: \"Seek not undue power, mortal.\"", \
              channel="warning" })
 SUBST:   ! : .
-
 MAP
     xxxxxxxxxxx
    xxxxxXXXxxxxx
@@ -761,4 +757,77 @@ xxXxxxxx+++xxxxxXx
  xxxxxxxx!xxxxxxxx
      xxxx+xxxx
          @
+ENDMAP
+
+##############################################################################
+# Elemental Laboratory (by Mu.)
+#
+NAME:   elemental_lab_mu
+DEPTH:  D:16-26, Elf:1-6
+ORIENT: float
+FLAGS:  no_monster_gen no_item_gen no_pool_fixup
+MARKER: ! = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 1, size_buildup_amnt = 5, \
+                size_buildup_time = 25, cloud_type = "flame" \
+            }
+MARKER: ? = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 1, size_buildup_amnt = 5, \
+                size_buildup_time = 25, cloud_type = "thin mist" \
+            }
+MARKER: * = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 1, size_buildup_amnt = 5, \
+                size_buildup_time = 25, cloud_type = "black smoke" \
+            }
+KMONS:  1 = fire elemental
+NSUBST: ; = 3:2 / *=.ll
+KMONS:  2 = molten gargoyle
+KMONS:  e = earth elemental
+SUBST:  E = ecxxx..
+NSUBST: ' = 3:3 / 3:W / *:.
+KMONS:  3 = clay golem
+NSUBST: w = 3:4 / *:w
+KMONS:  4 = water elemental
+KFEAT:  4 = deep_water
+NSUBST: " = 3:5 / *:.
+KMONS:  5 = vapour
+KMONS:  6 = air elemental
+KMONS:  7 = fire vortex
+: if string.find(you.where(), "Elf:") then
+KMONS:  Z = deep elf sorcerer ; robe ego:fire_resistance race:elven | \
+            robe ego:cold_resistance race:elven | \
+            robe ego:resistance race:elven
+: else
+KMONS:  Z = wizard ; robe ego:fire_resistance | robe ego:cold_resistance | \
+                     robe ego:resistance
+: end
+KITEM:  B = any book
+KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air
+MAP
+       ccccccccc
+      ccE+'''cwcc
+     ccEEc'''cwwcc
+    ccEEEc'''cwwwcc
+   ccEEEEc'''cwwwwcc
+  ccEEEEEc'''cwwwwwcc
+ ccEEEEEEc''Wcwwwwwwcc
+ccEEEEEEEc'WW+wwwwwwwcc
+cEEEEEEEEcccccwwwwwwwwc
+ccccccc+ccB|Bcccccccc+c
+c;;;;;;;c$...$c"""""""c
+c;;;;;;;c$.Z.$c""?"?""c
+c;;;;;;;c$...$c"""""""c
+c+cccccccc...cc+ccccccc
+c........c+++c........c
+cc..!1.!1c...c.6..6..cc
+ cc......c7.7c......cc
+  cc.....c...c.....cc
+   cc.1!.c.*.c.6..cc
+    cc...c...c...cc
+     cc..c.7.c..cc
+      cc.c...+.cc
+       c+ccccccc
+        @
 ENDMAP

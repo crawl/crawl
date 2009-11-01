@@ -843,6 +843,29 @@ XXXXXXXXXX
 XXXXXXXXXX
 ENDMAP
 
+##############################################################################
+# Not Minivault 9 (by Mu.)
+
+NAME:   not_minivault_9_mu
+TAGS:   allow_dup
+CHANCE: 1
+DEPTH:  D:15-27, Elf, Vault
+MONS:   butterfly
+MARKER: X = lua: props_marker { connected_exclude="true" }
+SUBST:  X = =
+MAP
+XXXXXXXXXX
+XxXXXXXXXX
+XXXXXXXXXX
+XXX1111XXX
+XXX1111XXX
+XXX1111XXX
+XXX1111XXX
+XXXXXXXXXX
+XXXXXXXXXX
+XXXXXXXXXX
+ENDMAP
+
 ###################################
 
 NAME: minivault_10
@@ -2535,4 +2558,93 @@ xxtttttttccccctx
 xxtttttttttttttx
 xxxxxttttttttxxx
 xxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Minislime (by Mu.)
+#
+NAME:    minislime_mu
+DEPTH:   D:14-26, Vault
+FLAGS:   no_monster_gen no_item_gen
+MONS:    slime creature, giant eyeball, eye of draining
+SUBST:   J = 1111111123
+KITEM:   R = royal jelly
+SUBST:   m : xxxm
+SHUFFLE: %!'"
+NSUBST:  % = 1:d / *:%
+NSUBST:  ! = 1:e / *:%
+NSUBST:  ' = 1:f / *:%
+NSUBST:  " = 1:g / *:%
+SUBST:   % = %$
+ITEM:    ring of teleportation / scroll of teleportation w:30 q:2
+ITEM:    wand of digging / wand of disintegration
+ITEM:    stone of earth elementals
+ITEM:    scroll of teleportation q:2 w:20 / knife ego:distortion
+MAP
+...................
+..J.............J..
+.JJ...mmmm.mmm...J.
+....mmm%m.Jm'mm....
+...mm%%%m..m''mm...
+...m%%%%m.mm'''mm..
+..mm%%%%mJ.m''''m..
+..m%%%%%mm.m''''m..
+..mmmmmmm..mmmmmm..
+...J..mJm.....mJ...
+..mmm.....R.mJ..m..
+..m!mmmmm...mmmmm..
+..m!!!!!m..mm"""m..
+..mm!!!!m.mm""""m..
+...mm!!!m.Jm"""mm..
+....mm!mmm.m""mm...
+.J...m!mJ..m"mm....
+..J..mmmm.mmmm..J..
+...............JJ..
+...................
+ENDMAP
+
+##############################################################################
+# Pandora's Box (by Mu.)
+#
+NAME:    pandoras_box_mu
+DEPTH:   D:14-24, Vault, Crypt:1-4
+FLAGS:   no_monster_gen no_item_gen
+MARKER:  a = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "black smoke" \
+             }
+KMONS:   a = giant mosquito
+KMONS:   b = green death
+KMONS:   c = reaper
+KMONS:   d = soul eater
+KMONS:   e = chaos spawn
+KMONS:   f = demonic crawler
+KMONS:   g = glowing shapeshifter
+KMONS:   h = shadow wraith
+KMONS:   i = orange rat
+KMONS:   j = giant cockroach
+KMONS:   k = phantom
+KMONS:   l = large abomination
+KMONS:   m = scorpion
+KMONS:   n = small abomination
+KMONS:   o = unseen horror
+KMONS:   p = red wasp
+KMONS:   q = yellow wasp
+KMONS:   r = wolf spider
+KITEM:   e = acquire armour / acquire weapon
+SHUFFLE: bcdfghjklno
+MAP
+.............
+.............
+..v.......v..
+...vvvvvvv...
+...vgbcdev...
+...vfahajv...
+...vklanov...
+...vpqrimv...
+...vv+++vv...
+..v.......v..
+.............
+.............
 ENDMAP
