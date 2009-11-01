@@ -628,6 +628,14 @@ MONS:     (list of monsters)
           in sight of the hero are removed. This does not hold for plants.
           You can use weights as for ITEM: lines.
 
+          A hydra can be given a specific number of heads by calling it
+          an "n-headed hydra" (with a maximum of 20 heads):
+              MONS: four-headed hydra
+
+          A slime creature's size can be set to other than normal using
+          the prefixes "large", "very large", "enourmous" or "titanic":
+              MONS: very large slime creature
+
           Individual monsters may be prefixed with the "generate_awake"
           (without the quotes). Use this sparingly:
               MONS: generate_awake giant beetle
@@ -691,6 +699,12 @@ MONS:     (list of monsters)
           Items given to an orc or an elf will be made orcish or elven
           unless the item's race type is explicitly set otherwise.
 
+          Limitations: If an item in the item list has alternatives,
+          there's no way to force all monsters dervied from that monster
+          spec to choose the same alternative.  If a monster is given
+          a random launcher, there is no way to force the ammo type to
+          match the launcher type.
+
           Individual monsters can be given names as follows:
               MONS: kobold name:Durwent
 
@@ -705,12 +719,6 @@ MONS:     (list of monsters)
           "Durwent the Kobold"s).
 
           Monster names should be used very, very, very sparingly.
-
-          Limitations: If an item in the item list has alternatives,
-          there's no way to force all monsters dervied from that monster
-          spec to choose the same alternative.  If a monster is given
-          a random launcher, there is no way to force the ammo type to
-          match the launcher type.
 
 COLOUR:   . = green / blue:5 / red / none
           COLOUR: allows you to attach explicit colours to any feature.
