@@ -703,3 +703,62 @@ MAP
           @.
 ENDMAP
 
+##############################################################################
+# An "artifact" protected by the the Shining One (abrahamwl)
+#
+# ORIENT: float ensures correct stair generation.
+#
+NAME:    protected_by_tso
+ORIENT:  float
+TAGS:    patrolling no_monster_gen no_item_gen
+DEPTH:   18-27
+
+MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
+
+KFEAT:   A = altar_shining_one
+KITEM:   A = w:1 acquire:the_shining_one any / nothing
+
+: if crawl.one_chance_in(3) then
+SUBST:   | = .
+SUBST:   % = |
+SUBST:   ? = =
+: else
+SUBST:   % = X
+SUBST:   ? = X
+: end
+
+COLOUR:  _ : yellow
+SUBST:   _ : .
+SUBST:   T = T F:1
+KMASK:   + = no_secret_doors
+
+MARKER:  ! = lua:message_machine({marker_type="player_at", message="You almost \
+             think you hear a voice: \"Seek not undue power, mortal.\"", \
+             channel="warning" })
+SUBST:   ! : .
+
+MAP
+    xxxxxxxxxxx
+   xxxxxXXXxxxxx
+  xxxxxxX|Xxxxxxx
+  xXXXXXX=XXXXXXx
+ xxXWWWWTATWWWWXx
+xxxXW.._____..WXx
+xXXXWt..___..tWXx
+xX%?W...___...WXx
+xXXXWt..___..tWXx
+xxXxxxxx+++xxxxxXx
+ xX.............Xx
+ xX.............Xx
+ xX.............Xx
+ xX...G.....G...Xx
+ xX......1......Xx
+ xX...G.....G...Xx
+ xX.............Xx
+ xX.............Xx
+ xX.............Xx
+ xXXXXXXX+XXXXXXXx
+ xxxxxxxx!xxxxxxxx
+     xxxx+xxxx
+         @
+ENDMAP
