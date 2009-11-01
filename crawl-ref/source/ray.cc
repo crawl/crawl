@@ -147,27 +147,32 @@ void ray_def::bounce(const reflect_grid &rg)
 
     // Move to the diamond edge to determine the side.
     coord_def side;
-    rtrans.to_grid(diamonds, false);
+    bool corner = rtrans.to_grid(diamonds, false);
     double d1 = diamonds.ls1.index(rtrans.start);
     if (double_is_integral(d1))
-        side = (iround(d1) ? coord_def(1,1) : coord_def(-1,-1));
-    else
+        side += iround(d1) ? coord_def(1,1) : coord_def(-1,-1);
+    double d2 = diamonds.ls2.index(rtrans.start);
+    if (double_is_integral(d2))
+        side += iround(d2) ? coord_def(1,-1) : coord_def(-1,1);
+    ASSERT(corner == (side.x == 0 || side.y == 0));
+
+    // In the corner case, we have side == (+-2, 0) or (0, +-2); reduce:
+    if (corner)
     {
-        double d2 = diamonds.ls2.index(rtrans.start);
-        ASSERT(double_is_integral(d2));
-        side = (iround(d2) ? coord_def(1,-1) : coord_def(-1,1));
+        side.x = side.x / 2;
+        side.y = side.y / 2;
     }
-    // TODO: for rays in cardinal directions, this is arbitrary
-    // and can lead to bad behaviour.
 
     // Mirror rtrans to have it leave through the positive side.
     geom::ray rmirr = _mirror(rtrans, side);
 
+    // TODO: on a corner, reflect back unless we're on a diagonal.
+
     // Determine which of the three relevant cells are bouncy.
     const coord_def dx = coord_def(side.x, 0);
     const coord_def dy = coord_def(0, side.y);
-    bool rx = rg(rg_o + dx);
-    bool ry = rg(rg_o + dy);
+    bool rx = (side.x != 0) && rg(rg_o + dx);
+    bool ry = (side.y != 0) && rg(rg_o + dy);
     bool rxy = rg(rg_o + dx + dy);
     // One of the three neighbours on this side must be bouncy.
     ASSERT(rx || ry || rxy);
@@ -216,15 +221,20 @@ void ray_def::bounce(const reflect_grid &rg)
         }
         else if (rx)
         {
-            // y = x - 0.5
-            l.f = geom::form(1, -1);
-            l.val = 0.5;
+            // Flattened corners: y = x - 0.5
+            // l.f = geom::form(1, -1);
+            // l.val = 0.5;
+            // Instead like rxy && rx: x = 1
+            l.f = geom::form(1, 0);
+            l.val = 1;
         }
         else // ry
         {
             // y = x + 0.5
-            l.f = geom::form(1, -1);
-            l.val = -0.5;
+            // l.f = geom::form(1, -1);
+            // l.val = -0.5;
+            l.f = geom::form(0, 1);
+            l.val = 1;
         }
         double t = intersect(rmirr, l);
         ASSERT(double_is_zero(t) || t >= 0);
