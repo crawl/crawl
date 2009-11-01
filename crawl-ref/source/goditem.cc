@@ -433,7 +433,7 @@ conduct_type god_hates_item_handling(const item_def &item)
 
     case GOD_FEAWN:
         if (item_type_known(item)
-            && is_potentially_evil_item(item) || is_evil_item(item))
+            && (is_potentially_evil_item(item) || is_evil_item(item)))
         {
             return (DID_NECROMANCY);
         }
