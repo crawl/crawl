@@ -2877,6 +2877,13 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "poisoned",
         "curare",
         "returning",
+        "chaos",
+        "penetration",
+        "reaping",
+        "dispersal",
+        "exploding",
+        "steel",
+        "silver",
         NULL
     };
 
