@@ -66,10 +66,9 @@ function sewer_setup(e)
   e.colour("W = lightgreen")
   e.lrocktile("wall_slime")
   e.lfloortile("floor_slime")
--- A standard random monster list for Sewer.
+-- Random monster list and milestone.
   e.set_random_mon_list("giant bat w:20 / giant newt w:20 / small snake / \
                          ooze / worm / snake / giant mosquito")
--- Add the milestone.
   crawl.mark_milestone("br.enter", "entered a Sewer.")
 end
 }}
@@ -333,6 +332,7 @@ ENDMAP
 NAME:     sewer_big_baddie
 TAGS:     sewer no_item_gen no_monster_gen
 ORIENT:   encompass
+WEIGHT:   5
 : sewer_setup(_G)
 SUBST:    2 = 23
 KMONS:    2 = giant lizard
@@ -373,6 +373,7 @@ ENDMAP
 NAME:   sewer_the_slug
 TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
+WEIGHT: 5
 SUBST:  - = WW...
 MONS:   kobold, jackal
 SUBST:  3 = 334
