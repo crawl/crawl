@@ -222,8 +222,8 @@ ORIENT:  encompass
 TAGS:    trove no_item_gen no_monster_gen allow_dup
 # Loot: 16 items.
 ITEM:   any good_item
-ITEM:   acquire jewellery / any good_item w:2
-ITEM:   acquire weapon / acquire armour / any good_item w:2
+ITEM:   acquire jewellery / any good_item
+ITEM:   acquire weapon / acquire armour / any good_item
 : trove_setup_features(_G)
 MAP
 xxxxxx
@@ -277,8 +277,8 @@ MONS:    plant col:white / plant col:blue w:6
 MONS:    plant col:white / plant col:cyan w:3 / plant col:blue w:3
 #
 ITEM:    any good_item
-ITEM:    any jewellery good_item / any good_item w:2
-ITEM:    any weapon good_item / any armour good_item / any good_item w:2
+ITEM:    any jewellery good_item / any good_item
+ITEM:    any weapon good_item / any armour good_item / any good_item
 KFEAT:   w = W
 : trove_setup_features(_G)
 : place_fog(_G, "blue smoke", 30)
@@ -357,7 +357,7 @@ WEIGHT: 20
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
-ITEM:   acquire jewellery
+ITEM:   acquire jewellery / any jewellery good_item / any jewellery
 COLOUR: o = blue
 : trove_setup_features(_G)
 MAP
@@ -383,7 +383,7 @@ WEIGHT: 20
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
-ITEM:   acquire jewellery
+ITEM:   acquire jewellery / any jewellery good_item / any jewellery w:2
 COLOUR: x = blue
 : trove_setup_features(_G)
 MAP
@@ -403,7 +403,7 @@ ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: o = blue
-ITEM:   acquire weapon
+ITEM:   acquire weapon / any weapon good_item / any weapon w:2
 : trove_setup_features(_G)
 MAP
 xxxxxxxx
@@ -429,7 +429,7 @@ ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: x = blue
-ITEM:   acquire weapon
+ITEM:   acquire weapon / any weapon good_item / any weapon w:2
 : trove_setup_features(_G)
 MAP
 xxxxxxxx
@@ -448,7 +448,7 @@ ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: o = blue
-ITEM:   acquire armour
+ITEM:   acquire armour / any armour good_item / any armour w:2
 : trove_setup_features(_G)
 MAP
 xxxxxxxx
@@ -474,7 +474,7 @@ ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: x = blue
-ITEM:   acquire armour
+ITEM:   acquire armour / any armour good_item / any armour w:2
 : trove_setup_features(_G)
 MAP
 xxxxxxxx
@@ -530,8 +530,8 @@ COLOUR: = = blue
 MONS:   vampire
 # 24 items, just because we're feeling generous.
 ITEM:   any good_item w:10 / any
-ITEM:   any jewellery good_item / any good_item w:2
-ITEM:   acquire weapon / acquire armour / any good_item w:2
+ITEM:   any jewellery good_item / any good_item
+ITEM:   acquire weapon / acquire armour / any good_item
 : trove_setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -555,9 +555,9 @@ COLOUR: o = blue
 COLOUR: = = blue
 MONS:  shining eye
 # 28 items, 'cos this one is *nasty*. The extra items are potions of cure mutation.
-ITEM:   any good_item w:10 / any
-ITEM:   any jewellery good_item / any good_item w:2
-ITEM:   acquire weapon / acquire armour / any good_item w:2
+ITEM:   any good_item / any
+ITEM:   any jewellery good_item / any good_item
+ITEM:   acquire weapon / acquire armour / any good_item
 ITEM:   potion of cure mutation
 : trove_setup_features(_G)
 MAP
