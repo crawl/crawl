@@ -66,14 +66,6 @@ double nextintersect(const ray &r, const lineseq &ls)
     return (t);
 }
 
-// Line distance in the ray parameter.
-//   ls.f(r.shoot(tdist)) == ls.f(r.start) +- ls.dist
-static double tdist(const ray &r, const lineseq &ls)
-{
-    ASSERT(!parallel(r.dir, ls.f));
-    return (std::abs(ls.dist / ls.f(r.dir)));
-}
-
 // Move the ray towards the next grid line.
 // Half way there if "half" is true, else all the way there
 // Returns whether it hit a corner.
