@@ -3628,6 +3628,37 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
         conduct[i].enabled = false;
 }
 
+static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
+{
+    int pos;
+
+    if (!*pmsg)
+        return false;
+
+    std::string pm = pmsg;
+    if ((pos = pm.find("biology")) != -1)
+        switch(you.is_undead)
+        {
+        case US_UNDEAD:      // mummies -- time has no meaning!
+            return false;
+        case US_HUNGRY_DEAD: // ghouls
+            pm.replace(pos, 7, "decay");
+            break;
+        case US_SEMI_UNDEAD: // vampires
+        case US_ALIVE:
+            break;
+        }
+
+    if (isupper(pmsg[0]))
+        god_speaks(you.religion, pm.c_str());
+    else
+    {
+        god_speaks(you.religion,
+                   make_stringf(youcanmsg, pmsg).c_str());
+    }
+    return true;
+}
+
 static void _dock_piety(int piety_loss, int penance)
 {
     static long last_piety_lecture   = -1L;
@@ -3754,19 +3785,9 @@ void gain_piety(int pgn)
             // title.
             redraw_skill(you.your_name, player_title());
 
-            const char* pmsg = god_gain_power_messages[you.religion][i];
-            const char first = pmsg[0];
-
-            if (first)
+            if (_abil_chg_message(god_gain_power_messages[you.religion][i],
+                              "You can now %s."))
             {
-                if (isupper(first))
-                    god_speaks(you.religion, pmsg);
-                else
-                {
-                    god_speaks(you.religion,
-                               make_stringf("You can now %s.", pmsg).c_str());
-                }
-
                 learned_something_new(TUT_NEW_ABILITY_GOD);
             }
 
@@ -3983,20 +4004,8 @@ void lose_piety(int pgn)
                 // title.
                 redraw_skill(you.your_name, player_title());
 
-                const char* pmsg = god_lose_power_messages[you.religion][i];
-                const char first = pmsg[0];
-
-                if (first)
-                {
-                    if (isupper(first))
-                        god_speaks(you.religion, pmsg);
-                    else
-                    {
-                        god_speaks(you.religion,
-                                   make_stringf("You can no longer %s.",
-                                                pmsg).c_str());
-                    }
-                }
+                _abil_chg_message(god_lose_power_messages[you.religion][i],
+                                  "You can no longer %s.");
 
                 if (_need_water_walking() && !beogh_water_walk())
                     fall_into_a_pool(you.pos(), true, grd(you.pos()));

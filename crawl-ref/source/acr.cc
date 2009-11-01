@@ -2517,6 +2517,7 @@ static void _decrement_durations()
         // XXX: Mummies have an ability (albeit an expensive one) that
         // can fix rotted HPs now... it's probably impossible for them
         // to even start rotting right now, but that could be changed. -- bwr
+        // It's not normal biology, so Cheibriados won't help.
         if (you.species == SP_MUMMY)
             you.rotting = 0;
         else if (x_chance_in_y(you.rotting, 20))
@@ -2535,7 +2536,8 @@ static void _decrement_durations()
     // attacks somewhat less painful, but that seems wrong-headed {dlb}:
     if (you.species == SP_GHOUL)
     {
-        if (one_chance_in(400))
+        if (one_chance_in((you.religion == GOD_CHEIBRIADOS && you.piety >
+                           piety_breakpoint(0)) ? 600 : 400))
         {
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
             ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
