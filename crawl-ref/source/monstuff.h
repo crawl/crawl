@@ -1,5 +1,5 @@
 /*
- *  File:       monstuff.cc
+ *  File:       monstuff.h
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
  */
@@ -111,10 +111,6 @@ void monster_cleanup(monsters *monster);
 
 int dismiss_monsters(std::string pattern);
 
-void behaviour_event(monsters *mon, mon_event_type event_type,
-                     int src = MHITNOT, coord_def src_pos = coord_def(),
-                     bool allow_shout = true);
-
 bool curse_an_item(bool decay_potions, bool quiet = false);
 
 
@@ -147,8 +143,6 @@ bool simple_monster_message(const monsters *monster, const char *event,
                             int param = 0,
                             description_level_type descrip = DESC_CAP_THE);
 
-void make_mons_leave_level(monsters *mon);
-
 bool choose_any_monster(const monsters* mon);
 monsters *choose_random_nearby_monster(
     int weight,
@@ -171,13 +165,9 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet = false);
 
 std::string get_wounds_description(const monsters *monster);
 void print_wounds(const monsters *monster);
-void handle_monsters(void);
 bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
-bool message_current_target(void);
 
 unsigned int monster_index(const monsters *monster);
-
-bool monster_can_hit_monster(monsters *monster, const monsters *targ);
 
 void mons_get_damage_level(const monsters*, std::string& desc,
                            mon_dam_level_type&);
@@ -197,17 +187,25 @@ int mons_thrown_weapon_damage(const item_def *weap);
 
 int mons_natural_regen_rate(monsters *monster);
 
-bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
-                       bool placement = false);
-
-// Like the above, but allow a monster to move from one damaging cloud
-// to another.
-bool mons_avoids_cloud(const monsters *monster, int cloud_num,
-                       cloud_type *cl_type = NULL, bool placement = false);
-
 void mons_relocated(monsters *mons);
 
 bool can_go_straight(const coord_def& p1, const coord_def& p2,
                      dungeon_feature_type allowed);
 
+bool is_item_jelly_edible(const item_def &item);
+
+bool monster_random_space(const monsters *monster, coord_def& target,
+                          bool forbid_sanctuary = false);
+bool monster_random_space(monster_type mon, coord_def& target,
+                          bool forbid_sanctuary = false);
+void monster_teleport(monsters *monster, bool instan, bool silent = false);
+void mons_clear_trapping_net(monsters *mon);
+
+bool mons_clonable(const monsters* orig, bool needs_adjacent = true);
+int  clone_mons(const monsters* orig, bool quiet = false,
+                bool* obvious = NULL, coord_def pos = coord_def(0, 0) );
+
+std::string summoned_poof_msg(const monsters* monster, bool plural = false);
+std::string summoned_poof_msg(const int midx, const item_def &item);
+std::string summoned_poof_msg(const monsters* monster, const item_def &item);
 #endif

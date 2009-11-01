@@ -82,6 +82,7 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-act.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"

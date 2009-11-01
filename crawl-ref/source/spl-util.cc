@@ -26,6 +26,7 @@
 #include "stuff.h"
 #include "los.h"
 #include "macro.h"
+#include "mon-behv.h"
 #include "monstuff.h"
 #include "notes.h"
 #include "player.h"

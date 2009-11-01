@@ -23,6 +23,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-behv.h"
 #include "mon-util.h"
 #include "monplace.h"
 #include "monstuff.h"

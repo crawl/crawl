@@ -21,6 +21,7 @@
 #include "itemname.h"
 #include "kills.h"
 #include "los.h"
+#include "mon-behv.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "random.h"
@@ -3812,4 +3813,10 @@ mon_resist_def mon_resist_def::operator | (const mon_resist_def &o) const
 {
     mon_resist_def c(*this);
     return (c |= o);
+}
+
+bool player_or_mon_in_sanct(const monsters* monster)
+{
+    return (is_sanctuary(you.pos())
+            || is_sanctuary(monster->pos()));
 }

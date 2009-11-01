@@ -84,6 +84,10 @@ menu.o \
 message.o \
 mgrow.o \
 misc.o \
+mon-abil.o \
+mon-act.o \
+mon-behv.o \
+mon-cast.o \
 mon-info.o \
 mon-pick.o \
 mon-util.o \
@@ -91,7 +95,6 @@ monplace.o \
 monspeak.o \
 monster.o \
 monstuff.o \
-mstuff2.o \
 mt19937ar.o \
 mtransit.o \
 mutation.o \

@@ -157,17 +157,6 @@ enum mons_class_flags
     M_NO_EXP_GAIN       = (1<<31)         // worth 0 xp
 };
 
-enum mon_event_type
-{
-    ME_EVAL,                            // 0, evaluate monster AI state
-    ME_DISTURB,                         // noisy
-    ME_ANNOY,                           // annoy at range
-    ME_ALERT,                           // alert to presence
-    ME_WHACK,                           // physical attack
-    ME_SCARE,                           // frighten monster
-    ME_CORNERED                         // cannot flee
-};
-
 enum mon_intel_type             // Must be in increasing intelligence order
 {
     I_PLANT = 0,
@@ -894,4 +883,6 @@ mon_inv_type item_to_mslot(const item_def &item);
 
 int scan_mon_inv_randarts(const monsters *mon,
                           artefact_prop_type ra_prop);
+
+bool player_or_mon_in_sanct(const monsters* monster);
 #endif

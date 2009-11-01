@@ -33,6 +33,7 @@
 #include "los.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-behv.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
