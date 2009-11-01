@@ -456,6 +456,12 @@ static void _direction_again(dist& moves, targetting_type restricts,
 class view_desc_proc
 {
 public:
+    view_desc_proc()
+    {
+        // This thing seems to be starting off 1 line above where it
+        // should be. -cao
+        nextline();
+    }
     int width() { return crawl_view.msgsz.x; }
     int height() { return crawl_view.msgsz.y; }
     void print(const std::string &str) { cprintf("%s", str.c_str()); }
