@@ -147,7 +147,26 @@ void shadow_lantern_effect()
     {
         create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, 2, 0, you.pos(),
                                  MHITYOU));
-        did_god_conduct(DID_NECROMANCY, 1);
+
+        item_def * lantern = you.weapon();
+
+        // This should only get called when we are wielding a lantern
+        // of shadows.
+        ASSERT(lantern && lantern->base_type ==OBJ_MISCELLANY
+               && lantern->sub_type == MISC_LANTERN_OF_SHADOWS);
+
+        bool known = fully_identified(*lantern);
+        did_god_conduct(DID_NECROMANCY, 1, known);
+
+        // ID the lantern and refresh the weapon display
+        if(!known)
+        {
+            set_ident_type(*lantern, ID_KNOWN_TYPE);
+            set_ident_flags(*lantern, ISFLAG_IDENT_MASK);
+
+            you.wield_change = true;
+        }
+
     }
 }
 
