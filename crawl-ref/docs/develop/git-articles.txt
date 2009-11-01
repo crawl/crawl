@@ -1,0 +1,3 @@
+http://www.newartisans.com/2008/04/git-from-the-bottom-up.html
+http://blog.woobling.org/2009/08/git-rebase-for-impatient.html
+http://blog.woobling.org/2009/05/git-rebase-considered-awesome.html

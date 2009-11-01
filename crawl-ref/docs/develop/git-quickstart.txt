@@ -1,0 +1,643 @@
+Date: Thu, 24 Sep 2009 14:36:41 +0530
+From: Darshan Shaligram <scintilla@gmail.com>
+To: crawl-ref-discuss@lists.sourceforge.net
+Subject: [Crawl-ref-discuss] git quickstart
+
+This is for those who haven't used git before and need a
+crash-course on basic operations. I'll keep this as simple as
+possible, and focus specifically on crawl-ref, rather than git in
+general. I've also added links to the official git docs at the end,
+which you can read instead of, or in addition to this, if you're
+inclined.
+
+Installing git
+--------------
+I strongly recommend using at least git 1.6 or later. While you can
+use older versions, the newer versions are much more user-friendly.
+This guide assumes you're using 1.6.
+
+Linux: Install git using your package manager. The git package is
+usually called git-core.
+
+Mac: Install git using Mac ports or Fink. The MacPorts port is
+called git-core (sudo port install git-core).
+
+Windows: Install msysgit (http://code.google.com/p/msysgit/).
+TortoiseGit is apparently pretty usable now for those who want
+Windows explorer integration, but I have not used it myself.
+
+Using git for crawl-ref
+-----------------------
+
+0. Basic git settings:
+
+   Set your name for git to use when committing changes:
+   $ git config --global user.name "John Doe"
+
+   Set your email address:
+   $ git config --global user.email "jdoe@users.sourceforge.net"
+
+   This assumes that you're using git only for crawl-ref on SF, and
+   you don't mind making your SF id your default email id for all
+   git work. If you're already using git for other things, you don't
+   need this crash-course anyway. :P
+
+1. Clone the crawl-ref repository (analogous to svn checkout):
+
+   Developers (anyone with commit rights to the git repo):
+   $ git clone ssh://<sfid>@crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+
+   Example:
+   $ git clone ssh://dploog@crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+
+   When prompted for your password, enter your Sourceforge password.
+
+   Other users:
+   $ git clone git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+
+   "git clone" clones the SF crawl-ref git repository to your
+   machine. When it's done, you have a full local copy of the
+   crawl-ref repository with all its history.
+
+2. Sanity-check your cloned repository (optional):
+
+   When you come back to a git repository after a while, you may not
+   recall where you cloned it from. You can check with:
+
+   $ git remote -v
+
+   For me, this reports:
+   origin  ssh://dshaligram@crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+(fetch)
+   origin  ssh://dshaligram@crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+(push)
+
+   See all available branches in the repository:
+   $ git branch -a
+
+   See all tags:
+   $ git tag
+
+3. Updating your repository with the latest changes from SF:
+
+   Use
+   $ git pull
+   to grab the latest commits from Sourceforge.
+
+   git pull assumes your working tree is clean; it will refuse to
+   overwrite any files that you've modified locally (unlike svn's
+   "svn update", which will happily try to modify the file anyway,
+   and add conflict markers if there are conflicts).
+
+   If git pull fails because you have local changes, you have two
+   options:
+
+   1. Complete your local changes and create a commit, then pull
+      again.
+
+   2. Temporarily save (stash) your local changes, pull changes from
+      SF, and reapply your local changes:
+      $ git stash
+      (this saves your local changes)
+      $ git pull
+      (grab changes from SF)
+      $ git stash apply
+      (reinstate your local changes)
+
+      If your local changes conflict with the changes from SF, git
+      stash apply will warn you of the conflict and add conflict
+      markers to the relevant files.
+
+4. Committing a change to the 'master' branch:
+
+   git's master branch is the equivalent of svn trunk. Immediately
+   after cloning a repository, the cloned crawl-ref repo will be on
+   the master branch. You can check what branch you're working on at
+   any time with:
+
+   $ git branch
+
+   The active branch will be asterisked.
+
+   Before starting work, let's make sure our working copy is not
+   dirty:
+
+   $ git status
+   # On branch master
+   nothing to commit (working directory clean)
+
+   Looking good. For our first change, let's assume we're fixing a
+   bug in, say, stuff.cc.
+
+   $ vim stuff.cc
+   <hackhackhack>
+   $ make
+   <test; that bugfix rocks the world>
+
+   Let's check how git sees things now:
+   $ git status
+   # On branch master
+   # Changed but not updated:
+   #   (use "git add <file>..." to update what will be committed)
+   #   (use "git checkout -- <file>..." to discard changes in working directory)
+   #
+   #       modified:   stuff.cc
+   #
+   no changes added to commit (use "git add" and/or "git commit -a")
+
+   git sees that we've modified stuff.cc. You can see what changes
+   you've made with:
+
+   $ git diff
+
+   Time to actually commit the change:
+   $ git commit -a
+
+   git will bring up your preferred editor for you to enter your
+   commit message. On Windows, you may have to set your EDITOR
+   environment variable; alternatively, you can specify your commit
+   message on the command line:
+
+   $ git commit -a -m "Fitted stuff.cc with warp drive"
+
+   When you're done, your change has been committed to your local
+   repository. Let's try git status again:
+
+   $ git status
+   # On branch master
+   # Your branch is ahead of 'origin/master' by 1 commit.
+   #
+   nothing to commit (working directory clean)
+
+   So git's telling us that we have one local commit that we haven't
+   sent to Sourceforge's git repository yet. Let's send in our fix
+   to SF (core devs only):
+
+   $ git push
+
+   You will be prompted for your password again. git should then
+   push your commit, producing a last line that looks like:
+
+   54ea5f1..ec2e15e  master -> master
+
+   The exact commit ids will differ, but a successful push looks
+   like this. Your push may fail if someone has pushed changes to SF
+   already (git will warn you about a non-fast-forward). In this
+   case, just pull and push again:
+
+   $ git pull
+   $ git push
+
+5. Viewing revision history:
+
+   You can see a history of changes with
+   $ git log
+
+   git log by itself may make it appear that the change history is a
+   straight line, but we know that git can handle branching
+   histories. We can request that git log show us the branching
+   history with:
+
+   $ git log --graph
+
+   You can also view history using the gitk GUI (this is installed
+   by default; everyone should have it, and I recommend it):
+
+   $ gitk
+
+   The history commands normally show you the history of the current
+   branch, but you can view other branches/tags' histories by naming
+   the branch or tag:
+
+   $ gitk origin/stone_soup-0.2
+   $ gitk release-0.5.1
+
+   If you want to annotate a file with last author and commit to
+   change each line in the file, you can use git blame, which is
+   similar to svn blame:
+
+   $ git blame stuff.cc
+
+6. Committing a change to the 0.5 branch:
+
+   So far we've restricted our attention to 'master', which is the
+   easiest branch to work with, since it's selected by default. Now
+   let's say we have a bug report with a 0.5.1 save, and we need the
+   0.5 code to test the save with:
+
+   Let's take a look at the branches we have locally:
+   $ git branch
+   * master
+
+   The only local branch in our repository is master. Let's look at
+   the branches in the remote repository (SF):
+   $ git branch -r
+     origin/HEAD -> origin/master
+     origin/master
+     origin/stone_soup
+     origin/stone_soup-0.1.3
+     origin/stone_soup-0.1.4
+     origin/stone_soup-0.1.5
+     origin/stone_soup-0.1.6
+     origin/stone_soup-0.1.7
+     origin/stone_soup-0.2
+     origin/stone_soup-0.3
+     origin/stone_soup-0.4
+     origin/stone_soup-0.5
+
+   So our local repository has a "master" branch corresponding to SF's
+   "master" branch. We do not yet have a branch corresponding to SF's
+   "stone_soup-0.5", so let's create the branch and switch to it:
+
+   $ git checkout -b stone_soup-0.5 origin/stone_soup-0.5
+   Branch stone_soup-0.5 set up to track remote branch stone_soup-0.5
+from origin.
+   Switched to a new branch 'stone_soup-0.5'
+
+   master and stone_soup-0.5 are both local branches now:
+   $ git branch
+     master
+   * stone_soup-0.5
+
+   git status will also confirm that we're on 0.5 now:
+   $ git status
+   # On branch stone_soup-0.5
+   nothing to commit (working directory clean)
+
+   A quick peek at the history to make really sure we're on 0.5:
+   $ git log
+
+   To grab the latest changes for 0.5:
+   $ git pull
+
+   Ok, now we compile 0.5, test the 0.5 save and verify that a bug
+   exists. Once we've fixed the bug, we create a commit:
+   $ git commit -a
+
+   Check git status:
+   $ git status
+   # On branch stone_soup-0.5
+   # Your branch is ahead of 'origin/stone_soup-0.5' by 1 commit.
+   #
+   nothing to commit (working directory clean)
+
+   Right, we're ready to push our fix to SF. But now that we have
+   multiple local branches, let's first ask git what it plans to do
+   when we push:
+
+   $ git push --dry-run -v
+   Pushing to ssh://dshaligram@crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+   To ssh://dshaligram@crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+    = [up to date]      master -> master
+      b05bb66..976e722  stone_soup-0.5 -> stone_soup-0.5
+
+   So git wants to push the local master and stone_soup-0.5 branches
+   to the corresponding branches on SF; the master branch has no new
+   local changes, whereas the 0.5 branch does (the new change is
+   976e722).
+
+   By default, git-push will push *all* your local branches to the
+   corresponding branches on Sourceforge. This is important to
+   remember; if you had local commits on master, they would also be
+   pushed to SF. This behaviour can be changed (the option is called
+   "push.default") if it bothers you.
+
+   Once you're done working on 0.5, you can switch back to "master"
+   with:
+   $ git checkout master
+
+   The next time you need to work on 0.5 again, you can return to it
+   with:
+   $ git checkout stone_soup-0.5
+
+7. SSH keys (for SF developers):
+
+   If you've been following along with the examples, you've probably
+   noticed that all the password prompts when you push or pull from SF
+   are wearing on your patience (this does not apply to users who've
+   cloned using the git:// URL).
+
+   svn handles the problem of needing passwords all the time by
+   caching the credentials you use the first time you enter them
+   (for https:// WebDAV svn access; svn does not cache credentials
+   for svn+ssh). git does not cache credentials.
+
+   To save yourself the pain of entering your password each time, you
+   should create an ssh key and upload your public key to SF:
+
+   Let's create an ssh key (if you already have a key, skip this
+   step):
+   $ ssh-keygen
+
+   You can accept all the default options and use an empty passphrase
+   for convenience (don't do this on an account you share with other
+   people, or they can commit to crawl-ref too :P)
+
+   Once the key is generated, you'll have two files id_rsa, and
+   id_rsa.pub in your ~/.ssh (the .ssh directory in your home
+   directory). id_rsa is your private key, and should not be shared or
+   given to anyone else (or they can pretend to be you); id_rsa.pub is
+   your public key, and this is what you'll upload to Sourceforge.
+
+   Go to SF, login, and hit the "Account" link to access your account
+   settings.
+
+   Under "Account", click the "Services" tab, and select "Edit SSH
+   keys for Shell/CVS".
+
+   Copy the one line in your id_rsa.pub, and paste it into the
+   Authorized keys text area. Hit Update when you're done.
+
+   Sourceforge being awesome, it will make silly choking noises even
+   on valid ssh keys:
+
+   "Our key validator reports that there may be a problem with one or
+   more of the lines of key data you provided; please edit your SSH
+   keys for Shell/CVS to see which lines may be invalid."
+
+   Ignore these cries of "Wolf! Wolf!"
+
+   Within a few minutes of uploading your key, you should be able to
+   push/pull from SF without needing to reenter your password.
+
+   Windows users (msysgit) can follow these exact same steps in a git
+   bash prompt.
+
+   You can also create a DSA key instead of an RSA key (or use an
+   existing DSA key). SF accepts both.
+
+
+8. Common operations:
+
+   Reverting Changes
+   -----------------
+   It often happens that you make a change to a file that you didn't
+   want, or accidentally delete files that you did want. You can
+   revert a file to its pristine version as:
+
+   $ git checkout stuff.cc
+
+   This also works to bring back files you accidentally deleted. If
+   you forget these commands, "git status" will remind you:
+
+   $ git status
+   # On branch master
+   # Changed but not updated:
+   #   (use "git add/rm <file>..." to update what will be committed)
+   #   (use "git checkout -- <file>..." to discard changes in working directory)
+   #
+   #       deleted:    mt19937ar.cc
+   #
+   no changes added to commit (use "git add" and/or "git commit -a")
+
+   Adding New Files
+   ----------------
+   When committing changes with "git commit -a", newly created files
+   won't be added to the commit unless you request it with "git add".
+   Let's take an example:
+
+   $ git status
+   # On branch master
+   # Untracked files:
+   #   (use "git add <file>..." to include in what will be committed)
+   #
+   #       dwim.cc
+   nothing added to commit but untracked files present (use "git add" to track)
+
+   Before we commit, we must add the new file:
+   $ git add dwim.cc
+   $ git status
+   # On branch master
+   # Changes to be committed:
+   #   (use "git reset HEAD <file>..." to unstage)
+   #
+   #       new file:   dwim.cc
+
+   $ git commit -a
+
+   In general, "git status" is your friend. It will usually tell you
+   exactly what you need to do.
+
+9. Branching:
+
+   Let's say it's time to create a stable 0.6 branch. Here's how you'd
+   do it:
+
+   a) Branch 0.6 from master:
+      $ git checkout -b stone_soup-0.6 master
+
+      Let's check our local branches now:
+        master
+        stone_soup-0.5
+      * stone_soup-0.6
+
+      stone_soup-0.6 is currently a *local* branch. SF's git repo
+      doesn't have it yet.
+
+   b) Push the local branch to SF with a --dry-run first to make sure
+      we're not lousing up anything:
+
+      $ git push --dry-run -v origin stone_soup-0.6
+      Pushing to
+ssh://dshaligram@crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+      To ssh://dshaligram@crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+       * [new branch]      stone_soup-0.6 -> stone_soup-0.6
+
+      Now for the real push:
+      $ git push origin stone_soup-0.6
+
+   c) Point your local branch at the new branch in SF:
+
+      Now that we've created the branch on SF, we want to set up our
+      local "stone_soup-0.6" to get changes from SF's "stone_soup-0.6"
+      when we do a git pull. We do this as:
+
+      Tell git that stone_soup-0.6's remote repository is on SF:
+      $ git config branch.stone_soup-0.6.remote origin
+
+      And that the corresponding branch in SF is stone_soup-0.6:
+      $ git config branch.stone_soup-0.6.merge refs/heads/stone_soup-0.6
+
+      Now you can pull changes from SF's 0.6 branch:
+      $ git pull
+
+      This is only necessary for new branches that you create locally
+      and push to SF. This configuration is automatically set up for
+      you when you work with branches that already exist on SF.
+
+10. Tagging:
+
+   Once 0.6 is fit for a release, you'll need to tag it:
+
+   $ git checkout stone_soup-0.6
+   $ git tag -a release-0.6 -m "0.6: Now with extra kangaroos"
+
+11. Committing changes from one major branch of development to another:
+
+   Once we create a stable branch (say 0.5), we usually make all
+   changes to trunk, but apply bugfixes to the 0.5 branch as well.
+   You can apply changes from master to stone_soup-0.5 with git
+   cherry-pick:
+
+   $ git checkout master
+   [ make the changes for the bugfix ]
+   $ git commit -a
+   $ git checkout stone_soup-0.5
+
+   And cherry-pick the tip commit of the master branch (the bugfix
+   we just committed there):
+   $ git cherry-pick master
+
+   If the commit you want to cherry-pick is not the tip of a branch, just
+   use the commit's id:
+   $ git cherry-pick b0ed1449
+
+   git push will then send in the commits from both branches.
+
+
+Additional Reading:
+------------------
+
+I've intentionally kept my examples very simple and glossed over a
+lot of details. I've covered the common operations in the svn
+workflow, but git can do much more for you if you spend a little
+time learning it.
+
+git documentation central:
+http://git-scm.com/documentation
+
+git tutorial:
+http://www.kernel.org/pub/software/scm/git/docs/gittutorial.html
+
+Another crash course for svn users:
+http://git-scm.org/course/svn.html
+
+------------------------------------------------------------------------------
+Come build with us! The BlackBerry&reg; Developer Conference in SF, CA
+is the only developer event you need to attend this year. Jumpstart your
+developing skills, take BlackBerry mobile applications to market and stay 
+ahead of the curve. Join us from November 9&#45;12, 2009. Register now&#33;
+http://p.sf.net/sfu/devconf
+_______________________________________________
+Crawl-ref-discuss mailing list
+Crawl-ref-discuss@lists.sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/crawl-ref-discuss
+
+From steven@uplinklabs.net Thu Sep 24 13:04:25 2009
+X-Spam-Checker-Version: SpamAssassin 3.2.3 (2007-08-08) on
+	rukia.nightrealms.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,RDNS_NONE
+	shortcircuit=no autolearn=no version=3.2.3
+Received: (qmail 16588 invoked from network); 24 Sep 2009 20:06:21 -0000
+Received: from localhost (127.0.0.1)
+  by rukia.nightrealms.com with SMTP; 24 Sep 2009 20:06:21 -0000
+Received: from pop.pi.sbcglobal.net [204.127.220.26]
+	by localhost with POP3 (fetchmail-6.3.8 polling pop.sbcglobal.net account matt_relay)
+	for <matt@nightrealms.com> (single-drop); Thu, 24 Sep 2009 13:06:21 -0700 (PDT)
+Received: from flpd114.prodigy.net ([207.115.20.124])
+          by isp.att.net (frfwmxc05) with ESMTP
+          id <20090924200518M05001qoc5e>; Thu, 24 Sep 2009 20:05:18 +0000
+X-Originating-IP: [207.115.20.124]
+X-Originating-IP: [205.178.146.50]
+Received: from mail.networksolutionsemail.com (mail.networksolutionsemail.com [205.178.146.50])
+	by flpd114.prodigy.net (8.13.8 inb ipv6 jeff0203/8.13.8) with SMTP id n8OK5Gl0013949
+	for <matt_relay@sbcglobal.net>; Thu, 24 Sep 2009 13:05:17 -0700
+Received: (qmail 23396 invoked by uid 78); 24 Sep 2009 20:05:17 -0000
+Delivered-To: nightrealms.com-matt@nightrealms.com
+Received: (qmail 22531 invoked by uid 78); 24 Sep 2009 20:05:06 -0000
+Received: from unknown (HELO ns-mr34.netsolmail.com) (10.49.16.29)
+  by 0 with SMTP; 24 Sep 2009 20:05:06 -0000
+Received: from lists.sourceforge.net (lists.sourceforge.net [216.34.181.88])
+	by ns-mr34.netsolmail.com (8.13.6/8.13.6) with ESMTP id n8OK4xfS006380
+	for <matt@nightrealms.com>; Thu, 24 Sep 2009 16:05:05 -0400
+Received: from localhost ([127.0.0.1] helo=sfs-ml-1.v29.ch3.sourceforge.com)
+	by 235xhf1.ch3.sourceforge.com with esmtp (Exim 4.69)
+	(envelope-from <crawl-ref-discuss-bounces@lists.sourceforge.net>)
+	id 1MquYV-0002St-AL; Thu, 24 Sep 2009 20:04:43 +0000
+Received: from sfi-mx-4.v28.ch3.sourceforge.com ([172.29.28.124]
+	helo=mx.sourceforge.net)
+	by 235xhf1.ch3.sourceforge.com with esmtp (Exim 4.69)
+	(envelope-from <steven@uplinklabs.net>) id 1MquYO-0002Sk-M5
+	for crawl-ref-discuss@lists.sourceforge.net;
+	Thu, 24 Sep 2009 20:04:36 +0000
+Received-SPF: pass (1b2kzd1.ch3.sourceforge.com: domain of uplinklabs.net
+	designates 209.85.210.198 as permitted sender)
+	client-ip=209.85.210.198; envelope-from=steven@uplinklabs.net;
+	helo=mail-yx0-f198.google.com; 
+Received: from mail-yx0-f198.google.com ([209.85.210.198])
+	by 1b2kzd1.ch3.sourceforge.com with esmtp (Exim 4.69)
+	id 1MquYJ-0000fa-T6 for crawl-ref-discuss@lists.sourceforge.net;
+	Thu, 24 Sep 2009 20:04:36 +0000
+Received: by yxe36 with SMTP id 36so2546764yxe.11
+	for <crawl-ref-discuss@lists.sourceforge.net>;
+	Thu, 24 Sep 2009 13:04:26 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.91.45.22 with SMTP id x22mr195343agj.120.1253822665923; Thu, 
+	24 Sep 2009 13:04:25 -0700 (PDT)
+In-Reply-To: <c7c883280909240206k2795f9f4u5d74828aa770de27@mail.gmail.com>
+References: <c7c883280909240206k2795f9f4u5d74828aa770de27@mail.gmail.com>
+Date: Thu, 24 Sep 2009 13:04:25 -0700
+Message-ID: <f488382f0909241304w5c2456aeh64572db37914c33e@mail.gmail.com>
+From: Steven Noonan <steven@uplinklabs.net>
+To: crawl-ref-discuss@lists.sourceforge.net
+X-Headers-End: 1MquYJ-0000fa-T6
+Subject: Re: [Crawl-ref-discuss] git quickstart
+X-BeenThere: crawl-ref-discuss@lists.sourceforge.net
+X-Mailman-Version: 2.1.9
+Precedence: list
+Reply-To: crawl-ref-discuss@lists.sourceforge.net
+List-Id: <crawl-ref-discuss.lists.sourceforge.net>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/crawl-ref-discuss>,
+	<mailto:crawl-ref-discuss-request@lists.sourceforge.net?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=crawl-ref-discuss>
+List-Post: <mailto:crawl-ref-discuss@lists.sourceforge.net>
+List-Help: <mailto:crawl-ref-discuss-request@lists.sourceforge.net?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/crawl-ref-discuss>,
+	<mailto:crawl-ref-discuss-request@lists.sourceforge.net?subject=subscribe>
+Content-Type: text/plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Errors-To: crawl-ref-discuss-bounces@lists.sourceforge.net
+Status: RO
+X-Status: R
+X-KMail-EncryptionState:  
+X-KMail-SignatureState:  
+X-KMail-MDN-Sent:  
+
+On Thu, Sep 24, 2009 at 2:06 AM, Darshan Shaligram <scintilla@gmail.com> wr=
+ote:
+> =A0 Right, we're ready to push our fix to SF. But now that we have
+> =A0 multiple local branches, let's first ask git what it plans to do
+> =A0 when we push:
+>
+> =A0 $ git push --dry-run -v
+> =A0 Pushing to ssh://dshaligram@crawl-ref.git.sourceforge.net/gitroot/cra=
+wl-ref/crawl-ref
+> =A0 To ssh://dshaligram@crawl-ref.git.sourceforge.net/gitroot/crawl-ref/c=
+rawl-ref
+> =A0 =A0=3D [up to date] =A0 =A0 =A0master -> master
+> =A0 =A0 =A0b05bb66..976e722 =A0stone_soup-0.5 -> stone_soup-0.5
+>
+> =A0 So git wants to push the local master and stone_soup-0.5 branches
+> =A0 to the corresponding branches on SF; the master branch has no new
+> =A0 local changes, whereas the 0.5 branch does (the new change is
+> =A0 976e722).
+>
+> =A0 By default, git-push will push *all* your local branches to the
+> =A0 corresponding branches on Sourceforge. This is important to
+> =A0 remember; if you had local commits on master, they would also be
+> =A0 pushed to SF. This behaviour can be changed (the option is called
+> =A0 "push.default") if it bothers you.
+>
+
+There's another way of specifying where to push:
+
+git push <remote> <local branch>:<remote branch>
+
+So for instance, if I am working on 'master' locally, but want to push
+to a remote branch called 'fixes-for-upstream', I could do:
+
+git push github master:fixes-for-upstream
+
+- Steven

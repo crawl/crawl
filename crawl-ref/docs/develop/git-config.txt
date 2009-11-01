@@ -1,0 +1,38 @@
+There are two ways of changing git configuration options
+
+1) using "git config" to change the current repository's configuration, and
+"git config --global" to change global configuration.
+
+2) Editing $GIT_TOPDIR/.git/config (.git can be found with "git rev-parse
+--git-dir") to change the current repository's configuration, and editing
+~/.gitconfig for the global configuration.
+
+------------------------
+
+Config options which should be set for the Crawl repository, but probably
+shouldn't be global config options:
+
+* Always rebase when doing a pull:
+      git config branch.master.rebase true
+
+* Always rebase when setting up a new branch:
+      git config branch.autosetuprebase always
+
+* Don't translate line endings to the native format.  Necessary for
+  Visual Studio projects:
+      git config core.autocrlf false
+
+------------------------
+
+Some useful config options:
+
+* Automatically colour all output which can be coloured:
+      git config --global color.ui auto
+
+* Automatically fix whitespace problems in a patch if using the
+  "apply" command:
+      git config --global apply.whitespace fix
+
+* Use more than one thread for packing when doing a push or gc.
+  Useful on multi-processor or dual-core machines:
+      git config --global pack.threads 2

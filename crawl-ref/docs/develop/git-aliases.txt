@@ -1,0 +1,8 @@
+Some useful git aliases (add them to the [auto] section of your ~/.gitconfig
+file):
+
+co  = checkout
+st  = status
+sm  = submodule
+smu = submodule update --init
+up  = remote update
