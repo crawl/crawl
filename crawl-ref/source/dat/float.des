@@ -795,7 +795,7 @@ NSUBST: " = 3:5 / *:.
 KMONS:  5 = vapour
 KMONS:  6 = air elemental
 KMONS:  7 = fire vortex
-: if string.find(you.where(), "Elf:") then
+: if you.in_branch("elf") then
 KMONS:  Z = deep elf sorcerer ; robe ego:fire_resistance race:elven | \
             robe ego:cold_resistance race:elven | \
             robe ego:resistance race:elven
