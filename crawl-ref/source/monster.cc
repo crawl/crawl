@@ -2776,6 +2776,28 @@ bool monsters::is_unholy() const
     return (holi == MH_UNDEAD || holi == MH_DEMONIC);
 }
 
+bool monsters::is_chaotic() const
+{
+    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
+        return (true);
+
+    if (mons_is_shapeshifter(this))
+        return (true);
+
+    if (has_spell(SPELL_POLYMORPH_OTHER))
+        return (true);
+
+    if (has_attack_flavour(AF_MUTATE)
+        || has_attack_flavour(AF_ROT)
+        || has_attack_flavour(AF_CHAOS)
+        || has_attack_flavour(AF_KLOWN))
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
 int monsters::res_fire() const
 {
     const mon_resist_def res = get_mons_resists(this);

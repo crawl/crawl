@@ -546,28 +546,6 @@ bool mons_is_native_in_branch(const monsters *monster,
     }
 }
 
-bool mons_is_chaotic(const monsters *mon)
-{
-    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
-        return (true);
-
-    if (mons_is_shapeshifter(mon))
-        return (true);
-
-    if (mon->has_spell(SPELL_POLYMORPH_OTHER))
-        return (true);
-
-    if (mon->has_attack_flavour(AF_MUTATE)
-        || mon->has_attack_flavour(AF_ROT)
-        || mon->has_attack_flavour(AF_CHAOS)
-        || mon->has_attack_flavour(AF_KLOWN))
-    {
-        return (true);
-    }
-
-    return (false);
-}
-
 bool mons_is_poisoner(const monsters *mon)
 {
     if (mons_corpse_effect(mon->type) == CE_POISONOUS)
@@ -1722,15 +1700,15 @@ static const char *drac_colour_names[] = {
     "black", "mottled", "yellow", "green", "purple", "red", "white", "pale"
 };
 
-std::string draconian_colour_name(monster_type mtype)
+std::string draconian_colour_name(monster_type mon_type)
 {
     COMPILE_CHECK(ARRAYSZ(drac_colour_names) ==
                   MONS_PALE_DRACONIAN - MONS_DRACONIAN, c1);
 
-    if (mtype < MONS_BLACK_DRACONIAN || mtype > MONS_PALE_DRACONIAN)
+    if (mon_type < MONS_BLACK_DRACONIAN || mon_type > MONS_PALE_DRACONIAN)
         return ("buggy");
 
-    return (drac_colour_names[mtype - MONS_BLACK_DRACONIAN]);
+    return (drac_colour_names[mon_type - MONS_BLACK_DRACONIAN]);
 }
 
 monster_type draconian_colour_by_name(const std::string &name)

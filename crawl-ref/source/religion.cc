@@ -1477,7 +1477,7 @@ bool _has_jelly()
 bool is_good_lawful_follower(const monsters* mon)
 {
     return (mon->alive() && !mons_is_evil_or_unholy(mon)
-            && !mons_is_chaotic(mon) && mons_friendly(mon));
+            && !mon->is_chaotic() && mons_friendly(mon));
 }
 
 bool is_good_follower(const monsters* mon)
@@ -5219,7 +5219,7 @@ static bool _chaotic_beings_on_level_attitude_change()
     {
         monsters *monster = &menv[i];
         if (monster->alive()
-            && mons_is_chaotic(monster))
+            && monster->is_chaotic())
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Chaotic attitude changing: %s on level %d, branch %d",
@@ -6811,14 +6811,17 @@ bool player_can_join_god(god_type which_god)
     if (you.species == SP_DEMIGOD)
         return (false);
 
-    if (you.is_unholy() && is_good_god(which_god))
+    if (is_good_god(which_god) && you.is_unholy())
+        return (false);
+
+    if (which_god == GOD_ZIN && you.is_chaotic())
+        return (false);
+
+    if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
         return (false);
 
     // Feawn hates undead, but will accept demonspawn.
     if (which_god == GOD_FEAWN && you.holiness() == MH_UNDEAD)
-        return (false);
-
-    if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
         return (false);
 
     return (true);

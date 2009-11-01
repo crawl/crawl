@@ -42,8 +42,8 @@
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
-#include "monstuff.h"
 #include "mon-util.h"
+#include "monstuff.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
@@ -6737,6 +6737,11 @@ bool player::is_unholy() const
     const mon_holy_type holi = holiness();
 
     return (holi == MH_UNDEAD || holi == MH_DEMONIC);
+}
+
+bool player::is_chaotic() const
+{
+    return (transform_changed_physiology());
 }
 
 // Output active level of player mutation.

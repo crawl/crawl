@@ -283,6 +283,7 @@ public:
 
     mon_holy_type holiness() const;
     bool is_unholy() const;
+    bool is_chaotic() const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;

@@ -21,8 +21,8 @@
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-pick.h"
-#include "monstuff.h"
 #include "mon-util.h"
+#include "monstuff.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -2563,7 +2563,7 @@ bool player_will_anger_monster(monsters *mon, bool *holy,
     const bool isUnholy =
         (is_evil_god(you.religion) && mons_is_holy(mon));
     const bool isLawful =
-        (you.religion == GOD_ZIN && mons_is_chaotic(mon));
+        (you.religion == GOD_ZIN && mon->is_chaotic());
     const bool isAntimagical =
         (you.religion == GOD_TROG && mons_is_magic_user(mon));
 

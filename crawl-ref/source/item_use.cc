@@ -42,9 +42,9 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-util.h"
 #include "monplace.h"
 #include "monstuff.h"
-#include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
@@ -1710,17 +1710,7 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
-    bool chaotic;
-
-    if (victim->atype() == ACT_MONSTER)
-    {
-        monsters* mon = dynamic_cast<monsters*>(victim);
-        chaotic = mons_is_chaotic(mon); // Includes shapeshifters.
-    }
-    else
-        chaotic = transform_changed_physiology();
-
-    if (chaotic || victim->is_unholy())
+    if (victim->is_unholy() || victim->is_chaotic())
     {
         dmg *= 2;
 

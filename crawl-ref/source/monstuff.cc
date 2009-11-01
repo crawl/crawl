@@ -49,12 +49,13 @@
 
 static bool _wounded_damaged(monster_type mon_type);
 
-// This function creates an artificial item to represent a mimic's appearance.
-// Eventually, mimics could be redone to be more like dancing weapons...
-// there'd only be one type and it would look like the item it carries. -- bwr
+// This function creates an artificial item to represent a mimic's
+// appearance.  Eventually, mimics could be redone to be more like
+// dancing weapons: there'd only be one type and it would look like the
+// item it carries. - bwr
 void get_mimic_item( const monsters *mimic, item_def &item )
 {
-    ASSERT( mimic != NULL && mons_is_mimic( mimic->type ) );
+    ASSERT(mimic != NULL && mons_is_mimic( mimic->type));
 
     item.base_type = OBJ_UNASSIGNED;
     item.sub_type  = 0;
@@ -1457,7 +1458,7 @@ int monster_die(monsters *monster, killer_type killer,
                 }
 
                 // Zin hates chaotic beings.
-                if (mons_is_chaotic(monster))
+                if (monster->is_chaotic())
                 {
                     did_god_conduct(DID_KILL_CHAOTIC,
                                     monster->hit_dice, true, monster);

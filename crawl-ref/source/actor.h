@@ -168,6 +168,7 @@ public:
 
     virtual mon_holy_type holiness() const = 0;
     virtual bool is_unholy() const = 0;
+    virtual bool is_chaotic() const = 0;
     virtual int res_fire() const = 0;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;

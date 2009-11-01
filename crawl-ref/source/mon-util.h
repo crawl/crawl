@@ -757,7 +757,6 @@ bool mons_foe_is_mons(const monsters *mons);
 bool mons_behaviour_perceptible(const monsters *mon);
 bool mons_is_native_in_branch(const monsters *monster,
                               const branch_type branch = you.where_are_you);
-bool mons_is_chaotic(const monsters *mon);
 bool mons_is_poisoner(const monsters *mon);
 bool mons_is_confused(const monsters *m, bool class_too = false);
 bool mons_is_caught(const monsters *m);
@@ -830,7 +829,7 @@ bool monster_senior(const monsters *first, const monsters *second,
 monster_type draco_subspecies(const monsters *mon);
 unsigned char ugly_thing_random_colour();
 int ugly_thing_colour_offset(const monsters *mon);
-std::string  draconian_colour_name(monster_type mtype);
+std::string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const std::string &colour);
 
 monster_type random_monster_at_grid(const coord_def& p);
