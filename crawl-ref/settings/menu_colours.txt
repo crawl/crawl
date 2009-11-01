@@ -17,6 +17,9 @@ menu = darkgrey:.*jewellery.*(sustenance)
 ae   = >ring.*(sustenance)
 :end
 
+# Evil items
+menu = $evil:.*evil_item.*
+
 # Important game items
 #
 menu = lightmagenta:.*misc.*rune( of Zot)?
@@ -50,9 +53,6 @@ menu = cyan:.*misc.*[lL]antern
 
 # Dangerous (but still useful) items
 menu = $dangerous:.*dangerous_item.*
-
-# Evil items
-menu = $evil:.*evil_item.*
 
 # Defaults for normal items
 #
