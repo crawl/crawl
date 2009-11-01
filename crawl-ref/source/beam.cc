@@ -2018,9 +2018,11 @@ void bolt::fire()
 
         if (special_explosion != NULL)
         {
-            seen = seen || special_explosion->seen;
-            foe_info    += special_explosion->foe_info;
-            friend_info += special_explosion->friend_info;
+            seen           = seen || special_explosion->seen;
+            beam_cancelled = beam_cancelled
+                          || special_explosion->beam_cancelled;
+            foe_info      += special_explosion->foe_info;
+            friend_info   += special_explosion->friend_info;
             _undo_tracer(*special_explosion, *boltcopy.special_explosion);
             delete boltcopy.special_explosion;
         }
