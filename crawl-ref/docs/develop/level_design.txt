@@ -633,7 +633,7 @@ MONS:     (list of monsters)
               MONS: four-headed hydra
 
           A slime creature's size can be set to other than normal using
-          the prefixes "large", "very large", "enourmous" or "titanic":
+          the prefixes "large", "very large", "enormous" or "titanic":
               MONS: very large slime creature
 
           Individual monsters may be prefixed with the "generate_awake"
