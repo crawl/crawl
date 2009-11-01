@@ -882,70 +882,78 @@ TAGS:       volcano no_item_gen no_monster_gen no_rotate
 LFLAGS:     no_tele_control
 :           volcano_setup(_G, true)
 {{
-local mytable = { total_doorways=8, total_collapsed=0, ac = {} }
+local mytable = { total_doorways=10, total_collapsed=0, ac = {},
+                  last_turn_collapsed = 0}
 
-local function collapse_doorways (point, mytable)
-    local x, y = point:xy()
-    local you_x, you_y = you.pos()
-    if mytable.total_collapsed == mytable.total_doorways then
-        return
-    end
+local function collapse_doorways (position, mytable)
+  local x, y = position:xy()
+  local you_x, you_y = you.pos()
+  if mytable.total_collapsed == mytable.total_doorways then
+    return
+  end
 
-    if you_x == x and you_y == y then
-        crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
-                  "warning")
-        return
+  if you_x == x and you_y == y then
+    crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
+              "warning")
+    return
+  end
+  local ack = x .. "/" .. y
+  if mytable.ac[ack] ~= true then
+    -- We only collapse once per turn!
+    if mytable.last_turn_collapsed == you.turns() then
+      return
+    else
+      mytable.last_turn_collapsed = you.turns()
     end
-    local ack = x .. "/" .. y
-    if mytable.ac[ack] ~= true then
-        mytable.ac[ack] = true
-        if you.see_cell(x, y) then
-            crawl.mpr("The volcano erupts! Nearby, a roof collapses.", "warning")
-        else
-            crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
-                      "warning")
-        end
-        mytable.total_collapsed = mytable.total_collapsed + 1
-        dgn.terrain_changed(x, y, "stone_wall", false, false, false)
-        dgn.colour_at(x, y, "lightred")
+    mytable.ac[ack] = true
+    if you.see_cell(position:xy()) then
+      crawl.mpr("The volcano erupts! Nearby, a roof collapses.", "warning")
+    else
+      crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
+                "warning")
     end
+    mytable.total_collapsed = mytable.total_collapsed + 1
+    dgn.terrain_changed(x, y, "stone_wall", false, false, false)
+    dgn.colour_at(x, y, "lightred")
+  end
 end
 
-local collapse_marker = function_machine {
+local collapse_marker = function_machine ( {
   marker_type = "random",
-  turns_min=30,
-  turns_max=40,
+  turns_min=5,
+  turns_max=20,
   func=collapse_doorways,
-  marker_params=mytable
-}
-
+  marker_params=mytable } )
 }}
 KPROP:      RXZ12< = no_rtele_into
 SUBST:      X = .
 SUBST:      ZY = c.
 SUBST:      R = defg$
 :           fiery_guardians(_G)
-:           lua_marker("M", collapse_marker)
+:           lua_marker("M", lmark.synchronized_markers(collapse_marker, "do_function"))
 :           volcano_setup(_G)
 #           There are eight oportunities for loot! Seven single threat (1) plus two items,
 #           and one triple threat (121), plus six items. items can be any of: 1 armour,
 #           1 weapon, 1 potion, 1 any, 1 gold)
 MAP
-                                  ccc                     ccccc
-                                 ccXcc                  cccZZZcc
-                 cccc    cccc   ccXZ<cc     cccc       ccXXRXX<cc
-                ccZXccc ccXZccc cXXRR1c   cccZZccc      ccXR1Zcc
-               cc<XRRYcccXR<ZXc ccXXccc cccX1RRX<cc      cccXcc      cccc
-                cccX1XXZccXR1ccc ccMcc ccXXXXXXXcc        ccMc      cccZccc
-            cccccccMccXcccccXXXccc.YYcccXXccccXZZcccccc ccc.cccc  cccZXXXZccc
-          cccY..Yc.cYccc.cccMcccY.Y...YccMcYYccccc.cc.cccYY.YYYccccZXXXXXXXZccc
-         ccY...c.....Y.....cYY....cc.Y.......Y.YYY..Y..Y......Y..cXXXX1RRXXXZZc
-          ccAcccccYY..Y...Y.....YcccMcccY...Y...Y....Yc.cYY....ccMXXXX2RRXXXXZc
-           ccc   cccYccc.ccccY.cccZXXXZccc.cccY....YcccMcccY..YcccZXXX1RRXXXZcc
-                   ccc ccc cccccZXXRRXXX<ccc ccc..cccZXXRXccc<cc ccZXXXXXXZccc
-                              cccZXX1XZccc     cccc ccZXR1XXccc   cccZXXZccc
-                                cccZZccc             cccZcc<c       cc<ccc
-                                  cccc                 cccccc        ccc
+               cccc ccc
+             ccc<XcccZcccccc
+           cccZcccXRRX1ccZZccc
+           c<XXZZccXXZccZ1X<cc
+           ccc1RRZcZXccXRRXcccc
+          cc<ccZXXccMcXZZXccZZcc
+         ccZXZccZMcY.cMccccZ1X<c
+        ccZ121ZcccY...ccMXXRRccc
+       ccZXRRRRccY....Y.cccccc
+       cZXXXXXccY..A<....ccZZccc
+       ccZRRXXXM.....YcccMXRR1Zcc
+        cccZXcccMY..YMc1ccZXXXX<c
+          ccccXXccYcccZXXcccZZccc
+           ccZXXZccccZXRRXZcccc
+          ccZRRX1XX<cccZZXZcc
+           ccZXZXZccc cccMcc
+            ccccXcc     ccc
+             ccccc
 ENDMAP
 ###############################################################################
 
