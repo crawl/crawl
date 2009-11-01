@@ -55,9 +55,9 @@ function sewer_portal(e)
 end
 
 -- Use the following line in destination maps after all SUBSTs
--- : sewer_colours(_G)
+-- : sewer_setup(_G)
 -- Note that the function also defines < to be the exit portal.
-function sewer_colours(e)
+function sewer_setup(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = darkgrey")
   e.lrockcol("darkgrey")
@@ -66,21 +66,10 @@ function sewer_colours(e)
   e.colour("W = lightgreen")
   e.lrocktile("wall_slime")
   e.lfloortile("floor_slime")
-end
-}}
-
-# A standard random monster list for Sewer. Use:
-# : sewer_random_monster_list(_G)
-{{
-function sewer_random_monster_list(e)
+-- A standard random monster list for Sewer.
   e.set_random_mon_list("giant bat w:20 / giant newt w:20 / small snake / \
                          ooze / worm / snake / giant mosquito")
-end
-}}
-
-# Add the milestone.
-{{
-function sewer_milestone(e)
+-- Add the milestone.
   crawl.mark_milestone("br.enter", "entered a Sewer.")
 end
 }}
@@ -179,9 +168,7 @@ SUBST:    X=c, C=x, V=x, v=x, *=x
 : end
 SUBST:    ' = .W
 SUBST:    ? = .x
-: sewer_colours(_G)
-: sewer_random_monster_list(_G)
-: sewer_milestone(_G)
+: sewer_setup(_G)
 # some fresh water for the kobolds
 KFEAT:    Y = deep_water
 KFEAT:    y = shallow_water
@@ -258,9 +245,7 @@ NSUBST:   ! = 2:! / *:w
 KFEAT:    ! = w
 COLOUR:   ! = green
 KMONS:    ! = giant frog / nothing w:2
-: sewer_colours(_G)
-: sewer_random_monster_list(_G)
-: sewer_milestone(_G)
+: sewer_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccc
 c.11---------.................1111c
@@ -311,9 +296,7 @@ ITEM:     any good_item, any good_item
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
 ITEM:     nothing, nothing
-: sewer_colours(_G)
-: sewer_random_monster_list(_G)
-: sewer_milestone(_G)
+: sewer_setup(_G)
 MAP
            ccccccccccccc
         cccc-----------cccc
@@ -344,14 +327,13 @@ cc---cc---c---.------w!cc---cc---c
 ENDMAP
 
 ############################################################################
-# The hardest one, and most rare (1 out of 10). Loot is good items.
+# The next two have a big, bad monster guarding some pretty good, if random
+# treasure. One out of ten Sewers is one of these.
 #
 NAME:     sewer_big_baddie
 TAGS:     sewer no_item_gen no_monster_gen
 ORIENT:   encompass
-: sewer_colours(_G)
-: sewer_random_monster_list(_G)
-: sewer_milestone(_G)
+: sewer_setup(_G)
 SUBST:    2 = 23
 KMONS:    2 = giant lizard
 KMONS:    3 = Purgy, giant lizard
@@ -359,7 +341,7 @@ ITEM:     potion of berserk rage / potion of speed w:5
 MONS:     giant bat / giant mosquito w:2
 MAP
  ccccccc
-:c$*|*$cc
+cc$*|*$cc
 c..$*$..c
 c.......c
 c...2...c
@@ -382,6 +364,59 @@ cc.....cc
    c.c
    cdc
    ccc
+ENDMAP
+
+###############################################################################
+# Another one with a big bad monster. Likely to be a giant slug, which hits
+# slightly harder than the giant lizard, but is much slower. On land, that is.
+#
+NAME:   sewer_the_slug
+TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+SUBST:  - = WW...
+MONS:   kobold, jackal
+SUBST:  3 = 334
+KMONS:  3 = giant slug
+KMONS:  4 = Purgy, giant slug
+ITEM:   potion of levitation / potion of agility / potion of heal wounds / \
+        potion of invisibility / potion of mutation / potion of degeneration /\
+        scroll of blinking / scroll of teleportation / scroll of fear / \
+        scroll of paper / scroll of random uselessness / meat ration / \
+        royal jelly / potion of blood / nothing w:140
+: sewer_setup(_G)
+MAP
+   ccccccccc
+   c%*c3c*%c
+   c*-c-c-*c
+   ccc---ccc
+    cc---cc
+    c-----c
+   cc.---.cc
+   c..-c-..c
+  cc.-ccc-.cc
+  c.--ccc--.c
+  c--ccccc--c
+  c.-ccccc-.c
+  c.-ccccc-.c
+  c--ccccc--c
+  c.--ccc--.c
+  cc--ccc--cc
+   c.--c--.c
+   cc-----cc
+    c..-..c
+    cc---cc
+     c.-.c
+     cc-cc
+     cc-cc
+   cccc-cccc
+cccc..---..ccccc
+cWWWWWWWWWWWWWWc
+cccc.......ccccc
+  ccc..c..cccxxxx
+  c....c.21.cdddx
+  c.A<.c2....dddx
+  c....c1.1.cxxxx
+  ccccccccccc
 ENDMAP
 
 ###############################################################################
@@ -409,9 +444,7 @@ KMONS:    ? = giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
 COLOUR:   ? = lightgreen
 # a little more random shallow water
 SUBST:    - = W..
-: sewer_colours(_G)
-: sewer_random_monster_list(_G)
-: sewer_milestone(_G)
+: sewer_setup(_G)
 MONS:     giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
           snake w:1 / giant mosquito w:2
 SHUFFLE:  23
@@ -465,3 +498,4 @@ xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
