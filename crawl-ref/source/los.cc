@@ -492,8 +492,8 @@ void raycast()
 
     // register perpendiculars FIRST, to make them top choice
     // when selecting beams
-    _register_ray(geom::ray(0.6, 0.5, 0.0, 1.0));
-    _register_ray(geom::ray(0.5, 0.6, 1.0, 0.0));
+    _register_ray(geom::ray(0.5, 0.5, 0.0, 1.0));
+    _register_ray(geom::ray(0.5, 0.5, 1.0, 0.0));
 
     // For a slope of M = y/x, every x we move on the X axis means
     // that we move y on the y axis. We want to look at the resolution

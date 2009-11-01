@@ -104,7 +104,7 @@ bool ray_def::advance()
         {
             // r is now on a corner, going from diamond to diamond.
             r.to_grid(diamonds, true);
-            return (false);
+            return (true);
         }
     }
 
