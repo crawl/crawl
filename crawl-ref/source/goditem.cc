@@ -220,8 +220,8 @@ bool is_hasty_item(const item_def& item)
     }
 
     if (is_artefact(item)
-        && artefact_wpn_property(item, ARTP_ANGRY)
-            || artefact_wpn_property(item, ARTP_BERSERK))
+        && (artefact_wpn_property(item, ARTP_ANGRY)
+            || artefact_wpn_property(item, ARTP_BERSERK)))
     {
         retval = true;
     }
