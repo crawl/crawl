@@ -144,13 +144,19 @@ end
 --                                    spread_rate=100 })
 --end
 
+local function in_radius (x, y)
+  local p1 = dgn.point(x, y)
+  local p2 = dgn.point(you.pos())
+  return dgn.point_in_radius(p1, p2, 12)
+end
+
 local large_warning = tw_machine(3, "The air gets thick with the scent of sulphur.",
                                  "In the distance, the volcano erupts with a roar.",
                                  "The volcano comes to life with a roar!")
 
 local small_warning = tw_machine(3, nil, nil, nil, "The volcano roars to life, " ..
                                  "belching forth lava!", "The air gets thick with " ..
-                                 "the scent of sulphur.")
+                                 "the scent of sulphur.", in_radius)
 
 function place_large_volcano(e)
     e.kfeat("V = l")
@@ -161,10 +167,19 @@ end
 
 function place_medium_volcano(e)
     e.kfeat("V = l")
-    e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
+    e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=0, pow_max=6,
                                    delay = 300, size = 3000, spread_rate = 30,
                                    listener = small_warning})
 end
+
+function place_chained_volcano(e)
+    e.kfeat("V = l")
+    local fm = fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
+                             delay = 300, size = 3000, spread_rate = 30,
+                             listener = large_warning}
+    e.lua_marker('V', lmark.synchronized_markers(fm, "do_fog"))
+end
+
 
 function place_small_volcano(e)
     e.kfeat("V = l")
@@ -401,6 +416,7 @@ WEIGHT: 0
   local fog = fog_machine { cloud_type = 'flame',
                             size = 3, pow_min=2,
                             pow_max = 5, delay_min = 22, delay_max = 120,
+                            listener = trigger_machine(nil, "Test", nil, in_radius)
                           }
   lua_marker('m', lmark.synchronized_markers(fog, 'do_fog'))
 }}
@@ -582,30 +598,30 @@ MAP
        xxxyyy...........................................yxxx
     xxxxy...............LLLllLLllLLLllllLLllLLlllL........yxxxx
     xy..............LllllllllllllllllllllllllllllllLL........yxxx
-   xxxy............LlllllllllllllllllllllllliiilllllliL........yxxx
+   xxxy............LlllllllllllllllVlllllllliiilllllliL........yxxx
   xxy............LLllllllllVlllllllllllllliillliilliilllLLL......<x
-  xy............LmmllllllllllllllllllllliillllllViilllllll.......yxx
-  xxxy........LllllmmllllllllllllllllliillllllllllllllllllL.......yx
+  xy............Lmmllllllllllllllllllllliillllllliilllllll.......yxx
+  xxxy........LllllmmllllllllllllllllliillllllVlllllllllllL.......yx
  xxy...........Llllllmmllllllllllllllilllllllllllllllllllll.....yxxx
   xxy.........LllllllllmmllLlLLllLLlillLLLllLllllllllllllLL......yx
-   xxy.....LlllllllllllllmL..................LlllllllllllllL.....yxxxx
-   xy......Lllllllllllllll.ccccccccccccccccc.lllllllllllllllL.......yx
-   xy.......LlllllVllllllL.c....+.111.+....c.LllllllllllllllL......yxx
+   xxy.....LllllllVllllllmL..................LlllllllllllllL.....yxxxx
+   xy......Lllllllllllllll.ccccccccccccccccc.llllllVllllllllL.......yx
+   xy.......LllllllllllllL.c....+.111.+....c.LllllllllllllllL......yxx
    xxy.....Lrrllllllllllll.c.<1.c.G_G.c.1<.c.llllllllllllllLL.......yx
    xy......LllrrlllllllllL.c....c..2..c....c.Lllllllllllluuu.......yxx
    xxy.....Lllllrrllllllll.ccc==ccc+ccc==ccc.LllllllllluullL......yxx
-   xy.....LlllllllrllllllL.c......c.c......c.lllllllluullllL.....yxx
+   xy.....LlllVlllrllllllL.c......c.c......c.lllllllluullllL.....yxx
    xxy.....Llllllllrllllll.cccccc.c.c.cccccc.LllllluulllllllL.....yxx
-   xy......LllllllllrrlllL.c.$f$c.c.c.cgd$.c.lllluullVllllllL......yxx
-   xxy......LlllllVllrllll.c.$gec.c.c.c$e$.c.LluulllllllllllL......yxx
-   xxy.......LllllllllrllL.c.3dgc.c.c.cfg3.c.uullllllllllllL.....yxxx
-   xy........LlllllllllrlL.c......c.c......c.LllllllllllllL......yxx
+   xy......LllllllllrrlllL.c.$f$c.c.c.cgd$.c.lllluulllllllllL......yxx
+   xxy......Lllllllllrllll.c.$gec.c.c.c$e$.c.LluulllllllllllL......yxx
+   xxy.......LllllllllrllL.c.3dgc.c.c.cfg3.c.uullllllVlllllL.....yxxx
+   xy........LlllVlllllrlL.c......c.c......c.LllllllllllllL......yxx
    xxy.....Lllllllllllllrr.cccccccc+cccccccc.llllllllllllllL......yxx
     xy.....LlllllllnnnllnnL.................LLllllllllllllL.....yxxx
     xxxy....LllllnnlllnnlllLllLlLllllLllLlLlzlllllllllllllL.......yxx
-     xA.......nnnllllllllllLlllllllllllllllllzzllllllllllllL.......yxx
-     xxxxy.....LllllllVllllllllllllllllllllllllzzlllVlllllllL.....yxx
-       xy........LLllllllllllllllllllllllllllllllzzllllllllL.....yxx
+     xA.......nnnllllllllllLlllllllllllllllllzzlllllVllllllL.......yxx
+     xxxxy.....LllllllVllllllVlllllllllllllllllzzlllllllllllL.....yxx
+       xy........LLlllllllllllllllllllllllllVllllzzllllllllL.....yxx
        xxxy..........LllllllllllllllllllLllllllllllzlllllLL......yxx
          xxxy.........LLlllllllllllllLL...LLllllllllzzzL......yxxxx
            xxxy.........LLlLLlLllllLL.......LLllLlLlLL.......yxxx
@@ -821,7 +837,7 @@ COLOUR:     + = cyan
 MONS:       dragon
 MONS:       human ; robe ego:fire_resistance
 MONS:       toenail golem
-:           place_medium_volcano(_G)
+:           place_chained_volcano(_G)
 :           dgn.set_feature_desc_short("translucent rock wall",
 :                                      "glass window")
 :           dgn.set_feature_desc_long("translucent rock wall",
@@ -956,7 +972,7 @@ SUBST:      " = ..'
 KFEAT:      ' = alarm trap
 :           fiery_humans(_G)
 :           volcano_setup(_G)
-:           place_medium_volcano(_G)
+:           place_chained_volcano(_G)
 MAP
 #########################################################
 #########################################################

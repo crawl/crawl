@@ -323,7 +323,7 @@ end
 -- the turns parameter cannot be null. All other parameters are
 -- considered optional.
 
-function warning_machine (trns, cantsee_mesg, see_mesg)
+function warning_machine (trns, cantsee_mesg, see_mesg, see_func)
   if trns == nil or (see_mesg == nil and cantsee_mesg == nil) then
     error("WarningMachine requires turns and message!")
   end
@@ -331,7 +331,7 @@ function warning_machine (trns, cantsee_mesg, see_mesg)
     local countdown = fm.countdown
     if event_name == "decrement" and countdown <= mtable.turns then
       if not mtable.warning_done then
-        if mtable.see_message and you.see_cell(point.x, point.y) then
+        if mtable.see_message and mtable.see_function(point.x, point.y) then
           crawl.mpr(mtable.see_message, "warning")
         elseif mtable.cantsee_message then
           crawl.mpr(mtable.cantsee_message, "warning")
@@ -343,13 +343,21 @@ function warning_machine (trns, cantsee_mesg, see_mesg)
     end
   end
   pars = {marker_type = "listener"}
-  pars.marker_params = {see_message = see_mesg, cantsee_message = cantsee_mesg,
-                        turns = trns * 10, warning_done = false}
+  if not see_func then
+    see_func = you.see_cell
+  end
+  pars.marker_params = {
+    see_message = see_mesg,
+    cantsee_message = cantsee_mesg,
+    turns = trns * 10,
+    warning_done = false,
+    see_function = see_func
+  }
   pars.func = warning_func
   return FunctionMachine:new(pars)
 end
 
-function trigger_machine (cantsee_mesg, see_mesg, chan)
+function trigger_machine (cantsee_mesg, see_mesg, chan, see_func)
   if see_mesg == nil and cantsee_mesg == nil then
     error("Triggermachine requires a message!")
   end
@@ -357,7 +365,7 @@ function trigger_machine (cantsee_mesg, see_mesg, chan)
     local countdown = fm.countdown
     if event_name == "trigger" then
       channel = mtable.channel or ""
-      if mtable.see_message ~= nil and you.see_cell(point.x, point.y) then
+      if mtable.see_message ~= nil and mtable.see_function(point.x, point.y) then
         crawl.mpr(mtable.see_message, channel)
       elseif mtable.cantsee_message ~= nil then
         crawl.mpr(mtable.cantsee_message, channel)
@@ -365,10 +373,14 @@ function trigger_machine (cantsee_mesg, see_mesg, chan)
     end
   end
   pars = {marker_type = "listener"}
+  if not see_func then
+    see_func = you.see_cell
+  end
   pars.marker_params = {
     channel = chan or nil,
     see_message = see_mesg,
-    cantsee_message = cantsee_mesg
+    cantsee_message = cantsee_mesg,
+    see_function = see_func
   }
   pars.func = trigger_func
   return FunctionMachine:new(pars)
@@ -376,7 +388,7 @@ end
 
 function tw_machine (warn_turns, warn_cantsee_message,
                      trig_cantsee_message, trig_channel,
-                     trig_see_message, warn_see_message)
+                     trig_see_message, warn_see_message, see_func)
   if (not warn_turns or (not warn_see_message and not warn_cantsee_message)
       or (not trig_see_message and not trig_cantsee_message)) then
     error("TWMachine needs warning turns, warning message and "
@@ -386,7 +398,7 @@ function tw_machine (warn_turns, warn_cantsee_message,
     local countdown = fm.countdown
     if event_name == "decrement" and countdown <= mtable.warning_turns then
       if mtable.warning_done ~= true then
-        if mtable.warning_see_message and you.see_cell(point.x, point.y) then
+        if mtable.warning_see_message and mtable.see_function(point.x, point.y) then
           crawl.mpr(mtable.warning_see_message, "warning")
         elseif mtable.warning_cantsee_message ~= nil then
           crawl.mpr(mtable.warning_cantsee_message, "warning")
@@ -396,12 +408,15 @@ function tw_machine (warn_turns, warn_cantsee_message,
     elseif event_name == "trigger" then
       mtable.warning_done = false
       channel = mtable.trigger_channel or ""
-      if mtable.trigger_see_message and you.see_cell(point.x, point.y) then
+      if mtable.trigger_see_message and mtable.see_function(point.x, point.y) then
         crawl.mpr(mtable.trigger_see_message, channel)
       elseif mtable.trigger_cantsee_message ~= nil then
         crawl.mpr(mtable.trigger_cantsee_message, channel)
       end
     end
+  end
+  if not see_func then
+    see_func = you.see_cell
   end
   pars = {marker_type = "listener"}
   pars.marker_params = {
@@ -411,7 +426,8 @@ function tw_machine (warn_turns, warn_cantsee_message,
     warning_done = false,
     trigger_see_message = trig_see_message,
     trigger_cantsee_message = trig_cantsee_message,
-    trigger_channel = trig_channel or nil
+    trigger_channel = trig_channel or nil,
+    see_function = see_func
   }
   pars.func = tw_func
   return FunctionMachine:new(pars)

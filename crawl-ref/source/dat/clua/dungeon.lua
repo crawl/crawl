@@ -394,3 +394,9 @@ dgn.good_scrolls = [[
     w:5   scroll of immolation / 
     w:5   scroll of vulnerability
     ]]
+
+-- Returns true if point1 is inside radius(X, point2).
+function dgn.point_in_radius(point1, point2, radius)
+  return dgn.distance(point1.x, point1.y, point2.x, point2.y) <=
+    (radius*radius)+1
+end

@@ -223,6 +223,14 @@ static int dgn_grid(lua_State *ls)
 LUARET1(_dgn_is_wall, boolean,
         feat_is_wall(static_cast<dungeon_feature_type>(luaL_checkint(ls, 1))))
 
+LUAFN(dgn_distance)
+{
+    COORDS(p1, 1, 2);
+    COORDS(p2, 3, 4);
+    lua_pushnumber(ls, distance(p1, p2));
+    return (1);
+}
+
 LUAFN(_dgn_is_opaque)
 {
     COORDS(c, 1, 2);
@@ -243,6 +251,7 @@ const struct luaL_reg dgn_grid_dlib[] =
 { "is_opaque", _dgn_is_opaque },
 { "is_wall", _dgn_is_wall },
 { "max_bounds", dgn_max_bounds },
+{ "distance", dgn_distance },
 
 { NULL, NULL }
 };
