@@ -218,15 +218,27 @@ int element_colour( int element, bool no_random )
                                : RED;
         break;
 
+    case ETC_KRAKEN:
+        ret = random_choose(GREEN, LIGHTGREEN, LIGHTCYAN, LIGHTBLUE, RED,
+                            LIGHTRED, MAGENTA, -1);
+        break;
+
+    case ETC_UGLY:
+    case ETC_VERY_UGLY:
+        ret = ugly_thing_random_colour();
+        ret = (element == ETC_VERY_UGLY) ? make_high_colour(ret)
+                                         : make_low_colour(ret);
+        break;
+
     case ETC_STONE:
-        if (player_in_branch( BRANCH_HALL_OF_ZOT ))
+        if (player_in_branch(BRANCH_HALL_OF_ZOT))
             ret = env.rock_colour;
         else
             ret = LIGHTGREY;
         break;
 
     case ETC_MIST:
-        ret = tmp_rand < 100? CYAN : BLUE;
+        ret = (tmp_rand < 100) ? CYAN : BLUE;
         break;
 
     case ETC_SHIMMER_BLUE:
@@ -253,13 +265,6 @@ int element_colour( int element, bool no_random )
 
     case ETC_BONE:
         ret = (tmp_rand < 90) ? WHITE : LIGHTGREY;
-        break;
-
-    case ETC_UGLY:
-    case ETC_VERY_UGLY:
-        ret = ugly_thing_random_colour();
-        ret = (element == ETC_VERY_UGLY) ? make_high_colour(ret)
-                                         : make_low_colour(ret);
         break;
 
     case ETC_RANDOM:
@@ -335,13 +340,13 @@ int str_to_colour( const std::string &str, int default_colour,
 
     static const std::string element_cols[] =
     {
-        "fire", "ice", "earth", "electricity", "air", "poison",
-        "water", "magic", "mutagenic", "warp", "enchant", "heal",
-        "holy", "dark", "death", "necro", "unholy", "vehumet",
-        "beogh", "crystal", "blood", "smoke", "slime", "jewel",
-        "elven", "dwarven", "orcish", "gila", "floor", "rock",
-        "stone", "mist", "shimmer_blue", "decay", "silver", "gold",
-        "iron", "bone", "ugly", "very_ugly", "random"
+        "fire", "ice", "earth", "electricity", "air", "poison", "water",
+        "magic", "mutagenic", "warp", "enchant", "heal", "holy", "dark",
+        "death", "necro", "unholy", "vehumet", "beogh", "crystal",
+        "blood", "smoke", "slime", "jewel", "elven", "dwarven",
+        "orcish", "gila", "kraken", "ugly", "very_ugly", "floor",
+        "rock", "stone", "mist", "shimmer_blue", "decay", "silver",
+        "gold", "iron", "bone", "random"
     };
 
     ASSERT(ARRAYSZ(element_cols) == (ETC_RANDOM - ETC_FIRE) + 1);

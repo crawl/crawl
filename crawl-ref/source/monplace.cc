@@ -1127,11 +1127,6 @@ static int _place_monster_aux(const mgen_data &mg,
     // it now.
     if (mg.colour != BLACK)
         menv[id].colour = mg.colour;
-    else if (mg.cls == MONS_KRAKEN)
-    {
-        menv[id].colour = random_choose(GREEN, LIGHTGREEN, LIGHTCYAN,
-                                        LIGHTBLUE, RED, LIGHTRED, MAGENTA, -1);
-    }
 
     if (mg.mname != "")
         menv[id].mname = mg.mname;

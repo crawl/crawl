@@ -935,7 +935,8 @@ static monsterentry mondata[] = {
 },
 
 {
-    // old colour: black (randomly lightmagenta, magenta, lightred, or yellow)
+    // Old gila monster colour: one of ETC_GILA (randomly lightmagenta,
+    // magenta, yellow, lightred or red).
     MONS_GILA_MONSTER, 'l', MAGENTA, "gila monster",
     M_COLD_BLOOD,
     MR_NO_FLAGS,

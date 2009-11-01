@@ -1566,25 +1566,18 @@ void define_monster(monsters &mons)
             (coinflip() ? MST_DEEP_ELF_CONJURER_I : MST_DEEP_ELF_CONJURER_II);
         break;
 
-    case MONS_BUTTERFLY:
-    case MONS_SPATIAL_VORTEX:
-    case MONS_KILLER_KLOWN:
-        if (col != BLACK) // May be overwritten by the mon_glyph option.
-            break;
-
-        col = random_colour();
-        break;
-
     case MONS_GILA_MONSTER:
         if (col != BLACK) // May be overwritten by the mon_glyph option.
             break;
 
-        temp_rand = random2(7);
+        col = element_colour(ETC_GILA);
+        break;
 
-        col = (temp_rand >= 5 ? LIGHTRED :                   // 2/7
-               temp_rand >= 3 ? LIGHTMAGENTA :               // 2/7
-               temp_rand >= 1 ? MAGENTA                      // 1/7
-                              : YELLOW);                     // 1/7
+    case MONS_KRAKEN:
+        if (col != BLACK) // May be overwritten by the mon_glyph option.
+            break;
+
+        col = element_colour(ETC_KRAKEN);
         break;
 
     case MONS_DRACONIAN_CALLER:

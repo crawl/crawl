@@ -747,13 +747,15 @@ void item_colour(item_def &item)
                 break;
 
             // This one is hardly unique, but colour isn't used for
-            // stacking, so we don't have to worry too much about this. -- bwr
-            case RUNE_DEMONIC:             // random pandemonium demonlords
+            // stacking, so we don't have to worry too much about this.
+            // - bwr
+            case RUNE_DEMONIC:                  // random Pandemonium lords
             {
                 element_type types[] =
                     {ETC_EARTH, ETC_ELECTRICITY, ETC_ENCHANT, ETC_HEAL,
                      ETC_BLOOD, ETC_DEATH, ETC_UNHOLY, ETC_VEHUMET, ETC_BEOGH,
-                     ETC_CRYSTAL, ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_GILA};
+                     ETC_CRYSTAL, ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_GILA,
+                     ETC_KRAKEN, ETC_UGLY, ETC_VERY_UGLY};
 
                 item.colour = RANDOM_ELEMENT(types);
                 break;
