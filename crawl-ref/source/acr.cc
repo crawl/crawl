@@ -2008,8 +2008,12 @@ void process_command( command_type cmd )
         break;
 
     case CMD_LIST_GOLD:
-        mprf("You have %d gold piece%s.",
-             you.gold, you.gold != 1 ? "s" : "");
+        if (shopping_list.size() == 0)
+            mprf("You have %d gold piece%s.",
+                 you.gold, you.gold != 1 ? "s" : "");
+        else
+            shopping_list.display();
+
         break;
 
     case CMD_INSCRIBE_ITEM:

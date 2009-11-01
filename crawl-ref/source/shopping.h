@@ -52,7 +52,7 @@ public:
 
     void move_things(const coord_def &src, const coord_def &dst);
 
-    void display_list();
+    void display();
 
     void refresh();
 

@@ -29,12 +29,16 @@
 #include "itemprop.h"
 #include "kills.h"
 #include "macro.h"
+#include "menu.h"
 #include "notes.h"
 #include "overmap.h"
+#include "place.h"
 #include "player.h"
 #include "spl-book.h"
 #include "stash.h"
 #include "stuff.h"
+
+#define SHOPPING_LIST_COST_KEY "shopping_list_cost_key"
 
 ShoppingList shopping_list;
 
@@ -2409,9 +2413,145 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
     }
 }
 
-void ShoppingList::display_list()
+class ShoppingListMenu : public Menu
 {
-    ASSERT(false); // Not implemented yet
+public:
+    ShoppingListMenu()
+        : Menu()
+    { }
+
+protected:
+    void draw_title();
+};
+
+void ShoppingListMenu::draw_title()
+{
+    if (title)
+    {
+        const long total_cost = you.props[SHOPPING_LIST_COST_KEY];
+
+        cgotoxy(1, 1);
+        textcolor(title->colour);
+        cprintf("%d %s%s, total cost %ld gp",
+                title->quantity, title->text.c_str(),
+                title->quantity > 1? "s" : "",
+                total_cost);
+
+        char buf[200];
+        snprintf(buf, 200,
+                 "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action]",
+                 menu_action == ACT_EXECUTE ? "travel" : "examine");
+
+        draw_title_suffix(formatted_string::parse_string(buf), false);
+    }
+}
+
+void ShoppingList::display()
+{
+    if (list->empty())
+        return;
+
+    const bool travelable = can_travel_interlevel();
+
+    ShoppingListMenu shopmenu;
+    shopmenu.set_tag("shop");
+    shopmenu.menu_action  = travelable ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
+    shopmenu.allow_toggle = travelable;
+    std::string title     = "thing";
+
+    MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
+    // Abuse of the quantity field.
+    mtitle->quantity = list->size();
+    shopmenu.set_title(mtitle);
+
+    // Don't make a menu so tall that we recycle hotkeys on the same page.
+    if (list->size() > 52
+        && (shopmenu.maxpagesize() > 52 || shopmenu.maxpagesize() == 0))
+    {
+        shopmenu.set_maxpagesize(52);
+    }
+
+    menu_letter hotkey;
+    for (unsigned i = 0; i < list->size(); ++i, ++hotkey)
+    {
+        CrawlHashTable &thing = (*list)[i];
+        level_pos      pos    = thing_pos(thing);
+        long           cost   = thing_cost(thing);
+
+        std::string etitle =
+            make_stringf("[%s] %s (%d gp)", short_place_name(pos.id).c_str(),
+                         name_thing(thing, DESC_NOCAP_A).c_str(),
+                         cost);
+
+        MenuEntry *me = new MenuEntry(etitle, MEL_ITEM, 1, hotkey);
+        me->data = &thing;
+
+        if (cost > you.gold)
+            me->colour = DARKGREY;
+        else if (thing_is_item(thing) && Options.menu_colour_shops)
+        {
+            // Colour shopping list item according to menu colours.
+            const item_def &item = get_thing_item(thing);
+
+            const std::string colprf = menu_colour_item_prefix(item);
+            const int col = menu_colour(item.name(DESC_NOCAP_A),
+                                        colprf, "shop");
+
+            if (col != -1)
+                me->colour = col;
+        }
+
+        shopmenu.add_entry(me);
+    }
+
+    std::string more_str = make_stringf("<yellow>You have %d gp</yellow>",
+                                        you.gold);
+    shopmenu.set_more(formatted_string::parse_string(more_str));
+
+    shopmenu.set_flags( MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE
+                        | MF_ALLOW_FORMATTING );
+
+    std::vector<MenuEntry*> sel;
+    while (true)
+    {
+        redraw_screen();
+        sel = shopmenu.show();
+
+        if (sel.empty())
+            break;
+
+        const CrawlHashTable* thing =
+            static_cast<const CrawlHashTable *>(sel[0]->data);
+
+        const bool is_item = thing_is_item(*thing);
+
+        if (shopmenu.menu_action == Menu::ACT_EXECUTE)
+        {
+            const long cost = thing_cost(*thing);
+
+            if (cost > you.gold)
+            {
+                std::string prompt =
+                   make_stringf("You cannot afford %s; travel there "
+                                "anyways? (y/N)",
+                                describe_thing(*thing, DESC_NOCAP_A).c_str());
+                redraw_screen();
+                if (!yesno(prompt.c_str(), true, 'n'))
+                    continue;
+            }
+
+            const travel_target lp(thing_pos(*thing), true);
+            start_translevel_travel(lp);
+            break;
+        }
+        else if (is_item)
+        {
+            redraw_screen();
+            const item_def &item = get_thing_item(*thing);
+            describe_item( const_cast<item_def&>(item) );
+        }
+    }
+    redraw_screen();
 }
 
 bool _compare_shopping_things(const CrawlStoreValue& a,
@@ -2439,6 +2579,8 @@ void ShoppingList::refresh()
     max_buyable_cost   = -1;
     max_buyable_idx    = -1;
 
+    long total_cost = 0;
+
     for (unsigned int i = 0; i < list->size(); i++)
     {
         const CrawlHashTable &thing = (*list)[i];
@@ -2450,13 +2592,14 @@ void ShoppingList::refresh()
             max_buyable_cost = cost;
             max_buyable_idx  = i;
         }
-        else
+        else if (min_unbuyable_idx == -1)
         {
             min_unbuyable_cost = cost;
             min_unbuyable_idx  = i;
-            break;
         }
+        total_cost += cost;
     }
+    you.props[SHOPPING_LIST_COST_KEY] = (long) total_cost;
 }
 
 int ShoppingList::find_thing(const item_def &item,
