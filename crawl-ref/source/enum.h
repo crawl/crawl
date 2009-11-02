@@ -12,8 +12,8 @@ enum ability_type
 {
     ABIL_NON_ABILITY = -1,
     ABIL_SPIT_POISON = 1,              //    1
-    ABIL_MAPPING,
-    ABIL_TELEPORTATION,
+    // was Mapping
+    ABIL_TELEPORTATION = 3,
     ABIL_BREATHE_FIRE,
     ABIL_BLINK,                        //    5
     ABIL_BREATHE_FROST,
@@ -38,8 +38,8 @@ enum ability_type
     ABIL_FLY_II,                       //   25
     ABIL_DELAYED_FIREBALL,
     ABIL_MUMMY_RESTORATION,
-    ABIL_EVOKE_MAPPING,
-    ABIL_EVOKE_TELEPORTATION,
+    // Was evoke mapping
+    ABIL_EVOKE_TELEPORTATION = 29,
     ABIL_EVOKE_BLINK,                  //   30
     ABIL_RECHARGING,                   //   31
     // 32 - 50 unused
@@ -2354,7 +2354,7 @@ enum mutation_type
     MUT_DEFORMED,
     MUT_TELEPORT_AT_WILL,
     MUT_SPIT_POISON,
-    MUT_MAPPING,
+    MUT_UNUSED_1,
     MUT_BREATHE_FLAMES,
     MUT_BLINK,
     MUT_HORNS,
@@ -2552,7 +2552,7 @@ enum artefact_prop_type
     ARTP_BLINK,                         //   15
     ARTP_CAN_TELEPORT,
     ARTP_BERSERK,
-    ARTP_MAPPING,
+    ARTP_UNUSED_1,
     ARTP_NOISES,
     ARTP_PREVENT_SPELLCASTING,          //   20
     ARTP_CAUSE_TELEPORTATION,

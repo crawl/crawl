@@ -473,21 +473,6 @@ mutation_def mutation_defs[] = {
 
       "spit poison"
     },
-    { MUT_MAPPING,                    3,  3, false, false,
-      {"You can sense your immediate surroundings.",
-       "You can sense your surroundings.",
-       "You can sense a large area of your surroundings."},
-
-      {"You feel aware of your surroundings.",
-       "You feel more aware of your surroundings.",
-       "You feel even more aware of your surroundings."},
-
-      {"You feel slightly disoriented.",
-       "You feel slightly disoriented.",
-       "You feel slightly disoriented."},
-
-      "mapping"
-    },
     { MUT_BREATHE_FLAMES,             4,  3, false, false,
       {"You can breathe flames.",
        "You can breathe fire.",
@@ -1735,7 +1720,6 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_TELEPORT_CONTROL:
     case MUT_MAGIC_RESISTANCE:
     case MUT_TELEPORT_AT_WILL:
-    case MUT_MAPPING:
     case MUT_CLARITY:
     case MUT_MUTATION_RESISTANCE:
     case MUT_ROBUST:
@@ -2734,7 +2718,7 @@ void roll_demonspawn_mutations()
     // "Awesome" mutations are character defining; they have a major
     // effect on strategy in at least one branch.
     static const mutation_type awesome_muts[] = {
-        MUT_HEAT_RESISTANCE, MUT_FAST, MUT_TELEPORT_AT_WILL, MUT_MAPPING,
+        MUT_HEAT_RESISTANCE, MUT_FAST, MUT_TELEPORT_AT_WILL,
         MUT_ROBUST, MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_BLACK_SCALES,
         MUT_METALLIC_SCALES, MUT_RED2_SCALES, MUT_STOCHASTIC_TORMENT_RESISTANCE
     };

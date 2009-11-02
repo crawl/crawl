@@ -196,7 +196,6 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         { "+Rage",  ARTP_BERSERK,               2 },
         { "+Inv",   ARTP_INVISIBLE,             2 },
         { "+Lev",   ARTP_LEVITATE,              2 },
-        { "+Map",   ARTP_MAPPING,               2 },
 
         // Resists, also really important
         { "rElec",  ARTP_ELECTRICITY,           2 },
@@ -398,7 +397,6 @@ static std::string _randart_descrip( const item_def &item )
         { ARTP_BLINK, "It lets you blink.", false},
         { ARTP_CAN_TELEPORT, "It lets you teleport.", false},
         { ARTP_BERSERK, "It lets you go berserk.", false},
-        { ARTP_MAPPING, "It lets you sense your surroundings.", false},
         { ARTP_SPIRIT_SHIELD, "It shields you from harm at the cost of magical power.", false},
         { ARTP_NOISES, "It makes noises.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},

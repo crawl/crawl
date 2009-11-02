@@ -2592,7 +2592,7 @@ std::string _status_mut_abilities()
                 snprintf(info, INFO_SIZE, "spit poison %d", level);
                 current = info;
                 break;
-            case MUT_MAPPING:
+            case MUT_PASSIVE_MAPPING:
                 snprintf(info, INFO_SIZE, "sense surroundings %d", level);
                 current = info;
                 break;

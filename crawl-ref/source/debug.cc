@@ -1730,7 +1730,7 @@ char _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_BOOL, //BLINK
     ARTP_VAL_BOOL, //CAN_TELEPORT
     ARTP_VAL_BOOL, //BERSERK
-    ARTP_VAL_BOOL, //MAPPING
+    ARTP_VAL_BOOL, //UNUSED_1
     ARTP_VAL_POS,  //NOISES
     ARTP_VAL_BOOL, //PREVENT_SPELLCASTING
     ARTP_VAL_BOOL, //CAUSE_TELEPORTATION
@@ -3513,7 +3513,7 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_BLINK
          1, //ARTP_CAN_TELEPORT
          1, //ARTP_BERSERK
-         1, //ARTP_MAPPING
+         1, //ARTP_UNUSED_1
         -1, //ARTP_NOISES
         -1, //ARTP_PREVENT_SPELLCASTING
         -1, //ARTP_CAUSE_TELEPORTATION
@@ -3656,7 +3656,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_BLINK",
         "ARTP_CAN_TELEPORT",
         "ARTP_BERSERK",
-        "ARTP_MAPPING",
+        "ARTP_UNUSED_1",
         "ARTP_NOISES",
         "ARTP_PREVENT_SPELLCASTING",
         "ARTP_CAUSE_TELEPORTATION",

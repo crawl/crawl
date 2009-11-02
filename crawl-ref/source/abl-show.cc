@@ -165,7 +165,6 @@ static const ability_def Ability_List[] =
     { ABIL_NON_ABILITY, "No ability", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_SPIT_POISON, "Spit Poison", 0, 0, 40, 0, ABFLAG_BREATH },
 
-    { ABIL_MAPPING, "Sense Surroundings", 0, 0, 30, 0, ABFLAG_NONE },
     { ABIL_TELEPORTATION, "Teleportation", 3, 0, 200, 0, ABFLAG_NONE },
     { ABIL_BLINK, "Blink", 1, 0, 50, 0, ABFLAG_NONE },
 
@@ -210,8 +209,6 @@ static const ability_def Ability_List[] =
     // you used a wand, potion, or miscast effect).  I didn't see
     // any reason to label them as "Evoke" in the text, they don't
     // use or train Evocations (the others do).  -- bwr
-    { ABIL_EVOKE_MAPPING, "Evoke Sense Surroundings",
-      0, 0, 30, 0, ABFLAG_NONE },
     { ABIL_EVOKE_TELEPORTATION, "Evoke Teleportation",
       3, 0, 200, 0, ABFLAG_NONE },
     { ABIL_EVOKE_BLINK, "Evoke Blink", 1, 0, 50, 0, ABFLAG_NONE },
@@ -544,15 +541,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = ((you.species == SP_NAGA) ? 20 : 40)
                         - 10 * player_mutation_level(MUT_SPIT_POISON)
                         - you.experience_level;
-        break;
-
-    case ABIL_EVOKE_MAPPING:
-        failure = 30 - you.skills[SK_EVOCATIONS];
-        break;
-
-    case ABIL_MAPPING:
-        failure = 40 - 10 * player_mutation_level(MUT_MAPPING)
-                  - you.experience_level;
         break;
 
     case ABIL_BREATHE_FIRE:
@@ -1118,16 +1106,6 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return (you.can_go_berserk(true) && berserk_check_wielded_weapon());
 
-    case ABIL_MAPPING:
-        if (player_mutation_level(MUT_MAPPING) < 3
-            && (you.level_type == LEVEL_PANDEMONIUM
-                || !player_in_mappable_area()))
-        {
-            mpr("You feel momentarily disoriented.");
-            return (false);
-        }
-        return (true);
-
     case ABIL_FLY_II:
         if (you.duration[DUR_EXHAUSTED])
         {
@@ -1349,25 +1327,6 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
     }
-    case ABIL_EVOKE_MAPPING:    // Randarts
-    case ABIL_MAPPING:          // Sense surroundings mutation
-        power = (abil.ability == ABIL_EVOKE_MAPPING) ?
-            you.skills[SK_EVOCATIONS] : you.experience_level;
-
-        if (magic_mapping(3 + roll_dice(2,
-                          (abil.ability == ABIL_EVOKE_MAPPING) ? power :
-                          power + player_mutation_level(MUT_MAPPING) * 10),
-                          40 + roll_dice( 2, power), true))
-        {
-            mpr("You sense your surroundings.");
-        }
-        else
-            mpr("You feel momentarily disoriented.");
-
-        if (abil.ability == ABIL_EVOKE_MAPPING)
-            exercise(SK_EVOCATIONS, 1);
-        break;
-
     case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
     case ABIL_TELEPORTATION:          // teleport mut
         if (player_mutation_level(MUT_TELEPORT_AT_WILL) == 3)
@@ -2360,9 +2319,6 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     // Mutations.
-    if (player_mutation_level(MUT_MAPPING))
-        _add_talent(talents, ABIL_MAPPING, check_confused);
-
     if (player_mutation_level(MUT_SUMMON_MINOR_DEMONS))
         _add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused);
 
@@ -2475,9 +2431,6 @@ std::vector<talent> your_talents(bool check_confused)
 
     if (wearing_amulet(AMU_RAGE) || scan_artefacts(ARTP_BERSERK))
         _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
-
-    if (scan_artefacts( ARTP_MAPPING ))
-        _add_talent(talents, ABIL_EVOKE_MAPPING, check_confused);
 
     if (player_equip( EQ_RINGS, RING_INVISIBILITY )
         || player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_DARKNESS )
