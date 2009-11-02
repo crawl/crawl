@@ -6746,7 +6746,7 @@ bool player::is_unholy() const
 
 bool player::is_chaotic() const
 {
-    return (transform_changed_physiology());
+    return (false);
 }
 
 // Output active level of player mutation.
