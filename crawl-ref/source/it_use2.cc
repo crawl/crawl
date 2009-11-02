@@ -726,24 +726,26 @@ void unuse_artefact(const item_def &item, bool *show_msgs)
     }
 
     // Modify ability scores; always output messages.
-    modify_stat( STAT_STRENGTH,     -proprt[ARTP_STRENGTH],     false, item,
-                 true);
-    modify_stat( STAT_INTELLIGENCE, -proprt[ARTP_INTELLIGENCE], false, item,
-                 true);
-    modify_stat( STAT_DEXTERITY,    -proprt[ARTP_DEXTERITY],    false, item,
-                 true);
+    modify_stat(STAT_STRENGTH,     -proprt[ARTP_STRENGTH],     false, item,
+                true);
+    modify_stat(STAT_INTELLIGENCE, -proprt[ARTP_INTELLIGENCE], false, item,
+                true);
+    modify_stat(STAT_DEXTERITY,    -proprt[ARTP_DEXTERITY],    false, item,
+                true);
 
     if (proprt[ARTP_NOISES] != 0)
-        you.attribute[ATTR_NOISES]  = 0;
+        you.attribute[ATTR_NOISES] = 0;
 
     if (proprt[ARTP_LEVITATE] != 0 && you.duration[DUR_LEVITATION] > 2
             && !you.permanent_levitation())
+    {
         you.duration[DUR_LEVITATION] = 1;
+    }
 
     if (proprt[ARTP_INVISIBLE] != 0 && you.duration[DUR_INVIS] > 1)
         you.duration[DUR_INVIS] = 1;
 
-    if (is_unrandom_artefact( item ))
+    if (is_unrandom_artefact(item))
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);
 

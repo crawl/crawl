@@ -3722,7 +3722,7 @@ void jewellery_remove_effects(item_def &item, bool mesg)
     Options.show_uncursed = false;
 
     if (mesg)
-        mprf("You remove %s.", item.name(DESC_NOCAP_YOUR).c_str() );
+        mprf("You remove %s.", item.name(DESC_NOCAP_YOUR).c_str());
 
     Options.show_uncursed = old_showuncursed;
 
@@ -3768,16 +3768,12 @@ void jewellery_remove_effects(item_def &item, bool mesg)
 
     case RING_LEVITATION:
         if (you.duration[DUR_LEVITATION] && !you.permanent_levitation())
-        {
             you.duration[DUR_LEVITATION] = 1;
-        }
         break;
 
     case RING_INVISIBILITY:
         if (you.duration[DUR_INVIS])
-        {
             you.duration[DUR_INVIS] = 1;
-        }
         break;
 
     case RING_MAGICAL_POWER:
