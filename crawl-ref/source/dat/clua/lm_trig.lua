@@ -176,6 +176,72 @@ function Triggerable:read(marker, th)
   return self
 end
 
+--------------------------
+
+-- A simple class to give out messages.  Should be split out into own
+-- file if/when it becomes more complex.
+
+TriggerableMessage       = util.subclass(Triggerable) 
+TriggerableMessage.CLASS = "TriggerableMessage"
+
+function TriggerableMessage:new(pars)
+  pars = pars or { }
+
+  local tm = self.super.new(self)
+
+  if not pars.msg then
+    error("Must provide msg to TriggerableMessage")
+  elseif type(pars.msg) ~= "string" then
+    error("TriggerableMessage msg must be string, not " .. type(pars.msg))
+  end
+
+  pars.channel  = pars.channel or "plain"
+  pars.repeated = pars.repeated
+
+  tm.msg      = pars.msg
+  tm.channel  = pars.channel
+  tm.repeated = pars.repeated
+
+  return tm
+end
+
+function TriggerableMessage:on_trigger(triggerer, marker, ev)
+  crawl.mpr(self.msg, self.channel)
+
+  if not self.repeated then
+    self:remove(marker)
+  end
+end
+
+function TriggerableMessage:write(marker, th)
+  TriggerableMessage.super.write(self, marker, th)
+
+  file.marshall(th, self.msg)
+  file.marshall(th, self.channel)
+  file.marshall_meta(th, self.repeated)
+end
+
+function TriggerableMessage:read(marker, th)
+  TriggerableMessage.super.read(self, marker, th)
+
+  self.msg      = file.unmarshall_string(th)
+  self.channel  = file.unmarshall_string(th)
+  self.repeated = file.unmarshall_meta(th)
+
+  setmetatable(self, TriggerableMessage) 
+
+  return self
+end
+
+function message_at_spot(msg, channel, repeated)
+  local tm = TriggerableMessage:new 
+      { msg = msg, channel = channel, repeated = repeated }
+
+  tm:add_triggerer( DgnTriggerer:new { type   = "player_move" } )
+
+  return tm
+end
+
 -------------------------------------------------------------------------------
 -- NOTE: The CLASS string of a triggerer class *MUST* be exactly the same as
 -- the triggerer class name, or it won't be able to deserialize properly.

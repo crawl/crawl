@@ -175,13 +175,3 @@ end
 function function_machine(pars)
   return FunctionMachine:new(pars)
 end
-
-function message_machine (pars)
-  local channel = pars.channel or false
-  local mtable = {message = pars.message, channel = pars.channel}
-  pars.func = function (position, mtable)
-                crawl.mpr(mtable.message, mtable.channel)
-              end
-  pars.marker_params = mtable
-  return FunctionMachine:new(pars)
-end

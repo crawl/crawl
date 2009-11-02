@@ -729,9 +729,9 @@ COLOUR:  _ : yellow
 SUBST:   _ : .
 SUBST:   T = T F:1
 KMASK:   + = no_secret_doors
-MARKER:  ! = lua:message_machine({marker_type="player_at", message="You almost \
-             think you hear a voice: \"Seek not undue power, mortal.\"", \
-             channel="warning" })
+MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
+                                   \"Seek not undue power, mortal.\"", \
+                                   "warning" )
 SUBST:   ! : .
 MAP
     xxxxxxxxxxx

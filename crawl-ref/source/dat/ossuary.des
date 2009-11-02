@@ -651,8 +651,10 @@ SUBST:   z = c:20 o:4
 SUBST:   y = c:20 o:1
 SUBST:   $ = 1:10 2:1
 KFEAT:   L = =
-MARKER:  L = lua:message_machine({marker_type="player_at", message="Something \
-             ancient and evil stirs ahead...", channel="warning" })
+MARKER:  L = lua:message_at_spot ( \
+                 "Something ancient and evil stirs ahead...", \
+                 "warning" \
+             )
 : ossuary_setup_features(_G)
 : ossuary_milestone(_G)
 MAP
