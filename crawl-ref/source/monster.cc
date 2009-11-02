@@ -2784,11 +2784,8 @@ bool monsters::is_chaotic() const
     if (mons_is_shapeshifter(this))
         return (true);
 
-    if (has_spell(SPELL_POLYMORPH_OTHER)
-        || has_spell(SPELL_SUMMON_UGLY_THING))
-    {
+    if (has_spell(SPELL_POLYMORPH_OTHER))
         return (true);
-    }
 
     if (has_attack_flavour(AF_MUTATE)
         || has_attack_flavour(AF_ROT)
