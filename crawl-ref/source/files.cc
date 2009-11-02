@@ -1901,55 +1901,50 @@ bool is_existing_level(const level_id &level)
     return (Generated_Levels.find(level) != Generated_Levels.end());
 }
 
+// This class provides a way to walk the dungeon with a bit more flexibility
+// than you get with apply_to_all_dungeons.
+level_excursion::level_excursion()
+    : original(level_id::current())
+{
+}
+
+void level_excursion::go_to(const level_id& next)
+{
+    if (level_id::current() != next)
+    {
+        _save_level(you.your_level, you.level_type, you.where_are_you);
+        _restore_level(next);
+    }
+}
+
+level_excursion::~level_excursion()
+{
+    go_to(original);
+}
+
+
 // Applies an operation (applicator) after switching to the specified level.
-// If preserve_current is true, will reload the original level after
-// modifying the target level.
+// Will reload the original level after modifying the target level.
 //
 // If the target level has not already been visited by the player, this
 // function will assert.
-bool apply_to_level(const level_id &level, bool preserve_current,
-                    bool (*applicator)())
+bool apply_to_level(const level_id &level, bool (*applicator)())
 {
     ASSERT(is_existing_level(level));
 
-    const level_id original = level_id::current();
-    if (level != original)
-    {
-        if (preserve_current)
-            _save_level(you.your_level, you.level_type, you.where_are_you);
+    level_excursion le;
 
-        you.where_are_you = level.branch;
-        you.your_level = level.dungeon_absdepth();
-        you.level_type = level.level_type;
+    le.go_to(level);
 
-        // Load the dungeon level...
-        load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
-             LEVEL_DUNGEON, original.absdepth(),
-             original.branch);
-    }
-
-    // Apply the change.
-    const bool result = applicator();
-
-    if (level != original)
-    {
-        // And save it back.
-        _save_level(you.your_level, you.level_type, you.where_are_you);
-
-        if (preserve_current)
-            _restore_level(original);
-    }
-
-    return (result);
+    return applicator();
 }
 
 bool apply_to_all_dungeons(bool (*applicator)())
 {
-    const level_id original = level_id::current();
+    level_excursion le;
+    level_id original(level_id::current());
 
-    // Apply to current level, then save it out.
     bool success = applicator();
-    _save_level(original.absdepth(), original.level_type, original.branch);
 
     for (int i = 0; i < MAX_LEVELS; ++i)
         for (int j = 0; j < NUM_BRANCHES; ++j)
@@ -1964,11 +1959,11 @@ bool apply_to_all_dungeons(bool (*applicator)())
             if (original == thislevel)
                 continue;
 
-            if (apply_to_level(thislevel, false, applicator))
+            le.go_to(thislevel);
+
+            if (applicator())
                 success = true;
         }
-
-    _restore_level(original);
 
     return (success);
 }

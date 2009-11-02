@@ -829,14 +829,14 @@ void slime_vault_change(bool glass)
     {
         if (glass)
         {
-            apply_to_level(target, true,
+            apply_to_level(target,
                            target == level_id::current() ?
                                _slime_vault_to_glass_onlevel :
                                _slime_vault_to_glass_offlevel);
         }
         else
         {
-            apply_to_level(target, true,
+            apply_to_level(target,
                            target == level_id::current() ?
                                _slime_vault_to_floor_onlevel :
                                _slime_vault_to_floor_offlevel);
