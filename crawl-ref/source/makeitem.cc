@@ -1380,9 +1380,12 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(30))
                 rc = SPWPN_HOLY_WRATH;
 
+            if (item.sub_type == WPN_SCYTHE && one_chance_in(6))
+                rc = SPWPN_REAPING;
+
             if (one_chance_in(4))
                 rc = SPWPN_PROTECTION;
-            // **** intentional fall through here ****
+
             if (one_chance_in(5))
                 rc = SPWPN_SPEED;
             // **** intentional fall through here ****
