@@ -2954,7 +2954,7 @@ static std::auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
 
         (*map)(p) = true;
 
-        if (grd(p) < DNGN_MINSEE)
+        if (grd(p) < DNGN_MINSEE && grd(p) != DNGN_CLOSED_DOOR)
             continue;
 
         for (int dy = -1; dy <= 1; ++dy)
