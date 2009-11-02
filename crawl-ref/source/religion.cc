@@ -298,7 +298,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "induce evolution"
     },
     // Cheibriados
-    { "Cheibriados is slowing your biology.",
+    { "Cheibriados is slowing your {biology}.",
       "bend time to slow others",
       "",
       "inflict damage to those overly hasty",
@@ -405,7 +405,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "induce evolution"
     },
     // Cheibriados
-    { "Cheibriados will no longer slow your biology.",
+    { "Cheibriados will no longer slow your {biology}.",
       "bend time to slow others",
       "",
       "inflict damage to those overly hasty",
@@ -3636,16 +3636,17 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
         return false;
 
     std::string pm = pmsg;
-    if ((pos = pm.find("biology")) != -1)
+    if ((pos = pm.find("{biology}")) != -1)
         switch(you.is_undead)
         {
         case US_UNDEAD:      // mummies -- time has no meaning!
             return false;
         case US_HUNGRY_DEAD: // ghouls
-            pm.replace(pos, 7, "decay");
+            pm.replace(pos, 9, "decay");
             break;
         case US_SEMI_UNDEAD: // vampires
         case US_ALIVE:
+            pm.replace(pos, 9, "biology");
             break;
         }
 
