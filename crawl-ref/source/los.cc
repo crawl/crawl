@@ -737,6 +737,8 @@ int num_feats_between(const coord_def& source, const coord_def& target,
     int     count    = 0;
     int     max_dist = grid_distance(source, target);
 
+    ASSERT(map_bounds(source) && map_bounds(target));
+
     if (source == target)
         return (0); // XXX: might want to count the cell.
 

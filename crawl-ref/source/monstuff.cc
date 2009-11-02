@@ -2499,8 +2499,9 @@ bool random_near_space(const coord_def& origin, coord_def& target,
     int min_walls_between = 0;
 
     // Skip ray tracing if possible.
-    if (trans_wall_block)
+    if (trans_wall_block && !crawl_state.arena)
     {
+        // XXX: you.pos() is invalid in the arena.
         min_walls_between = num_feats_between(origin, you.pos(),
                                               DNGN_CLEAR_ROCK_WALL,
                                               DNGN_CLEAR_PERMAROCK_WALL);
@@ -2578,7 +2579,9 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         if (origin_is_player)
             continue;
 
-        int walls_between = num_feats_between(target, you.pos(),
+        int walls_between = 0;
+        if (!crawl_state.arena)
+            walls_between = num_feats_between(target, you.pos(),
                                               DNGN_CLEAR_ROCK_WALL,
                                               DNGN_CLEAR_PERMAROCK_WALL);
 
