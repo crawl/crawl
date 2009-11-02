@@ -1445,7 +1445,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
 
         while (true)
         {
-            show_map(pos, false);
+            show_map(pos, false, true);
             redraw_screen();
 
 #if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
@@ -1463,6 +1463,15 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
 #if DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
 #endif
+
+            if (pos == you.pos() || pos == coord_def(-1,-1))
+            {
+                if (!yesno("Are you sure you want to cancel this teleport?",
+                           true, 'n'))
+                    continue;
+                you.turn_is_over = false;
+                return (false);
+            }
 
             if (you.duration[DUR_MESMERISED])
             {

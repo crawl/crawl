@@ -2393,7 +2393,7 @@ static void _reset_travel_colours(std::vector<coord_def> &features)
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
 // to get that.  This function is still a mess, though. -- bwr
-void show_map( coord_def &spec_place, bool travel_mode )
+void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
 {
     cursor_control ccon(!Options.use_fake_cursor);
     int i, j;
@@ -2797,6 +2797,12 @@ void show_map( coord_def &spec_place, bool travel_mode )
 #endif
 
         case CMD_MAP_EXIT_MAP:
+            if (allow_esc)
+            {
+                spec_place = coord_def(-1, -1);
+                map_alive = false;
+                break;
+            }
         default:
             if (travel_mode)
             {

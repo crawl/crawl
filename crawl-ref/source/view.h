@@ -35,7 +35,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg = NULL,
 void blood_smell( int strength, const coord_def& where);
 void handle_monster_shouts(monsters* monster, bool force = false);
 
-void show_map( coord_def &spec_place, bool travel_mode );
+void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc = false );
 bool check_awaken(monsters* monster);
 int count_detected_mons(void);
 void clear_map(bool clear_items = true, bool clear_mons = true);
