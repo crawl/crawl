@@ -3203,7 +3203,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     item.base_type = OBJ_UNASSIGNED;
 
     if (mon->type == MONS_DANCING_WEAPON
-        && player_in_branch( BRANCH_HALL_OF_BLADES ))
+        && player_in_branch(BRANCH_HALL_OF_BLADES))
     {
         level = MAKE_GOOD_ITEM;
     }
@@ -3299,7 +3299,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         }
 
         if (one_chance_in(3))
-            do_curse_item( item );
+            do_curse_item(item);
         break;
 
     case MONS_GNOLL:
@@ -3699,7 +3699,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             item.sub_type = WPN_DEMON_TRIDENT;
 
         if (one_chance_in(3))
-            set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         else if (one_chance_in(3))
         {
             set_item_ego_type(item, OBJ_WEAPONS,
@@ -3820,28 +3820,29 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_CEREBOV:
         force_item = true;
-        make_item_unrandart( item, UNRAND_CEREBOV ); break;
+        make_item_unrandart(item, UNRAND_CEREBOV);
+        break;
 
     case MONS_DISPATER:
         force_item = true;
-        make_item_unrandart( item, UNRAND_DISPATER );
+        make_item_unrandart(item, UNRAND_DISPATER);
         break;
 
     case MONS_ASMODEUS:
         force_item = true;
-        make_item_unrandart( item, UNRAND_ASMODEUS );
+        make_item_unrandart(item, UNRAND_ASMODEUS);
         break;
 
     case MONS_GERYON:
-        //mv: Probably should be moved out of this switch, but it's not
-        //worth it, unless we have more monsters with misc. items.
+        // mv: Probably should be moved out of this switch, but it's not
+        // worth it, unless we have more monsters with misc. items.
         item.base_type = OBJ_MISCELLANY;
         item.sub_type  = MISC_HORN_OF_GERYON;
         break;
 
-    case MONS_SALAMANDER: //mv: new 8 Aug 2001
-                          //Yes, they've got really nice items, but
-                          //it's almost impossible to get them
+    case MONS_SALAMANDER: // mv: new 8 Aug 2001
+                          // Yes, they've got really nice items, but
+                          // it's almost impossible to get them.
         force_item = true;
         item_race  = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
@@ -3878,8 +3879,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     const int xitt = item.sub_type;
 
     // Note this mess, all the work above doesn't mean much unless
-    // force_item is set... otherwise we're just going to take the
-    // base and subtypes and create a new item. -- bwr
+    // force_item is set... otherwise we're just going to take the base
+    // and subtype and create a new item. - bwr
     const int thing_created =
         ((force_item) ? get_item_slot() : items(0, xitc, xitt, true,
                                                 level, item_race));
@@ -4118,8 +4119,9 @@ void give_shield(monsters *mon, int level)
     const item_def *main_weap = mon->mslot_item(MSLOT_WEAPON);
     const item_def *alt_weap  = mon->mslot_item(MSLOT_ALT_WEAPON);
 
-    // If the monster is already wielding/carrying a two-handed weapon, it
-    // doesn't get a shield. (Monsters always prefer raw damage to protection!)
+    // If the monster is already wielding/carrying a two-handed weapon,
+    // it doesn't get a shield.  (Monsters always prefer raw damage to
+    // protection!)
     if (main_weap && hands_reqd(*main_weap, mon->body_size()) == HANDS_TWO
         || alt_weap && hands_reqd(*alt_weap, mon->body_size()) == HANDS_TWO)
     {
@@ -4454,7 +4456,7 @@ void give_armour(monsters *mon, int level)
     const object_class_type xitc = item.base_type;
     const int xitt = item.sub_type;
 
-    if (mons_is_unique( mon->type ) && level != MAKE_GOOD_ITEM)
+    if (mons_is_unique(mon->type) && level != MAKE_GOOD_ITEM)
     {
         if (x_chance_in_y(9 + mon->hit_dice, 100))
             level = MAKE_GOOD_ITEM;
@@ -4469,7 +4471,7 @@ void give_armour(monsters *mon, int level)
 
     _give_monster_item(mon, thing_created);
 
-    //mv: All items with force_colour = 0 are colored via items().
+    // mv: All items with force_colour = 0 are colored via items().
     if (force_colour)
         mitm[thing_created].colour = force_colour;
 }
