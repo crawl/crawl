@@ -7,8 +7,6 @@
 #ifndef SQLDBM_H
 #define SQLDBM_H
 
-#include "AppHdr.h"
-
 #ifdef USE_SQLITE_DBM
 
 #include <sys/types.h>

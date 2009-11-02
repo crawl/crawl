@@ -7,7 +7,6 @@
 #ifndef TILEREG_H
 #define TILEREG_H
 
-#include "AppHdr.h"
 #include "format.h"
 #include "player.h"
 #include "tilebuf.h"

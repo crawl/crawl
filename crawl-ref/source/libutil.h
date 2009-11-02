@@ -6,7 +6,6 @@
 #ifndef LIBUTIL_H
 #define LIBUTIL_H
 
-#include "AppHdr.h"
 #include "defines.h"
 #include "enum.h"
 #include <cctype>

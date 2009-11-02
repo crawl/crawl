@@ -8,7 +8,6 @@
 #ifndef TILEMCACHE_H
 #define TILEMCACHE_H
 
-#include "AppHdr.h"
 #include "debug.h"
 #include <vector>
 

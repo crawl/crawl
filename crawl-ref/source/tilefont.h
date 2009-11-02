@@ -6,7 +6,6 @@
 #ifndef TILEFONT_H
 #define TILEFONT_H
 
-#include "AppHdr.h"
 #include "externs.h"
 #include "tiletex.h"
 
