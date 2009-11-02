@@ -218,6 +218,11 @@ function DgnTriggerer:new(pars)
     error("DgnTriggerer must have a type")
   end
 
+  -- Check for method name identical to event name.
+  if not DgnTriggerer[pars.type] then
+    error("DgnTriggerer can't handle event type '" .. pars.type .. "'")
+  end
+
   if pars.type == "monster_dies" or pars.type == "item_moved"
      or pars.type == "item_pickup"
   then
@@ -281,56 +286,62 @@ function DgnTriggerer:remove(triggerable, marker)
 end
 
 function DgnTriggerer:event(triggerable, marker, ev)
-  if self.type == "monster_dies" then
-    local midx = ev:arg1()
-    local mons = dgn.mons_from_index(midx)
+  -- Use a method-dispatch type mechanism, rather than a series
+  -- of "elseif"s.
+  DgnTriggerer[self.type](self, triggerable, marker, ev)
+end
 
-    if not mons then
-      error("DgnTriggerer:event() didn't get a valid monster index")
-    end
+function DgnTriggerer:monster_dies(triggerable, marker, ev)
+  local midx = ev:arg1()
+  local mons = dgn.mons_from_index(midx)
 
-    if mons.name == self.target then
-      triggerable:on_trigger(self, marker, ev)
-    end
-  elseif self.type == "feat_change" then
-    if self.target and self.target ~= "" then
-      local feat = dgn.feature_name(dgn.grid(ev:pos()))
-      if not string.find(feat, self.target) then
-        return
-      end
-    end
+  if not mons then
+    error("DgnTriggerer:monster_dies() didn't get a valid monster index")
+  end
+
+  if mons.name == self.target then
     triggerable:on_trigger(self, marker, ev)
-  elseif self.type == "item_moved" then
-    local obj_idx = ev:arg1()
-    local it      = dgn.item_from_index(obj_idx)
+  end
+end
 
-    if not it then
-      error("DgnTriggerer:event() didn't get a valid item index")
+function DgnTriggerer:feat_change(triggerable, marker, ev)
+  if self.target and self.target ~= "" then
+    local feat = dgn.feature_name(dgn.grid(ev:pos()))
+    if not string.find(feat, self.target) then
+      return
     end
+  end
+  triggerable:on_trigger(self, marker, ev)
+end
 
-    if item.name(it) == self.target then
-      if self.marker_mover then
-        -- We only exist to move the triggerable if the item moves
-        triggerable:move(marker, ev:dest())
-      else
-        triggerable:on_trigger(self, marker, ev)
-      end
-    end
-  elseif self.type == "item_pickup" then
-    local obj_idx = ev:arg1()
-    local it      = dgn.item_from_index(obj_idx)
+function DgnTriggerer:item_moved(triggerable, marker, ev)
+  local obj_idx = ev:arg1()
+  local it      = dgn.item_from_index(obj_idx)
 
-    if not it then
-      error("DgnTriggerer:event() didn't get a valid item index")
-    end
+  if not it then
+    error("DgnTriggerer:item_moved() didn't get a valid item index")
+  end
 
-    if item.name(it) == self.target then
+  if item.name(it) == self.target then
+    if self.marker_mover then
+      -- We only exist to move the triggerable if the item moves
+      triggerable:move(marker, ev:dest())
+    else
       triggerable:on_trigger(self, marker, ev)
     end
-  else
-    local e_type = dgn.dgn_event_type(et)
+  end
+end
 
-    error("DgnTriggerer can't handle events of type " .. e_type)
+function DgnTriggerer:item_pickup(triggerable, marker, ev)
+  local obj_idx = ev:arg1()
+  local it      = dgn.item_from_index(obj_idx)
+
+  if not it then
+    error("DgnTriggerer:item_pickup() didn't get a valid item index")
+  end
+
+  if item.name(it) == self.target then
+    triggerable:on_trigger(self, marker, ev)
   end
 end
 
