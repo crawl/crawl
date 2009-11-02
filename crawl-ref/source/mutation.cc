@@ -1218,6 +1218,20 @@ mutation_def mutation_defs[] = {
       {"", "", ""},
       "icemail"
     },
+
+    { MUT_CONSERVE_SCROLLS,           0,  1, false, false,
+      {"You are very good at protecting items from fire.", "", ""},
+      {"You feel less concerned about heat.", "", ""},
+      {"", "", ""},
+      "conserve scrolls",
+    },
+
+    { MUT_CONSERVE_POTIONS,           0,  1, false, false,
+      {"You are very good at protecting items from cold.", "", ""},
+      {"You feel less concerned about cold.", "", ""},
+      {"", "", ""},
+      "conserve scrolls",
+    },
 };
 
 const mutation_def& get_mutation_def(mutation_type mut)
