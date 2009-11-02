@@ -3389,6 +3389,31 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
         }
     }
 
+    if (item.base_type == OBJ_ARMOUR && item_type_known(item))
+    {
+        switch (item.special)
+        {
+        case SPARM_STRENGTH:
+            prop_str = 3;
+            break;
+
+        case SPARM_INTELLIGENCE:
+            prop_int = 3;
+            break;
+
+        case SPARM_DEXTERITY:
+            prop_dex = 3;
+            break;
+
+        case SPARM_LEVITATION:
+            prop_lev = true;
+            break;
+
+        default:
+            break;
+        }
+    }
+
     if (is_artefact(item))
     {
         prop_str += artefact_known_wpn_property(item, ARTP_STRENGTH);
