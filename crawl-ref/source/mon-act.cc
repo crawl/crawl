@@ -2192,9 +2192,9 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
 
         int quant = si->quantity;
 
-        death_ooze_ate_good = (get_weapon_brand(*si) == SPWPN_HOLY_WRATH
-                               || get_ammo_brand(*si) == SPMSL_SILVER
-                               && monster->type == MONS_DEATH_OOZE);
+        death_ooze_ate_good = (monster->type == MONS_DEATH_OOZE
+                               && (get_weapon_brand(*si) == SPWPN_HOLY_WRATH
+                                   || get_ammo_brand(*si) == SPMSL_SILVER));
 
         if (si->base_type != OBJ_GOLD)
         {
@@ -2292,13 +2292,11 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
         hps_changed = std::min(hps_changed, 50);
 
         if (death_ooze_ate_good)
-        {
             monster->hurt(NULL, hps_changed, BEAM_NONE, false);
-        }
         else
         {
             // This is done manually instead of using heal_monster(),
-            // because that function doesn't work quite this way.  -- bwr
+            // because that function doesn't work quite this way. - bwr
             monster->hit_points += hps_changed;
             monster->max_hit_points = std::max(monster->hit_points,
                                                monster->max_hit_points);
@@ -2310,11 +2308,10 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
                  nearby ? "" : " distant");
         }
 
-        if (eaten_net)
-            simple_monster_message(monster, " devours the net!");
-
         if (death_ooze_ate_good)
             simple_monster_message(monster, " twists violently!");
+        else if (eaten_net)
+            simple_monster_message(monster, " devours the net!");
         else
             _jelly_divide(monster);
     }
