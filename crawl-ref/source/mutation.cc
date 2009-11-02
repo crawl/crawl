@@ -1215,7 +1215,7 @@ mutation_def mutation_defs[] = {
       {"You are very good at protecting items from cold.", "", ""},
       {"You feel less concerned about cold.", "", ""},
       {"", "", ""},
-      "conserve scrolls",
+      "conserve potions",
     },
 };
 
