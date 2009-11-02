@@ -1322,53 +1322,6 @@ bool map_lines::find_bounds(const char *str, coord_def &tl, coord_def &br) const
     return (br.x >= 0);
 }
 
-#ifdef USE_TILE
-bool map_tile_list::parse(const std::string &s, int weight)
-{
-    unsigned int idx = 0;
-    if (s != "none" && !tile_dngn_index(s.c_str(), idx))
-        return false;
-
-    push_back(map_weighted_tile((int)idx, weight));
-    return true;
-}
-
-std::string map_lines::add_tile(const std::string &sub, bool is_floor)
-{
-    std::string s = trimmed_string(sub);
-
-    if (s.empty())
-        return ("");
-
-    int sep = 0;
-    std::string key;
-    std::string substitute;
-
-    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
-    if (!err.empty())
-        return (err);
-
-    map_tile_list list;
-    err = parse_weighted_str<map_tile_list>(substitute, list);
-    if (!err.empty())
-        return (err);
-
-    tile_spec spec(key, sep == ':', is_floor, list);
-    overlay_tiles(spec);
-
-    return ("");
-}
-
-std::string map_lines::add_rocktile(const std::string &sub)
-{
-    return add_tile(sub, false);
-}
-
-std::string map_lines::add_floortile(const std::string &sub)
-{
-    return add_tile(sub, true);
-}
-
 bool map_lines::fill_zone(travel_distance_grid_t &tpd, const coord_def &start,
                           const coord_def &tl, const coord_def &br, int zone,
                           const char *wanted, const char *passable) const
@@ -1428,6 +1381,53 @@ int map_lines::count_feature_in_box(const coord_def &tl, const coord_def &br,
     }
 
     return (result);
+}
+
+#ifdef USE_TILE
+bool map_tile_list::parse(const std::string &s, int weight)
+{
+    unsigned int idx = 0;
+    if (s != "none" && !tile_dngn_index(s.c_str(), idx))
+        return false;
+
+    push_back(map_weighted_tile((int)idx, weight));
+    return true;
+}
+
+std::string map_lines::add_tile(const std::string &sub, bool is_floor)
+{
+    std::string s = trimmed_string(sub);
+
+    if (s.empty())
+        return ("");
+
+    int sep = 0;
+    std::string key;
+    std::string substitute;
+
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
+    if (!err.empty())
+        return (err);
+
+    map_tile_list list;
+    err = parse_weighted_str<map_tile_list>(substitute, list);
+    if (!err.empty())
+        return (err);
+
+    tile_spec spec(key, sep == ':', is_floor, list);
+    overlay_tiles(spec);
+
+    return ("");
+}
+
+std::string map_lines::add_rocktile(const std::string &sub)
+{
+    return add_tile(sub, false);
+}
+
+std::string map_lines::add_floortile(const std::string &sub)
+{
+    return add_tile(sub, true);
 }
 
 //////////////////////////////////////////////////////////////////////////
