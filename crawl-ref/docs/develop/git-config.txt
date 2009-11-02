@@ -7,6 +7,8 @@ There are two ways of changing git configuration options
 --git-dir") to change the current repository's configuration, and editing
 ~/.gitconfig for the global configuration.
 
+You can list all currently set configuration options with "git var -l".
+
 ------------------------
 
 Config options which should be set for the Crawl repository, but probably
