@@ -7,14 +7,19 @@
 ###############################################################################
 
 {{
-    function dgn.random_room_point(room)
-      return dgn.point(room.x1 + crawl.random2(room.x2 - room.x1),
-                       room.y1 + crawl.random2(room.y2 - room.y1))
-    end
+    -- Call func num times around a circle of radius centered at (x, y)
+    function apply_circle(x, y, num, radius, scale_x, scale_y, func)
+        radius = math.floor(radius)
+        for n = 1, num do
+            local rad = n * 2 * math.pi / num
 
-    function dgn.join_the_dots_p(start, finish)
-      return dgn.join_the_dots(start.x, start.y, finish.x, finish.y)
-    end
+            local rx = math.floor(math.cos(rad) * radius * scale_x + 0.5)
+            local ry = math.floor(math.sin(rad) * radius * scale_y + 0.5)
+
+            func(x + rx, y + ry)
+        end
+    end 
+
 }}
 
 ##############################################################
@@ -26,20 +31,21 @@
 NAME:   layout_forbidden_donut
 ORIENT: encompass
 TAGS:   layout allow_dup
-
 {{
     local gxm, gym = dgn.max_bounds()
-    local wall = dgn.feature_number("rock_wall")
-    local floor = dgn.feature_number("floor")
-    dgn.fill_area(0, 0, gxm - 1, gym - 1, wall)
+    extend_map{width=gxm, height=gym, fill='x'}
+    fill_area{fill='x'}
 
     local width = (10 - crawl.random2(7))
 
+    local floor = '.'
+    local wall = 'x'
+
     -- construct donut
-    dgn.fill_area(10, 10, gxm - 10, 10 + width, floor)
-    dgn.fill_area(10, 60 - width, gxm - 10, gym - 10, floor)
-    dgn.fill_area(10, 10, 10 + width, gym - 10, floor)
-    dgn.fill_area(60 - width, 10, gxm - 10, gym - 10, floor)
+    fill_area{x1=10, y1=10, x2=gxm-10, y2=10+width, fill=floor}
+    fill_area{x1=10, y1=60-width, x2=gxm-10, y2=gym-10, fill=floor}
+    fill_area{x1=10, y1=10, x2=10+width, y2=gym-10, fill=floor}
+    fill_area{x1=60-width, y1=10, x2=gxm-10, y2=gym-10, fill=floor}
 
     local spotty = crawl.coinflip()
     local smears = crawl.random2(300)
@@ -48,22 +54,22 @@ TAGS:   layout allow_dup
     if crawl.coinflip() then
         local width2 = 1 + crawl.random2(5)
 
-        dgn.fill_area(10, gym/2 - width2, gxm - 10, gym/2 + width2, floor)
-        dgn.fill_area(gxm/2 - width2, 10, gxm/2 + width2, gym - 10, floor)
+        fill_area{x1=10, y1=gym/2-width2, x2=gxm-10, y2=gym/2+width2, fill=floor}
+        fill_area{x1=gxm/2-width2, y1=10, x2=gxm/2+width2, y2=gym-10, fill=floor}
 
         -- sometimes add a small octagon room
-        if crawl.coinflip() and crawl.random2(15) > 7 then
-            local oblique = 0
+        if crawl.coinflip() then
+            local obl = 0
             if crawl.coinflip() then
-                oblique = 5 + crawl.random2(20)
+                obl = 5 + crawl.random2(20)
             end
 
-            local feature_name = crawl.random_element({
-                ["floor"]      = 5,
-                ["deep_water"] = 1,
-                ["lava"]       = 1,
+            local fill = crawl.random_element({
+                ["."] = 10,
+                ["w"] = 5,
+                ["l"] = 1,
             })
-            dgn.octa_room(25, 25, gxm - 25, gym - 25, oblique, feature_name)
+            octa_room{x1=25, y1=25, x2=gxm-25, y2=gym-25, oblique=obl, replace='x', inside=fill}
 
             -- decrease spotty chance
             spotty = crawl.one_chance_in(5)
@@ -74,10 +80,10 @@ TAGS:   layout allow_dup
     local smear_boxy = crawl.coinflip()
 
     if spotty then
-        dgn.spotty_level(true, 0, spotty_boxy)
+        spotty_map{boxy=spotty_boxy}
     end
     if not spotty and crawl.one_chance_in(4) or spotty then
-        dgn.smear_feature(smears, smear_boxy, wall, 0, 0, gxm - 1, gym - 1)
+        smear_map{iterations=smears, smear='x', onto='.', boxy=smear_boxy}
     end
 }}
 MAP
@@ -94,45 +100,45 @@ ORIENT:  encompass
 TAGS:    layout allow_dup
 
 {{
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'}
+
+    local floor = '.'
+    local wall = 'x'
+
     local width = 5 - crawl.random2(5)
     local height = 5 - crawl.random2(5)
-
-    local gxm, gym = dgn.max_bounds()
-
-    local wall = dgn.feature_number("rock_wall")
-    local floor = dgn.feature_number("floor")
 
     -- Include a small possibility of adding windows around the cross.
     -- This layout can get used with spotty_level, so don't make this
     -- chance too large as lava/water prevents that from happening.
     local window = crawl.one_chance_in(20)
 
-    if window or crawl.one_chance_in(20) then
+    if window then
         if crawl.coinflip() then
-            wall = dgn.feature_number("lava")
+            wall = 'l'
         else
-            wall = dgn.feature_number("deep_water")
+            wall = 'w'
         end
     end
 
-    -- fill with rock
-    dgn.fill_area(0, 0, gxm-1, gym-1, wall)
+    fill_area{fill=wall}
 
     -- create window
     if window then
-        local clear = dgn.feature_number("clear_rock_wall")
-        dgn.fill_area(10, gym/2 - height - 1, gxm - 10, gym/2 - height - 1, clear)
-        dgn.fill_area(10, gym/2 + height + 1, gxm - 10, gym/2 + height + 1, clear)
-        dgn.fill_area(gxm/2 - width - 1, 10, gxm/2 - width - 1, gym - 10, clear)
-        dgn.fill_area(gxm/2 + width + 1, 10, gxm/2 + width + 1, gym - 10, clear)
+        local clear = 'm'
+        fill_area{x1=10, y1=gym/2-height-1, x2=gxm-10, y2=gym/2-height-1, fill=clear}
+        fill_area{x1=10, y1=gym/2+height+1, x2=gxm-10, y2=gym/2+height+1, fill=clear}
+        fill_area{x1=gxm/2-width-1, y1=10, x2=gxm/2-width-1, y2=gym-10, fill=clear}
+        fill_area{x1=gxm/2+width+1, y1=10, x2=gxm/2+width+1, y2=gym-10, fill=clear}
     end
 
     -- create a cross
-    dgn.fill_area(10, gym/2 - height, gxm - 10, gym/2 + height, floor)
-    dgn.fill_area(gxm/2 - width, 10, gxm/2 + width, gym - 10, floor)
+    fill_area{x1=10, y1=gym/2-height, x2=gxm-10, y2=gym/2+height, fill=floor}
+    fill_area{x1=gxm/2-width, y1=10, x2=gxm/2+width, y2=gym-10, fill=floor}
 
     if not crawl.one_chance_in(4) then
-        dgn.spotty_level(true, 0, crawl.coinflip())
+        spotty_map{boxy = crawl.coinflip()}
     end
 }}
 MAP
@@ -151,58 +157,83 @@ ORIENT:  encompass
 TAGS:    layout allow_dup
 
 {{
+    -- Step 1: Big octagon.
+
     local gxm, gym = dgn.max_bounds()
-    local wall = dgn.feature_number("rock_wall")
-    local floor = dgn.feature_number("floor")
+    extend_map{width = gxm, height = gym, fill = 'x'}
+    fill_area{fill = 'x'}
 
     local oblique = 10 + crawl.random2(20)
+    octa_room{
+        x1 = 10,
+        y1 = 10,
+        x2 = gxm-10,
+        y2 = gym-10,
+        oblique = oblique,
+        replace = 'x',
+        inside = '.'}
 
-    dgn.fill_area(0, 0, gxm - 1, gym - 1, "rock_wall")
-    dgn.octa_room(10, 10, gxm - 10, gym - 10, oblique, "floor")
+    local do_smear = crawl.coinflip()
+    if do_smear then
+        local iterations = 100 + crawl.random2(800)
+        smear_map{iterations = iterations, boxy = false}
 
-    local smear = crawl.coinflip()
-    if smear then
-        local iterations = 100 + crawl.random2(500 - oblique * 12)
-        dgn.smear_feature(iterations, false, wall, 0, 0, gxm - 1, gym - 1)
+        --Fill in disconnected zones now, prior to adding the stairs.
+        --Temporarily set a (passable) unique symbol in the middle of the map,
+        --to guarantee everything is connected to it after smearing.
+        mapgrd[gxm/2][gym/2] = '@'
+        fill_disconnected{wanted = '@'}
+        mapgrd[gxm/2][gym/2] = '.'
     end
 
     -- Step 2: Add pillars
 
     -- pillar types and relative weights
     local pillar_fill = {
-        ["rock_wall"]          = 15,
-        ["green_crystal_wall"] = 5,
-        ["metal_wall"]         = 4,
-        ["clear_rock_wall"]    = 3,
-        ["deep_water"]         = 2,
-        ["lava"]               = 1,
+        ["x"] = 15,
+        ["b"] = 5,
+        ["v"] = 4,
+        ["m"] = 3,
+        ["w"] = 2,
+        ["l"] = 1,
     }
-    local fill = dgn.feature_number(crawl.random_element(pillar_fill))
+    if (you.in_branch("lair")) then
+        pillar_fill["t"] = 15
+    end
 
     -- Potential pillar drawing routines
     local pillar_func = {
-        dgn.make_circle,
-        dgn.make_square,
-        dgn.make_rounded_square
-    }
+        make_circle,
+        make_diamond,
+        make_square,
+        make_rounded_square}
 
     -- Pillar size params
     -- NOTE: Be careful about tweaking the ranges here.  Pillars that are
     -- too large, close, or large in number can entirely surround the center.
-    local type = crawl.random2(#pillar_func) + 1
+
+    local pfunc = pillar_func[crawl.random2(#pillar_func) + 1]
+    pfunc = make_diamond
     local num = 3 + crawl.random2(9)
     local pillar_radius = 1 + crawl.random2(3)
     local circle_radius = 2 + crawl.random2(6) + pillar_radius * 2 + num / 2
-
+    local fill = crawl.random_element(pillar_fill)
 
     -- beautification hack: no "circle" pillars of radius 1
-    if type == 1 and pillar_radius == 1 then
-        fill = dgn.feature_number("stone_arch")
+    if pfunc == make_circle and pillar_radius == 1 then
+        fill = crawl.random_element({"G", "X", "t"})
+        kfeat("X = stone_arch")
     end
 
     -- Finally, make the pillars
-    dgn.make_pillars(gxm/2, gym/2, num, 1, circle_radius, pillar_radius,
-                     pillar_func[type], fill)
+    local make_pillar = function(x, y)
+        return pfunc({
+            x = x,
+            y = y,
+            radius = pillar_radius,
+            fill = fill})
+    end
+    apply_circle(gxm/2, gym/2, num, circle_radius, 1, 1, make_pillar)
 
     -- Step 3: Create stairs
 
@@ -220,43 +251,56 @@ TAGS:    layout allow_dup
         down_loc = crawl.random2(6)
     end
 
-    local up_stairs = {
-        dgn.feature_number("stone_stairs_up_i"),
-        dgn.feature_number("stone_stairs_up_ii"),
-        dgn.feature_number("stone_stairs_up_iii"),
-    }
-    local down_stairs = {
-        dgn.feature_number("stone_stairs_down_i"),
-        dgn.feature_number("stone_stairs_down_ii"),
-        dgn.feature_number("stone_stairs_down_iii"),
-    }
+    local up_stairs = {"{", "(", "["}
+    local down_stairs = {"}", ")", "]"}
     local full_stair_set = {[up_loc] = up_stairs, [down_loc] = down_stairs}
 
     for loc, stair_list in pairs (full_stair_set) do
         for i = 1, #stair_list do
             local st = stair_list[i]
-            local ret = true
 
             if loc == 0 then
-                dgn.replace_random(floor, stair_list[i])
+                replace_random({find = ".", replace = st, required = true})
             elseif loc == 1 then
-                dgn.grid(gxm/2 + i - 2, gym/2 + 1 - math.abs(i - 2), st)
+                mapgrd[gxm/2 + i - 2][gym/2 + 1 - math.abs(i - 2)] = st
             elseif loc == 2 then
-                ret = dgn.replace_first(gxm/2 + i-2, 0, 0, 1, floor, st)
+                replace_first({
+                    required = true,
+                    x = gxm/2 + i - 2,
+                    y = 1,
+                    xdir = 0,
+                    ydir = 1,
+                    find = ".",
+                    replace = st})
             elseif loc == 3 then
-                ret = dgn.replace_first(gxm - 1, gym/2 + i-2, -1, 0, floor, st)
+                replace_first({
+                    required = true,
+                    x = gxm,
+                    y = gym/2 + i - 2,
+                    xdir = -1,
+                    ydir = 0,
+                    find = ".",
+                    replace = st})
             elseif loc == 4 then
-                ret = dgn.replace_first(gxm/2 + i-2, gym - 1, 0, -1, floor, st)
+                replace_first({
+                    required = true,
+                    x = gxm/2 + i - 2,
+                    y = gym,
+                    xdir = 0,
+                    ydir = -1,
+                    find = ".",
+                    replace = st})
             elseif loc == 5 then
-                ret = dgn.replace_first(0, gym/2 + i-2, 1, 0, floor, st)
+                replace_first({
+                    required = true,
+                    x = 1,
+                    y = gym/2 + i - 2,
+                    xdir = 1,
+                    ydir = 0,
+                    find = ".",
+                    replace = st})
             end
-
-            assert(ret)
         end
-    end
-
-    if smear then
-        dgn.fill_disconnected_zones(0, 0, gxm - 1, gym - 1, wall)
     end
 }}
 MAP
@@ -271,8 +315,22 @@ NAME: layout_rooms
 ORIENT: encompass
 TAGS: layout allow_dup
 {{
-    local wall = dgn.feature_number("rock_wall")
-    local floor = dgn.feature_number("floor")
+    function random_room_point(room)
+        return dgn.point(room.x1 + crawl.random2(room.x2 - room.x1),
+                         room.y1 + crawl.random2(room.y2 - room.y1))
+    end
+
+    function join_the_dots_p(start, finish)
+        return join_the_dots({
+            x1 = start.x,
+            y1 = start.y,
+            x2 = finish.x,
+            y2 = finish.y})
+    end
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'}
+    fill_area{fill = 'x'}
 
     local num_rooms = 30 + crawl.random2(90)
     local exclusive = not crawl.one_chance_in(10)
@@ -281,36 +339,46 @@ TAGS: layout allow_dup
     local rooms = {}
 
     for i = 0, num_rooms do
-      local new_room = {
-        x1 = 10 + crawl.random2(50),
-        y1 = 10 + crawl.random2(40)
-      }
-      new_room.x2 = new_room.x1 + 2 + crawl.random2(8)
-      new_room.y2 = new_room.y1 + 2 + crawl.random2(8)
+        local new_room = {
+            x1 = 10 + crawl.random2(50),
+            y1 = 10 + crawl.random2(40)
+        }
+        new_room.x2 = new_room.x1 + 2 + crawl.random2(8)
+        new_room.y2 = new_room.y1 + 2 + crawl.random2(8)
 
-      local not_walls = dgn.count_antifeature_in_box(new_room.x1 - 1,
-                    new_room.y1 - 1, new_room.x2 + 1, new_room.y2 + 1, wall)
-      if (not exclusive or not_walls == 0) then
-        dgn.replace_area(new_room.x1, new_room.y1, new_room.x2,
-                         new_room.y2, wall, floor);
+        local not_walls = count_antifeature_in_box({
+            x1 = new_room.x1,
+            y1 = new_room.y1,
+            x2 = new_room.x2,
+            y2 = new_room.y2,
+            feat = "x"})
 
-        if #rooms > 0 and not exclusive2 then
-          dgn.join_the_dots_p(dgn.random_room_point(new_room),
-                              dgn.random_room_point(rooms[#rooms]))
+        if (not exclusive or not_walls == 0) then
+            replace_area({
+                x1 = new_room.x1,
+                y1 = new_room.y1,
+                x2 = new_room.x2,
+                y2 = new_room.y2,
+                find = "x",
+                replace = "."})
+
+            if #rooms > 0 and not exclusive2 then
+                join_the_dots_p(random_room_point(new_room),
+                                random_room_point(rooms[#rooms]))
+            end
+
+            table.insert(rooms, new_room)
+            if #rooms >= 30 then
+                break
+            end
         end
-
-        table.insert(rooms, new_room)
-        if #rooms >= 30 then
-          break
-        end
-      end
     end
 
     if exclusive2 then
-      for i = 2, #rooms do
-        dgn.join_the_dots_p(dgn.random_room_point(rooms[i]),
-                            dgn.random_room_point(rooms[i - 1]))
-      end
+        for i = 2, #rooms do
+          join_the_dots_p(random_room_point(rooms[i]),
+                          random_room_point(rooms[i - 1]))
+        end
     end
 }}
 MAP

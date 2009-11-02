@@ -412,7 +412,6 @@
 		B0F01D31108DDEBF00A53656 /* dlua.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D20108DDEBF00A53656 /* dlua.cc */; };
 		B0F01D32108DDEBF00A53656 /* l_crawl.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D22108DDEBF00A53656 /* l_crawl.cc */; };
 		B0F01D33108DDEBF00A53656 /* l_debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D23108DDEBF00A53656 /* l_debug.cc */; };
-		B0F01D34108DDEBF00A53656 /* l_dgn_bf.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D24108DDEBF00A53656 /* l_dgn_bf.cc */; };
 		B0F01D35108DDEBF00A53656 /* l_dgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D25108DDEBF00A53656 /* l_dgn.cc */; };
 		B0F01D36108DDEBF00A53656 /* l_dgnbld.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D26108DDEBF00A53656 /* l_dgnbld.cc */; };
 		B0F01D37108DDEBF00A53656 /* l_dgnevt.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D27108DDEBF00A53656 /* l_dgnevt.cc */; };
@@ -427,7 +426,6 @@
 		B0F01D40108DDEBF00A53656 /* dlua.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D20108DDEBF00A53656 /* dlua.cc */; };
 		B0F01D41108DDEBF00A53656 /* l_crawl.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D22108DDEBF00A53656 /* l_crawl.cc */; };
 		B0F01D42108DDEBF00A53656 /* l_debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D23108DDEBF00A53656 /* l_debug.cc */; };
-		B0F01D43108DDEBF00A53656 /* l_dgn_bf.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D24108DDEBF00A53656 /* l_dgn_bf.cc */; };
 		B0F01D44108DDEBF00A53656 /* l_dgn.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D25108DDEBF00A53656 /* l_dgn.cc */; };
 		B0F01D45108DDEBF00A53656 /* l_dgnbld.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D26108DDEBF00A53656 /* l_dgnbld.cc */; };
 		B0F01D46108DDEBF00A53656 /* l_dgnevt.cc in Sources */ = {isa = PBXBuildFile; fileRef = B0F01D27108DDEBF00A53656 /* l_dgnevt.cc */; };
@@ -1137,7 +1135,6 @@
 		B0F01D21108DDEBF00A53656 /* dlua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dlua.h; sourceTree = "<group>"; };
 		B0F01D22108DDEBF00A53656 /* l_crawl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_crawl.cc; sourceTree = "<group>"; };
 		B0F01D23108DDEBF00A53656 /* l_debug.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_debug.cc; sourceTree = "<group>"; };
-		B0F01D24108DDEBF00A53656 /* l_dgn_bf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgn_bf.cc; sourceTree = "<group>"; };
 		B0F01D25108DDEBF00A53656 /* l_dgn.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgn.cc; sourceTree = "<group>"; };
 		B0F01D26108DDEBF00A53656 /* l_dgnbld.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgnbld.cc; sourceTree = "<group>"; };
 		B0F01D27108DDEBF00A53656 /* l_dgnevt.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_dgnevt.cc; sourceTree = "<group>"; };
@@ -1488,7 +1485,6 @@
 				B0F01D22108DDEBF00A53656 /* l_crawl.cc */,
 				B0F01D23108DDEBF00A53656 /* l_debug.cc */,
 				B0F01D25108DDEBF00A53656 /* l_dgn.cc */,
-				B0F01D24108DDEBF00A53656 /* l_dgn_bf.cc */,
 				B0F01D26108DDEBF00A53656 /* l_dgnbld.cc */,
 				B0F01D27108DDEBF00A53656 /* l_dgnevt.cc */,
 				B0F01D28108DDEBF00A53656 /* l_dgngrd.cc */,
@@ -2251,7 +2247,6 @@
 				B0F01D41108DDEBF00A53656 /* l_crawl.cc in Sources */,
 				B0F01D42108DDEBF00A53656 /* l_debug.cc in Sources */,
 				B0F01D44108DDEBF00A53656 /* l_dgn.cc in Sources */,
-				B0F01D43108DDEBF00A53656 /* l_dgn_bf.cc in Sources */,
 				B0F01D45108DDEBF00A53656 /* l_dgnbld.cc in Sources */,
 				B0F01D46108DDEBF00A53656 /* l_dgnevt.cc in Sources */,
 				B0F01D47108DDEBF00A53656 /* l_dgngrd.cc in Sources */,
@@ -2389,7 +2384,6 @@
 				B0F01D32108DDEBF00A53656 /* l_crawl.cc in Sources */,
 				B0F01D33108DDEBF00A53656 /* l_debug.cc in Sources */,
 				B0F01D35108DDEBF00A53656 /* l_dgn.cc in Sources */,
-				B0F01D34108DDEBF00A53656 /* l_dgn_bf.cc in Sources */,
 				B0F01D36108DDEBF00A53656 /* l_dgnbld.cc in Sources */,
 				B0F01D37108DDEBF00A53656 /* l_dgnevt.cc in Sources */,
 				B0F01D38108DDEBF00A53656 /* l_dgngrd.cc in Sources */,

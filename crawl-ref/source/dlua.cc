@@ -296,8 +296,6 @@ void init_dungeon_lua()
     luaopen_mapmarker(dlua);
     luaopen_ray(dlua);
 
-    register_builder_funcs(dlua);
-
     register_itemlist(dlua);
     register_monslist(dlua);
 }

@@ -1245,10 +1245,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\l_dgn_bf.cc"
-			>
-		</File>
-		<File
 			RelativePath="..\l_dgnbld.cc"
 			>
 		</File>

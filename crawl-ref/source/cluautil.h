@@ -168,8 +168,10 @@ branch_type br = str_to_branch(branch_name);                        \
 if (lev == LEVEL_DUNGEON && br == NUM_BRANCHES)                     \
 luaL_error(ls, "Expected branch name");
 
-#define MAP(ls, n, var)                             \
+#define MAP(ls, n, var) \
 map_def *var = *(map_def **) luaL_checkudata(ls, n, MAP_METATABLE)
+#define LINES(ls, n, var) \
+map_lines &var = (*(map_def **) luaL_checkudata(ls, n, MAP_METATABLE))->map
 #define DEVENT(ls, n, var) \
 dgn_event *var = *(dgn_event **) luaL_checkudata(ls, n, DEVENT_METATABLE)
 #define MAPMARKER(ls, n, var) \

@@ -4934,14 +4934,14 @@ TAGS:   entry no_monster_gen
 FTILE:  '[({ = floor_sand_stone
 SUBST:  ' = .
 {{
-    map_octa_room({
+    octa_room({
         oblique = crawl.random_range(3,7),
         replace = '.',
         outside = 'W',
         inside  = '.'
     })
     if crawl.coinflip() then
-        map_smear({iterations=20, smear='x', onto='.W', boxy=true})
+        smear_map({iterations=20, smear='x', onto='.W', boxy=true})
     end
 }}
 SUBST: W:xw

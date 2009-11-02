@@ -8,14 +8,414 @@
 #include <cmath>
 
 #include "cluautil.h"
-#include "l_libs.h"
-
 #include "coord.h"
 #include "dungeon.h"
+#include "l_libs.h"
+#include "mapdef.h"
 #include "random.h"
 
+static const char *traversable_glyphs =
+    ".+=w@{}()[]<>BC^~TUVY$%*|Odefghijk0123456789";
+
+static const char *exit_glyphs = "{}()[]<>@";
+
+// Return the integer stored in the table (on the stack) with the key name.
+// If the key doesn't exist or the value is the wrong type, return defval.
+static int _table_int(lua_State *ls, int idx, const char *name, int defval)
+{
+    if (!lua_istable(ls, idx))
+        return defval;
+    lua_pushstring(ls, name);
+    lua_gettable(ls, idx < 0 ? idx - 1 : idx);
+    bool nil = lua_isnil(ls, idx);
+    bool valid = lua_isnumber(ls, idx);
+    if (!nil && !valid)
+        luaL_error(ls, "'%s' in table, but not an int.", name);
+    int ret = (!nil && valid ? luaL_checkint(ls, idx) : defval);
+    lua_pop(ls, 1);
+    return (ret);
+}
+
+// Return the character stored in the table (on the stack) with the key name.
+// If the key doesn't exist or the value is the wrong type, return defval.
+static char _table_char(lua_State *ls, int idx, const char *name, char defval)
+{
+    if (!lua_istable(ls, idx))
+        return defval;
+    lua_pushstring(ls, name);
+    lua_gettable(ls, idx < 0 ? idx - 1 : idx);
+    bool nil = lua_isnil(ls, idx);
+    bool valid = lua_isstring(ls, idx);
+    if (!nil && !valid)
+        luaL_error(ls, "'%s' in table, but not a string.", name);
+
+    char ret = defval;
+    if (!nil && valid)
+    {
+        const char *str = lua_tostring(ls, idx);
+        if (str[0] && !str[1])
+            ret = str[0];
+        else
+            luaL_error(ls, "'%s' has more than one character.", name);
+    }
+    lua_pop(ls, 1);
+    return (ret);
+}
+
+// Return the string stored in the table (on the stack) with the key name.
+// If the key doesn't exist or the value is the wrong type, return defval.
+static const char* _table_str(lua_State *ls, int idx, const char *name, const char *defval)
+{
+    if (!lua_istable(ls, idx))
+        return defval;
+    lua_pushstring(ls, name);
+    lua_gettable(ls, idx < 0 ? idx - 1 : idx);
+    bool nil = lua_isnil(ls, idx);
+    bool valid = lua_isstring(ls, idx);
+    if (!nil && !valid)
+        luaL_error(ls, "'%s' in table, but not a string.", name);
+    const char *ret = (!nil && valid ? lua_tostring(ls, idx) : defval);
+    lua_pop(ls, 1);
+    return (ret);
+}
+
+// Return the boolean stored in the table (on the stack) with the key name.
+// If the key doesn't exist or the value is the wrong type, return defval.
+static bool _table_bool(lua_State *ls, int idx, const char *name, bool defval)
+{
+    if (!lua_istable(ls, idx))
+        return defval;
+    lua_pushstring(ls, name);
+    lua_gettable(ls, idx < 0 ? idx - 1 : idx);
+    bool nil = lua_isnil(ls, idx);
+    bool valid = lua_isboolean(ls, idx);
+    if (!nil && !valid)
+        luaL_error(ls, "'%s' in table, but not a bool.", name);
+    bool ret = (!nil && valid ? lua_toboolean(ls, idx) : defval);
+    lua_pop(ls, 1);
+    return (ret);
+}
+
+// These macros all assume the table is on the top of the lua stack.
+#define TABLE_INT(ls, val, def) int val = _table_int(ls, -1, #val, def);
+#define TABLE_CHAR(ls, val, def) char val = _table_char(ls, -1, #val, def);
+#define TABLE_STR(ls, val, def) const char *val = _table_str(ls, -1, #val, def);
+#define TABLE_BOOL(ls, val, def) bool val = _table_bool(ls, -1, #val, def);
+
+// Read a set of box coords (x1, y1, x2, y2) from the table.
+// Return true if coords are valid.
+static bool _coords(lua_State *ls, map_lines &lines,
+                    int &x1, int &y1, int &x2, int &y2, int border = 0)
+{
+    const int idx = -1;
+    x1 = _table_int(ls, idx, "x1", 1);
+    y1 = _table_int(ls, idx, "y1", 1);
+    x2 = _table_int(ls, idx, "x2", lines.width());
+    y2 = _table_int(ls, idx, "y2", lines.height());
+
+    if (x2 < x1)
+        std::swap(x1, x2); 
+    if (y2 < y1)
+        std::swap(y1, y2);
+
+    x1--;
+    y1--;
+    x2--;
+    y2--;
+
+    return (x1 + border <= x2 - border && y1 + border <= y2 - border);
+}
+
+// Check if a given coordiante is valid for lines.
+static bool _valid_coord(lua_State *ls, map_lines &lines, int x, int y)
+{
+    if (x < 0 || x >= lines.width())
+    {
+        luaL_error(ls, "Invalid x coordinate: %d", x);
+        return false;
+    }
+
+    if (y < 0 || y >= lines.height())
+    {
+        luaL_error(ls, "Invalid y coordinate: %d", y);
+        return false;
+    }
+
+    return true;
+}
+
+LUAFN(dgn_count_feature_in_box)
+{
+    LINES(ls, 1, lines);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
+
+    TABLE_STR(ls, feat, "");
+
+    coord_def tl(x1, y1);
+    coord_def br(x2, y2);
+
+    PLUARET(number, lines.count_feature_in_box(tl, br, feat));
+}
+
+LUAFN(dgn_count_antifeature_in_box)
+{
+    LINES(ls, 1, lines);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
+
+    TABLE_STR(ls, feat, "");
+
+    coord_def tl(x1, y1);
+    coord_def br(x2, y2);
+
+    int sum = (br.x - tl.x + 1) * (br.y - tl.y + 1);
+    PLUARET(number, sum - lines.count_feature_in_box(tl, br, feat));
+}
+
+LUAFN(dgn_count_neighbors)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_STR(ls, feat, "");
+    TABLE_INT(ls, x, -1);
+    TABLE_INT(ls, y, -1);
+
+    if (!_valid_coord(ls, lines, --x, --y))
+        return (0);
+
+    coord_def tl(x-1, y-1);
+    coord_def br(x+1, y+1);
+
+    PLUARET(number, lines.count_feature_in_box(tl, br, feat));
+}
+
+LUAFN(dgn_extend_map)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, height, 1);
+    TABLE_INT(ls, width, 1);
+    TABLE_CHAR(ls, fill, 'x');
+
+    lines.extend(width, height, fill);
+
+    return (0);
+}
+
+LUAFN(dgn_fill_area)
+{
+    LINES(ls, 1, lines);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
+
+    TABLE_CHAR(ls, fill, 'x');
+
+    for (int y = y1; y <= y2; ++y)
+        for (int x = x1; x <= x2; ++x)
+        {
+            lines(x, y) = fill;
+        }
+
+    return (0);
+}
+
+LUAFN(dgn_fill_disconnected)
+{
+    LINES(ls, 1, lines);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
+
+    TABLE_CHAR(ls, fill, 'x');
+    TABLE_STR(ls, passable, traversable_glyphs);
+    TABLE_STR(ls, wanted, exit_glyphs);
+
+    coord_def tl(x1, y1);
+    coord_def br(x2, y2);
+
+    travel_distance_grid_t tpd;
+    memset(tpd, 0, sizeof(tpd));
+
+    int nzones = 0;
+    for (rectangle_iterator ri(tl, br); ri; ++ri)
+    {
+        const coord_def c = *ri;
+        if (tpd[c.x][c.y] || passable && !strchr(passable, lines(c)))
+            continue;
+
+        if (lines.fill_zone(tpd, c, tl, br, ++nzones, wanted, passable))
+            continue;
+
+        // If wanted wasn't found, fill every passable square that
+        // we just found with the 'fill' glyph.
+        for (rectangle_iterator f(tl, br); f; ++f)
+        {
+            const coord_def fc = *f;
+            if (tpd[fc.x][fc.y] == nzones)
+                lines(fc) = fill;
+        }
+    }
+
+    return (0);
+}
+
+LUAFN(dgn_height)
+{
+    LINES(ls, 1, lines);
+    PLUARET(number, lines.height());
+}
+
+LUAFN(dgn_join_the_dots)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x1, -1);
+    TABLE_INT(ls, y1, -1);
+    TABLE_INT(ls, x2, -1);
+    TABLE_INT(ls, y2, -1);
+    TABLE_STR(ls, passable, traversable_glyphs);
+    TABLE_CHAR(ls, fill, '.');
+
+    if (!_valid_coord(ls, lines, --x1, --y1))
+        return (0);
+    if (!_valid_coord(ls, lines, --x2, --y2))
+        return (0);
+
+    coord_def from(x1, y1);
+    coord_def to(x2, y2);
+
+    if (from == to)
+        return (0);
+
+    coord_def at = from;
+    do
+    {
+        char glyph = lines(at);
+
+        if (!strchr(passable, glyph))
+            lines(at) = fill;
+
+        if (at == to)
+            break;
+
+        if (at.x < to.x)
+        {
+            at.x++;
+            continue;
+        }
+
+        if (at.x > to.x)
+        {
+            at.x--;
+            continue;
+        }
+
+        if (at.y > to.y)
+        {
+            at.y--;
+            continue;
+        }
+
+        if (at.y < to.y)
+        {
+            at.y++;
+            continue;
+        }
+    }
+    while (true);
+
+    return (0);
+}
+
+LUAFN(dgn_make_circle)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x, -1);
+    TABLE_INT(ls, y, -1);
+    TABLE_INT(ls, radius, 1);
+    TABLE_CHAR(ls, fill, 'x');
+
+    if (!_valid_coord(ls, lines, --x, --y))
+        return (0);
+
+    for (int ry = -radius; ry <= radius; ++ry) 
+        for (int rx = -radius; rx <= radius; ++rx)
+            if (rx * rx + ry * ry < radius * radius)
+                lines(x + rx, y + ry) = fill;
+
+    return (0);
+}
+
+LUAFN(dgn_make_diamond)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x, -1);
+    TABLE_INT(ls, y, -1);
+    TABLE_INT(ls, radius, 1);
+    TABLE_CHAR(ls, fill, 'x');
+
+    if (!_valid_coord(ls, lines, --x, --y))
+        return (0);
+
+    for (int ry = -radius; ry <= radius; ++ry) 
+        for (int rx = -radius; rx <= radius; ++rx)
+            if (std::abs(rx) + std::abs(ry) <= radius)
+                lines(x + rx, y + ry) = fill;
+
+    return (0);
+}
+
+LUAFN(dgn_make_rounded_square)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x, -1);
+    TABLE_INT(ls, y, -1);
+    TABLE_INT(ls, radius, 1);
+    TABLE_CHAR(ls, fill, 'x');
+
+    if (!_valid_coord(ls, lines, --x, --y))
+        return (0);
+
+    for (int ry = -radius; ry <= radius; ++ry) 
+        for (int rx = -radius; rx <= radius; ++rx)
+            if (std::abs(rx) != radius || std::abs(ry) != radius)
+                lines(x + rx, y + ry) = fill;
+
+    return (0);
+}
+
+LUAFN(dgn_make_square)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x, -1);
+    TABLE_INT(ls, y, -1);
+    TABLE_INT(ls, radius, 1);
+    TABLE_CHAR(ls, fill, 'x');
+
+    if (!_valid_coord(ls, lines, --x, --y))
+        return (0);
+
+    for (int ry = -radius; ry <= radius; ++ry) 
+        for (int rx = -radius; rx <= radius; ++rx)
+            lines(x + rx, y + ry) = fill;
+
+    return (0);
+}
+
 // Return a metatable for a point on the map_lines grid.
-static int dgn_mapgrd_table(lua_State *ls)
+LUAFN(dgn_mapgrd_table)
 {
     MAP(ls, 1, map);
 
@@ -25,343 +425,292 @@ static int dgn_mapgrd_table(lua_State *ls)
     return (1);
 }
 
-static int dgn_width(lua_State *ls)
+LUAFN(dgn_octa_room)
 {
-    MAP(ls, 1, map);
+    LINES(ls, 1, lines);
 
-    lua_pushnumber(ls, map->map.width());
-    return (1);
-}
+    int default_oblique = std::min(lines.width(), lines.height()) / 2 - 1;
+    TABLE_INT(ls, oblique, default_oblique);
+    TABLE_CHAR(ls, outside, 'x');
+    TABLE_CHAR(ls, inside, '.');
+    TABLE_STR(ls, replace, "");
 
-static int dgn_height(lua_State *ls)
-{
-    MAP(ls, 1, map);
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
 
-    lua_pushnumber(ls, map->map.height());
-    return (1);
-}
+    coord_def tl(x1, y1);
+    coord_def br(x2, y2);
 
-static void _clamp_to_bounds(int &x, int &y, bool edge_ok = false)
-{
-    const int edge_offset = edge_ok ? 0 : 1;
-    x = std::min(std::max(x, X_BOUND_1 + edge_offset), X_BOUND_2 - edge_offset);
-    y = std::min(std::max(y, Y_BOUND_1 + edge_offset), Y_BOUND_2 - edge_offset);
-}
-
-static int dgn_fill_area(lua_State *ls)
-{
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type feat = check_lua_feature(ls, 5);
-
-    _clamp_to_bounds(x1, y1);
-    _clamp_to_bounds(x2, y2);
-    if (x2 < x1)
-        std::swap(x1, x2);
-    if (y2 < y1)
-        std::swap(y1, y2);
-
-    for (int y = y1; y <= y2; y++)
-        for (int x = x1; x <= x2; x++)
-            grd[x][y] = feat;
-
-    return 0;
-}
-
-static int dgn_replace_area(lua_State *ls)
-{
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type search = check_lua_feature(ls, 5);
-    dungeon_feature_type replace = check_lua_feature(ls, 6);
-
-    // gracefully handle out of bound areas by truncating them.
-    _clamp_to_bounds(x1, y1);
-    _clamp_to_bounds(x2, y2);
-    if (x2 < x1)
-        std::swap(x1, x2);
-    if (y2 < y1)
-        std::swap(y1, y2);
-
-    for (int y = y1; y <= y2; y++)
-        for (int x = x1; x <= x2; x++)
-            if (grd[x][y] == search)
-                grd[x][y] = replace;
-
-    return 0;
-}
-
-static int dgn_octa_room(lua_State *ls)
-{
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
-    int oblique = luaL_checkint(ls, 5);
-    dungeon_feature_type fill = check_lua_feature(ls, 6);
-
-    spec_room sr;
-    sr.tl.x = x1;
-    sr.br.x = x2;
-    sr.tl.y = y1;
-    sr.br.y = y2;
-
-    octa_room(sr, oblique, fill);
-
-    return 0;
-}
-
-static int dgn_make_pillars(lua_State *ls)
-{
-    int center_x = luaL_checkint(ls, 1);
-    int center_y = luaL_checkint(ls, 2);
-    int num = luaL_checkint(ls, 3);
-    int scale_x = luaL_checkint(ls, 4);
-    int big_radius = luaL_checkint(ls, 5);
-    int pillar_radius = luaL_checkint(ls, 6);
-    dungeon_feature_type fill = check_lua_feature(ls, 8);
-
-    // [enne] The underscore is for DJGPP's brain damage.
-    const float _PI = 3.14159265f;
-    for (int n = 0; n < num; n++)
+    for (rectangle_iterator ri(tl, br); ri; ++ri)
     {
-        float angle = n * 2 * _PI / (float)num;
-        int x = (int)std::floor(std::cos(angle) * big_radius * scale_x + 0.5f);
-        int y = (int)std::floor(std::sin(angle) * big_radius + 0.5f);
+        const coord_def mc = *ri;
+        char glyph = lines(mc);
+        if (replace[0] && !strchr(replace, glyph))
+            continue;
 
-        lua_pushvalue(ls, 7);
-        lua_pushnumber(ls, center_x + x);
-        lua_pushnumber(ls, center_y + y);
-        lua_pushnumber(ls, pillar_radius);
-        lua_pushnumber(ls, fill);
+        int ob = 0;
+        ob += std::max(oblique + tl.x - mc.x, 0);
+        ob += std::max(oblique + mc.x - br.x, 0);
 
-        lua_call(ls, 4, 0);
+        bool is_inside = (mc.y >= tl.y + ob && mc.y <= br.y - ob);
+        lines(mc) = is_inside ? inside : outside;
     }
 
-    return 0;
+    return (0);
 }
 
-static int dgn_make_square(lua_State *ls)
+LUAFN(dgn_replace_area)
 {
-    int center_x = luaL_checkint(ls, 1);
-    int center_y = luaL_checkint(ls, 2);
-    int radius = std::abs(luaL_checkint(ls, 3));
-    dungeon_feature_type fill = check_lua_feature(ls, 4);
+    LINES(ls, 1, lines);
 
-    for (int x = -radius; x <= radius; x++)
-        for (int y = -radius; y <= radius; y++)
-            grd[center_x + x][center_y + y] = fill;
+    TABLE_STR(ls, find, '\0');
+    TABLE_CHAR(ls, replace, '\0');
 
-    return 0;
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
+
+    for (int y = y1; y <= y2; ++y)
+        for (int x = x1; x <= x2; ++x)
+            if (strchr(find, lines(x, y)))
+                lines(x, y) = replace;
+
+    return (0);
 }
 
-static int dgn_make_rounded_square(lua_State *ls)
+LUAFN(dgn_replace_first)
 {
-    int center_x = luaL_checkint(ls, 1);
-    int center_y = luaL_checkint(ls, 2);
-    int radius = std::abs(luaL_checkint(ls, 3));
-    dungeon_feature_type fill = check_lua_feature(ls, 4);
+    LINES(ls, 1, lines);
 
-    for (int x = -radius; x <= radius; x++)
-        for (int y = -radius; y <= radius; y++)
-            if (std::abs(x) != radius || std::abs(y) != radius)
-                grd[center_x + x][center_y + y] = fill;
+    TABLE_INT(ls, x, 0);
+    TABLE_INT(ls, y, 0);
+    TABLE_INT(ls, xdir, 2);
+    TABLE_INT(ls, ydir, 2);
+    TABLE_CHAR(ls, find, '\0');
+    TABLE_CHAR(ls, replace, '\0');
+    TABLE_BOOL(ls, required, false);
 
-    return 0;
-}
+    if (!_valid_coord(ls, lines, --x, --y))
+        return (0);
 
-static int dgn_make_circle(lua_State *ls)
-{
-    int center_x = luaL_checkint(ls, 1);
-    int center_y = luaL_checkint(ls, 2);
-    int radius = std::abs(luaL_checkint(ls, 3));
-    dungeon_feature_type fill = check_lua_feature(ls, 4);
-
-    for (int x = -radius; x <= radius; x++)
-        for (int y = -radius; y <= radius; y++)
-            if (x * x + y * y < radius * radius)
-                grd[center_x + x][center_y + y] = fill;
-
-    return 0;
-}
-
-static int dgn_in_bounds(lua_State *ls)
-{
-    int x = luaL_checkint(ls, 1);
-    int y = luaL_checkint(ls, 2);
-
-    lua_pushboolean(ls, in_bounds(x, y));
-    return 1;
-}
-
-static int dgn_replace_first(lua_State *ls)
-{
-    int x = luaL_checkint(ls, 1);
-    int y = luaL_checkint(ls, 2);
-    int dx = luaL_checkint(ls, 3);
-    int dy = luaL_checkint(ls, 4);
-    dungeon_feature_type search = check_lua_feature(ls, 5);
-    dungeon_feature_type replace = check_lua_feature(ls, 6);
-
-    _clamp_to_bounds(x, y);
-    bool found = false;
-    while (in_bounds(x, y))
+    if (xdir < -1 || xdir > 1)
     {
-        if (grd[x][y] == search)
+        return (luaL_error(ls, "Invalid xdir: %d", xdir));
+    }
+
+    if (ydir < -1 || ydir > 1)
+    {
+        return (luaL_error(ls, "Invalid ydir: %d", ydir));
+    }
+
+    while (lines.in_bounds(coord_def(x, y)))
+    {
+        if (lines(x, y) == find)
         {
-            grd[x][y] = replace;
-            found = true;
-            break;
+            lines(x, y) = replace;
+            return (0);
         }
 
-        x += dx;
-        y += dy;
+        x += xdir;
+        y += ydir;
     }
 
-    lua_pushboolean(ls, found);
-    return 1;
+    if (required)
+        return (luaL_error(ls, "Could not find feature '%c' to replace", find));
+
+    return (0);
 }
 
-static int dgn_replace_random(lua_State *ls)
+LUAFN(dgn_replace_random)
 {
-    dungeon_feature_type search = check_lua_feature(ls, 1);
-    dungeon_feature_type replace = check_lua_feature(ls, 2);
+    LINES(ls, 1, lines);
 
-    int x, y;
-    do
+    TABLE_CHAR(ls, find, '\0');
+    TABLE_CHAR(ls, replace, '\0');
+    TABLE_BOOL(ls, required, false);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
+
+    int count = (x2 - x1) * (y2 - y1);
+    if (!count)
     {
-        x = random2(GXM);
-        y = random2(GYM);
+        if (required)
+            luaL_error(ls, "%s", "No elements to replace");
+        return (0);
     }
-    while (grd[x][y] != search);
 
-    grd[x][y] = replace;
+    std::vector<coord_def> loc;
+    loc.reserve(count);
 
-    return 0;
+    for (int y = y1; y <= y2; ++y)
+        for (int x = x1; x <= x2; ++x)
+            if (lines(x, y) == find)
+                loc.push_back(coord_def(x, y));
+
+    if (!loc.size())
+    {
+        if (required)
+            return (luaL_error(ls, "Could not find '%c'", find));
+    }
+
+    int idx = random2(loc.size());
+    lines(loc[idx]) = replace;
+
+    return (0);
 }
 
-static int dgn_spotty_level(lua_State *ls)
+LUAFN(dgn_smear_map)
 {
-    bool seeded = lua_toboolean(ls, 1);
-    int iterations = luaL_checkint(ls, 2);
-    bool boxy = lua_toboolean(ls, 3);
+    LINES(ls, 1, lines);
 
-    spotty_level(seeded, iterations, boxy);
-    return 0;
+    TABLE_INT(ls, iterations, 1);
+    TABLE_CHAR(ls, smear, 'x');
+    TABLE_STR(ls, onto, ".");
+    TABLE_BOOL(ls, boxy, false);
+
+    const int border = 1;
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2, border))
+        return (0);
+
+    const int max_test_per_iteration = 10;
+    int sanity = 0;
+    int max_sanity = iterations * max_test_per_iteration;
+
+    for (int i = 0; i < iterations; i++)
+    {
+        bool diagonals, straights;
+        coord_def mc;
+
+        do
+        {
+            do
+            {
+                if (sanity++ > max_sanity)
+                    return (0);
+
+                mc.x = random_range(x1+border, y2-border);
+                mc.y = random_range(y1+border, y2-border);
+            }
+            while (onto[0] && !strchr(onto, lines(mc)));
+  
+            // Is there a "smear" feature along the diagonal from mc?    
+            diagonals = lines(mc.x+1, mc.y+1) == smear ||
+                        lines(mc.x-1, mc.y+1) == smear ||
+                        lines(mc.x-1, mc.y-1) == smear ||
+                        lines(mc.x+1, mc.y-1) == smear;
+
+            // Is there a "smear" feature up, down, left, or right from mc?
+            straights = lines(mc.x+1, mc.y) == smear ||
+                        lines(mc.x-1, mc.y) == smear ||
+                        lines(mc.x, mc.y+1) == smear ||
+                        lines(mc.x, mc.y-1) == smear;
+        }
+        while (!straights && (boxy || !diagonals));
+     
+        lines(mc) = smear; 
+    }
+
+    return (0);
 }
 
-static int dgn_smear_feature(lua_State *ls)
+LUAFN(dgn_spotty_map)
 {
-    int iterations = luaL_checkint(ls, 1);
-    bool boxy = lua_toboolean(ls, 2);
-    dungeon_feature_type feat = check_lua_feature(ls, 3);
+    LINES(ls, 1, lines);
 
-    int x1 = luaL_checkint(ls, 4);
-    int y1 = luaL_checkint(ls, 5);
-    int x2 = luaL_checkint(ls, 6);
-    int y2 = luaL_checkint(ls, 7);
+    TABLE_STR(ls, replace, "x");
+    TABLE_CHAR(ls, fill, '.');
+    TABLE_BOOL(ls, boxy, true);
+    TABLE_INT(ls, iterations, random2(boxy ? 750 : 1500));
 
-    _clamp_to_bounds(x1, y1, true);
-    _clamp_to_bounds(x2, y2, true);
+    const int border = 4;
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2, border))
+        return (0);
+    
+    const int max_test_per_iteration = 10;
+    int sanity = 0;
+    int max_sanity = iterations * max_test_per_iteration;
 
-    smear_feature(iterations, boxy, feat, x1, y1, x2, y2);
+    for (int i = 0; i < iterations; i++)
+    {
+        int x, y;
+        do
+        {
+            if (sanity++ > max_sanity)
+                return (0);
 
-    return 0;
+            x = random_range(x1 + border, x2 - border);
+            y = random_range(y1 + border, y2 - border);
+        } 
+        while (strchr(replace, lines(x, y))
+               && strchr(replace, lines(x-1, y))
+               && strchr(replace, lines(x+1, y))
+               && strchr(replace, lines(x, y-1))
+               && strchr(replace, lines(x, y+1))
+               && strchr(replace, lines(x-2, y))
+               && strchr(replace, lines(x+2, y))
+               && strchr(replace, lines(x, y-2))
+               && strchr(replace, lines(x, y+2)));
+
+        if (strchr(replace, lines(x, y)))
+            lines(x, y) = fill;
+        if (strchr(replace, lines(x, y-1)))
+            lines(x, y-1) = fill;
+        if (strchr(replace, lines(x, y+1)))
+            lines(x, y+1) = fill;
+        if (strchr(replace, lines(x-1, y)))
+            lines(x-1, y) = fill;
+        if (strchr(replace, lines(x+1, y)))
+            lines(x+1, y) = fill;
+
+        if (boxy)
+        {
+            if (strchr(replace, lines(x-1, y-1)))
+                lines(x-1, y-1) = fill;
+            if (strchr(replace, lines(x+1, y+1)))
+                lines(x+1, y+1) = fill;
+            if (strchr(replace, lines(x-1, y+1)))
+                lines(x-1, y+1) = fill;
+            if (strchr(replace, lines(x+1, y-1)))
+                lines(x+1, y-1) = fill;
+        }
+    }
+
+    return (0);
 }
 
-static int dgn_count_feature_in_box(lua_State *ls)
+static int dgn_width(lua_State *ls)
 {
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type feat = check_lua_feature(ls, 5);
-
-    lua_pushnumber(ls, count_feature_in_box(x1, y1, x2, y2, feat));
-    return 1;
-}
-
-static int dgn_count_antifeature_in_box(lua_State *ls)
-{
-    int x1 = luaL_checkint(ls, 1);
-    int y1 = luaL_checkint(ls, 2);
-    int x2 = luaL_checkint(ls, 3);
-    int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type feat = check_lua_feature(ls, 5);
-
-    lua_pushnumber(ls, count_antifeature_in_box(x1, y1, x2, y2, feat));
-    return 1;
-}
-
-static int dgn_count_neighbours(lua_State *ls)
-{
-    int x = luaL_checkint(ls, 1);
-    int y = luaL_checkint(ls, 2);
-    dungeon_feature_type feat = check_lua_feature(ls, 3);
-
-    lua_pushnumber(ls, count_neighbours(x, y, feat));
-    return 1;
-}
-
-static int dgn_join_the_dots(lua_State *ls)
-{
-    int from_x = luaL_checkint(ls, 1);
-    int from_y = luaL_checkint(ls, 2);
-    int to_x = luaL_checkint(ls, 3);
-    int to_y = luaL_checkint(ls, 4);
-    // TODO enne - push map masks to lua?
-    unsigned map_mask = MMT_VAULT;
-    bool early_exit = lua_toboolean(ls, 5);
-
-    coord_def from(from_x, from_y);
-    coord_def to(to_x, to_y);
-
-    bool ret = join_the_dots(from, to, map_mask, early_exit);
-    lua_pushboolean(ls, ret);
-
-    return 1;
-}
-
-static int dgn_fill_disconnected_zones(lua_State *ls)
-{
-    int from_x = luaL_checkint(ls, 1);
-    int from_y = luaL_checkint(ls, 2);
-    int to_x = luaL_checkint(ls, 3);
-    int to_y = luaL_checkint(ls, 4);
-
-    dungeon_feature_type feat = check_lua_feature(ls, 5);
-
-    process_disconnected_zones(from_x, from_y, to_x, to_y, true, feat);
-
-    return 0;
+    LINES(ls, 1, lines);
+    PLUARET(number, lines.width());
 }
 
 const struct luaL_reg dgn_build_dlib[] =
 {
-{ "mapgrd_table", dgn_mapgrd_table },
-{ "width", dgn_width },
-{ "height", dgn_height },
-{ "fill_area", dgn_fill_area },
-{ "replace_area", dgn_replace_area },
-{ "octa_room", dgn_octa_room },
-{ "make_pillars", dgn_make_pillars },
-{ "make_square", dgn_make_square },
-{ "make_rounded_square", dgn_make_rounded_square },
-{ "make_circle", dgn_make_circle },
-{ "in_bounds", dgn_in_bounds },
-{ "replace_first", dgn_replace_first },
-{ "replace_random", dgn_replace_random },
-{ "spotty_level", dgn_spotty_level },
-{ "smear_feature", dgn_smear_feature },
-{ "count_feature_in_box", dgn_count_feature_in_box },
-{ "count_antifeature_in_box", dgn_count_antifeature_in_box },
-{ "count_neighbours", dgn_count_neighbours },
-{ "join_the_dots", dgn_join_the_dots },
-{ "fill_disconnected_zones", dgn_fill_disconnected_zones },
+    { "count_feature_in_box", &dgn_count_feature_in_box },
+    { "count_antifeature_in_box", &dgn_count_antifeature_in_box },
+    { "count_neighbors", &dgn_count_neighbors },
+    { "extend_map", &dgn_extend_map },
+    { "fill_area", &dgn_fill_area },
+    { "fill_disconnected", &dgn_fill_disconnected },
+    { "height", dgn_height },
+    { "join_the_dots", &dgn_join_the_dots },
+    { "make_circle", &dgn_make_circle },
+    { "make_diamond", &dgn_make_diamond },
+    { "make_rounded_square", &dgn_make_rounded_square },
+    { "make_square", &dgn_make_square },
+    { "mapgrd_table", dgn_mapgrd_table },
+    { "octa_room", &dgn_octa_room },
+    { "replace_area", &dgn_replace_area },
+    { "replace_first", &dgn_replace_first },
+    { "replace_random", &dgn_replace_random },
+    { "smear_map", &dgn_smear_map },
+    { "spotty_map", &dgn_spotty_map },
+    { "width", dgn_width },
 
-{ NULL, NULL }
+    { NULL, NULL }
 };

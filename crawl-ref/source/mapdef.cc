@@ -365,13 +365,29 @@ rectangle_iterator map_lines::get_iter() const
 
 char map_lines::operator () (const coord_def &c) const
 {
-    return lines[c.y][c.x];
+    return (lines[c.y][c.x]);
 }
 
 char& map_lines::operator () (const coord_def &c)
 {
-    return lines[c.y][c.x];
+    return (lines[c.y][c.x]);
 }
+
+char map_lines::operator () (int x, int y) const
+{
+    return (lines[y][x]);
+}
+
+char& map_lines::operator () (int x, int y)
+{
+    return (lines[y][x]);
+}
+
+bool map_lines::in_bounds(const coord_def &c) const
+{
+    return (c.x >= 0 && c.y >= 0 && c.x < width() && c.y < height());
+}
+
 
 bool map_lines::in_map(const coord_def &c) const
 {
@@ -1351,6 +1367,67 @@ std::string map_lines::add_rocktile(const std::string &sub)
 std::string map_lines::add_floortile(const std::string &sub)
 {
     return add_tile(sub, true);
+}
+
+bool map_lines::fill_zone(travel_distance_grid_t &tpd, const coord_def &start,
+                          const coord_def &tl, const coord_def &br, int zone,
+                          const char *wanted, const char *passable) const
+{
+    // This is the map_lines equivalent of _dgn_fill_zone.
+    // It's unfortunately extremely similar, but not close enough to combine.
+
+    bool ret = false;
+    std::list<coord_def> points[2];
+    int cur = 0;
+
+    for (points[cur].push_back(start); !points[cur].empty(); )
+    {
+        for (std::list<coord_def>::const_iterator i = points[cur].begin();
+             i != points[cur].end(); ++i)
+        {
+            const coord_def &c(*i);
+
+            tpd[c.x][c.y] = zone;
+
+            ret |= (wanted && strchr(wanted, (*this)(c)) != NULL);
+
+            for (int yi = -1; yi <= 1; ++yi)
+                for (int xi = -1; xi <= 1; ++xi)
+                {
+                    if (!xi && !yi)
+                        continue;
+
+                    const coord_def cp(c.x + xi, c.y + yi);
+                    if (cp.x < tl.x || cp.x > br.x
+                        || cp.y < tl.y || cp.y > br.y
+                        || !in_bounds(cp) || tpd[cp.x][cp.y]
+                        || passable && !strchr(passable, (*this)(cp)))
+                    {
+                        continue;
+                    }
+
+                    tpd[cp.x][cp.y] = zone;
+                    points[!cur].push_back(cp);
+                }
+        }
+
+        points[cur].clear();
+        cur = !cur;
+    }
+    return (ret);
+}
+
+int map_lines::count_feature_in_box(const coord_def &tl, const coord_def &br,
+                                    const char *feat) const
+{
+    int result = 0;
+    for (rectangle_iterator ri(tl, br); ri; ++ri)
+    {
+        if (strchr(feat, (*this)(*ri)))
+            result++;
+    }
+
+    return (result);
 }
 
 //////////////////////////////////////////////////////////////////////////

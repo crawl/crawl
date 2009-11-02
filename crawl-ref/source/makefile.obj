@@ -51,7 +51,6 @@ kills.o \
 l_crawl.o \
 l_debug.o \
 l_dgn.o \
-l_dgn_bf.o \
 l_dgnbld.o \
 l_dgnevt.o \
 l_dgngrd.o \

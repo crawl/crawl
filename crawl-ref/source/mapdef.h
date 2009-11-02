@@ -302,9 +302,20 @@ public:
     rectangle_iterator get_iter() const;
     char operator () (const coord_def &c) const;
     char& operator () (const coord_def &c);
+    char operator () (int x, int y) const;
+    char& operator () (int x, int y);
+
+    bool in_bounds(const coord_def &c) const;
 
     // Extend map dimensions with glyph 'fill' to minimum width and height.
     void extend(int min_width, int min_height, char fill);
+
+    bool fill_zone(travel_distance_grid_t &tpd, const coord_def &start,
+                   const coord_def &tl, const coord_def &br, int zone,
+                   const char *wanted, const char *passable) const;
+
+    int count_feature_in_box(const coord_def &tl, const coord_def &br,
+                             const char *feat) const;
 
 private:
     void init_from(const map_lines &map);
