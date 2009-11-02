@@ -736,6 +736,10 @@ void unuse_artefact(const item_def &item, bool *show_msgs)
     if (proprt[ARTP_NOISES] != 0)
         you.attribute[ATTR_NOISES]  = 0;
 
+    if (proprt[ARTP_LEVITATE] != 0 && you.duration[DUR_LEVITATION] > 2
+            && !you.permanent_levitation())
+        you.duration[DUR_LEVITATION] = 1;
+
     if (is_unrandom_artefact( item ))
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);

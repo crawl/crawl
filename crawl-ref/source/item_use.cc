@@ -30,6 +30,7 @@
 #include "effects.h"
 #include "fight.h"
 #include "food.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -3358,6 +3359,9 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
     int prop_str = 0;
     int prop_dex = 0;
     int prop_int = 0;
+    bool prop_lev = false;
+    bool fatal_liquid = false;
+    dungeon_feature_type gridhere = grd(you.pos());
 
     // Don't warn when putting on an unknown item.
     if (item.base_type == OBJ_JEWELLERY
@@ -3377,6 +3381,9 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
             if (item.plus != 0)
                 prop_int = item.plus;
             break;
+        case RING_LEVITATION:
+            prop_lev = true;
+            break;
         default:
             break;
         }
@@ -3388,6 +3395,8 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
         prop_int += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
         prop_dex += artefact_known_wpn_property(item, ARTP_DEXTERITY);
 
+        prop_lev = prop_lev || artefact_known_wpn_property(item, ARTP_LEVITATE);
+
         if (!remove && artefact_known_wpn_property(item, ARTP_EYESIGHT))
         {
             // We might have to turn autopickup back on again.
@@ -3397,10 +3406,60 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
         }
     }
 
+    if (you.species == SP_MERFOLK && feat_is_water(gridhere))
+    {
+        // Falling into water could lose boots and cause fatal stat loss.
+        // There is a complication here.  Suppose you are taking off a
+        // randart with +Lev and a stat modification, while wearing boots
+        // that modify the same stat.  We have to consider losing both at
+        // the same time.
+
+        // This only handles removal, which is OK, because levitating is
+        // never fatal.
+
+        you.strength -= prop_str;
+        you.intel -= prop_int;
+        you.dex -= prop_dex;
+
+        bool safe = merfolk_change_is_safe();
+
+        you.strength += prop_str;
+        you.intel += prop_int;
+        you.dex += prop_dex;
+
+        if (!safe)
+            fatal_liquid = true;
+    }
+
+    if (gridhere == DNGN_LAVA || (gridhere == DNGN_DEEP_WATER && !beogh_water_walk()))
+    {
+        // We'd fall into water!  See if we would drown.
+        coord_def empty;
+
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
+               || (carrying_capacity() / 2) <= you.burden
+               || !empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty))
+            fatal_liquid = true;
+
+        if (gridhere == DNGN_LAVA)
+        {
+            int res = player_res_fire(false);
+
+            if (res <= 0 || (110 / res) >= you.hp)
+                fatal_liquid = true;
+        }
+    }
+
+    if (you.permanent_levitation()
+            && (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_BOOTS))
+    {
+        fatal_liquid = false; // we won't fall!
+    }
+
     if (remove)
     {
         if (prop_str >= you.strength || prop_int >= you.intel
-            || prop_dex >= you.dex)
+            || prop_dex >= you.dex || prop_lev && fatal_liquid)
         {
             if (!quiet)
             {
@@ -3680,6 +3739,13 @@ void jewellery_remove_effects(item_def &item, bool mesg)
 
     case RING_INTELLIGENCE:
         modify_stat(STAT_INTELLIGENCE, -item.plus, false, item, true);
+        break;
+
+    case RING_LEVITATION:
+        if (you.duration[DUR_LEVITATION] && !you.permanent_levitation())
+        {
+            you.duration[DUR_LEVITATION] = 1;
+        }
         break;
 
     case RING_MAGICAL_POWER:
