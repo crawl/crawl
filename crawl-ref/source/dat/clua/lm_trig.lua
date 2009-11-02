@@ -207,6 +207,13 @@ end
 --      The triggerable/marker must be placed on top of the cell containing
 --      the item.  Automatically takes care of the item moving from one
 --      square to another without being picked up.
+--
+-- * player_move: Wait for the player to move to a cell.  The
+--      triggerable/marker must be placed on top of cell in question.
+--
+-- * player_los: Wait for the player to come into LOS of a cell, which
+--      must contain a notable feature..  The triggerable/marker must be
+--      placed on top of cell in question.
 
 DgnTriggerer = { CLASS = "DgnTriggerer" }
 DgnTriggerer.__index = DgnTriggerer
@@ -344,6 +351,16 @@ function DgnTriggerer:item_pickup(triggerable, marker, ev)
     triggerable:on_trigger(self, marker, ev)
   end
 end
+
+function DgnTriggerer:player_move(triggerable, marker, ev)
+  triggerable:on_trigger(self, marker, ev)
+end
+
+function DgnTriggerer:player_los(triggerable, marker, ev)
+  triggerable:on_trigger(self, marker, ev)
+end
+
+-------------------
 
 function DgnTriggerer:write(marker, th)
   -- Will always be "dgn_event", so we don't need to save it.
