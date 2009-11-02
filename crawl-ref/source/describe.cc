@@ -721,9 +721,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
     if (verbose)
         append_weapon_stats(description, item);
 
-    int spec_ench = get_weapon_brand( item );
+    int spec_ench = get_weapon_brand(item);
 
-    if (!is_artefact( item ) && !verbose)
+    if (!is_artefact(item) && !verbose)
         spec_ench = SPWPN_NORMAL;
 
     // special weapon descrip
@@ -734,33 +734,30 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         switch (spec_ench)
         {
         case SPWPN_FLAMING:
-            description += "It emits flame when wielded, "
-                "causing extra injury to most foes "
-                "and up to double damage against "
-                "particularly susceptible opponents. "
-                "Big, fiery blades are also staple "
-                "armaments of hydra-hunters.";
+            description += "It emits flame when wielded, causing extra "
+                "injury to most foes and up to double damage against "
+                "particularly susceptible opponents. Big, fiery blades "
+                "are also staple armaments of hydra-hunters.";
             break;
         case SPWPN_FREEZING:
-            description += "It has been specially enchanted to "
-                "freeze those struck by it, causing "
-                "extra injury to most foes and "
-                "up to double damage against "
-                "particularly susceptible opponents. "
-                "It can also slow down cold-blooded creatures.";
+            description += "It has been specially enchanted to freeze "
+                "those struck by it, causing extra injury to most foes "
+                "and up to double damage against particularly "
+                "susceptible opponents. It can also slow down "
+                "cold-blooded creatures.";
             break;
         case SPWPN_HOLY_WRATH:
-            description += "It has been blessed by the Shining One "
-                "to cause great damage to the undead and demons.";
+            description += "It has been blessed by the Shining One to "
+                "cause great damage to the undead and demons.";
             break;
         case SPWPN_ELECTROCUTION:
-            description += "Occasionally upon striking a foe "
-                "it will discharge some electrical energy "
-                "and cause terrible harm.";
+            description += "Occasionally, upon striking a foe, it will "
+                "discharge some electrical energy and cause terrible "
+                "harm.";
             break;
         case SPWPN_ORC_SLAYING:
-            description += "It is especially effective against "
-                "all of orcish descent.";
+            description += "It is especially effective against all of "
+                "orcish descent.";
             break;
         case SPWPN_DRAGON_SLAYING:
             description += "This legendary weapon is deadly to all "
@@ -778,8 +775,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 "injury (+5 to AC).";
             break;
         case SPWPN_DRAINING:
-            description += "A truly terrible weapon, "
-                "it drains the life of those it strikes.";
+            description += "A truly terrible weapon, it drains the "
+                "life of those it strikes.";
             break;
         case SPWPN_SPEED:
             description += "Attacks with this weapon take half as long "
@@ -789,13 +786,13 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             if (is_range_weapon(item))
             {
                 description += "Any ";
-                description += ammo_name( item );
+                description += ammo_name(item);
                 description += " fired from it inflicts extra damage.";
             }
             else
             {
-                description += "It inflicts extra damage upon "
-                    "your enemies.";
+                description += "It inflicts extra damage upon your "
+                    "enemies.";
             }
             break;
         case SPWPN_FLAME:
@@ -809,8 +806,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_CHAOS:
             if (is_range_weapon(item))
             {
-                description += "Each time it fires it turns the launched "
-                    "projectile into a different, random type of bolt.";
+                description += "Each time it fires, it turns the "
+                    "launched projectile into a different, random type "
+                    "of bolt.";
             }
             else
             {
@@ -819,14 +817,12 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             }
             break;
         case SPWPN_VAMPIRICISM:
-            description += "It inflicts no extra harm, "
-                "but heals its wielder somewhat when "
-                "it strikes a living foe.";
+            description += "It inflicts no extra harm, but heals its "
+                "wielder somewhat when it strikes a living foe.";
             break;
         case SPWPN_PAIN:
-            description += "In the hands of one skilled in "
-                "necromantic magic it inflicts "
-                "extra damage on living creatures.";
+            description += "In the hands of one skilled in necromantic "
+                "magic, it inflicts extra damage on living creatures.";
             break;
         case SPWPN_DISTORTION:
             description += "It warps and distorts space around it. "
@@ -847,21 +843,22 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_REAPING:
             description += "If ammo fired by it kills a monster, "
                 "causing it to leave a corpse, the corpse will be "
-                "animated as a zombie friendly to the one who fired it.";
+                "animated as a zombie friendly to the one who fired "
+                "it.";
             break;
         }
     }
 
-    if (is_artefact( item ))
+    if (is_artefact(item))
     {
-        std::string rand_desc = _randart_descrip( item );
+        std::string rand_desc = _randart_descrip(item);
         if (!rand_desc.empty())
         {
             description += "$$";
             description += rand_desc;
         }
 
-        // Can't happen, right? (XXX)
+        // XXX: Can't happen, right?
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
             && item_type_known(item))
         {
@@ -879,7 +876,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
 
         description +=
             make_stringf(" '%s' category. ",
-                         skill == SK_FIGHTING? "buggy" : skill_name(skill));
+                         skill == SK_FIGHTING ? "buggy" : skill_name(skill));
 
         if (!launcher)
         {
@@ -890,7 +887,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                  break;
             case HANDS_HALF:
                 description += "It can be used with one hand, or more "
-                       "effectively with two (i.e. when not using a shield)";
+                       "effectively with two (i.e. when not using a "
+                       "shield)";
                 break;
             case HANDS_TWO:
                 description += "It is a two handed weapon";
@@ -947,7 +945,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
 
     if (!is_known_artefact(item))
     {
-        if (item_ident( item, ISFLAG_KNOW_PLUSES )
+        if (item_ident(item, ISFLAG_KNOW_PLUSES)
             && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
         {
             description += "$It is maximally enchanted.";
@@ -971,7 +969,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
 // describe_ammo
 //
 //---------------------------------------------------------------
-static std::string _describe_ammo( const item_def &item )
+static std::string _describe_ammo(const item_def &item)
 {
     std::string description;
 
@@ -1027,11 +1025,11 @@ static std::string _describe_ammo( const item_def &item )
         {
         case SPMSL_FLAME:
             bolt_name = "flame";
-            // Intentional fall-through
+            // Intentional fall-through.
         case SPMSL_FROST:
             if (bolt_name.empty())
                 bolt_name = "frost";
-            // Intentional fall-through
+            // Intentional fall-through.
         case SPMSL_CHAOS:
             if (bolt_name.empty())
                 bolt_name = "a random type";
@@ -1093,7 +1091,7 @@ static std::string _describe_ammo( const item_def &item )
         case SPMSL_SILVER:
             description += "Compared to normal ammo, it does twice as "
                 "much damage to the undead, demons and chaotic beings, "
-                "and weighs twice as much.  With due care, it can still "
+                "and weighs twice as much. With due care, it can still "
                 "be handled by those folks.";
             break;
         }
@@ -1136,7 +1134,7 @@ static std::string _describe_ammo( const item_def &item )
     else if (item.sub_type != MI_THROWING_NET)
         append_missile_info(description);
 
-    if (item_ident( item, ISFLAG_KNOW_PLUSES ) && item.plus >= MAX_WPN_ENCHANT)
+    if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus >= MAX_WPN_ENCHANT)
         description += "$It is maximally enchanted.";
     else
     {
