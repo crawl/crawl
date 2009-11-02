@@ -300,7 +300,7 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
 //  For the ? key, the text should read:
 //  [!] switch to examination mode
 //  [!] switch to selection mode
-static bool _in_a_shop( int shopidx )
+static bool _in_a_shop( int shopidx, int &num_in_list )
 {
     const shop_struct& shop = env.shop[shopidx];
 
@@ -356,7 +356,7 @@ static bool _in_a_shop( int shopidx )
             }
         }
 
-        int num_in_list  = 0;
+            num_in_list  = 0;
         int num_selected = 0;
         for (unsigned int i = 0; i < stock.size(); i++)
         {
@@ -1983,7 +1983,8 @@ void shop()
         return;
     }
 
-    const bool bought_something = _in_a_shop(i);
+          int  num_in_list      = 0;
+    const bool bought_something = _in_a_shop(i, num_in_list);
     const std::string shopname = shop_name(env.shop[i].pos);
 
     // If the shop is now empty, erase it from the overmap.
@@ -1995,6 +1996,9 @@ void shop()
 
     if (bought_something)
         mprf("Thank you for shopping at %s!", shopname.c_str());
+
+    if (num_in_list > 0)
+        mpr("You can access your shopping list by pressing '$'");
 }
 
 shop_struct *get_shop(const coord_def& where)
@@ -2402,6 +2406,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 
         mpr_comma_separated_list("You now have enough gold to ", descs,
                                  ", or ");
+        mpr("You can access your shopping list by pressing '$'");
 
         // Reset max_buyable and min_unbuyable info
         refresh();
@@ -2535,7 +2540,7 @@ void ShoppingList::display()
                    make_stringf("You cannot afford %s; travel there "
                                 "anyways? (y/N)",
                                 describe_thing(*thing, DESC_NOCAP_A).c_str());
-                redraw_screen();
+                clrscr();
                 if (!yesno(prompt.c_str(), true, 'n'))
                     continue;
             }
@@ -2546,7 +2551,7 @@ void ShoppingList::display()
         }
         else if (is_item)
         {
-            redraw_screen();
+            clrscr();
             const item_def &item = get_thing_item(*thing);
             describe_item( const_cast<item_def&>(item) );
         }
