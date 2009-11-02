@@ -46,6 +46,7 @@
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transfor.h"
 #include "traps.h"

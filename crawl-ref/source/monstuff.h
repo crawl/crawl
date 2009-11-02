@@ -122,18 +122,6 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins = false,
  * *********************************************************************** */
 bool monster_blink(monsters *monster, bool quiet = false);
 
-
-/* ***********************************************************************
- * called from: spells1 spells4 monstuff
- * defaults are set up for player blink;  monster blink should call with
- * false, false
- * *********************************************************************** */
-bool random_near_space(const coord_def& origin, coord_def& target,
-                       bool allow_adjacent = false, bool restrict_LOS = true,
-                       bool forbid_dangerous = true,
-                       bool forbid_sanctuary = false);
-
-
 /* ***********************************************************************
  * called from: beam - effects - fight - monstuff - mstuff2 - spells1 -
  *              spells2 - spells4

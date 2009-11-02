@@ -43,6 +43,7 @@
 #include "spells4.h"
 #include "spl-mis.h"
 #include "stuff.h"
+#include "teleport.h"
 #include "tiles.h"
 #include "terrain.h"
 #include "traps.h"

@@ -133,6 +133,7 @@ state.o \
 store.o \
 stuff.o \
 tags.o \
+teleport.o \
 terrain.o \
 transfor.o \
 traps.o \
