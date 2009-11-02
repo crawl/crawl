@@ -22,7 +22,7 @@
 static geom::grid diamonds(geom::lineseq(1, 1, 0.5, 1),
                            geom::lineseq(1, -1, -0.5, 1));
 
-static int ifloor(double d)
+static int _ifloor(double d)
 {
     return static_cast<int>(floor(d));
 }
@@ -32,17 +32,18 @@ static int iround(double d)
     return static_cast<int>(round(d));
 }
 
+static int ifloor(double d)
+{
+    int r = iround(d);
+    if (double_is_zero(d - r))
+        return (r);
+    else
+        return (_ifloor(d));
+}
+
 static bool double_is_integral(double d)
 {
     return (double_is_zero(d - round(d)));
-}
-
-// Is v in a diamond?
-static bool in_diamond(const geom::vector &v)
-{
-    int i1 = ifloor(diamonds.ls1.index(v));
-    int i2 = ifloor(diamonds.ls2.index(v));
-    return ((i1 + i2) % 2 == 0);
 }
 
 // Is v in the interiour of a diamond?
@@ -50,7 +51,16 @@ static bool in_diamond_int(const geom::vector &v)
 {
     double d1 = diamonds.ls1.index(v);
     double d2 = diamonds.ls2.index(v);
-    return (!double_is_integral(d1) && !double_is_integral(d2));
+    return (!double_is_integral(d1) && !double_is_integral(d2)
+            && (ifloor(d1) + ifloor(d2)) % 2 == 0);
+}
+
+// Is v on a grid line?
+static bool on_line(const geom::vector &v)
+{
+    double d1 = diamonds.ls1.index(v);
+    double d2 = diamonds.ls2.index(v);
+    return (double_is_integral(d1) || double_is_integral(d2));
 }
 
 // Is v an intersection of grid lines?
@@ -59,6 +69,12 @@ static bool is_corner(const geom::vector &v)
     double d1 = diamonds.ls1.index(v);
     double d2 = diamonds.ls2.index(v);
     return (double_is_integral(d1) && double_is_integral(d2));
+}
+
+// Is v in a diamond?
+static bool in_diamond(const geom::vector &v)
+{
+    return (in_diamond_int(v) || is_corner(v));
 }
 
 coord_def ray_def::pos() const
@@ -138,6 +154,13 @@ void ray_def::bounce(const reflect_grid &rg)
          r.start.x, r.start.y, r.dir.x, r.dir.y);
 #endif
     ASSERT(in_diamond(r.start));
+
+    if (on_corner)
+    {
+        // XXX
+        r.dir = -r.dir;
+        return;
+    }
 
     // Translate to cell (0,0).
     geom::vector p(pos().x, pos().y);
@@ -264,4 +287,3 @@ void ray_def::regress()
     advance();
     r.dir = -r.dir;
 }
-
