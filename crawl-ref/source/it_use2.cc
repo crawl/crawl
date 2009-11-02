@@ -740,6 +740,9 @@ void unuse_artefact(const item_def &item, bool *show_msgs)
             && !you.permanent_levitation())
         you.duration[DUR_LEVITATION] = 1;
 
+    if (proprt[ARTP_INVISIBLE] != 0 && you.duration[DUR_INVIS] > 1)
+        you.duration[DUR_INVIS] = 1;
+
     if (is_unrandom_artefact( item ))
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);

@@ -3773,6 +3773,13 @@ void jewellery_remove_effects(item_def &item, bool mesg)
         }
         break;
 
+    case RING_INVISIBILITY:
+        if (you.duration[DUR_INVIS])
+        {
+            you.duration[DUR_INVIS] = 1;
+        }
+        break;
+
     case RING_MAGICAL_POWER:
         mpr("You feel your mana capacity decrease.");
         // dec_max_mp(9);
