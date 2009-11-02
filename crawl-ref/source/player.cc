@@ -2157,6 +2157,11 @@ int player_AC(void)
     if (you.duration[DUR_STONESKIN])
         AC += 200 + 100 * you.skills[SK_EARTH_MAGIC] / 5;       // max 7
 
+    if (you.mutation[MUT_ICEMAIL])
+        AC += (100 * ICEMAIL_MAX)
+              - (you.duration[DUR_ICEMAIL_DEPLETED] * 100
+                     * ICEMAIL_MAX / ICEMAIL_TIME);
+
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
         || you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
         || you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)

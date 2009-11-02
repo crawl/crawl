@@ -2122,6 +2122,16 @@ static void _decrement_durations()
     else
         you.duration[DUR_GOURMAND] = 0;
 
+    if (you.duration[DUR_ICEMAIL_DEPLETED] > 0)
+    {
+        --you.duration[DUR_ICEMAIL_DEPLETED];
+
+        if (!you.duration[DUR_ICEMAIL_DEPLETED])
+            mpr("Your icy envelope is fully restored.", MSGCH_DURATION);
+
+        you.redraw_armour_class = true;
+    }
+
     // Must come before might/haste/berserk.
     if (_decrement_a_duration(DUR_BUILDING_RAGE))
         go_berserk(false);

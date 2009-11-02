@@ -159,6 +159,9 @@ const int GOURMAND_NUTRITION_BASE = 10;
 
 const int CHUNK_BASE_NUTRITION    = 1000;
 
+const int ICEMAIL_MAX  = 10;
+const int ICEMAIL_TIME = 300;
+
 // The maximum number of abilities any god can have
 #define MAX_GOD_ABILITIES               5
 

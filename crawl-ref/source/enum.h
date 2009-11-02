@@ -158,7 +158,7 @@ enum attribute_type
     ATTR_DIVINE_DEATH_CHANNEL,
     ATTR_TRANSFORMATION,
     ATTR_CARD_COUNTDOWN,
-    ATTR_NUM_DEMONIC_POWERS,
+    ATTR_NUM_DEMONIC_POWERS,    // No longer used - for 0.5 demonspawn
     ATTR_WAS_SILENCED,          //jmf: added for silenced messages
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
@@ -1242,6 +1242,7 @@ enum duration_type
     DUR_REPEL_STAIRS_CLIMB,
     DUR_SLIMIFY,
     DUR_TIME_STEP,
+    DUR_ICEMAIL_DEPLETED,     // Wait this many turns for full Icemail
 
     NUM_DURATIONS
 };
@@ -2416,6 +2417,7 @@ enum mutation_type
 
     MUT_STOCHASTIC_TORMENT_RESISTANCE,
     MUT_PASSIVE_MAPPING,
+    MUT_ICEMAIL,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = 100,

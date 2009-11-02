@@ -477,6 +477,8 @@ static void _print_stats_ac(int x, int y)
         textcolor(_dur_colour( BLUE, dur_expiring(DUR_STONEMAIL) ));
     else if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
         textcolor( LIGHTBLUE );
+    else if (you.duration[DUR_ICEMAIL_DEPLETED] > ICEMAIL_TIME / ICEMAIL_MAX)
+        textcolor( RED );
     else
         textcolor( HUD_VALUE_COLOUR );
     cprintf( "%2d ", player_AC() );

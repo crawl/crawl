@@ -601,6 +601,13 @@ bool expose_player_to_element(beam_type flavour, int strength)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
             remove_condensation_shield();
+
+        if (you.mutation[MUT_ICEMAIL])
+        {
+            mpr("Your icy envelope dissipates!", MSGCH_DURATION);
+            you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
+            you.redraw_armour_class = true;
+        }
     }
 
     if (strength <= 0)

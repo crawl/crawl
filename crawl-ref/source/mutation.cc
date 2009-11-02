@@ -1211,6 +1211,13 @@ mutation_def mutation_defs[] = {
 
       "passive mapping"
     },
+
+    { MUT_ICEMAIL,                    0,  1, false, false,
+      {"A meltable icy envelope protects you from harm (AC+", "", ""},
+      {"An icy envelope takes form around you.", "", ""},
+      {"", "", ""},
+      "icemail"
+    },
 };
 
 const mutation_def& get_mutation_def(mutation_type mut)
@@ -2649,6 +2656,16 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     {
         std::ostringstream ostr;
         ostr << mdef.have[0] << level << ").";
+        result = ostr.str();
+    }
+    else if (mut == MUT_ICEMAIL)
+    {
+        std::ostringstream ostr;
+
+        int amt = ICEMAIL_MAX;
+        amt -= you.duration[DUR_ICEMAIL_DEPLETED] * ICEMAIL_MAX / ICEMAIL_TIME;
+
+        ostr << mdef.have[0] << amt << ").";
         result = ostr.str();
     }
     else if (result.empty() && level > 0)
