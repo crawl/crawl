@@ -2172,13 +2172,14 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
     if (mons_friendly(monster) && you.religion != GOD_JIYVA)
         return (false);
 
-    int hps_gained = 0;
+    int hps_changed = 0;
     int max_eat = roll_dice(1, 10);
     int eaten = 0;
     bool eaten_net = false;
+    bool death_ooze_ate_good = false;
 
     for (stack_iterator si(monster->pos());
-         si && eaten < max_eat && hps_gained < 50; ++si)
+         si && eaten < max_eat && hps_changed < 50; ++si)
     {
         if (!is_item_jelly_edible(*si))
             continue;
@@ -2191,11 +2192,15 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
 
         int quant = si->quantity;
 
+        death_ooze_ate_good = (monster->type == MONS_DEATH_OOZE
+                               && (get_weapon_brand(*si) == SPWPN_HOLY_WRATH
+                                   || get_ammo_brand(*si) == SPMSL_SILVER));
+
         if (si->base_type != OBJ_GOLD)
         {
             quant = std::min(quant, max_eat - eaten);
 
-            hps_gained += (quant * item_mass(*si)) / 20 + quant;
+            hps_changed += (quant * item_mass(*si)) / 20 + quant;
             eaten += quant;
 
             if (mons_is_caught(monster)
@@ -2213,7 +2218,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
             if (quant > 500)
                 quant = 500 + roll_dice(2, (quant - 500) / 2);
 
-            hps_gained += quant / 10 + 1;
+            hps_changed += quant / 10 + 1;
             eaten++;
         }
 
@@ -2283,14 +2288,19 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
 
     if (eaten > 0)
     {
-        hps_gained = std::max(hps_gained, 1);
-        hps_gained = std::min(hps_gained, 50);
+        hps_changed = std::max(hps_changed, 1);
+        hps_changed = std::min(hps_changed, 50);
 
-        // This is done manually instead of using heal_monster(),
-        // because that function doesn't work quite this way.  -- bwr
-        monster->hit_points += hps_gained;
-        monster->max_hit_points = std::max(monster->hit_points,
-                                           monster->max_hit_points);
+        if (death_ooze_ate_good)
+            monster->hurt(NULL, hps_changed, BEAM_NONE, false);
+        else
+        {
+            // This is done manually instead of using heal_monster(),
+            // because that function doesn't work quite this way. - bwr
+            monster->hit_points += hps_changed;
+            monster->max_hit_points = std::max(monster->hit_points,
+                                               monster->max_hit_points);
+        }
 
         if (player_can_hear(monster->pos()))
         {
@@ -2298,10 +2308,12 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
                  nearby ? "" : " distant");
         }
 
-        if (eaten_net)
+        if (death_ooze_ate_good)
+            simple_monster_message(monster, " twists violently!");
+        else if (eaten_net)
             simple_monster_message(monster, " devours the net!");
-
-        _jelly_divide(monster);
+        else
+            _jelly_divide(monster);
     }
 
     return (eaten > 0);
