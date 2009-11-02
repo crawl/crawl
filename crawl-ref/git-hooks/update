@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Note that you can (and it might be actually more desirable) also use this
+# script as the GIT update hook:
+#
+
+GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
+if [ -z "$GIT_DIR" ]; then
+	echo >&2 "fatal: post-receive: GIT_DIR not set"
+	exit 1
+fi
+
+refname=${1#refs/heads/}
+[ "$refname" = "master" ] && refname=
+oldhead=$2
+newhead=$3
+for merged in $(git-rev-list $newhead ^$oldhead | tac); do
+  $GIT_DIR/hooks/crawl-ref-cia $merged $refname
+done

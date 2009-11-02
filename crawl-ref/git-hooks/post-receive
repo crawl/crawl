@@ -1,0 +1,13 @@
+#!/bin/bash
+
+GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
+if [ -z "$GIT_DIR" ]; then
+	echo >&2 "fatal: post-receive: GIT_DIR not set"
+	exit 1
+fi
+
+$GIT_DIR/hooks/crawl-ref-email "$@"
+#$GIT_DIR/hooks/crawl-ref-cia "$@"
+
+# BuildBot
+#$GIT_DIR/hooks/git_buildbot.py "$@"
