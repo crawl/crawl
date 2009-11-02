@@ -120,22 +120,6 @@ void radius_iterator::step()
     }
 }
 
-void radius_iterator::step_back()
-{
-    const int minx = std::max(X_BOUND_1+1, center.x - radius);
-    const int maxx = std::min(X_BOUND_2-1, center.x + radius);
-    const int miny = std::max(Y_BOUND_1+1, center.y - radius);
-
-    location.x--;
-    if (location.x < minx)
-    {
-        location.x = maxx;
-        location.y--;
-        if (location.y < miny)
-            iter_done = true;
-    }
-}
-
 bool radius_iterator::on_valid_square() const
 {
     if (!in_bounds(location))
@@ -164,26 +148,9 @@ const radius_iterator& radius_iterator::operator++()
     return (*this);
 }
 
-const radius_iterator& radius_iterator::operator--()
-{
-    do
-        this->step_back();
-    while (!this->done() && !this->on_valid_square());
-
-    return (*this);
-}
-
 radius_iterator radius_iterator::operator++(int dummy)
 {
     const radius_iterator copy = *this;
     ++(*this);
     return (copy);
 }
-
-radius_iterator radius_iterator::operator--(int dummy)
-{
-    const radius_iterator copy = *this;
-    --(*this);
-    return (copy);
-}
-

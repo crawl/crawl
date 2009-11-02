@@ -19,7 +19,7 @@ private:
     coord_def current, topleft, bottomright;
 };
 
-class radius_iterator : public std::iterator<std::bidirectional_iterator_tag,
+class radius_iterator : public std::iterator<std::forward_iterator_tag,
                         coord_def>
 {
 public:
@@ -35,12 +35,9 @@ public:
     const coord_def* operator->() const;
 
     const radius_iterator& operator ++ ();
-    const radius_iterator& operator -- ();
     radius_iterator operator ++ (int);
-    radius_iterator operator -- (int);
 private:
     void step();
-    void step_back();
     bool on_valid_square() const;
 
     coord_def location, center;
@@ -59,4 +56,3 @@ public:
 };
 
 #endif
-
