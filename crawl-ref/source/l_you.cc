@@ -11,9 +11,11 @@
 #include "food.h"
 #include "initfile.h"
 #include "los.h"
+#include "mapmark.h"
 #include "mon-util.h"
 #include "jobs.h"
 #include "ouch.h"
+#include "shopping.h"
 #include "species.h"
 #include "religion.h"
 #include "skills2.h"
@@ -310,6 +312,38 @@ LUAFN(you_in_branch)
     PLUARET(boolean, in_branch);
 }
 
+LUAFN(_you_shopping_list_has)
+{
+    const char *thing = luaL_checkstring(ls, 1);
+    MAPMARKER(ls, 2, mark);
+
+    level_pos pos(level_id::current(), mark->pos);
+    bool has = shopping_list.is_on_list(thing, &pos);
+    PLUARET(boolean, has);
+}
+
+LUAFN(_you_shopping_list_add)
+{
+    const char *thing = luaL_checkstring(ls, 1);
+    const char *verb  = luaL_checkstring(ls, 2);
+    const int  cost   = luaL_checkint(ls, 3);
+    MAPMARKER(ls, 4, mark);
+
+    level_pos pos(level_id::current(), mark->pos);
+    bool added = shopping_list.add_thing(thing, verb, cost, &pos);
+    PLUARET(boolean, added);
+}
+
+LUAFN(_you_shopping_list_del)
+{
+    const char *thing = luaL_checkstring(ls, 1);
+    MAPMARKER(ls, 2, mark);
+
+    level_pos pos(level_id::current(), mark->pos);
+    bool deleted = shopping_list.del_thing(thing, &pos);
+    PLUARET(boolean, deleted);
+}
+
 static const struct luaL_reg you_dlib[] =
 {
 { "hear_pos",           you_can_hear_pos },
@@ -325,6 +359,9 @@ static const struct luaL_reg you_dlib[] =
 { "uniques",            _you_uniques },
 { "die",                _you_die },
 { "in_branch",          you_in_branch },
+{ "shopping_list_has",  _you_shopping_list_has },
+{ "shopping_list_add",  _you_shopping_list_add },
+{ "shopping_list_del",  _you_shopping_list_del },
 
 { NULL, NULL }
 };

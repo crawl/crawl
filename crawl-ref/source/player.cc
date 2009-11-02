@@ -7624,7 +7624,8 @@ void player::set_gold(int amount)
 
     if (amount != gold)
     {
-        shopping_list.gold_changed(gold, amount);
+        const int old_gold = gold;
         gold = amount;
+        shopping_list.gold_changed(old_gold, gold);
     }
 }

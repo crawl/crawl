@@ -2102,6 +2102,8 @@ static SavefileCallback _register_callback(_callback);
 #define SHOPPING_LIST_KEY       "shopping_list_key"
 #define SHOPPING_THING_COST_KEY "cost_key"
 #define SHOPPING_THING_ITEM_KEY "item_key"
+#define SHOPPING_THING_DESC_KEY "desc_key"
+#define SHOPPING_THING_VERB_KEY "verb_key"
 #define SHOPPING_THING_POS_KEY  "pos_key"
 
 ShoppingList::ShoppingList()
@@ -2159,11 +2161,33 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
                              level_pos* _pos)
 {
-    ASSERT(false); // Not implemented yet
+    ASSERT(!desc.empty());
+    ASSERT(!buy_verb.empty());
+    ASSERT(cost > 0);
 
     SETUP_POS();
 
-    return (false);
+    if (pos.id.level_type != LEVEL_DUNGEON)
+    {
+        mprf("The shopping list can only contain things in the dungeon.",
+             MSGCH_ERROR);
+        return (false);
+    }
+
+    if (find_thing(desc, pos) != -1)
+    {
+        mprf(MSGCH_ERROR, "%s is already on the shopping list.",
+             desc.c_str());
+        return (false);
+    }
+
+    SETUP_THING();
+    (*thing)[SHOPPING_THING_DESC_KEY] = desc;
+    (*thing)[SHOPPING_THING_VERB_KEY] = buy_verb;
+    list->push_back(*thing);
+    refresh();
+
+    return (true);
 }
 
 #undef SETUP_THING
@@ -2177,11 +2201,9 @@ bool ShoppingList::is_on_list(const item_def &item, level_pos* _pos) const
 
 bool ShoppingList::is_on_list(std::string desc, level_pos* _pos) const
 {
-    ASSERT(false); // Not implemented yet
-
     SETUP_POS();
 
-    return (false);
+    return (find_thing(desc, pos) != -1);
 }
 
 bool ShoppingList::del_thing(const item_def &item, level_pos* _pos)
@@ -2205,11 +2227,21 @@ bool ShoppingList::del_thing(const item_def &item, level_pos* _pos)
 
 bool ShoppingList::del_thing(std::string desc, level_pos* _pos)
 {
-    ASSERT(false); // Not implemented yet
-
     SETUP_POS();
 
-    return (false);
+    int idx = find_thing(desc, pos);
+
+    if (idx == -1)
+    {
+        mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
+             desc.c_str());
+        return (false);
+    }
+
+    list->erase(idx);
+    refresh();
+
+    return (true);
 }
 
 #undef SETUP_POS
@@ -2395,8 +2427,11 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 
             std::string desc;
 
-            if (thing_is_item(thing))
-                desc = "buy ";
+            if (thing.exists(SHOPPING_THING_VERB_KEY))
+                desc += thing[SHOPPING_THING_VERB_KEY].get_string();
+            else
+                desc = "buy";
+            desc += " ";
 
             desc += describe_thing(thing, DESC_NOCAP_A);
 
@@ -2613,11 +2648,15 @@ int ShoppingList::find_thing(const item_def &item,
     for (unsigned int i = 0; i < list->size(); i++)
     {
         const CrawlHashTable &thing = (*list)[i];
-        const item_def       &_item = get_thing_item(thing);
         const level_pos       _pos  = thing_pos(thing);
 
         if (pos != _pos)
             continue;
+
+        if (!thing_is_item(thing))
+            continue;
+
+        const item_def &_item = get_thing_item(thing);
 
         if (item_name_simple(item) == item_name_simple(_item))
             return (i);
@@ -2629,7 +2668,21 @@ int ShoppingList::find_thing(const item_def &item,
 int ShoppingList::find_thing(const std::string &desc,
                              const level_pos &pos) const
 {
-    ASSERT(false); // Not implemented yet
+    for (unsigned int i = 0; i < list->size(); i++)
+    {
+        const CrawlHashTable &thing = (*list)[i];
+        const level_pos       _pos  = thing_pos(thing);
+
+        if (pos != _pos)
+            continue;
+
+        if (thing_is_item(thing))
+            continue;
+
+        if (desc == name_thing(thing))
+            return (i);
+    }
+
     return (-1);
 }
 
@@ -2650,8 +2703,10 @@ const item_def& ShoppingList::get_thing_item(const CrawlHashTable& thing)
 
 std::string ShoppingList::get_thing_desc(const CrawlHashTable& thing)
 {
-    ASSERT(false); // Not implemented yet
-    return("");
+    ASSERT(thing.exists(SHOPPING_THING_DESC_KEY));
+
+    std::string desc = thing[SHOPPING_THING_DESC_KEY].get_string();
+    return (desc);
 }
 
 long ShoppingList::thing_cost(const CrawlHashTable& thing)
@@ -2672,13 +2727,13 @@ std::string ShoppingList::name_thing(const CrawlHashTable& thing,
     if (thing_is_item(thing))
     {
         const item_def &item = get_thing_item(thing);
-
         return item.name(descrip);
     }
     else
-        ASSERT(false);
-
-    return ("");
+    {
+        std::string desc = get_thing_desc(thing);
+        return apply_description(descrip, desc);
+    }
 }
 
 std::string ShoppingList::describe_thing(const CrawlHashTable& thing,
