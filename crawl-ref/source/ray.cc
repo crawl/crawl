@@ -95,6 +95,7 @@ coord_def ray_def::pos() const
 
 static bool _advance_from_non_diamond(geom::ray *r)
 {
+    ASSERT(in_non_diamond_int(r->start));
     if (!r->to_next_cell(diamonds))
     {
         ASSERT(in_diamond_int(r->start));
@@ -228,7 +229,7 @@ void ray_def::bounce(const reflect_grid &rg)
         // Tricky case: diagonal corridor.
         // TODO: Implement this.
         rmirr.dir = -rmirr.dir;
-        _advance_from_non_diamond(&rmirr);
+        r.to_grid(diamonds, true);
     }
     else
     {
