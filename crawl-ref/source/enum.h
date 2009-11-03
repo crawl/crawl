@@ -2555,7 +2555,7 @@ enum artefact_prop_type
     ARTP_INVISIBLE,
     ARTP_LEVITATE,
     ARTP_BLINK,                         //   15
-    ARTP_CAN_TELEPORT,
+    ARTP_UNUSED_2,
     ARTP_BERSERK,
     ARTP_UNUSED_1,
     ARTP_NOISES,

@@ -3207,14 +3207,11 @@ void jewellery_wear_effects(item_def &item)
         break;
 
     case RING_TELEPORTATION:
-        if (!scan_artefacts(ARTP_CAN_TELEPORT))
-        {
-            mpr("You feel slightly jumpy.");
-            if (artefact)
-                fake_rap = ARTP_CAUSE_TELEPORTATION;
-            else
-                ident = ID_KNOWN_TYPE;
-        }
+        mpr("You feel slightly jumpy.");
+        if (artefact)
+            fake_rap = ARTP_CAUSE_TELEPORTATION;
+        else
+            ident = ID_KNOWN_TYPE;
         break;
 
     case AMU_RAGE:
@@ -5478,13 +5475,6 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
     {
         mpr("You become transparent for a moment.");
         artefact_wpn_learn_prop(item, ARTP_INVISIBLE);
-    }
-
-    if (unknown_proprt(ARTP_CAN_TELEPORT)
-        && !items_give_ability(item.link, ARTP_CAN_TELEPORT))
-    {
-        mpr("You feel slightly jumpy.");
-        artefact_wpn_learn_prop(item, ARTP_CAN_TELEPORT);
     }
 
     if (unknown_proprt(ARTP_BERSERK)

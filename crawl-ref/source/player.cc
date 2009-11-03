@@ -4498,8 +4498,6 @@ bool items_give_ability(const int slot, artefact_prop_type abil)
         {
             if (abil == ARTP_LEVITATE && you.inv[eq].sub_type == RING_LEVITATION)
                 return (true);
-            if (abil == ARTP_CAN_TELEPORT && you.inv[eq].sub_type == RING_TELEPORTATION)
-                return (true);
             if (abil == ARTP_INVISIBLE && you.inv[eq].sub_type == RING_INVISIBILITY)
                 return (true);
         }

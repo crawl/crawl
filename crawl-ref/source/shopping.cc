@@ -815,9 +815,6 @@ int artefact_value( const item_def &item )
     if (prop[ ARTP_BLINK ])
         ret += 3;
 
-    if (prop[ ARTP_CAN_TELEPORT ])
-        ret += 5;
-
     if (prop[ ARTP_BERSERK ])
         ret += 5;
 

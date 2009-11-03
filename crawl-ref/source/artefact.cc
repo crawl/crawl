@@ -1059,15 +1059,6 @@ void static _get_randart_properties(const item_def &item,
         power_level++;
     }
 
-    // teleport
-    if (!done_powers
-        && one_chance_in(10)
-        && (aclass != OBJ_JEWELLERY || atype != RING_TELEPORTATION))
-    {
-        proprt[ARTP_CAN_TELEPORT] = 1;
-        power_level++;
-    }
-
     // go berserk
     if (!done_powers
         && one_chance_in(10)
@@ -1114,7 +1105,6 @@ void static _get_randart_properties(const item_def &item,
             if (aclass == OBJ_JEWELLERY && atype == RING_TELEPORT_CONTROL)
                 break;              // already is a ring of tport ctrl
             proprt[ARTP_BLINK] = 0;
-            proprt[ARTP_CAN_TELEPORT] = 0;
             proprt[ARTP_PREVENT_TELEPORTATION] = 1;
             break;
         case 4:                     // berserk on attack
@@ -1782,8 +1772,7 @@ static bool _randart_is_redundant( const item_def &item,
         break;
 
     case RING_TELEPORTATION:
-        provides  = ARTP_CAN_TELEPORT;
-        provides2 = ARTP_CAUSE_TELEPORTATION;
+        provides = ARTP_CAUSE_TELEPORTATION;
         break;
 
     case RING_EVASION:

@@ -2459,8 +2459,7 @@ std::vector<talent> your_talents(bool check_confused)
         }
     }
 
-    if (player_equip( EQ_RINGS, RING_TELEPORTATION )
-        || scan_artefacts( ARTP_CAN_TELEPORT ))
+    if (player_equip( EQ_RINGS, RING_TELEPORTATION ))
     {
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
     }
