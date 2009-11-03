@@ -3831,6 +3831,16 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.sub_type  = (one_chance_in(3) ? WPN_FALCHION : WPN_SABRE);
         break;
 
+    case MONS_NIKOLA:
+        force_item = true;
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_SABRE;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+        item.plus      = random2(5);
+        item.plus2     = random2(5);
+        break;
+
     case MONS_CEREBOV:
         force_item = true;
         make_item_unrandart(item, UNRAND_CEREBOV);
@@ -4194,7 +4204,16 @@ void give_shield(monsters *mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
         break;
-
+    case MONS_NIKOLA:
+        {
+            make_item_for_monster(mon, OBJ_ARMOUR, ARM_GLOVES,
+                                  level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
+            
+            item_def *gaunt = mon->mslot_item(MSLOT_SHIELD);
+            if (gaunt)
+                gaunt->plus2 = TGLOV_DESC_GAUNTLETS;
+        }
+        break;
     default:
         break;
     }
@@ -4462,6 +4481,13 @@ void give_armour(monsters *mon, int level)
         force_colour   = DARKGREY;
         break;
 
+    case MONS_NIKOLA:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_CLOAK;
+        force_colour   = LIGHTCYAN;
+        break;
+
     default:
         return;
     }
@@ -4487,6 +4513,14 @@ void give_armour(monsters *mon, int level)
     // mv: All items with force_colour = 0 are colored via items().
     if (force_colour)
         mitm[thing_created].colour = force_colour;
+    switch(mon->type)
+    {
+    case MONS_NIKOLA:
+        mitm[thing_created].plus2 = TGLOV_DESC_GAUNTLETS;
+        break;
+    default:
+        break;
+    }
 }
 
 static void _give_gold(monsters *mon, int level)

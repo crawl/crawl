@@ -244,6 +244,10 @@ Nessos
 
 A black centaur warrior with a malicious look in the eyes.
 %%%%
+Nikola
+
+A brilliant scientist obsessed with electricity. In his attempts to perfect his electric golem he was involved in a terrible accident, and now phases in and out of reality.
+%%%%
 Norbert
 
 A skilled warrior, looking to further develop his reputation as a great slayer of monsters. Be warned: he defines 'monster' rather more liberally than most dictionaries.

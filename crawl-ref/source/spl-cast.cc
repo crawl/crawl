@@ -1609,7 +1609,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_CHAIN_LIGHTNING:
-        cast_chain_lightning(powc);
+        cast_chain_lightning(powc, &you);
         break;
 
     case SPELL_DISPERSAL:

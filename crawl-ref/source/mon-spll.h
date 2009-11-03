@@ -1243,6 +1243,17 @@
       }
     },
 
+    {  MST_NIKOLA,
+      {
+       SPELL_SHOCK,
+       SPELL_CHAIN_LIGHTNING,
+       SPELL_BLINK,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_CHAIN_LIGHTNING,
+       SPELL_BLINK
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

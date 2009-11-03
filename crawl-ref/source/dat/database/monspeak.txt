@@ -2398,6 +2398,17 @@ w:1
 @The_monster@ tries to tell @foe@ a complicated story about hydras, @possessive@ blood, and marriage.
 ## END NESSOS
 %%%%
+############ NIKOLA ### A brilliant scientist obsessed with electricity.
+Nikola
+
+@The_monster@ yells, "Danger! Danger! High voltage!"
+
+@The_monster@ says, "Theres a spark of magic in your eyes."
+
+@The_monster@ raves, "Can you feel it? Can you feel it? CAN YOU FEEL IT?"
+
+@The_monster@ warns, "If you see one of my golems, approach with caution, they bite."
+%%%%
 ############ NORBERT ### A skilled warrior looking for some fame.  More kills = more fame.
 Norbert
 

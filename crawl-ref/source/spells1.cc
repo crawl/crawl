@@ -349,15 +349,15 @@ bool _lightning_los(const coord_def& source, const coord_def& target)
     return (exists_ray(source, target, opc_solid, bds_maxlos));
 }
 
-void cast_chain_lightning(int pow)
+void cast_chain_lightning(int pow, const actor *caster)
 {
     bolt beam;
 
     // initialise beam structure
     beam.name           = "lightning arc";
     beam.aux_source     = "chain lightning";
-    beam.beam_source    = MHITYOU;
-    beam.thrower        = KILL_YOU_MISSILE;
+    beam.beam_source    = caster->mindex();
+    beam.thrower        = (caster == &you) ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.range          = 8;
     beam.hit            = AUTOMATIC_HIT;
     beam.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -369,7 +369,7 @@ void cast_chain_lightning(int pow)
 
     coord_def source, target;
 
-    for (source = you.pos(); pow > 0; pow -= 8 + random2(13), source = target)
+    for (source = caster->pos(); pow > 0; pow -= 8 + random2(13), source = target)
     {
         // infinity as far as this spell is concerned
         // (Range - 1) is used because the distance is randomised and
@@ -477,8 +477,8 @@ void cast_chain_lightning(int pow)
         beam.colour = LIGHTBLUE;
         beam.damage = calc_dice(5, 12 + pow * 2 / 3);
 
-        // Be kinder to the player.
-        if (target == you.pos())
+        // Be kinder to the caster.
+        if (target == caster->pos())
         {
             if (!(beam.damage.num /= 2))
                 beam.damage.num = 1;

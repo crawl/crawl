@@ -686,6 +686,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
     case SPELL_TOMB_OF_DOROKLOHE:
+    case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
         return;
     default:
         break;
@@ -1942,6 +1943,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         monster->number = 1; // mark Khufu as entombed
         return;
     }
+    case SPELL_CHAIN_LIGHTNING:
+        if (!monsterNearby || mons_friendly(monster))
+            return;
+        cast_chain_lightning(4 * monster->hit_dice, monster);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,

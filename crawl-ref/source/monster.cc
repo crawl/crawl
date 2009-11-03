@@ -1482,8 +1482,12 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
             eq = EQ_BODY_ARMOUR;
         break;
     case ARM_CLOAK:
-        if (this->type == MONS_MAURICE)
+        if (this->type == MONS_MAURICE || this->type == MONS_NIKOLA)
             eq = EQ_BODY_ARMOUR;
+        break;
+    case ARM_GLOVES:
+        if (this->type == MONS_NIKOLA)
+            eq = EQ_SHIELD;
         break;
     default:
         eq = get_armour_slot(item);
@@ -2708,7 +2712,7 @@ bool monsters::caught() const
 int monsters::shield_bonus() const
 {
     const item_def *shld = const_cast<monsters*>(this)->shield();
-    if (shld)
+    if (shld && get_armour_slot(*shld) == EQ_SHIELD)
     {
         // Note that 0 is not quite no-blocking.
         if (incapacitated())
