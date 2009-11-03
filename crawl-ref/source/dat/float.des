@@ -704,13 +704,130 @@ MAP
 ENDMAP
 
 ##############################################################################
-# An "artefact" protected by the the Shining One (abrahamwl)
+# The Shining One Protects a Powerful Item 1 (by abrahamwl)
 #
-# ORIENT: float ensures correct stair generation.
+# The basic theme of this vault is that the the Shining one has placed a
+# powerful item under the guard of an angel or daeva
 #
-NAME:    protected_by_tso
+NAME:    protected_by_tso_1
 ORIENT:  float
-TAGS:    patrolling no_monster_gen no_item_gen
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup luniq_protected_by_tso
+WEIGHT:  4
+DEPTH:   23-27
+
+MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
+
+COLOUR:  - : yellow
+SUBST:   - : +
+
+KMASK:   + = no_secret_doors
+
+MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
+                                   \"Seek not undue power, mortal.\"", \
+                                   "warning" )
+SUBST:   ! : .
+
+MAP
+         xxxxx
+   xxxxxxxXXXxxxxxxx
+   xXXXXXXX1XXXXXXXx
+   xX|...-...-...|Xx
+   xXXXXXX...XXXXXXx
+   xxxxxXX...XXxxxxx
+     xxxXG...GXxxx
+    xxxxXX...XXxxxx
+    xXXXXX...XXXXXx
+    xXxxxx---xxxxXx
+    xX...........Xx
+    xX...........Xx
+    xX..G.....G..Xx
+    xX...........Xx
+    xX.....1.....Xx
+    xX...........Xx
+    xX..G.....G..Xx
+    xX...........Xx
+    xX...........Xx
+    xXXXXXX-XXXXXXx
+    xxxxxxx!xxxxxxx
+       xxxx+xxxx
+           @
+ENDMAP
+
+##############################################################################
+# The Shining One Protects a Powerful Item 2 (by abrahamwl)
+#
+# The basic theme of this vault is that the the Shining one has placed a
+# powerful item under the guard of an angel or daeva
+#
+NAME:    protected_by_tso_2
+ORIENT:  float
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup luniq_protected_by_tso
+WEIGHT:  4
+DEPTH:   18-27
+
+MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
+
+KFEAT:   A = altar_shining_one
+KITEM:   A = w:1 acquire:the_shining_one any / nothing
+
+: if crawl.one_chance_in(3) then
+SUBST:   | = .
+SUBST:   % = |
+SUBST:   ? = =
+: else
+SUBST:   % = X
+SUBST:   ? = X
+: end
+
+COLOUR:  _ : yellow
+SUBST:   _ : .
+
+SUBST:   T = T F:1
+
+COLOUR:  - : yellow
+SUBST:   - : +
+
+KMASK:   + = no_secret_doors
+
+MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
+                                   \"Seek not undue power, mortal.\"", \
+                                   "warning" )
+SUBST:   ! : .
+
+MAP
+    xxxxxxxxxxxxxx
+  xxxXXXXXXXXXXXXXxxx
+  xXXX_____A_____XXXx
+  xX%?Wwwww_wwwwW=|Xx
+  xXXXxWwww_wwwWxXXXx
+  xxxXxxWWw_wWWxxXxxx
+   xXXxxxx._.xxxxXXx 
+   xxXxxxx---xxxxXxx
+    xX...........Xx
+    xX...........Xx
+    xX..G.....G..Xx
+    xX...........Xx
+    xX.....1.....Xx
+    xX...........Xx
+    xX..G.....G..Xx
+    xX...........Xx
+    xX...........Xx
+    xXXXXXX-XXXXXXx
+    xxxxxxx!xxxxxxx
+       xxxx+xxxx
+           @
+ENDMAP
+
+##############################################################################
+# The Shining One Protects a Powerful Item 3 (by abrahamwl)
+#
+# The basic theme of this vault is that the the Shining one has placed a
+# powerful item under the guard of an angel or daeva
+#
+NAME:    protected_by_tso_3
+ORIENT:  float
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup luniq_protected_by_tso
+WEIGHT:  4
 DEPTH:   18-27
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_shining_one
@@ -727,36 +844,41 @@ SUBST:   ? = X
 #
 COLOUR:  _ : yellow
 SUBST:   _ : .
+
 SUBST:   T = T F:1
+
+COLOUR:  - : yellow
+SUBST:   - : +
+
 KMASK:   + = no_secret_doors
 MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
                                    \"Seek not undue power, mortal.\"", \
                                    "warning" )
 SUBST:   ! : .
 MAP
-    xxxxxxxxxxx
-   xxxxxXXXxxxxx
-  xxxxxxX|Xxxxxxx
-  xXXXXXX=XXXXXXx
- xxXWWWWTATWWWWXx
-xxxXW.._____..WXx
-xXXXWt..___..tWXx
-xX%?W...___...WXx
-xXXXWt..___..tWXx
-xxXxxxxx+++xxxxxXx
- xX.............Xx
- xX.............Xx
- xX.............Xx
- xX...G.....G...Xx
- xX......1......Xx
- xX...G.....G...Xx
- xX.............Xx
- xX.............Xx
- xX.............Xx
- xXXXXXXX+XXXXXXXx
- xxxxxxxx!xxxxxxxx
-     xxxx+xxxx
-         @
+      xxxxxxxxxxx
+     xxxxxXXXxxxxx
+    xxxxxxX|Xxxxxxx
+    xXXXXXX=XXXXXXx
+   xxXWWWWTATWWWWXx
+  xxxXW.._____..WXx
+  xXXXWt..___..tWXx
+  xX%?W...___...WXx
+  xXXXWt..___..tWXx
+  xxxXxxxx---xxxxXx
+    xX...........Xx
+    xX...........Xx
+    xX..G.....G..Xx
+    xX...........Xx
+    xX.....1.....Xx
+    xX...........Xx
+    xX..G.....G..Xx
+    xX...........Xx
+    xX...........Xx
+    xXXXXXX-XXXXXXx
+    xxxxxxx!xxxxxxx
+       xxxx+xxxx
+           @
 ENDMAP
 
 ##############################################################################
