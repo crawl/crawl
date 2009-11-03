@@ -2403,7 +2403,7 @@ Nikola
 
 @The_monster@ yells, "Danger! Danger! High voltage!"
 
-@The_monster@ says, "Theres a spark of magic in your eyes."
+@The_monster@ says, "There's a spark of magic in your eyes."
 
 @The_monster@ raves, "Can you feel it? Can you feel it? CAN YOU FEEL IT?"
 
