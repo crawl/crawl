@@ -2089,7 +2089,7 @@ following variables:
 
 Once you have saved your changes, run crawl:
 
- crawl -test
+ crawl -test vault_generation
 
-Once all of the tests have been finished successfully (this may take some time)
-you should find the relevant files in your working directory.
+Once all of the tests have been finished successfully you should find the 
+relevant files in your working directory.

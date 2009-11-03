@@ -2835,7 +2835,6 @@ rMut      resist mutation
 +Blink    can invoke blink
 +Rage     can invoke berserk
 +Tele     can invoke teleport
-+Map      can invoke magic mapping (sense surroundings)
 
 *RAGE     uncontrolled berserk (anger)
 *TELE     random teleporting
