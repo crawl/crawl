@@ -10,17 +10,11 @@
 
 #include "enum.h"
 
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void adjust();
 void list_weapons();
 void list_armour();
 void list_jewellery();
 
-/* ***********************************************************************
- * called from: clua
- * *********************************************************************** */
 void swap_inv_slots(int slot1, int slot2, bool verbose);
 
 void show_levelmap_help();

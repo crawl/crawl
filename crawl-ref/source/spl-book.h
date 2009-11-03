@@ -21,10 +21,6 @@ enum read_book_action_type
     RBOOK_READ_SPELL
 };
 
-// updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - effects - shopping
- * *********************************************************************** */
 int  book_rarity(unsigned char which_book);
 int  spell_rarity(spell_type which_spell);
 void init_spell_rarities();
@@ -35,17 +31,8 @@ bool is_valid_spell_in_book( int splbook, int spell );
 void mark_had_book(const item_def &book);
 void mark_had_book(int booktype);
 
-// updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: it_use3 - item_use - spl-book
- * *********************************************************************** */
 int read_book( item_def &item, read_book_action_type action );
 
-
-// updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool learn_spell();

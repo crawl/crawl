@@ -58,9 +58,6 @@ extern Branch branches[];
 
 Branch& your_branch();
 
-/* ***********************************************************************
- * called from: dungeon
- * *********************************************************************** */
 bool at_branch_bottom();
 
 branch_type str_to_branch(const std::string &branch,

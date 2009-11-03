@@ -22,10 +22,6 @@ enum drop_mode_type
 god_type str_to_god(std::string god);
 int str_to_fprop (const std::string &str);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 std::string read_init_file(bool runscript = false);
 
 void read_startup_prefs();
@@ -37,10 +33,6 @@ void parse_option_line(const std::string &line, bool runscript = false);
 
 void apply_ascii_display(bool ascii);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void get_system_environment(void);
 
 struct system_environment
@@ -80,11 +72,6 @@ public:
 
 extern system_environment SysEnv;
 
-
-// last updated 16feb2001 {gdl}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 bool parse_args(int argc, char **argv, bool rc_only);
 
 void write_newgame_options_file(void);

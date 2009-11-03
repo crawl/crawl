@@ -83,19 +83,11 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
            level_area_type old_level_type, char old_level,
            branch_type where_were_you2 );
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - misc
- * *********************************************************************** */
 void save_game(bool leave_game, const char *bye = NULL);
 
 // Save game without exiting (used when changing levels).
 void save_game_state();
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void restore_game(void);
 
 bool apply_to_all_dungeons(bool (*applicator)());
@@ -117,16 +109,8 @@ public:
     void go_to(const level_id &level);
 };
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: ouch
- * *********************************************************************** */
 void save_ghost( bool force = false );
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: files hiscores
- * *********************************************************************** */
 std::string make_filename(std::string prefix, int level, branch_type branch,
                           level_area_type lt, bool isGhost );
 

@@ -43,24 +43,12 @@ void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
                       bool spatter = false, bool smell_alert = true);
 void generate_random_blood_spatter_on_level();
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 bool check_annotation_exclusion_warning();
 void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
                entry_cause_type entry_cause = EC_UNKNOWN);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - effects
- * *********************************************************************** */
 std::string weird_glowing_colour();
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: it_use3
- * *********************************************************************** */
 std::string weird_writing();
 
 std::string weird_smell();

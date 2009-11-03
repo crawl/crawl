@@ -291,12 +291,6 @@ bool player_angers_monster(monsters *mon);
 bool empty_surrounds( const coord_def& where, dungeon_feature_type spc_wanted,
                       int radius, bool allow_centre, coord_def& empty );
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - acr - items - maps - mon-abil - mon-cast
- * - spell - spells
- * *********************************************************************** */
 monster_type summon_any_demon(demon_class_type dct);
 
 monster_type summon_any_holy_being(holy_being_class_type hbct);
@@ -305,9 +299,6 @@ monster_type summon_any_dragon(dragon_class_type dct);
 
 bool drac_colour_incompatible(int drac, int colour);
 
-/* ***********************************************************************
- * called from: monplace monstuff
- * *********************************************************************** */
 void mark_interesting_monst(monsters* monster,
                             beh_type behaviour = BEH_SLEEP);
 
@@ -327,16 +318,10 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
 
 void spawn_random_monsters();
 
-/* ***********************************************************************
- * called from: luadgn
- * *********************************************************************** */
 void set_vault_mon_list(const std::vector<mons_spec> &list);
 
 void get_vault_mon_list(std::vector<mons_spec> &list);
 
-/* ***********************************************************************
- * called from: files
- * *********************************************************************** */
 void setup_vault_mon_list();
 
 int mons_tracking_range(const monsters *mon);

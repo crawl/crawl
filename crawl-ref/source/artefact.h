@@ -187,30 +187,15 @@ void set_unique_item_status(const item_def& item,
 void set_unique_item_status(int unrand_index,
                             unique_item_status_type status );
 
-/* ***********************************************************************
- * called from: itemname
- * *********************************************************************** */
 std::string get_artefact_name( const item_def &item );
 
-/* ***********************************************************************
- * called from: spl-book
- * *********************************************************************** */
 void set_artefact_name( item_def &item, const std::string &name );
 void set_artefact_appearance( item_def &item, const std::string &appear );
 
-/* ***********************************************************************
- * called from: effects
- * *********************************************************************** */
 std::string artefact_name( const item_def &item, bool appearance = false );
 
-/* ***********************************************************************
- * called from: describe
- * *********************************************************************** */
 const char *unrandart_descrip( int which_descrip, const item_def &item );
 
-/* ***********************************************************************
- * called from: dungeon makeitem
- * *********************************************************************** */
 int find_okay_unrandart(unsigned char aclass, unsigned char atype = OBJ_RANDOM,
                         unrand_special_type specialness = UNRANDSPEC_EITHER,
                         bool in_abyss = false);
@@ -218,9 +203,6 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype = OBJ_RANDOM,
 typedef FixedVector< int, ART_PROPERTIES >  artefact_properties_t;
 typedef FixedVector< bool, ART_PROPERTIES > artefact_known_props_t;
 
-/* ***********************************************************************
- * called from: describe - fight - it_use2 - item_use - player
- * *********************************************************************** */
 void artefact_desc_properties( const item_def        &item,
                               artefact_properties_t &proprt,
                               artefact_known_props_t &known,
@@ -244,21 +226,12 @@ int artefact_known_wpn_property( const item_def &item,
 void artefact_wpn_learn_prop( item_def &item, artefact_prop_type prop );
 bool artefact_wpn_known_prop( const item_def &item, artefact_prop_type prop );
 
-/* ***********************************************************************
- * called from: dungeon
- * *********************************************************************** */
 bool make_item_randart( item_def &item );
 bool make_item_unrandart( item_def &item, int unrand_index );
 
-/* ***********************************************************************
- * called from: randart - debug
- * *********************************************************************** */
 bool randart_is_bad( const item_def &item );
 bool randart_is_bad( const item_def &item, artefact_properties_t &proprt );
 
-/* ***********************************************************************
- * called from: items
- * *********************************************************************** */
 int find_unrandart_index(const item_def& artefact);
 
 unrandart_entry* get_unrand_entry(int unrand_index);
@@ -266,17 +239,11 @@ unrandart_entry* get_unrand_entry(int unrand_index);
 unrand_special_type get_unrand_specialness(int unrand_index);
 unrand_special_type get_unrand_specialness(const item_def &item);
 
-/* ***********************************************************************
- * called from: debug
- * *********************************************************************** */
 void artefact_set_properties( item_def              &item,
                               artefact_properties_t &proprt );
 void artefact_set_property( item_def           &item,
                             artefact_prop_type  prop,
                             int                 val );
 
-/* ***********************************************************************
- * called from: mapdef
- * *********************************************************************** */
 int get_unrandart_num( const char *name );
 #endif

@@ -10,39 +10,16 @@
 
 #include "travel.h"
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - fight
- * *********************************************************************** */
 int mons_rarity(int mcls, const level_id &place = level_id::current());
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon
- * *********************************************************************** */
 int mons_level(int mcls, const level_id &place = level_id::current());
 
 int mons_global_level(int mcls);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - mon-pick
- * *********************************************************************** */
 bool mons_abyss(int mcls);
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - mon-pick
- * *********************************************************************** */
 int mons_rare_abyss(int mcls);
 
-
-// last updated 10jun2000 {dlb}
-/* ***********************************************************************
- * called from: levels - mon-pick
- * *********************************************************************** */
 bool mons_pan(int mcls);
 
 int mons_cocytus_level(int mcls);

@@ -51,28 +51,14 @@ int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true);
 int spell_enhancement( unsigned int typeflags );
 
-// last updaetd 12may2000 {dlb}
-/* ***********************************************************************
- * called from: it_use3 - spell
- * *********************************************************************** */
 void exercise_spell(spell_type spell_ex, bool spc, bool divide);
 
-
-// last updaetd 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 bool cast_a_spell( bool check_range, spell_type spell = SPELL_NO_SPELL );
 
 bool maybe_identify_staff( item_def &item, spell_type spell = SPELL_NO_SPELL );
 
 void inspect_spells();
 
-
-// last updaetd 12may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - debug - it_use3 - spell
- * *********************************************************************** */
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true);
 
 const char* failure_rate_to_string( int fail );

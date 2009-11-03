@@ -13,18 +13,10 @@
 struct bolt;
 class  monsters;
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void disarm_trap(const coord_def& where);
 void remove_net_from( monsters *mon );
 void free_self_from_net(void);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - misc
- * *********************************************************************** */
 void handle_traps(trap_type trt, int i, bool trap_known);
 int get_trapping_net(const coord_def& where, bool trapped = true);
 void mark_net_trapping(const coord_def& where);

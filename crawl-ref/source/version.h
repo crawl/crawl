@@ -129,9 +129,6 @@ namespace Version
     std::string LDFLAGS();
 }
 
-/* ***********************************************************************
- * called from: initfile debug
- * *********************************************************************** */
 std::string compilation_info();
 
 #endif

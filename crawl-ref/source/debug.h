@@ -113,11 +113,6 @@ void debug_fight_statistics( bool use_init_defaults, bool defence = false );
 void debug_list_monsters();
 void debug_test_explore();
 
-
-// last updated 12 Jun 2008 {jpeg}
-/* ***********************************************************************
- * called from: directn
- * *********************************************************************** */
 void error_message_to_player(void);
 void debug_stethoscope(int mon);
 

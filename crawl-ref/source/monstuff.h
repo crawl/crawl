@@ -48,7 +48,6 @@ public:
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
 
-// useful macro
 #define SAME_ATTITUDE(x) (mons_friendly_real(x)  ? BEH_FRIENDLY : \
                           mons_good_neutral(x)   ? BEH_GOOD_NEUTRAL : \
                           mons_strict_neutral(x) ? BEH_STRICT_NEUTRAL : \
@@ -59,15 +58,10 @@ public:
 
 // for definition of type monsters {dlb}
 #include "externs.h"
-// for definition of type monsters {dlb}
 
 void get_mimic_item( const monsters *mimic, item_def & item );
 int  get_mimic_colour( const monsters *mimic );
 
-// last updated: 08jun2000 {dlb}
-/* ***********************************************************************
-   * called from: fight - item_use - items - spell
-   * *********************************************************************** */
 void alert_nearby_monsters(void);
 
 enum poly_power_type {
@@ -80,11 +74,6 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
                        poly_power_type power = PPT_SAME,
                        bool force_beh = false);
 
-// last updated: 08jun2000 {dlb}
-/* **************************************************************************
-   * called from: bang - beam - effects - fight - misc - mon-abil - mon-act -
-   *              monstuff - spells1 - spells2 - spells3 - spells4
-   * *********************************************************************** */
 int monster_die(monsters *monster, killer_type killer,
                 int killer_index, bool silent = false, bool wizard = false);
 
@@ -103,10 +92,6 @@ bool mon_can_be_slimified(monsters *monster);
 void mons_check_pool(monsters *monster, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);
 
-// last updated: 17dec2000 {gdl}
-/* ***********************************************************************
-   * called from: monstuff - fight
-   * *********************************************************************** */
 void monster_cleanup(monsters *monster);
 
 int dismiss_monsters(std::string pattern);
@@ -117,16 +102,8 @@ bool curse_an_item(bool decay_potions, bool quiet = false);
 void monster_drop_ething(monsters *monster, bool mark_item_origins = false,
                          int owner_id = NON_ITEM);
 
-/* ***********************************************************************
- * called from: fight
- * *********************************************************************** */
 bool monster_blink(monsters *monster, bool quiet = false);
 
-/* ***********************************************************************
- * called from: beam - effects - fight - mgrow - mon-abil - mon-act -
- *              mon-behv - mon-cast - monster - monstuff -spells1 -
- *              spells2 - spells4
- * *********************************************************************** */
 bool simple_monster_message(const monsters *monster, const char *event,
                             msg_channel_type channel = MSGCH_PLAIN,
                             int param = 0,

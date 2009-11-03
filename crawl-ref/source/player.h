@@ -529,120 +529,49 @@ bool player_can_hit_monster(const monsters *mon);
 
 bool player_is_shapechanged(void);
 
-/* ***********************************************************************
- * called from: player - item_use
- * *********************************************************************** */
 bool is_light_armour( const item_def &item );
 
-/* ***********************************************************************
- * called from: beam - fight - misc - newgame
- * *********************************************************************** */
 bool player_light_armour(bool with_skill = false);
 
-
-/* ***********************************************************************
- * called from: acr.cc - fight.cc - misc.cc - player.cc
- * *********************************************************************** */
 bool player_in_water(void);
 bool player_is_swimming(void);
 bool player_is_airborne(void);
 
-/* ***********************************************************************
- * called from: ability - chardump - fight - religion - spell - spells -
- *              spells0 - spells2
- * *********************************************************************** */
 bool player_under_penance(void);
 
 int player_wielded_item();
 
-/* ***********************************************************************
- * called from: ability - acr - fight - food - it_use2 - item_use - items -
- *              misc - mutation - ouch
- * *********************************************************************** */
-
 bool extrinsic_amulet_effect(jewellery_type amulet);
 bool wearing_amulet(jewellery_type which_am, bool calc_unid = true);
 
-
-/* ***********************************************************************
- * called from: beam
- * *********************************************************************** */
 bool you_resist_magic(int power);
 
-
-/* ***********************************************************************
- * called from: acr - decks - effects - it_use2 - it_use3 - item_use -
- *              items - output - shopping - spells1 - spells3
- * *********************************************************************** */
 int burden_change(void);
 
-
-/* ***********************************************************************
- * called from: items - misc
- * *********************************************************************** */
 int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
 
-
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 int check_stealth(void);
 
-
-/* ***********************************************************************
- * called from: bang - beam - chardump - fight - files - it_use2 -
- *              item_use - misc - output - spells - spells1
- * *********************************************************************** */
 int player_AC(void);
 
-
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
 int player_energy(void);
 
-
-/* ***********************************************************************
- * called from: beam - chardump - fight - files - misc - output
- * *********************************************************************** */
 int player_evasion(void);
 
-
-/* ***********************************************************************
- * called from: acr - spells1
- * *********************************************************************** */
 int player_movement_speed(void);
 
-
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 int player_hunger_rate(void);
 
 int calc_hunger(int food_cost);
 
-/* ***********************************************************************
- * called from: debug - it_use3 - spells0
- * *********************************************************************** */
 int player_mag_abil(bool is_weighted);
 int player_magical_power(void);
 
-/* ***********************************************************************
- * called from: fight - misc - ouch - spells
- * *********************************************************************** */
 int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
-
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 int player_regen(void);
 
-
-/* ***********************************************************************
- * called from: fight - files - it_use2 - misc - ouch - spells - spells2
- * *********************************************************************** */
 int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_acid(bool calc_unid = true, bool items = true);
@@ -661,16 +590,9 @@ bool player_likes_water(bool permanently = false);
 
 int player_mutation_level(mutation_type mut);
 
-/* ***********************************************************************
- * called from: fight - files - ouch
- * *********************************************************************** */
 int player_res_electricity(bool calc_unid = true, bool temp = true,
                            bool items = true);
 
-
-/* ***********************************************************************
- * called from: acr - fight - misc - ouch - spells
- * *********************************************************************** */
 int player_res_fire(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_sticky_flame(bool calc_unid = true, bool temp = true,
@@ -678,11 +600,6 @@ int player_res_sticky_flame(bool calc_unid = true, bool temp = true,
 int player_res_steam(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
-
-/* ***********************************************************************
- * called from: beam - decks - fight - fod - it_use2 - misc - ouch -
- *              spells - spells2
- * *********************************************************************** */
 int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
 int player_res_rotting();
@@ -694,9 +611,6 @@ int player_res_magic(void);
 
 int player_res_asphyx();
 
-/* ***********************************************************************
- * called from: beam - chardump - fight - misc - output
- * *********************************************************************** */
 int player_shield_class(void);
 
 
@@ -711,47 +625,20 @@ int player_spec_holy(void);
 int player_spec_poison(void);
 int player_spec_summ(void);
 
-
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 int player_speed(void);
 
-
-/* ***********************************************************************
- * called from: chardump - spells
- * *********************************************************************** */
 int player_spell_levels(void);
 
-/* ***********************************************************************
- * called from: libgui - item_use
- * *********************************************************************** */
 bool player_knows_spell(int spell);
 
-// last updated 18may2000 {dlb}
-/* ***********************************************************************
- * called from: effects
- * *********************************************************************** */
 int player_sust_abil(bool calc_unid = true);
 void jiyva_stat_action();
 
-
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 int player_teleport(bool calc_unid = true);
 
-
-/* ***********************************************************************
- * called from: ability - acr - items - misc - spells1 - spells3
- * *********************************************************************** */
 bool items_give_ability(const int slot, artefact_prop_type abil);
 int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 
-
-/* ***********************************************************************
- * called from: fight - item_use
- * *********************************************************************** */
 int slaying_bonus(char which_affected);
 
 
@@ -759,38 +646,17 @@ bool player_mesmerised_by(const monsters *mon);
 void update_beholders(const monsters *mon, bool force = false);
 void check_beholders();
 
-/* ***********************************************************************
- * called from: acr - decks - it_use2 - ouch
- * *********************************************************************** */
 unsigned long exp_needed(int lev);
 
-
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
 void display_char_status(void);
 
-
-/* ***********************************************************************
- * called from: item_use - items - misc - spells - spells3
- * *********************************************************************** */
 void forget_map(unsigned char chance_forgotten = 100, bool force = false);
 
-
-// last updated 19may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - fight
- * *********************************************************************** */
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
               unsigned int* actual_avail_gain = NULL);
 
-// last updated 17dec2000 {gdl}
-/* ***********************************************************************
- * called from: acr - it_use2 - item_use - mutation - transfor - player -
- *              misc - stuff
- * *********************************************************************** */
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
                  const std::string& cause, bool see_source = true);
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
@@ -803,17 +669,8 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
 bool player_in_bat_form();
 bool player_can_open_doors();
 
-// last updated 19may2000 {dlb}
-/* ***********************************************************************
- * called from: decks - it_use2 - player
- * *********************************************************************** */
 void level_change(bool skip_attribute_increase = false);
 
-
-/* ***********************************************************************
- * called from: ability - fight - item_use - mutation - newgame - spells0 -
- *              transfor
- * *********************************************************************** */
 bool player_genus( genus_type which_genus,
                    species_type species = SP_UNKNOWN );
 bool is_player_same_species( const int mon, bool = false );

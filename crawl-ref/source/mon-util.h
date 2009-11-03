@@ -462,10 +462,6 @@ monsterentry *get_monster_data(int p_monsterid);
 const mon_resist_def &get_mons_class_resists(int mc);
 mon_resist_def get_mons_resists(const monsters *mon);
 
-// last updated 10jun2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void init_monsters();
 void init_monster_symbols();
 
@@ -476,11 +472,6 @@ std::string mons_type_name(int type, description_level_type desc);
 
 bool give_monster_proper_name(monsters *mon, bool orcs_only = true);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: beam - direct - fight - mon-act - mon-behv - monplace -
- *              monstuff - mon-util - spells4 - view
- * *********************************************************************** */
 flight_type mons_class_flies(int mc);
 flight_type mons_flies(const monsters *mon, bool randarts = true);
 
@@ -489,86 +480,40 @@ bool mons_amphibious(const monsters *mon);
 bool mons_class_wall_shielded(int mc);
 bool mons_wall_shielded(const monsters *mon);
 
-// last updated XXmay2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - monstuff
- * *********************************************************************** */
 mon_itemuse_type mons_class_itemuse(int mc);
 mon_itemuse_type mons_itemuse(const monsters *mon);
 mon_itemeat_type mons_class_itemeat(int mc);
 mon_itemeat_type mons_itemeat(const monsters *mon);
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: beam - fight - monstuff - view
- * *********************************************************************** */
 bool mons_sense_invis(const monsters *mon);
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: view
- * *********************************************************************** */
 int get_shout_noise_level(const shout_type shout);
 shout_type mons_shouts(int mclass, bool demon_shout = false);
 
 bool mons_is_ghost_demon(int mc);
 bool mons_is_unique(int mc);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: describe - fight
- * *********************************************************************** */
-// int exper_value(int mclass, int mHD, int maxhp);
 int mons_difficulty(int mtype);
 int exper_value(const monsters *monster);
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - mon-util
- * *********************************************************************** */
 int hit_points(int hit_dice, int min_hp, int rand_hp);
 
 int mons_type_hit_dice( int type );
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: beam - effects
- * *********************************************************************** */
 int mons_resist_magic( const monsters *mon );
 int mons_resist_turn_undead( const monsters *mon );
 bool mons_immune_magic( const monsters *mon );
 const char* mons_resist_string(const monsters *mon);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: fight - monstuff
- * *********************************************************************** */
 int mons_damage(int mc, int rt);
 mon_attack_def mons_attack_spec(const monsters *mon, int attk_number);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: food - spells4
- * *********************************************************************** */
 corpse_effect_type mons_corpse_effect(int mc);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - fight - monstuff - mon-util
- * *********************************************************************** */
 bool mons_class_flag(int mc, int bf);
 
 int mons_unusable_items(const monsters *mon);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: beam - effects - fight - monstuff - mon-util - spells2 -
- *              spells3 - spells4
- * *********************************************************************** */
 mon_holy_type mons_class_holiness(int mc);
 
 bool mons_is_mimic( int mc );
@@ -582,10 +527,6 @@ bool mons_is_summoned(const monsters *m, int* duration = NULL,
                       int *summon_info = NULL);
 bool mons_is_shapeshifter(const monsters *m);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: monstuff - spells4 - view
- * *********************************************************************** */
 mon_intel_type mons_class_intel(int mc);
 mon_intel_type mons_intel(const monsters *mon);
 
@@ -600,34 +541,15 @@ habitat_type mons_secondary_habitat(const monsters *mon);
 
 bool intelligent_ally(const monsters *mon);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - items - spells2 - spells4
- * *********************************************************************** */
 bool mons_skeleton(int mc);
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: describe - fight - items - misc - monstuff - mon-util -
- *              player - spells2 - spells3
- * *********************************************************************** */
 int mons_weight(int mc);
 
-
-// last updated 08may2001 {gdl}
-/* ***********************************************************************
- * called from: monplace mon-util
- * *********************************************************************** */
 int mons_class_base_speed(int mc);
 int mons_class_zombie_base_speed(int zombie_base_mc);
 int mons_base_speed(const monsters *mon);
 int mons_real_base_speed(int mc);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - mon-util - spells2
- * *********************************************************************** */
 bool mons_class_can_regenerate(int mc);
 bool mons_can_regenerate(const monsters *mon);
 int mons_zombie_size(int mc);
@@ -645,25 +567,10 @@ bool mons_enslaved_soul(const monsters *mon);
 bool name_zombie(monsters *mon, int mc, const std::string mon_name);
 bool name_zombie(monsters *mon, const monsters* orig);
 
-
-// last updated 07jan2001 (gdl)
-/* ***********************************************************************
- * called from: beam
- * *********************************************************************** */
 int mons_power(int mclass);
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: spells2 - view
- * *********************************************************************** */
 unsigned mons_char(int mc);
 
-
-// last updated 10jun2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - fight - misc
- * *********************************************************************** */
 int mons_class_colour(int mc);
 int mons_colour(const monsters *mon);
 
@@ -672,37 +579,14 @@ void mons_load_spells(monsters *mon, mon_spellbook_type book);
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - fight
- * *********************************************************************** */
 void define_monster(int mid);
 void define_monster(monsters &mons);
 
-// last updated 4jan2001 (gdl)
-/* ***********************************************************************
- * called from: delay - monstuff - spells1
- * *********************************************************************** */
 void mons_pacify(monsters *mon);
 
-
-// last updated 4jan2001 (gdl)
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
 bool mons_should_fire(struct bolt &beam);
 
-
-// last updated 23mar2001 (gdl)
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
 bool ms_direct_nasty(spell_type monspell);
-
-// last updated 14jan2001 (gdl)
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
 
 bool ms_useful_fleeing_out_of_sight(const monsters *mon, spell_type monspell);
 bool ms_quick_get_away(const monsters *mon, spell_type monspell);
@@ -717,24 +601,12 @@ bool mons_has_ranged_spell(const monsters *mon, bool attack_only = false,
 bool mons_has_ranged_attack(const monsters *mon);
 bool mons_has_ranged_ability(const monsters *mon);
 
-// last updated 06mar2001 (gdl)
-/* ***********************************************************************
- * called from:
- * *********************************************************************** */
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);
 
-// last updated 14mar2001 (gdl)
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
 bool mons_aligned(int m1, int m2);
 bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2);
 
-// last updated 14mar2001 (gdl)
-/* ***********************************************************************
- * called from: monstuff acr
- * *********************************************************************** */
 bool mons_friendly(const monsters *m);
 bool mons_friendly_real(const monsters *m);
 bool mons_neutral(const monsters *m);
@@ -796,11 +668,6 @@ bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monsters *mon);
-
-// last updated 15jul2009 (bh)
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
 
 bool mons_is_fast( const monsters *mon );
 

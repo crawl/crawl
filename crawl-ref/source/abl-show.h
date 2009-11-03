@@ -82,10 +82,6 @@ const std::string make_cost_description(ability_type ability);
 std::vector<const char*> get_ability_names();
 int choose_ability_menu(const std::vector<talent>& talents);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 bool activate_ability();
 std::vector<talent> your_talents(bool check_confused);
 bool string_matches_ability_name(const std::string key);

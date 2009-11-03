@@ -53,10 +53,7 @@ enum run_mode_type
 
 /* ***********************************************************************
  * Initialises the travel subsystem.
- *
- * ***********************************************************************
- * called from: initfile (what's a better place to initialise stuff?)
- * *********************************************************************** */
+ */
 void initialise_travel();
 void init_travel_terrain_check(bool check_race_equip = true);
 void stop_running(void);
@@ -86,10 +83,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false,
  * If grab_items is true, greedy explore is triggered - in greedy mode, explore
  * grabs items that are eligible for autopickup and visits (previously
  * unvisited) shops.
- *
- * ***********************************************************************
- * called from: acr
- * *********************************************************************** */
+ */
 void start_explore(bool grab_items = false);
 
 struct level_pos;

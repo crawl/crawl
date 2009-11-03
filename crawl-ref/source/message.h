@@ -14,22 +14,10 @@
 #include "enum.h"
 #include "mpr.h"
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - acr - command - direct - effects - item_use -
- *              misc - player - spell - spl-book - spells1 - spells2 -
- *              spells3
- * *********************************************************************** */
 void mesclr(bool force = false);
 
 void flush_prev_message();
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - bang - beam - decks - fight - files - it_use3 -
- *              item_use - items - message - misc - ouch - player -
- *              religion - spell - spells - spells2 - spells3
- * *********************************************************************** */
 void more(bool user_forced = false);
 
 
@@ -70,16 +58,8 @@ void set_colour(char set_message_colour);
 
 void reset_more_autoclear();
 
-// last updated 13oct2003 {dlb}
-/* ***********************************************************************
- * called from: chardump
- * *********************************************************************** */
 std::string get_last_messages(int mcount);
 
-// last updated 31dec2008 {dlb}
-/* ***********************************************************************
- * called from: arena
- * *********************************************************************** */
 std::vector<std::string> get_recent_messages(int &message_pos,
                                              bool dumpworthy_only = true,
                                              std::vector<int> *channels = NULL);

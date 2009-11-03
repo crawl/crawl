@@ -97,9 +97,6 @@ std::string make_name(unsigned long seed, bool all_caps, int maxlen = -1,
 
 const char* weapon_brand_name(const item_def& item, bool terse);
 
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void init_properties();
 
 typedef FixedArray < item_type_id_state_type, NUM_IDTYPE, 50 > id_arr;

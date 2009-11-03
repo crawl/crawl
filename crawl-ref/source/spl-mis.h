@@ -7,13 +7,6 @@
 #ifndef SPL_MIS_H
 #define SPL_MIS_H
 
-// last updated 23jul2008 {mpc}
-/* ***********************************************************************
- * called from: decks - effects - fight - item_use - it_use2 - it_use3 -
- *              item_use - monstuff - religion - spells2 - spells4 -
- *              spl-book - spl-cast - traps - xom
- * *********************************************************************** */
-
 #include "enum.h"
 
 #include "beam.h"

@@ -38,71 +38,37 @@ struct describe_info
 
 void append_spells(std::string &desc, const item_def &item);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: chardump - spells4
- * *********************************************************************** */
 bool is_dumpable_artefact( const item_def &item, bool verbose );
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: chardump - describe
- * *********************************************************************** */
 std::string get_item_description( const item_def &item, bool verbose,
                                   bool dump = false, bool noquote = false );
 
-// last updated 12 Jun 2008 {jpeg}
-/* ***********************************************************************
- * called from: acr - religion
- * *********************************************************************** */
 std::string god_title(god_type which_god);
 void describe_god( god_type which_god, bool give_title );
 
 void describe_feature_wide(const coord_def& pos);
 void get_feature_desc(const coord_def &gc, describe_info &inf);
 
-// last updated 24 Dec 2008 {mpc}
-/* ***********************************************************************
- * called from: l_dgn
- * *********************************************************************** */
 void set_feature_desc_long(const std::string &raw_name,
                            const std::string &desc);
 
-/* ***********************************************************************
- * called from: item_use - shopping
- * *********************************************************************** */
 void describe_item(item_def &item, bool allow_inscribe = false,
                    bool shopping = false);
 void get_item_desc(const item_def &item, describe_info &inf,
                    bool terse = false);
 void inscribe_item(item_def &item, bool proper_prompt);
 
-/* ***********************************************************************
- * called from: command
- * *********************************************************************** */
 void append_weapon_stats(std::string &description, const item_def &item);
 void append_armour_stats(std::string &description, const item_def &item);
 void append_missile_info(std::string &description);
 
-// last updated 12 Jun 2008 {jpeg}
-/* ***********************************************************************
- * called from: command - direct
- * *********************************************************************** */
 void describe_monsters(const monsters &mons, bool force_seen = false);
 void get_monster_db_desc(const monsters &item, describe_info &inf,
                          bool force_seen = false);
 
-// last updated 12 Jun 2008 {jpeg}
-/* ***********************************************************************
- * called from: item_use - spl-cast
- * *********************************************************************** */
 void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled, const item_def* item = NULL);
 
-// last updated 13oct2003 {darshan}
-/* ***********************************************************************
- * called from: Kills - monstuff
- * *********************************************************************** */
 std::string get_ghost_description(const monsters &mons, bool concise = false);
 
 std::string get_skill_description(int skill, bool need_title = false);
