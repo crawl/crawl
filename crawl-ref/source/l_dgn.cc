@@ -1540,14 +1540,6 @@ LUAFN(_dgn_reuse_map)
 
 LUAWRAP(_dgn_reset_level, dgn_reset_level())
 
-LUAFN(dgn_in_bounds)
-{
-    int x = luaL_checkint(ls, 1);
-    int y = luaL_checkint(ls, 2);
-
-    PLUARET(boolean, in_bounds(x, y));
-}
- 
 const struct luaL_reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
@@ -1631,8 +1623,6 @@ const struct luaL_reg dgn_dlib[] =
 { "find_markers_by_prop", _dgn_find_markers_by_prop },
 
 { "get_special_room_info", dgn_get_special_room_info },
-
-{ "in_bounds", dgn_in_bounds },
 
 { NULL, NULL }
 };
