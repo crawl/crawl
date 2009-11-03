@@ -679,6 +679,10 @@ void unwear_armour(int slot)
         }
         break;
 
+    case SPARM_ARCHERY:
+        mpr("Your aim is not that steady anymore.");
+        break;
+
     default:
         break;
     }

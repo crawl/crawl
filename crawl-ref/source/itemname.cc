@@ -379,6 +379,7 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
         case SPARM_PRESERVATION:      return "preservation";
         case SPARM_REFLECTION:        return "reflection";
         case SPARM_SPIRIT_SHIELD:     return "spirit shield";
+        case SPARM_ARCHERY:           return "archery";
         default:                      return "bugginess";
         }
     }
@@ -406,6 +407,7 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
         case SPARM_PRESERVATION:      return " {rCorr, Cons}";
         case SPARM_REFLECTION:        return " {rflct}";
         case SPARM_SPIRIT_SHIELD:     return " {Spirit}";
+        case SPARM_ARCHERY:           return " {archer}";
         default:                      return " {buggy}";
         }
     }

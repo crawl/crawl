@@ -1548,6 +1548,10 @@ void armour_wear_effects(const int item_slot)
                 mpr("You feel spirits watching over you.");
             }
             break;
+
+        case SPARM_ARCHERY:
+            mpr("You feel that your aim is more steady.");
+            break;
         }
     }
 

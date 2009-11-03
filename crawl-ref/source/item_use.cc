@@ -2832,12 +2832,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // slaying bonuses
             if (projected != LRET_LAUNCHED || wepType != MI_NEEDLE)
             {
-                slayDam = slaying_bonus(PWPN_DAMAGE);
+                slayDam = slaying_bonus(PWPN_DAMAGE, true);
                 slayDam = (slayDam < 0 ? -random2(1 - slayDam)
                                        :  random2(1 + slayDam));
             }
 
-            exHitBonus += slaying_bonus(PWPN_HIT);
+            exHitBonus += slaying_bonus(PWPN_HIT, true);
         }
     }
     else // LRET_FUMBLED

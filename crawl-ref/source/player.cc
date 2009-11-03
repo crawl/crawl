@@ -4455,7 +4455,7 @@ unsigned long exp_needed(int lev)
 }
 
 // returns bonuses from rings of slaying, etc.
-int slaying_bonus(char which_affected)
+int slaying_bonus(char which_affected, bool ranged)
 {
     int ret = 0;
 
@@ -4463,11 +4463,15 @@ int slaying_bonus(char which_affected)
     {
         ret += player_equip( EQ_RINGS_PLUS, RING_SLAYING );
         ret += scan_artefacts(ARTP_ACCURACY);
+        if (player_equip_ego_type(EQ_GLOVES, SPARM_ARCHERY))
+            ret += ranged ? 5 : -1;
     }
     else if (which_affected == PWPN_DAMAGE)
     {
         ret += player_equip( EQ_RINGS_PLUS2, RING_SLAYING );
         ret += scan_artefacts(ARTP_DAMAGE);
+        if (player_equip_ego_type(EQ_GLOVES, SPARM_ARCHERY))
+            ret += ranged ? 3 : -1;
     }
 
     ret += std::min(you.duration[DUR_SLAYING] / 13, 6);

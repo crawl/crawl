@@ -2067,7 +2067,17 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
 
     case ARM_GLOVES:
-        rc = coinflip() ? SPARM_DEXTERITY : SPARM_STRENGTH;
+        switch (random2(3))
+        {
+        case 0:
+            rc = SPARM_DEXTERITY;
+            break;
+        case 1:
+            rc = SPARM_STRENGTH;
+            break;
+        default:
+            rc = SPARM_ARCHERY;
+        }
         break;
 
     case ARM_BOOTS:
@@ -2144,8 +2154,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     // If we get here the item is not an artefact.
     if (is_helmet(item) && one_chance_in(3))
         set_helmet_random_desc(item);
-    else if (item.sub_type == ARM_GLOVES)
-        set_gloves_random_desc(item);
 
     if (item_race == MAKE_ITEM_RANDOM_RACE && item.sub_type == ARM_BOOTS)
     {
@@ -2245,6 +2253,9 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
     if (armour_is_hide(item))
         item.plus = 0;
+
+    if (item.sub_type == ARM_GLOVES)
+        set_gloves_random_desc(item);
 }
 
 static monster_type _choose_random_monster_corpse()

@@ -905,6 +905,8 @@ void set_gloves_random_desc( item_def &item )
     ASSERT( item.base_type == OBJ_ARMOUR && item.sub_type == ARM_GLOVES );
 
     item.plus2 = coinflip() ? TGLOV_DESC_GLOVES : TGLOV_DESC_GAUNTLETS;
+    if (get_armour_ego_type(item) == SPARM_ARCHERY)
+        item.plus2 = TGLOV_DESC_BRACERS;
 }
 
 //

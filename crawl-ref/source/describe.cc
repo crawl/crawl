@@ -1262,6 +1262,12 @@ static std::string _describe_armour( const item_def &item, bool verbose )
             description += "It shields its wearer from harm at the cost "
                 "of magical power.";
             break;
+
+        // This is only for bracers (gloves).
+        case SPARM_ARCHERY:
+            description += "These improve your skills with ranged weaponry "
+                "but interfere slightly with melee combat.";
+            break;
         }
     }
 

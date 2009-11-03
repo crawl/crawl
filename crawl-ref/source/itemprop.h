@@ -343,7 +343,8 @@ enum special_armour_type
     SPARM_PRESERVATION,
     SPARM_REFLECTION,
     SPARM_SPIRIT_SHIELD,               //   20
-    NUM_SPECIAL_ARMOURS                //   21
+    SPARM_ARCHERY,
+    NUM_SPECIAL_ARMOURS                //   22
 };
 
 enum special_missile_type // to separate from weapons in general {dlb}

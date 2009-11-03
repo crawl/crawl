@@ -639,7 +639,7 @@ int player_teleport(bool calc_unid = true);
 bool items_give_ability(const int slot, artefact_prop_type abil);
 int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 
-int slaying_bonus(char which_affected);
+int slaying_bonus(char which_affected, bool ranged = false);
 
 
 bool player_mesmerised_by(const monsters *mon);
