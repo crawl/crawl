@@ -114,7 +114,7 @@ static bool _coords(lua_State *ls, map_lines &lines,
     y2 = _table_int(ls, idx, "y2", lines.height());
 
     if (x2 < x1)
-        std::swap(x1, x2); 
+        std::swap(x1, x2);
     if (y2 < y1)
         std::swap(y1, y2);
 
@@ -347,7 +347,7 @@ LUAFN(dgn_make_circle)
     if (!_valid_coord(ls, lines, --x, --y))
         return (0);
 
-    for (int ry = -radius; ry <= radius; ++ry) 
+    for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
             if (rx * rx + ry * ry < radius * radius)
                 lines(x + rx, y + ry) = fill;
@@ -367,7 +367,7 @@ LUAFN(dgn_make_diamond)
     if (!_valid_coord(ls, lines, --x, --y))
         return (0);
 
-    for (int ry = -radius; ry <= radius; ++ry) 
+    for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
             if (std::abs(rx) + std::abs(ry) <= radius)
                 lines(x + rx, y + ry) = fill;
@@ -387,7 +387,7 @@ LUAFN(dgn_make_rounded_square)
     if (!_valid_coord(ls, lines, --x, --y))
         return (0);
 
-    for (int ry = -radius; ry <= radius; ++ry) 
+    for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
             if (std::abs(rx) != radius || std::abs(ry) != radius)
                 lines(x + rx, y + ry) = fill;
@@ -407,7 +407,7 @@ LUAFN(dgn_make_square)
     if (!_valid_coord(ls, lines, --x, --y))
         return (0);
 
-    for (int ry = -radius; ry <= radius; ++ry) 
+    for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
             lines(x + rx, y + ry) = fill;
 
@@ -596,8 +596,8 @@ LUAFN(dgn_smear_map)
                 mc.y = random_range(y1+border, y2-border);
             }
             while (onto[0] && !strchr(onto, lines(mc)));
-  
-            // Is there a "smear" feature along the diagonal from mc?    
+
+            // Is there a "smear" feature along the diagonal from mc?
             diagonals = lines(mc.x+1, mc.y+1) == smear ||
                         lines(mc.x-1, mc.y+1) == smear ||
                         lines(mc.x-1, mc.y-1) == smear ||
@@ -610,8 +610,8 @@ LUAFN(dgn_smear_map)
                         lines(mc.x, mc.y-1) == smear;
         }
         while (!straights && (boxy || !diagonals));
-     
-        lines(mc) = smear; 
+
+        lines(mc) = smear;
     }
 
     return (0);
@@ -630,7 +630,7 @@ LUAFN(dgn_spotty_map)
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2, border))
         return (0);
-    
+
     const int max_test_per_iteration = 10;
     int sanity = 0;
     int max_sanity = iterations * max_test_per_iteration;
@@ -645,7 +645,7 @@ LUAFN(dgn_spotty_map)
 
             x = random_range(x1 + border, x2 - border);
             y = random_range(y1 + border, y2 - border);
-        } 
+        }
         while (strchr(replace, lines(x, y))
                && strchr(replace, lines(x-1, y))
                && strchr(replace, lines(x+1, y))
