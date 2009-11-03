@@ -86,10 +86,7 @@ static int _loadline(lua_State *ls)
 static int _docall(lua_State *ls)
 {
     int status;
-    int base = lua_gettop(ls);
-    status = lua_pcall(ls, 0, LUA_MULTRET, base);
-    if (status != 0)
-        lua_gc(ls, LUA_GCCOLLECT, 0);
+    status = lua_pcall(ls, 0, LUA_MULTRET, 0);
     return (status);
 }
 
