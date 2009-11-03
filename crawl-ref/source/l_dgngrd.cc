@@ -206,6 +206,15 @@ static int dgn_max_bounds(lua_State *ls)
     return (2);
 }
 
+static int dgn_in_bounds(lua_State *ls)
+{
+    int x = luaL_checkint(ls, 1);
+    int y = luaL_checkint(ls, 2);
+
+    lua_pushboolean(ls, in_bounds(x, y));
+    return 1;
+}
+    
 static int dgn_grid(lua_State *ls)
 {
     GETCOORD(c, 1, 2, map_bounds);
@@ -251,6 +260,7 @@ const struct luaL_reg dgn_grid_dlib[] =
 { "is_opaque", _dgn_is_opaque },
 { "is_wall", _dgn_is_wall },
 { "max_bounds", dgn_max_bounds },
+{ "in_bounds", dgn_in_bounds },
 { "distance", dgn_distance },
 
 { NULL, NULL }
