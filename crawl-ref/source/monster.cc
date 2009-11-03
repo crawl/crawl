@@ -2785,8 +2785,8 @@ bool monsters::is_chaotic() const
         return (true);
 
     if (has_spell(SPELL_POLYMORPH_OTHER)
-        || has_spell(SPELL_PORKALATOR)
-        || has_spell(SPELL_SUMMON_UGLY_THING))
+        || has_spell(SPELL_SUMMON_UGLY_THING)
+        || has_spell(SPELL_PORKALATOR))
     {
         return (true);
     }
