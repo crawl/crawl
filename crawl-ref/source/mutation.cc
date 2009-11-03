@@ -2725,7 +2725,7 @@ void roll_demonspawn_mutations()
     // "Awesome" mutations are character defining; they have a major
     // effect on strategy in at least one branch.
     static const mutation_type awesome_muts[] = {
-        MUT_HEAT_RESISTANCE, MUT_FAST, MUT_TELEPORT_AT_WILL,
+        MUT_HURL_HELLFIRE, MUT_CONSERVE_SCROLLS, MUT_FAST, MUT_TELEPORT_AT_WILL,
         MUT_ROBUST, MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_BLACK_SCALES,
         MUT_METALLIC_SCALES, MUT_RED2_SCALES, MUT_STOCHASTIC_TORMENT_RESISTANCE
     };
@@ -2737,8 +2737,8 @@ void roll_demonspawn_mutations()
         MUT_REPULSION_FIELD, MUT_MAGIC_RESISTANCE, MUT_BREATHE_FLAMES,
         MUT_NACREOUS_SCALES, MUT_GREY2_SCALES, MUT_BLACK2_SCALES,
         MUT_WHITE_SCALES, MUT_YELLOW_SCALES, MUT_BROWN_SCALES,
-        MUT_PURPLE_SCALES, MUT_INDIGO_SCALES, MUT_COLD_RESISTANCE,
-        MUT_PASSIVE_MAPPING
+        MUT_PURPLE_SCALES, MUT_INDIGO_SCALES, MUT_PASSIVE_MAPPING,
+        MUT_ICEMAIL, MUT_PASSIVE_FREEZE
     };
 
     // "Good" mutations are rarely noticed; they improve your character
@@ -2754,6 +2754,14 @@ void roll_demonspawn_mutations()
     bool good_enough = false;
 
     typedef mutation_type facet_type[3];
+
+    static const facet_type mixed_facets[] = {
+        { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
+        { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
+        { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
+        { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
+    };
+
     facet_type facets[6];
 
 try_again:
@@ -2768,24 +2776,32 @@ try_again:
         muts[4] = RANDOM_ELEMENT(good_muts);
         muts[5] = RANDOM_ELEMENT(good_muts);
 
+        FixedVector< int, NUM_MUTATIONS > mutsgiven;
+        mutsgiven.init(0);
+
+        int scales = 0;
+        int elemental = 0;
+        int metabolism = 0;
+
         // Check for conflicting mutations
         for (int i = 0; i < 6; ++i)
         {
-            for (int j = 0; j < i; ++j)
-            {
-                // No redundancy, please
-                if (muts[i] == muts[j])
-                    goto try_again;
+            mutation_type m = muts[i];
 
-                // Prevent excessive scales
-                if (_is_covering(muts[i]) && _is_covering(muts[j]))
-                    goto try_again;
+            if (++mutsgiven[m] > 1)
+                goto try_again;
 
-                // Physiology conflict
-                if ((muts[i] == MUT_SLOW_METABOLISM && muts[j] == MUT_REGENERATION)
-                        || (muts[i] == MUT_REGENERATION && muts[j] == MUT_SLOW_METABOLISM))
-                    goto try_again;
-            }
+            if (_is_covering(m) && ++scales > 1)
+                goto try_again;
+
+            if ((m == MUT_SLOW_METABOLISM || m == MUT_REGENERATION)
+                    && ++metabolism > 1)
+                goto try_again;
+
+            if ((m == MUT_HURL_HELLFIRE || m == MUT_CONSERVE_SCROLLS
+                        || m == MUT_ICEMAIL || m == MUT_PASSIVE_FREEZE)
+                    && ++elemental > 1)
+                goto try_again;
         }
 
         good_enough = true;
@@ -2793,6 +2809,15 @@ try_again:
         for (int i = 0; i < 6; ++i)
         {
             facets[i][0] = facets[i][1] = facets[i][2] = muts[i];
+
+            for (unsigned j = 0; j < ARRAYSZ(mixed_facets); ++j)
+            {
+                if (mixed_facets[j][2] != muts[i])
+                    continue;
+
+                facets[i][0] = mixed_facets[j][0];
+                facets[i][1] = mixed_facets[j][1];
+            }
         }
     }
 
