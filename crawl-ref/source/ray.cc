@@ -232,6 +232,28 @@ static geom::line _choose_reflect_line(bool rx, bool ry, bool rxy)
     return (l);
 }
 
+geom::vector _fudge_corner(const geom::vector &w, const reflect_grid &rg)
+{
+    geom::vector v = w;
+    if (double_is_integral(v.x))
+    {
+        // just try both sides
+        v.x += 10 * EPSILON_VALUE;
+        if (rg(round_vec(v) + rg_o))
+            v.x -= 20 * EPSILON_VALUE;
+        ASSERT(!rg(round_vec(v) + rg_o));
+    }
+    else
+    {
+        ASSERT(double_is_integral(v.y));
+        v.y += 10 * EPSILON_VALUE;
+        if (rg(round_vec(v) + rg_o))
+            v.y -= 20 * EPSILON_VALUE;
+        ASSERT(!rg(round_vec(v) + rg_o));
+    }
+    return (v);
+}
+
 void ray_def::bounce(const reflect_grid &rg)
 {
     ASSERT(_valid());
