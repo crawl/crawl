@@ -228,6 +228,7 @@ void ray_def::bounce(const reflect_grid &rg)
         // Tricky case: diagonal corridor.
         // TODO: Implement this.
         rmirr.dir = -rmirr.dir;
+        _advance_from_non_diamond(&rmirr);
     }
     else
     {
