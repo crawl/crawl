@@ -402,7 +402,7 @@ void cast_chain_lightning(int pow)
             if (dist > min_dist)
                 continue;
 
-            if (_lightning_los(source, monster->pos()))
+            if (!_lightning_los(source, monster->pos()))
                 continue;
 
             count++;
