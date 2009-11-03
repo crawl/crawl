@@ -4208,7 +4208,7 @@ void give_shield(monsters *mon, int level)
         {
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_GLOVES,
                                   level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
-            
+
             item_def *gaunt = mon->mslot_item(MSLOT_SHIELD);
             if (gaunt)
                 gaunt->plus2 = TGLOV_DESC_GAUNTLETS;
