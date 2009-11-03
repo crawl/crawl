@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
--- lm_tmsg.lua:
+-- lm_fog.lua:
 -- Fog machines.
 --
 -- There are three different "pure" ways to use a fog machine marker:
@@ -16,6 +16,10 @@
 --
 -- Combining these different methods, along with varying the different
 -- parameters, can be used to achieve different effects.
+--
+-- Fog machines can be "chained" together (activated at the same time) by using
+-- the convenience function "chained_fog_machine" with the normal paramaters 
+-- which are accepted by "fog_machine".
 --
 -- Marker parameters:
 --
@@ -263,6 +267,10 @@ end
 
 function fog_machine(pars)
   return FogMachine:new(pars)
+end
+
+function chained_fog_machine(pars)
+  return lmark.synchronized_markers(FogMachine:new(pars), "do_fog")
 end
 
 function fog_machine_geyser(cloud_type, size, power, buildup_amnt,

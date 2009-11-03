@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
--- dungeon.lua:
+-- lm_trig.lua:
 -- DgnTriggerers and triggerables:
 --
 -- This is similar to the overvable/observer design pattern: a triggerable

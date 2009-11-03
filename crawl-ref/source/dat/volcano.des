@@ -65,7 +65,11 @@
 -- # General setup and design functions: (head to line 382 for the maps)
 
 function volcano_portal (e)
-    local desc_long = [[Leading directly into the rock is a dark and forbidding tunnel. Every so often air, hot enough to singe your face, blasts from within, and, as though trigger by the air, rocks fall from the roof and sides of the tunnel, slowly filling the entry.]]
+    local desc_long = "Leading directly into the rock is a dark and " ..
+                      "forbidding tunnel. Every so often air, hot enough " .. 
+                      "to singe your face, blasts from within, and, as " ..
+                      "though triggered by the air, rocks fall from the roof " ..
+                      "and sides of the tunnel, slowly filling the entry."
 
     local timeout_turns = crawl.random_range(1200, 1700)
     local messager =
@@ -74,15 +78,16 @@ function volcano_portal (e)
             -- $F{xxx} will be substituted with the 'entity' property of the timed
             -- marker, or with the desc property (if entity is not set).
             messages = time_messages(timeout_turns,
-                               "Rocks fall inside $F{the}.",
-                               "Debris falls inside $F{the}, filling the entry.",
-                               "More rocks fall inside $F{the}, blocking the entry.",
-                               "Rocks have almost completely blocked $F{the}.")
+                            "Rocks fall inside $F{the}.",
+                            "Debris falls inside $F{the}, filling the entry.",
+                            "More rocks fall inside $F{the}, blocking the entry.",
+                            "Rocks have almost completely blocked $F{the}.")
     }
 
     e.lua_marker('O',
       timed_marker {
-        disappear = "There is a deep roar from within the tunnel. Moments later, a river of lava pours forth, sealing it permanently.",
+        disappear = "There is a deep roar from within the tunnel. Moments " ..
+                    "later, a river of lava pours forth, sealing it permanently.",
         desc = "A dark tunnel",
         desc_long = desc_long,
         entity = 'tunnel',
@@ -128,23 +133,16 @@ function volcano_setup (e, metal)
         e.lfloorcol("red")
         e.lfloortile("floor_rough_red")
     end
-    e.set_random_mon_list([[hog / fire elemental / fire vortex / giant ant / bumblebee /
-                            firedrake / lindwurm / imp / redback / manticore / hell hound /
-                            hell-hog / ghoul / flayed ghost / pulsating lump / toenail golem /
+    e.set_random_mon_list([[hog / fire elemental / fire vortex / giant ant / 
+                            bumblebee / firedrake / lindwurm / imp / redback /
+                            manticore / hell hound / hell-hog / ghoul / 
+                            flayed ghost / pulsating lump / toenail golem /
                             efreet / vampire]])
     crawl.mark_milestone("br.enter", "entered a Volcano.")
 end
 
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully
 -- weighted and balanced and have been tested extensively.
-
--- Currently unused
---function place_giant_volcano(e)
---    e.kfeat("V = l")
---    e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=0, pow_min=10,
---                                    pow_max=10, delay=1100, size=90000,
---                                    spread_rate=100 })
---end
 
 local function in_radius (x, y)
   local p1 = dgn.point(x, y)
@@ -176,10 +174,9 @@ end
 
 function place_chained_volcano(e)
     e.kfeat("V = l")
-    local fm = fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
-                             delay = 300, size = 3000, spread_rate = 30,
-                             listener = large_warning}
-    e.lua_marker('V', lmark.synchronized_markers(fm, "do_fog"))
+    e.lua_marker('V', chained_fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
+                                            delay = 300, size = 3000, spread_rate = 30,
+                                            listener = large_warning } )
 end
 
 
@@ -415,12 +412,12 @@ TAGS: uniq_volcano
 ORIENT: float
 WEIGHT: 0
 {{
-  local fog = fog_machine { cloud_type = 'flame',
+  local fog = chained_fog_machine { 
+                            cloud_type = 'flame',
                             size = 3, pow_min=2,
-                            pow_max = 5, delay_min = 22, delay_max = 120,
-                            listener = trigger_machine(nil, "Test", nil, in_radius)
+                            pow_max = 5, delay_min = 22, delay_max = 120
                           }
-  lua_marker('m', lmark.synchronized_markers(fog, 'do_fog'))
+  lua_marker('m', fog)
 }}
 SUBST: m = .
 :           volcano_portal(_G)

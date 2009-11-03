@@ -6,6 +6,9 @@
 -- positions.
 --
 -- API: lmark.synchronized_markers(<marker>, <trigger-function-names>)
+-- 
+-- (Some markers may already provide convenience functionality for the
+--  synchronized_markers call, so check the relevant marker file.)
 --
 -- Usage:
 -- ------
