@@ -154,19 +154,31 @@ bool ray_def::advance()
     return (!on_corner);
 }
 
+static geom::vector _mirror_pt(const geom::vector &vorig, const coord_def &side)
+{
+    geom::vector v = vorig;
+    if (side.x == -1)
+        v.x = 1.0 - v.x;
+    if (side.y == -1)
+        v.y = 1.0 - v.y;
+    return (v);
+}
+
+static geom::vector _mirror_dir(const geom::vector &vorig, const coord_def &side)
+{
+    geom::vector v = vorig;
+    if (side.x == -1)
+        v.x = -v.x;
+    if (side.y == -1)
+        v.y = -v.y;
+    return (v);
+}
+
 static geom::ray _mirror(const geom::ray &rorig, const coord_def &side)
 {
-    geom::ray r = rorig;
-    if (side.x == -1)
-    {
-        r.start.x = 1.0 - r.start.x;
-        r.dir.x = -r.dir.x;
-    }
-    if (side.y == -1)
-    {
-        r.start.y = 1.0 - r.start.y;
-        r.dir.y = -r.dir.y;
-    }
+    geom::ray r;
+    r.start = _mirror_pt(rorig.start, side);
+    r.dir = _mirror_dir(rorig.dir, side);
     return (r);
 }
 
