@@ -296,7 +296,7 @@ mutation_def mutation_defs[] = {
 
       "regeneration"
     },
-    // Deep Dwarf only
+    // Deep Dwarf/Ghoul only
     { MUT_SLOW_HEALING,               0,  3,  true, false,
       {"You heal slowly.",
        "You heal very slowly.",
