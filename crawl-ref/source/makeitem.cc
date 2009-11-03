@@ -2144,6 +2144,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     // If we get here the item is not an artefact.
     if (is_helmet(item) && one_chance_in(3))
         set_helmet_random_desc(item);
+    else if (item.sub_type == ARM_GLOVES)
+        set_gloves_random_desc(item);
 
     if (item_race == MAKE_ITEM_RANDOM_RACE && item.sub_type == ARM_BOOTS)
     {

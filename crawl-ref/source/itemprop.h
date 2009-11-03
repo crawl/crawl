@@ -146,6 +146,13 @@ enum helmet_desc_type
     THELM_NUM_DESCS
 };
 
+enum gloves_desc_type
+{
+    TGLOV_DESC_GLOVES = 0,
+    TGLOV_DESC_GAUNTLETS,
+    TGLOV_DESC_BRACERS
+};
+
 enum jewellery_type
 {
     RING_FIRST_RING = 0,
@@ -608,6 +615,9 @@ short get_helmet_desc( const item_def &item );
 
 bool  is_helmet( const item_def& item );
 bool  is_hard_helmet( const item_def& item );
+
+short get_gloves_desc( const item_def &item );
+void  set_gloves_random_desc( item_def &item );
 
 // ego items:
 bool set_item_ego_type( item_def &item, int item_type, int ego_type );

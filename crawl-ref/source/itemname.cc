@@ -1271,7 +1271,18 @@ std::string item_def::name_aux(description_level_type desc,
                                                    : "buggy ");
         }
 
-        buff << item_base_name(*this);
+        if (!basename && item_typ == ARM_GLOVES)
+        {
+            const short dglov = get_gloves_desc(*this);
+
+            buff <<
+                   ((dglov == TGLOV_DESC_GLOVES)    ? "gloves" :
+                    (dglov == TGLOV_DESC_GAUNTLETS) ? "gauntlets" :
+                    (dglov == TGLOV_DESC_BRACERS)   ? "bracers" :
+                                                      "bug-ridden gloves");
+        }
+        else
+            buff << item_base_name(*this);
 
         if (know_ego && !is_artefact(*this))
         {
