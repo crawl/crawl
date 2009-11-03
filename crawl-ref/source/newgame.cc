@@ -2220,62 +2220,24 @@ static void _good_potion_or_scroll(int & slot)
     slot++;
 }
 
-// Add a specified number of healing/teleportation items to the
-// inventory.
-static void _healing_or_teleport(int quantity, int & slot)
+// Make n random attempts at identifying healing or teleportation.
+static void _healing_or_teleport(int n)
 {
-    int healing_slot  = -1;
-    int teleport_slot = -1;
-
-    for (int i = 0; i < slot; ++i)
-    {
-        if (you.inv[i].sub_type == SCR_TELEPORTATION
-            && you.inv[i].base_type == OBJ_SCROLLS)
-        {
-            teleport_slot = i;
-        }
-        else if (you.inv[i].sub_type == POT_HEALING
-                 && you.inv[i].base_type == OBJ_POTIONS)
-        {
-            healing_slot = i;
-        }
-    }
-
     int temp_rand = 2;
 
     // No potions for mummies.
     if (you.is_undead == US_UNDEAD)
         temp_rand--;
 
-    for (int i = 0; i < quantity; ++i)
+    for (int i = 0; i < n; ++i)
     {
         switch (random2(temp_rand))
         {
         case 0:
-            if (teleport_slot == -1)
-            {
-                teleport_slot = slot;
-                you.inv[teleport_slot].quantity  = 0;
-                you.inv[teleport_slot].base_type = OBJ_SCROLLS;
-                you.inv[teleport_slot].plus      = 0;
-                you.inv[teleport_slot].plus2     = 0;
-                you.inv[teleport_slot].sub_type  = SCR_TELEPORTATION;
-                slot++;
-            }
-            you.inv[teleport_slot].quantity++;
+            set_ident_type(OBJ_SCROLLS, SCR_TELEPORTATION, ID_KNOWN_TYPE);
             break;
         case 1:
-            if (healing_slot == -1)
-            {
-                healing_slot = slot;
-                you.inv[healing_slot].quantity  = 0;
-                you.inv[healing_slot].base_type = OBJ_POTIONS;
-                you.inv[healing_slot].plus      = 0;
-                you.inv[healing_slot].plus2     = 0;
-                you.inv[healing_slot].sub_type  = POT_HEALING;
-                slot++;
-            }
-            you.inv[healing_slot].quantity++;
+            set_ident_type(OBJ_POTIONS, POT_HEALING, ID_KNOWN_TYPE);
             break;
         }
     }
@@ -2395,9 +2357,9 @@ void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     {
-        // Random consumables: 2x random healing/teleportation and 1
-        // good potion/scroll.
-        _healing_or_teleport(2, slot);
+        // Random consumables: 2x attempts to ID healing/teleportation
+        // 1 good potion/scroll.
+        _healing_or_teleport(2);
         _good_potion_or_scroll(slot);
         break;
     }
@@ -2576,7 +2538,7 @@ void _wanderer_decent_equipment(skill_type & skill,
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     case SK_EVOCATIONS:
-        _healing_or_teleport(1, slot);
+        _healing_or_teleport(1);
         break;
     }
 }
