@@ -311,7 +311,7 @@ void ray_def::bounce(const reflect_grid &rg)
     r.dir = rtrans.dir;
 
     ASSERT(_valid());
-    ASSERT(rg(pos() - old_pos));
+    ASSERT(!rg(pos() - old_pos + rg_o));
 }
 
 void ray_def::regress()
