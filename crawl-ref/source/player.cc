@@ -5218,7 +5218,7 @@ bool curare_hits_player(int death_source, int amount)
 
     int hurted = 0;
 
-    if (player_res_asphyx())
+    if (player_res_asphyx() <= 0)
     {
       hurted = roll_dice(2, 6);
 
