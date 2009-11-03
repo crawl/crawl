@@ -69,6 +69,7 @@ level-map
          (Moves cursor to the last travel destination if still on @.)
 <w>[</w>/<w>]</w>    : Examine the next higher/lower level
 <w>v</w>      : Examine a different level at the same depth
+<w>G</w>      : Go to another level by branch and depth
 
 <h>Travel exclusions
 <w>e</w>      : Create a travel exclusion, change its radius, or remove it.
