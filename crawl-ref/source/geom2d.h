@@ -56,6 +56,10 @@ struct line
 {
     form f;
     double val;
+
+    line() {}
+    line(double a, double b, double v)
+        : f(a,b), val(v) {}
 };
 
 // A sequence of evenly spaced parallel lines, like the
