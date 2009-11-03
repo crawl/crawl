@@ -2830,7 +2830,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             exHitBonus += you.dex / 2;
 
             // slaying bonuses
-            if (projected != LRET_LAUNCHED || wepType != MI_NEEDLE)
+            if (wepType != MI_NEEDLE)
             {
                 slayDam = slaying_bonus(PWPN_DAMAGE, true);
                 slayDam = (slayDam < 0 ? -random2(1 - slayDam)
