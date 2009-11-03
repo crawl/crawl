@@ -1627,23 +1627,20 @@ void bolt::bounce()
 {
     ray_def old_ray  = ray;
     bolt    old_bolt = *this;
+
     do
-    {
-        do
-            ray.regress();
-        while (feat_is_solid(grd(ray.pos())));
+        ray.regress();
+    while (feat_is_solid(grd(ray.pos())));
 
-        bounce_pos = ray.pos();
-        reflect_grid rg;
-        for (adjacent_iterator ai(ray.pos()); ai; ++ai)
-            rg(*ai - ray.pos() + rg_o) = feat_is_solid(grd(*ai));
-        ray.bounce(rg);
-        range_used += 2;
-    }
-    while (range_used < range && feat_is_solid(grd(ray.pos())));
+    bounce_pos = ray.pos();
+    reflect_grid rg;
+    for (adjacent_iterator ai(ray.pos()); ai; ++ai)
+        rg(*ai - ray.pos() + rg_o) = feat_is_solid(grd(*ai));
+    ray.bounce(rg);
+    range_used += 2;
 
-    if (!feat_is_solid(grd(ray.pos())))
-        _munge_bounced_bolt(old_bolt, *this, old_ray, ray);
+    ASSERT(!feat_is_solid(grd(ray.pos())));
+    _munge_bounced_bolt(old_bolt, *this, old_ray, ray);
 }
 
 void bolt::fake_flavour()
