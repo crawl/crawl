@@ -3583,7 +3583,7 @@ static bool _initialise(void)
 
     if (crawl_state.test)
     {
-#ifdef DEBUG_DIAGNOSTICS
+#if DEBUG_DIAGNOSTICS || DEBUG_TESTS
 #ifdef USE_TILE
         init_player_doll();
         tiles.initialise_items();
@@ -3595,7 +3595,8 @@ static bool _initialise(void)
         end(0, false);
 #else
         end(1, false, "Non-debug Crawl cannot run tests. "
-            "Please use a debug build");
+            "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
+            "or DEBUG_TESTS)");
 #endif
     }
 

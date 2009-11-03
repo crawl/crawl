@@ -14,7 +14,7 @@
 
 #include "AppHdr.h"
 
-#if DEBUG_DIAGNOSTICS
+#if DEBUG_DIAGNOSTICS || DEBUG_TESTS
 
 #include "clua.h"
 #include "dlua.h"
