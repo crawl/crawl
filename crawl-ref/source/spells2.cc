@@ -1982,9 +1982,11 @@ bool sunlight()
                 plant_count++;
         }
     }
-    delay(50);
-
-    update_screen();
+    // move the cursor out of the way (it looks weird ok)
+#ifndef USE_TILE
+    cgotoxy(base.x, base.y, GOTO_DNGN);
+#endif
+    delay(200);
 
     if (plant_count)
     {
