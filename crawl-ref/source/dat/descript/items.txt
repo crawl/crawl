@@ -1255,6 +1255,9 @@ under pressure. May be harmful to the reader."
 scroll of magic mapping
 
 This scroll reveals the nearby surroundings of one who reads it.
+
+It is not strong enough to see the interior of rooms sealed with
+secret doors; one needs Traps and Doors skill for that.
 %%%%
 scroll of noise
 
