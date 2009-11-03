@@ -84,13 +84,18 @@ static bool in_non_diamond_int(const geom::vector &v)
     return (!in_diamond(v) && !on_line(v));
 }
 
+static coord_def round_vec(const geom::vector &v)
+{
+    int x = ifloor(v.x);
+    int y = ifloor(v.y);
+    return (coord_def(x, y));
+}
+
 
 coord_def ray_def::pos() const
 {
     // XXX: pretty arbitrary if we're just on a corner.
-    int x = ifloor(r.start.x);
-    int y = ifloor(r.start.y);
-    return (coord_def(x, y));
+    return (round_vec(r.start));
 }
 
 static bool _advance_from_non_diamond(geom::ray *r)
