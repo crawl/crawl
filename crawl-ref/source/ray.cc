@@ -274,6 +274,146 @@ geom::vector _fudge_corner(const geom::vector &w, const reflect_grid &rg)
     return (v);
 }
 
+// Bounce a ray leaving (0,0) through the positive side
+// along a diagonal corridor between (0,1) and (1,0) until
+// it's inside (1,1).
+geom::ray _bounce_diag_corridor(const geom::ray &rorig)
+{
+    geom::ray r = rorig;
+    geom::form wall(1, -1);
+    // The actual walls: geom::line l1(1, -1, 0.5), l2(1, -1, -0.5);
+    geom::line k(1, 1, 2.5);
+    ASSERT(k.f(r.dir) > 0); // We're actually moving towards k.
+    ASSERT(!geom::parallel(r.dir, geom::form(1, -1)));
+    // Now bounce back and forth between l1 and l2 until we hit k.
+    while (!double_is_zero(geom::intersect(r, k)))
+    {
+        r.to_grid(diamonds, false);
+        r.dir = reflect(r.dir, wall);
+    }
+    // Now pointing inside the destination cell (1,1) -- move inside.
+    r.to_grid(diamonds, true);
+    return (r);
+}
+
+// Bounce a ray leaving (0,0) properly through one of the sides
+// of the diamond.
+// r is positioned on the edge already, and side says which
+// side this is.
+geom::ray _bounce_noncorner(const geom::ray &r, const coord_def &side,
+                            const reflect_grid &rg)
+{
+    // Mirror r to have it leave through the positive side.
+    geom::ray rmirr = _mirror(r, side);
+
+    // Determine which of the three relevant cells are bouncy.
+    const coord_def dx = coord_def(side.x, 0);
+    const coord_def dy = coord_def(0, side.y);
+    bool rx  = rg(rg_o + dx);
+    bool ry  = rg(rg_o + dy);
+    bool rxy = rg(rg_o + dx + dy);
+    // One of the three neighbours on this side must be bouncy.
+    ASSERT(rx || ry || rxy);
+
+    // Now go through the cases separately.
+    if (rx && ry && !rxy)
+    {
+        rmirr = _bounce_diag_corridor(rmirr);
+    }
+    else
+    {
+        // These all reduce to reflection at one line.
+        geom::line l = _choose_reflect_line(rx, ry, rxy);
+
+        double t = intersect(rmirr, l);
+        ASSERT(double_is_zero(t) || t >= 0);
+        rmirr.advance(t);
+        rmirr.dir = geom::reflect(rmirr.dir, l.f);
+        if (bad_corner(rmirr))
+        {
+            // Really want to stay and set on_corner.
+            // But then pos() might be a solid cell.
+            geom::vector v = _mirror_pt(rmirr.start, side);
+            v = _fudge_corner(v, rg);
+            rmirr.start = _mirror_pt(v, side);
+        }
+        else
+        {
+            // Depending on the case, we're on some diamond edge
+            // or between diamonds. We'll just move safely into
+            // the next one.
+            rmirr.to_grid(diamonds, true);
+            if (in_non_diamond_int(rmirr.start))
+                _advance_from_non_diamond(&rmirr);
+        }
+    }
+
+    // Mirror back.
+    return (_mirror(rmirr, side));
+}
+
+geom::form _corner_wall(const coord_def &side, const reflect_grid &rg)
+{
+    coord_def e;
+    if (side.x == 0)
+        e = coord_def(1, 0);
+    else
+        e = coord_def(0, 1);
+    ASSERT(!rg(rg_o) && rg(rg_o+side));
+    // Reflect back by an orthogonal wall...
+    coord_def wall = e;
+    // unless the wall is clearly diagonal:
+    //  ##.
+    //  #*.  (with side.y == -1)
+    if (rg(rg_o+e) && rg(rg_o+side+e) && !rg(rg_o-e) && !rg(rg_o+side-e))
+    {
+        // diagonal wall through side and e
+        wall = side - e;
+    }
+    else if (rg(rg_o-e) && rg(rg_o+side-e) && !rg(rg_o+e) && !rg(rg_o+side+e))
+    {
+        // diagonal wall through side and -e
+        wall = side + e;
+    }
+    return (geom::form(wall.y, -wall.x));
+}
+
+// Bounce a ray that leaves cell (0,0) through a corner. We could
+// just fudge it a little, but want to be consistent for rays
+// shot in cardinal directions.
+geom::ray _bounce_corner(const geom::ray &rorig, const coord_def &side,
+                         const reflect_grid &rg)
+{
+    geom::ray r = rorig;
+    geom::form f = _corner_wall(side, rg);
+
+    if (r.dir.x == 0 || r.dir.y == 0)
+    {
+        // To keep cardinal rays nicely in the middle,
+        // we reflect them earlier.
+        r.start.x = r.start.y = 0.5;
+        r.dir = geom::reflect(r.dir, f);
+        ASSERT(r.dir.x == 0 || r.dir.y == 0);
+    }
+    else
+    {
+        // Others are reflected at the corner.
+        r.dir = geom::reflect(r.dir, f);
+        if (f.a != 0 && f.b != 0)
+        {
+            // Diagonal wall: to the next diamond, then inside.
+            r.to_grid(diamonds, false);
+            r.to_grid(diamonds, true);
+        }
+        else
+        {
+            // Back inside diamond (0,0).
+            r.to_grid(diamonds, true);
+        }
+    }
+    return (r);
+}
+
 void ray_def::bounce(const reflect_grid &rg)
 {
     ASSERT(_valid());
@@ -314,71 +454,17 @@ void ray_def::bounce(const reflect_grid &rg)
         side.y = side.y / 2;
     }
 
-    // Mirror rtrans to have it leave through the positive side.
-    geom::ray rmirr = _mirror(rtrans, side);
-
-    // TODO: on a corner, reflect back unless we're on a diagonal.
-
-    // Determine which of the three relevant cells are bouncy.
-    const coord_def dx = coord_def(side.x, 0);
-    const coord_def dy = coord_def(0, side.y);
-    bool rx = (side.x != 0) && rg(rg_o + dx);
-    bool ry = (side.y != 0) && rg(rg_o + dy);
-    bool rxy = rg(rg_o + dx + dy);
-    // One of the three neighbours on this side must be bouncy.
-    ASSERT(rx || ry || rxy);
-
-    // Now go through the cases separately.
-    if (rx && ry && !rxy)
-    {
-        // Tricky case: diagonal corridor.
-        geom::form wall(1, -1);
-        // The actual walls: geom::line l1(1, -1, 0.5), l2(1, -1, -0.5);
-        geom::line k(1, 1, 2.5);
-        ASSERT(k.f(rmirr.dir) > 0); // We're actually moving towards k.
-        ASSERT(!geom::parallel(rmirr.dir, geom::form(1, -1)));
-        // Now bounce back and forth between l1 and l2 until we hit k.
-        while (!double_is_zero(geom::intersect(rmirr, k)))
-        {
-            rmirr.to_grid(diamonds, false);
-            rmirr.dir = reflect(rmirr.dir, wall);
-        }
-        // Now pointing inside the destination cell (1,1) -- move inside.
-        rmirr.to_grid(diamonds, true);
-    }
+    if (corner)
+        rtrans = _bounce_corner(rtrans, side, rg);
     else
-    {
-        // These all reduce to reflection at one line.
-        geom::line l = _choose_reflect_line(rx, ry, rxy);
+        rtrans = _bounce_noncorner(rtrans, side, rg);
 
-        double t = intersect(rmirr, l);
-        ASSERT(double_is_zero(t) || t >= 0);
-        rmirr.advance(t);
-        rmirr.dir = geom::reflect(rmirr.dir, l.f);
-        if (bad_corner(rmirr))
-        {
-            // Really want to stay and set on_corner.
-            // But then pos() might be a solid cell.
-            geom::vector v = _mirror_pt(rmirr.start, side);
-            v = _fudge_corner(v, rg);
-            rmirr.start = _mirror_pt(v, side);
-        }
-        else
-        {
-            // Depending on the case, we're on some diamond edge
-            // or between diamonds. We'll just move safely into
-            // the next one.
-            rmirr.to_grid(diamonds, true);
-            if (in_non_diamond_int(rmirr.start))
-                on_corner = _advance_from_non_diamond(&rmirr);
-        }
-    }
-
-    // Mirror back.
-    rtrans = _mirror(rmirr, side);
     // Translate back.
     r.start = rtrans.start + p;
     r.dir = rtrans.dir;
+
+    // Set on_corner if we happen to have ended up on a corner.
+    on_corner = is_corner(r.start);
 
     ASSERT(_valid());
     ASSERT(!rg(pos() - old_pos + rg_o));
