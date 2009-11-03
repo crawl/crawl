@@ -152,9 +152,12 @@ struct mgen_data
     // monsters, to indicate whose priest they are.
     god_type        god;
 
-    // The number of hydra heads, manticore attack volleys, or merged
-    // slime creatures.  Note: in older versions this field was used for
-    // both this and for base_type.
+    // The number of hydra heads, the number of manticore attack volleys,
+    // the number of merged slime creatures, or the indicator for when
+    // Khufu is entombed.
+    //
+    // Note: in older versions this field was used for both this and for
+    // base_type.
     int             number;
 
     // The colour of the monster.
