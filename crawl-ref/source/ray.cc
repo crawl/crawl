@@ -282,19 +282,19 @@ void ray_def::bounce(const reflect_grid &rg)
     const coord_def old_pos = pos();
 #endif
 
-    if (on_corner)
-    {
-        // XXX
-        r.dir = -r.dir;
-        ASSERT(_valid());
-        return;
-    }
-
     // Translate to cell (0,0).
     geom::vector p(pos().x, pos().y);
     geom::ray rtrans;
     rtrans.start = r.start - p;
     rtrans.dir = r.dir;
+
+    if (on_corner)
+    {
+        // Move a little bit towards cell center (0.5, 0.5).
+       rtrans.start = 0.9 * rtrans.start + 0.1 * geom::vector(0.5, 0.5);
+       on_corner = false;
+       ASSERT(in_diamond_int(rtrans.start));
+    }
 
     // Move to the diamond edge to determine the side.
     coord_def side;
