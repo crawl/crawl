@@ -104,6 +104,7 @@ static coord_def round_vec(const geom::vector &v)
 
 coord_def ray_def::pos() const
 {
+    ASSERT(_valid());
     // XXX: pretty arbitrary if we're just on a corner.
     return (round_vec(r.start));
 }
