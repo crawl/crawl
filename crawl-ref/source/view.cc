@@ -34,6 +34,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "exclude.h"
+#include "files.h"
 #include "format.h"
 #include "ghost.h"
 #include "godabil.h"
@@ -92,7 +93,7 @@ FixedArray < unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER > Show_Backup;
 extern int stealth;             // defined in acr.cc
 
 screen_buffer_t colour_code_map( const coord_def& p, bool item_colour = false,
-                                 bool travel_colour = false );
+        bool travel_colour = false, bool on_level = true );
 
 void cloud_grid(void);
 void monster_grid(bool do_updates);
@@ -707,7 +708,7 @@ unsigned short dos_brand( unsigned short colour,
 // FIXME: Rework this function to use the new terrain known/seen checks
 // These are still env.map coordinates, NOT grid coordinates!
 screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
-                                bool travel_colour)
+                                bool travel_colour, bool on_level)
 {
     const unsigned short map_flags = env.map(p).flags;
     if (!(map_flags & MAP_GRID_KNOWN))
@@ -758,7 +759,7 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
 
     if (feature_colour != DARKGREY)
         tc = feature_colour;
-    else if (you.duration[DUR_MESMERISED])
+    else if (you.duration[DUR_MESMERISED] && on_level)
     {
         // If mesmerised, colour the few grids that can be reached anyway
         // lightgrey.
@@ -2297,7 +2298,8 @@ static std::string _level_description_string()
     return buf;
 }
 
-static void _draw_level_map(int start_x, int start_y, bool travel_mode)
+static void _draw_level_map(int start_x, int start_y, bool travel_mode,
+        bool on_level)
 {
     int bufcount2 = 0;
     screen_buffer_t buffer2[GYM * GXM * 2];
@@ -2343,12 +2345,13 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
             {
                 colour = colour_code_map(c,
                                          Options.item_colour,
-                                         travel_mode);
+                                         travel_mode,
+                                         on_level);
 
                 buffer2[bufcount2 + 1] = colour;
                 buffer2[bufcount2] = env.map(c).glyph();
 
-                if (c == you.pos() && !crawl_state.arena_suspended)
+                if (c == you.pos() && !crawl_state.arena_suspended && on_level)
                 {
                     // [dshaligram] Draw the @ symbol on the level-map. It's no
                     // longer saved into the env.map, so we need to draw it
@@ -2380,11 +2383,24 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
 }
 #endif // USE_TILE
 
-static void _reset_travel_colours(std::vector<coord_def> &features)
+static void _reset_travel_colours(std::vector<coord_def> &features,
+        bool on_level)
 {
     // We now need to redo travel colours.
     features.clear();
-    find_travel_pos(you.pos(), NULL, NULL, &features);
+
+    if (on_level)
+    {
+        find_travel_pos((on_level ? you.pos() : coord_def()),
+                NULL, NULL, &features);
+    }
+    else
+    {
+        travel_pathfind tp;
+        tp.set_feature_vector(&features);
+        tp.get_features();
+    }
+
     // Sort features into the order the player is likely to prefer.
     arrange_features(features);
 }
@@ -2393,78 +2409,36 @@ static void _reset_travel_colours(std::vector<coord_def> &features)
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
 // to get that.  This function is still a mess, though. -- bwr
-void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
+void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 {
+    level_excursion le;
+    level_id original(level_id::current());
+
     cursor_control ccon(!Options.use_fake_cursor);
     int i, j;
 
     int move_x = 0, move_y = 0, scroll_y = 0;
 
+    bool new_level = true;
+
     // Vector to track all features we can travel to, in order of distance.
     std::vector<coord_def> features;
-    if (travel_mode)
-    {
-        travel_cache.update();
 
-        find_travel_pos(you.pos(), NULL, NULL, &features);
-        // Sort features into the order the player is likely to prefer.
-        arrange_features(features);
-    }
-
-    int min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
-    bool found_y = false;
-
+    int min_x, max_x, min_y, max_y;
     const int num_lines   = _get_number_of_lines_levelmap();
     const int half_screen = (num_lines - 1) / 2;
 
     const int top = 1 + Options.level_map_title;
 
-    for (j = 0; j < GYM; j++)
-        for (i = 0; i < GXM; i++)
-        {
-            if (env.map[i][j].known())
-            {
-                if (!found_y)
-                {
-                    found_y = true;
-                    min_y = j;
-                }
+    int map_lines = 0;
 
-                max_y = j;
-
-                if (i < min_x)
-                    min_x = i;
-
-                if (i > max_x)
-                    max_x = i;
-            }
-        }
-
-    const int map_lines = max_y - min_y + 1;
-
-    const int start_x = min_x + (max_x - min_x + 1) / 2 - 40; // no x scrolling
+    int start_x;                                              // no x scrolling
     const int block_step = Options.level_map_cursor_step;
-    int start_y = 0;                                          // y does scroll
+    int start_y;                                              // y does scroll
 
-    int screen_y = you.pos().y;
+    int screen_y;
 
-    // If close to top of known map, put min_y on top
-    // else if close to bottom of known map, put max_y on bottom.
-    //
-    // The num_lines comparisons are done to keep things neat, by
-    // keeping things at the top of the screen.  By shifting an
-    // additional one in the num_lines > map_lines case, we can
-    // keep the top line clear... which makes things look a whole
-    // lot better for small maps.
-    if (num_lines > map_lines)
-        screen_y = min_y + half_screen - 1;
-    else if (num_lines == map_lines || screen_y - half_screen < min_y)
-        screen_y = min_y + half_screen;
-    else if (screen_y + half_screen > max_y)
-        screen_y = max_y - half_screen;
-
-    int curs_x = you.pos().x - start_x + 1;
-    int curs_y = you.pos().y - screen_y + half_screen + 1;
+    int curs_x, curs_y;
     int search_found = 0, anchor_x = -1, anchor_y = -1;
 
     bool map_alive  = true;
@@ -2475,15 +2449,98 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
 #endif
     textcolor(DARKGREY);
 
+    bool on_level;
+
     while (map_alive)
     {
+        if (new_level)
+        {
+            on_level = (level_id::current() == original);
+
+            move_x = 0, move_y = 0, scroll_y = 0;
+
+            // Vector to track all features we can travel to, in order of distance.
+            if (travel_mode)
+            {
+                travel_init_new_level();
+                travel_cache.update();
+
+                _reset_travel_colours(features, on_level);
+            }
+
+            min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
+            bool found_y = false;
+
+            for (j = 0; j < GYM; j++)
+                for (i = 0; i < GXM; i++)
+                {
+                    if (env.map[i][j].known())
+                    {
+                        if (!found_y)
+                        {
+                            found_y = true;
+                            min_y = j;
+                        }
+
+                        max_y = j;
+
+                        if (i < min_x)
+                            min_x = i;
+
+                        if (i > max_x)
+                            max_x = i;
+                    }
+                }
+
+            map_lines = max_y - min_y + 1;
+
+            start_x = min_x + (max_x - min_x + 1) / 2 - 40;           // no x scrolling
+            start_y = 0;                                              // y does scroll
+
+            coord_def reg;
+
+            if (on_level)
+            {
+                reg = you.pos();
+            }
+            else
+            {
+                reg.y = min_y + (max_y - min_y + 1) / 2;
+                reg.x = min_x + (max_x - min_x + 1) / 2;
+            }
+
+            screen_y = reg.y;
+
+            // If close to top of known map, put min_y on top
+            // else if close to bottom of known map, put max_y on bottom.
+            //
+            // The num_lines comparisons are done to keep things neat, by
+            // keeping things at the top of the screen.  By shifting an
+            // additional one in the num_lines > map_lines case, we can
+            // keep the top line clear... which makes things look a whole
+            // lot better for small maps.
+            if (num_lines > map_lines)
+                screen_y = min_y + half_screen - 1;
+            else if (num_lines == map_lines || screen_y - half_screen < min_y)
+                screen_y = min_y + half_screen;
+            else if (screen_y + half_screen > max_y)
+                screen_y = max_y - half_screen;
+
+            curs_x = reg.x - start_x + 1;
+            curs_y = reg.y - screen_y + half_screen + 1;
+            search_found = 0, anchor_x = -1, anchor_y = -1;
+
+            redraw_map = true;
+            new_level = false;
+        }
+
 #if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
         // If we've received a HUP signal then the user can't choose a
         // location, so indicate this by returning an invalid position.
         if (crawl_state.seen_hups)
         {
-            spec_place = coord_def(-1, -1);
-            return;
+            spec_place = level_pos();
+            break;
         }
 #endif
 
@@ -2500,7 +2557,7 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
             coord_def cen(start_x + curs_x - 1, start_y + curs_y - 1);
             tiles.load_dungeon(cen);
 #else
-            _draw_level_map(start_x, start_y, travel_mode);
+            _draw_level_map(start_x, start_y, travel_mode, on_level);
 
 #ifdef WIZARD
             if (you.wizard)
@@ -2538,7 +2595,7 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
 
             if (cme.left_clicked() && in_bounds(grdp))
             {
-                spec_place = grdp;
+                spec_place = level_pos(level_id::current(), grdp);
                 map_alive  = false;
             }
             else if (cme.scroll_up())
@@ -2574,10 +2631,7 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
                                       start_y + curs_y - 1);
             // We need to do this all over again so that the user can jump
             // to the waypoint he just created.
-            features.clear();
-            find_travel_pos(you.pos(), NULL, NULL, &features);
-            // Sort features into the order the player is likely to prefer.
-            arrange_features(features);
+            _reset_travel_colours(features, on_level);
             break;
 
         // Cycle the radius of an exclude.
@@ -2586,13 +2640,13 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
             const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
             cycle_exclude_radius(p);
 
-            _reset_travel_colours(features);
+            _reset_travel_colours(features, on_level);
             break;
         }
 
         case CMD_MAP_CLEAR_EXCLUDES:
             clear_excludes();
-            _reset_travel_colours(features);
+            _reset_travel_colours(features, on_level);
             break;
 
         case CMD_MAP_MOVE_DOWN_LEFT:
@@ -2634,6 +2688,76 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
             move_x = 1;
             move_y = 0;
             break;
+
+        case CMD_MAP_PREV_LEVEL:
+        case CMD_MAP_NEXT_LEVEL: {
+            int best_score = 1000;
+            level_id best_level;
+
+            int cur_depth = level_id::current().dungeon_absdepth();
+
+            for (level_id_set::iterator it = Generated_Levels.begin();
+                    it != Generated_Levels.end(); ++it)
+            {
+                int depth = it->dungeon_absdepth();
+
+                int score = (depth - cur_depth) * 2;
+
+                if (cmd == CMD_MAP_PREV_LEVEL)
+                    score *= -1;
+
+                if (score <= 0)
+                    continue;
+
+                if (it->branch == you.where_are_you
+                        && it->level_type == you.level_type)
+                {
+                    --score;
+                }
+
+                if (score < best_score)
+                {
+                    best_score = score;
+                    best_level = *it;
+                }
+            }
+
+            if (best_score != 1000)
+            {
+                le.go_to(best_level);
+                new_level = true;
+            }
+            break;
+        }
+
+        case CMD_MAP_OTHER_BRANCH: {
+            level_id_set::iterator it = Generated_Levels.begin();
+
+            while (*it != level_id::current())
+            {
+                ++it;
+
+                if (it != Generated_Levels.end())
+                    goto no_depth_category;
+            }
+
+            do
+            {
+                ++it;
+
+                if (it == Generated_Levels.end())
+                    it = Generated_Levels.begin();
+            }
+            while (it->dungeon_absdepth() != level_id::current().dungeon_absdepth());
+
+            if (*it != level_id::current())
+            {
+                le.go_to(*it);
+                new_level = true;
+            }
+        no_depth_category:
+            break;
+        }
 
         case CMD_MAP_JUMP_DOWN_LEFT:
             move_x = -block_step;
@@ -2688,8 +2812,11 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
             break;
 
         case CMD_MAP_FIND_YOU:
-            move_x = you.pos().x - (start_x + curs_x - 1);
-            move_y = you.pos().y - (start_y + curs_y - 1);
+            if (on_level)
+            {
+                move_x = you.pos().x - (start_x + curs_x - 1);
+                move_y = you.pos().y - (start_y + curs_y - 1);
+            }
             break;
 
         case CMD_MAP_FIND_UPSTAIR:
@@ -2765,7 +2892,7 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
         case CMD_MAP_GOTO_TARGET:
         {
             int x = start_x + curs_x - 1, y = start_y + curs_y - 1;
-            if (travel_mode && x == you.pos().x && y == you.pos().y)
+            if (travel_mode && on_level && x == you.pos().x && y == you.pos().y)
             {
                 if (you.travel_x > 0 && you.travel_y > 0)
                 {
@@ -2776,7 +2903,7 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
             }
             else
             {
-                spec_place = coord_def(x, y);
+                spec_place = level_pos(level_id::current(), coord_def(x, y));
                 map_alive = false;
                 break;
             }
@@ -2786,6 +2913,8 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
         case CMD_MAP_WIZARD_TELEPORT:
         {
             if (!you.wizard)
+                break;
+            if (!on_level)
                 break;
             const coord_def pos(start_x + curs_x - 1, start_y + curs_y - 1);
             if (!in_bounds(pos))
@@ -2799,7 +2928,7 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
         case CMD_MAP_EXIT_MAP:
             if (allow_esc)
             {
-                spec_place = coord_def(-1, -1);
+                spec_place = level_pos();
                 map_alive = false;
                 break;
             }
@@ -2879,6 +3008,11 @@ void show_map( coord_def &spec_place, bool travel_mode, bool allow_esc )
         curs_y += move_y;
 #endif
     }
+
+    le.go_to(original);
+
+    travel_init_new_level();
+    travel_cache.update();
 }
 
 // We logically associate a difficulty parameter with each tile on each level,

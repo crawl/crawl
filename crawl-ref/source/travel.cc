@@ -1367,6 +1367,46 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
                                   : explore_target());
 }
 
+void travel_pathfind::get_features()
+{
+    ASSERT( features );
+
+    if (!ls && (annotate_map || need_for_greed))
+        ls = StashTrack.find_current_level();
+
+    memset(point_distance, 0, sizeof(travel_distance_grid_t));
+
+    for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+        {
+            coord_def dc(x,y);
+            dungeon_feature_type feature = grd(dc);
+
+            if ((feature != DNGN_FLOOR
+                    && !feat_is_water(feature)
+                    && feature != DNGN_LAVA)
+                || is_waypoint(dc)
+                || is_stash(ls, dc.x, dc.y)
+                || is_trap(dc))
+            {
+                features->push_back(dc);
+            }
+        }
+
+    for (int i = 0, size = curr_excludes.size(); i < size; ++i)
+    {
+        const travel_exclude &exc = curr_excludes[i];
+        // An exclude - wherever it is - is always a feature.
+        if (std::find(features->begin(), features->end(), exc.pos)
+                == features->end())
+        {
+            features->push_back(exc.pos);
+        }
+
+        _fill_exclude_radius(exc);
+    }
+}
+
 bool travel_pathfind::square_slows_movement(const coord_def &c)
 {
     // c is a known (explored) location - we never put unknown points in the
@@ -1557,6 +1597,10 @@ bool travel_pathfind::point_traverse_delay(const coord_def &c)
 // to be the target; otherwise, false.
 bool travel_pathfind::path_examine_point(const coord_def &c)
 {
+    // If we've run off the map, or are pathfinding from nowhere in particular
+    if (!in_bounds(c))
+        return (false);
+
     if (point_traverse_delay(c))
         return (false);
 

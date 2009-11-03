@@ -47,6 +47,7 @@
 #include "stash.h"
 #include "stuff.h"
 #include "traps.h"
+#include "travel.h"
 #include "view.h"
 #include "xom.h"
 
@@ -1445,7 +1446,9 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
 
         while (true)
         {
-            show_map(pos, false, true);
+            level_pos lpos;
+            show_map(lpos, false, true);
+            pos = lpos.pos;
             redraw_screen();
 
 #if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
@@ -2065,10 +2068,12 @@ bool project_noise(void)
     bool success = false;
 
     coord_def pos(1, 0);
+    level_pos lpos;
 
     mpr( "Choose the noise's source (press '.' or delete to select)." );
     more();
-    show_map(pos, false);
+    show_map(lpos, false);
+    pos = lpos.pos;
 
     redraw_screen();
 

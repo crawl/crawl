@@ -1846,7 +1846,7 @@ void process_command( command_type cmd )
         }
 #endif
         {
-            coord_def pos;
+            level_pos pos;
 #ifdef USE_TILE
             // Since there's no actual overview map, but the functionality
             // exists, give a message to explain what's going on.
@@ -1861,8 +1861,8 @@ void process_command( command_type cmd )
 #ifdef USE_TILE
             mpr("Returning to the game...");
 #endif
-            if (pos.x > 0)
-                start_travel(pos);
+            if (pos.pos.x > 0)
+                start_translevel_travel(pos);
         }
         break;
 

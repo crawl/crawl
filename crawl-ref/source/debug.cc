@@ -5708,7 +5708,9 @@ void debug_pathfind(int mid)
     more();
 #endif
     coord_def dest;
-    show_map(dest, true);
+    level_pos ldest;
+    show_map(ldest, false);
+    dest = ldest.pos;
     redraw_screen();
     if (!dest.x)
     {

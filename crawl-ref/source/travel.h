@@ -513,6 +513,9 @@ public:
     // Set feature vector to use; if non-NULL, also sets annotate_map to true.
     void set_feature_vector(std::vector<coord_def> *features);
 
+    // Extract features without pathfinding
+    void get_features();
+
     // The next square to go to to move towards the travel destination. Return
     // value is undefined if pathfind was not called with RMODE_TRAVEL.
     const coord_def travel_move() const;

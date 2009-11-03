@@ -67,6 +67,8 @@ level-map
 <w>-</w>/<w>+</w>    : Scroll level map 20 grids up/down.
 <w>.</w>      : Start travel (also <w>Enter</w> and <w>,</w> and <w>;</w>).
          (Moves cursor to the last travel destination if still on @.)
+<w>[</w>/<w>]</w>    : Examine the next higher/lower level
+<w>v</w>      : Examine a different level at the same depth
 
 <h>Travel exclusions
 <w>e</w>      : Create a travel exclusion, change its radius, or remove it.
