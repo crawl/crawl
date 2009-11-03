@@ -4833,7 +4833,7 @@ static bool _dgn_place_one_monster( const vault_placement &place,
 }
 
 // Grr, keep this in sync with vault_grid.
-dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
+dungeon_feature_type map_feature_at(map_def *map, const coord_def &c, int rawfeat)
 {
     if (rawfeat == -1)
         rawfeat = map->glyph_at(c);
@@ -4856,7 +4856,7 @@ dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
         else if (f.feat >= 0)
             return static_cast<dungeon_feature_type>(f.feat);
         else if (f.glyph >= 0)
-            return map_feature(NULL, c, rawfeat);
+            return map_feature_at(NULL, c, rawfeat);
         else if (f.shop >= 0)
             return (DNGN_ENTER_SHOP);
 

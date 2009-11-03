@@ -632,7 +632,7 @@ struct dlua_set_map
 };
 
 class map_def;
-dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat);
+dungeon_feature_type map_feature_at(map_def *map, const coord_def &c, int rawfeat);
 
 struct map_file_place
 {
@@ -805,7 +805,7 @@ public:
         // feature slots, but that's fine by us.
         dungeon_feature_type operator () (const coord_def &c) const
         {
-            return (map_feature(&map, c, -1));
+            return (map_feature_at(&map, c, -1));
         }
     };
 
