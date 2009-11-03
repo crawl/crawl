@@ -13,6 +13,7 @@
 #include <conio.h>
 #endif
 
+#include "arena.h"
 #include "beam.h"
 #include "colour.h"
 #include "directn.h"
@@ -196,13 +197,13 @@ static bool _do_split(monsters *thing, coord_def & target)
 
     monsters *new_slime = &env.mons[slime_idx];
 
+    if (!new_slime)
+        return (false);
+
     // Inflict the new slime with any enchantments on the parent.
     _split_ench_durations(thing, new_slime);
     new_slime->attitude = thing->attitude;
     new_slime->flags = thing->flags;
-
-    if (!new_slime)
-        return (false);
 
     if (you.can_see(thing))
         mprf("%s splits.", thing->name(DESC_CAP_A).c_str());
@@ -217,6 +218,9 @@ static bool _do_split(monsters *thing, coord_def & target)
 
     _stats_from_blob_count(thing, hp_per_blob);
     _stats_from_blob_count(new_slime, hp_per_blob);
+
+    if (crawl_state.arena)
+        arena_split_monster(thing, new_slime);
 
     return (true);
 }

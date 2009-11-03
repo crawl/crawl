@@ -1140,8 +1140,8 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
             || arena::banned_glyphs[mons_char(mg.cls)]);
 }
 
-// XXX: We sometimes get a book-keeping error when a slime creature
-// splits.
+// XXX: Still having some trouble with book-keeping if a slime creature
+// is placed via splitting.
 void arena_placed_monster(monsters *monster)
 {
     if (monster->attitude == ATT_FRIENDLY)
@@ -1225,6 +1225,21 @@ void arena_placed_monster(monsters *monster)
     }
 }
 
+// Take care of respawning slime creatures merging and then splitting.
+void arena_split_monster(monsters *split_from, monsters *split_to)
+{
+    if (!arena::respawn)
+        return;
+
+    const int from_idx   = split_from->mindex();
+    const int member_idx = arena::to_respawn[from_idx];
+
+    if (member_idx == -1)
+        return;
+
+    arena::to_respawn[split_to->mindex()] = member_idx;
+}
+
 void arena_monster_died(monsters *monster, killer_type killer,
                         int killer_index, bool silent, int corpse)
 {
@@ -1281,16 +1296,20 @@ void arena_monster_died(monsters *monster, killer_type killer,
 
         if (fac)
         {
-            fac->respawn_list.push_back(arena::to_respawn[midx]);
+            int member_idx = arena::to_respawn[midx];
+            fac->respawn_list.push_back(member_idx);
             fac->respawn_pos.push_back(monster->pos());
 
-            // Un-merge slime when it respawns.
-            // XXX: We're still losing slimes here.
-            if (monster->type == MONS_SLIME_CREATURE)
+            // Un-merge slime when it respawns, but only if it's
+            // specifically a slime, and not a random monster which
+            // happens to be a slime.
+            if (monster->type == MONS_SLIME_CREATURE
+                && (fac->members.get_monster(member_idx).mid
+                    == MONS_SLIME_CREATURE))
             {
                 for (unsigned int i = 1; i < monster->number; i++)
                 {
-                    fac->respawn_list.push_back(arena::to_respawn[midx]);
+                    fac->respawn_list.push_back(member_idx);
                     fac->respawn_pos.push_back(monster->pos());
                 }
             }
