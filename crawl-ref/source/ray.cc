@@ -84,6 +84,16 @@ static bool in_non_diamond_int(const geom::vector &v)
     return (!in_diamond(v) && !on_line(v));
 }
 
+// Is r on a corner and heading into a non-diamond?
+static bool bad_corner(const geom::ray &r)
+{
+    if (!is_corner(r.start))
+        return (false);
+    geom::ray copy = r;
+    copy.to_grid(diamonds, true);
+    return (in_non_diamond_int(copy.start));
+}
+
 static coord_def round_vec(const geom::vector &v)
 {
     int x = ifloor(v.x);
@@ -334,13 +344,24 @@ void ray_def::bounce(const reflect_grid &rg)
         double t = intersect(rmirr, l);
         ASSERT(double_is_zero(t) || t >= 0);
         rmirr.advance(t);
-        rmirr.dir = reflect(rmirr.dir, l.f);
-        // Depending on the case, we're on some diamond edge
-        // or between diamonds. We'll just move safely into
-        // the next one.
-        rmirr.to_grid(diamonds, true);
-        if (!in_diamond(rmirr.start))
-            on_corner = _advance_from_non_diamond(&rmirr);
+        rmirr.dir = geom::reflect(rmirr.dir, l.f);
+        if (bad_corner(rmirr))
+        {
+            // Really want to stay and set on_corner.
+            // But then pos() might be a solid cell.
+            geom::vector v = _mirror_pt(rmirr.start, side);
+            v = _fudge_corner(v, rg);
+            rmirr.start = _mirror_pt(v, side);
+        }
+        else
+        {
+            // Depending on the case, we're on some diamond edge
+            // or between diamonds. We'll just move safely into
+            // the next one.
+            rmirr.to_grid(diamonds, true);
+            if (in_non_diamond_int(rmirr.start))
+                on_corner = _advance_from_non_diamond(&rmirr);
+        }
     }
 
     // Mirror back.
