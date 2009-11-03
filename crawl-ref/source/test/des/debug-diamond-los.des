@@ -234,3 +234,35 @@ c....ccccc
 c.cccccccc
 cccccccccc
 ENDMAP
+
+NAME: los_diag
+ORIENT: float
+TAGS: debug_los
+MAP
+@xcccccccc
+x.xccccccc
+cx.xcccccc
+ccx.xccccc
+cccx.xcccc
+ccccx.xccc
+cccccxcccc
+cccccccccc
+cccccccccc
+cccccccccc
+ENDMAP
+
+NAME: los_diag_gap
+ORIENT: float
+TAGS: debug_los
+MAP
+@xcccccccc
+x.xccccccc
+cx..cccccc
+cc....cccc
+ccc.....cc
+ccc....ccc
+cccc..cccc
+cccc.ccccc
+cccccccccc
+cccccccccc
+ENDMAP
