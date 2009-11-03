@@ -4138,6 +4138,17 @@ void zap_wand(int slot)
 
     // Reset range.
     beam.range = _wand_range(type_zapped);
+
+#ifdef WIZARD
+    if (you.wizard)
+    {
+        std::string str = wand.inscription;
+        int wiz_range = strip_number_tag(str, "range:");
+        if (wiz_range != TAG_UNFOUND)
+            beam.range = wiz_range;
+    }
+#endif
+
     // zapping() updates beam.
     zapping( type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 

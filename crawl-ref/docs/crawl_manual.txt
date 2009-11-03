@@ -2861,3 +2861,10 @@ Clar      clarity
 Cons      conservation
 Gourm     gourmand
 Ward      warding
+
+Debugging inscriptions
+----------------------
+
+If you've entered wizard mode, then you can change the zapping range of a
+wand by inscribing it with 'range:number' (e.g., 'range:50').  This only works
+for wands zapped by the player.
