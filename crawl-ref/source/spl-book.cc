@@ -125,7 +125,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_FREEZE,
      SPELL_THROW_FROST,
      SPELL_OZOCUBUS_ARMOUR,
-     SPELL_FLING_ICICLE,
+     SPELL_THROW_ICICLE,
      SPELL_SUMMON_ICE_BEAST,
      SPELL_FREEZING_CLOUD,
      SPELL_NO_SPELL,
@@ -643,7 +643,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // 53 - Rod of destruction (ice)
     {SPELL_THROW_FROST,
-     SPELL_FLING_ICICLE,
+     SPELL_THROW_ICICLE,
      SPELL_FREEZING_CLOUD,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,

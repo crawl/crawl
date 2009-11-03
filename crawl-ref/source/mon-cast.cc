@@ -234,7 +234,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.is_beam  = true;
         break;
 
-    case SPELL_FLING_ICICLE:
+    case SPELL_THROW_ICICLE:
         beam.name     = "shard of ice";
         beam.damage   = dice_def( 3, 8 + power / 11 );
         beam.colour   = WHITE;

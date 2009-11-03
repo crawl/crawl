@@ -286,7 +286,7 @@ Hellfire
 
 This spell should only be available from Dispater's staff. So how are you reading this?
 %%%%
-Fling Icicle
+Throw Icicle
 
 This spell throws forth a shard of ice. It is particularly effective against those creatures not immune to the effects of freezing. But as most of its destructive potential comes from strong impact and cutting edges, even cold-resistant creatures are notably affected.
 %%%%

@@ -94,7 +94,7 @@ ensorcelled_hibernation ENSORCELLED_HIBERNATION
 freeze FREEZE
 freezing_aura FREEZING_AURA
 freezing_cloud FREEZING_CLOUD
-fling_icicle FLING_ICICLE
+throw_icicle THROW_ICICLE
 ice_form ICE_FORM
 ice_storm ICE_STORM
 metabolic_englaciation METABOLIC_ENGLACIATION

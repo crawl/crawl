@@ -1483,8 +1483,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_FLING_ICICLE:
-        if (!zapping(ZAP_FLING_ICICLE, powc, beam, true))
+    case SPELL_THROW_ICICLE:
+        if (!zapping(ZAP_THROW_ICICLE, powc, beam, true))
             return (SPRET_ABORT);
         break;
 

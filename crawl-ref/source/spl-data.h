@@ -1663,7 +1663,7 @@
 },
 
 {
-    SPELL_FLING_ICICLE, "Fling Icicle",
+    SPELL_THROW_ICICLE, "Throw Icicle",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
      4,

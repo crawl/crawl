@@ -1102,7 +1102,7 @@ const zap_info zap_data[] = {
     },
 
     {
-        ZAP_FLING_ICICLE,
+        ZAP_THROW_ICICLE,
         "shard of ice",
         100,
         new calcdice_calculator<3, 10, 1, 2>,
