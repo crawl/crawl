@@ -80,10 +80,14 @@ LUAFN(debug_bouncy_beam)
     source.y = luaL_checkint(ls, 2);
     target.x = luaL_checkint(ls, 3);
     target.y = luaL_checkint(ls, 4);
+    int range = luaL_checkint(ls, 5);
+    bool findray = false;
+    if (lua_gettop(ls) > 5)
+        findray = lua_toboolean(ls, 6);
 
     bolt beam;
 
-    beam.range      = luaL_checkint(ls, 5);
+    beam.range      = range;
     beam.type       = '*';
     beam.colour     = LIGHTCYAN;
     beam.flavour    = BEAM_ELECTRICITY;
@@ -91,6 +95,9 @@ LUAFN(debug_bouncy_beam)
     beam.target     = target;
     beam.is_beam    = true;
     beam.draw_delay = 0;
+
+    if (findray)
+        beam.chose_ray = find_ray(source, target, beam.ray);
 
     beam.name       = "debug lightning beam";
     beam.short_name = "DEBUG";
