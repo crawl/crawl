@@ -530,6 +530,8 @@ int max_cloud_damage(cloud_type cl_type, int power)
 
         // Intentional fall-throuigh
     case CLOUD_COLD:
+        if (you.mutation[MUT_PASSIVE_FREEZE])
+            return (0);
         if (cl_type == CLOUD_COLD)
             resist = player_res_cold();
 
@@ -665,6 +667,9 @@ void in_a_cloud()
         break;
 
     case CLOUD_COLD:
+        if (you.mutation[MUT_PASSIVE_FREEZE])
+            break;
+
         mpr("You are engulfed in freezing vapours!");
 
         resist = player_res_cold();
@@ -791,8 +796,9 @@ bool is_damaging_cloud(cloud_type type, bool temp)
         if (temp && you.duration[DUR_FIRE_SHIELD])
             return (false);
     case CLOUD_CHAOS:
-    case CLOUD_COLD:
         return (true);
+    case CLOUD_COLD:
+        return (!you.mutation[MUT_PASSIVE_FREEZE]);
 
     // Only harmful if the player doesn't have the necessary resistances.
     // Takes into account what the player can *know* and what s/he can

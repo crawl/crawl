@@ -34,6 +34,7 @@
 #include "externs.h"
 
 #include "artefact.h"
+#include "beam.h"
 #include "chardump.h"
 #include "delay.h"
 #include "effects.h"
@@ -857,6 +858,52 @@ static void _yred_mirrors_injury(int dam, int death_source)
     }
 }
 
+static void _passive_freeze(kill_method_type death_type, int death_source)
+{
+    if (you.mutation[MUT_PASSIVE_FREEZE] && death_type == KILLED_BY_MONSTER)
+    {
+        if (invalid_monster_index(death_source))
+            return;
+
+        monsters *mon = &menv[death_source];
+
+        if (!mon->alive())
+            return;
+
+        bolt beam;
+        beam.flavour = BEAM_COLD;
+        beam.thrower = KILL_YOU;
+
+        const int orig_hurted = roll_dice(1, 11);
+        int hurted = mons_adjust_flavoured(mon, beam, orig_hurted);
+
+        if (!hurted)
+            return;
+
+        simple_monster_message(mon, " is very cold.");
+
+#ifndef USE_TILE
+        flash_monster_colour(mon, LIGHTBLUE, 200);
+#endif
+
+        mon->hurt(&you, hurted);
+
+        if (mon->alive())
+        {
+            mon->expose_to_element(BEAM_COLD, orig_hurted);
+            print_wounds(mon);
+
+            const int cold_res = mon->res_cold();
+
+            if (cold_res <= 0)
+            {
+                const int stun = (1 - cold_res) * random2(7);
+                mon->speed_increment -= stun;
+            }
+        }
+    }
+}
+
 static void _maybe_spawn_jellies(int dam, const char* aux,
                                   kill_method_type death_type, int death_source)
 {
@@ -1029,6 +1076,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                       Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
 
             _yred_mirrors_injury(dam, death_source);
+            _passive_freeze(death_type, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
 
             return;
