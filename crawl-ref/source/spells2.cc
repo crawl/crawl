@@ -2209,7 +2209,8 @@ bool plant_ring_from_fruit()
 {
     int possible_count;
     int created_count = 0;
-    int rc = _prompt_for_fruit(possible_count, "Use which fruit?");
+    int rc = _prompt_for_fruit(possible_count,
+                               "Use which fruit? [0-9] specify amount");
 
     // Prompt failed?
     if (rc < 0)
@@ -2451,7 +2452,8 @@ bool evolve_flora()
 
     char prompt_string[100];
     memset(prompt_string,0,100);
-    sprintf(prompt_string,"Use which fruit (%1.1f oklob plants per fruit)?",
+    sprintf(prompt_string,
+            "Use which fruit?  %1.1f oklob plants per fruit, [0-9] specify amount",
             approx_oklob_rate);
 
     rc = _prompt_for_fruit(available_count, prompt_string);
