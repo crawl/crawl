@@ -52,7 +52,7 @@ local function test_los_map(map)
 end
 
 local function test_los_maps()
-  dgn.load_des_file("test/des/debug-los.des")
+  dgn.load_des_file("test/des/debug-diamond-los.des")
   local map = dgn.map_by_tag("debug_los")
   assert(map, "Could not find debug-los maps (tag 'debug_los')")
   while map do
@@ -62,6 +62,5 @@ local function test_los_maps()
   end
 end
 
--- Disable until the maps have been updated for diamond LOS model.
---test_los_maps()
+test_los_maps()
 
