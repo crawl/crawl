@@ -1,0 +1,23 @@
+# A random set of walls for unpredictable ray bouncing.
+NAME: bounce_test
+TAGS: bounce_test
+KFEAT: x = w:70 floor / w:30 X
+MAP
+XXXXXXXXXXXXXXXXX
+XxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxX
+Xxxxx.......xxxxX
+Xxxxx.......xxxxX
+Xxxxx.......xxxxX
+Xxxxx...@...xxxxX
+Xxxxx.......xxxxX
+Xxxxx.......xxxxX
+Xxxxx.......xxxxX
+XxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxX
+XxxxxxxxxxxxxxxxX
+XXXXXXXXXXXXXXXXX
+ENDMAP

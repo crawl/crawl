@@ -8,6 +8,7 @@
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "beam.h"
 #include "chardump.h"
 #include "dungeon.h"
 #include "message.h"
@@ -70,6 +71,35 @@ LUAFN(_debug_test_explore)
     return (0);
 }
 
+LUAFN(debug_bouncy_beam)
+{
+    coord_def source;
+    coord_def target;
+
+    source.x = luaL_checkint(ls, 1);
+    source.y = luaL_checkint(ls, 2);
+    target.x = luaL_checkint(ls, 3);
+    target.y = luaL_checkint(ls, 4);
+
+    bolt beam;
+
+    beam.range      = luaL_checkint(ls, 5);
+    beam.type       = '*';
+    beam.colour     = LIGHTCYAN;
+    beam.flavour    = BEAM_ELECTRICITY;
+    beam.source     = source;
+    beam.target     = target;
+    beam.is_beam    = true;
+    beam.draw_delay = 0;
+
+    beam.name       = "debug lightning beam";
+    beam.short_name = "DEBUG";
+
+    beam.fire();
+
+    return (0);
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
@@ -77,6 +107,7 @@ const struct luaL_reg debug_dlib[] =
 { "generate_level", debug_generate_level },
 { "dump_map", debug_dump_map },
 { "test_explore", _debug_test_explore },
+{ "bouncy_beam", debug_bouncy_beam },
 
 { NULL, NULL }
 };
