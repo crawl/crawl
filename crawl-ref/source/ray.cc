@@ -77,6 +77,14 @@ static bool in_diamond(const geom::vector &v)
     return (in_diamond_int(v) || is_corner(v));
 }
 
+// Is v in the interiour of a non-diamond?
+static bool in_non_diamond_int(const geom::vector &v)
+{
+    // This could instead be done like in_diamond_int.
+    return (!in_diamond(v) && !on_line(v));
+}
+
+
 coord_def ray_def::pos() const
 {
     // XXX: pretty arbitrary if we're just on a corner.
@@ -100,11 +108,18 @@ static bool _advance_from_non_diamond(geom::ray *r)
     }
 }
 
+// The ray is in a legal state to be passed around externally.
+bool ray_def::_valid() const
+{
+    return (on_corner && is_corner(r.start) ||
+            !on_corner && in_diamond_int(r.start));
+}
+
 // Return true if we didn't hit a corner, hence if this
 // is a good ray so far.
 bool ray_def::advance()
 {
-    ASSERT(on_corner || in_diamond_int(r.start));
+    ASSERT(_valid());
     if (on_corner)
     {
         ASSERT (is_corner(r.start));
@@ -120,14 +135,16 @@ bool ray_def::advance()
         {
             // r is now on a corner, going from diamond to diamond.
             r.to_grid(diamonds, true);
+            ASSERT(_valid());
             return (true);
         }
     }
 
     // Now inside a non-diamond.
-    ASSERT(!in_diamond(r.start));
+    ASSERT(in_non_diamond_int(r.start));
 
     on_corner = _advance_from_non_diamond(&r);
+    ASSERT(_valid());
     return (!on_corner);
 }
 
@@ -153,12 +170,13 @@ void ray_def::bounce(const reflect_grid &rg)
     mprf(MSGCH_DIAGNOSTICS, "mirroring ray: (%f,%f) + t*(%f,%f)",
          r.start.x, r.start.y, r.dir.x, r.dir.y);
 #endif
-    ASSERT(in_diamond(r.start));
+    ASSERT(_valid());
 
     if (on_corner)
     {
         // XXX
         r.dir = -r.dir;
+        ASSERT(_valid());
         return;
     }
 
@@ -279,6 +297,7 @@ void ray_def::bounce(const reflect_grid &rg)
     mprf(MSGCH_DIAGNOSTICS, "mirrored ray: (%f,%f) + t*(%f,%f)",
          r.start.x, r.start.y, r.dir.x, r.dir.y);
 #endif
+    ASSERT(_valid());
 }
 
 void ray_def::regress()
