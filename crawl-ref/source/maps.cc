@@ -914,7 +914,7 @@ static void parse_maps(const std::string &s)
 {
     const std::string base = get_base_filename(s);
     if (map_files_read.find(base) != map_files_read.end())
-        end(1, false, "Map file %s has already been read.", base.c_str());
+        return;
 
     map_files_read.insert(base);
 
