@@ -2067,9 +2067,9 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     if (mon.mons_species() == MONS_SLIME_CREATURE && desc != DESC_DBNAME)
     {
         ASSERT(mon.number <= 5);
-        const char* cardinals[] = {"", "large ", "very large ",
+        const char* cardinals[] = {"buggy ", "", "large ", "very large ",
                                    "enormous ", "titanic "};
-        result += cardinals[mon.number - 1];
+        result += cardinals[mon.number];
     }
 
     // Done here to cover cases of undead versions of hydras.

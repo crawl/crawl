@@ -1316,7 +1316,7 @@ int exper_value(const monsters *monster)
     // Hacks to make merged slime creatures not worth so much exp.  We
     // will calculate the experience we would get for 1 blob, and then
     // just multiply it so that exp is linear with blobs merged. -cao
-    if (monster->mons_species() == MONS_SLIME_CREATURE)
+    if (monster->mons_species() == MONS_SLIME_CREATURE && monster->number)
         maxhp /= monster->number;
 
     // These are some values we care about.
