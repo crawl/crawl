@@ -2393,7 +2393,6 @@ static bool _god_accepts_prayer(god_type god)
 
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
-    case GOD_FEAWN:
         return (true);
 
     default:
@@ -2509,12 +2508,6 @@ void pray()
         || you.religion == GOD_YREDELEMNUL)
     {
         you.duration[DUR_PRAYER] = 20;
-    }
-    else if (you.religion == GOD_FEAWN)
-    {
-        if (you.duration[DUR_SLOW] < you.duration[DUR_PRAYER])
-            slow_player(you.duration[DUR_PRAYER]);
-        mprf(MSGCH_GOD, "You feel in touch with plants.");
     }
 
     // Gods who like fresh corpses, Beoghites and Nemelexites offer the

@@ -3868,7 +3868,26 @@ static void _move_player(coord_def move)
 
           monsters*      targ_monst = monster_at(targ);
           if (feawn_passthrough(targ_monst))
+          {
+              // Moving on a plant takes 1.5 x normal move delay. We
+              // will print a message about it but only when moving
+              // from open space->plant (hopefully this will cut down
+              // on the message spam).
+              you.time_taken = div_rand_round(you.time_taken * 3, 2);
+
+              monsters * current = monster_at(you.pos());
+              if(!current || !feawn_passthrough(current))
+              {
+                  // Probably need a better messages. -cao
+                  if(mons_genus(targ_monst->type == MONS_FUNGUS))
+                  {
+                      mprf("You walk carefully through the fungus.");
+                  }
+                  else
+                      mprf("You walk carefully throuh the plants.");
+              }
               targ_monst = NULL;
+          }
 
     const bool           targ_pass  = you.can_pass_through(targ);
 

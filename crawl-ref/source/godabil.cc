@@ -396,12 +396,11 @@ void feawn_neutralise_plant(monsters *plant)
     plant->flags   |= MF_WAS_NEUTRAL;
 }
 
-// During prayer feawn allows worshipers to walk on top of stationary plants
-// and fungi.
+// Feawn allows worshipers to walk on top of stationary plants and
+// fungi.
 bool feawn_passthrough(const monsters * target)
 {
     return (target && you.religion == GOD_FEAWN
-            && you.duration[DUR_PRAYER]
             && mons_is_plant(target)
             && mons_is_stationary(target));
 }
