@@ -165,8 +165,8 @@ static const ability_def Ability_List[] =
     { ABIL_NON_ABILITY, "No ability", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_SPIT_POISON, "Spit Poison", 0, 0, 40, 0, ABFLAG_BREATH },
 
-    { ABIL_TELEPORTATION, "Teleportation", 3, 0, 200, 0, ABFLAG_NONE },
-    { ABIL_BLINK, "Blink", 1, 0, 50, 0, ABFLAG_NONE },
+    { ABIL_TELEPORTATION, "Teleportation", 0, 100, 200, 0, ABFLAG_NONE },
+    { ABIL_BLINK, "Blink", 0, 50, 50, 0, ABFLAG_NONE },
 
     { ABIL_BREATHE_FIRE, "Breathe Fire", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_FROST, "Breathe Frost", 0, 0, 125, 0, ABFLAG_BREATH },
@@ -182,16 +182,16 @@ static const ability_def Ability_List[] =
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_NONE },
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
-    { ABIL_SUMMON_MINOR_DEMON, "Summon Minor Demon", 3, 3, 75, 0, ABFLAG_NONE },
-    { ABIL_SUMMON_DEMON, "Summon Demon", 5, 5, 150, 0, ABFLAG_NONE },
-    { ABIL_HELLFIRE, "Hellfire", 8, 8, 200, 0, ABFLAG_NONE },
-    { ABIL_TORMENT, "Torment", 9, 0, 250, 0, ABFLAG_PAIN },
-    { ABIL_RAISE_DEAD, "Raise Dead", 5, 5, 150, 0, ABFLAG_NONE },
-    { ABIL_CONTROL_DEMON, "Control Demon", 4, 4, 100, 0, ABFLAG_NONE },
-    { ABIL_CHANNELING, "Channeling", 1, 0, 30, 0, ABFLAG_NONE },
-    { ABIL_THROW_FLAME, "Throw Flame", 1, 1, 50, 0, ABFLAG_NONE },
-    { ABIL_THROW_FROST, "Throw Frost", 1, 1, 50, 0, ABFLAG_NONE },
-    { ABIL_BOLT_OF_DRAINING, "Bolt of Draining", 4, 4, 100, 0, ABFLAG_NONE },
+    { ABIL_SUMMON_MINOR_DEMON, "Summon Minor Demon", 0, 50, 75, 0, ABFLAG_NONE },
+    { ABIL_SUMMON_DEMON, "Summon Demon", 0, 150, 150, 0, ABFLAG_NONE },
+    { ABIL_HELLFIRE, "Hellfire", 0, 350, 200, 0, ABFLAG_NONE },
+    { ABIL_TORMENT, "Torment", 0, 100, 250, 0, ABFLAG_PAIN },
+    { ABIL_RAISE_DEAD, "Raise Dead", 0, 75, 150, 0, ABFLAG_NONE },
+    { ABIL_CONTROL_DEMON, "Control Demon", 0, 275, 100, 0, ABFLAG_NONE },
+    { ABIL_CHANNELING, "Channeling", 0, 15, 30, 0, ABFLAG_NONE },
+    { ABIL_THROW_FLAME, "Throw Flame", 0, 20, 50, 0, ABFLAG_NONE },
+    { ABIL_THROW_FROST, "Throw Frost", 0, 20, 50, 0, ABFLAG_NONE },
+    { ABIL_BOLT_OF_DRAINING, "Bolt of Draining", 0, 175, 100, 0, ABFLAG_NONE },
 
     // FLY_II used to have ABFLAG_EXHAUSTION, but that's somewhat meaningless
     // as exhaustion's only (and designed) effect is preventing Berserk. - bwr
@@ -302,7 +302,7 @@ static const ability_def Ability_List[] =
     { ABIL_LUGONU_BANISH, "Banish",
       4, 0, 200, generic_cost::range(3, 4), ABFLAG_NONE },
     { ABIL_LUGONU_CORRUPT, "Corrupt",
-      7, 5, 500, generic_cost::range(10, 14), ABFLAG_NONE },
+      7, scaling_cost::fixed(5), 500, generic_cost::range(10, 14), ABFLAG_NONE },
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss",
       9, 0, 500, generic_cost::fixed(35), ABFLAG_PAIN },
 
@@ -412,7 +412,7 @@ const std::string make_cost_description(ability_type ability)
         if (!ret.str().empty())
             ret << ", ";
 
-        ret << abil.hp_cost;
+        ret << abil.hp_cost.cost(you.hp_max);
         if (abil.flags & ABFLAG_PERMANENT_HP)
             ret << " Permanent";
         ret << " HP";
@@ -1205,7 +1205,7 @@ static bool _activate_talent(const talent& tal)
         return (false);
     }
 
-    if (!enough_hp(abil.hp_cost, false))
+    if (!enough_hp(abil.hp_cost.cost(you.hp_max), false))
     {
         crawl_state.zero_turns_taken();
         return (false);
@@ -2095,10 +2095,11 @@ static void _pay_ability_costs(const ability_def& abil)
 
     const int food_cost  = abil.food_cost + random2avg(abil.food_cost, 2);
     const int piety_cost = abil.piety_cost.cost();
+    const int hp_cost    = abil.hp_cost.cost(you.hp_max);
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Cost: mp=%d; hp=%d; food=%d; piety=%d",
-         abil.mp_cost, abil.hp_cost, food_cost, piety_cost );
+         abil.mp_cost, hp_cost, food_cost, piety_cost );
 #endif
 
     if (abil.mp_cost)
@@ -2110,7 +2111,7 @@ static void _pay_ability_costs(const ability_def& abil)
 
     if (abil.hp_cost)
     {
-        dec_hp( abil.hp_cost, false );
+        dec_hp( hp_cost, false );
         if (abil.flags & ABFLAG_PERMANENT_HP)
             rot_hp(1);
     }
@@ -2625,4 +2626,9 @@ static int _find_ability_slot(ability_type which_ability)
 int generic_cost::cost() const
 {
     return (base + (add > 0 ? random2avg(add, rolls) : 0));
+}
+
+int scaling_cost::cost(int max) const
+{
+    return (value < 0) ? (-value) : ((value * max + 500) / 1000);
 }

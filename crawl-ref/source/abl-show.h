@@ -39,13 +39,29 @@ struct generic_cost
     operator bool () const { return base > 0 || add > 0; }
 };
 
+struct scaling_cost
+{
+    int value;
+
+    scaling_cost(int permille) : value(permille) {}
+
+    static scaling_cost fixed(int fixed)
+    {
+        return scaling_cost(-fixed);
+    }
+
+    int cost(int max) const;
+
+    operator bool () const { return value != 0; }
+};
+
 // Structure for representing an ability:
 struct ability_def
 {
     ability_type        ability;
     const char *        name;
     unsigned int        mp_cost;        // magic cost of ability
-    unsigned int        hp_cost;        // hit point cost of ability
+    scaling_cost        hp_cost;        // hit point cost of ability
     unsigned int        food_cost;      // + rand2avg( food_cost, 2 )
     generic_cost        piety_cost;     // + random2( (piety_cost + 1) / 2 + 1 )
     unsigned int        flags;          // used for additonal cost notices
