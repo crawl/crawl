@@ -62,4 +62,6 @@ local function test_los_maps()
   end
 end
 
-test_los_maps()
+-- Disable until the maps have been updated for diamond LOS model.
+--test_los_maps()
+
