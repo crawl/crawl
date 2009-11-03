@@ -1529,6 +1529,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_fire_storm(powc, beam);
         break;
 
+    case SPELL_HELLFIRE_BURST:
+        if (!cast_hellfire_burst(powc, beam))
+            return (SPRET_ABORT);
+        break;
+
     case SPELL_ICE_STORM:
         if (!zapping(ZAP_ICE_STORM, powc, beam, true))
             return (SPRET_ABORT);

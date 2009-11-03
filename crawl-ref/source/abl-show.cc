@@ -1474,8 +1474,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_HELLFIRE:
-        if (your_spells(SPELL_HELLFIRE,
-                        20 + you.experience_level, false) == SPRET_ABORT)
+        if (your_spells(SPELL_HELLFIRE_BURST,
+                        you.experience_level * 5, false) == SPRET_ABORT)
             return (false);
         break;
 

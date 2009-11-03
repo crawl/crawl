@@ -40,6 +40,7 @@ int allowed_deaths_door_hp(void);
 void cast_deaths_door(int pow);
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 void cast_fire_storm(int pow, bolt &beam);
+bool cast_hellfire_burst(int pow, bolt &beam);
 void cast_chain_lightning(int pow);
 bool cast_revivification(int pow);
 void cast_berserk(void);

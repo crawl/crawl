@@ -699,6 +699,19 @@
 },
 
 {
+    SPELL_HELLFIRE_BURST, "Hellfire Burst",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_UNHOLY,
+     9,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     "Where?",
+     true,
+     false
+},
+
+{
     SPELL_DETECT_TRAPS, "Detect Traps",
      SPTYP_DIVINATION,
      SPFLAG_MAPPING,
@@ -2157,19 +2170,6 @@
 },
 
 // From here on, all spells are monster-only spells.
-
-{
-    SPELL_HELLFIRE_BURST, "Hellfire Burst",
-     SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_MONSTER,
-     9,
-     200,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     true,
-     false
-},
 
 {
     SPELL_VAMPIRE_SUMMON, "Vampire Summon",

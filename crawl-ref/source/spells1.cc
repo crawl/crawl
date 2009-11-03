@@ -299,6 +299,49 @@ void cast_fire_storm(int pow, bolt &beam)
     viewwindow(true, false);
 }
 
+// No setup/cast split here as monster hellfire is completely different.
+// Sad, but needed to maintain balance - monster hellfirers get asymmetric
+// torment too.
+bool cast_hellfire_burst(int pow, bolt &beam)
+{
+    beam.name              = "burst of hellfire";
+    beam.aux_source        = "burst of hellfire";
+    beam.ex_size           = 1;
+    beam.flavour           = BEAM_HELLFIRE;
+    beam.real_flavour      = beam.flavour;
+    beam.type              = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.colour            = RED;
+    beam.beam_source       = MHITYOU;
+    beam.thrower           = KILL_YOU;
+    beam.obvious_effect    = false;
+    beam.is_beam           = false;
+    beam.is_explosion      = true;
+    beam.ench_power        = pow;      // used for radius
+    beam.hit               = 20 + pow / 10;
+    beam.damage            = calc_dice(6, 30 + pow);
+    beam.can_see_invis     = you.can_see_invisible();
+    beam.smart_monster     = true;
+    beam.attitude          = ATT_FRIENDLY;
+    beam.friend_info.count = 0;
+    beam.is_tracer         = true;
+
+    beam.explode(false);
+
+    if (beam.beam_cancelled)
+    {
+        canned_msg(MSG_OK);
+        return (false);
+    }
+
+    mpr("You call forth a pillar of hellfire!");
+
+    beam.is_tracer = false;
+    beam.in_explosion_phase = false;
+    beam.explode(true);
+
+    return (true);
+}
+
 bool _lightning_los(const coord_def& source, const coord_def& target)
 {
     // XXX: currently bounded by circular LOS radius;
