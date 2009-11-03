@@ -2759,6 +2759,24 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             break;
         }
 
+        case CMD_MAP_GOTO_LEVEL: {
+            std::string name;
+            const level_pos pos =
+                prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
+
+            if (pos.id.depth < 1 || pos.id.depth > branches[pos.id.branch].depth
+                    || !is_existing_level(pos.id))
+            {
+                canned_msg(MSG_OK);
+                redraw_map = true;
+                break;
+            }
+
+            le.go_to(pos.id);
+            new_level = true;
+            break;
+        }
+
         case CMD_MAP_JUMP_DOWN_LEFT:
             move_x = -block_step;
             move_y = block_step;

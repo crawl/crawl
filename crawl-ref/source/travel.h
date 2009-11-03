@@ -129,7 +129,8 @@ enum translevel_prompt_flags
                                                 | TPF_REMEMBER_TARGET
 };
 
-travel_target prompt_translevel_target(int prompt_flags = TPF_DEFAULT_OPTIONS);
+travel_target prompt_translevel_target(int prompt_flags,
+        std::string& dest_name);
 
 // Magic numbers for point_distance:
 

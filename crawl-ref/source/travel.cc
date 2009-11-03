@@ -2254,7 +2254,8 @@ static travel_target _prompt_travel_depth(const level_id &id,
     }
 }
 
-travel_target prompt_translevel_target(int prompt_flags)
+travel_target prompt_translevel_target(int prompt_flags,
+        std::string& dest_name)
 {
     travel_target target;
     bool to_entrance = false;
@@ -2272,7 +2273,7 @@ travel_target prompt_translevel_target(int prompt_flags)
     {
         target.p = _find_up_level();
         if (target.p.id.depth > 0 && remember_targ)
-            trans_travel_dest = get_trans_travel_dest(target);
+            dest_name = get_trans_travel_dest(target);
         return (target);
     }
 
@@ -2280,14 +2281,16 @@ travel_target prompt_translevel_target(int prompt_flags)
     {
         target.p = _find_down_level();
         if (target.p.id.depth > 0 && remember_targ)
-            trans_travel_dest = get_trans_travel_dest(target);
+            dest_name = get_trans_travel_dest(target);
         return (target);
     }
 
     if (branch < 0)
     {
-        travel_cache.travel_to_waypoint(-branch - 1);
-        return target;
+        target = travel_cache.get_waypoint(-branch - 1);
+        if (target.p.id.depth > 0 && remember_targ)
+            dest_name = get_trans_travel_dest(target);
+        return (target);
     }
 
     target.p.id.branch = static_cast<branch_type>(branch);
@@ -2302,7 +2305,7 @@ travel_target prompt_translevel_target(int prompt_flags)
     }
 
     if (target.p.id.depth > -1 && remember_targ)
-        trans_travel_dest = get_trans_travel_dest(target);
+        dest_name = get_trans_travel_dest(target);
 
     return target;
 }
@@ -2355,11 +2358,8 @@ void start_translevel_travel(bool prompt_for_destination)
 
     if (prompt_for_destination)
     {
-        // prompt_translevel_target may actually initiate travel directly if
-        // the user chose a waypoint instead of a branch + depth. As far as
-        // we're concerned, if the target depth is unset, we need to take no
-        // further action.
-        travel_target target = prompt_translevel_target();
+        travel_target target = prompt_translevel_target(TPF_DEFAULT_OPTIONS,
+                trans_travel_dest);
         if (target.p.id.depth <= 0)
             return;
 
