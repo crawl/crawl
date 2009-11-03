@@ -100,16 +100,9 @@ bool recharge_wand(const int item_slot = -1);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: mstuff2
+ * called from: mon-cast
  * *********************************************************************** */
 void direct_effect(monsters *src, spell_type spl, bolt &pbolt, actor *defender);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: mstuff2
- * *********************************************************************** */
-void mons_direct_effect(struct bolt &pbolt, int i);
 
 
 // last updated 12may2000 {dlb}
@@ -133,8 +126,8 @@ int holy_word_monsters(coord_def where, int pow, int caster,
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: ability - decks - fight - it_use3 - item_use - mstuff2 -
- *              spell
+ * called from: ability - decks - fight - it_use3 - item_use - mon-abil -
+ *              mon-cast - mon-util - spell
  * *********************************************************************** */
 int torment(int caster, const coord_def& where);
 

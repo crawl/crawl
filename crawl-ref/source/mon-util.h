@@ -478,7 +478,8 @@ bool give_monster_proper_name(monsters *mon, bool orcs_only = true);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: beam - direct - fight - monstuff - mstuff2 - spells4 - view
+ * called from: beam - direct - fight - mon-act - mon-behv - monplace -
+ *              monstuff - mon-util - spells4 - view
  * *********************************************************************** */
 flight_type mons_class_flies(int mc);
 flight_type mons_flies(const monsters *mon, bool randarts = true);
@@ -565,7 +566,7 @@ int mons_unusable_items(const monsters *mon);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: beam - effects - fight - monstuff - mstuff2 - spells2 -
+ * called from: beam - effects - fight - monstuff - mon-util - spells2 -
  *              spells3 - spells4
  * *********************************************************************** */
 mon_holy_type mons_class_holiness(int mc);
@@ -643,13 +644,6 @@ bool mons_enslaved_intact_soul(const monsters *mon);
 bool mons_enslaved_soul(const monsters *mon);
 bool name_zombie(monsters *mon, int mc, const std::string mon_name);
 bool name_zombie(monsters *mon, const monsters* orig);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: bang - beam - monstuff - mstuff2 - spells4 - view
- * *********************************************************************** */
-// unsigned char mons_category(int which_mons);
 
 
 // last updated 07jan2001 (gdl)

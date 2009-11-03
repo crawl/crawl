@@ -81,9 +81,9 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
                        bool force_beh = false);
 
 // last updated: 08jun2000 {dlb}
-/* ***********************************************************************
-   * called from: bang - beam - effects - fight - misc - monstuff - mstuff2 -
-   *              spells1 - spells2 - spells3 - spells4
+/* **************************************************************************
+   * called from: bang - beam - effects - fight - misc - mon-abil - mon-act -
+   *              monstuff - spells1 - spells2 - spells3 - spells4
    * *********************************************************************** */
 int monster_die(monsters *monster, killer_type killer,
                 int killer_index, bool silent = false, bool wizard = false);
@@ -123,7 +123,8 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins = false,
 bool monster_blink(monsters *monster, bool quiet = false);
 
 /* ***********************************************************************
- * called from: beam - effects - fight - monstuff - mstuff2 - spells1 -
+ * called from: beam - effects - fight - mgrow - mon-abil - mon-act -
+ *              mon-behv - mon-cast - monster - monstuff -spells1 -
  *              spells2 - spells4
  * *********************************************************************** */
 bool simple_monster_message(const monsters *monster, const char *event,

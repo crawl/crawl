@@ -2816,7 +2816,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
 
 // When a mimic is hit by a ranged attack, it teleports away (the slow
 // way) and changes its appearance - the appearance change is in
-// monster_teleport() in mstuff2.cc.
+// monster_teleport() in monstuff.cc.
 void mimic_alert(monsters *mimic)
 {
     if (!mimic->alive())

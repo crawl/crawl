@@ -270,13 +270,6 @@ int place_monster(mgen_data mg, bool force_pos = false);
  * *********************************************************************** */
 monster_type pick_local_zombifiable_monster_type(int power);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - debug - decks - effects - fight - it_use3 - item_use -
- *              items - monstuff - mstuff2 - religion - spell - spells -
- *              spells2 - spells3 - spells4
- * *********************************************************************** */
-
 class level_id;
 
 monster_type pick_random_monster(const level_id &place);
@@ -301,7 +294,8 @@ bool empty_surrounds( const coord_def& where, dungeon_feature_type spc_wanted,
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: ability - acr - items - maps - mstuff2 - spell - spells
+ * called from: ability - acr - items - maps - mon-abil - mon-cast
+ * - spell - spells
  * *********************************************************************** */
 monster_type summon_any_demon(demon_class_type dct);
 

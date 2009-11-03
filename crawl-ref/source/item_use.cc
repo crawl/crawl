@@ -2193,7 +2193,7 @@ void _merge_ammo_in_inventory(int slot)
 }
 
 // throw_it - currently handles player throwing only.  Monster
-// throwing is handled in mstuff2:mons_throw()
+// throwing is handled in mon-act:_mons_throw()
 // Note: If teleport is true, assume that pbolt is already set up,
 // and teleport the projectile onto the square.
 //
