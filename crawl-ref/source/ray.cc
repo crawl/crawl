@@ -165,6 +165,56 @@ static geom::ray _mirror(const geom::ray &rorig, const coord_def &side)
     return (r);
 }
 
+static geom::line _choose_reflect_line(bool rx, bool ry, bool rxy)
+{
+    geom::line l;
+    if (rxy)
+    {
+        if (rx && ry)
+        {
+            // x + y = 1.5
+            l.f = geom::form(1, 1);
+            l.val = 1.5;
+        }
+        else if (!rx && !ry)
+        {
+            // x + y = 2.5
+            l.f = geom::form(1, 1);
+            l.val = 2.5;
+        }
+        else if (rx)
+        {
+            // x = 1
+            l.f = geom::form(1, 0);
+            l.val = 1;
+        }
+        else if (ry)
+        {
+            // y = 1
+            l.f = geom::form(0, 1);
+            l.val = 1;
+        }
+    }
+    else if (rx)
+    {
+        // Flattened corners: y = x - 0.5
+        // l.f = geom::form(1, -1);
+        // l.val = 0.5;
+        // Instead like rxy && rx: x = 1
+        l.f = geom::form(1, 0);
+        l.val = 1;
+    }
+    else // ry
+    {
+        // y = x + 0.5
+        // l.f = geom::form(1, -1);
+        // l.val = -0.5;
+        l.f = geom::form(0, 1);
+        l.val = 1;
+    }
+    return (l);
+}
+
 void ray_def::bounce(const reflect_grid &rg)
 {
 #ifdef DEBUG_REFLECTION
@@ -244,51 +294,8 @@ void ray_def::bounce(const reflect_grid &rg)
     else
     {
         // These all reduce to reflection at one line.
-        geom::line l;
-        if (rxy)
-        {
-            if (rx && ry)
-            {
-                // x + y = 1.5
-                l.f = geom::form(1, 1);
-                l.val = 1.5;
-            }
-            else if (!rx && !ry)
-            {
-                // x + y = 2.5
-                l.f = geom::form(1, 1);
-                l.val = 2.5;
-            }
-            else if (rx)
-            {
-                // x = 1
-                l.f = geom::form(1, 0);
-                l.val = 1;
-            }
-            else if (ry)
-            {
-                // y = 1
-                l.f = geom::form(0, 1);
-                l.val = 1;
-            }
-        }
-        else if (rx)
-        {
-            // Flattened corners: y = x - 0.5
-            // l.f = geom::form(1, -1);
-            // l.val = 0.5;
-            // Instead like rxy && rx: x = 1
-            l.f = geom::form(1, 0);
-            l.val = 1;
-        }
-        else // ry
-        {
-            // y = x + 0.5
-            // l.f = geom::form(1, -1);
-            // l.val = -0.5;
-            l.f = geom::form(0, 1);
-            l.val = 1;
-        }
+        geom::line l = _choose_reflect_line(rx, ry, rxy);
+
         double t = intersect(rmirr, l);
         ASSERT(double_is_zero(t) || t >= 0);
         rmirr.advance(t);
