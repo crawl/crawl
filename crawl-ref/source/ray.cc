@@ -165,6 +165,15 @@ bool ray_def::advance()
     return (!on_corner);
 }
 
+void ray_def::regress()
+{
+    ASSERT(_valid());
+    r.dir = -r.dir;
+    advance();
+    r.dir = -r.dir;
+    ASSERT(_valid());
+}
+
 static geom::vector _mirror_pt(const geom::vector &vorig, const coord_def &side)
 {
     geom::vector v = vorig;
@@ -373,13 +382,4 @@ void ray_def::bounce(const reflect_grid &rg)
 
     ASSERT(_valid());
     ASSERT(!rg(pos() - old_pos + rg_o));
-}
-
-void ray_def::regress()
-{
-    ASSERT(_valid());
-    r.dir = -r.dir;
-    advance();
-    r.dir = -r.dir;
-    ASSERT(_valid());
 }
