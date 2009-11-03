@@ -283,10 +283,10 @@ void ray_def::bounce(const reflect_grid &rg)
         ASSERT(k.f(rmirr.dir) > 0); // We're actually moving towards k.
         ASSERT(!geom::parallel(rmirr.dir, geom::form(1, -1)));
         // Now bounce back and forth between l1 and l2 until we hit k.
-        while (!double_is_zero(intersect(rmirr, k)))
+        while (!double_is_zero(geom::intersect(rmirr, k)))
         {
             rmirr.to_grid(diamonds, false);
-            r.dir = reflect(r.dir, wall);
+            rmirr.dir = reflect(rmirr.dir, wall);
         }
         // Now pointing inside the destination cell (1,1) -- move inside.
         rmirr.to_grid(diamonds, true);
