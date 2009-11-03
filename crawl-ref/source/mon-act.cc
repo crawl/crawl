@@ -1899,8 +1899,10 @@ static void _handle_monster_move(monsters *monster)
         mon_nearby_ability(monster);
 
         if (monster->type == MONS_KHUFU && monster->number
-            && monster->hit_points==monster->max_hit_points)
+            && monster->hit_points == monster->max_hit_points)
+        {
             _khufu_drop_tomb(monster);
+        }
 
         if (!monster->asleep() && !mons_is_wandering(monster)
             // Berserking monsters are limited to running up and
