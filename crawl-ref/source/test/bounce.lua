@@ -32,6 +32,7 @@ local function test_bounce_iter(map)
 end
 
 local function test_bounces()
+  debug.flush_map_memory()
   dgn.load_des_file("test/des/bounce.des")
   local map = dgn.map_by_tag("bounce_test")
   assert(map, "Could not find bounce_test map (tag 'bounce_test')")
