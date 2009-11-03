@@ -217,11 +217,11 @@ static geom::line _choose_reflect_line(bool rx, bool ry, bool rxy)
 
 void ray_def::bounce(const reflect_grid &rg)
 {
-#ifdef DEBUG_REFLECTION
-    mprf(MSGCH_DIAGNOSTICS, "mirroring ray: (%f,%f) + t*(%f,%f)",
-         r.start.x, r.start.y, r.dir.x, r.dir.y);
-#endif
     ASSERT(_valid());
+    ASSERT(!rg(rg_o)); // The cell we bounce from is not solid.
+#ifdef DEBUG
+    const coord_def old_pos = pos();
+#endif
 
     if (on_corner)
     {
@@ -269,10 +269,6 @@ void ray_def::bounce(const reflect_grid &rg)
     // One of the three neighbours on this side must be bouncy.
     ASSERT(rx || ry || rxy);
 
-#ifdef DEBUG_REFLECTION
-    mprf(MSGCH_DIAGNOSTICS, "bouncy cells: rx=%d, ry=%d, rxy=%d", rx, ry, rxy);
-#endif
-
     // Now go through the cases separately.
     if (rx && ry && !rxy)
     {
@@ -307,16 +303,15 @@ void ray_def::bounce(const reflect_grid &rg)
         if (!in_diamond(rmirr.start))
             on_corner = _advance_from_non_diamond(&rmirr);
     }
+
     // Mirror back.
     rtrans = _mirror(rmirr, side);
     // Translate back.
     r.start = rtrans.start + p;
     r.dir = rtrans.dir;
-#ifdef DEBUG_REFLECTION
-    mprf(MSGCH_DIAGNOSTICS, "mirrored ray: (%f,%f) + t*(%f,%f)",
-         r.start.x, r.start.y, r.dir.x, r.dir.y);
-#endif
+
     ASSERT(_valid());
+    ASSERT(rg(pos() - old_pos));
 }
 
 void ray_def::regress()
