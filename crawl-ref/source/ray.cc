@@ -227,9 +227,19 @@ void ray_def::bounce(const reflect_grid &rg)
     if (rx && ry && !rxy)
     {
         // Tricky case: diagonal corridor.
-        // TODO: Implement this.
-        rmirr.dir = -rmirr.dir;
-        r.to_grid(diamonds, true);
+        geom::form wall(1, -1);
+        // The actual walls: geom::line l1(1, -1, 0.5), l2(1, -1, -0.5);
+        geom::line k(1, 1, 2.5);
+        ASSERT(k.f(rmirr.dir) > 0); // We're actually moving towards k.
+        ASSERT(!geom::parallel(rmirr.dir, geom::form(1, -1)));
+        // Now bounce back and forth between l1 and l2 until we hit k.
+        while (!double_is_zero(intersect(rmirr, k)))
+        {
+            rmirr.to_grid(diamonds, false);
+            r.dir = reflect(r.dir, wall);
+        }
+        // Now pointing inside the destination cell (1,1) -- move inside.
+        rmirr.to_grid(diamonds, true);
     }
     else
     {
