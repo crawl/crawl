@@ -17,7 +17,7 @@ static bool double_is_zero(double d)
 }
 
 // Is v parallel to the kernel of f?
-static bool parallel(vector v, form f)
+bool parallel(const vector &v, const form &f)
 {
     return (double_is_zero(f(v)));
 }

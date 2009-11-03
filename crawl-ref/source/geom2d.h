@@ -84,6 +84,7 @@ struct grid
 
 double intersect(const ray &r, const line &l);
 double nextintersect(const ray &r, const lineseq &ls);
+bool parallel(const vector& v, const form &f);
 vector reflect(const vector& v, const form &f);
 
 }
