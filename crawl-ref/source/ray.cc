@@ -469,3 +469,14 @@ void ray_def::bounce(const reflect_grid &rg)
     ASSERT(_valid());
     ASSERT(!rg(pos() - old_pos + rg_o));
 }
+
+double ray_def::get_degrees() const
+{
+    return (geom::degrees(r.dir));
+}
+
+void ray_def::set_degrees(double d)
+{
+    r.dir = geom::degree_to_vector(d);
+}
+

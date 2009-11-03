@@ -27,6 +27,10 @@ struct ray_def
     void bounce(const reflect_grid &rg);
     void regress();
 
+    // Get and set the direction.
+    double get_degrees() const;
+    void set_degrees(double d);
+
     bool _valid() const;
 };
 
