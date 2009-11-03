@@ -1790,7 +1790,7 @@ int fungal_bloom()
                 {
                     const int mushroom = create_monster(
                                 mgen_data(MONS_TOADSTOOL,
-                                          BEH_HOSTILE,
+                                          BEH_FRIENDLY,
                                           0,
                                           0,
                                           pos,
@@ -1829,7 +1829,8 @@ int fungal_bloom()
                 int target_count = 1 + binomial_generator(20, trial_prob);
 
                 int seen_per;
-                spawn_corpse_mushrooms(*j, target_count, seen_per, true);
+                spawn_corpse_mushrooms(*j, target_count, seen_per,
+                                       BEH_FRIENDLY, true);
 
                 seen_mushrooms += seen_per;
 

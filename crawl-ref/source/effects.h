@@ -55,6 +55,7 @@ bool mushroom_spawn_message(int seen_targets, int seen_corpses);
 int spawn_corpse_mushrooms(item_def &corpse,
                            int target_count,
                            int & seen_targets,
+                           beh_type toadstool_behavior = BEH_HOSTILE,
                            bool distance_as_time = false);
 
 struct mgen_data;

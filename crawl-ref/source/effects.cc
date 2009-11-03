@@ -4429,7 +4429,8 @@ void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
 // Place a partial ring of toadstools around the given corpse.  Returns
 // the number of mushrooms spawned.  A return of 0 indicates no
 // mushrooms were placed -> some sort of failure mode was reached.
-static int _mushroom_ring(item_def &corpse, int & seen_count)
+static int _mushroom_ring(item_def &corpse, int & seen_count,
+                          beh_type toadstool_behavior)
 {
     // minimum number of mushrooms spawned on a given ring
     unsigned min_spawn = 2;
@@ -4466,7 +4467,7 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
         return (0);
 
     mgen_data temp(MONS_TOADSTOOL,
-                   BEH_HOSTILE, 0, 0,
+                   toadstool_behavior, 0, 0,
                    coord_def(),
                    MHITNOT,
                    MG_FORCE_PLACE,
@@ -4495,7 +4496,9 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
 int spawn_corpse_mushrooms(item_def &corpse,
                            int target_count,
                            int & seen_targets,
+                           beh_type toadstool_behavior,
                            bool distance_as_time)
+
 {
     seen_targets = 0;
     if (target_count == 0)
@@ -4516,7 +4519,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
         int ring_seen;
         // It's possible no reasonable ring can be found, in that case we'll
         // give up and just place a toadstool on top of the corpse (probably).
-        int res = _mushroom_ring(corpse, ring_seen);
+        int res = _mushroom_ring(corpse, ring_seen, toadstool_behavior);
 
         if (res)
         {
@@ -4557,7 +4560,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
         {
             const int mushroom = create_monster(
                         mgen_data(MONS_TOADSTOOL,
-                                  BEH_HOSTILE,
+                                  toadstool_behavior,
                                   0,
                                   0,
                                   current,
@@ -4581,7 +4584,8 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
                     int dist = static_cast<int>(sqrtf(offset.abs()) + 0.5);
 
-                    int time_left = random2(8) + dist * 8 + 1;
+                    // Trying a longer base duration...
+                    int time_left = random2(8) + dist * 8 + 8;
 
                     time_left *= 10;
 

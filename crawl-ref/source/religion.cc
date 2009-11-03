@@ -2925,7 +2925,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             case GOD_FEAWN:
                 // double-check god because of fall-throughs from other gods
-                if (you.religion == GOD_FEAWN && !feawn_protects(victim))
+                // Toadstools are an exception for this conduct
+                if (you.religion == GOD_FEAWN && (!feawn_protects(victim)
+                        || victim->mons_species() == MONS_TOADSTOOL))
                     break;
                 // fall through
 
