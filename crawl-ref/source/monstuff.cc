@@ -361,7 +361,12 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     corpse.base_type = OBJ_FOOD;
     corpse.sub_type = FOOD_CHUNK;
 
-    blood_spray(where, static_cast<monster_type>(corpse.plus), nchunks * 3);
+    int blood = nchunks * 3;
+
+    if (food_is_rotten(corpse))
+        blood /= 3;
+
+    blood_spray(where, static_cast<monster_type>(corpse.plus), blood);
 
     while (nchunks > 0 && ntries < 10000)
     {
