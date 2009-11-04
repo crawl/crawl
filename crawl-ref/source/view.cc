@@ -2439,7 +2439,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
     // Vector to track all features we can travel to, in order of distance.
     std::vector<coord_def> features;
 
-    int min_x, max_x, min_y, max_y;
+    int min_x = INT_MAX, max_x = INT_MIN, min_y = INT_MAX, max_y = INT_MIN;
     const int num_lines   = _get_number_of_lines_levelmap();
     const int half_screen = (num_lines - 1) / 2;
 
@@ -2447,13 +2447,13 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 
     int map_lines = 0;
 
-    int start_x;                                              // no x scrolling
+    int start_x = -1;                                         // no x scrolling
     const int block_step = Options.level_map_cursor_step;
     int start_y;                                              // y does scroll
 
-    int screen_y;
+    int screen_y = -1;
 
-    int curs_x, curs_y;
+    int curs_x = -1, curs_y = -1;
     int search_found = 0, anchor_x = -1, anchor_y = -1;
 
     bool map_alive  = true;
@@ -2464,7 +2464,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 #endif
     textcolor(DARKGREY);
 
-    bool on_level;
+    bool on_level = false;
 
     while (map_alive)
     {
