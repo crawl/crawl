@@ -3653,13 +3653,19 @@ void describe_god( god_type which_god, bool give_title )
                                            ABIL_JIYVA_JELLY_SHIELD);
             }
         }
-        else if (which_god == GOD_FEAWN )
+        else if (which_god == GOD_FEAWN)
         {
             have_any = true;
 
             std::string buf = "You can speed up decomposition.";
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_FEAWN_FUNGAL_BLOOM);
+            _print_final_god_abil_desc(which_god,
+                                       "You can walk through plants.",
+                                       ABIL_NON_ABILITY);
+            _print_final_god_abil_desc(which_god,
+                                       "You can fire through allied plants.",
+                                       ABIL_NON_ABILITY);
         }
 
         // mv: No abilities (except divine protection) under penance
