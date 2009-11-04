@@ -1914,6 +1914,58 @@ static std::string _ugly_thing_colour_name(const monsters *mon)
     return (ugly_colour_names[colour_offset]);
 }
 
+static std::string _invalid_monster_str(monster_type type)
+{
+    std::string str = "INVALID MONSTER ";
+
+    switch(type)
+    {
+    case NUM_MONSTERS:
+        return (str + "NUM_MONSTERS");
+    case MONS_NO_MONSTER:
+        return (str + "MONS_NO_MONSTER");
+    case MONS_PLAYER:
+        return (str + "MONS_PLAYER");
+    case RANDOM_DRACONIAN:
+        return (str + "RANDOM_DRACONIAN");
+    case RANDOM_BASE_DRACONIAN:
+        return (str + "RANDOM_BASE_DRACONIAN");
+    case RANDOM_NONBASE_DRACONIAN:
+        return (str + "RANDOM_NONBASE_DRACONIAN");
+    case WANDERING_MONSTER:
+        return (str + "WANDERING_MONSTER");
+    default:
+        break;
+    }
+
+    str += make_stringf("#%d", (int) type);
+
+    if (type < 0)
+        return (str);
+
+    if (type > NUM_MONSTERS)
+    {
+        str += make_stringf(" (NUM_MONSTERS + %d)",
+                            int (NUM_MONSTERS - type));
+        return (str);
+    }
+
+    int          i;
+    monster_type new_type;
+    for (i = 0; true; i++)
+    {
+        new_type = (monster_type) ( ((int) type) - i);
+
+        if (invalid_monster_type(new_type))
+            continue;
+        break;
+    }
+    str += make_stringf(" (%s + %d)",
+                        mons_type_name(new_type, DESC_PLAIN).c_str(),
+                        i);
+
+    return (str);
+}
 
 static std::string _str_monam(const monsters& mon, description_level_type desc,
                               bool force_seen)
@@ -1921,7 +1973,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     if (mon.type == MONS_NO_MONSTER)
         return ("DEAD MONSTER");
     else if (invalid_monster_type(mon.type) && mon.type != MONS_PROGRAM_BUG)
-        return make_stringf("INVALID MONSTER (#%d)", mon.type);
+        return _invalid_monster_str(mon.type);
 
     const bool arena_submerged = crawl_state.arena && !force_seen
                                      && mon.submerged();
@@ -2099,7 +2151,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     {
         // Add the base name.
         if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
-            result += make_stringf("INVALID MONSTER (#%d)", nametype);
+            result += _invalid_monster_str(nametype);
         else
             result += get_monster_data(nametype)->name;
     }
