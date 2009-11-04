@@ -1628,8 +1628,15 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
             {
                 if (ego > SPWPN_NORMAL)
                     item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = ego;
-                if (!randart_is_bad(item)) // recheck, the brand changed
-                    return;
+                if (randart_is_bad(item)) // recheck, the brand changed
+                {
+                    force_type = item.sub_type;
+                    item.clear();
+                    item.base_type = OBJ_WEAPONS;
+                    item.sub_type = force_type;
+                    continue;
+                }
+                return;
             }
         // fall back to an ordinary item
         item_level = MAKE_GOOD_ITEM;
