@@ -4009,6 +4009,9 @@ void bolt::affect_player()
     if (flavour == BEAM_MIASMA && hurted > 0)
         was_affected = miasma_player();
 
+    if (flavour == BEAM_NUKE) // DISINTEGRATION already handled
+        blood_spray(you.pos(), MONS_PLAYER, hurted / 5);
+
     // Confusion effect for spore explosions
     if (flavour == BEAM_SPORE && hurted && you.holiness() != MH_UNDEAD)
         potion_effect( POT_CONFUSION, 1);
