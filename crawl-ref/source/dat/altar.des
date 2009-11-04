@@ -630,3 +630,17 @@ cccyy..yycc
     c++c
      @@
 ENDMAP
+
+###############################################################################
+# Blood-stained Trog altar!
+NAME:       bloody_trog
+DEPTH:      D:7-20
+TAGS:       uniq_bloody_trog
+KPROP:      . = bloody / nothing
+KFEAT:      _ = altar_trog
+KITEM:      _ = animal skin, knife
+MAP
+...
+._.
+...
+ENDMAP
