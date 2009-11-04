@@ -928,6 +928,13 @@ mutation_def mutation_defs[] = {
       ""
     },
 
+    { MUT_UNUSED_1,                   0,  3, false, false,
+      {"", "", ""},
+      {"", "", ""},
+      {"", "", ""},
+      ""
+    },
+
 // Scales of various colours and effects
     { MUT_RED_SCALES,                 2,  3, false,  true,
       {"You are partially covered in red scales (AC +1).",
