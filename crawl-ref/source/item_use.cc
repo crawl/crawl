@@ -587,7 +587,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_SPEED:
-                    mpr("Your hands tingle!");
+                    mprf("Your %s tingle!",
+                         you.hand_name(true).c_str());
                     break;
 
                 case SPWPN_FLAME:
