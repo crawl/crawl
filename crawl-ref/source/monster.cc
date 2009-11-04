@@ -2643,8 +2643,7 @@ void monsters::go_berserk(bool /* intentional */)
     if (has_ench(ENCH_SLOW))
     {
         del_ench(ENCH_SLOW, true); // Give no additional message.
-        simple_monster_message(
-            this,
+        simple_monster_message(this,
             make_stringf(" shakes off %s lethargy.",
                          pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str()).c_str());
     }
@@ -2655,7 +2654,7 @@ void monsters::go_berserk(bool /* intentional */)
     add_ench(mon_enchant(ENCH_BERSERK, 0, KC_OTHER, duration * 10));
     add_ench(mon_enchant(ENCH_HASTE, 0, KC_OTHER, duration * 10));
     add_ench(mon_enchant(ENCH_MIGHT, 0, KC_OTHER, duration * 10));
-    if (simple_monster_message( this, " goes berserk!" ))
+    if (simple_monster_message(this, " goes berserk!"))
         // Xom likes monsters going berserk.
         xom_is_stimulated(mons_friendly(this) ? 32 : 128);
 }
@@ -2665,8 +2664,11 @@ void monsters::expose_to_element(beam_type flavour, int strength)
     switch (flavour)
     {
     case BEAM_COLD:
-        if (mons_class_flag(this->type, M_COLD_BLOOD) && this->res_cold() <= 0 && coinflip())
+        if (mons_class_flag(this->type, M_COLD_BLOOD) && this->res_cold() <= 0
+            && coinflip())
+        {
             slow_down(this, strength);
+        }
         break;
     default:
         break;
@@ -3003,7 +3005,7 @@ int monsters::res_poison() const
 
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += scan_mon_inv_randarts( this, ARTP_POISON );
+        u += scan_mon_inv_randarts(this, ARTP_POISON);
 
         const int armour = this->inv[MSLOT_ARMOUR];
         const int shld = this->inv[MSLOT_SHIELD];
@@ -4546,7 +4548,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // isn't up to choice. - bwr
         if (type == MONS_AIR_ELEMENTAL)
         {
-            heal_monster( this, 1, one_chance_in(5) );
+            heal_monster(this, 1, one_chance_in(5));
 
             if (one_chance_in(5))
                 del_ench(ENCH_SUBMERGED);
@@ -4603,9 +4605,9 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
 #if DEBUG_DIAGNOSTICS
             // For debugging, we don't have this silent.
-            simple_monster_message( this, " takes poison damage.",
-                                    MSGCH_DIAGNOSTICS );
-            mprf(MSGCH_DIAGNOSTICS, "poison damage: %d", dam );
+            simple_monster_message(this, " takes poison damage.",
+                                   MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "poison damage: %d", dam);
 #endif
 
             // Credit the kill.
