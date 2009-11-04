@@ -3109,6 +3109,11 @@ item_spec item_list::parse_single_spec(std::string s)
         result.level = ISPEC_BAD; // damaged + cursed, actually
         s = s.substr(7);
     }
+    if (s.find("randart ") == 0)
+    {
+        result.level = ISPEC_RANDART;
+        s = s.substr(8);
+    }
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;

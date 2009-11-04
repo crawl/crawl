@@ -900,17 +900,17 @@ static bool _try_make_item_special_unrand(item_def& item, int force_type,
 
 // Return whether we made an artefact.
 static bool _try_make_weapon_artefact(item_def& item, int force_type,
-                                      int item_level)
+                                      int item_level, bool force_randart = false)
 {
     if (item.sub_type != WPN_CLUB && item_level > 2
-        && x_chance_in_y(101 + item_level * 3, 4000))
+        && x_chance_in_y(101 + item_level * 3, 4000) || force_randart)
     {
         // Make a randart or unrandart.
 
         // 1 in 50 randarts are unrandarts.
         if (you.level_type != LEVEL_ABYSS
             && you.level_type != LEVEL_PANDEMONIUM
-            && one_chance_in(50))
+            && one_chance_in(50) && !force_randart)
         {
             const int idx = find_okay_unrandart(OBJ_WEAPONS, force_type,
                                                 UNRANDSPEC_NORMAL);
@@ -1542,6 +1542,23 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     else
         item.sub_type = _determine_weapon_subtype(item_level);
 
+    // Forced randart.
+    if (item_level == -6)
+    {
+        int i;
+        int ego = item.special;
+        for (i=0; i<10; i++)
+            if (_try_make_weapon_artefact(item, force_type, 0, true))
+            {
+                if (ego > SPWPN_NORMAL)
+                    item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = ego;
+                if (!randart_is_bad(item)) // recheck, the brand changed
+                    return;
+            }
+        // fall back to an ordinary item
+        item_level = MAKE_GOOD_ITEM;
+    }
+
     // If we make the unique roll, no further generation necessary.
     if (allow_uniques
         && _try_make_weapon_artefact(item, force_type, item_level))
@@ -1849,16 +1866,17 @@ static void _generate_missile_item(item_def& item, int force_type,
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
-                                      int item_level)
+                                      int item_level, bool force_randart = false)
 {
-    if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000))
+    if (item_level > 2 && x_chance_in_y(101 + item_level * 3, 4000)
+        || force_randart)
     {
         // Make a randart or unrandart.
 
         // 1 in 50 randarts are unrandarts.
         if (you.level_type != LEVEL_ABYSS
             && you.level_type != LEVEL_PANDEMONIUM
-            && one_chance_in(50))
+            && one_chance_in(50) && !force_randart)
         {
             // The old generation code did not respect force_type here.
             const int idx = find_okay_unrandart(OBJ_ARMOUR, force_type,
@@ -2145,6 +2163,17 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         item.sub_type = force_type;
     else
         item.sub_type = get_random_armour_type(item_level);
+
+    // Forced randart.
+    if (item_level == -6)
+    {
+        int i;
+        for (i=0; i<10; i++)
+            if (_try_make_armour_artefact(item, force_type, 0, true))
+                return;
+        // fall back to an ordinary item
+        item_level = MAKE_GOOD_ITEM;
+    }
 
     if (allow_uniques
         && _try_make_armour_artefact(item, force_type, item_level))

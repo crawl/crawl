@@ -4506,6 +4506,7 @@ static void _dgn_place_item_explicit(const item_spec &spec,
         {
         case ISPEC_DAMAGED:
         case ISPEC_BAD:
+        case ISPEC_RANDART:
             level = spec.level;
             break;
         case ISPEC_GOOD:

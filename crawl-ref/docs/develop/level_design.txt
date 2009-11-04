@@ -606,16 +606,17 @@ ITEM:     (list of items, separated by comma)
             something between double quotes then use that string (e.g,
             unrand:bloodbane). If the unique already exists, the base item
             will be given instead.
+          * "randart" will force a randart.  Most of the above modifiers
+            will be ignored, except for "ego" (for weapons only).
 
             WARNING: While checks are done to make sure that an armour ego
             isn't given to a weapon, a weapon ego to a missile, and so on, and
-            also to make sure that egos are only given to amrours, weapons and
+            also to make sure that egos are only given to armours, weapons and
             missiles, no other checking is done.  Thus it is possible to create
             a demonic weapon of holy wrath or a helmet of running.
 
-          Limitations: You can't specify specific pluses or number of charges
-          or force a randart.  You also can't lay down corpses, skeletons, or
-          chunks.
+          Limitations: You can't specify specific pluses or number of charges.
+          You also can't lay down corpses, skeletons, or chunks.
 
           You can place multiple items on the same square by using the KITEM
           directive. See that section for more information.

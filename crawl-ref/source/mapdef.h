@@ -389,6 +389,7 @@ enum item_spec_type
     ISPEC_SUPERB  = -3,
     ISPEC_DAMAGED = -4,
     ISPEC_BAD     = -5,
+    ISPEC_RANDART = -6,
     ISPEC_ACQUIREMENT = -9
 };
 
