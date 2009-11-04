@@ -3226,22 +3226,16 @@ item_spec item_list::parse_single_spec(std::string s)
         return (result);
     }
 
+    error.clear();
+
     // Check for "any objclass"
     if (s.find("any ") == 0)
-    {
         parse_random_by_class(s.substr(4), result);
-        return (result);
-    }
-
-    if (s.find("random ") == 0)
-    {
+    else if (s.find("random ") == 0)
         parse_random_by_class(s.substr(7), result);
-        return (result);
-    }
-
     // Check for actual item names.
-    error.clear();
-    parse_raw_name(s, result);
+    else
+        parse_raw_name(s, result);
 
     if (!error.empty())
         return (result);

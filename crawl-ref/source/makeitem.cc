@@ -1529,7 +1529,74 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         }
     }
 
+    ASSERT(is_weapon_brand_ok(item.sub_type, rc));
     return (rc);
+}
+
+// Reject brands which are outright bad for the item.  Unorthodox combinations
+// are ok, since they can happen on randarts.
+bool is_weapon_brand_ok(int type, int brand)
+{
+    item_def item;
+    item.base_type = OBJ_WEAPONS;
+    item.sub_type = type;
+
+    int vorp = get_vorpal_type(item);
+    int skill = weapon_skill(OBJ_WEAPONS, type);
+
+    if (brand <= SPWPN_NORMAL)
+        return (true);
+    if (type == WPN_QUICK_BLADE && brand == SPWPN_SPEED)
+        return (false);
+    if (vorp == DVORP_CRUSHING && brand == SPWPN_VENOM)
+        return (false);
+    if (skill != SK_POLEARMS && brand == SPWPN_DRAGON_SLAYING)
+        return (false);
+    switch((brand_type)brand)
+    {
+    // Universal brands.
+    case SPWPN_NORMAL:
+    case SPWPN_VENOM:
+    case SPWPN_PROTECTION:
+    case SPWPN_SPEED:
+    case SPWPN_VORPAL:
+    case SPWPN_CHAOS:
+    case SPWPN_REAPING:
+        break;
+    // Melee-only brands.
+    case SPWPN_FLAMING:
+    case SPWPN_FREEZING:
+    case SPWPN_HOLY_WRATH:
+    case SPWPN_ELECTROCUTION:
+    case SPWPN_ORC_SLAYING:
+    case SPWPN_DRAGON_SLAYING:
+    case SPWPN_DRAINING:
+    case SPWPN_VAMPIRICISM:
+    case SPWPN_PAIN:
+    case SPWPN_DISTORTION:
+    case SPWPN_REACHING:
+    case SPWPN_RETURNING:
+    case SPWPN_CONFUSE:
+        if (is_range_weapon(item))
+            return (false);
+        break;
+    // Ranged-only brands.
+    case SPWPN_FLAME:
+    case SPWPN_FROST:
+    case SPWPN_PENETRATION:
+        if (!is_range_weapon(item))
+            return (false);
+        break;
+    case SPWPN_FORBID_BRAND:
+    case SPWPN_DEBUG_RANDART:
+    case NUM_SPECIAL_WEAPONS:
+    case SPWPN_DUMMY_CRUSHING:
+        ASSERT(!"invalid brand");
+    }
+    if (brand == SPWPN_RETURNING && !is_throwable(&you, item, true))
+        return (false);
+
+    return (true);
 }
 
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
@@ -1540,6 +1607,15 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
+    {
+        int i;
+        for (i=0; i<1000; i++)
+        {
+            item.sub_type = _determine_weapon_subtype(item_level);
+            if (is_weapon_brand_ok(item.sub_type, item.special))
+                break;
+        }
+    }
         item.sub_type = _determine_weapon_subtype(item_level);
 
     // Forced randart.
@@ -2152,7 +2228,80 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
     }
 
+    ASSERT(is_armour_brand_ok(item.sub_type, rc));
     return (rc);
+}
+
+bool is_armour_brand_ok(int type, int brand)
+{
+    equipment_type slot = get_armour_slot((armour_type)type);
+
+    // Currently being too restrictive results in asserts, being too
+    // permissive will generate such items on "any armour ego:XXX".
+    // The latter is definitely so much safer -- 1KB
+    switch((special_armour_type)brand)
+    {
+    case SPARM_FORBID_EGO:
+    case SPARM_NORMAL:
+        return (true);
+
+    case SPARM_RUNNING:
+    case SPARM_LEVITATION:
+    case SPARM_STEALTH:
+        return (slot == EQ_BOOTS);
+
+    case SPARM_RESISTANCE:
+        if (slot == EQ_SHIELD)
+            return (true);
+    case SPARM_ARCHMAGI:
+        if (type != ARM_ROBE)
+            return (false);
+    case SPARM_PONDEROUSNESS:
+        return (slot == EQ_BODY_ARMOUR);
+
+    case SPARM_PRESERVATION:
+    case SPARM_DARKNESS:
+        return (slot == EQ_CLOAK);
+
+    case SPARM_REFLECTION:
+    case SPARM_PROTECTION:
+        return (slot == EQ_SHIELD);
+
+    case SPARM_ARCHERY:
+    case SPARM_STRENGTH:
+    case SPARM_DEXTERITY:
+        return (slot == EQ_GLOVES);
+
+    case SPARM_INTELLIGENCE:
+        if (type == ARM_HELMET)
+            return (false);
+    case SPARM_SEE_INVISIBLE:
+        return (slot == EQ_HELMET);
+
+    case SPARM_FIRE_RESISTANCE:
+    case SPARM_COLD_RESISTANCE:
+        if (slot == EQ_BOOTS && type != ARM_BOOTS) // both bardings
+            return (true);
+    case SPARM_POISON_RESISTANCE:
+    case SPARM_MAGIC_RESISTANCE:
+    case SPARM_POSITIVE_ENERGY:
+        if (brand == SPARM_POISON_RESISTANCE && slot == EQ_CLOAK)
+            return (true);
+        if (brand == SPARM_MAGIC_RESISTANCE && slot == EQ_CLOAK)
+            return (true);
+        if (brand == SPARM_MAGIC_RESISTANCE && type == ARM_WIZARD_HAT)
+            return (true);
+        return (slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD);
+
+    case SPARM_SPIRIT_SHIELD:
+        if (type == ARM_CAP || slot == EQ_SHIELD)
+            return (true);
+
+    case NUM_SPECIAL_ARMOURS:
+        ASSERT(!"invalid armour brand");
+    }
+
+    return (true);
 }
 
 static void _generate_armour_item(item_def& item, bool allow_uniques,
@@ -2162,7 +2311,15 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
-        item.sub_type = get_random_armour_type(item_level);
+    {
+        int i;
+        for (i=0; i<1000; i++)
+        {
+            item.sub_type = get_random_armour_type(item_level);
+            if (is_armour_brand_ok(item.sub_type, item.special))
+                break;
+        }
+    }
 
     // Forced randart.
     if (item_level == -6)
@@ -2850,15 +3007,9 @@ int items(int allow_uniques,       // not just true-false,
           int force_ego,           // desired ego/brand
           int agent)               // acquirement agent, if not -1
 {
-    // TODO: Allow a combination of force_ego > 0 and
-    // force_type == OBJ_RANDOM, so that (for example) you could have
-    // force_class = OBJ_WEAPON, force_type = OBJ_RANDOM and
-    // force_ego = SPWPN_VORPAL, and a random weapon of a type
-    // appropriate for the vorpal brand will be chosen.
     ASSERT(force_ego <= 0
-           || force_type != OBJ_RANDOM
-              && (force_class == OBJ_WEAPONS || force_class == OBJ_ARMOUR
-                  || force_class == OBJ_MISSILES));
+           || force_class == OBJ_WEAPONS || force_class == OBJ_ARMOUR
+           || force_class == OBJ_MISSILES);
 
     // Find an empty slot for the item (with culling if required).
     int p = get_item_slot(10);

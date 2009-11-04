@@ -827,6 +827,8 @@ void static _get_randart_properties(const item_def &item,
             proprt[ARTP_BRAND] = SPWPN_NORMAL;
         else
             power_level++;
+
+        ASSERT(is_weapon_brand_ok(atype, proprt[ARTP_BRAND]));
     }
 
     if (!one_chance_in(5))
