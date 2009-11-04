@@ -3041,6 +3041,8 @@ int monsters::res_poison() const
 int monsters::res_sticky_flame() const
 {
     int res = get_mons_resists(this).sticky_flame;
+    if (mons_is_insubstantial(type))
+        res += 1;
     if (has_equipped(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
         res += 1;
     return (res);
