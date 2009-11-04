@@ -2128,7 +2128,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         break;
     }
 
-    if (mon.mons_species() == MONS_SLIME_CREATURE && desc != DESC_DBNAME)
+    if (mon.type == MONS_SLIME_CREATURE && desc != DESC_DBNAME)
     {
         ASSERT(mon.number <= 5);
         const char* cardinals[] = {"buggy ", "", "large ", "very large ",

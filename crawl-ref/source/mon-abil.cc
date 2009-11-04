@@ -362,7 +362,7 @@ static bool _slime_merge(monsters *thing)
         monsters *other_thing = monster_at(target);
         if (!merge_target
             && other_thing
-            && other_thing->mons_species() == MONS_SLIME_CREATURE
+            && other_thing->type == MONS_SLIME_CREATURE
             && other_thing->attitude == thing->attitude
             && other_thing->is_summoned() == thing->is_summoned()
             && !mons_is_shapeshifter(other_thing)
@@ -426,7 +426,7 @@ bool slime_split_merge(monsters *thing)
     // No merging/splitting shapeshifters.
     if (!thing
         || mons_is_shapeshifter(thing)
-        || thing->mons_species() != MONS_SLIME_CREATURE)
+        || thing->type != MONS_SLIME_CREATURE)
     {
         return (false);
     }
@@ -752,7 +752,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     if ((!mons_near(monster)
          || monster->asleep()
          || monster->submerged())
-             && monster->mons_species() != MONS_SLIME_CREATURE)
+             && monster->type != MONS_SLIME_CREATURE)
     {
         return (false);
     }
