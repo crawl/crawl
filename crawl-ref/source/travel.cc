@@ -2092,7 +2092,7 @@ static bool _is_easy_exiting_branch(int branch)
     return branches[branch].any_upstair_exits;
 }
 
-static level_id _find_up_level(level_id curr, bool up_branch = false)
+level_id find_up_level(level_id curr, bool up_branch)
 {
     --curr.depth;
 
@@ -2123,10 +2123,10 @@ static level_id _find_up_level(level_id curr, bool up_branch = false)
 
 static level_id _find_up_level()
 {
-    return (_find_up_level(level_id::current()));
+    return (find_up_level(level_id::current()));
 }
 
-static level_id _find_down_level(level_id curr)
+level_id find_down_level(level_id curr)
 {
     if (curr.depth < branches[curr.branch].depth)
         ++curr.depth;
@@ -2147,7 +2147,7 @@ static level_id _find_deepest_explored(level_id curr)
 
 static level_id _find_down_level()
 {
-    return (_find_down_level(level_id::current()));
+    return (find_down_level(level_id::current()));
 }
 
 static int _travel_depth_keyfilter(int &c)
@@ -2202,13 +2202,13 @@ static void _travel_depth_munge(int munge_method, const std::string &s,
         redraw_screen();
         return;
     case '<':
-        lid = _find_up_level(lid);
+        lid = find_up_level(lid);
         break;
     case '>':
-        lid = _find_down_level(lid);
+        lid = find_down_level(lid);
         break;
     case '-':
-        lid = _find_up_level(lid, true);
+        lid = find_up_level(lid, true);
         break;
     case '$':
         lid = _find_deepest_explored(lid);

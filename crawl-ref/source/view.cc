@@ -2443,71 +2443,18 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 
         case CMD_MAP_PREV_LEVEL:
         case CMD_MAP_NEXT_LEVEL: {
-            int best_score = 1000;
-            level_id best_level;
+            level_id next;
 
-            int cur_depth = level_id::current().dungeon_absdepth();
+            next = (cmd == CMD_MAP_PREV_LEVEL)
+                   ? find_up_level(level_id::current())
+                   : find_down_level(level_id::current());
 
-            for (level_id_set::iterator it = Generated_Levels.begin();
-                    it != Generated_Levels.end(); ++it)
+            if (next.is_valid() && next != level_id::current()
+                    && is_existing_level(next))
             {
-                int depth = it->dungeon_absdepth();
-
-                int score = (depth - cur_depth) * 2;
-
-                if (cmd == CMD_MAP_PREV_LEVEL)
-                    score *= -1;
-
-                if (score <= 0)
-                    continue;
-
-                if (it->branch == you.where_are_you
-                        && it->level_type == you.level_type)
-                {
-                    --score;
-                }
-
-                if (score < best_score)
-                {
-                    best_score = score;
-                    best_level = *it;
-                }
-            }
-
-            if (best_score != 1000)
-            {
-                le.go_to(best_level);
+                le.go_to(next);
                 new_level = true;
             }
-            break;
-        }
-
-        case CMD_MAP_OTHER_BRANCH: {
-            level_id_set::iterator it = Generated_Levels.begin();
-
-            while (*it != level_id::current())
-            {
-                ++it;
-
-                if (it != Generated_Levels.end())
-                    goto no_depth_category;
-            }
-
-            do
-            {
-                ++it;
-
-                if (it == Generated_Levels.end())
-                    it = Generated_Levels.begin();
-            }
-            while (it->dungeon_absdepth() != level_id::current().dungeon_absdepth());
-
-            if (*it != level_id::current())
-            {
-                le.go_to(*it);
-                new_level = true;
-            }
-        no_depth_category:
             break;
         }
 
