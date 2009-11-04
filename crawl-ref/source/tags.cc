@@ -82,6 +82,10 @@
 #include "travel.h"
 #include "view.h"
 
+#if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
+#include "coord.h"
+#endif
+
 // defined in overmap.cc
 extern std::map<branch_type, level_id> stair_level;
 extern std::map<level_pos, shop_type> shops_present;
@@ -1910,7 +1914,28 @@ static void tag_construct_level_monsters(writer &th)
     marshallByte(th, NUM_MONSTER_SLOTS);
 
     for (int i = 0; i < MAX_MONSTERS; i++)
-        marshall_monster(th, menv[i]);
+    {
+        monsters &m(menv[i]);
+
+#if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
+        if (m.type != MONS_NO_MONSTER)
+        {
+            if (invalid_monster_type(m.type))
+            {
+                mprf(MSGCH_ERROR, "Marshalled monster #%d %s",
+                     i, m.name(DESC_PLAIN, true).c_str());
+            }
+            if (!in_bounds(m.pos()))
+            {
+                mprf(MSGCH_ERROR,
+                     "Marshalled monster #%d %s out of bounds at (%d, %d)",
+                     i, m.name(DESC_PLAIN, true).c_str(),
+                     m.pos().x, m.pos().y);
+            }
+        }
+#endif
+        marshall_monster(th, m);
+    }
 }
 
 void tag_construct_level_attitude(writer &th)
@@ -2216,10 +2241,23 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
     {
         monsters &m = menv[i];
         unmarshall_monster(th, m);
+
         // place monster
         if (m.type != MONS_NO_MONSTER)
         {
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
+            if (invalid_monster_type(m.type))
+            {
+                mprf(MSGCH_ERROR, "Unmarshalled monster #%d %s",
+                     i, m.name(DESC_PLAIN, true).c_str());
+            }
+            if (!in_bounds(m.pos()))
+            {
+                mprf(MSGCH_ERROR,
+                     "Unmarshalled monster #%d %s out of bounds at (%d, %d)",
+                     i, m.name(DESC_PLAIN, true).c_str(),
+                     m.pos().x, m.pos().y);
+            }
             int midx = mgrd(m.pos());
             if (midx != NON_MONSTER)
                 mprf(MSGCH_ERROR, "(%d,%d) for %s already occupied by %s",
