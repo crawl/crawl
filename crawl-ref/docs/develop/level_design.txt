@@ -617,6 +617,9 @@ ITEM:     (list of items, separated by comma)
           or force a randart.  You also can't lay down corpses, skeletons, or
           chunks.
 
+          You can place multiple items on the same square by using the KITEM
+          directive. See that section for more information.
+
 MONS:     (list of monsters)
           These are used to help place specific monsters at specific places
           in a vault. They create an array with up to 7 positions. What's in
