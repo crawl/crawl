@@ -2405,13 +2405,28 @@ static void _reset_travel_colours(std::vector<coord_def> &features,
     arrange_features(features);
 }
 
+class levelview_excursion : public level_excursion
+{
+public:
+    void go_to(const level_id& next)
+    {
+#ifdef USE_TILE
+        tiles.clear_minimap();
+        level_excursion::go_to(next);
+        TileNewLevel(false);
+#else
+        level_excursion::go_to(next);
+#endif
+    } 
+};
+
 // show_map() now centers the known map along x or y.  This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
 // to get that.  This function is still a mess, though. -- bwr
 void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 {
-    level_excursion le;
+    levelview_excursion le;
     level_id original(level_id::current());
 
     cursor_control ccon(!Options.use_fake_cursor);

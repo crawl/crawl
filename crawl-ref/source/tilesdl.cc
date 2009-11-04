@@ -427,6 +427,8 @@ void TilesFramework::load_dungeon(const coord_def &cen)
     unsigned int *tb = (unsigned int*)alloca(sizeof(unsigned int) *
                                              wy * wx * 2);
 
+    bool draw_los = you.on_current_level;
+
     int count = 0;
     for (int y = 0; y < wy; y++)
         for (int x = 0; x < wx; x++)
@@ -444,7 +446,7 @@ void TilesFramework::load_dungeon(const coord_def &cen)
                 fg = 0;
                 bg = TILE_DNGN_UNSEEN;
             }
-            else if (!crawl_view.in_grid_los(gc) || !env.show(ep))
+            else if (!crawl_view.in_grid_los(gc) || !env.show(ep) || !draw_los)
             {
                 fg = env.tile_bk_fg(gc);
                 bg = env.tile_bk_bg(gc);
@@ -1325,7 +1327,7 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
 
     coord_def gc(gx, gy);
 
-    if (you.pos() == gc)
+    if (you.pos() == gc && you.on_current_level)
     {
         f = MF_PLAYER;
     }

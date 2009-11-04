@@ -6003,6 +6003,8 @@ void player::init()
 
     // Currently only set if Xom accidentally kills the player.
     reset_escaped_death();
+
+    on_current_level = true;
 }
 
 player_save_info player_save_info::operator=(const player& rhs)

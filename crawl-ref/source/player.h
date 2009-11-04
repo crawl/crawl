@@ -280,6 +280,9 @@ public:
 
   CrawlHashTable props;
 
+  // When other levels are loaded (e.g. viewing), is the player on this level?
+  bool on_current_level;
+
 protected:
   FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
   FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
