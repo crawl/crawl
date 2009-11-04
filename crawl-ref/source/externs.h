@@ -688,28 +688,6 @@ struct message_colour_mapping
     int colour;
 };
 
-struct feature_def
-{
-    dungeon_char_type   dchar;
-    unsigned            symbol;          // symbol used for seen terrain
-    unsigned            magic_symbol;    // symbol used for magic-mapped terrain
-    unsigned short      colour;          // normal in LoS colour
-    unsigned short      map_colour;      // colour when out of LoS on display
-    unsigned short      seen_colour;     // map_colour when is_terrain_seen()
-    unsigned short      em_colour;       // Emphasised colour when in LoS.
-    unsigned short      seen_em_colour;  // Emphasised colour when out of LoS
-    unsigned            flags;
-    map_feature         minimap;         // mini-map categorization
-
-    bool is_notable() const { return (flags & FFT_NOTABLE); }
-};
-
-struct feature_override
-{
-    dungeon_feature_type    feat;
-    feature_def             override;
-};
-
 class InvEntry;
 typedef int (*item_sort_fn)(const InvEntry *a, const InvEntry *b);
 struct item_comparator

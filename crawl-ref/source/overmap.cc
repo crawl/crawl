@@ -25,6 +25,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "feature.h"
 #include "files.h"
 #include "initfile.h"
 #include "menu.h"

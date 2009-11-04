@@ -15,6 +15,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "effects.h"
+#include "feature.h"
 #include "goditem.h"
 #include "it_use2.h"
 #include "items.h"

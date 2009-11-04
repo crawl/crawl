@@ -11,7 +11,6 @@
 #include "externs.h"
 
 void init_char_table(char_set_type set);
-void init_feature_table();
 void init_monsters_seens();
 
 void beogh_follower_convert(monsters *monster, bool orc_hit = false);
@@ -56,8 +55,6 @@ void get_item_symbol(unsigned int object, unsigned *ch,
 // Applies ETC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour);
 int get_mons_colour(const monsters *mons);
-
-const feature_def &get_feature_def(dungeon_feature_type feat);
 
 void set_envmap_obj( const coord_def& where, int object );
 unsigned get_envmap_char(int x, int y);
