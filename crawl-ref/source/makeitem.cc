@@ -4899,7 +4899,7 @@ void item_set_appearance(item_def &item)
     }
 }
 
-#ifdef DEBUG_DIAGNOSTICS
+#if DEBUG_DIAGNOSTICS || DEBUG_TESTS
 static int _test_item_level()
 {
     switch(random2(10))

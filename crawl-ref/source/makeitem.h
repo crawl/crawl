@@ -36,7 +36,7 @@ void item_set_appearance(item_def &item);
 bool is_weapon_brand_ok(int type, int brand);
 bool is_armour_brand_ok(int type, int brand);
 
-#ifdef DEBUG_DIAGNOSTICS
+#if DEBUG_DIAGNOSTICS || DEBUG_TESTS
 void makeitem_tests();
 #endif
 #endif

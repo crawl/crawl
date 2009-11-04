@@ -3587,6 +3587,10 @@ static bool _initialise(void)
 
     if (crawl_state.test)
     {
+#if DEBUG_TESTS && !DEBUG
+#error "DEBUG must be defined if DEBUG_TESTS is defined"
+#endif
+
 #if DEBUG_DIAGNOSTICS || DEBUG_TESTS
 #ifdef USE_TILE
         init_player_doll();
