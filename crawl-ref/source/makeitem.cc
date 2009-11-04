@@ -1623,8 +1623,8 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     {
         int i;
         int ego = item.special;
-        for (i=0; i<10; i++)
-            if (_try_make_weapon_artefact(item, force_type, 0, true))
+        for (i=0; i<100; i++)
+            if (_try_make_weapon_artefact(item, force_type, 0, true) && is_artefact(item))
             {
                 if (ego > SPWPN_NORMAL)
                     item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = ego;
@@ -2325,8 +2325,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (item_level == -6)
     {
         int i;
-        for (i=0; i<10; i++)
-            if (_try_make_armour_artefact(item, force_type, 0, true))
+        for (i=0; i<100; i++)
+            if (_try_make_armour_artefact(item, force_type, 0, true) && is_artefact(item))
                 return;
         // fall back to an ordinary item
         item_level = MAKE_GOOD_ITEM;
