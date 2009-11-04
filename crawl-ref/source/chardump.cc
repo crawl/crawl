@@ -54,6 +54,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
+#include "viewchar.h"
 #include "xom.h"
 
 struct dump_params;

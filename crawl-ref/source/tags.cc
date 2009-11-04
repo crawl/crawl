@@ -64,6 +64,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "enum.h"
+#include "envmap.h"
 #include "externs.h"
 #include "files.h"
 #include "ghost.h"

@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
+#include "envmap.h"
 #include "externs.h"
 #include "options.h"
 #include "food.h"
@@ -39,6 +40,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#include "viewgeom.h"
 
 void TileNewLevel(bool first_time)
 {

@@ -51,6 +51,7 @@
 #include "terrain.h"
 #include "transfor.h"
 #include "view.h"
+#include "viewchar.h"
 
 static void _adjust_item(void);
 static void _adjust_spells(void);

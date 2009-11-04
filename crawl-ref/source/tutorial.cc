@@ -56,6 +56,8 @@
  #include "tiles.h"
 #endif
 #include "view.h"
+#include "viewchar.h"
+#include "viewgeom.h"
 
 static species_type _get_tutorial_species(unsigned int type);
 static job_type     _get_tutorial_job(unsigned int type);

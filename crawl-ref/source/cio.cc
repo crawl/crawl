@@ -12,6 +12,7 @@
 #include "macro.h"
 #include "message.h"
 #include "state.h"
+#include "viewgeom.h"
 
 #include <queue>
 

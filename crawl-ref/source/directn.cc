@@ -31,6 +31,7 @@
 #include "debug.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "envmap.h"
 #include "initfile.h"
 #include "invent.h"
 #include "itemname.h"
@@ -59,6 +60,8 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewchar.h"
+#include "viewgeom.h"
 #include "output.h"
 
 #include "macro.h"

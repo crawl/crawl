@@ -15,6 +15,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "effects.h"
+#include "envmap.h"
 #include "feature.h"
 #include "goditem.h"
 #include "it_use2.h"
@@ -51,6 +52,7 @@
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
+#include "viewchar.h"
 #include "xom.h"
 
 #ifdef DEBUG_XOM

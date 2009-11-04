@@ -27,6 +27,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
+#include "envmap.h"
 #include "food.h"
 #include "goditem.h"
 #include "invent.h"
@@ -60,6 +61,7 @@
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewgeom.h"
 #include "xom.h"
 
 #ifdef NOTE_DEBUG_CHAOS_BRAND

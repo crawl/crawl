@@ -32,6 +32,7 @@
 #include "dgnevent.h"
 #include "effects.h"
 #include "enum.h"
+#include "envmap.h"
 #include "fight.h"
 #include "item_use.h"
 #include "it_use2.h"
@@ -59,6 +60,8 @@
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
+#include "viewchar.h"
+#include "viewgeom.h"
 #include "xom.h"
 
 #include "tiles.h"

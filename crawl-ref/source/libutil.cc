@@ -6,12 +6,13 @@
 #include "AppHdr.h"
 
 #include "defines.h"
-#include "directn.h"
 #include "itemname.h" // is_vowel()
 #include "libutil.h"
 #include "externs.h"
 #include "macro.h"
 #include "stuff.h"
+#include "viewgeom.h"
+
 #include <sstream>
 #include <stdio.h>
 #include <ctype.h>

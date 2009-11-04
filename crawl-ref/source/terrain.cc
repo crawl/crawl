@@ -15,6 +15,7 @@
 #include "cloud.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "envmap.h"
 #include "godabil.h"
 #include "itemprop.h"
 #include "items.h"

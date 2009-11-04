@@ -25,6 +25,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
+#include "envmap.h"
 #include "food.h"
 #include "goditem.h"
 #include "itemname.h"
@@ -49,6 +50,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#include "viewgeom.h"
 #include "xom.h"
 
 bool cast_selective_amnesia(bool force)

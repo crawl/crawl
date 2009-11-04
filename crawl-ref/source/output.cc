@@ -51,6 +51,8 @@
 #include "transfor.h"
 #include "travel.h"
 #include "view.h"
+#include "viewchar.h"
+#include "viewgeom.h"
 
 // Color for captions like 'Health:', 'Str:', etc.
 #define HUD_CAPTION_COLOUR Options.status_caption_colour

@@ -3,6 +3,7 @@
 #include "show.h"
 
 #include "cloud.h"
+#include "colour.h"
 #include "coordit.h"
 #include "directn.h"
 #include "feature.h"
@@ -12,6 +13,7 @@
 #include "state.h"
 #include "terrain.h"
 #include "view.h"
+#include "viewgeom.h"
 
 void get_show_symbol(show_type object, unsigned *ch,
                      unsigned short *colour)

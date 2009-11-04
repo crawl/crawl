@@ -16,6 +16,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
+#include "envmap.h"
 #include "mapmark.h"
 #include "ouch.h"
 #include "player.h"

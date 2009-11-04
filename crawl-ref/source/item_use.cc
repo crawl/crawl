@@ -14,7 +14,6 @@
 #include <stdio.h>
 
 #include "externs.h"
-#include "options.h"
 
 #include "abl-show.h"
 #include "artefact.h"
@@ -29,6 +28,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "effects.h"
+#include "envmap.h"
 #include "fight.h"
 #include "food.h"
 #include "godabil.h"
@@ -48,6 +48,7 @@
 #include "monplace.h"
 #include "monstuff.h"
 #include "notes.h"
+#include "options.h"
 #include "ouch.h"
 #include "player.h"
 #include "quiver.h"
@@ -70,6 +71,8 @@
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewchar.h"
+#include "viewgeom.h"
 #include "xom.h"
 
 static bool _drink_fountain();

@@ -28,6 +28,7 @@
 #include "tilesdl.h"
 #include "travel.h"
 #include "view.h"
+#include "viewgeom.h"
 
 #include <SDL.h>
 #include "tilesdl.h"

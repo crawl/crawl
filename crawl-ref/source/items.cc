@@ -60,6 +60,7 @@
 #include "terrain.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewgeom.h"
 #include "xom.h"
 
 #define PORTAL_VAULT_ORIGIN_KEY "portal_vault_origin"

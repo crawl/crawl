@@ -33,6 +33,7 @@
 #include "describe.h"
 #include "effects.h"
 #include "enum.h"
+#include "envmap.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"

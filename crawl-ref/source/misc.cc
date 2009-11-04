@@ -43,6 +43,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "envmap.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -80,6 +81,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewchar.h"
 #include "xom.h"
 
 static void _create_monster_hide(const item_def corpse)

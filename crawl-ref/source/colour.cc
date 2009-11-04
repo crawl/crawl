@@ -4,6 +4,7 @@
 
 #include "env.h"
 #include "mon-util.h"
+#include "options.h"
 #include "player.h"
 #include "random.h"
 
@@ -391,4 +392,132 @@ int str_to_colour( const std::string &str, int default_colour,
     }
 
     return ((ret == 16) ? default_colour : ret);
+}
+
+#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+static unsigned short _dos_reverse_brand(unsigned short colour)
+{
+    if (Options.dos_use_background_intensity)
+    {
+        // If the console treats the intensity bit on background colours
+        // correctly, we can do a very simple colour invert.
+
+        // Special casery for shadows.
+        if (colour == BLACK)
+            colour = (DARKGREY << 4);
+        else
+            colour = (colour & 0xF) << 4;
+    }
+    else
+    {
+        // If we're on a console that takes its DOSness very seriously the
+        // background high-intensity bit is actually a blink bit. Blinking is
+        // evil, so we strip the background high-intensity bit. This, sadly,
+        // limits us to 7 background colours.
+
+        // Strip off high-intensity bit.  Special case DARKGREY, since it's the
+        // high-intensity counterpart of black, and we don't want black on
+        // black.
+        //
+        // We *could* set the foreground colour to WHITE if the background
+        // intensity bit is set, but I think we've carried the
+        // angry-fruit-salad theme far enough already.
+
+        if (colour == DARKGREY)
+            colour |= (LIGHTGREY << 4);
+        else if (colour == BLACK)
+            colour = LIGHTGREY << 4;
+        else
+        {
+            // Zap out any existing background colour, and the high
+            // intensity bit.
+            colour  &= 7;
+
+            // And swap the foreground colour over to the background
+            // colour, leaving the foreground black.
+            colour <<= 4;
+        }
+    }
+
+    return (colour);
+}
+
+static unsigned short _dos_hilite_brand(unsigned short colour,
+                                        unsigned short hilite)
+{
+    if (!hilite)
+        return (colour);
+
+    if (colour == hilite)
+        colour = 0;
+
+    colour |= (hilite << 4);
+    return (colour);
+}
+
+unsigned short dos_brand( unsigned short colour,
+                          unsigned brand)
+{
+    if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
+        return (colour);
+
+    colour &= 0xFF;
+
+    if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+        return _dos_hilite_brand(colour, (brand & CHATTR_COLMASK) >> 8);
+    else
+        return _dos_reverse_brand(colour);
+}
+#endif
+
+#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+static unsigned _colflag2brand(int colflag)
+{
+    switch (colflag)
+    {
+    case COLFLAG_ITEM_HEAP:
+        return (Options.heap_brand);
+    case COLFLAG_FRIENDLY_MONSTER:
+        return (Options.friend_brand);
+    case COLFLAG_NEUTRAL_MONSTER:
+        return (Options.neutral_brand);
+    case COLFLAG_WILLSTAB:
+        return (Options.stab_brand);
+    case COLFLAG_MAYSTAB:
+        return (Options.may_stab_brand);
+    case COLFLAG_FEATURE_ITEM:
+        return (Options.feature_item_brand);
+    case COLFLAG_TRAP_ITEM:
+        return (Options.trap_item_brand);
+    default:
+        return (CHATTR_NORMAL);
+    }
+}
+#endif
+
+unsigned real_colour(unsigned raw_colour)
+{
+    // This order is important - is_element_colour() doesn't want to see the
+    // munged colours returned by dos_brand, so it should always be done
+    // before applying DOS brands.
+    const int colflags = raw_colour & 0xFF00;
+
+    // Evaluate any elemental colours to guarantee vanilla colour is returned
+    if (is_element_colour( raw_colour ))
+        raw_colour = colflags | element_colour( raw_colour );
+
+#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+    if (colflags)
+    {
+        unsigned brand = _colflag2brand(colflags);
+        raw_colour = dos_brand(raw_colour & 0xFF, brand);
+    }
+#endif
+
+#ifndef USE_COLOUR_OPTS
+    // Strip COLFLAGs for systems that can't do anything meaningful with them.
+    raw_colour &= 0xFF;
+#endif
+
+    return (raw_colour);
 }

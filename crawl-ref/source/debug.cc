@@ -39,6 +39,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "envmap.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"

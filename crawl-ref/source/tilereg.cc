@@ -11,6 +11,7 @@
 
 #include "cio.h"
 #include "coord.h"
+#include "envmap.h"
 #include "debug.h"
 #include "describe.h"
 #include "files.h"
@@ -40,6 +41,7 @@
 #include "transfor.h"
 #include "travel.h"
 #include "view.h"
+#include "viewgeom.h"
 
 #include "tilereg.h"
 #include "tiles.h"

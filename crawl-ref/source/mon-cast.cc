@@ -15,6 +15,7 @@
 #include "colour.h"
 #include "database.h"
 #include "effects.h"
+#include "envmap.h"
 #include "fight.h"
 #include "ghost.h"
 #include "los.h"
@@ -32,6 +33,7 @@
 #include "spells3.h"
 #include "stuff.h"
 #include "view.h"
+#include "viewchar.h"
 
 static void _scale_draconian_breath(bolt& beam, int drac_type)
 {

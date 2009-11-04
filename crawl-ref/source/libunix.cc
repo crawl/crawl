@@ -35,6 +35,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
+#include "viewgeom.h"
 
 #ifdef DGL_ENABLE_CORE_DUMP
 #include <sys/time.h>

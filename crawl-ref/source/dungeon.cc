@@ -22,6 +22,7 @@
 #include "defines.h"
 #include "effects.h"
 #include "enum.h"
+#include "envmap.h"
 #include "externs.h"
 #include "options.h"
 #include "directn.h"

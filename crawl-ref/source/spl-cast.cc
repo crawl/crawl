@@ -19,6 +19,7 @@
 #include "coordit.h"
 #include "describe.h"
 #include "effects.h"
+#include "envmap.h"
 #include "food.h"
 #include "format.h"
 #include "godabil.h"

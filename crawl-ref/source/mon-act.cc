@@ -16,6 +16,7 @@
 #include "cloud.h"
 #include "delay.h"
 #include "directn.h"
+#include "envmap.h"
 #include "fight.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -41,6 +42,7 @@
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewchar.h"
 
 static bool _handle_pickup(monsters *monster);
 static void _mons_in_cloud(monsters *monster);

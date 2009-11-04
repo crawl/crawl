@@ -22,6 +22,7 @@
 #include "describe.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "envmap.h"
 #include "exclude.h"
 #include "itemname.h"
 #include "itemprop.h"

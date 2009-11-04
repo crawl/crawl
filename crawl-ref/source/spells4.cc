@@ -51,6 +51,7 @@
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
+#include "viewchar.h"
 
 enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
 {

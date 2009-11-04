@@ -15,6 +15,7 @@
 #include "colour.h"
 #include "database.h"
 #include "directn.h"
+#include "envmap.h"
 #include "fight.h"
 #include "ghost.h"
 #include "goditem.h"

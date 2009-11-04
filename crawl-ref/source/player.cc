@@ -29,6 +29,7 @@
 #include "delay.h"
 #include "dgnevent.h"
 #include "effects.h"
+#include "envmap.h"
 #include "fight.h"
 #include "food.h"
 #include "godabil.h"
@@ -68,6 +69,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewgeom.h"
 #include "tiles.h"
 #include "xom.h"
 

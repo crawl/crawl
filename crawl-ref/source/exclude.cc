@@ -8,6 +8,7 @@
 #include "exclude.h"
 
 #include "coord.h"
+#include "envmap.h"
 #include "mon-util.h"
 #include "options.h"
 #include "overmap.h"

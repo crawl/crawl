@@ -21,6 +21,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "enum.h"
+#include "envmap.h"
 #include "exclude.h"
 #include "food.h"
 #include "invent.h"

@@ -79,6 +79,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewgeom.h"
 
 #ifdef TARGET_COMPILER_VC
 #include <direct.h>

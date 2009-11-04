@@ -28,6 +28,7 @@ directn.o \
 dlua.o \
 dungeon.o \
 effects.o \
+envmap.o \
 exclude.o \
 feature.o \
 fight.o \
@@ -141,4 +142,7 @@ traps.o \
 travel.o \
 tutorial.o \
 view.o \
+viewchar.o \
+viewgeom.o \
+viewmap.o \
 xom.o

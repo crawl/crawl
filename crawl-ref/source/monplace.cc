@@ -13,6 +13,7 @@
 #include "arena.h"
 #include "branch.h"
 #include "directn.h" // for the Compass
+#include "envmap.h"
 #include "externs.h"
 #include "options.h"
 #include "ghost.h"

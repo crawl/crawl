@@ -40,6 +40,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
+#include "viewgeom.h"
 
 #include <cctype>
 #include <cstdio>

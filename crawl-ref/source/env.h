@@ -1,6 +1,7 @@
 #ifndef ENV_H
 #define ENV_H
 
+#include "mapcell.h"
 #include "monster.h"
 #include "show.h"
 

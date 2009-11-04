@@ -24,6 +24,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "envmap.h"
 #include "goditem.h"
 #include "invent.h"
 #include "itemname.h"

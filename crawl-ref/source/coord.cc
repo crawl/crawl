@@ -2,9 +2,9 @@
 
 #include "coord.h"
 
-#include "directn.h"
 #include "random.h"
 #include "state.h"
+#include "viewgeom.h"
 
 //////////////////////////////////////////////////////////////////////////
 // coord_def

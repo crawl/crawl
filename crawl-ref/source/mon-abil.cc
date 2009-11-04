@@ -18,6 +18,7 @@
 #include "beam.h"
 #include "colour.h"
 #include "directn.h"
+#include "envmap.h"
 #include "ghost.h"
 #include "misc.h"
 #include "mon-act.h"
@@ -32,6 +33,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
+#include "viewchar.h"
 
 bool ugly_thing_mutate(monsters *ugly, bool proximity)
 {

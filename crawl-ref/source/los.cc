@@ -51,7 +51,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "debug.h"
-#include "directn.h"
 #include "externs.h"
 #include "geom2d.h"
 #include "losparam.h"
@@ -60,6 +59,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "viewgeom.h"
 
 // This determines which cells are considered out of range during
 // precalculations (only positive quadrant used).

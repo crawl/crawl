@@ -8,6 +8,7 @@
 #include "colour.h"
 #include "format.h"
 #include "view.h"
+#include "viewchar.h"
 
 formatted_string::formatted_string(int init_colour)
     : ops()

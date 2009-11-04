@@ -22,6 +22,7 @@
 #include "delay.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "envmap.h"
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
@@ -46,6 +47,7 @@
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewchar.h"
 #include "stash.h"
 #include "xom.h"
 

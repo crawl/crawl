@@ -38,6 +38,8 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewchar.h"
+#include "viewgeom.h"
 #include "menu.h"
 
 class message_item {

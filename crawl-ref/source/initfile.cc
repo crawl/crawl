@@ -44,6 +44,7 @@
 #include "travel.h"
 #include "items.h"
 #include "view.h"
+#include "viewchar.h"
 
 // For finding the executable's path
 #ifdef TARGET_OS_WINDOWS

@@ -12,6 +12,7 @@
 
 #include "coord.h"
 #include "coordit.h"
+#include "envmap.h"
 #include "exclude.h"
 #include "los.h"
 #include "monplace.h"

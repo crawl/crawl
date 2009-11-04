@@ -30,6 +30,7 @@
 #include "terrain.h"
 #include "transfor.h"
 #include "view.h"
+#include "viewchar.h"
 #include "xom.h"
 
 // This determines how likely it is that more powerful wild magic

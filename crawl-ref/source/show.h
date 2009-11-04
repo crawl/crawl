@@ -57,19 +57,11 @@ struct show_type
     bool operator < (const show_type &other) const;
 };
 
-struct map_cell
+struct show_info
 {
-    show_type object;           // The object: monster, item, feature, or cloud.
-    unsigned short flags;   // Flags describing the mappedness of this square.
-    unsigned short colour;
-    unsigned long property; // Flags for blood, sanctuary, ...
-
-    map_cell() : object(), flags(0), colour(0), property(0) { }
-    void clear() { flags = colour = 0; object = show_type(); }
-
-    unsigned glyph() const;
-    bool known() const;
-    bool seen() const;
+    dungeon_feature_type feat;
+    show_item_type item;
+    monster_type mons;
 };
 
 // Replaces get_item_symbol.

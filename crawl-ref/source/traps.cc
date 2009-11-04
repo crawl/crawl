@@ -18,6 +18,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
+#include "envmap.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"

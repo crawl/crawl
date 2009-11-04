@@ -5,6 +5,7 @@
 #include "artefact.h"
 #include "cio.h"
 #include "coord.h"
+#include "envmap.h"
 #include "itemname.h"
 #include "items.h"
 #include "itemprop.h"
@@ -22,6 +23,7 @@
 #include "tilesdl.h"
 #include "travel.h"
 #include "view.h"
+#include "viewgeom.h"
 
 #include "tiledef-dngn.h"
 #include "tilefont.h"

@@ -18,6 +18,8 @@
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
+#include "viewchar.h"
+#include "viewgeom.h"
 
 #include <cstdarg>
 #include <sstream>

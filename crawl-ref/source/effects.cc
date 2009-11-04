@@ -27,6 +27,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dgnevent.h"
+#include "envmap.h"
 #include "food.h"
 #include "hiscores.h"
 #include "invent.h"
@@ -62,6 +63,7 @@
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewchar.h"
 #include "xom.h"
 
 int holy_word_player(int pow, int caster, actor *attacker)
