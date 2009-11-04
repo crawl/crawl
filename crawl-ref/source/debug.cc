@@ -1694,9 +1694,7 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Inv",
     "Lev",
     "Blnk",
-    "UNUSED",
     "Bers",
-    "UNUSED",
     "Nois",
     "NoSpl",
     "RndTl",
@@ -1733,9 +1731,7 @@ char _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_BOOL, //INVISIBLE
     ARTP_VAL_BOOL, //LEVITATE
     ARTP_VAL_BOOL, //BLINK
-    ARTP_VAL_BOOL, //UNUSED_2
     ARTP_VAL_BOOL, //BERSERK
-    ARTP_VAL_BOOL, //UNUSED_1
     ARTP_VAL_POS,  //NOISES
     ARTP_VAL_BOOL, //PREVENT_SPELLCASTING
     ARTP_VAL_BOOL, //CAUSE_TELEPORTATION
@@ -3673,9 +3669,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_INVISIBLE",
         "ARTP_LEVITATE",
         "ARTP_BLINK",
-        "ARTP_UNUSED_2",
         "ARTP_BERSERK",
-        "ARTP_UNUSED_1",
         "ARTP_NOISES",
         "ARTP_PREVENT_SPELLCASTING",
         "ARTP_CAUSE_TELEPORTATION",

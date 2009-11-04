@@ -472,8 +472,8 @@ my @art_order = (
 
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
-    "SEEINV", "INV", "LEV", "BLINK", "UNUSED", "BERSERK", "UNUSED", "\n",
-    "NOISES", "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
+    "SEEINV", "INV", "LEV", "BLINK", "BERSERK",  "NOISES", "\n",
+    "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "SPIRIT", "}",
 

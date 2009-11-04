@@ -929,13 +929,6 @@ mutation_def mutation_defs[] = {
       ""
     },
 
-    { MUT_UNUSED_1,                   0,  3, false, false,
-      {"", "", ""},
-      {"", "", ""},
-      {"", "", ""},
-      ""
-    },
-
 // Scales of various colours and effects
     { MUT_RED_SCALES,                 2,  3, false,  true,
       {"You are partially covered in red scales (AC +1).",
@@ -1162,21 +1155,6 @@ mutation_def mutation_defs[] = {
 
       "iridescent scales"
     },
-    { MUT_PATTERNED_SCALES,           1,  3, false,  true,
-      {"You are partially covered in patterned scales (AC +1).",
-       "You are mostly covered in patterned scales (AC +2).",
-       "You are completely covered in patterned scales (AC +3)."},
-
-      {"Patterned scales grow over part of your body.",
-       "Patterned scales spread over more of your body.",
-       "Patterned scales cover you completely."},
-
-      {"Your patterned scales disappear.",
-       "Your patterned scales recede somewhat.",
-       "Your patterned scales recede somewhat."},
-
-      "patterned scales"
-    },
     { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 3, false, false,
       {"You are somewhat able to resist unholy torments (1 in 5 success).",
        "You are decently able to resist unholy torments (2 in 5 success).",
@@ -1231,6 +1209,22 @@ mutation_def mutation_defs[] = {
       {"Your skin feels very cold...", "", ""},
       {"", "", ""},
       "passive freeze",
+    },
+    // Anything after PATTERNED SCALES will be ignored by the debug code
+    { MUT_PATTERNED_SCALES,           1,  3, false,  true,
+      {"You are partially covered in patterned scales (AC +1).",
+       "You are mostly covered in patterned scales (AC +2).",
+       "You are completely covered in patterned scales (AC +3)."},
+
+      {"Patterned scales grow over part of your body.",
+       "Patterned scales spread over more of your body.",
+       "Patterned scales cover you completely."},
+
+      {"Your patterned scales disappear.",
+       "Your patterned scales recede somewhat.",
+       "Your patterned scales recede somewhat."},
+
+      "patterned scales"
     },
 };
 

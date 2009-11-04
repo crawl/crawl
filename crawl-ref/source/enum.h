@@ -12,37 +12,35 @@ enum ability_type
 {
     ABIL_NON_ABILITY = -1,
     ABIL_SPIT_POISON = 1,              //    1
-    // was Mapping
-    ABIL_TELEPORTATION = 3,
+    ABIL_TELEPORTATION,
     ABIL_BREATHE_FIRE,
-    ABIL_BLINK,                        //    5
-    ABIL_BREATHE_FROST,
+    ABIL_BLINK,
+    ABIL_BREATHE_FROST,                //    5
     ABIL_BREATHE_POISON,
     ABIL_BREATHE_LIGHTNING,
     ABIL_SPIT_ACID,
-    ABIL_BREATHE_POWER,                //   10
-    ABIL_EVOKE_BERSERK,
+    ABIL_BREATHE_POWER,
+    ABIL_EVOKE_BERSERK,                //   10
     ABIL_BREATHE_STICKY_FLAME,
     ABIL_BREATHE_STEAM,
     ABIL_FLY,
-    ABIL_SUMMON_MINOR_DEMON,           //   15
-    ABIL_SUMMON_DEMON,
+    ABIL_SUMMON_MINOR_DEMON,
+    ABIL_SUMMON_DEMON,                 //   15
     ABIL_HELLFIRE,
     ABIL_TORMENT,
     ABIL_RAISE_DEAD,
-    ABIL_CONTROL_DEMON,                //   20
-    ABIL_CHANNELING,
+    ABIL_CONTROL_DEMON,
+    ABIL_CHANNELING,                   //   20
     ABIL_THROW_FLAME,
     ABIL_THROW_FROST,
     ABIL_BOLT_OF_DRAINING,
-    ABIL_FLY_II,                       //   25
-    ABIL_DELAYED_FIREBALL,
+    ABIL_FLY_II,
+    ABIL_DELAYED_FIREBALL,             //   25
     ABIL_MUMMY_RESTORATION,
-    // Was evoke mapping
-    ABIL_EVOKE_TELEPORTATION = 29,
-    ABIL_EVOKE_BLINK,                  //   30
-    ABIL_RECHARGING,                   //   31
-    // 32 - 50 unused
+    ABIL_EVOKE_TELEPORTATION,
+    ABIL_EVOKE_BLINK,
+    ABIL_RECHARGING,
+    // 30 - 50 unused
     ABIL_EVOKE_TURN_INVISIBLE = 51,    //   51
     ABIL_EVOKE_TURN_VISIBLE,
     ABIL_EVOKE_LEVITATE,
@@ -157,7 +155,6 @@ enum attribute_type
     ATTR_DIVINE_DEATH_CHANNEL,
     ATTR_TRANSFORMATION,
     ATTR_CARD_COUNTDOWN,
-    ATTR_NUM_DEMONIC_POWERS,    // No longer used - for 0.5 demonspawn
     ATTR_WAS_SILENCED,          //jmf: added for silenced messages
     ATTR_GOD_GIFT_COUNT,        //jmf: added to help manage god gift giving
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
@@ -2319,6 +2316,7 @@ enum mutation_type
     MUT_GREY_SCALES,
     MUT_BONEY_PLATES,
     MUT_REPULSION_FIELD,
+    MUT_PASSIVE_MAPPING,
     MUT_POISON_RESISTANCE,
     MUT_CARNIVOROUS,
     MUT_HERBIVOROUS,
@@ -2340,7 +2338,6 @@ enum mutation_type
     MUT_DEFORMED,
     MUT_TELEPORT_AT_WILL,
     MUT_SPIT_POISON,
-    MUT_UNUSED_1,
     MUT_BREATHE_FLAMES,
     MUT_BLINK,
     MUT_HORNS,
@@ -2357,6 +2354,11 @@ enum mutation_type
     MUT_ROBUST,
     MUT_TORMENT_RESISTANCE,
     MUT_NEGATIVE_ENERGY_RESISTANCE,
+    MUT_STOCHASTIC_TORMENT_RESISTANCE,
+    MUT_ICEMAIL,
+    MUT_CONSERVE_SCROLLS,
+    MUT_CONSERVE_POTIONS,
+    MUT_PASSIVE_FREEZE,
     MUT_SUMMON_MINOR_DEMONS,
     MUT_SUMMON_DEMONS,
     MUT_HURL_HELLFIRE,
@@ -2401,12 +2403,6 @@ enum mutation_type
     MUT_IRIDESCENT_SCALES,
     MUT_PATTERNED_SCALES,
 
-    MUT_STOCHASTIC_TORMENT_RESISTANCE,
-    MUT_PASSIVE_MAPPING,
-    MUT_ICEMAIL,
-    MUT_CONSERVE_SCROLLS,
-    MUT_CONSERVE_POTIONS,
-    MUT_PASSIVE_FREEZE,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = 100,
@@ -2537,23 +2533,21 @@ enum artefact_prop_type
     ARTP_INVISIBLE,
     ARTP_LEVITATE,
     ARTP_BLINK,                         //   15
-    ARTP_UNUSED_2,
     ARTP_BERSERK,
-    ARTP_UNUSED_1,
     ARTP_NOISES,
-    ARTP_PREVENT_SPELLCASTING,          //   20
+    ARTP_PREVENT_SPELLCASTING,
     ARTP_CAUSE_TELEPORTATION,
-    ARTP_PREVENT_TELEPORTATION,
+    ARTP_PREVENT_TELEPORTATION,         //   20
     ARTP_ANGRY,
     ARTP_METABOLISM,
-    ARTP_MUTAGENIC,                     //   25
+    ARTP_MUTAGENIC,
     ARTP_ACCURACY,
-    ARTP_DAMAGE,
+    ARTP_DAMAGE,                        //   25
     ARTP_CURSED,
     ARTP_STEALTH,
-    ARTP_MAGICAL_POWER,                 //   30
+    ARTP_MAGICAL_POWER,
     ARTP_SPIRIT_SHIELD,
-    ARTP_NUM_PROPERTIES
+    ARTP_NUM_PROPERTIES                 //   30
 };
 
 enum score_format_type
