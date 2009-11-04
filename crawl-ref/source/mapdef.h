@@ -426,6 +426,7 @@ public:
 
     item_spec get_item(int index);
     size_t size() const { return items.size(); }
+    bool empty() const { return items.empty(); }
 
     std::string add_item(const std::string &spec, bool fix = false);
     std::string set_item(int index, const std::string &spec);
@@ -474,6 +475,10 @@ class mons_spec
     item_list items;
     std::string monname;
 
+    bool explicit_spells;
+    monster_spells spells;
+    unsigned long extra_monster_flags;
+
     mons_spec(int id = RANDOM_MONSTER,
               monster_type base = MONS_NO_MONSTER,
               int num = 0,
@@ -482,7 +487,8 @@ class mons_spec
         : mid(id), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
           quantity(1), genweight(gw), mlevel(ml), fix_mons(_fixmons),
           generate_awake(awaken), patrolling(false), band(false),
-          colour(BLACK), items(), monname("")
+          colour(BLACK), items(), monname(""), explicit_spells(false),
+          spells(), extra_monster_flags(0L)
     {
     }
 };
@@ -532,6 +538,7 @@ private:
     mons_spec get_zombified_monster(const std::string &name,
                                     monster_type zomb) const;
     mons_spec_slot parse_mons_spec(std::string spec);
+    void parse_mons_spells(mons_spec &slot, const std::string &spells);
     mons_spec pick_monster(mons_spec_slot &slot);
     int fix_demon(int id) const;
     bool check_mimic(const std::string &s, int *mid, bool *fix) const;

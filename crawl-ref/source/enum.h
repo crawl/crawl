@@ -2189,7 +2189,15 @@ enum monster_flag_type
     MF_NAME_MASK          = 0x30000,
     MF_GOD_GIFT           = 0x40000, // Is a god gift.
     MF_FLEEING_FROM_SANCTUARY = 0x80000, // Is running away from player sanctuary
-    MF_EXPLODE_KILL       = 0x100000 // Is being killed with disintegration
+    MF_EXPLODE_KILL       = 0x100000, // Is being killed with disintegration
+
+    // These are based on the flags in monster class, but can be set for
+    // monsters that are not normally spellcasters (in vaults).
+    MF_SPELLCASTER        = 0x200000,
+    MF_ACTUAL_SPELLS      = 0x400000, // Can use spells and is a spellcaster for
+                                      // Trog purposes.
+    MF_PRIEST             = 0x800000  // Is a priest (divine spells)
+                                      // for the conduct.
 };
 
 // Adding slots breaks saves. YHBW.

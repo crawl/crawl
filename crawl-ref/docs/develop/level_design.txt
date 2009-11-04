@@ -722,7 +722,61 @@ MONS:     (list of monsters)
           and then using the glyph '1' multiple times will result in multiple
           "Durwent the Kobold"s).
 
-          Monster names should be used very, very, very sparingly.
+          Monster names should be used very sparingly.
+
+          Overriding Monster Spells:
+          --------------------------
+          Monster spell sets can be overridden with a spells: tag,
+          used as follows:
+
+              MONS: goblin spells:throw_flame
+              MONS: ancient lich spells:symbol_of_torment;ice_storm;ice_storm
+
+          (a list of spell names, spaces replaced with underscores,
+          and names separated by ';' with no spaces around the ';' or
+          after the spell: prefix)
+
+          Monster spells currently use a limited spell-slot system,
+          with these slots:
+              1. Bolt spell
+              2. Enchantment
+              3. Self-enchantment
+              4. Misc(1)
+              5. Misc(2)
+              6. Emergency/escape
+
+          These slots are not hard and fast rules, but it is sometimes
+          useful to drop a spell in a specific slot, for instance the
+          emergency/escape slot:
+              MONS: hobgoblin spells:.;.;.;.;.;teleport_self
+
+          Spell names must exactly match the names in spl-data.h, with
+          spaces replaced by underscores. You may use "." or an empty
+          string to specify that a slot should be left empty. You can
+          force a spell-less monster with:
+              MONS: orc wizard spells:.
+          (although why you'd want to do this is open to question.)
+
+          If you define spells for a monster that cannot cast spells
+          normally, you may want to mark the monster as a real
+          spellcaster with 'actual_spells':
+              MONS: goblin spells:throw_flame actual_spells
+
+          Or as a priestly (divine) caster with 'priest_spells':
+              MONS: goblin spells:smiting priest_spells
+
+          Real spellcasters and priests can be silenced and will
+          trigger appropriate conducts (Trog will appreciate killing
+          spellcasters, Beogh will appreciate killing priests). If you
+          define spells without specifying 'actual_spells' or
+          'priest_spells', and the monster cannot cast spells
+          normally, the spells will be treated as innate abilities, so
+          the monster can use these spells even when silenced.
+          Treating spells as innate abilities may produce odd casting
+          message (such as: "the rat throws fire at you"). If you find
+          the messages you get unsatisfactory, add suitable entries to
+          source/dat/database/monspell.txt.
+
 
 COLOUR:   . = green / blue:5 / red / none
           COLOUR: allows you to attach explicit colours to any feature.

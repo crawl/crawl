@@ -167,8 +167,7 @@ static bool _swap_monsters(monsters* mover, monsters* moved)
 static bool _do_mon_spell(monsters *monster, bolt &beem)
 {
     // Shapeshifters don't get spells.
-    if (!mons_is_shapeshifter(monster)
-        || !mons_class_flag(monster->type, M_ACTUAL_SPELLS))
+    if (!mons_is_shapeshifter(monster) || !monster->is_actual_spellcaster())
     {
         if (handle_mon_spell(monster, beem))
         {
@@ -3634,4 +3633,3 @@ static spell_type _map_wand_to_mspell(int wand_type)
     default:                   return SPELL_NO_SPELL;
     }
 }
-

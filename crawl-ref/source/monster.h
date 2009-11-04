@@ -136,6 +136,16 @@ public:
     bool has_hydra_multi_attack() const;
     bool has_multitargeting() const;
 
+    // Has the 'spellcaster' flag (may not actually have any spells)
+    bool can_use_spells() const;
+
+    // Has the 'priest' flag.
+    bool is_priest() const;
+
+    // Is an actual wizard-type spellcaster, i.e. Trog will dislike it, it
+    // can be silenced, etc.
+    bool is_actual_spellcaster() const;
+
     bool has_ench(enchant_type ench) const;
     bool has_ench(enchant_type ench, enchant_type ench2) const;
     mon_enchant get_ench(enchant_type ench,
@@ -319,6 +329,7 @@ public:
     bool backlit(bool check_haloed = true) const;
     bool haloed() const;
 
+    bool has_spells() const;
     bool has_spell(spell_type spell) const;
 
     bool has_attack_flavour(int flavour) const;
@@ -368,6 +379,8 @@ public:
 
     bool do_shaft();
     bool has_spell_of_type(unsigned) const;
+
+    void bind_spell_flags();
 
 private:
     void init_with(const monsters &mons);

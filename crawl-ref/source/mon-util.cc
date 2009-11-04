@@ -1312,7 +1312,7 @@ int exper_value(const monsters *monster)
     // These four are the original arguments.
     const int  mclass      = monster->type;
     const int  mHD         = monster->hit_dice;
-    int  maxhp       = monster->max_hit_points;
+    int  maxhp             = monster->max_hit_points;
 
     // Hacks to make merged slime creatures not worth so much exp.  We
     // will calculate the experience we would get for 1 blob, and then
@@ -1326,7 +1326,7 @@ int exper_value(const monsters *monster)
     const int  item_usage  = mons_itemuse(monster);
 
     // XXX: Shapeshifters can qualify here, even though they can't cast.
-    const bool spellcaster = mons_class_flag(mclass, M_SPELLCASTER);
+    const bool spellcaster = monster->can_use_spells();
 
     // Early out for no XP monsters.
     if (mons_class_flag(mclass, M_NO_EXP_GAIN))
@@ -1451,11 +1451,6 @@ int exper_value(const monsters *monster)
         x_val = 15000;
 
     return (x_val);
-}
-
-void mons_load_spells(monsters *mon, mon_spellbook_type book)
-{
-    mon->load_spells(book);
 }
 
 monster_type random_draconian_monster_species()
@@ -1660,7 +1655,8 @@ void define_monster(monsters &mons)
     mons.experience = 0L;
     mons.colour     = col;
 
-    mons_load_spells(&mons, spells);
+    mons.load_spells(spells);
+    mons.bind_spell_flags();
 
     // Reset monster enchantments.
     mons.enchantments.clear();
@@ -2687,7 +2683,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
 
 bool mons_is_magic_user( const monsters *mon )
 {
-    if (mons_class_flag(mon->type, M_ACTUAL_SPELLS))
+    if (mon->is_actual_spellcaster())
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             if (mon->spells[i] != SPELL_NO_SPELL)
@@ -2727,7 +2723,7 @@ bool mons_has_los_attack(const monsters *mon)
     if (mons_has_los_ability(mclass))
         return (true);
 
-    if (mons_class_flag(mclass, M_SPELLCASTER))
+    if (mon->can_use_spells())
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
             if (_ms_los_spell(mon->spells[i]))
@@ -2746,7 +2742,7 @@ bool mons_has_ranged_spell(const monsters *mon, bool attack_only,
     if (mons_has_los_ability(mclass))
         return (true);
 
-    if (mons_class_flag(mclass, M_SPELLCASTER))
+    if (mon->can_use_spells())
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
             if (_ms_ranged_spell(mon->spells[i], attack_only, ench_too))

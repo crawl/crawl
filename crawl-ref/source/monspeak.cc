@@ -340,7 +340,7 @@ static std::string _player_ghost_speak_str(const monsters *monster,
 static bool _polyd_can_speak(const monsters* monster)
 {
     // Wizard and priest monsters can always speak.
-    if (mons_class_flag(monster->type, M_ACTUAL_SPELLS | M_PRIEST))
+    if (monster->is_actual_spellcaster() || monster->is_priest())
         return (true);
 
     // Silent or non-sentient monsters can't use the original speech.

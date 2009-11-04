@@ -4801,8 +4801,17 @@ int dgn_place_monster(mons_spec &mspec,
             mg.flags |= MG_PERMIT_BANDS;
 
         const int mindex = place_monster(mg, true);
-        if (mindex != -1 && mspec.items.size() > 0)
-            _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
+        if (mindex != -1)
+        {
+            monsters &mons(menv[mindex]);
+            if (!mspec.items.empty())
+                _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
+            if (mspec.explicit_spells)
+                mons.spells = mspec.spells;
+            mons.flags |= mspec.extra_monster_flags;
+            if (mons.is_priest() && mons.god == GOD_NO_GOD)
+                mons.god = GOD_NAMELESS;
+        }
         return (mindex);
     }
     return (-1);
@@ -8484,4 +8493,3 @@ std::string dump_vault_maps()
     }
     return (out);
 }
-

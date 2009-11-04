@@ -3557,15 +3557,15 @@ static bool _initialise(void)
     // Set up the Lua interpreter for the dungeon builder.
     init_dungeon_lua();
 
-    // Read special levels and vaults.
-    read_maps();
-
     // Initialise internal databases.
     databaseSystemInit();
 
     init_feat_desc_cache();
     init_spell_name_cache();
     init_spell_rarities();
+
+    // Read special levels and vaults.
+    read_maps();
 
     cio_init();
 

@@ -658,6 +658,18 @@ bool monsters::has_spell_of_type(unsigned disciplines) const
     return (false);
 }
 
+void monsters::bind_spell_flags()
+{
+    // Bind spellcaster / priest flags from the base type. These may be
+    // overridden by vault defs for individual monsters.
+    if (mons_class_flag(type, M_SPELLCASTER))
+        flags |= MF_SPELLCASTER;
+    if (mons_class_flag(type, M_ACTUAL_SPELLS))
+        flags |= MF_ACTUAL_SPELLS;
+    if (mons_class_flag(type, M_PRIEST))
+        flags |= MF_PRIEST;
+}
+
 static bool _needs_ranged_attack(const monsters *mon)
 {
     // Prevent monsters that have conjurations from grabbing missiles.
@@ -2680,6 +2692,15 @@ void monsters::banish(const std::string &)
     monster_die(this, KILL_RESET, NON_MONSTER);
 }
 
+bool monsters::has_spells() const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (spells[i] != SPELL_NO_SPELL)
+            return (true);
+
+    return (false);
+}
+
 bool monsters::has_spell(spell_type spell) const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -3595,6 +3616,21 @@ bool monsters::has_multitargeting() const
     return (type == MONS_HYDRA
             || type == MONS_TENTACLED_MONSTROSITY
             || type == MONS_ELECTRIC_GOLEM);
+}
+
+bool monsters::can_use_spells() const
+{
+    return (flags & MF_SPELLCASTER);
+}
+
+bool monsters::is_priest() const
+{
+    return (flags & MF_PRIEST);
+}
+
+bool monsters::is_actual_spellcaster() const
+{
+    return (flags & MF_ACTUAL_SPELLS);
 }
 
 bool monsters::has_ench(enchant_type ench) const
@@ -5705,5 +5741,3 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
     if (duration > maxduration)
         maxduration = duration;
 }
-
-

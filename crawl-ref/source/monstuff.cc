@@ -1564,7 +1564,7 @@ int monster_die(monsters *monster, killer_type killer,
                 }
 
                 // Beogh hates priests of other gods.
-                if (mons_class_flag(monster->type, M_PRIEST))
+                if (monster->is_priest())
                 {
                     did_god_conduct(DID_KILL_PRIEST,
                                     monster->hit_dice, true, monster);
@@ -2324,8 +2324,8 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster_spells spl    = monster->spells;
     const bool need_save_spells
             = (!name.empty()
-               && (!mons_class_flag(monster->type, M_SPELLCASTER)
-                   || mons_class_flag(monster->type, M_ACTUAL_SPELLS)));
+               && (!monster->can_use_spells()
+                   || monster->is_actual_spellcaster()));
 
     // deal with mons_sec
     monster->type         = targetc;
@@ -2345,8 +2345,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     // swamp drake he'll breathe fumes and, if polymorphed further,
     // won't remember his spells anymore.
     if (need_save_spells
-        && (!mons_class_flag(monster->type, M_SPELLCASTER)
-            || mons_class_flag(monster->type, M_ACTUAL_SPELLS)))
+        && (!monster->can_use_spells() || monster->is_actual_spellcaster()))
     {
         monster->spells = spl;
     }
@@ -2899,7 +2898,7 @@ monsters *choose_random_monster_on_level(int weight,
                 if (prefer_named && mon->is_named())
                     mon_weight++;
 
-                if (prefer_priest && mons_class_flag(mon->type, M_PRIEST))
+                if (prefer_priest && mon->is_priest())
                     mon_weight++;
 
                 if (x_chance_in_y(mon_weight, (weight += mon_weight)))

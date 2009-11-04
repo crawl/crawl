@@ -35,6 +35,7 @@
 #include "place.h"
 #include "random.h"
 #include "religion.h"
+#include "spl-util.h"
 #include "stuff.h"
 #include "tags.h"
 
@@ -2337,6 +2338,41 @@ bool mons_list::check_mimic(const std::string &s, int *mid, bool *fix) const
     return (true);
 }
 
+void mons_list::parse_mons_spells(mons_spec &spec, const std::string &spells)
+{
+    spec.explicit_spells = true;
+    spec.extra_monster_flags |= MF_SPELLCASTER;
+    const std::vector<std::string> spell_names(split_string(";", spells));
+    if (spell_names.size() > NUM_MONSTER_SPELL_SLOTS)
+    {
+        error = make_stringf("Too many monster spells (max %d) in %s",
+                             NUM_MONSTER_SPELL_SLOTS,
+                             spells.c_str());
+        return;
+    }
+    for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
+    {
+        const std::string spname(
+            lowercase_string(replace_all_of(spell_names[i], "_", " ")));
+        if (spname.empty() || spname == "." || spname == "none"
+            || spname == "no spell")
+        {
+            spec.spells[i] = SPELL_NO_SPELL;
+        }
+        else
+        {
+            const spell_type sp(spell_by_name(spname));
+            if (sp == SPELL_NO_SPELL)
+            {
+                error = make_stringf("Unknown spell name: '%s' in '%s'",
+                                     spname.c_str(), spells.c_str());
+                return;
+            }
+            spec.spells[i] = sp;
+        }
+    }
+}
+
 mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 {
     mons_spec_slot slot;
@@ -2347,11 +2383,19 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 
     for (int i = 0, ssize = specs.size(); i < ssize; ++i)
     {
+        mons_spec mspec;
         std::string s = specs[i];
+
+        std::string spells(strip_tag_prefix(s, "spells:"));
+        if (!spells.empty())
+        {
+            parse_mons_spells(mspec, spells);
+            if (!error.empty())
+                return (slot);
+        }
+
         std::vector<std::string> parts = split_string(";", s);
         std::string mon_str = parts[0];
-
-        mons_spec mspec;
 
         if (parts.size() > 2)
         {
@@ -2387,6 +2431,18 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mspec.genweight = find_weight(mon_str);
         if (mspec.genweight == TAG_UNFOUND || mspec.genweight <= 0)
             mspec.genweight = 10;
+
+        if (strip_tag(mon_str, "priest_spells"))
+        {
+            mspec.extra_monster_flags &= ~MF_ACTUAL_SPELLS;
+            mspec.extra_monster_flags |= MF_PRIEST;
+        }
+
+        if (strip_tag(mon_str, "actual_spells"))
+        {
+            mspec.extra_monster_flags &= ~MF_PRIEST;
+            mspec.extra_monster_flags |= MF_ACTUAL_SPELLS;
+        }
 
         mspec.fix_mons       = strip_tag(mon_str, "fix_mons");
         mspec.generate_awake = strip_tag(mon_str, "generate_awake");

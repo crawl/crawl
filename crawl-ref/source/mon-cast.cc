@@ -751,7 +751,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
             if (targ->type != hog_type
                 && mons_atts_aligned(monster->attitude, targ->attitude)
                 && mons_power(hog_type) + random2(4) >= mons_power(targ->type)
-                && (!mons_class_flag(targ->type, M_SPELLCASTER) || coinflip())
+                && (!targ->can_use_spells() || coinflip())
                 && one_chance_in(++count))
             {
                 target = i;
@@ -807,15 +807,6 @@ static spell_type _get_draconian_breath_spell( monsters *monster )
     return (draco_breath);
 }
 
-static bool _mon_has_spells(monsters *monster)
-{
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (monster->spells[i] != SPELL_NO_SPELL)
-            return (true);
-
-    return (false);
-}
-
 static bool _is_emergency_spell(const monster_spells &msp, int spell)
 {
     // If the emergency spell appears early, it's probably not a dedicated
@@ -845,10 +836,10 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
     // form. If the new form has the SPELLCASTER flag, casting happens as
     // normally, otherwise we need to enforce it, but it only happens with
     // a 50% chance.
-    const bool spellcasting_poly
-            = !mons_class_flag(monster->type, M_SPELLCASTER)
-              && mons_class_flag(monster->type, M_SPEAKS)
-              && _mon_has_spells(monster);
+    const bool spellcasting_poly(
+        !monster->can_use_spells()
+        && mons_class_flag(monster->type, M_SPEAKS)
+        && monster->has_spells());
 
     if (is_sanctuary(monster->pos()) && !mons_wont_attack(monster))
         return (false);
@@ -856,9 +847,9 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
     // Yes, there is a logic to this ordering {dlb}:
     if (monster->asleep()
         || monster->submerged()
-        || !mons_class_flag(monster->type, M_SPELLCASTER)
-           && !spellcasting_poly
-           && draco_breath == SPELL_NO_SPELL)
+        || (!monster->can_use_spells()
+            && !spellcasting_poly
+            && draco_breath == SPELL_NO_SPELL))
     {
         return (false);
     }
@@ -868,8 +859,8 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
     // monster is neither a priest nor a wizard, assume summons come
     // from intrinsic abilities, in which case they'll also have the
     // same god.
-    const bool priest = mons_class_flag(monster->type, M_PRIEST);
-    const bool wizard = mons_class_flag(monster->type, M_ACTUAL_SPELLS);
+    const bool priest = monster->is_priest();
+    const bool wizard = monster->is_actual_spellcaster();
     god_type god = (priest || !(priest || wizard)) ? monster->god : GOD_NO_GOD;
 
     if (silenced(monster->pos())
@@ -1471,8 +1462,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     // monster is neither a priest nor a wizard, assume summons come
     // from intrinsic abilities, in which case they'll also have the
     // same god.
-    const bool priest = mons_class_flag(monster->type, M_PRIEST);
-    const bool wizard = mons_class_flag(monster->type, M_ACTUAL_SPELLS);
+    const bool priest = monster->is_priest();
+    const bool wizard = monster->is_actual_spellcaster();
     god_type god = (priest || !(priest || wizard)) ? monster->god : GOD_NO_GOD;
 
     switch (spell_cast)
@@ -2008,8 +1999,8 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     const unsigned int flags = get_spell_flags(real_spell);
 
-    const bool priest = mons_class_flag(monster->type, M_PRIEST);
-    const bool wizard = mons_class_flag(monster->type, M_ACTUAL_SPELLS);
+    const bool priest = monster->is_priest();
+    const bool wizard = monster->is_actual_spellcaster();
     const bool innate = !(priest || wizard || no_silent)
                         || (flags & SPFLAG_INNATE);
 
@@ -2354,10 +2345,3 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         mons_speaks_msg(monster, msg, chan);
     }
 }
-
-
-
-
-
-
-

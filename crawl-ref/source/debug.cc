@@ -470,16 +470,17 @@ void wizard_create_spec_monster_name()
 
     if (!err.empty())
     {
+        std::string newerr;
         // Try for a partial match, but not if the user accidently entered
         // only a few letters.
         monster_type partial = get_monster_by_name(specs);
         if (strlen(specs) >= 3 && partial != NON_MONSTER)
         {
             mlist.clear();
-            err = mlist.add_mons(mons_type_name(partial, DESC_PLAIN));
+            newerr = mlist.add_mons(mons_type_name(partial, DESC_PLAIN));
         }
 
-        if (!err.empty())
+        if (!newerr.empty())
         {
             mpr(err.c_str());
             return;
@@ -6764,7 +6765,7 @@ void debug_dump_mon(const monsters* mon, bool recurse)
     }
     fprintf(stderr, EOL);
 
-    if (mons_class_flag(mon->type, M_SPELLCASTER))
+    if (mon->can_use_spells())
     {
         fprintf(stderr, "Spells:" EOL);
 

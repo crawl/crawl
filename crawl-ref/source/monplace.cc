@@ -965,7 +965,7 @@ int place_monster(mgen_data mg, bool force_pos)
     if (band_size > 1)
         menv[id].flags |= MF_BAND_MEMBER;
 
-    const bool priest = mons_class_flag(mon->type, M_PRIEST);
+    const bool priest = mon->is_priest();
 
     mgen_data band_template = mg;
     // (5) For each band monster, loop call to place_monster_aux().
@@ -1054,12 +1054,13 @@ static int _place_monster_aux(const mgen_data &mg,
         return (-1);
     }
 
+    monsters &mons(menv[id]);
     // Now, actually create the monster. (Wheeee!)
-    menv[id].type         = mg.cls;
-    menv[id].base_monster = mg.base_type;
-    menv[id].number       = mg.number;
+    mons.type         = mg.cls;
+    mons.base_monster = mg.base_type;
+    mons.number       = mg.number;
 
-    menv[id].moveto(fpos);
+    mons.moveto(fpos);
 
     // Link monster into monster grid.
     mgrd(fpos) = id;
@@ -1073,8 +1074,8 @@ static int _place_monster_aux(const mgen_data &mg,
     // Is it a god gift?
     if (mg.god != GOD_NO_GOD)
     {
-        menv[id].god    = mg.god;
-        menv[id].flags |= MF_GOD_GIFT;
+        mons.god    = mg.god;
+        mons.flags |= MF_GOD_GIFT;
     }
     // Not a god gift, give priestly monsters a god.
     else if (mons_class_flag(mg.cls, M_PRIEST))
@@ -1082,20 +1083,17 @@ static int _place_monster_aux(const mgen_data &mg,
         switch (mons_genus(mg.cls))
         {
         case MONS_ORC:
-            menv[id].god = GOD_BEOGH;
+            mons.god = GOD_BEOGH;
             break;
         case MONS_JELLY:
-            menv[id].god = GOD_JIYVA;
+            mons.god = GOD_JIYVA;
             break;
         case MONS_MUMMY:
         case MONS_DRACONIAN:
         case MONS_ELF:
-            menv[id].god = GOD_NAMELESS;
-            break;
+            // [ds] Vault defs can request priest monsters of unusual types.
         default:
-            mprf(MSGCH_ERROR, "ERROR: Invalid monster priest '%s'",
-                 menv[id].name(DESC_PLAIN, true).c_str());
-            ASSERT(false);
+            mons.god = GOD_NAMELESS;
             break;
         }
     }
@@ -1103,34 +1101,34 @@ static int _place_monster_aux(const mgen_data &mg,
     else if (mons_genus(mg.cls) == MONS_ORC)
     {
         if (!one_chance_in(7))
-            menv[id].god = GOD_BEOGH;
+            mons.god = GOD_BEOGH;
     }
     // The royal jelly belongs to Jiyva.
     else if (mg.cls == MONS_ROYAL_JELLY)
-        menv[id].god = GOD_JIYVA;
+        mons.god = GOD_JIYVA;
     // Angels and Daevas belong to TSO, but 1 out of 7 in the Abyss are
     // adopted by Xom.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
     {
         if (mg.level_type != LEVEL_ABYSS || !one_chance_in(7))
-            menv[id].god = GOD_SHINING_ONE;
+            mons.god = GOD_SHINING_ONE;
         else
-            menv[id].god = GOD_XOM;
+            mons.god = GOD_XOM;
     }
     // 6 out of 7 demons in the Abyss belong to Lugonu.
     else if (mons_class_holiness(mg.cls) == MH_DEMONIC)
     {
         if (mg.level_type == LEVEL_ABYSS && !one_chance_in(7))
-            menv[id].god = GOD_LUGONU;
+            mons.god = GOD_LUGONU;
     }
 
     // If the caller requested a specific colour for this monster, apply
     // it now.
     if (mg.colour != BLACK)
-        menv[id].colour = mg.colour;
+        mons.colour = mg.colour;
 
     if (mg.mname != "")
-        menv[id].mname = mg.mname;
+        mons.mname = mg.mname;
 
     // The return of Boris is now handled in monster_die().  Not setting
     // this for Boris here allows for multiple Borises in the dungeon at
@@ -1139,16 +1137,16 @@ static int _place_monster_aux(const mgen_data &mg,
         you.unique_creatures[mg.cls] = true;
 
     if (mons_class_flag(mg.cls, M_INVIS))
-        menv[id].add_ench(ENCH_INVIS);
+        mons.add_ench(ENCH_INVIS);
 
     if (mons_class_flag(mg.cls, M_CONFUSED))
-        menv[id].add_ench(ENCH_CONFUSION);
+        mons.add_ench(ENCH_CONFUSION);
 
     if (mg.cls == MONS_SHAPESHIFTER)
-        menv[id].add_ench(ENCH_SHAPESHIFTER);
+        mons.add_ench(ENCH_SHAPESHIFTER);
 
     if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
-        menv[id].add_ench(ENCH_GLOWING_SHAPESHIFTER);
+        mons.add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
     if (mg.cls == MONS_TOADSTOOL)
     {
@@ -1157,29 +1155,29 @@ static int _place_monster_aux(const mgen_data &mg,
         // spawning mushrooms in the same place over and over.  Aside
         // from that, the value is slightly randomised to avoid
         // simultaneous die-offs of mushroom rings.
-        menv[id].add_ench(ENCH_SLOWLY_DYING);
+        mons.add_ench(ENCH_SLOWLY_DYING);
     }
 
     if (mg.cls == MONS_BALLISTOMYCETE)
     {
         // This enchantment causes giant spore production.
-        menv[id].add_ench(ENCH_SPORE_PRODUCTION);
+        mons.add_ench(ENCH_SPORE_PRODUCTION);
     }
 
-    if (monster_can_submerge(&menv[id], grd(fpos)) && !one_chance_in(5))
-        menv[id].add_ench(ENCH_SUBMERGED);
+    if (monster_can_submerge(&mons, grd(fpos)) && !one_chance_in(5))
+        mons.add_ench(ENCH_SUBMERGED);
 
-    menv[id].flags |= MF_JUST_SUMMONED;
+    mons.flags |= MF_JUST_SUMMONED;
 
     // Don't leave shifters in their starting shape.
     if (mg.cls == MONS_SHAPESHIFTER || mg.cls == MONS_GLOWING_SHAPESHIFTER)
     {
         no_messages nm;
-        monster_polymorph(&menv[id], RANDOM_MONSTER);
+        monster_polymorph(&mons, RANDOM_MONSTER);
 
         // It's not actually a known shapeshifter if it happened to be
         // placed in LOS of the player.
-        menv[id].flags &= ~MF_KNOWN_MIMIC;
+        mons.flags &= ~MF_KNOWN_MIMIC;
     }
 
     // dur should always be 1-6 for monsters that can be abjured.
@@ -1192,16 +1190,16 @@ static int _place_monster_aux(const mgen_data &mg,
 
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
-        const item_def* wpn = menv[id].weapon();
+        const item_def* wpn = mons.weapon();
         if (!wpn)
         {
-            menv[id].destroy_inventory();
-            menv[id].reset();
+            mons.destroy_inventory();
+            mons.reset();
             mgrd(fpos) = NON_MONSTER;
             return (-1);
         }
         else
-            menv[id].colour = wpn->colour;
+            mons.colour = wpn->colour;
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -1210,13 +1208,13 @@ static int _place_monster_aux(const mgen_data &mg,
         if (mons_class_wields_two_weapons(mg.cls))
             give_item(id, mg.power, summoned);
 
-        unwind_var<int> save_speedinc(menv[id].speed_increment);
-        menv[id].wield_melee_weapon(false);
+        unwind_var<int> save_speedinc(mons.speed_increment);
+        mons.wield_melee_weapon(false);
     }
 
     // Give manticores 8 to 16 spike volleys.
     if (mg.cls == MONS_MANTICORE)
-        menv[id].number = 8 + random2(9);
+        mons.number = 8 + random2(9);
 
     if (mg.cls == MONS_SLIME_CREATURE)
     {
@@ -1224,21 +1222,21 @@ static int _place_monster_aux(const mgen_data &mg,
         {
             // Boost HP to what it would have been if it had grown this
             // big by merging.
-            menv[id].hit_points     *= mg.number;
-            menv[id].max_hit_points *= mg.number;
+            mons.hit_points     *= mg.number;
+            mons.max_hit_points *= mg.number;
         }
     }
 
     // Set attitude, behaviour and target.
-    menv[id].attitude  = ATT_HOSTILE;
-    menv[id].behaviour = mg.behaviour;
+    mons.attitude  = ATT_HOSTILE;
+    mons.behaviour = mg.behaviour;
 
     // Statues cannot sleep (nor wander but it means they are a bit
     // more aware of the player than they'd be otherwise).
     if (mons_is_statue(mg.cls))
-        menv[id].behaviour = BEH_WANDER;
+        mons.behaviour = BEH_WANDER;
 
-    menv[id].foe_memory = 0;
+    mons.foe_memory = 0;
 
     // Setting attitude will always make the monster wander...
     // If you want sleeping hostiles, use BEH_SLEEP since the default
@@ -1246,52 +1244,52 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.behaviour > NUM_BEHAVIOURS)
     {
         if (mg.behaviour == BEH_FRIENDLY)
-            menv[id].attitude = ATT_FRIENDLY;
+            mons.attitude = ATT_FRIENDLY;
 
         if (mg.behaviour == BEH_GOOD_NEUTRAL)
-            menv[id].attitude = ATT_GOOD_NEUTRAL;
+            mons.attitude = ATT_GOOD_NEUTRAL;
 
         if (mg.behaviour == BEH_NEUTRAL)
-            menv[id].attitude = ATT_NEUTRAL;
+            mons.attitude = ATT_NEUTRAL;
 
         if (mg.behaviour == BEH_STRICT_NEUTRAL)
-            menv[id].attitude = ATT_STRICT_NEUTRAL;
+            mons.attitude = ATT_STRICT_NEUTRAL;
 
-        menv[id].behaviour = BEH_WANDER;
+        mons.behaviour = BEH_WANDER;
     }
 
     if (summoned)
     {
-        menv[id].mark_summoned(mg.abjuration_duration, true,
+        mons.mark_summoned(mg.abjuration_duration, true,
                                mg.summon_type);
     }
-    menv[id].foe = mg.foe;
+    mons.foe = mg.foe;
 
     // Initialise (very) ugly things and pandemonium demons.
-    if (menv[id].type == MONS_UGLY_THING
-        || menv[id].type == MONS_VERY_UGLY_THING)
+    if (mons.type == MONS_UGLY_THING
+        || mons.type == MONS_VERY_UGLY_THING)
     {
         ghost_demon ghost;
-        ghost.init_ugly_thing(menv[id].type == MONS_VERY_UGLY_THING, false,
+        ghost.init_ugly_thing(mons.type == MONS_VERY_UGLY_THING, false,
                               mg.colour);
-        menv[id].set_ghost(ghost, false);
-        menv[id].uglything_init();
+        mons.set_ghost(ghost, false);
+        mons.uglything_init();
     }
-    else if (menv[id].type == MONS_PANDEMONIUM_DEMON)
+    else if (mons.type == MONS_PANDEMONIUM_DEMON)
     {
         ghost_demon ghost;
         ghost.init_random_demon();
-        menv[id].set_ghost(ghost);
-        menv[id].pandemon_init();
+        mons.set_ghost(ghost);
+        mons.pandemon_init();
     }
 
-    mark_interesting_monst(&menv[id], mg.behaviour);
+    mark_interesting_monst(&mons, mg.behaviour);
 
-    if (you.can_see(&menv[id]))
-        handle_seen_interrupt(&menv[id]);
+    if (you.can_see(&mons))
+        handle_seen_interrupt(&mons);
 
     if (crawl_state.arena)
-        arena_placed_monster(&menv[id]);
+        arena_placed_monster(&mons);
 
     return (id);
 }

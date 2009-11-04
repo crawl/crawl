@@ -2905,7 +2905,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     inf.quote += quote2;
 
 #if DEBUG_DIAGNOSTICS
-    if (mons_class_flag( mons.type, M_SPELLCASTER ))
+    if (mons.can_use_spells())
     {
         const monster_spells &hspell_pass = mons.spells;
         bool found_spell = false;
