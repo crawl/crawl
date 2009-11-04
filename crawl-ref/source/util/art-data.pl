@@ -19,7 +19,6 @@ my %field_type = (
     BERSERK  => "bool",
     BLINK    => "bool",
     BRAND    => "enum",
-    CANTELEP => "bool",
     CHAOTIC  => "bool",
     COLD     => "num",
     COLOUR   => "enum",
@@ -36,7 +35,6 @@ my %field_type = (
     LEV      => "bool",
     LIFE     => "bool",
     MAGIC    => "num",
-    MAPPING  => "bool",
     METAB    => "num",
     MP       => "num",
     MUTATE   => "num",
@@ -59,6 +57,8 @@ my %field_type = (
     TILE     => "str",
     TILE_EQ  => "str",
     TILERIM  => "bool",
+
+    UNUSED   => "unused",
 
     flags     => "flags",
 
@@ -207,6 +207,10 @@ sub finish_art
             elsif($type eq "func")
             {
                 $artefact->{$field} = "NULL";
+            }
+            elsif ($type eq "unused")
+            {
+                $artefact->{$field} = "0";
             }
             else
             {
@@ -451,8 +455,7 @@ sub process_line
     if ($enum ne "")
     {
         if (exists($used_enums{$enum}))
-        {
-            error($artefact, "Enum \"$enum\" already used by artefact " .
+        { error($artefact, "Enum \"$enum\" already used by artefact " .
                              "\"$used_enums{$enum}\"");
             return;
         }
@@ -469,10 +472,10 @@ my @art_order = (
 
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
-    "SEEINV", "INV", "LEV", "BLINK", "CANTELEP", "BERSERK", "\n",
-    "MAPPING", "NOISES", "NOSPELL", "RND_TELE", "NOTELEP", "\n",
-    "ANGRY", "METAB", "MUTATE", "ACC", "DAM", "\n",
-    "CURSED", "STEALTH", "MP", "SPIRIT", "}",
+    "SEEINV", "INV", "LEV", "BLINK", "UNUSED", "BERSERK", "UNUSED", "\n",
+    "NOISES", "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
+    "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
+    "SPIRIT", "}",
 
     "DESC", "\n",
     "DESC_ID", "\n",
