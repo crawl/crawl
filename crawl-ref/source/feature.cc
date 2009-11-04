@@ -700,6 +700,9 @@ void _init_item(feature_def &f, show_item_type item)
         case SHOW_ITEM_AMULET:
             f.dchar   = DCHAR_ITEM_AMULET;
             break;
+
+        default:
+            break;
     }
 }
 
