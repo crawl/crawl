@@ -3267,6 +3267,15 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour,
             hit_points = max_hit_points;
         }
 
+        if (flavour == BEAM_NUKE || flavour == BEAM_DISINTEGRATION)
+        {
+            if (can_bleed())
+                blood_spray(pos(), id(), amount / 5);
+
+            if (!alive())
+                flags |= MF_EXPLODE_KILL;
+        }
+
         // Allow the victim to exhibit passive damage behaviour (royal
         // jelly).
         kill_category whose = (agent == NULL) ? KC_OTHER :

@@ -23,6 +23,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "files.h"
+#include "food.h"
 #include "godabil.h"
 #include "items.h"
 #include "kills.h"
@@ -336,6 +337,78 @@ monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
     return (corpse_class);
 }
 
+bool explode_corpse(item_def& corpse, const coord_def& where)
+{
+    los_def ld(where, opc_solid);
+
+    if (monster_descriptor(corpse.plus, MDSC_LEAVES_HIDE)
+            && mons_genus(corpse.plus) == MONS_DRAGON)
+    {
+        // Uh... dragon hide is tough stuff and it keeps the monster in
+        // one piece?  More importantly, it prevents a flavor feature
+        // from becoming a trap for the unwary.
+
+        return (false);
+    }
+
+    ld.update();
+
+    int nchunks = 1 + random2(mons_weight(corpse.plus) / 150);
+    nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
+
+    int ntries = 0;
+
+    corpse.base_type = OBJ_FOOD;
+    corpse.sub_type = FOOD_CHUNK;
+
+    blood_spray(where, static_cast<monster_type>(corpse.plus), nchunks * 3);
+
+    while (nchunks > 0 && ntries < 10000)
+    {
+        ++ntries;
+
+        coord_def cp = where;
+        cp.x += random_range(-LOS_RADIUS, LOS_RADIUS);
+        cp.y += random_range(-LOS_RADIUS, LOS_RADIUS);
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Trying to scatter chunk to %d, %d...",
+             cp.x, cp.y);
+#endif
+
+        if (! in_bounds(cp))
+            continue;
+
+        if (! ld.see_cell(cp))
+            continue;
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Cell is visible...");
+#endif
+
+        if (feat_is_solid(grd(cp)))
+            continue;
+
+        --nchunks;
+
+        if (feat_destroys_items(grd(cp)))
+        {
+            if (!silenced(cp))
+                mprf(MSGCH_SOUND, feat_item_destruction_message(grd(cp)));
+
+            continue;
+        }
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Success");
+#endif
+
+        copy_item_to_grid(corpse, cp);
+    }
+
+    return (true);
+}
+
 // Returns the item slot of a generated corpse, or -1 if no corpse.
 int place_monster_corpse(const monsters *monster, bool silent,
                          bool force)
@@ -363,18 +436,31 @@ int place_monster_corpse(const monsters *monster, bool silent,
     if (corpse_class == MONS_NO_MONSTER || (!force && coinflip()))
         return (-1);
 
-    if (feat_destroys_items(grd(monster->pos())))
+    int o = get_item_slot();
+    if (o == NON_ITEM)
     {
         item_was_destroyed(corpse);
         return (-1);
     }
 
-    int o = get_item_slot();
-    if (o == NON_ITEM)
-        return (-1);
     mitm[o] = corpse;
 
     origin_set_monster(mitm[o], monster);
+
+    if ((monster->flags & MF_EXPLODE_KILL)
+            && explode_corpse(corpse, monster->pos()))
+    {
+        // We already have a spray of chunks
+        destroy_item(o);
+        return (-1);
+    }
+
+    if (feat_destroys_items(grd(monster->pos())))
+    {
+        item_was_destroyed(corpse);
+        destroy_item(o);
+        return (-1);
+    }
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't
     // stack).

@@ -6957,6 +6957,12 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         ASSERT(false);
         ouch(amount, NON_MONSTER, KILLED_BY_SOMETHING);
     }
+
+    if ((flavour == BEAM_NUKE || flavour == BEAM_DISINTEGRATION) && can_bleed())
+    {
+        blood_spray(pos(), id(), amount / 5);
+    }
+
     return (amount);
 }
 

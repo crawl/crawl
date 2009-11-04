@@ -3837,7 +3837,14 @@ void bolt::affect_player_enchantment()
         if (aux_source.empty())
             aux_source = "a disintegration bolt";
 
-        internal_ouch(damage.roll());
+        {
+            int amt = damage.roll();
+            internal_ouch(amt);
+
+            if (you.can_bleed())
+                blood_spray(you.pos(), MONS_PLAYER, amt / 5);
+        }
+
         obvious_effect = true;
         break;
 

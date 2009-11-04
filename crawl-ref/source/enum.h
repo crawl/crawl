@@ -2188,7 +2188,8 @@ enum monster_flag_type
                                      // name.
     MF_NAME_MASK          = 0x30000,
     MF_GOD_GIFT           = 0x40000, // Is a god gift.
-    MF_FLEEING_FROM_SANCTUARY = 0x80000 // Is running away from player sanctuary
+    MF_FLEEING_FROM_SANCTUARY = 0x80000, // Is running away from player sanctuary
+    MF_EXPLODE_KILL       = 0x100000 // Is being killed with disintegration
 };
 
 // Adding slots breaks saves. YHBW.

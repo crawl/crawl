@@ -39,6 +39,7 @@ void turn_corpse_into_blood_potions (item_def &item);
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item);
 void split_potions_into_decay(int obj, int amount, bool need_msg = true);
 
+void blood_spray(const coord_def& where, monster_type mon, int level);
 void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
                       bool spatter = false, bool smell_alert = true);
 void generate_random_blood_spatter_on_level();

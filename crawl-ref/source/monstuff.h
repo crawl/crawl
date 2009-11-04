@@ -80,6 +80,8 @@ int monster_die(monsters *monster, killer_type killer,
 monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
                              bool allow_weightless = false);
 
+bool explode_corpse(item_def& corpse, const coord_def& where);
+
 int place_monster_corpse(const monsters *monster, bool silent,
                          bool force = false);
 
