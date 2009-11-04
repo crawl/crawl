@@ -2099,10 +2099,13 @@ enum monster_type                      // (int) menv[].type
     MONS_TEST_SPAWNER,
 
     NUM_MONSTERS,                      // used for polymorph
-    MONS_NO_MONSTER,
+
+    // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
+    // when NUM_MONSTERS increases.
+    MONS_NO_MONSTER = 1000,
     MONS_PLAYER,
 
-    RANDOM_MONSTER = 1000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
+    RANDOM_MONSTER = 2000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
 
     // A random draconian, either base coloured drac or specialised.
     RANDOM_DRACONIAN,
@@ -2113,7 +2116,7 @@ enum monster_type                      // (int) menv[].type
     // Any random specialised draconian, such as a draconian knight.
     RANDOM_NONBASE_DRACONIAN,
 
-    WANDERING_MONSTER = 2500 // only used in monster placement routines - forced limit checks {dlb}
+    WANDERING_MONSTER = 3500 // only used in monster placement routines - forced limit checks {dlb}
 
 };
 
