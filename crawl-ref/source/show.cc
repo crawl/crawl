@@ -27,19 +27,26 @@ void get_show_symbol(show_type object, unsigned *ch,
     *colour = real_colour(*colour);
 }
 
+show_type::show_type()
+    : cls(SH_NOTHING), colour(0)
+{
+    // To quiet Valgrind warnings.
+    feat = (dungeon_feature_type) -1;
+}
+
 show_type::show_type(const monsters* m)
-    : cls(SH_MONSTER), mons(m->type) {}
+    : cls(SH_MONSTER), mons(m->type), colour(0) {}
 
 show_type::show_type(dungeon_feature_type f)
-    : cls(SH_FEATURE), feat(f) {}
+    : cls(SH_FEATURE), feat(f), colour(0) {}
 
 static show_item_type _item_to_show_code(const item_def &item);
 
 show_type::show_type(const item_def &it)
-    : cls(SH_ITEM), item(_item_to_show_code(it)) {}
+    : cls(SH_ITEM), item(_item_to_show_code(it)), colour(0) {}
 
 show_type::show_type(show_item_type t)
-    : cls(SH_ITEM), item(t) {}
+    : cls(SH_ITEM), item(t), colour(0) {}
 
 bool show_type::operator < (const show_type &other) const
 {

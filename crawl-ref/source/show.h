@@ -46,7 +46,7 @@ struct show_type
     };
     unsigned short colour;
 
-    show_type() : cls(SH_NOTHING), colour(0) {}
+    show_type();
     show_type(dungeon_feature_type f);
     show_type(const item_def &item);
     show_type(show_item_type itemtype);
