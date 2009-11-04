@@ -371,7 +371,6 @@ void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_EXIT_PANDEMONIUM:
-            // Note: Has special handling for colouring with mutation.
             f.colour      = LIGHTBLUE;
             f.dchar       = DCHAR_ARCH;
             f.map_colour  = LIGHTGREY;
