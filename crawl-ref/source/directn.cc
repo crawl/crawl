@@ -21,6 +21,7 @@
 #endif
 
 #include "externs.h"
+#include "options.h"
 
 #include "cio.h"
 #include "cloud.h"

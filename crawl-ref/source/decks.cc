@@ -11,6 +11,7 @@
 #include <algorithm>
 
 #include "externs.h"
+#include "options.h"
 
 #include "beam.h"
 #include "cio.h"

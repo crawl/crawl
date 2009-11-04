@@ -14,6 +14,7 @@
 #include "branch.h"
 #include "directn.h" // for the Compass
 #include "externs.h"
+#include "options.h"
 #include "ghost.h"
 #include "lev-pand.h"
 #include "los.h"

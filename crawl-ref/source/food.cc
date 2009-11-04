@@ -19,6 +19,7 @@
 #endif
 
 #include "externs.h"
+#include "options.h"
 
 #include "artefact.h"
 #include "cio.h"

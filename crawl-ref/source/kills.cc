@@ -18,6 +18,7 @@
 #include "tags.h"
 #include "kills.h"
 #include "clua.h"
+#include "options.h"
 
 #define KILLS_MAJOR_VERSION 4
 #define KILLS_MINOR_VERSION 1

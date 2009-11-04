@@ -46,6 +46,7 @@
 #include "monstuff.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "ouch.h"
 #include "output.h"
 #include "quiver.h"

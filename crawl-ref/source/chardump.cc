@@ -24,6 +24,7 @@
 #endif
 
 #include "externs.h"
+#include "options.h"
 
 #include "artefact.h"
 #include "debug.h"

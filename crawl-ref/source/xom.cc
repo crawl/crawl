@@ -29,6 +29,7 @@
 #include "monstuff.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "ouch.h"
 #include "item_use.h" // for safe_to_remove_or_wear()
 #include "output.h"   // for the monster list

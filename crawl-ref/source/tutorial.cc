@@ -40,6 +40,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
+#include "options.h"
 #include "jobs.h"
 #include "player.h"
 #include "random.h"

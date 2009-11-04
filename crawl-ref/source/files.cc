@@ -64,6 +64,7 @@
 #include "mtransit.h"
 #include "newgame.h"
 #include "notes.h"
+#include "options.h"
 #include "output.h"
 #include "overmap.h"
 #include "place.h"

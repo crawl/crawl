@@ -8,6 +8,7 @@
 #include "mon-behv.h"
 
 #include "externs.h"
+#include "options.h"
 
 #include "coord.h"
 #include "coordit.h"

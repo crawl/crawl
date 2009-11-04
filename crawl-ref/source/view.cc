@@ -20,6 +20,7 @@
 #endif
 
 #include "externs.h"
+#include "options.h"
 
 #include "branch.h"
 #include "command.h"

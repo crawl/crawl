@@ -24,6 +24,7 @@
 #include "mon-behv.h"
 #include "monplace.h"
 #include "monstuff.h"
+#include "options.h"
 #include "random.h"
 #include "religion.h"
 #include "spl-util.h"

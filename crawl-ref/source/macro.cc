@@ -39,6 +39,7 @@
 
 #include "cio.h"
 #include "externs.h"
+#include "options.h"
 #include "message.h"
 #include "state.h"
 #include "stuff.h"

@@ -12,6 +12,7 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-util.h"
+#include "options.h"
 #include "player.h"
 #include "spl-book.h"
 #include "spl-util.h"

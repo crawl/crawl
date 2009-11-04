@@ -23,6 +23,7 @@
 #include "effects.h"
 #include "enum.h"
 #include "externs.h"
+#include "options.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "files.h"

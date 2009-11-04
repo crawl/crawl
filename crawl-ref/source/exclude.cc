@@ -9,6 +9,7 @@
 
 #include "coord.h"
 #include "mon-util.h"
+#include "options.h"
 #include "overmap.h"
 #include "stuff.h"
 #include "tags.h"

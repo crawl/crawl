@@ -20,6 +20,7 @@
 #endif
 
 #include "externs.h"
+#include "options.h"
 
 #include "arena.h"
 #include "artefact.h"

@@ -46,6 +46,7 @@
 #include "mon-util.h"
 #include "newgame.h"
 #include "jobs.h"
+#include "options.h"
 #include "ouch.h"
 #include "place.h"
 #include "player.h"

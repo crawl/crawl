@@ -19,6 +19,7 @@
 #include "kills.h"
 #include "hiscores.h"
 #include "mutation.h"
+#include "options.h"
 #include "place.h"
 #include "religion.h"
 #include "skills2.h"

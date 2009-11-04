@@ -19,6 +19,7 @@
 #include "clua.h"
 
 #include "externs.h"
+#include "options.h"
 
 #include "artefact.h"
 #include "colour.h"

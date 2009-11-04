@@ -14,6 +14,7 @@
 #include <ctype.h>
 
 #include "externs.h"
+#include "options.h"
 
 #include "abl-show.h"
 #include "branch.h"

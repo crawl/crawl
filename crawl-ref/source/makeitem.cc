@@ -10,6 +10,7 @@
 
 #include "enum.h"
 #include "externs.h"
+#include "options.h"
 #include "makeitem.h"
 
 #include "artefact.h"

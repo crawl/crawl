@@ -14,6 +14,7 @@
 #include "coordit.h"
 #include "directn.h"
 #include "externs.h"
+#include "options.h"
 #include "food.h"
 #include "itemname.h"
 #include "items.h"

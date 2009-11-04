@@ -3,6 +3,8 @@
 #include "clua.h"
 #include "l_libs.h"
 
+#include "options.h"
+
 ////////////////////////////////////////////////////////////////
 // Option handling
 

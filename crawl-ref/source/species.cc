@@ -2,6 +2,7 @@
 
 #include "species.h"
 
+#include "options.h"
 #include "random.h"
 
 // March 2008: change order of species and jobs on character selection

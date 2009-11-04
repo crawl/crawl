@@ -51,6 +51,7 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f) {
 #include "crash.h"
 
 #include "externs.h"
+#include "options.h"
 #include "state.h"
 #include "initfile.h"
 

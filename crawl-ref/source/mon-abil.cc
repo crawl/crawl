@@ -8,6 +8,7 @@
 #include "mon-abil.h"
 
 #include "externs.h"
+#include "options.h"
 
 #ifdef TARGET_OS_DOS
 #include <conio.h>

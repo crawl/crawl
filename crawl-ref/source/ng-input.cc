@@ -6,6 +6,7 @@
 #include "cio.h"
 #include "files.h"
 #include "menu.h"
+#include "options.h"
 #include "stuff.h"
 
 extern std::string init_file_error; // defined in acr.cc

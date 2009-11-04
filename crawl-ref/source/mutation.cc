@@ -22,6 +22,7 @@
 #endif
 
 #include "externs.h"
+#include "options.h"
 
 #include "abl-show.h"
 #include "cio.h"

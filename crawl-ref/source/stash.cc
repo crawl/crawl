@@ -29,6 +29,7 @@
 #include "mon-util.h"
 #include "monstuff.h"
 #include "notes.h"
+#include "options.h"
 #include "place.h"
 #include "shopping.h"
 #include "spl-book.h"

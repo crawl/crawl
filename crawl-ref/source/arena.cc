@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "externs.h"
+#include "options.h"
 #include "arena.h"
 #include "artefact.h"
 #include "cio.h"

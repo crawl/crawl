@@ -24,6 +24,7 @@
 #endif
 
 #include "externs.h"
+#include "options.h"
 #include "species.h"
 
 #include "artefact.h"

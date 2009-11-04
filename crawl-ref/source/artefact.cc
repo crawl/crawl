@@ -15,6 +15,7 @@
 #include <algorithm>
 
 #include "externs.h"
+#include "options.h"
 
 #include "colour.h"
 #include "database.h"

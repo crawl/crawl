@@ -46,6 +46,7 @@
 #include "branch.h"
 #include "delay.h"
 #include "externs.h"
+#include "options.h"
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"

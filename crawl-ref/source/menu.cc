@@ -12,6 +12,7 @@
 #include "menu.h"
 #include "macro.h"
 #include "message.h"
+#include "options.h"
 #include "player.h"
 #include "tutorial.h"
 #include "view.h"

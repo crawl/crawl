@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include "externs.h"
+#include "options.h"
 
 #include "delay.h"
 #include "directn.h"

@@ -24,6 +24,7 @@
 #include "cio.h"
 #include "describe.h"
 #include "externs.h"
+#include "options.h"
 #include "fight.h"
 #include "itemprop.h"
 #include "menu.h"

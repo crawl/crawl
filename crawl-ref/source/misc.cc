@@ -29,6 +29,7 @@
 #endif
 
 #include "externs.h"
+#include "options.h"
 #include "misc.h"
 
 #include "abyss.h"

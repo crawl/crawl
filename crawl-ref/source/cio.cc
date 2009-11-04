@@ -8,6 +8,7 @@
 
 #include "cio.h"
 #include "externs.h"
+#include "options.h"
 #include "macro.h"
 #include "message.h"
 #include "state.h"

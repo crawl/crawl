@@ -23,6 +23,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "options.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"

@@ -12,6 +12,7 @@
 #include "spl-cast.h"
 
 #include "externs.h"
+#include "options.h"
 
 #include "beam.h"
 #include "coord.h"

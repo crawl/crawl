@@ -13,6 +13,7 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "monster.h"
+#include "options.h"
 #include "religion.h"
 #include "view.h"
 

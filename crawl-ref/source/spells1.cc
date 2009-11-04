@@ -15,6 +15,7 @@
 #include <iostream>
 
 #include "externs.h"
+#include "options.h"
 
 #include "abyss.h"
 #include "artefact.h"

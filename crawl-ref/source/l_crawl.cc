@@ -19,6 +19,7 @@
 #include "macro.h"
 #include "message.h"
 #include "notes.h"
+#include "options.h"
 #include "player.h"
 #include "random.h"
 #include "stuff.h"

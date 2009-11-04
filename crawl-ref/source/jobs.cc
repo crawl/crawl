@@ -2,6 +2,8 @@
 
 #include "jobs.h"
 
+#include "options.h"
+
 // Listed in two columns to match the selection screen output.
 // Take care to list all valid classes here, or they cannot be directly chosen.
 // The old and new lists are expected to have the same length.
