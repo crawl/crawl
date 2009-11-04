@@ -588,33 +588,44 @@ CCCCCCCC+++CCCCCCCC
 ENDMAP
 
 ###################################################################
-# Distorted kobolds (Jude)
-NAME:   due_chaos_kobolds
-DEPTH:  D:13-27, Vault, Elf, Crypt
-ORIENT: float
-KFEAT:  L = altar_lugonu
-KFEAT:  P = enter_abyss
-KFEAT:  e = .
-KFEAT:  1 = .
-COLOUR: . = random
-COLOUR: 1 = random
-MARKER: e = lua:fog_machine { cloud_type="purple smoke", walk_dist=1, size=9, \
-            pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
+# Distorted/chaotic kobolds (Jude)
+NAME:       due_chaos_kobolds
+DEPTH:      D:13-27, Vault, Elf, Crypt
+TAGS:       no_rotate
+ORIENT:     float
+SUBST:      y  = c.
+COLOUR:     1. = random
+MARKER:     P  = lua:fog_machine { cloud_type="purple smoke", walk_dist=1, \
+            size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
             spread_rate=3, start_clouds=1 }
-: kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:distortion w:6 |" ..
-:       "                  sabre ego:distortion | short sword ego:distortion" ..
-:       "  / kobold w:80 ; short sword | sabre | quick blade w:3")
+: if crawl.coinflip() then
+KFEAT:      L = altar_lugonu
+KFEAT:      P = enter_abyss
+: kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:distortion " ..
+:       "w:6 | sabre ego:distortion | short sword ego:distortion / kobold "   ..
+:       "w:80 ; short sword | sabre | quick blade w:3")
+: else
+KFEAT:      L = altar_xom
+:   if crawl.one_chance_in(4) then 
+KMONS:      P = orange crystal statue
+:   else
+KFEAT:      P = enter_abyss / fountain_sparkling / stone_arch
+:   end
+: kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:chaos " ..
+:       "w:6 | sabre ego:chaos | short sword ego:chaos / kobold w:80 ;"  ..
+:       "short sword | sabre | quick blade w:3")
+: end
 MAP
   ccccc
  cc...cc
-cc.eP..cc
+cc..P..cc
  cc...cc
  ccc.cccc
-cc......ccc
-c...111...c
+ccyy.yyyccc
+cy..111.yyc
 cc..1L1..cc
-c...111...c
-ccc......cc
+cyy.111..yc
+cccyy..yycc
   ccc..ccc
     c++c
      @@
