@@ -267,7 +267,7 @@ void set_terrain_mapped( int x, int y )
 static void _automap_from( int x, int y, int mutated )
 {
     if (mutated)
-        magic_mapping(8 * mutated, 5 * mutated, true, false,
+        magic_mapping(8 * mutated, 25, true, false,
                       true, true, coord_def(x,y));
 }
 
