@@ -2272,11 +2272,11 @@ bool is_armour_brand_ok(int type, int brand)
     case SPARM_DEXTERITY:
         return (slot == EQ_GLOVES);
 
+    case SPARM_SEE_INVISIBLE:
+        if (type == ARM_WIZARD_HAT)
+            return (false);
     case SPARM_INTELLIGENCE:
         return (slot == EQ_HELMET);
-
-    case SPARM_SEE_INVISIBLE:
-        return (type == ARM_HELMET);
 
     case SPARM_FIRE_RESISTANCE:
     case SPARM_COLD_RESISTANCE:
@@ -2294,8 +2294,7 @@ bool is_armour_brand_ok(int type, int brand)
         return (slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD);
 
     case SPARM_SPIRIT_SHIELD:
-        if (type == ARM_CAP || slot == EQ_SHIELD)
-            return (true);
+        return (type == ARM_CAP || slot == EQ_SHIELD);
 
     case NUM_SPECIAL_ARMOURS:
         ASSERT(!"invalid armour brand");
@@ -4892,3 +4891,62 @@ void item_set_appearance(item_def &item)
         break;
     }
 }
+
+#ifdef DEBUG_DIAGNOSTICS
+static int _test_item_level()
+{
+    switch(random2(10))
+    {
+    case 0:
+        return MAKE_GOOD_ITEM;
+    case 1:
+        return -4; // damaged
+    case 2:
+        return -5; // cursed
+    case 3:
+        return -6; // force randart
+    default:
+        return random2(50);
+    }
+}
+
+void makeitem_tests()
+{
+    int i, level;
+    item_def item;
+
+    mpr("Running generate_weapon_item tests.");
+    for (i=0;i<10000;i++)
+    {
+        item.clear();
+        level = _test_item_level();
+        item.base_type = OBJ_WEAPONS;
+        if (coinflip())
+            item.special = SPWPN_NORMAL;
+        else
+            item.special = random2(MAX_PAN_LORD_BRANDS);
+        _generate_weapon_item(item,
+                              coinflip(),
+                              coinflip() ? OBJ_RANDOM : random2(NUM_WEAPONS),
+                              level,
+                              MAKE_ITEM_RANDOM_RACE);
+    }
+
+    mpr("Running generate_armour_item tests.");
+    for (i=0;i<10000;i++)
+    {
+        item.clear();
+        level = _test_item_level();
+        item.base_type = OBJ_ARMOUR;
+        if (coinflip())
+            item.special = SPARM_NORMAL;
+        else
+            item.special = random2(NUM_SPECIAL_ARMOURS);
+        _generate_armour_item(item,
+                              coinflip(),
+                              coinflip() ? OBJ_RANDOM : random2(NUM_ARMOURS),
+                              level,
+                              MAKE_ITEM_RANDOM_RACE);
+    }
+}
+#endif
