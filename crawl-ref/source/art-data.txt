@@ -71,7 +71,6 @@
 #
 # * berserk:  Lets wearer evoke berserking ability.
 # * blink:    Lets wearer evoke the blink ability.
-# * cantelep: Lets wearer evoke the teleport ability.
 # * chaotic:  Is treated as a chaotic item.
 # * cursed:   Item is generated cursed.
 # * elec:     Grants electrical resistance.
@@ -80,7 +79,6 @@
 # * inv:      Lets wearer evoke invisibility ability.
 # * lev:      Lets wearer evoke levitation ability.
 # * life:     Grants negative energy resistance.
-# * mapping:  Lets wearer evoke magic mapping ability.
 # * noises:   Weapon makes noises.  Can be given its own set of noises by
 #             making an entry in dat/database/wpnnoise.txt, with the
 #             entry's key exactly the same as the weapon's name, but all
@@ -804,7 +802,7 @@ COLOUR:   ETC_GILA
 TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
-BOOL:     lev, cantelep
+BOOL:     lev
 DESC:     A vibrating cloak.
 
 ENUM:     BOOTS_ASSASSIN

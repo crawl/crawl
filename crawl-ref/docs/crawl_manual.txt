@@ -2834,7 +2834,6 @@ rMut      resist mutation
 +Inv      can invoke invisibility
 +Blink    can invoke blink
 +Rage     can invoke berserk
-+Tele     can invoke teleport
 
 *RAGE     uncontrolled berserk (anger)
 *TELE     random teleporting
