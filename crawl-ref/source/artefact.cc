@@ -735,33 +735,11 @@ void static _get_randart_properties(const item_def &item,
         if (one_chance_in(6))
             proprt[ARTP_BRAND] = SPWPN_ORC_SLAYING + random2(5);
 
-        if (proprt[ARTP_BRAND] == SPWPN_DRAGON_SLAYING
-            && weapon_skill(item) != SK_POLEARMS)
-        {
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;
-        }
-
-        if (proprt[ARTP_BRAND] == SPWPN_VENOM
-            && get_vorpal_type(item) == DVORP_CRUSHING)
-        {
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;
-        }
-
         if (one_chance_in(6))
             proprt[ARTP_BRAND] = SPWPN_VORPAL;
 
-        if (proprt[ARTP_BRAND] == SPWPN_FLAME
-            || proprt[ARTP_BRAND] == SPWPN_FROST)
-        {
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;      // missile wpns
-        }
-
         if (proprt[ARTP_BRAND] == SPWPN_PROTECTION)
             proprt[ARTP_BRAND] = SPWPN_NORMAL;      // no protection
-
-        // If this happens, things might get broken. - bwr
-        if (proprt[ARTP_BRAND] == SPWPN_SPEED && atype == WPN_QUICK_BLADE)
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;
 
         if (is_range_weapon(item))
         {
@@ -828,7 +806,11 @@ void static _get_randart_properties(const item_def &item,
         else
             power_level++;
 
-        ASSERT(is_weapon_brand_ok(atype, proprt[ARTP_BRAND]));
+        if (!is_weapon_brand_ok(atype, proprt[ARTP_BRAND]))
+        {
+            proprt[ARTP_BRAND] = SPWPN_NORMAL;
+            power_level--;
+        }
     }
 
     if (!one_chance_in(5))
