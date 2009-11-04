@@ -323,8 +323,8 @@ static bool _disabled_slime(monsters *thing)
 //
 // A slime creature will merge if there is an adjacent slime, merging
 // onto that slime would reduce the distance to the original slime's
-// target, and there are no empty squares that would also reduce
-// the distance to the target.
+// target, and there are no empty squares that would also reduce the
+// distance to the target.
 static bool _slime_merge(monsters *thing)
 {
     if (!thing || _disabled_slime(thing) || _unoccupied_slime(thing))
@@ -343,17 +343,19 @@ static bool _slime_merge(monsters *thing)
     {
         coord_def target = origin + Compass[compass_idx[i]];
 
-        // If this square won't reduce the distance to our target don't
+        // If this square won't reduce the distance to our target, don't
         // look for a potential merge, and don't allow this square to
         // prevent a merge if empty.
-        if(grid_distance(thing->target, target) >= target_distance)
+        if (grid_distance(thing->target, target) >= target_distance)
             continue;
 
         // Don't merge if there is an open square that reduces distance
-        // to target even if we found a possible slime to merge with.
-        if(!actor_at(target)
-           && mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target)))
+        // to target, even if we found a possible slime to merge with.
+        if (!actor_at(target)
+            && mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target)))
+        {
             return false;
+        }
 
         // Is there a slime creature on this square we can consider
         // merging with?
@@ -366,8 +368,8 @@ static bool _slime_merge(monsters *thing)
             && !mons_is_shapeshifter(other_thing)
             && !_disabled_slime(other_thing))
         {
-            // We can potentially merge if doing wouldn't take us over
-            // the merge cap
+            // We can potentially merge if doing so won't take us over
+            // the merge cap.
             int new_blob_count = other_thing->number + thing->number;
             if (new_blob_count <= max_slime_merge)
                 merge_target = other_thing;
@@ -376,8 +378,8 @@ static bool _slime_merge(monsters *thing)
 
     // We found a merge target and didn't find an open square that
     // would reduce distance to target, so we can actually merge.
-    if(merge_target)
-        return _do_merge(thing, merge_target);
+    if (merge_target)
+        return (_do_merge(thing, merge_target));
 
     // No adjacent slime creatures we could merge with.
     return (false);
