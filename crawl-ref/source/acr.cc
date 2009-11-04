@@ -3525,13 +3525,13 @@ static bool _initialise(void)
     seed_rng();
     get_typeid_array().init(ID_UNKNOWN_TYPE);
     init_char_table(Options.char_set);
-    init_feature_table();
+    init_show_table();
     init_monster_symbols();
     init_spell_descs();        // This needs to be way up top. {dlb}
     init_mon_name_cache();
 
     // init_item_name_cache() needs to be redone after init_char_table()
-    // and init_feature_table() have been called, so that the glyphs will
+    // and init_show_table() have been called, so that the glyphs will
     // be set to use with item_names_by_glyph_cache.
     init_item_name_cache();
 
@@ -3680,7 +3680,7 @@ static bool _initialise(void)
 
     // In case Lua changed the character set.
     init_char_table(Options.char_set);
-    init_feature_table();
+    init_show_table();
     init_monster_symbols();
 #endif
 

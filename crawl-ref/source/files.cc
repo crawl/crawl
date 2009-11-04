@@ -1224,7 +1224,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Clear the show grid, to prevent us noticing things
     // which were within the old LOS by new coordinates.
-    env.show.init(0);
+    env.show_los.init(0);
 
     // Try to open level savefile.
 #ifdef DEBUG_LEVEL_LOAD

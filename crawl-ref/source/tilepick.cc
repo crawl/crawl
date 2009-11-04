@@ -2343,11 +2343,9 @@ static int _tileidx_shop(coord_def where)
     }
 }
 
-int tileidx_feature(int object, int gx, int gy)
+int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
 {
-    ASSERT(object < NUM_REAL_FEATURES);
-
-    switch (object)
+    switch (feat)
     {
     case DNGN_UNSEEN:
         return TILE_DNGN_UNSEEN;
@@ -2363,7 +2361,7 @@ int tileidx_feature(int object, int gx, int gy)
         const dungeon_feature_type appear
                 = grid_secret_door_appearance(coord_def(gx, gy));
         ASSERT(!feat_is_secret_door(appear));
-        return tileidx_feature((int) appear, gx, gy);
+        return tileidx_feature(appear, gx, gy);
     }
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
@@ -2553,9 +2551,9 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_DRY_FOUNTAIN_BLOOD:
     case DNGN_PERMADRY_FOUNTAIN:
         return TILE_DNGN_DRY_FOUNTAIN;
+    default:
+        return TILE_DNGN_ERROR;
     }
-
-    return TILE_DNGN_ERROR;
 }
 
 static int _tileidx_cloud(int type, int decay)
@@ -4534,18 +4532,15 @@ void tile_draw_floor()
             const coord_def gc = show2grid(ep);
             int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
 
-            int object = show_appearance(ep);
-            if (object != 0 && map_bounds(gc))
+            if (env.show_los(ep))
             {
-                bg = tileidx_feature(object, gc.x, gc.y);
+                dungeon_feature_type feat = grid_appearance(gc);
+                bg = tileidx_feature(feat, gc.x, gc.y);
 
-                if (in_bounds(gc))
-                {
-                    if (object == DNGN_DETECTED_SECRET_DOOR)
-                        bg |= TILE_FLAG_WAS_SECRET;
-                    else if (is_unknown_stair(gc))
-                        bg |= TILE_FLAG_NEW_STAIR;
-                }
+                if (feat == DNGN_DETECTED_SECRET_DOOR)
+                     bg |= TILE_FLAG_WAS_SECRET;
+                else if (is_unknown_stair(gc))
+                     bg |= TILE_FLAG_NEW_STAIR;
             }
 
             // init tiles
@@ -4673,11 +4668,11 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         // features.
         if (is_terrain_mapped(gc))
         {
-            unsigned int feature = grd(gc);
+            dungeon_feature_type feature = grd(gc);
 
             unsigned int grid_symbol;
             unsigned short grid_colour;
-            get_item_symbol(feature, &grid_symbol, &grid_colour);
+            get_show_symbol(show_type(feature), &grid_symbol, &grid_colour);
 
             unsigned int fg;
             unsigned int bg;

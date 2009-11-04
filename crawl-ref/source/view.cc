@@ -88,26 +88,20 @@
 #define MC_MONS    0x02
 
 crawl_view_geometry crawl_view;
-FixedArray < unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER > Show_Backup;
 
 extern int stealth;             // defined in acr.cc
 
 screen_buffer_t colour_code_map( const coord_def& p, bool item_colour = false,
         bool travel_colour = false, bool on_level = true );
 
-void cloud_grid(void);
-void monster_grid(bool do_updates);
-
 static void _get_symbol( const coord_def& where,
-                         int object, unsigned *ch,
+                         show_type object, unsigned *ch,
                          unsigned short *colour,
                          bool magic_mapped = false );
-static unsigned _get_symbol(int object, unsigned short *colour = NULL,
+static unsigned _get_symbol(show_type object, unsigned short *colour = NULL,
                             bool magic_mapped = false);
 
-static int _get_item_dngn_code(const item_def &item);
-static void _set_show_backup( int ex, int ey );
-static int _get_viewobj_flags(int viewobj);
+static int _get_viewobj_flags(show_type viewobj);
 
 unsigned map_cell::glyph() const
 {
@@ -141,7 +135,7 @@ unsigned get_envmap_char(int x, int y)
     return env.map[x][y].glyph();
 }
 
-int get_envmap_obj(int x, int y)
+show_type get_envmap_obj(int x, int y)
 {
     return (env.map[x][y].object);
 }
@@ -172,7 +166,7 @@ bool is_envmap_detected_mons(int x, int y)
     return (env.map[x][y].flags & MAP_DETECTED_MONSTER);
 }
 
-void set_envmap_glyph(int x, int y, int object, int col)
+void set_envmap_glyph(int x, int y, show_type object, int col)
 {
     map_cell &c = env.map[x][y];
     c.object = object;
@@ -182,12 +176,12 @@ void set_envmap_glyph(int x, int y, int object, int col)
 #endif
 }
 
-void set_envmap_glyph(const coord_def& c, int object, int col)
+void set_envmap_glyph(const coord_def& c, show_type object, int col)
 {
     set_envmap_glyph(c.x, c.y, object, col);
 }
 
-void set_envmap_obj( const coord_def& where, int obj )
+void set_envmap_obj(const coord_def& where, show_type obj)
 {
     env.map(where).object = obj;
 #ifdef USE_TILE
@@ -398,14 +392,14 @@ unsigned real_colour(unsigned raw_colour)
     return (raw_colour);
 }
 
-static int _get_viewobj_flags(int object)
+static int _get_viewobj_flags(show_type object)
 {
     // Check for monster glyphs.
-    if (object >= DNGN_START_OF_MONSTERS)
+    if (object.cls == SH_MONSTER)
         return (MC_MONS);
 
     // Check for item glyphs.
-    if (object >= DNGN_ITEM_ORB && object < DNGN_CLOUD)
+    if (object.cls == SH_ITEM)
         return (MC_ITEM);
 
     // We don't care to look further; we could check for
@@ -413,7 +407,7 @@ static int _get_viewobj_flags(int object)
     return (0);
 }
 
-static unsigned _get_symbol(int object, unsigned short *colour,
+static unsigned _get_symbol(show_type object, unsigned short *colour,
                             bool magic_mapped)
 {
     unsigned ch;
@@ -450,24 +444,23 @@ static unsigned short _tree_colour(const coord_def& where)
 }
 
 static void _get_symbol( const coord_def& where,
-                         int object, unsigned *ch,
+                         show_type object, unsigned *ch,
                          unsigned short *colour,
                          bool magic_mapped )
 {
     ASSERT( ch != NULL );
 
-    if (object < NUM_FEATURES)
+    if (object.cls < SH_MONSTER)
     {
-        const dungeon_feature_type feat =
-            static_cast<dungeon_feature_type>(object);
-        const feature_def &fdef = get_feature_def(feat);
+        const feature_def &fdef = get_feature_def(object);
 
         *ch = magic_mapped? fdef.magic_symbol
                           : fdef.symbol;
 
         // Don't recolor items
-        if (colour && object < NUM_REAL_FEATURES)
+        if (colour && object.cls == SH_FEATURE)
         {
+            dungeon_feature_type feat = object.feat;
             const int colmask = *colour & COLFLAG_MASK;
 
             // TODO: consolidate with feat_is_stair etc.
@@ -553,13 +546,14 @@ static void _get_symbol( const coord_def& where,
         // Note anything we see that's notable
         if (!where.origin() && fdef.is_notable())
         {
-            seen_notable_thing(feat, where);
+            if (object.cls == SH_FEATURE) // other notable things?
+                seen_notable_thing(object.feat, where);
         }
     }
     else
     {
-        ASSERT(object >= DNGN_START_OF_MONSTERS);
-        *ch = mons_char(object - DNGN_START_OF_MONSTERS);
+        ASSERT(object.cls == SH_MONSTER);
+        *ch = mons_char(object.mons);
     }
 
     if (colour)
@@ -575,41 +569,19 @@ unsigned grid_character_at(const coord_def &c)
     return glych;
 }
 
-void get_item_symbol(unsigned int object, unsigned *ch,
-                     unsigned short *colour)
-{
-    if (object < NUM_FEATURES)
-    {
-        dungeon_feature_type feat = static_cast<dungeon_feature_type>(object);
-        *ch = get_feature_def(feat).symbol;
-
-        // Don't clobber with BLACK, because the colour should be already set.
-        if (get_feature_def(feat).colour != BLACK)
-            *colour = get_feature_def(feat).colour;
-    }
-    *colour = real_colour(*colour);
-
-}
-
-dungeon_char_type get_feature_dchar( dungeon_feature_type feat )
+dungeon_char_type get_feature_dchar(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).dchar);
 }
 
-unsigned get_sightmap_char(dungeon_feature_type feature)
+unsigned get_sightmap_char(dungeon_feature_type feat)
 {
-    if (feature < NUM_FEATURES)
-        return (get_feature_def(feature).symbol);
-
-    return (0);
+    return (get_feature_def(feat).symbol);
 }
 
-unsigned get_magicmap_char(dungeon_feature_type feature)
+unsigned get_magicmap_char(dungeon_feature_type feat)
 {
-    if (feature < NUM_FEATURES)
-        return (get_feature_def(feature).magic_symbol);
-
-    return (0);
+    return (get_feature_def(feat).magic_symbol);
 }
 
 static char _get_travel_colour( const coord_def& p )
@@ -721,9 +693,9 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
     dungeon_feature_type feat_value = grd(p);
     if (!see_cell(p))
     {
-        const int remembered = get_envmap_obj(p);
-        if (remembered < NUM_REAL_FEATURES)
-            feat_value = static_cast<dungeon_feature_type>(remembered);
+        const show_type remembered = get_envmap_obj(p);
+        if (remembered.cls == SH_FEATURE)
+            feat_value = remembered.feat;
     }
 
     unsigned tc = travel_colour ? _get_travel_colour(p) : DARKGREY;
@@ -770,7 +742,7 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
                 const int olddist = grid_distance(you.pos(), mon.pos());
                 const int newdist = grid_distance(p, mon.pos());
 
-                if (olddist < newdist || !see_cell(env.show, p, mon.pos()))
+                if (olddist < newdist || !see_cell(env.show_los, p, mon.pos()))
                 {
                     blocked_movement = true;
                     break;
@@ -847,19 +819,19 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             continue;
 #endif
 
-        set_envmap_obj(p, is_terrain_seen(p) || is_terrain_mapped(p)
-                ? grd(p) : DNGN_UNSEEN);
+        set_envmap_obj(p, show_type(is_terrain_seen(p) || is_terrain_mapped(p)
+                                    ? grd(p) : DNGN_UNSEEN));
         set_envmap_detected_mons(p, false);
         set_envmap_detected_item(p, false);
 
 #ifdef USE_TILE
         if (is_terrain_mapped(p))
         {
-            unsigned int feature = grd(p);
+            dungeon_feature_type feature = grd(p);
 
             unsigned int feat_symbol;
             unsigned short feat_colour;
-            get_item_symbol(feature, &feat_symbol, &feat_colour);
+            get_show_symbol(show_type(feature), &feat_symbol, &feat_colour);
 
             unsigned int fg;
             unsigned int bg;
@@ -1329,58 +1301,6 @@ void force_monster_shout(monsters* monster)
 }
 #endif
 
-inline static bool _update_monster_grid(const monsters *monster)
-{
-    const coord_def e = grid2show(monster->pos());
-
-    if (!monster->visible_to(&you))
-    {
-        // ripple effect?
-        if (grd(monster->pos()) == DNGN_SHALLOW_WATER
-            && !mons_flies(monster)
-            && env.cgrid(monster->pos()) == EMPTY_CLOUD)
-        {
-            _set_show_backup(e.x, e.y);
-            env.show(e)     = DNGN_INVIS_EXPOSED;
-
-            // Translates between colours used for shallow and deep water,
-            // if not using the normal LIGHTCYAN / BLUE. The ripple uses
-            // the deep water colour.
-            unsigned short base_colour = env.grid_colours(monster->pos());
-
-            static const unsigned short ripple_table[] =
-                {BLUE,          // BLACK        => BLUE (default)
-                 BLUE,          // BLUE         => BLUE
-                 GREEN,         // GREEN        => GREEN
-                 CYAN,          // CYAN         => CYAN
-                 RED,           // RED          => RED
-                 MAGENTA,       // MAGENTA      => MAGENTA
-                 BROWN,         // BROWN        => BROWN
-                 DARKGREY,      // LIGHTGREY    => DARKGREY
-                 DARKGREY,      // DARKGREY     => DARKGREY
-                 BLUE,          // LIGHTBLUE    => BLUE
-                 GREEN,         // LIGHTGREEN   => GREEN
-                 BLUE,          // LIGHTCYAN    => BLUE
-                 RED,           // LIGHTRED     => RED
-                 MAGENTA,       // LIGHTMAGENTA => MAGENTA
-                 BROWN,         // YELLOW       => BROWN
-                 LIGHTGREY};    // WHITE        => LIGHTGREY
-
-            env.show_col(e) = ripple_table[base_colour & 0x0f];
-        }
-        return (false);
-    }
-
-    // Mimics are always left on map.
-    if (!mons_is_mimic( monster->type ))
-        _set_show_backup(e.x, e.y);
-
-    env.show(e)     = monster->type + DNGN_START_OF_MONSTERS;
-    env.show_col(e) = get_mons_colour( monster );
-
-    return (true);
-}
-
 void monster_grid(bool do_updates)
 {
     do_updates = do_updates && !crawl_state.arena;
@@ -1415,7 +1335,7 @@ void monster_grid(bool do_updates)
                 mgrd(monster->pos()) = s;
             }
 
-            if (!_update_monster_grid(monster))
+            if (!env.show.update_monster(monster))
                 continue;
 
 #ifdef USE_TILE
@@ -1558,197 +1478,18 @@ bool check_awaken(monsters* monster)
     return (false);
 }
 
-static void _set_show_backup( int ex, int ey )
-{
-    // Must avoid double setting it.
-    // We want the base terrain/item, not the cloud or monster that replaced it.
-    if (!Show_Backup[ex][ey])
-        Show_Backup[ex][ey] = env.show[ex][ey];
-}
-
-static int _get_item_dngn_code(const item_def &item)
-{
-    switch (item.base_type)
-    {
-    case OBJ_ORBS:       return (DNGN_ITEM_ORB);
-    case OBJ_WEAPONS:    return (DNGN_ITEM_WEAPON);
-    case OBJ_MISSILES:   return (DNGN_ITEM_MISSILE);
-    case OBJ_ARMOUR:     return (DNGN_ITEM_ARMOUR);
-    case OBJ_WANDS:      return (DNGN_ITEM_WAND);
-    case OBJ_FOOD:       return (DNGN_ITEM_FOOD);
-    case OBJ_SCROLLS:    return (DNGN_ITEM_SCROLL);
-    case OBJ_JEWELLERY:
-        return (jewellery_is_amulet(item)? DNGN_ITEM_AMULET : DNGN_ITEM_RING);
-    case OBJ_POTIONS:    return (DNGN_ITEM_POTION);
-    case OBJ_BOOKS:      return (DNGN_ITEM_BOOK);
-    case OBJ_STAVES:     return (DNGN_ITEM_STAVE);
-    case OBJ_MISCELLANY: return (DNGN_ITEM_MISCELLANY);
-    case OBJ_CORPSES:    return (DNGN_ITEM_CORPSE);
-    case OBJ_GOLD:       return (DNGN_ITEM_GOLD);
-    default:             return (DNGN_ITEM_ORB); // bad item character
-   }
-}
-
-inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
-{
-    const item_def &eitem = mitm[igrd(gp)];
-    unsigned short &ecol  = env.show_col(ep);
-
-    const dungeon_feature_type feat = grd(gp);
-    if (Options.feature_item_brand && is_critical_feature(feat))
-        ecol |= COLFLAG_FEATURE_ITEM;
-    else if (Options.trap_item_brand && feat_is_trap(feat))
-        ecol |= COLFLAG_TRAP_ITEM;
-    else
-    {
-        const unsigned short gcol = env.grid_colours(gp);
-        ecol = (feat == DNGN_SHALLOW_WATER) ?
-               (gcol != BLACK ? gcol : CYAN) : eitem.colour;
-        if (eitem.link != NON_ITEM && !crawl_state.arena)
-            ecol |= COLFLAG_ITEM_HEAP;
-        env.show(ep) = _get_item_dngn_code( eitem );
-    }
-
-#ifdef USE_TILE
-    int idx = igrd(gp);
-    if (feat_is_stair(feat))
-        tile_place_item_marker(ep.x, ep.y, idx);
-    else
-        tile_place_item(ep.x, ep.y, idx);
-#endif
-}
-
-void item_grid()
-{
-    const coord_def c(crawl_view.glosc());
-    const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
-    for (radius_iterator ri(c, LOS_RADIUS, true, false); ri; ++ri)
-    {
-        if (igrd(*ri) != NON_ITEM)
-        {
-            const coord_def ep = *ri - c + offset;
-            if (env.show(ep))
-                _update_item_grid(*ri, ep);
-        }
-    }
-}
-
-void get_item_glyph( const item_def *item, unsigned *glych,
-                     unsigned short *glycol )
+void get_item_glyph(const item_def *item, unsigned *glych,
+                    unsigned short *glycol)
 {
     *glycol = item->colour;
-    _get_symbol( coord_def(0,0), _get_item_dngn_code( *item ), glych, glycol );
+    _get_symbol(coord_def(0,0), show_type(*item), glych, glycol);
 }
 
-void get_mons_glyph( const monsters *mons, unsigned *glych,
-                     unsigned short *glycol )
+void get_mons_glyph(const monsters *mons, unsigned *glych,
+                    unsigned short *glycol)
 {
-    *glycol = get_mons_colour( mons );
-    _get_symbol( coord_def(0,0), mons->type + DNGN_START_OF_MONSTERS,
-                 glych, glycol );
-}
-
-inline static void _update_cloud_grid(int cloudno)
-{
-    int which_colour = LIGHTGREY;
-    const coord_def e = grid2show(env.cloud[cloudno].pos);
-
-    switch (env.cloud[cloudno].type)
-    {
-    case CLOUD_FIRE:
-    case CLOUD_FOREST_FIRE:
-        if (env.cloud[cloudno].decay <= 20)
-            which_colour = RED;
-        else if (env.cloud[cloudno].decay <= 40)
-            which_colour = LIGHTRED;
-        else if (one_chance_in(4))
-            which_colour = RED;
-        else if (one_chance_in(4))
-            which_colour = LIGHTRED;
-        else
-            which_colour = YELLOW;
-        break;
-
-    case CLOUD_STINK:
-        which_colour = GREEN;
-        break;
-
-    case CLOUD_COLD:
-        if (env.cloud[cloudno].decay <= 20)
-            which_colour = BLUE;
-        else if (env.cloud[cloudno].decay <= 40)
-            which_colour = LIGHTBLUE;
-        else if (one_chance_in(4))
-            which_colour = BLUE;
-        else if (one_chance_in(4))
-            which_colour = LIGHTBLUE;
-        else
-            which_colour = WHITE;
-        break;
-
-    case CLOUD_POISON:
-        which_colour = (one_chance_in(3) ? LIGHTGREEN : GREEN);
-        break;
-
-    case CLOUD_BLUE_SMOKE:
-        which_colour = LIGHTBLUE;
-        break;
-
-    case CLOUD_PURP_SMOKE:
-        which_colour = MAGENTA;
-        break;
-
-    case CLOUD_MIASMA:
-    case CLOUD_BLACK_SMOKE:
-        which_colour = DARKGREY;
-        break;
-
-    case CLOUD_RAIN:
-    case CLOUD_MIST:
-        which_colour = ETC_MIST;
-        break;
-
-    case CLOUD_CHAOS:
-        which_colour = ETC_RANDOM;
-        break;
-
-    case CLOUD_MUTAGENIC:
-        which_colour = ETC_MUTAGENIC;
-        break;
-
-    default:
-        which_colour = LIGHTGREY;
-        break;
-    }
-
-    _set_show_backup(e.x, e.y);
-    env.show(e)     = DNGN_CLOUD;
-    env.show_col(e) = which_colour;
-
-#ifdef USE_TILE
-    tile_place_cloud(e.x, e.y, env.cloud[cloudno].type,
-                     env.cloud[cloudno].decay);
-#endif
-}
-
-void cloud_grid(void)
-{
-    int mnc = 0;
-
-    for (int s = 0; s < MAX_CLOUDS; s++)
-    {
-        // can anyone explain this??? {dlb}
-        // its an optimization to avoid looking past the last cloud -bwr
-        if (mnc >= env.cloud_no)
-            break;
-
-        if (env.cloud[s].type != CLOUD_NONE)
-        {
-            mnc++;
-            if (see_cell(env.cloud[s].pos))
-                _update_cloud_grid(s);
-        }
-    }
+    *glycol = get_mons_colour(mons);
+    _get_symbol(coord_def(0,0), show_type(mons), glych, glycol);
 }
 
 // Noisy now has a messenging service for giving messages to the
@@ -3391,18 +3132,18 @@ unsigned get_screen_glyph( int x, int y )
     return get_screen_glyph(coord_def(x,y));
 }
 
-unsigned get_screen_glyph( const coord_def& p )
+unsigned get_screen_glyph(const coord_def& p)
 {
     const coord_def ep = view2show(grid2view(p));
 
-    int             object = show_appearance(ep);
-    unsigned short  colour = env.show_col(ep);
+    show_type object = env.show(ep);
+    unsigned short  colour = object.colour;
     unsigned        ch;
 
     if (!object)
         return get_envmap_char(p.x, p.y);
 
-    _get_symbol( p, object, &ch, &colour );
+    _get_symbol(p, object, &ch, &colour);
     return (ch);
 }
 
@@ -3436,7 +3177,7 @@ std::string screenshot(bool fullscreen)
     char_table_bk = Options.char_table;
 
     init_char_table(CSET_ASCII);
-    init_feature_table();
+    init_show_table();
 
     int firstnonspace = -1;
     int firstpopline  = -1;
@@ -3461,7 +3202,7 @@ std::string screenshot(bool fullscreen)
             if (ch && !isprint(ch))
             {
                 // [ds] Evil hack time again. Peek at grid, use that character.
-                int object = grid_appearance(gc);
+                show_type object = show_type(grid_appearance(gc));
                 unsigned glych;
                 unsigned short glycol = 0;
 
@@ -3494,7 +3235,7 @@ std::string screenshot(bool fullscreen)
 
     // Restore char and feature tables.
     Options.char_table = char_table_bk;
-    init_feature_table();
+    init_show_table();
 
     std::ostringstream ss;
     if (firstpopline != -1 && lastpopline != -1)
@@ -3524,27 +3265,6 @@ static int _viewmap_flash_colour()
     return (BLACK);
 }
 
-static void _update_env_show(const coord_def &gp, const coord_def &ep)
-{
-    // The sequence is grid, items, clouds, monsters.
-    env.show(ep) = grd(gp);
-    env.show_col(ep) = 0;
-
-    if (igrd(gp) != NON_ITEM)
-        _update_item_grid(gp, ep);
-
-    const int cloud = env.cgrid(gp);
-    if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
-        && env.cloud[cloud].pos == gp)
-    {
-        _update_cloud_grid(cloud);
-    }
-
-    const monsters *mons = monster_at(gp);
-    if (mons && mons->alive())
-        _update_monster_grid(mons);
-}
-
 // Updates one square of the view area. Should only be called for square
 // in LOS.
 void view_update_at(const coord_def &pos)
@@ -3554,14 +3274,14 @@ void view_update_at(const coord_def &pos)
 
     const coord_def vp = grid2view(pos);
     const coord_def ep = view2show(vp);
-    _update_env_show(pos, ep);
+    env.show.update_at(pos, ep);
 
-    int object = show_appearance(ep);
+    show_type object = env.show(ep);
 
     if (!object)
         return;
 
-    unsigned short  colour = env.show_col(ep);
+    unsigned short  colour = object.colour;
     unsigned        ch = 0;
 
     _get_symbol( pos, object, &ch, &colour );
@@ -3680,12 +3400,9 @@ void viewwindow(bool draw_it, bool do_updates)
     mcache.clear_nonref();
 #endif
 
-    env.show_col.init(LIGHTGREY);
-    Show_Backup.init(0);
+    env.show.init();
 
-    item_grid();                // Must be done before cloud and monster.
-    cloud_grid();
-    monster_grid( do_updates );
+    monster_grid(true);
 
 #ifdef USE_TILE
     tile_draw_rays(true);
@@ -3769,8 +3486,8 @@ void viewwindow(bool draw_it, bool do_updates)
                 else if (gc == you.pos() && !crawl_state.arena
                          && !crawl_state.arena_suspended)
                 {
-                    int             object = env.show(ep);
-                    unsigned short  colour = env.show_col(ep);
+                    show_type       object = env.show(ep);
+                    unsigned short  colour = object.colour;
                     unsigned        ch;
                     _get_symbol(gc, object, &ch, &colour);
 
@@ -3810,8 +3527,8 @@ void viewwindow(bool draw_it, bool do_updates)
                 }
                 else
                 {
-                    int             object = show_appearance(ep);
-                    unsigned short  colour = env.show_col(ep);
+                    show_type  object = env.show(ep);
+                    unsigned short colour = object.colour;
                     unsigned        ch;
 
                     _get_symbol( gc, object, &ch, &colour );
@@ -3868,11 +3585,11 @@ void viewwindow(bool draw_it, bool do_updates)
                         // to the grid before monsters and clouds were
                         // added otherwise.
                         if (Options.clean_map
-                            && Show_Backup(ep)
+                            && env.show.get_backup(ep)
                             && is_terrain_seen(gc))
                         {
-                            _get_symbol(gc, Show_Backup(ep), &ch, &colour);
-                            set_envmap_glyph(gc, Show_Backup(ep), colour);
+                            _get_symbol(gc, env.show.get_backup(ep), &ch, &colour);
+                            set_envmap_glyph(gc, env.show.get_backup(ep), colour);
                         }
 
                         // Now we get to filling in both the unseen

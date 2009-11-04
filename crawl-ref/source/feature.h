@@ -1,6 +1,8 @@
 #ifndef FEATURE_H
 #define FEATURE_H
 
+#include "show.h"
+
 struct feature_def
 {
     dungeon_char_type   dchar;
@@ -14,17 +16,31 @@ struct feature_def
     unsigned            flags;
     map_feature         minimap;         // mini-map categorization
 
+    feature_def() :
+        dchar(NUM_DCHAR_TYPES),
+        symbol(0),
+        magic_symbol(0),
+        colour(BLACK),
+        map_colour(DARKGREY),
+        seen_colour(BLACK),
+        em_colour(BLACK),
+        seen_em_colour(BLACK),
+        flags(FFT_NONE),
+        minimap(MF_UNSEEN)
+    {}
+
     bool is_notable() const { return (flags & FFT_NOTABLE); }
 };
 
 struct feature_override
 {
-    dungeon_feature_type    feat;
-    feature_def             override;
+    show_type    object;
+    feature_def  override;
 };
 
+const feature_def &get_feature_def(show_type object);
 const feature_def &get_feature_def(dungeon_feature_type feat);
 
-void init_feature_table();
+void init_show_table();
 
 #endif

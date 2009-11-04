@@ -1261,7 +1261,7 @@ void dump_map(FILE *fp, bool debug)
     char_table_bk = Options.char_table;
 
     init_char_table(CSET_ASCII);
-    init_feature_table();
+    init_show_table();
 
     if (debug)
     {
@@ -1306,7 +1306,7 @@ void dump_map(FILE *fp, bool debug)
 
     // Restore char and feature tables
     Options.char_table = char_table_bk;
-    init_feature_table();
+    init_show_table();
 }
 
 void dump_map(const char* fname, bool debug)

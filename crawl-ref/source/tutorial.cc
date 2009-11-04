@@ -1669,7 +1669,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     const coord_def e = gc - you.pos() + coord_def(9,9);
     unsigned ch;
     unsigned short colour;
-    int object;
+    show_type object;
 #endif
 
     Options.tut_just_triggered = true;
@@ -1716,7 +1716,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
         text << "('<w>";
 
-        get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
+        get_show_symbol(show_type(SHOW_ITEM_BOOK), &ch, &colour);
         text << static_cast<char>(ch)
              << "'</w>) "
              << "that you can read by typing <w>r</w>. "
@@ -1971,7 +1971,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
                 ", both of which are represented by '<w>";
 
-        get_item_symbol(DNGN_ITEM_STAVE, &ch, &colour);
+        get_show_symbol(show_type(SHOW_ITEM_STAVE), &ch, &colour);
         text << static_cast<char>(ch)
              << "</w>'"
 #endif
@@ -2021,8 +2021,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         object = env.show(e);
-        colour = env.show_col(e);
-        { unsigned short dummy; get_item_symbol( object, &ch, &dummy ); }
+        colour = object.colour;
+        { unsigned short dummy; get_show_symbol( object, &ch, &dummy ); }
 
         text << _colourize_glyph(colour, ch) << " ";
 #else
@@ -2052,8 +2052,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "These ";
 #ifndef USE_TILE
         object = env.show(e);
-        colour = env.show_col(e);
-        get_item_symbol( object, &ch, &colour );
+        colour = object.colour;
+        get_show_symbol( object, &ch, &colour );
 
         text << _colourize_glyph(colour, ch);
         text << " ";
@@ -2081,8 +2081,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         // FIXME: Branch entrance character is not being colored yellow.
         object = env.show(e);
-        colour = env.show_col(e);
-        { unsigned short dummy; get_item_symbol( object, &ch, &dummy ); }
+        colour = object.colour;
+        { unsigned short dummy; get_show_symbol( object, &ch, &dummy ); }
 
         text << _colourize_glyph(colour, ch) << " ";
 #else
@@ -2119,8 +2119,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         object = env.show(e);
-        colour = env.show_col(e);
-        { unsigned short dummy; get_item_symbol( object, &ch, &dummy ); }
+        colour = object.colour;
+        { unsigned short dummy; get_show_symbol( object, &ch, &dummy ); }
 
         text << _colourize_glyph(colour, ch) << " ";
 #else
@@ -2192,8 +2192,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "of these nasty constructions";
 #ifndef USE_TILE
         object = env.show(e);
-        colour = env.show_col(e);
-        get_item_symbol( object, &ch, &colour );
+        colour = object.colour;
+        get_show_symbol( object, &ch, &colour );
 
         if (ch == ' ' || colour == BLACK)
             colour = LIGHTCYAN;
@@ -2209,8 +2209,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "That ";
 #ifndef USE_TILE
         object = env.show(e);
-        colour = env.show_col(e);
-        get_item_symbol( object, &ch, &colour );
+        colour = object.colour;
+        get_show_symbol( object, &ch, &colour );
         text << _colourize_glyph(colour, ch) << " ";
 #else
         {

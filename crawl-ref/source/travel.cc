@@ -232,7 +232,7 @@ inline bool is_player_altar(const coord_def &c)
 
 bool is_unknown_stair(const coord_def &p, dungeon_feature_type remembered_feat)
 {
-    dungeon_feature_type feat = (remembered_feat == NUM_REAL_FEATURES)
+    dungeon_feature_type feat = (remembered_feat == NUM_FEATURES)
                                     ? env.grid(p) : remembered_feat;
     return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p));
 }
@@ -349,14 +349,14 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
 
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
-    const int levelmap_object = get_envmap_obj(c);
+    const show_type levelmap_object = get_envmap_obj(c);
 
     // Travel will not voluntarily cross squares blocked by immobile monsters.
     if (!ignore_hostile
-        && levelmap_object >= DNGN_START_OF_MONSTERS
+        && levelmap_object.cls == SH_MONSTER
         && _is_monster_blocked(c)
         // _is_monster_blocked can only return true if monster_at(c) != NULL
-        && monster_at(c)->type == levelmap_object - DNGN_START_OF_MONSTERS)
+        && monster_at(c)->type == levelmap_object.mons)
     {
         return (false);
     }
@@ -481,7 +481,7 @@ void travel_init_new_level()
 // Sets up travel-related stuff.
 void initialise_travel()
 {
-    for (int feat = DNGN_FLOOR_MIN; feat < NUM_REAL_FEATURES; feat++)
+    for (int feat = DNGN_FLOOR_MIN; feat < NUM_FEATURES; feat++)
     {
         if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_NATURAL)
             continue;

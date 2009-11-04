@@ -44,7 +44,7 @@ LUAFN(debug_flush_map_memory)
 LUAFN(debug_generate_level)
 {
     no_messages mx;
-    env.show.init(0);
+    env.show_los.init(0);
     env.map.init(map_cell());
 #ifdef USE_TILE
     tile_init_default_flavour();

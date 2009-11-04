@@ -1708,7 +1708,7 @@ static void tag_construct_level(writer &th)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
             marshallByte(th, grd[count_x][count_y]);
-            marshallShort(th, env.map[count_x][count_y].object);
+            marshallShowtype(th, env.map[count_x][count_y].object);
             marshallShort(th, env.map[count_x][count_y].colour);
             marshallShort(th, env.map[count_x][count_y].flags);
             marshallLong(th, env.map[count_x][count_y].property);
@@ -1808,6 +1808,22 @@ void unmarshallItem(reader &th, item_def &item)
 
     item.props.clear();
     item.props.read(th);
+}
+
+void marshallShowtype(writer &th, const show_type &obj)
+{
+    marshallByte(th, obj.cls);
+    marshallShort(th, obj.feat); // union
+    marshallShort(th, obj.colour);
+}
+
+show_type unmarshallShowtype(reader &th)
+{
+    show_type obj;
+    obj.cls = static_cast<show_class>(unmarshallByte(th));
+    obj.feat = static_cast<dungeon_feature_type>(unmarshallShort(th));
+    obj.colour = unmarshallShort(th);
+    return (obj);
 }
 
 static void tag_construct_level_items(writer &th)
@@ -2073,7 +2089,7 @@ static void tag_read_level( reader &th, char minorVersion )
                 static_cast<dungeon_feature_type>(
                     static_cast<unsigned char>(unmarshallByte(th)) );
 
-            env.map[i][j].object   = unmarshallShort(th);
+            env.map[i][j].object   = unmarshallShowtype(th);
             env.map[i][j].colour   = unmarshallShort(th);
             env.map[i][j].flags    = unmarshallShort(th);
             env.map[i][j].property = unmarshallLong(th);

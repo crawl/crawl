@@ -9,6 +9,7 @@
 #define VIEW_H
 
 #include "externs.h"
+#include "show.h"
 
 void init_char_table(char_set_type set);
 void init_monsters_seens();
@@ -49,22 +50,19 @@ unsigned get_screen_glyph( const coord_def &p );
 std::string stringize_glyph(unsigned glyph);
 int multibyte_strlen(const std::string &s);
 
-void get_item_symbol(unsigned int object, unsigned *ch,
-                     unsigned short *colour);
-
 // Applies ETC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour);
 int get_mons_colour(const monsters *mons);
 
-void set_envmap_obj( const coord_def& where, int object );
+void set_envmap_obj(const coord_def& where, show_type object);
 unsigned get_envmap_char(int x, int y);
 inline unsigned get_envmap_char(const coord_def& c) {
     return get_envmap_char(c.x, c.y);
 }
 bool inside_level_bounds(int x, int y);
 bool inside_level_bounds(const coord_def &p);
-int get_envmap_obj(int x, int y);
-inline int get_envmap_obj(const coord_def& c) {
+show_type get_envmap_obj(int x, int y);
+inline show_type get_envmap_obj(const coord_def& c) {
     return get_envmap_obj(c.x, c.y);
 }
 void set_envmap_detected_item(int x, int y, bool detected = true);

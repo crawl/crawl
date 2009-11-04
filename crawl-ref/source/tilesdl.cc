@@ -1310,9 +1310,9 @@ void TilesFramework::update_minimap(int gx, int gy)
     if (!player_in_mappable_area())
         return;
 
-    int object = env.map[gx][gy].object;
-    map_feature f = (object >= DNGN_START_OF_MONSTERS) ? MF_MONS_HOSTILE :
-        get_feature_def((dungeon_feature_type)object).minimap;
+    show_type object = env.map[gx][gy].object;
+    map_feature f = (object.cls == SH_MONSTER) ? MF_MONS_HOSTILE :
+        get_feature_def(object).minimap;
 
     if (f == MF_SKIP)
         f = get_feature_def(grd[gx][gy]).minimap;

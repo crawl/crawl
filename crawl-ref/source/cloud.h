@@ -63,6 +63,7 @@ int  max_cloud_damage(cloud_type cl_type, int power = -1);
 void in_a_cloud(void);
 
 std::string cloud_name(cloud_type type);
+int get_cloud_colour(int cloudno);
 
 bool is_damaging_cloud(cloud_type type, bool temp = false);
 bool is_harmless_cloud(cloud_type type);

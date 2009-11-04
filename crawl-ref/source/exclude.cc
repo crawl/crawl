@@ -95,8 +95,8 @@ struct opacity_excl : opacity_func
             return OPC_CLEAR;
         else if (!is_terrain_changed(p))
             return _feat_opacity(env.grid(p));
-        else if (env.map(p).object < NUM_REAL_FEATURES)
-            return _feat_opacity((dungeon_feature_type) env.map(p).object);
+        else if (env.map(p).object.cls == SH_FEATURE)
+            return _feat_opacity(env.map(p).object.feat);
         else
         {
             // If you have seen monsters, items or clouds there,

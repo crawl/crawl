@@ -46,6 +46,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "shopping.h"
+#include "show.h"
 #include "state.h"
 #include "stuff.h"
 #include "stash.h"
@@ -689,10 +690,10 @@ void full_describe_view()
             std::string desc = "";
 #ifndef USE_TILE
             const coord_def e  = c - you.pos() + coord_def(9,9);
-            unsigned short col = env.show_col(e);;
-            int object         = env.show(e);
+            show_type object         = env.show(e);
+            unsigned short col = object.colour;
             unsigned ch;
-            get_item_symbol( object, &ch, &col );
+            get_show_symbol(object, &ch, &col);
 
             const std::string colour_str = colour_to_str(col);
             desc = "(<" + colour_str + ">";

@@ -2,6 +2,7 @@
 #define ENV_H
 
 #include "monster.h"
+#include "show.h"
 
 class crawl_exit_hook;
 
@@ -22,15 +23,13 @@ public:
 
     FixedArray< map_cell, GXM, GYM >         map;    // discovered terrain
 
-    // Glyphs of squares that are in LOS.
-    env_show_grid show;
+    // Objects that are in LOS, used for drawing.
+    show_def show;
 
+    env_show_grid show_los; // Compatibility. TODO: remove.
     // What would be visible, if all of the translucent wall were
     // made opaque.
     env_show_grid no_trans_show;
-
-    FixedArray<unsigned short, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
-                                             show_col;  // view window colour
 
 #ifdef USE_TILE
     // indexed by grid coords

@@ -1146,38 +1146,7 @@ enum dungeon_feature_type
     DNGN_PERMADRY_FOUNTAIN,
     DNGN_ABANDONED_SHOP,
 
-    NUM_REAL_FEATURES,                 //  208
-
-    // Real terrain must all occur before 256 to guarantee it fits
-    // into the unsigned char used for the grid!
-
-    // These aren't really terrain, but they're passed in and used
-    // to get their appearance character so I'm putting them here for now.
-    DNGN_ITEM_ORB        = 256,
-    DNGN_INVIS_EXPOSED   = 257,
-    DNGN_ITEM_WEAPON     = 258,
-    DNGN_ITEM_ARMOUR     = 259,
-    DNGN_ITEM_WAND       = 260,
-    DNGN_ITEM_FOOD       = 261,
-    DNGN_ITEM_UNUSED_1   = 262,
-    DNGN_ITEM_SCROLL     = 263,
-    DNGN_ITEM_RING       = 264,
-    DNGN_ITEM_POTION     = 265,
-    DNGN_ITEM_MISSILE    = 266,
-    DNGN_ITEM_BOOK       = 267,
-    DNGN_ITEM_UNUSED_2   = 268,
-    DNGN_ITEM_STAVE      = 269,
-    DNGN_ITEM_MISCELLANY = 270,
-    DNGN_ITEM_CORPSE     = 271,
-    DNGN_ITEM_GOLD       = 272,
-    DNGN_ITEM_AMULET     = 273,
-    DNGN_ITEM_DETECTED   = 274,
-
-    DNGN_CLOUD           = 280,
-    NUM_FEATURES,                 // for use in lookup table in view.cc
-
-    DNGN_RANDOM,
-    DNGN_START_OF_MONSTERS = 297  // don't go past here! see view.cc
+    NUM_FEATURES                       //  208
 };
 
 enum duration_type

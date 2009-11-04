@@ -696,7 +696,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     if (!find_ray(source, target, ray, opc_default))
     {
         ASSERT (false);
-        return (NUM_REAL_FEATURES);
+        return (NUM_FEATURES);
     }
 
     ray.advance();
@@ -709,7 +709,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
         ray.advance();
     }
     ASSERT (false);
-    return (NUM_REAL_FEATURES);
+    return (NUM_FEATURES);
 }
 
 // Returns a straight ray from source to target.
@@ -1001,7 +1001,7 @@ void calc_show_los()
 {
     if (!crawl_state.arena && !crawl_state.arena_suspended)
     {
-        losight(env.show, you.pos());
+        losight(env.show_los, you.pos());
 
         // What would be visible, if all of the translucent walls were
         // made opaque.
@@ -1010,7 +1010,7 @@ void calc_show_los()
     }
     else
     {
-        losight_permissive(env.show, crawl_view.glosc());
+        losight_permissive(env.show_los, crawl_view.glosc());
     }
 }
 
@@ -1036,7 +1036,7 @@ bool see_cell(const coord_def &p)
 {
     return (((crawl_state.arena || crawl_state.arena_suspended)
                 && crawl_view.in_grid_los(p))
-             || see_cell(env.show, you.pos(), p));
+             || see_cell(env.show_los, you.pos(), p));
 }
 
 // Answers the question: "Would a cell be within character's line of sight,

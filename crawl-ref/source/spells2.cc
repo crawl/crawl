@@ -68,7 +68,7 @@ int detect_traps(int pow)
         {
             traps_found++;
             trap.reveal();
-            set_envmap_obj(trap.pos, grd(trap.pos));
+            set_envmap_obj(trap.pos, show_type(grd(trap.pos)));
             set_terrain_mapped(trap.pos);
         }
     }
@@ -95,7 +95,7 @@ int detect_items(int pow)
         {
             items_found++;
 
-            set_envmap_obj(*ri, DNGN_ITEM_DETECTED);
+            set_envmap_obj(*ri, show_type(SHOW_ITEM_DETECTED));
             set_envmap_detected_item(*ri);
 #ifdef USE_TILE
             // Don't replace previously seen items with an unseen one.
@@ -170,7 +170,7 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
             where = place;
     }
 
-    set_envmap_obj(where, mon->type + DNGN_START_OF_MONSTERS);
+    set_envmap_obj(where, show_type(mon));
     set_envmap_detected_mons(where);
 
 #ifdef USE_TILE

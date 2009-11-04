@@ -2291,7 +2291,7 @@ static item_def* _tran_get_eq(equipment_type eq)
 }
 
 // Which types of dungeon features are in view?
-static void _get_in_view(FixedVector<bool, NUM_REAL_FEATURES>& in_view)
+static void _get_in_view(FixedVector<bool, NUM_FEATURES>& in_view)
 {
     in_view.init(false);
 
@@ -2321,7 +2321,7 @@ static void _xom_zero_miscast()
     ///////////////////////////////////
     // Dungeon feature dependent stuff.
 
-    FixedVector<bool, NUM_REAL_FEATURES> in_view;
+    FixedVector<bool, NUM_FEATURES> in_view;
     _get_in_view(in_view);
 
     if (in_view[DNGN_LAVA])

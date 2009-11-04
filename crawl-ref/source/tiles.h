@@ -14,6 +14,7 @@
 
 #include "beam.h"
 #include "enum.h"
+#include "show.h"
 
 enum tag_version
 {
@@ -33,8 +34,7 @@ struct demon_data
 //*tile1.cc: get data from core part and drives tile drawing codes
 
 //**convert in-game data to tile index
-int tileidx(unsigned int object, int extra);
-int tileidx_feature(int object, int gx, int gy);
+int tileidx_feature(dungeon_feature_type feat, int gx, int gy);
 int tileidx_player(int job);
 void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
                     const coord_def& gc);

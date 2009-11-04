@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include "externs.h"
 
+struct show_type;
+
 enum tag_type   // used during save/load process to identify data blocks
 {
     TAG_NO_TAG = 0,                     // should NEVER be read in!
@@ -92,6 +94,7 @@ void marshallString  (writer &, const std::string &, int maxSize = 0);
 void marshallString4 (writer &, const std::string &);
 void marshallCoord   (writer &, const coord_def &);
 void marshallItem    (writer &, const item_def &);
+void marshallShowtype (writer &, const show_type &);
 
 /* ***********************************************************************
  * reader API
@@ -124,6 +127,7 @@ std::string unmarshallString  (reader &, int maxSize = 1000);
 void        unmarshallString4 (reader &, std::string&);
 void        unmarshallCoord   (reader &, coord_def &c);
 void        unmarshallItem    (reader &, item_def &item);
+show_type   unmarshallShowtype (reader &);
 
 /* ***********************************************************************
  * Tag interface

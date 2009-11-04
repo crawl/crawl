@@ -14,6 +14,7 @@
 
 #include "branch.h"
 #include "cloud.h"
+#include "colour.h"
 #include "coord.h"
 #include "mapmark.h"
 #include "ouch.h"
@@ -959,6 +960,80 @@ void cloud_struct::set_killer(killer_type _killer)
             break;
      }
 }
+
+int get_cloud_colour(int cloudno)
+{
+    int which_colour = LIGHTGREY;
+    switch (env.cloud[cloudno].type)
+    {
+    case CLOUD_FIRE:
+    case CLOUD_FOREST_FIRE:
+        if (env.cloud[cloudno].decay <= 20)
+            which_colour = RED;
+        else if (env.cloud[cloudno].decay <= 40)
+            which_colour = LIGHTRED;
+        else if (one_chance_in(4))
+            which_colour = RED;
+        else if (one_chance_in(4))
+            which_colour = LIGHTRED;
+        else
+            which_colour = YELLOW;
+        break;
+
+    case CLOUD_STINK:
+        which_colour = GREEN;
+        break;
+
+    case CLOUD_COLD:
+        if (env.cloud[cloudno].decay <= 20)
+            which_colour = BLUE;
+        else if (env.cloud[cloudno].decay <= 40)
+            which_colour = LIGHTBLUE;
+        else if (one_chance_in(4))
+            which_colour = BLUE;
+        else if (one_chance_in(4))
+            which_colour = LIGHTBLUE;
+        else
+            which_colour = WHITE;
+        break;
+
+    case CLOUD_POISON:
+        which_colour = (one_chance_in(3) ? LIGHTGREEN : GREEN);
+        break;
+
+    case CLOUD_BLUE_SMOKE:
+        which_colour = LIGHTBLUE;
+        break;
+
+    case CLOUD_PURP_SMOKE:
+        which_colour = MAGENTA;
+        break;
+
+    case CLOUD_MIASMA:
+    case CLOUD_BLACK_SMOKE:
+        which_colour = DARKGREY;
+        break;
+
+    case CLOUD_RAIN:
+    case CLOUD_MIST:
+        which_colour = ETC_MIST;
+        break;
+
+    case CLOUD_CHAOS:
+        which_colour = ETC_RANDOM;
+        break;
+
+    case CLOUD_MUTAGENIC:
+        which_colour = ETC_MUTAGENIC;
+        break;
+
+    default:
+        which_colour = LIGHTGREY;
+        break;
+    }
+    return (which_colour);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Fog machine stuff
 

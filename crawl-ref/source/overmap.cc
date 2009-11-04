@@ -64,8 +64,7 @@ static void _seen_staircase(dungeon_feature_type which_staircase,
 static void _seen_other_thing(dungeon_feature_type which_thing,
                               const coord_def& pos);
 
-void seen_notable_thing( dungeon_feature_type which_thing,
-                         const coord_def& pos )
+void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
     // Tell the world first.
     dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, pos);

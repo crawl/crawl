@@ -1,0 +1,98 @@
+#ifndef SHOW_H
+#define SHOW_H
+
+#include "fixary.h"
+
+enum show_item_type
+{
+    SHOW_ITEM_ORB,
+    SHOW_ITEM_WEAPON,
+    SHOW_ITEM_ARMOUR,
+    SHOW_ITEM_WAND,
+    SHOW_ITEM_FOOD,
+    SHOW_ITEM_SCROLL,
+    SHOW_ITEM_RING,
+    SHOW_ITEM_POTION,
+    SHOW_ITEM_MISSILE,
+    SHOW_ITEM_BOOK,
+    SHOW_ITEM_STAVE,
+    SHOW_ITEM_MISCELLANY,
+    SHOW_ITEM_CORPSE,
+    SHOW_ITEM_GOLD,
+    SHOW_ITEM_AMULET,
+    SHOW_ITEM_DETECTED,
+    NUM_SHOW_ITEMS
+};
+
+enum show_class
+{
+    SH_NOTHING,
+    SH_FEATURE,
+    SH_ITEM,
+    SH_CLOUD,
+    SH_INVIS_EXPOSED,
+    SH_MONSTER,
+    NUM_SHOW_CLASSES
+};
+
+struct show_type
+{
+    show_class cls;
+    union
+    {
+        dungeon_feature_type feat;
+        show_item_type item;
+        monster_type mons;
+    };
+    unsigned short colour;
+
+    show_type() : cls(SH_NOTHING), colour(0) {}
+    show_type(dungeon_feature_type f);
+    show_type(const item_def &item);
+    show_type(show_item_type itemtype);
+    show_type(const monsters* mons);
+
+    operator bool() const { return (cls != SH_NOTHING); }
+
+    bool operator < (const show_type &other) const;
+};
+
+struct map_cell
+{
+    show_type object;           // The object: monster, item, feature, or cloud.
+    unsigned short flags;   // Flags describing the mappedness of this square.
+    unsigned short colour;
+    unsigned long property; // Flags for blood, sanctuary, ...
+
+    map_cell() : object(), flags(0), colour(0), property(0) { }
+    void clear() { flags = colour = 0; object = show_type(); }
+
+    unsigned glyph() const;
+    bool known() const;
+    bool seen() const;
+};
+
+// Replaces get_item_symbol.
+void get_show_symbol(show_type object, unsigned *ch, unsigned short *colour);
+
+class monsters;
+class show_def
+{
+    FixedArray<show_type, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> grid;
+    FixedArray<show_type, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> backup;
+
+    void _update_feat_at(const coord_def &gp, const coord_def &ep);
+    void _update_item_at(const coord_def &gp, const coord_def &ep);
+    void _update_cloud(int cloudno);
+    void _set_backup(const coord_def &e);
+
+public:
+    show_type operator()(const coord_def &ep) const { return grid(ep); }
+    show_type get_backup(const coord_def &ep) const { return backup(ep); }
+
+    void init();
+    bool update_monster(const monsters *monster);
+    void update_at(const coord_def &gp, const coord_def &ep);
+};
+
+#endif

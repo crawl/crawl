@@ -40,21 +40,18 @@ static void _check_lava_water_in_sight()
         // XXX: remove explicit coordinate translation.
         const coord_def ep = *ri - you.pos() + coord_def(ENV_SHOW_OFFSET,
                                                          ENV_SHOW_OFFSET);
-        if (env.show(ep))
+        const dungeon_feature_type feat = grd(*ri);
+        if (feat == DNGN_LAVA)
         {
-            const dungeon_feature_type feat = grd(*ri);
-            if (feat == DNGN_LAVA)
-            {
-                you.lava_in_sight = 1;
-                if (you.water_in_sight > 0)
-                    break;
-            }
-            else if (feat == DNGN_DEEP_WATER)
-            {
-                you.water_in_sight = 1;
-                if (you.lava_in_sight > 0)
-                    break;
-            }
+            you.lava_in_sight = 1;
+            if (you.water_in_sight > 0)
+                break;
+        }
+        else if (feat == DNGN_DEEP_WATER)
+        {
+            you.water_in_sight = 1;
+            if (you.lava_in_sight > 0)
+                break;
         }
     }
 }

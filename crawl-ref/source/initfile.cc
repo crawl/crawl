@@ -1091,8 +1091,11 @@ void game_options::add_feature_override(const std::string &text)
 
     for (int i = 0, size = feats.size(); i < size; ++i)
     {
+        if (feats[i] >= NUM_FEATURES)
+            continue; // TODO: handle other object types.
         feature_override fov;
-        fov.feat = feats[i];
+        fov.object.cls = SH_FEATURE;
+        fov.object.feat = feats[i];
 
         fov.override.symbol         = read_symbol(iprops[0]);
         fov.override.magic_symbol   = read_symbol(iprops[1]);
