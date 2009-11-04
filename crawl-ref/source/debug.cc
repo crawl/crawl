@@ -1692,9 +1692,9 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Inv",
     "Lev",
     "Blnk",
-    "Unsd2",
+    "UNUSED",
     "Bers",
-    "Unsd1",
+    "UNUSED",
     "Nois",
     "NoSpl",
     "RndTl",
@@ -1706,7 +1706,8 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Dam",
     "Curse",
     "Stlth",
-    "MP"
+    "MP",
+    "Spirit"
 };
 
 #define ARTP_VAL_BOOL 0
@@ -1744,7 +1745,8 @@ char _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_ANY,  //DAMAGE
     ARTP_VAL_POS,  //CURSED
     ARTP_VAL_ANY,  //STEALTH
-    ARTP_VAL_ANY   //MAGICAL_POWER
+    ARTP_VAL_ANY,  //MAGICAL_POWER
+    ARTP_VAL_BOOL  //SPIRIT_SHIELD
 };
 
 static void _tweak_randart(item_def &item)
@@ -1761,18 +1763,22 @@ static void _tweak_randart(item_def &item)
 
     std::string prompt = "";
 
-    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    std::vector<unsigned int> choice_to_prop;
+    for (unsigned int i = 0, choice_num = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
-        if (i % 8 == 0 && i != 0)
+        if (_prop_name[i] == std::string("UNUSED"))
+            continue;
+        choice_to_prop.push_back(i);
+        if (choice_num % 8 == 0 && choice_num != 0)
             prompt += "\n";
 
         char choice;
         char buf[80];
 
-        if (i < 26)
-            choice = 'A' + i;
+        if (choice_num < 26)
+            choice = 'A' + choice_num;
         else
-            choice = '1' + i - 26;
+            choice = '1' + choice_num - 26;
 
         if (props[i])
             sprintf(buf, "%c) <w>%-5s</w> ", choice, _prop_name[i]);
@@ -1780,13 +1786,15 @@ static void _tweak_randart(item_def &item)
             sprintf(buf, "%c) %-5s ", choice, _prop_name[i]);
 
         prompt += buf;
+
+        choice_num++;
     }
     formatted_message_history(prompt, MSGCH_PROMPT, 0, 80);
 
     mpr("Change which field? ", MSGCH_PROMPT);
 
-    char keyin = tolower( get_ch() );
-    int  choice;
+    char     keyin = tolower( get_ch() );
+    unsigned int  choice;
 
     if (isalpha(keyin))
         choice = keyin - 'a';
@@ -1795,33 +1803,40 @@ static void _tweak_randart(item_def &item)
     else
         return;
 
+    if (choice >= choice_to_prop.size())
+        return;
+
+    unsigned int prop = choice_to_prop[choice];
+    ASSERT(prop >= 0);
+    ASSERT(prop < ARRAYSZ(_prop_type));
+
     int val;
-    switch (_prop_type[choice])
+    switch (_prop_type[prop])
     {
     case ARTP_VAL_BOOL:
-        mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[choice],
-             props[choice] ? "off" : "on");
-        artefact_set_property(item, static_cast<artefact_prop_type>(choice),
-                             !props[choice]);
+        mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[prop],
+             props[prop] ? "off" : "on");
+        artefact_set_property(item, static_cast<artefact_prop_type>(prop),
+                             !props[prop]);
         break;
 
     case ARTP_VAL_POS:
-        mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[choice], props[choice]);
+        mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
         val = _debug_prompt_for_int("New value? ", true);
 
         if (val < 0)
         {
             mprf(MSGCH_PROMPT, "Value for %s must be non-negative",
-                 _prop_name[choice]);
+                 _prop_name[prop]);
             return;
         }
-        artefact_set_property(item, static_cast<artefact_prop_type>(choice),
+        artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
     case ARTP_VAL_ANY:
-        mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[choice], props[choice]);
+        mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
         val = _debug_prompt_for_int("New value? ", false);
-        artefact_set_property(item, static_cast<artefact_prop_type>(choice),
+        artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
     }
