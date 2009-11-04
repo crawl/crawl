@@ -3293,7 +3293,8 @@ static void _give_monster_item(monsters *mon, int thing,
         destroy_item(thing, true);
         return;
     }
-    ASSERT(is_valid_item(mthing));
+    if (!is_valid_item(mthing)) // missiles merged into an existing stack
+        return;
     ASSERT(mthing.holding_monster() == mon);
 
     if (!force_item || mthing.colour == BLACK)
