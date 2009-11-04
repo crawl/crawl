@@ -2791,7 +2791,7 @@ try_again:
         int elemental = 0;
         int metabolism = 0;
 
-        // Check for conflicting mutations
+        // Check for conflicting mutations.
         for (int i = 0; i < 6; ++i)
         {
             mutation_type m = muts[i];
@@ -2855,12 +2855,15 @@ try_again:
 
             int first_facet;
 
+            // At or above 12 all mutations are available.
             if (level >= 12)
-                first_facet = 0; // At or above 12 all mutations are available
+                first_facet = 0;
+            // The awesome mutation does not show up before 12.
             else if (level >= 6)
-                first_facet = 1; // The awesome mutation does not show up before 12
+                first_facet = 1;
+            // Only body and good mutations are eligible at start.
             else
-                first_facet = 3; // Only body and good mutations are eligible at start
+                first_facet = 3;
 
             for (int i = first_facet; i < 6; ++i)
                 if (given[i] != 3)
@@ -2874,7 +2877,7 @@ try_again:
             mprf(MSGCH_DIAGNOSTICS, "Demonspawn will gain %s at level %d",
                     get_mutation_def(newmut).wizname, level);
 #endif
-            you.demon_trait[level-2] = newmut;
+            you.demon_trait[level - 2] = newmut;
 
             ++given[which_facet];
             ++ngiven;
