@@ -2543,7 +2543,7 @@ ENDMAP
 # 'cuz we need more chaos weapons (1KB)
 #
 NAME:  crazy_cottage
-DEPTH: D:3-7
+DEPTH: D:2-7
 MONS:  gnoll name:Crazy_Yiuf ; quarterstaff good_item ego:chaos . cloak
 ITEM:  hammer
 MAP
