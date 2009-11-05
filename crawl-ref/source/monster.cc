@@ -435,7 +435,7 @@ int monsters::damage_brand(int which_attack)
     return (!is_range_weapon(*mweap) ? get_weapon_brand(*mweap) : SPWPN_NORMAL);
 }
 
-int monsters::damage_type(int which_attack)
+int monsters::damage_type(int which_attack) const
 {
     const item_def *mweap = weapon(which_attack);
 
@@ -2702,7 +2702,16 @@ bool monsters::has_spells() const
     return (false);
 }
 
-bool monsters::has_evil_spells() const
+bool monsters::has_spell(spell_type spell) const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (spells[i] == spell)
+            return (true);
+
+    return (false);
+}
+
+bool monsters::has_evil_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         if (is_evil_spell(spells[i]))
@@ -2711,19 +2720,10 @@ bool monsters::has_evil_spells() const
     return (false);
 }
 
-bool monsters::has_chaotic_spells() const
+bool monsters::has_chaotic_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         if (is_chaotic_spell(spells[i]))
-            return (true);
-
-    return (false);
-}
-
-bool monsters::has_spell(spell_type spell) const
-{
-    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        if (spells[i] == spell)
             return (true);
 
     return (false);
@@ -2876,7 +2876,7 @@ bool monsters::is_evil() const
     if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS))
         return (true);
 
-    if (has_evil_spells())
+    if (has_evil_spell())
         return (true);
 
     if (mons_class_flag(type, M_EVIL))
@@ -2904,7 +2904,7 @@ bool monsters::is_chaotic() const
     if (is_priest() && is_chaotic_god(god))
         return (true);
 
-    if (has_chaotic_spells())
+    if (has_chaotic_spell())
         return (true);
 
     if (has_attack_flavour(AF_MUTATE)
