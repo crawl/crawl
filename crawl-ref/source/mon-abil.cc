@@ -246,19 +246,32 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
 
     // Merging costs the combined slime some energy.
     monsterentry* entry = get_monster_data(merge_to->type);
-    merge_to->speed_increment -= entry->energy_usage.move;
 
-    // This is dumb.  With that said, the idea is that if 2 slimes merge
-    // you can gain a space by moving away the turn after (maybe this is
-    // too nice but there will probably be a lot of complaints about the
-    // damage on higher level slimes).  So we subtracted some energy
-    // above, but if merge_to hasn't moved yet this turn, that will just
-    // cancel its turn in this round of world_reacts().  So we are going
-    // to see if merge_to has gone already by checking its mindex (this
-    // works because handle_monsters just iterates over env.mons in
-    // ascending order).
-    if (initial_slime->mindex() < merge_to->mindex())
+    // We want to find out if merge_to will move next time it has a turn
+    // (assuming for the sake of argument the next delay is 10). The
+    // purpose of subtracting energy from merge_to is to make it lose a
+    // turn after the merge takes place, if it's already going to lose
+    // a turn we don't need to do anything.
+    merge_to->speed_increment += entry->speed;
+    bool can_move = merge_to->has_action_energy();
+    merge_to->speed_increment -= entry->speed;
+
+    if(can_move)
+    {
         merge_to->speed_increment -= entry->energy_usage.move;
+
+        // This is dumb.  With that said, the idea is that if 2 slimes merge
+        // you can gain a space by moving away the turn after (maybe this is
+        // too nice but there will probably be a lot of complaints about the
+        // damage on higher level slimes).  So we subtracted some energy
+        // above, but if merge_to hasn't moved yet this turn, that will just
+        // cancel its turn in this round of world_reacts().  So we are going
+        // to see if merge_to has gone already by checking its mindex (this
+        // works because handle_monsters just iterates over env.mons in
+        // ascending order).
+        if (initial_slime->mindex() < merge_to->mindex())
+            merge_to->speed_increment -= entry->energy_usage.move;
+    }
 
     // Overwrite the state of the slime getting merged into, because it
     // might have been resting or something.
