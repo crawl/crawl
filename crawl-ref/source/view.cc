@@ -328,7 +328,7 @@ static void _good_god_follower_attitude_change(monsters *monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_wont_attack(monster)
         && you.visible_to(monster) && !monster->asleep()
-        && !mons_is_confused(monster) && !mons_is_paralysed(monster))
+        && !mons_is_confused(monster) && !monster->paralysed())
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -368,7 +368,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_friendly(monster)
         && you.visible_to(monster) && !monster->asleep()
-        && !mons_is_confused(monster) && !mons_is_paralysed(monster))
+        && !mons_is_confused(monster) && !monster->paralysed())
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -403,7 +403,7 @@ void slime_convert(monsters* monster)
         && !mons_friendly(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && you.visible_to(monster) && !monster->asleep()
-        && !mons_is_confused(monster) && !mons_is_paralysed(monster))
+        && !mons_is_confused(monster) && !monster->paralysed())
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
         if (!player_under_penance())

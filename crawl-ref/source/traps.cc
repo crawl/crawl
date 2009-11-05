@@ -828,7 +828,7 @@ void remove_net_from(monsters *mon)
 
     // factor in whether monster is paralysed or invisible
     int paralys = 0;
-    if (mons_is_paralysed(mon)) // makes this easier
+    if (mon->paralysed()) // makes this easier
         paralys = random2(5);
 
     int invis = 0;

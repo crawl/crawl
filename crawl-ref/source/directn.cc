@@ -3088,7 +3088,7 @@ static std::string _stair_destination_description(const coord_def &pos)
 
 std::string _mon_enchantments_string(const monsters* mon)
 {
-    const bool paralysed = mons_is_paralysed(mon);
+    const bool paralysed = mon->paralysed();
     std::vector<std::string> enchant_descriptors;
 
     for (mon_enchant_list::const_iterator e = mon->enchantments.begin();

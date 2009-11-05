@@ -5192,7 +5192,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             && !mons_is_stationary(mon)
             && mon->add_ench(ENCH_HASTE))
         {
-            if (!mons_is_paralysed(mon) && !mons_is_petrified(mon)
+            if (!mon->paralysed() && !mons_is_petrified(mon)
                 && simple_monster_message(mon, " seems to speed up."))
             {
                 obvious_effect = true;

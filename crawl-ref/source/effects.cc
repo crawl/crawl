@@ -4002,7 +4002,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     }
 
     // Let sleeping monsters lie.
-    if (mon->asleep() || mons_is_paralysed(mon))
+    if (mon->asleep() || mon->paralysed())
         return;
 
     const int range = (turns * mon->speed) / 10;

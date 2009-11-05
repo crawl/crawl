@@ -330,7 +330,7 @@ static bool _disabled_slime(monsters *thing)
     return (!thing
             || mons_is_fleeing(thing)
             || mons_is_confused(thing)
-            || mons_is_paralysed(thing));
+            || thing->paralysed());
 }
 
 // See if there are any appropriate adjacent slime creatures for 'thing'

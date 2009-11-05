@@ -156,7 +156,7 @@ static std::string _verbose_info(const monsters* m)
     {
         if (mons_is_petrified(m))
             return (" (petrified)");
-        if (mons_is_paralysed(m))
+        if (m->paralysed())
             return (" (paralysed)");
         if (mons_is_petrifying(m))
             return (" (petrifying)");

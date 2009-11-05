@@ -2751,7 +2751,7 @@ bool monsters::confused_by_you() const
 
 bool monsters::paralysed() const
 {
-    return (mons_is_paralysed(this));
+    return this->has_ench(ENCH_PARALYSIS);
 }
 
 bool monsters::cannot_act() const

@@ -2051,11 +2051,6 @@ mon_attitude_type mons_attitude(const monsters *m)
         return ATT_HOSTILE;
 }
 
-bool mons_is_paralysed(const monsters *m)
-{
-    return (m->has_ench(ENCH_PARALYSIS));
-}
-
 bool mons_is_petrified(const monsters *m)
 {
     return (m->has_ench(ENCH_PETRIFIED));
@@ -2068,7 +2063,7 @@ bool mons_is_petrifying(const monsters *m)
 
 bool mons_cannot_act(const monsters *m)
 {
-    return (mons_is_paralysed(m)
+    return (m->paralysed()
             || mons_is_petrified(m) && !mons_is_petrifying(m));
 }
 

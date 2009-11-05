@@ -2101,7 +2101,7 @@ bool do_slow_monster(monsters* mon, kill_category whose_kill)
         && !mons_is_stationary(mon)
         && mon->add_ench(mon_enchant(ENCH_SLOW, 0, whose_kill)))
     {
-        if (!mons_is_paralysed(mon) && !mons_is_petrified(mon)
+        if (!mon->paralysed() && !mons_is_petrified(mon)
             && simple_monster_message(mon, " seems to slow down."))
         {
             return (true);
