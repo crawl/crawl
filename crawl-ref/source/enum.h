@@ -2884,11 +2884,12 @@ enum spell_type
     SPELL_COLD_BREATH,                 //  195
     SPELL_DRACONIAN_BREATH,
     SPELL_WATER_ELEMENTALS,
-    SPELL_PORKALATOR,                  //  198
+    SPELL_PORKALATOR,
     SPELL_KRAKEN_TENTACLES,
-    SPELL_TOMB_OF_DOROKLOHE,
+    SPELL_TOMB_OF_DOROKLOHE,           //  200
+    SPELL_SUMMON_EYEBALLS,
 
-    NUM_SPELLS                         //  201
+    NUM_SPELLS                         //  202
 };
 
 enum slot_select_mode

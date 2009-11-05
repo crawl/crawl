@@ -688,6 +688,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_CONTROLLED_BLINK:
     case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
+    case SPELL_SUMMON_EYEBALLS:
         return;
     default:
         break;
@@ -1939,6 +1940,30 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         if (!monsterNearby || mons_friendly(monster))
             return;
         cast_chain_lightning(4 * monster->hit_dice, monster);
+        return;
+    case SPELL_SUMMON_EYEBALLS:
+        if (_mons_abjured(monster, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(2) + random2(monster->hit_dice / 7 + 1);
+
+        duration = std::min(2 + monster->hit_dice / 10, 6);
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            const monster_type mon = static_cast<monster_type>(
+                random_choose_weighted(100, MONS_GIANT_EYEBALL,
+                                        80, MONS_EYE_OF_DRAINING,
+                                        60, MONS_GOLDEN_EYE,
+                                        40, MONS_SHINING_EYE,
+                                        20, MONS_GREAT_ORB_OF_EYES,
+                                        10, MONS_EYE_OF_DEVASTATION,
+                                        0));
+            
+            create_monster(
+                mgen_data(mon, SAME_ATTITUDE(monster), duration,
+                          spell_cast, monster->pos(), monster->foe, 0, god));
+        }
         return;
     }
 
