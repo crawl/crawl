@@ -9,6 +9,7 @@
 #include <cctype>
 
 #include "cio.h"
+#include "colour.h"
 #include "menu.h"
 #include "macro.h"
 #include "message.h"

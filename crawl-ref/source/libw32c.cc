@@ -67,9 +67,11 @@
 #include "defines.h"
 #include "libutil.h"
 #include "message.h"
+#include "options.h"
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
+#include "viewgeom.h"
 
 char oldTitle[80];
 
