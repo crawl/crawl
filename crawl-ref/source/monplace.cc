@@ -1290,7 +1290,10 @@ static int _place_monster_aux(const mgen_data &mg,
         // at attack types, which are in the ghost structure we're
         // building.
         ASSERT( mons.mslot_item(MSLOT_WEAPON) );
-        ghost.init_dancing_weapon(*(mons.mslot_item(MSLOT_WEAPON)), 100);
+        // Dancing weapons are placed at pretty high power.  Remember, the
+        // player is fighting them one-on-one, while he will often summon
+        // several.
+        ghost.init_dancing_weapon(*(mons.mslot_item(MSLOT_WEAPON)), 180);
         mons.set_ghost(ghost);
         mons.dancing_weapon_init();
     }

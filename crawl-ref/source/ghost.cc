@@ -601,33 +601,73 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
     }
 }
 
-void ghost_demon::init_dancing_weapon(const item_def& weapon, int)
+void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 {
-    speed = 15;
+    int mass  = item_mass(weapon);
+    int delay = property(weapon, PWPN_SPEED);
+    int damg  = property(weapon, PWPN_DAMAGE);
 
-    ev = 20;
+    if (power > 200)
+        power = 200;
 
-    ac = 10;
+    reset();
 
-    damage = 30;
+    att_type = AT_HIT;
+    colour = weapon.colour;
+    att_flav = AF_PLAIN;
+    fly = FL_LEVITATE;
+
+    // We want Tukima to reward characters who invest heavily in both
+    // carrying capacity and enchantments skill.  Therefore, heavy
+    // weapons are a bit stronger when animated, and benefit much more
+    // from very high skill.
+
+    // First set up what the monsters will look like at very high skill.
+    // Daggers are weak here!
+
+    // Giant spiked club: speed 12, 44+22 damage, 35 AC, 70 HP, 16 EV
+    // Bardiche: speed 10, 40+20 damage, 20 AC, 40 HP, 15 EV
+    // Katana: speed 17, 26+13 damage, 16 AC, 32 HP, 18 EV
+    // Dagger: Speed 20, 8+4 damage, 2 AC, 4 HP, 20 EV
+    // Quick blade: Speed 23, 10+5 damage, 5 AC, 10 HP, 22 EV
+    // Sabre: Speed 18, 14+7 damage, 9 AC, 18 HP, 19 EV
 
     xl = 15;
 
-    max_hp = 15;
+    speed   = 30 - delay;
+    ev      = 25 - delay / 2;
+    ac      = mass / 10;
+    damage  = 2 * damg;
+    max_hp  = mass / 5;
 
-    att_type = AT_HIT;
+    // If you aren't an awesome spellcaster, nerf the weapons.  Do it in
+    // a way that lays most of the penalty on heavy weapons.
 
-    colour = weapon.colour;
+    speed = std::max(3, speed - (10 - power / 20));
+    ev    = std::max(3, ev    - (10 - power / 20));
 
-    att_flav = AF_PLAIN;
+    ac = ac * power / 200;
+    max_hp = std::max(5, max_hp * power / 200);
+    damage = std::max(1, damage * power / 200);
 
-    fly = FL_LEVITATE;
+    // For a spellpower 100 character (typical late midgame mage with no Ench
+    // focus), we have:
 
-    resists.hellfire = 3;
-    resists.fire = 3;
-    resists.cold = 3;
-    resists.poison = 3;
-    resists.elec = 1;
+    // Giant spiked club: speed 7, 22+22 damage, 17 AC, 35 HP, 11 EV
+    // Bardiche: speed 5, 20+20 damage, 10 AC, 20 HP, 10 EV
+    // Katana: speed 12, 13+13 damage, 8 AC, 16 HP, 13 EV
+    // Dagger: Speed 15, 4+4 damage, 1 AC, 5 HP, 15 EV
+    // Quick blade: Speed 18, 5+5 damage, 2 AC, 5 HP, 17 EV
+    // Sabre: Speed 13, 7+7 damage, 4 AC, 9 HP, 14 EV
+
+    // At spellpower 50 (early game character with focus on Ench):
+
+    // Giant spiked club: speed 5, 11+22 damage, 8 AC, 17 HP, 9 EV
+    // Bardiche: speed 3, 10+20 damage, 5 AC, 10 HP, 8 EV
+    // Katana: speed 10, 6+13 damage, 4 AC, 8 HP, 11 EV
+    // Dagger: Speed 13, 2+4 damage, 0 AC, 5 HP, 13 EV
+    // Quick blade: Speed 16, 2+5 damage, 1 AC, 5 HP, 15 EV
+    // Sabre: Speed 11, 3+7 damage, 2 AC, 5 HP, 12 EV
 }
 
 static spell_type search_first_list(int ignore_spell)
