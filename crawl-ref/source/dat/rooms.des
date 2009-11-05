@@ -134,7 +134,7 @@ function sroom_morgue()
 end
 
 function sroom_jelly_pit()
-    local level = dgn.get_special_room_info()
+    local level, tl_x, tl_y, br_x, br_y = dgn.get_special_room_info()
 
     -- Return early if we're being called during map validation.
     if not level then
@@ -154,6 +154,19 @@ function sroom_jelly_pit()
 
     if level >= 15 then
         mons[6] = "acid blob w:" .. (1 + math.floor((level - 15) / 4))
+    end
+
+    -- XXX: This may leave behind random Jiyva altars when the vault is veto'd.
+    -- It really shouldn't, though!
+    local jiyva_placed = false
+    local jiyva_altar = dgn.fnum("altar_jiyva")
+    for x = tl_x, br_x do
+        for y = tl_y, br_y do
+            if not jiyva_placed and crawl.one_chance_in(30) then
+                dgn.grid(x, y, jiyva_altar)
+                jiyva_placed = true
+            end
+        end
     end
 
     fill_special_room(mons, nil, true)
