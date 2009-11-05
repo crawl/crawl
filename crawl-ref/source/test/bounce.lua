@@ -3,6 +3,7 @@
 
 local checks = 0
 local iters  = 10
+local range  = 1000
 
 local function test_bounce_iter(map)
   dgn.reset_level()
@@ -21,14 +22,14 @@ local function test_bounce_iter(map)
 
   -- Fire beams slightly off of compass directions, to get the
   -- beam to bounce all over the place.
-  debug.bouncy_beam(30, 30, 30 - 8, 30 - 7, 1000)
-  debug.bouncy_beam(30, 30, 30 - 1, 30 - 8, 1000)
-  debug.bouncy_beam(30, 30, 30 + 8, 30 - 7, 1000)
-  debug.bouncy_beam(30, 30, 30 + 1, 30 - 8, 1000)
-  debug.bouncy_beam(30, 30, 30 - 8, 30 + 7, 1000)
-  debug.bouncy_beam(30, 30, 30 - 1, 30 + 8, 1000)
-  debug.bouncy_beam(30, 30, 30 + 8, 30 + 7, 1000)
-  debug.bouncy_beam(30, 30, 30 + 1, 30 + 8, 1000)
+  debug.bouncy_beam(30, 30, 30 - 8, 30 - 7, range)
+  debug.bouncy_beam(30, 30, 30 - 1, 30 - 8, range)
+  debug.bouncy_beam(30, 30, 30 + 8, 30 - 7, range)
+  debug.bouncy_beam(30, 30, 30 + 1, 30 - 8, range)
+  debug.bouncy_beam(30, 30, 30 - 8, 30 + 7, range)
+  debug.bouncy_beam(30, 30, 30 - 1, 30 + 8, range)
+  debug.bouncy_beam(30, 30, 30 + 8, 30 + 7, range)
+  debug.bouncy_beam(30, 30, 30 + 1, 30 + 8, range)
 end
 
 local function test_bounces()
