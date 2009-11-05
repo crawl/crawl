@@ -3483,7 +3483,7 @@ bool bolt::harmless_to_player() const
         return (player_res_steam(false) >= 3);
 
     case BEAM_MIASMA:
-        return (player_res_rotting());
+        return (you.res_rotting());
 
     case BEAM_NEG:
         return (player_prot_life(false) >= 3);

@@ -1614,39 +1614,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     return (rp);
 }
 
-int player_res_rotting()
-{
-    if (you.is_undead
-        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state < HS_SATIATED))
-    {
-        return (1);
-    }
-
-    return (0);
-}
-
-int player_res_asphyx()
-{
-    int ra = 0;
-
-    // The undead are immune to asphyxiation, or so we'll assume.
-    if (you.is_undead)
-        ra++;
-
-    switch (you.attribute[ATTR_TRANSFORMATION])
-    {
-    case TRAN_LICH:
-    case TRAN_STATUE:
-        ra++;
-        break;
-    }
-
-    if (ra > 1)
-        ra = 1;
-
-    return (ra);
-}
-
 int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
 {
     int rsf = 0;
@@ -5122,7 +5089,7 @@ bool curare_hits_player(int death_source, int amount)
 
     int hurted = 0;
 
-    if (player_res_asphyx() <= 0)
+    if (you.res_asphyx() <= 0)
     {
       hurted = roll_dice(2, 6);
 
@@ -5232,7 +5199,7 @@ bool miasma_player()
 {
     ASSERT(!crawl_state.arena);
 
-    if (player_res_rotting())
+    if (you.res_rotting())
         return (false);
 
     bool success = poison_player(1);
@@ -5473,7 +5440,7 @@ bool rot_player(int amount)
     if (amount <= 0)
         return (false);
 
-    if (player_res_rotting())
+    if (you.res_rotting())
     {
         mpr("You feel terrible.");
         return (false);
@@ -6705,7 +6672,19 @@ int player::res_elec() const
 
 int player::res_asphyx() const
 {
-    return (player_res_asphyx());
+    // The undead are immune to asphyxiation, or so we'll assume.
+    if (this->is_undead)
+        return 1;
+
+    switch (this->attribute[ATTR_TRANSFORMATION])
+    {
+    case TRAN_LICH:
+    case TRAN_STATUE:
+        return 1;
+        break;
+    }
+
+    return 0;
 }
 
 int player::res_poison() const
@@ -6715,7 +6694,13 @@ int player::res_poison() const
 
 int player::res_rotting() const
 {
-    return (player_res_rotting());
+    if (this->is_undead
+       && (this->is_undead != US_SEMI_UNDEAD || this->hunger_state < HS_SATIATED))
+    {
+        return (1);
+    }
+
+    return (0);
 }
 
 int player::res_sticky_flame() const
@@ -6968,7 +6953,7 @@ void player::drain_stat(int stat, int amount, actor *attacker)
 
 bool player::rot(actor *who, int amount, int immediate, bool quiet)
 {
-    if (player_res_rotting() || amount <= 0)
+    if (you.res_rotting() || amount <= 0)
         return (false);
 
     if (immediate > 0)
@@ -7072,7 +7057,7 @@ bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.arena);
 
-    if (player_res_rotting() || amount <= 0)
+    if (you.res_rotting() || amount <= 0)
         return (false);
 
     mpr( "You feel ill." );

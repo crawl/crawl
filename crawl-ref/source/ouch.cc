@@ -217,7 +217,7 @@ int check_your_resists(int hurted, beam_type flavour)
         break;
 
     case BEAM_MIASMA:
-        if (player_res_rotting())
+        if (you.res_rotting())
         {
             canned_msg(MSG_YOU_RESIST);
             hurted = 0;

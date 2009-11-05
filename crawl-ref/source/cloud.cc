@@ -585,7 +585,7 @@ int max_cloud_damage(cloud_type cl_type, int power)
     }
 
     case CLOUD_MIASMA:
-        if (player_res_rotting())
+        if (you.res_rotting())
             return (0);
 
         dam += 11 * speed / 10;
@@ -746,7 +746,7 @@ void in_a_cloud()
     case CLOUD_MIASMA:
         mpr("You are engulfed in a dark miasma.");
 
-        if (player_res_rotting())
+        if (you.res_rotting())
             return;
 
         miasma_player();
@@ -811,7 +811,7 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     case CLOUD_STEAM:
         return (player_res_steam(false, temp) <= 0);
     case CLOUD_MIASMA:
-        return (player_res_rotting());
+        return (you.res_rotting());
     case CLOUD_MUTAGENIC:
         return (you.can_mutate());
 

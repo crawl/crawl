@@ -605,12 +605,9 @@ int player_res_steam(bool calc_unid = true, bool temp = true,
 
 int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
-int player_res_rotting();
 
 bool player_control_teleport(bool calc_unid = true, bool temp = true,
                              bool items = true);
-
-int player_res_asphyx();
 
 int player_shield_class(void);
 
