@@ -6398,6 +6398,9 @@ bool player::is_unholy() const
 
 bool player::is_chaotic() const
 {
+    if (is_chaotic_god(religion))
+        return (true);
+
     return (false);
 }
 

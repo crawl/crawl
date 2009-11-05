@@ -2854,7 +2854,7 @@ bool monsters::is_evil() const
     if (is_unholy())
         return (true);
 
-    // Assume that unknown gods are evil.
+    // Assume that all unknown gods (GOD_NAMELESS) are evil.
     if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS))
         return (true);
 
@@ -2877,6 +2877,10 @@ bool monsters::is_chaotic() const
         return (true);
 
     if (mons_is_shapeshifter(this))
+        return (true);
+
+    // Assume that all unknown gods (GOD_NAMELESS) are not chaotic.
+    if (is_priest() && is_chaotic_god(god))
         return (true);
 
     if (has_spell(SPELL_POLYMORPH_OTHER)
