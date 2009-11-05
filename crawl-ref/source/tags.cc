@@ -2234,16 +2234,6 @@ static void unmarshall_monster(reader &th, monsters &m)
         m.set_ghost(unmarshallGhost(th, _tag_minor_version));
 
     m.check_speed();
-
-    // XXX: Changed MONS_NO_MONSTER from NUM_MONSTERS + 1 to 1000.
-    // This is a temporary hack, remove when the following compile
-    // time assert fails.
-    COMPILE_CHECK(NUM_MONSTERS == 472, c1);
-
-    if (m.type == (NUM_MONSTERS + 1))
-        m.type = MONS_NO_MONSTER;
-    if (m.base_monster == (NUM_MONSTERS + 1))
-        m.base_monster = MONS_NO_MONSTER;
 }
 
 static void tag_read_level_monsters(reader &th, char minorVersion)
