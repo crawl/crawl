@@ -268,6 +268,64 @@ MAP
 @...............
 ENDMAP
 
+###############################################################################
+# The Teleporter! There's some nice loot, but you'll have to fight your way to
+# it.
+NAME:       the_teleporter
+{{
+-- Find the slave of the teleporter and move to it. 
+local function teleporter (position, mtable)
+  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot", 
+    mtable.teleport_spot)
+
+  -- In order to make you.moveto safe(ish), teleport anyy monster at the
+  -- destination randomly.
+  local monster = dgn.mons_at(my_slaves[1].x, my_slaves[1].y)
+  if monster ~= nil then
+    monster.random_teleport()
+  end
+
+  -- XXX: This is still unsafe! Should be replaced with aimed teleport.
+  you.moveto(my_slaves[1].x, my_slaves[1].y)
+  crawl.mpr("Your surroundings suddenly seem different!")
+
+  -- In order to mimic a normal teleport, even though this is certainly not. 
+  dgn.apply_area_cloud(position.x, position.y, 1, 4, 1, 1, 
+    "purple smoke", "you", -1) 
+end
+
+-- Lua marker magic!
+lua_marker('M', function_machine { marker_type="player_at", 
+    func = teleporter, marker_params = {teleport_spot=1}, repeated=true })
+lua_marker('E', function_machine { marker_type="player_at", 
+    func = teleporter, marker_params = {teleport_spot=2}, repeated=true })
+
+-- And the slaves.
+lua_marker('e', portal_desc { teleport_spot=1})
+lua_marker('m', portal_desc { teleport_spot=2})
+}}
+ORIENT:     float
+DEPTH:      Vault:3-
+TAGS:       no_secret_doors no_monster_gen no_item_gen uniq_the_teleporter \
+            patrolling
+COLOUR:     ME = yellow
+MONS:       iron golem / crystal golem / stone golem 
+SUBST:      EM = .
+SUBST:      em = U
+MARKER:     v = lua:props_marker { veto_shatter="veto" }
+MAP     
+.........                                   .........
+.vvvvvvv.                                   .ccccccc.
+.vvvEvvv.                                   .cccMccc.
+.vvv+vvv.                                   .ccc+ccc.
+.vU...Uv.                                   .c00100c.
+.v.|*|.v.                                   .c01m10c.
+.v.*e*.v.                                   .c00100c.
+.v.|*|.v.                                   .ccc+ccc.
+.vU...Uv.                                   ...@@@...
+.vvvvvvv.
+.........
+ENDMAP
 
 ##############################################################################
 # Vaults:8 last level of the vaults -- dungeon.cc will change all these 'x's
