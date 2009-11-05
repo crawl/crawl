@@ -3737,7 +3737,7 @@ std::string get_skill_description(int skill, bool need_title)
 
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
             || player_genus(GENPC_DRACONIAN)
-            || you.species == SP_MERFOLK && player_is_swimming()
+            || you.species == SP_MERFOLK && you.swimming()
             || player_mutation_level( MUT_STINGER ))
         {
             // TSO worshippers will not use their venomous tails.
@@ -3766,7 +3766,7 @@ std::string get_skill_description(int skill, bool need_title)
         else if (player_mutation_level(MUT_TALONS))
             unarmed_attacks.push_back("claw with your talons");
         else if (you.species != SP_NAGA
-                 && (you.species != SP_MERFOLK || !player_is_swimming()))
+                 && (you.species != SP_MERFOLK || !you.swimming()))
         {
             unarmed_attacks.push_back("deliver a kick");
         }

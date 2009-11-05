@@ -2475,7 +2475,7 @@ static void _xom_zero_miscast()
     }
 
     if (you.species != SP_NAGA
-        && (you.species != SP_MERFOLK || !player_is_swimming())
+        && (you.species != SP_MERFOLK || !you.swimming())
         && !you.airborne())
     {
         messages.push_back("You do an impromptu tapdance.");

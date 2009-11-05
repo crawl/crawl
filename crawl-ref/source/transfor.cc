@@ -532,7 +532,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (false);
     }
 
-    if (you.species == SP_MERFOLK && player_is_swimming()
+    if (you.species == SP_MERFOLK && you.swimming()
         && which_trans != TRAN_DRAGON && which_trans != TRAN_BAT)
     {
         // This might be overkill, but it's okay because obviously
@@ -672,7 +672,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         symbol    = 'D';
         colour    = GREEN;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
-        if (you.species == SP_MERFOLK && player_is_swimming())
+        if (you.species == SP_MERFOLK && you.swimming())
         {
             msg = "You fly out of the water as you turn into "
                   "a fearsome dragon!";

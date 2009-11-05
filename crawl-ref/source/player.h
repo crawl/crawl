@@ -538,7 +538,6 @@ bool is_light_armour( const item_def &item );
 bool player_light_armour(bool with_skill = false);
 
 bool player_in_water(void);
-bool player_is_swimming(void);
 
 bool player_under_penance(void);
 

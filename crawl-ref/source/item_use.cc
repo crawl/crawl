@@ -853,7 +853,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (!ignore_temporary && player_is_swimming()
+        if (!ignore_temporary && you.swimming()
             && you.species == SP_MERFOLK)
         {
             if (verbose)

@@ -239,7 +239,7 @@ int calc_heavy_armour_penalty( bool random_factor )
 
         // Wearing heavy armour in water is particularly cumbersome.
         if (you.species == SP_MERFOLK && grd(you.pos()) == DNGN_DEEP_WATER
-            && player_is_swimming())
+            && you.swimming())
         {
             ev_pen *= 2;
         }
@@ -985,7 +985,7 @@ bool melee_attack::player_aux_unarmed()
 
         if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                || player_genus(GENPC_DRACONIAN)
-               || (you.species == SP_MERFOLK && player_is_swimming())
+               || (you.species == SP_MERFOLK && you.swimming())
                || player_mutation_level(MUT_STINGER))
             && one_chance_in(3))
         {
@@ -1098,7 +1098,7 @@ bool melee_attack::player_aux_unarmed()
             {
                 // not draconian, and not wet merfolk
                 if (!player_genus(GENPC_DRACONIAN)
-                       && !(you.species == SP_MERFOLK && player_is_swimming())
+                       && !(you.species == SP_MERFOLK && you.swimming())
                        && !player_mutation_level(MUT_STINGER)
                     || (!one_chance_in(4)))
 

@@ -428,11 +428,6 @@ bool player_likes_water(bool permanently)
     return (player_can_swim() || (!permanently && beogh_water_walk()));
 }
 
-bool player_is_swimming()
-{
-    return (you.swimming());
-}
-
 bool player_in_bat_form()
 {
     return (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
@@ -692,7 +687,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
             return (false);
 
         if (eq == EQ_BOOTS
-            && (player_is_swimming() && you.species == SP_MERFOLK
+            && (you.swimming() && you.species == SP_MERFOLK
                 || player_mutation_level(MUT_HOOVES)
                 || player_mutation_level(MUT_TALONS)))
         {
@@ -1867,7 +1862,7 @@ int player_movement_speed(void)
 {
     int mv = 10;
 
-    if (player_is_swimming())
+    if (you.swimming())
     {
         // This is swimming... so it doesn't make sense to really
         // apply the other things (the mutation is "cover ground",
@@ -4051,7 +4046,7 @@ void display_char_status()
     const int move_cost = (player_speed() * player_movement_speed()) / 10;
 
     const bool water  = player_in_water();
-    const bool swim   = player_is_swimming();
+    const bool swim   = you.swimming();
 
     const bool lev    = you.airborne();
     const bool fly    = (you.flight_mode() == FL_FLY);
@@ -6173,7 +6168,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
             str         = "underbelly";
             *can_plural = false;
         }
-        else if (this->species == SP_MERFOLK && player_is_swimming())
+        else if (this->species == SP_MERFOLK && you.swimming())
         {
             str         = "tail";
             *can_plural = false;

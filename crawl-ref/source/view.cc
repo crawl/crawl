@@ -1751,7 +1751,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     buffy[bufcount]     = you.symbol;
                     buffy[bufcount + 1] = you.colour;
 
-                    if (player_is_swimming())
+                    if (you.swimming())
                     {
                         if (grd(gc) == DNGN_DEEP_WATER)
                             buffy[bufcount + 1] = BLUE;

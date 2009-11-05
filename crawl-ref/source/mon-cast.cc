@@ -1382,7 +1382,7 @@ static void _do_high_level_summon(monsters *monster, bool monsterNearby,
 static bool _legs_msg_applicable()
 {
     return (you.species != SP_NAGA
-            && (you.species != SP_MERFOLK || !player_is_swimming()));
+            && (you.species != SP_MERFOLK || !you.swimming()));
 }
 
 void mons_cast_haunt(monsters *monster)
