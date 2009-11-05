@@ -425,7 +425,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DRACONIAN_ZEALOT, 'd', LIGHTGREEN, "draconian zealot",
-    M_SPELLCASTER | M_PRIEST | M_COLD_BLOOD | M_EVIL | M_SPEAKS,
+    M_SPELLCASTER | M_PRIEST | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -583,7 +583,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEEP_ELF_PRIEST, 'e', GREEN, "deep elf priest",
-    M_SPELLCASTER | M_PRIEST | M_WARM_BLOOD | M_EVIL | M_SPEAKS,
+    M_SPELLCASTER | M_PRIEST | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -594,8 +594,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEEP_ELF_HIGH_PRIEST, 'e', LIGHTGREEN, "deep elf high priest",
-    M_SPELLCASTER | M_SPEAKS | M_PRIEST | M_WARM_BLOOD | M_SEE_INVIS
-        | M_EVIL,
+    M_SPELLCASTER | M_SPEAKS | M_PRIEST | M_WARM_BLOOD | M_SEE_INVIS,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1103,7 +1102,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ORC_PRIEST, 'o', GREEN, "orc priest",
-    M_SPELLCASTER | M_PRIEST | M_WARM_BLOOD | M_EVIL | M_SPEAKS,
+    M_SPELLCASTER | M_PRIEST | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     600, 10, MONS_ORC, MONS_ORC, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1159,8 +1158,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ORC_HIGH_PRIEST, 'o', LIGHTGREEN, "orc high priest",
-    M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_PRIEST | M_WARM_BLOOD
-        | M_EVIL,
+    M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_PRIEST | M_WARM_BLOOD,
     MR_RES_HELLFIRE,
     600, 10, MONS_ORC, MONS_ORC, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4165,7 +4163,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SAINT_ROKA, 'o', LIGHTBLUE, "Saint Roka",
-    M_UNIQUE | M_FIGHTER | M_WARM_BLOOD | M_SPELLCASTER | M_PRIEST | M_EVIL
+    M_UNIQUE | M_FIGHTER | M_WARM_BLOOD | M_SPELLCASTER | M_PRIEST
         | M_SPEAKS,
     MR_NO_FLAGS,
     600, 15, MONS_ORC, MONS_ORC, MH_NATURAL, -3,

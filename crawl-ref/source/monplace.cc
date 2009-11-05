@@ -2861,7 +2861,6 @@ monster_type summon_any_dragon(dragon_class_type dct)
     return (mon);
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 // monster_pathfind
 

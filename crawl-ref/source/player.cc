@@ -6380,7 +6380,13 @@ mon_holy_type player::holiness() const
 
 bool player::is_evil() const
 {
-    return (is_unholy());
+    if (is_unholy())
+        return (true);
+
+    if (is_evil_god(religion))
+        return (true);
+
+    return (false);
 }
 
 bool player::is_unholy() const

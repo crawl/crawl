@@ -2851,7 +2851,17 @@ mon_holy_type monsters::holiness() const
 
 bool monsters::is_evil() const
 {
-    return (is_unholy() || mons_class_flag(type, M_EVIL));
+    if (is_unholy())
+        return (true);
+
+    // Assume that unknown gods are evil.
+    if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS))
+        return (true);
+
+    if (mons_class_flag(type, M_EVIL))
+        return (true);
+
+    return (false);
 }
 
 bool monsters::is_unholy() const
