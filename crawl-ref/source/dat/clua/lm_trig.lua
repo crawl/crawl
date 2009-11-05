@@ -192,15 +192,6 @@ function Triggerable:do_trigger(triggerer, marker, ev)
   local slaves =
     dgn.find_markers_by_prop("slaved_to", master_name)
 
-  -- Pretend that the master marker is gone if it asked to be removed.
-  if self.master_removed then
-    for i = #slaves, 1, -1 do
-      if slaves[i] == marker then
-        table.remove(slaves, i)
-      end
-    end
-  end
-
   -- If all slaves are gone, we're done.
   if #slaves == 0 then
     self:remove(marker)
@@ -223,16 +214,15 @@ function Triggerable:do_trigger(triggerer, marker, ev)
     if self.want_remove then
       num_want_remove = num_want_remove + 1
 
-      -- XXX: hack: don't remove ourself (the master marker) until the end.
       if slave_marker == marker then
-        self.master_removed = true
+        -- The master marker shouldn't be removed until the end, so
+        -- simply stop being slaved.
+        self.props.slaved_to = nil
       else
         triggerer:remove(self, slave_marker)
         dgn.remove_marker(slave_marker)
       end
     end
-
-    self.want_remove = false
   end
   self.calling_slaves = false
 
@@ -241,17 +231,13 @@ function Triggerable:do_trigger(triggerer, marker, ev)
     slaves =
       dgn.find_markers_by_prop("slaved_to", master_name)
 
-    if #slaves == 0
-      or (self.master_removed and #slaves == 1 and slaves[1] == marker)
-    then
+    if #slaves == 0 then
       self:remove(marker)
     end
   end
 end
 
 function Triggerable:write(marker, th)
-  file.marshall_meta(th, self.master_removed)
-
   file.marshall(th, #self.triggerers)
   for _, trig in ipairs(self.triggerers) do
     -- We'll be handling the de-serialization of the triggerer, so we need to
@@ -265,8 +251,6 @@ function Triggerable:write(marker, th)
 end
 
 function Triggerable:read(marker, th)
-  self.master_removed = file.unmarshall_meta(th)
-
   self.triggerers = {}
 
   local num_trigs = file.unmarshall_number(th)
