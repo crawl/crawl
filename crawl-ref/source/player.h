@@ -411,6 +411,7 @@ public:
     int mons_species() const;
 
     mon_holy_type holiness() const;
+    bool is_evil() const;
     bool is_unholy() const;
     bool is_chaotic() const;
     int res_fire() const;

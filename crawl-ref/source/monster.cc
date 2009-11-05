@@ -2849,6 +2849,11 @@ mon_holy_type monsters::holiness() const
     return (mons_class_holiness(type));
 }
 
+bool monsters::is_evil() const
+{
+    return (is_unholy() || mons_class_flag(type, M_EVIL));
+}
+
 bool monsters::is_unholy() const
 {
     const mon_holy_type holi = holiness();
@@ -3080,7 +3085,7 @@ int monsters::res_rotting() const
 
 int monsters::res_holy_energy(const actor *attacker) const
 {
-    if (mons_is_evil(this))
+    if (is_evil())
         return (-1);
 
     if (is_unholy())

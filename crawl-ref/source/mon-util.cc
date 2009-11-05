@@ -1109,14 +1109,9 @@ bool mons_is_holy(const monsters *mon)
     return (mon->holiness() == MH_HOLY);
 }
 
-bool mons_is_evil(const monsters *mon)
-{
-    return (mons_class_flag(mon->type, M_EVIL));
-}
-
 bool mons_is_evil_or_unholy(const monsters *mon)
 {
-    return (mons_is_evil(mon) || mon->is_unholy());
+    return (mon->is_evil() || mon->is_unholy());
 }
 
 bool mons_has_lifeforce(const monsters *mon)

@@ -6499,6 +6499,11 @@ mon_holy_type player::holiness() const
     return (MH_NATURAL);
 }
 
+bool player::is_evil() const
+{
+    return (is_unholy());
+}
+
 bool player::is_unholy() const
 {
     const mon_holy_type holi = holiness();
