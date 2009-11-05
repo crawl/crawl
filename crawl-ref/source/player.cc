@@ -418,11 +418,6 @@ bool player_in_hell(void)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
 }
 
-bool player_in_water(void)
-{
-    return (you.in_water());
-}
-
 bool player_likes_water(bool permanently)
 {
     return (player_can_swim() || (!permanently && beogh_water_walk()));
@@ -1893,7 +1888,7 @@ int player_movement_speed(void)
 
         // Swiftness is an Air spell, it doesn't work in water, but
         // flying players will move faster.
-        if (you.duration[DUR_SWIFTNESS] > 0 && !player_in_water())
+        if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_water())
             mv -= (you.flight_mode() == FL_FLY ? 4 : 2);
 
         // Mutations: -2, -3, -4, unless innate and shapechanged.
@@ -3528,7 +3523,7 @@ int check_stealth(void)
 
     if (you.airborne())
         stealth += 10;
-    else if (player_in_water())
+    else if (you.in_water())
     {
         // Merfolk can sneak up on monsters underwater -- bwr
         if (you.species == SP_MERFOLK)
@@ -4045,7 +4040,7 @@ void display_char_status()
 
     const int move_cost = (player_speed() * player_movement_speed()) / 10;
 
-    const bool water  = player_in_water();
+    const bool water  = you.in_water();
     const bool swim   = you.swimming();
 
     const bool lev    = you.airborne();
@@ -6168,7 +6163,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
             str         = "underbelly";
             *can_plural = false;
         }
-        else if (this->species == SP_MERFOLK && you.swimming())
+        else if (this->species == SP_MERFOLK && this->swimming())
         {
             str         = "tail";
             *can_plural = false;
@@ -7001,7 +6996,7 @@ bool player::visible_to(const actor *looker) const
         return (can_see_invisible() || !invisible());
 
     const monsters* mon = dynamic_cast<const monsters*>(looker);
-    return (!this->invisible() || player_in_water() ||
+    return (!this->invisible() || this->in_water() ||
             mon->can_see_invisible() || mons_sense_invis(mon));
 }
 

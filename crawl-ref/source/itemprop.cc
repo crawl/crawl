@@ -1227,7 +1227,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 break;
 
             case SP_MERFOLK:
-                if (player_in_water() && item.sub_type == ARM_BOOTS)
+                if (you.in_water() && item.sub_type == ARM_BOOTS)
                 {
                     if (!quiet)
                         mpr("You don't currently have feet!");

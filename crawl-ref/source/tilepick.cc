@@ -3242,7 +3242,7 @@ void tilep_race_default(int sp, int gender, int level, int *parts)
             hair = 0;
             break;
         case SP_MERFOLK:
-            result = player_in_water() ? TILEP_BASE_MERFOLK_WATER
+            result = you.in_water() ? TILEP_BASE_MERFOLK_WATER
                                        : TILEP_BASE_MERFOLK;
             break;
         case SP_VAMPIRE:
