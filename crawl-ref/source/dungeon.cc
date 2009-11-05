@@ -1028,6 +1028,15 @@ void dgn_reset_level()
     env.floor_colour = BLACK;
     env.rock_colour  = BLACK;
 
+    // Clear exclusions
+    clear_excludes();
+
+#ifdef USE_TILE
+    // Clear custom tile settings from vaults
+    tile_init_default_flavour();
+    tile_clear_flavour();
+#endif
+
     lua_special_room_spec.created = false;
     lua_special_room_spec.tl.set(-1, -1);
     lua_special_room_level = -1;
