@@ -2600,7 +2600,7 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_POTIONS:
     {
         // No potion is useless if it can be used for Evaporate.
-        if (player_knows_spell(SPELL_EVAPORATE))
+        if (you.has_spell(SPELL_EVAPORATE))
             return (false);
 
         // Apart from Evaporate, mummies can't use potions.

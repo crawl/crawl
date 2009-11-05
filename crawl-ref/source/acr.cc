@@ -2408,7 +2408,7 @@ static void _decrement_durations()
             const int chance =
                 10 + player_mutation_level(MUT_BERSERK) * 25
                 + (wearing_amulet(AMU_RAGE) ? 10 : 0)
-                + (player_has_spell(SPELL_BERSERKER_RAGE) ? 5 : 0);
+                + (you.has_spell(SPELL_BERSERKER_RAGE) ? 5 : 0);
 
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.

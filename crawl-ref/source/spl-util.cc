@@ -409,12 +409,12 @@ int spell_levels_required( spell_type which_spell )
     int levels = spell_difficulty( which_spell );
 
     if (which_spell == SPELL_DELAYED_FIREBALL
-        && player_has_spell( SPELL_FIREBALL ))
+        && you.has_spell(SPELL_FIREBALL))
     {
         levels -= spell_difficulty( SPELL_FIREBALL );
     }
     else if (which_spell == SPELL_FIREBALL
-            && player_has_spell( SPELL_DELAYED_FIREBALL ))
+            && you.has_spell(SPELL_DELAYED_FIREBALL))
     {
         levels = 0;
     }

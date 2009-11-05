@@ -1393,7 +1393,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         const spell_type spell = i->first;
 
-        if (spell == current_spell || player_knows_spell(spell))
+        if (spell == current_spell || you.has_spell(spell))
             num_known++;
         else if (you_cannot_memorise(spell))
             num_race++;
@@ -1720,7 +1720,7 @@ static bool _learn_spell_checks(spell_type specspell)
         return (false);
     }
 
-    if (player_knows_spell(specspell))
+    if (you.has_spell(specspell))
     {
         mpr("You already know that spell!");
         return (false);

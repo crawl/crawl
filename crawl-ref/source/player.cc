@@ -1286,15 +1286,6 @@ int player_spell_levels(void)
     return (sl);
 }
 
-bool player_knows_spell(int spell)
-{
-    for (int i = 0; i < 25; i++)
-        if (you.spells[i] == spell)
-            return (true);
-
-    return (false);
-}
-
 bool player_can_smell()
 {
     return (you.species != SP_MUMMY);
@@ -4241,11 +4232,6 @@ bool wearing_amulet(jewellery_type amulet, bool calc_unid)
 bool player_is_airborne(void)
 {
     return you.airborne();
-}
-
-bool player_has_spell( spell_type spell )
-{
-    return you.has_spell(spell);
 }
 
 static int _species_exp_mod(species_type species)

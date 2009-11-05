@@ -683,7 +683,7 @@ static spell_type search_first_list(int ignore_spell)
         if (search_order_conj[i] == ignore_spell)
             continue;
 
-        if (player_has_spell(search_order_conj[i]))
+        if (you.has_spell(search_order_conj[i]))
             return (search_order_conj[i]);
     }
 
@@ -701,7 +701,7 @@ static spell_type search_second_list(int ignore_spell)
         if (search_order_third[i] == ignore_spell)
             continue;
 
-        if (player_has_spell(search_order_third[i]))
+        if (you.has_spell(search_order_third[i]))
             return (search_order_third[i]);
     }
 
@@ -719,7 +719,7 @@ static spell_type search_third_list(int ignore_spell)
         if (search_order_misc[i] == ignore_spell)
             continue;
 
-        if (player_has_spell(search_order_misc[i]))
+        if (you.has_spell(search_order_misc[i]))
             return (search_order_misc[i]);
     }
 
@@ -746,17 +746,17 @@ void ghost_demon::add_spells()
     if (spells[4] == SPELL_NO_SPELL)
         spells[4] = search_first_list(spells[3]);
 
-    if (player_has_spell(SPELL_DIG))
+    if (you.has_spell(SPELL_DIG))
         spells[4] = SPELL_DIG;
 
     // Look for Blink or Teleport Self for the emergency slot.
-    if (player_has_spell(SPELL_CONTROLLED_BLINK)
-        || player_has_spell(SPELL_BLINK))
+    if (you.has_spell(SPELL_CONTROLLED_BLINK)
+        || you.has_spell(SPELL_BLINK))
     {
         spells[5] = SPELL_CONTROLLED_BLINK;
     }
 
-    if (player_has_spell(SPELL_TELEPORT_SELF))
+    if (you.has_spell(SPELL_TELEPORT_SELF))
         spells[5] = SPELL_TELEPORT_SELF;
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)

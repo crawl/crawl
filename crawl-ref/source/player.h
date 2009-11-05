@@ -630,8 +630,6 @@ int player_speed(void);
 
 int player_spell_levels(void);
 
-bool player_knows_spell(int spell);
-
 int player_sust_abil(bool calc_unid = true);
 void jiyva_stat_action();
 
@@ -736,8 +734,6 @@ bool disease_player(int amount);
 void dec_disease_player();
 
 bool rot_player(int amount);
-
-bool player_has_spell(spell_type spell);
 
 item_def *player_slot_item(equipment_type eq);
 

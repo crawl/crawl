@@ -2247,9 +2247,9 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 if (wielded)
                     tip += "\n[Ctrl-L-Click] Unwield (w-)";
                 else if (item.sub_type == MI_STONE
-                            && player_knows_spell(SPELL_SANDBLAST)
+                            && you.has_spell(SPELL_SANDBLAST)
                          || item.sub_type == MI_ARROW
-                            && player_knows_spell(SPELL_STICKS_TO_SNAKES))
+                            && you.has_spell(SPELL_STICKS_TO_SNAKES))
                 {
                     // For Sandblast and Sticks to Snakes,
                     // respectively.
@@ -2284,7 +2284,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                     tip += "\n[Ctrl-L-Click] Unwield (w-)";
                 else if (item_type_known(item)
                          && is_blood_potion(item)
-                         && player_knows_spell(SPELL_SUBLIMATION_OF_BLOOD))
+                         && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
                 {
                     tip += "\n[Ctrl-L-Click] Wield (w)";
                 }
@@ -2295,7 +2295,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 if (wielded)
                     tip += "\n[Ctrl-L-Click] Unwield (w-)";
                 else if (item.sub_type == FOOD_CHUNK
-                         && player_knows_spell(
+                         && you.has_spell(
                                 SPELL_SUBLIMATION_OF_BLOOD))
                 {
                     tip += "\n[Ctrl-L-Click] Wield (w)";
@@ -2324,7 +2324,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         {
             if (wielded)
                 tip += "\n[Ctrl-L-Click] Unwield";
-            else if (player_knows_spell(SPELL_BONE_SHARDS))
+            else if (you.has_spell(SPELL_BONE_SHARDS))
                 tip += "\n[Ctrl-L-Click] Wield (w)";
         }
 

@@ -196,10 +196,10 @@ static bool _valid_weapon_swap(const item_def &item)
     if (item.base_type == OBJ_MISSILES)
     {
         if (item.sub_type == MI_STONE)
-            return (player_knows_spell(SPELL_SANDBLAST));
+            return (you.has_spell(SPELL_SANDBLAST));
 
         if (item.sub_type == MI_ARROW)
-            return (player_knows_spell(SPELL_STICKS_TO_SNAKES));
+            return (you.has_spell(SPELL_STICKS_TO_SNAKES));
 
         return (false);
     }
@@ -208,11 +208,11 @@ static bool _valid_weapon_swap(const item_def &item)
     if (item.base_type == OBJ_CORPSES)
     {
         return (item.sub_type == CORPSE_SKELETON
-                && player_knows_spell(SPELL_BONE_SHARDS));
+                && you.has_spell(SPELL_BONE_SHARDS));
     }
 
     // Sublimation of Blood.
-    if (!player_knows_spell(SPELL_SUBLIMATION_OF_BLOOD))
+    if (!you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
         return (false);
 
     if (item.base_type == OBJ_FOOD)
