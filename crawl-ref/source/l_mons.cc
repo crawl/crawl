@@ -33,7 +33,7 @@ void push_monster(lua_State *ls, monsters *mons)
     static int l_mons_##name(lua_State *ls, monsters *mons, const char *attrs) \
     {                                                                   \
     lua_pushlightuserdata(ls, mons);                                    \
-    lua_pushcclosure(ls, l_mons_do_dismiss, 1);                         \
+    lua_pushcclosure(ls, l_mons_##closure, 1);                          \
     return (1);                                                         \
     }
 
@@ -115,6 +115,22 @@ static int l_mons_do_dismiss(lua_State *ls)
 
 MDEFN(dismiss, do_dismiss)
 
+static int l_mons_do_random_teleport(lua_State *ls)
+{
+    // We should only be able to teleport monsters from dlua.
+    ASSERT_DLUA;
+
+    monsters *mons =
+        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+    if (mons->alive())
+    {
+        mons->teleport(true);
+    }
+    return (0);
+}
+
+MDEFN(random_teleport, do_random_teleport)
+
 MDEF(experience)
 {
     ASSERT_DLUA;
@@ -137,6 +153,7 @@ static MonsAccessor mons_attrs[] =
     { "meat", l_mons_meat },
     { "dismiss", l_mons_dismiss },
     { "experience", l_mons_experience },
+    { "random_teleport", l_mons_random_teleport }
 };
 
 static int monster_get(lua_State *ls)
