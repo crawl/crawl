@@ -1585,10 +1585,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
         }
 
         do
-        {
-            newpos.set( random_range(X_BOUND_1 + 1, X_BOUND_2 - 1),
-                        random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1) );
-        }
+            newpos = random_in_bounds();
         while (grd(newpos) != DNGN_FLOOR
                    && grd(newpos) != DNGN_SHALLOW_WATER
                    && (you.species != SP_MERFOLK

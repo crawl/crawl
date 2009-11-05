@@ -2962,16 +2962,13 @@ static void _place_fog_machines(int level_number)
 
 static void _place_specific_feature(dungeon_feature_type feat)
 {
-    int sx, sy;
+    coord_def c;
 
     do
-    {
-        sx = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
-        sy = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
-    }
-    while (grd[sx][sy] != DNGN_FLOOR || mgrd[sx][sy] != NON_MONSTER);
+        c = random_in_bounds();
+    while (grd(c) != DNGN_FLOOR || mgrd(c) != NON_MONSTER);
 
-    grd[sx][sy] = feat;
+    grd(c) = feat;
 }
 
 static void _place_specific_stair(dungeon_feature_type stair,
@@ -4422,7 +4419,7 @@ static bool _build_vaults(int level_number, const map_def *vault,
         _dig_vault_loose(place, target_connections);
     }
 
-    unsigned char pos_x, pos_y;
+    coord_def pos;
 
     for (stx = 0; stx < 10; stx++)
         stair_exist[stx] = 0;
@@ -4457,13 +4454,10 @@ static bool _build_vaults(int level_number, const map_def *vault,
 
             int tries = 10000;
             do
-            {
-                pos_x = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
-                pos_y = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
-            }
-            while ((grd[pos_x][pos_y] != DNGN_FLOOR
-                    || (!is_layout && pos_x >= v1x && pos_x <= v2x
-                        && pos_y >= v1y && pos_y <= v2y))
+                pos = random_in_bounds();
+            while ((grd(pos) != DNGN_FLOOR
+                    || (!is_layout && pos.x >= v1x && pos.x <= v2x
+                        && pos.y >= v1y && pos.y <= v2y))
                    && tries-- > 0);
 
 
@@ -4476,11 +4470,10 @@ static bool _build_vaults(int level_number, const map_def *vault,
                     "(layout: %s) failed",
                     place.map.name.c_str(), is_layout? "yes" : "no");
 #endif
-                pos_x = you.pos().x;
-                pos_y = you.pos().y;
+                pos = you.pos();
             }
 
-            grd[pos_x][pos_y] = stair;
+            grd(pos) = stair;
         }
 
     return (true);
@@ -5627,8 +5620,7 @@ static void _place_shops(int level_number, int nshops)
 
         do
         {
-            shop_place.set(random_range(X_BOUND_1 + 1, X_BOUND_2 - 1),
-                           random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1));
+            shop_place = random_in_bounds();
 
             timeout++;
 

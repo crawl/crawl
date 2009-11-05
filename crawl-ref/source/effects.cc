@@ -3945,10 +3945,7 @@ void handle_time(long time_delta)
             // Spread jellies around the level.
             coord_def newpos;
             do
-            {
-                newpos.set(random_range(X_BOUND_1 + 1, X_BOUND_2 - 1),
-                           random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1));
-            }
+                newpos = random_in_bounds();
             while (grd(newpos) != DNGN_FLOOR
                        && grd(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)
