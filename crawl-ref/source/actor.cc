@@ -3,7 +3,9 @@
 #include "actor.h"
 #include "env.h"
 #include "player.h"
+#include "random.h"
 #include "state.h"
+#include "stuff.h"
 #include "traps.h"
 
 actor::~actor()
@@ -72,4 +74,38 @@ bool actor::handle_trap()
     if (trap)
         trap->trigger(*this);
     return (trap != NULL);
+}
+
+bool actor::check_res_magic(int power)
+{
+    int mrs = this->res_magic();
+
+    if (mrs == MAG_IMMUNE)
+        return (true);
+
+    // Evil, evil hack to make weak one hd monsters easier for first level
+    // characters who have resistable 1st level spells. Six is a very special
+    // value because mrs = hd * 2 * 3 for most monsters, and the weak, low
+    // level monsters have been adjusted so that the "3" is typically a 1.
+    // There are some notable one hd monsters that shouldn't fall under this,
+    // so we do < 6, instead of <= 6...  or checking monster->hit_dice.  The
+    // goal here is to make the first level easier for these classes and give
+    // them a better shot at getting to level two or three and spells that can
+    // help them out (or building a level or two of their base skill so they
+    // aren't resisted as often). -- bwr
+    if (this->atype() == ACT_MONSTER && mrs < 6 && coinflip())
+        return (false);
+
+    power = stepdown_value(power, 30, 40, 100, 120);
+
+    const int mrchance = (100 + mrs) - power;
+    const int mrch2 = random2(100) + random2(101);
+
+#if DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+         "Power: %d, MR: %d, target: %d, roll: %d",
+         power, mrs, mrchance, mrch2);
+#endif
+
+    return (mrch2 < mrchance);
 }

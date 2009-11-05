@@ -6725,28 +6725,6 @@ int player::res_magic() const
     return (rm);
 }
 
-bool player::check_res_magic(int power)
-{
-    int ench_power = stepdown_value( power, 30, 40, 100, 120 );
-
-    int mrchance = 100 + this->res_magic();
-
-    mrchance -= ench_power;
-
-    int mrch2 = random2(100) + random2(101);
-
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Power: %d, player's MR: %d, target: %d, roll: %d",
-         ench_power, this->res_magic(), mrchance, mrch2);
-#endif
-
-    if (mrch2 < mrchance)
-        return (true);            // ie saved successfully
-
-    return (false);
-}
-
 bool player::confusable() const
 {
     return (player_mental_clarity() == 0);

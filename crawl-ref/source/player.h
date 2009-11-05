@@ -425,7 +425,6 @@ public:
     int res_negative_energy() const;
     int res_torment() const;
     int res_magic() const;
-    bool check_res_magic(int power);
     bool confusable() const;
     bool slowable() const;
 

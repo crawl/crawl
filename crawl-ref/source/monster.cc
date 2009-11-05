@@ -3191,41 +3191,6 @@ int monsters::res_magic() const
     return (u);
 }
 
-bool monsters::check_res_magic(int pow)
-{
-    int mrs = this->res_magic();
-
-    if (mrs == MAG_IMMUNE)
-        return (true);
-
-    // Evil, evil hack to make weak one hd monsters easier for first
-    // level characters who have resistable 1st level spells. Six is
-    // a very special value because mrs = hd * 2 * 3 for most monsters,
-    // and the weak, low level monsters have been adjusted so that the
-    // "3" is typically a 1.  There are some notable one hd monsters
-    // that shouldn't fall under this, so we do < 6, instead of <= 6...
-    // or checking monster->hit_dice.  The goal here is to make the
-    // first level easier for these classes and give them a better
-    // shot at getting to level two or three and spells that can help
-    // them out (or building a level or two of their base skill so they
-    // aren't resisted as often). -- bwr
-    if (mrs < 6 && coinflip())
-        return (false);
-
-    pow = stepdown_value( pow, 30, 40, 100, 120 );
-
-    const int mrchance = (100 + mrs) - pow;
-    const int mrch2 = random2(100) + random2(101);
-
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Power: %d, monster's MR: %d, target: %d, roll: %d",
-         pow, mrs, mrchance, mrch2 );
-#endif
-
-    return (mrch2 < mrchance);
-}
-
 flight_type monsters::flight_mode() const
 {
     return (mons_flies(this));
