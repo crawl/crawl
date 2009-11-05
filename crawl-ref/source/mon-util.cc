@@ -3440,8 +3440,8 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_CENTIPEDE);
         else
             return (MON_SHAPE_ARACHNID);
-    case 'u': // ugly things are humanoid???
-        return (MON_SHAPE_HUMANOID);
+    case 'u': // mutated type, not enough info to determine shape
+        return (MON_SHAPE_MISC);
     case 't': // minotaurs
         return (MON_SHAPE_HUMANOID);
     case 'v': // vortices and elementals
