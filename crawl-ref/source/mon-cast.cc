@@ -1,5 +1,4 @@
-/*
- *  File:       mon-cast.cc
+/* *  File:       mon-cast.cc
  *  Summary:    Monster spell casting.
  *  Written by: Linley Henzell
  */
@@ -2020,7 +2019,13 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (mons_genus(monster->type) == MONS_DRAGON)
             noise = get_shout_noise_level(S_ROAR);
         else
-            noise = spell_noise(real_spell);
+        {
+            // Noise for targeted spells happens at where the spell hits,
+            // rather than where the spell is cast. zappy() sets up the
+            // noise for beams.
+            noise = (flags & SPFLAG_TARGETTING_MASK) ? 1
+                                                     : spell_noise(real_spell);
+        }
     }
 
     const std::string cast_str = " cast";

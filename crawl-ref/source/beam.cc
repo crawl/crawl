@@ -223,7 +223,10 @@ bool zapping(zap_type ztype, int power, bolt &pbolt,
         mpr(msg);
 
     if (ztype == ZAP_LIGHTNING)
+    {
         noisy(25, you.pos(), "You hear a mighty clap of thunder!");
+        pbolt.heard = true;
+    }
 
     if (ztype == ZAP_DIGGING)
         pbolt.aimed_at_spot = false;
@@ -263,6 +266,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
 
     // Clear misc
     pbolt.seen          = false;
+    pbolt.heard         = false;
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
 
@@ -345,6 +349,7 @@ struct zap_info
     bool always_obvious;
     bool can_beam;
     bool is_explosion;
+    int hit_loudness;
 };
 
 const zap_info zap_data[] = {
@@ -361,7 +366,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         false,
-        false
+        false,
+        2
     },
 
     {
@@ -376,7 +382,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         false,
-        false
+        false,
+        2
     },
 
     {
@@ -391,7 +398,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -406,7 +414,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -421,7 +430,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         false,
-        false
+        false,
+        1
     },
 
     {
@@ -436,7 +446,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -451,7 +462,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -466,7 +478,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        6
     },
 
     {
@@ -481,7 +494,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        6
     },
 
     {
@@ -496,7 +510,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -511,7 +526,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -526,7 +542,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         true,
-        false
+        false,
+        0
     },
 
     {
@@ -541,7 +558,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         false,
         false,
-        true
+        true,
+        0 // Noise comes from explosion
     },
 
     {
@@ -556,7 +574,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -571,7 +590,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        5 // XXX: Maybe louder?
     },
 
     {
@@ -586,7 +606,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -601,7 +622,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        5 // XXX: Quiter because it's poison?
     },
 
     {
@@ -616,7 +638,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        0 // Draining is soundless
     },
 
     {
@@ -631,7 +654,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_MISSILE,
         true,
         false,
-        false
+        false,
+        8
     },
 
     {
@@ -646,7 +670,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        3
     },
 
     {
@@ -661,7 +686,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         false,
-        false
+        false,
+        4
     },
 
     {
@@ -676,7 +702,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -691,7 +718,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        1 // XXX: Should this be soundless?
     },
 
     {
@@ -706,7 +734,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         false,
-        false
+        false,
+        4 // XXX: Would sticky flame really be this noisy?
     },
 
     {
@@ -721,7 +750,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -740,7 +770,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        3
     },
 
     {
@@ -755,7 +786,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -770,7 +802,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0 // XXX: How loud should this be?
     },
 
     {
@@ -785,7 +818,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         false,
-        false
+        false,
+        1 // XXX: Maybe silent because it's poison?
     },
 
     {
@@ -800,7 +834,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         false,
-        true
+        true,
+        9 // XXX: Even louder because it's hellish?
     },
 
     {
@@ -815,7 +850,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_MISSILE,
         true,
         false,
-        false
+        false,
+        6
     },
 
     {
@@ -830,7 +866,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         true,
         false,
-        false
+        false,
+        4 // XXX: this is just a guess.
     },
 
     {
@@ -845,7 +882,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_MISSILE,
         true,
         false,
-        false
+        false,
+        3
     },
 
     {
@@ -860,7 +898,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        1 // XXX: maybe electricity should be louder?
     },
 
     {
@@ -875,7 +914,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         false,
-        true
+        true,
+        6 // XXX: maybe electricity should be louder?
     },
 
     {
@@ -890,7 +930,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         false,
-        false
+        false,
+        1
     },
 
     {
@@ -905,9 +946,11 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_DEBUG,
         false,
         false,
-        false
+        false,
+        0
     },
 
+    // XXX: How loud should breath be?
     {
         ZAP_BREATHE_FIRE,
         "fiery breath",
@@ -920,7 +963,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        6
     },
 
 
@@ -936,7 +980,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        6
     },
 
     {
@@ -951,7 +996,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        6
     },
 
     {
@@ -966,7 +1012,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        0 // Explosion does the noise.
     },
 
     {
@@ -981,7 +1028,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        6
     },
 
     {
@@ -996,7 +1044,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -1011,7 +1060,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -1026,7 +1076,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
 
@@ -1042,7 +1093,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        6 // XXX: How loud is disintigration?
     },
 
     {
@@ -1057,7 +1109,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         true,
-        false
+        false,
+        6
     },
 
     {
@@ -1072,7 +1125,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        0 // Explosion does the noise.
     },
 
     {
@@ -1087,7 +1141,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -1102,7 +1157,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         false,
         false,
-        true
+        true,
+        5 // XXX: Seems like it might be louder than this.
     },
 
     {
@@ -1117,7 +1173,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         false,
         false,
-        false
+        false,
+        4
     },
 
     {                           // ench_power controls radius
@@ -1132,7 +1189,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         false,
-        true
+        true,
+        9 // XXX: Should a storm be louder?
     },
 
     {
@@ -1147,7 +1205,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -1162,7 +1221,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -1177,7 +1237,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_BOLT,
         true,
         false,
-        false
+        false,
+        1
     },
 
     {
@@ -1192,7 +1253,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_BOLT,
         true,
         false,
-        false
+        false,
+        2 // XXX: Sound 2 for level one spell?
     },
 
     {
@@ -1207,7 +1269,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_BOLT,
         true,
         false,
-        false
+        false,
+        1
     },
 
     {
@@ -1222,7 +1285,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        false,
+        5
     },
 
     {
@@ -1237,7 +1301,8 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_MISSILE,
         true,
         false,
-        false
+        false,
+        6 // XXX: Less noise because it's poison?
     },
 
     {
@@ -1252,7 +1317,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     },
 
     {
@@ -1267,7 +1333,8 @@ const zap_info zap_data[] = {
         DCHAR_SPACE,
         false,
         false,
-        false
+        false,
+        0
     }
 };
 
@@ -1327,6 +1394,9 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
     // One special case
     if (z_type == ZAP_ICE_STORM)
         pbolt.ench_power = power; // used for radius
+
+    if (pbolt.loudness == 0)
+        pbolt.loudness = zinfo->hit_loudness;
 }
 
 // Affect monster in wall unless it can shield itself using the wall.
@@ -2017,11 +2087,6 @@ void bolt::fire()
 
         if (special_explosion != NULL)
         {
-            seen           = seen || special_explosion->seen;
-            beam_cancelled = beam_cancelled
-                          || special_explosion->beam_cancelled;
-            foe_info      += special_explosion->foe_info;
-            friend_info   += special_explosion->friend_info;
             _undo_tracer(*special_explosion, *boltcopy.special_explosion);
             delete boltcopy.special_explosion;
         }
@@ -2030,6 +2095,15 @@ void bolt::fire()
     }
     else
         do_fire();
+
+    if (special_explosion != NULL)
+    {
+        seen           = seen  || special_explosion->seen;
+        heard          = heard || special_explosion->heard;
+        beam_cancelled = beam_cancelled || special_explosion->beam_cancelled;
+        foe_info      += special_explosion->foe_info;
+        friend_info   += special_explosion->friend_info;
+    }
 }
 
 void bolt::do_fire()
@@ -4729,6 +4803,9 @@ void bolt::affect_monster(monsters* mon)
         conducts[0].enabled = false;
     }
 
+    if (!is_explosion)
+        heard = noisy(loudness, pos(), beam_source) || heard;
+
     // The beam hit.
     if (mons_near(mon))
     {
@@ -4742,15 +4819,14 @@ void bolt::affect_monster(monsters* mon)
                  mon->name(DESC_NOCAP_THE).c_str() : "something");
 
     }
-    else
+    else if (heard && !noise_msg.empty())
+        mprf(MSGCH_SOUND, "%s", noise_msg.c_str());
+    // The player might hear something, if _they_ fired a missile
+    // (not magic beam).
+    else if (!silenced(you.pos()) && flavour == BEAM_MISSILE
+             && YOU_KILL(thrower))
     {
-        // The player might hear something, if _they_ fired a missile
-        // (not magic beam).
-        if (!silenced(you.pos()) && flavour == BEAM_MISSILE
-            && YOU_KILL(thrower))
-        {
-            mprf(MSGCH_SOUND, "The %s hits something.", name.c_str());
-        }
+        mprf(MSGCH_SOUND, "The %s hits something.", name.c_str());
     }
 
     // handling of missiles
@@ -5413,12 +5489,13 @@ void bolt::refine_for_explosion()
 
     if (!is_tracer && *seeMsg && *hearMsg)
     {
+        heard = player_can_hear(target);
         // Check for see/hear/no msg.
         if (see_cell(target) || target == you.pos())
             mpr(seeMsg);
         else
         {
-            if (!player_can_hear(target))
+            if (!heard)
                 msg_generated = false;
             else
                 mpr(hearMsg, MSGCH_SOUND);
@@ -5495,8 +5572,16 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
          pos().x, pos().y, type, colour, flavour, hit, damage.num, damage.size, r);
 #endif
 
-    // make a noise
-    noisy(10 + 5 * r, pos(), beam_source);
+    if (!is_tracer)
+    {
+        loudness = 10 + 5 * r;
+
+        bool heard_expl = noisy(loudness, pos(), beam_source);
+        heard = heard || heard_expl;
+
+        if (heard_expl && !noise_msg.empty() && !you.see_cell(pos()))
+            mprf(MSGCH_SOUND, "%s", noise_msg.c_str());
+    }
 
     // Run DFS to determine which cells are influenced
     explosion_map exp_map;
@@ -5781,23 +5866,21 @@ bool bolt::nice_to(const monsters *mon) const
 //
 // TODO: Eventually it'd be nice to have a proper factory for these things
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
-bolt::bolt() : range(-2), type('*'),
-               colour(BLACK),
-               flavour(BEAM_MAGIC), real_flavour(BEAM_MAGIC), drop_item(false),
-               item(NULL), source(), target(), damage(0, 0),
-               ench_power(0), hit(0), thrower(KILL_MISC), ex_size(0),
-               beam_source(MHITNOT), name(), short_name(), hit_verb(), is_beam(false),
-               is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
-               aux_source(), affects_nothing(false), affects_items(true),
-               effect_known(true), draw_delay(15), special_explosion(NULL),
-               range_funcs(), damage_funcs(), hit_funcs(), aoe_funcs(),
-               obvious_effect(false), seen(false), path_taken(), range_used(0),
-               is_tracer(false), aimed_at_feet(false), msg_generated(false),
-               passed_target(false), in_explosion_phase(false),
-               smart_monster(false), can_see_invis(false),
-               attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
-               beam_cancelled(false), dont_stop_player(false), bounces(false),
-               bounce_pos(), reflections(0), reflector(-1), auto_hit(false)
+bolt::bolt() : range(-2), type('*'), colour(BLACK), flavour(BEAM_MAGIC),
+    real_flavour(BEAM_MAGIC), drop_item(false), item(NULL), source(), target(),
+    damage(0, 0), ench_power(0), hit(0), thrower(KILL_MISC), ex_size(0),
+    beam_source(MHITNOT), name(), short_name(), hit_verb(), loudness(0),
+    noise_msg(), is_beam(false), is_explosion(false), is_big_cloud(false),
+    aimed_at_spot(false), aux_source(), affects_nothing(false),
+    affects_items(true), effect_known(true), draw_delay(15),
+    special_explosion(NULL), range_funcs(), damage_funcs(), hit_funcs(),
+    aoe_funcs(), obvious_effect(false), seen(false), heard(false),
+    path_taken(), range_used(0), is_tracer(false), aimed_at_feet(false),
+    msg_generated(false), passed_target(false), in_explosion_phase(false),
+    smart_monster(false), can_see_invis(false), attitude(ATT_HOSTILE),
+    foe_ratio(0), chose_ray(false), beam_cancelled(false),
+    dont_stop_player(false), bounces(false), bounce_pos(), reflections(0),
+    reflector(-1), auto_hit(false)
 {
 }
 

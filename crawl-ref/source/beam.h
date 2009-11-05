@@ -88,6 +88,9 @@ struct bolt
                                        // something.  If not set, will use
                                        // "engulfs" if an explosion or cloud
                                        // and "hits" otherwise.
+    int         loudness;              // Noise level on hitting or exploding.
+    std::string noise_msg;             // Message to give player if the hit
+                                       // or explosion isn't in view.
     bool        is_beam;               // beam? (can hit multiple targets?)
     bool        is_explosion;
     bool        is_big_cloud;          // expands into big_cloud at endpoint
@@ -117,6 +120,7 @@ struct bolt
     bool        obvious_effect;        // did an 'obvious' effect happen?
 
     bool        seen;                  // Has player seen the beam?
+    bool        heard;                 // Has the player heard the beam?
 
     std::vector<coord_def> path_taken; // Path beam took.
 
