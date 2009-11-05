@@ -500,7 +500,6 @@ int hit_points(int hit_dice, int min_hp, int rand_hp);
 
 int mons_type_hit_dice( int type );
 
-int mons_resist_magic( const monsters *mon );
 int mons_resist_turn_undead( const monsters *mon );
 bool mons_immune_magic( const monsters *mon );
 const char* mons_resist_string(const monsters *mon);
@@ -661,8 +660,6 @@ void mons_start_fleeing_from_sanctuary(monsters *monster);
 void mons_stop_fleeing_from_sanctuary(monsters *monster);
 
 bool mons_has_smite_attack(const monsters *monster);
-
-bool check_mons_resist_magic(const monsters *monster, int pow);
 
 bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);

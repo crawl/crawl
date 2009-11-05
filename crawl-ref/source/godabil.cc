@@ -524,7 +524,7 @@ static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
     if (!mons_friendly(mon))
         behaviour_event(mon, ME_ANNOY, MHITYOU);
 
-    if (check_mons_resist_magic(mon, pow * 2))
+    if (mon->check_res_magic(pow * 2))
     {
         mprf("%s %s.",
              mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
@@ -534,7 +534,7 @@ static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
     const int damage = 1 + random2(pow / 6);
     if (mon->type == MONS_BLINK_FROG)
         mon->heal(damage, false);
-    else if (!check_mons_resist_magic(mon, pow))
+    else if (!mon->check_res_magic(pow))
     {
         mon->hurt(&you, damage);
         if (!mon->alive())

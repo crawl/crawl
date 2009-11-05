@@ -424,6 +424,8 @@ public:
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;
     int res_torment() const;
+    int res_magic() const;
+    bool check_res_magic(int power);
     bool confusable() const;
     bool slowable() const;
 
@@ -547,8 +549,6 @@ int player_wielded_item();
 bool extrinsic_amulet_effect(jewellery_type amulet);
 bool wearing_amulet(jewellery_type which_am, bool calc_unid = true);
 
-bool you_resist_magic(int power);
-
 int burden_change(void);
 
 int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
@@ -609,8 +609,6 @@ int player_res_rotting();
 
 bool player_control_teleport(bool calc_unid = true, bool temp = true,
                              bool items = true);
-
-int player_res_magic(void);
 
 int player_res_asphyx();
 

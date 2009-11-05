@@ -105,7 +105,7 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
         resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
     else
     {
-        resist = mons_resist_magic(mon);
+        resist = mon->res_magic();
 
         if (holiness == MH_UNDEAD)
             pow -= 2 + random2(3);

@@ -1295,69 +1295,6 @@ bool player_knows_spell(int spell)
     return (false);
 }
 
-int player_res_magic(void)
-{
-    int rm = 0;
-
-    switch (you.species)
-    {
-    case SP_MOUNTAIN_DWARF:
-    case SP_HILL_ORC:
-        rm = you.experience_level * 2;
-        break;
-    default:
-        rm = you.experience_level * 3;
-        break;
-    case SP_HIGH_ELF:
-    case SP_SLUDGE_ELF:
-    case SP_DEEP_ELF:
-    case SP_VAMPIRE:
-    case SP_DEMIGOD:
-    case SP_OGRE:
-        rm = you.experience_level * 4;
-        break;
-    case SP_NAGA:
-        rm = you.experience_level * 5;
-        break;
-    case SP_PURPLE_DRACONIAN:
-    case SP_DEEP_DWARF:
-        rm = you.experience_level * 6;
-        break;
-    case SP_SPRIGGAN:
-        rm = you.experience_level * 7;
-        break;
-    }
-
-    // randarts
-    rm += scan_artefacts(ARTP_MAGIC);
-
-    // armour
-    rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE);
-
-    // rings of magic resistance
-    rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC);
-
-    // Enchantment skill
-    rm += 2 * you.skills[SK_ENCHANTMENTS];
-
-    // Mutations
-    rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
-
-    // transformations
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
-        rm += 50;
-
-    // Trog's Hand
-    if (you.attribute[ATTR_DIVINE_REGENERATION])
-        rm += 70;
-
-    // Enchantment effect
-    if (you.duration[DUR_LOWERED_MR])
-        rm /= 2;
-
-    return (rm);
-}
-
 bool player_can_smell()
 {
     return (you.species != SP_MUMMY);
@@ -2882,28 +2819,6 @@ int burden_change(void)
     return (you.burden);
 }
 
-bool you_resist_magic(int power)
-{
-    int ench_power = stepdown_value( power, 30, 40, 100, 120 );
-
-    int mrchance = 100 + player_res_magic();
-
-    mrchance -= ench_power;
-
-    int mrch2 = random2(100) + random2(101);
-
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Power: %d, player's MR: %d, target: %d, roll: %d",
-         ench_power, player_res_magic(), mrchance, mrch2 );
-#endif
-
-    if (mrch2 < mrchance)
-        return (true);            // ie saved successfully
-
-    return (false);
-}
-
 // force is true for forget_map command on level map.
 void forget_map(unsigned char chance_forgotten, bool force)
 {
@@ -4231,7 +4146,7 @@ void display_char_status()
 */
 
     // magic resistance
-    const int mr = player_res_magic();
+    const int mr = you.res_magic();
     mprf("You are %s resistant to magic.",
          (mr <  10) ? "not" :
          (mr <  30) ? "slightly" :
@@ -6844,6 +6759,91 @@ int player::res_negative_energy() const
 int player::res_torment() const
 {
     return (player_res_torment());
+}
+
+int player::res_magic() const
+{
+    int rm = 0;
+
+    switch (you.species)
+    {
+    case SP_MOUNTAIN_DWARF:
+    case SP_HILL_ORC:
+        rm = you.experience_level * 2;
+        break;
+    default:
+        rm = you.experience_level * 3;
+        break;
+    case SP_HIGH_ELF:
+    case SP_SLUDGE_ELF:
+    case SP_DEEP_ELF:
+    case SP_VAMPIRE:
+    case SP_DEMIGOD:
+    case SP_OGRE:
+        rm = you.experience_level * 4;
+        break;
+    case SP_NAGA:
+        rm = you.experience_level * 5;
+        break;
+    case SP_PURPLE_DRACONIAN:
+    case SP_DEEP_DWARF:
+        rm = you.experience_level * 6;
+        break;
+    case SP_SPRIGGAN:
+        rm = you.experience_level * 7;
+        break;
+    }
+
+    // randarts
+    rm += scan_artefacts(ARTP_MAGIC);
+
+    // armour
+    rm += 30 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE);
+
+    // rings of magic resistance
+    rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC);
+
+    // Enchantment skill
+    rm += 2 * you.skills[SK_ENCHANTMENTS];
+
+    // Mutations
+    rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
+
+    // transformations
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+        rm += 50;
+
+    // Trog's Hand
+    if (you.attribute[ATTR_DIVINE_REGENERATION])
+        rm += 70;
+
+    // Enchantment effect
+    if (you.duration[DUR_LOWERED_MR])
+        rm /= 2;
+
+    return (rm);
+}
+
+bool player::check_res_magic(int power)
+{
+    int ench_power = stepdown_value( power, 30, 40, 100, 120 );
+
+    int mrchance = 100 + this->res_magic();
+
+    mrchance -= ench_power;
+
+    int mrch2 = random2(100) + random2(101);
+
+#if DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+         "Power: %d, player's MR: %d, target: %d, roll: %d",
+         ench_power, this->res_magic(), mrchance, mrch2);
+#endif
+
+    if (mrch2 < mrchance)
+        return (true);            // ie saved successfully
+
+    return (false);
 }
 
 bool player::confusable() const

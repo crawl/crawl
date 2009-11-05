@@ -2639,7 +2639,7 @@ void debug_stethoscope(int mon)
          mons.experience,
          mons.hit_points, mons.max_hit_points,
          mons.ac, mons.ev,
-         mons_resist_magic( &mons ),
+         mons.res_magic(),
          mons.speed, mons.speed_increment,
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?

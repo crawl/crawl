@@ -4150,7 +4150,7 @@ bool melee_attack::mons_attack_warded_off()
     const int warding = defender->warding();
     if (warding
         && attacker->is_summoned()
-        && !check_mons_resist_magic(attacker_as_monster(), warding))
+        && !attacker_as_monster()->check_res_magic(warding))
     {
         if (needs_message)
         {

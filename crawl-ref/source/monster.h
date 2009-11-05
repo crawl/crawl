@@ -307,6 +307,8 @@ public:
     int res_negative_energy() const;
     int res_torment() const;
     int res_acid() const;
+    int res_magic() const;
+    bool check_res_magic(int power);
 
     flight_type flight_mode() const;
     bool is_levitating() const;

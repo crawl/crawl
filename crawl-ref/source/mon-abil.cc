@@ -455,7 +455,7 @@ bool slime_split_merge(monsters *thing)
 // Returns true if you resist the siren's call.
 static bool _siren_movement_effect(const monsters *monster)
 {
-    bool do_resist = (you.attribute[ATTR_HELD] || you_resist_magic(70));
+    bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70));
 
     if (!do_resist)
     {
@@ -1250,7 +1250,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             // Once mesmerised by a particular monster, you cannot resist
             // anymore.
             if (!already_mesmerised
-                && (you.species == SP_MERFOLK || you_resist_magic(100)))
+                && (you.species == SP_MERFOLK || you.check_res_magic(100)))
             {
                 if (!did_resist)
                     canned_msg(MSG_YOU_RESIST);
@@ -1390,23 +1390,19 @@ void mon_nearby_ability(monsters *monster)
                      foe->name(DESC_NOCAP_THE).c_str());
 
             int confuse_power = 2 + random2(3);
-    
-            if (foe->atype() == ACT_PLAYER
-                && you_resist_magic((monster->hit_dice * 5) * confuse_power))
+
+            if (foe->check_res_magic((monster->hit_dice * 5) * confuse_power))
             {
-                canned_msg(MSG_YOU_RESIST);
+                if (foe->atype() == ACT_PLAYER)
+                    canned_msg(MSG_YOU_RESIST);
+                else if (foe->atype() == ACT_MONSTER)
+                {
+                    const monsters *foe_mons = dynamic_cast<const monsters*>(foe);
+                    simple_monster_message(foe_mons, mons_resist_string(foe_mons));
+                }
                 break;
             }
-            else if (foe->atype() == ACT_MONSTER)
-            {
-                const monsters* foe_mons = dynamic_cast<const monsters*>(foe);
-                if (check_mons_resist_magic(foe_mons, (monster->hit_dice * 5) * confuse_power))
-                {
-                    simple_monster_message(foe_mons, mons_resist_string(foe_mons));
-                    break;
-                }   
-            }
-            
+
             foe->confuse(monster, 2 + random2(3));
         }
         break;

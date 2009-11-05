@@ -1096,86 +1096,12 @@ bool mons_immune_magic(const monsters *mon)
     return (get_monster_data(mon->type)->resist_magic == MAG_IMMUNE);
 }
 
-int mons_resist_magic( const monsters *mon )
-{
-    if (mons_immune_magic(mon))
-        return MAG_IMMUNE;
-
-    int u = (get_monster_data(mon->type))->resist_magic;
-
-    // Negative values get multiplied with monster hit dice.
-    if (u < 0)
-        u = mon->hit_dice * -u * 4 / 3;
-
-    // Randarts have a multiplicative effect.
-    u *= (scan_mon_inv_randarts( mon, ARTP_MAGIC ) + 100);
-    u /= 100;
-
-    // ego armour resistance
-    const int armour = mon->inv[MSLOT_ARMOUR];
-    const int shield = mon->inv[MSLOT_SHIELD];
-
-    if (armour != NON_ITEM
-        && get_armour_ego_type( mitm[armour] ) == SPARM_MAGIC_RESISTANCE )
-    {
-        u += 30;
-    }
-
-    if (shield != NON_ITEM
-        && get_armour_ego_type( mitm[shield] ) == SPARM_MAGIC_RESISTANCE )
-    {
-        u += 30;
-    }
-
-    if (mon->has_ench(ENCH_LOWERED_MR))
-        u /= 2;
-
-    return (u);
-}
-
 const char* mons_resist_string(const monsters *mon)
 {
     if ( mons_immune_magic(mon) )
         return "is unaffected";
     else
         return "resists";
-}
-
-// Returns true if the monster made its save against hostile
-// enchantments/some other magics.
-bool check_mons_resist_magic( const monsters *monster, int pow )
-{
-    int mrs = mons_resist_magic(monster);
-
-    if (mrs == MAG_IMMUNE)
-        return (true);
-
-    // Evil, evil hack to make weak one hd monsters easier for first
-    // level characters who have resistable 1st level spells. Six is
-    // a very special value because mrs = hd * 2 * 3 for most monsters,
-    // and the weak, low level monsters have been adjusted so that the
-    // "3" is typically a 1.  There are some notable one hd monsters
-    // that shouldn't fall under this, so we do < 6, instead of <= 6...
-    // or checking monster->hit_dice.  The goal here is to make the
-    // first level easier for these classes and give them a better
-    // shot at getting to level two or three and spells that can help
-    // them out (or building a level or two of their base skill so they
-    // aren't resisted as often). -- bwr
-    if (mrs < 6 && coinflip())
-        return (false);
-
-    pow = stepdown_value( pow, 30, 40, 100, 120 );
-
-    const int mrchance = (100 + mrs) - pow;
-    const int mrch2 = random2(100) + random2(101);
-
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Power: %d, monster's MR: %d, target: %d, roll: %d",
-         pow, mrs, mrchance, mrch2 );
-#endif
-
-    return (mrch2 < mrchance);
 }
 
 bool mons_is_holy(const monsters *mon)
@@ -2580,9 +2506,9 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         if (mon->foe != MHITNOT)
         {
             if (mon->foe == MHITYOU)
-                est_magic_resist = player_res_magic();
+                est_magic_resist = you.res_magic();
             else
-                est_magic_resist = mons_resist_magic(&menv[mon->foe]);
+                est_magic_resist = menv[mon->foe].res_magic();
 
             // now randomise (normal intels less accurate than high):
             if (intel == I_NORMAL)

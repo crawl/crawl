@@ -2561,7 +2561,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
         if (monster->holiness() != MH_UNDEAD)
             return (true);
 
-        if (check_mons_resist_magic(monster, pow))
+        if (monster->check_res_magic(pow))
         {
             simple_monster_message(monster,
                                    mons_immune_magic(monster)? " is unaffected."
@@ -2578,7 +2578,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
             return (true);
         }
 
-        if (check_mons_resist_magic(monster, pow))
+        if (monster->check_res_magic(pow))
         {
             simple_monster_message(monster,
                                    mons_immune_magic(monster)? " is unaffected."
@@ -3705,7 +3705,7 @@ bool bolt::misses_player()
 void bolt::affect_player_enchantment()
 {
     if (flavour != BEAM_POLYMORPH && has_saving_throw()
-        && you_resist_magic(ench_power))
+        && you.check_res_magic(ench_power))
     {
         // You resisted it.
 
@@ -5005,7 +5005,7 @@ mon_resist_type bolt::try_enchant_monster(monsters *mon)
         }
         else
         {
-            if (check_mons_resist_magic(mon, ench_power))
+            if (mon->check_res_magic(ench_power))
                 return (MON_RESIST);
         }
     }

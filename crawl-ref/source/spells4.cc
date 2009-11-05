@@ -398,7 +398,7 @@ static int _sleep_monsters(coord_def where, int pow, int, actor *)
 
     if (monster->holiness() != MH_NATURAL)
         return (0);
-    if (check_mons_resist_magic(monster, pow))
+    if (monster->check_res_magic(pow))
         return (0);
 
     // Works on friendlies too, so no check for that.
@@ -464,7 +464,7 @@ static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
     if (you.species == SP_HILL_ORC && monster->type == MONS_WARG)
         pow += (pow / 2);
 
-    if (check_mons_resist_magic(monster, pow))
+    if (monster->check_res_magic(pow))
         return 0;
 
     simple_monster_message(monster, " is tamed!");
@@ -872,7 +872,7 @@ int disperse_monsters(coord_def where, int pow, int, actor *)
         simple_monster_message(defender, " resists.");
         return 1;
     }
-    else if (check_mons_resist_magic(defender, pow))
+    else if (defender->check_res_magic(pow))
     {
         // XXX Note that this might affect magic-immunes!
         if (coinflip())

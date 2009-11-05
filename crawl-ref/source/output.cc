@@ -2270,7 +2270,7 @@ std::string _status_mut_abilities()
     if (you.attribute[ATTR_HELD])
         status.push_back("held");
 
-    const int mr = player_res_magic();
+    const int mr = you.res_magic();
     snprintf(info, INFO_SIZE, "%s resistant to magic",
              (mr <  10) ? "not" :
              (mr <  30) ? "slightly" :
