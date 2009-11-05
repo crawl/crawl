@@ -2703,7 +2703,8 @@ bool mons_has_los_ability(int mclass)
         return (true);
 
     // These eyes only need LOS, as well.  (The other eyes use spells.)
-    if (mclass == MONS_GIANT_EYEBALL || mclass == MONS_EYE_OF_DRAINING)
+    if (mclass == MONS_GIANT_EYEBALL || mclass == MONS_EYE_OF_DRAINING 
+        || mclass == MONS_GOLDEN_EYE)
         return (true);
 
     // Although not using spells, these are exceedingly dangerous.

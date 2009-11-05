@@ -2411,6 +2411,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
             case MONS_EYE_OF_DRAINING:
             case MONS_SHINING_EYE:
             case MONS_EYE_OF_DEVASTATION:
+            case MONS_GOLDEN_EYE:
                 *can_plural = false;
                 // Deliberate fallthrough.
             case MONS_GREAT_ORB_OF_EYES:

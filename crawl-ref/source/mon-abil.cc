@@ -1047,6 +1047,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     case MONS_BLINK_FROG:
     case MONS_KILLER_KLOWN:
     case MONS_PRINCE_RIBBIT:
+    case MONS_GOLDEN_EYE:
         if (one_chance_in(7) || mons_is_caught(monster) && one_chance_in(3))
             used = monster_blink(monster);
         break;
@@ -1287,6 +1288,17 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     return (used);
 }
 
+// Combines code using in Confusing Eye, Giant Eye and Eye of Draining to
+// reduce clutter.
+bool _eyeball_will_use_ability (monsters *monster)
+{
+    return (coinflip()
+        && !mons_is_wandering(monster)
+        && !mons_is_fleeing(monster)
+        && !mons_is_pacified(monster)
+        && !player_or_mon_in_sanct(monster));
+}
+
 //---------------------------------------------------------------
 //
 // mon_nearby_ability
@@ -1369,12 +1381,38 @@ void mon_nearby_ability(monsters *monster)
         monster->colour = random_colour();
         break;
 
+    case MONS_GOLDEN_EYE:
+        if (_eyeball_will_use_ability(monster))
+        {
+            if (you.can_see(monster) && you.can_see(foe))
+                mprf("%s blinks at %s.",
+                     monster->name(DESC_CAP_THE).c_str(),
+                     foe->name(DESC_NOCAP_THE).c_str());
+
+            int confuse_power = 2 + random2(3);
+    
+            if (foe->atype() == ACT_PLAYER
+                && you_resist_magic((monster->hit_dice * 5) * confuse_power))
+            {
+                canned_msg(MSG_YOU_RESIST);
+                break;
+            }
+            else if (foe->atype() == ACT_MONSTER)
+            {
+                const monsters* foe_mons = dynamic_cast<const monsters*>(foe);
+                if (check_mons_resist_magic(foe_mons, (monster->hit_dice * 5) * confuse_power))
+                {
+                    simple_monster_message(foe_mons, mons_resist_string(foe_mons));
+                    break;
+                }   
+            }
+            
+            foe->confuse(monster, 2 + random2(3));
+        }
+        break;
+
     case MONS_GIANT_EYEBALL:
-        if (coinflip()
-            && !mons_is_wandering(monster)
-            && !mons_is_fleeing(monster)
-            && !mons_is_pacified(monster)
-            && !player_or_mon_in_sanct(monster))
+        if (_eyeball_will_use_ability(monster))
         {
             if (you.can_see(monster) && you.can_see(foe))
                 mprf("%s stares at %s.",
@@ -1388,12 +1426,8 @@ void mon_nearby_ability(monsters *monster)
         break;
 
     case MONS_EYE_OF_DRAINING:
-        if (coinflip()
-            && foe->atype() == ACT_PLAYER
-            && !mons_is_wandering(monster)
-            && !mons_is_fleeing(monster)
-            && !mons_is_pacified(monster)
-            && !player_or_mon_in_sanct(monster))
+        if (_eyeball_will_use_ability(monster)
+            && foe->atype() == ACT_PLAYER)
         {
             simple_monster_message(monster, " stares at you.");
 

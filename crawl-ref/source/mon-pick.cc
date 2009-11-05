@@ -220,6 +220,7 @@ bool mons_abyss(int mcls)
     case MONS_GIANT_ORANGE_BRAIN:
     case MONS_GIANT_SPORE:
     case MONS_GREAT_ORB_OF_EYES:
+    case MONS_GOLDEN_EYE:
     case MONS_GREEN_DEATH:
     case MONS_GUARDIAN_NAGA:
     case MONS_HAIRY_DEVIL:
@@ -364,6 +365,7 @@ int mons_rare_abyss(int mcls)
 
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_UNSEEN_HORROR:
+    case MONS_GOLDEN_EYE:
         return 12;
 
     case MONS_HELL_HOUND:
@@ -517,6 +519,7 @@ bool mons_pan(int mcls)
     case MONS_EYE_OF_DRAINING:
     case MONS_GIANT_EYEBALL:
     case MONS_GREAT_ORB_OF_EYES:
+    case MONS_GOLDEN_EYE:
     // malign beings
     case MONS_EFREET:
     case MONS_RAKSHASA:
@@ -1873,6 +1876,7 @@ int mons_pitslime_level(int mcls)
     case MONS_GIANT_AMOEBA:
     case MONS_AZURE_JELLY:
     case MONS_SHINING_EYE:
+    case MONS_GOLDEN_EYE:
         mlev += 3;
         break;
 
@@ -1927,6 +1931,7 @@ int mons_pitslime_rare(int mcls)
     case MONS_DEATH_OOZE:
     case MONS_GREAT_ORB_OF_EYES:
     case MONS_EYE_OF_DEVASTATION:
+    case MONS_GOLDEN_EYE:
         return 30;
 
     case MONS_PULSATING_LUMP:

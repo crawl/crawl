@@ -2058,7 +2058,10 @@ enum monster_type                      // (int) menv[].type
     MONS_GASTRONOK,
     MONS_MAURICE,
     MONS_KHUFU,
-    MONS_NIKOLA,
+    MONS_NIKOLA,                       // 470
+
+    // New set of monsters {november, 2009}
+    MONS_GOLDEN_EYE, 
 
     // Testing monsters
     MONS_TEST_SPAWNER,
