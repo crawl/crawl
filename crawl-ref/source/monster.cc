@@ -435,7 +435,7 @@ int monsters::damage_brand(int which_attack)
     return (!is_range_weapon(*mweap) ? get_weapon_brand(*mweap) : SPWPN_NORMAL);
 }
 
-int monsters::damage_type(int which_attack) const
+int monsters::damage_type(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
 
