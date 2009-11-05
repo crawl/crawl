@@ -6953,7 +6953,7 @@ void player::drain_stat(int stat, int amount, actor *attacker)
 
 bool player::rot(actor *who, int amount, int immediate, bool quiet)
 {
-    if (you.res_rotting() || amount <= 0)
+    if (this->res_rotting() || amount <= 0)
         return (false);
 
     if (immediate > 0)
@@ -7057,7 +7057,7 @@ bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.arena);
 
-    if (you.res_rotting() || amount <= 0)
+    if (this->res_rotting() || amount <= 0)
         return (false);
 
     mpr( "You feel ill." );
