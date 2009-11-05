@@ -2702,6 +2702,24 @@ bool monsters::has_spells() const
     return (false);
 }
 
+bool monsters::has_evil_spells() const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (is_evil_spell(spells[i]))
+            return (true);
+
+    return (false);
+}
+
+bool monsters::has_chaotic_spells() const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (is_chaotic_spell(spells[i]))
+            return (true);
+
+    return (false);
+}
+
 bool monsters::has_spell(spell_type spell) const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -2858,6 +2876,9 @@ bool monsters::is_evil() const
     if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS))
         return (true);
 
+    if (has_evil_spells())
+        return (true);
+
     if (mons_class_flag(type, M_EVIL))
         return (true);
 
@@ -2883,12 +2904,8 @@ bool monsters::is_chaotic() const
     if (is_priest() && is_chaotic_god(god))
         return (true);
 
-    if (has_spell(SPELL_POLYMORPH_OTHER)
-        || has_spell(SPELL_SUMMON_UGLY_THING)
-        || has_spell(SPELL_PORKALATOR))
-    {
+    if (has_chaotic_spells())
         return (true);
-    }
 
     if (has_attack_flavour(AF_MUTATE)
         || has_attack_flavour(AF_ROT)

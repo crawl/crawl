@@ -333,6 +333,8 @@ public:
     bool haloed() const;
 
     bool has_spells() const;
+    bool has_evil_spells() const;
+    bool has_chaotic_spells() const;
     bool has_spell(spell_type spell) const;
 
     bool has_attack_flavour(int flavour) const;
