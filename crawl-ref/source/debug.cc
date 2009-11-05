@@ -534,10 +534,7 @@ void wizard_create_spec_monster_name()
             {
                 if (menv[mid].type == MONS_KRAKEN && menv[mid].alive())
                 {
-                    menv[mid].colour = random_choose(GREEN, LIGHTGREEN,
-                                                     LIGHTCYAN, LIGHTBLUE,
-                                                     RED, LIGHTRED, MAGENTA,
-                                                     -1);
+                    menv[mid].colour = element_colour(ETC_KRAKEN);
                     return;
                 }
             }
