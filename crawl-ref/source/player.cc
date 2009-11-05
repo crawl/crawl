@@ -5433,34 +5433,6 @@ void dec_disease_player()
     }
 }
 
-bool rot_player(int amount)
-{
-    ASSERT(!crawl_state.arena);
-
-    if (amount <= 0)
-        return (false);
-
-    if (you.res_rotting())
-    {
-        mpr("You feel terrible.");
-        return (false);
-    }
-
-    if (you.rotting < 40)
-    {
-        // Either this, or the actual rotting message should probably
-        // be changed so that they're easier to tell apart. -- bwr
-        mprf(MSGCH_WARN, "You feel your flesh %s away!",
-             you.rotting > 0 ? "rotting" : "start to rot");
-
-        you.rotting += amount;
-
-        learned_something_new(TUT_YOU_ROTTING);
-    }
-
-    return (true);
-}
-
 int count_worn_ego(int which_ego)
 {
     int result = 0;
@@ -6861,13 +6833,31 @@ void player::drain_stat(int stat, int amount, actor *attacker)
 
 bool player::rot(actor *who, int amount, int immediate, bool quiet)
 {
-    if (this->res_rotting() || amount <= 0)
+    ASSERT(!crawl_state.arena);
+
+    if (amount <= 0)
         return (false);
+
+    if (you.res_rotting())
+    {
+        mpr("You feel terrible.");
+        return (false);
+    }
 
     if (immediate > 0)
         rot_hp(immediate);
 
-    rot_player(amount);
+    if (you.rotting < 40)
+    {
+        // Either this, or the actual rotting message should probably
+        // be changed so that they're easier to tell apart. -- bwr
+        mprf(MSGCH_WARN, "You feel your flesh %s away!",
+             you.rotting > 0 ? "rotting" : "start to rot");
+
+        you.rotting += amount;
+
+        learned_something_new(TUT_YOU_ROTTING);
+    }
 
     if (one_chance_in(4))
         disease_player(50 + random2(100));

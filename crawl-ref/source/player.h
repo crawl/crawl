@@ -729,8 +729,6 @@ void dec_haste_player();
 bool disease_player(int amount);
 void dec_disease_player();
 
-bool rot_player(int amount);
-
 item_def *player_slot_item(equipment_type eq);
 
 bool player_weapon_wielded();
