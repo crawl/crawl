@@ -32,6 +32,7 @@
 #include "branch.h"
 #include "chardump.h"
 #include "cio.h"
+#include "colour.h"
 #include "crash.h"
 #include "decks.h"
 #include "delay.h"
