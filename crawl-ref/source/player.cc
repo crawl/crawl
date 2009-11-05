@@ -5935,7 +5935,7 @@ bool player::is_levitating() const
 bool player::in_water() const
 {
     return (!airborne() && !beogh_water_walk()
-            && feat_is_water(grd(you.pos())));
+            && feat_is_water(grd(this->pos())));
 }
 
 bool player::can_swim() const
@@ -6053,7 +6053,7 @@ bool player::cannot_speak() const
     if (silenced(this->pos()))
         return (true);
 
-    if (you.cannot_move()) // we allow talking during sleep ;)
+    if (this->cannot_move()) // we allow talking during sleep ;)
         return (true);
 
     // No transform that prevents the player from speaking yet.
@@ -6129,7 +6129,7 @@ int player::damage_brand(int)
             break;
 
         case TRAN_BAT:
-            if (you.species == SP_VAMPIRE && one_chance_in(8))
+            if (this->species == SP_VAMPIRE && one_chance_in(8))
                 ret = SPWPN_VAMPIRICISM;
             break;
 
@@ -6263,7 +6263,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
     std::string str;
 
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+    if (this->attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
         str = "hind leg";
     else if (!transform_changed_physiology())
     {
@@ -6271,12 +6271,12 @@ std::string player::foot_name(bool plural, bool *can_plural) const
             str = "hoof";
         else if (player_mutation_level(MUT_TALONS))
             str = "talon";
-        else if (you.species == SP_NAGA)
+        else if (this->species == SP_NAGA)
         {
             str         = "underbelly";
             *can_plural = false;
         }
-        else if (you.species == SP_MERFOLK && player_is_swimming())
+        else if (this->species == SP_MERFOLK && player_is_swimming())
         {
             str         = "tail";
             *can_plural = false;
@@ -6302,11 +6302,11 @@ std::string player::arm_name(bool plural, bool *can_plural) const
 
     std::string str = "arm";
 
-    if (player_genus(GENPC_DRACONIAN) || you.species == SP_NAGA)
+    if (player_genus(GENPC_DRACONIAN) || this->species == SP_NAGA)
         str = "scaled arm";
-    else if (you.species == SP_KENKU)
+    else if (this->species == SP_KENKU)
         str = "feathered arm";
-    else if (you.species == SP_MUMMY)
+    else if (this->species == SP_MUMMY)
         str = "bandage wrapped arm";
 
     if (plural)
@@ -6421,7 +6421,7 @@ bool player::can_go_berserk() const
 
 bool player::can_go_berserk(bool verbose) const
 {
-    if (you.duration[DUR_BERSERKER])
+    if (this->duration[DUR_BERSERKER])
     {
         if (verbose)
             mpr("You're already berserk!");
@@ -6429,7 +6429,7 @@ bool player::can_go_berserk(bool verbose) const
         return (false);
     }
 
-    if (you.duration[DUR_EXHAUSTED])
+    if (this->duration[DUR_EXHAUSTED])
     {
         if (verbose)
             mpr("You're too exhausted to go berserk.");
@@ -6437,7 +6437,7 @@ bool player::can_go_berserk(bool verbose) const
         return (false);
     }
 
-    if (you.duration[DUR_MESMERISED])
+    if (this->duration[DUR_MESMERISED])
     {
         if (verbose)
             mpr("You are too mesmerised to rage.");
@@ -6445,8 +6445,8 @@ bool player::can_go_berserk(bool verbose) const
         return (false);
     }
 
-    if (you.is_undead
-        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state <= HS_SATIATED))
+    if (this->is_undead
+        && (this->is_undead != US_SEMI_UNDEAD || this->hunger_state <= HS_SATIATED))
     {
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");
@@ -6710,13 +6710,13 @@ int player::res_sticky_flame() const
 
 int player::res_holy_energy(const actor *attacker) const
 {
-    if (is_evil_god(you.religion))
+    if (is_evil_god(this->religion))
         return (-1);
 
     if (is_unholy())
         return (-2);
 
-    if (is_good_god(you.religion))
+    if (is_good_god(this->religion))
         return (1);
 
     return (0);
@@ -6736,14 +6736,14 @@ int player::res_magic() const
 {
     int rm = 0;
 
-    switch (you.species)
+    switch (this->species)
     {
     case SP_MOUNTAIN_DWARF:
     case SP_HILL_ORC:
-        rm = you.experience_level * 2;
+        rm = this->experience_level * 2;
         break;
     default:
-        rm = you.experience_level * 3;
+        rm = this->experience_level * 3;
         break;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
@@ -6751,17 +6751,17 @@ int player::res_magic() const
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
-        rm = you.experience_level * 4;
+        rm = this->experience_level * 4;
         break;
     case SP_NAGA:
-        rm = you.experience_level * 5;
+        rm = this->experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_DEEP_DWARF:
-        rm = you.experience_level * 6;
+        rm = this->experience_level * 6;
         break;
     case SP_SPRIGGAN:
-        rm = you.experience_level * 7;
+        rm = this->experience_level * 7;
         break;
     }
 
@@ -6775,21 +6775,21 @@ int player::res_magic() const
     rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC);
 
     // Enchantment skill
-    rm += 2 * you.skills[SK_ENCHANTMENTS];
+    rm += 2 * this->skills[SK_ENCHANTMENTS];
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
 
     // transformations
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+    if (this->attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
         rm += 50;
 
     // Trog's Hand
-    if (you.attribute[ATTR_DIVINE_REGENERATION])
+    if (this->attribute[ATTR_DIVINE_REGENERATION])
         rm += 70;
 
     // Enchantment effect
-    if (you.duration[DUR_LOWERED_MR])
+    if (this->duration[DUR_LOWERED_MR])
         rm /= 2;
 
     return (rm);
@@ -6836,7 +6836,7 @@ flight_type player::flight_mode() const
     }
     else if (is_levitating())
     {
-        return (you.duration[DUR_CONTROLLED_FLIGHT]
+        return (this->duration[DUR_CONTROLLED_FLIGHT]
                 || wearing_amulet(AMU_CONTROLLED_FLIGHT) ? FL_FLY
                                                          : FL_LEVITATE);
     }
@@ -6851,13 +6851,13 @@ bool player::permanent_levitation() const
     // in order to actually cancel levitation (by setting
     // DUR_LEVITATION to 1.) Note that antimagic() won't do this.
     return (airborne() && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
-            && you.duration[DUR_LEVITATION] > 1);
+            && this->duration[DUR_LEVITATION] > 1);
 }
 
 bool player::permanent_flight() const
 {
     return (airborne() && wearing_amulet(AMU_CONTROLLED_FLIGHT)
-            && you.species == SP_KENKU && you.experience_level >= 15);
+            && this->species == SP_KENKU && this->experience_level >= 15);
 }
 
 bool player::light_flight() const
@@ -6869,7 +6869,7 @@ bool player::light_flight() const
 
 bool player::travelling_light() const
 {
-    return (you.burden < carrying_capacity(BS_UNENCUMBERED) * 70 / 100);
+    return (this->burden < carrying_capacity(BS_UNENCUMBERED) * 70 / 100);
 }
 
 int player::mons_species() const
@@ -7082,7 +7082,7 @@ bool player::can_see_invisible(bool calc_unid) const
         si += player_mutation_level(MUT_ACUTE_VISION);
 
     //jmf: added see_invisible spell
-    if (you.duration[DUR_SEE_INVISIBLE] > 0)
+    if (this->duration[DUR_SEE_INVISIBLE] > 0)
         si++;
 
     // randart wpns
@@ -7113,7 +7113,7 @@ bool player::visible_to(const actor *looker) const
         return (can_see_invisible() || !invisible());
 
     const monsters* mon = dynamic_cast<const monsters*>(looker);
-    return (!you.invisible() || player_in_water() ||
+    return (!this->invisible() || player_in_water() ||
             mon->can_see_invisible() || mons_sense_invis(mon));
 }
 
@@ -7139,24 +7139,24 @@ bool player::backlit(bool check_haloed) const
 // This is the imperative version.
 void player::backlight()
 {
-    if (!you.duration[DUR_INVIS])
+    if (!this->duration[DUR_INVIS])
     {
-        if (you.duration[DUR_BACKLIGHT])
+        if (this->duration[DUR_BACKLIGHT])
             mpr("You glow brighter.");
         else
             mpr("You are outlined in light.");
 
-        you.duration[DUR_BACKLIGHT] += random_range(15, 35);
-        if (you.duration[DUR_BACKLIGHT] > 250)
-            you.duration[DUR_BACKLIGHT] = 250;
+        this->duration[DUR_BACKLIGHT] += random_range(15, 35);
+        if (this->duration[DUR_BACKLIGHT] > 250)
+            this->duration[DUR_BACKLIGHT] = 250;
     }
     else
     {
         mpr("You feel strangely conspicuous.");
 
-        you.duration[DUR_BACKLIGHT] += random_range(3, 5);
-        if (you.duration[DUR_BACKLIGHT] > 250)
-            you.duration[DUR_BACKLIGHT] = 250;
+        this->duration[DUR_BACKLIGHT] += random_range(3, 5);
+        if (this->duration[DUR_BACKLIGHT] > 250)
+            this->duration[DUR_BACKLIGHT] = 250;
     }
 }
 
@@ -7175,20 +7175,20 @@ bool player::can_safely_mutate() const
     if (!can_mutate())
         return (false);
 
-    return (!you.is_undead
-            || you.is_undead == US_SEMI_UNDEAD
-               && you.hunger_state == HS_ENGORGED);
+    return (!this->is_undead
+            || this->is_undead == US_SEMI_UNDEAD
+               && this->hunger_state == HS_ENGORGED);
 }
 
 bool player::can_bleed() const
 {
-    if (you.is_undead && (you.species != SP_VAMPIRE
-                          || you.hunger_state <= HS_SATIATED))
+    if (this->is_undead && (this->species != SP_VAMPIRE
+                          || this->hunger_state <= HS_SATIATED))
     {
         return (false);
     }
 
-    const int tran = you.attribute[ATTR_TRANSFORMATION];
+    const int tran = this->attribute[ATTR_TRANSFORMATION];
     // The corresponding monsters don't bleed either.
     if (tran == TRAN_STATUE || tran == TRAN_ICE_BEAST
         || tran == TRAN_LICH || tran == TRAN_SPIDER)
@@ -7236,18 +7236,18 @@ void player::base_moveto(const coord_def &c)
 
     if (real_move)
     {
-        you.reset_prev_move();
+        this->reset_prev_move();
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
 
         // Reset lava/water nearness check to unknown, so it'll be
         // recalculated for the next monster that tries to reach us.
-        you.lava_in_sight = you.water_in_sight = -1;
+        this->lava_in_sight = this->water_in_sight = -1;
     }
 }
 
 void player::moveto(const coord_def &c)
 {
-    if (c != you.pos())
+    if (c != this->pos())
         clear_trapping_net();
 
     crawl_view.set_player_at(c);
@@ -7297,7 +7297,7 @@ void player::put_to_sleep(int)
 
     mpr("You fall asleep.");
     stop_delay();
-    you.flash_colour = DARKGREY;
+    this->flash_colour = DARKGREY;
     viewwindow(true, false);
 
     // Do this *after* redrawing the view, or viewwindow() will no-op.
@@ -7310,7 +7310,7 @@ void player::awake()
 
     duration[DUR_SLEEP] = 0;
     mpr("You wake up.");
-    you.flash_colour = BLACK;
+    this->flash_colour = BLACK;
     viewwindow(true, false);
 }
 
@@ -7552,7 +7552,7 @@ bool player::do_shaft()
     // the player isn't standing over a shaft.
     if (get_trap_type(this->pos()) != TRAP_SHAFT)
     {
-        switch (grd(you.pos()))
+        switch (grd(this->pos()))
         {
         case DNGN_FLOOR:
         case DNGN_OPEN_DOOR:
@@ -7568,7 +7568,7 @@ bool player::do_shaft()
         }
 
         mpr("A shaft briefly opens up underneath you!");
-        handle_items_on_shaft(you.pos(), false);
+        handle_items_on_shaft(this->pos(), false);
 
         if (airborne() || total_weight() == 0)
             return (true);
