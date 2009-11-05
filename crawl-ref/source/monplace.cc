@@ -475,8 +475,7 @@ static bool _can_place_on_trap(int mon_type, trap_type trap)
         if (mon_type == RANDOM_MONSTER)
             return (false);
 
-        return (mons_class_flag(mon_type, M_FLIES)
-                || mons_class_flag(mon_type, M_LEVITATE)
+        return (mons_class_flies(mon_type) != FL_NONE
                 || get_monster_data(mon_type)->size == SIZE_TINY);
     }
 

@@ -110,11 +110,12 @@ enum mons_class_flags
 
     M_SPELLCASTER       = (1<< 0),        // any non-physical-attack powers,
     M_ACTUAL_SPELLS     = (1<< 1),        // monster is a wizard,
-    M_PRIEST            = (1<< 2),        // monster is a priest
+    M_PRIEST            = (1<< 2),        // monster is a priest,
     M_FIGHTER           = (1<< 3),        // monster is skilled fighter
 
-    M_FLIES             = (1<< 4),        // will crash to ground if paralysed?
-    M_LEVITATE          = (1<< 5),        // ... but not if this is set
+    M_UNUSED_1          = (1<< 4),
+    M_UNUSED_2          = (1<< 5),
+
     M_INVIS             = (1<< 6),        // is created invis
     M_SEE_INVIS         = (1<< 7),        // can see invis
     M_SENSE_INVIS       = (1<< 8),        // can sense invisible things
@@ -443,11 +444,11 @@ struct monsterentry
     char ev; // evasion
     mon_spellbook_type sec;
     corpse_effect_type corpse_thingy;
-    zombie_size_type zombie_size;
-    shout_type shouts;
-    mon_intel_type intel;
-    habitat_type habitat;
-
+    zombie_size_type   zombie_size;
+    shout_type         shouts;
+    mon_intel_type     intel;
+    habitat_type     habitat;
+    flight_type      fly;
     char             speed;        // How quickly speed_increment increases
     mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;

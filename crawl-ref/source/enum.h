@@ -1522,7 +1522,6 @@ enum flight_type
     FL_NONE = 0,
     FL_LEVITATE,                       // doesn't require physical effort
     FL_FLY                             // wings, etc... paralysis == fall
-
 };
 
 enum level_area_type                   // you.level_type

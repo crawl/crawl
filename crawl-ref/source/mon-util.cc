@@ -1128,13 +1128,8 @@ bool mons_skeleton(int mc)
 
 flight_type mons_class_flies(int mc)
 {
-    if (mons_class_flag(mc, M_LEVITATE))
-        return (FL_LEVITATE);
-
-    if (mons_class_flag(mc, M_FLIES))
-        return (FL_FLY);
-
-    return (FL_NONE);
+    const monsterentry *me = get_monster_data(mc);
+    return (me ? me->fly : FL_NONE);
 }
 
 flight_type mons_flies(const monsters *mon, bool randarts)
@@ -3379,161 +3374,163 @@ mon_body_shape get_mon_shape(const monsters *mon)
 mon_body_shape get_mon_shape(const int type)
 {
     if (type == MONS_CHAOS_SPAWN)
-        return static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1));
+        return (static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1)));
+
+    const bool flies = (mons_class_flies(type) == FL_FLY);
 
     switch (mons_char(type))
     {
     case 'a': // ants and cockroaches
-        return(MON_SHAPE_INSECT);
+        return (MON_SHAPE_INSECT);
     case 'b':  // bats and butterflys
         if (type == MONS_BUTTERFLY)
-            return(MON_SHAPE_INSECT_WINGED);
+            return (MON_SHAPE_INSECT_WINGED);
         else
-            return(MON_SHAPE_BAT);
+            return (MON_SHAPE_BAT);
     case 'c': // centaurs
-        return(MON_SHAPE_CENTAUR);
+        return (MON_SHAPE_CENTAUR);
     case 'd': // draconions and drakes
         if (mons_genus(type) == MONS_DRACONIAN)
         {
-            if (mons_class_flag(type, M_FLIES))
-                return(MON_SHAPE_HUMANOID_WINGED_TAILED);
+            if (flies)
+                return (MON_SHAPE_HUMANOID_WINGED_TAILED);
             else
-                return(MON_SHAPE_HUMANOID_TAILED);
+                return (MON_SHAPE_HUMANOID_TAILED);
         }
-        else if (mons_class_flag(type, M_FLIES))
-            return(MON_SHAPE_QUADRUPED_WINGED);
+        else if (flies)
+            return (MON_SHAPE_QUADRUPED_WINGED);
         else
-            return(MON_SHAPE_QUADRUPED);
+            return (MON_SHAPE_QUADRUPED);
     case 'e': // elves
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'f': // fungi
-        return(MON_SHAPE_FUNGUS);
+        return (MON_SHAPE_FUNGUS);
     case 'g': // gargoyles, gnolls, goblins and hobgoblins
         if (type == MONS_GARGOYLE)
-            return(MON_SHAPE_HUMANOID_WINGED_TAILED);
+            return (MON_SHAPE_HUMANOID_WINGED_TAILED);
         else
-            return(MON_SHAPE_HUMANOID);
+            return (MON_SHAPE_HUMANOID);
     case 'h': // hounds
-        return(MON_SHAPE_QUADRUPED);
+        return (MON_SHAPE_QUADRUPED);
     case 'j': // snails
-            return(MON_SHAPE_SNAIL);
+        return (MON_SHAPE_SNAIL);
     case 'k': // killer bees
-        return(MON_SHAPE_INSECT_WINGED);
+        return (MON_SHAPE_INSECT_WINGED);
     case 'l': // lizards
-        return(MON_SHAPE_QUADRUPED);
+        return (MON_SHAPE_QUADRUPED);
     case 'm': // merfolk
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'n': // necrophages and ghouls
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'o': // orcs
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'p': // ghosts
         if (type != MONS_INSUBSTANTIAL_WISP
             && type != MONS_PLAYER_GHOST) // handled elsewhere
         {
-            return(MON_SHAPE_HUMANOID);
+            return (MON_SHAPE_HUMANOID);
         }
         break;
-    case 'q': // quasists
-        return(MON_SHAPE_HUMANOID_TAILED);
+    case 'q': // quasits
+        return (MON_SHAPE_HUMANOID_TAILED);
     case 'r': // rodents
-        return(MON_SHAPE_QUADRUPED);
+        return (MON_SHAPE_QUADRUPED);
     case 's': // arachnids and centipedes
         if (type == MONS_GIANT_CENTIPEDE)
-            return(MON_SHAPE_CENTIPEDE);
+            return (MON_SHAPE_CENTIPEDE);
         else
-            return(MON_SHAPE_ARACHNID);
+            return (MON_SHAPE_ARACHNID);
     case 'u': // ugly things are humanoid???
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 't': // minotaurs
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'v': // vortices and elementals
-        return(MON_SHAPE_MISC);
+        return (MON_SHAPE_MISC);
     case 'w': // worms
-        return(MON_SHAPE_SNAKE);
+        return (MON_SHAPE_SNAKE);
     case 'x': // small abominations
-        return(MON_SHAPE_MISC);
+        return (MON_SHAPE_MISC);
     case 'y': // winged insects
-        return(MON_SHAPE_INSECT_WINGED);
+        return (MON_SHAPE_INSECT_WINGED);
     case 'z': // small skeletons
         if (type == MONS_SKELETAL_WARRIOR)
-            return(MON_SHAPE_HUMANOID);
+            return (MON_SHAPE_HUMANOID);
         else
         {
             // constructed type, not enough info to determine shape
-            return(MON_SHAPE_MISC);
+            return (MON_SHAPE_MISC);
         }
     case 'A': // angelic beings
-        return(MON_SHAPE_HUMANOID_WINGED);
+        return (MON_SHAPE_HUMANOID_WINGED);
     case 'B': // beetles
-        return(MON_SHAPE_INSECT);
+        return (MON_SHAPE_INSECT);
     case 'C': // giants
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'D': // dragons
-        if (mons_class_flag(type, M_FLIES))
-            return(MON_SHAPE_QUADRUPED_WINGED);
+        if (flies)
+            return (MON_SHAPE_QUADRUPED_WINGED);
         else
-            return(MON_SHAPE_QUADRUPED);
-    case 'E': // effreets
-        return(MON_SHAPE_HUMANOID);
+            return (MON_SHAPE_QUADRUPED);
+    case 'E': // efreeti
+        return (MON_SHAPE_HUMANOID);
     case 'F': // frogs
-        return(MON_SHAPE_QUADRUPED_TAILLESS);
+        return (MON_SHAPE_QUADRUPED_TAILLESS);
     case 'G': // floating eyeballs and orbs
-        return(MON_SHAPE_ORB);
+        return (MON_SHAPE_ORB);
     case 'H': // manticores, hippogriffs and griffins
         if (type == MONS_MANTICORE)
-            return(MON_SHAPE_QUADRUPED);
+            return (MON_SHAPE_QUADRUPED);
         else
-            return(MON_SHAPE_QUADRUPED_WINGED);
+            return (MON_SHAPE_QUADRUPED_WINGED);
     case 'I': // ice beasts
-        return(MON_SHAPE_QUADRUPED);
+        return (MON_SHAPE_QUADRUPED);
     case 'J': // jellies and jellyfish
-        return(MON_SHAPE_BLOB);
+        return (MON_SHAPE_BLOB);
     case 'K': // kobolds
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'L': // liches
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'M': // mummies
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'N': // nagas
-        return(MON_SHAPE_NAGA);
+        return (MON_SHAPE_NAGA);
     case 'O': // ogres
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'P': // plants
-        return(MON_SHAPE_PLANT);
+        return (MON_SHAPE_PLANT);
     case 'Q': // queen insects
         if (type == MONS_QUEEN_BEE)
-            return(MON_SHAPE_INSECT_WINGED);
+            return (MON_SHAPE_INSECT_WINGED);
         else
-            return(MON_SHAPE_INSECT);
+            return (MON_SHAPE_INSECT);
     case 'R': // rakshasa; humanoid?
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'S': // snakes
-        return(MON_SHAPE_SNAKE);
+        return (MON_SHAPE_SNAKE);
     case 'T': // trolls
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'U': // bears
-        return(MON_SHAPE_QUADRUPED_TAILLESS);
+        return (MON_SHAPE_QUADRUPED_TAILLESS);
     case 'V': // vampires
-        return(MON_SHAPE_HUMANOID);
+        return (MON_SHAPE_HUMANOID);
     case 'W': // wraiths, humanoid if not a spectral thing
         if (type == MONS_SPECTRAL_THING)
             // constructed type, not enough info to determine shape
-            return(MON_SHAPE_MISC);
+            return (MON_SHAPE_MISC);
         else
-            return(MON_SHAPE_HUMANOID);
+            return (MON_SHAPE_HUMANOID);
     case 'X': // large abominations
-        return(MON_SHAPE_MISC);
+        return (MON_SHAPE_MISC);
     case 'Y': // yaks and sheep
         if (type == MONS_SHEEP)
-            return(MON_SHAPE_QUADRUPED_TAILLESS);
+            return (MON_SHAPE_QUADRUPED_TAILLESS);
         else
-            return(MON_SHAPE_QUADRUPED);
+            return (MON_SHAPE_QUADRUPED);
     case 'Z': // constructed type, not enough info to determine shape
-        return(MON_SHAPE_MISC);
+        return (MON_SHAPE_MISC);
     case ';': // Fish and eels
         if (type == MONS_ELECTRIC_EEL)
-            return(MON_SHAPE_SNAKE);
+            return (MON_SHAPE_SNAKE);
         else
             return (MON_SHAPE_FISH);
 
@@ -3546,11 +3543,8 @@ mon_body_shape get_mon_shape(const int type)
     case '&':
     case '8':
     case '@':
-        // Assume demon has wings if it can fly.
-        bool flies = mons_class_flag(type, M_FLIES);
-
-        // Assume demon has a tail if it has a sting attack or a
-        // tail slap attack.
+        // Assume that a demon has wings if it can fly, and that it has
+        // a tail if it has a sting or tail-slap attack.
         monsterentry *mon_data = get_monster_data(type);
         bool tailed = false;
         for (int i = 0; i < 4; i++)
@@ -3562,16 +3556,16 @@ mon_body_shape get_mon_shape(const int type)
             }
 
         if (flies && tailed)
-            return(MON_SHAPE_HUMANOID_WINGED_TAILED);
+            return (MON_SHAPE_HUMANOID_WINGED_TAILED);
         else if (flies && !tailed)
-            return(MON_SHAPE_HUMANOID_WINGED);
+            return (MON_SHAPE_HUMANOID_WINGED);
         else if (!flies && tailed)
-            return(MON_SHAPE_HUMANOID_TAILED);
+            return (MON_SHAPE_HUMANOID_TAILED);
         else
-            return(MON_SHAPE_HUMANOID);
+            return (MON_SHAPE_HUMANOID);
     }
 
-    return(MON_SHAPE_MISC);
+    return (MON_SHAPE_MISC);
 }
 
 std::string get_mon_shape_str(const monsters *mon)
