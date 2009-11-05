@@ -1,3 +1,8 @@
+/*
+ * File:     behold.cc
+ * Summary:  player methods dealing with mesmerisation.
+ */
+
 #include "AppHdr.h"
 
 #include "player.h"
@@ -9,6 +14,7 @@
 #include "mon-util.h"
 #include "monster.h"
 #include "random.h"
+#include "state.h"
 #include "stuff.h"
 #include "view.h"
 
@@ -154,6 +160,8 @@ void player::_removed_beholder()
 // beholder.
 bool player::_possible_beholder(const monsters *mon) const
 {
+    if (crawl_state.arena)
+        return (false);
     if (silenced(you.pos()))
         return (false);
     if (!mon->alive() || !mons_near(mon) || mons_friendly(mon)
