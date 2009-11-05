@@ -3295,7 +3295,7 @@ void swap_with_monster(monsters *mon_to_swap)
         return;
     }
 
-    const bool mon_caught = mons_is_caught(&mon);
+    const bool mon_caught = mon.caught();
     const bool you_caught = you.attribute[ATTR_HELD];
 
     // If it was submerged, it surfaces first.

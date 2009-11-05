@@ -3060,7 +3060,7 @@ void bolt::drop_object()
             monsters* m = monster_at(pos());
             // Player or monster at position is caught in net.
             if (you.pos() == pos() && you.attribute[ATTR_HELD]
-                || m && mons_is_caught(m))
+                || m && m->caught())
             {
                 // If no trapping net found mark this one.
                 if (get_trapping_net(pos(), true) == NON_ITEM)

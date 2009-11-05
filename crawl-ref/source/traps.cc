@@ -257,7 +257,7 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
         return;
     }
 
-    if (!mons_is_caught(mon) && mon->add_ench(ENCH_HELD))
+    if (!mon->caught() && mon->add_ench(ENCH_HELD))
     {
         if (mons_near(mon) && !mon->visible_to(&you))
             mpr("Something gets caught in the net!");
@@ -578,7 +578,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 item_def item = this->generate_trap_item();
                 copy_item_to_grid(item, triggerer.pos());
 
-                if (mons_is_caught(m))
+                if (m->caught())
                     mark_net_trapping(m->pos());
 
                 trap_destroyed = true;

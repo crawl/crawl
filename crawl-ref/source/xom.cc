@@ -1480,8 +1480,8 @@ static bool _swap_monsters(monsters *m1, monsters *m2)
     monsters& mon1(*m1);
     monsters& mon2(*m2);
 
-    const bool mon1_caught = mons_is_caught(&mon1);
-    const bool mon2_caught = mons_is_caught(&mon2);
+    const bool mon1_caught = mon1.caught();
+    const bool mon2_caught = mon2.caught();
 
     const coord_def mon1_pos = mon1.pos();
     const coord_def mon2_pos = mon2.pos();

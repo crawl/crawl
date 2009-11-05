@@ -1591,7 +1591,7 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
         if (item.sub_type == MI_THROWING_NET)
         {
             // Monster may not pick up trapping net.
-            if (mons_is_caught(this) && item_is_stationary(item))
+            if (this->caught() && item_is_stationary(item))
                 return (false);
         }
         else // None of these exceptions hold for throwing nets.
@@ -2782,7 +2782,7 @@ bool monsters::haloed() const
 
 bool monsters::caught() const
 {
-    return (mons_is_caught(this));
+    return this->has_ench(ENCH_HELD);
 }
 
 int monsters::shield_bonus() const

@@ -313,7 +313,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
         unchivalric = UCAT_INVISIBLE;
 
     // held in a net
-    if (def && mons_is_caught(def))
+    if (def && def->caught())
         unchivalric = UCAT_HELD_IN_NET;
 
     // petrifying

@@ -940,7 +940,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
         // Monsters caught in a net try to get away.
         // This is only urgent if enemies are around.
         if (!finalAnswer && mon_enemies_around(monster)
-            && mons_is_caught(monster) && one_chance_in(4))
+            && monster->caught() && one_chance_in(4))
         {
             for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             {

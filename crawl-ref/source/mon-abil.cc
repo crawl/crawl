@@ -1048,7 +1048,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     case MONS_KILLER_KLOWN:
     case MONS_PRINCE_RIBBIT:
     case MONS_GOLDEN_EYE:
-        if (one_chance_in(7) || mons_is_caught(monster) && one_chance_in(3))
+        if (one_chance_in(7) || monster->caught() && one_chance_in(3))
             used = monster_blink(monster);
         break;
 

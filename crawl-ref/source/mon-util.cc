@@ -2078,11 +2078,6 @@ bool mons_is_confused(const monsters *m, bool class_too)
             && (class_too || !mons_class_flag(m->type, M_CONFUSED)));
 }
 
-bool mons_is_caught(const monsters *m)
-{
-    return (m->has_ench(ENCH_HELD));
-}
-
 bool mons_is_wandering(const monsters *m)
 {
     return (m->behaviour == BEH_WANDER);

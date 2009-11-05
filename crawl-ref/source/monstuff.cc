@@ -2311,7 +2311,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     const int  old_hp             = monster->hit_points;
     const int  old_hp_max         = monster->max_hit_points;
-    const bool old_mon_caught     = mons_is_caught(monster);
+    const bool old_mon_caught     = monster->caught();
     const char old_ench_countdown = monster->ench_countdown;
 
     mon_enchant abj       = monster->get_ench(ENCH_ABJ);
@@ -2641,7 +2641,7 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
         return (false);
     }
 
-    if (mons_is_caught(monster))
+    if (monster->caught())
     {
         if (!quiet)
             simple_monster_message(monster, " is held in a net!");
@@ -3667,7 +3667,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
 
 void mons_clear_trapping_net(monsters *mon)
 {
-    if (!mons_is_caught(mon))
+    if (!mon->caught())
         return;
 
     const int net = get_trapping_net(mon->pos());

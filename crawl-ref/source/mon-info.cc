@@ -149,7 +149,7 @@ bool monster_info::less_than(const monster_info& m1,
 
 static std::string _verbose_info(const monsters* m)
 {
-    if (mons_is_caught(m))
+    if (m->caught())
         return (" (caught)");
 
     if (mons_behaviour_perceptible(m))

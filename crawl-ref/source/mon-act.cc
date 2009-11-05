@@ -537,7 +537,7 @@ static void _handle_movement(monsters *monster)
            || monster_at(newpos) && monster->foe == mgrd(newpos))
         && mons_intel(monster) >= I_ANIMAL
         && coinflip()
-        && !mons_is_confused(monster) && !mons_is_caught(monster)
+        && !mons_is_confused(monster) && !monster->caught()
         && !monster->has_ench(ENCH_BERSERK))
     {
         // If the monster is moving parallel to the x or y axis, check
@@ -821,7 +821,7 @@ static bool _handle_scroll(monsters *monster)
     case SCR_TELEPORTATION:
         if (!monster->has_ench(ENCH_TP))
         {
-            if (mons_is_caught(monster) || mons_is_fleeing(monster)
+            if (monster->caught() || mons_is_fleeing(monster)
                 || mons_is_pacified(monster))
             {
                 simple_monster_message(monster, " reads a scroll.");
@@ -833,7 +833,7 @@ static bool _handle_scroll(monsters *monster)
         break;
 
     case SCR_BLINKING:
-        if (mons_is_caught(monster) || mons_is_fleeing(monster)
+        if (monster->caught() || mons_is_fleeing(monster)
             || mons_is_pacified(monster))
         {
             if (mons_near(monster))
@@ -997,7 +997,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
 
     case WAND_TELEPORTATION:
         if (monster->hit_points <= monster->max_hit_points / 2
-            || mons_is_caught(monster))
+            || monster->caught())
         {
             if (!monster->has_ench(ENCH_TP)
                 && !one_chance_in(20))
@@ -1850,7 +1850,7 @@ static void _handle_monster_move(monsters *monster)
             }
         }
 
-        if (mons_is_caught(monster))
+        if (monster->caught())
         {
             // Struggling against the net takes time.
             _swim_or_move_energy(monster);
@@ -1976,7 +1976,7 @@ static void _handle_monster_move(monsters *monster)
             }
         }
 
-        if (!mons_is_caught(monster))
+        if (!monster->caught())
         {
             if (monster->pos() + mmov == you.pos())
             {
@@ -2207,7 +2207,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
             hps_changed += (quant * item_mass(*si)) / 20 + quant;
             eaten += quant;
 
-            if (mons_is_caught(monster)
+            if (monster->caught()
                 && si->base_type == OBJ_MISSILES
                 && si->sub_type == MI_THROWING_NET
                 && item_is_stationary(*si))
