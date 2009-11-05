@@ -20,12 +20,14 @@
 #include "effects.h"
 #include "files.h"
 #include "food.h"
+#include "ghost.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
 #include "los.h"
+#include "makeitem.h"
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
@@ -2700,7 +2702,14 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
             set_item_ego_type(wpn, OBJ_WEAPONS,
                               coinflip() ? SPWPN_SPEED : SPWPN_ELECTROCUTION);
         }
+        item_colour(wpn);
         menv[mon].flags |= MF_HARD_RESET;
+
+        ghost_demon newstats;
+        newstats.init_dancing_weapon(wpn, power / 4);
+
+        menv[mon].set_ghost(newstats);
+        menv[mon].dancing_weapon_init();
     }
     else
     {

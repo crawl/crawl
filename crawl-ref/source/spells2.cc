@@ -25,6 +25,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "envmap.h"
+#include "ghost.h"
 #include "goditem.h"
 #include "invent.h"
 #include "itemname.h"
@@ -1582,6 +1583,7 @@ bool summon_holy_warrior(int pow, god_type god, int spell,
                                       !force_hostile, quiet);
 }
 
+// This function seems to have very little regard for encapsulation.
 bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 {
     bool success = true;
@@ -1670,8 +1672,13 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 
     destroy_item(menv[monster].inv[MSLOT_WEAPON]);
     menv[monster].inv[MSLOT_WEAPON] = i;
-    menv[monster].colour = mitm[i].colour;
     burden_change();
+
+    ghost_demon stats;
+    stats.init_dancing_weapon(mitm[i], pow);
+
+    menv[monster].set_ghost(stats);
+    menv[monster].dancing_weapon_init();
 
     if ((why = good_god_hates_item_handling(you.inv[wpn]))
         || (why = god_hates_item_handling(you.inv[wpn])))
