@@ -146,7 +146,11 @@ else
 ifdef NEED_LIBW32C
 OBJECTS += libw32c.o
 else
+ifdef NEED_LIBDOS
+OBJECTS += libdos.o
+else
 OBJECTS += libunix.o
+endif
 endif
 endif
 

@@ -13,6 +13,8 @@
 #include "cio.h"
 #include <termios.h>
 #include <conio.h>
+#include "options.h"
+#include "viewgeom.h"
 
 #if defined(TARGET_OS_DOS)
 

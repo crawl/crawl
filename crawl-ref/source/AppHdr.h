@@ -201,7 +201,9 @@
 
     // Use Perl-compatible regular expressions. libpcre must be available and
     // linked in.  This is optional.
+    #ifndef REGEX_PCRE
     #define REGEX_PCRE
+    #endif
 
 #elif defined(TARGET_OS_WINDOWS)
     #if !defined(USE_TILE)
