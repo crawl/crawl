@@ -2,7 +2,7 @@
 -- lm_trig.lua:
 -- DgnTriggerers and triggerables:
 --
--- This is similar to the overvable/observer design pattern: a triggerable
+-- This is similar to the observable/observer design pattern: a triggerable
 -- class which does something and a triggerrer which sets it off.  As an
 -- example, the ChangeFlags class (clua/lm_flags.lua), rather than having
 -- three subclasses (for monster death, feature change and item pickup)
@@ -17,20 +17,51 @@
 --
 -- A triggerable class just needs to subclass Triggerable and define an
 -- "on_trigger" method.
+--
+-- If a triggerable marker has the property "master_name" with the value
+-- "FOO", then when triggered on_trigger() will be called at each marker
+-- on the level which has the property "slaved_to" equal to "FOO".  A
+-- master marker can be slaved to itself to cause on_trigger() to be called
+-- at it's location.  If the master marker has the property
+-- "single_random_slave" set to anythinb but the empty string ("") then
+-- on each triggering only a single, randomly chosen slave will have
+-- on_trigger() called.
+--
+-- on_trigger() shouldn't have to worry about the master/slave business,
+-- and should have the same code regardless of whether or not it's a
+-- master or just a plain triggerable.  If on_trigger() calls
+-- self:remove() while it's acting on a slave marker then the slave marker
+-- will be removed, and the master marker will only be removed when all
+-- slaves are gone.
 ------------------------------------------------------------------------------
 
 Triggerable = { CLASS = "Triggerable" }
 Triggerable.__index = Triggerable
 
-function Triggerable:new()
+function Triggerable:new(props)
+  props = props or {}
+
   local tr = { }
   setmetatable(tr, self)
   self.__index = self
 
+  tr.props             = props
   tr.triggerers        = { }
   tr.dgn_trigs_by_type = { }
 
   return tr
+end
+
+function Triggerable:unmangle(x)
+  if x and type(x) == 'function' then
+    return x(self)
+  else
+    return x
+  end
+end
+
+function Triggerable:property(marker, pname)
+  return self:unmangle(self.props[pname] or '')
 end
 
 function Triggerable:add_triggerer(triggerer)
@@ -86,6 +117,11 @@ end
 function Triggerable:remove(marker)
   if self.removed then
     error("Trigerrable already removed")
+  end
+
+  if self.calling_slaves then
+    self.want_remove = true
+    return
   end
 
   self:remove_all_triggerers(marker)
@@ -144,7 +180,78 @@ function Triggerable:event(marker, ev)
   end
 end
 
+function Triggerable:do_trigger(triggerer, marker, ev)
+  local master_name = self:property(marker, "master_name")
+
+  if master_name == "" then
+    self:on_trigger(triggerer, marker, ev)
+    return
+  end
+
+  -- NOTE: The master marker can be slaved to itself.
+  local slaves =
+    dgn.find_markers_by_prop("slaved_to", master_name)
+
+  -- Pretend that the master marker is gone if it asked to be removed.
+  if self.master_removed then
+    for i = #slaves, 1, -1 do
+      if slaves[i] == marker then
+        table.remove(slaves, i)
+      end
+    end
+  end
+
+  -- If all slaves are gone, we're done.
+  if #slaves == 0 then
+    self:remove(marker)
+    return
+  end
+
+  local num_slaves = #slaves
+
+  if self:property("single_random_slave") ~= '' then
+    slaves = { slaves[ crawl.random2(#slaves) + 1 ] }
+  end
+
+  local num_want_remove = 0
+  self.calling_slaves = true
+  for _, slave_marker in ipairs(slaves) do
+    self.want_remove = false
+
+    self:on_trigger(triggerer, slave_marker, ev)
+
+    if self.want_remove then
+      num_want_remove = num_want_remove + 1
+
+      -- XXX: hack: don't remove ourself (the master marker) until the end.
+      if slave_marker == marker then
+        self.master_removed = true
+      else
+        triggerer:remove(self, slave_marker)
+        dgn.remove_marker(slave_marker)
+      end
+    end
+
+    self.want_remove = false
+  end
+  self.calling_slaves = false
+
+  if num_want_remove >= num_slaves then
+    -- Make sure they're really all gone.
+    slaves =
+      dgn.find_markers_by_prop("slaved_to", master_name)
+
+    if #slaves == 0
+      or (self.master_removed and #slaves == 1 and slaves[1] == marker)
+    then
+      self:remove(marker)
+    end
+  end
+end
+
 function Triggerable:write(marker, th)
+  file.marshall_meta(th, self.master_removed)
+
   file.marshall(th, #self.triggerers)
   for _, trig in ipairs(self.triggerers) do
     -- We'll be handling the de-serialization of the triggerer, so we need to
@@ -154,9 +261,12 @@ function Triggerable:write(marker, th)
   end
 
   lmark.marshall_table(th, self.dgn_trigs_by_type)
+  lmark.marshall_table(th, self.props)
 end
 
 function Triggerable:read(marker, th)
+  self.master_removed = file.unmarshall_meta(th)
+
   self.triggerers = {}
 
   local num_trigs = file.unmarshall_number(th)
@@ -171,6 +281,7 @@ function Triggerable:read(marker, th)
   end
 
   self.dgn_trigs_by_type = lmark.unmarshall_table(th)
+  self.props             = lmark.unmarshall_table(th)
 
   setmetatable(self, Triggerable)
   return self
@@ -373,7 +484,7 @@ function DgnTriggerer:monster_dies(triggerable, marker, ev)
   end
 
   if mons.name == self.target then
-    triggerable:on_trigger(self, marker, ev)
+    triggerable:do_trigger(self, marker, ev)
   end
 end
 
@@ -384,7 +495,7 @@ function DgnTriggerer:feat_change(triggerable, marker, ev)
       return
     end
   end
-  triggerable:on_trigger(self, marker, ev)
+  triggerable:do_trigger(self, marker, ev)
 end
 
 function DgnTriggerer:item_moved(triggerable, marker, ev)
@@ -400,7 +511,7 @@ function DgnTriggerer:item_moved(triggerable, marker, ev)
       -- We only exist to move the triggerable if the item moves
       triggerable:move(marker, ev:dest())
     else
-      triggerable:on_trigger(self, marker, ev)
+      triggerable:do_trigger(self, marker, ev)
     end
   end
 end
@@ -414,16 +525,16 @@ function DgnTriggerer:item_pickup(triggerable, marker, ev)
   end
 
   if item.name(it) == self.target then
-    triggerable:on_trigger(self, marker, ev)
+    triggerable:do_trigger(self, marker, ev)
   end
 end
 
 function DgnTriggerer:player_move(triggerable, marker, ev)
-  triggerable:on_trigger(self, marker, ev)
+  triggerable:do_trigger(self, marker, ev)
 end
 
 function DgnTriggerer:player_los(triggerable, marker, ev)
-  triggerable:on_trigger(self, marker, ev)
+  triggerable:do_trigger(self, marker, ev)
 end
 
 -------------------

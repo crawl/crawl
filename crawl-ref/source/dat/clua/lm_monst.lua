@@ -49,13 +49,9 @@ function MonsterOnTrigger:new(pars)
   mot.message_unseen  = pars.message_unseen
   mot.death_monster   = pars.death_monster
   mot.new_monster     = pars.new_monster
-  mot.props           = pars
+  mot.props           = util.append( mot.props, pars)
 
   return mot
-end
-
-function MonsterOnTrigger:property(marker, pname)
-  return self.props[pname] or ''
 end
 
 function MonsterOnTrigger:write(marker, th)

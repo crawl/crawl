@@ -80,7 +80,7 @@ function ChangeFlags:new(pars)
   cf.level_flags  = pars.level_flags
   cf.branch_flags = pars.branch_flags
   cf.msg          = pars.msg
-  cf.props        = { flag_group = pars.group }
+  cf.props        = util.append( cf.props, { flag_group = pars.group } )
 
   return cf
 end
@@ -118,10 +118,6 @@ function ChangeFlags:on_trigger(triggerer, marker, ev)
   end
   
   return true, false
-end
-
-function ChangeFlags:property(marker, pname)
-  return self.props[pname] or ''
 end
 
 function ChangeFlags:write(marker, th)
