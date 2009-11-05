@@ -3888,13 +3888,13 @@ static void _move_player(coord_def move)
               monsters * current = monster_at(you.pos());
               if(!current || !feawn_passthrough(current))
               {
-                  // Probably need a better messages. -cao
-                  if(mons_genus(targ_monst->type == MONS_FUNGUS))
+                  // Probably need better messages. -cao
+                  if(mons_genus(targ_monst->type) == MONS_FUNGUS)
                   {
                       mprf("You walk carefully through the fungus.");
                   }
                   else
-                      mprf("You walk carefully throuh the plants.");
+                      mprf("You walk carefully through the plants.");
               }
               targ_monst = NULL;
           }

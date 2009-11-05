@@ -403,7 +403,9 @@ bool feawn_passthrough(const monsters * target)
 {
     return (target && you.religion == GOD_FEAWN
             && mons_is_plant(target)
-            && mons_is_stationary(target));
+            && mons_is_stationary(target)
+            && (target->type != MONS_OKLOB_PLANT
+                || target->attitude != ATT_HOSTILE));
 }
 
 void jiyva_convert_slime(monsters* slime)
