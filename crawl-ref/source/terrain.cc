@@ -953,7 +953,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     // Note that trapping nets, etc., move together
     // with the monster/player, so don't clear them.
     const int m1 = mgrd(pos1);
-    const int m2 = mgrd(pos1);
+    const int m2 = mgrd(pos2);
 
     mgrd(pos1) = m2;
     mgrd(pos2) = m1;
