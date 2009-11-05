@@ -1636,7 +1636,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
     env.show.init();
 
-    monster_grid(true);
+    monster_grid(do_updates);
 
 #ifdef USE_TILE
     tile_draw_rays(true);
