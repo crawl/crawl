@@ -264,7 +264,8 @@ bool is_chaotic_spell(spell_type spell, god_type god)
 
     return (spell == SPELL_POLYMORPH_OTHER
             || spell == SPELL_ALTER_SELF
-            || spell == SPELL_SUMMON_UGLY_THING);
+            || spell == SPELL_SUMMON_UGLY_THING
+            || spell == SPELL_PORKALATOR);
 }
 
 bool is_hasty_spell(spell_type spell, god_type god)
