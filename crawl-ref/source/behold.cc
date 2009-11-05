@@ -164,7 +164,8 @@ bool player::_possible_beholder(const monsters *mon) const
         return (false);
     if (silenced(you.pos()))
         return (false);
-    if (!mon->alive() || !mons_near(mon) || mons_friendly(mon)
+    if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID
+        || !mons_near(mon) || mons_friendly(mon)
         || mon->submerged() || mon->confused() || mons_cannot_move(mon)
         || mon->asleep() || silenced(mon->pos()))
     {
