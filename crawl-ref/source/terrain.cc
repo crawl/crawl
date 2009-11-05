@@ -958,9 +958,9 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     mgrd(pos1) = m2;
     mgrd(pos2) = m1;
 
-    if (mgrd(pos1) != NON_MONSTER)
+    if (monster_at(pos1))
         menv[mgrd(pos1)].position = pos1;
-    if (mgrd(pos2) != NON_MONSTER)
+    if (monster_at(pos2))
         menv[mgrd(pos2)].position = pos2;
 
     // Swap clouds.
@@ -1099,8 +1099,8 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
         else
         {
             // back out the way we came in, if possible
-            if (grid_distance( you.pos(), entry ) == 1
-                && mgrd(entry) == NON_MONSTER)
+            if (grid_distance(you.pos(), entry) == 1
+                && !monster_at(entry))
             {
                 escape = true;
                 empty = entry;

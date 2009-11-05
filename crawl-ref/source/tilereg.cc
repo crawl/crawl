@@ -1382,14 +1382,12 @@ bool DungeonRegion::update_tip_text(std::string& tip)
 
         if (!cell_is_solid(m_cursor[CURSOR_MOUSE]))
         {
-            int mon_num = mgrd(m_cursor[CURSOR_MOUSE]);
-            if (mon_num == NON_MONSTER || mons_friendly(&menv[mon_num]))
-            {
+            const monsters *mon = monster_at(m_cursor[CURSOR_MOUSE]));
+            if (!mon || mons_friendly(mon))
                 tip = "[L-Click] Move\n";
-            }
-            else if (mon_num != NON_MONSTER)
+            else if (mon)
             {
-                tip = menv[mon_num].name(DESC_CAP_A);
+                tip = mon->name(DESC_CAP_A);
                 tip += "\n[L-Click] Attack\n";
             }
         }

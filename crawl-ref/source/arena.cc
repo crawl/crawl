@@ -783,7 +783,7 @@ namespace arena
                                         true);
 
             if (idx == -1 && fac.active_members == 0
-                && mgrd(pos) != NON_MONSTER)
+                && monster_at(pos))
             {
                 // We have no members left, so to prevent the round
                 // from ending attempt to displace whatever is in

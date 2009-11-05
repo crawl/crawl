@@ -2966,7 +2966,7 @@ static void _place_specific_feature(dungeon_feature_type feat)
 
     do
         c = random_in_bounds();
-    while (grd(c) != DNGN_FLOOR || mgrd(c) != NON_MONSTER);
+    while (grd(c) != DNGN_FLOOR || monster_at(c));
 
     grd(c) = feat;
 }
@@ -3832,9 +3832,9 @@ static void _special_room(int level_number, spec_room &sr,
 }                               // end special_room()
 
 // Used for placement of rivers/lakes.
-static bool _may_overwrite_pos(const int i, const int j)
+static bool _may_overwrite_pos(coord_def c)
 {
-    const dungeon_feature_type grid = grd[i][j];
+    const dungeon_feature_type grid = grd(c);
 
     // Don't overwrite any stairs or branch entrances.
     if (grid >= DNGN_ENTER_SHOP && grid <= DNGN_EXIT_PORTAL_VAULT
@@ -3845,7 +3845,7 @@ static bool _may_overwrite_pos(const int i, const int j)
 
     // Don't overwrite feature if there's a monster or item there.
     // Otherwise, items/monsters might end up stuck in deep water.
-    return (mgrd[i][j] == NON_MONSTER && igrd[i][j] == NON_ITEM);
+    return (!monster_at(c) && igrd(c) == NON_ITEM);
 }
 
 static void _build_rooms(const dgn_region_list &excluded,
@@ -4779,7 +4779,7 @@ int dgn_place_monster(mons_spec &mspec,
         mg.mname     = mspec.monname;
 
         coord_def place(where);
-        if (!force_pos && mgrd(place) != NON_MONSTER
+        if (!force_pos && monster_at(place)
             && (mg.cls < NUM_MONSTERS || mg.cls == RANDOM_MONSTER))
         {
             const monster_type habitat_target =
@@ -5573,7 +5573,7 @@ static void _place_altar()
         for (int i = px - 2; i <= px + 2; i++)
             for (int j = py - 2; j <= py + 2; j++)
             {
-                if (mgrd[i][j] != NON_MONSTER)
+                if (monster_at(coord_def(i, j)))
                     mon_there = true;
             }
 
@@ -7574,7 +7574,7 @@ static void _build_river( dungeon_feature_type river_type ) //mv
                 // Note that vaults might have been created in this area!
                 // So we'll avoid the silliness of orcs/royal jelly on
                 // lava and deep water grids. -- bwr
-                if (!one_chance_in(200) && _may_overwrite_pos(i, j))
+                if (!one_chance_in(200) && _may_overwrite_pos(coord_def(i, j)))
                 {
                     if (width == 2 && river_type == DNGN_DEEP_WATER
                         && coinflip())
@@ -7638,7 +7638,7 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
                 // Note that vaults might have been created in this area!
                 // So we'll avoid the silliness of monsters and items
                 // on lava and deep water grids. -- bwr
-                if (!one_chance_in(200) && _may_overwrite_pos(i,j))
+                if (!one_chance_in(200) && _may_overwrite_pos(coord_def(i, j)))
                 {
                     grd[i][j] = lake_type;
 

@@ -120,10 +120,10 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     ASSERT( you.can_pass_through_feat( new_grid ) );
 
     // Better not be an unsubmerged monster either.
-    ASSERT(swapping && mgrd(p) != NON_MONSTER
-           || !swapping && (mgrd(p) == NON_MONSTER
-                            || menv[ mgrd(p) ].submerged()
-                            || feawn_passthrough(&menv[mgrd(p)])));
+    ASSERT(swapping && monster_at(p)
+           || !swapping && (!monster_at(p)
+                            || monster_at(p)->submerged()
+                            || feawn_passthrough(monster_at(p))));
 
     // Don't prompt if force is true.
     if (!force)

@@ -2607,7 +2607,7 @@ void debug_stethoscope(int mon)
                  env.cloud[ env.cgrid(stethpos) ].decay );
         }
 
-        if (mgrd(stethpos) == NON_MONSTER)
+        if (!monster_at(stethpos))
         {
             mprf(MSGCH_DIAGNOSTICS, "item grid = %d", igrd(stethpos) );
             return;
@@ -6305,7 +6305,7 @@ static void _dump_player(FILE *file)
     }
     fprintf(file, EOL);
 
-    if (in_bounds(you.pos()) && mgrd(you.pos()) != NON_MONSTER)
+    if (in_bounds(you.pos()) && monster_at(you.pos()))
     {
         fprintf(file, "Standing on same square as: ");
         const unsigned short midx = mgrd(you.pos());

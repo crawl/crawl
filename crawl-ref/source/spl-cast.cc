@@ -1037,7 +1037,7 @@ static bool _spell_is_uncastable(spell_type spell)
 static void _try_monster_cast(spell_type spell, int powc,
                               dist &spd, bolt &beam)
 {
-    if (mgrd(you.pos()) != NON_MONSTER)
+    if (monster_at(you.pos()))
     {
         mpr("Couldn't try casting monster spell because you're "
             "on top of a monster.");
@@ -1074,7 +1074,7 @@ static void _try_monster_cast(spell_type spell, int powc,
 
     if (!spd.isTarget)
         mon->foe = MHITNOT;
-    else if (mgrd(spd.target) == NON_MONSTER)
+    else if (!monster_at(spd.target))
     {
         if (spd.isMe)
             mon->foe = MHITYOU;

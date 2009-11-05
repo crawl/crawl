@@ -501,7 +501,7 @@ static bool _siren_movement_effect(const monsters *monster)
 
                 if (swapping)
                 {
-                    if (mgrd(oldpos) != NON_MONSTER)
+                    if (monster_at(oldpos))
                     {
                         mprf("Something prevents you from swapping places "
                              "with %s.",

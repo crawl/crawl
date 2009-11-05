@@ -496,7 +496,7 @@ void area_shift(void)
         move_item_stack_to_grid(*ri, newpos);
 
         // Move monster.
-        if (mgrd(*ri) != NON_MONSTER)
+        if (monster_at(*ri))
         {
             menv[mgrd(*ri)].moveto(newpos);
             mgrd(newpos) = mgrd(*ri);
@@ -569,7 +569,7 @@ void abyss_teleport( bool new_area )
 
             if ((grd(newspot) == DNGN_FLOOR
                     || grd(newspot) == DNGN_SHALLOW_WATER)
-                && mgrd(newspot) == NON_MONSTER
+                && !monster_at(newspot)
                 && env.cgrid(newspot) == EMPTY_CLOUD)
             {
                 found = true;

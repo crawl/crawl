@@ -745,7 +745,7 @@ void monster_grid(bool do_updates)
                      "improperly placed.  Updating mgrd.",
                      monster->name(DESC_PLAIN, true).c_str(), s,
                      monster->pos().x, monster->pos().y);
-                ASSERT(mgrd(monster->pos()) == NON_MONSTER);
+                ASSERT(!monster_at(monster->pos()));
                 mgrd(monster->pos()) = s;
             }
 

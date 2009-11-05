@@ -2611,7 +2611,7 @@ bool swap_places(monsters *monster, const coord_def &loc)
     ASSERT(map_bounds(loc));
     ASSERT(_habitat_okay(monster, grd(loc)));
 
-    if (mgrd(loc) != NON_MONSTER)
+    if (monster_at(loc))
     {
         mpr("Something prevents you from swapping places.");
         return (false);
@@ -2657,7 +2657,7 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
         int num_found = 0;
 
         for (adjacent_iterator ai; ai; ++ai)
-            if (mgrd(*ai) == NON_MONSTER && _habitat_okay( monster, grd(*ai))
+            if (!monster_at(*ai) && _habitat_okay(monster, grd(*ai))
                 && one_chance_in(++num_found))
             {
                 loc = *ai;

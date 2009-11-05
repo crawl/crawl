@@ -2406,9 +2406,9 @@ int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
         else if (player_in_branch(BRANCH_SHOALS))
             t = TILE_SHOALS_SHALLOW_WATER;
 
-        if (mgrd[gx][gy] != NON_MONSTER)
+        monsters *mon = monster_at(coord_def(gx, gy));
+        if (mon)
         {
-            monsters *mon = &menv[mgrd[gx][gy]];
             // Add disturbance to tile.
             if (mon->submerged())
                 t += tile_dngn_count(t);
@@ -4764,12 +4764,12 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 bool print_blood = true;
                 if (inside_halo(gc))
                 {
-                    if (see_cell(gc) && mgrd(gc) != NON_MONSTER)
+                    monsters *mon = monster_at(gc);
+                    if (see_cell(gc) && mon)
                     {
-                        monsters* m = &menv[mgrd(gc)];
-                        if (!mons_class_flag(m->type, M_NO_EXP_GAIN)
-                             && (!mons_is_mimic(m->type)
-                                 || testbits(m->flags, MF_KNOWN_MIMIC)))
+                        if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
+                             && (!mons_is_mimic(mon->type)
+                                 || testbits(mon->flags, MF_KNOWN_MIMIC)))
                         {
                             tileb[count+1] |= TILE_FLAG_HALO;
                             print_blood = false;

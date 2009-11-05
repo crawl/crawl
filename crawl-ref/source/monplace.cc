@@ -1047,7 +1047,7 @@ static int _place_monster_aux(const mgen_data &mg,
             return (-1);
     }
 
-    ASSERT(mgrd(fpos) == NON_MONSTER);
+    ASSERT(!monster_at(fpos));
 
     if (crawl_state.arena
         && arena_veto_place_monster(mg, first_band_member, fpos))

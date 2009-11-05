@@ -21,8 +21,9 @@
 #include "enum.h"
 #include "files.h"
 #include "message.h"
-#include "monplace.h"
 #include "mapdef.h"
+#include "mon-util.h"
+#include "monplace.h"
 #include "random.h"
 #include "state.h"
 #include "terrain.h"
@@ -228,8 +229,8 @@ static bool _safe_vault_place(const map_def &map,
         if (!_may_overwrite_feature(dfeat, water_ok))
             return (false);
 
-        // Don't overwrite items or monsters, either!
-        if (igrd(cp) != NON_ITEM || mgrd(cp) != NON_MONSTER)
+        // Don't overwrite monsters or items, either!
+        if (monster_at(cp) || igrd(cp) != NON_ITEM)
             return (false);
     }
 

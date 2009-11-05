@@ -1896,7 +1896,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
             // we can blink away the crowd, but only our allies
-            if (mgrd(*ai) != NON_MONSTER
+            if (monster_at(*ai)
                 && monster_at(*ai)->attitude != monster->attitude)
                 sumcount++;
             if (grd(*ai) != DNGN_FLOOR && grd(*ai) > DNGN_MAX_NONREACH
@@ -1915,13 +1915,13 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         sumcount = 0;
         for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
-            if (mgrd(*ai) != NON_MONSTER && monster_at(*ai) != monster)
+            if (monster_at(*ai) && monster_at(*ai) != monster)
             {
                 monster_at(*ai)->blink();
-                if (mgrd(*ai) != NON_MONSTER)
+                if (monster_at(*ai))
                 {
                     monster_at(*ai)->teleport(true);
-                    if (mgrd(*ai) != NON_MONSTER)
+                    if (monster_at(*ai))
                         continue;
                 }
             }

@@ -3898,7 +3898,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
     int midx = mon->mindex();
 
-    if (mgrd(mon->pos()) == NON_MONSTER)
+    if (!monster_at(mon->pos()))
         mgrd(mon->pos()) = midx;
 
     if (mon->pos() != you.pos() && midx == mgrd(mon->pos()))
@@ -3935,7 +3935,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     int       okay_squares = 0;
 
     for (adjacent_iterator ai; ai; ++ai)
-        if (mgrd(*ai) == NON_MONSTER && *ai != you.pos()
+        if (!actor_at(*ai)
             && monster_can_submerge(mon, grd(*ai))
             && one_chance_in(++okay_squares))
         {
@@ -3957,7 +3957,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     // Try to move to an adjacent square where it would be happy.
     for (adjacent_iterator ai; ai; ++ai)
     {
-        if (mgrd(*ai) == NON_MONSTER
+        if (!monster_at(*ai)
             && monster_habitable_grid(mon, grd(*ai))
             && !find_trap(*ai))
         {

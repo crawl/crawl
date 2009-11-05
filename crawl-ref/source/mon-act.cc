@@ -534,7 +534,7 @@ static void _handle_movement(monsters *monster)
     // First, check whether the monster is smart enough to even consider
     // this.
     if ((newpos == you.pos()
-           || mgrd(newpos) != NON_MONSTER && monster->foe == mgrd(newpos))
+           || monster_at(newpos) && monster->foe == mgrd(newpos))
         && mons_intel(monster) >= I_ANIMAL
         && coinflip()
         && !mons_is_confused(monster) && !mons_is_caught(monster)

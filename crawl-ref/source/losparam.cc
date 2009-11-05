@@ -10,11 +10,11 @@
 #include "cloud.h"
 #include "externs.h"
 #include "los.h"
+#include "mon-util.h"
 #include "terrain.h"
 
 opacity_type opacity_default::operator()(const coord_def& p) const
 {
-    int m;
     dungeon_feature_type f = env.grid(p);
     if (feat_is_opaque(f))
         return OPC_OPAQUE;
@@ -22,7 +22,7 @@ opacity_type opacity_default::operator()(const coord_def& p) const
         return OPC_HALF;
     else if (f == DNGN_TREES)
         return OPC_HALF;
-    else if ((m = mgrd(p)) != NON_MONSTER && menv[m].type == MONS_BUSH)
+    else if (monster_at(p) && monster_at(p)->type == MONS_BUSH)
         return OPC_HALF;
     else
         return OPC_CLEAR;
@@ -40,7 +40,6 @@ opacity_type opacity_fullyopaque::operator()(const coord_def& p) const
 // XXX: Are trees, bushes solid?
 opacity_type opacity_solid::operator()(const coord_def& p) const
 {
-    int m;
     dungeon_feature_type f = env.grid(p);
     if (feat_is_solid(f))
         return OPC_OPAQUE;
@@ -48,7 +47,7 @@ opacity_type opacity_solid::operator()(const coord_def& p) const
         return OPC_HALF;
     else if (f == DNGN_TREES)
         return OPC_HALF;
-    else if ((m = mgrd(p)) != NON_MONSTER && menv[m].type == MONS_BUSH)
+    else if (monster_at(p) && monster_at(p)->type == MONS_BUSH)
         return OPC_HALF;
     else
         return OPC_CLEAR;

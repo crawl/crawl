@@ -1407,7 +1407,7 @@ void tutorial_first_item(const item_def &item)
         // corpse is first seen.
         if (!Options.tut_just_triggered
             && item.base_type == OBJ_CORPSES
-            && monster_at(item.pos) == NULL)
+            && !monster_at(item.pos))
         {
             learned_something_new(TUT_SEEN_CARRION, item.pos);
         }
@@ -2135,7 +2135,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
     case TUT_STAIR_BRAND:
         // Monster or player standing on stairs.
-        if (monster_at(gc) || you.pos() == gc)
+        if (actor_at(gc))
             DELAY_EVENT;
 
         viewwindow(true, false);
@@ -2152,7 +2152,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
     case TUT_HEAP_BRAND:
         // Monster or player standing on heap.
-        if (monster_at(gc) || you.pos() == gc)
+        if (actor_at(gc))
             DELAY_EVENT;
 
         viewwindow(true, false);
@@ -2174,7 +2174,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         return;
 #else
         // Monster or player standing on trap.
-        if (monster_at(gc) || (you.pos() == gc))
+        if (actor_at(gc))
             DELAY_EVENT;
 
         viewwindow(true, false);
@@ -4460,7 +4460,7 @@ static bool _water_is_disturbed(int x, int y)
     const coord_def c(x,y);
     const monsters *mon = monster_at(c);
 
-    if (mon == NULL || grd(c) != DNGN_SHALLOW_WATER || !see_cell(c))
+    if (!mon || grd(c) != DNGN_SHALLOW_WATER || !see_cell(c))
         return (false);
 
     return (!mon->visible_to(&you) && !mons_flies(mon));

@@ -2277,7 +2277,7 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
             }
             int midx = mgrd(m.pos());
             if (midx != NON_MONSTER)
-                mprf(MSGCH_ERROR, "(%d,%d) for %s already occupied by %s",
+                mprf(MSGCH_ERROR, "(%d, %d) for %s already occupied by %s",
                      m.pos().x, m.pos().y,
                      m.name(DESC_PLAIN, true).c_str(),
                      menv[midx].name(DESC_PLAIN, true).c_str());
