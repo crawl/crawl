@@ -1586,6 +1586,12 @@ void melee_attack::player_weapon_auto_id()
 
 int melee_attack::player_stab_weapon_bonus(int damage)
 {
+    if (weapon && weapon->base_type == OBJ_WEAPONS
+        && (weapon->sub_type == WPN_CLUB || weapon->sub_type == WPN_SPEAR))
+    {
+        goto ok_weaps;
+    }
+
     switch (wpn_skill)
     {
     case SK_SHORT_BLADES:
@@ -1599,6 +1605,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
         damage += bonus;
     }
     // fall through
+    ok_weaps:
     case SK_LONG_BLADES:
         damage *= 10 + you.skills[SK_STABBING] /
                        (stab_bonus + (wpn_skill == SK_SHORT_BLADES ? 0 : 1));

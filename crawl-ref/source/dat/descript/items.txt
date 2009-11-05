@@ -410,6 +410,7 @@ A cloth cloak.
 club
 
 A heavy piece of wood, to be held or thrown.
+Coshing someone on the head while they're asleep is a great idea.
 %%%%
 corpse
 
@@ -448,6 +449,7 @@ armour.  It is somewhat resistant to corrosion.
 dagger
 
 A long knife or a very short sword, which can be held or thrown.
+It causes massive damage when used for backstabbing.
 %%%%
 dart
 
