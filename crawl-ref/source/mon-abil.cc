@@ -1202,7 +1202,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             break;
         }
 
-        bool already_mesmerised = player_mesmerised_by(monster);
+        bool already_mesmerised = you.beheld_by(monster);
 
         if (one_chance_in(5)
             || monster->foe == MHITYOU && !already_mesmerised && coinflip())
@@ -1257,23 +1257,9 @@ bool mon_special_ability(monsters *monster, bolt & beem)
                 break;
             }
 
-            if (!you.duration[DUR_MESMERISED])
-            {
-                you.duration[DUR_MESMERISED] = 7;
-                you.mesmerised_by.push_back(monster_index(monster));
-                mprf(MSGCH_WARN, "You are mesmerised by %s!",
-                                 monster->name(DESC_NOCAP_THE).c_str());
-            }
-            else
-            {
-                you.duration[DUR_MESMERISED] += 5;
-                if (!already_mesmerised)
-                    you.mesmerised_by.push_back(monster_index(monster));
-            }
-            used = true;
+            you.add_beholder(monster);
 
-            if (you.duration[DUR_MESMERISED] > 12)
-                you.duration[DUR_MESMERISED] = 12;
+            used = true;
         }
         break;
     }
@@ -1361,7 +1347,7 @@ void mon_nearby_ability(monsters *monster)
 
     if (monster_can_submerge(monster, grd(monster->pos()))
         && !monster->caught()             // No submerging while caught.
-        && !player_mesmerised_by(monster) // No submerging if player entranced.
+        && !you.beheld_by(monster) // No submerging if player entranced.
         && !mons_is_lurking(monster)  // Handled elsewhere.
         && monster->wants_submerge())
     {
@@ -1369,7 +1355,6 @@ void mon_nearby_ability(monsters *monster)
 
         monster->add_ench(ENCH_SUBMERGED);
         monster->speed_increment -= ENERGY_SUBMERGE(entry);
-        update_beholders(monster);
         return;
     }
 

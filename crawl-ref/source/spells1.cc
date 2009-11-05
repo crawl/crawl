@@ -117,27 +117,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 return (-1);         // early return {dlb}
             }
 
-            if (!wizard_blink && you.duration[DUR_MESMERISED])
+            monsters* beholder = you.get_beholder(beam.target);
+            if (!wizard_blink && beholder)
             {
-                bool blocked_movement = false;
-                for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
-                {
-                    monsters& mon = menv[you.mesmerised_by[i]];
-                    const int olddist = grid_distance(you.pos(), mon.pos());
-                    const int newdist = grid_distance(beam.target, mon.pos());
-
-                    if (olddist < newdist)
-                    {
-                        mprf("You cannot blink away from %s!",
-                             mon.name(DESC_NOCAP_THE, true).c_str());
-
-                        blocked_movement = true;
-                        break;
-                    }
-                }
-
-                if (blocked_movement)
-                    continue;
+                mprf("You cannot blink away from %s!",
+                    beholder->name(DESC_NOCAP_THE, true).c_str());
+                continue;
             }
 
             if (grd(beam.target) == DNGN_OPEN_SEA)

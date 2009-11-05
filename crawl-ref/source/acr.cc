@@ -920,7 +920,7 @@ static void _input()
     crawl_state.clear_mon_acting();
 
     religion_turn_start();
-    check_beholders();
+    you.update_beholders();
 
     // Currently only set if Xom accidentally kills the player.
     you.reset_escaped_death();
@@ -1188,10 +1188,11 @@ static void _input()
 
 static bool _stairs_check_mesmerised()
 {
-    if (you.duration[DUR_MESMERISED] && !you.confused())
+    if (you.beheld() && !you.confused())
     {
+        const monsters* beholder = you.get_any_beholder();
         mprf("You cannot move away from %s!",
-             menv[you.mesmerised_by[0]].name(DESC_NOCAP_THE, true).c_str());
+             beholder->name(DESC_NOCAP_THE, true).c_str());
         return (true);
     }
 
@@ -2370,7 +2371,7 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_MESMERISED, "You break out of your daze.",
                               0, NULL, MSGCH_RECOVERY))
     {
-        you.mesmerised_by.clear();
+        you.clear_beholders();
     }
 
     dec_slow_player();
@@ -3913,21 +3914,8 @@ static void _move_player(coord_def move)
     // You cannot move away from a mermaid but you CAN fight monsters on
     // neighbouring squares.
     monsters *beholder = NULL;
-    if (you.duration[DUR_MESMERISED] && !you.confused())
-    {
-        for (unsigned int i = 0; i < you.mesmerised_by.size(); ++i)
-        {
-            monsters& mon = menv[you.mesmerised_by[i]];
-            int olddist = grid_distance(you.pos(), mon.pos());
-            int newdist = grid_distance(targ, mon.pos());
-
-            if (olddist < newdist)
-            {
-                beholder = &mon;
-                break;
-            }
-        }
-    }
+    if (!you.confused())
+        beholder = you.get_beholder(targ);
 
     if (you.running.check_stop_running())
     {

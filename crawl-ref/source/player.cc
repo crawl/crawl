@@ -2554,127 +2554,6 @@ int player_shield_class(void)   //jmf: changes for new spell
     return (base_shield);
 }
 
-// Returns true if player is mesmerised by a given monster.
-bool player_mesmerised_by(const monsters *mon)
-{
-    if (!you.duration[DUR_MESMERISED])
-        return (false);
-
-    // Can this monster even behold you?
-    if (mons_genus(mon->type) != MONS_MERMAID)
-        return (false);
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "mesmerised_by.size: %d, DUR_MESMERISED: %d, "
-                            "current mon: %d", you.mesmerised_by.size(),
-                            you.duration[DUR_MESMERISED], mon->mindex());
-#endif
-
-    if (you.mesmerised_by.empty()) // shouldn't happen
-    {
-        you.duration[DUR_MESMERISED] = 0;
-        return (false);
-    }
-
-    for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
-    {
-         unsigned int which_mon = you.mesmerised_by[i];
-         if (monster_index(mon) == which_mon)
-             return (true);
-    }
-
-    return (false);
-}
-
-// Removes a monster from the list of beholders if force == true
-// (e.g. monster dead) or one of several cases is met.
-void update_beholders(const monsters *mon, bool force)
-{
-    if (!player_mesmerised_by(mon)) // Not in list?
-        return;
-
-    // Is an update even necessary?
-    if (force || !mons_near(mon) || mons_friendly(mon) || mon->submerged()
-        || mon->has_ench(ENCH_CONFUSION) || mons_cannot_move(mon)
-        || mon->asleep() || silenced(you.pos()) || silenced(mon->pos()))
-    {
-        const std::vector<int> help = you.mesmerised_by;
-        you.mesmerised_by.clear();
-
-        for (unsigned int i = 0; i < help.size(); i++)
-        {
-             unsigned int which_mon = help[i];
-             if (monster_index(mon) != which_mon)
-                 you.mesmerised_by.push_back(which_mon);
-        }
-
-        if (you.mesmerised_by.empty())
-        {
-            mpr("You are no longer entranced.", MSGCH_RECOVERY);
-            you.duration[DUR_MESMERISED] = 0;
-        }
-    }
-}
-
-void check_beholders()
-{
-    for (int i = you.mesmerised_by.size() - 1; i >= 0; i--)
-    {
-        const monsters* mon = &menv[you.mesmerised_by[i]];
-        if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID
-            || mon->submerged())
-        {
-#ifdef DEBUG
-            if (!mon->alive())
-                mpr("Dead mermaid/siren still mesmerising?", MSGCH_DIAGNOSTICS);
-            else if (mons_genus(mon->type) != MONS_MERMAID)
-            {
-                mprf(MSGCH_DIAGNOSTICS, "Non-mermaid/siren '%s' mesmerising?",
-                     mon->name(DESC_PLAIN, true).c_str());
-            }
-#endif
-
-            you.mesmerised_by.erase(you.mesmerised_by.begin() + i);
-            if (you.mesmerised_by.empty())
-            {
-                mpr("You are no longer entranced.", MSGCH_RECOVERY);
-                you.duration[DUR_MESMERISED] = 0;
-                break;
-            }
-            continue;
-        }
-        const coord_def pos = mon->pos();
-        int walls = num_feats_between(you.pos(), pos,
-                                      DNGN_UNSEEN, DNGN_MAXOPAQUE);
-
-        if (walls > 0)
-        {
-#ifdef DEBUG
-            mprf(MSGCH_DIAGNOSTICS, "%d walls between mesmerising '%s' "
-                 "and player", walls, mon->name(DESC_PLAIN, true).c_str());
-#endif
-            you.mesmerised_by.erase(you.mesmerised_by.begin() + i);
-            if (you.mesmerised_by.empty())
-            {
-                mpr("You are no longer entranced.", MSGCH_RECOVERY);
-                you.duration[DUR_MESMERISED] = 0;
-                break;
-            }
-            continue;
-        }
-    }
-
-    if (you.duration[DUR_MESMERISED] > 0 && you.mesmerised_by.empty())
-    {
-#ifdef DEBUG
-        mpr("Mesmerised with no mermaids/sirens left?", MSGCH_DIAGNOSTICS);
-#endif
-
-        mpr("You are no longer entranced.", MSGCH_RECOVERY);
-        you.duration[DUR_MESMERISED] = 0;
-    }
-}
-
 int player_sust_abil(bool calc_unid)
 {
     int sa = 0;
@@ -3949,7 +3828,7 @@ void display_char_status()
         mpr("You are confused.");
 
     // TODO: Distinguish between mermaids and sirens!
-    if (you.duration[DUR_MESMERISED])
+    if (you.beheld())
         mpr("You are mesmerised.");
 
     // How exactly did you get to show the status?
@@ -6324,7 +6203,7 @@ bool player::can_go_berserk(bool verbose) const
         return (false);
     }
 
-    if (this->duration[DUR_MESMERISED])
+    if (beheld())
     {
         if (verbose)
             mpr("You are too mesmerised to rage.");

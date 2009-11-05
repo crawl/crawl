@@ -35,8 +35,6 @@ public:
   bool banished;
   std::string banished_by;
 
-  std::vector<int> mesmerised_by; // monsters mesmerising player
-
   int  friendly_pickup;       // pickup setting for allies
 
   unsigned short prev_targ;
@@ -283,9 +281,14 @@ public:
   // When other levels are loaded (e.g. viewing), is the player on this level?
   bool on_current_level;
 
+  // monsters mesmerising player; should be proteced, but needs to be saved
+  // and restored.
+  std::vector<int> beholders;
+
 protected:
   FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
   FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
+
 
 public:
     player();
@@ -318,6 +321,18 @@ public:
 
     bool light_flight() const;
     bool travelling_light() const;
+
+    // Dealing with beholders. Implemented in behold.cc.
+    void add_beholder(const monsters *mon);
+    bool beheld() const;
+    bool beheld_by(const monsters *mon) const;
+    monsters* get_beholder(const coord_def &pos) const;
+    monsters* get_any_beholder() const;
+    void remove_beholder(const monsters *mon);
+    void clear_beholders();
+    void beholders_check_noise(int loudness);
+    void update_beholders();
+    void update_beholder(const monsters *mon);
 
     kill_category kill_alignment() const;
 
@@ -489,6 +504,9 @@ public:
 
 protected:
     void base_moveto(const coord_def &c);
+
+    void _removed_beholder();
+    bool _possible_beholder(const monsters *mon) const;
 };
 
 extern player you;
@@ -632,11 +650,6 @@ bool items_give_ability(const int slot, artefact_prop_type abil);
 int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 
 int slaying_bonus(char which_affected, bool ranged = false);
-
-
-bool player_mesmerised_by(const monsters *mon);
-void update_beholders(const monsters *mon, bool force = false);
-void check_beholders();
 
 unsigned long exp_needed(int lev);
 

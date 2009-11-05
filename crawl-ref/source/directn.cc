@@ -627,7 +627,7 @@ void full_describe_view()
             std::string str = get_monster_equipment_desc(list_mons[i], true,
                                                          DESC_CAP_A, true);
 
-            if (player_mesmerised_by(list_mons[i]))
+            if (you.beheld_by(list_mons[i]))
                 str += ", keeping you mesmerised";
 
             if (damage_level != MDAM_OKAY)
@@ -3123,7 +3123,7 @@ static std::string _get_monster_desc(const monsters *mon)
     std::string text    = "";
     std::string pronoun = mon->pronoun(PRONOUN_CAP);
 
-    if (player_mesmerised_by(mon))
+    if (you.beheld_by(mon))
         text += "You are mesmerised by her song.\n";
 
     if (!mons_is_mimic(mon->type) && mons_behaviour_perceptible(mon))

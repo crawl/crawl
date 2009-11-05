@@ -737,7 +737,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(RED, "-MR"));
 
     // TODO: Differentiate between mermaids and sirens!
-    if (you.duration[DUR_MESMERISED])
+    if (you.beheld())
         out.push_back(status_light(RED, "Mesm"));
 
     if (you.duration[DUR_LIQUID_FLAMES])
@@ -2056,7 +2056,7 @@ std::string _status_mut_abilities()
         status.push_back("short of breath");
 
     // TODO: Differentiate between mermaids and sirens!
-    if (you.duration[DUR_MESMERISED])
+    if (you.beheld())
         status.push_back("mesmerised");
 
     if (you.duration[DUR_LIQUID_FLAMES])

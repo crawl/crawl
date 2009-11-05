@@ -2040,7 +2040,7 @@ static void _handle_monster_move(monsters *monster)
             if (mons_cannot_move(monster) || !_monster_move(monster))
                 monster->speed_increment -= non_move_energy;
         }
-        update_beholders(monster);
+        you.update_beholder(monster);
 
         // Reevaluate behaviour, since the monster's surroundings have
         // changed (it may have moved, or died for that matter).  Don't
@@ -2087,11 +2087,7 @@ void handle_monsters()
         if (you.banished)
         {
             // Clear list of mesmerising monsters.
-            if (you.duration[DUR_MESMERISED])
-            {
-                you.mesmerised_by.clear();
-                you.duration[DUR_MESMERISED] = 0;
-            }
+            you.clear_beholders();
             break;
         }
     }

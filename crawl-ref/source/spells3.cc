@@ -1478,30 +1478,16 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
                 return (false);
             }
 
-            if (you.duration[DUR_MESMERISED])
+            monsters *beholder = you.get_beholder(pos);
+            if (beholder)
             {
-                bool blocked_movement = false;
-                for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
-                {
-                    monsters& mon = menv[you.mesmerised_by[i]];
-                    const int olddist = grid_distance(you.pos(), mon.pos());
-                    const int newdist = grid_distance(pos, mon.pos());
-
-                    if (olddist < newdist)
-                    {
-                        mprf("You cannot teleport away from %s!",
-                             mon.name(DESC_NOCAP_THE, true).c_str());
-                        mpr("Choose another destination (press '.' or delete to select).");
-                        more();
-
-                        blocked_movement = true;
-                        break;
-                    }
-                }
-
-                if (blocked_movement)
-                    continue;
+                mprf("You cannot teleport away from %s!",
+                     beholder->name(DESC_NOCAP_THE, true).c_str());
+                mpr("Choose another destination (press '.' or delete to select).");
+                more();
+                continue;
             }
+
             break;
         }
 
@@ -1717,25 +1703,7 @@ bool entomb(int powc)
     if (number_built > 0)
     {
         mpr("Walls emerge from the floor!");
-
-        for (int i = you.mesmerised_by.size() - 1; i >= 0; i--)
-        {
-            const monsters* mon = &menv[you.mesmerised_by[i]];
-            int walls = num_feats_between(you.pos(), mon->pos(),
-                                          DNGN_UNSEEN, DNGN_MAXWALL,
-                                          true, true);
-
-            if (walls > 0)
-            {
-                update_beholders(mon, true);
-                if (you.mesmerised_by.empty())
-                {
-                    you.duration[DUR_MESMERISED] = 0;
-                    break;
-                }
-                continue;
-            }
-        }
+        you.update_beholders();
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

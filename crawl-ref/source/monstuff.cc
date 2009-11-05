@@ -1323,8 +1323,7 @@ int monster_die(monsters *monster, killer_type killer,
 
     mons_clear_trapping_net(monster);
 
-    // Update list of monsters beholding player.
-    update_beholders(monster, true);
+    you.remove_beholder(monster);
 
     // Clear auto exclusion now the monster is killed -- if we know about it.
     if (mons_near(monster) || wizard)
@@ -2257,7 +2256,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     // the polymorph disrupts the beholding process.  Do this before
     // changing monster->type, since unbeholding can only happen while
     // the monster is still a mermaid/siren.
-    update_beholders(monster, true);
+    you.remove_beholder(monster);
 
     // Inform listeners that the original monster is gone.
     _fire_monster_death_event(monster, KILL_MISC, NON_MONSTER, true);

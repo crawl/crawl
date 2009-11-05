@@ -158,31 +158,14 @@ static void _get_symbol( const coord_def& where,
                                     && feat <= DNGN_ESCAPE_HATCH_UP
                                     && is_exclude_root(where));
 
-            bool blocked_movement = false;
-            if (!excluded_stairs
-                && feat >= DNGN_MINMOVE
-                && you.duration[DUR_MESMERISED])
+            if (excluded_stairs)
+                *colour = Options.tc_excluded | colmask;
+            else if (feat >= DNGN_MINMOVE && you.get_beholder(where))
             {
                 // Colour grids that cannot be reached due to beholders
                 // dark grey.
-                for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
-                {
-                    monsters& mon = menv[you.mesmerised_by[i]];
-                    const int olddist = grid_distance(you.pos(), mon.pos());
-                    const int newdist = grid_distance(where, mon.pos());
-
-                    if (olddist < newdist)
-                    {
-                        blocked_movement = true;
-                        break;
-                    }
-                }
-            }
-
-            if (excluded_stairs)
-                *colour = Options.tc_excluded | colmask;
-            else if (blocked_movement)
                 *colour = DARKGREY | colmask;
+            }
             else if (feat >= DNGN_MINMOVE && is_sanctuary(where))
             {
                 if (testbits(env.map(where).property, FPROP_SANCTUARY_1))
@@ -953,14 +936,8 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
 
         you.check_awaken(dist - player_distance);
 
-        if (!mermaid && loudness >= 20 && you.duration[DUR_MESMERISED])
-        {
-            mprf("For a moment, you cannot hear the mermaid%s!",
-                 you.mesmerised_by.size() == 1? "" : "s");
-            mpr("You break out of your daze!", MSGCH_DURATION);
-            you.duration[DUR_MESMERISED] = 0;
-            you.mesmerised_by.clear();
-        }
+        if (!mermaid)
+            you.beholders_check_noise(loudness);
 
         ret = true;
     }

@@ -767,11 +767,10 @@ void cast_silence(int pow)
     if (you.duration[DUR_SILENCE] > 100)
         you.duration[DUR_SILENCE] = 100;
 
-    if (you.duration[DUR_MESMERISED])
+    if (you.beheld())
     {
+        you.clear_beholders();
         mpr("You break out of your daze!", MSGCH_RECOVERY);
-        you.duration[DUR_MESMERISED] = 0;
-        you.mesmerised_by.clear();
     }
 }
 

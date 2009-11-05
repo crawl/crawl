@@ -1007,9 +1007,9 @@ static void tag_construct_you(writer &th)
     // be recalculated on game start.
 
     // List of currently beholding monsters (usually empty).
-    marshallByte(th, you.mesmerised_by.size());
-    for (unsigned int k = 0; k < you.mesmerised_by.size(); k++)
-         marshallByte(th, you.mesmerised_by[k]);
+    marshallByte(th, you.beholders.size());
+    for (unsigned int k = 0; k < you.beholders.size(); k++)
+         marshallByte(th, you.beholders[k]);
 
     marshallByte(th, you.piety_hysteresis);
 
@@ -1449,7 +1449,7 @@ static void tag_read_you(reader &th, char minorVersion)
     // List of currently beholding monsters (usually empty).
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; i++)
-         you.mesmerised_by.push_back(unmarshallByte(th));
+         you.beholders.push_back(unmarshallByte(th));
 
     you.piety_hysteresis = unmarshallByte(th);
 

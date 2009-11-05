@@ -1142,30 +1142,14 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
 
     if (feature_colour != DARKGREY)
         tc = feature_colour;
-    else if (you.duration[DUR_MESMERISED] && on_level)
+    else if (on_level && you.beheld())
     {
         // If mesmerised, colour the few grids that can be reached anyway
         // lightgrey.
         const monsters *blocker = monster_at(p);
         const bool seen_blocker = blocker && you.can_see(blocker);
-        if (grd(p) >= DNGN_MINMOVE && !seen_blocker)
-        {
-            bool blocked_movement = false;
-            for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
-            {
-                const monsters& mon = menv[you.mesmerised_by[i]];
-                const int olddist = grid_distance(you.pos(), mon.pos());
-                const int newdist = grid_distance(p, mon.pos());
-
-                if (olddist < newdist || !see_cell(env.show_los, p, mon.pos()))
-                {
-                    blocked_movement = true;
-                    break;
-                }
-            }
-            if (!blocked_movement)
-                tc = LIGHTGREY;
-        }
+        if (grd(p) >= DNGN_MINMOVE && !seen_blocker && !you.get_beholder(p))
+            tc = LIGHTGREY;
     }
 
     if (Options.feature_item_brand

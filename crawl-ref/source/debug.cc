@@ -2140,11 +2140,8 @@ void wizard_heal(bool super_heal)
         // Clear more stuff and give a HP boost.
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
-        if (you.duration[DUR_MESMERISED])
-        {
-            you.duration[DUR_MESMERISED] = 0;
-            you.mesmerised_by.clear();
-        }
+        you.clear_beholders();
+
         // If we're repeating then do the HP increase all at once.
         int amount = 10;
         if (crawl_state.cmd_repeat_goal > 0)

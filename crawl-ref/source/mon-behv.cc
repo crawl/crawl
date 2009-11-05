@@ -1391,7 +1391,7 @@ void handle_behaviour(monsters *mon)
             {
                 // The foe is the player.
                 if (mon->type == MONS_SIREN
-                    && player_mesmerised_by(mon)
+                    && you.beheld_by(mon)
                     && _find_siren_water_target(mon))
                 {
                     break;

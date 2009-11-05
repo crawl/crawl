@@ -2580,11 +2580,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     }
 
     // Clear list of beholding monsters.
-    if (you.duration[DUR_MESMERISED])
-    {
-        you.mesmerised_by.clear();
-        you.duration[DUR_MESMERISED] = 0;
-    }
+    you.clear_beholders();
 
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
