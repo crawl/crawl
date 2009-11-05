@@ -4328,7 +4328,6 @@ bool _give_items_skills()
     case JOB_ENCHANTER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 1,
                            1);
-
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CHARMS);
 
@@ -4340,8 +4339,10 @@ bool _give_items_skills()
         // necessary. (jpeg)
         if (you.species == SP_SPRIGGAN)
             you.inv[0].sub_type = WPN_DAGGER;
+        if (you.species == SP_OGRE || you.species == SP_TROLL)
+            you.inv[0].sub_type = WPN_CLUB;
 
-        you.skills[SK_SHORT_BLADES] = 1;
+        weap_skill = 1;
         you.skills[SK_DARTS]        = 1;
         you.skills[SK_ENCHANTMENTS] = 4;
         you.skills[SK_SPELLCASTING] = 1;
@@ -4456,8 +4457,11 @@ bool _give_items_skills()
         _newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
         _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
 
+        if (you.species == SP_OGRE || you.species == SP_TROLL)
+            you.inv[0].sub_type = WPN_CLUB;
+
         you.skills[SK_FIGHTING]     = 1;
-        you.skills[SK_SHORT_BLADES] = 1;
+        weap_skill = 1;
         you.skills[SK_POISON_MAGIC] = 1;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
@@ -4480,8 +4484,10 @@ bool _give_items_skills()
         // necessary. (jpeg)
         if (you.species == SP_SPRIGGAN)
             you.inv[0].sub_type = WPN_DAGGER;
+        if (you.species == SP_OGRE || you.species == SP_TROLL)
+            you.inv[0].sub_type = WPN_CLUB;
 
-        you.skills[SK_SHORT_BLADES] = 2;
+        weap_skill = 2;
         you.skills[SK_FIGHTING] = 1;
         you.skills[SK_DODGING]  = 2;
         you.skills[SK_STEALTH]  = 2;
@@ -4502,7 +4508,10 @@ bool _give_items_skills()
         _newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 3);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
 
-        you.skills[SK_SHORT_BLADES] = 2;
+        if (you.species == SP_OGRE || you.species == SP_TROLL)
+            you.inv[0].sub_type = WPN_CLUB;
+
+        weap_skill = 2;
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_DODGING]      = 1;
         you.skills[SK_STEALTH]      = 3;
