@@ -84,35 +84,84 @@ static bool in_non_diamond_int(const geom::vector &v)
     return (!in_diamond(v) && !on_line(v));
 }
 
+static bool _to_grid(geom::ray *r, bool half);
 // Is r on a corner and heading into a non-diamond?
 static bool bad_corner(const geom::ray &r)
 {
     if (!is_corner(r.start))
         return (false);
     geom::ray copy = r;
-    copy.to_grid(diamonds, true);
+    _to_grid(&copy, true);
     return (in_non_diamond_int(copy.start));
 }
 
-static coord_def round_vec(const geom::vector &v)
+static coord_def floor_vec(const geom::vector &v)
 {
     int x = ifloor(v.x);
     int y = ifloor(v.y);
     return (coord_def(x, y));
 }
 
-
 coord_def ray_def::pos() const
 {
     ASSERT(_valid());
     // XXX: pretty arbitrary if we're just on a corner.
-    return (round_vec(r.start));
+    return (floor_vec(r.start));
+}
+
+void _round_to_corner(geom::ray *r)
+{
+    geom::vector v = 2.0 * r->start;
+    v.x = round(v.x);
+    v.y = round(v.y);
+    ASSERT((iround(v.x) + iround(v.y)) % 2 == 1);
+    r->start = 0.5 * v;
+}
+
+void _round_to_grid(geom::ray *r)
+{
+    // x + y or x - y is of the form 0.5+k
+    geom::vector v = r->start;
+    double sum = v.x + v.y - 0.5;
+    double diff = v.x - v.y - 0.5;
+    double deltas = round(sum) - sum;
+    double deltad = round(diff) - diff;
+    if (std::abs(deltas) <= std::abs(deltad))
+    {
+        v.x += 0.5 * deltas;
+        v.y += 0.5 * deltas;
+    }
+    else
+    {
+        v.x += 0.5 * deltad;
+        v.y -= 0.5 * deltad;
+    }
+    r->start = v;
+}
+
+static bool _to_next_cell(geom::ray *r)
+{
+    bool c = r->to_next_cell(diamonds);
+    if (c)
+        _round_to_corner(r);
+    return (c);
+}
+
+static bool _to_grid(geom::ray *r, bool half)
+{
+    bool c = r->to_grid(diamonds, half);
+    if (!half)
+        _round_to_grid(r);
+    c = c || is_corner(r->start);
+    if (c)
+        _round_to_corner(r);
+    return (c);
 }
 
 static bool _advance_from_non_diamond(geom::ray *r)
 {
     ASSERT(in_non_diamond_int(r->start));
-    if (!r->to_next_cell(diamonds))
+    if (!_to_next_cell(r))
     {
         ASSERT(in_diamond_int(r->start));
         return (false);
@@ -128,8 +177,14 @@ static bool _advance_from_non_diamond(geom::ray *r)
 // The ray is in a legal state to be passed around externally.
 bool ray_def::_valid() const
 {
-    return (on_corner && is_corner(r.start) ||
+    return (on_corner && is_corner(r.start) && bad_corner(r) ||
             !on_corner && in_diamond_int(r.start));
+}
+
+geom::vector _normalize(const geom::vector &v)
+{
+    double n = sqrt(v.x*v.x + v.y*v.y);
+    return ((1.0 / n) * v);
 }
 
 // Return true if we didn't hit a corner, hence if this
@@ -137,21 +192,22 @@ bool ray_def::_valid() const
 bool ray_def::advance()
 {
     ASSERT(_valid());
+    r.dir = _normalize(r.dir);
     if (on_corner)
     {
         ASSERT (is_corner(r.start));
         on_corner = false;
-        r.to_grid(diamonds, true);
+        _to_grid(&r, true);
     }
     else
     {
         // Starting inside a diamond.
-        bool c = r.to_next_cell(diamonds);
+        bool c = _to_next_cell(&r);
 
         if (c)
         {
             // r is now on a corner, going from diamond to diamond.
-            r.to_grid(diamonds, true);
+            _to_grid(&r, true);
             ASSERT(_valid());
             return (true);
         }
@@ -259,17 +315,17 @@ geom::vector _fudge_corner(const geom::vector &w, const reflect_grid &rg)
     {
         // just try both sides
         v.x += 10 * EPSILON_VALUE;
-        if (rg(round_vec(v) + rg_o))
+        if (rg(floor_vec(v) + rg_o))
             v.x -= 20 * EPSILON_VALUE;
-        ASSERT(!rg(round_vec(v) + rg_o));
+        ASSERT(!rg(floor_vec(v) + rg_o));
     }
     else
     {
         ASSERT(double_is_integral(v.y));
         v.y += 10 * EPSILON_VALUE;
-        if (rg(round_vec(v) + rg_o))
+        if (rg(floor_vec(v) + rg_o))
             v.y -= 20 * EPSILON_VALUE;
-        ASSERT(!rg(round_vec(v) + rg_o));
+        ASSERT(!rg(floor_vec(v) + rg_o));
     }
     return (v);
 }
@@ -288,11 +344,11 @@ geom::ray _bounce_diag_corridor(const geom::ray &rorig)
     // Now bounce back and forth between l1 and l2 until we hit k.
     while (!double_is_zero(geom::intersect(r, k)))
     {
-        r.to_grid(diamonds, false);
+        _to_grid(&r, false);
         r.dir = reflect(r.dir, wall);
     }
     // Now pointing inside the destination cell (1,1) -- move inside.
-    r.to_grid(diamonds, true);
+    _to_grid(&r, true);
     return (r);
 }
 
@@ -342,7 +398,7 @@ geom::ray _bounce_noncorner(const geom::ray &r, const coord_def &side,
             // Depending on the case, we're on some diamond edge
             // or between diamonds. We'll just move safely into
             // the next one.
-            rmirr.to_grid(diamonds, true);
+            _to_grid(&rmirr, true);
             if (in_non_diamond_int(rmirr.start))
                 _advance_from_non_diamond(&rmirr);
         }
@@ -402,13 +458,13 @@ geom::ray _bounce_corner(const geom::ray &rorig, const coord_def &side,
         if (f.a != 0 && f.b != 0)
         {
             // Diagonal wall: to the next diamond, then inside.
-            r.to_grid(diamonds, false);
-            r.to_grid(diamonds, true);
+            _to_grid(&r, false);
+            _to_grid(&r, true);
         }
         else
         {
             // Back inside diamond (0,0).
-            r.to_grid(diamonds, true);
+            _to_grid(&r, true);
         }
     }
     return (r);
@@ -438,7 +494,7 @@ void ray_def::bounce(const reflect_grid &rg)
 
     // Move to the diamond edge to determine the side.
     coord_def side;
-    bool corner = rtrans.to_grid(diamonds, false);
+    bool corner = _to_grid(&rtrans, false);
     double d1 = diamonds.ls1.index(rtrans.start);
     if (double_is_integral(d1))
         side += iround(d1) ? coord_def(1,1) : coord_def(-1,-1);
