@@ -1191,7 +1191,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
-        const item_def* wpn = mons.weapon();
+        const item_def* wpn = mons.mslot_item(MSLOT_WEAPON);
         if (!wpn)
         {
             mons.destroy_inventory();
@@ -1282,6 +1282,17 @@ static int _place_monster_aux(const mgen_data &mg,
         ghost.init_random_demon();
         mons.set_ghost(ghost);
         mons.pandemon_init();
+    }
+    else if (mons.type == MONS_DANCING_WEAPON)
+    {
+        ghost_demon ghost;
+        // We can't use monsters::weapon here because it wants to look
+        // at attack types, which are in the ghost structure we're
+        // building.
+        ASSERT( mons.mslot_item(MSLOT_WEAPON) );
+        ghost.init_dancing_weapon(*(mons.mslot_item(MSLOT_WEAPON)), 100);
+        mons.set_ghost(ghost);
+        mons.dancing_weapon_init();
     }
 
     mark_interesting_monst(&mons, mg.behaviour);

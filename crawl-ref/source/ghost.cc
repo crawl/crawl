@@ -601,6 +601,35 @@ void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
     }
 }
 
+void ghost_demon::init_dancing_weapon(const item_def& weapon, int)
+{
+    speed = 15;
+
+    ev = 20;
+
+    ac = 10;
+
+    damage = 30;
+
+    xl = 15;
+
+    max_hp = 15;
+
+    att_type = AT_HIT;
+
+    colour = weapon.colour;
+
+    att_flav = AF_PLAIN;
+
+    fly = FL_LEVITATE;
+
+    resists.hellfire = 3;
+    resists.fire = 3;
+    resists.cold = 3;
+    resists.poison = 3;
+    resists.elec = 1;
+}
+
 static spell_type search_first_list(int ignore_spell)
 {
     for (unsigned i = 0;

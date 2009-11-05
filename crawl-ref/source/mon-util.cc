@@ -818,6 +818,7 @@ bool mons_is_ghost_demon(int mc)
     return (mc == MONS_UGLY_THING
             || mc == MONS_VERY_UGLY_THING
             || mc == MONS_PLAYER_GHOST
+            || mc == MONS_DANCING_WEAPON
             || mc == MONS_PANDEMONIUM_DEMON);
 }
 

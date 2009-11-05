@@ -46,6 +46,7 @@ public:
     void init_player_ghost();
     void init_ugly_thing(bool very_ugly, bool only_mutate = false,
                          unsigned char force_colour = BLACK);
+    void init_dancing_weapon(const item_def& weapon, int power);
     void ugly_thing_to_very_ugly_thing();
 
 public:
