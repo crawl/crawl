@@ -2021,6 +2021,19 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         return player_monattk_final_hit_effects(true);
     }
 
+    if (stab_attempt && stab_bonus > 0 && weapon
+        && weapon->base_type == OBJ_WEAPONS && weapon->sub_type == WPN_CLUB
+        && damage_done + special_damage > random2(defender->get_experience_level())
+        && !defender_as_monster()->has_ench(ENCH_CONFUSION)
+        && mons_class_is_confusable(defender->id()))
+    {
+        if (defender_as_monster()->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+            KC_YOU, 20+random2(30)))) // 1-3 turns
+        {
+            mprf("%s is stunned!", defender->name(DESC_NOCAP_THE).c_str());
+        }
+    }
+
     return player_monattk_final_hit_effects(false);
 }
 
