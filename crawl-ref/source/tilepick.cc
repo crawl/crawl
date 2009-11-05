@@ -2623,7 +2623,7 @@ int tileidx_player(int job)
         case TRAN_LICH:      ch = TILEP_TRAN_LICH;      break;
     }
 
-    if (player_is_airborne())
+    if (you.airborne())
         ch |= TILE_FLAG_FLYING;
 
     if (you.attribute[ATTR_HELD])

@@ -3200,7 +3200,7 @@ void jewellery_wear_effects(item_def &item)
     case RING_LEVITATION:
         if (!scan_artefacts(ARTP_LEVITATE))
         {
-            if (player_is_airborne())
+            if (you.airborne())
                 mpr("You feel vaguely more buoyant than before.");
             else
                 mpr("You feel buoyant.");
@@ -5469,7 +5469,7 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
     if (unknown_proprt(ARTP_LEVITATE)
         && !items_give_ability(item.link, ARTP_LEVITATE))
     {
-        if (player_is_airborne())
+        if (you.airborne())
             mpr("You feel vaguely more buoyant than before.");
         else
             mpr("You feel buoyant.");

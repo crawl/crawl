@@ -991,7 +991,7 @@ bool zin_remove_all_mutations()
 
 static bool _need_water_walking()
 {
-    return (!player_is_airborne() && you.species != SP_MERFOLK
+    return (!you.airborne() && you.species != SP_MERFOLK
             && grd(you.pos()) == DNGN_DEEP_WATER);
 }
 

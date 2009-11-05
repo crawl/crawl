@@ -788,7 +788,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         mpr("You are struck by lightning.");
         damage = 3 + random2(5 + pow / 10);
         damage = check_your_resists( damage, BEAM_ELECTRICITY );
-        if (player_is_airborne())
+        if (you.airborne())
             damage /= 2;
         ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC);
     }

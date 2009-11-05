@@ -1481,7 +1481,7 @@ void cast_swiftness(int power)
 void cast_fly(int power)
 {
     const int dur_change = 25 + random2(power) + random2(power);
-    const bool was_levitating = player_is_airborne();
+    const bool was_levitating = you.airborne();
 
     you.duration[DUR_LEVITATION] += dur_change;
     if (you.duration[DUR_LEVITATION] > 100)

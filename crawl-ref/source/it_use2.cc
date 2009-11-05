@@ -224,10 +224,10 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
     case POT_LEVITATION:
         mprf(MSGCH_DURATION,
-             "You feel %s buoyant.", !player_is_airborne() ? "very"
+             "You feel %s buoyant.", !you.airborne() ? "very"
                                                            : "more");
 
-        if (!player_is_airborne())
+        if (!you.airborne())
             mpr("You gently float upwards from the floor.");
 
         // Amulet of Controlled Flight can auto-ID.
@@ -246,7 +246,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         }
 
         // Merfolk boots unmeld if levitation takes us out of water.
-        if (!player_is_airborne() && you.species == SP_MERFOLK
+        if (!you.airborne() && you.species == SP_MERFOLK
             && feat_is_water(grd(you.pos())))
         {
             unmeld_one_equip(EQ_BOOTS);

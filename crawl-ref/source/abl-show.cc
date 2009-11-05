@@ -2301,7 +2301,7 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
 
-    if (!player_is_airborne() && !transform_changed_physiology())
+    if (!you.airborne() && !transform_changed_physiology())
     {
         // Kenku can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).

@@ -668,7 +668,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(color, "Ins"));
     }
 
-    if (player_is_airborne())
+    if (you.airborne())
     {
         const bool perm     = you.permanent_flight();
         const bool expiring = (!perm && dur_expiring(DUR_LEVITATION));
@@ -1907,7 +1907,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     cols.add_formatted(1, buf, false);
 
     const int rctel = player_control_teleport(calc_unid);
-    const int rlevi = player_is_airborne();
+    const int rlevi = you.airborne();
     const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
     snprintf(buf, sizeof buf,
              "%sCtrl.Telep.: %s\n"
@@ -2160,7 +2160,7 @@ std::string _status_mut_abilities()
     if (you.duration[DUR_BERSERKER])
         status.push_back("berserking");
 
-    if (player_is_airborne())
+    if (you.airborne())
     {
         std::string help;
         if (wearing_amulet( AMU_CONTROLLED_FLIGHT ))

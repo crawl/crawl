@@ -1303,7 +1303,7 @@ void search_around(bool only_adjacent)
 bool merfolk_change_is_safe(bool quiet)
 {
     // If already transformed, no subsequent transformation necessary.
-    if (!player_is_airborne() && feat_is_water(grd(you.pos())))
+    if (!you.airborne() && feat_is_water(grd(you.pos())))
         return (true);
 
     std::set<equipment_type> r;
@@ -1346,21 +1346,21 @@ static void climb_message(dungeon_feature_type stair, bool going_up,
         {
             mprf("You %s downwards.",
                  you.flight_mode() == FL_FLY ? "fly" :
-                     (player_is_airborne() ? "float" : "slide"));
+                     (you.airborne() ? "float" : "slide"));
         }
     }
     else if (feat_is_gate(stair))
     {
         mprf("You %s %s through the gate.",
              you.flight_mode() == FL_FLY ? "fly" :
-                   (player_is_airborne() ? "float" : "go"),
+                   (you.airborne() ? "float" : "go"),
              going_up ? "up" : "down");
     }
     else
     {
         mprf("You %s %swards.",
              you.flight_mode() == FL_FLY ? "fly" :
-                   (player_is_airborne() ? "float" : "climb"),
+                   (you.airborne() ? "float" : "climb"),
              going_up ? "up" : "down");
     }
 }
@@ -1802,7 +1802,7 @@ void up_stairs(dungeon_feature_type force_stair,
     // Since the overloaded message set turn_is_over, I'm assuming that
     // the overloaded character makes an attempt... so we're doing this
     // check before that one. -- bwr
-    if (!player_is_airborne()
+    if (!you.airborne()
         && you.confused()
         && old_level_type == LEVEL_DUNGEON
         && !feat_is_escape_hatch(stair_find)
@@ -2345,7 +2345,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (old_level_type != you.level_type && you.level_type == LEVEL_DUNGEON)
         mprf("Welcome back to %s!", branches[you.where_are_you].longname);
 
-    if (!player_is_airborne()
+    if (!you.airborne()
         && you.confused()
         && !feat_is_escape_hatch(stair_find)
         && force_stair != DNGN_ENTER_ABYSS

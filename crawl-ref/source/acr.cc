@@ -3300,7 +3300,7 @@ static void _open_door(coord_def move, bool check_confused)
     }
     else
     {
-        const char* verb = (player_is_airborne() ? "reach down and open"
+        const char* verb = (you.airborne() ? "reach down and open"
                                                  : "open");
         mprf("You %s the %s%s.", verb, adj, noun);
     }
@@ -3463,7 +3463,7 @@ static void _close_door(coord_def move)
         }
         else
         {
-            const char* verb = player_is_airborne() ? "reach down and close"
+            const char* verb = you.airborne() ? "reach down and close"
                                                     : "close";
 
             mprf("You %s the %s%s.", verb, adj, noun);

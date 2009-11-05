@@ -235,7 +235,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     bool need_doll_update = false;
 #endif
     // Only consider terrain if player is not levitating.
-    if (!player_is_airborne())
+    if (!you.airborne())
     {
         bool merfolk_check = false;
         if (you.species == SP_MERFOLK)
@@ -389,7 +389,7 @@ bool player_can_swim()
 
 bool is_feat_dangerous(dungeon_feature_type grid)
 {
-    return (!player_is_airborne()
+    return (!you.airborne()
             && (grid == DNGN_LAVA
                 || (grid == DNGN_DEEP_WATER && !player_likes_water())));
 }
@@ -2697,7 +2697,7 @@ int player_sust_abil(bool calc_unid)
 int carrying_capacity(burden_state_type bs)
 {
     int cap = (2 * you.body_weight()) + (you.strength * 200)
-              + (player_is_airborne() ? 1000 : 0);
+              + (you.airborne() ? 1000 : 0);
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
 
@@ -3531,7 +3531,7 @@ int check_stealth(void)
 
     stealth += scan_artefacts( ARTP_STEALTH );
 
-    if (player_is_airborne())
+    if (you.airborne())
         stealth += 10;
     else if (player_in_water())
     {
@@ -3996,7 +3996,7 @@ void display_char_status()
     if (you.duration[DUR_BERSERKER])
         mpr("You are possessed by a berserker rage.");
 
-    if (player_is_airborne())
+    if (you.airborne())
     {
         const bool expires = dur_expiring(DUR_LEVITATION)
                              && !you.permanent_flight();
@@ -4053,7 +4053,7 @@ void display_char_status()
     const bool water  = player_in_water();
     const bool swim   = player_is_swimming();
 
-    const bool lev    = player_is_airborne();
+    const bool lev    = you.airborne();
     const bool fly    = (you.flight_mode() == FL_FLY);
     const bool swift  = (you.duration[DUR_SWIFTNESS] > 0);
 
@@ -4194,11 +4194,6 @@ bool wearing_amulet(jewellery_type amulet, bool calc_unid)
 
     const item_def& amu(you.inv[you.equip[EQ_AMULET]]);
     return (amu.sub_type == amulet && (calc_unid || item_type_known(amu)));
-}
-
-bool player_is_airborne(void)
-{
-    return you.airborne();
 }
 
 static int _species_exp_mod(species_type species)
