@@ -6823,7 +6823,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     if (amount <= 0)
         return (false);
 
-    if (you.res_rotting())
+    if (this->res_rotting())
     {
         mpr("You feel terrible.");
         return (false);
@@ -6832,14 +6832,14 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     if (immediate > 0)
         rot_hp(immediate);
 
-    if (you.rotting < 40)
+    if (this->rotting < 40)
     {
         // Either this, or the actual rotting message should probably
         // be changed so that they're easier to tell apart. -- bwr
         mprf(MSGCH_WARN, "You feel your flesh %s away!",
-             you.rotting > 0 ? "rotting" : "start to rot");
+             this->rotting > 0 ? "rotting" : "start to rot");
 
-        you.rotting += amount;
+        this->rotting += amount;
 
         learned_something_new(TUT_YOU_ROTTING);
     }
