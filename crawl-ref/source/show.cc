@@ -4,6 +4,7 @@
 
 #include "cloud.h"
 #include "colour.h"
+#include "coord.h"
 #include "coordit.h"
 #include "directn.h"
 #include "feature.h"
@@ -228,6 +229,18 @@ void show_def::init()
     grid.init(show_type());
     backup.init(show_type());
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-        update_at(*ri, grid2show(*ri));
+    if (crawl_state.arena)
+    {
+        const coord_def &ul = crawl_view.glos1; // Upper left
+        const coord_def &lr = crawl_view.glos2; // Lower right
+
+        for (rectangle_iterator ri(ul, lr); ri; ++ri)
+            update_at(*ri, grid2show(*ri));
+    }
+    else
+    {
+        ASSERT(in_bounds(you.pos()));
+        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+            update_at(*ri, grid2show(*ri));
+    }
 }
