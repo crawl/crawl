@@ -1,6 +1,8 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
+#include "los_def.h"
+
 class actor
 {
 public:
@@ -107,7 +109,9 @@ public:
     virtual bool visible_to(const actor *looker) const = 0;
 
     // Is the given cell within LOS of the actor?
-    virtual bool see_cell(const coord_def &c) const = 0;
+    virtual bool see_cell(const coord_def &c) const;
+
+    virtual void update_los();
 
     // Can the actor actually see the target?
     virtual bool can_see(const actor *target) const;
@@ -221,6 +225,9 @@ public:
     virtual bool     do_shaft() = 0;
 
     coord_def position;
+
+protected:
+    los_def los;
 };
 
 #endif

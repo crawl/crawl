@@ -17,6 +17,16 @@ bool actor::observable() const
     return (crawl_state.arena || this == &you || you.can_see(this));
 }
 
+bool actor::see_cell(const coord_def &p) const
+{
+    return (los.see_cell(p));
+}
+
+void actor::update_los()
+{
+    los.update();
+}
+
 bool actor::can_see(const actor *target) const
 {
     return (target->visible_to(this) && see_cell(target->pos()));
@@ -118,4 +128,5 @@ bool actor::check_res_magic(int power)
 void actor::set_position(const coord_def &c)
 {
     position = c;
+    los.set_center(c);
 }
