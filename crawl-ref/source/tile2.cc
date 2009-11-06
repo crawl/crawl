@@ -177,7 +177,7 @@ void tile_init_default_flavour()
 int get_clean_map_idx(int tile_idx)
 {
     int idx = tile_idx & TILE_FLAG_MASK;
-    if (idx >= TILE_CLOUD_FIRE_0 && idx <= TILE_CLOUD_PURP_SMOKE
+    if (idx >= TILE_CLOUD_FIRE_0 && idx <= TILE_CLOUD_TLOC_ENERGY
         || idx >= TILEP_MONS_PANDEMONIUM_DEMON && idx <= TILEP_MONS_TEST_SPAWNER
         || idx >= TILEP_MCACHE_START)
     {

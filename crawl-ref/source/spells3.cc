@@ -1530,7 +1530,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
             else
             {
                 // Leave a purple cloud.
-                place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
+                place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
 
                 // Controlling teleport contaminates the player. - bwr
                 move_player_to_grid(pos, false, true, true);
@@ -1592,7 +1592,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
         }
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
 
         move_player_to_grid(newpos, false, true, true);
     }

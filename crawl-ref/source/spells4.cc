@@ -1181,7 +1181,6 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
         case 4:   beem.flavour = BEAM_POTION_RANDOM;          break;
         case 5:   beem.flavour = BEAM_POTION_BLUE_SMOKE;      break;
         case 6:   beem.flavour = BEAM_POTION_BLACK_SMOKE;     break;
-        case 7:   beem.flavour = BEAM_POTION_PURP_SMOKE;      break;
         default:  beem.flavour = BEAM_POTION_STEAM;           break;
         }
         tracer_flavour = BEAM_RANDOM;
@@ -2028,7 +2027,7 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     if (res)
     {
         // Leave a purple cloud.
-        place_cloud(CLOUD_PURP_SMOKE, origin, 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
     }
 
     return res;

@@ -2585,8 +2585,8 @@ static int _tileidx_cloud(int type, int decay)
             ch = TILE_CLOUD_BLUE_SMOKE;
             break;
 
-        case CLOUD_PURP_SMOKE:
-            ch = TILE_CLOUD_PURP_SMOKE;
+        case CLOUD_TLOC_ENERGY:
+            ch = TILE_CLOUD_TLOC_ENERGY;
             break;
 
         case CLOUD_MIASMA:

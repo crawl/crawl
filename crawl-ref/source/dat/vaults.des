@@ -291,7 +291,7 @@ local function teleporter (position, mtable)
 
   -- In order to mimic a normal teleport, even though this is certainly not. 
   dgn.apply_area_cloud(position.x, position.y, 1, 4, 1, 1, 
-    "purple smoke", "you", -1) 
+    "tloc energy", "you", -1) 
 end
 
 -- Lua marker magic!

@@ -246,7 +246,7 @@ ENDMAP
 # Bazaar in the mist (Lemuel)
 NAME:   bzr_in_the_mist
 TAGS:   bzr_entry
-MARKER: O = lua:fog_machine { cloud_type= "purple smoke", \
+MARKER: O = lua:fog_machine { cloud_type= "thin mist", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
 MARKER: O = lua:bazaar_portal()

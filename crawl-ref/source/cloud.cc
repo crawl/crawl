@@ -427,12 +427,12 @@ cloud_type cloud_type_at(const coord_def &c)
 
 cloud_type random_smoke_type()
 {
-    // excludes black (reproducing existing behaviour)
+    // including black to keep variety
     switch ( random2(3) )
     {
     case 0: return CLOUD_GREY_SMOKE;
     case 1: return CLOUD_BLUE_SMOKE;
-    case 2: return CLOUD_PURP_SMOKE;
+    case 2: return CLOUD_BLACK_SMOKE;
     }
     return CLOUD_DEBUGGING;
 }
@@ -461,8 +461,6 @@ cloud_type beam2cloud(beam_type flavour)
         return CLOUD_GREY_SMOKE;
     case BEAM_POTION_BLUE_SMOKE:
         return CLOUD_BLUE_SMOKE;
-    case BEAM_POTION_PURP_SMOKE:
-        return CLOUD_PURP_SMOKE;
     case BEAM_STEAM:
     case BEAM_POTION_STEAM:
         return CLOUD_STEAM;
@@ -494,7 +492,6 @@ beam_type cloud2beam(cloud_type flavour)
     case CLOUD_BLACK_SMOKE: return BEAM_POTION_BLACK_SMOKE;
     case CLOUD_GREY_SMOKE:  return BEAM_POTION_GREY_SMOKE;
     case CLOUD_BLUE_SMOKE:  return BEAM_POTION_BLUE_SMOKE;
-    case CLOUD_PURP_SMOKE:  return BEAM_POTION_PURP_SMOKE;
     case CLOUD_STEAM:       return BEAM_STEAM;
     case CLOUD_MIASMA:      return BEAM_MIASMA;
     case CLOUD_CHAOS:       return BEAM_CHAOS;
@@ -712,7 +709,7 @@ void in_a_cloud()
 
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLUE_SMOKE:
-    case CLOUD_PURP_SMOKE:
+    case CLOUD_TLOC_ENERGY:
     case CLOUD_BLACK_SMOKE:
         mpr("You are engulfed in a cloud of smoke!");
         break;
@@ -829,7 +826,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_BLACK_SMOKE:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLUE_SMOKE:
-    case CLOUD_PURP_SMOKE:
+    case CLOUD_TLOC_ENERGY:
     case CLOUD_MIST:
     case CLOUD_RAIN:
     case CLOUD_DEBUGGING:
@@ -880,8 +877,8 @@ std::string cloud_name(cloud_type type)
         return "grey smoke";
     case CLOUD_BLUE_SMOKE:
         return "blue smoke";
-    case CLOUD_PURP_SMOKE:
-        return "purple smoke";
+    case CLOUD_TLOC_ENERGY:
+        return "translocational energy";
     case CLOUD_STEAM:
         return "steam";
     case CLOUD_MIASMA:
@@ -1006,7 +1003,7 @@ int get_cloud_colour(int cloudno)
         which_colour = LIGHTBLUE;
         break;
 
-    case CLOUD_PURP_SMOKE:
+    case CLOUD_TLOC_ENERGY:
         which_colour = MAGENTA;
         break;
 

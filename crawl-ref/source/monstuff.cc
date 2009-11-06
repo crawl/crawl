@@ -2511,7 +2511,7 @@ bool monster_blink(monsters *monster, bool quiet)
         return (false);
 
     // Leave a purple cloud.
-    place_cloud(CLOUD_PURP_SMOKE, oldplace, 1 + random2(3),
+    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
                 monster->kill_alignment());
 
     monster->check_redraw(oldplace);
@@ -3646,7 +3646,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         handle_seen_interrupt(monster);
 
     // Leave a purple cloud.
-    place_cloud(CLOUD_PURP_SMOKE, oldplace, 1 + random2(3),
+    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
                 monster->kill_alignment());
 
     monster->check_redraw(oldplace);

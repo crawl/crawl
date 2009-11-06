@@ -171,7 +171,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         else
         {
             // Leave a purple cloud.
-            place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
+            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
             move_player_to_grid(beam.target, false, true, true);
 
             // Controlling teleport contaminates the player. -- bwr
@@ -235,7 +235,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         if (success)
         {
             // Leave a purple cloud.
-            place_cloud(CLOUD_PURP_SMOKE, origin, 1 + random2(3), KC_YOU);
+            place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
 
             if (you.level_type == LEVEL_ABYSS)
             {

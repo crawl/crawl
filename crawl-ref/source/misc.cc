@@ -2244,7 +2244,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
         mprf("You insert %s into the lock.",
              you.inv[runes[1]].name(DESC_NOCAP_THE).c_str());
-        big_cloud(CLOUD_PURP_SMOKE, KC_YOU, you.pos(), 20, 7 + random2(7));
+        big_cloud(CLOUD_BLUE_SMOKE, KC_YOU, you.pos(), 20, 7 + random2(7));
         viewwindow(true, false);
         mpr("Heavy smoke blows from the lock!");
         more();

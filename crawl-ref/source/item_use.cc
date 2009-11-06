@@ -1829,7 +1829,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     if (victim->atype() == ACT_PLAYER)
     {
         // Leave a purple cloud.
-        place_cloud(CLOUD_PURP_SMOKE, you.pos(), 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
 
         victim->moveto(pos);
         mpr("You blink!");
@@ -1844,7 +1844,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
         mon->move_to_pos(pos);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_PURP_SMOKE, oldpos, 1 + random2(3),
+        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3),
                     victim->kill_alignment());
 
         mon->apply_location_effects(oldpos);

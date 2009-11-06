@@ -23,7 +23,7 @@ cloud_black_smoke CLOUD_BLACK_SMOKE
 cloud_blue_smoke CLOUD_BLUE_SMOKE
 cloud_grey_smoke CLOUD_GREY_SMOKE
 cloud_miasma CLOUD_MIASMA
-cloud_purp_smoke CLOUD_PURP_SMOKE
+cloud_tloc_energy CLOUD_TLOC_ENERGY
 
 #########MAP
 %sdir dc-misc
