@@ -12,9 +12,13 @@
 class monsters;
 class bolt;
 
+void init_mons_spells();
+bool is_valid_mon_spell(spell_type spell);
+
 bool handle_mon_spell(monsters *monster, bolt &beem);
 
-bolt mons_spells(monsters *mons, spell_type spell_cast, int power);
+bolt mons_spells(monsters *mons, spell_type spell_cast, int power,
+                 bool check_validity = false);
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                bool do_noise = true);
 void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast);

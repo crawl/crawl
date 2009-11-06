@@ -85,6 +85,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-act.h"
+#include "mon-cast.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -3533,6 +3534,7 @@ static bool _initialise(void)
     init_monster_symbols();
     init_spell_descs();        // This needs to be way up top. {dlb}
     init_mon_name_cache();
+    init_mons_spells();
 
     // init_item_name_cache() needs to be redone after init_char_table()
     // and init_show_table() have been called, so that the glyphs will

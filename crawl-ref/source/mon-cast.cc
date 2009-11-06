@@ -34,6 +34,38 @@
 #include "view.h"
 #include "viewchar.h"
 
+static bool _valid_mon_spells[NUM_SPELLS];
+
+void init_mons_spells()
+{
+    monsters fake_mon;
+    fake_mon.type       = MONS_BLACK_DRACONIAN;
+    fake_mon.hit_points = 1;
+
+    for (int i = 0; i < NUM_SPELLS; i++)
+    {
+        spell_type spell = (spell_type) i;
+
+        _valid_mon_spells[i] = false;
+
+        if (!is_valid_spell(spell))
+            continue;
+
+        bolt beam = mons_spells(&fake_mon, spell, 1, true);
+
+        if (beam.flavour != NUM_BEAMS)
+            _valid_mon_spells[i] = true;
+    }
+}
+
+bool is_valid_mon_spell(spell_type spell)
+{
+    if (spell < 0 || spell >= NUM_SPELLS)
+        return (false);
+
+    return (_valid_mon_spells[spell]);
+}
+
 static void _scale_draconian_breath(bolt& beam, int drac_type)
 {
     int scaling = 100;
@@ -126,7 +158,8 @@ static bool _set_allied_target(monsters * caster, bolt & pbolt)
     return (false);
 }
 
-bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
+bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
+                  bool check_validity )
 {
     ASSERT(power > 0);
 
@@ -606,6 +639,12 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         break;
 
     default:
+        if (check_validity)
+        {
+            beam.flavour = NUM_BEAMS;
+            return (beam);
+        }
+
         if (!is_valid_spell(real_spell))
             DEBUGSTR("Invalid spell #%d cast by %s", (int) real_spell,
                      mons->name(DESC_PLAIN, true).c_str());

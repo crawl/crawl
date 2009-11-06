@@ -30,6 +30,7 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "misc.h"
+#include "mon-cast.h"
 #include "monplace.h"
 #include "mon-util.h"
 #include "place.h"
@@ -2368,6 +2369,12 @@ void mons_list::parse_mons_spells(mons_spec &spec, const std::string &spells)
                                      spname.c_str(), spells.c_str());
                 return;
             }
+            if (!is_valid_mon_spell(sp))
+            {
+                error = make_stringf("Not a monster spell: '%s'",
+                                     spname.c_str());
+                return;
+             }
             spec.spells[i] = sp;
         }
     }
