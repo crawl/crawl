@@ -454,7 +454,7 @@ SUBST:   ? = +=
 SUBST:   d = $d
 SUBST:   I = IG
 SHUFFLE: 112/334
-MONS:    orc sorcerer, orc / orc wizard, ogre-mage, ogre / nothing
+MONS:    orc sorcerer, orc / orc wizard, ogre mage, ogre / nothing
 ITEM:    any book
 MAP
   xxxx?xxxx

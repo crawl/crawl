@@ -169,7 +169,7 @@ DEPTH:   D:11-22, Orc:3-4
 ORIENT:  north
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
 MONS:    hill giant, cyclops
-MONS:    w:50 ogre / w:5 ogre-mage / two-headed ogre
+MONS:    w:50 ogre / w:5 ogre mage / two-headed ogre
 MONS:    wolf / warg
 SHUFFLE: ae / bB / gG / dD
 SUBST:   ; = .'
@@ -1219,7 +1219,7 @@ KFEAT:  m = .
 KFEAT:  z = .
 KMONS:  A = orc sorcerer / Nergalle, orc sorcerer
 KMONS:  B = wizard
-KMONS:  C = ogre-mage / Erolcha, ogre-mage
+KMONS:  C = ogre mage / Erolcha, ogre mage
 KMONS:  D = deep elf sorcerer
 KMONS:  E = lich / Boris, lich
 KMONS:  F = ancient lich

@@ -48,7 +48,7 @@ ENDMAP
 NAME: david_vaults_2
 TAGS: vault_entry
 MONS: weight:40 nothing / weight:30 yaktaur / yaktaur captain
-MONS: weight:70 nothing / weight:40 ogre / weight:20 two-headed ogre / ogre-mage
+MONS: weight:70 nothing / weight:40 ogre / weight:20 two-headed ogre / ogre mage
 MONS: weight:100 nothing / shapeshifter
 SHUFFLE: 123
 ORIENT:  float

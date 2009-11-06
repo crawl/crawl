@@ -503,7 +503,7 @@ MONS:    deep elf knight / w:1 deep elf high priest / \
 # the orcish delegation:
 MONS:    orc warlord / iron troll / w:1 fire giant / w:1 frost giant / \
          w:1 stone giant
-MONS:    orc sorcerer / orc high priest / w:5 ogre-mage
+MONS:    orc sorcerer / orc high priest / w:5 ogre mage
 MONS:    orc knight / rock troll / ettin / w:1 orc sorcerer / \
          w:1 orc high priest
 # the arbiter(s):

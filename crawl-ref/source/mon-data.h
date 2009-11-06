@@ -2496,7 +2496,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_OGRE_MAGE, 'O', MAGENTA, "ogre-mage",
+    MONS_OGRE_MAGE, 'O', MAGENTA, "ogre mage",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     1300, 16, MONS_OGRE, MONS_OGRE, MH_NATURAL, -6,

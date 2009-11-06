@@ -631,7 +631,7 @@ NAME:    lemuel_ogre_cave
 ORIENT:  float
 DEPTH:   D:9-15, Orc
 TAGS:    no_pool_fixup
-MONS:    ogre, two-headed ogre, ogre-mage / Erolcha, plant / fungus
+MONS:    ogre, two-headed ogre, ogre mage / Erolcha, plant / fungus
 MONS:    ogre zombie, two-headed ogre zombie
 SHUFFLE: WX/ZY , 12/12/67
 SUBST:   W:ww. , X:. , Z:x , Y:+.=

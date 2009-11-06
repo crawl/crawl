@@ -55,7 +55,7 @@ KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
 SUBST:   P = MNO
 #
-# Player monsters (no vampire or ogre-mages because they can get out of their
+# Player monsters (no vampire or ogre magi because they can get out of their
 # cells or create threats outside; no merfolk, alive or undead, because they
 # insist on having deep water in their cells, which annoys me; other player
 # species don't exist as monsters):

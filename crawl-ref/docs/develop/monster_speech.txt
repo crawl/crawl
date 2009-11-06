@@ -258,7 +258,7 @@ following order:
 1. The actual monster name.
    Examples: "crystal golem", "default confused moth of wrath"
 2. The monster genus.
-   Examples: If "friendly ogre-mage" wasn't found, try "friendly ogre"
+   Examples: If "friendly ogre mage" wasn't found, try "friendly ogre"
              instead. Same for "dragon" if "swamp drake" was
              unsuccessful.
 3. Then the monster glyph, with prefix "cap-" for capital letters.
@@ -478,7 +478,7 @@ The following variables are hardcoded:
 @player_species@: Player base species, with Draconian rather than the
                   actual subtype.
 @player_genus@  : Player genus, i.e. "Elf" rather than the exact type,
-                  or "Ogre" instead of "Ogre-Mage".
+                  or "Orc" instead of "Hill Orc".
 @player_genus_plural@ : pluralised genus form.
 @player_god@    : Player's god name, or "you" if non-religious.
 @Player_god@    : Player's god name, or "You" if non-religious.
@@ -506,7 +506,7 @@ handling. If the parser encounters such a variable, it will search the
 database for the corresponding specific entry, i.e. "insult <genus>
 adj1/adj2/noun" where <genus> is replaced with the actual genus name,
 that is "draconian", "elf" or "dwarf" instead of the more specific
-species name, "ogre" for "ogre-mage", or the actual species name in all
+species name, "ogre" for "ogre mage", or the actual species name in all
 other cases.
 
 If this specific search doesn't yield any results, i.e., such an

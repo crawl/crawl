@@ -2003,7 +2003,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
         case SK_SPELLCASTING:
             if (player_genus(GENPC_OGRE, static_cast<species_type>(species)))
             {
-                result = "Ogre-Mage";
+                result = "Ogre Mage";
                 break;
             }
             // else fall-through
