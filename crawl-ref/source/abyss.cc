@@ -412,7 +412,7 @@ void area_shift(void)
 {
 #ifdef DEBUG_ABYSS
     mprf(MSGCH_DIAGNOSTICS, "area_shift() - player at pos (%d, %d)",
-         you.position.x, you.position.y);
+         you.pos().x, you.pos().y);
 #endif
 
     // Preserve floor props around the player, primarily so that

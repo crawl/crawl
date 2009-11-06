@@ -1728,7 +1728,7 @@ int fungal_bloom()
     int processed_count = 0;
     bool kills = false;
 
-    for (radius_iterator i(you.position, LOS_RADIUS); i; ++i)
+    for (radius_iterator i(you.pos(), LOS_RADIUS); i; ++i)
     {
         actor *target = actor_at(*i);
         if (target && (target->atype() == ACT_PLAYER
