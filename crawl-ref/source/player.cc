@@ -3832,11 +3832,11 @@ void display_char_status()
         mpr("You are mesmerised.");
 
     // How exactly did you get to show the status?
-    if (you.duration[DUR_PARALYSIS])
+    if (you.paralysed())
         mpr("You are paralysed.");
-    if (you.duration[DUR_PETRIFIED])
+    if (you.petrified())
         mpr("You are petrified.");
-    if (you.duration[DUR_SLEEP])
+    if (you.asleep())
         mpr("You are asleep.");
 
     if (you.duration[DUR_EXHAUSTED])

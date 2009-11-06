@@ -2044,7 +2044,7 @@ std::string _status_mut_abilities()
     if (you.petrified())
         status.push_back("petrified");
 
-    if (you.duration[DUR_SLEEP])
+    if (you.asleep())
         status.push_back("sleeping");
 
     if (you.burden_state == BS_ENCUMBERED)
