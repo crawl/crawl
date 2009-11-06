@@ -1605,7 +1605,7 @@ int monster_die(monsters *monster, killer_type killer,
                 || (!created_friendly && gives_xp
                     && (you.religion == GOD_MAKHLEB
                         || you.religion == GOD_SHINING_ONE
-                           && mons_is_evil_or_unholy(monster))
+                           && monster->is_evil())
                     && !player_under_penance()
                     && random2(you.piety) >= piety_breakpoint(0)))
             {
@@ -1621,7 +1621,7 @@ int monster_die(monsters *monster, killer_type killer,
                 && (you.religion == GOD_MAKHLEB
                     || you.religion == GOD_VEHUMET
                     || you.religion == GOD_SHINING_ONE
-                       && mons_is_evil_or_unholy(monster))
+                       && monster->is_evil())
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(0))
             {
@@ -1836,7 +1836,7 @@ int monster_die(monsters *monster, killer_type killer,
                 }
 
                 if (you.religion == GOD_SHINING_ONE
-                    && mons_is_evil_or_unholy(monster)
+                    && monster->is_evil()
                     && !player_under_penance()
                     && random2(you.piety) >= piety_breakpoint(0)
                     && !invalid_monster_index(killer_index))

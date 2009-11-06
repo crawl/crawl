@@ -2576,7 +2576,7 @@ bool player_will_anger_monster(monsters *mon, bool *holy,
                                bool *antimagical)
 {
     const bool isHoly =
-        (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
+        (is_good_god(you.religion) && mon->is_evil());
     const bool isUnholy =
         (is_evil_god(you.religion) && mons_is_holy(mon));
     const bool isLawful =

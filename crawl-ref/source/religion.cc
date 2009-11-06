@@ -1478,14 +1478,13 @@ bool _has_jelly()
 
 bool is_good_lawful_follower(const monsters* mon)
 {
-    return (mon->alive() && !mons_is_evil_or_unholy(mon)
-            && !mon->is_chaotic() && mons_friendly(mon));
+    return (mon->alive() && !mon->is_evil() && !mon->is_chaotic()
+            && mons_friendly(mon));
 }
 
 bool is_good_follower(const monsters* mon)
 {
-    return (mon->alive() && !mons_is_evil_or_unholy(mon)
-            && mons_friendly(mon));
+    return (mon->alive() && !mon->is_evil() && mons_friendly(mon));
 }
 
 bool is_follower(const monsters* mon)
@@ -5186,7 +5185,7 @@ static bool _evil_beings_on_level_attitude_change()
     {
         monsters *monster = &menv[i];
         if (monster->alive()
-            && mons_is_evil_or_unholy(monster))
+            && monster->is_evil())
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Evil attitude changing: %s "
