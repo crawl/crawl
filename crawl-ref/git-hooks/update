@@ -10,10 +10,10 @@ if [ -z "$GIT_DIR" ]; then
 	exit 1
 fi
 
-refname=${1#refs/heads/}
-[ "$refname" = "master" ] && refname=
+branchname=${1#refs/heads/}
+[ "$branchname" = "master" ] && branchname=
 oldhead=$2
 newhead=$3
-for merged in $(git-rev-list $newhead ^$oldhead | tac); do
-  $GIT_DIR/hooks/crawl-ref-cia $merged $refname
+for merged in $(git-rev-parse --symbolic-full-name --not --branches | egrep -v "^\^$1$" | git-rev-list --stdin $oldhead..$newhead | tac); do
+  $GIT_DIR/hooks/crawl-ref-cia $merged $branchname
 done
