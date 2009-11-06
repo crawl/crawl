@@ -3,6 +3,13 @@
 
 #include "show.h"
 
+/*
+ * A map_cell stores what the player knows about a cell.
+ * These go in env.map.
+ *
+ * TODO: Remove property -- that should go in env.grid.
+ */
+
 struct map_cell
 {
     show_type object;       // The object: monster, item, feature, or cloud.
