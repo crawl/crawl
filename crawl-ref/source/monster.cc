@@ -5159,11 +5159,6 @@ bool monsters::see_cell(const coord_def &c) const
     return (mon_see_cell(c));
 }
 
-bool monsters::can_see(const actor *targ) const
-{
-    return (targ->visible_to(this) && see_cell(targ->pos()));
-}
-
 bool monsters::near_foe() const
 {
     const actor *afoe = get_foe();

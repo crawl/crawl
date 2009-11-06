@@ -6903,14 +6903,6 @@ bool player::see_cell(const coord_def &c) const
     return (::see_cell(c));
 }
 
-bool player::can_see(const actor *target) const
-{
-    if (crawl_state.arena)
-        return target->visible_to(this);
-
-    return (target->visible_to(this) && see_cell(target->pos()));
-}
-
 bool player::backlit(bool check_haloed) const
 {
     return (get_contamination_level() > 0 || duration[DUR_BACKLIGHT]

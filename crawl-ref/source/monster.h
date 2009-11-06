@@ -317,7 +317,6 @@ public:
     bool visible_to(const actor *looker) const;
     bool mon_see_cell(const coord_def& pos, bool reach = false) const;
     bool see_cell(const coord_def& c) const;
-    bool can_see(const actor *target) const;
     bool near_foe() const;
 
     bool is_icy() const;

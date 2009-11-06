@@ -109,7 +109,7 @@ public:
     virtual bool see_cell(const coord_def &c) const = 0;
 
     // Can the actor actually see the target?
-    virtual bool can_see(const actor *target) const = 0;
+    virtual bool can_see(const actor *target) const;
 
     // Visibility as required by messaging. In usual play:
     //   Does the player know what's happening to the actor?
