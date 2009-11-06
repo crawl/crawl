@@ -823,7 +823,7 @@ e   all elves
 f   fungus, wandering mushroom
 g   goblin, hobgoblin, gnoll, boggart
 h   all hounds (jackal, hound, wolf, warg, war dog, hell hound)
-        and hogs (hog, hell-hog)
+        and hogs (hog, hell hog)
 j   snails: elephant slug, giant slug, giant snail
 k   winged insects: killer bee, bumblebee
 l   lizards (giant newt/gecko/iguana/lizard, gila monster, komodo

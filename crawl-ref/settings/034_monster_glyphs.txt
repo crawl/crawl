@@ -95,7 +95,7 @@ mon_glyph = hound : brown
 mon_glyph = warg : darkgrey
 mon_glyph = hog : lightred
 mon_glyph = hell hound : darkgrey
-mon_glyph = hell-hog : red
+mon_glyph = hell hog : red
 mon_glyph = jackal : yellow j
 
 # slugs and snails
@@ -230,7 +230,7 @@ mon_glyph = Frederick : darkgrey
 # warg                    darkgrey       white
 # hog                     lightred       red
 # hell hound              darkgrey       lightcyan
-# hell-hog                red            lightred
+# hell hog                red            lightred
 #
 # monster                 old colour     new colour
 # -------                 ----------     ----------
