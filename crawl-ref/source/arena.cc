@@ -866,7 +866,7 @@ namespace arena
                 viewwindow(true, false);
                 unwind_var<coord_def> pos(you.position);
                 // Move hero offscreen.
-                you.set_position(coord_def(-1,-1));
+                you.position.y = -1;
                 you.time_taken = 10;
                 // Make sure we don't starve.
                 you.hunger = 10999;
