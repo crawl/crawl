@@ -2195,7 +2195,7 @@ enum mon_spellbook_type
     MST_LICH_II,
     MST_LICH_III,
     MST_LICH_IV,
-    MST_BURNING_DEVIL    = 30,
+    MST_HELLION          = 30,
     MST_VAMPIRE          = 40,
     MST_VAMPIRE_KNIGHT,
     MST_VAMPIRE_MAGE,

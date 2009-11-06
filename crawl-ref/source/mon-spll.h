@@ -107,7 +107,7 @@
       }
     },
 
-    {  MST_BURNING_DEVIL,
+    {  MST_HELLION,
       {
        SPELL_HELLFIRE_BURST,
        SPELL_HELLFIRE_BURST,
@@ -982,7 +982,6 @@
        SPELL_BLINK
       }
     },
-
 
     // Crusader theme.
     {  MST_RUPERT,
