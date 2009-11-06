@@ -33,6 +33,19 @@ public:
     typedef FixedVector<TYPE, HEIGHT> Column;
 
 //-----------------------------------
+//    Initialization/Destruction
+//
+public:
+    ~FixedArray()                           {}
+
+    FixedArray()                            {}
+
+    FixedArray(TYPE def)
+    {
+        init(def);
+    }
+
+//-----------------------------------
 //    API
 //
 public:
