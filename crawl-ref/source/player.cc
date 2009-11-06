@@ -6378,6 +6378,13 @@ mon_holy_type player::holiness() const
     return (MH_NATURAL);
 }
 
+bool player::is_unholy() const
+{
+    const mon_holy_type holi = holiness();
+
+    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
+}
+
 bool player::is_evil() const
 {
     if (is_unholy())
@@ -6387,13 +6394,6 @@ bool player::is_evil() const
         return (true);
 
     return (false);
-}
-
-bool player::is_unholy() const
-{
-    const mon_holy_type holi = holiness();
-
-    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
 }
 
 bool player::is_chaotic() const

@@ -2867,6 +2867,13 @@ mon_holy_type monsters::holiness() const
     return (mons_class_holiness(type));
 }
 
+bool monsters::is_unholy() const
+{
+    const mon_holy_type holi = holiness();
+
+    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
+}
+
 bool monsters::is_evil() const
 {
     if (is_unholy())
@@ -2883,13 +2890,6 @@ bool monsters::is_evil() const
         return (true);
 
     return (false);
-}
-
-bool monsters::is_unholy() const
-{
-    const mon_holy_type holi = holiness();
-
-    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
 }
 
 bool monsters::is_chaotic() const
