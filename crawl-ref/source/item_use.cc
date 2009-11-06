@@ -90,7 +90,7 @@ bool can_wield(item_def *weapon, bool say_reason,
 {
 #define SAY(x) if (say_reason) { x; } else
 
-    if (!ignore_temporary_disability && you.duration[DUR_BERSERKER])
+    if (!ignore_temporary_disability && you.berserk())
     {
         SAY(canned_msg(MSG_TOO_BERSERK));
         return (false);
@@ -712,7 +712,7 @@ bool armour_prompt(const std::string & mesg, int *index, operation_types oper)
 
     if (inv_count() < 1)
         canned_msg(MSG_NOTHING_CARRIED);
-    else if (you.duration[DUR_BERSERKER])
+    else if (you.berserk())
         canned_msg(MSG_TOO_BERSERK);
     else
     {
@@ -1067,7 +1067,7 @@ bool takeoff_armour(int item)
         return (false);
     }
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
@@ -1442,7 +1442,7 @@ static bool _fire_warn_if_impossible()
         }
         // Else shooting is possible.
     }
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return (true);
@@ -3693,7 +3693,7 @@ bool puton_ring(int slot)
         return (false);
     }
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
@@ -3813,7 +3813,7 @@ bool remove_ring(int slot, bool announce)
         return (false);
     }
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
@@ -3982,7 +3982,7 @@ void zap_wand(int slot)
         return;
     }
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return;
@@ -4244,7 +4244,7 @@ void drink(int slot)
         return;
     }
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return;
@@ -4346,7 +4346,7 @@ bool _drink_fountain()
         return (false);
     }
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return (true);
@@ -4940,7 +4940,7 @@ static void _vulnerability_scroll()
 
 void read_scroll(int slot)
 {
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return;

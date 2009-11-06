@@ -598,7 +598,7 @@ static bool _orc_battle_cry(monsters *chief)
                 && mons_species(mon->type) == MONS_ORC
                 && mons_aligned(boss_index, i)
                 && mon->hit_dice < chief->hit_dice
-                && !mon->has_ench(ENCH_BERSERK)
+                && !mon->berserk()
                 && !mon->has_ench(ENCH_MIGHT)
                 && !mon->cannot_move()
                 && !mon->confused()
@@ -1188,7 +1188,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         }
 
         // Don't even try on berserkers. Mermaids know their limits.
-        if (you.duration[DUR_BERSERKER])
+        if (you.berserk())
             break;
 
         // Reduce probability because of spamminess.

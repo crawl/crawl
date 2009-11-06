@@ -283,6 +283,7 @@ public:
     void attacking(actor *other);
     bool can_go_berserk() const;
     void go_berserk(bool intentional);
+    bool berserk() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed() const;

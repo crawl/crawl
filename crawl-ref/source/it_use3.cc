@@ -712,9 +712,9 @@ static bool _ball_of_fixation(void)
 
 bool evoke_item(int slot)
 {
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
-        canned_msg( MSG_TOO_BERSERK );
+        canned_msg(MSG_TOO_BERSERK);
         return (false);
     }
 

@@ -395,6 +395,7 @@ public:
     bool can_go_berserk() const;
     bool can_go_berserk(bool verbose) const;
     void go_berserk(bool intentional);
+    bool berserk() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed() const;

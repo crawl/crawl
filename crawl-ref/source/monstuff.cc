@@ -1377,7 +1377,7 @@ int monster_die(monsters *monster, killer_type killer,
     }
 
     // From time to time Trog gives you a little bonus.
-    if (killer == KILL_YOU && you.duration[DUR_BERSERKER])
+    if (killer == KILL_YOU && you.berserk())
     {
         if (you.religion == GOD_TROG
             && !player_under_penance() && you.piety > random2(1000))

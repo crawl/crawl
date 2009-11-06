@@ -468,7 +468,7 @@ bool unwield_item(bool showMsgs)
     if (!you.weapon())
         return (false);
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         if (showMsgs)
             canned_msg(MSG_TOO_BERSERK);

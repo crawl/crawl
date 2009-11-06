@@ -1668,7 +1668,7 @@ bool can_learn_spell(bool silent)
         return (false);
     }
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         if (!silent)
             canned_msg(MSG_TOO_BERSERK);

@@ -562,8 +562,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
                              bool transform)
 {
     if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
-        || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act()
-        || you.duration[DUR_BERSERKER])
+        || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act() || you.berserk())
     {
         return;
     }
@@ -1284,7 +1283,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 else
                     turn_corpse_into_chunks(item);
 
-                if (you.duration[DUR_BERSERKER]
+                if (you.berserk()
                     && you.berserk_penalty != NO_BERSERK_PENALTY)
                 {
                     mpr("You enjoyed that.");

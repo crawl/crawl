@@ -1170,7 +1170,7 @@ int player_hunger_rate(void)
             hunger += 5;
 
         // Berserk has its own food penalty -- excluding berserk haste.
-        if (you.duration[DUR_HASTE] > 0 && !you.duration[DUR_BERSERKER])
+        if (you.duration[DUR_HASTE] > 0 && !you.berserk())
             hunger += 5;
     }
 
@@ -3319,7 +3319,7 @@ int check_stealth(void)
         return (1000);
 #endif
 
-    if (you.attribute[ATTR_SHADOWS] || you.duration[DUR_BERSERKER])
+    if (you.attribute[ATTR_SHADOWS] || you.berserk())
         return (0);
 
     int stealth = you.dex * 3;
@@ -3862,7 +3862,7 @@ void display_char_status()
     if (you.duration[DUR_DIVINE_STAMINA])
         mpr("You are divinely fortified.");
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
         mpr("You are possessed by a berserker rage.");
 
     if (you.airborne())
@@ -4722,7 +4722,7 @@ int get_real_hp(bool trans, bool rotted)
     hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 5;
 
     // Being berserk makes you resistant to damage. I don't know why.
-    if (trans && you.duration[DUR_BERSERKER])
+    if (trans && you.berserk())
         hitp *= 2;
 
     if (trans)
@@ -6182,12 +6182,12 @@ void player::go_berserk(bool intentional)
 
 bool player::can_go_berserk() const
 {
-    return can_go_berserk(false);
+    return (can_go_berserk(false));
 }
 
 bool player::can_go_berserk(bool verbose) const
 {
-    if (this->duration[DUR_BERSERKER])
+    if (berserk())
     {
         if (verbose)
             mpr("You're already berserk!");
@@ -6195,7 +6195,7 @@ bool player::can_go_berserk(bool verbose) const
         return (false);
     }
 
-    if (this->duration[DUR_EXHAUSTED])
+    if (duration[DUR_EXHAUSTED])
     {
         if (verbose)
             mpr("You're too exhausted to go berserk.");
@@ -6211,8 +6211,8 @@ bool player::can_go_berserk(bool verbose) const
         return (false);
     }
 
-    if (this->is_undead
-        && (this->is_undead != US_SEMI_UNDEAD || this->hunger_state <= HS_SATIATED))
+    if (is_undead
+        && (is_undead != US_SEMI_UNDEAD || hunger_state <= HS_SATIATED))
     {
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");
@@ -6222,6 +6222,11 @@ bool player::can_go_berserk(bool verbose) const
     }
 
     return (true);
+}
+
+bool player::berserk() const
+{
+    return (duration[DUR_BERSERKER]);
 }
 
 void player::god_conduct(conduct_type thing_done, int level)
@@ -7057,7 +7062,7 @@ void player::put_to_sleep(int)
 {
     ASSERT(!crawl_state.arena);
 
-    if (duration[DUR_BERSERKER] || asleep())   // No cumulative sleeps.
+    if (berserk() || asleep()) // No cumulative sleeps.
         return;
 
     // Not all species can be put to sleep. Check holiness.

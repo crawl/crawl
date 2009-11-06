@@ -2669,7 +2669,7 @@ void monsters::attacking(actor * /* other */)
 
 void monsters::go_berserk(bool /* intentional */)
 {
-    if (!this->can_go_berserk())
+    if (!can_go_berserk())
         return;
 
     if (has_ench(ENCH_SLOW))
@@ -3816,7 +3816,7 @@ bool monsters::add_ench(const mon_enchant &ench)
         return (false);
 
     if (ench.ench == ENCH_FEAR
-        && (holiness() == MH_NONLIVING || has_ench(ENCH_BERSERK)))
+        && (holiness() == MH_NONLIVING || berserk()))
     {
         return (false);
     }
@@ -4135,7 +4135,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_FEAR:
-        if (holiness() == MH_NONLIVING || has_ench(ENCH_BERSERK))
+        if (holiness() == MH_NONLIVING || berserk())
         {
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
@@ -4246,7 +4246,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // abjured.
         add_ench(mon_enchant(ENCH_ABJ, 0, KC_OTHER, -1));
 
-        if (this->has_ench(ENCH_BERSERK))
+        if (berserk())
             simple_monster_message(this, " is no longer berserk.");
 
         monster_die(this, quiet ? KILL_DISMISSED : KILL_RESET, NON_MONSTER);
@@ -4601,7 +4601,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         // Smaller monsters can escape more quickly.
         if (mon_size < random2(SIZE_BIG)  // BIG = 5
-            && !has_ench(ENCH_BERSERK) && type != MONS_DANCING_WEAPON)
+            && !berserk() && type != MONS_DANCING_WEAPON)
         {
             if (mons_near(this) && !visible_to(&you))
                 mpr("Something wriggles in the net.");
@@ -4665,7 +4665,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                 damage++;
 
             // Berserking doubles damage dealt.
-            if (has_ench(ENCH_BERSERK))
+            if (berserk())
                 damage *= 2;
 
             // Faster monsters can damage the net more often per
@@ -5081,7 +5081,7 @@ bool monsters::can_go_berserk() const
     if (holiness() != MH_NATURAL || type == MONS_KRAKEN_TENTACLE)
         return (false);
 
-    if (has_ench(ENCH_FATIGUE) || has_ench(ENCH_BERSERK))
+    if (berserk() || has_ench(ENCH_FATIGUE))
         return (false);
 
     // If we have no melee attack, going berserk is pointless.
@@ -5090,6 +5090,11 @@ bool monsters::can_go_berserk() const
         return (false);
 
     return (true);
+}
+
+bool monsters::berserk() const
+{
+    return (has_ench(ENCH_BERSERK));
 }
 
 bool monsters::needs_berserk(bool check_spells) const
@@ -5508,7 +5513,7 @@ bool monsters::should_drink_potion(potion_type ptype) const
     case POT_MIGHT:
         return (!has_ench(ENCH_MIGHT) && foe_distance() <= 2);
     case POT_BERSERK_RAGE:
-        // this implies !has_ench(ENCH_BERSERK_RAGE)
+        // this implies !berserk()
         return (!has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
                 && needs_berserk());
     case POT_INVISIBILITY:

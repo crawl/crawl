@@ -1192,14 +1192,14 @@ void handle_behaviour(monsters *mon)
     if (isFriendly
         && you.pet_target != MHITNOT
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
-        && !mon->has_ench(ENCH_BERSERK)
-        && mon->mons_species() != MONS_GIANT_SPORE )
+        && !mon->berserk()
+        && mon->mons_species() != MONS_GIANT_SPORE)
     {
         mon->foe = you.pet_target;
     }
 
     // Instead, berserkers attack nearest monsters.
-    if ((mon->has_ench(ENCH_BERSERK) || mon->mons_species() == MONS_GIANT_SPORE)
+    if ((mon->berserk() || mon->mons_species() == MONS_GIANT_SPORE)
         && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
     {
         // Intelligent monsters prefer to attack the player,
@@ -1238,7 +1238,7 @@ void handle_behaviour(monsters *mon)
     // target the player, if they're healthy.
     if (!isFriendly && !isNeutral
         && mon->foe != MHITYOU && mon->foe != MHITNOT
-        && proxPlayer && !(mon->has_ench(ENCH_BERSERK)) && isHealthy
+        && proxPlayer && !mon->berserk() && isHealthy
         && !one_chance_in(3))
     {
         mon->foe = MHITYOU;
@@ -1802,7 +1802,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     case ME_SCARE:
         // Stationary monsters can't flee, and berserking monsters
         // are too enraged.
-        if (mons_is_stationary(mon) || mon->has_ench(ENCH_BERSERK))
+        if (mons_is_stationary(mon) || mon->berserk())
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;

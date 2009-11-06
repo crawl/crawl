@@ -1223,7 +1223,7 @@ static void _go_upstairs()
 
     if (ygrd == DNGN_ENTER_SHOP)
     {
-        if (you.duration[DUR_BERSERKER])
+        if (you.berserk())
             canned_msg(MSG_TOO_BERSERK);
         else
             shop();
@@ -1280,7 +1280,7 @@ static void _go_downstairs()
     // Up and down both work for shops.
     if (ygrd == DNGN_ENTER_SHOP)
     {
-        if (you.duration[DUR_BERSERKER])
+        if (you.berserk())
             canned_msg(MSG_TOO_BERSERK);
         else
             shop();
@@ -3283,7 +3283,7 @@ static void _open_door(coord_def move, bool check_confused)
         }
     }
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         // XXX: Better flavour for larger doors?
         if (silenced(you.pos()))
@@ -3443,7 +3443,7 @@ static void _close_door(coord_def move)
         int skill = you.dex
                     + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
-        if (you.duration[DUR_BERSERKER])
+        if (you.berserk())
         {
             if (silenced(you.pos()))
             {
@@ -3773,7 +3773,7 @@ static void _do_berserk_no_combat_penalty(void)
     if (you.berserk_penalty == NO_BERSERK_PENALTY)
         return;
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         you.berserk_penalty++;
 

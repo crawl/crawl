@@ -144,7 +144,7 @@ static void _unwear_equipment_slot(equipment_type eqslot)
 
     if (eqslot == EQ_WEAPON)
     {
-        unwield_item(!you.duration[DUR_BERSERKER]);
+        unwield_item(!you.berserk());
         canned_msg(MSG_EMPTY_HANDED);
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = slot + 1;
     }

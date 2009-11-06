@@ -2461,7 +2461,7 @@ static void _set_friendly_foes(bool allow_patrol = false)
         }
 
         // Berserking monsters cannot be ordered around.
-        if (mon->has_ench(ENCH_BERSERK))
+        if (mon->berserk())
             continue;
 
         mon->foe = (allow_patrol && mon->is_patrolling() ? MHITNOT
@@ -2478,7 +2478,7 @@ static void _set_allies_patrol_point(bool clear = false)
             continue;
 
         // Berserking monsters cannot be ordered around.
-        if (mon->has_ench(ENCH_BERSERK))
+        if (mon->berserk())
             continue;
 
         mon->patrol_point = (clear ? coord_def(0, 0) : mon->pos());
@@ -2553,7 +2553,7 @@ void yell(bool force)
     mpr("What do you say?", MSGCH_PROMPT);
     mprf(" t - %s!", cap_shout.c_str());
 
-    if (!you.duration[DUR_BERSERKER])
+    if (!you.berserk())
     {
         std::string previous;
         if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
@@ -2569,7 +2569,7 @@ void yell(bool force)
         mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
         mpr( "                   s - Stop attacking.");
         mpr( "                   w - Wait here.           f - Follow me.");
-   }
+    }
     mprf(" Anything else - Stay silent%s.",
          one_chance_in(20) ? " (and be thought a fool)" : "");
 
@@ -2605,7 +2605,7 @@ void yell(bool force)
         break;
 
     case 'p':
-        if (you.duration[DUR_BERSERKER])
+        if (you.berserk())
         {
             canned_msg(MSG_TOO_BERSERK);
             return;
@@ -2619,7 +2619,7 @@ void yell(bool force)
 
     // fall through
     case 'a':
-        if (you.duration[DUR_BERSERKER])
+        if (you.berserk())
         {
             canned_msg(MSG_TOO_BERSERK);
             return;
@@ -3730,11 +3730,8 @@ void handle_time(long time_delta)
     if (you.duration[DUR_INVIS] && x_chance_in_y(6, 10))
         added_contamination++;
 
-    if (you.duration[DUR_HASTE] && !you.duration[DUR_BERSERKER]
-        && x_chance_in_y(6, 10))
-    {
+    if (you.duration[DUR_HASTE] && !you.berserk() && x_chance_in_y(6, 10))
         added_contamination++;
-    }
 
     bool mutagenic_randart = false;
     if (const int artefact_glow = scan_artefacts(ARTP_MUTAGENIC))
@@ -3911,7 +3908,7 @@ void handle_time(long time_delta)
     }
     // Exercise stealth skill:
     else if (you.burden_state == BS_UNENCUMBERED
-             && !you.duration[DUR_BERSERKER]
+             && !you.berserk()
              && !you.attribute[ATTR_SHADOWS])
     {
         // Diminishing returns for stealth training by waiting.

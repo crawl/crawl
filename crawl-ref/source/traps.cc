@@ -757,7 +757,7 @@ trap_type get_trap_type(const coord_def& pos)
 // where *must* point to a valid, discovered trap.
 void disarm_trap(const coord_def& where)
 {
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return;
@@ -915,7 +915,7 @@ static int damage_or_escape_net(int hold)
     }
 
     // Berserkers get a fighting bonus.
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
         damage += 2;
 
     // Check stats.
@@ -993,7 +993,7 @@ void free_self_from_net()
         if (damage < 1)
             damage = 1;
 
-        if (you.duration[DUR_BERSERKER])
+        if (you.berserk())
             damage *= 2;
 
         // Medium sized characters are at a disadvantage and sometimes

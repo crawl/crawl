@@ -2989,8 +2989,8 @@ static std::string _describe_mons_enchantment(const monsters &mons,
     }
 
     if ((ench.ench == ENCH_HASTE || ench.ench == ENCH_BATTLE_FRENZY
-         || ench.ench == ENCH_MIGHT)
-        && mons.has_ench(ENCH_BERSERK))
+            || ench.ench == ENCH_MIGHT)
+        && mons.berserk())
     {
         return "";
     }

@@ -1022,7 +1022,7 @@ void DungeonRegion::render()
     m_buf_doll.draw();
     m_buf_main.draw();
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         ShapeBuffer buff;
         VColour red_film(130, 0, 0, 100);

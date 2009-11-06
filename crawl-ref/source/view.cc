@@ -491,7 +491,7 @@ bool check_awaken(monsters* monster)
         return (false);
 
     // Berserkers aren't really concerned about stealth.
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
         return (true);
 
     // I assume that creatures who can sense invisible are very perceptive.
@@ -1118,7 +1118,7 @@ static int _viewmap_flash_colour()
 {
     if (you.attribute[ATTR_SHADOWS])
         return (DARKGREY);
-    else if (you.duration[DUR_BERSERKER])
+    else if (you.berserk())
         return (RED);
 
     return (BLACK);

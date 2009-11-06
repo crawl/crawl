@@ -878,7 +878,7 @@ static void _print_talent_description(talent tal)
 
 bool activate_ability()
 {
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);

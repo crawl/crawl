@@ -4099,8 +4099,7 @@ bool melee_attack::mons_attack_mons()
                     mpr("Zin prevents your ally from violating sanctuary "
                         "in its confusion.", MSGCH_GOD);
                 }
-                else if (attacker_as_monster()->has_ench(ENCH_BERSERK)
-                         && you.can_see(attacker))
+                else if (attacker->berserk() && you.can_see(attacker))
                 {
                     mpr("Zin prevents your ally from violating sanctuary "
                         "in its berserker rage.", MSGCH_GOD);

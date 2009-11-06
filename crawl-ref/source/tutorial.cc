@@ -1052,7 +1052,7 @@ void tutorial_healing_reminder()
 #endif
                     ".";
 
-            if (you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
+            if (you.religion == GOD_TROG && !you.berserk()
                 && !you.duration[DUR_EXHAUSTED]
                 && you.hunger_state >= HS_SATIATED)
             {
@@ -1276,7 +1276,7 @@ void tutorial_first_monster(const monsters &mon)
         if (mon.friendly())
             learned_something_new(TUT_MONSTER_FRIENDLY, mon.pos());
 
-        if (you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
+        if (you.religion == GOD_TROG && !you.berserk()
             && !you.duration[DUR_EXHAUSTED] && you.hunger_state >= HS_SATIATED
             && one_chance_in(4))
         {
@@ -2849,7 +2849,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "you come back, so you might want to use a different set of "
                 "stairs when you return.";
 
-        if (you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
+        if (you.religion == GOD_TROG && !you.berserk()
             && !you.duration[DUR_EXHAUSTED]
             && you.hunger_state >= HS_SATIATED)
         {
@@ -4524,7 +4524,7 @@ void tutorial_describe_monster(const monsters *mons)
         }
     }
 
-    if (mons->has_ench(ENCH_BERSERK))
+    if (mons->berserk())
     {
         ostr << "A berserking monster is bloodthirsty and fighting madly. "
                 "Such a blood rage makes it particularly dangerous!\n\n";
@@ -4566,7 +4566,7 @@ void tutorial_describe_monster(const monsters *mons)
         {
             ostr << "This might be a good time to run away";
 
-            if (you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
+            if (you.religion == GOD_TROG && !you.berserk()
                 && !you.duration[DUR_EXHAUSTED]
                 && you.hunger_state >= HS_SATIATED)
             {

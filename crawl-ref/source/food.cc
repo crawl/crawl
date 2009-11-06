@@ -523,7 +523,7 @@ bool butchery(int which_corpse)
     // It makes more sense that you first find out if there's anything
     // to butcher, *then* decide to actually butcher it.
     // The old code did it the other way.
-    if (!can_butcher && you.duration[DUR_BERSERKER])
+    if (!can_butcher && you.berserk())
     {
         mpr("You are too berserk to search for a butchering tool!");
         return (false);

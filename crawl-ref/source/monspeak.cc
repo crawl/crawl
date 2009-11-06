@@ -392,7 +392,7 @@ bool mons_speaks(monsters *monster)
         }
 
         // Berserk monsters just want your hide.
-        if (monster->has_ench(ENCH_BERSERK))
+        if (monster->berserk())
             return (false);
 
         // Monsters in a battle frenzy are likewise occupied.

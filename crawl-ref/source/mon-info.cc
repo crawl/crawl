@@ -46,7 +46,7 @@ monster_info::monster_info(const monsters *m)
 
     if (mons_looks_stabbable(m))   m_brands |= (1 << MB_STABBABLE);
     if (mons_looks_distracted(m))  m_brands |= (1 << MB_DISTRACTED);
-    if (m->has_ench(ENCH_BERSERK)) m_brands |= (1 << MB_BERSERK);
+    if (m->berserk())              m_brands |= (1 << MB_BERSERK);
 
     get_mons_glyph(m_mon, &m_glyph, &m_glyph_colour);
 
@@ -255,7 +255,7 @@ void monster_info::to_string(int count, std::string& desc,
 
     if (count == 1)
     {
-        if (m_mon->has_ench(ENCH_BERSERK))
+        if (m_mon->berserk())
             out << " (berserk)";
         else if (Options.verbose_monster_pane)
             out << _verbose_info(m_mon);

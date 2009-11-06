@@ -327,7 +327,7 @@ static void _print_stats_hp(int x, int y)
     short hp_colour = HUD_VALUE_COLOUR;
 
     const bool boosted = you.duration[DUR_DIVINE_VIGOUR]
-                             || you.duration[DUR_BERSERKER];
+                             || you.berserk();
 
     if (boosted)
         hp_colour = LIGHTBLUE;
@@ -1636,7 +1636,7 @@ static std::vector<formatted_string> _get_overview_stats()
     column_composer cols1(4, 18, 28, 40);
 
     const bool boosted_hp  = you.duration[DUR_DIVINE_VIGOUR]
-                                || you.duration[DUR_BERSERKER];
+                                || you.berserk();
     const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
     const bool boosted_str = you.duration[DUR_DIVINE_STAMINA]
                                 || you.duration[DUR_MIGHT];
@@ -2157,7 +2157,7 @@ std::string _status_mut_abilities()
     if (you.duration[DUR_DIVINE_STAMINA])
         status.push_back("divinely fortified");
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
         status.push_back("berserking");
 
     if (you.airborne())

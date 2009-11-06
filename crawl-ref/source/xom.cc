@@ -1532,7 +1532,7 @@ static int _xom_swap_weapons(bool debug = false)
     if (!wpn)
         return (XOM_DID_NOTHING);
 
-    if (you.duration[DUR_BERSERKER]
+    if (you.berserk()
         || wpn->base_type != OBJ_WEAPONS
         || get_weapon_brand(*wpn) == SPWPN_DISTORTION
         || !safe_to_remove_or_wear(*wpn, true, true))

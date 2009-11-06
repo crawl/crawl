@@ -679,7 +679,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return (false);
     }
 
-    if (you.duration[DUR_BERSERKER])
+    if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
