@@ -308,7 +308,7 @@ static bool _mon_submerged_in_water(const monsters *mon)
         return (false);
 
     return (grd(mon->pos()) == DNGN_SHALLOW_WATER
-            && see_cell(mon->pos())
+            && you.see_cell(mon->pos())
             && !mon->visible_to(&you)
             && !mons_flies(mon));
 }
@@ -390,7 +390,7 @@ static void _direction_again(dist& moves, targetting_type restricts,
 
     if (you.prev_grd_targ != coord_def(0, 0))
     {
-        if (!see_cell(you.prev_grd_targ))
+        if (!you.see_cell(you.prev_grd_targ))
         {
             moves.isCancel = true;
 
@@ -924,7 +924,7 @@ bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
 {
     if (!moves.isCancel && moves.isTarget)
     {
-        if (!see_cell(moves.target))
+        if (!you.see_cell(moves.target))
         {
             mpr("Sorry, you can't target what you can't see.",
                 MSGCH_EXAMINE_FILTER);
@@ -1773,7 +1773,7 @@ std::string get_terse_square_desc(const coord_def &gc)
         desc = you.your_name;
     else if (!map_bounds(gc))
         desc = unseen_desc;
-    else if (!see_cell(gc))
+    else if (!observe_cell(gc))
     {
         if (is_terrain_seen(gc))
         {
@@ -1809,7 +1809,7 @@ std::string get_terse_square_desc(const coord_def &gc)
 
 void terse_describe_square(const coord_def &c, bool in_range)
 {
-    if (!see_cell(c))
+    if (!observe_cell(c))
         _describe_oos_square(c);
     else if (in_bounds(c) )
         _describe_cell(c, in_range);
@@ -1821,7 +1821,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     // NOTE: Keep this function in sync with full_describe_square.
 
     // Don't give out information for things outside LOS
-    if (!see_cell(c))
+    if (!observe_cell(c))
         return;
 
     const monsters* mons = monster_at(c);
@@ -1864,7 +1864,7 @@ void full_describe_square(const coord_def &c)
     // NOTE: Keep this function in sync with get_square_desc.
 
     // Don't give out information for things outside LOS
-    if (!see_cell(c))
+    if (!observe_cell(c))
         return;
 
     const monsters* mons = monster_at(c);

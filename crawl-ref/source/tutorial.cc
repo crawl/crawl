@@ -4461,7 +4461,7 @@ static bool _water_is_disturbed(int x, int y)
     const coord_def c(x,y);
     const monsters *mon = monster_at(c);
 
-    if (!mon || grd(c) != DNGN_SHALLOW_WATER || !see_cell(c))
+    if (!mon || grd(c) != DNGN_SHALLOW_WATER || !you.see_cell(c))
         return (false);
 
     return (!mon->visible_to(&you) && !mons_flies(mon));

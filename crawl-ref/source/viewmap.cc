@@ -49,7 +49,7 @@ unsigned get_magicmap_char(dungeon_feature_type feat)
 // 5. Anything else will look for the exact same character in the level map.
 bool is_feature(int feature, const coord_def& where)
 {
-    if (!env.map(where).object && !see_cell(where))
+    if (!env.map(where).object && !observe_cell(where))
         return (false);
 
     dungeon_feature_type grid = grd(where);
@@ -1106,7 +1106,7 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
 #endif
 
     dungeon_feature_type feat_value = grd(p);
-    if (!see_cell(p))
+    if (!observe_cell(p))
     {
         const show_type remembered = get_envmap_obj(p);
         if (remembered.cls == SH_FEATURE)

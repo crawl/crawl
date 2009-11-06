@@ -970,8 +970,8 @@ void DungeonRegion::pack_buffers()
         }
 
     pack_cursor(CURSOR_TUTORIAL, TILE_TUTORIAL_CURSOR);
-    pack_cursor(CURSOR_MOUSE, see_cell(m_cursor[CURSOR_MOUSE]) ? TILE_CURSOR
-                                                               : TILE_CURSOR2);
+    pack_cursor(CURSOR_MOUSE, observe_cell(m_cursor[CURSOR_MOUSE]) ? TILE_CURSOR
+                                                                   : TILE_CURSOR2);
 
     if (m_cursor[CURSOR_TUTORIAL] != NO_CURSOR
         && on_screen(m_cursor[CURSOR_TUTORIAL]))
@@ -1496,7 +1496,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         return (false);
 
     describe_info inf;
-    if (see_cell(gc))
+    if (observe_cell(gc))
         get_square_desc(gc, inf, true);
     else if (grd(gc) != DNGN_FLOOR)
         get_feature_desc(gc, inf);

@@ -1031,8 +1031,9 @@ bool see_cell(const env_show_grid &show,
     return (false);
 }
 
-// Answers the question: "Is a cell within character's line of sight?"
-bool see_cell(const coord_def &p)
+// Answers the question: Is the cell visible to the observer?
+// Usually the same as player LOS.
+bool observe_cell(const coord_def &p)
 {
     return (((crawl_state.arena || crawl_state.arena_suspended)
                 && crawl_view.in_grid_los(p))
@@ -1049,5 +1050,5 @@ bool see_cell_no_trans(const coord_def &p)
 // Is the cell visible, but a translucent wall is in the way?
 bool trans_wall_blocking(const coord_def &p)
 {
-    return see_cell(p) && !see_cell_no_trans(p);
+    return you.see_cell(p) && !see_cell_no_trans(p);
 }

@@ -6749,7 +6749,7 @@ int get_tension(god_type god, bool count_travelling)
         if (!mons->alive())
             continue;
 
-        if (see_cell(mons->pos()))
+        if (you.see_cell(mons->pos()))
         {
             // Monster is nearby.
             if (!nearby_monster && !mons_wont_attack(mons))
@@ -6771,7 +6771,7 @@ int get_tension(god_type god, bool count_travelling)
                 target = mons->target;
 
             // Monster is neither nearby nor trying to get near us.
-            if (!in_bounds(target) || !see_cell(target))
+            if (!in_bounds(target) || !you.see_cell(target))
                 continue;
         }
 

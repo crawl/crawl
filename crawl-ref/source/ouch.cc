@@ -564,7 +564,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
     if (flavour == BEAM_STEAL_FOOD)
         return (true);
 
-    if (see_cell(where))
+    if (observe_cell(where))
     {
         switch (target_class)
         {

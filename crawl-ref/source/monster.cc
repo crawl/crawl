@@ -4850,7 +4850,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(me))
         {
-            if (::see_cell(position))
+            if (observe_cell(position))
             {
                 mprf("A nearby %s withers and dies.",
                      this->name(DESC_PLAIN, false).c_str());
@@ -4890,7 +4890,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                     {
                         env.mons[rc].behaviour = BEH_WANDER;
 
-                        if (::see_cell(adjacent) && ::see_cell(pos()))
+                        if (observe_cell(adjacent) && observe_cell(pos()))
                             mpr("A nearby fungus spawns a giant spore.");
                     }
                     break;
@@ -5245,8 +5245,8 @@ bool monsters::has_action_energy() const
 
 void monsters::check_redraw(const coord_def &old) const
 {
-    const bool see_new = ::see_cell(pos());
-    const bool see_old = ::see_cell(old);
+    const bool see_new = observe_cell(pos());
+    const bool see_old = observe_cell(old);
     if ((see_new || see_old) && !view_update())
     {
         if (see_new)
@@ -5300,7 +5300,7 @@ void monsters::apply_location_effects(const coord_def &oldpos)
         if (genus == MONS_JELLY || genus == MONS_GIANT_SLUG)
         {
             prop &= ~FPROP_BLOODY;
-            if (see_cell(pos()) && !visible_to(&you))
+            if (observe_cell(pos()) && !visible_to(&you))
             {
                std::string desc =
                    feature_description(pos(), false, DESC_NOCAP_THE, false);

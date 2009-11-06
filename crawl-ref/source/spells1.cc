@@ -433,8 +433,8 @@ void cast_chain_lightning(int pow, const actor *caster)
             }
         }
 
-        const bool see_source = see_cell( source );
-        const bool see_targ   = see_cell( target );
+        const bool see_source = observe_cell( source );
+        const bool see_targ   = observe_cell( target );
 
         if (target.x == -1)
         {

@@ -128,7 +128,7 @@ bool radius_iterator::on_valid_square() const
         return (false);
     if (require_los)
     {
-        if (!losgrid && !see_cell(location))
+        if (!losgrid && !you.see_cell(location))
             return (false);
         if (losgrid && !see_cell(*losgrid, center, location))
             return (false);

@@ -1658,7 +1658,7 @@ void find_travel_pos(const coord_def& youpos,
     {
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
-            if (!see_cell(*ai)
+            if (!you.see_cell(*ai)
                 && (!is_terrain_seen(*ai) || !feat_is_wall(grd(*ai))))
             {
                 unseen = *ai;

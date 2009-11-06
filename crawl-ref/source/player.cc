@@ -2661,7 +2661,7 @@ void forget_map(unsigned char chance_forgotten, bool force)
                                                                      : 25*25;
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (!see_cell(*ri)
+        if (!you.see_cell(*ri)
             && (force || x_chance_in_y(chance_forgotten, 100)
                 || use_lab_check && (you.pos()-*ri).abs() > radius))
         {
@@ -6905,7 +6905,8 @@ bool player::visible_to(const actor *looker) const
 
 bool player::see_cell(const coord_def &c) const
 {
-    return (::see_cell(c));
+    // TODO: give player own LOS.
+    return (observe_cell(c));
 }
 
 bool player::backlit(bool check_haloed) const

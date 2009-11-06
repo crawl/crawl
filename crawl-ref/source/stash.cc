@@ -1548,7 +1548,7 @@ void StashTracker::update_visible_stashes(
     for (int cy = crawl_view.glos1.y; cy <= crawl_view.glos2.y; ++cy)
         for (int cx = crawl_view.glos1.x; cx <= crawl_view.glos2.x; ++cx)
         {
-            if (!in_bounds(cx, cy) || !see_cell(cx, cy))
+            if (!in_bounds(cx, cy) || !you.see_cell(coord_def(cx, cy)))
                 continue;
 
             const dungeon_feature_type grid = grd[cx][cy];

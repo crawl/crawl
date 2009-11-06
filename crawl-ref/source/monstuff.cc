@@ -473,7 +473,7 @@ int place_monster_corpse(const monsters *monster, bool silent,
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't
     // stack).
     move_item_to_grid(&o, monster->pos());
-    if (see_cell(monster->pos()))
+    if (observe_cell(monster->pos()))
     {
         if (force && !silent)
         {
@@ -822,7 +822,7 @@ static bool _slime_vault_in_los()
         {
             if ((grd[x][y] == DNGN_STONE_WALL
                     || grd[x][y] == DNGN_CLEAR_STONE_WALL)
-                && see_cell(x, y))
+                && observe_cell(coord_def(x, y)))
             {
                 in_los = true;
                 break;
@@ -1928,7 +1928,7 @@ int monster_die(monsters *monster, killer_type killer,
             monster->foe = killer_index;
     }
 
-    if (!silent && !wizard && see_cell(monster->pos()))
+    if (!silent && !wizard && observe_cell(monster->pos()))
     {
         // Make sure that the monster looks dead.
         if (monster->alive() && !in_transit && (!summoned || duration > 0))
@@ -2031,7 +2031,7 @@ int monster_die(monsters *monster, killer_type killer,
     monster_cleanup(monster);
 
     // Force redraw for monsters that die.
-    if (see_cell(mwhere))
+    if (observe_cell(mwhere))
     {
         view_update_at(mwhere);
         update_screen();

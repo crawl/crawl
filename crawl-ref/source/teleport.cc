@@ -58,7 +58,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
             continue;
 
         if (!in_bounds(target)
-            || restrict_los && !see_cell(target)
+            || restrict_los && !you.see_cell(target)
             || grd(target) < DNGN_SHALLOW_WATER
             || actor_at(target)
             || !allow_adjacent && distance(origin, target) <= 2
@@ -92,7 +92,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         // away from the player, since in the absence of translucent
         // walls monsters can blink to places which are not in either
         // the monster's nor the player's LOS.
-        if (!origin_is_player && !see_cell(target))
+        if (!origin_is_player && !you.see_cell(target))
             return (true);
 
         // Player can't randomly pass through translucent walls.

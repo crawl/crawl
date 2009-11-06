@@ -226,9 +226,9 @@ LUARET1(you_y_pos, number, you.pos().y)
 LUARET2(you_pos, number, you.pos().x, you.pos().y)
 
 LUARET1(you_see_cell, boolean,
-        see_cell(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+        you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2))))
 LUARET1(you_see_cell_no_trans, boolean,
-        see_cell_no_trans(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+        see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2))))
 
 LUAFN(you_moveto)
 {

@@ -653,7 +653,7 @@ static void _handle_movement(monsters *monster)
     }
 
     // We're already staying in the player's LOS.
-    if (see_cell(old_pos + mmov))
+    if (you.see_cell(old_pos + mmov))
         return;
 
     // Try to find a move that brings us closer to the player while
@@ -671,7 +671,7 @@ static void _handle_movement(monsters *monster)
             delta.set(i - 1, j - 1);
             coord_def tmp = old_pos + delta;
 
-            if (grid_distance(you.pos(), tmp) < old_dist && see_cell(tmp))
+            if (grid_distance(you.pos(), tmp) < old_dist && you.see_cell(tmp))
             {
                 if (one_chance_in(++matches))
                     mmov = delta;
@@ -2632,13 +2632,13 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
          i != all_door.end(); ++i)
     {
         const coord_def& dc = *i;
-        if (grd(dc) == DNGN_SECRET_DOOR && see_cell(dc))
+        if (grd(dc) == DNGN_SECRET_DOOR && observe_cell(dc))
         {
             grid = grid_secret_door_appearance(dc);
             was_secret = true;
         }
 
-        if (see_cell(dc))
+        if (observe_cell(dc))
             was_seen = true;
         else
             set_terrain_changed(dc);
@@ -2813,7 +2813,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     }
 
     // Wandering mushrooms don't move while you are looking.
-    if (monster->type == MONS_WANDERING_MUSHROOM && see_cell(targ))
+    if (monster->type == MONS_WANDERING_MUSHROOM && you.see_cell(targ))
         return (false);
 
     // Water elementals avoid fire and heat.
@@ -3070,10 +3070,10 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaing the player nothing to see, so give
     // this message to avoid confusion.
-    if (monster->seen_context == _just_seen && !see_cell(f))
+    if (monster->seen_context == _just_seen && !observe_cell(f))
         simple_monster_message(monster, " moves out of view.");
     else if (Options.tutorial_left && (monster->flags & MF_WAS_IN_VIEW)
-             && !see_cell(f))
+             && !observe_cell(f))
     {
         learned_something_new(TUT_MONSTER_LEFT_LOS, monster->pos());
     }
@@ -3274,7 +3274,7 @@ static bool _monster_move(monsters *monster)
 
         _jelly_grows(monster);
 
-        if (see_cell(newpos))
+        if (observe_cell(newpos))
         {
             viewwindow(true, false);
 

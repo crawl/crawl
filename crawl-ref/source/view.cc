@@ -677,7 +677,7 @@ void blood_smell( int strength, const coord_def& where )
 #endif
                 you.check_awaken(range - player_distance);
                 // Don't message if you can see the square.
-                if (!see_cell(where))
+                if (!you.see_cell(where))
                 {
                     mprf("You smell fresh blood%s.",
                          _player_vampire_smells_blood(player_distance));
@@ -994,7 +994,7 @@ bool mons_near(const monsters *monster)
 {
     if (crawl_state.arena || crawl_state.arena_suspended)
         return (true);
-    return (see_cell(monster->pos()));
+    return (you.see_cell(monster->pos()));
 }
 
 bool mon_enemies_around(const monsters *monster)
@@ -1298,7 +1298,7 @@ void viewwindow(bool draw_it, bool do_updates)
                 const coord_def gc(view2grid(coord_def(count_x, count_y)));
                 const coord_def ep = view2show(grid2view(gc));
 
-                if (in_bounds(gc) && see_cell(gc))
+                if (in_bounds(gc) && you.see_cell(gc))
                     maybe_remove_autoexclusion(gc);
 
                 // Print tutorial messages for features in LOS.
@@ -1497,16 +1497,16 @@ void viewwindow(bool draw_it, bool do_updates)
                 if (flash_colour && buffy[bufcount])
                 {
                     buffy[bufcount + 1] =
-                        see_cell(gc) ? real_colour(flash_colour)
-                                     : DARKGREY;
+                        observe_cell(gc) ? real_colour(flash_colour)
+                                         : DARKGREY;
                 }
                 else if (Options.target_range > 0 && buffy[bufcount]
                          && (grid_distance(you.pos(), gc) > Options.target_range
-                             || !see_cell(gc)))
+                             || !observe_cell(gc)))
                 {
                     buffy[bufcount + 1] = DARKGREY;
 #ifdef USE_TILE
-                    if (see_cell(gc))
+                    if (observe_cell(gc))
                         tileb[bufcount + 1] |= TILE_FLAG_OOR;
 #endif
                 }

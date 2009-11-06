@@ -149,7 +149,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
         p = mon->pos();
     }
 
-    if (!see_cell(p))
+    if (!observe_cell(p))
         return;
 
     const coord_def drawp = grid2view(p);
@@ -1579,7 +1579,7 @@ void bolt::initialise_fire()
     message_cache.clear();
 
     // seen might be set by caller to supress this.
-    if (!seen && see_cell(source) && range > 0 && !invisible() )
+    if (!seen && observe_cell(source) && range > 0 && !invisible() )
     {
         seen = true;
         const monsters* mon = monster_at(source);
@@ -1597,7 +1597,7 @@ void bolt::initialise_fire()
 
     // Visible self-targeted beams are always seen, even though they don't
     // leave a path.
-    if (see_cell(source) && target == source && !invisible())
+    if (observe_cell(source) && target == source && !invisible())
         seen = true;
 
     // Scale draw_delay to match change in arena_delay.
@@ -1650,7 +1650,7 @@ void bolt::choose_ray()
 // Draw the bolt at p if needed.
 void bolt::draw(const coord_def& p)
 {
-    if (is_tracer || is_enchantment() || !see_cell(p))
+    if (is_tracer || is_enchantment() || !observe_cell(p))
         return;
 
     // We don't clean up the old position.
@@ -1772,7 +1772,7 @@ void bolt::fire_wall_effect()
             // No actual effect.
             if (flavour != BEAM_HELLFIRE && feat == DNGN_WAX_WALL)
             {
-                if (see_cell(pos()))
+                if (observe_cell(pos()))
                 {
                     emit_message(MSGCH_PLAIN,
                                  "The wax appears to soften slightly.");
@@ -1785,7 +1785,7 @@ void bolt::fire_wall_effect()
         {
             // Destroy the wall.
             grd(pos()) = DNGN_FLOOR;
-            if (see_cell(pos()))
+            if (observe_cell(pos()))
                 emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
             else if (player_can_smell())
                 emit_message(MSGCH_PLAIN, "You smell burning wax.");
@@ -1799,7 +1799,7 @@ void bolt::fire_wall_effect()
         {
             // Destroy the wall.
             grd(pos()) = DNGN_FLOOR;
-            if (see_cell(pos()))
+            if (observe_cell(pos()))
                 emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
             else if (player_can_smell())
                 emit_message(MSGCH_PLAIN, "You smell burning wood.");
@@ -1850,7 +1850,7 @@ void bolt::nuke_wall_effect()
 
         if (player_can_hear(pos()))
         {
-            if (!see_cell(pos()))
+            if (!observe_cell(pos()))
                 mpr("You hear a hideous screaming!", MSGCH_SOUND);
             else
             {
@@ -1858,7 +1858,7 @@ void bolt::nuke_wall_effect()
                     MSGCH_SOUND);
             }
         }
-        else if (see_cell(pos()))
+        else if (observe_cell(pos()))
             mpr("The idol twists and shakes as its substance crumbles away!");
 
         if (beam_source == NON_MONSTER)
@@ -1906,7 +1906,7 @@ void bolt::hit_wall()
     if (is_tracer && YOU_KILL(thrower) && in_bounds(target) && !passed_target
         && pos() != target  && pos() != source && foe_info.count == 0
         && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
-        && bounces == 0 && reflections == 0 && see_cell(target)
+        && bounces == 0 && reflections == 0 && you.see_cell(target)
         && !feat_is_solid(grd(target)))
     {
         // Okay, with all those tests passed, this is probably an instance
@@ -2176,7 +2176,7 @@ void bolt::do_fire()
                || is_tracer && affects_wall(grd(pos())));
 
         const bool was_seen = seen;
-        if (!was_seen && range > 0 && !invisible() && see_cell(pos()))
+        if (!was_seen && range > 0 && !invisible() && observe_cell(pos()))
             seen = true;
 
         if (flavour != BEAM_VISUAL && !was_seen && seen && !is_tracer)
@@ -3044,7 +3044,7 @@ void bolt::drop_object()
     // Summoned creatures' thrown items disappear.
     if (item->flags & ISFLAG_SUMMONED)
     {
-        if (see_cell(pos()))
+        if (observe_cell(pos()))
         {
             mprf("%s %s!",
                  item->name(DESC_CAP_THE).c_str(),
@@ -3113,7 +3113,7 @@ void bolt::affect_ground()
                                           MHITNOT,
                                           MG_FORCE_PLACE));
 
-        if (rc != -1 && see_cell(pos()))
+        if (rc != -1 && observe_cell(pos()))
             mpr("A fungus suddenly grows.");
     }
 
@@ -4317,7 +4317,7 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
         // Electricity is ineffective.
         if (flavour == BEAM_ELECTRICITY)
         {
-            if (!is_tracer && see_cell(mon->pos()))
+            if (!is_tracer && observe_cell(mon->pos()))
                 mprf("The %s arcs harmlessly into the water.", name.c_str());
             finish_beam();
             return (false);
@@ -4417,8 +4417,8 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
 void bolt::tracer_affect_monster(monsters* mon)
 {
     // Ignore unseen monsters.
-    if (!can_see_invis && mon->invisible()
-        || (YOU_KILL(thrower) && !see_cell(mon->pos())))
+    if (!mon->visible_to(&you)
+        || (YOU_KILL(thrower) && !you.see_cell(mon->pos())))
     {
         return;
     }
@@ -4578,7 +4578,7 @@ bool bolt::attempt_block(monsters* mon)
                          shield->name(DESC_PLAIN).c_str());
                     _ident_reflector(shield);
                 }
-                else if (see_cell(pos()))
+                else if (observe_cell(pos()))
                     mprf("The %s bounces off of thin air!", name.c_str());
 
                 reflect();
@@ -4608,7 +4608,7 @@ bool bolt::handle_statue_disintegration(monsters* mon)
         // Disintegrate the statue.
         if (!silenced(you.pos()))
         {
-            if (!see_cell(mon->pos()))
+            if (!observe_cell(mon->pos()))
                 mpr("You hear a hideous screaming!", MSGCH_SOUND);
             else
             {
@@ -4616,7 +4616,7 @@ bool bolt::handle_statue_disintegration(monsters* mon)
                     MSGCH_SOUND);
             }
         }
-        else if (see_cell(mon->pos()))
+        else if (observe_cell(mon->pos()))
         {
             mpr("The statue twists and shakes as its substance "
                 "crumbles away!");
@@ -5493,7 +5493,7 @@ void bolt::refine_for_explosion()
     {
         heard = player_can_hear(target);
         // Check for see/hear/no msg.
-        if (see_cell(target) || target == you.pos())
+        if (observe_cell(target) || target == you.pos())
             mpr(seeMsg);
         else
         {
@@ -5559,7 +5559,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
     if (is_sanctuary(pos()))
     {
-        if (!is_tracer && see_cell(pos()) && !name.empty())
+        if (!is_tracer && observe_cell(pos()) && !name.empty())
         {
             mprf(MSGCH_GOD, "By Zin's power, the %s is contained.",
                  name.c_str());
@@ -5581,7 +5581,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         bool heard_expl = noisy(loudness, pos(), beam_source);
         heard = heard || heard_expl;
 
-        if (heard_expl && !noise_msg.empty() && !you.see_cell(pos()))
+        if (heard_expl && !noise_msg.empty() && !observe_cell(pos()))
             mprf(MSGCH_SOUND, "%s", noise_msg.c_str());
     }
 
@@ -5647,7 +5647,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
             if (exp_map(delta + centre) < INT_MAX)
             {
-                if (see_cell(delta + pos()))
+                if (observe_cell(delta + pos()))
                     ++cells_seen;
 
                 explosion_affect_cell(delta + pos());
@@ -5679,7 +5679,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
 void bolt::explosion_draw_cell(const coord_def& p)
 {
-    if (see_cell(p))
+    if (observe_cell(p))
     {
         const coord_def drawpos = grid2view(p);
 #ifdef USE_TILE

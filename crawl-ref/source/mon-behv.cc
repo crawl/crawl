@@ -1788,7 +1788,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
 
             // XXX: Should this be done in _handle_behaviour()?
             if (src == MHITYOU && src_pos == you.pos()
-                && !see_cell(mon->pos()))
+                && !you.see_cell(mon->pos()))
             {
                 const dungeon_feature_type can_move =
                     (mons_amphibious(mon)) ? DNGN_DEEP_WATER
@@ -1839,7 +1839,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         else if (mon->friendly() && !crawl_state.arena)
             mon->foe = MHITYOU;
 
-        if (see_cell(mon->pos()))
+        if (observe_cell(mon->pos()))
             learned_something_new(TUT_FLEEING_MONSTER);
         break;
 

@@ -4335,7 +4335,7 @@ int place_ring(std::vector<coord_def> &ring_points,
         if (mushroom != -1)
         {
             spawned_count++;
-            if (see_cell(ring_points.at(i)))
+            if (observe_cell(ring_points.at(i)))
                 seen_count++;
         }
     }
@@ -4522,7 +4522,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
         {
             corpse.special = 0;
 
-            if (see_cell(corpse.pos))
+            if (observe_cell(corpse.pos))
                 mpr("A ring of toadstools grows before your very eyes.");
             else if (ring_seen > 1)
                 mpr("Some toadstools grow in a peculiar arc.");
@@ -4593,7 +4593,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
                 }
 
                 placed_targets++;
-                if (see_cell(current))
+                if (observe_cell(current))
                     seen_targets++;
             }
             else
@@ -4701,7 +4701,7 @@ static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
 
     int seen_spawns;
     spawn_corpse_mushrooms(corpse, success_count, seen_spawns);
-    mushroom_spawn_message(seen_spawns, see_cell(corpse.pos) ? 1 : 0);
+    mushroom_spawn_message(seen_spawns, observe_cell(corpse.pos) ? 1 : 0);
 }
 
 //---------------------------------------------------------------
