@@ -27,23 +27,15 @@
 #include "viewgeom.h"
 #include "viewmap.h"
 
-unsigned get_symbol(show_type object, unsigned short *colour,
-                    bool magic_mapped)
-{
-    unsigned ch;
-    get_symbol(coord_def(0,0), object, &ch, NULL, magic_mapped);
-    return (ch);
-}
-
 static bool _show_bloodcovered(const coord_def& where)
 {
     if (!is_bloodcovered(where))
         return (false);
 
-    dungeon_feature_type grid = grd(where);
+    dungeon_feature_type feat = env.grid(where);
 
     // Altars, stairs (of any kind) and traps should not be coloured red.
-    return (!is_critical_feature(grid) && !feat_is_trap(grid));
+    return (!is_critical_feature(feat) && !feat_is_trap(feat));
 }
 
 static unsigned short _tree_colour(const coord_def& where)
@@ -58,9 +50,9 @@ static unsigned short _tree_colour(const coord_def& where)
 
 static unsigned short _feat_colour(const coord_def &where,
                                    const dungeon_feature_type feat,
-                                   const feature_def &fdef,
                                    unsigned short colour)
 {
+    const feature_def &fdef = get_feature_def(feat);
     // TODO: consolidate with feat_is_stair etc.
     bool excluded_stairs = (feat >= DNGN_STONE_STAIRS_DOWN_I
                             && feat <= DNGN_ESCAPE_HATCH_UP
@@ -134,22 +126,22 @@ void get_symbol(const coord_def& where,
 
     if (object.cls < SH_MONSTER)
     {
-        const feature_def &fdef = get_feature_def(object);
 
         // Don't recolor items
         if (colour && object.cls == SH_FEATURE)
         {
             const int colmask = *colour & COLFLAG_MASK;
-            *colour = _feat_colour(where, object.feat, fdef, *colour) | colmask;
+            *colour = _feat_colour(where, object.feat, *colour) | colmask;
         }
 
+        const feature_def &fdef = get_feature_def(object);
         *ch = magic_mapped ? fdef.magic_symbol
                            : fdef.symbol;
 
         // Note anything we see that's notable
         if (!where.origin() && fdef.is_notable())
         {
-            if (object.cls == SH_FEATURE) // other notable things?
+            if (object.cls == SH_FEATURE)
                 seen_notable_thing(object.feat, where);
         }
     }
@@ -161,6 +153,14 @@ void get_symbol(const coord_def& where,
 
     if (colour)
         *colour = real_colour(*colour);
+}
+
+unsigned get_symbol(show_type object, unsigned short *colour,
+                    bool magic_mapped)
+{
+    unsigned ch;
+    get_symbol(coord_def(0,0), object, &ch, NULL, magic_mapped);
+    return (ch);
 }
 
 unsigned grid_character_at(const coord_def &c)
