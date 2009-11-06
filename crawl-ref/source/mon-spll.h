@@ -1089,9 +1089,9 @@
       {
        SPELL_THROW_FROST,
        SPELL_BACKLIGHT,
-       SPELL_HASTE,
-       SPELL_THROW_FLAME,
        SPELL_BLINK,
+       SPELL_THROW_FLAME,
+       SPELL_HASTE_OTHER,
        SPELL_MINOR_HEALING,
       }
     },
