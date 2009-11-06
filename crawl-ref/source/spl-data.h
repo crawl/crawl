@@ -432,7 +432,7 @@
      SPTYP_SUMMONING,
      SPFLAG_BATTLE,
      1,
-     80,
+     25,
      -1, -1,
      0,
      NULL,

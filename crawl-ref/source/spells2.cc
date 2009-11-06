@@ -942,37 +942,18 @@ bool cast_summon_small_mammals(int pow, god_type god)
 
     monster_type mon = MONS_PROGRAM_BUG;
 
-    int count = 0;
-    const int count_max = 2;
+    int count = (pow == 25) ? 2 : 1;
 
-    do
+    for (int i = 0; i < count; ++i)
     {
-        switch (random2(pow+1))
+        if (x_chance_in_y(10, pow+1))
         {
-        case 75: case 74: case 38:
-            mon = MONS_ORANGE_RAT;
-            break;
-
-        case 65: case 64: case 63: case 27: case 26: case 25:
-            mon = MONS_GREEN_RAT;
-            break;
-
-        case 57: case 56: case 55: case 54: case 53: case 52:
-        case 20: case 18: case 16: case 14: case 12: case 10:
-            mon = (coinflip()) ? MONS_QUOKKA : MONS_GREY_RAT;
-            break;
-
-        default:
             mon = (coinflip()) ? MONS_GIANT_BAT : MONS_RAT;
-            break;
         }
-
-        // If you worship a good god, don't summon an evil small mammal
-        // (in this case, the orange rat).
-        if (player_will_anger_monster(mon))
-            mon = MONS_GREEN_RAT;
-
-        count++;
+        else
+        {
+            mon = (coinflip()) ? MONS_QUOKKA : MONS_GREY_RAT;
+        }
 
         if (create_monster(
                 mgen_data(mon, BEH_FRIENDLY,
@@ -984,7 +965,6 @@ bool cast_summon_small_mammals(int pow, god_type god)
         }
 
     }
-    while (random2(pow+1) > 32 && count < count_max);
 
     return (success);
 }
