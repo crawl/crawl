@@ -684,9 +684,6 @@ portal_type feature_to_portal( unsigned char feat )
 // If player has seen any other thing; record it.
 void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
 {
-    if (you.level_type != LEVEL_DUNGEON) // Can't record in Abyss or Pan.
-        return;
-
     level_pos where(level_id::current(), pos);
 
     switch (which_thing)
