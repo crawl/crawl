@@ -595,7 +595,7 @@ TAGS:       no_rotate
 ORIENT:     float
 SUBST:      y  = c.
 COLOUR:     1. = random
-MARKER:     P  = lua:fog_machine { cloud_type="tloc energy", walk_dist=1, \
+MARKER:     P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
             size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
             spread_rate=3, start_clouds=1 }
 : if crawl.coinflip() then
