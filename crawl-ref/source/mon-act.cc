@@ -2680,7 +2680,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
     monster->lose_energy(EUT_MOVE);
 }
 
-static bool _habitat_okay( const monsters *monster, dungeon_feature_type targ )
+static bool _habitat_okay(const monsters *monster, dungeon_feature_type targ)
 {
     return (monster_habitable_grid(monster, targ));
 }

@@ -3175,19 +3175,15 @@ static void _open_door(coord_def move, bool check_confused)
         if (check_confused && you.confused() && !one_chance_in(3))
         {
             do
-            {
-                move.x = random2(3) - 1;
-                move.y = random2(3) - 1;
-            }
+                move = coord_def(random2(3) - 1, random2(3) - 1);
             while (move.origin());
         }
         if (_untrap_target(move, check_confused))
             return;
     }
 
-    // If we get here, the player either hasn't picked a direction yet
+    // If we get here, the player either hasn't picked a direction yet,
     // or the chosen direction actually contains a closed door.
-
     if (!player_can_open_doors())
     {
         mpr("You can't open doors in your present form.");
@@ -3226,10 +3222,7 @@ static void _open_door(coord_def move, bool check_confused)
     if (check_confused && you.confused() && !one_chance_in(3))
     {
         do
-        {
-            door_move.delta.x = random2(3) - 1;
-            door_move.delta.y = random2(3) - 1;
-        }
+            door_move.delta = coord_def(random2(3) - 1, random2(3) - 1);
         while (door_move.delta.origin());
     }
 
@@ -3272,7 +3265,7 @@ static void _open_door(coord_def move, bool check_confused)
     if (is_exclude_root(doorpos) && !(check_confused && you.confused()))
     {
         std::string prompt =
-            make_stringf("This %s%s is marked as excluded!  Open it "
+            make_stringf("This %s%s is marked as excluded! Open it "
                          "anyway?", adj, noun);
 
         if (!yesno(prompt.c_str(), true, 'n', true, false))
@@ -3303,7 +3296,7 @@ static void _open_door(coord_def move, bool check_confused)
     else
     {
         const char* verb = (you.airborne() ? "reach down and open"
-                                                 : "open");
+                                           : "open");
         mprf("You %s the %s%s.", verb, adj, noun);
     }
 
@@ -3466,7 +3459,7 @@ static void _close_door(coord_def move)
         else
         {
             const char* verb = you.airborne() ? "reach down and close"
-                                                    : "close";
+                                              : "close";
 
             mprf("You %s the %s%s.", verb, adj, noun);
         }
