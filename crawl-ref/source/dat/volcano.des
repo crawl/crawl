@@ -135,7 +135,7 @@ function volcano_setup (e, metal)
     end
     e.set_random_mon_list([[hog / fire elemental / fire vortex / giant ant / 
                             bumblebee / firedrake / lindwurm / imp / redback /
-                            manticore / hell hound / hell-hog / ghoul / 
+                            manticore / hell hound / hell hog / ghoul / 
                             flayed ghost / pulsating lump / toenail golem /
                             efreet / vampire]])
     crawl.mark_milestone("br.enter", "entered a Volcano.")
@@ -385,7 +385,7 @@ function fiery_guardians (e)
         -- "Demonic" fire-themed monster pack.
         e.mons("imp w:20 / pulsating lump / toenail golem / hell hound w:9 / \
                 ghoul w:9 / red devil ; trident ego:flaming")
-        e.mons("efreet / flaming corpse / flayed ghost / hell-hog / vampire / " .. hellknight)
+        e.mons("efreet / flaming corpse / flayed ghost / hell hog / vampire / " .. hellknight)
         return
     end
 
