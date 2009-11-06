@@ -13,6 +13,8 @@
 #include <map>
 
 std::string make_time_string(time_t abs_time, bool terse = false);
+std::string make_file_time(time_t when);
+
 void set_redraw_status(unsigned long flags);
 void tag_followers();
 void untag_followers();

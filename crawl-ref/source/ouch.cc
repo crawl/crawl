@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <time.h>
 
 #ifdef TARGET_OS_DOS
 #include <conio.h>
@@ -1202,18 +1201,10 @@ static std::string morgue_name(time_t when_crawl_got_even)
 #else  // !SHORT_FILE_NAMES
     std::string name = "morgue-" + you.your_name;
 
-    if (tm *loc = TIME_FN(&when_crawl_got_even))
-    {
-        char buf[25];
-        snprintf(buf, sizeof buf, "-%04d%02d%02d-%02d%02d%02d",
-                 loc->tm_year + 1900,
-                 loc->tm_mon + 1,
-                 loc->tm_mday,
-                 loc->tm_hour,
-                 loc->tm_min,
-                 loc->tm_sec);
-        name += buf;
-    }
+    std::string time = make_file_time(when_crawl_got_even);
+    if (!time.empty())
+        name += "-" + time;
+
     return (name);
 #endif // SHORT_FILE_NAMES
 }
