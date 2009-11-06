@@ -1,4 +1,4 @@
-/* *  File:       mon-cast.cc
+/*  File:       mon-cast.cc
  *  Summary:    Monster spell casting.
  *  Written by: Linley Henzell
  */
@@ -135,7 +135,7 @@ static bool _set_allied_target(monsters * caster, bolt & pbolt)
             && targ->alive()
             && caster->can_see(targ)
             && mons_genus(targ->type) == caster_genus
-            && targ->attitude == caster->attitude
+            && mons_atts_aligned(targ->attitude, caster->attitude)
             && !targ->has_ench(ENCH_CHARM)
             && !targ->has_ench(ENCH_HASTE))
         {
