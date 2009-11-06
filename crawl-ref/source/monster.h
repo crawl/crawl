@@ -363,6 +363,7 @@ public:
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false, bool abyss_shift = false);
 
+    bool can_sleep(bool holi_only = false) const;
     void put_to_sleep(int power = 0);
     void check_awaken(int disturbance);
 

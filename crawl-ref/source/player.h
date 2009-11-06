@@ -461,6 +461,7 @@ public:
     bool petrified() const;
 
     bool asleep() const;
+    bool can_sleep(bool holi_only = false) const;
     void put_to_sleep(int power = 0);
     void awake();
     void check_awaken(int disturbance);

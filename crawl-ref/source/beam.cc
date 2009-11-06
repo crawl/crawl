@@ -4950,9 +4950,7 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
         break;
 
     case BEAM_SLEEP:
-        rc = !mon->has_ench(ENCH_SLEEP_WARY)   // slept recently
-             && mon->holiness() == MH_NATURAL  // no unnatural
-             && mon->res_cold() <= 0;          // can't be hibernated
+        rc = mon->can_sleep();
         break;
 
     case BEAM_PORKALATOR:
@@ -5157,10 +5155,14 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         return (MON_AFFECTED);
 
     case BEAM_SLEEP:
-        if (simple_monster_message(mon, " looks drowsy..."))
-            obvious_effect = true;
-        mon->put_to_sleep();
-        return (MON_AFFECTED);
+        if (mon->can_sleep())
+        {
+            if (simple_monster_message(mon, " looks drowsy..."))
+                obvious_effect = true;
+            mon->put_to_sleep();
+            return (MON_AFFECTED);
+        }
+        return (MON_UNAFFECTED);
 
     case BEAM_BACKLIGHT:
         if (backlight_monsters(mon->pos(), hit, 0))
@@ -5202,9 +5204,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             && mon->add_ench(ENCH_MIGHT))
         {
             if (simple_monster_message(mon, " seems to grow stronger."))
-            {
                 obvious_effect = true;
-            }
         }
         return (MON_AFFECTED);
 

@@ -7046,7 +7046,7 @@ void player::reset_prev_move()
 
 bool player::asleep() const
 {
-    return (duration[DUR_SLEEP] > 0);
+    return (duration[DUR_SLEEP]);
 }
 
 bool player::cannot_act() const
@@ -7059,24 +7059,41 @@ bool player::can_throw_large_rocks() const
     return (player_genus(GENPC_OGRE) || species == SP_TROLL);
 }
 
+bool player::can_sleep(bool holi_only) const
+{
+    // Undead, nonliving, and plants don't sleep.
+    const mon_holy_type holi = holiness();
+    if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
+        return (false);
+
+    if (!holi_only)
+    {
+        // The player is berserk or already asleep.
+        if (berserk() || asleep())
+            return (false);
+
+        // The player is cold-resistant and can't be hibernated.
+        if (res_cold() > 0)
+            return (false);
+    }
+
+    return (true);
+}
+
 void player::put_to_sleep(int)
 {
     ASSERT(!crawl_state.arena);
 
-    if (berserk() || asleep()) // No cumulative sleeps.
-        return;
-
-    // Not all species can be put to sleep. Check holiness.
-    const mon_holy_type holy = holiness();
-    if (holy == MH_UNDEAD || holy == MH_NONLIVING)
+    if (!can_sleep())
     {
         mpr("You feel weary for a moment.");
         return;
     }
 
     mpr("You fall asleep.");
+
     stop_delay();
-    this->flash_colour = DARKGREY;
+    flash_colour = DARKGREY;
     viewwindow(true, false);
 
     // Do this *after* redrawing the view, or viewwindow() will no-op.

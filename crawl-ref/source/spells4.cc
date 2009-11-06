@@ -393,28 +393,24 @@ void cast_detect_secret_doors(int pow)
 static int _sleep_monsters(coord_def where, int pow, int, actor *)
 {
     monsters *monster = monster_at(where);
-    if (monster == NULL)
+    if (!monster)
         return (0);
 
-    if (monster->holiness() != MH_NATURAL)
+    if (!monster->can_sleep(true))
         return (0);
+
     if (monster->check_res_magic(pow))
         return (0);
 
-    // Works on friendlies too, so no check for that.
-
-    //jmf: Now that sleep == hibernation:
     const int res = monster->res_cold();
     if (res > 0 && one_chance_in(std::max(4 - res, 1)))
         return (0);
+
     if (monster->has_ench(ENCH_SLEEP_WARY) && !one_chance_in(3))
         return (0);
 
     monster->put_to_sleep();
-
-    if (mons_class_flag( monster->type, M_COLD_BLOOD ) && coinflip())
-        monster->add_ench(ENCH_SLOW);
-
+    monster->expose_to_element(BEAM_COLD, 2);
     return (1);
 }
 

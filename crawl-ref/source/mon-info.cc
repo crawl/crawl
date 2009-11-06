@@ -166,12 +166,8 @@ static std::string _verbose_info(const monsters* m)
             return (" (fleeing)");
         if (m->asleep())
         {
-            if (m->holiness() == MH_UNDEAD
-                || m->holiness() == MH_NONLIVING
-                || m->holiness() == MH_PLANT)
-            {
+            if (!m->can_sleep(true))
                 return (" (dormant)");
-            }
             else
                 return (" (sleeping)");
         }

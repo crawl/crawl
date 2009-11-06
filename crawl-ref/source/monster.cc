@@ -2696,7 +2696,7 @@ void monsters::expose_to_element(beam_type flavour, int strength)
     switch (flavour)
     {
     case BEAM_COLD:
-        if (mons_class_flag(this->type, M_COLD_BLOOD) && this->res_cold() <= 0
+        if (mons_class_flag(type, M_COLD_BLOOD) && res_cold() <= 0
             && coinflip())
         {
             slow_down(this, strength);
@@ -5392,9 +5392,34 @@ bool monsters::do_shaft()
     return (reveal);
 }
 
+bool monsters::can_sleep(bool holi_only) const
+{
+    // Undead, nonliving, and plants don't sleep.
+    const mon_holy_type holi = holiness();
+    if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
+        return (false);
+
+    if (!holi_only)
+    {
+        // The monster is berserk or already asleep.
+        if (berserk() || asleep())
+            return (false);
+
+        // The monster is cold-resistant and can't be hibernated.
+        if (res_cold() > 0)
+            return (false);
+
+        // The monster has slept recently.
+        if (has_ench(ENCH_SLEEP_WARY))
+            return (false);
+    }
+
+    return (true);
+}
+
 void monsters::put_to_sleep(int)
 {
-    if (has_ench(ENCH_BERSERK))
+    if (!can_sleep())
         return;
 
     behaviour = BEH_SLEEP;

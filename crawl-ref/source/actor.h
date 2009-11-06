@@ -141,7 +141,8 @@ public:
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
     virtual void drain_stat(int stat, int amount, actor* attacker) { }
-    virtual void put_to_sleep(int power = 0) { };
+    virtual bool can_sleep(bool holi_only = false) const = 0;
+    virtual void put_to_sleep(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
 
     virtual bool wearing_light_armour(bool = false) const { return (true); }
