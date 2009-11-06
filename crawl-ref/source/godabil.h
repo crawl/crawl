@@ -18,10 +18,6 @@ bool jiyva_remove_bad_mutation();
 bool beogh_water_walk();
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
                              bool quiet = false, bool unrestricted = false);
-void beogh_convert_orc(monsters *orc, bool emergency,
-                       bool converted_by_follower = false);
-void jiyva_convert_slime(monsters* slime);
-void feawn_neutralise_plant(monsters *plant);
 bool feawn_passthrough(const monsters * target);
 
 bool vehumet_supports_spell(spell_type spell);

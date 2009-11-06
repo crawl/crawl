@@ -27,6 +27,7 @@
 #include "viewmap.h"
 #include "showsymb.h"
 
+#include "attitude-change.h"
 #include "branch.h"
 #include "command.h"
 #include "cio.h"
@@ -98,127 +99,6 @@ bool inside_level_bounds(const coord_def &p)
 bool is_notable_terrain(dungeon_feature_type ftype)
 {
     return (get_feature_def(ftype).is_notable());
-}
-
-static void _good_god_follower_attitude_change(monsters *monster)
-{
-    if (you.is_unholy() || crawl_state.arena)
-        return;
-
-    // For followers of good gods, decide whether holy beings will be
-    // good neutral towards you.
-    if (is_good_god(you.religion)
-        && monster->foe == MHITYOU
-        && mons_is_holy(monster)
-        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !mons_wont_attack(monster)
-        && you.visible_to(monster) && !monster->asleep()
-        && !mons_is_confused(monster) && !monster->paralysed())
-    {
-        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-        if (x_chance_in_y(you.piety, MAX_PIETY) && !you.penance[you.religion])
-        {
-            const item_def* wpn = you.weapon();
-            if (wpn
-                && wpn->base_type == OBJ_WEAPONS
-                && is_evil_item(*wpn)
-                && coinflip()) // 50% chance of conversion failing
-            {
-                msg::stream << monster->name(DESC_CAP_THE)
-                            << " glares at your weapon."
-                            << std::endl;
-                good_god_holy_fail_attitude_change(monster);
-                return;
-            }
-            good_god_holy_attitude_change(monster);
-            stop_running();
-        }
-        else
-            good_god_holy_fail_attitude_change(monster);
-    }
-}
-
-void beogh_follower_convert(monsters *monster, bool orc_hit)
-{
-    if (you.species != SP_HILL_ORC || crawl_state.arena)
-        return;
-
-    // For followers of Beogh, decide whether orcs will join you.
-    if (you.religion == GOD_BEOGH
-        && monster->foe == MHITYOU
-        && mons_species(monster->type) == MONS_ORC
-        && !mons_is_summoned(monster)
-        && !mons_is_shapeshifter(monster)
-        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !mons_friendly(monster)
-        && you.visible_to(monster) && !monster->asleep()
-        && !mons_is_confused(monster) && !monster->paralysed())
-    {
-        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-        const int hd = monster->hit_dice;
-
-        if (you.piety >= piety_breakpoint(2) && !player_under_penance()
-            && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
-                 > random2(hd) + hd + random2(5))
-        {
-            if (you.weapon()
-                && you.weapon()->base_type == OBJ_WEAPONS
-                && get_weapon_brand(*you.weapon()) == SPWPN_ORC_SLAYING
-                && coinflip()) // 50% chance of conversion failing
-            {
-                msg::stream << monster->name(DESC_CAP_THE)
-                            << " flinches from your weapon."
-                            << std::endl;
-                return;
-            }
-            beogh_convert_orc(monster, orc_hit);
-            stop_running();
-        }
-    }
-}
-
-void slime_convert(monsters* monster)
-{
-    if (you.religion == GOD_JIYVA && mons_is_slime(monster)
-        && !mons_is_summoned(monster)
-        && !mons_is_shapeshifter(monster)
-        && !mons_neutral(monster)
-        && !mons_friendly(monster)
-        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
-        && you.visible_to(monster) && !monster->asleep()
-        && !mons_is_confused(monster) && !monster->paralysed())
-    {
-        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
-        if (!player_under_penance())
-        {
-            jiyva_convert_slime(monster);
-            stop_running();
-        }
-    }
-}
-
-void feawn_neutralise(monsters* monster)
-{
-    if (you.religion == GOD_FEAWN
-        && monster->attitude == ATT_HOSTILE
-        && feawn_neutralises(monster)
-        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !player_under_penance())
-    {
-        // We must call remove_auto_exclude before neutralizing the
-        // plant because remove_auto_exclude only removes exclusions
-        // it thinks were caused by auto-exclude, and
-        // auto-exclusions now check for ATT_HOSTILE.  Oh, what a
-        // tangled web, etc.
-        remove_auto_exclude(monster, false);
-
-        feawn_neutralise_plant(monster);
-        monster->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-        stop_running();
-    }
 }
 
 void handle_seen_interrupt(monsters* monster)
@@ -541,7 +421,7 @@ void monster_grid(bool do_updates)
             tile_place_monster(monster->pos().x, monster->pos().y, s, true);
 #endif
 
-            _good_god_follower_attitude_change(monster);
+            good_god_follower_attitude_change(monster);
             beogh_follower_convert(monster);
             slime_convert(monster);
             feawn_neutralise(monster);

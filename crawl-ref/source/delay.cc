@@ -13,6 +13,7 @@
 
 #include "abl-show.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "clua.h"
 #include "command.h"
 #include "coordit.h"

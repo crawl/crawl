@@ -15,10 +15,10 @@
 #include <iostream>
 
 #include "externs.h"
-#include "options.h"
 
 #include "abyss.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
 #include "coord.h"
@@ -35,6 +35,7 @@
 #include "misc.h"
 #include "monstuff.h"
 #include "mon-util.h"
+#include "options.h"
 #include "player.h"
 #include "religion.h"
 #include "skills2.h"

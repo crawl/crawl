@@ -103,8 +103,6 @@ bool divine_retribution(god_type god);
 
 bool jiyva_is_dead();
 bool remove_all_jiyva_altars();
-void good_god_holy_attitude_change(monsters *holy);
-void good_god_holy_fail_attitude_change(monsters *holy);
 bool feawn_protects(const monsters * target);
 bool feawn_protects_species(int mc);
 bool feawn_neutralises(const monsters * target);

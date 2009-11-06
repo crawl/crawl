@@ -13,8 +13,6 @@
 
 void init_monsters_seens();
 
-void beogh_follower_convert(monsters *monster, bool orc_hit = false);
-void slime_convert(monsters *monster);
 bool mons_near(const monsters *monster);
 bool mon_enemies_around(const monsters *monster);
 

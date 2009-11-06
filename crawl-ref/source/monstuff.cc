@@ -18,6 +18,7 @@
 
 #include "arena.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "cloud.h"
 #include "delay.h"
 #include "dgnevent.h"

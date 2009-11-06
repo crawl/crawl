@@ -5,6 +5,7 @@ acr.o \
 actor.o \
 arena.o \
 artefact.o \
+attitude-change.o \
 beam.o \
 behold.o \
 bitary.o \
