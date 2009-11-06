@@ -199,6 +199,9 @@
 
     #include <dos.h>
 
+    // It's sad we don't use autoconf...
+    #define round(x) floor((x)+0.5)
+
     // Use Perl-compatible regular expressions. libpcre must be available and
     // linked in.  This is optional.
     #ifndef REGEX_PCRE

@@ -29,7 +29,7 @@ static int _ifloor(double d)
 
 static int iround(double d)
 {
-    return static_cast<int>(floor(d+0.5));
+    return static_cast<int>(round(d));
 }
 
 static int ifloor(double d)
@@ -43,7 +43,7 @@ static int ifloor(double d)
 
 static bool double_is_integral(double d)
 {
-    return (double_is_zero(d - floor(d+0.5)));
+    return (double_is_zero(d - round(d)));
 }
 
 // Is v in the interiour of a diamond?
