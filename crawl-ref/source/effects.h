@@ -42,17 +42,17 @@ int spawn_corpse_mushrooms(item_def &corpse,
                            bool distance_as_time = false);
 
 struct mgen_data;
-int place_ring(std::vector<coord_def> & ring_points,
-                coord_def & origin,
-                mgen_data & prototype,
-                int n_arcs,
-                int arc_occupancy,
-                int & seen_count);
+int place_ring(std::vector<coord_def>& ring_points,
+               const coord_def& origin,
+               mgen_data prototype,
+               int n_arcs,
+               int arc_occupancy,
+               int& seen_count);
 
 // Collect lists of points that are within LOS (under the given losgrid),
 // unoccupied, and not solid (walls/statues).
 void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
-                           coord_def & origin, env_show_grid & losgrid);
+                           const coord_def &origin, const env_show_grid &losgrid);
 
 void random_uselessness(int scroll_slot = -1);
 

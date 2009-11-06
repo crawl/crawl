@@ -2106,7 +2106,7 @@ void point_point(std::vector<coord_def> & origins,
 // to calculate the distances in question. In practice it should be called for
 // at most 7 searches since 8 (all adjacent free, > 8 monsters in view) can be
 // special cased easily.
-bool prioritise_adjacent(coord_def & target, std::vector<coord_def> & candidates)
+bool prioritise_adjacent(const coord_def &target, std::vector<coord_def> & candidates)
 {
     radius_iterator los_it(target, LOS_RADIUS, true, true, true);
 
@@ -2114,7 +2114,7 @@ bool prioritise_adjacent(coord_def & target, std::vector<coord_def> & candidates
     // collect hostile monster positions in LOS
     for ( ; los_it; ++los_it)
     {
-        monsters * hostile = monster_at(*los_it);
+        monsters *hostile = monster_at(*los_it);
 
         if (hostile && hostile->attitude == ATT_HOSTILE)
             mons_positions.push_back(hostile->pos());

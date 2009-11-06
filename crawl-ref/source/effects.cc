@@ -4305,12 +4305,12 @@ static int _arc_decomposition(const coord_def & pos, int n_arcs)
     return static_cast<int> (theta / arc_angle);
 }
 
-int place_ring(std::vector<coord_def> & ring_points,
-                coord_def & origin,
-                mgen_data & prototype,
-                int n_arcs,
-                int arc_occupancy,
-                int & seen_count)
+int place_ring(std::vector<coord_def> &ring_points,
+               const coord_def &origin,
+               mgen_data prototype,
+               int n_arcs,
+               int arc_occupancy,
+               int &seen_count)
 {
     std::random_shuffle(ring_points.begin(),
                         ring_points.end());
@@ -4349,7 +4349,7 @@ int place_ring(std::vector<coord_def> & ring_points,
 // Collect lists of points that are within LOS (under the given env map),
 // unoccupied, and not solid (walls/statues).
 void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
-                           coord_def & origin, env_show_grid & losgrid)
+                           const coord_def &origin, const env_show_grid &losgrid)
 {
 
     radius_points.clear();
