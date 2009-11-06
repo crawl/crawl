@@ -6490,13 +6490,13 @@ int player::res_sticky_flame() const
 
 int player::res_holy_energy(const actor *attacker) const
 {
-    if (is_evil_god(this->religion))
+    if (is_evil())
         return (-1);
 
     if (is_unholy())
         return (-2);
 
-    if (is_good_god(this->religion))
+    if (is_good_god(religion))
         return (1);
 
     return (0);
