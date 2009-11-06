@@ -78,6 +78,8 @@ namespace arena
 
     bool contest_canceled = false;
 
+    bool is_respawning = false;
+
     int trials_done = 0;
     int team_a_wins = 0;
     int ties        = 0;
@@ -768,6 +770,7 @@ namespace arena
 
     void do_respawn(faction &fac)
     {
+        is_respawning = true;
         for (unsigned int _i = fac.respawn_list.size(); _i > 0; _i--)
         {
             unsigned int i = _i - 1;
@@ -832,6 +835,7 @@ namespace arena
                 // space will open up later.
             }
         }
+        is_respawning = false;
     }
 
     void do_fight()
@@ -1178,8 +1182,14 @@ void arena_placed_monster(monsters *monster)
             arena::b_spawners.push_back(monster->mindex());
     }
 
+    const bool summoned = monster->is_summoned();
+
 #ifdef DEBUG_DIAGNOSTICS
-    mprf("%s enters the arena!", monster->full_name(DESC_CAP_A, true).c_str());
+    mprf("%s %s!",
+         monster->full_name(DESC_CAP_A, true).c_str(),
+         arena::is_respawning                ? "respawns" :
+         (summoned && ! arena::real_summons) ? "is summoned"
+                                             : "enters the arena");
 #endif
 
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
@@ -1205,7 +1215,7 @@ void arena_placed_monster(monsters *monster)
     if (arena::name_monsters && !monster->is_named())
         monster->mname = make_name(random_int(), false);
 
-    if (monster->is_summoned())
+    if (summoned)
     {
         // Real summons drop corpses and items.
         if (arena::real_summons)
