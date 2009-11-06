@@ -3119,7 +3119,7 @@ static monsterentry mondata[] = {
 {
     MONS_HELL_KNIGHT, '@', RED, "hell knight",
     M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
-    mrd(MR_RES_FIRE, 2),
+    MR_RES_FIRE | MR_RES_HELLFIRE,
     550, 10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 3, 6, 0 },

@@ -2892,6 +2892,15 @@ bool monsters::is_evil() const
         return (true);
     }
 
+    // Assume that no natural creatures resist hellfire, except by evil
+    // means.
+    if (holiness() == MH_NATURAL)
+    {
+        const mon_resist_def res = get_mons_resists(this);
+        if (res.hellfire)
+            return (true);
+    }
+
     return (false);
 }
 
