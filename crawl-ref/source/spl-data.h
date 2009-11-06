@@ -1005,7 +1005,7 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      3,
-     200,
+     150,
      -1, -1,
      0,
      NULL,
