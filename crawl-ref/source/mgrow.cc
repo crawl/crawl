@@ -9,6 +9,7 @@
 #include "enum.h"
 #include "mgrow.h"
 #include "mon-util.h"
+#include "monplace.h"
 #include "monstuff.h"
 #include "random.h"
 
@@ -234,6 +235,10 @@ bool monsters::gain_exp(int exp)
 
     if (hit_dice < MAX_MONS_HD && experience >= mexplevs[hit_dice + 1])
         experience = (mexplevs[hit_dice] + mexplevs[hit_dice + 1]) / 2;
+
+    // If the monster has leveled up to a monster that will be angered
+    // by the player, handle it properly.
+    player_angers_monster(this);
 
     return (levels_gained > 0);
 }
