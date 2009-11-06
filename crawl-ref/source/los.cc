@@ -1008,7 +1008,7 @@ void calc_show_los()
     if (!crawl_state.arena && !crawl_state.arena_suspended)
     {
         losight(env.show_los, you.pos());
-
+        you.update_los();
         // What would be visible, if all of the translucent walls were
         // made opaque.
         // XXX: figure out what this should really do.

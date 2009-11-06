@@ -6903,12 +6903,6 @@ bool player::visible_to(const actor *looker) const
             mon->can_see_invisible() || mons_sense_invis(mon));
 }
 
-bool player::see_cell(const coord_def &c) const
-{
-    // TODO: give player own LOS.
-    return (observe_cell(c));
-}
-
 bool player::backlit(bool check_haloed) const
 {
     return (get_contamination_level() > 0 || duration[DUR_BACKLIGHT]
