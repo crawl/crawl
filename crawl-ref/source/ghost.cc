@@ -609,8 +609,8 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     int delay = property(weapon, PWPN_SPEED);
     int damg  = property(weapon, PWPN_DAMAGE);
 
-    if (power > 200)
-        power = 200;
+    if (power > 150)
+        power = 150;
 
     reset();
 
@@ -645,14 +645,14 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     // If you aren't an awesome spellcaster, nerf the weapons.  Do it in
     // a way that lays most of the penalty on heavy weapons.
 
-    speed = std::max(3, speed - (10 - power / 20));
-    ev    = std::max(3, ev    - (10 - power / 20));
+    speed = std::max(3, speed - (10 - power / 15));
+    ev    = std::max(3, ev    - (10 - power / 15));
 
     ac = ac * power / 200;
-    max_hp = std::max(5, max_hp * power / 200);
-    damage = std::max(1, damage * power / 200);
+    max_hp = std::max(5, max_hp * power / 150);
+    damage = std::max(1, damage * power / 150);
 
-    // For a spellpower 100 character (typical late midgame mage with no Ench
+    // For a spellpower 75 character (typical late midgame mage with no Ench
     // focus), we have:
 
     // Giant spiked club: speed 7, 22+22 damage, 17 AC, 35 HP, 11 EV
@@ -662,7 +662,7 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     // Quick blade: Speed 18, 5+5 damage, 2 AC, 5 HP, 17 EV
     // Sabre: Speed 13, 7+7 damage, 4 AC, 9 HP, 14 EV
 
-    // At spellpower 50 (early game character with focus on Ench):
+    // At spellpower 37 (early game character with focus on Ench):
 
     // Giant spiked club: speed 5, 11+22 damage, 8 AC, 17 HP, 9 EV
     // Bardiche: speed 3, 10+20 damage, 5 AC, 10 HP, 8 EV
