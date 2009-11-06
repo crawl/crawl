@@ -2149,7 +2149,7 @@ enum monster_flag_type
                                      // Yredelemnul's power
 
     MF_NAME_SUFFIX        = 0x10000, // mname is a suffix.
-    MF_NAME_NO_THE        = 0x20000, // mname is a prefix with no "the"
+    MF_NAME_ADJECTIVE     = 0x20000, // mname is an adjective.
                                      // between it and the monster type name.
     MF_NAME_REPLACE       = 0x30000, // mname entirely replaces normal monster
                                      // name.

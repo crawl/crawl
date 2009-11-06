@@ -2273,6 +2273,21 @@ std::string monsters::full_name(description_level_type desc,
 
     const unsigned long flag = flags & MF_NAME_MASK;
 
+    if (flag == MF_NAME_REPLACE)
+    {
+        switch(desc)
+        {
+        case DESC_CAP_THE:
+        case DESC_CAP_A:
+        case DESC_CAP_YOUR:
+            title = uppercase_first(title);
+            break;
+
+        default:
+            break;
+        }
+    }
+
     const int _type = mons_is_zombified(this) ? base_monster : type;
     if (mons_genus(_type) == MONS_HYDRA && flag == 0)
         return (title);
@@ -2285,7 +2300,7 @@ std::string monsters::full_name(description_level_type desc,
             title += " ";
             title += mname;
         }
-        else if (flag == MF_NAME_NO_THE)
+        else if (flag == MF_NAME_ADJECTIVE)
         {
             title += " ";
             title += base_name(DESC_PLAIN, true);
@@ -2300,6 +2315,10 @@ std::string monsters::full_name(description_level_type desc,
             title += base_name(DESC_NOCAP_THE, true);
         }
     }
+
+    if (flag == MF_NAME_ADJECTIVE)
+        title = apply_description(desc, title);
+
     return (title);
 }
 
