@@ -27,6 +27,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "shopping.h"
+#include "showsymb.h"
 #include "spells3.h" // for the halo
 #include "stuff.h"
 #include "terrain.h"

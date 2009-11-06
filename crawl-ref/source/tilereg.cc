@@ -30,6 +30,7 @@
 #include "options.h"
 #include "player.h"
 #include "religion.h"
+#include "showsymb.h"
 #include "species.h"
 #include "spells3.h"
 #include "spl-book.h"
@@ -1382,7 +1383,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
 
         if (!cell_is_solid(m_cursor[CURSOR_MOUSE]))
         {
-            const monsters *mon = monster_at(m_cursor[CURSOR_MOUSE]));
+            const monsters *mon = monster_at(m_cursor[CURSOR_MOUSE]);
             if (!mon || mon->friendly())
                 tip = "[L-Click] Move\n";
             else if (mon)

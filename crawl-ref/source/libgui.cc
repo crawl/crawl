@@ -20,6 +20,7 @@
 #include "externs.h"
 #include "tilereg.h"
 #include "message.h"
+#include "showsymb.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
