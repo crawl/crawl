@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "directn.h"
 #include "env.h"
+#include "religion.h"
 #include "terrain.h"
 
 const char *dngn_feature_names[] =
@@ -69,8 +70,15 @@ dungeon_feature_type dungeon_feature_by_name(const std::string &name)
         return (DNGN_UNSEEN);
 
     for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
+    {
         if (dngn_feature_names[i] == name)
-            return static_cast<dungeon_feature_type>(i);
+        {
+            if (jiyva_is_dead() && name == "altar_jiyva")
+                return (DNGN_FLOOR);
+
+            return (static_cast<dungeon_feature_type>(i));
+        }
+    }
 
     return (DNGN_UNSEEN);
 }
