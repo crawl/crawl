@@ -143,7 +143,6 @@ while (defined ($line = <COMMIT>)) {
 }
 close COMMIT;
 
-
 open DIFF, "git-diff-tree -r $parent[0] $tree|" or die "git-diff-tree $parent[0] $tree: $!";
 while (defined ($line = <DIFF>)) {
   chomp $line;
@@ -157,6 +156,19 @@ close DIFF;
 # Figure out who is doing the update.
 # XXX: Too trivial this way?
 ($user) = $author =~ /<(.*?)@/;
+
+# HACK to convert CIA's idea of committeers names to match the IRC handles
+$user =~ s/stefanor/sorear/;
+$user =~ s/evktalo/Keskitalo/;
+$user =~ s/dploog/dpeg/;
+$user =~ s/bookofjude/due/;
+$user =~ s/zelgadis/Matthew_Cline/;
+$user =~ s/dshaligram/greensnark/;
+$user =~ s/rvollmert/by/;
+$user =~ s/ottochar/pointless_/;
+$user =~ s/ennewalker/Enne/;
+$user =~ s/steven/neunon/;
+
 
 
 $rev = substr($commit, 0, 12);
