@@ -458,8 +458,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DRACONIAN_KNIGHT, 'd', CYAN, "draconian knight",
-    M_SPELLCASTER | M_ACTUAL_SPELLS | M_FIGHTER | M_COLD_BLOOD | M_EVIL
-        | M_SPEAKS,
+    M_SPELLCASTER | M_ACTUAL_SPELLS | M_FIGHTER | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -550,7 +549,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEEP_ELF_MAGE, 'e', MAGENTA, "deep elf mage",
-    M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_EVIL | M_SPEAKS,
+    M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -572,7 +571,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEEP_ELF_CONJURER, 'e', BLUE, "deep elf conjurer",
-    M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_EVIL | M_SPEAKS,
+    M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2498,8 +2497,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_OGRE_MAGE, 'O', MAGENTA, "ogre-mage",
-    M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD | M_EVIL
-        | M_SPEAKS,
+    M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     1300, 16, MONS_OGRE, MONS_OGRE, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3120,8 +3118,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_HELL_KNIGHT, '@', RED, "hell knight",
-    M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_EVIL
-        | M_SPEAKS,
+    M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
     mrd(MR_RES_FIRE, 2),
     550, 10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3143,7 +3140,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_WIZARD, '@', MAGENTA, "wizard",
-    M_SPELLCASTER | M_SPEAKS | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_EVIL,
+    M_SPELLCASTER | M_SPEAKS | M_ACTUAL_SPELLS | M_WARM_BLOOD,
     MR_NO_FLAGS,
     550, 10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4166,7 +4163,7 @@ static monsterentry mondata[] = {
 {
     MONS_EROLCHA, 'O', LIGHTBLUE, "Erolcha",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD
-        | M_EVIL | M_SPEAKS,
+        | M_SPEAKS,
     MR_NO_FLAGS,
     1300, 20, MONS_OGRE, MONS_OGRE, MH_NATURAL, -7,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

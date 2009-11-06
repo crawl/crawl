@@ -2892,9 +2892,6 @@ bool monsters::is_evil() const
         return (true);
     }
 
-    if (mons_class_flag(type, M_EVIL))
-        return (true);
-
     return (false);
 }
 
