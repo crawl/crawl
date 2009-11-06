@@ -35,6 +35,7 @@
 #include "message.h"
 #include "player.h"
 #include "shopping.h"
+#include "showsymb.h"
 #include "stuff.h"
 #include "view.h"
 #include "menu.h"

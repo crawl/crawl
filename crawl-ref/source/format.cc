@@ -7,6 +7,7 @@
 
 #include "colour.h"
 #include "format.h"
+#include "showsymb.h"
 #include "view.h"
 #include "viewchar.h"
 

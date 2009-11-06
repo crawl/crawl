@@ -46,6 +46,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
+#include "showsymb.h"
 #include "skills2.h"
 #include "species.h"
 #include "spl-book.h"

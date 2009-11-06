@@ -48,6 +48,7 @@
 #include "player.h"
 #include "shopping.h"
 #include "show.h"
+#include "showsymb.h"
 #include "state.h"
 #include "stuff.h"
 #include "stash.h"

@@ -51,6 +51,7 @@
 #include "quiver.h"
 #include "religion.h"
 #include "shopping.h"
+#include "showsymb.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "state.h"

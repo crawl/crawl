@@ -15,7 +15,7 @@
 #include "monster.h"
 #include "options.h"
 #include "religion.h"
-#include "view.h"
+#include "showsymb.h"
 
 #include <algorithm>
 #include <sstream>

@@ -14,6 +14,7 @@
 #include "env.h"
 #include "notes.h"
 #include "overmap.h"
+#include "showsymb.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"

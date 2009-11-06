@@ -46,6 +46,7 @@
 #include "player.h"
 #include "religion.h"
 #include "shopping.h"
+#include "showsymb.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"

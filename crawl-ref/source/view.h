@@ -38,23 +38,10 @@ class level_pos;
 void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc = false );
 bool check_awaken(monsters* monster);
 bool is_feature(int feature, const coord_def& where);
-void get_item_glyph(const item_def *item, unsigned *glych,
-                    unsigned short *glycol);
-void get_mons_glyph(const monsters *mons, unsigned *glych,
-                    unsigned short *glycol);
-unsigned get_screen_glyph( int x, int y );
-unsigned get_screen_glyph( const coord_def &p );
-
-int get_mons_colour(const monsters *mons);
-
 bool inside_level_bounds(int x, int y);
 bool inside_level_bounds(const coord_def &p);
 void clear_feature_overrides();
 void add_feature_override(const std::string &text);
-
-unsigned grid_character_at(const coord_def &c);
-unsigned get_symbol(show_type object, unsigned short *colour = NULL,
-                     bool magic_mapped = false);
 
 std::string screenshot(bool fullscreen = false);
 

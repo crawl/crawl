@@ -119,6 +119,7 @@ rng.o \
 sha256.o \
 shopping.o \
 show.o \
+showsymb.o \
 skills.o \
 skills2.o \
 species.o \

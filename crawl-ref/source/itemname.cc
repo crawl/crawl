@@ -39,6 +39,7 @@
 #include "religion.h"
 #include "quiver.h"
 #include "shopping.h"
+#include "showsymb.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "state.h"

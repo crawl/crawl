@@ -29,6 +29,7 @@
 #include "los.h"
 #include "random.h"
 #include "religion.h"
+#include "showsymb.h"
 #include "stuff.h"
 #include "spells3.h"
 #include "terrain.h"

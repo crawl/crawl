@@ -11,9 +11,9 @@
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
+#include "showsymb.h"
 #include "state.h"
 #include "terrain.h"
-#include "view.h"
 #include "viewgeom.h"
 
 void get_show_symbol(show_type object, unsigned *ch,
