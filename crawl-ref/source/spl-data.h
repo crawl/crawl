@@ -2408,6 +2408,45 @@
 },
 
 {
+    SPELL_EARTH_ELEMENTALS, "Summon Earth Elementals",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_AIR_ELEMENTALS, "Summon Air Elementals",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_FIRE_ELEMENTALS, "Summon Fire Elementals",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

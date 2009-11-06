@@ -2889,8 +2889,11 @@ enum spell_type
     SPELL_TOMB_OF_DOROKLOHE,           //  200
     SPELL_SUMMON_EYEBALLS,
     SPELL_HASTE_OTHER,
+    SPELL_FIRE_ELEMENTALS,
+    SPELL_EARTH_ELEMENTALS,
+    SPELL_AIR_ELEMENTALS,              //  205
 
-    NUM_SPELLS                         //  203
+    NUM_SPELLS                         //  206
 };
 
 enum slot_select_mode

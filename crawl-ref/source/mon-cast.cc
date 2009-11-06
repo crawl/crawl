@@ -766,6 +766,9 @@ void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_CANTRIP:
     case SPELL_BERSERKER_RAGE:
     case SPELL_WATER_ELEMENTALS:
+    case SPELL_FIRE_ELEMENTALS:
+    case SPELL_AIR_ELEMENTALS:
+    case SPELL_EARTH_ELEMENTALS:
     case SPELL_KRAKEN_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
@@ -1559,6 +1562,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     const bool wizard = monster->is_actual_spellcaster();
     god_type god = (priest || !(priest || wizard)) ? monster->god : GOD_NO_GOD;
 
+    // Used for summon X elemental, and nothing else. {bookofjude}
+    monster_type el_summon_type = MONS_NO_MONSTER; 
+
     switch (spell_cast)
     {
     default:
@@ -1610,6 +1616,21 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_WATER_ELEMENTALS:
+        if (el_summon_type == MONS_NO_MONSTER)
+            el_summon_type = MONS_WATER_ELEMENTAL;
+        // Deliberate fall through
+    case SPELL_EARTH_ELEMENTALS:
+        if (el_summon_type == MONS_NO_MONSTER)
+            el_summon_type = MONS_EARTH_ELEMENTAL;
+        // Deliberate fall through
+    case SPELL_AIR_ELEMENTALS:
+        if (el_summon_type == MONS_NO_MONSTER)
+            el_summon_type = MONS_AIR_ELEMENTAL;
+        // Deliberate fall through
+    case SPELL_FIRE_ELEMENTALS:
+        if (el_summon_type == MONS_NO_MONSTER)
+            el_summon_type = MONS_FIRE_ELEMENTAL;
+
         if (_mons_abjured(monster, monsterNearby))
             return;
 
@@ -1618,7 +1639,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
-                mgen_data(MONS_WATER_ELEMENTAL, SAME_ATTITUDE(monster),
+                mgen_data(el_summon_type, SAME_ATTITUDE(monster),
                           3, spell_cast, monster->pos(), monster->foe, 0, god));
         }
         return;
