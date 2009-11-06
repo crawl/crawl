@@ -86,12 +86,6 @@ LUAFN(dgn_level_name)
 
 LUAFN(dgn_set_level_type_name)
 {
-    if (you.level_type != LEVEL_PORTAL_VAULT)
-    {
-        luaL_error(ls, "Can only set level type name on portal vaults");
-        return(0);
-    }
-
     if (!lua_isstring(ls, 1))
     {
         luaL_argerror(ls, 1, "Expected string for level type name");
@@ -105,13 +99,6 @@ LUAFN(dgn_set_level_type_name)
 
 LUAFN(dgn_set_level_type_name_abbrev)
 {
-    if (you.level_type != LEVEL_PORTAL_VAULT)
-    {
-        luaL_error(ls, "Can only set level type name abbreviation on "
-                   "portal vaults");
-        return(0);
-    }
-
     if (!lua_isstring(ls, 1))
     {
         luaL_argerror(ls, 1, "Expected string for level type name "
@@ -126,12 +113,6 @@ LUAFN(dgn_set_level_type_name_abbrev)
 
 LUAFN(dgn_set_level_type_origin)
 {
-    if (you.level_type != LEVEL_PORTAL_VAULT)
-    {
-        luaL_error(ls, "Can only set level type origin on portal vaults");
-        return(0);
-    }
-
     if (!lua_isstring(ls, 1))
     {
         luaL_argerror(ls, 1, "Expected string for level type origin");
