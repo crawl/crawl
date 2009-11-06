@@ -64,9 +64,6 @@ struct show_info
     monster_type mons;
 };
 
-// Replaces get_item_symbol.
-void get_show_symbol(show_type object, unsigned *ch, unsigned short *colour);
-
 class monsters;
 class show_def
 {

@@ -41,6 +41,7 @@
 #include "player.h"
 #include "quiver.h"
 #include "religion.h"
+#include "showsymb.h"
 #include "skills2.h"
 #include "species.h"
 #include "spl-book.h"

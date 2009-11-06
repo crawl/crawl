@@ -16,20 +16,6 @@
 #include "terrain.h"
 #include "viewgeom.h"
 
-void get_show_symbol(show_type object, unsigned *ch,
-                     unsigned short *colour)
-{
-    if (object.cls < SH_MONSTER)
-    {
-        *ch = get_feature_def(object).symbol;
-
-        // Don't clobber with BLACK, because the colour should be already set.
-        if (get_feature_def(object).colour != BLACK)
-            *colour = get_feature_def(object).colour;
-    }
-    *colour = real_colour(*colour);
-}
-
 show_type::show_type()
     : cls(SH_NOTHING), colour(0)
 {

@@ -19,6 +19,7 @@ void get_symbol(const coord_def& where,
                 show_type object, unsigned *ch,  
                 unsigned short *colour,
                 bool magic_mapped = false);
+void get_show_symbol(show_type object, unsigned *ch, unsigned short *colour);
 
 #endif
 
