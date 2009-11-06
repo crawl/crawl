@@ -35,7 +35,7 @@ bool sunlight();
 bool prioritise_adjacent(coord_def & target, std::vector<coord_def> & candidates);
 bool plant_ring_from_fruit();
 
-int rain(coord_def & target);
+int rain(const coord_def &target);
 int corpse_spores(beh_type behavior = BEH_FRIENDLY);
 bool evolve_flora();
 

@@ -2241,7 +2241,7 @@ bool plant_ring_from_fruit()
 // chance of spawning plants or fungus on unoccupied dry floor tiles
 // outside of the rainfall area.  Return the number of plants/fungi
 // created.
-int rain(coord_def & target)
+int rain(const coord_def &target)
 {
     int spawned_count = 0;
     for (radius_iterator rad(target, LOS_RADIUS, true, true, true); rad; ++rad)
