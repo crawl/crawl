@@ -69,8 +69,6 @@ void update_monsters_in_view();
 void handle_seen_interrupt(monsters* monster);
 void flush_comes_into_view();
 
-dungeon_char_type dchar_by_name(const std::string &name);
-
 void handle_terminal_resize(bool redraw = true);
 
 #endif
