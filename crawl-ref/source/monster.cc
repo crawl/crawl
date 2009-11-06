@@ -2630,7 +2630,7 @@ void monsters::moveto(const coord_def& c)
     if (c != pos() && in_bounds(pos()))
         mons_clear_trapping_net(this);
 
-    position = c;
+    set_position(c);
 }
 
 bool monsters::fumbles_attack(bool verbose)
@@ -4845,7 +4845,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(me))
         {
-            if (::see_cell(this->position))
+            if (::see_cell(position))
             {
                 mprf("A nearby %s withers and dies.",
                      this->name(DESC_PLAIN, false).c_str());

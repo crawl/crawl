@@ -300,6 +300,8 @@ public:
 
     void init();
 
+    // Set player position without updating view geometry.
+    void set_position(const coord_def &c);
     // Low-level move the player. Use this instead of changing pos directly.
     void moveto(const coord_def &c);
     // Move the player during an abyss shift.
@@ -505,8 +507,6 @@ public:
     void set_gold(int amount);
 
 protected:
-    void base_moveto(const coord_def &c);
-
     void _removed_beholder();
     bool _possible_beholder(const monsters *mon) const;
 };

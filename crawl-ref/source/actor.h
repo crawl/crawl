@@ -19,8 +19,8 @@ public:
                              int* summon_type = NULL) const = 0;
 
     virtual void moveto(const coord_def &c) = 0;
+    virtual void set_position(const coord_def &c);
     virtual const coord_def& pos() const { return position; }
-    virtual coord_def& pos() { return position; }
 
     virtual bool      swimming() const = 0;
     virtual bool      submerged() const = 0;

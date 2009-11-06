@@ -151,8 +151,8 @@ static bool _swap_monsters(monsters* mover, monsters* moved)
     const coord_def mover_pos = mover->pos();
     const coord_def moved_pos = moved->pos();
 
-    mover->pos() = moved_pos;
-    moved->pos() = mover_pos;
+    mover->set_position(moved_pos);
+    moved->set_position(mover_pos);
 
     mgrd(mover->pos()) = mover->mindex();
     mgrd(moved->pos()) = moved->mindex();
@@ -3027,9 +3027,9 @@ static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
     // Okay, do the swap!
     _swim_or_move_energy(mon);
 
-    mon->pos() = n;
+    mon->set_position(n);
     mgrd(n) = monster_index(mon);
-    m2->pos() = c;
+    m2->set_position(c);
     const int m2i = monster_index(m2);
     ASSERT(m2i >= 0 && m2i < MAX_MONSTERS);
     mgrd(c) = m2i;
@@ -3091,7 +3091,7 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     }
     mgrd(monster->pos()) = NON_MONSTER;
 
-    monster->pos() = f;
+    monster->set_position(f);
 
     mgrd(monster->pos()) = monster_index(monster);
 

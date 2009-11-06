@@ -109,3 +109,8 @@ bool actor::check_res_magic(int power)
 
     return (mrch2 < mrchance);
 }
+
+void actor::set_position(const coord_def &c)
+{
+    position = c;
+}

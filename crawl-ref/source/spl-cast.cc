@@ -1069,7 +1069,7 @@ static void _try_monster_cast(spell_type spell, int powc,
                        | MF_WAS_IN_VIEW | MF_HARD_RESET);
     mon->hit_points = you.hp;
     mon->hit_dice   = you.experience_level;
-    mon->pos()      = you.pos();
+    mon->set_position(you.pos());
     mon->target     = spd.target;
 
     if (!spd.isTarget)

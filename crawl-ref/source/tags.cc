@@ -2186,8 +2186,9 @@ static void unmarshall_monster(reader &th, monsters &m)
     // Avoid sign extension when loading files (Elethiomel's hang)
     m.speed_increment = (unsigned char) unmarshallByte(th);
     m.behaviour       = static_cast<beh_type>(unmarshallByte(th));
-    m.position.x      = unmarshallByte(th);
-    m.position.y      = unmarshallByte(th);
+    int x             = unmarshallByte(th);
+    int y             = unmarshallByte(th);
+    m.set_position(coord_def(x,y));
     m.target.x        = unmarshallByte(th);
     m.target.y        = unmarshallByte(th);
 

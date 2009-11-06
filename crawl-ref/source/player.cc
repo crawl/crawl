@@ -7008,12 +7008,12 @@ bool player::is_fiery() const
     return (false);
 }
 
-void player::base_moveto(const coord_def &c)
+void player::set_position(const coord_def &c)
 {
     ASSERT(!crawl_state.arena);
 
     const bool real_move = (c != pos());
-    position = c;
+    actor::set_position(c);
 
     if (real_move)
     {
@@ -7032,13 +7032,13 @@ void player::moveto(const coord_def &c)
         clear_trapping_net();
 
     crawl_view.set_player_at(c);
-    base_moveto(c);
+    set_position(c);
 }
 
 void player::shiftto(const coord_def &c)
 {
     crawl_view.shift_player_to(c);
-    base_moveto(c);
+    set_position(c);
 }
 
 void player::reset_prev_move()

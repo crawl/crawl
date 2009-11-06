@@ -734,7 +734,7 @@ bool _take_portal_vault_stairs( const bool down )
         return (false);
 
     clear_trapping_net();
-    you.position = stair_pos;
+    you.set_position(stair_pos);
 
     if (down)
         down_stairs(you.your_level);

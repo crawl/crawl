@@ -1143,7 +1143,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     // used to be, so make sure that mgrd() doesn't get cleared a second
     // time (causing the new monster to become floating) when
     // monster->reset() is called.
-    monster->pos().reset();
+    monster->set_position(coord_def(0,0));
 
     // Exploding kills the monster a bit earlier than normal.
     monster->hit_points = -16;
@@ -3764,7 +3764,7 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
     monsters &mon(menv[midx]);
 
     mon          = *orig;
-    mon.position = pos;
+    mon.set_position(pos);
     mgrd(pos)    = midx;
 
     // Duplicate objects, or unequip them if they can't be duplicated.
