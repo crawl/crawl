@@ -6274,7 +6274,7 @@ bool player::paralysed() const
 
 bool player::cannot_move() const
 {
-    return (duration[DUR_PARALYSIS] || duration[DUR_PETRIFIED]);
+    return (paralysed() || petrified());
 }
 
 bool player::confused() const
@@ -6285,6 +6285,11 @@ bool player::confused() const
 bool player::caught() const
 {
     return (attribute[ATTR_HELD]);
+}
+
+bool player::petrified() const
+{
+    return (duration[DUR_PETRIFIED]);
 }
 
 int player::shield_block_penalty() const

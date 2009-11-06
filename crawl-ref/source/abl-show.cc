@@ -1021,7 +1021,7 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_ELYVILON_PURIFICATION:
         if (!you.disease && !you.rotting && !you.duration[DUR_POISONING]
             && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
-            && !you.duration[DUR_PARALYSIS] && !you.duration[DUR_PETRIFIED])
+            && !you.duration[DUR_PARALYSIS] && !you.petrified())
         {
             mpr("Nothing ails you!");
             return (false);

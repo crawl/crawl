@@ -1531,7 +1531,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             else
             {
                 const bool petrifying = mons_is_petrifying(mon);
-                const bool petrified = mons_is_petrified(mon) && !petrifying;
+                const bool petrified = mon->petrified() && !petrifying;
 
                 // Petrifying or petrified monsters can be exploded.
                 if (petrifying || petrified)
@@ -2100,7 +2100,7 @@ bool do_slow_monster(monsters* mon, kill_category whose_kill)
         && !mons_is_stationary(mon)
         && mon->add_ench(mon_enchant(ENCH_SLOW, 0, whose_kill)))
     {
-        if (!mon->paralysed() && !mons_is_petrified(mon)
+        if (!mon->paralysed() && !mon->petrified()
             && simple_monster_message(mon, " seems to slow down."))
         {
             return (true);

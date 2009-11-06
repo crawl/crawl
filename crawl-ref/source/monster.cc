@@ -2803,6 +2803,11 @@ bool monsters::caught() const
     return this->has_ench(ENCH_HELD);
 }
 
+bool monsters::petrified() const
+{
+    return has_ench(ENCH_PETRIFIED);
+}
+
 int monsters::shield_bonus() const
 {
     const item_def *shld = const_cast<monsters*>(this)->shield();
@@ -4096,7 +4101,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_PETRIFYING:
-        if (!has_ench(ENCH_PETRIFIED))
+        if (!petrified())
             break;
 
         if (!quiet)

@@ -2665,9 +2665,9 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
 
 void bolt::apply_bolt_paralysis(monsters *monster)
 {
-    if (!monster->has_ench(ENCH_PARALYSIS)
+    if (!monster->paralysed()
         && monster->add_ench(ENCH_PARALYSIS)
-        && (!monster->has_ench(ENCH_PETRIFIED)
+        && (!monster->petrified()
             || monster->has_ench(ENCH_PETRIFYING)))
     {
         if (simple_monster_message(monster, " suddenly stops moving!"))
@@ -2685,7 +2685,7 @@ void bolt::apply_bolt_paralysis(monsters *monster)
 void bolt::apply_bolt_petrify(monsters *monster)
 {
     int petrifying = monster->has_ench(ENCH_PETRIFYING);
-    if (monster->has_ench(ENCH_PETRIFIED))
+    if (monster->petrified())
     {
         // If the petrifying is not yet finished, we can force it to happen
         // right away by casting again. Otherwise, the spell has no further
@@ -5192,7 +5192,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             && !mons_is_stationary(mon)
             && mon->add_ench(ENCH_HASTE))
         {
-            if (!mon->paralysed() && !mons_is_petrified(mon)
+            if (!mon->paralysed() && !mon->petrified()
                 && simple_monster_message(mon, " seems to speed up."))
             {
                 obvious_effect = true;

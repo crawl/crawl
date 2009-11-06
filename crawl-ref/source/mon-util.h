@@ -675,7 +675,6 @@ bool invalid_monster_type(monster_type mt);
 bool invalid_monster_index(int i);
 
 bool monster_shover(const monsters *m);
-bool mons_is_petrified(const monsters *m);
 bool mons_is_petrifying(const monsters *m);
 bool mons_cannot_act(const monsters *m);
 bool mons_cannot_move(const monsters *m);

@@ -960,7 +960,7 @@ bool cast_vitalisation()
     // Remove negative afflictions.
     if (you.disease || you.rotting || you.confused()
         || you.duration[DUR_PARALYSIS] || you.duration[DUR_POISONING]
-        || you.duration[DUR_PETRIFIED])
+        || you.petrified())
     {
         do
         {

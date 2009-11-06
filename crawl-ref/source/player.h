@@ -455,6 +455,7 @@ public:
     bool caught() const;
     bool backlit(bool check_haloed = true) const;
     bool haloed() const;
+    bool petrified() const;
 
     bool asleep() const;
     void put_to_sleep(int power = 0);

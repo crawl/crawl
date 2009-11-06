@@ -321,7 +321,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
         unchivalric = UCAT_PETRIFYING;
 
     // petrified
-    if (def && mons_is_petrified(def))
+    if (defender->petrified())
         unchivalric = UCAT_PETRIFIED;
 
     // paralysed
@@ -1685,7 +1685,7 @@ int melee_attack::player_apply_monster_ac(int damage)
             damage -= random2(1 + defender->armour_class());
     }
 
-    if (mons_is_petrified(defender_as_monster()))
+    if (defender->petrified())
         damage /= 3;
 
     return (damage);

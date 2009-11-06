@@ -196,6 +196,7 @@ public:
     virtual bool asleep() const { return (false); }
     virtual bool backlit(bool check_haloed = true) const = 0;
     virtual bool haloed() const = 0;
+    virtual bool petrified() const = 0;
 
     virtual bool handle_trap();
 

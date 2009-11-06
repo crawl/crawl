@@ -154,7 +154,7 @@ static std::string _verbose_info(const monsters* m)
 
     if (mons_behaviour_perceptible(m))
     {
-        if (mons_is_petrified(m))
+        if (m->petrified())
             return (" (petrified)");
         if (m->paralysed())
             return (" (paralysed)");

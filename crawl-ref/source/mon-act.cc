@@ -1855,7 +1855,7 @@ static void _handle_monster_move(monsters *monster)
             // Struggling against the net takes time.
             _swim_or_move_energy(monster);
         }
-        else if (!mons_is_petrified(monster))
+        else if (!monster->petrified())
         {
             // Calculates mmov based on monster target.
             _handle_movement(monster);

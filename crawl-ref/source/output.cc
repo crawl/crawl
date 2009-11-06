@@ -2041,7 +2041,7 @@ std::string _status_mut_abilities()
     if (you.paralysed())
         status.push_back("paralysed");
 
-    if (you.duration[DUR_PETRIFIED])
+    if (you.petrified())
         status.push_back("petrified");
 
     if (you.duration[DUR_SLEEP])

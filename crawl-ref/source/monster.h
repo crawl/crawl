@@ -331,6 +331,7 @@ public:
     bool asleep() const;
     bool backlit(bool check_haloed = true) const;
     bool haloed() const;
+    bool petrified() const;
 
     bool has_spells() const;
     bool has_spell(spell_type spell) const;

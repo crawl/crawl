@@ -2348,12 +2348,12 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SLIMIFY, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
 
-    if (you.duration[DUR_PARALYSIS] || you.duration[DUR_PETRIFIED])
+    if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
         _decrement_a_duration(DUR_PARALYSIS);
         _decrement_a_duration(DUR_PETRIFIED);
 
-        if (!you.duration[DUR_PARALYSIS] && !you.duration[DUR_PETRIFIED])
+        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         {
             mpr("You can move again.", MSGCH_DURATION);
             you.redraw_evasion = true;
@@ -2426,7 +2426,7 @@ static void _decrement_durations()
             }
         }
 
-        if (!you.duration[DUR_PARALYSIS] && !you.duration[DUR_PETRIFIED])
+        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
             mpr("You are exhausted.", MSGCH_WARN);
 
         // This resets from an actual penalty or from NO_BERSERK_PENALTY.
