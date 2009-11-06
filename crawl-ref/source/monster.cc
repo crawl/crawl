@@ -2886,6 +2886,12 @@ bool monsters::is_evil() const
     if (has_evil_spell())
         return (true);
 
+    if (has_attack_flavour(AF_DRAIN_XP)
+        || has_attack_flavour(AF_VAMPIRIC))
+    {
+        return (true);
+    }
+
     if (mons_class_flag(type, M_EVIL))
         return (true);
 

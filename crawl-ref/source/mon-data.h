@@ -1271,7 +1271,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ORANGE_RAT, 'r', LIGHTRED, "orange rat",
-    M_WARM_BLOOD | M_EVIL | M_GLOWS,
+    M_WARM_BLOOD | M_GLOWS,
     MR_NO_FLAGS,
     250, 10, MONS_RAT, MONS_ORANGE_RAT, MH_NATURAL, -3,
     { {AT_BITE, AF_DRAIN_XP, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
