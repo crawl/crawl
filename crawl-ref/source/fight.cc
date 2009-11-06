@@ -2227,7 +2227,7 @@ bool melee_attack::distortion_affects_defender()
             if (defender_visible)
             {
                 special_damage_message =
-                    make_stringf("%s %s in the translocular energy.",
+                    make_stringf("%s %s in the distortional energy.",
                                  def_name(DESC_CAP_THE).c_str(),
                                  defender->conj_verb("bask").c_str());
             }
