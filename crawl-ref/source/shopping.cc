@@ -2126,7 +2126,7 @@ ShoppingList::ShoppingList()
 bool ShoppingList::add_thing(const item_def &item, int cost,
                              level_pos* _pos)
 {
-    ASSERT(is_valid_item(item));
+    ASSERT(item.is_valid());
     ASSERT(cost > 0);
 
     SETUP_POS();
@@ -2691,7 +2691,7 @@ const item_def& ShoppingList::get_thing_item(const CrawlHashTable& thing)
     ASSERT(thing.exists(SHOPPING_THING_ITEM_KEY));
 
     const item_def &item = thing[SHOPPING_THING_ITEM_KEY].get_item();
-    ASSERT(is_valid_item(item));
+    ASSERT(item.is_valid());
 
     return (item);
 }

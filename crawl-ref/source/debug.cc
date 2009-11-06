@@ -2295,7 +2295,7 @@ void wizard_identify_pack()
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& item = you.inv[i];
-        if (is_valid_item(item))
+        if (item.is_valid())
         {
             set_ident_type(item, ID_KNOWN_TYPE);
             set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -2311,7 +2311,7 @@ void wizard_unidentify_pack()
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& item = you.inv[i];
-        if (is_valid_item(item))
+        if (item.is_valid())
         {
             set_ident_type(item, ID_UNKNOWN_TYPE);
             unset_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -2336,7 +2336,7 @@ void wizard_unidentify_pack()
 
                 item_def &item = mitm[mon->inv[j]];
 
-                if (!is_valid_item(item))
+                if (!item.is_valid())
                     continue;
 
                 set_ident_type(item, ID_UNKNOWN_TYPE);
@@ -2547,7 +2547,7 @@ void wizard_list_items()
     for (int i = 0; i < MAX_ITEMS; ++i)
     {
         item_def &item(mitm[i]);
-        if (!is_valid_item(item) || item.held_by_monster())
+        if (!item.is_valid() || item.held_by_monster())
             continue;
 
         if (item.link != NON_ITEM)
@@ -2781,7 +2781,7 @@ void debug_item_scan( void )
             }
 
             // Check for invalid (zero quantity) items that are linked in.
-            if (!is_valid_item( mitm[obj] ))
+            if (!mitm[obj].is_valid())
             {
                 mprf(MSGCH_ERROR, "Linked invalid item at (%d,%d)!",
                      ri->x, ri->y);
@@ -2812,7 +2812,7 @@ void debug_item_scan( void )
     // Now scan all the items on the level:
     for (i = 0; i < MAX_ITEMS; ++i)
     {
-        if (!is_valid_item( mitm[i] ))
+        if (!mitm[i].is_valid())
             continue;
 
         strcpy(name, mitm[i].name(DESC_PLAIN).c_str());
@@ -3088,7 +3088,7 @@ void debug_mons_scan()
             }
             item_def &item(mitm[idx]);
 
-            if (!is_valid_item(item))
+            if (!item.is_valid())
             {
                 _announce_level_prob(warned);
                 warned = true;
@@ -3312,7 +3312,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         if (!acquirement(type, AQ_WIZMODE, true, &item_index)
             || item_index == NON_ITEM
-            || !is_valid_item(mitm[item_index]))
+            || !mitm[item_index].is_valid())
         {
             mpr("Acquirement failed, stopping early.");
             break;
@@ -4531,7 +4531,7 @@ int fsim_kit_equip(const std::string &kit)
     {
         for (int i = 0; i < ENDOFPACK; ++i)
         {
-            if (!is_valid_item(you.inv[i]))
+            if (!you.inv[i].is_valid())
                 continue;
 
             if (you.inv[i].name(DESC_PLAIN).find(weapon) != std::string::npos)
@@ -4553,7 +4553,7 @@ int fsim_kit_equip(const std::string &kit)
     {
         for (int i = 0; i < ENDOFPACK; ++i)
         {
-            if (!is_valid_item(you.inv[i]))
+            if (!you.inv[i].is_valid())
                 continue;
 
             if (you.inv[i].name(DESC_PLAIN).find(missile) != std::string::npos)
@@ -6258,7 +6258,7 @@ static void _dump_player(FILE *file)
             item.quantity = orig_quant;
             continue;
         }
-        else if (!is_valid_item(item))
+        else if (!item.is_valid())
             continue;
 
         const std::string name = item.name(DESC_PLAIN, false, true);
@@ -6732,7 +6732,7 @@ void debug_dump_mon(const monsters* mon, bool recurse)
         }
         const item_def &item(mitm[idx]);
 
-        if (!is_valid_item(item))
+        if (!item.is_valid())
         {
             fprintf(stderr, "invalid item" EOL);
             continue;

@@ -900,7 +900,7 @@ void zap_los_monsters()
         {
             int item = igrd(g);
 
-            if (item != NON_ITEM && is_valid_item(mitm[item]) )
+            if (item != NON_ITEM && mitm[item].is_valid() )
                 destroy_item(item);
         }
 

@@ -398,7 +398,7 @@ static bool _has_tran_unwearable_armour(bool &melded)
     {
         item_def &item(you.inv[i]);
 
-        if (is_valid_item(item) && item.base_type == OBJ_ARMOUR
+        if (item.is_valid() && item.base_type == OBJ_ARMOUR
             && !you_tran_can_wear(item))
         {
             unwearable = true;
@@ -909,7 +909,7 @@ unsigned char get_invent(int invent_type)
         if (isalpha(select))
         {
             const int invidx = letter_to_index(select);
-            if (is_valid_item(you.inv[invidx]))
+            if (you.inv[invidx].is_valid())
                 describe_item( you.inv[invidx], true );
         }
         else
@@ -1103,7 +1103,7 @@ static void _get_inv_items_to_show(std::vector<const item_def*> &v,
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (is_valid_item(you.inv[i])
+        if (you.inv[i].is_valid()
             && you.inv[i].slot != excluded_slot
             && _is_item_selected(you.inv[i], selector))
         {
@@ -1116,7 +1116,7 @@ static bool _any_items_to_select(int selector)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (is_valid_item(you.inv[i])
+        if (you.inv[i].is_valid()
             && _is_item_selected(you.inv[i], selector))
         {
             return (true);
@@ -1317,7 +1317,7 @@ std::vector<SelItem> prompt_invent_items(
         {
             ret = letter_to_index( keyin );
 
-            if (!is_valid_item( you.inv[ret] ))
+            if (!you.inv[ret].is_valid())
                 mpr("You don't have any such object.");
             else
                 break;
@@ -1350,7 +1350,7 @@ static int _digit_to_index( char digit, operation_types oper )
 
     for ( int i = 0; i < ENDOFPACK; ++i )
     {
-        if (is_valid_item(you.inv[i]))
+        if (you.inv[i].is_valid())
         {
             const std::string& r(you.inv[i].inscription);
             // Note that r.size() is unsigned.
@@ -1487,7 +1487,7 @@ static std::string _operation_verb(operation_types oper)
 bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
-    if (is_valid_item( item ) && has_warning_inscription(item, oper) )
+    if (item.is_valid() && has_warning_inscription(item, oper) )
     {
         // When it's about destroying an item, don't even ask.
         // If the player really wants to do that, they'll have
@@ -1703,7 +1703,7 @@ int prompt_invent_item( const char *prompt,
         {
             ret = letter_to_index( keyin );
 
-            if (must_exist && !is_valid_item( you.inv[ret] ))
+            if (must_exist && !you.inv[ret].is_valid())
                 mpr("You don't have any such object.");
             else if (check_warning_inscriptions( you.inv[ret], oper ))
                 break;

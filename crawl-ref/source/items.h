@@ -28,8 +28,6 @@ enum item_source_type
     AQ_WIZMODE    = 200
 };
 
-bool is_valid_item( const item_def &item );
-
 bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
 bool dec_mitm_item_quantity(int obj, int amount);
 

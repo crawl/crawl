@@ -161,7 +161,7 @@ bool detect_curse(bool suppress_msg)
     {
         item_def& item = you.inv[i];
 
-        if (is_valid_item(item)
+        if (item.is_valid()
             && (item.base_type == OBJ_WEAPONS
                 || item.base_type == OBJ_ARMOUR
                 || item.base_type == OBJ_JEWELLERY))

@@ -1222,7 +1222,7 @@ static bool _advise_use_wand()
     {
         item_def &obj(you.inv[i]);
 
-        if (!is_valid_item( obj ))
+        if (!obj.is_valid())
             continue;
 
         if (obj.base_type != OBJ_WANDS)
@@ -1540,7 +1540,7 @@ static int _num_butchery_tools()
     {
         const item_def& tool(you.inv[i]);
 
-        if (is_valid_item( tool )
+        if (tool.is_valid()
             && tool.base_type == OBJ_WEAPONS
             && can_cut_meat( tool ))
         {

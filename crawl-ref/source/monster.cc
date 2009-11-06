@@ -587,7 +587,7 @@ bool monsters::can_wield(const item_def& item, bool ignore_curse,
 bool monsters::could_wield(const item_def &item, bool ignore_brand,
                            bool /* ignore_transform */) const
 {
-    ASSERT(is_valid_item(item));
+    ASSERT(item.is_valid());
 
     // These *are* weapons, so they can't wield another weapon.
     if (type == MONS_DANCING_WEAPON)
@@ -983,7 +983,7 @@ void monsters::pickup_message(const item_def &item, int near)
 
 bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
 {
-    ASSERT(is_valid_item(item));
+    ASSERT(item.is_valid());
 
     const monsters *other_mon = item.holding_monster();
 

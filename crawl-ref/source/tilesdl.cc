@@ -1580,7 +1580,7 @@ void TilesFramework::update_inventory()
                 break;
 
             if (inv_shown[i]
-                || !is_valid_item(you.inv[i])
+                || !you.inv[i].is_valid()
                 || you.inv[i].quantity == 0
                 || (!show_any && you.inv[i].base_type != type))
             {

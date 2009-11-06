@@ -750,7 +750,7 @@ static void _recharge_rods()
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (i != wielded && is_valid_item(you.inv[i])
+        if (i != wielded && you.inv[i].is_valid()
             && one_chance_in(3)
             && _recharge_rod( you.inv[i], false ))
         {
@@ -4011,7 +4011,7 @@ static void _move_player(coord_def move)
         mpr("Shifting.", MSGCH_DIAGNOSTICS);
         int j = 0;
         for (int i = 0; i < MAX_ITEMS; ++i)
-            if (is_valid_item( mitm[i] ))
+            if (mitm[i].is_valid())
                 ++j;
 
         mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);

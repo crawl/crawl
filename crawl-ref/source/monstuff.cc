@@ -168,7 +168,7 @@ bool curse_an_item( bool decay_potions, bool quiet )
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (!is_valid_item( you.inv[i] ))
+        if (!you.inv[i].is_valid())
             continue;
 
         if (you.inv[i].base_type == OBJ_WEAPONS
@@ -255,12 +255,12 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
             }
             else
             {
-                if (mons_friendly(monster) && is_valid_item(mitm[item]))
+                if (mons_friendly(monster) && mitm[item].is_valid())
                     mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
 
                 move_item_to_grid(&item, monster->pos());
 
-                if (mark_item_origins && is_valid_item(mitm[item]))
+                if (mark_item_origins && mitm[item].is_valid())
                     origin_set_monster(mitm[item], monster);
             }
 
@@ -3478,7 +3478,7 @@ static void _vanish_orig_eq(monsters* mons)
 
         item_def &item(mitm[mons->inv[i]]);
 
-        if (!is_valid_item(item))
+        if (!item.is_valid())
             continue;
 
         if (item.orig_place != 0 || item.orig_monnum != 0

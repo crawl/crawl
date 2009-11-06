@@ -52,7 +52,7 @@ static int dgn_item_from_index(lua_State *ls)
 
     item_def *item = &mitm[index];
 
-    if (is_valid_item(*item))
+    if (item->is_valid())
         lua_pushlightuserdata(ls, item);
     else
         lua_pushnil(ls);

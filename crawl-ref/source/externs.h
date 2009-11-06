@@ -454,6 +454,8 @@ public:
     // Returns true if a monster is holding this item.
     bool held_by_monster() const;
 
+    bool is_valid() const;
+
 private:
     std::string name_aux(description_level_type desc,
                          bool terse, bool ident,

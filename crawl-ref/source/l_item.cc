@@ -58,7 +58,7 @@ void lua_push_inv_items(lua_State *ls = NULL)
     int index = 0;
     for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
     {
-        if (is_valid_item(you.inv[slot]))
+        if (you.inv[slot].is_valid())
         {
             lua_pushlightuserdata(ls, &you.inv[slot]);
             lua_rawseti(ls, -2, ++index);
@@ -109,7 +109,7 @@ static int l_item_swap_slots(lua_State *ls)
     bool verbose = lua_toboolean(ls, 3);
     if (slot1 < 0 || slot1 >= ENDOFPACK
         || slot2 < 0 || slot2 >= ENDOFPACK
-        || slot1 == slot2 || !is_valid_item(you.inv[slot1]))
+        || slot1 == slot2 || !you.inv[slot1].is_valid())
     {
         return (0);
     }
@@ -126,7 +126,7 @@ static int l_item_wield(lua_State *ls)
 
     LUA_ITEM(item, 1);
     int slot = -1;
-    if (item && is_valid_item(*item) && in_inventory(*item))
+    if (item && item->is_valid() && in_inventory(*item))
         slot = item->link;
     bool res = wield_weapon(true, slot);
     lua_pushboolean(ls, res);
@@ -536,7 +536,7 @@ static int l_item_quantity(lua_State *ls)
 static int l_item_inslot(lua_State *ls)
 {
     int index = luaL_checkint(ls, 1);
-    if (index >= 0 && index < 52 && is_valid_item(you.inv[index]))
+    if (index >= 0 && index < 52 && you.inv[index].is_valid())
         lua_pushlightuserdata(ls, &you.inv[index]);
     else
         lua_pushnil(ls);
@@ -567,7 +567,7 @@ static int l_item_ininventory(lua_State *ls)
 static int l_item_equip_type(lua_State *ls)
 {
     LUA_ITEM(item, 1);
-    if (!item || !is_valid_item(*item))
+    if (!item || !item->is_valid())
         return (0);
 
     equipment_type eq = EQ_NONE;
@@ -595,7 +595,7 @@ static int l_item_equip_type(lua_State *ls)
 static int l_item_weap_skill(lua_State *ls)
 {
     LUA_ITEM(item, 1);
-    if (!item || !is_valid_item(*item))
+    if (!item || !item->is_valid())
         return (0);
 
     int skill = range_skill(*item);
@@ -612,7 +612,7 @@ static int l_item_weap_skill(lua_State *ls)
 static int l_item_dropped(lua_State *ls)
 {
     LUA_ITEM(item, 1);
-    if (!item || !is_valid_item(*item))
+    if (!item || !item->is_valid())
         return (0);
 
     lua_pushboolean(ls, item->flags & ISFLAG_DROPPED);
@@ -623,7 +623,7 @@ static int l_item_dropped(lua_State *ls)
 static int l_item_can_cut_meat(lua_State *ls)
 {
     LUA_ITEM(item, 1);
-    if (!item || !is_valid_item(*item))
+    if (!item || !item->is_valid())
         return (0);
 
     lua_pushboolean(ls, can_cut_meat(*item));
@@ -634,7 +634,7 @@ static int l_item_can_cut_meat(lua_State *ls)
 static int l_item_artefact(lua_State *ls)
 {
     LUA_ITEM(item, 1);
-    if (!item || !is_valid_item(*item))
+    if (!item || !item->is_valid())
         return (0);
 
     lua_pushboolean(ls, item_ident(*item, ISFLAG_KNOW_PROPERTIES)
@@ -645,7 +645,7 @@ static int l_item_artefact(lua_State *ls)
 static int l_item_branded(lua_State *ls)
 {
     LUA_ITEM(item, 1);
-    if (!item || !is_valid_item(*item) || !item_type_known(*item))
+    if (!item || !item->is_valid() || !item_type_known(*item))
         return (0);
 
     bool branded = false;

@@ -2711,7 +2711,7 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
 
         item_def &item(mitm[idx]);
 
-        if (!is_valid_item(item) || item.pos != mon->pos())
+        if (!item.is_valid() || item.pos != mon->pos())
             continue;
 
         items.push_back(idx);
@@ -4592,7 +4592,7 @@ static void _steal_item_from_player(monsters *mon)
     int total_value = 0;
     for (int m = 0; m < ENDOFPACK; ++m)
     {
-        if (!is_valid_item(you.inv[m]))
+        if (!you.inv[m].is_valid())
             continue;
 
         // Cannot unequip player.

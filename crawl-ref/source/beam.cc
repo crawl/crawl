@@ -1569,7 +1569,7 @@ void bolt::initialise_fire()
     ASSERT(!name.empty() || is_tracer);
     ASSERT(in_bounds(source));
     ASSERT(flavour > BEAM_NONE && flavour < BEAM_FIRST_PSEUDO);
-    ASSERT(!drop_item || item && is_valid_item(*item));
+    ASSERT(!drop_item || item && item->is_valid());
     ASSERT(range >= 0);
     ASSERT(!aimed_at_feet || source == target);
 
@@ -3034,7 +3034,7 @@ bool bolt::stop_at_target() const
 
 void bolt::drop_object()
 {
-    ASSERT( item != NULL && is_valid_item(*item) );
+    ASSERT( item != NULL && item->is_valid() );
 
     // Conditions: beam is missile and not tracer.
     if (is_tracer || flavour != BEAM_MISSILE)
@@ -5973,7 +5973,7 @@ std::string bolt::get_short_name() const
     if (!short_name.empty())
         return (short_name);
 
-    if (item != NULL && is_valid_item(*item))
+    if (item != NULL && item->is_valid())
         return item->name(DESC_NOCAP_A, false, false, false, false,
                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
                           | ISFLAG_RACIAL_MASK);

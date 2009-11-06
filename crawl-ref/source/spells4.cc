@@ -632,7 +632,7 @@ void cast_ignite_poison(int pow)
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& item = you.inv[i];
-        if (!is_valid_item(item))
+        if (!item.is_valid())
             continue;
 
         int strength = 0;

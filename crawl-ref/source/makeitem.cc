@@ -3186,7 +3186,7 @@ int items(int allow_uniques,       // not just true-false,
     }
 
     // Note that item might be invalidated now, since p could have changed.
-    ASSERT(is_valid_item(mitm[p]));
+    ASSERT(mitm[p].is_valid());
     return (p);
 }
 
@@ -3259,7 +3259,7 @@ static void _give_monster_item(monsters *mon, int thing,
         return;
 
     item_def &mthing = mitm[thing];
-    ASSERT(is_valid_item(mthing));
+    ASSERT(mthing.is_valid());
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
@@ -3293,7 +3293,7 @@ static void _give_monster_item(monsters *mon, int thing,
         destroy_item(thing, true);
         return;
     }
-    if (!is_valid_item(mthing)) // missiles merged into an existing stack
+    if (!mthing.is_valid()) // missiles merged into an existing stack
         return;
     ASSERT(mthing.holding_monster() == mon);
 

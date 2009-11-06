@@ -3118,7 +3118,7 @@ static bool _shuffle_all_decks_on_level()
     for (int i = 0; i < MAX_ITEMS; ++i)
     {
         item_def& item(mitm[i]);
-        if (is_valid_item(item) && is_deck(item))
+        if (item.is_valid() && is_deck(item))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Shuffling: %s on level %d, branch %d",
@@ -3142,7 +3142,7 @@ static bool _shuffle_inventory_decks()
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& item(you.inv[i]);
-        if (is_valid_item(item) && is_deck(item))
+        if (item.is_valid() && is_deck(item))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Shuffling in inventory: %s",

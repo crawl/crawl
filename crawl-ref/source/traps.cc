@@ -1388,7 +1388,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     {
         int next = mitm[o].link;
 
-        if (is_valid_item( mitm[o] ))
+        if (mitm[o].is_valid())
         {
             if (is_terrain_seen(pos))
             {

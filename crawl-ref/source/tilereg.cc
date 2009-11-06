@@ -1694,9 +1694,9 @@ void InventoryRegion::render()
                 desc = info;
             }
         }
-        else if (floor && is_valid_item(mitm[idx]))
+        else if (floor && mitm[idx].is_valid())
             desc = mitm[idx].name(DESC_PLAIN);
-        else if (!floor && is_valid_item(you.inv[idx]))
+        else if (!floor && you.inv[idx].is_valid())
             desc = you.inv[idx].name(DESC_INVENTORY_EQUIP);
 
         if (!desc.empty())
@@ -2120,7 +2120,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     {
         const item_def &item = mitm[idx];
 
-        if (!is_valid_item(item))
+        if (!item.is_valid())
             return (false);
 
         tip = "";
@@ -2160,7 +2160,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     else
     {
         const item_def &item = you.inv[idx];
-        if (!is_valid_item(item))
+        if (!item.is_valid())
             return (false);
 
         tip = item.name(DESC_INVENTORY_EQUIP);
@@ -2384,7 +2384,7 @@ bool InventoryRegion::update_alt_text(std::string &alt)
     else
         item = &you.inv[idx];
 
-    if (!is_valid_item(*item))
+    if (!item->is_valid())
         return (false);
 
     describe_info inf;

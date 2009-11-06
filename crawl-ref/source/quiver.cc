@@ -187,7 +187,7 @@ void choose_item_for_quiver()
     }
 
     const item_def item = you.inv[slot];
-    ASSERT(is_valid_item(item));
+    ASSERT(item.is_valid());
 
     ammo_t t = AMMO_THROW;
     const item_def *weapon = you.weapon();
@@ -318,7 +318,7 @@ void player_quiver::_maybe_fill_empty_slot()
 #endif
 
     bool unquiver_weapon = false;
-    if (is_valid_item(m_last_used_of_type[slot]))
+    if (m_last_used_of_type[slot].is_valid())
     {
         // If we're wielding an item previously quivered, the quiver may need
         // to be cleared. Else, any already quivered item is valid and we
@@ -387,7 +387,7 @@ void player_quiver::_get_fire_order( std::vector<int>& order,
         if (launcher && launcher->sub_type == WPN_BLOWGUN)
         {
             for (int i_inv = inv_start; i_inv < ENDOFPACK; i_inv++)
-                if (is_valid_item(you.inv[i_inv])
+                if (you.inv[i_inv].is_valid()
                     && you.inv[i_inv].launched_by(*launcher))
                 {
                     order.push_back(i_inv);
@@ -399,7 +399,7 @@ void player_quiver::_get_fire_order( std::vector<int>& order,
     for (int i_inv = inv_start; i_inv < ENDOFPACK; i_inv++)
     {
         const item_def& item = you.inv[i_inv];
-        if (!is_valid_item(item))
+        if (!item.is_valid())
             continue;
 
         // Don't quiver a wielded weapon unless it's a weapon of returning
@@ -520,7 +520,7 @@ preserve_quiver_slots::~preserve_quiver_slots()
 static bool _item_matches(const item_def &item, fire_type types,
                           const item_def* launcher)
 {
-    ASSERT(is_valid_item(item));
+    ASSERT(item.is_valid());
 
     if (types & FIRE_INSCRIBED)
         if (item.inscription.find("+f", 0) != std::string::npos)
@@ -569,7 +569,7 @@ static bool _item_matches(const item_def &item, fire_type types,
 // or -1 if not in inv.
 static int _get_pack_slot(const item_def& item)
 {
-    if (! is_valid_item(item))
+    if (! item.is_valid())
         return -1;
 
     // First try to find the exact same item.

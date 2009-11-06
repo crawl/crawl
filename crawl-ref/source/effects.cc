@@ -1398,7 +1398,7 @@ static bool _have_item_with_types(object_class_type basetype, int subtype)
     for (int i = 0; i < ENDOFPACK; i++)
     {
         const item_def& item = you.inv[i];
-        if (is_valid_item(item)
+        if (item.is_valid()
             && item.base_type == basetype && item.sub_type == subtype)
         {
             return (true);
@@ -1626,7 +1626,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         const item_def& item = you.inv[i];
-        if (is_valid_item(item) && item.base_type == class_wanted)
+        if (item.is_valid() && item.base_type == class_wanted)
         {
             ASSERT(item.sub_type < max_has_value);
             already_has[item.sub_type] += item.quantity;
@@ -2687,7 +2687,7 @@ bool forget_inventory(bool quiet)
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def& item(you.inv[i]);
-        if (!is_valid_item(item) || item_is_equipped(item))
+        if (!item.is_valid() || item_is_equipped(item))
             continue;
 
         unsigned long orig_flags = item.flags;
@@ -3419,7 +3419,7 @@ void change_labyrinth(bool msg)
 
 static bool _food_item_needs_time_check(item_def &item)
 {
-    if (!is_valid_item(item))
+    if (!item.is_valid())
         return (false);
 
     if (item.base_type != OBJ_CORPSES

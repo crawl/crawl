@@ -572,7 +572,7 @@ bool item_ident( const item_def &item, unsigned long flags )
 // The Orb of Zot and unique runes are considered critical.
 bool item_is_critical(const item_def &item)
 {
-    if (!is_valid_item(item))
+    if (!item.is_valid())
         return (false);
 
     if (item.base_type == OBJ_ORBS)
@@ -2345,13 +2345,13 @@ bool ring_has_stackable_effect( const item_def &item )
 //
 bool food_is_meat(const item_def &item)
 {
-    ASSERT(is_valid_item(item) && item.base_type == OBJ_FOOD);
+    ASSERT(item.is_valid() && item.base_type == OBJ_FOOD);
     return (Food_prop[Food_index[item.sub_type]].carn_mod > 0);
 }
 
 bool food_is_veg( const item_def &item )
 {
-    ASSERT(is_valid_item(item) && item.base_type == OBJ_FOOD);
+    ASSERT(item.is_valid() && item.base_type == OBJ_FOOD);
     return (Food_prop[Food_index[item.sub_type]].herb_mod > 0);
 }
 
@@ -2367,7 +2367,7 @@ bool is_blood_potion(const item_def &item)
 // Returns food value for one turn of eating.
 int food_value(const item_def &item)
 {
-    ASSERT(is_valid_item(item) && item.base_type == OBJ_FOOD);
+    ASSERT(item.is_valid() && item.base_type == OBJ_FOOD);
 
     const int herb = player_mutation_level(MUT_HERBIVOROUS);
 
@@ -2386,7 +2386,7 @@ int food_value(const item_def &item)
 
 int food_turns(const item_def &item)
 {
-    ASSERT(is_valid_item(item) && item.base_type == OBJ_FOOD);
+    ASSERT(item.is_valid() && item.base_type == OBJ_FOOD);
     return (Food_prop[Food_index[item.sub_type]].turns);
 }
 

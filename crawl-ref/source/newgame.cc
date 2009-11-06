@@ -378,7 +378,7 @@ static void _give_starting_food()
 static void _mark_starting_books()
 {
     for (int i = 0; i < ENDOFPACK; ++i)
-        if (is_valid_item(you.inv[i]) && you.inv[i].base_type == OBJ_BOOKS)
+        if (you.inv[i].is_valid() && you.inv[i].base_type == OBJ_BOOKS)
             mark_had_book(you.inv[i]);
 }
 
@@ -386,7 +386,7 @@ static void _racialise_starting_equipment()
 {
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (is_valid_item(you.inv[i]))
+        if (you.inv[i].is_valid())
         {
             // Don't change object type modifier unless it starts plain.
             if ((you.inv[i].base_type == OBJ_ARMOUR
@@ -857,7 +857,7 @@ game_start:
     calc_total_skill_points();
 
     for (int i = 0; i < ENDOFPACK; ++i)
-        if (is_valid_item(you.inv[i]))
+        if (you.inv[i].is_valid())
         {
             // XXX: Why is this here? Elsewhere it's only ever used for runes.
             you.inv[i].flags |= ISFLAG_BEEN_IN_INV;
@@ -1711,7 +1711,7 @@ static void _newgame_make_item(int slot, equipment_type eqslot,
 
         for (int i = 0; i < ENDOFPACK; ++i)
         {
-            if (!is_valid_item(you.inv[i]))
+            if (!you.inv[i].is_valid())
             {
                 slot = i;
                 break;

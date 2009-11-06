@@ -988,7 +988,7 @@ void scorefile_entry::init()
     // Calculate value of pack and runes when character leaves dungeon
     for (int d = 0; d < ENDOFPACK; d++)
     {
-        if (is_valid_item( you.inv[d] ))
+        if (you.inv[d].is_valid())
         {
             if (calc_item_values)
                 points += item_value( you.inv[d], true );

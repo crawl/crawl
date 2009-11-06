@@ -167,7 +167,7 @@ std::vector<item_def> item_list_in_stash( coord_def pos )
 
 static void _fully_identify_item(item_def *item)
 {
-    if (!item || !is_valid_item(*item))
+    if (!item || !item->is_valid())
         return;
 
     set_ident_flags( *item, ISFLAG_IDENT_MASK );

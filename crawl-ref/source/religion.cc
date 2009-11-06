@@ -1184,7 +1184,7 @@ static const item_def* _find_missile_launcher(int skill)
 {
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!is_valid_item(you.inv[i]))
+        if (!you.inv[i].is_valid())
             continue;
 
         const item_def &item = you.inv[i];
@@ -1204,7 +1204,7 @@ static int _ammo_count(const item_def *launcher)
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!is_valid_item(you.inv[i]))
+        if (!you.inv[i].is_valid())
             continue;
 
         const item_def &item = you.inv[i];
@@ -4204,7 +4204,7 @@ static void _ely_dull_inventory_weapons()
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!is_valid_item(you.inv[i]))
+        if (!you.inv[i].is_valid())
             continue;
 
         if (you.inv[i].base_type == OBJ_WEAPONS

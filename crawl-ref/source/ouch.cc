@@ -443,7 +443,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     // factor of junk (which might be more desirable for game play).
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!is_valid_item(you.inv[i]))
+        if (!you.inv[i].is_valid())
             continue;
 
         if (you.inv[i].base_type == target_class
@@ -540,7 +540,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 
     for (stack_iterator si(where); si; ++si)
     {
-        if (!is_valid_item(*si))
+        if (!si->is_valid())
             continue;
 
         if (si->base_type == target_class

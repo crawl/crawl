@@ -609,7 +609,7 @@ void abyss_teleport( bool new_area )
     // Orbs and fixed artefacts are marked as "lost in the abyss".
     for (int i = 0; i < MAX_ITEMS; ++i)
     {
-        if (is_valid_item( mitm[i] ))
+        if (mitm[i].is_valid())
         {
             item_was_lost( mitm[i] );
             destroy_item( i );

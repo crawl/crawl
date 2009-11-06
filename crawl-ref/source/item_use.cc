@@ -262,7 +262,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Prompt if not using the auto swap command, or if the swap slot
     // is empty.
     if (item_slot != PROMPT_GOT_SPECIAL
-        && (!auto_wield || !is_valid_item(you.inv[item_slot]) || !good_swap))
+        && (!auto_wield || !you.inv[item_slot].is_valid() || !good_swap))
     {
         if (!auto_wield)
         {
@@ -951,7 +951,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 bool do_wear_armour(int item, bool quiet)
 {
     const item_def &invitem = you.inv[item];
-    if (!is_valid_item(invitem))
+    if (!invitem.is_valid())
     {
         if (!quiet)
            mpr("You don't have any such object.");
@@ -2172,14 +2172,14 @@ static void identify_floor_missiles_matching(item_def mitem, int idflags)
 
 void _merge_ammo_in_inventory(int slot)
 {
-    if (!is_valid_item(you.inv[slot]))
+    if (!you.inv[slot].is_valid())
         return;
 
     bool done_anything = false;
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (i == slot || !is_valid_item(you.inv[i]))
+        if (i == slot || !you.inv[i].is_valid())
             continue;
 
         // Merge with the thrower slot. This could be a bad
@@ -2242,7 +2242,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     pbolt.set_target(thr);
 
     item_def& thrown = you.inv[throw_2];
-    ASSERT(is_valid_item(thrown));
+    ASSERT(thrown.is_valid());
 
     // Figure out if we're thrown or launched.
     const launch_retval projected = is_launched(&you, you.weapon(), thrown);

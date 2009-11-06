@@ -1798,7 +1798,7 @@ std::string get_terse_square_desc(const coord_def &gc)
     }
     else if (igrd(gc) != NON_ITEM)
     {
-        if (is_valid_item(mitm[igrd(gc)]))
+        if (mitm[igrd(gc)].is_valid())
             desc = mitm[igrd(gc)].name(DESC_PLAIN);
     }
     else
@@ -1849,7 +1849,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     {
         // Second priority: objects.
         // If examine_mons is true, use terse descriptions.
-        if (is_valid_item(mitm[oid]))
+        if (mitm[oid].is_valid())
             get_item_desc(mitm[oid], inf, examine_mons);
     }
     else

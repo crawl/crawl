@@ -320,7 +320,7 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     {
         mpr( you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str() );
 
-        if (is_valid_item( you.inv[from_slot] ))
+        if (you.inv[from_slot].is_valid())
             mpr( you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str() );
     }
 
@@ -668,7 +668,7 @@ void list_weapons(void)
             wstring = "Secondary : ";
 
         colour = MSGCOL_BLACK;
-        if (is_valid_item( you.inv[i])
+        if (you.inv[i].is_valid()
             && (you.inv[i].base_type == OBJ_WEAPONS
                 || you.inv[i].base_type == OBJ_STAVES
                 || you.inv[i].base_type == OBJ_MISCELLANY))
@@ -697,7 +697,7 @@ void list_weapons(void)
     {
         const item_def* item;
         you.m_quiver->get_desired_item(&item, &slot);
-        if (!is_valid_item(*item))
+        if (!item->is_valid())
         {
             wstring += "    nothing";
         }
