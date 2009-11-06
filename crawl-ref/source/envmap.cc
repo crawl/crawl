@@ -27,9 +27,6 @@
 #define MAP_DETECTED_ITEM       0x10
 #define MAP_GRID_KNOWN          0xFF
 
-#define MC_ITEM    0x01
-#define MC_MONS    0x02
-
 unsigned map_cell::glyph() const
 {
     if (!object)
@@ -45,21 +42,6 @@ bool map_cell::known() const
 bool map_cell::seen() const
 {
     return (object && (flags & MAP_SEEN_FLAG));
-}
-
-static int _get_viewobj_flags(show_type object)
-{
-    // Check for monster glyphs.
-    if (object.cls == SH_MONSTER)
-        return (MC_MONS);
-
-    // Check for item glyphs.
-    if (object.cls == SH_ITEM)
-        return (MC_ITEM);
-
-    // We don't care to look further; we could check for
-    // clouds here as well.
-    return (0);
 }
 
 unsigned get_envmap_char(int x, int y)
@@ -141,12 +123,12 @@ bool is_bloodcovered(const coord_def& p)
 
 bool is_envmap_item(int x, int y)
 {
-    return (_get_viewobj_flags(env.map[x][y].object) & MC_ITEM);
+    return (env.map[x][y].object.cls == SH_ITEM);
 }
 
 bool is_envmap_mons(int x, int y)
 {
-    return (_get_viewobj_flags(env.map[x][y].object) & MC_MONS);
+    return (env.map[x][y].object.cls == SH_MONSTER);
 }
 
 int get_envmap_col(const coord_def& p)
