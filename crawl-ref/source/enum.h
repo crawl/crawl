@@ -2060,7 +2060,7 @@ enum monster_type                      // (int) menv[].type
     MONS_NIKOLA,                       // 470
 
     // New set of monsters {november, 2009}
-    MONS_GOLDEN_EYE, 
+    MONS_GOLDEN_EYE,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2303,7 +2303,7 @@ enum mon_spellbook_type
     MST_NIKOLA,
     MST_DISSOLUTION,
 
-    MST_TEST_SPAWNER = 170,
+    MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
     MST_NO_SPELLS = 250
 };
