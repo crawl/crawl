@@ -1588,7 +1588,7 @@ void bolt::initialise_fire()
             && !is_tracer
             && !YOU_KILL(thrower)
             && !crawl_state.is_god_acting()
-            && (!mon || !you.can_see(mon)))
+            && (!mon || !mon->observable()))
         {
             mprf("%s appears from out of thin air!",
                  article_a(name, false).c_str());
@@ -1916,7 +1916,7 @@ void bolt::hit_wall()
         std::string prompt = "Your line of fire to ";
         const monsters* mon = monster_at(target);
 
-        if (mon && you.can_see(mon))
+        if (mon && mon->observable())
             prompt += mon->name(DESC_NOCAP_THE);
         else
         {
@@ -2414,7 +2414,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             if (!doFlavouredEffects)
                 return (hurted);
 
-            if (you.can_see(monster))
+            if (monster->observable())
                 pbolt.obvious_effect = true;
 
             monster->drain_exp(pbolt.agent());
@@ -2897,7 +2897,7 @@ void mimic_alert(monsters *mimic)
         return;
 
     bool should_id = !testbits(mimic->flags, MF_KNOWN_MIMIC)
-                     && you.can_see(mimic);
+                     && mimic->observable();
 
     // If we got here, we at least got a resists message, if not
     // a full wounds printing. Thus, might as well id the mimic.
@@ -3710,7 +3710,7 @@ void bolt::affect_player_enchantment()
         if (thrower != KILL_YOU_MISSILE && !invalid_monster_index(beam_source))
         {
             monsters *mon = &menv[beam_source];
-            if (!you.can_see(mon))
+            if (!mon->observable())
             {
                 mpr("Something tries to affect you, but you resist.");
                 need_msg = false;
@@ -4564,7 +4564,7 @@ bool bolt::attempt_block(monsters* mon)
             item_def *shield = mon->mslot_item(MSLOT_SHIELD);
             if (is_reflectable(shield))
             {
-                if (you.can_see(mon))
+                if (mon->observable())
                 {
                     mprf("%s reflects the %s off %s %s!",
                          mon->name(DESC_CAP_THE).c_str(),
@@ -4769,7 +4769,7 @@ void bolt::affect_monster(monsters* mon)
     if (!engulfs && !test_beam_hit(beam_hit, random2(mon->ev)))
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
-        if (you.can_see(mon))
+        if (mon->observable())
         {
             msg::stream << "The " << name << " misses "
                         << mon->name(DESC_NOCAP_THE) << '.' << std::endl;
@@ -4811,7 +4811,7 @@ void bolt::affect_monster(monsters* mon)
         mprf("The %s %s %s.",
              name.c_str(),
              hit_verb.c_str(),
-             you.can_see(mon) ?
+             mon->observable() ?
                  mon->name(DESC_NOCAP_THE).c_str() : "something");
 
     }
@@ -5013,13 +5013,13 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
     switch (flavour)
     {
     case BEAM_TELEPORT:
-        if (you.can_see(mon))
+        if (mon->observable())
             obvious_effect = true;
         monster_teleport(mon, false);
         return (MON_AFFECTED);
 
     case BEAM_BLINK:
-        if (you.can_see(mon))
+        if (mon->observable())
             obvious_effect = true;
         monster_blink(mon);
         return (MON_AFFECTED);

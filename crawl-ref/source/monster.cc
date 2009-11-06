@@ -1991,7 +1991,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
                                      && mon.submerged();
 
     // Handle non-visible case first.
-    if (!force_seen && !you.can_see(&mon) && !arena_submerged)
+    if (!force_seen && !mon.observable() && !arena_submerged)
     {
         switch (desc)
         {
@@ -2236,7 +2236,7 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
         desc = DESC_NOCAP_THE;
 
     std::string monnam;
-    if ((flags & MF_NAME_MASK) && (force_vis || you.can_see(this))
+    if ((flags & MF_NAME_MASK) && (force_vis || observable())
         || crawl_state.arena && mons_class_is_zombified(type))
     {
         monnam = full_name(desc);
