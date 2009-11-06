@@ -1380,7 +1380,6 @@ void define_monster(int index)
 // Generate a shiny new and unscarred monster.
 void define_monster(monsters &mons)
 {
-    int temp_rand = 0;          // probability determination {dlb}
     int mcls                  = mons.type;
     int hd, hp, hp_max, ac, ev, speed;
     int monnumber             = mons.number;
@@ -1471,8 +1470,8 @@ void define_monster(monsters &mons)
         break;
 
     case MONS_DEEP_ELF_CONJURER:
-        spells =
-            (coinflip() ? MST_DEEP_ELF_CONJURER_I : MST_DEEP_ELF_CONJURER_II);
+        spells = (coinflip() ? MST_DEEP_ELF_CONJURER_I
+                             : MST_DEEP_ELF_CONJURER_II);
         break;
 
     case MONS_GILA_MONSTER:
@@ -1507,8 +1506,8 @@ void define_monster(monsters &mons)
 
     case MONS_DRACONIAN_KNIGHT:
     {
-        temp_rand = random2(10);
-        // hell knight, death knight, chaos knight...
+        int temp_rand = random2(10);
+        // Hell knight, death knight, or chaos knight.
         if (temp_rand < 6)
             spells = (coinflip() ? MST_HELL_KNIGHT_I : MST_HELL_KNIGHT_II);
         else if (temp_rand < 9)
