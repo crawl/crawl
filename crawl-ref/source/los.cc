@@ -917,9 +917,14 @@ void losight(env_show_grid& sh, const coord_def& center,
 
 // class los_def
 
+los_def::los_def()
+    : show(0), opc(opc_default.clone()), bds(bds_default.clone())
+{
+}
+
 los_def::los_def(const coord_def& c, const opacity_func &o,
                                      const bounds_func &b)
-    : center(c), opc(o.clone()), bds(b.clone())
+    : show(0), center(c), opc(o.clone()), bds(b.clone())
 {
 }
 
@@ -939,6 +944,7 @@ los_def& los_def::operator=(const los_def& los)
 void los_def::init(const coord_def &c, const opacity_func &o,
                    const bounds_func &b)
 {
+    show.init(0);
     set_center(c);
     set_opacity(o);
     set_bounds(b);
