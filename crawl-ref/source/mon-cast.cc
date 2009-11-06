@@ -87,6 +87,45 @@ static spell_type _draco_type_to_breath(int drac_type)
     return (SPELL_DRACONIAN_BREATH);
 }
 
+// Find an allied monster to cast a beneficial beam spell at.
+// Only used for haste other at the moment.
+static bool _set_allied_target(monsters * caster, bolt & pbolt)
+{
+    monsters * selected_target = NULL;
+    int min_distance = INT_MAX;
+
+    monster_type caster_genus = mons_genus(caster->type);
+
+    for (int i = 0; i < MAX_MONSTERS; i++)
+    {
+        monsters * targ = &menv[i];
+        if (i != caster->mindex()
+            && targ->alive()
+            && caster->can_see(targ)
+            && mons_genus(targ->type) == caster_genus
+            && targ->attitude == caster->attitude
+            && !targ->has_ench(ENCH_CHARM)
+            && !targ->has_ench(ENCH_HASTE))
+        {
+            int targ_distance = grid_distance(targ->pos(), caster->pos());
+            if (targ_distance < min_distance && targ_distance < pbolt.range)
+            {
+                min_distance = targ_distance;
+                selected_target = targ;
+            }
+        }
+    }
+
+    if (selected_target)
+    {
+        pbolt.target = selected_target->pos();
+        return (true);
+    }
+
+    // Didn't find a target
+    return (false);
+}
+
 bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 {
     ASSERT(power > 0);
@@ -170,6 +209,11 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_SLOW:
         beam.flavour  = BEAM_SLOW;
         beam.is_beam  = true;
+        break;
+
+    case SPELL_HASTE_OTHER:
+        beam.flavour = BEAM_HASTE;
+        beam.is_beam = true;
         break;
 
     case SPELL_HASTE:              // (self)
@@ -1054,6 +1098,14 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
 
                 // Setup the spell.
                 setup_mons_cast(monster, beem, spell_cast);
+
+                // Try to find a nearby ally to haste
+                if (spell_cast == SPELL_HASTE_OTHER
+                    && !_set_allied_target(monster, beem))
+                {
+                    spell_cast = SPELL_NO_SPELL;
+                    continue;
+                }
 
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))

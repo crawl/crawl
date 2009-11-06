@@ -2180,6 +2180,42 @@ void mons_pacify(monsters *mon)
     behaviour_event(mon, ME_EVAL);
 }
 
+static bool _mons_should_fire_beneficial(bolt &beam)
+{
+    // Should monster haste other be able to target the player?
+    // Saying no for now. -cao
+    if (beam.target == you.pos())
+        return false;
+
+    // Assuming all beneficial beams are enchantments if a foe is in
+    // the path the beam will definitely hit them so we shouldn't fire
+    // in that case.
+    if (beam.friend_info.count == 0
+        || beam.foe_info.count != 0)
+        return (false);
+
+    // Should beneficial monster enchantment beams be allowed in a
+    // sanctuary? -cao
+    if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
+        return (false);
+
+    return (true);
+}
+
+static bool _beneficial_beam_flavour(beam_type flavour)
+{
+    switch(flavour)
+    {
+    case BEAM_HASTE:
+    case BEAM_HEALING:
+    case BEAM_INVISIBILITY:
+        return (true);
+
+    default:
+        return (false);
+    }
+}
+
 bool mons_should_fire(struct bolt &beam)
 {
 #ifdef DEBUG_DIAGNOSTICS
@@ -2190,6 +2226,11 @@ bool mons_should_fire(struct bolt &beam)
          beam.friend_info.count, beam.friend_info.power,
          beam.foe_ratio, beam.smart_monster ? "yes" : "no");
 #endif
+
+    // Use different evaluation criteria if the beam is a beneficial
+    // enchantment (haste other).
+    if (_beneficial_beam_flavour(beam.flavour))
+        return _mons_should_fire_beneficial(beam);
 
     // Friendly monsters shouldn't be targetting you: this will happen
     // often because the default behaviour for charmed monsters is to

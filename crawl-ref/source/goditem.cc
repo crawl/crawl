@@ -274,7 +274,8 @@ bool is_hasty_spell(spell_type spell, god_type god)
 
     return (spell == SPELL_HASTE
             || spell == SPELL_SWIFTNESS
-            || spell == SPELL_BERSERKER_RAGE);
+            || spell == SPELL_BERSERKER_RAGE
+            || spell == SPELL_HASTE_OTHER);
 }
 
 // The default suitable() function for is_spellbook_type().

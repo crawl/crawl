@@ -2887,8 +2887,9 @@ enum spell_type
     SPELL_KRAKEN_TENTACLES,
     SPELL_TOMB_OF_DOROKLOHE,           //  200
     SPELL_SUMMON_EYEBALLS,
+    SPELL_HASTE_OTHER,
 
-    NUM_SPELLS                         //  202
+    NUM_SPELLS                         //  203
 };
 
 enum slot_select_mode
