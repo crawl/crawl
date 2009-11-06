@@ -2907,10 +2907,13 @@ bool monsters::is_chaotic() const
     if (has_chaotic_spell())
         return (true);
 
-    if (has_attack_flavour(AF_MUTATE)
+    if (has_attack_flavour(AF_HUNGER)
+        || has_attack_flavour(AF_MUTATE)
         || has_attack_flavour(AF_ROT)
+        || has_attack_flavour(AF_KLOWN)
         || has_attack_flavour(AF_CHAOS)
-        || has_attack_flavour(AF_KLOWN))
+        || has_attack_flavour(AF_STEAL)
+        || has_attack_flavour(AF_STEAL_FOOD))
     {
         return (true);
     }
