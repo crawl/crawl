@@ -1979,11 +1979,6 @@ bool mons_friendly(const monsters *m)
     return (m->attitude == ATT_FRIENDLY || m->has_ench(ENCH_CHARM));
 }
 
-bool mons_friendly_real(const monsters *m)
-{
-    return (m->attitude == ATT_FRIENDLY || m->has_ench(ENCH_CHARM));
-}
-
 bool mons_neutral(const monsters *m)
 {
     return (m->attitude == ATT_NEUTRAL || m->has_ench(ENCH_NEUTRAL)
@@ -2011,11 +2006,6 @@ bool mons_wont_attack(const monsters *m)
     return (mons_friendly(m) || mons_good_neutral(m) || mons_strict_neutral(m));
 }
 
-bool mons_wont_attack_real(const monsters *m)
-{
-    return (mons_friendly_real(m) || mons_good_neutral(m) || mons_strict_neutral(m));
-}
-
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
     return (fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL || fr == ATT_STRICT_NEUTRAL);
@@ -2023,7 +2013,7 @@ bool mons_att_wont_attack(mon_attitude_type fr)
 
 mon_attitude_type mons_attitude(const monsters *m)
 {
-    if (mons_friendly_real(m))
+    if (mons_friendly(m))
         return ATT_FRIENDLY;
     else if (mons_good_neutral(m))
         return ATT_GOOD_NEUTRAL;

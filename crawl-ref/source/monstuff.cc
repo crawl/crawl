@@ -2930,7 +2930,7 @@ bool simple_monster_message(const monsters *monster, const char *event,
         msg += event;
         msg = apostrophise_fixup(msg);
 
-        if (channel == MSGCH_PLAIN && mons_wont_attack_real(monster))
+        if (channel == MSGCH_PLAIN && mons_wont_attack(monster))
             channel = MSGCH_FRIEND_ACTION;
 
         mpr(msg.c_str(), channel, param);

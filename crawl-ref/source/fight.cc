@@ -4541,7 +4541,7 @@ void melee_attack::mons_do_napalm()
         else
         {
             napalm_monster(defender_as_monster(),
-                           mons_friendly_real(attacker_as_monster()) ?
+                           mons_friendly(attacker_as_monster()) ?
                            KC_FRIENDLY : KC_OTHER,
                            std::min(4, 1 + random2(attacker->get_experience_level())/2));
         }

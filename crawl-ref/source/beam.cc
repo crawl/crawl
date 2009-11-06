@@ -127,7 +127,7 @@ kill_category bolt::whose_kill() const
         if (!invalid_monster_index(beam_source))
         {
             const monsters *mon = &menv[beam_source];
-            if (mons_friendly_real(mon))
+            if (mons_friendly(mon))
                 return (KC_FRIENDLY);
         }
     }

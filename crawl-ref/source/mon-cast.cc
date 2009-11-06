@@ -1282,7 +1282,7 @@ static int _monster_abjure_square(const coord_def &pos,
         return (0);
 
     if (!target->alive()
-        || ((bool)wont_attack == mons_wont_attack_real(target)))
+        || ((bool)wont_attack == mons_wont_attack(target)))
     {
         return (0);
     }
@@ -1371,7 +1371,7 @@ static int _apply_radius_around_square( const coord_def &c, int radius,
 
 static int _monster_abjuration(const monsters *caster, bool actual)
 {
-    const bool wont_attack = mons_wont_attack_real(caster);
+    const bool wont_attack = mons_wont_attack(caster);
     int maffected = 0;
 
     if (actual)
@@ -2478,7 +2478,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
     const msg_channel_type chan =
         (unseen                      ? MSGCH_SOUND :
-         mons_friendly_real(monster) ? MSGCH_FRIEND_SPELL
+         mons_friendly(monster) ? MSGCH_FRIEND_SPELL
                                      : MSGCH_MONSTER_SPELL);
 
     if (silent)

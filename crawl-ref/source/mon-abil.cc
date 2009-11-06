@@ -644,7 +644,7 @@ static bool _orc_battle_cry(monsters *chief)
 
             // Disabling detailed frenzy announcement because it's so spammy.
             const msg_channel_type channel =
-                        mons_friendly_real(chief) ? MSGCH_MONSTER_ENCHANT
+                        mons_friendly(chief) ? MSGCH_MONSTER_ENCHANT
                                                   : MSGCH_FRIEND_ENCHANT;
 
             if (!seen_affected.empty())
@@ -682,7 +682,7 @@ static bool _orc_battle_cry(monsters *chief)
 
 static bool _make_monster_angry(const monsters *mon, monsters *targ)
 {
-    if (mons_friendly_real(mon) != mons_friendly_real(targ))
+    if (mons_friendly(mon) != mons_friendly(targ))
         return (false);
 
     // targ is guaranteed to have a foe (needs_berserk checks this).

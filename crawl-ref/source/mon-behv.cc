@@ -1086,7 +1086,7 @@ void handle_behaviour(monsters *mon)
     bool changed = true;
     bool isFriendly = mons_friendly(mon);
     bool isNeutral  = mons_neutral(mon);
-    bool wontAttack = mons_wont_attack_real(mon);
+    bool wontAttack = mons_wont_attack(mon);
 
     // Whether the player is in LOS of the monster and can see
     // or has guessed the player's location.
@@ -1222,7 +1222,7 @@ void handle_behaviour(monsters *mon)
     // Friendly and good neutral monsters do not attack other friendly
     // and good neutral monsters.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && wontAttack && mons_wont_attack_real(&menv[mon->foe]))
+        && wontAttack && mons_wont_attack(&menv[mon->foe]))
     {
         mon->foe = MHITNOT;
     }
@@ -1617,7 +1617,7 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
 // Choose random nearest monster as a foe.
 void _set_nearest_monster_foe(monsters *mon)
 {
-    const bool friendly = mons_friendly_real(mon);
+    const bool friendly = mons_friendly(mon);
     const bool neutral  = mons_neutral(mon);
 
     for (int k = 1; k <= LOS_RADIUS; ++k)
@@ -1660,7 +1660,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     const beh_type old_behaviour = mon->behaviour;
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
-    bool wontAttack       = mons_wont_attack_real(mon);
+    bool wontAttack       = mons_wont_attack(mon);
     bool sourceWontAttack = false;
     bool setTarget        = false;
     bool breakCharm       = false;
@@ -1669,7 +1669,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     if (src == MHITYOU)
         sourceWontAttack = true;
     else if (src != MHITNOT)
-        sourceWontAttack = mons_wont_attack_real( &menv[src] );
+        sourceWontAttack = mons_wont_attack( &menv[src] );
 
     if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
     {

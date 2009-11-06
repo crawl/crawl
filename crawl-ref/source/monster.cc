@@ -3418,7 +3418,7 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour,
         // jelly).
         kill_category whose = (agent == NULL) ? KC_OTHER :
                               (agent->atype() == ACT_PLAYER) ? KC_YOU :
-                               mons_friendly_real((monsters*)agent) ? KC_FRIENDLY :
+                               mons_friendly((monsters*)agent) ? KC_FRIENDLY :
                                                 KC_OTHER;
         react_to_damage(amount, flavour, whose);
     }
@@ -4985,7 +4985,7 @@ void monsters::scale_hp(int num, int den)
 
 kill_category monsters::kill_alignment() const
 {
-    return (mons_friendly_real(this) ? KC_FRIENDLY : KC_OTHER);
+    return (mons_friendly(this) ? KC_FRIENDLY : KC_OTHER);
 }
 
 bool monsters::sicken(int amount)
