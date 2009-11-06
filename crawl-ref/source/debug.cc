@@ -6475,8 +6475,8 @@ void do_crash_dump()
 
     char name[180];
 
-    sprintf(name, "%scrash-%s-%d.txt", dir.c_str(),
-            you.your_name.c_str(), (int) time(NULL));
+    sprintf(name, "%scrash-%s-%s.txt", dir.c_str(),
+            you.your_name.c_str(), make_file_time(time(NULL)).c_str());
 
     fprintf(stderr, EOL "Writing crash info to %s" EOL, name);
     errno = 0;
