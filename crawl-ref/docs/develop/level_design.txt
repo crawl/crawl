@@ -722,6 +722,26 @@ MONS:     (list of monsters)
           and then using the glyph '1' multiple times will result in multiple
           "Durwent the Kobold"s).
 
+          There are three different modifiers that by used on a name:
+          name_adjective, name_suffix and name_replace.  name_adjective
+          makes the name act as an adjective.  For example:
+              MONS: kobold name:ugly name_adjective
+
+          Will cause "An ugly kobold", "The ugly kobold hits you",
+          and so on.
+
+          name_suffix does the same, but after the monster's base name:
+              MONS: kobold name:wearing_mittens name_suffix
+
+          Will give "A kobold wearing mittens", "The kobold wearing
+          mittens hits you", and so on.
+
+          name_replace causes the base name to be replaced by given
+          name, as if the monster was a unique:
+              MONS: kobold name:Durwent name_replace
+
+          Will result in "Durwent" rather than "Durwent the Kobold".
+
           Monster names should be used very sparingly.
 
           Overriding Monster Spells:

@@ -2509,6 +2509,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         {
             name = replace_all_of(name, "_", " ");
             mspec.monname = name;
+
+            if (strip_tag(mon_str, "name_suffix"))
+                mspec.extra_monster_flags |= MF_NAME_SUFFIX;
+            else if (strip_tag(mon_str, "name_adjective"))
+                mspec.extra_monster_flags |= MF_NAME_ADJECTIVE;
+            else if (strip_tag(mon_str, "name_replace"))
+                mspec.extra_monster_flags |= MF_NAME_REPLACE;
         }
 
         trim_string(mon_str);
