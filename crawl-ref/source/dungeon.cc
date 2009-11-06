@@ -3375,7 +3375,8 @@ static monster_type _choose_unique_by_depth(int step)
     default:
         ret = random_choose(MONS_FRANCIS, MONS_FRANCES, MONS_WAYNE, MONS_DUANE,
                             MONS_XTAHUA, MONS_NORRIS, MONS_FREDERICK, MONS_NIKOLA,
-                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, -1);
+                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, MONS_AIZUL, 
+                            -1);
     }
 
     return static_cast<monster_type>(ret);
@@ -3399,6 +3400,11 @@ static monster_type _pick_unique(int lev)
             return MONS_PRINCE_RIBBIT;
         else
             return MONS_NO_MONSTER;
+    }
+    else if (player_in_branch(BRANCH_SNAKE_PIT))
+    {
+        if (player_branch_depth() > 3 && coinflip())
+            return MONS_AIZUL;
     }
 
     // First, pick generic unique depending on depth.

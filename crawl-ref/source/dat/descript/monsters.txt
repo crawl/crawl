@@ -8,6 +8,10 @@ __(_suffix_examine
 It has been enchanted to dance through the air and attack under its own
 power.
 %%%%
+Aizul
+
+Once the guardian of a legendary treasure hoard, he was disgraced after thieves looted it while he slept. Left without a purpose he now slithers aimlessly from place to place, seeking redemption on the field of battle.
+%%%%%
 Agnes
 
 A lanky warrior, she moves at a great pace and carries an exotic weapon.

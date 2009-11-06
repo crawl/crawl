@@ -1264,6 +1264,17 @@
       }
     },
 
+    {  MST_AIZUL,
+      {
+       SPELL_VENOM_BOLT,
+       SPELL_BLINK_OTHER,
+       SPELL_SLEEP,
+       SPELL_VENOM_BOLT,
+       SPELL_SLOW,
+       SPELL_MINOR_HEALING
+      }
+    },
+       
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

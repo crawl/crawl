@@ -1045,6 +1045,40 @@ _player_ghost_rare_
 # Unique monsters
 #######################################
 %%%%
+Aizul
+
+@_Aizul_common_@
+
+w:5
+
+@_Aizul_rare_@
+%%%%
+_Aizul_common_
+
+VISUAL:@The_monster@ yawns, and then pretends he didn't.
+
+@The_monster@ says, "Feeling sleepy?"
+
+@The_monster@ says, "I wasn't actually sleeping!"
+
+VISUAL:@The_monster@ grinds his teeth.
+
+@The_monster@ screams @at_foe@, "I'll haunt your nightmares!"
+%%%%
+_Aizul_rare_
+
+@The_monster@ says, "Sweet dreams!"
+
+@The_monster@ hums a lullaby.
+
+VISUAL:@The_monster@ stretches carefully.
+
+@The_monster@ says, "Everybody has to sleep sometimes."
+
+@The_monster@ says @to_foe@, "Fancy a snooze?"
+
+VISUAL:@The_monster@ winks several times @at_foe@.
+%%%%
 ############ AGNES ### She is trying to get money and treasure
 Agnes
 

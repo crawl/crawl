@@ -2060,6 +2060,7 @@ enum monster_type                      // (int) menv[].type
 
     // New set of monsters {november, 2009}
     MONS_GOLDEN_EYE,
+    MONS_AIZUL,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2300,7 +2301,8 @@ enum mon_spellbook_type
     MST_MAURICE,
     MST_KHUFU,
     MST_NIKOLA,
-    MST_DISSOLUTION,
+    MST_DISSOLUTION,                  // 170
+    MST_AIZUL,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
