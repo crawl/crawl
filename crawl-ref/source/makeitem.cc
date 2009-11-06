@@ -1616,7 +1616,6 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                 break;
         }
     }
-        item.sub_type = _determine_weapon_subtype(item_level);
 
     // Forced randart.
     if (item_level == -6)
