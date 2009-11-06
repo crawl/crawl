@@ -83,6 +83,9 @@ ifdef CROSSHOST
 	ifneq (,$(findstring mingw,$(CROSSHOST)))
 		uname_S=MINGW32
 	endif
+	ifneq (,$(findstring djgpp,$(CROSSHOST)))
+		uname_S=DOS
+	endif
 
 endif
 ifneq (,$(findstring MINGW,$(uname_S)))
@@ -100,6 +103,13 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 		BUILD_LIBPNG = YesPlease
 		BUILD_ZLIB = YesPlease
 	endif
+endif
+ifeq ($(uname_S),DOS)
+	NO_NCURSES = yes
+	NO_UNICODE = yes
+	NEED_LIBDOS = yes
+	BUILD_PCRE = yes
+	NO_RDYNAMIC = yes
 endif
 ifeq ($(uname_S),Darwin)
 	NO_PKGCONFIG = Yes
