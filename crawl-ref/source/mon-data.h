@@ -818,7 +818,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_HELL_HOG, 'h', LIGHTRED, "hell-hog",
+    MONS_HELL_HOG, 'h', LIGHTRED, "hell hog",
     M_SPELLCASTER,
     MR_NO_FLAGS,
     0, 10, MONS_HOG, MONS_HELL_HOG, MH_DEMONIC, -3,
