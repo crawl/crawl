@@ -1055,7 +1055,7 @@ int tileidx_monster(const monsters *mons, bool detected)
     if (mons->has_ench(ENCH_STICKY_FLAME))
         ch |= TILE_FLAG_FLAME;
 
-    if (mons_friendly(mons))
+    if (mons->friendly())
         ch |= TILE_FLAG_PET;
     else if (mons_neutral(mons))
         ch |= TILE_FLAG_NEUTRAL;
@@ -4655,7 +4655,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         else if (!mon->is_named())
             return;
 
-        if (pref != TAGPREF_NAMED && mons_friendly(mon))
+        if (pref != TAGPREF_NAMED && mon->friendly())
             return;
 
         // HACK.  Names cover up pan demons in a weird way.

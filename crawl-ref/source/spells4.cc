@@ -451,7 +451,7 @@ static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
     if (monster == NULL)
         return 0;
 
-    if (!_is_domesticated_animal(monster->type) || mons_friendly(monster)
+    if (!_is_domesticated_animal(monster->type) || monster->friendly()
         || player_will_anger_monster(monster))
     {
         return 0;

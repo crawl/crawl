@@ -1974,11 +1974,6 @@ int mons_base_damage_brand(const monsters *m)
     return (SPWPN_NORMAL);
 }
 
-bool mons_friendly(const monsters *m)
-{
-    return (m->attitude == ATT_FRIENDLY || m->has_ench(ENCH_CHARM));
-}
-
 bool mons_neutral(const monsters *m)
 {
     return (m->attitude == ATT_NEUTRAL || m->has_ench(ENCH_NEUTRAL)
@@ -2003,7 +1998,7 @@ bool mons_is_pacified(const monsters *m)
 
 bool mons_wont_attack(const monsters *m)
 {
-    return (mons_friendly(m) || mons_good_neutral(m) || mons_strict_neutral(m));
+    return (m->friendly() || mons_good_neutral(m) || mons_strict_neutral(m));
 }
 
 bool mons_att_wont_attack(mon_attitude_type fr)
@@ -2013,7 +2008,7 @@ bool mons_att_wont_attack(mon_attitude_type fr)
 
 mon_attitude_type mons_attitude(const monsters *m)
 {
-    if (mons_friendly(m))
+    if (m->friendly())
         return ATT_FRIENDLY;
     else if (mons_good_neutral(m))
         return ATT_GOOD_NEUTRAL;
@@ -2114,7 +2109,7 @@ bool mons_looks_stabbable(const monsters *m)
 {
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
     return (mons_behaviour_perceptible(m)
-            && !mons_friendly(m)
+            && !m->friendly()
             && (uat == UCAT_PARALYSED || uat == UCAT_SLEEPING));
 }
 
@@ -2122,7 +2117,7 @@ bool mons_looks_distracted(const monsters *m)
 {
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
     return (mons_behaviour_perceptible(m)
-            && !mons_friendly(m)
+            && !m->friendly()
             && uat != UCAT_NO_ATTACK
             && uat != UCAT_PARALYSED
             && uat != UCAT_SLEEPING);
@@ -2229,7 +2224,7 @@ bool mons_should_fire(struct bolt &beam)
     if (!invalid_monster_index(beam.beam_source))
     {
         monsters& m = menv[beam.beam_source];
-        if (m.alive() && mons_friendly(&m) && beam.target == you.pos())
+        if (m.alive() && m.friendly() && beam.target == you.pos())
             return (false);
     }
 
@@ -2359,7 +2354,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     const actor *foe = mon->get_foe();
 
     // Keep friendly summoners from spamming summons constantly.
-    if (mons_friendly(mon)
+    if (mon->friendly()
         && (!foe || foe == &you)
         && spell_typematch(monspell, SPTYP_SUMMONING))
     {
@@ -2438,7 +2433,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
     case SPELL_INVISIBILITY:
         if (mon->has_ench(ENCH_INVIS)
-            || mons_friendly(mon) && !you.can_see_invisible(false))
+            || mon->friendly() && !you.can_see_invisible(false))
         {
             ret = true;
         }

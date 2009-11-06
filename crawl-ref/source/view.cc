@@ -147,7 +147,7 @@ void handle_monster_shouts(monsters* monster, bool force)
         return;
 
     // Friendly or neutral monsters don't shout.
-    if (!force && (mons_friendly(monster) || mons_neutral(monster)))
+    if (!force && (monster->friendly() || mons_neutral(monster)))
         return;
 
     // Get it once, since monster might be S_RANDOM, in which case
@@ -611,7 +611,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
             if (where == you.pos())
                 behaviour_event( monster, ME_ALERT, MHITYOU, you.pos() );
             else if (mermaid && mons_primary_habitat(monster) == HT_WATER
-                     && !mons_friendly(monster))
+                     && !monster->friendly())
             {
                 // Mermaids/sirens call (hostile) aquatic monsters.
                 behaviour_event( monster, ME_ALERT, MHITNOT, where );

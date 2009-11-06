@@ -2518,7 +2518,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
             monsters* const monster = &menv[i];
             if (!monster->alive()
                 || !mons_near(monster)
-                || mons_friendly(monster)
+                || monster->friendly()
                 || monster->holiness() != MH_NATURAL
                 || mons_is_unique(monster->type)
                 || mons_immune_magic(monster)

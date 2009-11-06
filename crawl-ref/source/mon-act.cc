@@ -129,7 +129,7 @@ static bool _swap_monsters(monsters* mover, monsters* moved)
 
     // Don't swap places if the player explicitly ordered their pet to
     // attack monsters.
-    if ((mons_friendly(mover) || mons_friendly(moved))
+    if ((mover->friendly() || moved->friendly())
         && you.pet_target != MHITYOU && you.pet_target != MHITNOT)
     {
         return (false);
@@ -316,7 +316,7 @@ static bool _mon_on_interesting_grid(monsters *mon)
 static void _maybe_set_patrol_route(monsters *monster)
 {
     if (mons_is_wandering(monster)
-        && !mons_friendly(monster)
+        && !monster->friendly()
         && !monster->is_patrolling()
         && _mon_on_interesting_grid(monster))
     {
@@ -398,7 +398,7 @@ static void _handle_movement(monsters *monster)
     mmov.y = (delta.y > 0) ? 1 : ((delta.y < 0) ? -1 : 0);
 
     if (mons_is_fleeing(monster) && monster->travel_target != MTRAV_WALL
-        && (!mons_friendly(monster)
+        && (!monster->friendly()
             || monster->target != you.pos()))
     {
         mmov *= -1;
@@ -987,7 +987,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
     case WAND_INVISIBILITY:
         if (!monster->has_ench(ENCH_INVIS)
             && !monster->has_ench(ENCH_SUBMERGED)
-            && (!mons_friendly(monster) || you.can_see_invisible(false)))
+            && (!monster->friendly() || you.can_see_invisible(false)))
         {
             beem.target = monster->pos();
             niceWand = true;
@@ -1105,7 +1105,7 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
     // Dropping item copy, since the launched item might be different.
     item_def item = mitm[hand_used];
     item.quantity = 1;
-    if (mons_friendly(monster))
+    if (monster->friendly())
         item.flags |= ISFLAG_DROPPED_BY_ALLY;
 
     // FIXME we should actually determine a sensible range here
@@ -1800,7 +1800,7 @@ static void _handle_monster_move(monsters *monster)
             // Same for friendlies if friendly_pickup is set to "none".
             if (!mons_neutral(monster) && !monster->has_ench(ENCH_CHARM)
                 || (you.religion == GOD_JIYVA && mons_is_slime(monster))
-                && (!mons_friendly(monster)
+                && (!monster->friendly()
                     || you.friendly_pickup != FRIENDLY_PICKUP_NONE))
             {
                 if (_handle_pickup(monster))
@@ -1922,7 +1922,7 @@ static void _handle_monster_move(monsters *monster)
             // Prevents unfriendlies from nuking you from offscreen.
             // How nice!
             const bool friendly_or_near =
-                mons_friendly(monster) || monster->near_foe();
+                monster->friendly() || monster->near_foe();
             if (friendly_or_near
                 || monster->type == MONS_TEST_SPAWNER
                 // Slime creatures can split when offscreen.
@@ -1982,7 +1982,7 @@ static void _handle_monster_move(monsters *monster)
             {
                 ASSERT(!crawl_state.arena);
 
-                if (!mons_friendly(monster))
+                if (!monster->friendly())
                 {
                     // If it steps into you, cancel other targets.
                     monster->foe = MHITYOU;
@@ -2169,7 +2169,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
         return (false);
 
     // Friendly jellies won't eat (unless worshipping Jiyva).
-    if (mons_friendly(monster) && you.religion != GOD_JIYVA)
+    if (monster->friendly() && you.religion != GOD_JIYVA)
         return (false);
 
     int hps_changed = 0;
@@ -2530,7 +2530,7 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
     const bool player_knows_trap = (trap.is_known(&you));
 
     // No friendly monsters will ever enter a Zot trap you know.
-    if (player_knows_trap && mons_friendly(monster) && trap.type == TRAP_ZOT)
+    if (player_knows_trap && monster->friendly() && trap.type == TRAP_ZOT)
         return (false);
 
     // Dumb monsters don't care at all.

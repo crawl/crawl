@@ -412,7 +412,7 @@ bool mons_speaks(monsters *monster)
 
         prefixes.push_back("neutral");
     }
-    else if (mons_friendly(monster) && !crawl_state.arena)
+    else if (monster->friendly() && !crawl_state.arena)
         prefixes.push_back("friendly");
     else
         prefixes.push_back("hostile");
@@ -766,13 +766,13 @@ bool mons_speaks_msg(monsters *monster, const std::string &msg,
                 msg_type = MSGCH_TALK_VISUAL;
             else if (param == "SPELL" && !silence || param == "VISUAL SPELL")
             {
-                msg_type = mons_friendly(monster) ? MSGCH_FRIEND_SPELL
+                msg_type = monster->friendly() ? MSGCH_FRIEND_SPELL
                                                   : MSGCH_MONSTER_SPELL;
             }
             else if (param == "ENCHANT" && !silence
                      || param == "VISUAL ENCHANT")
             {
-                msg_type = mons_friendly(monster) ? MSGCH_FRIEND_ENCHANT
+                msg_type = monster->friendly() ? MSGCH_FRIEND_ENCHANT
                                                   : MSGCH_MONSTER_ENCHANT;
             }
             else if (param == "PLAIN")

@@ -1465,12 +1465,12 @@ bool _has_jelly()
 bool is_good_lawful_follower(const monsters* mon)
 {
     return (mon->alive() && !mon->is_evil() && !mon->is_chaotic()
-            && mons_friendly(mon));
+            && mon->friendly());
 }
 
 bool is_good_follower(const monsters* mon)
 {
-    return (mon->alive() && !mon->is_evil() && mons_friendly(mon));
+    return (mon->alive() && !mon->is_evil() && mon->friendly());
 }
 
 bool is_follower(const monsters* mon)
@@ -1488,7 +1488,7 @@ bool is_follower(const monsters* mon)
     else if (is_good_god(you.religion))
         return (is_good_follower(mon));
     else
-        return (mon->alive() && mons_friendly(mon));
+        return (mon->alive() && mon->friendly());
 }
 
 static bool _blessing_wpn(monsters* mon)
@@ -3564,7 +3564,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
 {
     const unsigned int midx = monster_index(mon);
 
-    if (mons_friendly(mon))
+    if (mon->friendly())
     {
         if ((mon->flags & NEW_GIFT_FLAGS) == NEW_GIFT_FLAGS
             && mon->god != GOD_XOM)

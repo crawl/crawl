@@ -1027,7 +1027,7 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
     {
         seen = true;
 
-        description_level_type desc = mons_friendly(mon) ? DESC_CAP_YOUR :
+        description_level_type desc = mon->friendly() ? DESC_CAP_YOUR :
                                                            DESC_CAP_THE;
         std::string msg = apostrophise(mon->name(desc));
 

@@ -393,7 +393,7 @@ static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
     if (mon == NULL)
         return (0);
 
-    if (!mons_friendly(mon))
+    if (!mon->friendly())
         behaviour_event(mon, ME_ANNOY, MHITYOU);
 
     if (mon->check_res_magic(pow * 2))

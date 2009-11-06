@@ -3074,7 +3074,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     monsters* mon = monster_at(target);
     if (mon && player_can_hit_monster(mon))
     {
-        if (mon->caught() && mons_friendly(mon)
+        if (mon->caught() && mon->friendly()
             && player_can_open_doors() && !you.confused())
         {
             const std::string prompt =

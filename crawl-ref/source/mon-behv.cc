@@ -162,7 +162,7 @@ static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
     // pathfinding, and it's also not necessary if the monster
     // is already adjacent to you.
     if (potentially_blocking && mons_intel(mon) >= I_NORMAL
-           && !mons_friendly(mon) && mons_has_los_ability(mon->type)
+           && !mon->friendly() && mons_has_los_ability(mon->type)
         || grid_distance(mon->pos(), you.pos()) == 1)
     {
         potentially_blocking = false;
@@ -180,7 +180,7 @@ static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
         // realise that.
         if (!potentially_blocking && !mons_flies(mon)
             && (mons_intel(mon) < I_NORMAL
-                || mons_friendly(mon)
+                || mon->friendly()
                 || (!mons_has_ranged_spell(mon, true)
                     && !mons_has_ranged_attack(mon))))
         {
@@ -787,7 +787,7 @@ static bool _handle_monster_patrolling(monsters *mon)
         if (mons_intel(mon) == I_PLANT)
         {
             // Really stupid monsters forget where they're supposed to be.
-            if (mons_friendly(mon))
+            if (mon->friendly())
             {
                 // Your ally was told to wait, and wait it will!
                 // (Though possibly not where you told it to.)
@@ -1084,7 +1084,7 @@ static void _set_random_slime_target(monsters* mon)
 void handle_behaviour(monsters *mon)
 {
     bool changed = true;
-    bool isFriendly = mons_friendly(mon);
+    bool isFriendly = mon->friendly();
     bool isNeutral  = mons_neutral(mon);
     bool wontAttack = mons_wont_attack(mon);
 
@@ -1160,7 +1160,7 @@ void handle_behaviour(monsters *mon)
         const monsters& foe_monster = menv[mon->foe];
         if (!foe_monster.alive())
             mon->foe = MHITNOT;
-        if (mons_friendly(&foe_monster) == isFriendly)
+        if (foe_monster.friendly() == isFriendly)
             mon->foe = MHITNOT;
     }
 
@@ -1250,7 +1250,7 @@ void handle_behaviour(monsters *mon)
         const monsters& foe_monster = menv[mon->foe];
         if (!foe_monster.alive())
             mon->foe = MHITNOT;
-        if (mons_friendly(&foe_monster) == isFriendly)
+        if (foe_monster.friendly() == isFriendly)
             mon->foe = MHITNOT;
     }
 
@@ -1605,7 +1605,7 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
         if (foe != mon
             && mon->can_see(foe)
             && (friendly || !is_sanctuary(p))
-            && (mons_friendly(foe) != friendly
+            && (foe->friendly() != friendly
                 || (neutral && !mons_neutral(foe))))
         {
             return (true);
@@ -1617,7 +1617,7 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
 // Choose random nearest monster as a foe.
 void _set_nearest_monster_foe(monsters *mon)
 {
-    const bool friendly = mons_friendly(mon);
+    const bool friendly = mon->friendly();
     const bool neutral  = mons_neutral(mon);
 
     for (int k = 1; k <= LOS_RADIUS; ++k)
@@ -1756,7 +1756,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     case ME_ALERT:
         // Allow monsters falling asleep while patrolling (can happen if
         // they're left alone for a long time) to be woken by this event.
-        if (mons_friendly(mon) && mon->is_patrolling()
+        if (mon->friendly() && mon->is_patrolling()
             && !mon->asleep())
         {
             break;
@@ -1827,7 +1827,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             // scroll of fear, but enslaved ones will.
             // Send friendlies off to a random target so they don't cling
             // to you in fear.
-            if (mons_friendly(mon))
+            if (mon->friendly())
             {
                 breakCharm = true;
                 mon->foe   = MHITNOT;
@@ -1836,7 +1836,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             else
                 setTarget = true;
         }
-        else if (mons_friendly(mon) && !crawl_state.arena)
+        else if (mon->friendly() && !crawl_state.arena)
             mon->foe = MHITYOU;
 
         if (see_cell(mon->pos()))
@@ -1855,7 +1855,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         // Just set behaviour... foe doesn't change.
         if (!mons_is_cornered(mon))
         {
-            if (mons_friendly(mon) && !crawl_state.arena)
+            if (mon->friendly() && !crawl_state.arena)
             {
                 mon->foe = MHITYOU;
                 simple_monster_message(mon, " returns to your side!");

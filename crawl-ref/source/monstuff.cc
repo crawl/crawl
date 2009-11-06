@@ -256,7 +256,7 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
             }
             else
             {
-                if (mons_friendly(monster) && mitm[item].is_valid())
+                if (monster->friendly() && mitm[item].is_valid())
                     mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
 
                 move_item_to_grid(&item, monster->pos());
@@ -536,7 +536,7 @@ static void _give_monster_experience(monsters *victim,
     if (!mon->alive())
         return;
 
-    if ((!victim_was_born_friendly || !mons_friendly(mon))
+    if ((!victim_was_born_friendly || !mon->friendly())
         && !mons_aligned(killer_index, monster_index(victim)))
     {
         if (mon->gain_exp(experience))
@@ -634,7 +634,7 @@ static bool _is_pet_kill(killer_type killer, int i)
         return (false);
 
     const monsters *m = &menv[i];
-    if (mons_friendly(m)) // This includes enslaved monsters.
+    if (m->friendly()) // This includes enslaved monsters.
         return (true);
 
     // Check if the monster was confused by you or a friendly, which
@@ -653,7 +653,7 @@ static bool _ely_protect_ally(monsters *monster)
 
     if (monster->holiness() != MH_NATURAL
             && monster->holiness() != MH_HOLY
-        || !mons_friendly(monster)
+        || !monster->friendly()
         || !you.can_see(monster) // for simplicity
         || !one_chance_in(20))
     {
@@ -686,13 +686,13 @@ static bool _ely_heal_monster(monsters *monster, killer_type killer, int i)
 
     const int ely_penance = you.penance[god];
 
-    if (mons_friendly(monster) || !one_chance_in(10))
+    if (monster->friendly() || !one_chance_in(10))
         return (false);
 
     if (MON_KILL(killer) && !invalid_monster_index(i))
     {
         monsters *mon = &menv[i];
-        if (!mons_friendly(mon) || !one_chance_in(3))
+        if (!mon->friendly() || !one_chance_in(3))
             return (false);
 
         if (!mons_near(monster))
@@ -1372,7 +1372,7 @@ int monster_die(monsters *monster, killer_type killer,
     if (!mons_reset && !crawl_state.arena && MONST_INTERESTING(monster))
     {
         take_note(Note(NOTE_KILL_MONSTER,
-                       monster->type, mons_friendly(monster),
+                       monster->type, monster->friendly(),
                        monster->full_name(DESC_NOCAP_A).c_str()));
     }
 
@@ -1688,7 +1688,7 @@ int monster_die(monsters *monster, killer_type killer,
 
             // No piety loss if god gifts killed by other monsters.
             // Also, dancing weapons aren't really friendlies.
-            if (mons_friendly(monster)
+            if (monster->friendly()
                 && monster->type != MONS_DANCING_WEAPON)
             {
                 did_god_conduct(DID_FRIEND_DIED, 1 + (monster->hit_dice / 2),
@@ -1734,7 +1734,7 @@ int monster_die(monsters *monster, killer_type killer,
                     if (killer_holy == MH_UNDEAD)
                     {
                         const bool confused =
-                            anon ? false : !mons_friendly(killer_mon);
+                            anon ? false : !killer_mon->friendly();
 
                         // Yes, these are hacks, but they make sure that
                         // confused monsters doing kills are not
@@ -1803,7 +1803,7 @@ int monster_die(monsters *monster, killer_type killer,
                     if (killer_holy == MH_UNDEAD)
                     {
                         const bool confused =
-                            anon ? false : !mons_friendly(killer_mon);
+                            anon ? false : !killer_mon->friendly();
 
                         // Yes, this is a hack, but it makes sure that
                         // confused monsters doing kills are not
@@ -2427,7 +2427,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     // Xom likes watching monsters being polymorphed.
     xom_is_stimulated(mons_is_shapeshifter(monster)               ? 16 :
-                      power == PPT_LESS || mons_friendly(monster) ? 32 :
+                      power == PPT_LESS || monster->friendly() ? 32 :
                       power == PPT_SAME                           ? 64 : 128);
 
     return (player_messaged);

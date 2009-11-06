@@ -2952,7 +2952,7 @@ static void monster_threat_values(double *general, double *highest,
     {
         monster = &menv[it];
 
-        if (monster->alive() && mons_near(monster) && !mons_friendly(monster))
+        if (monster->alive() && mons_near(monster) && !monster->friendly())
         {
             const int xp = exper_value(monster);
             const double log_xp = log((double)xp);
@@ -3161,7 +3161,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     const bool inSanctuary   = (is_sanctuary(you.pos())
                                 || is_sanctuary(mon->pos()));
     const bool wontAttack    = mons_wont_attack(mon);
-    const bool isFriendly    = mons_friendly(mon);
+    const bool isFriendly    = mon->friendly();
     const bool isNeutral     = mons_neutral(mon);
     const bool isUnchivalric = is_unchivalric_attack(&you, mon);
     const bool isHoly        = mons_is_holy(mon)

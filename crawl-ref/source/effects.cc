@@ -2454,7 +2454,7 @@ static void _set_friendly_foes(bool allow_patrol = false)
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *mon(&menv[i]);
-        if (!mon->alive() || !mons_near(mon) || !mons_friendly(mon)
+        if (!mon->alive() || !mons_near(mon) || !mon->friendly()
             || mon->mons_species() == MONS_GIANT_SPORE)
         {
             continue;
@@ -2474,7 +2474,7 @@ static void _set_allies_patrol_point(bool clear = false)
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *mon(&menv[i]);
-        if (!mon->alive() || !mons_near(mon) || !mons_friendly(mon))
+        if (!mon->alive() || !mons_near(mon) || !mon->friendly())
             continue;
 
         // Berserking monsters cannot be ordered around.

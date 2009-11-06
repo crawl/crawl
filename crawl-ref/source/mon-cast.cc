@@ -1232,7 +1232,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
 
         // Friendly monsters don't use polymorph other, for fear of harming
         // the player.
-        if (spell_cast == SPELL_POLYMORPH_OTHER && mons_friendly(monster))
+        if (spell_cast == SPELL_POLYMORPH_OTHER && monster->friendly())
             return (false);
 
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
@@ -1836,7 +1836,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SYMBOL_OF_TORMENT:
-        if (!monsterNearby || mons_friendly(monster))
+        if (!monsterNearby || monster->friendly())
             return;
 
         torment(monster_index(monster), monster->pos());
@@ -1911,7 +1911,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         if (!mons_near(monster))
             return;
 
-        const bool friendly  = mons_friendly(monster);
+        const bool friendly  = monster->friendly();
         const bool buff_only = !friendly && is_sanctuary(you.pos());
         const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
                                                     : MSGCH_MONSTER_ENCHANT;
@@ -2049,7 +2049,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
     }
     case SPELL_CHAIN_LIGHTNING:
-        if (!monsterNearby || mons_friendly(monster))
+        if (!monsterNearby || monster->friendly())
             return;
         cast_chain_lightning(4 * monster->hit_dice, monster);
         return;
@@ -2477,9 +2477,9 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     msg = replace_all(msg, "@beam@", beam_name);
 
     const msg_channel_type chan =
-        (unseen                 ? MSGCH_SOUND :
-         mons_friendly(monster) ? MSGCH_FRIEND_SPELL
-                                : MSGCH_MONSTER_SPELL);
+        (unseen              ? MSGCH_SOUND :
+         monster->friendly() ? MSGCH_FRIEND_SPELL
+                             : MSGCH_MONSTER_SPELL);
 
     if (silent)
         mons_speaks_msg(monster, msg, chan, true);

@@ -161,14 +161,14 @@ void MiscastEffect::init()
             kt = KILL_YOU_CONF;
         }
         else if (!death_curse && mon_source->confused_by_you()
-                 && !mons_friendly(mon_source))
+                 && !mon_source->friendly())
         {
             kt = KILL_YOU_CONF;
         }
         else
             kt = KILL_MON_MISSILE;
 
-        if (mons_friendly(mon_source))
+        if (mon_source->friendly())
             kc = KC_FRIENDLY;
         else
             kc = KC_OTHER;

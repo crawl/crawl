@@ -696,7 +696,7 @@ bool melee_attack::attack()
         if (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
         {
             if (attacker->atype() == ACT_PLAYER
-                || mons_friendly(attacker_as_monster()))
+                || attacker_as_monster()->friendly())
             {
                 remove_sanctuary(true);
             }
@@ -2450,7 +2450,7 @@ void melee_attack::chaos_affects_defender()
                 clone.mark_summoned(6, true, MON_SUMM_CLONE);
 
             // Monsters being cloned is interesting.
-            xom_is_stimulated(mons_friendly(&clone) ? 16 : 32);
+            xom_is_stimulated(clone.friendly() ? 16 : 32);
         }
         break;
     }
@@ -2481,7 +2481,7 @@ void melee_attack::chaos_affects_defender()
         monster_polymorph(defender_as_monster(), RANDOM_MONSTER);
 
         // Xom loves it if this happens!
-        const int friend_factor = mons_friendly(defender_as_monster()) ? 1 : 2;
+        const int friend_factor = defender_as_monster()->friendly() ? 1 : 2;
         const int glow_factor   =
             (defender_as_monster()->has_ench(ENCH_SHAPESHIFTER) ? 1 : 2);
         xom_is_stimulated( 64 * friend_factor * glow_factor );
@@ -2565,7 +2565,7 @@ void melee_attack::chaos_affects_defender()
             : attacker_as_monster()->confused_by_you() ? KILL_YOU_CONF
                                                        : KILL_MON;
 
-        if (beam.thrower == KILL_YOU || mons_friendly(attacker_as_monster()))
+        if (beam.thrower == KILL_YOU || attacker_as_monster()->friendly())
             beam.attitude = ATT_FRIENDLY;
 
         beam.beam_source = attacker->mindex();
@@ -4090,7 +4090,7 @@ bool melee_attack::mons_attack_mons()
     {
         // Friendly monsters should only violate sanctuary if explicitly
         // ordered to do so by the player.
-        if (mons_friendly(attacker_as_monster()))
+        if (attacker_as_monster()->friendly())
         {
             if (you.pet_target == MHITYOU || you.pet_target == MHITNOT)
             {
@@ -4140,7 +4140,7 @@ bool melee_attack::mons_attack_mons()
     // already, but not if sanctuary is in effect (pet target must be
     // set explicitly by the player during sanctuary).
     if (perceived_attack && attacker->alive()
-        && mons_friendly(defender_as_monster())
+        && defender_as_monster()->friendly()
         && !crawl_state.arena
         && !mons_wont_attack(attacker_as_monster())
         && you.pet_target == MHITNOT
@@ -4541,7 +4541,7 @@ void melee_attack::mons_do_napalm()
         else
         {
             napalm_monster(defender_as_monster(),
-                           mons_friendly(attacker_as_monster()) ?
+                           attacker_as_monster()->friendly() ?
                            KC_FRIENDLY : KC_OTHER,
                            std::min(4, 1 + random2(attacker->get_experience_level())/2));
         }
@@ -5049,7 +5049,7 @@ void melee_attack::mons_perform_attack_rounds()
             bool end = true;
             for (adjacent_iterator i(attacker->pos()); i; ++i)
             {
-                if (*i == you.pos() && !mons_friendly(attacker_as_monster()))
+                if (*i == you.pos() && !attacker_as_monster()->friendly())
                 {
                     attacker_as_monster()->foe = MHITYOU;
                     attacker_as_monster()->target = you.pos();

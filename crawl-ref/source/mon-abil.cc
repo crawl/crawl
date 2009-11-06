@@ -582,7 +582,7 @@ static bool _orc_battle_cry(monsters *chief)
     int affected = 0;
 
     if (foe
-        && (foe != &you || !mons_friendly(chief))
+        && (foe != &you || !chief->friendly())
         && !silenced(chief->pos())
         && chief->can_see(foe)
         && coinflip())
@@ -645,7 +645,7 @@ static bool _orc_battle_cry(monsters *chief)
 
             // Disabling detailed frenzy announcement because it's so spammy.
             const msg_channel_type channel =
-                        mons_friendly(chief) ? MSGCH_MONSTER_ENCHANT
+                        chief->friendly() ? MSGCH_MONSTER_ENCHANT
                                                   : MSGCH_FRIEND_ENCHANT;
 
             if (!seen_affected.empty())
@@ -671,7 +671,7 @@ static bool _orc_battle_cry(monsters *chief)
                     who = get_monster_data(type)->name;
 
                     mprf(channel, "%s %s go into a battle-frenzy!",
-                         mons_friendly(chief) ? "Your" : "The",
+                         chief->friendly() ? "Your" : "The",
                          pluralise(who).c_str());
                 }
             }
@@ -683,7 +683,7 @@ static bool _orc_battle_cry(monsters *chief)
 
 static bool _make_monster_angry(const monsters *mon, monsters *targ)
 {
-    if (mons_friendly(mon) != mons_friendly(targ))
+    if (mon->friendly() != targ->friendly())
         return (false);
 
     // targ is guaranteed to have a foe (needs_berserk checks this).
@@ -773,7 +773,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         return (false);
     }
 
-    const msg_channel_type spl = (mons_friendly(monster) ? MSGCH_FRIEND_SPELL
+    const msg_channel_type spl = (monster->friendly() ? MSGCH_FRIEND_SPELL
                                                          : MSGCH_MONSTER_SPELL);
 
     spell_type spell = SPELL_NO_SPELL;
@@ -970,7 +970,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             break;
 
         if (monster->foe == MHITNOT
-            || monster->foe == MHITYOU && mons_friendly(monster))
+            || monster->foe == MHITYOU && monster->friendly())
         {
             break;
         }
@@ -1011,7 +1011,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             switch (random2(4))
             {
             case 0:
-                if (!mons_friendly(monster))
+                if (!monster->friendly())
                 {
                     make_mons_stop_fleeing(monster);
                     spell_cast = SPELL_SYMBOL_OF_TORMENT;
@@ -1181,7 +1181,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION)
             || mons_is_fleeing(monster)
             || mons_is_pacified(monster)
-            || mons_friendly(monster)
+            || monster->friendly()
             || !player_can_hear(monster->pos()))
         {
             break;

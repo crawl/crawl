@@ -410,7 +410,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (!you_know)
                 this->hide();
         }
-        else if (!(m && mons_friendly(m)))
+        else if (!(m && m->friendly()))
         {
             // Alarm traps aren't set off by hostile monsters, because
             // that would be way too nasty for the player.

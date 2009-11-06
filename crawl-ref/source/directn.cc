@@ -1076,7 +1076,7 @@ void direction(dist& moves, targetting_type restricts,
                 if (you.can_see(montarget)
                         // not made friendly since then
                     && (mons_attitude(montarget) == ATT_HOSTILE
-                        || mode == TARG_ENEMY && !mons_friendly(montarget))
+                        || mode == TARG_ENEMY && !montarget->friendly())
                     && _is_target_in_range(montarget->pos(), range))
                 {
                     found_autotarget = true;
@@ -2081,10 +2081,10 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
         return (mons_attitude(mon) == ATT_HOSTILE);
 
     if (mode == TARG_FRIEND)
-        return (mons_friendly(mon));
+        return (mon->friendly());
 
     ASSERT(mode == TARG_ENEMY);
-    if (mons_friendly(mon))
+    if (mon->friendly())
         return (false);
 
     // Don't target zero xp monsters, unless target_zero_exp is set.
@@ -3140,7 +3140,7 @@ static std::string _get_monster_desc(const monsters *mon)
         else if (mons_is_fleeing(mon))
             text += pronoun + " is retreating.\n";
         // hostile with target != you
-        else if (!mons_friendly(mon) && !mons_neutral(mon)
+        else if (!mon->friendly() && !mons_neutral(mon)
                  && mon->foe != MHITYOU && !crawl_state.arena_suspended)
         {
             // Special case: batty monsters get set to BEH_WANDER as
@@ -3248,7 +3248,7 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
         if (print_attitude)
         {
             std::string str = "";
-            if (mons_friendly(mon))
+            if (mon->friendly())
                 str = "friendly";
             else if (mons_neutral(mon))
                 str = "neutral";
@@ -3288,7 +3288,7 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     // true rakshasa when it summons.
 
     if (mon->type != MONS_DANCING_WEAPON
-        && (mon->type != MONS_RAKSHASA || mons_friendly(mon)))
+        && (mon->type != MONS_RAKSHASA || mon->friendly()))
     {
         weap = _describe_monster_weapon(mon);
     }
@@ -3301,15 +3301,15 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     }
 
     // Print the rest of the equipment only for full descriptions.
-    if (full_desc && (mon->type != MONS_RAKSHASA || mons_friendly(mon)))
+    if (full_desc && (mon->type != MONS_RAKSHASA || mon->friendly()))
     {
         const int mon_arm = mon->inv[MSLOT_ARMOUR];
         const int mon_shd = mon->inv[MSLOT_SHIELD];
         const int mon_qvr = mon->inv[MSLOT_MISSILE];
         const int mon_alt = mon->inv[MSLOT_ALT_WEAPON];
 
-        const bool need_quiver  = (mon_qvr != NON_ITEM && mons_friendly(mon));
-        const bool need_alt_wpn = (mon_alt != NON_ITEM && mons_friendly(mon)
+        const bool need_quiver  = (mon_qvr != NON_ITEM && mon->friendly());
+        const bool need_alt_wpn = (mon_alt != NON_ITEM && mon->friendly()
                                    && !mons_wields_two_weapons(mon));
               bool found_sth    = !weap.empty();
 
@@ -3341,7 +3341,7 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
 
         // For friendly monsters, also list quivered missiles
         // and alternate weapon.
-        if (mons_friendly(mon))
+        if (mon->friendly())
         {
             if (mon_qvr != NON_ITEM)
             {

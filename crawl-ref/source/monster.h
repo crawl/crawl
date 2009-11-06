@@ -332,6 +332,8 @@ public:
     bool haloed() const;
     bool petrified() const;
 
+    bool friendly() const;
+
     bool has_spells() const;
     bool has_spell(spell_type spell) const;
     bool has_evil_spell() const;

@@ -3265,7 +3265,7 @@ bool monster_pathfind::mons_traversable(const coord_def p)
 
     // Your friends only know about doors you know about, unless they feel
     // at home in this branch.
-    if (grd(p) == DNGN_SECRET_DOOR && mons_friendly(mons)
+    if (grd(p) == DNGN_SECRET_DOOR && mons->friendly()
         && (mons_intel(mons) < I_NORMAL || !mons_is_native_in_branch(mons)))
     {
         return (false);
@@ -3279,7 +3279,7 @@ bool monster_pathfind::mons_traversable(const coord_def p)
         // Don't allow allies to pass over known (to them) Zot traps.
         if (tt == TRAP_ZOT
             && ptrap->is_known(mons)
-            && mons_friendly(mons))
+            && mons->friendly())
         {
             return (false);
         }
@@ -3336,7 +3336,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
         {
             // Your allies take extra precautions to avoid known alarm traps.
             // Zot traps are considered intraversable.
-            if (knows_trap && mons_friendly(mons))
+            if (knows_trap && mons->friendly())
                 return (3);
 
             // To hostile monsters, these traps are completely harmless.

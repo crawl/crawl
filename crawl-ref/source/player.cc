@@ -6163,7 +6163,7 @@ void player::attacking(actor *other)
     if (other && other->atype() == ACT_MONSTER)
     {
         const monsters *mon = dynamic_cast<monsters*>(other);
-        if (!mons_friendly(mon) && !mons_neutral(mon))
+        if (!mon->friendly() && !mons_neutral(mon))
             pet_target = mon->mindex();
     }
 

@@ -1908,7 +1908,7 @@ bool cast_sanctuary(const int power)
         // move towards the player.
         if (monsters* mon = monster_at(pos))
         {
-            if (mons_friendly(mon))
+            if (mon->friendly())
             {
                 mon->foe       = MHITYOU;
                 mon->target    = you.pos();
@@ -2102,7 +2102,7 @@ bool recall(char type_recalled)
         if (monster->type == MONS_NO_MONSTER)
             continue;
 
-        if (!mons_friendly(monster))
+        if (!monster->friendly())
             continue;
 
         if (mons_class_is_stationary(monster->type))

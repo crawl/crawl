@@ -190,7 +190,7 @@ static bool _tag_follower_at(const coord_def &pos)
 
     // Only friendly monsters, or those actively seeking the
     // player, will follow up/down stairs.
-    if (!mons_friendly(fmenv)
+    if (!fmenv->friendly()
         && (!mons_is_seeking(fmenv) || fmenv->foe != MHITYOU))
     {
         return (false);
@@ -200,7 +200,7 @@ static bool _tag_follower_at(const coord_def &pos)
     // stringent checks.
     if ((pos - you.pos()).abs() > 2)
     {
-        if (!mons_friendly(fmenv))
+        if (!fmenv->friendly())
             return (false);
 
         // Undead will follow Yredelemnul worshippers, and orcs will
@@ -235,7 +235,7 @@ static int follower_tag_radius2()
     for (adjacent_iterator ai; ai; ++ai)
     {
         if (const monsters *mon = monster_at(*ai))
-            if (!mons_friendly(mon))
+            if (!mon->friendly())
                 return (2);
     }
 

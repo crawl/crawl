@@ -145,7 +145,7 @@ namespace arena
             if (!mon->alive())
                 continue;
 
-            const bool friendly = mons_friendly(mon);
+            const bool friendly = mon->friendly();
             // Set target to the opposite faction's home base.
             mon->target = friendly ? place_b : place_a;
         }

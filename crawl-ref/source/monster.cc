@@ -677,7 +677,7 @@ static bool _needs_ranged_attack(const monsters *mon)
         return (false);
 
     // Same for summonings, but make an exception for friendlies.
-    if (!mons_friendly(mon) && mon->has_spell_of_type(SPTYP_SUMMONING))
+    if (!mon->friendly() && mon->has_spell_of_type(SPTYP_SUMMONING))
         return (false);
 
     // Blademasters don't want to throw stuff.
@@ -1138,7 +1138,7 @@ bool monsters::drop_item(int eslot, int near)
 
     if (on_floor)
     {
-        if (mons_friendly(this))
+        if (friendly())
             pitem->flags |= ISFLAG_DROPPED_BY_ALLY;
 
         if (need_message(near))
@@ -1396,7 +1396,7 @@ bool monsters::pickup_throwable_weapon(item_def &item, int near)
     // If occupied, don't pick up a throwable weapons if it would just
     // stack with an existing one. (Upgrading is possible.)
     if (mslot_item(slot)
-        && (mons_is_wandering(this) || mons_friendly(this) && foe == MHITYOU)
+        && (mons_is_wandering(this) || friendly() && foe == MHITYOU)
         && pickup(item, slot, near, true))
     {
         return (true);
@@ -1605,7 +1605,7 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
             // Monsters in a fight will only pick up missiles if doing so
             // is worthwhile.
             if (!mons_is_wandering(this)
-                && (!mons_friendly(this) || foe != MHITYOU)
+                && (!friendly() || foe != MHITYOU)
                 && (item.quantity < 5 || miss && miss->quantity >= 7))
             {
                 return (false);
@@ -1749,7 +1749,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
         // If a monster isn't otherwise occupied (has a foe, is fleeing, etc.)
         // it is considered wandering.
         bool wandering = (mons_is_wandering(this)
-                          || mons_friendly(this) && foe == MHITYOU);
+                          || friendly() && foe == MHITYOU);
         const int itype = item.base_type;
 
         // Weak(ened) monsters won't stop to pick up things as long as they
@@ -1760,7 +1760,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
             return (false);
         }
 
-        if (mons_friendly(this))
+        if (friendly())
         {
             // Never pick up gold or misc. items, it'd only annoy the player.
             if (itype == OBJ_MISCELLANY || itype == OBJ_GOLD)
@@ -1798,7 +1798,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
                 // While occupied, hostile monsters won't pick up items
                 // dropped or thrown by you. (You might have done that to
                 // distract them.)
-                if (!mons_friendly(this)
+                if (!friendly()
                     && (testbits(item.flags, ISFLAG_DROPPED)
                         || testbits(item.flags, ISFLAG_THROWN)))
                 {
@@ -2071,7 +2071,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     if (!mons_is_unique(nametype)
         && (mon.mname.empty() || mons_genus(nametype) == MONS_HYDRA))
     {
-        const bool use_your = mons_friendly(&mon);
+        const bool use_your = mon.friendly();
         switch (desc)
         {
         case DESC_CAP_THE:
@@ -2688,7 +2688,7 @@ void monsters::go_berserk(bool /* intentional */)
     add_ench(mon_enchant(ENCH_MIGHT, 0, KC_OTHER, duration * 10));
     if (simple_monster_message(this, " goes berserk!"))
         // Xom likes monsters going berserk.
-        xom_is_stimulated(mons_friendly(this) ? 32 : 128);
+        xom_is_stimulated(friendly() ? 32 : 128);
 }
 
 void monsters::expose_to_element(beam_type flavour, int strength)
@@ -2825,6 +2825,11 @@ bool monsters::caught() const
 bool monsters::petrified() const
 {
     return has_ench(ENCH_PETRIFIED);
+}
+
+bool monsters::friendly() const
+{
+    return (attitude == ATT_FRIENDLY || has_ench(ENCH_CHARM));
 }
 
 int monsters::shield_bonus() const
@@ -3418,7 +3423,7 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour,
         // jelly).
         kill_category whose = (agent == NULL) ? KC_OTHER :
                               (agent->atype() == ACT_PLAYER) ? KC_YOU :
-                               mons_friendly((monsters*)agent) ? KC_FRIENDLY :
+                               ((monsters*)agent)->friendly() ? KC_FRIENDLY :
                                                 KC_OTHER;
         react_to_damage(amount, flavour, whose);
     }
@@ -4985,7 +4990,7 @@ void monsters::scale_hp(int num, int den)
 
 kill_category monsters::kill_alignment() const
 {
-    return (mons_friendly(this) ? KC_FRIENDLY : KC_OTHER);
+    return (friendly() ? KC_FRIENDLY : KC_OTHER);
 }
 
 bool monsters::sicken(int amount)
@@ -5057,7 +5062,7 @@ actor *monsters::get_foe() const
     if (foe == MHITNOT)
         return (NULL);
     else if (foe == MHITYOU)
-        return (mons_friendly(this) ? NULL : &you);
+        return (friendly() ? NULL : &you);
 
     // Must be a monster!
     monsters *my_foe = &menv[foe];
@@ -5510,7 +5515,7 @@ bool monsters::should_drink_potion(potion_type ptype) const
         // We're being nice: friendlies won't go invisible if the player
         // won't be able to see them.
         return (!has_ench(ENCH_INVIS)
-                && (you.can_see_invisible(false) || !mons_friendly(this)));
+                && (you.can_see_invisible(false) || !friendly()));
     default:
         break;
     }

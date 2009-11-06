@@ -127,7 +127,7 @@ kill_category bolt::whose_kill() const
         if (!invalid_monster_index(beam_source))
         {
             const monsters *mon = &menv[beam_source];
-            if (mons_friendly(mon))
+            if (mon->friendly())
                 return (KC_FRIENDLY);
         }
     }
@@ -2556,7 +2556,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
     // Assuming that the only mass charm is control undead.
     if (wh_enchant == ENCH_CHARM)
     {
-        if (mons_friendly(monster))
+        if (monster->friendly())
             return (true);
 
         if (monster->holiness() != MH_UNDEAD)
@@ -4947,7 +4947,7 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
         break;
 
     case BEAM_ENSLAVE_DEMON:
-        rc = (mon->holiness() == MH_DEMONIC && !mons_friendly(mon));
+        rc = (mon->holiness() == MH_DEMONIC && !mon->friendly());
         break;
 
     case BEAM_PAIN:

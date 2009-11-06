@@ -182,7 +182,7 @@ static std::string _verbose_info(const monsters* m)
             return (" (wandering)");
         }
         if (m->foe == MHITNOT && !mons_is_batty(m) && !mons_neutral(m)
-            && !mons_friendly(m))
+            && !m->friendly())
         {
             return (" (unaware)");
         }

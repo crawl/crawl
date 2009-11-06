@@ -1208,7 +1208,7 @@ static std::string _colourize_glyph(int col, unsigned glyph)
 
 static bool _mons_is_highlighted(const monsters *mons)
 {
-    return (mons_friendly(mons)
+    return (mons->friendly()
                 && Options.friend_brand != CHATTR_NORMAL
             || mons_looks_stabbable(mons)
                 && Options.stab_brand != CHATTR_NORMAL
@@ -1273,7 +1273,7 @@ void tutorial_first_monster(const monsters &mon)
 
         if (_mons_is_highlighted(&mon))
             learned_something_new(TUT_MONSTER_BRAND, mon.pos());
-        if (mons_friendly(&mon))
+        if (mon.friendly())
             learned_something_new(TUT_MONSTER_FRIENDLY, mon.pos());
 
         if (you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
@@ -1390,7 +1390,7 @@ void tutorial_first_monster(const monsters &mon)
 
     if (_mons_is_highlighted(&mon))
         learned_something_new(TUT_MONSTER_BRAND, mon.pos());
-    if (mons_friendly(&mon))
+    if (mon.friendly())
         learned_something_new(TUT_MONSTER_FRIENDLY, mon.pos());
 }
 
@@ -4532,7 +4532,7 @@ void tutorial_describe_monster(const monsters *mons)
     }
 
     // Monster is highlighted.
-    if (mons_friendly(mons))
+    if (mons->friendly())
     {
         ostr << "Friendly monsters will follow you around and attempt to aid "
                 "you in battle. You can order your allies by <w>t</w>alking "
