@@ -238,6 +238,12 @@ gastronok cast targeted
 
 @The_monster@ casts a spell at @target@.
 %%%%
+dissolution cast
+
+@The_monster@ gurgles deeply, a call to fellow slimes.
+
+@The_monster@ says, "The Slime God sees all!"
+%%%%
 wizard cast targeted
 
 @The_monster@ gestures at @target@ while chanting.

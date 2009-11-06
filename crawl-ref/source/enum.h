@@ -2301,6 +2301,7 @@ enum mon_spellbook_type
     MST_MAURICE,
     MST_KHUFU,
     MST_NIKOLA,
+    MST_DISSOLUTION,
 
     MST_TEST_SPAWNER = 170,
     NUM_MSTYPES,

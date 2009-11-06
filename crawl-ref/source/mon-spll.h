@@ -1253,6 +1253,17 @@
       }
     },
 
+    {  MST_DISSOLUTION,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_EYEBALLS,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_EYEBALLS
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
