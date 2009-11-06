@@ -220,19 +220,6 @@
 },
 
 {
-    SPELL_PARALYSE, "Paralyse",
-     SPTYP_ENCHANTMENT,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
-     4,
-     200,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     true,
-     false
-},
-
-{
     SPELL_PETRIFY, "Petrify",
      SPTYP_ENCHANTMENT | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
@@ -386,32 +373,6 @@
      NULL,
      true,
      false
-},
-
-{
-    SPELL_MINOR_HEALING, "Minor Healing",
-     SPTYP_HOLY,
-     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
-     2,
-     0,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
-    SPELL_MAJOR_HEALING, "Major Healing",
-     SPTYP_HOLY,
-     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
-     6,
-     0,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     false,
-     true
 },
 
 {
@@ -1049,20 +1010,6 @@
      0,
      NULL,
      false,
-     false
-},
-
-{
-    SPELL_HELLFIRE, "Hellfire",
-     SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_MONSTER,
-        // plus DS ability, staff of Dispater & Sceptre of Asmodeus
-     9,
-     200,
-     7, 7,
-     0,
-     NULL,
-     true,
      false
 },
 
@@ -2055,6 +2002,59 @@
 },
 
 // From here on, all spells are monster-only spells.
+
+{
+    SPELL_PARALYSE, "Paralyse",
+     SPTYP_ENCHANTMENT,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_MINOR_HEALING, "Minor Healing",
+     SPTYP_HOLY,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
+     2,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_MAJOR_HEALING, "Major Healing",
+     SPTYP_HOLY,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
+     6,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_HELLFIRE, "Hellfire",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_MONSTER,
+        // plus DS ability, staff of Dispater & Sceptre of Asmodeus
+     9,
+     200,
+     7, 7,
+     0,
+     NULL,
+     true,
+     false
+},
 
 {
     SPELL_VAMPIRE_SUMMON, "Vampire Summon",
