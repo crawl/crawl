@@ -1642,14 +1642,14 @@ void _set_nearest_monster_foe(monsters *mon)
     }
 }
 
-///---------------------------------------------------------------
+//-----------------------------------------------------------------
 //
 // behaviour_event
 //
 // 1. Change any of: monster state, foe, and attitude
-// 2. Call handle_behaviour to re-evaluate AI state and target x,y
+// 2. Call handle_behaviour to re-evaluate AI state and target x, y
 //
-//---------------------------------------------------------------
+//-----------------------------------------------------------------
 void behaviour_event(monsters *mon, mon_event_type event, int src,
                      coord_def src_pos, bool allow_shout)
 {
@@ -1669,7 +1669,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     if (src == MHITYOU)
         sourceWontAttack = true;
     else if (src != MHITNOT)
-        sourceWontAttack = mons_wont_attack( &menv[src] );
+        sourceWontAttack = mons_wont_attack(&menv[src]);
 
     if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
     {
@@ -1879,7 +1879,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             mon->attitude = ATT_HOSTILE;
         }
         else if (src != MHITNOT)
-            mon->target = menv[src].pos();
+            mon->target = src_pos;
     }
 
     // Now, break charms if appropriate.

@@ -2477,9 +2477,9 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     msg = replace_all(msg, "@beam@", beam_name);
 
     const msg_channel_type chan =
-        (unseen                      ? MSGCH_SOUND :
+        (unseen                 ? MSGCH_SOUND :
          mons_friendly(monster) ? MSGCH_FRIEND_SPELL
-                                     : MSGCH_MONSTER_SPELL);
+                                : MSGCH_MONSTER_SPELL);
 
     if (silent)
         mons_speaks_msg(monster, msg, chan, true);
