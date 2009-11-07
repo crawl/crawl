@@ -641,8 +641,8 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
 bool monsters::can_throw_large_rocks() const
 {
     return (type == MONS_STONE_GIANT
-            || ::mons_species(this->type) == MONS_CYCLOPS
-            || ::mons_species(this->type) == MONS_OGRE);
+            || ::mons_species(type) == MONS_CYCLOPS
+            || ::mons_species(type) == MONS_OGRE);
 }
 
 bool monsters::has_spell_of_type(unsigned disciplines) const
@@ -1478,13 +1478,12 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
     switch (item.sub_type)
     {
     case ARM_NAGA_BARDING:
-        if (::mons_species(this->type) == MONS_NAGA
-            || ::mons_species(this->type) == MONS_GUARDIAN_NAGA)
+        if (::mons_genus(type) == MONS_NAGA)
             eq = EQ_BODY_ARMOUR;
         break;
     case ARM_CENTAUR_BARDING:
-        if (::mons_species(this->type) == MONS_CENTAUR
-            || ::mons_species(this->type) == MONS_YAKTAUR)
+        if (::mons_species(type) == MONS_CENTAUR
+            || ::mons_species(type) == MONS_YAKTAUR)
         {
             eq = EQ_BODY_ARMOUR;
         }
