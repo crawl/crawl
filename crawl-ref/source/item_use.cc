@@ -167,6 +167,13 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
+    if(you.hunger_state < HS_FULL &&
+       SPWPN_VAMPIRICISM == get_weapon_brand(*weapon) &&
+       you.species != SP_VAMPIRE){
+        SAY(mpr("You're too hungry to wield that."));
+        return(false);
+    }
+
     if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
     {
         SAY(mpr("You can't wield that with a shield."));
@@ -604,10 +611,20 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_VAMPIRICISM:
-                    if (you.is_undead != US_UNDEAD)
-                        mpr("You feel a strange hunger.");
-                    else
-                        mpr("You feel strangely empty.");
+
+
+                    if(you.species == SP_VAMPIRE){
+                        mpr("You feel a bloodthirsty glee!");
+                        break;
+                    }
+
+                    if (you.is_undead != US_UNDEAD) {
+                        mpr("You feel a dreadful hunger.");
+                    } else {
+                        mpr("You feel an empty sense of dread.");
+                    }
+
+                    make_hungry(4500, false, false);
                     break;
 
                 case SPWPN_RETURNING:
