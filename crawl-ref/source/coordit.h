@@ -1,8 +1,6 @@
 #ifndef COORDIT_H
 #define COORDIT_H
 
-#include "player.h"
-
 class rectangle_iterator :
     public std::iterator<std::forward_iterator_tag, coord_def>
 {
@@ -50,7 +48,7 @@ private:
 class adjacent_iterator : public radius_iterator
 {
 public:
-    explicit adjacent_iterator( const coord_def& pos = you.pos(),
+    explicit adjacent_iterator( const coord_def& pos,
                                 bool _exclude_center = true ) :
         radius_iterator(pos, 1, true, false, _exclude_center) {}
 };

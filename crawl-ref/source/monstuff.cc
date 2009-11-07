@@ -2655,7 +2655,7 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
     {
         int num_found = 0;
 
-        for (adjacent_iterator ai; ai; ++ai)
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
             if (!monster_at(*ai) && _habitat_okay(monster, grd(*ai))
                 && one_chance_in(++num_found))
             {

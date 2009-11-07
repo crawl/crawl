@@ -1059,7 +1059,7 @@ static void _grab_followers()
     int non_stair_using_allies = 0;
 
     // Handle nearby ghosts.
-    for (adjacent_iterator ai; ai; ++ai)
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         monsters *fmenv = monster_at(*ai);
         if (fmenv == NULL)

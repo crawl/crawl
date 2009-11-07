@@ -1655,7 +1655,7 @@ bool entomb(int powc)
         DNGN_FLOOR_SPECIAL
     };
 
-    for ( adjacent_iterator ai; ai; ++ai )
+    for ( adjacent_iterator ai(you.pos()); ai; ++ai )
     {
         // Tile already occupied by monster
         if (monster_at(*ai))

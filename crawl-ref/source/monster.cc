@@ -4031,7 +4031,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     coord_def target_square;
     int       okay_squares = 0;
 
-    for (adjacent_iterator ai; ai; ++ai)
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
         if (!actor_at(*ai)
             && monster_can_submerge(mon, grd(*ai))
             && one_chance_in(++okay_squares))
@@ -4052,7 +4052,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
     // The terrain changed and the monster can't remain submerged.
     // Try to move to an adjacent square where it would be happy.
-    for (adjacent_iterator ai; ai; ++ai)
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         if (!monster_at(*ai)
             && monster_habitable_grid(mon, grd(*ai))

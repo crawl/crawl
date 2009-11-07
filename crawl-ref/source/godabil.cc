@@ -1304,7 +1304,7 @@ void cheibriados_time_bend(int pow)
 {
     mpr("The flow of time bends around you.");
 
-    for (adjacent_iterator ai; ai; ++ai)
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         monsters* mon = monster_at(*ai);
         if (mon != NULL && !mons_is_stationary(mon))

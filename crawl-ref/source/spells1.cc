@@ -1576,7 +1576,7 @@ void manage_fire_shield()
         mpr("Your ring of flames is guttering out.", MSGCH_WARN);
 
     // Place fire clouds all around you
-    for ( adjacent_iterator ai; ai; ++ai )
+    for ( adjacent_iterator ai(you.pos()); ai; ++ai )
         if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
             place_cloud( CLOUD_FIRE, *ai, 1 + random2(6), KC_YOU );
 }

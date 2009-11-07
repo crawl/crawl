@@ -2824,7 +2824,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
     if (!_xom_feels_nasty())
     {
         // Don't confuse the player if standing next to lava or deep water.
-        for (adjacent_iterator ai; ai; ++ai)
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
             if (in_bounds(*ai) && is_feat_dangerous(grd(*ai)))
                 return (XOM_DID_NOTHING);
     }
