@@ -1586,6 +1586,7 @@ static bool _tso_blessing_holy_wpn(monsters* mon)
     if (is_artefact(wpn) || is_range_weapon(wpn)
         || (wpn_brand != SPWPN_NORMAL && wpn_brand != SPWPN_DRAINING
             && wpn_brand != SPWPN_PAIN && wpn_brand != SPWPN_VAMPIRICISM
+            && wpn_brand != SPWPN_REAPING && wpn_brand != SPWPN_CHAOS
             && wpn_brand != SPWPN_VENOM))
     {
         return (false);
