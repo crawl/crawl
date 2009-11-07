@@ -756,7 +756,7 @@ wizard: $(GAME)
 # flex/bison combos I've tried don't produce code that passes the warnings
 # test.
 
-$(UTIL)%.o: $(UTIL)%.cc
+$(UTIL)%.o: $(UTIL)%.cc .cflags
 	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -o $@ -c $<
 
 ifdef PCH
