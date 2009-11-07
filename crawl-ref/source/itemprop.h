@@ -8,8 +8,6 @@
 #ifndef ITEMPROP_H
 #define ITEMPROP_H
 
-#include "externs.h"
-
 struct bolt;
 
 enum armour_type
