@@ -813,7 +813,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     if (m->friendly())
         tileset.push_back(tile_def(TILE_HEART, TEX_DEFAULT));
-    else if (mons_neutral(m))
+    else if (m->neutral())
         tileset.push_back(tile_def(TILE_NEUTRAL, TEX_DEFAULT));
     else if (mons_looks_stabbable(m))
         tileset.push_back(tile_def(TILE_STAB_BRAND, TEX_DEFAULT));

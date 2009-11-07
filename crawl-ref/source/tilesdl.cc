@@ -1337,7 +1337,7 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
         const monsters *mon = monster_at(gc);
         if (mon->friendly())
             f = MF_MONS_FRIENDLY;
-        else if (mons_neutral(mon))
+        else if (mon->neutral())
             f = MF_MONS_NEUTRAL;
         else if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
             f = MF_MONS_NO_EXP;

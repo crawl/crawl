@@ -1974,13 +1974,6 @@ int mons_base_damage_brand(const monsters *m)
     return (SPWPN_NORMAL);
 }
 
-bool mons_neutral(const monsters *m)
-{
-    return (m->attitude == ATT_NEUTRAL || m->has_ench(ENCH_NEUTRAL)
-            || m->attitude == ATT_GOOD_NEUTRAL
-            || m->attitude == ATT_STRICT_NEUTRAL);
-}
-
 bool mons_good_neutral(const monsters *m)
 {
     return (m->attitude == ATT_GOOD_NEUTRAL);
@@ -2014,7 +2007,7 @@ mon_attitude_type mons_attitude(const monsters *m)
         return ATT_GOOD_NEUTRAL;
     else if (mons_strict_neutral(m))
         return ATT_STRICT_NEUTRAL;
-    else if (mons_neutral(m))
+    else if (m->neutral())
         return ATT_NEUTRAL;
     else
         return ATT_HOSTILE;

@@ -204,7 +204,7 @@ int get_mons_colour(const monsters *mons)
     {
         col |= COLFLAG_FRIENDLY_MONSTER;
     }
-    else if (mons_neutral(mons))
+    else if (mons->neutral())
     {
         col |= COLFLAG_NEUTRAL_MONSTER;
     }

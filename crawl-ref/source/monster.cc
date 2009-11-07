@@ -2832,6 +2832,13 @@ bool monsters::friendly() const
     return (attitude == ATT_FRIENDLY || has_ench(ENCH_CHARM));
 }
 
+bool monsters::neutral() const
+{
+    return (attitude == ATT_NEUTRAL || has_ench(ENCH_NEUTRAL)
+            || attitude == ATT_GOOD_NEUTRAL
+            || attitude == ATT_STRICT_NEUTRAL);
+}
+
 int monsters::shield_bonus() const
 {
     const item_def *shld = const_cast<monsters*>(this)->shield();
@@ -3168,7 +3175,7 @@ int monsters::res_holy_energy(const actor *attacker) const
 
     if (is_good_god(god)
         || mons_is_holy(this)
-        || mons_neutral(this)
+        || neutral()
         || is_unchivalric_attack(attacker, this)
         || is_good_god(you.religion) && is_follower(this))
     {

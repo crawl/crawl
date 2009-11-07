@@ -147,7 +147,7 @@ void handle_monster_shouts(monsters* monster, bool force)
         return;
 
     // Friendly or neutral monsters don't shout.
-    if (!force && (monster->friendly() || mons_neutral(monster)))
+    if (!force && (monster->friendly() || monster->neutral()))
         return;
 
     // Get it once, since monster might be S_RANDOM, in which case

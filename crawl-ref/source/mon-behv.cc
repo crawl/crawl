@@ -1085,7 +1085,7 @@ void handle_behaviour(monsters *mon)
 {
     bool changed = true;
     bool isFriendly = mon->friendly();
-    bool isNeutral  = mons_neutral(mon);
+    bool isNeutral  = mon->neutral();
     bool wontAttack = mons_wont_attack(mon);
 
     // Whether the player is in LOS of the monster and can see
@@ -1229,7 +1229,7 @@ void handle_behaviour(monsters *mon)
 
     // Neutral monsters prefer not to attack players, or other neutrals.
     if (isNeutral && mon->foe != MHITNOT
-        && (mon->foe == MHITYOU || mons_neutral(&menv[mon->foe])))
+        && (mon->foe == MHITYOU || menv[mon->foe].neutral()))
     {
         mon->foe = MHITNOT;
     }
@@ -1606,7 +1606,7 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
             && mon->can_see(foe)
             && (friendly || !is_sanctuary(p))
             && (foe->friendly() != friendly
-                || (neutral && !mons_neutral(foe))))
+                || (neutral && !foe->neutral())))
         {
             return (true);
         }
@@ -1618,7 +1618,7 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
 void _set_nearest_monster_foe(monsters *mon)
 {
     const bool friendly = mon->friendly();
-    const bool neutral  = mons_neutral(mon);
+    const bool neutral  = mon->neutral();
 
     for (int k = 1; k <= LOS_RADIUS; ++k)
     {

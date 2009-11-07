@@ -334,6 +334,7 @@ public:
     bool petrified() const;
 
     bool friendly() const;
+    bool neutral() const;
 
     bool has_spells() const;
     bool has_spell(spell_type spell) const;

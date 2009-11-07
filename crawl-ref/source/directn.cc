@@ -3123,7 +3123,7 @@ static std::string _get_monster_desc(const monsters *mon)
         else if (mons_is_fleeing(mon))
             text += pronoun + " is retreating.\n";
         // hostile with target != you
-        else if (!mon->friendly() && !mons_neutral(mon)
+        else if (!mon->friendly() && !mon->neutral()
                  && mon->foe != MHITYOU && !crawl_state.arena_suspended)
         {
             // Special case: batty monsters get set to BEH_WANDER as
@@ -3135,7 +3135,7 @@ static std::string _get_monster_desc(const monsters *mon)
 
     if (mon->attitude == ATT_FRIENDLY)
         text += pronoun + " is friendly.\n";
-    else if (mons_neutral(mon)) // don't differentiate between permanent or not
+    else if (mon->neutral()) // don't differentiate between permanent or not
         text += pronoun + " is indifferent to you.\n";
 
     if (mons_is_summoned(mon) && mon->type != MONS_RAKSHASA_FAKE)
@@ -3233,7 +3233,7 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
             std::string str = "";
             if (mon->friendly())
                 str = "friendly";
-            else if (mons_neutral(mon))
+            else if (mon->neutral())
                 str = "neutral";
 
             if (mons_is_summoned(mon))

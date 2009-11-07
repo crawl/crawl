@@ -6147,7 +6147,7 @@ void player::attacking(actor *other)
     if (other && other->atype() == ACT_MONSTER)
     {
         const monsters *mon = dynamic_cast<monsters*>(other);
-        if (!mon->friendly() && !mons_neutral(mon))
+        if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }
 

@@ -1086,7 +1086,7 @@ void draw_border(void)
 
 static bool _mons_hostile(const monsters *mon)
 {
-    return (!mon->friendly() && !mons_neutral(mon));
+    return (!mon->friendly() && !mon->neutral());
 }
 
 static std::string _get_monster_name(const monster_info& m,
@@ -1101,7 +1101,7 @@ static std::string _get_monster_name(const monster_info& m,
         desc += "friendly ";
         adj = true;
     }
-    else if (mons_neutral(mon))
+    else if (mon->neutral())
     {
         desc += "neutral ";
         adj = true;
@@ -1136,7 +1136,7 @@ bool compare_monsters_attitude( const monsters *m1, const monsters *m2 )
     if (_mons_hostile(m1) && !_mons_hostile(m2))
         return (true);
 
-    if (mons_neutral(m1))
+    if (m1->neutral())
     {
         if (m2->friendly())
             return (true);

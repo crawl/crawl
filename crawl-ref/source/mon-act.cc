@@ -1799,7 +1799,7 @@ static void _handle_monster_move(monsters *monster)
         {
             // Keep neutral and charmed monsters from picking up stuff.
             // Same for friendlies if friendly_pickup is set to "none".
-            if (!mons_neutral(monster) && !monster->has_ench(ENCH_CHARM)
+            if (!monster->neutral() && !monster->has_ench(ENCH_CHARM)
                 || (you.religion == GOD_JIYVA && mons_is_slime(monster))
                 && (!monster->friendly()
                     || you.friendly_pickup != FRIENDLY_PICKUP_NONE))

@@ -1058,7 +1058,7 @@ int tileidx_monster(const monsters *mons, bool detected)
 
     if (mons->friendly())
         ch |= TILE_FLAG_PET;
-    else if (mons_neutral(mons))
+    else if (mons->neutral())
         ch |= TILE_FLAG_NEUTRAL;
     else if (mons_looks_stabbable(mons))
         ch |= TILE_FLAG_STAB;

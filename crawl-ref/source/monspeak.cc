@@ -405,7 +405,7 @@ bool mons_speaks(monsters *monster)
     }
 
     std::vector<std::string> prefixes;
-    if (mons_neutral(monster))
+    if (monster->neutral())
     {
         if (!force_speak && coinflip()) // Neutrals speak half as often.
             return (false);

@@ -3162,7 +3162,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                                 || is_sanctuary(mon->pos()));
     const bool wontAttack    = mons_wont_attack(mon);
     const bool isFriendly    = mon->friendly();
-    const bool isNeutral     = mons_neutral(mon);
+    const bool isNeutral     = mon->neutral();
     const bool isUnchivalric = is_unchivalric_attack(&you, mon);
     const bool isHoly        = mons_is_holy(mon)
                                    && (mon->attitude != ATT_HOSTILE
