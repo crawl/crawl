@@ -14,6 +14,7 @@
 #include "coord.h"
 #include "crash.h"
 #include "dbg-crsh.h"
+#include "dbg-scan.h"
 #include "dbg-util.h"
 #include "directn.h"
 #include "dlua.h"
