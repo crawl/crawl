@@ -41,6 +41,7 @@ geom2d.o \
 ghost.o \
 godabil.o \
 goditem.o \
+godwrath.o \
 hiscores.o \
 initfile.o \
 invent.o \

@@ -99,7 +99,6 @@ bool god_likes_fresh_corpses(god_type god);
 bool god_likes_butchery(god_type god);
 bool god_hates_butchery(god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
-bool divine_retribution(god_type god);
 
 bool jiyva_is_dead();
 bool remove_all_jiyva_altars();
@@ -113,6 +112,7 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon);
 void mons_make_god_gift(monsters *mon, god_type god = you.religion);
 bool mons_is_god_gift(const monsters *mon, god_type god = you.religion);
 
+int yred_random_servants(int threshold, bool force_hostile = false);
 bool is_undead_slave(const monsters* mon);
 bool is_yred_undead_slave(const monsters* mon);
 bool is_orcish_follower(const monsters* mon);

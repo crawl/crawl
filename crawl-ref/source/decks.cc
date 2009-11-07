@@ -21,6 +21,7 @@
 #include "files.h"
 #include "food.h"
 #include "ghost.h"
+#include "godwrath.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "item_use.h"
