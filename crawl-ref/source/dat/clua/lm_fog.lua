@@ -403,7 +403,7 @@ function tw_machine (warn_turns, warn_cantsee_message,
         end
         self.warning_done = true
       end
-    elseif triggerer.type == "turn" then
+    elseif triggerer.type == "turn" and triggerer.sub_type == "countdown" then
       self.warning_done = false
       channel = self.trigger_channel or ""
       if self.trigger_see_message and self.see_function(point.x, point.y) then
