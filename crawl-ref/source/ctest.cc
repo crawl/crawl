@@ -20,6 +20,7 @@
 #include "dlua.h"
 #include "files.h"
 #include "maps.h"
+#include "message.h"
 #include "state.h"
 #include "stuff.h"
 
@@ -96,6 +97,10 @@ namespace crawl_tests
             return;
 
         ++ntests;
+        mprf(MSGCH_DIAGNOSTICS, "Running test %d: %s",
+             ntests, file.c_str());
+        flush_prev_message();
+
         const std::string path(catpath(test_dir, file));
         dlua.execfile(path.c_str(), true, false);
         if (dlua.error.empty())
@@ -107,6 +112,8 @@ namespace crawl_tests
     // Assumes curses has already been initialized.
     bool run_tests(bool exit_on_complete)
     {
+        flush_prev_message();
+
         run_map_preludes();
         reset_test_data();
 
