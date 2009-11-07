@@ -119,6 +119,24 @@ static spell_type _draco_type_to_breath(int drac_type)
     return (SPELL_DRACONIAN_BREATH);
 }
 
+static bool _flavour_benefits_monster(beam_type flavour, monsters & monster)
+{
+    switch(flavour)
+    {
+    case BEAM_HASTE:
+        return (!monster.has_ench(ENCH_HASTE));
+
+    case BEAM_INVISIBILITY:
+        return (!monster.has_ench(ENCH_INVIS));
+
+    case BEAM_HEALING:
+        return (monster.hit_points != monster.max_hit_points);
+
+    default:
+        return false;
+    }
+}
+
 // Find an allied monster to cast a beneficial beam spell at.
 // Only used for haste other at the moment.
 static bool _set_allied_target(monsters * caster, bolt & pbolt)
@@ -137,7 +155,7 @@ static bool _set_allied_target(monsters * caster, bolt & pbolt)
             && mons_genus(targ->type) == caster_genus
             && mons_atts_aligned(targ->attitude, caster->attitude)
             && !targ->has_ench(ENCH_CHARM)
-            && !targ->has_ench(ENCH_HASTE))
+            && _flavour_benefits_monster(pbolt.flavour, *targ))
         {
             int targ_distance = grid_distance(targ->pos(), caster->pos());
             if (targ_distance < min_distance && targ_distance < pbolt.range)
