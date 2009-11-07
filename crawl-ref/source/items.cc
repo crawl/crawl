@@ -26,7 +26,9 @@
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "dbg-util.h"
 #include "debug.h"
+#include "decks.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "directn.h"
@@ -54,6 +56,7 @@
 #include "showsymb.h"
 #include "skills2.h"
 #include "spl-book.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "stash.h"
@@ -2687,4 +2690,542 @@ bool item_def::held_by_monster() const
 bool item_def::is_valid() const
 {
     return (base_type != OBJ_UNASSIGNED && quantity > 0);
+}
+
+static void _rune_from_specs(const char* _specs, item_def &item)
+{
+    char specs[80];
+    char obj_name[ ITEMNAME_SIZE ];
+
+    item.sub_type = MISC_RUNE_OF_ZOT;
+
+    if (strstr(_specs, "rune of zot"))
+        strncpy(specs, _specs, strlen(_specs) - strlen(" of zot"));
+    else
+        strcpy(specs, _specs);
+
+    if (strlen(specs) > 4)
+    {
+        for (int i = 0; i < NUM_RUNE_TYPES; ++i)
+        {
+            item.plus = i;
+
+            strcpy(obj_name, item.name(DESC_PLAIN).c_str());
+
+            if (strstr(strlwr(obj_name), specs))
+                return;
+        }
+    }
+
+    while (true)
+    {
+        mpr("[a] iron       [b] obsidian [c] icy      [d] bone     [e] slimy    [f] silver",
+            MSGCH_PROMPT);
+        mpr("[g] serpentine [h] elven    [i] golden   [j] decaying [k] barnacle [l] demonic",
+            MSGCH_PROMPT);
+        mpr("[m] abyssal    [n] glowing  [o] magical  [p] fiery    [q] dark     [r] buggy",
+            MSGCH_PROMPT);
+        mpr("Which rune (ESC to exit)? ", MSGCH_PROMPT);
+
+        int keyin = tolower( get_ch() );
+
+        if (keyin == ESCAPE  || keyin == ' '
+            || keyin == '\r' || keyin == '\n')
+        {
+            canned_msg( MSG_OK );
+            item.base_type = OBJ_UNASSIGNED;
+            return;
+        }
+
+        if (keyin < 'a' || keyin > 'r')
+            continue;
+
+        rune_type types[] = {
+            RUNE_DIS,
+            RUNE_GEHENNA,
+            RUNE_COCYTUS,
+            RUNE_TARTARUS,
+            RUNE_SLIME_PITS,
+            RUNE_VAULTS,
+            RUNE_SNAKE_PIT,
+            RUNE_ELVEN_HALLS,
+            RUNE_TOMB,
+            RUNE_SWAMP,
+            RUNE_SHOALS,
+
+            RUNE_DEMONIC,
+            RUNE_ABYSSAL,
+
+            RUNE_MNOLEG,
+            RUNE_LOM_LOBON,
+            RUNE_CEREBOV,
+            RUNE_GLOORX_VLOQ,
+            NUM_RUNE_TYPES
+        };
+
+        item.plus = types[keyin - 'a'];
+
+        return;
+    }
+}
+
+static void _deck_from_specs(const char* _specs, item_def &item)
+{
+    std::string specs    = _specs;
+    std::string type_str = "";
+
+    trim_string(specs);
+
+    if (specs.find(" of ") != std::string::npos)
+    {
+        type_str = specs.substr(specs.find(" of ") + 4);
+
+        if (type_str.find("card") != std::string::npos
+            || type_str.find("deck") != std::string::npos)
+        {
+            type_str = "";
+        }
+
+        trim_string(type_str);
+    }
+
+    misc_item_type types[] = {
+        MISC_DECK_OF_ESCAPE,
+        MISC_DECK_OF_DESTRUCTION,
+        MISC_DECK_OF_DUNGEONS,
+        MISC_DECK_OF_SUMMONING,
+        MISC_DECK_OF_WONDERS,
+        MISC_DECK_OF_PUNISHMENT,
+        MISC_DECK_OF_WAR,
+        MISC_DECK_OF_CHANGES,
+        MISC_DECK_OF_DEFENCE,
+        NUM_MISCELLANY
+    };
+
+    item.special  = DECK_RARITY_COMMON;
+    item.sub_type = NUM_MISCELLANY;
+
+    if (!type_str.empty())
+    {
+        for (int i = 0; types[i] != NUM_MISCELLANY; ++i)
+        {
+            item.sub_type = types[i];
+            item.plus     = 1;
+            init_deck(item);
+            // Remove "plain " from front.
+            std::string name = item.name(DESC_PLAIN).substr(6);
+            item.props.clear();
+
+            if (name.find(type_str) != std::string::npos)
+                break;
+        }
+    }
+
+    if (item.sub_type == NUM_MISCELLANY)
+    {
+        while (true)
+        {
+            mpr(
+"[a] escape     [b] destruction [c] dungeons [d] summoning [e] wonders",
+                MSGCH_PROMPT);
+            mpr(
+"[f] punishment [g] war         [h] changes  [i] defence",
+                MSGCH_PROMPT);
+            mpr("Which deck (ESC to exit)? ");
+
+            int keyin = tolower( get_ch() );
+
+            if (keyin == ESCAPE  || keyin == ' '
+                || keyin == '\r' || keyin == '\n')
+            {
+                canned_msg( MSG_OK );
+                item.base_type = OBJ_UNASSIGNED;
+                return;
+            }
+
+            if (keyin < 'a' || keyin > 'i')
+                continue;
+
+            item.sub_type = types[keyin - 'a'];
+            break;
+        }
+    }
+
+    const char* rarities[] = {
+        "plain",
+        "ornate",
+        "legendary",
+        NULL
+    };
+
+    int rarity_val = -1;
+
+    for (int i = 0; rarities[i] != NULL; ++i)
+        if (specs.find(rarities[i]) != std::string::npos)
+        {
+            rarity_val = i;
+            break;
+        }
+
+    if (rarity_val == -1)
+    {
+        while (true)
+        {
+            mpr("[a] plain [b] ornate [c] legendary? (ESC to exit)",
+                MSGCH_PROMPT);
+
+            int keyin = tolower( get_ch() );
+
+            if (keyin == ESCAPE  || keyin == ' '
+                || keyin == '\r' || keyin == '\n')
+            {
+                canned_msg( MSG_OK );
+                item.base_type = OBJ_UNASSIGNED;
+                return;
+            }
+
+            switch (keyin)
+            {
+            case 'p': keyin = 'a'; break;
+            case 'o': keyin = 'b'; break;
+            case 'l': keyin = 'c'; break;
+            }
+
+            if (keyin < 'a' || keyin > 'c')
+                continue;
+
+            rarity_val = keyin - 'a';
+            break;
+        }
+    }
+
+    const deck_rarity_type rarity =
+        static_cast<deck_rarity_type>(DECK_RARITY_COMMON + rarity_val);
+    item.special = rarity;
+
+    int num = debug_prompt_for_int("How many cards? ", false);
+
+    if (num <= 0)
+    {
+        canned_msg( MSG_OK );
+        item.base_type = OBJ_UNASSIGNED;
+        return;
+    }
+
+    item.plus = num;
+
+    init_deck(item);
+}
+
+static void _rune_or_deck_from_specs(const char* specs, item_def &item)
+{
+    if (strstr(specs, "rune"))
+        _rune_from_specs(specs, item);
+    else if (strstr(specs, "deck"))
+        _deck_from_specs(specs, item);
+}
+
+static bool _book_from_spell(const char* specs, item_def &item)
+{
+    spell_type type = spell_by_name(specs, true);
+
+    if (type == SPELL_NO_SPELL)
+        return (false);
+
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+        for (int j = 0; j < 8; ++j)
+            if (which_spell_in_book(i, j) == type)
+            {
+                item.sub_type = i;
+                return (true);
+            }
+
+    return (false);
+}
+
+bool get_item_by_name(item_def *item, char* specs,
+                      object_class_type class_wanted, bool create_for_real)
+{
+    static int max_subtype[] =
+    {
+        NUM_WEAPONS,
+        NUM_MISSILES,
+        NUM_ARMOURS,
+        NUM_WANDS,
+        NUM_FOODS,
+        0,              // unknown I
+        NUM_SCROLLS,
+        NUM_JEWELLERY,
+        NUM_POTIONS,
+        0,              // unknown II
+        NUM_BOOKS,
+        NUM_STAVES,
+        0,              // Orbs         -- only one, handled specially
+        NUM_MISCELLANY,
+        0,              // corpses      -- handled specially
+        0,              // gold         -- handled specially
+        0,              // "gemstones"  -- no items of type
+    };
+
+    char           obj_name[ ITEMNAME_SIZE ];
+    char*          ptr;
+    int            best_index;
+    int            type_wanted    = -1;
+    int            special_wanted = 0;
+
+    // In order to get the sub-type, we'll fill out the base type...
+    // then we're going to iterate over all possible subtype values
+    // and see if we get a winner. -- bwr
+    item->base_type = class_wanted;
+    item->sub_type  = 0;
+    item->plus      = 0;
+    item->plus2     = 0;
+    item->special   = 0;
+    item->flags     = 0;
+    item->quantity  = 1;
+    // Don't use set_ident_flags(), to avoid getting a spurious ID note.
+    item->flags    |= ISFLAG_IDENT_MASK;
+
+    if (class_wanted == OBJ_MISCELLANY)
+    {
+        // Leaves object unmodified if it wasn't a rune or deck.
+        _rune_or_deck_from_specs(specs, *item);
+
+        if (item->base_type == OBJ_UNASSIGNED)
+        {
+            // Rune or deck creation canceled, clean up item->
+            return (false);
+        }
+    }
+
+    if (!item->sub_type)
+    {
+        type_wanted = -1;
+        best_index  = 10000;
+
+        for (int i = 0; i < max_subtype[ item->base_type ]; ++i)
+        {
+            item->sub_type = i;
+            strcpy(obj_name, item->name(DESC_PLAIN).c_str());
+
+            ptr = strstr( strlwr(obj_name), specs );
+            if (ptr != NULL)
+            {
+                // Earliest match is the winner.
+                if (ptr - obj_name < best_index)
+                {
+                    if (create_for_real)
+                        mpr(obj_name);
+                    type_wanted = i;
+                    best_index = ptr - obj_name;
+                }
+            }
+        }
+
+        if (type_wanted != -1)
+        {
+            item->sub_type = type_wanted;
+            if (!create_for_real)
+                return (true);
+        }
+        else
+        {
+            switch (class_wanted)
+            {
+            case OBJ_BOOKS:
+                // Try if we get a match against a spell.
+                if (_book_from_spell(specs, *item))
+                    type_wanted = item->sub_type;
+                break;
+
+            // Search for a matching unrandart.
+            case OBJ_WEAPONS:
+            case OBJ_ARMOUR:
+            case OBJ_JEWELLERY:
+            {
+                for (int unrand = 0; unrand < NO_UNRANDARTS; ++unrand)
+                {
+                    int index = unrand + UNRAND_START;
+                    unrandart_entry* entry = get_unrand_entry(index);
+
+                    strcpy(obj_name, entry->name);
+
+                    ptr = strstr( strlwr(obj_name), specs );
+                    if (ptr != NULL && entry->base_type == class_wanted)
+                    {
+                        make_item_unrandart(*item, index);
+                        if (create_for_real)
+                        {
+                            mprf("%s (%s)", entry->name,
+                                 debug_art_val_str(*item).c_str());
+                        }
+                        return(true);
+                    }
+                }
+
+                // Reset base type to class_wanted, if nothing found.
+                item->base_type = class_wanted;
+                item->sub_type  = 0;
+                break;
+            }
+
+            default:
+                break;
+            }
+        }
+
+        if (type_wanted == -1)
+        {
+            // ds -- If specs is a valid int, try using that.
+            //       Since zero is atoi's copout, the wizard
+            //       must enter (subtype + 1).
+            if (!(type_wanted = atoi(specs)))
+                return (false);
+
+            type_wanted--;
+
+            item->sub_type = type_wanted;
+        }
+    }
+
+    if (!create_for_real)
+        return (true);
+
+    switch (item->base_type)
+    {
+    case OBJ_MISSILES:
+        item->quantity = 30;
+        // intentional fall-through
+    case OBJ_WEAPONS:
+    case OBJ_ARMOUR:
+    {
+        char buf[80];
+        mpr("What ego type? ", MSGCH_PROMPT);
+        get_input_line( buf, sizeof( buf ) );
+
+        if (buf[0] != '\0')
+        {
+            special_wanted = 0;
+            best_index = 10000;
+
+            for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
+            {
+                item->special = i;
+                strcpy(obj_name, item->name(DESC_PLAIN).c_str());
+
+                ptr = strstr( strlwr(obj_name), strlwr(buf) );
+                if (ptr != NULL)
+                {
+                    // earliest match is the winner
+                    if (ptr - obj_name < best_index)
+                    {
+                        if (create_for_real)
+                            mpr(obj_name);
+                        special_wanted = i;
+                        best_index = ptr - obj_name;
+                    }
+                }
+            }
+
+            item->special = special_wanted;
+        }
+        break;
+    }
+
+    case OBJ_BOOKS:
+        if (item->sub_type == BOOK_MANUAL)
+        {
+            special_wanted =
+                    debug_prompt_for_skill( "A manual for which skill? " );
+
+            if (special_wanted != -1)
+            {
+                item->plus  = special_wanted;
+                item->plus2 = 3 + random2(15);
+            }
+            else
+                mpr("Sorry, no books on that skill today.");
+        }
+        else if (type_wanted == BOOK_RANDART_THEME)
+            make_book_theme_randart(*item, 0, 0, 5 + coinflip(), 20);
+        else if (type_wanted == BOOK_RANDART_LEVEL)
+        {
+            int level = random_range(1, 9);
+            int max_spells = 5 + level/3;
+            make_book_level_randart(*item, level, max_spells);
+        }
+        break;
+
+    case OBJ_WANDS:
+        item->plus = 24;
+        break;
+
+    case OBJ_STAVES:
+        if (item_is_rod(*item))
+        {
+            item->plus  = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+            item->plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+        }
+        break;
+
+    case OBJ_MISCELLANY:
+        if (!is_rune(*item) && !is_deck(*item))
+            item->plus = 50;
+        break;
+
+    case OBJ_POTIONS:
+        item->quantity = 12;
+        if (is_blood_potion(*item))
+        {
+            const char* prompt;
+            if (item->sub_type == POT_BLOOD)
+            {
+                prompt = "# turns away from coagulation? "
+                         "[ENTER for fully fresh] ";
+            }
+            else
+            {
+                prompt = "# turns away from rotting? "
+                         "[ENTER for fully fresh] ";
+            }
+            int age = debug_prompt_for_int(prompt, false);
+
+            if (age <= 0)
+                age = -1;
+            else if (item->sub_type == POT_BLOOD)
+                age += 500;
+
+            init_stack_blood_potions(*item, age);
+        }
+        break;
+
+    case OBJ_FOOD:
+    case OBJ_SCROLLS:
+        item->quantity = 12;
+        break;
+
+    case OBJ_JEWELLERY:
+        if (jewellery_is_amulet(*item))
+            break;
+
+        switch (item->sub_type)
+        {
+        case RING_SLAYING:
+            item->plus2 = 5;
+            // intentional fall-through
+        case RING_PROTECTION:
+        case RING_EVASION:
+        case RING_STRENGTH:
+        case RING_DEXTERITY:
+        case RING_INTELLIGENCE:
+            item->plus = 5;
+        default:
+            break;
+        }
+
+    default:
+        break;
+    }
+
+    return (true);
 }

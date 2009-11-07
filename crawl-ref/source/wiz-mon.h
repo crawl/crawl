@@ -1,0 +1,31 @@
+/*
+ *  File:       wiz-mon.h
+ *  Summary:    Monster related wizard functions.
+ *  Written by: Linley Henzell and Jesse Jones
+ */
+
+#ifndef WIZMON_H
+#define WIZMON_H
+
+void wizard_create_spec_monster(void);
+void wizard_create_spec_monster_name(void);
+void wizard_spawn_control();
+void wizard_detect_creatures();
+void wizard_dismiss_all_monsters(bool force_all = false);
+void debug_list_monsters();
+void debug_stethoscope(int mon);
+void debug_miscast(int target);
+
+class monsters;
+struct coord_def;
+
+void wizard_apply_monster_blessing(monsters* mon);
+void wizard_give_monster_item(monsters* mon);
+void wizard_move_player_or_monster(const coord_def& where);
+void wizard_make_monster_summoned(monsters* mon);
+void wizard_polymorph_monster(monsters* mon);
+void debug_make_monster_shout(monsters* mon);
+
+void debug_pathfind(int mid);
+
+#endif

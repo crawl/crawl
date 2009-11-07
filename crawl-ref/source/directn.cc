@@ -28,6 +28,7 @@
 #include "colour.h"
 #include "command.h"
 #include "coord.h"
+#include "dbg-util.h"
 #include "debug.h"
 #include "describe.h"
 #include "dungeon.h"
@@ -38,6 +39,7 @@
 #include "items.h"
 #include "l_defs.h"
 #include "los.h"
+#include "macro.h"
 #include "mapmark.h"
 #include "message.h"
 #include "menu.h"
@@ -45,6 +47,7 @@
 #include "monstuff.h"
 #include "mon-info.h"
 #include "mon-util.h"
+#include "output.h"
 #include "player.h"
 #include "shopping.h"
 #include "show.h"
@@ -63,9 +66,8 @@
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
-#include "output.h"
+#include "wiz-mon.h"
 
-#include "macro.h"
 
 #define SHORT_DESC_KEY "short_desc_key"
 

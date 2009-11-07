@@ -25,6 +25,7 @@
 #include "envmap.h"
 #include "externs.h"
 #include "options.h"
+#include "dbg-scan.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "files.h"

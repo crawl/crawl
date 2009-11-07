@@ -49,6 +49,7 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f) {
 #endif // defined(UNIX) || defined(TARGET_OS_MACOSX)
 
 #include "crash.h"
+#include "dbg-crsh.h"
 
 #include "externs.h"
 #include "options.h"

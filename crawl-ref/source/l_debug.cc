@@ -13,6 +13,7 @@
 #include "dungeon.h"
 #include "message.h"
 #include "place.h"
+#include "wiz-dgn.h"
 
 // WARNING: This is a very low-level call.
 LUAFN(debug_goto_place)

@@ -55,6 +55,7 @@
 #include "ctest.h"
 #include "crash.h"
 #include "database.h"
+#include "dbg-scan.h"
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
@@ -123,6 +124,11 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "stash.h"
+#include "wiz-dgn.h"
+#include "wiz-fsim.h"
+#include "wiz-item.h"
+#include "wiz-mon.h"
+#include "wiz-you.h"
 #include "xom.h"
 
 #ifdef USE_TILE

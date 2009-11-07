@@ -9,6 +9,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "dbg-util.h"
 #include "delay.h"
 #include "directn.h"
 #include "exclude.h"
