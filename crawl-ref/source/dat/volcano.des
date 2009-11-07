@@ -1047,11 +1047,13 @@ TAGS:       volcano no_item_gen no_monster_gen no_rotate
 MONS:       nothing, nothing, nothing
 {{
 
-local mtable = {lava_phase=0}
+function convert_lava (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
 
-function convert_lava (position, mytable)
-  mytable.lava_phase = mytable.lava_phase + 1
-  local lp = mytable.lava_phase
+  data.lava_phase = data.lava_phase + 1
+  local lp = data.lava_phase
   local my_slaves = {}
 
   -- So we don't have to duplicate code too much.
@@ -1101,13 +1103,19 @@ lua_marker("1", portal_desc { lava_phase=2 })
 lua_marker("2", portal_desc { lava_phase=4 })
 lua_marker("3", portal_desc { lava_phase=6 })
 
--- And finially, let's convert it
-lua_marker("M", function_machine ( {
-  marker_type="random",
-  turns_min=5,
-  turns_max=20,
+-- And finally, let's convert it
+local sink_marker = TriggerableFunction:new {
   func = convert_lava,
-  marker_params = mtable } ) )
+  repeated = true,
+  data = {lava_phase=0}
+}
+
+sink_marker:add_triggerer(DgnTriggerer:new {
+  type="turn",
+  delay_min=50,
+  delay_max=200, })
+
+lua_marker("M", sink_marker)
 }}
 SUBST:      M = c
 NSUBST:     123 = 8:d / 8:e / 8:f / 8:g / 8:h / *:.
