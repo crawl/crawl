@@ -336,6 +336,7 @@ public:
     bool friendly() const;
     bool neutral() const;
     bool good_neutral() const;
+    bool strict_neutral() const;
 
     bool has_spells() const;
     bool has_spell(spell_type spell) const;

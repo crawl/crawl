@@ -50,9 +50,9 @@ public:
 
 #define SAME_ATTITUDE(x) (x->friendly()       ? BEH_FRIENDLY : \
                           x->good_neutral()   ? BEH_GOOD_NEUTRAL : \
-                          mons_strict_neutral(x) ? BEH_STRICT_NEUTRAL : \
+                          x->strict_neutral() ? BEH_STRICT_NEUTRAL : \
                           x->neutral()        ? BEH_NEUTRAL \
-                                                 : BEH_HOSTILE)
+                                              : BEH_HOSTILE)
 
 #define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
 

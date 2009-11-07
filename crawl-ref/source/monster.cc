@@ -2844,6 +2844,11 @@ bool monsters::good_neutral() const
     return (attitude == ATT_GOOD_NEUTRAL);
 }
 
+bool monsters::strict_neutral() const
+{
+    return (attitude == ATT_STRICT_NEUTRAL);
+}
+
 int monsters::shield_bonus() const
 {
     const item_def *shld = const_cast<monsters*>(this)->shield();

@@ -1471,7 +1471,7 @@ void handle_behaviour(monsters *mon)
                     return;
             }
 
-            if (mons_strict_neutral(mon) && mons_is_slime(mon)
+            if (mon->strict_neutral() && mons_is_slime(mon)
                 && you.religion == GOD_JIYVA)
             {
                 _set_random_slime_target(mon);
