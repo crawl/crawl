@@ -25,7 +25,7 @@
 --
 -- cloud_type: The name of the cloud type to use.  Possible cloud types are:
 --     flame, noxious fumes, freezing vapour, poison gases,
---     grey smoke, blue smoke, tloc energy, steam, rain,
+--     grey smoke, blue smoke, translocational energy, steam, rain,
 --     foul pestilence, black smoke, mutagenic fog, thin mist (the default).
 -- walk_dist: The distance to move over the course of one random walk.
 --     defaults to 0.
