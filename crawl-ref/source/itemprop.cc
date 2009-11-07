@@ -2053,20 +2053,6 @@ bool check_weapon_wieldable_size( const item_def &item, size_type size )
     return (fit == 0);
 }
 
-// Returns the you.inv[] index of our wielded weapon or -1 (no item, not wield).
-int get_inv_wielded( void )
-{
-    return (player_weapon_wielded() ? you.equip[EQ_WEAPON] : -1);
-}
-
-// Returns the you.inv[] index of the thing in our hand... this is provided
-// as a service to specify that both of the above are irrelevant.
-// Do not use this for low level functions dealing with wielding directly.
-int get_inv_in_hand( void )
-{
-    return (you.equip[EQ_WEAPON]);
-}
-
 //
 // Launcher and ammo functions:
 //
