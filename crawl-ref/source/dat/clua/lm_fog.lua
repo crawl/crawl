@@ -52,21 +52,21 @@
 -- start_clouds: The number of clouds to lay when the level containing
 --     the cloud machine is entered.  This is necessary since clouds
 --     are cleared when the player leaves a level.
--- listener: A FunctionMachine listener marker. Will be called
+-- listener: A table with a function field called 'func'.  Will be called
 --     whenever the countdown is activated, and whenever the fog
---     machine is reset. It will be called with the FogMachine's
---     marker, a string containing the event ("decrement", "trigger"),
---     the actual event object, and a copy of the FogMachine itself.
---     See the section "Messages for fog machines" at the end of the
---     file.
+--     machine is reset. It will be called with a reference to the table,
+--     the fog machine, the Triggerer which was the cause, the marker,
+--     and the vevent which was the cause.
 --
 ------------------------------------------------------------------------------
 
-FogMachine = { CLASS = "FogMachine" }
-FogMachine.__index = FogMachine
+require('clua/lm_trig.lua')
+
+FogMachine       = util.subclass(Triggerable)
+FogMachine.CLASS = "FogMachine"
 
 function FogMachine:_new()
-  local m = { }
+  local m = self.super.new(self)
   setmetatable(m, self)
   self.__index = self
   return m
@@ -95,14 +95,11 @@ function FogMachine:new(pars)
   m.pow_min      = pars.pow_min      or 1
   m.pow_max      = pars.pow_max
   m.pow_rolls    = pars.pow_rolls    or 3
-  m.delay_min    = pars.delay_min    or pars.delay or 1
-  m.delay_max    = pars.delay_max    or pars.delay
   m.kill_cat     = pars.kill_cat     or "other"
   m.size_min     = pars.size_min     or pars.size or 1
   m.size_max     = pars.size_max     or pars.size
   m.spread_rate  = pars.spread_rate  or -1
   m.start_clouds = pars.start_clouds or 1
-  m.listener     = pars.listener     or nil
 
   m.size_buildup_amnt   = pars.size_buildup_amnt   or 0
   m.size_buildup_time   = pars.size_buildup_time   or 1
@@ -110,7 +107,19 @@ function FogMachine:new(pars)
   m.spread_buildup_time = pars.spread_buildup_time or 1
 
   m.buildup_turns      = 0
-  m.countdown          = 0
+
+  local tick_pars = {}
+  tick_pars.delay_min = pars.delay_min or pars.delay or 1
+  tick_pars.delay_max = pars.delay_max or pars.delay
+  tick_pars.type      = "turn"
+
+  m:add_triggerer( DgnTriggerer:new (tick_pars) )
+
+  m:add_triggerer( DgnTriggerer:new { type = "entered_level" } )
+
+  if pars.listener then
+    m:add_listener(pars.listener)
+  end
 
   return m
 end
@@ -159,58 +168,53 @@ function FogMachine:do_fog(point)
                    self.cloud_type, self.kill_cat, spread)
 end
 
-function FogMachine:activate(marker, verbose)
-  local _x, _y = marker:pos()
-  dgn.register_listener(dgn.dgn_event_type('turn'), marker)
-  dgn.register_listener(dgn.dgn_event_type('entered_level'), marker)
-end
-
-function FogMachine:notify_listener(point, event, evobj)
-  if self.listener then
-    return self.listener:do_function(point, event, ev, self)
-  end
-end
-
-function FogMachine:event(marker, ev)
-  local _x, _y = marker:pos()
-  if ev:type() == dgn.dgn_event_type('turn') then
-    self.countdown = self.countdown - ev:ticks()
-
+function FogMachine:do_trigger(triggerer, marker, ev)
+  -- Override do_trigger for things that we want to do only once if
+  -- there's multiple markers slaved to this one.
+  if triggerer.type == "turn" then
     self.buildup_turns = self.buildup_turns + ev:ticks()
 
     if (self.buildup_turns > self.size_buildup_time) then
       self.buildup_turns = self.size_buildup_time
     end
-
-    if self.countdown > 0 then
-      self:notify_listener(dgn.point(marker:pos()), "decrement", ev)
-    elseif self.countdown <= 0 then
-      self:notify_listener(dgn.point(marker:pos()), "trigger", ev)
+  elseif triggerer.type == "entered_level" then
+    local et = dgn.dgn_event_type("turn")
+    for _, trig_idx in ipairs(self.dgn_trigs_by_type[et]) do
+      local trig = self.triggerers[trig_idx]
+      trig:reset_countdown()
     end
+  end
 
-    while self.countdown <= 0 do
-      self:do_fog(dgn.point(marker:pos()))
-      self.countdown = self.countdown +
-        crawl.random_range(self.delay_min, self.delay_max, 1)
-    end
-  elseif ev:type() == dgn.dgn_event_type('entered_level') then
+  -- Turns passing without reaching the countdown shouldn't generate
+  -- fog.
+  if triggerer.type == "turn" and triggerer.sub_type ~= "countdown" then
+    triggerer.listener_only = true
+  else
+    triggerer.listener_only = false
+  end
+
+  -- This will call on_trigger() for all the slaves.
+  FogMachine.super.do_trigger(self, triggerer, marker, ev)
+end
+
+function FogMachine:on_trigger(triggerer, marker, ev)
+  if triggerer.type == 'turn' then
+    self:do_fog(dgn.point(marker:pos()))
+  elseif triggerer.type == 'entered_level' then
     for i = 1, self.start_clouds do
       self:do_fog(dgn.point(marker:pos()))
-      self:notify_listener(dgn.point(marker:pos()), "trigger", ev)
-      self.countdown = crawl.random_range(self.delay_min, self.delay_max, 1)
-      self.buildup_turns = 0
     end
   end
 end
 
 function FogMachine:write(marker, th)
+  FogMachine.super.write(self, marker, th)
+
   file.marshall(th, self.cloud_type)
   file.marshall(th, self.walk_dist)
   file.marshall(th, self.pow_min)
   file.marshall(th, self.pow_max)
   file.marshall(th, self.pow_rolls)
-  file.marshall(th, self.delay_min)
-  file.marshall(th, self.delay_max)
   file.marshall(th, self.kill_cat)
   file.marshall(th, self.size_min)
   file.marshall(th, self.size_max)
@@ -221,23 +225,16 @@ function FogMachine:write(marker, th)
   file.marshall(th, self.spread_buildup_amnt)
   file.marshall(th, self.spread_buildup_time)
   file.marshall(th, self.buildup_turns)
-  file.marshall(th, self.countdown)
-  if self.listener then
-    file.marshall_meta(th, true)
-    self.listener:write(marker, th)
-  else
-    file.marshall_meta(th, false)
-  end
 end
 
 function FogMachine:read(marker, th)
+  FogMachine.super.read(self, marker, th)
+
   self.cloud_type          = file.unmarshall_string(th)
   self.walk_dist           = file.unmarshall_number(th)
   self.pow_min             = file.unmarshall_number(th)
   self.pow_max             = file.unmarshall_number(th)
   self.pow_rolls           = file.unmarshall_number(th)
-  self.delay_min           = file.unmarshall_number(th)
-  self.delay_max           = file.unmarshall_number(th)
   self.kill_cat            = file.unmarshall_string(th)
   self.size_min            = file.unmarshall_number(th)
   self.size_max            = file.unmarshall_number(th)
@@ -248,17 +245,6 @@ function FogMachine:read(marker, th)
   self.spread_buildup_amnt = file.unmarshall_number(th)
   self.spread_buildup_time = file.unmarshall_number(th)
   self.buildup_turns       = file.unmarshall_number(th)
-  self.countdown           = file.unmarshall_number(th)
-  got_listener               = file.unmarshall_meta(th)
-  if got_listener == true then
-    self.listener = function_machine {
-      marker_type = "listener",
-      func = (function() end)
-    }
-    self.listener:read(marker, th)
-  else
-    self.listener = nil
-  end
 
   setmetatable(self, FogMachine)
 
@@ -270,7 +256,7 @@ function fog_machine(pars)
 end
 
 function chained_fog_machine(pars)
-  return lmark.synchronized_markers(FogMachine:new(pars), "do_fog")
+  return Triggerable.synchronized_markers(FogMachine:new(pars))
 end
 
 function fog_machine_geyser(cloud_type, size, power, buildup_amnt,
@@ -335,26 +321,28 @@ function warning_machine (trns, cantsee_mesg, see_mesg, see_func)
   if trns == nil or (see_mesg == nil and cantsee_mesg == nil) then
     error("WarningMachine requires turns and message!")
   end
-  local function warning_func (point, mtable, event_name, event, fm)
-    local countdown = fm.countdown
-    if event_name == "decrement" and countdown <= mtable.turns then
-      if not mtable.warning_done then
-        if mtable.see_message and mtable.see_function(point.x, point.y) then
-          crawl.mpr(mtable.see_message, "warning")
-        elseif mtable.cantsee_message then
-          crawl.mpr(mtable.cantsee_message, "warning")
+  local function warning_func (self, fog_machine, triggerer, marker, ev)
+    local countdown = triggerer.countdown
+    local point     = dgn.point(marker:pos())
+    if triggerer.type == "turn" and triggerer.sub_type == "tick"
+       and countdown <= self.turns
+    then
+      if not self.warning_done then
+        if self.see_message and self.see_function(point.x, point.y) then
+          crawl.mpr(self.see_message, "warning")
+        elseif self.cantsee_message then
+          crawl.mpr(self.cantsee_message, "warning")
         end
-        mtable.warning_done = true
+        self.warning_done = true
       end
     elseif event_name == "trigger" then
-      mtable.warning_done = false
+      self.warning_done = false
     end
   end
-  pars = {marker_type = "listener"}
   if not see_func then
     see_func = you.see_cell
   end
-  pars.marker_params = {
+  pars = {
     see_message = see_mesg,
     cantsee_message = cantsee_mesg,
     turns = trns * 10,
@@ -362,36 +350,35 @@ function warning_machine (trns, cantsee_mesg, see_mesg, see_func)
     see_function = see_func
   }
   pars.func = warning_func
-  return FunctionMachine:new(pars)
+  return pars
 end
 
 function trigger_machine (cantsee_mesg, see_mesg, chan, see_func)
   if see_mesg == nil and cantsee_mesg == nil then
     error("Triggermachine requires a message!")
   end
-  local function trigger_func (point, mtable, event_name, event, fm)
-    local countdown = fm.countdown
-    if event_name == "trigger" then
-      channel = mtable.channel or ""
-      if mtable.see_message ~= nil and mtable.see_function(point.x, point.y) then
-        crawl.mpr(mtable.see_message, channel)
-      elseif mtable.cantsee_message ~= nil then
-        crawl.mpr(mtable.cantsee_message, channel)
+  local function trigger_func (self, fog_machine, triggerer, marker, ev)
+    local point     = dgn.point(marker:pos())
+    if triggerer.type == "turn" and triggerer.sub_type == "countdown" then
+      channel = self.channel or ""
+      if self.see_message ~= nil and self.see_function(point.x, point.y) then
+        crawl.mpr(self.see_message, channel)
+      elseif self.cantsee_message ~= nil then
+        crawl.mpr(self.cantsee_message, channel)
       end
     end
   end
-  pars = {marker_type = "listener"}
   if not see_func then
     see_func = you.see_cell
   end
-  pars.marker_params = {
+  pars = {
     channel = chan or nil,
     see_message = see_mesg,
     cantsee_message = cantsee_mesg,
     see_function = see_func
   }
   pars.func = trigger_func
-  return FunctionMachine:new(pars)
+  return pars
 end
 
 function tw_machine (warn_turns, warn_cantsee_message,
@@ -402,32 +389,35 @@ function tw_machine (warn_turns, warn_cantsee_message,
     error("TWMachine needs warning turns, warning message and "
           .. "triggering message.")
   end
-  local function tw_func (point, mtable, event_name, event, fm)
-    local countdown = fm.countdown
-    if event_name == "decrement" and countdown <= mtable.warning_turns then
-      if mtable.warning_done ~= true then
-        if mtable.warning_see_message and mtable.see_function(point.x, point.y) then
-          crawl.mpr(mtable.warning_see_message, "warning")
-        elseif mtable.warning_cantsee_message ~= nil then
-          crawl.mpr(mtable.warning_cantsee_message, "warning")
+  local function tw_func (self, fog_machine, triggerer, marker, ev)
+    local point     = dgn.point(marker:pos())
+    local countdown = triggerer.countdown
+    if triggerer.type == "turn" and triggerer.sub_type == "tick"
+        and countdown <= self.warning_turns
+    then
+      if self.warning_done ~= true then
+        if self.warning_see_message and self.see_function(point.x, point.y) then
+          crawl.mpr(self.warning_see_message, "warning")
+        elseif self.warning_cantsee_message ~= nil then
+          crawl.mpr(self.warning_cantsee_message, "warning")
         end
-        mtable.warning_done = true
+        self.warning_done = true
       end
-    elseif event_name == "trigger" then
-      mtable.warning_done = false
-      channel = mtable.trigger_channel or ""
-      if mtable.trigger_see_message and mtable.see_function(point.x, point.y) then
-        crawl.mpr(mtable.trigger_see_message, channel)
-      elseif mtable.trigger_cantsee_message ~= nil then
-        crawl.mpr(mtable.trigger_cantsee_message, channel)
+    elseif triggerer.type == "turn" then
+      self.warning_done = false
+      channel = self.trigger_channel or ""
+      if self.trigger_see_message and self.see_function(point.x, point.y) then
+        crawl.mpr(self.trigger_see_message, channel)
+      elseif self.trigger_cantsee_message ~= nil then
+        crawl.mpr(self.trigger_cantsee_message, channel)
       end
     end
   end
   if not see_func then
     see_func = you.see_cell
   end
-  pars = {marker_type = "listener"}
-  pars.marker_params = {
+
+  pars = {
     warning_see_message = warn_see_message,
     warning_cantsee_message = warn_cantsee_message,
     warning_turns = warn_turns * 10,
@@ -438,5 +428,6 @@ function tw_machine (warn_turns, warn_cantsee_message,
     see_function = see_func
   }
   pars.func = tw_func
-  return FunctionMachine:new(pars)
+
+  return pars
 end
