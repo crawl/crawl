@@ -209,8 +209,10 @@ GCC_VER := 4.0
 # FIXME: The '-arch i386' is only here until
 #   SDL 1.2.14 is available
 #
-ARCHS := -arch i386
+ARCHS := i386
 export ARCHS
+
+CF_ARCHS := $(patsubst %,-arch %,$(ARCHS))
 
 # Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
 # else is much easier to predict the name of.
@@ -220,8 +222,8 @@ else
 SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER).sdk
 endif
 
-CC = $(GCC) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-CXX = $(GXX) $(ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+CC = $(GCC) $(CF_ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+CXX = $(GXX) $(CF_ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 
 endif # MacOS
 
