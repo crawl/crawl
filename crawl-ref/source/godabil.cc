@@ -538,27 +538,22 @@ bool sunlight()
 
         if (grd(target) != ftype)
         {
-            grd(target) = ftype;
+            dungeon_terrain_changed(target, ftype);
             if (observe_cell(target))
                 evap_count++;
         }
 
         monsters *mons = monster_at(target);
 
-        // Pop submerged status.
-        if (mons && mons_habitat(mons) == HT_WATER)
-        {
-            mons->del_ench(ENCH_SUBMERGED);
-            if (ftype == DNGN_FLOOR)
-                mons->add_ench(mon_enchant(ENCH_AQUATIC_LAND, 0, KC_YOU));
-        }
-
         if (victim)
         {
             if (!mons)
                 you.backlight();
             else
+            {
                 backlight_monsters(target, 1, 0);
+                behaviour_event(mons, ME_ALERT, MHITYOU);
+            }
         }
         else if (one_chance_in(100)
                  && ftype >= DNGN_FLOOR_MIN
@@ -899,13 +894,7 @@ int rain(const coord_def &target)
         // Turn regular floor squares only into shallow water.
         if (ftype >= DNGN_FLOOR_MIN && ftype <= DNGN_FLOOR_MAX)
         {
-            grd(*rad) = DNGN_SHALLOW_WATER;
-            // Remove blood stains as well.
-            env.map(*rad).property &= ~(FPROP_BLOODY);
-
-            monsters *mon = monster_at(*rad);
-            if (mon && mon->has_ench(ENCH_AQUATIC_LAND))
-                mon->del_ench(ENCH_AQUATIC_LAND);
+            dungeon_terrain_changed(*rad, DNGN_SHALLOW_WATER);
         }
         // We can also turn shallow water into deep water, but we're
         // just going to skip cases where there is something on the
@@ -915,7 +904,7 @@ int rain(const coord_def &target)
                  && igrd(*rad) == NON_ITEM
                  && ftype == DNGN_SHALLOW_WATER)
         {
-            grd(*rad) = DNGN_DEEP_WATER;
+            dungeon_terrain_changed(*rad, DNGN_DEEP_WATER);
         }
 
         if (ftype >= DNGN_MINMOVE)

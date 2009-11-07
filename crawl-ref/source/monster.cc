@@ -5262,6 +5262,12 @@ void monsters::apply_location_effects(const coord_def &oldpos)
     if (oldpos != pos())
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
+    if (alive() && mons_habitat(this) == HT_WATER
+        && !feat_is_watery( grd(pos()) ) && !has_ench(ENCH_AQUATIC_LAND))
+    {
+        add_ench(ENCH_AQUATIC_LAND);
+    }
+
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
     {
         if (!feat_is_watery( grd(pos()) ))
@@ -5271,6 +5277,11 @@ void monsters::apply_location_effects(const coord_def &oldpos)
             simple_monster_message(this, " dives back into the water!");
             del_ench(ENCH_AQUATIC_LAND);
         }
+        // This may have been called via dungeon_terrain_changed instead
+        // of by the monster moving move, in that case grd(oldpos) will
+        // be the current position that became watery.
+        else
+            del_ench(ENCH_AQUATIC_LAND);
     }
 
     // Monsters stepping on traps:
