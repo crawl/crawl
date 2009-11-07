@@ -1274,7 +1274,7 @@
        SPELL_MINOR_HEALING
       }
     },
-       
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

@@ -21,7 +21,7 @@ bool actor::can_see(const actor *target) const
 {
     return (target->visible_to(this) && see_cell(target->pos()));
 }
-     
+
 bool actor::has_equipped(equipment_type eq, int sub_type) const
 {
     const item_def *item = slot_item(eq);

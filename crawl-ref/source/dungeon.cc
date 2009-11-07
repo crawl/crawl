@@ -3375,7 +3375,7 @@ static monster_type _choose_unique_by_depth(int step)
     default:
         ret = random_choose(MONS_FRANCIS, MONS_FRANCES, MONS_WAYNE, MONS_DUANE,
                             MONS_XTAHUA, MONS_NORRIS, MONS_FREDERICK, MONS_NIKOLA,
-                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, MONS_AIZUL, 
+                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, MONS_AIZUL,
                             -1);
     }
 

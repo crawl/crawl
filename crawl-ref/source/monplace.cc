@@ -1944,7 +1944,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
     case MONS_GOLDEN_EYE:
         band = BAND_GOLDEN_EYE;
         band_size = 1 + random2(5);
-        break; 
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)

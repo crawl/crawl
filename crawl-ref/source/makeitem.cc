@@ -3502,7 +3502,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             do_curse_item(item);
         break;
 
-    case MONS_AIZUL:   
+    case MONS_AIZUL:
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
 

@@ -16,7 +16,7 @@ unsigned grid_character_at(const coord_def &c);
 unsigned get_symbol(show_type object, unsigned short *colour = NULL,
                      bool magic_mapped = false);
 void get_symbol(const coord_def& where,
-                show_type object, unsigned *ch,  
+                show_type object, unsigned *ch,
                 unsigned short *colour,
                 bool magic_mapped = false);
 void get_show_symbol(show_type object, unsigned *ch, unsigned short *colour);

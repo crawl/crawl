@@ -1563,7 +1563,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     god_type god = (priest || !(priest || wizard)) ? monster->god : GOD_NO_GOD;
 
     // Used for summon X elemental, and nothing else. {bookofjude}
-    monster_type el_summon_type = MONS_NO_MONSTER; 
+    monster_type el_summon_type = MONS_NO_MONSTER;
 
     switch (spell_cast)
     {
@@ -2071,7 +2071,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                                         20, MONS_GREAT_ORB_OF_EYES,
                                         10, MONS_EYE_OF_DEVASTATION,
                                         0));
-            
+
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(monster), duration,
                           spell_cast, monster->pos(), monster->foe, 0, god));

@@ -220,9 +220,9 @@ static int dgn_in_bounds(lua_State *ls)
     int y = luaL_checkint(ls, 2);
 
     lua_pushboolean(ls, in_bounds(x, y));
-    return 1;
+    return (1);
 }
-    
+
 static int dgn_grid(lua_State *ls)
 {
     GETCOORD(c, 1, 2, map_bounds);
