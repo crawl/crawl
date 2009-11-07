@@ -2293,7 +2293,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         }
         else if (original < hurted && doFlavouredEffects)
         {
-            if (mons_is_icy(monster->type))
+            if (monster->is_icy())
                 simple_monster_message(monster, " melts!");
             else if (monster->type == MONS_BUSH)
                 simple_monster_message(monster, " is on fire!");
@@ -2491,7 +2491,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         }
         else if (hurted > original)
         {
-            if (mons_is_icy(monster->type))
+            if (monster->is_icy())
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");
@@ -2526,7 +2526,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         }
         else if (resist < 0)
         {
-            if (mons_is_icy(monster->type))
+            if (monster->is_icy())
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");

@@ -1487,7 +1487,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             break;
 
         default:
-            if (mons_is_icy(mon->type)) // blast of ice
+            if (mon->is_icy()) // blast of ice
             {
                 explode         = true;
                 beam.name       = "icy blast";

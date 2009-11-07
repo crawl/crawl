@@ -565,14 +565,6 @@ bool mons_is_poisoner(const monsters *mon)
     return (false);
 }
 
-bool mons_is_icy(int mc)
-{
-    return (mc == MONS_ICE_BEAST
-            || mc == MONS_SIMULACRUM_SMALL
-            || mc == MONS_SIMULACRUM_LARGE
-            || mc == MONS_ICE_STATUE);
-}
-
 // Monsters considered as "slime" for Jiyva.
 bool mons_class_is_slime(int mc)
 {

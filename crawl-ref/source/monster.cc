@@ -5230,9 +5230,17 @@ bool monsters::mutate()
     return (monster_polymorph(this, RANDOM_MONSTER));
 }
 
+static bool _mons_is_icy(int mc)
+{
+    return (mc == MONS_ICE_BEAST
+            || mc == MONS_SIMULACRUM_SMALL
+            || mc == MONS_SIMULACRUM_LARGE
+            || mc == MONS_ICE_STATUE);
+}
+
 bool monsters::is_icy() const
 {
-    return (mons_is_icy(type));
+    return (_mons_is_icy(type));
 }
 
 static bool _mons_is_fiery(int mc)
