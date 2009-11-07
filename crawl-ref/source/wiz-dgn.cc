@@ -555,10 +555,32 @@ static void debug_load_map_by_name(std::string name)
     }
 
     coord_def where(-1, -1);
-    if ((toplace->orient == MAP_FLOAT || toplace->orient == MAP_NONE)
-        && place_on_us)
+    if (place_on_us)
     {
-        where = you.pos();
+        if (toplace->orient == MAP_FLOAT || toplace->orient == MAP_NONE)
+        {
+            coord_def size = toplace->map.size();
+            coord_def tl   = you.pos() - (size / 2) - coord_def(-1, -1);
+            coord_def br   = you.pos() + (size / 2) + coord_def(-1, -1);
+
+            for (rectangle_iterator ri(tl, br); ri; ++ri)
+            {
+                if (!in_bounds(*ri))
+                {
+                    mprf("Placing %s on top of you would put part of the "
+                         "map outside of the level, cancelling.",
+                         toplace->name.c_str());
+                    return;
+                }
+            }
+            // We're okay.
+            where = you.pos();
+        }
+        else
+        {
+            mprf("%s decides where it goes, can't place where you are.",
+                 toplace->name.c_str());
+        }
     }
 
     if (dgn_place_map(toplace, true, false, where))
