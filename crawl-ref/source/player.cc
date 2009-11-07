@@ -732,13 +732,6 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     return (true);
 }
 
-// Returns the item in the given equipment slot, NULL if the slot is empty.
-// eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
-item_def *player_slot_item(equipment_type eq)
-{
-    return (you.slot_item(eq));
-}
-
 // Returns the item in the player's weapon slot.
 item_def *player_weapon()
 {
@@ -5922,6 +5915,8 @@ int player::damage_brand(int)
     return (ret);
 }
 
+// Returns the item in the given equipment slot, NULL if the slot is empty.
+// eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
 item_def *player::slot_item(equipment_type eq)
 {
     ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
