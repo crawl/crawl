@@ -19,6 +19,7 @@ colour.o \
 command.o \
 coord.o \
 coordit.o \
+coord-circle.o \
 ctest.o \
 database.o \
 dbg-asrt.o \
