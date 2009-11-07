@@ -1974,11 +1974,6 @@ int mons_base_damage_brand(const monsters *m)
     return (SPWPN_NORMAL);
 }
 
-bool mons_good_neutral(const monsters *m)
-{
-    return (m->attitude == ATT_GOOD_NEUTRAL);
-}
-
 bool mons_strict_neutral(const monsters *m)
 {
     return (m->attitude == ATT_STRICT_NEUTRAL);
@@ -1991,7 +1986,7 @@ bool mons_is_pacified(const monsters *m)
 
 bool mons_wont_attack(const monsters *m)
 {
-    return (m->friendly() || mons_good_neutral(m) || mons_strict_neutral(m));
+    return (m->friendly() || m->good_neutral() || mons_strict_neutral(m));
 }
 
 bool mons_att_wont_attack(mon_attitude_type fr)
@@ -2003,7 +1998,7 @@ mon_attitude_type mons_attitude(const monsters *m)
 {
     if (m->friendly())
         return ATT_FRIENDLY;
-    else if (mons_good_neutral(m))
+    else if (m->good_neutral())
         return ATT_GOOD_NEUTRAL;
     else if (mons_strict_neutral(m))
         return ATT_STRICT_NEUTRAL;

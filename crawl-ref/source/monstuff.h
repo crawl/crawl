@@ -49,7 +49,7 @@ public:
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
 
 #define SAME_ATTITUDE(x) (x->friendly()       ? BEH_FRIENDLY : \
-                          mons_good_neutral(x)   ? BEH_GOOD_NEUTRAL : \
+                          x->good_neutral()   ? BEH_GOOD_NEUTRAL : \
                           mons_strict_neutral(x) ? BEH_STRICT_NEUTRAL : \
                           x->neutral()        ? BEH_NEUTRAL \
                                                  : BEH_HOSTILE)
