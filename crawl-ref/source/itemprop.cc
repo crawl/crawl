@@ -2053,42 +2053,6 @@ bool check_weapon_wieldable_size( const item_def &item, size_type size )
     return (fit == 0);
 }
 
-// Note that this function is used to check validity of equipment
-// coming out of transformations... so it shouldn't contain any
-// wield/unwield only checks like two-handed weapons and shield.
-// check_id is only used for descriptions, where we don't want to
-// give away any information the player doesn't have yet.
-bool check_weapon_shape( const item_def &item, bool quiet, bool check_id )
-{
-    const int brand = get_weapon_brand( item );
-
-    if ((!check_id || item_type_known( item ))
-        && ((item.base_type == OBJ_WEAPONS
-                && is_blessed_blade(item))
-            || brand == SPWPN_HOLY_WRATH)
-        && you.is_unholy())
-    {
-        if (!quiet)
-            mpr("This weapon will not allow you to wield it.");
-
-        return (false);
-    }
-
-    // Note: this should always be done last, see check_armour_shape()
-    // FIXME FIXME FIXME
-    /*
-    if (!transform_can_equip_type( EQ_WEAPON ))
-    {
-        if (!quiet)
-           mpr( "You can't wield anything in your current form!" );
-
-        return (false);
-    }
-    */
-
-    return (true);
-}
-
 // Returns the you.inv[] index of our wielded weapon or -1 (no item, not wield).
 int get_inv_wielded( void )
 {

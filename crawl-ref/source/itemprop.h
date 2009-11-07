@@ -669,8 +669,6 @@ bool  check_weapon_wieldable_size( const item_def &item, size_type size );
 
 int   fit_item_throwable_size( const item_def &item, size_type size );
 
-bool  check_weapon_shape( const item_def &item, bool quiet, bool check_id = false );
-
 int weapon_ev_bonus( const item_def &wpn, int skill, size_type body, int dex,
                      bool hide_hidden = false );
 
