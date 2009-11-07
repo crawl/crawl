@@ -1143,11 +1143,9 @@ int player_hunger_rate(void)
     if (you.duration[DUR_REGENERATION] && you.hp < you.hp_max)
         hunger += 4;
 
-    // If Cheibriados has slowed your life processes, there's a
-    // chance you'll hunger a bit less.
+    // If Cheibriados has slowed your life processes, you will hunger less.
     if (GOD_CHEIBRIADOS == you.religion
-        && you.piety >= piety_breakpoint(0)
-        && coinflip())
+        && you.piety >= piety_breakpoint(0))
         hunger--;
 
     // Moved here from acr.cc... maintaining the >= 40 behaviour.
