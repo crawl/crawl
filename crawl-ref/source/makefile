@@ -112,7 +112,12 @@ ifeq ($(uname_S),DOS)
 	NO_RDYNAMIC = yes
 endif
 ifeq ($(uname_S),Darwin)
+	NEED_APPKIT = YesPlease
+	LIBNCURSES_IS_UNICODE = Yes
 	NO_PKGCONFIG = Yes
+	ifndef NO_APPLE_GCC
+		APPLE_GCC = YesPlease
+	endif
 	ifdef TILES
 		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/lib/libSDLmain.a
 		BUILD_FREETYPE = YesPlease
@@ -126,13 +131,6 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
 	NO_RDYNAMIC = YesPlease
 	BUILD_PCRE = YesPlease
-endif
-ifeq ($(uname_S),Darwin)
-	ifndef NO_APPLE_GCC
-		APPLE_GCC = YesPlease
-	endif
-	NEED_APPKIT = YesPlease
-	LIBNCURSES_IS_UNICODE = Yes
 endif
 
 #
