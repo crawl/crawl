@@ -2033,21 +2033,6 @@ int fit_item_throwable_size( const item_def &item, size_type size )
                        : ret + 5);
 }
 
-// Returns true if weapon is usable as a tool.
-// Note that we assume that tool usable >= wieldable.
-bool check_weapon_tool_size( const item_def &item, size_type size )
-{
-    ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
-
-    // Staves are currently usable for everyone just to be nice.
-    if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
-        return (true);
-
-    const int fit = cmp_weapon_size( item, size );
-
-    return (fit >= -3 && fit <= 1);
-}
-
 // Returns true if weapon is usable as a weapon.
 bool check_weapon_wieldable_size( const item_def &item, size_type size )
 {
@@ -2108,33 +2093,6 @@ bool check_weapon_shape( const item_def &item, bool quiet, bool check_id )
 int get_inv_wielded( void )
 {
     return (player_weapon_wielded() ? you.equip[EQ_WEAPON] : -1);
-}
-
-// Returns the you.inv[] index of our hand tool or -1 (no item, not usable)
-// Note that we don't count armour and such as "tools" here because
-// this function is used to judge if the item will sticky curse to
-// our hands.
-int get_inv_hand_tool( void )
-{
-    const int tool = you.equip[EQ_WEAPON];
-
-    // FIXME
-    /*
-    if (tool == -1 || !is_tool( you.inv[tool] ))
-        return (-1);
-
-    if (you.inv[tool].base_type == OBJ_WEAPONS
-        || you.inv[tool].base_type == OBJ_STAVES)
-    {
-        // assuring that bad "shape" weapons aren't in hand
-        ASSERT( check_weapon_shape( you.inv[tool], false ) );
-
-        if (!check_weapon_tool_size( you.inv[tool], you.body_size() ))
-            return (-1);
-    }
-    */
-
-    return (tool);
 }
 
 // Returns the you.inv[] index of the thing in our hand... this is provided

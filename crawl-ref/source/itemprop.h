@@ -664,7 +664,6 @@ bool shield_reflects(const item_def &shield);
 int weapon_rarity( int w_type );
 
 int   cmp_weapon_size( const item_def &item, size_type size );
-bool  check_weapon_tool_size( const item_def &item, size_type size );
 int   fit_weapon_wieldable_size( const item_def &item, size_type size );
 bool  check_weapon_wieldable_size( const item_def &item, size_type size );
 
@@ -676,7 +675,6 @@ int weapon_ev_bonus( const item_def &wpn, int skill, size_type body, int dex,
                      bool hide_hidden = false );
 
 int get_inv_wielded( void );
-int get_inv_hand_tool( void );
 int get_inv_in_hand( void );
 
 hands_reqd_type  hands_reqd( const item_def &item, size_type size );
