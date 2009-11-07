@@ -5626,13 +5626,17 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
         return;
 
     // The royal jelly objects to taking damage and will SULK. :-)
-    if (type == MONS_ROYAL_JELLY && flavour != BEAM_TORMENT_DAMAGE
-        && damage > 8 && x_chance_in_y(damage, 50))
+    if (type == MONS_ROYAL_JELLY)
     {
+        int lobes = hit_points / 12;
+        int oldlobes = (hit_points + damage) / 12;
+
+        if (lobes == oldlobes)
+            return;
+
         mon_acting mact(this);
 
-        const int tospawn =
-            1 + random2avg(1 + std::min((damage - 8) / 8, 5), 2);
+        const int tospawn = oldlobes - lobes;
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Trying to spawn %d jellies.", tospawn);
 #endif
