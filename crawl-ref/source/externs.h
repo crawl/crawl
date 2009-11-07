@@ -391,6 +391,7 @@ public:
     void load(reader&);
 };
 
+class monsters;
 
 struct item_def
 {
@@ -567,7 +568,6 @@ public:
 
 class ghost_demon;
 class actor;
-class monsters;
 
 struct trap_def
 {
