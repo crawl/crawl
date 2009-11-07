@@ -3436,13 +3436,10 @@ static void _close_door(coord_def move)
         if (you.berserk())
         {
             if (silenced(you.pos()))
-            {
                 mprf("You slam the %s%s shut!", adj, noun);
-            }
             else
             {
-                mprf(MSGCH_SOUND,
-                     "You slam the %s%s shut with an echoing bang!",
+                mprf(MSGCH_SOUND, "You slam the %s%s shut with a bang!",
                      adj, noun);
                 noisy(25, you.pos());
             }
