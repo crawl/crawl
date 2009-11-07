@@ -81,6 +81,7 @@ l_you.o \
 lev-pand.o \
 libutil.o \
 los.o \
+los_def.o \
 losparam.o \
 luaterp.o \
 macro.o \
