@@ -2506,12 +2506,6 @@ int player_mag_abil(bool is_weighted)
     return ((is_weighted) ? ((ma * you.intel) / 10) : ma);
 }
 
-// Returns the shield the player is wearing, or NULL if none.
-item_def *player_shield()
-{
-    return (you.shield());
-}
-
 int player_shield_class(void)   //jmf: changes for new spell
 {
     int base_shield = 0;
@@ -5976,6 +5970,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     return (true);
 }
 
+// Returns the shield the player is wearing, or NULL if none.
 item_def *player::shield()
 {
     if (!you_tran_can_wear(EQ_SHIELD))

@@ -2854,7 +2854,7 @@ bool is_shield(const item_def &item)
 bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
 {
     // If there's no shield, there's no problem.
-    if (!shield && !(shield = player_shield()))
+    if (!shield && !(shield = you.shield()))
         return (false);
 
     hands_reqd_type hand = hands_reqd(weapon, you.body_size());

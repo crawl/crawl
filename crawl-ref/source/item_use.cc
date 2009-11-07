@@ -394,7 +394,7 @@ static void warn_rod_shield_interference(const item_def &)
     {
         mprf(MSGCH_WARN,
                 "Your %s %sreduces the effectiveness of your rod.",
-                shield_base_name(player_shield()),
+                shield_base_name(you.shield()),
                 leak_degree);
     }
 }
@@ -402,7 +402,7 @@ static void warn_rod_shield_interference(const item_def &)
 static void warn_launcher_shield_slowdown(const item_def &launcher)
 {
     const int slowspeed =
-        launcher_final_speed(launcher, player_shield()) * player_speed() / 100;
+        launcher_final_speed(launcher, you.shield()) * player_speed() / 100;
     const int normspeed =
         launcher_final_speed(launcher, NULL) * player_speed() / 100;
 
@@ -416,7 +416,7 @@ static void warn_launcher_shield_slowdown(const item_def &launcher)
         {
             mprf(MSGCH_WARN,
                     "Your %s %sslows your rate of fire.",
-                    shield_base_name(player_shield()),
+                    shield_base_name(you.shield()),
                     slow_degree);
         }
     }
@@ -425,7 +425,7 @@ static void warn_launcher_shield_slowdown(const item_def &launcher)
 // Warn if your shield is greatly impacting the effectiveness of your weapon?
 void warn_shield_penalties()
 {
-    if (!player_shield())
+    if (!you.shield())
         return;
 
     // Warnings are limited to rods, bows, and quarterstaves at the moment.
@@ -441,7 +441,7 @@ void warn_shield_penalties()
              && weapon_skill(*weapon) == SK_STAVES)
     {
         mprf(MSGCH_WARN, "Your %s severely limits your weapon's effectiveness.",
-             shield_base_name(player_shield()));
+             shield_base_name(you.shield()));
     }
 }
 
@@ -2484,7 +2484,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         shoot_skill = you.skills[launcher_skill];
         effSkill    = shoot_skill;
 
-        const int speed = launcher_final_speed(launcher, player_shield());
+        const int speed = launcher_final_speed(launcher, you.shield());
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Final launcher speed: %d", speed);
 #endif

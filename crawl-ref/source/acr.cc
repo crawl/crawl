@@ -725,7 +725,7 @@ static bool _recharge_rod( item_def &rod, bool wielded )
     if (!wielded)
         rate /= 5;
     // Shields hamper recharging for wielded rods.
-    else if (player_shield())
+    else if (you.shield())
         rate /= 2;
 
     if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)

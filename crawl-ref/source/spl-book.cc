@@ -1888,7 +1888,7 @@ int count_staff_spells(const item_def &item, bool need_id)
 // Returns a measure of the rod spell power disrupted by a worn shield.
 int rod_shield_leakage()
 {
-    const item_def *shield = player_shield();
+    const item_def *shield = you.shield();
     int leakage = 100;
 
     if (shield)
