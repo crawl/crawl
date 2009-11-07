@@ -70,7 +70,7 @@ static bool _surge_identify_boosters(spell_type spell)
         // Must not be wielding an unIDed staff.
         // Note that robes of the Archmagi identify on wearing,
         // so that's less of an issue.
-        const item_def* wpn = player_weapon();
+        const item_def* wpn = you.weapon();
         if (wpn == NULL
             || wpn->base_type != OBJ_STAVES
             || item_ident(*wpn, ISFLAG_KNOW_PROPERTIES))

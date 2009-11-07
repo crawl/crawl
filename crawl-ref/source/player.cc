@@ -732,12 +732,6 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     return (true);
 }
 
-// Returns the item in the player's weapon slot.
-item_def *player_weapon()
-{
-    return (you.weapon());
-}
-
 bool player_weapon_wielded()
 {
     const int wpn = you.equip[EQ_WEAPON];

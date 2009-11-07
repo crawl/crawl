@@ -429,7 +429,7 @@ void warn_shield_penalties()
         return;
 
     // Warnings are limited to rods, bows, and quarterstaves at the moment.
-    const item_def *weapon = player_weapon();
+    const item_def *weapon = you.weapon();
     if (!weapon)
         return;
 

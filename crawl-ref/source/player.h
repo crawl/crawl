@@ -742,7 +742,6 @@ bool disease_player(int amount);
 void dec_disease_player();
 
 bool player_weapon_wielded();
-item_def *player_weapon();
 
 // Determines if the given grid is dangerous for the player to enter.
 bool is_feat_dangerous(dungeon_feature_type feat);
