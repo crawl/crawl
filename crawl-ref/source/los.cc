@@ -160,7 +160,7 @@ struct los_ray : public ray_def
     unsigned int length;
 
     los_ray(geom::ray _r)
-        : ray_def(_r), length(0)
+        : ray_def(_r), start(-1), length(0)
     {
     }
 
