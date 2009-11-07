@@ -35,7 +35,8 @@ LMACH :=
 endif
 CXX = $(LMACH)g++
 ifdef ARCHS
-CXX += $(ARCHS)
+CF_ARCHS := $(patsubst %,-arch %,$(ARCHS))
+CXX += $(CF_ARCHS)
 endif
 
 DELETE = rm -f
