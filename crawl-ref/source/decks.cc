@@ -2547,7 +2547,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                         || you.religion == GOD_BEOGH
                             && mons_species(monster->type) == MONS_ORC
                             && !monster->is_summoned()
-                            && !mons_is_shapeshifter(monster))
+                            && !monster->is_shapeshifter())
                     {
                         // Prevent assertion if the monster was
                         // previously worshipping a different god,

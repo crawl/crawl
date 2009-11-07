@@ -984,7 +984,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
     }
 
     // Shapeshifters don't get spells.
-    if (mons_is_shapeshifter(monster) && (priest || wizard))
+    if (monster->is_shapeshifter() && (priest || wizard))
         return (false);
     else if (monster->has_ench(ENCH_CONFUSION)
              && !mons_class_flag(monster->type, M_CONFUSED))

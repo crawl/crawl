@@ -75,7 +75,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
         && monster->foe == MHITYOU
         && mons_species(monster->type) == MONS_ORC
         && !monster->is_summoned()
-        && !mons_is_shapeshifter(monster)
+        && !monster->is_shapeshifter()
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !monster->friendly()
         && you.visible_to(monster) && !monster->asleep()
@@ -109,7 +109,7 @@ void slime_convert(monsters* monster)
 {
     if (you.religion == GOD_JIYVA && mons_is_slime(monster)
         && !monster->is_summoned()
-        && !mons_is_shapeshifter(monster)
+        && !monster->is_shapeshifter()
         && !monster->neutral()
         && !monster->friendly()
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)

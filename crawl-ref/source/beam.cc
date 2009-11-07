@@ -4993,7 +4993,7 @@ mon_resist_type bolt::try_enchant_monster(monsters *mon)
         if (flavour == BEAM_POLYMORPH
             && (mon->type == MONS_UGLY_THING
                 || mon->type == MONS_VERY_UGLY_THING
-                || mons_is_shapeshifter(mon)))
+                || mon->is_shapeshifter()))
         {
             ;
         }

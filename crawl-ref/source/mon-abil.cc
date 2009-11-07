@@ -380,7 +380,7 @@ static bool _slime_merge(monsters *thing)
             && other_thing->type == MONS_SLIME_CREATURE
             && other_thing->attitude == thing->attitude
             && other_thing->is_summoned() == thing->is_summoned()
-            && !mons_is_shapeshifter(other_thing)
+            && !other_thing->is_shapeshifter()
             && !_disabled_slime(other_thing))
         {
             // We can potentially merge if doing so won't take us over
@@ -440,7 +440,7 @@ bool slime_split_merge(monsters *thing)
 {
     // No merging/splitting shapeshifters.
     if (!thing
-        || mons_is_shapeshifter(thing)
+        || thing->is_shapeshifter()
         || thing->type != MONS_SLIME_CREATURE)
     {
         return (false);

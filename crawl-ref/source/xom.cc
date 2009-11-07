@@ -1417,7 +1417,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
 
             if (one_chance_in(8)
                 && !mons_is_ghost_demon(mon->type)
-                && !mons_is_shapeshifter(mon)
+                && !mon->is_shapeshifter()
                 && mon->holiness() == MH_NATURAL)
             {
                 mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER

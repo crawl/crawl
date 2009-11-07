@@ -1896,11 +1896,6 @@ bool mons_self_destructs(const monsters *m)
     return (m->type == MONS_GIANT_SPORE || m->type == MONS_BALL_LIGHTNING);
 }
 
-bool mons_is_shapeshifter(const monsters *m)
-{
-    return (m->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER));
-}
-
 int mons_base_damage_brand(const monsters *m)
 {
     if (mons_is_ghost_demon(m->type))

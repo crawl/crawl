@@ -743,7 +743,7 @@ static bool _beogh_forcibly_convert_orc(monsters *monster, killer_type killer,
 {
     if (you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
-        && !monster->is_summoned() && !mons_is_shapeshifter(monster)
+        && !monster->is_summoned() && !monster->is_shapeshifter()
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
         && mons_near(monster))
     {
@@ -2088,7 +2088,7 @@ int monster_die(monsters *monster, killer_type killer,
 
     if (!silent && !wizard && !mons_reset && corpse != -1
         && !(monster->flags & MF_KNOWN_MIMIC)
-        && mons_is_shapeshifter(monster))
+        && monster->is_shapeshifter())
     {
         simple_monster_message(monster, "'s shape twists and changes "
                                "as it dies.");
@@ -2285,7 +2285,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
         str_polymon = " grows a second head";
     else
     {
-        if (mons_is_shapeshifter(monster))
+        if (monster->is_shapeshifter())
             str_polymon = " changes into ";
         else if (targetc == MONS_PULSATING_LUMP)
             str_polymon = " degenerates into ";
@@ -2497,7 +2497,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
         player_angers_monster(monster);
 
     // Xom likes watching monsters being polymorphed.
-    xom_is_stimulated(mons_is_shapeshifter(monster)               ? 16 :
+    xom_is_stimulated(monster->is_shapeshifter()               ? 16 :
                       power == PPT_LESS || monster->friendly() ? 32 :
                       power == PPT_SAME                           ? 64 : 128);
 

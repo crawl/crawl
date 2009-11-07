@@ -2209,7 +2209,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         }
     }
 
-    if ((mon.flags & MF_KNOWN_MIMIC) && mons_is_shapeshifter(&mon))
+    if ((mon.flags & MF_KNOWN_MIMIC) && mon.is_shapeshifter())
     {
         // If momentarily in original form, don't display "shaped
         // shifter".
@@ -2952,7 +2952,7 @@ bool monsters::is_chaotic() const
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
         return (true);
 
-    if (mons_is_shapeshifter(this))
+    if (is_shapeshifter())
         return (true);
 
     // Assume that all unknown gods (GOD_NAMELESS) are not chaotic.
@@ -2974,6 +2974,11 @@ bool monsters::is_chaotic() const
     }
 
     return (false);
+}
+
+bool monsters::is_shapeshifter() const
+{
+    return (has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER));
 }
 
 int monsters::res_fire() const

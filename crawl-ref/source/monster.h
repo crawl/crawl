@@ -146,6 +146,9 @@ public:
     // can be silenced, etc.
     bool is_actual_spellcaster() const;
 
+    // Has ENCH_SHAPESHIFTER or ENCH_GLOWING_SHAPESHIFTER.
+    bool is_shapeshifter() const;
+
     bool has_ench(enchant_type ench) const;
     bool has_ench(enchant_type ench, enchant_type ench2) const;
     mon_enchant get_ench(enchant_type ench,
