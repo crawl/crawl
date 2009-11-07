@@ -151,9 +151,9 @@
 #endif
 
     // Use POSIX regular expressions
-    #ifndef REGEX_PCRE
+#ifndef REGEX_PCRE
     #define REGEX_POSIX
-    #endif
+#endif
 
     // If you have libpcre, you can use that instead of POSIX regexes -
     // uncomment the line below and add -lpcre to your makefile.
@@ -199,7 +199,6 @@
 
     #include <dos.h>
 
-    // It's sad we don't use autoconf...
     #define round(x) floor((x)+0.5)
 
     // Use Perl-compatible regular expressions. libpcre must be available and
@@ -251,9 +250,9 @@
     //
     #define DGL_CLEAR_SCREEN "\033[2J"
 
-#   ifndef USE_MORE_SECURE_SEED
-#   error DGAMELAUNCH builds should define USE_MORE_SECURE_SEED
-#   endif
+    #ifndef USE_MORE_SECURE_SEED
+    #error DGAMELAUNCH builds should define USE_MORE_SECURE_SEED
+    #endif
 
     // This secures the PRNG itself by hashing the values with SHA256.
     // It doesn't have much point if USE_MORE_SECURE_SEED is not used.
@@ -486,7 +485,7 @@
 
     // This is used to unpack a specific file from the archive.
     #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
-    #endif
+    #endif // SAVE_PACKAGE_NONE
 
     // This defines the chmod permissions for score and bones files.
     #define SHARED_FILES_CHMOD_PRIVATE  0664
@@ -501,16 +500,16 @@
     // seconds before giving up.
     #define USE_BLOCKING_LOCK
 
-// some files needed for file locking
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+    // some files needed for file locking
+    #include <unistd.h>
+    #include <fcntl.h>
+    #include <sys/types.h>
+    #include <sys/stat.h>
 
 #endif /* MULTIUSER */
 
 #if defined(DGL_SIMPLE_MESSAGING) && !defined(USE_FILE_LOCKING)
-#   error Must define USE_FILE_LOCKING for DGL_SIMPLE_MESSAGING
+#error Must define USE_FILE_LOCKING for DGL_SIMPLE_MESSAGING
 #endif
 
 #if !defined(DB_NDBM) && !defined(DB_DBH) && !defined(USE_SQLITE_DBM)
@@ -539,6 +538,6 @@ inline void UNUSED(const volatile T &)
 #include "libw32c.h"
 #endif
 
-#endif
+#endif // __cplusplus
 
-#endif
+#endif // APPHDR_H
