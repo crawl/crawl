@@ -33,6 +33,8 @@ CFOTHERS := -fno-strict-aliasing -pipe $(EXTERNAL_FLAGS)
 CFOTHERS_L := -fsigned-char
 CFWARN := -Wall
 
+DEFINES := $(EXTERNAL_DEFINES)
+
 #
 # The GCC and GXX variables are set later.
 #
