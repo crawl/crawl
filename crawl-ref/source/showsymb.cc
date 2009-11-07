@@ -10,6 +10,8 @@
 
 #include "showsymb.h"
 
+#include <stdint.h> // For uint32_t
+
 #include "colour.h"
 #include "env.h"
 #include "envmap.h"
