@@ -171,8 +171,19 @@ bool can_wield(item_def *weapon, bool say_reason,
             && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
             && you.species != SP_VAMPIRE)
     {
-        SAY(mpr("You're too hungry to wield that."));
-        return(false);
+        if (say_reason)
+        {
+            mpr("You're too hungry to wield that.");
+            // If it's a standard weapon, you know its ego now.
+            if (!is_artefact(*weapon) && !is_blessed_blade(*weapon)
+                && !item_type_known(*weapon))
+            {
+                set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+                if (in_inventory(*weapon))
+                    mpr(weapon->name(DESC_INVENTORY_EQUIP).c_str());
+            }
+        }
+        return (false);
     }
 
     if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
