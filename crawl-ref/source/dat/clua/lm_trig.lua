@@ -371,14 +371,14 @@ function TriggerableFunction:new(pars)
 
   tf.func     = pars.func
   tf.repeated = pars.repeated
-  tf.data     = pars.data
+  tf.data     = pars.data or {}
   tf.props    = pars.props or {}
 
   return tf
 end
 
 function TriggerableFunction:on_trigger(triggerer, marker, ev)
-  self.func(data, self, triggerer, marker, ev)
+  self.func(self.data, self, triggerer, marker, ev)
 
   if not self.repeated then
     self:remove(marker)
@@ -390,7 +390,7 @@ function TriggerableFunction:write(marker, th)
 
   file.marshall(th, self.func)
   file.marshall_meta(th, self.repeated)
-  file.marshall_meta(th, self.data)
+  lmark.marshall_table(th, self.data)
 end
 
 function TriggerableFunction:read(marker, th)
@@ -398,7 +398,7 @@ function TriggerableFunction:read(marker, th)
 
   self.func     = file.unmarshall_fn(th)
   self.repeated = file.unmarshall_meta(th)
-  self.data     = file.unmarshall_meta(th)
+  self.data     = lmark.unmarshall_table(th)
 
   setmetatable(self, TriggerableFunction) 
 
