@@ -330,7 +330,8 @@ ORIENT: float
 WEIGHT: 1
 DEPTH:  Lair
 SUBST:  .= d .:150 1:8 2:4
-MONS:   plant, butterfly
+# "strawberry plant"
+MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 SUBST:  . = G:20 B:15 .
@@ -364,7 +365,8 @@ ORIENT: float
 WEIGHT: 1
 DEPTH:  Lair
 SUBST:  .= d .:140 1:8 2:4
-MONS:   plant, butterfly
+# "strawberry plant"
+MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 SUBST:  . = G:20 B:15 .
@@ -399,7 +401,8 @@ WEIGHT: 4
 TAGS:   allow_dup
 DEPTH:  Lair
 SUBST:  .= d .:50 1:8 2:4
-MONS:   plant, butterfly
+# "strawberry plant"
+MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 SUBST:  . = G:20 B:15 .
@@ -425,7 +428,8 @@ ORIENT: float
 WEIGHT: 4
 DEPTH:  Lair
 SUBST:  .= d .:50 1:8 2:4
-MONS:   plant, butterfly
+# "strawberry plant"
+MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
 SUBST:  . = G:20 B:15 .
