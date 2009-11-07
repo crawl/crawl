@@ -536,11 +536,14 @@ bool unwield_item(bool showMsgs)
                 break;
 
             case SPWPN_VAMPIRICISM:
-                if (showMsgs){
-
-                    if(you.species == SP_VAMPIRE){
+                if (showMsgs)
+                {
+                    if(you.species == SP_VAMPIRE)
+                    {
                         mpr("You feel your glee subside.");
-                    } else {
+                    }
+                    else
+                    {
                         mpr("You feel the dreadful sensation subside.");
                     }
                 }

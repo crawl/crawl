@@ -167,9 +167,10 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    if(you.hunger_state < HS_FULL &&
-       SPWPN_VAMPIRICISM == get_weapon_brand(*weapon) &&
-       you.species != SP_VAMPIRE){
+    if (you.hunger_state < HS_FULL
+            && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
+            && you.species != SP_VAMPIRE)
+    {
         SAY(mpr("You're too hungry to wield that."));
         return(false);
     }
@@ -611,19 +612,22 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_VAMPIRICISM:
-
-
-                    if(you.species == SP_VAMPIRE){
+                    if(you.species == SP_VAMPIRE)
+                    {
                         mpr("You feel a bloodthirsty glee!");
                         break;
                     }
 
-                    if (you.is_undead != US_UNDEAD) {
+                    if (you.is_undead != US_UNDEAD)
+                    {
                         mpr("You feel a dreadful hunger.");
-                    } else {
+                    }
+                    else
+                    {
                         mpr("You feel an empty sense of dread.");
                     }
 
+                    // takes player from Full to Hungry
                     make_hungry(4500, false, false);
                     break;
 
