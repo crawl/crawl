@@ -689,8 +689,6 @@ int single_damage_type(const item_def &item);
 
 int weapon_str_weight( const item_def &wpn );
 int weapon_dex_weight( const item_def &wpn );
-int weapon_impact_mass( const item_def &wpn );
-int weapon_str_required( const item_def &wpn, bool half );
 
 skill_type weapon_skill( const item_def &item );
 skill_type weapon_skill( object_class_type wclass, int wtype );

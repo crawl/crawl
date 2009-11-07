@@ -1879,22 +1879,6 @@ int weapon_dex_weight( const item_def &wpn )
     return (10 - weapon_str_weight( wpn ));
 }
 
-int weapon_impact_mass( const item_def &wpn )
-{
-    ASSERT (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
-
-    return ((weapon_str_weight( wpn ) * item_mass( wpn ) + 5) / 10);
-}
-
-int weapon_str_required( const item_def &wpn, bool hand_half )
-{
-    ASSERT (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
-
-    const int req = weapon_impact_mass( wpn ) / ((hand_half) ? 11 : 10);
-
-    return ((req < STR_REQ_THRESHOLD) ? 0 : req);
-}
-
 // Returns melee skill of item.
 skill_type weapon_skill( const item_def &item )
 {
