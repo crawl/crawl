@@ -818,7 +818,7 @@ static int _healing_spell(int healed, bool divine_ability,
         did_something = true;
 
         const bool is_holy     = mons_is_holy(monster);
-        const bool is_summoned = mons_is_summoned(monster);
+        const bool is_summoned = monster->is_summoned();
 
         int pgain = 0;
         if (!is_holy && !is_summoned && you.piety < MAX_PIETY)

@@ -696,7 +696,7 @@ void drain_life(int pow)
 
             const int hurted = 3 + random2(7) + random2(pow);
             behaviour_event(monster, ME_WHACK, MHITYOU, you.pos());
-            if (!mons_is_summoned(monster))
+            if (!monster->is_summoned())
                 hp_gain += hurted;
 
             monster->hurt(&you, hurted);
@@ -775,7 +775,7 @@ bool vampiric_drain(int pow, const dist &vmove)
             return (false);
         }
 
-        const bool mons_was_summoned = mons_is_summoned(monster);
+        const bool mons_was_summoned = monster->is_summoned();
 
         monster->hurt(&you, hp_gain);
 

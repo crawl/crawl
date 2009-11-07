@@ -3703,7 +3703,7 @@ bool monsters::needs_transit() const
                 || you.level_type == LEVEL_DUNGEON
                    && hit_dice > 8 + random2(25)
                    && mons_can_use_stairs(this))
-            && !mons_is_summoned(this));
+            && !is_summoned());
 }
 
 void monsters::set_transit(const level_id &dest)
@@ -4973,7 +4973,54 @@ void monsters::mark_summoned(int longevity, bool mark_items, int summon_type)
 
 bool monsters::is_summoned(int* duration, int* summon_type) const
 {
-    return mons_is_summoned(this, duration, summon_type);
+    const mon_enchant abj = get_ench(ENCH_ABJ);
+    if (abj.ench == ENCH_NONE)
+    {
+        if (duration != NULL)
+            *duration = -1;
+        if (summon_type != NULL)
+            *summon_type = 0;
+
+        return (false);
+    }
+    if (duration != NULL)
+        *duration = abj.duration;
+
+    const mon_enchant summ = get_ench(ENCH_SUMMON);
+    if (summ.ench == ENCH_NONE)
+    {
+        if (summon_type != NULL)
+            *summon_type = 0;
+
+        return (true);
+    }
+    if (summon_type != NULL)
+        *summon_type = summ.degree;
+
+    switch (summ.degree)
+    {
+    // Temporarily dancing weapons are really there.
+    case SPELL_TUKIMAS_DANCE:
+
+    // A corpse/skeleton which was temporarily animated.
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_ANIMATE_SKELETON:
+
+    // Fire vortices are made from real fire.
+    case SPELL_FIRE_STORM:
+
+    // Clones aren't really summoned (though their equipment might be).
+    case MON_SUMM_CLONE:
+
+    // Nor are body parts.
+    case SPELL_KRAKEN_TENTACLES:
+
+    // Some object which was animated, and thus not really summoned.
+    case MON_SUMM_ANIMATE:
+        return (false);
+    }
+
+    return (true);
 }
 
 void monsters::apply_enchantments()

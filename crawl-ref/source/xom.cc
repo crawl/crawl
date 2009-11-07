@@ -1551,7 +1551,7 @@ static int _xom_swap_weapons(bool debug = false)
         if (!you.see_cell(m->pos()))
             continue;
 
-        if (!wpn || mons_wont_attack(m) || mons_is_summoned(m)
+        if (!wpn || mons_wont_attack(m) || m->is_summoned()
             || mons_itemuse(m) < MONUSE_STARTING_EQUIPMENT
             || (m->flags & MF_HARD_RESET))
         {
@@ -1751,7 +1751,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
         if (!you.see_cell(m->pos()))
             continue;
 
-        if (mons_wont_attack(m) || mons_is_summoned(m)
+        if (mons_wont_attack(m) || m->is_summoned()
             || mons_itemuse(m) < MONUSE_STARTING_EQUIPMENT
             || (m->flags & MF_HARD_RESET))
         {

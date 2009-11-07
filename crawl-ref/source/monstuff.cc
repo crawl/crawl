@@ -280,7 +280,7 @@ monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
     corpse.clear();
 
     int summon_type;
-    if (mons_is_summoned(monster, NULL, &summon_type)
+    if (monster->is_summoned(NULL, &summon_type)
         || (monster->flags & (MF_BANISHED | MF_HARD_RESET)))
     {
         return (MONS_NO_MONSTER);
@@ -743,7 +743,7 @@ static bool _beogh_forcibly_convert_orc(monsters *monster, killer_type killer,
 {
     if (you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
-        && !mons_is_summoned(monster) && !mons_is_shapeshifter(monster)
+        && !monster->is_summoned() && !mons_is_shapeshifter(monster)
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
         && mons_near(monster))
     {
@@ -1332,8 +1332,7 @@ int monster_die(monsters *monster, killer_type killer,
 
           int  summon_type   = 0;
           int  duration      = 0;
-    const bool summoned      = mons_is_summoned(monster, &duration,
-                                                &summon_type);
+    const bool summoned      = monster->is_summoned(&duration, &summon_type);
     const int monster_killed = monster_index(monster);
     const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
     const bool gives_xp      = (!summoned && !mons_class_flag(monster->type,
@@ -1895,7 +1894,7 @@ int monster_die(monsters *monster, killer_type killer,
             {
                 // A banished monster that doesn't go on the transit list
                 // loses all items.
-                if (!mons_is_summoned(monster))
+                if (!monster->is_summoned())
                     monster->destroy_inventory();
                 break;
             }
@@ -1956,7 +1955,7 @@ int monster_die(monsters *monster, killer_type killer,
                 "back into the water like the carrion they now are.");
         }
     }
-    else if (!mons_is_summoned(monster))
+    else if (!monster->is_summoned())
     {
         if (mons_genus(monster->type) == MONS_MUMMY)
             _mummy_curse(monster, killer, killer_index);

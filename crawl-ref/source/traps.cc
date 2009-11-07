@@ -488,7 +488,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (damage_taken < 0)
                     damage_taken = 0;
 
-                if (!mons_is_summoned(m))
+                if (!m->is_summoned())
                     bleed_onto_floor(m->pos(), m->type, damage_taken, true);
 
                 m->hurt(NULL, damage_taken);

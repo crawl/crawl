@@ -524,8 +524,6 @@ bool mons_is_demon( int mc );
 bool mons_class_wields_two_weapons(int mc);
 bool mons_wields_two_weapons(const monsters *m);
 bool mons_self_destructs(const monsters *m);
-bool mons_is_summoned(const monsters *m, int* duration = NULL,
-                      int *summon_info = NULL);
 bool mons_is_shapeshifter(const monsters *m);
 
 mon_intel_type mons_class_intel(int mc);

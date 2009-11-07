@@ -4846,7 +4846,7 @@ void bolt::affect_monster(monsters* mon)
     // we might bleed on the floor.
     if (!engulfs
         && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE)
-        && !mons_is_summoned(mon) && !mon->submerged())
+        && !mon->is_summoned() && !mon->submerged())
     {
         // Using raw_damage instead of the flavoured one!
         // assumes DVORP_PIERCING, factor: 0.5

@@ -917,7 +917,7 @@ bool mons_class_can_be_zombified(int mc)
 bool mons_can_be_zombified(const monsters *mon)
 {
     return (mons_class_can_be_zombified(mon->type)
-            && !mons_is_summoned(mon)
+            && !mon->is_summoned()
             && !mons_enslaved_body_and_soul(mon));
 }
 
@@ -1901,58 +1901,6 @@ bool mons_self_destructs(const monsters *m)
     return (m->type == MONS_GIANT_SPORE || m->type == MONS_BALL_LIGHTNING);
 }
 
-bool mons_is_summoned(const monsters *m, int *duration, int *summon_type)
-{
-    const mon_enchant abj = m->get_ench(ENCH_ABJ);
-    if (abj.ench == ENCH_NONE)
-    {
-        if (duration != NULL)
-            *duration = -1;
-        if (summon_type != NULL)
-            *summon_type = 0;
-
-        return (false);
-    }
-    if (duration != NULL)
-        *duration = abj.duration;
-
-    const mon_enchant summ = m->get_ench(ENCH_SUMMON);
-    if (summ.ench == ENCH_NONE)
-    {
-        if (summon_type != NULL)
-            *summon_type = 0;
-
-        return (true);
-    }
-    if (summon_type != NULL)
-        *summon_type = summ.degree;
-
-    switch (summ.degree)
-    {
-    // Temporarily dancing weapons are really there.
-    case SPELL_TUKIMAS_DANCE:
-
-    // A corpse/skeleton which was temporarily animated.
-    case SPELL_ANIMATE_DEAD:
-    case SPELL_ANIMATE_SKELETON:
-
-    // Fire vortices are made from real fire.
-    case SPELL_FIRE_STORM:
-
-    // Clones aren't really summoned (though their equipment might be).
-    case MON_SUMM_CLONE:
-
-    // Nor are body parts.
-    case SPELL_KRAKEN_TENTACLES:
-
-    // Some object which was animated, and thus not really summoned.
-    case MON_SUMM_ANIMATE:
-        return (false);
-    }
-
-    return (true);
-}
-
 bool mons_is_shapeshifter(const monsters *m)
 {
     return (m->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER));
@@ -2119,7 +2067,7 @@ void mons_pacify(monsters *mon)
     mon->attitude = ATT_NEUTRAL;
     mon->flags |= MF_WAS_NEUTRAL;
 
-    if (!testbits(mon->flags, MF_GOT_HALF_XP) && !mons_is_summoned(mon))
+    if (!testbits(mon->flags, MF_GOT_HALF_XP) && !mon->is_summoned())
     {
         // Give the player half of the monster's XP.
         unsigned int exp_gain = 0, avail_gain = 0;
