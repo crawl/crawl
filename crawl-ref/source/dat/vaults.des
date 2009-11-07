@@ -274,9 +274,10 @@ ENDMAP
 NAME:       the_teleporter
 {{
 -- Find the slave of the teleporter and move to it. 
-local function teleporter (position, mtable)
+local function teleporter (data, triggerable, triggerer, marker, ev)
+  local position = dgn.point(marker:pos())
   my_slaves = dgn.find_marker_positions_by_prop("teleport_spot", 
-    mtable.teleport_spot)
+    data.teleport_spot)
 
   -- In order to make you.moveto safe(ish), teleport anyy monster at the
   -- destination randomly.
@@ -291,14 +292,23 @@ local function teleporter (position, mtable)
 
   -- In order to mimic a normal teleport, even though this is certainly not. 
   dgn.apply_area_cloud(position.x, position.y, 1, 4, 1, 1, 
-    "tloc energy", "you", -1) 
+    "translocational energy", "you", -1) 
 end
 
 -- Lua marker magic!
-lua_marker('M', function_machine { marker_type="player_at", 
-    func = teleporter, marker_params = {teleport_spot=1}, repeated=true })
-lua_marker('E', function_machine { marker_type="player_at", 
-    func = teleporter, marker_params = {teleport_spot=2}, repeated=true })
+local m_marker = TriggerableFunction:new {
+  func=teleporter,
+  data = {teleport_spot=1},
+  repeated=true }
+local e_marker = TriggerableFunction:new {
+  func=teleporter,
+  data = {teleport_spot=1},
+  repeated=true }
+m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
+e_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
+
+lua_marker('M', m_marker)
+lua_marker('E', e_marker)
 
 -- And the slaves.
 lua_marker('e', portal_desc { teleport_spot=1})
