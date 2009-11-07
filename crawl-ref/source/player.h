@@ -543,7 +543,6 @@ bool player_in_mappable_area(void);
 bool player_in_branch(int branch);
 bool player_in_hell(void);
 
-int get_player_wielded_weapon(void);
 bool berserk_check_wielded_weapon(void);
 int player_equip( equipment_type slot, int sub_type, bool calc_unid = true );
 int player_equip_ego_type( int slot, int sub_type );

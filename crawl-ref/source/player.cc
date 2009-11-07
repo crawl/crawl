@@ -748,17 +748,6 @@ bool player_weapon_wielded()
     return (true);
 }
 
-// Returns the you.inv[] index of our wielded weapon or -1 (no item, not wield)
-int get_player_wielded_item()
-{
-    return (you.equip[EQ_WEAPON]);
-}
-
-int get_player_wielded_weapon()
-{
-    return (player_weapon_wielded()? get_player_wielded_item() : -1);
-}
-
 // Returns false if the player is wielding a weapon inappropriate for Berserk.
 bool berserk_check_wielded_weapon()
 {

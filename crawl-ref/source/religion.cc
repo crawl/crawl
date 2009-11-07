@@ -4389,11 +4389,11 @@ static bool _altar_prayer()
         && !player_under_penance()
         && you.piety > 160)
     {
-        const int wpn = get_player_wielded_weapon();
+        item_def *wpn = you.weapon();
 
-        if (wpn != -1
-            && (get_weapon_brand(you.inv[wpn]) != SPWPN_HOLY_WRATH
-                || is_blessed_blade_convertible(you.inv[wpn])))
+        if (wpn
+            && (get_weapon_brand(*wpn) != SPWPN_HOLY_WRATH
+            || is_blessed_blade_convertible(*wpn)))
         {
             did_bless = _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH,
                                       YELLOW);
@@ -4406,9 +4406,9 @@ static bool _altar_prayer()
         && !player_under_penance()
         && you.piety > 160)
     {
-        const int wpn = get_player_wielded_weapon();
+        item_def *wpn = you.weapon();
 
-        if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_DISTORTION)
+        if (wpn && get_weapon_brand(*wpn) != SPWPN_DISTORTION)
             did_bless = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
     }
 
@@ -4423,10 +4423,10 @@ static bool _altar_prayer()
 
         bool kiku_did_bless_weapon = false;
 
-        const int wpn = get_player_wielded_weapon();
+        item_def *wpn = you.weapon();
 
         // Does the player want a pain branding?
-        if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_PAIN)
+        if (wpn && get_weapon_brand(*wpn) != SPWPN_PAIN)
         {
             kiku_did_bless_weapon =
                 _bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED);
