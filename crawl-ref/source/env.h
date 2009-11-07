@@ -27,7 +27,6 @@ public:
     // Objects that are in LOS, used for drawing.
     show_def show;
 
-    env_show_grid show_los; // Compatibility. TODO: remove.
     // What would be visible, if all of the translucent wall were
     // made opaque.
     env_show_grid no_trans_show;

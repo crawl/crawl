@@ -1007,16 +1007,11 @@ void calc_show_los()
 {
     if (!crawl_state.arena && !crawl_state.arena_suspended)
     {
-        losight(env.show_los, you.pos());
         you.update_los();
         // What would be visible, if all of the translucent walls were
         // made opaque.
         // XXX: figure out what this should really do.
         losight(env.no_trans_show, you.pos(), opc_solid);
-    }
-    else
-    {
-        losight_permissive(env.show_los, crawl_view.glosc());
     }
 }
 
@@ -1043,7 +1038,7 @@ bool observe_cell(const coord_def &p)
 {
     return (((crawl_state.arena || crawl_state.arena_suspended)
                 && crawl_view.in_grid_los(p))
-             || see_cell(env.show_los, you.pos(), p));
+             || you.see_cell(p));
 }
 
 // Answers the question: "Would a cell be within character's line of sight,
