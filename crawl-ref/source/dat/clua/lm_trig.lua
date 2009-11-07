@@ -10,7 +10,7 @@
 -- which listen for different events.  Additionally, new types of triggerers
 -- can be developed and used without have to update the ChangeFlags code.
 --
--- Unlike with the overvable/observer design pattern, each triggerer is
+-- Unlike with the observable/observer design pattern, each triggerer is
 -- associated with a signle triggerable, rather than there being one observable
 -- and multiple observers, since each triggerer might have a data payload which
 -- is meant to be different for each triggerable.
@@ -22,8 +22,8 @@
 -- "FOO", then when triggered on_trigger() will be called at each marker
 -- on the level which has the property "slaved_to" equal to "FOO".  A
 -- master marker can be slaved to itself to cause on_trigger() to be called
--- at it's location.  If the master marker has the property
--- "single_random_slave" set to anythinb but the empty string ("") then
+-- at its location.  If the master marker has the property
+-- "single_random_slave" set to anything but the empty string ("") then
 -- on each triggering only a single, randomly chosen slave will have
 -- on_trigger() called.
 --
@@ -31,9 +31,17 @@
 -- and should have the same code regardless of whether or not it's a
 -- master or just a plain triggerable.  If on_trigger() calls
 -- self:remove() while it's acting on a slave marker then the slave marker
--- will be removed, and the master marker will only be removed when all
--- slaves are gone.
+-- will be removed, and if called on the master while the master is slaved
+-- to itself it will stop acting as a slave, with the master marker being
+-- automatically removed when all slaves are gone.
 ------------------------------------------------------------------------------
+
+-- XXX: Listeners and the whole master/slave business could be more
+-- generally and more flexibly done by implementing a framework for
+-- Lua defined/fired events, making Triggerable fire a Lua event every
+-- time it's triggered, and then registering listeners for those Lua
+-- events.  However, we don't need that much flexibility yet, so it's
+-- all handled inside of the Triggerable class.
 
 Triggerable = { CLASS = "Triggerable" }
 Triggerable.__index = Triggerable
@@ -48,6 +56,7 @@ function Triggerable:new(props)
   tr.props             = props
   tr.triggerers        = { }
   tr.dgn_trigs_by_type = { }
+  tr.listeners         = { }
 
   return tr
 end
@@ -62,6 +71,25 @@ end
 
 function Triggerable:property(marker, pname)
   return self:unmangle(self.props[pname] or '')
+end
+
+function Triggerable:set_property(pname, pval)
+  local old_val = self.props[pname]
+  self.props[pname] = pval
+  return old_val
+end
+
+function Triggerable:add_listener(listener)
+  if type(listener) ~= "table" then
+    error("listener isn't a table")
+  end
+  if not listener.func then
+    error("listener has no func")
+  end
+  if type(listener.func) ~= "function" then
+    error("listener.func isn't a function")
+  end
+  table.insert(self.listeners, listener)
 end
 
 function Triggerable:add_triggerer(triggerer)
@@ -87,6 +115,8 @@ function Triggerable:add_triggerer(triggerer)
       class = "(no meta table)"
     elseif not meta.CLASS then
       class = "(no class name)"
+    else
+      class = meta.CLASS
     end
 
     error("Unknown triggerer method '" .. method .. "' for trigger class '"
@@ -116,7 +146,8 @@ end
 
 function Triggerable:remove(marker)
   if self.removed then
-    error("Trigerrable already removed")
+    crawl.mpr("ERROR: Trigerrable already removed", "error")
+    return
   end
 
   if self.calling_slaves then
@@ -181,6 +212,14 @@ function Triggerable:event(marker, ev)
 end
 
 function Triggerable:do_trigger(triggerer, marker, ev)
+  for _, listener in ipairs(self.listeners) do
+    listener:func(triggerable, triggerer, marker, ev)
+  end
+
+  if triggerer.listener_only then
+    return
+  end
+
   local master_name = self:property(marker, "master_name")
 
   if master_name == "" then
@@ -198,9 +237,10 @@ function Triggerable:do_trigger(triggerer, marker, ev)
     return
   end
 
+  local master_pos = dgn.point(marker:pos())
   local num_slaves = #slaves
 
-  if self:property("single_random_slave") ~= '' then
+  if self:property(marker, "single_random_slave") ~= '' then
     slaves = { slaves[ crawl.random2(#slaves) + 1 ] }
   end
 
@@ -214,7 +254,7 @@ function Triggerable:do_trigger(triggerer, marker, ev)
     if self.want_remove then
       num_want_remove = num_want_remove + 1
 
-      if slave_marker == marker then
+      if dgn.point(slave_marker:pos()) == master_pos then
         -- The master marker shouldn't be removed until the end, so
         -- simply stop being slaved.
         self.props.slaved_to = nil
@@ -248,6 +288,7 @@ function Triggerable:write(marker, th)
 
   lmark.marshall_table(th, self.dgn_trigs_by_type)
   lmark.marshall_table(th, self.props)
+  lmark.marshall_table(th, self.listeners)
 end
 
 function Triggerable:read(marker, th)
@@ -266,8 +307,101 @@ function Triggerable:read(marker, th)
 
   self.dgn_trigs_by_type = lmark.unmarshall_table(th)
   self.props             = lmark.unmarshall_table(th)
+  self.listeners         = lmark.unmarshall_table(th)
 
   setmetatable(self, Triggerable)
+  return self
+end
+
+--------------------------
+
+-- Convenience functions, similar to the lmark ones in lm_mslav.lua
+
+Triggerable.slave_cookie = 0
+
+function Triggerable.next_slave_id()
+  local slave_id = "marker_slave" .. Triggerable.slave_cookie
+  Triggerable.slave_cookie = Triggerable.slave_cookie + 1
+  return slave_id
+end
+
+function Triggerable.make_master(lmarker, slave_id)
+  -- NOTE: The master marker is slaved to itself.
+  lmarker:set_property("master_name", slave_id)
+  lmarker:set_property("slaved_to",   slave_id)
+
+  return lmarker
+end
+
+function Triggerable.make_slave(slave_id)
+  return props_marker { slaved_to = slave_id }
+end
+
+function Triggerable.synchronized_markers(master)
+  local first = true
+  local slave_id = lmark.next_slave_id()
+  return function ()
+           if first then
+             first = false
+             return Triggerable.make_master(master, slave_id)
+           else
+             return Triggerable.make_slave(slave_id)
+           end
+         end
+end
+
+--------------------------
+
+-- A simple class to invoke an arbitrary Lua function.  Should be split out
+-- into own file if/when it becomes more complex.
+
+TriggerableFunction       = util.subclass(Triggerable) 
+TriggerableFunction.CLASS = "TriggerableFunction"
+
+function TriggerableFunction:new(pars)
+  pars = pars or { }
+
+  local tf = self.super.new(self)
+
+  if not pars.func then
+    error("Must provide func to TriggerableMessage")
+  elseif type(pars.func) ~= "function" then
+    error("TriggerableMessage func must be function, not " .. type(pars.msg))
+  end
+
+  tf.func     = pars.func
+  tf.repeated = pars.repeated
+  tf.data     = pars.data
+  tf.props    = pars.props or {}
+
+  return tf
+end
+
+function TriggerableFunction:on_trigger(triggerer, marker, ev)
+  self.func(data, self, triggerer, marker, ev)
+
+  if not self.repeated then
+    self:remove(marker)
+  end
+end
+
+function TriggerableFunction:write(marker, th)
+  TriggerableFunction.super.write(self, marker, th)
+
+  file.marshall(th, self.func)
+  file.marshall_meta(th, self.repeated)
+  file.marshall_meta(th, self.data)
+end
+
+function TriggerableFunction:read(marker, th)
+  TriggerableFunction.super.read(self, marker, th)
+
+  self.func     = file.unmarshall_fn(th)
+  self.repeated = file.unmarshall_meta(th)
+  self.data     = file.unmarshall_meta(th)
+
+  setmetatable(self, TriggerableFunction) 
+
   return self
 end
 
@@ -375,12 +509,19 @@ end
 -- * player_los: Wait for the player to come into LOS of a cell, which
 --      must contain a notable feature..  The triggerable/marker must be
 --      placed on top of cell in question.
+--
+-- * turn: Called once for each player turn that passes.
+--
+-- * entered_level: Called when player enters the level, after all level
+--      stetup code has completed.
 
 DgnTriggerer = { CLASS = "DgnTriggerer" }
 DgnTriggerer.__index = DgnTriggerer
 
 function DgnTriggerer:new(pars)
-  pars = pars or {}
+  if not pars then
+    error("No parameters provided")
+  end
 
   if not pars.type then
     error("DgnTriggerer must have a type")
@@ -405,6 +546,14 @@ function DgnTriggerer:new(pars)
 
   tr:setup()
 
+  if tr.type == "turn" and (tr.delay or (tr.delay_min and tr.delay_max)) then
+    tr.delay_min = tr.delay_min or tr.delay or 1
+    tr.delay_max = tr.delay_max or tr.delay
+
+    tr.buildup_turns = 0
+    tr.countdown     = 0
+  end
+
   return tr
 end
 
@@ -422,6 +571,10 @@ function DgnTriggerer:added(triggerable)
     mover.marker_mover = true
 
     triggerable:add_triggerer( DgnTriggerer:new(mover) )
+  elseif self.type == "turn" then
+    if self.countdown then
+      self:reset_countdown()
+    end
   end
 end
 
@@ -518,6 +671,38 @@ function DgnTriggerer:player_move(triggerable, marker, ev)
 end
 
 function DgnTriggerer:player_los(triggerable, marker, ev)
+  triggerable:do_trigger(self, marker, ev)
+end
+
+function DgnTriggerer:turn(triggerable, marker, ev)
+  if not self.countdown then
+    triggerable:do_trigger(self, marker, ev)
+  end
+
+  self.countdown = self.countdown - ev:ticks()
+
+  if self.countdown > 0 then
+    self.sub_type = "tick"
+    triggerable:do_trigger(self, marker, ev)
+    return
+  end
+
+  self.sub_type = "countdown"
+
+  while self.countdown <= 0 do
+    triggerable:do_trigger(self, marker, ev)
+    self.countdown = self.countdown +
+        crawl.random_range(self.delay_min, self.delay_max, 1)
+  end
+end
+
+function DgnTriggerer:reset_countdown()
+  assert(self.type == "turn")
+
+  self.countdown = crawl.random_range(self.delay_min, self.delay_max, 1)
+end
+
+function DgnTriggerer:entered_level(triggerable, marker, ev)
   triggerable:do_trigger(self, marker, ev)
 end
 
