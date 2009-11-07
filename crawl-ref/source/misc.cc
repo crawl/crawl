@@ -1779,7 +1779,8 @@ void up_stairs(dungeon_feature_type force_stair,
     if (get_feature_dchar(stair_find) == DCHAR_ARCH
         && feat_stair_direction(stair_find) != CMD_NO_CMD
         && stair_find != DNGN_ENTER_ZOT
-        && stair_find != DNGN_RETURN_FROM_ZOT)
+        && stair_find != DNGN_RETURN_FROM_ZOT
+        && stair_find != DNGN_EXIT_HELL)
     {
         down_stairs(you.your_level, force_stair, entry_cause);
         return;
@@ -2121,7 +2122,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (get_feature_dchar(stair_find) == DCHAR_ARCH
         && feat_stair_direction(stair_find) != CMD_NO_CMD
         && stair_find != DNGN_ENTER_ZOT
-        && stair_find != DNGN_RETURN_FROM_ZOT)
+        && stair_find != DNGN_RETURN_FROM_ZOT
+        && stair_find != DNGN_EXIT_HELL)
     {
         ;
     }
