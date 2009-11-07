@@ -55,6 +55,7 @@
 #include "ctest.h"
 #include "crash.h"
 #include "database.h"
+#include "dbg-maps.h"
 #include "dbg-scan.h"
 #include "debug.h"
 #include "delay.h"

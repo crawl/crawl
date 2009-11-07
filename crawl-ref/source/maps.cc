@@ -17,6 +17,7 @@
 #include <unistd.h>
 #endif
 
+#include "dbg-maps.h"
 #include "dungeon.h"
 #include "enum.h"
 #include "files.h"

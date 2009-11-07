@@ -8,6 +8,18 @@
 
 #include "dbg-maps.h"
 
+#include "branch.h"
+#include "chardump.h"
+#include "coord.h"
+#include "dungeon.h"
+#include "envmap.h"
+#include "initfile.h"
+#include "maps.h"
+#include "message.h"
+#include "place.h"
+#include "player.h"
+#include "view.h"
+
 #ifdef DEBUG_DIAGNOSTICS
 // Map statistics generation.
 
