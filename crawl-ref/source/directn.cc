@@ -1044,8 +1044,10 @@ void direction(dist& moves, targetting_type restricts,
 
     int dir = 0;
     bool show_beam = Options.show_beam && !just_looking && needs_path;
-    bool have_beam = false;
-    ray_def ray;
+
+    ray_def ray;             // The possibly filled in beam.
+    bool have_beam = false;  // Whether it is filled in.
+    coord_def beam_target;   // What target is was chosen for.
 
     coord_def objfind_pos, monsfind_pos;
 
@@ -1055,7 +1057,10 @@ void direction(dist& moves, targetting_type restricts,
 
     // If we show the beam on startup, we have to initialise it.
     if (show_beam)
+    {
         have_beam = find_ray(you.pos(), moves.target, ray);
+        beam_target = moves.target;
+    }
 
     bool skip_iter = false;
     bool found_autotarget = false;
@@ -1141,22 +1146,14 @@ void direction(dist& moves, targetting_type restricts,
         if (skip_iter)
         {
             if (restricts == DIR_TARGET_OBJECT)
-            {
                 key_command = CMD_TARGET_OBJ_CYCLE_FORWARD;
-            }
             else if (found_autotarget)
-            {
                 key_command = CMD_NO_CMD;
-            }
             else
-            {
                 key_command = CMD_TARGET_CYCLE_FORWARD; // Find closest target.
-            }
         }
         else
-        {
                 key_command = beh->get_command();
-        }
 
 #ifdef USE_TILE
         // If a mouse command, update location to mouse position.
@@ -1173,26 +1170,10 @@ void direction(dist& moves, targetting_type restricts,
                 moves.target = gc;
 
                 if (key_command == CMD_TARGET_MOUSE_SELECT)
-                {
                     key_command = CMD_TARGET_SELECT;
-// Do we really need this? (jpeg)
-// Looks like the redrawing routine already handles it.
-#if 0
-                    if (needs_path && range > 0)
-                    {
-                        ray_def raycopy = ray;
-                        int l = 0;
-                        while (raycopy.pos() != moves.target && range > l++)
-                            raycopy.advance();
-                        moves.target = raycopy.pos();
-                    }
-#endif
-                }
             }
             else
-            {
                 key_command = CMD_NO_CMD;
-            }
         }
         else
             moved_with_keys = true;
@@ -1326,6 +1307,7 @@ void direction(dist& moves, targetting_type restricts,
             show_beam = true;
             have_beam = find_ray(you.pos(), moves.target, ray,
                                  opc_solid, bds_default, show_beam);
+            beam_target = moves.target;
             need_beam_redraw = true;
             break;
 #endif
@@ -1346,6 +1328,7 @@ void direction(dist& moves, targetting_type restricts,
                 }
 
                 have_beam = find_ray(you.pos(), moves.target, ray);
+                beam_target = moves.target;
                 show_beam = true;
                 need_beam_redraw = true;
             }
@@ -1683,16 +1666,13 @@ void direction(dist& moves, targetting_type restricts,
             moves.target = old_target;
         }
 
-        bool have_moved = false;
-        if (old_target != moves.target)
-        {
-            have_moved = true;
+        bool have_moved = (old_target != moves.target);
 
-            if (show_beam)
-            {
-                 have_beam = find_ray(you.pos(), moves.target, ray);
-                 need_beam_redraw = true;
-            }
+        if (beam_target != moves.target && show_beam)
+        {
+             have_beam = find_ray(you.pos(), moves.target, ray);
+             beam_target = moves.target;
+             need_beam_redraw = true;
         }
 
         if (have_moved || force_redraw)
@@ -1722,7 +1702,8 @@ void direction(dist& moves, targetting_type restricts,
                 // your square or the target square.
                 // Out-of-range cells get grey '*'s instead.
                 ray_def raycopy = ray; // temporary copy to work with
-                while (raycopy.pos() != moves.target)
+                // XXX: should have moves.target == beam_target, but don't.
+                while (raycopy.pos() != beam_target)
                 {
                     if (raycopy.pos() != you.pos())
                     {
