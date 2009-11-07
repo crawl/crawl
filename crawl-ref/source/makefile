@@ -206,10 +206,7 @@ ifdef APPLE_GCC
 SDK_VER := 10.4
 GCC_VER := 4.0
 
-# FIXME: The '-arch i386' is only here until
-#   SDL 1.2.14 is available
-#
-ARCHS := i386
+ARCHS := $(shell arch)
 export ARCHS
 
 CF_ARCHS := $(patsubst %,-arch %,$(ARCHS))
