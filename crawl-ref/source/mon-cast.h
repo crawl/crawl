@@ -22,7 +22,8 @@ bolt mons_spells(monsters *mons, spell_type spell_cast, int power,
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                bool do_noise = true);
 void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast);
-void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast);
+bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
+                     bool check_validity = false);
 
 void mons_cast_haunt(monsters *monster);
 

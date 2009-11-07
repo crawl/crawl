@@ -42,6 +42,8 @@ void init_mons_spells()
     fake_mon.type       = MONS_BLACK_DRACONIAN;
     fake_mon.hit_points = 1;
 
+    bolt pbolt;
+
     for (int i = 0; i < NUM_SPELLS; i++)
     {
         spell_type spell = (spell_type) i;
@@ -51,9 +53,7 @@ void init_mons_spells()
         if (!is_valid_spell(spell))
             continue;
 
-        bolt beam = mons_spells(&fake_mon, spell, 1, true);
-
-        if (beam.flavour != NUM_BEAMS)
+        if (setup_mons_cast(&fake_mon, pbolt, spell, true))
             _valid_mon_spells[i] = true;
     }
 }
@@ -718,7 +718,8 @@ static bool _los_free_spell(spell_type spell_cast)
 }
 
 // Set up bolt structure for monster spell casting.
-void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
+bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
+                     bool check_validity)
 {
     // always set these -- used by things other than fire_beam()
 
@@ -745,11 +746,11 @@ void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
         case SPELL_BRAIN_FEED:
             pbolt.type = DMNBM_BRAIN_FEED;
-            return;
+            return (true);
         case SPELL_SMITING:
         case SPELL_AIRSTRIKE:
             pbolt.type = DMNBM_SMITING;
-            return;
+            return (true);
         default:
             // Other spells get normal setup:
             break;
@@ -793,8 +794,13 @@ void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_SUMMON_EYEBALLS:
-        return;
+        return (true);
     default:
+        if (check_validity)
+        {
+            bolt beam = mons_spells(monster, spell_cast, 1, true);
+            return (beam.flavour != NUM_BEAMS);
+        }
         break;
     }
 
@@ -876,6 +882,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         }
         // else target remains as specified
     }
+    return (true);
 }
 
 // Returns a suitable breath weapon for the draconian; does not handle all
