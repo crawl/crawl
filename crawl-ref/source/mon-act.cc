@@ -2643,7 +2643,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
         else
             set_terrain_changed(dc);
 
-        grd[dc.x][dc.y] = DNGN_OPEN_DOOR;
+        grd(dc) = DNGN_OPEN_DOOR;
     }
 
     if (was_seen)
