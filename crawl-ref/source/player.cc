@@ -1140,7 +1140,7 @@ int player_hunger_rate(void)
     if (you.species == SP_TROLL)
         hunger += 3;            // in addition to the +3 for fast metabolism
 
-    if (you.duration[DUR_REGENERATION])
+    if (you.duration[DUR_REGENERATION] && you.hp < you.hp_max)
         hunger += 4;
 
     // If Cheibriados has slowed your life processes, there's a
@@ -1198,7 +1198,8 @@ int player_hunger_rate(void)
     }
 
     // rings
-    hunger += 2 * player_equip( EQ_RINGS, RING_REGENERATION );
+    if (you.hp < you.hp_max)
+        hunger += 3 * player_equip( EQ_RINGS, RING_REGENERATION );
     hunger += 4 * player_equip( EQ_RINGS, RING_HUNGER );
     hunger -= 2 * player_equip( EQ_RINGS, RING_SUSTENANCE );
 
@@ -1215,7 +1216,7 @@ int player_hunger_rate(void)
     }
 
     // troll leather armour
-    if (you.species != SP_TROLL)
+    if (you.species != SP_TROLL && you.hp < you.hp_max)
         hunger += player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR );
 
     // randarts
