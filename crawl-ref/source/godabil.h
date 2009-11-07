@@ -4,7 +4,7 @@
  */
 
 #ifndef GODABIL_H
-#define GODABILN_H
+#define GODABIL_H
 
 #include "enum.h"
 #include "externs.h"
