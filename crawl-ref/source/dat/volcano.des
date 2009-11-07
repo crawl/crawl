@@ -886,56 +886,58 @@ TAGS:       volcano no_item_gen no_monster_gen no_rotate
 LFLAGS:     no_tele_control
 :           volcano_setup(_G, true)
 {{
-local mytable = { total_doorways=10, total_collapsed=0, ac = {},
-                  last_turn_collapsed = 0}
-
-local function collapse_doorways (position, mytable)
-  local x, y = position:xy()
-  local you_x, you_y = you.pos()
-  if mytable.total_collapsed == mytable.total_doorways then
+local function collapse_doorways (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
     return
   end
+
+  local x, y = marker:pos()
+  local you_x, you_y = you.pos()
 
   if you_x == x and you_y == y then
     crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
               "warning")
     return
   end
-  local ack = x .. "/" .. y
-  if mytable.ac[ack] ~= true then
-    -- We only collapse once per turn!
-    if mytable.last_turn_collapsed == you.turns() then
-      return
-    else
-      mytable.last_turn_collapsed = you.turns()
-    end
-    mytable.ac[ack] = true
-    if you.see_cell(position:xy()) then
-      crawl.mpr("The volcano erupts! Nearby, a roof collapses.", "warning")
-    else
-      crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
-                "warning")
-    end
-    mytable.total_collapsed = mytable.total_collapsed + 1
-    dgn.terrain_changed(x, y, "stone_wall", false, false, false)
-    dgn.colour_at(x, y, "lightred")
-    dgn.apply_area_cloud(x, y, 1, 6, 1, 10, "grey smoke", "other", -1)
+
+  if you.see_cell(marker:pos()) then
+    crawl.mpr("The volcano erupts! Nearby, a roof collapses.", "warning")
+  else
+    crawl.mpr("There is a rumble as the volcano erupts. The roof shakes.",
+              "warning")
   end
+  dgn.terrain_changed(x, y, "stone_wall", false, false, false)
+  dgn.colour_at(x, y, "lightred")
+  dgn.apply_area_cloud(x, y, 1, 6, 1, 10, "grey smoke", "other", -1)
+
+  -- Don't collapse same doorway twice.
+  triggerable:remove(marker)
 end
 
-local collapse_marker = function_machine ( {
-  marker_type = "random",
-  turns_min=5,
-  turns_max=20,
-  func=collapse_doorways,
-  marker_params=mytable } )
+local collapse_marker = TriggerableFunction:new (
+  {
+    func=collapse_doorways,
+    repeated=true,
+    props = {
+      -- Only collapse one doorway at a time, randomly.
+      single_random_slave="true"
+    }
+  }
+)
+
+collapse_marker:add_triggerer(DgnTriggerer:new {
+  type="turn",
+  delay_min=50,
+  delay_max=200
+})
+
 }}
 KPROP:      RXZ12< = no_rtele_into
 SUBST:      X = .
 SUBST:      ZY = c.
 SUBST:      R = defg$
 :           fiery_guardians(_G)
-:           lua_marker("M", lmark.synchronized_markers(collapse_marker, "do_function"))
+:           lua_marker("M", Triggerable.synchronized_markers(collapse_marker))
 :           volcano_setup(_G)
 #           There are eight oportunities for loot! Seven single threat (1) plus two items,
 #           and one triple threat (121), plus six items. items can be any of: 1 armour,
