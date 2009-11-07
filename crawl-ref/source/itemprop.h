@@ -739,8 +739,6 @@ size_type item_size(const item_def &item);
 equipment_type get_item_slot(object_class_type type, int sub_type);
 equipment_type get_item_slot(const item_def& item);
 
-bool is_colourful_item(const item_def &item);
-
 std::string item_base_name(const item_def &item);
 const char* weapon_base_name(unsigned char subtype);
 
