@@ -1204,7 +1204,8 @@ int player_hunger_rate(void)
 
     // troll leather armour
     if (you.species != SP_TROLL && you.hp < you.hp_max)
-        hunger += player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR );
+        if (player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR ))
+            hunger += coinflip() ? 2 : 1;
 
     // randarts
     hunger += scan_artefacts(ARTP_METABOLISM);
