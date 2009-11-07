@@ -4535,7 +4535,7 @@ void tile_draw_floor()
             const coord_def gc = show2grid(ep);
             int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
 
-            if (observe_cell(ep))
+            if (observe_cell(gc))
             {
                 dungeon_feature_type feat = grid_appearance(gc);
                 bg = tileidx_feature(feat, gc.x, gc.y);
