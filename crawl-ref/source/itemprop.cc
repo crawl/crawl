@@ -1693,25 +1693,6 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
     return (static_cast< hands_reqd_type >( ret ));
 }
 
-bool is_double_ended( const item_def &item )
-{
-    if (item.base_type == OBJ_STAVES)
-        return (true);
-    else if (item.base_type != OBJ_WEAPONS)
-        return (false);
-
-    return (Weapon_prop[ Weapon_index[item.sub_type] ].hands == HANDS_DOUBLE);
-}
-
-int double_wpn_awkward_speed( const item_def &item )
-{
-    ASSERT( is_double_ended( item ) );
-
-    const int base = property( item, PWPN_SPEED );
-
-    return ((base * 30 + 10) / 20 + 2);
-}
-
 bool is_demonic(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS)

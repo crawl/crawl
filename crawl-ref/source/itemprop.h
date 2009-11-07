@@ -682,9 +682,6 @@ int get_inv_in_hand( void );
 hands_reqd_type  hands_reqd( const item_def &item, size_type size );
 hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
                            size_type size);
-bool is_double_ended( const item_def &item );
-
-int double_wpn_awkward_speed( const item_def &item );
 
 bool is_demonic(const item_def &item);
 bool is_blessed_blade(const item_def &item);
