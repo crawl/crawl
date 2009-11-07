@@ -609,12 +609,12 @@ test:
 # This should eliminate an annoying need to use 'make clean' every time.
 #
 
-TRACK_CFLAGS = $(subst ','\'',$(ALL_CFLAGS))
+TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))
 
 .cflags: .force-cflags
 	@FLAGS='$(TRACK_CFLAGS)'; \
     if test x"$$FLAGS" != x"`cat .cflags 2>/dev/null`" ; then \
-        echo "    * new build flags or prefix"; \
+        echo "    * rebuilding crawl: new build flags or prefix"; \
         echo "$$FLAGS" > .cflags; \
     fi
 
@@ -625,7 +625,7 @@ TRACK_CFLAGS = $(subst ','\'',$(ALL_CFLAGS))
 
 ifeq ($(shell which fastdep 2> /dev/null),)
 
-%.d: %.cc
+%.d: %.cc .cflags
 	$(QUIET_DEPEND)$(CXX) -MM $(ALL_CFLAGS) $< > $@
 
 depend: $(OBJECTS:.o=.d)
@@ -781,7 +781,7 @@ $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 $(CONTRIB_LIBS): .contrib-libs
 	@:
 
-.contrib-libs:
+.contrib-libs: .cflags
 	+@$(MAKE) -C contrib $(CONTRIBS)
 	@touch $@
 
