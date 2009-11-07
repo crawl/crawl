@@ -623,34 +623,23 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))
 ##########################################################################
 # Dependencies
 
+DEPS := $(OBJECTS:.o=.d)
+
 ifeq ($(shell which fastdep 2> /dev/null),)
+DEPEND := $(CXX) -MM $(ALL_CFLAGS)
+else
+DEPEND := fastdep $(DEFINES) $(INCLUDES)
+endif
 
 %.d: %.cc .cflags
-	$(QUIET_DEPEND)$(CXX) -MM $(ALL_CFLAGS) $< > $@
+	$(QUIET_DEPEND)$(DEPEND) $< > $@
 
-depend: $(OBJECTS:.o=.d)
-
-ifneq ($(MAKECMDGOALS),clean)
-ifneq ($(MAKECMDGOALS),distclean)
--include $(OBJECTS:.o=.d)
-endif
-endif
-
-else
-
-DEPENDENCY_MKF := makefile.dep
-
-depend: $(DEPENDENCY_MKF)
-
-%.dep: $(OBJECTS:.o=.cc)
-	$(QUIET_DEPEND)fastdep $(DEFINES) $(INCLUDES) $(OBJECTS:.o=.cc) > $@
+depend: $(DEPS)
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),distclean)
--include $(DEPENDENCY_MKF)
+-include $(DEPS)
 endif
-endif
-
 endif
 
 
