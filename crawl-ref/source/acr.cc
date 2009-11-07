@@ -3378,10 +3378,7 @@ static void _close_door(coord_def move)
     if (you.confused() && !one_chance_in(3))
     {
         do
-        {
-            door_move.delta.x = random2(3) - 1;
-            door_move.delta.y = random2(3) - 1;
-        }
+            door_move.delta = coord_def(random2(3) - 1, random2(3) - 1);
         while (door_move.delta.origin());
     }
 
