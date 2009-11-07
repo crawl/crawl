@@ -27,19 +27,6 @@ void cast_refrigeration(int pow);
 void cast_toxic_radiance(void);
 void drain_life(int pow);
 
-int fungal_bloom();
-int create_plant(coord_def & target);
-//bool plant_from_fruit();
-bool sunlight();
-
-bool prioritise_adjacent(const coord_def &target,
-                         std::vector<coord_def> &candidates);
-bool plant_ring_from_fruit();
-
-int rain(const coord_def &target);
-int corpse_spores(beh_type behavior = BEH_FRIENDLY);
-bool evolve_flora();
-
 bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
                   bool suppress_msg, bool recovery = false);
 

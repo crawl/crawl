@@ -15,6 +15,7 @@
 #include "effects.h"
 #include "enum.h"
 #include "food.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "it_use2.h"
 #include "message.h"
