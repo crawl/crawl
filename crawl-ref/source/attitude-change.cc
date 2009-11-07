@@ -133,13 +133,6 @@ void feawn_neutralise(monsters* monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !player_under_penance())
     {
-        // We must call remove_auto_exclude before neutralizing the
-        // plant because remove_auto_exclude only removes exclusions
-        // it thinks were caused by auto-exclude, and
-        // auto-exclusions now check for ATT_HOSTILE.  Oh, what a
-        // tangled web, etc.
-        remove_auto_exclude(monster, false);
-
         feawn_neutralise_plant(monster);
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
 

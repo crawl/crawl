@@ -328,8 +328,11 @@ void maybe_remove_autoexclusion(const coord_def &p)
     if (travel_exclude *exc = _find_exclude_root(p))
     {
         const monsters *m = monster_at(p);
-        if (exc->autoex && (!m || !you.can_see(m) || m->type != exc->mon))
+        if (exc->autoex && (!m || !you.can_see(m) || m->type != exc->mon
+                            || m->attitude != ATT_HOSTILE))
+        {
             del_exclude(p);
+        }
     }
 }
 
