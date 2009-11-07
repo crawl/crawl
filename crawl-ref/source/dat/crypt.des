@@ -664,7 +664,7 @@ KMONS:  D = lich / w:5 ancient lich
 KMONS:  E = iron golem
 KMONS:  G = flayed ghost / hungry ghost / phantom
 ####### NE monsters (hoard). On a coinflip, either vampires or mummies.
-: if crawl.coinflip() == 0 then
+: if crawl.coinflip() then
 KMONS:  H = vampire mage
 KMONS:  I = vampire knight
 KMONS:  J = vampire
@@ -676,7 +676,7 @@ KMONS:  J = guardian mummy / mummy
 KMONS:  P = large skeleton / mummy
 : end
 ####### SE monsters (catacombs). Either corporeal or incorporeal undead.
-: if crawl.coinflip() == 0 then
+: if crawl.coinflip() then
 KMONS:  Z = curse skull
 KMONS:  Q = skeletal dragon
 KMONS:  R = skeletal warrior
@@ -688,7 +688,7 @@ KMONS:  R = spectral warrior
 KMONS:  S = phantom / wraith / freezing wraith / flayed ghost / wight
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.
-: if crawl.coinflip() == 0 then
+: if crawl.coinflip() then
 KMONS:  t = w:20 flaming corpse / fire giant skeleton / dragon skeleton
 KMONS:  X = w:1 curse skull / w:19 flaming corpse
 : else
