@@ -1384,7 +1384,7 @@ w:2
 %%%%
 _Dowan_common_
 
-VISUAL:@The_monster@ points a slender finger @at_foe@ and smirks.
+VISUAL:@The_monster@ smirks and points a slender finger @at_foe@.
 
 @The_monster@ says @to_foe@, "My weaknesses are her strengths!"
 
@@ -1399,7 +1399,6 @@ VISUAL:@The_monster@ throws and catches a handful of magical flame, then smirks.
 
 VISUAL:@The_monster@ robes are whipped around by a magical breeze.
 
-# Removed VISUAL - makes no sense when silenced
 @The_monster@ goes cross-eyed from fumbling a word in a spell.
 
 @The_monster@ whispers @to_foe@, "It won't be long now."
@@ -1428,7 +1427,7 @@ w:2
 %%%%
 _Duvessa_common_
 
-VISUAL:@The_monster@ gestures towards @at_foe@ with her weapon.
+VISUAL:@The_monster@ gestures with her weapon @at_foe@.
 
 @The_monster@ says @to_foe@, "My weaknesses are his strengths!"
 
