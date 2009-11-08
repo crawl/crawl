@@ -2715,171 +2715,283 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
-void roll_demonspawn_mutations()
+struct facet_def
 {
-    // First try for a body mutation; every DS has exactly one of these,
-    // as they result in the loss or crippling of one slot, and we don't
-    // want to deal with the balance issues of a variable-slot race.
-    static const mutation_type body_muts[] = {
-        MUT_CLAWS, MUT_HORNS
-    };
+    mutation_type muts[3];
+    int tiers[3];
+};
 
-    // "Awesome" mutations are character defining; they have a major
-    // effect on strategy in at least one branch.
-    static const mutation_type awesome_muts[] = {
-        MUT_HURL_HELLFIRE, MUT_CONSERVE_SCROLLS, MUT_FAST, MUT_TELEPORT_AT_WILL,
-        MUT_ROBUST, MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_BLACK_SCALES,
-        MUT_METALLIC_SCALES, MUT_RED2_SCALES, MUT_STOCHASTIC_TORMENT_RESISTANCE
-    };
+struct demon_mutation_info
+{
+    mutation_type mut;
+    int tier;
+    int facet;
 
-    // "Great" mutations define strategy in common encounters, but not
-    // universal.
-    static const mutation_type great_muts[] = {
-        MUT_REGENERATION, MUT_GREEN_SCALES, MUT_BLACK_SCALES,
-        MUT_REPULSION_FIELD, MUT_MAGIC_RESISTANCE, MUT_BREATHE_FLAMES,
-        MUT_NACREOUS_SCALES, MUT_GREY2_SCALES, MUT_BLACK2_SCALES,
-        MUT_WHITE_SCALES, MUT_YELLOW_SCALES, MUT_BROWN_SCALES,
-        MUT_PURPLE_SCALES, MUT_INDIGO_SCALES, MUT_PASSIVE_MAPPING,
-        MUT_ICEMAIL, MUT_PASSIVE_FREEZE
-    };
+    demon_mutation_info(mutation_type m, int t, int f)
+        : mut(m), tier(t), facet(f) { }
+};
 
-    // "Good" mutations are rarely noticed; they improve your character
-    // in ways that affect most fights.
-    static const mutation_type good_muts[] = {
-        MUT_TOUGH_SKIN,  MUT_GREY_SCALES, MUT_BONEY_PLATES,
-        MUT_SLOW_METABOLISM, MUT_SPIT_POISON, MUT_BLINK, MUT_SHAGGY_FUR,
-        MUT_HIGH_MAGIC, MUT_RED_SCALES, MUT_BLUE_SCALES,
-        MUT_SPECKLED_SCALES, MUT_ORANGE_SCALES, MUT_IRIDESCENT_SCALES,
-        MUT_PATTERNED_SCALES
-    };
+static int ct_of_tier[] = { 0, 2, 3, 1 };
 
-    bool good_enough = false;
+static const facet_def _demon_facets[] =
+{
+    { { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
+      { 2, 2, 2 } },
+    { { MUT_HORNS, MUT_HORNS, MUT_HORNS },
+      { 2, 2, 2 } },
+    { { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
+      { 3, 3, 3 } },
+    { { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
+      { 3, 3, 3 } },
+    { { MUT_FAST, MUT_FAST, MUT_FAST },
+      { 3, 3, 3 } },
+    { { MUT_TELEPORT_AT_WILL, MUT_TELEPORT_AT_WILL, MUT_TELEPORT_AT_WILL },
+      { 3, 3, 3 } },
+    { { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
+      { 3, 3, 3 } },
+    { { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
+          MUT_NEGATIVE_ENERGY_RESISTANCE },
+      { 3, 3, 3 } },
+    { { MUT_BLACK_SCALES, MUT_BLACK_SCALES, MUT_BLACK_SCALES },
+      { 3, 3, 3 } },
+    { { MUT_METALLIC_SCALES, MUT_METALLIC_SCALES, MUT_METALLIC_SCALES },
+      { 3, 3, 3 } },
+    { { MUT_RED2_SCALES, MUT_RED2_SCALES, MUT_RED2_SCALES },
+      { 3, 3, 3 } },
+    { { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
+          MUT_STOCHASTIC_TORMENT_RESISTANCE },
+      { 3, 3, 3 } },
+    { { MUT_REGENERATION, MUT_REGENERATION, MUT_REGENERATION },
+      { 2, 2, 2 } },
+    { { MUT_GREEN_SCALES, MUT_GREEN_SCALES, MUT_GREEN_SCALES },
+      { 2, 2, 2 } },
+    { { MUT_BLACK_SCALES, MUT_BLACK_SCALES, MUT_BLACK_SCALES },
+      { 2, 2, 2 } },
+    { { MUT_REPULSION_FIELD, MUT_REPULSION_FIELD, MUT_REPULSION_FIELD },
+      { 2, 2, 2 } },
+    { { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
+      { 2, 2, 2 } },
+    { { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
+      { 2, 2, 2 } },
+    { { MUT_NACREOUS_SCALES, MUT_NACREOUS_SCALES, MUT_NACREOUS_SCALES },
+      { 2, 2, 2 } },
+    { { MUT_GREY2_SCALES, MUT_GREY2_SCALES, MUT_GREY2_SCALES },
+      { 2, 2, 2 } },
+    { { MUT_BLACK2_SCALES, MUT_BLACK2_SCALES, MUT_BLACK2_SCALES },
+      { 2, 2, 2 } },
+    { { MUT_WHITE_SCALES, MUT_WHITE_SCALES, MUT_WHITE_SCALES },
+      { 2, 2, 2 } },
+    { { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
+      { 2, 2, 2 } },
+    { { MUT_BROWN_SCALES, MUT_BROWN_SCALES, MUT_BROWN_SCALES },
+      { 2, 2, 2 } },
+    { { MUT_PURPLE_SCALES, MUT_PURPLE_SCALES, MUT_PURPLE_SCALES },
+      { 2, 2, 2 } },
+    { { MUT_INDIGO_SCALES, MUT_INDIGO_SCALES, MUT_INDIGO_SCALES },
+      { 2, 2, 2 } },
+    { { MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING },
+      { 2, 2, 2 } },
+    { { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
+      { 2, 2, 2 } },
+    { { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
+      { 2, 2, 2 } },
+    { { MUT_TOUGH_SKIN, MUT_TOUGH_SKIN, MUT_TOUGH_SKIN },
+      { 1, 1, 1 } },
+    { { MUT_GREY_SCALES, MUT_GREY_SCALES, MUT_GREY_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_BONEY_PLATES, MUT_BONEY_PLATES, MUT_BONEY_PLATES },
+      { 1, 1, 1 } },
+    { { MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM },
+      { 1, 1, 1 } },
+    { { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
+      { 1, 1, 1 } },
+    { { MUT_BLINK, MUT_BLINK, MUT_BLINK },
+      { 1, 1, 1 } },
+    { { MUT_SHAGGY_FUR, MUT_SHAGGY_FUR, MUT_SHAGGY_FUR },
+      { 1, 1, 1 } },
+    { { MUT_HIGH_MAGIC, MUT_HIGH_MAGIC, MUT_HIGH_MAGIC },
+      { 1, 1, 1 } },
+    { { MUT_RED_SCALES, MUT_RED_SCALES, MUT_RED_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_BLUE_SCALES, MUT_BLUE_SCALES, MUT_BLUE_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_SPECKLED_SCALES, MUT_SPECKLED_SCALES, MUT_SPECKLED_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_ORANGE_SCALES, MUT_ORANGE_SCALES, MUT_ORANGE_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_PATTERNED_SCALES, MUT_PATTERNED_SCALES, MUT_PATTERNED_SCALES },
+      { 1, 1, 1 } },
+};
 
-    typedef mutation_type facet_type[3];
+static bool _works_at_tier(const facet_def& facet, int tier)
+{
+    return facet.tiers[0] == tier
+        || facet.tiers[1] == tier
+        || facet.tiers[2] == tier;
+}
 
-    static const facet_type mixed_facets[] = {
-        { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
-        { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
-        { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
-        { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
-    };
+static int _rank_for_tier(const facet_def& facet, int tier)
+{
+    int k;
 
-    facet_type facets[6];
+    for (k = 0; k < 3 && facet.tiers[k] <= tier; ++k);
 
+    return (k);
+}
+
+static std::vector<demon_mutation_info> _select_ds_mutations()
+{
 try_again:
-    while (!good_enough)
+    std::vector<demon_mutation_info> ret;
+
+    ret.clear();
+    int absfacet = 0;
+    int scales = 0;
+    int slow_dig = 0;
+    int regen = 0;
+    int slots_lost = 0;
+
+    std::set<const facet_def *> facets_used;
+
+    for (int tier = ARRAYSZ(ct_of_tier); tier >= 0; --tier)
     {
-        mutation_type muts[6];
-
-        muts[0] = RANDOM_ELEMENT(awesome_muts);
-        muts[1] = RANDOM_ELEMENT(great_muts);
-        muts[2] = RANDOM_ELEMENT(great_muts);
-        muts[3] = RANDOM_ELEMENT(body_muts);
-        muts[4] = RANDOM_ELEMENT(good_muts);
-        muts[5] = RANDOM_ELEMENT(good_muts);
-
-        FixedVector< int, NUM_MUTATIONS > mutsgiven;
-        mutsgiven.init(0);
-
-        int scales = 0;
-        int elemental = 0;
-        int metabolism = 0;
-
-        // Check for conflicting mutations.
-        for (int i = 0; i < 6; ++i)
+        for (int nfacet = 0; nfacet < ct_of_tier[tier]; ++nfacet)
         {
-            mutation_type m = muts[i];
+            const facet_def* next_facet;
 
-            if (++mutsgiven[m] > 1)
-                goto try_again;
-
-            if (_is_covering(m) && ++scales > 1)
-                goto try_again;
-
-            if ((m == MUT_SLOW_METABOLISM || m == MUT_REGENERATION)
-                    && ++metabolism > 1)
-                goto try_again;
-
-            if ((m == MUT_HURL_HELLFIRE || m == MUT_CONSERVE_SCROLLS
-                        || m == MUT_ICEMAIL || m == MUT_PASSIVE_FREEZE)
-                    && ++elemental > 1)
-                goto try_again;
-        }
-
-        good_enough = true;
-
-        for (int i = 0; i < 6; ++i)
-        {
-            facets[i][0] = facets[i][1] = facets[i][2] = muts[i];
-
-            for (unsigned j = 0; j < ARRAYSZ(mixed_facets); ++j)
+            do
             {
-                if (mixed_facets[j][2] != muts[i])
-                    continue;
-
-                facets[i][0] = mixed_facets[j][0];
-                facets[i][1] = mixed_facets[j][1];
+                next_facet = &RANDOM_ELEMENT(_demon_facets);
             }
+            while (!_works_at_tier(*next_facet, tier)
+                   || facets_used.find(next_facet) != facets_used.end());
+
+            facets_used.insert(next_facet);
+
+            for (int i = 0; i < _rank_for_tier(*next_facet, tier); ++i)
+            {
+                mutation_type m = next_facet->muts[i];
+
+                ret.push_back(demon_mutation_info(m, next_facet->tiers[i],
+                                                  absfacet));
+
+                if (_is_covering(m))
+                    ++scales;
+
+                if (m == MUT_SLOW_METABOLISM)
+                    slow_dig = 1;
+
+                if (m == MUT_REGENERATION)
+                    regen = 1;
+
+                if (m == MUT_CLAWS && i == 3 || m == MUT_HORNS && i == 1)
+                    ++slots_lost;
+            }
+
+            ++absfacet;
         }
     }
 
-    you.demonic_traits.clear();
-    player::demon_trait dt;
+    if (scales > 3)
+        goto try_again;
 
-    // Now give mutations from the facets in some order, consistent
-    // with the internal order of the facets.
+    if (slots_lost != 1)
+        goto try_again;
 
-    FixedVector<int, 6> given;
-    given.init(0);
-    int ngiven = 0;
+    if (slow_dig && regen)
+        goto try_again;
+
+    return ret;
+}
+
+static std::vector<mutation_type>
+_order_ds_mutations(std::vector<demon_mutation_info> muts)
+{
+    std::vector<mutation_type> out;
+
+    while (! muts.empty())
+    {
+        int first_tier = 99;
+
+        for (unsigned i = 0; i < muts.size(); ++i)
+        {
+            first_tier = std::min(first_tier, muts[i].tier);
+        }
+
+        int ix;
+
+        do
+        {
+            ix = random2(muts.size());
+        }
+        // Don't consider mutations from more than two tiers at a time
+        while (muts[ix].tier >= first_tier + 2);
+
+        // Don't reorder mutations within a facet
+        for (int j = 0; j < ix; ++j)
+        {
+            if (muts[j].facet == muts[ix].facet)
+            {
+                ix = j;
+                break;
+            }
+        }
+
+        out.push_back(muts[ix].mut);
+        muts.erase(muts.begin() + ix);
+    }
+
+    return out;
+}
+
+static std::vector<player::demon_trait>
+_schedule_ds_mutations(std::vector<mutation_type> muts)
+{
+    std::list<mutation_type> muts_left(muts.begin(), muts.end());
+
+    std::list<int> slots_left;
+
+    std::vector<player::demon_trait> out;
 
     for (int level = 2; level <= 27; ++level)
     {
-        // To reduce variance a bit, cap mutations per level at 0.75.
-        // This has the side effect of forcing no mutation at XL2.
-        if ((ngiven + 1) * 4 > (level - 1) * 3)
-            continue;
+        int ct = coinflip() ? 2 : 1;
 
-        // We want 18 (6*3) random attempts to raise or add a mutation
-        // in the 26 level ups.  The following check is equivalent to
-        // taking a string of 18 1s and 8 0s and shuffling it.
-        if (x_chance_in_y(18 - ngiven, 28 - level))
+        for (int i = 0; i < ct; ++i)
+            slots_left.push_back(level);
+    }
+
+    while (!muts_left.empty())
+    {
+        if (x_chance_in_y(muts_left.size(), slots_left.size()))
         {
-            int available_facets[6];
-            int navailable_facets = 0;
+            player::demon_trait dt;
 
-            int first_facet;
-
-            // At or above 12 all mutations are available.
-            if (level >= 12)
-                first_facet = 0;
-            // The awesome mutation does not show up before 12.
-            else if (level >= 6)
-                first_facet = 1;
-            // Only body and good mutations are eligible at start.
-            else
-                first_facet = 3;
-
-            for (int i = first_facet; i < 6; ++i)
-                if (given[i] != 3)
-                    available_facets[navailable_facets++] = i;
-
-            int which_facet = available_facets[random2(navailable_facets)];
-
-            mutation_type newmut = facets[which_facet][given[which_facet]];
+            dt.level_gained = slots_left.front();
+            dt.mutation     = muts_left.front();
 
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Demonspawn will gain %s at level %d",
-                    get_mutation_def(newmut).wizname, level);
+                    get_mutation_def(dt.mutation).wizname, dt.level_gained);
 #endif
-            dt.level_gained = level;
-            dt.mutation = newmut;
-            you.demonic_traits.push_back(dt);
 
-            ++given[which_facet];
-            ++ngiven;
+            out.push_back(dt);
+
+            muts_left.pop_front();
         }
+        slots_left.pop_front();
     }
+
+    return out;
+}
+
+void roll_demonspawn_mutations()
+{
+    you.demonic_traits = _schedule_ds_mutations(
+                         _order_ds_mutations(
+                         _select_ds_mutations()));
 }
 
 bool perma_mutate(mutation_type which_mut, int how_much)
