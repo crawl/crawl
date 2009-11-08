@@ -8,10 +8,9 @@
 #include "religion.h"
 #include "terrain.h"
 
-// TODO: generalize.
 bool actor::haloed() const
 {
-    return (you.halo_contains(pos()));
+    return (!haloers(pos()).empty());
 }
 
 bool actor::halo_contains(const coord_def &c) const
@@ -36,6 +35,9 @@ int monsters::halo_radius() const
     return 0;
 }
 
+// XXX: This might become too expensive; possibly, keep
+//      a mapping of cell -> list of monsters in view of cell
+//      and just iterate through that.
 std::list<actor*> haloers(const coord_def &c)
 {
     std::list<actor*> ret;
@@ -47,4 +49,3 @@ std::list<actor*> haloers(const coord_def &c)
     }
     return (ret);
 }
-

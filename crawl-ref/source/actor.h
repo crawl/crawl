@@ -202,7 +202,7 @@ public:
     virtual bool asleep() const { return (false); }
 
     virtual bool backlit(bool check_haloed = true) const = 0;
-    // Within player halo.
+    // Within any actor's halo?
     virtual bool haloed() const;
     // Halo radius.
     virtual int halo_radius() const = 0;
