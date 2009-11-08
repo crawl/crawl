@@ -272,6 +272,10 @@ pandemonium lord
 
 Powerful demons inhabiting the endless halls of Pandemonium, each is different, with its own set of strengths and weaknesses.
 %%%%
+Pikel
+
+While kobolds are normally slaves, Pikel's rough life, selfish ambition and large stature have caused him to rise up and become a slaver himself. He is on his way to the Orcish Mines to sell his wares, a selection of timid humans that cower with every crack of his whip.
+%%%%
 Pit Fiend
 
 A huge winged fiend with incredibly tough skin.

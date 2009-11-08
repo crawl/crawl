@@ -3518,6 +3518,15 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         }
         break;
 
+    case MONS_PIKEL:
+        force_item = true; // guaranteed flaming or pain
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_WHIP;
+        set_item_ego_type(item, OBJ_WEAPONS, coinflip() ? SPWPN_PAIN : SPWPN_FLAMING);
+        item.plus  += -2 + random2(4);
+        item.plus2 += -1 + random2(2);
+        break;
+
     case MONS_GRUM:
         force_item = true; // guaranteed reaching
         item_race  = MAKE_ITEM_NO_RACE;
@@ -4652,6 +4661,7 @@ void give_armour(monsters *mon, int level)
     case MONS_FRANCIS:
     case MONS_NECROMANCER:
     case MONS_VAMPIRE_MAGE:
+    case MONS_PIKEL:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         force_colour   = DARKGREY;

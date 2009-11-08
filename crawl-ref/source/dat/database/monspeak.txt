@@ -2545,6 +2545,63 @@ VISUAL:@The_monster@ looks very balanced.
 @The_monster@ screams @at_foe@, "Blow your mind!"
 ## END Norris ##
 %%%%
+############ Pikel ######## A big kobold slaver!
+Pikel
+
+@_Pikel_common_@
+
+w:5
+
+@_Pikel_rare_@
+%%%%
+_Pikel_common_
+
+@The_monster@ cracks his whip.
+
+@The_monster@ says, "You'll fetch a fair price!" @player_only@
+
+@The_monster@ says, "Slavery isn't that bad."
+
+@The_monster@ says @to_foe@, "You'll feel the lick of my whip!"
+
+VISUAL:@The_monster@ waves his whip at you.
+%%%%
+_Pikel_rare_
+
+VISUAL:@The_monster@ waves a pair of manacles at you. @player_only@
+
+@The_monster@ says @to_foe@, "Why not give it a go? You'll get fed. Maybe."
+
+@The_monster@ says, "Who am I kidding? They'll work you to death!"
+
+# Creepy Pikel
+@The_monster@ says @to_foe@, "You strike me more as a bedroom slave. Hm."
+
+# Greedy Pikel
+VISUAL:@The_monster@ checks his coin pouch and frowns.
+
+# Original FR speech
+@The_monster@ says, "It's all about the gold, really."
+
+@The_monster@ says, "I just want to get paid!"
+
+@The_mosnter@ says, "I'm sure they'll be treated well, anyway."
+# End original speech
+
+@The_monster@ says, "I'm sure the Orcish Mines are around here somewhere..."
+
+@The_monster@ says, "I knew I should've brought a map."
+
+# Stalker Pikel!
+@The_monster@ shouts, "If I can't have you, no one shall!"
+
+VISUAL:@The_monster@ scowls and wipes his hands on his robe.
+
+# Kinky Pikel
+@The_monster@ says @to_foe@, "I'm sure you'll love being tied up!"
+
+@The_monster@ sighs. "I should go into elves, they're easier to handle. And prettier!"
+%%%%
 ############ POLYPHEMUS ### The King of the Cyclopes from Homer's Odyssey!
 # (A cyclops watching over a herd of yaks.)
 Polyphemus

@@ -3346,12 +3346,12 @@ static monster_type _choose_unique_by_depth(int step)
     case 1: // depth <= 7
         ret = random_choose(MONS_IJYB, MONS_SIGMUND, MONS_BLORK_THE_ORC,
                             MONS_EDMUND, MONS_PRINCE_RIBBIT, MONS_PURGY,
-                            MONS_MENKAURE, MONS_DUVESSA, -1);
+                            MONS_MENKAURE, MONS_DUVESSA, MONS_PIKEL, -1);
         break;
     case 2: // depth <= 9
         ret = random_choose(MONS_BLORK_THE_ORC, MONS_EDMUND, MONS_PSYCHE,
                             MONS_EROLCHA, MONS_PRINCE_RIBBIT, MONS_GRUM,
-                            MONS_GASTRONOK, MONS_MAURICE, -1);
+                            MONS_GASTRONOK, MONS_MAURICE, MONS_PIKEL, -1);
         break;
     case 3: // depth <= 13
         ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,

@@ -1945,6 +1945,12 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         band = BAND_GOLDEN_EYE;
         band_size = 1 + random2(5);
         break;
+
+    case MONS_PIKEL:
+        band = BAND_PIKEL;
+        band_size = 1 + random2(3);
+        break;
+
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2253,6 +2259,10 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_GOLDEN_EYE:
         mon_type = MONS_GOLDEN_EYE;
+        break;
+
+    case BAND_PIKEL:
+        mon_type = MONS_HUMAN;
         break;
 
     default:

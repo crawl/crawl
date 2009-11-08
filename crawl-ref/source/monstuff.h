@@ -176,4 +176,6 @@ int  clone_mons(const monsters* orig, bool quiet = false,
 std::string summoned_poof_msg(const monsters* monster, bool plural = false);
 std::string summoned_poof_msg(const int midx, const item_def &item);
 std::string summoned_poof_msg(const monsters* monster, const item_def &item);
+
+void pikel_band_neutralise();
 #endif

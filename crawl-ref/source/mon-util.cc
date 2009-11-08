@@ -2075,6 +2075,10 @@ void mons_pacify(monsters *mon)
 
     // Make the monster begin leaving the level.
     behaviour_event(mon, ME_EVAL);
+
+    // XXX: Needs a better way to track Pikel's turning neutral.
+    if (mon->type == MONS_PIKEL)
+        pikel_band_neutralise();
 }
 
 static bool _mons_should_fire_beneficial(bolt &beam)

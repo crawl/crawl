@@ -68,6 +68,7 @@ enum band_type
     BAND_DUVESSA,               // 50
     BAND_KHUFU,
     BAND_GOLDEN_EYE,
+    BAND_PIKEL,
     NUM_BANDS                   // always last
 };
 

@@ -1198,6 +1198,29 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
     }
 }
 
+void pikel_band_neutralise ()
+{
+    // XXX: This is a really ugly hack. It should be replaced by something else
+    // when band tracking is available. This assumes that the only human monsters
+    // with MF_BAND_MEMBER are Pikel's band members.
+    bool message_made = false;
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *monster = &menv[i];
+        if (monster->alive() && monster->type == MONS_HUMAN 
+            && testbits(monster->flags, MF_BAND_MEMBER))
+        {
+            if (monster->observable() && !message_made)
+            {
+                mpr("Pikel's slaves thank you for their freedom.");
+                message_made = true;
+            }
+            mons_pacify(monster);
+        }
+    }
+}
+
 static void _hogs_to_humans()
 {
     // Simplification: if, in a rare event, another hog which was not created
@@ -1989,6 +2012,12 @@ int monster_die(monsters *monster, killer_type killer,
     else if (monster->type == MONS_KIRKE && !in_transit)
     {
         _hogs_to_humans();
+    }
+    else if (monster->type == MONS_PIKEL)
+    {
+        // His slaves don't care if he's dead or not, just whether or not
+        // he goes away.
+        pikel_band_neutralise();
     }
     else if (monster->type == MONS_KRAKEN)
     {

@@ -5296,6 +5296,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
         if (!mon->has_ench(ENCH_CHARM))
         {
+            // XXX: Another hackish thing for Pikel's band neutrality.
+            if (mon->type == MONS_PIKEL)
+                pikel_band_neutralise();
+
             if (simple_monster_message(mon, " is charmed."))
                 obvious_effect = true;
             mon->add_ench(ENCH_CHARM);
