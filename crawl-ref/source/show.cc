@@ -216,10 +216,10 @@ void show_def::init()
     grid.init(show_type());
     backup.init(show_type());
 
-     const coord_def &ul = crawl_view.glos1; // Upper left
-     const coord_def &lr = crawl_view.glos2; // Lower right
+    const coord_def &ul = crawl_view.glos1; // Upper left
+    const coord_def &lr = crawl_view.glos2; // Lower right
 
-     for (rectangle_iterator ri(ul, lr); ri; ++ri)
-         if (observe_cell(*ri))
-            update_at(*ri, grid2show(*ri));
+    for (rectangle_iterator ri(ul, lr); ri; ++ri)
+        if (observe_cell(*ri))
+           update_at(*ri, grid2show(*ri));
 }

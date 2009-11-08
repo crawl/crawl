@@ -76,5 +76,5 @@ bool los_def::in_bounds(const coord_def& p) const
 bool los_def::see_cell(const coord_def& p) const
 {
     const coord_def sp = p - center;
-    return (sp.rdist() <= ENV_SHOW_OFFSET && show(sp));
+    return (sp.rdist() <= LOS_MAX_RANGE && show(sp));
 }
