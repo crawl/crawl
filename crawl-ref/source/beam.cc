@@ -5304,6 +5304,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
     case BEAM_PORKALATOR:
     {
+        // Monster's which use the ghost structure can't be properly
+        // restored from hog form.
+        if (mons_is_ghost_demon(mon->type))
+            return (MON_UNAFFECTED);
+
         monster_type orig_type = mon->type;
         if (monster_polymorph(mon, (mon->holiness() == MH_DEMONIC ?
                                         MONS_HELL_HOG : MONS_HOG)))
