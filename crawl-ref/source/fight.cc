@@ -2256,7 +2256,8 @@ bool melee_attack::distortion_affects_defender()
     //jmf: blink frogs *like* distortion
     // I think could be amended to let blink frogs "grow" like
     // jellies do {dlb}
-    if (mons_genus(defender_as_monster()->type) == MONS_BLINK_FROG)
+    if (defender->atype() == ACT_MONSTER
+        && mons_genus(defender_as_monster()->type) == MONS_BLINK_FROG)
     {
         if (one_chance_in(5))
         {
