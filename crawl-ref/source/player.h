@@ -567,8 +567,6 @@ bool player_light_armour(bool with_skill = false);
 
 bool player_under_penance(void);
 
-int player_wielded_item();
-
 bool extrinsic_amulet_effect(jewellery_type amulet);
 bool wearing_amulet(jewellery_type which_am, bool calc_unid = true);
 
