@@ -5,8 +5,8 @@ class rectangle_iterator :
     public std::iterator<std::forward_iterator_tag, coord_def>
 {
 public:
-    rectangle_iterator( const coord_def& corner1, const coord_def& corner2 );
-    explicit rectangle_iterator( int x_border_dist, int y_border_dist = -1 );
+    rectangle_iterator(const coord_def& corner1, const coord_def& corner2);
+    explicit rectangle_iterator(int x_border_dist, int y_border_dist = -1);
     operator bool() const;
     coord_def operator *() const;
     const coord_def* operator->() const;
