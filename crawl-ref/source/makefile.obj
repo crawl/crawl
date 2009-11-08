@@ -3,6 +3,7 @@ abl-show.o \
 abyss.o \
 acr.o \
 actor.o \
+actor-los.o \
 arena.o \
 artefact.o \
 attitude-change.o \

@@ -322,6 +322,8 @@ public:
     bool mon_see_cell(const coord_def& pos, bool reach = false) const;
     bool near_foe() const;
 
+    const los_def& get_los_no_trans();
+
     bool is_icy() const;
     bool is_fiery() const;
     bool paralysed() const;

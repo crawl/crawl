@@ -1030,7 +1030,8 @@ static bool _feawn_retribution()
         // We are going to spawn some oklobs but first we need to find
         // out a little about the situation.
         std::vector<std::vector<coord_def> > radius_points;
-        collect_radius_points(radius_points,you.pos(),env.no_trans_show);
+        collect_radius_points(radius_points, you.pos(),
+                              you.get_los_no_trans());
 
         unsigned free_thresh = 30;
 

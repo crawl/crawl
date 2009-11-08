@@ -2729,7 +2729,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
             continue;
 
         // Players won't summon out of LOS, or past transparent walls.
-        if (!see_cell_no_trans(*ri) && playerSummon)
+        if (!you.see_cell_no_trans(*ri) && playerSummon)
             continue;
 
         success =

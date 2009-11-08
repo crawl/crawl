@@ -295,9 +295,8 @@ public:
   std::vector<int> beholders;
 
 protected:
-  FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
-  FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
-
+    FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
+    FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
 
 public:
     player();
@@ -325,6 +324,10 @@ public:
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid) const;
     bool visible_to(const actor *looker) const;
+
+    bool see_cell_no_trans(const coord_def &c) const;
+    void update_los();
+
     bool is_icy() const;
     bool is_fiery() const;
 

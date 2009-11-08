@@ -50,7 +50,6 @@ bool see_cell(const env_show_grid &show,
               const coord_def &c,
               const coord_def &pos );
 bool observe_cell(const coord_def &p);
-bool see_cell_no_trans( const coord_def &p );
 bool trans_wall_blocking( const coord_def &p );
 
 #endif

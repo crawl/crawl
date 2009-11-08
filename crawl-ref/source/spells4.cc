@@ -2007,7 +2007,7 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
         if (distance(base, target) > 10 || distance(you.pos(), target) < 8)
             continue;
 
-        if (!see_cell_no_trans(target))
+        if (!you.see_cell_no_trans(target))
             continue;
 
         found = true;

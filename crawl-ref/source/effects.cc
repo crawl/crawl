@@ -4347,7 +4347,7 @@ int place_ring(std::vector<coord_def> &ring_points,
 // Collect lists of points that are within LOS (under the given env map),
 // unoccupied, and not solid (walls/statues).
 void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
-                           const coord_def &origin, const env_show_grid &losgrid)
+                           const coord_def &origin, const los_def &los)
 {
 
     radius_points.clear();
@@ -4404,7 +4404,7 @@ void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
             coord_dist temp(*i, current.second);
 
             // If the grid is out of LOS, skip it.
-            if (!see_cell(losgrid, origin, temp.first))
+            if (!los.see_cell(temp.first))
                 continue;
 
             coord_def local = temp.first - origin;
@@ -4437,10 +4437,9 @@ static int _mushroom_ring(item_def &corpse, int & seen_count,
 
     std::vector<std::vector<coord_def> > radius_points;
 
-    env_show_grid losgrid;
-    losight(losgrid, corpse.pos, opc_solid);
+    los_def los(corpse.pos, opc_solid);
 
-    collect_radius_points(radius_points, corpse.pos, losgrid);
+    collect_radius_points(radius_points, corpse.pos, los);
 
     // So what we have done so far is collect the set of points at each radius
     // reachable from the origin with (somewhat constrained) 8 connectivity,

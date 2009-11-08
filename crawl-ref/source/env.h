@@ -29,10 +29,6 @@ public:
     // Objects that are in LOS, used for drawing.
     show_def show;
 
-    // What would be visible, if all of the translucent wall were
-    // made opaque.
-    env_show_grid no_trans_show;
-
 #ifdef USE_TILE
     // indexed by grid coords
     FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg;

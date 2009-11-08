@@ -6,6 +6,7 @@
 class actor
 {
 public:
+    actor();
     virtual ~actor();
 
     virtual monster_type  id() const = 0;
@@ -112,6 +113,9 @@ public:
     virtual bool see_cell(const coord_def &c) const;
 
     virtual void update_los();
+
+    // Could be const for player, but monsters updates it on the fly.
+    virtual const los_def& get_los_no_trans();
 
     // Can the actor actually see the target?
     virtual bool can_see(const actor *target) const;
@@ -235,6 +239,7 @@ public:
 
 protected:
     los_def los;
+    los_def los_no_trans; // only being updated for player
 };
 
 #endif

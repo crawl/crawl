@@ -224,7 +224,7 @@ void corpse_rot()
 {
     for (radius_iterator ri(you.pos(), 6); ri; ++ri)
     {
-        if (see_cell_no_trans(*ri) && !is_sanctuary(*ri)
+        if (you.see_cell_no_trans(*ri) && !is_sanctuary(*ri)
             && env.cgrid(*ri) == EMPTY_CLOUD)
         {
             for (stack_iterator si(*ri); si; ++si)

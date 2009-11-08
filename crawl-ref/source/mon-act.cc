@@ -759,7 +759,7 @@ static bool _handle_reaching(monsters *monster)
             // This check isn't redundant -- player may be invisible.
             if (monster->target == you.pos()
                 && grid_distance(monster->pos(), you.pos()) == 2
-                && (see_cell_no_trans(monster->pos())
+                && (you.see_cell_no_trans(monster->pos())
                     || grd(middle) > DNGN_MAX_NONREACH))
             {
                 ret = true;

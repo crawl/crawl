@@ -70,10 +70,10 @@ rectangle_iterator rectangle_iterator::operator++( int dummy )
 radius_iterator::radius_iterator(const coord_def& _center, int _radius,
                                  bool _roguelike_metric, bool _require_los,
                                  bool _exclude_center,
-                                 const env_show_grid* _losgrid)
+                                 const los_def* _los)
     : center(_center), radius(_radius), roguelike_metric(_roguelike_metric),
       require_los(_require_los), exclude_center(_exclude_center),
-      losgrid(_losgrid), iter_done(false)
+      los(_los), iter_done(false)
 {
     reset();
 }
@@ -129,9 +129,9 @@ bool radius_iterator::on_valid_square() const
         return (false);
     if (require_los)
     {
-        if (!losgrid && !you.see_cell(location))
+        if (!los && !you.see_cell(location))
             return (false);
-        if (losgrid && !see_cell(*losgrid, center, location))
+        if (los && !los->see_cell(location))
             return (false);
     }
     if (exclude_center && location == center)

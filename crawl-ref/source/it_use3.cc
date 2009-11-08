@@ -223,7 +223,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         mpr("Your weapon cannot reach that far!");
         return (false);
     }
-    else if (!see_cell_no_trans(beam.target)
+    else if (!you.see_cell_no_trans(beam.target)
              && grd(middle) <= DNGN_MAX_NONREACH)
     {
         // Might also be a granite statue/orcish idol which you

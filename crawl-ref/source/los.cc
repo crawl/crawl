@@ -929,12 +929,7 @@ void losight_permissive(env_show_grid &sh, const coord_def& center)
 void calc_show_los()
 {
     if (!crawl_state.arena && !crawl_state.arena_suspended)
-    {
         you.update_los();
-        // What would be visible, if all of the translucent walls were
-        // made opaque.
-        losight(env.no_trans_show, you.pos(), opc_no_trans);
-    }
 }
 
 bool see_cell(const env_show_grid &show,
@@ -963,15 +958,8 @@ bool observe_cell(const coord_def &p)
              || you.see_cell(p));
 }
 
-// Answers the question: "Would a cell be within character's line of sight,
-// even if all translucent/clear walls were made opaque?"
-bool see_cell_no_trans(const coord_def &p)
-{
-    return see_cell(env.no_trans_show, you.pos(), p);
-}
-
 // Is the cell visible, but a translucent wall is in the way?
 bool trans_wall_blocking(const coord_def &p)
 {
-    return you.see_cell(p) && !see_cell_no_trans(p);
+    return (you.see_cell(p) && !you.see_cell_no_trans(p));
 }

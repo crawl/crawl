@@ -8,28 +8,13 @@
 #include "stuff.h"
 #include "traps.h"
 
+actor::actor()
+    : los_no_trans(los_def(coord_def(0,0), opacity_no_trans()))
+{
+}
+
 actor::~actor()
 {
-}
-
-bool actor::observable() const
-{
-    return (crawl_state.arena || this == &you || you.can_see(this));
-}
-
-bool actor::see_cell(const coord_def &p) const
-{
-    return (los.see_cell(p));
-}
-
-void actor::update_los()
-{
-    los.update();
-}
-
-bool actor::can_see(const actor *target) const
-{
-    return (target->visible_to(this) && see_cell(target->pos()));
 }
 
 bool actor::has_equipped(equipment_type eq, int sub_type) const
@@ -129,4 +114,5 @@ void actor::set_position(const coord_def &c)
 {
     position = c;
     los.set_center(c);
+    los_no_trans.set_center(c);
 }

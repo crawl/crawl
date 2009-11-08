@@ -643,7 +643,7 @@ static int _get_dist_to_nearest_monster()
             continue;
 
         // Can we see (and reach) the grid?
-        if (!see_cell_no_trans(*ri))
+        if (!you.see_cell_no_trans(*ri))
             continue;
 
         const monsters *mon = monster_at(*ri);

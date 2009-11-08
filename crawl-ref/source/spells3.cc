@@ -1062,17 +1062,11 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 {
     UNUSED(pow);
 
-    // Use an alternate LOS grid, based on the caster's LOS.
-    env_show_grid losgrid;
-    if (caster->atype() != ACT_PLAYER)
-        losight(losgrid, caster->pos(), opc_no_trans);
-
     int number_raised = 0;
     int number_seen   = 0;
 
     radius_iterator ri(caster->pos(), 6, true, true, false,
-                       caster->atype() == ACT_PLAYER ? &env.no_trans_show
-                                                     : &losgrid);
+                       &caster->get_los_no_trans());
 
     // Sweep all squares in LOS.
     for (; ri; ++ri)

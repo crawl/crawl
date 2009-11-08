@@ -2048,7 +2048,7 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.
-    if (need_path && !see_cell_no_trans(where))
+    if (need_path && !you.see_cell_no_trans(where))
         return (false);
 
     if (!_mons_is_valid_target(mon, mode, range))

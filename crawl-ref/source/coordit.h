@@ -17,15 +17,16 @@ private:
     coord_def current, topleft, bottomright;
 };
 
+class los_def;
 class radius_iterator : public std::iterator<std::forward_iterator_tag,
                         coord_def>
 {
 public:
-    radius_iterator( const coord_def& center, int radius,
-                     bool roguelike_metric = true,
-                     bool require_los = true,
-                     bool exclude_center = false,
-                     const env_show_grid* losgrid = NULL );
+    radius_iterator(const coord_def& center, int radius,
+                    bool roguelike_metric = true,
+                    bool require_los = true,
+                    bool exclude_center = false,
+                    const los_def* los = NULL);
     bool done() const;
     void reset();
     operator bool() const { return !done(); }
@@ -41,7 +42,7 @@ private:
     coord_def location, center;
     int radius;
     bool roguelike_metric, require_los, exclude_center;
-    const env_show_grid* losgrid;
+    const los_def* los;
     bool iter_done;
 };
 

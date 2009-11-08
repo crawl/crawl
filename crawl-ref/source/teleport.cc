@@ -100,7 +100,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
         // Player can't randomly pass through translucent walls.
         if (origin_is_player)
         {
-            if (see_cell_no_trans(target))
+            if (you.see_cell_no_trans(target))
                 return (true);
 
             continue;
