@@ -1,9 +1,12 @@
 #include "AppHdr.h"
 
+#include "halo.h"
+
 #include "actor.h"
 #include "player.h"
 #include "monster.h"
 #include "religion.h"
+#include "terrain.h"
 
 // TODO: generalize.
 bool actor::haloed() const
@@ -32,3 +35,16 @@ int monsters::halo_radius() const
 {
     return 0;
 }
+
+std::list<actor*> inside_halo(const coord_def &c)
+{
+    std::list<actor*> haloers;
+    for (radius_iterator ri(c, LOS_RADIUS, false); ri; ++ri)
+    {
+        actor* a = actor_at(*ri);
+        if (a && a->inside_halo(c))
+            haloers.push_back(a);
+    }
+    return (haloers);
+}
+
