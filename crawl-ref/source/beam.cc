@@ -4041,7 +4041,7 @@ void bolt::affect_player()
     std::vector<std::string> messages;
     apply_dmg_funcs(&you, hurted, messages);
 
-    int armour_damage_reduction = random2( 1 + player_AC() );
+    int armour_damage_reduction = random2( 1 + you.armour_class() );
     if (flavour == BEAM_ELECTRICITY)
         armour_damage_reduction /= 2;
     hurted -= armour_damage_reduction;
@@ -4049,8 +4049,8 @@ void bolt::affect_player()
     // shrapnel has triple AC reduction
     if (flavour == BEAM_FRAG && !player_light_armour())
     {
-        hurted -= random2( 1 + player_AC() );
-        hurted -= random2( 1 + player_AC() );
+        hurted -= random2( 1 + you.armour_class() );
+        hurted -= random2( 1 + you.armour_class() );
     }
 
 #if DEBUG_DIAGNOSTICS
@@ -4111,7 +4111,7 @@ void bolt::affect_player()
         }
         else if (item->special == SPMSL_CURARE)
         {
-            if (x_chance_in_y(90 - 3 * player_AC(), 100))
+            if (x_chance_in_y(90 - 3 * you.armour_class(), 100))
             {
                 curare_hits_player(actor_to_death_source(agent()),
                                    1 + random2(3));

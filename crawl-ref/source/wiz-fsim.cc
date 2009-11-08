@@ -94,7 +94,7 @@ static void _fsim_defence_item(FILE *out, long cum, int hits, int max,
     // AC | EV | Arm | Dod | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time
     fprintf(out, "%2d   %2d    %2d   %2d   %3ld%%   %5.2f      %5.2f      %5.2f      %3d"
             "       %2d\n",
-            player_AC(),
+            you.armour_class(),
             player_evasion(),
             you.skills[SK_DODGING],
             you.skills[SK_ARMOUR],

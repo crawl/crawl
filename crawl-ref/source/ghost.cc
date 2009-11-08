@@ -333,7 +333,7 @@ void ghost_demon::init_player_ghost()
     name   = you.your_name;
     max_hp = ((you.hp_max >= MAX_GHOST_HP) ? MAX_GHOST_HP : you.hp_max);
     ev     = player_evasion();
-    ac     = player_AC();
+    ac     = you.armour_class();
 
     if (ev > MAX_GHOST_EVASION)
         ev = MAX_GHOST_EVASION;

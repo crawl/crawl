@@ -484,7 +484,7 @@ static void _print_stats_ac(int x, int y)
         textcolor( RED );
     else
         textcolor( HUD_VALUE_COLOUR );
-    cprintf( "%2d ", player_AC() );
+    cprintf( "%2d ", you.armour_class() );
 
     // SH: (two lines lower)
     cgotoxy(x+4, y+2, GOTO_STAT);
@@ -1685,7 +1685,7 @@ static std::vector<formatted_string> _get_overview_stats()
     snprintf(buf, sizeof buf, "Gold %d", you.gold);
     cols1.add_formatted(0, buf, false);
 
-    snprintf(buf, sizeof buf, "AC %2d" , player_AC());
+    snprintf(buf, sizeof buf, "AC %2d" , you.armour_class());
     cols1.add_formatted(1, buf, false);
 
     snprintf(buf, sizeof buf, "EV %2d" , player_evasion());

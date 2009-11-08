@@ -578,8 +578,6 @@ int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
 
 int check_stealth(void);
 
-int player_AC(void);
-
 int player_energy(void);
 
 int player_evasion(void);

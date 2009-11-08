@@ -626,7 +626,7 @@ void in_a_cloud()
             if (resist < 0)
                 hurted += ((random2avg(14, 2) + 3) * you.time_taken) / 10;
 
-            hurted -= random2(player_AC());
+            hurted -= random2(you.armour_class());
 
             if (hurted < 0)
                 hurted = 0;
@@ -680,7 +680,7 @@ void in_a_cloud()
             if (resist < 0)
                 hurted += ((random2avg(14, 2) + 3) * you.time_taken) / 10;
 
-            hurted -= random2(player_AC());
+            hurted -= random2(you.armour_class());
             if (hurted < 0)
                 hurted = 0;
 
