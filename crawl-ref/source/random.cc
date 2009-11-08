@@ -261,3 +261,79 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
         hfuzz = highfuzz * val / 100;
     return val + random2avg(lfuzz + hfuzz + 1, naverage) - lfuzz;
 }
+
+// This is used when the front-end randomness is inconclusive.  There are
+// never more than two possibilities, which simplifies things.
+bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
+{
+    if (x <= 0)
+        return (false);
+
+    if (x >= y)
+        return (true);
+
+    do
+    {
+        if (index == int(bits.size()))
+            bits.push_back(random_int());
+
+        uint64_t expn_rand_1 = uint64_t(bits[index++]) * y;
+        uint64_t expn_rand_2 = expn_rand_1 + y;
+        uint64_t expn_minimum_fail = uint64_t(x) << 32;
+
+        if (expn_minimum_fail <= expn_rand_1)
+            return (false);
+
+        if (expn_rand_2 <= expn_minimum_fail)
+            return (true);
+
+        // y = expn_rand_2 - expn_rand_1;  no-op
+        x = expn_minimum_fail - expn_rand_1;
+    } while(1);
+}
+
+int defer_rand::random2(int maxp1)
+{
+    if (maxp1 <= 1)
+        return (0);
+
+    if (bits.empty())
+        bits.push_back(random_int());
+
+    uint64_t expn_rand_1 = uint64_t(bits[0]) * maxp1;
+    uint64_t expn_rand_2 = expn_rand_1 + maxp1;
+
+    int val1 = int(expn_rand_1 >> 32);
+    int val2 = int(expn_rand_2 >> 32);
+
+    if (val2 == val1)
+        return (val1);
+
+    // val2 == val1 + 1
+    uint64_t expn_thresh = uint64_t(val2) << 32;
+
+    return x_chance_in_y_contd(int(expn_thresh - expn_rand_1),
+                               maxp1, 1)
+         ? val1 : val2;
+}
+
+defer_rand& defer_rand::operator[](int i)
+{
+    return children[i];
+}
+
+int defer_rand::random_range(int low, int high)
+{
+    ASSERT(low <= high);
+    return (low + random2(high - low + 1));
+}
+
+int defer_rand::random2avg(int max, int rolls)
+{
+    int sum = random2(max);
+
+    for (int i = 0; i < (rolls - 1); i++)
+        sum += random2(max + 1);
+
+    return (sum / rolls);
+}
