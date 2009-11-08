@@ -360,7 +360,7 @@ A:help
 
 A: There are several areas where you can get creative and outside help is
 much appreciated. These are:
-* the maps/vaults (see dat/ folder, docs/level_design.txt)
+* the maps/vaults (see dat/ folder, docs/develop/levels/introduction.txt)
 * monster speech (see dat/database/, docs/monster_speech.txt)
 * monster/item/spell descriptions (see dat/descript/)
 * tiles (see source/rltiles/, docs/tiles_creation.txt)

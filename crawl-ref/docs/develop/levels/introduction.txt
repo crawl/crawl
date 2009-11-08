@@ -1,0 +1,349 @@
+-----------------------------------------------
+How to make levels for Dungeon Crawl Stone Soup
+-----------------------------------------------
+
+Part I:    INTRODUCTION
+           ============
+
+Contents:  A. Introduction
+           B. Sample map
+           C. The .des files
+           D. Kinds of vaults
+           E. Hints for level makers
+           F. Principles of vault making
+
+This document explains some basics of vault making. For actual vault work,
+you will need to look at syntax.txt. However, by simply looking at the 
+example provided here and looking through entry.des, you should be able to
+make changes or small vaults on your own.
+
+
+A.   Introduction
+=================
+
+A game like Crawl generally uses random content. This also applies to maps,
+which are made in various ways, but all with a large random component. 
+However, for several reasons, it is also useful to have handmade maps: they
+can provide challenges random levels would rarely come up with; they can be
+especially thematic, for example on branch ends. Simple pre-made pieces of
+maps are called "vaults", these can provide challenge, loot, flavour or 
+just make the rather big levels of Crawl more interesting.
+
+These vaults come in all sizes, from mere 3x3 to level encompassing maps.
+Section B contains an example vault (not to be used somewhere), giving you
+an idea of how vaults are defined.
+
+Since predefined and fixed content clashes with the philosophy of randomly
+generated content, vaults can be randomised in many ways. The other way to
+help lessen the effect of deja vu is by having lots of vaults. Therefore,
+new vaults are always appreciated.
+
+
+B.   Sample Map
+===============
+
+Before going into the technical details of the level-file syntax, it might be
+a good idea to look at an example - a branch entry for the Ecumenical Temple -
+to see what a map definition looks like.
+
+# name below:
+NAME:    useless_temple_entry
+# header section below:
+ORIENT:  float                    # "ORIENT: float" tells the level builder that
+                                  #     this entry can be anywhere on the level.
+TAGS:    temple_entry             #  "TAGS: temple_entry" turns the 'O' on the
+MONS:    butterfly, plant         #               map into stairs to the Temple.
+ITEM:    stone
+# actual map below:               # The symbols on the map:
+MAP                               # x - rock wall
+xx.d.xx                           # . - floor
+x..1..x                           # @ - entry point (
+@d2O2d.                           # O - stairs to the Temple
+x..1..x                           # 1 - first monster from list (here butterfly)
+xx.d.xx                           # 2 - second monster from list (here plant)
+ENDMAP                            # d - first item from the list (here stones)
+
+Every map consists of a name, a header and the actual map (the order is not
+important as long as the name comes first, but try to stick to this order for
+consistency).
+
+Lines starting with # are comments. The keywords available are explained
+in detail in the syntax.txt file.
+
+
+C.   The .des files
+===================
+
+All fixed level information resides in various .des files to be found in the
+dat directory. If you are interested in adding some vaults, say, start with
+the existing ones and modify them. If you are new to vault making, look at
+
+ entry.des    - entry vaults (each game - but not tutorial games - uses one of
+                these premade maps for the vicinity of the entrance)
+ float.des    - floating vaults
+ large.des    - all regular vaults which have ORIENT:encompass/northwest etc
+ mini.des     - minivaults (no ORIENT line at all)
+
+The following contain vaults for special branches:
+
+ crypt.des    - random vaults for Crypt, the Crypt:5 branch ends, and the
+                predefined maps for Tomb:1, Tomb:2 and Tomb:3
+ elf.des      - arrival and random vaults for Elf, and Elf:7 branch ends
+ hells.des    - hell entrances, Geryon's vestibule, Coc:7, Tar:7, Dis:7, Geh:7
+ hive.des     - hive entrances, random hive vaults, Hive:2
+ lair.des     - lair entrances, random vaults for lair proper and sub-branches,
+                and the branch ends: Shoals:5, Swamp:5, Snake:5, Slime:6
+ orc.des      - orcish mine entrances, orc only vaults
+ pan.des      - vaults of the Pan demon lords, Pan minivaults
+ temple.des   - Ecumenical Temples, and Temple entrances
+ vaults.des   - entrances for the Vaults, Vaults-specific vaults, the
+                Hall of Blades, and Vaults:8
+ zot.des      - vaults for the Zot branch and the maps for Zot:5
+
+There are a number of portal vaults. The following files contain a lot more
+technology. Look into them if you want to make portal vaults of your own, or
+just see lua applied.
+
+ altar.des    - minivaults containing altars
+ bailey.des   - the bailey portal vault
+ bazaar.des   - entrances to bazaar portal vaults, and bazaars proper
+ icecave.des  - the ice cave portal vault
+ lab.des      - labyrinths exits and flavour vaults
+ ossuary.des  - the ossuary portal vault
+ sewer.des    - the sewer portal vault
+ shrine.des   - the shrine portal vault
+ volcano.des  - the volcano portal vault
+ ziggurat.des - the ziggurat entry vaults, pillars and arenas
+
+The following .des files are rather special. Look, don't touch.
+
+ arena.des    - arenas for the arena mode
+ didact.des   - lua and vaults for syntax checking - not used in-game
+ dummy.des    - global dummy balancers
+ layout.des   - level layout code that has been moved from dungeon.cc and
+                rewritten in Lua.
+ rooms.des    - special monster rooms, such as orc, kobold and jelly rooms
+
+
+D.   Kinds of Vaults
+====================
+
+The different kinds of vaults used by Crawl are described below.
+
+Entry vault:
+    A map designed for D:1, which (usually) contains the primary upstair {
+and is always tagged "entry". A player starting a new game will usually land
+in an entry vault.
+
+Branch entry vault, or branch portal vault:
+     A map containing the entry to a branch - either a branch stair (such as
+the stair to the Orcish Mines), or a branch portal (a portal to Hell, say).
+Always tagged "<branchname>_entry".
+
+Special level:
+     A map for a location of significance in the game, such as the Ecumenical
+Temple, or the end of branches such as level 5 of the Snake Pit (Snake:5).
+Special level maps usually have a PLACE: attribute.
+
+Random vaults:
+    Random vaults may be randomly generated at any level in the dungeon.
+Random vault maps are selected by the dungeon builder based on their DEPTH:
+attributes.
+
+Random minivaults:
+    Random minivaults are small maps that are placed onto a level that the
+dungeon builder has already constructed fully otherwise (the level may
+include other vaults).
+
+Minivaults are distinguished from normal vaults by the absence of an
+ORIENT: declaration. Any map without a specified ORIENT: is a
+minivault. Minivaults are handled like floating vaults (ORIENT: float
+vaults) in most respects. The differences are:
+
+1. Floating vaults may be placed before the rest of the level layout
+   is generated, and the rest of the level may be built around the floating
+   vault. This is never the case for minivaults.
+
+2. Floating vaults may be placed anywhere in the map, including places
+   completely separated from the rest of the level by rock. The
+   dungeon builder will then connect the exits from the floating vault
+   to the rest of the level, usually producing obvious "passages" from
+   the floating vault to the main body of the level.
+
+   In contrast, minivaults are placed such that at least one square of
+   the minivault overlaps with an existing part of the level, and are
+   thus more likely to look like part of the level. Unlike floating
+   vaults, the dungeon builder assumes that any one square of overlap
+   is enough to connect the minivault to the rest of the level and
+   makes no effort to connect exits from the minivault to the level.
+   You can ask the dungeon builder to connect exits from your
+   minivault with the "mini_float" tag.
+
+
+E.   Hints for level makers
+===========================
+
+Stairs
+------
+You do not have to place all of the stairs unless the level is full
+screen, in which case you must place all except the extra stairs (these
+are glyphs > and < and produce escape hatches). Any of the other stairs
+which are not present in the vault will be randomly placed outside it.
+
+Also generally try to avoid rooms with no exit (you can use > or < to
+make it possible for players to get away, although there are other,
+more elaborate options like teleporation traps, etc.). However, unless
+needed for the purpose, escape hatches are generally not interesting.
+If you do use them, > is almost always better than <.
+
+Entry points
+------------
+Minivaults can use explicit @ exits, or be completely surrounded by
+one space of floor for accessibility. Alternatively, you can request
+that the dungeon builder pick appropriate exits as it does for
+floating vaults by using the "mini_float" tag.
+
+The entry point '@' must be present for all vaults (except for
+full-screen vaults where it must not, and for floating vaults and
+minivaults where it is optional). All @ will be connected to floor
+space in the rest of the map (multiple @ close together may merge
+into the same exit corridor). Make sure that no part of your entry
+level can be cut off! If no @ is present in a floating vault (and
+there are no doors on the edge of the map, see below), the level
+builder will use one or more random floor spaces '.' or doors at the
+circumference as exits. Note that it is not possible to predict
+which spaces the level builder will choose to connect; if you need
+predictability, use explicit @ exits on the edge.
+
+The level-builder will also implicitly treat doors and secret doors
+on the edge of a map as explicit exits (the same as using @) and
+connect them to the rest of the level.
+
+Not using @ and allowing the level-builder to pick exits is
+acceptable in floating vaults, but when you use no @'s with this
+feature in mind, please add comments stating this - else somebody
+may just add @'s later on. :)
+
+Minivaults vs. random vaults
+----------------------------
+Minivaults are handled very differently from regular vaults and special
+levels. They're placed *after* normal map generation, whereas normal
+vaults are placed before generating the rest of the level. There's no
+way to guarantee generation of a minivault on a particular level, although
+using a PLACE: attribute makes the dungeon builder try very hard to place
+the minivault on the specified level. Regular vaults can always be forced to
+appear using a PLACE: attribute.
+
+Technically, you make a minivault like a normal floating vault but
+without an ORIENT: line. Note that minivaults used to be exclusively of
+size 12x12 but this restriction is gone. Still, the smaller the better.
+
+Where possible, use minivaults instead of regular vaults, because the dungeon
+builder has greater freedom with the rest of the level layout when using
+minivaults.
+
+levdes.vim
+----------
+If you use vim, the levdes.vim syntax highlighting script (provided
+in the dat directory) can make level-editing far more pleasant by colouring
+different features in maps and syntax-highlighting .des-file syntax. vim is
+available for nearly all operating systems, including Windows.
+
+
+F.   Principles of vault making
+===============================
+
+Small is good!
+--------------
+This applies mostly to entry vaults and minivaults. Especially entry vaults
+should be rather small. Their intention is to provide some atmosphere for
+the starting room, not to get a grip on the whole of D:1. Minivaults should
+be rather small, as well, in order to increase the chances they may actually
+be chosen during level generation.
+
+Randomise!
+----------
+The level making syntax is very supportive for making a single map appear
+in many versions. Use the SHUFFLE: and SUBST: and NSUBST: directives and
+look at the existing entry vaults. Besides reducing tedium, this avoids
+giving veterans a spoiled edge. As an example, if a secret chamber with
+loot is always at the same place, it's a no-brainer for those who know.
+The same goes for traps. This is much less so if there are several places
+for the chamber (or trap) and there's even a chance it doesn't exist.
+
+You can also use WEIGHT to create modified versions of the same map. In
+order to do this, make several maps and endow each with a chance such
+that the sum of chances add up to 10.
+
+Randomisation does not just apply to layout: you could also have
+different monster population sets (for example make a branch end skewed
+for either melee or ranged opponents), or perhaps couple difficulty to
+loot.
+
+Not too much loot!
+------------------
+For example, entry vaults should in general have very little loot - in
+particular no good_xxx or '*' items lest they might give incentive for
+start-scumming. For random vaults, there needn't be loot at all and, in
+any case, there shouldn't be too much of it. Compare with the branch ends
+rich in treasure (Tomb:3, Cocytus etc.) to get a feeling for this.
+
+It is very easy to fall into the power spiral trap: making newer vaults
+harder than the old ones, but handing out more loot. Be strong, don't
+give in to that temptation.
+
+Have a theme.
+-------------
+It is often worthwhile (for me at least) to have a theme in mind before
+making the actual level. For entry vaults, something simple like 'forest'
+or 'fortress' may be enough. For later (or larger) maps, try to think of
+distinguishing features your map may have. Being cool can be good enough,
+but possessing some gameplay value (for example by being easier for
+particular skills/capabilities like ranged attacks or Traps & Doors or
+necromancy) is even better.
+
+Testing your maps.
+------------------
+This is easy for entry vaults. Temporarily introducing either
+    WEIGHT: 50000   or
+    PLACE:  D:1
+will make your entry appear almost always. For other vaults, you can
+for the moment declare them as entry vaults with a huge WEIGHT: as
+above (and preferably in wizard mode).
+
+In wizmode, you can use the following commands
+    &L "map name"   (creates that vault on the current level)
+    &P "map name"   (for playtesting portal vaults)
+    &~              (for jumping to a branch end).
+For both &L and &P, you don't need to specify the full name of the vault, 
+a substring which uniquely determines the vault is enough. If a branch end
+has several alternatives, you may want to use a high WEIGHT: again.
+
+Minivaults can also be tested by adding a PLACE: to the definition, which
+makes it very likely that the minivault will appear in the chosen level.
+
+If the .des file syntax is incorrect, Crawl will tell you on which line of
+which des file it found the syntax error, making for easier debugging.
+
+Be fair!
+--------
+Crawl is hard but try to balance your monsters. While it is true that Orc:1
+can show an orcish knight, this is very rare. Hence it's probably a bad idea
+to use orcish knights for an entry to the Orcish Mines.
+
+Phrased more generally, do not use OOD (out-of-depth) monsters unless you
+really know what you want.
+
+Be especially fair when creating entry vaults. If your entry is too hard,
+it might get just trashed. Keep in mind that your vault will be played
+very very often, so even small chances of something stupid happening
+(like creation of a really nasty monster) will kick in often enough.
+
+Glass, colours, names: use sparingly!
+-------------------------------------
+It can be very tempting to use the cool new features all over the place:
+transparent walls for looking through, colouring walls and floor in exotic
+ways, giving monsters special names.
+Each of these have their uses, but ask yourself each time if the vaults
+really benefits from this. If all vaults use colours, actual flavour has
+been lost.

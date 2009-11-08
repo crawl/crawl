@@ -125,8 +125,8 @@ them at the homepage, http://crawl-ref.sourceforge.net.
 Crawl uses many hand-drawn (but often randomised) maps. Making them is fun and
 easy. It's best to start with simple entry vaults (glance through
 dat/entry.des for a first impression). Later, you may want to read
-docs/level_design.txt for the full power. If you're ambitious, new maps for
-branch ends are possible, as well.
+docs/develop/levels/introduction.txt. If you're ambitious, new maps for branch
+ends are possible, as well.
 If you've made some maps, you can test them on your system (no compiling
 needed) and then just mail them to the mailing list.
 
