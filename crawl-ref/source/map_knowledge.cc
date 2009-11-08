@@ -18,7 +18,7 @@
 // below to get information about the map grid.
 #define MAP_MAGIC_MAPPED_FLAG   0x01
 #define MAP_SEEN_FLAG           0x02
-#define MAP_CHANGED_FLAG        0x04
+#define MAP_CHANGED_FLAG        0x04 // FIXME: this doesn't belong here
 #define MAP_DETECTED_MONSTER    0x08
 #define MAP_DETECTED_ITEM       0x10
 #define MAP_GRID_KNOWN          0xFF
