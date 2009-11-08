@@ -96,7 +96,6 @@ public:
     int       attack_number;
 
     int       to_hit;
-    int       base_damage;
     int       damage_done;
     int       special_damage;
     int       aux_damage;

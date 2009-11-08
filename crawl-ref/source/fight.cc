@@ -341,24 +341,20 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
 
 melee_attack::melee_attack(actor *attk, actor *defn,
                            bool allow_unarmed, int which_attack)
-    : attacker(attk), defender(defn),
-      cancel_attack(false),
-      did_hit(false), perceived_attack(false), obvious_effect(false),
-      needs_message(false), attacker_visible(false), defender_visible(false),
-      attacker_invisible(false), defender_invisible(false),
-      defender_starting_attitude(ATT_HOSTILE),
-      unarmed_ok(allow_unarmed),
-      attack_number(which_attack),
-      to_hit(0), base_damage(0), damage_done(0),
-      special_damage(0), aux_damage(0), stab_attempt(false), stab_bonus(0),
-      weapon(NULL), damage_brand(SPWPN_NORMAL),
-      wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE), hand_half_bonus(false),
-      art_props(0), unrand_entry(NULL), attack_verb("bug"), verb_degree(),
-      no_damage_message(), special_damage_message(), unarmed_attack(),
-      shield(NULL), defender_shield(NULL),
-      heavy_armour_penalty(0), can_do_unarmed(false),
-      water_attack(false), miscast_level(-1), miscast_type(SPTYP_NONE),
-      miscast_target(NULL), final_effects()
+    : attacker(attk), defender(defn), cancel_attack(false), did_hit(false),
+    perceived_attack(false), obvious_effect(false), needs_message(false),
+    attacker_visible(false), defender_visible(false),
+    attacker_invisible(false), defender_invisible(false),
+    defender_starting_attitude(ATT_HOSTILE), unarmed_ok(allow_unarmed),
+    attack_number(which_attack), to_hit(0), damage_done(0), special_damage(0),
+    aux_damage(0), stab_attempt(false), stab_bonus(0), weapon(NULL),
+    damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
+    hand_half_bonus(false), art_props(0), unrand_entry(NULL),
+    attack_verb("bug"), verb_degree(), no_damage_message(),
+    special_damage_message(), unarmed_attack(), shield(NULL),
+    defender_shield(NULL), heavy_armour_penalty(0), can_do_unarmed(false),
+    water_attack(false), miscast_level(-1), miscast_type(SPTYP_NONE),
+    miscast_target(NULL), final_effects()
 {
     init_attack();
 }
