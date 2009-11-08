@@ -27,7 +27,9 @@ LUAFN(los_find_ray)
     GETCOORD(a, 1, 2, map_bounds);
     GETCOORD(b, 3, 4, map_bounds);
     ray_def *ray = new ray_def;
-    if (find_ray(a, b, *ray))
+    // XXX: opc_no_trans to fit with you.see_cell_no_trans
+    //      in findray test case.
+    if (find_ray(a, b, *ray, opc_no_trans))
     {
         lua_push_ray(ls, ray);
         return (1);
