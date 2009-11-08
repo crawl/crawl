@@ -3616,12 +3616,54 @@ bool bolt::misses_player()
     if (you.invisible() && !can_see_invis)
         real_tohit /= 2;
 
+    // Wow, what a horrid test.  These cannot be blocked or dodged
+    if (!is_beam && !is_blockable())
+        return (false);
+
+    if (is_blockable()
+        && you.shield()
+        && !aimed_at_feet
+        && player_shield_class() > 0)
+    {
+        // We use the original to-hit here.
+        const int testhit = random2(hit * 130 / 100
+                                    + you.shield_block_penalty());
+
+        const int block = you.shield_bonus();
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Beamshield: hit: %d, block %d",
+             testhit, block);
+#endif
+        if (testhit < block)
+        {
+            if (is_reflectable(you.shield()))
+            {
+                mprf( "Your %s reflects the %s!",
+                      you.shield()->name(DESC_PLAIN).c_str(),
+                      name.c_str() );
+                _ident_reflector(you.shield());
+                reflect();
+            }
+            else
+            {
+                mprf( "You block the %s.", name.c_str() );
+                finish_beam();
+            }
+            you.shield_block_succeeded();
+            return (true);
+        }
+
+        // Some training just for the "attempt".
+        if (coinflip())
+            exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
+    }
+
+    if (player_light_armour(true) && !aimed_at_feet && coinflip())
+        exercise(SK_DODGING, 1);
+
     if (is_beam)
     {
-        // Beams can be dodged.
-        if (player_light_armour(true) && !aimed_at_feet && coinflip())
-            exercise(SK_DODGING, 1);
-
         if (you.duration[DUR_DEFLECT_MISSILES])
             real_tohit = random2(real_tohit * 2) / 3;
         else if (you.duration[DUR_REPEL_MISSILES]
@@ -3629,57 +3671,9 @@ bool bolt::misses_player()
         {
             real_tohit -= random2(real_tohit / 2);
         }
-
-        if (!test_beam_hit(real_tohit, dodge))
-        {
-            mprf("The %s misses you.", name.c_str());
-            return (true);
-        }
     }
-    else if (is_blockable())
+    else
     {
-        // Non-beams can be blocked or dodged.
-        if (you.shield()
-            && !aimed_at_feet
-            && player_shield_class() > 0)
-        {
-            // We use the original to-hit here.
-            const int testhit = random2(hit * 130 / 100
-                                        + you.shield_block_penalty());
-
-            const int block = you.shield_bonus();
-
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Beamshield: hit: %d, block %d",
-                 testhit, block);
-#endif
-            if (testhit < block)
-            {
-                if (is_reflectable(you.shield()))
-                {
-                    mprf( "Your %s reflects the %s!",
-                          you.shield()->name(DESC_PLAIN).c_str(),
-                          name.c_str() );
-                    _ident_reflector(you.shield());
-                    reflect();
-                }
-                else
-                {
-                    mprf( "You block the %s.", name.c_str() );
-                    finish_beam();
-                }
-                you.shield_block_succeeded();
-                return (true);
-            }
-
-            // Some training just for the "attempt".
-            if (coinflip())
-                exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
-        }
-
-        if (player_light_armour(true) && !aimed_at_feet && coinflip())
-            exercise(SK_DODGING, 1);
-
         if (you.duration[DUR_DEFLECT_MISSILES])
             real_tohit = random2(real_tohit / 2);
         else if (you.duration[DUR_REPEL_MISSILES]
@@ -3687,14 +3681,14 @@ bool bolt::misses_player()
         {
             real_tohit = random2(real_tohit);
         }
-
-        // miss message
-        if (!test_beam_hit(real_tohit, dodge))
-        {
-            mprf("The %s misses you.", name.c_str());
-            return (true);
-        }
     }
+
+    if (!test_beam_hit(real_tohit, dodge))
+    {
+        mprf("The %s misses you.", name.c_str());
+        return (true);
+    }
+
     return (false);
 }
 
