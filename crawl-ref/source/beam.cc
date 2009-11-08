@@ -3371,31 +3371,41 @@ bool bolt::fuzz_invis_tracer()
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
 static bool _test_beam_hit(int attack, int defence, bool is_beam,
-                           bool deflect, bool repel)
+                           bool deflect, bool repel, defer_rand &r)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Beam attack: %d, defence: %d", attack, defence);
-#endif
-
     if (is_beam && deflect)
     {
-        attack = random2(attack * 2) / 3;
+        attack = r[0].random2(attack * 2) / 3;
     }
     else if (is_beam && repel)
     {
-        attack -= random2(attack / 2);
+        if (attack >= 2)
+            attack = r[0].random_range((attack + 1) / 2 + 1, attack);
     }
     else if (deflect)
     {
-        attack = random2(attack / 2);
+        attack = r[0].random2(attack / 2);
     }
     else if (repel)
     {
-        attack = random2(attack);
+        attack = r[0].random2(attack);
     }
 
-    return (attack == AUTOMATIC_HIT
-            || random2(attack) >= random2avg(defence, 2));
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Beam attack: %d, defence: %d", attack, defence);
+#endif
+    // Reproducing old behavior here; magic dart is dodgable with DMsl
+    if (attack == AUTOMATIC_HIT)
+        return (true);
+
+    attack = r[1].random2(attack);
+    defence = r[2].random2avg(defence, 2);
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Beam new attack: %d, defence: %d", attack, defence);
+#endif
+
+    return (attack >= defence);
 }
 
 std::string bolt::zapper() const
@@ -3662,12 +3672,26 @@ bool bolt::misses_player()
     if (player_light_armour(true) && !aimed_at_feet && coinflip())
         exercise(SK_DODGING, 1);
 
-    if (!_test_beam_hit(real_tohit, dodge, is_beam,
-                        you.duration[DUR_DEFLECT_MISSILES],
-                        (you.duration[DUR_REPEL_MISSILES]
-                         || player_mutation_level(MUT_REPULSION_FIELD) == 3)))
+    defer_rand r;
+
+    if (!_test_beam_hit(real_tohit, dodge, is_beam, false, false, r))
     {
         mprf("The %s misses you.", name.c_str());
+        return (true);
+    }
+    else if ((you.duration[DUR_REPEL_MISSILES]
+                || player_mutation_level(MUT_REPULSION_FIELD) == 3
+                || you.duration[DUR_DEFLECT_MISSILES])
+             && !_test_beam_hit(real_tohit, dodge, is_beam, false, true, r))
+    {
+        mprf("The %s is repelled.", name.c_str());
+        return (true);
+    }
+    else if (you.duration[DUR_DEFLECT_MISSILES]
+             && !_test_beam_hit(real_tohit, dodge, is_beam, true, true, r))
+    {
+        // active voice to imply stronger effect
+        mprf("You deflect the %s!", name.c_str());
         return (true);
     }
 
@@ -4737,17 +4761,27 @@ void bolt::affect_monster(monsters* mon)
     if (mon->invisible() && !can_see_invis)
         beam_hit /= 2;
 
+    defer_rand r;
+    int rand_ev = random2(mon->ev);
+    bool dmsl = mon->type == MONS_KIRKE;
+
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit.  This is so we stay close to the
     // 4.0 to-hit system (which had very little love for monsters).
-    if (!engulfs && !_test_beam_hit(beam_hit, random2(mon->ev), is_beam,
-                                    mon->type == MONS_KIRKE, false))
+    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, is_beam, dmsl, false, r))
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable())
         {
-            msg::stream << "The " << name << " misses "
-                        << mon->name(DESC_NOCAP_THE) << '.' << std::endl;
+            // if it would have hit otherwise...
+            if (_test_beam_hit(beam_hit, rand_ev, is_beam, false, false, r))
+            {
+                msg::stream << mon->name(DESC_CAP_THE) << " deflects the "
+                            << name << '!' << std::endl;
+            } else {
+                msg::stream << "The " << name << " misses "
+                            << mon->name(DESC_NOCAP_THE) << '.' << std::endl;
+            }
         }
         return;
     }
