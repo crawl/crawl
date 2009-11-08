@@ -98,7 +98,7 @@ static bool _tso_retribution()
         bool success = false;
         int how_many = 1 + random2(you.experience_level / 5) + random2(3);
 
-        for (int i = 0; i < how_many; ++i)
+        for (; how_many > 0; --how_many)
         {
             if (summon_holy_warrior(100, god, 0, true, true, true))
                 success = true;
@@ -185,10 +185,10 @@ static bool _zin_retribution()
                 MONS_EYE_OF_DEVASTATION, MONS_GREAT_ORB_OF_EYES
             };
 
-            const int how_many = 1 + (you.experience_level / 10) + random2(3);
+            int how_many = 1 + (you.experience_level / 10) + random2(3);
             bool success = false;
 
-            for (int i = 0; i < how_many; ++i)
+            for (; how_many > 0; --how_many)
             {
                 const monster_type mon = RANDOM_ELEMENT(eyes);
 
@@ -406,7 +406,7 @@ static bool _makhleb_retribution()
         int how_many = 1 + (you.experience_level / 7);
         int count = 0;
 
-        for (int i = 0; i < how_many; ++i)
+        for (; how_many > 0; --how_many)
         {
             if (create_monster(
                     mgen_data::hostile_at(
@@ -436,7 +436,7 @@ static bool _kikubaaqudgha_retribution()
         bool success = false;
         int how_many = 1 + (you.experience_level / 5) + random2(3);
 
-        for (int i = 0; i < how_many; ++i)
+        for (; how_many > 0; --how_many)
         {
             if (create_monster(
                     mgen_data::hostile_at(MONS_REAPER,
@@ -854,7 +854,7 @@ static bool _lugonu_retribution()
         bool success = false;
         int how_many = 1 + (you.experience_level / 7);
 
-        for (int loopy = 0; loopy < how_many; ++loopy)
+        for (; how_many > 0; --how_many)
         {
             if (create_monster(
                    mgen_data::hostile_at(
@@ -977,10 +977,10 @@ static bool _jiyva_retribution()
                 MONS_DEATH_OOZE, MONS_SLIME_CREATURE
             };
 
-        const int how_many = 1 + (you.experience_level / 10) + random2(3);
-
+        int how_many = 1 + (you.experience_level / 10) + random2(3);
         bool success = false;
-        for (int i = 0; i < how_many; ++i)
+
+        for (; how_many > 0; --how_many)
         {
             const monster_type slime = RANDOM_ELEMENT(slimes);
 
