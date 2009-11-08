@@ -1523,6 +1523,7 @@ int monster_die(monsters *monster, killer_type killer,
                                && mons_near(monster)
                                && (monster->visible_to(&you)
                                    || crawl_state.arena);
+    const bool exploded      = monster->flags & MF_EXPLODE_KILL;
 
     const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
           bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
@@ -1544,14 +1545,17 @@ int monster_die(monsters *monster, killer_type killer,
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          monster->name(DESC_CAP_THE).c_str(),
-                         _wounded_damaged(monster->type) ?
-                             "destroyed" : "killed");
+                         exploded                        ? "blown up" :
+                         _wounded_damaged(monster->type) ? "destroyed"
+                                                         : "killed");
                 }
                 else
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
-                         _wounded_damaged(monster->type) ? "destroy" : "kill",
-                             monster->name(DESC_NOCAP_THE).c_str());
+                         exploded                        ? "blow up" :
+                         _wounded_damaged(monster->type) ? "destroy"
+                                                         : "kill",
+                         monster->name(DESC_NOCAP_THE).c_str());
                 }
 
                 if ((created_friendly || was_neutral) && gives_xp)
@@ -1712,10 +1716,11 @@ int monster_die(monsters *monster, killer_type killer,
         case KILL_MON_MISSILE:  // Monster kills by missile or beam.
             if (!silent)
             {
-                simple_monster_message(monster,
-                                       _wounded_damaged(monster->type) ?
-                                           " is destroyed!" : " dies!",
-                                       MSGCH_MONSTER_DAMAGE,
+                const char* msg =
+                    exploded                        ? " is blown up!" :
+                    _wounded_damaged(monster->type) ? " is destroyed!"
+                                                    : " dies!";
+                simple_monster_message(monster, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
 
@@ -1911,10 +1916,11 @@ int monster_die(monsters *monster, killer_type killer,
         case KILL_MISC:
             if (!silent)
             {
-                simple_monster_message(monster,
-                                       _wounded_damaged(monster->type) ?
-                                           " is destroyed!" : " dies!",
-                                       MSGCH_MONSTER_DAMAGE,
+                const char* msg =
+                    exploded                        ? " is blown up!" :
+                    _wounded_damaged(monster->type) ? " is destroyed!"
+                                                    : " dies!";
+                simple_monster_message(monster, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
             break;
