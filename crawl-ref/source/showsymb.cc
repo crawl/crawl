@@ -164,8 +164,7 @@ void get_symbol(const coord_def& where,
         *colour = real_colour(*colour);
 }
 
-unsigned get_symbol(show_type object, unsigned short *colour,
-                    bool magic_mapped)
+unsigned get_symbol(show_type object, bool magic_mapped)
 {
     unsigned ch;
     get_symbol(coord_def(0,0), object, &ch, NULL, magic_mapped);

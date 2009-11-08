@@ -27,7 +27,7 @@ unsigned map_cell::glyph() const
 {
     if (!object)
         return (' ');
-    return get_symbol(object, NULL, !(flags & MAP_SEEN_FLAG));
+    return get_symbol(object, !(flags & MAP_SEEN_FLAG));
 }
 
 bool map_cell::known() const
