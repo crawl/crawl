@@ -95,7 +95,16 @@ int random2(int max)
     if (max <= 1)
         return (0);
 
-    return (static_cast<int>(random_int() / (0xFFFFFFFFUL / max + 1)));
+    unsigned long partn = 0xFFFFFFFFUL / max;
+
+    while (true)
+    {
+        unsigned long bits = random_int();
+        unsigned long val  = bits / partn;
+
+        if (val < (unsigned long)(max))
+            return val;
+    }
 }
 
 bool coinflip(void)
