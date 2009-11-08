@@ -716,6 +716,7 @@ install: $(GAME)
 	mkdir -p $(datadir_fp)/dat/database
 	mkdir -p $(datadir_fp)/dat/descript
 	mkdir -p $(datadir_fp)/docs/develop
+	mkdir -p $(datadir_fp)/docs/develop/levels
 	mkdir -p $(datadir_fp)/docs/license
 	mkdir -p $(datadir_fp)/settings
 	$(COPY) dat/*.des $(datadir_fp)/dat/
@@ -725,6 +726,7 @@ install: $(GAME)
 	$(COPY) dat/descript/*.txt $(datadir_fp)/dat/descript/
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
+	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
 	$(COPY) ../docs/license/*.txt $(datadir_fp)/docs/license/
 	$(COPY) ../settings/* $(datadir_fp)/settings/
 ifdef TILES
