@@ -318,7 +318,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
         unchivalric = UCAT_HELD_IN_NET;
 
     // petrifying
-    if (def && mons_is_petrifying(def))
+    if (def && def->petrifying())
         unchivalric = UCAT_PETRIFYING;
 
     // petrified
@@ -1461,7 +1461,7 @@ bool melee_attack::player_hits_monster()
             || one_chance_in(20)
             || ((defender->cannot_act() || defender->asleep())
                 && !one_chance_in(10 + you.skills[SK_STABBING]))
-            || mons_is_petrifying(defender_as_monster())
+            || defender_as_monster()->petrifying()
                && !one_chance_in(2 + you.skills[SK_STABBING]));
 }
 

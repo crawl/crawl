@@ -334,6 +334,7 @@ public:
     bool backlit(bool check_haloed = true) const;
     int halo_radius() const;
     bool petrified() const;
+    bool petrifying() const;
 
     bool friendly() const;
     bool neutral() const;

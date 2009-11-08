@@ -2819,6 +2819,11 @@ bool monsters::petrified() const
     return has_ench(ENCH_PETRIFIED);
 }
 
+bool monsters::petrifying() const
+{
+    return has_ench(ENCH_PETRIFYING);
+}
+
 bool monsters::friendly() const
 {
     return (attitude == ATT_FRIENDLY || has_ench(ENCH_CHARM));
