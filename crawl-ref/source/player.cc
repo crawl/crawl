@@ -3180,10 +3180,24 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_DEMONSPAWN:
-                if (you.demon_trait[you.experience_level - 2] != NUM_MUTATIONS)
                 {
-                    mpr("Your demonic ancestry asserts itself...", MSGCH_INTRINSIC_GAIN);
-                    perma_mutate(you.demon_trait[you.experience_level - 2], 1);
+                    bool gave_message = false;
+
+                    for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
+                    {
+                        if (you.demonic_traits[i].level_gained
+                            == you.experience_level)
+                        {
+                            if (!gave_message)
+                            {
+                                mpr("Your demonic ancestry asserts itself...",
+                                    MSGCH_INTRINSIC_GAIN);
+
+                                gave_message = true;
+                            }
+                            perma_mutate(you.demonic_traits[i].mutation, 1);
+                        }
+                    }
                 }
 
                 if (!(you.experience_level % 4))
@@ -5572,7 +5586,7 @@ void player::init()
     mutation.init(0);
     demon_pow.init(0);
 
-    demon_trait.init(NUM_MUTATIONS);
+    demonic_traits.clear();
 
     had_book.init(false);
 

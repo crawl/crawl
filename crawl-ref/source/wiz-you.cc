@@ -127,11 +127,11 @@ void wizard_change_species( void )
     case SP_DEMONSPAWN:
     {
         roll_demonspawn_mutations();
-        for (i = 2; i <= you.experience_level; ++i)
+        for (i = 0; i < int(you.demonic_traits.size()); ++i)
         {
-            mutation_type m = you.demon_trait[i-2];
+            mutation_type m = you.demonic_traits[i].mutation;
 
-            if (m == NUM_MUTATIONS)
+            if (you.demonic_traits[i].level_gained > you.experience_level)
                 continue;
 
             ++you.mutation[m];

@@ -12,6 +12,8 @@
 #include "itemprop.h"
 #include "species.h"
 
+#include <vector>
+
 #ifdef USE_TILE
 // This used to be in tiles.h. (jpeg)
 #include "tiledef-main.h"
@@ -221,9 +223,15 @@ public:
 
   FixedVector<unsigned char, NUM_MUTATIONS> mutation;
   FixedVector<unsigned char, NUM_MUTATIONS> demon_pow;
-  // demon_trait[i] is the mutation increased at the i'th
-  // levellup, or NUM_MUTATIONS
-  FixedVector<mutation_type, 26> demon_trait;
+
+  struct demon_trait
+  {
+      int           level_gained;
+      mutation_type mutation;
+  };
+
+  std::vector<demon_trait> demonic_traits;
+
   unsigned char magic_contamination;
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;

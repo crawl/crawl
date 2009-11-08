@@ -2823,7 +2823,8 @@ try_again:
         }
     }
 
-    you.demon_trait.init(NUM_MUTATIONS);
+    you.demonic_traits.clear();
+    player::demon_trait dt;
 
     // Now give mutations from the facets in some order, consistent
     // with the internal order of the facets.
@@ -2871,7 +2872,9 @@ try_again:
             mprf(MSGCH_DIAGNOSTICS, "Demonspawn will gain %s at level %d",
                     get_mutation_def(newmut).wizname, level);
 #endif
-            you.demon_trait[level - 2] = newmut;
+            dt.level_gained = level;
+            dt.mutation = newmut;
+            you.demonic_traits.push_back(dt);
 
             ++given[which_facet];
             ++ngiven;

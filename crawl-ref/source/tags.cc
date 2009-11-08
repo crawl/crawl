@@ -949,10 +949,11 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.demon_pow[j]);
     }
 
-    marshallByte(th, 26);
-    for (j = 0; j < 26; j++)
+    marshallByte(th, you.demonic_traits.size());
+    for (j = 0; j < int(you.demonic_traits.size()); ++j)
     {
-        marshallShort(th, you.demon_trait[j]);
+        marshallByte(th, you.demonic_traits[j].level_gained);
+        marshallShort(th, you.demonic_traits[j].mutation);
     }
 
     // how many penances?
@@ -1403,8 +1404,14 @@ static void tag_read_you(reader &th, char minorVersion)
     if (minorVersion >= TAG_MINOR_DSTRAITS)
     {
         count_c = unmarshallByte(th);
+        you.demonic_traits.clear();
         for (j = 0; j < count_c; ++j)
-            you.demon_trait[j] = static_cast<mutation_type>(unmarshallShort(th));
+        {
+            player::demon_trait dt;
+            dt.level_gained = unmarshallByte(th);
+            dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
+            you.demonic_traits.push_back(dt);
+        }
     }
 
     // how many penances?
