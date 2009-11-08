@@ -330,10 +330,10 @@ int defer_rand::random_range(int low, int high)
 
 int defer_rand::random2avg(int max, int rolls)
 {
-    int sum = random2(max);
+    int sum = (*this)[0].random2(max);
 
     for (int i = 0; i < (rolls - 1); i++)
-        sum += random2(max + 1);
+        sum += (*this)[i+1].random2(max + 1);
 
     return (sum / rolls);
 }
