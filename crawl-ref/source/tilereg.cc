@@ -11,7 +11,8 @@
 
 #include "cio.h"
 #include "coord.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "debug.h"
 #include "describe.h"
 #include "files.h"

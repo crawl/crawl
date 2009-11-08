@@ -64,7 +64,8 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "enum.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "externs.h"
 #include "files.h"
 #include "ghost.h"
@@ -1716,10 +1717,10 @@ static void tag_construct_level(writer &th)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
             marshallByte(th, grd[count_x][count_y]);
-            marshallShowtype(th, env.map[count_x][count_y].object);
-            marshallShort(th, env.map[count_x][count_y].colour);
-            marshallShort(th, env.map[count_x][count_y].flags);
-            marshallLong(th, env.map[count_x][count_y].property);
+            marshallShowtype(th, env.map_knowledge[count_x][count_y].object);
+            marshallShort(th, env.map_knowledge[count_x][count_y].colour);
+            marshallShort(th, env.map_knowledge[count_x][count_y].flags);
+            marshallLong(th, env.pgrid[count_x][count_y]);
             marshallShort(th, env.cgrid[count_x][count_y]);
         }
 
@@ -2097,10 +2098,10 @@ static void tag_read_level( reader &th, char minorVersion )
                 static_cast<dungeon_feature_type>(
                     static_cast<unsigned char>(unmarshallByte(th)) );
 
-            env.map[i][j].object   = unmarshallShowtype(th);
-            env.map[i][j].colour   = unmarshallShort(th);
-            env.map[i][j].flags    = unmarshallShort(th);
-            env.map[i][j].property = unmarshallLong(th);
+            env.map_knowledge[i][j].object   = unmarshallShowtype(th);
+            env.map_knowledge[i][j].colour   = unmarshallShort(th);
+            env.map_knowledge[i][j].flags    = unmarshallShort(th);
+            env.pgrid[i][j] = unmarshallLong(th);
 
             mgrd[i][j] = NON_MONSTER;
             env.cgrid[i][j] = (unsigned short) unmarshallShort(th);
@@ -2439,7 +2440,7 @@ static void tag_missing_level_tiles()
         {
             coord_def gc(i, j);
             unsigned int fg, bg;
-            tileidx_unseen(fg, bg, get_envmap_char(i, j), gc);
+            tileidx_unseen(fg, bg, get_map_knowledge_char(i, j), gc);
             env.tile_bk_fg[i][j] = fg;
             env.tile_bk_bg[i][j] = bg;
         }

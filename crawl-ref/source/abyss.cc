@@ -180,7 +180,7 @@ static void _generate_area(const coord_def& topleft,
     dungeon_feature_type replaced[5];
 
     // Nuke map.
-    env.map.init(map_cell());
+    env.map_knowledge.init(map_cell());
 
     // Generate level composition vector.
     for (int i = 0; i < 5; i++)
@@ -427,7 +427,7 @@ void area_shift(void)
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        fprops(you.pos() - *ri + los_delta) = env.map(*ri).property;
+        fprops(you.pos() - *ri + los_delta) = env.pgrid(*ri);
         if (env.sanctuary_pos == *ri && env.sanctuary_time > 0)
         {
             sanct_pos     = *ri - you.pos();
@@ -526,7 +526,7 @@ void area_shift(void)
     _xom_check_nearness();
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-        env.map(*ri).property = fprops(you.pos() - *ri + los_delta);
+        env.pgrid(*ri) = fprops(you.pos() - *ri + los_delta);
 
     if (sanct_shifted)
         env.sanctuary_pos = sanct_pos + you.pos();

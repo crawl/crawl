@@ -20,6 +20,7 @@
 #include "enum.h"
 #include "externs.h"
 #include "fixary.h"
+#include "fprop.h"
 #include "makeitem.h"
 #include "stuff.h"
 #include "travel.h"

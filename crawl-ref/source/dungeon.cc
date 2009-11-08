@@ -22,7 +22,8 @@
 #include "defines.h"
 #include "effects.h"
 #include "enum.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "externs.h"
 #include "options.h"
 #include "dbg-maps.h"
@@ -961,7 +962,7 @@ void dgn_reset_level()
     // Blank level with DNGN_ROCK_WALL.
     grd.init(DNGN_ROCK_WALL);
     env.grid_colours.init(BLACK);
-    env.map.init(map_cell());
+    env.map_knowledge.init(map_cell());
 
     // Delete all traps.
     for (int i = 0; i < MAX_TRAPS; i++)
@@ -5182,7 +5183,7 @@ static void _replace_area( const coord_def& p1, const coord_def& p2,
             grd(*ri) = feature;
             if (needs_update && is_terrain_seen(*ri))
             {
-                set_envmap_obj(*ri, feature);
+                set_map_knowledge_obj(*ri, feature);
 #ifdef USE_TILE
                 env.tile_bk_bg(*ri) = feature;
 #endif
@@ -6674,9 +6675,9 @@ static void _labyrinth_add_blood_trail(const dgn_region &region)
         if (path.size() < 10)
             continue;
 
-        env.map(start).property |= FPROP_BLOODY;
+        env.pgrid(start) |= FPROP_BLOODY;
 #ifdef WIZARD
-        env.map(start).property |= FPROP_HIGHLIGHT;
+        env.pgrid(start) |= FPROP_HIGHLIGHT;
 #endif
         bleed_onto_floor(start, MONS_HUMAN, 150, true, false);
 
@@ -6687,10 +6688,10 @@ static void _labyrinth_add_blood_trail(const dgn_region &region)
             if (step < 2 || step < 12 && coinflip()
                 || step >= 12 && one_chance_in(step/4))
             {
-                env.map(pos).property |= FPROP_BLOODY;
+                env.pgrid(pos) |= FPROP_BLOODY;
             }
 #ifdef WIZARD
-            env.map(pos).property |= FPROP_HIGHLIGHT;
+            env.pgrid(pos) |= FPROP_HIGHLIGHT;
 #endif
 
             if (step >= 10 && one_chance_in(7))
@@ -6761,14 +6762,14 @@ static void _vitrify_wall_neighbours(const coord_def pos)
             continue;
 
         // Don't vitrify vault grids
-        if (testbits(env.map(p).property, FPROP_VAULT))
+        if (testbits(env.pgrid(p), FPROP_VAULT))
             continue;
 
         if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_STONE_WALL)
         {
             grd(p) = static_cast<dungeon_feature_type>(grd(p) + clear_plus);
 #ifdef WIZARD
-            env.map(p).property |= FPROP_HIGHLIGHT;
+            env.pgrid(p) |= FPROP_HIGHLIGHT;
 #endif
             if (one_chance_in(3) || _grid_has_wall_neighbours(p, dirs[i]))
                 _vitrify_wall_neighbours(p);
@@ -6797,7 +6798,7 @@ static void _labyrinth_add_glass_walls(const dgn_region &region)
 
         grd(pos) = static_cast<dungeon_feature_type>(grd(pos) + clear_plus);
 #ifdef WIZARD
-        env.map(pos).property |= FPROP_HIGHLIGHT;
+        env.pgrid(pos) |= FPROP_HIGHLIGHT;
 #endif
         _vitrify_wall_neighbours(pos);
     }
@@ -8388,7 +8389,7 @@ void vault_placement::apply_grid()
                 dungeon_terrain_changed(*ri, newgrid, true, true);
                 env.markers.remove_markers_at(*ri, MAT_ANY);
             }
-            env.map(*ri).property |= FPROP_VAULT;
+            env.pgrid(*ri) |= FPROP_VAULT;
         }
 
         map.map.apply_overlays(pos);

@@ -8,7 +8,8 @@
 #include "exclude.h"
 
 #include "coord.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "mon-util.h"
 #include "options.h"
 #include "overmap.h"
@@ -96,8 +97,8 @@ struct opacity_excl : opacity_func
             return OPC_CLEAR;
         else if (!is_terrain_changed(p))
             return _feat_opacity(env.grid(p));
-        else if (env.map(p).object.cls == SH_FEATURE)
-            return _feat_opacity(env.map(p).object.feat);
+        else if (env.map_knowledge(p).object.cls == SH_FEATURE)
+            return _feat_opacity(env.map_knowledge(p).object.feat);
         else
         {
             // If you have seen monsters, items or clouds there,

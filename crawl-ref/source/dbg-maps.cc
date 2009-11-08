@@ -12,7 +12,8 @@
 #include "chardump.h"
 #include "coord.h"
 #include "dungeon.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "initfile.h"
 #include "maps.h"
 #include "message.h"
@@ -59,7 +60,7 @@ static bool _mg_region_flood(const coord_def &c, int region, bool flag)
 
     if (flag)
     {
-        env.map(c).flags = 0;
+        env.map_knowledge(c).flags = 0;
         set_terrain_mapped(c.x, c.y);
     }
 
@@ -188,7 +189,7 @@ static bool mg_do_build_level(int niters)
             coord_def c;
             for (c.y = 0; c.y < GYM; ++c.y)
                 for (c.x = 0; c.x < GXM; ++c.x)
-                    set_envmap_obj(c, grd(c));
+                    set_map_knowledge_obj(c, grd(c));
 
             dump_map(fp);
 

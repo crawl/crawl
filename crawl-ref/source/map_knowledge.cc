@@ -1,11 +1,6 @@
-/*
- * File:      envmap.cc
- * Summary:   Functions dealing with env.map.
- */
-
 #include "AppHdr.h"
 
-#include "envmap.h"
+#include "map_knowledge.h"
 
 #include "coord.h"
 #include "coordit.h"
@@ -45,45 +40,45 @@ bool map_cell::seen() const
     return (object && (flags & MAP_SEEN_FLAG));
 }
 
-unsigned get_envmap_char(int x, int y)
+unsigned get_map_knowledge_char(int x, int y)
 {
-    return env.map[x][y].glyph();
+    return env.map_knowledge[x][y].glyph();
 }
 
-show_type get_envmap_obj(int x, int y)
+show_type get_map_knowledge_obj(int x, int y)
 {
-    return (env.map[x][y].object);
+    return (env.map_knowledge[x][y].object);
 }
 
-void set_envmap_detected_item(int x, int y, bool detected)
+void set_map_knowledge_detected_item(int x, int y, bool detected)
 {
     if (detected)
-        env.map[x][y].flags |= MAP_DETECTED_ITEM;
+        env.map_knowledge[x][y].flags |= MAP_DETECTED_ITEM;
     else
-        env.map[x][y].flags &= ~MAP_DETECTED_ITEM;
+        env.map_knowledge[x][y].flags &= ~MAP_DETECTED_ITEM;
 }
 
-bool is_envmap_detected_item(int x, int y)
+bool is_map_knowledge_detected_item(int x, int y)
 {
-    return (env.map[x][y].flags & MAP_DETECTED_ITEM);
+    return (env.map_knowledge[x][y].flags & MAP_DETECTED_ITEM);
 }
 
-void set_envmap_detected_mons(int x, int y, bool detected)
+void set_map_knowledge_detected_mons(int x, int y, bool detected)
 {
     if (detected)
-        env.map[x][y].flags |= MAP_DETECTED_MONSTER;
+        env.map_knowledge[x][y].flags |= MAP_DETECTED_MONSTER;
     else
-        env.map[x][y].flags &= ~MAP_DETECTED_MONSTER;
+        env.map_knowledge[x][y].flags &= ~MAP_DETECTED_MONSTER;
 }
 
-bool is_envmap_detected_mons(int x, int y)
+bool is_map_knowledge_detected_mons(int x, int y)
 {
-    return (env.map[x][y].flags & MAP_DETECTED_MONSTER);
+    return (env.map_knowledge[x][y].flags & MAP_DETECTED_MONSTER);
 }
 
-void set_envmap_glyph(int x, int y, show_type object, int col)
+void set_map_knowledge_glyph(int x, int y, show_type object, int col)
 {
-    map_cell &c = env.map[x][y];
+    map_cell &c = env.map_knowledge[x][y];
     c.object = object;
     c.colour = col;
 #ifdef USE_TILE
@@ -91,89 +86,76 @@ void set_envmap_glyph(int x, int y, show_type object, int col)
 #endif
 }
 
-void set_envmap_glyph(const coord_def& c, show_type object, int col)
+void set_map_knowledge_glyph(const coord_def& c, show_type object, int col)
 {
-    set_envmap_glyph(c.x, c.y, object, col);
+    set_map_knowledge_glyph(c.x, c.y, object, col);
 }
 
-void set_envmap_obj(const coord_def& where, show_type obj)
+void set_map_knowledge_obj(const coord_def& where, show_type obj)
 {
-    env.map(where).object = obj;
+    env.map_knowledge(where).object = obj;
 #ifdef USE_TILE
     tiles.update_minimap(where.x, where.y);
 #endif
 }
 
-void set_envmap_col( int x, int y, int colour )
+void set_map_knowledge_col( int x, int y, int colour )
 {
-    env.map[x][y].colour = colour;
+    env.map_knowledge[x][y].colour = colour;
 }
 
-bool is_sanctuary(const coord_def& p)
+bool is_map_knowledge_item(int x, int y)
 {
-    if (!map_bounds(p))
-        return (false);
-    return (testbits(env.map(p).property, FPROP_SANCTUARY_1)
-            || testbits(env.map(p).property, FPROP_SANCTUARY_2));
+    return (env.map_knowledge[x][y].object.cls == SH_ITEM);
 }
 
-bool is_bloodcovered(const coord_def& p)
+bool is_map_knowledge_mons(int x, int y)
 {
-    return (testbits(env.map(p).property, FPROP_BLOODY));
+    return (env.map_knowledge[x][y].object.cls == SH_MONSTER);
 }
 
-bool is_envmap_item(int x, int y)
+int get_map_knowledge_col(const coord_def& p)
 {
-    return (env.map[x][y].object.cls == SH_ITEM);
-}
-
-bool is_envmap_mons(int x, int y)
-{
-    return (env.map[x][y].object.cls == SH_MONSTER);
-}
-
-int get_envmap_col(const coord_def& p)
-{
-    return (env.map[p.x][p.y].colour);
+    return (env.map_knowledge[p.x][p.y].colour);
 }
 
 bool is_terrain_known( int x, int y )
 {
-    return (env.map[x][y].known());
+    return (env.map_knowledge[x][y].known());
 }
 
 bool is_terrain_known(const coord_def &p)
 {
-    return (env.map(p).known());
+    return (env.map_knowledge(p).known());
 }
 
 bool is_terrain_seen( int x, int y )
 {
-    return (env.map[x][y].flags & MAP_SEEN_FLAG);
+    return (env.map_knowledge[x][y].flags & MAP_SEEN_FLAG);
 }
 
 bool is_terrain_changed( int x, int y )
 {
-    return (env.map[x][y].flags & MAP_CHANGED_FLAG);
+    return (env.map_knowledge[x][y].flags & MAP_CHANGED_FLAG);
 }
 
 bool is_terrain_mapped(const coord_def &p)
 {
-    return (env.map(p).flags & MAP_MAGIC_MAPPED_FLAG);
+    return (env.map_knowledge(p).flags & MAP_MAGIC_MAPPED_FLAG);
 }
 
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
 void set_terrain_changed( int x, int y )
 {
-    env.map[x][y].flags |= MAP_CHANGED_FLAG;
+    env.map_knowledge[x][y].flags |= MAP_CHANGED_FLAG;
 
     dungeon_events.fire_position_event(DET_FEAT_CHANGE, coord_def(x, y));
 }
 
 void set_terrain_mapped( int x, int y )
 {
-    env.map[x][y].flags &= (~MAP_CHANGED_FLAG);
-    env.map[x][y].flags |= MAP_MAGIC_MAPPED_FLAG;
+    env.map_knowledge[x][y].flags &= (~MAP_CHANGED_FLAG);
+    env.map_knowledge[x][y].flags |= MAP_MAGIC_MAPPED_FLAG;
 #ifdef USE_TILE
     tiles.update_minimap(x, y);
 #endif
@@ -191,7 +173,7 @@ int count_detected_mons()
         if (is_terrain_changed(*ri))
             continue;
 
-        if (is_envmap_detected_mons(*ri))
+        if (is_map_knowledge_detected_mons(*ri))
             count++;
     }
 
@@ -211,27 +193,27 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         // This reasoning doesn't make sense when it comes to *clearing*
         // the map! (jpeg)
 
-        if (get_envmap_char(p) == 0)
+        if (get_map_knowledge_char(p) == 0)
             continue;
 
-        if (is_envmap_item(p))
+        if (is_map_knowledge_item(p))
             continue;
 
-        if (!clear_detected_items && is_envmap_detected_item(p))
+        if (!clear_detected_items && is_map_knowledge_detected_item(p))
             continue;
 
-        if (!clear_detected_monsters && is_envmap_detected_mons(p))
+        if (!clear_detected_monsters && is_map_knowledge_detected_mons(p))
             continue;
 
 #ifdef USE_TILE
-        if (is_terrain_mapped(p) && !is_envmap_detected_mons(p))
+        if (is_terrain_mapped(p) && !is_map_knowledge_detected_mons(p))
             continue;
 #endif
 
-        set_envmap_obj(p, show_type(is_terrain_seen(p) || is_terrain_mapped(p)
+        set_map_knowledge_obj(p, show_type(is_terrain_seen(p) || is_terrain_mapped(p)
                                     ? grd(p) : DNGN_UNSEEN));
-        set_envmap_detected_mons(p, false);
-        set_envmap_detected_item(p, false);
+        set_map_knowledge_detected_mons(p, false);
+        set_map_knowledge_detected_item(p, false);
 
 #ifdef USE_TILE
         if (is_terrain_mapped(p))
@@ -272,7 +254,7 @@ void reautomap_level( )
 
     for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
         for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
-            if (env.map[x][y].flags & MAP_SEEN_FLAG)
+            if (env.map_knowledge[x][y].flags & MAP_SEEN_FLAG)
                 _automap_from(x, y, passive);
 }
 
@@ -281,7 +263,7 @@ void set_terrain_seen( int x, int y )
     const dungeon_feature_type feat = grd[x][y];
 
     // First time we've seen a notable feature.
-    if (!(env.map[x][y].flags & MAP_SEEN_FLAG))
+    if (!(env.map_knowledge[x][y].flags & MAP_SEEN_FLAG))
     {
         _automap_from(x, y, player_mutation_level(MUT_PASSIVE_MAPPING));
 
@@ -312,20 +294,20 @@ void set_terrain_seen( int x, int y )
     }
 
 #ifdef USE_TILE
-    env.map[x][y].flags &= ~(MAP_DETECTED_ITEM);
-    env.map[x][y].flags &= ~(MAP_DETECTED_MONSTER);
+    env.map_knowledge[x][y].flags &= ~(MAP_DETECTED_ITEM);
+    env.map_knowledge[x][y].flags &= ~(MAP_DETECTED_MONSTER);
 #endif
 
-    env.map[x][y].flags &= (~MAP_CHANGED_FLAG);
-    env.map[x][y].flags |= MAP_SEEN_FLAG;
+    env.map_knowledge[x][y].flags &= (~MAP_CHANGED_FLAG);
+    env.map_knowledge[x][y].flags |= MAP_SEEN_FLAG;
 }
 
-void clear_envmap_grid( const coord_def& p )
+void clear_map_knowledge_grid( const coord_def& p )
 {
-    env.map(p).clear();
+    env.map_knowledge(p).clear();
 }
 
-void clear_envmap_grid( int x, int y )
+void clear_map_knowledge_grid( int x, int y )
 {
-    env.map[x][y].clear();
+    env.map_knowledge[x][y].clear();
 }

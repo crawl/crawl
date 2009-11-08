@@ -23,7 +23,8 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "ghost.h"
 #include "goditem.h"
 #include "invent.h"
@@ -69,7 +70,7 @@ int detect_traps(int pow)
         {
             traps_found++;
             trap.reveal();
-            set_envmap_obj(trap.pos, show_type(grd(trap.pos)));
+            set_map_knowledge_obj(trap.pos, show_type(grd(trap.pos)));
             set_terrain_mapped(trap.pos);
         }
     }
@@ -92,12 +93,12 @@ int detect_items(int pow)
             continue;
 
         if (igrd(*ri) != NON_ITEM
-            && (!get_envmap_obj(*ri) || !is_envmap_item(*ri)))
+            && (!get_map_knowledge_obj(*ri) || !is_map_knowledge_item(*ri)))
         {
             items_found++;
 
-            set_envmap_obj(*ri, show_type(SHOW_ITEM_DETECTED));
-            set_envmap_detected_item(*ri);
+            set_map_knowledge_obj(*ri, show_type(SHOW_ITEM_DETECTED));
+            set_map_knowledge_detected_item(*ri);
 #ifdef USE_TILE
             // Don't replace previously seen items with an unseen one.
             if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
@@ -154,7 +155,7 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
                 continue;
 
             // Try not to overwrite another detected monster.
-            if (is_envmap_detected_mons(place))
+            if (is_map_knowledge_detected_mons(place))
                 continue;
 
             // Don't print monsters on terrain they cannot pass through,
@@ -171,8 +172,8 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
             where = place;
     }
 
-    set_envmap_obj(where, show_type(mon));
-    set_envmap_detected_mons(where);
+    set_map_knowledge_obj(where, show_type(mon));
+    set_map_knowledge_detected_mons(where);
 
 #ifdef USE_TILE
     tile_place_monster(where.x, where.y, idx, false, true);

@@ -12,7 +12,8 @@
 
 #include "coord.h"
 #include "coordit.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "exclude.h"
 #include "los.h"
 #include "monplace.h"
@@ -429,7 +430,7 @@ static bool _find_siren_water_target(monsters *mon)
 #ifdef WIZARD
     // Remove old highlighted areas to make place for the new ones.
     for (rectangle_iterator ri(1); ri; ++ri)
-        env.map(*ri).property &= ~(FPROP_HIGHLIGHT);
+        env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
 #endif
 
     if (mp.init_pathfind(mon, best_target))
@@ -440,7 +441,7 @@ static bool _find_siren_water_target(monsters *mon)
         {
 #ifdef WIZARD
             for (unsigned int i = 0; i < mon->travel_path.size(); i++)
-                env.map(mon->travel_path[i]).property |= FPROP_HIGHLIGHT;
+                env.pgrid(mon->travel_path[i]) |= FPROP_HIGHLIGHT;
 #endif
 #ifdef DEBUG_PATHFIND
             mprf("Found a path to (%d, %d) with %d surrounding water squares",
@@ -521,7 +522,7 @@ static bool _find_wall_target(monsters *mon)
 #ifdef WIZARD
     // Remove old highlighted areas to make place for the new ones.
     for (rectangle_iterator ri(1); ri; ++ri)
-        env.map(*ri).property &= ~(FPROP_HIGHLIGHT);
+        env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
 #endif
 
     if (mp.init_pathfind(mon, best_target))
@@ -532,7 +533,7 @@ static bool _find_wall_target(monsters *mon)
         {
 #ifdef WIZARD
             for (unsigned int i = 0; i < mon->travel_path.size(); i++)
-                env.map(mon->travel_path[i]).property |= FPROP_HIGHLIGHT;
+                env.pgrid(mon->travel_path[i]) |= FPROP_HIGHLIGHT;
 #endif
 #ifdef DEBUG_PATHFIND
             mprf("Found a path to (%d, %d)", best_target.x, best_target.y);

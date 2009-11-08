@@ -33,7 +33,8 @@
 #include "dgnevent.h"
 #include "effects.h"
 #include "enum.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "fight.h"
 #include "item_use.h"
 #include "it_use2.h"
@@ -1721,7 +1722,7 @@ void bolt::digging_wall_effect()
 
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
-            env.map(pos()).property &= ~(FPROP_BLOODY);
+            env.pgrid(pos()) &= ~(FPROP_BLOODY);
 
         if (!msg_generated)
         {
@@ -1814,7 +1815,7 @@ void bolt::nuke_wall_effect()
     {
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
-            env.map(pos()).property &= ~(FPROP_BLOODY);
+            env.pgrid(pos()) &= ~(FPROP_BLOODY);
 
         grd(pos()) = DNGN_FLOOR;
         if (player_can_hear(pos()))
@@ -1829,7 +1830,7 @@ void bolt::nuke_wall_effect()
 
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
-            env.map(pos()).property &= ~(FPROP_BLOODY);
+            env.pgrid(pos()) &= ~(FPROP_BLOODY);
 
         if (player_can_hear(pos()))
         {

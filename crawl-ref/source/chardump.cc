@@ -1289,7 +1289,7 @@ void dump_map(FILE *fp, bool debug)
 
         for (int i = X_BOUND_1; i <= X_BOUND_2; i++)
             for (int j = Y_BOUND_1; j <= Y_BOUND_2; j++)
-                if (env.map[i][j].known())
+                if (env.map_knowledge[i][j].known())
                 {
                     if (i > max_x) max_x = i;
                     if (i < min_x) min_x = i;
@@ -1300,7 +1300,7 @@ void dump_map(FILE *fp, bool debug)
         for (int y = min_y; y <= max_y; ++y)
         {
             for (int x = min_x; x <= max_x; ++x)
-                fputc( env.map[x][y].glyph(), fp );
+                fputc( env.map_knowledge[x][y].glyph(), fp );
 
             fputc('\n', fp);
         }

@@ -43,7 +43,8 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -1107,7 +1108,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
              where.x, where.y, amount);
 #endif
         if (allow_bleeding_on_square(where))
-            env.map(where).property |= FPROP_BLOODY;
+            env.pgrid(where) |= FPROP_BLOODY;
 
         if (smell_alert)
             blood_smell(12, where);
@@ -1194,7 +1195,7 @@ static void _spatter_neighbours(const coord_def& where, int chance)
 
         if (one_chance_in(chance))
         {
-            env.map(*ai).property |= FPROP_BLOODY;
+            env.pgrid(*ai) |= FPROP_BLOODY;
             _spatter_neighbours(*ai, chance+1);
         }
     }
@@ -1234,7 +1235,7 @@ void generate_random_blood_spatter_on_level()
         startprob = min_prob + random2(max_prob);
 
         if (allow_bleeding_on_square(c))
-            env.map(c).property |= FPROP_BLOODY;
+            env.pgrid(c) |= FPROP_BLOODY;
 
         _spatter_neighbours(c, startprob);
     }
@@ -3021,7 +3022,7 @@ static void apply_environment_effect(const coord_def &c)
 {
     const dungeon_feature_type grid = grd(c);
     // Don't apply if if the feature doesn't want it.
-    if (testbits(env.map(c).property, FPROP_NO_CLOUD_GEN))
+    if (testbits(env.pgrid(c), FPROP_NO_CLOUD_GEN))
         return;
     if (grid == DNGN_LAVA)
         check_place_cloud(CLOUD_BLACK_SMOKE, c, random_range(4, 8), KC_OTHER);

@@ -22,7 +22,8 @@
 #include "describe.h"
 #include "dgnevent.h"
 #include "directn.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "exclude.h"
 #include "godabil.h"
 #include "itemname.h"
@@ -352,7 +353,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
 
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
-    const show_type levelmap_object = get_envmap_obj(c);
+    const show_type levelmap_object = get_map_knowledge_obj(c);
 
     // Travel will not voluntarily cross squares blocked by immobile monsters.
     if (!ignore_hostile
@@ -550,7 +551,7 @@ bool prompt_stop_explore(int es_why)
 
 // Adds interesting stuff on (x, y) to explore_discoveries.
 //
-// NOTE: These are env.map coords, add +1 to get grid coords.
+// NOTE: These are env.map_knowledge coords, add +1 to get grid coords.
 inline static void _check_interesting_square(int x, int y,
                                              explore_discoveries &ed)
 {
@@ -876,7 +877,7 @@ command_type travel()
         if (discoveries.prompt_stop())
             stop_running();
 
-        mapshadow = env.map;
+        mapshadow = env.map_knowledge;
     }
 
     if (you.running.is_explore())
@@ -2810,7 +2811,7 @@ void start_explore(bool grab_items)
     }
 
     // Clone shadow array off map
-    mapshadow = env.map;
+    mapshadow = env.map_knowledge;
 
     you.running.pos.reset();
     _start_running();
@@ -3324,7 +3325,7 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const dungeon_feature_type feat = grd(*ri);
-        const int envc = env.map(*ri).object;
+        const int envc = env.map_knowledge(*ri).object;
 
         if ((*ri == you.pos() || envc)
             && feat_is_travelable_stair(feat)

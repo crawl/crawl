@@ -14,7 +14,8 @@
 
 #include "colour.h"
 #include "env.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "halo.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -71,9 +72,9 @@ static unsigned short _feat_colour(const coord_def &where,
     }
     else if (feat >= DNGN_MINMOVE && is_sanctuary(where))
     {
-        if (testbits(env.map(where).property, FPROP_SANCTUARY_1))
+        if (testbits(env.pgrid(where), FPROP_SANCTUARY_1))
             colour = YELLOW;
-        else if (testbits(env.map(where).property, FPROP_SANCTUARY_2))
+        else if (testbits(env.pgrid(where), FPROP_SANCTUARY_2))
         {
             if (!one_chance_in(4))
                 colour = WHITE;     // 3/4
@@ -273,7 +274,7 @@ unsigned get_screen_glyph(const coord_def& p)
     unsigned        ch;
 
     if (!object)
-        return get_envmap_char(p.x, p.y);
+        return get_map_knowledge_char(p.x, p.y);
 
     get_symbol(p, object, &ch, &colour);
     return (ch);

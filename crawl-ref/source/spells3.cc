@@ -25,7 +25,8 @@
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "food.h"
 #include "goditem.h"
 #include "itemname.h"
@@ -1579,7 +1580,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
                || monster_at(newpos)
                || env.cgrid(newpos) != EMPTY_CLOUD
                || need_distance_check && (newpos - centre).abs() < 34*34
-               || testbits(env.map(newpos).property, FPROP_NO_RTELE_INTO));
+               || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO));
 
         if (newpos == you.pos())
             mpr("Your surroundings flicker for a moment.");
@@ -1732,7 +1733,7 @@ static int _inside_circle(const coord_def& where, int radius)
 
 static void _remove_sanctuary_property(const coord_def& where)
 {
-    env.map(where).property &= ~(FPROP_SANCTUARY_1 | FPROP_SANCTUARY_2);
+    env.pgrid(where) &= ~(FPROP_SANCTUARY_1 | FPROP_SANCTUARY_2);
 }
 
 bool remove_sanctuary(bool did_attack)
@@ -1862,7 +1863,7 @@ bool cast_sanctuary(const int power)
             continue;
 
         const coord_def pos = *ri;
-        if (testbits(env.map(pos).property, FPROP_BLOODY) && observe_cell(pos))
+        if (testbits(env.pgrid(pos), FPROP_BLOODY) && observe_cell(pos))
             blood_count++;
 
         if (trap_def* ptrap = find_trap(pos))
@@ -1898,10 +1899,10 @@ bool cast_sanctuary(const int power)
             break;
         }
 
-        env.map(pos).property |= (in_yellow ? FPROP_SANCTUARY_1
+        env.pgrid(pos) |= (in_yellow ? FPROP_SANCTUARY_1
                                             : FPROP_SANCTUARY_2);
 
-        env.map(pos).property &= ~(FPROP_BLOODY);
+        env.pgrid(pos) &= ~(FPROP_BLOODY);
 
         // Scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and

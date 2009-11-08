@@ -64,7 +64,8 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -3318,7 +3319,7 @@ static void _open_door(coord_def move, bool check_confused)
         // door!
         if (is_terrain_seen(dc))
         {
-            set_envmap_obj(dc, DNGN_OPEN_DOOR);
+            set_map_knowledge_obj(dc, DNGN_OPEN_DOOR);
 #ifdef USE_TILE
             env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
 #endif
@@ -3478,7 +3479,7 @@ static void _close_door(coord_def move)
             // want the entire door to be updated.
             if (is_terrain_seen(dc))
             {
-                set_envmap_obj(dc, DNGN_CLOSED_DOOR);
+                set_map_knowledge_obj(dc, DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
                 env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif
@@ -3549,7 +3550,7 @@ static bool _initialise(void)
 
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
-    env.map.init(map_cell());
+    env.map_knowledge.init(map_cell());
 
     you.unique_creatures.init(false);
     you.unique_items.init(UNIQ_NOT_EXISTS);

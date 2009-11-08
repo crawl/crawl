@@ -13,7 +13,8 @@
 #include "command.h"
 #include "coord.h"
 #include "env.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "exclude.h"
 #include "feature.h"
 #include "files.h"
@@ -49,7 +50,7 @@ unsigned get_magicmap_char(dungeon_feature_type feat)
 // 5. Anything else will look for the exact same character in the level map.
 bool is_feature(int feature, const coord_def& where)
 {
-    if (!env.map(where).object && !observe_cell(where))
+    if (!env.map_knowledge(where).object && !observe_cell(where))
         return (false);
 
     dungeon_feature_type grid = grd(where);
@@ -172,13 +173,13 @@ bool is_feature(int feature, const coord_def& where)
             return (false);
         }
     default:
-        return get_envmap_char(where.x, where.y) == (unsigned) feature;
+        return get_map_knowledge_char(where.x, where.y) == (unsigned) feature;
     }
 }
 
 static bool _is_feature_fudged(int feature, const coord_def& where)
 {
-    if (!env.map(where).object)
+    if (!env.map_knowledge(where).object)
         return (false);
 
     if (is_feature(feature, where))
@@ -424,12 +425,12 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                                          on_level);
 
                 buffer2[bufcount2 + 1] = colour;
-                buffer2[bufcount2] = env.map(c).glyph();
+                buffer2[bufcount2] = env.map_knowledge(c).glyph();
 
                 if (c == you.pos() && !crawl_state.arena_suspended && on_level)
                 {
                     // [dshaligram] Draw the @ symbol on the level-map. It's no
-                    // longer saved into the env.map, so we need to draw it
+                    // longer saved into the env.map_knowledge, so we need to draw it
                     // directly.
                     buffer2[bufcount2 + 1] = WHITE;
                     buffer2[bufcount2]     = you.symbol;
@@ -565,7 +566,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             for (j = 0; j < GYM; j++)
                 for (i = 0; i < GXM; i++)
                 {
-                    if (env.map[i][j].known())
+                    if (env.map_knowledge[i][j].known())
                     {
                         if (!found_y)
                         {
@@ -1099,7 +1100,7 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
 
 #ifdef WIZARD
     if (travel_colour && you.wizard
-        && testbits(env.map(p).property, FPROP_HIGHLIGHT))
+        && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
     {
         return (LIGHTGREEN);
     }
@@ -1108,17 +1109,17 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
     dungeon_feature_type feat_value = grd(p);
     if (!observe_cell(p))
     {
-        const show_type remembered = get_envmap_obj(p);
+        const show_type remembered = get_map_knowledge_obj(p);
         if (remembered.cls == SH_FEATURE)
             feat_value = remembered.feat;
     }
 
     unsigned tc = travel_colour ? _get_travel_colour(p) : DARKGREY;
 
-    if (is_envmap_detected_item(p))
+    if (is_map_knowledge_detected_item(p))
         return real_colour(Options.detected_item_colour);
 
-    if (is_envmap_detected_mons(p))
+    if (is_map_knowledge_detected_mons(p))
     {
         tc = Options.detected_monster_colour;
         return real_colour(tc);
@@ -1129,8 +1130,8 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
     if (is_waypoint(p) || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
         return real_colour(tc);
 
-    if (item_colour && is_envmap_item(p))
-        return get_envmap_col(p);
+    if (item_colour && is_map_knowledge_item(p))
+        return get_map_knowledge_col(p);
 
     int feature_colour = DARKGREY;
     const bool terrain_seen = is_terrain_seen(p);

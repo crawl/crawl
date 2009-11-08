@@ -15,7 +15,8 @@
 #include "cloud.h"
 #include "dgnevent.h"
 #include "directn.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "godabil.h"
 #include "itemprop.h"
 #include "items.h"
@@ -663,7 +664,7 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
                                      dungeon_feature_type old_feat,
                                      dungeon_feature_type new_feat)
 {
-    if (!testbits(env.map(pos).property, FPROP_BLOODY))
+    if (!testbits(env.pgrid(pos), FPROP_BLOODY))
         return;
 
     if (new_feat == DNGN_UNSEEN)
@@ -671,7 +672,7 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
         // Caller has already changed the grid, and old_feat is actually
         // the new feat.
         if (old_feat != DNGN_FLOOR && !feat_is_solid(old_feat))
-            env.map(pos).property &= ~(FPROP_BLOODY);
+            env.pgrid(pos) &= ~(FPROP_BLOODY);
     }
     else
     {
@@ -679,7 +680,7 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
             || feat_is_water(new_feat) || feat_destroys_items(new_feat)
             || is_critical_feature(new_feat))
         {
-            env.map(pos).property &= ~(FPROP_BLOODY);
+            env.pgrid(pos) &= ~(FPROP_BLOODY);
         }
     }
 }
@@ -850,8 +851,8 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const unsigned short col1 = env.grid_colours(pos1);
     const unsigned short col2 = env.grid_colours(pos2);
 
-    const unsigned long prop1 = env.map(pos1).property;
-    const unsigned long prop2 = env.map(pos2).property;
+    const unsigned long prop1 = env.pgrid(pos1);
+    const unsigned long prop2 = env.pgrid(pos2);
 
     trap_def* trap1 = find_trap(pos1);
     trap_def* trap2 = find_trap(pos2);
@@ -894,13 +895,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     env.markers.move(pos1, temp);
     dungeon_events.move_listeners(pos1, temp);
     grd(pos1) = DNGN_UNSEEN;
-    env.map(pos1).property = 0;
+    env.pgrid(pos1) = 0;
 
     (void) move_notable_thing(pos2, pos1);
     env.markers.move(pos2, pos1);
     dungeon_events.move_listeners(pos2, pos1);
-    env.map(pos1).property = prop2;
-    env.map(pos2).property = prop1;
+    env.pgrid(pos1) = prop2;
+    env.pgrid(pos2) = prop1;
 
     (void) move_notable_thing(temp, pos2);
     env.markers.move(temp, pos2);

@@ -27,7 +27,8 @@
 #include "delay.h"
 #include "directn.h"
 #include "dgnevent.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "food.h"
 #include "hiscores.h"
 #include "invent.h"
@@ -3112,7 +3113,7 @@ void change_labyrinth(bool msg)
                 continue;
 
             // Skip on grids inside vaults so as not to disrupt them.
-            if (testbits(env.map(*ri).property, FPROP_VAULT))
+            if (testbits(env.pgrid(*ri), FPROP_VAULT))
                 continue;
 
             // Make sure we don't accidentally create "ugly" dead-ends.
@@ -3153,7 +3154,7 @@ void change_labyrinth(bool msg)
 #ifdef WIZARD
     // Remove old highlighted areas to make place for the new ones.
     for (rectangle_iterator ri(1); ri; ++ri)
-        env.map(*ri).property &= ~(FPROP_HIGHLIGHT);
+        env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
 #endif
 
     // How many switches we'll be doing.
@@ -3254,8 +3255,8 @@ void change_labyrinth(bool msg)
         }
 #ifdef WIZARD
         // Highlight the switched grids.
-        env.map(c).property |= FPROP_HIGHLIGHT;
-        env.map(p).property |= FPROP_HIGHLIGHT;
+        env.pgrid(c) |= FPROP_HIGHLIGHT;
+        env.pgrid(p) |= FPROP_HIGHLIGHT;
 #endif
 
         // Shift blood some of the time.
@@ -3271,15 +3272,15 @@ void change_labyrinth(bool msg)
 
                 if (old_adj != c && !is_bloodcovered(old_adj))
                 {
-                    env.map(old_adj).property |= FPROP_BLOODY;
-                    env.map(c).property &= (~FPROP_BLOODY);
+                    env.pgrid(old_adj) |= FPROP_BLOODY;
+                    env.pgrid(c) &= (~FPROP_BLOODY);
                 }
             }
         }
         else if (one_chance_in(500))
         {
             // Rarely add blood randomly, accumulating with time...
-            env.map(c).property |= FPROP_BLOODY;
+            env.pgrid(c) |= FPROP_BLOODY;
         }
 
         // Rather than use old_grid directly, replace with an adjacent
@@ -3323,15 +3324,15 @@ void change_labyrinth(bool msg)
 
                 if (new_adj != p && !is_bloodcovered(new_adj))
                 {
-                    env.map(new_adj).property |= FPROP_BLOODY;
-                    env.map(p).property &= (~FPROP_BLOODY);
+                    env.pgrid(new_adj) |= FPROP_BLOODY;
+                    env.pgrid(p) &= (~FPROP_BLOODY);
                 }
             }
         }
         else if (one_chance_in(100))
         {
             // Occasionally add blood randomly, accumulating with time...
-            env.map(p).property |= FPROP_BLOODY;
+            env.pgrid(p) |= FPROP_BLOODY;
         }
     }
 
@@ -4251,16 +4252,16 @@ static void _maybe_restart_fountain_flow(const coord_def& where,
                         - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
 
         if (is_terrain_seen(where))
-            set_envmap_obj(where, grd(where));
+            set_map_knowledge_obj(where, grd(where));
 
         // Clean bloody floor.
         if (is_bloodcovered(where))
-            env.map(where).property &= ~(FPROP_BLOODY);
+            env.pgrid(where) &= ~(FPROP_BLOODY);
 
         // Chance of cleaning adjacent squares.
         for (adjacent_iterator ai(where); ai; ++ai)
             if (is_bloodcovered(*ai) && one_chance_in(5))
-                env.map(*ai).property &= ~(FPROP_BLOODY);
+                env.pgrid(*ai) &= ~(FPROP_BLOODY);
 
         break;
    }

@@ -21,7 +21,8 @@
 
 #include "externs.h"
 
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
@@ -906,7 +907,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         }
 
         if (is_terrain_changed(*ri))
-            clear_envmap_grid(*ri);
+            clear_map_knowledge_grid(*ri);
 
         if (!wizard_map && (is_terrain_seen(*ri) || is_terrain_mapped(*ri)))
             continue;
@@ -934,8 +935,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         if (open)
         {
-            if (wizard_map || !get_envmap_obj(*ri))
-                set_envmap_obj(*ri, grd(*ri));
+            if (wizard_map || !get_map_knowledge_obj(*ri))
+                set_map_knowledge_obj(*ri, grd(*ri));
 
             if (wizard_map)
             {
@@ -944,7 +945,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
                 set_terrain_seen(*ri);
 #ifdef USE_TILE
-                // Can't use set_envmap_obj because that would
+                // Can't use set_map_knowledge_obj because that would
                 // overwrite the gmap.
                 env.tile_bk_bg(*ri) = tile_idx_unseen_terrain(ri->x, ri->y,
                                                               grd(*ri));
@@ -1054,7 +1055,7 @@ std::string screenshot(bool fullscreen)
 
             int ch =
                   (!map_bounds(gc))             ? 0 :
-                  (!crawl_view.in_grid_los(gc)) ? get_envmap_char(gc.x, gc.y) :
+                  (!crawl_view.in_grid_los(gc)) ? get_map_knowledge_char(gc.x, gc.y) :
                   (gc == you.pos())             ? you.symbol
                                                 : get_screen_glyph(gc.x, gc.y);
 
@@ -1323,7 +1324,7 @@ void viewwindow(bool draw_it, bool do_updates)
                 else if (!crawl_view.in_grid_los(gc))
                 {
                     // Outside the env.show area.
-                    buffy[bufcount]     = get_envmap_char(gc);
+                    buffy[bufcount]     = get_map_knowledge_char(gc);
                     buffy[bufcount + 1] = DARKGREY;
 
                     if (Options.colour_map)
@@ -1336,7 +1337,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     unsigned int bg = env.tile_bk_bg(gc);
                     unsigned int fg = env.tile_bk_fg(gc);
                     if (bg == 0 && fg == 0)
-                        tileidx_unseen(fg, bg, get_envmap_char(gc), gc);
+                        tileidx_unseen(fg, bg, get_map_knowledge_char(gc), gc);
 
                     tileb[bufcount]     = fg;
                     tileb[bufcount + 1] = bg | tile_unseen_flag(gc);
@@ -1352,13 +1353,13 @@ void viewwindow(bool draw_it, bool do_updates)
 
                     if (map)
                     {
-                        set_envmap_glyph(gc, object, colour);
+                        set_map_knowledge_glyph(gc, object, colour);
                         if (is_terrain_changed(gc) || !is_terrain_seen(gc))
                             update_excludes.push_back(gc);
 
                         set_terrain_seen(gc);
-                        set_envmap_detected_mons(gc, false);
-                        set_envmap_detected_item(gc, false);
+                        set_map_knowledge_detected_mons(gc, false);
+                        set_map_knowledge_detected_item(gc, false);
                     }
 #ifdef USE_TILE
                     if (map)
@@ -1413,9 +1414,9 @@ void viewwindow(bool draw_it, bool do_updates)
                                 update_excludes.push_back(gc);
 
                             set_terrain_seen(gc);
-                            set_envmap_glyph(gc, object, colour );
-                            set_envmap_detected_mons(gc, false);
-                            set_envmap_detected_item(gc, false);
+                            set_map_knowledge_glyph(gc, object, colour );
+                            set_map_knowledge_detected_mons(gc, false);
+                            set_map_knowledge_detected_item(gc, false);
 #ifdef USE_TILE
                             // We remove any references to mcache when
                             // writing to the background.
@@ -1434,7 +1435,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
                         // Check if we're looking to clean_map...
                         // but don't touch the buffer to clean it,
-                        // instead we modify the env.map itself so
+                        // instead we modify the env.map_knowledge itself so
                         // that the map stays clean as it moves out
                         // of the env.show radius.
                         //
@@ -1448,23 +1449,23 @@ void viewwindow(bool draw_it, bool do_updates)
                             && is_terrain_seen(gc))
                         {
                             get_symbol(gc, env.show.get_backup(ep), &ch, &colour);
-                            set_envmap_glyph(gc, env.show.get_backup(ep), colour);
+                            set_map_knowledge_glyph(gc, env.show.get_backup(ep), colour);
                         }
 
                         // Now we get to filling in both the unseen
                         // grids in the env.show radius area as
                         // well doing the clean_map.  The clean_map
-                        // is done by having the env.map set to the
+                        // is done by having the env.map_knowledge set to the
                         // backup character above, and down here we
                         // procede to override that character if it's
                         // out of LoS!  If it wasn't, buffy would have
                         // already been set (but we'd still have
-                        // clobbered env.map... which is important
+                        // clobbered env.map_knowledge... which is important
                         // to do for when we move away from the area!)
                         if (buffy[bufcount] == 0)
                         {
                             // Show map.
-                            buffy[bufcount]     = get_envmap_char(gc);
+                            buffy[bufcount]     = get_map_knowledge_char(gc);
                             buffy[bufcount + 1] = DARKGREY;
 
                             if (Options.colour_map)
@@ -1485,7 +1486,7 @@ void viewwindow(bool draw_it, bool do_updates)
                             {
                                 tileidx_unseen(tileb[bufcount],
                                                tileb[bufcount+1],
-                                               get_envmap_char(gc),
+                                               get_map_knowledge_char(gc),
                                                gc);
                             }
 #endif

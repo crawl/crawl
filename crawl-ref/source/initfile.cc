@@ -22,6 +22,7 @@
 #include "directn.h"
 #include "kills.h"
 #include "files.h"
+#include "fprop.h"
 #include "defines.h"
 #ifdef USE_TILE
  #include "tilereg.h"

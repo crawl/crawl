@@ -1,7 +1,7 @@
 #ifndef ENV_H
 #define ENV_H
 
-#include "mapcell.h"
+#include "map_knowledge.h"
 #include "monster.h"
 #include "show.h"
 
@@ -17,12 +17,14 @@ public:
     FixedVector< monsters, MAX_MONSTERS >    mons;  // monster list
 
     feature_grid                             grid;  // terrain grid
+    FixedArray< unsigned long, GXM, GYM >    pgrid; // terrain properties
     FixedArray< unsigned short, GXM, GYM >   mgrid; // monster grid
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned short, GXM, GYM >   cgrid; // cloud grid
     FixedArray< unsigned short, GXM, GYM >   grid_colours; // colour overrides
 
-    FixedArray< map_cell, GXM, GYM >         map;    // discovered terrain
+    // Player-remembered terrain. TODO: move to class player.
+    FixedArray< map_cell, GXM, GYM >         map_knowledge;
 
     // Objects that are in LOS, used for drawing.
     show_def show;

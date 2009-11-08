@@ -34,7 +34,8 @@
 #include "describe.h"
 #include "effects.h"
 #include "enum.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -4287,7 +4288,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         // Un-bloodify surrounding squares.
         for (radius_iterator ri(you.pos(), 3, true, true); ri; ++ri)
             if (is_bloodcovered(*ri))
-                env.map(*ri).property &= ~(FPROP_BLOODY);
+                env.pgrid(*ri) &= ~(FPROP_BLOODY);
     }
 
     if (god == GOD_KIKUBAAQUDGHA)
@@ -4297,7 +4298,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         // Bloodify surrounding squares (75% chance).
         for (radius_iterator ri(you.pos(), 2, true, true); ri; ++ri)
             if (!is_bloodcovered(*ri) && !one_chance_in(4))
-                env.map(*ri).property |= FPROP_BLOODY;
+                env.pgrid(*ri) |= FPROP_BLOODY;
     }
 
 #ifndef USE_TILE

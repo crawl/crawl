@@ -1014,7 +1014,7 @@ static void _close_level_gates()
 
 static void _clear_env_map()
 {
-    env.map.init(map_cell());
+    env.map_knowledge.init(map_cell());
 }
 
 static void _clear_clouds()

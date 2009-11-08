@@ -5,7 +5,8 @@
 #include "artefact.h"
 #include "cio.h"
 #include "coord.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "itemname.h"
 #include "items.h"
 #include "itemprop.h"
@@ -454,7 +455,7 @@ void TilesFramework::load_dungeon(const coord_def &cen)
                 fg = env.tile_bk_fg(gc);
                 bg = env.tile_bk_bg(gc);
                 if (!fg && !bg)
-                    tileidx_unseen(fg, bg, get_envmap_char(gc), gc);
+                    tileidx_unseen(fg, bg, get_map_knowledge_char(gc), gc);
                 bg |= tile_unseen_flag(gc);
             }
             else
@@ -1312,7 +1313,7 @@ void TilesFramework::update_minimap(int gx, int gy)
     if (!player_in_mappable_area())
         return;
 
-    show_type object = env.map[gx][gy].object;
+    show_type object = env.map_knowledge[gx][gy].object;
     map_feature f = (object.cls == SH_MONSTER) ? MF_MONS_HOSTILE :
         get_feature_def(object).minimap;
 
@@ -1353,8 +1354,8 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
     if (f == MF_WALL || f == MF_FLOOR)
     {
         if (is_terrain_known(gx, gy) && !is_terrain_seen(gx, gy)
-            || is_envmap_detected_item(gx, gy)
-            || is_envmap_detected_mons(gx, gy))
+            || is_map_knowledge_detected_item(gx, gy)
+            || is_map_knowledge_detected_mons(gx, gy))
         {
             f = (f == MF_WALL) ? MF_MAP_WALL : MF_MAP_FLOOR;
         }

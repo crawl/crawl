@@ -13,7 +13,8 @@
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "externs.h"
 #include "options.h"
 #include "food.h"
@@ -86,8 +87,8 @@ int tile_unseen_flag(const coord_def& gc)
         return TILE_FLAG_UNSEEN;
     else if (is_terrain_known(gc)
                 && !is_terrain_seen(gc)
-             || is_envmap_detected_item(gc)
-             || is_envmap_detected_mons(gc))
+             || is_map_knowledge_detected_item(gc)
+             || is_map_knowledge_detected_mons(gc))
     {
         return TILE_FLAG_MM_UNSEEN;
     }

@@ -18,7 +18,8 @@
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
-#include "envmap.h"
+#include "map_knowledge.h"
+#include "fprop.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -120,7 +121,7 @@ void trap_def::reveal()
 {
     const dungeon_feature_type cat = this->category();
     grd(this->pos) = cat;
-    set_envmap_obj(this->pos, cat);
+    set_map_knowledge_obj(this->pos, cat);
 }
 
 std::string trap_def::name(description_level_type desc) const
