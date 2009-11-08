@@ -694,7 +694,7 @@ bool beogh_followers_abandon_you()
                 if (you.visible_to(monster)
                     && !monster->asleep()
                     && !mons_is_confused(monster)
-                    && !mons_cannot_act(monster))
+                    && !monster->cannot_act())
                 {
                     const int hd = monster->hit_dice;
 

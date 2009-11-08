@@ -5479,7 +5479,7 @@ int get_tension(god_type god, bool count_travelling)
         if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
             continue;
 
-        if (mons_cannot_act(mons) || mons->asleep() || mons_is_fleeing(mons))
+        if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(mons))
             continue;
 
         int exper = exper_value(mons);

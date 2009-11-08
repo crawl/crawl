@@ -2790,7 +2790,8 @@ bool monsters::paralysed() const
 
 bool monsters::cannot_act() const
 {
-    return (mons_cannot_act(this));
+    return (paralysed()
+            || petrified() && !petrifying());
 }
 
 bool monsters::cannot_move() const
@@ -4595,8 +4596,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_HELD:
     {
-        if (mons_is_stationary(this) || mons_cannot_act(this)
-            || asleep())
+        if (mons_is_stationary(this) || cannot_act() || asleep())
         {
             break;
         }

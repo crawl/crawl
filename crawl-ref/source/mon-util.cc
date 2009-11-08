@@ -1938,12 +1938,6 @@ mon_attitude_type mons_attitude(const monsters *m)
         return ATT_HOSTILE;
 }
 
-bool mons_cannot_act(const monsters *m)
-{
-    return (m->paralysed()
-            || m->petrified() && !m->petrifying());
-}
-
 bool mons_is_confused(const monsters *m, bool class_too)
 {
     return (m->has_ench(ENCH_CONFUSION)

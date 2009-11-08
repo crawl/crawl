@@ -1762,7 +1762,7 @@ static void _handle_monster_move(monsters *monster)
 
         _monster_regenerate(monster);
 
-        if (mons_cannot_act(monster))
+        if (monster->cannot_act())
         {
             monster->speed_increment -= non_move_energy;
             continue;
