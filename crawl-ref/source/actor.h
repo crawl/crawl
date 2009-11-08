@@ -207,7 +207,7 @@ public:
     // Halo radius.
     virtual int halo_radius() const = 0;
     // Is the given point within this actor's halo?
-    virtual bool inside_halo(const coord_def &c) const;
+    virtual bool halo_contains(const coord_def &c) const;
 
     virtual bool petrified() const = 0;
 

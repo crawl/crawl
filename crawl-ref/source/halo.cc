@@ -11,10 +11,10 @@
 // TODO: generalize.
 bool actor::haloed() const
 {
-    return (you.inside_halo(pos()));
+    return (you.halo_contains(pos()));
 }
 
-bool actor::inside_halo(const coord_def &c) const
+bool actor::halo_contains(const coord_def &c) const
 {
     int r = halo_radius();
     return ((c - pos()).abs() <= r * r && see_cell(c));
@@ -36,15 +36,15 @@ int monsters::halo_radius() const
     return 0;
 }
 
-std::list<actor*> inside_halo(const coord_def &c)
+std::list<actor*> haloers(const coord_def &c)
 {
-    std::list<actor*> haloers;
+    std::list<actor*> ret;
     for (radius_iterator ri(c, LOS_RADIUS, false); ri; ++ri)
     {
         actor* a = actor_at(*ri);
-        if (a && a->inside_halo(c))
-            haloers.push_back(a);
+        if (a && a->halo_contains(c))
+            ret.push_back(a);
     }
-    return (haloers);
+    return (ret);
 }
 

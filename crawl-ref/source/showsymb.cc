@@ -106,7 +106,7 @@ static unsigned short _feat_colour(const coord_def &where,
     if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX
         || feat == DNGN_UNDISCOVERED_TRAP)
     {
-        if (you.inside_halo(where))
+        if (you.halo_contains(where))
         {
             if (silenced(where))
                 colour = LIGHTCYAN;
