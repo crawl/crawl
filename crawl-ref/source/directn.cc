@@ -1306,7 +1306,7 @@ void direction(dist& moves, targetting_type restricts,
         case CMD_TARGET_CYCLE_BEAM:
             show_beam = true;
             have_beam = find_ray(you.pos(), moves.target, ray,
-                                 opc_solid, bds_default, show_beam);
+                                 opc_solid, BDS_DEFAULT, show_beam);
             beam_target = moves.target;
             need_beam_redraw = true;
             break;

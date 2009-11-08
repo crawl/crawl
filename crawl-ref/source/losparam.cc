@@ -62,15 +62,3 @@ opacity_type opacity_monmove::operator()(const coord_def& p) const
     else
         return (OPC_CLEAR);
 }
-
-// LOS bounded by fixed presquared radius.
-bool bounds_radius_sq::operator()(const coord_def& p) const
-{
-    return (p.abs() <= radius_sq);
-}
-
-// LOS bounded by current global LOS radius.
-bool bounds_cur_los_radius::operator()(const coord_def& p) const
-{
-    return (p.abs() <= get_los_radius_sq());
-}

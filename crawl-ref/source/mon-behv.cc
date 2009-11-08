@@ -691,7 +691,8 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     const int  rad      = (intel >= I_ANIMAL || !patrol_seen) ? LOS_RADIUS : 5;
     const bool is_smart = (intel >= I_NORMAL);
 
-    los_def patrol(mon->patrol_point, opacity_monmove(*mon), bounds_radius(rad));
+    los_def patrol(mon->patrol_point, opacity_monmove(*mon),
+                   circle_def(rad, C_ROUND));
     patrol.update();
     los_def lm(mon->pos(), opacity_monmove(*mon));
     if (is_smart || !patrol_seen)

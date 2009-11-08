@@ -108,7 +108,7 @@ struct opacity_excl : opacity_func
 };
 static opacity_excl opc_excl;
 
-// Note: bounds_radius gives a circle with square radius r*r+1;
+// Note: circle_def(r, C_ROUND) gives a circle with square radius r*r+1;
 // this doesn't work well for radius 0, but then we want to
 // skip LOS calculation in that case anyway since it doesn't
 // currently short-cut for small bounds. So radius 0 is special-cased.
@@ -116,7 +116,7 @@ static opacity_excl opc_excl;
 travel_exclude::travel_exclude(const coord_def &p, int r,
                                bool autoexcl, monster_type mons, bool vaultexcl)
     : pos(p), radius(r),
-      los(los_def(p, opc_excl, bounds_radius(r))),
+      los(los_def(p, opc_excl, circle_def(r, C_ROUND))),
       uptodate(false), autoex(autoexcl), mon(mons), vault(vaultexcl)
 {
     set_los();
@@ -128,7 +128,7 @@ void travel_exclude::set_los()
     if (radius > 0)
     {
         // Radius might have been changed, and this is cheap.
-        los.set_bounds(bounds_radius(radius));
+        los.set_bounds(circle_def(radius, C_ROUND));
         los.update();
     }
 }

@@ -24,19 +24,11 @@ struct opacity_func
     virtual opacity_func* clone() const = 0;
 };
 
-struct bounds_func
-{
-    virtual ~bounds_func() {}
-    virtual bool operator()(const coord_def& p) const = 0;
-    virtual bounds_func* clone() const = 0;
-};
-
 #define CLONE(typename) \
     typename* clone() const \
     { \
         return (new typename(*this)); \
     }
-
 
 // Default LOS rules.
 struct opacity_default : opacity_func
@@ -81,41 +73,6 @@ struct opacity_monmove : opacity_func
 
     opacity_type operator()(const coord_def& p) const;
 };
-
-// LOS bounded by fixed presquared radius.
-struct bounds_radius_sq : bounds_func
-{
-    int radius_sq;
-    bounds_radius_sq(int r_sq)
-        : radius_sq(r_sq) {}
-
-    CLONE(bounds_radius_sq)
-
-    bool operator()(const coord_def& p) const;
-};
-
-// LOS bounded by fixed radius.
-struct bounds_radius : bounds_radius_sq
-{
-    bounds_radius(int r)
-        : bounds_radius_sq(r * r + 1)
-    {
-    }
-
-    CLONE(bounds_radius)
-};
-
-static bounds_radius bds_deflos = bounds_radius(LOS_RADIUS);
-static bounds_radius bds_maxlos = bounds_radius(LOS_MAX_RADIUS);
-
-// LOS bounded by current global LOS radius.
-struct bounds_cur_los_radius : bounds_func
-{
-    CLONE(bounds_cur_los_radius)
-
-    bool operator()(const coord_def& p) const;
-};
-static bounds_cur_los_radius bds_default;
 
 // Subclasses of this are passed to losight() to modify the
 // LOS calculation. Implementations will have to translate between

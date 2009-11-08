@@ -49,6 +49,7 @@
 
 #include "bitary.h"
 #include "coord.h"
+#include "coord-circle.h"
 #include "coordit.h"
 #include "debug.h"
 #include "externs.h"
@@ -63,11 +64,9 @@
 
 // This determines which cells are considered out of range during
 // precalculations (only positive quadrant used).
-// For the LOS code to work correctly, any bounds function that
-// is used needs to satisfy
-//     bds_func(p) == true  ==>  bds_precalc(p) == true
-// This used to be the entire LOS_MAX_RANGE rectangle.
-const bounds_func& bds_precalc = bds_maxlos;
+// For the LOS code to work correctly, any LOS shape that
+// is used needs to be contained in bds_precalc.
+const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
 
 // These determine what rays are cast in the precomputation,
 // and affect start-up time significantly.
@@ -165,7 +164,7 @@ struct los_ray : public ray_def
     }
 
     // Shoot a ray from the given start point (accx, accy) with the given
-    // slope, bounded by the pre-calc bounds function.
+    // slope, bounded by the pre-calc bounds shape.
     // Returns the cells it travels through, excluding the origin.
     // Returns an empty vector if this was a bad ray.
     std::vector<coord_def> footprint()
@@ -189,7 +188,7 @@ struct los_ray : public ray_def
                 break;
             }
             c = copy.pos();
-            if (!bds_precalc(c))
+            if (!bds_precalc.contains(c))
                 break;
             cs.push_back(c);
             ASSERT((c - old).rdist() == 1);
@@ -572,14 +571,14 @@ void cellray::calc_params()
 // opc has been translated for this quadrant.
 // XXX: Allow finding ray of minimum opacity.
 bool _find_ray_se(const coord_def& target, ray_def& ray,
-                  const opacity_func& opc, const bounds_func& bds,
+                  const opacity_func& opc, const circle_def& bds,
                   bool cycle)
 {
     ASSERT(target.x >= 0 && target.y >= 0 && !target.origin());
-    if (!bds(target))
+    if (!bds.contains(target))
         return false;
 
-    ASSERT(bds_precalc(target));
+    ASSERT(bds_precalc.contains(target));
 
     // Ensure the precalculations have been done.
     raycast();
@@ -651,7 +650,7 @@ struct opacity_trans : opacity_func
 // assume that ray is appropriately filled in, and look for the next
 // ray. We only ever use ray.cycle_idx.
 bool find_ray(const coord_def& source, const coord_def& target,
-              ray_def& ray, const opacity_func& opc, const bounds_func &bds,
+              ray_def& ray, const opacity_func& opc, const circle_def &bds,
               bool cycle)
 {
     if (target == source || !map_bounds(source) || !map_bounds(target))
@@ -681,7 +680,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
 }
 
 bool exists_ray(const coord_def& source, const coord_def& target,
-                const opacity_func& opc, const bounds_func &bds)
+                const opacity_func& opc, const circle_def &bds)
 {
     ray_def ray;
     return (find_ray(source, target, ray, opc, bds));
@@ -884,17 +883,17 @@ struct los_param_funcs : public los_param
 {
     coord_def center;
     const opacity_func& opc;
-    const bounds_func& bounds;
+    const circle_def& bounds;
 
     los_param_funcs(const coord_def& c,
-                    const opacity_func& o, const bounds_func& b)
+                    const opacity_func& o, const circle_def& b)
         : center(c), opc(o), bounds(b)
     {
     }
 
     bool los_bounds(const coord_def& p) const
     {
-        return (map_bounds(p + center) && bounds(p));
+        return (map_bounds(p + center) && bounds.contains(p));
     }
 
     unsigned appearance(const coord_def& p) const
@@ -909,7 +908,7 @@ struct los_param_funcs : public los_param
 };
 
 void losight(env_show_grid& sh, const coord_def& center,
-             const opacity_func& opc, const bounds_func& bounds)
+             const opacity_func& opc, const circle_def& bounds)
 {
     losight(sh, los_param_funcs(center, opc, bounds));
 }

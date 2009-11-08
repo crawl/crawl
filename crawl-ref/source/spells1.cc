@@ -334,7 +334,8 @@ bool _lightning_los(const coord_def& source, const coord_def& target)
 {
     // XXX: currently bounded by circular LOS radius;
     // XXX: adapt opacity -- allow passing clouds.
-    return (exists_ray(source, target, opc_solid, bds_maxlos));
+    return (exists_ray(source, target, opc_solid,
+                       circle_def(LOS_MAX_RADIUS, C_ROUND)));
 }
 
 void cast_chain_lightning(int pow, const actor *caster)

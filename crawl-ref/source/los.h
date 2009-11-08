@@ -6,8 +6,11 @@
 #ifndef LOS_H
 #define LOS_H
 
-#include "los_def.h"
+#include "coord-circle.h"
 #include "losparam.h"
+
+class circle_def;
+struct ray_def;
 
 #define EPSILON_VALUE 0.00001
 
@@ -16,13 +19,14 @@ bool double_is_zero(const double x);
 void set_los_radius(int r);
 int get_los_radius_sq(); // XXX
 
-struct ray_def;
+#define BDS_DEFAULT (circle_def())
+
 bool find_ray(const coord_def& source, const coord_def& target,
               ray_def& ray, const opacity_func &opc = opc_solid,
-              const bounds_func &bds = bds_default, bool cycle = false);
+              const circle_def &bds = BDS_DEFAULT, bool cycle = false);
 bool exists_ray(const coord_def& source, const coord_def& target,
                 const opacity_func &opc = opc_solid,
-                const bounds_func &bds = bds_default);
+                const circle_def &bds = BDS_DEFAULT);
 dungeon_feature_type ray_blocker(const coord_def& source, const coord_def& target);
 
 void fallback_ray(const coord_def& source, const coord_def& target,
@@ -38,7 +42,7 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2);
 void clear_rays_on_exit();
 void losight(env_show_grid& sh, const coord_def& center,
              const opacity_func &opc = opc_default,
-             const bounds_func &bds = bds_default);
+             const circle_def &bds = BDS_DEFAULT);
 void losight(env_show_grid& sh, const los_param& param);
 
 void calc_show_los();
