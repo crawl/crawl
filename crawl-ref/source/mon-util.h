@@ -113,8 +113,8 @@ enum mons_class_flags
     M_PRIEST            = (1<< 2),        // monster is a priest,
     M_FIGHTER           = (1<< 3),        // monster is skilled fighter
 
-    M_UNUSED_1          = (1<< 4),
-    M_UNUSED_2          = (1<< 5),
+    M_NO_WAND           = (1<< 4),        // do not give (unique) a wand
+    M_NO_HT_WAND        = (1<< 5),        // do not give a high tier wand
 
     M_INVIS             = (1<< 6),        // is created invis
     M_SEE_INVIS         = (1<< 7),        // can see invis

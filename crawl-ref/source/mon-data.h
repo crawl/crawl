@@ -4247,7 +4247,7 @@ static monsterentry mondata[] = {
 {
     MONS_GASTRONOK, 'j', LIGHTRED, "Gastronok",
     M_NO_SKELETON | M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS
-        | M_SPEAKS,
+        | M_SPEAKS | M_NO_WAND,
     MR_RES_FIRE | MR_RES_COLD,
     700, 10, MONS_GIANT_SLUG, MONS_GIANT_SLUG, MH_NATURAL, -4,
     { {AT_BITE, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

@@ -3324,7 +3324,7 @@ static void _give_scroll(monsters *mon, int level)
 
 static void _give_wand(monsters *mon, int level)
 {
-    if (mons_is_unique(mon->type) && mon->type != MONS_GASTRONOK
+    if (mons_is_unique(mon->type) && !mons_class_flag(mon->type, M_NO_WAND)
         && (one_chance_in(5) || mon->type == MONS_MAURICE && one_chance_in(3)))
     {
         const int idx = items(0, OBJ_WANDS, OBJ_RANDOM, true, level, 0);
@@ -3335,7 +3335,7 @@ static void _give_wand(monsters *mon, int level)
         item_def& wand = mitm[idx];
 
         // Don't give top-tier wands before 5 HD.
-        if (mon->hit_dice < 5)
+        if (mon->hit_dice < 5 || mons_class_flag(mon->type, M_NO_HT_WAND))
         {
             // Technically these wands will be undercharged, but it
             // doesn't really matter.
