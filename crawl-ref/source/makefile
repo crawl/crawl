@@ -434,8 +434,8 @@ endif
 
 ifneq ($(strip $(DATADIR)),)
 CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(strip $(prefix))/$(strip $(DATADIR)))\"
-datadir_fp := $(abspath $(strip $(prefix_fp))/$(strip $(DATADIR)))
 endif
+datadir_fp := $(abspath $(strip $(prefix_fp))/$(strip $(DATADIR)))
 
 ifndef NO_NCURSES
 
@@ -696,9 +696,6 @@ endif
 # The actual build targets
 #
 install: $(GAME)
-ifeq ($(DATADIR),)
-	$(error DATADIR not set! Set DATADIR and run make clean install again)
-endif
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
 	$(STRIP) -s $(prefix_fp)/$(bin_prefix)/$(GAME)
