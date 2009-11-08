@@ -279,9 +279,6 @@ public:
                                   bool stop_at_statues, bool stop_at_walls);
 };
 
-// Test if the to-hit (attack) beats evasion (defence).
-bool test_beam_hit(int attack, int defence);
-
 int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);
 

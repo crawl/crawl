@@ -3389,11 +3389,30 @@ bool bolt::fuzz_invis_tracer()
 // A first step towards to-hit sanity for beams. We're still being
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
-bool test_beam_hit(int attack, int defence)
+static bool _test_beam_hit(int attack, int defence, bool is_beam,
+                           bool deflect, bool repel)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Beam attack: %d, defence: %d", attack, defence);
 #endif
+
+    if (is_beam && deflect)
+    {
+        attack = random2(attack * 2) / 3;
+    }
+    else if (is_beam && repel)
+    {
+        attack -= random2(attack / 2);
+    }
+    else if (deflect)
+    {
+        attack = random2(attack / 2);
+    }
+    else if (repel)
+    {
+        attack = random2(attack);
+    }
+
     return (attack == AUTOMATIC_HIT
             || random2(attack) >= random2avg(defence, 2));
 }
@@ -3662,28 +3681,10 @@ bool bolt::misses_player()
     if (player_light_armour(true) && !aimed_at_feet && coinflip())
         exercise(SK_DODGING, 1);
 
-    if (is_beam)
-    {
-        if (you.duration[DUR_DEFLECT_MISSILES])
-            real_tohit = random2(real_tohit * 2) / 3;
-        else if (you.duration[DUR_REPEL_MISSILES]
-                 || player_mutation_level(MUT_REPULSION_FIELD) == 3)
-        {
-            real_tohit -= random2(real_tohit / 2);
-        }
-    }
-    else
-    {
-        if (you.duration[DUR_DEFLECT_MISSILES])
-            real_tohit = random2(real_tohit / 2);
-        else if (you.duration[DUR_REPEL_MISSILES]
-                 || player_mutation_level(MUT_REPULSION_FIELD) == 3)
-        {
-            real_tohit = random2(real_tohit);
-        }
-    }
-
-    if (!test_beam_hit(real_tohit, dodge))
+    if (!_test_beam_hit(real_tohit, dodge, is_beam,
+                        you.duration[DUR_DEFLECT_MISSILES],
+                        (you.duration[DUR_REPEL_MISSILES]
+                         || player_mutation_level(MUT_REPULSION_FIELD) == 3)))
     {
         mprf("The %s misses you.", name.c_str());
         return (true);
@@ -4754,13 +4755,12 @@ void bolt::affect_monster(monsters* mon)
     int beam_hit = hit;
     if (mon->invisible() && !can_see_invis)
         beam_hit /= 2;
-    if (mon->type == MONS_KIRKE)  // deflect missiles
-        beam_hit = random2(beam_hit * 2) / 3;
 
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit.  This is so we stay close to the
     // 4.0 to-hit system (which had very little love for monsters).
-    if (!engulfs && !test_beam_hit(beam_hit, random2(mon->ev)))
+    if (!engulfs && !_test_beam_hit(beam_hit, random2(mon->ev), is_beam,
+                                    mon->type == MONS_KIRKE, false))
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable())
