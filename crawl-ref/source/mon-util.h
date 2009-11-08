@@ -133,7 +133,7 @@ enum mons_class_flags
     M_REGEN             = (1<<18),        // regenerates quickly
     M_BURROWS           = (1<<19),        // monster digs through rock
 
-    M_UNUSED_3          = (1<<20),
+    // XXX: unused        (1<<20),
 
     M_UNIQUE            = (1<<21),        // monster is a unique
     M_ACID_SPLASH       = (1<<22),        // Passive acid splash when hit.
