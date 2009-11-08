@@ -78,7 +78,7 @@ bool actor::handle_trap()
 
 bool actor::check_res_magic(int power)
 {
-    int mrs = this->res_magic();
+    const int mrs = res_magic();
 
     if (mrs == MAG_IMMUNE)
         return (true);
@@ -92,8 +92,8 @@ bool actor::check_res_magic(int power)
     // goal here is to make the first level easier for these classes and give
     // them a better shot at getting to level two or three and spells that can
     // help them out (or building a level or two of their base skill so they
-    // aren't resisted as often). -- bwr
-    if (this->atype() == ACT_MONSTER && mrs < 6 && coinflip())
+    // aren't resisted as often). - bwr
+    if (atype() == ACT_MONSTER && mrs < 6 && coinflip())
         return (false);
 
     power = stepdown_value(power, 30, 40, 100, 120);
