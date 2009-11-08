@@ -2338,7 +2338,7 @@ void melee_attack::chaos_affects_defender()
     const bool immune     = mon && mons_immune_magic(defender_as_monster());
     const bool is_natural = mon && defender->holiness() == MH_NATURAL;
     const bool is_shifter = mon && mons_is_shapeshifter(defender_as_monster());
-    const bool can_clone  = mon && !mons_is_holy(defender_as_monster())
+    const bool can_clone  = mon && defender->holiness() == MH_HOLY
                             && mons_clonable(defender_as_monster(), true);
     const bool can_poly   = is_shifter || (defender->can_safely_mutate()
                                            && !immune);

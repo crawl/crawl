@@ -818,7 +818,7 @@ static int _healing_spell(int healed, bool divine_ability,
     {
         did_something = true;
 
-        const bool is_holy     = mons_is_holy(monster);
+        const bool is_holy     = monster->holiness() == MH_HOLY;
         const bool is_summoned = monster->is_summoned();
 
         int pgain = 0;

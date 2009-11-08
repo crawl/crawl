@@ -1612,10 +1612,9 @@ int monster_die(monsters *monster, killer_type killer,
                                     monster->hit_dice, true, monster);
                 }
 
-                // Holy kills are always noticed.
-                if (targ_holy == MH_HOLY)
+                if (mons_is_slime(monster))
                 {
-                    did_god_conduct(DID_KILL_HOLY, monster->hit_dice,
+                    did_god_conduct(DID_KILL_SLIME, monster->hit_dice,
                                     true, monster);
                 }
 
@@ -1625,16 +1624,17 @@ int monster_die(monsters *monster, killer_type killer,
                                     true, monster);
                 }
 
-                if (mons_is_slime(monster))
-                {
-                    did_god_conduct(DID_KILL_SLIME, monster->hit_dice,
-                                    true, monster);
-                }
-
-                // Cheibriados hates fast monsters
+                // Cheibriados hates fast monsters.
                 if (mons_is_fast(monster))
                 {
                     did_god_conduct(DID_KILL_FAST, monster->hit_dice,
+                                    true, monster);
+                }
+
+                // Holy kills are always noticed.
+                if (targ_holy == MH_HOLY)
+                {
+                    did_god_conduct(DID_KILL_HOLY, monster->hit_dice,
                                     true, monster);
                 }
             }
@@ -1900,13 +1900,13 @@ int monster_die(monsters *monster, killer_type killer,
                     }
                 }
 
-                // Randomly bless the follower who killed.
                 if (you.religion == GOD_BEOGH
                     && random2(you.piety) >= piety_breakpoint(2)
                     && !player_under_penance()
                     && !one_chance_in(3)
                     && !invalid_monster_index(killer_index))
                 {
+                    // Randomly bless the follower who killed.
                     bless_follower(killer_mon);
                 }
             }
@@ -3897,7 +3897,8 @@ std::string summoned_poof_msg(const monsters* monster, bool plural)
             msg = "degenerate%s into a cloud of primal chaos";
         }
 
-        if (mons_is_holy(monster) && summon_type != SPELL_SHADOW_CREATURES
+        if (monster->holiness() == MH_HOLY
+            && summon_type != SPELL_SHADOW_CREATURES
             && summon_type != MON_SUMM_CHAOS)
         {
             msg = "dissolve%s into sparkling lights";

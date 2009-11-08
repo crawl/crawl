@@ -35,7 +35,7 @@ void good_god_follower_attitude_change(monsters *monster)
     // good neutral towards you.
     if (is_good_god(you.religion)
         && monster->foe == MHITYOU
-        && mons_is_holy(monster)
+        && monster->holiness() == MH_HOLY
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_wont_attack(monster)
         && you.visible_to(monster) && !monster->asleep()
@@ -148,7 +148,7 @@ static bool _holy_beings_on_level_attitude_change()
     {
         monsters *monster = &menv[i];
         if (monster->alive()
-            && mons_is_holy(monster))
+            && monster->holiness() == MH_HOLY)
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Holy attitude changing: %s on level %d, branch %d",
@@ -369,7 +369,7 @@ static bool _make_holy_god_gifts_on_level_good_neutral(bool seen = false)
         monsters *monster = &menv[i];
         if (is_follower(monster)
             && !monster->has_ench(ENCH_CHARM)
-            && mons_is_holy(monster)
+            && monster->holiness() == MH_HOLY
             && mons_is_god_gift(monster, god))
         {
             // monster changes attitude
@@ -785,7 +785,7 @@ static void _print_good_god_holy_being_speech(bool neutral,
 // the good gods, and be made worshippers of TSO if necessary.
 void good_god_holy_attitude_change(monsters *holy)
 {
-    ASSERT(mons_is_holy(holy));
+    ASSERT(holy->holiness() == MH_HOLY);
 
     if (you.can_see(holy)) // show reaction
     {
@@ -813,7 +813,7 @@ void good_god_holy_attitude_change(monsters *holy)
 
 void good_god_holy_fail_attitude_change(monsters *holy)
 {
-    ASSERT(mons_is_holy(holy));
+    ASSERT(holy->holiness() == MH_HOLY);
 
     if (you.can_see(holy)) // show reaction
     {

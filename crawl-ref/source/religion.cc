@@ -3545,7 +3545,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
         _first_attack_was_unchivalric[midx] = true;
     }
 
-    if (mons_is_holy(mon))
+    if (mon->holiness() == MH_HOLY)
         conduct[2].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
 
     _first_attack_conduct[midx] = false;

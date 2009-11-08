@@ -6479,7 +6479,7 @@ int player::res_holy_energy(const actor *attacker) const
     if (is_unholy())
         return (-2);
 
-    if (is_good_god(religion))
+    if (is_good_god(religion) || holiness() == MH_HOLY)
         return (1);
 
     return (0);

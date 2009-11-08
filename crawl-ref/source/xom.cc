@@ -952,7 +952,7 @@ static bool _choose_chaos_upgrade(const monsters* mon)
 
     // Holy beings are presumably protected by another god, unless
     // they're gifts from a chaotic god.
-    if (mons_is_holy(mon) && !is_chaotic_god(mon->god))
+    if (mon->holiness() == MH_HOLY && !is_chaotic_god(mon->god))
         return (false);
 
     // God gifts from good gods will be protected by their god from

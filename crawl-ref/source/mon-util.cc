@@ -424,7 +424,7 @@ int mons_unusable_items(const monsters *mon)
 {
     int ret = 0;
 
-    if (mons_is_holy(mon))
+    if (mon->holiness() == MH_HOLY)
         ret += _scan_mon_inv_items(mon, is_evil_item) > 0;
     else if (mon->is_unholy())
     {
@@ -1094,11 +1094,6 @@ const char* mons_resist_string(const monsters *mon)
         return "is unaffected";
     else
         return "resists";
-}
-
-bool mons_is_holy(const monsters *mon)
-{
-    return (mon->holiness() == MH_HOLY);
 }
 
 bool mons_has_lifeforce(const monsters *mon)
