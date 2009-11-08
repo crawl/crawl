@@ -383,11 +383,6 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     return (true);
 }
 
-bool player_can_swim()
-{
-    return (you.can_swim());
-}
-
 bool is_feat_dangerous(dungeon_feature_type grid)
 {
     return (!you.airborne()
@@ -421,7 +416,7 @@ bool player_in_hell(void)
 
 bool player_likes_water(bool permanently)
 {
-    return (player_can_swim() || (!permanently && beogh_water_walk()));
+    return (you.can_swim() || (!permanently && beogh_water_walk()));
 }
 
 bool player_in_bat_form()
@@ -3206,7 +3201,7 @@ int check_stealth(void)
         // Merfolk can sneak up on monsters underwater -- bwr
         if (you.species == SP_MERFOLK)
             stealth += 50;
-        else if ( !player_can_swim() && !you.extra_balanced() )
+        else if ( !you.can_swim() && !you.extra_balanced() )
             stealth /= 2;       // splashy-splashy
     }
     else if (player_mutation_level(MUT_HOOVES))

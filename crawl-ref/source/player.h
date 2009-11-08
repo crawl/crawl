@@ -610,7 +610,6 @@ int player_spirit_shield(bool calc_unid = true);
 
 bool player_can_smell();
 bool player_likes_chunks(bool permanently = false);
-bool player_can_swim();
 bool player_likes_water(bool permanently = false);
 
 int player_mutation_level(mutation_type mut);
