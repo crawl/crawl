@@ -854,39 +854,37 @@ void cast_discharge(int pow)
 
 // Really this is just applying the best of Band/Warp weapon/Warp field
 // into a spell that gives the "make monsters go away" benefit without
-// the insane damage potential.  -- bwr
+// the insane damage potential. - bwr
 int disperse_monsters(coord_def where, int pow, int, actor *)
 {
-    monsters *defender = monster_at(where);
-    if (defender == NULL)
-        return 0;
+    monsters *mon = monster_at(where);
+    if (!mon)
+        return (0);
 
-    if (defender->type == MONS_BLINK_FROG
-        || defender->type == MONS_PRINCE_RIBBIT)
+    if (mons_genus(mon->type) == MONS_BLINK_FROG)
     {
-        simple_monster_message(defender, " resists.");
-        return 1;
+        simple_monster_message(mon, " resists.");
+        return (1);
     }
-    else if (defender->check_res_magic(pow))
+    else if (mon->check_res_magic(pow))
     {
-        // XXX Note that this might affect magic-immunes!
+        // XXX: Note that this might affect magic-immunes!
         if (coinflip())
         {
-            simple_monster_message(defender, " partially resists.");
-            monster_blink(defender);
+            simple_monster_message(mon, " partially resists.");
+            monster_blink(mon);
         }
         else
-            simple_monster_message(defender, " resists.");
-
-        return 1;
+            simple_monster_message(mon, " resists.");
+        return (1);
     }
     else
     {
-        monster_teleport( defender, true );
-        return 1;
+        monster_teleport(mon, true);
+        return (1);
     }
 
-    return 0;
+    return (0);
 }
 
 void cast_dispersal(int pow)
