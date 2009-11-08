@@ -1207,13 +1207,30 @@ static void _hogs_to_humans()
     // affected by the magic of Kirke's death.
     // FIXME: If another monster was polymorphed into a hog by Kirke's
     //        porkalator spell, they should be handled specially...
-    int any = 0;
+    int any = 0, human = 0;
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
-        if (monster->type == MONS_HOG)
+        if (monster->alive() && monster->type == MONS_HOG)
         {
+            const bool could_see = you.can_see(monster);
+
+            // XXX: This resets the size of slime creatures, the number
+            // of heads a hydra has, and the number of spikes a manticore
+            // has.  Plus it also changes the colour of a draconian which
+            // has a sub-type.  And it re-rolls the spellbook the monster
+            // has.
+            if (monster->number == 0)
+                monster->type = MONS_HUMAN;
+            else
+                monster->type = (monster_type) (monster->number - 1);
+
+            monster->number = 0;
+            define_monster(*monster);
+
+            const bool can_see = you.can_see(monster);
+
             // A monster changing factions while in the arena messes up
             // arena book-keeping.
             if (!crawl_state.arena)
@@ -1221,19 +1238,39 @@ static void _hogs_to_humans()
                 monster->attitude = ATT_GOOD_NEUTRAL;
                 monster->flags |= MF_WAS_NEUTRAL;
             }
-            monster->type = MONS_HUMAN;
+
             behaviour_event(monster, ME_EVAL);
 
-            any++;
+            if (could_see && can_see)
+            {
+                any++;
+                if (monster->type == MONS_HUMAN)
+                    human++;
+            }
+            else if (could_see && !can_see)
+                mpr("The hog vanishes!");
+            else if (!could_see && can_see)
+                mprf("%s appears from out of thin air!",
+                     monster->name(DESC_CAP_A).c_str());
         }
     }
 
     if (any == 1)
-        mpr("No longer under Kirke's spell, the hog turns into a human!");
+    {
+        if (any == human)
+            mpr("No longer under Kirke's spell, the hog turns into a human!");
+        else
+            mpr("No longer under Kirke's spell, the hog returns to its "
+                "original form!");
+    }
     else if (any > 1)
     {
-        mpr("No longer under Kirke's spell, all hogs revert to their human "
-            "forms!");
+        if (any == human)
+            mpr("No longer under Kirke's spell, all hogs revert to their "
+                "human forms!");
+        else
+            mpr("No longer under Kirke's spell, all hogs revert to their "
+                "original forms!");
     }
 
     // Revert the player as well.

@@ -5303,12 +5303,16 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         return (MON_AFFECTED);
 
     case BEAM_PORKALATOR:
+    {
+        monster_type orig_type = mon->type;
         if (monster_polymorph(mon, (mon->holiness() == MH_DEMONIC ?
                                         MONS_HELL_HOG : MONS_HOG)))
         {
             obvious_effect = true;
         }
+        mon->number = ((int) orig_type + 1);
         return (MON_AFFECTED);
+    }
 
     default:
         break;
