@@ -62,7 +62,7 @@ monsters* player::get_beholder(const coord_def &target) const
     for (unsigned int i = 0; i < beholders.size(); i++)
     {
         monsters *mon = &menv[beholders[i]];
-        const int olddist = grid_distance(you.pos(), mon->pos());
+        const int olddist = grid_distance(pos(), mon->pos());
         const int newdist = grid_distance(target, mon->pos());
 
         if (olddist < newdist)
@@ -101,7 +101,7 @@ void player::clear_beholders()
 // Possibly end mesmerisation if a loud noise happened.
 void player::beholders_check_noise(int loudness)
 {
-    if (loudness >= 20 && you.beheld())
+    if (loudness >= 20 && beheld())
     {
         mprf("For a moment, you cannot hear the mermaid%s!",
              beholders.size() > 1 ? "s" : "");
@@ -162,7 +162,7 @@ bool player::_possible_beholder(const monsters *mon) const
 {
     if (crawl_state.arena)
         return (false);
-    if (silenced(you.pos()))
+    if (silenced(pos()))
         return (false);
     if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID
         || !mons_near(mon) || mon->friendly()
@@ -173,7 +173,7 @@ bool player::_possible_beholder(const monsters *mon) const
     }
 
     // TODO: replace this by see/see_no_trans.
-    int walls = num_feats_between(you.pos(), mon->pos(),
+    int walls = num_feats_between(pos(), mon->pos(),
                                   DNGN_UNSEEN, DNGN_MAXOPAQUE);
     if (walls > 0)
         return (false);
