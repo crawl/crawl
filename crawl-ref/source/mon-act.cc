@@ -1336,6 +1336,7 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
             set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);
         }
     }
+    throw_noise(monster, pbolt, item);
 
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.

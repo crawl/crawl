@@ -2229,6 +2229,59 @@ void _merge_ammo_in_inventory(int slot)
     }
 }
 
+void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
+{
+    const item_def* launcher = act->weapon();
+
+    if (launcher == NULL)
+        return;
+
+    ASSERT(launcher->base_type == OBJ_WEAPONS);
+
+    if (is_launched(act, launcher, ammo) != LRET_LAUNCHED)
+        return;
+
+    // Throwing and blowguns are silent...
+    int         level = 0;
+    const char* msg   = NULL;
+
+    switch(launcher->sub_type)
+    {
+    case WPN_BLOWGUN:
+        return;
+
+    case WPN_SLING:
+        level = 1;
+        msg   = "You hear a whirring sound.";
+        break;
+    case WPN_HAND_CROSSBOW:
+        level = 3;
+        msg   = "You hear a small twanging sound.";
+        break;
+     case WPN_BOW:
+        level = 5;
+        msg   = "You hear a twanging sound.";
+        break;
+     case WPN_LONGBOW:
+        level = 6;
+        msg   = "You hear a loud twanging sound.";
+        break;
+     case WPN_CROSSBOW:
+        level = 7;
+        msg   = "You hear a thunk.";
+        break;
+ 
+    default:
+        DEBUGSTR("Invalid launcher '%s'",
+                 launcher->name(DESC_PLAIN).c_str());
+        return;
+    }
+    if (act->atype() == ACT_PLAYER || you.can_see(act))
+        msg = NULL;
+
+    noisy(level, act->pos(), msg, act->mindex());
+}
+
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mon-act:_mons_throw()
 // Note: If teleport is true, assume that pbolt is already set up,
@@ -3016,11 +3069,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             canned_msg(MSG_EMPTY_HANDED);
     }
 
-    // Throwing and blowguns are silent...
-    if (projected == LRET_LAUNCHED && lnchType != WPN_BLOWGUN)
-        noisy(6, you.pos());
+    throw_noise(&you, pbolt, thrown);
 
-    // ...but any monster nearby can see that something has been thrown.
+    // ...any monster nearby can see that something has been thrown, even
+    // if it didn't make any noise.
     alert_nearby_monsters();
 
     if (ammo_ided)

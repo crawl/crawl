@@ -99,6 +99,8 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 bool setup_missile_beam(const actor *actor, bolt &beam, item_def &item,
                         std::string &ammo_name, bool &returning);
 
+void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo);
+
 bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
               int acc_bonus = 0, dist *target = NULL);
 
