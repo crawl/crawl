@@ -119,7 +119,7 @@ bool monster_habitable_grid(const monsters *m,
                                                       : m->type;
 
     return (monster_habitable_grid(montype, actual_grid, mons_flies(m),
-                                   mons_cannot_move(m)));
+                                   m->cannot_move()));
 }
 
 inline static bool _mons_airborne(int mcls, int flies, bool paralysed)

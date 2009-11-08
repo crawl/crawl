@@ -166,7 +166,7 @@ bool player::_possible_beholder(const monsters *mon) const
         return (false);
     if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID
         || !mons_near(mon) || mon->friendly()
-        || mon->submerged() || mon->confused() || mons_cannot_move(mon)
+        || mon->submerged() || mon->confused() || mon->cannot_move()
         || mon->asleep() || silenced(mon->pos()))
     {
         return (false);

@@ -1944,11 +1944,6 @@ bool mons_cannot_act(const monsters *m)
             || m->petrified() && !m->petrifying());
 }
 
-bool mons_cannot_move(const monsters *m)
-{
-    return (mons_cannot_act(m) || m->petrifying());
-}
-
 bool mons_is_confused(const monsters *m, bool class_too)
 {
     return (m->has_ench(ENCH_CONFUSION)

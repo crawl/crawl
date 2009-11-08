@@ -2795,7 +2795,7 @@ bool monsters::cannot_act() const
 
 bool monsters::cannot_move() const
 {
-    return (mons_cannot_move(this));
+    return (cannot_act() || petrifying());
 }
 
 bool monsters::asleep() const

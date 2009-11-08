@@ -2039,7 +2039,7 @@ static void _handle_monster_move(monsters *monster)
                 continue;
             }
 
-            if (mons_cannot_move(monster) || !_monster_move(monster))
+            if (monster->cannot_move() || !_monster_move(monster))
                 monster->speed_increment -= non_move_energy;
         }
         you.update_beholder(monster);
@@ -2715,7 +2715,7 @@ static bool _mons_can_displace(const monsters *mpusher,
     // past, either, but they may be woken up by a crowd trying to
     // elbow past them, and the wake-up check happens downstream.
     if (mons_is_confused(mpusher)      || mons_is_confused(mpushee)
-        || mons_cannot_move(mpusher)   || mons_cannot_move(mpushee)
+        || mpusher->cannot_move()   || mpushee->cannot_move()
         || mons_is_stationary(mpusher) || mons_is_stationary(mpushee)
         || mpusher->asleep())
     {
