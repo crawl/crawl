@@ -479,7 +479,8 @@ public:
     bool can_throw_large_rocks() const;
 
     int armour_class() const;
-    int melee_evasion(const actor *attacker) const;
+    int melee_evasion(const actor *attacker,
+                      ev_ignore_type evit = EV_IGNORE_NONE) const;
 
     int stat_hp() const     { return hp; }
     int stat_maxhp() const  { return hp_max; }
@@ -581,7 +582,7 @@ int check_stealth(void);
 
 int player_energy(void);
 
-int player_evasion(void);
+int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 
 int player_movement_speed(void);
 

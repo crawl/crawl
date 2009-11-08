@@ -2901,9 +2901,13 @@ int monsters::armour_class() const
     return (ac);
 }
 
-int monsters::melee_evasion(const actor *act) const
+int monsters::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
     int evasion = ev;
+
+    if (evit & EV_IGNORE_HELPLESS)
+        return (evasion);
+
     if (paralysed() || asleep())
         evasion = 0;
     else if (caught())

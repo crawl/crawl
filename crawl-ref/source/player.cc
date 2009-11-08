@@ -2032,7 +2032,7 @@ bool player_is_shapechanged(void)
 }
 
 // New and improved 4.1 evasion model, courtesy Brent Ross.
-int player_evasion()
+int player_evasion(ev_ignore_type evit)
 {
     // XXX: you.body_size() implementations are incomplete, fix.
     const size_type size  = you.body_size(PSIZE_BODY);
@@ -2042,7 +2042,7 @@ int player_evasion()
     int ev = 10 + 2 * size_factor;
 
     // Repulsion fields and size are all that matters when paralysed.
-    if (you.cannot_move())
+    if (you.cannot_move() && !(evit & EV_IGNORE_HELPLESS))
     {
         ev = 2 + size_factor;
         if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
@@ -2115,7 +2115,7 @@ int player_evasion()
     if (you.duration[DUR_AGILITY])
         ev += 5;
 
-    if (you.duration[DUR_PHASE_SHIFT])
+    if (you.duration[DUR_PHASE_SHIFT] && !(evit & EV_IGNORE_PHASESHIFT))
         ev += 8;
 
     if (you.duration[DUR_STONEMAIL])
@@ -6337,11 +6337,13 @@ int player::armour_class() const
     return (AC / 100);
 }
 
-int player::melee_evasion(const actor *act) const
+int player::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
-    return (player_evasion()
-            - ((!act || act->visible_to(this)) ? 0 : 10)
+    return (player_evasion(evit)
+            - ((!act || act->visible_to(this)
+                || (evit & EV_IGNORE_HELPLESS)) ? 0 : 10)
             - (you_are_delayed()
+               && !(evit & EV_IGNORE_HELPLESS)
                && !is_run_delay(current_delay_action())? 5 : 0));
 }
 

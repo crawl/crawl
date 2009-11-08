@@ -3,6 +3,13 @@
 
 #include "los_def.h"
 
+enum ev_ignore_type
+{
+    EV_IGNORE_NONE       = 0,
+    EV_IGNORE_HELPLESS   = 1,
+    EV_IGNORE_PHASESHIFT = 2
+};
+
 class actor
 {
 public:
@@ -167,7 +174,8 @@ public:
     virtual bool can_throw_large_rocks() const = 0;
 
     virtual int armour_class() const = 0;
-    virtual int melee_evasion(const actor *attacker) const = 0;
+    virtual int melee_evasion(const actor *attacker,
+                              ev_ignore_type ign = EV_IGNORE_NONE) const = 0;
     virtual int shield_bonus() const = 0;
     virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
