@@ -23,8 +23,6 @@ bool cast_smiting(int power, const coord_def& where);
 bool remove_sanctuary(bool did_attack = false);
 void decrease_sanctuary_radius();
 bool cast_sanctuary(const int power);
-int halo_radius();
-bool inside_halo(const coord_def& where);
 bool project_noise();
 bool detect_curse(bool suppress_msg);
 bool entomb(int powc);

@@ -1979,25 +1979,6 @@ bool cast_sanctuary(const int power)
     return (true);
 }
 
-int halo_radius()
-{
-    if (you.religion == GOD_SHINING_ONE && you.piety >= piety_breakpoint(0)
-        && !you.penance[GOD_SHINING_ONE])
-    {
-        return std::min(LOS_RADIUS, you.piety / 20);
-    }
-
-    return 0;
-}
-
-bool inside_halo(const coord_def& where)
-{
-    if (!halo_radius())
-        return (false);
-
-    return (_inside_circle(where, halo_radius()) != -1);
-}
-
 void cast_poison_ammo()
 {
     const int ammo = you.equip[EQ_WEAPON];

@@ -3585,9 +3585,9 @@ void display_char_status()
     else
         mpr("You are alive.");
 
-    if (you.haloed())
+    const int halo_size = you.halo_radius();
+    if (halo_size > 0)
     {
-        const int halo_size = halo_radius();
         if (halo_size > 6)
             mpr("You are illuminated by a large divine halo.");
         else if (halo_size > 3)
@@ -6904,11 +6904,6 @@ void player::backlight()
         if (this->duration[DUR_BACKLIGHT] > 250)
             this->duration[DUR_BACKLIGHT] = 250;
     }
-}
-
-bool player::haloed() const
-{
-    return (halo_radius());
 }
 
 bool player::can_mutate() const

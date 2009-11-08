@@ -333,7 +333,7 @@ public:
     bool caught() const;
     bool asleep() const;
     bool backlit(bool check_haloed = true) const;
-    bool haloed() const;
+    int halo_radius() const;
     bool petrified() const;
 
     bool friendly() const;

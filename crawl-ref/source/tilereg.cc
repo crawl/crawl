@@ -644,7 +644,7 @@ static void _fill_doll_equipment(dolls_data &result)
     // Halo.
     if (result.parts[TILEP_PART_HALO] == TILEP_SHOW_EQUIP)
     {
-        const bool halo = inside_halo(you.pos());
+        const bool halo = you.haloed();
         result.parts[TILEP_PART_HALO] = halo ? TILEP_HALO_TSO : 0;
     }
     // Enchantments.

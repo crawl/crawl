@@ -4762,7 +4762,7 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
             if (in_bounds)
             {
                 bool print_blood = true;
-                if (inside_halo(gc))
+                if (you.inside_halo(gc))
                 {
                     monsters *mon = monster_at(gc);
                     if (observe_cell(gc) && mon)

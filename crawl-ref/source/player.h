@@ -456,7 +456,7 @@ public:
     bool confused() const;
     bool caught() const;
     bool backlit(bool check_haloed = true) const;
-    bool haloed() const;
+    int halo_radius() const;
     bool petrified() const;
 
     bool asleep() const;

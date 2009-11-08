@@ -200,8 +200,15 @@ public:
     virtual bool confused() const = 0;
     virtual bool caught() const = 0;
     virtual bool asleep() const { return (false); }
+
     virtual bool backlit(bool check_haloed = true) const = 0;
-    virtual bool haloed() const = 0;
+    // Within player halo.
+    virtual bool haloed() const;
+    // Halo radius.
+    virtual int halo_radius() const = 0;
+    // Is the given point within this actor's halo?
+    virtual bool inside_halo(const coord_def &c) const;
+
     virtual bool petrified() const = 0;
 
     virtual bool handle_trap();

@@ -2809,11 +2809,6 @@ bool monsters::backlit(bool check_haloed) const
         || ((check_haloed) ? haloed() : false));
 }
 
-bool monsters::haloed() const
-{
-    return (inside_halo(pos()));
-}
-
 bool monsters::caught() const
 {
     return this->has_ench(ENCH_HELD);
