@@ -10,7 +10,7 @@
 
 bool actor::haloed() const
 {
-    return (!haloers(pos()).empty());
+    return (you.halo_contains(pos()));
 }
 
 bool actor::halo_contains(const coord_def &c) const
