@@ -108,6 +108,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	endif
 endif
 ifeq ($(uname_S),DOS)
+	GAME = crawl.exe
 	NO_NCURSES = yes
 	NO_UNICODE = yes
 	NEED_LIBDOS = yes
