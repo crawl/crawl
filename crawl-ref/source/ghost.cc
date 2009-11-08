@@ -615,9 +615,7 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 
     reset();
 
-    att_type = AT_HIT;
     colour = weapon.colour;
-    att_flav = AF_PLAIN;
     fly = FL_LEVITATE;
 
     // We want Tukima to reward characters who invest heavily in both
