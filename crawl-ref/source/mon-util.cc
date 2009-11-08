@@ -1555,6 +1555,11 @@ void define_monster(monsters &mons)
     mons.colour     = col;
 
     mons.load_spells(spells);
+    // (dumb) special casing to gives ogre mages haste other. -cao
+    if(mons.type == MONS_OGRE_MAGE)
+    {
+        mons.spells[0] = SPELL_HASTE_OTHER;
+    }
     mons.bind_spell_flags();
 
     // Reset monster enchantments.
