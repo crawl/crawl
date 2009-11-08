@@ -2310,17 +2310,6 @@ int corpse_freshness(const item_def &item)
 //
 // Generic item functions:
 //
-// Returns true if item counts as a tool for tool size comparisons and msgs.
-bool is_tool(const item_def &item)
-{
-    // Currently using OBJ_WEAPONS instead of can_cut_meat() as almost
-    // any weapon might be an evocable artefact.
-    return (item.base_type == OBJ_WEAPONS
-            || item.base_type == OBJ_STAVES
-            || (item.base_type == OBJ_MISCELLANY
-                && item.sub_type != MISC_RUNE_OF_ZOT));
-}
-
 int property(const item_def &item, int prop_type)
 {
     switch (item.base_type)
