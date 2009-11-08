@@ -3332,6 +3332,12 @@ bool melee_attack::apply_damage_brand()
 
     case SPWPN_CONFUSE:
     {
+        // This was originally for confusing touch and it doesn't really
+        // work on the player, but a monster with a chaos weapon will
+        // occassionally come up with this brand. -cao
+        if (defender->atype() == ACT_PLAYER)
+            break;
+
         emit_nodmg_hit_message();
 
         const int hdcheck =
