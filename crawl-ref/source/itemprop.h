@@ -627,7 +627,6 @@ int  get_ammo_brand( const item_def &item );
 // armour functions:
 int armour_max_enchant( const item_def &item );
 bool armour_is_hide( const item_def &item, bool inc_made = false );
-bool armour_not_shiny( const item_def &item );
 
 equipment_type get_armour_slot( const item_def &item );
 equipment_type get_armour_slot( armour_type arm );

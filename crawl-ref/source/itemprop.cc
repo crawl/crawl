@@ -1054,31 +1054,6 @@ bool armour_is_hide( const item_def &item, bool inc_made )
     return (false);
 }
 
-// Used to distinguish shiny and embroidered.
-bool armour_not_shiny( const item_def &item )
-{
-    ASSERT( item.base_type == OBJ_ARMOUR );
-
-    switch (item.sub_type)
-    {
-    case ARM_ROBE:
-    case ARM_CLOAK:
-    case ARM_GLOVES:
-    case ARM_BOOTS:
-    case ARM_NAGA_BARDING:
-    case ARM_CENTAUR_BARDING:
-    case ARM_LEATHER_ARMOUR:
-    case ARM_ANIMAL_SKIN:
-    case ARM_TROLL_HIDE:
-    case ARM_TROLL_LEATHER_ARMOUR:
-    case ARM_CAP:
-    case ARM_WIZARD_HAT:
-        return (true);
-    }
-
-    return (false);
-}
-
 equipment_type get_armour_slot( const item_def &item )
 {
     ASSERT( item.base_type == OBJ_ARMOUR );
