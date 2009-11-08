@@ -763,6 +763,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
         if (mon->type == MONS_PSYCHE)
         {
+            force_item = true;
             set_item_ego_type(item, OBJ_WEAPONS,
                               random_choose_weighted(3, SPWPN_CHAOS,
                                                      1, SPWPN_DISTORTION,
