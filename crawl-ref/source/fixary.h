@@ -128,4 +128,59 @@ void Matrix<Z>::init(const Z &initial)
         data[i] = initial;
 }
 
+// A fixed array centered around the origin.
+template <class TYPE, int RADIUS> class SquareArray {
+//-----------------------------------
+//    Types
+//
+public:
+    typedef TYPE            value_type;
+    typedef TYPE&           reference;
+    typedef const TYPE&     const_reference;
+    typedef TYPE*           pointer;
+    typedef const TYPE*     const_pointer;
+
+    typedef unsigned long   size_type;
+    typedef long            difference_type;
+
+//-----------------------------------
+//    Initialization/Destruction
+//
+public:
+    ~SquareArray()                           {}
+
+    SquareArray()                            {}
+
+    SquareArray(TYPE def)
+    {
+        init(def);
+    }
+
+//-----------------------------------
+//    API
+//
+public:
+    // ----- Size -----
+    bool empty() const { return data.empty(); }
+    int size() const { return data.size(); }
+    int width() const { return data.width(); }
+    int height() const { return data.height(); }
+
+    // ----- Access -----
+    template<class Indexer> TYPE& operator () (const Indexer &i) {
+        return data[i.x+RADIUS][i.y+RADIUS];
+    }
+
+    template<class Indexer> const TYPE& operator () (const Indexer &i) const {
+        return data[i.x+RADIUS][i.y+RADIUS];
+    }
+
+    void init(const TYPE& def) {
+        data.init(def);
+    }
+
+protected:
+    FixedArray<TYPE, 2*RADIUS+1, 2*RADIUS+1> data;
+};
+
 #endif    // FIXARY_H
