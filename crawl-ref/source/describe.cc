@@ -3145,6 +3145,7 @@ static std::string _religion_help(god_type god)
         break;
 
     case GOD_SHINING_ONE:
+    {
         result += "You can pray at an altar to sacrifice evil items.";
         int halo_size = you.halo_radius();
         if (halo_size > 0)
@@ -3171,6 +3172,7 @@ static std::string _religion_help(god_type god)
                       "blessed, especially a long blade.";
         }
         break;
+    }
 
     case GOD_LUGONU:
         if (!player_under_penance() && you.piety > 160
