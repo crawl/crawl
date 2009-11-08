@@ -45,6 +45,7 @@ CXX = $(GXX)
 RM = rm -f
 COPY = cp
 STRIP = strip
+WINDRES = windres
 
 export AR
 export RANLIB
@@ -151,6 +152,10 @@ endif
 
 # Works for Mac OS X and Linux.
 OBJECTS += crash-u.o
+
+ifdef WIN32
+EXTRA_OBJECTS += icon.o
+endif
 
 ifdef TILES
 OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o
@@ -259,6 +264,7 @@ GXX := $(CROSSHOST)-g++
 AR := $(CROSSHOST)-ar
 RANLIB := $(CROSSHOST)-ranlib
 STRIP := $(CROSSHOST)-strip
+WINDRES := $(CROSSHOST)-windres
 
 endif
 GCC_GTE_4_0_0 := $(shell util/gcc-gte.pl $(GCC) 4.0.0)
@@ -533,6 +539,7 @@ ifndef V
         QUIET_GEN      = @echo '   ' GEN $@;
         QUIET_COPY     = @echo '   ' COPY $@;
         QUIET_DEPEND   = @echo '   ' DEPEND $@;
+        QUIET_WINDRES  = @echo '   ' WINDRES $@;
         export V
 endif
 endif
@@ -770,6 +777,9 @@ $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
 %.o: %.cc .cflags
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -c $< -o $@
+
+icon.o: util/crawl.rc util/crawl.ico
+	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
 #
 # Contribs
