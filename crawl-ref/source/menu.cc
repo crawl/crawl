@@ -10,6 +10,7 @@
 
 #include "cio.h"
 #include "colour.h"
+#include "env.h"
 #include "menu.h"
 #include "macro.h"
 #include "message.h"
