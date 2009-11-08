@@ -44,6 +44,7 @@ CC = $(GCC)
 CXX = $(GXX)
 RM = rm -f
 COPY = cp
+STRIP = strip
 
 export AR
 export RANLIB
@@ -186,8 +187,9 @@ MCHMOD_SAVEDIR := 775
 # The user:group to install the game as.
 INSTALL_UGRP := games:games
 
-prefix        := /usr/games/crawl
 chroot_prefix :=
+prefix        := /usr/games/crawl
+bin_prefix    := bin
 
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
@@ -255,6 +257,7 @@ GCC := $(CROSSHOST)-gcc
 GXX := $(CROSSHOST)-g++
 AR := $(CROSSHOST)-ar
 RANLIB := $(CROSSHOST)-ranlib
+STRIP := $(CROSSHOST)-strip
 
 endif
 GCC_GTE_4_0_0 := $(shell util/gcc-gte.pl $(GCC) 4.0.0)
@@ -696,10 +699,11 @@ install: $(GAME)
 ifeq ($(DATADIR),)
 	$(error DATADIR not set! Set DATADIR and run make clean install again)
 endif
-	[ -d $(prefix_fp)/bin ] || mkdir -p $(prefix_fp)/bin
-	$(COPY) $(GAME) $(prefix_fp)/bin/
-	chown -R $(INSTALL_UGRP) $(prefix_fp)/bin
-	chmod $(MCHMOD) $(prefix_fp)/bin/$(GAME)
+	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
+	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
+	$(STRIP) -s $(prefix_fp)/$(bin_prefix)/$(GAME)
+	chown -R $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)
+	chmod $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME)
 	mkdir -p $(datadir_fp)/dat/clua
 	mkdir -p $(datadir_fp)/dat/lua
 	mkdir -p $(datadir_fp)/dat/database
