@@ -1219,7 +1219,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
             if (already)
                 desc += "/" ;
 
-            desc += spelltype_name( 1 << i );
+            desc += spelltype_long_name( 1 << i );
             already = true;
         }
     }

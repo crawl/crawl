@@ -849,41 +849,6 @@ const char* spelltype_long_name( int which_spelltype )
     }
 }
 
-const char *spelltype_name(unsigned int which_spelltype)
-{
-    switch (which_spelltype)
-    {
-    case SPTYP_CONJURATION:
-        return ("Conjuration");
-    case SPTYP_ENCHANTMENT:
-        return ("Enchantment");
-    case SPTYP_FIRE:
-        return ("Fire");
-    case SPTYP_ICE:
-        return ("Ice");
-    case SPTYP_TRANSMUTATION:
-        return ("Transmutation");
-    case SPTYP_NECROMANCY:
-        return ("Necromancy");
-    case SPTYP_HOLY:
-        return ("Holy");
-    case SPTYP_SUMMONING:
-        return ("Summoning");
-    case SPTYP_DIVINATION:
-        return ("Divination");
-    case SPTYP_TRANSLOCATION:
-        return ("Translocation");
-    case SPTYP_POISON:
-        return ("Poison");
-    case SPTYP_EARTH:
-        return ("Earth");
-    case SPTYP_AIR:
-        return ("Air");
-    default:
-        return "Buggy";
-    }
-}                               // end spelltype_name()
-
 int spell_type2skill(unsigned int spelltype)
 {
     switch (spelltype)

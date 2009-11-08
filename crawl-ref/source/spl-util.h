@@ -115,8 +115,6 @@ bool spell_direction( dist &spelld, bolt &pbolt,
                       bool may_target_self = false, const char *prompt = NULL,
                       bool cancel_at_self = false );
 
-const char *spelltype_name(unsigned int which_spelltype);
-
 int spell_type2skill (unsigned int which_spelltype);
 int spell_skill2type (unsigned int which_skill);
 

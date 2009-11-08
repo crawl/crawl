@@ -850,7 +850,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
                     if (already)
                         out.cprintf( "/" );
 
-                    out.cprintf( "%s", spelltype_name( 1 << i ) );
+                    out.cprintf( "%s", spelltype_long_name( 1 << i ) );
                     already = true;
                 }
             }
@@ -2068,9 +2068,9 @@ static bool _compare_spells(spell_type a, spell_type b)
         {
             int mask = 1 << i;
             if (a_type == NULL && (schools_a & mask))
-                a_type = spelltype_name(mask);
+                a_type = spelltype_long_name(mask);
             if (b_type == NULL && (schools_b & mask))
-                b_type = spelltype_name(mask);
+                b_type = spelltype_long_name(mask);
         }
         ASSERT(a_type != NULL && b_type != NULL);
         return (strcmp(a_type, b_type) < 0);
