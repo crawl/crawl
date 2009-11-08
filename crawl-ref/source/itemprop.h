@@ -635,7 +635,6 @@ equipment_type get_armour_slot( armour_type arm );
 
 bool jewellery_is_amulet( const item_def &item );
 bool jewellery_is_amulet( int sub_type );
-bool check_jewellery_size( const item_def &item, size_type size );
 
 bool  hide2armour( item_def &item );
 

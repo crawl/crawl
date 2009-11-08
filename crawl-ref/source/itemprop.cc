@@ -1129,17 +1129,6 @@ bool jewellery_is_amulet( int sub_type )
     return (sub_type >= AMU_RAGE);
 }
 
-bool check_jewellery_size( const item_def &item, size_type size )
-{
-    ASSERT( item.base_type == OBJ_JEWELLERY );
-
-    // Currently assuming amulets are always wearable (only needs
-    // to be held over head or heart... giants can strap it on with
-    // a bit of binder twine).  However, rings need to actually fit
-    // around the ring finger to work, and so the big cannot use them.
-    return (size <= SIZE_LARGE || jewellery_is_amulet( item ));
-}
-
 // Returns the basic light status of an armour, ignoring things like the
 // elven bonus... you probably want is_light_armour() most times.
 bool base_armour_is_light( const item_def &item )
