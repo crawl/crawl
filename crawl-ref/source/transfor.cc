@@ -1020,16 +1020,6 @@ bool can_equip( equipment_type use_which, bool ignore_temporary )
     return (true);
 }
 
-// raw comparison of an item, must use check_armour_shape for full version
-bool transform_can_equip_type( int eq_slot )
-{
-    // FIXME FIXME FIXME
-    return (false);
-
-    // const int form = you.attribute[ATTR_TRANSFORMATION];
-    // return (!must_remove( Trans[form].rem_stuff, eq_slot ));
-}
-
 void _extra_hp(int amount_extra) // must also set in calc_hp
 {
     calc_hp();

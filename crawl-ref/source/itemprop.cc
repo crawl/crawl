@@ -1298,21 +1298,6 @@ bool check_armour_shape( const item_def &item, bool quiet )
         }
     }
 
-    // Note: This need to be checked after all the special cases
-    // above, and in addition to shapechanged or not.  This is
-    // a simple check against the armour types that are forced off.
-
-    // FIXME FIXME FIXME
-    /*
-    if (!transform_can_equip_type( slot ))
-    {
-        if (!quiet)
-           mpr( "You can't wear that in your current form!" );
-
-        return (false);
-    }
-    */
-
     return (true);
 }
 

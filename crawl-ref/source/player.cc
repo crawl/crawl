@@ -5945,11 +5945,6 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
             return (false);
     }
 
-#if 0
-    if (!ignore_transform && !transform_can_equip_type(EQ_WEAPON))
-        return (false);
-#endif
-
     return (true);
 }
 
