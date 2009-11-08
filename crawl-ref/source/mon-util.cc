@@ -1070,7 +1070,7 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
     }
 
     // Slime creature attacks are multiplied by the number merged.
-    if (mon->type == MONS_SLIME_CREATURE)
+    if (mon->type == MONS_SLIME_CREATURE && mon->number)
         attk.damage *= mon->number;
 
     return (zombified ? downscale_zombie_attack(mon, attk) : attk);
@@ -1336,7 +1336,7 @@ int exper_value(const monsters *monster)
 
     // Slime creature exp hack part 2: Scale exp back up by the number
     // of blobs merged. -cao
-    if (monster->type == MONS_SLIME_CREATURE)
+    if (monster->type == MONS_SLIME_CREATURE && monster->number)
         x_val *= monster->number;
 
     // Reductions for big values. - bwr
