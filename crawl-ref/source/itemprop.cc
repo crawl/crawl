@@ -1079,32 +1079,6 @@ bool armour_not_shiny( const item_def &item )
     return (false);
 }
 
-int armour_str_required( const item_def &arm )
-{
-    ASSERT( arm.base_type == OBJ_ARMOUR );
-
-    int ret = 0;
-
-    const equipment_type  slot = get_armour_slot( arm );
-    const int             mass = item_mass( arm );
-
-    switch (slot)
-    {
-    case EQ_BODY_ARMOUR:
-        ret = mass / 35;
-        break;
-
-    case EQ_SHIELD:
-        ret = mass / 15;
-        break;
-
-    default:
-        break;
-    }
-
-    return ((ret < STR_REQ_THRESHOLD) ? 0 : ret);
-}
-
 equipment_type get_armour_slot( const item_def &item )
 {
     ASSERT( item.base_type == OBJ_ARMOUR );
