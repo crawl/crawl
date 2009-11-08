@@ -1061,8 +1061,7 @@ static bool _spell_filter(std::string key, std::string body)
     if (spell == SPELL_NO_SPELL)
         return (true);
 
-    if (get_spell_flags(spell) & (SPFLAG_MONSTER | SPFLAG_TESTING
-                                  | SPFLAG_DEVEL))
+    if (get_spell_flags(spell) & (SPFLAG_MONSTER | SPFLAG_TESTING))
     {
 #ifdef WIZARD
         return (!you.wizard);
@@ -1166,12 +1165,7 @@ static void _append_non_item(std::string &desc, std::string key)
 
     unsigned int flags = get_spell_flags(type);
 
-    if (flags & SPFLAG_DEVEL)
-    {
-        desc += "$This spell is still being developed, and is only available "
-                "via the &Z wizard command.";
-    }
-    else if (flags & SPFLAG_TESTING)
+    if (flags & SPFLAG_TESTING)
     {
         desc += "$This is a testing spell, only available via the "
                 "&Z wizard command.";
@@ -1198,7 +1192,7 @@ static void _append_non_item(std::string &desc, std::string key)
     if (true)
 #endif
     {
-        if (flags & (SPFLAG_TESTING | SPFLAG_MONSTER | SPFLAG_DEVEL))
+        if (flags & (SPFLAG_TESTING | SPFLAG_MONSTER))
         {
             desc += "$$You aren't in wizard mode, so you shouldn't be "
                     "seeing this entry.  Please file a bug report.";

@@ -1378,19 +1378,6 @@
 },
 
 {
-    SPELL_DISRUPT, "Disrupt",
-     SPTYP_TRANSMUTATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE | SPFLAG_DEVEL,
-     1,
-     25,
-     7, 7,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
     SPELL_DISINTEGRATE, "Disintegrate",
      SPTYP_TRANSMUTATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CARD, // also: wand

@@ -2163,18 +2163,6 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
             }
         }
 
-        // Only wizard mode gets spells still under development.
-        const unsigned int flags = get_spell_flags(spell);
-        if (flags & SPFLAG_DEVEL)
-        {
-#ifdef WIZARD
-            if (!you.wizard)
-                continue;
-#else
-            continue;
-#endif
-        }
-
         if (avoid_uncastable && you_cannot_memorise(spell))
         {
             uncastable_discard++;
