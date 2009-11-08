@@ -39,16 +39,15 @@ int num_feats_between(const coord_def& source, const coord_def& target,
                       bool just_check = false);
 bool cell_see_cell(const coord_def& p1, const coord_def& p2);
 
+typedef SquareArray<bool, ENV_SHOW_OFFSET> los_grid;
+
 void clear_rays_on_exit();
-void losight(env_show_grid& sh, const coord_def& center,
+void losight(los_grid& sh, const coord_def& center,
              const opacity_func &opc = opc_default,
              const circle_def &bds = BDS_DEFAULT);
-void losight(env_show_grid& sh, const los_param& param);
+void losight(los_grid& sh, const los_param& param);
 
 void calc_show_los();
-bool see_cell(const env_show_grid &show,
-              const coord_def &c,
-              const coord_def &pos );
 bool observe_cell(const coord_def &p);
 bool trans_wall_blocking( const coord_def &p );
 

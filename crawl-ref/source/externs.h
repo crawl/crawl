@@ -76,8 +76,6 @@ const int kPathLen = 256;
 #define NO_BERSERK_PENALTY    -1
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
-typedef FixedArray<unsigned, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
-    env_show_grid;
 
 struct item_def;
 class melee_attack;

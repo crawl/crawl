@@ -7,7 +7,7 @@
 
 class los_def
 {
-    env_show_grid show;
+    los_grid show;
     coord_def center;
     opacity_func const * opc;
     circle_def bds;

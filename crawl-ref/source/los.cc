@@ -74,15 +74,6 @@ const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
 #define LOS_MAX_ANGLE (2*LOS_MAX_RANGE-2)
 #define LOS_INTERCEPT_MULT (2)
 
-// the following two constants represent the 'middle' of the sh array.
-// since the current shown area is 19x19, centering the view at (9,9)
-// means it will be exactly centered.
-// This is done to accomodate possible future changes in viewable screen
-// area - simply change sh_xo and sh_yo to the new view center.
-const int sh_xo = ENV_SHOW_OFFSET;            // X and Y origins for the sh array
-const int sh_yo = ENV_SHOW_OFFSET;
-const coord_def sh_o = coord_def(sh_xo, sh_yo);
-
 // These store all unique (in terms of footprint) full rays.
 // The footprint of ray=fullray[i] consists of ray.length cells,
 // stored in ray_coords[ray.start..ray.length-1].
@@ -817,7 +808,7 @@ bool cell_see_cell(const coord_def& p1, const coord_def& p2)
 // Smoke will now only block LOS after two cells of smoke. This is
 // done by updating with a second array.
 
-void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
+void _losight_quadrant(los_grid& sh, const los_param& dat, int sx, int sy)
 {
     const unsigned int num_cellrays = cellray_ends.size();
 
@@ -857,14 +848,14 @@ void _losight_quadrant(env_show_grid& sh, const los_param& dat, int sx, int sy)
             const coord_def p = coord_def(sx * cellray_ends[rayidx].x,
                                           sy * cellray_ends[rayidx].y);
             if (dat.los_bounds(p))
-                sh(p+sh_o) = dat.appearance(p);
+                sh(p) = true;
         }
     }
 }
 
-void losight(env_show_grid& sh, const los_param& dat)
+void losight(los_grid& sh, const los_param& dat)
 {
-    sh.init(0);
+    sh.init(false);
 
     // Do precomputations if necessary.
     raycast();
@@ -876,7 +867,7 @@ void losight(env_show_grid& sh, const los_param& dat)
 
     // Center is always visible.
     const coord_def o = coord_def(0,0);
-    sh(o+sh_o) = dat.appearance(o);
+    sh(o) = dat.appearance(o);
 }
 
 struct los_param_funcs : public los_param
@@ -907,46 +898,29 @@ struct los_param_funcs : public los_param
     }
 };
 
-void losight(env_show_grid& sh, const coord_def& center,
+void losight(los_grid& sh, const coord_def& center,
              const opacity_func& opc, const circle_def& bounds)
 {
     losight(sh, los_param_funcs(center, opc, bounds));
 }
 
 
-void losight_permissive(env_show_grid &sh, const coord_def& center)
+void losight_permissive(los_grid &sh, const coord_def& center)
 {
     for (int x = -ENV_SHOW_OFFSET; x <= ENV_SHOW_OFFSET; ++x)
         for (int y = -ENV_SHOW_OFFSET; y <= ENV_SHOW_OFFSET; ++y)
         {
-            const coord_def pos = center + coord_def(x, y);
+            const coord_def sp = coord_def(x, y);
+            const coord_def pos = center + sp;
             if (map_bounds(pos))
-                sh[x + sh_xo][y + sh_yo] = env.grid(pos);
+                sh(sp) = env.grid(pos);
         }
 }
-
 
 void calc_show_los()
 {
     if (!crawl_state.arena && !crawl_state.arena_suspended)
         you.update_los();
-}
-
-bool see_cell(const env_show_grid &show,
-              const coord_def &c,
-              const coord_def &pos)
-{
-    if (c == pos)
-        return (true);
-
-    const coord_def ip = pos - c;
-    if (ip.rdist() <= ENV_SHOW_OFFSET)
-    {
-        const coord_def sp(ip + coord_def(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET));
-        if (show(sp))
-            return (true);
-    }
-    return (false);
 }
 
 // Answers the question: Is the cell visible to the observer?
