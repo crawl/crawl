@@ -3630,6 +3630,8 @@ bool bolt::misses_player()
     if (!is_beam && !is_blockable())
         return (false);
 
+    bool train_shields_more = false;
+
     if (is_blockable()
         && you.shield()
         && !aimed_at_feet
@@ -3665,19 +3667,18 @@ bool bolt::misses_player()
         }
 
         // Some training just for the "attempt".
-        if (coinflip())
-            exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
+        train_shields_more = true;
     }
 
     if (player_light_armour(true) && !aimed_at_feet && coinflip())
         exercise(SK_DODGING, 1);
 
     defer_rand r;
+    bool miss = true;
 
     if (!_test_beam_hit(real_tohit, dodge, is_beam, false, false, r))
     {
         mprf("The %s misses you.", name.c_str());
-        return (true);
     }
     else if ((you.duration[DUR_REPEL_MISSILES]
                 || player_mutation_level(MUT_REPULSION_FIELD) == 3
@@ -3685,17 +3686,22 @@ bool bolt::misses_player()
              && !_test_beam_hit(real_tohit, dodge, is_beam, false, true, r))
     {
         mprf("The %s is repelled.", name.c_str());
-        return (true);
     }
     else if (you.duration[DUR_DEFLECT_MISSILES]
              && !_test_beam_hit(real_tohit, dodge, is_beam, true, true, r))
     {
         // active voice to imply stronger effect
         mprf("You deflect the %s!", name.c_str());
-        return (true);
+    }
+    else
+    {
+        miss = false;
     }
 
-    return (false);
+    if (coinflip() && train_shields_more)
+            exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
+
+    return (miss);
 }
 
 void bolt::affect_player_enchantment()
