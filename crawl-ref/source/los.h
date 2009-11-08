@@ -39,7 +39,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
                       bool just_check = false);
 bool cell_see_cell(const coord_def& p1, const coord_def& p2);
 
-typedef SquareArray<bool, ENV_SHOW_OFFSET> los_grid;
+typedef SquareArray<bool, LOS_MAX_RANGE> los_grid;
 
 void clear_rays_on_exit();
 void losight(los_grid& sh, const coord_def& center,

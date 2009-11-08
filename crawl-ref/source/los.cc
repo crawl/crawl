@@ -899,19 +899,6 @@ void losight(los_grid& sh, const coord_def& center,
     losight(sh, los_param_funcs(center, opc, bounds));
 }
 
-
-void losight_permissive(los_grid &sh, const coord_def& center)
-{
-    for (int x = -ENV_SHOW_OFFSET; x <= ENV_SHOW_OFFSET; ++x)
-        for (int y = -ENV_SHOW_OFFSET; y <= ENV_SHOW_OFFSET; ++y)
-        {
-            const coord_def sp = coord_def(x, y);
-            const coord_def pos = center + sp;
-            if (map_bounds(pos))
-                sh(sp) = true;
-        }
-}
-
 void calc_show_los()
 {
     if (!crawl_state.arena && !crawl_state.arena_suspended)
