@@ -5220,16 +5220,6 @@ bool monsters::mon_see_cell(const coord_def& p, bool reach) const
                                true, true));
 }
 
-bool monsters::see_cell(const coord_def &c) const
-{
-    // XXX: using env.show since that's been filled anywa.
-    if (c == you.pos())
-        return (you.see_cell(pos()));
-
-    // TODO: Proper monster LOS.
-    return (mon_see_cell(c));
-}
-
 bool monsters::near_foe() const
 {
     const actor *afoe = get_foe();

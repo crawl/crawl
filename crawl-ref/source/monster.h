@@ -320,7 +320,6 @@ public:
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const;
     bool mon_see_cell(const coord_def& pos, bool reach = false) const;
-    bool see_cell(const coord_def& c) const;
     bool near_foe() const;
 
     bool is_icy() const;

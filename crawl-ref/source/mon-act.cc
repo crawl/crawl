@@ -2080,6 +2080,7 @@ void handle_monsters()
 
         const coord_def oldpos = monster->pos();
 
+        monster->update_los();
         _handle_monster_move(monster);
 
         if (!invalid_monster(monster) && monster->pos() != oldpos)
