@@ -1479,11 +1479,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
-    case SPELL_DISRUPT:
-        if (!zapping(ZAP_DISRUPTION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_DISINTEGRATE:
         if (!zapping(ZAP_DISINTEGRATION, powc, beam, true))
             return (SPRET_ABORT);

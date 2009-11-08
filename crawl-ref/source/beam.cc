@@ -1081,23 +1081,6 @@ const zap_info zap_data[] = {
         0
     },
 
-
-    {
-        ZAP_DISRUPTION,
-        "0",
-        100,
-        new dicedef_calculator<1, 4, 1, 5>,
-        new tohit_calculator<0, 3, 1>,
-        BLACK,
-        true,
-        BEAM_DISINTEGRATION,
-        DCHAR_SPACE,
-        false,
-        false,
-        false,
-        6 // XXX: How loud is disintigration?
-    },
-
     {
         ZAP_DISINTEGRATION,
         "0",
@@ -3149,8 +3132,6 @@ bool bolt::affects_wall(dungeon_feature_type wall) const
     if (flavour == BEAM_DIGGING)
         return (true);
 
-    // FIXME: There should be a better way to test for ZAP_DISRUPTION
-    // vs. ZAP_DISINTEGRATION.
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3)
         return (true);
 

@@ -4365,7 +4365,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SK_EVOCATIONS == 39           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 103    , c4);
-    COMPILE_CHECK(SPELL_PETRIFY == 156          , c5);
+    COMPILE_CHECK(SPELL_PETRIFY == 155          , c5);
     COMPILE_CHECK(NUM_SPELLS == 206             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
