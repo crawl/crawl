@@ -182,7 +182,7 @@ static bool _zin_retribution()
         {
             const monster_type eyes[] = {
                 MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
-                MONS_EYE_OF_DEVASTATION, MONS_GREAT_ORB_OF_EYES
+                MONS_EYE_OF_DEVASTATION, MONS_GOLDEN_EYE, MONS_GREAT_ORB_OF_EYES
             };
 
             int how_many = 1 + (you.experience_level / 10) + random2(3);
