@@ -933,8 +933,7 @@ void calc_show_los()
         you.update_los();
         // What would be visible, if all of the translucent walls were
         // made opaque.
-        // XXX: figure out what this should really do.
-        losight(env.no_trans_show, you.pos(), opc_solid);
+        losight(env.no_trans_show, you.pos(), opc_no_trans);
     }
 }
 

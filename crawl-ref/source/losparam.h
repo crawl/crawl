@@ -49,8 +49,16 @@ struct opacity_fullyopaque : opacity_func
 };
 static opacity_fullyopaque opc_fullyopaque;
 
+// Make transparent walls block in addition to normal LOS.
+struct opacity_no_trans : opacity_func
+{
+    CLONE(opacity_no_trans)
+
+    opacity_type operator()(const coord_def& p) const;
+};
+static opacity_no_trans opc_no_trans;
+
 // Make anything solid block in addition to normal LOS.
-// XXX: Are trees, bushes solid?
 struct opacity_solid : opacity_func
 {
     CLONE(opacity_solid)

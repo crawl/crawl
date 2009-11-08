@@ -37,8 +37,24 @@ opacity_type opacity_fullyopaque::operator()(const coord_def& p) const
         return OPC_CLEAR;
 }
 
+// Make transparent walls block in addition to normal LOS.
+opacity_type opacity_no_trans::operator()(const coord_def& p) const
+{
+    dungeon_feature_type f = env.grid(p);
+    if (feat_is_opaque(f) || feat_is_wall(f))
+        return OPC_OPAQUE;
+    else if (is_opaque_cloud(env.cgrid(p)))
+        return OPC_HALF;
+    else if (f == DNGN_TREES)
+        return OPC_HALF;
+    else if (monster_at(p) && monster_at(p)->type == MONS_BUSH)
+        return OPC_HALF;
+    else
+        return OPC_CLEAR;
+}
+
 // Make anything solid block in addition to normal LOS.
-// XXX: Are trees, bushes solid?
+// That's just granite statues in addition to opacity_no_trans.
 opacity_type opacity_solid::operator()(const coord_def& p) const
 {
     dungeon_feature_type f = env.grid(p);
