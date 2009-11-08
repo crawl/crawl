@@ -269,6 +269,8 @@ int mons_place(mgen_data mg);
  * *********************************************************************** */
 int place_monster(mgen_data mg, bool force_pos = false);
 
+monster_type pick_random_zombie();
+
 /* ***********************************************************************
  * Returns a monster class type of a zombie that would be generated
  * on the player's current level.

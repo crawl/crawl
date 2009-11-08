@@ -1310,7 +1310,7 @@ static int _place_monster_aux(const mgen_data &mg,
     return (id);
 }
 
-static monster_type _pick_random_zombie()
+monster_type pick_random_zombie()
 {
     static std::vector<monster_type> zombifiable;
     if (zombifiable.empty())
@@ -1344,7 +1344,7 @@ monster_type pick_local_zombifiable_monster_type(int power)
     int cls;
     while (true)
     {
-        cls = _pick_random_zombie();
+        cls = pick_random_zombie();
 
         bool ignore_rarity = false;
         // On certain branches, zombie creation will fail if we use the
@@ -1442,7 +1442,7 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
         // incredible OOD zombies.
         while (true)
         {
-            cls = _pick_random_zombie();
+            cls = pick_random_zombie();
 
             // Actually pick a monster that is happy where we want to put it.
             // Fish zombies on land are helpless and uncool.

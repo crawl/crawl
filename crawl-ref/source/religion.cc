@@ -1099,10 +1099,9 @@ static void _inc_gift_timeout(int val)
 
 int yred_random_servants(int threshold, bool force_hostile)
 {
-    // error trapping {dlb}
     monster_type mon = MONS_PROGRAM_BUG;
     int how_many = 1;
-    int temp_rand = random2(std::min(100, threshold));
+    const int temp_rand = random2(std::min(100, threshold));
 
     // undead
     mon = ((temp_rand < 15) ? MONS_WRAITH :           // 15%

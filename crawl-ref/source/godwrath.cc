@@ -44,12 +44,29 @@ static bool _beogh_idol_revenge();
 static void _tso_blasts_cleansing_flame(const char *message = NULL);
 static bool _tso_holy_revenge();
 
+static bool _yred_random_zombified_hostile()
+{
+    const bool skel = one_chance_in(4);
+
+    monster_type z_type = MONS_PROGRAM_BUG;
+    monster_type z_base = pick_random_zombie();
+
+    if (mons_zombie_size(z_base) == Z_BIG)
+        z_type = skel ? MONS_SKELETON_LARGE : MONS_ZOMBIE_LARGE;
+    else
+        z_type = skel ? MONS_SKELETON_SMALL : MONS_ZOMBIE_SMALL;
+
+    mgen_data mg(z_type, BEH_HOSTILE,
+                 0, 0, you.pos(), MHITYOU, 0, GOD_YREDELEMNUL,
+                 z_base);
+
+    return (create_monster(mg) != -1);
+}
 
 static bool _okawaru_random_servant()
 {
-    // error trapping {dlb}
     monster_type mon = MONS_PROGRAM_BUG;
-    int temp_rand = random2(100);
+    const int temp_rand = random2(100);
 
     // warriors
     mon = ((temp_rand < 15) ? MONS_ORC_WARRIOR :      // 15%
@@ -456,25 +473,27 @@ static bool _yredelemnul_retribution()
 
     if (random2(you.experience_level) > 4)
     {
-        if (one_chance_in(4) && animate_dead(&you, you.experience_level * 5,
-                                             BEH_HOSTILE, MHITYOU, god, false))
-        {
-            simple_god_message(" animates the dead around you.", god);
-            animate_dead(&you, you.experience_level * 5, BEH_HOSTILE, MHITYOU,
-                         god);
-        }
-        else if (you.religion == god && coinflip()
-            && yred_slaves_abandon_you())
+        if (you.religion == god && coinflip() && yred_slaves_abandon_you())
         {
             ;
         }
         else
         {
+            const bool zombified = one_chance_in(4);
+
             int how_many = 1 + random2(1 + (you.experience_level / 5));
             int count = 0;
 
             for (; how_many > 0; --how_many)
-                count += yred_random_servants(100, true);
+            {
+                if (zombified)
+                {
+                    if (_yred_random_zombified_hostile())
+                        count++;
+                }
+                else
+                    count += yred_random_servants(100, true);
+            }
 
             simple_god_message(count > 1 ? " sends servants to punish you." :
                                count > 0 ? " sends a servant to punish you."
