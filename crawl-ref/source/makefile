@@ -718,6 +718,10 @@ install: $(GAME)
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
 	$(COPY) ../docs/license/*.txt $(datadir_fp)/docs/license/
 	$(COPY) ../settings/* $(datadir_fp)/settings/
+ifdef TILES
+	mkdir -p $(datadir_fp)/dat/tiles
+	$(COPY) dat/tiles/*.png dat/tiles/*.ttf $(prefix_fp)/dat/tiles/
+endif
 	chown -R $(INSTALL_UGRP) $(datadir_fp)
 ifneq ($(SAVEDIR),)
 	mkdir -p $(savedir_fp)/saves
