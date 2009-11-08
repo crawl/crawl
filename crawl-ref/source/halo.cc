@@ -16,7 +16,7 @@ bool actor::haloed() const
 bool actor::halo_contains(const coord_def &c) const
 {
     int r = halo_radius();
-    return ((c - pos()).abs() <= r * r && see_cell(c));
+    return (r > 0 && (c - pos()).abs() <= r * r && see_cell(c));
 }
 
 int player::halo_radius() const
