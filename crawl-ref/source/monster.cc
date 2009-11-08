@@ -281,7 +281,22 @@ bool monsters::can_drown() const
 size_type monsters::body_size(size_part_type /* psize */, bool /* base */) const
 {
     const monsterentry *e = get_monster_data(type);
-    return (e ? e->size : SIZE_MEDIUM);
+    size_type ret = (e ? e->size : SIZE_MEDIUM);
+
+    // Slime creature size is increased by the number merged.
+    if (type == MONS_SLIME_CREATURE)
+    {
+        if (number == 2)
+            ret = SIZE_MEDIUM;
+        else if (number == 3)
+            ret = SIZE_LARGE;
+        else if (number == 4)
+            ret = SIZE_BIG;
+        else if (number == 5)
+            ret = SIZE_GIANT;
+    }
+
+    return (ret);
 }
 
 int monsters::body_weight() const
