@@ -407,7 +407,7 @@ int monsters::body_weight() const
         weight /= 2;
 
     // Slime creature weight is multiplied by the number merged.
-    if (type == MONS_SLIME_CREATURE)
+    if (type == MONS_SLIME_CREATURE && number > 1)
         weight *= number;
 
     return (weight);
