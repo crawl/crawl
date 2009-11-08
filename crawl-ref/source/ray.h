@@ -9,8 +9,7 @@
 #include "fixary.h"
 #include "geom2d.h"
 
-typedef FixedArray<bool,3,3> reflect_grid;
-const coord_def rg_o = coord_def(1,1);
+typedef SquareArray<bool,1> reflect_grid;
 
 struct ray_def
 {

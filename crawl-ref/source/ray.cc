@@ -315,17 +315,17 @@ geom::vector _fudge_corner(const geom::vector &w, const reflect_grid &rg)
     {
         // just try both sides
         v.x += 10 * EPSILON_VALUE;
-        if (rg(floor_vec(v) + rg_o))
+        if (rg(floor_vec(v)))
             v.x -= 20 * EPSILON_VALUE;
-        ASSERT(!rg(floor_vec(v) + rg_o));
+        ASSERT(!rg(floor_vec(v)));
     }
     else
     {
         ASSERT(double_is_integral(v.y));
         v.y += 10 * EPSILON_VALUE;
-        if (rg(floor_vec(v) + rg_o))
+        if (rg(floor_vec(v)))
             v.y -= 20 * EPSILON_VALUE;
-        ASSERT(!rg(floor_vec(v) + rg_o));
+        ASSERT(!rg(floor_vec(v)));
     }
     return (v);
 }
@@ -365,9 +365,9 @@ geom::ray _bounce_noncorner(const geom::ray &r, const coord_def &side,
     // Determine which of the three relevant cells are bouncy.
     const coord_def dx = coord_def(side.x, 0);
     const coord_def dy = coord_def(0, side.y);
-    bool rx  = rg(rg_o + dx);
-    bool ry  = rg(rg_o + dy);
-    bool rxy = rg(rg_o + dx + dy);
+    bool rx  = rg(dx);
+    bool ry  = rg(dy);
+    bool rxy = rg(dx + dy);
     // One of the three neighbours on this side must be bouncy.
     ASSERT(rx || ry || rxy);
 
@@ -415,18 +415,18 @@ geom::form _corner_wall(const coord_def &side, const reflect_grid &rg)
         e = coord_def(1, 0);
     else
         e = coord_def(0, 1);
-    ASSERT(!rg(rg_o) && rg(rg_o+side));
+    ASSERT(!rg(coord_def(0,0)) && rg(side));
     // Reflect back by an orthogonal wall...
     coord_def wall = e;
     // unless the wall is clearly diagonal:
     //  ##.
     //  #*.  (with side.y == -1)
-    if (rg(rg_o+e) && rg(rg_o+side+e) && !rg(rg_o-e) && !rg(rg_o+side-e))
+    if (rg(e) && rg(side+e) && !rg(-e) && !rg(side-e))
     {
         // diagonal wall through side and e
         wall = side - e;
     }
-    else if (rg(rg_o-e) && rg(rg_o+side-e) && !rg(rg_o+e) && !rg(rg_o+side+e))
+    else if (rg(-e) && rg(side-e) && !rg(e) && !rg(side+e))
     {
         // diagonal wall through side and -e
         wall = side + e;
@@ -473,7 +473,7 @@ geom::ray _bounce_corner(const geom::ray &rorig, const coord_def &side,
 void ray_def::bounce(const reflect_grid &rg)
 {
     ASSERT(_valid());
-    ASSERT(!rg(rg_o)); // The cell we bounce from is not solid.
+    ASSERT(!rg(coord_def(0,0))); // The cell we bounce from is not solid.
 #ifdef DEBUG
     const coord_def old_pos = pos();
 #endif
@@ -523,7 +523,7 @@ void ray_def::bounce(const reflect_grid &rg)
     on_corner = is_corner(r.start);
 
     ASSERT(_valid());
-    ASSERT(!rg(pos() - old_pos + rg_o));
+    ASSERT(!rg(pos() - old_pos));
 }
 
 double ray_def::get_degrees() const
