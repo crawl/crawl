@@ -39,9 +39,6 @@ static void _check_lava_water_in_sight()
     you.lava_in_sight = you.water_in_sight = 0;
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        // XXX: remove explicit coordinate translation.
-        const coord_def ep = *ri - you.pos() + coord_def(ENV_SHOW_OFFSET,
-                                                         ENV_SHOW_OFFSET);
         const dungeon_feature_type feat = grd(*ri);
         if (feat == DNGN_LAVA)
         {
