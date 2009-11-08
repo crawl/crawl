@@ -101,6 +101,7 @@ mon-abil.o \
 mon-act.o \
 mon-behv.o \
 mon-cast.o \
+mon-gear.o \
 mon-info.o \
 mon-pick.o \
 mon-util.o \

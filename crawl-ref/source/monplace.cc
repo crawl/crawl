@@ -23,6 +23,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-gear.h"
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "monstuff.h"
