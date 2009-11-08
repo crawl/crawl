@@ -46,6 +46,8 @@ RM = rm -f
 COPY = cp
 STRIP = strip
 WINDRES = windres
+CHMOD = chmod 2>/dev/null
+CHOWN = chown 2>/dev/null
 
 export AR
 export RANLIB
@@ -707,8 +709,8 @@ install: $(GAME)
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
 	$(STRIP) -s $(prefix_fp)/$(bin_prefix)/$(GAME)
-	chown -R $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)
-	chmod $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME)
+	$(CHOWN) -R $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix) || true
+	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	mkdir -p $(datadir_fp)/dat/clua
 	mkdir -p $(datadir_fp)/dat/lua
 	mkdir -p $(datadir_fp)/dat/database
@@ -729,12 +731,12 @@ ifdef TILES
 	mkdir -p $(datadir_fp)/dat/tiles
 	$(COPY) dat/tiles/*.png dat/tiles/*.ttf $(prefix_fp)/dat/tiles/
 endif
-	chown -R $(INSTALL_UGRP) $(datadir_fp)
+	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
 ifneq ($(SAVEDIR),)
 	mkdir -p $(savedir_fp)/saves
 	mkdir -p $(savedir_fp)/morgue
-	chown -R $(INSTALL_UGRP) $(savedir_fp)
-	chmod $(MCHMOD_SAVEDIR) $(savedir_fp)
+	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
+	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
 endif
 
 clean:
