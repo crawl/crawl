@@ -96,6 +96,7 @@ ifdef CROSSHOST
 endif
 ifneq (,$(findstring MINGW,$(uname_S)))
 	GAME = crawl.exe
+	bin_prefix = .
 	WIN32 = Yes
 	NO_RDYNAMIC = YesPlease
 	NO_NCURSES = YesPlease
@@ -112,6 +113,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 endif
 ifeq ($(uname_S),DOS)
 	GAME = crawl.exe
+	bin_prefix = .
 	NO_NCURSES = yes
 	NO_UNICODE = yes
 	NEED_LIBDOS = yes
@@ -197,7 +199,9 @@ INSTALL_UGRP := games:games
 
 chroot_prefix :=
 prefix        := /usr/games/crawl
+ifeq (,$(bin_prefix))
 bin_prefix    := bin
+endif
 
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
