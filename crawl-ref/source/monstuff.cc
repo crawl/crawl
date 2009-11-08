@@ -2552,7 +2552,7 @@ static coord_def _random_monster_nearby_habitable_space(const monsters& mon,
             continue;
         }
 
-        if (respect_los && !mon.mon_see_cell(target))
+        if (respect_los && !mon.see_cell(target))
             continue;
 
         // Survived everything, break out (with a good value of target.)

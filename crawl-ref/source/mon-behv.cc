@@ -83,7 +83,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
 
         // Don't alert monsters out of sight (e.g. on the other side of
         // a wall).
-        if (!mon->mon_see_cell(*ri))
+        if (!mon->see_cell(*ri))
             continue;
 
         monsters* const m = monster_at(*ri);
