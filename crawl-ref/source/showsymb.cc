@@ -15,6 +15,7 @@
 #include "colour.h"
 #include "env.h"
 #include "envmap.h"
+#include "halo.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
@@ -106,7 +107,7 @@ static unsigned short _feat_colour(const coord_def &where,
     if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX
         || feat == DNGN_UNDISCOVERED_TRAP)
     {
-        if (you.halo_contains(where))
+        if (!haloers(where).empty())
         {
             if (silenced(where))
                 colour = LIGHTCYAN;
