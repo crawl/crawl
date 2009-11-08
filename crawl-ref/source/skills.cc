@@ -428,16 +428,20 @@ static int _exercise2(int exsk)
 
         if (exsk == SK_ARMOUR || exsk == SK_SHIELDS
             || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
-            || you.duration[ DUR_TRANSFORMATION ] > 0)
+            || you.duration[DUR_TRANSFORMATION] > 0)
         {
             you.redraw_armour_class = true;
         }
 
-        const unsigned char best = best_skill( SK_FIGHTING,
-                                               (NUM_SKILLS - 1), 99 );
+        // For wielded weapons of pain.
+        if (exsk == SK_NECROMANCY && you.skills[exsk] == 1)
+            you.wield_change = true;
 
-        const unsigned char best_spell = best_skill( SK_SPELLCASTING,
-                                                     SK_POISON_MAGIC, 99 );
+        const unsigned char best = best_skill(SK_FIGHTING,
+                                              (NUM_SKILLS - 1), 99);
+
+        const unsigned char best_spell = best_skill(SK_SPELLCASTING,
+                                                    SK_POISON_MAGIC, 99);
 
         if (exsk == SK_SPELLCASTING
             && you.skills[exsk] == 1 && best_spell == SK_SPELLCASTING)
@@ -448,7 +452,7 @@ static int _exercise2(int exsk)
         if (best != old_best_skill || old_best_skill == exsk)
             redraw_skill(you.your_name, player_title());
 
-        if (you.weapon() && item_is_staff( *you.weapon() ))
+        if (you.weapon() && item_is_staff(*you.weapon()))
             maybe_identify_staff(*you.weapon());
     }
 
