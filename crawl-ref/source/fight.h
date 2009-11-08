@@ -106,6 +106,9 @@ public:
     int       min_delay;
     int       final_attack_delay;
 
+    int       noise_factor;
+    int       extra_noise;
+
     // Attacker's damage output potential:
 
     item_def  *weapon;
@@ -206,6 +209,8 @@ private:
     void do_miscast();
 
     std::vector<attack_final_effect> final_effects;
+
+    void handle_noise();
 
 private:
     // Monster-attack specific stuff
