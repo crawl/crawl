@@ -629,17 +629,17 @@ void wield_effects(int item_wield_2, bool showMsgs)
                         break;
                     }
 
-                    if (you.is_undead != US_UNDEAD)
+                    if (you.is_undead == US_ALIVE)
                     {
                         mpr("You feel a dreadful hunger.");
+                        // takes player from Full to Hungry
+                        make_hungry(4500, false, false);
                     }
                     else
                     {
                         mpr("You feel an empty sense of dread.");
                     }
 
-                    // takes player from Full to Hungry
-                    make_hungry(4500, false, false);
                     break;
 
                 case SPWPN_RETURNING:

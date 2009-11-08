@@ -771,10 +771,11 @@ static bool _vamp_wants_blood_from_monster(const monsters *mon)
 }
 
 // Should life protection protect from this?
-// Called when stabbing and for bite attacks.
+// Called when stabbing, for bite attacks, and vampires wielding vampiric weapons
 // Returns true if blood was drawn.
 static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
-                                        bool needs_bite_msg = false)
+                                        bool needs_bite_msg = false,
+                                        int reduction = 1)
 {
     ASSERT(you.species == SP_VAMPIRE);
 
@@ -826,6 +827,8 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
         // Bats get a rather less nutrition out of it.
         if (player_in_bat_form())
             food_value /= 2;
+        
+        food_value /= reduction;
 
         lessen_hunger(food_value, false);
     }
@@ -1937,9 +1940,19 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     {
         // No further effects.
     }
+    else if (you.species == SP_VAMPIRE 
+             && damage_brand == SPWPN_VAMPIRICISM
+             && you.equip[EQ_WEAPON] != -1
+             && _player_vampire_draws_blood(defender_as_monster(),
+                                            damage_done, false,
+                                            (mondied ? 1 : 10)))
+    {
+        // No further effects.
+    }
     // Vampiric *weapon* effects for the killing blow.
     else if (mondied && damage_brand == SPWPN_VAMPIRICISM
-             && you.equip[EQ_WEAPON] != -1)
+             && you.equip[EQ_WEAPON] != -1
+             && you.is_undead == US_ALIVE)
     {
         if (defender->holiness() == MH_NATURAL
             && !defender->is_summoned()
