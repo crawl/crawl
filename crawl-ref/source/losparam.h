@@ -95,9 +95,6 @@ struct los_param
     // (including boundary) and within the LOS area
     virtual bool los_bounds(const coord_def& p) const = 0;
 
-    // appearance(p) will be copied to show(sh_o+p) for visible p.
-    virtual unsigned appearance(const coord_def& p) const = 0;
-
     virtual opacity_type opacity(const coord_def& p) const = 0;
 };
 

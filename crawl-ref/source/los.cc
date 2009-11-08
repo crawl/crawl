@@ -867,7 +867,7 @@ void losight(los_grid& sh, const los_param& dat)
 
     // Center is always visible.
     const coord_def o = coord_def(0,0);
-    sh(o) = dat.appearance(o);
+    sh(o) = true;
 }
 
 struct los_param_funcs : public los_param
@@ -885,11 +885,6 @@ struct los_param_funcs : public los_param
     bool los_bounds(const coord_def& p) const
     {
         return (map_bounds(p + center) && bounds.contains(p));
-    }
-
-    unsigned appearance(const coord_def& p) const
-    {
-        return (grid_appearance(p + center));
     }
 
     opacity_type opacity(const coord_def& p) const
@@ -913,7 +908,7 @@ void losight_permissive(los_grid &sh, const coord_def& center)
             const coord_def sp = coord_def(x, y);
             const coord_def pos = center + sp;
             if (map_bounds(pos))
-                sh(sp) = env.grid(pos);
+                sh(sp) = true;
         }
 }
 
