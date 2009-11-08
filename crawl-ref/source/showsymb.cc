@@ -128,36 +128,31 @@ void get_symbol(const coord_def& where,
 {
     ASSERT(ch != NULL);
 
-    feature_def fdef;
-    switch (object.cls)
+    if (object.cls < SH_MONSTER)
     {
-    case SH_FEATURE:
-        fdef =  get_feature_def(object);
-        if (colour)
+
+        // Don't recolor items
+        if (colour && object.cls == SH_FEATURE)
         {
             const int colmask = *colour & COLFLAG_MASK;
             *colour = _feat_colour(where, object.feat, *colour) | colmask;
         }
-        // Note anything we see that's notable
-        if (!where.origin() && fdef.is_notable())
-            seen_notable_thing(object.feat, where);
+
+        const feature_def &fdef = get_feature_def(object);
         *ch = magic_mapped ? fdef.magic_symbol
                            : fdef.symbol;
-        break;
 
-    case SH_ITEM:
-    case SH_CLOUD:
-    case SH_INVIS_EXPOSED:
-        fdef =  get_feature_def(object);
-        *ch = fdef.symbol;
-        break;
-
-    case SH_MONSTER:
+        // Note anything we see that's notable
+        if (!where.origin() && fdef.is_notable())
+        {
+            if (object.cls == SH_FEATURE)
+                seen_notable_thing(object.feat, where);
+        }
+    }
+    else
+    {
+        ASSERT(object.cls == SH_MONSTER);
         *ch = mons_char(object.mons);
-        break;
-
-    default:
-        break;
     }
 
     if (colour)
