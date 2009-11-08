@@ -3214,8 +3214,8 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
             if (create_monster(
                     mgen_data::hostile_at(
                         _xom_random_demon(sever),
-                        you.pos(), 4, 0, true, GOD_XOM,
-                        MON_SUMM_WRATH)) != -1)
+                        true, 4, MON_SUMM_WRATH, you.pos(), 0,
+                        GOD_XOM)) != -1)
             {
                 num_summoned++;
             }

@@ -337,7 +337,7 @@ static bool evoke_horn_of_geryon()
         mpr("You produce a hideous howling noise!", MSGCH_SOUND);
         create_monster(
             mgen_data::hostile_at(MONS_BEAST,
-                you.pos(), 4, 0, true));
+                true, 4, 0, you.pos()));
     }
     return (rc);
 }
@@ -530,7 +530,7 @@ void tome_of_power(int slot)
     {
         if (create_monster(
                 mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
-                    you.pos(), 6, 0, true)) != -1)
+                    true, 6, 0, you.pos())) != -1)
         {
             mpr("A horrible Thing appears!");
             mpr("It doesn't look too friendly.");

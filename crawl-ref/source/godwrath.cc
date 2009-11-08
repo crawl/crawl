@@ -56,11 +56,8 @@ static bool _yred_random_zombified_hostile()
     else
         z_type = skel ? MONS_SKELETON_SMALL : MONS_ZOMBIE_SMALL;
 
-    mgen_data mg(z_type, BEH_HOSTILE,
-                 0, 0, you.pos(), MHITYOU, 0, GOD_YREDELEMNUL,
-                 z_base);
-
-    return (create_monster(mg) != -1);
+    return (create_monster(mgen_data::hostile_at(z_type, true,
+                    0, 0, you.pos(), 0, GOD_YREDELEMNUL, z_base)) != -1);
 }
 
 static bool _okawaru_random_servant()
@@ -82,7 +79,7 @@ static bool _okawaru_random_servant()
 
     return (create_monster(
                     mgen_data::hostile_at(mon,
-                        you.pos(), 0, 0, true, GOD_OKAWARU)) != -1);
+                        true, 0, 0, you.pos(), 0, GOD_OKAWARU)) != -1);
 }
 
 static bool _tso_retribution()
@@ -201,7 +198,7 @@ static bool _zin_retribution()
 
                 if (mons_place(
                         mgen_data::hostile_at(mon,
-                            mon_pos, 0, 0, true, god)) != -1)
+                            true, 0, 0, mon_pos, 0, god)) != -1)
                 {
                     success = true;
                 }
@@ -398,7 +395,7 @@ static bool _makhleb_retribution()
                            mgen_data::hostile_at(
                                static_cast<monster_type>(
                                    MONS_EXECUTIONER + random2(5)),
-                               you.pos(), 0, 0, true, god)) != -1);
+                               true, 0, 0, you.pos(), 0, god)) != -1);
 
         simple_god_message(success ? " sends a greater servant after you!"
                                    : "'s greater servant is unavoidably "
@@ -415,7 +412,7 @@ static bool _makhleb_retribution()
                     mgen_data::hostile_at(
                         static_cast<monster_type>(
                             MONS_NEQOXEC + random2(5)),
-                        you.pos(), 0, 0, true, god)) != -1)
+                        true, 0, 0, you.pos(), 0, god)) != -1)
             {
                 count++;
             }
@@ -443,7 +440,7 @@ static bool _kikubaaqudgha_retribution()
         {
             if (create_monster(
                     mgen_data::hostile_at(MONS_REAPER,
-                        you.pos(), 0, 0, true, god)) != -1)
+                        true, 0, 0, you.pos(), 0, god)) != -1)
             {
                 success = true;
             }
@@ -669,7 +666,7 @@ static bool _beogh_retribution()
             int midx =
                 create_monster(
                     mgen_data::hostile_at(MONS_DANCING_WEAPON,
-                        you.pos(), 0, 0, true, god));
+                        true, 0, 0, you.pos(), 0, god));
 
             // Hand item information over to monster.
             if (midx != -1)
@@ -736,7 +733,7 @@ static bool _beogh_retribution()
 
         int mons = create_monster(
                        mgen_data::hostile_at(punisher,
-                           you.pos(), 0, MG_PERMIT_BANDS, true, god));
+                           true, 0, 0, you.pos(), MG_PERMIT_BANDS, god));
 
         // sometimes name band leader
         if (mons != -1 && one_chance_in(3))
@@ -847,7 +844,7 @@ static bool _lugonu_retribution()
                            mgen_data::hostile_at(
                                static_cast<monster_type>(
                                    MONS_GREEN_DEATH + random2(3)),
-                               you.pos(), 0, 0, true, god)) != -1);
+                               true, 0, 0, you.pos(), 0, god)) != -1);
 
         simple_god_message(success ? " sends a demon after you!"
                                    : "'s demon is unavoidably detained.", god);
@@ -863,7 +860,7 @@ static bool _lugonu_retribution()
                    mgen_data::hostile_at(
                        static_cast<monster_type>(
                            MONS_NEQOXEC + random2(5)),
-                       you.pos(), 0, 0, true, god)) != -1)
+                       true, 0, 0, you.pos(), 0, god)) != -1)
             {
                 success = true;
             }
@@ -989,7 +986,7 @@ static bool _jiyva_retribution()
 
             if (create_monster(
                     mgen_data::hostile_at(static_cast<monster_type>(slime),
-                    you.pos(), 0, 0, true, god)) != -1)
+                        true, 0, 0, you.pos(), 0, god)) != -1)
             {
                 success = true;
             }

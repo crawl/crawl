@@ -2374,7 +2374,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
             if (create_monster(
                     mgen_data::hostile_at(
                         RANDOM_ELEMENT(statues),
-                        you.pos(), 0, 0, true)) != -1)
+                        true, 0, 0, you.pos())) != -1)
             {
                 mpr("A menacing statue appears!");
                 num_made++;

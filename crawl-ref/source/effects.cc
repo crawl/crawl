@@ -2868,7 +2868,7 @@ static void _hell_effects()
         {
             create_monster(
                 mgen_data::hostile_at(which_beastie,
-                    you.pos(), 0, 0, true));
+                    true, 0, 0, you.pos()));
         }
         else
         {

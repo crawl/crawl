@@ -73,7 +73,7 @@ static bool _evoke_sceptre_of_asmodeus()
                                      summon_any_demon(DEMON_COMMON));
         const bool good_summon = create_monster(
                                      mgen_data::hostile_at(mon,
-                                         you.pos(), 6, 0, true)) != -1;
+                                         true, 6, 0, you.pos())) != -1;
 
         if (good_summon)
         {

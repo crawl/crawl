@@ -233,17 +233,19 @@ struct mgen_data
         return mgen_data(what, BEH_SLEEP, 0, 0, where, MHITNOT, flags);
     }
 
-    static mgen_data hostile_at(monster_type what,
-                                const coord_def &where,
-                                int abj_deg = 0,
-                                unsigned flags = 0,
+    static mgen_data hostile_at(monster_type mt,
                                 bool alert = false,
+                                int abj = 0,
+                                int st = 0,
+                                const coord_def &p = coord_def(-1, -1),
+                                unsigned monflags = 0,
                                 god_type god = GOD_NO_GOD,
-                                int summon_type = 0)
+                                monster_type base = MONS_NO_MONSTER)
+
     {
-        return mgen_data(what, BEH_HOSTILE, abj_deg, summon_type, where,
+        return mgen_data(mt, BEH_HOSTILE, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         flags, god);
+                         monflags, god, base);
     }
 };
 
