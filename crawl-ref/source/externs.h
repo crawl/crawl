@@ -185,6 +185,11 @@ struct coord_def
         return (copy -= other);
     }
 
+    coord_def operator -() const
+    {
+        return (coord_def(0, 0) - *this);
+    }
+
     coord_def operator - (int other) const
     {
         coord_def copy = *this;
