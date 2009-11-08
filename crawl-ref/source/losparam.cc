@@ -8,6 +8,7 @@
 #include "losparam.h"
 
 #include "cloud.h"
+#include "env.h"
 #include "externs.h"
 #include "los.h"
 #include "mon-util.h"

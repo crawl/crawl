@@ -9,6 +9,7 @@
 
 #include "cloud.h"
 #include "coord.h"
+#include "env.h"
 #include "envmap.h"
 #include "los.h"
 #include "player.h"

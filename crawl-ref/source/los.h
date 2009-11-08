@@ -6,7 +6,6 @@
 #ifndef LOS_H
 #define LOS_H
 
-#include "env.h"
 #include "los_def.h"
 #include "losparam.h"
 

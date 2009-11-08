@@ -12,6 +12,7 @@
 
 #include "artefact.h"
 #include "colour.h"
+#include "env.h"
 #include "externs.h"
 #include "itemname.h"
 #include "itemprop.h"
