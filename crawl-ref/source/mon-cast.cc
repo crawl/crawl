@@ -1617,8 +1617,12 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
-            const monster_type rats[] = { MONS_ORANGE_RAT, MONS_GREEN_RAT,
-                                          MONS_GREY_RAT,   MONS_RAT };
+            monster_type rats[] = { MONS_ORANGE_RAT, MONS_GREEN_RAT,
+                                    MONS_GREY_RAT,   MONS_RAT };
+
+            if (spell_cast == SPELL_SUMMON_SMALL_MAMMALS)
+                rats[0] = MONS_QUOKKA;
+
             const monster_type mon = (one_chance_in(3) ? MONS_GIANT_BAT
                                                        : RANDOM_ELEMENT(rats));
             create_monster(
