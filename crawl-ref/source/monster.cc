@@ -2979,15 +2979,6 @@ bool monsters::is_evil() const
     if (is_unholy())
         return (true);
 
-    // Assume that no natural creatures resist hellfire, except by evil
-    // means.
-    if (holiness() == MH_NATURAL)
-    {
-        const mon_resist_def res = get_mons_resists(this);
-        if (res.hellfire > 0)
-            return (true);
-    }
-
     // Assume that all unknown gods (GOD_NAMELESS) are evil.
     if (is_priest() && (is_evil_god(god) || god == GOD_NAMELESS))
         return (true);

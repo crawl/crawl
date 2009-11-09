@@ -241,8 +241,8 @@
 
     {  MST_HELL_KNIGHT_I,
       {
-       SPELL_NO_SPELL,
        SPELL_PAIN,
+       SPELL_THROW_FLAME,
        SPELL_HASTE,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
@@ -252,7 +252,7 @@
 
     {  MST_HELL_KNIGHT_II,
       {
-       SPELL_NO_SPELL,
+       SPELL_PAIN,
        SPELL_BOLT_OF_FIRE,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
