@@ -1556,11 +1556,12 @@ void define_monster(monsters &mons)
     if (m->sec == MST_NO_SPELLS && mons_class_flag(mons.type, M_SPELLCASTER))
     {
         mon_spellbook_type book[6];
-        _get_spellbook_list(book, mons.type);
-
-        do
-            spells = book[random2(6)];
-        while (spells == MST_NO_SPELLS);
+        if (_get_spellbook_list(book, mons.type))
+        {
+            do
+                spells = book[random2(6)];
+            while (spells == MST_NO_SPELLS);
+        }
     }
 
     // Some calculations.
