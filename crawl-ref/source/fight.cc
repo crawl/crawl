@@ -96,7 +96,8 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
  **************************************************
 */
 
-bool test_melee_hit(int to_hit, int ev)
+// This function is only used when monsters are attacking.
+bool test_melee_hit(int to_hit, int ev, defer_rand& r)
 {
     int   roll = -1;
     int margin = AUTOMATIC_HIT;
@@ -105,12 +106,12 @@ bool test_melee_hit(int to_hit, int ev)
 
     if (to_hit >= AUTOMATIC_HIT)
         return (true);
-    else if (x_chance_in_y(MIN_HIT_MISS_PERCENTAGE, 100))
-        margin = (coinflip() ? 1 : -1) * AUTOMATIC_HIT;
+    else if (r[0].x_chance_in_y(MIN_HIT_MISS_PERCENTAGE, 100))
+        margin = (r[1].random2(2) ? 1 : -1) * AUTOMATIC_HIT;
     else
     {
-        roll = random2( to_hit + 1 );
-        margin = (roll - random2avg(ev, 2));
+        roll = r[2].random2( to_hit + 1 );
+        margin = (roll - r[3].random2avg(ev, 2));
     }
 
 #if DEBUG_DIAGNOSTICS
@@ -1274,6 +1275,9 @@ bool melee_attack::player_aux_unarmed()
 
         bool ely_block = false;
         const int evasion = defender->melee_evasion(attacker);
+        const int helpful_evasion =
+            defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
+        // No monster Phase Shift yet
         if (you.religion != GOD_ELYVILON
             && you.penance[GOD_ELYVILON]
             && to_hit >= evasion
@@ -1283,7 +1287,19 @@ bool melee_attack::player_aux_unarmed()
             ely_block = true;
         }
 
-        if (!ely_block && (to_hit >= evasion || one_chance_in(30)))
+        bool auto_hit = one_chance_in(30);
+
+        if (!ely_block && !auto_hit && to_hit >= evasion
+            && !(to_hit >= helpful_evasion)
+            && defender_visible)
+        {
+            mprf("Helpless, %s fails to dodge your %s.",
+                 defender->name(DESC_NOCAP_THE).c_str(),
+                 miss_verb.empty() ? unarmed_attack.c_str()
+                                   : miss_verb.c_str());
+        }
+
+        if (!ely_block && (to_hit >= evasion || auto_hit))
         {
             // Upset the monster.
             behaviour_event(defender_as_monster(), ME_WHACK, MHITYOU);
@@ -1453,17 +1469,31 @@ void melee_attack::player_warn_miss()
 bool melee_attack::player_hits_monster()
 {
     const int evasion = defender->melee_evasion(attacker);
+    const int evasion_helpful
+        = defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "your to-hit: %d; defender effective EV: %d",
          to_hit, evasion);
 #endif
 
-    return (to_hit >= evasion
-            || one_chance_in(20)
-            || ((defender->cannot_act() || defender->asleep())
-                && !one_chance_in(10 + you.skills[SK_STABBING]))
-            || defender_as_monster()->petrifying()
-               && !one_chance_in(2 + you.skills[SK_STABBING]));
+    if (to_hit >= evasion_helpful || one_chance_in(20))
+    {
+        return (true);
+    }
+
+    if (to_hit >= evasion
+        || ((defender->cannot_act() || defender->asleep())
+            && !one_chance_in(10 + you.skills[SK_STABBING]))
+        || defender_as_monster()->petrifying()
+           && !one_chance_in(2 + you.skills[SK_STABBING]))
+    {
+        if (defender_visible)
+            msg::stream << "Helpless, " << defender->name(DESC_NOCAP_THE)
+                        << " fails to dodge your attack." << std::endl;
+        return (true);
+    }
+
+    return (false);
 }
 
 int melee_attack::player_stat_modify_damage(int damage)
@@ -5287,24 +5317,69 @@ void melee_attack::mons_perform_attack_rounds()
         if (!shield_blocked)
         {
             const int defender_evasion = defender->melee_evasion(attacker);
-            if (attacker == defender
-                || test_melee_hit(to_hit, defender_evasion))
+            int defender_evasion_help
+                = defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
+            int defender_evasion_nophase
+                = defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
+
+            defer_rand r;
+
+            if (defender_invisible)
             {
-                this_round_hit = did_hit = true;
-                perceived_attack = true;
-                damage_done = mons_calc_damage(attk);
+                // No evasion feedback if we don't know what we're fighting
+                defender_evasion_help = defender_evasion;
+                defender_evasion_nophase = defender_evasion;
+            }
+
+            if (attacker == defender
+                || test_melee_hit(to_hit, defender_evasion_help, r))
+            {
+                // would have hit no matter what
+                this_round_hit = true;
+            }
+            else if (test_melee_hit(to_hit, defender_evasion, r))
+            {
+                if (needs_message)
+                {
+                    mprf("Helpless, %s %s to dodge %s attack.",
+                         mons_defender_name().c_str(),
+                         defender->conj_verb("fail").c_str(),
+                         atk_name(DESC_NOCAP_ITS).c_str());
+                }
+                this_round_hit = true;
+            }
+            else if (test_melee_hit(to_hit, defender_evasion_nophase, r))
+            {
+                if (needs_message)
+                {
+                    mprf("%s momentarily %s out as %s attack passes through %s.",
+                         defender->name(DESC_CAP_THE).c_str(),
+                         defender->conj_verb("phase").c_str(),
+                         atk_name(DESC_NOCAP_ITS).c_str(),
+                         defender->pronoun(PRONOUN_NOCAP).c_str());
+                }
+                this_round_hit = false;
             }
             else
             {
-                this_round_hit = false;
-                perceived_attack = perceived_attack || attacker_visible;
-
+                // Misses no matter what
                 if (needs_message)
                 {
                     mprf("%s misses %s.",
                          atk_name(DESC_CAP_THE).c_str(),
                          mons_defender_name().c_str());
                 }
+            }
+
+            if (this_round_hit)
+            {
+                did_hit = true;
+                perceived_attack = true;
+                damage_done = mons_calc_damage(attk);
+            }
+            else
+            {
+                perceived_attack = perceived_attack || attacker_visible;
             }
         }
 
