@@ -2617,7 +2617,7 @@ bool player_angers_monster(monsters *mon)
 
     // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
     if (player_will_anger_monster(mon, &holy, &unholy, &lawful, &antimagical)
-        && mons_wont_attack(mon))
+        && mon->wont_attack())
     {
         mon->attitude = ATT_HOSTILE;
         mon->del_ench(ENCH_CHARM);

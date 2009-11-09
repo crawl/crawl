@@ -547,7 +547,7 @@ bool check_awaken(monsters* monster)
         && you.can_see(monster) // to avoid leaking information
         && you.burden_state == BS_UNENCUMBERED
         && !you.attribute[ATTR_SHADOWS]
-        && !mons_wont_attack(monster)
+        && !monster->wont_attack()
         && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
             // If invisible, training happens much more rarely.
         && (!unnatural_stealthy && one_chance_in(25) || one_chance_in(100)))
@@ -1010,7 +1010,7 @@ bool mon_enemies_around(const monsters *monster)
         // we don't have one.
         return (false);
     }
-    else if (mons_wont_attack(monster))
+    else if (monster->wont_attack())
     {
         // Additionally, if an ally is nearby and *you* have a foe,
         // consider it as the ally's enemy too.

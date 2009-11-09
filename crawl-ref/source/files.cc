@@ -1065,7 +1065,7 @@ static void _grab_followers()
         if (fmenv == NULL)
             continue;
 
-        if (mons_wont_attack(fmenv) && !mons_can_use_stairs(fmenv))
+        if (fmenv->wont_attack() && !mons_can_use_stairs(fmenv))
             non_stair_using_allies++;
 
         if (fmenv->type == MONS_PLAYER_GHOST

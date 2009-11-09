@@ -37,7 +37,7 @@ void good_god_follower_attitude_change(monsters *monster)
         && monster->foe == MHITYOU
         && monster->holiness() == MH_HOLY
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !mons_wont_attack(monster)
+        && !monster->wont_attack()
         && you.visible_to(monster) && !monster->asleep()
         && !mons_is_confused(monster) && !monster->paralysed())
     {
@@ -159,7 +159,7 @@ static bool _holy_beings_on_level_attitude_change()
 
             // If you worship a good god, you get another chance to make
             // neutral and hostile holy beings good neutral.
-            if (is_good_god(you.religion) && !mons_wont_attack(monster))
+            if (is_good_god(you.religion) && !monster->wont_attack())
             {
                 if (testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
                 {
@@ -171,7 +171,7 @@ static bool _holy_beings_on_level_attitude_change()
             // If you don't worship a good god, you make all friendly
             // and good neutral holy beings that worship a good god
             // hostile.
-            else if (!is_good_god(you.religion) && mons_wont_attack(monster)
+            else if (!is_good_god(you.religion) && monster->wont_attack()
                 && is_good_god(monster->god))
             {
                 monster->attitude = ATT_HOSTILE;
@@ -212,7 +212,7 @@ static bool _evil_beings_on_level_attitude_change()
 
             // If you worship a good god, you make all friendly and good
             // neutral evil and unholy beings hostile.
-            if (is_good_god(you.religion) && mons_wont_attack(monster))
+            if (is_good_god(you.religion) && monster->wont_attack())
             {
                 monster->attitude = ATT_HOSTILE;
                 monster->del_ench(ENCH_CHARM, true);
@@ -251,7 +251,7 @@ static bool _chaotic_beings_on_level_attitude_change()
 
             // If you worship Zin, you make all friendly and good neutral
             // chaotic beings hostile.
-            if (you.religion == GOD_ZIN && mons_wont_attack(monster))
+            if (you.religion == GOD_ZIN && monster->wont_attack())
             {
                 monster->attitude = ATT_HOSTILE;
                 monster->del_ench(ENCH_CHARM, true);
@@ -290,7 +290,7 @@ static bool _magic_users_on_level_attitude_change()
 
             // If you worship Trog, you make all friendly and good neutral
             // magic users hostile.
-            if (you.religion == GOD_TROG && mons_wont_attack(monster))
+            if (you.religion == GOD_TROG && monster->wont_attack())
             {
                 monster->attitude = ATT_HOSTILE;
                 monster->del_ench(ENCH_CHARM, true);

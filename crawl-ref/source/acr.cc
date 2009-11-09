@@ -3915,7 +3915,7 @@ static void _move_player(coord_def move)
     // you're not confused, or if both of you are inside a sanctuary.
     const bool can_swap_places = targ_monst
                                  && !mons_is_stationary(targ_monst)
-                                 && (mons_wont_attack(targ_monst)
+                                 && (targ_monst->wont_attack()
                                        && !you.confused()
                                      || is_sanctuary(you.pos())
                                         && is_sanctuary(targ));

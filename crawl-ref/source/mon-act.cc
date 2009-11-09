@@ -124,7 +124,7 @@ static bool _swap_monsters(monsters* mover, monsters* moved)
 
     // A friendly or good-neutral monster moving past a fleeing hostile
     // or neutral monster, or vice versa.
-    if (mons_wont_attack(mover) == mons_wont_attack(moved)
+    if (mover->wont_attack() == moved->wont_attack()
         || mons_is_fleeing(mover) == mons_is_fleeing(moved))
     {
         return (false);
@@ -216,7 +216,7 @@ static bool _ranged_allied_monster_in_dir(monsters *mon, coord_def p)
         {
             // Hostile monsters of normal intelligence only move aside for
             // monsters of the same type.
-            if (mons_intel(mon) <= I_NORMAL && !mons_wont_attack(mon)
+            if (mons_intel(mon) <= I_NORMAL && !mon->wont_attack()
                 && mons_genus(mon->type) != mons_genus(ally->type))
             {
                 return (false);
@@ -258,7 +258,7 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
 
         // Hostile monsters of normal intelligence only move aside for
         // monsters of the same genus.
-        if (mons_intel(mon) <= I_NORMAL && !mons_wont_attack(mon)
+        if (mons_intel(mon) <= I_NORMAL && !mon->wont_attack()
             && mons_genus(mon->type) != mons_genus(ally->type))
         {
             continue;
@@ -561,7 +561,7 @@ static void _handle_movement(monsters *monster)
                                        coord_def(-mmov.x, 0),
                                        coord_def(-mmov.x, 1))
                     || mons_intel(monster) >= I_NORMAL
-                       && !mons_wont_attack(monster)
+                       && !monster->wont_attack()
                        && _ranged_allied_monster_in_dir(monster,
                                                         coord_def(-mmov.x, 0))))
             {
@@ -579,7 +579,7 @@ static void _handle_movement(monsters *monster)
                                        coord_def(0, -mmov.y),
                                        coord_def(1, -mmov.y))
                     || mons_intel(monster) >= I_NORMAL
-                       && !mons_wont_attack(monster)
+                       && !monster->wont_attack()
                        && _ranged_allied_monster_in_dir(monster,
                                                         coord_def(0, -mmov.y))))
             {
@@ -598,7 +598,7 @@ static void _handle_movement(monsters *monster)
                                            coord_def(-mmov.x, 0),
                                            coord_def(-mmov.x, 1))
                         || mons_intel(monster) >= I_NORMAL
-                           && !mons_wont_attack(monster)
+                           && !monster->wont_attack()
                            && _ranged_allied_monster_in_dir(monster,
                                                 coord_def(-mmov.x, -mmov.y))))
                 {
@@ -610,7 +610,7 @@ static void _handle_movement(monsters *monster)
                                             coord_def(0, -mmov.y),
                                             coord_def(1, -mmov.y))
                          || mons_intel(monster) >= I_NORMAL
-                            && !mons_wont_attack(monster)
+                            && !monster->wont_attack()
                             && _ranged_allied_monster_in_dir(monster,
                                                 coord_def(-mmov.x, -mmov.y))))
             {
@@ -2420,7 +2420,7 @@ static bool _monster_eat_food(monsters *monster, bool nearby)
         if (!is_food && !is_corpse)
             continue;
 
-        if ((mons_wont_attack(monster)
+        if ((monster->wont_attack()
                 || grid_distance(monster->pos(), you.pos()) > 1)
             && coinflip())
         {
@@ -2624,7 +2624,7 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
 
     // Friendly and good neutral monsters don't enjoy Zot trap perks;
     // handle accordingly.  In the arena Zot traps affect all monsters.
-    if (mons_wont_attack(monster) || crawl_state.arena)
+    if (monster->wont_attack() || crawl_state.arena)
     {
         return (mechanical ? mons_flies(monster)
                            : !trap.is_known(monster) || trap.type != TRAP_ZOT);
@@ -2768,7 +2768,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     // Non-friendly and non-good neutral monsters won't enter
     // sanctuaries.
-    if (!mons_wont_attack(monster)
+    if (!monster->wont_attack()
         && is_sanctuary(targ)
         && !is_sanctuary(monster->pos()))
     {
@@ -2891,7 +2891,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     // Friendlies shouldn't try to move onto the player's
     // location, if they are aiming for some other target.
-    if (mons_wont_attack(monster)
+    if (monster->wont_attack()
         && monster->foe != MHITYOU
         && (monster->foe != MHITNOT || monster->is_patrolling())
         && targ == you.pos())
@@ -3220,8 +3220,8 @@ static bool _monster_move(monsters *monster)
                 newpos = moves[i];
 
         const monsters *mon2 = monster_at(newpos);
-        if (newpos == you.pos() && mons_wont_attack(monster)
-            || (mon2 && mons_wont_attack(monster) == mons_wont_attack(mon2)))
+        if (newpos == you.pos() && monster->wont_attack()
+            || (mon2 && monster->wont_attack() == mon2->wont_attack()))
         {
 
             simple_monster_message(monster, " flops around on dry land!");

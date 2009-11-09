@@ -430,7 +430,7 @@ bool mons_speaks(monsters *monster)
     if (confused)
         prefixes.push_back("confused");
 
-    const actor*    foe   = (!crawl_state.arena && mons_wont_attack(monster)
+    const actor*    foe   = (!crawl_state.arena && monster->wont_attack()
                                 && invalid_monster_index(monster->foe)) ?
                                     &you : monster->get_foe();
     const monsters* m_foe = (foe && foe->atype() == ACT_MONSTER) ?
@@ -494,7 +494,7 @@ bool mons_speaks(monsters *monster)
 
     const bool no_foe      = (foe == NULL);
     const bool no_player   = crawl_state.arena
-                             || (!mons_wont_attack(monster)
+                             || (!monster->wont_attack()
                                  && (!foe || foe->atype() != ACT_PLAYER));
     const bool mon_foe     = (m_foe != NULL);
     const bool no_god      = no_foe || (mon_foe && foe->deity() == GOD_NO_GOD);

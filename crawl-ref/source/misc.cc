@@ -2772,7 +2772,7 @@ bool mons_is_safe(const monsters *mon, bool want_move,
 {
     int  dist    = grid_distance(you.pos(), mon->pos());
 
-    bool is_safe = (mons_wont_attack(mon)
+    bool is_safe = (mon->wont_attack()
                     || mons_class_flag(mon->type, M_NO_EXP_GAIN)
                        && mon->type != MONS_KRAKEN_TENTACLE
                     || mons_is_pacified(mon) && dist > 1
@@ -3170,7 +3170,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     const bool mon_target    = (beam_target == mon->pos());
     const bool inSanctuary   = (is_sanctuary(you.pos())
                                 || is_sanctuary(mon->pos()));
-    const bool wontAttack    = mons_wont_attack(mon);
+    const bool wontAttack    = mon->wont_attack();
     const bool isFriendly    = mon->friendly();
     const bool isNeutral     = mon->neutral();
     const bool isUnchivalric = is_unchivalric_attack(&you, mon);

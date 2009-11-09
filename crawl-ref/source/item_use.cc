@@ -5014,7 +5014,7 @@ static void _vulnerability_scroll()
                 mon->add_ench(lowered_mr);
 
             // Annoying but not enough to turn friendlies against you.
-            if (!mons_wont_attack(mon))
+            if (!mon->wont_attack())
                 behaviour_event(mon, ME_ANNOY, MHITYOU);
         }
     }

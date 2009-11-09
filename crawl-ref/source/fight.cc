@@ -4261,7 +4261,7 @@ bool melee_attack::mons_attack_mons()
     if (perceived_attack && attacker->alive()
         && defender_as_monster()->friendly()
         && !crawl_state.arena
-        && !mons_wont_attack(attacker_as_monster())
+        && !attacker_as_monster()->wont_attack()
         && you.pet_target == MHITNOT
         && env.sanctuary_time <= 0)
     {
@@ -5729,7 +5729,7 @@ bool monster_attack(monsters* attacker, bool allow_unarmed)
     ASSERT(!crawl_state.arena);
 
     // Friendly and good neutral monsters won't attack unless confused.
-    if (mons_wont_attack(attacker) && !mons_is_confused(attacker))
+    if (attacker->wont_attack() && !mons_is_confused(attacker))
         return (false);
 
     // In case the monster hasn't noticed you, bumping into it will

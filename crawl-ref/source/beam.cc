@@ -2234,7 +2234,7 @@ void bolt::do_fire()
         // sanctuary when pet_target can only be explicitly changed by
         // the player.
         const monsters *mon = &menv[beam_source];
-        if (foe_info.hurt > 0 && !mons_wont_attack(mon) && !crawl_state.arena
+        if (foe_info.hurt > 0 && !mon->wont_attack() && !crawl_state.arena
             && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
         {
             you.pet_target = beam_source;
@@ -4547,7 +4547,7 @@ void bolt::monster_post_hit(monsters* mon, int dmg)
 
     // Don't annoy friendlies or good neutrals if the player's beam
     // did no damage.  Hostiles will still take umbrage.
-    if (dmg > 0 || !mons_wont_attack(mon) || !YOU_KILL(thrower))
+    if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
         behaviour_event(mon, ME_ANNOY, beam_source_as_target());
 
     // Sticky flame.
@@ -5860,7 +5860,7 @@ bool bolt::nasty_to(const monsters *mon) const
 
     // Friendly and good neutral monsters don't mind being teleported.
     if (flavour == BEAM_TELEPORT)
-        return (!mons_wont_attack(mon));
+        return (!mon->wont_attack());
 
     // degeneration / sleep / enslave soul
     if (flavour == BEAM_DEGENERATE

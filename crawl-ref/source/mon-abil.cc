@@ -484,7 +484,7 @@ static bool _siren_movement_effect(const monsters *monster)
             if (mon)
             {
                 coord_def swapdest;
-                if (mons_wont_attack(mon)
+                if (mon->wont_attack()
                     && !mons_is_stationary(mon)
                     && !mon->cannot_act()
                     && !mon->asleep()

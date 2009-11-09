@@ -660,7 +660,7 @@ static int _get_dist_to_nearest_monster()
         if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
             continue;
 
-        if (mons_wont_attack(mon))
+        if (mon->wont_attack())
             continue;
 
         int dist = grid_distance(you.pos(), *ri);

@@ -2815,12 +2815,12 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     case MONS_VAMPIRE:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
-        if (you.is_undead == US_ALIVE && !mons_wont_attack(&mons))
+        if (you.is_undead == US_ALIVE && !mons.wont_attack())
             inf.body << "$It wants to drink your blood!$";
         break;
 
     case MONS_REAPER:
-        if (you.is_undead == US_ALIVE && !mons_wont_attack(&mons))
+        if (you.is_undead == US_ALIVE && !mons.wont_attack())
             inf.body <<  "$It has come for your soul!$";
         break;
 

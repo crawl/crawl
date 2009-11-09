@@ -5452,7 +5452,7 @@ int get_tension(god_type god, bool count_travelling)
         if (you.see_cell(mons->pos()))
         {
             // Monster is nearby.
-            if (!nearby_monster && !mons_wont_attack(mons))
+            if (!nearby_monster && !mons->wont_attack())
                 nearby_monster = true;
         }
         else if (count_travelling)

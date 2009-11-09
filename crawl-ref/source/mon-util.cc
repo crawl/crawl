@@ -1956,11 +1956,6 @@ bool mons_is_pacified(const monsters *m)
     return (m->attitude == ATT_NEUTRAL && testbits(m->flags, MF_GOT_HALF_XP));
 }
 
-bool mons_wont_attack(const monsters *m)
-{
-    return (m->friendly() || m->good_neutral() || m->strict_neutral());
-}
-
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
     return (fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL || fr == ATT_STRICT_NEUTRAL);
@@ -2018,7 +2013,7 @@ bool mons_is_lurking(const monsters *m)
 
 bool mons_is_influenced_by_sanctuary(const monsters *m)
 {
-    return (!mons_wont_attack(m)
+    return (!m->wont_attack()
             && (m->holiness() != MH_PLANT || mons_is_stationary(m)));
 }
 
@@ -2309,7 +2304,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         return (true);
     }
 
-    if (!mons_wont_attack(mon))
+    if (!mon->wont_attack())
     {
         if (spell_harms_area(monspell) && env.sanctuary_time > 0)
             return (true);
@@ -2986,7 +2981,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 {
     std::string msg = in_msg;
 
-    const actor*    foe   = (mons_wont_attack(monster)
+    const actor*    foe   = (monster->wont_attack()
                              && invalid_monster_index(monster->foe)) ?
                             &you : monster->get_foe();
 

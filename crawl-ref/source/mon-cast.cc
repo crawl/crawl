@@ -955,7 +955,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
         && mons_class_flag(monster->type, M_SPEAKS)
         && monster->has_spells());
 
-    if (is_sanctuary(monster->pos()) && !mons_wont_attack(monster))
+    if (is_sanctuary(monster->pos()) && !monster->wont_attack())
         return (false);
 
     // Yes, there is a logic to this ordering {dlb}:
@@ -1100,7 +1100,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
         {
             // If nothing found by now, safe friendlies and good
             // neutrals will rarely cast.
-            if (mons_wont_attack(monster) && !mon_enemies_around(monster)
+            if (monster->wont_attack() && !mon_enemies_around(monster)
                 && !one_chance_in(10))
             {
                 return (false);
@@ -1308,7 +1308,7 @@ static int _monster_abjure_square(const coord_def &pos,
         return (0);
 
     if (!target->alive()
-        || ((bool)wont_attack == mons_wont_attack(target)))
+        || ((bool)wont_attack == target->wont_attack()))
     {
         return (0);
     }
@@ -1397,7 +1397,7 @@ static int _apply_radius_around_square( const coord_def &c, int radius,
 
 static int _monster_abjuration(const monsters *caster, bool actual)
 {
-    const bool wont_attack = mons_wont_attack(caster);
+    const bool wont_attack = caster->wont_attack();
     int maffected = 0;
 
     if (actual)
@@ -2405,7 +2405,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 // Be egotistical and assume that the monster is aiming at
                 // the player, rather than the player being in the path of
                 // a beam aimed at an ally.
-                if (!mons_wont_attack(monster))
+                if (!monster->wont_attack())
                 {
                     targ_prep = "at";
                     target    = "you";

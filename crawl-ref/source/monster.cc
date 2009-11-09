@@ -2866,6 +2866,11 @@ bool monsters::strict_neutral() const
     return (attitude == ATT_STRICT_NEUTRAL);
 }
 
+bool monsters::wont_attack() const
+{
+    return (friendly() || good_neutral() || strict_neutral());
+}
+
 int monsters::shield_bonus() const
 {
     const item_def *shld = const_cast<monsters*>(this)->shield();

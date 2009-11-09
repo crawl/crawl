@@ -168,7 +168,7 @@ bool trap_def::is_known(const actor* act) const
 
         rc = (intel >= I_NORMAL
               && (mons_is_native_in_branch(monster)
-                  || mons_wont_attack(monster) && player_knows
+                  || monster->wont_attack() && player_knows
                   || intel >= I_HIGH && one_chance_in(3)));
     }
     return (rc);
@@ -607,7 +607,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (!you_know)
                 this->hide();
 
-            if (mons_wont_attack(m) || crawl_state.arena)
+            if (m->wont_attack() || crawl_state.arena)
             {
                 MiscastEffect( m, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                                3, "the power of Zot" );

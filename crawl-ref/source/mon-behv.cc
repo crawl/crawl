@@ -1085,7 +1085,7 @@ void handle_behaviour(monsters *mon)
     bool changed = true;
     bool isFriendly = mon->friendly();
     bool isNeutral  = mon->neutral();
-    bool wontAttack = mons_wont_attack(mon);
+    bool wontAttack = mon->wont_attack();
 
     // Whether the player is in LOS of the monster and can see
     // or has guessed the player's location.
@@ -1096,7 +1096,7 @@ void handle_behaviour(monsters *mon)
 #ifdef WIZARD
     // If stealth is greater than actually possible (wizmode level)
     // pretend the player isn't there, but only for hostile monsters.
-    if (proxPlayer && you.skills[SK_STEALTH] > 27 && !mons_wont_attack(mon))
+    if (proxPlayer && you.skills[SK_STEALTH] > 27 && !mon->wont_attack())
         proxPlayer = false;
 #endif
     bool proxFoe;
@@ -1221,7 +1221,7 @@ void handle_behaviour(monsters *mon)
     // Friendly and good neutral monsters do not attack other friendly
     // and good neutral monsters.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && wontAttack && mons_wont_attack(&menv[mon->foe]))
+        && wontAttack && menv[mon->foe].wont_attack())
     {
         mon->foe = MHITNOT;
     }
@@ -1659,7 +1659,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     const beh_type old_behaviour = mon->behaviour;
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
-    bool wontAttack       = mons_wont_attack(mon);
+    bool wontAttack       = mon->wont_attack();
     bool sourceWontAttack = false;
     bool setTarget        = false;
     bool breakCharm       = false;
@@ -1668,7 +1668,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     if (src == MHITYOU)
         sourceWontAttack = true;
     else if (src != MHITNOT)
-        sourceWontAttack = mons_wont_attack(&menv[src]);
+        sourceWontAttack = menv[src].wont_attack();
 
     if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
     {
@@ -1891,7 +1891,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
 
     // If it woke up and you're its new foe, it might shout.
     if (was_sleeping && !mon->asleep() && allow_shout
-        && mon->foe == MHITYOU && !mons_wont_attack(mon))
+        && mon->foe == MHITYOU && !mon->wont_attack())
     {
         handle_monster_shouts(mon);
     }

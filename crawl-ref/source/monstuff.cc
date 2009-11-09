@@ -1998,7 +1998,7 @@ int monster_die(monsters *monster, killer_type killer,
     // Make sure Boris has a foe to address.
     if (monster->foe == MHITNOT)
     {
-        if (!mons_wont_attack(monster) && !crawl_state.arena)
+        if (!monster->wont_attack() && !crawl_state.arena)
             monster->foe = MHITYOU;
         else if (!invalid_monster_index(killer_index))
             monster->foe = killer_index;
@@ -2525,7 +2525,7 @@ static coord_def _random_monster_nearby_habitable_space(const monsters& mon,
                                                         bool allow_adjacent,
                                                         bool respect_los)
 {
-    const bool respect_sanctuary = mons_wont_attack(&mon);
+    const bool respect_sanctuary = mon.wont_attack();
 
     coord_def target;
     int tries;
@@ -3017,7 +3017,7 @@ bool simple_monster_message(const monsters *monster, const char *event,
         msg += event;
         msg = apostrophise_fixup(msg);
 
-        if (channel == MSGCH_PLAIN && mons_wont_attack(monster))
+        if (channel == MSGCH_PLAIN && monster->wont_attack())
             channel = MSGCH_FRIEND_ACTION;
 
         mpr(msg.c_str(), channel, param);
@@ -3693,7 +3693,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
     mgrd(oldplace) = NON_MONSTER;
 
     coord_def newpos;
-    if (monster_random_space(monster, newpos, !mons_wont_attack(monster)))
+    if (monster_random_space(monster, newpos, !monster->wont_attack()))
         monster->moveto(newpos);
 
     mgrd(monster->pos()) = monster_index(monster);

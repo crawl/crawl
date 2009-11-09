@@ -1204,7 +1204,7 @@ static int _xom_confuse_monsters(int sever, bool debug = false)
         monster = &menv[i];
 
         if (monster->type == MONS_NO_MONSTER || !mons_near(monster)
-            || mons_wont_attack(monster)
+            || monster->wont_attack()
             || !mons_class_is_confusable(monster->type)
             || one_chance_in(20))
         {
@@ -1425,7 +1425,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
                                                : ENCH_SHAPESHIFTER);
             }
 
-            const bool powerup = !(mons_wont_attack(mon) ^ helpful);
+            const bool powerup = !(mon->wont_attack() ^ helpful);
             monster_polymorph(mon, RANDOM_MONSTER,
                               powerup ? PPT_MORE : PPT_LESS);
 
@@ -1552,7 +1552,7 @@ static int _xom_swap_weapons(bool debug = false)
         if (!you.see_cell(m->pos()))
             continue;
 
-        if (!wpn || mons_wont_attack(m) || m->is_summoned()
+        if (!wpn || m->wont_attack() || m->is_summoned()
             || mons_itemuse(m) < MONUSE_STARTING_EQUIPMENT
             || (m->flags & MF_HARD_RESET))
         {
@@ -1752,7 +1752,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
         if (!you.see_cell(m->pos()))
             continue;
 
-        if (mons_wont_attack(m) || m->is_summoned()
+        if (m->wont_attack() || m->is_summoned()
             || mons_itemuse(m) < MONUSE_STARTING_EQUIPMENT
             || (m->flags & MF_HARD_RESET))
         {
@@ -1926,7 +1926,7 @@ static int _xom_throw_divine_lightning(bool debug = false)
     {
         if (monsters* mon = monster_at(*ri))
         {
-            if (!mons_wont_attack(mon))
+            if (!mon->wont_attack())
             {
                 found_hostile = true;
                 break;

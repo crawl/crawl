@@ -1910,7 +1910,7 @@ bool cast_sanctuary(const int power)
                 mon->behaviour = BEH_SEEK;
                 behaviour_event(mon, ME_EVAL, MHITYOU);
             }
-            else if (!mons_wont_attack(mon))
+            else if (!mon->wont_attack())
             {
                 if (mons_is_mimic(mon->type))
                 {

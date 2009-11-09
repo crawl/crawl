@@ -688,7 +688,7 @@ void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
 static bool _mons_hostile(const monsters *mon)
 {
     // Needs to be done this way because of friendly/neutral enchantments.
-    return (!mons_wont_attack(mon) && !mon->neutral());
+    return (!mon->wont_attack() && !mon->neutral());
 }
 
 static bool _can_pacify_monster(const monsters *mon, const int healed)
@@ -1138,7 +1138,7 @@ void abjuration(int pow)
         if (monster->type == MONS_NO_MONSTER || !mons_near(monster))
             continue;
 
-        if (mons_wont_attack(monster))
+        if (monster->wont_attack())
             continue;
 
         int duration;
