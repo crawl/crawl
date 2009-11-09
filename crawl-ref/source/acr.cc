@@ -1237,6 +1237,12 @@ static void _go_upstairs()
             shop();
         return;
     }
+    else if (ygrd == DNGN_ENTER_HELL && you.level_type != LEVEL_DUNGEON)
+    {
+        mpr("You can't enter Hell from outside the dungeon!",
+            MSGCH_ERROR);
+        return;
+    }
     // Up and down both work for portals.
     else if (get_feature_dchar(ygrd) == DCHAR_ARCH
              && feat_stair_direction(ygrd) != CMD_NO_CMD
@@ -1292,6 +1298,12 @@ static void _go_downstairs()
             canned_msg(MSG_TOO_BERSERK);
         else
             shop();
+        return;
+    }
+    else if (ygrd == DNGN_ENTER_HELL && you.level_type != LEVEL_DUNGEON)
+    {
+        mpr("You can't enter Hell from outside the dungeon!",
+            MSGCH_ERROR);
         return;
     }
     // Up and down both work for portals.

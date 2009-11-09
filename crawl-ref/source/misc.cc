@@ -2140,6 +2140,13 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         return;
     }
 
+    if (stair_find == DNGN_ENTER_HELL && you.level_type != LEVEL_DUNGEON)
+    {
+        mpr("You can't enter Hell from outside the dungeon!",
+            MSGCH_ERROR);
+        return;
+    }
+
     if (stair_find >= DNGN_ENTER_LABYRINTH
         && stair_find <= DNGN_ESCAPE_HATCH_DOWN
         && player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
