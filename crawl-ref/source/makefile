@@ -456,14 +456,24 @@ prefix_fp := $(abspath $(strip $(DESTDIR)$(prefix)))
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
-CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(strip $(prefix))/$(strip $(SAVEDIR)))\"
-savedir_fp := $(abspath $(strip $(prefix_fp))/$(strip $(SAVEDIR)))
+ifeq ($(filter /%,$(SAVEDIR)),)
+ifneq ($(prefix),)
+override SAVEDIR := $(strip $(prefix))/$(strip $(SAVEDIR))
+endif
+endif
+CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
+savedir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SAVEDIR)))
 endif
 
 ifneq ($(strip $(DATADIR)),)
-CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(strip $(prefix))/$(strip $(DATADIR)))\"
+ifeq ($(filter /%,$(DATADIR)),)
+ifneq ($(prefix),)
+override DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
 endif
-datadir_fp := $(abspath $(strip $(prefix_fp))/$(strip $(DATADIR)))
+endif
+CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))\"
+endif
+datadir_fp := $(abspath $(strip $(DESTDIR))$(strip $(DATADIR)))
 
 ifndef NO_NCURSES
 
