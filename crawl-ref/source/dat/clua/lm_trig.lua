@@ -27,6 +27,15 @@
 -- on each triggering only a single, randomly chosen slave will have
 -- on_trigger() called.
 --
+-- Ordinarily, a master marker which listens to position-dependant events will
+-- only be triggered by events which happen at the master's position.  To make
+-- the master marker also listen to events which happen at the locations of the
+-- slave markers, set the property "listen_to_slaves" to anything but the empty
+-- strign true.  This will cause all of the slave markers to be triggered
+-- whenever any of the slave markers are triggered.  To only trigger the slave
+-- where the event happened, also set the property "only_at_slave" to anything
+-- but the empty string.
+--
 -- on_trigger() shouldn't have to worry about the master/slave business,
 -- and should have the same code regardless of whether or not it's a
 -- master or just a plain triggerable.  If on_trigger() calls
@@ -172,6 +181,10 @@ function Triggerable:activate(marker)
     error("Can't activate, trigerrable removed")
   end
 
+  if #self.triggerers == 0 then
+    error("Triggerable has no triggerers")
+  end
+
   if self.activating then
     error("Triggerable already activating")
   end
@@ -181,8 +194,25 @@ function Triggerable:activate(marker)
   end
 
   self.activating = true
+
+  -- NOTE: The master marker can be slaved to itself.
+  local listen_to_slaves = self:property(marker, "listen_to_slaves")
+  local master_name      = self:property(marker, "master_name")
+
+  local slaves
+  if listen_to_slaves ~= "" and master_name ~= ""  then
+    slaves = dgn.find_markers_by_prop("slaved_to", master_name)
+    if #slaves == 0 then
+      error("Triggerable has no slaves to listen to")
+    end
+  else
+    slaves = { marker }
+  end
+
   for _, trig in ipairs(self.triggerers) do
-    trig:activate(self, marker)
+    for _, slave_marker in ipairs(slaves) do
+      trig:activate(self, marker, slave_marker:pos())
+    end
   end
   self.activating = false
   self.activated  = true
@@ -228,8 +258,18 @@ function Triggerable:do_trigger(triggerer, marker, ev)
   end
 
   -- NOTE: The master marker can be slaved to itself.
-  local slaves =
+  local slaves
+
+  if self:property(marker, "only_at_slave") ~= '' then
+    local slave_marker = dgn.marker_at_pos(ev:pos())
+    if not slave_marker then
+      error("No slave marker at event position")
+    end
+
+    slaves = { slave_marker }
+  else
     dgn.find_markers_by_prop("slaved_to", master_name)
+  end
 
   -- If all slaves are gone, we're done.
   if #slaves == 0 then
@@ -364,9 +404,9 @@ function TriggerableFunction:new(pars)
   local tf = self.super.new(self)
 
   if not pars.func then
-    error("Must provide func to TriggerableMessage")
+    error("Must provide func to TriggerableFunction")
   elseif type(pars.func) ~= "function" then
-    error("TriggerableMessage func must be function, not " .. type(pars.msg))
+    error("TriggerableFunction func must be function, not " .. type(pars.msg))
   end
 
   tf.func     = pars.func
@@ -578,7 +618,7 @@ function DgnTriggerer:added(triggerable)
   end
 end
 
-function DgnTriggerer:activate(triggerable, marker)
+function DgnTriggerer:activate(triggerable, marker, x, y)
   if not (triggerable.activated or triggerable.activating) then
     error("DgnTriggerer:activate(): triggerable is not activated")
   end
@@ -586,7 +626,11 @@ function DgnTriggerer:activate(triggerable, marker)
   local et = dgn.dgn_event_type(self.type)
 
   if (dgn.dgn_event_is_position(et)) then
-    dgn.register_listener(et, marker, marker:pos())
+    if not x or not y then
+      x, y = marker:pos()
+    end
+
+    dgn.register_listener(et, marker, x, y)
   else
     dgn.register_listener(et, marker)
   end
