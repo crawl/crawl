@@ -554,7 +554,7 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
 
 void game_options::reset_options()
 {
-    filename     = "unkown";
+    filename     = "unknown";
     basefilename = "unknown";
     line_num     = -1;
 
