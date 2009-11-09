@@ -2585,7 +2585,7 @@ VISUAL:@The_monster@ checks his coin pouch and frowns.
 
 @The_monster@ says, "I just want to get paid!"
 
-@The_mosnter@ says, "I'm sure they'll be treated well, anyway."
+@The_monster@ says, "I'm sure they'll be treated well, anyway."
 # End original speech
 
 @The_monster@ says, "I'm sure the Orcish Mines are around here somewhere..."
