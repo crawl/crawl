@@ -435,9 +435,9 @@ CFOTHERS_L += -DDGAMELAUNCH
 endif
 
 ifdef USE_CHROOT
-prefix_fp := $(abspath $(strip $(chroot_prefix))/$(strip $(prefix)))
+prefix_fp := $(abspath $(strip $(DESTDIR)$(chroot_prefix))/$(strip $(prefix)))
 else
-prefix_fp := $(abspath $(strip $(prefix)))
+prefix_fp := $(abspath $(strip $(DESTDIR)$(prefix)))
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
@@ -710,6 +710,10 @@ endif
 # The actual build targets
 #
 install: $(GAME)
+ifeq ($(DESTDIR)$(prefix),)
+	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
+	@exit 1
+endif
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
 	$(STRIP) -s $(prefix_fp)/$(bin_prefix)/$(GAME)
