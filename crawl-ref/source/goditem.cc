@@ -266,6 +266,7 @@ bool is_chaotic_spell(spell_type spell, god_type god)
             || spell == SPELL_ALTER_SELF
             || spell == SPELL_SUMMON_UGLY_THING
             || spell == SPELL_MIASMA
+            || spell == SPELL_SUMMON_DRAKES
             || spell == SPELL_PORKALATOR);
 }
 
