@@ -296,8 +296,11 @@ function Triggerable:do_trigger(triggerer, marker, ev)
 
       if dgn.point(slave_marker:pos()) == master_pos then
         -- The master marker shouldn't be removed until the end, so
-        -- simply stop being slaved.
+        -- simply stop being slaved to itself.
         self.props.slaved_to = nil
+        if self:property("listen_to_slaves") ~= "" then
+          triggerer:remove(self, slave_marker)
+        end
       else
         triggerer:remove(self, slave_marker)
         dgn.remove_marker(slave_marker)
