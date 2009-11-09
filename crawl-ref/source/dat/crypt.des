@@ -1010,7 +1010,7 @@ SUBST:   $ = *:2 |:1 $:17
 MONS:    mummy, guardian mummy, mummy priest, greater mummy
 #
 MARKER:  O = lua:item_pickup_change_flags { \
-            branch_flags="!no_tele_control", item="golden rune of Zot" \
+            branch_flags="!no_tele_control", item="auto" \
          }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

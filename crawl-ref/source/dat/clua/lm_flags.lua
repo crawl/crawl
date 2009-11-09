@@ -52,7 +52,9 @@
 --        an item on its grid gets picked up.  Accepts the parameter
 --        "item", which is the plain name of the item its watching
 --        (i.e., "Orb of Zot" and "golden rune of Zot" rather than
---         "the Orb of Zot" or "a golden rune of Zot").
+--        "the Orb of Zot" or "a golden rune of Zot").  You can also
+--        just use "auto", in which case whichever item is on top of
+--        the marker will autoamically be chosen.
 --
 -- ChangeFlags is a Triggerable subclass, and the above three functions
 -- are just convenience functions which add a single triggerer.  Other

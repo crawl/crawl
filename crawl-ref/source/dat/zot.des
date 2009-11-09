@@ -333,7 +333,7 @@ ORIENT:     north
 TAGS:       no_dump
 LFLAGS:     no_tele_control
 MARKER:     Z = lua:item_pickup_change_flags { \
-                level_flags="!no_tele_control", item="Orb of Zot" \
+                level_flags="!no_tele_control", item="auto" \
             }
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta

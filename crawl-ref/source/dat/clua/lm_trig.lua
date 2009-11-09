@@ -537,14 +537,17 @@ end
 --
 -- * item_moved: Wait for an item to move from one cell to another.
 --      Needs the parameter "target", who's value is the name of the
---      item that is being tracked.  The triggerable/marker must be placed
---      on top of the cell containing the item.
+--      item that is being tracked, or which can be "auto", in which
+--      case it will pick the item placed by the vault.  The
+--      triggerable/marker must be placed on top of the cell containing
+--      the item.
 --
 -- * item_pickup: Wait for an item to be picked up.  Needs the parameter
---      "target", who's value is the name of the item that is being tracked.
---      The triggerable/marker must be placed on top of the cell containing
---      the item.  Automatically takes care of the item moving from one
---      square to another without being picked up.
+--      "target", who's value is the name of the item that is being tracked,
+--      or which can be "auto", in which case it will pick the item placed
+--      by the vault.  The triggerable/marker must be placed on top of the
+--      cell containing the item.  Automatically takes care of the item
+--      moving from one square to another without being picked up.
 --
 -- * player_move: Wait for the player to move to a cell.  The
 --      triggerable/marker must be placed on top of cell in question.
@@ -624,6 +627,19 @@ end
 function DgnTriggerer:activate(triggerable, marker, x, y)
   if not (triggerable.activated or triggerable.activating) then
     error("DgnTriggerer:activate(): triggerable is not activated")
+  end
+
+  if self.type == "item_moved" or self.type == "item_pickup" then
+    if self.target == "auto" then
+      local items = dgn.items_at(marker:pos())
+
+      if #items == 0 then
+        error("No vault item for " .. self.type)
+      elseif #items > 1 then
+        error("Too many vault items for " .. self.type)
+      end
+      self.target = item.name(items[1])
+    end
   end
 
   local et = dgn.dgn_event_type(self.type)
