@@ -1882,7 +1882,8 @@ coord_def bolt::pos() const
         return ray.pos();
 }
 
-void bolt::hit_wall()
+// Returns true if the beam ended due to hitting the wall.
+bool bolt::hit_wall()
 {
     const dungeon_feature_type feat = grd(pos());
     ASSERT( feat_is_solid(feat) );
@@ -1917,7 +1918,7 @@ void bolt::hit_wall()
         {
             beam_cancelled = true;
             finish_beam();
-            return;
+            return (false);
         }
 
         // Well, we warned them.
@@ -1954,7 +1955,11 @@ void bolt::hit_wall()
                 target = ray.pos();
         }
         finish_beam();
+
+        return (true);
     }
+
+    return (false);
 }
 
 void bolt::affect_cell(bool avoid_self)
@@ -1988,7 +1993,10 @@ void bolt::affect_cell(bool avoid_self)
 
         // Note that this can change the ray position and the solidity
         // of the wall.
-        hit_wall();
+        if (hit_wall())
+            // Beam ended due to hitting wall, so don't hit the player
+            // or monster with the regressed beam.
+            return;
     }
 
     const bool still_wall = (was_solid && old_pos == pos());

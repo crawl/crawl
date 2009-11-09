@@ -216,7 +216,7 @@ private:
     std::set<std::string> message_cache;
     void emit_message(msg_channel_type chan, const char* msg);
     void step();
-    void hit_wall();
+    bool hit_wall();
 
     bool apply_hit_funcs(actor* victim, int dmg, int corpse = -1);
     bool apply_dmg_funcs(actor* victim, int &dmg,
