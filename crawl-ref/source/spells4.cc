@@ -599,7 +599,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
 void cast_ignite_poison(int pow)
 {
     you.flash_colour = RED;
-    viewwindow(true);
+    viewwindow(false);
 
     // Poison branding becomes fire branding.
     if (you.weapon()
