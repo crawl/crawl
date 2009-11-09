@@ -200,7 +200,11 @@ INSTALL_UGRP := games:games
 chroot_prefix :=
 prefix        := /usr/games/crawl
 ifeq (,$(bin_prefix))
+ifneq ($(patsubst %/local,%,$(patsubst %/,%,$(prefix))),/usr)
 bin_prefix    := bin
+else
+bin_prefix    := games
+endif
 endif
 
 # If you're installing Crawl for multiple users, you *must* set this to a
