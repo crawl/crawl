@@ -3371,8 +3371,8 @@ static int _place_uniques(int level_number, char level_type)
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Placed %s.",
                  uniq_map->name.c_str());
-        }
 #endif
+        }
 #ifdef DEBUG_UNIQUE_PLACEMENT
         else
         {
