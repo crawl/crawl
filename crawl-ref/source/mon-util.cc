@@ -1374,13 +1374,14 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
 
     switch (mon_type)
     {
-    case MONS_DEEP_ELF_FIGHTER:
-    case MONS_DEEP_ELF_KNIGHT:
-    case MONS_DEEP_ELF_SOLDIER:
-    case MONS_ORC_WIZARD:
-        book[0] = MST_ORC_WIZARD_I;
-        book[1] = MST_ORC_WIZARD_II;
-        book[2] = MST_ORC_WIZARD_III;
+    case MONS_DEEP_ELF_CONJURER:
+        book[0] = MST_DEEP_ELF_CONJURER_I;
+        book[1] = MST_DEEP_ELF_CONJURER_II;
+        break;
+
+    case MONS_HELL_KNIGHT:
+        book[0] = MST_HELL_KNIGHT_I;
+        book[1] = MST_HELL_KNIGHT_II;
         break;
 
     case MONS_LICH:
@@ -1391,14 +1392,18 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[3] = MST_LICH_IV;
         break;
 
-    case MONS_HELL_KNIGHT:
-        book[0] = MST_HELL_KNIGHT_I;
-        book[1] = MST_HELL_KNIGHT_II;
-        break;
-
     case MONS_NECROMANCER:
         book[0] = MST_NECROMANCER_I;
         book[1] = MST_NECROMANCER_II;
+        break;
+
+    case MONS_ORC_WIZARD:
+    case MONS_DEEP_ELF_SOLDIER:
+    case MONS_DEEP_ELF_FIGHTER:
+    case MONS_DEEP_ELF_KNIGHT:
+        book[0] = MST_ORC_WIZARD_I;
+        book[1] = MST_ORC_WIZARD_II;
+        book[2] = MST_ORC_WIZARD_III;
         break;
 
     case MONS_WIZARD:
@@ -1412,18 +1417,13 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[4] = MST_WIZARD_V;
         break;
 
-    case MONS_DEEP_ELF_CONJURER:
+    case MONS_DRACONIAN_KNIGHT:
         book[0] = MST_DEEP_ELF_CONJURER_I;
         book[1] = MST_DEEP_ELF_CONJURER_II;
-        break;
-
-    case MONS_DRACONIAN_KNIGHT:
-        book[0] = MST_HELL_KNIGHT_I;
-        book[1] = MST_HELL_KNIGHT_II;
-        book[2] = MST_NECROMANCER_I;
-        book[3] = MST_NECROMANCER_II;
-        book[4] = MST_DEEP_ELF_CONJURER_I;
-        book[5] = MST_DEEP_ELF_CONJURER_II;
+        book[2] = MST_HELL_KNIGHT_I;
+        book[3] = MST_HELL_KNIGHT_II;
+        book[4] = MST_NECROMANCER_I;
+        book[5] = MST_NECROMANCER_II;
         break;
 
     default:
