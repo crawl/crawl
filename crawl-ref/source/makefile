@@ -198,9 +198,14 @@ MCHMOD_SAVEDIR := 775
 INSTALL_UGRP := games:games
 
 chroot_prefix :=
-prefix        := /usr/games/crawl
+prefix        :=
+
+ifeq ($(patsubst %/local,%,$(patsubst %/,%,$(prefix))),/usr)
+FHS := yes
+endif
+
 ifeq (,$(bin_prefix))
-ifneq ($(patsubst %/local,%,$(patsubst %/,%,$(prefix))),/usr)
+ifeq (,$(FHS))
 bin_prefix    := bin
 else
 bin_prefix    := games
@@ -210,9 +215,15 @@ endif
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
 # Crawl for a single user.
+# If you're installing to /usr or /usr/local, we have sane defaults.
 
 # SAVEDIR := saves/
 # DATADIR := data/
+ifneq (,$(FHS))
+DATADIR       := share/crawl
+SAVEDIR       := /var/games/crawl
+endif
+
 
 INCLUDES_L += -Icontrib/install/include
 LIBS += -Lcontrib/install/lib
