@@ -772,7 +772,7 @@ endif
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
 	$(STRIP) -s $(prefix_fp)/$(bin_prefix)/$(GAME)
-	$(CHOWN) -R $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix) || true
+	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	mkdir -p $(datadir_fp)/dat/clua
 	mkdir -p $(datadir_fp)/dat/lua
@@ -801,7 +801,7 @@ ifneq ($(SAVEDIR),)
 	mkdir -p $(savedir_fp)/saves
 	mkdir -p $(savedir_fp)/morgue
 	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
-	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
+	$(CHMOD) -R $(MCHMOD_SAVEDIR) $(savedir_fp) || true
 endif
 
 clean:
