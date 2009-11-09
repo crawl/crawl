@@ -2542,15 +2542,9 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     }
 }
 
-bool mons_is_magic_user( const monsters *mon )
+bool mons_is_magic_user(const monsters *mon)
 {
-    if (mon->is_actual_spellcaster())
-    {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            if (mon->spells[i] != SPELL_NO_SPELL)
-                return (true);
-    }
-    return (false);
+    return (mon->is_actual_spellcaster() && mon->has_spells());
 }
 
 // Returns true if the monster has an ability that only needs LOS to
