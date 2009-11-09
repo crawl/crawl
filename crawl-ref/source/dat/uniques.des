@@ -129,6 +129,14 @@ MAP
 1
 ENDMAP
 
+NAME:   uniq_gastronok
+DEPTH:  8-9, 10-13, Lair:4-8
+TAGS:   place_unique
+MONS:   Gastronok
+MAP
+1
+ENDMAP
+
 NAME:   uniq_erolcha
 DEPTH:  8-9, 10-13, !Lair
 TAGS:   place_unique
@@ -140,7 +148,7 @@ ENDMAP
 NAME:   uniq_grum
 DEPTH:  8-9, 10-13, !Lair
 TAGS:   place_unique
-MONS:   Gastronok
+MONS:   Grum band
 MAP
 1
 ENDMAP
@@ -162,7 +170,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_urug
-DEPTH:  10-13, 14-16, !Lair, !Tomb
+DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Urug
 MAP
@@ -170,7 +178,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_michael
-DEPTH:  10-13, 14-16, !Lair, !Tomb
+DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Michael
 MAP
@@ -178,7 +186,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_eustachio
-DEPTH:  10-13, 14-16, !Lair, !Tomb
+DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Eustachio
 MAP
@@ -186,7 +194,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_sonja
-DEPTH:  10-13, 14-16, !Lair, !Tomb
+DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Sonja
 MAP
@@ -202,7 +210,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_erica
-DEPTH:  10-13, 14-16, !Lair, !Tomb
+DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Erica
 MAP
@@ -210,7 +218,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_josephine
-DEPTH:  10-13, 14-16, !Lair, !Tomb
+DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Josephine band
 MAP
@@ -218,7 +226,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_jozef
-DEPTH:  10-13, 14-16, !Lair, !Tomb
+DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Jozef
 MAP
@@ -226,7 +234,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_harold
-DEPTH:  10-13, 14-16, !Lair, !Tomb
+DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Harold
 MAP
@@ -234,7 +242,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_norbert
-DEPTH:  10-13, 14-16, !Lair, !Tomb
+DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Norbert
 MAP
@@ -242,7 +250,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_snorg
-DEPTH:  14-16, 17-19, !Tomb
+DEPTH:  14-16, 17-19, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Snorg
 MAP
@@ -250,7 +258,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_roxanne
-DEPTH:  14-16, 17-19, !Tomb
+DEPTH:  14-16, 17-19, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Roxanne
 MAP
@@ -258,7 +266,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_rupert
-DEPTH:  14-16, 17-19, !Tomb
+DEPTH:  14-16, 17-19, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Rupert
 MAP
@@ -266,7 +274,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_azrael
-DEPTH:  14-16, 17-19, !Tomb, !Swamp, !Shoal
+DEPTH:  14-16, 17-19, !Tomb, !Lair, !Swamp, !Shoal
 TAGS:   place_unique
 MONS:   Azrael band
 MAP
@@ -274,7 +282,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_nessos
-DEPTH:  14-16, 17-19, !Tomb
+DEPTH:  14-16, 17-19, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Nessos
 MAP
@@ -282,7 +290,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_agnes
-DEPTH:  14-16, !Tomb
+DEPTH:  14-16, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Agnes
 MAP
@@ -290,7 +298,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_nikola
-DEPTH:  14-16, 17-19, !Tomb
+DEPTH:  14-16, 17-19, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Nikola
 MAP
@@ -298,7 +306,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_maud
-DEPTH:  14-16, !Tomb
+DEPTH:  14-16, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Maud
 MAP
@@ -306,7 +314,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_louise
-DEPTH:  14-16, 17-19, !Tomb
+DEPTH:  14-16, 17-19, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Louise
 MAP
@@ -314,7 +322,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_nergalle
-DEPTH:  14-16, 17-19, !Tomb
+DEPTH:  14-16, 17-19, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Nergalle
 MAP
@@ -322,7 +330,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_kirke
-DEPTH:  14-16, 17-19, !Tomb
+DEPTH:  14-16, 17-19, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Kirke band
 MAP
@@ -330,7 +338,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_francis
-DEPTH:  17-19, 20-27, !Tomb
+DEPTH:  17-19, 20-27, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Francis
 MAP
@@ -338,7 +346,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_frances
-DEPTH:  17-19, 20-27, !Tomb
+DEPTH:  17-19, 20-27, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Frances
 MAP
@@ -346,7 +354,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_wayne
-DEPTH:  17-19, 20-27, !Tomb
+DEPTH:  17-19, 20-27, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Wayne
 MAP
@@ -354,7 +362,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_duane
-DEPTH:  17-19, 20-27, !Tomb
+DEPTH:  17-19, 20-27, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Duane
 MAP
@@ -362,7 +370,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_norris
-DEPTH:  17-19, !Tomb
+DEPTH:  17-19, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Norris
 MAP
@@ -370,7 +378,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_saint_roka
-DEPTH:  17-19, 20-27, !Tomb
+DEPTH:  17-19, 20-27, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Saint Roka band
 MAP
@@ -378,7 +386,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_xtahua
-DEPTH:  20-27, !Tomb
+DEPTH:  20-27, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Xtahua
 MAP
@@ -386,7 +394,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_frederick
-DEPTH:  20-27, !Tomb
+DEPTH:  20-27, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Frederick
 MAP
@@ -394,7 +402,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_margery
-DEPTH:  20-27, !Tomb
+DEPTH:  20-27, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Margery band
 MAP
@@ -407,7 +415,7 @@ ENDMAP
 # multiple uniq_boris TAG'd maps, ensure that you add the relevant line to
 # remove the tag in monstuff.cc:monster_die.
 NAME:   uniq_boris
-DEPTH:  20-27
+DEPTH:  20-27, !Lair
 TAGS:   place_unique
 MONS:   Boris
 MAP
@@ -415,7 +423,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_aizul
-DEPTH:  20-27, !Tomb
+DEPTH:  20-27, !Tomb, !Lair
 TAGS:   place_unique
 MONS:   Aizul
 MAP
@@ -472,132 +480,3 @@ MONS:   Tiamat band
 MAP
 1
 ENDMAP
-
-################################################################################
-# The original C++ code for unique placement was:
-# static monster_type _pick_unique(int lev)
-# {
-#     if (player_in_branch(BRANCH_SLIME_PITS))
-#     {
-#         // Only allow Dissolution in the Slime Pits.
-#         if (player_branch_depth() > 1 && one_chance_in(3))
-#             return MONS_DISSOLUTION;
-# 
-#         return MONS_NO_MONSTER;
-#     }
-#     else if (player_in_branch(BRANCH_LAIR))
-#     {
-#         if (player_branch_depth() > 5 && one_chance_in(3))
-#             return MONS_GASTRONOK;
-#         else if (player_branch_depth() < 3 && one_chance_in(4))
-#             return MONS_PRINCE_RIBBIT;
-#         else
-#             return MONS_NO_MONSTER;
-#     }
-#     else if (player_in_branch(BRANCH_SNAKE_PIT))
-#     {
-#         if (player_branch_depth() > 3 && coinflip())
-#             return MONS_AIZUL;
-#     }
-# 
-#     // First, pick generic unique depending on depth.
-#     int which_unique =
-#         ((lev <=  3) ? _choose_unique_by_depth(0) :
-#          (lev <=  7) ? _choose_unique_by_depth(1) :
-#          (lev <=  9) ? _choose_unique_by_depth(2) :
-#          (lev <= 13) ? _choose_unique_by_depth(3) :
-#          (lev <= 16) ? _choose_unique_by_depth(4) :
-#          (lev <= 19) ? _choose_unique_by_depth(5) :
-#                        _choose_unique_by_depth(6));
-# 
-#     // Azrael may not be created in the Swamp or Shoals.
-#     if (which_unique == MONS_AZRAEL
-#         && (player_in_branch(BRANCH_SWAMP) || player_in_branch(BRANCH_SHOALS)))
-#     {
-#         return MONS_NO_MONSTER;
-#     }
-# 
-#     // If applicable, replace it with one of the uniques appearing
-#     // only in some branches.
-#     if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-#     {
-#         if (one_chance_in(7))
-#             which_unique = MONS_MURRAY;
-#     }
-#     else if (player_in_branch(BRANCH_HALL_OF_ZOT))
-#     {
-#         if (one_chance_in(3))
-#             which_unique = MONS_TIAMAT;
-#     }
-#     else if (player_in_branch(BRANCH_SHOALS))
-#     {
-#         if (player_branch_depth() > 1 && coinflip())
-#             which_unique = MONS_POLYPHEMUS;
-#         else if (player_branch_depth() > 2 && coinflip())
-#             which_unique = MONS_ILSUIW;
-#     }
-#     else if (player_in_branch(BRANCH_TOMB) || player_in_branch(BRANCH_CRYPT))
-#     {
-#         if (one_chance_in(10))
-#             which_unique = MONS_KHUFU;
-#     }
-# 
-#     return static_cast<monster_type>(which_unique);
-# }
-# 
-# // Doesn't include Polyphemus or Ilsuiw (only appear in the Shoals),
-# // Dissolution (Slime), Murray (Hell), Khufu(Tomb/Crypt) or Tiamat (Zot).
-# // NOTE: The Lernaean hydra should *never* be randomly generated.
-# //       The Royal jelly likewise is only placed via Slime end vault.
-# //       Dowan is automatically placed together with Duvessa.
-# static monster_type _choose_unique_by_depth(int step)
-# {
-#     int ret;
-#     switch (step)
-#     {
-#     case 0: // depth <= 3
-#         ret = random_choose(MONS_TERENCE, MONS_JESSICA, MONS_IJYB,
-#                             MONS_SIGMUND, -1);
-#         break;
-#     case 1: // depth <= 7
-#         ret = random_choose(MONS_IJYB, MONS_SIGMUND, MONS_BLORK_THE_ORC,
-#                             MONS_EDMUND, MONS_PRINCE_RIBBIT, MONS_PURGY,
-#                             MONS_MENKAURE, MONS_DUVESSA, MONS_PIKEL, -1);
-#         break;
-#     case 2: // depth <= 9
-#         ret = random_choose(MONS_BLORK_THE_ORC, MONS_EDMUND, MONS_PSYCHE,
-#                             MONS_EROLCHA, MONS_PRINCE_RIBBIT, MONS_GRUM,
-#                             MONS_GASTRONOK, MONS_MAURICE, MONS_PIKEL, -1);
-#         break;
-#     case 3: // depth <= 13
-#         ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,
-#                             MONS_MICHAEL, MONS_EUSTACHIO, MONS_SONJA, MONS_GRUM,
-#                             MONS_JOSEPH, MONS_ERICA, MONS_JOSEPHINE, MONS_JOZEF,
-#                             MONS_HAROLD, MONS_NORBERT, MONS_GASTRONOK,
-#                             MONS_MAURICE, -1);
-#         break;
-#     case 4: // depth <= 16
-#         ret = random_choose(MONS_URUG, MONS_MICHAEL, MONS_EUSTACHIO, MONS_SONJA,
-#                             MONS_SNORG, MONS_ERICA, MONS_JOSEPHINE, MONS_HAROLD,
-#                             MONS_ROXANNE, MONS_RUPERT, MONS_NORBERT, MONS_JOZEF,
-#                             MONS_AZRAEL, MONS_NESSOS, MONS_AGNES, MONS_NIKOLA,
-#                             MONS_MAUD, MONS_LOUISE, MONS_NERGALLE, MONS_KIRKE, -1);
-#         break;
-#     case 5: // depth <= 19
-#         ret = random_choose(MONS_SNORG, MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
-#                             MONS_RUPERT, MONS_WAYNE, MONS_DUANE, MONS_NORRIS,
-#                             MONS_AZRAEL, MONS_NESSOS, MONS_NERGALLE, MONS_NIKOLA,
-#                             MONS_ROXANNE, MONS_SAINT_ROKA, MONS_KIRKE, -1);
-#         break;
-#     case 6: // depth > 19
-#     default:
-#         ret = random_choose(MONS_FRANCIS, MONS_FRANCES, MONS_WAYNE, MONS_DUANE,
-#                             MONS_XTAHUA, MONS_NORRIS, MONS_FREDERICK, MONS_NIKOLA,
-#                             MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, MONS_AIZUL,
-#                             -1);
-#     }
-# 
-#     return static_cast<monster_type>(ret);
-# }
-# 
-# 
