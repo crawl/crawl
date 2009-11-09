@@ -3,6 +3,12 @@
 
 struct show_type;
 
+struct glyph
+{
+    unsigned ch;
+    unsigned short col;
+};
+
 void get_item_glyph(const item_def *item, unsigned *glych,
                     unsigned short *glycol);
 void get_mons_glyph(const monsters *mons, unsigned *glych,
