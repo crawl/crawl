@@ -75,7 +75,9 @@ TAGS:   allow_dup
 DEPTH:  Crypt
 MONS:   death ooze
 KFEAT:  f = .
-KMONS:  f = w:2 col:darkgrey plant/w:1 col:lightgrey plant
+# "withered plant" instead of "plant"
+KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective / \
+            w:1 col:lightgrey plant name:withered name_adjective
 SUBST:  p = f:2 .:1
 SUBST:  1 = 1:3 .:1
 MAP
@@ -314,7 +316,9 @@ NAME:   tomb_entry_forgotten_bobbens
 ORIENT: float
 TAGS:   tomb_entry no_monster_gen
 KFEAT:  f = .
-KMONS:  f = w:2 col:darkgrey plant/w:1 col:lightgrey plant
+# "withered plant" instead of "plant"
+KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective / \
+            w:1 col:lightgrey plant name:withered name_adjective
 SUBST:  p = f.
 MAP
 cccccccccc
@@ -627,7 +631,9 @@ PLACE:  Crypt:5
 SUBST:  F = f ?
 SUBST:  f = p:1 .:1
 KFEAT:  p = .
-KMONS:  p = w:2 col:darkgrey plant / w:1 col:lightgrey plant
+# "withered plant" instead of "plant"
+KMONS:  p = w:2 col:darkgrey plant name:withered name_adjective / \
+            w:1 col:lightgrey plant name:withered name_adjective
 ####### hidden skeleton; sometimes good pain weapon, but draining short sword
 KFEAT:  ! = .
 KMONS:  ! = skeletal warrior ; w:2 dagger ego:pain | short sword ego:draining |\
