@@ -1259,8 +1259,18 @@ static void _hogs_to_humans()
             // arena book-keeping.
             if (!crawl_state.arena)
             {
-                monster->attitude = ATT_GOOD_NEUTRAL;
-                monster->flags |= MF_WAS_NEUTRAL;
+                // * A monster's attitude shouldn't downgrade from friendly
+                //   or good-neutral because you helped it.  It'd suck to
+                //   lose a permanent ally that way.
+                //
+                // * A monster has to be smart enough to realize that you
+                //   helped it.
+                if (monster->attitude == ATT_HOSTILE
+                    && mons_intel(monster) >= I_NORMAL)
+                {
+                    monster->attitude = ATT_GOOD_NEUTRAL;
+                    monster->flags |= MF_WAS_NEUTRAL;
+                }
             }
 
             behaviour_event(monster, ME_EVAL);
