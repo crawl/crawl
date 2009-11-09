@@ -674,7 +674,7 @@ static bool _beogh_retribution()
                     menv[mon].flags |= MF_HARD_RESET;
 
                 ghost_demon newstats;
-                newstats.init_dancing_weapon(wpn, you.experience_level);
+                newstats.init_dancing_weapon(wpn, you.experience_level * 5);
 
                 menv[mon].set_ghost(newstats);
                 menv[mon].dancing_weapon_init();
