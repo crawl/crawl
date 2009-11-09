@@ -3528,7 +3528,7 @@ static monsterentry mondata[] = {
 {
     MONS_DANCING_WEAPON, '(', BLACK, "dancing weapon",
     M_FIGHTER,
-    mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD, 1) | MR_RES_ELEC,
+    MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
     0, 10, MONS_DANCING_WEAPON, MONS_DANCING_WEAPON, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 15, 0, 0, 15 },
