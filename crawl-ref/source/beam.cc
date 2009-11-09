@@ -3621,6 +3621,7 @@ bool bolt::misses_player()
         return (false);
 
     const int dodge = player_evasion();
+    const int dodge_less = player_evasion(EV_IGNORE_PHASESHIFT);
     int real_tohit  = hit;
 
     // Monsters shooting at an invisible player are very inaccurate.
@@ -3677,25 +3678,45 @@ bool bolt::misses_player()
     defer_rand r;
     bool miss = true;
 
-    if (!_test_beam_hit(real_tohit, dodge, is_beam, false, false, r))
+    bool dmsl = you.duration[DUR_DEFLECT_MISSILES];
+    bool rmsl = dmsl || you.duration[DUR_REPEL_MISSILES]
+                || player_mutation_level(MUT_REPULSION_FIELD) == 3;
+
+    if (!_test_beam_hit(real_tohit, dodge_less, is_beam, false, false, r))
     {
         mprf("The %s misses you.", name.c_str());
     }
-    else if ((you.duration[DUR_REPEL_MISSILES]
-                || player_mutation_level(MUT_REPULSION_FIELD) == 3
-                || you.duration[DUR_DEFLECT_MISSILES])
-             && !_test_beam_hit(real_tohit, dodge, is_beam, false, true, r))
+    else if (!_test_beam_hit(real_tohit, dodge_less, is_beam, false, rmsl, r))
     {
         mprf("The %s is repelled.", name.c_str());
     }
-    else if (you.duration[DUR_DEFLECT_MISSILES]
-             && !_test_beam_hit(real_tohit, dodge, is_beam, true, true, r))
+    else if (!_test_beam_hit(real_tohit, dodge_less, is_beam, dmsl, rmsl, r))
     {
         // active voice to imply stronger effect
         mprf("You deflect the %s!", name.c_str());
     }
+    else if (!_test_beam_hit(real_tohit, dodge, is_beam, dmsl, rmsl, r))
+    {
+        mprf("You momentarily phase out as the %s "
+             "passes through you.", name.c_str());
+    }
     else
     {
+        const bool engulfs = is_explosion || is_big_cloud;
+        int dodge_more = player_evasion(EV_IGNORE_HELPLESS);
+
+        if (hit_verb.empty())
+            hit_verb = engulfs ? "engulfs" : "hits";
+
+        if (_test_beam_hit(real_tohit, dodge_more, is_beam, dmsl, rmsl, r))
+        {
+            mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
+        }
+        else
+        {
+            mprf("Helpless, you fail to dodge the %s.", name.c_str());
+        }
+
         miss = false;
     }
 
@@ -4021,11 +4042,6 @@ void bolt::affect_player()
         return;
 
     const bool engulfs = is_explosion || is_big_cloud;
-
-    if (hit_verb.empty())
-        hit_verb = engulfs ? "engulfs" : "hits";
-
-    mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
 
     // FIXME: Lots of duplicated code here (compare handling of
     // monsters)
@@ -4821,6 +4837,8 @@ void bolt::affect_monster(monsters* mon)
     // The beam hit.
     if (mons_near(mon))
     {
+        // Monsters don't currently use Phase Shift and are never currently
+        // helpless in ranged combat.
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";
 
