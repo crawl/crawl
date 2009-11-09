@@ -57,7 +57,7 @@ const char *dngn_feature_names[] =
 "altar_yredelemnul", "altar_xom", "altar_vehumet",
 "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
 "altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu",
-"altar_beogh", "altar_jiyva", "altar_feawn", "altar_cheibriados", "", "", "",
+"altar_beogh", "altar_jiyva", "altar_fedhas", "altar_cheibriados", "", "", "",
 "fountain_blue", "fountain_sparkling", "fountain_blood",
 "dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
 "permadry_fountain", "abandoned_shop"

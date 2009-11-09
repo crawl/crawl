@@ -1717,7 +1717,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         {
             // Monster types that you can't gain experience from cannot
             // fight back, so don't bother having them do so.  If you
-            // worship Feawn, create a ring of friendly plants, and try
+            // worship Fedhas, create a ring of friendly plants, and try
             // to break out of the ring by killing a plant, you'll get
             // a warning prompt and penance only once.  Without the
             // hostility check, the plant will remain friendly until it

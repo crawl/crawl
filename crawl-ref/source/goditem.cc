@@ -433,7 +433,7 @@ conduct_type god_hates_item_handling(const item_def &item)
         }
         break;
 
-    case GOD_FEAWN:
+    case GOD_FEDHAS:
         if (item_type_known(item)
             && (is_potentially_evil_item(item) || is_evil_item(item)))
         {

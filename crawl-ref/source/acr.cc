@@ -414,7 +414,7 @@ static void _god_greeting_message(bool game_start)
     case GOD_JIYVA:
         god_speaks(you.religion, "Slime for the Slime God!");
         break;
-    case GOD_FEAWN:
+    case GOD_FEDHAS:
         simple_god_message(" says: Spread life and death.");
         break;
     case GOD_CHEIBRIADOS:
@@ -3875,7 +3875,7 @@ static void _move_player(coord_def move)
     const dungeon_feature_type targ_grid  =  grd(targ);
 
           monsters*      targ_monst = monster_at(targ);
-          if (feawn_passthrough(targ_monst))
+          if (fedhas_passthrough(targ_monst))
           {
               // Moving on a plant takes 1.5 x normal move delay. We
               // will print a message about it but only when moving
@@ -3884,7 +3884,7 @@ static void _move_player(coord_def move)
               you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
               monsters * current = monster_at(you.pos());
-              if(!current || !feawn_passthrough(current))
+              if(!current || !fedhas_passthrough(current))
               {
                   // Probably need better messages. -cao
                   if(mons_genus(targ_monst->type) == MONS_FUNGUS)

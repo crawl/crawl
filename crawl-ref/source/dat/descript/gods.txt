@@ -74,9 +74,9 @@ Jiyva
 
 Jiyva is the chaotic ancient deity of the slimes.
 %%%%
-Feawn
+Fedhas
 
-Feawn is the god of plant and fungal life.
+Fedhas Madash is the god of plant and fungal life.
 %%%%
 Cheibriados
 
@@ -136,9 +136,9 @@ Beogh powers
 
 Beogh encourages followers to make use of orcish gear found in the dungeon. Followers can smite their foes, and will even gain orcish followers of their own, who may be blessed by Beogh in battle and can be recalled within a level as needed. Eventually, they'll gain the power to walk on water. Beogh will sometimes directly intervene to save a follower's life.
 %%%%
-Feawn powers
+Fedhas powers
 
-Feawn encourages followers to promote the growth of plant life.
+Fedhas encourages followers to promote the growth of plant life.
 %%%%
 Cheibriados powers
 

@@ -125,15 +125,15 @@ void slime_convert(monsters* monster)
     }
 }
 
-void feawn_neutralise(monsters* monster)
+void fedhas_neutralise(monsters* monster)
 {
-    if (you.religion == GOD_FEAWN
+    if (you.religion == GOD_FEDHAS
         && monster->attitude == ATT_HOSTILE
-        && feawn_neutralises(monster)
+        && fedhas_neutralises(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !player_under_penance())
     {
-        feawn_neutralise_plant(monster);
+        fedhas_neutralise_plant(monster);
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
 
         stop_running();
@@ -621,7 +621,7 @@ bool yred_slaves_abandon_you()
     return (false);
 }
 
-static bool _feawn_plants_on_level_hostile()
+static bool _fedhas_plants_on_level_hostile()
 {
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
@@ -637,7 +637,7 @@ static bool _feawn_plants_on_level_hostile()
 #endif
 
             // You can potentially turn an oklob or whatever neutral
-            // again by going back to Feawn.
+            // again by going back to Fedhas.
             if (testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
                 monster->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
@@ -651,9 +651,9 @@ static bool _feawn_plants_on_level_hostile()
     return (true);
 }
 
-bool feawn_plants_hostile()
+bool fedhas_plants_hostile()
 {
-    if (apply_to_all_dungeons(_feawn_plants_on_level_hostile))
+    if (apply_to_all_dungeons(_fedhas_plants_on_level_hostile))
     {
         mpr("The plants of the dungeon turn on you!", MSGCH_GOD);
         return (true);
@@ -901,10 +901,10 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     behaviour_event(orc, ME_ALERT, MHITNOT);
 }
 
-void feawn_neutralise_plant(monsters *plant)
+void fedhas_neutralise_plant(monsters *plant)
 {
     if (!plant
-        || !feawn_neutralises(plant)
+        || !fedhas_neutralises(plant)
         || plant->attitude != ATT_HOSTILE
         || testbits(plant->flags, MF_ATT_CHANGE_ATTEMPT))
     {

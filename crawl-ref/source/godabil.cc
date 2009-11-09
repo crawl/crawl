@@ -312,11 +312,11 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     }
 }
 
-// Feawn allows worshipers to walk on top of stationary plants and
+// Fedhas allows worshipers to walk on top of stationary plants and
 // fungi.
-bool feawn_passthrough(const monsters * target)
+bool fedhas_passthrough(const monsters * target)
 {
-    return (target && you.religion == GOD_FEAWN
+    return (target && you.religion == GOD_FEDHAS
             && mons_is_plant(target)
             && mons_is_stationary(target)
             && (target->type != MONS_OKLOB_PLANT
@@ -464,7 +464,7 @@ static int _create_plant(coord_def & target)
                                       0,
                                       target,
                                       MHITNOT,
-                                      MG_FORCE_PLACE, GOD_FEAWN));
+                                      MG_FORCE_PLACE, GOD_FEDHAS));
 
 
     if (plant != -1)
@@ -567,7 +567,7 @@ bool sunlight()
                                                        target,
                                                        MHITNOT,
                                                        MG_FORCE_PLACE,
-                                                       GOD_FEAWN));
+                                                       GOD_FEDHAS));
 
             if (plant != -1 && observe_cell(target))
                 plant_count++;
@@ -882,7 +882,7 @@ int rain(const coord_def &target)
                                       0,
                                       *rad,
                                       MHITNOT,
-                                      MG_FORCE_PLACE, GOD_FEAWN));
+                                      MG_FORCE_PLACE, GOD_FEDHAS));
 
                 if (plant != -1)
                     spawned_count++;
@@ -1112,7 +1112,7 @@ bool evolve_flora()
         };
 
         current_plant->upgrade_type(current_target.new_type, true, true);
-        current_plant->god = GOD_FEAWN;
+        current_plant->god = GOD_FEDHAS;
         current_plant->attitude = ATT_FRIENDLY;
         current_plant->flags |= MF_CREATED_FRIENDLY;
         current_plant->flags |= MF_ATT_CHANGE_ATTEMPT;

@@ -124,7 +124,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     ASSERT(swapping && monster_at(p)
            || !swapping && (!monster_at(p)
                             || monster_at(p)->submerged()
-                            || feawn_passthrough(monster_at(p))));
+                            || fedhas_passthrough(monster_at(p))));
 
     // Don't prompt if force is true.
     if (!force)

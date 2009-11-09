@@ -4276,11 +4276,11 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
 bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
 {
-    // Feawn worshippers can fire through monsters of the same
-    // alignment.  This means Feawn-worshipping players can fire through
-    // allied plants, and also means that Feawn-worshipping oklob plants
+    // Fedhas worshippers can fire through monsters of the same
+    // alignment.  This means Fedhas-worshipping players can fire through
+    // allied plants, and also means that Fedhas-worshipping oklob plants
     // can fire through plants with the same attitude.
-    bool originator_worships_feawn = false;
+    bool originator_worships_fedhas = false;
 
     // Checking beam_source to decide whether the player or a monster
     // fired the beam (so we can check their religion).  This is
@@ -4291,21 +4291,21 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     // or not this is an explosion, and also the range of beam_source
     // before attempting to reference env.mons with it. -cao
     if (!is_explosion && beam_source == NON_MONSTER)
-        originator_worships_feawn = (you.religion == GOD_FEAWN);
+        originator_worships_fedhas = (you.religion == GOD_FEDHAS);
     else if (!is_explosion && beam_source >= 0 && beam_source < MAX_MONSTERS)
-        originator_worships_feawn = (env.mons[beam_source].god == GOD_FEAWN);
+        originator_worships_fedhas = (env.mons[beam_source].god == GOD_FEDHAS);
 
     if (!is_enchantment()
         && attitude == mon->attitude
-        && originator_worships_feawn
-        && feawn_protects(mon))
+        && originator_worships_fedhas
+        && fedhas_protects(mon))
     {
         if (!is_tracer)
         {
             // FIXME: Could use a better message, something about
             // dodging that doesn't sound excessively weird would be
             // nice.
-            mprf(MSGCH_GOD, "Feawn protects %s plant from harm.",
+            mprf(MSGCH_GOD, "Fedhas protects %s plant from harm.",
                  attitude == ATT_FRIENDLY ? "your" : "a");
         }
         return (false);
@@ -4817,13 +4817,13 @@ void bolt::affect_monster(monsters* mon)
     enable_attack_conducts(conducts);
 
     // We'll say giant spore explosions don't trigger the ally attack conduct
-    // for Feawn worshipers.  Mostly because you can accidentally blow up a
+    // for Fedhas worshipers.  Mostly because you can accidentally blow up a
     // group of 8 plants and get placed under penance until the end of time
     // otherwise.  I'd prefer to do this elsewhere but the beam information
     // goes out of scope.
     //
     // Also exempting miscast explosions from this conduct -cao
-    if (you.religion == GOD_FEAWN
+    if (you.religion == GOD_FEDHAS
         && (flavour == BEAM_SPORE
             || beam_source == NON_MONSTER
                && aux_source.find("your miscasting") != std::string::npos))
@@ -4899,14 +4899,14 @@ void bolt::affect_monster(monsters* mon)
     else
     {
         // Prevent spore explosions killing plants from being registered
-        // as a Feawn misconduct.  Deaths can trigger the ally dying or
+        // as a Fedhas misconduct.  Deaths can trigger the ally dying or
         // plant dying conducts, but spore explosions shouldn't count
         // for either of those.
         //
         // FIXME: Should be a better way of doing this.  For now, we are
         // just falsifying the death report... -cao
-        if (you.religion == GOD_FEAWN && flavour == BEAM_SPORE
-            && feawn_protects(mon))
+        if (you.religion == GOD_FEDHAS && flavour == BEAM_SPORE
+            && fedhas_protects(mon))
         {
             if (mon->attitude == ATT_FRIENDLY)
                 mon->attitude = ATT_HOSTILE;

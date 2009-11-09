@@ -309,7 +309,7 @@ static bool _is_monster_blocked(const coord_def& c)
     return (mons
             && mons->visible_to(&you)
             && mons_is_stationary(mons)
-            && !feawn_passthrough(mons)
+            && !fedhas_passthrough(mons)
             && mons_was_seen(mons)
             && !mons_is_unknown_mimic(mons));
 }
@@ -390,9 +390,9 @@ static bool _is_safe_move(const coord_def& c)
     if (const monsters *mon = monster_at(c))
     {
         // Stop before wasting energy on plants and fungi,
-        // unless a worshipping Feawn.
+        // unless a worshipping Fedhas.
         if (you.can_see(mon) && mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && !feawn_passthrough(mon))
+            && !fedhas_passthrough(mon))
             return (false);
 
         // If this is any *other* monster, it'll be visible and
@@ -3819,7 +3819,7 @@ bool runrest::run_grids_changed() const
         return (true);
 
     monsters * mon = monster_at(you.pos() + pos);
-    if (mon && !feawn_passthrough(mon))
+    if (mon && !fedhas_passthrough(mon))
         return (true);
 
     for (int i = 0; i < 3; i++)

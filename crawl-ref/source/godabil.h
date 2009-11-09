@@ -18,7 +18,7 @@ bool jiyva_remove_bad_mutation();
 bool beogh_water_walk();
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
                              bool quiet = false, bool unrestricted = false);
-bool feawn_passthrough(const monsters * target);
+bool fedhas_passthrough(const monsters * target);
 int fungal_bloom();
 bool sunlight();
 bool prioritise_adjacent(const coord_def &target,

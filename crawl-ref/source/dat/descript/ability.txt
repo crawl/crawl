@@ -358,7 +358,7 @@ Recall Orcish Followers
 
 Recall your orcish followers from anywhere on the level to your immediate surroundings.
 %%%%
-# Feawn
+# Fedhas
 Decomposition
 
 Cause corpses in your field of vision to rapidly decay. Corpses with a monster (or you) on top of them will not be affected.

@@ -101,12 +101,12 @@ enum ability_type
     ABIL_JIYVA_JELLY_SHIELD,                // 240
     ABIL_JIYVA_SLIMIFY,
     ABIL_JIYVA_CURE_BAD_MUTATION,
-    ABIL_FEAWN_FUNGAL_BLOOM,
-    ABIL_FEAWN_SUNLIGHT,
-    ABIL_FEAWN_RAIN,                        // 245
-    ABIL_FEAWN_PLANT_RING,
-    ABIL_FEAWN_SPAWN_SPORES,
-    ABIL_FEAWN_EVOLUTION,
+    ABIL_FEDHAS_FUNGAL_BLOOM,
+    ABIL_FEDHAS_SUNLIGHT,
+    ABIL_FEDHAS_RAIN,                        // 245
+    ABIL_FEDHAS_PLANT_RING,
+    ABIL_FEDHAS_SPAWN_SPORES,
+    ABIL_FEDHAS_EVOLUTION,
     ABIL_CHEIBRIADOS_PONDEROUSIFY,
     ABIL_CHEIBRIADOS_TIME_STEP,             // 250
     ABIL_CHEIBRIADOS_TIME_BEND,
@@ -780,8 +780,8 @@ enum conduct_type
     DID_DESTROY_ORCISH_IDOL,            // Beogh
     DID_CREATE_LIFE,                    // unused
     DID_KILL_SLIME,                     // Jiyva
-    DID_KILL_PLANT,                     // Feawn
-    DID_ALLY_KILLED_PLANT,              // Feawn
+    DID_KILL_PLANT,                     // Fedhas
+    DID_ALLY_KILLED_PLANT,              // Fedhas
     DID_HASTY,                          // Cheibriados
 
     NUM_CONDUCTS
@@ -1113,7 +1113,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_LUGONU,
     DNGN_ALTAR_BEOGH,
     DNGN_ALTAR_JIYVA,
-    DNGN_ALTAR_FEAWN,
+    DNGN_ALTAR_FEDHAS,
     DNGN_ALTAR_CHEIBRIADOS,
     DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_CHEIBRIADOS,
 
@@ -1337,7 +1337,7 @@ enum god_type
     GOD_LUGONU,
     GOD_BEOGH,
     GOD_JIYVA,                         //   15
-    GOD_FEAWN,
+    GOD_FEDHAS,
     GOD_CHEIBRIADOS,
     NUM_GODS,                          // always after last god
 

@@ -2,6 +2,13 @@
 # util/art-data.pl.  Do not directly edit this file, but rather change
 # art-data.txt.
 
+%sdir item/amulet/artefact
+urand_air UNRAND_AIR
+urand_cekugob UNRAND_CEKUGOB
+urand_four_winds UNRAND_FOUR_WINDS
+urand_bloodlust UNRAND_BLOODLUST
+urand_brooch_of_shielding UNRAND_SHIELDING
+
 %sdir item/armour/artefact
 urand_ignorance UNRAND_IGNORANCE
 urand_augmentation UNRAND_AUGMENTATION
@@ -26,6 +33,12 @@ urand_alchemist UNRAND_ALCHEMIST
 urand_fencer UNRAND_FENCERS_GLOVES
 urand_starlight UNRAND_STARLIGHT
 urand_ratskin_cloak UNRAND_RATSKIN_CLOAK
+
+%sdir item/ring/artefact
+urand_shadows UNRAND_SHADOWS
+urand_shaolin UNRAND_SHAOLIN
+urand_robustness UNRAND_ROBUSTNESS
+urand_mage UNRAND_MAGE
 
 %sdir item/weapon/artefact
 spwpn_singing_sword UNRAND_SINGING_SWORD
@@ -73,17 +86,4 @@ urand_spriggans_knife UNRAND_SPRIGGANS_KNIFE
 urand_serpent_scourge UNRAND_SERPENT_SCOURGE
 urand_knife_of_accuracy UNRAND_ACCURACY
 %rim 0
-
-%sdir item/amulet/artefact
-urand_air UNRAND_AIR
-urand_cekugob UNRAND_CEKUGOB
-urand_four_winds UNRAND_FOUR_WINDS
-urand_bloodlust UNRAND_BLOODLUST
-urand_brooch_of_shielding UNRAND_SHIELDING
-
-%sdir item/ring/artefact
-urand_shadows UNRAND_SHADOWS
-urand_shaolin UNRAND_SHAOLIN
-urand_robustness UNRAND_ROBUSTNESS
-urand_mage UNRAND_MAGE
 

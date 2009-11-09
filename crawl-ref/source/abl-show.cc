@@ -146,9 +146,9 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATION },
-    // Feawn
-    { ABIL_FEAWN_SUNLIGHT, ABIL_FEAWN_PLANT_RING, ABIL_FEAWN_RAIN,
-      ABIL_FEAWN_SPAWN_SPORES, ABIL_FEAWN_EVOLUTION },
+    // Fedhas
+    { ABIL_FEDHAS_SUNLIGHT, ABIL_FEDHAS_PLANT_RING, ABIL_FEDHAS_RAIN,
+      ABIL_FEDHAS_SPAWN_SPORES, ABIL_FEDHAS_EVOLUTION },
     // Cheibriados
     { ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_TIME_BEND, ABIL_NON_ABILITY,
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
@@ -327,13 +327,13 @@ static const ability_def Ability_List[] =
     { ABIL_JIYVA_CURE_BAD_MUTATION, "Cure Bad Mutation",
       8, 0, 200, 15, ABFLAG_NONE },
 
-    // Feawn
-    { ABIL_FEAWN_FUNGAL_BLOOM, "Decomposition", 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_FEAWN_SUNLIGHT, "Sunlight", 2, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_FEAWN_PLANT_RING, "Growth", 2, 0, 0, 1, ABFLAG_FRUIT},
-    { ABIL_FEAWN_RAIN, "Rain", 4, 0, 100, 2, ABFLAG_NONE},
-    { ABIL_FEAWN_SPAWN_SPORES, "Reproduction", 4, 0, 50, 2, ABFLAG_NONE},
-    { ABIL_FEAWN_EVOLUTION, "Evolution", 4, 0, 0, 2, ABFLAG_FRUIT},
+    // Fedhas
+    { ABIL_FEDHAS_FUNGAL_BLOOM, "Decomposition", 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_FEDHAS_SUNLIGHT, "Sunlight", 2, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_FEDHAS_PLANT_RING, "Growth", 2, 0, 0, 1, ABFLAG_FRUIT},
+    { ABIL_FEDHAS_RAIN, "Rain", 4, 0, 100, 2, ABFLAG_NONE},
+    { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction", 4, 0, 50, 2, ABFLAG_NONE},
+    { ABIL_FEDHAS_EVOLUTION, "Evolution", 4, 0, 0, 2, ABFLAG_FRUIT},
 
     // Cheibriados
     { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous", 2, 0, 0, 0, ABFLAG_NONE },
@@ -683,14 +683,14 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_JIYVA_CALL_JELLY:
-    case ABIL_FEAWN_SUNLIGHT:
+    case ABIL_FEDHAS_SUNLIGHT:
         invoc = true;
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
 
     // destroying stuff doesn't train anything
     case ABIL_ELYVILON_DESTROY_WEAPONS:
-    case ABIL_FEAWN_FUNGAL_BLOOM:
+    case ABIL_FEDHAS_FUNGAL_BLOOM:
         invoc = true;
         failure = 0;
         break;
@@ -734,7 +734,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_JIYVA_SLIMIFY:
-    case ABIL_FEAWN_PLANT_RING:
+    case ABIL_FEDHAS_PLANT_RING:
         invoc = true;
         failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
         break;
@@ -756,8 +756,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-    case ABIL_FEAWN_SPAWN_SPORES:
-    case ABIL_FEAWN_RAIN:
+    case ABIL_FEDHAS_SPAWN_SPORES:
+    case ABIL_FEDHAS_RAIN:
     case ABIL_YRED_DRAIN_LIFE:
     case ABIL_CHEIBRIADOS_SLOUCH:
         invoc = true;
@@ -769,7 +769,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_OKAWARU_HASTE:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
-    case ABIL_FEAWN_EVOLUTION:
+    case ABIL_FEDHAS_EVOLUTION:
         invoc = true;
         failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -1927,14 +1927,14 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 1);
         break;
 
-    case ABIL_FEAWN_FUNGAL_BLOOM:
+    case ABIL_FEDHAS_FUNGAL_BLOOM:
     {
         int count = fungal_bloom();
 
         if (count)
         {
             simple_god_message(" appreciates your contribution to the "
-                               "ecosystem.", GOD_FEAWN);
+                               "ecosystem.", GOD_FEDHAS);
         }
 
         // We are following the blood god sacrifice piety gain model, given as:
@@ -1953,33 +1953,33 @@ static bool _do_ability(const ability_def& abil)
         break;
     }
 
-    case ABIL_FEAWN_SUNLIGHT:
+    case ABIL_FEDHAS_SUNLIGHT:
         if (!sunlight())
             return (false);
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
-    case ABIL_FEAWN_PLANT_RING:
+    case ABIL_FEDHAS_PLANT_RING:
         if (!plant_ring_from_fruit())
             return (false);
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
-    case ABIL_FEAWN_RAIN:
+    case ABIL_FEDHAS_RAIN:
         rain(you.pos());
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
-    case ABIL_FEAWN_SPAWN_SPORES:
+    case ABIL_FEDHAS_SPAWN_SPORES:
         corpse_spores();
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
-    case ABIL_FEAWN_EVOLUTION:
+    case ABIL_FEDHAS_EVOLUTION:
         if (!evolve_flora())
             return (false);
 
@@ -2363,8 +2363,8 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused);
     else if (you.religion == GOD_TROG)
         _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
-    else if (you.religion == GOD_FEAWN)
-        _add_talent(talents, ABIL_FEAWN_FUNGAL_BLOOM, check_confused);
+    else if (you.religion == GOD_FEDHAS)
+        _add_talent(talents, ABIL_FEDHAS_FUNGAL_BLOOM, check_confused);
     else if (you.religion == GOD_CHEIBRIADOS)
         _add_talent(talents, ABIL_CHEIBRIADOS_PONDEROUSIFY, check_confused);
 

@@ -1209,7 +1209,7 @@ void pikel_band_neutralise ()
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
-        if (monster->alive() && monster->type == MONS_HUMAN 
+        if (monster->alive() && monster->type == MONS_HUMAN
             && testbits(monster->flags, MF_BAND_MEMBER))
         {
             if (monster->observable() && !message_made)
@@ -1307,7 +1307,7 @@ static int _tentacle_too_far(monsters *head, monsters *tentacle)
     // The Shoals produce no disjoint bodies of water.
     // If this ever changes, we'd need to check if the head and tentacle
     // are still in the same pool.
-    // XXX: Actually, using Feawn's Sunlight power you can separate pools...
+    // XXX: Actually, using Fedhas's Sunlight power you can separate pools...
     return grid_distance(head->pos(), tentacle->pos()) > LOS_RADIUS;
 }
 
@@ -1642,7 +1642,7 @@ int monster_die(monsters *monster, killer_type killer,
                                     true, monster);
                 }
 
-                if (feawn_protects(monster))
+                if (fedhas_protects(monster))
                 {
                     did_god_conduct(DID_KILL_PLANT, monster->hit_dice,
                                     true, monster);
@@ -1760,7 +1760,7 @@ int monster_die(monsters *monster, killer_type killer,
                                 true, monster);
             }
 
-            if (pet_kill && feawn_protects(monster))
+            if (pet_kill && fedhas_protects(monster))
             {
                 did_god_conduct(DID_ALLY_KILLED_PLANT, 1 + (monster->hit_dice / 2),
                                 true, monster);

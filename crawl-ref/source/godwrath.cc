@@ -985,13 +985,13 @@ static bool _jiyva_retribution()
     return (true);
 }
 
-static bool _feawn_retribution()
+static bool _fedhas_retribution()
 {
-    const god_type god = GOD_FEAWN;
+    const god_type god = GOD_FEDHAS;
 
     // We have 3 forms of retribution, but players under penance will be
     // spared the 'you are now surrounded by oklob plants, please die' one.
-    const int retribution_options = you.religion == GOD_FEAWN ? 2 : 3;
+    const int retribution_options = you.religion == GOD_FEDHAS ? 2 : 3;
 
     switch (random2(retribution_options))
     {
@@ -1000,13 +1000,13 @@ static bool _feawn_retribution()
         // fall through to the elemental miscast effects.
         if (corpse_spores(BEH_HOSTILE))
         {
-            simple_god_message(" produces spores.", GOD_FEAWN);
+            simple_god_message(" produces spores.", GOD_FEDHAS);
             break;
         }
     case 1:
     {
         // Elemental miscast effects.
-        simple_god_message(" invokes the elements against you.", GOD_FEAWN);
+        simple_god_message(" invokes the elements against you.", GOD_FEDHAS);
 
         spschool_flag_type stype = SPTYP_NONE;
         switch (random2(4))
@@ -1025,7 +1025,7 @@ static bool _feawn_retribution()
             break;
         };
         MiscastEffect(&you, -god, stype, 5 + you.experience_level,
-                      random2avg(88, 3), "the enmity of Feawn");
+                      random2avg(88, 3), "the enmity of Fedhas Madash");
         break;
     }
     case 2:
@@ -1042,7 +1042,7 @@ static bool _feawn_retribution()
                        coord_def(),
                        MHITNOT,
                        MG_FORCE_PLACE,
-                       GOD_FEAWN);
+                       GOD_FEDHAS);
 
         // If we have a lot of space to work with (the circle with
         // radius 6 is substantially unoccupied), we can do something
@@ -1133,7 +1133,7 @@ bool divine_retribution(god_type god, bool no_bonus)
     case GOD_SIF_MUNA:      do_more = _sif_muna_retribution(); break;
     case GOD_ELYVILON:      do_more = _elyvilon_retribution(); break;
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
-    case GOD_FEAWN:         do_more = _feawn_retribution(); break;
+    case GOD_FEDHAS:         do_more = _fedhas_retribution(); break;
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
 
     default:

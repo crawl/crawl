@@ -82,7 +82,7 @@ bool is_feature(int feature, const coord_def& where)
         case DNGN_ALTAR_LUGONU:
         case DNGN_ALTAR_BEOGH:
         case DNGN_ALTAR_JIYVA:
-        case DNGN_ALTAR_FEAWN:
+        case DNGN_ALTAR_FEDHAS:
         case DNGN_ALTAR_CHEIBRIADOS:
             return (true);
         default:

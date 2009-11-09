@@ -481,7 +481,7 @@ dngn_altar_lugonu DNGN_ALTAR_LUGONU
 dngn_altar_beogh DNGN_ALTAR_BEOGH
 dngn_altar_jiyva DNGN_ALTAR_JIYVA
 %rim 1
-dngn_altar_feawn DNGN_ALTAR_FEAWN
+dngn_altar_fedhas DNGN_ALTAR_FEDHAS
 %rim 0
 dngn_altar DNGN_ALTAR_CHEIBRIADOS
 

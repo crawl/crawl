@@ -2775,8 +2775,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("roughly hewn altar of Beogh");
     case DNGN_ALTAR_JIYVA:
         return ("viscous altar of Jiyva");
-    case DNGN_ALTAR_FEAWN:
-        return ("blossoming altar of Feawn");
+    case DNGN_ALTAR_FEDHAS:
+        return ("blossoming altar of Fedhas");
     case DNGN_ALTAR_CHEIBRIADOS:
         return ("snail-covered altar of Cheibriados");
 

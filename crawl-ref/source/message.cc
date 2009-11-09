@@ -213,7 +213,7 @@ static char god_message_altar_colour( god_type god )
     case GOD_KIKUBAAQUDGHA:
         return (DARKGREY);
 
-    case GOD_FEAWN:
+    case GOD_FEDHAS:
         return (coinflip() ? BROWN : GREEN);
 
     case GOD_XOM:

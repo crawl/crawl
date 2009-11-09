@@ -102,9 +102,9 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
 
 bool jiyva_is_dead();
 bool remove_all_jiyva_altars();
-bool feawn_protects(const monsters * target);
-bool feawn_protects_species(int mc);
-bool feawn_neutralises(const monsters * target);
+bool fedhas_protects(const monsters * target);
+bool fedhas_protects_species(int mc);
+bool fedhas_neutralises(const monsters * target);
 bool ely_destroy_weapons();
 
 bool tso_unchivalric_attack_safe_monster(const monsters *mon);

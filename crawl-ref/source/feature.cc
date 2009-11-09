@@ -579,7 +579,7 @@ void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_FEATURE;
             break;
 
-        case DNGN_ALTAR_FEAWN:
+        case DNGN_ALTAR_FEDHAS:
             f.colour      = GREEN;
             f.dchar       = DCHAR_ALTAR;
             f.flags      |= FFT_NOTABLE;

@@ -350,11 +350,11 @@ xxxxxxxxx...xxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: shrine_feawn
+NAME: shrine_fedhas
 TAGS: shrine no_item_gen no_monster_gen
 ORIENT: encompass
 KFEAT: > = exit_portal_vault
-KFEAT: X = altar_feawn
+KFEAT: X = altar_fedhas
 MONS: plant, fungus, oklob plant
 SUBST: . = .F
 COLOUR: F = green

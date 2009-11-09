@@ -425,7 +425,7 @@ void monster_grid(bool do_updates)
             good_god_follower_attitude_change(monster);
             beogh_follower_convert(monster);
             slime_convert(monster);
-            feawn_neutralise(monster);
+            fedhas_neutralise(monster);
         }
     }
 }

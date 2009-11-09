@@ -295,7 +295,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "turn your foes to slime",
       "call upon Jiyva to remove your harmful mutations"
     },
-    // Feawn
+    // Fedhas
     { "call sunshine",
       "cause a ring of plants to grow",
       "control the weather",
@@ -402,7 +402,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "turn your foes to slime",
       "call upon Jiyva to remove your harmful mutations"
     },
-    // Feawn
+    // Fedhas
     { "call sunshine",
       "cause a ring of plants to grow",
       "control the weather",
@@ -523,7 +523,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you train your various spell casting skills");
         break;
 
-    case GOD_FEAWN:
+    case GOD_FEDHAS:
         snprintf(info, INFO_SIZE, "you promote decomposition of nearby corpses%s",
                  verbose ? " via the <w>a</w> command" : "");
         likes.push_back(info);
@@ -802,7 +802,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("you attack your fellow slimes");
         break;
 
-    case GOD_FEAWN:
+    case GOD_FEDHAS:
         dislikes.push_back("you or your allies destroy plants");
         dislikes.push_back("allied flora die");
         dislikes.push_back("you use necromancy");
@@ -1454,7 +1454,7 @@ bool is_follower(const monsters* mon)
         return (is_orcish_follower(mon));
     else if (you.religion == GOD_JIYVA)
         return (is_fellow_slime(mon));
-    else if (you.religion == GOD_FEAWN)
+    else if (you.religion == GOD_FEDHAS)
         return (is_neutral_plant(mon));
     else if (you.religion == GOD_ZIN)
         return (is_good_lawful_follower(mon));
@@ -2521,7 +2521,7 @@ std::string god_name(god_type which_god, bool long_name)
         return (long_name ? god_name_jiyva(true) + " the Shapeless"
                           : god_name_jiyva(false));
     }
-    case GOD_FEAWN:        return (long_name ? "Feawn the Arboreal" : "Feawn");
+    case GOD_FEDHAS:        return (long_name ? "Fedhas Madash" : "Fedhas");
     case GOD_CHEIBRIADOS:  return (long_name ? "Cheibriados the Contemplative" : "Cheibriados");
     case GOD_XOM:
         if (!long_name)
@@ -2675,7 +2675,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_NECROMANCY:
-            if (you.religion == GOD_FEAWN)
+            if (you.religion == GOD_FEDHAS)
             {
                 if (known)
                 {
@@ -2773,7 +2773,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
        case DID_KILL_PLANT:
        case DID_ALLY_KILLED_PLANT:
            // Piety loss but no penance for killing a plant.
-           if (you.religion == GOD_FEAWN)
+           if (you.religion == GOD_FEDHAS)
            {
                retval = true;
                piety_change = -level;
@@ -2856,10 +2856,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     break;
                 // fall through
 
-            case GOD_FEAWN:
+            case GOD_FEDHAS:
                 // double-check god because of fall-throughs from other gods
                 // Toadstools are an exception for this conduct
-                if (you.religion == GOD_FEAWN && (!feawn_protects(victim)
+                if (you.religion == GOD_FEDHAS && (!fedhas_protects(victim)
                         || victim->mons_species() == MONS_TOADSTOOL))
                     break;
                 // fall through
@@ -3962,24 +3962,24 @@ void lose_piety(int pgn)
     }
 }
 
-// Feawn worshipers are on the hook for most plants and fungi
+// Fedhas worshipers are on the hook for most plants and fungi
 //
-// If feawn worshipers kill a protected monster they lose piety,
+// If fedhas worshipers kill a protected monster they lose piety,
 // if they attack a friendly one they get penance,
 // if a friendly one dies they lose piety.
-bool feawn_protects_species(int mc)
+bool fedhas_protects_species(int mc)
 {
     return (mons_class_is_plant(mc)
             && mc != MONS_GIANT_SPORE);
 }
 
-bool feawn_protects(const monsters * target)
+bool fedhas_protects(const monsters * target)
 {
-    return target && feawn_protects_species(target->mons_species());
+    return target && fedhas_protects_species(target->mons_species());
 }
 
-// Feawn neutralises most plants and fungi
-bool feawn_neutralises(const monsters * target)
+// Fedhas neutralises most plants and fungi
+bool fedhas_neutralises(const monsters * target)
 {
     return (target && mons_is_plant(target));
 }
@@ -4178,8 +4178,8 @@ void excommunication(god_type new_god)
 
         _inc_penance(old_god, 30);
         break;
-    case GOD_FEAWN:
-        feawn_plants_hostile();
+    case GOD_FEDHAS:
+        fedhas_plants_hostile();
         _inc_penance(old_god, 30);
         divine_retribution(old_god);
         break;
@@ -4492,8 +4492,8 @@ bool god_hates_attacking_friend(god_type god, int species)
             return (mons_genus(species) == MONS_ORC);
         case GOD_JIYVA:
             return (mons_class_is_slime(species));
-        case GOD_FEAWN:
-            return feawn_protects_species(species);
+        case GOD_FEDHAS:
+            return fedhas_protects_species(species);
         default:
             return (false);
     }
@@ -4881,8 +4881,8 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
         return (false);
 
-    // Feawn hates undead, but will accept demonspawn.
-    if (which_god == GOD_FEAWN && you.holiness() == MH_UNDEAD)
+    // Fedhas hates undead, but will accept demonspawn.
+    if (which_god == GOD_FEDHAS && you.holiness() == MH_UNDEAD)
         return (false);
 
     return (true);
@@ -4993,9 +4993,9 @@ void god_pitch(god_type which_god)
         mpr("You can now call upon Trog to burn spellbooks in your "
             "surroundings.", MSGCH_GOD);
     }
-    else if (you.religion == GOD_FEAWN)
+    else if (you.religion == GOD_FEDHAS)
     {
-        mpr("You can call upon Feawn to speed up the decay of corpses.",
+        mpr("You can call upon Fedhas to speed up the decay of corpses.",
             MSGCH_GOD);
         mpr("The plants of the dungeon cease their hostilities.", MSGCH_GOD);
     }
@@ -5119,8 +5119,8 @@ bool god_hates_killing(god_type god, const monsters* mon)
             break;
     }
 
-    if (god == GOD_FEAWN)
-        retval = (feawn_protects(mon));
+    if (god == GOD_FEDHAS)
+        retval = (fedhas_protects(mon));
 
     return (retval);
 }
@@ -5331,8 +5331,8 @@ void handle_god_time()
                 lose_piety(1);
             break;
 
-        case GOD_FEAWN:
-            // Feawn's piety is stable over time but we need a case here to
+        case GOD_FEDHAS:
+            // Fedhas's piety is stable over time but we need a case here to
             // avoid the error message below.
             break;
 
@@ -5362,7 +5362,7 @@ int god_colour(god_type god) // mv - added
     case GOD_SHINING_ONE:
     case GOD_ELYVILON:
     case GOD_OKAWARU:
-    case GOD_FEAWN:
+    case GOD_FEDHAS:
         return (CYAN);
 
     case GOD_YREDELEMNUL:

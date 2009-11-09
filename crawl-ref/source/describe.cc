@@ -3289,7 +3289,7 @@ const char *divine_title[NUM_GODS][8] =
     {"Scum",               "Jelly",                 "Squelcher",                "Dissolver",
      "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"},
 
-    // Feawn -- nature theme.  Titles could use some work, but the
+    // Fedhas Madash -- nature theme.  Titles could use some work, but the
     // progression is generally from nature lover to walking disaster.
     // -cao
     {"Walking Fertiliser", "Green %s",              "Photosynthesist",          "Planter",
@@ -3656,13 +3656,13 @@ void describe_god( god_type which_god, bool give_title )
                                            ABIL_JIYVA_JELLY_SHIELD);
             }
         }
-        else if (which_god == GOD_FEAWN)
+        else if (which_god == GOD_FEDHAS)
         {
             have_any = true;
 
             std::string buf = "You can speed up decomposition.";
             _print_final_god_abil_desc(which_god, buf,
-                                       ABIL_FEAWN_FUNGAL_BLOOM);
+                                       ABIL_FEDHAS_FUNGAL_BLOOM);
             _print_final_god_abil_desc(which_god,
                                        "You can walk through plants.",
                                        ABIL_NON_ABILITY);

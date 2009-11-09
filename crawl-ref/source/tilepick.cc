@@ -2540,8 +2540,8 @@ int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
         return TILE_DNGN_ALTAR_BEOGH;
     case DNGN_ALTAR_JIYVA:
         return TILE_DNGN_ALTAR_JIYVA;
-    case DNGN_ALTAR_FEAWN:
-        return TILE_DNGN_ALTAR_FEAWN;
+    case DNGN_ALTAR_FEDHAS:
+        return TILE_DNGN_ALTAR_FEDHAS;
     case DNGN_ALTAR_CHEIBRIADOS:
         return TILE_DNGN_ALTAR_CHEIBRIADOS;
     case DNGN_FOUNTAIN_BLUE:
