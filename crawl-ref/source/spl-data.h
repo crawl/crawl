@@ -181,7 +181,7 @@
 {
     SPELL_POLYMORPH_OTHER, "Polymorph Other",
      SPTYP_TRANSMUTATION,  // removed enchantment, wasn't needed -- bwr
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -1055,7 +1055,7 @@
 {
     SPELL_CORPSE_ROT, "Corpse Rot",
      SPTYP_NECROMANCY,
-     SPFLAG_AREA | SPFLAG_NEUTRAL,
+     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_CHAOTIC,
      2,
      0,
      -1, -1,
@@ -1302,7 +1302,7 @@
 {
     SPELL_ALTER_SELF, "Alter Self",
      SPTYP_TRANSMUTATION,
-     SPFLAG_NONE,
+     SPFLAG_CHAOTIC,
      7,
      0,
      -1, -1,
@@ -1978,7 +1978,7 @@
 {
     SPELL_SUMMON_UGLY_THING, "Summon Ugly Thing",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_CHAOTIC,
      5,
      200,
      -1, -1,
@@ -2202,7 +2202,7 @@
 {
     SPELL_MIASMA, "Miasma",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
      6,
      0,
      6, 6,
@@ -2215,7 +2215,7 @@
 {
     SPELL_SUMMON_DRAKES, "Summon Drakes",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY | SPFLAG_MONSTER,
+     SPFLAG_UNHOLY | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
      6,
      0,
      -1, -1,
@@ -2332,7 +2332,7 @@
 {
     SPELL_PORKALATOR, "Porkalator",
      SPTYP_ENCHANTMENT | SPTYP_TRANSMUTATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_CHAOTIC,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,

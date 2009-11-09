@@ -21,19 +21,20 @@ enum spflag_type
     SPFLAG_HELPFUL              = 0x00010,      // TARG_FRIENDS used
     SPFLAG_NEUTRAL              = 0x00020,      // TARG_ANY used
     SPFLAG_NOT_SELF             = 0x00040,      // aborts on isMe
-    SPFLAG_UNHOLY               = 0x00080,      // counts at "unholy"
-    SPFLAG_MAPPING              = 0x00100,      // a mapping spell of some kind
-    SPFLAG_ESCAPE               = 0x00200,      // useful for running away
-    SPFLAG_RECOVERY             = 0x00400,      // healing or recovery spell
-    SPFLAG_AREA                 = 0x00800,      // area affect
-    SPFLAG_BATTLE               = 0x01000,      // a non-Conjuration spell that
+    SPFLAG_UNHOLY               = 0x00080,      // counts as "unholy"
+    SPFLAG_CHAOTIC              = 0x00100,      // counts as "chaotic"
+    SPFLAG_MAPPING              = 0x00200,      // a mapping spell of some kind
+    SPFLAG_ESCAPE               = 0x00400,      // useful for running away
+    SPFLAG_RECOVERY             = 0x00800,      // healing or recovery spell
+    SPFLAG_AREA                 = 0x01000,      // area affect
+    SPFLAG_BATTLE               = 0x02000,      // a non-Conjuration spell that
                                                 // is still a battle spell
-    SPFLAG_CARD                 = 0x02000,      // a card effect spell
-    SPFLAG_MONSTER              = 0x04000,      // monster-only spell
-    SPFLAG_INNATE               = 0x08000,      // an innate spell, even if
+    SPFLAG_CARD                 = 0x04000,      // a card effect spell
+    SPFLAG_MONSTER              = 0x08000,      // monster-only spell
+    SPFLAG_INNATE               = 0x10000,      // an innate spell, even if
                                                 // use by a priest/wizard
-    SPFLAG_NOISY                = 0x10000,      // makes noise, even if innate
-    SPFLAG_TESTING              = 0x20000       // a testing/debugging spell
+    SPFLAG_NOISY                = 0x20000,      // makes noise, even if innate
+    SPFLAG_TESTING              = 0x40000       // a testing/debugging spell
 };
 
 enum spret_type
