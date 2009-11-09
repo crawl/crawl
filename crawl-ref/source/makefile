@@ -628,7 +628,7 @@ test:
 # This should eliminate an annoying need to use 'make clean' every time.
 #
 
-TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))
+TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' for highlights)
 
 .cflags: .force-cflags
 	@FLAGS='$(TRACK_CFLAGS)'; \
