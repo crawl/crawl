@@ -343,6 +343,7 @@ public:
     bool good_neutral() const;
     bool strict_neutral() const;
     bool wont_attack() const;
+    bool pacified() const;
 
     bool has_spells() const;
     bool has_spell(spell_type spell) const;

@@ -1951,11 +1951,6 @@ int mons_base_damage_brand(const monsters *m)
     return (SPWPN_NORMAL);
 }
 
-bool mons_is_pacified(const monsters *m)
-{
-    return (m->attitude == ATT_NEUTRAL && testbits(m->flags, MF_GOT_HALF_XP));
-}
-
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
     return (fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL || fr == ATT_STRICT_NEUTRAL);

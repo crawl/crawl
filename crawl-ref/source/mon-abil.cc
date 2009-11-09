@@ -1181,7 +1181,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         // confused, fleeing, or leaving the level.
         if (monster->has_ench(ENCH_CONFUSION)
             || mons_is_fleeing(monster)
-            || mons_is_pacified(monster)
+            || monster->pacified()
             || monster->friendly()
             || !player_can_hear(monster->pos()))
         {
@@ -1283,7 +1283,7 @@ bool _eyeball_will_use_ability (monsters *monster)
     return (coinflip()
         && !mons_is_wandering(monster)
         && !mons_is_fleeing(monster)
-        && !mons_is_pacified(monster)
+        && !monster->pacified()
         && !player_or_mon_in_sanct(monster));
 }
 

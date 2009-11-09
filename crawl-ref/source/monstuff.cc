@@ -1967,7 +1967,7 @@ int monster_die(monsters *monster, killer_type killer,
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
-            if (mons_is_pacified(monster) || !monster->needs_transit())
+            if (monster->pacified() || !monster->needs_transit())
             {
                 // A banished monster that doesn't go on the transit list
                 // loses all items.
@@ -2899,7 +2899,7 @@ static void _mons_indicate_level_exit(const monsters *mon)
 
 void make_mons_leave_level(monsters *mon)
 {
-    if (mons_is_pacified(mon))
+    if (mon->pacified())
     {
         if (you.can_see(mon))
             _mons_indicate_level_exit(mon);

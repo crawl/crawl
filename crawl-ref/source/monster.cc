@@ -2871,6 +2871,11 @@ bool monsters::wont_attack() const
     return (friendly() || good_neutral() || strict_neutral());
 }
 
+bool monsters::pacified() const
+{
+    return (attitude == ATT_NEUTRAL && testbits(flags, MF_GOT_HALF_XP));
+}
+
 int monsters::shield_bonus() const
 {
     const item_def *shld = const_cast<monsters*>(this)->shield();
@@ -3972,7 +3977,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         }
 
         // Pacified monsters leave the level when they submerge.
-        if (mons_is_pacified(this))
+        if (pacified())
             make_mons_leave_level(this);
         break;
 
@@ -5480,7 +5485,7 @@ bool monsters::do_shaft()
 
     // If a pacified monster is leaving the level via a shaft trap, and
     // has reached its goal, handle it here.
-    if (!mons_is_pacified(this))
+    if (!pacified())
         set_transit(lev);
 
     const bool reveal =

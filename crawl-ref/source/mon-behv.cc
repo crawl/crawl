@@ -1105,7 +1105,7 @@ void handle_behaviour(monsters *mon)
     bool isSmart    = (mons_intel(mon) > I_ANIMAL);
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isMobile   = !mons_is_stationary(mon);
-    bool isPacified = mons_is_pacified(mon);
+    bool isPacified = mon->pacified();
     bool patrolling = mon->is_patrolling();
     static std::vector<level_exit> e;
     static int                     e_index = -1;
@@ -1848,7 +1848,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             break;
 
         // Pacified monsters shouldn't change their behaviour.
-        if (mons_is_pacified(mon))
+        if (mon->pacified())
             break;
 
         // Just set behaviour... foe doesn't change.
@@ -1898,7 +1898,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
 
     const bool wasLurking =
         (old_behaviour == BEH_LURK && !mons_is_lurking(mon));
-    const bool isPacified = mons_is_pacified(mon);
+    const bool isPacified = mon->pacified();
 
     if ((wasLurking || isPacified)
         && (event == ME_DISTURB || event == ME_ALERT || event == ME_EVAL))

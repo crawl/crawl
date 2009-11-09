@@ -825,7 +825,7 @@ static bool _handle_scroll(monsters *monster)
         if (!monster->has_ench(ENCH_TP))
         {
             if (monster->caught() || mons_is_fleeing(monster)
-                || mons_is_pacified(monster))
+                || monster->pacified())
             {
                 simple_monster_message(monster, " reads a scroll.");
                 monster_teleport(monster, false);
@@ -837,7 +837,7 @@ static bool _handle_scroll(monsters *monster)
 
     case SCR_BLINKING:
         if (monster->caught() || mons_is_fleeing(monster)
-            || mons_is_pacified(monster))
+            || monster->pacified())
         {
             if (mons_near(monster))
             {
@@ -1484,7 +1484,7 @@ static bool _handle_throw(monsters *monster, bolt & beem)
 
     // Greatly lowered chances if the monster is fleeing or pacified and
     // leaving the level.
-    if ((mons_is_fleeing(monster) || mons_is_pacified(monster))
+    if ((mons_is_fleeing(monster) || monster->pacified())
         && !one_chance_in(8))
     {
         return (false);
@@ -2557,7 +2557,7 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
     {
         if (mons_is_fleeing(monster) && intel >= I_NORMAL
-            || mons_is_pacified(monster))
+            || monster->pacified())
         {
             return (true);
         }

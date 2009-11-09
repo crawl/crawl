@@ -1030,7 +1030,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                                  SPELL_MAJOR_HEALING : SPELL_MINOR_HEALING;
                 finalAnswer = true;
             }
-            else if (mons_is_fleeing(monster) || mons_is_pacified(monster))
+            else if (mons_is_fleeing(monster) || monster->pacified())
             {
                 // Since the player isn't around, we'll extend the monster's
                 // normal choices to include the self-enchant slot.
@@ -1074,7 +1074,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
             // get here... even if the monster is on its last HP.  That
             // way we don't have to worry about monsters infinitely casting
             // Healing on themselves (e.g. orc high priests).
-            if ((mons_is_fleeing(monster) || mons_is_pacified(monster))
+            if ((mons_is_fleeing(monster) || monster->pacified())
                 && ms_low_hitpoint_cast(monster, hspell_pass[5]))
             {
                 spell_cast = hspell_pass[5];
@@ -1141,7 +1141,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                 // Setup spell - monsters that are fleeing or pacified
                 // and leaving the level will always try to choose their
                 // emergency spell.
-                if (mons_is_fleeing(monster) || mons_is_pacified(monster))
+                if (mons_is_fleeing(monster) || monster->pacified())
                 {
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
                                                    : hspell_pass[5]);
@@ -1149,7 +1149,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                     // Pacified monsters leaving the level won't choose
                     // emergency spells harmful to the area.
                     if (spell_cast != SPELL_NO_SPELL
-                        && mons_is_pacified(monster)
+                        && monster->pacified()
                         && spell_harms_area(spell_cast))
                     {
                         spell_cast = SPELL_NO_SPELL;
