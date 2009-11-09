@@ -6,6 +6,36 @@
 #    (if something breaks, blame him.)
 #
 
+# Typical targets:
+#    make
+#    make wizard
+#    make debug
+#    make install
+#    make wizard install
+#    make debug install
+#    -- note, unlike most programs, you need to specify build type when
+#       installing even if you just built it.
+# Typical parameters:
+#    TILES         -- set to anything to enable tiles build
+#
+#    CROSSHOST     -- target system, eg, i386-pc-msdosdjgpp or i586-mingw32msvc
+#
+#    prefix        -- installation base.  Specify eg. /usr/local on Unix systems.
+#    DESTDIR       -- installation staging area (the dir you intend to pack)
+#    DATADIR       -- place to hold immutable files.  Can be either relative to
+#                     "prefix" or absolute.
+#    SAVEDIR       -- place to hold writeable data (saves, database, morgue
+#                     dumps).  Can be relative to "prefix" or absolute.
+#       Layout examples:
+#         prefix=~/crawl DATADIR=data/ SAVEDIR=saves/
+#                  -- everything under ~/crawl
+#         prefix=/usr/local
+#                  -- a typical multiuser installation
+#
+#    V             -- set to anything to enable verbose build
+#
+#    USE_ICC       -- set to use Intel's compiler
+
 GAME = crawl
 
 #
