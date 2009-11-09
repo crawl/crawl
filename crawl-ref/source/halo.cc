@@ -32,7 +32,7 @@ int player::halo_radius() const
 
 int monsters::halo_radius() const
 {
-    if (holiness() == MH_HOLY)
+    if (is_holy())
         return (2);
     else
         return (0);

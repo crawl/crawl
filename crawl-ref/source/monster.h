@@ -297,6 +297,7 @@ public:
     int mons_species() const;
 
     mon_holy_type holiness() const;
+    bool is_holy() const;
     bool is_unholy() const;
     bool is_evil() const;
     bool is_chaotic() const;
@@ -347,6 +348,7 @@ public:
 
     bool has_spells() const;
     bool has_spell(spell_type spell) const;
+    bool has_holy_spell() const;
     bool has_evil_spell() const;
     bool has_chaotic_spell() const;
 

@@ -6364,6 +6364,14 @@ mon_holy_type player::holiness() const
     return (MH_NATURAL);
 }
 
+bool player::is_holy() const
+{
+    if (is_good_god(religion))
+        return (true);
+
+    return (false);
+}
+
 bool player::is_unholy() const
 {
     const mon_holy_type holi = holiness();
@@ -6482,7 +6490,7 @@ int player::res_holy_energy(const actor *attacker) const
     if (is_unholy())
         return (-2);
 
-    if (is_good_god(religion) || holiness() == MH_HOLY)
+    if (is_holy())
         return (1);
 
     return (0);

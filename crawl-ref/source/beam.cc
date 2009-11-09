@@ -5856,7 +5856,7 @@ bool bolt::nasty_to(const monsters *mon) const
 
     // No charming holy beings!
     if (flavour == BEAM_CHARM)
-        return (mon->holiness() == MH_HOLY);
+        return (mon->is_holy());
 
     // Friendly and good neutral monsters don't mind being teleported.
     if (flavour == BEAM_TELEPORT)

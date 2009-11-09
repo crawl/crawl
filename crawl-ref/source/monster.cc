@@ -638,13 +638,12 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
 
         // Holy monsters and monsters that are gifts of good gods won't
         // use evil weapons.
-        if ((holiness() == MH_HOLY || is_good_god(god)) && is_evil_item(item))
+        if ((is_holy() || is_good_god(god)) && is_evil_item(item))
             return (false);
 
         // Holy monsters that aren't gifts of chaotic gods and monsters
         // that are gifts of good gods won't use chaotic weapons.
-        if (((holiness() == MH_HOLY && !is_chaotic_god(god))
-                || is_good_god(god))
+        if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
             && is_chaotic_item(item))
         {
             return (false);
@@ -1691,7 +1690,7 @@ bool monsters::pickup_wand(item_def &item, int near)
 
     // Holy monsters and worshippers of good gods won't pick up evil
     // wands.
-    if ((holiness() == MH_HOLY || is_good_god(god)) && is_evil_item(item))
+    if ((is_holy() || is_good_god(god)) && is_evil_item(item))
         return (false);
 
     // If a monster already has a charged wand, don't bother.
@@ -1719,7 +1718,7 @@ bool monsters::pickup_scroll(item_def &item, int near)
 
     // Holy monsters and worshippers of good gods won't pick up evil
     // scrolls.
-    if ((holiness() == MH_HOLY || is_good_god(god)) && is_evil_item(item))
+    if ((is_holy() || is_good_god(god)) && is_evil_item(item))
         return (false);
 
     return (pickup(item, MSLOT_SCROLL, near));
@@ -1731,7 +1730,7 @@ bool monsters::pickup_potion(item_def &item, int near)
     // them.
     const potion_type ptype = static_cast<potion_type>(item.sub_type);
 
-    if (!this->can_drink_potion(ptype))
+    if (!can_drink_potion(ptype))
         return (false);
 
     return (pickup(item, MSLOT_POTION, near));
@@ -1750,7 +1749,7 @@ bool monsters::pickup_misc(item_def &item, int near)
 
     // Holy monsters and worshippers of good gods won't pick up evil
     // miscellaneous items.
-    if ((holiness() == MH_HOLY || is_good_god(god)) && is_evil_item(item))
+    if ((is_holy() || is_good_god(god)) && is_evil_item(item))
         return (false);
 
     return (pickup(item, MSLOT_MISCELLANY, near));
@@ -2746,6 +2745,15 @@ bool monsters::has_spell(spell_type spell) const
     return (false);
 }
 
+bool monsters::has_holy_spell() const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (is_holy_spell(spells[i]))
+            return (true);
+
+    return (false);
+}
+
 bool monsters::has_evil_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -2942,6 +2950,21 @@ mon_holy_type monsters::holiness() const
         return (MH_UNDEAD);
 
     return (mons_class_holiness(type));
+}
+
+bool monsters::is_holy() const
+{
+    if (holiness() == MH_HOLY)
+        return (true);
+
+    // Assume that all unknown gods (GOD_NAMELESS) are not holy.
+    if (is_priest() && is_good_god(god))
+        return (true);
+
+    if (has_holy_spell())
+        return (true);
+
+    return (false);
 }
 
 bool monsters::is_unholy() const
@@ -3219,8 +3242,8 @@ int monsters::res_holy_energy(const actor *attacker) const
     if (is_unholy())
         return (-2);
 
-    if (is_good_god(god)
-        || holiness() == MH_HOLY
+    if (is_holy()
+        || is_good_god(god)
         || neutral()
         || is_unchivalric_attack(attacker, this)
         || is_good_god(you.religion) && is_follower(this))

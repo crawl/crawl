@@ -71,7 +71,7 @@ static bool _recite_mons_useless(const monsters *mon)
     const mon_holy_type holiness = mon->holiness();
 
     return (mons_intel(mon) < I_NORMAL
-            || holiness != MH_HOLY
+            || !mon->is_holy()
                && holiness != MH_NATURAL
                && holiness != MH_UNDEAD
                && holiness != MH_DEMONIC
@@ -103,7 +103,7 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
     int resist;
     const mon_holy_type holiness = mon->holiness();
 
-    if (holiness == MH_HOLY)
+    if (mon->is_holy())
         resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
     else
     {
@@ -197,7 +197,7 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
             simple_monster_message(mon, " freezes in fright!");
             break;
         default:
-            if (holiness == MH_HOLY)
+            if (mon->is_holy())
                 good_god_holy_attitude_change(mon);
             else
             {

@@ -290,7 +290,7 @@ static bool _mon_on_interesting_grid(monsters *mon)
         // else fall through
     case DNGN_ALTAR_ZIN:
     case DNGN_ALTAR_SHINING_ONE:
-        return (mon->holiness() == MH_HOLY);
+        return (mon->is_holy());
 
     // Orcs will tend to patrol around altars to Beogh, and guard the
     // stairway from and to the Orcish Mines.

@@ -1666,7 +1666,7 @@ static int _tso_blessing_extend_stay(monsters* mon)
     // [ds] Disabling permanence for balance reasons, but extending
     // duration increase.  These numbers are tenths of a player turn.
     // Holy monsters get a much bigger boost than random beasties.
-    const int base_increase = mon->holiness() == MH_HOLY ? 1100 : 500;
+    const int base_increase = mon->is_holy() ? 1100 : 500;
     const int increase = base_increase + random2(base_increase);
     return _increase_ench_duration(mon, abj, increase);
 }
@@ -3545,7 +3545,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
         _first_attack_was_unchivalric[midx] = true;
     }
 
-    if (mon->holiness() == MH_HOLY)
+    if (mon->is_holy())
         conduct[2].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
 
     _first_attack_conduct[midx] = false;
@@ -5432,7 +5432,7 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon)
     const mon_holy_type holiness = mon->holiness();
     return (mons_intel(mon) < I_NORMAL
             || mon->is_evil()
-            || holiness != MH_NATURAL && holiness != MH_HOLY);
+            || !mon->is_holy() && holiness != MH_NATURAL);
 }
 
 int get_tension(god_type god, bool count_travelling)

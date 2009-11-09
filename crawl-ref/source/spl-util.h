@@ -25,7 +25,7 @@ enum spschool_flag_type
   SPTYP_POISON         = 1<<9,
   SPTYP_EARTH          = 1<<10,
   SPTYP_AIR            = 1<<11,
-  SPTYP_HOLY           = 1<<12, //jmf: moved to accomodate "random" miscast f/x
+  SPTYP_HOLY           = 1<<12, //jmf: moved to accommodate "random" miscast f/x
   SPTYP_LAST_EXPONENT  = 12,    //jmf: ``NUM_SPELL_TYPES'' kinda useless
   NUM_SPELL_TYPES      = 14,
   SPTYP_RANDOM         = 1<<14

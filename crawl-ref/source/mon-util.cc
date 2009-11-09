@@ -425,7 +425,7 @@ int mons_unusable_items(const monsters *mon)
 {
     int ret = 0;
 
-    if (mon->holiness() == MH_HOLY)
+    if (mon->is_holy())
         ret += _scan_mon_inv_items(mon, is_evil_item) > 0;
     else if (mon->is_unholy())
     {

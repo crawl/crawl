@@ -652,8 +652,8 @@ static bool _ely_protect_ally(monsters *monster)
     if (you.religion != GOD_ELYVILON)
         return (false);
 
-    if (monster->holiness() != MH_NATURAL
-            && monster->holiness() != MH_HOLY
+    if (!monster->is_holy()
+            && monster->holiness() != MH_NATURAL
         || !monster->friendly()
         || !you.can_see(monster) // for simplicity
         || !one_chance_in(20))
@@ -1666,7 +1666,7 @@ int monster_die(monsters *monster, killer_type killer,
                 }
 
                 // Holy kills are always noticed.
-                if (targ_holy == MH_HOLY)
+                if (monster->is_holy())
                 {
                     did_god_conduct(DID_KILL_HOLY, monster->hit_dice,
                                     true, monster);
@@ -1873,7 +1873,7 @@ int monster_die(monsters *monster, killer_type killer,
                 }
 
                 // Holy kills are always noticed.
-                if (targ_holy == MH_HOLY)
+                if (monster->is_holy())
                 {
                     if (killer_holy == MH_UNDEAD)
                     {
@@ -3942,7 +3942,7 @@ std::string summoned_poof_msg(const monsters* monster, bool plural)
             msg = "degenerate%s into a cloud of primal chaos";
         }
 
-        if (monster->holiness() == MH_HOLY
+        if (monster->is_holy()
             && summon_type != SPELL_SHADOW_CREATURES
             && summon_type != MON_SUMM_CHAOS)
         {

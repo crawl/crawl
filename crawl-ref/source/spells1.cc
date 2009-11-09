@@ -706,10 +706,10 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
 
     const mon_holy_type holiness = mon->holiness();
 
-    if (holiness != MH_HOLY
-        && holiness != MH_NATURAL
+    if (!mon->is_holy()
         && holiness != MH_UNDEAD
-        && holiness != MH_DEMONIC)
+        && holiness != MH_DEMONIC
+        && holiness != MH_NATURAL)
     {
         return (false);
     }
@@ -726,7 +726,7 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
 
     int divisor = 3;
 
-    if (holiness == MH_HOLY)
+    if (mon->is_holy())
         divisor--;
     else if (holiness == MH_UNDEAD)
         divisor++;
@@ -818,7 +818,7 @@ static int _healing_spell(int healed, bool divine_ability,
     {
         did_something = true;
 
-        const bool is_holy     = monster->holiness() == MH_HOLY;
+        const bool is_holy     = monster->is_holy();
         const bool is_summoned = monster->is_summoned();
 
         int pgain = 0;
