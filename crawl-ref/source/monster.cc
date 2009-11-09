@@ -5580,7 +5580,7 @@ void monsters::lose_energy(energy_use_type et, int div, int mult)
 
 bool monsters::can_drink_potion(potion_type ptype) const
 {
-    if (mons_class_is_stationary(this->type))
+    if (mons_class_is_stationary(type))
         return (false);
 
     if (mons_itemuse(this) < MONUSE_STARTING_EQUIPMENT)
@@ -5588,7 +5588,8 @@ bool monsters::can_drink_potion(potion_type ptype) const
 
     // These monsters cannot drink.
     if (mons_is_skeletal(type) || mons_is_insubstantial(type)
-        || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY)
+        || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY
+        || type == MONS_GASTRONOK)
     {
         return (false);
     }
