@@ -263,6 +263,7 @@ bool is_chaotic_spell(spell_type spell, god_type god)
     UNUSED(god);
 
     return (spell == SPELL_POLYMORPH_OTHER
+            || spell == SPELL_CORPSE_ROT
             || spell == SPELL_ALTER_SELF
             || spell == SPELL_SUMMON_UGLY_THING
             || spell == SPELL_MIASMA
