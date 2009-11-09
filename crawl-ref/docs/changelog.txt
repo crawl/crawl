@@ -18,7 +18,7 @@ Stone Soup 0.6
 * Armour acquirement is more likely to fill secondary slots.
 * Book acquirement doesn't give manuals to spellcasting specialists anymore.
 * Added wands as an acquirement option.
-* Detected secret doors are still unknown to stupid monsters.
+* Detected secret doors now remain unknown to stupid monsters.
 * Let toadstools grow on corpses.
 * Hungry ghosts eat corpses.
 * All spectral things can use stairs again.
