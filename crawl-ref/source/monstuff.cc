@@ -2019,6 +2019,8 @@ int monster_die(monsters *monster, killer_type killer,
         // Now that Boris is dead, he's a valid target for monster
         // creation again. -- bwr
         you.unique_creatures[monster->type] = false;
+        // And his vault can  be placed again.
+        you.uniq_map_names.erase("uniq_boris");
     }
     else if (monster->type == MONS_KIRKE && !in_transit)
     {

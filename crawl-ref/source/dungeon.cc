@@ -3330,131 +3330,6 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     return (true);
 }
 
-// Doesn't include Polyphemus or Ilsuiw (only appear in the Shoals),
-// Dissolution (Slime), Murray (Hell), Khufu(Tomb/Crypt) or Tiamat (Zot).
-// NOTE: The Lernaean hydra should *never* be randomly generated.
-//       The Royal jelly likewise is only placed via Slime end vault.
-//       Dowan is automatically placed together with Duvessa.
-static monster_type _choose_unique_by_depth(int step)
-{
-    int ret;
-    switch (step)
-    {
-    case 0: // depth <= 3
-        ret = random_choose(MONS_TERENCE, MONS_JESSICA, MONS_IJYB,
-                            MONS_SIGMUND, -1);
-        break;
-    case 1: // depth <= 7
-        ret = random_choose(MONS_IJYB, MONS_SIGMUND, MONS_BLORK_THE_ORC,
-                            MONS_EDMUND, MONS_PRINCE_RIBBIT, MONS_PURGY,
-                            MONS_MENKAURE, MONS_DUVESSA, MONS_PIKEL, -1);
-        break;
-    case 2: // depth <= 9
-        ret = random_choose(MONS_BLORK_THE_ORC, MONS_EDMUND, MONS_PSYCHE,
-                            MONS_EROLCHA, MONS_PRINCE_RIBBIT, MONS_GRUM,
-                            MONS_GASTRONOK, MONS_MAURICE, MONS_PIKEL, -1);
-        break;
-    case 3: // depth <= 13
-        ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,
-                            MONS_MICHAEL, MONS_EUSTACHIO, MONS_SONJA, MONS_GRUM,
-                            MONS_JOSEPH, MONS_ERICA, MONS_JOSEPHINE, MONS_JOZEF,
-                            MONS_HAROLD, MONS_NORBERT, MONS_GASTRONOK,
-                            MONS_MAURICE, -1);
-        break;
-    case 4: // depth <= 16
-        ret = random_choose(MONS_URUG, MONS_MICHAEL, MONS_EUSTACHIO, MONS_SONJA,
-                            MONS_SNORG, MONS_ERICA, MONS_JOSEPHINE, MONS_HAROLD,
-                            MONS_ROXANNE, MONS_RUPERT, MONS_NORBERT, MONS_JOZEF,
-                            MONS_AZRAEL, MONS_NESSOS, MONS_AGNES, MONS_NIKOLA,
-                            MONS_MAUD, MONS_LOUISE, MONS_NERGALLE, MONS_KIRKE, -1);
-        break;
-    case 5: // depth <= 19
-        ret = random_choose(MONS_SNORG, MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
-                            MONS_RUPERT, MONS_WAYNE, MONS_DUANE, MONS_NORRIS,
-                            MONS_AZRAEL, MONS_NESSOS, MONS_NERGALLE, MONS_NIKOLA,
-                            MONS_ROXANNE, MONS_SAINT_ROKA, MONS_KIRKE, -1);
-        break;
-    case 6: // depth > 19
-    default:
-        ret = random_choose(MONS_FRANCIS, MONS_FRANCES, MONS_WAYNE, MONS_DUANE,
-                            MONS_XTAHUA, MONS_NORRIS, MONS_FREDERICK, MONS_NIKOLA,
-                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, MONS_AIZUL,
-                            -1);
-    }
-
-    return static_cast<monster_type>(ret);
-}
-
-static monster_type _pick_unique(int lev)
-{
-    if (player_in_branch(BRANCH_SLIME_PITS))
-    {
-        // Only allow Dissolution in the Slime Pits.
-        if (player_branch_depth() > 1 && one_chance_in(3))
-            return MONS_DISSOLUTION;
-
-        return MONS_NO_MONSTER;
-    }
-    else if (player_in_branch(BRANCH_LAIR))
-    {
-        if (player_branch_depth() > 5 && one_chance_in(3))
-            return MONS_GASTRONOK;
-        else if (player_branch_depth() < 3 && one_chance_in(4))
-            return MONS_PRINCE_RIBBIT;
-        else
-            return MONS_NO_MONSTER;
-    }
-    else if (player_in_branch(BRANCH_SNAKE_PIT))
-    {
-        if (player_branch_depth() > 3 && coinflip())
-            return MONS_AIZUL;
-    }
-
-    // First, pick generic unique depending on depth.
-    int which_unique =
-        ((lev <=  3) ? _choose_unique_by_depth(0) :
-         (lev <=  7) ? _choose_unique_by_depth(1) :
-         (lev <=  9) ? _choose_unique_by_depth(2) :
-         (lev <= 13) ? _choose_unique_by_depth(3) :
-         (lev <= 16) ? _choose_unique_by_depth(4) :
-         (lev <= 19) ? _choose_unique_by_depth(5) :
-                       _choose_unique_by_depth(6));
-
-    // Azrael may not be created in the Swamp or Shoals.
-    if (which_unique == MONS_AZRAEL
-        && (player_in_branch(BRANCH_SWAMP) || player_in_branch(BRANCH_SHOALS)))
-    {
-        return MONS_NO_MONSTER;
-    }
-
-    // If applicable, replace it with one of the uniques appearing
-    // only in some branches.
-    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-    {
-        if (one_chance_in(7))
-            which_unique = MONS_MURRAY;
-    }
-    else if (player_in_branch(BRANCH_HALL_OF_ZOT))
-    {
-        if (one_chance_in(3))
-            which_unique = MONS_TIAMAT;
-    }
-    else if (player_in_branch(BRANCH_SHOALS))
-    {
-        if (player_branch_depth() > 1 && coinflip())
-            which_unique = MONS_POLYPHEMUS;
-        else if (player_branch_depth() > 2 && coinflip())
-            which_unique = MONS_ILSUIW;
-    }
-    else if (player_in_branch(BRANCH_TOMB) || player_in_branch(BRANCH_CRYPT))
-    {
-        if (one_chance_in(10))
-            which_unique = MONS_KHUFU;
-    }
-
-    return static_cast<monster_type>(which_unique);
-}
-
 // Place uniques on the level.
 // There is a hidden dependency on the player's actual
 // location (through your_branch()).
@@ -3468,48 +3343,48 @@ static int _place_uniques(int level_number, char level_type)
         return 0;
     }
 
+#ifdef DEBUG_UNIQUE_PLACEMENT
+    FILE *ostat = fopen("unique_placement.log", "a");
+    fprintf(ostat, "--- Looking to place uniques on: Level %d of %s ---\n", level_number, your_branch().shortname);
+#endif
+
     int num_placed = 0;
 
-    while (one_chance_in(3))
+    while (coinflip())
     {
-        monster_type which_unique = MONS_NO_MONSTER;
+        const map_def *uniq_map = random_map_for_tag("place_unique", true);
 
-        while (which_unique == MONS_NO_MONSTER
-               || you.unique_creatures[which_unique])
+        if (!uniq_map)
         {
-            which_unique = _pick_unique(level_number);
-
-            // Sometimes, we just quit if a unique is already placed.
-            if (which_unique == MONS_NO_MONSTER
-                || you.unique_creatures[which_unique] && !one_chance_in(3))
-            {
-                which_unique = MONS_NO_MONSTER;
-                break;
-            }
-        }
-
-        // Usually, we'll have quit after a few tries. Make sure we have
-        // a valid unique.
-        if (which_unique == MONS_NO_MONSTER)
-            break;
-
-        mgen_data mg(which_unique, BEH_SLEEP, 0, 0,
-                     coord_def(), MHITNOT, MG_PERMIT_BANDS,
-                     GOD_NO_GOD, MONS_NO_MONSTER, 0, BLACK,
-                     level_number, PROX_ANYWHERE);
-        mg.map_mask = MMT_NO_MONS;
-
-        const int mindex = place_monster(mg);
-        if (mindex != -1)
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Placed %s",
-                 menv[mindex].name(DESC_NOCAP_A).c_str());
+#ifdef DEBUG_UNIQUE_PLACEMENT
+            fprintf(ostat, "Dummy balance or no uniques left.\n");
 #endif
-            ++num_placed;
+            break;
         }
+
+        if (dgn_place_map(uniq_map, true, false))
+        {
+            num_placed++;
+#ifdef DEBUG_UNIQUE_PLACEMENT
+            fprintf(ostat, "Placed valid unique map: %s.\n", uniq_map->name.c_str());
+#endif
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Placed %s.",
+                 uniq_map->name.c_str());
+        }
+#endif
+#ifdef DEBUG_UNIQUE_PLACEMENT
+        else
+        {
+            fprintf(ostat, "Didn't place valid map: %s\n", uniq_map->name.c_str());
+        }
+#endif
     }
 
+#ifdef DEBUG_UNIQUE_PLACEMENT
+    fprintf(ostat, "--- Finished this set, placed %d uniques.\n", num_placed);
+    fclose(ostat);
+#endif
     return num_placed;
 }
 

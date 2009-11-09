@@ -506,6 +506,7 @@ bool map_selector::accept(const map_def &mapdef) const
         return (mapdef.is_minivault() == mini
                 && mapdef.place == place
                 && !mapdef.has_tag("layout")
+                && !mapdef.has_tag("place_unique")
                 && map_matches_layout_type(mapdef)
                 && vault_unforbidden(mapdef));
     case DEPTH:
@@ -520,6 +521,7 @@ bool map_selector::accept(const map_def &mapdef) const
                 && !mapdef.has_tag("unrand")
                 && !mapdef.has_tag("bazaar")
                 && !mapdef.has_tag("layout")
+                && !mapdef.has_tag("place_unique")
                 && (!check_layout || map_matches_layout_type(mapdef))
                 && vault_unforbidden(mapdef));
     case TAG:
