@@ -18,6 +18,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "map_knowledge.h"
+#include "food.h"
 #include "fprop.h"
 #include "fight.h"
 #include "itemname.h"
@@ -2181,6 +2182,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
     int eaten = 0;
     bool eaten_net = false;
     bool death_ooze_ate_good = false;
+    bool death_ooze_ate_corpse = false;
 
     for (stack_iterator si(monster->pos());
          si && eaten < max_eat && hps_changed < 50; ++si)
@@ -2199,6 +2201,11 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
         death_ooze_ate_good = (monster->type == MONS_DEATH_OOZE
                                && (get_weapon_brand(*si) == SPWPN_HOLY_WRATH
                                    || get_ammo_brand(*si) == SPMSL_SILVER));
+        death_ooze_ate_corpse = (monster->type == MONS_DEATH_OOZE
+                                 && ((si->base_type == OBJ_CORPSES
+                                      && si->sub_type == CORPSE_BODY)
+                                    || si->base_type == OBJ_FOOD
+                                      && si->sub_type == FOOD_CHUNK));
 
         if (si->base_type != OBJ_GOLD)
         {
@@ -2315,6 +2322,12 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
         {
             mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
                  nearby ? "" : " distant");
+        }
+
+        if (death_ooze_ate_corpse)
+        {
+            place_cloud ( CLOUD_MIASMA, monster->pos(),
+                          4 + random2(5), monster->kill_alignment() );
         }
 
         if (death_ooze_ate_good)
