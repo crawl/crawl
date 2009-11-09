@@ -253,22 +253,21 @@ SHUFFLE: YZ
 KFEAT: Y = altar_okawaru
 KFEAT: Z = altar_trog
 MONS: moth of wrath
-MONS: orc warrior; nothing w:15 / ogre; nothing w:15 / ogre / orc warrior
-NSUBST: M = 1:2 / *:.
+MONS: orc warrior; nothing w:15 / orc warrior / orc; nothing
 ITEM: any weapon
-NSUBST: . = 8:d / *:.
+NSUBST: M = 8:d / *:.
 : shrine_milestone(_G)
 MAP
 xxxxxxxxxxxxxxxxxxx
-xxxxxxxx...xxxxxxxx
-xxxxxx..MMM..xxxxxx
-xxxxx..YMM.Z...xxxxx
-xxxxx.M..o....xxxxx
+xxxxxxxxMMMxxxxxxxx
+xxxxxxMMM2MMMxxxxxx
+xxxxxMMY...ZMMxxxxx
+xxxxx.........xxxxx
 xxxx....ooo....xxxx
 xxxx...oo1oo...xxxx
 xxxx....ooo....xxxx
-xxxx.....o....xxxxx
-xxxxx..A...>..xxxxx
+xxxx..........xxxxx
+xxxxx...A.>...xxxxx
 xxxxxx.......xxxxxx
 xxxxxxxx...xxxxxxxx
 xxxxxxxxxxxxxxxxxxx
