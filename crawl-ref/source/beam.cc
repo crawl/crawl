@@ -2602,8 +2602,6 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
     if (m_attempted)
         *m_attempted = 0;
 
-    viewwindow(false, false);
-
     pow = std::min(pow, 200);
 
     const kill_category kc = (origin == MHITYOU ? KC_YOU : KC_OTHER);
