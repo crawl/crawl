@@ -210,8 +210,14 @@ function Triggerable:activate(marker)
   end
 
   for _, trig in ipairs(self.triggerers) do
-    for _, slave_marker in ipairs(slaves) do
-      trig:activate(self, marker, slave_marker:pos())
+    local et = dgn.dgn_event_type(trig.type)
+
+    if (dgn.dgn_event_is_position(et)) then
+      for _, slave_marker in ipairs(slaves) do
+        trig:activate(self, marker, slave_marker:pos())
+      end
+    else
+      trig:activate(self, marker)
     end
   end
   self.activating = false
@@ -299,7 +305,11 @@ function Triggerable:do_trigger(triggerer, marker, ev)
         -- simply stop being slaved to itself.
         self.props.slaved_to = nil
         if self:property("listen_to_slaves") ~= "" then
-          triggerer:remove(self, slave_marker)
+          local et = dgn.dgn_event_type(triggerer.type)
+
+          if (dgn.dgn_event_is_position(et)) then
+            triggerer:remove(self, slave_marker)
+          end
         end
       else
         triggerer:remove(self, slave_marker)
