@@ -2667,11 +2667,11 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     // piety.
     if (mon != -1)
     {
-        // Override the weapon
-        ASSERT( menv[mon].weapon() != NULL );
+        // Override the weapon.
+        ASSERT(menv[mon].weapon() != NULL);
         item_def& wpn(*menv[mon].weapon());
 
-        // FIXME Mega-hack (breaks encapsulation too)
+        // FIXME: Mega-hack (breaks encapsulation too).
         wpn.flags &= ~ISFLAG_RACIAL_MASK;
 
         if (power_level == 0)
@@ -2679,15 +2679,17 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
             // Wimpy, negative-enchantment weapon.
             wpn.plus  = -random2(4);
             wpn.plus2 = -random2(4);
-            wpn.sub_type = (coinflip() ? WPN_DAGGER : WPN_CLUB );
+            wpn.sub_type = (coinflip() ? WPN_DAGGER : WPN_CLUB);
+
             set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
         }
         else if (power_level == 1)
         {
-            // This is getting good...
+            // This is getting good.
             wpn.plus  = random2(4) - 1;
             wpn.plus2 = random2(4) - 1;
             wpn.sub_type = (coinflip() ? WPN_LONG_SWORD : WPN_HAND_AXE);
+
             if (coinflip())
             {
                 set_item_ego_type(wpn, OBJ_WEAPONS,
@@ -2700,10 +2702,13 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
             wpn.plus  = random2(4) + 2;
             wpn.plus2 = random2(4) + 2;
             wpn.sub_type = (coinflip() ? WPN_KATANA : WPN_EXECUTIONERS_AXE);
+
             set_item_ego_type(wpn, OBJ_WEAPONS,
                               coinflip() ? SPWPN_SPEED : SPWPN_ELECTROCUTION);
         }
+
         item_colour(wpn);
+
         menv[mon].flags |= MF_HARD_RESET;
 
         ghost_demon newstats;
@@ -2713,9 +2718,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         menv[mon].dancing_weapon_init();
     }
     else
-    {
         mpr("You see a puff of smoke.");
-    }
 }
 
 static void _summon_flying(int power, deck_rarity_type rarity)

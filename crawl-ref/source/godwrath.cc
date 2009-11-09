@@ -15,6 +15,7 @@
 #include "effects.h"
 #include "enum.h"
 #include "food.h"
+#include "ghost.h"
 #include "godabil.h"
 #include "goditem.h"
 #include "it_use2.h"
@@ -623,80 +624,65 @@ static bool _beogh_retribution()
         for (int i = 0; i < num_to_create; ++i)
         {
             const int temp_rand = random2(13);
-            int wpn_type = ((temp_rand ==  0) ? WPN_CLUB :
-                            (temp_rand ==  1) ? WPN_MACE :
-                            (temp_rand ==  2) ? WPN_FLAIL :
-                            (temp_rand ==  3) ? WPN_MORNINGSTAR :
-                            (temp_rand ==  4) ? WPN_DAGGER :
-                            (temp_rand ==  5) ? WPN_SHORT_SWORD :
-                            (temp_rand ==  6) ? WPN_LONG_SWORD :
-                            (temp_rand ==  7) ? WPN_SCIMITAR :
-                            (temp_rand ==  8) ? WPN_GREAT_SWORD :
-                            (temp_rand ==  9) ? WPN_HAND_AXE :
-                            (temp_rand == 10) ? WPN_BATTLEAXE :
-                            (temp_rand == 11) ? WPN_SPEAR
-                                              : WPN_HALBERD);
-
-            // Create item.
-            int slot = items(0, OBJ_WEAPONS, wpn_type,
-                             true, you.experience_level,
-                             am_orc ? MAKE_ITEM_NO_RACE : MAKE_ITEM_ORCISH,
-                             0, 0, GOD_BEOGH);
-
-            if (slot == -1)
-                continue;
-
-            item_def& item = mitm[slot];
-
-            // Set item ego type.
-            set_item_ego_type(item, OBJ_WEAPONS,
-                              am_orc ? SPWPN_ORC_SLAYING : SPWPN_ELECTROCUTION);
-
-            // Manually override item plusses.
-            item.plus  = random2(3);
-            item.plus2 = random2(3);
-
-            if (coinflip())
-                item.flags |= ISFLAG_CURSED;
-
-            // Let the player see what he's being attacked by.
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+            const int wpn_type = ((temp_rand ==  0) ? WPN_CLUB :
+                                  (temp_rand ==  1) ? WPN_MACE :
+                                  (temp_rand ==  2) ? WPN_FLAIL :
+                                  (temp_rand ==  3) ? WPN_MORNINGSTAR :
+                                  (temp_rand ==  4) ? WPN_DAGGER :
+                                  (temp_rand ==  5) ? WPN_SHORT_SWORD :
+                                  (temp_rand ==  6) ? WPN_LONG_SWORD :
+                                  (temp_rand ==  7) ? WPN_SCIMITAR :
+                                  (temp_rand ==  8) ? WPN_GREAT_SWORD :
+                                  (temp_rand ==  9) ? WPN_HAND_AXE :
+                                  (temp_rand == 10) ? WPN_BATTLEAXE :
+                                  (temp_rand == 11) ? WPN_SPEAR
+                                                    : WPN_HALBERD);
 
             // Now create monster.
-            int midx =
+            const int mon =
                 create_monster(
                     mgen_data::hostile_at(MONS_DANCING_WEAPON,
                         true, 0, 0, you.pos(), 0, god));
 
-            // Hand item information over to monster.
-            if (midx != -1)
+            if (mon != -1)
             {
-                monsters *mon = &menv[midx];
+                ASSERT(menv[mon].weapon() != NULL);
+                item_def& wpn(*menv[mon].weapon());
 
-                // Destroy the old weapon.
-                // Arguably we should use destroy_item() here.
-                mitm[mon->inv[MSLOT_WEAPON]].clear();
-                mon->inv[MSLOT_WEAPON] = NON_ITEM;
-
-                unwind_var<int> save_speedinc(mon->speed_increment);
-                if (mon->pickup_item(mitm[slot], false, true))
-                {
-                    num_created++;
-
-                    // 50% chance of weapon disappearing on "death".
-                    if (coinflip())
-                        mon->flags |= MF_HARD_RESET;
-                }
+                // FIXME: Mega-hack (breaks encapsulation too).
+                wpn.flags &= ~ISFLAG_RACIAL_MASK;
+                if (am_orc)
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ORC_SLAYING);
                 else
                 {
-                    // It wouldn't pick up the weapon.
-                    monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
-                    mitm[slot].clear();
+                    wpn.flags |= ISFLAG_ORCISH;
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
                 }
+
+                if (coinflip())
+                    wpn.flags |= ISFLAG_CURSED;
+
+                wpn.plus  = random2(3);
+                wpn.plus2 = random2(3);
+                wpn.sub_type = wpn_type;
+
+                set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+
+                item_colour(wpn);
+
+                if (coinflip())
+                    menv[mon].flags |= MF_HARD_RESET;
+
+                ghost_demon newstats;
+                newstats.init_dancing_weapon(wpn, you.experience_level);
+
+                menv[mon].set_ghost(newstats);
+                menv[mon].dancing_weapon_init();
+
+                num_created++;
             }
-            else // Didn't work out! Delete item.
-                mitm[slot].clear();
         }
+
         if (num_created > 0)
         {
             std::ostringstream msg;
