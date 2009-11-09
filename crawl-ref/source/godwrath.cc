@@ -708,8 +708,8 @@ static bool _beogh_retribution()
             break;
         } // else fall through
     }
-    case 4: // 25%, relatively harmless
-    case 5: // in effect, only for penance
+    case 3: // 25%, relatively harmless
+    case 4: // in effect, only for penance
         if (you.religion == god && beogh_followers_abandon_you())
             break;
         // else fall through
