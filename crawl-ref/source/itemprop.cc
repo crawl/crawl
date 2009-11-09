@@ -142,11 +142,11 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
 
     // Note: shields use ac-value as sh-value, EV pen is used for heavy_shield.
-    { ARM_BUCKLER,              "buckler",                3,  0,   90,
+    { ARM_BUCKLER,              "buckler",                5,  0,   90,
         true,  EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM },
-    { ARM_SHIELD,               "shield",                 5, -1,  150,
+    { ARM_SHIELD,               "shield",                 8, -1,  150,
         false, EQ_SHIELD,      SIZE_SMALL,  SIZE_BIG    },
-    { ARM_LARGE_SHIELD,         "large shield",           7, -2,  230,
+    { ARM_LARGE_SHIELD,         "large shield",          13, -2,  230,
         false, EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT  },
 };
 
@@ -1015,6 +1015,11 @@ int armour_max_enchant( const item_def &item )
         || item.sub_type == ARM_NAGA_BARDING)
     {
         max_plus = MAX_ARM_ENCHANT;
+    }
+
+    if (eq_slot == EQ_SHIELD)
+    {
+        max_plus = 3;
     }
 
     return (max_plus);

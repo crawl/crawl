@@ -862,7 +862,7 @@
 /* 45: UNRAND_IGNORANCE */
 {
     "shield of Ignorance", "dull large shield", 
-    OBJ_ARMOUR, ARM_LARGE_SHIELD, +5, 0, BROWN, 0, 
+    OBJ_ARMOUR, ARM_LARGE_SHIELD, +8, 0, BROWN, 0, 
     UNRAND_FLAG_NONE, 
     {
         SPARM_NORMAL, 2, 2, 0, -6, 0, 
@@ -919,7 +919,7 @@
 /* 48: UNRAND_BULLSEYE */
 {
     "shield \"Bullseye\"", "round shield", 
-    OBJ_ARMOUR, ARM_SHIELD, +10, 0, RED, 0, 
+    OBJ_ARMOUR, ARM_SHIELD, +15, 0, RED, 0, 
     UNRAND_FLAG_NONE, 
     {
         SPARM_NORMAL, 0, -5, 0, 0, 0, 
@@ -1109,7 +1109,7 @@
 /* 58: UNRAND_RESISTANCE */
 {
     "shield of Resistance", "bronze shield", 
-    OBJ_ARMOUR, ARM_SHIELD, +3, 0, LIGHTRED, 0, 
+    OBJ_ARMOUR, ARM_SHIELD, +5, 0, LIGHTRED, 0, 
     UNRAND_FLAG_NONE, 
     {
         SPARM_NORMAL, 0, 0, 0, 0, 0, 

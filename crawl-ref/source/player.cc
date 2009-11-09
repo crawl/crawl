@@ -2301,37 +2301,59 @@ int player_mag_abil(bool is_weighted)
 
 int player_shield_class(void)   //jmf: changes for new spell
 {
-    int base_shield = 0;
+    int shield = 0;
+    int stat = 0;
+
+    if (you.incapacitated())
+        return (0);
 
     if (player_wearing_slot(EQ_SHIELD))
     {
         const item_def& item = you.inv[you.equip[EQ_SHIELD]];
-        base_shield = property(item, PARM_AC);
+        int base_shield = property(item, PARM_AC);
 
-        int racial_bonus = _player_armour_racial_bonus(item) * 2 / 3;
+        int racial_bonus = _player_armour_racial_bonus(item);
 
         // bonus applied only to base, see above for effect:
-        base_shield *= (20 + you.skills[SK_SHIELDS] + racial_bonus);
-        base_shield /= 20;
+        shield += base_shield * 100;
+        shield += base_shield * 5 * you.skills[SK_SHIELDS];
+        shield += base_shield * racial_bonus * 10 / 3;
 
-        base_shield += item.plus;
+        shield += item.plus * 100;
+
+        if (item.sub_type == ARM_BUCKLER)
+            stat = you.dex * 38;
+        else if (item.sub_type == ARM_LARGE_SHIELD)
+            stat = you.dex * 12 + you.strength * 26;
+        else
+            stat = you.dex * 19 + you.strength * 19;
     }
     else
     {
         if (you.duration[DUR_MAGIC_SHIELD])
-            base_shield = 2 + you.skills[SK_EVOCATIONS] / 6;
+        {
+            stat   =  600 + you.skills[SK_EVOCATIONS] * 50;
+            shield += 300 + you.skills[SK_EVOCATIONS] * 25;
+        }
 
         if (!you.duration[DUR_FIRE_SHIELD]
             && you.duration[DUR_CONDENSATION_SHIELD])
         {
-            base_shield += 2 + (you.skills[SK_ICE_MAGIC] / 6);  // max 6
+            shield += 300 + (you.skills[SK_ICE_MAGIC] * 25);
+            stat    = std::max(stat, you.intel * 38);
         }
     }
 
     if (you.duration[DUR_DIVINE_SHIELD])
-        base_shield += you.attribute[ATTR_DIVINE_SHIELD];
+    {
+        shield += you.attribute[ATTR_DIVINE_SHIELD] * 150;
+        stat = std::max(stat, int(you.attribute[ATTR_DIVINE_SHIELD] * 300));
+    }
 
-    return (base_shield);
+    if (shield + stat > 0)
+        shield += skill_bump(SK_SHIELDS) * 38;
+
+    return (shield + stat + 50) / 100;
 }
 
 int player_sust_abil(bool calc_unid)
@@ -6097,31 +6119,10 @@ int player::shield_block_penalty() const
 int player::shield_bonus() const
 {
     const int shield_class = player_shield_class();
-    if (!shield_class)
+    if (shield_class <= 0)
         return (-100);
 
-    // Note that 0 is not quite no-blocking.
-    if (incapacitated())
-        return (0);
-
-    int stat = 0;
-    if (const item_def *sh = const_cast<player*>(this)->shield())
-    {
-        stat =
-            sh->sub_type == ARM_BUCKLER?      dex :
-            sh->sub_type == ARM_LARGE_SHIELD? (3 * strength + dex) / 4:
-            (dex + strength) / 2;
-    }
-    else
-    {
-        // Magical and divine shields are governed by the mind.
-        stat = intel / 2;
-    }
-
-    return (random2(shield_class)
-            + (random2(stat) / 4)
-            + (random2(skill_bump(SK_SHIELDS)) / 4)
-            - 1);
+    return random2avg(shield_class * 2, 2) / 3 - 1;
 }
 
 int player::shield_bypass_ability(int tohit) const

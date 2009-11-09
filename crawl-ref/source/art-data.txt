@@ -708,7 +708,7 @@ DESC_END: Presumably this relic led to the invention of the famous spell, or may
 NAME:    shield of Ignorance
 APPEAR:  dull large shield
 OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
-PLUS:    +5
+PLUS:    +8
 COLOUR:  BROWN
 TILE:    urand_ignorance
 TILE_EQ: shield_of_ignorance
@@ -747,7 +747,7 @@ DESC_END: It allows its wearer to excel in the arts of thievery.
 NAME:    shield "Bullseye"
 APPEAR:  round shield
 OBJ:     OBJ_ARMOUR/ARM_SHIELD
-PLUS:    +10
+PLUS:    +15
 COLOUR:  RED
 TILE:    urand_bullseye
 TILE_EQ: bullseye
@@ -866,7 +866,7 @@ DAM:     3
 NAME:    shield of Resistance
 APPEAR:  bronze shield
 OBJ:     OBJ_ARMOUR/ARM_SHIELD
-PLUS:    +3
+PLUS:    +5
 COLOUR:  LIGHTRED
 TILE:    urand_resistance
 TILE_EQ: shield_of_resistance
