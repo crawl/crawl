@@ -1363,7 +1363,7 @@ monster_type random_draconian_monster_species()
 static bool _get_spellbook_list(mon_spellbook_type book[6],
                                 monster_type mon_type)
 {
-    bool retval = false;
+    bool retval = true;
 
     book[0] = MST_NO_SPELLS;
     book[1] = MST_NO_SPELLS;
@@ -1378,7 +1378,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_ORC_WIZARD:
-        retval = true;
         book[0] = MST_ORC_WIZARD_I;
         book[1] = MST_ORC_WIZARD_II;
         book[2] = MST_ORC_WIZARD_III;
@@ -1386,7 +1385,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
 
     case MONS_LICH:
     case MONS_ANCIENT_LICH:
-        retval = true;
         book[0] = MST_LICH_I;
         book[1] = MST_LICH_II;
         book[2] = MST_LICH_III;
@@ -1394,13 +1392,11 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         break;
 
     case MONS_HELL_KNIGHT:
-        retval = true;
         book[0] = MST_HELL_KNIGHT_I;
         book[1] = MST_HELL_KNIGHT_II;
         break;
 
     case MONS_NECROMANCER:
-        retval = true;
         book[0] = MST_NECROMANCER_I;
         book[1] = MST_NECROMANCER_II;
         break;
@@ -1409,7 +1405,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
     case MONS_OGRE_MAGE:
     case MONS_EROLCHA:
     case MONS_DEEP_ELF_MAGE:
-        retval = true;
         book[0] = MST_WIZARD_I;
         book[1] = MST_WIZARD_II;
         book[2] = MST_WIZARD_III;
@@ -1418,13 +1413,11 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         break;
 
     case MONS_DEEP_ELF_CONJURER:
-        retval = true;
         book[0] = MST_DEEP_ELF_CONJURER_I;
         book[1] = MST_DEEP_ELF_CONJURER_II;
         break;
 
     case MONS_DRACONIAN_KNIGHT:
-        retval = true;
         book[0] = MST_HELL_KNIGHT_I;
         book[1] = MST_HELL_KNIGHT_II;
         book[2] = MST_NECROMANCER_I;
@@ -1434,6 +1427,7 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         break;
 
     default:
+        retval = false;
         break;
     }
 
