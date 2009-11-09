@@ -1889,7 +1889,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
-    // Journey -- Added in Summon Lizards and Draconian
+    // Journey -- Added in Summon Lizards and Draconians
     case SPELL_SUMMON_DRAKES:
         if (_mons_abjured(monster, monsterNearby))
             return;
@@ -1901,18 +1901,21 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         {
             std::vector<monster_type> monsters;
 
-            for (sumcount = 0; sumcount < sumcount2; sumcount++)
+            for (sumcount = 0; sumcount < sumcount2; ++sumcount)
             {
+                bool drag = false;
                 monster_type mon = summon_any_dragon(DRAGON_LIZARD);
 
                 if (mon == MONS_DRAGON)
                 {
-                    monsters.clear();
-                    monsters.push_back(summon_any_dragon(DRAGON_DRAGON));
-                    break;
+                    drag = true;
+                    mon = summon_any_dragon(DRAGON_DRAGON);
                 }
 
                 monsters.push_back(mon);
+
+                if (drag)
+                    break;
             }
 
             for (int i = 0, size = monsters.size(); i < size; ++i)
