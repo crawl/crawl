@@ -1453,6 +1453,23 @@ LUAFN(_dgn_find_markers_by_prop)
     return (1);
 }
 
+LUAFN(_dgn_marker_at_pos)
+{
+    const int x = luaL_checknumber(ls, 1);
+    const int y = luaL_checknumber(ls, 2);
+
+    coord_def p(x, y);
+
+    map_marker* marker = env.markers.find(p);
+
+    if (marker == NULL)
+        lua_pushnil(ls);
+    else
+        _push_mapmarker(ls, marker);
+
+    return (1);
+}
+
 extern spec_room lua_special_room_spec;
 extern int       lua_special_room_level;
 
@@ -1621,6 +1638,8 @@ const struct luaL_reg dgn_dlib[] =
 { "find_marker_position_by_prop", _dgn_find_marker_position_by_prop },
 { "find_marker_positions_by_prop", _dgn_find_marker_positions_by_prop },
 { "find_markers_by_prop", _dgn_find_markers_by_prop },
+
+{ "marker_at_pos", _dgn_marker_at_pos },
 
 { "get_special_room_info", dgn_get_special_room_info },
 
