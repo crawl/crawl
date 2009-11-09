@@ -1360,9 +1360,11 @@ monster_type random_draconian_monster_species()
     return static_cast<monster_type>(MONS_BLACK_DRACONIAN + random2(num_drac));
 }
 
-static void _get_spellbook_list(mon_spellbook_type book[6],
+static bool _get_spellbook_list(mon_spellbook_type book[6],
                                 monster_type mon_type)
 {
+    bool retval = false;
+
     book[0] = MST_NO_SPELLS;
     book[1] = MST_NO_SPELLS;
     book[2] = MST_NO_SPELLS;
@@ -1376,59 +1378,53 @@ static void _get_spellbook_list(mon_spellbook_type book[6],
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_ORC_WIZARD:
-    {
+        retval = true;
         book[0] = MST_ORC_WIZARD_I;
         book[1] = MST_ORC_WIZARD_II;
         book[2] = MST_ORC_WIZARD_III;
         break;
-    }
 
     case MONS_LICH:
     case MONS_ANCIENT_LICH:
-    {
+        retval = true;
         book[0] = MST_LICH_I;
         book[1] = MST_LICH_II;
         book[2] = MST_LICH_III;
         book[3] = MST_LICH_IV;
         break;
-    }
 
     case MONS_HELL_KNIGHT:
-    {
+        retval = true;
         book[0] = MST_HELL_KNIGHT_I;
         book[1] = MST_HELL_KNIGHT_II;
         break;
-    }
 
     case MONS_NECROMANCER:
-    {
+        retval = true;
         book[0] = MST_NECROMANCER_I;
         book[1] = MST_NECROMANCER_II;
         break;
-    }
 
     case MONS_WIZARD:
     case MONS_OGRE_MAGE:
     case MONS_EROLCHA:
     case MONS_DEEP_ELF_MAGE:
-    {
+        retval = true;
         book[0] = MST_WIZARD_I;
         book[1] = MST_WIZARD_II;
         book[2] = MST_WIZARD_III;
         book[3] = MST_WIZARD_IV;
         book[4] = MST_WIZARD_V;
         break;
-    }
 
     case MONS_DEEP_ELF_CONJURER:
-    {
+        retval = true;
         book[0] = MST_DEEP_ELF_CONJURER_I;
         book[1] = MST_DEEP_ELF_CONJURER_II;
         break;
-    }
 
     case MONS_DRACONIAN_KNIGHT:
-    {
+        retval = true;
         book[0] = MST_HELL_KNIGHT_I;
         book[1] = MST_HELL_KNIGHT_II;
         book[2] = MST_NECROMANCER_I;
@@ -1436,11 +1432,12 @@ static void _get_spellbook_list(mon_spellbook_type book[6],
         book[4] = MST_DEEP_ELF_CONJURER_I;
         book[5] = MST_DEEP_ELF_CONJURER_II;
         break;
-    }
 
     default:
         break;
     }
+
+    return (retval);
 }
 
 void define_monster(int index)
@@ -1597,11 +1594,11 @@ void define_monster(monsters &mons)
     mons.colour     = col;
 
     mons.load_spells(spells);
-    // (dumb) special casing to gives ogre mages haste other. -cao
-    if(mons.type == MONS_OGRE_MAGE)
-    {
+
+    // (Dumb) special casing to give ogre mages Haste Other. -cao
+    if (mons.type == MONS_OGRE_MAGE)
         mons.spells[0] = SPELL_HASTE_OTHER;
-    }
+
     mons.bind_spell_flags();
 
     // Reset monster enchantments.
