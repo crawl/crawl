@@ -9,12 +9,12 @@
 #
 # If you want to weight uniques different for different, the different vaults
 # should all add up to 10 (the current default weight for uniques), you can use
-# multiple vaults that are tagged "uniq_<name>", with different weights for each
-# of the vaults.
+# multiple vaults that are tagged "uniq_<name>", with different weights for
+# each of the vaults.
 #
-# As a final caveat, you.branches[you.where_are_you].has_uniques is still checked
-# before vaults are even considered; unique vaults with depths that could take
-# in Lair should be specified !Lair (unless you want them in lair).
+# As a final caveat, you.branches[you.where_are_you].has_uniques is still
+# checked before vaults are even considered; unique vaults with depths that
+# could take in Lair should be specified !Lair (unless you want them in lair).
 #
 # You can define DEBUG_UNIQUE_PLACEMENT and get a per-level unique generation
 # report in "unique_placement.log" in debug mode.
