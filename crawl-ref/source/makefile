@@ -235,7 +235,7 @@ FHS := yes
 endif
 
 ifeq (,$(bin_prefix))
-ifneq (%,$(patsubst %/,%,$(prefix)),/usr)
+ifneq ($(patsubst %/,%,$(prefix)),/usr)
 bin_prefix    := bin
 else
 bin_prefix    := games
