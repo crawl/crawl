@@ -1935,7 +1935,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
     new_level();
 
-    viewwindow(true, true);
+    viewwindow(true);
 
     // Left Zot without enough runes to get back in (because they were
     // destroyed), but need to get back in Zot to get the Orb?
@@ -2247,7 +2247,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         update_screen();
 #else
         you.flash_colour = LIGHTGREEN;
-        viewwindow(true, false);
+        viewwindow(false);
 #endif
         mpr("The lock glows an eerie green colour!");
         more();
@@ -2255,7 +2255,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         mprf("You insert %s into the lock.",
              you.inv[runes[1]].name(DESC_NOCAP_THE).c_str());
         big_cloud(CLOUD_BLUE_SMOKE, KC_YOU, you.pos(), 20, 7 + random2(7));
-        viewwindow(true, false);
+        viewwindow(false);
         mpr("Heavy smoke blows from the lock!");
         more();
 
@@ -2597,7 +2597,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     trackers_init_new_level(true);
 
-    viewwindow(true, true);
+    viewwindow(true);
     maybe_update_stashes();
 
     if (collect_travel_data)
@@ -3115,7 +3115,7 @@ void reveal_secret_door(const coord_def& p)
     // until opened.
     grd(p) = feat_is_opaque(door) ? DNGN_DETECTED_SECRET_DOOR
                                   : DNGN_OPEN_DOOR;
-    viewwindow(true, false);
+    viewwindow(false);
     learned_something_new(TUT_SEEN_SECRET_DOOR, p);
 }
 

@@ -1331,7 +1331,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
     mpr("You step out of the flow of time.");
     you.flash_colour = LIGHTBLUE;
-    viewwindow(true, true);
+    viewwindow(true);
     you.moveto(coord_def(0, 0));
     you.duration[DUR_TIME_STEP] = pow;
 
@@ -1353,6 +1353,6 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     you.flash_colour = 0;
     you.moveto(old_pos);
     you.duration[DUR_TIME_STEP] = 0;
-    viewwindow(true, false);
+    viewwindow(false);
     mpr("You return into the normal time flow.");
 }

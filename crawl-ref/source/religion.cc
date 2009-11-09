@@ -4276,7 +4276,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     mpr("Your weapon shines brightly!", MSGCH_GOD);
 
     you.flash_colour = colour;
-    viewwindow(true, false);
+    viewwindow(false);
 
     simple_god_message(" booms: Use this gift wisely!");
 

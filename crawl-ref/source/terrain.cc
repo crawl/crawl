@@ -972,12 +972,12 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     if (pos1 == you.pos())
     {
         you.set_position(pos2);
-        viewwindow(true, false);
+        viewwindow(false);
     }
     else if (pos2 == you.pos())
     {
         you.set_position(pos1);
-        viewwindow(true, false);
+        viewwindow(false);
     }
 
     set_terrain_changed(pos1);

@@ -914,7 +914,7 @@ range_view_annotator::range_view_annotator(int range)
 range_view_annotator::~range_view_annotator()
 {
     restore_state();
-    viewwindow(true, false);
+    viewwindow(false);
 }
 
 void range_view_annotator::restore_state()
@@ -1543,7 +1543,7 @@ void direction(dist& moves, targetting_type restricts,
                 // To update visual branding of friendlies.  Only
                 // seems capabable of adding bolding, not removing it,
                 // though.
-                viewwindow(true, false);
+                viewwindow(false);
             }
             break;
 
@@ -1695,7 +1695,7 @@ void direction(dist& moves, targetting_type restricts,
         if (need_beam_redraw)
         {
 #ifndef USE_TILE
-            viewwindow(true, false);
+            viewwindow(false);
 #endif
             if (show_beam && have_beam)
             {
@@ -1731,7 +1731,7 @@ void direction(dist& moves, targetting_type restricts,
 #endif
             }
 #ifdef USE_TILE
-            viewwindow(true, false);
+            viewwindow(false);
 #endif
         }
         skip_iter = false;      // Only skip one iteration at most.

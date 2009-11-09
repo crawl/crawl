@@ -284,7 +284,7 @@ void cast_fire_storm(int pow, bolt &beam)
     if (beam.explode(false))
         mpr("A raging storm of fire appears!");
 
-    viewwindow(true, false);
+    viewwindow(false);
 }
 
 // No setup/cast split here as monster hellfire is completely different.

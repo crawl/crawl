@@ -583,7 +583,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
     // If we're going to prompt then update the window so the player can
     // see what the monsters are.
     if (prompt)
-        viewwindow(true, false);
+        viewwindow(false);
 
     if (delay == DELAY_WEAPON_SWAP)
     {
@@ -821,7 +821,7 @@ void handle_delay()
                  _get_recite_speech("start", you.num_turns + delay.duration).c_str());
 
             if (apply_area_visible(_recite_to_monsters, delay.parm1))
-                viewwindow(true, false);
+                viewwindow(false);
             break;
 
         default:
@@ -1031,7 +1031,7 @@ void handle_delay()
             mprf(MSGCH_MULTITURN_ACTION, "You continue %s.",
                  _get_recite_speech("other", you.num_turns + delay.duration+1).c_str());
             if (apply_area_visible(_recite_to_monsters, delay.parm1))
-                viewwindow(true, false);
+                viewwindow(false);
             break;
 
         case DELAY_MULTIDROP:

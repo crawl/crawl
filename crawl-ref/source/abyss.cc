@@ -373,7 +373,7 @@ static void _xom_check_nearness_setup()
 static void _xom_check_nearness()
 {
     // Update known terrain
-    viewwindow(true, false);
+    viewwindow(false);
 
     int exit_is_near = _abyss_exit_nearness();
     int rune_is_near = _abyss_rune_nearness();
@@ -938,7 +938,7 @@ bool lugonu_corrupt_level(int power)
     mpr("Lugonu's Hand of Corruption reaches out!", MSGCH_GOD);
 
     you.flash_colour = MAGENTA;
-    viewwindow(true, false);
+    viewwindow(false);
 
     _initialise_level_corrupt_seeds(power);
 

@@ -49,7 +49,7 @@ void view_update_at(const coord_def &pos);
 void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
                           int fmc_delay);
 #endif
-void viewwindow(bool draw_it, bool do_updates);
+void viewwindow(bool do_updates);
 void update_monsters_in_view();
 void handle_seen_interrupt(monsters* monster);
 void flush_comes_into_view();

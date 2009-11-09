@@ -165,7 +165,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                     if (trap_def* ptrap = find_trap(p))
                         ptrap->reveal();
 
-                    viewwindow(true, false);
+                    viewwindow(false);
 
                     mprf(MSGCH_WARN,
                          "Wait a moment, %s! Do you really want to step there?",
@@ -295,7 +295,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 // Have to move now so fall_into_a_pool will work.
                 you.moveto(p);
 
-                viewwindow( true, false );
+                viewwindow(false);
 
                 // If true, we were shifted and so we're done.
                 if (fall_into_a_pool( entry, allow_shift, new_grid ))
@@ -330,7 +330,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
         init_player_doll();
 #endif
 
-    viewwindow(true, false);
+    viewwindow(false);
 
     // Other Effects:
     // Clouds -- do we need this? (always seems to double up with acr.cc call)
@@ -7067,7 +7067,7 @@ void player::put_to_sleep(int)
 
     stop_delay();
     flash_colour = DARKGREY;
-    viewwindow(true, false);
+    viewwindow(false);
 
     // Do this *after* redrawing the view, or viewwindow() will no-op.
     duration[DUR_SLEEP] = 3 + random2avg(5, 2);
@@ -7080,7 +7080,7 @@ void player::awake()
     duration[DUR_SLEEP] = 0;
     mpr("You wake up.");
     this->flash_colour = BLACK;
-    viewwindow(true, false);
+    viewwindow(false);
 }
 
 void player::check_awaken(int disturbance)

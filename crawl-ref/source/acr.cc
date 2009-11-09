@@ -1124,7 +1124,7 @@ static void _input()
         world_reacts();
     }
     else
-        viewwindow(true, false);
+        viewwindow(false);
 
     _update_replay_state();
 
@@ -2774,7 +2774,7 @@ void world_reacts()
     // If you're wielding a rod, it'll gradually recharge.
     _recharge_rods();
 
-    viewwindow(true, true);
+    viewwindow(true);
 
     maybe_update_stashes();
     handle_monsters();
@@ -2834,7 +2834,7 @@ void world_reacts()
         }
     }
 
-    viewwindow(true, false);
+    viewwindow(false);
 
     if (you.cannot_act() && any_messages()
         && crawl_state.repeat_cmd != CMD_WIZARD)
@@ -3751,7 +3751,7 @@ static bool _initialise(void)
     maybe_update_stashes();
 
     // This just puts the view up for the first turn.
-    viewwindow(true, false);
+    viewwindow(false);
 
     activate_notes(true);
 

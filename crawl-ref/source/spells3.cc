@@ -1412,7 +1412,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
     // Update what we can see at the current location as well as its stash,
     // in case something happened in the exact turn that we teleported
     // (like picking up/dropping an item).
-    viewwindow(true, false);
+    viewwindow(false);
     StashTrack.update_stash();
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
@@ -1825,7 +1825,7 @@ bool cast_sanctuary(const int power)
         mpr("You are suddenly bathed in radiance!");
 
     you.flash_colour = WHITE;
-    viewwindow(true, false);
+    viewwindow(false);
 
     holy_word(100, HOLY_WORD_ZIN, you.pos(), true);
 

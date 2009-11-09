@@ -618,7 +618,7 @@ LUAFN(_crawl_milestone)
 
 LUAFN(_crawl_redraw_view)
 {
-    viewwindow(true, false);
+    viewwindow(false);
     return (0);
 }
 

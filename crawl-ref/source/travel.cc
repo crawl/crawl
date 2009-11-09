@@ -1050,7 +1050,7 @@ command_type travel()
     if (!you.running && Options.travel_delay == -1
         && (!you.running.is_explore() || Options.explore_delay == -1))
     {
-        viewwindow(true, false);
+        viewwindow(false);
     }
 
     if (!you.running)
@@ -3846,7 +3846,7 @@ void runrest::stop()
     stop_delay();
 
     if (need_redraw)
-        viewwindow(true, false);
+        viewwindow(false);
 
     _reset_zigzag_info();
 }

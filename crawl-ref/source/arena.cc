@@ -840,7 +840,7 @@ namespace arena
 
     void do_fight()
     {
-        viewwindow(true, false);
+        viewwindow(false);
         mesclr(true);
         {
             cursor_control coff(false);
@@ -863,7 +863,7 @@ namespace arena
                 if ((turns++ % 100) == 0)
                     count_foes();
 
-                viewwindow(true, false);
+                viewwindow(false);
                 unwind_var<coord_def> pos(you.position);
                 // Move hero offscreen.
                 you.position.y = -1;
@@ -881,7 +881,7 @@ namespace arena
                 dump_messages();
                 ASSERT(you.pet_target == MHITNOT);
             }
-            viewwindow(true, false);
+            viewwindow(false);
         }
 
         mesclr();

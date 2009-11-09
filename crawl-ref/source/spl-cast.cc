@@ -768,10 +768,10 @@ bool cast_a_spell(bool check_range, spell_type spell)
         if (Options.target_range != -1)
         {
             Options.target_range = _calc_spell_range(spell);
-            viewwindow(true, false);
+            viewwindow(false);
             delay(500);
             Options.target_range = 0;
-            viewwindow(true, false);
+            viewwindow(false);
         }
         return (false);
     }

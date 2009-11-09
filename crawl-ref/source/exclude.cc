@@ -61,7 +61,7 @@ void set_auto_exclude(const monsters *mon)
     {
         set_exclude(mon->pos(), LOS_RADIUS, true);
 #ifdef USE_TILE
-        viewwindow(true, false);
+        viewwindow(false);
 #endif
         learned_something_new(TUT_AUTO_EXCLUSION, mon->pos());
     }
@@ -75,7 +75,7 @@ void remove_auto_exclude(const monsters *mon, bool sleepy)
     {
         del_exclude(mon->pos());
 #ifdef USE_TILE
-        viewwindow(true, false);
+        viewwindow(false);
 #endif
     }
 }

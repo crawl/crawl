@@ -1110,7 +1110,7 @@ void debug_pathfind(int mid)
 
 static void _miscast_screen_update()
 {
-    viewwindow(true, false);
+    viewwindow(false);
 
     you.redraw_status_flags =
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;

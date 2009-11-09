@@ -3034,7 +3034,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     beam.fire();
 
     // Clear out "missile trails"
-    viewwindow(true, false);
+    viewwindow(false);
 
     if (!swap_features(stair_pos, ray.pos(), false, false))
     {

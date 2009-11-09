@@ -296,7 +296,7 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
         }
 
         you.flash_colour = LIGHTGREEN;
-        viewwindow(true, false);
+        viewwindow(false);
 
         int flash_delay = 150;
         // Scale delay to match change in arena_delay.
