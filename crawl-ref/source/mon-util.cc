@@ -1360,6 +1360,89 @@ monster_type random_draconian_monster_species()
     return static_cast<monster_type>(MONS_BLACK_DRACONIAN + random2(num_drac));
 }
 
+static void _get_spellbook_list(mon_spellbook_type book[6],
+                                monster_type mon_type)
+{
+    book[0] = MST_NO_SPELLS;
+    book[1] = MST_NO_SPELLS;
+    book[2] = MST_NO_SPELLS;
+    book[3] = MST_NO_SPELLS;
+    book[4] = MST_NO_SPELLS;
+    book[5] = MST_NO_SPELLS;
+
+    switch (mon_type)
+    {
+    case MONS_DEEP_ELF_FIGHTER:
+    case MONS_DEEP_ELF_KNIGHT:
+    case MONS_DEEP_ELF_SOLDIER:
+    case MONS_ORC_WIZARD:
+    {
+        book[0] = MST_ORC_WIZARD_I;
+        book[1] = MST_ORC_WIZARD_II;
+        book[2] = MST_ORC_WIZARD_III;
+        break;
+    }
+
+    case MONS_LICH:
+    case MONS_ANCIENT_LICH:
+    {
+        book[0] = MST_LICH_I;
+        book[1] = MST_LICH_II;
+        book[2] = MST_LICH_III;
+        book[3] = MST_LICH_IV;
+        break;
+    }
+
+    case MONS_HELL_KNIGHT:
+    {
+        book[0] = MST_HELL_KNIGHT_I;
+        book[1] = MST_HELL_KNIGHT_II;
+        break;
+    }
+
+    case MONS_NECROMANCER:
+    {
+        book[0] = MST_NECROMANCER_I;
+        book[1] = MST_NECROMANCER_II;
+        break;
+    }
+
+    case MONS_WIZARD:
+    case MONS_OGRE_MAGE:
+    case MONS_EROLCHA:
+    case MONS_DEEP_ELF_MAGE:
+    {
+        book[0] = MST_WIZARD_I;
+        book[1] = MST_WIZARD_II;
+        book[2] = MST_WIZARD_III;
+        book[3] = MST_WIZARD_IV;
+        book[4] = MST_WIZARD_V;
+        break;
+    }
+
+    case MONS_DEEP_ELF_CONJURER:
+    {
+        book[0] = MST_DEEP_ELF_CONJURER_I;
+        book[1] = MST_DEEP_ELF_CONJURER_II;
+        break;
+    }
+
+    case MONS_DRACONIAN_KNIGHT:
+    {
+        book[0] = MST_HELL_KNIGHT_I;
+        book[1] = MST_HELL_KNIGHT_II;
+        book[2] = MST_NECROMANCER_I;
+        book[3] = MST_NECROMANCER_II;
+        book[4] = MST_DEEP_ELF_CONJURER_I;
+        book[5] = MST_DEEP_ELF_CONJURER_II;
+        break;
+    }
+
+    default:
+        break;
+    }
+}
+
 void define_monster(int index)
 {
     define_monster(menv[index]);
@@ -1430,38 +1513,6 @@ void define_monster(monsters &mons)
         monnumber = 27;
         break;
 
-    case MONS_DEEP_ELF_FIGHTER:
-    case MONS_DEEP_ELF_KNIGHT:
-    case MONS_DEEP_ELF_SOLDIER:
-    case MONS_ORC_WIZARD:
-        spells = static_cast<mon_spellbook_type>(MST_ORC_WIZARD_I + random2(3));
-        break;
-
-    case MONS_LICH:
-    case MONS_ANCIENT_LICH:
-        spells = static_cast<mon_spellbook_type>(MST_LICH_I + random2(4));
-        break;
-
-    case MONS_HELL_KNIGHT:
-        spells = (coinflip() ? MST_HELL_KNIGHT_I : MST_HELL_KNIGHT_II);
-        break;
-
-    case MONS_NECROMANCER:
-        spells = (coinflip() ? MST_NECROMANCER_I : MST_NECROMANCER_II);
-        break;
-
-    case MONS_WIZARD:
-    case MONS_OGRE_MAGE:
-    case MONS_EROLCHA:
-    case MONS_DEEP_ELF_MAGE:
-        spells = static_cast<mon_spellbook_type>(MST_WIZARD_I + random2(5));
-        break;
-
-    case MONS_DEEP_ELF_CONJURER:
-        spells = (coinflip() ? MST_DEEP_ELF_CONJURER_I
-                             : MST_DEEP_ELF_CONJURER_II);
-        break;
-
     case MONS_GILA_MONSTER:
         if (col != BLACK) // May be overwritten by the mon_glyph option.
             break;
@@ -1482,6 +1533,7 @@ void define_monster(monsters &mons)
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
     {
         // Professional draconians still have a base draconian type.
         // White draconians will never be draconian scorchers, but
@@ -1489,24 +1541,6 @@ void define_monster(monsters &mons)
         do
             monbase = random_draconian_monster_species();
         while (drac_colour_incompatible(mcls, monbase));
-        break;
-    }
-
-    case MONS_DRACONIAN_KNIGHT:
-    {
-        int temp_rand = random2(10);
-        // Hell knight, death knight, or chaos knight.
-        if (temp_rand < 6)
-            spells = (coinflip() ? MST_HELL_KNIGHT_I : MST_HELL_KNIGHT_II);
-        else if (temp_rand < 9)
-            spells = (coinflip() ? MST_NECROMANCER_I : MST_NECROMANCER_II);
-        else
-        {
-            spells = (coinflip() ? MST_DEEP_ELF_CONJURER_I
-                                 : MST_DEEP_ELF_CONJURER_II);
-        }
-
-        monbase = random_draconian_monster_species();
         break;
     }
 
@@ -1528,8 +1562,15 @@ void define_monster(monsters &mons)
     if (col == BLACK)
         col = random_colour();
 
-    if (spells == MST_NO_SPELLS && mons_class_flag(mons.type, M_SPELLCASTER))
-        spells = m->sec;
+    if (m->sec == MST_NO_SPELLS && mons_class_flag(mons.type, M_SPELLCASTER))
+    {
+        mon_spellbook_type book[6];
+        _get_spellbook_list(book, mons.type);
+
+        do
+            spells = book[random2(6)];
+        while (spells == MST_NO_SPELLS);
+    }
 
     // Some calculations.
     hp     = hit_points(hd, m->hpdice[1], m->hpdice[2]);
