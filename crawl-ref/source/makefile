@@ -745,6 +745,8 @@ $(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
 $(UTIL)levcomp.lex.cc: $(UTIL)levcomp.lpp $(UTIL)levcomp.tab.cc
 		+@$(MAKE) -C $(UTIL) levcomp.lex.cc
 
+$(UTIL)levcomp.tab.h: $(UTIL)levcomp.tab.cc
+
 else
 
 # Pull the level-compiler stuff up from prebuilt/
@@ -872,7 +874,7 @@ art-data.h: art-data.txt util/art-data.pl art-func.h
 
 .PHONY: rltile-build
 rltile-build: .contrib-libs
-	$(MAKE) -C $(RLTILES) -f makefile.unix all
+	+$(MAKE) -C $(RLTILES) -f makefile.unix all
 
 $(TILEDEFSRCS): rltile-build
 $(TILEDEFHDRS): rltile-build
@@ -890,9 +892,15 @@ clean-rltiles:
 #
 
 # To package, you *must* have lex and yacc to generate the intermediates.
-ifdef DOYACC
-package-source: distclean prebuildyacc pkgtidy depend removeold vlink \
-				pkgtarbz2 pkgzip
+package-source:
+	+$(MAKE) distclean
+	+$(MAKE) prebuildyacc
+	+$(MAKE) pkgtidy
+	+$(MAKE) depend
+	+$(MAKE) removeold
+	+$(MAKE) vlink
+	+$(MAKE) pkgtarbz2
+	+$(MAKE) pkgzip
 
 pkgtidy:
 	$(RM) $(PKG_TIDY_LIST)
@@ -913,5 +921,3 @@ pkgtarbz2:
 pkgzip:
 	cd ../.. && zip -rq $(SRC_PKG_ZIP) $(PKG_SRC_DIR) \
 		-x@$(PKG_EXCLUDES)
-
-endif
