@@ -2215,7 +2215,7 @@
 {
     SPELL_SUMMON_DRAKES, "Summon Drakes",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
+     SPFLAG_UNHOLY | SPFLAG_MONSTER,
      6,
      0,
      -1, -1,
