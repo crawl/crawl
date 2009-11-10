@@ -3053,11 +3053,6 @@ bool monsters::is_chaotic() const
     return (false);
 }
 
-bool monsters::is_shapeshifter() const
-{
-    return (has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER));
-}
-
 int monsters::res_fire() const
 {
     const mon_resist_def res = get_mons_resists(this);
@@ -3858,6 +3853,11 @@ bool monsters::is_priest() const
 bool monsters::is_actual_spellcaster() const
 {
     return (flags & MF_ACTUAL_SPELLS);
+}
+
+bool monsters::is_shapeshifter() const
+{
+    return (has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER));
 }
 
 bool monsters::has_ench(enchant_type ench) const
