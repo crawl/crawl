@@ -798,12 +798,16 @@ ifdef TILES
 	mkdir -p $(datadir_fp)/dat/tiles
 	$(COPY) dat/tiles/*.png dat/tiles/*.ttf $(prefix_fp)/dat/tiles/
 endif
+ifeq ($(USE_DGAMELAUNCH),)
 	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
+endif
 ifneq ($(SAVEDIR),)
 	mkdir -p $(savedir_fp)/saves
 	mkdir -p $(savedir_fp)/morgue
+ifeq ($(USE_DGAMELAUNCH),)
 	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
 	$(CHMOD) -R $(MCHMOD_SAVEDIR) $(savedir_fp) || true
+endif
 endif
 
 clean:
