@@ -1,19 +1,29 @@
-# The shrines are thematic portal vaults which offer early religion in
-# exchange for one's safety.
-
+###############################################################################
+# Shrines.des:
+#   The shrines are thematic portal vaults which offer early religion in
+#   exchange for one's safety.
+###############################################################################
+# Setup functions:
 {{
-function shrine_milestone(e)
+function shrine_portal_setup (e)
+  e.lua_marker("O", one_way_stair { desc = "An entrance to a Shrine",
+                                 dst  = "shrine" })
+  e.kfeat("O = enter_portal_vault")
+end
+
+function shrine_setup(e)
+  e.kfeat("> = exit_portal_vault")
   crawl.mark_milestone("br.enter", "entered a Shrine.")
 end
 }}
+###############################################################################
+# Entry vaults:
+default-depth: D:2-6
 
-NAME: shrine_entry_a
-TAGS: luniq_shrine
-DEPTH: D:2-6
-ORIENT: float
-MARKER: O = lua:one_way_stair { desc = "A portal to a shrine", \
-                                dst = "shrine" }
-KFEAT: O = enter_portal_vault
+NAME:       shrine_entry_a
+TAGS:       luniq_shrine
+ORIENT:     float
+:           shrine_portal_setup(_G)
 MAP
 x   x
 x.T.x
@@ -24,13 +34,10 @@ x.T.x
 x   x
 ENDMAP
 
-NAME: shrine_entry_b
-TAGS: luniq_shrine
-DEPTH: D:2-6
-ORIENT: float
-MARKER: O = lua:one_way_stair { desc = "A portal to a shrine", \
-                                dst = "shrine" }
-KFEAT: O = enter_portal_vault
+NAME:       shrine_entry_b
+TAGS:       luniq_shrine
+ORIENT:     float
+:           shrine_portal_setup (_G)
 MAP
   x x
  xx.xx
@@ -41,13 +48,10 @@ xx...xx
   x x
 ENDMAP
 
-NAME: shrine_entry_c
-TAGS: uniq_shrine
-DEPTH: D:2-6
-ORIENT: float
-MARKER: O = lua:one_way_stair { desc = "A portal to a shrine", \
-                                dst = "shrine" }
-KFEAT: O = enter_portal_vault
+NAME:       shrine_entry_c
+TAGS:       uniq_shrine
+ORIENT:     float
+:           shrine_portal_setup (_G)
 MAP
 .......
 .x...x.
@@ -58,30 +62,35 @@ MAP
 .......
 ENDMAP
 
-NAME:     shrine_yred_kiku_a
-WEIGHT: 5
-TAGS:     shrine no_item_gen no_monster_gen no_pool_fixup
-ORIENT:   encompass
-KFEAT: > = exit_portal_vault
-SHUFFLE: XY
-KFEAT: X = altar_yredelemnul
-KFEAT: Y = altar_kikubaaqudgha
-NSUBST: M = 2:. / *:M
-SUBST: M = 1 2 3:5 4:5
-NSUBST: N = 4:. / *:N
-SUBST: N = 1 2 3:15 4:15
-SUBST: . = ZZ.
-COLOUR: Z = darkgrey
-SUBST: Z = .
-COLOUR: x = darkgrey
-MONS: place:D:4 zombie, place:D:5 skeleton, place:D:6 zombie, place:D:7 skeleton
-ITEM: any wand w:5 / wand of enslavement / q:1-3 any scroll w:2 / scroll of torment w:2
-: shrine_milestone(_G)
+###############################################################################
+# The portals themselves.
+default-depth:
+
+NAME:       shrine_yred_kiku_a
+WEIGHT:     5
+TAGS:       shrine no_item_gen no_monster_gen no_pool_fixup
+ORIENT:     encompass
+SHUFFLE:    XY
+KFEAT:      X = altar_yredelemnul
+KFEAT:      Y = altar_kikubaaqudgha
+NSUBST:     M = 2:. / *:M
+SUBST:      M = 1 2 3:5 4:5
+NSUBST:     N = 4:. / *:N
+SUBST:      N = 1 2 3:15 4:15
+SUBST:      . = ZZ.
+COLOUR:     Z = darkgrey
+SUBST:      Z = .
+COLOUR:     x = darkgrey
+MONS:       place:D:4 zombie, place:D:5 skeleton, place:D:6 zombie, \
+            place:D:7 skeleton
+ITEM:       any wand w:5 / wand of enslavement / q:1-3 any scroll w:2 \
+            / scroll of torment w:2
+:           shrine_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..NYN..xxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..NNN..xxxx
+                                      xxxxxxx
+                                     xx.....xx
+                                     x..NYN..x
+                                     x..NNN..x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..T..xxxxx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW...Wwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.d.Wwwwwx
@@ -93,34 +102,34 @@ xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW...Wwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.d.Wwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW...Wwwwwx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..T..xxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..NNN..xxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..NXN..xxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                                     x..NNN..x
+                                     x..NXN..x
+                                     xx.....xx
+                                      xxxxxxx
 ENDMAP
 
-NAME: shrine_yred_kiku_b
-WEIGHT: 5
-TAGS: shrine no_item_gen no_monster_gen no_pool_fixup
-ORIENT: encompass
-KFEAT: > = exit_portal_vault
-SHUFFLE: XY
-SHUFFLE: A>
-KFEAT: X = altar_yredelemnul
-KFEAT: Y = altar_kikubaaqudgha
-NSUBST: . = 8:M / *:.
-SUBST: M = 12
-NSUBST: H = 2:N / 3:M / *:.
-SUBST: N = 34
-MONS: place:D:4 zombie, place:D:5 skeleton
-MONS: place:D:6 zombie, place:D:6 skeleton
-SUBST: S = .
-SUBST: . = .ZZ
-COLOUR: Z = darkgrey
-SUBST: Z = .
-COLOUR: x = darkgrey
-ITEM: any wand w:5 / wand of enslavement / q:1-3 any scroll w:2 / scroll of torment w:2
-: shrine_milestone(_G)
+NAME:       shrine_yred_kiku_b
+WEIGHT:     5
+TAGS:       shrine no_item_gen no_monster_gen no_pool_fixup
+ORIENT:     encompass
+SHUFFLE:    XY
+SHUFFLE:    A>
+KFEAT:      X = altar_yredelemnul
+KFEAT:      Y = altar_kikubaaqudgha
+NSUBST:     . = 8:M / *:.
+SUBST:      M = 12
+NSUBST:     H = 2:N / 3:M / *:.
+SUBST:      N = 34
+MONS:       place:D:4 zombie, place:D:5 skeleton
+MONS:       place:D:6 zombie, place:D:6 skeleton
+SUBST:      S = .
+SUBST:      . = .ZZ
+COLOUR:     Z = darkgrey
+SUBST:      Z = .
+COLOUR:     x = darkgrey
+ITEM:       any wand w:5 / wand of enslavement / q:1-3 any scroll w:2 / \
+            scroll of torment w:2
+:           shrine_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.............SSSx............x
@@ -137,18 +146,19 @@ x............xSSS.............x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: shrine_makh_vehu_a
-WEIGHT: 5
-TAGS: shrine no_item_gen no_monster_gen no_pool_fixup
-ORIENT: encompass
-KFEAT: > = exit_portal_vault
-SHUFFLE: YZ
-KFEAT: Y = altar_vehumet
-KFEAT: Z = altar_makhleb
-MONS: imp / shadow imp / white imp
-NSUBST: M = 5:1 / *:.
-ITEM: tome of destruction / q:1-3 scroll of summoning / q:2-3 scroll of immolation / q:1-3 any scroll / wand of flame w:5 / wand of frost w:5 / wand of lightning w:5 / any wand w:3
-: shrine_milestone(_G)
+NAME:       shrine_makh_vehu_a
+WEIGHT:     5
+TAGS:       shrine no_item_gen no_monster_gen no_pool_fixup
+ORIENT:     encompass
+SHUFFLE:    YZ
+KFEAT:      Y = altar_vehumet
+KFEAT:      Z = altar_makhleb
+MONS:       imp / shadow imp / white imp
+NSUBST:     M = 5:1 / *:.
+ITEM:       tome of destruction / q:1-3 scroll of summoning / q:2-3 \
+            scroll of immolation / q:1-3 any scroll / wand of flame w:5 / \
+            wand of frost w:5 / wand of lightning w:5 / any wand w:3
+:           shrine_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.........www.........www...x
@@ -164,137 +174,135 @@ x...www.........www.........x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:shrine_makh_vehu_b
-WEIGHT: 5
-TAGS: shrine no_item_gen no_monster_gen no_pool_fixup
-ORIENT: encompass
-KFEAT: > = exit_portal_vault
-SHUFFLE: XY
-KFEAT: X = altar_makhleb
-KFEAT: Y = altar_vehumet
-KMONS: 1 = neqoxec
-ITEM: tome of destruction / q:1-3 scroll of summoning / q:2-3 scroll of immolation / q:1-3 any scroll / wand of flame w:5 / wand of frost w:5 / wand of lightning w:5 / any wand w:3
-: shrine_milestone(_G)
+NAME:       shrine_makh_vehu_b
+WEIGHT:     5
+TAGS:       shrine no_item_gen no_monster_gen no_pool_fixup
+ORIENT:     encompass
+SHUFFLE:    XY
+KFEAT:      X = altar_makhleb
+KFEAT:      Y = altar_vehumet
+MONS:       neqoxec
+ITEM:       tome of destruction / q:1-3 scroll of summoning / q:2-3 \ 
+            scroll of immolation / q:1-3 any scroll / wand of flame w:5 / \
+            wand of frost w:5 / wand of lightning w:5 / any wand w:3
+:           shrine_setup(_G)
 MAP
-xxxxxxxxxxxxx
-xxxxx...xxxxx
-xxxx.....xxxx
-xxx...w...xxx
+    xxxxx
+   xx...xx
+  xx.....xx
+ xx...w...xx
 xx.Y.www.A.xx
 x...wcncw...x
 xd.wwn1nww..x
 x...wcncw...x
 xx.X.www.>.xx
-xxx...w...xxx
-xxxx.....xxxx
-xxxxx...xxxxx
-xxxxxxxxxxxxx
+ xx...w...xx
+  xx.....xx
+   xx...xx
+    xxxxx
 ENDMAP
 
-NAME: shrine_good
-TAGS: shrine no_item_gen no_monster_gen
-ORIENT: encompass
-KFEAT: > = exit_portal_vault
-SHUFFLE: XYZ
-KFEAT: X = altar_shining_one
-KFEAT: Y = altar_elyvilon
-KFEAT: Z = altar_zin
-COLOUR: a = darkgrey / red / blue w:3 / lightred w:2
-COLOUR: b = darkgrey / red w:5 / lightgrey w:1 / blue w:3 / cyan w:1 / lightred w:1
-COLOUR: c = darkgrey w:7 / red w:2 / lightgrey w:4 / blue w:4 / cyan w:2
-COLOUR: d = darkgrey w:4 / lightgrey w:4 / blue / cyan w:4
-COLOUR: e = blue / cyan w:4
-COLOUR: f = blue / cyan w:7
-SUBST: a = w
-SUBST: b = w
-SUBST: c = w
-SUBST: d = w
-SUBST: e = w
-SUBST: f = w
-SUBST: G = ...BBC
-NSUBST: H = 2:C *:H
-SUBST: H = .BBCCC
-COLOUR: B = white
-COLOUR: C = yellow
-SUBST: B = .
-NSUBST: C = 3:M / 3:d / *:.
-ITEM: any scroll / scroll of holy word
-MONS: human; falchion / human; falchion ego:holy_wrath w:1 / human; quarterstaff / human; quarterstaff ego:holy_wrath w:1 / human
-MONS: gnoll; falchion / gnoll; falchion ego:holy_wrath w:1 / gnoll; quarterstaff / gnoll; quarterstaff ego:holy_wrath w:1 / gnoll
-MONS: orc; falchion / orc; falchion ego:holy_wrath w:1 / orc; quarterstaff / orc; quarterstaff ego:holy_wrath w:1 / orc
-#this one has really boring enemies. need more holy stuff.
-SUBST: M = 1222333
-: shrine_milestone(_G)
+NAME:       shrine_good
+TAGS:       shrine no_item_gen no_monster_gen
+ORIENT:     encompass
+SHUFFLE:    XYZ
+KFEAT:      X = altar_shining_one
+KFEAT:      Y = altar_elyvilon
+KFEAT:      Z = altar_zin
+COLOUR:     a = darkgrey / red / blue w:3 / lightred w:2
+COLOUR:     b = darkgrey / red w:5 / lightgrey w:1 / blue w:3 / cyan w:1 / \
+            lightred w:1
+COLOUR:     c = darkgrey w:7 / red w:2 / lightgrey w:4 / blue w:4 / cyan w:2
+COLOUR:     d = darkgrey w:4 / lightgrey w:4 / blue / cyan w:4
+COLOUR:     e = blue / cyan w:4
+COLOUR:     f = blue / cyan w:7
+SUBST:      abcdef = w
+SUBST:      G = ...BBC
+NSUBST:     H = 2:C / *:H
+SUBST:      H = .BBCCC
+COLOUR:     B = white
+COLOUR:     C = yellow
+SUBST:      B = .
+NSUBST:     C = 3:M / 3:d / *:.
+ITEM:       any scroll / scroll of holy word
+MONS:       human; falchion / human; falchion ego:holy_wrath w:1 \
+            / human; quarterstaff / human; quarterstaff ego:holy_wrath w:1 \
+            / human
+MONS:       gnoll; falchion / gnoll; falchion ego:holy_wrath w:1 / gnoll; \
+            quarterstaff / gnoll; quarterstaff ego:holy_wrath w:1 / gnoll 
+MONS:       orc; falchion / orc; falchion ego:holy_wrath w:1 \
+            / orc; quarterstaff / orc; quarterstaff ego:holy_wrath w:1 / orc
+SUBST:      M = 1222333
+:           shrine_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxaaaaaaaaaaaxxxxxxxx
-xxxxxxxxxxxxxxxxbbbbbbbbbbbbbxxxxxxx
-xxxxxxxxxxxxxxxcccccccccccccccxxxxxx
-xxxxxxxxxxxxxxdddddddddddddddddxxxxx
-xxxxxxxxxxxxxeeeeeeeeeeeeeeeeeeexxxx
-xxxxxxxxxxxxfffffffffffffffffffffxxx
+                xxxxxxxxxxxxx
+               xxaaaaaaaaaaaxx
+              xxbbbbbbbbbbbbbxx
+             xxcccccccccccccccxx
+            xxdddddddddddddddddxx
+           xxeeeeeeeeeeeeeeeeeeexx
+xxxxxxxxxxxxfffffffffffffffffffffxx
 x..........GGGGGGHHHHHHHHHHHGGGGGGxx
 x.>.A.....GGGGGGHHHXHHYHHZHHHGGGGGGx
 x..........GGGGGGHHHHHHHHHHHGGGGGGxx
-xxxxxxxxxxxxfffffffffffffffffffffxxx
-xxxxxxxxxxxxxeeeeeeeeeeeeeeeeeeexxxx
-xxxxxxxxxxxxxxdddddddddddddddddxxxxx
-xxxxxxxxxxxxxxxcccccccccccccccxxxxxx
-xxxxxxxxxxxxxxxxbbbbbbbbbbbbbxxxxxxx
-xxxxxxxxxxxxxxxxxaaaaaaaaaaaxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxfffffffffffffffffffffxx
+           xxeeeeeeeeeeeeeeeeeeexx
+            xxdddddddddddddddddxx
+             xxcccccccccccccccxx
+              xxbbbbbbbbbbbbbxx
+               xxaaaaaaaaaaaxx
+                xxxxxxxxxxxxx
 ENDMAP
 
-NAME: shrine_trog_oka
-TAGS: shrine no_item_gen no_monster_gen
-ORIENT: encompass
-KFEAT: > = exit_portal_vault
-SHUFFLE: YZ
-KFEAT: Y = altar_okawaru
-KFEAT: Z = altar_trog
-MONS: moth of wrath
-MONS: orc warrior; nothing w:15 / orc warrior / orc; nothing
-ITEM: any weapon
-NSUBST: M = 8:d / *:.
-: shrine_milestone(_G)
+NAME:       shrine_trog_oka
+TAGS:       shrine no_item_gen no_monster_gen
+ORIENT:     encompass
+SHUFFLE:    YZ
+KFEAT:      Y = altar_okawaru
+KFEAT:      Z = altar_trog
+MONS:       moth of wrath
+MONS:       orc warrior; nothing w:15 / orc warrior / orc; nothing
+ITEM:       any weapon
+NSUBST:     M = 8:d / *:.
+:           shrine_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxx
-xxxxxxxxMMMxxxxxxxx
-xxxxxxMMM2MMMxxxxxx
-xxxxxMMY...ZMMxxxxx
-xxxxx.........xxxxx
-xxxx....ooo....xxxx
-xxxx...oo1oo...xxxx
-xxxx....ooo....xxxx
-xxxx..........xxxxx
-xxxxx...A.>...xxxxx
-xxxxxx.......xxxxxx
-xxxxxxxx...xxxxxxxx
-xxxxxxxxxxxxxxxxxxx
+      xxxxxxx
+     xxxMMMxxx
+    xxMMM2MMMxx
+   xxMMY...ZMMxx
+   xx.........xx
+   x....ooo....x
+   x...oo1oo...x
+   x....ooo....x
+   x...........x
+   xx...A.>...xx
+    xx.......xx
+     xxx...xxx
+       xxxxx
 ENDMAP
 
-NAME: shrine_xom_nemelex
-TAGS: shrine no_item_gen no_monster gen
-ORIENT: encompass
-KFEAT: > = exit_portal_vault
-SHUFFLE: XY
-KFEAT: X = altar_xom
-KFEAT: Y = altar_nemelex_xobeh
-MONS: orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
-MONS: gnoll; club ego:chaos / gnoll; dagger ego:chaos / gnoll; spear ego:chaos
-MONS: place:D:1-8
-NSUBST: . = 1:X / 1:Y / *:.
-SUBST: . = ....................~~~~~~~WWWWWWwwwwwxxxxxxxxvnnnnnnnnbvlZTUMM
-SUBST: Z = **%%%|C
-SUBST: M = 123333.
-SUBST: S = ...W
-SUBST: R = ....................~~~~~~~WWWWWWwwwwwxxxxxxxxvnnnnnnnnbvlTU
-COLOUR: . = random
-: shrine_milestone(_G)
+NAME:       shrine_xom_nemelex
+TAGS:       shrine no_item_gen no_monster gen
+ORIENT:     encompass
+SHUFFLE:    XY
+KFEAT:      X = altar_xom
+KFEAT:      Y = altar_nemelex_xobeh
+MONS:       orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
+MONS:       gnoll; club ego:chaos / gnoll; dagger ego:chaos \
+            / gnoll; spear ego:chaos
+MONS:       place:D:1-8
+NSUBST:     . = 1:X / 1:Y / *:.
+SUBST:      . = ....................~~~~~~~WWWWWWwwwwwxxxxxxxxvnnnnnnnnbvlZTUMM
+SUBST:      Z = **%%%|C
+SUBST:      M = 123333.
+SUBST:      S = ...W
+SUBST:      R = ....................~~~~~~~WWWWWWwwwwwxxxxxxxxvnnnnnnnnbvlTU
+COLOUR:     . = random
+:           shrine_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx...........................xxxx
-xxx.............................xxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  xx...........................xx
+ xx.............................xx
 xx...............................xx
 x.................................x
 x.................................x
@@ -310,67 +318,67 @@ x.................................x
 x.................................x
 x.................................x
 xx...............................xx
-xxx.............................xxx
-xxxx...........................xxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ xx.............................xx
+  xx...........................xx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: shrine_sif
-TAGS: shrine no_item_gen no_monster_gen no_pool_fixup
-ORIENT: encompass
-KFEAT: > = exit_portal_vault
-KFEAT: X = altar_sif_muna
-MONS: orc wizard w:15 / Jessica / Michael w:5
-NSUBST: M = 2:1 *:.
-SUBST: . = ..Z
-COLOUR: Z = blue
-SUBST: Z = .
-ITEM: potion of gain intelligence / q:2 potion of gain intelligence w:5 / q:2 potion of magic / any book w:2 / nothing
-: shrine_milestone(_G)
+NAME:       shrine_sif
+TAGS:       shrine no_item_gen no_monster_gen no_pool_fixup
+ORIENT:     encompass
+KFEAT:      X = altar_sif_muna
+MONS:       orc wizard w:15 / Jessica / Blork the orc
+NSUBST:     M = 2:1 / *:.
+SUBST:      . = ..Z
+COLOUR:     Z = blue
+SUBST:      Z = .
+ITEM:       potion of gain intelligence / q:2 potion of gain intelligence w:5 \
+            / q:2 potion of magic / any book w:2 / nothing
+:           shrine_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxxxxx.A.xxxxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxxx...>...xxxxxxx
-xxxxxx.........xxxxxx
-xxxxx....www....xxxxx
-xxxxx...wwwww...xxxxx
-xxxx...wwM.Mww...xxxx
-xxxx...WWMMMWW...xxxx
-xxxx...wwMMMww...xxxx
-xxxxx...wwwww...xxxxx
-xxxxx....www....xxxxx
-xxxxxx.........xxxxxx
-xxxxxxx..d.d..xxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxxxxx.X.xxxxxxxxx
-xxxxxxxxx...xxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
+        xxxxx
+        x...x
+        x.A.x
+      xxx...xxx
+     xx...>...xx
+    xx.........xx
+    x....www....x
+   xx...wwwww...xx
+   x...wwM.Mww...x
+   x...WWMMMWW...x
+   x...wwMMMww...x
+   xx...wwwww...xx
+    x....www....x
+    xx.........xx
+     xx..d.d..xx
+      xxx...xxx
+        x.X.x
+        x...x
+        xxxxx
 ENDMAP
 
-NAME: shrine_fedhas
-TAGS: shrine no_item_gen no_monster_gen
-ORIENT: encompass
-KFEAT: > = exit_portal_vault
-KFEAT: X = altar_fedhas
-MONS: plant, fungus, oklob plant
-SUBST: . = .F
-COLOUR: F = green
-SUBST: F = .
-NSUBST: w = 2:Z / *:w
-KFEAT: Z = w
-KMONS: Z = big fish
-SUBST: x = xxxV
-COLOUR: V = green
-SUBST: V = x
-SUBST: x = xx11122.
-SUBST: y = x
-SUBST: d = dd.
-SHUFFLE: A>
-SUBST: 6 = 112
-ITEM: apple / apricot / orange / pear / grape / sultana / strawberry / nothing w:30
-: shrine_milestone(_G)
+NAME:       shrine_fedhas
+TAGS:       shrine no_item_gen no_monster_gen
+ORIENT:     encompass
+KFEAT:      X = altar_fedhas
+MONS:       plant, fungus, oklob plant
+SUBST:      . = .F
+COLOUR:     F = green
+SUBST:      F = .
+NSUBST:     w = 2:Z / *:w
+KFEAT:      Z = w
+KMONS:      Z = big fish
+SUBST:      x = xxxV
+COLOUR:     V = green
+SUBST:      V = x
+SUBST:      x = xx11122.
+SUBST:      y = x
+SUBST:      d = dd.
+SHUFFLE:    A>
+SUBST:      6 = 112
+ITEM:       apple / apricot / orange / pear / grape / sultana \
+            / strawberry / nothing w:30
+:           shrine_setup(_G)
 MAP
 yyyyyyyyyyyyyyyyyyyyyyy
 yxxxxxxxxxxxxxxxxxxxxxy
