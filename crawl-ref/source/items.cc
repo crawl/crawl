@@ -466,6 +466,9 @@ void unlink_item( int dest )
 
 void destroy_item( item_def &item, bool never_created )
 {
+    // Free up CrawlHashTable memory.
+    item.props.clear();
+
     if (!item.is_valid())
         return;
 

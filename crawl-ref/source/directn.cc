@@ -2839,7 +2839,7 @@ void set_feature_desc_short(const std::string &base_name,
     CrawlHashTable &props = env.properties;
 
     if (!props.exists(SHORT_DESC_KEY))
-        props[SHORT_DESC_KEY].new_table(SV_STR);
+        props[SHORT_DESC_KEY].new_table();
 
     CrawlHashTable &desc_table = props[SHORT_DESC_KEY].get_table();
 

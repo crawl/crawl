@@ -955,8 +955,8 @@ void dgn_reset_level()
     env.properties.clear();
 
     // Set up containers for storing some level generation info.
-    env.properties[LEVEL_VAULTS_KEY].new_table(SV_STR);
-    env.properties[TEMP_VAULTS_KEY].new_table(SV_STR);
+    env.properties[LEVEL_VAULTS_KEY].new_table();
+    env.properties[TEMP_VAULTS_KEY].new_table();
     env.properties[LEVEL_EXTRAS_KEY].new_vector(SV_STR);
 
     // Blank level with DNGN_ROCK_WALL.

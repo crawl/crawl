@@ -203,8 +203,7 @@ void init_stack_blood_potions(item_def &stack, int age)
 
     CrawlHashTable &props = stack.props;
     props.clear(); // sanity measure
-    props.set_default_flags(SFLAG_CONST_TYPE);
-    props["timer"].new_vector(SV_LONG);
+    props["timer"].new_vector(SV_LONG, SFLAG_CONST_TYPE);
     CrawlVector &timer = props["timer"].get_vector();
 
     if (age == -1)
@@ -406,8 +405,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
     item_colour(item);
 
     CrawlHashTable &props_new = item.props;
-    props_new.set_default_flags(SFLAG_CONST_TYPE);
-    props_new["timer"].new_vector(SV_LONG);
+    props_new["timer"].new_vector(SV_LONG, SFLAG_CONST_TYPE);
     CrawlVector &timer_new = props_new["timer"].get_vector();
 
     long val;
@@ -663,8 +661,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         item_colour(item);
 
         CrawlHashTable &props_new = item.props;
-        props_new.set_default_flags(SFLAG_CONST_TYPE);
-        props_new["timer"].new_vector(SV_LONG);
+        props_new["timer"].new_vector(SV_LONG, SFLAG_CONST_TYPE);
         CrawlVector &timer_new = props_new["timer"].get_vector();
 
         long val;
@@ -744,8 +741,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     item_colour(mitm[o]);
 
     CrawlHashTable &props_new = mitm[o].props;
-    props_new.set_default_flags(SFLAG_CONST_TYPE);
-    props_new["timer"].new_vector(SV_LONG);
+    props_new["timer"].new_vector(SV_LONG, SFLAG_CONST_TYPE);
     CrawlVector &timer_new = props_new["timer"].get_vector();
 
     long val;

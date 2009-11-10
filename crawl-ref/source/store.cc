@@ -302,10 +302,12 @@ void CrawlStoreValue::unset(bool force)
     }
 
     case SV_NONE:
-        ASSERT(false);
+        DEBUGSTR("CrawlStoreValue::unset: unsetting nothing");
+        break;
 
-    case NUM_STORE_VAL_TYPES:
-        ASSERT(false);
+    default:
+        DEBUGSTR("CrawlStoreValue::unset: unsetting invalid type");
+        break;
     }
 
     flags |= SFLAG_UNSET;
@@ -339,8 +341,6 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
     switch (type)
     {
     case SV_NONE:
-        break;
-
     case SV_BOOL:
     case SV_BYTE:
     case SV_SHORT:
@@ -377,8 +377,8 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         COPY_PTR(level_pos);
         break;
 
-     case NUM_STORE_VAL_TYPES:
-        DEBUGSTR("CrawlStoreValue has type NUM_STORE_VAL_TYPES");
+     default:
+        DEBUGSTR("CrawlStoreValue has invalid type");
         break;
     }
 
@@ -595,37 +595,9 @@ void CrawlStoreValue::read(reader &th)
     }
 }
 
-////////////////////////////////////////////////////////////////
-// Setup a new table with the given flags and/or type; assert if
-// a table already exists.
-CrawlHashTable &CrawlStoreValue::new_table(store_flags _flags)
+CrawlHashTable &CrawlStoreValue::new_table()
 {
-    return new_table(SV_NONE, flags);
-}
-
-CrawlHashTable &CrawlStoreValue::new_table(store_val_type _type,
-                                          store_flags _flags)
-{
-#ifdef DEBUG
-    CrawlHashTable* old_table = static_cast<CrawlHashTable*>(val.ptr);
-
-    ASSERT(flags & SFLAG_UNSET);
-    ASSERT(type == SV_NONE
-           || (type == SV_HASH
-               && old_table->size() == 0
-               && old_table->get_type() == SV_NONE
-               && old_table->get_default_flags() == 0));
-#endif
-
-    CrawlHashTable &table = get_table();
-
-    table.default_flags = _flags;
-    table.type          = _type;
-
-    type   =  SV_HASH;
-    flags &= ~SFLAG_UNSET;
-
-    return table;
+    return get_table();
 }
 
 ////////////////////////////////////////////////////////////////
@@ -1165,26 +1137,43 @@ std::string &CrawlStoreValue::operator += (const std::string &_val)
 ////////////////////////////////////////////////////////////////////////////
 
 CrawlHashTable::CrawlHashTable()
-    : type(SV_NONE), default_flags(0)
 {
+    hash_map = NULL;
 }
 
-CrawlHashTable::CrawlHashTable(store_flags flags)
-    : type(SV_NONE), default_flags(flags)
+CrawlHashTable::CrawlHashTable(const CrawlHashTable& other)
 {
-    ASSERT(!(default_flags & SFLAG_UNSET));
-}
+    if (other.hash_map == NULL)
+    {
+        hash_map = NULL;
+        return;
+    }
 
-CrawlHashTable::CrawlHashTable(store_val_type _type, store_flags flags)
-    : type(_type), default_flags(flags)
-{
-    ASSERT(type >= SV_NONE && type < NUM_STORE_VAL_TYPES);
-    ASSERT(!(default_flags & SFLAG_UNSET));
+    hash_map = new hash_map_type(*(other.hash_map));
 }
 
 CrawlHashTable::~CrawlHashTable()
 {
-    assert_validity();
+    // NOTE: Not using std::auto_ptr because making hash_map and auto_ptr
+    // causes compile weirdness in externs.h
+    if (hash_map == NULL)
+        return;
+
+    delete hash_map;
+    hash_map = NULL;
+}
+
+CrawlHashTable &CrawlHashTable::operator = (const CrawlHashTable &other)
+{
+    if (other.hash_map == NULL)
+    {
+        hash_map = NULL;
+        return (*this);
+    }
+
+    hash_map = new hash_map_type(*(other.hash_map));
+
+    return (*this);
 }
 
 //////////////////////////////
@@ -1199,12 +1188,10 @@ void CrawlHashTable::write(writer &th) const
     }
 
     marshallByte(th, size());
-    marshallByte(th, static_cast<char>(type));
-    marshallByte(th, (char) default_flags);
 
-    CrawlHashTable::hash_map_type::const_iterator i = hash_map.begin();
+    CrawlHashTable::hash_map_type::const_iterator i = hash_map->begin();
 
-    for (; i != hash_map.end(); i++)
+    for (; i != hash_map->end(); i++)
     {
         marshallString(th, i->first);
         i->second.write(th);
@@ -1218,16 +1205,19 @@ void CrawlHashTable::read(reader &th)
     assert_validity();
 
     ASSERT(empty());
-    ASSERT(type == SV_NONE);
-    ASSERT(default_flags == 0);
 
     hash_size _size = (hash_size) unmarshallByte(th);
 
     if (_size == 0)
         return;
 
-    type          = static_cast<store_val_type>(unmarshallByte(th));
-    default_flags = (store_flags) unmarshallByte(th);
+    if (th.getMinorVersion() < TAG_MINOR_SMALL_HASH)
+    {
+        unmarshallByte(th);
+        unmarshallByte(th);
+    }
+
+    init_hash_map();
 
     for (hash_size i = 0; i < _size; i++)
     {
@@ -1244,54 +1234,28 @@ void CrawlHashTable::read(reader &th)
 //////////////////
 // Misc functions
 
-store_flags CrawlHashTable::get_default_flags() const
-{
-    assert_validity();
-    return default_flags;
-}
-
-store_flags CrawlHashTable::set_default_flags(store_flags flags)
-{
-    assert_validity();
-    ASSERT(!(flags & SFLAG_UNSET));
-    default_flags |= flags;
-
-    return default_flags;
-}
-
-store_flags CrawlHashTable::unset_default_flags(store_flags flags)
-{
-    assert_validity();
-    ASSERT(!(flags & SFLAG_UNSET));
-    default_flags &= ~flags;
-
-    return default_flags;
-}
-
-store_val_type CrawlHashTable::get_type() const
-{
-    assert_validity();
-    return type;
-}
-
 bool CrawlHashTable::exists(const std::string &key) const
 {
-    assert_validity();
-    hash_map_type::const_iterator i = hash_map.find(key);
+    if (hash_map == NULL)
+        return (false);
 
-    return (i != hash_map.end());
+    assert_validity();
+    hash_map_type::const_iterator i = hash_map->find(key);
+
+    return (i != hash_map->end());
 }
 
 void CrawlHashTable::assert_validity() const
 {
 #ifdef DEBUG
-    ASSERT(!(default_flags & SFLAG_UNSET));
+    if (hash_map == NULL)
+        return;
 
-    hash_map_type::const_iterator i = hash_map.begin();
+    hash_map_type::const_iterator i = hash_map->begin();
 
     unsigned long actual_size = 0;
 
-    for (; i != hash_map.end(); i++)
+    for (; i != hash_map->end(); i++)
     {
         actual_size++;
 
@@ -1304,9 +1268,6 @@ void CrawlHashTable::assert_validity() const
 
         ASSERT(val.type != SV_NONE);
         ASSERT(!(val.flags & SFLAG_UNSET));
-
-        if (type != SV_NONE)
-            ASSERT(type == val.type);
 
         switch (val.type)
         {
@@ -1355,18 +1316,14 @@ void CrawlHashTable::assert_validity() const
 CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
 {
     assert_validity();
-    iterator i = hash_map.find(key);
+    init_hash_map();
 
-    if (i == hash_map.end())
+    iterator i = hash_map->find(key);
+
+    if (i == hash_map->end())
     {
-        hash_map[key]        = CrawlStoreValue(default_flags);
-        CrawlStoreValue &val = hash_map[key];
-
-        if (type != SV_NONE)
-        {
-            val.type   = type;
-            val.flags |= SFLAG_CONST_TYPE;
-        }
+        (*hash_map)[key]     = CrawlStoreValue();
+        CrawlStoreValue &val = (*hash_map)[key];
 
         return (val);
     }
@@ -1376,10 +1333,12 @@ CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
 
 const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
 {
+    ASSERT(hash_map != NULL);
     assert_validity();
-    hash_map_type::const_iterator i = hash_map.find(key);
 
-    ASSERT(i != hash_map.end());
+    hash_map_type::const_iterator i = hash_map->find(key);
+
+    ASSERT(i != hash_map->end());
     ASSERT(i->second.type != SV_NONE);
     ASSERT(!(i->second.flags & SFLAG_UNSET));
 
@@ -1401,66 +1360,86 @@ const CrawlStoreValue& CrawlHashTable::operator[] (const std::string &key)
 // std::map style interface
 hash_size CrawlHashTable::size() const
 {
-    return hash_map.size();
+    if (hash_map == NULL)
+        return (0);
+
+    return hash_map->size();
 }
 
 bool CrawlHashTable::empty() const
 {
-    return hash_map.empty();
+    if (hash_map == NULL)
+        return (true);
+
+    return hash_map->empty();
 }
 
 void CrawlHashTable::erase(const std::string key)
 {
     assert_validity();
-    iterator i = hash_map.find(key);
+    init_hash_map();
 
-    if (i != hash_map.end())
+    iterator i = hash_map->find(key);
+
+    if (i != hash_map->end())
     {
 #ifdef DEBUG
         CrawlStoreValue &val = i->second;
         ASSERT(!(val.flags & SFLAG_NO_ERASE));
 #endif
 
-        hash_map.erase(i);
+        hash_map->erase(i);
     }
 }
 
 void CrawlHashTable::clear()
 {
     assert_validity();
-    ASSERT(!(default_flags & SFLAG_NO_ERASE));
+    if (hash_map == NULL)
+        return;
 
-    iterator i = hash_map.begin();
-    for (; i != hash_map.end(); i++)
-        ASSERT(!(i->second.flags & SFLAG_NO_ERASE));
-
-    hash_map.clear();
-    default_flags = 0;
-    type          = SV_NONE;
+    delete hash_map;
+    hash_map = NULL;
 }
 
 CrawlHashTable::iterator CrawlHashTable::begin()
 {
     assert_validity();
-    return hash_map.begin();
+    init_hash_map();
+
+    return hash_map->begin();
 }
 
 CrawlHashTable::iterator CrawlHashTable::end()
 {
     assert_validity();
-    return hash_map.end();
+    init_hash_map();
+
+    return hash_map->end();
 }
 
 CrawlHashTable::const_iterator CrawlHashTable::begin() const
 {
+    ASSERT(hash_map != NULL);
     assert_validity();
-    return hash_map.begin();
+
+    return hash_map->begin();
 }
 
 CrawlHashTable::const_iterator CrawlHashTable::end() const
 {
+    ASSERT(hash_map != NULL);
     assert_validity();
-    return hash_map.end();
+
+    return hash_map->end();
+}
+
+void CrawlHashTable::init_hash_map()
+{
+    if (hash_map != NULL)
+        return;
+
+    hash_map = new hash_map_type();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1876,7 +1855,6 @@ template <typename T, store_val_type TYPE>
 void CrawlTableWrapper<T, TYPE>::wrap(CrawlHashTable* _table)
 {
     ASSERT(_table != NULL);
-    ASSERT(_table->get_type() == TYPE);
 
     table = _table;
 }

@@ -3056,11 +3056,11 @@ void init_deck(item_def &item)
     ASSERT(item.special >= DECK_RARITY_COMMON
            && item.special <= DECK_RARITY_LEGENDARY);
 
-    props.set_default_flags(SFLAG_CONST_TYPE);
+    const store_flags fl = SFLAG_CONST_TYPE;
 
-    props["cards"].new_vector(SV_BYTE).resize((vec_size)item.plus);
-    props["card_flags"].new_vector(SV_BYTE).resize((vec_size)item.plus);
-    props["drawn_cards"].new_vector(SV_BYTE);
+    props["cards"].new_vector(SV_BYTE, fl).resize((vec_size)item.plus);
+    props["card_flags"].new_vector(SV_BYTE, fl).resize((vec_size)item.plus);
+    props["drawn_cards"].new_vector(SV_BYTE, fl);
 
     for (int i = 0; i < item.plus; ++i)
     {

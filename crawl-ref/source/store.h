@@ -109,8 +109,7 @@ public:
     store_flags    unset_flags(store_flags flags);
     store_val_type get_type() const;
 
-    CrawlHashTable &new_table(store_flags flags);
-    CrawlHashTable &new_table(store_val_type type, store_flags flags = 0);
+    CrawlHashTable &new_table();
 
     CrawlVector &new_vector(store_flags flags,
                             vec_size max_size = VEC_MAX_SIZE);
@@ -270,8 +269,7 @@ class CrawlHashTable
 {
 public:
     CrawlHashTable();
-    CrawlHashTable(store_flags flags);
-    CrawlHashTable(store_val_type type, store_flags flags = 0);
+    CrawlHashTable(const CrawlHashTable& other);
 
     ~CrawlHashTable();
 
@@ -280,22 +278,22 @@ public:
     typedef hash_map_type::const_iterator          const_iterator;
 
 protected:
-    store_val_type type;
-    store_flags    default_flags;
-    hash_map_type  hash_map;
+    // NOTE: Not using std::auto_ptr because making hash_map an auto_ptr
+    // causes compile weirdness in externs.h
+    hash_map_type *hash_map;
+
+    void init_hash_map();
 
     friend class CrawlStoreValue;
 
 public:
+    CrawlHashTable &operator = (const CrawlHashTable &other);
+
     void write(writer &) const;
     void read(reader &);
 
-    store_flags    get_default_flags() const;
-    store_flags    set_default_flags(store_flags flags);
-    store_flags    unset_default_flags(store_flags flags);
-    store_val_type get_type() const;
-    bool           exists(const std::string &key) const;
-    void           assert_validity() const;
+    bool exists(const std::string &key) const;
+    void assert_validity() const;
 
     // NOTE: If the const versions of get_value() or [] are given a
     // key which doesn't exist, they will assert.
