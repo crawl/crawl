@@ -442,9 +442,7 @@ int fungal_bloom()
     }
 
     if (seen_mushrooms > 0)
-    {
         mushroom_spawn_message(seen_mushrooms, seen_corpses);
-    }
 
     if (kills)
         mprf("That felt like a moral victory.");
@@ -961,10 +959,10 @@ int corpse_spores(beh_type behavior)
                                                   MHITNOT,
                                                   MG_FORCE_PLACE));
 
-                if (rc!=-1)
+                if (rc != -1)
                 {
                     env.mons[rc].flags |= MF_ATT_CHANGE_ATTEMPT;
-                    if(behavior == BEH_FRIENDLY)
+                    if (behavior == BEH_FRIENDLY)
                     {
                         env.mons[rc].behaviour = BEH_WANDER;
                         env.mons[rc].foe = MHITNOT;
@@ -1314,12 +1312,12 @@ void cheibriados_time_bend(int pow)
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         monsters* mon = monster_at(*ai);
-        if (mon != NULL && !mons_is_stationary(mon))
+        if (mon && !mons_is_stationary(mon))
         {
             if (roll_dice(mon->hit_dice, 3) > random2avg(pow, 2))
             {
                 mprf("%s %s.",
-                 mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
+                     mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
                 continue;
             }
 
@@ -1350,8 +1348,9 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
         manage_clouds();
     }
     while (--you.duration[DUR_TIME_STEP] > 0);
-    // Update corpses, etc.  This does also shift monsters, but only by a tiny bit.
-    update_level(pow*10);
+    // Update corpses, etc.  This does also shift monsters, but only by
+    // a tiny bit.
+    update_level(pow * 10);
 
 #ifndef USE_TILE
     delay(1000);
@@ -1361,5 +1360,5 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     you.moveto(old_pos);
     you.duration[DUR_TIME_STEP] = 0;
     viewwindow(false);
-    mpr("You return into the normal time flow.");
+    mpr("You return to the normal time flow.");
 }
