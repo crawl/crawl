@@ -327,7 +327,7 @@ NAME:       shrine_sif
 TAGS:       shrine no_item_gen no_monster_gen no_pool_fixup
 ORIENT:     encompass
 KFEAT:      X = altar_sif_muna
-MONS:       orc wizard w:15 / Jessica / Blork the orc
+MONS:       orc wizard w:15 / Jessica / Blork the Orc
 NSUBST:     M = 2:1 / *:.
 SUBST:      . = ..Z
 COLOUR:     Z = blue

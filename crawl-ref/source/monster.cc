@@ -1509,8 +1509,11 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
             eq = EQ_BODY_ARMOUR;
         break;
     case ARM_CLOAK:
-        if (this->type == MONS_MAURICE || this->type == MONS_NIKOLA)
+        if (this->type == MONS_MAURICE || this->type == MONS_NIKOLA ||
+            this->type == MONS_CRAZY_YIUF)
+        {
             eq = EQ_BODY_ARMOUR;
+        }
         break;
     case ARM_GLOVES:
         if (this->type == MONS_NIKOLA)

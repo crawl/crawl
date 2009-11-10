@@ -2540,27 +2540,6 @@ MAP
 ENDMAP
 
 ##############################################################################
-# 'cuz we need more chaos weapons (1KB)
-#
-NAME:  crazy_cottage
-DEPTH: D:2-7
-MONS:  gnoll name:Crazy_Yiuf ; quarterstaff good_item ego:chaos . cloak
-ITEM:  hammer
-MAP
-xxxxxxxxxxxxxxxx
-xxtttttttxxtttxx
-xxtttttttttttttx
-....t.tttccccctx
-.....t..tc...ctx
-....tttt....1ctx
-...ttttttc..dctx
-xxtttttttccccctx
-xxtttttttttttttx
-xxxxxttttttttxxx
-xxxxxxxxxxxxxxxx
-ENDMAP
-
-##############################################################################
 # Minislime (by Mu.)
 #
 NAME:    minislime_mu

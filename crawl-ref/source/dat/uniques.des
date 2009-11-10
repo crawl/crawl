@@ -480,3 +480,25 @@ MONS:   Tiamat band
 MAP
 1
 ENDMAP
+
+###############################################################################
+# Crazy Yiuf! Only in his cottage.
+NAME:   uniq_crazy_yiuf_cottage
+DEPTH:  D:2-7
+TAGS:   place_unique no_monster_gen no_item_gen
+MONS:   Crazy Yiuf
+ITEM:   hammer
+MAP
+xxxxxxxxxxxxxxxx
+xxtttttttxxtttxx
+xxtttttttttttttx
+....t.tttccccctx
+.....t..tc...ctx
+....tttt....1ctx
+...ttttttc..dctx
+xxtttttttccccctx
+xxtttttttttttttx
+xxxxxttttttttxxx
+xxxxxxxxxxxxxxxx
+ENDMAP
+

@@ -318,6 +318,16 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.plus2 += -1 + random2(2);
         break;
 
+    case MONS_CRAZY_YIUF:
+        force_item        = true; // guaranteed chaos
+        item_race         = MAKE_ITEM_NO_RACE;
+        item.base_type    = OBJ_WEAPONS;
+        item.sub_type     = WPN_QUARTERSTAFF;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_CHAOS);
+        item.plus        += random2(5);
+        item.plus2       += random2(4);
+        break;
+
     case MONS_ORC:
     case MONS_ORC_PRIEST:
         item_race = MAKE_ITEM_ORCISH;
@@ -1386,6 +1396,12 @@ void give_armour(monsters *mon, int level)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
         force_colour   = DARKGREY;
+        break;
+
+    case MONS_CRAZY_YIUF:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_CLOAK;
         break;
 
     case MONS_DOWAN:
