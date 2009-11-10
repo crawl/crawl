@@ -2706,7 +2706,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     break;
                 }
 
-                if (thing_done == DID_ATTACK_HOLY
+                if (thing_done == DID_ATTACK_HOLY && victim
                     && !testbits(victim->flags, MF_CREATED_FRIENDLY)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
@@ -2744,7 +2744,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 if (thing_done == DID_UNCHIVALRIC_ATTACK)
                 {
-                    if (tso_unchivalric_attack_safe_monster(victim))
+                    if (victim && tso_unchivalric_attack_safe_monster(victim))
                         break;
 
                     if (!known)
@@ -2806,7 +2806,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
 
             case GOD_JIYVA:
-                if (mons_is_slime(victim))
+                if (victim && mons_is_slime(victim))
                 {
                     piety_change = -(level/2 + 3);
                     penance = level/2 + 3;
@@ -2841,7 +2841,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
             case GOD_ELYVILON: // healer god cares more about this
                 // Converted allies (marked as TSOites) can be martyrs.
-                if (victim->god == GOD_SHINING_ONE)
+                if (victim && victim->god == GOD_SHINING_ONE)
                     break;
 
                 if (player_under_penance())
@@ -2852,14 +2852,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             case GOD_ZIN:
                 // Converted allies (marked as TSOites) can be martyrs.
-                if (victim->god == GOD_SHINING_ONE)
+                if (victim && victim->god == GOD_SHINING_ONE)
                     break;
                 // fall through
 
             case GOD_FEDHAS:
                 // double-check god because of fall-throughs from other gods
                 // Toadstools are an exception for this conduct
-                if (you.religion == GOD_FEDHAS && (!fedhas_protects(victim)
+                if (you.religion == GOD_FEDHAS && (!victim
+                        || !fedhas_protects(victim)
                         || victim->mons_species() == MONS_TOADSTOOL))
                     break;
                 // fall through
@@ -3045,7 +3046,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
-                if (!testbits(victim->flags, MF_CREATED_FRIENDLY)
+                if (victim
+                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;
@@ -3112,7 +3114,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
-                if (!testbits(victim->flags, MF_CREATED_FRIENDLY)
+                if (victim
+                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;
