@@ -28,6 +28,7 @@
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
+#include "hiscores.h"
 #include "items.h"
 #include "kills.h"
 #include "message.h"
