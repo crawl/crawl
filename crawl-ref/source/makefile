@@ -502,6 +502,10 @@ override DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
 endif
 endif
 CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))\"
+else
+ifneq ($(prefix),)
+DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
+endif
 endif
 datadir_fp := $(abspath $(strip $(DESTDIR))$(strip $(DATADIR)))
 
