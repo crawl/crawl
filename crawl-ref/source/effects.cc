@@ -3271,17 +3271,14 @@ void change_labyrinth(bool msg)
                     if (feat_is_wall(grd(*ai)) && one_chance_in(++wall_count))
                         old_adj = *ai;
 
-                if (old_adj != c && !is_bloodcovered(old_adj))
-                {
-                    env.pgrid(old_adj) |= FPROP_BLOODY;
+                if (old_adj != c && maybe_bloodify_square(old_adj))
                     env.pgrid(c) &= (~FPROP_BLOODY);
-                }
             }
         }
         else if (one_chance_in(500))
         {
             // Rarely add blood randomly, accumulating with time...
-            env.pgrid(c) |= FPROP_BLOODY;
+            maybe_bloodify_square(c);
         }
 
         // Rather than use old_grid directly, replace with an adjacent
@@ -3323,17 +3320,14 @@ void change_labyrinth(bool msg)
                     if (_is_floor(grd(*ai)) && one_chance_in(++floor_count))
                         new_adj = *ai;
 
-                if (new_adj != p && !is_bloodcovered(new_adj))
-                {
-                    env.pgrid(new_adj) |= FPROP_BLOODY;
+                if (new_adj != p && maybe_bloodify_square(new_adj))
                     env.pgrid(p) &= (~FPROP_BLOODY);
-                }
             }
         }
         else if (one_chance_in(100))
         {
             // Occasionally add blood randomly, accumulating with time...
-            env.pgrid(p) |= FPROP_BLOODY;
+            maybe_bloodify_square(p);
         }
     }
 

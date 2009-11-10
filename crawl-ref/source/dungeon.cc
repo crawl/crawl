@@ -6547,7 +6547,7 @@ static void _labyrinth_add_blood_trail(const dgn_region &region)
         if (path.size() < 10)
             continue;
 
-        env.pgrid(start) |= FPROP_BLOODY;
+        maybe_bloodify_square(start);
 #ifdef WIZARD
         env.pgrid(start) |= FPROP_HIGHLIGHT;
 #endif
@@ -6560,7 +6560,7 @@ static void _labyrinth_add_blood_trail(const dgn_region &region)
             if (step < 2 || step < 12 && coinflip()
                 || step >= 12 && one_chance_in(step/4))
             {
-                env.pgrid(pos) |= FPROP_BLOODY;
+                maybe_bloodify_square(pos);
             }
 #ifdef WIZARD
             env.pgrid(pos) |= FPROP_HIGHLIGHT;

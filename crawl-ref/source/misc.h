@@ -44,6 +44,9 @@ void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
                       bool spatter = false, bool smell_alert = true);
 void generate_random_blood_spatter_on_level();
 
+// Set FPROP_BLOODY after checking bleedability.
+bool maybe_bloodify_square(const coord_def& where);
+
 bool check_annotation_exclusion_warning();
 void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
                entry_cause_type entry_cause = EC_UNKNOWN);

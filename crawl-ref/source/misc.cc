@@ -1085,6 +1085,15 @@ static bool allow_bleeding_on_square(const coord_def& where)
     return (true);
 }
 
+bool maybe_bloodify_square(const coord_def& where)
+{
+    if (!allow_bleeding_on_square(where))
+        return (false);
+
+    env.pgrid(where) |= FPROP_BLOODY;
+    return(true);
+}
+
 static void _maybe_bloodify_square(const coord_def& where, int amount,
                                    bool spatter = false,
                                    bool smell_alert = true)
@@ -1228,8 +1237,7 @@ void generate_random_blood_spatter_on_level()
         coord_def c = random_in_bounds();
         startprob = min_prob + random2(max_prob);
 
-        if (allow_bleeding_on_square(c))
-            env.pgrid(c) |= FPROP_BLOODY;
+        maybe_bloodify_square(c);
 
         _spatter_neighbours(c, startprob);
     }
