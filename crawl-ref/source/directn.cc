@@ -2745,7 +2745,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
 
     // altars
     case DNGN_ALTAR_ZIN:
-        return ("glowing white marble altar of Zin");
+        return ("glowing silver altar of Zin");
     case DNGN_ALTAR_SHINING_ONE:
         return ("glowing golden altar of the Shining One");
     case DNGN_ALTAR_KIKUBAAQUDGHA:
@@ -2767,7 +2767,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_ALTAR_NEMELEX_XOBEH:
         return ("sparkling altar of Nemelex Xobeh");
     case DNGN_ALTAR_ELYVILON:
-        return ("silver altar of Elyvilon");
+        return ("white marble altar of Elyvilon");
     case DNGN_ALTAR_LUGONU:
         return ("corrupted altar of Lugonu");
     case DNGN_ALTAR_BEOGH:
