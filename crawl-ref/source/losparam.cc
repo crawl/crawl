@@ -15,7 +15,9 @@
 
 opacity_type opacity_default::operator()(const coord_def& p) const
 {
-    dungeon_feature_type f = env.grid(p);
+    // Secret doors in translucent walls shouldn't block LOS,
+    // hence grid_appearance.
+    dungeon_feature_type f = grid_appearance(p);
     if (feat_is_opaque(f))
         return OPC_OPAQUE;
     else if (is_opaque_cloud(env.cgrid(p)))
