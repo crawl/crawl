@@ -476,36 +476,37 @@ ifneq ($(strip $(chroot_prefix)),)
 endif
 
 ifdef USE_DGAMELAUNCH
-CFOTHERS_L += -DDGAMELAUNCH
+	CFOTHERS_L += -DDGAMELAUNCH
 endif
 
 ifdef USE_CHROOT
-prefix_fp := $(abspath $(strip $(DESTDIR)$(chroot_prefix))/$(strip $(prefix)))
+	prefix_fp := $(abspath $(strip $(DESTDIR)$(chroot_prefix))/$(strip $(prefix)))
 else
-prefix_fp := $(abspath $(strip $(DESTDIR)$(prefix)))
+	prefix_fp := $(abspath $(strip $(DESTDIR)$(prefix)))
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
-ifeq ($(filter /%,$(SAVEDIR)),)
-ifneq ($(prefix),)
-override SAVEDIR := $(strip $(prefix))/$(strip $(SAVEDIR))
-endif
-endif
-CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
-savedir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SAVEDIR)))
+  ifeq ($(filter /%,$(SAVEDIR)),)
+    ifneq ($(prefix),)
+	override SAVEDIR := $(strip $(prefix))/$(strip $(SAVEDIR))
+    endif
+  endif
+  CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
+  savedir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SAVEDIR)))
 endif
 
 ifneq ($(strip $(DATADIR)),)
-ifeq ($(filter /%,$(DATADIR)),)
-ifneq ($(prefix),)
-override DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
-endif
-endif
-CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))\"
+  ifeq ($(filter /%,$(DATADIR)),)
+    #relative DATADIR
+    ifneq ($(prefix),)
+	override DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
+    endif
+  endif
+  CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))\"
 else
-ifneq ($(prefix),)
-DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
-endif
+  ifneq ($(prefix),)
+	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
+  endif
 endif
 datadir_fp := $(abspath $(strip $(DESTDIR))$(strip $(DATADIR)))
 
