@@ -2855,7 +2855,7 @@ try_again:
 
     std::set<const facet_def *> facets_used;
 
-    for (int tier = ARRAYSZ(ct_of_tier); tier >= 0; --tier)
+    for (int tier = ARRAYSZ(ct_of_tier) - 1; tier >= 0; --tier)
     {
         for (int nfacet = 0; nfacet < ct_of_tier[tier]; ++nfacet)
         {
