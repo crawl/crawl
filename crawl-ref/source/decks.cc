@@ -27,7 +27,6 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
-#include "los.h"
 #include "makeitem.h"
 #include "maps.h"
 #include "message.h"
@@ -52,7 +51,6 @@
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
-#include "shout.h"
 #include "xom.h"
 
 // DECK STRUCTURE: deck.plus is the number of cards the deck *started*

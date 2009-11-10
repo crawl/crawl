@@ -23,6 +23,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "transfor.h"
+#include "travel.h"
 
 /////////////////////////////////////////////////////////////////////
 // Bindings to get information on the player (clua).

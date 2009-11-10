@@ -35,7 +35,6 @@
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
-#include "shout.h"
 
 actor* actor_at(const coord_def& c)
 {

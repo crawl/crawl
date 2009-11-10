@@ -9,6 +9,7 @@
 
 #include "externs.h"
 
+#include "artefact.h"
 #include "attitude-change.h"
 #include "database.h"
 #include "decks.h"
@@ -17,7 +18,6 @@
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"
-#include "goditem.h"
 #include "it_use2.h"
 #include "message.h"
 #include "misc.h"
@@ -26,8 +26,8 @@
 #include "monstuff.h"
 #include "mutation.h"
 #include "ouch.h"
-#include "religion.h"
 #include "quiver.h"
+#include "religion.h"
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"

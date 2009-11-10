@@ -2,7 +2,6 @@
 
 #include "map_knowledge.h"
 
-#include "coord.h"
 #include "coordit.h"
 #include "dgnevent.h"
 #include "directn.h"
@@ -13,7 +12,6 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
-#include "shout.h"
 
 // These are hidden from the rest of the world... use the functions
 // below to get information about the map grid.

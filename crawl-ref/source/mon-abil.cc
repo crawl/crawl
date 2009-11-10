@@ -18,7 +18,6 @@
 #include "beam.h"
 #include "colour.h"
 #include "directn.h"
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "ghost.h"
 #include "misc.h"

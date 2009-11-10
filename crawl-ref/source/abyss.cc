@@ -39,7 +39,6 @@
 #include "tiles.h"
 #include "traps.h"
 #include "view.h"
-#include "shout.h"
 #include "xom.h"
 
 const coord_def abyss_center(45,35);

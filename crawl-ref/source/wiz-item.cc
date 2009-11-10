@@ -27,12 +27,10 @@
 #include "options.h"
 #include "religion.h"
 #include "spl-book.h"
-#include "spl-util.h"
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
-#include "shout.h"
 
 #ifdef WIZARD
 static void _make_all_books()

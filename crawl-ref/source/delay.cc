@@ -22,7 +22,6 @@
 #include "describe.h"
 #include "directn.h"
 #include "enum.h"
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "exclude.h"
 #include "food.h"
@@ -52,7 +51,6 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
-#include "shout.h"
 #include "xom.h"
 
 extern std::vector<SelItem> items_for_multidrop;

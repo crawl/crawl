@@ -9,7 +9,6 @@
 
 #include "coord.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "mon-util.h"
 #include "options.h"
 #include "overmap.h"
@@ -19,7 +18,6 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
-#include "shout.h"
 
 static bool _mon_needs_auto_exclude(const monsters *mon, bool sleepy = false)
 {

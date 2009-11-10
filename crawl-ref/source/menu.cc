@@ -17,7 +17,6 @@
 #include "options.h"
 #include "player.h"
 #include "tutorial.h"
-#include "shout.h"
 
 #ifdef USE_TILE
  #include "coord.h"

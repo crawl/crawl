@@ -8,7 +8,6 @@
 #include "artefact.h"
 #include "colour.h"
 #include "command.h"
-#include "initfile.h"
 #include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"

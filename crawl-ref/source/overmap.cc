@@ -26,10 +26,8 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "feature.h"
 #include "files.h"
-#include "initfile.h"
 #include "menu.h"
 #include "religion.h"
 #include "shopping.h"
@@ -37,7 +35,6 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
-#include "shout.h"
 
 typedef std::map<branch_type, level_id> stair_map_type;
 typedef std::map<level_pos, shop_type> shop_map_type;

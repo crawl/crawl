@@ -15,7 +15,6 @@
 
 #include "cio.h"
 #include "defines.h"
-#include "directn.h"
 #include "itemprop.h"
 #include "externs.h"
 #include "tilereg.h"
@@ -28,7 +27,6 @@
 #include "tiles.h"
 #include "tilesdl.h"
 #include "travel.h"
-#include "shout.h"
 #include "viewgeom.h"
 
 #include <SDL.h>

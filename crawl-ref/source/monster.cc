@@ -25,7 +25,6 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h" // for item values
-#include "spells3.h"
 #include "state.h"
 #include "traps.h"
 #include "tutorial.h"

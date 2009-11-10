@@ -15,7 +15,6 @@
 #include "colour.h"
 #include "database.h"
 #include "directn.h"
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"
 #include "ghost.h"
@@ -33,7 +32,6 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "shout.h"
 
 //jmf: moved from inside function
 static FixedVector < int, NUM_MONSTERS > mon_entry;

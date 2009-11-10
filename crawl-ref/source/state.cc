@@ -23,7 +23,6 @@
 #include "religion.h"
 #include "state.h"
 #include "tutorial.h"
-#include "shout.h"
 
 game_state::game_state()
     : game_crashed(false), mouse_enabled(false), waiting_for_command(false),

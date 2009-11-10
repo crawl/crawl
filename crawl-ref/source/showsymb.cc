@@ -23,7 +23,6 @@
 #include "overmap.h"
 #include "random.h"
 #include "show.h"
-#include "spells3.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"

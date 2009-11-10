@@ -27,7 +27,6 @@
 #include "describe.h"
 #include "files.h"
 #include "ghost.h"
-#include "initfile.h"
 #include "invent.h"
 #include "itemname.h"
 #include "items.h"
@@ -52,7 +51,6 @@
 #include "terrain.h"
 #include "transfor.h"
 #include "view.h"
-#include "shout.h"
 #include "viewchar.h"
 
 static void _adjust_item(void);

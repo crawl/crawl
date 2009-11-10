@@ -8,7 +8,6 @@
 #include "colour.h"
 #include "format.h"
 #include "showsymb.h"
-#include "shout.h"
 #include "viewchar.h"
 
 formatted_string::formatted_string(int init_colour)

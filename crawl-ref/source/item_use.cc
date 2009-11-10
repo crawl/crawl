@@ -29,7 +29,6 @@
 #include "directn.h"
 #include "effects.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "fight.h"
 #include "food.h"
 #include "godabil.h"

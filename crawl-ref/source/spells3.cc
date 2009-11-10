@@ -25,7 +25,6 @@
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "food.h"
 #include "goditem.h"

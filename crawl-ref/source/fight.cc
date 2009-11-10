@@ -64,7 +64,6 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
-#include "viewgeom.h"
 #include "xom.h"
 
 #ifdef NOTE_DEBUG_CHAOS_BRAND

@@ -25,7 +25,6 @@
 #include "colour.h"
 #include "coord.h"
 #include "describe.h"
-#include "directn.h"
 #include "format.h"
 #include "fight.h"
 #include "godabil.h"
@@ -35,7 +34,6 @@
 #include "item_use.h"
 #include "menu.h"
 #include "message.h"
-#include "misc.h"
 #include "monstuff.h"
 #include "mon-info.h"
 #include "mon-util.h"
@@ -50,7 +48,6 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "travel.h"
-#include "shout.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 

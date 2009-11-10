@@ -13,7 +13,6 @@
 #include "arena.h"
 #include "branch.h"
 #include "directn.h" // for the Compass
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "externs.h"
 #include "options.h"
@@ -35,7 +34,6 @@
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
-#include "shout.h"
 
 static std::vector<int> vault_mon_types;
 static std::vector<int> vault_mon_bases;

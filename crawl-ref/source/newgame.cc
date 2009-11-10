@@ -36,7 +36,6 @@
 
 #include "abl-show.h"
 #include "artefact.h"
-#include "branch.h"
 #include "cio.h"
 #include "command.h"
 #include "describe.h"

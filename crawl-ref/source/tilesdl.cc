@@ -6,9 +6,7 @@
 #include "cio.h"
 #include "coord.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "itemname.h"
-#include "items.h"
 #include "itemprop.h"
 #include "files.h"
 #include "macro.h"
@@ -24,7 +22,6 @@
 #include "tilesdl.h"
 #include "travel.h"
 #include "view.h"
-#include "shout.h"
 #include "viewgeom.h"
 
 #include "tiledef-dngn.h"

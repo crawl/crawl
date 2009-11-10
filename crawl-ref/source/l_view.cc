@@ -6,10 +6,10 @@
 #include "AppHdr.h"
 
 #include "l_libs.h"
+#include "l_defs.h"
 
 #include "cluautil.h"
 #include "env.h"
-#include "l_defs.h"
 #include "player.h"
 
 coord_def player2show(const coord_def &s)

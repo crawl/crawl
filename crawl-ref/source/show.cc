@@ -3,12 +3,8 @@
 #include "show.h"
 
 #include "cloud.h"
-#include "colour.h"
-#include "coord.h"
 #include "coordit.h"
-#include "directn.h"
 #include "env.h"
-#include "feature.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"

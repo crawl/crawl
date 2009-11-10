@@ -28,7 +28,6 @@
 #include "random.h"
 #include "spl-book.h"
 #include "travel.h"
-#include "shout.h"
 
 void item_set_appearance(item_def &item);
 

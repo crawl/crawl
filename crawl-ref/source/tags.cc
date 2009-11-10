@@ -65,7 +65,6 @@
 #include "dungeon.h"
 #include "enum.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "externs.h"
 #include "files.h"
 #include "ghost.h"
@@ -83,7 +82,6 @@
 #include "tilemcache.h"
 #include "travel.h"
 #include "view.h"
-#include "shout.h"
 
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
 #include "coord.h"

@@ -34,7 +34,6 @@
 #include "random.h"
 #include "shopping.h"
 #include "stuff.h"
-#include "transfor.h"
 #include "xom.h"
 
 

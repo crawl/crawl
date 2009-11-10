@@ -28,7 +28,6 @@
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "los.h"
 #include "mapmark.h"
 #include "message.h"
 #include "monplace.h"

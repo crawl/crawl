@@ -10,14 +10,12 @@
 #include "cloud.h"
 #include "coord.h"
 #include "env.h"
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "los.h"
 #include "player.h"
 #include "random.h"
 #include "state.h"
 #include "terrain.h"
-#include "shout.h"
 
 bool random_near_space(const coord_def& origin, coord_def& target,
                        bool allow_adjacent, bool restrict_los,

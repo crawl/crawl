@@ -63,7 +63,6 @@
 #include "state.h"
 #include "terrain.h"
 #include "tutorial.h"
-#include "shout.h"
 #include "viewgeom.h"
 #include "xom.h"
 

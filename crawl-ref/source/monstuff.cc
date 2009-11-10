@@ -24,7 +24,6 @@
 #include "delay.h"
 #include "dgnevent.h"
 #include "directn.h"
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "files.h"
 #include "food.h"

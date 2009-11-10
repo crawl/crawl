@@ -24,7 +24,6 @@
 #include "random.h"
 #include "stuff.h"
 #include "view.h"
-#include "shout.h"
 
 #ifdef UNIX
 #include <sys/time.h>

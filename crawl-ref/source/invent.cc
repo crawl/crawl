@@ -37,7 +37,6 @@
 #include "shopping.h"
 #include "showsymb.h"
 #include "stuff.h"
-#include "shout.h"
 #include "menu.h"
 #include "mon-util.h"
 #include "state.h"

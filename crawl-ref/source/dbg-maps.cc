@@ -13,14 +13,12 @@
 #include "coord.h"
 #include "dungeon.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "initfile.h"
 #include "maps.h"
 #include "message.h"
 #include "place.h"
 #include "player.h"
 #include "view.h"
-#include "shout.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 // Map statistics generation.

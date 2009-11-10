@@ -45,7 +45,6 @@
 #include "travel.h"
 #include "items.h"
 #include "view.h"
-#include "shout.h"
 #include "viewchar.h"
 
 // For finding the executable's path

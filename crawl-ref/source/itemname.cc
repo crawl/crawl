@@ -26,7 +26,6 @@
 #include "decks.h"
 #include "food.h"
 #include "goditem.h"
-#include "initfile.h"
 #include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -45,7 +44,6 @@
 #include "state.h"
 #include "stuff.h"
 #include "transfor.h"
-#include "shout.h"
 
 
 id_arr type_ids;

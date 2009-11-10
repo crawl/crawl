@@ -16,7 +16,6 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "mapmark.h"
 #include "ouch.h"
@@ -25,7 +24,6 @@
 #include "spells4.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "shout.h"
 #include "mutation.h"
 #include "los.h"
 

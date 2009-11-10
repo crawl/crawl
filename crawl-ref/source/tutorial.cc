@@ -25,7 +25,6 @@
 #include "describe.h"
 #include "food.h"
 #include "format.h"
-#include "initfile.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -57,7 +56,6 @@
  #include "tiles.h"
 #endif
 #include "view.h"
-#include "shout.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 

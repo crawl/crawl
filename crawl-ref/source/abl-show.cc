@@ -24,7 +24,6 @@
 #include "abyss.h"
 #include "artefact.h"
 #include "beam.h"
-#include "cloud.h"
 #include "database.h"
 #include "decks.h"
 #include "delay.h"
@@ -38,7 +37,6 @@
 #include "message.h"
 #include "menu.h"
 #include "misc.h"
-#include "mon-util.h"
 #include "monplace.h"
 #include "mutation.h"
 #include "notes.h"
@@ -57,7 +55,6 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "tutorial.h"
-#include "shout.h"
 
 #ifdef UNIX
 #include "libunix.h"

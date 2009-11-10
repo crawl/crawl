@@ -12,7 +12,6 @@
 
 #include "coord.h"
 #include "coordit.h"
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "exclude.h"
 #include "los.h"

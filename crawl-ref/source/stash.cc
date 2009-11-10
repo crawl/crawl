@@ -22,7 +22,6 @@
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
-#include "los.h"
 #include "menu.h"
 #include "message.h"
 #include "misc.h"

@@ -16,7 +16,6 @@
 #include "directn.h"
 #include "effects.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "feature.h"
 #include "goditem.h"
 #include "it_use2.h"
@@ -53,7 +52,6 @@
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
-#include "shout.h"
 #include "viewchar.h"
 #include "xom.h"
 

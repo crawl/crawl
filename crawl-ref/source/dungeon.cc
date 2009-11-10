@@ -31,11 +31,9 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "files.h"
-#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
-#include "los.h"
 #include "makeitem.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -56,7 +54,6 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "shout.h"
 
 #ifdef WIZARD
 #include "cio.h" // for cancelable_get_line()

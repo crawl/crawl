@@ -79,7 +79,6 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
-#include "shout.h"
 #include "viewgeom.h"
 
 #ifdef TARGET_COMPILER_VC

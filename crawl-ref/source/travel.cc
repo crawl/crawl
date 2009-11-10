@@ -23,13 +23,11 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "exclude.h"
 #include "godabil.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "los.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -53,7 +51,6 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
-#include "shout.h"
 
 #include <algorithm>
 #include <set>

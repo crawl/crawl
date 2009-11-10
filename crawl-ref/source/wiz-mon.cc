@@ -13,7 +13,6 @@
 #include "dbg-util.h"
 #include "delay.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "ghost.h"
 #include "invent.h"
 #include "items.h"
@@ -31,7 +30,6 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
-#include "shout.h"
 
 #ifdef WIZARD
 // Creates a specific monster by mon type number.

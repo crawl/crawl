@@ -14,7 +14,6 @@
 #include "colour.h"
 #include "database.h"
 #include "effects.h"
-#include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"
 #include "ghost.h"

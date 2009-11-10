@@ -19,7 +19,6 @@
 #include "describe.h"
 #include "directn.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"

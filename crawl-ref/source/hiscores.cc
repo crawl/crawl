@@ -39,7 +39,6 @@
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "items.h"
 #include "kills.h"
 #include "libutil.h"
 #include "message.h"

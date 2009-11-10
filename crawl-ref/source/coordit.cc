@@ -8,7 +8,6 @@
 #include "coordit.h"
 
 #include "coord.h"
-#include "los.h"
 #include "player.h"
 
 rectangle_iterator::rectangle_iterator( const coord_def& corner1,
