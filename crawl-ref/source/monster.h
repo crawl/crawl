@@ -371,7 +371,7 @@ public:
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
-    void heal(int amount, bool max_too = false);
+    bool heal(int amount, bool max_too = false);
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false, bool abyss_shift = false);
 

@@ -2938,13 +2938,39 @@ int monsters::melee_evasion(const actor *act, ev_ignore_type evit) const
     return (evasion);
 }
 
-void monsters::heal(int amount, bool max_too)
+bool monsters::heal(int amount, bool max_too)
 {
+    if (mons_is_statue(type))
+        return (false);
+
+    if (amount < 1)
+        return (false);
+    else if (!max_too && hit_points == max_hit_points)
+        return (false);
+
     hit_points += amount;
-    if (max_too)
-        max_hit_points += amount;
+
+    bool success = true;
+
     if (hit_points > max_hit_points)
+    {
+        if (max_too)
+        {
+            const monsterentry* m = get_monster_data(type);
+            const int maxhp =
+                m->hpdice[0] * (m->hpdice[1] + m->hpdice[2]) + m->hpdice[3];
+
+            // Limit HP growth.
+            if (random2(3 * maxhp) > 2 * max_hit_points)
+                max_hit_points++;
+            else
+                success = false;
+        }
+
         hit_points = max_hit_points;
+    }
+
+    return (success);
 }
 
 mon_holy_type monsters::holiness() const
@@ -4786,7 +4812,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // isn't up to choice. - bwr
         if (type == MONS_AIR_ELEMENTAL)
         {
-            heal_monster(this, 1, one_chance_in(5));
+            heal(1, one_chance_in(5));
 
             if (one_chance_in(5))
                 del_ench(ENCH_SUBMERGED);

@@ -105,7 +105,7 @@ static void _monster_regenerate(monsters *monster)
 
         || _mons_natural_regen_roll(monster))
     {
-        heal_monster(monster, 1, false);
+        monster->heal(1);
     }
 }
 

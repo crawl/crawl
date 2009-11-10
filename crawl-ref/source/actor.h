@@ -144,7 +144,7 @@ public:
     virtual int  hurt(const actor *attacker, int amount,
                       beam_type flavour = BEAM_MISSILE,
                       bool cleanup_dead = true) = 0;
-    virtual void heal(int amount, bool max_too = false) = 0;
+    virtual bool heal(int amount, bool max_too = false) = 0;
     virtual void banish(const std::string &who = "") = 0;
     virtual void blink(bool allow_partial_control = true) = 0;
     virtual void teleport(bool right_now = false, bool abyss_shift = false) = 0;

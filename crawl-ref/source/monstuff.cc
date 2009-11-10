@@ -1982,8 +1982,7 @@ int monster_die(monsters *monster, killer_type killer,
                     {
                         simple_monster_message(killer_mon,
                                                " looks invigorated.");
-                        heal_monster(killer_mon,
-                                     1 + random2(monster->hit_dice / 4), false);
+                        killer_mon->heal(1 + random2(monster->hit_dice / 4));
                     }
                 }
 
@@ -3506,42 +3505,6 @@ bool message_current_target()
 unsigned int monster_index(const monsters *monster)
 {
     return (monster - menv.buffer());
-}
-
-bool heal_monster(monsters * patient, int health_boost,
-                  bool permit_growth)
-{
-    if (mons_is_statue(patient->type))
-        return (false);
-
-    if (health_boost < 1)
-        return (false);
-    else if (!permit_growth && patient->hit_points == patient->max_hit_points)
-        return (false);
-
-    patient->hit_points += health_boost;
-
-    bool success = true;
-
-    if (patient->hit_points > patient->max_hit_points)
-    {
-        if (permit_growth)
-        {
-            const monsterentry* m = get_monster_data(patient->type);
-            const int maxhp =
-                m->hpdice[0] * (m->hpdice[1] + m->hpdice[2]) + m->hpdice[3];
-
-            // Limit HP growth.
-            if (random2(3 * maxhp) > 2 * patient->max_hit_points)
-                patient->max_hit_points++;
-            else
-                success = false;
-        }
-
-        patient->hit_points = patient->max_hit_points;
-    }
-
-    return (success);
 }
 
 void seen_monster(monsters *monster)

@@ -427,7 +427,7 @@ public:
     void petrify(actor *, int str);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
-    void heal(int amount, bool max_too = false);
+    bool heal(int amount, bool max_too = false);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     int hurt(const actor *attacker, int amount,

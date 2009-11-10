@@ -1597,8 +1597,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         break;
 
     case SPELL_MAJOR_HEALING:
-        if (heal_monster(monster, 50 + random2avg(monster->hit_dice * 10, 2),
-                         false))
+        if (monster->heal(50 + random2avg(monster->hit_dice * 10, 2)))
         {
             simple_monster_message(monster, " is healed.");
         }

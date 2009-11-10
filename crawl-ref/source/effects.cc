@@ -4197,7 +4197,7 @@ void update_level(double elapsedTime)
             if (monster_descriptor(mon->type, MDSC_REGENERATES)
                 || mon->type == MONS_PLAYER_GHOST)
             {
-                heal_monster(mon, turns, false);
+                mon->heal(turns);
             }
             else
             {
@@ -4205,8 +4205,7 @@ void update_level(double elapsedTime)
                 const int regen_rate =
                     std::max(mons_natural_regen_rate(mon) * 2, 5);
 
-                heal_monster(mon, div_rand_round(turns * regen_rate, 50),
-                             false);
+                mon->heal(div_rand_round(turns * regen_rate, 50));
             }
         }
 

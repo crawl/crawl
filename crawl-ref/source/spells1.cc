@@ -847,7 +847,7 @@ static int _healing_spell(int healed, bool divine_ability,
         }
     }
 
-    if (heal_monster(monster, healed, false))
+    if (monster->heal(healed))
     {
         did_something = true;
         mprf("You heal %s.", monster->name(DESC_NOCAP_THE).c_str());

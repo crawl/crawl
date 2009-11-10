@@ -6346,9 +6346,10 @@ int player::melee_evasion(const actor *act, ev_ignore_type evit) const
                && !is_run_delay(current_delay_action())? 5 : 0));
 }
 
-void player::heal(int amount, bool max_too)
+bool player::heal(int amount, bool max_too)
 {
     ::inc_hp(amount, max_too);
+    return true; /* TODO Check whether the player was healed. */
 }
 
 mon_holy_type player::holiness() const

@@ -1546,7 +1546,7 @@ static bool _blessing_healing(monsters* mon)
     const int healing = mon->max_hit_points / 4 + 1;
 
     // Heal a monster.
-    if (heal_monster(mon, healing + random2(healing + 1), false))
+    if (mon->heal(healing + random2(healing + 1)))
     {
         // A high-HP monster might get a unique name.
         if (x_chance_in_y(mon->max_hit_points + 1, 100))

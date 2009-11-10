@@ -5266,7 +5266,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
                 obvious_effect = true;
             msg_generated = true; // to avoid duplicate "nothing happens"
         }
-        else if (heal_monster(mon, 5 + damage.roll(), false))
+        else if (mon->heal(5 + damage.roll()))
         {
             if (mon->hit_points == mon->max_hit_points)
             {

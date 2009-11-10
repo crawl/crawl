@@ -3555,7 +3555,7 @@ bool melee_attack::chop_hydra_head( int dam,
                     simple_monster_message(defender_as_monster(),
                                            " grows two more!" );
                     defender_as_monster()->number += 2;
-                    heal_monster(defender_as_monster(), 8 + random2(8), true);
+                    defender->heal(8 + random2(8), true);
                 }
             }
         }

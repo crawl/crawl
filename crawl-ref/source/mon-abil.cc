@@ -1416,7 +1416,7 @@ void mon_nearby_ability(monsters *monster)
 
             dec_mp(5 + random2avg(13, 3));
 
-            heal_monster(monster, 10, true); // heh heh {dlb}
+            monster->heal(10, true); // heh heh {dlb}
         }
         break;
 
