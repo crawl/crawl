@@ -1358,6 +1358,14 @@ monster_type random_draconian_monster_species()
     return static_cast<monster_type>(MONS_BLACK_DRACONIAN + random2(num_drac));
 }
 
+// Note: For consistent behavior in player_will_anger_monster(), all
+// spellbooks a given monster can get here should produce the same
+// return values in is_holy_spell(), is_evil_spell(), and
+// is_chaotic_spell().
+//
+// FIXME: This is not true for one set of spellbooks; MST_WIZARD_IV
+// contains the evil Banishment spell, but the other MST_WIZARD-type
+// spellbooks contain no evil spells.
 static bool _get_spellbook_list(mon_spellbook_type book[6],
                                 monster_type mon_type)
 {
