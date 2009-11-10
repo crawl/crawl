@@ -2456,7 +2456,7 @@ static void _set_friendly_foes(bool allow_patrol = false)
     {
         monsters *mon(&menv[i]);
         if (!mon->alive() || !mons_near(mon) || !mon->friendly()
-            || mon->mons_species() == MONS_GIANT_SPORE)
+            || mon->type == MONS_GIANT_SPORE)
         {
             continue;
         }
@@ -2479,7 +2479,7 @@ static void _set_allies_patrol_point(bool clear = false)
             continue;
 
         // Berserking monsters cannot be ordered around.
-        if (mon->berserk())
+        if (mon->berserk() || mon->type == MONS_GIANT_SPORE)
             continue;
 
         mon->patrol_point = (clear ? coord_def(0, 0) : mon->pos());

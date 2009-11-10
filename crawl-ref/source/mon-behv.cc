@@ -1283,7 +1283,8 @@ void handle_behaviour(monsters *mon)
             // No foe? Then wander or seek the player.
             if (mon->foe == MHITNOT)
             {
-                if (crawl_state.arena || !proxPlayer || isNeutral || patrolling)
+                if (crawl_state.arena || !proxPlayer || isNeutral || patrolling
+                    || mon->type == MONS_GIANT_SPORE)
                     new_beh = BEH_WANDER;
                 else
                 {
@@ -1760,6 +1761,10 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         {
             break;
         }
+
+        // Avoid moving friendly giant spores out of BEH_WANDER
+        if (mon->friendly() && mon->type == MONS_GIANT_SPORE)
+            break;
 
         if (mon->asleep() && mons_near(mon))
             remove_auto_exclude(mon, true);

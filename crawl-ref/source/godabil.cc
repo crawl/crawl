@@ -962,7 +962,14 @@ int corpse_spores(beh_type behavior)
                                                   MG_FORCE_PLACE));
 
                 if (rc!=-1)
+                {
                     env.mons[rc].flags |= MF_ATT_CHANGE_ATTEMPT;
+                    if(behavior == BEH_FRIENDLY)
+                    {
+                        env.mons[rc].behaviour = BEH_WANDER;
+                        env.mons[rc].foe = MHITNOT;
+                    }
+                }
 
                 if (mons_skeleton(stack_it->plus))
                     turn_corpse_into_skeleton(*stack_it);
