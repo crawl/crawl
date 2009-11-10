@@ -437,6 +437,14 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     if (target_class == OBJ_UNASSIGNED)
         return (false);
 
+    // Fedhas worshipers are exempt from the food destruction effect
+    // of spores.
+    if(flavour == BEAM_SPORE
+       && you.religion == GOD_FEDHAS)
+    {
+        return false;
+    }
+
     // Currently we test against each stack (and item in the stack)
     // independently at strength%... perhaps we don't want that either
     // because it makes the system very fair and removes the protection
