@@ -28,8 +28,7 @@ void reautomap_level();
 class level_pos;
 void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc = false );
 bool is_feature(int feature, const coord_def& where);
-bool inside_level_bounds(int x, int y);
-bool inside_level_bounds(const coord_def &p);
+
 void clear_feature_overrides();
 void add_feature_override(const std::string &text);
 

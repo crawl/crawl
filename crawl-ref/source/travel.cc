@@ -250,7 +250,7 @@ static void _init_traps()
         int x = env.trap[i].pos.x,
             y = env.trap[i].pos.y;
 
-        if (inside_level_bounds(x,y))
+        if (in_bounds(x,y))
             curr_traps[x][y] = i;
     }
     traps_inited = true;

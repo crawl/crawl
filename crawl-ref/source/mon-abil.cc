@@ -851,7 +851,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             coord_def sg(sgn(diff.x), sgn(diff.y));
             coord_def t = monster->pos() + sg;
 
-            if (!inside_level_bounds(t))
+            if (!in_bounds(t))
                 continue;
 
             if (!feat_is_solid(grd(t)))

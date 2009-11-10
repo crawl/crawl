@@ -56,7 +56,6 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "view.h"
 #include "shout.h"
 
 #ifdef WIZARD
@@ -2879,7 +2878,7 @@ static bool _shaft_is_in_corridor(const coord_def& c)
     for (unsigned int i = 0; i < ARRAYSZ(adjs); ++i)
     {
         const coord_def spot = c + adjs[i];
-        if (!inside_level_bounds(spot) || grd(spot) < DNGN_SHALLOW_WATER)
+        if (!in_bounds(spot) || grd(spot) < DNGN_SHALLOW_WATER)
             return (true);
     }
     return (false);

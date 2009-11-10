@@ -86,16 +86,6 @@
 
 crawl_view_geometry crawl_view;
 
-bool inside_level_bounds(int x, int y)
-{
-    return (x > 0 && x < GXM && y > 0 && y < GYM);
-}
-
-bool inside_level_bounds(const coord_def &p)
-{
-    return (inside_level_bounds(p.x, p.y));
-}
-
 bool is_notable_terrain(dungeon_feature_type ftype)
 {
     return (get_feature_def(ftype).is_notable());

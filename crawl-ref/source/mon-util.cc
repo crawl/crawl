@@ -33,7 +33,6 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "view.h"
 #include "shout.h"
 
 //jmf: moved from inside function
@@ -2008,7 +2007,7 @@ bool mons_is_influenced_by_sanctuary(const monsters *m)
 bool mons_is_fleeing_sanctuary(const monsters *m)
 {
     return (mons_is_influenced_by_sanctuary(m)
-            && inside_level_bounds(env.sanctuary_pos)
+            && in_bounds(env.sanctuary_pos)
             && (m->flags & MF_FLEEING_FROM_SANCTUARY));
 }
 

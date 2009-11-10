@@ -1594,7 +1594,7 @@ void handle_behaviour(monsters *mon)
 static bool _mons_check_foe(monsters *mon, const coord_def& p,
                             bool friendly, bool neutral)
 {
-    if (!inside_level_bounds(p))
+    if (!in_bounds(p))
         return (false);
 
     if (!friendly && !neutral && p == you.pos()

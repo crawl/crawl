@@ -1712,7 +1712,7 @@ bool entomb(int powc)
 // Otherwise, return -1.
 static int _inside_circle(const coord_def& where, int radius)
 {
-    if (!inside_level_bounds(where))
+    if (!in_bounds(where))
         return -1;
 
     const coord_def ep = grid2view(where);
@@ -1736,7 +1736,7 @@ bool remove_sanctuary(bool did_attack)
     if (env.sanctuary_time)
         env.sanctuary_time = 0;
 
-    if (!inside_level_bounds(env.sanctuary_pos))
+    if (!in_bounds(env.sanctuary_pos))
         return (false);
 
     const int radius = 5;
