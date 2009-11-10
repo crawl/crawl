@@ -103,18 +103,23 @@ void marshallShowtype (writer &, const show_type &);
 class reader
 {
 public:
-    reader(FILE* input)
-        : _file(input), _pbuf(0), _read_offset(0) {}
-    reader(const std::vector<unsigned char>& input)
-        : _file(0), _pbuf(&input), _read_offset(0) {}
+    reader(FILE* input, char minorVersion = TAG_MINOR_VERSION)
+        : _file(input), _pbuf(0), _read_offset(0),
+          _minorVersion(minorVersion) {}
+    reader(const std::vector<unsigned char>& input,
+           char minorVersion = TAG_MINOR_VERSION)
+        : _file(0), _pbuf(&input), _read_offset(0),
+          _minorVersion(minorVersion) {}
 
     unsigned char readByte();
     void read(void *data, size_t size);
+    char getMinorVersion();
 
 private:
     FILE* _file;
     const std::vector<unsigned char>* _pbuf;
     unsigned int _read_offset;
+    char _minorVersion;
 };
 
 char        unmarshallByte    (reader &);

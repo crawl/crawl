@@ -134,6 +134,11 @@ void reader::read(void *data, size_t size)
     }
 }
 
+char reader::getMinorVersion()
+{
+    return _minorVersion;
+}
+
 void writer::writeByte(unsigned char ch)
 {
     if (_file)
@@ -703,7 +708,7 @@ tag_type tag_read(FILE *fp, char minorVersion)
     short tag_id;
     std::vector<unsigned char> buf;
     {
-        reader tmp(fp);
+        reader tmp(fp, minorVersion);
         tag_id = unmarshallShort(tmp);
         if (tag_id < 0)
             return TAG_NO_TAG;
@@ -720,7 +725,7 @@ tag_type tag_read(FILE *fp, char minorVersion)
     unwind_var<int> tag_minor_version(_tag_minor_version, minorVersion);
 
     // Ok, we have data now.
-    reader th(buf);
+    reader th(buf, minorVersion);
     switch (tag_id)
     {
     case TAG_YOU:            tag_read_you(th, minorVersion);            break;

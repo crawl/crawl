@@ -1818,7 +1818,7 @@ void restore_game(void)
     FILE *stashf = fopen(stashFile.c_str(), "rb");
     if (stashf)
     {
-        reader inf(stashf);
+        reader inf(stashf, minorVersion);
         StashTrack.load(inf);
         fclose(stashf);
     }
@@ -1832,7 +1832,7 @@ void restore_game(void)
     FILE *killf = fopen(killFile.c_str(), "rb");
     if (killf)
     {
-        reader inf(killf);
+        reader inf(killf, minorVersion);
         you.kills->load(inf);
         fclose(killf);
     }
@@ -1841,7 +1841,7 @@ void restore_game(void)
     FILE *travelf = fopen(travelCacheFile.c_str(), "rb");
     if (travelf)
     {
-        reader inf(travelf);
+        reader inf(travelf, minorVersion);
         travel_cache.load(inf, minorVersion);
         fclose(travelf);
     }
@@ -1850,7 +1850,7 @@ void restore_game(void)
     FILE *notesf = fopen(notesFile.c_str(), "rb");
     if (notesf)
     {
-        reader inf(notesf);
+        reader inf(notesf, minorVersion);
         load_notes(inf);
         fclose(notesf);
     }
@@ -1860,7 +1860,7 @@ void restore_game(void)
     FILE *tutorf = fopen(tutorFile.c_str(), "rb");
     if (tutorf)
     {
-        reader inf(tutorf);
+        reader inf(tutorf, minorVersion);
         load_tutorial(inf);
         fclose(tutorf);
     }
@@ -1870,7 +1870,7 @@ void restore_game(void)
     FILE *msgf = fopen(msgFile.c_str(), "rb");
     if (msgf)
     {
-        reader inf(msgf);
+        reader inf(msgf, minorVersion);
         load_messages(inf);
         fclose(msgf);
     }
@@ -2065,7 +2065,7 @@ static bool _determine_ghost_version( FILE *ghostFile,
     majorVersion = buf[0];
     minorVersion = buf[1];
 
-    reader inf(ghostFile);
+    reader inf(ghostFile, minorVersion);
     // Check for the DCSS ghost signature.
     if (unmarshallShort(inf) != GHOST_SIGNATURE)
         return (false);
