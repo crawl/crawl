@@ -507,6 +507,11 @@ bool god_hates_spell_type(spell_type spell, god_type god)
             return (true);
         break;
 
+    case GOD_FEDHAS:
+        if (disciplines & SPTYP_NECROMANCY)
+            return (true);
+        break;
+
     case GOD_CHEIBRIADOS:
         if (is_hasty_spell(spell))
             return (true);
@@ -600,6 +605,9 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
 
     case GOD_ELYVILON:
         return (discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));
+
+    case GOD_FEDHAS:
+        return (discipline & SPTYP_NECROMANCY);
 
     default:
         break;
