@@ -421,7 +421,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         }
         else
         {
-            if (go_berserk(true))
+            if (go_berserk(was_known))
                 xom_is_stimulated(64);
         }
         break;
