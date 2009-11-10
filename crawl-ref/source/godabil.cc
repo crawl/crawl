@@ -1270,7 +1270,7 @@ static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
     }
 
     const int damage = 1 + random2(pow / 6);
-    if (mon->type == MONS_BLINK_FROG)
+    if (mons_genus(mon->type) == MONS_BLINK_FROG)
         mon->heal(damage, false);
     else if (!mon->check_res_magic(pow))
     {
@@ -1286,7 +1286,7 @@ static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
 
 static void _lugonu_warp_area(int pow)
 {
-    apply_area_around_square( _lugonu_warp_monster, you.pos(), pow );
+    apply_area_around_square(_lugonu_warp_monster, you.pos(), pow);
 }
 
 void lugonu_bends_space()
@@ -1294,7 +1294,7 @@ void lugonu_bends_space()
     const int pow = 4 + skill_bump(SK_INVOCATIONS);
     const bool area_warp = random2(pow) > 9;
 
-    mprf("Space bends %saround you!", area_warp? "sharply " : "");
+    mprf("Space bends %saround you!", area_warp ? "sharply " : "");
 
     if (area_warp)
         _lugonu_warp_area(pow);

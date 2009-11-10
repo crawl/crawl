@@ -1192,13 +1192,13 @@ void handle_behaviour(monsters *mon)
         && you.pet_target != MHITNOT
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
         && !mon->berserk()
-        && mon->mons_species() != MONS_GIANT_SPORE)
+        && mon->type != MONS_GIANT_SPORE)
     {
         mon->foe = you.pet_target;
     }
 
     // Instead, berserkers attack nearest monsters.
-    if ((mon->berserk() || mon->mons_species() == MONS_GIANT_SPORE)
+    if ((mon->berserk() || mon->type == MONS_GIANT_SPORE)
         && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
     {
         // Intelligent monsters prefer to attack the player,
@@ -1280,12 +1280,14 @@ void handle_behaviour(monsters *mon)
 
         case BEH_LURK:
         case BEH_SEEK:
-            // No foe? Then wander or seek the player.
+            // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
             {
                 if (crawl_state.arena || !proxPlayer || isNeutral || patrolling
                     || mon->type == MONS_GIANT_SPORE)
+                {
                     new_beh = BEH_WANDER;
+                }
                 else
                 {
                     new_foe = MHITYOU;
@@ -1762,7 +1764,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             break;
         }
 
-        // Avoid moving friendly giant spores out of BEH_WANDER
+        // Avoid moving friendly giant spores out of BEH_WANDER.
         if (mon->friendly() && mon->type == MONS_GIANT_SPORE)
             break;
 
