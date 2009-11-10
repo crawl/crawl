@@ -1324,6 +1324,31 @@ Crazy Yiuf
 
 @_crazy_yiuf_speech_@
 %%%%
+# Not quite so mad when he's confused.
+confused Crazy Yiuf
+
+@The_monster@ says, "This beard itches something crazy!"
+
+@The_monster@ says, "I wonder if I left the window open."
+
+VISUAL:@The_monster@ scratches his head thoughtfully.
+
+@The_monster@ says, "Have you seen my glasses?"
+
+@The_monster@ says, "Perhaps I shall have lamb for dinner."
+
+@The_monster@ says, "Oh, this is rather nice."
+
+@The_monster@ says, "Have you seen my cloak?"
+
+@The_monster@ laughs.
+
+VISUAL:@The_monster@ counts something out on his fingers.
+
+@The_monster@ says, "My, my head's in a spin!"
+
+@The_monster@ says, "I feel rather peculiar."
+%%%%
 _crazy_yiuf_speech_
 
 w:30
