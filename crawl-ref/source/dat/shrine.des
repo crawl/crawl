@@ -293,7 +293,7 @@ MONS:       gnoll; club ego:chaos / gnoll; dagger ego:chaos \
 MONS:       place:D:1-8
 NSUBST:     . = 1:X / 1:Y / *:.
 SUBST:      . = ....................~~~~~~~WWWWWWwwwwwxxxxxxxxvnnnnnnnnbvlZTUMM
-SUBST:      Z = **%%%|C
+SUBST:      Z = **%%%|
 SUBST:      M = 123333.
 SUBST:      S = ...W
 SUBST:      R = ....................~~~~~~~WWWWWWwwwwwxxxxxxxxvnnnnnnnnbvlTU
