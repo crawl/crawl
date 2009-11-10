@@ -47,10 +47,14 @@ static bool _tso_holy_revenge();
 
 static bool _yred_random_zombified_hostile()
 {
-    monster_type z_type = MONS_PROGRAM_BUG;
-    monster_type z_base = pick_random_zombie();
+    const bool skel = one_chance_in(4);
 
-    const bool skel = mons_skeleton(z_base) && one_chance_in(4);
+    monster_type z_base;
+    monster_type z_type;
+
+    do
+        z_base = pick_random_zombie();
+    while (skel && !mons_skeleton(z_base));
 
     if (mons_zombie_size(z_base) == Z_BIG)
         z_type = skel ? MONS_SKELETON_LARGE : MONS_ZOMBIE_LARGE;
