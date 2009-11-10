@@ -45,6 +45,7 @@
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 
 static bool _handle_pickup(monsters *monster);

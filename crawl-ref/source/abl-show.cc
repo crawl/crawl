@@ -58,6 +58,7 @@
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 
 #ifdef UNIX
 #include "libunix.h"

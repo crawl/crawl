@@ -44,6 +44,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
+#include "shout.h"
 #include "xom.h"
 
 // TODO: Let artefacts besides weapons generate noise.

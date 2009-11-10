@@ -29,6 +29,7 @@
 #include "spl-book.h"
 #include "travel.h"
 #include "view.h"
+#include "shout.h"
 
 void item_set_appearance(item_def &item);
 

@@ -57,6 +57,7 @@
  #include "tiles.h"
 #endif
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 

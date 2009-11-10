@@ -37,6 +37,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
+#include "shout.h"
 
 typedef std::map<branch_type, level_id> stair_map_type;
 typedef std::map<level_pos, shop_type> shop_map_type;

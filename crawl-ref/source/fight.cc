@@ -63,6 +63,7 @@
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 #include "viewgeom.h"
 #include "xom.h"
 

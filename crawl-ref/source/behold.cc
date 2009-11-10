@@ -17,6 +17,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
+#include "shout.h"
 
 // Add a monster to the list of beholders.
 void player::add_beholder(const monsters* mon)

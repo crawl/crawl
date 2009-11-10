@@ -53,6 +53,7 @@
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 #include "xom.h"
 

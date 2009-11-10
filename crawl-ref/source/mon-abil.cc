@@ -34,6 +34,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 
 bool ugly_thing_mutate(monsters *ugly, bool proximity)

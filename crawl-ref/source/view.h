@@ -25,16 +25,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    coord_def origin = coord_def(-1, -1));
 void reautomap_level();
 
-bool noisy(int loudness, const coord_def& where, int who,
-           bool mermaid = false);
-bool noisy(int loudness, const coord_def& where, const char *msg = NULL,
-           int who = -1, bool mermaid = false);
-void blood_smell( int strength, const coord_def& where);
-void handle_monster_shouts(monsters* monster, bool force = false);
-
 class level_pos;
 void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc = false );
-bool check_awaken(monsters* monster);
 bool is_feature(int feature, const coord_def& where);
 bool inside_level_bounds(int x, int y);
 bool inside_level_bounds(const coord_def &p);

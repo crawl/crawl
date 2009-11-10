@@ -129,6 +129,7 @@ religion.o \
 rng.o \
 sha256.o \
 shopping.o \
+shout.o \
 show.o \
 showsymb.o \
 skills.o \

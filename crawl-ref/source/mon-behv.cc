@@ -25,6 +25,7 @@
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 
 static void _set_nearest_monster_foe(monsters *monster);
 

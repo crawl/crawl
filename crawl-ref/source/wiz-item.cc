@@ -32,6 +32,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
+#include "shout.h"
 
 #ifdef WIZARD
 static void _make_all_books()

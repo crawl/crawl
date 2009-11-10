@@ -33,6 +33,7 @@
 #include "spells3.h"
 #include "stuff.h"
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 
 static bool _valid_mon_spells[NUM_SPELLS];

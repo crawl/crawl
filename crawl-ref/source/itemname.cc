@@ -46,6 +46,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
+#include "shout.h"
 
 
 id_arr type_ids;

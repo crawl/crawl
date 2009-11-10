@@ -52,6 +52,7 @@
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
+#include "shout.h"
 #include "xom.h"
 
 // DECK STRUCTURE: deck.plus is the number of cards the deck *started*

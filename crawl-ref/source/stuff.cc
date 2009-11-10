@@ -18,6 +18,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 
@@ -61,6 +62,7 @@
 #include "religion.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 
 stack_iterator::stack_iterator(const coord_def& pos)
 {

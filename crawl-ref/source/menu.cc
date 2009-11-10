@@ -18,6 +18,7 @@
 #include "player.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 
 #ifdef USE_TILE
  #include "coord.h"

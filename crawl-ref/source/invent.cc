@@ -38,6 +38,7 @@
 #include "showsymb.h"
 #include "stuff.h"
 #include "view.h"
+#include "shout.h"
 #include "menu.h"
 #include "mon-util.h"
 #include "state.h"

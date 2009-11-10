@@ -20,6 +20,7 @@
 #include "place.h"
 #include "player.h"
 #include "view.h"
+#include "shout.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 // Map statistics generation.

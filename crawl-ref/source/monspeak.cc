@@ -31,6 +31,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
+#include "shout.h"
 
 // Try the exact key lookup along with the entire prefix list.
 // If that fails, start ignoring hostile/religion/silence, in that order,

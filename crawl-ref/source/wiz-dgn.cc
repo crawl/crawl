@@ -29,6 +29,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
+#include "shout.h"
 #include "wiz-mon.h"
 
 #ifdef WIZARD

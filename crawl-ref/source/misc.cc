@@ -82,6 +82,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 #include "xom.h"
 

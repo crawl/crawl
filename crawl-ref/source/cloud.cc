@@ -26,6 +26,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
+#include "shout.h"
 #include "mutation.h"
 #include "los.h"
 

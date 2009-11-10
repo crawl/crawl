@@ -35,6 +35,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
+#include "shout.h"
 
 static std::vector<int> vault_mon_types;
 static std::vector<int> vault_mon_bases;

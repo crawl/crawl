@@ -30,6 +30,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "view.h"
+#include "shout.h"
 #include "viewgeom.h"
 
 #define DEBUG_DIAGNOSTICS 1

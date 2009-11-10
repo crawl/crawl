@@ -80,6 +80,7 @@
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 #include "xom.h"
 
 #if DEBUG_RELIGION

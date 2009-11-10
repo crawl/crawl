@@ -39,6 +39,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
+#include "shout.h"
 
 bool yred_injury_mirror(bool actual)
 {

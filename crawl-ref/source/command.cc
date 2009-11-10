@@ -52,6 +52,7 @@
 #include "terrain.h"
 #include "transfor.h"
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 
 static void _adjust_item(void);

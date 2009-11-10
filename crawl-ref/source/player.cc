@@ -70,6 +70,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 #include "viewgeom.h"
 #include "tiles.h"
 #include "xom.h"

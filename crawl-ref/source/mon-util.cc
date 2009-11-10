@@ -34,6 +34,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
+#include "shout.h"
 
 //jmf: moved from inside function
 static FixedVector < int, NUM_MONSTERS > mon_entry;

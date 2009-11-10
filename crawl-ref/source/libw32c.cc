@@ -71,6 +71,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
+#include "shout.h"
 #include "viewgeom.h"
 
 char oldTitle[80];

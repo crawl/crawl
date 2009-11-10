@@ -50,6 +50,7 @@
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 
 static bool _abyss_blocks_teleport(bool cblink)

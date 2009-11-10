@@ -31,6 +31,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
+#include "shout.h"
 
 #ifdef WIZARD
 // Creates a specific monster by mon type number.

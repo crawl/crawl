@@ -83,6 +83,7 @@
 #include "tilemcache.h"
 #include "travel.h"
 #include "view.h"
+#include "shout.h"
 
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
 #include "coord.h"

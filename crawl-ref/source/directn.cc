@@ -65,6 +65,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "wiz-mon.h"

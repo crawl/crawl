@@ -57,6 +57,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#include "shout.h"
 
 #ifdef WIZARD
 #include "cio.h" // for cancelable_get_line()

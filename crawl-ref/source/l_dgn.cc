@@ -18,6 +18,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "view.h"
+#include "shout.h"
 
 ///////////////////////////////////////////////////////////////////////////
 // Lua dungeon bindings (in the dgn table).

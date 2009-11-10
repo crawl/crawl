@@ -19,6 +19,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 
 static bool _mon_needs_auto_exclude(const monsters *mon, bool sleepy = false)
 {

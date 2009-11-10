@@ -55,6 +55,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
+#include "shout.h"
 #include "viewchar.h"
 #include "xom.h"
 

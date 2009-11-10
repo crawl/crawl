@@ -41,6 +41,7 @@
 #include "transfor.h"
 #include "tutorial.h"
 #include "view.h"
+#include "shout.h"
 #include "xom.h"
 
 bool trap_def::active() const

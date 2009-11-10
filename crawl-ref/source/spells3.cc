@@ -51,6 +51,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#include "shout.h"
 #include "viewgeom.h"
 #include "xom.h"
 
