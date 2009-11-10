@@ -91,20 +91,22 @@ int random_choose_weighted(int weight, int first, ...)
     return (chosen);
 }
 
+#define UINT32_MAX ((uint32_t)(-1))
+
 int random2(int max)
 {
     if (max <= 1)
         return (0);
 
-    unsigned long partn = 0xFFFFFFFFUL / max;
+    uint32_t partn = UINT32_MAX / max;
 
     while (true)
     {
-        unsigned long bits = random_int();
-        unsigned long val  = bits / partn;
+        uint32_t bits = random_int();
+        uint32_t val  = bits / partn;
 
-        if (val < (unsigned long)(max))
-            return val;
+        if (val < (uint32_t)max)
+            return ((int)val);
     }
 }
 
