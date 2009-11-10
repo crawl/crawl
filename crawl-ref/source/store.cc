@@ -1154,7 +1154,7 @@ CrawlHashTable::CrawlHashTable(const CrawlHashTable& other)
 
 CrawlHashTable::~CrawlHashTable()
 {
-    // NOTE: Not using std::auto_ptr because making hash_map and auto_ptr
+    // NOTE: Not using std::auto_ptr because making hash_map an auto_ptr
     // causes compile weirdness in externs.h
     if (hash_map == NULL)
         return;
@@ -1165,6 +1165,9 @@ CrawlHashTable::~CrawlHashTable()
 
 CrawlHashTable &CrawlHashTable::operator = (const CrawlHashTable &other)
 {
+    if (hash_map != NULL)
+        delete hash_map;
+
     if (other.hash_map == NULL)
     {
         hash_map = NULL;
