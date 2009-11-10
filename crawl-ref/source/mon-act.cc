@@ -1578,10 +1578,13 @@ static void _khufu_drop_tomb(monsters *monster)
         }
     }
     if (count)
-        if (mons_near(monster))
+    {
+        calc_show_los();
+        if (monster->observable())
             mpr("The walls disappear!");
         else
             mpr("You hear a deep rumble.");
+    }
     monster->number = 0;
     monster->lose_energy(EUT_SPELL);
 }

@@ -11,6 +11,7 @@
 #endif
 
 #include "beam.h"
+#include "cloud.h"
 #include "colour.h"
 #include "database.h"
 #include "effects.h"
@@ -2072,6 +2073,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             if (grd(*ai) == DNGN_FLOOR || feat_is_trap(grd(*ai)))
             {
                 grd(*ai) = DNGN_ROCK_WALL;
+                if (env.cgrid(*ai) != EMPTY_CLOUD)
+                    delete_cloud(env.cgrid(*ai));
                 sumcount++;
             }
         }
