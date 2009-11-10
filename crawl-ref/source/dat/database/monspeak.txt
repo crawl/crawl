@@ -1760,7 +1760,14 @@ VISUAL:@The_monster@ robes are whipped around by a magical breeze.
 @The_monster@ says @to_foe@, "There's a certain beauty in death, don't you think?"
 
 @The_monster@ laughs at you. "Don't get delusional, you can't win!"
+%%%%
+_Dowan_Duvessa_dies_
 
+@The_monster@ screams, "No! No!"
+
+@The_monster@ starts to cry.
+
+@The_monster@ screams, "No! Oh no!"
 %%%%
 ############ DUANE ### A mercenary guarding the dungeon
 Duane
@@ -1797,6 +1804,14 @@ _Duvessa_rare_
 @The_monster@ says @to_foe@, "Beauty is only skin deep, and my weapons penetrate much further than that."
 
 @The_monster@ says @to_foe@, "Practice, practice, practice! One day you'll be as good as me." @player_only@
+%%%%
+_Duvessa_Dowan_dies_
+
+@The_monster@ screams in rage.
+
+@The_monster@ screams, "No! How DARE you!"
+
+@The_monster@ weeps, then rights herself and shakes her weapon.
 %%%%
 ############ EDMUND ### A mercenary guarding the dungeon
 Edmund

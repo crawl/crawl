@@ -20,6 +20,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "cloud.h"
+#include "database.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "directn.h"
@@ -1202,6 +1203,56 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
     }
 }
 
+// XXX: Another hackish function! May do weird things if multiple copies of
+//      the band have been placed using wizard mode. {due}
+static void _elven_twin_died(monsters* twin)
+{
+    bool found_duvessa = false;
+    bool found_dowan = false;
+    monsters *monster;
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monster = &menv[i];
+        if (monster->alive() && monster->type == MONS_DUVESSA)
+        {
+            found_duvessa = true;
+            break;
+        }
+        else if (monster->alive() && monster->type == MONS_DOWAN)
+        {
+            found_dowan = true;
+            break;
+        }
+    }
+
+    if ((found_duvessa || found_dowan) && monster->observable())
+    {
+        // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
+        // 'Dowan_Dowan_dies', but as neither will match, these can safely be
+        // ignored.
+        std::string death_message = getSpeakString("_"
+            + monster->name(DESC_CAP_THE, true) + "_"
+            + twin->name(DESC_CAP_THE) + "_dies_");
+
+        if (!death_message.empty())
+            mons_speaks_msg(monster, death_message, MSGCH_TALK, silenced(you.pos()));
+    }
+
+    if (found_duvessa && monster->observable())
+    {
+        // Provides its own flavour message.
+        monster->go_berserk(true);
+    }
+    else if (found_dowan && monster->observable())
+    {
+        // Doesn't provide any message, so needs one.
+        simple_monster_message(monster, " turns to flee.");
+        monster->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU));
+        behaviour_event(monster, ME_SCARE, MHITNOT);
+    }
+}
+
 void pikel_band_neutralise ()
 {
     // XXX: This is a really ugly hack. It should be replaced by something else
@@ -2042,6 +2093,11 @@ int monster_die(monsters *monster, killer_type killer,
             mpr("The kraken is slain, and its tentacles slide "
                 "back into the water like the carrion they now are.");
         }
+    }
+    else if ((monster->type == MONS_DOWAN || monster->type == MONS_DUVESSA)
+              && monster->observable())
+    {
+        _elven_twin_died(monster);
     }
     else if (!monster->is_summoned())
     {
