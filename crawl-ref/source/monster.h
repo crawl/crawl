@@ -136,15 +136,18 @@ public:
     bool has_hydra_multi_attack() const;
     bool has_multitargeting() const;
 
-    // Has the 'spellcaster' flag (may not actually have any spells)
+    // Has the 'spellcaster' flag (may not actually have any spells).
     bool can_use_spells() const;
 
     // Has the 'priest' flag.
     bool is_priest() const;
 
-    // Is an actual wizard-type spellcaster, i.e. Trog will dislike it, it
-    // can be silenced, etc.
+    // Is an actual wizard-type spellcaster (it can be silenced, etc.).
     bool is_actual_spellcaster() const;
+
+    // Is an actual wizard-type spellcaster, and has spells (Trog will
+    // dislike it).
+    bool is_magic_user() const;
 
     // Has ENCH_SHAPESHIFTER or ENCH_GLOWING_SHAPESHIFTER.
     bool is_shapeshifter() const;

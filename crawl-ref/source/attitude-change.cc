@@ -279,7 +279,7 @@ static bool _magic_users_on_level_attitude_change()
     {
         monsters *monster = &menv[i];
         if (monster->alive()
-            && mons_is_magic_user(monster))
+            && monster->is_magic_user())
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Magic user attitude changing: %s on level %d, branch %d",

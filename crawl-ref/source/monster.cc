@@ -3855,6 +3855,11 @@ bool monsters::is_actual_spellcaster() const
     return (flags & MF_ACTUAL_SPELLS);
 }
 
+bool monsters::is_magic_user() const
+{
+    return (is_actual_spellcaster() && has_spells());
+}
+
 bool monsters::is_shapeshifter() const
 {
     return (has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER));
