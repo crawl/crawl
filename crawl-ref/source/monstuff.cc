@@ -344,7 +344,8 @@ monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
 
 bool explode_corpse(item_def& corpse, const coord_def& where)
 {
-    los_def ld(where, opc_solid);
+    // Don't want chunks to show up behind the player.
+    los_def ld(where, opc_no_actor);
 
     if (monster_descriptor(corpse.plus, MDSC_LEAVES_HIDE)
             && mons_genus(corpse.plus) == MONS_DRAGON)
@@ -396,7 +397,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
         mprf(MSGCH_DIAGNOSTICS, "Cell is visible...");
 #endif
 
-        if (feat_is_solid(grd(cp)))
+        if (feat_is_solid(grd(cp)) || actor_at(cp))
             continue;
 
         --nchunks;

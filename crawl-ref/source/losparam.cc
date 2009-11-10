@@ -78,3 +78,11 @@ opacity_type opacity_monmove::operator()(const coord_def& p) const
     else
         return (OPC_CLEAR);
 }
+
+opacity_type opacity_no_actor::operator()(const coord_def& p) const
+{
+    if (feat_is_solid(env.grid(p)) || actor_at(p))
+        return (OPC_OPAQUE);
+    else
+        return (OPC_CLEAR);
+}

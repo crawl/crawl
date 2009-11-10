@@ -82,6 +82,16 @@ struct opacity_monmove : opacity_func
     opacity_type operator()(const coord_def& p) const;
 };
 
+// Make any actor (as well as solid features) block.
+// Note that the blocking actors are still "visible".
+struct opacity_no_actor : opacity_func
+{
+    CLONE(opacity_no_actor)
+
+    opacity_type operator()(const coord_def& p) const;
+};
+static opacity_no_actor opc_no_actor;
+
 // Subclasses of this are passed to losight() to modify the
 // LOS calculation. Implementations will have to translate between
 // relative coordinates (-8,-8)..(8,8) and real coordinates,
