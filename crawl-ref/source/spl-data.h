@@ -207,10 +207,10 @@
 {
     SPELL_HASTE, "Haste",
      SPTYP_ENCHANTMENT,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_HASTY,
      6,  // lowered to 6 from 8, since it's easily available from various items
          // and Swiftness is level 2 (and gives a similar effect).  It's also
-         // not that much better than Invisibility.  -- bwr
+         // not that much better than Invisibility. - bwr
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
@@ -860,7 +860,7 @@
 {
     SPELL_BERSERKER_RAGE, "Berserker Rage",
      SPTYP_ENCHANTMENT,
-     SPFLAG_NONE,
+     SPFLAG_HASTY,
      3,
      0,
      -1, -1,
@@ -1172,7 +1172,7 @@
 {
     SPELL_SWIFTNESS, "Swiftness",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
-     SPFLAG_NONE,
+     SPFLAG_HASTY,
      2,
      200,
      -1, -1,
@@ -2384,7 +2384,7 @@
 {
     SPELL_HASTE_OTHER, "Haste Other",
      SPTYP_ENCHANTMENT,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_HASTY,
      6,
      200,
      LOS_RADIUS, LOS_RADIUS,
