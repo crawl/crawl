@@ -957,7 +957,8 @@ void dgn_reset_level()
     env.properties[LEVEL_EXTRAS_KEY].new_vector(SV_STR);
 
     // Blank level with DNGN_ROCK_WALL.
-    grd.init(DNGN_ROCK_WALL);
+    env.grid.init(DNGN_ROCK_WALL);
+    env.pgrid.init(0);
     env.grid_colours.init(BLACK);
     env.map_knowledge.init(map_cell());
 
