@@ -9,7 +9,7 @@ void slime_convert(monsters *monster);
 bool holy_beings_attitude_change();
 bool evil_beings_attitude_change();
 bool chaotic_beings_attitude_change();
-bool magic_users_attitude_change();
+bool spellcasters_attitude_change();
 bool yred_slaves_abandon_you();
 bool beogh_followers_abandon_you();
 bool jiyva_slimes_abandon_you();

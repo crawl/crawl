@@ -142,12 +142,9 @@ public:
     // Has the 'priest' flag.
     bool is_priest() const;
 
-    // Is an actual wizard-type spellcaster (it can be silenced, etc.).
+    // Is an actual wizard-type spellcaster (it can be silenced, Trog
+    // will dislike it, etc.).
     bool is_actual_spellcaster() const;
-
-    // Is an actual wizard-type spellcaster, and has spells (Trog will
-    // dislike it).
-    bool is_magic_user() const;
 
     // Has ENCH_SHAPESHIFTER or ENCH_GLOWING_SHAPESHIFTER.
     bool is_shapeshifter() const;

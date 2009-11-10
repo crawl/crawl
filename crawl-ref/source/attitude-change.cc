@@ -271,7 +271,7 @@ bool chaotic_beings_attitude_change()
     return (apply_to_all_dungeons(_chaotic_beings_on_level_attitude_change));
 }
 
-static bool _magic_users_on_level_attitude_change()
+static bool _spellcasters_on_level_attitude_change()
 {
     bool success = false;
 
@@ -279,10 +279,10 @@ static bool _magic_users_on_level_attitude_change()
     {
         monsters *monster = &menv[i];
         if (monster->alive()
-            && monster->is_magic_user())
+            && monster->is_actual_spellcaster())
         {
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Magic user attitude changing: %s on level %d, branch %d",
+            mprf(MSGCH_DIAGNOSTICS, "Spellcaster attitude changing: %s on level %d, branch %d",
                  monster->name(DESC_PLAIN).c_str(),
                  static_cast<int>(you.your_level),
                  static_cast<int>(you.where_are_you));
@@ -305,9 +305,9 @@ static bool _magic_users_on_level_attitude_change()
     return (success);
 }
 
-bool magic_users_attitude_change()
+bool spellcasters_attitude_change()
 {
-    return (apply_to_all_dungeons(_magic_users_on_level_attitude_change));
+    return (apply_to_all_dungeons(_spellcasters_on_level_attitude_change));
 }
 
 // Make summoned (temporary) god gifts disappear on penance or when
