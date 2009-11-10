@@ -207,13 +207,19 @@ bool is_hasty_item(const item_def& item)
     case OBJ_WANDS:
         retval = (item.sub_type == WAND_HASTING);
         break;
+    case OBJ_JEWELLERY:
+        retval = (item.sub_type == AMU_RAGE
+                  || item.sub_type == AMU_RESIST_SLOW);
+        break;
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_SPEED
                   || item.sub_type == POT_BERSERK_RAGE);
         break;
-    case OBJ_JEWELLERY:
-        retval = (item.sub_type == AMU_RAGE
-                  || item.sub_type == AMU_RESIST_SLOW);
+    case OBJ_BOOKS:
+        retval = is_hasty_spellbook(item);
+        break;
+    case OBJ_STAVES:
+        retval = is_hasty_rod(item);
         break;
     default:
         break;
@@ -336,6 +342,11 @@ bool is_chaotic_spellbook(const item_def& item)
     return (is_spellbook_type(item, false, is_chaotic_spell));
 }
 
+bool is_hasty_spellbook(const item_def& item)
+{
+    return (is_spellbook_type(item, false, is_hasty_spell));
+}
+
 bool god_hates_spellbook(const item_def& item)
 {
     return (is_spellbook_type(item, false, god_hates_spell_type));
@@ -354,6 +365,11 @@ bool is_evil_rod(const item_def& item)
 bool is_chaotic_rod(const item_def& item)
 {
     return (is_spellbook_type(item, true, is_chaotic_spell));
+}
+
+bool is_hasty_rod(const item_def& item)
+{
+    return (is_spellbook_type(item, true, is_hasty_spell));
 }
 
 bool god_hates_rod(const item_def& item)
