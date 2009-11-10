@@ -1561,6 +1561,8 @@ void define_monster(monsters &mons)
             while (spells == MST_NO_SPELLS);
         }
     }
+    else
+        spells = m->sec;
 
     // Some calculations.
     hp     = hit_points(hd, m->hpdice[1], m->hpdice[2]);
