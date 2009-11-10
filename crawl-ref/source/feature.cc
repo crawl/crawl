@@ -445,11 +445,11 @@ void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_ALTAR_ZIN:
-            f.colour      = WHITE;
+            f.colour      = LIGHTGREY;
             f.dchar       = DCHAR_ALTAR;
             f.flags      |= FFT_NOTABLE;
             f.map_colour  = DARKGREY;
-            f.seen_colour = WHITE;
+            f.seen_colour = LIGHTGREY;
             f.minimap     = MF_FEATURE;
             break;
 
@@ -544,11 +544,11 @@ void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_ALTAR_ELYVILON:
-            f.colour      = LIGHTGREY;
+            f.colour      = WHITE;
             f.dchar       = DCHAR_ALTAR;
             f.flags      |= FFT_NOTABLE;
             f.map_colour  = DARKGREY;
-            f.seen_colour = LIGHTGREY;
+            f.seen_colour = WHITE;
             f.minimap     = MF_FEATURE;
             break;
 
