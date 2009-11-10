@@ -1093,37 +1093,37 @@ static void _inc_gift_timeout(int val)
 
 int yred_random_servants(int threshold, bool force_hostile)
 {
-    monster_type mon = MONS_PROGRAM_BUG;
+    monster_type mon_type;
     int how_many = 1;
     const int temp_rand = random2(std::min(100, threshold));
 
     // undead
-    mon = ((temp_rand < 15) ? MONS_WRAITH :           // 15%
-           (temp_rand < 30) ? MONS_WIGHT :            // 15%
-           (temp_rand < 40) ? MONS_FLYING_SKULL :     // 10%
-           (temp_rand < 49) ? MONS_SPECTRAL_WARRIOR : //  9%
-           (temp_rand < 57) ? MONS_ROTTING_HULK :     //  8%
-           (temp_rand < 64) ? MONS_SKELETAL_WARRIOR : //  7%
-           (temp_rand < 70) ? MONS_FREEZING_WRAITH :  //  6%
-           (temp_rand < 76) ? MONS_FLAMING_CORPSE :   //  6%
-           (temp_rand < 81) ? MONS_GHOUL :            //  5%
-           (temp_rand < 86) ? MONS_MUMMY :            //  5%
-           (temp_rand < 90) ? MONS_VAMPIRE :          //  4%
-           (temp_rand < 94) ? MONS_HUNGRY_GHOST :     //  4%
-           (temp_rand < 97) ? MONS_FLAYED_GHOST :     //  3%
-           (temp_rand < 99) ? MONS_SKELETAL_DRAGON    //  2%
-                            : MONS_DEATH_COB);        //  1%
+    mon_type = ((temp_rand < 15) ? MONS_WRAITH :           // 15%
+                (temp_rand < 30) ? MONS_WIGHT :            // 15%
+                (temp_rand < 40) ? MONS_FLYING_SKULL :     // 10%
+                (temp_rand < 49) ? MONS_SPECTRAL_WARRIOR : //  9%
+                (temp_rand < 57) ? MONS_ROTTING_HULK :     //  8%
+                (temp_rand < 64) ? MONS_SKELETAL_WARRIOR : //  7%
+                (temp_rand < 70) ? MONS_FREEZING_WRAITH :  //  6%
+                (temp_rand < 76) ? MONS_FLAMING_CORPSE :   //  6%
+                (temp_rand < 81) ? MONS_GHOUL :            //  5%
+                (temp_rand < 86) ? MONS_MUMMY :            //  5%
+                (temp_rand < 90) ? MONS_VAMPIRE :          //  4%
+                (temp_rand < 94) ? MONS_HUNGRY_GHOST :     //  4%
+                (temp_rand < 97) ? MONS_FLAYED_GHOST :     //  3%
+                (temp_rand < 99) ? MONS_SKELETAL_DRAGON    //  2%
+                                 : MONS_DEATH_COB);        //  1%
 
-    if (mon == MONS_FLYING_SKULL)
+    if (mon_type == MONS_FLYING_SKULL)
         how_many = 2 + random2(4);
 
-    mgen_data mg(mon, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
+    mgen_data mg(mon_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
                  0, 0, you.pos(), MHITYOU, 0, GOD_YREDELEMNUL);
 
     int created = 0;
     if (force_hostile)
     {
-        for (int i = 0; i < how_many; ++i)
+        for (; how_many > 0; --how_many)
         {
             if (create_monster(mg) != -1)
                 created++;
@@ -1131,7 +1131,7 @@ int yred_random_servants(int threshold, bool force_hostile)
     }
     else
     {
-        for (int i = 0; i < how_many; ++i)
+        for (; how_many > 0; --how_many)
             _delayed_monster(mg);
     }
 

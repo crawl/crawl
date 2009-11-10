@@ -67,23 +67,23 @@ static bool _yred_random_zombified_hostile()
 
 static bool _okawaru_random_servant()
 {
-    monster_type mon = MONS_PROGRAM_BUG;
+    monster_type mon_type;
     const int temp_rand = random2(100);
 
     // warriors
-    mon = ((temp_rand < 15) ? MONS_ORC_WARRIOR :      // 15%
-           (temp_rand < 30) ? MONS_ORC_KNIGHT :       // 15%
-           (temp_rand < 40) ? MONS_NAGA_WARRIOR :     // 10%
-           (temp_rand < 50) ? MONS_CENTAUR_WARRIOR :  // 10%
-           (temp_rand < 60) ? MONS_STONE_GIANT :      // 10%
-           (temp_rand < 70) ? MONS_FIRE_GIANT :       // 10%
-           (temp_rand < 80) ? MONS_FROST_GIANT :      // 10%
-           (temp_rand < 90) ? MONS_CYCLOPS :          // 10%
-           (temp_rand < 95) ? MONS_HILL_GIANT         //  5%
-                            : MONS_TITAN);            //  5%
+    mon_type = ((temp_rand < 15) ? MONS_ORC_WARRIOR :      // 15%
+                (temp_rand < 30) ? MONS_ORC_KNIGHT :       // 15%
+                (temp_rand < 40) ? MONS_NAGA_WARRIOR :     // 10%
+                (temp_rand < 50) ? MONS_CENTAUR_WARRIOR :  // 10%
+                (temp_rand < 60) ? MONS_STONE_GIANT :      // 10%
+                (temp_rand < 70) ? MONS_FIRE_GIANT :       // 10%
+                (temp_rand < 80) ? MONS_FROST_GIANT :      // 10%
+                (temp_rand < 90) ? MONS_CYCLOPS :          // 10%
+                (temp_rand < 95) ? MONS_HILL_GIANT         //  5%
+                                 : MONS_TITAN);            //  5%
 
     return (create_monster(
-                    mgen_data::hostile_at(mon,
+                    mgen_data::hostile_at(mon_type,
                         true, 0, 0, you.pos(), 0, GOD_OKAWARU)) != -1);
 }
 
