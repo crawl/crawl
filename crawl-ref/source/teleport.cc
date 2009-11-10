@@ -17,7 +17,6 @@
 #include "random.h"
 #include "state.h"
 #include "terrain.h"
-#include "view.h"
 #include "shout.h"
 
 bool random_near_space(const coord_def& origin, coord_def& target,

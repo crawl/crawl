@@ -23,7 +23,6 @@
 #include "religion.h"
 #include "state.h"
 #include "tutorial.h"
-#include "view.h"
 #include "shout.h"
 
 game_state::game_state()

@@ -45,7 +45,6 @@
 #include "state.h"
 #include "stuff.h"
 #include "transfor.h"
-#include "view.h"
 #include "shout.h"
 
 

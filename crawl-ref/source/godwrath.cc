@@ -35,7 +35,6 @@
 #include "spl-mis.h"
 #include "stash.h"
 #include "transfor.h"
-#include "view.h"
 #include "shout.h"
 #include "xom.h"
 

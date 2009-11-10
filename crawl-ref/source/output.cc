@@ -50,7 +50,6 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "travel.h"
-#include "view.h"
 #include "shout.h"
 #include "viewchar.h"
 #include "viewgeom.h"

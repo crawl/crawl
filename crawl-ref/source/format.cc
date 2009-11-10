@@ -8,7 +8,6 @@
 #include "colour.h"
 #include "format.h"
 #include "showsymb.h"
-#include "view.h"
 #include "shout.h"
 #include "viewchar.h"
 

@@ -28,7 +28,6 @@
 #include "tiles.h"
 #include "tilesdl.h"
 #include "travel.h"
-#include "view.h"
 #include "shout.h"
 #include "viewgeom.h"
 
