@@ -1102,8 +1102,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
              "might bleed now; square: (%d, %d); amount = %d",
              where.x, where.y, amount);
 #endif
-        if (allow_bleeding_on_square(where))
-            env.pgrid(where) |= FPROP_BLOODY;
+        env.pgrid(where) |= FPROP_BLOODY;
 
         if (smell_alert)
             blood_smell(12, where);
