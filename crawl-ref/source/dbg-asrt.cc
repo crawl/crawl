@@ -458,8 +458,58 @@ static void _debug_dump_lua_persist(FILE* file)
     fprintf(file, "%s", result.c_str());
 }
 
+static void _dump_ver_stuff(FILE* file)
+{
+    fprintf(file, "Version: %s %s" EOL, CRAWL, Version::Long().c_str());
+#if defined(UNIX)
+    fprintf(file, "Platform: unix");
+#   if defined(TARGET_OS_MACOSX)
+    fprintf(file, " (OS X)");
+#   endif
+    fprintf(file, EOL);
+#elif defined(TARGET_OS_WINDOWS)
+    fprintf(file, "Platform: Windows" EOL);
+#elif defined(TARGET_OS_DOS)
+    fprintf(file, "Platform: DOS" EOL);
+#endif // UNIX
+
+#if TARGET_CPU_BITS == 64
+    fprintf(file, "Bits: 64" EOL);
+#else
+    fprintf(file, "Bits: 32" EOL);
+#endif
+
+#ifdef USE_TILE
+    fprintf(file, "Tiles: yes" EOL EOL);
+#else
+    fprintf(file, "Tiles: no" EOL EOL);
+#endif
+}
+
+// Defined in stuff.cc.  Not a part of crawl_state, since that's a
+// global C++ instance which is free'd by exit() hooks when exit()
+// is called, and we don't want to reference free'd memory.
+extern bool CrawlIsExiting;
+
 void do_crash_dump()
 {
+    if (CrawlIsExiting)
+    {
+        // We crashed during exit() callbacks, so it's likely that
+        // any global C++ instances we could reference would be
+        // free'd and invalid, plus their content likely wouldn't help
+        // tracking it down anyways.  Thus, just do the bare bones
+        // info to stderr and quit.
+        fprintf(stderr, "Crashed while calling exit()!!!!" EOL);
+
+        _dump_ver_stuff(stderr);
+
+        dump_crash_info(stderr);
+        write_stack_trace(stderr, 0);
+
+        return;
+    }
+
     std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
                        !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
                                                    : "");
@@ -494,30 +544,7 @@ void do_crash_dump()
         fprintf(file, "%s" EOL EOL, _assert_msg.c_str());
 #endif
 
-    fprintf(file, "Version: %s %s" EOL, CRAWL, Version::Long().c_str());
-#if defined(UNIX)
-    fprintf(file, "Platform: unix");
-#   if defined(TARGET_OS_MACOSX)
-    fprintf(file, " (OS X)");
-#   endif
-    fprintf(file, EOL);
-#elif defined(TARGET_OS_WINDOWS)
-    fprintf(file, "Platform: Windows" EOL);
-#elif defined(TARGET_OS_DOS)
-    fprintf(file, "Platform: DOS" EOL);
-#endif // UNIX
-
-#if TARGET_CPU_BITS == 64
-    fprintf(file, "Bits: 64" EOL);
-#else
-    fprintf(file, "Bits: 32" EOL);
-#endif
-
-#ifdef USE_TILE
-    fprintf(file, "Tiles: yes" EOL EOL);
-#else
-    fprintf(file, "Tiles: no" EOL EOL);
-#endif
+    _dump_ver_stuff(file);
 
     // First get the immediate cause of the crash and the stack trace,
     // since that's most important and later attempts to get more information

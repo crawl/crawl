@@ -356,6 +356,12 @@ void clear_globals_on_exit()
     clear_zap_info_on_exit();
 }
 
+// Used by do_crash_dump() to tell if the crash happened during exit() hooks.
+// Not a part of crawl_state, since that's a global C++ instance which is
+// free'd by exit() hooks when exit() is called, and we don't want to reference
+// free'd memory.
+bool CrawlIsExiting = false;
+
 void end(int exit_code, bool print_error, const char *format, ...)
 {
     std::string error = print_error? strerror(errno) : "";
@@ -395,6 +401,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
     }
 #endif
 
+    CrawlIsExiting = true;
     exit(exit_code);
 }
 
