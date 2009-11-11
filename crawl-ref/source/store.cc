@@ -413,7 +413,8 @@ store_val_type CrawlStoreValue::get_type() const
 // Read/write from/to savefile
 void CrawlStoreValue::write(writer &th) const
 {
-    ASSERT(!(flags & SFLAG_UNSET));
+    ASSERT(type != SV_NONE || (flags & SFLAG_UNSET));
+    ASSERT(!(flags & SFLAG_UNSET) || (type == SV_NONE));
 
     marshallByte(th,  (char) type);
     marshallByte(th, (char) flags);
@@ -490,7 +491,7 @@ void CrawlStoreValue::write(writer &th) const
     }
 
     case SV_NONE:
-        ASSERT(false);
+        break;
 
     case NUM_STORE_VAL_TYPES:
         ASSERT(false);
@@ -502,7 +503,8 @@ void CrawlStoreValue::read(reader &th)
     type = static_cast<store_val_type>(unmarshallByte(th));
     flags = (store_flags) unmarshallByte(th);
 
-    ASSERT(!(flags & SFLAG_UNSET));
+    ASSERT(type != SV_NONE || (flags & SFLAG_UNSET));
+    ASSERT(!(flags & SFLAG_UNSET) || (type == SV_NONE));
 
     switch (type)
     {
@@ -588,7 +590,7 @@ void CrawlStoreValue::read(reader &th)
     }
 
     case SV_NONE:
-        ASSERT(false);
+        break;
 
     case NUM_STORE_VAL_TYPES:
         ASSERT(false);
@@ -1493,9 +1495,7 @@ void CrawlVector::write(writer &th) const
     for (vec_size i = 0; i < size(); i++)
     {
         CrawlStoreValue val = vector[i];
-        ASSERT(val.type != SV_NONE);
-        ASSERT(!(val.flags & SFLAG_UNSET));
-        val.write(th);
+       val.write(th);
     }
 
     assert_validity();
