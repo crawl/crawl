@@ -28,12 +28,18 @@ void seed_rng(unsigned long* seed_key, size_t num_keys)
 {
     // MT19937 -- see mt19937ar.cc for details/licence
     init_by_array(seed_key, num_keys);
+
+    // for std::random_shuffle()
+    srand(seed_key[0]);
 }
 
 void seed_rng(long seed)
 {
     // MT19937 -- see mt19937ar.cc for details/licence
     init_genrand(seed);
+
+    // for std::random_shuffle()
+    srand(seed);
 }
 
 void seed_rng()
