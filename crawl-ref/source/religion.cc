@@ -209,7 +209,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "call upon Zin to create a sanctuary" },
     // TSO
-    { "You and your allies can gain power from killing evil.",
+    { "You and your allies can gain power from killing the unholy and evil.",
       "call upon the Shining One for a divine shield",
       "",
       "channel blasts of cleansing flame",
@@ -316,7 +316,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "call upon Zin to create a sanctuary" },
     // TSO
-    { "You and your allies can no longer gain power from killing evil.",
+    { "You and your allies can no longer gain power from killing the unholy and evil.",
       "call upon the Shining One for a divine shield",
       "",
       "channel blasts of cleansing flame",
@@ -541,7 +541,8 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_ELYVILON:
-        snprintf(info, INFO_SIZE, "you destroy weapons (especially evil ones)%s",
+        snprintf(info, INFO_SIZE, "you destroy weapons (especially unholy and "
+                                  "evil ones)%s",
                  verbose ? " via the <w>a</w> command (inscribe items with "
                            "<w>!D</w> to prevent their accidental destruction)"
                          : "");
@@ -576,7 +577,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_SHINING_ONE:
-        snprintf(info, INFO_SIZE, "you sacrifice evil items%s",
+        snprintf(info, INFO_SIZE, "you sacrifice unholy and evil items%s",
                  verbose ? " (by dropping them on an altar and praying)" : "");
 
         likes.push_back(info);
@@ -1432,13 +1433,14 @@ bool _has_jelly()
 
 bool is_good_lawful_follower(const monsters* mon)
 {
-    return (mon->alive() && !mon->is_evil() && !mon->is_chaotic()
-            && mon->friendly());
+    return (mon->alive() && !mon->is_unholy() && !mon->is_evil()
+            && !mon->is_chaotic() && mon->friendly());
 }
 
 bool is_good_follower(const monsters* mon)
 {
-    return (mon->alive() && !mon->is_evil() && mon->friendly());
+    return (mon->alive() && !mon->is_unholy() && !mon->is_evil()
+            && mon->friendly());
 }
 
 bool is_follower(const monsters* mon)
@@ -3780,7 +3782,7 @@ void gain_piety(int pgn)
 }
 
 // Is the destroyed weapon valuable enough to gain piety by doing so?
-// Evil weapons are handled specially.
+// Unholy and evil weapons are handled specially.
 static bool _destroyed_valuable_weapon(int value, int type)
 {
     // Artefacts, including most randarts.
@@ -3838,10 +3840,14 @@ bool ely_destroy_weapons()
 #endif
 
         piety_gain_t pgain = PIETY_NONE;
-        const bool is_evil_weapon = is_evil_item(item);
+        const bool unholy_weapon = is_unholy_item(item);
+        const bool evil_weapon = is_evil_item(item);
 
-        if (is_evil_weapon || _destroyed_valuable_weapon(value, item.base_type))
+        if (unholy_weapon || evil_weapon
+            || _destroyed_valuable_weapon(value, item.base_type))
+        {
             pgain = PIETY_SOME;
+        }
 
         if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
         {
@@ -3858,13 +3864,16 @@ bool ely_destroy_weapons()
             // Elyvilon doesn't care about item sacrifices at altars, so
             // I'm stealing _Sacrifice_Messages.
             _print_sacrifice_message(GOD_ELYVILON, item, pgain);
-            if (is_evil_weapon)
+            if (unholy_weapon || evil_weapon)
             {
+                const char *desc_weapon = evil_weapon ? "evil" : "unholy";
+
                 // Print this in addition to the above!
                 simple_god_message(
-                    make_stringf(" welcomes the destruction of %s evil "
+                    make_stringf(" welcomes the destruction of %s %s "
                                  "weapon%s.",
                                  item.quantity == 1 ? "this" : "these",
+                                 desc_weapon,
                                  item.quantity == 1 ? ""     : "s").c_str(),
                     GOD_ELYVILON);
             }
@@ -4533,7 +4542,7 @@ static bool _god_likes_item(god_type god, const item_def& item)
         return (item.base_type == OBJ_GOLD);
 
     case GOD_SHINING_ONE:
-        return (is_evil_item(item));
+        return (is_unholy_item(item) || is_evil_item(item));
 
     case GOD_BEOGH:
         return (item.base_type == OBJ_CORPSES
@@ -4857,7 +4866,7 @@ void offer_items()
         if (god_likes_fresh_corpses(you.religion))
             simple_god_message(" only cares about fresh corpses!");
         else if (you.religion == GOD_SHINING_ONE)
-            simple_god_message(" only cares about evil items!");
+            simple_god_message(" only cares about unholy and evil items!");
         else if (you.religion == GOD_BEOGH)
             simple_god_message(" only cares about orcish remains!");
         else if (you.religion == GOD_NEMELEX_XOBEH)
@@ -4970,8 +4979,8 @@ void god_pitch(god_type which_god)
     // you make all non-hostile chaotic beings hostile; and when you
     // start worshipping Trog, you make all non-hostile magic users
     // hostile.
-    if (is_good_god(you.religion) && evil_beings_attitude_change())
-        mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
+    if (is_good_god(you.religion) && unholy_and_evil_beings_attitude_change())
+        mpr("Your unholy and evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
 
     if (you.religion == GOD_ZIN && chaotic_beings_attitude_change())
         mpr("Your chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
@@ -5426,7 +5435,7 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon)
 {
     const mon_holy_type holiness = mon->holiness();
     return (mons_intel(mon) < I_NORMAL
-            || mon->is_evil()
+            || mon->undead_or_demonic()
             || !mon->is_holy() && holiness != MH_NATURAL);
 }
 

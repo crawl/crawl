@@ -48,7 +48,8 @@ void good_god_follower_attitude_change(monsters *monster)
             const item_def* wpn = you.weapon();
             if (wpn
                 && wpn->base_type == OBJ_WEAPONS
-                && is_evil_item(*wpn)
+                && (is_unholy_item(*wpn)
+                    || is_evil_item(*wpn))
                 && coinflip()) // 50% chance of conversion failing
             {
                 msg::stream << monster->name(DESC_CAP_THE)
@@ -192,7 +193,7 @@ bool holy_beings_attitude_change()
     return (apply_to_all_dungeons(_holy_beings_on_level_attitude_change));
 }
 
-static bool _evil_beings_on_level_attitude_change()
+static bool _unholy_and_evil_beings_on_level_attitude_change()
 {
     bool success = false;
 
@@ -200,10 +201,11 @@ static bool _evil_beings_on_level_attitude_change()
     {
         monsters *monster = &menv[i];
         if (monster->alive()
-            && monster->is_evil())
+            && (monster->is_unholy()
+                || monster->is_evil()))
         {
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Evil attitude changing: %s "
+            mprf(MSGCH_DIAGNOSTICS, "Unholy/evil attitude changing: %s "
                  "on level %d, branch %d",
                  monster->name(DESC_PLAIN, true).c_str(),
                  static_cast<int>(you.your_level),
@@ -211,7 +213,7 @@ static bool _evil_beings_on_level_attitude_change()
 #endif
 
             // If you worship a good god, you make all friendly and good
-            // neutral evil and unholy beings hostile.
+            // neutral unholy and evil beings hostile.
             if (is_good_god(you.religion) && monster->wont_attack())
             {
                 monster->attitude = ATT_HOSTILE;
@@ -227,9 +229,9 @@ static bool _evil_beings_on_level_attitude_change()
     return (success);
 }
 
-bool evil_beings_attitude_change()
+bool unholy_and_evil_beings_attitude_change()
 {
-    return (apply_to_all_dungeons(_evil_beings_on_level_attitude_change));
+    return (apply_to_all_dungeons(_unholy_and_evil_beings_on_level_attitude_change));
 }
 
 static bool _chaotic_beings_on_level_attitude_change()

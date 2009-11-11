@@ -14,6 +14,7 @@
 #include "delay.h"
 #include "map_knowledge.h"
 #include "ghost.h"
+#include "goditem.h"
 #include "invent.h"
 #include "items.h"
 #include "jobs.h"

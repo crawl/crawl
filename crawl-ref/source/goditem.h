@@ -12,12 +12,14 @@
 #include "spl-util.h"
 
 bool is_holy_item(const item_def& item);
+bool is_unholy_item(const item_def& item);
 bool is_potentially_evil_item(const item_def& item);
 bool is_evil_item(const item_def& item);
 bool is_chaotic_item(const item_def& item);
 bool is_holy_discipline(int discipline);
 bool is_evil_discipline(int discipline);
 bool is_holy_spell(spell_type spell, god_type god = GOD_NO_GOD);
+bool is_unholy_spell(spell_type spell, god_type god = GOD_NO_GOD);
 bool is_evil_spell(spell_type spell, god_type god = GOD_NO_GOD);
 bool is_chaotic_spell(spell_type spell, god_type god = GOD_NO_GOD);
 bool is_hasty_spell(spell_type spell, god_type god = GOD_NO_GOD);
@@ -27,11 +29,13 @@ bool is_spellbook_type(const item_def& item, bool book_or_rod,
                            is_any_spell,
                        god_type god = you.religion);
 bool is_holy_spellbook(const item_def& item);
+bool is_unholy_spellbook(const item_def& item);
 bool is_evil_spellbook(const item_def& item);
 bool is_chaotic_spellbook(const item_def& item);
 bool is_hasty_spellbook(const item_def& item);
 bool god_hates_spellbook(const item_def& item);
 bool is_holy_rod(const item_def& item);
+bool is_unholy_rod(const item_def& item);
 bool is_evil_rod(const item_def& item);
 bool is_chaotic_rod(const item_def& item);
 bool is_hasty_rod(const item_def& item);

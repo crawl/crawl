@@ -825,11 +825,6 @@ static bool _spell_is_utility_spell(spell_type spell_id)
                 SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION | SPTYP_DIVINATION));
 }
 
-static bool _spell_is_unholy(spell_type spell_id)
-{
-    return (testbits(get_spell_flags(spell_id), SPFLAG_UNHOLY));
-}
-
 bool maybe_identify_staff(item_def &item, spell_type spell)
 {
     if (item_type_known(item))
@@ -946,7 +941,7 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
 
     // Self-banishment gets a special exemption - you're there to spread
     // light.
-    if (_spell_is_unholy(spell)
+    if (is_unholy_spell(spell)
         && !you.banished
         && !crawl_state.is_god_acting())
     {

@@ -51,6 +51,42 @@ bool is_holy_item(const item_def& item)
     return (retval);
 }
 
+bool is_unholy_item(const item_def& item)
+{
+    bool retval = false;
+
+    if (is_unrandom_artefact(item))
+    {
+        unrandart_entry* entry = get_unrand_entry(item.special);
+
+        if (entry->flags & UNRAND_FLAG_UNHOLY)
+            return (true);
+    }
+
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        retval = is_demonic(item);
+        break;
+    case OBJ_SCROLLS:
+        retval = (item.sub_type == SCR_SUMMONING);
+        break;
+    case OBJ_BOOKS:
+        retval = is_unholy_spellbook(item);
+        break;
+    case OBJ_STAVES:
+        retval = is_unholy_rod(item);
+        break;
+    case OBJ_MISCELLANY:
+        retval = (item.sub_type == MISC_BOTTLED_EFREET);
+        break;
+    default:
+        break;
+    }
+
+    return (retval);
+}
+
 bool is_potentially_evil_item(const item_def& item)
 {
     switch (item.base_type)
@@ -97,8 +133,7 @@ bool is_evil_item(const item_def& item)
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-        retval = (is_demonic(item)
-                  || item_brand == SPWPN_DRAINING
+        retval = (item_brand == SPWPN_DRAINING
                   || item_brand == SPWPN_PAIN
                   || item_brand == SPWPN_VAMPIRICISM
                   || item_brand == SPWPN_REAPING);
@@ -117,8 +152,7 @@ bool is_evil_item(const item_def& item)
         retval = is_blood_potion(item);
         break;
     case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_SUMMONING
-                  || item.sub_type == SCR_TORMENT);
+        retval = (item.sub_type == SCR_TORMENT);
         break;
     case OBJ_BOOKS:
         retval = is_evil_spellbook(item);
@@ -127,8 +161,7 @@ bool is_evil_item(const item_def& item)
         retval = (item.sub_type == STAFF_DEATH || is_evil_rod(item));
         break;
     case OBJ_MISCELLANY:
-        retval = (item.sub_type == MISC_BOTTLED_EFREET
-                  || item.sub_type == MISC_LANTERN_OF_SHADOWS);
+        retval = (item.sub_type == MISC_LANTERN_OF_SHADOWS);
         break;
     default:
         break;
@@ -254,14 +287,22 @@ bool is_holy_spell(spell_type spell, god_type god)
     return (is_holy_discipline(disciplines));
 }
 
-bool is_evil_spell(spell_type spell, god_type god)
+bool is_unholy_spell(spell_type spell, god_type god)
 {
     UNUSED(god);
 
     unsigned int flags = get_spell_flags(spell);
+
+    return (flags & SPFLAG_UNHOLY);
+}
+
+bool is_evil_spell(spell_type spell, god_type god)
+{
+    UNUSED(god);
+
     unsigned int disciplines = get_spell_disciplines(spell);
 
-    return ((flags & SPFLAG_UNHOLY) || (is_evil_discipline(disciplines)));
+    return (is_evil_discipline(disciplines));
 }
 
 bool is_chaotic_spell(spell_type spell, god_type god)
@@ -331,6 +372,11 @@ bool is_holy_spellbook(const item_def& item)
     return (is_spellbook_type(item, false, is_holy_spell));
 }
 
+bool is_unholy_spellbook(const item_def& item)
+{
+    return (is_spellbook_type(item, false, is_unholy_spell));
+}
+
 bool is_evil_spellbook(const item_def& item)
 {
     return (is_spellbook_type(item, false, is_evil_spell));
@@ -354,6 +400,11 @@ bool god_hates_spellbook(const item_def& item)
 bool is_holy_rod(const item_def& item)
 {
     return (is_spellbook_type(item, true, is_holy_spell));
+}
+
+bool is_unholy_rod(const item_def& item)
+{
+    return (is_spellbook_type(item, true, is_unholy_spell));
 }
 
 bool is_evil_rod(const item_def& item)
@@ -481,7 +532,7 @@ conduct_type god_hates_item_handling(const item_def &item)
 
 bool god_hates_spell_type(spell_type spell, god_type god)
 {
-    if (is_good_god(god) && is_evil_spell(spell))
+    if (is_good_god(god) && (is_unholy_spell(spell) || is_evil_spell(spell)))
         return (true);
 
     unsigned int disciplines = get_spell_disciplines(spell);
@@ -508,7 +559,7 @@ bool god_hates_spell_type(spell_type spell, god_type god)
         break;
 
     case GOD_FEDHAS:
-        if (is_evil_discipline(disciplines))
+        if (is_evil_spell(spell))
             return (true);
         break;
 

@@ -255,7 +255,7 @@
 {
     "Sword of Cerebov", "great serpentine sword", 
     OBJ_WEAPONS, WPN_GREAT_SWORD, +6, +6, ETC_FIRE, 2000, 
-    UNRAND_FLAG_SPECIAL | UNRAND_FLAG_EVIL, 
+    UNRAND_FLAG_SPECIAL | UNRAND_FLAG_UNHOLY, 
     {
         SPWPN_FLAMING, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 0, 
@@ -274,7 +274,7 @@
 {
     "Staff of Dispater", "golden staff", 
     OBJ_WEAPONS, WPN_QUARTERSTAFF, +4, +4, ETC_GOLD, 1200, 
-    UNRAND_FLAG_SPECIAL | UNRAND_FLAG_EVIL, 
+    UNRAND_FLAG_SPECIAL | UNRAND_FLAG_UNHOLY, 
     {
         SPWPN_NORMAL, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 0, 

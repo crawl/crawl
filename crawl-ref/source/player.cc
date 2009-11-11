@@ -6382,14 +6382,12 @@ bool player::is_holy() const
 
 bool player::is_unholy() const
 {
-    const mon_holy_type holi = holiness();
-
-    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
+    return (holiness() == MH_DEMONIC);
 }
 
 bool player::is_evil() const
 {
-    if (is_unholy())
+    if (holiness() == MH_UNDEAD)
         return (true);
 
     if (is_evil_god(religion))

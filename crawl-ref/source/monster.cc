@@ -2757,6 +2757,15 @@ bool monsters::has_holy_spell() const
     return (false);
 }
 
+bool monsters::has_unholy_spell() const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (is_unholy_spell(spells[i]))
+            return (true);
+
+    return (false);
+}
+
 bool monsters::has_evil_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -3005,14 +3014,18 @@ bool monsters::is_holy() const
 
 bool monsters::is_unholy() const
 {
-    const mon_holy_type holi = holiness();
+    if (holiness() == MH_DEMONIC)
+        return (true);
 
-    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
+    if (has_unholy_spell())
+        return (true);
+
+    return (false);
 }
 
 bool monsters::is_evil() const
 {
-    if (is_unholy())
+    if (holiness() == MH_UNDEAD)
         return (true);
 
     // Assume that all unknown gods (GOD_NAMELESS) are evil.
