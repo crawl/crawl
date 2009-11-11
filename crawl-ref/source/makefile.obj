@@ -103,6 +103,7 @@ mon-behv.o \
 mon-cast.o \
 mon-gear.o \
 mon-info.o \
+mon-iter.o \
 mon-pick.o \
 mon-util.o \
 monplace.o \
