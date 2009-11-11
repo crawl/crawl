@@ -1637,8 +1637,13 @@ std::string item_def::name_aux(description_level_type desc,
         if (food_is_rotten(*this) && !dbname)
             buff << "rotting ";
 
-        const std::string _name  = get_corpse_name(*this);
+        unsigned long name_type;
+
+        const std::string _name  = get_corpse_name(*this, &name_type);
         const bool        shaped = starts_with(_name, "shaped ");
+
+        if (!_name.empty() && name_type == MF_NAME_ADJECTIVE)
+            buff << _name << " ";
 
         if (!dbname && !starts_with(_name, "the "))
         {
@@ -1655,8 +1660,13 @@ std::string item_def::name_aux(description_level_type desc,
         else
             buff << "corpse bug";
 
-        if (!_name.empty() && !shaped)
-            buff << " of " << _name;
+        if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE)
+        {
+            if (name_type == MF_NAME_SUFFIX)
+                buff << " " << _name;
+            else
+                buff << " of " << _name;
+        }
         break;
     }
 
@@ -3065,12 +3075,18 @@ bool is_named_corpse(const item_def &corpse)
     return (corpse.props.exists(CORPSE_NAME_KEY));
 }
 
-std::string get_corpse_name(const item_def &corpse)
+std::string get_corpse_name(const item_def &corpse, unsigned long *name_type)
 {
     ASSERT(corpse.base_type == OBJ_CORPSES);
 
     if (!corpse.props.exists(CORPSE_NAME_KEY))
         return ("");
+
+    if (name_type != NULL)
+    {
+        *name_type
+            = (unsigned long) corpse.props[CORPSE_NAME_TYPE_KEY].get_long();
+    }
 
     return (corpse.props[CORPSE_NAME_KEY].get_string());
 }

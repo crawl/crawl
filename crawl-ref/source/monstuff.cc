@@ -333,11 +333,16 @@ monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
         corpse.colour = monster->colour;
 
     if (!monster->mname.empty())
+    {
         corpse.props[CORPSE_NAME_KEY] = monster->mname;
+        corpse.props[CORPSE_NAME_TYPE_KEY]
+            = (long) (monster->flags & MF_NAME_MASK);
+    }
     else if (mons_is_unique(monster->type))
     {
         corpse.props[CORPSE_NAME_KEY] = mons_type_name(monster->type,
                                                        DESC_PLAIN);
+        corpse.props[CORPSE_NAME_TYPE_KEY] = (long) 0;
     }
 
     return (corpse_class);

@@ -984,7 +984,13 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     const int monnum = item.orig_monnum - 1;
 
     if (is_named_corpse(item))
-        name_zombie(&menv[monster], monnum, get_corpse_name(item));
+    {
+        unsigned long name_type;
+        std::string name = get_corpse_name(item, &name_type);
+
+        if (name_type == 0 || name_type == MF_NAME_REPLACE)
+            name_zombie(&menv[monster], monnum, name);
+    }
 
     equip_undead(pos, corps, monster, monnum);
 

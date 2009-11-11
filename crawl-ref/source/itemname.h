@@ -10,7 +10,8 @@
 
 #include "externs.h"
 
-#define CORPSE_NAME_KEY "corpse_name_key"
+#define CORPSE_NAME_KEY      "corpse_name_key"
+#define CORPSE_NAME_TYPE_KEY "corpse_name_type_key"
 
 struct item_types_pair
 {
@@ -126,6 +127,7 @@ std::vector<std::string> item_name_list_for_glyph(unsigned glyph);
 const char* wand_type_name(int wandtype);
 
 bool        is_named_corpse(const item_def &corpse);
-std::string get_corpse_name(const item_def &corpse);
+std::string get_corpse_name(const item_def &corpse,
+                            unsigned long *name_type = NULL);
 
 #endif
