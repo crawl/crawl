@@ -2030,7 +2030,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         {
             text << "Whenever you pick up some gold, your current amount will "
                     "be mentioned. If you'd like to check your wealth at other "
-                    "times, it will be listed on the <w>%</w> screen.";
+                    "times, you can press <w>$</w>. It will also be "
+                    "listed on the <w>%</w> screen.";
         }
         break;
 
@@ -2276,6 +2277,10 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "<w>left mouse button</w> "
 #endif
                 "while standing on the square.";
+        text << "\n\nIf there's anything you want which you can't afford yet "
+                "you can select those items and press <w>@</w> to put them "
+                "on your shopping list.  The game will then remind you when "
+                "you gather enough gold to buy the items on your list.";
         break;
 
     case TUT_SEEN_DOOR:
