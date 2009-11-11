@@ -218,6 +218,7 @@ static void _place_altar();
 static void _place_altars();
 
 static std::vector<god_type> _temple_altar_list;
+static CrawlHashTable*       _current_temple_hash = NULL; // XXX: hack!
 
 typedef std::list<coord_def> coord_list;
 
@@ -954,6 +955,9 @@ void dgn_reset_level()
     use_random_maps  = true;
     dgn_check_connectivity = false;
     dgn_zones        = 0;
+
+    _temple_altar_list.clear();
+    _current_temple_hash = NULL;
 
     // Forget level properties.
     env.properties.clear();
@@ -1710,6 +1714,7 @@ static void _build_overflow_temples(int level_number)
         if (!_ensure_vault_placed(_build_vaults(level_number, vault), false))
             return;
     }
+    _current_temple_hash = NULL; // XXX: hack!
 }
 
 static void _build_dungeon_level(int level_number, int level_type)
@@ -2637,6 +2642,8 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
 static int _setup_temple_altars(CrawlHashTable &temple)
 {
+    _current_temple_hash = &temple; // XXX: hack!
+
     CrawlVector god_list = temple[TEMPLE_GODS_KEY].get_vector();
 
     _temple_altar_list.clear();
@@ -4926,9 +4933,6 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c, int rawfea
                              : DNGN_FLOOR); // includes everything else
 }
 
-// Returns altar_count - seems rather odd to me to force such a return
-// when I believe the value is only used in the case of the ecumenical
-// temple - oh, well... {dlb} (XXX)
 static void _vault_grid( vault_placement &place,
                          int vgrid,
                          const coord_def& where,
@@ -5440,8 +5444,14 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
 {
     if (_temple_altar_list.empty())
     {
-        return (dungeon_feature_type)
-            (DNGN_ALTAR_FIRST_GOD + place.altar_count++);
+        if (_current_temple_hash != NULL)
+        {
+            mprf("Ran out of altars for temple!", MSGCH_ERROR);
+            return (DNGN_FLOOR);
+        }
+        // Randomized altar list for mini-temples.
+        _temple_altar_list = temple_god_list();
+        std::random_shuffle(_temple_altar_list.begin(), _temple_altar_list.end());
     }
 
     const god_type god = _temple_altar_list.back();
@@ -8371,7 +8381,10 @@ static bool _fixup_interlevel_connectivity()
 
 void vault_placement::reset()
 {
-    altar_count = 0;
+    if (_current_temple_hash != NULL)
+        _setup_temple_altars(*_current_temple_hash);
+    else
+        _temple_altar_list.clear();
 }
 
 void vault_placement::apply_grid()
@@ -8426,10 +8439,10 @@ void remember_vault_placement(std::string key, vault_placement &place)
                                     table.size() + 1);
 
     std::string place_str
-        = make_stringf("(%d,%d) (%d,%d) orient: %d lev: %d alt: %d rune: %d "
+        = make_stringf("(%d,%d) (%d,%d) orient: %d lev: %d rune: %d "
                        "subst: %d",
                        place.pos.x, place.pos.y, place.size.x, place.size.y,
-                       place.orient, place.level_number, place.altar_count,
+                       place.orient, place.level_number,
                        place.num_runes, place.rune_subst);
 
     table[name] = place_str;
