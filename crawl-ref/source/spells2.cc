@@ -33,6 +33,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -531,31 +532,29 @@ void cast_toxic_radiance()
 
     counted_monster_list affected_monsters;
     // determine which monsters are hit by the radiance: {dlb}
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
     {
-        monsters* const monster = &menv[i];
-
-        if (monster->alive() && mons_near(monster) && !monster->submerged())
+        if (!mi->submerged())
         {
             // Monsters affected by corona are still invisible in that
             // radiation passes through them without affecting them. Therefore,
             // this check should not be !monster->invisible().
-            if (!monster->has_ench(ENCH_INVIS))
+            if (!mi->has_ench(ENCH_INVIS))
             {
                 bool affected =
-                    poison_monster(monster, KC_YOU, 1, false, false);
+                    poison_monster(*mi, KC_YOU, 1, false, false);
 
-                if (coinflip() && poison_monster(monster, KC_YOU, false, false))
+                if (coinflip() && poison_monster(*mi, KC_YOU, false, false))
                     affected = true;
 
                 if (affected)
-                    _record_monster_by_name(affected_monsters, monster);
+                    _record_monster_by_name(affected_monsters, *mi);
             }
             else if (you.can_see_invisible())
             {
                 // message player re:"miss" where appropriate {dlb}
                 mprf("The light passes through %s.",
-                     monster->name(DESC_NOCAP_THE).c_str());
+                     mi->name(DESC_NOCAP_THE).c_str());
             }
         }
     }
