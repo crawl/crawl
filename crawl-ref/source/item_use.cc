@@ -2271,7 +2271,7 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 7;
         msg   = "You hear a thunk.";
         break;
- 
+
     default:
         DEBUGSTR("Invalid launcher '%s'",
                  launcher->name(DESC_PLAIN).c_str());

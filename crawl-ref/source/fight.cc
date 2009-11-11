@@ -844,7 +844,7 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
         // Bats get a rather less nutrition out of it.
         if (player_in_bat_form())
             food_value /= 2;
-        
+
         food_value /= reduction;
 
         lessen_hunger(food_value, false);
@@ -1995,7 +1995,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     {
         // No further effects.
     }
-    else if (you.species == SP_VAMPIRE 
+    else if (you.species == SP_VAMPIRE
              && damage_brand == SPWPN_VAMPIRICISM
              && you.equip[EQ_WEAPON] != -1
              && _player_vampire_draws_blood(defender_as_monster(),
