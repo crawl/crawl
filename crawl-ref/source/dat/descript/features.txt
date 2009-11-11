@@ -107,9 +107,9 @@ A glowing golden altar of the Shining One
 
 An altar to The Shining One, made from the purest gold and almost blinding in its radiance.
 %%%%
-A glowing white marble altar of Zin
+A glowing silver altar of Zin
 
-An altar to Zin the Law-Giver, made from white marble as pristine as Zin's followers are expected to be, and glowing gently.
+An altar to Zin the Law-Giver, made from silver as pristine as Zin's followers are expected to be, and glowing gently.
 %%%%
 A granite statue
 
@@ -163,9 +163,9 @@ A shop
 
 A shop in the dungeon, beyond sight of the world above, manned by a secretive and reclusive shopkeeper who cannot be bargained with, grants no refunds, and is interested in nothing you may have to sell. Some shops hawk antiques of unknown provenance, and offer little hint as to the quality or nature of their goods.
 %%%%
-A silver altar of Elyvilon
+A white marble altar of Elyvilon
 
-An altar to Elyvilon the Healer, made from silver and topped by a sculpture of the Silver Chalice of Purification.
+An altar to Elyvilon the Healer, made from purest white marble and topped by a sculpture of the Chalice of Purification.
 %%%%
 A slime covered rock wall
 
