@@ -15,6 +15,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monster.h"
 #include "monstuff.h"
@@ -378,34 +379,32 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
         ret = true;
     }
 
-    for (int p = 0; p < MAX_MONSTERS; p++)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters* monster = &menv[p];
-
-        if (!monster->alive())
+        if (!mi->alive())
             continue;
 
         // Monsters arent' affected by their own noise.  We don't check
-        // where == monster->pos() since it might be caused by the
+        // where == mi->pos() since it might be caused by the
         // Projected Noise spell.
-        if (p == who)
+        if (mi->mindex() == who)
             continue;
 
-        if (distance(monster->pos(), where) <= dist
-            && !silenced(monster->pos()))
+        if (distance(mi->pos(), where) <= dist
+            && !silenced(mi->pos()))
         {
             // If the noise came from the character, any nearby monster
             // will be jumping on top of them.
             if (where == you.pos())
-                behaviour_event( monster, ME_ALERT, MHITYOU, you.pos() );
-            else if (mermaid && mons_primary_habitat(monster) == HT_WATER
-                     && !monster->friendly())
+                behaviour_event(*mi, ME_ALERT, MHITYOU, you.pos());
+            else if (mermaid && mons_primary_habitat(*mi) == HT_WATER
+                     && !mi->friendly())
             {
                 // Mermaids/sirens call (hostile) aquatic monsters.
-                behaviour_event( monster, ME_ALERT, MHITNOT, where );
+                behaviour_event(*mi, ME_ALERT, MHITNOT, where);
             }
             else
-                behaviour_event( monster, ME_DISTURB, MHITNOT, where );
+                behaviour_event(*mi, ME_DISTURB, MHITNOT, where);
         }
     }
 
@@ -434,10 +433,8 @@ static const char* _player_vampire_smells_blood(int dist)
     return "";
 }
 
-void blood_smell( int strength, const coord_def& where )
+void blood_smell(int strength, const coord_def& where)
 {
-    monsters *monster = NULL;
-
     const int range = strength * strength;
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
@@ -454,7 +451,7 @@ void blood_smell( int strength, const coord_def& where )
         {
             int vamp_range = vamp_strength * vamp_strength;
 
-            const int player_distance = distance( you.pos(), where );
+            const int player_distance = distance(you.pos(), where);
 
             if (player_distance <= vamp_range)
             {
@@ -474,73 +471,66 @@ void blood_smell( int strength, const coord_def& where )
         }
     }
 
-    for (int p = 0; p < MAX_MONSTERS; p++)
+    circle_def c(where, range, C_CIRCLE);
+    for (monster_iterator mi(&c); mi; ++mi)
     {
-        monster = &menv[p];
-
-        if (monster->type < 0)
+        if (!mons_class_flag(mi->type, M_BLOOD_SCENT))
             continue;
 
-        if (!mons_class_flag(monster->type, M_BLOOD_SCENT))
-            continue;
-
-        if (distance(monster->pos(), where) <= range)
+        // Let sleeping hounds lie.
+        if (mi->asleep()
+            && mons_species(mi->type) != MONS_VAMPIRE
+            && mi->type != MONS_SHARK)
         {
-            // Let sleeping hounds lie.
-            if (monster->asleep()
-                && mons_species(monster->type) != MONS_VAMPIRE
-                && monster->type != MONS_SHARK)
+            // 33% chance of sleeping on
+            // 33% of being disturbed (start BEH_WANDER)
+            // 33% of being alerted   (start BEH_SEEK)
+            if (!one_chance_in(3))
             {
-                // 33% chance of sleeping on
-                // 33% of being disturbed (start BEH_WANDER)
-                // 33% of being alerted   (start BEH_SEEK)
-                if (!one_chance_in(3))
+                if (coinflip())
                 {
-                    if (coinflip())
-                    {
 #ifdef DEBUG_DIAGNOSTICS
-                        mprf(MSGCH_DIAGNOSTICS, "disturbing %s (%d, %d)",
-                             monster->name(DESC_PLAIN).c_str(),
-                             monster->pos().x, monster->pos().y);
+                    mprf(MSGCH_DIAGNOSTICS, "disturbing %s (%d, %d)",
+                         mi->name(DESC_PLAIN).c_str(),
+                         mi->pos().x, mi->pos().y);
 #endif
-                        behaviour_event(monster, ME_DISTURB, MHITNOT, where);
-                    }
-                    continue;
+                    behaviour_event(*mi, ME_DISTURB, MHITNOT, where);
                 }
+                continue;
             }
+        }
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "alerting %s (%d, %d)",
-                 monster->name(DESC_PLAIN).c_str(),
-                 monster->pos().x, monster->pos().y);
+        mprf(MSGCH_DIAGNOSTICS, "alerting %s (%d, %d)",
+             mi->name(DESC_PLAIN).c_str(),
+             mi->pos().x, mi->pos().y);
 #endif
-            behaviour_event( monster, ME_ALERT, MHITNOT, where );
+        behaviour_event(*mi, ME_ALERT, MHITNOT, where);
 
-            if (monster->type == MONS_SHARK)
+        if (mi->type == MONS_SHARK)
+        {
+            // Sharks go into a battle frenzy if they smell blood.
+            monster_pathfind mp;
+            if (mp.init_pathfind(*mi, where))
             {
-                // Sharks go into a battle frenzy if they smell blood.
-                monster_pathfind mp;
-                if (mp.init_pathfind(monster, where))
-                {
-                    mon_enchant ench = monster->get_ench(ENCH_BATTLE_FRENZY);
-                    const int dist = 15 - (monster->pos() - where).rdist();
-                    const int dur  = random_range(dist, dist*2)
-                                     * speed_to_duration(monster->speed);
+                mon_enchant ench = mi->get_ench(ENCH_BATTLE_FRENZY);
+                const int dist = 15 - (mi->pos() - where).rdist();
+                const int dur  = random_range(dist, dist*2)
+                                 * speed_to_duration(mi->speed);
 
-                    if (ench.ench != ENCH_NONE)
-                    {
-                        int level = ench.degree;
-                        if (level < 4 && one_chance_in(2*level))
-                            ench.degree++;
-                        ench.duration = std::max(ench.duration, dur);
-                        monster->update_ench(ench);
-                    }
-                    else
-                    {
-                        monster->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1,
-                                                      KC_OTHER, dur));
-                        simple_monster_message(monster, " is consumed with "
-                                                        "blood-lust!");
-                    }
+                if (ench.ench != ENCH_NONE)
+                {
+                    int level = ench.degree;
+                    if (level < 4 && one_chance_in(2*level))
+                        ench.degree++;
+                    ench.duration = std::max(ench.duration, dur);
+                    mi->update_ench(ench);
+                }
+                else
+                {
+                    mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1,
+                                             KC_OTHER, dur));
+                    simple_monster_message(*mi, " is consumed with "
+                                                "blood-lust!");
                 }
             }
         }

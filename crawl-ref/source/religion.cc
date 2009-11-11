@@ -52,6 +52,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-util.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -1421,13 +1422,9 @@ bool _has_jelly()
 {
     ASSERT(you.religion == GOD_JIYVA);
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-    {
-        monsters *monster = &menv[i];
-        if (mons_is_god_gift(monster, GOD_JIYVA))
+    for (monster_iterator mi; mi; ++mi)
+        if (mons_is_god_gift(*mi, GOD_JIYVA))
             return (true);
-    }
-
     return (false);
 }
 
@@ -5446,10 +5443,8 @@ int get_tension(god_type god, bool count_travelling)
     int total = 0;
 
     bool nearby_monster = false;
-    for (int midx = 0; midx < MAX_MONSTERS; ++midx)
+    for (monster_iterator mons; mons; ++mons)
     {
-        const monsters* mons = &menv[midx];
-
         if (!mons->alive())
             continue;
 
@@ -5479,14 +5474,14 @@ int get_tension(god_type god, bool count_travelling)
                 continue;
         }
 
-        const mon_attitude_type att = mons_attitude(mons);
+        const mon_attitude_type att = mons_attitude(*mons);
         if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
             continue;
 
-        if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(mons))
+        if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(*mons))
             continue;
 
-        int exper = exper_value(mons);
+        int exper = exper_value(*mons);
         if (exper <= 0)
             continue;
 
@@ -5494,7 +5489,7 @@ int get_tension(god_type god, bool count_travelling)
         exper *= mons->hit_points;
         exper /= mons->max_hit_points;
 
-        const bool gift = mons_is_god_gift(mons, god);
+        const bool gift = mons_is_god_gift(*mons, god);
 
         if (att == ATT_HOSTILE)
         {
@@ -5517,7 +5512,7 @@ int get_tension(god_type god, bool count_travelling)
 
         if (att != ATT_FRIENDLY)
         {
-            if (!you.visible_to(mons))
+            if (!you.visible_to(*mons))
                 exper /= 2;
             if (!mons->visible_to(&you))
                 exper *= 2;
