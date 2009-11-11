@@ -627,14 +627,15 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     // from very high skill.
 
     // First set up what the monsters will look like at very high skill.
-    // Daggers are weak here!
+    // Daggers are weak here! In the table, "44+22" means d44+d22 with
+    // d22 being base damage and d44 coming from power.
 
     // Giant spiked club: speed 12, 44+22 damage, 35 AC, 70 HP, 16 EV
-    // Bardiche: speed 10, 40+20 damage, 20 AC, 40 HP, 15 EV
-    // Katana: speed 17, 26+13 damage, 16 AC, 32 HP, 18 EV
-    // Dagger: Speed 20, 8+4 damage, 2 AC, 4 HP, 20 EV
-    // Quick blade: Speed 23, 10+5 damage, 5 AC, 10 HP, 22 EV
-    // Sabre: Speed 18, 14+7 damage, 9 AC, 18 HP, 19 EV
+    // Bardiche:          speed 10, 40+20 damage, 20 AC, 40 HP, 15 EV
+    // Katana:            speed 17, 26+13 damage, 16 AC, 32 HP, 18 EV
+    // Dagger:            speed 20,  8+ 4 damage,  2 AC,  4 HP, 20 EV
+    // Quick blade:       speed 23, 10+ 5 damage,  5 AC, 10 HP, 22 EV
+    // Sabre:             speed 18, 14+ 7 damage,  9 AC, 18 HP, 19 EV
 
     xl = 15;
 
@@ -657,21 +658,21 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     // For a spellpower 75 character (typical late midgame mage with no Ench
     // focus), we have:
 
-    // Giant spiked club: speed 7, 22+22 damage, 17 AC, 35 HP, 11 EV
-    // Bardiche: speed 5, 20+20 damage, 10 AC, 20 HP, 10 EV
-    // Katana: speed 12, 13+13 damage, 8 AC, 16 HP, 13 EV
-    // Dagger: Speed 15, 4+4 damage, 1 AC, 5 HP, 15 EV
-    // Quick blade: Speed 18, 5+5 damage, 2 AC, 5 HP, 17 EV
-    // Sabre: Speed 13, 7+7 damage, 4 AC, 9 HP, 14 EV
+    // Giant spiked club: speed 7,  22+22 damage, 17 AC, 35 HP, 11 EV
+    // Bardiche:          speed 5,  20+20 damage, 10 AC, 20 HP, 10 EV
+    // Katana:            speed 12, 13+13 damage,  8 AC, 16 HP, 13 EV
+    // Dagger:            speed 15,  4+4  damage,  1 AC,  5 HP, 15 EV
+    // Quick blade:       speed 18,  5+5  damage,  2 AC,  5 HP, 17 EV
+    // Sabre:             speed 13,  7+7  damage,  4 AC,  9 HP, 14 EV
 
     // At spellpower 37 (early game character with focus on Ench):
 
-    // Giant spiked club: speed 5, 11+22 damage, 8 AC, 17 HP, 9 EV
-    // Bardiche: speed 3, 10+20 damage, 5 AC, 10 HP, 8 EV
-    // Katana: speed 10, 6+13 damage, 4 AC, 8 HP, 11 EV
-    // Dagger: Speed 13, 2+4 damage, 0 AC, 5 HP, 13 EV
-    // Quick blade: Speed 16, 2+5 damage, 1 AC, 5 HP, 15 EV
-    // Sabre: Speed 11, 3+7 damage, 2 AC, 5 HP, 12 EV
+    // Giant spiked club: speed 5, 11+22 damage, 8 AC, 17 HP,  9 EV
+    // Bardiche:          speed 3, 10+20 damage, 5 AC, 10 HP,  8 EV
+    // Katana:            speed 10, 6+13 damage, 4 AC,  8 HP, 11 EV
+    // Dagger:            speed 13, 2+4  damage, 0 AC,  5 HP, 13 EV
+    // Quick blade:       speed 16, 2+5  damage, 1 AC,  5 HP, 15 EV
+    // Sabre:             speed 11, 3+7  damage, 2 AC,  5 HP, 12 EV
 }
 
 static spell_type search_first_list(int ignore_spell)
