@@ -3860,7 +3860,7 @@ bool ely_destroy_weapons()
             _print_sacrifice_message(GOD_ELYVILON, item, pgain);
             if (is_evil_weapon)
             {
-                // Print this is addition to the above!
+                // Print this in addition to the above!
                 simple_god_message(
                     make_stringf(" welcomes the destruction of %s evil "
                                  "weapon%s.",
