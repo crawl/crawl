@@ -335,6 +335,8 @@ void setup_vault_mon_list();
 
 int mons_tracking_range(const monsters *mon);
 
+monsters* get_free_monster();
+
 class monster_pathfind
 {
 public:
