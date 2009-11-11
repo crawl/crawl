@@ -30,6 +30,11 @@ bool player::see_cell_no_trans(const coord_def &p) const
     return (los_no_trans.see_cell(p));
 }
 
+const los_def& actor::get_los() const
+{
+    return (los);
+}
+
 const los_def& actor::get_los_no_trans()
 {
     return (los_no_trans);

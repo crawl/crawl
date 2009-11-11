@@ -121,6 +121,7 @@ public:
 
     virtual void update_los();
 
+    virtual const los_def& get_los() const;
     // Could be const for player, but monsters updates it on the fly.
     virtual const los_def& get_los_no_trans();
 
