@@ -29,6 +29,12 @@
 
 #define YOU_PORTAL_VAULT_NAMES_KEY  "you_portal_vault_names_key"
 
+// See _build_overflow_temples() in dungeon.cc for details on overflow
+// temples.
+#define TEMPLE_GODS_KEY      "temple_gods_key"
+#define OVERFLOW_TEMPLES_KEY "overflow_temples_key"
+#define TEMPLE_MAP_KEY       "temple_map_key"
+
 enum portal_type
 {
     PORTAL_NONE = 0,

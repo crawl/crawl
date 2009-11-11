@@ -893,6 +893,7 @@ game_start:
     Generated_Levels.clear();
 
     initialise_branch_depths();
+    initialise_temples();
     init_level_connectivity();
 
     // Generate the second name of Jiyva

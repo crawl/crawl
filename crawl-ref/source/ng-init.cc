@@ -10,9 +10,11 @@
 
 #include "branch.h"
 #include "describe.h"
+#include "dungeon.h"
 #include "itemname.h"
 #include "player.h"
 #include "random.h"
+#include "store.h"
 
 static unsigned char _random_potion_description()
 {
@@ -62,6 +64,78 @@ void initialise_branch_depths()
     branches[BRANCH_CRYPT].startdepth          = random_range(2, 4);
     branches[BRANCH_HALL_OF_BLADES].startdepth = random_range(4, 6);
     branches[BRANCH_TOMB].startdepth           = random_range(2, 3);
+}
+
+#define MAX_OVERFLOW_LEVEL 9
+
+// Determine which altars go into the Ecumenical Temple, which go into
+// overflow temples, and on what level the overflow temples are.
+void initialise_temples()
+{
+    std::vector<god_type> god_list;
+
+    for (int i = 0; i < NUM_GODS; i++)
+    {
+        god_type god = (god_type) i;
+
+        // These never appear in any temples.
+        switch(god)
+        {
+        case GOD_NO_GOD:
+        case GOD_LUGONU:
+        case GOD_BEOGH:
+        case GOD_JIYVA:
+            continue;
+
+        default:
+            break;
+        }
+
+        god_list.push_back(god);
+    }
+
+    std::random_shuffle(god_list.begin(), god_list.end());
+
+    std::vector<god_type> overflow_gods;
+
+    while (god_list.size() > 12)
+    {
+        overflow_gods.push_back(god_list.back());
+        god_list.pop_back();
+    }
+
+    CrawlVector &temple_gods
+        = you.props[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
+
+    for (unsigned int i = 0; i < god_list.size(); i++)
+        temple_gods.push_back( (char) god_list[i] );
+
+    CrawlVector &overflow_temples
+        = you.props[OVERFLOW_TEMPLES_KEY].new_vector(SV_VEC);
+    overflow_temples.resize(MAX_OVERFLOW_LEVEL);
+
+    // NOTE: The overflow temples don't have to contain only one
+    // altar; they can contain any number of altars, so long as there's
+    // at least one vault definition with the tag "overflow_temple_num"
+    // (where "num" is the number of altars).
+    for (unsigned int i = 0; i < overflow_gods.size(); i++)
+    {
+        const unsigned int level = random_range(2, MAX_OVERFLOW_LEVEL);
+
+        // List of overflow temples on this level.
+        CrawlVector &level_temples
+            = overflow_temples[level - 1].get_vector();
+
+        CrawlHashTable temple;
+
+        CrawlVector &gods
+            = temple[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
+
+        // Only single-altar overflow temples for now.
+        gods.push_back( (char) overflow_gods[i] );
+
+        level_temples.push_back(temple);
+    }
 }
 
 static int _get_random_porridge_desc()

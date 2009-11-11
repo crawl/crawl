@@ -211,9 +211,13 @@ static void _dgn_load_colour_grid();
 static void _dgn_map_colour_fixup();
 
 // ALTAR FUNCTIONS
+static int                  _setup_temple_altars(CrawlHashTable &temple);
+static dungeon_feature_type _pick_temple_altar(vault_placement &place);
 static dungeon_feature_type _pick_an_altar();
 static void _place_altar();
 static void _place_altars();
+
+static std::vector<god_type> _temple_altar_list;
 
 typedef std::list<coord_def> coord_list;
 
@@ -294,6 +298,9 @@ bool builder(int level_number, int level_type)
 #endif
 
         dgn_reset_level();
+
+        if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+            _setup_temple_altars(you.props);
 
         // If we're getting low on available retries, disable random vaults
         // and minivaults (special levels will still be placed).
@@ -1617,6 +1624,97 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     }
 }
 
+// Structure of OVERFLOW_TEMPLES:
+//
+// * A vector, with one cell per dungeon level (unset if there's no
+//   overflow temples on that level).
+//
+// * The cell of the previous vector is a vector, with one overlfow
+//   temple definition per cell.
+//
+// * The cell of the previous vector is a hash table, containing the
+//   list of gods for the overflow temple and (optionally) the name of
+//   the vault to use for the temple.  If no map name is supplied,
+//   it will randomly pick from vaults tagged "overflow_vault_num",
+//   where "num" is the number of gods in the temple.  Gods are listed
+//   in the order their altars are placed.
+static void _build_overflow_temples(int level_number)
+{
+    if (!you.props.exists(OVERFLOW_TEMPLES_KEY))
+        // Levels built while in testing mode.
+        return;
+
+    CrawlVector &levels = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
+
+    // Are we deeper than the last overflow temple?
+    if (level_number >= levels.size())
+        return;
+
+    CrawlStoreValue &val = levels[level_number];
+
+    // Does this level have an overflow temple?
+    if (val.get_flags() & SFLAG_UNSET)
+        return;
+
+    CrawlVector &temples = val.get_vector();
+
+    if (temples.size() == 0)
+        return;
+
+    if (!can_create_vault)
+    {
+        mpr("WARNING: Overriding can_create_vault",
+            MSGCH_DIAGNOSTICS);
+        can_create_vault = true;
+    }
+
+    mprf(MSGCH_DIAGNOSTICS, "Placing %lu overflow temples",
+         temples.size());
+
+    for (unsigned int i = 0; i < temples.size(); i++)
+    {
+        CrawlHashTable &temple = temples[i].get_table();
+
+        const int num_gods = _setup_temple_altars(temple);
+
+        const map_def *vault = NULL;
+
+        if (temple.exists(TEMPLE_MAP_KEY))
+        {
+            std::string name = temple[TEMPLE_MAP_KEY].get_string();
+
+            vault = find_map_by_name(name);
+            if (vault == NULL)
+            {
+                mprf(MSGCH_ERROR,
+                     "Couldn't find overflow temple map '%s'!",
+                     name.c_str());
+            }
+        }
+        else
+        {
+            std::string vault_tag =
+                make_stringf("overflow_temple_%d", num_gods);
+
+            vault = random_map_for_tag(vault_tag, true);
+            if (vault == NULL)
+            {
+                mprf(MSGCH_ERROR,
+                     "Couldn't find overflow temple tag '%s'!",
+                     vault_tag.c_str());
+            }
+        }
+
+        if (vault == NULL)
+            // Might as well build the rest of the level if we couldn't
+            // find the overflow temple map, so don't veto the level.
+            return;
+
+        if (!_ensure_vault_placed(_build_vaults(level_number, vault), false))
+            return;
+    }
+}
+
 static void _build_dungeon_level(int level_number, int level_type)
 {
     spec_room sr;
@@ -1663,9 +1761,16 @@ static void _build_dungeon_level(int level_number, int level_type)
     // Any further vaults must make sure not to disrupt level layout.
     dgn_check_connectivity = !player_in_branch(BRANCH_SHOALS);
 
+    if (you.where_are_you == BRANCH_MAIN_DUNGEON)
+    {
+        _build_overflow_temples(level_number);
+
+        if (dgn_level_vetoed)
+            return;
+    }
+
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
-
     _place_minivaults();
     _place_branch_entrances( level_number, level_type );
     _place_extra_vaults();
@@ -2515,6 +2620,18 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
     }
 
     return (vault);
+}
+
+static int _setup_temple_altars(CrawlHashTable &temple)
+{
+    CrawlVector god_list = temple[TEMPLE_GODS_KEY].get_vector();
+
+    _temple_altar_list.clear();
+
+    for (unsigned int i = 0; i < god_list.size(); i++)
+        _temple_altar_list.push_back( (god_type) god_list[i].get_byte() );
+
+    return ( (int) god_list.size() );
 }
 
 // Returns BUILD_SKIP if we should skip further generation,
@@ -4871,9 +4988,7 @@ static void _vault_grid( vault_placement &place,
                    (vgrid == ']') ? DNGN_STONE_STAIRS_DOWN_III :
                    (vgrid == '[') ? DNGN_STONE_STAIRS_UP_III :
                    (vgrid == 'A') ? DNGN_STONE_ARCH :
-                   (vgrid == 'B') ?
-                   static_cast<dungeon_feature_type>(
-                       DNGN_ALTAR_FIRST_GOD + place.altar_count) :// see below
+                   (vgrid == 'B') ? _pick_temple_altar(place) :
                    (vgrid == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
                    (vgrid == 'I') ? DNGN_ORCISH_IDOL :
                    (vgrid == 'G') ? DNGN_GRANITE_STATUE :
@@ -4890,9 +5005,6 @@ static void _vault_grid( vault_placement &place,
     // then, handle oddball grids {dlb}:
     switch (vgrid)
     {
-    case 'B':
-        place.altar_count++;
-        break;
     case '@':
         place.exits.push_back( where );
         break;
@@ -5310,6 +5422,21 @@ static void _many_pools(dungeon_feature_type pool_type)
         }
     }
 }                               // end many_pools()
+
+static dungeon_feature_type _pick_temple_altar(vault_placement &place)
+{
+    if (_temple_altar_list.empty())
+    {
+        return (dungeon_feature_type)
+            (DNGN_ALTAR_FIRST_GOD + place.altar_count++);
+    }
+
+    const god_type god = _temple_altar_list.back();
+
+    _temple_altar_list.pop_back();
+
+    return altar_for_god(god);
+}
 
 //jmf: Generate altar based on where you are, or possibly randomly.
 static dungeon_feature_type _pick_an_altar()

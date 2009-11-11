@@ -366,6 +366,31 @@ void wizard_list_branches()
                  "this game", i, branches[i].longname);
         }
     }
+
+    if (!you.props.exists(OVERFLOW_TEMPLES_KEY))
+        return;
+
+    mpr("----", MSGCH_DIAGNOSTICS);
+    mpr("Overflow temples: ", MSGCH_DIAGNOSTICS);
+
+    CrawlVector &levels = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
+
+    for (unsigned int i = 0; i < levels.size(); i++)
+    {
+        CrawlStoreValue &val = levels[i];
+
+        // Does this level have an overflow temple?
+        if (val.get_flags() & SFLAG_UNSET)
+            continue;
+
+        CrawlVector &temples = val.get_vector();
+
+        if (temples.size() == 0)
+            continue;
+
+        mprf(MSGCH_DIAGNOSTICS, "%lu on D:%lu", temples.size(),
+             i + 1);
+    }
 }
 
 void wizard_map_level()

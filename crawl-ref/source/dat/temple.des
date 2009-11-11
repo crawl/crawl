@@ -893,3 +893,16 @@ bbbbbbbbbbbbbbb.B.bbbbbbbbbbbbbbb
 bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 ENDMAP
+
+##############################################################################
+# Overflow temples
+##############################################################################
+
+##############################################################################
+# Overflow temples with one altar, must have tag "overflow_temple_1"
+#
+NAME:   overflow_temple_1_a
+TAGS:   overflow_temple_1 allow_dup
+MAP
+B
+ENDMAP
