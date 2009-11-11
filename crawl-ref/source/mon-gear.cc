@@ -324,8 +324,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.base_type    = OBJ_WEAPONS;
         item.sub_type     = WPN_QUARTERSTAFF;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_CHAOS);
-        item.plus        += random2(5);
-        item.plus2       += random2(4);
+        item.plus        += 2 + random2(3);
+        item.plus2       += 2 + random2(3);
         break;
 
     case MONS_ORC:
