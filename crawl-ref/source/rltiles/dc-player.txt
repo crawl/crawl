@@ -418,6 +418,7 @@ knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
 dire_lajatang DIRE_LAJATANG
 spriggans_knife SPRIGGANS_KNIFE
+cutlass CUTLASS
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
