@@ -2357,7 +2357,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             text << "\nAlso, new experience levels let you learn more spells "
                     "(the Spellcasting skill also does this). For now, you "
                     "should try to memorise the second spell of your "
-                    "starting book with <w>Mbb</w>, which can then be zapped "
+                    "starting book with <w>Ma</w>, which can then be zapped "
                     "with <w>zb</w>.";
 #ifdef USE_TILE
             text << " Memorising is also possible by doing a <w>left "
