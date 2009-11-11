@@ -39,6 +39,26 @@ void push_monster(lua_State *ls, monsters *mons)
 
 MDEF(name)
 {
+    PLUARET(string, mons->name(DESC_PLAIN, true).c_str());
+}
+
+MDEF(base_name)
+{
+    PLUARET(string, mons->base_name(DESC_PLAIN, true).c_str());
+}
+
+MDEF(full_name)
+{
+    PLUARET(string, mons->full_name(DESC_PLAIN, true).c_str());
+}
+
+MDEF(db_name)
+{
+    PLUARET(string, mons->name(DESC_DBNAME, true).c_str());
+}
+
+MDEF(type_name)
+{
     PLUARET(string, mons_type_name(mons->type, DESC_PLAIN).c_str());
 }
 
@@ -145,14 +165,20 @@ struct MonsAccessor
 
 static MonsAccessor mons_attrs[] =
 {
-    { "name", l_mons_name },
+    { "name",      l_mons_name      },
+    { "base_name", l_mons_base_name },
+    { "full_name", l_mons_full_name },
+    { "db_name",   l_mons_db_name   },
+    { "type_name", l_mons_type_name },
+
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },
     { "hd"  , l_mons_hd   },
     { "muse", l_mons_muse },
     { "meat", l_mons_meat },
-    { "dismiss", l_mons_dismiss },
-    { "experience", l_mons_experience },
+
+    { "dismiss",         l_mons_dismiss         },
+    { "experience",      l_mons_experience      },
     { "random_teleport", l_mons_random_teleport }
 };
 
