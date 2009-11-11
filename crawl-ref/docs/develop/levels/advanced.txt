@@ -869,8 +869,9 @@ O.   Map Generation
 
 Full-debug Crawl builds (see above for more information) include a test for
 generating specific vaults and outputting a copy of the map to a text file for
-inspection. This is most useful for portal and other encompass vaults which
-use randomisation heavily.
+inspection (you can also define the macro DEBUG_TESTS on an ordinary debug
+build, like "make EXTERNAL_DEFINES=-DDEBUG_TESTS wizard"). This is most useful
+for portal and other encompass vaults which use randomisation heavily.
 
 To use the test, you must edit source/test/vault_generation.lua. Fill in the
 following variables:
