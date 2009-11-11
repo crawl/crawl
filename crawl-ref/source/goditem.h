@@ -16,6 +16,7 @@ bool is_unholy_item(const item_def& item);
 bool is_potentially_evil_item(const item_def& item);
 bool is_evil_item(const item_def& item);
 bool is_chaotic_item(const item_def& item);
+bool is_hasty_item(const item_def& item);
 bool is_holy_discipline(int discipline);
 bool is_evil_discipline(int discipline);
 bool is_holy_spell(spell_type spell, god_type god = GOD_NO_GOD);
