@@ -1180,7 +1180,7 @@ void debug_miscast( int target_index )
         }
     }
 
-    if (school == SPTYP_HOLY || (disciplines & SPTYP_HOLY))
+    if (is_holy_spell(spell))
     {
         mpr("Can't miscast holy spells.");
         return;

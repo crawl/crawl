@@ -557,14 +557,14 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
             return (true);
         }
 
+        // Holy spells are probably too useful for Xom to find them
+        // interesting.
+        if (is_holy_spell(spell))
+            return (true);
+
         // Things are more fun for Xom the less the player knows in
         // advance.
         if (disciplines & SPTYP_DIVINATION)
-            return (true);
-
-        // Holy spells are probably too useful for Xom to find them
-        // interesting.
-        if (disciplines & SPTYP_HOLY)
             return (true);
         break;
 
@@ -601,7 +601,8 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
         return (is_holy_discipline(discipline));
 
     case GOD_XOM:
-        return (discipline & (SPTYP_DIVINATION | SPTYP_HOLY));
+        return (is_holy_discipline(discipline)
+                || discipline & (SPTYP_DIVINATION));
 
     case GOD_ELYVILON:
         return (discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));
