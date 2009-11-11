@@ -695,7 +695,7 @@ void full_describe_view()
             const coord_def c = list_features[i];
             std::string desc = "";
 #ifndef USE_TILE
-            const coord_def e  = c - you.pos() + coord_def(9,9);
+            const coord_def e  = c - you.pos() + coord_def(8,8);
             show_type object         = env.show(e);
             unsigned short col = object.colour;
             unsigned ch;
