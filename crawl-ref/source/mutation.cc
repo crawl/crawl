@@ -2886,7 +2886,7 @@ try_again:
                 if (m == MUT_REGENERATION)
                     regen = 1;
 
-                if (m == MUT_CLAWS && i == 3 || m == MUT_HORNS && i == 1)
+                if (m == MUT_CLAWS && i == 2 || m == MUT_HORNS && i == 0)
                     ++slots_lost;
             }
 
