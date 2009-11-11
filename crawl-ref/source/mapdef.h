@@ -19,7 +19,7 @@
 #include "dlua.h"
 #include "enum.h"
 #include "externs.h"
-#include "fixary.h"
+#include "matrix.h"
 #include "fprop.h"
 #include "makeitem.h"
 #include "stuff.h"
