@@ -425,7 +425,7 @@ int mons_unusable_items(const monsters *mon)
 
     if (mon->is_holy())
         ret += _scan_mon_inv_items(mon, is_evil_item) > 0;
-    else if (mon->is_unholy())
+    else if (mon->undead_or_demonic())
     {
         ret += _scan_mon_inv_items(mon, is_holy_item) > 0;
 

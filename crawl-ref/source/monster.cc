@@ -632,8 +632,8 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
         if (brand == SPWPN_ORC_SLAYING && is_orckind(this))
             return (false);
 
-        // Demonic/undead monsters won't use holy weapons.
-        if (is_unholy() && is_holy_item(item))
+        // Undead and demonic monsters won't use holy weapons.
+        if (undead_or_demonic() && is_holy_item(item))
             return (false);
 
         // Holy monsters and monsters that are gifts of good gods won't
@@ -3190,7 +3190,7 @@ int monsters::res_asphyx() const
 {
     int res = get_mons_resists(this).asphyx;
     const mon_holy_type holi = holiness();
-    if (is_unholy()
+    if (undead_or_demonic()
         || holi == MH_NONLIVING
         || holi == MH_PLANT)
     {
@@ -3258,11 +3258,11 @@ int monsters::res_rotting() const
 
 int monsters::res_holy_energy(const actor *attacker) const
 {
+    if (undead_or_demonic())
+        return (-2);
+
     if (is_evil())
         return (-1);
-
-    if (is_unholy())
-        return (-2);
 
     if (is_holy()
         || is_good_god(god)

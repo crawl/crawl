@@ -41,7 +41,7 @@ static void _give_monster_item(monsters *mon, int thing,
     mthing.link = NON_ITEM;
     unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
-    if (mon->is_unholy()
+    if (mon->undead_or_demonic()
         && (is_blessed_blade(mthing)
             || get_weapon_brand(mthing) == SPWPN_HOLY_WRATH))
     {

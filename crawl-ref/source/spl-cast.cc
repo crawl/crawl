@@ -1003,7 +1003,7 @@ static bool _vampire_cannot_cast(spell_type spell)
 
 static bool _spell_is_uncastable(spell_type spell)
 {
-    if (you.is_unholy() && is_holy_spell(spell))
+    if (you.undead_or_demonic() && is_holy_spell(spell))
     {
         mpr("You can't use this type of magic!");
         return (true);
@@ -1011,7 +1011,7 @@ static bool _spell_is_uncastable(spell_type spell)
 
     // Normally undead can't memorise these spells, so this check is
     // to catch those in Lich form.  As such, we allow the Lich form
-    // to be extended here. -- bwr
+    // to be extended here. - bwr
     if (spell != SPELL_NECROMUTATION && you_cannot_memorise(spell))
     {
         mpr( "You cannot cast that spell in your current form!" );

@@ -746,7 +746,7 @@ bool vampiric_drain(int pow, const dist &vmove)
             return (false);
         }
 
-        if (monster->is_unholy())
+        if (monster->undead_or_demonic())
         {
             mpr("Aaaarggghhhhh!");
             dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");

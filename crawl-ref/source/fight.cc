@@ -3159,7 +3159,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_HOLY_WRATH:
-        if (defender->is_unholy())
+        if (defender->undead_or_demonic())
             special_damage = 1 + (random2(damage_done * 15) / 10);
 
         if (special_damage && defender_visible)

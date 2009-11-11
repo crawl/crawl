@@ -151,7 +151,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    if (you.is_unholy() && is_holy_item(*weapon))
+    if (you.undead_or_demonic() && is_holy_item(*weapon))
     {
         if (say_reason)
         {
@@ -1750,7 +1750,7 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
-    if (victim->is_unholy() || victim->is_chaotic())
+    if (victim->undead_or_demonic() || victim->is_chaotic())
     {
         dmg *= 2;
 

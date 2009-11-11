@@ -5781,11 +5781,13 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     // Small species wielding large weapons...
     if (body_size(PSIZE_BODY) < SIZE_MEDIUM
         && !check_weapon_wieldable_size(item, body_size(PSIZE_BODY)))
+    {
         return (false);
+    }
 
     if (!ignore_brand)
     {
-        if (is_unholy() && is_holy_item(item))
+        if (undead_or_demonic() && is_holy_item(item))
             return (false);
     }
 
@@ -6490,11 +6492,11 @@ int player::res_sticky_flame() const
 
 int player::res_holy_energy(const actor *attacker) const
 {
+    if (undead_or_demonic())
+        return (-2);
+
     if (is_evil())
         return (-1);
-
-    if (is_unholy())
-        return (-2);
 
     if (is_holy())
         return (1);

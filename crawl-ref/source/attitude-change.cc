@@ -28,7 +28,7 @@
 
 void good_god_follower_attitude_change(monsters *monster)
 {
-    if (you.is_unholy() || crawl_state.arena)
+    if (you.undead_or_demonic() || crawl_state.arena)
         return;
 
     // For followers of good gods, decide whether holy beings will be

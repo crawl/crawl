@@ -518,7 +518,8 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_FEDHAS:
-        snprintf(info, INFO_SIZE, "you promote decomposition of nearby corpses%s",
+        snprintf(info, INFO_SIZE, "you promote decomposition of nearby "
+                                  "corpses%s",
                  verbose ? " via the <w>a</w> command" : "");
         likes.push_back(info);
         break;
@@ -4869,7 +4870,7 @@ bool player_can_join_god(god_type which_god)
     if (you.species == SP_DEMIGOD)
         return (false);
 
-    if (is_good_god(which_god) && you.is_unholy())
+    if (is_good_god(which_god) && you.undead_or_demonic())
         return (false);
 
     if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
@@ -4891,7 +4892,7 @@ void god_pitch(god_type which_god)
     more();
 
     // Note: using worship we could make some gods not allow followers to
-    // return, or not allow worshippers from other religions.  -- bwr
+    // return, or not allow worshippers from other religions. - bwr
 
     // Gods can be racist...
     if (!player_can_join_god(which_god))
@@ -4965,7 +4966,7 @@ void god_pitch(god_type which_god)
     more();
 
     // When you start worshipping a good god, you make all non-hostile
-    // evil and unholy beings hostile; when you start worshipping Zin,
+    // unholy and evil beings hostile; when you start worshipping Zin,
     // you make all non-hostile chaotic beings hostile; and when you
     // start worshipping Trog, you make all non-hostile magic users
     // hostile.
@@ -5017,7 +5018,7 @@ void god_pitch(god_type which_god)
     else if (is_evil_god(you.religion))
     {
         // Note: Using worshipped[] we could make this sort of grudge
-        // permanent instead of based off of penance. -- bwr
+        // permanent instead of based off of penance. - bwr
         if (you.penance[GOD_SHINING_ONE])
         {
             _inc_penance(GOD_SHINING_ONE, 30);

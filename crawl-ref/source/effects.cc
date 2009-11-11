@@ -70,7 +70,7 @@
 
 int holy_word_player(int pow, int caster, actor *attacker)
 {
-    if (!you.is_unholy())
+    if (!you.undead_or_demonic())
         return (0);
 
     int hploss;
@@ -132,7 +132,7 @@ int holy_word_monsters(coord_def where, int pow, int caster,
     if (monster == NULL)
         return (retval);
 
-    if (!monster->alive() || !monster->is_unholy())
+    if (!monster->alive() || !monster->undead_or_demonic())
         return (retval);
 
     int hploss;
