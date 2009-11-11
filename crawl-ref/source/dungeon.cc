@@ -1635,7 +1635,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 // * The cell of the previous vector is a hash table, containing the
 //   list of gods for the overflow temple and (optionally) the name of
 //   the vault to use for the temple.  If no map name is supplied,
-//   it will randomly pick from vaults tagged "overflow_vault_num",
+//   it will randomly pick from vaults tagged "temple_overflow_num",
 //   where "num" is the number of gods in the temple.  Gods are listed
 //   in the order their altars are placed.
 static void _build_overflow_temples(int level_number)
@@ -1668,9 +1668,6 @@ static void _build_overflow_temples(int level_number)
         can_create_vault = true;
     }
 
-    mprf(MSGCH_DIAGNOSTICS, "Placing %lu overflow temples",
-         temples.size());
-
     for (unsigned int i = 0; i < temples.size(); i++)
     {
         CrawlHashTable &temple = temples[i].get_table();
@@ -1694,7 +1691,7 @@ static void _build_overflow_temples(int level_number)
         else
         {
             std::string vault_tag =
-                make_stringf("overflow_temple_%d", num_gods);
+                make_stringf("temple_overflow_%d", num_gods);
 
             vault = random_map_for_tag(vault_tag, true);
             if (vault == NULL)
@@ -2608,8 +2605,24 @@ static bool _place_portal_vault(int stair, const std::string &tag, int dlevel)
 
 static const map_def *_dgn_random_map_for_place(bool minivault)
 {
-    const level_id lid   = level_id::current();
-    const map_def *vault = random_map_for_place(lid, minivault);
+    const map_def *vault = NULL;
+
+    if (!minivault && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+    {
+        // Try to place a main Temple vault with the exact number
+        // of altars needed.
+        std::string tag
+            = make_stringf("temple_main_%lu", 
+                           _temple_altar_list.size());
+        vault = random_map_for_tag(tag);
+
+        if (vault != NULL)
+            return (vault);
+    }
+
+    const level_id lid = level_id::current();
+
+    vault = random_map_for_place(lid, minivault);
 
     // Disallow entry vaults for tutorial (only complicates things).
     if (!vault

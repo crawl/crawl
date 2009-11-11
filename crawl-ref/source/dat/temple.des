@@ -382,6 +382,12 @@ ENDMAP
 # Temple maps
 ##############################################################################
 
+# To make a main temple (Ecumenical Temple branch) vault with an
+# arbitrary number of altars, give it the tag "temple_main_N", where
+# N is the number of altars.  If no vaults are found for the specific
+# number of altars, then the game will pick a random vault for
+# "PLACE: Temple".
+
 ##########################################################################
 # Circular temple (David Ploog). 12 = 1 x 12
 
@@ -898,11 +904,14 @@ ENDMAP
 # Overflow temples
 ##############################################################################
 
+# To make an overflow temple for N altars, give it the tag
+# "temple_overflow_N".
+
 ##############################################################################
-# Overflow temples with one altar, must have tag "overflow_temple_1"
+# Overflow temples with one altar, must have tag "temple_overflow_1"
 #
 NAME:   overflow_temple_1_a
-TAGS:   overflow_temple_1 allow_dup
+TAGS:   temple_overflow_1 allow_dup
 MAP
 B
 ENDMAP
