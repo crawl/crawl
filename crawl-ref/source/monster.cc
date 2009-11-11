@@ -2981,6 +2981,13 @@ mon_holy_type monsters::holiness() const
     return (mons_class_holiness(type));
 }
 
+bool monsters::undead_or_demonic() const
+{
+    const mon_holy_type holi = holiness();
+
+    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
+}
+
 bool monsters::is_holy() const
 {
     if (holiness() == MH_HOLY)

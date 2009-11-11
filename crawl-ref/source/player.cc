@@ -6363,6 +6363,13 @@ mon_holy_type player::holiness() const
     return (MH_NATURAL);
 }
 
+bool player::undead_or_demonic() const
+{
+    const mon_holy_type holi = holiness();
+
+    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
+}
+
 bool player::is_holy() const
 {
     if (is_good_god(religion))
