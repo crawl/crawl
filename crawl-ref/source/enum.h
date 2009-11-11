@@ -2972,65 +2972,67 @@ enum tutorial_event_type
     TUT_SEEN_SECRET_DOOR,
     // other 'first events'
     TUT_SEEN_MONSTER,
-    TUT_MONSTER_BRAND,        // 25
+    TUT_SEEN_ZERO_EXP_MON,    // 25
+    TUT_SEEN_TOADSTOOL,
+    TUT_MONSTER_BRAND,
     TUT_MONSTER_FRIENDLY,
     TUT_MONSTER_SHOUT,
-    TUT_MONSTER_LEFT_LOS,
+    TUT_MONSTER_LEFT_LOS,     // 30
     TUT_KILLED_MONSTER,
-    TUT_NEW_LEVEL,            // 30
+    TUT_NEW_LEVEL,
     TUT_SKILL_RAISE,
     TUT_GAINED_MAGICAL_SKILL,
-    TUT_GAINED_MELEE_SKILL,
+    TUT_GAINED_MELEE_SKILL,   // 35
     TUT_GAINED_RANGED_SKILL,
-    TUT_CHOOSE_STAT,          // 35
+    TUT_CHOOSE_STAT,
     TUT_MAKE_CHUNKS,
     TUT_OFFER_CORPSE,
-    TUT_NEW_ABILITY_GOD,
+    TUT_NEW_ABILITY_GOD,      // 40
     TUT_NEW_ABILITY_MUT,
-    TUT_NEW_ABILITY_ITEM,     // 40
+    TUT_NEW_ABILITY_ITEM,
     TUT_FLEEING_MONSTER,
     TUT_ROTTEN_FOOD,
-    TUT_CONVERT,
+    TUT_CONVERT,              // 45
     TUT_GOD_DISPLEASED,
-    TUT_EXCOMMUNICATE,        // 45
+    TUT_EXCOMMUNICATE,
     TUT_SPELL_MISCAST,
     TUT_SPELL_HUNGER,
-    TUT_GLOWING,
+    TUT_GLOWING,              // 50
     TUT_YOU_RESIST,
     // status changes
-    TUT_YOU_ENCHANTED,        // 50
+    TUT_YOU_ENCHANTED,
     TUT_YOU_SICK,
     TUT_YOU_POISON,
-    TUT_YOU_ROTTING,
+    TUT_YOU_ROTTING,          // 55
     TUT_YOU_CURSED,
-    TUT_YOU_HUNGRY,           // 55
+    TUT_YOU_HUNGRY,
     TUT_YOU_STARVING,
     TUT_YOU_MUTATED,
-    TUT_CAN_BERSERK,
+    TUT_CAN_BERSERK,          // 60
     TUT_POSTBERSERK,
-    TUT_CAUGHT_IN_NET,        // 60
+    TUT_CAUGHT_IN_NET,
     // warning
     TUT_RUN_AWAY,
     TUT_RETREAT_CASTER,
-    TUT_WIELD_WEAPON,
+    TUT_WIELD_WEAPON,         // 65
     TUT_NEED_HEALING,
-    TUT_NEED_POISON_HEALING,  // 65
+    TUT_NEED_POISON_HEALING,
     TUT_INVISIBLE_DANGER,
     TUT_NEED_HEALING_INVIS,
-    TUT_ABYSS,
+    TUT_ABYSS,                // 70
     // interface
     TUT_MULTI_PICKUP,
-    TUT_HEAVY_LOAD,           // 70
+    TUT_HEAVY_LOAD,
     TUT_SHIFT_RUN,
     TUT_MAP_VIEW,
-    TUT_AUTO_EXPLORE,
+    TUT_AUTO_EXPLORE,         // 75
     TUT_DONE_EXPLORE,
-    TUT_AUTO_EXCLUSION,       // 75
+    TUT_AUTO_EXCLUSION,
     TUT_STAIR_BRAND,
     TUT_HEAP_BRAND,
-    TUT_TRAP_BRAND,
+    TUT_TRAP_BRAND,           // 80
     TUT_LOAD_SAVED_GAME,
-    TUT_EVENTS_NUM            // 80
+    TUT_EVENTS_NUM            // 82
 };
 // NOTE: For numbers higher than 85 change size of tutorial_events in externs.h.
 

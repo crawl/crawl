@@ -68,7 +68,7 @@ static void         _tutorial_describe_feature(int x, int y);
 static bool         _water_is_disturbed(int x, int y);
 
 //#define TUTORIAL_DEBUG
-#define TUTORIAL_VERSION  9
+#define TUTORIAL_VERSION 10
 
 static int _get_tutorial_cols()
 {
@@ -373,6 +373,10 @@ static std::string _tut_debug_list(int event)
         return "seen first misc. item";
     case TUT_SEEN_MONSTER:
         return "seen first monster";
+    case TUT_SEEN_ZERO_EXP_MON:
+        return "seen first zero experience monster";
+    case TUT_SEEN_TOADSTOOL:
+        return "seen first toadstool";
     case TUT_SEEN_STAIRS:
         return "seen first stairs";
     case TUT_SEEN_ESCAPE_HATCH:
@@ -1265,6 +1269,25 @@ static bool _advise_use_wand()
 
 void tutorial_first_monster(const monsters &mon)
 {
+    if (mons_class_flag(mon.type, M_NO_EXP_GAIN))
+    {
+        tutorial_event_type et = mon.type == MONS_TOADSTOOL ?
+            TUT_SEEN_TOADSTOOL : TUT_SEEN_ZERO_EXP_MON;
+
+        if (Options.tutorial_events[et])
+        {
+            if (Options.tut_just_triggered)
+                return;
+
+            learned_something_new(et, mon.pos());
+            return;
+        }
+
+        // Don't do TUT_SEEN_MONSTER for zero exp monsters.
+        if (Options.tutorial_events[TUT_SEEN_MONSTER])
+            return;
+    }
+
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
     {
         if (Options.tut_just_triggered)
@@ -3137,6 +3160,14 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (!m)
             DELAY_EVENT;
 
+        // "Shouts" from zero experience monsters are boring, ignore
+        // them.
+        if (mons_class_flag(m->type, M_NO_EXP_GAIN))
+        {
+            Options.tutorial_events[TUT_MONSTER_SHOUT] = true;
+            return;
+        }
+
         const bool vis = you.can_see(m);
 
 #ifdef USE_TILE
@@ -3192,6 +3223,52 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     case TUT_SEEN_FIRST_OBJECT:
         // Handled in special functions.
         break;
+
+    case TUT_SEEN_TOADSTOOL:
+    {
+        const monsters* m = monster_at(gc);
+
+        if (!m || !you.can_see(m))
+            DELAY_EVENT;
+
+        viewwindow(false);
+        text << "Sometimes toadstools will grow on decaying corpses, and "
+                "will wither away soon after appearing.  Worshipers of "
+                "Fedhas Madash, the plant god, can make use of them, "
+                "but to everyone else they're just ugly dungeon decoration.";
+        break;
+    }
+
+    case TUT_SEEN_ZERO_EXP_MON:
+    {
+        const monsters* m = monster_at(gc);
+
+        if (!m || !you.can_see(m))
+            DELAY_EVENT;
+        viewwindow(false);
+
+        text << "That ";
+#ifdef USE_TILE
+        // need to highlight monster
+        const coord_def gc = m->pos();
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        tiles.add_text_tag(TAG_TUTORIAL, m);
+
+        text << "is a ";
+#else
+        unsigned short col;
+        get_mons_glyph(m, &ch, &col);
+
+        text << _colourize_glyph(col, ch) << " is a ";
+#endif
+        text << m->name(DESC_PLAIN).c_str() << ". ";
+
+        text << "While <w>technically</w> a monster, it's more like "
+                "dungeon furniture, since it's harmless and doesn't move. "
+                "If it's in your way you can attack and kill it like other "
+                "monsters, but you won't get any expereince for doing so. ";
+        break;
+    }
 
     case TUT_ABYSS:
         text << "Uh-oh, you've wound up in the Abyss! The Abyss is a special "
