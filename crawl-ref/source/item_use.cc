@@ -519,10 +519,14 @@ void wield_effects(int item_wield_2, bool showMsgs)
         {
             if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
                 mpr("You really shouldn't be using a holy item like this.");
+            else if (is_unholy_item(item) && is_good_god(you.religion))
+                mpr("You really shouldn't be using an unholy item like this.");
             else if (is_evil_item(item) && is_good_god(you.religion))
                 mpr("You really shouldn't be using an evil item like this.");
             else if (is_chaotic_item(item) && you.religion == GOD_ZIN)
                 mpr("You really shouldn't be using a chaotic item like this.");
+            else if (is_hasty_item(item) && you.religion == GOD_CHEIBRIADOS)
+                mpr("You really shouldn't be using a fast item like this.");
         }
 
         // Call unrandrt equip func before item is identified.
