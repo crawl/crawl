@@ -1576,8 +1576,8 @@ static bool _tso_blessing_holy_wpn(monsters* mon)
 
     const int wpn_brand = get_weapon_brand(wpn);
 
-    // Only brand melee weapons, and only override certain brands.
-    if (is_artefact(wpn) || is_range_weapon(wpn)
+    // Only brand weapons, and only override certain brands.
+    if (is_artefact(wpn)
         || (wpn_brand != SPWPN_NORMAL && wpn_brand != SPWPN_DRAINING
             && wpn_brand != SPWPN_PAIN && wpn_brand != SPWPN_VAMPIRICISM
             && wpn_brand != SPWPN_REAPING && wpn_brand != SPWPN_CHAOS
@@ -4209,7 +4209,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     item_def& wpn = *you.weapon();
 
     // Only bless non-artefact melee weapons.
-    if (is_artefact(wpn) || is_range_weapon(wpn))
+    if (is_artefact(wpn) || (is_range_weapon(wpn) && brand != SPWPN_HOLY_WRATH))
         return (false);
 
     std::string prompt = "Do you wish to have your weapon ";
