@@ -429,14 +429,22 @@ bool god_hates_rod(const item_def& item)
 
 conduct_type good_god_hates_item_handling(const item_def &item)
 {
-    if (!is_good_god(you.religion) || !is_evil_item(item))
+    if (!is_good_god(you.religion)
+        || (!is_unholy_item(item) && !is_evil_item(item)))
+    {
         return (DID_NOTHING);
+    }
+
+    if (item_type_known(item))
+    {
+        if (is_evil_item(item))
+            return (DID_NECROMANCY);
+        else
+            return (DID_UNHOLY);
+    }
 
     if (is_demonic(item))
         return (DID_UNHOLY);
-
-    if (item_type_known(item))
-        return (DID_NECROMANCY);
 
     return (DID_NOTHING);
 }
