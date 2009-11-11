@@ -485,7 +485,7 @@ void do_curse_item( item_def &item, bool quiet )
     {
         if (!quiet)
         {
-            mprf("Your %s glows black briefly, but repels the curse",
+            mprf("Your %s glows black briefly, but repels the curse.",
                  item.name(DESC_PLAIN).c_str());
         }
         return;
