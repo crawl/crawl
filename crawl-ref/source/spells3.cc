@@ -35,6 +35,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -1767,12 +1768,8 @@ bool remove_sanctuary(bool did_attack)
 
     // Now that the sanctuary is gone, monsters aren't afraid of it
     // anymore.
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-    {
-        monsters *mon = &menv[i];
-        if (mon->alive())
-            mons_stop_fleeing_from_sanctuary(mon);
-    }
+    for (monster_iterator mi; mi; ++mi)
+        mons_stop_fleeing_from_sanctuary(*mi);
 
     if (is_resting())
         stop_running();

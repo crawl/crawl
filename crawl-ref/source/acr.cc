@@ -89,6 +89,7 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-cast.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -4025,9 +4026,8 @@ static void _move_player(coord_def move)
         mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);
 
         j = 0;
-        for (int i = 0; i < MAX_MONSTERS; ++i)
-            if (menv[i].type != -1)
-                ++j;
+        for (monster_iterator mi; mi; ++mi)
+            ++j;
 
         mprf(MSGCH_DIAGNOSTICS, "Number of monsters present: %d", j);
         mprf(MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);

@@ -18,6 +18,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-iter.h"
 #include "mon-util.h"
 #include "monplace.h"
 #include "mtransit.h"
@@ -442,16 +443,11 @@ void area_shift(void)
 
     _xom_check_nearness_setup();
 
-    for (unsigned int i = 0; i < MAX_MONSTERS; i++)
+    // Remove non-nearby monsters.
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters &m = menv[i];
-
-        if (!m.alive())
-            continue;
-
-        // Remove non-nearby monsters.
-        if (grid_distance(m.pos(), you.pos()) > 10)
-            _abyss_lose_monster(m);
+        if (grid_distance(mi->pos(), you.pos()) > 10)
+            _abyss_lose_monster(**mi);
     }
 
     for (rectangle_iterator ri(5); ri; ++ri)
@@ -546,12 +542,9 @@ void area_shift(void)
 
 void save_abyss_uniques()
 {
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-    {
-        monsters &m = menv[i];
-        if (m.alive() && m.needs_transit())
-            m.set_transit( level_id(LEVEL_ABYSS) );
-    }
+    for (monster_iterator mi; mi; ++mi)
+         if (mi->needs_transit())
+            mi->set_transit(level_id(LEVEL_ABYSS));
 }
 
 void abyss_teleport( bool new_area )
@@ -602,9 +595,8 @@ void abyss_teleport( bool new_area )
     tile_init_flavour();
 #endif
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-        if (menv[i].alive())
-            _abyss_lose_monster(menv[i]);
+    for (monster_iterator mi; mi; ++mi)
+        _abyss_lose_monster(**mi);
 
     // Orbs and fixed artefacts are marked as "lost in the abyss".
     for (int i = 0; i < MAX_ITEMS; ++i)

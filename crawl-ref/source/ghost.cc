@@ -16,6 +16,7 @@
 #include "externs.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "mon-iter.h"
 #include "ng-input.h"
 #include "random.h"
 #include "skills2.h"
@@ -846,16 +847,13 @@ void ghost_demon::announce_ghost(const ghost_demon &g)
 
 void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
 {
-    for (int i = 0; n > 0 && i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        if (!menv[i].alive())
-            continue;
-
-        if (menv[i].type == MONS_PLAYER_GHOST && menv[i].ghost.get())
+        if (mi->type == MONS_PLAYER_GHOST && mi->ghost.get())
         {
             // Bingo!
-            announce_ghost(*menv[i].ghost);
-            gs.push_back(*menv[i].ghost);
+            announce_ghost(*(mi->ghost));
+            gs.push_back(*(mi->ghost));
             --n;
         }
     }

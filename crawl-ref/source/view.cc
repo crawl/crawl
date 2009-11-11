@@ -48,6 +48,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -122,34 +123,31 @@ void flush_comes_into_view()
 
 void monster_grid_updates()
 {
-    for (int s = 0; s < MAX_MONSTERS; ++s)
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
     {
-        monsters *monster = &menv[s];
-
-        if (monster->alive() && mons_near(monster))
+        if ((mi->asleep() || mons_is_wandering(*mi))
+            && check_awaken(*mi))
         {
-            if ((monster->asleep() || mons_is_wandering(monster))
-                && check_awaken(monster))
-            {
-                behaviour_event(monster, ME_ALERT, MHITYOU, you.pos(), false);
-                handle_monster_shouts(monster);
-            }
-
-            if (!monster->visible_to(&you))
-                continue;
-
-            good_god_follower_attitude_change(monster);
-            beogh_follower_convert(monster);
-            slime_convert(monster);
-            fedhas_neutralise(monster);
+            behaviour_event(*mi, ME_ALERT, MHITYOU, you.pos(), false);
+            handle_monster_shouts(*mi);
         }
+
+        if (!mi->visible_to(&you))
+            continue;
+
+        good_god_follower_attitude_change(*mi);
+        beogh_follower_convert(*mi);
+        slime_convert(*mi);
+        fedhas_neutralise(*mi);
     }
 }
 
-static void _check_monster_pos(const monsters* monster, int s)
+static void _check_monster_pos(const monsters* monster)
 {
+    int s = monster->mindex();
     ASSERT(mgrd(monster->pos()) == s);
 
+    // [rob] The following in case asserts aren't enabled.
     // [enne] - It's possible that mgrd and monster->x/y are out of
     // sync because they are updated separately.  If we can see this
     // monster, then make sure that the mgrd is set correctly.
@@ -169,20 +167,15 @@ static void _check_monster_pos(const monsters* monster, int s)
 
 void monster_grid()
 {
-    for (int s = 0; s < MAX_MONSTERS; ++s)
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
     {
-        monsters *monster = &menv[s];
-
-        if (monster->alive() && mons_near(monster))
-        {
-            _check_monster_pos(monster, s);
-            env.show.update_monster(monster);
+        _check_monster_pos(*mi);
+        env.show.update_monster(*mi);
 
 #ifdef USE_TILE
-            if (monster->visible_to(&you))
-                tile_place_monster(monster->pos().x, monster->pos().y, s, true);
+        if (mi->visible_to(&you))
+            tile_place_monster(mi->pos().x, mi->pos().y, s, true);
 #endif
-        }
     }
 }
 
@@ -190,39 +183,34 @@ void update_monsters_in_view()
 {
     unsigned int num_hostile = 0;
 
-    for (int s = 0; s < MAX_MONSTERS; s++)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[s];
-
-        if (!monster->alive())
-            continue;
-
-        if (mons_near(monster))
+        if (mons_near(*mi))
         {
-            if (monster->attitude == ATT_HOSTILE)
+            if (mi->attitude == ATT_HOSTILE)
                 num_hostile++;
 
-            if (mons_is_unknown_mimic(monster))
+            if (mons_is_unknown_mimic(*mi))
             {
                 // For unknown mimics, don't mark as seen,
                 // but do mark it as in view for later messaging.
                 // FIXME: is this correct?
-                monster->flags |= MF_WAS_IN_VIEW;
+                mi->flags |= MF_WAS_IN_VIEW;
             }
-            else if (monster->visible_to(&you))
+            else if (mi->visible_to(&you))
             {
-                handle_seen_interrupt(monster);
-                seen_monster(monster);
+                handle_seen_interrupt(*mi);
+                seen_monster(*mi);
             }
             else
-                monster->flags &= ~MF_WAS_IN_VIEW;
+                mi->flags &= ~MF_WAS_IN_VIEW;
         }
         else
-            monster->flags &= ~MF_WAS_IN_VIEW;
+            mi->flags &= ~MF_WAS_IN_VIEW;
 
         // If the monster hasn't been seen by the time that the player
         // gets control back then seen_context is out of date.
-        monster->seen_context.clear();
+        mi->seen_context.clear();
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever

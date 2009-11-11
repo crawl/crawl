@@ -26,6 +26,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-util.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -1197,14 +1198,10 @@ static int _xom_do_potion(bool debug = false)
 static int _xom_confuse_monsters(int sever, bool debug = false)
 {
     bool rc = false;
-    monsters *monster;
-    for (unsigned i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
     {
-        monster = &menv[i];
-
-        if (monster->type == MONS_NO_MONSTER || !mons_near(monster)
-            || monster->wont_attack()
-            || !mons_class_is_confusable(monster->type)
+        if (mi->wont_attack()
+            || !mons_class_is_confusable(mi->type)
             || one_chance_in(20))
         {
             continue;
@@ -1213,14 +1210,14 @@ static int _xom_confuse_monsters(int sever, bool debug = false)
         if (debug)
             return (XOM_GOOD_CONFUSION);
 
-        if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+        if (mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
                                           KC_FRIENDLY, random2(sever))))
         {
             // Only give this message once.
             if (!rc)
                 god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
 
-            simple_monster_message(monster, " looks rather confused.");
+            simple_monster_message(*mi, " looks rather confused.");
             rc = true;
         }
     }
@@ -1541,24 +1538,16 @@ static int _xom_swap_weapons(bool debug = false)
     }
 
     std::vector<monsters *> mons_wpn;
-    for (unsigned i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi(&you); mi; ++mi)
     {
-        monsters* m = &menv[i];
-
-        if (!m->alive())
-            continue;
-
-        if (!you.see_cell(m->pos()))
-            continue;
-
-        if (!wpn || m->wont_attack() || m->is_summoned()
-            || mons_itemuse(m) < MONUSE_STARTING_EQUIPMENT
-            || (m->flags & MF_HARD_RESET))
+        if (!wpn || mi->wont_attack() || mi->is_summoned()
+            || mons_itemuse(*mi) < MONUSE_STARTING_EQUIPMENT
+            || (mi->flags & MF_HARD_RESET))
         {
             continue;
         }
 
-        const int mweap = m->inv[MSLOT_WEAPON];
+        const int mweap = mi->inv[MSLOT_WEAPON];
         if (mweap == NON_ITEM)
             continue;
 
@@ -1567,11 +1556,11 @@ static int _xom_swap_weapons(bool debug = false)
         // Let's be nice about this.
         if (weapon.base_type == OBJ_WEAPONS
             && !(weapon.flags & ISFLAG_SUMMONED)
-            && you.can_wield(weapon, true) && m->can_wield(*wpn, true)
+            && you.can_wield(weapon, true) && mi->can_wield(*wpn, true)
             && !get_weapon_brand(weapon) != SPWPN_DISTORTION
             && (!is_artefact(weapon) || _art_is_safe(weapon)))
         {
-            mons_wpn.push_back(m);
+            mons_wpn.push_back(*mi);
         }
     }
     if (mons_wpn.empty())
@@ -1677,18 +1666,9 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
         return (XOM_DID_NOTHING);
 
     std::vector<monsters *> mons;
-    for (unsigned i = 0; i < MAX_MONSTERS; ++i)
-    {
-        monsters* m = &menv[i];
+    for (monster_iterator mi(&you); mi; ++mi)
+        mons.push_back(*mi);
 
-        if (!m->alive())
-            continue;
-
-        if (!you.see_cell(m->pos()))
-            continue;
-
-        mons.push_back(m);
-    }
     if (mons.empty())
         return (XOM_DID_NOTHING);
 
@@ -1741,24 +1721,16 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
 static int _xom_animate_monster_weapon(int sever, bool debug = false)
 {
     std::vector<monsters *> mons_wpn;
-    for (unsigned i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi(&you); mi; ++mi)
     {
-        monsters* m = &menv[i];
-
-        if (!m->alive())
-            continue;
-
-        if (!you.see_cell(m->pos()))
-            continue;
-
-        if (m->wont_attack() || m->is_summoned()
-            || mons_itemuse(m) < MONUSE_STARTING_EQUIPMENT
-            || (m->flags & MF_HARD_RESET))
+        if (mi->wont_attack() || mi->is_summoned()
+            || mons_itemuse(*mi) < MONUSE_STARTING_EQUIPMENT
+            || (mi->flags & MF_HARD_RESET))
         {
             continue;
         }
 
-        const int mweap = m->inv[MSLOT_WEAPON];
+        const int mweap = mi->inv[MSLOT_WEAPON];
         if (mweap == NON_ITEM)
             continue;
 
@@ -1771,7 +1743,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
             && !is_special_unrandom_artefact(weapon)
             && !get_weapon_brand(weapon) != SPWPN_DISTORTION)
         {
-            mons_wpn.push_back(m);
+            mons_wpn.push_back(*mi);
         }
     }
     if (mons_wpn.empty())
@@ -2846,22 +2818,18 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         bool mons_too = false;
         if (coinflip())
         {
-            for (unsigned i = 0; i < MAX_MONSTERS; ++i)
+            for (monster_iterator mi(&you.get_los()); mi; ++mi)
             {
-                monsters* const monster = &menv[i];
-
-                if (!monster->alive()
-                    || !mons_near(monster)
-                    || !mons_class_is_confusable(monster->type)
+                if (!mons_class_is_confusable(mi->type)
                     || one_chance_in(20))
                 {
                     continue;
                 }
 
-                if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0,
+                if (mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
                                                   KC_FRIENDLY, random2(sever))))
                 {
-                    simple_monster_message(monster,
+                    simple_monster_message(*mi,
                                            " looks rather confused.");
                 }
                 mons_too = true;

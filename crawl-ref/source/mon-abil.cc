@@ -24,6 +24,7 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monspeak.h"
 #include "monstuff.h"
@@ -591,44 +592,41 @@ static bool _orc_battle_cry(monsters *chief)
         const int boss_index = monster_index(chief);
         const int level = chief->hit_dice > 12? 2 : 1;
         std::vector<monsters*> seen_affected;
-        for (int i = 0; i < MAX_MONSTERS; ++i)
+        for (monster_iterator mi(chief); mi; ++mi)
         {
-            monsters *mon = &menv[i];
-            if (mon != chief
-                && mon->alive()
-                && mons_species(mon->type) == MONS_ORC
-                && mons_aligned(boss_index, i)
-                && mon->hit_dice < chief->hit_dice
-                && !mon->berserk()
-                && !mon->has_ench(ENCH_MIGHT)
-                && !mon->cannot_move()
-                && !mon->confused()
-                && chief->can_see(mon))
+            if (*mi != chief
+                && mons_species(mi->type) == MONS_ORC
+                && mons_aligned(boss_index, mi->mindex())
+                && mi->hit_dice < chief->hit_dice
+                && !mi->berserk()
+                && !mi->has_ench(ENCH_MIGHT)
+                && !mi->cannot_move()
+                && !mi->confused())
             {
-                mon_enchant ench = mon->get_ench(ENCH_BATTLE_FRENZY);
+                mon_enchant ench = mi->get_ench(ENCH_BATTLE_FRENZY);
                 if (ench.ench == ENCH_NONE || ench.degree < level)
                 {
                     const int dur =
-                        random_range(12, 20) * speed_to_duration(mon->speed);
+                        random_range(12, 20) * speed_to_duration(mi->speed);
 
                     if (ench.ench != ENCH_NONE)
                     {
                         ench.degree   = level;
                         ench.duration = std::max(ench.duration, dur);
-                        mon->update_ench(ench);
+                        mi->update_ench(ench);
                     }
                     else
                     {
-                        mon->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, level,
+                        mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, level,
                                                   KC_OTHER, dur));
                     }
 
                     affected++;
-                    if (you.can_see(mon))
-                        seen_affected.push_back(mon);
+                    if (you.can_see(*mi))
+                        seen_affected.push_back(*mi);
 
-                    if (mon->asleep())
-                        behaviour_event(mon, ME_DISTURB, MHITNOT, chief->pos());
+                    if (mi->asleep())
+                        behaviour_event(*mi, ME_DISTURB, MHITNOT, chief->pos());
                 }
             }
         }
@@ -729,23 +727,20 @@ static bool _moth_incite_monsters(const monsters *mon)
         return false;
 
     int goaded = 0;
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    circle_def c(mon->pos(), 3, C_SQUARE);
+    for (monster_iterator mi(&c); mi; ++mi)
     {
-        monsters *targ = &menv[i];
-        if (targ == mon || !targ->alive() || !targ->needs_berserk())
+        if (*mi == mon || !mi->needs_berserk())
             continue;
 
-        if (mon->pos().distance_from(targ->pos()) > 3)
-            continue;
-
-        if (is_sanctuary(targ->pos()))
+        if (is_sanctuary(mi->pos()))
             continue;
 
         // Cannot goad other moths of wrath!
-        if (targ->type == MONS_MOTH_OF_WRATH)
+        if (mi->type == MONS_MOTH_OF_WRATH)
             continue;
 
-        if (_make_monster_angry(mon, targ) && !one_chance_in(3 * ++goaded))
+        if (_make_monster_angry(mon, *mi) && !one_chance_in(3 * ++goaded))
             return (true);
     }
 
@@ -779,6 +774,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
 
     spell_type spell = SPELL_NO_SPELL;
 
+    circle_def c;
     switch (mclass)
     {
     case MONS_UGLY_THING:
@@ -832,16 +828,9 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             break;
         }
 
-        for (int i = 0; i < MAX_MONSTERS; i++)
+        c = circle_def(monster->pos(), 4, C_CIRCLE);
+        for (monster_iterator targ(&c); targ; ++targ)
         {
-            monsters *targ = &menv[i];
-
-            if (targ->type == MONS_NO_MONSTER)
-                continue;
-
-            if (distance(monster->pos(), targ->pos()) >= 5)
-                continue;
-
             if (mons_atts_aligned(monster->attitude, targ->attitude))
                 continue;
 

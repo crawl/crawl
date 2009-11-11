@@ -23,6 +23,7 @@
 #include "monplace.h"
 #include "monspeak.h"
 #include "monstuff.h"
+#include "mon-iter.h"
 #include "mon-util.h"
 #include "output.h"
 #include "religion.h"
@@ -253,13 +254,9 @@ void debug_list_monsters()
     std::string prev_name = "";
     int         count     = 0;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        const monsters *m = &menv[mon_nums[i]];
-        if (!m->alive())
-            continue;
-
-        std::string name = m->name(DESC_PLAIN, true);
+        std::string name = mi->name(DESC_PLAIN, true);
 
         if (prev_name != name && count > 0)
         {
@@ -276,15 +273,15 @@ void debug_list_monsters()
         count++;
         prev_name = name;
 
-        int exp = exper_value(m);
+        int exp = exper_value(*mi);
         total_exp += exp;
 
-        if ((m->flags & (MF_WAS_NEUTRAL | MF_CREATED_FRIENDLY))
-            || m->has_ench(ENCH_ABJ))
+        if ((mi->flags & (MF_WAS_NEUTRAL | MF_CREATED_FRIENDLY))
+            || mi->has_ench(ENCH_ABJ))
         {
             continue;
         }
-        if (m->flags & MF_GOT_HALF_XP)
+        if (mi->flags & MF_GOT_HALF_XP)
             exp /= 2;
 
         total_adj_exp += exp;
@@ -338,9 +335,8 @@ void wizard_spawn_control()
     {
         // 50 spots are reserved for non-wandering monsters.
         int max_spawn = MAX_MONSTERS - 50;
-        for (int i = 0; i < MAX_MONSTERS; ++i)
-            if (menv[i].alive())
-                max_spawn--;
+        for (monster_iterator mi; mi; ++mi)
+            if (mi->alive())
 
         if (max_spawn <= 0)
         {

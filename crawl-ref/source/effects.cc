@@ -43,6 +43,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -2449,44 +2450,35 @@ bool recharge_wand(int item_slot)
     return (false);
 }
 
+// Berserking monsters cannot be ordered around.
+static bool _follows_orders(monsters* mon)
+{
+    return (mon->friendly() && mon->type != MONS_GIANT_SPORE
+        && !mon->berserk());
+}
+
 // Sets foe target of friendly monsters.
 // If allow_patrol is true, patrolling monsters get MHITNOT instead.
 static void _set_friendly_foes(bool allow_patrol = false)
 {
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
     {
-        monsters *mon(&menv[i]);
-        if (!mon->alive() || !mons_near(mon) || !mon->friendly()
-            || mon->type == MONS_GIANT_SPORE)
-        {
+        if (!_follows_orders(*mi))
             continue;
-        }
-
-        // Berserking monsters cannot be ordered around.
-        if (mon->berserk())
-            continue;
-
-        mon->foe = (allow_patrol && mon->is_patrolling() ? MHITNOT
+        mi->foe = (allow_patrol && mi->is_patrolling() ? MHITNOT
                                                          : you.pet_target);
     }
 }
 
 static void _set_allies_patrol_point(bool clear = false)
 {
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
     {
-        monsters *mon(&menv[i]);
-        if (!mon->alive() || !mons_near(mon) || !mon->friendly())
+        if (!_follows_orders(*mi))
             continue;
-
-        // Berserking monsters cannot be ordered around.
-        if (mon->berserk() || mon->type == MONS_GIANT_SPORE)
-            continue;
-
-        mon->patrol_point = (clear ? coord_def(0, 0) : mon->pos());
-
+        mi->patrol_point = (clear ? coord_def(0, 0) : mi->pos());
         if (!clear)
-            mon->behaviour = BEH_WANDER;
+            mi->behaviour = BEH_WANDER;
     }
 }
 
@@ -4166,57 +4158,52 @@ void update_level(double elapsedTime)
     dungeon_events.fire_event(
         dgn_event(DET_TURN_ELAPSED, coord_def(0, 0), turns * 10));
 
-    for (int m = 0; m < MAX_MONSTERS; m++)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *mon = &menv[m];
-
-        if (!mon->alive())
-            continue;
-
 #if DEBUG_DIAGNOSTICS
         mons_total++;
 #endif
 
         // Pacified monsters often leave the level now.
-        if (mon->pacified() && turns > random2(40) + 21)
+        if (mi->pacified() && turns > random2(40) + 21)
         {
-            make_mons_leave_level(mon);
+            make_mons_leave_level(*mi);
             continue;
         }
 
         // Following monsters don't get movement.
-        if (mon->flags & MF_JUST_SUMMONED)
+        if (mi->flags & MF_JUST_SUMMONED)
             continue;
 
         // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
-        // const bool healthy = (mon->hit_points * 2 > mon->max_hit_points);
+        // const bool healthy = (mi->hit_points * 2 > mi->max_hit_points);
 
         // This is the monster healing code, moved here from tag.cc:
-        if (mons_can_regenerate(mon))
+        if (mons_can_regenerate(*mi))
         {
-            if (monster_descriptor(mon->type, MDSC_REGENERATES)
-                || mon->type == MONS_PLAYER_GHOST)
+            if (monster_descriptor(mi->type, MDSC_REGENERATES)
+                || mi->type == MONS_PLAYER_GHOST)
             {
-                mon->heal(turns);
+                mi->heal(turns);
             }
             else
             {
                 // Set a lower ceiling of 0.1 on the regen rate.
                 const int regen_rate =
-                    std::max(mons_natural_regen_rate(mon) * 2, 5);
+                    std::max(mons_natural_regen_rate(*mi) * 2, 5);
 
-                mon->heal(div_rand_round(turns * regen_rate, 50));
+                mi->heal(div_rand_round(turns * regen_rate, 50));
             }
         }
 
         // Handle nets specially to remove the trapping property of the net.
-        if (mon->caught())
-            mon->del_ench(ENCH_HELD, true);
+        if (mi->caught())
+            mi->del_ench(ENCH_HELD, true);
 
-        _catchup_monster_moves(mon, turns);
+        _catchup_monster_moves(*mi, turns);
 
-        if (turns >= 10 && mon->alive())
-            mon->timeout_enchantments(turns / 10);
+        if (turns >= 10 && mi->alive())
+            mi->timeout_enchantments(turns / 10);
     }
 
 #if DEBUG_DIAGNOSTICS

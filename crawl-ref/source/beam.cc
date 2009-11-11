@@ -45,6 +45,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -2610,26 +2611,18 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
 
     const kill_category kc = (origin == MHITYOU ? KC_YOU : KC_OTHER);
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
     {
-        monsters* const monster = &menv[i];
-
-        if (!monster->alive())
-            continue;
-
-        if (!mons_near(monster))
-            continue;
-
-        if (monster->has_ench(wh_enchant))
+        if (mi->has_ench(wh_enchant))
             continue;
 
         if (m_attempted)
             ++*m_attempted;
 
-        if (_monster_resists_mass_enchantment(monster, wh_enchant, pow))
+        if (_monster_resists_mass_enchantment(*mi, wh_enchant, pow))
             continue;
 
-        if (monster->add_ench(mon_enchant(wh_enchant, 0, kc)))
+        if (mi->add_ench(mon_enchant(wh_enchant, 0, kc)))
         {
             if (m_succumbed)
                 ++*m_succumbed;
@@ -2644,11 +2637,11 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
             default:             msg = NULL;                      break;
             }
             if (msg)
-                msg_generated = simple_monster_message(monster, msg);
+                msg_generated = simple_monster_message(*mi, msg);
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
-                behaviour_event(monster, ME_SCARE, origin);
+                behaviour_event(*mi, ME_SCARE, origin);
         }
     }
 

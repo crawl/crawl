@@ -16,6 +16,7 @@
 #include "goditem.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "monstuff.h"
@@ -145,43 +146,41 @@ static bool _holy_beings_on_level_attitude_change()
 {
     bool success = false;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (monster->alive()
-            && monster->is_holy())
-        {
+        if (!mi->is_holy())
+            continue;
+
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Holy attitude changing: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
-                 static_cast<int>(you.where_are_you));
+        mprf(MSGCH_DIAGNOSTICS, "Holy attitude changing: %s on level %d, branch %d",
+             mi->name(DESC_PLAIN).c_str(),
+             static_cast<int>(you.your_level),
+             static_cast<int>(you.where_are_you));
 #endif
 
-            // If you worship a good god, you get another chance to make
-            // neutral and hostile holy beings good neutral.
-            if (is_good_god(you.religion) && !monster->wont_attack())
+        // If you worship a good god, you get another chance to make
+        // neutral and hostile holy beings good neutral.
+        if (is_good_god(you.religion) && !mi->wont_attack())
+        {
+            if (testbits(mi->flags, MF_ATT_CHANGE_ATTEMPT))
             {
-                if (testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
-                {
-                    monster->flags &= ~MF_ATT_CHANGE_ATTEMPT;
-
-                    success = true;
-                }
-            }
-            // If you don't worship a good god, you make all friendly
-            // and good neutral holy beings that worship a good god
-            // hostile.
-            else if (!is_good_god(you.religion) && monster->wont_attack()
-                && is_good_god(monster->god))
-            {
-                monster->attitude = ATT_HOSTILE;
-                monster->del_ench(ENCH_CHARM, true);
-                behaviour_event(monster, ME_ALERT, MHITYOU);
-                // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
+                mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
                 success = true;
             }
+        }
+        // If you don't worship a good god, you make all friendly
+        // and good neutral holy beings that worship a good god
+        // hostile.
+        else if (!is_good_god(you.religion) && mi->wont_attack()
+            && is_good_god(mi->god))
+        {
+            mi->attitude = ATT_HOSTILE;
+            mi->del_ench(ENCH_CHARM, true);
+            behaviour_event(*mi, ME_ALERT, MHITYOU);
+            // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
+
+            success = true;
         }
     }
 
@@ -197,32 +196,29 @@ static bool _unholy_and_evil_beings_on_level_attitude_change()
 {
     bool success = false;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (monster->alive()
-            && (monster->is_unholy()
-                || monster->is_evil()))
-        {
+        if (!mi->is_unholy() && !mi->is_evil())
+            continue;
+
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Unholy/evil attitude changing: %s "
-                 "on level %d, branch %d",
-                 monster->name(DESC_PLAIN, true).c_str(),
-                 static_cast<int>(you.your_level),
-                 static_cast<int>(you.where_are_you));
+        mprf(MSGCH_DIAGNOSTICS, "Unholy/evil attitude changing: %s "
+             "on level %d, branch %d",
+             mi->name(DESC_PLAIN, true).c_str(),
+             static_cast<int>(you.your_level),
+             static_cast<int>(you.where_are_you));
 #endif
 
-            // If you worship a good god, you make all friendly and good
-            // neutral unholy and evil beings hostile.
-            if (is_good_god(you.religion) && monster->wont_attack())
-            {
-                monster->attitude = ATT_HOSTILE;
-                monster->del_ench(ENCH_CHARM, true);
-                behaviour_event(monster, ME_ALERT, MHITYOU);
-                // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
+        // If you worship a good god, you make all friendly and good
+        // neutral unholy and evil beings hostile.
+        if (is_good_god(you.religion) && mi->wont_attack())
+        {
+            mi->attitude = ATT_HOSTILE;
+            mi->del_ench(ENCH_CHARM, true);
+            behaviour_event(*mi, ME_ALERT, MHITYOU);
+            // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
 
-                success = true;
-            }
+            success = true;
         }
     }
 
@@ -238,33 +234,30 @@ static bool _chaotic_beings_on_level_attitude_change()
 {
     bool success = false;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (monster->alive()
-            && monster->is_chaotic())
-        {
+        if (!mi->is_chaotic())
+            continue;
+
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Chaotic attitude changing: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
-                 static_cast<int>(you.where_are_you));
+        mprf(MSGCH_DIAGNOSTICS, "Chaotic attitude changing: %s on level %d, branch %d",
+             mi->name(DESC_PLAIN).c_str(),
+             static_cast<int>(you.your_level),
+             static_cast<int>(you.where_are_you));
 #endif
 
-            // If you worship Zin, you make all friendly and good neutral
-            // chaotic beings hostile.
-            if (you.religion == GOD_ZIN && monster->wont_attack())
-            {
-                monster->attitude = ATT_HOSTILE;
-                monster->del_ench(ENCH_CHARM, true);
-                behaviour_event(monster, ME_ALERT, MHITYOU);
-                // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
+        // If you worship Zin, you make all friendly and good neutral
+        // chaotic beings hostile.
+        if (you.religion == GOD_ZIN && mi->wont_attack())
+        {
+            mi->attitude = ATT_HOSTILE;
+            mi->del_ench(ENCH_CHARM, true);
+            behaviour_event(*mi, ME_ALERT, MHITYOU);
+            // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
 
-                success = true;
-            }
+            success = true;
         }
     }
-
     return (success);
 }
 
@@ -277,30 +270,28 @@ static bool _spellcasters_on_level_attitude_change()
 {
     bool success = false;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (monster->alive()
-            && monster->is_actual_spellcaster())
-        {
+        if (!mi->is_actual_spellcaster())
+            continue;
+
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Spellcaster attitude changing: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
-                 static_cast<int>(you.where_are_you));
+        mprf(MSGCH_DIAGNOSTICS, "Spellcaster attitude changing: %s on level %d, branch %d",
+             mi->name(DESC_PLAIN).c_str(),
+             static_cast<int>(you.your_level),
+             static_cast<int>(you.where_are_you));
 #endif
 
-            // If you worship Trog, you make all friendly and good neutral
-            // magic users hostile.
-            if (you.religion == GOD_TROG && monster->wont_attack())
-            {
-                monster->attitude = ATT_HOSTILE;
-                monster->del_ench(ENCH_CHARM, true);
-                behaviour_event(monster, ME_ALERT, MHITYOU);
-                // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
+        // If you worship Trog, you make all friendly and good neutral
+        // magic users hostile.
+        if (you.religion == GOD_TROG && mi->wont_attack())
+        {
+            mi->attitude = ATT_HOSTILE;
+            mi->del_ench(ENCH_CHARM, true);
+            behaviour_event(*mi, ME_ALERT, MHITYOU);
+            // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
 
-                success = true;
-            }
+            success = true;
         }
     }
 
@@ -322,18 +313,17 @@ static bool _make_god_gifts_on_level_disappear(bool seen = false)
                                       : GOD_NO_GOD;
     int count = 0;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (is_follower(monster)
-            && monster->has_ench(ENCH_ABJ)
-            && mons_is_god_gift(monster, god))
+        if (is_follower(*mi)
+            && mi->has_ench(ENCH_ABJ)
+            && mons_is_god_gift(*mi, god))
         {
-            if (!seen || simple_monster_message(monster, " abandons you!"))
+            if (!seen || simple_monster_message(*mi, " abandons you!"))
                 count++;
 
             // The monster disappears.
-            monster_die(monster, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
         }
     }
 
@@ -366,18 +356,17 @@ static bool _make_holy_god_gifts_on_level_good_neutral(bool seen = false)
                                       : GOD_NO_GOD;
     int count = 0;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (is_follower(monster)
-            && !monster->has_ench(ENCH_CHARM)
-            && monster->is_holy()
-            && mons_is_god_gift(monster, god))
+        if (is_follower(*mi)
+            && !mi->has_ench(ENCH_CHARM)
+            && mi->is_holy()
+            && mons_is_god_gift(*mi, god))
         {
             // monster changes attitude
-            monster->attitude = ATT_GOOD_NEUTRAL;
+            mi->attitude = ATT_GOOD_NEUTRAL;
 
-            if (!seen || simple_monster_message(monster, " becomes indifferent."))
+            if (!seen || simple_monster_message(*mi, " becomes indifferent."))
                 count++;
         }
     }
@@ -412,18 +401,17 @@ static bool _make_god_gifts_on_level_hostile(bool seen = false)
                                       : GOD_NO_GOD;
     int count = 0;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (is_follower(monster)
-            && mons_is_god_gift(monster, god))
+        if (is_follower(*mi)
+            && mons_is_god_gift(*mi, god))
         {
             // monster changes attitude and behaviour
-            monster->attitude = ATT_HOSTILE;
-            monster->del_ench(ENCH_CHARM, true);
-            behaviour_event(monster, ME_ALERT, MHITYOU);
+            mi->attitude = ATT_HOSTILE;
+            mi->del_ench(ENCH_CHARM, true);
+            behaviour_event(*mi, ME_ALERT, MHITYOU);
 
-            if (!seen || simple_monster_message(monster, " turns against you!"))
+            if (!seen || simple_monster_message(*mi, " turns against you!"))
                 count++;
         }
     }
@@ -457,33 +445,32 @@ static bool _yred_slaves_on_level_abandon_you()
 {
     bool success = false;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (_is_yred_enslaved_body_and_soul(monster))
+        if (_is_yred_enslaved_body_and_soul(*mi))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Undead soul abandoning: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
+                 mi->name(DESC_PLAIN).c_str(),
                  static_cast<int>(you.your_level),
                  static_cast<int>(you.where_are_you));
 #endif
 
-            yred_make_enslaved_soul(monster, true, true, true);
+            yred_make_enslaved_soul(*mi, true, true, true);
 
             success = true;
         }
-        else if (is_yred_undead_slave(monster))
+        else if (is_yred_undead_slave(*mi))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Undead abandoning: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
+                 mi->name(DESC_PLAIN).c_str(),
                  static_cast<int>(you.your_level),
                  static_cast<int>(you.where_are_you));
 #endif
 
-            monster->attitude = ATT_HOSTILE;
-            behaviour_event(monster, ME_ALERT, MHITYOU);
+            mi->attitude = ATT_HOSTILE;
+            behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now CREATED_FRIENDLY stays.
 
             success = true;
@@ -499,20 +486,19 @@ static bool _beogh_followers_on_level_abandon_you()
 
     // Note that orc high priests' summons are gifts of Beogh, so we
     // can't use is_orcish_follower() here.
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (mons_is_god_gift(monster, GOD_BEOGH))
+        if (mons_is_god_gift(*mi, GOD_BEOGH))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Orc abandoning: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
+                 mi->name(DESC_PLAIN).c_str(),
                  static_cast<int>(you.your_level),
                  static_cast<int>(you.where_are_you));
 #endif
 
-            monster->attitude = ATT_HOSTILE;
-            behaviour_event(monster, ME_ALERT, MHITYOU);
+            mi->attitude = ATT_HOSTILE;
+            behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now CREATED_FRIENDLY stays.
 
             success = true;
@@ -526,20 +512,19 @@ static bool _jiyva_slimes_on_level_abandon_you()
 {
     bool success = false;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (is_fellow_slime(monster))
+        if (is_fellow_slime(*mi))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Slime abandoning: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
+                 mi->name(DESC_PLAIN).c_str(),
                  static_cast<int>(you.your_level),
                  static_cast<int>(you.where_are_you));
 #endif
 
-            monster->attitude = ATT_HOSTILE;
-            behaviour_event(monster, ME_ALERT, MHITYOU);
+            mi->attitude = ATT_HOSTILE;
+            behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now WAS_NEUTRAL stays.
 
             success = true;
@@ -625,27 +610,25 @@ bool yred_slaves_abandon_you()
 
 static bool _fedhas_plants_on_level_hostile()
 {
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (monster->alive()
-            && mons_is_plant(monster))
+        if (mons_is_plant(*mi))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Plant hostility: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
+                 mi->name(DESC_PLAIN).c_str(),
                  static_cast<int>(you.your_level),
                  static_cast<int>(you.where_are_you));
 #endif
 
             // You can potentially turn an oklob or whatever neutral
             // again by going back to Fedhas.
-            if (testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT))
-                monster->flags &= ~MF_ATT_CHANGE_ATTEMPT;
+            if (testbits(mi->flags, MF_ATT_CHANGE_ATTEMPT))
+                mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
-            monster->attitude = ATT_HOSTILE;
-            monster->del_ench(ENCH_CHARM, true);
-            behaviour_event(monster, ME_ALERT, MHITYOU);
+            mi->attitude = ATT_HOSTILE;
+            mi->del_ench(ENCH_CHARM, true);
+            behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now WAS_NEUTRAL stays.
         }
     }

@@ -31,6 +31,7 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mutation.h"
@@ -2513,16 +2514,13 @@ static void _crusade_card(int power, deck_rarity_type rarity)
     if (power_level >= 1)
     {
         // A chance to convert opponents.
-        for (int i = 0; i < MAX_MONSTERS; ++i)
+        for (monster_iterator mi(&you.get_los()); mi; ++mi)
         {
-            monsters* const monster = &menv[i];
-            if (!monster->alive()
-                || !mons_near(monster)
-                || monster->friendly()
-                || monster->holiness() != MH_NATURAL
-                || mons_is_unique(monster->type)
-                || mons_immune_magic(monster)
-                || player_will_anger_monster(monster))
+             if (mi->friendly()
+                || mi->holiness() != MH_NATURAL
+                || mons_is_unique(mi->type)
+                || mons_immune_magic(*mi)
+                || player_will_anger_monster(*mi))
             {
                 continue;
             }
@@ -2531,35 +2529,35 @@ static void _crusade_card(int power, deck_rarity_type rarity)
             // (though not immunity) check.  Specifically,
             // you can convert Killer Klowns this way.
             // Might be too good.
-            if (monster->hit_dice * 35 < random2(power))
+            if (mi->hit_dice * 35 < random2(power))
             {
-                simple_monster_message(monster, " is converted.");
+                simple_monster_message(*mi, " is converted.");
 
                 if (one_chance_in(5 - power_level))
                 {
-                    monster->attitude = ATT_FRIENDLY;
+                    mi->attitude = ATT_FRIENDLY;
 
                     // If you worship a god that lets you recruit
                     // permanent followers, or a god allied with one,
                     // count this as a recruitment.
                     if (is_good_god(you.religion)
                         || you.religion == GOD_BEOGH
-                            && mons_species(monster->type) == MONS_ORC
-                            && !monster->is_summoned()
-                            && !monster->is_shapeshifter())
+                            && mons_species(mi->type) == MONS_ORC
+                            && !mi->is_summoned()
+                            && !mi->is_shapeshifter())
                     {
                         // Prevent assertion if the monster was
                         // previously worshipping a different god,
                         // rather than already worshipping your god or
                         // being an atheist.
-                        monster->god = GOD_NO_GOD;
+                        mi->god = GOD_NO_GOD;
 
-                        mons_make_god_gift(monster, is_good_god(you.religion) ?
+                        mons_make_god_gift(*mi, is_good_god(you.religion) ?
                                            GOD_SHINING_ONE : GOD_BEOGH);
                     }
                 }
                 else
-                    monster->add_ench(ENCH_CHARM);
+                    mi->add_ench(ENCH_CHARM);
             }
         }
     }

@@ -34,6 +34,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monspeak.h"
 #include "notes.h"
@@ -1269,18 +1270,17 @@ void pikel_band_neutralise ()
     // with MF_BAND_MEMBER are Pikel's band members.
     bool message_made = false;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (monster->alive() && monster->type == MONS_HUMAN
-            && testbits(monster->flags, MF_BAND_MEMBER))
+        if (mi->type == MONS_HUMAN
+            && testbits(mi->flags, MF_BAND_MEMBER))
         {
-            if (monster->observable() && !message_made)
+            if (mi->observable() && !message_made)
             {
                 mpr("Pikel's slaves thank you for their freedom.");
                 message_made = true;
             }
-            mons_pacify(monster);
+            mons_pacify(*mi);
         }
     }
 }
@@ -1296,60 +1296,59 @@ static void _hogs_to_humans()
     //        porkalator spell, they should be handled specially...
     int any = 0, human = 0;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (monster->alive() && monster->type == MONS_HOG)
+        if (!mi->type == MONS_HOG)
+            continue;
+
+        const bool could_see = you.can_see(*mi);
+
+        // XXX: This resets the size of slime creatures, the number
+        // of heads a hydra has, and the number of spikes a manticore
+        // has.  Plus it also changes the colour of a draconian which
+        // has a sub-type.  And it re-rolls the spellbook the monster
+        // has.
+        if (mi->number == 0)
+            mi->type = MONS_HUMAN;
+        else
+            mi->type = (monster_type) (mi->number - 1);
+
+        mi->number = 0;
+        define_monster(**mi);
+
+        const bool can_see = you.can_see(*mi);
+
+        // A monster changing factions while in the arena messes up
+        // arena book-keeping.
+        if (!crawl_state.arena)
         {
-            const bool could_see = you.can_see(monster);
-
-            // XXX: This resets the size of slime creatures, the number
-            // of heads a hydra has, and the number of spikes a manticore
-            // has.  Plus it also changes the colour of a draconian which
-            // has a sub-type.  And it re-rolls the spellbook the monster
-            // has.
-            if (monster->number == 0)
-                monster->type = MONS_HUMAN;
-            else
-                monster->type = (monster_type) (monster->number - 1);
-
-            monster->number = 0;
-            define_monster(*monster);
-
-            const bool can_see = you.can_see(monster);
-
-            // A monster changing factions while in the arena messes up
-            // arena book-keeping.
-            if (!crawl_state.arena)
+            // * A monster's attitude shouldn't downgrade from friendly
+            //   or good-neutral because you helped it.  It'd suck to
+            //   lose a permanent ally that way.
+            //
+            // * A monster has to be smart enough to realize that you
+            //   helped it.
+            if (mi->attitude == ATT_HOSTILE
+                && mons_intel(*mi) >= I_NORMAL)
             {
-                // * A monster's attitude shouldn't downgrade from friendly
-                //   or good-neutral because you helped it.  It'd suck to
-                //   lose a permanent ally that way.
-                //
-                // * A monster has to be smart enough to realize that you
-                //   helped it.
-                if (monster->attitude == ATT_HOSTILE
-                    && mons_intel(monster) >= I_NORMAL)
-                {
-                    monster->attitude = ATT_GOOD_NEUTRAL;
-                    monster->flags |= MF_WAS_NEUTRAL;
-                }
+                mi->attitude = ATT_GOOD_NEUTRAL;
+                mi->flags |= MF_WAS_NEUTRAL;
             }
-
-            behaviour_event(monster, ME_EVAL);
-
-            if (could_see && can_see)
-            {
-                any++;
-                if (monster->type == MONS_HUMAN)
-                    human++;
-            }
-            else if (could_see && !can_see)
-                mpr("The hog vanishes!");
-            else if (!could_see && can_see)
-                mprf("%s appears from out of thin air!",
-                     monster->name(DESC_CAP_A).c_str());
         }
+
+        behaviour_event(*mi, ME_EVAL);
+
+        if (could_see && can_see)
+        {
+            any++;
+            if (mi->type == MONS_HUMAN)
+                human++;
+        }
+        else if (could_see && !can_see)
+            mpr("The hog vanishes!");
+        else if (!could_see && can_see)
+            mprf("%s appears from out of thin air!",
+                 mi->name(DESC_CAP_A).c_str());
     }
 
     if (any == 1)
@@ -1393,14 +1392,13 @@ void mons_relocated(monsters *monster)
         if (invalid_monster_index(headnum))
             return;
 
-        for (int i = 0; i < MAX_MONSTERS; ++i)
+        for (monster_iterator mi; mi; ++mi)
         {
-            monsters *tentacle = &menv[i];
-            if (tentacle->type == MONS_KRAKEN_TENTACLE
-                && (int)tentacle->number == headnum
-                && _tentacle_too_far(monster, tentacle))
+            if (mi->type == MONS_KRAKEN_TENTACLE
+                && (int)mi->number == headnum
+                && _tentacle_too_far(monster, *mi))
             {
-                monster_die(tentacle, KILL_RESET, -1, true, false);
+                monster_die(*mi, KILL_RESET, -1, true, false);
             }
         }
     }
@@ -1423,15 +1421,14 @@ static int _destroy_tentacles(monsters *head)
     if (invalid_monster_index(headnum))
         return 0;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (monster->type == MONS_KRAKEN_TENTACLE
-            && (int)monster->number == headnum)
+        if (mi->type == MONS_KRAKEN_TENTACLE
+            && (int)mi->number == headnum)
         {
-            if (mons_near(monster))
+            if (mons_near(*mi))
                 tent++;
-            monster->hurt(monster, INSTANT_DEATH);
+            mi->hurt(*mi, INSTANT_DEATH);
         }
     }
     return tent;
@@ -2199,9 +2196,9 @@ void monster_cleanup(monsters *monster)
     unsigned int monster_killed = monster_index(monster);
     monster->reset();
 
-    for (int dmi = 0; dmi < MAX_MONSTERS; dmi++)
-        if (menv[dmi].foe == monster_killed)
-            menv[dmi].foe = MHITNOT;
+    for (monster_iterator mi; mi; ++mi)
+       if (mi->foe == monster_killed)
+            mi->foe = MHITNOT;
 
     if (you.pet_target == monster_killed)
         you.pet_target = MHITNOT;
@@ -2210,24 +2207,14 @@ void monster_cleanup(monsters *monster)
 // If you're invis and throw/zap whatever, alerts menv to your position.
 void alert_nearby_monsters(void)
 {
-    monsters *monster = 0;       // NULL {dlb}
-
-    for (int it = 0; it < MAX_MONSTERS; it++)
-    {
-        monster = &menv[it];
-
-        // Judging from the above comment, this function isn't
-        // intended to wake up monsters, so we're only going to
-        // alert monsters that aren't sleeping.  For cases where an
-        // event should wake up monsters and alert them, I'd suggest
-        // calling noisy() before calling this function. -- bwr
-        if (monster->alive()
-            && mons_near(monster)
-            && !monster->asleep())
-        {
-            behaviour_event(monster, ME_ALERT, MHITYOU);
-        }
-    }
+    // Judging from the above comment, this function isn't
+    // intended to wake up monsters, so we're only going to
+    // alert monsters that aren't sleeping.  For cases where an
+    // event should wake up monsters and alert them, I'd suggest
+    // calling noisy() before calling this function. -- bwr
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+        if (!mi->asleep())
+             behaviour_event(*mi, ME_ALERT, MHITYOU);
 }
 
 static bool _valid_morph(monsters *monster, monster_type new_mclass)
@@ -3620,15 +3607,14 @@ int dismiss_monsters(std::string pattern) {
     // Dismiss by regex
     text_pattern tpat(pattern);
     int ndismissed = 0;
-    for (int mon = 0; mon < MAX_MONSTERS; mon++)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[mon];
-        if (monster->alive() &&
-            (tpat.empty() || tpat.matches(monster->name(DESC_PLAIN, true))))
+        if (mi->alive() &&
+            (tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
         {
             if (!keep_item)
-                _vanish_orig_eq(monster);
-            monster_die(monster, KILL_DISMISSED, NON_MONSTER, false, true);
+                _vanish_orig_eq(*mi);
+            monster_die(*mi, KILL_DISMISSED, NON_MONSTER, false, true);
             ++ndismissed;
         }
     }

@@ -56,6 +56,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "monplace.h"
+#include "mon-iter.h"
 #include "mon-util.h"
 #include "monstuff.h"
 #include "ouch.h"
@@ -2968,14 +2969,11 @@ static void monster_threat_values(double *general, double *highest,
     double sum = 0;
     int highest_xp = -1;
 
-    monsters *monster = NULL;
-    for (int it = 0; it < MAX_MONSTERS; it++)
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
     {
-        monster = &menv[it];
-
-        if (monster->alive() && mons_near(monster) && !monster->friendly())
+        if (!mi->friendly())
         {
-            const int xp = exper_value(monster);
+            const int xp = exper_value(*mi);
             const double log_xp = log((double)xp);
             sum += log_xp;
             if (xp > highest_xp)
@@ -2983,7 +2981,7 @@ static void monster_threat_values(double *general, double *highest,
                 highest_xp = xp;
                 *highest   = log_xp;
             }
-            if (!you.can_see(monster))
+            if (!you.can_see(*mi))
                 *invis = true;
         }
     }

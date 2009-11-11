@@ -31,6 +31,7 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mutation.h"
@@ -2077,20 +2078,18 @@ void handle_monsters()
     // them to move again.
     memset(immobile_monster, 0, sizeof immobile_monster);
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-
-        if (!monster->alive() || immobile_monster[i])
+        if (immobile_monster[mi->mindex()])
             continue;
 
-        const coord_def oldpos = monster->pos();
+        const coord_def oldpos = mi->pos();
 
-        monster->update_los();
-        _handle_monster_move(monster);
+        mi->update_los();
+        _handle_monster_move(*mi);
 
-        if (!invalid_monster(monster) && monster->pos() != oldpos)
-            immobile_monster[i] = true;
+        if (!invalid_monster(*mi) && mi->pos() != oldpos)
+            immobile_monster[mi->mindex()] = true;
 
         // If the player got banished, discard pending monster actions.
         if (you.banished)

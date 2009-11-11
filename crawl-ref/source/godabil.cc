@@ -23,6 +23,7 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
@@ -203,22 +204,21 @@ static bool _yred_enslaved_souls_on_level_disappear()
 {
     bool success = false;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monsters *monster = &menv[i];
-        if (_is_yred_enslaved_soul(monster))
+        if (_is_yred_enslaved_soul(*mi))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Undead soul disappearing: %s on level %d, branch %d",
-                 monster->name(DESC_PLAIN).c_str(),
+                 mi->name(DESC_PLAIN).c_str(),
                  static_cast<int>(you.your_level),
                  static_cast<int>(you.where_are_you));
 #endif
 
-            simple_monster_message(monster, " is freed.");
+            simple_monster_message(*mi, " is freed.");
 
             // The monster disappears.
-            monster_die(monster, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
 
             success = true;
         }
