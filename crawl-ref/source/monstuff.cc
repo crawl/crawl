@@ -1225,28 +1225,33 @@ static void _elven_twin_died(monsters* twin)
         }
     }
 
-    if ((found_duvessa || found_dowan) && monster->observable())
+    if ((found_duvessa || found_dowan) && mons_near(monster))
     {
         // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
         // 'Dowan_Dowan_dies', but as neither will match, these can safely be
         // ignored.
-        std::string death_message = getSpeakString("_"
-            + monster->name(DESC_CAP_THE, true) + "_"
-            + twin->name(DESC_CAP_THE) + "_dies_");
+        std::string key = "_" + monster->name(DESC_CAP_THE, true) + "_"
+                              + twin->name(DESC_CAP_THE) + "_dies_";
+
+        if (!monster->observable())
+            key += "invisible_";
+
+        std::string death_message = getSpeakString(key);
 
         if (!death_message.empty())
             mons_speaks_msg(monster, death_message, MSGCH_TALK, silenced(you.pos()));
     }
 
-    if (found_duvessa && monster->observable())
+    if (found_duvessa && mons_near(monster))
     {
         // Provides its own flavour message.
         monster->go_berserk(true);
     }
-    else if (found_dowan && monster->observable())
+    else if (found_dowan && mons_near(monster))
     {
-        // Doesn't provide any message, so needs one.
-        simple_monster_message(monster, " turns to flee.");
+        // Doesn't provide any message, so needs one, but only if visible.
+        if (monster->observable())
+            simple_monster_message(monster, " turns to flee.");
         monster->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU));
         behaviour_event(monster, ME_SCARE, MHITNOT);
     }
@@ -2093,7 +2098,7 @@ int monster_die(monsters *monster, killer_type killer,
         }
     }
     else if ((monster->type == MONS_DOWAN || monster->type == MONS_DUVESSA)
-              && monster->observable())
+              && mons_near(monster))
     {
         _elven_twin_died(monster);
     }
