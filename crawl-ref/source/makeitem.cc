@@ -1437,6 +1437,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_VORPAL;
             else
                 rc = SPWPN_SPEED;
+            if (item.sub_type == WPN_HAND_CROSSBOW || item.sub_type == WPN_CROSSBOW)
+                if (one_chance_in(5))
+                    rc = SPWPN_ELECTROCUTION;
             break;
         }
 
@@ -1552,12 +1555,12 @@ bool is_weapon_brand_ok(int type, int brand)
     case SPWPN_VORPAL:
     case SPWPN_CHAOS:
     case SPWPN_REAPING:
+    case SPWPN_HOLY_WRATH:
+    case SPWPN_ELECTROCUTION:
         break;
     // Melee-only brands.
     case SPWPN_FLAMING:
     case SPWPN_FREEZING:
-    case SPWPN_HOLY_WRATH:
-    case SPWPN_ELECTROCUTION:
     case SPWPN_ORC_SLAYING:
     case SPWPN_DRAGON_SLAYING:
     case SPWPN_DRAINING:

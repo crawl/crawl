@@ -1898,6 +1898,39 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     return (true);
 }
 
+static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
+                                   std::string &dmg_msg)
+{
+    if (victim->airborne() || victim->res_elec() > 0 || !one_chance_in(3))
+        return (false);
+
+    dmg += 10 + random2(15);
+
+    if (!beam.is_tracer && you.can_see(victim))
+        if (victim->atype() == ACT_PLAYER)
+            dmg_msg = "You are electrocuted!";
+        else
+            dmg_msg = "There is a sudden explosion of sparks!";
+    // TODO: lightning discharge into water
+
+    return (false);
+}
+
+static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
+                                   std::string &dmg_msg)
+{
+    if (victim->undead_or_demonic())
+    {
+        dmg += 1 + (random2(dmg * 15) / 10);
+
+        if (!beam.is_tracer && you.can_see(victim))
+           dmg_msg = victim->name(DESC_CAP_THE) + " "
+                   + victim->conj_verb("convulse") + "!";
+    }
+
+    return (false);
+}
+
 bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                         std::string &ammo_name, bool &returning)
 {
@@ -1996,7 +2029,11 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     const bool silver       = (ammo_brand == SPMSL_SILVER);
     const bool disperses    = (ammo_brand == SPMSL_DISPERSAL);
     const bool reaping      = (bow_brand  == SPWPN_REAPING
-                               || ammo_brand == SPMSL_REAPING);
+                               || ammo_brand == SPMSL_REAPING)
+                              && bow_brand != SPWPN_HOLY_WRATH;
+    const bool charged      = bow_brand  == SPWPN_ELECTROCUTION;
+    const bool blessed      = bow_brand == SPWPN_HOLY_WRATH 
+                              && ammo_brand != SPMSL_REAPING;
 
     ASSERT(!exploding || !is_artefact(item));
 
@@ -2065,6 +2102,10 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.hit_funcs.push_back(_reaping_hit_victim);
     if (disperses)
         beam.hit_funcs.push_back(_dispersal_hit_victim);
+    if (charged)
+        beam.damage_funcs.push_back(_charged_hit_victim);
+    if (blessed)
+        beam.damage_funcs.push_back(_blessed_hit_victim);
 
     if (reaping && ammo.special != SPMSL_REAPING)
     {
@@ -2094,6 +2135,18 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     {
         beam.name = "silvery " + beam.name;
         ammo_name = "silvery " + ammo_name;
+    }
+
+    if (charged)
+    {
+        beam.name = "charged " + beam.name;
+        ammo_name = "charged " + ammo_name;
+    }
+
+    if (blessed)
+    {
+        beam.name = "blessed " + beam.name;
+        ammo_name = "blessed " + ammo_name;
     }
 
     // Do this here so that we get all the name mods except for a

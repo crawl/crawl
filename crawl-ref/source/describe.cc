@@ -748,9 +748,14 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 "cause great damage to the undead and demons.";
             break;
         case SPWPN_ELECTROCUTION:
-            description += "Occasionally, upon striking a foe, it will "
-                "discharge some electrical energy and cause terrible "
-                "harm.";
+            if (is_range_weapon(item))
+                description += "It charges the ammunition it shoots with "
+                    "electricity; occasionally upon a hit, such missiles "
+                    "may discharge and cause terrible harm.";
+            else
+                description += "Occasionally, upon striking a foe, it will "
+                    "discharge some electrical energy and cause terrible "
+                    "harm.";
             break;
         case SPWPN_ORC_SLAYING:
             description += "It is especially effective against all of "

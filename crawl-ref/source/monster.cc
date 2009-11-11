@@ -1199,6 +1199,8 @@ static bool _compatible_launcher_ammo_brands(item_def *launcher,
         return (bow_brand != SPWPN_FLAME && bow_brand != SPWPN_FROST);
     case SPMSL_CHAOS:
         return (bow_brand != SPWPN_CHAOS);
+    case SPMSL_REAPING:
+        return (bow_brand != SPWPN_HOLY_WRATH);
     default:
         return (true);
     }
