@@ -24,7 +24,7 @@
 #include "message.h"
 #include "mapdef.h"
 #include "mon-util.h"
-#include "monplace.h"
+#include "mon-place.h"
 #include "random.h"
 #include "state.h"
 #include "terrain.h"

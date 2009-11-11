@@ -1,11 +1,11 @@
 /*
- *  File:       monstuff.cc
+ *  File:       mon-stuff.cc
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
  */
 
 #include "AppHdr.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 
 //#include <stdlib.h>
 //#include <string.h>
@@ -35,8 +35,8 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
-#include "monplace.h"
-#include "monspeak.h"
+#include "mon-place.h"
+#include "mon-speak.h"
 #include "notes.h"
 #include "options.h"
 #include "player.h"

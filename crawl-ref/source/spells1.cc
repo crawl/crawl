@@ -33,7 +33,7 @@
 #include "los.h"
 #include "message.h"
 #include "misc.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"

@@ -5,7 +5,7 @@
 
 #include "delay.h"
 #include "mon-util.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 
 /////////////////////////////////////////////////////////////////////
 // Monster handling

@@ -27,7 +27,7 @@
 #include "itemprop.h"
 #include "macro.h"
 #include "mon-util.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "notes.h"
 #include "player.h"
 #include "quiver.h"

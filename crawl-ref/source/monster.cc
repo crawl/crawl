@@ -19,8 +19,8 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
-#include "monplace.h"
-#include "monstuff.h"
+#include "mon-place.h"
+#include "mon-stuff.h"
 #include "mtransit.h"
 #include "random.h"
 #include "religion.h"
@@ -1758,7 +1758,7 @@ bool monsters::pickup_misc(item_def &item, int near)
     return (pickup(item, MSLOT_MISCELLANY, near));
 }
 
-// Eaten items are handled elsewhere, in _handle_pickup() in monstuff.cc.
+// Eaten items are handled elsewhere, in _handle_pickup() in mon-stuff.cc.
 bool monsters::pickup_item(item_def &item, int near, bool force)
 {
     // Equipping stuff can be forced when initially equipping monsters.

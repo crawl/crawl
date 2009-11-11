@@ -27,7 +27,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mtransit.h"
 #include "ouch.h"
 #include "player.h"

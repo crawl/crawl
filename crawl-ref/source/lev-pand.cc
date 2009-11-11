@@ -12,7 +12,7 @@
 
 #include "externs.h"
 #include "dungeon.h"
-#include "monplace.h"
+#include "mon-place.h"
 #include "mon-pick.h"
 #include "random.h"
 

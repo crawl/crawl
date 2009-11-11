@@ -106,10 +106,10 @@ mon-info.o \
 mon-iter.o \
 mon-pick.o \
 mon-util.o \
-monplace.o \
-monspeak.o \
+mon-place.o \
+mon-speak.o \
 monster.o \
-monstuff.o \
+mon-stuff.o \
 mt19937ar.o \
 mtransit.o \
 mutation.o \

@@ -22,7 +22,7 @@
 #include "it_use2.h"
 #include "invent.h"
 #include "makeitem.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
 #include "religion.h"

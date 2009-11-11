@@ -23,8 +23,8 @@
 
 #include "effects.h"  // For Sceptre of Torment tormenting
 #include "food.h"     // For evokes
-#include "monplace.h" // For Sceptre of Asmodeus evoke
-#include "monstuff.h" // For Scythe of Curses cursing items
+#include "mon-place.h" // For Sceptre of Asmodeus evoke
+#include "mon-stuff.h" // For Scythe of Curses cursing items
 #include "spells3.h"  // For Zonguldrok animating dead
 #include "spl-cast.h" // For evokes
 #include "spl-mis.h"  // For Staff of Wucad Mu miscasts

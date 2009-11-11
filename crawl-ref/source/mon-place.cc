@@ -8,7 +8,7 @@
 
 #include <algorithm>
 
-#include "monplace.h"
+#include "mon-place.h"
 
 #include "arena.h"
 #include "branch.h"
@@ -25,7 +25,7 @@
 #include "mon-gear.h"
 #include "mon-pick.h"
 #include "mon-util.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"

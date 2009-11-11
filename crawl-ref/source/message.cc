@@ -27,7 +27,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "notes.h"
 #include "random.h"
 #include "religion.h"

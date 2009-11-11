@@ -31,7 +31,7 @@
 #include "maps.h"
 #include "misc.h"
 #include "mon-cast.h"
-#include "monplace.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "place.h"
 #include "random.h"

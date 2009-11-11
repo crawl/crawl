@@ -26,7 +26,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"
 #include "place.h"

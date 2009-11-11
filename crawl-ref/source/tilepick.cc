@@ -24,7 +24,7 @@
 #include "kills.h"
 #include "los.h"
 #include "macro.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "player.h"
 #include "shopping.h"

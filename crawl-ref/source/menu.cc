@@ -20,7 +20,7 @@
 
 #ifdef USE_TILE
  #include "coord.h"
- #include "monstuff.h"
+ #include "mon-stuff.h"
  #include "mon-util.h"
  #include "newgame.h"
  #include "terrain.h"

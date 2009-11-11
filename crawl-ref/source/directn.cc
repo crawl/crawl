@@ -44,7 +44,7 @@
 #include "message.h"
 #include "menu.h"
 #include "misc.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mon-info.h"
 #include "mon-util.h"
 #include "output.h"

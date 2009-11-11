@@ -30,7 +30,7 @@
 #include "itemprop.h"
 #include "mapmark.h"
 #include "message.h"
-#include "monplace.h"
+#include "mon-place.h"
 #include "misc.h"
 #include "player.h"
 #include "religion.h"

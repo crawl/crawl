@@ -46,8 +46,8 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
-#include "monplace.h"
-#include "monstuff.h"
+#include "mon-place.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -2877,7 +2877,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
 
 // When a mimic is hit by a ranged attack, it teleports away (the slow
 // way) and changes its appearance - the appearance change is in
-// monster_teleport() in monstuff.cc.
+// monster_teleport() in mon-stuff.cc.
 void mimic_alert(monsters *mimic)
 {
     if (!mimic->alive())
@@ -5153,7 +5153,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         }
 
         // The monster can be no more than lightly wounded/damaged,
-        // using the formula from monstuff.cc:mons_get_damage_level().
+        // using the formula from mon-stuff.cc:mons_get_damage_level().
         if (mon->hit_points <= mon->max_hit_points * 3 / 4)
         {
             simple_monster_message(mon, "'s soul is too badly injured.");

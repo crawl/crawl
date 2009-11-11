@@ -34,7 +34,7 @@
 #include "item_use.h"
 #include "menu.h"
 #include "message.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mon-info.h"
 #include "mon-util.h"
 #include "newgame.h"

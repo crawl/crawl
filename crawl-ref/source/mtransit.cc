@@ -13,7 +13,7 @@
 #include "artefact.h"
 #include "dungeon.h"
 #include "items.h"
-#include "monplace.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "random.h"
 

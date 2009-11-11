@@ -34,7 +34,7 @@
 #include "misc.h"
 #include "message.h"
 #include "mon-cast.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"

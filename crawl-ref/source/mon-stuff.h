@@ -1,5 +1,5 @@
 /*
- *  File:       monstuff.h
+ *  File:       mon-stuff.h
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
  */

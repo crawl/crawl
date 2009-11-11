@@ -41,7 +41,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
-#include "monplace.h"
+#include "mon-place.h"
 #include "notes.h"
 #include "place.h"
 #include "player.h"

@@ -1,7 +1,7 @@
 #ifndef MON_INFO_H
 #define MON_INFO_H
 
-#include "monstuff.h"
+#include "mon-stuff.h"
 
 // Monster info used by the pane; precomputes some data
 // to help with sorting and rendering.

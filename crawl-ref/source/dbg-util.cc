@@ -12,7 +12,7 @@
 #include "cio.h"
 #include "coord.h"
 #include "dungeon.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "religion.h"
 #include "shopping.h"

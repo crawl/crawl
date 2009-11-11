@@ -8,7 +8,7 @@
 
 #include "delay.h"
 #include "files.h"
-#include "monplace.h"
+#include "mon-place.h"
 
 #include <errno.h>
 #include <string.h>
@@ -59,7 +59,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-act.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mtransit.h"
 #include "newgame.h"

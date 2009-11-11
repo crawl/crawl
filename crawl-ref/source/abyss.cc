@@ -20,7 +20,7 @@
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-util.h"
-#include "monplace.h"
+#include "mon-place.h"
 #include "mtransit.h"
 #include "player.h"
 #include "dungeon.h"

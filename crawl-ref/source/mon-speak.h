@@ -1,5 +1,5 @@
 /*
- *  File:       monspeak.h
+ *  File:       mon-speak.h
  *  Summary:    Functions to handle speaking monsters
  */
 

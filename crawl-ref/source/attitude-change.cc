@@ -19,7 +19,7 @@
 #include "mon-iter.h"
 #include "mon-util.h"
 #include "monster.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"

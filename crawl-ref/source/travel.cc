@@ -32,7 +32,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "options.h"
 #ifdef USE_TILE
  #include "output.h"

@@ -11,8 +11,8 @@
 #include "dungeon.h"
 #include "mapdef.h"
 #include "mon-util.h"
-#include "monplace.h"
-#include "monstuff.h"
+#include "mon-place.h"
+#include "mon-stuff.h"
 
 #define MONSLIST_METATABLE "crawldgn.monster_list"
 

@@ -40,7 +40,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "newgame.h"
 #include "jobs.h"

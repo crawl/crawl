@@ -1921,7 +1921,7 @@ enum monster_type                      // (int) menv[].type
     MONS_WHITE_DRACONIAN,
     MONS_PALE_DRACONIAN,                //  320 Should always be last colour.
 
-    // Sync up with monplace.cc's draconian selection if adding more.
+    // Sync up with mon-place.cc's draconian selection if adding more.
     MONS_DRACONIAN_CALLER,
     MONS_DRACONIAN_MONK,
     MONS_DRACONIAN_ZEALOT,

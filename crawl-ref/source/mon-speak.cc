@@ -1,11 +1,11 @@
 /*
- *  File:       monspeak.cc
+ *  File:       mon-speak.cc
  *  Summary:    Functions to handle speaking monsters
  */
 
 #include "AppHdr.h"
 
-#include "monspeak.h"
+#include "mon-speak.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +23,7 @@
 #include "debug.h"
 #include "ghost.h"
 #include "message.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "jobs.h"
 #include "player.h"

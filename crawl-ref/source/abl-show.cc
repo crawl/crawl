@@ -37,7 +37,7 @@
 #include "message.h"
 #include "menu.h"
 #include "misc.h"
-#include "monplace.h"
+#include "mon-place.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"

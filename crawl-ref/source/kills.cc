@@ -10,7 +10,7 @@
 
 #include "describe.h"
 #include "mon-util.h"
-#include "monstuff.h"
+#include "mon-stuff.h"
 #include "files.h"
 #include "ghost.h"
 #include "place.h"
