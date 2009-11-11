@@ -113,12 +113,12 @@ bool is_evil_item(const item_def& item)
     case OBJ_WANDS:
         retval = (item.sub_type == WAND_DRAINING);
         break;
+    case OBJ_POTIONS:
+        retval = is_blood_potion(item);
+        break;
     case OBJ_SCROLLS:
         retval = (item.sub_type == SCR_SUMMONING
                   || item.sub_type == SCR_TORMENT);
-        break;
-    case OBJ_POTIONS:
-        retval = is_blood_potion(item);
         break;
     case OBJ_BOOKS:
         retval = is_evil_spellbook(item);
@@ -508,7 +508,7 @@ bool god_hates_spell_type(spell_type spell, god_type god)
         break;
 
     case GOD_FEDHAS:
-        if (disciplines & SPTYP_NECROMANCY)
+        if (is_evil_discipline(disciplines))
             return (true);
         break;
 
@@ -598,7 +598,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
         return (discipline & SPTYP_POISON);
 
     case GOD_YREDELEMNUL:
-        return (discipline & SPTYP_HOLY);
+        return (is_holy_discipline(discipline));
 
     case GOD_XOM:
         return (discipline & (SPTYP_DIVINATION | SPTYP_HOLY));
@@ -607,7 +607,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
         return (discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));
 
     case GOD_FEDHAS:
-        return (discipline & SPTYP_NECROMANCY);
+        return (is_evil_discipline(discipline));
 
     default:
         break;
