@@ -1842,6 +1842,15 @@ void up_stairs(dungeon_feature_type force_stair,
         && (!yesno("Are you sure you want to leave the Dungeon?", false, 'n')
             || !_check_carrying_orb()))
     {
+        if (Options.tutorial_left)
+        {
+            if (!yesno("Are you *sure*?  Doing so will end the game!", false,
+                       'n'))
+            {
+                mpr("Alright.");
+                return;
+            }
+        }
         mpr("Alright, then stay!");
         return;
     }
