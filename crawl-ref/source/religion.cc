@@ -5714,3 +5714,29 @@ static void _place_delayed_monsters()
     _delayed_success.clear();
     _delayed_failure.clear();
 }
+
+std::vector<god_type> temple_god_list()
+{
+    std::vector<god_type> god_list;
+
+    for (int i = 0; i < NUM_GODS; i++)
+    {
+        god_type god = (god_type) i;
+
+        // These never appear in any temples.
+        switch(god)
+        {
+        case GOD_NO_GOD:
+        case GOD_LUGONU:
+        case GOD_BEOGH:
+        case GOD_JIYVA:
+            continue;
+
+        default:
+            break;
+        }
+
+        god_list.push_back(god);
+    }
+    return god_list;
+}

@@ -134,4 +134,6 @@ void religion_turn_start();
 void religion_turn_end();
 
 int get_tension(god_type god = you.religion, bool count_travelling = true);
+
+std::vector<god_type> temple_god_list();
 #endif
