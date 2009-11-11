@@ -4872,9 +4872,6 @@ bool player_can_join_god(god_type which_god)
     if (is_good_god(which_god) && you.is_unholy())
         return (false);
 
-    if (which_god == GOD_ZIN && you.is_chaotic())
-        return (false);
-
     if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
         return (false);
 
