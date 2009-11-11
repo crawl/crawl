@@ -2464,8 +2464,8 @@ bool is_useless_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (player_size(PSIZE_BODY) < SIZE_MEDIUM
-            && !check_weapon_wieldable_size(item, player_size(PSIZE_BODY)))
+        if (player_size(PSIZE_TORSO) < SIZE_LARGE
+            && !check_weapon_wieldable_size(item, player_size(PSIZE_TORSO)))
         {
             // Weapon is too large to be wielded.
             return (true);
