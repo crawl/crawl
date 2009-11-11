@@ -3505,7 +3505,7 @@ bool monsters::rot(actor *agent, int amount, int immediate, bool quiet)
 int monsters::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
-    if (hit_points > 0 && type != -1)
+    if (alive())
     {
         if (amount == INSTANT_DEATH)
             amount = hit_points;
