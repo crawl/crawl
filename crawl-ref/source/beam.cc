@@ -3634,9 +3634,8 @@ void bolt::tracer_affect_player()
     for (unsigned int i = 0; i < messages.size(); ++i)
         mpr(messages[i].c_str(), MSGCH_WARN);
 
-    range_used += range_used_on_hit(&you);
-
     apply_hit_funcs(&you, 0);
+    range_used += range_used_on_hit(&you);
 }
 
 bool bolt::misses_player()
@@ -4020,11 +4019,11 @@ void bolt::affect_player_enchantment()
         }
     }
 
+    apply_hit_funcs(&you, 0);
+
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
     range_used += range_used_on_hit(&you);
-
-    apply_hit_funcs(&you, 0);
 }
 
 
@@ -4291,8 +4290,8 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
     handle_stop_attack_prompt(mon);
     if (!beam_cancelled)
     {
-        range_used += range_used_on_hit(mon);
         apply_hit_funcs(mon, 0);
+        range_used += range_used_on_hit(mon);
     }
 }
 
@@ -4451,9 +4450,10 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
             mpr(messages[i].c_str(), MSGCH_MONSTER_DAMAGE);
     }
 
+    apply_hit_funcs(mon, final);
+
     // Either way, we could hit this monster, so update range used.
     range_used += range_used_on_hit(mon);
-    apply_hit_funcs(mon, final);
 }
 
 void bolt::tracer_affect_monster(monsters* mon)
@@ -4552,8 +4552,8 @@ void bolt::enchantment_affect_monster(monsters* mon)
             beogh_follower_convert(mon, true);
     }
 
-    range_used += range_used_on_hit(mon);
     apply_hit_funcs(mon, 0);
+    range_used += range_used_on_hit(mon);
 }
 
 void bolt::monster_post_hit(monsters* mon, int dmg)
@@ -4947,9 +4947,8 @@ void bolt::affect_monster(monsters* mon)
         mon = &orig;
     }
 
-    range_used += range_used_on_hit(mon);
-
     apply_hit_funcs(mon, final, corpse);
+    range_used += range_used_on_hit(mon);
 }
 
 bool bolt::has_saving_throw() const
