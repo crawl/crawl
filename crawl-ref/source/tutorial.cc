@@ -25,6 +25,7 @@
 #include "describe.h"
 #include "food.h"
 #include "format.h"
+#include "fprop.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -4249,6 +4250,8 @@ static void _tutorial_describe_feature(int x, int y)
     std::ostringstream ostr;
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
+    bool boring = false;
+
     switch (feat)
     {
        case DNGN_ORCISH_IDOL:
@@ -4441,8 +4444,26 @@ static void _tutorial_describe_feature(int x, int y)
                 break;
             }
             else
-                return;
+            {
+                // Describe blood-stains even for boring features.
+                if (!is_bloodcovered(where))
+                    return;
+                boring = true;
+            }
     }
+
+    if (is_bloodcovered(where))
+    {
+        if (!boring)
+            ostr << "\n\n";
+
+        ostr << "Many forms of combat and some forms of magical attack "
+                "will splatter the surrounings with blood (if the victim has "
+                "any blood, that is).  Some monsters can smell blood from "
+                "a distance and will come looking for whatever the blood "
+                "was spilled from.";
+    }
+
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     std::string broken = ostr.str();
