@@ -4610,7 +4610,7 @@ static bool _vorpalise_weapon()
 
         // This is only naughty if you know you're doing it.
         // XXX: assumes this can only happen from Vorpalise Weapon scroll.
-        did_god_conduct(DID_UNHOLY, 10,
+        did_god_conduct(DID_NECROMANCY, 10,
                         get_ident_type(OBJ_SCROLLS, SCR_VORPALISE_WEAPON)
                         == ID_KNOWN_TYPE);
         break;
@@ -5219,7 +5219,7 @@ void read_scroll(int slot)
         torment(TORMENT_SCROLL, you.pos());
 
         // This is only naughty if you know you're doing it.
-        did_god_conduct(DID_UNHOLY, 10, item_type_known(scroll));
+        did_god_conduct(DID_NECROMANCY, 10, item_type_known(scroll));
         bad_effect = true;
         break;
 
