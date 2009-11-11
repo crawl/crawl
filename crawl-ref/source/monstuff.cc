@@ -1432,6 +1432,43 @@ static int _destroy_tentacles(monsters *head)
     return tent;
 }
 
+static void _activate_ballistomycetes( monsters * monster)
+{
+    if(!monster || monster->type != MONS_BALLISTOMYCETE)
+        return;
+
+    bool activated_others = false;
+    int seen_others = 0;
+    for(int i=0; i < int(env.mons.size()); ++i)
+    {
+        if(i != monster->mindex()
+           && env.mons[i].alive()
+           && env.mons[i].type == MONS_BALLISTOMYCETE)
+        {
+            if(env.mons[i].colour != LIGHTRED)
+            {
+                env.mons[i].colour = LIGHTRED;
+                // Reset the spore production timer.
+                env.mons[i].del_ench(ENCH_SPORE_PRODUCTION, false);
+                env.mons[i].add_ench(ENCH_SPORE_PRODUCTION);
+
+                activated_others = true;
+                if(you.can_see(&env.mons[i]))
+                    seen_others++;
+            }
+        }
+    }
+
+    // How to do messaging? Message on kill no matter what, only if you see
+    // other ballistos get angry, only if other ballistos get angry
+    // (seen or not). Also need a message if a ballisto suddenly becomes
+    // angry
+    if(mons_near(monster) && activated_others)
+        mprf("You feel ballistomycets on the level are angry now?");
+    else if (seen_others > 0)
+        mprf("The ballistomycete appears angry...");
+}
+
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monsters *monster, killer_type killer,
                 int killer_index, bool silent, bool wizard)
@@ -1454,6 +1491,8 @@ int monster_die(monsters *monster, killer_type killer,
     mons_clear_trapping_net(monster);
 
     you.remove_beholder(monster);
+
+    _activate_ballistomycetes(monster);
 
     // Clear auto exclusion now the monster is killed -- if we know about it.
     if (mons_near(monster) || wizard)

@@ -713,7 +713,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_BALLISTOMYCETE, 'f', LIGHTRED, "ballistomycete",
+    MONS_BALLISTOMYCETE, 'f', MAGENTA, "ballistomycete",
     M_STATIONARY,
     MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,

@@ -4976,42 +4976,50 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SPORE_PRODUCTION:
-        // Very low chance of actually making a spore on each turn.
-        if(one_chance_in(5000))
+
+        // Reduce the timer, if that means we lose the enchantment then
+        // spawn a spore and re-add the enchantment
+        if(decay_enchantment(me))
         {
+            // Search for an open adjacent square to place a spore on
             int idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
             std::random_shuffle(idx, idx + 8);
 
             for (unsigned i = 0; i < 8; ++i)
             {
                 coord_def adjacent = this->pos() + Compass[idx[i]];
+
                 if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
-                    && !actor_at(adjacent))
+                                        && !actor_at(adjacent))
                 {
                     beh_type created_behavior = BEH_HOSTILE;
 
                     if (this->attitude == ATT_FRIENDLY)
-                        created_behavior = BEH_FRIENDLY;
+                    created_behavior = BEH_FRIENDLY;
 
                     int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
-                                                      created_behavior,
-                                                      0,
-                                                      0,
-                                                      adjacent,
-                                                      MHITNOT,
-                                                      MG_FORCE_PLACE));
+                                    created_behavior,
+                                    0,
+                                    0,
+                                    adjacent,
+                                    MHITNOT,
+                                    MG_FORCE_PLACE));
 
                     if (rc != -1)
                     {
                         env.mons[rc].behaviour = BEH_WANDER;
 
                         if (observe_cell(adjacent) && observe_cell(pos()))
-                            mpr("A nearby fungus spawns a giant spore.");
+                        mpr("A nearby fungus spawns a giant spore.");
                     }
                     break;
                 }
             }
+            // Re=add the enchantment (this resets the spore production
+            // timer).
+            this->add_ench(ENCH_SPORE_PRODUCTION);
         }
+
         break;
 
     case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
@@ -6030,6 +6038,12 @@ int mon_enchant::calc_duration(const monsters *mons,
         // of this function is excessive for toadstools. -cao
         return (2 * FRESHEST_CORPSE + random2(10))
                   * speed_to_duration(mons->speed) * mons->speed / 10;
+    case ENCH_SPORE_PRODUCTION:
+        // The duration of the spore production timer depends on the color
+        // of the fungus
+        cturn = mons->colour == LIGHTRED ? 150 : 1500;
+        break;
+
     case ENCH_ABJ:
         if (deg >= 6)
             cturn = 1000 / _mod_speed(10, mons->speed);
