@@ -2725,7 +2725,7 @@ static monsterentry mondata[] = {
 {
     MONS_OKLOB_PLANT, 'P', LIGHTGREEN, "oklob plant",
     M_SPECIAL_ABILITY | M_STATIONARY,
-    MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ACID,
     0, 10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 3, 5, 0 },
