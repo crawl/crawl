@@ -274,7 +274,7 @@ function Triggerable:do_trigger(triggerer, marker, ev)
 
     slaves = { slave_marker }
   else
-    dgn.find_markers_by_prop("slaved_to", master_name)
+    slaves = dgn.find_markers_by_prop("slaved_to", master_name)
   end
 
   -- If all slaves are gone, we're done.
@@ -693,7 +693,7 @@ function DgnTriggerer:monster_dies(triggerable, marker, ev)
     error("DgnTriggerer:monster_dies() didn't get a valid monster index")
   end
 
-  if mons.name == self.target then
+  if mons.full_name == self.target then
     triggerable:do_trigger(self, marker, ev)
   end
 end
