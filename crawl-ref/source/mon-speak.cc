@@ -391,8 +391,9 @@ void maybe_mons_speaks (monsters *monster)
         int chance = MON_SPEAK_CHANCE * 4;
 
         // Band members are a lot less likely to speak, since there's
-        // a lot of them.
-        if (testbits(monster->flags, MF_BAND_MEMBER))
+        // a lot of them.  Except for uniques.
+        if (testbits(monster->flags, MF_BAND_MEMBER)
+            && !mons_is_unique(monster->type))
             chance *= 10;
 
         // However, confused and fleeing monsters are more interesting.
