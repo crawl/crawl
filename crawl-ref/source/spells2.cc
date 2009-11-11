@@ -605,12 +605,8 @@ void cast_refrigeration(int pow)
     // First build the message.
     counted_monster_list affected_monsters;
 
-    for (int i = 0; i < MAX_MONSTERS; i++)
-    {
-        const monsters* const monster = &menv[i];
-        if (monster->alive() && you.can_see(monster))
-            _record_monster_by_name(affected_monsters, monster);
-    }
+    for (monster_iterator mi(&you); mi; ++mi)
+        _record_monster_by_name(affected_monsters, *mi);
 
     if (!affected_monsters.empty())
     {
@@ -635,25 +631,22 @@ void cast_refrigeration(int pow)
     beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
 
-    for (int i = 0; i < MAX_MONSTERS; i++)
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
     {
-        monsters* const monster = &menv[i];
         // Note that we *do* hurt monsters which you can't see
         // (submerged, invisible) even though you get no information
         // about it.
-        if (monster->alive() && mons_near(monster))
-        {
-            // Calculate damage and apply.
-            int hurt = mons_adjust_flavoured(monster, beam, dam_dice.roll());
-            monster->hurt(&you, hurt, BEAM_COLD);
 
-            // Cold-blooded creatures can be slowed.
-            if (monster->alive()
-                && mons_class_flag(monster->type, M_COLD_BLOOD)
-                && coinflip())
-            {
-                monster->add_ench(ENCH_SLOW);
-            }
+        // Calculate damage and apply.
+        int hurt = mons_adjust_flavoured(*mi, beam, dam_dice.roll());
+        mi->hurt(&you, hurt, BEAM_COLD);
+
+        // Cold-blooded creatures can be slowed.
+        if (mi->alive()
+            && mons_class_flag(mi->type, M_COLD_BLOOD)
+            && coinflip())
+        {
+            mi->add_ench(ENCH_SLOW);
         }
     }
 }
@@ -674,32 +667,26 @@ void drain_life(int pow)
 
     int hp_gain = 0;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
     {
-        monsters* monster = &menv[i];
-
-        if (!monster->alive()
-            || monster->holiness() != MH_NATURAL
-            || monster->res_negative_energy())
+        if (mi->holiness() != MH_NATURAL
+            || mi->res_negative_energy())
         {
             continue;
         }
 
-        if (mons_near(monster))
-        {
-            mprf("You draw life from %s.",
-                 monster->name(DESC_NOCAP_THE).c_str());
+        mprf("You draw life from %s.",
+             mi->name(DESC_NOCAP_THE).c_str());
 
-            const int hurted = 3 + random2(7) + random2(pow);
-            behaviour_event(monster, ME_WHACK, MHITYOU, you.pos());
-            if (!monster->is_summoned())
-                hp_gain += hurted;
+        const int hurted = 3 + random2(7) + random2(pow);
+        behaviour_event(*mi, ME_WHACK, MHITYOU, you.pos());
+        if (!mi->is_summoned())
+            hp_gain += hurted;
 
-            monster->hurt(&you, hurted);
+        mi->hurt(&you, hurted);
 
-            if (monster->alive())
-                print_wounds(monster);
-        }
+        if (mi->alive())
+            print_wounds(*mi);
     }
 
     hp_gain /= 2;
