@@ -355,6 +355,59 @@ static bool _polyd_can_speak(const monsters* monster)
     return (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA);
 }
 
+// Returns true if the monster did speak, false otherwise.
+// Maybe monsters will speak!
+void maybe_mons_speaks (monsters *monster)
+{
+#define MON_SPEAK_CHANCE 21
+
+    if (monster->is_patrolling() || mons_is_wandering(monster)
+        || monster->attitude == ATT_NEUTRAL)
+    {
+        // Very fast wandering/patrolling monsters might, in one monster turn,
+        // move into the player's LOS and then back out (or the player
+        // might move into their LOS and the monster move back out before
+        // the player's view has a chance to update) so prevent them
+        // from speaking.
+        ;
+    }
+    else if ((mons_class_flag(monster->type, M_SPEAKS)
+                    || !monster->mname.empty())
+                && one_chance_in(MON_SPEAK_CHANCE))
+    {
+        mons_speaks(monster);
+    }
+    else if (monster->type == MONS_CRAZY_YIUF 
+        && one_chance_in(MON_SPEAK_CHANCE / 3))
+    {
+        // Yiuf gets an extra chance to speak!
+        mons_speaks(monster);
+    }
+    else if (get_mon_shape(monster) >= MON_SHAPE_QUADRUPED)
+    {
+        // Non-humanoid-ish monsters have a low chance of speaking
+        // without the M_SPEAKS flag, to give the dungeon some
+        // atmosphere/flavour.
+        int chance = MON_SPEAK_CHANCE * 4;
+
+        // Band members are a lot less likely to speak, since there's
+        // a lot of them.
+        if (testbits(monster->flags, MF_BAND_MEMBER))
+            chance *= 10;
+
+        // However, confused and fleeing monsters are more interesting.
+        if (mons_is_fleeing(monster))
+            chance /= 2;
+        if (monster->has_ench(ENCH_CONFUSION))
+            chance /= 2;
+
+        if (one_chance_in(chance))
+            mons_speaks(monster);
+    }
+    // Okay then, don't speak.
+}
+
+
 // Returns true if something is said.
 bool mons_speaks(monsters *monster)
 {
