@@ -774,6 +774,27 @@ cccccccccc
 ENDMAP
 
 ###################################
+# This wizard likes to experiment!
+#
+NAME:    laboratory_2
+MONS:    col:lightred wizard spells:polymorph_other;paralyse;blink\
+         ;bolt_of_fire;bolt_of_fire;teleport_self
+DEPTH:   D:10-26, Vault
+MONS:    col:red name:altered name_adjective rat spells:fire_breath
+MAP
+ccccccc+cc
+c........c
+c........c
+c..1.....c
+c........c
+cc+ccccccc
+c***c2222c
+c|**+2222c
+c||*c2222c
+cccccccccc
+ENDMAP
+
+###################################
 # Beehive minivault
 #
 NAME: minivault_7
