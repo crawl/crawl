@@ -707,7 +707,7 @@ DEPS := $(OBJECTS:.o=.d)
 ifeq ($(shell which fastdep 2> /dev/null),)
 DEPEND := $(CXX) -MM $(ALL_CFLAGS)
 else
-DEPEND := fastdep $(DEFINES) $(INCLUDES)
+DEPEND := fastdep $(DEFINES) $(DEFINES_L) $(INCLUDES) $(INCLUDES_L)
 endif
 
 %.d: %.cc .cflags
