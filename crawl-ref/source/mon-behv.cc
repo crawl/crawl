@@ -15,6 +15,7 @@
 #include "fprop.h"
 #include "exclude.h"
 #include "los.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -914,13 +915,13 @@ static void _arena_set_foe(monsters *mons)
 
     int nearest_unseen = -1;
     int best_unseen_distance = -1;
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator other; other; ++other)
     {
+        int i = other->mindex();
         if (mind == i)
             continue;
 
-        const monsters *other(&menv[i]);
-        if (!other->alive() || mons_aligned(mind, i))
+        if (mons_aligned(mind, i))
             continue;
 
         // Don't fight test spawners, since they're only pseudo-monsters
@@ -934,7 +935,7 @@ static void _arena_set_foe(monsters *mons)
         }
 
         const int distance = grid_distance(mons->pos(), other->pos());
-        const bool seen = mons->can_see(other);
+        const bool seen = mons->can_see(*other);
 
         if (seen)
         {
@@ -954,7 +955,7 @@ static void _arena_set_foe(monsters *mons)
         }
 
         if ((best_distance == -1 || distance < best_distance)
-            && mons->can_see(other))
+            && mons->can_see(*other))
 
         {
             best_distance = distance;

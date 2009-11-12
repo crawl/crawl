@@ -33,6 +33,7 @@
 #include "los.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
@@ -372,14 +373,12 @@ void cast_chain_lightning(int pow, const actor *caster)
         target.x = -1;
         target.y = -1;
 
-        for (int i = 0; i < MAX_MONSTERS; i++)
+        for (monster_iterator mi; mi; ++mi)
         {
-            monsters *monster = &menv[i];
-
-            if (invalid_monster(monster))
+            if (invalid_monster(*mi))
                 continue;
 
-            dist = grid_distance(source, monster->pos());
+            dist = grid_distance(source, mi->pos());
 
             // check for the source of this arc
             if (!dist)
@@ -392,7 +391,7 @@ void cast_chain_lightning(int pow, const actor *caster)
             if (dist > min_dist)
                 continue;
 
-            if (!_lightning_los(source, monster->pos()))
+            if (!_lightning_los(source, mi->pos()))
                 continue;
 
             count++;
@@ -403,14 +402,14 @@ void cast_chain_lightning(int pow, const actor *caster)
                 if (!one_chance_in(10))
                 {
                     min_dist = dist;
-                    target = monster->pos();
+                    target = mi->pos();
                     count = 0;
                 }
             }
             else if (target.x == -1 || one_chance_in(count))
             {
                 // either first target, or new selected target at min_dist
-                target = monster->pos();
+                target = mi->pos();
 
                 // need to set min_dist for first target case
                 dist = std::max(dist, min_dist);
@@ -1132,30 +1131,25 @@ void abjuration(int pow)
     // Scale power into something comparable to summon lifetime.
     const int abjdur = pow * 12;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mon(&you.get_los()); mon; ++mon)
     {
-        monsters* const monster = &menv[i];
-
-        if (monster->type == MONS_NO_MONSTER || !mons_near(monster))
-            continue;
-
-        if (monster->wont_attack())
+        if (mon->wont_attack())
             continue;
 
         int duration;
-        if (monster->is_summoned(&duration))
+        if (mon->is_summoned(&duration))
         {
             int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "%s abj: dur: %d, abj: %d",
-                 monster->name(DESC_PLAIN).c_str(), duration, sockage);
+                 mon->name(DESC_PLAIN).c_str(), duration, sockage);
 #endif
 
             bool shielded = false;
             // TSO and Trog's abjuration protection.
-            if (mons_is_god_gift(monster, GOD_SHINING_ONE))
+            if (mons_is_god_gift(*mon, GOD_SHINING_ONE))
             {
-                sockage = sockage * (30 - monster->hit_dice) / 45;
+                sockage = sockage * (30 - mon->hit_dice) / 45;
                 if (sockage < duration)
                 {
                     simple_god_message(" protects a fellow warrior from your evil magic!",
@@ -1163,7 +1157,7 @@ void abjuration(int pow)
                     shielded = true;
                 }
             }
-            else if (mons_is_god_gift(monster, GOD_TROG))
+            else if (mons_is_god_gift(*mon, GOD_TROG))
             {
                 sockage = sockage * 8 / 15;
                 if (sockage < duration)
@@ -1174,9 +1168,9 @@ void abjuration(int pow)
                 }
             }
 
-            mon_enchant abj = monster->get_ench(ENCH_ABJ);
-            if (!monster->lose_ench_duration(abj, sockage) && !shielded)
-                simple_monster_message(monster, " shudders.");
+            mon_enchant abj = mon->get_ench(ENCH_ABJ);
+            if (!mon->lose_ench_duration(abj, sockage) && !shielded)
+                simple_monster_message(*mon, " shudders.");
         }
     }
 }

@@ -22,6 +22,7 @@
 #include "maps.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "mon-place.h"
@@ -139,12 +140,8 @@ namespace arena
 
     void adjust_monsters()
     {
-        for (int i = 0; i < MAX_MONSTERS; i++)
+        for (monster_iterator mon; mon; ++mon)
         {
-            monsters *mon = &menv[i];
-            if (!mon->alive())
-                continue;
-
             const bool friendly = mon->friendly();
             // Set target to the opposite faction's home base.
             mon->target = friendly ? place_b : place_a;
@@ -543,16 +540,12 @@ namespace arena
         faction_a.active_members = 0;
         faction_b.active_members = 0;
 
-        for (int i = 0; i < MAX_MONSTERS; ++i)
+        for (monster_iterator mons; mons; ++mons)
         {
-            const monsters *mons(&menv[i]);
-            if (mons->alive())
-            {
-                if (mons->attitude == ATT_FRIENDLY)
-                    faction_a.active_members++;
-                else if (mons->attitude == ATT_HOSTILE)
-                    faction_b.active_members++;
-            }
+            if (mons->attitude == ATT_FRIENDLY)
+                faction_a.active_members++;
+            else if (mons->attitude == ATT_HOSTILE)
+                faction_b.active_members++;
         }
 
         if (orig_a != faction_a.active_members
@@ -601,35 +594,27 @@ namespace arena
 
     void report_foes()
     {
-        for (int i = 0; i < MAX_MONSTERS; ++i)
+        for (monster_iterator mons; mons; ++mons)
         {
-            monsters *mons(&menv[i]);
-            if (mons->alive())
+            if (mons->type == MONS_SIGMUND)
             {
-                if (mons->type == MONS_SIGMUND)
-                {
-                    coord_def where;
-                    if (mons->get_foe())
-                        where = mons->get_foe()->pos();
-                    mprf("%s (%d,%d) foe: %s (%d,%d)",
-                         mons->name(DESC_PLAIN).c_str(),
-                         mons->pos().x, mons->pos().y,
-                         mons->get_foe()? mons->get_foe()->name(DESC_PLAIN).c_str()
-                         : "(none)",
-                         where.x, where.y);
-                }
+                coord_def where;
+                if (mons->get_foe())
+                    where = mons->get_foe()->pos();
+                mprf("%s (%d,%d) foe: %s (%d,%d)",
+                     mons->name(DESC_PLAIN).c_str(),
+                     mons->pos().x, mons->pos().y,
+                     mons->get_foe()? mons->get_foe()->name(DESC_PLAIN).c_str()
+                     : "(none)",
+                     where.x, where.y);
             }
         }
     }
 
     void fixup_foes()
     {
-        for (int i = 0; i < MAX_MONSTERS; ++i)
-        {
-            monsters *mons(&menv[i]);
-            if (mons->alive())
-                behaviour_event(mons, ME_DISTURB, MHITNOT, mons->pos());
-        }
+        for (monster_iterator mons; mons; ++mons)
+            behaviour_event(*mons, ME_DISTURB, MHITNOT, mons->pos());
     }
 
     void dump_messages()
@@ -718,15 +703,13 @@ namespace arena
         if (!miscasts)
             return;
 
-        for (int i = 0; i < MAX_MONSTERS; i++)
+        for (monster_iterator mon; mon; ++mon)
         {
-            monsters* mon = &menv[i];
-
-            if (!mon->alive() || mon->type == MONS_TEST_SPAWNER)
+            if (mon->type == MONS_TEST_SPAWNER)
                 continue;
 
-            MiscastEffect(mon, i, SPTYP_RANDOM, random_range(1, 3),
-                          "arena miscast", NH_NEVER);
+            MiscastEffect(*mon, mon->mindex(), SPTYP_RANDOM,
+                          random_range(1, 3), "arena miscast", NH_NEVER);
         }
     }
 

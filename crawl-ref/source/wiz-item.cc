@@ -22,6 +22,7 @@
 #include "it_use2.h"
 #include "invent.h"
 #include "makeitem.h"
+#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
@@ -729,25 +730,20 @@ void wizard_unidentify_pack()
     // Forget things that nearby monsters are carrying, as well.
     // (For use with the "give monster an item" wizard targetting
     // command.)
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mon(&you.get_los()); mon; ++mon)
     {
-        monsters* mon = &menv[i];
-
-        if (mon->alive() && mons_near(mon))
+        for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
         {
-            for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
-            {
-                if (mon->inv[j] == NON_ITEM)
-                    continue;
+            if (mon->inv[j] == NON_ITEM)
+                continue;
 
-                item_def &item = mitm[mon->inv[j]];
+            item_def &item = mitm[mon->inv[j]];
 
-                if (!item.is_valid())
-                    continue;
+            if (!item.is_valid())
+                continue;
 
-                set_ident_type(item, ID_UNKNOWN_TYPE);
-                unset_ident_flags(item, ISFLAG_IDENT_MASK);
-            }
+            set_ident_type(item, ID_UNKNOWN_TYPE);
+            unset_ident_flags(item, ISFLAG_IDENT_MASK);
         }
     }
 }

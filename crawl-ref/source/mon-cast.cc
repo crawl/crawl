@@ -21,6 +21,7 @@
 #include "los.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
@@ -148,22 +149,19 @@ static bool _set_allied_target(monsters * caster, bolt & pbolt)
 
     monster_type caster_genus = mons_genus(caster->type);
 
-    for (int i = 0; i < MAX_MONSTERS; i++)
+    for (monster_iterator targ(caster); targ; ++targ)
     {
-        monsters * targ = &menv[i];
-        if (i != caster->mindex()
-            && targ->alive()
-            && caster->can_see(targ)
+        if (*targ != caster
             && mons_genus(targ->type) == caster_genus
             && mons_atts_aligned(targ->attitude, caster->attitude)
             && !targ->has_ench(ENCH_CHARM)
-            && _flavour_benefits_monster(pbolt.flavour, *targ))
+            && _flavour_benefits_monster(pbolt.flavour, **targ))
         {
             int targ_distance = grid_distance(targ->pos(), caster->pos());
             if (targ_distance < min_distance && targ_distance < pbolt.range)
             {
                 min_distance = targ_distance;
-                selected_target = targ;
+                selected_target = *targ;
             }
         }
     }
@@ -846,35 +844,29 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     }
     else if (spell_cast == SPELL_PORKALATOR && one_chance_in(3))
     {
-        int target   = -1;
+        monsters* targ;
         int count    = 0;
         monster_type hog_type = MONS_HOG;
-        for (int i = 0; i < MAX_MONSTERS; i++)
+        for (monster_iterator mi(monster); mi; ++mi)
         {
-            monsters *targ = &menv[i];
-
-            if (!monster->can_see(targ))
-                continue;
-
             hog_type = MONS_HOG;
-            if (targ->holiness() == MH_DEMONIC)
+            if (mi->holiness() == MH_DEMONIC)
                 hog_type = MONS_HELL_HOG;
-            else if (targ->holiness() != MH_NATURAL)
+            else if (mi->holiness() != MH_NATURAL)
                 continue;
 
-            if (targ->type != hog_type
-                && mons_atts_aligned(monster->attitude, targ->attitude)
-                && mons_power(hog_type) + random2(4) >= mons_power(targ->type)
-                && (!targ->can_use_spells() || coinflip())
+            if (mi->type != hog_type
+                && mons_atts_aligned(monster->attitude, mi->attitude)
+                && mons_power(hog_type) + random2(4) >= mons_power(mi->type)
+                && (!mi->can_use_spells() || coinflip())
                 && one_chance_in(++count))
             {
-                target = i;
+                targ = *mi;
             }
         }
 
-        if (target != -1)
+        if (targ)
         {
-            monsters *targ = &menv[target];
             pbolt.target = targ->pos();
 #if DEBUG_DIAGNOSTICS
             mprf("Porkalator: targetting %s instead",

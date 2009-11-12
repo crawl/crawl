@@ -1216,16 +1216,17 @@ static void _elven_twin_died(monsters* twin)
     bool found_dowan = false;
     monsters *monster;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (monster_iterator mi; mi; ++mi)
     {
-        monster = &menv[i];
-        if (monster->alive() && monster->type == MONS_DUVESSA)
+        if (mi->type == MONS_DUVESSA)
         {
+            monster = *mi;
             found_duvessa = true;
             break;
         }
-        else if (monster->alive() && monster->type == MONS_DOWAN)
+        else if (monster->type == MONS_DOWAN)
         {
+            monster = *mi;
             found_dowan = true;
             break;
         }
