@@ -761,9 +761,10 @@ ENDMAP
 
 ##########################################################################
 # Eino's temples
-NAME:    temple_eino_001
+NAME:    temple_eino_001a
 PLACE:   Temple
 ORIENT:  encompass
+WEIGHT:  5
 SHUFFLE: {([
 COLOUR:  c = red
 MAP
@@ -785,6 +786,34 @@ ccccG...............Gcccc
 ccl...................lcc
 cl..B...............B..lc
 ccl...................lcc
+cccl.................lccc
+cccll.......B.......llccc
+ccclll..B.G...G.B..lllccc
+cccclll...c...c...lllcccc
+cccccccl.lcclccl.lccccccc
+cccccccclccccccclcccccccc
+ccccccccccccccccccccccccc
+ENDMAP
+
+NAME:    temple_eino_001b
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  5
+SHUFFLE: {([
+COLOUR:  c = red
+MAP
+ccccccccccccccccccccccccc
+cccccccclccccccclcccccccc
+cccccccl.lcclccl.lccccccc
+cccclll...c...c...lllcccc
+ccclll..B.G...G.B..lllccc
+cccll.......B.......llccc
+cccl.................lccc
+ccccG...............Gcccc
+ccc...................ccc
+ccl..B....{.(.[....B..lcc
+ccc...................ccc
+ccccG...............Gcccc
 cccl.................lccc
 cccll.......B.......llccc
 ccclll..B.G...G.B..lllccc
@@ -939,7 +968,111 @@ bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 ENDMAP
 
-##############################################################################
+NAME:    temple_eino_005a
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  5
+SHUFFLE: {([
+MAP
+            bbbbb
+          bbb...bbb
+          b...(...b
+    bbbbbbb.b...b.bbbbbbb
+    b...b...........b...b
+bbbbb.{.....b.T.b.....[.bbbbb
+b...b.....B.......B.....b...b
+b.B....bb...b...b...bb....B.b
+b...b...b.....B.....b...b...b
+bbbbb.B....bb...bb....B.bbbbb
+    b...b...b...b...b...b
+    bbbbb.B.......B.bbbbb
+        b...b...b...b
+        bbbbb.B.bbbbb
+            b...b
+            bbbbb
+ENDMAP
+
+NAME:    temple_eino_005b
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  5
+SHUFFLE: {([
+MAP
+            bbbbb
+        bbbbb...bbbbb
+        b...b.(.b...b
+        b.B.......B.b
+    bbbbb...bbbbb...bbbbb
+    b...bb.bbbbbbbbbb...b
+bbbbb.{.b...bbbbb.....[.bbbbb
+b...b...b.B.......B.b...b...b
+b.B....bb...b...b...bb....B.b
+b...b...bbbbb.B.bbbbb...b...b
+bbbbb.B....bb...bb....B.bbbbb
+    b...b...bbbbb...b...b
+    bbbbb.B.......B.bbbbb
+        b...b...b...b
+        bbbbb.B.bbbbb
+            b...b
+            bbbbb
+ENDMAP
+
+NAME:    temple_eino_006a
+PLACE:   Temple
+ORIENT:  encompass
+SHUFFLE: {([
+WEIGHT:  5
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x..x...xxx....xxxxxxx....xxx...x..x
+x.x.....x.......xxx.......x.....x.x
+xx...B..x..B.....x.....B..x..B...xx
+x.......x.................x.......x
+xx.....xxx.......{.......xxx.....xx
+xxx...xxxxx...xx...xx...xxxxx...xxx
+xx.....xxx.....xx.xx.....xxx.....xx
+x.......x.......x.x.......x.......x
+x..B.........B..x(x..B.........B..x
+x.......x.......x.x.......x.......x
+xx.....xxx.....xx.xx.....xxx.....xx
+xxx...xxxxx...xx...xx...xxxxx...xxx
+xx.....xxx.......[.......xxx.....xx
+x.......x.................x.......x
+xx...B..x..B.....x.....B..x..B...xx
+x.x.....x.......xxx.......x.....x.x
+x..x...xxx....xxxxxxx....xxx...x..x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    temple_eino_006b
+PLACE:   Temple
+ORIENT:  encompass
+SHUFFLE: {([
+WEIGHT:  5
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x..x...xxx....xxxxxxx....xxx...x..x
+x.x.....x.......xxx.......x.....x.x
+xx...B..x..B.....x.....B..x..B...xx
+x.......x.................x.......x
+xx.....xxx.......{.......xxx.....xx
+xxx...xxxxx...xx...xx...xxxxx...xxx
+xx.....xxx...xxxx.xxxx...xxx.....xx
+x.......x...xxxx...xxxx...x.......x
+x..B.......xxxx..(..xxxx.......B..x
+x.......x...xxxx...xxxx...x.......x
+xx.....xxx...xxxx.xxxx...xxx.....xx
+xxx...xxxxx...xx...xx...xxxxx...xxx
+xx.....xxx.......[.......xxx.....xx
+x.......x.................x.......x
+xx...B..x..B.....x.....B..x..B...xx
+x.x.....x.......xxx.......x.....x.x
+x..x...xxx....xxxxxxx....xxx...x..x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+#############################################################################
 # Overflow temples
 ##############################################################################
 
