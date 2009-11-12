@@ -41,8 +41,8 @@ void circle_def::init(int param, circle_type ctype)
         break;
     case C_CIRCLE:
         shape = SH_CIRCLE;
-        radius = static_cast<int>(ceil(sqrt(radius_sq)));
         radius_sq = param;
+        radius = static_cast<int>(ceil(sqrt(radius_sq)));
         break;
     case C_ROUND:
         shape = SH_CIRCLE;
