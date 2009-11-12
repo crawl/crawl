@@ -520,7 +520,7 @@ ENDMAP
 #
 NAME:    onia_ninara_012_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   D:16-20, Lair:3-10, Swamp, Snake, Slime
+DEPTH:   D:16-20, Lair:3-10, Swamp, Snake
 ORIENT:  float
 SHUFFLE: AB@
 SUBST: x = .:30 W x:4
