@@ -281,8 +281,8 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
-    case SPELL_SLEEP:
-        beam.flavour  = BEAM_SLEEP;
+    case SPELL_HIBERNATION:
+        beam.flavour  = BEAM_HIBERNATION;
         beam.is_beam  = true;
         break;
 

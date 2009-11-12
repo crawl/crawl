@@ -2409,9 +2409,9 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     case SPELL_BANISHMENT:
     case SPELL_DISINTEGRATE:
     case SPELL_PARALYSE:
-    case SPELL_SLEEP:
+    case SPELL_HIBERNATION:
     {
-        if (monspell == SPELL_SLEEP && (!foe || foe->asleep()))
+        if (monspell == SPELL_HIBERNATION && (!foe || foe->asleep()))
         {
             ret = true;
             break;

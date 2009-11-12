@@ -1197,14 +1197,14 @@ const zap_info zap_data[] = {
     },
 
     {
-        ZAP_SLEEP,
+        ZAP_HIBERNATION,
         "0",
         100,
         NULL,
         NULL,
         BLACK,
         true,
-        BEAM_SLEEP,
+        BEAM_HIBERNATION,
         DCHAR_SPACE,
         false,
         false,
@@ -3789,7 +3789,7 @@ void bolt::affect_player_enchantment()
 
     switch (flavour)
     {
-    case BEAM_SLEEP:
+    case BEAM_HIBERNATION:
         you.put_to_sleep(ench_power);
         break;
 
@@ -5006,7 +5006,7 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
         rc = !mon->res_negative_energy();
         break;
 
-    case BEAM_SLEEP:
+    case BEAM_HIBERNATION:
         rc = mon->can_sleep();
         break;
 
@@ -5211,7 +5211,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         mon->hurt(agent(), damage.roll(), flavour);
         return (MON_AFFECTED);
 
-    case BEAM_SLEEP:
+    case BEAM_HIBERNATION:
         if (mon->can_sleep())
         {
             if (simple_monster_message(mon, " looks drowsy..."))
@@ -5879,7 +5879,7 @@ bool bolt::nasty_to(const monsters *mon) const
 
     // degeneration / sleep / enslave soul
     if (flavour == BEAM_DEGENERATE
-        || flavour == BEAM_SLEEP
+        || flavour == BEAM_HIBERNATION
         || flavour == BEAM_ENSLAVE_SOUL)
     {
         return (mon->holiness() == MH_NATURAL);
@@ -6129,7 +6129,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_PETRIFY:              return ("petrify");
     case BEAM_BACKLIGHT:            return ("backlight");
     case BEAM_PORKALATOR:           return ("porkalator");
-    case BEAM_SLEEP:                return ("sleep");
+    case BEAM_HIBERNATION:                return ("sleep");
     case BEAM_BERSERK:              return ("berserk");
     case BEAM_POTION_BLACK_SMOKE:   return ("black smoke");
     case BEAM_POTION_GREY_SMOKE:    return ("grey smoke");

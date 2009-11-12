@@ -1766,7 +1766,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_tame_beasts(powc);
         break;
 
-    case SPELL_SLEEP:
+    case SPELL_HIBERNATION:
     {
         const int sleep_power =
             stepdown_value(powc * 9 / 10, 5, 35, 45, 50);
@@ -1774,7 +1774,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         mprf(MSGCH_DIAGNOSTICS, "Sleep power stepdown: %d -> %d",
              powc, sleep_power);
 #endif
-        if (!zapping(ZAP_SLEEP, sleep_power, beam, true))
+        if (!zapping(ZAP_HIBERNATION, sleep_power, beam, true))
             return (SPRET_ABORT);
         break;
     }

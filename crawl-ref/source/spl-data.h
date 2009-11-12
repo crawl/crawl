@@ -1664,7 +1664,7 @@
 },
 
 {
-    SPELL_SLEEP, "Ensorcelled Hibernation",
+    SPELL_HIBERNATION, "Ensorcelled Hibernation",
      SPTYP_ENCHANTMENT | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      2,

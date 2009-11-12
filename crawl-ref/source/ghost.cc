@@ -68,7 +68,7 @@ static spell_type search_order_conj[] = {
     SPELL_SHOCK,
     SPELL_SANDBLAST,
     SPELL_MAGIC_DART,
-    SPELL_SLEEP,
+    SPELL_HIBERNATION,
     SPELL_BACKLIGHT,
     SPELL_NO_SPELL,                        // end search
 };

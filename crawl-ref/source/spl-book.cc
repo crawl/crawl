@@ -156,7 +156,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // 9 - Book of Ice
     {SPELL_FREEZING_AURA,
-     SPELL_SLEEP,
+     SPELL_HIBERNATION,
      SPELL_CONDENSATION_SHIELD,
      SPELL_OZOCUBUS_REFRIGERATION,
      SPELL_BOLT_OF_COLD,
@@ -322,7 +322,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // 24 - Book of Charms
     {SPELL_BACKLIGHT,
      SPELL_REPEL_MISSILES,
-     SPELL_SLEEP,
+     SPELL_HIBERNATION,
      SPELL_CONFUSE,
      SPELL_ENSLAVEMENT,
      SPELL_SILENCE,

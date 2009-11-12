@@ -2794,7 +2794,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_FREEZE:                   return TILEG_FREEZE;
     case SPELL_THROW_FROST:              return TILEG_THROW_FROST;
     case SPELL_FREEZING_AURA:            return TILEG_FREEZING_AURA;
-    case SPELL_SLEEP:                    return TILEG_ENSORCELLED_HIBERNATION;
+    case SPELL_HIBERNATION:                    return TILEG_ENSORCELLED_HIBERNATION;
     case SPELL_OZOCUBUS_ARMOUR:          return TILEG_OZOCUBUS_ARMOUR;
     case SPELL_THROW_ICICLE:             return TILEG_THROW_ICICLE;
     case SPELL_CONDENSATION_SHIELD:      return TILEG_CONDENSATION_SHIELD;
