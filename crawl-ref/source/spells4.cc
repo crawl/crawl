@@ -397,7 +397,7 @@ static int _sleep_monsters(coord_def where, int pow, int, actor *)
     if (!monster)
         return (0);
 
-    if (!monster->can_sleep(true))
+    if (!monster->can_hibernate(true))
         return (0);
 
     if (monster->check_res_magic(pow))
@@ -410,7 +410,7 @@ static int _sleep_monsters(coord_def where, int pow, int, actor *)
     if (monster->has_ench(ENCH_SLEEP_WARY) && !one_chance_in(3))
         return (0);
 
-    monster->put_to_sleep();
+    monster->hibernate();
     monster->expose_to_element(BEAM_COLD, 2);
     return (1);
 }

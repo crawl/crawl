@@ -165,7 +165,7 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
         case 6:
         case 7:
         case 8:
-            mon->put_to_sleep();
+            mon->hibernate();
             simple_monster_message(mon, " falls asleep!");
             break;
         case 9:

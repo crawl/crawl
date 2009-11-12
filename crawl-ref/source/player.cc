@@ -7038,7 +7038,7 @@ bool player::can_throw_large_rocks() const
     return (player_genus(GENPC_OGRE) || species == SP_TROLL);
 }
 
-bool player::can_sleep(bool holi_only) const
+bool player::can_hibernate(bool holi_only) const
 {
     // Undead, nonliving, and plants don't sleep.
     const mon_holy_type holi = holiness();
@@ -7059,11 +7059,11 @@ bool player::can_sleep(bool holi_only) const
     return (true);
 }
 
-void player::put_to_sleep(int)
+void player::hibernate(int)
 {
     ASSERT(!crawl_state.arena);
 
-    if (!can_sleep())
+    if (!can_hibernate())
     {
         mpr("You feel weary for a moment.");
         return;

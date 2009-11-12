@@ -5566,7 +5566,7 @@ bool monsters::do_shaft()
     return (reveal);
 }
 
-bool monsters::can_sleep(bool holi_only) const
+bool monsters::can_hibernate(bool holi_only) const
 {
     // Undead, nonliving, and plants don't sleep.
     const mon_holy_type holi = holiness();
@@ -5591,9 +5591,9 @@ bool monsters::can_sleep(bool holi_only) const
     return (true);
 }
 
-void monsters::put_to_sleep(int)
+void monsters::hibernate(int)
 {
-    if (!can_sleep())
+    if (!can_hibernate())
         return;
 
     behaviour = BEH_SLEEP;

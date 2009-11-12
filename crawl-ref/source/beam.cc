@@ -3791,7 +3791,7 @@ void bolt::affect_player_enchantment()
     switch (flavour)
     {
     case BEAM_HIBERNATION:
-        you.put_to_sleep(ench_power);
+        you.hibernate(ench_power);
         break;
 
     case BEAM_CORONA:
@@ -5008,7 +5008,7 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
         break;
 
     case BEAM_HIBERNATION:
-        rc = mon->can_sleep();
+        rc = mon->can_hibernate();
         break;
 
     case BEAM_PORKALATOR:
@@ -5213,11 +5213,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         return (MON_AFFECTED);
 
     case BEAM_HIBERNATION:
-        if (mon->can_sleep())
+        if (mon->can_hibernate())
         {
             if (simple_monster_message(mon, " looks drowsy..."))
                 obvious_effect = true;
-            mon->put_to_sleep();
+            mon->hibernate();
             return (MON_AFFECTED);
         }
         return (MON_UNAFFECTED);

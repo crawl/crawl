@@ -166,7 +166,7 @@ static std::string _verbose_info(const monsters* m)
             return (" (fleeing)");
         if (m->asleep())
         {
-            if (!m->can_sleep(true))
+            if (!m->can_hibernate(true))
                 return (" (dormant)");
             else
                 return (" (sleeping)");

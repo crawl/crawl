@@ -235,7 +235,7 @@ static bool _zin_retribution()
             confuse_player(3 + random2(10), false);
             break;
         case 1:
-            you.put_to_sleep();
+            you.hibernate();
             break;
         case 2:
             you.paralyse(NULL, 3 + random2(10));
@@ -373,7 +373,7 @@ static bool _cheibriados_retribution()
     case 2:
     case 3:
         mpr("You lose track of time.");
-        you.put_to_sleep();
+        you.hibernate();
         break;
 
     case 4:
