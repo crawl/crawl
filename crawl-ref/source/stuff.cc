@@ -885,27 +885,21 @@ bool is_trap_square(dungeon_feature_type grid)
 
 // Does the equivalent of KILL_RESET on all monsters in LOS. Should only be
 // applied to new games.
-void zap_los_monsters()
+void zap_los_monsters(bool items_also)
 {
-    calc_show_los();
+    // Not using player LOS since clouds might temporarily
+    // block monsters.
+    los_def los(you.pos(), opc_fullyopaque);
+    los.update();
 
-    for (rectangle_iterator ri(crawl_view.vlos1, crawl_view.vlos2); ri; ++ri )
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        const coord_def g = view2grid(*ri);
-
-        if (!map_bounds(g))
+        if (!you.see_cell(*ri))
             continue;
 
-        if (!you.see_cell(g))
-            continue;
-
-        if (g == you.pos())
-            continue;
-
-        // At tutorial beginning disallow items in line of sight.
-        if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
+        if (items_also)
         {
-            int item = igrd(g);
+            int item = igrd(*ri);
 
             if (item != NON_ITEM && mitm[item].is_valid() )
                 destroy_item(item);
@@ -913,11 +907,8 @@ void zap_los_monsters()
 
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
-        monsters *mon = monster_at(g);
-        if (mon == NULL)
-            continue;
-
-        if (mons_class_flag( mon->type, M_NO_EXP_GAIN ))
+        monsters *mon = monster_at(*ri);
+        if (mon == NULL || mons_class_flag(mon->type, M_NO_EXP_GAIN))
             continue;
 
 #ifdef DEBUG_DIAGNOSTICS

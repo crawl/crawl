@@ -3736,8 +3736,9 @@ static bool _initialise(void)
         // Mark items in inventory as of unknown origin.
         origin_set_inventory(origin_set_unknown);
 
-        // For a new game, wipe out monsters in LOS.
-        zap_los_monsters();
+        // For a new game, wipe out monsters in LOS, and
+        // for new tutorial games also the items.
+        zap_los_monsters(Options.tutorial_events[TUT_SEEN_FIRST_OBJECT]);
 
         // For a newly started tutorial, turn secret doors into normal ones.
         if (Options.tutorial_left)
