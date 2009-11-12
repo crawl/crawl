@@ -295,7 +295,6 @@ protected:
     TileBuffer m_buf_dngn;
     TileBuffer m_buf_doll;
     TileBuffer m_buf_main;
-    bool m_dirty;
 
     struct tile_overlay
     {
