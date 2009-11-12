@@ -3,7 +3,7 @@
 dolinks() {
     mkdir -p source
     cd source
-    ln -sf ../../source/*.{cc,h} .
+    ln -sf ../../source/*.{cc,h,txt} .
     ln -sf ../../source/makefile* .
     ln -sf ../../source/{util,contrib,rltiles,prebuilt,dat} .
 }
