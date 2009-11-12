@@ -19,14 +19,14 @@ TAGS:   allow_dup
 # More common than the others.
 WEIGHT: 20
 MAP
-cccccccccc
-cBcBcBcBcc
-G.c.c.c.Bc
-@.......Bc
-@.......Bc
-G.c.c.c.Bc
-cBcBcBcBcc
-cccccccccc
+cccccccccccc
+cBcBcBcBcBcc
+G.c.c.c.c.Bc
+@.........Bc
+@.........Bc
+G.c.c.c.c.Bc
+cBcBcBcBcBcc
+cccccccccccc
 ENDMAP
 
 NAME:    jmf_multi_god_temple
@@ -545,7 +545,7 @@ ENDMAP
 # Nemelex altar (Shiori)
 # Perhaps could have different parameters for the two types of clouds,
 # and different patterns.
-NAME:   nemelx_altar_shiori
+NAME:   nemelex_altar_shiori
 DEPTH:  !Lair, !Orc
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
 TAGS:   generate_awake patrolling mini_float no_rotate
@@ -819,4 +819,24 @@ MAP
         x._.x
         x...x
         xxxxx
+ENDMAP
+
+###############################################################################
+# TSO's small temple (1KB)
+# Idea stolen from protected_by_tso_3.
+NAME:     tso_altar
+TAGS:     no_item_gen no_rotate temple_overflow_the_shining_one
+COLOUR:   _ = yellow
+SUBST:    _ = .
+COLOUR:   c = white
+KFEAT:    A = altar_shining_one
+MAP
+  xxxxx
+xxxcccxxx
+xcccAcccx
+xc.___.cx
+xct._.tcx
+xc.._..cx
+xct...tcx
+xccc+cccx
 ENDMAP
