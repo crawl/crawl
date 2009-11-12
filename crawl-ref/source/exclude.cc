@@ -19,6 +19,9 @@
 #include "tutorial.h"
 #include "view.h"
 
+typedef std::map<coord_def, travel_exclude*> exclmap;
+static exclmap _curr_excludes_map;
+
 static bool _mon_needs_auto_exclude(const monsters *mon, bool sleepy = false)
 {
     if (mons_is_stationary(mon))
@@ -154,20 +157,27 @@ bool travel_exclude::in_bounds(const coord_def &p) const
 
 void _mark_excludes_non_updated(const coord_def &p)
 {
-    for (exclvec::iterator it = curr_excludes.begin();
+    _curr_excludes_map.clear();
+
+     for (exclvec::iterator it = curr_excludes.begin();
          it != curr_excludes.end(); ++it)
     {
         it->uptodate = it->uptodate && it->in_bounds(p);
-    }
+        _curr_excludes_map[it->pos] = &(*it);
+     }
 }
 
-void _update_exclusion_los(bool all=false)
+static void _update_exclusion_los(bool all=false)
 {
+    _curr_excludes_map.clear();
+
     for (exclvec::iterator it = curr_excludes.begin();
          it != curr_excludes.end(); ++it)
     {
         if (all || !it->uptodate)
             it->set_los();
+
+        _curr_excludes_map[it->pos] = &(*it);
     }
 }
 
@@ -202,9 +212,11 @@ bool is_excluded(const coord_def &p, const exclvec &exc)
 
 static travel_exclude *_find_exclude_root(const coord_def &p)
 {
-    for (unsigned int i = 0; i < curr_excludes.size(); ++i)
-        if (curr_excludes[i].pos == p)
-            return (&curr_excludes[i]);
+    exclmap::iterator it = _curr_excludes_map.find(p);
+
+    if (it !=_curr_excludes_map.end())
+        return it->second;
+
     return (NULL);
 }
 
@@ -259,6 +271,7 @@ void clear_excludes()
 #endif
 
     curr_excludes.clear();
+    _curr_excludes_map.clear();
     clear_level_exclusion_annotation();
 
     _exclude_update();
@@ -287,6 +300,7 @@ void del_exclude(const coord_def &p)
         if (curr_excludes[i].pos == p)
         {
             curr_excludes.erase(curr_excludes.begin() + i);
+            _curr_excludes_map.erase(p);
             break;
         }
     _exclude_update(p);
@@ -317,6 +331,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
 
         curr_excludes.push_back(travel_exclude(p, radius, autoexcl,
                                                montype, vaultexcl));
+        _curr_excludes_map[p] = &curr_excludes.back();
     }
 
     _exclude_update(p);
@@ -391,6 +406,7 @@ void marshallExcludes(writer& outf, const exclvec& excludes)
 void unmarshallExcludes(reader& inf, char minorVersion, exclvec &excludes)
 {
     excludes.clear();
+    _curr_excludes_map.clear();
     int nexcludes = unmarshallShort(inf);
     if (nexcludes)
     {
@@ -407,6 +423,7 @@ void unmarshallExcludes(reader& inf, char minorVersion, exclvec &excludes)
                 mon      = static_cast<monster_type>(unmarshallShort(inf));
             }
             excludes.push_back(travel_exclude(c, radius, autoexcl, mon));
+            _curr_excludes_map[c] = &curr_excludes.back();
         }
     }
 }
