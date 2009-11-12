@@ -3072,6 +3072,8 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "archmagi",
         "preservation",
         "reflection",
+        "spirit shield",
+        "archery",
         NULL
     };
 
@@ -3096,6 +3098,8 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "returning",
         "chaos",
         "confuse",        // 20
+        "penetration",
+        "reaping",
         NULL
     };
 
@@ -3373,6 +3377,20 @@ item_spec item_list::parse_single_spec(std::string s)
         return (result);
     }
     else if (ego == -1)
+    {
+        error = make_stringf("Ego '%s' is invalid for item '%s'.",
+                             ego_str.c_str(), s.c_str());
+        return (result);
+    }
+    else if (result.sub_type == OBJ_RANDOM)
+    {
+        // it will be assigned among appropiate ones later
+    }
+    else if (result.base_type == OBJ_WEAPONS
+                && !is_weapon_brand_ok(result.sub_type, ego)
+             || result.base_type == OBJ_ARMOUR
+                && !is_armour_brand_ok(result.sub_type, ego))
+            // no missile brands are dissallowed yet
     {
         error = make_stringf("Ego '%s' is incompatible with item '%s'.",
                              ego_str.c_str(), s.c_str());
