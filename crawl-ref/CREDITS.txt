@@ -40,8 +40,8 @@ Rob Grant                    Arien Malec               William Tanksley, Jr.
 John Greenberg               Paul Maloney              Marc H. Thoben
 GreyKnight                   Neil 'Mu' Middleton       Matt Titus
 Joshua Gross                 Shawn M Moore             Steven Wheeler
-Brian Haase                  Eva Myers                 Jeremey Wilson
-Shayne Halvorson             Wille Mäntylä             Yelve Yakut
-Ciaran Hamilton              Erkki Nurmi               Zooko
-Chris Hamons                 Mattias Nyberg
+Brian Haase                  Eva Myers                 Thomas Willem
+Shayne Halvorson             Wille Mäntylä             Jeremey Wilson
+Ciaran Hamilton              Erkki Nurmi               Yelve Yakut
+Chris Hamons                 Mattias Nyberg            Zooko
 

@@ -346,13 +346,13 @@ ENDMAP
 NAME:  fedhas_altar_5
 TAGS:  uniq_altar_fedhas
 PLACE: D:8
-KFEAT: C = altar_fedhas
+KFEAT: _ = altar_fedhas
 MONS:  centaur, bush
 MAP
 ...... 
 .2222..
 .21222.
-.22C22.
+.22_22.
 ...22..
 .222.. 
 ENDMAP
@@ -360,18 +360,18 @@ ENDMAP
 NAME:   cheibriados_altar_1
 TAGS:   uniq_altar_cheibriados
 PLACE:  D:7
-KFEAT:  C = altar_cheibriados
+KFEAT:  _ = altar_cheibriados
 MAP
 ...
-.C.
+._.
 ...
 ENDMAP
 
 NAME:    cheibriados_altar_2
 TAGS:    uniq_altar_cheibriados
 DEPTH:   D:2-6
-WEIGHT:  100
-KFEAT:   C = altar_cheibriados
+WEIGHT:  5
+KFEAT:   _ = altar_cheibriados
 MONS:    giant slug, giant snail, elephant slug
 SUBST:   1 : 1:50 2:30 3:10 4:10
 NSUBST:  4 = 1:1 / 1:2 / 1:3
@@ -380,7 +380,7 @@ MAP
 .mmm... 
 .m1m... 
 .mmmmm. 
-..Cm1m.  
+.._m1m.  
 .mmmmm. 
 .m1m... 
 .mmm... 
@@ -391,13 +391,13 @@ NAME:   cheibriados_altar_3
 TAGS:   uniq_altar_cheibriados
 DEPTH:  D:2-6
 WEIGHT: 100
-KFEAT:  C = altar_cheibriados
+KFEAT:  _ = altar_cheibriados
 ITEM:   potion of slowing
 ITEM:   apple, pear, orange, banana
 SUBST:  e : efgh
 MAP
 .d.
-eCe
+e_e
 .d.
 ENDMAP
 
@@ -411,14 +411,14 @@ MONS: patrolling Daeva / patrolling Angel
 : else
 MONS:  patrolling Angel
 : end
-KFEAT: C = altar_elyvilon / altar_zin / altar_shining_one
+KFEAT: _ = altar_elyvilon / altar_zin / altar_shining_one
 MAP
    .....
   ..xmx..
  ..xx>xx..
 ..xxx.xxx..
 .xxxx1xxxx.
-.m>..C..>m.
+.m>.._..>m.
 .xxxx.xxxx.
 ..xxx.xxx..
  ..xx>xx..
@@ -436,15 +436,15 @@ SUBST: 3 = 3L
 SUBST: 1 = 1:20 4
 : end
 SUBST: L = l.
-SUBST: C = C P:1
-KFEAT: C = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
+SUBST: _ = _ P:1
+KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
 KFEAT: P = enter_abyss
 MAP
   ..LLllLL....
   .LllllllLLL..
 ..Lll323lllLLL.
 .LLl32123lllLL.
-.LLl33C33llLL..
+.LLl33_33llLL..
 ..Lll323llLL...
 ..LLll3llL.....
 ...LLlllL...
@@ -457,11 +457,11 @@ NAME:  david_defended_altar_orc
 DEPTH: D:7-20, Orc
 MONS:  patrolling orc priest
 TAGS:  uniq_defended_altar
-KFEAT: D = altar_beogh / w:1 altar_okawaru / w:1 altar_makhleb / w:1 altar_trog
+KFEAT: _ = altar_beogh / w:1 altar_okawaru / w:1 altar_makhleb / w:1 altar_trog
 MAP
 ccccc...
 c1..c...
-c1D.+.I@
+c1_.+.I@
 c1..c...
 ccccc...
 ENDMAP
@@ -483,11 +483,11 @@ DEPTH:  D:2-18, Elf, Vault
 TAGS:   no_monster_gen mini_float
 COLOUR: . = blue
 FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
-KFEAT:  C = altar_sif_muna
+KFEAT:  _ = altar_sif_muna
 MAP
 xxxxxxxxxxxxxx
 ...........xxx
-@..........+Cx
+@..........+_x
 ...........xxx
 xxxxxxxxxxxxxx
 ENDMAP
@@ -498,12 +498,12 @@ TAGS:  no_pool_fixup
 MONS:  rat zombie / giant bat zombie / nothing w:200
 KMONS: w = giant goldfish zombie / big fish zombie / nothing w:200
 KFEAT: w = deep_water
-KFEAT: C = altar_kikubaaqudgha / altar_yredelemnul
+KFEAT: _ = altar_kikubaaqudgha / altar_yredelemnul
 MAP
 xxxxxxxxxxxxxxxx
 xxxxwwwwwwwwxxxx
 xxxx11111111xxxx
-@.............Cx
+@............._x
 xxxx11111111xxxx
 xxxxwwwwwwwwxxxx
 xxxxxxxxxxxxxxxx
@@ -534,10 +534,10 @@ MONS:   w:50 human zombie/orc zombie/elf zombie/w:5 ogre zombie/w:5 troll zombie
 MONS:   w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/\
         w:5 troll skeleton
 MONS:   mummy, wight, wraith, necrophage, ghoul
-NSUBST: ? = 1:C / *:1
+NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:6 6:4 7:2
-KFEAT:  C = altar_kikubaaqudgha / altar_yredelemnul
-KMONS:  C = human zombie
+KFEAT:  _ = altar_kikubaaqudgha / altar_yredelemnul
+KMONS:  _ = human zombie
 MAP
 ccccccccccccccc
 c?c?c?c?c?c?ccG
@@ -552,15 +552,15 @@ ENDMAP
 # Nemelex altar (Shiori)
 # Perhaps could have different parameters for the two types of clouds,
 # and different patterns.
-NAME:  nemelx_altar_shiori
-DEPTH: !Lair, !Orc
-TAGS:  no_pool_fixup no_monster_gen no_item_gen
-TAGS:  generate_awake patrolling mini_float no_rotate
-TAGS:  layout_rooms layout_city layout_open layout_cross
-KFEAT: _ = altar_nemelex_xobeh
-SUBST: b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
-SUBST: G:GTUVblw> , C=c
-KFEAT: z = teleport trap
+NAME:   nemelx_altar_shiori
+DEPTH:  !Lair, !Orc
+TAGS:   no_pool_fixup no_monster_gen no_item_gen
+TAGS:   generate_awake patrolling mini_float no_rotate
+TAGS:   layout_rooms layout_city layout_open layout_cross
+KFEAT:  _ = altar_nemelex_xobeh
+SUBST:  b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
+SUBST:  G:GTUVblw> , C=c
+KFEAT:  z = teleport trap
 MARKER: R = lua:fog_machine { cloud_type="flame", walk_dist=1, size=9, \
             pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
             spread_rate=3, start_clouds=1 }
@@ -599,13 +599,13 @@ MARKER:     P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
             size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
             spread_rate=3, start_clouds=1 }
 : if crawl.coinflip() then
-KFEAT:      L = altar_lugonu
+KFEAT:      _ = altar_lugonu
 KFEAT:      P = enter_abyss
 : kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:distortion " ..
 :       "w:6 | sabre ego:distortion | short sword ego:distortion / kobold "   ..
 :       "w:80 ; short sword | sabre | quick blade w:3")
 : else
-KFEAT:      L = altar_xom
+KFEAT:      _ = altar_xom
 :   if crawl.one_chance_in(4) then 
 KMONS:      P = orange crystal statue
 :   else
@@ -623,7 +623,7 @@ cc..P..cc
  ccc.cccc
 ccyy.yyyccc
 cy..111.yyc
-cc..1L1..cc
+cc..1_1..cc
 cyy.111..yc
 cccyy..yycc
   ccc..ccc
@@ -633,14 +633,197 @@ ENDMAP
 
 ###############################################################################
 # Blood-stained Trog altar!
-NAME:       bloody_trog
-DEPTH:      D:7-20
-TAGS:       uniq_bloody_trog
-KPROP:      . = bloody / nothing
-KFEAT:      _ = altar_trog
-KITEM:      _ = animal skin, knife
+NAME:  bloody_trog
+TAGS:  uniq_bloody_trog
+DEPTH: D:2-20, Orc, Vault
+KPROP: . = bloody / nothing
+KFEAT: _ = altar_trog
+KITEM: _ = animal skin, knife
 MAP
 ...
 ._.
 ...
+ENDMAP
+
+###############################################################################
+# Fedhas altar by TGW.
+# Threat: two big fish. Loot: some fruits.
+# The oklob plant may be abusable (if so, remove it).
+NAME:    tgw_fedhas
+TAGS:    no_item_gen no_monster_gen
+DEPTH:   Lair, D:2-20
+KFEAT:   _ = altar_fedhas
+MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
+SUBST:   x = TTPPPPP.
+SHUFFLE: PQR, TU, ..."
+SUBST:   P = 112 , Q = 115, R = 111235
+SUBST:   T = xt, U = xx
+SUBST:   " = .....6
+COLOUR:  . = green / none
+COLOUR:  ' = green
+COLOUR:  x = green / none w:30
+NSUBST:  w = 2:4 / *:w
+SUBST:   6 = 112
+ITEM:    apple / apricot / orange / pear / grape / strawberry / nothing w:70
+MAP
+ccccccccccccccccccccccc
+cxxxxxxxxxxxxxxxxxxxxxc
+cxxxxxxxxxxxxxxPxxd3xxc
+cxxxxxxxxxxxxxxPddddxxc
+cxxxxxxxxxxxxxxPPPx.dxc
+cxxxxxxx.......xxPPxxxc
+cxxxxxx..wwdww..xxPPxxc
+cxxxxx..wwwdwww..xxxPxc
+cxxxx..wwwwdwwww..xxxxc
+cxxxx.wwwwwdwwwww.xxxxc
+cxxxx.wwww'''wwww.xxxxc
+cxxxx.wwww'_'wwww.xxxxc
+cxxxx.wwww'''wwww.xxxxc
+cxxxx.wwwwwwwwwww.xxxxc
+cxxxx..wwwwwwwww..xxxxc
+cxxxxx..wwwwwww..xxxxxc
+cxxxxxx..wwwww..xxxxxxc
+cxxxxxxx.......xxxxxxxc
+cxxxxxxxxxc.cxxxxxxxxxc
+cxxxxxxxxxc.cxxxxxxxxxc
+ccccccccccc@ccccccccccc
+ENDMAP
+
+###############################################################################
+# Altars to the good gods by TGW.
+NAME:    tgw_good
+TAGS:    no_item_gen no_monster_gen
+SHUFFLE: XYZ
+KFEAT:   X = altar_shining_one
+KFEAT:   Y = altar_elyvilon
+KFEAT:   Z = altar_zin
+COLOUR:  a = darkgrey / red / blue w:3 / lightred w:2
+COLOUR:  b = darkgrey w:100 / red w:50 / lightgrey / blue w:30 / cyan / lightred
+COLOUR:  c = darkgrey w:7 / red w:2 / lightgrey w:4 / blue w:4 / cyan w:2
+COLOUR:  d = darkgrey w:4 / lightgrey w:4 / blue / cyan w:4
+COLOUR:  e = blue / cyan w:4
+COLOUR:  f = blue / cyan w:7
+SUBST:   abcdef = w
+SUBST:   G = ...BBC
+NSUBST:  H = 2:C / *:H
+SUBST:   H = .BBCCC
+COLOUR:  B = white
+COLOUR:  C = yellow
+SUBST:   B = .
+NSUBST:  C = 1:M / 3:d / *:.
+ITEM:    any scroll / scroll of holy word
+MONS:    human; falchion / human; falchion ego:holy_wrath w:1 \
+         / human; quarterstaff / human; quarterstaff ego:holy_wrath w:1 \
+         / human
+MONS:    gnoll; falchion / gnoll; falchion ego:holy_wrath w:1 / gnoll; \
+         quarterstaff / gnoll; quarterstaff ego:holy_wrath w:1 / gnoll 
+MONS:    orc; falchion / orc; falchion ego:holy_wrath w:1 \
+         / orc; quarterstaff / orc; quarterstaff ego:holy_wrath w:1 / orc
+SUBST:   M = 123
+MAP
+                xxxxxxxxxxxxx
+               xxaaaaaaaaaaaxx
+              xxbbbbbbbbbbbbbxx
+             xxcccccccccccccccxx
+            xxdddddddddddddddddxx
+           xxeeeeeeeeeeeeeeeeeeexx
+xxxxxxxxxxxxfffffffffffffffffffffxx
+x..........GGGGGGHHHHHHHHHHHGGGGGGxx
+@..........GGGGGGHHHXHHYHHZHHHGGGGGGx
+x..........GGGGGGHHHHHHHHHHHGGGGGGxx
+xxxxxxxxxxxxfffffffffffffffffffffxx
+           xxeeeeeeeeeeeeeeeeeeexx
+            xxdddddddddddddddddxx
+             xxcccccccccccccccxx
+              xxbbbbbbbbbbbbbxx
+               xxaaaaaaaaaaaxx
+                xxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+# Altar to Xom by TGW.
+NAME:   tgw_xom
+TAGS:   no_item_gen no_monster gen
+KFEAT:  _ = altar_xom
+MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
+MONS:   gnoll; club ego:chaos / gnoll; dagger ego:chaos / gnoll; spear ego:chaos
+MONS:   place:D:1-8
+NSUBST: ' = 1:_ / *:.
+SUBST:  . = .:200 ~:70 W:60 w:50 x:80 n:80 v b l Z T U M:20
+NSUBST: Z = 1:* / *:%
+SUBST:  M : 123333M, 1 = 1.., 2 = 2.., M = 123.
+COLOUR: . = random
+MAP
+   xxxxxx@xxxxxx
+  xx...........xx
+ xx.............xx
+xx...............xx
+x.................x
+x.................x
+x'...............'x
+x'...............'x
+xx'.............'xx
+ xx'''''''''''''xx
+  xx'''''''''''xx
+   xxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+# Altar to Trog by TGW.
+# Features berserk monsters, so we're careful: no intelligent monsters, so you
+# close the door. Provide a chokepoint.
+NAME:       tgw_trog
+TAGS:       no_item_gen no_monster_gen
+KFEAT:      _ = altar_trog
+MONS:       moth of wrath, rat / worm w:5
+ITEM:       any weapon
+NSUBST:     M = 4:d / *:.
+MAP
+      xxxxxxx
+     xxxMMMxxx
+    xxMMM2MMMxx
+   xxMM22_22MMxx
+   xx.........xx
+   x....ooo....x
+   x...oo1oo...x
+   x....ooo....x
+   x...........x
+   xx.........xx
+    xx.......xx
+     xxxx+xxxx
+       xx@xx
+ENDMAP
+
+###############################################################################
+# Altar to Sif by TGW.
+NAME:       tgw_sif
+TAGS:       no_item_gen no_monster_gen no_pool_fixup
+KFEAT:      _ = altar_sif_muna
+MONS:       orc wizard w:15 / Jessica / Blork the Orc
+NSUBST:     M = 1:1 / *:"
+SUBST:      ' : "'., ' = ''.
+COLOUR:     . = blue
+SUBST:      ' = ., " = .
+ITEM:       potion of gain intelligence w:2 / potion of brilliance /\
+            potion of magic / any book w:1
+MAP
+        xx@xx
+        x...x
+        x...x
+      xxx...xxx
+     xx'''''''xx
+    xx'''...'''xx
+    x'''.www.'''x
+   xx''.wwwww.''xx
+   x''.wwM"Mww.''x
+   x''.wwM>Mww.''x
+   x''.wwMMMww.''x
+   xx''.wwwww.''xx
+    x'''.www.'''x
+    xx'''...'''xx
+     xx''d'd''xx
+      xxx...xxx
+        x._.x
+        x...x
+        xxxxx
 ENDMAP
