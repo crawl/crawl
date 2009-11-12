@@ -277,14 +277,9 @@ ENDMAP
 # for overflow temples, but one tagged with both temple_overflow_FOO and
 # uniq_altar_FOO can be generated either randomly or as an overflow temple.
 
-# XXX - The WEIGHTs and PLACE of these Fedhas vaults are temporary.
-#       Remove once the Ecumenical Temple is updated to cater for
-#       more than 12 gods.
-
 NAME:   fedhas_altar_1
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas
 DEPTH:  D:2-7
-WEIGHT: 75
 KFEAT:  C = altar_fedhas
 MONS:   plant
 MAP
@@ -298,7 +293,6 @@ ENDMAP
 NAME:   fedhas_altar_2
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas
 DEPTH:  D:2-7
-WEIGHT: 75
 KFEAT:  C = altar_fedhas
 NSUBST: w = 2:W / *:w
 SUBST:  . = ..wW
@@ -314,7 +308,6 @@ ENDMAP
 NAME:   fedhas_altar_3
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas
 DEPTH:  D:2-7
-WEIGHT: 75
 KFEAT:  C = altar_fedhas
 NSUBST: b = 1:. / *:1
 MONS:   plant w:5 / fungus / nothing w:3
@@ -329,7 +322,6 @@ ENDMAP
 NAME:   fedhas_altar_4
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas
 DEPTH:  D:2-7
-WEIGHT: 75
 KFEAT:  C = altar_fedhas
 FTILE:  . = floor_lair
 FTILE:  t = floor_lair
@@ -349,7 +341,6 @@ ENDMAP
 
 NAME:  fedhas_altar_5
 TAGS:  uniq_altar_fedhas
-PLACE: D:8
 KFEAT: _ = altar_fedhas
 MONS:  centaur, bush
 MAP
@@ -363,7 +354,6 @@ ENDMAP
 
 NAME:   cheibriados_altar_1
 TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
-PLACE:  D:7
 KFEAT:  _ = altar_cheibriados
 MAP
 ...
@@ -394,7 +384,6 @@ ENDMAP
 NAME:   cheibriados_altar_3
 TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
 DEPTH:  D:2-6
-WEIGHT: 100
 KFEAT:  _ = altar_cheibriados
 ITEM:   potion of slowing
 ITEM:   apple, pear, orange, banana
