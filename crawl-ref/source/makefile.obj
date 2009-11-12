@@ -79,6 +79,7 @@ l_mapmrk.o \
 l_moninf.o \
 l_mons.o \
 l_option.o \
+l_travel.o \
 l_view.o \
 l_you.o \
 lev-pand.o \
