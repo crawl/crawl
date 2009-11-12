@@ -2154,6 +2154,11 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         result += cardinals[mon.number];
     }
 
+    if (mon.type == MONS_BALLISTOMYCETE && desc != DESC_DBNAME)
+    {
+        result += mon.colour == LIGHTRED ? "Active " : "";
+    }
+
     // Done here to cover cases of undead versions of hydras.
     if (mons_species(nametype) == MONS_HYDRA
         && mon.number > 0 && desc != DESC_DBNAME)
@@ -4992,25 +4997,23 @@ void monsters::apply_enchantment(const mon_enchant &me)
                 if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
                                         && !actor_at(adjacent))
                 {
-                    beh_type created_behavior = BEH_HOSTILE;
-
-                    if (this->attitude == ATT_FRIENDLY)
-                    created_behavior = BEH_FRIENDLY;
+                    beh_type created_behavior = SAME_ATTITUDE(this);
 
                     int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
-                                    created_behavior,
-                                    0,
-                                    0,
-                                    adjacent,
-                                    MHITNOT,
-                                    MG_FORCE_PLACE));
+                                                      created_behavior,
+                                                      0,
+                                                      0,
+                                                      adjacent,
+                                                      MHITNOT,
+                                                      MG_FORCE_PLACE));
 
                     if (rc != -1)
                     {
                         env.mons[rc].behaviour = BEH_WANDER;
+                        env.mons[rc].number = 10;
 
                         if (observe_cell(adjacent) && observe_cell(pos()))
-                        mpr("A nearby fungus spawns a giant spore.");
+                            mpr("A nearby fungus spawns a giant spore.");
                     }
                     break;
                 }

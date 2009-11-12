@@ -16,4 +16,6 @@ void mon_nearby_ability(monsters *monster);
 bool ugly_thing_mutate(monsters *ugly, bool proximity = false);
 bool slime_split_merge(monsters *thing);
 
+void ballisto_on_move(monsters * monster, const coord_def & pos);
+
 #endif

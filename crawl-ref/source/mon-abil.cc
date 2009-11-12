@@ -1435,4 +1435,39 @@ void mon_nearby_ability(monsters *monster)
     }
 }
 
+// When giant spores move (while wandering) maybe place a spore on the
+// square they move off of.
+void ballisto_on_move(monsters * monster, const coord_def & position)
+{
+    if (monster->type == MONS_GIANT_SPORE
+        && monster->behaviour ==  BEH_WANDER)
+    {
+        // The number field is used as a cooldown timer for this behavior.
+        if (monster->number <= 0)
+        {
+            if (one_chance_in(4))
+            {
+                 int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
+                                                  SAME_ATTITUDE(monster),
+                                                  0,
+                                                  0,
+                                                  position,
+                                                  MHITNOT,
+                                                  MG_FORCE_PLACE));
+
+                if (rc != -1 && you.can_see(&env.mons[rc]))
+                {
+                    mprf("A ballistomycete grows in the wake of the spore.");
+                }
+                monster->number = 20;
+            }
+        }
+        else
+        {
+            monster->number--;
+        }
+
+    }
+}
+
 

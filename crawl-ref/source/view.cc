@@ -135,13 +135,13 @@ void monster_grid_updates()
                 handle_monster_shouts(monster);
             }
 
+            fedhas_neutralise(monster);
             if (!monster->visible_to(&you))
                 continue;
 
             good_god_follower_attitude_change(monster);
             beogh_follower_convert(monster);
             slime_convert(monster);
-            fedhas_neutralise(monster);
         }
     }
 }

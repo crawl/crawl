@@ -3112,9 +3112,13 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     }
     mgrd(monster->pos()) = NON_MONSTER;
 
+    coord_def old_pos = monster->pos();
+
     monster->set_position(f);
 
     mgrd(monster->pos()) = monster_index(monster);
+
+    ballisto_on_move(monster, old_pos);
 
     monster->check_redraw(monster->pos() - delta);
     monster->apply_location_effects(monster->pos() - delta);
