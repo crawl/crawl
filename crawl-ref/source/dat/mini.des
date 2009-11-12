@@ -2648,3 +2648,15 @@ MAP
 .............
 .............
 ENDMAP
+
+##############################################################################
+# Hunter's Booth (1KB)
+#
+NAME:   hunters_booth
+DEPTH:  D:5-15
+MONS:   centaur, bush
+MAP
+.....xxx
+@....21=@
+.....xxx
+ENDMAP
