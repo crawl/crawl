@@ -598,7 +598,7 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         // into a state where attacking them would be unchivalrous.
         if (spell == SPELL_CAUSE_FEAR || spell == SPELL_PARALYSE
             || spell == SPELL_CONFUSE || spell == SPELL_MASS_CONFUSION
-            || spell == SPELL_HIBERNATION   || spell == SPELL_MASS_SLEEP)
+            || spell == SPELL_HIBERNATION   || spell == SPELL_ENGLACIATION)
         {
             return (true);
         }

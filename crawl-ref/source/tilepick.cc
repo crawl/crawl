@@ -2801,7 +2801,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_OZOCUBUS_REFRIGERATION:   return TILEG_OZOCUBUS_REFRIGERATION;
     case SPELL_BOLT_OF_COLD:             return TILEG_BOLT_OF_COLD;
     case SPELL_FREEZING_CLOUD:           return TILEG_FREEZING_CLOUD;
-    case SPELL_MASS_SLEEP:               return TILEG_METABOLIC_ENGLACIATION;
+    case SPELL_ENGLACIATION:               return TILEG_METABOLIC_ENGLACIATION;
     case SPELL_SIMULACRUM:               return TILEG_SIMULACRUM;
     case SPELL_ICE_STORM:                return TILEG_ICE_STORM;
 

@@ -161,7 +161,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_OZOCUBUS_REFRIGERATION,
      SPELL_BOLT_OF_COLD,
      SPELL_SIMULACRUM,
-     SPELL_MASS_SLEEP,
+     SPELL_ENGLACIATION,
      SPELL_NO_SPELL,
      },
 
@@ -402,7 +402,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_TAME_BEASTS,
      SPELL_MASS_CONFUSION,
      SPELL_CONTROL_UNDEAD,
-     SPELL_MASS_SLEEP,
+     SPELL_ENGLACIATION,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },

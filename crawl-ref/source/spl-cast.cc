@@ -1807,7 +1807,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         mass_enchantment(ENCH_CONFUSION, powc, MHITYOU);
         break;
 
-    case SPELL_MASS_SLEEP:
+    case SPELL_ENGLACIATION:
         cast_mass_sleep(powc);
         break;
 

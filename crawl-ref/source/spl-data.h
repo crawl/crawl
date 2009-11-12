@@ -1677,7 +1677,7 @@
 },
 
 {
-    SPELL_MASS_SLEEP, "Metabolic Englaciation",
+    SPELL_ENGLACIATION, "Metabolic Englaciation",
      SPTYP_ENCHANTMENT | SPTYP_ICE,
      SPFLAG_AREA,
      7,
