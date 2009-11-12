@@ -31,6 +31,7 @@
 #include "attitude-change.h"
 #include "branch.h"
 #include "cio.h"
+#include "cloud.h"
 #include "clua.h"
 #include "colour.h"
 #include "database.h"
@@ -764,7 +765,29 @@ void viewwindow(bool do_updates)
         const coord_def ep = view2show(grid2view(gc));
 
         if (in_bounds(gc) && you.see_cell(gc))
+        {
             maybe_remove_autoexclusion(gc);
+
+            // Set excludes in a radius of 1 around harmful clouds genereated
+            // by neither monsters nor the player.
+            const int cloudidx = env.cgrid(gc);
+            if (cloudidx != EMPTY_CLOUD)
+            {
+                cloud_struct &cl   = env.cloud[cloudidx];
+                cloud_type   ctype = cl.type;
+
+                if (!is_harmless_cloud(ctype)
+                    && cl.whose  == KC_OTHER
+                    && cl.killer == KILL_MISC)
+                {
+                    for (adjacent_iterator ai(gc, false); ai; ++ai)
+                    {
+                        if (!cell_is_solid(*ai) && !is_exclude_root(*ai))
+                            set_exclude(*ai, 0);
+                    }
+                }
+            }
+        }
 
         // Print tutorial messages for features in LOS.
         if (Options.tutorial_left
