@@ -3739,6 +3739,10 @@ static bool _initialise(void)
         // For a new game, wipe out monsters in LOS.
         zap_los_monsters();
 
+        // At tutorial beginning disallow items in line of sight.
+        if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
+            zap_los_items();
+
         // For a newly started tutorial, turn secret doors into normal ones.
         if (Options.tutorial_left)
             tutorial_zap_secret_doors();
