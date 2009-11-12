@@ -278,7 +278,7 @@ ENDMAP
 #       more than 12 gods.
 
 NAME:   fedhas_altar_1
-TAGS:   uniq_altar_fedhas
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas
 DEPTH:  D:2-7
 WEIGHT: 75
 KFEAT:  C = altar_fedhas
@@ -292,7 +292,7 @@ MAP
 ENDMAP
 
 NAME:   fedhas_altar_2
-TAGS:   uniq_altar_fedhas
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas
 DEPTH:  D:2-7
 WEIGHT: 75
 KFEAT:  C = altar_fedhas
@@ -308,7 +308,7 @@ MAP
 ENDMAP
 
 NAME:   fedhas_altar_3
-TAGS:   uniq_altar_fedhas
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas
 DEPTH:  D:2-7
 WEIGHT: 75
 KFEAT:  C = altar_fedhas
@@ -323,7 +323,7 @@ MAP
 ENDMAP
 
 NAME:   fedhas_altar_4
-TAGS:   uniq_altar_fedhas
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas
 DEPTH:  D:2-7
 WEIGHT: 75
 KFEAT:  C = altar_fedhas
@@ -358,7 +358,7 @@ MAP
 ENDMAP
 
 NAME:   cheibriados_altar_1
-TAGS:   uniq_altar_cheibriados
+TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
 PLACE:  D:7
 KFEAT:  _ = altar_cheibriados
 MAP
@@ -388,7 +388,7 @@ MAP
 ENDMAP
 
 NAME:   cheibriados_altar_3
-TAGS:   uniq_altar_cheibriados
+TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
 DEPTH:  D:2-6
 WEIGHT: 100
 KFEAT:  _ = altar_cheibriados
@@ -480,7 +480,7 @@ ENDMAP
 
 NAME:   lemuel_blue_sif_altar
 DEPTH:  D:2-18, Elf, Vault
-TAGS:   no_monster_gen mini_float
+TAGS:   no_monster_gen mini_float temple_overflow_sif_muna
 COLOUR: . = blue
 FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
 KFEAT:  _ = altar_sif_muna
@@ -634,7 +634,7 @@ ENDMAP
 ###############################################################################
 # Blood-stained Trog altar!
 NAME:  bloody_trog
-TAGS:  uniq_bloody_trog
+TAGS:  uniq_bloody_trog temple_overflow_trog
 DEPTH: D:2-20, Orc, Vault
 KPROP: . = bloody / nothing
 KFEAT: _ = altar_trog

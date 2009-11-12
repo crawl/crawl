@@ -1694,15 +1694,39 @@ static void _build_overflow_temples(int level_number)
         }
         else
         {
-            std::string vault_tag =
-                make_stringf("temple_overflow_%d", num_gods);
+            std::string vault_tag;
 
-            vault = random_map_for_tag(vault_tag, true);
+            // For a single-altar temple, first try to find a temple specialized
+            // for that god.
+            if (num_gods == 1)
+            {
+                CrawlVector &god_vec = temple[TEMPLE_GODS_KEY];
+                god_type     god     = (god_type) god_vec[0].get_byte();
+
+                vault_tag = make_stringf("temple_overflow_%s",
+                                         god_name(god).c_str());
+                vault_tag = replace_all(vault_tag, " ", "_");
+                lowercase(vault_tag);
+
+                vault = random_map_for_tag(vault_tag, true);
+#ifdef DEBUG_DIAGNOSTICS
+                if (vault == NULL)
+                    mprf(MSGCH_DIAGNOSTICS, "Couldn't find overflow temple "
+                         "for god %s", god_name(god).c_str());
+#endif
+            }
+
             if (vault == NULL)
             {
-                mprf(MSGCH_ERROR,
-                     "Couldn't find overflow temple tag '%s'!",
-                     vault_tag.c_str());
+                vault_tag = make_stringf("temple_overflow_%d", num_gods);
+
+                vault = random_map_for_tag(vault_tag, true);
+                if (vault == NULL)
+                {
+                    mprf(MSGCH_ERROR,
+                         "Couldn't find overflow temple tag '%s'!",
+                         vault_tag.c_str());
+                }
             }
         }
 
