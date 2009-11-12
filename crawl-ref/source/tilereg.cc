@@ -226,10 +226,9 @@ TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_
     dx = tile_x;
     dy = tile_y;
     m_tag_font = tag_font;
-#if 0
-    // Not needed? (jpeg)
+
+    // To quite Valgrind
     m_dirty = true;
-#endif
 }
 
 TileRegion::~TileRegion()
