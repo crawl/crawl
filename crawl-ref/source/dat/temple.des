@@ -461,40 +461,40 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Twelve chambers temple (David Ploog). 12 = 12 x 1
+# Fourteen chambers temple (David Ploog). 14 = 14 x 1
 
-NAME:   twelve_chambers_temple
+NAME:   fourteen_chambers_temple
 PLACE:  Temple
 TAGS:   no_rotate
 ORIENT: encompass
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxx
-xvvvvvvvvvvv..................................vvvvvvvvvxx
-xvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvvvvxx
-xvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvvvvv...vvvxx
-xvvvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvvv.vvvxx
-xvv.....vvvvv.......v.......v.......v.......vvvvv.....vvx
-xv.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......vx
-xv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vx
-xv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vx
-xvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvx
-xvvvv.vvvv.....................................vvvv.vvvvx
-xvvv..vvvv.....................................vvvv..vvvx
-xvvv.vvvvv......T.......(...{...[.......T......vvvvv.vvvx
-xvvv..vvvv.....................................vvvv..vvvx
-xvvvv.vvvv.....................................vvvv.vvvvx
-xvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvx
-xv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vx
-xv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vx
-xv.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......vx
-xvv.....vvvvv.......v.......v.......v.......vvvvv.....vvx
-xvvvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvv.vvvvxx
-xvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvvvv...vvvvxx
-xvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvvvvvxx
-xvvvvvvvvvvv.................................vvvvvvvvvvxx
-xvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxx
+xvvvvvvvvvvv..........................................vvvvvvvvvxx
+xvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvvvvxx
+xvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvvv...vvvxx
+xvvvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvvv.vvvxx
+xvv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vvx
+xv.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......vx
+xv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vx
+xv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vx
+xvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvx
+xvvvv.vvvv.............................................vvvv.vvvvx
+xvvv..vvvv.............................................vvvv..vvvx
+xvvv.vvvvv........T.........(...{...[.........T........vvvvv.vvvx
+xvvv..vvvv.............................................vvvv..vvvx
+xvvvv.vvvv.............................................vvvv.vvvvx
+xvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvx
+xv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vx
+xv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vx
+xv.......vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv.......vx
+xvv.....vvvvv.......v.......v.......v.......v.......vvvvv.....vvx
+xvvvvv.vvvvvv...B...v...B...v...B...v...B...v...B...vvvvvv.vvvvxx
+xvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvv.....vvvvv...vvvvxx
+xvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvvvvvxx
+xvvvvvvvvvvv.........................................vvvvvvvvvvxx
+xvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##########################################################################
@@ -564,7 +564,7 @@ xcwww......B.............................B......wwwcx
 xcwww.............B...............B.............wwwcx
 xcww......................(......................wwcx
 xcww.............................................wwcx
-xcww...B..................T..................B...wwcx
+xcww...B......B...........T...........B......B...wwcx
 xcww.............................................wwcx
 xcww...................[.....{...................wwcx
 xcwww.............B...............B.............wwwcx
