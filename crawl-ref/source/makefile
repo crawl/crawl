@@ -416,9 +416,28 @@ endif
 # Figure out the build settings for this type of build
 #
 
+# All
+# Default target.
+ifneq (,$(findstring all,$(MAKECMDGOALS)))
+	USE_DEPGEN=YesPlease
+endif
+
+# All
+# Default target.
+ifeq (,$(MAKECMDGOALS))
+	USE_DEPGEN=YesPlease
+endif
+
+# $(GAME)
+# Another default target.
+ifneq (,$(findstring $(GAME),$(MAKECMDGOALS)))
+	USE_DEPGEN=YesPlease
+endif
+
 # Debug
 # No optimization, full debugging.
 ifneq (,$(findstring debug,$(MAKECMDGOALS)))
+	USE_DEPGEN=YesPlease
 	FULLDEBUG=YesPlease
 	WIZARD=YesPlease
 	DEBUG=YesPlease
@@ -428,6 +447,7 @@ endif
 # Wizard
 # Optimized, with wizard mode.
 ifneq (,$(findstring wizard,$(MAKECMDGOALS)))
+	USE_DEPGEN=YesPlease
 	WIZARD=YesPlease
 	DEBUG=YesPlease
 endif
@@ -435,6 +455,7 @@ endif
 # Profile
 # Optimized, with full debugging.
 ifneq (,$(findstring profile,$(MAKECMDGOALS)))
+	USE_DEPGEN=YesPlease
 	FULLDEBUG=YesPlease
 	WIZARD=YesPlease
 	DEBUG=YesPlease
@@ -697,6 +718,8 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 ##########################################################################
 # Dependencies
 
+ifdef USE_DEPGEN
+
 DEPS := $(OBJECTS:.o=.d)
 
 ifeq ($(shell which fastdep 2> /dev/null),)
@@ -710,12 +733,9 @@ endif
 
 depend: $(DEPS)
 
-ifneq ($(MAKECMDGOALS),clean)
-ifneq ($(MAKECMDGOALS),distclean)
 -include $(DEPS)
-endif
-endif
 
+endif
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
