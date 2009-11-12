@@ -3256,7 +3256,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "That ";
 #ifdef USE_TILE
         // need to highlight monster
-        const coord_def gc = m->pos();
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, m);
 
