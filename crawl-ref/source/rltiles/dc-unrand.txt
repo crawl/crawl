@@ -60,6 +60,8 @@ urand_piercer UNRAND_PIERCER
 urand_plutonium UNRAND_PLUTONIUM_SWORD
 urand_undeadhunter UNRAND_UNDEADHUNTER
 urand_crystal_spear UNRAND_CRYSTAL_SPEAR
+urand_cutlass UNRAND_CAPTAINS_CUTLASS
+urand_storm_bow UNRAND_STORM_BOW
 %rim 1
 spwpn_sword_of_power UNRAND_POWER
 spwpn_sceptre_of_torment UNRAND_TORMENT

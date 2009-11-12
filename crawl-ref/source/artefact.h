@@ -13,7 +13,7 @@
 class bolt;
 
 // NOTE: NO_UNRANDARTS is automatically set by util/art-data.pl
-#define NO_UNRANDARTS 77
+#define NO_UNRANDARTS 79
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
@@ -81,6 +81,8 @@ enum unrand_type
     UNRAND_SERPENT_SCOURGE,  // whip "Serpent-Scourge"
     UNRAND_ACCURACY,         // knife of Accuracy
     UNRAND_CRYSTAL_SPEAR,    // Lehudib's crystal spear
+    UNRAND_CAPTAINS_CUTLASS, // captain's cutlass
+    UNRAND_STORM_BOW,        // storm bow
     UNRAND_IGNORANCE,        // shield of Ignorance
     UNRAND_AUGMENTATION,     // robe of Augmentation
     UNRAND_THIEF,            // cloak of the Thief

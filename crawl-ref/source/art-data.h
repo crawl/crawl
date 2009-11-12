@@ -23,7 +23,7 @@
 
 #define ART_DATA_H
 
-/* 1: UNRAND_DUMMY1 */
+/* UNRAND_DUMMY1 */
 {
     "DUMMY UNRANDART 1", "DUMMY UNRANDART 1", 
     OBJ_UNASSIGNED, 250, 250, 250, BLACK, 0, 
@@ -42,7 +42,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 2: UNRAND_SINGING_SWORD */
+/* UNRAND_SINGING_SWORD */
 {
     "Singing Sword", "golden long sword", 
     OBJ_WEAPONS, WPN_LONG_SWORD, +7, +7, ETC_GOLD, 1200, 
@@ -61,7 +61,7 @@
     _SINGING_SWORD_equip, _SINGING_SWORD_unequip, NULL, { NULL }, NULL, 
 },
 
-/* 3: UNRAND_TROG */
+/* UNRAND_TROG */
 {
     "Wrath of Trog", "bloodstained battleaxe", 
     OBJ_WEAPONS, WPN_BATTLEAXE, +3, +11, ETC_BLOOD, 1000, 
@@ -80,7 +80,7 @@
     _TROG_equip, _TROG_unequip, NULL, { _TROG_melee_effect }, NULL, 
 },
 
-/* 4: UNRAND_VARIABILITY */
+/* UNRAND_VARIABILITY */
 {
     "Mace of Variability", "shimmering mace", 
     OBJ_WEAPONS, WPN_MACE, 0, 0, ETC_RANDOM, 700, 
@@ -99,7 +99,7 @@
     NULL, NULL, _VARIABILITY_world_reacts, { NULL }, NULL, 
 },
 
-/* 5: UNRAND_PRUNE */
+/* UNRAND_PRUNE */
 {
     "Glaive of Prune", "purple glaive", 
     OBJ_WEAPONS, WPN_GLAIVE, 0, +12, MAGENTA, 1000, 
@@ -118,7 +118,7 @@
     _PRUNE_equip, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 6: UNRAND_POWER */
+/* UNRAND_POWER */
 {
     "Sword of Power", "chunky great sword", 
     OBJ_WEAPONS, WPN_GREAT_SWORD, 0, 0, RED, 1000, 
@@ -137,7 +137,7 @@
     _POWER_equip, NULL, _POWER_world_reacts, { NULL }, NULL, 
 },
 
-/* 7: UNRAND_OLGREB */
+/* UNRAND_OLGREB */
 {
     "Staff of Olgreb", "green glowing staff", 
     OBJ_WEAPONS, WPN_QUARTERSTAFF, 0, 0, ETC_POISON, 1000, 
@@ -156,7 +156,7 @@
     _OLGREB_equip, _OLGREB_unequip, _OLGREB_world_reacts, { NULL }, _OLGREB_evoke, 
 },
 
-/* 8: UNRAND_WUCAD_MU */
+/* UNRAND_WUCAD_MU */
 {
     "Staff of Wucad Mu", "ephemeral quarterstaff", 
     OBJ_WEAPONS, WPN_QUARTERSTAFF, 0, 0, ETC_MAGIC, 1000, 
@@ -175,7 +175,7 @@
     _WUCAD_MU_equip, _WUCAD_MU_unequip, _WUCAD_MU_world_reacts, { _WUCAD_MU_melee_effect }, _WUCAD_MU_evoke, 
 },
 
-/* 9: UNRAND_VAMPIRES_TOOTH */
+/* UNRAND_VAMPIRES_TOOTH */
 {
     "Vampire's Tooth", "ivory dagger", 
     OBJ_WEAPONS, WPN_DAGGER, +3, +4, ETC_BONE, 1000, 
@@ -194,7 +194,7 @@
     _VAMPIRES_TOOTH_equip, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 10: UNRAND_CURSES */
+/* UNRAND_CURSES */
 {
     "Scythe of Curses", "warped scythe", 
     OBJ_WEAPONS, WPN_SCYTHE, +13, +13, ETC_NECRO, 800, 
@@ -213,7 +213,7 @@
     _CURSES_equip, NULL, _CURSES_world_reacts, { _CURSES_melee_effect }, NULL, 
 },
 
-/* 11: UNRAND_TORMENT */
+/* UNRAND_TORMENT */
 {
     "Sceptre of Torment", "jewelled golden mace", 
     OBJ_WEAPONS, WPN_MACE, +7, +6, ETC_GOLD, 1200, 
@@ -232,7 +232,7 @@
     _TORMENT_equip, NULL, _TORMENT_world_reacts, { _TORMENT_melee_effect }, NULL, 
 },
 
-/* 12: UNRAND_ZONGULDROK */
+/* UNRAND_ZONGULDROK */
 {
     "Sword of Zonguldrok", "bone long sword", 
     OBJ_WEAPONS, WPN_LONG_SWORD, +9, +9, ETC_BONE, 1250, 
@@ -251,7 +251,7 @@
     _ZONGULDROK_equip, NULL, _ZONGULDROK_world_reacts, { _ZONGULDROK_melee_effect }, NULL, 
 },
 
-/* 13: UNRAND_CEREBOV */
+/* UNRAND_CEREBOV */
 {
     "Sword of Cerebov", "great serpentine sword", 
     OBJ_WEAPONS, WPN_GREAT_SWORD, +6, +6, ETC_FIRE, 2000, 
@@ -270,7 +270,7 @@
     NULL, NULL, NULL, { _CEREBOV_melee_effect }, NULL, 
 },
 
-/* 14: UNRAND_DISPATER */
+/* UNRAND_DISPATER */
 {
     "Staff of Dispater", "golden staff", 
     OBJ_WEAPONS, WPN_QUARTERSTAFF, +4, +4, ETC_GOLD, 1200, 
@@ -289,7 +289,7 @@
     NULL, NULL, NULL, { _DISPATER_melee_effect }, _DISPATER_evoke, 
 },
 
-/* 15: UNRAND_ASMODEUS */
+/* UNRAND_ASMODEUS */
 {
     "Sceptre of Asmodeus", "ruby sceptre", 
     OBJ_WEAPONS, WPN_QUARTERSTAFF, +7, +7, ETC_BLOOD, 1500, 
@@ -308,7 +308,7 @@
     NULL, NULL, NULL, { _ASMODEUS_melee_effect }, _ASMODEUS_evoke, 
 },
 
-/* 16: UNRAND_BLOODBANE */
+/* UNRAND_BLOODBANE */
 {
     "long sword \"Bloodbane\"", "blackened long sword", 
     OBJ_WEAPONS, WPN_LONG_SWORD, +7, +8, ETC_DARK, 0, 
@@ -327,7 +327,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 17: UNRAND_FLAMING_DEATH */
+/* UNRAND_FLAMING_DEATH */
 {
     "scimitar of Flaming Death", "smoking scimitar", 
     OBJ_WEAPONS, WPN_SCIMITAR, +7, +5, ETC_FIRE, 0, 
@@ -346,7 +346,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 18: UNRAND_BRILLIANCE */
+/* UNRAND_BRILLIANCE */
 {
     "mace of Brilliance", "brightly glowing mace", 
     OBJ_WEAPONS, WPN_MACE, +5, +5, ETC_HOLY, 0, 
@@ -365,7 +365,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 19: UNRAND_LEECH */
+/* UNRAND_LEECH */
 {
     "demon blade \"Leech\"", "runed demon blade", 
     OBJ_WEAPONS, WPN_DEMON_BLADE, +13, +4, MAGENTA, 0, 
@@ -384,7 +384,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 20: UNRAND_CHILLY_DEATH */
+/* UNRAND_CHILLY_DEATH */
 {
     "dagger of Chilly Death", "sapphire dagger", 
     OBJ_WEAPONS, WPN_DAGGER, +5, +7, ETC_ICE, 0, 
@@ -403,7 +403,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 21: UNRAND_MORG */
+/* UNRAND_MORG */
 {
     "dagger \"Morg\"", "rusty dagger", 
     OBJ_WEAPONS, WPN_DAGGER, -1, +4, LIGHTRED, 0, 
@@ -422,7 +422,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 22: UNRAND_FINISHER */
+/* UNRAND_FINISHER */
 {
     "scythe \"Finisher\"", "blackened scythe", 
     OBJ_WEAPONS, WPN_SCYTHE, +3, +5, ETC_DARK, 0, 
@@ -441,7 +441,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 23: UNRAND_PUNK */
+/* UNRAND_PUNK */
 {
     "sling \"Punk\"", "blue sling", 
     OBJ_WEAPONS, WPN_SLING, +9, +12, ETC_ICE, 0, 
@@ -460,7 +460,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 24: UNRAND_KRISHNA */
+/* UNRAND_KRISHNA */
 {
     "bow of Krishna \"Sharnga\"", "golden bow", 
     OBJ_WEAPONS, WPN_BOW, +8, +8, ETC_GOLD, 0, 
@@ -479,7 +479,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 25: UNRAND_SKULLCRUSHER */
+/* UNRAND_SKULLCRUSHER */
 {
     "giant club \"Skullcrusher\"", "brutal giant club", 
     OBJ_WEAPONS, WPN_GIANT_CLUB, +0, +5, BROWN, 0, 
@@ -498,7 +498,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 26: UNRAND_GUARD */
+/* UNRAND_GUARD */
 {
     "glaive of the Guard", "polished glaive", 
     OBJ_WEAPONS, WPN_GLAIVE, +5, +8, ETC_ELECTRICITY, 0, 
@@ -517,7 +517,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 27: UNRAND_JIHAD */
+/* UNRAND_JIHAD */
 {
     "sword of Jihad", "crystal sword", 
     OBJ_WEAPONS, WPN_LONG_SWORD, +12, +10, ETC_HOLY, 0, 
@@ -536,7 +536,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 28: UNRAND_HELLFIRE */
+/* UNRAND_HELLFIRE */
 {
     "crossbow \"Hellfire\"", "flaming crossbow", 
     OBJ_WEAPONS, WPN_CROSSBOW, +6, +9, ETC_FIRE, 0, 
@@ -555,7 +555,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 29: UNRAND_DOOM_KNIGHT */
+/* UNRAND_DOOM_KNIGHT */
 {
     "sword of the Doom Knight", "adamantine great sword", 
     OBJ_WEAPONS, WPN_GREAT_SWORD, +13, +13, BLUE, 0, 
@@ -574,7 +574,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 30: UNRAND_EOS */
+/* UNRAND_EOS */
 {
     "\"Eos\"", "encrusted morningstar", 
     OBJ_WEAPONS, WPN_MORNINGSTAR, +5, +5, ETC_JEWEL, 0, 
@@ -593,7 +593,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 31: UNRAND_BOTONO */
+/* UNRAND_BOTONO */
 {
     "spear of the Botono", "ebony spear", 
     OBJ_WEAPONS, WPN_SPEAR, +2, +10, ETC_UNHOLY, 0, 
@@ -612,7 +612,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 32: UNRAND_OCTOPUS_KING */
+/* UNRAND_OCTOPUS_KING */
 {
     "trident of the Octopus King", "mangy trident", 
     OBJ_WEAPONS, WPN_TRIDENT, +10, +4, ETC_WATER, 0, 
@@ -631,7 +631,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 33: UNRAND_ARGA */
+/* UNRAND_ARGA */
 {
     "mithril axe \"Arga\"", "mithril axe", 
     OBJ_WEAPONS, WPN_WAR_AXE, +10, +6, WHITE, 0, 
@@ -650,7 +650,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 34: UNRAND_ELEMENTAL_STAFF */
+/* UNRAND_ELEMENTAL_STAFF */
 {
     "Elemental Staff", "black staff", 
     OBJ_WEAPONS, WPN_QUARTERSTAFF, +3, +1, DARKGREY, 0, 
@@ -669,7 +669,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 35: UNRAND_SNIPER */
+/* UNRAND_SNIPER */
 {
     "hand crossbow \"Sniper\"", "black crossbow", 
     OBJ_WEAPONS, WPN_HAND_CROSSBOW, +10, +0, ETC_DARK, 0, 
@@ -688,7 +688,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 36: UNRAND_PIERCER */
+/* UNRAND_PIERCER */
 {
     "longbow \"Piercer\"", "very long metal bow", 
     OBJ_WEAPONS, WPN_LONGBOW, +2, +10, CYAN, 0, 
@@ -707,7 +707,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 37: UNRAND_BLOWGUN_ASSASSIN */
+/* UNRAND_BLOWGUN_ASSASSIN */
 {
     "blowgun of the Assassin", "tiny blowgun", 
     OBJ_WEAPONS, WPN_BLOWGUN, +6, +6, WHITE, 0, 
@@ -726,7 +726,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 38: UNRAND_WYRMBANE */
+/* UNRAND_WYRMBANE */
 {
     "Wyrmbane", "scale-covered lance", 
     OBJ_WEAPONS, WPN_SPEAR, +9, +6, LIGHTGREEN, 0, 
@@ -745,7 +745,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 39: UNRAND_SPRIGGANS_KNIFE */
+/* UNRAND_SPRIGGANS_KNIFE */
 {
     "Spriggan's Knife", "dainty little knife", 
     OBJ_WEAPONS, WPN_KNIFE, +4, +10, LIGHTCYAN, 0, 
@@ -764,7 +764,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 40: UNRAND_PLUTONIUM_SWORD */
+/* UNRAND_PLUTONIUM_SWORD */
 {
     "plutonium sword", "glowing long sword", 
     OBJ_WEAPONS, WPN_LONG_SWORD, +12, +16, ETC_RANDOM, 0, 
@@ -783,7 +783,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 41: UNRAND_UNDEADHUNTER */
+/* UNRAND_UNDEADHUNTER */
 {
     "great mace \"Undeadhunter\"", "great steel mace", 
     OBJ_WEAPONS, WPN_GREAT_MACE, +7, +7, LIGHTGREY, 0, 
@@ -802,7 +802,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 42: UNRAND_SERPENT_SCOURGE */
+/* UNRAND_SERPENT_SCOURGE */
 {
     "whip \"Serpent-Scourge\"", "forked whip", 
     OBJ_WEAPONS, WPN_WHIP, +5, +10, DARKGREY, 0, 
@@ -821,7 +821,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 43: UNRAND_ACCURACY */
+/* UNRAND_ACCURACY */
 {
     "knife of Accuracy", "thin dagger", 
     OBJ_WEAPONS, WPN_DAGGER, +27, -1, LIGHTCYAN, 0, 
@@ -840,7 +840,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 44: UNRAND_CRYSTAL_SPEAR */
+/* UNRAND_CRYSTAL_SPEAR */
 {
     "Lehudib's crystal spear", "crystal spear", 
     OBJ_WEAPONS, WPN_SPEAR, +6, +6, GREEN, 0, 
@@ -859,7 +859,45 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 45: UNRAND_IGNORANCE */
+/* UNRAND_CAPTAINS_CUTLASS */
+{
+    "captain's cutlass", "black cutlass", 
+    OBJ_WEAPONS, WPN_SABRE, +6, +7, DARKGRAY, 0, 
+    UNRAND_FLAG_NONE, 
+    {
+        SPWPN_SPEED, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 
+        0, 0, 3, 0, 0, 0, 
+        0, 
+    },
+    "", 
+    "", 
+    "This infamous weapon was used by a vile pirate captain to slaughter countless innocents.  Finally, he met his destiny when a kraken swallowed his ship with all the crew aboard. The cutlass was thought to be forever lost, but now you have a proof to the contrary in your very hands.", 
+    NULL, NULL, NULL, { NULL }, NULL, 
+},
+
+/* UNRAND_STORM_BOW */
+{
+    "storm bow", "night blue bow", 
+    OBJ_WEAPONS, WPN_LONGBOW, +8, +8, BLUE, 0, 
+    UNRAND_FLAG_SPECIAL, 
+    {
+        SPWPN_ELECTROCUTION, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 
+        0, 
+    },
+    "This bow has the color of dark rain clouds, and the smell of wet ozone.", 
+    "", 
+    "", 
+    NULL, NULL, _STORM_BOW_world_reacts, { NULL }, NULL, 
+},
+
+/* UNRAND_IGNORANCE */
 {
     "shield of Ignorance", "dull large shield", 
     OBJ_ARMOUR, ARM_LARGE_SHIELD, +8, 0, BROWN, 0, 
@@ -878,7 +916,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 46: UNRAND_AUGMENTATION */
+/* UNRAND_AUGMENTATION */
 {
     "robe of Augmentation", "silk robe", 
     OBJ_ARMOUR, ARM_ROBE, +4, 0, LIGHTRED, 0, 
@@ -897,7 +935,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 47: UNRAND_THIEF */
+/* UNRAND_THIEF */
 {
     "cloak of the Thief", "tattered cloak", 
     OBJ_ARMOUR, ARM_CLOAK, +1, 0, ETC_DARK, 0, 
@@ -916,7 +954,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 48: UNRAND_BULLSEYE */
+/* UNRAND_BULLSEYE */
 {
     "shield \"Bullseye\"", "round shield", 
     OBJ_ARMOUR, ARM_SHIELD, +15, 0, RED, 0, 
@@ -935,7 +973,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 49: UNRAND_DYROVEPREVA */
+/* UNRAND_DYROVEPREVA */
 {
     "crown of Dyrovepreva", "jewelled bronze crown", 
     OBJ_ARMOUR, ARM_CAP, +3, 0, ETC_JEWEL, 0, 
@@ -954,7 +992,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 50: UNRAND_BEAR_SPIRIT */
+/* UNRAND_BEAR_SPIRIT */
 {
     "hat of the Bear Spirit", "fur hat", 
     OBJ_ARMOUR, ARM_CAP, +2, 0, DARKGREY, 0, 
@@ -973,7 +1011,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 51: UNRAND_MISFORTUNE */
+/* UNRAND_MISFORTUNE */
 {
     "robe of Misfortune", "fabulously ornate robe", 
     OBJ_ARMOUR, ARM_ROBE, -5, 0, MAGENTA, 0, 
@@ -992,7 +1030,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 52: UNRAND_FLASH */
+/* UNRAND_FLASH */
 {
     "cloak of Flash", "vibrating cloak", 
     OBJ_ARMOUR, ARM_CLOAK, +3, 0, ETC_GILA, 0, 
@@ -1011,7 +1049,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 53: UNRAND_BOOTS_ASSASSIN */
+/* UNRAND_BOOTS_ASSASSIN */
 {
     "boots of the Assassin", "soft boots", 
     OBJ_ARMOUR, ARM_BOOTS, +2, 0, BROWN, 0, 
@@ -1030,7 +1068,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 54: UNRAND_LEAR */
+/* UNRAND_LEAR */
 {
     "Lear's chain mail", "golden chain mail", 
     OBJ_ARMOUR, ARM_CHAIN_MAIL, -1, 0, ETC_GOLD, 0, 
@@ -1049,7 +1087,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 55: UNRAND_ZHOR */
+/* UNRAND_ZHOR */
 {
     "skin of Zhor", "smelly skin", 
     OBJ_ARMOUR, ARM_ANIMAL_SKIN, +4, 0, BROWN, 0, 
@@ -1068,7 +1106,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 56: UNRAND_SALAMANDER */
+/* UNRAND_SALAMANDER */
 {
     "salamander hide armour", "red leather armour", 
     OBJ_ARMOUR, ARM_LEATHER_ARMOUR, +3, 0, ETC_FIRE, 0, 
@@ -1087,7 +1125,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 57: UNRAND_WAR */
+/* UNRAND_WAR */
 {
     "gauntlets of War", "thick gauntlets", 
     OBJ_ARMOUR, ARM_GLOVES, +3, 0, BROWN, 0, 
@@ -1106,7 +1144,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 58: UNRAND_RESISTANCE */
+/* UNRAND_RESISTANCE */
 {
     "shield of Resistance", "bronze shield", 
     OBJ_ARMOUR, ARM_SHIELD, +5, 0, LIGHTRED, 0, 
@@ -1125,7 +1163,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 59: UNRAND_FOLLY */
+/* UNRAND_FOLLY */
 {
     "robe of Folly", "dull robe", 
     OBJ_ARMOUR, ARM_ROBE, -1, 0, LIGHTGREY, 0, 
@@ -1144,7 +1182,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 60: UNRAND_MAXWELL */
+/* UNRAND_MAXWELL */
 {
     "Maxwell's patent armour", "weird-looking armour", 
     OBJ_ARMOUR, ARM_PLATE_MAIL, +10, 0, LIGHTGREEN, 0, 
@@ -1163,7 +1201,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 61: UNRAND_DRAGONMASK */
+/* UNRAND_DRAGONMASK */
 {
     "mask of the Dragon", "blue mask", 
     OBJ_ARMOUR, ARM_CAP, 0, 0, ETC_SHIMMER_BLUE, 0, 
@@ -1182,7 +1220,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 62: UNRAND_NIGHT */
+/* UNRAND_NIGHT */
 {
     "robe of Night", "black robe", 
     OBJ_ARMOUR, ARM_ROBE, +4, 0, ETC_DARK, 0, 
@@ -1201,7 +1239,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 63: UNRAND_DRAGON_KING */
+/* UNRAND_DRAGON_KING */
 {
     "armour of the Dragon King", "shiny dragon armour", 
     OBJ_ARMOUR, ARM_GOLD_DRAGON_ARMOUR, +5, 0, ETC_GOLD, 0, 
@@ -1220,7 +1258,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 64: UNRAND_ALCHEMIST */
+/* UNRAND_ALCHEMIST */
 {
     "hat of the Alchemist", "dirty hat", 
     OBJ_ARMOUR, ARM_WIZARD_HAT, +2, 0, MAGENTA, 0, 
@@ -1239,7 +1277,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 65: UNRAND_FENCERS_GLOVES */
+/* UNRAND_FENCERS_GLOVES */
 {
     "Fencer's gloves", "silk gloves", 
     OBJ_ARMOUR, ARM_GLOVES, +2, 0, WHITE, 0, 
@@ -1258,7 +1296,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 66: UNRAND_STARLIGHT */
+/* UNRAND_STARLIGHT */
 {
     "cloak of Starlight", "phosphorescent cloak", 
     OBJ_ARMOUR, ARM_CLOAK, 0, 0, ETC_ICE, 0, 
@@ -1277,7 +1315,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 67: UNRAND_RATSKIN_CLOAK */
+/* UNRAND_RATSKIN_CLOAK */
 {
     "ratskin cloak", "motley cloak", 
     OBJ_ARMOUR, ARM_CLOAK, +1, 0, ETC_BEOGH, 0, 
@@ -1296,7 +1334,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 68: UNRAND_AIR */
+/* UNRAND_AIR */
 {
     "amulet of the Air", "sky-blue amulet", 
     OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT, 0, 0, ETC_ELECTRICITY, 0, 
@@ -1315,7 +1353,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 69: UNRAND_SHADOWS */
+/* UNRAND_SHADOWS */
 {
     "ring of Shadows", "black ring", 
     OBJ_JEWELLERY, RING_INVISIBILITY, 0, 0, ETC_DARK, 0, 
@@ -1334,7 +1372,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 70: UNRAND_CEKUGOB */
+/* UNRAND_CEKUGOB */
 {
     "amulet of Cekugob", "crystal amulet", 
     OBJ_JEWELLERY, AMU_WARDING, 0, 0, LIGHTGREY, 0, 
@@ -1353,7 +1391,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 71: UNRAND_FOUR_WINDS */
+/* UNRAND_FOUR_WINDS */
 {
     "amulet of the Four Winds", "jade amulet", 
     OBJ_JEWELLERY, AMU_CLARITY, 0, 0, ETC_POISON, 0, 
@@ -1372,7 +1410,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 72: UNRAND_BLOODLUST */
+/* UNRAND_BLOODLUST */
 {
     "necklace of Bloodlust", "blood-stained necklace", 
     OBJ_JEWELLERY, AMU_RAGE, 0, 0, ETC_BLOOD, 0, 
@@ -1391,7 +1429,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 73: UNRAND_SHAOLIN */
+/* UNRAND_SHAOLIN */
 {
     "ring of Shaolin", "jade ring", 
     OBJ_JEWELLERY, RING_EVASION, +8, 0, ETC_POISON, 0, 
@@ -1410,7 +1448,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 74: UNRAND_ROBUSTNESS */
+/* UNRAND_ROBUSTNESS */
 {
     "ring of Robustness", "steel ring", 
     OBJ_JEWELLERY, RING_PROTECTION, +8, 0, LIGHTGREY, 0, 
@@ -1429,7 +1467,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 75: UNRAND_MAGE */
+/* UNRAND_MAGE */
 {
     "ring of the Mage", "sapphire ring", 
     OBJ_JEWELLERY, RING_WIZARDRY, 0, 0, ETC_ENCHANT, 0, 
@@ -1448,7 +1486,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 76: UNRAND_SHIELDING */
+/* UNRAND_SHIELDING */
 {
     "brooch of Shielding", "shield-shaped amulet", 
     OBJ_JEWELLERY, AMU_WARDING, 0, 0, ETC_MAGIC, 0, 
@@ -1467,7 +1505,7 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
-/* 77: UNRAND_DUMMY2 */
+/* UNRAND_DUMMY2 */
 {
     "DUMMY UNRANDART 2", "DUMMY UNRANDART 2", 
     OBJ_UNASSIGNED, 250, 250, 250, BLACK, 0, 
