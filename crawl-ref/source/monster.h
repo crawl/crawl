@@ -60,6 +60,7 @@ public:
     void reset();
 
 public:
+    // Possibly some of these should be moved into the hash table
     std::string mname;
 
     monster_type type;
@@ -101,6 +102,8 @@ public:
 
     std::string seen_context;          // Non-standard context for
                                        // AI_SEE_MONSTER
+
+    CrawlHashTable props;
 
 public:
     mon_attitude_type temp_attitude() const;

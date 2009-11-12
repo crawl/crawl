@@ -1928,6 +1928,8 @@ static void marshall_monster(writer &th, const monsters &m)
         ASSERT(m.ghost.get());
         marshallGhost(th, *m.ghost);
     }
+
+    m.props.write(th);
 }
 
 static void tag_construct_level_monsters(writer &th)
@@ -2245,6 +2247,12 @@ static void unmarshall_monster(reader &th, monsters &m)
 
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th, _tag_minor_version));
+
+    if (_tag_minor_version >= TAG_MINOR_MON_PROP)
+    {
+        m.props.clear();
+        m.props.read(th);
+    }
 
     m.check_speed();
 }

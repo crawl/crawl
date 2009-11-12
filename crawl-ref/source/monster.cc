@@ -52,7 +52,7 @@ monsters::monsters()
       inv(NON_ITEM), spells(), attitude(ATT_HOSTILE), behaviour(BEH_WANDER),
       foe(MHITYOU), enchantments(), flags(0L), experience(0), number(0),
       colour(BLACK), foe_memory(0), shield_blocks(0), god(GOD_NO_GOD), ghost(),
-      seen_context("")
+      seen_context(""), props()
 {
     travel_path.clear();
 }

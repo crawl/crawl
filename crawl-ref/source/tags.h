@@ -61,7 +61,8 @@ enum tag_minor_version
     TAG_MINOR_DSTRAITS   =  9,   // Pre-calculate demonspawn mutations
     TAG_MINOR_YOU_PROP   = 10,   // Player class has CrawlHashTable
     TAG_MINOR_SMALL_HASH = 11,   // Reduced RAM size of CrawlHashTable
-    TAG_MINOR_VERSION    = 11    // Current version.  (Keep equal to max.)
+    TAG_MINOR_MON_PROP   = 12,   // Monster class has CrawlHashTable
+    TAG_MINOR_VERSION    = 12    // Current version.  (Keep equal to max.)
 };
 
 
