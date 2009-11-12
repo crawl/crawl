@@ -418,7 +418,7 @@ endif
 
 # Debug
 # No optimization, full debugging.
-ifeq ($(MAKECMDGOALS),debug)
+ifneq (,$(findstring debug,$(MAKECMDGOALS)))
 	FULLDEBUG=YesPlease
 	WIZARD=YesPlease
 	DEBUG=YesPlease
@@ -427,14 +427,14 @@ endif
 
 # Wizard
 # Optimized, with wizard mode.
-ifeq ($(MAKECMDGOALS),wizard)
+ifneq (,$(findstring wizard,$(MAKECMDGOALS)))
 	WIZARD=YesPlease
 	DEBUG=YesPlease
 endif
 
 # Profile
 # Optimized, with full debugging.
-ifeq ($(MAKECMDGOALS),profile)
+ifneq (,$(findstring profile,$(MAKECMDGOALS)))
 	FULLDEBUG=YesPlease
 	WIZARD=YesPlease
 	DEBUG=YesPlease
