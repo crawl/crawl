@@ -3832,15 +3832,9 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
                coord_def pos)
 {
     // Is there an open slot in menv?
-    int midx = NON_MONSTER;
-    for (int i = 0; i < MAX_MONSTERS; i++)
-        if (menv[i].type == MONS_NO_MONSTER)
-        {
-            midx = i;
-            break;
-        }
+    monsters* mons = get_free_monster();
 
-    if (midx == NON_MONSTER)
+    if (!mons)
         return (NON_MONSTER);
 
     if (!in_bounds(pos))
@@ -3866,11 +3860,9 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
 
     ASSERT( !actor_at(pos) );
 
-    monsters &mon(menv[midx]);
-
-    mon          = *orig;
-    mon.set_position(pos);
-    mgrd(pos)    = midx;
+    *mons          = *orig;
+    mons->set_position(pos);
+    mgrd(pos)    = mons->mindex();
 
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
@@ -3883,14 +3875,14 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
         const int new_index = get_item_slot(0);
         if (new_index == NON_ITEM)
         {
-            mon.unequip(mitm[old_index], i, 0, true);
-            mon.inv[i] = NON_ITEM;
+            mons->unequip(mitm[old_index], i, 0, true);
+            mons->inv[i] = NON_ITEM;
             continue;
         }
 
-        mon.inv[i]      = new_index;
+        mons->inv[i]      = new_index;
         mitm[new_index] = mitm[old_index];
-        mitm[new_index].set_holding_monster(midx);
+        mitm[new_index].set_holding_monster(mons->mindex());
     }
 
     bool _obvious;
@@ -3898,24 +3890,24 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
         obvious = &_obvious;
     *obvious = false;
 
-    if (you.can_see(orig) && you.can_see(&mon))
+    if (you.can_see(orig) && you.can_see(mons))
     {
         if (!quiet)
             simple_monster_message(orig, " is duplicated!");
         *obvious = true;
     }
 
-    mark_interesting_monst(&mon, mon.behaviour);
-    if (you.can_see(&mon))
+    mark_interesting_monst(mons, mons->behaviour);
+    if (you.can_see(mons))
     {
-        handle_seen_interrupt(&mon);
+        handle_seen_interrupt(mons);
         viewwindow(false);
     }
 
     if (crawl_state.arena)
-        arena_placed_monster(&mon);
+        arena_placed_monster(mons);
 
-    return (midx);
+    return (mons->mindex());
 }
 
 std::string summoned_poof_msg(const monsters* monster, bool plural)

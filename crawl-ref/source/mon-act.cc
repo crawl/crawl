@@ -2128,18 +2128,10 @@ static bool _jelly_divide(monsters *parent)
     if ( num_spots == 0 )
         return (false);
 
-    int k = 0;
-
     // Now that we have a spot, find a monster slot {dlb}:
-    for (k = 0; k < MAX_MONSTERS; k++)
-    {
-        child = &menv[k];
-
-        if (child->type == -1)
-            break;
-        else if (k == MAX_MONSTERS - 1)
-            return (false);
-    }
+    child = get_free_monster();
+    if (!child)
+        return (false);
 
     // Handle impact of split on parent {dlb}:
     parent->max_hit_points /= 2;
@@ -2158,7 +2150,7 @@ static bool _jelly_divide(monsters *parent)
     child->speed_increment = 70 + random2(5);
     child->moveto(child_spot);
 
-    mgrd(child->pos()) = k;
+    mgrd(child->pos()) = child->mindex();
 
     if (!simple_monster_message(parent, " splits in two!"))
         if (player_can_hear(parent->pos()) || player_can_hear(child->pos()))

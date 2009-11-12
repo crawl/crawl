@@ -34,6 +34,7 @@
 #include "misc.h"
 #include "message.h"
 #include "mon-cast.h"
+#include "mon-place.h"
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -1039,13 +1040,8 @@ static void _try_monster_cast(spell_type spell, int powc,
         return;
     }
 
-    int midx;
-
-    for (midx = 0; midx < MAX_MONSTERS; midx++)
-        if (menv[midx].type == MONS_NO_MONSTER)
-            break;
-
-    if (midx == MAX_MONSTERS)
+    monsters* mon = get_free_monster();
+    if (!mon)
     {
         mpr("Couldn't try casting monster spell because there is "
             "no empty monster slot.");
@@ -1053,8 +1049,6 @@ static void _try_monster_cast(spell_type spell, int powc,
     }
 
     mpr("Invalid player spell, attempting to cast it as monster spell.");
-
-    monsters* mon = &menv[midx];
 
     mon->mname      = "Dummy Monster";
     mon->type       = MONS_HUMAN;
@@ -1079,7 +1073,7 @@ static void _try_monster_cast(spell_type spell, int powc,
     else
         mon->foe = mgrd(spd.target);
 
-    mgrd(you.pos()) = midx;
+    mgrd(you.pos()) = mon->mindex();
 
     mons_cast(mon, beam, spell);
 
