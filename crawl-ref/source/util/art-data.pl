@@ -589,12 +589,10 @@ sub write_data
 ENDofTEXT
 
     my $artefact;
-    my $art_num = 1;
     foreach $artefact (@all_artefacts)
     {
-        print HEADER "/* $art_num: UNRAND_$artefact->{_ENUM} */\n";
+        print HEADER "/* UNRAND_$artefact->{_ENUM} */\n";
         print HEADER art_to_str($artefact);
-        $art_num++;
     }
 
     close(HEADER);
