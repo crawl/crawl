@@ -243,7 +243,7 @@ enum beam_type                  // beam[].flavour
     BEAM_ENSLAVE_DEMON,
     BEAM_BLINK,
     BEAM_PETRIFY,
-    BEAM_BACKLIGHT,               // 45
+    BEAM_CORONA,               // 45
     BEAM_PORKALATOR,
     BEAM_HIBERNATION,
     BEAM_BERSERK,
@@ -1147,7 +1147,7 @@ enum duration_type
 
     DUR_CONFUSING_TOUCH,
     DUR_SURE_BLADE,
-    DUR_BACKLIGHT,
+    DUR_CORONA,
     DUR_DEATHS_DOOR,
     DUR_FIRE_SHIELD,
 
@@ -1221,7 +1221,7 @@ enum enchant_type
     ENCH_ROT,                          //   10
     ENCH_SUMMON,
     ENCH_ABJ,
-    ENCH_BACKLIGHT,
+    ENCH_CORONA,
     ENCH_CHARM,
     ENCH_STICKY_FLAME,                 //   15
     ENCH_GLOWING_SHAPESHIFTER,
@@ -2832,7 +2832,7 @@ enum spell_type
     SPELL_SHATTER,
     SPELL_DISPERSAL,
     SPELL_DISCHARGE,
-    SPELL_BACKLIGHT,
+    SPELL_CORONA,
     SPELL_INTOXICATE,
     SPELL_EVAPORATE,
     SPELL_FRAGMENTATION,
@@ -3120,7 +3120,7 @@ enum zap_type
     ZAP_ORB_OF_FRAGMENTATION,
     ZAP_THROW_ICICLE,
     ZAP_ICE_STORM,
-    ZAP_BACKLIGHT,
+    ZAP_CORONA,
     ZAP_HIBERNATION,
     ZAP_FLAME_TONGUE,
     ZAP_SANDBLAST,

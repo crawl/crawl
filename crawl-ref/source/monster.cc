@@ -2847,7 +2847,7 @@ bool monsters::asleep() const
 
 bool monsters::backlit(bool check_haloed) const
 {
-    return (has_ench(ENCH_BACKLIGHT)
+    return (has_ench(ENCH_CORONA)
         || ((check_haloed) ? haloed() : false));
 }
 
@@ -4319,7 +4319,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
-    case ENCH_BACKLIGHT:
+    case ENCH_CORONA:
         if (!quiet)
         {
             if (visible_to(&you))
@@ -4512,7 +4512,7 @@ void monsters::timeout_enchantments(int levels)
     {
         switch (i->first)
         {
-        case ENCH_POISON: case ENCH_ROT: case ENCH_BACKLIGHT:
+        case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM:  case ENCH_SLEEP_WARY:
@@ -4658,7 +4658,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_PETRIFYING:
     case ENCH_PETRIFIED:
     case ENCH_SICK:
-    case ENCH_BACKLIGHT:
+    case ENCH_CORONA:
     case ENCH_ABJ:
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
@@ -6019,7 +6019,7 @@ int mon_enchant::calc_duration(const monsters *mons,
             cturn = 1000 * (deg - 1) / _mod_speed(333, mons->speed);
         cturn += 1000 / _mod_speed(250, mons->speed);
         break;
-    case ENCH_BACKLIGHT:
+    case ENCH_CORONA:
         if (deg > 1)
             cturn = 1000 * (deg - 1) / _mod_speed(200, mons->speed);
         cturn += 1000 / _mod_speed(100, mons->speed);

@@ -1036,22 +1036,22 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     if (mons_class_flag(monster->type, M_GLOWS))
         return (false);
 
-    mon_enchant bklt = monster->get_ench(ENCH_BACKLIGHT);
+    mon_enchant bklt = monster->get_ench(ENCH_CORONA);
     const int lvl = bklt.degree;
 
     // This enchantment overrides invisibility (neat).
     if (monster->has_ench(ENCH_INVIS))
     {
-        if (!monster->has_ench(ENCH_BACKLIGHT))
+        if (!monster->has_ench(ENCH_CORONA))
         {
             monster->add_ench(
-                mon_enchant(ENCH_BACKLIGHT, 1, KC_OTHER, random_range(30, 50)));
+                mon_enchant(ENCH_CORONA, 1, KC_OTHER, random_range(30, 50)));
             simple_monster_message(monster, " is lined in light.");
         }
         return (true);
     }
 
-    monster->add_ench(mon_enchant(ENCH_BACKLIGHT, 1));
+    monster->add_ench(mon_enchant(ENCH_CORONA, 1));
 
     if (lvl == 0)
         simple_monster_message(monster, " is outlined in light.");

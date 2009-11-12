@@ -2504,7 +2504,7 @@ static void _decrement_durations()
         Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
-    if (you.duration[DUR_BACKLIGHT] && !--you.duration[DUR_BACKLIGHT]
+    if (you.duration[DUR_CORONA] && !--you.duration[DUR_CORONA]
         && !you.backlit())
     {
         mpr("You are no longer glowing.", MSGCH_DURATION);

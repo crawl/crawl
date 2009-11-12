@@ -1738,8 +1738,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_confusing_touch(powc);
         break;
 
-    case SPELL_BACKLIGHT:
-        if (!zapping(ZAP_BACKLIGHT, powc + 10, beam, true))
+    case SPELL_CORONA:
+        if (!zapping(ZAP_CORONA, powc + 10, beam, true))
             return (SPRET_ABORT);
         break;
 

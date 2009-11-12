@@ -1181,14 +1181,14 @@ const zap_info zap_data[] = {
     },
 
     {
-        ZAP_BACKLIGHT,
+        ZAP_CORONA,
         "0",
         100,
         NULL,
         NULL,
         BLUE,
         true,
-        BEAM_BACKLIGHT,
+        BEAM_CORONA,
         DCHAR_SPACE,
         false,
         false,
@@ -3793,7 +3793,7 @@ void bolt::affect_player_enchantment()
         you.put_to_sleep(ench_power);
         break;
 
-    case BEAM_BACKLIGHT:
+    case BEAM_CORONA:
         you.backlight();
         obvious_effect = true;
         break;
@@ -5221,7 +5221,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         }
         return (MON_UNAFFECTED);
 
-    case BEAM_BACKLIGHT:
+    case BEAM_CORONA:
         if (backlight_monsters(mon->pos(), hit, 0))
         {
             obvious_effect = true;
@@ -5324,7 +5324,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
         {
             // A casting of invisibility erases backlight.
-            mon->del_ench(ENCH_BACKLIGHT);
+            mon->del_ench(ENCH_CORONA);
 
             // Can't use simple_monster_message() here, since it checks
             // for visibility of the monster (and it's now invisible).
@@ -6127,7 +6127,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_ENSLAVE_DEMON:        return ("enslave demon");
     case BEAM_BLINK:                return ("blink");
     case BEAM_PETRIFY:              return ("petrify");
-    case BEAM_BACKLIGHT:            return ("backlight");
+    case BEAM_CORONA:            return ("backlight");
     case BEAM_PORKALATOR:           return ("porkalator");
     case BEAM_HIBERNATION:                return ("sleep");
     case BEAM_BERSERK:              return ("berserk");

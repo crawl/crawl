@@ -1646,7 +1646,7 @@ static void _give_basic_spells(job_type which_job)
         which_spell = SPELL_PAIN;
         break;
     case JOB_ENCHANTER:
-        which_spell = SPELL_BACKLIGHT;
+        which_spell = SPELL_CORONA;
         break;
     case JOB_FIRE_ELEMENTALIST:
         which_spell = SPELL_FLAME_TONGUE;
@@ -2427,7 +2427,7 @@ static void _give_wanderer_spell(skill_type skill)
         break;
 
     case SK_ENCHANTMENTS:
-        spell = SPELL_BACKLIGHT;
+        spell = SPELL_CORONA;
         break;
     }
 

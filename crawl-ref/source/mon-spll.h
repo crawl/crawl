@@ -1080,7 +1080,7 @@
        SPELL_SLOW,
        SPELL_SUMMON_UGLY_THING,
        SPELL_PORKALATOR,
-       SPELL_BACKLIGHT,
+       SPELL_CORONA,
        SPELL_INVISIBILITY
       }
     },
@@ -1088,7 +1088,7 @@
     {  MST_DOWAN,
       {
        SPELL_THROW_FROST,
-       SPELL_BACKLIGHT,
+       SPELL_CORONA,
        SPELL_BLINK,
        SPELL_THROW_FLAME,
        SPELL_HASTE_OTHER,

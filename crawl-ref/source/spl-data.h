@@ -1807,7 +1807,7 @@
 },
 
 {
-    SPELL_BACKLIGHT, "Corona",
+    SPELL_CORONA, "Corona",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,

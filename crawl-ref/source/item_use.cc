@@ -5069,7 +5069,7 @@ static void _vulnerability_scroll()
         ENCH_FEAR,
         ENCH_CONFUSION,
         ENCH_INVIS,
-        ENCH_BACKLIGHT,
+        ENCH_CORONA,
         ENCH_CHARM,
         ENCH_PARALYSIS,
         ENCH_PETRIFYING,

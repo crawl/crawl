@@ -69,7 +69,7 @@ static spell_type search_order_conj[] = {
     SPELL_SANDBLAST,
     SPELL_MAGIC_DART,
     SPELL_HIBERNATION,
-    SPELL_BACKLIGHT,
+    SPELL_CORONA,
     SPELL_NO_SPELL,                        // end search
 };
 
@@ -114,7 +114,7 @@ static spell_type search_order_misc[] = {
     SPELL_TELEPORT_OTHER,
 // 10
     SPELL_DIG,
-    SPELL_BACKLIGHT,
+    SPELL_CORONA,
     SPELL_NO_SPELL,                        // end search
 };
 

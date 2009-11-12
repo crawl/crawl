@@ -6895,7 +6895,7 @@ bool player::visible_to(const actor *looker) const
 
 bool player::backlit(bool check_haloed) const
 {
-    return (get_contamination_level() > 0 || duration[DUR_BACKLIGHT]
+    return (get_contamination_level() > 0 || duration[DUR_CORONA]
             || (check_haloed ? haloed() : false));
 }
 
@@ -6904,22 +6904,22 @@ void player::backlight()
 {
     if (!this->duration[DUR_INVIS])
     {
-        if (this->duration[DUR_BACKLIGHT])
+        if (this->duration[DUR_CORONA])
             mpr("You glow brighter.");
         else
             mpr("You are outlined in light.");
 
-        this->duration[DUR_BACKLIGHT] += random_range(15, 35);
-        if (this->duration[DUR_BACKLIGHT] > 250)
-            this->duration[DUR_BACKLIGHT] = 250;
+        this->duration[DUR_CORONA] += random_range(15, 35);
+        if (this->duration[DUR_CORONA] > 250)
+            this->duration[DUR_CORONA] = 250;
     }
     else
     {
         mpr("You feel strangely conspicuous.");
 
-        this->duration[DUR_BACKLIGHT] += random_range(3, 5);
-        if (this->duration[DUR_BACKLIGHT] > 250)
-            this->duration[DUR_BACKLIGHT] = 250;
+        this->duration[DUR_CORONA] += random_range(3, 5);
+        if (this->duration[DUR_CORONA] > 250)
+            this->duration[DUR_CORONA] = 250;
     }
 }
 

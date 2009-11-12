@@ -320,7 +320,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // 24 - Book of Charms
-    {SPELL_BACKLIGHT,
+    {SPELL_CORONA,
      SPELL_REPEL_MISSILES,
      SPELL_HIBERNATION,
      SPELL_CONFUSE,

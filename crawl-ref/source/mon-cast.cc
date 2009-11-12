@@ -271,8 +271,8 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_HASTE;
         break;
 
-    case SPELL_BACKLIGHT:
-        beam.flavour  = BEAM_BACKLIGHT;
+    case SPELL_CORONA:
+        beam.flavour  = BEAM_CORONA;
         beam.is_beam  = true;
         break;
 

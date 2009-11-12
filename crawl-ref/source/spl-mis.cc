@@ -630,7 +630,7 @@ void MiscastEffect::_potion_effect(int pot_eff, int pot_pow)
             // There's no levitation enchantment for monsters, and,
             // anyway, it's not nearly as inconvenient for monsters as
             // for the player, so backlight them instead.
-            mon_target->add_ench(mon_enchant(ENCH_BACKLIGHT, pot_pow, kc));
+            mon_target->add_ench(mon_enchant(ENCH_CORONA, pot_pow, kc));
             break;
         case POT_BERSERK_RAGE:
             if (target->can_go_berserk())

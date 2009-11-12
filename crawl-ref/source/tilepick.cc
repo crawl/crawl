@@ -2819,7 +2819,7 @@ int tileidx_spell(spell_type spell)
 
     // Enchantment
     case SPELL_CONFUSING_TOUCH:          return TILEG_CONFUSING_TOUCH;
-    case SPELL_BACKLIGHT:                return TILEG_CORONA;
+    case SPELL_CORONA:                return TILEG_CORONA;
     case SPELL_PROJECTED_NOISE:          return TILEG_PROJECTED_NOISE;
     case SPELL_SURE_BLADE:               return TILEG_SURE_BLADE;
     case SPELL_TUKIMAS_VORPAL_BLADE:     return TILEG_TUKIMAS_VORPAL_BLADE;

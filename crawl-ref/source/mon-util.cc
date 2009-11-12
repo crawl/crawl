@@ -2355,7 +2355,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         ret = (!foe || foe->holiness() != MH_UNDEAD);
         break;
 
-    case SPELL_BACKLIGHT:
+    case SPELL_CORONA:
         ret = (!foe || foe->backlit());
         break;
 

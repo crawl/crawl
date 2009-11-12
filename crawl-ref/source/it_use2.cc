@@ -304,7 +304,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
             // And also cancel backlight (for whatever good that will
             // do).
-            you.duration[DUR_BACKLIGHT] = 0;
+            you.duration[DUR_CORONA] = 0;
             return (true);
         }
 
@@ -324,7 +324,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         }
 
         // Invisibility cancels backlight.
-        you.duration[DUR_BACKLIGHT] = 0;
+        you.duration[DUR_CORONA] = 0;
 
         // Now multiple invisiblity casts aren't as good. -- bwr
         if (!you.duration[DUR_INVIS])
