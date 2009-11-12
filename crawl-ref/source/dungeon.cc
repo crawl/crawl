@@ -55,6 +55,10 @@
 #include "traps.h"
 #include "travel.h"
 
+#ifdef DEBUG_DIAGNOSTICS
+#define DEBUG_TEMPLES 1
+#endif
+
 #ifdef WIZARD
 #include "cio.h" // for cancelable_get_line()
 #endif
@@ -1712,7 +1716,7 @@ static void _build_overflow_temples(int level_number)
                 {
                     // We've already placed a specialized temple for this
                     // god, so do nothing.
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_TEMPLES
                     mprf(MSGCH_DIAGNOSTICS, "Already placed specialized "
                          "single-altar temple for %s", name.c_str());
 #endif
@@ -1722,7 +1726,7 @@ static void _build_overflow_temples(int level_number)
                 vault_tag = make_stringf("temple_overflow_%s", name.c_str());
 
                 vault = random_map_for_tag(vault_tag, true);
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_TEMPLES
                 if (vault == NULL)
                     mprf(MSGCH_DIAGNOSTICS, "Couldn't find overflow temple "
                          "for god %s", name.c_str());
@@ -1749,7 +1753,17 @@ static void _build_overflow_temples(int level_number)
             return;
 
         if (!_ensure_vault_placed(_build_vaults(level_number, vault), false))
+        {
+#ifdef DEBUG_TEMPLES
+            mprf(MSGCH_DIAGNOSTICS, "Couldn't place overlfow temple '%s', "
+                 "vetoing level.", vault->name.c_str());
+#endif
             return;
+        }
+#ifdef DEBUG_TEMPLES
+        mprf(MSGCH_DIAGNOSTICS, "Placed overflow temple %s",
+             vault->name.c_str());
+#endif
     }
     _current_temple_hash = NULL; // XXX: hack!
 }

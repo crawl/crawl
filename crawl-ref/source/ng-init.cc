@@ -18,6 +18,10 @@
 #include "religion.h"
 #include "store.h"
 
+#ifdef DEBUG_DIAGNOSTICS
+#define DEBUG_TEMPLES 1
+#endif
+
 static unsigned char _random_potion_description()
 {
     int desc, nature, colour;
@@ -129,7 +133,7 @@ void initialise_temples()
             main_temple->name.c_str());
     }
 
-#ifdef DEBUG_DIAGNOSITCS
+#ifdef DEBUG_TEMPLES
     mprf(MSGCH_DIAGNOSTICS, "Chose main temple %s, size %lu",
          main_temple->name.c_str(), main_temple_size);
 #endif
@@ -148,6 +152,10 @@ void initialise_temples()
         overflow_gods.push_back(god_list.back());
         god_list.pop_back();
     }
+
+#ifdef DEBUG_TEMPLES
+    mprf(MSGCH_DIAGNOSTICS, "%lu overflow altars", overflow_gods.size());
+#endif
 
     CrawlVector &temple_gods
         = you.props[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
