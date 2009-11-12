@@ -1,3 +1,11 @@
-,svn
-**/.svn/*
-.*
+^\.
+/\.
+git-hooks
+contrib/freetype
+contrib/libpng
+contrib/lua
+contrib/pcre
+contrib/sdl
+contrib/sdl-image
+contrib/sqlite
+contrib/zlib

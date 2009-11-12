@@ -663,15 +663,11 @@ LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell git describe --tags --long)
-PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
-SRC_PKG_TAR  := $(PKG_SRC_DIR).tbz2
+PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)
+SRC_PKG_TAR  := $(PKG_SRC_DIR).tar.bz2
 SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
 
-PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o \
-		$(UTIL)*.tab.cc $(UTIL)*.tab.h $(UTIL)*.lex.cc *.ixx
-PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
-
-.PHONY: all test install clean clean-contrib distclean debug profile wizard
+.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source
 
 all: $(GAME)
 
@@ -901,32 +897,26 @@ clean-rltiles:
 #
 
 # To package, you *must* have lex and yacc to generate the intermediates.
-package-source:
-	+$(MAKE) distclean
-	+$(MAKE) prebuildyacc
-	+$(MAKE) pkgtidy
-	+$(MAKE) depend
-	+$(MAKE) removeold
-	+$(MAKE) vlink
-	+$(MAKE) pkgtarbz2
-	+$(MAKE) pkgzip
-
-pkgtidy:
-	$(RM) $(PKG_TIDY_LIST)
+BSRC = build/crawl-ref/source/
+package-source: prebuildyacc depend removeold
+	rm -rf build
+	mkdir build
+	(cd ../..;git ls-files| \
+		grep -v -f crawl-ref/source/misc/src-pkg-excludes.lst| \
+		tar cf - -T -)|tar xf - -C build
+	cp -p *.d $(BSRC)
+	for x in lua pcre sqlite; \
+	  do \
+	   mkdir -p $(BSRC)contrib/$$x; \
+	   (cd contrib/$$x;git ls-files|tar cf - -T -)| \
+		tar xf - -C $(BSRC)contrib/$$x; \
+	  done
+	find build -name .gitignore -execdir rm -f '{}' +
+	cd build && mv crawl-ref $(PKG_SRC_DIR)
+	cd build && tar cfj ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
+	cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR)
+	rm -rf build
 
 removeold:
 	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
 	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(RM) ../../$(SRC_PKG_ZIP); fi
-
-# [ds] Existing directory names could produce a bad package!
-vlink:
-	cd .. && WHERE=$$PWD && cd .. && \
-		( [ -e $(PKG_SRC_DIR) ] || ln -sf $$WHERE $(PKG_SRC_DIR) )
-
-pkgtarbz2:
-	cd ../.. && tar -ch --bzip2 -f $(SRC_PKG_TAR) \
-		-X $(PKG_EXCLUDES) $(PKG_SRC_DIR)
-
-pkgzip:
-	cd ../.. && zip -rq $(SRC_PKG_ZIP) $(PKG_SRC_DIR) \
-		-x@$(PKG_EXCLUDES)
