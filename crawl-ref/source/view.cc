@@ -174,7 +174,7 @@ void monster_grid()
 
 #ifdef USE_TILE
         if (mi->visible_to(&you))
-            tile_place_monster(mi->pos().x, mi->pos().y, s, true);
+            tile_place_monster(mi->pos().x, mi->pos().y, mi->mindex(), true);
 #endif
     }
 }
