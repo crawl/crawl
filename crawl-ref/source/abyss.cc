@@ -182,6 +182,7 @@ static void _generate_area(const coord_def& topleft,
 
     // Nuke map.
     env.map_knowledge.init(map_cell());
+    env.pgrid.init(0);
 
     // Generate level composition vector.
     for (int i = 0; i < 5; i++)

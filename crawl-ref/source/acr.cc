@@ -3565,6 +3565,7 @@ static bool _initialise(void)
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
     env.map_knowledge.init(map_cell());
+    env.pgrid.init(0);
 
     you.unique_creatures.init(false);
     you.unique_items.init(UNIQ_NOT_EXISTS);
