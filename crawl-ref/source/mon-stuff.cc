@@ -1235,6 +1235,10 @@ static void _elven_twin_died(monsters* twin)
     if (!found_duvessa && !found_dowan)
         return;
 
+    // If you've stabbed one of them, the other one is likely asleep still.
+    if (monster->asleep())
+        behaviour_event(monster, ME_DISTURB, MHITNOT, monster->pos());
+
     // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
     // 'Dowan_Dowan_dies', but as neither will match, these can safely be
     // ignored.
@@ -1243,7 +1247,7 @@ static void _elven_twin_died(monsters* twin)
 
     if (mons_near(monster) && !monster->observable())
         key += "invisible_";
-    else
+    else if (!mons_near(monster))
         key += "distance_";
 
     std::string death_message = getSpeakString(key);
