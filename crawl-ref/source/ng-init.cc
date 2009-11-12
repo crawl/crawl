@@ -14,6 +14,7 @@
 #include "itemname.h"
 #include "player.h"
 #include "random.h"
+#include "religion.h"
 #include "store.h"
 
 static unsigned char _random_potion_description()
@@ -72,27 +73,7 @@ void initialise_branch_depths()
 // overflow temples, and on what level the overflow temples are.
 void initialise_temples()
 {
-    std::vector<god_type> god_list;
-
-    for (int i = 0; i < NUM_GODS; i++)
-    {
-        god_type god = (god_type) i;
-
-        // These never appear in any temples.
-        switch(god)
-        {
-        case GOD_NO_GOD:
-        case GOD_LUGONU:
-        case GOD_BEOGH:
-        case GOD_JIYVA:
-            continue;
-
-        default:
-            break;
-        }
-
-        god_list.push_back(god);
-    }
+    std::vector<god_type> god_list = temple_god_list();
 
     std::random_shuffle(god_list.begin(), god_list.end());
 
