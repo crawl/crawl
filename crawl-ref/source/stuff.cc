@@ -14,7 +14,6 @@
 #include "los.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "state.h"
 #include "stuff.h"
@@ -884,39 +883,52 @@ bool is_trap_square(dungeon_feature_type grid)
     return (grid >= DNGN_TRAP_MECHANICAL && grid <= DNGN_UNDISCOVERED_TRAP);
 }
 
-// At tutorial beginning disallow items in line of sight.
-void zap_los_items()
-{
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-    {
-        int item = igrd(*ri);
-
-        if (item != NON_ITEM && mitm[item].is_valid() )
-            destroy_item(item);
-    }
-}
-
 // Does the equivalent of KILL_RESET on all monsters in LOS. Should only be
 // applied to new games.
 void zap_los_monsters()
 {
-    you.update_los();
-    // If we ever allow starting with a friendly monster,
-    // we'll have to check here.
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    calc_show_los();
+
+    for (rectangle_iterator ri(crawl_view.vlos1, crawl_view.vlos2); ri; ++ri )
     {
-        if (mons_class_flag(mi->type, M_NO_EXP_GAIN))
+        const coord_def g = view2grid(*ri);
+
+        if (!map_bounds(g))
+            continue;
+
+        if (!you.see_cell(g))
+            continue;
+
+        if (g == you.pos())
+            continue;
+
+        // At tutorial beginning disallow items in line of sight.
+        if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
+        {
+            int item = igrd(g);
+
+            if (item != NON_ITEM && mitm[item].is_valid() )
+                destroy_item(item);
+        }
+
+        // If we ever allow starting with a friendly monster,
+        // we'll have to check here.
+        monsters *mon = monster_at(g);
+        if (mon == NULL)
+            continue;
+
+        if (mons_class_flag( mon->type, M_NO_EXP_GAIN ))
             continue;
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
-             mi->name(DESC_PLAIN, true).c_str() );
+             mon->name(DESC_PLAIN, true).c_str() );
 #endif
         // Do a hard reset so the monster's items will be discarded.
-        mi->flags |= MF_HARD_RESET;
+        mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the
         // player sees nothing.
-        monster_die(*mi, KILL_DISMISSED, NON_MONSTER, true, true);
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
     }
 }
 

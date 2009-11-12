@@ -93,7 +93,6 @@ template <typename Z> inline Z sgn(Z x)
 }
 
 bool is_trap_square(dungeon_feature_type grid);
-void zap_los_items();
 void zap_los_monsters();
 
 int integer_sqrt(int value);
