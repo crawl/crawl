@@ -768,7 +768,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             break;
         case SPWPN_VENOM:
             if (is_range_weapon(item))
-                description += "It poisons the unbranded ammo it fires.";
+                description += "It poisons the ammo it fires.";
             else
                 description += "It poisons the flesh of those it strikes.";
             break;
