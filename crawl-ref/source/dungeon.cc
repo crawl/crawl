@@ -2610,24 +2610,28 @@ static bool _place_portal_vault(int stair, const std::string &tag, int dlevel)
 
 static const map_def *_dgn_random_map_for_place(bool minivault)
 {
-    const map_def *vault = NULL;
-
     if (!minivault && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
-        // Try to place a main Temple vault with the exact number
-        // of altars needed.
-        std::string tag
-            = make_stringf("temple_main_%lu", 
-                           _temple_altar_list.size());
-        vault = random_map_for_tag(tag);
+        // Temple vault determined at new game tiem.
+        std::string name = you.props[TEMPLE_MAP_KEY];
 
-        if (vault != NULL)
+        // Tolerate this for a little while, for old games.
+        if (!name.empty())
+        {
+            const map_def *vault = find_map_by_name(name);
+
+            if (vault == NULL)
+            {
+                end(1, false, "Unable to place Temple vault '%s'",
+                    name.c_str());
+            }
             return (vault);
+        }
     }
 
     const level_id lid = level_id::current();
 
-    vault = random_map_for_place(lid, minivault);
+    const map_def *vault = random_map_for_place(lid, minivault);
 
     // Disallow entry vaults for tutorial (only complicates things).
     if (!vault

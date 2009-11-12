@@ -12,6 +12,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "itemname.h"
+#include "maps.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -73,13 +74,76 @@ void initialise_branch_depths()
 // overflow temples, and on what level the overflow temples are.
 void initialise_temples()
 {
+    //////////////////////////////////////////
+    // First determine main temple map to use.
+    level_id ecumenical(BRANCH_ECUMENICAL_TEMPLE, 1);
+
+    map_def *main_temple = NULL;
+    for (int i = 0; i < 10; i++)
+    {
+        main_temple
+            = const_cast<map_def*>(random_map_for_place(ecumenical, false));
+
+        if (main_temple == NULL)
+            end (1, false, "No temples?!");
+
+        // Without all this find_glyph() returns 0.
+        std::string err;
+              main_temple->load();
+              main_temple->reinit();
+        err = main_temple->run_lua(true);
+
+        if (!err.empty())
+        {
+            mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
+                 err.c_str());
+            main_temple = NULL;
+            continue;
+        }
+
+              main_temple->fixup();
+        err = main_temple->resolve();
+
+        if (!err.empty())
+        {
+            mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
+                 err.c_str());
+            main_temple = NULL;
+            continue;
+        }
+        break;
+    }
+
+    if (main_temple == NULL)
+        end(1, false, "No valid temples.");
+
+    you.props[TEMPLE_MAP_KEY] = main_temple->name;
+
+    const std::vector<coord_def> altar_coords
+        = main_temple->find_glyph('B');
+    const unsigned int main_temple_size = altar_coords.size();
+
+    if (main_temple_size == 0)
+    {
+        end(1, false, "Main temple '%s' has no altars",
+            main_temple->name.c_str());
+    }
+
+#ifdef DEBUG_DIAGNOSITCS
+    mprf(MSGCH_DIAGNOSTICS, "Chose main temple %s, size %lu",
+         main_temple->name.c_str(), main_temple_size);
+#endif
+
+    ///////////////////////////////////
+    // Now set up the overflow temples.
+
     std::vector<god_type> god_list = temple_god_list();
 
     std::random_shuffle(god_list.begin(), god_list.end());
 
     std::vector<god_type> overflow_gods;
 
-    while (god_list.size() > 12)
+    while (god_list.size() > main_temple_size)
     {
         overflow_gods.push_back(god_list.back());
         god_list.pop_back();
