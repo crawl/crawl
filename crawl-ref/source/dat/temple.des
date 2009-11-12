@@ -666,59 +666,59 @@ ENDMAP
 
 ##########################################################################
 # Five rooms temple (David Ploog). 12 + 3 = 5 x 3
-NAME:    five_temple
-PLACE:   Temple
-TAGS:    no_rotate
-ORIENT:  encompass
-SHUFFLE: ABC/DEF/GHI/JKL/MNO
-SHUFFLE: ABC, DEF, GHI, JKL, MNO
-SUBST:   A=[, B=(, C={
-KFEAT:   D = altar_trog
-KFEAT:   E = altar_makhleb
-KFEAT:   F = altar_okawaru
-KFEAT:   G = altar_shining_one
-KFEAT:   H = altar_zin
-KFEAT:   I = altar_elyvilon
-KFEAT:   J = altar_sif_muna
-KFEAT:   K = altar_vehumet
-KFEAT:   L = altar_kikubaaqudgha
-KFEAT:   M = altar_yredelemnul
-KFEAT:   N = altar_xom
-KFEAT:   O = altar_nemelex_xobeh
-KFEAT:   X : G / U / T
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
-xxxxxxxxxx........xxxxx+xxxxx........xxxxxxxxxx
-xxxxxxx.....xxxxxxxxx.....xxxxxxxxx.....xxxxxxx
-xxxxxx...xxxxxxxxxx.........xxxxxxxxxx...xxxxxx
-xxxxx..xxxxxxxxxxx..A.....C..xxxxxxxxxxx..xxxxx
-xxxx..xxxxxxxxxxxx.....X.....xxxxxxxxxxxx..xxxx
-xxx..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..xxx
-xxx..xxx.....xxxxxx....B....xxxxxx.....xxx..xxx
-xx..+x..O......xxxxxx.....xxxxxx......F..x+..xx
-xx..x...........xxxxxxxxxxxxxxx...........x..xx
-x..xx.....X..N..xxxxxxxxxxxxxxx..D..X.....xx..x
-x..xx...........xxxxxxxxxxxxxxx...........xx..x
-x..xxx..M......xxxxxxxxxxxxxxxxx......E..xxx..x
-x..xxxxx.....xxxxxxxxxxxxxxxxxxxxx.....xxxxx..x
-x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
-x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
-x..xxxxxxxxxx.....xxxxxxxxxxx.....xxxxxxxxxx..x
-xx..xxxxxxx......K..xxxxxxx..G......xxxxxxx..xx
-xx..xxxxxx.L.........xxxxx.........H.xxxxxx..xx
-xxx..xxxxx.....X.....xxxxx.....X.....xxxxx..xxx
-xxx..xxxxx...........xxxxx...........xxxxx..xxx
-xxxx..xxxxx......J..xxxxxxx..I......xxxxx..xxxx
-xxxxx..xxxxxx.....xxxxxxxxxxx.....xxxxxx..xxxxx
-xxxxxx...xxx+xxxxxxxxxxxxxxxxxxxxx+xxx...xxxxxx
-xxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxx
-xxxxxxxxxx........xxxxxxxxxxx........xxxxxxxxxx
-xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
+#NAME:    five_temple
+#PLACE:   Temple
+#TAGS:    no_rotate
+#ORIENT:  encompass
+#SHUFFLE: ABC/DEF/GHI/JKL/MNO
+#SHUFFLE: ABC, DEF, GHI, JKL, MNO
+#SUBST:   A=[, B=(, C={
+#KFEAT:   D = altar_trog
+#KFEAT:   E = altar_makhleb
+#KFEAT:   F = altar_okawaru
+#KFEAT:   G = altar_shining_one
+#KFEAT:   H = altar_zin
+#KFEAT:   I = altar_elyvilon
+#KFEAT:   J = altar_sif_muna
+#KFEAT:   K = altar_vehumet
+#KFEAT:   L = altar_kikubaaqudgha
+#KFEAT:   M = altar_yredelemnul
+#KFEAT:   N = altar_xom
+#KFEAT:   O = altar_nemelex_xobeh
+#KFEAT:   X : G / U / T
+#MAP
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
+#xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
+#xxxxxxxxxx........xxxxx+xxxxx........xxxxxxxxxx
+#xxxxxxx.....xxxxxxxxx.....xxxxxxxxx.....xxxxxxx
+#xxxxxx...xxxxxxxxxx.........xxxxxxxxxx...xxxxxx
+#xxxxx..xxxxxxxxxxx..A.....C..xxxxxxxxxxx..xxxxx
+#xxxx..xxxxxxxxxxxx.....X.....xxxxxxxxxxxx..xxxx
+#xxx..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..xxx
+#xxx..xxx.....xxxxxx....B....xxxxxx.....xxx..xxx
+#xx..+x..O......xxxxxx.....xxxxxx......F..x+..xx
+#xx..x...........xxxxxxxxxxxxxxx...........x..xx
+#x..xx.....X..N..xxxxxxxxxxxxxxx..D..X.....xx..x
+#x..xx...........xxxxxxxxxxxxxxx...........xx..x
+#x..xxx..M......xxxxxxxxxxxxxxxxx......E..xxx..x
+#x..xxxxx.....xxxxxxxxxxxxxxxxxxxxx.....xxxxx..x
+#x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+#x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+#x..xxxxxxxxxx.....xxxxxxxxxxx.....xxxxxxxxxx..x
+#xx..xxxxxxx......K..xxxxxxx..G......xxxxxxx..xx
+#xx..xxxxxx.L.........xxxxx.........H.xxxxxx..xx
+#xxx..xxxxx.....X.....xxxxx.....X.....xxxxx..xxx
+#xxx..xxxxx...........xxxxx...........xxxxx..xxx
+#xxxx..xxxxx......J..xxxxxxx..I......xxxxx..xxxx
+#xxxxx..xxxxxx.....xxxxxxxxxxx.....xxxxxx..xxxxx
+#xxxxxx...xxx+xxxxxxxxxxxxxxxxxxxxx+xxx...xxxxxx
+#xxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxx
+#xxxxxxxxxx........xxxxxxxxxxx........xxxxxxxxxx
+#xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
+#xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#ENDMAP
 
 ##########################################################################
 # Eino's temples
