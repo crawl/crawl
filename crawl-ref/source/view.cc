@@ -139,6 +139,15 @@ void monster_grid_updates()
         beogh_follower_convert(*mi);
         slime_convert(*mi);
         fedhas_neutralise(*mi);
+
+        // XXX: Probably quite hackish. Allows for monsters going berserk when
+        //      they see the player. Currently only used for Duvessa, see the
+        //      function _elven_twin_dies in mon-stuff.cc.
+        if (mi->flags & MF_GOING_BERSERK)
+        {
+            mi->flags &= ~MF_GOING_BERSERK;
+            mi->go_berserk(true);
+        }
     }
 }
 

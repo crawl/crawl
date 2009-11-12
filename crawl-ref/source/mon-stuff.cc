@@ -1224,7 +1224,7 @@ static void _elven_twin_died(monsters* twin)
             found_duvessa = true;
             break;
         }
-        else if (monster->type == MONS_DOWAN)
+        else if (mi->type == MONS_DOWAN)
         {
             monster = *mi;
             found_dowan = true;
@@ -1232,29 +1232,37 @@ static void _elven_twin_died(monsters* twin)
         }
     }
 
-    if ((found_duvessa || found_dowan) && mons_near(monster))
+    if (!found_duvessa && !found_dowan)
+        return;
+
+    // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
+    // 'Dowan_Dowan_dies', but as neither will match, these can safely be
+    // ignored.
+    std::string key = "_" + monster->name(DESC_CAP_THE, true) + "_"
+                          + twin->name(DESC_CAP_THE) + "_dies_";
+
+    if (mons_near(monster) && !monster->observable())
+        key += "invisible_";
+    else
+        key += "distance_";
+
+    std::string death_message = getSpeakString(key);
+
+    if (mons_near(monster) && !death_message.empty())
+        mons_speaks_msg(monster, death_message, MSGCH_TALK, silenced(you.pos()));
+    else
+        mprf("%s", death_message.c_str());
+
+    if (found_duvessa)
     {
-        // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
-        // 'Dowan_Dowan_dies', but as neither will match, these can safely be
-        // ignored.
-        std::string key = "_" + monster->name(DESC_CAP_THE, true) + "_"
-                              + twin->name(DESC_CAP_THE) + "_dies_";
-
-        if (!monster->observable())
-            key += "invisible_";
-
-        std::string death_message = getSpeakString(key);
-
-        if (!death_message.empty())
-            mons_speaks_msg(monster, death_message, MSGCH_TALK, silenced(you.pos()));
+        if (mons_near(monster))
+            // Provides its own flavour message.
+            monster->go_berserk(true);
+        else
+            // She'll go berserk the next time she sees you
+            monster->flags |= MF_GOING_BERSERK;
     }
-
-    if (found_duvessa && mons_near(monster))
-    {
-        // Provides its own flavour message.
-        monster->go_berserk(true);
-    }
-    else if (found_dowan && mons_near(monster))
+    else if (found_dowan)
     {
         // Doesn't provide any message, so needs one, but only if visible.
         if (monster->observable())

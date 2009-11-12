@@ -2153,8 +2153,10 @@ enum monster_flag_type
     MF_SPELLCASTER        = 0x200000,
     MF_ACTUAL_SPELLS      = 0x400000, // Can use spells and is a spellcaster for
                                       // Trog purposes.
-    MF_PRIEST             = 0x800000  // Is a priest (divine spells)
+    MF_PRIEST             = 0x800000, // Is a priest (divine spells)
                                       // for the conduct.
+
+    MF_GOING_BERSERK      = 0x1000000 // Is about to go berserk!
 };
 
 // Adding slots breaks saves. YHBW.

@@ -1732,6 +1732,10 @@ Dowan
 w:2
 @_Dowan_rare_@
 %%%%
+fleeing Dowan
+
+VISUAL:@The_monster@ cries in horror.
+%%%%
 _Dowan_common_
 
 VISUAL:@The_monster@ smirks and points a slender finger @at_foe@.
@@ -1772,6 +1776,10 @@ _Dowan_Duvessa_dies_
 _Dowan_Duvessa_dies_invisible_
 
 @The_monster@ screams, "No! No! NO!"
+%%%%
+_Dowan_Duvessa_dies_distance_
+
+You hear a distant wail of despair.
 %%%%
 ############ DUANE ### A mercenary guarding the dungeon
 Duane
@@ -1824,6 +1832,10 @@ _Duvessa_Dowan_dies_invisible_
 @The_monster@ screams in a voice full of rage, "No, no!"
 
 @The_monster@ shouts wrathfully, "No!"
+%%%%
+_Duvessa_Dowan_dies_distance_
+
+You hear a distant scream of rage.
 %%%%
 ############ EDMUND ### A mercenary guarding the dungeon
 Edmund
