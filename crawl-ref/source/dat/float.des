@@ -868,7 +868,7 @@ ENDMAP
 # Elemental Laboratory (by Mu.)
 #
 NAME:   elemental_lab_mu
-DEPTH:  D:16-26, Elf:1-6
+DEPTH:  D:13-26, Elf:1-6
 ORIENT: float
 FLAGS:  no_monster_gen no_item_gen no_pool_fixup
 MARKER: ! = lua:fog_machine { \
@@ -890,7 +890,7 @@ KMONS:  1 = fire elemental
 NSUBST: ; = 3:2 / *=.ll
 KMONS:  2 = molten gargoyle
 KMONS:  e = earth elemental
-SUBST:  E = ecxxx..
+SUBST:  E = exxx....
 NSUBST: ' = 3:3 / 3:W / *:.
 KMONS:  3 = clay golem
 NSUBST: w = 3:4 / *:w
@@ -900,13 +900,25 @@ NSUBST: " = 3:5 / *:.
 KMONS:  5 = vapour
 KMONS:  6 = air elemental
 KMONS:  7 = fire vortex
+#
 : if you.in_branch("elf") then
-KMONS:  Z = deep elf sorcerer ; robe ego:fire_resistance race:elven | \
-            robe ego:cold_resistance race:elven | \
-            robe ego:resistance race:elven
+KMONS:  Z = col:gila deep elf sorcerer \
+        name:deep_elf_elementalist name_replace \
+        spells:iron_shot;summon_air_elementals;sticky_flame;\
+        summon_water_elementals;haste;blink actual_spells \
+        ; robe ego:fire_resistance race:elven | \
+        robe ego:cold_resistance race:elven | \
+        robe ego:resistance race:elven . dagger ego:freezing race:elven | \
+        dagger ego:flaming race:elven | dagger ego:electrocution race:elven
 : else
-KMONS:  Z = wizard ; robe ego:fire_resistance | robe ego:cold_resistance | \
-                     robe ego:resistance
+KMONS:  Z = col:gila vault guard \
+        name:master_elementalist name_replace \
+        spells:iron_shot;summon_air_elementals;sticky_flame;\
+        summon_water_elementals;haste;blink actual_spells \
+        ; robe ego:fire_resistance | robe ego:cold_resistance | \
+        robe ego:resistance \
+        . dagger ego:freezing | dagger ego:flaming | \
+        dagger ego:electrocution
 : end
 KITEM:  B = any book
 KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air
