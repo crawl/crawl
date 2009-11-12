@@ -111,8 +111,7 @@ static opacity_excl opc_excl;
 // Note: circle_def(r, C_ROUND) gives a circle with square radius r*r+1;
 // this doesn't work well for radius 0, but then we want to
 // skip LOS calculation in that case anyway since it doesn't
-// currently short-cut for small bounds. So radius 0 is special-cased.
-
+// currently short-cut for small bounds. So radius 0, 1 are special-cased.
 travel_exclude::travel_exclude(const coord_def &p, int r,
                                bool autoexcl, monster_type mons, bool vaultexcl)
     : pos(p), radius(r),
@@ -125,7 +124,7 @@ travel_exclude::travel_exclude(const coord_def &p, int r,
 void travel_exclude::set_los()
 {
     uptodate = true;
-    if (radius > 0)
+    if (radius > 1)
     {
         // Radius might have been changed, and this is cheap.
         los.set_bounds(circle_def(radius, C_ROUND));
@@ -140,12 +139,16 @@ bool travel_exclude::affects(const coord_def& p) const
              pos.x, pos.y, p.x, p.y);
     if (radius == 0)
         return (p == pos);
-    return (los.see_cell(p));
+    else if (radius == 1)
+        return ((p - pos).rdist() <= 1);
+    else
+        return (los.see_cell(p));
 }
 
 bool travel_exclude::in_bounds(const coord_def &p) const
 {
     return (radius == 0 && p == pos
+            || radius == 1 && (p - pos).rdist() <= 1
             || los.in_bounds(p));
 }
 
@@ -261,7 +264,8 @@ void clear_excludes()
     _exclude_update();
 }
 
-// Cycles the radius of an exclusion, including "off" state.
+// Cycles the radius of an exclusion, including "off" state;
+// may start at 0 < radius < LOS_RADIUS, but won't cycle there.
 void cycle_exclude_radius(const coord_def &p)
 {
     // XXX: scanning through curr_excludes twice
@@ -270,10 +274,7 @@ void cycle_exclude_radius(const coord_def &p)
         if (exc->radius == LOS_RADIUS)
             set_exclude(p, 0);
         else
-        {
-            ASSERT(exc->radius == 0);
             del_exclude(p);
-        }
     }
     else
         set_exclude(p, LOS_RADIUS);
