@@ -47,6 +47,11 @@ public:
         init(def);
     }
 
+    FixedVector(TYPE value0, TYPE value1, ...);
+    // Allows for something resembling C array initialization, eg
+    // instead of "int a[3] = {0, 1, 2}" you'd use "FixedVector<int, 3>
+    // a(0, 1, 2)". Note that there must be SIZE arguments.
+
 //-----------------------------------
 //    API
 //
@@ -88,6 +93,24 @@ protected:
 // ==========================================================================
 //    Outlined Methods
 // ==========================================================================
+template <class TYPE, int SIZE>
+FixedVector<TYPE, SIZE>::FixedVector(TYPE value0, TYPE value1, ...)
+{
+    mData[0] = value0;
+    mData[1] = value1;
+
+    va_list ap;
+    va_start(ap, value1);   // second argument is last fixed parameter
+
+    for (int index = 2; index < SIZE; index++)
+    {
+        TYPE value = va_arg(ap, TYPE);
+        mData[index] = value;
+    }
+
+    va_end(ap);
+}
+
 template <class TYPE, int SIZE>
 void FixedVector<TYPE, SIZE>::init(const TYPE& def)
 {
