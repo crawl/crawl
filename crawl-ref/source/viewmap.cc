@@ -741,6 +741,17 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             _reset_travel_colours(features, on_level);
             break;
 
+#ifdef WIZARD
+        case CMD_MAP_EXCLUDE_RADIUS:
+        {
+            const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
+            set_exclude(p, getchm() - '0');
+
+            _reset_travel_colours(features, on_level);
+            break;
+        }
+#endif
+
         case CMD_MAP_MOVE_DOWN_LEFT:
             move_x = -1;
             move_y = 1;
