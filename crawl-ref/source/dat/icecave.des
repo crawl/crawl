@@ -330,10 +330,10 @@ ITEM:    potion of resistance w:5 / potion of gain strength / \
          potion of might / potion of confusion / potion of levitation / \
          potion of experience w:2
 MAP
-                   xxxx        xxxxxxxx
-                xxxx..xxxx  xxxx12....xx
-         xxxxxxxx...xx...xxxx...2xxx...xxxx
-      xxxx......1..xxxxx..x212.xxxxxxx...1xxxx
+                  xxxxx        xxxxxxxx
+                xxx...xxxx  xxxx12....xx
+         xxxxxxxx...x....xxxx...2.x....xxxx
+      xxxx......1..xxxx...x212.xxxxxxx...1xxxx
      xx.......1..1.xxxxxx....xxxxxxxxxxxx21..xxx
    xxx...xxxx.3.1....xxxxxxxxxxxxxwwwxxxxxx....xxx
   xx...xxxfgxx.1..1...xxxxxxxxxxwwwwwxxxxxxxx....xxx
@@ -342,34 +342,34 @@ MAP
   x...x....$$xx.....xxxxwwwwxxwwwwwwwwwwwwxxxxxx11xx
   xx.......xxx.....xxwwwwxxxxxxxxxwwwwwwxxxxx...2xx
    xx............xxxwwwwxxxxxxxxxxxwwwxxxx......xx
- xxx"xx.........x'wwwwwxxxxxxxxxxxxwxxxx...xxxxxx
-xxwwxxxxxxxxxxxxxxwwwxxxxxxxxxxxxxxxxxx..xxx
+ xxx"xx.........x'wwwwwxxxxxxxxxxxxwxxxx...x.xxxx
+xxwwwxxxxxxxxxxxxxwwwxxxxxxxxxxxxxxxxxx..xxxxx
  xxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx..xx
- xwwwwwwwwwwwwwwwwwx'xxxxxxxxxxxxxxx5...xxx
+ xwwwwwwwwwwwwwwwww''xxxxxxxxxxxxxxx5...xxx
  xwwwxxxxxxxxxxwwxx'x'xxxxxxxxxxxxx.......xxx
-xxwwxxxxxxxxxxxwwxxx'xxxxxxxxxxxxxxxx.......xxx
-x"xxxxxxxxxxxxxxwxx'xxxxxx"xxxxxxxxxxx....2...xx
-xx"xxxxxxxxxxxxxxx'xxxxxxx""""x..xxxxxxx2......x
- xx"xxxxxxxxxxxxx'xxxxxxx"xxxx.......xxx.......x
-  x"xxxxxxxxxxxxx''xxxxx"xxx''xx......21x.....xx
-  xx""xxxxxxxxxxxxx'xxx"xxx'xxxxx....1..2....xx
-   xxx""""xxxxxxxxxx'xx"xxx'xxwwxx.1......1.xx
-     xxxxx"xxxxxxxxx'xxx"xxx'xxwwxx.x....x.xx
-      xxx"xxxxxxxxx'xxx"xxxxx'xxwwxxxx..xxxx
-     xx""xxxxxxxxx'xxx"xxxxxx'xxxwwxxx..x
-    xx"xxxxxxxxxxx''xxx"xxxxxx'xxwwxx..xx
-   xx"xxxxxxxxxxxxx'xxxx""xxxx'xxwxx..xx
-  xx"xxxxxxxxxxxxxxx'xxxx"xxx'xxxwwx...xx
-  x"xxxxxxxxxxxxxxxxx'xxxx"x'xxxxwwxx...xx
-  x"xxxxxxxxxxxxxxxxx'xxxxx2xxxxxwwxxx44.x
- xx"xxxxxxxxxxxxxxxxx'x..x.xxxxxwwxxxx4.4x
- x"xxxxxxxxxxxxxxxxxxx.hx.xxxxxxwwxxx...xx
-xx"xxxxxxxxxxxxxxxx.1xhxhx.xxxxwwwxxx...xx
-x"xxxxxxxxxxxxxxxxx.xhxhxh.xxxwwwxxx.....xx
-xx"xxxxxxxxx"xxxxxxx1.....xx xxwwxx...A...x
- xx"""xxx"""x""xxx""xxxxxxx   xwwxx.......x
-  xxxx"""xxxxxx"""xxx        xxwwxxx..<..xx
-     xxxxx    xxxxx          xwwwx xx...xx
+xxwwxxxxxxxxxxxwwxxx'xxxxxxx"xxxxxxxx.......xxx
+x""xxxxxxxxxxxxxwxx''xxxxx"""xxxxxxxxx....2...xx
+xx""xxxxxxxxxxxxxx''xxxxxx"""""..xxxxxxx2......x
+ xx""xxxxxxxxxxxx'x'xxxx"""xxx.......xxx.......x
+  x"x"xxxxxxxxxxx''xxxxx"xx'''xx......21x.....xx
+  xx"""xxxxxxxxxxx''xxx""x''x'''x....1..2....xx
+   xxx""""xxxxxxxxx''xx"xx''xxwwxx.1......1.xx
+     xxx"x"xxxxxxxxx'xx""xx''xxwwxx.x....x.xx
+      xxx"xxxxxxxxx''x""xxxx''xxwwxxxx..xxxx
+     xx"""xxxxxxxx'x'x"x"xxxx''xxwwxxx..x
+    xx""xxxxxxxxxx''xxx"x"xxxx''xwwxx..xx
+   xx""x"xxxxxxxxxx''xxx""xxx''xxwxx..xx
+  xx""x"xxxxxxxxxxxx'xxxx""x''xxxwwx...xx
+  x""xxxxxxxxxxxxxx'x'xxxx""'xxxxwwxx...xx
+  x"x"xxxxxxxxxxxxxx'''xxxx2'xxxxwwxxx44.x
+ xx""xxxxxxxxxxxxxxxx'x..x.'xxxxwwxxxx4.4x
+xx""xxxxxxxxxxxxxxxxxx.hx.xxxxxxwwxxx...xx
+x""xxxxxxxxxxxxxxxx.1xhxhx.xxxxwwwxxx...xx
+x"x"xxxxxxxxxxxxxxx.xhxhxh.xxxwwwxxx.....xx
+xx"x"xxxx""x"xxxxxx"1.....xx xxwwxx...A...x
+ xx""""x""""x""x""""xxxxxxx   xwwxx.......x
+  xxxx"""xxx"x""""xxx        xxwwxxx..<..xx
+     xxxxx xxxxxxxx          xwwwx xx...xx
                              xxwxx  xxxxx
                               xxx
 ENDMAP
@@ -395,37 +395,37 @@ ITEM:    any jewellery good_item / gold w:5 / nothing w:5
 MAP
                          xxxxxxxx
                       xxxx......xxxx
-                     xx.....xxx....xxx
-                     x..xxxxxxx...2..xxx
-                    xxxx.xxxx$$.2....dexx
-                   xx..xx.xx$$$$....deddx
-                  xx.xx..xx$$$$$$..deddxx
-                 xx..xxxxxxxx$$$$$$$xxx'x
-              xxxx11xxxxwwwxxxxxxxxxxwx'x
-           xxxx...1xxwwwwwwwwwwwwwwwwwwxxx
+                     xx......x.....xxx
+                     x...xx.xxx...2..xxx
+                   xxxxx..xxx$$.2....dexx
+                  xx...xx.xx$$$$....deddx
+                  xx.x....x$$$$$$..deddxx
+                 xx..xxx.xxxx$$$$$$$xx''x
+              xxxx11xxxxxxwxxxxxxxxxxwx'x
+           xxxx...1xxwwwwwwwwwwwwwwwwwwwxx
          xxx......xxwwwwwwwwwwwwwwwwwwwwwxx
         xx...xxxxxxxxwwwwwwwwwxxwwwwwwwwwwx
        xx..xxxxxxxxxxxxwwwwwxxxxxxxx'xwwxxx
-     xxx..xxxxxxxxxxxxxxxxxxxxxxxxx.xxwwwx
-   xxx....xxxxxxxxxxxxxxxxxxx"""x..$$xxwxx
-  xx........xxxxxxxx""xxxxx""xxx.xxx$xxxx
- xx...........xxxxx"xx""x""xxxxxx'xxx"xx
-xx..............x""xxxxx"xxxxxxxxx'xxx"x
-x................xxxxxxxxxxxxxxxxxx'xx"xx
-x.................xxxxxxxxxxxxxxxxxx'xx"x
-xx...1.111.1....xx'xxxxxxxxxxxxxxxxx'xx"x
- xx...1.1.1.....xxx'xxx''xxxxx''x'x'xx"xx
-  xx..........xxxxxx'''xx'xxx'xx'x'xx"xx
-   xx4x....x4xxxxxxxxxxxxx''$xxxxxxx"xx
-    xxxx..xxxxxxxxxxxxxxxxx$$$xxxx""xx
-      xx..xxxxxxxxxxxxxx"xx$$$$xx"xxx
-     xx..xxxxxxxxxxxxxx"x""x$$"xxx"x
-     x..xxxxxxxxxxxxxxx"xxxxxxx"x"xx
-     x...x""x"xxxxxxxxxx"xx   xx"xx
-     xx...xx"x""xxxxxxxxx"x    xxx
-      xx33.xxxxx""xxxxx""xx
-      xx3.3x   xxx"""x"xxx
-      x...xx     xxxx"xx
+     xxx..xxxxxxxxxxxxxxxxxxxxxxxxx..xwwwx
+   xxx....xxxxxxxxxxx"xxxxxx""""x..$$xxwxx
+  xx........xxxxxxxx"""x"x"""x"x.'xx$xxxx
+ xx...........xxxx"""x""x""xxxx"x''xx""xx
+xx..............x""xxxxx"xxxxxxxxx''xx""xx
+x................xxxxxxxxxxxxxxxxxx''x"x"x
+x.................xxxxxxxxxxxxxxxxxx'xx"xx
+xx...1.111.1....x'''xxxxxxxxxxxxxx'''x""x
+ xx...1.1.1.....xxx''xx''xxxx'''x'x'xx"xx
+  xx..........xxxxxx''''x''x''x''''xx""x
+   xx4x....x4xxxxxxxx'xxxx''$xxxxxx"""xx
+    xxxx..xxxxxxxxxxxxxxxxx$$$xxx""""xx
+      xx..xxxxxxxxxxxxx"""x$$$$xx"x"xx
+     xx..xxxxxxxxxxxxxx"x""x$$""xx"xx
+     x..xxxx"xxxxxxxxx""xxxxxxx""""x
+     x...x""x""xxxxxxxx"""x   xx"xxx
+     xx..."x"x"""xxxxx"xx"x    xxx
+      xx33.xxxxx"""x"xx""xx
+      xx3.3x   xxx""""""xx
+      x...xx     xxxx"xxx
      xx...xx        xxx
     xx.....xx
     x...A...x
@@ -504,12 +504,12 @@ x...xxffxx...xxxxx*%....3.3..xwwwwwxx6.6x
 x....xxxx...xxxxxxxxx.......xxxwwwxx...xx
 xxx.........xxxxxxxxxxx...xxxxwwwxxx...xx
   x...7....xxxxxxxxxxxxx..xxxwwwxxx.....xx
-  xx------xxxxxxxxxxxxxxxx..xxwwxx...A...x
-   xx----xxxxxx...xxxxxxxx...xwwxx.......x
-    x---xxxx...xx...xx.....xxxwwxxx..<..xx
+  xx------xxxxx.xxxxxxxxxx..xxwwxx...A...x
+   xx----xxxxx....xxxxx..x...xwwxx.......x
+    x---xx.x...xx....x.....xxxwwxxx..<..xx
     xx.......xxxxxx....xxxxxxwwwwxxx...xx
-     xxxxxxxxx    xxxxxx    xxwwwxxxxxxx
-                             xwwxx
+     xxx.xx.xx    xxxxxx    xxwwwxxxxxxx
+      xxxxxxx                xwwxx
                              xxxx
 ENDMAP
 
@@ -605,21 +605,21 @@ NAME: ice_cave_tombish
 # This is an ice cave which is also a tomb of a necromancer who likes staying
 # alive and simulacrums, or just a chillout of an ice fiend. By Zaba.
 # Weighted as a small cave, although this is pretty tough. --Eino
-TAGS: ice_cave no_item_gen no_monster_gen
+TAGS:   ice_cave no_item_gen no_monster_gen
 ORIENT: encompass
 WEIGHT: 6
 # S is either an ice statue or a granite statue.
-SUBST: S = GGS
-KMONS: S = ice statue
+SUBST:  S = GGS
+KMONS:  S = ice statue
 # I is an ice statue with loot underneath.
-KITEM: I = any scroll q:3
-KMONS: I = ice statue
-MONS: ice devil / blue devil / nothing w:7
+KITEM:  I = any scroll q:3
+KMONS:  I = ice statue
+MONS:   ice devil / blue devil / nothing w:7
 # FIXME: I can't quite make up more simulacrums
-MONS: grizzly bear simulacrum / bear simulacrum / dragon simulacrum /\
-      human simulacrum / golden dragon simulacrum w:1
-MONS: Ice Fiend w:2 / necromancer
-ITEM: any potion / any scroll / any weapon good_item / any armour good_item
+MONS:   grizzly bear simulacrum / bear simulacrum / dragon simulacrum /\
+        human simulacrum / golden dragon simulacrum w:1
+MONS:   ice fiend w:2 / necromancer
+ITEM:   any potion / any scroll / any weapon good_item / any armour good_item
 KFEAT: ' = alarm trap / net trap / arrow trap / bolt trap w:5 / floor w:5
 : ice_cave_colours(_G)
 : ice_cave_milestone(_G)
