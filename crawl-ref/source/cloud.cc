@@ -925,7 +925,7 @@ killer_type cloud_struct::whose_to_killer(kill_category whose)
     {
         case KC_YOU:         return(KILL_YOU_MISSILE);
         case KC_FRIENDLY:    return(KILL_MON_MISSILE);
-        case KC_OTHER:       return(KILL_MON_MISSILE);
+        case KC_OTHER:       return(KILL_MISC);
         case KC_NCATEGORIES: ASSERT(false);
     }
     return (KILL_NONE);
