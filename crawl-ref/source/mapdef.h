@@ -759,6 +759,7 @@ public:
     bool test_lua_veto();
 
     std::string validate_map_def();
+    std::string validate_temple_map();
 
     void add_prelude_line(int line,  const std::string &s);
     void add_main_line(int line, const std::string &s);

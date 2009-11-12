@@ -1784,6 +1784,78 @@ std::string map_def::rewrite_chunk_errors(const std::string &s) const
     return (res);
 }
 
+std::string map_def::validate_temple_map()
+{
+    std::vector<coord_def> altars = find_glyph('B');
+
+    if (has_tag_prefix("temple_overflow_"))
+    {
+        std::vector<std::string> tag_list = get_tags();
+        std::string              temple_tag;
+
+        for (unsigned int i = 0; i < tag_list.size(); i++)
+        {
+            if (starts_with(tag_list[i], "temple_overflow_"))
+            {
+                temple_tag = tag_list[i];
+                break;
+            }
+        }
+
+        if (temple_tag.empty())
+            return make_stringf("Unkown temple tag.");
+
+        temple_tag = strip_tag_prefix(temple_tag, "temple_overflow_");
+
+        if (temple_tag.empty())
+            return ("Malformed temple_overflow_ tag");
+
+        int num = atoi(temple_tag.c_str());
+
+        if (num == 0)
+        {
+            temple_tag = replace_all(temple_tag, "_", " ");
+
+            god_type god = string_to_god(temple_tag.c_str(), true);
+
+            if (god == GOD_NO_GOD)
+            {
+                return make_stringf("Invalid god name '%s'",
+                                    temple_tag.c_str());
+            }
+
+            // Assume that specialized single-god temples are set up
+            // properly.
+            return("");
+        }
+        else
+        {
+            if ( ( (unsigned long) num ) != altars.size() )
+            {
+                return make_stringf("Temple should contain %lu altars, but "
+                                    "has %d.", altars.size(), num);
+            }
+        }
+    }
+
+    if (altars.empty())
+        return ("Temple vault must contain at least one altar.");
+
+    // TODO: check for substitutions and shuffles
+
+    keyed_mapspec *spec = mapspec_for_key('B');
+
+    if (spec != NULL && spec->feat.feats.size() > 0)
+        return ("Can't change feat 'B' in temple (KFEAT)");
+
+    std::vector<god_type> god_list = temple_god_list();
+
+    if (altars.size() > god_list.size())
+        return ("Temple vault has too many altars");
+
+    return ("");
+}
+
 std::string map_def::validate_map_def()
 {
     std::string err = run_lua(true);
@@ -1793,6 +1865,15 @@ std::string map_def::validate_map_def()
     fixup();
     resolve();
     test_lua_validate(true);
+
+    if ((place.branch == BRANCH_ECUMENICAL_TEMPLE
+         && place.level_type == LEVEL_DUNGEON)
+        || has_tag_prefix("temple_overflow_"))
+    {
+        err = validate_temple_map();
+        if (!err.empty())
+            return err;
+    }
 
     if (orient == MAP_FLOAT || is_minivault())
     {
