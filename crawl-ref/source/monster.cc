@@ -2156,7 +2156,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     if (mon.type == MONS_BALLISTOMYCETE && desc != DESC_DBNAME)
     {
-        result += mon.colour == LIGHTRED ? "Active " : "";
+        result += mon.number ? "active " : "";
     }
 
     // Done here to cover cases of undead versions of hydras.
@@ -5014,6 +5014,19 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
                         if (observe_cell(adjacent) && observe_cell(pos()))
                             mpr("A nearby fungus spawns a giant spore.");
+
+                        // Decrease the count and maybe become inactive
+                        // again
+                        if(this->number)
+                        {
+                            this->number--;
+                            if(this->number == 0)
+                            {
+                                this->colour = MAGENTA;
+                                if(you.can_see(this))
+                                    mprf("A nearby ballistomycete calms down.");
+                            }
+                        }
                     }
                     break;
                 }
@@ -6044,7 +6057,7 @@ int mon_enchant::calc_duration(const monsters *mons,
     case ENCH_SPORE_PRODUCTION:
         // The duration of the spore production timer depends on the color
         // of the fungus
-        cturn = mons->colour == LIGHTRED ? 150 : 1500;
+        cturn = mons->number ? 150 : 1500;
         break;
 
     case ENCH_ABJ:

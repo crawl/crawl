@@ -1445,13 +1445,15 @@ static void _activate_ballistomycetes( monsters * monster)
            && env.mons[i].alive()
            && env.mons[i].type == MONS_BALLISTOMYCETE)
         {
-            if(env.mons[i].colour != LIGHTRED)
+            env.mons[i].number++;
+            // 0 -> 1 means the ballisto moves onto the faster spawn
+            // timer and changes color
+            if(env.mons[i].number == 1)
             {
                 env.mons[i].colour = LIGHTRED;
                 // Reset the spore production timer.
                 env.mons[i].del_ench(ENCH_SPORE_PRODUCTION, false);
                 env.mons[i].add_ench(ENCH_SPORE_PRODUCTION);
-
                 activated_others = true;
                 if(you.can_see(&env.mons[i]))
                     seen_others++;
