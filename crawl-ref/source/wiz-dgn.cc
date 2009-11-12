@@ -25,6 +25,7 @@
 #include "options.h"
 #include "place.h"
 #include "player.h"
+#include "religion.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
@@ -388,8 +389,26 @@ void wizard_list_branches()
         if (temples.size() == 0)
             continue;
 
-        mprf(MSGCH_DIAGNOSTICS, "%lu on D:%lu", temples.size(),
-             i + 1);
+        std::vector<std::string> god_names;
+
+        for (unsigned int j = 0; j < temples.size(); j++)
+        {
+            CrawlHashTable &temple_hash = temples[j];
+            CrawlVector    &gods        = temple_hash[TEMPLE_GODS_KEY];
+
+            for (unsigned int k = 0; k < gods.size(); k++)
+            {
+                god_type god = (god_type) gods[k].get_byte();
+
+                god_names.push_back(god_name(god));
+            }
+        }
+
+        mprf(MSGCH_DIAGNOSTICS, "%lu on D:%lu (%s)", temples.size(),
+             i + 1,
+             comma_separated_line( god_names.begin(),
+                                   god_names.end() ).c_str()
+            );
     }
 }
 
