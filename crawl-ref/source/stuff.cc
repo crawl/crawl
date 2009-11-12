@@ -892,7 +892,7 @@ void zap_los_monsters(bool items_also)
     los_def los(you.pos(), opc_fullyopaque);
     los.update();
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, true, false); ri; ++ri)
     {
         if (!you.see_cell(*ri))
             continue;
