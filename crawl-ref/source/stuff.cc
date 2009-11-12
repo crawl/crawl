@@ -891,12 +891,12 @@ void zap_los_monsters()
 
     for (rectangle_iterator ri(crawl_view.vlos1, crawl_view.vlos2); ri; ++ri )
     {
-        if (!in_vlos(*ri))
-            continue;
-
         const coord_def g = view2grid(*ri);
 
         if (!map_bounds(g))
+            continue;
+
+        if (!you.see_cell(g))
             continue;
 
         if (g == you.pos())
