@@ -689,13 +689,13 @@ static std::string _describe_demon(const monsters &mons)
 
 void append_weapon_stats(std::string &description, const item_def &item)
 {
-    description += "$Damage rating: ";
-    _append_value(description, property( item, PWPN_DAMAGE ), false);
-    description += "   ";
-
-    description += "Accuracy rating: ";
+    description += "$Accuracy rating: ";
     _append_value(description, property( item, PWPN_HIT ), true);
     description += "    ";
+
+    description += "Damage rating: ";
+    _append_value(description, property( item, PWPN_DAMAGE ), false);
+    description += "   ";
 
     description += "Base attack delay: ";
     _append_value(description, property( item, PWPN_SPEED ) * 10, false);
