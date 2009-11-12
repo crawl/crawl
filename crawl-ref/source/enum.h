@@ -2093,7 +2093,8 @@ enum beh_type
     BEH_STRICT_NEUTRAL,
     BEH_NEUTRAL,                       //  creation only
     BEH_HOSTILE,                       //  creation only
-    BEH_GUARD                          //  creation only - monster is guard
+    BEH_GUARD,                         //  creation only - monster is guard
+    BEH_COPY                           //  creation only - copy from summoner
 };
 
 enum mon_attitude_type

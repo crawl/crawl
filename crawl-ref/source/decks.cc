@@ -2373,7 +2373,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
 
             if (create_monster(
                     mgen_data::hostile_at(
-                        RANDOM_ELEMENT(statues),
+                        RANDOM_ELEMENT(statues), "the Trowel card",
                         true, 0, 0, you.pos())) != -1)
             {
                 mpr("A menacing statue appears!");
@@ -2387,7 +2387,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
 
             if (create_monster(
                     mgen_data(RANDOM_ELEMENT(golems),
-                              BEH_FRIENDLY, 5, 0,
+                              BEH_FRIENDLY, &you, 5, 0,
                               you.pos(), MHITYOU)) != -1)
             {
                 mpr("You construct a golem!");
@@ -2582,7 +2582,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // and thus not print the message.
     // This hack appears later in this file as well.
     if (create_monster(
-            mgen_data(summon_any_demon(dct), BEH_FRIENDLY,
+            mgen_data(summon_any_demon(dct), BEH_FRIENDLY, &you,
                       std::min(power/50 + 1, 6), 0,
                       you.pos(), MHITYOU),
             false) == -1)
@@ -2638,7 +2638,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
     const bool friendly = (power_level > 0 || !one_chance_in(4));
 
     if (create_monster(mgen_data(mon_chosen,
-                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                                  3, 0, chosen_spot, MHITYOU),
                        false) == -1)
     {
@@ -2654,7 +2654,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     const int mon =
         create_monster(
             mgen_data(MONS_DANCING_WEAPON,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                       power_level + 3, 0, you.pos(), MHITYOU),
             false);
 
@@ -2740,7 +2740,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     {
         create_monster(
             mgen_data(result,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                       std::min(power/50 + 1, 6), 0,
                       you.pos(), MHITYOU));
     }
@@ -2755,7 +2755,7 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
     };
 
     if (create_monster(mgen_data(skeltypes[power_level],
-                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                 friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                                  std::min(power/50 + 1, 6), 0,
                                  you.pos(), MHITYOU),
                        false) == -1)
@@ -2778,6 +2778,7 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
 
     if (create_monster(mgen_data(ugly,
                                  friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                                 &you,
                                  std::min(power/50 + 1, 6), 0,
                                  you.pos(), MHITYOU),
                        false) == -1)

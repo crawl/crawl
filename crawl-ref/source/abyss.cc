@@ -709,7 +709,10 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         const beh_type beh =
             one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4) ? BEH_HOSTILE
                                                               : BEH_NEUTRAL;
-        const int mid = create_monster(mgen_data(mons, beh, 5, 0, p));
+        mgen_data mg(mons, beh, 0, 5, 0, p);
+        mg.non_actor_summoner = "Lugonu's corruption";
+
+        const int mid = create_monster(mg);
 
         return (mid != -1);
     }

@@ -1262,12 +1262,14 @@ static int _xom_send_allies(int sever, bool debug = false)
     {
         monster_type mon_type = _xom_random_demon(sever);
 
-        summons[i] =
-            create_monster(
-                mgen_data(mon_type, BEH_FRIENDLY,
-                          3, MON_SUMM_AID,
-                          you.pos(), MHITYOU,
-                          MG_FORCE_BEH, GOD_XOM));
+        mgen_data mg(mon_type, BEH_FRIENDLY, &you, 3, MON_SUMM_AID,
+                     you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+
+        // Even though the friendlies are charged to you for accounting,
+        // they should still show as Xom's fault if one of them kills you.
+        mg.non_actor_summoner = "Xom";
+
+        summons[i] = create_monster(mg);
 
         if (summons[i] != -1)
         {
@@ -1325,6 +1327,7 @@ static int _xom_send_allies(int sever, bool debug = false)
                     || (!is_demonic[i] && hostiletype == 2))
                 {
                     mon->attitude = ATT_HOSTILE;
+                    // XXX need to reset summon quota here?
                     behaviour_event(mon, ME_ALERT, MHITYOU);
                 }
             }
@@ -1367,10 +1370,12 @@ static int _xom_send_one_ally(int sever, bool debug = false)
     if (different && one_chance_in(4))
         beha = BEH_HOSTILE;
 
-    const int summons =
-        create_monster(
-            mgen_data(mon_type, beha, 6, MON_SUMM_AID, you.pos(), MHITYOU,
-                      MG_FORCE_BEH, GOD_XOM));
+    mgen_data mg(mon_type, beha, (beha == BEH_FRIENDLY) ? &you : 0, 6,
+                 MON_SUMM_AID, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+
+    mg.non_actor_summoner = "Xom";
+
+    const int summons = create_monster(mg);
 
     if (summons != -1)
     {
@@ -1763,10 +1768,14 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
     ASSERT(wpn != NON_ITEM);
 
     const int dur = std::min(2 + (random2(sever) / 5), 6);
-    const int monster = create_monster(
-                          mgen_data(MONS_DANCING_WEAPON, BEH_FRIENDLY,
-                                  dur, SPELL_TUKIMAS_DANCE,
-                                  mon->pos(), mon->mindex(), 0, GOD_XOM));
+
+    mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, &you, dur,
+                 SPELL_TUKIMAS_DANCE, mon->pos(), mon->mindex(),
+                 0, GOD_XOM);
+
+    mg.non_actor_summoner = "Xom";
+
+    const int monster = create_monster(mg);
 
     if (monster == -1)
         return (XOM_DID_NOTHING);
@@ -1853,10 +1862,13 @@ static int _xom_send_major_ally(int sever, bool debug = false)
     if (!is_demonic && one_chance_in(4))
         beha = BEH_HOSTILE;
 
-    const int summons =
-        create_monster(
-            mgen_data(_xom_random_demon(sever, one_chance_in(8)), beha,
-                      0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM));
+    mgen_data mg(_xom_random_demon(sever, one_chance_in(8)), beha,
+                 (beha == BEH_FRIENDLY) ? &you : 0,
+                 0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+
+    mg.non_actor_summoner = "Xom";
+
+    const int summons = create_monster(mg);
 
     if (summons != -1)
     {
@@ -3180,7 +3192,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
         {
             if (create_monster(
                     mgen_data::hostile_at(
-                        _xom_random_demon(sever),
+                        _xom_random_demon(sever), "Xom",
                         true, 4, MON_SUMM_WRATH, you.pos(), 0,
                         GOD_XOM)) != -1)
             {

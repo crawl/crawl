@@ -74,6 +74,7 @@ static bool _evoke_sceptre_of_asmodeus()
                                      summon_any_demon(DEMON_COMMON));
         const bool good_summon = create_monster(
                                      mgen_data::hostile_at(mon,
+                                         "the Sceptre of Asmodeus",
                                          true, 6, 0, you.pos())) != -1;
 
         if (good_summon)
@@ -462,7 +463,8 @@ static void _ZONGULDROK_world_reacts(item_def *item)
 {
     if (one_chance_in(5))
     {
-        animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU);
+        animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
+                     "the Sword of Zonguldrok");
         did_god_conduct(DID_NECROMANCY, 1);
     }
 }

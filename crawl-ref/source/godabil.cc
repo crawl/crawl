@@ -386,6 +386,7 @@ int fungal_bloom()
                     const int mushroom = create_monster(
                                 mgen_data(MONS_TOADSTOOL,
                                           BEH_FRIENDLY,
+                                          &you,
                                           0,
                                           0,
                                           pos,
@@ -458,6 +459,7 @@ static int _create_plant(coord_def & target)
     const int plant = create_monster(mgen_data
                                      (MONS_PLANT,
                                       BEH_FRIENDLY,
+                                      &you,
                                       0,
                                       0,
                                       target,
@@ -560,6 +562,7 @@ bool sunlight()
             // Create a plant.
             const int plant = create_monster(mgen_data(MONS_PLANT,
                                                        BEH_HOSTILE,
+                                                       &you,
                                                        0,
                                                        0,
                                                        target,
@@ -876,6 +879,7 @@ int rain(const coord_def &target)
                 const int plant = create_monster(mgen_data
                                      (coinflip() ? MONS_PLANT : MONS_FUNGUS,
                                       BEH_GOOD_NEUTRAL,
+                                      &you,
                                       0,
                                       0,
                                       *rad,
@@ -953,6 +957,7 @@ int corpse_spores(beh_type behavior)
 
                 int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                   behavior,
+                                                  &you,
                                                   0,
                                                   0,
                                                   *rad,

@@ -1482,7 +1482,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_RAISE_DEAD:
-        animate_dead(&you, you.experience_level * 5, BEH_FRIENDLY, MHITYOU);
+        animate_dead(&you, you.experience_level * 5, BEH_FRIENDLY,
+                     MHITYOU, &you);
         break;
 
     case ABIL_CONTROL_DEMON:
@@ -1609,7 +1610,7 @@ static bool _do_ability(const ability_def& abil)
         mpr("You attempt to give life to the dead...");
 
         if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
-                            MHITYOU, GOD_YREDELEMNUL) < 0)
+                            MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
         {
             mpr("There are no remains here to animate!");
         }
@@ -1625,7 +1626,7 @@ static bool _do_ability(const ability_def& abil)
         mpr("You call on the dead to walk for you...");
 
         animate_dead(&you, 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
-                     MHITYOU, GOD_YREDELEMNUL);
+                     MHITYOU, &you, "", GOD_YREDELEMNUL);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
@@ -1993,8 +1994,10 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_JIYVA_CALL_JELLY:
     {
-        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, you.pos(),
+        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, you.pos(),
                      MHITNOT, 0, GOD_JIYVA);
+
+        mg.non_actor_summoner = "Jiyva";
 
         if (create_monster(mg) == -1)
             return (false);

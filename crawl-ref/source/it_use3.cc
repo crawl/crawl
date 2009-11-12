@@ -145,8 +145,8 @@ void shadow_lantern_effect()
 {
     if (x_chance_in_y(player_spec_death() + 1, 8))
     {
-        create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, 2, 0, you.pos(),
-                                 MHITYOU));
+        create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2, 0,
+                                 you.pos(), MHITYOU));
 
         item_def *lantern = you.weapon();
 
@@ -336,7 +336,7 @@ static bool evoke_horn_of_geryon()
     {
         mpr("You produce a hideous howling noise!", MSGCH_SOUND);
         create_monster(
-            mgen_data::hostile_at(MONS_BEAST,
+            mgen_data::hostile_at(MONS_BEAST, "the horn of Geryon",
                 true, 4, 0, you.pos()));
     }
     return (rc);
@@ -352,7 +352,7 @@ static bool _efreet_flask(int slot)
         create_monster(
             mgen_data(MONS_EFREET,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      0, 0, you.pos(),
+                      &you, 0, 0, you.pos(),
                       MHITYOU, MG_FORCE_BEH));
 
     if (monster != -1)
@@ -530,6 +530,7 @@ void tome_of_power(int slot)
     {
         if (create_monster(
                 mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
+                    "a tome of Destruction",
                     true, 6, 0, you.pos())) != -1)
         {
             mpr("A horrible Thing appears!");
@@ -630,7 +631,7 @@ static bool _box_of_beasts(item_def &box)
             beha = BEH_HOSTILE;
 
         if (create_monster(
-                mgen_data(beasty, beha, 2 + random2(4), 0,
+                mgen_data(beasty, beha, &you, 2 + random2(4), 0,
                           you.pos(), MHITYOU)) != -1)
         {
             success = true;

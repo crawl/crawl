@@ -2854,7 +2854,8 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
         mitm[last_item].link = idx;
 
         animate_remains(mon->pos(), CORPSE_BODY, mon->behaviour,
-                        mon->foe, mon->god, true, true, true, &zombie_index);
+                        mon->foe, 0, "a chaos effect", mon->god,
+                        true, true, true, &zombie_index);
     }
 
     // No equipment to get, or couldn't get it for some reason.
@@ -2862,10 +2863,11 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
     {
         monster_type type = (mons_zombie_size(mon->type) == Z_SMALL) ?
                                 MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE;
-        zombie_index = create_monster(
-                           mgen_data(type, mon->behaviour, 0, 0, mon->pos(),
-                                     mon->foe, MG_FORCE_PLACE, mon->god,
-                                     mon->type, mon->number));
+        mgen_data mg(type, mon->behaviour, 0, 0, 0, mon->pos(),
+                     mon->foe, MG_FORCE_PLACE, mon->god,
+                     mon->type, mon->number);
+        mg.non_actor_summoner = "a chaos effect";
+        zombie_index = create_monster(mg);
     }
 
     if (zombie_index == -1)

@@ -707,7 +707,9 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                       : GOD_NO_GOD;
 
-    mgen_data data = mgen_data::hostile_at(what, alert,
+    if (cause.empty())
+        cause = get_default_cause();
+    mgen_data data = mgen_data::hostile_at(what, cause, alert,
                                            abj_deg, 0, target->pos(), 0, god);
 
     // hostile_at() assumes the monster is hostile to the player,

@@ -193,6 +193,7 @@ static bool _do_split(monsters *thing, coord_def & target)
                                              thing->behaviour,
                                              0,
                                              0,
+                                             0,
                                              target,
                                              thing->foe,
                                              MG_FORCE_PLACE));
@@ -209,6 +210,8 @@ static bool _do_split(monsters *thing, coord_def & target)
     _split_ench_durations(thing, new_slime);
     new_slime->attitude = thing->attitude;
     new_slime->flags = thing->flags;
+    new_slime->props = thing->props;
+    // XXX copy summoner info
 
     if (you.can_see(thing))
         mprf("%s splits.", thing->name(DESC_CAP_A).c_str());
@@ -547,7 +550,7 @@ static bool _silver_statue_effects(monsters *mons)
             mgen_data(
                 summon_any_demon((coinflip() ? DEMON_COMMON
                                              : DEMON_LESSER)),
-                SAME_ATTITUDE(mons), 5, 0, foe->pos(), mons->foe));
+                SAME_ATTITUDE(mons), mons, 5, 0, foe->pos(), mons->foe));
         return (true);
     }
     return (false);

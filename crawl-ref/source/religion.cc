@@ -1121,7 +1121,11 @@ int yred_random_servants(int threshold, bool force_hostile)
         how_many = 2 + random2(4);
 
     mgen_data mg(mon_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 0, 0, you.pos(), MHITYOU, 0, GOD_YREDELEMNUL);
+                 !force_hostile ? &you : 0, 0, 0, you.pos(), MHITYOU, 0,
+                 GOD_YREDELEMNUL);
+
+    if (force_hostile)
+        mg.non_actor_summoner = "the anger of Yredelemnul";
 
     int created = 0;
     if (force_hostile)
@@ -1730,7 +1734,7 @@ static void _beogh_blessing_reinforcements()
             follower_type = RANDOM_ELEMENT(followers);
 
         _delayed_monster(
-            mgen_data(follower_type, BEH_FRIENDLY, 0, 0,
+            mgen_data(follower_type, BEH_FRIENDLY, &you, 0, 0,
                       you.pos(), MHITYOU, 0, GOD_BEOGH),
             _beogh_reinf_callback);
     }
@@ -2137,8 +2141,10 @@ static void _do_god_gift(bool prayed_for)
                     int count_created = 0;
                     for (; jelly_count > 0; --jelly_count)
                     {
-                        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0,
+                        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0,
                                      you.pos(), MHITNOT, 0, GOD_JIYVA);
+
+                        mg.non_actor_summoner = "Jiyva";
 
                         if (create_monster(mg) != -1)
                             count_created++;
@@ -5046,8 +5052,8 @@ void god_pitch(god_type which_god)
         if (!_has_jelly())
         {
             monster_type mon = MONS_JELLY;
-            mgen_data mg(mon, BEH_STRICT_NEUTRAL, 0, 0, you.pos(), MHITNOT, 0,
-                         GOD_JIYVA);
+            mgen_data mg(mon, BEH_STRICT_NEUTRAL, &you, 0, 0, you.pos(),
+                         MHITNOT, 0, GOD_JIYVA);
 
             _delayed_monster(mg);
             simple_god_message(" grants you a jelly!");

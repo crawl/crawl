@@ -1794,8 +1794,8 @@ static bool _reaping_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
     }
 
     int midx = NON_MONSTER;
-    if (animate_remains(victim->pos(), CORPSE_BODY, beh, hitting, GOD_NO_GOD,
-                        true, true, true, &midx) <= 0)
+    if (animate_remains(victim->pos(), CORPSE_BODY, beh, hitting, agent, "",
+                        GOD_NO_GOD, true, true, true, &midx) <= 0)
     {
         return (false);
     }
@@ -5261,7 +5261,7 @@ void read_scroll(int slot)
     {
         const int monster = create_monster(
                                 mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
-                                          0, 0, you.pos(), MHITYOU,
+                                          &you, 0, 0, you.pos(), MHITYOU,
                                           MG_FORCE_BEH));
         if (monster != -1)
         {

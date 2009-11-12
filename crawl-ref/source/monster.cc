@@ -4997,6 +4997,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
                     int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                       created_behavior,
+                                                      this,
                                                       0,
                                                       0,
                                                       adjacent,
@@ -5824,7 +5825,7 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
                 continue;
 
             const int nmons = mons_place(
-                                  mgen_data(jelly, beha, 0, 0,
+                                  mgen_data(jelly, beha, this, 0, 0,
                                             jpos, foe, 0, god));
 
             if (nmons != -1 && nmons != NON_MONSTER)

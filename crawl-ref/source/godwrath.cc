@@ -61,7 +61,8 @@ static bool _yred_random_zombified_hostile()
     else
         z_type = skel ? MONS_SKELETON_SMALL : MONS_ZOMBIE_SMALL;
 
-    return (create_monster(mgen_data::hostile_at(z_type, true,
+    return (create_monster(mgen_data::hostile_at(z_type,
+                    "the anger of Yredelemnul", true,
                     0, 0, you.pos(), 0, GOD_YREDELEMNUL, z_base)) != -1);
 }
 
@@ -83,7 +84,7 @@ static bool _okawaru_random_servant()
                                  : MONS_TITAN);            //  5%
 
     return (create_monster(
-                    mgen_data::hostile_at(mon_type,
+                    mgen_data::hostile_at(mon_type, "the fury of Okawaru",
                         true, 0, 0, you.pos(), 0, GOD_OKAWARU)) != -1);
 }
 
@@ -202,7 +203,7 @@ static bool _zin_retribution()
                     mon_pos = you.pos();
 
                 if (mons_place(
-                        mgen_data::hostile_at(mon,
+                        mgen_data::hostile_at(mon, "the power of Zin",
                             true, 0, 0, mon_pos, 0, god)) != -1)
                 {
                     success = true;
@@ -400,6 +401,7 @@ static bool _makhleb_retribution()
                            mgen_data::hostile_at(
                                static_cast<monster_type>(
                                    MONS_EXECUTIONER + random2(5)),
+                               "the fury of Makhleb",
                                true, 0, 0, you.pos(), 0, god)) != -1);
 
         simple_god_message(success ? " sends a greater servant after you!"
@@ -417,6 +419,7 @@ static bool _makhleb_retribution()
                     mgen_data::hostile_at(
                         static_cast<monster_type>(
                             MONS_NEQOXEC + random2(5)),
+                        "the fury of Makhleb",
                         true, 0, 0, you.pos(), 0, god)) != -1)
             {
                 count++;
@@ -445,6 +448,7 @@ static bool _kikubaaqudgha_retribution()
         {
             if (create_monster(
                     mgen_data::hostile_at(MONS_REAPER,
+                        "the malice of Kikubaaqudgha",
                         true, 0, 0, you.pos(), 0, god)) != -1)
             {
                 success = true;
@@ -646,6 +650,7 @@ static bool _beogh_retribution()
             const int mon =
                 create_monster(
                     mgen_data::hostile_at(MONS_DANCING_WEAPON,
+                        "the wrath of Beogh",
                         true, 0, 0, you.pos(), 0, god));
 
             if (mon != -1)
@@ -724,6 +729,7 @@ static bool _beogh_retribution()
 
         int mons = create_monster(
                        mgen_data::hostile_at(punisher,
+                           "the wrath of Beogh",
                            true, 0, 0, you.pos(), MG_PERMIT_BANDS, god));
 
         // sometimes name band leader
@@ -835,6 +841,7 @@ static bool _lugonu_retribution()
                            mgen_data::hostile_at(
                                static_cast<monster_type>(
                                    MONS_GREEN_DEATH + random2(3)),
+                               "the touch of Lugonu",
                                true, 0, 0, you.pos(), 0, god)) != -1);
 
         simple_god_message(success ? " sends a demon after you!"
@@ -851,6 +858,7 @@ static bool _lugonu_retribution()
                    mgen_data::hostile_at(
                        static_cast<monster_type>(
                            MONS_NEQOXEC + random2(5)),
+                       "the touch of Lugonu",
                        true, 0, 0, you.pos(), 0, god)) != -1)
             {
                 success = true;
@@ -977,6 +985,7 @@ static bool _jiyva_retribution()
 
             if (create_monster(
                     mgen_data::hostile_at(static_cast<monster_type>(slime),
+                        "the vengence of Jiyva",
                         true, 0, 0, you.pos(), 0, god)) != -1)
             {
                 success = true;
@@ -1043,11 +1052,13 @@ static bool _fedhas_retribution()
         unsigned free_thresh = 30;
 
         mgen_data temp(MONS_OKLOB_PLANT,
-                       BEH_HOSTILE, 0, 0,
+                       BEH_HOSTILE, 0, 0, 0,
                        coord_def(),
                        MHITNOT,
                        MG_FORCE_PLACE,
                        GOD_FEDHAS);
+
+        temp.non_actor_summoner = "the enmity of Fedhas Madash";
 
         // If we have a lot of space to work with (the circle with
         // radius 6 is substantially unoccupied), we can do something

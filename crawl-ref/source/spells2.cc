@@ -884,7 +884,7 @@ bool summon_animals(int pow)
 
         if (create_monster(
                 mgen_data(mon,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                           4, 0, you.pos(), MHITYOU)) != -1)
         {
             success = true;
@@ -903,7 +903,7 @@ bool cast_summon_butterflies(int pow, god_type god)
     for (int i = 0; i < how_many; ++i)
     {
         if (create_monster(
-                mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY,
+                mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, &you,
                           3, SPELL_SUMMON_BUTTERFLIES,
                           you.pos(), MHITYOU,
                           0, god)) != -1)
@@ -938,7 +938,7 @@ bool cast_summon_small_mammals(int pow, god_type god)
         }
 
         if (create_monster(
-                mgen_data(mon, BEH_FRIENDLY,
+                mgen_data(mon, BEH_FRIENDLY, &you,
                           3, SPELL_SUMMON_SMALL_MAMMALS,
                           you.pos(), MHITYOU,
                           0, god)) != -1)
@@ -996,7 +996,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
                 mon = MONS_SMALL_SNAKE;
 
             if (create_monster(
-                    mgen_data(mon, beha,
+                    mgen_data(mon, beha, &you,
                               dur, SPELL_STICKS_TO_SNAKES,
                               you.pos(), MHITYOU,
                               0, god)) != -1)
@@ -1043,7 +1043,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             mon = MONS_GREY_SNAKE;
 
         if (create_monster(
-                mgen_data(mon, beha,
+                mgen_data(mon, beha, &you,
                           dur, SPELL_STICKS_TO_SNAKES,
                           you.pos(), MHITYOU,
                           0, god)) != -1)
@@ -1082,7 +1082,7 @@ bool cast_summon_scorpions(int pow, god_type god)
 
         if (create_monster(
                 mgen_data(MONS_SCORPION,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                           3, SPELL_SUMMON_SCORPIONS,
                           you.pos(), MHITYOU,
                           0, god)) != -1)
@@ -1123,7 +1123,7 @@ bool cast_summon_swarm(int pow, god_type god,
 
         if (create_monster(
                 mgen_data(mon,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                           dur, !permanent ? SPELL_SUMMON_SWARM : 0,
                           you.pos(),
                           MHITYOU,
@@ -1180,7 +1180,7 @@ bool cast_call_canine_familiar(int pow, god_type god)
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
     if (create_monster(
-            mgen_data(mon, BEH_FRIENDLY,
+            mgen_data(mon, BEH_FRIENDLY, &you,
                       dur, SPELL_CALL_CANINE_FAMILIAR,
                       you.pos(),
                       MHITYOU,
@@ -1317,7 +1317,7 @@ bool cast_summon_elemental(int pow, god_type god,
 
     if (create_monster(
             mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                       dur, SPELL_SUMMON_ELEMENTAL,
                       targ,
                       MHITYOU,
@@ -1342,7 +1342,7 @@ bool cast_summon_ice_beast(int pow, god_type god)
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
     if (create_monster(
-            mgen_data(mon, BEH_FRIENDLY,
+            mgen_data(mon, BEH_FRIENDLY, &you,
                       dur, SPELL_SUMMON_ICE_BEAST,
                       you.pos(), MHITYOU,
                       0, god)) != -1)
@@ -1367,7 +1367,7 @@ bool cast_summon_ugly_thing(int pow, god_type god)
 
     if (create_monster(
             mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                       dur, SPELL_SUMMON_UGLY_THING,
                       you.pos(),
                       MHITYOU,
@@ -1397,7 +1397,7 @@ bool cast_summon_dragon(int pow, god_type god)
 
     if (create_monster(
             mgen_data(MONS_DRAGON,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                       3, SPELL_SUMMON_DRAGON,
                       you.pos(),
                       MHITYOU,
@@ -1462,11 +1462,15 @@ bool summon_berserker(int pow, god_type god, int spell,
         mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
     }
 
+    mgen_data mg(mon, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
+                 !force_hostile ? &you : 0, dur, spell, you.pos(),
+                 MHITYOU, 0, god);
+
+    if (force_hostile)
+        mg.non_actor_summoner = "the rage of " + god_name(god, false);
+
     int monster =
-        create_monster(
-            mgen_data(mon,
-                      !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, spell, you.pos(), MHITYOU, 0, god));
+        create_monster(mg);
 
     if (monster == -1)
         return (false);
@@ -1496,14 +1500,18 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
 {
     UNUSED(pow);
 
-    const int monster =
-        create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, spell,
-                      you.pos(),
-                      MHITYOU,
-                      MG_FORCE_BEH, god));
+    mgen_data mg(mon,
+                 friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                 friendly ? &you : 0,
+                 dur, spell,
+                 you.pos(),
+                 MHITYOU,
+                 MG_FORCE_BEH, god);
+
+    if (!friendly)
+        mg.non_actor_summoner = god_name(god, false);
+
+    const int monster = create_monster(mg);
 
     if (monster == -1)
         return (false);
@@ -1584,14 +1592,18 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
         // Cursed weapons become hostile.
         const bool friendly = (!force_hostile && !item_cursed(you.inv[wpn]));
 
-        monster =
-            create_monster(
-                mgen_data(MONS_DANCING_WEAPON,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                          dur, SPELL_TUKIMAS_DANCE,
-                          you.pos(),
-                          MHITYOU,
-                          0, god));
+        mgen_data mg(MONS_DANCING_WEAPON,
+                     friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                     force_hostile ? 0 : &you,
+                     dur, SPELL_TUKIMAS_DANCE,
+                     you.pos(),
+                     MHITYOU,
+                     0, god);
+
+        if (force_hostile)
+            mg.non_actor_summoner = god_name(god, false);
+
+        monster = create_monster(mg);
 
         if (monster == -1)
         {
@@ -1680,7 +1692,7 @@ bool cast_conjure_ball_lightning(int pow, god_type god)
 
         int monster =
             mons_place(
-                mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY,
+                mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, &you,
                           0, SPELL_CONJURE_BALL_LIGHTNING,
                           target, MHITNOT, 0, god));
 

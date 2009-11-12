@@ -857,7 +857,8 @@ static bool _handle_scroll(monsters *monster)
             simple_monster_message(monster, " reads a scroll.");
             const int mon = create_monster(
                 mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(monster),
-                          0, 0, monster->pos(), monster->foe, MG_FORCE_BEH));
+                          monster, 0, 0, monster->pos(), monster->foe,
+                          MG_FORCE_BEH));
 
             read = true;
             if (mon != -1)

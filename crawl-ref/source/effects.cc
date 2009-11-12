@@ -2860,7 +2860,7 @@ static void _hell_effects()
         if (summon_instead)
         {
             create_monster(
-                mgen_data::hostile_at(which_beastie,
+                mgen_data::hostile_at(which_beastie, "the effects of Hell",
                     true, 0, 0, you.pos()));
         }
         else
@@ -2882,6 +2882,7 @@ static void _hell_effects()
         mgen_data mg;
         mg.pos = you.pos();
         mg.foe = MHITYOU;
+        mg.non_actor_summoner = "the effects of Hell";
         create_monster(mg);
 
         for (int i = 0; i < 4; ++i)
@@ -3936,8 +3937,9 @@ void handle_time(long time_delta)
                    || monster_at(newpos)
                    || env.cgrid(newpos) != EMPTY_CLOUD);
 
-            mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, newpos,
+            mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, newpos,
                          MHITNOT, 0, GOD_JIYVA);
+            mg.non_actor_summoner = "Jiyva";
 
             if (create_monster(mg) != -1)
                 success = true;
@@ -4445,7 +4447,7 @@ static int _mushroom_ring(item_def &corpse, int & seen_count,
         return (0);
 
     mgen_data temp(MONS_TOADSTOOL,
-                   toadstool_behavior, 0, 0,
+                   toadstool_behavior, 0, 0, 0,
                    coord_def(),
                    MHITNOT,
                    MG_FORCE_PLACE,
@@ -4539,6 +4541,7 @@ int spawn_corpse_mushrooms(item_def &corpse,
             const int mushroom = create_monster(
                         mgen_data(MONS_TOADSTOOL,
                                   toadstool_behavior,
+                                  0,
                                   0,
                                   0,
                                   current,

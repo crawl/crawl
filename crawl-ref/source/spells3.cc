@@ -427,7 +427,7 @@ bool cast_call_imp(int pow, god_type god)
 
     const int monster =
         create_monster(
-            mgen_data(mon, BEH_FRIENDLY, dur, SPELL_CALL_IMP,
+            mgen_data(mon, BEH_FRIENDLY, &you, dur, SPELL_CALL_IMP,
                       you.pos(), MHITYOU, MG_FORCE_BEH, god));
 
     if (monster != -1)
@@ -456,7 +456,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
         create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY :
-                          charmed ? BEH_CHARMED : BEH_HOSTILE,
+                          charmed ? BEH_CHARMED : BEH_HOSTILE, &you,
                       dur, spell, you.pos(), MHITYOU, MG_FORCE_BEH, god));
 
     if (monster != -1)
@@ -566,7 +566,7 @@ bool cast_shadow_creatures(god_type god)
 
     const int monster =
         create_monster(
-            mgen_data(RANDOM_MONSTER, BEH_FRIENDLY,
+            mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, &you,
                       2, SPELL_SHADOW_CREATURES,
                       you.pos(), MHITYOU,
                       MG_FORCE_BEH, god), false);
@@ -613,7 +613,7 @@ bool cast_summon_horrible_things(int pow, god_type god)
     {
         const int monster =
             create_monster(
-               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY,
+               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, &you,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
                          MG_FORCE_BEH, god));
@@ -629,7 +629,7 @@ bool cast_summon_horrible_things(int pow, god_type god)
     {
         const int monster =
             create_monster(
-               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY,
+               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, &you,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
                          MG_FORCE_BEH, god));
@@ -926,8 +926,9 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
 }
 
 static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
-                           unsigned short hitting, god_type god, bool actual,
-                           bool force_beh, int* mon_index)
+                           unsigned short hitting, actor *as, std::string nas,
+                           god_type god, bool actual, bool force_beh,
+                           int* mon_index)
 {
     if (mon_index != NULL)
         *mon_index = -1;
@@ -970,11 +971,12 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                                                        : MONS_SKELETON_LARGE;
     }
 
-    int monster = create_monster(
-                            mgen_data(mon, beha,
-                                      0, 0, pos, hitting,
-                                      MG_FORCE_BEH, god,
-                                      zombie_type, number));
+    mgen_data mg(mon, beha, as, 0, 0, pos, hitting, MG_FORCE_BEH, god,
+                 zombie_type, number);
+
+    mg.non_actor_summoner = nas;
+
+    int monster = create_monster(mg);
 
     if (mon_index != NULL)
         *mon_index = monster;
@@ -1007,6 +1009,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 // you are butchering being animated.
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
+                    actor *as, std::string nas,
                     god_type god, bool actual,
                     bool quiet, bool force_beh,
                     int* mon_index)
@@ -1031,8 +1034,8 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
 
             const bool was_butchering = is_being_butchered(*si);
 
-            success = _raise_remains(a, si.link(), beha, hitting, god, actual,
-                                     force_beh, mon_index);
+            success = _raise_remains(a, si.link(), beha, hitting, as, nas,
+                                     god, actual, force_beh, mon_index);
 
             if (actual && success)
             {
@@ -1065,7 +1068,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
 }
 
 int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
-                 god_type god, bool actual)
+                 actor *as, std::string nas, god_type god, bool actual)
 {
     UNUSED(pow);
 
@@ -1080,7 +1083,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     {
         // This will produce a message if the corpse you are butchering
         // is raised.
-        if (animate_remains(*ri, CORPSE_BODY, beha, hitting, god,
+        if (animate_remains(*ri, CORPSE_BODY, beha, hitting, as, nas, god,
                             actual, true) > 0)
         {
             number_raised++;
@@ -1133,7 +1136,7 @@ bool cast_simulacrum(int pow, god_type god)
         {
             const int monster =
                 create_monster(
-                    mgen_data(sim_type, BEH_FRIENDLY,
+                    mgen_data(sim_type, BEH_FRIENDLY, &you,
                               6, SPELL_SIMULACRUM,
                               you.pos(), MHITYOU,
                               MG_FORCE_BEH, god, type));
@@ -1224,7 +1227,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
 
     const int monster =
         create_monster(
-            mgen_data(mon, BEH_FRIENDLY,
+            mgen_data(mon, BEH_FRIENDLY, &you,
                       0, 0,
                       you.pos(), MHITYOU,
                       MG_FORCE_BEH, god,
@@ -1306,7 +1309,7 @@ bool cast_haunt(int pow, const coord_def& where, god_type god)
         const int monster =
             create_monster(
                 mgen_data(mon,
-                          BEH_FRIENDLY,
+                          BEH_FRIENDLY, &you,
                           5, SPELL_HAUNT,
                           where, mi, MG_FORCE_BEH, god));
 

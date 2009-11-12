@@ -1790,7 +1790,7 @@ int monster_die(monsters *monster, killer_type killer,
                 {
                     const int spectre =
                         create_monster(
-                            mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY,
+                            mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY, &you,
                                 0, 0, monster->pos(), MHITYOU,
                                 0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
                                 spectre_type, monster->number));

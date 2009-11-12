@@ -126,6 +126,10 @@ struct mgen_data
     // XXX: Could use splitting up these aspects.
     beh_type        behaviour;
 
+    // Who summoned this monster?  Important to know for death accounting
+    // and the summon cap, if and when it goes in.  NULL is no summoner.
+    actor*          summoner;
+
     // For summoned monsters, this is a measure of how long the summon will
     // hang around, on a scale of 1-6, 6 being longest. Use 0 for monsters
     // that aren't summoned.
@@ -190,8 +194,13 @@ struct mgen_data
     // XXX: Rather hackish.
     std::string     mname;
 
+    // This is used to account for non-actor summoners.  Blasted by an Ice
+    // Fiend ... summoned by the effects of Hell.
+    std::string     non_actor_summoner;
+
     mgen_data(monster_type mt = RANDOM_MONSTER,
               beh_type beh = BEH_HOSTILE,
+              actor* sner = 0,
               int abj = 0,
               int st = 0,
               const coord_def &p = coord_def(-1, -1),
@@ -204,13 +213,14 @@ struct mgen_data
               int monpower = you.your_level,
               proximity_type prox = PROX_ANYWHERE,
               level_area_type ltype = you.level_type,
-              std::string monname = "")
+              std::string monname = "",
+              std::string nas = "")
 
-        : cls(mt), base_type(base), behaviour(beh),
+        : cls(mt), base_type(base), behaviour(beh), summoner(sner),
           abjuration_duration(abj), summon_type(st), pos(p), foe(mfoe),
           flags(monflags), god(which_god), number(monnumber), colour(moncolour),
           power(monpower), proximity(prox), level_type(ltype), map_mask(0),
-          mname(monname)
+          mname(monname), non_actor_summoner(nas)
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
                || mt == MONS_BALL_LIGHTNING);
@@ -230,10 +240,11 @@ struct mgen_data
                                 const coord_def &where,
                                 unsigned flags = 0)
     {
-        return mgen_data(what, BEH_SLEEP, 0, 0, where, MHITNOT, flags);
+        return mgen_data(what, BEH_SLEEP, 0, 0, 0, where, MHITNOT, flags);
     }
 
     static mgen_data hostile_at(monster_type mt,
+                                std::string summoner,
                                 bool alert = false,
                                 int abj = 0,
                                 int st = 0,
@@ -243,9 +254,10 @@ struct mgen_data
                                 monster_type base = MONS_NO_MONSTER)
 
     {
-        return mgen_data(mt, BEH_HOSTILE, abj, st, p,
+        return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         monflags, god, base);
+                         monflags, god, base, 0, BLACK, you.your_level,
+                         PROX_ANYWHERE, you.level_type, "", summoner);
     }
 };
 

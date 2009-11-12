@@ -3091,6 +3091,7 @@ void bolt::affect_ground()
 
         int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                           beh,
+                                          agent(),
                                           0,
                                           0,
                                           pos(),
@@ -3322,8 +3323,8 @@ void bolt::affect_place_explosion_clouds()
                 (whose_kill() == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY);
 
             mons_place(
-                mgen_data(MONS_FIRE_VORTEX, att, 2, SPELL_FIRE_STORM, p,
-                          MHITNOT, 0, god));
+                mgen_data(MONS_FIRE_VORTEX, att, agent(), 2, SPELL_FIRE_STORM,
+                          p, MHITNOT, 0, god));
         }
     }
 }
