@@ -21,6 +21,7 @@
 
 #define ART_FUNC_H
 
+#include "cloud.h"    // For storm's bow rain
 #include "effects.h"  // For Sceptre of Torment tormenting
 #include "food.h"     // For evokes
 #include "mon-place.h" // For Sceptre of Asmodeus evoke
@@ -477,3 +478,14 @@ static void _ZONGULDROK_melee_effect(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
+static void _STORM_BOW_world_reacts(item_def *item)
+{
+    if (!one_chance_in(300))
+        return;
+
+    for (radius_iterator ri(you.pos(), 2); ri; ++ri)
+        if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD && one_chance_in(5))
+            place_cloud( CLOUD_RAIN, *ri, random2(20), KC_OTHER, 3);
+}
+
+///////////////////////////////////////////////////
