@@ -3384,13 +3384,13 @@ item_spec item_list::parse_single_spec(std::string s)
     }
     else if (result.sub_type == OBJ_RANDOM)
     {
-        // it will be assigned among appropiate ones later
+        // it will be assigned among appropriate ones later
     }
     else if (result.base_type == OBJ_WEAPONS
                 && !is_weapon_brand_ok(result.sub_type, ego)
              || result.base_type == OBJ_ARMOUR
                 && !is_armour_brand_ok(result.sub_type, ego))
-            // no missile brands are dissallowed yet
+            // no missile brands are disallowed yet
     {
         error = make_stringf("Ego '%s' is incompatible with item '%s'.",
                              ego_str.c_str(), s.c_str());
