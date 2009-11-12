@@ -1218,34 +1218,9 @@ static std::string morgue_name(time_t when_crawl_got_even)
 #endif // SHORT_FILE_NAMES
 }
 
-void end_game( scorefile_entry &se )
+// Delete save files on game end.
+static void delete_files()
 {
-    bool dead = true;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-        set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].base_type != 0)
-            set_ident_type( you.inv[i], ID_KNOWN_TYPE );
-    }
-
-    if (!dump_char( morgue_name(se.death_time), !dead, true, &se ))
-    {
-        mpr("Char dump unsuccessful! Sorry about that.");
-        if (!crawl_state.seen_hups)
-            more();
-        clrscr();
-    }
-
-    if (se.death_type == KILLED_BY_LEAVING
-        || se.death_type == KILLED_BY_QUITTING
-        || se.death_type == KILLED_BY_WINNING)
-    {
-        dead = false;
-    }
-
     // clean all levels that we think we have ever visited
     for (level_id_set::const_iterator i = Generated_Levels.begin();
          i != Generated_Levels.end(); ++i)
@@ -1288,6 +1263,37 @@ void end_game( scorefile_entry &se )
     {
         std::string tmpname = basename + suffixes[i];
         unlink( tmpname.c_str() );
+    }
+}
+
+void end_game(scorefile_entry &se)
+{
+    bool dead = true;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+        set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].base_type != 0)
+            set_ident_type( you.inv[i], ID_KNOWN_TYPE );
+    }
+
+    delete_files();
+
+    if (!dump_char( morgue_name(se.death_time), !dead, true, &se ))
+    {
+        mpr("Char dump unsuccessful! Sorry about that.");
+        if (!crawl_state.seen_hups)
+            more();
+        clrscr();
+    }
+
+    if (se.death_type == KILLED_BY_LEAVING
+        || se.death_type == KILLED_BY_QUITTING
+        || se.death_type == KILLED_BY_WINNING)
+    {
+        dead = false;
     }
 
     // death message
