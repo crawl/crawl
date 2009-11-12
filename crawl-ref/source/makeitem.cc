@@ -2249,12 +2249,9 @@ bool is_armour_brand_ok(int type, int brand)
     case SPARM_STEALTH:
         return (slot == EQ_BOOTS);
 
-    case SPARM_RESISTANCE:
-        if (slot == EQ_SHIELD)
-            return (true);
     case SPARM_ARCHMAGI:
-        if (type != ARM_ROBE)
-            return (false);
+        return (type == ARM_ROBE);
+
     case SPARM_PONDEROUSNESS:
         return (slot == EQ_BODY_ARMOUR);
 
@@ -2272,25 +2269,20 @@ bool is_armour_brand_ok(int type, int brand)
         return (slot == EQ_GLOVES);
 
     case SPARM_SEE_INVISIBLE:
-        if (type == ARM_WIZARD_HAT)
-            return (false);
     case SPARM_INTELLIGENCE:
         return (slot == EQ_HELMET);
 
     case SPARM_FIRE_RESISTANCE:
     case SPARM_COLD_RESISTANCE:
-        if (slot == EQ_BOOTS && type != ARM_BOOTS) // both bardings
+    case SPARM_RESISTANCE:
+        return (true); // in portal vaults, these can happen on every slot
+
+    case SPARM_MAGIC_RESISTANCE:
+        if (type == ARM_WIZARD_HAT)
             return (true);
     case SPARM_POISON_RESISTANCE:
-    case SPARM_MAGIC_RESISTANCE:
     case SPARM_POSITIVE_ENERGY:
-        if (brand == SPARM_POISON_RESISTANCE && slot == EQ_CLOAK)
-            return (true);
-        if (brand == SPARM_MAGIC_RESISTANCE && slot == EQ_CLOAK)
-            return (true);
-        if (brand == SPARM_MAGIC_RESISTANCE && type == ARM_WIZARD_HAT)
-            return (true);
-        return (slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD);
+        return (slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD || slot == EQ_CLOAK);
 
     case SPARM_SPIRIT_SHIELD:
         return (type == ARM_CAP || slot == EQ_SHIELD);
