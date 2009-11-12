@@ -223,7 +223,10 @@ end
 function make_fiery_weapon (e, weapon)
     local weapon_string = ""
     for _, wt in ipairs(weapon) do
-        weapon_string = weapon_string .. " / " .. wt .. " ego:flaming good_item"
+        if string.find(wt, "bow") == nil
+          then weapon_string = weapon_string .. " / " .. wt .. " ego:flaming good_item"
+          else weapon_string = weapon_string .. " / " .. wt .. " ego:flame good_item"
+        end
     end
     local n_weapon = string.gsub(weapon_string, "%s*\/$", "")
     e.item(n_weapon)
