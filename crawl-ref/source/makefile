@@ -181,7 +181,6 @@ include makefile.obj
 # tiles-specific object files too.
 ifneq (,$(findstring clean,$(MAKECMDGOALS)))
 TILES := YesPlease
-UNSUPPORTED_BUILD := YesPlease
 endif
 
 # Works for Mac OS X and Linux.
