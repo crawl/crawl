@@ -129,9 +129,19 @@ MAP
 1
 ENDMAP
 
-NAME:   uniq_gastronok
-DEPTH:  8-9, 10-13, Lair:4-8
-TAGS:   place_unique
+NAME:   uniq_gastronok_1
+DEPTH:  8-9, 10-13, !Lair
+TAGS:   place_unique uniq_gastronok
+WEIGHT: 5
+MONS:   Gastronok
+MAP
+1
+ENDMAP
+
+NAME:   uniq_gastronok_2
+DEPTH:  Lair:4-8
+TAGS:   place_unique uniq_gastronok
+WEIGHT: 15
 MONS:   Gastronok
 MAP
 1
