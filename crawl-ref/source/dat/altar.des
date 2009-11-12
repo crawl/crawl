@@ -273,6 +273,10 @@ ENDMAP
 # III  Special altars
 ######################################
 
+# NOTE: A vault tagged with only temple_overflow_FOO will only ever be used
+# for overflow temples, but one tagged with both temple_overflow_FOO and
+# uniq_altar_FOO can be generated either randomly or as an overflow temple.
+
 # XXX - The WEIGHTs and PLACE of these Fedhas vaults are temporary.
 #       Remove once the Ecumenical Temple is updated to cater for
 #       more than 12 gods.
@@ -480,7 +484,7 @@ ENDMAP
 
 NAME:   lemuel_blue_sif_altar
 DEPTH:  D:2-18, Elf, Vault
-TAGS:   no_monster_gen mini_float temple_overflow_sif_muna
+TAGS:   no_monster_gen mini_float temple_overflow_sif_muna uniq_altar_sif_muna
 COLOUR: . = blue
 FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
 KFEAT:  _ = altar_sif_muna
@@ -634,7 +638,7 @@ ENDMAP
 ###############################################################################
 # Blood-stained Trog altar!
 NAME:  bloody_trog
-TAGS:  uniq_bloody_trog temple_overflow_trog
+TAGS:  uniq_altar_trog temple_overflow_trog
 DEPTH: D:2-20, Orc, Vault
 KPROP: . = bloody / nothing
 KFEAT: _ = altar_trog
