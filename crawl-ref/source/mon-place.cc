@@ -1270,6 +1270,42 @@ static int _place_monster_aux(const mgen_data &mg,
     }
     mon->foe = mg.foe;
 
+    if (!mg.non_actor_summoner.empty())
+    {
+        CrawlStoreValue& blame = mon->props["blame"];
+
+        blame.new_vector(SV_STR, SFLAG_CONST_TYPE);
+        blame.get_vector().push_back(mg.non_actor_summoner);
+    }
+    else if (mg.summoner != NULL)
+    {
+        CrawlStoreValue& blame = mon->props["blame"];
+
+        blame.new_vector(SV_STR, SFLAG_CONST_TYPE);
+
+        if (mg.summoner->atype() == ACT_PLAYER)
+        {
+            blame.get_vector().push_back("themselves");
+        }
+        else
+        {
+            monsters* sum = &menv[mg.summoner->mindex()];
+
+            blame.get_vector().push_back(sum->full_name(DESC_NOCAP_A, true));
+
+            if (sum->props.exists("blame"))
+            {
+                CrawlVector& oldblame = sum->props["blame"].get_vector();
+
+                for (CrawlVector::iterator i = oldblame.begin();
+                     i != oldblame.end(); ++i)
+                {
+                    blame.get_vector().push_back(*i);
+                }
+            }
+        }
+    }
+
     // Initialise (very) ugly things and pandemonium demons.
     if (mon->type == MONS_UGLY_THING
         || mon->type == MONS_VERY_UGLY_THING)
@@ -2407,6 +2443,11 @@ int mons_place(mgen_data mg)
         mg.power = you.your_level;
         break;
     }
+
+    if (mg.behaviour == BEH_COPY)
+        mg.behaviour = mg.summoner == &you
+            ? BEH_FRIENDLY
+            : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
 
     int mid = place_monster(mg);
     if (mid == -1)

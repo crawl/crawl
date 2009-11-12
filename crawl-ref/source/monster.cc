@@ -105,6 +105,7 @@ void monsters::reset()
     travel_path.clear();
     ghost.reset(NULL);
     seen_context = "";
+    props.clear();
 }
 
 void monsters::init_with(const monsters &mon)
@@ -136,6 +137,7 @@ void monsters::init_with(const monsters &mon)
     colour            = mon.colour;
     foe_memory        = mon.foe_memory;
     god               = mon.god;
+    props             = mon.props;
 
     if (mon.ghost.get())
         ghost.reset(new ghost_demon(*mon.ghost));

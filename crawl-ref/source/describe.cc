@@ -2952,6 +2952,19 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
                      << mitm[mons.inv[i]].name(DESC_NOCAP_A, false, true);
         }
     }
+
+    if (mons.props.exists("blame"))
+    {
+        inf.body << "$$Monster blame chain:$";
+
+        const CrawlVector& blame = mons.props["blame"].get_vector();
+
+        for (CrawlVector::const_iterator it = blame.begin();
+             it != blame.end(); ++it)
+        {
+            inf.body << "    " << it->get_string() << "$";
+        }
+    }
 #endif
 }
 
