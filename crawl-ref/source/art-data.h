@@ -1334,6 +1334,25 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
+/* UNRAND_GONG */
+{
+    "shield of the gong", "bronze gong", 
+    OBJ_ARMOUR, ARM_SHIELD, +6, 0, ETC_GOLD, 0, 
+    UNRAND_FLAG_NONE, 
+    {
+        SPARM_NORMAL, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 
+        0, 
+    },
+    "This is a large gong; you wonder if it could be worn as a shield.", 
+    "This shield surely will be heard!", 
+    "", 
+    NULL, NULL, NULL, { _GONG_melee_effect }, NULL, 
+},
+
 /* UNRAND_AIR */
 {
     "amulet of the Air", "sky-blue amulet", 

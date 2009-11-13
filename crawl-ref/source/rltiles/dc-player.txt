@@ -654,6 +654,7 @@ bladehands BLADEHAND
 shield_round_small SHIELD_ROUND_SMALL
 shield_round_small2 SHIELD_ROUND_SMALL2
 bullseye BULLSEYE
+gong GONG
 
 shield_middle_round SHIELD_MIDDLE_ROUND
 shield_skull SHIELD_SKULL

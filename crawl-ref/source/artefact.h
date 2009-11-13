@@ -13,7 +13,7 @@
 class bolt;
 
 // NOTE: NO_UNRANDARTS is automatically set by util/art-data.pl
-#define NO_UNRANDARTS 79
+#define NO_UNRANDARTS 80
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
@@ -106,6 +106,7 @@ enum unrand_type
     UNRAND_FENCERS_GLOVES,   // Fencer's gloves
     UNRAND_STARLIGHT,        // cloak of Starlight
     UNRAND_RATSKIN_CLOAK,    // ratskin cloak
+    UNRAND_GONG,             // shield of the gong
     UNRAND_AIR,              // amulet of the Air
     UNRAND_SHADOWS,          // ring of Shadows
     UNRAND_CEKUGOB,          // amulet of Cekugob

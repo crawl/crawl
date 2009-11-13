@@ -1014,6 +1014,16 @@ DESC_END: An enchantress with a magic loom and way too much time on
           and looks rather foolish, but it provides excellent protection
           from rats of all kinds.
 
+NAME:     shield of the gong
+APPEAR:   bronze gong
+OBJ:      OBJ_ARMOUR/ARM_SHIELD
+PLUS:     +6
+COLOUR:   ETC_GOLD
+TILE:     urand_gong
+TILE_EQ:  gong
+DESC:     This is a large gong; you wonder if it could be worn as a shield.
+DESC_ID:  This shield surely will be heard!
+
 NAME:    amulet of the Air
 APPEAR:  sky-blue amulet
 OBJ:     OBJ_JEWELLERY/AMU_CONTROLLED_FLIGHT

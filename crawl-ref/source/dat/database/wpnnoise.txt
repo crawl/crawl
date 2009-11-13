@@ -894,3 +894,22 @@ silent
 
 boring
 %%%%
+############################################################
+# The SHIELD OF THE GONG can be struck in different ways.
+############################################################
+shield of the gong
+
+w:40
+GONNNNG!
+
+BOUMMMMG!
+
+PTOANNNG!
+
+PANG!
+
+BONNNG!
+
+# scraping hit
+SHROANNG!
+%%%%
