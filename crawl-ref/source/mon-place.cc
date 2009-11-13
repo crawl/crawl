@@ -1003,6 +1003,15 @@ int place_monster(mgen_data mg, bool force_pos)
             // same religion.
             if (priest)
                 menv[band_id].god = mon->god;
+
+            if (mon->type == MONS_PIKEL)
+            {
+                // Don't give XP for the slaves to discourage hunting.  Pikel
+                // has an artificially large XP modifier to compensate for
+                // this.
+
+                menv[band_id].flags |= MF_CREATED_FRIENDLY;
+            }
         }
     }
 
