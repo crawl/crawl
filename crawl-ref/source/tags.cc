@@ -202,9 +202,6 @@ static void unmarshallResists(reader &th, mon_resist_def &res,
 static void marshallSpells(writer &, const monster_spells &);
 static void unmarshallSpells(reader &, monster_spells &);
 
-static void marshall_monster(writer &th, const monsters &m);
-static void unmarshall_monster(reader &th, monsters &m);
-
 template<typename T, typename T_iter, typename T_marshal>
 static void marshall_iterator(writer &th, T_iter beg, T_iter end,
                               T_marshal marshal);
@@ -1161,14 +1158,14 @@ static void tag_construct_you_dungeon(writer &th)
 
 static void marshall_follower(writer &th, const follower &f)
 {
-    marshall_monster(th, f.mons);
+    marshallMonster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         marshallItem(th, f.items[i]);
 }
 
 static void unmarshall_follower(reader &th, follower &f)
 {
-    unmarshall_monster(th, f.mons);
+    unmarshallMonster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         unmarshallItem(th, f.items[i]);
 }
@@ -1876,7 +1873,7 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
     return (me);
 }
 
-static void marshall_monster(writer &th, const monsters &m)
+void marshallMonster(writer &th, const monsters &m)
 {
     marshallString(th, m.mname);
     marshallByte(th, m.ac);
@@ -1965,7 +1962,7 @@ static void tag_construct_level_monsters(writer &th)
             }
         }
 #endif
-        marshall_monster(th, m);
+        marshallMonster(th, m);
     }
 }
 
@@ -2188,7 +2185,7 @@ static void tag_read_level_items(reader &th, char minorVersion)
 #endif
 }
 
-static void unmarshall_monster(reader &th, monsters &m)
+void unmarshallMonster(reader &th, monsters &m)
 {
     m.reset();
 
@@ -2278,7 +2275,7 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
     for (i = 0; i < count; i++)
     {
         monsters &m = menv[i];
-        unmarshall_monster(th, m);
+        unmarshallMonster(th, m);
 
         // place monster
         if (m.type != MONS_NO_MONSTER)

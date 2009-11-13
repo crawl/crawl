@@ -9,7 +9,9 @@
 
 #include "store.h"
 
+#include "dlua.h"
 #include "externs.h"
+#include "monster.h"
 #include "tags.h"
 #include "travel.h"
 
@@ -102,6 +104,22 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
         level_pos* pos;
         pos = new level_pos(*static_cast<level_pos*>(other.val.ptr));
         val.ptr = static_cast<void*>(pos);
+        break;
+    }
+
+    case SV_MONST:
+    {
+        monsters* mon;
+        mon = new monsters(*static_cast<monsters*>(other.val.ptr));
+        val.ptr = static_cast<void*>(mon);
+        break;
+    }
+
+    case SV_LUA:
+    {
+        dlua_chunk* chunk;
+        chunk = new dlua_chunk(*static_cast<dlua_chunk*>(other.val.ptr));
+        val.ptr = static_cast<void*>(chunk);
         break;
     }
 
@@ -208,6 +226,20 @@ CrawlStoreValue::CrawlStoreValue(const level_pos &_val)
     get_level_pos() = _val;
 }
 
+CrawlStoreValue::CrawlStoreValue(const monsters &_val)
+    : type(SV_MONST), flags(SFLAG_UNSET)
+{
+    val.ptr = NULL;
+    get_monster() = _val;
+}
+
+CrawlStoreValue::CrawlStoreValue(const dlua_chunk &_val)
+    : type(SV_LUA), flags(SFLAG_UNSET)
+{
+    val.ptr = NULL;
+    get_lua() = _val;
+}
+
 CrawlStoreValue::~CrawlStoreValue()
 {
     unset(true);
@@ -297,6 +329,22 @@ void CrawlStoreValue::unset(bool force)
     {
         level_pos* pos = static_cast<level_pos*>(val.ptr);
         delete pos;
+        val.ptr = NULL;
+        break;
+    }
+
+    case SV_MONST:
+    {
+        monsters* mon = static_cast<monsters*>(val.ptr);
+        delete mon;
+        val.ptr = NULL;
+        break;
+    }
+
+    case SV_LUA:
+    {
+        dlua_chunk* chunk = static_cast<dlua_chunk*>(val.ptr);
+        delete chunk;
         val.ptr = NULL;
         break;
     }
@@ -490,6 +538,20 @@ void CrawlStoreValue::write(writer &th) const
         break;
     }
 
+    case SV_MONST:
+    {
+        monsters* mon = static_cast<monsters*>(val.ptr);
+        marshallMonster(th, *mon);
+        break;
+    }
+
+    case SV_LUA:
+    {
+        dlua_chunk* chunk = static_cast<dlua_chunk*>(val.ptr);
+        chunk->write(th);
+        break;
+    }
+
     case SV_NONE:
         break;
 
@@ -585,6 +647,24 @@ void CrawlStoreValue::read(reader &th)
         level_pos* pos = new level_pos();
         pos->load(th);
         val.ptr = (void*) pos;
+
+        break;
+    }
+
+    case SV_MONST:
+    {
+        monsters mon;
+        unmarshallMonster(th, mon);
+        val.ptr = (void*) new monsters(mon);
+
+        break;
+    }
+
+    case SV_LUA:
+    {
+        dlua_chunk chunk;
+        chunk.read(th);
+        val.ptr = (void*) new dlua_chunk(chunk);
 
         break;
     }
@@ -759,6 +839,15 @@ level_pos &CrawlStoreValue::get_level_pos()
     GET_VAL_PTR(SV_LEV_POS, level_pos*, new level_pos());
 }
 
+monsters &CrawlStoreValue::get_monster()
+{
+    GET_VAL_PTR(SV_MONST, monsters*, new monsters());
+}
+
+dlua_chunk &CrawlStoreValue::get_lua()
+{
+    GET_VAL_PTR(SV_LUA, dlua_chunk*, new dlua_chunk());
+}
 
 CrawlStoreValue &CrawlStoreValue::operator [] (const std::string &key)
 {
@@ -863,18 +952,20 @@ const CrawlStoreValue &CrawlStoreValue::operator
 /////////////////////
 // Typecast operators
 #ifdef TARGET_COMPILER_VC
-CrawlStoreValue::operator bool&()                   { return get_bool();      }
-CrawlStoreValue::operator char&()                   { return get_byte();      }
-CrawlStoreValue::operator short&()                  { return get_short();     }
-CrawlStoreValue::operator float&()                  { return get_float();     }
-CrawlStoreValue::operator long&()                   { return get_long();      }
-CrawlStoreValue::operator std::string&()            { return get_string();    }
-CrawlStoreValue::operator coord_def&()              { return get_coord();     }
-CrawlStoreValue::operator CrawlHashTable&()         { return get_table();     }
-CrawlStoreValue::operator CrawlVector&()            { return get_vector();    }
-CrawlStoreValue::operator item_def&()               { return get_item();      }
-CrawlStoreValue::operator level_id&()               { return get_level_id();  }
-CrawlStoreValue::operator level_pos&()              { return get_level_pos(); }
+CrawlStoreValue::operator bool&()                  { return get_bool();       }
+CrawlStoreValue::operator char&()                  { return get_byte();       }
+CrawlStoreValue::operator short&()                 { return get_short();      }
+CrawlStoreValue::operator float&()                 { return get_float();      }
+CrawlStoreValue::operator long&()                  { return get_long();       }
+CrawlStoreValue::operator std::string&()           { return get_string();     }
+CrawlStoreValue::operator coord_def&()             { return get_coord();      }
+CrawlStoreValue::operator CrawlHashTable&()        { return get_table();      }
+CrawlStoreValue::operator CrawlVector&()           { return get_vector();     }
+CrawlStoreValue::operator item_def&()              { return get_item();       }
+CrawlStoreValue::operator level_id&()              { return get_level_id();   }
+CrawlStoreValue::operator level_pos&()             { return get_level_pos();  }
+CrawlStoreValue::operator monster&()               { return get_monster();    }
+CrawlStoreValue::operator dlua_chunk&()            { return get_dlua_chunk(); }
 #else
 &CrawlStoreValue::operator bool()
 {
@@ -934,6 +1025,16 @@ CrawlStoreValue::operator level_pos&()              { return get_level_pos(); }
 &CrawlStoreValue::operator level_pos()
 {
     return get_level_pos();
+}
+
+&CrawlStoreValue::operator monsters()
+{
+    return get_monster();
+}
+
+&CrawlStoreValue::operator dlua_chunk()
+{
+    return get_lua();
 }
 #endif
 
@@ -1075,6 +1176,18 @@ CrawlStoreValue &CrawlStoreValue::operator = (const level_id &_val)
 CrawlStoreValue &CrawlStoreValue::operator = (const level_pos &_val)
 {
     get_level_pos() = _val;
+    return (*this);
+}
+
+CrawlStoreValue &CrawlStoreValue::operator = (const monsters &_val)
+{
+    get_monster() = _val;
+    return (*this);
+}
+
+CrawlStoreValue &CrawlStoreValue::operator = (const dlua_chunk &_val)
+{
+    get_lua() = _val;
     return (*this);
 }
 

@@ -20,7 +20,9 @@ class  CrawlVector;
 struct item_def;
 struct coord_def;
 struct level_pos;
-class level_id;
+class  level_id;
+class  dlua_chunk;
+class  monsters;
 
 typedef unsigned char hash_size;
 typedef unsigned char vec_size;
@@ -46,6 +48,8 @@ enum store_val_type
     SV_VEC,
     SV_LEV_ID,
     SV_LEV_POS,
+    SV_MONST,
+    SV_LUA,
     NUM_STORE_VAL_TYPES
 };
 
@@ -94,8 +98,9 @@ public:
     CrawlStoreValue(const CrawlVector &val);
     CrawlStoreValue(const level_id &val);
     CrawlStoreValue(const level_pos &val);
+    CrawlStoreValue(const monsters &val);
+    CrawlStoreValue(const dlua_chunk &val);
 
-    // Only needed for doing some assertion checking.
     CrawlStoreValue &operator = (const CrawlStoreValue &other);
 
 protected:
@@ -128,6 +133,8 @@ public:
     item_def       &get_item();
     level_id       &get_level_id();
     level_pos      &get_level_pos();
+    monsters       &get_monster();
+    dlua_chunk     &get_lua();
 
     bool           get_bool()      const;
     char           get_byte()      const;
@@ -142,6 +149,8 @@ public:
     const CrawlHashTable& get_table()  const;
     const CrawlVector&    get_vector() const;
     const item_def&       get_item()   const;
+    const monsters&       get_monster() const;
+    const dlua_chunk&     get_lua() const;
 
 #if 0
     // These don't actually exist
@@ -188,6 +197,8 @@ public:
     operator item_def&();
     operator level_id&();
     operator level_pos&();
+    operator monsters&();
+    operator dlua_chunk&();
 #else
     &operator bool();
     &operator char();
@@ -201,6 +212,8 @@ public:
     &operator item_def();
     &operator level_id();
     &operator level_pos();
+    &operator monsters();
+    &operator dlua_chunk();
 #endif
 
     operator bool()        const;
@@ -227,6 +240,8 @@ public:
     CrawlStoreValue &operator = (const item_def &val);
     CrawlStoreValue &operator = (const level_id &val);
     CrawlStoreValue &operator = (const level_pos &val);
+    CrawlStoreValue &operator = (const monsters &val);
+    CrawlStoreValue &operator = (const dlua_chunk &val);
 
     // Misc operators
     std::string &operator += (const std::string &val);
