@@ -3281,22 +3281,52 @@ static void _open_door(coord_def move, bool check_confused)
     const char *adj, *noun;
     get_door_description(all_door.size(), &adj, &noun);
 
-    int skill = you.dex
-                + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
-
-    if (is_exclude_root(doorpos) && !(check_confused && you.confused()))
+    if (!(check_confused && you.confused()))
     {
-        std::string prompt =
-            make_stringf("This %s%s is marked as excluded! Open it "
-                         "anyway?", adj, noun);
+        std::string door_open_prompt =
+            env.markers.property_at(doorpos, MAT_ANY, "door_open_prompt");
 
-        if (!yesno(prompt.c_str(), true, 'n', true, false))
+        bool ignore_exclude = false;
+
+        if (!door_open_prompt.empty())
         {
-            canned_msg(MSG_OK);
-            interrupt_activity(AI_FORCE_INTERRUPT);
-            return;
+            door_open_prompt += " (y/N)";
+            if (!yesno(door_open_prompt.c_str(), true, 'n', true, false))
+            {
+                if (is_exclude_root(doorpos))
+                    canned_msg(MSG_OK);
+                else
+                {
+                    if (yesno("Put travel exclusion on door? (Y/n)",
+                              true, 'y'))
+                    {
+                        // Zero radius exclusion right on top of door.
+                        set_exclude(doorpos, 0);
+                    }
+                }
+                interrupt_activity(AI_FORCE_INTERRUPT);
+                return;
+            }
+            ignore_exclude = true;
+        }
+
+        if (!ignore_exclude && is_exclude_root(doorpos))
+        {
+            std::string prompt =
+                make_stringf("This %s%s is marked as excluded! Open it "
+                             "anyway?", adj, noun);
+
+            if (!yesno(prompt.c_str(), true, 'n', true, false))
+            {
+                canned_msg(MSG_OK);
+                interrupt_activity(AI_FORCE_INTERRUPT);
+                return;
+            }
         }
     }
+
+    int skill = you.dex
+                + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
     if (you.berserk())
     {

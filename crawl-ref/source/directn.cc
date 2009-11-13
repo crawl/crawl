@@ -2902,6 +2902,13 @@ std::string feature_description(const coord_def& where, bool bloody,
 
     if (grid == DNGN_OPEN_DOOR || feat_is_closed_door(grid))
     {
+        const std::string door_desc_prefix =
+            env.markers.property_at(where, MAT_ANY,
+                                    "door_description_prefix");
+        const std::string door_desc_suffix =
+            env.markers.property_at(where, MAT_ANY,
+                                    "door_description_suffix");
+
         std::set<coord_def> all_door;
         find_connected_identical(where, grd(where), all_door);
         const char *adj, *noun;
@@ -2911,12 +2918,8 @@ std::string feature_description(const coord_def& where, bool bloody,
         desc += (grid == DNGN_OPEN_DOOR) ? "open " : "closed ";
         if (grid == DNGN_DETECTED_SECRET_DOOR)
             desc += "detected secret ";
-        desc += noun;
 
-        const std::string door_desc_suffix =
-            env.markers.property_at(where, MAT_ANY,
-                                    "door_description_suffix");
-        desc += door_desc_suffix;
+        desc += door_desc_prefix + noun + door_desc_suffix;
 
         if (bloody)
             desc += ", spattered with blood";

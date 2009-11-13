@@ -3126,6 +3126,27 @@ void reveal_secret_door(const coord_def& p)
                                   : DNGN_OPEN_DOOR;
     viewwindow(false);
     learned_something_new(TUT_SEEN_SECRET_DOOR, p);
+
+    // If a transparent secret door was forced open to preserve LOS,
+    // check if it had an opening prompt.
+    if (grd(p) == DNGN_OPEN_DOOR)
+    {
+        std::string door_open_prompt =
+            env.markers.property_at(p, MAT_ANY, "door_open_prompt");
+
+        if (!door_open_prompt.empty())
+        {
+            mprf("That secret door had a prompt on it:", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "%s", door_open_prompt.c_str());
+
+            if (!is_exclude_root(p))
+            {
+                if (yesno("Put travel exclusion on door? (Y/n)", true, 'y'))
+                    // Zero radius exclusion right on top of door.
+                    set_exclude(p, 0);
+            }
+        }
+    }
 }
 
 // A feeble attempt at Nethack-like completeness for cute messages.

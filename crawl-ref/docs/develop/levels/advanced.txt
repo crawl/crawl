@@ -703,11 +703,21 @@ dungeon cell which they are on:
       forcing them to open and close as separate doors.  See the Evil
       Zoo (minivault_9) in dat/mini.des for an example.
 
+* door_description_prefix: A string to prepend to the description of
+      any door the marker is on.  This should be used for doors
+      rather than the feature_description property since it elemintates
+      the need to track if the door is opened or closed, plus it will
+      have no effect on secret doors which have yet to be detected.
+
 * door_description_suffix: A string to append to the description of
       any door the marker is on.  This should be used for doors
       rather than the feature_description property since it elemintates
       the need to track if the door is opened or closed, plus it will
       have no effect on secret doors which have yet to be detected.
+
+* door_open_prompt: If placed on top of a door, the use will be prompted
+      before opening the door, with the value of the property used as
+      the prompt string.
 
 * feature_description: What to use as the short description of the
       cell's feature.
