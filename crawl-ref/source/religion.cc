@@ -1374,8 +1374,7 @@ void mons_make_god_gift(monsters *mon, god_type god)
     if (god == GOD_NO_GOD)
         god = acting_god;
 
-    ASSERT(acting_god == GOD_NO_GOD || god == acting_god);
-    ASSERT(mon->god == GOD_NO_GOD || mon->god == god);
+    ASSERT(!(mon->flags & MF_GOD_GIFT));
 
     mon->god = god;
 
