@@ -834,7 +834,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
 bool transform_can_butcher_barehanded(transformation_type tt)
 {
-    return (tt == TRAN_BLADE_HANDS || tt == TRAN_DRAGON);
+    return (tt == TRAN_BLADE_HANDS || tt == TRAN_DRAGON || tt == TRAN_ICE_BEAST);
 }
 
 void untransform(bool skip_wielding)
