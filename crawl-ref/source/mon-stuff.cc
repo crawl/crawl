@@ -20,6 +20,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "cloud.h"
+#include "cluautil.h"
 #include "database.h"
 #include "delay.h"
 #include "dgnevent.h"
@@ -1478,6 +1479,33 @@ static int _destroy_tentacles(monsters *head)
     return tent;
 }
 
+static std::string _killer_type_name(killer_type killer)
+{
+    switch(killer)
+    {
+    case KILL_NONE:
+        return ("none");
+    case KILL_YOU:
+        return ("you");
+    case KILL_MON:
+        return ("mon");
+    case KILL_YOU_MISSILE:
+        return ("you_missile");
+    case KILL_MON_MISSILE:
+        return ("mon_missile");
+    case KILL_YOU_CONF:
+        return ("you_conf");
+    case KILL_MISC:
+        return ("misc");
+    case KILL_RESET:
+        return ("reset");
+    case KILL_DISMISSED:
+        return ("dismissed");
+    }
+    ASSERT(false);
+    return("");
+}
+
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monsters *monster, killer_type killer,
                 int killer_index, bool silent, bool wizard)
@@ -1496,6 +1524,30 @@ int monster_die(monsters *monster, killer_type killer,
     crawl_state.inc_mon_acting(monster);
 
     ASSERT(!( YOU_KILL(killer) && crawl_state.arena ));
+
+    if (monster->props.exists("monster_dies_lua_key"))
+    {
+        lua_stack_cleaner clean(dlua);
+
+        dlua_chunk &chunk = monster->props["monster_dies_lua_key"];
+
+        if (!chunk.load(dlua))
+        {
+            push_monster(dlua, monster);
+            clua_pushcxxstring(dlua, _killer_type_name(killer));
+            lua_pushnumber(dlua, killer_index);
+            lua_pushboolean(dlua, silent);
+            lua_pushboolean(dlua, wizard);
+            dlua.callfn(NULL, 5, 0);
+        }
+        else
+        {
+            mprf(MSGCH_ERROR,
+                 "Lua death function for monster '%s' didn't load: %s",
+                 monster->full_name(DESC_PLAIN).c_str(),
+                 dlua.error.c_str());
+        }
+    }
 
     mons_clear_trapping_net(monster);
 
