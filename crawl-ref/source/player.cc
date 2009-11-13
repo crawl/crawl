@@ -7084,10 +7084,7 @@ void player::put_to_sleep(int power)
     ASSERT(!crawl_state.arena);
 
     if (duration[DUR_SLEEP])
-    {
-        mpr("You feel weary for a moment.");
         return;
-    }
 
     mpr("You fall asleep!");
 
