@@ -21,7 +21,9 @@
 .Op Fl job Ar job
 .Op Fl help
 .Op Fl dir Ar path
-.Op Fl arena Qq Ar monsters Cm v Ar monsters Op Cm arena: Ar map
+.Op Fl extra-opt-first Ar optname Ns = Ns Ar optval
+.Op Fl extra-opt-last Ar optname Ns = Ns Ar optval
+.Op Fl arena Op Qq Ar monsters Cm v Ar monsters Op Cm arena: Ar map
 .Sh DESCRIPTION
 .Nm
 is a fun game in the grand tradition of games like Rogue, Hack, and Moria. Your
@@ -38,6 +40,6 @@ The configuration file to use.
 .El
 .Sh SEE ALSO
 The in-game help menu, which can be accessed by pressing
-.Sq \&? .
+.Ic \&? .
 .Sh AUTHORS
 Copyright 1997, 1998, 1999 Linley Henzell
