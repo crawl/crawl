@@ -1594,8 +1594,7 @@ int monster_die(monsters *monster, killer_type killer,
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(monster)
-                               && (monster->visible_to(&you)
-                                   || crawl_state.arena);
+                               && monster->visible_to(&you);
     const bool exploded      = monster->flags & MF_EXPLODE_KILL;
 
     const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
@@ -3049,9 +3048,9 @@ bool simple_monster_message(const monsters *monster, const char *event,
                             description_level_type descrip)
 {
 
-    if ((mons_near(monster) || crawl_state.arena)
+    if (mons_near(monster)
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
-            || monster->visible_to(&you) || crawl_state.arena))
+            || monster->visible_to(&you)))
     {
         std::string msg = monster->name(descrip);
         msg += event;
