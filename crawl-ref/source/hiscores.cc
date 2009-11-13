@@ -499,6 +499,8 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     mon_num           = se.mon_num;
     death_source_name = se.death_source_name;
     auxkilldata       = se.auxkilldata;
+    indirectkiller    = se.indirectkiller;
+    killerpath        = se.killerpath;
     dlvl              = se.dlvl;
     level_type        = se.level_type;
     branch            = se.branch;
@@ -594,6 +596,8 @@ void scorefile_entry::init_with_fields()
     death_type        = str_to_kill_method(fields->str_field("ktyp"));
     death_source_name = fields->str_field("killer");
     auxkilldata       = fields->str_field("kaux");
+    indirectkiller    = fields->str_field("ikiller");
+    killerpath        = fields->str_field("kpath");
 
     branch     = str_to_branch(fields->str_field("br"), BRANCH_MAIN_DUNGEON);
     dlvl       = fields->int_field("lvl");
@@ -713,6 +717,8 @@ void scorefile_entry::set_score_fields() const
     fields->add_field("dam", "%d", damage);
 
     fields->add_field("kaux", "%s", auxkilldata.c_str());
+    fields->add_field("ikiller", "%s", indirectkiller.c_str());
+    fields->add_field("kpath", "%s", killerpath.c_str());
 
     if (piety > 0)
         fields->add_field("piety", "%d", piety);
@@ -837,11 +843,33 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             death_source_name += " (shapeshifter)";
         else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             death_source_name += " (glowing shapeshifter)";
+
+        if (monster->props.exists("blame"))
+        {
+            const CrawlVector& blame = monster->props["blame"].get_vector();
+
+            indirectkiller = blame[blame.size() - 1].get_string();
+            killerpath = "";
+
+            for (CrawlVector::const_iterator it = blame.begin();
+                 it != blame.end(); ++it)
+            {
+                killerpath = killerpath + ":" + xlog_escape(it->get_string());
+            }
+
+            killerpath.erase(killerpath.begin());
+        }
+        else
+        {
+            indirectkiller = death_source_name;
+            killerpath = "";
+        }
     }
     else
     {
         mon_num = 0;
         death_source_name.clear();
+        indirectkiller = killerpath = "";
     }
 
     if (death_type == KILLED_BY_WEAKNESS
@@ -871,6 +899,8 @@ void scorefile_entry::reset()
     mon_num              = 0;
     death_source_name.clear();
     auxkilldata.clear();
+    indirectkiller.clear();
+    killerpath.clear();
     dlvl                 = 0;
     level_type           = LEVEL_DUNGEON;
     branch               = BRANCH_MAIN_DUNGEON;
@@ -2037,13 +2067,13 @@ void xlog_fields::init(const std::string &line)
 }
 
 // xlogfile escape: s/:/::/g
-std::string xlog_fields::xlog_escape(const std::string &s) const
+std::string xlog_escape(const std::string &s)
 {
     return replace_all(s, ":", "::");
 }
 
 // xlogfile unescape: s/::/:/g
-std::string xlog_fields::xlog_unescape(const std::string &s) const
+std::string xlog_unescape(const std::string &s)
 {
     return replace_all(s, "::", ":");
 }

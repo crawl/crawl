@@ -29,6 +29,9 @@ void mark_milestone(const std::string &type, const std::string &milestone);
 std::string xlog_status_line();
 #endif
 
+std::string xlog_unescape(const std::string &);
+std::string xlog_escape(const std::string &);
+
 class xlog_fields
 {
 public:
@@ -46,8 +49,6 @@ public:
     long long_field(const std::string &) const;
 
 private:
-    std::string xlog_unescape(const std::string &) const;
-    std::string xlog_escape(const std::string &) const;
     void map_fields() const;
     std::string::size_type next_separator(const std::string &s,
                                           std::string::size_type start) const;
@@ -79,6 +80,8 @@ public:
     int         mon_num;            // sigh...
     std::string death_source_name;  // overrides death_source
     std::string auxkilldata;        // weapon wielded, spell cast, etc
+    std::string indirectkiller;     // the effect or real monster that summoned
+    std::string killerpath;         // colon-separated intermediate killers
     char        dlvl;               // dungeon level (relative)
     level_area_type level_type;     // what kind of level died on..
     branch_type branch;             // dungeon branch
