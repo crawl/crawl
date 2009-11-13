@@ -701,10 +701,6 @@ void game_options::reset_options()
     arena_dump_msgs_all    = false;
     arena_list_eq          = false;
 
-    // If true, monsters are forced to target each other in arena
-    // mode, even when outside LOS of each other.
-    arena_force_ai         = true;
-
     // Sort only pickup menus by default.
     sort_menus.clear();
     set_menu_sort("pickup: true");

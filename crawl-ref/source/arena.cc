@@ -296,9 +296,6 @@ namespace arena
     {
         std::string spec = find_monster_spec();
 
-        Options.arena_force_ai =
-            strip_bool_tag(spec, "force_ai", Options.arena_force_ai);
-
         allow_chain_summons = !strip_tag(spec, "no_chain_summons");
 
         allow_summons   = !strip_tag(spec, "no_summons");

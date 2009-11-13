@@ -372,31 +372,7 @@ static void _handle_movement(monsters *monster)
         delta = you.pos() - monster->pos();
     }
     else
-    {
         delta = monster->target - monster->pos();
-
-        if (crawl_state.arena && Options.arena_force_ai
-            && !mons_is_stationary(monster))
-        {
-            const bool ranged = (mons_has_ranged_attack(monster)
-                                 || mons_has_ranged_spell(monster));
-
-            // Smiters are happy if they have clear visibility through
-            // glass, but other monsters must go around.
-            const bool glass_ok = mons_has_smite_attack(monster);
-
-            // Monsters in the arena are smarter than the norm and
-            // always pathfind to their targets.
-            if (delta.abs() > 2
-                && (!ranged
-                    || !monster->mon_see_cell(monster->target, !glass_ok)))
-            {
-                monster_pathfind mp;
-                if (mp.init_pathfind(monster, monster->target))
-                    delta = mp.next_pos(monster->pos()) - monster->pos();
-            }
-        }
-    }
 
     // Move the monster.
     mmov.x = (delta.x > 0) ? 1 : ((delta.x < 0) ? -1 : 0);

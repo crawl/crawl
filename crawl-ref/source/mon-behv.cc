@@ -906,91 +906,6 @@ static void _check_wander_target(monsters *mon, bool isPacified = false,
     }
 }
 
-static void _arena_set_foe(monsters *mons)
-{
-    const int mind = mons->mindex();
-
-    int nearest = -1;
-    int best_distance = -1;
-
-    int nearest_unseen = -1;
-    int best_unseen_distance = -1;
-    for (monster_iterator other; other; ++other)
-    {
-        int i = other->mindex();
-        if (mind == i)
-            continue;
-
-        if (mons_aligned(mind, i))
-            continue;
-
-        // Don't fight test spawners, since they're only pseudo-monsters
-        // placed to spawn real monsters, plus they're impossible to
-        // kill.  But test spawners can fight each other, to give them a
-        // target to spawn against.
-        if (other->type == MONS_TEST_SPAWNER
-            && mons->type != MONS_TEST_SPAWNER)
-        {
-            continue;
-        }
-
-        const int distance = grid_distance(mons->pos(), other->pos());
-        const bool seen = mons->can_see(*other);
-
-        if (seen)
-        {
-            if (best_distance == -1 || distance < best_distance)
-            {
-                best_distance = distance;
-                nearest = i;
-            }
-        }
-        else
-        {
-            if (best_unseen_distance == -1 || distance < best_unseen_distance)
-            {
-                best_unseen_distance = distance;
-                nearest_unseen = i;
-            }
-        }
-
-        if ((best_distance == -1 || distance < best_distance)
-            && mons->can_see(*other))
-
-        {
-            best_distance = distance;
-            nearest = i;
-        }
-    }
-
-    if (nearest != -1)
-    {
-        mons->foe = nearest;
-        mons->target = menv[nearest].pos();
-        mons->behaviour = BEH_SEEK;
-    }
-    else if (nearest_unseen != -1)
-    {
-        mons->target = menv[nearest_unseen].pos();
-        if (mons->type == MONS_TEST_SPAWNER)
-        {
-            mons->foe       = nearest_unseen;
-            mons->behaviour = BEH_SEEK;
-        }
-        else
-            mons->behaviour = BEH_WANDER;
-    }
-    else
-    {
-        mons->foe       = MHITNOT;
-        mons->behaviour = BEH_WANDER;
-    }
-    if (mons->behaviour == BEH_WANDER)
-        _check_wander_target(mons);
-
-    ASSERT(mons->foe == MHITNOT || !mons->target.origin());
-}
-
 static void _find_all_level_exits(std::vector<level_exit> &e)
 {
     e.clear();
@@ -1125,21 +1040,9 @@ void handle_behaviour(monsters *mon)
         return;
     }
 
-    if (crawl_state.arena)
-    {
-        if (Options.arena_force_ai)
-        {
-            if (!mon->get_foe() || mon->target.origin() || one_chance_in(3))
-                mon->foe = MHITNOT;
-            if (mon->foe == MHITNOT || mon->foe == MHITYOU)
-                _arena_set_foe(mon);
-            return;
-        }
-        // If we're not forcing monsters to attack, just make sure they're
-        // not targetting the player in arena mode.
-        else if (mon->foe == MHITYOU)
-            mon->foe = MHITNOT;
-    }
+    // Make sure monsters are not targetting the player in arena mode.
+    if (crawl_state.arena && mon->foe == MHITYOU)
+        mon->foe = MHITNOT;
 
     if (mons_wall_shielded(mon) && cell_is_solid(mon->pos()))
     {
