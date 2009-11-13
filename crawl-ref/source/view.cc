@@ -730,6 +730,172 @@ static void player_view_updates(const coord_def &gc)
         tutorial_observe_cell(gc);
 }
 
+#ifndef USE_TILE
+#define DRAW(kind) draw_##kind(&buffy[bufcount], gc, ep);
+#define DRAWFN(kind) \
+    static void draw_##kind(screen_buffer_t *buffy, \
+                            const coord_def &gc, const coord_def &ep)
+#else
+#define DRAW(kind) draw_##kind(&buffy[bufcount], &tileb[bufcount], gc, ep)
+#define DRAWFN(kind) \
+    static void draw_##kind(screen_buffer_t *buffy, tile_buffer_t *tileb, \
+                            const coord_def &gc, const coord_def &ep)
+#endif
+
+DRAWFN(unseen)
+{
+    // off the map
+    buffy[0] = 0;
+    buffy[1] = DARKGREY;
+#ifdef USE_TILE
+    tileidx_unseen(tileb[0], tileb[1], ' ', gc);
+#endif
+}
+
+DRAWFN(outside_los)
+{
+    // Outside the env.show area.
+    buffy[0] = get_map_knowledge_char(gc);
+    buffy[1] = DARKGREY;
+
+    if (Options.colour_map)
+        buffy[1] = colour_code_map(gc, Options.item_colour);
+
+#ifdef USE_TILE
+    unsigned int bg = env.tile_bk_bg(gc);
+    unsigned int fg = env.tile_bk_fg(gc);
+    if (bg == 0 && fg == 0)
+        tileidx_unseen(fg, bg, get_map_knowledge_char(gc), gc);
+
+    tileb[0] = fg;
+    tileb[1] = bg | tile_unseen_flag(gc);
+#endif
+}
+
+// Updates for player cell. Returns whether exclusion LOS needs to be
+// updated here.
+static bool draw_update_player(const coord_def &gc, const coord_def &ep)
+{
+    bool need_excl_update = false;
+    if (player_in_mappable_area())
+    {
+        show_type       object = env.show(ep);
+        unsigned short  colour = object.colour;
+        unsigned        ch;
+        get_symbol(gc, object, &ch, &colour);
+
+        set_map_knowledge_glyph(gc, object, colour);
+        need_excl_update = is_terrain_changed(gc) || !is_terrain_seen(gc);
+
+        set_terrain_seen(gc);
+        set_map_knowledge_detected_mons(gc, false);
+        set_map_knowledge_detected_item(gc, false);
+    }
+    return (need_excl_update);
+}
+
+
+DRAWFN(player)
+{
+#ifdef USE_TILE
+    if (player_in_mappable_area())
+    {
+        env.tile_bk_bg(gc) = env.tile_bg(ep);
+        env.tile_bk_fg(gc) = env.tile_fg(ep);
+    }
+
+    tileb[0] = env.tile_fg(ep) = tileidx_player(you.char_class);
+    tileb[1] = env.tile_bg(ep);
+#endif
+
+    // Player overrides everything in cell.
+    buffy[0] = you.symbol;
+    buffy[1] = you.colour;
+    if (you.swimming())
+    {
+        if (grd(gc) == DNGN_DEEP_WATER)
+            buffy[1] = BLUE;
+        else
+            buffy[1] = CYAN;
+    }
+}
+
+// Updates for non-player LOS cell. Returns whether exclusion LOS needs
+// to be updated here.
+bool draw_update_los(const coord_def &gc, const coord_def &ep)
+{
+    if (!player_in_mappable_area())
+        return (false);
+
+    // ... map that we've seen this
+    bool need_excl_update = is_terrain_changed(gc) || !is_terrain_seen(gc);
+
+    show_type  object = env.show(ep);
+    unsigned short colour = object.colour;
+    unsigned        ch;
+    get_symbol(gc, object, &ch, &colour);
+
+    set_terrain_seen(gc);
+    set_map_knowledge_glyph(gc, object, colour);
+    set_map_knowledge_detected_mons(gc, false);
+    set_map_knowledge_detected_item(gc, false);
+
+#ifdef USE_TILE
+    // We remove any references to mcache when
+    // writing to the background.
+    if (Options.clean_map)
+        env.tile_bk_fg(gc) = get_clean_map_idx(env.tile_fg(ep));
+    else
+        env.tile_bk_fg(gc) = env.tile_fg(ep);
+    env.tile_bk_bg(gc) = env.tile_bg(ep);
+#endif
+
+    if (Options.clean_map && env.show.get_backup(ep) && is_terrain_seen(gc))
+    {
+        get_symbol(gc, env.show.get_backup(ep), &ch, &colour);
+        set_map_knowledge_glyph(gc, env.show.get_backup(ep), colour);
+    }
+
+    return (need_excl_update);
+}
+
+DRAWFN(los)
+{
+    show_type  object = env.show(ep);
+    unsigned short colour = object.colour;
+    unsigned        ch;
+
+    get_symbol(gc, object, &ch, &colour);
+
+    buffy[0] = ch;
+    buffy[1] = colour;
+#ifdef USE_TILE
+    tileb[0] = env.tile_fg(ep);
+    tileb[1] = env.tile_bg(ep);
+#endif
+}
+
+DRAWFN(los_backup)
+{
+    // Show map.
+    buffy[0] = get_map_knowledge_char(gc);
+    buffy[1] = DARKGREY;
+
+    if (Options.colour_map)
+        buffy[1] = colour_code_map(gc, Options.item_colour);
+
+#ifdef USE_TILE
+    if (env.tile_bk_fg(gc) != 0
+        || env.tile_bk_bg(gc) != 0)
+    {
+        tileb[0] = env.tile_bk_fg(gc);
+        tileb[1] = env.tile_bk_bg(gc) | tile_unseen_flag(gc);
+    }
+    else
+        tileidx_unseen(tileb[0], tileb[1], get_map_knowledge_char(gc), gc);
+#endif
+}
+
 //---------------------------------------------------------------
 //
 // viewwindow -- now unified and rolled into a single pass
@@ -775,8 +941,6 @@ void viewwindow(bool do_updates)
 
     cursor_control cs(false);
 
-    const bool map = player_in_mappable_area();
-
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
         flash_colour = _viewmap_flash_colour();
@@ -798,180 +962,27 @@ void viewwindow(bool do_updates)
         // Order is important here.
         if (!map_bounds(gc))
         {
-            // off the map
-            buffy[bufcount]     = 0;
-            buffy[bufcount + 1] = DARKGREY;
-#ifdef USE_TILE
-            tileidx_unseen(tileb[bufcount], tileb[bufcount+1], ' ', gc);
-#endif
+            DRAW(unseen);
         }
         else if (!crawl_view.in_grid_los(gc))
         {
-            // Outside the env.show area.
-            buffy[bufcount]     = get_map_knowledge_char(gc);
-            buffy[bufcount + 1] = DARKGREY;
-
-            if (Options.colour_map)
-            {
-                buffy[bufcount + 1] =
-                    colour_code_map(gc, Options.item_colour);
-            }
-
-#ifdef USE_TILE
-            unsigned int bg = env.tile_bk_bg(gc);
-            unsigned int fg = env.tile_bk_fg(gc);
-            if (bg == 0 && fg == 0)
-                tileidx_unseen(fg, bg, get_map_knowledge_char(gc), gc);
-
-            tileb[bufcount]     = fg;
-            tileb[bufcount + 1] = bg | tile_unseen_flag(gc);
-#endif
+            DRAW(outside_los);
         }
         else if (gc == you.pos() && !crawl_state.arena
                  && !crawl_state.arena_suspended)
         {
-            show_type       object = env.show(ep);
-            unsigned short  colour = object.colour;
-            unsigned        ch;
-            get_symbol(gc, object, &ch, &colour);
-
-            if (map)
-            {
-                set_map_knowledge_glyph(gc, object, colour);
-                if (is_terrain_changed(gc) || !is_terrain_seen(gc))
-                    update_excludes.push_back(gc);
-
-                set_terrain_seen(gc);
-                set_map_knowledge_detected_mons(gc, false);
-                set_map_knowledge_detected_item(gc, false);
-            }
-#ifdef USE_TILE
-            if (map)
-            {
-                env.tile_bk_bg(gc) = env.tile_bg(ep);
-                env.tile_bk_fg(gc) = env.tile_fg(ep);
-            }
-
-            tileb[bufcount] = env.tile_fg(ep) =
-                tileidx_player(you.char_class);
-            tileb[bufcount+1] = env.tile_bg(ep);
-#endif
-
-            // Player overrides everything in cell.
-            buffy[bufcount]     = you.symbol;
-            buffy[bufcount + 1] = you.colour;
-            if (you.swimming())
-            {
-                if (grd(gc) == DNGN_DEEP_WATER)
-                    buffy[bufcount + 1] = BLUE;
-                else
-                    buffy[bufcount + 1] = CYAN;
-            }
+            DRAW(player);
+            if (draw_update_player(gc, ep))
+                update_excludes.push_back(gc);
+        }
+        else if (you.see_cell(gc))
+        {
+            DRAW(los);
+            if (draw_update_player(gc, ep))
+                update_excludes.push_back(gc);
         }
         else
-        {
-            show_type  object = env.show(ep);
-            unsigned short colour = object.colour;
-            unsigned        ch;
-
-            get_symbol( gc, object, &ch, &colour );
-
-            buffy[bufcount]     = ch;
-            buffy[bufcount + 1] = colour;
-#ifdef USE_TILE
-            tileb[bufcount]   = env.tile_fg(ep);
-            tileb[bufcount+1] = env.tile_bg(ep);
-#endif
-
-            if (map)
-            {
-                // This section is very tricky because it
-                // duplicates the old code (which was horrid).
-
-                // If the grid is in LoS env.show was set and
-                // we set the buffer already, so...
-                if (buffy[bufcount] != 0)
-                {
-                    // ... map that we've seen this
-                    if (is_terrain_changed(gc) || !is_terrain_seen(gc))
-                        update_excludes.push_back(gc);
-
-                    set_terrain_seen(gc);
-                    set_map_knowledge_glyph(gc, object, colour );
-                    set_map_knowledge_detected_mons(gc, false);
-                    set_map_knowledge_detected_item(gc, false);
-#ifdef USE_TILE
-                    // We remove any references to mcache when
-                    // writing to the background.
-                    if (Options.clean_map)
-                        env.tile_bk_fg(gc) =
-                            get_clean_map_idx(env.tile_fg(ep));
-                    else
-                        env.tile_bk_fg(gc) = env.tile_fg(ep);
-                    env.tile_bk_bg(gc) = env.tile_bg(ep);
-#endif
-                }
-
-                // Check if we're looking to clean_map...
-                // but don't touch the buffer to clean it,
-                // instead we modify the env.map_knowledge itself so
-                // that the map stays clean as it moves out
-                // of the env.show radius.
-                //
-                // Note: show_backup is 0 on every square which
-                // is inside the env.show radius and doesn't
-                // have a monster or cloud on it, and is equal
-                // to the grid before monsters and clouds were
-                // added otherwise.
-                if (Options.clean_map
-                    && env.show.get_backup(ep)
-                    && is_terrain_seen(gc))
-                {
-                    get_symbol(gc, env.show.get_backup(ep), &ch, &colour);
-                    set_map_knowledge_glyph(gc, env.show.get_backup(ep), colour);
-                }
-
-                // Now we get to filling in both the unseen
-                // grids in the env.show radius area as
-                // well doing the clean_map.  The clean_map
-                // is done by having the env.map_knowledge set to the
-                // backup character above, and down here we
-                // procede to override that character if it's
-                // out of LoS!  If it wasn't, buffy would have
-                // already been set (but we'd still have
-                // clobbered env.map_knowledge... which is important
-                // to do for when we move away from the area!)
-                if (buffy[bufcount] == 0)
-                {
-                    // Show map.
-                    buffy[bufcount]     = get_map_knowledge_char(gc);
-                    buffy[bufcount + 1] = DARKGREY;
-
-                    if (Options.colour_map)
-                    {
-                        buffy[bufcount + 1] =
-                            colour_code_map(gc, Options.item_colour);
-                    }
-#ifdef USE_TILE
-                    if (env.tile_bk_fg(gc) != 0
-                        || env.tile_bk_bg(gc) != 0)
-                    {
-                        tileb[bufcount] = env.tile_bk_fg(gc);
-
-                        tileb[bufcount + 1] =
-                            env.tile_bk_bg(gc) | tile_unseen_flag(gc);
-                    }
-                    else
-                    {
-                        tileidx_unseen(tileb[bufcount],
-                                       tileb[bufcount+1],
-                                       get_map_knowledge_char(gc),
-                                       gc);
-                    }
-#endif
-                }
-            }
-        }
+            DRAW(los_backup);
 
         // Alter colour if flashing the characters vision.
         if (flash_colour && buffy[bufcount])
