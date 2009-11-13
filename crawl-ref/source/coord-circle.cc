@@ -33,6 +33,14 @@ circle_def::circle_def()
     init(LOS_MAX_RADIUS, C_ROUND);
 }
 
+circle_def::circle_def(const coord_def& origin_, const circle_def& bds)
+    : los_radius(bds.los_radius), shape(bds.shape),
+      origin(origin_), radius(bds.radius), radius_sq(bds.radius_sq)
+{
+    // Set up bounding box.
+    init_bbox();
+}
+
 circle_def::circle_def(int param, circle_type ctype)
     : los_radius(false), origin(coord_def(0,0))
 {
@@ -69,6 +77,11 @@ void circle_def::init(int param, circle_type ctype)
         radius = param;
         radius_sq = radius * radius;
     }
+    init_bbox();
+}
+
+void circle_def::init_bbox()
+{
     bbox = rect_def(origin - coord_def(radius, radius),
                     origin + coord_def(radius, radius));
     if (!origin.origin())

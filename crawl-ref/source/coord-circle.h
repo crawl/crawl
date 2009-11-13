@@ -48,6 +48,8 @@ class circle_def
 public:
     // Circle around (0,0) with radius that tracks global LOS radius.
     circle_def();
+    // Circle around origin with shape of given circle.
+    circle_def(const coord_def &origin_, const circle_def &bds);
     // Circle around (0,0) of specified shape and size.
     explicit circle_def(int param, circle_type ctype = C_SQUARE);
     // Circle around given origin of specified shape and size.
@@ -61,6 +63,7 @@ public:
 
 private:
     void init(int param, circle_type ctype);
+    void init_bbox();
 };
 
 #endif
