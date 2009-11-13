@@ -909,6 +909,13 @@ void viewwindow(bool do_updates)
     tiles.clear_overlays();
 #endif
 
+    bool run_dont_draw = you.running && Options.travel_delay < 0
+                && (!you.running.is_explore() || Options.explore_delay < 0);
+#ifndef USE_TILE
+    if (run_dont_draw || you.asleep())
+        return;
+#endif
+
     cursor_control cs(false);
 
     int flash_colour = you.flash_colour;
@@ -961,28 +968,24 @@ void viewwindow(bool do_updates)
     // and this simply works without requiring a stack.
     you.flash_colour = BLACK;
 
-    // TODO: move this before the loop
-    if ((!you.running || Options.travel_delay > -1
-        || you.running.is_explore() && Options.explore_delay > -1)
-        && !you.asleep())
-    {
-#ifndef USE_TILE
-        you.last_view_update = you.num_turns;
-        puttext(crawl_view.viewp.x, crawl_view.viewp.y,
-                crawl_view.viewp.x + crawl_view.viewsz.x - 1,
-                crawl_view.viewp.y + crawl_view.viewsz.y - 1,
-                buffy);
-
-        update_monster_pane();
-#else
-        if (!is_resting())
-        {
-            tiles.set_need_redraw();
-            tiles.load_dungeon(&buffy[0], crawl_view.vgrdc);
-            tiles.update_inventory();
-        }
+#ifdef USE_TILE
+    if (run_dont_draw || you.asleep() || is_resting())
+        return;
 #endif
-    }
+
+#ifndef USE_TILE
+    you.last_view_update = you.num_turns;
+    puttext(crawl_view.viewp.x, crawl_view.viewp.y,
+            crawl_view.viewp.x + crawl_view.viewsz.x - 1,
+            crawl_view.viewp.y + crawl_view.viewsz.y - 1,
+            buffy);
+
+    update_monster_pane();
+#else
+    tiles.set_need_redraw();
+    tiles.load_dungeon(&buffy[0], crawl_view.vgrdc);
+    tiles.update_inventory();
+#endif
 
     _debug_pane_bounds();
 }
