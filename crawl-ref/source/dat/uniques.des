@@ -90,7 +90,8 @@ MAP
 ENDMAP
 
 NAME:   uniq_purgy
-DEPTH:  4-7
+DEPTH:  3-4
+WEIGHT: 1
 TAGS:   place_unique
 MONS:   Purgy
 MAP
