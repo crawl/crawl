@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 
 #include "actor.h"
+#include "artefact.h"
 #include "env.h"
 #include "player.h"
 #include "random.h"
@@ -145,4 +146,19 @@ bool actor::can_hibernate(bool holi_only) const
     return (true);
 }
 
+void actor::shield_block_succeeded(actor *foe)
+{
+    item_def *sh = shield();
+    unrandart_entry *unrand_entry;
 
+    if (sh
+        && sh->base_type == OBJ_ARMOUR
+        && get_armour_slot(*sh) == EQ_SHIELD
+        && is_artefact(*sh)
+        && is_unrandom_artefact(*sh)
+        && (unrand_entry = get_unrand_entry(sh->special))
+        && unrand_entry->fight_func.melee_effects)
+    {
+       unrand_entry->fight_func.melee_effects(sh, this, foe, false);
+    }
+}

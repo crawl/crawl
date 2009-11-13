@@ -495,7 +495,7 @@ public:
     int shield_block_penalty() const;
     int shield_bypass_ability(int tohit) const;
 
-    void shield_block_succeeded();
+    void shield_block_succeeded(actor *foe);
 
     bool wearing_light_armour(bool with_skill = false) const;
     void exercise(skill_type skill, int qty);

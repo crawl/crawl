@@ -6130,8 +6130,10 @@ int player::shield_bypass_ability(int tohit) const
     return (15 + tohit / 2);
 }
 
-void player::shield_block_succeeded()
+void player::shield_block_succeeded(actor *foe)
 {
+    actor::shield_block_succeeded(foe);
+
     shield_blocks++;
     if (coinflip())
         exercise(SK_SHIELDS, 1);

@@ -4342,7 +4342,7 @@ bool melee_attack::attack_shield_blocked(bool verbose)
                  atk_name(DESC_NOCAP_ITS).c_str());
         }
 
-        defender->shield_block_succeeded();
+        defender->shield_block_succeeded(attacker);
 
         return (true);
     }

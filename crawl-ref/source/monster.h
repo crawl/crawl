@@ -388,7 +388,7 @@ public:
 
     int shield_bonus() const;
     int shield_block_penalty() const;
-    void shield_block_succeeded();
+    void shield_block_succeeded(actor *foe);
     int shield_bypass_ability(int tohit) const;
 
     actor_type atype() const { return ACT_MONSTER; }
