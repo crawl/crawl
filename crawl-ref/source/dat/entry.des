@@ -191,14 +191,12 @@ MARKER:  A = lua:fog_machine { \
 SUBST:   A = a ,  a = a m:1
 FTILE:   a = floor_slime
 COLOUR:  a = lightgreen
-KPROP:   a = force_exclude
 SUBST:   a = .
 MARKER:  W = lua:fog_machine{\
              pow_max = 10, delay_min = 50, delay_max = 300, \
              size = 8, start_clouds = 1, \
              cloud_type = "freezing vapour"}
 SUBST:   W = w
-KPROP:   w = force_exclude
 SUBST:   w : Ww'" , ' = wwW"
 COLOUR:  " = blue
 SUBST:   " = .
@@ -208,7 +206,6 @@ MARKER:  F = lua:fog_machine {\
              size = 8, start_clouds = 1, \
              cloud_type = "flame"}
 SUBST:   F = f
-KPROP:   f = force_exclude
 SUBST:   f : fflF , f = llf , F = f
 FTILE:   f = floor_rough_red
 COLOUR:  f = red
@@ -224,6 +221,11 @@ SUBST:   e =.
 SHUFFLE: XZ
 NSUBST:  Z = ) / ]
 NSUBST:  X = ( / [
+MARKER:  = = lua:props_marker { \
+            door_open_prompt="This door is covered in warnings.  Open " .. \
+                             "it anyways?", \
+            door_description_prefix="warning scrawled " \
+         }
 MAP
           ...
        ccc===ccc
