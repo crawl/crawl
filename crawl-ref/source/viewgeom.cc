@@ -220,25 +220,6 @@ class _mlist_col_layout : public _layout
     }
 };
 
-//////////////////////////////////////////////////////////////////////////////
-// crawl_view_buffer
-
-crawl_view_buffer::crawl_view_buffer()
-    : buffer(NULL)
-{
-}
-
-crawl_view_buffer::~crawl_view_buffer()
-{
-    delete [] buffer;
-}
-
-void crawl_view_buffer::size(const coord_def &sz)
-{
-    delete [] buffer;
-    buffer = new screen_buffer_t [ sz.x * sz.y * 2 ];
-}
-
 // ----------------------------------------------------------------------
 // crawl_view_geometry
 // ----------------------------------------------------------------------
@@ -250,7 +231,11 @@ crawl_view_geometry::crawl_view_geometry()
       msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
       mlistp(hudp.x, hudp.y + hudsz.y),
       mlistsz(hudsz.x, msgp.y - mlistp.y),
-      vbuf(), vgrdc(), viewhalfsz(), glos1(), glos2(),
+      vbuf(),
+#ifdef USE_TILE
+      tbuf(),
+#endif
+      vgrdc(), viewhalfsz(), glos1(), glos2(),
       vlos1(), vlos2(), mousep(), last_player_pos()
 {
 }
@@ -259,6 +244,9 @@ void crawl_view_geometry::init_view()
 {
     viewhalfsz = viewsz / 2;
     vbuf.size(viewsz);
+#ifdef USE_TILE
+    tbuf.size(viewsz);
+#endif
     set_player_at(you.pos(), true);
 }
 

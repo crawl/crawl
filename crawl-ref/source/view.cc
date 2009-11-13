@@ -748,16 +748,16 @@ void viewwindow(bool do_updates)
         return;
     flush_prev_message();
 
-#ifdef USE_TILE
-    std::vector<unsigned int> tileb(
-        crawl_view.viewsz.y * crawl_view.viewsz.x * 2);
-    tiles.clear_text_tags(TAG_NAMED_MONSTER);
-#endif
     screen_buffer_t *buffy(crawl_view.vbuf);
+
+#ifdef USE_TILE
+    tile_buffer_t *tileb(crawl_view.tbuf);
+#endif
 
     calc_show_los();
 
 #ifdef USE_TILE
+    tiles.clear_text_tags(TAG_NAMED_MONSTER);
     tile_draw_floor();
     mcache.clear_nonref();
 #endif
