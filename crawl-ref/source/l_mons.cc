@@ -4,6 +4,7 @@
 #include "l_libs.h"
 
 #include "delay.h"
+#include "dlua.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 
@@ -157,6 +158,44 @@ MDEF(experience)
     PLUARET(number, exper_value(mons));
 }
 
+static int l_mons_do_set_prop(lua_State *ls)
+{
+    // We should only be able to set properties from dlua.
+    ASSERT_DLUA;
+
+    monsters *mons =
+        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+
+    const char *prop_name = luaL_checkstring(ls, 1);
+
+    if (lua_isnoneornil(ls, 2))
+        mons->props.erase(prop_name);
+    else if (lua_isboolean(ls, 2))
+        mons->props[prop_name] = (bool) lua_toboolean(ls, 2);
+    // NOTE: number has to be before string, or numbers will get converted
+    // into strings.
+    else if (lua_isnumber(ls, 2))
+        mons->props[prop_name] = luaL_checklong(ls, 2);
+    else if (lua_isstring(ls, 2))
+        mons->props[prop_name] = lua_tostring(ls, 2);
+    else if (lua_isfunction(ls, 2))
+    {
+        dlua_chunk chunk(ls);
+        mons->props[prop_name] = chunk;
+    }
+    else
+    {
+        std::string err
+            = make_stringf("Don't know how to set monster property of the "
+                           "given value type for property '%s'", prop_name);
+        luaL_argerror(ls, 2, err.c_str());
+    }
+
+    return (0);
+}
+
+MDEFN(set_prop, do_set_prop)
+
 struct MonsAccessor
 {
     const char *attribute;
@@ -179,7 +218,8 @@ static MonsAccessor mons_attrs[] =
 
     { "dismiss",         l_mons_dismiss         },
     { "experience",      l_mons_experience      },
-    { "random_teleport", l_mons_random_teleport }
+    { "random_teleport", l_mons_random_teleport },
+    { "set_prop",        l_mons_set_prop        }
 };
 
 static int monster_get(lua_State *ls)
