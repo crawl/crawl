@@ -158,13 +158,13 @@ static void _build_lake(dungeon_feature_type lake_type); //mv
 
 static void _bigger_room();
 static void _plan_main(int level_number, int force_plan);
-static char _plan_1(int level_number);
-static char _plan_2(int level_number);
-static char _plan_3(int level_number);
-static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
+static bool _plan_1(int level_number);
+static bool _plan_2(int level_number);
+static bool _plan_3(int level_number);
+static bool _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
                     char forbid_y2, dungeon_feature_type force_wall);
-static char _plan_5();
-static char _plan_6(int level_number);
+static bool _plan_5();
+static bool _plan_6(int level_number);
 static void _portal_vault_level(int level_number);
 static void _labyrinth_level(int level_number);
 static void _box_room(int bx1, int bx2, int by1, int by2,
@@ -6128,12 +6128,7 @@ static void _plan_main(int level_number, int force_plan)
                                      force_plan ? " force_plan" : "");
     dgn_Layout_Type   = "rooms";
 
-    // possible values for do_stairs:
-    //  0 - stairs already done
-    //  1 - stairs already done, do spotty
-    //  2 - no stairs
-    //  3 - no stairs, do spotty
-    int do_stairs = 0;
+    bool do_stairs = false;
     dungeon_feature_type special_grid = (one_chance_in(3) ? DNGN_METAL_WALL
                                                           : DNGN_STONE_WALL);
     int i,j;
@@ -6150,10 +6145,7 @@ static void _plan_main(int level_number, int force_plan)
                  (force_plan == 6) ? _plan_6(level_number)
                                    : _plan_3(level_number));
 
-    if (do_stairs == 3 || do_stairs == 1)
-        spotty_level(true, 0, coinflip());
-
-    if (do_stairs == 2 || do_stairs == 3)
+    if (do_stairs)
     {
         int pair_count = coinflip()?4:3;
 
@@ -6170,7 +6162,7 @@ static void _plan_main(int level_number, int force_plan)
         _replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, special_grid);
 }
 
-static char _plan_1(int level_number)
+static bool _plan_1(int level_number)
 {
     dgn_Build_Method += make_stringf(" plan_1 [%d]", level_number);
     dgn_Layout_Type   = "open";
@@ -6181,10 +6173,10 @@ static char _plan_1(int level_number)
     bool success = _build_vaults(level_number, vault);
     _ensure_vault_placed(success, false);
 
-    return 0;
+    return false;
 }
 
-static char _plan_2(int level_number)
+static bool _plan_2(int level_number)
 {
     dgn_Build_Method += " plan_2";
     dgn_Layout_Type   = "cross";
@@ -6195,10 +6187,10 @@ static char _plan_2(int level_number)
     bool success = _build_vaults(level_number, vault);
     _ensure_vault_placed(success, false);
 
-    return 0;
+    return false;
 }
 
-static char _plan_3(int level_number)
+static bool _plan_3(int level_number)
 {
     dgn_Build_Method += " plan_3";
     dgn_Layout_Type   = "rooms";
@@ -6209,11 +6201,11 @@ static char _plan_3(int level_number)
     bool success = _build_vaults(level_number, vault);
     _ensure_vault_placed(success, false);
 
-    return 2;
+    return true;
 }
 
 // A more chaotic version of city level.
-static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
+static bool _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
                     char forbid_y2, dungeon_feature_type force_wall)
 {
     dgn_Build_Method += make_stringf(" plan_4 [%d,%d %d,%d %d]",
@@ -6316,10 +6308,10 @@ static char _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
         octa_room(sr, oblique_max, feature);
     }
 
-    return 2;
+    return true;
 }
 
-static char _plan_5()
+static bool _plan_5()
 {
     dgn_Build_Method += " plan_5";
     dgn_Layout_Type   = "misc"; // XXX: What type of layout is this?
@@ -6337,11 +6329,11 @@ static char _plan_5()
     if (!one_chance_in(4))
         spotty_level(true, 100, coinflip());
 
-    return 2;
+    return true;
 }
 
 // Octagon with pillars in middle.
-static char _plan_6(int level_number)
+static bool _plan_6(int level_number)
 {
     dgn_Build_Method += make_stringf(" plan_6 [%d]", level_number);
     dgn_Layout_Type   = "open";
@@ -6366,7 +6358,7 @@ static char _plan_6(int level_number)
         grd[41][36] = DNGN_ENTER_ABYSS;
     }
 
-    return (0);
+    return (false);
 }
 
 bool octa_room(spec_room &sr, int oblique_max,
