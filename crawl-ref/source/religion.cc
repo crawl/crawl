@@ -32,6 +32,7 @@
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgnevent.h"
 #include "effects.h"
 #include "enum.h"
 #include "fprop.h"
@@ -5047,7 +5048,14 @@ void god_pitch(god_type which_god)
     if (you.religion == GOD_JIYVA)
     {
         if (you.worshipped[GOD_JIYVA] == 1)
-            slime_vault_change(false);
+        {
+            dlua.callfn("dgn_set_persistent_var", "sb",
+                        "fix_slime_vaults", true);
+            // If we're on Slime:6, pretend we just entered the level
+            // in order to bring down the vault walls.
+            if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
+                dungeon_events.fire_event(DET_ENTERED_LEVEL);
+        }
 
         if (!_has_jelly())
         {

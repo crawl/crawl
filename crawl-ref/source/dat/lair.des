@@ -731,6 +731,88 @@ KMASK:   | = no_monster_gen
 KFEAT:   Z = altar_jiyva
 SHUFFLE: ([{
 LFLAGS:  no_tele_control
+
+{{
+-- Attach function to the royal jelly itself.  This will follow it wherever
+-- it goes, even through polymorphs, and set dgn.persist.royal_jelly_dead
+-- when it dies through means other than being banished.
+local function monster_die(monster, killer_type, killer_index, silent, wizard)
+    if killer_type == "reset" then
+       if monster.you_can_see then
+          crawl.mpr("You feel a great sense of loss.")
+       else
+          crawl.mpr("You feel a great sense of loss, and a brush of " ..
+                    "the abyss.")
+       end
+    else
+      dgn.persist.fix_slime_vaults = true
+    end
+end
+}}
+MARKER: 1 = lua: MonPropsMarker:new {monster_dies_lua_key = monster_die}
+
+{{
+local function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
+  if not dgn.persist.fix_slime_vaults then
+    return
+  end
+
+  -- Restore teleport control.
+  dgn.change_level_flags("!no_tele_control")
+
+  local to_feat
+  if you.god() == "Jiyva" then
+    to_feat = "floor"
+  else
+    to_feat = "clear_rock_wall"
+  end
+
+  local seen = dgn.seen_replace_feat("stone_wall", to_feat)
+        seen = dgn.seen_replace_feat("clear_stone_wall", to_feat) or seen
+
+  if you.god() == "Jiyva" then
+    if you.silenced() then
+        crawl.mpr("An unexplained breeze blows through the dungeon.", "god")
+    else
+        crawl.mpr("You hear the sound of toppling stones.", "god")
+    end
+  else
+    if seen then
+        crawl.mpr("Suddenly, all colour oozes out of the stone walls.",
+                  "monster_enchant")
+    else
+        crawl.mpr("You feel a strange vibration for a moment.",
+                  "monster_enchant")
+    end
+  end
+
+  -- We're done.
+  dgn.persist.slime_fixup_done = true
+
+  triggerable:remove(marker)
+end
+
+local fixup_marker = TriggerableFunction:new(
+  {
+    func=fixup_slime_vaults,
+    repeated=true
+  }
+)
+
+fixup_marker:add_triggerer(DgnTriggerer:new {
+  type="monster_dies",
+  target="any"
+})
+
+fixup_marker:add_triggerer(DgnTriggerer:new {
+  type="entered_level"
+})
+
+}}
+# Doesn't matter where thisw marker goes, so we might as well chose
+# the altar.
+: lua_marker("Z", fixup_marker)
+
 {{
     dgn.set_feature_desc_short("stone wall", "rune carved stone wall")
     dgn.set_feature_desc_long("stone wall",

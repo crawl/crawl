@@ -87,8 +87,6 @@ bool explode_corpse(item_def& corpse, const coord_def& where);
 int place_monster_corpse(const monsters *monster, bool silent,
                          bool force = false);
 
-void slime_vault_change(bool glass);
-
 void slimify_monster(monsters *monster, bool hostile = false);
 
 bool mon_can_be_slimified(monsters *monster);

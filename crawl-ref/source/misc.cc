@@ -42,7 +42,6 @@
 #include "directn.h"
 #include "dgnevent.h"
 #include "directn.h"
-#include "dungeon.h"
 #include "fprop.h"
 #include "fight.h"
 #include "files.h"
@@ -2585,21 +2584,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     save_game_state();
 
     new_level();
-
-    static int times_entered = 0;
-
-    if (level_id::current() == level_id(BRANCH_SLIME_PITS, 6))
-    {
-        if (times_entered == 0)
-        {
-            if (you.religion == GOD_JIYVA)
-                slime_vault_change(false);
-            else if (jiyva_is_dead())
-                slime_vault_change(true);
-        }
-
-        times_entered++;
-    }
 
     // Clear list of beholding monsters.
     you.clear_beholders();

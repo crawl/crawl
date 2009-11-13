@@ -824,55 +824,15 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
     return (false);
 }
 
-static bool _slime_vault_in_los()
+static void _jiyva_died()
 {
-    bool in_los = false;
-
-    for (int x = 0; x < GXM && !in_los; ++x)
-    {
-        for (int y = 0; y < GYM; ++y)
-        {
-            if ((grd[x][y] == DNGN_STONE_WALL
-                    || grd[x][y] == DNGN_CLEAR_STONE_WALL)
-                && observe_cell(coord_def(x, y)))
-            {
-                in_los = true;
-                break;
-            }
-        }
-    }
-
-    return (in_los);
-}
-
-static bool _slime_vault_to_glass(bool silent)
-{
-    unset_level_flags(LFLAG_NO_TELE_CONTROL, silent);
-
-    bool in_los = false;
-
-    if (!silent)
-        in_los = _slime_vault_in_los();
-
-    replace_area_wrapper(DNGN_STONE_WALL, DNGN_CLEAR_ROCK_WALL);
-    // In case it was already vitrified, but then it's less noticeable.
-    replace_area_wrapper(DNGN_CLEAR_STONE_WALL, DNGN_CLEAR_ROCK_WALL);
-
-    if (!silent)
-    {
-        if (in_los)
-        {
-            mpr("Suddenly, all colour oozes out of the stone walls.",
-                MSGCH_MONSTER_ENCHANT);
-        }
-        else
-        {
-            mpr("You feel a strange vibration for a moment.",
-                MSGCH_MONSTER_ENCHANT);
-        }
-    }
+    if (you.religion == GOD_JIYVA)
+        return;
 
     remove_all_jiyva_altars();
+
+    if (!player_in_branch(BRANCH_SLIME_PITS))
+        return;
 
     if (silenced(you.pos()))
     {
@@ -883,71 +843,6 @@ static bool _slime_vault_to_glass(bool silent)
     {
         god_speaks(GOD_JIYVA, "With infernal noise, the power ruling this "
                    "place vanishes!");
-    }
-
-    return (true);
-}
-
-static bool _slime_vault_to_glass_offlevel()
-{
-    return _slime_vault_to_glass(true);
-}
-
-static bool _slime_vault_to_glass_onlevel()
-{
-    return _slime_vault_to_glass(false);
-}
-
-static bool _slime_vault_to_floor(bool silent)
-{
-    unset_level_flags(LFLAG_NO_TELE_CONTROL, silent);
-
-    bool in_los = false;
-
-    if (!silent)
-        in_los = _slime_vault_in_los();
-
-    replace_area_wrapper(DNGN_STONE_WALL, DNGN_FLOOR);
-    // In case it was already vitrified, but then it's less noticeable.
-    replace_area_wrapper(DNGN_CLEAR_STONE_WALL, DNGN_FLOOR);
-
-    if (silenced(you.pos()))
-        mpr("An unexplained breeze blows through the dungeon.", MSGCH_GOD);
-    else
-        mpr("You hear the sound of toppling stones.", MSGCH_GOD);
-
-    return (true);
-}
-
-static bool _slime_vault_to_floor_offlevel()
-{
-    return _slime_vault_to_floor(true);
-}
-
-static bool _slime_vault_to_floor_onlevel()
-{
-    return _slime_vault_to_floor(false);
-}
-
-void slime_vault_change(bool glass)
-{
-    const level_id target(BRANCH_SLIME_PITS, 6);
-    if (is_existing_level(target))
-    {
-        if (glass)
-        {
-            apply_to_level(target,
-                           target == level_id::current() ?
-                               _slime_vault_to_glass_onlevel :
-                               _slime_vault_to_glass_offlevel);
-        }
-        else
-        {
-            apply_to_level(target,
-                           target == level_id::current() ?
-                               _slime_vault_to_floor_onlevel :
-                               _slime_vault_to_floor_offlevel);
-        }
     }
 }
 
@@ -970,33 +865,18 @@ static void _fire_monster_death_event(monsters *monster,
     // Banished monsters aren't technically dead, so no death event
     // for them.
     if (killer == KILL_RESET)
-    {
-        // Give player a hint that banishing the Royal Jelly means the
-        // Slime:6 vaults stay locked.
-        if (type == MONS_ROYAL_JELLY)
-        {
-            if (you.can_see(monster))
-                mpr("You feel a great sense of loss.");
-            else
-                mpr("You feel a great sense of loss, and the brush of the "
-                    "Abyss.");
-        }
         return;
-    }
 
     dungeon_events.fire_event(
         dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
                   monster_index(monster), killer));
 
-    // Don't unlock the Slime:6 vaults if the "death" was actually the
-    // Royal Jelly polymorphing into something else; the player still
-    // has to kill whatever it polymorphed into.
     if (type == MONS_ROYAL_JELLY && !polymorph)
     {
         you.royal_jelly_dead = true;
 
         if (jiyva_is_dead())
-            slime_vault_change(true);
+            _jiyva_died();
     }
 }
 
