@@ -8,26 +8,16 @@
 #            There are two reasons for keeping altar vaults separate:
 #            * This makes it easier to adapt for new gods.
 #            * Easier tweaking of altar chances.
+#
+# NOTE: A vault tagged with only temple_overflow_FOO will only ever be used
+# for overflow temples, but one tagged with both temple_overflow_FOO and
+# uniq_altar_FOO can be generated either randomly or as an overflow temple.
+#
 ###############################################################################
 
 ######################################
 # I    Temples (Multi-altar vaults)
 ######################################
-
-NAME:   minitemple
-TAGS:   allow_dup
-# More common than the others.
-WEIGHT: 20
-MAP
-cccccccccccc
-cBcBcBcBcBcc
-G.c.c.c.c.Bc
-@.........Bc
-@.........Bc
-G.c.c.c.c.Bc
-cBcBcBcBcBcc
-cccccccccccc
-ENDMAP
 
 NAME:    jmf_multi_god_temple
 SHUFFLE: abc
@@ -72,7 +62,7 @@ ENDMAP
 
 NAME: old_standard_altar
 TAGS: allow_dup
-SHUFFLE: cvxx
+SHUFFLE: cvxxxx
 MAP
 ...........
 .xxxx.xxxx.
@@ -273,13 +263,9 @@ ENDMAP
 # III  Special altars
 ######################################
 
-# NOTE: A vault tagged with only temple_overflow_FOO will only ever be used
-# for overflow temples, but one tagged with both temple_overflow_FOO and
-# uniq_altar_FOO can be generated either randomly or as an overflow temple.
-
 NAME:   fedhas_altar_1
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas
-DEPTH:  D:2-7
+DEPTH:  D:2-20
 KFEAT:  C = altar_fedhas
 MONS:   plant
 MAP
@@ -292,7 +278,7 @@ ENDMAP
 
 NAME:   fedhas_altar_2
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas
-DEPTH:  D:2-7
+DEPTH:  D:2-20
 KFEAT:  C = altar_fedhas
 NSUBST: w = 2:W / *:w
 SUBST:  . = ..wW
@@ -307,7 +293,7 @@ ENDMAP
 
 NAME:   fedhas_altar_3
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas
-DEPTH:  D:2-7
+DEPTH:  D:2-20
 KFEAT:  C = altar_fedhas
 NSUBST: b = 1:. / *:1
 MONS:   plant w:5 / fungus / nothing w:3
@@ -321,7 +307,7 @@ ENDMAP
 
 NAME:   fedhas_altar_4
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas
-DEPTH:  D:2-7
+DEPTH:  D:2-20
 KFEAT:  C = altar_fedhas
 FTILE:  . = floor_lair
 FTILE:  t = floor_lair
@@ -363,8 +349,8 @@ ENDMAP
 
 NAME:    cheibriados_altar_2
 TAGS:    uniq_altar_cheibriados
-DEPTH:   D:2-6
-WEIGHT:  5
+DEPTH:   D:2-20
+WEIGHT:  1
 KFEAT:   _ = altar_cheibriados
 MONS:    giant slug, giant snail, elephant slug
 SUBST:   1 : 1:50 2:30 3:10 4:10
@@ -485,13 +471,28 @@ xxxxxxxxxxxxxx
 xxxxxxxxxxxxxx
 ENDMAP
 
-NAME:  lemuel_zombie_altar
-DEPTH: D:2-18, Crypt
-TAGS:  no_pool_fixup
-MONS:  rat zombie / giant bat zombie / nothing w:200
-KMONS: w = giant goldfish zombie / big fish zombie / nothing w:200
-KFEAT: w = deep_water
-KFEAT: _ = altar_kikubaaqudgha / altar_yredelemnul
+# The following vaults could be merged if the temple_overflow and uniq_altar
+# TAGs could be given inside lua conditionals. Can they?
+
+NAME:   lemuel_zombie_altar
+DEPTH:  D:2-18, Crypt
+TAGS:   no_pool_fixup uniq_zombie_altar
+: local god = ""
+: if crawl.coinflip() then god = "kikubaaqudgha" else god = "yredelemnul" end
+: tags("temple_overflow_" .. god, "uniq_altar_" .. god)
+: kfeat("_ = altar_" .. god)
+#
+: if crawl.coinflip() then
+MONS:   rat zombie / giant bat zombie / nothing w:200
+KMONS:  w = giant goldfish zombie / big fish zombie / nothing w:200
+KFEAT:  w = deep_water
+: else
+SUBST:  1 : 1Ww
+SUBST:  1 = WWw
+NSUBST: w = 2:1 / *:w
+KMONS:  1 = giant goldfish zombie / big fish zombie
+KFEAT:  1 = deep_water
+: end
 MAP
 xxxxxxxxxxxxxxxx
 xxxxwwwwwwwwxxxx
@@ -644,6 +645,7 @@ ENDMAP
 # The oklob plant may be abusable (if so, remove it).
 NAME:    tgw_fedhas
 TAGS:    no_item_gen no_monster_gen
+TAGS:    temple_overflow_fedhas uniq_altar_fedhas
 DEPTH:   Lair, D:2-20
 KFEAT:   _ = altar_fedhas
 MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
@@ -736,7 +738,7 @@ ENDMAP
 ###############################################################################
 # Altar to Xom by TGW.
 NAME:   tgw_xom
-TAGS:   no_item_gen no_monster gen
+TAGS:   no_item_gen no_monster gen temple_overflow_xom uniq_altar_xom
 KFEAT:  _ = altar_xom
 MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
 MONS:   gnoll; club ego:chaos / gnoll; dagger ego:chaos / gnoll; spear ego:chaos
@@ -767,6 +769,7 @@ ENDMAP
 # close the door. Provide a chokepoint.
 NAME:       tgw_trog
 TAGS:       no_item_gen no_monster_gen
+TAGS:       temple_overflow_trog uniq_altar_trog
 KFEAT:      _ = altar_trog
 MONS:       moth of wrath, rat / worm w:5
 ITEM:       any weapon
@@ -791,6 +794,7 @@ ENDMAP
 # Altar to Sif by TGW.
 NAME:       tgw_sif
 TAGS:       no_item_gen no_monster_gen no_pool_fixup
+TAGS:       temple_overflow_sif_muna uniq_altar_sif_muna
 KFEAT:      _ = altar_sif_muna
 MONS:       orc wizard w:15 / Jessica / Blork the Orc
 NSUBST:     M = 1:1 / *:"
@@ -825,7 +829,8 @@ ENDMAP
 # TSO's small temple (1KB)
 # Idea stolen from protected_by_tso_3.
 NAME:     tso_altar
-TAGS:     no_item_gen no_rotate temple_overflow_the_shining_one
+TAGS:     no_item_gen no_rotate 
+TAGS:     temple_overflow_the_shining_one uniq_altar_the_shining_one
 COLOUR:   _ = yellow
 SUBST:    _ = .
 COLOUR:   c = white
