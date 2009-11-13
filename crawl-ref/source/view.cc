@@ -701,6 +701,35 @@ static void _debug_pane_bounds()
 #endif
 }
 
+static void player_view_updates(const coord_def &gc)
+{
+    maybe_remove_autoexclusion(gc);
+
+    // Set excludes in a radius of 1 around harmful clouds genereated
+    // by neither monsters nor the player.
+    const int cloudidx = env.cgrid(gc);
+    if (cloudidx != EMPTY_CLOUD)
+    {
+        cloud_struct &cl   = env.cloud[cloudidx];
+        cloud_type   ctype = cl.type;
+
+        if (!is_harmless_cloud(ctype)
+            && cl.whose  == KC_OTHER
+            && cl.killer == KILL_MISC)
+        {
+            for (adjacent_iterator ai(gc, false); ai; ++ai)
+            {
+                if (!cell_is_solid(*ai) && !is_exclude_root(*ai))
+                    set_exclude(*ai, 0);
+            }
+        }
+    }
+
+    // Print tutorial messages for features in LOS.
+    if (Options.tutorial_left)
+        tutorial_observe_cell(gc);
+}
+
 //---------------------------------------------------------------
 //
 // viewwindow -- now unified and rolled into a single pass
@@ -763,39 +792,8 @@ void viewwindow(bool do_updates)
         const coord_def gc = view2grid(*ri);
         const coord_def ep = view2show(grid2view(gc));
 
-        if (in_bounds(gc) && you.see_cell(gc))
-        {
-            maybe_remove_autoexclusion(gc);
-
-            // Set excludes in a radius of 1 around harmful clouds genereated
-            // by neither monsters nor the player.
-            const int cloudidx = env.cgrid(gc);
-            if (cloudidx != EMPTY_CLOUD)
-            {
-                cloud_struct &cl   = env.cloud[cloudidx];
-                cloud_type   ctype = cl.type;
-
-                if (!is_harmless_cloud(ctype)
-                    && cl.whose  == KC_OTHER
-                    && cl.killer == KILL_MISC)
-                {
-                    for (adjacent_iterator ai(gc, false); ai; ++ai)
-                    {
-                        if (!cell_is_solid(*ai) && !is_exclude_root(*ai))
-                            set_exclude(*ai, 0);
-                    }
-                }
-            }
-        }
-
-        // Print tutorial messages for features in LOS.
-        if (Options.tutorial_left
-            && in_bounds(gc)
-            && crawl_view.in_grid_los(gc)
-            && env.show(ep))
-        {
-            tutorial_observe_cell(gc);
-        }
+        if (you.see_cell(gc))
+            player_view_updates(gc);
 
         // Order is important here.
         if (!map_bounds(gc))
