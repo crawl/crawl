@@ -70,10 +70,6 @@ LUARET1(you_god_likes_fresh_corpses, boolean,
         lua_isstring(ls, 1) ?
         god_likes_fresh_corpses(str_to_god(lua_tostring(ls, 1))) :
         god_likes_fresh_corpses(you.religion))
-LUARET1(you_god_likes_butchery, boolean,
-        lua_isstring(ls, 1) ?
-        god_likes_butchery(str_to_god(lua_tostring(ls, 1))) :
-        god_likes_butchery(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_hunger, string, hunger_level())
@@ -192,7 +188,6 @@ static const struct luaL_reg you_clib[] =
     { "transform",    you_transform },
 
     { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
-    { "god_likes_butchery",       you_god_likes_butchery },
     { "can_consume_corpses",      you_can_consume_corpses },
 
     { "stop_activity", you_stop_activity },

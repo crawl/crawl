@@ -356,42 +356,20 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
 
     const bool rotten = food_is_rotten(mitm[corpse_id]);
 
-    if (you.duration[DUR_PRAYER] && god_likes_butchery(you.religion))
+    // Start work on the first corpse we butcher.
+    if (first_corpse)
+        mitm[corpse_id].plus2++;
+
+    int work_req = std::max(0, 4 - mitm[corpse_id].plus2);
+
+    delay_type dtype = DELAY_BUTCHER;
+    if (!force_butcher && !rotten
+        && can_bottle_blood_from_corpse(mitm[corpse_id].plus))
     {
-        if (!rotten)
-        {
-            offer_and_butcher_corpse(corpse_id);
-
-            // Kikubaaqudgha torments if you butcher a fresh corpse
-            // while praying.
-            if (you.religion == GOD_KIKUBAAQUDGHA
-                && you.piety >= piety_breakpoint(4))
-            {
-                simple_god_message(" inflicts torment against the living!");
-                torment(TORMENT_KIKUBAAQUDGHA, you.pos());
-                you.piety -= 8 + random2(4); // 8 to 12
-            }
-        }
-        else
-            simple_god_message(" refuses to accept that mouldy sacrifice!");
+        dtype = DELAY_BOTTLE_BLOOD;
     }
-    else
-    {
-        // Start work on the first corpse we butcher.
-        if (first_corpse)
-            mitm[corpse_id].plus2++;
 
-        int work_req = std::max(0, 4 - mitm[corpse_id].plus2);
-
-        delay_type dtype = DELAY_BUTCHER;
-        if (!force_butcher && !rotten
-            && can_bottle_blood_from_corpse(mitm[corpse_id].plus))
-        {
-            dtype = DELAY_BOTTLE_BLOOD;
-        }
-
-        start_delay(dtype, work_req, corpse_id, mitm[corpse_id].special);
-    }
+    start_delay(dtype, work_req, corpse_id, mitm[corpse_id].special);
 
     you.turn_is_over = true;
     return (true);
@@ -414,10 +392,7 @@ static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
 
 static bool _have_corpses_in_pack(bool remind)
 {
-    const bool sacrifice  = (you.duration[DUR_PRAYER]
-                             && god_likes_butchery(you.religion));
-
-    const bool can_bottle = (!sacrifice && you.species == SP_VAMPIRE
+    const bool can_bottle = (you.species == SP_VAMPIRE
                              && you.experience_level > 5);
 
     int num        = 0;
@@ -435,9 +410,7 @@ static bool _have_corpses_in_pack(bool remind)
             continue;
 
         // Only saprovorous characters care about rotten food.
-        // Also, rotten corpses can't be sacrificed.
-        if (food_is_rotten(obj) && (sacrifice
-                                    || !player_mutation_level(MUT_SAPROVOROUS)))
+        if (food_is_rotten(obj) && (!player_mutation_level(MUT_SAPROVOROUS)))
         {
             continue;
         }
@@ -623,15 +596,11 @@ bool butchery(int which_corpse)
 
             std::string corpse_name = si->name(DESC_NOCAP_A);
 
-            const bool sacrifice = (you.duration[DUR_PRAYER]
-                                    && god_likes_butchery(you.religion));
-
             // We don't need to check for undead because
             // * Mummies can't eat.
             // * Ghouls relish the bad things.
             // * Vampires won't bottle bad corpses.
-            // Also, don't bother colouring if it's only for sacrificing.
-            if (!sacrifice && !you.is_undead)
+            if (!you.is_undead)
             {
                 corpse_name = get_message_colour_tags(*si, DESC_NOCAP_A,
                                                       MSGCH_PROMPT);
@@ -641,7 +610,7 @@ bool butchery(int which_corpse)
             do
             {
                 mprf(MSGCH_PROMPT, "%s %s? (yc/n/a/q/?)",
-                     (sacrifice || !can_bottle_blood_from_corpse(si->plus)) ?
+                     (!can_bottle_blood_from_corpse(si->plus)) ?
                          "Butcher" : "Bottle",
                      corpse_name.c_str());
                 repeat_prompt = false;
@@ -671,9 +640,7 @@ bool butchery(int which_corpse)
                     if (keyin == 'a')
                     {
                         if (!force_butcher
-                            && can_bottle_blood_from_corpse(si->plus)
-                            && (!you.duration[DUR_PRAYER]
-                                || !god_likes_butchery(you.religion)))
+                            && can_bottle_blood_from_corpse(si->plus))
                         {
                             bottle_all = true;
                         }

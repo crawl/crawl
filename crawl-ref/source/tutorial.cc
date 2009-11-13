@@ -981,7 +981,7 @@ void tutorial_dissection_reminder(bool healthy)
         return;
     }
 
-    if (!god_likes_butchery(you.religion))
+    if (!god_likes_fresh_corpses(you.religion))
         return;
 
     if (Options.tutorial_events[TUT_OFFER_CORPSE])
@@ -991,7 +991,7 @@ void tutorial_dissection_reminder(bool healthy)
         Options.tut_just_triggered = true;
 
         std::string text;
-        text += "If you don't want to eat it, consider <w>c</w>hopping this "
+        text += "If you don't want to eat it, consider offering this "
                 "corpse up under <w>p</w>rayer as a sacrifice to ";
         text += god_name(you.religion);
 #ifdef USE_TILE
@@ -1947,11 +1947,11 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "click</w>.";
 #endif
 
-        if (god_likes_butchery(you.religion))
+        if (god_likes_fresh_corpses(you.religion))
         {
-            text << " During prayer you can offer corpses to "
+            text << " You can offer corpses to "
                  << god_name(you.religion)
-                 << " by chopping them up, as well. Note that the gods will "
+                 << " by praying over them to offer them. Note that the gods will "
                  << "not accept rotting flesh.";
         }
         text << "\nDuring the tutorial you can reread this information at "
@@ -2655,20 +2655,10 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "<w>v</w>iewing a corpse or chunk on the floor or by having a "
                 "look at it in your <w>i</w>nventory.";
 #endif
-
-        if (you.duration[DUR_PRAYER]
-            && (god_likes_butchery(you.religion)
-                || god_hates_butchery(you.religion)))
-        {
-            text << "\nRemember, though, to wait until your prayer is over, "
-                    "or the corpse will instead be sacrificed to "
-                 << god_name(you.religion)
-                 << ".";
-        }
         break;
 
     case TUT_OFFER_CORPSE:
-        if (!god_likes_butchery(you.religion)
+        if (!god_likes_fresh_corpses(you.religion)
             || you.hunger_state < HS_SATIATED)
         {
             return;
@@ -2677,21 +2667,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "Hey, that monster left a corpse! If you don't need it for "
                 "food or other purposes, you can sacrifice it to "
              << god_name(you.religion)
-             << " by <w>c</w>hopping it while <w>p</w>raying. ";
+             << " by <w>p</w>raying over it to offer it. ";
 
-        if (_cant_butcher())
-        {
-            text << "(Or you <w>could</w> sacrifice it if it weren't for "
-                    "the fact that you can't let go of your cursed "
-                    "non-chopping weapon)";
-        }
-        else if (_num_butchery_tools() == 0)
-        {
-            text << "(Or you <w>could</w> sacrifice it if you had a "
-                    "chopping weapon; you should pick up the first knife, "
-                    "dagger, sword or axe you find if you want to be able "
-                    "to chop up corpses)";
-        }
         break;
 
     case TUT_SHIFT_RUN:
@@ -4023,11 +4000,11 @@ void tutorial_describe_item(const item_def &item)
                     "a sharp implement to produce chunks for food (though they "
                     "may not be healthy)";
 
-            if (!food_is_rotten(item) && god_likes_butchery(you.religion))
+            if (!food_is_rotten(item) && god_likes_fresh_corpses(you.religion))
             {
-                ostr << ", or as a sacrifice to "
+                ostr << ", or offered as a sacrifice by "
                      << god_name(you.religion)
-                     << " (while <w>p</w>raying)";
+                     << " <w>p</w>raying over them.";
             }
             ostr << ". ";
 

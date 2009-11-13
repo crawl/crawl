@@ -2338,13 +2338,16 @@ static bool _god_accepts_prayer(god_type god)
         return (true);
     }
 
-    if (god_likes_fresh_corpses(god) || god_likes_butchery(god))
+    if (god_likes_fresh_corpses(god))
         return (true);
 
     switch (god)
     {
     case GOD_ZIN:
         return (zin_sustenance(false));
+
+    case GOD_KIKUBAAQUDGHA:
+        return (you.piety >= piety_breakpoint(4));
 
     case GOD_YREDELEMNUL:
         return (yred_injury_mirror(false));
@@ -2457,11 +2460,11 @@ void pray()
     // Assume for now that gods who like fresh corpses and/or butchery
     // don't use prayer for anything else.
     if (you.religion == GOD_ZIN
+        || you.religion == GOD_KIKUBAAQUDGHA
         || you.religion == GOD_BEOGH
         || you.religion == GOD_NEMELEX_XOBEH
         || you.religion == GOD_JIYVA
-        || god_likes_fresh_corpses(you.religion)
-        || god_likes_butchery(you.religion))
+        || god_likes_fresh_corpses(you.religion))
     {
         you.duration[DUR_PRAYER] = 1;
     }
@@ -2471,8 +2474,8 @@ void pray()
         you.duration[DUR_PRAYER] = 20;
     }
 
-    // Gods who like fresh corpses, Beoghites and Nemelexites offer the
-    // items they're standing on.
+    // Gods who like fresh corpses, Kikuites, Beoghites and
+    // Nemelexites offer the items they're standing on.
     if (altar_god == GOD_NO_GOD
         && (god_likes_fresh_corpses(you.religion)
             || you.religion == GOD_BEOGH || you.religion == GOD_NEMELEX_XOBEH))
@@ -4861,6 +4864,14 @@ void offer_items()
         _show_pure_deck_chances();
 #endif
     }
+
+    if (num_sacced > 0 && you.religion == GOD_KIKUBAAQUDGHA)
+    {
+		simple_god_message(" torments the living!");
+        torment(TORMENT_KIKUBAAQUDGHA, you.pos());
+		you.piety -= 8 + random2(4);	// costs 8 - 12 piety
+    }
+
     // Explanatory messages if nothing the god likes is sacrificed.
     else if (num_sacced == 0 && num_disliked > 0)
     {
@@ -5144,12 +5155,8 @@ bool god_likes_fresh_corpses(god_type god)
     return (god == GOD_OKAWARU
             || god == GOD_MAKHLEB
             || god == GOD_TROG
-            || god == GOD_LUGONU);
-}
-
-bool god_likes_butchery(god_type god)
-{
-    return (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4));
+            || god == GOD_LUGONU
+            || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
 }
 
 bool god_hates_butchery(god_type god)
