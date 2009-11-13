@@ -2647,6 +2647,7 @@ bool mon_can_be_slimified(monsters *monster)
     const mon_holy_type holi = monster->holiness();
 
     return (!(monster->flags & MF_GOD_GIFT)
+            && !mons_is_insubstantial(monster->type)
             && (holi == MH_UNDEAD
                  || holi == MH_NATURAL && !mons_is_slime(monster))
             );
@@ -2691,8 +2692,11 @@ void slimify_monster(monsters *mon, bool hostile)
     else
         mon->attitude = ATT_HOSTILE;
 
-    //mon->god = GOD_NO_GOD; // Prevent assertion.
     mons_make_god_gift(mon, GOD_JIYVA);
+
+    // Don't want shape-shifters to shift into non-slimes.
+    mon->del_ench(ENCH_GLOWING_SHAPESHIFTER);
+    mon->del_ench(ENCH_SHAPESHIFTER);
 }
 
 static bool _habitat_okay( const monsters *monster, dungeon_feature_type targ )
