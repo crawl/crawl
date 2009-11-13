@@ -21,6 +21,10 @@ function dgn_load_data(th)
   dgn.persist = lmark.unmarshall_table(th) or { }
 end
 
+function dgn_set_persistent_var(var, val)
+  dgn.persist[var] = val
+end
+
 function dgn.fnum(name)
   local fnum = dgn.f_map[name]
   if not fnum then
