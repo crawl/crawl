@@ -1230,7 +1230,10 @@ int exper_value(const monsters *monster)
     if (mons_class_flag(mclass, M_NO_EXP_GAIN))
         return (0);
 
-    if (mons_is_statue(mclass))
+    // The beta26 statues have non-spell-like abilities that the experience
+    // code can't see, so inflate their XP a bit.  Ice statues and Roxanne
+    // get plenty of XP for their spells.
+    if (mclass == MONS_ORANGE_STATUE || mclass == MONS_SILVER_STATUE)
         return (mHD * 15);
 
     x_val = (16 + maxhp) * (mHD * mHD) / 10;
