@@ -83,9 +83,9 @@ private:
 class adjacent_iterator : public radius_iterator
 {
 public:
-    explicit adjacent_iterator( const coord_def& pos,
-                                bool _exclude_center = true ) :
-        radius_iterator(pos, 1, true, false, _exclude_center) {}
+    explicit adjacent_iterator(const coord_def& pos,
+                               bool _exclude_center = true) :
+        radius_iterator(pos, 1, SH_SQUARE, NULL, _exclude_center) {}
 };
 
 #endif
