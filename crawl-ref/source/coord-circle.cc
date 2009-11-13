@@ -6,6 +6,21 @@
 
 #include <cmath>
 
+bool rect_def::contains(const coord_def& p) const
+{
+    return (p.x >= min.x && p.x <= max.x && p.y >= min.y && p.y <= max.y);
+}
+
+rect_def rect_def::intersect(const rect_def& other) const
+{
+    rect_def res;
+    res.min.x = std::max(min.x, other.min.x);
+    res.min.y = std::max(min.y, other.min.y);
+    res.max.x = std::min(max.x, other.max.x);
+    res.max.y = std::min(max.y, other.max.y);
+    return (res);
+}
+
 rectangle_iterator rect_def::iter() const
 {
     return (rectangle_iterator(min, max));

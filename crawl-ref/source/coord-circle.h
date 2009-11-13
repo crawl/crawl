@@ -26,8 +26,13 @@ public:
     rect_def(const coord_def &min_, const coord_def &max_)
         : min(min_), max(max_) {}
 
+    bool contains(const coord_def& p) const;
+    rect_def intersect(const rect_def& other) const;
     rectangle_iterator iter() const;
 };
+
+#define RECT_MAP_BOUNDS (rect_def(coord_def(X_BOUND_1, Y_BOUND_1), \
+                                  coord_def(X_BOUND_2, Y_BOUND_2)))
 
 class circle_iterator;
 class circle_def
