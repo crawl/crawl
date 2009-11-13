@@ -30,10 +30,13 @@ static coord_def random_close_space(actor* victim, actor* target)
     // XXX: should use actor::see_cell_no_trans.
     const los_def* vlos = &victim->get_los_no_trans();
     const los_def* tlos = &target->get_los_no_trans();
-    for (radius_iterator ri(vlos, true); ri; ++ri)
+    for (radius_iterator ri(vlos); ri; ++ri)
     {
-        if (!tlos->see_cell(*ri) || !victim->is_habitable(*ri))
+        if (!tlos->see_cell(*ri) || !victim->is_habitable(*ri)
+            || actor_at(*ri))
+        {
             continue;
+        }
         int weight = (LOS_RADIUS+1)*(LOS_RADIUS+1) - (tpos - *ri).abs();
         if (weight < 0)
             weight = 1;
