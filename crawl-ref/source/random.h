@@ -18,6 +18,7 @@ int random_range(int low, int high, int nrolls);
 const char* random_choose_string(const char* first, ...);
 int random_choose(int first, ...);
 int random_choose_weighted(int weight, int first, ...);
+
 int random2avg(int max, int rolls);
 int bestroll(int max, int rolls);
 int random2limit(int max, int limit);
