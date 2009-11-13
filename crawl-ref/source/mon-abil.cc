@@ -1388,8 +1388,8 @@ void mon_nearby_ability(monsters *monster)
     }
 }
 
-// When giant spores move (while wandering) maybe place a spore on the
-// square they move off of.
+// When giant spores move maybe place a ballistomycete on the they move
+// off of.
 void ballisto_on_move(monsters * monster, const coord_def & position)
 {
     if (monster->type == MONS_GIANT_SPORE)
@@ -1427,10 +1427,16 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
     }
 }
 
+// Increase the count of every ballistomycete on the level (only if
+// monster is of an appropriate type). If a ballisto has a count greater
+// than 0 it changes color and starts producing spores.
 void activate_ballistomycetes( monsters * monster)
 {
-    if(!monster || monster->type != MONS_BALLISTOMYCETE && monster->type != MONS_GIANT_SPORE)
+    if(!monster || monster->type != MONS_BALLISTOMYCETE
+                   && monster->type != MONS_GIANT_SPORE)
+    {
         return;
+    }
 
     bool activated_others = false;
     int seen_others = 0;
@@ -1441,8 +1447,9 @@ void activate_ballistomycetes( monsters * monster)
            && env.mons[i].type == MONS_BALLISTOMYCETE)
         {
             env.mons[i].number++;
-            // 0 -> 1 means the ballisto moves onto the faster spawn
-            // timer and changes color
+
+            // Change color and start the spore production timer if we
+            // are moving from 0 to 1.
             if(env.mons[i].number == 1)
             {
                 env.mons[i].colour = LIGHTRED;
@@ -1450,22 +1457,26 @@ void activate_ballistomycetes( monsters * monster)
                 env.mons[i].del_ench(ENCH_SPORE_PRODUCTION, false);
                 env.mons[i].add_ench(ENCH_SPORE_PRODUCTION);
                 activated_others = true;
+
                 if(you.can_see(&env.mons[i]))
                     seen_others++;
             }
         }
     }
 
-    // How to do messaging? Message on kill no matter what, only if you see
-    // other ballistos get angry, only if other ballistos get angry
-    // (seen or not). Also need a message if a ballisto suddenly becomes
-    // angry
+    // Do some messaging. I'm not entirely sure how detailed to get,
+    // so erroring on the side of message spam at this point. -cao
     if(mons_near(monster) && activated_others)
-        mprf("You feel ballistomycets on the level are angry now?");
-    else if (seen_others > 0)
-        mprf("The ballistomycete appears angry...");
+        mprf("The fungus' death has angered other fungi on the level.");
+    if (seen_others == 1)
+        mprf("A ballistomycete appears irritated.");
+    else if (seen_others > 1)
+        mprf("Some ballistomycetes appear irritated.");
 }
 
+// Decrease the count on each ballistomycete on the level. To be called
+// after a new spore is created. If a ballistos count drops to 0 it changes
+// colorr (back to magenta) and stops producing spores.
 void deactivate_ballistos()
 {
     for(unsigned i=0;i < env.mons.size(); i++)
@@ -1483,7 +1494,7 @@ void deactivate_ballistos()
                 {
                     temp->colour = MAGENTA;
                     temp->del_ench(ENCH_SPORE_PRODUCTION);
-                    //temp->add_ench(ENCH_SPORE_PRODUCTION);
+
                     if(you.can_see(temp))
                         mprf("A nearby ballistomycete calms down.");
                 }

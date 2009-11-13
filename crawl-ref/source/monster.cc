@@ -5024,14 +5024,14 @@ void monsters::apply_enchantment(const mon_enchant &me)
                         env.mons[rc].number = 20;
 
                         if (observe_cell(adjacent) && observe_cell(pos()))
-                            mpr("A nearby fungus spawns a giant spore.");
+                            mpr("A ballistomycete spawns a giant spore.");
 
                         deactivate_ballistos();
                     }
                     break;
                 }
             }
-            // Re=add the enchantment (this resets the spore production
+            // Re-add the enchantment (this resets the spore production
             // timer).
             this->add_ench(ENCH_SPORE_PRODUCTION);
         }
@@ -6060,7 +6060,7 @@ int mon_enchant::calc_duration(const monsters *mons,
     case ENCH_SPORE_PRODUCTION:
         // The duration of the spore production timer depends on the color
         // of the fungus
-        cturn = mons->number ? 150 : 1500;
+        cturn = 150;
         break;
 
     case ENCH_ABJ:
