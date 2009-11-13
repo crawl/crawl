@@ -9,13 +9,54 @@
 
 #include "cloud.h"
 #include "coord.h"
+#include "coordit.h"
 #include "env.h"
 #include "fprop.h"
 #include "los.h"
 #include "player.h"
 #include "random.h"
+#include "random-weight.h"
 #include "state.h"
 #include "terrain.h"
+
+typedef std::pair<coord_def, int> coord_weight;
+
+// Try to find a "safe" place for the victim close to the target.
+static coord_def random_close_space(actor* victim, actor* target)
+{
+    std::vector<std::pair<coord_def, int> > dests;
+    const coord_def tpos = target->pos();
+
+    // XXX: should use actor::see_cell_no_trans.
+    const los_def* vlos = &victim->get_los_no_trans();
+    const los_def* tlos = &target->get_los_no_trans();
+    for (radius_iterator ri(vlos, true); ri; ++ri)
+    {
+        if (!tlos->see_cell(*ri) || !victim->is_habitable(*ri))
+            continue;
+        int weight = (LOS_RADIUS+1)*(LOS_RADIUS+1) - (tpos - *ri).abs();
+        if (weight < 0)
+            weight = 1;
+        dests.push_back(coord_weight(*ri, weight));
+    }
+    coord_def* choice = random_choose_weighted(dests);
+    return (choice ? *choice : coord_def(0, 0));
+}
+
+void blink_closer(const coord_def &target)
+{
+    actor* caster = actor_at(target);
+    if (!caster)
+        return;
+    coord_def dest = random_close_space(&you, caster);
+    if (dest.origin())
+        return;
+    mpr("You blink.");
+    coord_def origin = you.pos();
+    bool success = move_player_to_grid(dest, false, true, true);
+    if (success)
+        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+}
 
 bool random_near_space(const coord_def& origin, coord_def& target,
                        bool allow_adjacent, bool restrict_los,
