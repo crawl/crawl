@@ -222,6 +222,7 @@ void cluaopen_you(lua_State *ls)
 
 LUARET1(you_can_hear_pos, boolean,
         player_can_hear(coord_def(luaL_checkint(ls,1), luaL_checkint(ls, 2))))
+LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_x_pos, number, you.pos().x)
 LUARET1(you_y_pos, number, you.pos().y)
 LUARET2(you_pos, number, you.pos().x, you.pos().y)
@@ -348,6 +349,7 @@ LUAFN(_you_shopping_list_del)
 static const struct luaL_reg you_dlib[] =
 {
 { "hear_pos",           you_can_hear_pos },
+{ "silenced",           you_silenced },
 { "x_pos",              you_x_pos },
 { "y_pos",              you_y_pos },
 { "pos",                you_pos },
