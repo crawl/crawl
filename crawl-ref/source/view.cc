@@ -952,19 +952,19 @@ void viewwindow(bool do_updates)
             DRAW(los_backup);
 
         // Alter colour if flashing the characters vision.
-        if (flash_colour && buffy[bufcount])
+        if (flash_colour)
         {
-            buffy[bufcount + 1] =
-                observe_cell(gc) ? real_colour(flash_colour)
-                                 : DARKGREY;
+            buffy[bufcount + 1] = observe_cell(gc) ? real_colour(flash_colour)
+                                                   : DARKGREY;
         }
-        else if (Options.target_range > 0 && buffy[bufcount]
-                 && (grid_distance(you.pos(), gc) > Options.target_range
-                     || !observe_cell(gc)))
+        else
         {
-            buffy[bufcount + 1] = DARKGREY;
+            bool out_of_range = Options.target_range > 0
+                 && (grid_distance(you.pos(), gc) > Options.target_range);
+            if (!observe_cell(gc) || out_of_range)
+                buffy[bufcount + 1] = DARKGREY;
 #ifdef USE_TILE
-            if (observe_cell(gc))
+            if (out_of_range)
                 tileb[bufcount + 1] |= TILE_FLAG_OOR;
 #endif
         }
