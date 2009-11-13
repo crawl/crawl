@@ -701,8 +701,11 @@ static void _debug_pane_bounds()
 #endif
 }
 
-static bool player_view_updates(const coord_def &gc, const coord_def &ep)
+// Do various updates when the player sees a cell. Returns whether
+// exclusion LOS might have been affected.
+static bool player_view_update_at(const coord_def &gc)
 {
+    const coord_def ep = grid2show(gc);
     maybe_remove_autoexclusion(gc);
 
     // Set excludes in a radius of 1 around harmful clouds genereated
@@ -761,6 +764,15 @@ static bool player_view_updates(const coord_def &gc, const coord_def &ep)
     }
 
     return (need_excl_update);
+}
+
+static void player_view_update()
+{
+    std::vector<coord_def> update_excludes;
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        if (player_view_update_at(*ri))
+            update_excludes.push_back(*ri);
+    update_exclusion_los(update_excludes);
 }
 
 #ifndef USE_TILE
@@ -869,8 +881,6 @@ DRAWFN(los_backup)
 
 //---------------------------------------------------------------
 //
-// viewwindow -- now unified and rolled into a single pass
-//
 // Draws the main window using the character set returned
 // by get_symbol().
 //
@@ -905,6 +915,8 @@ void viewwindow(bool do_updates)
     if (do_updates && !crawl_state.arena)
         monster_grid_updates();
 
+    player_view_update(); // XXX: also conditional on do_updates?
+
 #ifdef USE_TILE
     tile_draw_rays(true);
     tiles.clear_overlays();
@@ -916,31 +928,26 @@ void viewwindow(bool do_updates)
     if (flash_colour == BLACK)
         flash_colour = _viewmap_flash_colour();
 
-    std::vector<coord_def> update_excludes;
     const coord_def &tl = crawl_view.viewp;
     const coord_def br = tl + crawl_view.viewsz - coord_def(1,1);
     int bufcount = 0;
-    for (rectangle_iterator ri(tl, br); ri;
-         ++ri, bufcount += 2)
+    for (rectangle_iterator ri(tl, br); ri; ++ri, bufcount += 2)
     {
         // in grid coords
         const coord_def gc = view2grid(*ri);
         const coord_def ep = view2show(grid2view(gc));
-
-        if (you.see_cell(gc) && player_view_updates(gc, ep))
-            update_excludes.push_back(gc);
 
         // Order is important here.
         if (!map_bounds(gc))
             DRAW(unseen);
         else if (!crawl_view.in_grid_los(gc))
             DRAW(outside_los);
-        else if (gc == you.pos() && !crawl_state.arena
-                 && !crawl_state.arena_suspended)
+        else if (gc == you.pos() &&
+                 !crawl_state.arena && !crawl_state.arena_suspended)
         {
             DRAW(player);
         }
-        else if (you.see_cell(gc))
+        else if (observe_cell(gc))
             DRAW(los);
         else
             DRAW(los_backup);
@@ -963,8 +970,6 @@ void viewwindow(bool do_updates)
 #endif
         }
     }
-
-    update_exclusion_los(update_excludes);
 
     // Leaving it this way because short flashes can occur in long ones,
     // and this simply works without requiring a stack.
