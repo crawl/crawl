@@ -2578,7 +2578,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         {
             if (colour == "any")
                 // XXX: Hack
-                mspec.colour = BLACK; 
+                mspec.colour = -1;
             else
             {
                 mspec.colour = str_to_colour(colour, BLACK);

@@ -97,9 +97,6 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    if (mspec.colour == BLACK && strstr(specs, "col:any") == NULL)
-        mspec.colour = mons_class_colour(mspec.mid);
-
     int type = mspec.mid;
     if (mons_class_is_zombified(mspec.mid))
         type = mspec.monbase;

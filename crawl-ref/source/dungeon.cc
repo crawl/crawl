@@ -4854,7 +4854,7 @@ int dgn_place_monster(mons_spec &mspec,
         mg.mname     = mspec.monname;
 
         // XXX: hack.
-        if (mg.colour == BLACK)
+        if (mg.colour == -1)
             mg.colour = random_colour();
 
         coord_def place(where);
