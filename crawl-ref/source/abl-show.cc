@@ -1929,11 +1929,14 @@ static bool _do_ability(const ability_def& abil)
     {
         int count = fungal_bloom();
 
-        if (count)
+        if (!count)
         {
-            simple_god_message(" appreciates your contribution to the "
-                               "ecosystem.", GOD_FEDHAS);
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return (false);
         }
+
+        simple_god_message(" appreciates your contribution to the "
+                           "ecosystem.", GOD_FEDHAS);
 
         // We are following the blood god sacrifice piety gain model, given as:
         // if (random2(level + 10) > 5)
