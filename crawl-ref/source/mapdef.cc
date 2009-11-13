@@ -2576,12 +2576,18 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         std::string colour = strip_tag_prefix(mon_str, "col:");
         if (!colour.empty())
         {
-            mspec.colour = str_to_colour(colour, BLACK);
-            if (mspec.colour == BLACK)
+            if (colour == "any")
+                // XXX: Hack
+                mspec.colour = BLACK; 
+            else
             {
-                error = make_stringf("bad monster colour \"%s\" in \"%s\"",
-                                     colour.c_str(), specs[i].c_str());
-                return (slot);
+                mspec.colour = str_to_colour(colour, BLACK);
+                if (mspec.colour == BLACK)
+                {
+                    error = make_stringf("bad monster colour \"%s\" in \"%s\"",
+                                         colour.c_str(), specs[i].c_str());
+                    return (slot);
+                }
             }
         }
 

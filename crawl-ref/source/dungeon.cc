@@ -19,6 +19,7 @@
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
+#include "colour.h"
 #include "defines.h"
 #include "effects.h"
 #include "enum.h"
@@ -4851,6 +4852,10 @@ int dgn_place_monster(mons_spec &mspec,
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;
         mg.mname     = mspec.monname;
+
+        // XXX: hack.
+        if (mg.colour == BLACK)
+            mg.colour = random_colour();
 
         coord_def place(where);
         if (!force_pos && monster_at(place)
