@@ -382,17 +382,22 @@ ENDMAP
 # Temple maps
 ##############################################################################
 
-# To make a main temple (Ecumenical Temple branch) vault with an
-# arbitrary number of altars, give it the tag "temple_main_N", where
-# N is the number of altars.  If no vaults are found for the specific
-# number of altars, then the game will pick a random vault for
-# "PLACE: Temple".
+# Maps for the main temple (Ecumenical Temple branch) come here, use 
+# PLACE:  Temple
+# ORIENT: encompass
+# Altars are to be placed as B glyphs, modification a la SUBST or SHUFFLE are
+# allowed. You could place any number of altars between one and the number 
+# guaranteed gods. However, don't make temple maps with less than six altars.
+#
+# Guaranteed gods not present in a temple will get altars in the dungeon.
+# See altar.des.
 
 ##########################################################################
 # Circular temple (David Ploog). 12 = 1 x 12
 
 NAME:   circular_temple
 PLACE:  Temple
+WEIGHT: 30
 TAGS:   no_rotate
 ORIENT: encompass
 MAP
@@ -433,7 +438,7 @@ NAME:   three_leaves__temple
 PLACE:  Temple
 TAGS:   no_rotate
 ORIENT: encompass
-WEIGHT: 4
+WEIGHT: 3
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxbbbxxxxxxxxxxxxxxxbbbxxxxxxx
@@ -591,6 +596,7 @@ ENDMAP
 # Watery temple (Darshan Shaligram)
 NAME:   water_temple
 TAGS:   no_pool_fixup no_rotate
+WEIGHT: 20
 PLACE:  Temple
 ORIENT: encompass
 MAP
@@ -705,64 +711,54 @@ ENDMAP
 
 ##########################################################################
 # Five rooms temple (David Ploog). 12 + 3 = 5 x 3
-#NAME:    five_temple
-#PLACE:   Temple
-#TAGS:    no_rotate
-#ORIENT:  encompass
-#SHUFFLE: ABC/DEF/GHI/JKL/MNO
-#SHUFFLE: ABC, DEF, GHI, JKL, MNO
-#SUBST:   A=[, B=(, C={
-#KFEAT:   D = altar_trog
-#KFEAT:   E = altar_makhleb
-#KFEAT:   F = altar_okawaru
-#KFEAT:   G = altar_shining_one
-#KFEAT:   H = altar_zin
-#KFEAT:   I = altar_elyvilon
-#KFEAT:   J = altar_sif_muna
-#KFEAT:   K = altar_vehumet
-#KFEAT:   L = altar_kikubaaqudgha
-#KFEAT:   M = altar_yredelemnul
-#KFEAT:   N = altar_xom
-#KFEAT:   O = altar_nemelex_xobeh
-#KFEAT:   X : G / U / T
-#MAP
-#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-#xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
-#xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
-#xxxxxxxxxx........xxxxx+xxxxx........xxxxxxxxxx
-#xxxxxxx.....xxxxxxxxx.....xxxxxxxxx.....xxxxxxx
-#xxxxxx...xxxxxxxxxx.........xxxxxxxxxx...xxxxxx
-#xxxxx..xxxxxxxxxxx..A.....C..xxxxxxxxxxx..xxxxx
-#xxxx..xxxxxxxxxxxx.....X.....xxxxxxxxxxxx..xxxx
-#xxx..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..xxx
-#xxx..xxx.....xxxxxx....B....xxxxxx.....xxx..xxx
-#xx..+x..O......xxxxxx.....xxxxxx......F..x+..xx
-#xx..x...........xxxxxxxxxxxxxxx...........x..xx
-#x..xx.....X..N..xxxxxxxxxxxxxxx..D..X.....xx..x
-#x..xx...........xxxxxxxxxxxxxxx...........xx..x
-#x..xxx..M......xxxxxxxxxxxxxxxxx......E..xxx..x
-#x..xxxxx.....xxxxxxxxxxxxxxxxxxxxx.....xxxxx..x
-#x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
-#x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
-#x..xxxxxxxxxx.....xxxxxxxxxxx.....xxxxxxxxxx..x
-#xx..xxxxxxx......K..xxxxxxx..G......xxxxxxx..xx
-#xx..xxxxxx.L.........xxxxx.........H.xxxxxx..xx
-#xxx..xxxxx.....X.....xxxxx.....X.....xxxxx..xxx
-#xxx..xxxxx...........xxxxx...........xxxxx..xxx
-#xxxx..xxxxx......J..xxxxxxx..I......xxxxx..xxxx
-#xxxxx..xxxxxx.....xxxxxxxxxxx.....xxxxxx..xxxxx
-#xxxxxx...xxx+xxxxxxxxxxxxxxxxxxxxx+xxx...xxxxxx
-#xxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxx
-#xxxxxxxxxx........xxxxxxxxxxx........xxxxxxxxxx
-#xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
-#xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
-#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-#ENDMAP
+#
+# Todo: would be nice to have the altars in each room follow a theme.
+#       That's harder with the random temples but perhaps there is a way.
+#
+NAME:    five_temple
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+KFEAT:   X : G / U / T
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
+xxxxxxxxxx........xxxxx+xxxxx........xxxxxxxxxx
+xxxxxxx.....xxxxxxxxx.....xxxxxxxxx.....xxxxxxx
+xxxxxx...xxxxxxxxxx.........xxxxxxxxxx...xxxxxx
+xxxxx..xxxxxxxxxxx..(.....[..xxxxxxxxxxx..xxxxx
+xxxx..xxxxxxxxxxxx.....X.....xxxxxxxxxxxx..xxxx
+xxx..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..xxx
+xxx..xxx.....xxxxxx....{....xxxxxx.....xxx..xxx
+xx..+x..B......xxxxxx.....xxxxxx......B..x+..xx
+xx..x...........xxxxxxxxxxxxxxx...........x..xx
+x..xx.....X..B..xxxxxxxxxxxxxxx..B..X.....xx..x
+x..xx...........xxxxxxxxxxxxxxx...........xx..x
+x..xxx..B......xxxxxxxxxxxxxxxxx......B..xxx..x
+x..xxxxx.....xxxxxxxxxxxxxxxxxxxxx.....xxxxx..x
+x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+x..xxxxxxxxxx.....xxxxxxxxxxx.....xxxxxxxxxx..x
+xx..xxxxxxx......B..xxxxxxx..B......xxxxxxx..xx
+xx..xxxxxx.B.........xxxxx.........B.xxxxxx..xx
+xxx..xxxxx.....X.....xxxxx.....X.....xxxxx..xxx
+xxx..xxxxx...........xxxxx...........xxxxx..xxx
+xxxx..xxxxx......B..xxxxxxx..B......xxxxx..xxxx
+xxxxx..xxxxxx.....xxxxxxxxxxx.....xxxxxx..xxxxx
+xxxxxx...xxx+xxxxxxxxxxxxxxxxxxxxx+xxx...xxxxxx
+xxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxx
+xxxxxxxxxx........xxxxxxxxxxx........xxxxxxxxxx
+xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 ##########################################################################
 # Eino's temples
 NAME:    temple_eino_001a
 PLACE:   Temple
+TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  5
 SHUFFLE: {([
@@ -797,6 +793,7 @@ ENDMAP
 
 NAME:    temple_eino_001b
 PLACE:   Temple
+TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  5
 SHUFFLE: {([
@@ -825,7 +822,7 @@ ENDMAP
 
 NAME:    temple_eino_002
 PLACE:   Temple
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
 MAP
@@ -888,6 +885,7 @@ ENDMAP
 
 NAME:    temple_eino_003
 PLACE:   Temple
+TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
 WEIGHT:  3
@@ -929,6 +927,7 @@ ENDMAP
 
 NAME:    temple_eino_004
 PLACE:   Temple
+TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
 WEIGHT:  3
@@ -970,8 +969,9 @@ ENDMAP
 
 NAME:    temple_eino_005a
 PLACE:   Temple
+TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  5
+WEIGHT:  3
 SHUFFLE: {([
 MAP
             bbbbb
@@ -994,6 +994,7 @@ ENDMAP
 
 NAME:    temple_eino_005b
 PLACE:   Temple
+TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  5
 SHUFFLE: {([
@@ -1019,6 +1020,7 @@ ENDMAP
 
 NAME:    temple_eino_006a
 PLACE:   Temple
+TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
 WEIGHT:  5
@@ -1046,6 +1048,7 @@ ENDMAP
 
 NAME:    temple_eino_006b
 PLACE:   Temple
+TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
 WEIGHT:  5
@@ -1073,8 +1076,13 @@ ENDMAP
 
 NAME:    mini_greek_temple
 PLACE:   Temple
+TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
+NSUBST:  . = 15:1 / 12:2 / 2:t / *:.
+SUBST:   ' = .
+COLOUR:  " : darkgrey w:3 / white w:1 / none
+SUBST:   " = .
 MONS:    plant, bush
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
@@ -1082,16 +1090,16 @@ tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttt....1111tttttttttttttttttttttttttttttttttttttttt
 tttttttt.........1111....tttttttttttt.........tttttttttttttt
 tttt.......................1tttttt.......t.........ttttttttt
-tt.........2........t...............................2222tttt
-tt.....{..21...t.................ccccccccccccccc.....22.tttt
-ttt...........ttt.......(........G.c...........ctt..t..ttttt
-tttt......2........................c.B.B.B.B.B.ctt......tttt
-tttttt.....................t.....G.c...........cttt.....tttt
-ttttttttt..1.....2...t.............+...B.B.B.B.ctt...t....tt
-tttttttt.....[...................G.c...........ct...ttt..ttt
-ttttttttt...................1......c.B.B.B.B.B.ct..tttt.tttt
-ttttttttttttttt....2....t........G.c...........ct....t..tttt
-ttttttttttttttttt................ccccccccccccccct.......2ttt
+tt.........2........t..........''''''...............2222tttt
+tt.....{..21...t...............''ccccccccccccccc.....22.tttt
+ttt...........ttt.......(......''G'c"""""""""""ctt..t..ttttt
+tttt......2....................''''c"B"B"B"B"B"ctt......tttt
+tttttt.....................t...''G'c"""""""""""cttt.....tttt
+ttttttttt..1.....2...t.........''''+"""B"B"B"B"ctt...t....tt
+tttttttt.....[.................''G'c"""""""""""ct...ttt..ttt
+ttttttttt...................1..''''c"B"B"B"B"B"ct..tttt.tttt
+ttttttttttttttt....2....t......''G'c"""""""""""ct....t..tttt
+ttttttttttttttttt..............''ccccccccccccccct.......2ttt
 tttttttttttttttttt..........t.........t......ttt......2ttttt
 ttttttttttttttttttttt...............................22tttttt
 ttttttttttttttttttttttt............t..........t....ttttttttt
