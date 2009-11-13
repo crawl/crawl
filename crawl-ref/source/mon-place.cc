@@ -66,7 +66,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 static void _define_zombie(int mid, monster_type ztype, monster_type cs,
                            int power, coord_def pos);
 static monster_type _band_member(band_type band, int power);
-static band_type _choose_band(int mon_type, int power, int &band_size);
+static band_type _choose_band(int mon_type, int power, int &band_size,
+                              bool& natural_leader);
 // static int _place_monster_aux(int mon_type, beh_type behaviour, int target,
 //                               int px, int py, int power, int extra,
 //                               bool first_band_member, int dur = 0);
@@ -746,6 +747,7 @@ int place_monster(mgen_data mg, bool force_pos)
 
     // (3) Decide on banding (good lord!)
     int band_size = 1;
+    bool leader = false;
     monster_type band_monsters[BIG_BAND];        // band monster types
     band_monsters[0] = mg.cls;
 
@@ -757,7 +759,8 @@ int place_monster(mgen_data mg, bool force_pos)
 #ifdef DEBUG_MON_CREATION
         mpr("Choose band members...", MSGCH_DIAGNOSTICS);
 #endif
-        const band_type band = _choose_band(mg.cls, mg.power, band_size);
+        const band_type band = _choose_band(mg.cls, mg.power, band_size,
+                                            leader);
         band_size++;
 
         for (int i = 1; i < band_size; ++i)
@@ -969,6 +972,13 @@ int place_monster(mgen_data mg, bool force_pos)
     const bool priest = mon->is_priest();
 
     mgen_data band_template = mg;
+
+    if (leader && !mg.summoner)
+    {
+        band_template.summoner = &menv[id];
+        band_template.flags |= MG_BAND_MINION;
+    }
+
     // (5) For each band monster, loop call to place_monster_aux().
     for (int i = 1; i < band_size; i++)
     {
@@ -1265,7 +1275,11 @@ static int _place_monster_aux(const mgen_data &mg,
 
     std::string blame_prefix;
 
-    if (mg.abjuration_duration > 0)
+    if (mg.flags & MG_BAND_MINION)
+    {
+        blame_prefix = "led by ";
+    }
+    else if (mg.abjuration_duration > 0)
     {
         blame_prefix = "summoned by ";
     }
@@ -1650,7 +1664,8 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     menv[mid].colour       = mons_class_colour(cs);
 }
 
-static band_type _choose_band(int mon_type, int power, int &band_size)
+static band_type _choose_band(int mon_type, int power, int &band_size,
+                              bool &natural_leader)
 {
 #ifdef DEBUG_MON_CREATION
     mpr("in _choose_band()", MSGCH_DIAGNOSTICS);
@@ -1658,6 +1673,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
     // Band size describes the number of monsters in addition to
     // the band leader.
     band_size = 0; // Single monster, no band.
+    natural_leader = false;
     band_type band = BAND_NO_BAND;
 
     switch (mon_type)
@@ -1684,11 +1700,13 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
     case MONS_ORC_KNIGHT:
         band = BAND_ORC_KNIGHT;       // orcs + knight
         band_size += 3 + random2(4);
+        natural_leader = true;
         break;
 
     case MONS_ORC_HIGH_PRIEST:
         band = BAND_ORC_HIGH_PRIEST;
         band_size = 4 + random2(4);
+        natural_leader = true;
         break;
 
     case MONS_BIG_KOBOLD:
@@ -1729,14 +1747,16 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         band = BAND_JACKALS;
         band_size = 1 + random2(3);
         break;
-    case MONS_HELL_KNIGHT:
     case MONS_MARGERY:
+        natural_leader = true;
+    case MONS_HELL_KNIGHT:
         band = BAND_HELL_KNIGHTS;
         band_size = 4 + random2(4);
         break;
     case MONS_JOSEPHINE:
     case MONS_NECROMANCER:
     case MONS_VAMPIRE_MAGE:
+        natural_leader = true;
         band = BAND_NECROMANCER;
         band_size = 4 + random2(4);
         break;
@@ -1745,6 +1765,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         band_size = (coinflip() ? 3 : 2);
         break;
     case MONS_GRUM:
+        natural_leader = true;
         band = BAND_WAR_DOGS;
         band_size = 2 + random2(3);
         break;
@@ -1752,8 +1773,9 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         band = BAND_BUMBLEBEES;
         band_size = 2 + random2(4);
         break;
-    case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
+        natural_leader = true;
+    case MONS_CENTAUR:
         if (power > 9 && one_chance_in(3))
         {
             band = BAND_CENTAURS;
@@ -1761,8 +1783,9 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         }
         break;
 
-    case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
+        natural_leader = true;
+    case MONS_YAKTAUR:
         if (coinflip())
         {
             band = BAND_YAKTAURS;
@@ -1779,14 +1802,17 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         band_size = 4 + random2(5);
         break;
     case MONS_OGRE_MAGE:
+        natural_leader = true;
         band = BAND_OGRE_MAGE;
         band_size = 4 + random2(4);
         break;
     case MONS_BALRUG:
+        natural_leader = true;
         band = BAND_BALRUG;      // RED gr demon
         band_size = 2 + random2(3);
         break;
     case MONS_CACODEMON:
+        natural_leader = true;
         band = BAND_CACODEMON;      // BROWN gr demon
         band_size = 1 + random2(3);
         break;
@@ -1794,12 +1820,14 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
     case MONS_EXECUTIONER:
         if (coinflip())
         {
+            natural_leader = true;
             band = BAND_EXECUTIONER;  // DARKGREY gr demon
             band_size = 1 + random2(3);
         }
         break;
 
     case MONS_PANDEMONIUM_DEMON:
+        natural_leader = true;
         band = BAND_PANDEMONIUM_DEMON;
         band_size = random_range(1, 3);
         break;
@@ -1831,6 +1859,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
     case MONS_DEEP_ELF_HIGH_PRIEST:
         if (coinflip())
         {
+            natural_leader = true;
             band = BAND_DEEP_ELF_HIGH_PRIEST;
             band_size = 3 + random2(4);
         }
@@ -1882,6 +1911,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
 
     case MONS_KIRKE:
         band_size = 2 + random2(3);
+        natural_leader = true;
     case MONS_HOG:
         band = BAND_HOGS;
         band_size += 1 + random2(3);
@@ -1920,12 +1950,14 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
     case MONS_CYCLOPS:
         if (one_chance_in(5) || player_in_branch(BRANCH_SHOALS))
         {
+            natural_leader = true;
             band = BAND_SHEEP;  // Odyssey reference
             band_size = 2 + random2(3);
         }
         break;
 
     case MONS_POLYPHEMUS:
+        natural_leader = true;
         band = BAND_DEATH_YAKS;
         band_size = 3 + random2(3);
         break;
@@ -1966,27 +1998,32 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         break;
 
     case MONS_TIAMAT:
+        natural_leader = true;
         band = BAND_DRACONIAN;
         // yup, scary
         band_size = random_range(3,6) + random_range(3,6) + 2;
         break;
 
     case MONS_ILSUIW:
+        natural_leader = true;
         band = BAND_ILSUIW;
         band_size = 3 + random2(3);
         break;
 
     case MONS_AZRAEL:
+        natural_leader = true;
         band = BAND_AZRAEL;
         band_size = 4 + random2(5);
         break;
 
     case MONS_DUVESSA:
+        // no natural_leader since this band is supposed to be symmetric
         band = BAND_DUVESSA;
         band_size = 1;
         break;
 
     case MONS_KHUFU:
+        natural_leader = true;
         band = BAND_KHUFU;
         band_size = 3;
         break;
@@ -1997,6 +2034,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         break;
 
     case MONS_PIKEL:
+        natural_leader = true;
         band = BAND_PIKEL;
         band_size = 1 + random2(3);
         break;

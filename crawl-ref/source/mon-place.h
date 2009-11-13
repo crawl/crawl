@@ -106,7 +106,8 @@ enum mgen_flag_type
     MG_FORCE_PLACE  = 0x02,
     MG_FORCE_BEH    = 0x04,
     MG_PLAYER_MADE  = 0x08,
-    MG_PATROLLING   = 0x10
+    MG_PATROLLING   = 0x10,
+    MG_BAND_MINION  = 0x20
 };
 
 // A structure with all the data needed to whip up a new monster.
