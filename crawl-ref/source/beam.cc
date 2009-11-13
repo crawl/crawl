@@ -5371,13 +5371,20 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         if (mons_is_ghost_demon(mon->type))
             return (MON_UNAFFECTED);
 
-        monster_type orig_type = mon->type;
+        monsters orig_mon(*mon);
         if (monster_polymorph(mon, (mon->holiness() == MH_DEMONIC ?
                                         MONS_HELL_HOG : MONS_HOG)))
         {
             obvious_effect = true;
+
+            // Don't restore items to monster if it reverts.
+            orig_mon.inv = mon->inv;
+
+            // For monster reverting to original form.
+            mon->props[ORIG_MONSTER_KEY] = orig_mon;
         }
-        mon->number = ((int) orig_type + 1);
+
+
         return (MON_AFFECTED);
     }
 

@@ -1320,23 +1320,42 @@ static void _hogs_to_humans()
 
         const bool could_see = you.can_see(*mi);
 
-        // XXX: This resets the size of slime creatures, the number
-        // of heads a hydra has, and the number of spikes a manticore
-        // has.  Plus it also changes the colour of a draconian which
-        // has a sub-type.  And it re-rolls the spellbook the monster
-        // has.
-        if (mi->number == 0)
-            mi->type = MONS_HUMAN;
-        else
-            mi->type = (monster_type) (mi->number - 1);
+        monsters  _orig;
+        monsters* orig;
 
-        // Keep enchantments.
+        if (mi->props.exists(ORIG_MONSTER_KEY))
+        {
+            orig = &(mi->props[ORIG_MONSTER_KEY].get_monster());
+        }
+        else
+        {
+            orig       = &_orig;
+            orig->type = MONS_HUMAN;
+            define_monster(*orig);
+        }
+
+        // Preserve relative HP.
+        const float hp
+            = (float) mi->hit_points / (float) mi->max_hit_points;
+        // Preserve some flags.
+        const unsigned long preserve_flags =
+            mi->flags & ~(MF_JUST_SUMMONED | MF_WAS_IN_VIEW);
+
+        // Preserve enchantments.
         mon_enchant_list enchantments = mi->enchantments;
 
-        mi->number = 0;
-        define_monster(**mi);
+        // Restore original monster.
+        **mi = *orig;
 
         mi->enchantments = enchantments;
+        mi->hit_points   = std::max(1, (int) (mi->max_hit_points * hp));
+        mi->flags        = mi->flags | preserve_flags;
+
+        // Allow ORIG_MONSTER_KEY to be chained.
+        if (orig->props.exists(ORIG_MONSTER_KEY))
+            mi->props[ORIG_MONSTER_KEY] = orig->props[ORIG_MONSTER_KEY];
+        else
+            mi->props.erase(ORIG_MONSTER_KEY);
 
         const bool can_see = you.can_see(*mi);
 
@@ -1354,7 +1373,7 @@ static void _hogs_to_humans()
                 && mons_intel(*mi) >= I_NORMAL)
             {
                 mi->attitude = ATT_GOOD_NEUTRAL;
-                mi->flags |= MF_WAS_NEUTRAL;
+                mi->flags   |= MF_WAS_NEUTRAL;
             }
         }
 

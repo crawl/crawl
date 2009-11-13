@@ -10,6 +10,8 @@
 
 #include "mon-util.h"
 
+#define ORIG_MONSTER_KEY "orig_monster_key"
+
 enum mon_dam_level_type
 {
     MDAM_OKAY,
