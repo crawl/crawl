@@ -116,3 +116,33 @@ void actor::set_position(const coord_def &c)
     los.set_center(c);
     los_no_trans.set_center(c);
 }
+
+bool actor::can_hibernate(bool holi_only) const
+{
+    // Undead, nonliving, and plants don't sleep.
+    const mon_holy_type holi = holiness();
+    if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
+        return (false);
+
+    if (!holi_only)
+    {
+        // The monster is berserk or already asleep.
+        if (berserk() || asleep())
+            return (false);
+
+        // The monster is cold-resistant and can't be hibernated.
+        if (res_cold() > 0)
+            return (false);
+
+        // The monster has slept recently.
+        if (atype() == ACT_MONSTER && 
+            static_cast<const monsters*>(this)->has_ench(ENCH_SLEEP_WARY))
+        {
+            return (false);
+        }
+    }
+
+    return (true);
+}
+
+

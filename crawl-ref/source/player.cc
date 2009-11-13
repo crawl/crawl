@@ -7038,27 +7038,6 @@ bool player::can_throw_large_rocks() const
     return (player_genus(GENPC_OGRE) || species == SP_TROLL);
 }
 
-bool player::can_hibernate(bool holi_only) const
-{
-    // Undead, nonliving, and plants don't sleep.
-    const mon_holy_type holi = holiness();
-    if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
-        return (false);
-
-    if (!holi_only)
-    {
-        // The player is berserk or already asleep.
-        if (berserk() || asleep())
-            return (false);
-
-        // The player is cold-resistant and can't be hibernated.
-        if (res_cold() > 0)
-            return (false);
-    }
-
-    return (true);
-}
-
 void player::hibernate(int)
 {
     ASSERT(!crawl_state.arena);

@@ -473,7 +473,6 @@ public:
     bool petrified() const;
 
     bool asleep() const;
-    bool can_hibernate(bool holi_only = false) const;
     void hibernate(int power = 0);
     void put_to_sleep(int power = 0);
     void awake();
