@@ -11,6 +11,7 @@
 
 #include "coord.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "religion.h"
 #include "terrain.h"
@@ -255,6 +256,15 @@ LUAFN(_dgn_is_opaque)
     return (1);
 }
 
+LUAFN(dgn_seen_replace_feat)
+{
+    dungeon_feature_type f1 = _get_lua_feature(ls, 1);
+    dungeon_feature_type f2 = _get_lua_feature(ls, 2);
+
+    lua_pushboolean(ls, seen_replace_feat(f1, f2));
+    return (1);
+}
+
 const struct luaL_reg dgn_grid_dlib[] =
 {
 { "feature_number", dgn_feature_number },
@@ -263,6 +273,7 @@ const struct luaL_reg dgn_grid_dlib[] =
 { "feature_desc_at", dgn_feature_desc_at },
 { "set_feature_desc_short", dgn_set_feature_desc_short },
 { "set_feature_desc_long", dgn_set_feature_desc_long },
+{ "seen_replace_feat", dgn_seen_replace_feat },
 
 { "grid", dgn_grid },
 { "is_opaque", _dgn_is_opaque },

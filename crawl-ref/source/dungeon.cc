@@ -5226,11 +5226,26 @@ static void _vault_grid( vault_placement &place,
 // Currently only used for Slime: branch end
 // where it will turn the stone walls into clear rock walls
 // once the royal jelly has been killed.
-void replace_area_wrapper(dungeon_feature_type old_feat,
-                          dungeon_feature_type new_feat)
+bool seen_replace_feat(dungeon_feature_type old_feat,
+                       dungeon_feature_type new_feat)
 {
     ASSERT(old_feat != new_feat);
-    _replace_area(0, 0, GXM-1, GYM-1, old_feat, new_feat, 0, false);
+
+    coord_def p1(0, 0);
+    coord_def p2(GXM - 1, GYM - 1);
+
+    bool seen = false;
+    for (rectangle_iterator ri(p1, p2); ri; ++ri)
+    {
+        if (grd(*ri) == old_feat)
+        {
+            grd(*ri) = new_feat;
+            if (you.see_cell(*ri))
+                seen = true;
+        }
+    }
+
+    return (seen);
 }
 
 static void _replace_area( const coord_def& p1, const coord_def& p2,
@@ -5253,6 +5268,7 @@ static void _replace_area( const coord_def& p1, const coord_def& p2,
         }
     }
 }
+
 
 // With apologies to Metallica.
 bool unforbidden(const coord_def &c, unsigned mask)

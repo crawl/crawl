@@ -354,8 +354,8 @@ void level_welcome_messages();
 bool place_specific_trap(const coord_def& where, trap_type spec_type);
 void place_spec_shop(int level_number, const coord_def& where,
                      int force_s_type, bool representative = false);
-void replace_area_wrapper(dungeon_feature_type old_feat,
-                          dungeon_feature_type new_feat);
+bool seen_replace_feat(dungeon_feature_type replace,
+                       dungeon_feature_type feature);
 bool unforbidden(const coord_def &c, unsigned mask);
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest);
