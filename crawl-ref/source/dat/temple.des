@@ -1074,6 +1074,125 @@ x..x...xxx....xxxxxxx....xxx...x..x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:    temple_eino_007a
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+WEIGHT:  3
+SHUFFLE: {([
+MAP
+            xxxxx     xxxxx
+           xx...xx   xx...xx
+          xx..x..xx xx..x..xx
+         xx..x.x..xxx..x.x..xx
+        xx..x...x..x..x...x..xx
+       xx..x..B..x...x..B..x..xx
+      xx....x...x..x..x...x....xx
+     xx...x..x.x..x.x..x.x..x...xx
+    xx...x.x..x..x...x..x..x.x...xx
+   xx...x...x...x..B..x...x...x...xx
+  xx...x.....x...x...x...x.....x...xx
+ xx...x...x...x...x.x...x...x...x...xx
+xx...x...x.x...x.x.x.x.x...x.x...x...xx
+x...x...x...x...x.....x...x...x...x...x
+x..x...x..B..x...[.(.{...x..B..x...x..x
+x...x...x...x...x.....x...x...x...x...x
+xx...x...x.x...x.x.x.x.x...x.x...x...xx
+ xx...x...x...x...x.x...x...x...x...xx
+  xx...x.....x...x...x...x.....x...xx
+   xx...x...x...x..B..x...x...x...xx
+    xx...x.x..x..x...x..x..x.x...xx
+     xx...x..x.x..x.x..x.x..x...xx
+      xx....x...x..x..x...x....xx
+       xx..x..B..x...x..B..x..xx
+        xx..x...x..x..x...x..xx
+         xx..x.x..xxx..x.x..xx
+          xx..x..xx xx..x..xx
+           xx...xx   xx...xx
+            xxxxx     xxxxx
+ENDMAP
+
+NAME:    temple_eino_007b
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+WEIGHT:  3
+SHUFFLE: {([
+MAP
+                  xxx
+                 xx[xx
+            xxxxxx{.(xxxxxx
+           xx...x.....x...xx
+          xx..x..x...x..x..xx
+         xx..x.x..x.x..x.x..xx
+        xx..x...x..x..x...x..xx
+       xx..x..B..x...x..B..x..xx
+      xx....x...x..x..x...x....xx
+     xx...x..x.x..x.x..x.x..x...xx
+    xx...x.x..x..x...x..x..x.x...xx
+   xx...x...x...x..B..x...x...x...xx
+  xx...x..B..x...x...x...x..B..x...xx
+ xx..x..x...x..x..x.x..x..x...x..x..xx
+xx..x.x..x.x..x.x..x..x.x..x.x..x.x..xx
+x..x...x..x..x...x...x...x..x..x...x..x
+x.x..B..x...x..B..x.x..B..x...x..B..x.x
+x..x...x..x..x...x...x...x..x..x...x..x
+xx..x.x..x.x..x.x..x..x.x..x.x..x.x..xx
+ xx..x..x...x..x..x.x..x..x...x..x..xx
+  xx...x..B..x...x...x...x..B..x...xx
+   xx...x...x...x..B..x...x...x...xx
+    xx...x.x..x..x...x..x..x.x...xx
+     xx...x..x.x..x.x..x.x..x...xx
+      xx....x...x..x..x...x....xx
+       xx..x..B..x...x..B..x..xx
+        xx..x...x..x..x...x..xx
+         xx..x.x..xxx..x.x..xx
+          xx..x..xx xx..x..xx
+           xx...xx   xx...xx
+            xxxxx     xxxxx
+ENDMAP
+
+NAME:    temple_eino_007c
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+WEIGHT:  4
+SHUFFLE: {([
+MAP
+             xxx
+            xx[xx
+       xxxxxx{.(xxxxxx
+      xx...x.....x...xx
+     xx..x..x...x..x..xx
+    xx..x.x..x.x..x.x..xx
+   xx..x...x..x..x...x..xx
+  xx..x..B..x...x..B..x..xx
+ xx....x...x..x..x...x....xx
+xx...x..x.x..x.x..x.x..x...xx
+x...x.x..x..x...x..x..x.x...x
+x..x...x...x..B..x...x...x..x
+x.x..B..x...x...x...x..B..x.x
+x..x...x..x..x.x..x..x...x..x
+xx..x.x..x.x..x..x.x..x.x..xx
+ xx..x..x...x...x...x..x..xx
+  xx...x..B..x.x..B..x...xx
+ xx..x..x...x...x...x..x..xx
+xx..x.x..x.x..x..x.x..x.x..xx
+x..x...x..x..x.x..x..x...x..xx
+x.x..B..x...x...x...x..B..x..x
+x..x...x...x..B..x...x...x...x
+x...x.x..x..x...x..x..x.x...xx
+xx...x..x.x..x.x..x.x..x...xx
+ xx....x...x..x..x...x....xx
+  xx..x..B..x...x..B..x..xx
+   xx..x...x..x..x...x..xx
+    xx..x.x..xxx..x.x..xx
+     xx..x..xx xx..x..xx
+      xx...xx   xx...xx
+       xxxxx     xxxxx
+ENDMAP
+
+
 NAME:    mini_greek_temple
 PLACE:   Temple
 TAGS:    no_rotate
