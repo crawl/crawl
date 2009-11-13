@@ -2099,6 +2099,11 @@ int monster_die(monsters *monster, killer_type killer,
             corpse = place_monster_corpse(monster, silent);
     }
 
+    unsigned int exp_gain = 0, avail_gain = 0;
+    if (!mons_reset)
+        _give_adjusted_experience(monster, killer, pet_kill, killer_index,
+                                  &exp_gain, &avail_gain);
+
     if (!mons_reset && !crawl_state.arena)
     {
         you.kills->record_kill(monster, killer, pet_kill);
@@ -2107,10 +2112,6 @@ int monster_die(monsters *monster, killer_type killer,
             (killer == KILL_YOU || killer == KILL_YOU_MISSILE) ? KC_YOU :
             (pet_kill)?                                          KC_FRIENDLY :
                                                                  KC_OTHER;
-
-        unsigned int exp_gain = 0, avail_gain = 0;
-        _give_adjusted_experience(monster, killer, pet_kill, killer_index,
-                                  &exp_gain, &avail_gain);
 
         PlaceInfo& curr_PlaceInfo = you.get_place_info();
         PlaceInfo  delta;
