@@ -1943,6 +1943,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                              auxkilldata.c_str());
                     desc += scratch;
                     needs_damage = true;
+                    desc += _hiscore_newline_string();
                 }
                 else
                     desc += make_stringf(" (%s)", auxkilldata.c_str());
@@ -1954,6 +1955,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                     desc += (is_vowel( auxkilldata[0] )) ? "... with an "
                         : "... with a ";
                     desc += auxkilldata;
+                    desc += _hiscore_newline_string();
                     needs_damage = true;
                 }
             }
@@ -1962,6 +1964,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                 snprintf( scratch, sizeof(scratch), "... invoked by %s",
                           death_source_name.c_str() );
                 desc += scratch;
+                desc += _hiscore_newline_string();
                 needs_damage = true;
             }
 
