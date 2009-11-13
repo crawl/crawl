@@ -621,6 +621,112 @@ std::string make_date_string( time_t in_date )
     return (buff);
 }
 
+void marshallEnumVal(writer& wr, const enum_info *ei, int val)
+{
+    enum_write_state& ews = wr.used_enums[ei];
+
+    if (!ews.store_type)
+    {
+        std::vector<std::pair<int, std::string> > values;
+
+        ei->collect(values);
+
+        for (unsigned i = 0; i < values.size(); ++i)
+        {
+            ews.names.insert(values[i]);
+        }
+
+        ews.store_type = 1;
+
+        if (ews.names.begin() != ews.names.end()
+            && (ews.names.rbegin()->first >= 128
+                || ews.names.begin()->first <= -1))
+        {
+            ews.store_type = 2;
+        }
+
+        marshallByte(wr, ews.store_type);
+    }
+
+    if (ews.store_type == 2)
+        marshallShort(wr, val);
+    else
+        marshallByte(wr, val);
+
+    if (ews.used.find(val) == ews.used.end())
+    {
+        ASSERT( ews.names.find(val) != ews.names.end() );
+        marshallString( wr, ews.names[val] );
+
+        ews.used.insert(val);
+    }
+}
+
+int unmarshallEnumVal(reader& rd, const enum_info *ei)
+{
+    enum_read_state& ers = rd.seen_enums[ei];
+
+    if (!ers.store_type)
+    {
+        std::vector<std::pair<int, std::string> > values;
+
+        ei->collect(values);
+
+        for (unsigned i = 0; i < values.size(); ++i)
+        {
+            ers.names.insert(make_pair(values[i].second, values[i].first));
+        }
+
+        if (rd.getMinorVersion() < ei->non_historical_first)
+        {
+            ers.store_type = ei->historic_bytes;
+
+            const enum_info::enum_val *evi = ei->historical;
+
+            for (; evi->name; ++evi)
+            {
+                if (ers.names.find(std::string(evi->name)) != ers.names.end())
+                {
+                    ers.mapping[evi->value] = ers.names[std::string(evi->name)];
+                }
+                else
+                {
+                    ers.mapping[evi->value] = ei->replacement;
+                }
+            }
+        }
+        else
+        {
+            ers.store_type = unmarshallByte(rd);
+        }
+    }
+
+    int raw;
+
+    if (ers.store_type == 2)
+        raw = unmarshallShort(rd);
+    else
+        raw = unmarshallByte(rd);
+
+    if (ers.mapping.find(raw) != ers.mapping.end())
+        return ers.mapping[raw];
+
+    ASSERT( rd.getMinorVersion() >= ei->non_historical_first );
+
+    std::string name = unmarshallString(rd);
+
+    if (ers.names.find(name) != ers.names.end())
+    {
+        ers.mapping[raw] = ers.names[name];
+    }
+    else
+    {
+        ers.mapping[raw] = ei->replacement;
+    }
+
+    return ers.mapping[raw];
+}
+
 static int get_val_from_string( const char *ptr, int len )
 {
     int ret = 0;

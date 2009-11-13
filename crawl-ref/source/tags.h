@@ -65,6 +65,47 @@ enum tag_minor_version
     TAG_MINOR_VERSION    = 12    // Current version.  (Keep equal to max.)
 };
 
+struct enum_info
+{
+    void (*collect)(std::vector<std::pair<int,std::string> >& prs);
+    int replacement;
+
+    struct enum_val
+    {
+        int value;
+        const char *name;
+    };
+
+    const enum_val *historical;
+    tag_minor_version non_historical_first;
+    char historic_bytes;
+};
+
+struct enum_write_state
+{
+    std::set<int> used;
+    std::map<int, std::string> names;
+    char store_type;
+
+    enum_write_state() : used(), names(), store_type(0) {}
+};
+
+struct enum_read_state
+{
+    std::map<int, int> mapping;
+    std::map<std::string, int> names;
+    char store_type;
+
+    enum_read_state() : mapping(), names(), store_type(0) {}
+};
+
+template<typename enm> struct enum_details;
+
+// TO ADD A NEW ENUM UNDER THE UMBRELLA OF marshallEnum:
+// * Create an enum_info instance
+// * Instanciate the enum_details template
+// * Change existing serialization to use marshallEnum
+// * Bump minor version
 
 /* ***********************************************************************
  * writer API
@@ -85,6 +126,9 @@ public:
 private:
     FILE* _file;
     std::vector<unsigned char>* _pbuf;
+
+    std::map<const enum_info*, enum_write_state> used_enums;
+    friend void marshallEnumVal(writer&, const enum_info*, int);
 };
 
 void marshallByte    (writer &, const char& );
@@ -98,6 +142,14 @@ void marshallCoord   (writer &, const coord_def &);
 void marshallItem    (writer &, const item_def &);
 void marshallMonster (writer &, const monsters &);
 void marshallShowtype (writer &, const show_type &);
+
+void marshallEnumVal (writer &, const enum_info *, int);
+
+template<typename enm>
+inline void marshallEnum(writer& wr, enm value)
+{
+    marshallEnumVal(wr, &enum_details<enm>::desc, static_cast<int>(value));
+}
 
 /* ***********************************************************************
  * reader API
@@ -123,6 +175,9 @@ private:
     const std::vector<unsigned char>* _pbuf;
     unsigned int _read_offset;
     char _minorVersion;
+
+    std::map<const enum_info*, enum_read_state> seen_enums;
+    friend int unmarshallEnumVal(reader &, const enum_info *);
 };
 
 char        unmarshallByte    (reader &);
@@ -137,6 +192,14 @@ void        unmarshallCoord   (reader &, coord_def &c);
 void        unmarshallItem    (reader &, item_def &item);
 void        unmarshallMonster (reader &, monsters &item);
 show_type   unmarshallShowtype (reader &);
+
+int         unmarshallEnumVal (reader &, const enum_info *);
+
+template<typename enm>
+inline enm unmarshallEnum(writer& wr)
+{
+    return static_cast<enm>(unmarshallEnumVal(wr, &enum_details<enm>::desc));
+}
 
 /* ***********************************************************************
  * Tag interface
