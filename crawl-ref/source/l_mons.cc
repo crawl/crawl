@@ -196,6 +196,12 @@ static int l_mons_do_set_prop(lua_State *ls)
 
 MDEFN(set_prop, do_set_prop)
 
+MDEF(you_can_see)
+{
+    ASSERT_DLUA;
+    PLUARET(boolean, you.can_see(mons));
+}
+
 struct MonsAccessor
 {
     const char *attribute;
@@ -219,7 +225,8 @@ static MonsAccessor mons_attrs[] =
     { "dismiss",         l_mons_dismiss         },
     { "experience",      l_mons_experience      },
     { "random_teleport", l_mons_random_teleport },
-    { "set_prop",        l_mons_set_prop        }
+    { "set_prop",        l_mons_set_prop        },
+    { "you_can_see",     l_mons_you_can_see     }
 };
 
 static int monster_get(lua_State *ls)
