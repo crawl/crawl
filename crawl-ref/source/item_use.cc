@@ -5065,6 +5065,7 @@ static void _vulnerability_scroll()
     const enchant_type lost_enchantments[] = {
         ENCH_SLOW,
         ENCH_HASTE,
+        ENCH_SWIFT,
         ENCH_MIGHT,
         ENCH_FEAR,
         ENCH_CONFUSION,

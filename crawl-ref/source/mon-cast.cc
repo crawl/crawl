@@ -784,6 +784,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_CANTRIP:
     case SPELL_BERSERKER_RAGE:
+    case SPELL_SWIFTNESS:
     case SPELL_WATER_ELEMENTALS:
     case SPELL_FIRE_ELEMENTALS:
     case SPELL_AIR_ELEMENTALS:
@@ -1598,6 +1599,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_BERSERKER_RAGE:
         monster->go_berserk(true);
+        return;
+
+    case SPELL_SWIFTNESS:
+        monster->add_ench(ENCH_SWIFT);
+        simple_monster_message(monster, " seems to move somewhat quicker.");
         return;
 
     case SPELL_SUMMON_SMALL_MAMMALS:

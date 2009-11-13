@@ -2209,6 +2209,7 @@ bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
     switch (monspell)
     {
     case SPELL_HASTE:
+    case SPELL_SWIFTNESS:
     case SPELL_INVISIBILITY:
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
@@ -2369,6 +2370,11 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
             ret = true;
         break;
 
+    case SPELL_SWIFTNESS:
+        if (mon->has_ench(ENCH_SWIFT))
+            ret = true;
+        break;
+
     case SPELL_INVISIBILITY:
         if (mon->has_ench(ENCH_INVIS)
             || mon->friendly() && !you.can_see_invisible(false))
@@ -2522,6 +2528,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_INVISIBILITY:
     case SPELL_BLINK:
     case SPELL_BERSERKER_RAGE:
+    case SPELL_SWIFTNESS:
         return (false);
 
     // The animation spells don't work through transparent walls and thus

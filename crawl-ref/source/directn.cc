@@ -2968,6 +2968,7 @@ static std::string _describe_mons_enchantment(const monsters &mons,
     // Suppress silly-looking combinations, even if they're
     // internally valid.
     if (paralysed && (ench.ench == ENCH_SLOW || ench.ench == ENCH_HASTE
+                      || ench.ench == ENCH_SWIFT
                       || ench.ench == ENCH_PETRIFIED
                       || ench.ench == ENCH_PETRIFYING))
     {
@@ -3009,6 +3010,7 @@ static std::string _describe_mons_enchantment(const monsters &mons,
     case ENCH_PETRIFIED:     return "petrified";
     case ENCH_PETRIFYING:    return "slowly petrifying";
     case ENCH_LOWERED_MR:    return "susceptible to magic";
+    case ENCH_SWIFT:         return "moving somewhat quickly";
     default:                 return "";
     }
 }

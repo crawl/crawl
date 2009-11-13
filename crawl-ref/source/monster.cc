@@ -4207,6 +4207,11 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer moving quickly.");
         break;
 
+    case ENCH_SWIFT:
+        if (!quiet)
+            simple_monster_message(this, " is no longer moving somewhat quickly.");
+        break;
+
     case ENCH_MIGHT:
         if (!quiet)
             simple_monster_message(this, " no longer looks unusually strong.");
@@ -4519,7 +4524,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM:  case ENCH_SLEEP_WARY:
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
-        case ENCH_PETRIFYING: case ENCH_PETRIFIED:
+        case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
         case ENCH_BATTLE_FRENZY: case ENCH_NEUTRAL:
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE:
             lose_ench_levels(i->second, levels);
@@ -4653,6 +4658,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SLOW:
     case ENCH_HASTE:
+    case ENCH_SWIFT:
     case ENCH_MIGHT:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
@@ -5616,12 +5622,14 @@ const monsterentry *monsters::find_monsterentry() const
 
 int monsters::action_energy(energy_use_type et) const
 {
+    bool swift = has_ench(ENCH_SWIFT);
+
     if (const monsterentry *me = find_monsterentry())
     {
         const mon_energy_usage &mu = me->energy_usage;
         switch (et)
         {
-        case EUT_MOVE:    return mu.move;
+        case EUT_MOVE:    return mu.move - (swift ? 2 : 0);
         case EUT_SWIM:
             // [ds] Amphibious monsters get a significant speed boost
             // when swimming, as discussed with dpeg. We do not
@@ -5630,9 +5638,9 @@ int monsters::action_energy(energy_use_type et) const
             // favour water (HT_AMPHIBIOUS_WATER, such as merfolk), but
             // that's something we can think about.
             if (mons_amphibious(this))
-                return div_rand_round(mu.swim * 7, 10);
+                return div_rand_round(mu.swim * 7, 10) - (swift ? 2 : 0);
             else
-                return mu.swim;
+                return mu.swim - (swift ? 2 : 0);
         case EUT_MISSILE: return mu.missile;
         case EUT_ITEM:    return mu.item;
         case EUT_SPECIAL: return mu.special;
@@ -5885,7 +5893,7 @@ static const char *enchant_names[] =
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
     "soul-ripe", "decay", "hungry", "flopping", "spore-producing",
-    "downtrodden", "bug"
+    "downtrodden", "swift", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -5986,6 +5994,7 @@ int mon_enchant::calc_duration(const monsters *mons,
     switch (ench)
     {
     case ENCH_HASTE:
+    case ENCH_SWIFT:
     case ENCH_MIGHT:
     case ENCH_INVIS:
         cturn = 1000 / _mod_speed(25, mons->speed);

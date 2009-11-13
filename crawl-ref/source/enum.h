@@ -1246,6 +1246,7 @@ enum enchant_type
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
     ENCH_SPORE_PRODUCTION,             //   35
     ENCH_SLOUCH,
+    ENCH_SWIFT,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
