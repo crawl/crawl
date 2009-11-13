@@ -96,13 +96,13 @@ mapmark.o \
 maps.o \
 menu.o \
 message.o \
-mgrow.o \
 misc.o \
 mon-abil.o \
 mon-act.o \
 mon-behv.o \
 mon-cast.o \
 mon-gear.o \
+mon-grow.o \
 mon-info.o \
 mon-iter.o \
 mon-pick.o \
