@@ -1311,7 +1311,11 @@ static void _hogs_to_humans()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mi->type == MONS_HOG)
+        if (mi->type != MONS_HOG)
+            continue;
+
+        // Shapeshifters will stop being a hog when they feel like it.
+        if (mi->is_shapeshifter())
             continue;
 
         const bool could_see = you.can_see(*mi);
@@ -1326,8 +1330,13 @@ static void _hogs_to_humans()
         else
             mi->type = (monster_type) (mi->number - 1);
 
+        // Keep enchantments.
+        mon_enchant_list enchantments = mi->enchantments;
+
         mi->number = 0;
         define_monster(**mi);
+
+        mi->enchantments = enchantments;
 
         const bool can_see = you.can_see(*mi);
 
