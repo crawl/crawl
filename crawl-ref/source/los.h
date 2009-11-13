@@ -47,6 +47,4 @@ void losight(los_grid& sh, const coord_def& center,
              const circle_def &bds = BDS_DEFAULT);
 void losight(los_grid& sh, const los_param& param);
 
-void calc_show_los();
-
 #endif

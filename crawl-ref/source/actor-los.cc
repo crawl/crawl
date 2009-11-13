@@ -55,8 +55,11 @@ const los_def& monsters::get_los_no_trans()
 
 void player::update_los()
 {
-    los_no_trans.update();
-    actor::update_los();
+    if (!crawl_state.arena || !crawl_state.arena_suspended)
+    {
+        los_no_trans.update();
+        actor::update_los();
+    }
 }
 
 // Player LOS overrides for arena.

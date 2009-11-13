@@ -898,9 +898,3 @@ void losight(los_grid& sh, const coord_def& center,
 {
     losight(sh, los_param_funcs(center, opc, bounds));
 }
-
-void calc_show_los()
-{
-    if (!crawl_state.arena && !crawl_state.arena_suspended)
-        you.update_los();
-}

@@ -886,7 +886,7 @@ void viewwindow(bool do_updates)
 
     screen_buffer_t *buffy(crawl_view.vbuf);
 
-    calc_show_los();
+    you.update_los();
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);

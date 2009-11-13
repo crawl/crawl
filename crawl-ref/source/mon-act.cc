@@ -1581,7 +1581,7 @@ static void _khufu_drop_tomb(monsters *monster)
     }
     if (count)
     {
-        calc_show_los();
+        you.update_los();
         if (monster->observable())
             mpr("The walls disappear!");
         else

@@ -1889,7 +1889,7 @@ static void _restore_level(const level_id &original)
           you.level_type, you.your_level, you.where_are_you );
 
     // Rebuild the show grid, which was cleared out before.
-    calc_show_los();
+    you.update_los();
 }
 
 // Given a level returns true if the level has been created already

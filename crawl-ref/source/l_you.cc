@@ -248,7 +248,7 @@ LUAFN(you_random_teleport)
 
 LUAFN(you_losight)
 {
-    calc_show_los();
+    you.update_los();
     return (0);
 }
 
