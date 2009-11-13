@@ -1416,26 +1416,35 @@ Replayability
 This is actually quite important, but in some sense just a corollary
 to the major design goals. Besides these, there are several other
 points helping to make playing Crawl fun over and over again:
-* Many species, which actually play differently: This is partly due to
-the skills and aptitude system. Similarly important are the built-in
-starting bonuses/handicaps of species; these often have great impact on
-play. To us, balance does not mean that all combinations of job and
-species play equally well! Some are much more challenging than others,
-and this is fine with us. Each species has at least some jobs playing
-rather well, though.
-* Dungeon layout: Even veteran players will find the Tomb or the Hells
+
+Diversity: whenever there are choices to the player, be that choice of
+species, god, weapon or spell, the various options should be genuinely
+different. It is no good to provide dozens of weapons with different
+names (and perhaps even numbers) if, in the end, they all play the 
+same.
+
+Many different species: This is partly due to the skills and aptitude
+system. Similarly important are the built-in starting bonuses/handicaps
+of species; these often have great impact on play. To us, balance does
+not mean that all combinations of job and species play equally well!
+Some are much more challenging than others, and this is fine with us.
+Each species has at least some jobs playing rather well, though.
+
+Dungeon layout: Even veteran players will find the Tomb or the Hells
 exciting (which are construed such that life endangering situations can
 always pop up). These and other branches may or may not fit a given
 character's buildup. By the way, we strongly believe that games are
 pointless if you can reach the invincible state.
-* Religion: This addresses new players, as getting to the Temple and
+
+Religion: This addresses new players, as getting to the Temple and
 choosing a god becomes the first major task of most games. But religion
 is also a point in favour of replayability for experienced players,
 since the choice of god can matter as much as species does.
-* Playing styles: Related to species, job, god are fundamentally
-different playing styles like melee oriented fighter, stabber, etc.
-Deciding on whether (and when!) to make a transition of style can make
-or break games.
+
+Playing styles: Related to, but encompassing, species, job, god are
+fundamentally different playing styles like melee oriented fighter,
+stabber, etc. Deciding on whether (and when!) to make a transition of
+style can make or break games.
 
 Out of the depths
 -----------------
