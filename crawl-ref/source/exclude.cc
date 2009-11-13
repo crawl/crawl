@@ -314,8 +314,11 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
     {
         monster_type montype = MONS_NO_MONSTER;
         const monsters *m = monster_at(p);
-        if (m && you.can_see(m))
+        if (m && (you.can_see(m) || mons_is_stationary(m)
+                                    && testbits(m->flags, MF_SEEN)))
+        {
             montype = m->type;
+        }
 
         curr_excludes.push_back(travel_exclude(p, radius, autoexcl,
                                                montype, vaultexcl));

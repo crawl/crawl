@@ -1911,6 +1911,9 @@ void level_excursion::go_to(const level_id& next)
     {
         _save_level(you.your_level, you.level_type, you.where_are_you);
         _restore_level(next);
+
+        LevelInfo &li = travel_cache.get_level_info(next);
+        li.set_level_excludes();
     }
 
     you.on_current_level = (level_id::current() == original);
