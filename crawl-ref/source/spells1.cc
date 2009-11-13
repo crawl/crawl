@@ -138,7 +138,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 // Grid in los, no problem.
                 break;
             }
-            else if (trans_wall_blocking( beam.target ))
+            else if (you.trans_wall_blocking( beam.target ))
             {
                 // Wizard blink can move past translucent walls.
                 if (wizard_blink)
@@ -557,7 +557,7 @@ bool conjure_flame(int pow, const coord_def& where)
         return (false);
     }
 
-    if (trans_wall_blocking(where))
+    if (you.trans_wall_blocking(where))
     {
         mpr("A translucent wall is in the way.");
         return (false);

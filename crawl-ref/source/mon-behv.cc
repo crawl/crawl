@@ -1092,7 +1092,7 @@ void handle_behaviour(monsters *mon)
     // or has guessed the player's location.
     bool proxPlayer = mons_near(mon) && !crawl_state.arena;
 
-    bool trans_wall_block = trans_wall_blocking(mon->pos());
+    bool trans_wall_block = you.trans_wall_blocking(mon->pos());
 
 #ifdef WIZARD
     // If stealth is greater than actually possible (wizmode level)

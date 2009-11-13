@@ -1777,7 +1777,7 @@ bool cast_portal_projectile(int pow)
     }
 
     // Can't use portal through walls. (That'd be just too cheap!)
-    if (trans_wall_blocking( target.target ))
+    if (you.trans_wall_blocking( target.target ))
     {
         mpr("A translucent wall is in the way.");
         return (false);
@@ -1801,7 +1801,7 @@ bool cast_apportation(int pow, const coord_def& where)
         return (false);
     }
 
-    if (trans_wall_blocking(where))
+    if (you.trans_wall_blocking(where))
     {
         mpr("A translucent wall is in the way.");
         return (false);

@@ -30,7 +30,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
     tried.init(false);
 
     // Is the monster on the other side of a transparent wall?
-    const bool trans_wall_block  = trans_wall_blocking(origin);
+    const bool trans_wall_block  = you.trans_wall_blocking(origin);
     const bool origin_is_player  = (you.pos() == origin);
     int min_walls_between = 0;
 

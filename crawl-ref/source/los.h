@@ -48,6 +48,5 @@ void losight(los_grid& sh, const coord_def& center,
 void losight(los_grid& sh, const los_param& param);
 
 void calc_show_los();
-bool trans_wall_blocking( const coord_def &p );
 
 #endif

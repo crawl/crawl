@@ -32,6 +32,11 @@ bool player::see_cell_no_trans(const coord_def &p) const
     return (los_no_trans.see_cell(p));
 }
 
+bool player::trans_wall_blocking(const coord_def &p) const
+{
+    return (see_cell(p) && !see_cell_no_trans(p));
+}
+
 const los_def& actor::get_los() const
 {
     return (los);

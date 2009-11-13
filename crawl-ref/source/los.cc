@@ -904,9 +904,3 @@ void calc_show_los()
     if (!crawl_state.arena && !crawl_state.arena_suspended)
         you.update_los();
 }
-
-// Is the cell visible, but a translucent wall is in the way?
-bool trans_wall_blocking(const coord_def &p)
-{
-    return (you.see_cell(p) && !you.see_cell_no_trans(p));
-}
