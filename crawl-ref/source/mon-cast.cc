@@ -852,8 +852,8 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     }
     else if (spell_cast == SPELL_PORKALATOR && one_chance_in(3))
     {
-        monsters* targ;
-        int count    = 0;
+        monsters*    targ     = NULL;
+        int          count    = 0;
         monster_type hog_type = MONS_HOG;
         for (monster_iterator mi(monster); mi; ++mi)
         {
