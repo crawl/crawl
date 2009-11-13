@@ -132,7 +132,6 @@ void monster_grid_updates()
             handle_monster_shouts(*mi);
         }
 
-        fedhas_neutralise(*mi);
         if (!mi->visible_to(&you))
             continue;
 

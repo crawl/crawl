@@ -38,7 +38,9 @@ static bool _mon_needs_auto_exclude(const monsters *mon, bool sleepy = false)
 bool need_auto_exclude(const monsters *mon, bool sleepy)
 {
     // This only works if the name is lowercased.
-    std::string name = mon->name(DESC_BASENAME);
+    std::string name = mon->name(DESC_BASENAME,
+                                 mons_is_stationary(mon)
+                                     && testbits(mon->flags, MF_SEEN));
     lowercase(name);
 
     for (unsigned i = 0; i < Options.auto_exclude.size(); ++i)

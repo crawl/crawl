@@ -137,8 +137,7 @@ void fedhas_neutralise(monsters* monster)
     {
         fedhas_neutralise_plant(monster);
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-        stop_running();
+        del_exclude(monster->pos());
     }
 }
 
@@ -612,7 +611,7 @@ static bool _fedhas_plants_on_level_hostile()
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mons_is_plant(*mi))
+        if (mi->alive() && mons_is_plant(*mi))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Plant hostility: %s on level %d, branch %d",
@@ -629,6 +628,7 @@ static bool _fedhas_plants_on_level_hostile()
             mi->attitude = ATT_HOSTILE;
             mi->del_ench(ENCH_CHARM, true);
             behaviour_event(*mi, ME_ALERT, MHITYOU);
+            set_auto_exclude(*mi);
             // For now WAS_NEUTRAL stays.
         }
     }

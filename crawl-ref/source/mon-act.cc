@@ -12,6 +12,7 @@
 #endif
 
 #include "arena.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
 #include "dbg-scan.h"
@@ -1581,6 +1582,8 @@ static void _handle_monster_move(monsters *monster)
 {
     monster->hit_points = std::min(monster->max_hit_points,
                                    monster->hit_points);
+
+    fedhas_neutralise(monster);
 
     // Monster just summoned (or just took stairs), skip this action.
     if (testbits( monster->flags, MF_JUST_SUMMONED ))
