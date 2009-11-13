@@ -19,6 +19,7 @@
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
+#include "colour.h"
 #include "defines.h"
 #include "effects.h"
 #include "enum.h"
@@ -1702,7 +1703,7 @@ static void _build_overflow_temples(int level_number)
 
             // For a single-altar temple, first try to find a temple specialized
             // for that god.
-            if (num_gods == 1)
+            if (num_gods == 1 && coinflip())
             {
                 CrawlVector &god_vec = temple[TEMPLE_GODS_KEY];
                 god_type     god     = (god_type) god_vec[0].get_byte();
@@ -4851,6 +4852,10 @@ int dgn_place_monster(mons_spec &mspec,
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;
         mg.mname     = mspec.monname;
+
+        // XXX: hack.
+        if (mg.colour == BLACK)
+            mg.colour = random_colour();
 
         coord_def place(where);
         if (!force_pos && monster_at(place)

@@ -519,6 +519,9 @@ MONS:     (list of monsters)
           colour. Use this *very* sparingly:
               MONS: col:darkgrey fungus
 
+          The colour "any" can be given, in which case a random colour
+          will be chosen when the monster is placed.
+
           Note that 8, 9, 0 also place monsters (see the table).
 
           If you want to place a random monster suitable for the level
