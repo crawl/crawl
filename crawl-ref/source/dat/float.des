@@ -948,3 +948,112 @@ cc..!1.!1c...c.6..6..cc
        c+ccccccc
         @
 ENDMAP
+
+##############################################################################
+# Ancient Champions (by Mu., lua by due)
+#
+NAME: 	ancient_champions_mu
+DEPTH: 	D:15-26, Vault, Crypt
+ORIENT: float
+FLAGS: 	no_item_gen no_monster_gen
+KFEAT: 	ABCDEFG = metal_wall
+KMONS: 	1 = col:gold skeletal warrior name:ancient_champion name_replace \
+	spells:iron_shot;.;haste;pain;.;. actual_spells \
+	; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
+	great sword ego:pain | great sword ego:draining | great sword \
+	ego:flaming | w:3 triple sword ego:vorpal
+KMONS:	2 = col:gold skeletal warrior name:ancient_champion name_replace \
+	spells:bolt_of_draining;.;haste;throw_frost;.;. actual_spells \
+	; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
+	great mace ego:vorpal | great mace ego:draining
+KMONS:	3 = col:gold skeletal warrior name:ancient_champion name_replace \
+	spells:venom_bolt;.;haste;haunt;.;. actual_spells \
+	; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
+	battleaxe ego:vorpal | battleaxe ego:pain | \
+	w:3 executioner's axe ego:vorpal
+KMONS:	4 = col:gold skeletal warrior name:ancient_champion name_replace \
+	spells:iskenderun's_mystic_blast;slow;haste;.;.;. actual_spells \
+	; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
+	great sword ego:pain | great sword ego:draining | great sword \
+	ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain | \
+	triple sword ego:vorpal | executioner's axe ego:vorpal
+SHUFFLE: 123
+KPROP:	]v.1234+ABCDEFG!n$wr|" = no_rtele_into
+KITEM:	w = acquire weapon
+KITEM:	r = acquire armour
+NSUBST:	$ = 1:w / 1:r / 4:| / *:$
+COLOUR:	" = yellow
+KFEAT:	" = .
+
+{{
+
+-- First off, slave marker magic.
+lua_marker("A", portal_desc { skele_slave=1 })
+lua_marker("B", portal_desc { skele_slave=2 })
+lua_marker("C", portal_desc { skele_slave=3 })
+lua_marker("D", portal_desc { skele_slave=4 })
+lua_marker("E", portal_desc { skele_slave=5 })
+lua_marker("F", portal_desc { skele_slave=6 })
+lua_marker("G", portal_desc { skele_slave=7 })
+
+-- Then the actual function which does everything.
+function skele_death (data, triggerable, triggerer, marker, ev)
+  data.skele_number = data.skele_number + 1
+
+  -- Only 7 skeles!
+  if data.skele_number > 7 then
+    return
+  end
+
+  local function get_slave (slavenum)
+    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
+    return myslaves[1]
+  end
+
+  local wall_pos = get_slave(data.skele_number)
+  if wall_pos == nil then
+    crawl.mpr("Couldn't find a slave!")
+  end
+
+  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
+
+  if you.see_cell(wall_pos.x, wall_pos.y) then
+    crawl.mpr("As the champion dies, a metal wall slides away!")
+  else
+    crawl.mpr("As the champion dies, you hear a distant grinding noise.")
+  end
+end
+
+local skele_death_marker = TriggerableFunction:new {
+  func=skele_death,
+  repeated=true,
+  data={skele_number=0} }
+
+skele_death_marker:add_triggerer(DgnTriggerer:new {
+  type="monster_dies",
+  target="ancient champion" })
+
+lua_marker("]", skele_death_marker)
+}}
+
+MAP
+vvvvvvvvvvvvvvvvvvv
+v..".1v.."..v.."..v
+v.""".v.""".v.""".v
+v"""""C"""""B"""""v
+v.""".v.""".v.""".v
+v.."..v..".3v..".2v
+vvvDvvvvvvvvvvvAvvv
+v..".2v$$$$$v.."..v
+v.""".v$$$$$v.""".v
+v"""""v$$.$$v"""""v
+v.""".v$$.$$v.""".v
+v.."..v$...$v1."..v
+vvvEvvvvvGvvvvv+vvv
+v3."..v.."..v.."..v
+v.""".v.""".v.""".v
+v"""""F"""""v""]""v
+v.""".v.""".v.""".v
+v.."..v4."..v.."..v
+vvvvvvvvvvvvvvvvvvv
+ENDMAP
