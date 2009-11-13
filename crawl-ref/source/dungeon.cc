@@ -1702,7 +1702,7 @@ static void _build_overflow_temples(int level_number)
 
             // For a single-altar temple, first try to find a temple specialized
             // for that god.
-            if (num_gods == 1)
+            if (num_gods == 1 && coinflip())
             {
                 CrawlVector &god_vec = temple[TEMPLE_GODS_KEY];
                 god_type     god     = (god_type) god_vec[0].get_byte();
