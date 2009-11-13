@@ -790,7 +790,7 @@ static void player_view_update()
 DRAWFN(unseen)
 {
     // off the map
-    buffy[0] = 0;
+    buffy[0] = ' ';
     buffy[1] = DARKGREY;
 #ifdef USE_TILE
     tileidx_unseen(tileb[0], tileb[1], ' ', gc);
