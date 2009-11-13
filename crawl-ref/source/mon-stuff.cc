@@ -1046,7 +1046,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     // FIXME: show_more == mons_near(monster)
     beam.explode();
 
-    activate_ballistomycetes(monster);
+    activate_ballistomycetes(monster, beam.target);
     // Monster died in explosion, so don't re-attach it to the grid.
     return (true);
 }
@@ -1432,9 +1432,6 @@ int monster_die(monsters *monster, killer_type killer,
     mons_clear_trapping_net(monster);
 
     you.remove_beholder(monster);
-
-    if(monster->type == MONS_BALLISTOMYCETE)
-        activate_ballistomycetes(monster);
 
     // Clear auto exclusion now the monster is killed -- if we know about it.
     if (mons_near(monster) || wizard)
@@ -2087,6 +2084,9 @@ int monster_die(monsters *monster, killer_type killer,
         if (mons_genus(monster->type) == MONS_MUMMY)
             _mummy_curse(monster, killer, killer_index);
     }
+
+    if(monster->type == MONS_BALLISTOMYCETE)
+        activate_ballistomycetes(monster, monster->pos());
 
     if (!wizard && !submerged)
         _monster_die_cloud(monster, !mons_reset, silent, summoned);

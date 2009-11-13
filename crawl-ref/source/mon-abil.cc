@@ -1430,7 +1430,7 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
 // Increase the count of every ballistomycete on the level (only if
 // monster is of an appropriate type). If a ballisto has a count greater
 // than 0 it changes color and starts producing spores.
-void activate_ballistomycetes( monsters * monster)
+void activate_ballistomycetes( monsters * monster, const coord_def & origin)
 {
     if (!monster || monster->type != MONS_BALLISTOMYCETE
                     && monster->type != MONS_GIANT_SPORE)
@@ -1438,7 +1438,7 @@ void activate_ballistomycetes( monsters * monster)
         return;
     }
 
-    bool activated_others = false;
+    bool found_others = false;
     int seen_others = 0;
 
     for (monster_iterator mi; mi; ++mi)
@@ -1448,7 +1448,7 @@ void activate_ballistomycetes( monsters * monster)
             && mi->type == MONS_BALLISTOMYCETE)
         {
             mi->number++;
-
+            found_others = true;
             // Change color and start the spore production timer if we
             // are moving from 0 to 1.
             if (mi->number == 1)
@@ -1457,7 +1457,6 @@ void activate_ballistomycetes( monsters * monster)
                 // Reset the spore production timer.
                 mi->del_ench(ENCH_SPORE_PRODUCTION, false);
                 mi->add_ench(ENCH_SPORE_PRODUCTION);
-                activated_others = true;
 
                 if (you.can_see(*mi))
                     seen_others++;
@@ -1465,14 +1464,10 @@ void activate_ballistomycetes( monsters * monster)
         }
     }
 
-    // Do some messaging. I'm not entirely sure how detailed to get,
-    // so erroring on the side of message spam at this point. -cao
-    if (mons_near(monster) && activated_others)
-        mprf("The fungus' death has angered other fungi on the level.");
-    if (seen_others == 1)
-        mprf("A ballistomycete appears irritated.");
-    else if (seen_others > 1)
-        mprf("Some ballistomycetes appear irritated.");
+    if (you.see_cell(origin) && found_others)
+    {
+        mprf("You feel the ballistomycetes will spawn a replacement spore.");
+    }
 }
 
 // Decrease the count on each ballistomycete on the level. To be called
@@ -1494,9 +1489,6 @@ void deactivate_ballistos()
                 {
                     mi->colour = MAGENTA;
                     mi->del_ench(ENCH_SPORE_PRODUCTION);
-
-                    if (you.can_see(*mi))
-                        mprf("A nearby ballistomycete calms down.");
                 }
             }
 
