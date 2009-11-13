@@ -849,6 +849,12 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             const CrawlVector& blame = monster->props["blame"].get_vector();
 
             indirectkiller = blame[blame.size() - 1].get_string();
+
+            if (indirectkiller.find(" by ") != std::string::npos)
+            {
+                indirectkiller.erase(0, indirectkiller.find(" by ") + 4);
+            }
+
             killerpath = "";
 
             for (CrawlVector::const_iterator it = blame.begin();
