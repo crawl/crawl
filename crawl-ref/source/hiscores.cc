@@ -1880,6 +1880,9 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         else if (needs_called_by_monster_line)
             desc += death_source_name;
 
+        if (!killerpath.empty())
+            desc += "[" + indirectkiller + "]";
+
         if (needs_damage && damage > 0)
             desc += " " + damage_string(true);
     }
@@ -1962,6 +1965,31 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                 needs_damage = true;
             }
 
+            if (!killerpath.empty())
+            {
+                std::vector<std::string> summoners
+                    = xlog_split_fields(killerpath);
+
+                for (std::vector<std::string>::iterator it = summoners.begin();
+                     it != summoners.end(); ++it)
+                {
+                    if (!semiverbose)
+                    {
+                        desc += "... summoned by " + *it;
+                        desc += _hiscore_newline_string();
+                    }
+                    else
+                    {
+                        desc += " (summoned by " + *it;
+                    }
+                }
+
+                if (semiverbose)
+                {
+                    desc += std::string(summoners.size(), ')');
+                }
+            }
+
             if (!semiverbose)
             {
                 if (needs_damage && !done_damage && damage > 0)
@@ -2019,23 +2047,23 @@ xlog_fields::xlog_fields(const std::string &line) : fields(), fieldmap()
     init(line);
 }
 
-std::string::size_type
-xlog_fields::next_separator(const std::string &s,
-                            std::string::size_type start) const
+static std::string::size_type
+_xlog_next_separator(const std::string &s,
+                            std::string::size_type start)
 {
     std::string::size_type p = s.find(':', start);
     if (p != std::string::npos && p < s.length() - 1 && s[p + 1] == ':')
-        return next_separator(s, p + 2);
+        return _xlog_next_separator(s, p + 2);
 
     return (p);
 }
 
-std::vector<std::string> xlog_fields::split_fields(const std::string &s) const
+std::vector<std::string> xlog_split_fields(const std::string &s)
 {
     std::string::size_type start = 0, end = 0;
     std::vector<std::string> fs;
 
-    for ( ; (end = next_separator(s, start)) != std::string::npos;
+    for ( ; (end = _xlog_next_separator(s, start)) != std::string::npos;
           start = end + 1  )
     {
         fs.push_back( s.substr(start, end - start) );
@@ -2049,7 +2077,7 @@ std::vector<std::string> xlog_fields::split_fields(const std::string &s) const
 
 void xlog_fields::init(const std::string &line)
 {
-    std::vector<std::string> rawfields = split_fields(line);
+    std::vector<std::string> rawfields = xlog_split_fields(line);
     for (int i = 0, size = rawfields.size(); i < size; ++i)
     {
         const std::string field = rawfields[i];

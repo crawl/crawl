@@ -32,6 +32,8 @@ std::string xlog_status_line();
 std::string xlog_unescape(const std::string &);
 std::string xlog_escape(const std::string &);
 
+std::vector<std::string> xlog_split_fields(const std::string &s);
+
 class xlog_fields
 {
 public:
@@ -50,9 +52,6 @@ public:
 
 private:
     void map_fields() const;
-    std::string::size_type next_separator(const std::string &s,
-                                          std::string::size_type start) const;
-    std::vector<std::string> split_fields(const std::string &s) const;
 
 private:
     typedef std::vector< std::pair<std::string, std::string> > xl_fields;
