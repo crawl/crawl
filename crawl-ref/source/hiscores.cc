@@ -1975,12 +1975,12 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                 {
                     if (!semiverbose)
                     {
-                        desc += "... summoned by " + *it;
+                        desc += "... " + *it;
                         desc += _hiscore_newline_string();
                     }
                     else
                     {
-                        desc += " (summoned by " + *it;
+                        desc += " (" + *it;
                     }
                 }
 

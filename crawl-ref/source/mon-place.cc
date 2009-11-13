@@ -1263,12 +1263,27 @@ static int _place_monster_aux(const mgen_data &mg,
     }
     mon->foe = mg.foe;
 
+    std::string blame_prefix;
+
+    if (mg.abjuration_duration > 0)
+    {
+        blame_prefix = "summoned by ";
+    }
+    else if (mons_class_is_zombified(mg.cls))
+    {
+        blame_prefix = "animated by ";
+    }
+    else
+    {
+        blame_prefix = "created by ";
+    }
+
     if (!mg.non_actor_summoner.empty())
     {
         CrawlStoreValue& blame = mon->props["blame"];
 
         blame.new_vector(SV_STR, SFLAG_CONST_TYPE);
-        blame.get_vector().push_back(mg.non_actor_summoner);
+        blame.get_vector().push_back(blame_prefix + mg.non_actor_summoner);
     }
     else if (mg.summoner != NULL)
     {
@@ -1278,13 +1293,14 @@ static int _place_monster_aux(const mgen_data &mg,
 
         if (mg.summoner->atype() == ACT_PLAYER)
         {
-            blame.get_vector().push_back("themselves");
+            blame.get_vector().push_back(blame_prefix + "the player character");
         }
         else
         {
             monsters* sum = &menv[mg.summoner->mindex()];
 
-            blame.get_vector().push_back(sum->full_name(DESC_NOCAP_A, true));
+            blame.get_vector().push_back(blame_prefix
+                                         + sum->full_name(DESC_NOCAP_A, true));
 
             if (sum->props.exists("blame"))
             {
