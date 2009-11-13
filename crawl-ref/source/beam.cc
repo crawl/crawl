@@ -4739,7 +4739,8 @@ void bolt::affect_monster(monsters* mon)
     }
 
     // Missiles go past bushes.
-    if (!is_beam && mon->type == MONS_BUSH)
+    if (mon->type == MONS_BUSH && !is_beam && !is_explosion &&
+        (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
     {
         apply_hit_funcs(mon, 0);
         return;
