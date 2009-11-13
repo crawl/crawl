@@ -2646,13 +2646,15 @@ bool mon_can_be_slimified(monsters *monster)
 {
     const mon_holy_type holi = monster->holiness();
 
-    return (holi == MH_UNDEAD
-            || holi == MH_NATURAL
-                && !mons_is_slime(monster));
+    return (!(monster->flags & MF_GOD_GIFT)
+            && (holi == MH_UNDEAD
+                 || holi == MH_NATURAL && !mons_is_slime(monster))
+            );
 }
 
 void slimify_monster(monsters *mon, bool hostile)
 {
+
     if (mon->holiness() == MH_UNDEAD)
         monster_polymorph(mon, MONS_DEATH_OOZE);
     else
@@ -2689,6 +2691,7 @@ void slimify_monster(monsters *mon, bool hostile)
     else
         mon->attitude = ATT_HOSTILE;
 
+    //mon->god = GOD_NO_GOD; // Prevent assertion.
     mons_make_god_gift(mon, GOD_JIYVA);
 }
 
