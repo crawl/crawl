@@ -1,28 +1,18 @@
 #ifndef VIEWGEOM_H
 #define VIEWGEOM_H
 
-template<typename T>
 class crawl_view_buffer
 {
 public:
-    crawl_view_buffer() : buffer(NULL) {}
-    ~crawl_view_buffer() { delete [] buffer; }
+    crawl_view_buffer();
+    ~crawl_view_buffer();
+    void size(const coord_def &size);
+    operator screen_buffer_t * () { return (buffer); }
 
-    void size(const coord_def &sz)
-    {
-        delete [] buffer;
-        buffer = new T[sz.x * sz.y * 2];
-    }
-
-    operator T * () { return (buffer); }
-
+    void draw();
 private:
-    T *buffer;
+    screen_buffer_t *buffer;
 };
-
-#ifdef USE_TILE
-typedef unsigned int tile_buffer_t;
-#endif
 
 struct crawl_view_geometry
 {
@@ -38,12 +28,7 @@ public:
     coord_def mlistp;              // Left-top pos of the monster list.
     coord_def mlistsz;             // Size of the monster list.
 
-    crawl_view_buffer<screen_buffer_t> vbuf;
-                                   // Buffer for drawing the main game map.
-#ifdef USE_TILE
-    crawl_view_buffer<tile_buffer_t> tbuf;
-                                   // Tiles buffer.
-#endif
+    crawl_view_buffer vbuf;        // Buffer for drawing the main game map.
 
     coord_def vgrdc;               // What grid pos is at the centre of the view
                                    // usually you.pos().

@@ -775,61 +775,40 @@ static void player_view_update()
     update_exclusion_los(update_excludes);
 }
 
-#ifndef USE_TILE
-#define DRAW(kind) draw_##kind(&buffy[bufcount], gc, ep);
-#define DRAWFN(kind) \
-    static void draw_##kind(screen_buffer_t *buffy, \
-                            const coord_def &gc, const coord_def &ep)
-#else
-#define DRAW(kind) draw_##kind(&buffy[bufcount], &tileb[bufcount], gc, ep)
-#define DRAWFN(kind) \
-    static void draw_##kind(screen_buffer_t *buffy, tile_buffer_t *tileb, \
-                            const coord_def &gc, const coord_def &ep)
-#endif
-
-DRAWFN(unseen)
+static void draw_unseen(screen_buffer_t* buffy, const coord_def &gc)
 {
-    // off the map
+#ifndef USE_TILE
     buffy[0] = ' ';
     buffy[1] = DARKGREY;
-#ifdef USE_TILE
-    tileidx_unseen(tileb[0], tileb[1], ' ', gc);
+#else
+    tileidx_unseen(buffy[0], buffy[1], ' ', gc);
 #endif
 }
 
-DRAWFN(outside_los)
+static void draw_outside_los(screen_buffer_t* buffy, const coord_def &gc)
 {
+#ifndef USE_TILE
     // Outside the env.show area.
     buffy[0] = get_map_knowledge_char(gc);
     buffy[1] = DARKGREY;
 
     if (Options.colour_map)
         buffy[1] = colour_code_map(gc, Options.item_colour);
-
-#ifdef USE_TILE
+#else USE_TILE
     unsigned int bg = env.tile_bk_bg(gc);
     unsigned int fg = env.tile_bk_fg(gc);
     if (bg == 0 && fg == 0)
         tileidx_unseen(fg, bg, get_map_knowledge_char(gc), gc);
 
-    tileb[0] = fg;
-    tileb[1] = bg | tile_unseen_flag(gc);
+    buffy[0] = fg;
+    buffy[1] = bg | tile_unseen_flag(gc);
 #endif
 }
 
-DRAWFN(player)
+static void draw_player(screen_buffer_t* buffy,
+                        const coord_def& gc, const coord_def& ep)
 {
-#ifdef USE_TILE
-    if (player_in_mappable_area())
-    {
-        env.tile_bk_bg(gc) = env.tile_bg(ep);
-        env.tile_bk_fg(gc) = env.tile_fg(ep);
-    }
-
-    tileb[0] = env.tile_fg(ep) = tileidx_player(you.char_class);
-    tileb[1] = env.tile_bg(ep);
-#endif
-
+#ifndef USE_TILE
     // Player overrides everything in cell.
     buffy[0] = you.symbol;
     buffy[1] = you.colour;
@@ -840,42 +819,52 @@ DRAWFN(player)
         else
             buffy[1] = CYAN;
     }
-}
+#else
+    if (player_in_mappable_area())
+    {
+        env.tile_bk_bg(gc) = env.tile_bg(ep);
+        env.tile_bk_fg(gc) = env.tile_fg(ep);
+    }
 
-DRAWFN(los)
-{
-    show_type  object = env.show(ep);
-    unsigned short colour = object.colour;
-    unsigned        ch;
-
-    get_symbol(gc, object, &ch, &colour);
-
-    buffy[0] = ch;
-    buffy[1] = colour;
-#ifdef USE_TILE
-    tileb[0] = env.tile_fg(ep);
-    tileb[1] = env.tile_bg(ep);
+    buffy[0] = env.tile_fg(ep) = tileidx_player(you.char_class);
+    buffy[1] = env.tile_bg(ep);
 #endif
 }
 
-DRAWFN(los_backup)
+static void draw_los(screen_buffer_t* buffy,
+                     const coord_def& gc, const coord_def& ep)
 {
-    // Show map.
+#ifndef USE_TILE
+    show_type  object = env.show(ep);
+    unsigned short colour = object.colour;
+    unsigned        ch;
+    get_symbol(gc, object, &ch, &colour);
+    buffy[0] = ch;
+    buffy[1] = colour;
+#else
+    buffy[0] = env.tile_fg(ep);
+    buffy[1] = env.tile_bg(ep);
+#endif
+}
+
+static void draw_los_backup(screen_buffer_t* buffy,
+                            const coord_def& gc, const coord_def& ep)
+{
+#ifndef USE_TILE
     buffy[0] = get_map_knowledge_char(gc);
     buffy[1] = DARKGREY;
 
     if (Options.colour_map)
         buffy[1] = colour_code_map(gc, Options.item_colour);
-
-#ifdef USE_TILE
+#else
     if (env.tile_bk_fg(gc) != 0
         || env.tile_bk_bg(gc) != 0)
     {
-        tileb[0] = env.tile_bk_fg(gc);
-        tileb[1] = env.tile_bk_bg(gc) | tile_unseen_flag(gc);
+        buffy[0] = env.tile_bk_fg(gc);
+        buffy[1] = env.tile_bk_bg(gc) | tile_unseen_flag(gc);
     }
     else
-        tileidx_unseen(tileb[0], tileb[1], get_map_knowledge_char(gc), gc);
+        tileidx_unseen(buffy[0], buffy[1], get_map_knowledge_char(gc), gc);
 #endif
 }
 
@@ -896,10 +885,6 @@ void viewwindow(bool do_updates)
     flush_prev_message();
 
     screen_buffer_t *buffy(crawl_view.vbuf);
-
-#ifdef USE_TILE
-    tile_buffer_t *tileb(crawl_view.tbuf);
-#endif
 
     calc_show_los();
 
@@ -938,34 +923,37 @@ void viewwindow(bool do_updates)
         const coord_def ep = view2show(grid2view(gc));
 
         if (!map_bounds(gc))
-            DRAW(unseen);
+            draw_unseen(&buffy[bufcount], gc);
         else if (!crawl_view.in_grid_los(gc))
-            DRAW(outside_los);
+            draw_outside_los(&buffy[bufcount], gc);
         else if (gc == you.pos() &&
                  !crawl_state.arena && !crawl_state.arena_suspended)
         {
-            DRAW(player);
+            draw_player(&buffy[bufcount], gc, ep);
         }
         else if (observe_cell(gc))
-            DRAW(los);
+            draw_los(&buffy[bufcount], gc, ep);
         else
-            DRAW(los_backup);
+            draw_los_backup(&buffy[bufcount], gc, ep);
 
         // Alter colour if flashing the characters vision.
         if (flash_colour)
         {
+#ifndef USE_TILE
             buffy[bufcount + 1] = observe_cell(gc) ? real_colour(flash_colour)
                                                    : DARKGREY;
+#endif
         }
         else
         {
             bool out_of_range = Options.target_range > 0
                  && (grid_distance(you.pos(), gc) > Options.target_range);
+#ifndef USE_TILE
             if (!observe_cell(gc) || out_of_range)
                 buffy[bufcount + 1] = DARKGREY;
-#ifdef USE_TILE
+#else
             if (out_of_range)
-                tileb[bufcount + 1] |= TILE_FLAG_OOR;
+                buffy[bufcount + 1] |= TILE_FLAG_OOR;
 #endif
         }
     }
@@ -974,22 +962,12 @@ void viewwindow(bool do_updates)
     // and this simply works without requiring a stack.
     you.flash_colour = BLACK;
 
-    // Avoiding unneeded draws when running.
-    const bool draw =
-#ifdef USE_TILE
-        !is_resting() &&
-#endif
-        (!you.running || Options.travel_delay > -1
-         || you.running.is_explore() && Options.explore_delay > -1)
-        && !you.asleep();
-
-    if (draw)
+    // TODO: move this before the loop
+    if ((!you.running || Options.travel_delay > -1
+        || you.running.is_explore() && Options.explore_delay > -1)
+        && !you.asleep())
     {
-#ifdef USE_TILE
-        tiles.set_need_redraw();
-        tiles.load_dungeon(&tileb[0], crawl_view.vgrdc);
-        tiles.update_inventory();
-#else
+#ifndef USE_TILE
         you.last_view_update = you.num_turns;
         puttext(crawl_view.viewp.x, crawl_view.viewp.y,
                 crawl_view.viewp.x + crawl_view.viewsz.x - 1,
@@ -997,6 +975,13 @@ void viewwindow(bool do_updates)
                 buffy);
 
         update_monster_pane();
+#else
+        if (!is_resting())
+        {
+            tiles.set_need_redraw();
+            tiles.load_dungeon(&buffy[0], crawl_view.vgrdc);
+            tiles.update_inventory();
+        }
 #endif
     }
 
