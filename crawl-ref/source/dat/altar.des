@@ -5,13 +5,24 @@
 #            go in the corresponding des-file. A few entry vaults contain
 #            altars; these should always be in entry.des.
 #
-#            There are two reasons for keeping altar vaults separate:
-#            * This makes it easier to adapt for new gods.
-#            * Easier tweaking of altar chances.
+# Altar vaults do not just provide flavour. They are crucial for ensuring
+# that granted gods without altars in the Temple will be present in the 
+# early part of the dungeon. Such altars are called "overflow temples".
+# Sometimes, ordinary altar maps featuring a single C glyph (random altar)
+# are used. However, there are also vaults dedicated to a special god. 
+# These look much more interesting, of course.
+# There are two TAGs to be used for single-altar maps with a specified god:
 #
-# NOTE: A vault tagged with only temple_overflow_FOO will only ever be used
-# for overflow temples, but one tagged with both temple_overflow_FOO and
-# uniq_altar_FOO can be generated either randomly or as an overflow temple.
+# TAG: temple_overflow_FOO        
+#      Says the map will only ever be used for overflow temples to god FOO.
+# TAG: uniq_altar_FOO
+#      If you also add this, then the map can be placed randomly even if 
+#      that altar has been chosen at new-game time to be an overflow temple
+#      on a specific level. If it happens to be randomly placed before being 
+#      generated specifically then it will only be placed once, rather than
+#      being placed a second time at the location chosen at new-game time.
+#
+# If you want to check altar placement in wizard mode, use the &: command.
 #
 ###############################################################################
 
