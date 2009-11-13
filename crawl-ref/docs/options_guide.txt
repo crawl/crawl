@@ -822,8 +822,11 @@ explore_stop = items,greedy_pickup,stairs,shops,altars,gates
         Explore will stop for one of these conditions. Whatever you
         set this option to, anything that stops travel will also stop
         explore. Multiple explore_stop lines are cumulative if you use
-        explore_stop += options, otherwise the last explore_stop =
+        "explore_stop += option"s, otherwise the last "explore_stop ="
         options line will override all previous explore_stop lines.
+        "explore_stop -=" can be used to remove items from the list.
+
+        NOTE: runrest_ignore_message has no effect on explore_stop.
 
         When using non-greedy explore, items causes explore to stop
         when any new item comes into view.  When using greedy explore,
@@ -903,6 +906,9 @@ runrest_ignore_message = <string>
 
         Note that monster talk and dungeon noises already do not
         interrupt running or resting, by default.
+
+        Also note that runrest_ignore_message has no effect on what
+        explore_stop stops for.
 
 runrest_ignore_poison = <poison damage>:<minimum hp>
         This only works if runrest.lua has already been sourced in
