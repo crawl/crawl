@@ -808,8 +808,6 @@ static void draw_outside_los(screen_buffer_t* buffy, const coord_def &gc)
 static void draw_player(screen_buffer_t* buffy,
                         const coord_def& gc, const coord_def& ep)
 {
-    if (crawl_state.arena || crawl_state.arena_suspended)
-        return;
 #ifndef USE_TILE
     // Player overrides everything in cell.
     buffy[0] = you.symbol;
@@ -935,8 +933,11 @@ void viewwindow(bool do_updates)
             draw_unseen(&buffy[bufcount], gc);
         else if (!crawl_view.in_grid_los(gc))
             draw_outside_los(&buffy[bufcount], gc);
-        else if (gc == you.pos())
+        else if (gc == you.pos() &&
+                 !crawl_state.arena && !crawl_state.arena_suspended)
+        {
             draw_player(&buffy[bufcount], gc, ep);
+        }
         else if (observe_cell(gc))
             draw_los(&buffy[bufcount], gc, ep);
         else
