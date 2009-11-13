@@ -186,8 +186,13 @@ int holy_word(int pow, int caster, const coord_def& where, bool silent,
              attacker->conj_verb("speak").c_str());
     }
 
-    return (apply_area_within_radius(holy_word_monsters, where, pow, 8, caster,
-                                     attacker));
+    // We could use actor.get_los(), but maybe it's NULL.
+    los_def los(where);
+    los.update();
+    int r = 0;
+    for (radius_iterator ri(&los); ri; ++ri)
+        r += holy_word_monsters(*ri, 0, caster, attacker);
+    return (r);
 }
 
 int torment_player(int pow, int caster)
@@ -314,6 +319,7 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use
         // it.  It does alert them, though.
+        // XXX: attacker isn't passed through "int torment()".
         if (attacker != NULL)
             behaviour_event(monster, ME_ALERT, attacker->mindex());
     }
@@ -328,7 +334,12 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
 
 int torment(int caster, const coord_def& where)
 {
-    return (apply_area_within_radius(torment_monsters, where, 0, 8, caster));
+    los_def los(where);
+    los.update();
+    int r = 0;
+    for (radius_iterator ri(&los); ri; ++ri)
+        r += torment_monsters(*ri, 0, caster);
+    return (r);
 }
 
 void immolation(int pow, int caster, coord_def where, bool known,
