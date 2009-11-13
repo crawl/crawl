@@ -1,18 +1,21 @@
 #ifndef COORD_CIRCLE_H
 #define COORD_CIRCLE_H
 
+
+// Internal to circle_def.
 enum shape_type
 {
     SH_SQUARE,     // square around an origin
     SH_CIRCLE      // circle around an origin
 };
 
+// External interface to circle_def shapes.
 enum circle_type
 {
     C_SQUARE,
-    C_CIRCLE,
-    C_POINTY,
-    C_ROUND
+    C_CIRCLE,      // circle specified by pre-squared radius
+    C_POINTY,      // circle with square radius r*r
+    C_ROUND        // circle with square radius r*r+1
 };
 
 class rectangle_iterator;
@@ -35,9 +38,20 @@ public:
                                   coord_def(X_BOUND_2, Y_BOUND_2)))
 
 class circle_iterator;
+/*
+ * Circles of different shapes; see circle_type for these.
+ *
+ * Warnings: 1. Distinguishes between circles within map bounds
+ * depending on whether origin is set:
+ *        origin == (0,0): map_bounds not checked
+ *        origin != (0,0): map_bounds checked
+ * 2. radius/radius_sq don't have meaning when los_radius is set.
+ */
 class circle_def
 {
+    // Are we tracking global LOS radius?
     bool los_radius;
+
     shape_type shape;
 
     coord_def origin;
