@@ -38,7 +38,19 @@ function MonPropsMarker:activate(marker)
     mon.set_prop(k, v)
   end
 
-  dgn.remove_marker(marker)
+  -- NOTE: do *not* call dgn.remove_marker() right now; removing a marker
+  -- while it's being activated causes memory problems.  We'll be
+  -- removed after activation is done with the "post_activate_remove"
+  -- property.
+  self.want_remove = true
+end
+
+function MonPropsMarker:property(marker, pname)
+  if self.want_remove and pname == "post_activate_remove" then
+    return "true"
+  end
+
+  return ""
 end
 
 function MonPropsMarker:write(marker, th)
