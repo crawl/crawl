@@ -11,7 +11,7 @@ Contents:  G. Glyphs
 This document contains the syntax needed for making maps and vaults. It
 does not say anything about principles of vault making; for this, see
 introduction.txt. For more technical aspects, including tests, lua and
-portal vaults, refer to advanced.txt.
+portal vaults, refer to advanced.txt. For Triggerables, please see triggerables.txt.
 
 G.   Glyphs
 ===========

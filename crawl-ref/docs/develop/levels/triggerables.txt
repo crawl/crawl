@@ -1,0 +1,515 @@
+How to make levels for Dungeon Crawl Stone Soup
+-----------------------------------------------
+
+Part IV:   TRIGGERABLES
+           ============
+
+Contents:  A. Introduction
+           B. Sample syntax
+           C. Examples of usage
+           D. Convenience functions
+           E. List of triggerers
+           F. Master and slaves
+
+This document describes the usage of Triggerables, a modular, extensible and
+highly flexible Lua marker systen used for making vaults. For more general
+syntax and other advanced Lua topics, see introduction.txt, syntax.txt and
+advanced.txt.
+
+A.   Introduction
+=================
+
+Triggerables are an event-driven framework that can be used to further randomise
+Dungeon Crawl Stone Soup maps, specifically at runtime. They can be used in
+every-day minivaults, portal vaults, branch endings and more.
+
+You've probably already used Triggerables in vaults, or seen them in action:
+FogMachines are a randomised Triggerable, while the removal of no
+controlled-teleport from some branch ends upon pickup of the rune is achieved
+through a Triggerable. These often used Triggerables are wrapped in convenience
+functions (see section D).
+
+However, Triggerables can be combined with pre-defined Lua functions to achieve
+extremely complicated game mechanics: in the "Collapsing Caverns" Volcano vault,
+they are used to randomly close cave entrances, while in the "Overflow" Volcano
+vault, they are used to increase and decrease the amount of lava present.
+
+Triggerables are usually only limited by the amount of triggers (see
+the list in section E), and Lua wrappers available. As these are constantly
+increasing, you are really only limited by imagination and vault design ethics.
+
+Sections B and C cover customised Triggerables (using examples from the Volcano
+portal vaults), while section D covers convenience functions (using examples
+from Branch ends).
+
+B.   Sample syntax
+==================
+
+Customised Triggerers usually use the non-abstracted TriggerableFunction
+mechanic. Consider this (trimmed) example from the Volcano portal vault (see
+dat/volcano.des for the full vault):
+
+-----------------------------
+
+{{
+local function collapse_doorways (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  [Doorway collapse code]
+
+  -- Don't collapse same doorway twice.
+  triggerable:remove(marker)
+end
+
+local collapse_marker = TriggerableFunction:new (
+  {
+    func=collapse_doorways,
+    repeated=true,
+    props = {
+      -- Only collapse one doorway at a time, randomly.
+      single_random_slave="true"
+    }
+  }
+)
+
+collapse_marker:add_triggerer(DgnTriggerer:new {
+  type="turn",
+  delay_min=50,
+  delay_max=200
+})
+
+}}
+
+-----------------------------
+
+As you can see, a TriggerableFunction consists of three parts: firstly, the
+function that is to be triggered, which is provided five parameters:
+
+  * data, a pre-defined Lua table which can be used for persistent data storage.
+  * triggerable, the instance of the Triggerable that is triggering the
+        function.
+  * triggerer, the instance of the DgnTriggerer that has fired
+  * marker, the marker object
+  * ev, the event object
+
+In most instances, the used parameters are "data", "triggerer" and "marker". The
+first of these allows for the storage of any function-required data persistently
+(such as the number of doorways already collapsed, the number of doorways left
+to collapse, etc).
+
+"Triggerer" is regularly used in randomised functions to determine whether or
+not the function is actually being fired. For example, if the Triggerer is not
+of the "turns" type and "countdown" subtype; see the WarningMachines in
+dat/clua/lm_fog.lua for examples of functions being triggered randomly, and 
+being triggered a certain number of turns before a FogMachine is fired).
+
+Finally, "marker" is usually used to determine the position of the Triggerable
+by colling the "marker:pos()" function.
+
+-----------------------------
+
+The second part of the TriggerableFunction is the actual marker. In this case,
+it is an instance of TriggerableFunction, called via TriggerableFunction:new.
+This requires the "func" parameter, the name of the function that is to be
+called.
+
+It also optionally takes the following parameters: "repeated" which defaults to
+'false': a non-repeated Triggerable will be removed after its first firing, and
+will not be subsequently fired.
+
+"props". A table consisting of one or more properties. In this instance takes 
+the "single_random_slave" parameter, which is linked into Master and Slave
+mechanics (see Section F).
+
+"data". A table consisting of data used by the function. This defaults to a
+blank table, but can be specified with on creation of the marker. (See the
+"Overflow" Volcano map in dat/volcano.des).
+
+-----------------------------
+
+The third and final part of the Triggerable is the actual trigger itself: this
+is an instance of DgnTriggerer, and is added to the marker with the
+"add_triggerer" function. See section E, "List of triggerers" for more
+information.
+
+-----------------------------
+
+In our example, all of this combined creates a Triggerable which does the
+following (ignoring the master/slave mechanics):
+
+1. Randomly every "50" and "200" "turns"[1]
+2. Pick a random slave
+3. Trigger the function "collapse_doorways" at the slave
+4. Remove the triggerer from that slave.
+
+This is repeated until all of the triggerers have been removed, or the player
+leaves the level.
+
+[1]: "Turns" are a misnomer. The countdown operates off the value of ev:ticks(),
+     a value which may be, but is not always, "10" for every turn. In practice,
+     for randomised functions, you can times your values by 10 to roughly get
+     a "turns" value: therefore, "50" ~= every 5 turns, "200" ~= every 20 turns.
+
+The following section will provide some annotated examples of customised
+TriggerableFunctions.
+
+C. Examples of usage
+====================
+
+These vaults have been taken in whole from the current crawl code repository,
+and may have been updated since their original inclusion. Please see the
+referenced files for the current version.
+
+Annotations are marked as "** <text of annotation>".
+
+-----------------------------
+
+From dat/volcano.des:
+
+NAME:       volcano_overflow
+WEIGHT:     10
+ORIENT:     encompass
+TAGS:       volcano no_item_gen no_monster_gen no_rotate
+MONS:       nothing, nothing, nothing
+{{
+
+** The function takes five parameters, as noted, though only acts on two.
+
+function convert_lava (data, triggerable, triggerer, marker, ev)
+  ** This piece of code ensures that the function is only triggered at the
+  ** end of the countdown.
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  ** Here, values stored in the persistent table are altered.
+  data.lava_phase = data.lava_phase + 1
+  local lp = data.lava_phase
+  local my_slaves = {}
+
+  ** This code converts a square either from floor to lava, or from lava to
+  ** floor.
+  -- So we don't have to duplicate code too much.
+  local function convert_slaves_to_lava (mslaves, opposite)
+   local yp = dgn.point(you.pos())
+    for _, pos in ipairs(mslaves) do
+      if pos ~= yp then
+        if opposite then
+          dgn.terrain_changed(pos.x, pos.y, "floor", false, false, false)
+        else
+          dgn.terrain_changed(pos.x, pos.y, "lava", false, false, false)
+        end
+      end
+    end
+  end
+
+  ** The use of slaves in this function is slightly different to the normal
+  ** slaved Triggerables. Instead, we access the slave fetching functions
+  ** directly in the code.
+  if lp == 1 then
+    crawl.mpr("The ground shudders ominously.", "warning")
+  elseif lp == 2 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 2)
+    crawl.mpr("In the distance, the volano explodes with a roar! Lava spreads "
+               .. "onto the path.", "warning")
+    convert_slaves_to_lava(my_slaves)
+  elseif lp == 3 then
+    crawl.mpr("The air is thick with the scent of sulphur.", "warning")
+  elseif lp == 4 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 4)
+    crawl.mpr("There is another distant roar. More lava overflows!", "warning")
+    convert_slaves_to_lava(my_slaves)
+  elseif lp == 5 then
+    crawl.mpr("The ground moves violently!", "warning")
+  elseif lp == 6 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
+    crawl.mpr("The volcano erupts again! A thin layer of lava overflows to " ..
+              "fill the cavern.", "warning")
+    convert_slaves_to_lava(my_slaves)
+  elseif lp == 7 then
+    my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
+    crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
+              "over!", "warning")
+    convert_slaves_to_lava(my_slaves, true)
+  end
+end
+
+** This sets up the various slaves, using a portal descriptor with the
+** lava_phase being parameter used to locate them.
+
+-- So we know what to convert.
+lua_marker("1", portal_desc { lava_phase=2 })
+lua_marker("2", portal_desc { lava_phase=4 })
+lua_marker("3", portal_desc { lava_phase=6 })
+
+** The marker for the TriggerableFunction, and the initial setup of the data
+** table.
+-- And finally, let's convert it
+local sink_marker = TriggerableFunction:new {
+  func = convert_lava,
+  repeated = true,
+  data = {lava_phase=0}
+}
+
+** The triggerer is randomly every 5 to 20 turns.
+sink_marker:add_triggerer(DgnTriggerer:new {
+  type="turn",
+  delay_min=50,
+  delay_max=200, })
+
+** While we need the marker on the map, it doesn't actually use or manipulate
+** anything at its location, hence it's inclusion outside of the bounds of the
+** map. This could easily be applied to any permanent feature included on the
+** map, such as the "<" or "A" symbols.
+lua_marker("M", sink_marker)
+}}
+SUBST:      M = c
+NSUBST:     123 = 8:d / 8:e / 8:f / 8:g / 8:h / *:.
+:           volcano_setup(_G)
+MAP
+                xxxx         xxx xxx                   xxx
+        xxxxx  xx33xxx     xxx3xxx3xxxx xxxxx xxx     xx3xx
+       xx333xxxx32233xxx xxx3323332333xxxx33xxx3xxx xxx323xx
+     xxx321133332112233xxx332211221121333322333233xxx332123xx
+   xxx3321l122221ll11133333311ll111l111222212211223332211123xx
+ xxx3321llll1111llllll111111lllllllllll11111111111222111123xx
+xx3321llllllllllllllllllllllllllllllllllll11233321111ll123xx
+ xx3321lllllllllllllllllllllllllllllllllll123xxx3321lll123xx
+  xxx321lllllllllllllllllllllllllllllllll123xxAxxx321lll123xx
+    xx321lllllllllllllllll111lllllllllll123xx<...xx3211ll123xx
+     xx321lll11llllllll122333221lllllllll123xxx...xx321lll123x
+      x321ll1221llllll1223xxx3211llllllll11233x....3321llll13xx
+    xxx321l133321llll1233xx xx3221llllllll123xx...xx321ll1123xx
+   xx3321133xxx33211123xxx   xx3321llll11233333.xxx322111233xx
+   x332233xxx xxx33233xx      xxx332111233xxxxxxx xx332233xxx
+   xxx33xxx     xxx3xxx    M    xxx33233xxx        xxx33xxx
+     xxxx         xxx             xxx3xxx            xxxx
+                                    xxx
+ENDMAP
+
+-----------------------------
+
+From dat/float.des
+
+NAME:   ancient_champions_mu
+DEPTH:  D:15-26, Vault, Crypt
+ORIENT: float
+FLAGS:  no_item_gen no_monster_gen
+KFEAT:  ABCDEFG = metal_wall
+** This vault uses named monsters to differentiate on the monster_dies trigger.
+KMONS:  1 = col:gold skeletal warrior name:ancient_champion name_replace \
+        spells:iron_shot;.;haste;pain;.;. actual_spells \
+        ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
+        great sword ego:pain | great sword ego:draining | great sword \
+        ego:flaming | w:3 triple sword ego:vorpal
+KMONS:  2 = col:gold skeletal warrior name:ancient_champion name_replace \
+        spells:bolt_of_draining;.;haste;throw_frost;.;. actual_spells \
+        ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
+        great mace ego:vorpal | great mace ego:draining
+KMONS:  3 = col:gold skeletal warrior name:ancient_champion name_replace \
+        spells:venom_bolt;.;haste;haunt;.;. actual_spells \
+        ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
+        battleaxe ego:vorpal | battleaxe ego:pain | \
+        w:3 executioner's axe ego:vorpal
+KMONS:  4 = col:gold skeletal warrior name:ancient_champion name_replace \
+        spells:iskenderun's_mystic_blast;slow;haste;.;.;. actual_spells \
+        ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
+        great sword ego:pain | great sword ego:draining | great sword \
+        ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain | \
+        triple sword ego:vorpal | executioner's axe ego:vorpal
+SHUFFLE: 123
+KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_rtele_into
+KITEM:  w = acquire weapon
+KITEM:  r = acquire armour
+NSUBST: $ = 1:w / 1:r / 4:| / *:$
+COLOUR: " = yellow
+KFEAT:  " = .
+
+{{
+
+** In this vault, killing one of the name skeletal warriors causes part of the 
+** wall to slide back. These sections of wall have to be individually marker as
+** such.
+-- First off, slave marker magic.
+lua_marker("A", portal_desc { skele_slave=1 })
+lua_marker("B", portal_desc { skele_slave=2 })
+lua_marker("C", portal_desc { skele_slave=3 })
+lua_marker("D", portal_desc { skele_slave=4 })
+lua_marker("E", portal_desc { skele_slave=5 })
+lua_marker("F", portal_desc { skele_slave=6 })
+lua_marker("G", portal_desc { skele_slave=7 })
+
+** Again, taking five parameters.
+
+-- Then the actual function which does everything.
+function skele_death (data, triggerable, triggerer, marker, ev)
+  data.skele_number = data.skele_number + 1
+  ** However, as this is a monster_dies function, we don't need to worry about
+  ** it being triggered erroneously.
+
+  ** And again, using the persistent data table to store the amount of skeletal
+  ** warriors that have been destroyed.
+  -- Only 7 skeles!
+  if data.skele_number > 7 then
+    return
+  end
+
+  ** Like the overflow vault from volcano.des, this directly accesses the
+  ** network of slaves in order to find out which section of wall should be
+  ** replaced.
+  local function get_slave (slavenum)
+    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
+    return myslaves[1]
+  end
+
+  local wall_pos = get_slave(data.skele_number)
+  if wall_pos == nil then
+    crawl.mpr("Couldn't find a slave!")
+  end
+
+  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
+
+  if you.see_cell(wall_pos.x, wall_pos.y) then
+    crawl.mpr("As the champion dies, a metal wall slides away!")
+  else
+    crawl.mpr("As the champion dies, you hear a distant grinding noise.")
+  end
+end
+
+local skele_death_marker = TriggerableFunction:new {
+  func=skele_death,
+  repeated=true,
+  data={skele_number=0} }
+
+** This uses the "monster_dies" type of triggerer, and links it in to the
+** changed description of the skeletal warriors.
+skele_death_marker:add_triggerer(DgnTriggerer:new {
+  type="monster_dies",
+  target="ancient champion" })
+
+** Again, like the Overflow vault, the marker in question doesn't act upon
+** anything at its location; assigning it to all of the skeletal warriors
+** would cause confusion, and placing it off the map would be impossible as
+** this is not an encompass vault; therefore, it is linked to a solid feature.
+lua_marker("]", skele_death_marker)
+}}
+
+MAP
+vvvvvvvvvvvvvvvvvvv
+v..".1v.."..v.."..v
+v.""".v.""".v.""".v
+v"""""C"""""B"""""v
+v.""".v.""".v.""".v
+v.."..v..".3v..".2v
+vvvDvvvvvvvvvvvAvvv
+v..".2v$$$$$v.."..v
+v.""".v$$$$$v.""".v
+v"""""v$$.$$v"""""v
+v.""".v$$.$$v.""".v
+v.."..v$...$v1."..v
+vvvEvvvvvGvvvvv+vvv
+v3."..v.."..v.."..v
+v.""".v.""".v.""".v
+v"""""F"""""v""]""v
+v.""".v.""".v.""".v
+v.."..v4."..v.."..v
+vvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+D. Convenience functions
+========================
+
+Previously, we have discussed completely customised Triggerables, using the
+TriggerableFunction marker. There also exist a large variety of other markers
+and convenience functions which use Triggerables as a base.
+
+Markers which use Triggerables as a base include FogMachines, MonsterOnTrigger,
+feat_change_change_flags, item_pickup_change_flags, and so on. These are
+documented in their own individual files.
+
+Currently, convenience functions for Triggerables include:
+
+  * message_at_spot, which can be used to trigger a single or repeated message
+      whenever the player crosses or reaches a certain point.
+
+E.    List of triggerers
+========================
+
+This list taken from dat/clua/lm_trig.lua, listing the different "type"
+parameters that an instance of DgnTriggerer may accept, and the required
+parameters for each.
+
+   * monster_dies: Waits for a monster to die.  Needs the parameter
+         "target", who's value is the name of the monster who's death
+         we're wating for.  Doesn't matter where the triggerable/marker
+         is placed.
+   * feat_change: Waits for a cell's feature to change.  Accepts the
+         optional parameter "target", which if set delays the trigger
+         until the feature the cell turns into contains the target as a
+         substring.  The triggerable/marker must be placed on top of the
+         cell who's feature you wish to monitor.
+   * item_moved: Wait for an item to move from one cell to another.
+        Needs the parameter "target", who's value is the name of the
+        item that is being tracked, or which can be "auto", in which
+        case it will pick the item placed by the vault.  The
+        triggerable/marker must be placed on top of the cell containing
+        the item.
+   * item_pickup: Wait for an item to be picked up.  Needs the parameter
+        "target", who's value is the name of the item that is being tracked,
+        or which can be "auto", in which case it will pick the item placed
+        by the vault.  The triggerable/marker must be placed on top of the
+        cell containing the item.  Automatically takes care of the item
+        moving from one square to another without being picked up.
+   * player_move: Wait for the player to move to a cell.  The
+        triggerable/marker must be placed on top of cell in question.
+   * player_los: Wait for the player to come into LOS of a cell, which
+        must contain a notable feature..  The triggerable/marker must be
+        placed on top of cell in question.
+   * turn: Called once for each player turn that passes. Optionally accepts a
+        "delay_min", "delay_max" or "delay" parameters, in which case a
+        countdown is performed.
+   * entered_level: Called when player enters the level, after all level
+        setup code has completed.
+
+F.     Master and slaves
+========================
+
+Multiple Triggerables can be combined together in a master/slave setup. There
+are multiple methods of doing this. The simplest is to to provide a
+"master_name" parameter to the main marker, and then provide "slave_to" at all
+of the individual slave markers, setting the same value for each.
+
+When a Triggerable is fired and it has a "master_name" property, it will execute
+at each of the slave locations as defined above, unless the master has the
+parameter "single_random_slave" (set to anything but empty), in which case it
+will randomly chose one slave and execute there. Further, the master marker may
+be slaved to itself in order to have execution occur there.
+
+Triggerables that depend on position (such as player_move) will only fire when
+the player moves over the master marker. For them to fire at either slave or
+master, provide the "listen_to_slaves" property. Finally, to have only the slave
+that fired be executed, provide the "only_at_slave" parameter.
+
+-----------------------------
+
+An example from dat/hells.des, using the MonsterOnTriggerer marker, a subset of
+Triggerables, and master/slave mechanics:
+
+MARKER:  1 = lua:monster_on_death { \
+            death_monster="Dispater", new_monster="generate_awake iron golem", \
+            message_seen="The iron statue comes to life!", \
+            message_unseen="You hear a grinding sound.", \
+            master_name="dispater" \
+         }
+MARKER:  o = lua:props_marker { \
+            veto_fragmentation="veto", veto_disintegrate="veto", \
+            slaved_to="dispater" \
+         }
+
+-----------------------------
+
+If you have any comments, questions, or issues with Triggerables, your best bet
+would be to contact the crawl-ref-discuss mailing list on SourceForge, or to try
+##crawl-dev on irc.freenode.org.

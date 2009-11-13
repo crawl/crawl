@@ -14,7 +14,7 @@ Contents:  I. Conditionalising levels
            O. Map generation
 
 This document describes the advanced features of vault making. This includes
-usage of lua and how to create portal vaults.
+usage of lua and how to create portal vaults. Triggerables are covered in a separate document: triggerables.txt.
 
 
 I.    Conditionalising levels
