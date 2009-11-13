@@ -63,6 +63,16 @@ const rect_def& circle_def::get_bbox() const
     return (bbox);
 }
 
+const coord_def& circle_def::get_center() const
+{
+    return (origin);
+}
+
+circle_iterator circle_def::iter() const
+{
+    return (circle_iterator(*this));
+}
+
 bool circle_def::contains(const coord_def &p) const
 {
     switch (shape)
@@ -74,33 +84,4 @@ bool circle_def::contains(const coord_def &p) const
     default:
         return (false);
     }
-}
-
-circle_iterator::circle_iterator(const circle_def &circle_)
-    : circle(circle_), iter(circle_.get_bbox().iter())
-{
-    while (iter && !circle.contains(*iter))
-        ++iter;
-}
-
-circle_iterator::operator bool() const
-{
-    return ((bool)iter);
-}
-
-coord_def circle_iterator::operator*() const
-{
-    return (*iter);
-}
-
-void circle_iterator::operator++()
-{
-    do
-        ++iter;
-    while (iter && !circle.contains(*iter));
-}
-
-void circle_iterator::operator++(int)
-{
-    ++(*this);
 }

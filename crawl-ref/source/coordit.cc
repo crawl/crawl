@@ -8,6 +8,7 @@
 #include "coordit.h"
 
 #include "coord.h"
+#include "coord-circle.h"
 #include "player.h"
 
 rectangle_iterator::rectangle_iterator( const coord_def& corner1,
@@ -59,6 +60,7 @@ rectangle_iterator& rectangle_iterator::operator ++()
     return *this;
 }
 
+
 rectangle_iterator rectangle_iterator::operator++( int dummy )
 {
     const rectangle_iterator copy = *this;
@@ -66,85 +68,110 @@ rectangle_iterator rectangle_iterator::operator++( int dummy )
     return (copy);
 }
 
+/*
+ *  circle iterator
+ */
+
+circle_iterator::circle_iterator(const circle_def &circle_)
+    : circle(circle_), iter(circle_.get_bbox().iter())
+{
+    while (iter && !circle.contains(*iter))
+        ++iter;
+}
+
+circle_iterator::operator bool() const
+{
+    return ((bool)iter);
+}
+
+coord_def circle_iterator::operator*() const
+{
+    return (*iter);
+}
+
+void circle_iterator::operator++()
+{
+    do
+        ++iter;
+    while (iter && !circle.contains(*iter));
+}
+
+void circle_iterator::operator++(int)
+{
+    ++(*this);
+}
+
+
+radius_iterator::radius_iterator(const coord_def& center, int param,
+                                 circle_type ctype,
+                                 const los_def* _los,
+                                 bool _exclude_center)
+    : circle(center, param, ctype),
+      iter(circle.iter()),
+      exclude_center(_exclude_center),
+      los(_los)
+{
+    advance(true);
+}
+
 radius_iterator::radius_iterator(const coord_def& _center, int _radius,
-                                 bool _roguelike_metric, bool _require_los,
+                                 bool roguelike, bool _require_los,
                                  bool _exclude_center,
                                  const los_def* _los)
-    : center(_center), radius(_radius), roguelike_metric(_roguelike_metric),
-      require_los(_require_los), exclude_center(_exclude_center),
-      los(_los), iter_done(false)
+    : circle(_center, _radius, roguelike ? C_SQUARE : C_POINTY),
+      iter(circle.iter()),
+      exclude_center(_exclude_center),
+      los(_require_los ? (_los ? _los : &you.get_los()) : NULL)
 {
-    reset();
+    advance(true);
 }
 
-void radius_iterator::reset()
+radius_iterator::radius_iterator(const los_def* los_,
+                                 bool _exclude_center)
+    : circle(los_->get_bounds()),
+      iter(circle.iter()),
+      exclude_center(_exclude_center),
+      los(los_)
 {
-    iter_done = false;
-
-    location.x = center.x - radius;
-    location.y = center.y - radius;
-
-    if ( !this->on_valid_square() )
-        ++(*this);
+    advance(true);
 }
 
-bool radius_iterator::done() const
+void radius_iterator::advance(bool may_stay)
 {
-    return iter_done;
+    if (!may_stay)
+        ++iter;
+    while (iter && !is_valid_square(*iter))
+        ++iter;
+    current = *iter;
+}
+
+radius_iterator::operator bool() const
+{
+    return (iter);
 }
 
 coord_def radius_iterator::operator *() const
 {
-    return location;
+    return (current);
 }
 
 const coord_def* radius_iterator::operator->() const
 {
-    return &location;
+    return &current;
 }
 
-void radius_iterator::step()
+bool radius_iterator::is_valid_square(const coord_def &p) const
 {
-    const int minx = std::max(X_BOUND_1+1, center.x - radius);
-    const int maxx = std::min(X_BOUND_2-1, center.x + radius);
-    const int maxy = std::min(Y_BOUND_2-1, center.y + radius);
-
-    // Sweep L-R, U-D
-    location.x++;
-    if (location.x > maxx)
-    {
-        location.x = minx;
-        location.y++;
-        if (location.y > maxy)
-            iter_done = true;
-    }
-}
-
-bool radius_iterator::on_valid_square() const
-{
-    if (!in_bounds(location))
+    if (exclude_center && p == circle.get_center())
         return (false);
-    if (!roguelike_metric && (location - center).abs() > radius*radius)
+    if (los && !los->see_cell(p))
         return (false);
-    if (require_los)
-    {
-        if (!los && !you.see_cell(location))
-            return (false);
-        if (los && !los->see_cell(location))
-            return (false);
-    }
-    if (exclude_center && location == center)
-        return (false);
-
     return (true);
 }
 
 const radius_iterator& radius_iterator::operator++()
 {
-    do
-        this->step();
-    while (!this->done() && !this->on_valid_square());
-
+    advance(false);
     return (*this);
 }
 

@@ -1,8 +1,6 @@
 #ifndef COORD_CIRCLE_H
 #define COORD_CIRCLE_H
 
-#include "coordit.h"
-
 enum shape_type
 {
     SH_SQUARE,     // square around an origin
@@ -17,6 +15,7 @@ enum circle_type
     C_ROUND
 };
 
+class rectangle_iterator;
 class rect_def
 {
     coord_def min;
@@ -51,26 +50,12 @@ public:
 
     bool contains(const coord_def &p) const;
     const rect_def& get_bbox() const;
+    const coord_def& get_center() const;
 
     circle_iterator iter() const;
 
 private:
     void init(int param, circle_type ctype);
-};
-
-class circle_iterator
-{
-    const circle_def &circle;
-    rectangle_iterator iter;
-
-public:
-    circle_iterator(const circle_def &circle_);
-
-    operator bool() const;
-    coord_def operator*() const;
-
-    void operator++();
-    void operator++(int);
 };
 
 #endif

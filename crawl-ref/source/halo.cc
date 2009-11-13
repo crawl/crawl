@@ -3,6 +3,7 @@
 #include "halo.h"
 
 #include "actor.h"
+#include "coordit.h"
 #include "player.h"
 #include "monster.h"
 #include "religion.h"
