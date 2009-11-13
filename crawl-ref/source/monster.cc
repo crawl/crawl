@@ -334,38 +334,7 @@ int monsters::body_weight() const
     // is sucked.  Grrrr.
     if (weight == 0 && !mons_is_insubstantial(type))
     {
-        const monsterentry *entry = get_monster_data(mclass);
-        switch (entry->size)
-        {
-        case SIZE_TINY:
-            weight = 150;
-            break;
-        case SIZE_LITTLE:
-            weight = 300;
-            break;
-        case SIZE_SMALL:
-            weight = 425;
-            break;
-        case SIZE_MEDIUM:
-            weight = 550;
-            break;
-        case SIZE_LARGE:
-            weight = 1300;
-            break;
-        case SIZE_BIG:
-            weight = 1500;
-            break;
-        case SIZE_GIANT:
-            weight = 1800;
-            break;
-        case SIZE_HUGE:
-            weight = 2200;
-            break;
-        default:
-            mpr("ERROR: invalid monster body weight");
-            perror("monsters::body_weight(): invalid monster body weight");
-            end(0);
-        }
+        weight = actor::body_weight();
 
         switch (mclass)
         {

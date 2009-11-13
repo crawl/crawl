@@ -5590,38 +5590,7 @@ size_type player::body_size(size_part_type psize, bool base) const
 
 int player::body_weight() const
 {
-    int weight = 0;
-    switch (body_size(PSIZE_BODY))
-    {
-    case SIZE_TINY:
-        weight = 150;
-        break;
-    case SIZE_LITTLE:
-        weight = 300;
-        break;
-    case SIZE_SMALL:
-        weight = 425;
-        break;
-    case SIZE_MEDIUM:
-        weight = 550;
-        break;
-    case SIZE_LARGE:
-        weight = 1300;
-        break;
-    case SIZE_BIG:
-        weight = 1500;
-        break;
-    case SIZE_GIANT:
-        weight = 1800;
-        break;
-    case SIZE_HUGE:
-        weight = 2200;
-        break;
-    default:
-        mpr("ERROR: invalid player body weight");
-        perror("player::body_weight(): invalid player body weight");
-        end(0);
-    }
+    int weight = actor::body_weight();
 
     switch (attribute[ATTR_TRANSFORMATION])
     {

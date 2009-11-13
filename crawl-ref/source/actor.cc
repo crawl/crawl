@@ -162,3 +162,31 @@ void actor::shield_block_succeeded(actor *foe)
        unrand_entry->fight_func.melee_effects(sh, this, foe, false);
     }
 }
+
+int actor::body_weight() const
+{
+    switch (body_size(PSIZE_BODY))
+    {
+    case SIZE_TINY:
+        return (150);
+    case SIZE_LITTLE:
+        return (300);
+    case SIZE_SMALL:
+        return (425);
+    case SIZE_MEDIUM:
+        return (550);
+    case SIZE_LARGE:
+        return (1300);
+    case SIZE_BIG:
+        return (1500);
+    case SIZE_GIANT:
+        return (1800);
+    case SIZE_HUGE:
+        return (2200);
+    default:
+        mpr("ERROR: invalid body weight");
+        perror("actor::body_weight(): invalid body weight");
+        end(0);
+        return (0);
+    }
+}
