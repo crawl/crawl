@@ -866,9 +866,12 @@ static void _yred_mirrors_injury(int dam, int death_source)
     }
 }
 
-static void _passive_freeze(kill_method_type death_type, int death_source)
+static void _passive_freeze(kill_method_type death_type, const char *aux,
+                            int death_source)
 {
-    if (you.mutation[MUT_PASSIVE_FREEZE] && death_type == KILLED_BY_MONSTER)
+    const char *ptr = strstr(aux, "torment");
+    if (you.mutation[MUT_PASSIVE_FREEZE] && death_type == KILLED_BY_MONSTER
+        && ptr == NULL)
     {
         if (invalid_monster_index(death_source))
             return;
@@ -1084,7 +1087,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                       Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
 
             _yred_mirrors_injury(dam, death_source);
-            _passive_freeze(death_type, death_source);
+            _passive_freeze(death_type, aux, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
 
             return;
