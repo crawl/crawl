@@ -536,8 +536,8 @@ end
 --
 -- * monster_dies: Waits for a monster to die.  Needs the parameter
 --       "target", who's value is the name of the monster who's death
---       we're wating for.  Doesn't matter where the triggerable/marker
---       is placed.
+--       we're wating for, or "any" for any monster.  Doesn't matter where
+--       the triggerable/marker is placed.
 --
 -- * feat_change: Waits for a cell's feature to change.  Accepts the
 --       optional parameter "target", which if set delays the trigger
@@ -693,7 +693,7 @@ function DgnTriggerer:monster_dies(triggerable, marker, ev)
     error("DgnTriggerer:monster_dies() didn't get a valid monster index")
   end
 
-  if mons.full_name == self.target then
+  if self.target == "any" or mons.full_name == self.target then
     triggerable:do_trigger(self, marker, ev)
   end
 end
