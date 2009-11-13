@@ -701,7 +701,7 @@ static void _debug_pane_bounds()
 #endif
 }
 
-static void player_view_updates(const coord_def &gc)
+static bool player_view_updates(const coord_def &gc, const coord_def &ep)
 {
     maybe_remove_autoexclusion(gc);
 
@@ -728,6 +728,39 @@ static void player_view_updates(const coord_def &gc)
     // Print tutorial messages for features in LOS.
     if (Options.tutorial_left)
         tutorial_observe_cell(gc);
+
+    if (!player_in_mappable_area())
+        return (false);
+
+    bool need_excl_update = is_terrain_changed(gc) || !is_terrain_seen(gc);
+
+    show_type  object = env.show(ep);
+    unsigned short colour = object.colour;
+    unsigned        ch;
+    get_symbol(gc, object, &ch, &colour);
+
+    set_terrain_seen(gc);
+    set_map_knowledge_glyph(gc, object, colour);
+    set_map_knowledge_detected_mons(gc, false);
+    set_map_knowledge_detected_item(gc, false);
+
+#ifdef USE_TILE
+    // We remove any references to mcache when
+    // writing to the background.
+    if (Options.clean_map)
+        env.tile_bk_fg(gc) = get_clean_map_idx(env.tile_fg(ep));
+    else
+        env.tile_bk_fg(gc) = env.tile_fg(ep);
+    env.tile_bk_bg(gc) = env.tile_bg(ep);
+#endif
+
+    if (Options.clean_map && env.show.get_backup(ep))
+    {
+        get_symbol(gc, env.show.get_backup(ep), &ch, &colour);
+        set_map_knowledge_glyph(gc, env.show.get_backup(ep), colour);
+    }
+
+    return (need_excl_update);
 }
 
 #ifndef USE_TILE
@@ -772,29 +805,6 @@ DRAWFN(outside_los)
 #endif
 }
 
-// Updates for player cell. Returns whether exclusion LOS needs to be
-// updated here.
-static bool draw_update_player(const coord_def &gc, const coord_def &ep)
-{
-    bool need_excl_update = false;
-    if (player_in_mappable_area())
-    {
-        show_type       object = env.show(ep);
-        unsigned short  colour = object.colour;
-        unsigned        ch;
-        get_symbol(gc, object, &ch, &colour);
-
-        set_map_knowledge_glyph(gc, object, colour);
-        need_excl_update = is_terrain_changed(gc) || !is_terrain_seen(gc);
-
-        set_terrain_seen(gc);
-        set_map_knowledge_detected_mons(gc, false);
-        set_map_knowledge_detected_item(gc, false);
-    }
-    return (need_excl_update);
-}
-
-
 DRAWFN(player)
 {
 #ifdef USE_TILE
@@ -818,45 +828,6 @@ DRAWFN(player)
         else
             buffy[1] = CYAN;
     }
-}
-
-// Updates for non-player LOS cell. Returns whether exclusion LOS needs
-// to be updated here.
-bool draw_update_los(const coord_def &gc, const coord_def &ep)
-{
-    if (!player_in_mappable_area())
-        return (false);
-
-    // ... map that we've seen this
-    bool need_excl_update = is_terrain_changed(gc) || !is_terrain_seen(gc);
-
-    show_type  object = env.show(ep);
-    unsigned short colour = object.colour;
-    unsigned        ch;
-    get_symbol(gc, object, &ch, &colour);
-
-    set_terrain_seen(gc);
-    set_map_knowledge_glyph(gc, object, colour);
-    set_map_knowledge_detected_mons(gc, false);
-    set_map_knowledge_detected_item(gc, false);
-
-#ifdef USE_TILE
-    // We remove any references to mcache when
-    // writing to the background.
-    if (Options.clean_map)
-        env.tile_bk_fg(gc) = get_clean_map_idx(env.tile_fg(ep));
-    else
-        env.tile_bk_fg(gc) = env.tile_fg(ep);
-    env.tile_bk_bg(gc) = env.tile_bg(ep);
-#endif
-
-    if (Options.clean_map && env.show.get_backup(ep) && is_terrain_seen(gc))
-    {
-        get_symbol(gc, env.show.get_backup(ep), &ch, &colour);
-        set_map_knowledge_glyph(gc, env.show.get_backup(ep), colour);
-    }
-
-    return (need_excl_update);
 }
 
 DRAWFN(los)
@@ -956,31 +927,21 @@ void viewwindow(bool do_updates)
         const coord_def gc = view2grid(*ri);
         const coord_def ep = view2show(grid2view(gc));
 
-        if (you.see_cell(gc))
-            player_view_updates(gc);
+        if (you.see_cell(gc) && player_view_updates(gc, ep))
+            update_excludes.push_back(gc);
 
         // Order is important here.
         if (!map_bounds(gc))
-        {
             DRAW(unseen);
-        }
         else if (!crawl_view.in_grid_los(gc))
-        {
             DRAW(outside_los);
-        }
         else if (gc == you.pos() && !crawl_state.arena
                  && !crawl_state.arena_suspended)
         {
             DRAW(player);
-            if (draw_update_player(gc, ep))
-                update_excludes.push_back(gc);
         }
         else if (you.see_cell(gc))
-        {
             DRAW(los);
-            if (draw_update_player(gc, ep))
-                update_excludes.push_back(gc);
-        }
         else
             DRAW(los_backup);
 
