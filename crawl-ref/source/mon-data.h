@@ -4467,10 +4467,11 @@ static monsterentry mondata[] = {
 },
 
 {
+    // XP modifier is very high to compensate for 1d3 created-friendly humans
     MONS_PIKEL, 'K', BLUE, "Pikel",
     M_WARM_BLOOD | M_SPEAKS | M_UNIQUE | M_NO_WAND,
     MR_NO_FLAGS,
-    500, 10, MONS_KOBOLD, MONS_BIG_KOBOLD, MH_NATURAL, -3,
+    500, 40, MONS_KOBOLD, MONS_BIG_KOBOLD, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 6, 0, 0, 40 },
     4, 12, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT,
