@@ -283,13 +283,6 @@ void player_quiver::on_weapon_changed()
 
 void player_quiver::on_inv_quantity_changed(int slot, int amt)
 {
-    const launch_retval projected = is_launched(&you, you.weapon(),
-                                                you.inv[slot]);
-
-    // Don't do anything if this item is not throwable.
-    if (projected == LRET_FUMBLED)
-        return;
-
     if (m_last_used_of_type[m_last_used_type].base_type == OBJ_UNASSIGNED)
     {
         // Empty quiver.  Maybe we can fill it now?
