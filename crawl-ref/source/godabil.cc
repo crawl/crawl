@@ -437,7 +437,7 @@ int fungal_bloom()
                     destroy_item(j->index());
             }
 
-            if (corpse_on_pos && observe_cell(*i))
+            if (corpse_on_pos && you.see_cell(*i))
                 seen_corpses++;
         }
     }
@@ -470,7 +470,7 @@ static int _create_plant(coord_def & target)
     if (plant != -1)
     {
         env.mons[plant].flags |= MF_ATT_CHANGE_ATTEMPT;
-        if (observe_cell(target))
+        if (you.see_cell(target))
             mpr("A plant grows up from the ground.");
     }
 
@@ -539,7 +539,7 @@ bool sunlight()
         if (grd(target) != ftype)
         {
             dungeon_terrain_changed(target, ftype);
-            if (observe_cell(target))
+            if (you.see_cell(target))
                 evap_count++;
         }
 
@@ -570,7 +570,7 @@ bool sunlight()
                                                        MG_FORCE_PLACE,
                                                        GOD_FEDHAS));
 
-            if (plant != -1 && observe_cell(target))
+            if (plant != -1 && you.see_cell(target))
                 plant_count++;
         }
     }

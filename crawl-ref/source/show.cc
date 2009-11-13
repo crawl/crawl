@@ -216,6 +216,6 @@ void show_def::init()
     const coord_def &lr = crawl_view.glos2; // Lower right
 
     for (rectangle_iterator ri(ul, lr); ri; ++ri)
-        if (observe_cell(*ri))
+        if (you.see_cell(*ri))
            update_at(*ri, grid2show(*ri));
 }

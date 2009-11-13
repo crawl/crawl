@@ -905,13 +905,6 @@ void calc_show_los()
         you.update_los();
 }
 
-// Answers the question: Is the cell visible to the observer?
-// Usually the same as player LOS.
-bool observe_cell(const coord_def &p)
-{
-    return (you.see_cell(p));
-}
-
 // Is the cell visible, but a translucent wall is in the way?
 bool trans_wall_blocking(const coord_def &p)
 {

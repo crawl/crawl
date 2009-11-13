@@ -224,7 +224,7 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
     switch (grid)
     {
     case DNGN_SECRET_DOOR:
-        if (observe_cell(where))
+        if (you.see_cell(where))
             mpr("A secret door shatters!");
         chance = 100;
         break;
@@ -232,7 +232,7 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
     case DNGN_CLOSED_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
     case DNGN_OPEN_DOOR:
-        if (observe_cell(where))
+        if (you.see_cell(where))
             mpr("A door shatters!");
         chance = 100;
         break;

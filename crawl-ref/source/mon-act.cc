@@ -2645,13 +2645,13 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
          i != all_door.end(); ++i)
     {
         const coord_def& dc = *i;
-        if (grd(dc) == DNGN_SECRET_DOOR && observe_cell(dc))
+        if (grd(dc) == DNGN_SECRET_DOOR && you.see_cell(dc))
         {
             grid = grid_secret_door_appearance(dc);
             was_secret = true;
         }
 
-        if (observe_cell(dc))
+        if (you.see_cell(dc))
             was_seen = true;
         else
             set_terrain_changed(dc);
@@ -3083,10 +3083,10 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaing the player nothing to see, so give
     // this message to avoid confusion.
-    if (monster->seen_context == _just_seen && !observe_cell(f))
+    if (monster->seen_context == _just_seen && !you.see_cell(f))
         simple_monster_message(monster, " moves out of view.");
     else if (Options.tutorial_left && (monster->flags & MF_WAS_IN_VIEW)
-             && !observe_cell(f))
+             && !you.see_cell(f))
     {
         learned_something_new(TUT_MONSTER_LEFT_LOS, monster->pos());
     }
@@ -3291,7 +3291,7 @@ static bool _monster_move(monsters *monster)
 
         _jelly_grows(monster);
 
-        if (observe_cell(newpos))
+        if (you.see_cell(newpos))
         {
             viewwindow(false);
 

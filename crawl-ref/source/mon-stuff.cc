@@ -485,7 +485,7 @@ int place_monster_corpse(const monsters *monster, bool silent,
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't
     // stack).
     move_item_to_grid(&o, monster->pos());
-    if (observe_cell(monster->pos()))
+    if (you.see_cell(monster->pos()))
     {
         if (force && !silent)
         {
@@ -2042,7 +2042,7 @@ int monster_die(monsters *monster, killer_type killer,
             monster->foe = killer_index;
     }
 
-    if (!silent && !wizard && observe_cell(monster->pos()))
+    if (!silent && !wizard && you.see_cell(monster->pos()))
     {
         // Make sure that the monster looks dead.
         if (monster->alive() && !in_transit && (!summoned || duration > 0))
@@ -2158,7 +2158,7 @@ int monster_die(monsters *monster, killer_type killer,
     monster_cleanup(monster);
 
     // Force redraw for monsters that die.
-    if (observe_cell(mwhere))
+    if (you.see_cell(mwhere))
     {
         view_update_at(mwhere);
         update_screen();

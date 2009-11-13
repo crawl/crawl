@@ -920,7 +920,7 @@ int place_monster(mgen_data mg, bool force_pos)
     }
 
     // Message to player from stairwell/gate appearance.
-    if (observe_cell(mg.pos) && mg.proximity == PROX_NEAR_STAIRS)
+    if (you.see_cell(mg.pos) && mg.proximity == PROX_NEAR_STAIRS)
     {
         std::string msg;
 
@@ -2743,7 +2743,7 @@ int create_monster(mgen_data mg, bool fail_msg)
 
     // Determine whether creating a monster is successful (summd != -1) {dlb}:
     // then handle the outcome. {dlb}:
-    if (fail_msg && summd == -1 && observe_cell(mg.pos))
+    if (fail_msg && summd == -1 && you.see_cell(mg.pos))
         mpr("You see a puff of smoke.");
 
     // The return value is either -1 (failure of some sort)

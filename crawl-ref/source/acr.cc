@@ -1963,7 +1963,7 @@ void process_command( command_type cmd )
             }
             else if (cme.right_clicked())
             {
-                if (observe_cell(dest))
+                if (you.see_cell(dest))
                     full_describe_square(dest);
                 else
                     mpr("You can't see that place.");

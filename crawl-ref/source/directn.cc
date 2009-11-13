@@ -1756,7 +1756,7 @@ std::string get_terse_square_desc(const coord_def &gc)
         desc = you.your_name;
     else if (!map_bounds(gc))
         desc = unseen_desc;
-    else if (!observe_cell(gc))
+    else if (!you.see_cell(gc))
     {
         if (is_terrain_seen(gc))
         {
@@ -1792,7 +1792,7 @@ std::string get_terse_square_desc(const coord_def &gc)
 
 void terse_describe_square(const coord_def &c, bool in_range)
 {
-    if (!observe_cell(c))
+    if (!you.see_cell(c))
         _describe_oos_square(c);
     else if (in_bounds(c) )
         _describe_cell(c, in_range);
@@ -1804,7 +1804,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     // NOTE: Keep this function in sync with full_describe_square.
 
     // Don't give out information for things outside LOS
-    if (!observe_cell(c))
+    if (!you.see_cell(c))
         return;
 
     const monsters* mons = monster_at(c);
@@ -1847,7 +1847,7 @@ void full_describe_square(const coord_def &c)
     // NOTE: Keep this function in sync with get_square_desc.
 
     // Don't give out information for things outside LOS
-    if (!observe_cell(c))
+    if (!you.see_cell(c))
         return;
 
     const monsters* mons = monster_at(c);

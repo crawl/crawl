@@ -938,7 +938,7 @@ void viewwindow(bool do_updates)
         {
             draw_player(&buffy[bufcount], gc, ep);
         }
-        else if (observe_cell(gc))
+        else if (you.see_cell(gc))
             draw_los(&buffy[bufcount], gc, ep);
         else
             draw_los_backup(&buffy[bufcount], gc, ep);
@@ -947,7 +947,7 @@ void viewwindow(bool do_updates)
         if (flash_colour)
         {
 #ifndef USE_TILE
-            buffy[bufcount + 1] = observe_cell(gc) ? real_colour(flash_colour)
+            buffy[bufcount + 1] = you.see_cell(gc) ? real_colour(flash_colour)
                                                    : DARKGREY;
 #endif
         }
@@ -956,7 +956,7 @@ void viewwindow(bool do_updates)
             bool out_of_range = Options.target_range > 0
                  && (grid_distance(you.pos(), gc) > Options.target_range);
 #ifndef USE_TILE
-            if (!observe_cell(gc) || out_of_range)
+            if (!you.see_cell(gc) || out_of_range)
                 buffy[bufcount + 1] = DARKGREY;
 #else
             if (out_of_range)

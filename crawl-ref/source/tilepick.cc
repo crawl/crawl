@@ -2995,7 +2995,7 @@ static inline void _finalise_tile(unsigned int *tile,
     else if (orig < TILE_DNGN_MAX)
     {
         // Some tiles may change from turn to turn, but only if in view.
-        if (orig >= TILE_DNGN_LAVA && orig < TILE_BLOOD && observe_cell(gc))
+        if (orig >= TILE_DNGN_LAVA && orig < TILE_BLOOD && you.see_cell(gc))
             env.tile_flv(gc).special = random2(256);
 
         (*tile) = orig + (special_flv % tile_dngn_count(orig));
@@ -4535,7 +4535,7 @@ void tile_draw_floor()
             const coord_def gc = show2grid(ep);
             int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
 
-            if (observe_cell(gc))
+            if (you.see_cell(gc))
             {
                 dungeon_feature_type feat = grid_appearance(gc);
                 bg = tileidx_feature(feat, gc.x, gc.y);
@@ -4766,7 +4766,7 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 if (you.halo_contains(gc))
                 {
                     monsters *mon = monster_at(gc);
-                    if (observe_cell(gc) && mon)
+                    if (you.see_cell(gc) && mon)
                     {
                         if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
                              && (!mons_is_mimic(mon->type)

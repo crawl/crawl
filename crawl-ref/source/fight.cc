@@ -410,10 +410,10 @@ void melee_attack::init_attack()
 
     water_attack       = is_water_attack(attacker, defender);
     attacker_visible   = attacker->observable();
-    attacker_invisible = (!attacker_visible && observe_cell(attacker->pos()));
+    attacker_invisible = (!attacker_visible && you.see_cell(attacker->pos()));
     defender_visible   = defender && defender->observable();
     defender_invisible = (!defender_visible && defender
-                          && observe_cell(defender->pos()));
+                          && you.see_cell(defender->pos()));
     needs_message      = (attacker_visible || defender_visible);
 
     if (defender && defender->atype() == ACT_MONSTER)
@@ -1970,7 +1970,7 @@ bool melee_attack::player_monattk_final_hit_effects(bool mondied)
         switch (final_effects[i].flavor)
         {
         case FINEFF_LIGHTNING_DISCHARGE:
-            if (observe_cell(final_effects[i].location))
+            if (you.see_cell(final_effects[i].location))
                 mpr("Electricity arcs through the water!");
             conduct_electricity(final_effects[i].location, attacker);
             break;
@@ -2434,7 +2434,7 @@ void melee_attack::chaos_affects_defender()
         miscast_chance *= 2;
 
         // Inform player that something is up.
-        if (observe_cell(defender->pos()))
+        if (you.see_cell(defender->pos()))
         {
             if (defender->atype() == ACT_PLAYER)
                 mpr("You give off a flash of multicoloured light!");

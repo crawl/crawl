@@ -1846,7 +1846,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         else if (mon->friendly() && !crawl_state.arena)
             mon->foe = MHITYOU;
 
-        if (observe_cell(mon->pos()))
+        if (you.see_cell(mon->pos()))
             learned_something_new(TUT_FLEEING_MONSTER);
         break;
 

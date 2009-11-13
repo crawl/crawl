@@ -2126,7 +2126,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     if (spell_is_direct_explosion(spell_cast))
     {
         const actor *foe = monster->get_foe();
-        const bool need_more = foe && (foe == &you || observe_cell(foe->pos()));
+        const bool need_more = foe && (foe == &you || you.see_cell(foe->pos()));
         pbolt.in_explosion_phase = false;
         pbolt.explode(need_more);
     }
@@ -2364,7 +2364,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     {
         target = "DEAD FOE";
     }
-    else if (in_bounds(pbolt.target) && observe_cell(pbolt.target))
+    else if (in_bounds(pbolt.target) && you.see_cell(pbolt.target))
     {
         if (const monsters* mtarg = monster_at(pbolt.target))
         {

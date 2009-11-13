@@ -950,7 +950,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     // Headless hydras cannot be raised, sorry.
     if (zombie_type == MONS_HYDRA && number == 0)
     {
-        if (observe_cell(pos))
+        if (you.see_cell(pos))
         {
             mpr("The zero-headed hydra corpse sways and immediately "
                 "collapses!");
@@ -1047,7 +1047,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                                               : "attack");
                 }
 
-                if (!quiet && observe_cell(a))
+                if (!quiet && you.see_cell(a))
                     mpr("The dead are walking!");
 
                 if (was_butchering)
@@ -1087,7 +1087,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                             actual, true) > 0)
         {
             number_raised++;
-            if (observe_cell(*ri))
+            if (you.see_cell(*ri))
                 number_seen++;
         }
     }
@@ -1755,7 +1755,7 @@ bool remove_sanctuary(bool did_attack)
         if (is_sanctuary(*ri))
         {
             _remove_sanctuary_property(*ri);
-            if (observe_cell(*ri))
+            if (you.see_cell(*ri))
                 seen_change = true;
         }
     }
@@ -1812,7 +1812,7 @@ void decrease_sanctuary_radius()
     if (!size)
     {
         _remove_sanctuary_property(env.sanctuary_pos);
-        if (observe_cell(env.sanctuary_pos))
+        if (you.see_cell(env.sanctuary_pos))
             mpr("The sanctuary disappears.", MSGCH_DURATION);
     }
 }
@@ -1863,7 +1863,7 @@ bool cast_sanctuary(const int power)
             continue;
 
         const coord_def pos = *ri;
-        if (testbits(env.pgrid(pos), FPROP_BLOODY) && observe_cell(pos))
+        if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
             blood_count++;
 
         if (trap_def* ptrap = find_trap(pos))
@@ -1944,7 +1944,7 @@ bool cast_sanctuary(const int power)
         if (!is_harmless_cloud(cloud_type_at(pos)))
         {
             delete_cloud(env.cgrid(pos));
-            if (observe_cell(pos))
+            if (you.see_cell(pos))
                 cloud_count++;
         }
     } // radius loop
@@ -2043,7 +2043,7 @@ bool project_noise(void)
             if (success)
             {
                 mprf(MSGCH_SOUND, "You hear a %svoice call your name.",
-                     (!observe_cell(pos) ? "distant " : "") );
+                     (!you.see_cell(pos) ? "distant " : "") );
             }
             else
                 mprf(MSGCH_SOUND, "You hear a dull thud.");

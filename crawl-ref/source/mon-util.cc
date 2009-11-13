@@ -3083,7 +3083,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@The_monster@",   "Your @the_monster@");
     }
 
-    if (observe_cell(monster->pos()))
+    if (you.see_cell(monster->pos()))
     {
         dungeon_feature_type feat = grd(monster->pos());
         if (feat < DNGN_MINMOVE || feat >= NUM_FEATURES)

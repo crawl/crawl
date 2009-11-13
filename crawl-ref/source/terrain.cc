@@ -723,7 +723,7 @@ void dungeon_terrain_changed(const coord_def &pos,
         unnotice_feature(level_pos(level_id::current(), pos));
         grd(pos) = nfeat;
         env.grid_colours(pos) = BLACK;
-        if (is_notable_terrain(nfeat) && observe_cell(pos))
+        if (is_notable_terrain(nfeat) && you.see_cell(pos))
             seen_notable_thing(nfeat, pos);
 
         // Don't destroy a trap which was just placed.
@@ -746,7 +746,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 
     const std::string orig_name =
         feature_description(dest_pos, false,
-                            observe_cell(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
+                            you.see_cell(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
                             false);
 
     std::string prep = feat_preposition(orig_feat, false);
@@ -770,13 +770,13 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 
     std::ostringstream str;
     str << orig_name << " ";
-    if (observe_cell(orig_pos) && !observe_cell(dest_pos))
+    if (you.see_cell(orig_pos) && !you.see_cell(dest_pos))
     {
         str << "suddenly disappears";
         if (!orig_actor.empty())
             str << " from " << prep << " " << orig_actor;
     }
-    else if (!observe_cell(orig_pos) && observe_cell(dest_pos))
+    else if (!you.see_cell(orig_pos) && you.see_cell(dest_pos))
     {
         str << "suddenly appears";
         if (!dest_actor.empty())
@@ -796,7 +796,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 
 static void _announce_swap(coord_def pos1, coord_def pos2)
 {
-    if (!observe_cell(pos1) && !observe_cell(pos2))
+    if (!you.see_cell(pos1) && !you.see_cell(pos2))
         return;
 
     const dungeon_feature_type feat1 = grd(pos1);
@@ -805,8 +805,8 @@ static void _announce_swap(coord_def pos1, coord_def pos2)
     if (feat1 == feat2)
         return;
 
-    const bool notable_seen1 = is_notable_terrain(feat1) && observe_cell(pos1);
-    const bool notable_seen2 = is_notable_terrain(feat2) && observe_cell(pos2);
+    const bool notable_seen1 = is_notable_terrain(feat1) && you.see_cell(pos1);
+    const bool notable_seen2 = is_notable_terrain(feat2) && you.see_cell(pos2);
     coord_def orig_pos, dest_pos;
 
     if (notable_seen1 && notable_seen2)
@@ -818,7 +818,7 @@ static void _announce_swap(coord_def pos1, coord_def pos2)
         _announce_swap_real(pos2, pos1);
     else if (notable_seen2)
         _announce_swap_real(pos1, pos2);
-    else if (observe_cell(pos2))
+    else if (you.see_cell(pos2))
         _announce_swap_real(pos1, pos2);
     else
         _announce_swap_real(pos2, pos1);
@@ -836,13 +836,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const dungeon_feature_type feat1 = grd(pos1);
     const dungeon_feature_type feat2 = grd(pos2);
 
-    if (is_notable_terrain(feat1) && !observe_cell(pos1)
+    if (is_notable_terrain(feat1) && !you.see_cell(pos1)
         && is_terrain_known(pos1))
     {
         return (false);
     }
 
-    if (is_notable_terrain(feat2) && !observe_cell(pos2)
+    if (is_notable_terrain(feat2) && !you.see_cell(pos2)
         && is_terrain_known(pos2))
     {
         return (false);
