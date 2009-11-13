@@ -324,6 +324,8 @@ public:
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid) const;
     bool visible_to(const actor *looker) const;
+    bool can_see(const actor* a) const;
+    bool see_cell(const coord_def& c) const;
 
     bool see_cell_no_trans(const coord_def &c) const;
     void update_los();

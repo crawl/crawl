@@ -4,10 +4,12 @@
 #include "player.h"
 #include "monster.h"
 #include "state.h"
+#include "viewgeom.h"
 
 bool actor::observable() const
 {
-    return (crawl_state.arena || this == &you || you.can_see(this));
+    return (crawl_state.arena && this != &you
+            || this == &you || you.can_see(this));
 }
 
 bool actor::see_cell(const coord_def &p) const
@@ -52,3 +54,20 @@ void player::update_los()
     actor::update_los();
 }
 
+// Player LOS overrides for arena.
+
+bool player::see_cell(const coord_def &c) const
+{
+    if (crawl_state.arena)
+        return (crawl_view.in_grid_los(c));
+    else
+        return (actor::see_cell(c));
+}
+
+bool player::can_see(const actor* a) const
+{
+    if (crawl_state.arena)
+        return (see_cell(a->pos()));
+    else
+        return (actor::can_see(a));
+}

@@ -909,9 +909,7 @@ void calc_show_los()
 // Usually the same as player LOS.
 bool observe_cell(const coord_def &p)
 {
-    return (((crawl_state.arena || crawl_state.arena_suspended)
-                && crawl_view.in_grid_los(p))
-             || you.see_cell(p));
+    return (you.see_cell(p));
 }
 
 // Is the cell visible, but a translucent wall is in the way?

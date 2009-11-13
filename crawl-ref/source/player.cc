@@ -6885,6 +6885,9 @@ bool player::invisible() const
 
 bool player::visible_to(const actor *looker) const
 {
+    if (crawl_state.arena)
+        return (false);
+
     if (this == looker)
         return (can_see_invisible() || !invisible());
 
