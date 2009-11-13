@@ -419,12 +419,12 @@ static void _hs_write( FILE *scores, scorefile_entry &se )
 
 static const char *kill_method_names[] =
 {
-    "mon", "pois", "cloud", "beam", "deaths_door", "lava", "water",
+    "mon", "pois", "cloud", "beam", "lava", "water",
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
     "quitting", "draining", "starvation", "freezing", "burning",
-    "wild_magic", "xom", "statue", "rotting", "targetting", "spore",
-    "tso_smiting", "petrification", "unknown", "something",
-    "falling_down_stairs", "acid", "curare", "melting", "bleeding",
+    "wild_magic", "xom", "rotting", "targetting", "spore",
+    "tso_smiting", "petrification", "something",
+    "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate"
 };
@@ -1565,13 +1565,6 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         }
         break;
 
-/* deprecated */
-/*
-    case KILLED_BY_DEATHS_DOOR:
-        desc += terse? "Death's door" : "Knocked on Death's door";
-        break;
-*/
-
     case KILLED_BY_LAVA:
         if (terse)
             desc += "lava";
@@ -1693,11 +1686,6 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         needs_damage = true;
         break;
 
-    case KILLED_BY_STATUE:
-        desc += terse? "statue" : "Killed by a statue";
-        needs_damage = true;
-        break;
-
     case KILLED_BY_ROTTING:
         desc += terse? "rotting" : "Rotted away";
         break;
@@ -1816,14 +1804,6 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
     case KILLED_BY_CURARE:
         desc += terse? "asphyx" : "Asphyxiated";
-        break;
-
-    case KILLED_BY_MELTING:
-        desc += terse? "melted" : " melted into a puddle";
-        break;
-
-    case KILLED_BY_BLEEDING:
-        desc += terse? "bleeding" : " bled to death";
         break;
 
     case KILLED_BY_DIVINE_WRATH:
