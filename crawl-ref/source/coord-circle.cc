@@ -71,6 +71,8 @@ void circle_def::init(int param, circle_type ctype)
     }
     bbox = rect_def(origin - coord_def(radius, radius),
                     origin + coord_def(radius, radius));
+    if (!origin.origin())
+        bbox = bbox.intersect(RECT_MAP_BOUNDS);
 }
 
 const rect_def& circle_def::get_bbox() const
@@ -90,6 +92,8 @@ circle_iterator circle_def::iter() const
 
 bool circle_def::contains(const coord_def &p) const
 {
+    if (!bbox.contains(p))
+        return (false);
     switch (shape)
     {
     case SH_SQUARE:
