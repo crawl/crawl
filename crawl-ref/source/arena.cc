@@ -273,7 +273,8 @@ namespace arena
     {
         if (!SysEnv.arena_teams.empty())
             return (SysEnv.arena_teams);
-        throw std::string("No monsters specified for the arena.");
+        else
+            return ("random v random");
     }
 
     void parse_faction(faction &fact, std::string spec)
