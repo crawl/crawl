@@ -637,15 +637,8 @@ void inspect_spells()
 static int _get_dist_to_nearest_monster()
 {
     int minRange = LOS_RADIUS + 1;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, true, false, true); ri; ++ri)
+    for (radius_iterator ri(&you.get_los_no_trans(), true); ri; ++ri)
     {
-        if (!in_bounds(*ri))
-            continue;
-
-        // Can we see (and reach) the grid?
-        if (!you.see_cell_no_trans(*ri))
-            continue;
-
         const monsters *mon = monster_at(*ri);
         if (mon == NULL)
             continue;

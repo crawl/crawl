@@ -80,7 +80,7 @@ int detect_items(int pow)
     int items_found = 0;
     const int map_radius = 8 + random2(8) + pow;
 
-    for (radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
@@ -193,7 +193,7 @@ int detect_creatures(int pow, bool telepathic)
     if (!telepathic)
         clear_map(false);
 
-    for (radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
         if (monsters *mon = monster_at(*ri))
         {
@@ -219,13 +219,11 @@ int detect_creatures(int pow, bool telepathic)
 
 void corpse_rot()
 {
-    for (radius_iterator ri(you.pos(), 6); ri; ++ri)
+    for (radius_iterator ri(you.pos(), 6, C_ROUND, &you.get_los_no_trans());
+         ri; ++ri)
     {
-        if (you.see_cell_no_trans(*ri) && !is_sanctuary(*ri)
-            && env.cgrid(*ri) == EMPTY_CLOUD)
-        {
+        if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
             for (stack_iterator si(*ri); si; ++si)
-            {
                 if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
                 {
                     // Found a corpse.  Skeletonise it if possible.
@@ -239,8 +237,6 @@ void corpse_rot()
                     // Don't look for more corpses here.
                     break;
                 }
-            }
-        }
     }
 
     if (player_can_smell())

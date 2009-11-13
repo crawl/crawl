@@ -2734,7 +2734,7 @@ bool vitrify_area(int radius)
     // This hinges on clear wall types having the same order as non-clear ones!
     const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
     bool something_happened = false;
-    for (radius_iterator ri(you.pos(), radius, false, false); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_POINTY); ri; ++ri)
     {
         const dungeon_feature_type grid = grd(*ri);
 

@@ -1975,11 +1975,8 @@ static int _xom_throw_divine_lightning(bool debug = false)
 static int _xom_change_scenery(bool debug = false)
 {
     std::vector<coord_def> candidates;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, false, true); ri; ++ri)
+    for (radius_iterator ri(&you.get_los()); ri; ++ri)
     {
-        if (!in_bounds(*ri) || !you.see_cell(*ri))
-            continue;
-
         dungeon_feature_type feat = grd(*ri);
         if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN_BLOOD)
             candidates.push_back(*ri);
@@ -2281,7 +2278,7 @@ static void _get_in_view(FixedVector<bool, NUM_FEATURES>& in_view)
 {
     in_view.init(false);
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(&you.get_los()); ri; ++ri)
         in_view[grd(*ri)] = true;
 }
 
@@ -3036,7 +3033,7 @@ static int _xom_repel_stairs(bool debug = false)
 
     std::vector<coord_def> stairs_avail;
     bool real_stairs = false;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, false, true); ri; ++ri)
+    for (radius_iterator ri(&you.get_los()); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
         if (feat_stair_direction(feat) != CMD_NO_CMD

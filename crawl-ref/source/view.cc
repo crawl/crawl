@@ -364,7 +364,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     if (!deterministic)
         detectable = _tile_detectability();
 
-    for (radius_iterator ri(pos, map_radius, !circular, false); ri; ++ri)
+    for (radius_iterator ri(pos, map_radius, circular ? C_ROUND : C_SQUARE);
+         ri; ++ri)
     {
         if (!wizard_map)
         {
@@ -768,7 +769,7 @@ static bool player_view_update_at(const coord_def &gc)
 static void player_view_update()
 {
     std::vector<coord_def> update_excludes;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(&you.get_los()); ri; ++ri)
         if (player_view_update_at(*ri))
             update_excludes.push_back(*ri);
     update_exclusion_los(update_excludes);

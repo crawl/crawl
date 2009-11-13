@@ -660,7 +660,8 @@ bool receive_corpses(int pow, coord_def where)
     // We should get the same number of corpses in a hallway as in an
     // open room.
     int spaces_for_corpses = 0;
-    for (radius_iterator ri(where, corpse_delivery_radius, true, true, true);
+    for (radius_iterator ri(where, corpse_delivery_radius, C_SQUARE,
+                            &you.get_los(), true);
          ri; ++ri)
     {
         if (mons_class_can_pass(MONS_HUMAN, grd(*ri)))
@@ -673,7 +674,9 @@ bool receive_corpses(int pow, coord_def where)
 
     int corpses_generated = 0;
 
-    for (radius_iterator ri(where, corpse_delivery_radius, false, true, false);
+    // XXX: Is it intentional that this loop is different from the one above?
+    for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
+                            &you.get_los());
          ri; ++ri)
     {
 
@@ -1074,10 +1077,9 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     int number_raised = 0;
     int number_seen   = 0;
 
-    radius_iterator ri(caster->pos(), 6, true, true, false,
+    radius_iterator ri(caster->pos(), 6, C_SQUARE,
                        &caster->get_los_no_trans());
 
-    // Sweep all squares in LOS.
     for (; ri; ++ri)
     {
         // This will produce a message if the corpse you are butchering
@@ -1749,15 +1751,13 @@ bool remove_sanctuary(bool did_attack)
 
     const int radius = 5;
     bool seen_change = false;
-    for (radius_iterator ri(env.sanctuary_pos, radius, true, false); ri; ++ri)
-    {
+    for (radius_iterator ri(env.sanctuary_pos, radius, C_SQUARE); ri; ++ri)
         if (is_sanctuary(*ri))
         {
             _remove_sanctuary_property(*ri);
             if (you.see_cell(*ri))
                 seen_change = true;
         }
-    }
 
     env.sanctuary_pos.set(-1, -1);
 
@@ -1798,7 +1798,7 @@ void decrease_sanctuary_radius()
         stop_running();
     }
 
-    for (radius_iterator ri(env.sanctuary_pos, size+1, true, false); ri; ++ri)
+    for (radius_iterator ri(env.sanctuary_pos, size+1, C_SQUARE); ri; ++ri)
     {
         int dist = distance(*ri, env.sanctuary_pos);
 
@@ -1854,7 +1854,7 @@ bool cast_sanctuary(const int power)
     int       cloud_count = 0;
     monsters *seen_mon    = NULL;
 
-    for (radius_iterator ri(you.pos(), radius, false, false); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_POINTY); ri; ++ri)
     {
         const int dist = _inside_circle(*ri, radius);
 
