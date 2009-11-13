@@ -7079,6 +7079,26 @@ void player::hibernate(int)
     duration[DUR_SLEEP] = 3 + random2avg(5, 2);
 }
 
+void player::put_to_sleep(int power)
+{
+    ASSERT(!crawl_state.arena);
+
+    if (duration[DUR_SLEEP])
+    {
+        mpr("You feel weary for a moment.");
+        return;
+    }
+
+    mpr("You fall asleep!");
+
+    stop_delay();
+    flash_colour = DARKGREY;
+    viewwindow(false);
+
+    // As above, do this after redraw.
+    duration[DUR_SLEEP] = 5 + random2avg(power / 10, 5);
+}
+
 void player::awake()
 {
     ASSERT(!crawl_state.arena);

@@ -286,6 +286,11 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
+    case SPELL_SLEEP:
+        beam.flavour  = BEAM_SLEEP;
+        beam.is_beam  = true;
+        break;
+
     case SPELL_POLYMORPH_OTHER:
         beam.flavour  = BEAM_POLYMORPH;
         beam.is_beam  = true;
@@ -730,6 +735,8 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     if (spell_cast == SPELL_TELEPORT_SELF)
         pbolt.ench_power = 2000;
+    else if (spell_cast == SPELL_SLEEP)
+        pbolt.ench_power = 6 * monster->hit_dice;
 
     pbolt.beam_source = monster_index(monster);
 

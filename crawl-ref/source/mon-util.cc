@@ -2415,6 +2415,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     case SPELL_BANISHMENT:
     case SPELL_DISINTEGRATE:
     case SPELL_PARALYSE:
+    case SPELL_SLEEP:
     case SPELL_HIBERNATION:
     {
         if (monspell == SPELL_HIBERNATION && (!foe || foe->asleep()))
@@ -2540,6 +2541,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_CONFUSE:
     case SPELL_SLOW:
     case SPELL_PARALYSE:
+    case SPELL_SLEEP:
     case SPELL_TELEPORT_OTHER:
         return (ench_too);
 

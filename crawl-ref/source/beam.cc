@@ -1322,6 +1322,22 @@ const zap_info zap_data[] = {
         false,
         false,
         0
+    },
+
+    {
+        ZAP_SLEEP,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_SLEEP,
+        DCHAR_SPACE,
+        false,
+        false,
+        false,
+        0
     }
 };
 
@@ -3794,6 +3810,10 @@ void bolt::affect_player_enchantment()
         you.hibernate(ench_power);
         break;
 
+    case BEAM_SLEEP:
+        you.put_to_sleep(ench_power);
+        break;
+
     case BEAM_CORONA:
         you.backlight();
         obvious_effect = true;
@@ -5317,6 +5337,17 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         }
         return (MON_AFFECTED);
 
+    case BEAM_SLEEP:
+        if (mon->has_ench(ENCH_SLEEPY))
+            return (MON_UNAFFECTED);
+
+        if (mon->add_ench(mon_enchant(ENCH_SLEEPY, 0, whose_kill())))
+        {
+            if (simple_monster_message(mon, " falls asleep!"))
+                obvious_effect = true;
+        }
+        return (MON_AFFECTED);
+
     case BEAM_INVISIBILITY:
     {
         // Store the monster name before it becomes an "it" -- bwr
@@ -6135,9 +6166,10 @@ std::string beam_type_name(beam_type type)
     case BEAM_ENSLAVE_DEMON:        return ("enslave demon");
     case BEAM_BLINK:                return ("blink");
     case BEAM_PETRIFY:              return ("petrify");
-    case BEAM_CORONA:            return ("backlight");
+    case BEAM_CORONA:               return ("backlight");
     case BEAM_PORKALATOR:           return ("porkalator");
-    case BEAM_HIBERNATION:                return ("sleep");
+    case BEAM_HIBERNATION:          return ("hibernation");
+    case BEAM_SLEEP:                return ("sleep");
     case BEAM_BERSERK:              return ("berserk");
     case BEAM_POTION_BLACK_SMOKE:   return ("black smoke");
     case BEAM_POTION_GREY_SMOKE:    return ("grey smoke");

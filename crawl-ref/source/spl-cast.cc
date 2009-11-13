@@ -1779,6 +1779,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
     }
 
+    case SPELL_SLEEP:
+        if (!zapping(ZAP_SLEEP, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
     case SPELL_PARALYSE:
         if (!zapping(ZAP_PARALYSIS, powc, beam, true))
             return (SPRET_ABORT);
