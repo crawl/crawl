@@ -6058,8 +6058,8 @@ int mon_enchant::calc_duration(const monsters *mons,
         return (2 * FRESHEST_CORPSE + random2(10))
                   * speed_to_duration(mons->speed) * mons->speed / 10;
     case ENCH_SPORE_PRODUCTION:
-        // The duration of the spore production timer depends on the color
-        // of the fungus
+        // This is used as a simple timer, when the enchantment runs out
+        // the monster will create a giant spore.
         cturn = 150;
         break;
 

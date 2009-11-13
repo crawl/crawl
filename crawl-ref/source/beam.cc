@@ -3108,13 +3108,13 @@ void bolt::affect_ground()
     {
         beh_type beh;
         // Half the fungi in arena mode are friendly.
-        if(crawl_state.arena)
+        if (crawl_state.arena)
         {
             beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
         }
         else
         {
-            switch(this->attitude)
+            switch (this->attitude)
             {
             case ATT_NEUTRAL:
                 beh = BEH_NEUTRAL;

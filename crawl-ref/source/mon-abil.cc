@@ -1400,7 +1400,7 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
             if (one_chance_in(4))
             {
                 beh_type attitude = SAME_ATTITUDE(monster);
-                if(!crawl_state.arena && attitude == BEH_FRIENDLY)
+                if (!crawl_state.arena && attitude == BEH_FRIENDLY)
                 {
                     attitude = BEH_GOOD_NEUTRAL;
                 }
@@ -1432,33 +1432,34 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
 // than 0 it changes color and starts producing spores.
 void activate_ballistomycetes( monsters * monster)
 {
-    if(!monster || monster->type != MONS_BALLISTOMYCETE
-                   && monster->type != MONS_GIANT_SPORE)
+    if (!monster || monster->type != MONS_BALLISTOMYCETE
+                    && monster->type != MONS_GIANT_SPORE)
     {
         return;
     }
 
     bool activated_others = false;
     int seen_others = 0;
-    for(int i=0; i < int(env.mons.size()); ++i)
+
+    for (monster_iterator mi; mi; ++mi)
     {
-        if(i != monster->mindex()
-           && env.mons[i].alive()
-           && env.mons[i].type == MONS_BALLISTOMYCETE)
+        if (mi->mindex() != monster->mindex()
+            && mi->alive()
+            && mi->type == MONS_BALLISTOMYCETE)
         {
-            env.mons[i].number++;
+            mi->number++;
 
             // Change color and start the spore production timer if we
             // are moving from 0 to 1.
-            if(env.mons[i].number == 1)
+            if (mi->number == 1)
             {
-                env.mons[i].colour = LIGHTRED;
+                mi->colour = LIGHTRED;
                 // Reset the spore production timer.
-                env.mons[i].del_ench(ENCH_SPORE_PRODUCTION, false);
-                env.mons[i].add_ench(ENCH_SPORE_PRODUCTION);
+                mi->del_ench(ENCH_SPORE_PRODUCTION, false);
+                mi->add_ench(ENCH_SPORE_PRODUCTION);
                 activated_others = true;
 
-                if(you.can_see(&env.mons[i]))
+                if (you.can_see(*mi))
                     seen_others++;
             }
         }
@@ -1466,7 +1467,7 @@ void activate_ballistomycetes( monsters * monster)
 
     // Do some messaging. I'm not entirely sure how detailed to get,
     // so erroring on the side of message spam at this point. -cao
-    if(mons_near(monster) && activated_others)
+    if (mons_near(monster) && activated_others)
         mprf("The fungus' death has angered other fungi on the level.");
     if (seen_others == 1)
         mprf("A ballistomycete appears irritated.");
@@ -1479,27 +1480,25 @@ void activate_ballistomycetes( monsters * monster)
 // colorr (back to magenta) and stops producing spores.
 void deactivate_ballistos()
 {
-    for(unsigned i=0;i < env.mons.size(); i++)
+    for (monster_iterator mi; mi; ++mi)
     {
-        if(env.mons[i].alive()
-           && env.mons[i].type == MONS_BALLISTOMYCETE)
+        if (mi->alive()
+            && mi->type == MONS_BALLISTOMYCETE)
         {
-            monsters * temp = &env.mons[i];
             // Decrease the count and maybe become inactive
             // again
-            if(temp->number)
+            if (mi->number)
             {
-                temp->number--;
-                if(temp->number == 0)
+                mi->number--;
+                if (mi->number == 0)
                 {
-                    temp->colour = MAGENTA;
-                    temp->del_ench(ENCH_SPORE_PRODUCTION);
+                    mi->colour = MAGENTA;
+                    mi->del_ench(ENCH_SPORE_PRODUCTION);
 
-                    if(you.can_see(temp))
+                    if (you.can_see(*mi))
                         mprf("A nearby ballistomycete calms down.");
                 }
             }
-
 
         }
     }
