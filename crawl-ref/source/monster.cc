@@ -5010,23 +5010,12 @@ void monsters::apply_enchantment(const mon_enchant &me)
                     if (rc != -1)
                     {
                         env.mons[rc].behaviour = BEH_WANDER;
-                        env.mons[rc].number = 10;
+                        env.mons[rc].number = 20;
 
                         if (observe_cell(adjacent) && observe_cell(pos()))
                             mpr("A nearby fungus spawns a giant spore.");
 
-                        // Decrease the count and maybe become inactive
-                        // again
-                        if(this->number)
-                        {
-                            this->number--;
-                            if(this->number == 0)
-                            {
-                                this->colour = MAGENTA;
-                                if(you.can_see(this))
-                                    mprf("A nearby ballistomycete calms down.");
-                            }
-                        }
+                        deactivate_ballistos();
                     }
                     break;
                 }

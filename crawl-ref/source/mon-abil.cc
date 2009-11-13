@@ -1446,8 +1446,13 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
         {
             if (one_chance_in(4))
             {
+                beh_type attitude = SAME_ATTITUDE(monster);
+                if(!crawl_state.arena && attitude == BEH_FRIENDLY)
+                {
+                    attitude = BEH_GOOD_NEUTRAL;
+                }
                  int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                                  SAME_ATTITUDE(monster),
+                                                  attitude,
                                                   0,
                                                   0,
                                                   position,
@@ -1455,10 +1460,9 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
                                                   MG_FORCE_PLACE));
 
                 if (rc != -1 && you.can_see(&env.mons[rc]))
-                {
                     mprf("A ballistomycete grows in the wake of the spore.");
-                }
-                monster->number = 20;
+
+                monster->number = 40;
             }
         }
         else
@@ -1466,6 +1470,73 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
             monster->number--;
         }
 
+    }
+}
+
+void activate_ballistomycetes( monsters * monster)
+{
+    if(!monster || monster->type != MONS_BALLISTOMYCETE && monster->type != MONS_GIANT_SPORE)
+        return;
+
+    bool activated_others = false;
+    int seen_others = 0;
+    for(int i=0; i < int(env.mons.size()); ++i)
+    {
+        if(i != monster->mindex()
+           && env.mons[i].alive()
+           && env.mons[i].type == MONS_BALLISTOMYCETE)
+        {
+            env.mons[i].number++;
+            // 0 -> 1 means the ballisto moves onto the faster spawn
+            // timer and changes color
+            if(env.mons[i].number == 1)
+            {
+                env.mons[i].colour = LIGHTRED;
+                // Reset the spore production timer.
+                env.mons[i].del_ench(ENCH_SPORE_PRODUCTION, false);
+                env.mons[i].add_ench(ENCH_SPORE_PRODUCTION);
+                activated_others = true;
+                if(you.can_see(&env.mons[i]))
+                    seen_others++;
+            }
+        }
+    }
+
+    // How to do messaging? Message on kill no matter what, only if you see
+    // other ballistos get angry, only if other ballistos get angry
+    // (seen or not). Also need a message if a ballisto suddenly becomes
+    // angry
+    if(mons_near(monster) && activated_others)
+        mprf("You feel ballistomycets on the level are angry now?");
+    else if (seen_others > 0)
+        mprf("The ballistomycete appears angry...");
+}
+
+void deactivate_ballistos()
+{
+    for(unsigned i=0;i < env.mons.size(); i++)
+    {
+        if(env.mons[i].alive()
+           && env.mons[i].type == MONS_BALLISTOMYCETE)
+        {
+            monsters * temp = &env.mons[i];
+            // Decrease the count and maybe become inactive
+            // again
+            if(temp->number)
+            {
+                temp->number--;
+                if(temp->number == 0)
+                {
+                    temp->colour = MAGENTA;
+                    temp->del_ench(ENCH_SPORE_PRODUCTION);
+                    //temp->add_ench(ENCH_SPORE_PRODUCTION);
+                    if(you.can_see(temp))
+                        mprf("A nearby ballistomycete calms down.");
+                }
+            }
+
+
+        }
     }
 }
 

@@ -33,6 +33,7 @@
 #include "kills.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "monplace.h"
 #include "monspeak.h"
@@ -1087,6 +1088,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     beam.thrower      = crawl_state.arena ? KILL_MON
       : monster->attitude == ATT_FRIENDLY ? KILL_YOU : KILL_MON;
     beam.aux_source.clear();
+    beam.attitude = monster->attitude;
 
     if (YOU_KILL(killer))
         beam.aux_source = "set off by themselves";
@@ -1157,6 +1159,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     // FIXME: show_more == mons_near(monster)
     beam.explode();
 
+    activate_ballistomycetes(monster);
     // Monster died in explosion, so don't re-attach it to the grid.
     return (true);
 }
@@ -1432,45 +1435,6 @@ static int _destroy_tentacles(monsters *head)
     return tent;
 }
 
-static void _activate_ballistomycetes( monsters * monster)
-{
-    if(!monster || monster->type != MONS_BALLISTOMYCETE)
-        return;
-
-    bool activated_others = false;
-    int seen_others = 0;
-    for(int i=0; i < int(env.mons.size()); ++i)
-    {
-        if(i != monster->mindex()
-           && env.mons[i].alive()
-           && env.mons[i].type == MONS_BALLISTOMYCETE)
-        {
-            env.mons[i].number++;
-            // 0 -> 1 means the ballisto moves onto the faster spawn
-            // timer and changes color
-            if(env.mons[i].number == 1)
-            {
-                env.mons[i].colour = LIGHTRED;
-                // Reset the spore production timer.
-                env.mons[i].del_ench(ENCH_SPORE_PRODUCTION, false);
-                env.mons[i].add_ench(ENCH_SPORE_PRODUCTION);
-                activated_others = true;
-                if(you.can_see(&env.mons[i]))
-                    seen_others++;
-            }
-        }
-    }
-
-    // How to do messaging? Message on kill no matter what, only if you see
-    // other ballistos get angry, only if other ballistos get angry
-    // (seen or not). Also need a message if a ballisto suddenly becomes
-    // angry
-    if(mons_near(monster) && activated_others)
-        mprf("You feel ballistomycets on the level are angry now?");
-    else if (seen_others > 0)
-        mprf("The ballistomycete appears angry...");
-}
-
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monsters *monster, killer_type killer,
                 int killer_index, bool silent, bool wizard)
@@ -1494,7 +1458,8 @@ int monster_die(monsters *monster, killer_type killer,
 
     you.remove_beholder(monster);
 
-    _activate_ballistomycetes(monster);
+    if(monster->type == MONS_BALLISTOMYCETE)
+        activate_ballistomycetes(monster);
 
     // Clear auto exclusion now the monster is killed -- if we know about it.
     if (mons_near(monster) || wizard)

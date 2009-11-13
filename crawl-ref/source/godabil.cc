@@ -1128,9 +1128,6 @@ bool evolve_flora()
         current_plant->del_ench(ENCH_SLOWLY_DYING);
         current_plant->del_ench(ENCH_SPORE_PRODUCTION);
 
-        if (current_plant->mons_species() == MONS_BALLISTOMYCETE)
-            current_plant->add_ench(ENCH_SPORE_PRODUCTION);
-
         // Maybe we can upgrade it again?
         if (_possible_evolution(current_plant, temp_conversion)
             && temp_conversion.cost <= points)
