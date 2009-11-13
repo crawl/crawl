@@ -133,14 +133,13 @@ void monster_grid_updates()
             handle_monster_shouts(*mi);
         }
 
+            fedhas_neutralise(monster);
         if (!mi->visible_to(&you))
             continue;
 
-        good_god_follower_attitude_change(*mi);
-        beogh_follower_convert(*mi);
-        slime_convert(*mi);
-        fedhas_neutralise(*mi);
-
+            good_god_follower_attitude_change(monster);
+            beogh_follower_convert(monster);
+            slime_convert(monster);
         // XXX: Probably quite hackish. Allows for monsters going berserk when
         //      they see the player. Currently only used for Duvessa, see the
         //      function _elven_twin_dies in mon-stuff.cc.

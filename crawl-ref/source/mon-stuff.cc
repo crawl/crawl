@@ -33,6 +33,7 @@
 #include "kills.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
@@ -1093,6 +1094,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     beam.thrower      = crawl_state.arena ? KILL_MON
       : monster->attitude == ATT_FRIENDLY ? KILL_YOU : KILL_MON;
     beam.aux_source.clear();
+    beam.attitude = monster->attitude;
 
     if (YOU_KILL(killer))
         beam.aux_source = "set off by themselves";
@@ -1163,6 +1165,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     // FIXME: show_more == mons_near(monster)
     beam.explode();
 
+    activate_ballistomycetes(monster);
     // Monster died in explosion, so don't re-attach it to the grid.
     return (true);
 }
@@ -1497,6 +1500,9 @@ int monster_die(monsters *monster, killer_type killer,
     mons_clear_trapping_net(monster);
 
     you.remove_beholder(monster);
+
+    if(monster->type == MONS_BALLISTOMYCETE)
+        activate_ballistomycetes(monster);
 
     // Clear auto exclusion now the monster is killed -- if we know about it.
     if (mons_near(monster) || wizard)

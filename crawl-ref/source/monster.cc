@@ -2158,6 +2158,11 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         result += cardinals[mon.number];
     }
 
+    if (mon.type == MONS_BALLISTOMYCETE && desc != DESC_DBNAME)
+    {
+        result += mon.number ? "active " : "";
+    }
+
     // Done here to cover cases of undead versions of hydras.
     if (mons_species(nametype) == MONS_HYDRA
         && mon.number > 0 && desc != DESC_DBNAME)
@@ -4986,22 +4991,23 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SPORE_PRODUCTION:
-        // Very low chance of actually making a spore on each turn.
-        if(one_chance_in(5000))
+
+        // Reduce the timer, if that means we lose the enchantment then
+        // spawn a spore and re-add the enchantment
+        if(decay_enchantment(me))
         {
+            // Search for an open adjacent square to place a spore on
             int idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
             std::random_shuffle(idx, idx + 8);
 
             for (unsigned i = 0; i < 8; ++i)
             {
                 coord_def adjacent = this->pos() + Compass[idx[i]];
-                if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
-                    && !actor_at(adjacent))
-                {
-                    beh_type created_behavior = BEH_HOSTILE;
 
-                    if (this->attitude == ATT_FRIENDLY)
-                        created_behavior = BEH_FRIENDLY;
+                if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
+                                        && !actor_at(adjacent))
+                {
+                    beh_type created_behavior = SAME_ATTITUDE(this);
 
                     int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                       created_behavior,
@@ -5015,14 +5021,21 @@ void monsters::apply_enchantment(const mon_enchant &me)
                     if (rc != -1)
                     {
                         env.mons[rc].behaviour = BEH_WANDER;
+                        env.mons[rc].number = 20;
 
                         if (observe_cell(adjacent) && observe_cell(pos()))
                             mpr("A nearby fungus spawns a giant spore.");
+
+                        deactivate_ballistos();
                     }
                     break;
                 }
             }
+            // Re=add the enchantment (this resets the spore production
+            // timer).
+            this->add_ench(ENCH_SPORE_PRODUCTION);
         }
+
         break;
 
     case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
@@ -6044,6 +6057,12 @@ int mon_enchant::calc_duration(const monsters *mons,
         // of this function is excessive for toadstools. -cao
         return (2 * FRESHEST_CORPSE + random2(10))
                   * speed_to_duration(mons->speed) * mons->speed / 10;
+    case ENCH_SPORE_PRODUCTION:
+        // The duration of the spore production timer depends on the color
+        // of the fungus
+        cturn = mons->number ? 150 : 1500;
+        break;
+
     case ENCH_ABJ:
         if (deg >= 6)
             cturn = 1000 / _mod_speed(10, mons->speed);
