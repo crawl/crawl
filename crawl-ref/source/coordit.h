@@ -34,22 +34,34 @@ public:
     void operator++(int);
 };
 
+/*
+ * radius_iterator: Iterator over coordinates in a more-or-less
+ *                  circular region.
+ *
+ * The region can be any circle_def; furthermore, the cells can
+ * be restricted to lie within some LOS field (need not be
+ * centered at the same point), and to exclude the center.
+ */
 class los_def;
 class radius_iterator : public std::iterator<std::forward_iterator_tag,
                         coord_def>
 {
 public:
+    // General constructor.
     radius_iterator(const coord_def& center, int param,
                     circle_type ctype,
                     const los_def* los = NULL,
                     bool exclude_center = false);
+    // Legacy constructor -- use above instead.
     radius_iterator(const coord_def& center, int radius,
                     bool roguelike_metric = true,
                     bool require_los = true,
                     bool exclude_center = false,
                     const los_def* los = NULL);
+    // Just iterate over a LOS field.
     radius_iterator(const los_def* los,
                     bool exclude_center = false);
+
     operator bool() const;
     coord_def operator *() const;
     const coord_def* operator->() const;
@@ -64,8 +76,8 @@ private:
     circle_def circle;
     circle_iterator iter;
     bool exclude_center;
-    const los_def* los;
-    coord_def current;
+    const los_def* los;   // restrict to the los if not NULL
+    coord_def current;    // storage for operater->
 };
 
 class adjacent_iterator : public radius_iterator
