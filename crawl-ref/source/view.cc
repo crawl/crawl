@@ -794,7 +794,7 @@ static void draw_outside_los(screen_buffer_t* buffy, const coord_def &gc)
 
     if (Options.colour_map)
         buffy[1] = colour_code_map(gc, Options.item_colour);
-#else USE_TILE
+#else
     unsigned int bg = env.tile_bk_bg(gc);
     unsigned int fg = env.tile_bk_fg(gc);
     if (bg == 0 && fg == 0)
