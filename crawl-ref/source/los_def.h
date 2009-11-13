@@ -24,6 +24,7 @@ public:
     void set_center(const coord_def& center);
     void set_opacity(const opacity_func& o);
     void set_bounds(const circle_def& b);
+    circle_def get_bounds() const;
 
     void update();
     bool in_bounds(const coord_def& p) const;

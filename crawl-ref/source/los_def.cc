@@ -68,6 +68,11 @@ void los_def::set_bounds(const circle_def &b)
     bds = b;
 }
 
+circle_def los_def::get_bounds() const
+{
+    return (circle_def(center, bds));
+}
+
 bool los_def::in_bounds(const coord_def& p) const
 {
     return (bds.contains(p));
