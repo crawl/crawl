@@ -18,7 +18,6 @@
 #include "options.h"
 #include "ghost.h"
 #include "lev-pand.h"
-#include "los.h"
 #include "makeitem.h"
 #include "message.h"
 #include "mon-behv.h"

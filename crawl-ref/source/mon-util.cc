@@ -21,7 +21,6 @@
 #include "goditem.h"
 #include "itemname.h"
 #include "kills.h"
-#include "los.h"
 #include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-stuff.h"

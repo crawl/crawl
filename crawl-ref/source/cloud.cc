@@ -25,7 +25,6 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "mutation.h"
-#include "los.h"
 
 static int _actual_spread_rate(cloud_type type, int spread_rate)
 {

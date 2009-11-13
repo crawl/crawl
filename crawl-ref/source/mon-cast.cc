@@ -18,7 +18,6 @@
 #include "fprop.h"
 #include "fight.h"
 #include "ghost.h"
-#include "los.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-iter.h"

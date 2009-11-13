@@ -22,7 +22,6 @@
 #include "items.h"
 #include "itemprop.h"
 #include "kills.h"
-#include "los.h"
 #include "macro.h"
 #include "mon-stuff.h"
 #include "mon-util.h"

@@ -38,7 +38,6 @@
 #include "itemprop.h"
 #include "item_use.h"
 #include "kills.h"
-#include "los.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
