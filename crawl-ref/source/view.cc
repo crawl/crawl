@@ -937,7 +937,6 @@ void viewwindow(bool do_updates)
         const coord_def gc = view2grid(*ri);
         const coord_def ep = view2show(grid2view(gc));
 
-        // Order is important here.
         if (!map_bounds(gc))
             DRAW(unseen);
         else if (!crawl_view.in_grid_los(gc))
