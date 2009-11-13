@@ -908,7 +908,7 @@ static void _check_wander_target(monsters *mon, bool isPacified = false,
 
 static void _arena_set_foe(monsters *mons)
 {
-    const int mind = monster_index(mons);
+    const int mind = mons->mindex();
 
     int nearest = -1;
     int best_distance = -1;
@@ -1216,7 +1216,7 @@ void handle_behaviour(monsters *mon)
         _set_nearest_monster_foe(mon);
 
     // Monsters do not attack themselves. {dlb}
-    if (mon->foe == monster_index(mon))
+    if (mon->foe == mon->mindex())
         mon->foe = MHITNOT;
 
     // Friendly and good neutral monsters do not attack other friendly

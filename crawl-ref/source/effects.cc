@@ -837,7 +837,7 @@ void direct_effect(monsters *source, spell_type spell,
     if (def)
     {
         // annoy the target
-        behaviour_event(def, ME_ANNOY, monster_index(source));
+        behaviour_event(def, ME_ANNOY, source->mindex());
     }
 
     int damage_taken = 0;
@@ -4006,7 +4006,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     mprf(MSGCH_DIAGNOSTICS,
          "mon #%d: range %d; long %d; "
          "pos (%d,%d); targ %d(%d,%d); flags %ld",
-         monster_index(mon), range, long_time, mon->pos().x, mon->pos().y,
+         mon->mindex(), range, long_time, mon->pos().x, mon->pos().y,
          mon->foe, mon->target.x, mon->target.y, mon->flags );
 #endif
 

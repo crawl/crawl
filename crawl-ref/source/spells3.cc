@@ -1282,7 +1282,7 @@ bool cast_haunt(int pow, const coord_def& where, god_type god)
         return (true);
     }
 
-    int mi = monster_index(m);
+    int mi = m->mindex();
     ASSERT(!invalid_monster_index(mi));
 
     if (stop_attack_prompt(m, false, you.pos()))

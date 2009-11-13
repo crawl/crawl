@@ -549,7 +549,7 @@ static void _give_monster_experience(monsters *victim,
         return;
 
     if ((!victim_was_born_friendly || !mon->friendly())
-        && !mons_aligned(killer_index, monster_index(victim)))
+        && !mons_aligned(killer_index, victim->mindex()))
     {
         if (mon->gain_exp(experience))
         {
@@ -869,7 +869,7 @@ static void _fire_monster_death_event(monsters *monster,
 
     dungeon_events.fire_event(
         dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
-                  monster_index(monster), killer));
+                  monster->mindex(), killer));
 
     if (type == MONS_ROYAL_JELLY && !polymorph)
     {
@@ -949,7 +949,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
             mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
                  target->name(DESC_NOCAP_THE).c_str());
         }
-        MiscastEffect(target, monster_index(monster), SPTYP_NECROMANCY,
+        MiscastEffect(target, monster->mindex(), SPTYP_NECROMANCY,
                       pow, random2avg(88, 3), "a mummy death curse");
     }
 }
@@ -968,7 +968,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
 
     beam.is_tracer    = false;
     beam.is_explosion = true;
-    beam.beam_source  = monster_index(monster);
+    beam.beam_source  = monster->mindex();
     beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = monster->pos();
     beam.target       = monster->pos();
@@ -1312,7 +1312,7 @@ void mons_relocated(monsters *monster)
 {
     if (monster->type == MONS_KRAKEN)
     {
-        int headnum = monster_index(monster);
+        int headnum = monster->mindex();
 
         if (invalid_monster_index(headnum))
             return;
@@ -1341,7 +1341,7 @@ void mons_relocated(monsters *monster)
 static int _destroy_tentacles(monsters *head)
 {
     int tent = 0;
-    int headnum = monster_index(head);
+    int headnum = head->mindex();
 
     if (invalid_monster_index(headnum))
         return 0;
@@ -1443,7 +1443,7 @@ int monster_die(monsters *monster, killer_type killer,
           int  summon_type   = 0;
           int  duration      = 0;
     const bool summoned      = monster->is_summoned(&duration, &summon_type);
-    const int monster_killed = monster_index(monster);
+    const int monster_killed = monster->mindex();
     const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
     const bool gives_xp      = (!summoned && !mons_class_flag(monster->type,
                                                               M_NO_EXP_GAIN));
@@ -2172,7 +2172,7 @@ void monster_cleanup(monsters *monster)
 {
     crawl_state.mon_gone(monster);
 
-    unsigned int monster_killed = monster_index(monster);
+    unsigned int monster_killed = monster->mindex();
     monster->reset();
 
     for (monster_iterator mi; mi; ++mi)
@@ -2455,7 +2455,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->number       = 0;
 
     // Note: define_monster() will clear out all enchantments! - bwr
-    define_monster(monster_index(monster));
+    define_monster(monster->mindex());
 
     monster->mname = name;
     monster->flags = flags;
@@ -2750,7 +2750,7 @@ bool swap_places(monsters *monster, const coord_def &loc)
 
     monster->moveto(loc);
 
-    mgrd(monster->pos()) = monster_index(monster);
+    mgrd(monster->pos()) = monster->mindex();
 
     return true;
 }
@@ -3375,7 +3375,7 @@ void mons_check_pool(monsters *monster, const coord_def &oldpos,
             {
                 // Self-kill.
                 killer  = KILL_MON;
-                killnum = monster_index(monster);
+                killnum = monster->mindex();
             }
 
             // Yredelemnul special, redux: It's the only one that can
@@ -3482,12 +3482,6 @@ bool message_current_target()
     }
 
     return (false);
-}
-
-// aaah, the simple joys of pointer arithmetic! {dlb}:
-unsigned int monster_index(const monsters *monster)
-{
-    return (monster - menv.buffer());
 }
 
 void seen_monster(monsters *monster)
@@ -3699,7 +3693,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
     if (monster_random_space(monster, newpos, !monster->wont_attack()))
         monster->moveto(newpos);
 
-    mgrd(monster->pos()) = monster_index(monster);
+    mgrd(monster->pos()) = monster->mindex();
 
     // Mimics change form/colour when teleported.
     if (mons_is_mimic(monster->type))

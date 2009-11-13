@@ -290,7 +290,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
         mon->base_monster = soul_type;
 
         // Re-equip the spectral thing.
-        equip_undead(mon->pos(), corps, monster_index(mon),
+        equip_undead(mon->pos(), corps, mon->mindex(),
                      mon->base_monster);
 
         // Destroy the monster's corpse, as it's no longer needed.

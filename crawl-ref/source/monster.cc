@@ -1070,7 +1070,7 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
         {
             dungeon_events.fire_position_event(
                 dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
-                          monster_index(this)),
+                          mindex()),
                 pos());
 
             pickup_message(item, near);
@@ -1086,7 +1086,7 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
 
     dungeon_events.fire_position_event(
         dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
-                  monster_index(this)),
+                  mindex()),
         pos());
 
     const int item_index = item.index();
@@ -2644,7 +2644,7 @@ monster_type monsters::id() const
 
 int monsters::mindex() const
 {
-    return (monster_index(this));
+    return (this - menv.buffer());
 }
 
 int monsters::get_experience_level() const

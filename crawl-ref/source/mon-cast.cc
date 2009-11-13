@@ -738,7 +738,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     else if (spell_cast == SPELL_SLEEP)
         pbolt.ench_power = 6 * monster->hit_dice;
 
-    pbolt.beam_source = monster_index(monster);
+    pbolt.beam_source = monster->mindex();
 
     // Convenience for the hapless innocent who assumes that this
     // damn function does all possible setup. [ds]
@@ -1192,7 +1192,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                     spellOK = true;
 
                     if (ms_direct_nasty(spell_cast)
-                        && mons_aligned(monster_index(monster),
+                        && mons_aligned(monster->mindex(),
                                         monster->foe))
                     {
                         spellOK = false;
@@ -1543,7 +1543,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Mon #%d casts %s (#%d)",
-         monster_index(monster), spell_title(spell_cast), spell_cast);
+         monster->mindex(), spell_title(spell_cast), spell_cast);
 #endif
 
     if (spell_cast == SPELL_CANTRIP)
@@ -1681,7 +1681,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_KRAKEN_TENTACLES:
     {
-        int kraken_index = monster_index(monster);
+        int kraken_index = monster->mindex();
         if (invalid_monster_index(duration))
         {
             mpr("Error! Kraken is not a part of the current environment!",
@@ -1875,7 +1875,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         if (!monsterNearby || monster->friendly())
             return;
 
-        torment(monster_index(monster), monster->pos());
+        torment(monster->mindex(), monster->pos());
         return;
 
     case SPELL_SUMMON_GREATER_DEMON:

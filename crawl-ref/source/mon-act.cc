@@ -745,7 +745,7 @@ static bool _handle_reaching(monsters *monster)
     if (monster->submerged())
         return (false);
 
-    if (mons_aligned(monster_index(monster), monster->foe))
+    if (mons_aligned(monster->mindex(), monster->foe))
         return (false);
 
     if (wpn != NON_ITEM && get_weapon_brand(mitm[wpn]) == SPWPN_REACHING)
@@ -927,7 +927,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
     bolt theBeam      = mons_spells(monster, mzap, power);
 
     beem.name         = theBeam.name;
-    beem.beam_source  = monster_index(monster);
+    beem.beam_source  = monster->mindex();
     beem.source       = monster->pos();
     beem.colour       = theBeam.colour;
     beem.range        = theBeam.range;
@@ -1067,7 +1067,7 @@ static void _setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
 {
     // FIXME we should use a sensible range here
     pbolt.range = LOS_RADIUS;
-    pbolt.beam_source = monster_index(monster);
+    pbolt.beam_source = monster->mindex();
 
     pbolt.type    = dchar_glyph(DCHAR_FIRED_MISSILE);
     pbolt.flavour = BEAM_MISSILE;
@@ -2713,7 +2713,7 @@ static bool _mons_can_displace(const monsters *mpusher,
     if (invalid_monster(mpusher) || invalid_monster(mpushee))
         return (false);
 
-    const int ipushee = monster_index(mpushee);
+    const int ipushee = mpushee->mindex();
     if (invalid_monster_index(ipushee))
         return (false);
 
@@ -3041,9 +3041,9 @@ static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
     _swim_or_move_energy(mon);
 
     mon->set_position(n);
-    mgrd(n) = monster_index(mon);
+    mgrd(n) = mon->mindex();
     m2->set_position(c);
-    const int m2i = monster_index(m2);
+    const int m2i = m2->mindex();
     ASSERT(m2i >= 0 && m2i < MAX_MONSTERS);
     mgrd(c) = m2i;
     immobile_monster[m2i] = true;
@@ -3108,7 +3108,7 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
 
     monster->set_position(f);
 
-    mgrd(monster->pos()) = monster_index(monster);
+    mgrd(monster->pos()) = monster->mindex();
 
     ballisto_on_move(monster, old_pos);
 

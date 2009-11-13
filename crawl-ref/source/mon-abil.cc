@@ -572,7 +572,7 @@ static bool _orange_statue_effects(monsters *mons)
                      foe->name(DESC_NOCAP_THE).c_str());
         }
 
-        MiscastEffect(foe, monster_index(mons), SPTYP_DIVINATION,
+        MiscastEffect(foe, mons->mindex(), SPTYP_DIVINATION,
                       random2(15), random2(150),
                       "an orange crystal statue");
         return (true);
@@ -592,7 +592,7 @@ static bool _orc_battle_cry(monsters *chief)
         && chief->can_see(foe)
         && coinflip())
     {
-        const int boss_index = monster_index(chief);
+        const int boss_index = chief->mindex();
         const int level = chief->hit_dice > 12? 2 : 1;
         std::vector<monsters*> seen_affected;
         for (monster_iterator mi(chief); mi; ++mi)
@@ -873,7 +873,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.colour      = RED;
         beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour     = BEAM_LAVA;
-        beem.beam_source = monster_index(monster);
+        beem.beam_source = monster->mindex();
         beem.thrower     = KILL_MON;
 
         // Fire tracer.
@@ -908,7 +908,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.colour      = LIGHTCYAN;
         beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour     = BEAM_ELECTRICITY;
-        beem.beam_source = monster_index(monster);
+        beem.beam_source = monster->mindex();
         beem.thrower     = KILL_MON;
         beem.is_beam     = true;
 
@@ -1067,7 +1067,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.range       = 6;
         beem.hit         = 14;
         beem.damage      = dice_def( 2, 10 );
-        beem.beam_source = monster_index(monster);
+        beem.beam_source = monster->mindex();
         beem.type        = dchar_glyph(DCHAR_FIRED_MISSILE);
         beem.colour      = LIGHTGREY;
         beem.flavour     = BEAM_MISSILE;

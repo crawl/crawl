@@ -135,8 +135,6 @@ std::string get_wounds_description(const monsters *monster);
 void print_wounds(const monsters *monster);
 bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 
-unsigned int monster_index(const monsters *monster);
-
 void mons_get_damage_level(const monsters*, std::string& desc,
                            mon_dam_level_type&);
 

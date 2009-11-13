@@ -3518,7 +3518,7 @@ void religion_turn_end()
 void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
                          bool known)
 {
-    const unsigned int midx = monster_index(mon);
+    const unsigned int midx = mon->mindex();
 
     if (mon->friendly())
     {
