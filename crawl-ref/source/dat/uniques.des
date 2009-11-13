@@ -180,7 +180,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_urug
-DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
+DEPTH:  10-13, 14-16, !Lair, !Lair
 TAGS:   place_unique
 MONS:   Urug
 MAP
@@ -188,7 +188,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_michael
-DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
+DEPTH:  10-13, 14-16, !Lair, !Lair
 TAGS:   place_unique
 MONS:   Michael
 MAP
@@ -196,7 +196,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_eustachio
-DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
+DEPTH:  10-13, 14-16, !Lair, !Lair
 TAGS:   place_unique
 MONS:   Eustachio
 MAP
@@ -204,7 +204,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_sonja
-DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
+DEPTH:  10-13, 14-16, !Lair, !Lair
 TAGS:   place_unique
 MONS:   Sonja
 MAP
@@ -220,7 +220,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_erica
-DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
+DEPTH:  10-13, 14-16, !Lair, !Lair
 TAGS:   place_unique
 MONS:   Erica
 MAP
@@ -228,7 +228,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_josephine
-DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
+DEPTH:  10-13, 14-16, !Lair, !Lair
 TAGS:   place_unique
 MONS:   Josephine band
 MAP
@@ -236,7 +236,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_jozef
-DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
+DEPTH:  10-13, 14-16, !Lair, !Lair
 TAGS:   place_unique
 MONS:   Jozef
 MAP
@@ -244,7 +244,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_harold
-DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
+DEPTH:  10-13, 14-16, !Lair, !Lair
 TAGS:   place_unique
 MONS:   Harold
 MAP
@@ -252,7 +252,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_norbert
-DEPTH:  10-13, 14-16, !Lair, !Tomb, !Lair
+DEPTH:  10-13, 14-16, !Lair, !Lair
 TAGS:   place_unique
 MONS:   Norbert
 MAP
@@ -260,7 +260,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_snorg
-DEPTH:  14-16, 17-19, !Tomb, !Lair
+DEPTH:  14-16, 17-19, !Lair
 TAGS:   place_unique
 MONS:   Snorg
 MAP
@@ -268,7 +268,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_roxanne
-DEPTH:  14-16, 17-19, !Tomb, !Lair
+DEPTH:  14-16, 17-19, !Lair
 TAGS:   place_unique
 MONS:   Roxanne
 MAP
@@ -276,7 +276,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_rupert
-DEPTH:  14-16, 17-19, !Tomb, !Lair
+DEPTH:  14-16, 17-19, !Lair
 TAGS:   place_unique
 MONS:   Rupert
 MAP
@@ -284,7 +284,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_azrael
-DEPTH:  14-16, 17-19, !Tomb, !Lair, !Swamp, !Shoal
+DEPTH:  14-16, 17-19, !Lair, !Swamp, !Shoal
 TAGS:   place_unique
 MONS:   Azrael band
 MAP
@@ -292,7 +292,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_nessos
-DEPTH:  14-16, 17-19, !Tomb, !Lair
+DEPTH:  14-16, 17-19, !Lair
 TAGS:   place_unique
 MONS:   Nessos
 MAP
@@ -300,7 +300,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_agnes
-DEPTH:  14-16, !Tomb, !Lair
+DEPTH:  14-16, !Lair
 TAGS:   place_unique
 MONS:   Agnes
 MAP
@@ -308,7 +308,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_nikola
-DEPTH:  14-16, 17-19, !Tomb, !Lair
+DEPTH:  14-16, 17-19, !Lair
 TAGS:   place_unique
 MONS:   Nikola
 MAP
@@ -316,7 +316,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_maud
-DEPTH:  14-16, !Tomb, !Lair
+DEPTH:  14-16, !Lair
 TAGS:   place_unique
 MONS:   Maud
 MAP
@@ -324,7 +324,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_louise
-DEPTH:  14-16, 17-19, !Tomb, !Lair
+DEPTH:  14-16, 17-19, !Lair
 TAGS:   place_unique
 MONS:   Louise
 MAP
@@ -332,7 +332,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_nergalle
-DEPTH:  14-16, 17-19, !Tomb, !Lair
+DEPTH:  14-16, 17-19, !Lair
 TAGS:   place_unique
 MONS:   Nergalle
 MAP
@@ -340,7 +340,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_kirke
-DEPTH:  14-16, 17-19, !Tomb, !Lair
+DEPTH:  14-16, 17-19, !Lair
 TAGS:   place_unique
 MONS:   Kirke band
 MAP
@@ -348,7 +348,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_francis
-DEPTH:  17-19, 20-27, !Tomb, !Lair
+DEPTH:  17-19, 20-27, !Lair
 TAGS:   place_unique
 MONS:   Francis
 MAP
@@ -356,7 +356,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_frances
-DEPTH:  17-19, 20-27, !Tomb, !Lair
+DEPTH:  17-19, 20-27, !Lair
 TAGS:   place_unique
 MONS:   Frances
 MAP
@@ -364,7 +364,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_wayne
-DEPTH:  17-19, 20-27, !Tomb, !Lair
+DEPTH:  17-19, 20-27, !Lair
 TAGS:   place_unique
 MONS:   Wayne
 MAP
@@ -372,7 +372,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_duane
-DEPTH:  17-19, 20-27, !Tomb, !Lair
+DEPTH:  17-19, 20-27, !Lair
 TAGS:   place_unique
 MONS:   Duane
 MAP
@@ -380,7 +380,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_norris
-DEPTH:  17-19, !Tomb, !Lair
+DEPTH:  17-19, !Lair
 TAGS:   place_unique
 MONS:   Norris
 MAP
@@ -388,7 +388,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_saint_roka
-DEPTH:  17-19, 20-27, !Tomb, !Lair
+DEPTH:  17-19, 20-27, !Lair
 TAGS:   place_unique
 MONS:   Saint Roka band
 MAP
@@ -396,7 +396,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_xtahua
-DEPTH:  20-27, !Tomb, !Lair
+DEPTH:  20-27, !Lair
 TAGS:   place_unique
 MONS:   Xtahua
 MAP
@@ -404,7 +404,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_frederick
-DEPTH:  20-27, !Tomb, !Lair
+DEPTH:  20-27, !Lair
 TAGS:   place_unique
 MONS:   Frederick
 MAP
@@ -412,7 +412,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_margery
-DEPTH:  20-27, !Tomb, !Lair
+DEPTH:  20-27, !Lair
 TAGS:   place_unique
 MONS:   Margery band
 MAP
@@ -433,7 +433,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_aizul
-DEPTH:  20-27, !Tomb, !Lair
+DEPTH:  20-27, !Lair
 TAGS:   place_unique
 MONS:   Aizul
 MAP
