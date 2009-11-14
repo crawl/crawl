@@ -49,20 +49,7 @@ enum tag_major_version
 // the dungeon Lua changes.
 enum tag_minor_version
 {
-    TAG_MINOR_ARTEFACT   =  0,   // Turned fixed arts into unrandarts.
-    TAG_MINOR_JIYVA      =  1,   // Added some player bits for Jiyva.
-    TAG_MINOR_ZOT_OPEN   =  2,   // Remember whether Zot was opened.
-    TAG_MINOR_JELLY      =  3,   // Remember whether the royal jelly is dead.
-    TAG_ANNOTATE_EXCL    =  4,   // Store exclusion information for annotations.
-    TAG_MINOR_UGLY       =  5,   // More ghost bits for (very) ugly things.
-    TAG_MINOR_ROTTING    =  6,   // Added monster-specific rotting resistance.
-    TAG_MINOR_TRANS      =  7,   // Keep track of cancellable transformations.
-    TAG_MINOR_GITREV     =  8,   // Removed SVN revision and added Git revision.
-    TAG_MINOR_DSTRAITS   =  9,   // Pre-calculate demonspawn mutations
-    TAG_MINOR_YOU_PROP   = 10,   // Player class has CrawlHashTable
-    TAG_MINOR_SMALL_HASH = 11,   // Reduced RAM size of CrawlHashTable
-    TAG_MINOR_MON_PROP   = 12,   // Monster class has CrawlHashTable
-    TAG_MINOR_VERSION    = 12    // Current version.  (Keep equal to max.)
+    TAG_MINOR_VERSION = 0 // Current version.  (Keep equal to max.)
 };
 
 struct enum_info

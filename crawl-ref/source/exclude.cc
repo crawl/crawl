@@ -406,11 +406,8 @@ void unmarshallExcludes(reader& inf, char minorVersion, exclvec &excludes)
             const int radius = unmarshallShort(inf);
             bool autoexcl    = false;
             monster_type mon = MONS_NO_MONSTER;
-            if (minorVersion >= TAG_ANNOTATE_EXCL)
-            {
-                autoexcl = unmarshallBoolean(inf);
-                mon      = static_cast<monster_type>(unmarshallShort(inf));
-            }
+            autoexcl         = unmarshallBoolean(inf);
+            mon              = static_cast<monster_type>(unmarshallShort(inf));
             excludes.push_back(travel_exclude(c, radius, autoexcl, mon));
         }
     }

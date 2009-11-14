@@ -1356,8 +1356,7 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.religion          = static_cast<god_type>(unmarshallByte(th));
 
-    if (minorVersion >= TAG_MINOR_JIYVA)
-        you.second_god_name = unmarshallString(th);
+    you.second_god_name = unmarshallString(th);
 
     you.piety             = unmarshallByte(th);
     you.rotting           = unmarshallByte(th);
@@ -1369,14 +1368,11 @@ static void tag_read_you(reader &th, char minorVersion)
     you.where_are_you     = static_cast<branch_type>( unmarshallByte(th) );
     you.char_direction    = static_cast<game_direction_type>(unmarshallByte(th));
 
-    if (minorVersion >= TAG_MINOR_ZOT_OPEN)
-        you.opened_zot = (bool) unmarshallByte(th);
+    you.opened_zot = (bool) unmarshallByte(th);
 
-    if (minorVersion >= TAG_MINOR_JELLY)
-        you.royal_jelly_dead = (bool) unmarshallByte(th);
+    you.royal_jelly_dead = (bool) unmarshallByte(th);
 
-     if (minorVersion >= TAG_MINOR_TRANS)
-         you.transform_uncancellable = (bool) unmarshallByte(th);
+    you.transform_uncancellable = (bool) unmarshallByte(th);
 
     you.your_level        = unmarshallByte(th);
     you.is_undead         = static_cast<undead_state_type>(unmarshallByte(th));
@@ -1411,8 +1407,7 @@ static void tag_read_you(reader &th, char minorVersion)
     you.intel                     = unmarshallByte(th);
     you.dex                       = unmarshallByte(th);
 
-    if (minorVersion >= TAG_MINOR_JIYVA)
-        you.last_chosen = (stat_type) unmarshallByte(th);
+    you.last_chosen = (stat_type) unmarshallByte(th);
 
     you.hit_points_regeneration   = unmarshallByte(th);
     you.magic_points_regeneration = unmarshallByte(th);
@@ -1509,17 +1504,14 @@ static void tag_read_you(reader &th, char minorVersion)
         you.demon_pow[j] = unmarshallByte(th);
     }
 
-    if (minorVersion >= TAG_MINOR_DSTRAITS)
+    count_c = unmarshallByte(th);
+    you.demonic_traits.clear();
+    for (j = 0; j < count_c; ++j)
     {
-        count_c = unmarshallByte(th);
-        you.demonic_traits.clear();
-        for (j = 0; j < count_c; ++j)
-        {
-            player::demon_trait dt;
-            dt.level_gained = unmarshallByte(th);
-            dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
-            you.demonic_traits.push_back(dt);
-        }
+        player::demon_trait dt;
+        dt.level_gained = unmarshallByte(th);
+        dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
+        you.demonic_traits.push_back(dt);
     }
 
     // how many penances?
@@ -1576,26 +1568,11 @@ static void tag_read_you(reader &th, char minorVersion)
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
              dlua.error.c_str());
 
-    if (minorVersion <  TAG_MINOR_GITREV)
-    {
-        std::string rev_str = unmarshallString(th);
-        int rev_int = unmarshallLong(th);
+    std::string rev_str = unmarshallString(th);
+    UNUSED(rev_str);
 
-        UNUSED(rev_str);
-        UNUSED(rev_int);
-    }
-
-    if (minorVersion >= TAG_MINOR_GITREV)
-    {
-        std::string rev_str = unmarshallString(th);
-        UNUSED(rev_str);
-    }
-
-    if (minorVersion >= TAG_MINOR_YOU_PROP)
-    {
-        you.props.clear();
-        you.props.read(th);
-    }
+    you.props.clear();
+    you.props.read(th);
 }
 
 static void tag_read_you_items(reader &th, char minorVersion)
@@ -1748,12 +1725,8 @@ static void tag_read_you_dungeon(reader &th, char minorVersion)
                   unmarshall_level_pos, unmarshallByte);
     unmarshallMap(th, level_annotations,
                   unmarshall_level_id, unmarshallStringNoMax);
-
-    if (minorVersion >= TAG_ANNOTATE_EXCL)
-    {
-        unmarshallMap(th, level_exclusions,
-                      unmarshall_level_id, unmarshallStringNoMax);
-    }
+    unmarshallMap(th, level_exclusions,
+                  unmarshall_level_id, unmarshallStringNoMax);
 
     PlaceInfo place_info = unmarshallPlaceInfo(th);
     ASSERT(place_info.is_global());
@@ -2351,11 +2324,8 @@ void unmarshallMonster(reader &th, monsters &m)
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th, _tag_minor_version));
 
-    if (_tag_minor_version >= TAG_MINOR_MON_PROP)
-    {
-        m.props.clear();
-        m.props.read(th);
-    }
+    m.props.clear();
+    m.props.read(th);
 
     m.check_speed();
 }
@@ -2597,10 +2567,7 @@ static void unmarshallResists(reader &th, mon_resist_def &res,
     res.asphyx       = unmarshallByte(th);
     res.acid         = unmarshallByte(th);
     res.sticky_flame = unmarshallByte(th);
-
-    if (minorVersion >= TAG_MINOR_ROTTING)
-        res.rotting  = unmarshallByte(th);
-
+    res.rotting      = unmarshallByte(th);
     res.pierce       = unmarshallByte(th);
     res.slice        = unmarshallByte(th);
     res.bludgeon     = unmarshallByte(th);
@@ -2667,19 +2634,14 @@ static ghost_demon unmarshallGhost(reader &th, char minorVersion)
     ghost.see_invis        = unmarshallByte(th);
     ghost.brand            = static_cast<brand_type>( unmarshallShort(th) );
 
-    if (minorVersion >= TAG_MINOR_UGLY)
-    {
-        ghost.att_type     = static_cast<mon_attack_type>( unmarshallShort(th) );
-        ghost.att_flav     = static_cast<mon_attack_flavour>( unmarshallShort(th) );
-    }
+    ghost.att_type = static_cast<mon_attack_type>( unmarshallShort(th) );
+    ghost.att_flav = static_cast<mon_attack_flavour>( unmarshallShort(th) );
 
     unmarshallResists(th, ghost.resists, minorVersion);
 
     ghost.spellcaster      = unmarshallByte(th);
     ghost.cycle_colours    = unmarshallByte(th);
-
-    if (minorVersion >= TAG_MINOR_UGLY)
-        ghost.colour       = unmarshallByte(th);
+    ghost.colour           = unmarshallByte(th);
 
     ghost.fly              = static_cast<flight_type>( unmarshallShort(th) );
 

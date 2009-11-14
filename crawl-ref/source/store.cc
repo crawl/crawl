@@ -1329,12 +1329,6 @@ void CrawlHashTable::read(reader &th)
     if (_size == 0)
         return;
 
-    if (th.getMinorVersion() < TAG_MINOR_SMALL_HASH)
-    {
-        unmarshallByte(th);
-        unmarshallByte(th);
-    }
-
     init_hash_map();
 
     for (hash_size i = 0; i < _size; i++)
