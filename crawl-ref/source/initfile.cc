@@ -748,8 +748,8 @@ void game_options::reset_options()
 
     stash_tracking         = STM_ALL;
 
-    explore_stop           = ES_ITEM | ES_STAIR | ES_PORTAL | ES_SHOP | ES_ALTAR
-                                     | ES_GREEDY_PICKUP;
+    explore_stop           = ES_ITEM | ES_STAIR | ES_PORTAL | ES_SHOP
+                                     | ES_ALTAR;
 
     // The prompt conditions will be combined into explore_stop after
     // reading options.
