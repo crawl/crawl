@@ -12,6 +12,7 @@
 #include "dungeon.h"
 #include "items.h"
 #include "mapdef.h"
+#include "stash.h"
 
 #define ITEMLIST_METATABLE "crawldgn.item_list"
 
@@ -87,12 +88,63 @@ static int dgn_create_item(lua_State *ls)
     return (0);
 }
 
+// Returns two arrays: one of floor items, one of shop items.
+static int dgn_stash_items(lua_State *ls)
+{
+    unsigned min_value  = lua_isnumber(ls, 1)  ? luaL_checkint(ls, 1) : 0;
+    bool skip_stackable = lua_isboolean(ls, 2) ? lua_toboolean(ls, 2)
+                                                : false;
+    std::vector<const item_def*> floor_items;
+    std::vector<const item_def*> shop_items;
+
+    for (ST_ItemIterator stii; stii; ++stii)
+    {
+        if (skip_stackable && is_stackable_item(*stii))
+            continue;
+        if (min_value > 0)
+        {
+            if (stii.shop())
+            {
+                if (stii.price() < min_value)
+                    continue;
+            }
+            else if (item_value(*stii, true) < min_value)
+                continue;
+        }
+        if (stii.shop())
+            shop_items.push_back(&(*stii));
+        else
+            floor_items.push_back(&(*stii));
+    }
+
+    lua_newtable(ls);
+    int index = 0;
+
+    for (unsigned int i = 0; i < floor_items.size(); i++)
+    {
+        lua_pushlightuserdata(ls, const_cast<item_def*>(floor_items[i]));
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    lua_newtable(ls);
+    index = 0;
+
+    for (unsigned int i = 0; i < shop_items.size(); i++)
+    {
+        lua_pushlightuserdata(ls, const_cast<item_def*>(floor_items[i]));
+        lua_rawseti(ls, -2, ++index);
+    }
+
+    return (2);
+}
+
 const struct luaL_reg dgn_item_dlib[] =
 {
 { "item_from_index", dgn_item_from_index },
 { "items_at", dgn_items_at },
 { "create_item", dgn_create_item },
 { "item_spec", _dgn_item_spec },
+{ "stash_items", dgn_stash_items },
 
 { NULL, NULL }
 };
