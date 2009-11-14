@@ -1308,7 +1308,10 @@ static int _place_monster_aux(const mgen_data &mg,
         blame.new_vector(SV_STR, SFLAG_CONST_TYPE);
         blame.get_vector().push_back(blame_prefix + mg.non_actor_summoner);
     }
-    else if (mg.summoner != NULL)
+    // NOTE: The summoner might be dead if the summoned is placed by a
+    // beam which killed the summoner first (like fire vortexes placed
+    // by the Fire Storm spell).
+    else if (mg.summoner != NULL && mg.summoner->alive())
     {
         CrawlStoreValue& blame = mon->props["blame"];
 
