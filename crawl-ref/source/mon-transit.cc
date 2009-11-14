@@ -1,5 +1,5 @@
 /*
- * File:       mtransit.cc
+ * File:       mon-transit.cc
  * Summary:    Tracks monsters that are in suspended animation between levels.
  * Written by: Darshan Shaligram
  */
@@ -8,7 +8,7 @@
 
 #include <algorithm>
 
-#include "mtransit.h"
+#include "mon-transit.h"
 
 #include "artefact.h"
 #include "dungeon.h"

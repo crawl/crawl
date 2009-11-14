@@ -111,8 +111,8 @@ mon-place.o \
 mon-speak.o \
 monster.o \
 mon-stuff.o \
+mon-transit.o \
 mt19937ar.o \
-mtransit.o \
 mutation.o \
 newgame.o \
 ng-init.o \

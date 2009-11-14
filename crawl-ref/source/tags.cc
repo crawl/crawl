@@ -72,7 +72,7 @@
 #include "itemprop.h"
 #include "mapmark.h"
 #include "mon-util.h"
-#include "mtransit.h"
+#include "mon-transit.h"
 #include "quiver.h"
 #include "skills.h"
 #include "skills2.h"

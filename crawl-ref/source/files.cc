@@ -60,7 +60,7 @@
 #include "mon-act.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "mtransit.h"
+#include "mon-transit.h"
 #include "newgame.h"
 #include "notes.h"
 #include "options.h"

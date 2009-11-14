@@ -1,11 +1,11 @@
 /*
- * File:       mtransit.h
+ * File:       mon-transit.h
  * Summary:    Tracking monsters in transit between levels.
  * Written by: Darshan Shaligram
  */
 
-#ifndef MTRANSIT_H
-#define MTRANSIT_H
+#ifndef MON_TRANSIT_H
+#define MON_TRANSIT_H
 
 #include "monster.h"
 #include "travel.h"

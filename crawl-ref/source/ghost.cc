@@ -21,7 +21,7 @@
 #include "random.h"
 #include "skills2.h"
 #include "mon-util.h"
-#include "mtransit.h"
+#include "mon-transit.h"
 #include "place.h"
 #include "player.h"
 #include "religion.h"

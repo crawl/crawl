@@ -21,7 +21,7 @@
 #include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
-#include "mtransit.h"
+#include "mon-transit.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h" // for item values
