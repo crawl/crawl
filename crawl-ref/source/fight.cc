@@ -5674,7 +5674,8 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     melee_attack attk(&you, defender, unarmed_attacks);
 
     // We're trying to hit a monster, break out of travel/explore now.
-    interrupt_activity(AI_HIT_MONSTER, defender);
+    if (!travel_kill_monster(defender))
+        interrupt_activity(AI_HIT_MONSTER, defender);
 
     // Check if the player is fighting with something unsuitable.
     if (you.can_see(defender) && !wielded_weapon_check(attk.weapon))

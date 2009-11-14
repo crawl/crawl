@@ -309,7 +309,8 @@ static bool _is_monster_blocked(const coord_def& c)
             && mons_is_stationary(mons)
             && !fedhas_passthrough(mons)
             && mons_was_seen(mons)
-            && !mons_is_unknown_mimic(mons));
+            && !mons_is_unknown_mimic(mons)
+            && !travel_kill_monster(mons));
 }
 
 /*
@@ -390,7 +391,8 @@ static bool _is_safe_move(const coord_def& c)
         // Stop before wasting energy on plants and fungi,
         // unless a worshipping Fedhas.
         if (you.can_see(mon) && mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && !fedhas_passthrough(mon))
+            && !fedhas_passthrough(mon)
+            && !travel_kill_monster(mon))
             return (false);
 
         // If this is any *other* monster, it'll be visible and
@@ -2257,6 +2259,11 @@ static travel_target _prompt_travel_depth(const level_id &id,
 
         _travel_depth_munge(response, buf, target);
     }
+}
+
+bool travel_kill_monster(const monsters * monster)
+{
+    return (monster->type == MONS_TOADSTOOL);
 }
 
 travel_target prompt_translevel_target(int prompt_flags,
