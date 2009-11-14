@@ -303,6 +303,9 @@ static std::auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
         coord_def p = flood_from.back();
         flood_from.pop_back();
 
+        if (!in_bounds(p))
+            continue;
+
         if ((*map)(p))
             continue;
 
