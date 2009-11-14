@@ -1315,6 +1315,8 @@ static int _place_monster_aux(const mgen_data &mg,
     // by the Fire Storm spell).
     else if (mg.summoner != NULL && mg.summoner->alive())
     {
+        ASSERT(mg.summoner->alive());
+
         CrawlStoreValue& blame = mon->props["blame"];
 
         blame.new_vector(SV_STR, SFLAG_CONST_TYPE);
@@ -1325,7 +1327,7 @@ static int _place_monster_aux(const mgen_data &mg,
         }
         else
         {
-            monsters* sum = &menv[mg.summoner->mindex()];
+            monsters* sum = dynamic_cast<monsters*>(mg.summoner);
 
             blame.get_vector().push_back(blame_prefix
                                          + sum->full_name(DESC_NOCAP_A, true));
