@@ -183,16 +183,33 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
 // Special front function for zap_animation to interpret enchantment flavours.
 static void _ench_animation(int flavour, const monsters *mon, bool force)
 {
-    const int elem = (flavour == BEAM_HEALING)       ? ETC_HEAL :
-                     (flavour == BEAM_PAIN)          ? ETC_UNHOLY :
-                     (flavour == BEAM_DISPEL_UNDEAD) ? ETC_HOLY :
-                     (flavour == BEAM_POLYMORPH)     ? ETC_MUTAGENIC :
-                     (flavour == BEAM_CHAOS
-                        || flavour == BEAM_RANDOM)   ? ETC_RANDOM :
-                     (flavour == BEAM_TELEPORT
-                        || flavour == BEAM_BANISH
-                        || flavour == BEAM_BLINK)    ? ETC_WARP
-                                                     : ETC_ENCHANT;
+    element_type elem;
+    switch (flavour)
+    {
+    case BEAM_HEALING:
+        elem = ETC_HEAL;
+        break;
+    case BEAM_PAIN:
+        elem = ETC_UNHOLY;
+        break;
+    case BEAM_DISPEL_UNDEAD:
+        elem = ETC_HOLY;
+        break;
+    case BEAM_POLYMORPH:
+        elem = ETC_MUTAGENIC;
+        break;
+    case BEAM_CHAOS:
+        elem = ETC_RANDOM;
+        break;
+    case BEAM_TELEPORT:
+    case BEAM_BANISH:
+    case BEAM_BLINK:
+        elem = ETC_WARP;
+        break;
+    default:
+        elem = ETC_ENCHANT;
+        break;
+    }
 
     _zap_animation(element_colour(elem), mon, force);
 }
