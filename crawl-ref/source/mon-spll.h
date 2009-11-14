@@ -1066,7 +1066,7 @@
     {  MST_NESSOS,
       {
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
+       SPELL_BLINK_RANGE,
        SPELL_HASTE,
        SPELL_ANIMATE_DEAD,
        SPELL_NO_SPELL,
