@@ -69,7 +69,8 @@ typedef std::pair<coord_def, int> coord_weight;
 // Try to find a "safe" place for moved close or far from the target.
 // keep_los indicates that the destination should be in view of the target.
 static coord_def random_space_weighted(actor* moved, actor* target,
-                                       bool close, bool keep_los = true)
+                                       bool close, bool keep_los = true,
+                                       bool allow_sanct = true)
 {
     std::vector<coord_weight> dests;
     const coord_def tpos = target->pos();
@@ -79,7 +80,8 @@ static coord_def random_space_weighted(actor* moved, actor* target,
     for (radius_iterator ri(mlos); ri; ++ri)
     {
         if (!moved->is_habitable(*ri) || actor_at(*ri)
-            || keep_los && !tlos->see_cell(*ri))
+            || keep_los && !tlos->see_cell(*ri)
+            || !allow_sanct && is_sanctuary(*ri))
         {
             continue;
         }
