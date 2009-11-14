@@ -869,7 +869,7 @@ static void _yred_mirrors_injury(int dam, int death_source)
 static void _passive_freeze(kill_method_type death_type, const char *aux,
                             int death_source)
 {
-    const char *ptr = strstr(aux, "torment");
+    const char *ptr = aux ? strstr(aux, "torment") : NULL;
     if (you.mutation[MUT_PASSIVE_FREEZE] && death_type == KILLED_BY_MONSTER
         && ptr == NULL)
     {
