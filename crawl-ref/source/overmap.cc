@@ -346,12 +346,21 @@ std::string overview_description_string()
             }
 
             ++branchcount;
+            level_id lid(branches[i].id, 0);
+            lid = find_deepest_explored(lid);
 
-            snprintf(buffer, sizeof buffer, "<yellow>%-6s</yellow>: %-7s",
+            // account for the space of the depth. Fortunately it's only an issue
+            // for the Lair which has a short name anyway.
+            snprintf(buffer, sizeof buffer,
+                branches[i].depth < 10 ? "<yellow>%-6s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-7s" :
+                        lid.depth < 10 ? "<yellow>%-5s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-7s" :
+                                         "<yellow>%-4s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-7s",
                      branches[branch].abbrevname,
+                     lid.depth,
+                     branches[i].depth,
                      stair_level[branch].describe(false, true).c_str());
             disp += buffer;
-            if ( (branchcount % 4) == 0 )
+            if ( (branchcount % 3) == 0 )
                 disp += "\n";
             else
                 disp += "   ";
