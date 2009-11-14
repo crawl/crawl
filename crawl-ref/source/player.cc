@@ -1001,11 +1001,6 @@ bool player_equip_unrand(int unrand_index)
     return (false);
 }
 
-int player_damage_brand(void)
-{
-    return (you.damage_brand());
-}
-
 int player_damage_type(void)
 {
     return (you.damage_type());
