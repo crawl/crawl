@@ -663,7 +663,7 @@ static std::string _describe_demon(const monsters &mons)
 
     if (x_chance_in_y(3, 40))
     {
-        if (player_can_smell())
+        if (you.can_smell())
         {
             switch (random2(3))
             {

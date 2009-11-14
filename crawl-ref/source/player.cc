@@ -1246,11 +1246,6 @@ int player_spell_levels(void)
     return (sl);
 }
 
-bool player_can_smell()
-{
-    return (you.species != SP_MUMMY);
-}
-
 bool player_likes_chunks(bool permanently)
 {
     return (player_mutation_level(MUT_GOURMAND) > 0
@@ -7010,6 +7005,11 @@ bool player::cannot_act() const
 bool player::can_throw_large_rocks() const
 {
     return (player_genus(GENPC_OGRE) || species == SP_TROLL);
+}
+
+bool player::can_smell() const
+{
+    return (species != SP_MUMMY);
 }
 
 void player::hibernate(int)

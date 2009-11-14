@@ -830,7 +830,7 @@ void MiscastEffect::_conjuration(int severity)
             // care of elsewhere.
             break;
         case 9:
-            if (player_can_smell())
+            if (you.can_smell())
                 all_msg = "You smell something strange.";
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";
@@ -1576,7 +1576,7 @@ void MiscastEffect::_necromancy(int severity)
         switch (random2(10))
         {
         case 0:
-            if (player_can_smell())
+            if (you.can_smell())
                 all_msg = "You smell decay.";
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";
@@ -1653,7 +1653,7 @@ void MiscastEffect::_necromancy(int severity)
         case 2:
             if (target->res_rotting() == 0)
             {
-                if (player_can_smell())
+                if (you.can_smell())
                 {
                     // identical to a harmless message
                     all_msg = "You smell decay.";
@@ -1850,7 +1850,7 @@ void MiscastEffect::_transmutation(int severity)
             // care of elsewhere.
             break;
         case 9:
-            if (player_can_smell())
+            if (you.can_smell())
                 all_msg = "You smell something strange.";
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";
@@ -1990,7 +1990,7 @@ void MiscastEffect::_fire(int severity)
             // Monster messages needed.
             break;
         case 4:
-            if (player_can_smell())
+            if (you.can_smell())
                 all_msg = "You smell smoke.";
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";
@@ -2489,7 +2489,7 @@ void MiscastEffect::_air(int severity)
                 msg_ch         = MSGCH_SOUND;
                 sound_loudness = 10;
             }
-            else if (player_can_smell())
+            else if (you.can_smell())
                 all_msg = "You smell ozone.";
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";
@@ -2505,7 +2505,7 @@ void MiscastEffect::_air(int severity)
                 msg_ch         = MSGCH_SOUND;
                 sound_loudness = 10;
             }
-            else if (player_can_smell())
+            else if (you.can_smell())
                 all_msg = "You smell something musty.";
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";

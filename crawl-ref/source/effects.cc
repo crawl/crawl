@@ -971,7 +971,7 @@ void random_uselessness(int scroll_slot)
     case 3:
         if (you.species == SP_MUMMY)
             mpr("Your bandages flutter.");
-        else // if (player_can_smell())
+        else // if (you.can_smell())
             mprf("You smell %s.", weird_smell().c_str());
         break;
 
@@ -2791,7 +2791,7 @@ static void _hell_effects()
         (temp_rand ==  5) ? "\"Leave now, before it is too late!\"" :
         (temp_rand ==  6) ? "\"We have you now!\"" :
         // plain messages
-        (temp_rand ==  7) ? (player_can_smell()) ? "You smell brimstone."
+        (temp_rand ==  7) ? (you.can_smell()) ? "You smell brimstone."
                                                  : "Brimstone rains from above." :
         (temp_rand ==  8) ? "You feel lost and a long, long way from home..." :
         (temp_rand ==  9) ? "You shiver with fear." :
@@ -3557,7 +3557,7 @@ static void _rot_inventory_food(long time_delta)
 
         // Races that can't smell don't care, and trolls are stupid and
         // don't care.
-        if (player_can_smell() && you.species != SP_TROLL)
+        if (you.can_smell() && you.species != SP_TROLL)
         {
             int temp_rand = 0; // Grr.
             int level = player_mutation_level(MUT_SAPROVOROUS);

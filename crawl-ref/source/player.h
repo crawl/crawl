@@ -483,6 +483,7 @@ public:
     void check_awaken(int disturbance);
 
     bool can_throw_large_rocks() const;
+    bool can_smell() const;
 
     int armour_class() const;
     int melee_evasion(const actor *attacker,
@@ -615,7 +616,6 @@ bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true, bool items = true);
 int player_spirit_shield(bool calc_unid = true);
 
-bool player_can_smell();
 bool player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
 

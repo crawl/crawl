@@ -1780,7 +1780,7 @@ void bolt::fire_wall_effect()
                     emit_message(MSGCH_PLAIN,
                                  "The wax appears to soften slightly.");
                 }
-                else if (player_can_smell())
+                else if (you.can_smell())
                     emit_message(MSGCH_PLAIN, "You smell warm wax.");
             }
         }
@@ -1790,7 +1790,7 @@ void bolt::fire_wall_effect()
             grd(pos()) = DNGN_FLOOR;
             if (you.see_cell(pos()))
                 emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
-            else if (player_can_smell())
+            else if (you.can_smell())
                 emit_message(MSGCH_PLAIN, "You smell burning wax.");
             place_cloud(CLOUD_FIRE, pos(), random2(10)+15, whose_kill(), killer());
             obvious_effect = true;
@@ -1804,7 +1804,7 @@ void bolt::fire_wall_effect()
             grd(pos()) = DNGN_FLOOR;
             if (you.see_cell(pos()))
                 emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
-            else if (player_can_smell())
+            else if (you.can_smell())
                 emit_message(MSGCH_PLAIN, "You smell burning wood.");
             if (whose_kill() == KC_YOU)
                 did_god_conduct(DID_KILL_PLANT, 1, effect_known);

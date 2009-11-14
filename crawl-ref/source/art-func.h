@@ -202,7 +202,7 @@ static void _olgreb_pluses(item_def *item)
 
 static void _OLGREB_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (player_can_smell())
+    if (you.can_smell())
         _equip_mpr(show_msgs, "You smell chlorine.");
     else
         _equip_mpr(show_msgs, "The staff glows a sickly green.");
@@ -212,7 +212,7 @@ static void _OLGREB_equip(item_def *item, bool *show_msgs, bool unmeld)
 
 static void _OLGREB_unequip(const item_def *item, bool *show_msgs)
 {
-    if (player_can_smell())
+    if (you.can_smell())
         _equip_mpr(show_msgs, "The smell of chlorine vanishes.");
     else
         _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");

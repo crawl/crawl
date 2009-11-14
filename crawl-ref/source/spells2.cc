@@ -239,7 +239,7 @@ void corpse_rot()
                 }
     }
 
-    if (player_can_smell())
+    if (you.can_smell())
         mpr("You smell decay.");
 
     // Should make zombies decay into skeletons?

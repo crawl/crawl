@@ -104,7 +104,7 @@ LUARET1(you_taking_stairs, boolean,
         current_delay_action() == DELAY_ASCENDING_STAIRS
         || current_delay_action() == DELAY_DESCENDING_STAIRS)
 LUARET1(you_turns, number, you.num_turns)
-LUARET1(you_can_smell, boolean, player_can_smell())
+LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
 
 void lua_push_floor_items(lua_State *ls);
