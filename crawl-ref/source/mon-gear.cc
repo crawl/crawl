@@ -447,7 +447,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_HAROLD:
     case MONS_JOSEPH:
     case MONS_LOUISE:
-    case MONS_MICHAEL:
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
     case MONS_RUPERT:
