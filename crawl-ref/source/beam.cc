@@ -59,7 +59,6 @@
 #include "traps.h"
 #include "view.h"
 #include "shout.h"
-#include "teleport.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "xom.h"
@@ -3925,7 +3924,7 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_BLINK:
-        blink_closer(source);
+        random_blink(false);
         obvious_effect = true;
         break;
 
