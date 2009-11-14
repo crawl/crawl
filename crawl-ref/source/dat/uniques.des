@@ -293,7 +293,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_nessos
-DEPTH:  14-16, 17-19, !Lair
+DEPTH:  11-16, !Lair
 TAGS:   place_unique
 MONS:   Nessos
 MAP
