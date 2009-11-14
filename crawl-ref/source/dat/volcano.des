@@ -270,8 +270,7 @@ end
 --  orc warrior, orc warrior, orc warrior, Urug; orc warrior, orc warrior,
 --  orc warrior, Blork the orc; orc warrior, orc warrior, orc warrior,
 --  orc warrior/orc knight.
---  human, human, human, Edmund; human, human, human, Michael; human,
---  human, human, human.
+--  human, human, human, Edmund; human, human, human, human.
 --  big kobold, big kobold, big kobold, Sonja; big kobold, big kobold, 
 --  big kobold, big kobold.
 --  gnoll, gnoll, gnoll, Grum + war dogs; gnoll, gnoll, gnoll, gnoll.
@@ -298,7 +297,6 @@ end
 local urug = "Urug ; spear ego:flaming race:orcish . leather armour ego:fire_resistance race:orcish"
 local blork = "Blork the orc ; short sword race:orcish ego:flaming . leather armour ego:fire_resistance race:orcish"
 local edmund = "Edmund ; flail ego:flaming . leather armour ego:fire_resistance"
-local michael = "Michael ; dagger ego:flaming . robe ego:fire_resistance"
 local grum  = "Grum ; animal skin ego:fire_resistance"
 local hellknight = "hell knight w:1 ; hand axe ego:flaming . ring mail ego:fire_resistance"
 
@@ -334,7 +332,7 @@ function fiery_guardians (e)
         local unq_weight = crawl.random2(40)
         if unq_weight < 10 then
             e.mons("human ; scimitar ego:flaming . leather armour ego:fire_resistance")
-            e.mons(edmund .. " / " .. michael .. " / human ; falchion ego:flaming . scale mail ego:fire_resistance")
+            e.mons(edmund .. " / human ; falchion ego:flaming . scale mail ego:fire_resistance")
         elseif unq_weight < 20 then
             e.mons("big kobold ; short sword ego:flaming . leather armour ego:fire_resistance")
             e.mons("Sonja / big kobold ; long sword ego:flaming . ring mail ego:fire_resistance")

@@ -2666,42 +2666,6 @@ VISUAL:@The_monster@ gestures ominously @at_foe@.
 VISUAL:@The_monster@ draws the symbol "Udjat" in the dust.
 ## END Menkaure ##
 %%%%
-############ MICHAEL ### Loner spell-caster
-Michael
-
-@_Michael_common_@
-
-w:5
-@_Michael_rare_@
-%%%%
-_Michael_common_
-
-SPELL:@The_monster@ mumbles some strange words.
-
-SPELL:@The_monster@ gestures wildly.
-
-VISUAL SPELL:@The_monster@ points at @foe@.
-VISUAL:__YOU_RESIST
-
-VISUAL:@The_monster@ looks very angry.
-
-VISUAL:@The_monster@ frowns.
-
-VISUAL:@The_monster@ looks angry.
-
-@The_monster@ screams @at_foe@, "Get away!  Or better yet, die!"
-%%%%
-_Michael_rare_
-
-VISUAL:@The_monster@ drinks a potion.
-
-VISUAL:@The_monster@ shakes with wrath.
-
-@The_monster@ says @to_foe@, "You really are a nuisance."
-
-@The_monster@ screams @at_foe@, "I want to be alone!"
-
-%%%%
 ############ MURRAY ### A disembodied skull.
 Murray
 

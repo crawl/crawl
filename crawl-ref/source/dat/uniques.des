@@ -188,14 +188,6 @@ MAP
 1
 ENDMAP
 
-NAME:   uniq_michael
-DEPTH:  10-13, 14-16, !Lair
-TAGS:   place_unique
-MONS:   Michael
-MAP
-1
-ENDMAP
-
 NAME:   uniq_eustachio
 DEPTH:  10-13, 14-16, !Lair
 TAGS:   place_unique

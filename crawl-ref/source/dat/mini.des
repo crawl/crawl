@@ -1762,7 +1762,7 @@ SUBST: k = HIJKL
 SUBST: k = KLMNO
 : end
 KMONS: A = Blork the Orc / human; long sword | falchion . chain mail . shield
-KMONS: B = Michael / human; great sword . banded mail|plate mail
+KMONS: B = human / human; great sword . banded mail|plate mail
 KMONS: C = Urug / elf; sabre | long sword . leather armour . buckler | nothing
 KMONS: D = Joseph / elf; long sword | scimitar . chain mail . shield
 KMONS: E = Erica / orc knight
