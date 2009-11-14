@@ -553,7 +553,8 @@ WEIGHT: 2
 COLOUR: x = blue
 COLOUR: o = blue
 COLOUR: = = blue
-MONS:  shining eye
+KFEAT:  1 = deep_water
+KMONS:  1 = shining eye
 # 28 items, 'cos this one is *nasty*. The extra items are potions of cure mutation.
 ITEM:   any good_item / any
 ITEM:   any jewellery good_item / any good_item
