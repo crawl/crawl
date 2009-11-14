@@ -648,6 +648,9 @@ void monsters::bind_spell_flags()
 {
     // Bind spellcaster / priest flags from the base type. These may be
     // overridden by vault defs for individual monsters.
+
+    // Alas, we don't know if the mon is zombified at the moment, if it is,
+    // the flags will be removed later.
     if (mons_class_flag(type, M_SPELLCASTER))
         flags |= MF_SPELLCASTER;
     if (mons_class_flag(type, M_ACTUAL_SPELLS))

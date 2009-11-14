@@ -1619,6 +1619,9 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
 
     define_monster(mid);
 
+    // Turn off all spellcasting flags.
+    menv[mid].flags &= ~MF_SPELLCASTER & ~MF_ACTUAL_SPELLS & ~MF_PRIEST;
+
     menv[mid].hit_points     = hit_points(menv[mid].hit_dice, 6, 5);
     menv[mid].max_hit_points = menv[mid].hit_points;
 
