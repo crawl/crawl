@@ -181,7 +181,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_urug
-DEPTH:  10-13, 14-16, !Lair, !Lair
+DEPTH:  10-13, 14-16, !Lair
 TAGS:   place_unique
 MONS:   Urug
 MAP
@@ -189,7 +189,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_michael
-DEPTH:  10-13, 14-16, !Lair, !Lair
+DEPTH:  10-13, 14-16, !Lair
 TAGS:   place_unique
 MONS:   Michael
 MAP
@@ -197,7 +197,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_eustachio
-DEPTH:  10-13, 14-16, !Lair, !Lair
+DEPTH:  10-13, 14-16, !Lair
 TAGS:   place_unique
 MONS:   Eustachio
 MAP
@@ -205,7 +205,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_sonja
-DEPTH:  10-13, 14-16, !Lair, !Lair
+DEPTH:  10-13, 14-16, !Lair
 TAGS:   place_unique
 MONS:   Sonja
 MAP
@@ -221,7 +221,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_erica
-DEPTH:  10-13, 14-16, !Lair, !Lair
+DEPTH:  10-13, 14-16, !Lair
 TAGS:   place_unique
 MONS:   Erica
 MAP
@@ -229,7 +229,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_josephine
-DEPTH:  10-13, 14-16, !Lair, !Lair
+DEPTH:  10-13, 14-16, !Lair
 TAGS:   place_unique
 MONS:   Josephine band
 MAP
@@ -237,7 +237,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_jozef
-DEPTH:  10-13, 14-16, !Lair, !Lair
+DEPTH:  10-13, 14-16, !Lair
 TAGS:   place_unique
 MONS:   Jozef
 MAP
@@ -245,7 +245,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_harold
-DEPTH:  10-13, 14-16, !Lair, !Lair
+DEPTH:  10-13, 14-16, !Lair
 TAGS:   place_unique
 MONS:   Harold
 MAP
@@ -253,7 +253,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_norbert
-DEPTH:  10-13, 14-16, !Lair, !Lair
+DEPTH:  10-13, 14-16, !Lair
 TAGS:   place_unique
 MONS:   Norbert
 MAP
@@ -512,4 +512,3 @@ xxtttttttttttttx
 xxxxxttttttttxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
-
