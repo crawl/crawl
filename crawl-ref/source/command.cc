@@ -2436,6 +2436,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-I</w> : item generation stats\n"
                        "<w>Ctrl-X</w> : Xom effect stats\n"
                        "<w>O</w>      : measure exploration time\n"
+                       "<w>Ctrl-t</w> : enter in-game Lua interpreter\n"
                        "\n"
                        "<w>?</w>      : list wizard commands\n",
                        true, true);
