@@ -35,6 +35,12 @@ default-depth: D:8-27
 ##############################################################################
 # Minivault balancer
 #
+NAME:   mini_test
+MONS:   skeletal warrior name:ancient_champion name_replace name_descriptor name_definite
+MAP
+1
+ENDMAP
+
 NAME: mini_dummy
 DEPTH: 1-50, !D:1-27
 TAGS: dummy

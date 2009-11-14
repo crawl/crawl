@@ -2051,7 +2051,8 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     // If the monster has an explicit name, return that, handling it like
     // a unique's name.  Special handling for named hydras.
     if (desc != DESC_BASENAME && !mon.mname.empty()
-        && mons_genus(nametype) != MONS_HYDRA)
+        && mons_genus(nametype) != MONS_HYDRA
+        && !testbits(mon.flags, MF_NAME_DESCRIPTOR))
     {
         return (mon.mname);
     }
@@ -2063,7 +2064,8 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     // Start with the prefix.
     // (Uniques don't get this, because their names are proper nouns.)
     if (!mons_is_unique(nametype)
-        && (mon.mname.empty() || mons_genus(nametype) == MONS_HYDRA))
+        && ((mon.mname.empty() || testbits(mon.flags, MF_NAME_DESCRIPTOR))
+            || mons_genus(nametype) == MONS_HYDRA))
     {
         const bool use_your = mon.friendly();
         switch (desc)
@@ -2075,13 +2077,15 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
             result = (use_your ? "your " : "the ");
             break;
         case DESC_CAP_A:
-            if (mon.mname.empty())
+            if (mon.mname.empty() || (testbits(mon.flags, MF_NAME_DESCRIPTOR)
+                && !testbits(mon.flags, MF_NAME_DEFINITE)))
                 result = "A ";
             else
                 result = "The ";
             break;
         case DESC_NOCAP_A:
-            if (mon.mname.empty())
+            if (mon.mname.empty() || (testbits(mon.flags, MF_NAME_DESCRIPTOR)
+                && !testbits(mon.flags, MF_NAME_DEFINITE)))
                 result = "a ";
             else
                 result = "the ";
@@ -2272,7 +2276,7 @@ std::string monsters::full_name(description_level_type desc,
 
     const unsigned long flag = flags & MF_NAME_MASK;
 
-    if (flag == MF_NAME_REPLACE)
+    if (flag == MF_NAME_REPLACE && !testbits(flags, MF_NAME_DESCRIPTOR))
     {
         switch(desc)
         {

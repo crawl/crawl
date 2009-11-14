@@ -2158,7 +2158,14 @@ enum monster_flag_type
     MF_PRIEST             = 0x800000, // Is a priest (divine spells)
                                       // for the conduct.
 
-    MF_GOING_BERSERK      = 0x1000000 // Is about to go berserk!
+    MF_GOING_BERSERK      = 0x1000000,// Is about to go berserk!
+
+    MF_NAME_DESCRIPTOR    = 0x2000000,// mname should be treated with normal 
+                                      // grammar, ie, prevent "You hit red rat"
+                                      // and other such constructs.
+    MF_NAME_DEFINITE      = 0x4000000 // give this monster the definite "the"
+                                      // article, instead of the indefinite "a"
+                                      // article.
 };
 
 // Adding slots breaks saves. YHBW.

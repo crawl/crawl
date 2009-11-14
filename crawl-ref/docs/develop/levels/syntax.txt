@@ -612,6 +612,30 @@ MONS:     (list of monsters)
 
           Will result in "Durwent" rather than "Durwent the Kobold".
 
+          In combinaton with name_replace, there are two further tags that
+          can be used when renaming monsters, but not giving them an actual
+          "name": name_descriptor, and name_definite.
+
+          For example:
+              MONS: kobold name:goblin name_replace
+
+          Will result in "goblin hits you". However, adding name_descriptor
+          from the above flags will result in "The goblin hits you" and in the
+          description of the monster, "A goblin".
+              MONS: kobold name:goblin name_replace name_descriptor
+
+          The name_definite flag ensures that it is never referred to as "a" or
+          "an", but that the definite object is always used. Therefore, you will
+          see "The goblin hits you", as per above, but also "The goblin" in its
+          description. Setting name_definite will automatically set the flag
+          name_descriptor, therefore meaning that:
+              MONS: kobold name:goblin name_replace name_definite
+
+          Is exactly the smae as:
+              MONS: kobold name:goblin name_replace name_descriptor name_definite
+
+          This allows for shorter definitions. 
+
           Monster names should be used very sparingly.
 
           Overriding Monster Spells:

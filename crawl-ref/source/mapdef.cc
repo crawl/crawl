@@ -2603,6 +2603,19 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 mspec.extra_monster_flags |= MF_NAME_ADJECTIVE;
             else if (strip_tag(mon_str, "name_replace"))
                 mspec.extra_monster_flags |= MF_NAME_REPLACE;
+
+            // We should be able to combine this with name_replace.
+            if (strip_tag(mon_str, "name_descriptor"))
+                mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
+            // Reasoning for this setting both flags: it does nothing with the
+            // description unless NAME_DESCRIPTOR is also set; thus, you end up
+            // with bloated vault description lines akin to: "name:blah_blah
+            // name_replace name_descrpitor name_definite".
+            if (strip_tag(mon_str, "name_definite"))
+            {
+                mspec.extra_monster_flags |= MF_NAME_DEFINITE;
+                mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
+            }
         }
 
         trim_string(mon_str);

@@ -958,25 +958,25 @@ ORIENT: float
 FLAGS:  no_item_gen no_monster_gen
 KFEAT:  ABCDEFG = metal_wall
 KMONS:  1 = col:gold skeletal warrior name:ancient_champion name_replace \
-        spells:iron_shot;.;haste;pain;.;. actual_spells \
+        name_descriptor spells:iron_shot;.;haste;pain;.;. actual_spells \
         ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
         great sword ego:pain | great sword ego:draining | great sword \
         ego:flaming | w:3 triple sword ego:vorpal
 KMONS:  2 = col:gold skeletal warrior name:ancient_champion name_replace \
-        spells:bolt_of_draining;.;haste;throw_frost;.;. actual_spells \
-        ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
-        great mace ego:vorpal | great mace ego:draining
+        name_descriptor spells:bolt_of_draining;.;haste;throw_frost;.;. \
+        actual_spells ; plate mail ego:fire_resistance | plate mail \
+        ego:cold_resistance . great mace ego:vorpal | great mace ego:draining
 KMONS:  3 = col:gold skeletal warrior name:ancient_champion name_replace \
-        spells:venom_bolt;.;haste;haunt;.;. actual_spells \
+        name_descriptor spells:venom_bolt;.;haste;haunt;.;. actual_spells \
         ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
         battleaxe ego:vorpal | battleaxe ego:pain | \
         w:3 executioner's axe ego:vorpal
 KMONS:  4 = col:gold skeletal warrior name:ancient_champion name_replace \
-        spells:iskenderun's_mystic_blast;slow;haste;.;.;. actual_spells \
-        ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
-        great sword ego:pain | great sword ego:draining | great sword \
-        ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain | \
-        triple sword ego:vorpal | executioner's axe ego:vorpal
+        name_descriptor spells:iskenderun's_mystic_blast;slow;haste;.;.;. \
+        actual_spells ; plate mail ego:fire_resistance | plate mail \
+        ego:cold_resistance . great sword ego:pain | great sword ego:draining \
+        | great sword ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain \
+        | triple sword ego:vorpal | executioner's axe ego:vorpal
 SHUFFLE: 123
 KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_rtele_into
 KITEM:  w = acquire weapon
