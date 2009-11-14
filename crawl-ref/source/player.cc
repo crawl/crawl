@@ -8,10 +8,6 @@
 
 #include "player.h"
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>

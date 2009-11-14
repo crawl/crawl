@@ -7,10 +7,6 @@
 #include "AppHdr.h"
 #include "mon-act.h"
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 #include "arena.h"
 #include "attitude-change.h"
 #include "beam.h"

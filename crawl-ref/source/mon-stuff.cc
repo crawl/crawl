@@ -7,15 +7,6 @@
 #include "AppHdr.h"
 #include "mon-stuff.h"
 
-//#include <stdlib.h>
-//#include <string.h>
-//#include <stdio.h>
-//#include <algorithm>
-
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 #include "arena.h"
 #include "artefact.h"
 #include "attitude-change.h"

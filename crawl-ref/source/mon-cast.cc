@@ -6,10 +6,6 @@
 #include "AppHdr.h"
 #include "mon-cast.h"
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"

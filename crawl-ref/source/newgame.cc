@@ -19,11 +19,6 @@
 #include <time.h>
 #include <algorithm>
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#include <dos.h>
-#endif
-
 #ifdef UNIX
 #include <sys/types.h>
 #include <fcntl.h>

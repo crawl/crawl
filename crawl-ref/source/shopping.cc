@@ -13,10 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef TARGET_OS_DOS
- #include <conio.h>
-#endif
-
 #include "externs.h"
 #include "options.h"
 #include "artefact.h"

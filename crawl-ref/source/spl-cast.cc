@@ -56,10 +56,6 @@
 #include "view.h"
 #include "shout.h"
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 static int _calc_spell_range(spell_type spell, int power = 0,
                              bool real_cast = false);
 

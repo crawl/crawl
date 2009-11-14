@@ -17,11 +17,6 @@
 #include <algorithm>
 #include <cmath>
 
-#ifdef TARGET_OS_DOS
-#include <dos.h>
-#include <conio.h>
-#endif
-
 #include "externs.h"
 #include "options.h"
 

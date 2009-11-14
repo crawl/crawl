@@ -13,10 +13,6 @@
 
 #include <sstream>
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 #if defined(UNIX) && !defined(USE_TILE)
 #include "libunix.h"
 #endif

@@ -13,9 +13,6 @@
 #include <ctype.h>
 #include <string.h>
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
 #include "clua.h"
 
 #include "externs.h"

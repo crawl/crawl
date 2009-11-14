@@ -14,10 +14,6 @@
 #include <algorithm>
 #include <iomanip>
 
-#ifdef TARGET_OS_DOS
- #include <conio.h>
-#endif
-
 #include "artefact.h"
 #include "externs.h"
 #include "species.h"

@@ -16,10 +16,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#ifdef TARGET_OS_DOS
- #include <conio.h>
-#endif
-
 #include "artefact.h"
 #include "cio.h"
 #include "describe.h"

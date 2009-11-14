@@ -28,12 +28,6 @@
 #include <sstream>
 #include <iostream>
 
-#ifdef TARGET_OS_DOS
-#include <dos.h>
-#include <conio.h>
-#include <file.h>
-#endif
-
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
 #endif

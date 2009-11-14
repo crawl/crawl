@@ -10,10 +10,6 @@
 #include "externs.h"
 #include "options.h"
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 #include "arena.h"
 #include "beam.h"
 #include "colour.h"

@@ -13,10 +13,6 @@
 #include <cstring>
 #include <sstream>
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 #include "externs.h"
 #include "options.h"
 

@@ -4,9 +4,6 @@
  *  Written by: Linley Henzel
  *
  *      Abstract:       A variety of miscellaneous constant values are found here.
- *                      I think we should move the colors into an enum or something
- *                      because there are in numerical order.  But I'm too lazy to
- *                      do it myself.
  *
  *  Copyright © 1999 Brian Robinson.  // Me?  How come?
  */
@@ -191,32 +188,35 @@ const int MAX_SEC_ENCHANT = 2;
 
 // colors, such pretty colors ...
 #ifndef TARGET_OS_DOS
-    #define BLACK 0
-    #define BLUE 1
-    #define GREEN 2
-    #define CYAN 3
-    #define RED 4
-    #define MAGENTA 5
-    #define BROWN 6
-    #define LIGHTGREY 7
-    #define DARKGREY 8
-    #define LIGHTBLUE 9
-    #define LIGHTGREEN 10
-    #define LIGHTCYAN 11
-    #define LIGHTRED 12
-    #define LIGHTMAGENTA 13
-    #define YELLOW 14
-    #define WHITE 15
-
-    #define LIGHTGRAY LIGHTGREY
-    #define DARKGRAY DARKGREY
+// The order is important (IRGB bit patterns).
+enum COLORS
+{
+    BLACK,
+    BLUE,
+    GREEN,
+    CYAN,
+    RED,
+    MAGENTA,
+    BROWN,
+    LIGHTGRAY,
+    LIGHTGREY = LIGHTGRAY,
+    DARKGRAY,
+    DARKGREY = DARKGRAY,
+    LIGHTBLUE,
+    LIGHTGREEN,
+    LIGHTCYAN,
+    LIGHTRED,
+    LIGHTMAGENTA,
+    YELLOW,
+    WHITE,
+    MAX_TERM_COLOUR
+};
 #else
-    #include <conio.h>
-    #define LIGHTGREY LIGHTGRAY
-    #define DARKGREY DARKGRAY
+# include <conio.h>
+# define LIGHTGREY LIGHTGRAY
+# define DARKGREY DARKGRAY
+# define MAX_TERM_COLOUR 16
 #endif
-
-#define MAX_TERM_COLOUR 16
 
 // Colour options... these are used as bit flags along with the colour
 // value in the low byte.

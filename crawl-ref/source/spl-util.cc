@@ -35,10 +35,6 @@
 #include "terrain.h"
 
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 struct spell_desc
 {
     int id;
