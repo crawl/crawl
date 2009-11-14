@@ -221,7 +221,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "",
       "Kikubaaqudgha is protecting you from unholy torment.",
-      "invoke torment by butchering corpses during prayer" },
+      "invoke torment by sacrificing corpses" },
     // Yredelemnul
     { "animate remains",
       "recall your undead slaves",
@@ -328,7 +328,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "",
       "Kikubaaqudgha will no longer protect you from unholy torment.",
-      "invoke torment by butchering corpses during prayer" },
+      "invoke torment by sacrificing corpses" },
     // Yredelemnul
     { "animate remains",
       "recall your undead slaves",
