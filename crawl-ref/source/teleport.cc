@@ -13,6 +13,8 @@
 #include "env.h"
 #include "fprop.h"
 #include "los.h"
+#include "monster.h"
+#include "mon-stuff.h"
 #include "player.h"
 #include "random.h"
 #include "random-weight.h"
@@ -44,6 +46,48 @@ static coord_def random_close_space(actor* victim, actor* target)
     }
     coord_def* choice = random_choose_weighted(dests);
     return (choice ? *choice : coord_def(0, 0));
+}
+
+bool player::blink_to(const coord_def& dest, bool quiet)
+{
+    // We rely on the non-generalized move_player_to_cell.
+    ASSERT(this == &you);
+
+    if (dest == pos())
+        return (false);
+    if (!quiet)
+        mpr("You blink.");
+    const coord_def origin = pos();
+    if (!move_player_to_grid(dest, false, true, true))
+        return (false);
+    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+    return (true);
+}
+
+bool monsters::blink_to(const coord_def& dest, bool quiet)
+{
+    if (dest == pos())
+        return (false);
+    if (!quiet)
+        simple_monster_message(this, " blinks!");
+
+    if (!(flags & MF_WAS_IN_VIEW))
+        seen_context = "thin air";
+
+    const coord_def oldplace = pos();
+    if (!move_to_pos(dest))
+        return (false);
+
+    // Leave a purple cloud.
+    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
+                kill_alignment());
+
+    check_redraw(oldplace);
+    apply_location_effects(oldplace);
+
+    mons_relocated(this);
+
+    return (true);
 }
 
 // Blink the player closer to the monster at target.

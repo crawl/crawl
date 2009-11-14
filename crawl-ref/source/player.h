@@ -313,6 +313,7 @@ public:
     void moveto(const coord_def &c);
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
+    bool blink_to(const coord_def& c, bool quiet = false);
 
     void reset_prev_move();
 

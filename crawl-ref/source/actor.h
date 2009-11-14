@@ -32,6 +32,11 @@ public:
     virtual void set_position(const coord_def &c);
     virtual const coord_def& pos() const { return position; }
 
+    // Blink the actor to the destination. c should be a
+    // valid target, though the method returns false
+    // if the blink fails.
+    virtual bool blink_to(const coord_def &c, bool quiet = false) = 0;
+
     virtual bool      swimming() const = 0;
     virtual bool      submerged() const = 0;
     virtual bool      floundering() const = 0;
