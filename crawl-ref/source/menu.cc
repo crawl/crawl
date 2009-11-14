@@ -1652,17 +1652,10 @@ formatted_scroller::formatted_scroller(int _flags, const std::string& s) :
 
 void formatted_scroller::add_text(const std::string& s)
 {
-    size_t eolpos = 0;
-    while (true)
-    {
-        const size_t newpos = s.find( "\n", eolpos );
-        add_item_formatted_string(formatted_string::parse_string(
-                                        std::string(s, eolpos, newpos-eolpos)));
-        if (newpos == std::string::npos)
-            break;
-        else
-            eolpos = newpos + 1;
-    }
+    std::vector<formatted_string> parts;
+    formatted_string::parse_string_to_multiple(s, parts);
+    for (unsigned int i = 0; i < parts.size(); ++i)
+        add_item_formatted_string(parts[i]);
 }
 
 void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
