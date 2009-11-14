@@ -73,6 +73,7 @@ class show_def
     void _update_feat_at(const coord_def &gp, const coord_def &ep);
     void _update_item_at(const coord_def &gp, const coord_def &ep);
     void _update_cloud(int cloudno);
+    void _update_monster(const monsters *monster);
     void _set_backup(const coord_def &e);
 
 public:
@@ -80,7 +81,6 @@ public:
     show_type get_backup(const coord_def &ep) const { return backup(ep); }
 
     void init();
-    bool update_monster(const monsters *monster);
     void update_at(const coord_def &gp, const coord_def &ep);
 };
 

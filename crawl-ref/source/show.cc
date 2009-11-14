@@ -132,8 +132,32 @@ void show_def::_update_cloud(int cloudno)
 #endif
 }
 
-bool show_def::update_monster(const monsters* mons)
+static void _check_monster_pos(const monsters* monster)
 {
+    int s = monster->mindex();
+    ASSERT(mgrd(monster->pos()) == s);
+
+    // [rob] The following in case asserts aren't enabled.
+    // [enne] - It's possible that mgrd and monster->x/y are out of
+    // sync because they are updated separately.  If we can see this
+    // monster, then make sure that the mgrd is set correctly.
+    if (mgrd(monster->pos()) != s)
+    {
+        // If this mprf triggers for you, please note any special
+        // circumstances so we can track down where this is coming
+        // from.
+        mprf(MSGCH_ERROR, "monster %s (%d) at (%d, %d) was "
+             "improperly placed.  Updating mgrd.",
+             monster->name(DESC_PLAIN, true).c_str(), s,
+             monster->pos().x, monster->pos().y);
+        mgrd(monster->pos()) = s;
+    }
+}
+
+void show_def::_update_monster(const monsters* mons)
+{
+    _check_monster_pos(mons);
+
     const coord_def e = grid2show(mons->pos());
 
     if (!mons->visible_to(&you))
@@ -171,7 +195,7 @@ bool show_def::update_monster(const monsters* mons)
 
             grid(e).colour = ripple_table[base_colour & 0x0f];
         }
-        return (false);
+        return;
     }
 
     // Mimics are always left on map.
@@ -182,7 +206,9 @@ bool show_def::update_monster(const monsters* mons)
     grid(e).mons = mons->type;
     grid(e).colour = get_mons_colour(mons);
 
-    return (true);
+#ifdef USE_TILE
+    tile_place_monster(mons->pos().x, mons->pos().y, mons->mindex(), true);
+#endif
 }
 
 void show_def::update_at(const coord_def &gp, const coord_def &ep)
@@ -204,7 +230,7 @@ void show_def::update_at(const coord_def &gp, const coord_def &ep)
 
     const monsters *mons = monster_at(gp);
     if (mons && mons->alive())
-        update_monster(mons);
+        _update_monster(mons);
 }
 
 void show_def::init()

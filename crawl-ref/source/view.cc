@@ -145,43 +145,6 @@ void monster_grid_updates()
     }
 }
 
-static void _check_monster_pos(const monsters* monster)
-{
-    int s = monster->mindex();
-    ASSERT(mgrd(monster->pos()) == s);
-
-    // [rob] The following in case asserts aren't enabled.
-    // [enne] - It's possible that mgrd and monster->x/y are out of
-    // sync because they are updated separately.  If we can see this
-    // monster, then make sure that the mgrd is set correctly.
-    if (mgrd(monster->pos()) != s)
-    {
-        // If this mprf triggers for you, please note any special
-        // circumstances so we can track down where this is coming
-        // from.
-        mprf(MSGCH_ERROR, "monster %s (%d) at (%d, %d) was "
-             "improperly placed.  Updating mgrd.",
-             monster->name(DESC_PLAIN, true).c_str(), s,
-             monster->pos().x, monster->pos().y);
-        ASSERT(!monster_at(monster->pos()));
-        mgrd(monster->pos()) = s;
-    }
-}
-
-void monster_grid()
-{
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
-    {
-        _check_monster_pos(*mi);
-        env.show.update_monster(*mi);
-
-#ifdef USE_TILE
-        if (mi->visible_to(&you))
-            tile_place_monster(mi->pos().x, mi->pos().y, mi->mindex(), true);
-#endif
-    }
-}
-
 void update_monsters_in_view()
 {
     unsigned int num_hostile = 0;
@@ -894,7 +857,6 @@ void viewwindow(bool do_updates)
 
     env.show.init();
 
-    monster_grid();
     if (do_updates && !crawl_state.arena)
         monster_grid_updates();
 
