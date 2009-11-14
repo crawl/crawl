@@ -6,9 +6,10 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "env.h"
+#include "feature.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "overmap.h"
-#include "showsymb.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
@@ -26,7 +27,13 @@ unsigned map_cell::glyph() const
 {
     if (!object)
         return (' ');
-    return get_symbol(object, !(flags & MAP_SEEN_FLAG));
+    if (object.cls < SH_MONSTER)
+    {
+        const feature_def &fdef = get_feature_def(object);
+        return ((flags & MAP_SEEN_FLAG) ? fdef.symbol : fdef.magic_symbol);
+    }
+    else
+        return (mons_char(object.mons));
 }
 
 bool map_cell::known() const
