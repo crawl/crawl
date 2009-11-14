@@ -98,7 +98,7 @@ static coord_def random_space_weighted(actor* moved, actor* target,
 }
 
 // Blink the victim closer to the monster at target.
-void blink_closer(actor* victim, const coord_def &target)
+void blink_other_close(actor* victim, const coord_def &target)
 {
     actor* caster = actor_at(target);
     if (!caster)

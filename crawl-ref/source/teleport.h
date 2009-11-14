@@ -4,7 +4,7 @@
 class actor;
 class monsters;
 
-void blink_closer(actor* victim, const coord_def& target);
+void blink_other_close(actor* victim, const coord_def& target);
 void blink_away(monsters* mon);
 void blink_range(monsters* mon);
 

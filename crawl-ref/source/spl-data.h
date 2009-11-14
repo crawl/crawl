@@ -2265,7 +2265,7 @@
 },
 
 {
-     SPELL_BLINK_OTHER_CLOSER, "Blink Other Closer",
+     SPELL_BLINK_OTHER_CLOSE, "Blink Other Close",
      SPTYP_TRANSLOCATION,
      SPFLAG_TARGET | SPFLAG_MONSTER,
      2,

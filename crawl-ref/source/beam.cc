@@ -205,7 +205,7 @@ static void _ench_animation(int flavour, const monsters *mon, bool force)
     case BEAM_TELEPORT:
     case BEAM_BANISH:
     case BEAM_BLINK:
-    case BEAM_BLINK_CLOSER:
+    case BEAM_BLINK_CLOSE:
         elem = ETC_WARP;
         break;
     default:
@@ -3947,8 +3947,8 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
-    case BEAM_BLINK_CLOSER:
-        blink_closer(&you, source);
+    case BEAM_BLINK_CLOSE:
+        blink_other_close(&you, source);
         obvious_effect = true;
         break;
 
@@ -5163,10 +5163,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         monster_blink(mon);
         return (MON_AFFECTED);
 
-    case BEAM_BLINK_CLOSER:
+    case BEAM_BLINK_CLOSE:
         if (mon->observable())
             obvious_effect = true;
-        blink_closer(mon, source);
+        blink_other_close(mon, source);
         return (MON_AFFECTED);
 
     case BEAM_POLYMORPH:
@@ -6232,7 +6232,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_DISINTEGRATION:       return ("disintegration");
     case BEAM_ENSLAVE_DEMON:        return ("enslave demon");
     case BEAM_BLINK:                return ("blink");
-    case BEAM_BLINK_CLOSER:         return ("blink closer");
+    case BEAM_BLINK_CLOSE:          return ("blink close");
     case BEAM_PETRIFY:              return ("petrify");
     case BEAM_CORONA:               return ("backlight");
     case BEAM_PORKALATOR:           return ("porkalator");

@@ -622,8 +622,8 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
-    case SPELL_BLINK_OTHER_CLOSER:
-        beam.flavour    = BEAM_BLINK_CLOSER;
+    case SPELL_BLINK_OTHER_CLOSE:
+        beam.flavour    = BEAM_BLINK_CLOSE;
         beam.is_beam    = true;
         break;
 
@@ -802,6 +802,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_CONTROLLED_BLINK:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
+    case SPELL_BLINK_CLOSE:
     case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_SUMMON_EYEBALLS:
@@ -2048,11 +2049,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
         break;
     }
-    case SPELL_BLINK_OTHER_CLOSER:
+    case SPELL_BLINK_OTHER_CLOSE:
     {
         // Allow the caster to comment on moving the foe.
         std::string msg = getSpeakString(monster->name(DESC_PLAIN)
-                                         + " blink_other_closer");
+                                         + " blink_other_close");
         if (!msg.empty() && msg != "__NONE")
         {
             mons_speaks_msg(monster, msg, MSGCH_TALK,
