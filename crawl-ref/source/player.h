@@ -566,7 +566,6 @@ bool berserk_check_wielded_weapon(void);
 int player_equip( equipment_type slot, int sub_type, bool calc_unid = true );
 int player_equip_ego_type( int slot, int sub_type );
 bool player_equip_unrand( int unrand_index );
-int player_damage_type(void);
 bool player_can_hit_monster(const monsters *mon);
 
 bool player_is_shapechanged(void);

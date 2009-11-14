@@ -1001,11 +1001,6 @@ bool player_equip_unrand(int unrand_index)
     return (false);
 }
 
-int player_damage_type(void)
-{
-    return (you.damage_type());
-}
-
 // Given an adjacent monster, returns true if the player can hit it (the
 // monster should not be submerged, or be submerged in shallow water if
 // the player has a polearm).
