@@ -3271,7 +3271,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_VORPAL:
-        special_damage = 1 + random2(damage_done) / 2;
+        special_damage = 1 + random2(damage_done) / 4;
         // Note: Leaving special_damage_message empty because there isn't one.
         break;
 

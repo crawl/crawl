@@ -1252,7 +1252,7 @@ static int _ego_damage_bonus(item_def &item)
     case SPWPN_NORMAL:      return 0;
     case SPWPN_PROTECTION:  return 1;
     default:                return 2;
-    case SPWPN_VORPAL:      return 3;
+    case SPWPN_VORPAL:      return 1;
     }
 }
 

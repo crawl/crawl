@@ -1038,7 +1038,6 @@ unsigned int item_value( item_def item, bool ident )
             case SPWPN_DISTORTION:
             case SPWPN_ELECTROCUTION:
             case SPWPN_PAIN:
-            case SPWPN_VORPAL:
                 valued *= 30;
                 break;
 
@@ -1056,6 +1055,7 @@ unsigned int item_value( item_def item, bool ident )
                 valued *= 21;
                 break;
 
+            case SPWPN_VORPAL:
             case SPWPN_PROTECTION:
                 valued *= 20;
                 break;
