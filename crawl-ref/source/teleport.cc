@@ -52,7 +52,7 @@ void blink_closer(const coord_def &target)
     actor* caster = actor_at(target);
     if (!caster)
         return;
-    if (is_sanctuary(you.pos())
+    if (is_sanctuary(you.pos()))
         return;
     coord_def dest = random_close_space(&you, caster);
     if (dest.origin())
