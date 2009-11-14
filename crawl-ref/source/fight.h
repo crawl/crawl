@@ -210,7 +210,7 @@ private:
 
     std::vector<attack_final_effect> final_effects;
 
-    void handle_noise();
+    void handle_noise(const coord_def & pos);
 
 private:
     // Monster-attack specific stuff
