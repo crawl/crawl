@@ -2312,10 +2312,8 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 {
     const item_def* launcher = act->weapon();
 
-    if (launcher == NULL)
+    if (launcher == NULL || launcher->base_type != OBJ_WEAPONS)
         return;
-
-    ASSERT(launcher->base_type == OBJ_WEAPONS);
 
     if (is_launched(act, launcher, ammo) != LRET_LAUNCHED)
         return;
