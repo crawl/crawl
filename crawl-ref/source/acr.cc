@@ -3918,6 +3918,11 @@ static void _move_player(coord_def move)
     }
 
     const coord_def& targ = you.pos() + move;
+
+    // You can't walk out of bounds!
+    if (!in_bounds(targ))
+        return;
+
     const dungeon_feature_type targ_grid  =  grd(targ);
 
           monsters*      targ_monst = monster_at(targ);
