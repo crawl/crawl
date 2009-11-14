@@ -491,7 +491,8 @@ bool mons_behaviour_perceptible(const monsters *mon)
     return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && !mons_is_mimic(mon->type)
             && !mons_is_statue(mon->type)
-            && mon->type != MONS_OKLOB_PLANT);
+            && mon->type != MONS_OKLOB_PLANT
+            && mon->type != MONS_BALLISTOMYCETE);
 }
 
 // Returns true for monsters that obviously (to the player) feel
