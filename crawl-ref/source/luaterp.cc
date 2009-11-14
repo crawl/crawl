@@ -106,6 +106,7 @@ static int _report(lua_State *ls, int status)
 void run_clua_interpreter(lua_State *ls)
 {
     int status;
+    mpr("[Hit ESC to exit interpreter.]");
     while ((status = _loadline(ls)) != -1)
     {
         if (status == 0)
