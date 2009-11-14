@@ -54,6 +54,7 @@
 #include "spells4.h"
 #include "state.h"
 #include "stuff.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transfor.h"
 #include "traps.h"
@@ -204,6 +205,7 @@ static void _ench_animation(int flavour, const monsters *mon, bool force)
     case BEAM_TELEPORT:
     case BEAM_BANISH:
     case BEAM_BLINK:
+    case BEAM_BLINK_CLOSER:
         elem = ETC_WARP;
         break;
     default:
@@ -3945,6 +3947,11 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
+    case BEAM_BLINK_CLOSER:
+        blink_closer(&you, source);
+        obvious_effect = true;
+        break;
+
     case BEAM_CHARM:
         potion_effect( POT_CONFUSION, ench_power );
         obvious_effect = true;
@@ -5156,6 +5163,12 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         monster_blink(mon);
         return (MON_AFFECTED);
 
+    case BEAM_BLINK_CLOSER:
+        if (mon->observable())
+            obvious_effect = true;
+        blink_closer(mon, source);
+        return (MON_AFFECTED);
+
     case BEAM_POLYMORPH:
         if (mon->mutate())
             obvious_effect = true;
@@ -6219,6 +6232,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_DISINTEGRATION:       return ("disintegration");
     case BEAM_ENSLAVE_DEMON:        return ("enslave demon");
     case BEAM_BLINK:                return ("blink");
+    case BEAM_BLINK_CLOSER:         return ("blink closer");
     case BEAM_PETRIFY:              return ("petrify");
     case BEAM_CORONA:               return ("backlight");
     case BEAM_PORKALATOR:           return ("porkalator");
