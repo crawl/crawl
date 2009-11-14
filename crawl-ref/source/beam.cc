@@ -1557,15 +1557,15 @@ void bolt::initialise_fire()
         std::string item_name   = item ? item->name(DESC_PLAIN, false, true)
                                        : "none";
 
-        std::string source_name = "unknown";
+        std::string dbg_source_name = "unknown";
         if (beam_source == NON_MONSTER && source == you.pos())
-            source_name = "player";
+            dbg_source_name = "player";
         else if (!invalid_monster_index(beam_source))
-            source_name = menv[beam_source].name(DESC_PLAIN, true);
+            dbg_source_name = menv[beam_source].name(DESC_PLAIN, true);
 
         mprf(MSGCH_ERROR, "beam '%s' (source '%s', item '%s') has range -1; "
                           "setting to LOS_RADIUS",
-             name.c_str(), source_name.c_str(), item_name.c_str());
+             name.c_str(), dbg_source_name.c_str(), item_name.c_str());
 #endif
         range = LOS_RADIUS;
     }
@@ -3356,8 +3356,7 @@ void bolt::affect_place_explosion_clouds()
 
         place_cloud( CLOUD_FIRE, p, duration, whose_kill(), killer() );
 
-        if (grd(p) == DNGN_FLOOR && !monster_at(p)
-            && one_chance_in(4))
+        if (grd(p) == DNGN_FLOOR && !monster_at(p) && one_chance_in(4))
         {
             const god_type god =
                 (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
@@ -3365,9 +3364,20 @@ void bolt::affect_place_explosion_clouds()
             const beh_type att =
                 (whose_kill() == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY);
 
-            mons_place(
-                mgen_data(MONS_FIRE_VORTEX, att, agent(), 2, SPELL_FIRE_STORM,
-                          p, MHITNOT, 0, god));
+            actor* summ = agent();
+            mgen_data mg(MONS_FIRE_VORTEX, att, summ, 2, SPELL_FIRE_STORM,
+                         p, MHITNOT, 0, god);
+
+            // Spell-summoned monsters need to have a live summoner.
+            if (summ == NULL || !summ->alive())
+            {
+                if (!source_name.empty())
+                    mg.non_actor_summoner = source_name;
+                else if (god != GOD_NO_GOD)
+                    mg.non_actor_summoner = god_name(god);
+            }
+
+            mons_place(mg);
         }
     }
 }
@@ -4971,6 +4981,11 @@ void bolt::affect_monster(monsters* mon)
         monster_post_hit(mon, final);
     else
     {
+        // Preserve name of the source monster if it winds up killing
+        // itself.
+        if (mon->mindex() == beam_source && source_name.empty())
+            source_name = orig.name(DESC_NOCAP_A, true);
+
         // Prevent spore explosions killing plants from being registered
         // as a Fedhas misconduct.  Deaths can trigger the ally dying or
         // plant dying conducts, but spore explosions shouldn't count
@@ -6003,12 +6018,12 @@ bool bolt::nice_to(const monsters *mon) const
 bolt::bolt() : range(-2), type('*'), colour(BLACK), flavour(BEAM_MAGIC),
     real_flavour(BEAM_MAGIC), drop_item(false), item(NULL), source(), target(),
     damage(0, 0), ench_power(0), hit(0), thrower(KILL_MISC), ex_size(0),
-    beam_source(MHITNOT), name(), short_name(), hit_verb(), loudness(0),
-    noise_msg(), is_beam(false), is_explosion(false), is_big_cloud(false),
-    aimed_at_spot(false), aux_source(), affects_nothing(false),
-    affects_items(true), effect_known(true), draw_delay(15),
-    special_explosion(NULL), range_funcs(), damage_funcs(), hit_funcs(),
-    aoe_funcs(), obvious_effect(false), seen(false), heard(false),
+    beam_source(MHITNOT), source_name(), name(), short_name(), hit_verb(),
+    loudness(0), noise_msg(), is_beam(false), is_explosion(false),
+    is_big_cloud(false), aimed_at_spot(false), aux_source(),
+    affects_nothing(false), affects_items(true), effect_known(true),
+    draw_delay(15), special_explosion(NULL), range_funcs(), damage_funcs(),
+    hit_funcs(), aoe_funcs(), obvious_effect(false), seen(false), heard(false),
     path_taken(), range_used(0), is_tracer(false), aimed_at_feet(false),
     msg_generated(false), passed_target(false), in_explosion_phase(false),
     smart_monster(false), can_see_invis(false), attitude(ATT_HOSTILE),
