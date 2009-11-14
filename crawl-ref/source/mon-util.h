@@ -577,7 +577,7 @@ void mons_load_spells(monsters *mon, mon_spellbook_type book);
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
 
-void define_monster(int mid);
+void define_monster(int midx);
 void define_monster(monsters &mons);
 
 void mons_pacify(monsters *mon);
