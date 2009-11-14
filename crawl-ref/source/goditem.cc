@@ -532,7 +532,7 @@ conduct_type god_hates_item_handling(const item_def &item)
     if (item_type_known(item)
         && (god_hates_spellbook(item) || god_hates_rod(item)))
     {
-        return (NUM_CONDUCTS); // FIXME: get the specific reason, if it
+        return (NUM_CONDUCTS); // FIXME: Get the specific reason, if it
     }                          // will ever be needed for spellbooks.
 
     return (DID_NOTHING);
@@ -605,9 +605,9 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         break;
 
     case GOD_XOM:
-        // Ideally, Xom would only like spells which have a random effect,
-        // are risky to use, or would otherwise amuse him, but that would
-        // be a really small number of spells.
+        // Ideally, Xom would only like spells which have a random
+        // effect, are risky to use, or would otherwise amuse him, but
+        // that would be a really small number of spells.
 
         // Xom would probably find these extra boring.
         if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL | SPFLAG_ESCAPE
@@ -661,7 +661,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
 
     case GOD_XOM:
         return (is_holy_discipline(discipline)
-                || discipline & (SPTYP_DIVINATION));
+                || (discipline & SPTYP_DIVINATION));
 
     case GOD_ELYVILON:
         return (discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));
