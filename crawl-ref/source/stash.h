@@ -114,6 +114,7 @@ private:
     static bool is_filtered(const item_def &item);
 
     friend class LevelStashes;
+    friend class ST_ItemIterator;
 };
 
 class ShopInfo
@@ -164,6 +165,8 @@ private:
     std::string shop_item_name(const shop_item &si) const;
     std::string shop_item_desc(const shop_item &si) const;
     void describe_shop_item(const shop_item &si) const;
+
+    friend class ST_ItemIterator;
 };
 
 struct stash_search_result
@@ -273,6 +276,7 @@ public:
     shops_t m_shops;
 
     friend class StashTracker;
+    friend class ST_ItemIterator;
 };
 
 extern std::ostream &operator << (std::ostream &, const LevelStashes &);
@@ -352,6 +356,41 @@ private:
     stash_levels_t levels;
 
     double last_corpse_update;
+
+    friend class ST_ItemIterator;
+};
+
+class ST_ItemIterator
+{
+public:
+    ST_ItemIterator();
+
+    const ST_ItemIterator& operator ++ ();
+    ST_ItemIterator operator ++ (int);
+
+    operator bool() const;
+    const item_def& operator *() const;
+    const item_def* operator->() const;
+
+    const level_id  &place();
+    const ShopInfo*  shop();
+    const unsigned   price();
+
+private:
+          level_id  m_place;
+    const item_def* m_item;
+          unsigned  m_price;
+    const ShopInfo* m_shop;
+
+    StashTracker::stash_levels_t::const_iterator m_stash_level_it;
+    LevelStashes::stashes_t::const_iterator      m_stash_it;
+    LevelStashes::shops_t::const_iterator        m_shop_it;
+    std::vector<item_def>::const_iterator        m_stash_item_it;
+
+    std::vector<ShopInfo::shop_item>::const_iterator m_shop_item_it;
+
+private:
+    void new_level();
 };
 
 extern StashTracker StashTrack;

@@ -1966,3 +1966,149 @@ void StashTracker::update_corpses()
         iter->second._update_corpses(rot_time);
     }
 }
+
+//////////////////////////////////////////////
+
+ST_ItemIterator::ST_ItemIterator()
+{
+    m_stash_level_it = StashTrack.levels.begin();
+    new_level();
+    //(*this)++;
+}
+
+ST_ItemIterator::operator bool() const
+{
+    return (m_item != NULL);
+}
+
+const item_def& ST_ItemIterator::operator *() const
+{
+    return (*m_item);
+}
+
+const item_def* ST_ItemIterator::operator->() const
+{
+    return (m_item);
+}
+
+const level_id &ST_ItemIterator::place()
+{
+    return (m_place);
+}
+
+const ShopInfo* ST_ItemIterator::shop()
+{
+    return (m_shop);
+}
+
+const unsigned  ST_ItemIterator::price()
+{
+    return (m_price);
+}
+
+const ST_ItemIterator& ST_ItemIterator::operator ++ ()
+{
+    m_item = NULL;
+    m_shop = NULL;
+
+    const LevelStashes &ls = m_stash_level_it->second;
+
+    if (m_stash_it == ls.m_stashes.end())
+    {
+        if (m_shop_it == ls.m_shops.end())
+        {
+            m_stash_level_it++;
+            if (m_stash_level_it == StashTrack.levels.end())
+                return (*this);
+
+            new_level();
+            return (*this);
+        }
+        m_shop = &(*m_shop_it);
+
+        if (m_shop_item_it != m_shop->items.end())
+        {
+            const ShopInfo::shop_item &item = *m_shop_item_it++;
+            m_item  = &(item.item);
+            ASSERT(m_item->is_valid());
+            m_price = item.price;
+            return (*this);
+        }
+
+        m_shop_it++;
+        if (m_shop_it != ls.m_shops.end())
+            m_shop_item_it = m_shop_it->items.begin();
+
+        ++(*this);
+    }
+    else
+    {
+        if (m_stash_item_it != m_stash_it->second.items.end())
+        {
+            m_item = &(*m_stash_item_it++);
+            ASSERT(m_item->is_valid());
+            return (*this);
+        }
+
+        m_stash_it++;
+        if (m_stash_it == ls.m_stashes.end())
+        {
+            ++(*this);
+            return (*this);
+        }
+
+        m_stash_item_it = m_stash_it->second.items.begin();
+        ++(*this);
+    }
+
+    return (*this);
+}
+
+void ST_ItemIterator::new_level()
+{
+    m_item  = NULL;
+    m_shop  = NULL;
+    m_price = 0;
+
+    if (m_stash_level_it == StashTrack.levels.end())
+        return;
+
+    const LevelStashes &ls = m_stash_level_it->second;
+
+    m_place = ls.m_place;
+
+    m_stash_it = ls.m_stashes.begin();
+    if (m_stash_it != ls.m_stashes.end())
+    {
+        m_stash_item_it = m_stash_it->second.items.begin();
+        if (m_stash_item_it != m_stash_it->second.items.end())
+        {
+            m_item = &(*m_stash_item_it++);
+            ASSERT(m_item->is_valid());
+        }
+    }
+
+    m_shop_it = ls.m_shops.begin();
+    if (m_shop_it != ls.m_shops.end())
+    {
+        const ShopInfo &si = *m_shop_it;
+
+        m_shop_item_it = si.items.begin();
+
+        if (m_item == NULL && m_shop_item_it != si.items.end())
+        {
+            const ShopInfo::shop_item &item = *m_shop_item_it++;
+            m_item  = &(item.item);
+            ASSERT(m_item->is_valid());
+            m_price = item.price;
+            m_shop  = &si;
+        }
+    }
+}
+
+ST_ItemIterator ST_ItemIterator::operator ++ (int dummy)
+{
+    const ST_ItemIterator copy = *this;
+    ++(*this);
+    return (copy);
+}
