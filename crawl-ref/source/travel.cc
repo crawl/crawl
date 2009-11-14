@@ -2139,7 +2139,7 @@ level_id find_down_level(level_id curr)
     return (curr);
 }
 
-static level_id _find_deepest_explored(level_id curr)
+level_id find_deepest_explored(level_id curr)
 {
     for (int i = branches[curr.branch].depth; i > 0; --i)
     {
@@ -2217,7 +2217,7 @@ static void _travel_depth_munge(int munge_method, const std::string &s,
         lid = find_up_level(lid, true);
         break;
     case '$':
-        lid = _find_deepest_explored(lid);
+        lid = find_deepest_explored(lid);
         break;
     case '^':
         targ.entrance_only = !targ.entrance_only;
