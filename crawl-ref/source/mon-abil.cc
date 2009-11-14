@@ -1439,28 +1439,35 @@ void activate_ballistomycetes( monsters * monster, const coord_def & origin)
     }
 
     bool found_others = false;
-    int seen_others = 0;
 
+    std::vector<monsters *> candidates;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->mindex() != monster->mindex()
             && mi->alive()
             && mi->type == MONS_BALLISTOMYCETE)
         {
-            mi->number++;
-            found_others = true;
-            // Change color and start the spore production timer if we
-            // are moving from 0 to 1.
-            if (mi->number == 1)
-            {
-                mi->colour = LIGHTRED;
-                // Reset the spore production timer.
-                mi->del_ench(ENCH_SPORE_PRODUCTION, false);
-                mi->add_ench(ENCH_SPORE_PRODUCTION);
+            candidates.push_back(*mi);
 
-                if (you.can_see(*mi))
-                    seen_others++;
-            }
+        }
+    }
+
+
+    if (!candidates.empty())
+    {
+        monsters * spawner = candidates[random2(candidates.size())];
+
+        spawner->number++;
+        found_others = true;
+
+        // Change color and start the spore production timer if we
+        // are moving from 0 to 1.
+        if (spawner->number == 1)
+        {
+            spawner->colour = LIGHTRED;
+            // Reset the spore production timer.
+            spawner->del_ench(ENCH_SPORE_PRODUCTION, false);
+            spawner->add_ench(ENCH_SPORE_PRODUCTION);
         }
     }
 
@@ -1469,31 +1476,3 @@ void activate_ballistomycetes( monsters * monster, const coord_def & origin)
         mprf("You feel the ballistomycetes will spawn a replacement spore.");
     }
 }
-
-// Decrease the count on each ballistomycete on the level. To be called
-// after a new spore is created. If a ballistos count drops to 0 it changes
-// colorr (back to magenta) and stops producing spores.
-void deactivate_ballistos()
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->alive()
-            && mi->type == MONS_BALLISTOMYCETE)
-        {
-            // Decrease the count and maybe become inactive
-            // again
-            if (mi->number)
-            {
-                mi->number--;
-                if (mi->number == 0)
-                {
-                    mi->colour = MAGENTA;
-                    mi->del_ench(ENCH_SPORE_PRODUCTION);
-                }
-            }
-
-        }
-    }
-}
-
-

@@ -18,6 +18,5 @@ bool slime_split_merge(monsters *thing);
 
 void ballisto_on_move(monsters * monster, const coord_def & pos);
 void activate_ballistomycetes( monsters * monster, const coord_def & origin);
-void deactivate_ballistos();
 
 #endif

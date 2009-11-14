@@ -5000,7 +5000,18 @@ void monsters::apply_enchantment(const mon_enchant &me)
                         if (you.see_cell(adjacent) && you.see_cell(pos()))
                             mpr("A ballistomycete spawns a giant spore.");
 
-                        deactivate_ballistos();
+                        // Decrease the count and maybe become inactive
+                        // again
+                        if (this->number)
+                        {
+                            this->number--;
+                            if (this->number == 0)
+                            {
+                                this->colour = MAGENTA;
+                                this->del_ench(ENCH_SPORE_PRODUCTION);
+                            }
+                        }
+
                     }
                     break;
                 }
