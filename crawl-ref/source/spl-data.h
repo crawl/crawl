@@ -2239,6 +2239,19 @@
 },
 
 {
+     SPELL_BLINK_OTHER_CLOSER, "Blink Other Closer",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_TARGET | SPFLAG_MONSTER,
+     2,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_SUMMON_MUSHROOMS, "Summon Mushrooms",
      SPTYP_SUMMONING,
      SPFLAG_MONSTER,

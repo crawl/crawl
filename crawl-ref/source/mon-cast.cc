@@ -621,6 +621,11 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_BLINK_OTHER_CLOSER:
+        beam.flavour    = BEAM_BLINK_CLOSER;
+        beam.is_beam    = true;
+        break;
+
     case SPELL_FIRE_BREATH:
         beam.name       = "blast of flame";
         beam.aux_source = "blast of fiery breath";
@@ -2029,6 +2034,18 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         // Allow the caster to comment on moving the foe.
         std::string msg = getSpeakString(monster->name(DESC_PLAIN)
                                          + " blink_other");
+        if (!msg.empty() && msg != "__NONE")
+        {
+            mons_speaks_msg(monster, msg, MSGCH_TALK,
+                            silenced(you.pos()) || silenced(monster->pos()));
+        }
+        break;
+    }
+    case SPELL_BLINK_OTHER_CLOSER:
+    {
+        // Allow the caster to comment on moving the foe.
+        std::string msg = getSpeakString(monster->name(DESC_PLAIN)
+                                         + " blink_other_closer");
         if (!msg.empty() && msg != "__NONE")
         {
             mons_speaks_msg(monster, msg, MSGCH_TALK,
