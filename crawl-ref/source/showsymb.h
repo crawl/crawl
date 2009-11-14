@@ -19,7 +19,7 @@ unsigned get_screen_glyph( const coord_def &p );
 int get_mons_colour(const monsters *mons);
 
 unsigned grid_character_at(const coord_def &c);
-unsigned get_symbol(show_type object, bool magic_mapped = false);
+unsigned get_symbol(show_type object, bool magic_mapped);
 void get_symbol(const coord_def& where,
                 show_type object, unsigned *ch,
                 unsigned short *colour,
