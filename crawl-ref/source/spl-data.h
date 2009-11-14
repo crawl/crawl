@@ -571,7 +571,7 @@
 },
 
 {
-    SPELL_BLINK, "Blink",
+     SPELL_BLINK, "Blink",
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE,
      2,
@@ -581,6 +581,32 @@
      NULL,
      false,
      true
+},
+
+{
+     SPELL_BLINK_RANGE, "Blink Range", // XXX needs better name
+     SPTYP_TRANSLOCATION,
+     SPFLAG_ESCAPE | SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+     SPELL_BLINK_AWAY, "Blink Away",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_ESCAPE | SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
 },
 
 // The following name was found in the hack.exe file of an early version
