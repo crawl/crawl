@@ -1894,7 +1894,7 @@ bool randart_is_bad( const item_def &item )
     return randart_is_bad( item, proprt);
 }
 
-bool make_item_randart( item_def &item )
+bool make_item_randart( item_def &item, bool force_mundane )
 {
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
@@ -1921,7 +1921,7 @@ bool make_item_randart( item_def &item )
     if (item.flags & ISFLAG_UNRANDART)
         return (false);
 
-    if (item_is_mundane(item) && !one_chance_in(5))
+    if (item_is_mundane(item) && !one_chance_in(5) && !force_mundane)
         return (false);
 
     ASSERT(!item.props.exists(KNOWN_PROPS_KEY));

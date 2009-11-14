@@ -2225,6 +2225,15 @@ int acquirement_create_item(object_class_type class_wanted,
             break;
         }
 
+        // These can never get egos, and mundane versions are quite common, so
+        // guarantee artifact status.  Rarity is a bit low to compensate.
+        if (thing.sub_type == WPN_GIANT_CLUB
+            || thing.sub_type == WPN_GIANT_SPIKED_CLUB)
+        {
+            if (!one_chance_in(25))
+                make_item_randart(thing, true);
+        }
+
         int plusmod = random2(4);
         if (agent == GOD_TROG)
         {

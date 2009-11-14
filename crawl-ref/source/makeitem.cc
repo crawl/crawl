@@ -1689,7 +1689,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     }
     else if ((force_good || is_demonic(item) || forced_ego
                     || x_chance_in_y(51 + item_level, 200))
-                && !item_is_mundane(item))
+                && (!item_is_mundane(item) || force_good))
     {
         // Make a better item (possibly ego).
         if (!no_brand)
@@ -2370,7 +2370,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
     else if ((force_good || forced_ego || item.sub_type == ARM_WIZARD_HAT
                     || x_chance_in_y(51 + item_level, 250))
-                && !item_is_mundane(item))
+                && (!item_is_mundane(item) || force_good))
     {
         // Make a good item...
         item.plus += random2(3);

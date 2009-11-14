@@ -211,10 +211,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CRUSHING, 10 },
     { WPN_GIANT_CLUB,        "giant club",         20, -6, 17, 330, 10,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE, false,
-        DAMV_CRUSHING, 0 },
+        DAMV_CRUSHING, 10 },
     { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18, 350, 10,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE, false,
-        DAMV_PIERCING | DAM_BLUDGEON, 0 },
+        DAMV_PIERCING | DAM_BLUDGEON, 10 },
 
     // Short Blades
     { WPN_KNIFE,             "knife",               3,  5, 10,  10,  1,
