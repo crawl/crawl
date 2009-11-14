@@ -1101,7 +1101,8 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
     if (amount < 1)
         return;
 
-    if (!spatter && !allow_bleeding_on_square(where))
+    bool may_bleed = allow_bleeding_on_square(where);
+    if (!spatter && !may_bleed)
         return;
 
     if (x_chance_in_y(amount, 20))
@@ -1111,10 +1112,13 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
              "might bleed now; square: (%d, %d); amount = %d",
              where.x, where.y, amount);
 #endif
-        env.pgrid(where) |= FPROP_BLOODY;
+        if (may_bleed)
+        {
+            env.pgrid(where) |= FPROP_BLOODY;
 
-        if (smell_alert)
-            blood_smell(12, where);
+            if (smell_alert)
+                blood_smell(12, where);
+        }
 
         if (spatter)
         {
