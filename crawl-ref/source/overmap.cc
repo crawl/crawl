@@ -347,24 +347,9 @@ std::string overview_description_string()
 
             ++branchcount;
 
-            // Changing this up a little bit because there is an issue
-            // with linebreaks getting placed in between the <yellow>
-            // and </yellow> tags if there are any spaces. It seems
-            // easier to put the spaces after the closing tag than to
-            // make the linebreak/formatted string stuff less dumb.
-            // -cao
-            //
-            //snprintf(buffer, sizeof buffer, "<yellow>%-6s</yellow>: %-7s",
-            //         branches[branch].abbrevname,
-            //         stair_level[branch].describe(false, true).c_str());
-
-            std::string merged=branches[branch].abbrevname +
-                               std::string("</yellow>");
-
-            snprintf(buffer, sizeof buffer, "<yellow>%-15s: %-7s",
-                     merged.c_str(),
+            snprintf(buffer, sizeof buffer, "<yellow>%-6s</yellow>: %-7s",
+                     branches[branch].abbrevname,
                      stair_level[branch].describe(false, true).c_str());
-
             disp += buffer;
             if ( (branchcount % 4) == 0 )
                 disp += "\n";
@@ -622,7 +607,7 @@ bool unnotice_feature(const level_pos &pos)
 void display_overmap()
 {
     std::string disp = overview_description_string();
-    linebreak_string2(disp, get_number_of_cols() - 1);
+    linebreak_string(disp, get_number_of_cols() - 5, get_number_of_cols() - 1);
     formatted_scroller(MF_EASY_EXIT | MF_ANYPRINTABLE | MF_NOSELECT,
                        disp).show();
     redraw_screen();
