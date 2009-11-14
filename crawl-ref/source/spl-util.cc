@@ -32,7 +32,6 @@
 #include "religion.h"
 #include "spells4.h"
 #include "spl-cast.h"
-#include "spl-util.h"
 #include "terrain.h"
 
 
