@@ -1807,7 +1807,7 @@ void bolt::fire_wall_effect()
             else if (player_can_smell())
                 emit_message(MSGCH_PLAIN, "You smell burning wood.");
             if (whose_kill() == KC_YOU)
-                did_god_conduct(DID_KILL_PLANT, 1, effect_known, 0);
+                did_god_conduct(DID_KILL_PLANT, 1, effect_known);
             else if (whose_kill() == KC_FRIENDLY)
                 did_god_conduct(DID_ALLY_KILLED_PLANT, 1, effect_known, 0);
             place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, whose_kill(), killer(), 5);
@@ -2398,10 +2398,10 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         {
             if (doFlavouredEffects)
             {
-                simple_monster_message( monster, " partially resists." );
+                simple_monster_message(monster, " partially resists.");
 
                 // Poison arrow can poison any living thing regardless of
-                // poison resistance. -- bwr
+                // poison resistance. - bwr
                 if (mons_has_lifeforce(monster))
                     poison_monster(monster, pbolt.whose_kill(), 2, true);
             }
