@@ -23,13 +23,14 @@
 #include "mon-util.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "spl-util.h"
 #include "spl-cast.h"
 #include "spells1.h"
 #include "spells3.h"
 #include "stuff.h"
+#include "teleport.h"
 #include "view.h"
-#include "shout.h"
 #include "viewchar.h"
 
 static bool _valid_mon_spells[NUM_SPELLS];
@@ -799,6 +800,8 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_KRAKEN_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
+    case SPELL_BLINK_RANGE:
+    case SPELL_BLINK_AWAY:
     case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_SUMMON_EYEBALLS:
@@ -1287,6 +1290,10 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
             else
                 return (false);
         }
+        else if (spell_cast == SPELL_BLINK_RANGE)
+            blink_range(monster);
+        else if (spell_cast == SPELL_BLINK_AWAY)
+            blink_away(monster);
         else
         {
             if (spell_needs_foe(spell_cast))
