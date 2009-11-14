@@ -2257,8 +2257,6 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
         return true;
-    case SPELL_BLINK_OTHER:
-        return !targ_sanct && targ_adj;
     case SPELL_BLINK:
         return targ_adj;
     case SPELL_TOMB_OF_DOROKLOHE:
