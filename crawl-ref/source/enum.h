@@ -242,6 +242,7 @@ enum beam_type                  // beam[].flavour
     BEAM_DISINTEGRATION,
     BEAM_ENSLAVE_DEMON,
     BEAM_BLINK,
+    BEAM_BLINK_CLOSER,
     BEAM_PETRIFY,
     BEAM_CORONA,               // 45
     BEAM_PORKALATOR,
