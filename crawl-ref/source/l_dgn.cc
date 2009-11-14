@@ -896,17 +896,28 @@ static int lua_dgn_set_lt_callback(lua_State *ls)
     return (0);
 }
 
+bool _valid_border_feat (dungeon_feature_type feat)
+{
+    return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
+            || (feat == DNGN_TREES || feat == DNGN_OPEN_SEA
+               || feat == DNGN_LAVA || feat == DNGN_DEEP_WATER
+               || feat == DNGN_SHALLOW_WATER || feat == DNGN_FLOOR));
+}
+
 static int lua_dgn_set_border_fill_type (lua_State *ls)
 {
     MAP(ls, 1, map);
     if (lua_gettop(ls) != 2)
         luaL_error(ls, "set_border_fill_type requires a feature.");
 
-    dungeon_feature_type fill_type = 
-        dungeon_feature_by_name(luaL_checkstring(ls, 2));
+    std::string fill_string = luaL_checkstring(ls, 2);
+    dungeon_feature_type fill_type = dungeon_feature_by_name(fill_string);
 
-    if (fill_type != DNGN_UNSEEN)
+    if (_valid_border_feat(fill_type))
         map->border_fill_type = fill_type;
+    else
+        luaL_error(ls, ("set_border_fill_type cannot be the feature '" +
+                         fill_string +"'.").c_str());
 
     return (0);
 }
