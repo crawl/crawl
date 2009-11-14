@@ -5564,7 +5564,7 @@ bool monsters::do_shaft()
         }
     }
 
-    level_id lev = shaft_dest();
+    level_id lev = shaft_dest(false);
 
     if (lev == level_id::current())
         return (false);

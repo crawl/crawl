@@ -2213,7 +2213,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             return;
         }
 
-        shaft_dest = you.shaft_dest();
+        shaft_dest = you.shaft_dest(known_trap);
         if (shaft_dest == level_id::current())
         {
             if (known_trap)
@@ -2230,6 +2230,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
         if (you.flight_mode() != FL_FLY || force_stair)
             mpr("You fall through a shaft!");
+
+        // Shafts are one-time-use.
+        mpr("The shaft crumbles and collapses!");
+        find_trap(you.pos())->destroy();
     }
 
     if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)

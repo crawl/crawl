@@ -203,10 +203,10 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
 #ifdef CLUA_BINDINGS
                      // Prompt for any trap where you might not have enough hp
                      // as defined in init.txt (see trapwalk.lua)
-                     if (new_grid != DNGN_TRAP_MECHANICAL
-                            && type != TRAP_SHAFT
+                     if (type != TRAP_SHAFT // Known shafts aren't traps
+                         && (new_grid != DNGN_TRAP_MECHANICAL
                          || !clua.callbooleanfn(false, "ch_cross_trap",
-                                                "s", trap_name(p)))
+                                                "s", trap_name(p))))
 #endif
                 {
                     std::string prompt = make_stringf(
@@ -7309,7 +7309,6 @@ bool player::do_shaft()
             return (false);
         }
 
-        mpr("A shaft briefly opens up underneath you!");
         handle_items_on_shaft(this->pos(), false);
 
         if (airborne() || total_weight() == 0)

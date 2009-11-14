@@ -30,9 +30,9 @@ bool actor::will_trigger_shaft() const
     return (!airborne() && total_weight() > 0 && is_valid_shaft_level());
 }
 
-level_id actor::shaft_dest() const
+level_id actor::shaft_dest(bool known = false) const
 {
-    return generic_shaft_dest(pos());
+    return generic_shaft_dest(pos(), known);
 }
 
 bool actor::airborne() const

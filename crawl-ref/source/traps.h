@@ -33,7 +33,7 @@ trap_def* find_trap(const coord_def& where);
 trap_type get_trap_type(const coord_def& where);
 
 bool     is_valid_shaft_level(const level_id &place = level_id::current());
-level_id generic_shaft_dest(coord_def pos);
+level_id generic_shaft_dest(coord_def pos, bool known);
 void     handle_items_on_shaft(const coord_def& where, bool open_shaft);
 
 int       num_traps_for_place(int level_number = -1,

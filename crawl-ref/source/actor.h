@@ -248,7 +248,7 @@ public:
     virtual bool has_spell(spell_type spell) const = 0;
 
     virtual bool     will_trigger_shaft() const;
-    virtual level_id shaft_dest() const;
+    virtual level_id shaft_dest(bool known) const;
     virtual bool     do_shaft() = 0;
 
     coord_def position;

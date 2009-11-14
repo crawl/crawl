@@ -626,6 +626,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         break;
 
     case TRAP_SHAFT:
+        // Unknown shafts are traps triggered by walking onto them.
+        // Known shafts are used as escape hatches
+
         // Paranoia
         if (!is_valid_shaft_level())
         {
@@ -636,48 +639,19 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             break;
         }
 
+        // If the shaft isn't triggered, don't reveal it.
+        if (!triggerer.will_trigger_shaft() && !you_know)
+            this->hide();
+
         // Known shafts don't trigger as traps.
         if (trig_knows)
-        {
-            if (you_trigger)
-            {
-               if (triggerer.airborne())
-               {
-                   if (you.flight_mode() == FL_LEVITATE)
-                       mpr("You float over the shaft.");
-                   else
-                       mpr("You fly over the shaft.");
-               }
-               else
-                   mpr("You carefully avoid triggering the shaft.");
-            }
             break;
-        }
-
-        if (!triggerer.will_trigger_shaft())
-        {
-            if (!you_know)
-                this->hide();
-            else if (!triggerer.airborne())
-            {
-                if (you_trigger)
-                {
-                    mpr("You don't fall through the shaft.");
-                }
-                else if (m)
-                {
-                    simple_monster_message(m,
-                                           " doesn't fall through the shaft.");
-                }
-            }
-        }
 
         // Fire away!
-        {
-            const bool revealed = triggerer.do_shaft();
-            if (!revealed && !you_know)
-                this->hide();
-        }
+        triggerer.do_shaft();
+
+        // Shafts are destroyed
+        // after one use in down_stairs(), misc.cc
         break;
 
     default:
@@ -1341,10 +1315,10 @@ bool is_valid_shaft_level(const level_id &place)
     return ((branch.depth - place.depth) >= min_delta);
 }
 
-level_id generic_shaft_dest(level_pos lpos)
+level_id generic_shaft_dest(level_pos lpos, bool known = false)
 {
-    level_id  lid = lpos.id;
-    coord_def pos = lpos.pos;
+    level_id  lid   = lpos.id;
+    coord_def pos   = lpos.pos;
 
     if (lid.level_type != LEVEL_DUNGEON)
         return lid;
@@ -1352,14 +1326,26 @@ level_id generic_shaft_dest(level_pos lpos)
     int      curr_depth = lid.depth;
     Branch   &branch    = branches[lid.branch];
 
-    // 25% drop one level
-    // 50% drop two levels
-    // 25% drop three levels
-    lid.depth += 2;
-    if (pos.x % 2)
-        lid.depth--;
-    if (pos.y % 2)
-        lid.depth++;
+    // Shaft traps' behavior depends on whether it is entered intentionally.
+    // Knowingly entering one is more likely to drop you 1 level.
+    // Falling in unknowingly can drop you 1/2/3 levels with equal chance.
+
+    if (known)
+    {
+        // Chances are 5/8s for 1 level, 2/8s for 2 levels, 1/8 for 3 levels
+        int s = random2(8) + 1;
+        if (s == 1)
+            lid.depth += 3;
+        else if (s <= 3)
+            lid.depth += 2;
+        else
+            lid.depth += 1;
+    }
+    else
+    {
+        // 33.3% for 1, 2, 3
+        lid.depth += 1 + random2(3);
+    }
 
     if (lid.depth > branch.depth)
         lid.depth = branch.depth;
@@ -1382,7 +1368,7 @@ level_id generic_shaft_dest(level_pos lpos)
     return lid;
 }
 
-level_id generic_shaft_dest(coord_def pos)
+level_id generic_shaft_dest(coord_def pos, bool known = false)
 {
     return generic_shaft_dest(level_pos(level_id::current(), pos));
 }
@@ -1392,7 +1378,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     if (!is_valid_shaft_level())
         return;
 
-    level_id  dest = generic_shaft_dest(pos);
+    level_id dest = generic_shaft_dest(pos);
 
     if (dest == level_id::current())
         return;
