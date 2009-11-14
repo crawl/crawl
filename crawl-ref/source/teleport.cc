@@ -46,10 +46,13 @@ static coord_def random_close_space(actor* victim, actor* target)
     return (choice ? *choice : coord_def(0, 0));
 }
 
+// Blink the player closer to the monster at target.
 void blink_closer(const coord_def &target)
 {
     actor* caster = actor_at(target);
     if (!caster)
+        return;
+    if (is_sanctuary(you.pos())
         return;
     coord_def dest = random_close_space(&you, caster);
     if (dest.origin())
