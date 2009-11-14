@@ -7,6 +7,7 @@ class monsters;
 void blink_other_close(actor* victim, const coord_def& target);
 void blink_away(monsters* mon);
 void blink_range(monsters* mon);
+void blink_close(monsters* mon);
 
 bool random_near_space(const coord_def& origin, coord_def& target,
                        bool allow_adjacent = false, bool restrict_LOS = true,

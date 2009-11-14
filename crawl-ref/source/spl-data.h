@@ -609,6 +609,19 @@
      false
 },
 
+{
+     SPELL_BLINK_CLOSE, "Blink Close",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
 // The following name was found in the hack.exe file of an early version
 // of PCHACK - credit goes to its creator (whoever that may be):
 {

@@ -1295,6 +1295,8 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
             blink_range(monster);
         else if (spell_cast == SPELL_BLINK_AWAY)
             blink_away(monster);
+        else if (spell_cast == SPELL_BLINK_CLOSE)
+            blink_close(monster);
         else
         {
             if (spell_needs_foe(spell_cast))

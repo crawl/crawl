@@ -140,6 +140,19 @@ void blink_range(monsters* mon)
     ASSERT(success);
 }
 
+// Blink the monster close to its foe.
+void blink_close(monsters* mon)
+{
+    actor* foe = mon->get_foe();
+    if (!foe || !mon->can_see(foe))
+        return;
+    coord_def dest = random_space_weighted(mon, foe, true);
+    if (dest.origin())
+        return;
+    bool success = mon->blink_to(dest);
+    ASSERT(success);
+}
+
 bool random_near_space(const coord_def& origin, coord_def& target,
                        bool allow_adjacent, bool restrict_los,
                        bool forbid_dangerous, bool forbid_sanctuary)
