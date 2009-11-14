@@ -2620,7 +2620,13 @@ static void _portal_vault_level(int level_number)
         vault = random_map_for_tag(level_name, false);
 
     if (vault)
+    {
+        // XXX: This is pretty hackish, I confess.
+        if (vault->border_fill_type != DNGN_ROCK_WALL)
+            _replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, vault->border_fill_type);
+
         _ensure_vault_placed( _build_vaults(level_number, vault), true );
+    }
     else
     {
         _plan_main(level_number, 0);

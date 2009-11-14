@@ -368,6 +368,7 @@ private:
 private:
     std::vector<map_marker *> markers;
     std::vector<std::string> lines;
+
     struct overlay_def
     {
         overlay_def() : colour(0), rocktile(0), floortile(0), property(0) {}
@@ -722,6 +723,7 @@ public:
     unsigned char   rock_colour, floor_colour;
     int             rock_tile, floor_tile;
 
+    dungeon_feature_type border_fill_type;
 private:
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;

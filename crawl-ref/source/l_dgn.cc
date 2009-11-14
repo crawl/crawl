@@ -896,6 +896,21 @@ static int lua_dgn_set_lt_callback(lua_State *ls)
     return (0);
 }
 
+static int lua_dgn_set_border_fill_type (lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (lua_gettop(ls) != 2)
+        luaL_error(ls, "set_border_fill_type requires a feature.");
+
+    dungeon_feature_type fill_type = 
+        dungeon_feature_by_name(luaL_checkstring(ls, 2));
+
+    if (fill_type != DNGN_UNSEEN)
+        map->border_fill_type = fill_type;
+
+    return (0);
+}
+
 static int dgn_fixup_stairs(lua_State *ls)
 {
     const dungeon_feature_type up_feat =
@@ -1612,6 +1627,7 @@ const struct luaL_reg dgn_dlib[] =
 { "change_floor_colour", dgn_change_floor_colour },
 { "change_rock_colour",  dgn_change_rock_colour },
 { "set_lt_callback", lua_dgn_set_lt_callback },
+{ "set_border_fill_type", lua_dgn_set_border_fill_type },
 { "fixup_stairs", dgn_fixup_stairs },
 { "floor_halo", dgn_floor_halo },
 { "random_walk", dgn_random_walk },

@@ -413,13 +413,13 @@ void map_lines::init_from(const map_lines &map)
     // Markers have to be regenerated, they will not be copied.
     clear_markers();
     overlay.reset(NULL);
-    lines         = map.lines;
-    map_width     = map.map_width;
-    solid_north   = map.solid_north;
-    solid_east    = map.solid_east;
-    solid_south   = map.solid_south;
-    solid_west    = map.solid_west;
-    solid_checked = map.solid_checked;
+    lines            = map.lines;
+    map_width        = map.map_width;
+    solid_north      = map.solid_north;
+    solid_east       = map.solid_east;
+    solid_south      = map.solid_south;
+    solid_west       = map.solid_west;
+    solid_checked    = map.solid_checked;
 }
 
 template <typename V>
@@ -1480,7 +1480,7 @@ map_def::map_def()
       mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"),
       rock_colour(BLACK), floor_colour(BLACK), rock_tile(0), floor_tile(0),
-      index_only(false), cache_offset(0L)
+      border_fill_type(DNGN_ROCK_WALL), index_only(false), cache_offset(0L)
 {
     init();
 }
@@ -1513,6 +1513,7 @@ void map_def::reinit()
 
     rock_colour = floor_colour = BLACK;
     rock_tile = floor_tile = 0;
+    border_fill_type = DNGN_ROCK_WALL;
 
     // Chance of using this level. Nonzero chance should be used
     // sparingly. When selecting vaults for a place, first those

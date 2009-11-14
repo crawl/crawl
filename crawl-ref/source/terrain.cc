@@ -29,6 +29,7 @@
 #include "overmap.h"
 #include "player.h"
 #include "random.h"
+#include "religion.h"
 #include "spells3.h"
 #include "stuff.h"
 #include "transfor.h"
@@ -1253,3 +1254,97 @@ std::string stair_climb_verb(dungeon_feature_type feat)
     else
         return "pass through";
 }
+
+const char *dngn_feature_names[] =
+{
+"unseen", "closed_door", "detected_secret_door", "secret_door",
+"wax_wall", "metal_wall", "green_crystal_wall", "rock_wall", "stone_wall",
+"permarock_wall",
+"clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "trees",
+"open_sea", "orcish_idol", "", "", "", "", "",
+"granite_statue", "statue_reserved_1", "statue_reserved_2",
+"", "", "", "", "", "", "", "",
+"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+"", "", "", "", "", "", "", "", "", "", "", "", "", "lava",
+"deep_water", "", "", "shallow_water", "water_stuck", "floor",
+"floor_special", "floor_reserved", "exit_hell", "enter_hell",
+"open_door", "", "", "trap_mechanical", "trap_magical", "trap_natural",
+"undiscovered_trap", "", "enter_shop", "enter_labyrinth",
+"stone_stairs_down_i", "stone_stairs_down_ii",
+"stone_stairs_down_iii", "escape_hatch_down", "stone_stairs_up_i",
+"stone_stairs_up_ii", "stone_stairs_up_iii", "escape_hatch_up", "",
+"", "enter_dis", "enter_gehenna", "enter_cocytus",
+"enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
+"enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
+"", "", "", "builder_special_wall", "builder_special_floor", "",
+"", "", "enter_orcish_mines", "enter_hive", "enter_lair",
+"enter_slime_pits", "enter_vaults", "enter_crypt",
+"enter_hall_of_blades", "enter_zot", "enter_temple",
+"enter_snake_pit", "enter_elven_halls", "enter_tomb",
+"enter_swamp", "enter_shoals", "enter_reserved_2",
+"enter_reserved_3", "enter_reserved_4", "", "", "",
+"return_from_orcish_mines", "return_from_hive",
+"return_from_lair", "return_from_slime_pits",
+"return_from_vaults", "return_from_crypt",
+"return_from_hall_of_blades", "return_from_zot",
+"return_from_temple", "return_from_snake_pit",
+"return_from_elven_halls", "return_from_tomb",
+"return_from_swamp", "return_from_shoals", "return_reserved_2",
+"return_reserved_3", "return_reserved_4", "", "", "", "", "", "",
+"", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
+"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+"", "", "altar_zin", "altar_shining_one", "altar_kikubaaqudgha",
+"altar_yredelemnul", "altar_xom", "altar_vehumet",
+"altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
+"altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu",
+"altar_beogh", "altar_jiyva", "altar_fedhas", "altar_cheibriados", "", "", "",
+"fountain_blue", "fountain_sparkling", "fountain_blood",
+"dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
+"permadry_fountain", "abandoned_shop"
+};
+
+dungeon_feature_type dungeon_feature_by_name(const std::string &name)
+{
+    COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_FEATURES, c1);
+    if (name.empty())
+        return (DNGN_UNSEEN);
+
+    for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
+    {
+        if (dngn_feature_names[i] == name)
+        {
+            if (jiyva_is_dead() && name == "altar_jiyva")
+                return (DNGN_FLOOR);
+
+            return (static_cast<dungeon_feature_type>(i));
+        }
+    }
+
+    return (DNGN_UNSEEN);
+}
+
+std::vector<std::string> dungeon_feature_matches(const std::string &name)
+{
+    std::vector<std::string> matches;
+
+    COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_FEATURES, c1);
+    if (name.empty())
+        return (matches);
+
+    for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
+        if (strstr(dngn_feature_names[i], name.c_str()))
+            matches.push_back(dngn_feature_names[i]);
+
+    return (matches);
+}
+
+const char *dungeon_feature_name(dungeon_feature_type rfeat)
+{
+    const unsigned feat = rfeat;
+
+    if (feat >= ARRAYSZ(dngn_feature_names))
+        return (NULL);
+
+    return dngn_feature_names[feat];
+}
+
