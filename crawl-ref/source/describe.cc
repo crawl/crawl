@@ -2806,11 +2806,6 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         }
         break;
 
-    case MONS_SWAMP_DRAKE:
-        if (player_can_smell())
-            inf.body << "$It smells horrible.$";
-        break;
-
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
@@ -2832,11 +2827,6 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     case MONS_REAPER:
         if (you.is_undead == US_ALIVE && !mons.wont_attack())
             inf.body <<  "$It has come for your soul!$";
-        break;
-
-    case MONS_ELF:
-        // These are only possible from polymorphing or shapeshifting.
-        inf.body << "$This one is remarkably plain looking.$";
         break;
 
     case MONS_DRACONIAN:
@@ -2866,11 +2856,6 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
 
     case MONS_PANDEMONIUM_DEMON:
         inf.body << _describe_demon(mons) << "$";
-        break;
-
-    case MONS_URUG:
-        if (player_can_smell())
-            inf.body << "$He smells terrible.$";
         break;
 
     case MONS_PROGRAM_BUG:

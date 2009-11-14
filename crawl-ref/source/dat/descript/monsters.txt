@@ -343,6 +343,13 @@ A powerful dragon with mighty wings.  Her scales seem to shimmer and change colo
 Urug
 
 A rude orc.
+{{
+if you.can_smell() then
+    return "\nHe smells terrible."
+else
+    return ""
+end
+}}
 %%%%
 Wayne
 
@@ -620,6 +627,8 @@ A huge grey slug with folds of wrinkled skin.
 elf
 
 One of the race of elves which inhabits this dreary cave.
+
+This one is remarkably plain looking.
 %%%%
 ettin
 
@@ -1408,7 +1417,14 @@ A slimy dragon, covered in swamp muck. Poisonous gasses dribble from its snout.
 swamp drake
 
 A small and slimy dragon, covered in swamp muck.
-%%%%
+{{
+if you.can_smell() then
+    return "\nIt smells terrible."
+else
+    return ""
+end
+}}
+%%%%%
 swamp worm
 
 A large slimy worm, adept at swimming through the muck of this foul swamp.
