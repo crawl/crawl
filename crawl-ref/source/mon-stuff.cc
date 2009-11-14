@@ -1162,21 +1162,22 @@ static void _elven_twin_died(monsters* twin)
 
 void pikel_band_neutralise ()
 {
-    // XXX: This is a really ugly hack. It should be replaced by something else
-    // when band tracking is available. This assumes that the only human monsters
-    // with MF_BAND_MEMBER are Pikel's band members.
     bool message_made = false;
 
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_HUMAN
-            && testbits(mi->flags, MF_BAND_MEMBER))
+            && testbits(mi->flags, MF_BAND_MEMBER)
+            && mi->props.exists("pikel_band"))
         {
             if (mi->observable() && !message_made)
             {
                 mpr("Pikel's slaves thank you for their freedom.");
                 message_made = true;
             }
+
+            mi->mname = "freed slave";
+            // viewwindow();
             mons_pacify(*mi);
         }
     }
