@@ -6024,8 +6024,7 @@ int mon_enchant::calc_duration(const monsters *mons,
     case ENCH_SPORE_PRODUCTION:
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.
-        cturn = 150;
-        break;
+        return (random_range(75, 125) * 10);
 
     case ENCH_ABJ:
         if (deg >= 6)
