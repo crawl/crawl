@@ -1,4 +1,14 @@
 %%%%
+# Only for non-uniques nagas.
+__cap-N_suffix
+{{
+if you.race() == "Naga" then
+    return "It is particularly attractive."
+else
+    return "It is strange and repulsive."
+end
+}}
+%%%%
 __cap-T_suffix
 
 You feel a lump in the pit of your stomach.
@@ -299,6 +309,8 @@ A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
 Purgy
 
 An unusually thin troll.
+
+You feel a lump in the pit of your stomach.
 %%%%
 Roxanne
 
@@ -327,6 +339,8 @@ The bane of all young adventurers, Sigmund combines delusions of greatness with 
 Snorg
 
 A hairy troll, angry and mean.
+
+You feel a lump in the pit of your stomach.
 %%%%
 Sonja
 
@@ -1263,7 +1277,18 @@ An enormous and very nasty-looking humanoid creature.  Its rocky hide seems to h
 rotting devil
 
 A hideous decaying form.
-%%%%
+{{
+if you.can_smell() then
+    if you.saprovorous() == 3 then
+        return "\nIt smells great!"
+    else
+        return "\nIt stinks."
+    end
+else
+    return ""
+end
+}}
+%%%%%
 rotting hulk
 
 A shambling undead creature, related to the ghoul.

@@ -2780,12 +2780,16 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     if (isupper(symbol[0]))
         symbol = "cap-" + symbol;
 
-    std::string symbol_prefix = "__";
-    symbol_prefix += symbol;
-    symbol_prefix += "_prefix";
-    inf.prefix = getLongDescription(symbol_prefix);
+    std::string quote2;
+    if (!mons_is_unique(mons.type))
+    {
+        std::string symbol_prefix = "__";
+        symbol_prefix += symbol;
+        symbol_prefix += "_prefix";
+        inf.prefix = getLongDescription(symbol_prefix);
+        quote2 = getQuoteString(symbol_prefix);
+    }
 
-    std::string quote2 = getQuoteString(symbol_prefix);
     if (!inf.quote.empty() && !quote2.empty())
         inf.quote += "$";
     inf.quote += quote2;
@@ -2796,27 +2800,6 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     // "It wants to drink your blood!" have something going for them. (jpeg)
     switch (mons.type)
     {
-    case MONS_ROTTING_DEVIL:
-        if (player_can_smell())
-        {
-            if (player_mutation_level(MUT_SAPROVOROUS) == 3)
-                inf.body << "$It smells great!$";
-            else
-                inf.body << "$It stinks.$";
-        }
-        break;
-
-    case MONS_NAGA:
-    case MONS_NAGA_MAGE:
-    case MONS_NAGA_WARRIOR:
-    case MONS_GUARDIAN_NAGA:
-    case MONS_GREATER_NAGA:
-        if (you.species == SP_NAGA)
-            inf.body << "$It is particularly attractive.$";
-        else
-            inf.body << "$It is strange and repulsive.$";
-        break;
-
     case MONS_VAMPIRE:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
@@ -2869,6 +2852,19 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         break;
     }
 
+    if (!mons_is_unique(mons.type))
+    {
+        std::string symbol_suffix = "__";
+        symbol_suffix += symbol;
+        symbol_suffix += "_suffix";
+
+        std::string suffix = getLongDescription(symbol_suffix);
+                    suffix += getLongDescription(symbol_suffix + "_examine");
+
+        if (!suffix.empty())
+            inf.body << "$" << suffix;
+    }
+
     // Get information on resistances, speed, etc.
     std::string result = _monster_stat_description(mons);
     if (!result.empty())
@@ -2888,16 +2884,8 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
                        "or items.$";
     }
 
-    std::string symbol_suffix = "__";
-    symbol_suffix += symbol;
-    symbol_suffix += "_suffix";
-    inf.suffix += getLongDescription(symbol_suffix);
-    inf.suffix += getLongDescription(symbol_suffix + "_examine");
-
-    quote2 = getQuoteString(symbol_suffix);
-    if (!inf.quote.empty() && !quote2.empty())
+    if (!inf.quote.empty())
         inf.quote += "$";
-    inf.quote += quote2;
 
 #if DEBUG_DIAGNOSTICS
     if (mons.can_use_spells())
