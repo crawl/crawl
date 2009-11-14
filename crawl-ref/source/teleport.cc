@@ -90,22 +90,19 @@ bool monsters::blink_to(const coord_def& dest, bool quiet)
     return (true);
 }
 
-// Blink the player closer to the monster at target.
-void blink_closer(const coord_def &target)
+// Blink the victim closer to the monster at target.
+void blink_closer(actor* victim, const coord_def &target)
 {
     actor* caster = actor_at(target);
     if (!caster)
         return;
     if (is_sanctuary(you.pos()))
         return;
-    coord_def dest = random_close_space(&you, caster);
+    coord_def dest = random_close_space(victim, caster);
     if (dest.origin())
         return;
-    mpr("You blink.");
-    coord_def origin = you.pos();
-    bool success = move_player_to_grid(dest, false, true, true);
-    if (success)
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+    bool success = victim->blink_to(dest);
+    ASSERT(success);
 }
 
 bool random_near_space(const coord_def& origin, coord_def& target,
