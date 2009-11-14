@@ -21,33 +21,6 @@
 #include "state.h"
 #include "terrain.h"
 
-typedef std::pair<coord_def, int> coord_weight;
-
-// Try to find a "safe" place for the victim close to the target.
-static coord_def random_close_space(actor* victim, actor* target)
-{
-    std::vector<std::pair<coord_def, int> > dests;
-    const coord_def tpos = target->pos();
-
-    // XXX: should use actor::see_cell_no_trans.
-    const los_def* vlos = &victim->get_los_no_trans();
-    const los_def* tlos = &target->get_los_no_trans();
-    for (radius_iterator ri(vlos); ri; ++ri)
-    {
-        if (!tlos->see_cell(*ri) || !victim->is_habitable(*ri)
-            || actor_at(*ri))
-        {
-            continue;
-        }
-        int weight = (LOS_RADIUS+1)*(LOS_RADIUS+1) - (tpos - *ri).abs();
-        if (weight < 0)
-            weight = 1;
-        dests.push_back(coord_weight(*ri, weight));
-    }
-    coord_def* choice = random_choose_weighted(dests);
-    return (choice ? *choice : coord_def(0, 0));
-}
-
 bool player::blink_to(const coord_def& dest, bool quiet)
 {
     // We rely on the non-generalized move_player_to_cell.
@@ -90,6 +63,40 @@ bool monsters::blink_to(const coord_def& dest, bool quiet)
     return (true);
 }
 
+
+typedef std::pair<coord_def, int> coord_weight;
+
+// Try to find a "safe" place for moved close or far from the target.
+// keep_los indicates that the destination should be in view of the target.
+static coord_def random_space_weighted(actor* moved, actor* target,
+                                       bool close, bool keep_los = true)
+{
+    std::vector<coord_weight> dests;
+    const coord_def tpos = target->pos();
+
+    const los_def* mlos = &moved->get_los_no_trans();
+    const los_def* tlos = &target->get_los_no_trans();
+    for (radius_iterator ri(mlos); ri; ++ri)
+    {
+        if (!moved->is_habitable(*ri) || actor_at(*ri)
+            || keep_los && !tlos->see_cell(*ri))
+        {
+            continue;
+        }
+        int weight;
+        int dist = (tpos - *ri).rdist();
+        if (close)
+            weight = (LOS_RADIUS - dist) * (LOS_RADIUS - dist);
+        else
+            weight = dist;
+        if (weight < 0)
+            weight = 0;
+        dests.push_back(coord_weight(*ri, weight));
+    }
+    coord_def* choice = random_choose_weighted(dests);
+    return (choice ? *choice : coord_def(0, 0));
+}
+
 // Blink the victim closer to the monster at target.
 void blink_closer(actor* victim, const coord_def &target)
 {
@@ -98,10 +105,36 @@ void blink_closer(actor* victim, const coord_def &target)
         return;
     if (is_sanctuary(you.pos()))
         return;
-    coord_def dest = random_close_space(victim, caster);
+    coord_def dest = random_space_weighted(victim, caster, true);
     if (dest.origin())
         return;
     bool success = victim->blink_to(dest);
+    ASSERT(success);
+}
+
+// Blink the monster away from its foe.
+void blink_away(monsters* mon)
+{
+    actor* foe = mon->get_foe();
+    if (!foe || !mon->can_see(foe))
+        return;
+    coord_def dest = random_space_weighted(mon, foe, false, false);
+    if (dest.origin())
+        return;
+    bool success = mon->blink_to(dest);
+    ASSERT(success);
+}
+
+// Blink the monster within range but at distance to its foe.
+void blink_range(monsters* mon)
+{
+    actor* foe = mon->get_foe();
+    if (!foe || !mon->can_see(foe))
+        return;
+    coord_def dest = random_space_weighted(mon, foe, false, true);
+    if (dest.origin())
+        return;
+    bool success = mon->blink_to(dest);
     ASSERT(success);
 }
 
