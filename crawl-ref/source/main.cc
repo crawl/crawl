@@ -2158,10 +2158,11 @@ static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
 //  objects) which get installed at some point.
 static void _decrement_durations()
 {
+    int delay = you.time_taken;
     if (wearing_amulet(AMU_THE_GOURMAND))
     {
         if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
-            you.duration[DUR_GOURMAND]++;
+            you.duration[DUR_GOURMAND] += delay;
     }
     else
         you.duration[DUR_GOURMAND] = 0;

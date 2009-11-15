@@ -151,8 +151,9 @@ const int MONSTER_LOS_RANGE = LOS_RADIUS;
 const int MAX_ROD_CHARGE  = 17;
 const int ROD_CHARGE_MULT = 100;
 
-const int GOURMAND_MAX            = 200;
-const int GOURMAND_NUTRITION_BASE = 10;
+const int BASELINE_DELAY  = 10;
+const int GOURMAND_MAX            = 200 * BASELINE_DELAY;
+const int GOURMAND_NUTRITION_BASE = 10  * BASELINE_DELAY;
 
 const int CHUNK_BASE_NUTRITION    = 1000;
 
