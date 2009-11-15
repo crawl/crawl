@@ -1536,7 +1536,7 @@ bool cast_sure_blade(int power)
     {
         if (!you.duration[DUR_SURE_BLADE])
             mpr("You become one with your weapon.");
-        else if (you.duration[DUR_SURE_BLADE] < 25)
+        else if (you.duration[DUR_SURE_BLADE] < 25 * BASELINE_DELAY)
             mpr("Your bond becomes stronger.");
 
         you.increase_duration(DUR_SURE_BLADE, 8 + (random2(power) / 10),

@@ -3389,7 +3389,8 @@ bool melee_attack::apply_damage_brand()
         if (attacker->atype() == ACT_PLAYER && damage_brand == SPWPN_CONFUSE)
         {
             ASSERT(you.duration[DUR_CONFUSING_TOUCH]);
-            you.duration[DUR_CONFUSING_TOUCH] -= roll_dice(3, 5);
+            you.duration[DUR_CONFUSING_TOUCH] -= roll_dice(3, 5)
+                                                 * BASELINE_DELAY;
 
             if (you.duration[DUR_CONFUSING_TOUCH] < 1)
                 you.duration[DUR_CONFUSING_TOUCH] = 1;
@@ -3909,9 +3910,10 @@ int melee_attack::player_to_hit(bool random_factor)
 
     if (weapon && wpn_skill == SK_SHORT_BLADES && you.duration[DUR_SURE_BLADE])
     {
+        int turn_duration = you.duration[DUR_SURE_BLADE] / BASELINE_DELAY;
         your_to_hit += 5 +
-            (random_factor ? random2limit( you.duration[DUR_SURE_BLADE], 10 ) :
-             you.duration[DUR_SURE_BLADE] / 2);
+            (random_factor ? random2limit( turn_duration, 10 ) :
+             turn_duration / 2);
     }
 
     // other stuff

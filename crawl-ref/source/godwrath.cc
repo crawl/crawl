@@ -381,7 +381,7 @@ static bool _cheibriados_retribution()
         {
             dec_penance(god, 1);
             mpr("You feel the world leave you behind!", MSGCH_WARN);
-            you.duration[DUR_EXHAUSTED] = 100;
+            you.set_duration(DUR_EXHAUSTED, 100);
             slow_player(100);
         }
         break;
@@ -599,7 +599,7 @@ static bool _trog_retribution()
             {
                 dec_penance(god, 1);
                 mpr( "You suddenly feel exhausted!", MSGCH_WARN );
-                you.duration[DUR_EXHAUSTED] = 100;
+                you.set_duration(DUR_EXHAUSTED, 100);
                 slow_player(100);
             }
             break;

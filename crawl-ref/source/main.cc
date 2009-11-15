@@ -2502,8 +2502,7 @@ static void _decrement_durations()
         // This resets from an actual penalty or from NO_BERSERK_PENALTY.
         you.berserk_penalty = 0;
 
-        int dur = 12 + roll_dice(2, 12);
-        you.duration[DUR_EXHAUSTED] += dur;
+        you.increase_duration(DUR_EXHAUSTED, 12 + roll_dice(2,12));
 
         // Don't trigger too many tutorial messages.
         const bool tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];

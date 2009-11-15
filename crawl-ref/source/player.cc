@@ -3698,17 +3698,19 @@ void display_char_status()
 
     if (you.duration[DUR_CONFUSING_TOUCH])
     {
+        int hi = 40 * BASELINE_DELAY;
+        int low = 20 * BASELINE_DELAY;
         mprf("Your hands are glowing %s red.",
-             (you.duration[DUR_CONFUSING_TOUCH] > 40) ? "an extremely bright" :
-             (you.duration[DUR_CONFUSING_TOUCH] > 20) ? "bright"
+             (you.duration[DUR_CONFUSING_TOUCH] > hi) ? "an extremely bright" :
+             (you.duration[DUR_CONFUSING_TOUCH] > low) ? "bright"
                                                       : "a soft");
     }
 
     if (you.duration[DUR_SURE_BLADE])
     {
         mprf("You have a %sbond with your blade.",
-             (you.duration[DUR_SURE_BLADE] > 15) ? "strong " :
-             (you.duration[DUR_SURE_BLADE] >  5) ? ""
+             (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY) ? "strong " :
+             (you.duration[DUR_SURE_BLADE] >  5 * BASELINE_DELAY) ? ""
                                                  : "weak ");
     }
 
