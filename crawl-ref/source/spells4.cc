@@ -757,10 +757,12 @@ void cast_silence(int pow)
 
     you.attribute[ATTR_WAS_SILENCED] = 1;
 
-    you.duration[DUR_SILENCE] += 10 + random2avg( pow, 2 );
+    int value = 10 + random2avg( pow, 2 );
+    value *= BASELINE_DELAY;
+    you.duration[DUR_SILENCE] += value;
 
-    if (you.duration[DUR_SILENCE] > 100)
-        you.duration[DUR_SILENCE] = 100;
+    if (you.duration[DUR_SILENCE] > 100 * BASELINE_DELAY)
+        you.duration[DUR_SILENCE] = 100 * BASELINE_DELAY;
 
     if (you.beheld())
     {
