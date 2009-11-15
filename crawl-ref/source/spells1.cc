@@ -1300,9 +1300,9 @@ void extension(int pow)
             || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT))
     {
         mpr("Your transformation has been extended.");
-        you.duration[DUR_TRANSFORMATION] += random2(pow);
-        if (you.duration[DUR_TRANSFORMATION] > 100)
-            you.duration[DUR_TRANSFORMATION] = 100;
+        you.duration[DUR_TRANSFORMATION] += random2(pow) * BASELINE_DELAY;
+        if (you.duration[DUR_TRANSFORMATION] > 100 * BASELINE_DELAY)
+            you.duration[DUR_TRANSFORMATION] = 100 * BASELINE_DELAY;
 
         // Give a warning if it won't last long enough for the
         // timeout messages.

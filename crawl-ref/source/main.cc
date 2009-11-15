@@ -2252,7 +2252,7 @@ static void _decrement_durations()
     //jmf: More flexible weapon branding code.
     int last_value = you.duration[DUR_WEAPON_BRAND];
 
-    if(last_value > 0)
+    if (last_value > 0)
     {
         you.duration[DUR_WEAPON_BRAND] -= delay;
 
@@ -2303,7 +2303,7 @@ static void _decrement_durations()
 
     // Vampire bat transformations are permanent (until ended).
     if (you.species != SP_VAMPIRE || !player_in_bat_form()
-        || you.duration[DUR_TRANSFORMATION] <= 5)
+        || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY)
     {
         if (_decrement_a_duration(DUR_TRANSFORMATION, delay, NULL, random2(3),
                                   "Your transformation is almost over."))

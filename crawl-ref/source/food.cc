@@ -925,11 +925,11 @@ bool food_change(bool suppress_message)
                 }
                 int transform = you.attribute[ATTR_TRANSFORMATION];
                 if (transform != TRAN_NONE && transform != TRAN_BAT
-                    && you.duration[DUR_TRANSFORMATION] > 2)
+                    && you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
                 {
                     mpr("Your blood-deprived body can't sustain your "
                         "transformation much longer.", MSGCH_DURATION);
-                    you.duration[DUR_TRANSFORMATION] = 2;
+                    you.duration[DUR_TRANSFORMATION] = 2 * BASELINE_DELAY;
                 }
             }
             else if (player_in_bat_form()
@@ -940,7 +940,7 @@ bool food_change(bool suppress_message)
                     "much longer.", MSGCH_WARN);
 
                 // Give more time because suddenly stopping flying can be fatal.
-                you.duration[DUR_TRANSFORMATION] = 5;
+                you.duration[DUR_TRANSFORMATION] = 5 * BASELINE_DELAY;
             }
             else if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
             {

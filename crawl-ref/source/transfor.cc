@@ -550,7 +550,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     if (you.attribute[ATTR_TRANSFORMATION]
         == static_cast<unsigned>(which_trans))
     {
-        if (you.duration[DUR_TRANSFORMATION] < 100)
+        if (you.duration[DUR_TRANSFORMATION] < 100 * BASELINE_DELAY)
         {
             if (just_check)
                 return (true);
@@ -559,10 +559,10 @@ bool transform(int pow, transformation_type which_trans, bool force,
                 mpr("You feel you'll be a pig longer.");
             else
                 mpr("You extend your transformation's duration.");
-            you.duration[DUR_TRANSFORMATION] += random2(pow);
+            you.duration[DUR_TRANSFORMATION] += random2(pow) * BASELINE_DELAY;
 
-            if (you.duration[DUR_TRANSFORMATION] > 100)
-                you.duration[DUR_TRANSFORMATION] = 100;
+            if (you.duration[DUR_TRANSFORMATION] > 100 * BASELINE_DELAY)
+                you.duration[DUR_TRANSFORMATION] = 100 * BASELINE_DELAY;
 
             return (true);
         }
@@ -756,7 +756,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     // Update your status.
     you.attribute[ATTR_TRANSFORMATION] = which_trans;
-    you.duration[DUR_TRANSFORMATION]   = dur;
+    you.duration[DUR_TRANSFORMATION]   = dur * BASELINE_DELAY;
     you.symbol = symbol;
     you.colour = colour;
 

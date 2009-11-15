@@ -1544,7 +1544,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_END_TRANSFORMATION:
         mpr("You feel almost normal.");
-        you.duration[DUR_TRANSFORMATION] = 2;
+        you.duration[DUR_TRANSFORMATION] = 2 * BASELINE_DELAY;
         break;
 
     // INVOCATIONS:
