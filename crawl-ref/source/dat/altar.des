@@ -845,9 +845,6 @@ ENDMAP
 
 ### Variable overflow altars ##################################################
 
-# The following vaults could be merged if the temple_overflow and uniq_altar
-# TAGs could be given inside lua conditionals. Can they?
-
 NAME:   lemuel_zombie_altar
 DEPTH:  D:2-18, Crypt
 TAGS:   no_pool_fixup uniq_zombie_altar
