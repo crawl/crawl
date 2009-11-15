@@ -2821,6 +2821,34 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
     }
 
+    // check for returning ammo from launchers
+    if (returning && projected == LRET_LAUNCHED) 
+    {
+        switch (lnchType)
+        {
+            case WPN_HAND_CROSSBOW:
+            case WPN_CROSSBOW:
+                if (returning && !one_chance_in(1 + skill_bump(SK_CROSSBOWS)))
+                    did_return = true;
+                    break;
+            case WPN_SLING:
+                if(returning && !one_chance_in(1 + skill_bump(SK_SLINGS)))
+                    did_return = true;
+                    break;
+            case WPN_BOW:
+            case WPN_LONGBOW:
+                if(returning && !one_chance_in(1 + skill_bump(SK_BOWS)))
+                    did_return = true;
+                    break;
+            case WPN_BLOWGUN:
+                if(returning && !one_chance_in(1 + skill_bump(SK_DARTS)))
+                    did_return = true;
+                    break;
+            default:
+                break;
+        }
+    }
+
     // CALCULATIONS FOR THROWN WEAPONS
     if (projected == LRET_THROWN)
     {
