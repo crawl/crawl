@@ -983,7 +983,7 @@ static void _set_random_slime_target(monsters* mon)
         set_random_target(mon);
 }
 
-static void _guess_invis_foe_pos(monsters *mon)
+static void _guess_invis_foe_pos(monsters *mon, bool strict = true)
 {
     const actor* foe          = mon->get_foe();
     const int    guess_radius = mons_sense_invis(mon) ? 3 : 2;
@@ -992,8 +992,20 @@ static void _guess_invis_foe_pos(monsters *mon)
 
     for (radius_iterator ri(mon->pos(), guess_radius); ri; ++ri)
     {
-        if (foe->is_habitable(*ri) && mon->mon_see_cell(*ri))
+        // NOTE: This depends on mon_see_cell() ignoring clouds,
+        // so that cells hidden by opaque clouds are included
+        // as a possibility for the foe's location.
+        if (!strict || foe->is_habitable(*ri) && mon->mon_see_cell(*ri))
             possibilities.push_back(*ri);
+    }
+
+    // If being strict (monster must see possible cell, foe must be
+    // able to live there) gives no possibilites, then find *some*
+    // cell near the foe.
+    if (strict && possibilities.empty())
+    {
+        _guess_invis_foe_pos(mon, false);
+        return;
     }
 
     if (!possibilities.empty())
@@ -1229,11 +1241,12 @@ void handle_behaviour(monsters *mon)
                         // (0, 0) can lead to asserts, so lets try to
                         // avoid that.
                         _set_nearest_monster_foe(mon);
-                        if (mon->foe != MHITNOT)
-                            continue;
-
-                        new_beh = BEH_WANDER;
-                        break;
+                        if (mon->foe == MHITNOT)
+                        {
+                            new_beh = BEH_WANDER;
+                            break;
+                        }
+                        mon->target = mon->get_foe()->pos();
                     }
                 }
 
