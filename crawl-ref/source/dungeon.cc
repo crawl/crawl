@@ -1707,7 +1707,7 @@ static void _build_overflow_temples(int level_number)
             {
                 CrawlVector &god_vec = temple[TEMPLE_GODS_KEY];
                 god_type     god     = (god_type) god_vec[0].get_byte();
-                
+
                 std::string name = god_name(god);
                 name = replace_all(name, " ", "_");
                 lowercase(name);

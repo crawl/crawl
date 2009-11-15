@@ -4255,13 +4255,13 @@ bool _give_items_skills()
 
     case JOB_WARPER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
- 
+
         if (!_choose_weapon())
             return (false);
- 
+
         if (you.inv[0].quantity < 1)
             _newgame_clear_item(0);
- 
+
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
@@ -4338,7 +4338,7 @@ bool _give_items_skills()
 
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_SPELLCASTING]   = 2;
-        
+
         switch (you.inv[3].sub_type)
         {
         case BOOK_ELEMENTAL_MISSILES:

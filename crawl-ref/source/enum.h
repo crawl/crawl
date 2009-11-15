@@ -2158,7 +2158,7 @@ enum monster_flag_type
 
     MF_GOING_BERSERK      = 0x1000000,// Is about to go berserk!
 
-    MF_NAME_DESCRIPTOR    = 0x2000000,// mname should be treated with normal 
+    MF_NAME_DESCRIPTOR    = 0x2000000,// mname should be treated with normal
                                       // grammar, ie, prevent "You hit red rat"
                                       // and other such constructs.
     MF_NAME_DEFINITE      = 0x4000000 // give this monster the definite "the"

@@ -1997,7 +1997,7 @@ void cast_brand_ammo(special_missile_type which_type)
 
     switch (which_type)
     {
-    
+
         case SPMSL_POISONED:
             if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_POISONED ))
             {
@@ -2058,7 +2058,7 @@ void cast_brand_ammo(special_missile_type which_type)
 
                 if (ammo == you.equip[EQ_WEAPON])
                     you.wield_change = true;
-            } 
+            }
             else
                 canned_msg(MSG_NOTHING_HAPPENS);
             break;

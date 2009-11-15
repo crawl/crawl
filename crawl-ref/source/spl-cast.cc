@@ -1947,7 +1947,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_RETURNING_AMMUNITION:
         cast_brand_ammo(SPMSL_RETURNING);
         break;
- 
+
     // Transformations.
     case SPELL_BLADE_HANDS:
         if (!transform(powc, TRAN_BLADE_HANDS))

@@ -482,7 +482,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // Book of Elemental Missiles 
+    // Book of Elemental Missiles
     {SPELL_CORONA,
      SPELL_SWIFTNESS,
      SPELL_REPEL_MISSILES,

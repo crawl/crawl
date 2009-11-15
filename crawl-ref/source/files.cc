@@ -1086,7 +1086,7 @@ static void _grab_followers()
     // Deal with Dowan and Duvessa here.
     if (dowan && duvessa)
     {
-        if (!testbits(dowan->flags, MF_TAKING_STAIRS) 
+        if (!testbits(dowan->flags, MF_TAKING_STAIRS)
             || !testbits(duvessa->flags, MF_TAKING_STAIRS))
         {
             dowan->flags &= ~MF_TAKING_STAIRS;
