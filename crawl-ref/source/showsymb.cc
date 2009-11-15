@@ -65,15 +65,6 @@ void get_show_symbol(show_type object, unsigned *ch,
     *colour = real_colour(*colour);
 }
 
-unsigned grid_character_at(const coord_def &c)
-{
-    unsigned glych;
-    unsigned short glycol = 0;
-
-    get_symbol(c, grd(c), &glych, &glycol);
-    return glych;
-}
-
 int get_mons_colour(const monsters *mons)
 {
     int col = mons->colour;

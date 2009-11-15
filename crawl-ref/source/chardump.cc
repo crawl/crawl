@@ -1274,7 +1274,7 @@ void dump_map(FILE *fp, bool debug)
                 else if (grd[x][y] == DNGN_FLOOR_SPECIAL)
                     fputc('?', fp);
                 else
-                    fputc(grid_character_at(coord_def(x,y)), fp);
+                    fputc(get_feature_def(grd[x][y]).symbol, fp);
             }
             fputc('\n', fp);
         }
