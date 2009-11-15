@@ -1979,13 +1979,13 @@ bool cast_sanctuary(const int power)
     return (true);
 }
 
-void cast_brand_ammo(special_missile_type which_type)
+void brand_ammo(special_missile_type which_type)
 {
     const int ammo = you.equip[EQ_WEAPON];
 
     if (ammo == -1
         || you.inv[ammo].base_type != OBJ_MISSILES
-        || get_ammo_brand( you.inv[ammo] ) != SPMSL_NORMAL
+        || get_ammo_brand(you.inv[ammo]) != SPMSL_NORMAL
         || you.inv[ammo].sub_type == MI_THROWING_NET)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1997,9 +1997,8 @@ void cast_brand_ammo(special_missile_type which_type)
 
     switch (which_type)
     {
-
         case SPMSL_POISONED:
-            if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_POISONED ))
+            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_POISONED))
             {
                 mprf("%s %s covered in a thin film of poison.", old_desc,
                      (you.inv[ammo].quantity == 1) ? "is" : "are");
@@ -2012,7 +2011,7 @@ void cast_brand_ammo(special_missile_type which_type)
             break;
 
         case SPMSL_FLAME:
-            if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_FLAME ))
+            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_FLAME))
             {
                 mprf("%s %s warm to the touch.", old_desc,
                      (you.inv[ammo].quantity == 1) ? "feels" : "feel");
@@ -2025,7 +2024,7 @@ void cast_brand_ammo(special_missile_type which_type)
             break;
 
         case SPMSL_FROST:
-            if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_FROST ))
+            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_FROST))
             {
                 mprf("%s %s cool to the touch.", old_desc,
                      (you.inv[ammo].quantity == 1) ? "feels" : "feel");
@@ -2038,7 +2037,7 @@ void cast_brand_ammo(special_missile_type which_type)
             break;
 
         case SPMSL_DISPERSAL:
-            if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_DISPERSAL ))
+            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_DISPERSAL))
             {
                 mprf("%s %s rather jumpy.", old_desc,
                     (you.inv[ammo].quantity == 1) ? "seems" : "seem");
@@ -2051,7 +2050,7 @@ void cast_brand_ammo(special_missile_type which_type)
             break;
 
         case SPMSL_ELECTRIC:
-            if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_ELECTRIC ))
+            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_ELECTRIC))
             {
                 mprf("%s %s you!", old_desc,
                     (you.inv[ammo].quantity == 1) ? "shocks" : "shock");
@@ -2064,7 +2063,7 @@ void cast_brand_ammo(special_missile_type which_type)
             break;
 
         case SPMSL_EXPLODING:
-            if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_EXPLODING ))
+            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_EXPLODING))
             {
                 mprf("%s %s unstable!", old_desc,
                     (you.inv[ammo].quantity == 1) ? "seems" : "seem");
@@ -2077,7 +2076,7 @@ void cast_brand_ammo(special_missile_type which_type)
             break;
 
         case SPMSL_REAPING:
-            if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_REAPING ))
+            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_REAPING))
             {
                 mprf("%s %s of rotten flesh!", old_desc,
                     (you.inv[ammo].quantity == 1) ? "smells" : "smell");
@@ -2090,7 +2089,7 @@ void cast_brand_ammo(special_missile_type which_type)
             break;
 
         case SPMSL_RETURNING:
-            if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_RETURNING ))
+            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_RETURNING))
             {
                 mprf("%s %s in your hand.", old_desc,
                     (you.inv[ammo].quantity == 1) ? "wiggles" : "wiggle");

@@ -17,7 +17,7 @@ bool allow_control_teleport(bool quiet = false);
 int airstrike(int power, dist &beam);
 bool cast_bone_shards(int power, bolt &);
 
-void cast_brand_ammo(special_missile_type which_brand);
+void brand_ammo(special_missile_type which_brand);
 bool cast_selective_amnesia(bool force);
 bool cast_smiting(int power, const coord_def& where);
 bool remove_sanctuary(bool did_attack = false);
