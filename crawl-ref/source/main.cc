@@ -2147,7 +2147,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     {
         if (midmsg)
             mpr(midmsg, chan);
-        you.duration[dur] -= midloss;
+        you.duration[dur] -= midloss * BASELINE_DELAY;
     }
 
     // allow fall-through in case midloss ended the duration (it shouldn't)
@@ -2554,10 +2554,14 @@ static void _decrement_durations()
         Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
-    if (you.duration[DUR_CORONA] && !--you.duration[DUR_CORONA]
-        && !you.backlit())
+    if (you.duration[DUR_CORONA])
     {
-        mpr("You are no longer glowing.", MSGCH_DURATION);
+        you.duration[DUR_CORONA] -= delay;
+        if (you.duration[DUR_CORONA] < 1)
+            you.duration[DUR_CORONA] = 0;
+
+        if (!you.duration[DUR_CORONA] && !you.backlit())
+            mpr("You are no longer glowing.", MSGCH_DURATION);
     }
 
     // Leak piety from the piety pool into actual piety.
@@ -3882,15 +3886,16 @@ static void _do_berserk_no_combat_penalty(void)
 
         // I do these three separately, because the might and
         // haste counters can be different.
-        you.duration[DUR_BERSERKER] -= you.berserk_penalty;
+        int berserk_delay_penalty = you.berserk_penalty * BASELINE_DELAY;
+        you.duration[DUR_BERSERKER] -= berserk_delay_penalty;
         if (you.duration[DUR_BERSERKER] < 1)
             you.duration[DUR_BERSERKER] = 1;
 
-        you.duration[DUR_MIGHT] -= you.berserk_penalty;
+        you.duration[DUR_MIGHT] -= berserk_delay_penalty;
         if (you.duration[DUR_MIGHT] < 1)
             you.duration[DUR_MIGHT] = 1;
 
-        you.duration[DUR_HASTE] -= you.berserk_penalty;
+        you.duration[DUR_HASTE] -= berserk_delay_penalty;
         if (you.duration[DUR_HASTE] < 1)
             you.duration[DUR_HASTE] = 1;
     }

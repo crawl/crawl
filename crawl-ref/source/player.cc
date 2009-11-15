@@ -6873,17 +6873,13 @@ void player::backlight()
         else
             mpr("You are outlined in light.");
 
-        this->duration[DUR_CORONA] += random_range(15, 35);
-        if (this->duration[DUR_CORONA] > 250)
-            this->duration[DUR_CORONA] = 250;
+        you.increase_duration(DUR_CORONA, random_range(15, 35), 250);
     }
     else
     {
         mpr("You feel strangely conspicuous.");
 
-        this->duration[DUR_CORONA] += random_range(3, 5);
-        if (this->duration[DUR_CORONA] > 250)
-            this->duration[DUR_CORONA] = 250;
+        you.increase_duration(DUR_CORONA, random_range(3, 5), 250);
     }
 }
 

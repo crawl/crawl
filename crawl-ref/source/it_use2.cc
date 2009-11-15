@@ -242,10 +242,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             unmeld_one_equip(EQ_BOOTS);
         }
 
-        you.duration[DUR_LEVITATION] += 25 + random2(pow);
-
-        if (you.duration[DUR_LEVITATION] > 100)
-            you.duration[DUR_LEVITATION] = 100;
+        you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
 
         burden_change();
         break;
@@ -736,8 +733,9 @@ void unuse_artefact(const item_def &item, bool *show_msgs)
     if (proprt[ARTP_NOISES] != 0)
         you.attribute[ATTR_NOISES] = 0;
 
-    if (proprt[ARTP_LEVITATE] != 0 && you.duration[DUR_LEVITATION] > 2
-            && !you.permanent_levitation())
+    if (proprt[ARTP_LEVITATE] != 0
+        && you.duration[DUR_LEVITATION] > 2
+        && !you.permanent_levitation())
     {
         you.duration[DUR_LEVITATION] = 1;
     }

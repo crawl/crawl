@@ -1453,13 +1453,8 @@ void cast_fly(int power)
     const int dur_change = 25 + random2(power) + random2(power);
     const bool was_levitating = you.airborne();
 
-    you.duration[DUR_LEVITATION] += dur_change;
-    if (you.duration[DUR_LEVITATION] > 100)
-        you.duration[DUR_LEVITATION] = 100;
-
-    you.duration[DUR_CONTROLLED_FLIGHT] += dur_change;
-    if (you.duration[DUR_CONTROLLED_FLIGHT] > 100)
-        you.duration[DUR_CONTROLLED_FLIGHT] = 100;
+    you.increase_duration(DUR_LEVITATION, dur_change, 100);
+    you.increase_duration(DUR_CONTROLLED_FLIGHT, dur_change, 100);
 
     burden_change();
 
