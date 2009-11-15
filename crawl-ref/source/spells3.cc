@@ -1347,16 +1347,18 @@ bool cast_death_channel(int pow, god_type god)
 {
     bool success = false;
 
-    if (you.duration[DUR_DEATH_CHANNEL] < 30)
+    if (you.duration[DUR_DEATH_CHANNEL] < 30 * BASELINE_DELAY)
     {
         success = true;
 
         mpr("Malign forces permeate your being, awaiting release.");
 
-        you.duration[DUR_DEATH_CHANNEL] += 15 + random2(1 + (pow / 3));
+        int addition = 15 + random2(1 + (pow / 3));
+        addition *= BASELINE_DELAY;
+        you.duration[DUR_DEATH_CHANNEL] += addition;
 
-        if (you.duration[DUR_DEATH_CHANNEL] > 100)
-            you.duration[DUR_DEATH_CHANNEL] = 100;
+        if (you.duration[DUR_DEATH_CHANNEL] > 100 * BASELINE_DELAY)
+            you.duration[DUR_DEATH_CHANNEL] = 100 * BASELINE_DELAY;
 
         if (god != GOD_NO_GOD)
             you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = static_cast<int>(god);
