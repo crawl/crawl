@@ -419,3 +419,36 @@ X.......A.......X
 XX.............XX
 XXXXXXXXXXXXXXXXX
 ENDMAP
+
+NAME: arena_smoke
+TAGS: arena_smoke no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = .
+MARKER:  S = lua:fog_machine { \
+             pow_max = 10, delay_min = 10, delay_max = 10, \
+             size = 10, start_clouds = 1, \
+             cloud_type = "black smoke" }
+SUBST: S = .
+ORIENT: encompass
+: randomise_colours(_G)
+MAP
+XXXXXXXXXXXXXXXXX
+X...............X
+X.......B.......X
+X...............X
+X...S.......S...X
+X...............X
+X...............X
+X...............X
+X.......O.......X
+X...............X
+X...............X
+X...............X
+X...S.......S...X
+X...............X
+X.......A.......X
+X...............X
+XXXXXXXXXXXXXXXXX
+ENDMAP
