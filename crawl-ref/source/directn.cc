@@ -478,7 +478,7 @@ static void _describe_monster(const monsters *mon);
 // TODO: Allow sorting of items lists.
 void full_describe_view()
 {
-    std::vector<const monsters*> list_mons;
+    std::vector<monster_info> list_mons;
     std::vector<item_def> list_items;
     std::vector<coord_def> list_features;
 
@@ -529,12 +529,9 @@ void full_describe_view()
     }
 
     // Get monsters via the monster_info, sorted by difficulty.
-    std::vector<monster_info> mons;
-    get_monster_info(mons);
-    std::sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
-
-    for (unsigned int i = 0; i < mons.size(); ++i)
-        list_mons.push_back(mons[i].m_mon);
+    get_monster_info(list_mons);
+    std::sort(list_mons.begin(), list_mons.end(),
+              monster_info::less_than_wrapper);
 
     if (list_mons.empty() && list_items.empty() && list_features.empty())
     {
@@ -596,41 +593,27 @@ void full_describe_view()
     if (!list_mons.empty())
     {
         desc_menu.add_entry( new MenuEntry("Monsters", MEL_SUBTITLE) );
-        for (unsigned int i = 0; i < list_mons.size(); ++i, ++hotkey)
+        std::vector<monster_info>::const_iterator mi;
+        for (mi = list_mons.begin(); mi != list_mons.end(); ++mi)
         {
             // List monsters in the form
             // (A) An angel (neutral), wielding a glowing long sword
 
-            // Get colour-coded letter.
-            unsigned char colour = get_mons_colour(list_mons[i]);
-            if (colour == BLACK)
-                colour = LIGHTGREY;
-
             std::string prefix = "";
 #ifndef USE_TILE
-            const std::string col_string = colour_to_str(colour);
+            const std::string col_string = colour_to_str(mi->m_glyph_colour);
             prefix = "(<" + col_string + ">"
-                     + stringize_glyph(mons_char( list_mons[i]->type) )
+                     + stringize_glyph(mi->m_glyph)
                      + "</" + col_string + ">) ";
 #endif
-            // Get damage level.
-            std::string damage_desc;
-
-            mon_dam_level_type damage_level;
-            mons_get_damage_level(list_mons[i], damage_desc, damage_level);
-
-            // If no messages about wounds, don't display damage level either.
-            if (monster_descriptor(list_mons[i]->type, MDSC_NOMSG_WOUNDS))
-                damage_level = MDAM_OKAY;
-
-            std::string str = get_monster_equipment_desc(list_mons[i], true,
+            std::string str = get_monster_equipment_desc(mi->m_mon, true,
                                                          DESC_CAP_A, true);
 
-            if (you.beheld_by(list_mons[i]))
+            if (you.beheld_by(mi->m_mon))
                 str += ", keeping you mesmerised";
 
-            if (damage_level != MDAM_OKAY)
-                str += ", " + damage_desc;
+            if (mi->m_damage_level != MDAM_OKAY)
+                str += ", " + mi->m_damage_desc;
 
 #ifndef USE_TILE
             // Wraparound if the description is longer than allowed.
@@ -642,9 +625,7 @@ void full_describe_view()
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                {
-                    me = new MonsterMenuEntry(prefix+str, list_mons[i], hotkey);
-                }
+                    me = new MonsterMenuEntry(prefix+str, mi->m_mon, hotkey);
 #ifndef USE_TILE
                 else
                 {
