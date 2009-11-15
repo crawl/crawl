@@ -1389,12 +1389,13 @@ static void _portal_card(int power, deck_rarity_type rarity)
             controlled = true;
     }
 
+    int threshold = 6 * BASELINE_DELAY;
     const bool was_controlled = player_control_teleport();
     const bool short_control = (you.duration[DUR_CONTROL_TELEPORT] > 0
-                                && you.duration[DUR_CONTROL_TELEPORT] < 6);
+                                && you.duration[DUR_CONTROL_TELEPORT] < threshold);
 
     if (controlled && (!was_controlled || short_control))
-        you.duration[DUR_CONTROL_TELEPORT] = 6; // Long enough to kick in.
+        you.duration[DUR_CONTROL_TELEPORT] = threshold; // Long enough to kick in.
 
     if (instant)
         you_teleport_now( true );
