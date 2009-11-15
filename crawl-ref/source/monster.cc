@@ -4980,6 +4980,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
             int idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
             std::random_shuffle(idx, idx + 8);
 
+            bool re_add = true;
+
             for (unsigned i = 0; i < 8; ++i)
             {
                 coord_def adjacent = this->pos() + Compass[idx[i]];
@@ -5015,6 +5017,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
                             {
                                 this->colour = MAGENTA;
                                 this->del_ench(ENCH_SPORE_PRODUCTION);
+                                re_add = false;
                             }
                         }
 
@@ -5024,7 +5027,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
             }
             // Re-add the enchantment (this resets the spore production
             // timer).
-            this->add_ench(ENCH_SPORE_PRODUCTION);
+            if (re_add)
+                this->add_ench(ENCH_SPORE_PRODUCTION);
         }
 
         break;
