@@ -8,7 +8,7 @@
  * Returns NULL if nothing found, i.e., if all weights are zero.
  */
 template <typename T>
-T* random_choose_weighted(std::vector<std::pair<T, int> > choices)
+T* random_choose_weighted(std::vector<std::pair<T, int> >& choices)
 {
     int total = 0;
     for (unsigned int i = 0; i < choices.size(); i++)
