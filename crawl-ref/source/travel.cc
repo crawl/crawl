@@ -835,7 +835,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     }
 }
 
-// Top-level travel control (called from input() in acr.cc).
+// Top-level travel control (called from input() in main.cc).
 //
 // travel() is responsible for making the individual moves that constitute
 // (interlevel) travel and explore and deciding when travel and explore

@@ -9,7 +9,7 @@
 #include "options.h"
 #include "stuff.h"
 
-extern std::string init_file_error; // defined in acr.cc
+extern std::string init_file_error; // defined in main.cc
 
 // Eventually, this should be something more grand. {dlb}
 void opening_screen(void)

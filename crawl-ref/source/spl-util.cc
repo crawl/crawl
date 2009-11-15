@@ -693,7 +693,7 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
     if (number == 0)
         return;
 
-    // These indices depend on the order in Compass (see acr.cc)
+    // These indices depend on the order in Compass (see main.cc)
     int compass_order_orth[4] = { 2, 6, 4, 0 };
     int compass_order_diag[4] = { 1, 3, 5, 7 };
 

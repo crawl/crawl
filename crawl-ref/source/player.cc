@@ -327,7 +327,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     viewwindow(false);
 
     // Other Effects:
-    // Clouds -- do we need this? (always seems to double up with acr.cc call)
+    // Clouds -- do we need this? (always seems to double up with main.cc call)
     // if (is_cloud( you.x_pos, you.y_pos ))
     //     in_a_cloud();
 
@@ -1117,7 +1117,7 @@ int player_hunger_rate(void)
         && you.piety >= piety_breakpoint(0))
         hunger--;
 
-    // Moved here from acr.cc... maintaining the >= 40 behaviour.
+    // Moved here from main.cc... maintaining the >= 40 behaviour.
     if (you.hunger >= 40)
     {
         if (you.duration[DUR_INVIS] > 0)

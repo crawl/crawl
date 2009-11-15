@@ -30,7 +30,7 @@
 
 #include <sstream>
 
-extern int stealth;             // defined in acr.cc
+extern int stealth;             // defined in main.cc
 
 void handle_monster_shouts(monsters* monster, bool force)
 {

@@ -1,7 +1,6 @@
 OBJECTS = \
 abl-show.o \
 abyss.o \
-acr.o \
 actor.o \
 actor-los.o \
 arena.o \
@@ -89,6 +88,7 @@ los_def.o \
 losparam.o \
 luaterp.o \
 macro.o \
+main.o \
 makeitem.o \
 map_knowledge.o \
 mapdef.o \
