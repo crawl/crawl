@@ -19,6 +19,9 @@
 #include "cio.h"
 #include "clua.h"
 #include "dlua.h"
+#include "options.h"
+
+#ifdef WIZARD
 
 static int _incomplete(lua_State *ls, int status)
 {
@@ -126,7 +129,21 @@ void run_clua_interpreter(lua_State *ls)
     lua_settop(ls, 0); // clear stack
 }
 
+static bool _loaded_terp_files = false;
+
 void debug_terp_dlua()
 {
+    if (!_loaded_terp_files)
+    {
+        for (unsigned int i = 0; i < Options.terp_files.size(); i++)
+        {
+            dlua.execfile(Options.terp_files[i].c_str(), false, false);
+            if (!dlua.error.empty())
+                mprf(MSGCH_ERROR, "Lua error: %s", dlua.error.c_str());
+        }
+        _loaded_terp_files = true;
+    }
     run_clua_interpreter(dlua);
 }
+
+#endif

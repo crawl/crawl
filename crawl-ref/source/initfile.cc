@@ -819,6 +819,7 @@ void game_options::reset_options()
 
 #ifdef WIZARD
     wiz_mode         = WIZ_NO;
+    terp_files.clear();
 #endif
 
 #ifdef USE_TILE
@@ -1976,7 +1977,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "autopickup_exceptions"
         && key != "stop_travel" && key != "sound"
         && key != "travel_stop_message" && key != "force_more_message"
-        && key != "drop_filter" && key != "lua_file"
+        && key != "drop_filter" && key != "lua_file" && key != "terp_file"
         && key != "note_items" && key != "autoinscribe"
         && key != "note_monsters" && key != "note_messages"
         && key.find("cset") != 0 && key != "dungeon"
@@ -2148,6 +2149,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         clua.execfile(field.c_str(), false, false);
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+#endif
+    }
+    else if (key == "terp_file" && runscript)
+    {
+#ifdef WIZARD
+        terp_files.push_back(field);
 #endif
     }
     else if (key == "colour" || key == "color")

@@ -382,6 +382,13 @@ The available stock Lua scripts are
 
 Also see section 7 on inline Lua fragments.
 
+The wizard-mode Lua interpreter (&^T) will, the first time it's invoked,
+load all of the files that are specified with the terp_file option:
+
+terp_file = <path/name.lua>
+
+The Lua in these files will have access to all of the Crawl Lua internals
+(that is, will be run in the context of dlua, not clua).
 
 4-  Interface.
 ==============

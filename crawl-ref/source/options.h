@@ -168,7 +168,8 @@ public:
     std::string pizza;
 
 #ifdef WIZARD
-    int         wiz_mode;        // yes, no, never in wiz mode to start
+    int                      wiz_mode;   // no, never, start in wiz mode
+    std::vector<std::string> terp_files; // Lua files to load for luaterp
 #endif
 
     // internal use only:
