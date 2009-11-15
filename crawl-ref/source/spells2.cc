@@ -39,6 +39,7 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
+#include "quiver.h"
 #include "religion.h"
 #include "stuff.h"
 #include "teleport.h"

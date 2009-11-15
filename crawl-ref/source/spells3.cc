@@ -39,7 +39,6 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "player.h"
-#include "quiver.h"
 #include "religion.h"
 #include "spells1.h"
 #include "spells4.h"
