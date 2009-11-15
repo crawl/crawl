@@ -265,7 +265,7 @@ MARKER:  * = lua:fog_machine { cloud_type = "flame", \
 SUBST:   * = .
 MARKER:  O = lua:bazaar_portal()
 MAP
-c...$...c
+c.@.$.@.c
 c.*...*.c
 c...$...c
 c.......c
