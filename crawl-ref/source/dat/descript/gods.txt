@@ -24,7 +24,7 @@ The Shining One is a powerful deity on a crusade against all evil. Followers and
 %%%%
 Kikubaaqudgha
 
-Kikubaaqudgha is a terrible Demon-God, served by those who seek knowledge of the powers of death. Followers gain special powers over the undead, and especially favoured servants can call on mighty demons to slay their foes. Kikubaaqudgha is evil, and requires the deaths of living creatures as often as possible, but is not interested in the offering of corpses.
+Kikubaaqudgha is a terrible Demon-God, served by those who wish to indulge in the powers of death.  Kikubaaqudgha is evil, and requires the deaths of living creatures and demons as often as possible.
 %%%%
 Yredelemnul
 
@@ -92,7 +92,7 @@ Followers of the Shining One are surrounded by a halo that reveals their enemies
 %%%%
 Kikubaaqudgha powers
 
-Kikubaaqudgha offers the power to recall your undead followers to your near surroundings, will protect you against side effects of necromantic magic, and allow you to permanently enslave undead creatures. Eventually, you can summon an emissary of death to fight with you.
+Kikubaaqudgha will send corpses to followers, enhance servants' necromantic prowess with gifts of spellbooks, and imbue their weapons with pain.  Especially fervent followers can protect themselves from torment, or even invoke it themselves by offering a cadaver to Kikubaaqudgha.
 %%%%
 Yredelemnul powers
 

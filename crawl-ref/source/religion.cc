@@ -680,6 +680,11 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you or your god-given allies kill demons");
         break;
 
+    case GOD_KIKUBAAQUDGHA:
+        likes.push_back("you kill demons");
+		likes.push_back("your undead slaves kill demons");
+        break;
+
     case GOD_BEOGH:
         likes.push_back("you or your allied orcs kill demons");
         break;
@@ -2963,6 +2968,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_OKAWARU:
             case GOD_MAKHLEB:
             case GOD_TROG:
+            case GOD_KIKUBAAQUDGHA:
             case GOD_BEOGH:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;

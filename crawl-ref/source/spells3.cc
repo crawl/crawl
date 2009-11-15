@@ -653,13 +653,13 @@ bool receive_corpses(int pow, coord_def where)
 #endif
 
     // Kiku gives branch-appropriate corpses (like shadow creatures).
-    int expected_extra_corpses = pow / 36; // 1 at 0 Inv, 7 at 7 Inv.
-    int corpse_delivery_radius = 3;
+    int expected_extra_corpses = 3 + pow / 18; // 3 at 0 Inv, 9 at 27 Inv.
+    int corpse_delivery_radius = 1;
 
-    // We should get the same number of corpses in a hallway as in an
-    // open room.
+    // We should get the same number of corpses
+    // in a hallway as in an open room.
     int spaces_for_corpses = 0;
-    for (radius_iterator ri(where, corpse_delivery_radius, C_SQUARE,
+    for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
                             &you.get_los(), true);
          ri; ++ri)
     {
@@ -668,17 +668,14 @@ bool receive_corpses(int pow, coord_def where)
     }
 
     int percent_chance_a_square_receives_extra_corpse = // can be > 100
-        (int)(((float)expected_extra_corpses) / ((float)spaces_for_corpses)
-            * 100.0);
+        int(float(expected_extra_corpses) / float(spaces_for_corpses) * 100.0);
 
     int corpses_generated = 0;
 
-    // XXX: Is it intentional that this loop is different from the one above?
     for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
                             &you.get_los());
          ri; ++ri)
     {
-
         bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, grd(*ri));
         bool square_is_player_square = (*ri == where);
         bool square_gets_corpse =
@@ -690,7 +687,7 @@ bool receive_corpses(int pow, coord_def where)
 
         corpses_generated++;
 
-        // Find an appropriate monster corpse.
+        // Find an appropriate monster corpse for level and power.
         monster_type mon_type = MONS_PROGRAM_BUG;
         int adjusted_power = 0;
         for (int i = 0; i < 200 && !mons_class_can_be_zombified(mon_type); ++i)
@@ -720,13 +717,11 @@ bool receive_corpses(int pow, coord_def where)
 
         ASSERT(valid_corpse >= 0);
 
-        // Higher power means fresher corpses.  One out of ten corpses
-        // will always be rotten.  (Perhaps this should be different for
-        // ghouls.)
+        // Higher piety means fresher corpses.  One out of ten corpses
+        // will always be rotten.
         int rottedness = 200 -
-            (!one_chance_in(10) ? random2(175 - pow)
+            (!one_chance_in(10) ? random2(200 - you.piety)
                                 : random2(100 + random2(75)));
-
         mitm[index_of_corpse_created].special = rottedness;
 
         // Place the corpse.
@@ -735,14 +730,20 @@ bool receive_corpses(int pow, coord_def where)
 
     if (corpses_generated)
     {
-        simple_god_message(corpses_generated > 1 ? " delivers you corpses!"
+        if (you.religion == GOD_KIKUBAAQUDGHA)
+        {
+            simple_god_message(corpses_generated > 1 ? " delivers you corpses!"
                                                  : " delivers you a corpse!");
+        }
         maybe_update_stashes();
         return (true);
     }
     else
     {
-        simple_god_message(" can find no living being to slaughter for you!");
+        if (you.religion == GOD_KIKUBAAQUDGHA)
+        {
+            simple_god_message(" can find no cadavers for you!");
+        }
         return (false);
     }
 }

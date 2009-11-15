@@ -439,35 +439,47 @@ static bool _kikubaaqudgha_retribution()
     // death/necromancy theme
     const god_type god = GOD_KIKUBAAQUDGHA;
 
-    if (random2(you.experience_level) > 7 && !one_chance_in(5))
-    {
-        bool success = false;
-        int how_many = 1 + (you.experience_level / 5) + random2(3);
+    god_speaks(god,
+        coinflip() ? "You hear Kikubaaqudgha cackling."
+                   : "Kikubaaqudgha's malice focuses upon you.");
 
-        for (; how_many > 0; --how_many)
+    if (random2(you.experience_level) > 4)
+    {
+        // Either zombies, or corpse rot + skeletons
+        receive_corpses(you.experience_level * 4, you.pos());
+
+        if (coinflip())
+            corpse_rot();
+    }
+
+    if (coinflip())
+    {
+        // necromancy miscast, 20% chance of additional miscast
+        do
         {
-            if (create_monster(
-                    mgen_data::hostile_at(MONS_REAPER,
-                        "the malice of Kikubaaqudgha",
-                        true, 0, 0, you.pos(), 0, god)) != -1)
+            MiscastEffect(&you, -god, SPTYP_NECROMANCY,
+                          5 + you.experience_level,
+                          random2avg(88, 3), "the malice of Kikubaaqudgha");
+        } while (one_chance_in(5));
+
+    } else if (one_chance_in(10)) {
+        // torment, or 3 necromancy miscasts
+        if (!player_res_torment(false))
+            torment(TORMENT_KIKUBAAQUDGHA, you.pos());
+        else
+        {
+            for (int i = 0; i < 3; i++)
             {
-                success = true;
+                MiscastEffect(&you, -god, SPTYP_NECROMANCY,
+                    5 + you.experience_level,
+                     random2avg(88, 3), "the malice of Kikubaaqudgha");
             }
         }
+    }
 
-        if (success)
-            simple_god_message(" unleashes Death upon you!", god);
-        else
-            god_speaks(god, "Death has been delayed... for now.");
-    }
-    else
-    {
-        god_speaks(god,
-            coinflip() ? "You hear Kikubaaqudgha cackling."
-                       : "Kikubaaqudgha's malice focuses upon you.");
-        MiscastEffect(&you, -god, SPTYP_NECROMANCY, 5 + you.experience_level,
-                      random2avg(88, 3), "the malice of Kikubaaqudgha");
-    }
+    // Every act of retribution causes corpses in view to rise against you.
+    animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
+                 "the malice of Kikubaaqudgha");
 
     return (true);
 }
