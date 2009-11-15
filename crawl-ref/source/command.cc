@@ -2100,9 +2100,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "         untrap, attack without move\n",
             true, true, _cmdhelp_textfilter);
 
-    unsigned ch;
-    // Initialise colour to quiet some Valgrind warnings.
-    unsigned short colour = BLACK;
     std::string item_types =
         "\n"
         "<h>Item types (and common commands)\n"
@@ -2117,8 +2114,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
         "<lightgrey>/</lightgrey> : wands (e<w>V</w>oke)\n"
         "<lightcyan>";
 
-    get_show_symbol(show_type(SHOW_ITEM_BOOK), &ch, &colour);
-    item_types += static_cast<char>(ch);
+    item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
         "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise, <w>z</w>ap, <w>Z</w>ap)\n"
         "<brown>\\</brown> : staves and rods (<w>w</w>ield and e<w>v</w>oke)\n"
@@ -2268,9 +2264,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
 static void _add_formatted_tutorial_help(column_composer &cols)
 {
-    unsigned ch;
-    unsigned short colour;
-
     std::ostringstream text;
     text <<
         "<h>Item types (and common commands)\n"
@@ -2284,13 +2277,11 @@ static void _add_formatted_tutorial_help(column_composer &cols)
         "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
         "<darkgrey>/</darkgrey> : wands (e<w>V</w>oke)\n"
         "<lightcyan>";
-    get_show_symbol(show_type(SHOW_ITEM_BOOK), &ch, &colour);
-    text << static_cast<char>(ch);
+    text << static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
     text << "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and "
         "<w>z</w>ap)\n"
         "<brown>";
-    get_show_symbol(show_type(SHOW_ITEM_STAVE), &ch, &colour);
-    text << static_cast<char>(ch);
+    text << static_cast<char>(get_item_symbol(SHOW_ITEM_STAVE));
     text << "</brown> : staves, rods (<w>w</w>ield and e<w>v</w>oke)\n"
             "\n"
             "<h>Movement and attacking\n"

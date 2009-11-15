@@ -116,6 +116,11 @@ static int _get_mons_colour(const monsters *mons)
     return (col);
 }
 
+unsigned get_item_symbol(show_item_type it)
+{
+    return (get_feature_def(show_type(it)).symbol);
+}
+
 glyph get_item_glyph(const item_def *item)
 {
     glyph g;

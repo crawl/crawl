@@ -1737,8 +1737,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
         text << "('<w>";
 
-        get_show_symbol(show_type(SHOW_ITEM_BOOK), &ch, &colour);
-        text << static_cast<char>(ch)
+        text << static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK))
              << "'</w>) "
              << "that you can read by typing <w>r</w>. "
                 "If it's a spellbook you'll then be able to memorise spells "
@@ -1989,8 +1988,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
                 ", both of which are represented by '<w>";
 
-        get_show_symbol(show_type(SHOW_ITEM_STAVE), &ch, &colour);
-        text << static_cast<char>(ch)
+        text << static_cast<char>(get_item_symbol(SHOW_ITEM_STAVE))
              << "</w>'"
 #endif
                 ". Both must be <w>w</w>ielded to be of use. "
