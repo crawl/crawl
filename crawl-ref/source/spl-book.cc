@@ -935,6 +935,8 @@ int book_rarity(unsigned char which_book)
     case BOOK_YOUNG_POISONERS:
     case BOOK_STALKING:    //jmf: added 24jun2000
     case BOOK_WAR_CHANTS:
+    case BOOK_ELEMENTAL_MISSILES:
+    case BOOK_WARPED_MISSILES:
         return 5;
 
     case BOOK_CLOUDS:
@@ -955,6 +957,7 @@ int book_rarity(unsigned char which_book)
     case BOOK_UNLIFE:
     case BOOK_CONTROL:
     case BOOK_SPATIAL_TRANSLOCATIONS:
+    case BOOK_DEVASTATING_MISSILES:
         return 10;
 
     case BOOK_TEMPESTS:
