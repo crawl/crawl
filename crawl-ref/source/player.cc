@@ -7016,6 +7016,7 @@ void player::hibernate(int)
 
     // Do this *after* redrawing the view, or viewwindow() will no-op.
     duration[DUR_SLEEP] = 3 + random2avg(5, 2);
+    duration[DUR_SLEEP] *= BASELINE_DELAY;
 }
 
 void player::put_to_sleep(int power)
@@ -7033,6 +7034,7 @@ void player::put_to_sleep(int power)
 
     // As above, do this after redraw.
     duration[DUR_SLEEP] = 5 + random2avg(power / 10, 5);
+    duration[DUR_SLEEP] *= BASELINE_DELAY;
 }
 
 void player::awake()

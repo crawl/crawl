@@ -1740,7 +1740,7 @@ static void _battle_lust_card(int power, deck_rarity_type rarity)
     }
     else if (power_level == 1)
     {
-        you.duration[DUR_BUILDING_RAGE] = 1;
+        you.duration[DUR_BUILDING_RAGE] = 1 * BASELINE_DELAY;
         mpr("You feel your rage building.");
     }
     else if (power_level == 0)
