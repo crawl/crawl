@@ -1508,7 +1508,6 @@ void armour_wear_effects(const int item_slot)
 
         case SPARM_PONDEROUSNESS:
             mpr("You feel rather ponderous.");
-            // you.speed += 2;
             you.redraw_evasion = true;
             break;
 

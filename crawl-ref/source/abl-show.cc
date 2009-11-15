@@ -331,7 +331,7 @@ static const ability_def Ability_List[] =
     // Cheibriados
     { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous", 2, 0, 0, 0, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time", 3, 0, 50, 1, ABFLAG_NONE },
-    { ABIL_CHEIBRIADOS_SLOUCH, "Ruinous Time", 5, 0, 100, 5, ABFLAG_NONE },
+    { ABIL_CHEIBRIADOS_SLOUCH, "Slouch", 5, 0, 100, 5, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time", 10, 0, 200, 10, ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },

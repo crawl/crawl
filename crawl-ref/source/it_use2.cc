@@ -640,7 +640,6 @@ void unwear_armour(int slot)
 
     case SPARM_PONDEROUSNESS:
         mpr("That put a bit of spring back into your step.");
-        // you.speed -= 2;
         break;
 
     case SPARM_LEVITATION:
