@@ -55,6 +55,8 @@ monsters::monsters()
       seen_context(""), props()
 {
     travel_path.clear();
+    if (crawl_state.arena)
+        foe = MHITNOT;
 }
 
 // Empty destructor to keep auto_ptr happy with incomplete ghost_demon type.

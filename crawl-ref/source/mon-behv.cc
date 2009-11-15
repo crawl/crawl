@@ -1458,8 +1458,11 @@ void handle_behaviour(monsters *mon)
             // Foe gone out of LOS?
             if (!proxFoe)
             {
-                if ((isFriendly || proxPlayer) && !isNeutral && !patrolling)
+                if ((isFriendly || proxPlayer) && !isNeutral && !patrolling
+                    && !crawl_state.arena)
+                {
                     new_foe = MHITYOU;
+                }
                 else
                     new_beh = BEH_WANDER;
             }
