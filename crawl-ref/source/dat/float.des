@@ -977,6 +977,9 @@ KMONS:  4 = col:gold skeletal warrior name:ancient_champion name_replace \
         ego:cold_resistance . great sword ego:pain | great sword ego:draining \
         | great sword ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain \
         | triple sword ego:vorpal | executioner's axe ego:vorpal
+: local ac_desc = "The unfathomably ancient " ..
+:    "skeleton of a humanoid creature. It has hundreds of golden sigils " ..
+:    "etched onto its bones, and pulses with terrible, unholy power.\n"
 SHUFFLE: 123
 KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_rtele_into
 KITEM:  w = acquire weapon
@@ -984,7 +987,10 @@ KITEM:  r = acquire armour
 NSUBST: $ = 1:w / 1:r / 4:| / *:$
 COLOUR: " = yellow
 KFEAT:  " = .
-
+MARKER: 1 = lua:MonPropsMarker:new { description=ac_desc }
+MARKER: 2 = lua:MonPropsMarker:new { description=ac_desc }
+MARKER: 3 = lua:MonPropsMarker:new { description=ac_desc }
+MARKER: 4 = lua:MonPropsMarker:new { description=ac_desc }
 {{
 
 -- First off, slave marker magic.
@@ -1018,9 +1024,9 @@ function skele_death (data, triggerable, triggerer, marker, ev)
   dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
 
   if you.see_cell(wall_pos.x, wall_pos.y) then
-    crawl.mpr("As the champion dies, a metal wall slides away!")
+    crawl.mpr("As the champion is destroyed, a metal wall slides away!")
   else
-    crawl.mpr("As the champion dies, you hear a distant grinding noise.")
+    crawl.mpr("As the champion is destroyed, you hear a distant grinding noise.")
   end
 end
 
