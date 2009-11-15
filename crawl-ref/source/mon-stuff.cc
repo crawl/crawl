@@ -1205,24 +1205,27 @@ static void _hogs_to_humans()
         }
         else
         {
-            orig       = &_orig;
+            orig = &_orig;
+
             orig->type = MONS_HUMAN;
             define_monster(*orig);
         }
 
+        // Keep at same spot.
+        const coord_def pos = mi->pos();
         // Preserve relative HP.
         const float hp
             = (float) mi->hit_points / (float) mi->max_hit_points;
         // Preserve some flags.
         const unsigned long preserve_flags =
             mi->flags & ~(MF_JUST_SUMMONED | MF_WAS_IN_VIEW);
-
         // Preserve enchantments.
         mon_enchant_list enchantments = mi->enchantments;
 
         // Restore original monster.
         **mi = *orig;
 
+        mi->set_position(pos);
         mi->enchantments = enchantments;
         mi->hit_points   = std::max(1, (int) (mi->max_hit_points * hp));
         mi->flags        = mi->flags | preserve_flags;
