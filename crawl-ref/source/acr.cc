@@ -1209,6 +1209,22 @@ static bool _marker_vetoes_stair()
     return marker_vetoes_operation("veto_stair");
 }
 
+// Maybe prompt to enter a portal, return true if we should enter the
+// portal, false if the user said no at the prompt.
+static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
+{
+    switch(ftype)
+    {
+    case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_ENTER_ABYSS:
+        return yesno("If you enter this portal you may not be able to return."
+                     " Continue?", false, 'n');
+
+    default:
+        return (true);
+    }
+}
+
 static void _go_downstairs();
 static void _go_upstairs()
 {
@@ -1256,6 +1272,9 @@ static void _go_upstairs()
             mpr("You can't go up here!");
         return;
     }
+
+    if (!_prompt_dangerous_portal(ygrd))
+        return;
 
     // Does the next level have a warning annotation?
     if (!check_annotation_exclusion_warning())
@@ -1326,6 +1345,9 @@ static void _go_downstairs()
         mpr("You're held in a net!");
         return;
     }
+
+    if (!_prompt_dangerous_portal(ygrd))
+        return;
 
     // Does the next level have a warning annotation?
     // Also checks for entering a labyrinth with teleportitis.
