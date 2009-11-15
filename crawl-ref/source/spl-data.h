@@ -2447,6 +2447,97 @@
 },
 
 {
+    SPELL_FLAME_AMMUNITION, "Flame Ammunition",
+      SPTYP_ENCHANTMENT | SPTYP_FIRE,
+      SPFLAG_HELPFUL | SPFLAG_BATTLE,
+      3,
+      0,
+      -1,-1,
+      0,
+      NULL,
+      false,
+      true
+},
+
+{
+    SPELL_FROST_AMMUNITION, "Frost Ammunition",
+      SPTYP_ENCHANTMENT | SPTYP_ICE,
+      SPFLAG_HELPFUL | SPFLAG_BATTLE,
+      3,
+      0,
+      -1,-1,
+      0,
+      NULL,
+      false,
+      true
+},
+
+{
+    SPELL_SHOCKING_AMMUNITION, "Shocking Ammunition",
+        SPTYP_ENCHANTMENT | SPTYP_AIR,
+        SPFLAG_HELPFUL | SPFLAG_BATTLE,
+        5,
+        0,
+        -1,-1,
+        0,
+        NULL,
+        false,
+        true
+},
+
+{
+    SPELL_EXPLODING_AMMUNITION, "Exploding Ammunition",
+        SPTYP_ENCHANTMENT | SPTYP_FIRE | SPTYP_AIR,
+        SPFLAG_HELPFUL | SPFLAG_BATTLE,
+        7,
+        0,
+        -1,-1,
+        0,
+        NULL,
+        false,
+        true
+},
+
+{
+    SPELL_WARP_AMMUNITION, "Warp Ammunition",
+        SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
+        SPFLAG_HELPFUL | SPFLAG_BATTLE,
+        5,
+        0,
+        -1,-1,
+        0,
+        NULL,
+        false,
+        true
+},
+
+{
+    SPELL_REAPING_AMMUNITION, "Reaping Ammunition",
+        SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
+        SPFLAG_HELPFUL | SPFLAG_BATTLE,
+        7,
+        0,
+        -1,-1,
+        0,
+        NULL,
+        false,
+        true
+},
+
+{
+    SPELL_RETURNING_AMMUNITION, "Returning Ammunition",
+        SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
+        SPFLAG_HELPFUL | SPFLAG_BATTLE,
+        3,
+        0,
+        -1,-1,
+        0,
+        NULL,
+        false,
+        true
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

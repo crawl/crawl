@@ -1921,9 +1921,37 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_POISON_AMMUNITION:
-        cast_poison_ammo();
+        cast_brand_ammo(SPMSL_POISONED);
         break;
 
+    case SPELL_FLAME_AMMUNITION:
+        cast_brand_ammo(SPMSL_FLAME);
+        break;
+
+    case SPELL_FROST_AMMUNITION:
+        cast_brand_ammo(SPMSL_FROST);
+        break;
+
+    case SPELL_WARP_AMMUNITION:
+        cast_brand_ammo(SPMSL_DISPERSAL);
+        break;
+
+    case SPELL_SHOCKING_AMMUNITION:
+        cast_brand_ammo(SPMSL_ELECTRIC);
+        break;
+
+    case SPELL_EXPLODING_AMMUNITION:
+        cast_brand_ammo(SPMSL_EXPLODING);
+        break;
+
+    case SPELL_REAPING_AMMUNITION:
+        cast_brand_ammo(SPMSL_REAPING);
+        break;
+
+    case SPELL_RETURNING_AMMUNITION:
+        cast_brand_ammo(SPMSL_RETURNING);
+        break;
+ 
     // Transformations.
     case SPELL_BLADE_HANDS:
         if (!transform(powc, TRAN_BLADE_HANDS))

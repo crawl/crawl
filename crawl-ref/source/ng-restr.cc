@@ -340,7 +340,7 @@ char_choice_restriction class_allowed(species_type speci,
                 return (CC_UNRESTRICTED);
         }
 
-        case JOB_WARPER:
+        case JOB_ARCANE_MARKSMAN:
             switch (speci)
         {
             case SP_HUMAN:

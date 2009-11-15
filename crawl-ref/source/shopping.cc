@@ -1188,6 +1188,7 @@ unsigned int item_value( item_def item, bool ident )
 
             case SPMSL_FLAME:
             case SPMSL_FROST:
+            case SPMSL_ELECTRIC:
                 valued *= 25;
                 break;
 

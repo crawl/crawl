@@ -361,7 +361,8 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_EXPLODING,                   //   10
     SPMSL_STEEL,
     SPMSL_SILVER,
-    NUM_SPECIAL_MISSILES               //   12
+    SPMSL_ELECTRIC,
+    NUM_SPECIAL_MISSILES               //   13
 };
 
 enum special_ring_type // jewellery mitm[].special values

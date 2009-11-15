@@ -230,6 +230,10 @@ Extension
 
 This spell extends the duration of most enchantments affecting the caster. Be wary that using it slowly contaminates you with magical energy.
 %%%%
+Exploding Ammunition
+
+This spell will make missile weapons held by the caster extremely unstable.
+%%%%
 Fire Brand
 
 This spell sets a weapon held by the caster ablaze. It will not affect weapons otherwise subject to special enchantments.
@@ -241,6 +245,10 @@ This spell creates a mighty storm of roaring flame.
 Fireball
 
 This spell hurls an exploding bolt of fire. This spell does not cost additional spell levels if the learner already knows Delayed Fireball.
+%%%%
+Flame Ammunition
+
+This spell will ignite missile weapons held by the caster.
 %%%%
 Flame Tongue
 
@@ -265,6 +273,10 @@ This spell surrounds a weapon held by the caster with an aura of freezing cold. 
 Freezing Cloud
 
 This spell conjures up a large cloud of lethally cold vapour.
+%%%%
+Frost Ammunition
+
+This spell will freeze missile weapons held by the caster.
 %%%%
 Fulsome Distillation
 
@@ -426,6 +438,10 @@ Projected Noise
 
 This spell produces a noise emanating from a place of the caster's own choosing.
 %%%%
+Reaping Ammunition
+
+This spell will infuse missile weapons held by the caster with necromantic magic which may create zombies from enemies slain by the weapon.
+%%%%
 Recall
 
 This spell is greatly prized by summoners and necromancers, as it allows the caster to recall any friendly creatures nearby to a position adjacent to the caster.
@@ -441,6 +457,10 @@ This spell reduces the chance of projectile attacks striking the caster. Even po
 Resist Poison
 
 This spell protects the caster from exposure to all poisons for a period of time.
+%%%%
+Returning Ammunition
+
+This spell will cause the weilded missile weapons to return to the caster after fired.
 %%%%
 Ring of Flames
 
@@ -469,6 +489,10 @@ This spell causes a burst of concussive force around the caster, which will dama
 Shock
 
 This spell throws a bouncing bolt of electricity.
+%%%%
+Shocking Ammunition
+
+This spell will electrically charge missile weapons held by the caster.
 %%%%
 Silence
 
@@ -626,6 +650,10 @@ However, attempting to drain an undead or demonic creature will backfire on the 
 Venom Bolt
 
 This spell throws a bolt of poison.
+%%%%
+Warp Ammunition
+
+This spell will infuse missile weapons held by the caster with distortional energy.
 %%%%
 Warp Weapon
 

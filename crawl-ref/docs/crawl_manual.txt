@@ -1962,11 +1962,12 @@ Reavers:
 Reavers are warriors who learn the magics of destruction in order to
 complement their deadliness in hand combat.
 
-Warpers:
+Arcane Marksmen:
 --------
-Warpers specialise in translocation magic, and are experts in travelling
-long distances and positioning themselves precisely and use this to
-their advantage in melee or missile combat.
+Arcane Marksmen specialize in dealing ranged damage via enchanted
+weapons. Initially, they may choose either elemental damage types or
+translocation effects. Additionally, they have spells which will aid
+in staying at a distance and defend against other ranged weapon users.
 
 
 Magicians: A magician is not a job by itself, but a type of job,

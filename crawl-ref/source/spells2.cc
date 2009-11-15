@@ -345,6 +345,11 @@ bool brand_weapon(brand_type which_brand, int power)
         duration_affected = 7;
         break;
 
+    case SPWPN_RETURNING:
+        msg += " wiggles in your hand.";
+        duration_affected = 5;
+        break;
+
     default:
         break;
     }

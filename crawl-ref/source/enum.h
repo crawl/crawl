@@ -320,9 +320,12 @@ enum book_type
     BOOK_PARTY_TRICKS,                 //jmf: 04jan2000
     BOOK_BEASTS,                       //   40
     BOOK_STALKING,         // renamed -- assassination was confusing  -- bwr
-    MAX_NORMAL_BOOK = BOOK_STALKING,
+    BOOK_ELEMENTAL_MISSILES,
+    BOOK_WARPED_MISSILES,
+    BOOK_DEVASTATING_MISSILES,
+    MAX_NORMAL_BOOK = BOOK_DEVASTATING_MISSILES,	
 
-    MIN_GOD_ONLY_BOOK,                      // 42
+    MIN_GOD_ONLY_BOOK,                      // 45
     BOOK_ANNIHILATIONS = MIN_GOD_ONLY_BOOK,
     BOOK_DEMONOLOGY,
     BOOK_NECRONOMICON,
@@ -330,14 +333,14 @@ enum book_type
 
     MAX_FIXED_BOOK = MAX_GOD_ONLY_BOOK,
 
-    BOOK_RANDART_LEVEL,                     // 45
+    BOOK_RANDART_LEVEL,                     // 48
     BOOK_RANDART_THEME,
     BOOK_CARD_EFFECT,    // not implemented
 
     MAX_MEMORISABLE_BOOK = BOOK_CARD_EFFECT,
 
     BOOK_MANUAL,
-    BOOK_DESTRUCTION,                       // 49
+    BOOK_DESTRUCTION,                       // 52
     NUM_BOOKS
 };
 
@@ -1459,7 +1462,7 @@ enum job_type
     JOB_REAVER,
     JOB_STALKER,
     JOB_MONK,                          //   25
-    JOB_WARPER,
+    JOB_ARCANE_MARKSMAN,
     JOB_WANDERER,                      //   27
     JOB_ARTIFICER,                     //   28 -Greenberg/Bane
     NUM_JOBS,                          // always after the last job
@@ -2860,6 +2863,13 @@ enum spell_type
     SPELL_PORTAL_PROJECTILE,
     SPELL_SUMMON_UGLY_THING,
     SPELL_PETRIFY,
+    SPELL_FLAME_AMMUNITION,
+    SPELL_FROST_AMMUNITION,
+    SPELL_SHOCKING_AMMUNITION,
+    SPELL_WARP_AMMUNITION,
+    SPELL_EXPLODING_AMMUNITION,
+    SPELL_REAPING_AMMUNITION,
+    SPELL_RETURNING_AMMUNITION,
 
     // Mostly monster-only spells after this point:
     SPELL_HELLFIRE_BURST = 175,

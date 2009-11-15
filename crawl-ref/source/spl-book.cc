@@ -518,7 +518,40 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 42 - Book of Annihilations - Vehumet special
+    // 42 - Book of Elemental Missiles 
+    {SPELL_CORONA,
+     SPELL_SWIFTNESS,
+     SPELL_REPEL_MISSILES,
+     SPELL_FLAME_AMMUNITION,
+     SPELL_FROST_AMMUNITION,
+     SPELL_POISON_AMMUNITION,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     },
+
+    // 43 - Book of Warped Missiles
+    {SPELL_APPORTATION,
+     SPELL_PORTAL_PROJECTILE,
+     SPELL_REPEL_MISSILES,
+     SPELL_BLINK,
+     SPELL_RETURNING_AMMUNITION,
+     SPELL_WARP_AMMUNITION,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     },
+    
+    // 44 Book of Devastating Missiles
+    {SPELL_POISON_AMMUNITION,
+     SPELL_WARP_AMMUNITION,
+     SPELL_SHOCKING_AMMUNITION,
+     SPELL_HASTE,
+     SPELL_DEFLECT_MISSILES,
+     SPELL_EXPLODING_AMMUNITION,
+     SPELL_REAPING_AMMUNITION,
+     SPELL_NO_SPELL,
+     },
+
+    // 45 - Book of Annihilations - Vehumet special
     {SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_POISON_ARROW,
      SPELL_CHAIN_LIGHTNING,
@@ -529,7 +562,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 43 - Book of Demonology - Vehumet special
+    // 46 - Book of Demonology - Vehumet special
     {SPELL_ABJURATION,
      SPELL_RECALL,
      SPELL_CALL_IMP,
@@ -540,7 +573,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 44 - Necronomicon - Kikubaaqudgha special
+    // 47 - Necronomicon - Kikubaaqudgha special
     {SPELL_SYMBOL_OF_TORMENT,
      SPELL_CONTROL_UNDEAD,
      SPELL_HAUNT,
@@ -551,7 +584,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 45 - Randart Spellbook (by level)
+    // 48 - Randart Spellbook (by level)
     {SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -562,7 +595,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 46 - Randart Spellbook (by theme)
+    // 49 - Randart Spellbook (by theme)
     {SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -573,7 +606,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 47 - Book of Card Effects
+    // 50 - Book of Card Effects
     {SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -584,7 +617,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 48 - manuals of all kinds
+    // 51 - manuals of all kinds
     {SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -595,7 +628,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 49 - Tome of Destruction
+    // 52 - Tome of Destruction
     {SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -608,7 +641,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // Rods - start at NUM_BOOKS.
 
-    // 50 - Rod of smiting
+    // 53 - Rod of smiting
     {SPELL_SMITING,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -619,7 +652,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 51 - Rod of summoning
+    // 54 - Rod of summoning
     {SPELL_ABJURATION,
      SPELL_RECALL,
      SPELL_SUMMON_ELEMENTAL,
@@ -630,7 +663,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 52 - Rod of destruction (fire)
+    // 55 - Rod of destruction (fire)
     {SPELL_THROW_FLAME,
      SPELL_BOLT_OF_FIRE,
      SPELL_FIREBALL,
@@ -641,7 +674,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 53 - Rod of destruction (ice)
+    // 56 - Rod of destruction (ice)
     {SPELL_THROW_FROST,
      SPELL_THROW_ICICLE,
      SPELL_FREEZING_CLOUD,
@@ -652,7 +685,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 54 - Rod of destruction (lightning, iron, fireball)
+    // 57 - Rod of destruction (lightning, iron, fireball)
     {SPELL_LIGHTNING_BOLT,
      SPELL_IRON_SHOT,
      SPELL_FIREBALL,
@@ -663,7 +696,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 55 - Rod of destruction (inaccuracy, magma, cold)
+    // 58 - Rod of destruction (inaccuracy, magma, cold)
     {SPELL_BOLT_OF_INACCURACY,
      SPELL_BOLT_OF_MAGMA,
      SPELL_BOLT_OF_COLD,
@@ -674,7 +707,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 56 - Rod of warding
+    // 59 - Rod of warding
     {SPELL_ABJURATION,
      SPELL_CONDENSATION_SHIELD,
      SPELL_CAUSE_FEAR,
@@ -685,7 +718,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 57 - Rod of discovery
+    // 60 - Rod of discovery
     {SPELL_DETECT_SECRET_DOORS,
      SPELL_DETECT_TRAPS,
      SPELL_DETECT_ITEMS,
@@ -696,7 +729,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 58 - Rod of demonology
+    // 61 - Rod of demonology
     {SPELL_ABJURATION,
      SPELL_RECALL,
      SPELL_CALL_IMP,
@@ -707,7 +740,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 59 - Rod of striking
+    // 62 - Rod of striking
     {SPELL_STRIKING,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -718,7 +751,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 60 - Rod of venom
+    // 63 - Rod of venom
     {SPELL_CURE_POISON,
      SPELL_VENOM_BOLT,
      SPELL_POISON_ARROW,

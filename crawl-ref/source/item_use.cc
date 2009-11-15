@@ -2052,7 +2052,8 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     const bool reaping      = (bow_brand  == SPWPN_REAPING
                                || ammo_brand == SPMSL_REAPING)
                               && bow_brand != SPWPN_HOLY_WRATH;
-    const bool charged      = bow_brand  == SPWPN_ELECTROCUTION;
+    const bool charged      = bow_brand  == SPWPN_ELECTROCUTION 
+                                || ammo_brand == SPMSL_ELECTRIC;
     const bool blessed      = bow_brand == SPWPN_HOLY_WRATH 
                               && ammo_brand != SPMSL_REAPING;
 

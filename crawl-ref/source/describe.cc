@@ -1032,6 +1032,10 @@ static std::string _describe_ammo(const item_def &item)
             if (bolt_name.empty())
                 bolt_name = "frost";
             // Intentional fall-through.
+        case SPMSL_ELECTRIC:
+            if (bolt_name.empty())
+                bolt_name = "electricity";
+            // Intentional fall-through.
         case SPMSL_CHAOS:
             if (bolt_name.empty())
                 bolt_name = "a random type";
@@ -1068,6 +1072,7 @@ static std::string _describe_ammo(const item_def &item)
             description += "If it kills a monster, causing it to leave "
                 "a corpse, the corpse will be animated as a zombie "
                 "friendly to the one who " + threw_or_fired + " it.";
+            always_destroyed = true;
             break;
         case SPMSL_PENETRATION:
             description += "It will pass through any targets it hits, "
@@ -1078,6 +1083,7 @@ static std::string _describe_ammo(const item_def &item)
             description += "Any target it hits will blink, with a "
                 "tendency towards blinking further away from the one "
                 "who " + threw_or_fired + " it.";
+            always_destroyed = true;
             break;
         case SPMSL_EXPLODING:
             description += "It will explode into fragments upon "

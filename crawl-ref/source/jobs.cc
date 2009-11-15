@@ -21,7 +21,7 @@ static job_type old_jobs_order[] = {
     JOB_CHAOS_KNIGHT,       JOB_TRANSMUTER,
     JOB_HEALER,             JOB_REAVER,
     JOB_STALKER,            JOB_MONK,
-    JOB_WARPER,             JOB_WANDERER,
+    JOB_ARCANE_MARKSMAN,    JOB_WANDERER,
     JOB_ARTIFICER
 };
 
@@ -36,7 +36,7 @@ static job_type new_jobs_order[] = {
     JOB_HEALER,             JOB_CHAOS_KNIGHT,
     JOB_DEATH_KNIGHT,       JOB_CRUSADER,
     // general and niche spellcasters (incl. Crusader above)
-    JOB_REAVER,             JOB_WARPER,
+    JOB_REAVER,             JOB_ARCANE_MARKSMAN,
     JOB_WIZARD,             JOB_CONJURER,
     JOB_ENCHANTER,          JOB_SUMMONER,
     JOB_NECROMANCER,        JOB_TRANSMUTER,
@@ -69,7 +69,7 @@ static const char * Class_Name_List[ NUM_JOBS ] =
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
       "Earth Elementalist", "Crusader", "Death Knight", "Venom Mage",
       "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
-      "Monk", "Warper", "Wanderer", "Artificer" };
+      "Monk", "Arcane Marksman", "Wanderer", "Artificer" };
 
 int get_class_index_by_abbrev(const char *abbrev)
 {

@@ -1355,7 +1355,7 @@ static void _give_last_paycheck(job_type which_job)
         break;
 
     case JOB_WANDERER:
-    case JOB_WARPER:
+    case JOB_ARCANE_MARKSMAN:
     case JOB_ASSASSIN:
         you.gold = 50;
         break;
@@ -1461,7 +1461,7 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_STALKER:           s =  2; i =  4; d =  6; hp = 12; mp = 1; break;
 
     case JOB_HUNTER:            s =  4; i =  3; d =  5; hp = 13; mp = 0; break;
-    case JOB_WARPER:            s =  3; i =  5; d =  4; hp = 12; mp = 1; break;
+    case JOB_ARCANE_MARKSMAN:   s =  3; i =  5; d =  4; hp = 12; mp = 1; break;
 
     case JOB_MONK:              s =  3; i =  2; d =  7; hp = 13; mp = 0; break;
     case JOB_TRANSMUTER:        s =  2; i =  5; d =  5; hp = 12; mp = 1; break;
@@ -4256,30 +4256,77 @@ bool _give_items_skills()
         weap_skill = 3;
         break;
 
-    case JOB_WARPER:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+    case JOB_ARCANE_MARKSMAN:
 
-        if (!_choose_weapon())
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+
+        switch (you.species)
+        {
+        case SP_SLUDGE_ELF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
+                               2);
+            break;
+
+        case SP_TROLL:
+        case SP_OGRE:
+            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
+                               3);
+            break;
+
+        case SP_HALFLING:
+        case SP_KOBOLD:
+            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
+                               30);
+
+            // Wield the sling instead.
+            you.equip[EQ_WEAPON] = 1;
+            break;
+
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25);
+
+            // Wield the crossbow instead.
+            you.equip[EQ_WEAPON] = 1;
+            break;
+
+        default:
+            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25);
+
+            // Wield the bow instead.
+            you.equip[EQ_WEAPON] = 1;
+            break;
+        }
+
+        if (is_range_weapon(you.inv[1]))
+            you.skills[range_skill(you.inv[1])] = 3;
+        else
+            you.skills[SK_THROWING] = 3;
+
+        if (!_choose_book(3, BOOK_ELEMENTAL_MISSILES, 2))
             return (false);
 
-        if (you.inv[0].quantity < 1)
-            _newgame_clear_item(0);
+        _newgame_make_item(4, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                           ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
-
-        // One free escape.
-        _newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
-
-        you.skills[SK_FIGHTING]       = 1;
-        you.skills[SK_ARMOUR]         = 1;
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_SPELLCASTING]   = 2;
-        you.skills[SK_TRANSLOCATIONS] = 3;
-        you.skills[SK_DARTS]          = 1;
-        weap_skill = 3;
+        
+        switch (you.inv[3].sub_type)
+        {
+        case BOOK_ELEMENTAL_MISSILES:
+            you.skills[SK_ENCHANTMENTS] = 3;
+            break;
+        case BOOK_WARPED_MISSILES:
+            you.skills[SK_TRANSLOCATIONS] = 3;
+            break;
+        }
         break;
 
     case JOB_WIZARD:
