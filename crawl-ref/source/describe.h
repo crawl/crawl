@@ -52,6 +52,9 @@ void get_feature_desc(const coord_def &gc, describe_info &inf);
 void set_feature_desc_long(const std::string &raw_name,
                            const std::string &desc);
 
+void set_feature_quote(const std::string &raw_name,
+                       const std::string &quote);
+
 void describe_item(item_def &item, bool allow_inscribe = false,
                    bool shopping = false);
 void get_item_desc(const item_def &item, describe_info &inf,

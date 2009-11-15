@@ -54,6 +54,7 @@
 #include "xom.h"
 
 #define LONG_DESC_KEY "long_desc_key"
+#define QUOTE_KEY "quote_key"
 
 // ========================================================================
 //      Internal Functions
@@ -2087,6 +2088,15 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         inf.body << _get_feature_description_wide(grd(pos));
 
     inf.quote = getQuoteString(db_name);
+
+    // Quotes don't care about custom descriptions.
+    if (props.exists(QUOTE_KEY))
+    {
+        const CrawlHashTable &quote_table = props[QUOTE_KEY].get_table();
+
+        if (quote_table.exists(db_name))
+            inf.quote = quote_table[db_name].get_string();
+    }
 }
 
 void describe_feature_wide(const coord_def& pos)
@@ -2121,6 +2131,25 @@ void set_feature_desc_long(const std::string &raw_name,
     else
         desc_table[raw_name] = desc;
 }
+
+void set_feature_quote(const std::string &raw_name,
+                       const std::string &quote)
+{
+    ASSERT(!raw_name.empty());
+
+    CrawlHashTable &props = env.properties;
+
+    if (!props.exists(QUOTE_KEY))
+        props[QUOTE_KEY].new_table();
+
+    CrawlHashTable &quote_table = props[QUOTE_KEY].get_table();
+
+    if (quote.empty())
+        quote_table.erase(raw_name);
+    else
+        quote_table[raw_name] = quote;
+}
+
 
 void get_item_desc(const item_def &item, describe_info &inf, bool terse)
 {
@@ -2776,7 +2805,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     // descriptions in Lua vaults by using MonPropsMarker. This is also the
     // method used by set_feature_desc_long, etc. {due}
     if (mons.props.exists("description"))
-        inf.body << std::string(mons.props["description"]);
+        inf.body << mons.props["description"].get_string();
     // Don't get description for player ghosts.
     else if (mons.type != MONS_PLAYER_GHOST)
         inf.body << getLongDescription(db_name);

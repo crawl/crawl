@@ -198,14 +198,6 @@ function place_tiny_volcano(e)
                                    delay = 800, size = 80, spread_rate = 10,
                                    listener = large_warning})
 end
-
-function place_medium_flame_cloud (e, glyph, nolava)
-    if not nolava then
-        e.kfeat(glyph .. " = l")
-    end
-    e.lua_marker(glyph, fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80,
-                                      start_clouds = 1, cloud_type = "flame"})
-end
 -- #
 -- ###
 
@@ -666,7 +658,9 @@ SHUFFLE:    <<<
 NSUBST:     < = 4:.
 :           volcano_setup(_G)
 :           place_tiny_volcano(_G)
-:           place_medium_flame_cloud(_G, 'J')
+KFEAT:      J = l
+MARKER:     J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
+                                  start_clouds = 1, cloud_type = "flame"}
 MAP
           xxx
          xxyxx
@@ -728,8 +722,11 @@ MONS:       mummy
 SHUFFLE:    12K
 :           volcano_setup(_G)
 :           place_large_volcano(_G)
-:           place_medium_flame_cloud(_G, "J")
-:           place_medium_flame_cloud(_G, "K")
+KFEAT:      JK = l
+MARKER:     J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
+                                  start_clouds = 1, cloud_type = "flame"}
+MARKER:     K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
+                                  start_clouds = 1, cloud_type = "flame"}
 MAP
                  xxxx
             xxxxxxyyxxxxx
@@ -777,8 +774,11 @@ COLOUR:     m = blue
 TAGS:       volcano no_item_gen no_monster_gen
 :           volcano_setup(_G)
 :           place_small_volcano(_G)
-:           place_medium_flame_cloud(_G, "J", true)
-:           place_medium_flame_cloud(_G, "K")
+MARKER:     J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
+                                  start_clouds = 1, cloud_type = "flame"}
+KFEAT:      K = l
+MARKER:     K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
+                                  start_clouds = 1, cloud_type = "flame"}
 # Sides:    Lindwurm # Vortex/elemental
 MAP
                  xxxxxxxxx
