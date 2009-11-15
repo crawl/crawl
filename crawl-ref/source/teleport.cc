@@ -99,12 +99,6 @@ static coord_def random_space_weighted(actor* moved, actor* target,
         dests.push_back(coord_weight(*ri, weight));
     }
 
-    // XXX: Sometimes this results in a memory problem, where it seems as
-    // if the dests vector is free'd before copying the result.  When
-    // this happens, an out-of-bounds coordinate is usually returned.
-    //
-    // This is with GCC 4.4.1, -O2, 32 bit Linux, -march-native on a
-    // Family 10 AMD chip.
     coord_def* choice = random_choose_weighted(dests);
     return (choice ? *choice : coord_def(0, 0));
 }
@@ -134,7 +128,7 @@ void blink_away(monsters* mon)
     if (!foe || !mon->can_see(foe))
         return;
     coord_def dest = random_space_weighted(mon, foe, false, false);
-    if (!in_bounds(dest))
+    if (dest.origin())
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success);
@@ -150,7 +144,7 @@ void blink_range(monsters* mon)
     if (!foe || !mon->can_see(foe))
         return;
     coord_def dest = random_space_weighted(mon, foe, false, true);
-    if (!in_bounds(dest))
+    if (dest.origin())
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success);
@@ -166,7 +160,7 @@ void blink_close(monsters* mon)
     if (!foe || !mon->can_see(foe))
         return;
     coord_def dest = random_space_weighted(mon, foe, true);
-    if (!in_bounds(dest))
+    if (dest.origin())
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success);
