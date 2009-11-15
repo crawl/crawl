@@ -61,7 +61,7 @@ job_type get_class(const int index)
 static const char * Class_Abbrev_List[ NUM_JOBS ] =
     { "Fi", "Wz", "Pr", "Th", "Gl", "Ne", "Pa", "As", "Be", "Hu",
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr", "DK", "VM",
-      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar", "Am" };
+      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar", "AM" };
 
 static const char * Class_Name_List[ NUM_JOBS ] =
     { "Fighter", "Wizard", "Priest", "Thief", "Gladiator", "Necromancer",
