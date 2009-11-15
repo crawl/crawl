@@ -314,10 +314,10 @@ enum book_type
     BOOK_EARTH,
     BOOK_WIZARDRY,
     BOOK_POWER,
-    BOOK_CANTRIPS,                     //jmf: 04jan2000
-    BOOK_PARTY_TRICKS,                 //jmf: 04jan2000
+    BOOK_CANTRIPS,
+    BOOK_PARTY_TRICKS,
     BOOK_BEASTS,
-    BOOK_STALKING,         // renamed -- assassination was confusing  -- bwr
+    BOOK_STALKING,
     MAX_NORMAL_BOOK = BOOK_STALKING,
 
     MIN_GOD_ONLY_BOOK,
@@ -330,7 +330,6 @@ enum book_type
 
     BOOK_RANDART_LEVEL,
     BOOK_RANDART_THEME,
-    BOOK_CARD_EFFECT,    // not implemented
 
     BOOK_MANUAL,
     BOOK_DESTRUCTION,
