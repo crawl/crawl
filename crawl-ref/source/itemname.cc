@@ -844,7 +844,6 @@ static const char* book_type_name(int booktype)
     case BOOK_SUMMONINGS:             return "Summonings";
     case BOOK_FIRE:                   return "Fire";
     case BOOK_ICE:                    return "Ice";
-    case BOOK_SURVEYANCES:            return "Surveyances";
     case BOOK_SPATIAL_TRANSLOCATIONS: return "Spatial Translocations";
     case BOOK_ENCHANTMENTS:           return "Enchantments";
     case BOOK_TEMPESTS:               return "the Tempests";
@@ -852,7 +851,6 @@ static const char* book_type_name(int booktype)
     case BOOK_HINDERANCE:             return "Hinderance";
     case BOOK_CHANGES:                return "Changes";
     case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
-    case BOOK_PRACTICAL_MAGIC:        return "Practical Magic";
     case BOOK_WAR_CHANTS:             return "War Chants";
     case BOOK_CLOUDS:                 return "Clouds";
     case BOOK_NECROMANCY:             return "Necromancy";
@@ -861,7 +859,6 @@ static const char* book_type_name(int booktype)
     case BOOK_DEMONOLOGY:             return "Demonology";
     case BOOK_AIR:                    return "Air";
     case BOOK_SKY:                    return "the Sky";
-    case BOOK_DIVINATIONS:            return "Divinations";
     case BOOK_WARP:                   return "the Warp";
     case BOOK_ENVENOMATIONS:          return "Envenomations";
     case BOOK_ANNIHILATIONS:          return "Annihilations";

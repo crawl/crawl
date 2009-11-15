@@ -4428,8 +4428,8 @@ static void _compile_time_asserts()
 {
     // Check that the numbering comments in enum.h haven't been
     // disturbed accidentally.
-    COMPILE_CHECK(SK_UNARMED_COMBAT == 19       , c1);
-    COMPILE_CHECK(SK_EVOCATIONS == 39           , c2);
+    COMPILE_CHECK(SK_UNARMED_COMBAT == 18       , c1);
+    COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 103    , c4);
     COMPILE_CHECK(SPELL_PETRIFY == 155          , c5);

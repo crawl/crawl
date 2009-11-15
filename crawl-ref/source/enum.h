@@ -279,51 +279,48 @@ enum beam_type                  // beam[].flavour
 
 enum book_type
 {
-    BOOK_MINOR_MAGIC_I,                //    0
+    BOOK_MINOR_MAGIC_I,
     BOOK_MINOR_MAGIC_II,
     BOOK_MINOR_MAGIC_III,
     BOOK_CONJURATIONS_I,
     BOOK_CONJURATIONS_II,
-    BOOK_FLAMES,                       //    5
+    BOOK_FLAMES,
     BOOK_FROST,
     BOOK_SUMMONINGS,
     BOOK_FIRE,
     BOOK_ICE,
-    BOOK_SURVEYANCES,                  //   10
     BOOK_SPATIAL_TRANSLOCATIONS,
     BOOK_ENCHANTMENTS,
     BOOK_YOUNG_POISONERS,
     BOOK_TEMPESTS,
-    BOOK_DEATH,                        //   15
+    BOOK_DEATH,
     BOOK_HINDERANCE,
     BOOK_CHANGES,
     BOOK_TRANSFIGURATIONS,
-    BOOK_PRACTICAL_MAGIC,
-    BOOK_WAR_CHANTS,                   //   20
+    BOOK_WAR_CHANTS,
     BOOK_CLOUDS,
     BOOK_NECROMANCY,
     BOOK_CALLINGS,
     BOOK_CHARMS,
-    BOOK_AIR,                          //   25
+    BOOK_AIR,
     BOOK_SKY,
-    BOOK_DIVINATIONS,
     BOOK_WARP,
     BOOK_ENVENOMATIONS,
-    BOOK_UNLIFE,                       //   30
+    BOOK_UNLIFE,
     BOOK_CONTROL,
     BOOK_MUTATIONS,
     BOOK_TUKIMA,
     BOOK_GEOMANCY,
-    BOOK_EARTH,                        //   35
+    BOOK_EARTH,
     BOOK_WIZARDRY,
     BOOK_POWER,
     BOOK_CANTRIPS,                     //jmf: 04jan2000
     BOOK_PARTY_TRICKS,                 //jmf: 04jan2000
-    BOOK_BEASTS,                       //   40
+    BOOK_BEASTS,
     BOOK_STALKING,         // renamed -- assassination was confusing  -- bwr
     MAX_NORMAL_BOOK = BOOK_STALKING,
 
-    MIN_GOD_ONLY_BOOK,                      // 42
+    MIN_GOD_ONLY_BOOK,
     BOOK_ANNIHILATIONS = MIN_GOD_ONLY_BOOK,
     BOOK_DEMONOLOGY,
     BOOK_NECRONOMICON,
@@ -331,20 +328,17 @@ enum book_type
 
     MAX_FIXED_BOOK = MAX_GOD_ONLY_BOOK,
 
-    BOOK_RANDART_LEVEL,                     // 45
+    BOOK_RANDART_LEVEL,
     BOOK_RANDART_THEME,
     BOOK_CARD_EFFECT,    // not implemented
 
-    MAX_MEMORISABLE_BOOK = BOOK_CARD_EFFECT,
-
     BOOK_MANUAL,
-    BOOK_DESTRUCTION,                       // 49
+    BOOK_DESTRUCTION,
     NUM_BOOKS
 };
 
 #define NUM_NORMAL_BOOKS     (MAX_NORMAL_BOOK + 1)
 #define NUM_FIXED_BOOKS      (MAX_FIXED_BOOK + 1)
-#define NUM_MEMORISABLE_BOOK (MAX_MEMORISABLE_BOOK + 1)
 
 enum branch_type                // you.where_are_you
 {
@@ -2604,42 +2598,40 @@ enum size_type
 // order.
 enum skill_type
 {
-    SK_FIGHTING,                       //    0
+    SK_FIGHTING,
     SK_SHORT_BLADES,
     SK_LONG_BLADES,
-    SK_UNUSED_1,                       // SK_GREAT_SWORDS - now unused
     SK_AXES,
-    SK_MACES_FLAILS,                   //    5
+    SK_MACES_FLAILS,
     SK_POLEARMS,
     SK_STAVES,
     SK_SLINGS,
     SK_BOWS,
-    SK_CROSSBOWS,                      //   10
+    SK_CROSSBOWS,
     SK_DARTS,
     SK_THROWING,
     SK_ARMOUR,
     SK_DODGING,
-    SK_STEALTH,                        //   15
+    SK_STEALTH,
     SK_STABBING,
     SK_SHIELDS,
     SK_TRAPS_DOORS,
-    SK_UNARMED_COMBAT,                 //   19
+    SK_UNARMED_COMBAT,
     // 20
     // 21
     // 22
     // 23
     // 24
-    SK_SPELLCASTING = 25,              //   25
+    SK_SPELLCASTING = 25,
     SK_CONJURATIONS,
     SK_ENCHANTMENTS,
     SK_SUMMONINGS,
     SK_NECROMANCY,
-    SK_TRANSLOCATIONS,                 //   30
+    SK_TRANSLOCATIONS,
     SK_TRANSMUTATIONS,
-    SK_DIVINATIONS,
     SK_FIRE_MAGIC,
     SK_ICE_MAGIC,
-    SK_AIR_MAGIC,                      //   35
+    SK_AIR_MAGIC,
     SK_EARTH_MAGIC,
     SK_POISON_MAGIC,
     SK_INVOCATIONS,

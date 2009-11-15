@@ -72,66 +72,63 @@ typedef skill_title_key_t stk;
 const char *skills[50][6] =
 {
   //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27
-    {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror"},          //  0
+    {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror"},
     {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Blademaster",    "Eviscerator"},
     {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster"},
-    {NULL},  //  3- was: great swords {dlb}
     {"Axes",           "Chopper",       "Cleaver",         "Severer",         "Executioner",    "Axe Maniac"},
-    {"Maces & Flails", "Cudgeler",      "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},       //  5
+    {"Maces & Flails", "Cudgeler",      "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},
     {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine"},
     {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff"},
     {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult"},
     {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@"},
-    {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest"},     // 10
+    {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest"},
     {"Darts",          "Dart Thrower",  "Hurler",          "Hedgehog",        "Darts Champion", "Perforator"},
     {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Adj@ Ballista"},
     {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable"},
     {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible"},
-    {"Stealth",        "Sneak",         "Covert",          "Unseen",          "Imperceptible",  "Ninja"},              // 15
+    {"Stealth",        "Sneak",         "Covert",          "Unseen",          "Imperceptible",  "Ninja"},
     {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician"},
     {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Adj@ Barricade"},
     {"Traps & Doors",  "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
     // STR based fighters, for DEX/martial arts titles see below
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
-    {NULL},   // 20- empty
-    {NULL},   // 21- empty
-    {NULL},   // 22- empty
-    {NULL},   // 23- empty
-    {NULL},   // 24- empty
+    {NULL},
+    {NULL},
+    {NULL},
+    {NULL},
+    {NULL},
+    {NULL},
 
-    {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},           // 25
+    {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},
     {"Conjurations",   "Ruinous",       "Conjurer",        "Destroyer",       "Devastator",     "Annihilator"},
     {"Enchantments",   "Charm-Maker",   "Infuser",         "Bewitcher",       "Enchanter",      "Spellbinder"},
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
-    {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},     // 30
+    {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},
     {"Transmutations", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@"},
-    {"Divinations",    "Seer",          "Clairvoyant",     "Diviner",         "Augur",          "Oracle"},
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist"},
     {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator"},
-    {"Air Magic",      "Gusty",         "Cloud Mage",      "Aerator",         "Anemomancer",    "Meteorologist"},      // 35
+    {"Air Magic",      "Gusty",         "Cloud Mage",      "Aerator",         "Anemomancer",    "Meteorologist"},
     {"Earth Magic",    "Digger",        "Geomancer",       "Earth Mage",      "Metallomancer",  "Petrodigitator"},
     {"Poison Magic",   "Stinger",       "Tainter",         "Polluter",        "Contaminator",   "Envenomancer"},
 
     // These titles apply to atheists only, worshippers of the various gods
     // use the god titles instead, depending on piety or, in Xom's case, mood.
     {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate"},
-    {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer"},        // 39
+    {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer"},
 
-/*NOTE: If more skills are added, must change ranges in level_change() in player.cc */
-
-    {NULL},   // 40- empty
-    {NULL},   // 41- empty
-    {NULL},   // 42- empty
-    {NULL},   // 43- empty
-    {NULL},   // 44- empty
-    {NULL},   // 45- empty
-    {NULL},   // 46- empty
-    {NULL},   // 47- empty
-    {NULL},   // 48- empty
-    {NULL}    // 49- empty  {end of array}
+    {NULL},
+    {NULL},
+    {NULL},
+    {NULL},
+    {NULL},
+    {NULL},
+    {NULL},
+    {NULL},
+    {NULL},
+    {NULL}
 };
 
 const char *martial_arts_titles[6] =
@@ -149,7 +146,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -171,6 +167,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      100,                       // SK_ENCHANTMENTS
@@ -178,7 +175,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -192,7 +188,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_FIGHTING
       70,                       // SK_SHORT_BLADES
       70,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      130,                       // SK_AXES
      150,                       // SK_MACES_FLAILS
      150,                       // SK_POLEARMS
@@ -214,6 +209,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
       90,                       // SK_SPELLCASTING
       90,                       // SK_CONJURATIONS
       70,                       // SK_ENCHANTMENTS
@@ -221,7 +217,6 @@ const int spec_skills[NUM_SPECIES][40] =
      130,                       // SK_NECROMANCY
       90,                       // SK_TRANSLOCATIONS
       90,                       // SK_TRANSMUTATIONS
-     110,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
       70,                       // SK_AIR_MAGIC
@@ -235,7 +230,6 @@ const int spec_skills[NUM_SPECIES][40] =
      150,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      110,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      150,                       // SK_AXES
      170,                       // SK_MACES_FLAILS
      170,                       // SK_POLEARMS
@@ -257,6 +251,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
       70,                       // SK_SPELLCASTING
       80,                       // SK_CONJURATIONS
       50,                       // SK_ENCHANTMENTS
@@ -264,7 +259,6 @@ const int spec_skills[NUM_SPECIES][40] =
       70,                       // SK_NECROMANCY
       80,                       // SK_TRANSLOCATIONS
       80,                       // SK_TRANSMUTATIONS
-      80,                       // SK_DIVINATIONS
       90,                       // SK_FIRE_MAGIC
       90,                       // SK_ICE_MAGIC
       80,                       // SK_AIR_MAGIC
@@ -278,7 +272,6 @@ const int spec_skills[NUM_SPECIES][40] =
       80,                       // SK_FIGHTING
      110,                       // SK_SHORT_BLADES
      110,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      130,                       // SK_AXES
      140,                       // SK_MACES_FLAILS
      140,                       // SK_POLEARMS
@@ -300,6 +293,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
       90,                       // SK_SPELLCASTING
      130,                       // SK_CONJURATIONS
      130,                       // SK_ENCHANTMENTS
@@ -307,7 +301,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
       60,                       // SK_TRANSMUTATIONS
-     130,                       // SK_DIVINATIONS
       80,                       // SK_FIRE_MAGIC
       80,                       // SK_ICE_MAGIC
       80,                       // SK_AIR_MAGIC
@@ -321,7 +314,6 @@ const int spec_skills[NUM_SPECIES][40] =
       70,                       // SK_FIGHTING
       80,                       // SK_SHORT_BLADES
       90,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
       70,                       // SK_AXES
       70,                       // SK_MACES_FLAILS
      110,                       // SK_POLEARMS
@@ -343,6 +335,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      210,                       // SK_SPELLCASTING
      120,                       // SK_CONJURATIONS
      150,                       // SK_ENCHANTMENTS
@@ -350,7 +343,6 @@ const int spec_skills[NUM_SPECIES][40] =
      160,                       // SK_NECROMANCY
      150,                       // SK_TRANSLOCATIONS
      120,                       // SK_TRANSMUTATIONS
-     130,                       // SK_DIVINATIONS
       70,                       // SK_FIRE_MAGIC
      130,                       // SK_ICE_MAGIC
      150,                       // SK_AIR_MAGIC
@@ -364,7 +356,6 @@ const int spec_skills[NUM_SPECIES][40] =
      120,                       // SK_FIGHTING
       60,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      120,                       // SK_AXES
      150,                       // SK_MACES_FLAILS
      160,                       // SK_POLEARMS
@@ -386,6 +377,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      170,                       // SK_SPELLCASTING
      130,                       // SK_CONJURATIONS
      100,                       // SK_ENCHANTMENTS
@@ -393,7 +385,6 @@ const int spec_skills[NUM_SPECIES][40] =
      150,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      150,                       // SK_TRANSMUTATIONS
-     140,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
       90,                       // SK_AIR_MAGIC
@@ -407,7 +398,6 @@ const int spec_skills[NUM_SPECIES][40] =
       70,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
       80,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
       70,                       // SK_AXES
       80,                       // SK_MACES_FLAILS
       80,                       // SK_POLEARMS
@@ -429,6 +419,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      200,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -436,7 +427,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      150,                       // SK_TRANSLOCATIONS
      160,                       // SK_TRANSMUTATIONS
-     160,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      150,                       // SK_AIR_MAGIC
@@ -450,7 +440,6 @@ const int spec_skills[NUM_SPECIES][40] =
       80,                       // SK_FIGHTING
       60,                       // SK_SHORT_BLADES
      140,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      110,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      150,                       // SK_POLEARMS
@@ -472,6 +461,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      140,                       // SK_SPELLCASTING
      110,                       // SK_CONJURATIONS
      110,                       // SK_ENCHANTMENTS
@@ -479,7 +469,6 @@ const int spec_skills[NUM_SPECIES][40] =
      110,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      110,                       // SK_TRANSMUTATIONS
-     130,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -493,7 +482,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_FIGHTING
      140,                       // SK_SHORT_BLADES
      140,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      140,                       // SK_AXES
      140,                       // SK_MACES_FLAILS
      140,                       // SK_POLEARMS
@@ -514,6 +502,7 @@ const int spec_skills[NUM_SPECIES][40] =
      140,                       // undefined
      140,                       // undefined
      140,                       // undefined
+     100,                       // undefined
      140,                       // undefined
      130,                       // SK_SPELLCASTING
      140,                       // SK_CONJURATIONS
@@ -522,7 +511,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      140,                       // SK_TRANSLOCATIONS
      140,                       // SK_TRANSMUTATIONS
-     140,                       // SK_DIVINATIONS
      140,                       // SK_FIRE_MAGIC
      140,                       // SK_ICE_MAGIC
      140,                       // SK_AIR_MAGIC
@@ -536,7 +524,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -558,6 +545,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      100,                       // SK_ENCHANTMENTS
@@ -565,7 +553,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -579,7 +566,6 @@ const int spec_skills[NUM_SPECIES][40] =
       70,                       // SK_FIGHTING
      200,                       // SK_SHORT_BLADES
      180,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      180,                       // SK_AXES
       90,                       // SK_MACES_FLAILS
      110,                       // SK_POLEARMS
@@ -601,6 +587,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
       90,                       // SK_SPELLCASTING
      160,                       // SK_CONJURATIONS
      160,                       // SK_ENCHANTMENTS
@@ -608,7 +595,6 @@ const int spec_skills[NUM_SPECIES][40] =
      160,                       // SK_NECROMANCY
      160,                       // SK_TRANSLOCATIONS
      160,                       // SK_TRANSMUTATIONS
-     160,                       // SK_DIVINATIONS
      160,                       // SK_FIRE_MAGIC
      160,                       // SK_ICE_MAGIC
      160,                       // SK_AIR_MAGIC
@@ -622,7 +608,6 @@ const int spec_skills[NUM_SPECIES][40] =
      140,                       // SK_FIGHTING
      150,                       // SK_SHORT_BLADES
      150,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      150,                       // SK_AXES
      130,                       // SK_MACES_FLAILS
      150,                       // SK_POLEARMS
@@ -644,6 +629,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      260,                       // SK_SPELLCASTING
      160,                       // SK_CONJURATIONS
      200,                       // SK_ENCHANTMENTS
@@ -651,7 +637,6 @@ const int spec_skills[NUM_SPECIES][40] =
      150,                       // SK_NECROMANCY
      160,                       // SK_TRANSLOCATIONS
      160,                       // SK_TRANSMUTATIONS
-     200,                       // SK_DIVINATIONS
      160,                       // SK_FIRE_MAGIC
      160,                       // SK_ICE_MAGIC
      200,                       // SK_AIR_MAGIC
@@ -665,7 +650,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -687,6 +671,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -694,7 +679,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
       70,                       // SK_FIRE_MAGIC
      140,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -708,7 +692,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -730,6 +713,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -737,7 +721,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
      140,                       // SK_FIRE_MAGIC
       70,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -751,7 +734,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -773,6 +755,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -780,7 +763,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -794,7 +776,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -816,6 +797,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -823,7 +805,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -837,7 +818,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -859,6 +839,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -866,7 +847,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -880,7 +860,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -902,6 +881,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -909,7 +889,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
       70,                       // SK_AIR_MAGIC
@@ -923,7 +902,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -945,6 +923,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
       90,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
       90,                       // SK_ENCHANTMENTS
@@ -952,7 +931,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -966,7 +944,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -988,6 +965,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -995,7 +973,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
       80,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -1009,7 +986,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -1031,6 +1007,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -1038,7 +1015,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
       90,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
       90,                       // SK_AIR_MAGIC
@@ -1052,7 +1028,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      100,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      100,                       // SK_POLEARMS
@@ -1074,6 +1049,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -1081,7 +1057,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMUTATIONS
-     100,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -1095,7 +1070,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_FIGHTING
      120,                       // SK_SHORT_BLADES
      110,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      110,                       // SK_AXES
      110,                       // SK_MACES_FLAILS
      110,                       // SK_POLEARMS
@@ -1117,6 +1091,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      180,                       // SK_SPELLCASTING
      120,                       // SK_CONJURATIONS
      110,                       // SK_ENCHANTMENTS
@@ -1124,7 +1099,6 @@ const int spec_skills[NUM_SPECIES][40] =
      120,                       // SK_NECROMANCY
      120,                       // SK_TRANSLOCATIONS
      120,                       // SK_TRANSMUTATIONS
-     130,                       // SK_DIVINATIONS
      120,                       // SK_FIRE_MAGIC
      120,                       // SK_ICE_MAGIC
      120,                       // SK_AIR_MAGIC
@@ -1138,7 +1112,6 @@ const int spec_skills[NUM_SPECIES][40] =
      110,                       // SK_FIGHTING
      110,                       // SK_SHORT_BLADES
      110,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      110,                       // SK_AXES
      110,                       // SK_MACES_FLAILS
      110,                       // SK_POLEARMS
@@ -1158,6 +1131,7 @@ const int spec_skills[NUM_SPECIES][40] =
      110,                       // undefined
      110,                       // undefined
      110,                       // undefined
+     100,                       // undefined
      110,                       // undefined
      110,                       // undefined
      140,                       // SK_SPELLCASTING
@@ -1167,7 +1141,6 @@ const int spec_skills[NUM_SPECIES][40] =
      110,                       // SK_NECROMANCY
      110,                       // SK_TRANSLOCATIONS
      110,                       // SK_TRANSMUTATIONS
-     110,                       // SK_DIVINATIONS
      110,                       // SK_FIRE_MAGIC
      110,                       // SK_ICE_MAGIC
      110,                       // SK_AIR_MAGIC
@@ -1181,7 +1154,6 @@ const int spec_skills[NUM_SPECIES][40] =
      150,                       // SK_FIGHTING
       90,                       // SK_SHORT_BLADES
      140,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      150,                       // SK_AXES
      160,                       // SK_MACES_FLAILS
      180,                       // SK_POLEARMS
@@ -1203,6 +1175,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
       80,                       // SK_SPELLCASTING
      160,                       // SK_CONJURATIONS
       50,                       // SK_ENCHANTMENTS
@@ -1210,7 +1183,6 @@ const int spec_skills[NUM_SPECIES][40] =
      120,                       // SK_NECROMANCY
       50,                       // SK_TRANSLOCATIONS
       60,                       // SK_TRANSMUTATIONS
-      70,                       // SK_DIVINATIONS
      140,                       // SK_FIRE_MAGIC
      140,                       // SK_ICE_MAGIC
      120,                       // SK_AIR_MAGIC
@@ -1224,7 +1196,6 @@ const int spec_skills[NUM_SPECIES][40] =
       70,                       // SK_FIGHTING
       70,                       // SK_SHORT_BLADES
       70,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
       70,                       // SK_AXES
       70,                       // SK_MACES_FLAILS
       70,                       // SK_POLEARMS
@@ -1246,6 +1217,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      230,                       // SK_SPELLCASTING
      170,                       // SK_CONJURATIONS
      170,                       // SK_ENCHANTMENTS
@@ -1253,7 +1225,6 @@ const int spec_skills[NUM_SPECIES][40] =
      170,                       // SK_NECROMANCY
      170,                       // SK_TRANSLOCATIONS
      170,                       // SK_TRANSMUTATIONS
-     170,                       // SK_DIVINATIONS
      170,                       // SK_FIRE_MAGIC
      170,                       // SK_ICE_MAGIC
      170,                       // SK_AIR_MAGIC
@@ -1267,7 +1238,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_FIGHTING
      110,                       // SK_SHORT_BLADES
      110,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      110,                       // SK_AXES
      110,                       // SK_MACES_FLAILS
      110,                       // SK_POLEARMS
@@ -1289,6 +1259,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      110,                       // SK_ENCHANTMENTS
@@ -1296,7 +1267,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_NECROMANCY
      110,                       // SK_TRANSLOCATIONS
      110,                       // SK_TRANSMUTATIONS
-     110,                       // SK_DIVINATIONS
      100,                       // SK_FIRE_MAGIC
      110,                       // SK_ICE_MAGIC
      110,                       // SK_AIR_MAGIC
@@ -1310,7 +1280,6 @@ const int spec_skills[NUM_SPECIES][40] =
       80,                       // SK_FIGHTING
      110,                       // SK_SHORT_BLADES
      110,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      110,                       // SK_AXES
      110,                       // SK_MACES_FLAILS
      110,                       // SK_POLEARMS
@@ -1332,6 +1301,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      160,                       // SK_SPELLCASTING
      130,                       // SK_CONJURATIONS
      130,                       // SK_ENCHANTMENTS
@@ -1339,7 +1309,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_NECROMANCY
      120,                       // SK_TRANSLOCATIONS
      120,                       // SK_TRANSMUTATIONS
-     120,                       // SK_DIVINATIONS
      150,                       // SK_FIRE_MAGIC
       90,                       // SK_ICE_MAGIC
      150,                       // SK_AIR_MAGIC
@@ -1353,7 +1322,6 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // SK_FIGHTING
       80,                       // SK_SHORT_BLADES
       80,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
       80,                       // SK_AXES
       80,                       // SK_MACES_FLAILS
       80,                       // SK_POLEARMS
@@ -1375,6 +1343,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
       60,                       // SK_CONJURATIONS
      160,                       // SK_ENCHANTMENTS
@@ -1382,7 +1351,6 @@ const int spec_skills[NUM_SPECIES][40] =
       80,                       // SK_NECROMANCY
      150,                       // SK_TRANSLOCATIONS
      150,                       // SK_TRANSMUTATIONS
-     180,                       // SK_DIVINATIONS
       90,                       // SK_FIRE_MAGIC
      120,                       // SK_ICE_MAGIC
       90,                       // SK_AIR_MAGIC
@@ -1396,7 +1364,6 @@ const int spec_skills[NUM_SPECIES][40] =
       80,                       // SK_FIGHTING
       70,                       // SK_SHORT_BLADES
       90,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      140,                       // SK_AXES
      150,                       // SK_MACES_FLAILS
       50,                       // SK_POLEARMS
@@ -1418,6 +1385,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      130,                       // SK_SPELLCASTING
      140,                       // SK_CONJURATIONS
       90,                       // SK_ENCHANTMENTS
@@ -1425,7 +1393,6 @@ const int spec_skills[NUM_SPECIES][40] =
      150,                       // SK_NECROMANCY
      140,                       // SK_TRANSLOCATIONS
       60,                       // SK_TRANSMUTATIONS
-      80,                       // SK_DIVINATIONS
      160,                       // SK_FIRE_MAGIC
       80,                       // SK_ICE_MAGIC
      150,                       // SK_AIR_MAGIC
@@ -1439,7 +1406,6 @@ const int spec_skills[NUM_SPECIES][40] =
      110,                       // SK_FIGHTING
       90,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
      110,                       // SK_AXES
      140,                       // SK_MACES_FLAILS
      110,                       // SK_POLEARMS
@@ -1460,6 +1426,7 @@ const int spec_skills[NUM_SPECIES][40] =
      140,                       // undefined
      140,                       // undefined
      140,                       // undefined
+     100,                       // undefined
      140,                       // undefined
      130,                       // SK_SPELLCASTING
      160,                       // SK_CONJURATIONS
@@ -1468,7 +1435,6 @@ const int spec_skills[NUM_SPECIES][40] =
       90,                       // SK_NECROMANCY
      140,                       // SK_TRANSLOCATIONS
       90,                       // SK_TRANSMUTATIONS
-     120,                       // SK_DIVINATIONS
      140,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
@@ -1482,7 +1448,6 @@ const int spec_skills[NUM_SPECIES][40] =
      110,                       // SK_FIGHTING
      120,                       // SK_SHORT_BLADES
      100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
       90,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      120,                       // SK_POLEARMS
@@ -1504,6 +1469,7 @@ const int spec_skills[NUM_SPECIES][40] =
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
+     100,                       // undefined
      160,                       // SK_SPELLCASTING
      120,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
@@ -1511,7 +1477,6 @@ const int spec_skills[NUM_SPECIES][40] =
       80,                       // SK_NECROMANCY
       90,                       // SK_TRANSLOCATIONS
      120,                       // SK_TRANSMUTATION
-     120,                       // SK_DIVINATIONS
      110,                       // SK_FIRE_MAGIC
      110,                       // SK_ICE_MAGIC
      170,                       // SK_AIR_MAGIC
@@ -1580,7 +1545,7 @@ static const skill_type skill_display_order[] =
     SK_COLUMN_BREAK,
 
     SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS, SK_SUMMONINGS,
-    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS, SK_DIVINATIONS,
+    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS,
     SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_POISON_MAGIC,
 
     SK_BLANK_LINE,
@@ -2204,7 +2169,7 @@ void wield_warning(bool newWeapon)
 
 bool is_invalid_skill(int skill)
 {
-    if (skill < 0 || skill == SK_UNUSED_1 || skill >= NUM_SKILLS)
+    if (skill < 0 || skill >= NUM_SKILLS)
         return (true);
 
     if (skill > SK_UNARMED_COMBAT && skill < SK_SPELLCASTING)

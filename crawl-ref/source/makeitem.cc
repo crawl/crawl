@@ -2753,12 +2753,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
         if (one_chance_in(4))
             item.plus = SK_SPELLCASTING + random2(NUM_SKILLS - SK_SPELLCASTING);
         else
-        {
             item.plus = random2(SK_UNARMED_COMBAT);
-
-            if (item.plus == SK_UNUSED_1)
-                item.plus = SK_UNARMED_COMBAT;
-        }
         // Set number of reads possible before it "crumbles to dust".
         item.plus2 = 3 + random2(15);
     }

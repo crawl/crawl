@@ -116,6 +116,5 @@ bool spell_direction( dist &spelld, bolt &pbolt,
                       bool cancel_at_self = false );
 
 int spell_type2skill (unsigned int which_spelltype);
-int spell_skill2type (unsigned int which_skill);
 
 #endif

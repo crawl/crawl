@@ -161,16 +161,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 10 - Book of Surveyances
-    {SPELL_DETECT_SECRET_DOORS,
-     SPELL_DETECT_TRAPS,
-     SPELL_DETECT_ITEMS,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL
-     },
 
     // 11 - Book of Spatial Translocations
     {SPELL_APPORTATION,
@@ -260,17 +250,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // 19 - Book of Practical Magic
-    {SPELL_PROJECTED_NOISE,
-     SPELL_SELECTIVE_AMNESIA,
-     SPELL_DIG,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     },
-
     // 20 - Book of War Chants
     {SPELL_FIRE_BRAND,
      SPELL_FREEZING_AURA,
@@ -348,16 +327,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_CONJURE_BALL_LIGHTNING,
      },
 
-    // 27 - Book of Divinations
-    {SPELL_DETECT_SECRET_DOORS,
-     SPELL_DETECT_CREATURES,
-     SPELL_DETECT_ITEMS,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     },
 
     // 28 - Book of the Warp
     {SPELL_BANISHMENT,
@@ -449,7 +418,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // 36 - Book of Wizardry
-    {SPELL_DETECT_CREATURES,
+    {SPELL_SELECTIVE_AMNESIA,
      SPELL_SUMMON_ELEMENTAL,
      SPELL_TELEPORT_SELF,
      SPELL_FIREBALL,
@@ -474,8 +443,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     {SPELL_CONFUSING_TOUCH,
      SPELL_ANIMATE_SKELETON,
      SPELL_SUMMON_SMALL_MAMMALS,
-     SPELL_DETECT_SECRET_DOORS,
      SPELL_APPORTATION,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -495,10 +464,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // 40 - Book of Beasts //jmf: added 19mar2000
     {SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_STICKS_TO_SNAKES,
-     SPELL_DETECT_CREATURES,
      SPELL_CALL_CANINE_FAMILIAR,
      SPELL_TAME_BEASTS,
      SPELL_DRAGON_FORM,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
@@ -910,7 +879,6 @@ int book_rarity(unsigned char which_book)
     case BOOK_MINOR_MAGIC_I:
     case BOOK_MINOR_MAGIC_II:
     case BOOK_MINOR_MAGIC_III:
-    case BOOK_SURVEYANCES:
     case BOOK_HINDERANCE:
     case BOOK_CANTRIPS: //jmf: added 04jan2000
         return 1;
@@ -921,7 +889,6 @@ int book_rarity(unsigned char which_book)
 
     case BOOK_CONJURATIONS_I:
     case BOOK_CONJURATIONS_II:
-    case BOOK_PRACTICAL_MAGIC:
     case BOOK_NECROMANCY:
     case BOOK_CALLINGS:
     case BOOK_WIZARDRY:
@@ -947,7 +914,6 @@ int book_rarity(unsigned char which_book)
         return 7;
 
     case BOOK_TRANSFIGURATIONS:
-    case BOOK_DIVINATIONS:
         return 8;
 
     case BOOK_FIRE:

@@ -270,7 +270,7 @@ static int _exercise2(int exsk)
         // Experimental restriction (too many spell schools). -- bwr
         int skill_rank = 1;
 
-        for (int i = SK_CONJURATIONS; i <= SK_DIVINATIONS; ++i)
+        for (int i = SK_CONJURATIONS; i < SK_FIRE_MAGIC; ++i)
         {
             if (you.skills[exsk] < you.skills[i])
                 skill_rank++;

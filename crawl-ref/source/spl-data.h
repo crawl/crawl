@@ -559,7 +559,7 @@
 
 {
     SPELL_DETECT_TRAPS, "Detect Traps",
-     SPTYP_DIVINATION,
+     0,
      SPFLAG_MAPPING,
      2,
      50,
@@ -768,7 +768,7 @@
 
 {
     SPELL_DETECT_ITEMS, "Detect Items",
-     SPTYP_DIVINATION,
+     0,
      SPFLAG_MAPPING,
      2,
      50,
@@ -1249,7 +1249,7 @@
 
 {
     SPELL_DETECT_CREATURES, "Detect Creatures",
-     SPTYP_DIVINATION,
+     0,
      SPFLAG_MAPPING,
      2,
      60,                        // not 50, note the fuzz
@@ -1730,7 +1730,7 @@
 
 {
     SPELL_DETECT_SECRET_DOORS, "Detect Secret Doors",
-     SPTYP_DIVINATION,
+     0,
      SPFLAG_NONE,
      1,
      200,

@@ -2373,7 +2373,7 @@ static void _give_wanderer_spell(skill_type skill)
     spell_type spell = SPELL_NO_SPELL;
 
     // Doing a rejection loop for this because I am lazy.
-    while (skill == SK_SPELLCASTING || skill == SK_DIVINATIONS)
+    while (skill == SK_SPELLCASTING)
     {
         int value = SK_POISON_MAGIC-SK_CONJURATIONS + 1;
         skill = skill_type(SK_CONJURATIONS + random2(value));

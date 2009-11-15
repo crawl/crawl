@@ -812,7 +812,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 static bool _spell_is_utility_spell(spell_type spell_id)
 {
     return (spell_typematch(spell_id,
-                SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION | SPTYP_DIVINATION));
+                SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION));
 }
 
 bool maybe_identify_staff(item_def &item, spell_type spell)
