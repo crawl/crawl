@@ -2158,7 +2158,8 @@ static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
 //  objects) which get installed at some point.
 static void _decrement_durations()
 {
-    int delay = you.time_taken;
+    int delay = (you.time_taken * BASELINE_DELAY) / 10;
+
     if (wearing_amulet(AMU_THE_GOURMAND))
     {
         if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
@@ -2169,7 +2170,10 @@ static void _decrement_durations()
 
     if (you.duration[DUR_ICEMAIL_DEPLETED] > 0)
     {
-        --you.duration[DUR_ICEMAIL_DEPLETED];
+        if(delay > you.duration[DUR_ICEMAIL_DEPLETED])
+            you.duration[DUR_ICEMAIL_DEPLETED] = 0;
+        else
+            you.duration[DUR_ICEMAIL_DEPLETED] -= delay;
 
         if (!you.duration[DUR_ICEMAIL_DEPLETED])
             mpr("Your icy envelope is fully restored.", MSGCH_DURATION);
