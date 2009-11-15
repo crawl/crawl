@@ -274,126 +274,6 @@ ENDMAP
 # III  Special altars
 ######################################
 
-NAME:   fedhas_altar_1
-TAGS:   uniq_altar_fedhas temple_overflow_fedhas
-DEPTH:  D:2-20
-KFEAT:  C = altar_fedhas
-MONS:   plant
-MAP
-.....
-.1.1.
-..C..
-.1.1.
-.....
-ENDMAP
-
-NAME:   fedhas_altar_2
-TAGS:   uniq_altar_fedhas temple_overflow_fedhas
-DEPTH:  D:2-20
-KFEAT:  C = altar_fedhas
-NSUBST: w = 2:W / *:w
-SUBST:  . = ..wW
-SUBST:  w = wwwP
-MAP
-.....
-.www.
-.wCw.
-.www.
-.....
-ENDMAP
-
-NAME:   fedhas_altar_3
-TAGS:   uniq_altar_fedhas temple_overflow_fedhas
-DEPTH:  D:2-20
-KFEAT:  C = altar_fedhas
-NSUBST: b = 1:. / *:1
-MONS:   plant w:5 / fungus / nothing w:3
-MAP
-.111.
-1b1b1
-11C11
-1b1b1
-.111.
-ENDMAP
-
-NAME:   fedhas_altar_4
-TAGS:   uniq_altar_fedhas temple_overflow_fedhas
-DEPTH:  D:2-20
-KFEAT:  C = altar_fedhas
-FTILE:  . = floor_lair
-FTILE:  t = floor_lair
-MAP
-xxxxxxxxxxxxxxx
-xxxtttttttxxxxx
-xxtttttttttxxxx
-xtttt.ttttttxxx
-xtttt.C.ttttttt
-xxtttt...ttttt.
-xxtttttt.......
-xxxxttttttttt..
-xxxxxxttttttttx
-xxxxxxxtttttttx
-xxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:  fedhas_altar_5
-TAGS:  uniq_altar_fedhas
-KFEAT: _ = altar_fedhas
-MONS:  centaur, bush
-MAP
-...... 
-.2222..
-.21222.
-.22_22.
-...22..
-.222.. 
-ENDMAP
-
-NAME:   cheibriados_altar_1
-TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
-KFEAT:  _ = altar_cheibriados
-MAP
-...
-._.
-...
-ENDMAP
-
-NAME:    cheibriados_altar_2
-TAGS:    uniq_altar_cheibriados
-DEPTH:   D:2-20
-WEIGHT:  1
-KFEAT:   _ = altar_cheibriados
-MONS:    giant slug, giant snail, elephant slug
-SUBST:   1 : 1:50 2:30 3:10 4:10
-NSUBST:  4 = 1:1 / 1:2 / 1:3
-MAP
-.......
-.mmm... 
-.m1m... 
-.mmmmm. 
-.._m1m.  
-.mmmmm. 
-.m1m... 
-.mmm... 
-.......
-ENDMAP
-
-NAME:   cheibriados_altar_3
-TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
-DEPTH:  D:2-6
-KFEAT:  _ = altar_cheibriados
-ITEM:   potion of slowing
-ITEM:   apple, pear, orange, banana
-SUBST:  e : efgh
-MAP
-.d.
-e_e
-.d.
-ENDMAP
-
-#############################
-
-
 NAME:  lemuel_angel_altar
 DEPTH: D:3-18, Vault
 : if you.absdepth() > 12 then
@@ -466,52 +346,6 @@ c1..c...
 c1C.+.G@
 c1..c...
 ccccc...
-ENDMAP
-
-NAME:   lemuel_blue_sif_altar
-DEPTH:  D:2-18, Elf, Vault
-TAGS:   no_monster_gen mini_float temple_overflow_sif_muna uniq_altar_sif_muna
-COLOUR: . = blue
-FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
-KFEAT:  _ = altar_sif_muna
-MAP
-xxxxxxxxxxxxxx
-...........xxx
-@..........+_x
-...........xxx
-xxxxxxxxxxxxxx
-ENDMAP
-
-# The following vaults could be merged if the temple_overflow and uniq_altar
-# TAGs could be given inside lua conditionals. Can they?
-
-NAME:   lemuel_zombie_altar
-DEPTH:  D:2-18, Crypt
-TAGS:   no_pool_fixup uniq_zombie_altar
-: local god = ""
-: if crawl.coinflip() then god = "kikubaaqudgha" else god = "yredelemnul" end
-: tags("temple_overflow_" .. god, "uniq_altar_" .. god)
-: kfeat("_ = altar_" .. god)
-#
-: if crawl.coinflip() then
-MONS:   rat zombie / giant bat zombie / nothing w:200
-KMONS:  w = giant goldfish zombie / big fish zombie / nothing w:200
-KFEAT:  w = deep_water
-: else
-SUBST:  1 : 1Ww
-SUBST:  1 = WWw
-NSUBST: w = 2:1 / *:w
-KMONS:  1 = giant goldfish zombie / big fish zombie
-KFEAT:  1 = deep_water
-: end
-MAP
-xxxxxxxxxxxxxxxx
-xxxxwwwwwwwwxxxx
-xxxx11111111xxxx
-@............._x
-xxxx11111111xxxx
-xxxxwwwwwwwwxxxx
-xxxxxxxxxxxxxxxx
 ENDMAP
 
 # The mix of deep and shallow water is intended to keep the centaurs from
@@ -637,65 +471,6 @@ cccyy..yycc
 ENDMAP
 
 ###############################################################################
-# Blood-stained Trog altar!
-NAME:  bloody_trog
-TAGS:  uniq_altar_trog temple_overflow_trog
-DEPTH: D:2-20, Orc, Vault
-KPROP: . = bloody / nothing
-KFEAT: _ = altar_trog
-KITEM: _ = animal skin, knife
-MAP
-...
-._.
-...
-ENDMAP
-
-###############################################################################
-# Fedhas altar by TGW.
-# Threat: two big fish. Loot: some fruits.
-# The oklob plant may be abusable (if so, remove it).
-NAME:    tgw_fedhas
-TAGS:    no_item_gen no_monster_gen
-TAGS:    temple_overflow_fedhas uniq_altar_fedhas
-DEPTH:   Lair, D:2-20
-KFEAT:   _ = altar_fedhas
-MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
-SUBST:   x = TTPPPPP.
-SHUFFLE: PQR, TU, ..."
-SUBST:   P = 112 , Q = 115, R = 111235
-SUBST:   T = xt, U = xx
-SUBST:   " = .....6
-COLOUR:  . = green / none
-COLOUR:  ' = green
-COLOUR:  x = green / none w:30
-NSUBST:  w = 2:4 / *:w
-SUBST:   6 = 112
-ITEM:    apple / apricot / orange / pear / grape / strawberry / nothing w:70
-MAP
-ccccccccccccccccccccccc
-cxxxxxxxxxxxxxxxxxxxxxc
-cxxxxxxxxxxxxxxPxxd3xxc
-cxxxxxxxxxxxxxxPddddxxc
-cxxxxxxxxxxxxxxPPPx.dxc
-cxxxxxxx.......xxPPxxxc
-cxxxxxx..wwdww..xxPPxxc
-cxxxxx..wwwdwww..xxxPxc
-cxxxx..wwwwdwwww..xxxxc
-cxxxx.wwwwwdwwwww.xxxxc
-cxxxx.wwww'''wwww.xxxxc
-cxxxx.wwww'_'wwww.xxxxc
-cxxxx.wwww'''wwww.xxxxc
-cxxxx.wwwwwwwwwww.xxxxc
-cxxxx..wwwwwwwww..xxxxc
-cxxxxx..wwwwwww..xxxxxc
-cxxxxxx..wwwww..xxxxxxc
-cxxxxxxx.......xxxxxxxc
-cxxxxxxxxxc.cxxxxxxxxxc
-cxxxxxxxxxc.cxxxxxxxxxc
-ccccccccccc@ccccccccccc
-ENDMAP
-
-###############################################################################
 # Altars to the good gods by TGW.
 NAME:    tgw_good
 TAGS:    no_item_gen no_monster_gen
@@ -746,63 +521,190 @@ xxxxxxxxxxxxfffffffffffffffffffffxx
                 xxxxxxxxxxxxx
 ENDMAP
 
-###############################################################################
-# Altar to Xom by TGW.
-NAME:   tgw_xom
-TAGS:   no_item_gen no_monster gen temple_overflow_xom uniq_altar_xom
-KFEAT:  _ = altar_xom
-MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
-MONS:   gnoll; club ego:chaos / gnoll; dagger ego:chaos / gnoll; spear ego:chaos
-MONS:   place:D:1-8
-NSUBST: ' = 1:_ / *:.
-SUBST:  . = .:200 ~:70 W:60 w:50 x:80 n:80 v b l Z T U M:20
-NSUBST: Z = 1:* / *:%
-SUBST:  M : 123333M, 1 = 1.., 2 = 2.., M = 123.
-COLOUR: . = random
+######################################
+# IV   Overflow altars
+######################################
+
+### Fedhas overflow altars ####################################################
+
+NAME:   fedhas_altar_1
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas
+DEPTH:  D:2-20
+KFEAT:  C = altar_fedhas
+MONS:   plant
 MAP
-   xxxxxx@xxxxxx
-  xx...........xx
- xx.............xx
-xx...............xx
-x.................x
-x.................x
-x'...............'x
-x'...............'x
-xx'.............'xx
- xx'''''''''''''xx
-  xx'''''''''''xx
-   xxxxxxxxxxxxx
+.....
+.1.1.
+..C..
+.1.1.
+.....
 ENDMAP
 
-###############################################################################
-# Altar to Trog by TGW.
-# Features berserk monsters, so we're careful: no intelligent monsters, so you
-# close the door. Provide a chokepoint.
-NAME:       tgw_trog
-TAGS:       no_item_gen no_monster_gen
-TAGS:       temple_overflow_trog uniq_altar_trog
-KFEAT:      _ = altar_trog
-MONS:       moth of wrath, rat / worm w:5
-ITEM:       any weapon
-NSUBST:     M = 4:d / *:.
+NAME:   fedhas_altar_2
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas
+DEPTH:  D:2-20
+KFEAT:  C = altar_fedhas
+NSUBST: w = 2:W / *:w
+SUBST:  . = ..wW
+SUBST:  w = wwwP
 MAP
-      xxxxxxx
-     xxxMMMxxx
-    xxMMM2MMMxx
-   xxMM22_22MMxx
-   xx.........xx
-   x....ooo....x
-   x...oo1oo...x
-   x....ooo....x
-   x...........x
-   xx.........xx
-    xx.......xx
-     xxxx+xxxx
-       xx@xx
+.....
+.www.
+.wCw.
+.www.
+.....
 ENDMAP
 
-###############################################################################
-# Altar to Sif by TGW.
+NAME:   fedhas_altar_3
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas
+DEPTH:  D:2-20
+KFEAT:  C = altar_fedhas
+NSUBST: b = 1:. / *:1
+MONS:   plant w:5 / fungus / nothing w:3
+MAP
+.111.
+1b1b1
+11C11
+1b1b1
+.111.
+ENDMAP
+
+NAME:   fedhas_altar_4
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas
+DEPTH:  D:2-20
+KFEAT:  C = altar_fedhas
+FTILE:  . = floor_lair
+FTILE:  t = floor_lair
+MAP
+xxxxxxxxxxxxxxx
+xxxtttttttxxxxx
+xxtttttttttxxxx
+xtttt.ttttttxxx
+xtttt.C.ttttttt
+xxtttt...ttttt.
+xxtttttt.......
+xxxxttttttttt..
+xxxxxxttttttttx
+xxxxxxxtttttttx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:  fedhas_altar_5
+TAGS:  uniq_altar_fedhas
+KFEAT: _ = altar_fedhas
+MONS:  centaur, bush
+MAP
+......
+.2222..
+.21222.
+.22_22.
+...22..
+.222..
+ENDMAP
+
+# Threat: two big fish. Loot: some fruits.
+# The oklob plant may be abusable (if so, remove it).
+NAME:    tgw_fedhas
+TAGS:    no_item_gen no_monster_gen
+TAGS:    temple_overflow_fedhas uniq_altar_fedhas
+DEPTH:   Lair, D:2-20
+KFEAT:   _ = altar_fedhas
+MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
+SUBST:   x = TTPPPPP.
+SHUFFLE: PQR, TU, ..."
+SUBST:   P = 112 , Q = 115, R = 111235
+SUBST:   T = xt, U = xx
+SUBST:   " = .....6
+COLOUR:  . = green / none
+COLOUR:  ' = green
+COLOUR:  x = green / none w:30
+NSUBST:  w = 2:4 / *:w
+SUBST:   6 = 112
+ITEM:    apple / apricot / orange / pear / grape / strawberry / nothing w:70
+MAP
+ccccccccccccccccccccccc
+cxxxxxxxxxxxxxxxxxxxxxc
+cxxxxxxxxxxxxxxPxxd3xxc
+cxxxxxxxxxxxxxxPddddxxc
+cxxxxxxxxxxxxxxPPPx.dxc
+cxxxxxxx.......xxPPxxxc
+cxxxxxx..wwdww..xxPPxxc
+cxxxxx..wwwdwww..xxxPxc
+cxxxx..wwwwdwwww..xxxxc
+cxxxx.wwwwwdwwwww.xxxxc
+cxxxx.wwww'''wwww.xxxxc
+cxxxx.wwww'_'wwww.xxxxc
+cxxxx.wwww'''wwww.xxxxc
+cxxxx.wwwwwwwwwww.xxxxc
+cxxxx..wwwwwwwww..xxxxc
+cxxxxx..wwwwwww..xxxxxc
+cxxxxxx..wwwww..xxxxxxc
+cxxxxxxx.......xxxxxxxc
+cxxxxxxxxxc.cxxxxxxxxxc
+cxxxxxxxxxc.cxxxxxxxxxc
+ccccccccccc@ccccccccccc
+ENDMAP
+
+### Cheibriados overflow altars ###############################################
+
+NAME:   cheibriados_altar_1
+TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
+KFEAT:  _ = altar_cheibriados
+MAP
+...
+._.
+...
+ENDMAP
+
+NAME:    cheibriados_altar_2
+TAGS:    uniq_altar_cheibriados
+DEPTH:   D:2-20
+WEIGHT:  1
+KFEAT:   _ = altar_cheibriados
+MONS:    giant slug, giant snail, elephant slug
+SUBST:   1 : 1:50 2:30 3:10 4:10
+NSUBST:  4 = 1:1 / 1:2 / 1:3
+MAP
+.......
+.mmm...
+.m1m...
+.mmmmm.
+.._m1m.
+.mmmmm.
+.m1m...
+.mmm...
+.......
+ENDMAP
+
+NAME:   cheibriados_altar_3
+TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
+DEPTH:  D:2-6
+KFEAT:  _ = altar_cheibriados
+ITEM:   potion of slowing
+ITEM:   apple, pear, orange, banana
+SUBST:  e : efgh
+MAP
+.d.
+e_e
+.d.
+ENDMAP
+
+### Sif Muna overflow altars ##################################################
+
+NAME:   lemuel_blue_sif_altar
+DEPTH:  D:2-18, Elf, Vault
+TAGS:   no_monster_gen mini_float temple_overflow_sif_muna uniq_altar_sif_muna
+COLOUR: . = blue
+FTILE:  . = floor_hall, C = floor_hall, @ = floor_hall, + = floor_hall
+KFEAT:  _ = altar_sif_muna
+MAP
+xxxxxxxxxxxxxx
+...........xxx
+@..........+_x
+...........xxx
+xxxxxxxxxxxxxx
+ENDMAP
+
 NAME:       tgw_sif
 TAGS:       no_item_gen no_monster_gen no_pool_fixup
 TAGS:       temple_overflow_sif_muna uniq_altar_sif_muna
@@ -836,7 +738,75 @@ MAP
         xxxxx
 ENDMAP
 
-###############################################################################
+### Trog overflow altars ######################################################
+
+NAME:  bloody_trog
+TAGS:  uniq_altar_trog temple_overflow_trog
+DEPTH: D:2-20, Orc, Vault
+KPROP: . = bloody / nothing
+KFEAT: _ = altar_trog
+KITEM: _ = animal skin, knife
+MAP
+...
+._.
+...
+ENDMAP
+
+# Features berserk monsters, so we're careful: no intelligent monsters, so you
+# close the door. Provide a chokepoint.
+NAME:       tgw_trog
+TAGS:       no_item_gen no_monster_gen
+TAGS:       temple_overflow_trog uniq_altar_trog
+KFEAT:      _ = altar_trog
+MONS:       moth of wrath, rat / worm w:5
+ITEM:       any weapon
+NSUBST:     M = 4:d / *:.
+MAP
+      xxxxxxx
+     xxxMMMxxx
+    xxMMM2MMMxx
+   xxMM22_22MMxx
+   xx.........xx
+   x....ooo....x
+   x...oo1oo...x
+   x....ooo....x
+   x...........x
+   xx.........xx
+    xx.......xx
+     xxxx+xxxx
+       xx@xx
+ENDMAP
+
+### Xom overflow altars #######################################################
+
+NAME:   tgw_xom
+TAGS:   no_item_gen no_monster gen temple_overflow_xom uniq_altar_xom
+KFEAT:  _ = altar_xom
+MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
+MONS:   gnoll; club ego:chaos / gnoll; dagger ego:chaos / gnoll; spear ego:chaos
+MONS:   place:D:1-8
+NSUBST: ' = 1:_ / *:.
+SUBST:  . = .:200 ~:70 W:60 w:50 x:80 n:80 v b l Z T U M:20
+NSUBST: Z = 1:* / *:%
+SUBST:  M : 123333M, 1 = 1.., 2 = 2.., M = 123.
+COLOUR: . = random
+MAP
+   xxxxxx@xxxxxx
+  xx...........xx
+ xx.............xx
+xx...............xx
+x.................x
+x.................x
+x'...............'x
+x'...............'x
+xx'.............'xx
+ xx'''''''''''''xx
+  xx'''''''''''xx
+   xxxxxxxxxxxxx
+ENDMAP
+
+### The Shining One overflow altars ###########################################
+
 # TSO's small temple (1KB)
 # Idea stolen from protected_by_tso_3.
 NAME:     tso_altar
@@ -856,3 +826,54 @@ xc.._..cx
 xct...tcx
 xccc+cccx
 ENDMAP
+
+### Vehumet overflow altars ###################################################
+
+### Makhleb overflow altars ###################################################
+
+### Nemelex overflow altars ###################################################
+
+### Elyvilon overflow altars ##################################################
+
+### Zin overflow altars #######################################################
+
+### Yredelemnul overflow altars ###############################################
+
+### Kikubaaqudgha overflow altars #############################################
+
+### Okawaru overflow altars ###################################################
+
+### Variable overflow altars ##################################################
+
+# The following vaults could be merged if the temple_overflow and uniq_altar
+# TAGs could be given inside lua conditionals. Can they?
+
+NAME:   lemuel_zombie_altar
+DEPTH:  D:2-18, Crypt
+TAGS:   no_pool_fixup uniq_zombie_altar
+: local god = ""
+: if crawl.coinflip() then god = "kikubaaqudgha" else god = "yredelemnul" end
+: tags("temple_overflow_" .. god, "uniq_altar_" .. god)
+: kfeat("_ = altar_" .. god)
+#
+: if crawl.coinflip() then
+MONS:   rat zombie / giant bat zombie / nothing w:200
+KMONS:  w = giant goldfish zombie / big fish zombie / nothing w:200
+KFEAT:  w = deep_water
+: else
+SUBST:  1 : 1Ww
+SUBST:  1 = WWw
+NSUBST: w = 2:1 / *:w
+KMONS:  1 = giant goldfish zombie / big fish zombie
+KFEAT:  1 = deep_water
+: end
+MAP
+xxxxxxxxxxxxxxxx
+xxxxwwwwwwwwxxxx
+xxxx11111111xxxx
+@............._x
+xxxx11111111xxxx
+xxxxwwwwwwwwxxxx
+xxxxxxxxxxxxxxxx
+ENDMAP
+
