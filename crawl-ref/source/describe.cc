@@ -2766,10 +2766,20 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
             inf.title = "A mimic";
     }
 
+    // This is somewhat hackish, but it's a good way of over-riding monsters'
+    // descriptions in Lua vaults by using MonPropsMarker. This is also the
+    // method used by set_feature_desc_long, etc. {due}
+    if (mons.props.exists("description"))
+        inf.body << std::string(mons.props["description"]);
     // Don't get description for player ghosts.
-    if (mons.type != MONS_PLAYER_GHOST)
+    else if (mons.type != MONS_PLAYER_GHOST)
         inf.body << getLongDescription(db_name);
-    inf.quote = getQuoteString(db_name);
+
+    // And quotes {due}
+    if (mons.props.exists("quote"))
+        inf.body << std::string(mons.props["quote"]);
+    else
+        inf.quote = getQuoteString(db_name);
 
     std::string symbol;
     symbol += get_monster_data(mons.type)->showchar;
