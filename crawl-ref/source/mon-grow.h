@@ -7,7 +7,7 @@
 #ifndef __MGROW_H__
 #define __MGROW_H__
 
-#include "fixvec.h"
+#include "fixedvector.h"
 
 // Monster level-up data.
 

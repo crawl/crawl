@@ -11,7 +11,7 @@
 #include "coord.h"
 #include "enum.h"
 #include "dungeon.h"
-#include "fixvec.h"
+#include "fixedvector.h"
 
 enum band_type
 {

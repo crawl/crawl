@@ -1,7 +1,7 @@
 #ifndef SHOW_H
 #define SHOW_H
 
-#include "fixary.h"
+#include "fixedarray.h"
 
 enum show_item_type
 {

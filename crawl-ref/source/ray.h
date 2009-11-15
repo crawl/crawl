@@ -6,7 +6,7 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "fixary.h"
+#include "fixedarray.h"
 #include "geom2d.h"
 
 typedef SquareArray<bool,1> reflect_grid;

@@ -20,7 +20,7 @@
 
 #include "defines.h"
 #include "enum.h"
-#include "fixary.h"
+#include "fixedarray.h"
 #include "libutil.h"
 #include "mpr.h"
 #include "store.h"

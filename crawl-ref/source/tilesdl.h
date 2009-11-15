@@ -10,7 +10,7 @@
 
 #include "debug.h"
 #include "externs.h"
-#include "fixvec.h"
+#include "fixedvector.h"
 #include "tilereg.h"
 
 // This struct defines all of the state that any particular rendering needs.

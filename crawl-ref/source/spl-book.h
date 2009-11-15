@@ -9,7 +9,7 @@
 #define SPL_BOOK_H
 
 #include "externs.h"
-#include "fixvec.h"
+#include "fixedvector.h"
 
 #define SPELLBOOK_SIZE 8
 

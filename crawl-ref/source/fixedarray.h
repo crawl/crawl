@@ -1,5 +1,5 @@
 /*
- *  File:       fixary.h
+ *  File:       fixedarray.h
  *  Summary:    Fixed size 2D vector class that asserts if you do something bad.
  *  Written by: Jesse Jones
  */
@@ -7,7 +7,7 @@
 #ifndef FIXARY_H
 #define FIXARY_H
 
-#include "fixvec.h"
+#include "fixedvector.h"
 
 
 // ==========================================================================

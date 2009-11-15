@@ -12,7 +12,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "files.h"
-#include "fixary.h"
+#include "fixedarray.h"
 #include "branch.h"
 #include "command.h"
 #include "cio.h"
