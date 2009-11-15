@@ -1334,7 +1334,9 @@ static void _increase_duration(duration_type dur, int amount, int cap,
 {
     if (msg)
         mpr(msg);
-    you.duration[dur] += amount;
+    cap *= BASELINE_DELAY;
+
+    you.duration[dur] += amount * BASELINE_DELAY;
     if (you.duration[dur] > cap)
         you.duration[dur] = cap;
 }
