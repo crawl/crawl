@@ -2025,10 +2025,12 @@ static bool _do_ability(const ability_def& abil)
         }
 
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
-        you.duration[DUR_SLIMIFY] += you.skills[SK_INVOCATIONS] * 3 / 2 + 3;
+        int addition = you.skills[SK_INVOCATIONS] * 3 / 2 + 3;
 
-        if (you.duration[DUR_SLIMIFY] > 100)
-            you.duration[DUR_SLIMIFY] = 100;
+        you.duration[DUR_SLIMIFY] += addition * BASELINE_DELAY;
+
+        if (you.duration[DUR_SLIMIFY] > 100 * BASELINE_DELAY)
+            you.duration[DUR_SLIMIFY] = 100 * BASELINE_DELAY;
 
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;

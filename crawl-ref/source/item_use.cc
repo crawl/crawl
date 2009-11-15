@@ -5125,7 +5125,7 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.duration[DUR_LOWERED_MR] = 40;
+    you.duration[DUR_LOWERED_MR] = 40 * BASELINE_DELAY;
     mpr("Magic dampens around you!");
 }
 
