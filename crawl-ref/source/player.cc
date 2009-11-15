@@ -4004,7 +4004,7 @@ int slaying_bonus(char which_affected, bool ranged)
             ret += ranged ? 3 : -1;
     }
 
-    ret += std::min(you.duration[DUR_SLAYING] / 13, 6);
+    ret += std::min(you.duration[DUR_SLAYING] / (13 * BASELINE_DELAY), 6);
 
     return (ret);
 }
