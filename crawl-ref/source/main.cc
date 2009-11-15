@@ -2125,8 +2125,9 @@ static void _prep_input()
 // NOTE: The maximum possible midloss should be smaller than midpoint,
 //       otherwise the duration may end in the same turn the warning
 //       message is printed which would be a bit late.
-static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
-                                  int midloss = 0, const char* midmsg = NULL,
+static bool _decrement_a_duration(duration_type dur, int delay,
+                                  const char* endmsg = NULL, int midloss = 0,
+                                  const char* midmsg = NULL,
                                   msg_channel_type chan = MSGCH_DURATION)
 {
     if (you.duration[dur] < 1)
@@ -2134,8 +2135,15 @@ static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
 
     const int midpoint = get_expiration_threshold(dur);
 
-    you.duration[dur]--;
-    if (you.duration[dur] == midpoint)
+
+    int old_dur = you.duration[dur];
+
+    you.duration[dur] -= delay;
+    if (you.duration[dur] < 0)
+        you.duration[dur] = 0;
+
+    // Did we cross the mid point? (No longer likely to hit it exactly) -cao
+    if (you.duration[dur] <= midpoint && old_dur > midpoint)
     {
         if (midmsg)
             mpr(midmsg, chan);
@@ -2182,10 +2190,10 @@ static void _decrement_durations()
     }
 
     // Must come before might/haste/berserk.
-    if (_decrement_a_duration(DUR_BUILDING_RAGE))
+    if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
         go_berserk(false);
 
-    if (_decrement_a_duration(DUR_SLEEP))
+    if (_decrement_a_duration(DUR_SLEEP, delay))
         you.awake();
 
     // Sticky flame paradox: It both lasts longer and does more damage
@@ -2195,27 +2203,27 @@ static void _decrement_durations()
     // move around more.
     dec_napalm_player();
 
-    if (_decrement_a_duration(DUR_ICY_ARMOUR,
+    if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
                               "Your icy armour evaporates.", coinflip(),
                               "Your icy armour starts to melt."))
     {
         you.redraw_armour_class = true;
     }
 
-    if (_decrement_a_duration(DUR_SILENCE, "Your hearing returns."))
+    if (_decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns."))
         you.attribute[ATTR_WAS_SILENCED] = 0;
 
-    _decrement_a_duration(DUR_REPEL_MISSILES,
+    _decrement_a_duration(DUR_REPEL_MISSILES, delay,
                           "You feel less protected from missiles.",
                           coinflip(),
                           "Your repel missiles spell is about to expire...");
 
-    _decrement_a_duration(DUR_DEFLECT_MISSILES,
+    _decrement_a_duration(DUR_DEFLECT_MISSILES, delay,
                           "You feel less protected from missiles.",
                           coinflip(),
                           "Your deflect missiles spell is about to expire...");
 
-    if (_decrement_a_duration(DUR_REGENERATION,
+    if (_decrement_a_duration(DUR_REGENERATION, delay,
                               NULL, coinflip(),
                               "Your skin is crawling a little less now."))
     {
@@ -2297,7 +2305,7 @@ static void _decrement_durations()
     if (you.species != SP_VAMPIRE || !player_in_bat_form()
         || you.duration[DUR_TRANSFORMATION] <= 5)
     {
-        if (_decrement_a_duration(DUR_TRANSFORMATION, NULL, random2(3),
+        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, NULL, random2(3),
                                   "Your transformation is almost over."))
         {
             untransform();
@@ -2306,17 +2314,18 @@ static void _decrement_durations()
     }
 
     // Must come after transformation duration.
-    _decrement_a_duration(DUR_BREATH_WEAPON, "You have got your breath back.",
-                          0, NULL, MSGCH_RECOVERY);
+    _decrement_a_duration(DUR_BREATH_WEAPON, delay,
+                          "You have got your breath back.", 0, NULL,
+                          MSGCH_RECOVERY);
 
-    _decrement_a_duration(DUR_SWIFTNESS,
+    _decrement_a_duration(DUR_SWIFTNESS, delay,
                           "You feel sluggish.", coinflip(),
                           "You start to feel a little slower.");
-    _decrement_a_duration(DUR_INSULATION,
+    _decrement_a_duration(DUR_INSULATION, delay,
                           "You feel conductive.", coinflip(),
                           "You start to feel a little less insulated.");
 
-    if (_decrement_a_duration(DUR_STONEMAIL,
+    if (_decrement_a_duration(DUR_STONEMAIL, delay,
                               "Your scaly stone armour disappears.",
                               coinflip(),
                               "Your scaly stone armour is starting "
@@ -2326,7 +2335,7 @@ static void _decrement_durations()
         burden_change();
     }
 
-    if (_decrement_a_duration(DUR_PHASE_SHIFT,
+    if (_decrement_a_duration(DUR_PHASE_SHIFT, delay,
                     "You are firmly grounded in the material plane once more.",
                     coinflip(),
                     "You feel closer to the material plane."))
@@ -2334,12 +2343,15 @@ static void _decrement_durations()
         you.redraw_evasion = true;
     }
 
-    if (_decrement_a_duration(DUR_SEE_INVISIBLE) && !you.can_see_invisible())
+    if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay)
+        && !you.can_see_invisible())
+    {
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
+    }
 
-    _decrement_a_duration(DUR_TELEPATHY, "You feel less empathic.");
+    _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
 
-    if (_decrement_a_duration(DUR_CONDENSATION_SHIELD))
+    if (_decrement_a_duration(DUR_CONDENSATION_SHIELD, delay))
         remove_condensation_shield();
 
     if (you.duration[DUR_CONDENSATION_SHIELD] && player_res_cold() < 0)
@@ -2348,53 +2360,53 @@ static void _decrement_durations()
         ouch(2 + random2avg(13, 2), NON_MONSTER, KILLED_BY_FREEZING);
     }
 
-    if (_decrement_a_duration(DUR_MAGIC_SHIELD,
+    if (_decrement_a_duration(DUR_MAGIC_SHIELD, delay,
                               "Your magical shield disappears."))
     {
         you.redraw_armour_class = true;
     }
 
-    if (_decrement_a_duration(DUR_STONESKIN, "Your skin feels tender."))
+    if (_decrement_a_duration(DUR_STONESKIN, delay, "Your skin feels tender."))
         you.redraw_armour_class = true;
 
-    if (_decrement_a_duration(DUR_TELEPORT))
+    if (_decrement_a_duration(DUR_TELEPORT, delay))
     {
         // Only to a new area of the abyss sometimes (for abyss teleports).
         you_teleport_now(true, one_chance_in(5));
         untag_followers();
     }
 
-    _decrement_a_duration(DUR_CONTROL_TELEPORT,
+    _decrement_a_duration(DUR_CONTROL_TELEPORT, delay,
                           "You feel uncertain.", coinflip(),
                           "You start to feel a little uncertain.");
 
-    if (_decrement_a_duration(DUR_DEATH_CHANNEL,
+    if (_decrement_a_duration(DUR_DEATH_CHANNEL, delay,
                               "Your unholy channel expires.", coinflip(),
                               "Your unholy channel is weakening."))
     {
         you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     }
 
-    _decrement_a_duration(DUR_SAGE, "You feel less studious.");
-    _decrement_a_duration(DUR_STEALTH, "You feel less stealthy.");
-    _decrement_a_duration(DUR_RESIST_FIRE, "Your fire resistance expires.");
-    _decrement_a_duration(DUR_RESIST_COLD, "Your cold resistance expires.");
-    _decrement_a_duration(DUR_RESIST_POISON, "Your poison resistance expires.");
-    _decrement_a_duration(DUR_SLAYING, "You feel less lethal.");
+    _decrement_a_duration(DUR_SAGE, delay, "You feel less studious.");
+    _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
+    _decrement_a_duration(DUR_RESIST_FIRE, delay, "Your fire resistance expires.");
+    _decrement_a_duration(DUR_RESIST_COLD, delay, "Your cold resistance expires.");
+    _decrement_a_duration(DUR_RESIST_POISON, delay, "Your poison resistance expires.");
+    _decrement_a_duration(DUR_SLAYING, delay, "You feel less lethal.");
 
-    _decrement_a_duration(DUR_INVIS, "You flicker back into view.",
+    _decrement_a_duration(DUR_INVIS, delay, "You flicker back into view.",
                           coinflip(), "You flicker for a moment.");
 
-    _decrement_a_duration(DUR_BARGAIN, "You feel less charismatic.");
-    _decrement_a_duration(DUR_CONF, "You feel less confused.");
-    _decrement_a_duration(DUR_LOWERED_MR, "You feel more resistant to magic.");
-    _decrement_a_duration(DUR_SLIMIFY, "You feel less slimy.",
+    _decrement_a_duration(DUR_BARGAIN, delay, "You feel less charismatic.");
+    _decrement_a_duration(DUR_CONF, delay, "You feel less confused.");
+    _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel more resistant to magic.");
+    _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
-        _decrement_a_duration(DUR_PARALYSIS);
-        _decrement_a_duration(DUR_PETRIFIED);
+        _decrement_a_duration(DUR_PARALYSIS, delay);
+        _decrement_a_duration(DUR_PETRIFIED, delay);
 
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         {
@@ -2403,16 +2415,17 @@ static void _decrement_durations()
         }
     }
 
-    _decrement_a_duration(DUR_EXHAUSTED, "You feel less fatigued.");
+    _decrement_a_duration(DUR_EXHAUSTED, delay, "You feel less fatigued.");
 
-    _decrement_a_duration(DUR_CONFUSING_TOUCH,
+    _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
                           ((std::string("Your ") + your_hand(true)) +
                           " stop glowing.").c_str());
 
-    _decrement_a_duration(DUR_SURE_BLADE,
+    _decrement_a_duration(DUR_SURE_BLADE, delay,
                           "The bond with your blade fades away.");
 
-    if (_decrement_a_duration(DUR_MESMERISED, "You break out of your daze.",
+    if (_decrement_a_duration(DUR_MESMERISED, delay,
+                              "You break out of your daze.",
                               0, NULL, MSGCH_RECOVERY))
     {
         you.clear_beholders();
@@ -2421,16 +2434,26 @@ static void _decrement_durations()
     dec_slow_player();
     dec_haste_player();
 
-    if (_decrement_a_duration(DUR_MIGHT, "You feel a little less mighty now."))
+    if (_decrement_a_duration(DUR_MIGHT, delay,
+                              "You feel a little less mighty now."))
+    {
         modify_stat(STAT_STRENGTH, -5, true, "might running out");
+    }
 
-    if (_decrement_a_duration(DUR_AGILITY, "You feel a little less agile now."))
+    if (_decrement_a_duration(DUR_AGILITY, delay,
+                              "You feel a little less agile now."))
+    {
         modify_stat(STAT_DEXTERITY, -5, true, "agility running out");
+    }
 
-    if (_decrement_a_duration(DUR_BRILLIANCE, "You feel a little less clever now."))
+    if (_decrement_a_duration(DUR_BRILLIANCE, delay,
+                              "You feel a little less clever now."))
+    {
         modify_stat(STAT_INTELLIGENCE, -5, true, "brilliance running out");
+    }
 
-    if (_decrement_a_duration(DUR_BERSERKER, "You are no longer berserk."))
+    if (_decrement_a_duration(DUR_BERSERKER, delay,
+                              "You are no longer berserk."))
     {
         //jmf: Guilty for berserking /after/ berserk.
         did_god_conduct(DID_STIMULANTS, 6 + random2(6));
@@ -2552,7 +2575,7 @@ static void _decrement_durations()
 
     if (!you.permanent_levitation() && !you.permanent_flight())
     {
-        if (_decrement_a_duration(DUR_LEVITATION,
+        if (_decrement_a_duration(DUR_LEVITATION, delay,
                                   "You float gracefully downwards.",
                                   random2(6),
                                   "You are starting to lose your buoyancy!"))
@@ -2565,9 +2588,10 @@ static void _decrement_durations()
         }
     }
 
-    if (!you.permanent_flight())
+    if (!you.permanent_flight()
+        && _decrement_a_duration(DUR_CONTROLLED_FLIGHT, delay)
+        && you.airborne())
     {
-        if (_decrement_a_duration(DUR_CONTROLLED_FLIGHT) && you.airborne())
             mpr("You lose control over your flight.", MSGCH_DURATION);
     }
 
@@ -2624,21 +2648,21 @@ static void _decrement_durations()
         }
         else
         {
-            _decrement_a_duration(DUR_DEATHS_DOOR,
+            _decrement_a_duration(DUR_DEATHS_DOOR, delay,
                                   "Your life is in your own hands again!",
                                   random2(6),
                                   "Your time is quickly running out!");
         }
     }
 
-    if (_decrement_a_duration(DUR_DIVINE_VIGOUR))
+    if (_decrement_a_duration(DUR_DIVINE_VIGOUR, delay))
         remove_divine_vigour();
 
-    if (_decrement_a_duration(DUR_DIVINE_STAMINA))
+    if (_decrement_a_duration(DUR_DIVINE_STAMINA, delay))
         remove_divine_stamina();
 
-    _decrement_a_duration(DUR_REPEL_STAIRS_MOVE);
-    _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB);
+    _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, delay);
+    _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, delay);
 }
 
 static void _check_banished()
