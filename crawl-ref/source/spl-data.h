@@ -2541,7 +2541,7 @@
     SPELL_EXPLODING_AMMUNITION, "Exploding Ammunition",
         SPTYP_ENCHANTMENT | SPTYP_FIRE | SPTYP_AIR,
         SPFLAG_HELPFUL | SPFLAG_BATTLE,
-        7,
+        5,
         0,
         -1,-1,
         0,

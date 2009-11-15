@@ -21,8 +21,8 @@ static job_type old_jobs_order[] = {
     JOB_CHAOS_KNIGHT,       JOB_TRANSMUTER,
     JOB_HEALER,             JOB_REAVER,
     JOB_STALKER,            JOB_MONK,
-    JOB_ARCANE_MARKSMAN,    JOB_WANDERER,
-    JOB_ARTIFICER
+    JOB_WARPER,             JOB_WANDERER,
+    JOB_ARTIFICER,          JOB_ARCANE_MARKSMAN
 };
 
 // First plain fighters, then religious fighters, then spell-casting
@@ -36,7 +36,7 @@ static job_type new_jobs_order[] = {
     JOB_HEALER,             JOB_CHAOS_KNIGHT,
     JOB_DEATH_KNIGHT,       JOB_CRUSADER,
     // general and niche spellcasters (incl. Crusader above)
-    JOB_REAVER,             JOB_ARCANE_MARKSMAN,
+    JOB_REAVER,             JOB_WARPER,
     JOB_WIZARD,             JOB_CONJURER,
     JOB_ENCHANTER,          JOB_SUMMONER,
     JOB_NECROMANCER,        JOB_TRANSMUTER,
@@ -46,7 +46,7 @@ static job_type new_jobs_order[] = {
     JOB_VENOM_MAGE,         JOB_STALKER,
     JOB_THIEF,              JOB_ASSASSIN,
     JOB_HUNTER,             JOB_ARTIFICER,
-    JOB_WANDERER
+    JOB_ARCANE_MARKSMAN,    JOB_WANDERER
 };
 
 job_type get_class(const int index)
@@ -61,7 +61,7 @@ job_type get_class(const int index)
 static const char * Class_Abbrev_List[ NUM_JOBS ] =
     { "Fi", "Wz", "Pr", "Th", "Gl", "Ne", "Pa", "As", "Be", "Hu",
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr", "DK", "VM",
-      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar" };
+      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar", "Am" };
 
 static const char * Class_Name_List[ NUM_JOBS ] =
     { "Fighter", "Wizard", "Priest", "Thief", "Gladiator", "Necromancer",
@@ -69,7 +69,7 @@ static const char * Class_Name_List[ NUM_JOBS ] =
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
       "Earth Elementalist", "Crusader", "Death Knight", "Venom Mage",
       "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
-      "Monk", "Arcane Marksman", "Wanderer", "Artificer" };
+      "Monk", "Warper", "Wanderer", "Artificer", "Arcane Marksman" };
 
 int get_class_index_by_abbrev(const char *abbrev)
 {

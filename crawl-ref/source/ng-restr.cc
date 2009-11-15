@@ -340,6 +340,32 @@ char_choice_restriction class_allowed(species_type speci,
                 return (CC_UNRESTRICTED);
         }
 
+        case JOB_WARPER:
+            switch (speci)
+        {
+            case SP_HUMAN:
+            case SP_DEEP_ELF:
+            case SP_SLUDGE_ELF:
+            case SP_MOUNTAIN_DWARF:
+            case SP_DEEP_DWARF:
+            case SP_HILL_ORC:
+            case SP_MERFOLK:
+            case SP_HALFLING:
+            case SP_KOBOLD:
+            case SP_CENTAUR:
+            case SP_OGRE:
+            case SP_TROLL:
+            case SP_MINOTAUR:
+            case SP_KENKU:
+            case SP_RED_DRACONIAN:
+            case SP_DEMONSPAWN:
+            case SP_MUMMY:
+            case SP_GHOUL:
+            case SP_VAMPIRE:
+                return (CC_RESTRICTED);
+            default:
+                return (CC_UNRESTRICTED);
+        }
         case JOB_ARCANE_MARKSMAN:
             switch (speci)
         {

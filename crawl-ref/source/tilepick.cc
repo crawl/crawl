@@ -3471,6 +3471,16 @@ void tilep_job_default(int job, int gender, int *parts)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
+        case JOB_WARPER:
+            parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_GANDALF;
+            parts[TILEP_PART_HAND1] = TILEP_HAND1_SARUMAN;
+            parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_WHITE;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
+            parts[TILEP_PART_CLOAK] = TILEP_CLOAK_RED;
+            break;
+
+
         case JOB_ARCANE_MARKSMAN:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
             parts[TILEP_PART_HELM]  = TILEP_HELM_GANDALF;

@@ -1456,9 +1456,10 @@ enum job_type
     JOB_REAVER,
     JOB_STALKER,
     JOB_MONK,                          //   25
-    JOB_ARCANE_MARKSMAN,
+    JOB_WARPER,
     JOB_WANDERER,                      //   27
     JOB_ARTIFICER,                     //   28 -Greenberg/Bane
+    JOB_ARCANE_MARKSMAN,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100

@@ -1350,6 +1350,7 @@ static void _give_last_paycheck(job_type which_job)
         break;
 
     case JOB_WANDERER:
+    case JOB_WARPER:
     case JOB_ARCANE_MARKSMAN:
     case JOB_ASSASSIN:
         you.gold = 50;
@@ -1456,6 +1457,7 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_STALKER:           s =  2; i =  4; d =  6; hp = 12; mp = 1; break;
 
     case JOB_HUNTER:            s =  4; i =  3; d =  5; hp = 13; mp = 0; break;
+    case JOB_WARPER:            s =  3; i =  5; d =  4; hp = 12; mp = 1; break;
     case JOB_ARCANE_MARKSMAN:   s =  3; i =  5; d =  4; hp = 12; mp = 1; break;
 
     case JOB_MONK:              s =  3; i =  2; d =  7; hp = 13; mp = 0; break;
@@ -4251,6 +4253,32 @@ bool _give_items_skills()
         weap_skill = 3;
         break;
 
+    case JOB_WARPER:
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+ 
+        if (!_choose_weapon())
+            return (false);
+ 
+        if (you.inv[0].quantity < 1)
+            _newgame_clear_item(0);
+ 
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                           ARM_ROBE);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
+
+        // One free escape.
+        _newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
+
+        you.skills[SK_FIGHTING]       = 1;
+        you.skills[SK_ARMOUR]         = 1;
+        you.skills[SK_DODGING]        = 2;
+        you.skills[SK_SPELLCASTING]   = 2;
+        you.skills[SK_TRANSLOCATIONS] = 3;
+        you.skills[SK_DARTS]          = 1;
+        weap_skill = 3;
+    break;
+
     case JOB_ARCANE_MARKSMAN:
 
         _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
@@ -4307,8 +4335,6 @@ bool _give_items_skills()
 
         if (!_choose_book(3, BOOK_ELEMENTAL_MISSILES, 2))
             return (false);
-
-        _newgame_make_item(4, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
 
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_SPELLCASTING]   = 2;
