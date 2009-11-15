@@ -929,8 +929,6 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
     if (is_holy_spell(spell))
         did_god_conduct(DID_HOLY, 10 + spell_difficulty(spell));
 
-    // Self-banishment gets a special exemption - you're there to spread
-    // light.
     if (is_unholy_spell(spell)
         && !you.banished
         && !crawl_state.is_god_acting())
