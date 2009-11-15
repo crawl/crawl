@@ -225,15 +225,9 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
 #ifdef USE_TILE
         if (is_terrain_mapped(p))
         {
-            dungeon_feature_type feature = grd(p);
-
-            unsigned int feat_symbol;
-            unsigned short feat_colour;
-            get_show_symbol(show_type(feature), &feat_symbol, &feat_colour);
-
             unsigned int fg;
             unsigned int bg;
-            tileidx_unseen(fg, bg, feat_symbol, p);
+            tileidx_unseen(fg, bg, get_feat_symbol(grd(p)), p);
             env.tile_bk_bg(p) = bg;
             env.tile_bk_fg(p) = fg;
         }

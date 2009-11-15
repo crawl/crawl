@@ -116,6 +116,11 @@ static int _get_mons_colour(const monsters *mons)
     return (col);
 }
 
+unsigned get_feat_symbol(dungeon_feature_type feat)
+{
+    return (get_feature_def(feat).symbol);
+}
+
 unsigned get_item_symbol(show_item_type it)
 {
     return (get_feature_def(show_type(it)).symbol);

@@ -4678,15 +4678,9 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         // features.
         if (is_terrain_mapped(gc))
         {
-            dungeon_feature_type feature = grd(gc);
-
-            unsigned int grid_symbol;
-            unsigned short grid_colour;
-            get_show_symbol(show_type(feature), &grid_symbol, &grid_colour);
-
             unsigned int fg;
             unsigned int bg;
-            tileidx_unseen(fg, bg, grid_symbol, gc);
+            tileidx_unseen(fg, bg, get_feat_symbol(grd(gc)), gc);
             env.tile_bk_bg(gc) = bg;
 //             env.tile_bk_bg(gc) = fg;
         }
