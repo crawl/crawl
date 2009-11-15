@@ -741,7 +741,7 @@ void reduce_poison_player(int amount);
 bool miasma_player();
 
 bool napalm_player(int amount);
-void dec_napalm_player();
+void dec_napalm_player(int delay);
 
 bool slow_player(int amount);
 void dec_slow_player();

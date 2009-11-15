@@ -4886,10 +4886,10 @@ bool napalm_player(int amount)
         return (false);
 
     const int old_value = you.duration[DUR_LIQUID_FLAMES];
-    you.duration[DUR_LIQUID_FLAMES] += amount;
+    you.duration[DUR_LIQUID_FLAMES] += amount * BASELINE_DELAY;
 
-    if (you.duration[DUR_LIQUID_FLAMES] > 100)
-        you.duration[DUR_LIQUID_FLAMES] = 100;
+    if (you.duration[DUR_LIQUID_FLAMES] > 100 * BASELINE_DELAY)
+        you.duration[DUR_LIQUID_FLAMES] = 100 * BASELINE_DELAY;
 
     if (you.duration[DUR_LIQUID_FLAMES] > old_value)
         mpr("You are covered in liquid flames!", MSGCH_WARN);
@@ -4897,9 +4897,9 @@ bool napalm_player(int amount)
     return (true);
 }
 
-void dec_napalm_player()
+void dec_napalm_player(int delay)
 {
-    if (you.duration[DUR_LIQUID_FLAMES] > 1)
+    if (you.duration[DUR_LIQUID_FLAMES] > BASELINE_DELAY)
     {
         if (feat_is_watery(grd(you.pos())))
         {
@@ -4907,7 +4907,6 @@ void dec_napalm_player()
             you.duration[DUR_LIQUID_FLAMES] = 0;
             return;
         }
-        you.duration[DUR_LIQUID_FLAMES]--;
 
         mpr("You are covered in liquid flames!", MSGCH_WARN);
 
@@ -4917,27 +4916,29 @@ void dec_napalm_player()
 
         if (res_fire > 0)
         {
-            ouch((((random2avg(9, 2) + 1) * you.time_taken) /
-                    (1 + (res_fire * res_fire))) / 10, NON_MONSTER,
+            ouch((((random2avg(9, 2) + 1) * delay) /
+                    (1 + (res_fire * res_fire))) / BASELINE_DELAY, NON_MONSTER,
                     KILLED_BY_BURNING);
         }
 
         if (res_fire <= 0)
         {
-            ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10,
+            ouch(((random2avg(9, 2) + 1) * delay) / BASELINE_DELAY,
                  NON_MONSTER, KILLED_BY_BURNING);
 
             if (res_fire < 0)
             {
-                ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10,
-                     NON_MONSTER, KILLED_BY_BURNING);
+                ouch(((random2avg(9, 2) + 1) * delay)
+                        / BASELINE_DELAY, NON_MONSTER, KILLED_BY_BURNING);
             }
         }
 
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
             remove_condensation_shield();
     }
-    else if (you.duration[DUR_LIQUID_FLAMES] == 1)
+
+    you.duration[DUR_LIQUID_FLAMES] -= delay;
+    if (you.duration[DUR_LIQUID_FLAMES] < 0)
         you.duration[DUR_LIQUID_FLAMES] = 0;
 }
 

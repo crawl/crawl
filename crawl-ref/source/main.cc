@@ -2196,12 +2196,7 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_SLEEP, delay))
         you.awake();
 
-    // Sticky flame paradox: It both lasts longer and does more damage
-    // overall if you're moving more slowly.
-    //
-    // Rationalisation: I guess it gets rubbed off/falls off/etc. if you
-    // move around more.
-    dec_napalm_player();
+    dec_napalm_player(delay);
 
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
                               "Your icy armour evaporates.", coinflip(),

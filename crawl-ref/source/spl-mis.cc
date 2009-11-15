@@ -2110,7 +2110,7 @@ void MiscastEffect::_fire(int severity)
             do_msg();
 
             if (target->atype() == ACT_PLAYER)
-                you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
+                napalm_player(random2avg(7,3)  + 1);
             else
             {
                 monsters* mon_target = target_as_monster();
