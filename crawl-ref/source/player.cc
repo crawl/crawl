@@ -4718,10 +4718,10 @@ bool confuse_player(int amount, bool resistable)
     }
 
     const int old_value = you.duration[DUR_CONF];
-    you.duration[DUR_CONF] += amount;
+    you.duration[DUR_CONF] += amount * BASELINE_DELAY;
 
-    if (you.duration[DUR_CONF] > 40)
-        you.duration[DUR_CONF] = 40;
+    if (you.duration[DUR_CONF] > 40 * BASELINE_DELAY)
+        you.duration[DUR_CONF] = 40 * BASELINE_DELAY;
 
     if (you.duration[DUR_CONF] > old_value)
     {
@@ -4732,7 +4732,8 @@ bool confuse_player(int amount, bool resistable)
 
         learned_something_new(TUT_YOU_ENCHANTED);
 
-        xom_is_stimulated(you.duration[DUR_CONF] - old_value);
+        xom_is_stimulated((you.duration[DUR_CONF] - old_value)
+                           / BASELINE_DELAY);
     }
 
     return (true);
