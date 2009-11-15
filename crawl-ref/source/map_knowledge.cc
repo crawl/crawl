@@ -118,7 +118,7 @@ bool is_map_knowledge_mons(int x, int y)
 
 int get_map_knowledge_col(const coord_def& p)
 {
-    return (env.map_knowledge[p.x][p.y].colour);
+    return (env.map_knowledge[p.x][p.y].object.colour);
 }
 
 bool is_terrain_known( int x, int y )
