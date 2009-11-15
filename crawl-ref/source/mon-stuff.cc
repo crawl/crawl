@@ -1211,7 +1211,8 @@ static void _hogs_to_humans()
         {
             orig = &_orig;
 
-            orig->type = MONS_HUMAN;
+            orig->type     = MONS_HUMAN;
+            orig->attitude = mi->attitude;
             define_monster(*orig);
         }
 
