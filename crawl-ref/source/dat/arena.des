@@ -428,7 +428,7 @@ MARKER: O = feat: escape_hatch_up
 SUBST: A = ., B = ., O = .
 MARKER:  S = lua:fog_machine { \
              pow_max = 10, delay_min = 10, delay_max = 10, \
-             size = 10, start_clouds = 1, \
+             size = 15, start_clouds = 1, \
              cloud_type = "black smoke" }
 SUBST: S = .
 ORIENT: encompass
