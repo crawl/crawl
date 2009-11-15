@@ -983,6 +983,23 @@ static void _set_random_slime_target(monsters* mon)
         set_random_target(mon);
 }
 
+static void _guess_invis_foe_pos(monsters *mon)
+{
+    const actor* foe          = mon->get_foe();
+    const int    guess_radius = mons_sense_invis(mon) ? 3 : 2;
+
+    std::vector<coord_def> possibilities;
+
+    for (radius_iterator ri(mon->pos(), guess_radius); ri; ++ri)
+    {
+        if (foe->is_habitable(*ri) && mon->mon_see_cell(*ri))
+            possibilities.push_back(*ri);
+    }
+
+    if (!possibilities.empty())
+        mon->target = possibilities[random2(possibilities.size())];
+}
+
 //---------------------------------------------------------------
 //
 // handle_behaviour
@@ -1202,6 +1219,24 @@ void handle_behaviour(monsters *mon)
             // Foe gone out of LOS?
             if (!proxFoe)
             {
+                // Maybe the foe is just invisible.
+                if (mon->target.origin() && afoe && mon->near_foe())
+                {
+                    _guess_invis_foe_pos(mon);
+                    if (mon->target.origin())
+                    {
+                        // Having a seeking mon with a foe who's target is
+                        // (0, 0) can lead to asserts, so lets try to
+                        // avoid that.
+                        _set_nearest_monster_foe(mon);
+                        if (mon->foe != MHITNOT)
+                            continue;
+
+                        new_beh = BEH_WANDER;
+                        break;
+                    }
+                }
+
                 if (mon->travel_target == MTRAV_SIREN)
                     mon->travel_target = MTRAV_NONE;
 
