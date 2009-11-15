@@ -756,6 +756,11 @@ the marker is placed upon. The options currently available are:
 * monster_dies_lua_key: If this property is set to a function, that function
       will be executed upon the monster's death.
 
+An example of MonPropsMarker to replace the description and quote of a monster:
+
+    MARKER: 8 = lua:MonPropsMarker:new {description="What a horrible sight!\n", \
+                                        quote='"They were filled with fear!'\n"}
+
 Lua API reference
 -----------------
 a. The Map.
