@@ -2189,12 +2189,14 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "An unwary adventurer will occasionally stumble into one "
                 "of these nasty constructions";
 #ifndef USE_TILE
-        glyph g = get_show_glyph(env.show(e));
+        {
+            glyph g = get_show_glyph(env.show(e));
 
-        if (g.ch == ' ' || g.col == BLACK)
-            g.col = LIGHTCYAN;
+            if (g.ch == ' ' || g.col == BLACK)
+                g.col = LIGHTCYAN;
 
-        text << " depicted by " << _colourize_glyph(g.col, '^');
+            text << " depicted by " << _colourize_glyph(g.col, '^');
+        }
 #endif
         text << ". They can do physical damage (with darts or needles, for "
                 "example) or have other, more magical effects, like "
