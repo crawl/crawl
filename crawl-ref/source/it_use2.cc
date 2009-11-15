@@ -153,11 +153,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             modify_stat(STAT_STRENGTH, 5, true, "");
 
         // conceivable max gain of +184 {dlb}
-        you.duration[DUR_MIGHT] += (35 + random2(pow)) / factor;
-
-        // files.cc permits values up to 215, but ... {dlb}
-        if (you.duration[DUR_MIGHT] > 80)
-            you.duration[DUR_MIGHT] = 80;
+        you.increase_duration(DUR_MIGHT, (35 + random2(pow)) / factor, 80);
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
@@ -175,10 +171,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         else
             modify_stat(STAT_INTELLIGENCE, 5, true, "");
 
-        you.duration[DUR_BRILLIANCE] += (35 + random2(pow)) / factor;
-
-        if (you.duration[DUR_BRILLIANCE] > 80)
-            you.duration[DUR_BRILLIANCE] = 80;
+        you.increase_duration(DUR_BRILLIANCE,
+                              (35 + random2(pow)) / factor, 80);
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;
@@ -196,11 +190,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         else
             modify_stat(STAT_DEXTERITY, 5, true, "");
 
-        you.duration[DUR_AGILITY] += (35 + random2(pow)) / factor;
-
-        if (you.duration[DUR_AGILITY] > 80)
-            you.duration[DUR_AGILITY] = 80;
-
+        you.increase_duration(DUR_AGILITY, (35 + random2(pow)) / factor, 80);
         you.redraw_evasion = true;
 
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
