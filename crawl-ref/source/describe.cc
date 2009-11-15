@@ -3334,7 +3334,7 @@ const char *divine_title[NUM_GODS][8] =
 
     // Cheibriados -- slow theme
     {"Unwound %s",         "Timekeeper",            "Righteous Timekeeper",     "Chronographer",
-     "Splendid Chronogrpaher", "Chronicler",        "Eternal Chronicler",   "Ticktocktomancer"}
+     "Splendid Chronographer", "Chronicler",        "Eternal Chronicler",       "Ticktocktomancer"}
 };
 
 static int _piety_level()

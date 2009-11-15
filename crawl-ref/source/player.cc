@@ -1832,7 +1832,7 @@ int player_movement_speed(void)
 
         // ponderous brand
         mv += 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
-        
+
         // In the air, can fly fast (should be lightly burdened).
         if (you.light_flight())
             mv--;
