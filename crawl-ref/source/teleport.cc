@@ -68,6 +68,9 @@ typedef std::pair<coord_def, int> coord_weight;
 
 // Try to find a "safe" place for moved close or far from the target.
 // keep_los indicates that the destination should be in view of the target.
+//
+// XXX: Check the result against in_bounds(), not coord_def::origin(),
+// beceause of a memory problem described below.
 static coord_def random_space_weighted(actor* moved, actor* target,
                                        bool close, bool keep_los = true,
                                        bool allow_sanct = true)
@@ -95,6 +98,13 @@ static coord_def random_space_weighted(actor* moved, actor* target,
             weight = 0;
         dests.push_back(coord_weight(*ri, weight));
     }
+
+    // XXX: Sometimes this results in a memory problem, where it seems as
+    // if the dests vector is free'd before copying the result.  When
+    // this happens, an out-of-bounds coordinate is usually returned.
+    //
+    // This is with GCC 4.4.1, -O2, 32 bit Linux, -march-native on a
+    // Family 10 AMD chip.
     coord_def* choice = random_choose_weighted(dests);
     return (choice ? *choice : coord_def(0, 0));
 }
@@ -108,7 +118,7 @@ void blink_other_close(actor* victim, const coord_def &target)
     if (is_sanctuary(you.pos()))
         return;
     coord_def dest = random_space_weighted(victim, caster, true);
-    if (dest.origin())
+    if (!in_bounds(dest))
         return;
     bool success = victim->blink_to(dest);
     ASSERT(success);
@@ -121,7 +131,7 @@ void blink_away(monsters* mon)
     if (!foe || !mon->can_see(foe))
         return;
     coord_def dest = random_space_weighted(mon, foe, false, false);
-    if (dest.origin())
+    if (!in_bounds(dest))
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success);
@@ -134,7 +144,7 @@ void blink_range(monsters* mon)
     if (!foe || !mon->can_see(foe))
         return;
     coord_def dest = random_space_weighted(mon, foe, false, true);
-    if (dest.origin())
+    if (!in_bounds(dest))
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success);
@@ -147,7 +157,7 @@ void blink_close(monsters* mon)
     if (!foe || !mon->can_see(foe))
         return;
     coord_def dest = random_space_weighted(mon, foe, true);
-    if (dest.origin())
+    if (!in_bounds(dest))
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success);
