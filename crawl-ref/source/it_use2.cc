@@ -328,12 +328,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
         // Now multiple invisiblity casts aren't as good. -- bwr
         if (!you.duration[DUR_INVIS])
-            you.duration[DUR_INVIS] = 15 + random2(pow);
+            you.duration[DUR_INVIS] = (15 + random2(pow)) * BASELINE_DELAY;
         else
-            you.duration[DUR_INVIS] += random2(pow);
+            you.duration[DUR_INVIS] += random2(pow) * BASELINE_DELAY;
 
-        if (you.duration[DUR_INVIS] > 100)
-            you.duration[DUR_INVIS] = 100;
+        if (you.duration[DUR_INVIS] > 100 * BASELINE_DELAY)
+            you.duration[DUR_INVIS] = 100 * BASELINE_DELAY;
         break;
 
     case POT_PORRIDGE:          // oatmeal - always gluggy white/grey?

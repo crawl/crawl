@@ -1880,7 +1880,9 @@ static void _shadow_card(int power, deck_rarity_type rarity)
     {
         mpr(you.duration[DUR_STEALTH] ? "You feel more catlike."
                                       : "You feel stealthy.");
-        you.duration[DUR_STEALTH] += random2(power/4) + 1;
+        int duration = (random2(power/4) + 1 ) * BASELINE_DELAY;
+
+        you.duration[DUR_STEALTH] += duration;
     }
 
     potion_effect(POT_INVISIBILITY, random2(power/4));
