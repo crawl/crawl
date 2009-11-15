@@ -1952,7 +1952,8 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
             break;
 
         case SK_BOWS:
-            if (player_genus(GENPC_ELVEN, static_cast<species_type>(species)))
+            if (player_genus(GENPC_ELVEN, static_cast<species_type>(species))
+                && skill_lev == 27)
             {
                 result = "Master Archer";
                 break;
