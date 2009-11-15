@@ -351,6 +351,18 @@ book of wizardry
 
 A book of magic spells.
 %%%%
+book of elemental missiles
+
+This book contains spells relating to ammunition and forms of ranged combat.
+%%%%
+book of warped missiles
+
+This book contains spells relating to ammunition and forms of ranged combat.
+%%%%
+book of devastating missiles
+
+This book contains spells relating to ammunition and forms of ranged combat.
+%%%%
 bottled efreet
 
 A mighty efreet, captured by some wizard and bound into a bronze
