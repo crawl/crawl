@@ -2129,6 +2129,7 @@ are equal; this is called crosstraining. Similar types of weapons are:
      *  Maces & Flails and Axes
      *  Polearms and Axes
      *  Staves and Polearms
+     *  Staves and Maces & Flails
 
 Being good at a specific weapon improves the speed with which you can
 use it by about 10% every two skill levels. Although lighter weapons are
