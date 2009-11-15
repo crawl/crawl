@@ -925,7 +925,7 @@
 {
     SPELL_FULSOME_DISTILLATION, "Fulsome Distillation",
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
-     SPFLAG_CHAOTIC,
+     SPFLAG_NONE,
      1,
      50,
      -1, -1,
