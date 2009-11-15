@@ -1110,6 +1110,9 @@ static void _elven_twin_died(monsters* twin)
     if (!found_duvessa && !found_dowan)
         return;
 
+    // Okay, let them climb stairs now.
+    monster->props["can_climb"] = "yes";
+
     // If you've stabbed one of them, the other one is likely asleep still.
     if (monster->asleep())
         behaviour_event(monster, ME_DISTURB, MHITNOT, monster->pos());

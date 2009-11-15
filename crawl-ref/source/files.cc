@@ -1055,6 +1055,8 @@ static void _grab_followers()
     const bool can_follow = level_type_allows_followers(you.level_type);
 
     int non_stair_using_allies = 0;
+    monsters *dowan = NULL;
+    monsters *duvessa = NULL;
 
     // Handle nearby ghosts.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
@@ -1062,6 +1064,12 @@ static void _grab_followers()
         monsters *fmenv = monster_at(*ai);
         if (fmenv == NULL)
             continue;
+
+        if (fmenv->type == MONS_DUVESSA && fmenv->alive())
+            duvessa = fmenv;
+
+        if (fmenv->type == MONS_DOWAN && fmenv->alive())
+            dowan = fmenv;
 
         if (fmenv->wont_attack() && !mons_can_use_stairs(fmenv))
             non_stair_using_allies++;
@@ -1073,6 +1081,27 @@ static void _grab_followers()
                 mpr("The ghost fades into the shadows.");
             monster_teleport(fmenv, true);
         }
+    }
+
+    // Deal with Dowan and Duvessa here.
+    if (dowan && duvessa)
+    {
+        if (!testbits(dowan->flags, MF_TAKING_STAIRS) 
+            || !testbits(duvessa->flags, MF_TAKING_STAIRS))
+        {
+            dowan->flags &= ~MF_TAKING_STAIRS;
+            duvessa->flags &= ~MF_TAKING_STAIRS;
+        }
+    }
+    else if (dowan && !duvessa)
+    {
+        if (!dowan->props.exists("can_climb"))
+            dowan->flags &= ~MF_TAKING_STAIRS;
+    }
+    else if (!dowan && duvessa)
+    {
+        if (!duvessa->props.exists("can_climb"))
+            duvessa->flags &= ~MF_TAKING_STAIRS;
     }
 
     if (can_follow)
