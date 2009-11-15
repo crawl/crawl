@@ -89,8 +89,7 @@ TravelCache travel_cache;
 static std::vector<stair_info> curr_stairs;
 
 // Squares that are not safe to travel to on the current level.
-typedef std::vector<travel_exclude> exclvec;
-exclvec curr_excludes;
+exclude_set curr_excludes;
 
 // This is where we last tried to take a stair during interlevel travel.
 // Note that last_stair.depth should be set to -1 before initiating interlevel
@@ -1356,9 +1355,10 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
 
     if (features && floodout)
     {
-        for (int i = 0, size = curr_excludes.size(); i < size; ++i)
+        exclude_set::const_iterator it;
+        for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
         {
-            const travel_exclude &exc = curr_excludes[i];
+            const travel_exclude &exc = it->second;
             // An exclude - wherever it is - is always a feature.
             if (std::find(features->begin(), features->end(), exc.pos)
                     == features->end())
@@ -1400,9 +1400,11 @@ void travel_pathfind::get_features()
             }
         }
 
-    for (int i = 0, size = curr_excludes.size(); i < size; ++i)
+    exclude_set::const_iterator it;
+    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
     {
-        const travel_exclude &exc = curr_excludes[i];
+        const travel_exclude &exc = it->second;
+
         // An exclude - wherever it is - is always a feature.
         if (std::find(features->begin(), features->end(), exc.pos)
                 == features->end())
@@ -2636,7 +2638,7 @@ static bool _loadlev_populate_stair_distances(const level_pos &target)
     if (travel_load_map(target.id.branch,
                         absdungeon_depth(target.id.branch, target.id.depth)))
     {
-        exclvec old_excludes = curr_excludes;
+        exclude_set old_excludes = curr_excludes;
 
         curr_excludes.clear();
         LevelInfo &li = travel_cache.get_level_info(target.id);

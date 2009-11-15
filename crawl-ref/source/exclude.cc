@@ -8,6 +8,7 @@
 #include "exclude.h"
 
 #include "coord.h"
+#include "coordit.h"
 #include "map_knowledge.h"
 #include "mon-util.h"
 #include "options.h"
@@ -123,6 +124,16 @@ travel_exclude::travel_exclude(const coord_def &p, int r,
     set_los();
 }
 
+// For exclude_map[p] = foo;
+travel_exclude::travel_exclude()
+    : pos(-1, -1), radius(-1),
+      los(coord_def(-1, -1), opc_excl, circle_def(-1, C_ROUND)),
+      uptodate(false), autoex(false), mon(MONS_NO_MONSTER), vault(false)
+{
+}
+
+extern exclude_set curr_excludes; // in travel.cc
+
 void travel_exclude::set_los()
 {
     uptodate = true;
@@ -154,28 +165,155 @@ bool travel_exclude::in_bounds(const coord_def &p) const
             || los.in_bounds(p));
 }
 
-void _mark_excludes_non_updated(const coord_def &p)
+/////////////////////////////////////////////////////////////////////////
+
+exclude_set::exclude_set()
 {
-    for (exclvec::iterator it = curr_excludes.begin();
-         it != curr_excludes.end(); ++it)
+}
+
+void exclude_set::clear()
+{
+    exclude_roots.clear();
+    exclude_points.clear();
+}
+
+void exclude_set::erase(const coord_def &p)
+{
+    exclude_set::iterator it = exclude_roots.find(p);
+
+    if (it == exclude_roots.end())
+        return;
+
+    travel_exclude old_ex = it->second;
+    exclude_roots.erase(it);
+
+    recompute_excluded_points();
+}
+
+void exclude_set::add_exclude(travel_exclude &ex)
+{
+    add_exclude_points(ex);
+    exclude_roots[ex.pos] = ex;
+}
+
+void exclude_set::add_exclude(const coord_def &p, int radius,
+                              bool autoexcl, monster_type mons,
+                              bool vaultexcl)
+{
+    travel_exclude ex(p, radius, autoexcl, mons, vaultexcl);
+    add_exclude(ex);
+}
+
+void exclude_set::add_exclude_points(travel_exclude& ex)
+{
+    if (ex.radius == 0)
     {
-        it->uptodate = it->uptodate && it->in_bounds(p);
+        exclude_points.insert(ex.pos);
+        return;
+    }
+
+    if (!ex.uptodate)
+        ex.set_los();
+    else
+        ex.los.update();
+
+    for (radius_iterator ri(ex.pos, ex.radius, C_ROUND); ri; ++ri)
+    {
+        if (ex.affects(*ri))
+            exclude_points.insert(*ri);
     }
 }
 
-void _update_exclusion_los(bool all=false)
+void exclude_set::update_excluded_points()
 {
-    for (exclvec::iterator it = curr_excludes.begin();
+    for (iterator it = exclude_roots.begin(); it != exclude_roots.end(); ++it)
+    {
+        travel_exclude &ex = it->second;
+        if (!ex.uptodate)
+        {
+            recompute_excluded_points();
+            return;
+        }
+    }
+}
+
+void exclude_set::recompute_excluded_points(bool recompute_los)
+{
+    exclude_points.clear();
+    for (iterator it = exclude_roots.begin(); it != exclude_roots.end(); ++it)
+    {
+        travel_exclude &ex = it->second;
+        if (recompute_los)
+            ex.set_los();
+        add_exclude_points(ex);
+    }
+}
+
+bool exclude_set::is_excluded(const coord_def &p) const
+{
+    return (exclude_points.find(p) != exclude_points.end());
+}
+
+bool exclude_set::is_exclude_root(const coord_def &p) const
+{
+    return (exclude_roots.find(p) != exclude_roots.end());
+}
+
+travel_exclude* exclude_set::get_exclude_root(const coord_def &p)
+{
+    exclude_set::iterator it = exclude_roots.find(p);
+
+    if (it != exclude_roots.end())
+        return (&(it->second));
+
+    return  (false);
+}
+
+size_t exclude_set::size() const
+{
+    return exclude_roots.size();
+}
+
+bool exclude_set::empty() const
+{
+    return exclude_roots.empty();
+}
+
+exclude_set::const_iterator exclude_set::begin() const
+{
+    return exclude_roots.begin();
+}
+
+exclude_set::const_iterator exclude_set::end() const
+{
+    return exclude_roots.end();
+}
+
+exclude_set::iterator exclude_set::begin()
+{
+    return exclude_roots.end();
+}
+
+exclude_set::iterator exclude_set::end()
+{
+    return exclude_roots.end();
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+void _mark_excludes_non_updated(const coord_def &p)
+{
+    for (exclude_set::iterator it = curr_excludes.begin();
          it != curr_excludes.end(); ++it)
     {
-        if (all || !it->uptodate)
-            it->set_los();
+        travel_exclude &ex = it->second;
+        ex.uptodate = ex.uptodate && ex.in_bounds(p);
     }
 }
 
 void init_exclusion_los()
 {
-    _update_exclusion_los(true);
+    curr_excludes.recompute_excluded_points(true);
 }
 
 /*
@@ -191,28 +329,18 @@ void update_exclusion_los(std::vector<coord_def> changed)
 
     for (unsigned int i = 0; i < changed.size(); ++i)
         _mark_excludes_non_updated(changed[i]);
-    _update_exclusion_los();
+
+    curr_excludes.update_excluded_points();
 }
 
-bool is_excluded(const coord_def &p, const exclvec &exc)
+bool is_excluded(const coord_def &p, const exclude_set &exc)
 {
-    for (unsigned int i = 0; i < exc.size(); ++i)
-        if (exc[i].affects(p))
-            return (true);
-    return (false);
-}
-
-static travel_exclude *_find_exclude_root(const coord_def &p)
-{
-    for (unsigned int i = 0; i < curr_excludes.size(); ++i)
-        if (curr_excludes[i].pos == p)
-            return (&curr_excludes[i]);
-    return (NULL);
+    return exc.is_excluded(p);
 }
 
 bool is_exclude_root(const coord_def &p)
 {
-    return (_find_exclude_root(p));
+    return (curr_excludes.get_exclude_root(p));
 }
 
 #ifdef USE_TILE
@@ -256,8 +384,10 @@ void clear_excludes()
         return;
 
 #ifdef USE_TILE
-    for (int i = curr_excludes.size()-1; i >= 0; i--)
-        _tile_exclude_gmap_update(curr_excludes[i].pos);
+    exclude_set::iterator it;
+    //for (int i = curr_excludes.size()-1; i >= 0; i--)
+    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
+        _tile_exclude_gmap_update(it->second.pos);
 #endif
 
     curr_excludes.clear();
@@ -270,8 +400,7 @@ void clear_excludes()
 // may start at 0 < radius < LOS_RADIUS, but won't cycle there.
 void cycle_exclude_radius(const coord_def &p)
 {
-    // XXX: scanning through curr_excludes twice
-    if (travel_exclude *exc = _find_exclude_root(p))
+    if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
         if (exc->radius == LOS_RADIUS)
             set_exclude(p, 0);
@@ -285,12 +414,7 @@ void cycle_exclude_radius(const coord_def &p)
 // Remove a possible exclude.
 void del_exclude(const coord_def &p)
 {
-    for (unsigned int i = 0; i < curr_excludes.size(); ++i)
-        if (curr_excludes[i].pos == p)
-        {
-            curr_excludes.erase(curr_excludes.begin() + i);
-            break;
-        }
+    curr_excludes.erase(p);
     _exclude_update(p);
 }
 
@@ -305,10 +429,14 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
     if (!in_bounds(p))
         return;
 
-    if (travel_exclude *exc = _find_exclude_root(p))
+    if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        exc->radius = radius;
-        exc->set_los();
+        if (exc->radius == radius)
+            return;
+
+        exc->radius   = radius;
+        exc->uptodate = false;
+        curr_excludes.recompute_excluded_points();
     }
     else
     {
@@ -320,8 +448,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
             montype = m->type;
         }
 
-        curr_excludes.push_back(travel_exclude(p, radius, autoexcl,
-                                               montype, vaultexcl));
+        curr_excludes.add_exclude(p, radius, autoexcl, montype, vaultexcl);
     }
 
     _exclude_update(p);
@@ -331,7 +458,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
 // monster (or it is invisible), remove the exclusion.
 void maybe_remove_autoexclusion(const coord_def &p)
 {
-    if (travel_exclude *exc = _find_exclude_root(p))
+    if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
         const monsters *m = monster_at(p);
         if (exc->autoex && (!m || !you.can_see(m) || m->type != exc->mon
@@ -347,10 +474,12 @@ std::string get_exclusion_desc()
 {
     std::vector<std::string> monsters;
     int count_other = 0;
-    for (unsigned int i = 0; i < curr_excludes.size(); ++i)
+    exclude_set::iterator it;
+    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
     {
-        if (!invalid_monster_type(curr_excludes[i].mon))
-            monsters.push_back(mons_type_name(curr_excludes[i].mon, DESC_PLAIN));
+        travel_exclude &ex = it->second;
+        if (!invalid_monster_type(ex.mon))
+            monsters.push_back(mons_type_name(ex.mon, DESC_PLAIN));
         else
             count_other++;
     }
@@ -377,23 +506,25 @@ std::string get_exclusion_desc()
 }
 
 
-void marshallExcludes(writer& outf, const exclvec& excludes)
+void marshallExcludes(writer& outf, const exclude_set& excludes)
 {
     marshallShort(outf, excludes.size());
+    exclude_set::const_iterator it;
     if (excludes.size())
     {
-        for (int i = 0, count = excludes.size(); i < count; ++i)
+        for (it = excludes.begin(); it != excludes.end(); ++it)
         {
-            marshallCoord(outf, excludes[i].pos);
-            marshallShort(outf, excludes[i].radius);
-            marshallBoolean(outf, excludes[i].autoex);
-            marshallShort(outf, excludes[i].mon);
+            const travel_exclude &ex = it->second;
+            marshallCoord(outf, ex.pos);
+            marshallShort(outf, ex.radius);
+            marshallBoolean(outf, ex.autoex);
+            marshallShort(outf, ex.mon);
             // XXX: marshall travel_exclude::vault?
         }
     }
 }
 
-void unmarshallExcludes(reader& inf, char minorVersion, exclvec &excludes)
+void unmarshallExcludes(reader& inf, char minorVersion, exclude_set &excludes)
 {
     excludes.clear();
     int nexcludes = unmarshallShort(inf);
@@ -408,7 +539,8 @@ void unmarshallExcludes(reader& inf, char minorVersion, exclvec &excludes)
             monster_type mon = MONS_NO_MONSTER;
             autoexcl         = unmarshallBoolean(inf);
             mon              = static_cast<monster_type>(unmarshallShort(inf));
-            excludes.push_back(travel_exclude(c, radius, autoexcl, mon));
+
+            excludes.add_exclude(c, radius, autoexcl, mon);
         }
     }
 }

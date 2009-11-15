@@ -375,7 +375,7 @@ struct LevelInfo
     void clear_distances();
     void set_level_excludes();
 
-    const std::vector<travel_exclude> &get_excludes() const
+    const exclude_set &get_excludes() const
     {
         return excludes;
     }
@@ -413,7 +413,7 @@ private:
     std::vector<stair_info> stairs;
 
     // Squares that are not safe to travel to.
-    std::vector<travel_exclude> excludes;
+    exclude_set excludes;
 
     std::vector<short> stair_distances;  // Dist between stairs
     level_id id;

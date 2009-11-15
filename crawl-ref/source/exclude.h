@@ -19,8 +19,9 @@ void maybe_remove_autoexclusion(const coord_def &p);
 std::string get_exclusion_desc();
 void clear_excludes();
 
-struct travel_exclude
+class travel_exclude
 {
+public:
     coord_def     pos;          // exclusion centre
     int           radius;       // exclusion radius
     los_def       los;          // los from exclusion centre
@@ -32,22 +33,72 @@ struct travel_exclude
     travel_exclude(const coord_def &p, int r = LOS_RADIUS,
                    bool autoex = false, monster_type mons = MONS_NO_MONSTER,
                    bool vault = false);
+    // For exclude_map[p] = foo;
+    travel_exclude();
 
     int radius_sq() const;
-    void set_los();
     bool in_bounds(const coord_def& p) const;
     bool affects(const coord_def& p) const;
+
+private:
+    void set_los();
+
+    friend class exclude_set;
 };
 
-typedef std::vector<travel_exclude> exclvec;
-extern exclvec curr_excludes; // in travel.cc
+class exclude_set
+{
+public:
+    exclude_set();
 
-bool is_excluded(const coord_def &p, const exclvec &exc = curr_excludes);
+    typedef std::map<coord_def, travel_exclude> exclmap;
+    typedef exclmap::iterator       iterator;
+    typedef exclmap::const_iterator const_iterator;
+
+    void clear();
+
+    void erase(const coord_def &p);
+    void add_exclude(travel_exclude &ex);
+    void add_exclude(const coord_def &p, int radius = LOS_RADIUS,
+                     bool autoexcl = false,
+                     monster_type mons = MONS_NO_MONSTER,
+                     bool vaultexcl = false);
+
+    void update_excluded_points();
+    void recompute_excluded_points(bool recompute_los = false);
+
+    travel_exclude* get_exclude_root(const coord_def &p);
+
+    bool is_excluded(const coord_def &p) const;
+    bool is_exclude_root(const coord_def &p) const;
+
+    size_t size()  const;
+    bool   empty() const;
+
+    const_iterator begin() const;
+    const_iterator end() const;
+
+    iterator  begin();
+    iterator  end();
+
+private:
+    typedef std::set<coord_def> exclset;
+
+    exclmap exclude_roots;
+    exclset exclude_points;
+
+private:
+    void add_exclude_points(travel_exclude& ex);
+};
+
+extern exclude_set curr_excludes; // in travel.cc
+
+bool is_excluded(const coord_def &p, const exclude_set &exc = curr_excludes);
 
 class writer;
 class reader;
-void marshallExcludes(writer& outf, const exclvec& excludes);
-void unmarshallExcludes(reader& inf, char minorVersion, exclvec& excludes);
+void marshallExcludes(writer& outf, const exclude_set& excludes);
+void unmarshallExcludes(reader& inf, char minorVersion, exclude_set& excludes);
 
 #endif
 
