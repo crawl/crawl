@@ -499,12 +499,7 @@ std::string screenshot(bool fullscreen)
             if (ch && !isprint(ch))
             {
                 // [ds] Evil hack time again. Peek at grid, use that character.
-                show_type object = show_type(grid_appearance(gc));
-                unsigned glych;
-                unsigned short glycol = 0;
-
-                get_symbol( gc, object, &glych, &glycol );
-                ch = glych;
+                ch = get_feat_symbol(grid_appearance(gc));
             }
 
             // More mangling to accommodate C strings.
@@ -573,23 +568,18 @@ void view_update_at(const coord_def &pos)
     const coord_def ep = view2show(vp);
     env.show.update_at(pos, ep);
 
+#ifndef USE_TILE
     show_type object = env.show(ep);
-
     if (!object)
         return;
-
-    unsigned short  colour = object.colour;
-    unsigned        ch = 0;
-
-    get_symbol( pos, object, &ch, &colour );
+    glyph g = get_show_glyph(object);
 
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
         flash_colour = _viewmap_flash_colour();
 
-#ifndef USE_TILE
     cgotoxy(vp.x, vp.y);
-    put_colour_ch(flash_colour? real_colour(flash_colour) : colour, ch);
+    put_colour_ch(flash_colour? real_colour(flash_colour) : g.col, g.ch);
 
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
@@ -698,13 +688,11 @@ static bool player_view_update_at(const coord_def &gc)
 
     bool need_excl_update = is_terrain_changed(gc) || !is_terrain_seen(gc);
 
-    show_type  object = env.show(ep);
-    unsigned short colour = object.colour;
-    unsigned        ch;
-    get_symbol(gc, object, &ch, &colour);
+    show_type object = env.show(ep);
+    glyph g = get_show_glyph(object);
 
     set_terrain_seen(gc);
-    set_map_knowledge_glyph(gc, object, colour);
+    set_map_knowledge_glyph(gc, object, g.col);
     set_map_knowledge_detected_mons(gc, false);
     set_map_knowledge_detected_item(gc, false);
 
@@ -720,8 +708,8 @@ static bool player_view_update_at(const coord_def &gc)
 
     if (Options.clean_map && env.show.get_backup(ep))
     {
-        get_symbol(gc, env.show.get_backup(ep), &ch, &colour);
-        set_map_knowledge_glyph(gc, env.show.get_backup(ep), colour);
+        glyph gb = get_show_glyph(env.show.get_backup(ep));
+        set_map_knowledge_glyph(gc, env.show.get_backup(ep), gb.col);
     }
 
     return (need_excl_update);
@@ -796,12 +784,9 @@ static void draw_los(screen_buffer_t* buffy,
                      const coord_def& gc, const coord_def& ep)
 {
 #ifndef USE_TILE
-    show_type  object = env.show(ep);
-    unsigned short colour = object.colour;
-    unsigned        ch;
-    get_symbol(gc, object, &ch, &colour);
-    buffy[0] = ch;
-    buffy[1] = colour;
+    glyph g = get_show_glyph(env.show(ep));
+    buffy[0] = g.ch;
+    buffy[1] = g.col;
 #else
     buffy[0] = env.tile_fg(ep);
     buffy[1] = env.tile_bg(ep);
@@ -832,7 +817,7 @@ static void draw_los_backup(screen_buffer_t* buffy,
 //---------------------------------------------------------------
 //
 // Draws the main window using the character set returned
-// by get_symbol().
+// by get_show_glyph().
 //
 // This function should not interfere with the game condition,
 // unless do_updates is set (ie. stealth checks for visible

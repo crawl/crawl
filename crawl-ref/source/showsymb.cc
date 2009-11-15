@@ -30,41 +30,26 @@
 #include "viewgeom.h"
 #include "viewmap.h"
 
-void get_symbol(const coord_def& where,
-                show_type object, unsigned *ch,
-                unsigned short *colour)
-{
-    ASSERT(ch != NULL);
-
-    if (object.cls < SH_MONSTER)
-    {
-        const feature_def &fdef = get_feature_def(object);
-        *ch = fdef.symbol;
-    }
-    else
-    {
-        ASSERT(object.cls == SH_MONSTER);
-        *ch = mons_char(object.mons);
-    }
-
-    if (colour)
-        *colour = real_colour(*colour);
-}
-
 glyph get_show_glyph(show_type object)
 {
     glyph g;
     g.col = object.colour;
+
     if (object.cls < SH_MONSTER)
     {
         const feature_def &fdef = get_feature_def(object);
         g.ch = fdef.symbol;
-
-        // Don't clobber with BLACK, because the colour should be already set.
-        if (fdef.colour != BLACK)
+        if (g.col == BLACK)
             g.col = fdef.colour;
     }
-    g.col = real_colour(g.col);
+    else
+    {
+        ASSERT(object.cls == SH_MONSTER);
+        g.ch = mons_char(object.mons);
+    }
+
+    if (g.col)
+        g.col = real_colour(g.col);
     return (g);
 }
 
@@ -148,14 +133,9 @@ glyph get_mons_glyph(const monsters *mons)
 unsigned get_screen_glyph(const coord_def& p)
 {
     const coord_def ep = view2show(grid2view(p));
-
     show_type object = env.show(ep);
-
     if (!object)
         return get_map_knowledge_char(p.x, p.y);
 
-    unsigned short  colour;
-    unsigned        ch;
-    get_symbol(p, object, &ch, &colour);
-    return (ch);
+    return (get_show_glyph(object).ch);
 }

@@ -17,9 +17,5 @@ glyph get_show_glyph(show_type object);
 
 unsigned get_screen_glyph( const coord_def &p );
 
-void get_symbol(const coord_def& where,
-                show_type object, unsigned *ch,
-                unsigned short *colour);
-
 #endif
 
