@@ -480,6 +480,10 @@ bool mons_speaks(monsters *monster)
     if (confused)
         prefixes.push_back("confused");
 
+    // Allows monster speech to be altered slightly on-the-fly.
+    if (monster->props.exists("speech_key"))
+        prefixes.push_back(monster->props["speech_key"].get_string());
+
     const actor*    foe   = (!crawl_state.arena && monster->wont_attack()
                                 && invalid_monster_index(monster->foe)) ?
                                     &you : monster->get_foe();
