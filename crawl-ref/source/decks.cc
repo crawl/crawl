@@ -1834,7 +1834,7 @@ static void _helm_card(int power, deck_rarity_type rarity)
     {
         if (you.duration[DUR_MAGIC_SHIELD] == 0)
             mpr("A magical shield forms in front of you.");
-        you.duration[DUR_MAGIC_SHIELD] += random2(power/6) + 1;
+        you.increase_duration(DUR_MAGIC_SHIELD, random2(power/6) + 1);
     }
 }
 

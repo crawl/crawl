@@ -6710,17 +6710,19 @@ void player::paralyse(actor *who, int str)
     mprf("You %s the ability to move!",
          paralysis ? "still haven't" : "suddenly lose");
 
+    str *= BASELINE_DELAY;
     if (str > paralysis && (paralysis < 3 || one_chance_in(paralysis)))
         paralysis = str;
 
-    if (paralysis > 13)
-        paralysis = 13;
+    if (paralysis > 13 * BASELINE_DELAY)
+        paralysis = 13 * BASELINE_DELAY;
 }
 
 void player::petrify(actor *who, int str)
 {
     ASSERT(!crawl_state.arena);
 
+    str *= BASELINE_DELAY;
     int &petrif(duration[DUR_PETRIFIED]);
 
     mprf("You %s the ability to move!",
@@ -6729,7 +6731,7 @@ void player::petrify(actor *who, int str)
     if (str > petrif && (petrif < 3 || one_chance_in(petrif)))
         petrif = str;
 
-    petrif = std::min(13, petrif);
+    petrif = std::min(13 * BASELINE_DELAY, petrif);
 }
 
 void player::slow_down(actor *foe, int str)

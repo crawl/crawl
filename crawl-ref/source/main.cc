@@ -2234,8 +2234,12 @@ static void _decrement_durations()
     {
         if (you.duration[DUR_DIVINE_SHIELD] > 1)
         {
-            if (--you.duration[DUR_DIVINE_SHIELD] == 1)
+            you.duration[DUR_DIVINE_SHIELD] -= delay;
+            if(you.duration[DUR_DIVINE_SHIELD] <= 1)
+            {
+                you.duration[DUR_DIVINE_SHIELD] = 1;
                 mpr("Your divine shield starts to fade.", MSGCH_DURATION);
+            }
         }
 
         if (you.duration[DUR_DIVINE_SHIELD] == 1 && !one_chance_in(3))
@@ -2488,7 +2492,7 @@ static void _decrement_durations()
             else if (one_chance_in(chance))
             {
                 mpr("You pass out from exhaustion.", MSGCH_WARN);
-                you.duration[DUR_PARALYSIS] += roll_dice(1, 4);
+                you.increase_duration(DUR_PARALYSIS, roll_dice(1,4));
             }
         }
 
@@ -2640,7 +2644,7 @@ static void _decrement_durations()
         if (you.hp > allowed_deaths_door_hp())
         {
             mpr("Your life is in your own hands once again.", MSGCH_DURATION);
-            you.duration[DUR_PARALYSIS] += 5 + random2(5);
+            you.increase_duration(DUR_PARALYSIS, 5 + random2(5));
             confuse_player(10 + random2(10));
             you.hp_max--;
             deflate_hp(you.hp_max, false);
@@ -2869,10 +2873,7 @@ void world_reacts()
             mpr("You lose consciousness!", MSGCH_FOOD);
             stop_running();
 
-            you.duration[DUR_PARALYSIS] += 5 + random2(8);
-
-            if (you.duration[DUR_PARALYSIS] > 13)
-                you.duration[DUR_PARALYSIS] = 13;
+            you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
         }
 
         if (you.hunger <= 100)

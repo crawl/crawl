@@ -1944,8 +1944,8 @@ void cast_divine_shield()
     you.redraw_armour_class = true;
 
     // duration of complete shield bonus from 35 to 80 turns
-    you.duration[DUR_DIVINE_SHIELD] =
-       35 + (you.skills[SK_SHIELDS] + you.skills[SK_INVOCATIONS]*4)/3;
+    you.set_duration(DUR_DIVINE_SHIELD,
+                     35 + (you.skills[SK_INVOCATIONS] * 4) / 3);
 
     // shield bonus up to 8
     you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
