@@ -4939,12 +4939,17 @@ void dec_napalm_player(int delay)
         you.duration[DUR_LIQUID_FLAMES] = 0;
 }
 
-bool slow_player(int amount)
+bool slow_player(int turns)
 {
     ASSERT(!crawl_state.arena);
 
-    if (amount <= 0)
+    if (turns <= 0)
         return (false);
+
+    // Doubling these values because moving while slowed takes twice the
+    // usual delay.
+    turns *= 2;
+    int threshold = 100 * 2;
 
     if (wearing_amulet(AMU_RESIST_SLOW))
     {
@@ -4958,7 +4963,7 @@ bool slow_player(int amount)
 
         return (false);
     }
-    else if (you.duration[DUR_SLOW] >= 100 * BASELINE_DELAY)
+    else if (you.duration[DUR_SLOW] >= threshold * BASELINE_DELAY)
         mpr("You already are as slow as you could be.");
     else
     {
@@ -4967,7 +4972,7 @@ bool slow_player(int amount)
         else
             mpr("You feel as though you will be slow longer.");
 
-        you.increase_duration(DUR_SLOW, amount, 100);
+        you.increase_duration(DUR_SLOW, turns, threshold);
         learned_something_new(TUT_YOU_ENCHANTED);
     }
 
@@ -4994,11 +4999,11 @@ void dec_slow_player(int delay)
     }
 }
 
-void haste_player(int amount)
+void haste_player(int turns)
 {
     ASSERT(!crawl_state.arena);
 
-    if (amount <= 0)
+    if (turns <= 0)
         return;
 
     bool amu_eff = wearing_amulet(AMU_RESIST_SLOW);
@@ -5011,9 +5016,14 @@ void haste_player(int amount)
             set_ident_type(*amulet, ID_KNOWN_TYPE);
     }
 
+    // Cutting the nominal turns in half since hasted actions take half the
+    // usual delay.
+    turns /= 2;
+    int threshold = (80 + 20 * amu_eff) / 2;
+
     if (you.duration[DUR_HASTE] == 0)
         mpr("You feel yourself speed up.");
-    else if (you.duration[DUR_HASTE] > (80 + 20 * amu_eff) * BASELINE_DELAY)
+    else if (you.duration[DUR_HASTE] > threshold * BASELINE_DELAY)
         mpr("You already have as much speed as you can handle.");
     else
     {
@@ -5021,7 +5031,7 @@ void haste_player(int amount)
         contaminate_player(1, true); // always deliberate
     }
 
-    you.increase_duration(DUR_HASTE, amount, 80 + 20 * amu_eff);
+    you.increase_duration(DUR_HASTE, turns, threshold);
 
     did_god_conduct(DID_STIMULANTS, 4 + random2(4));
 }

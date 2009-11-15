@@ -1488,22 +1488,23 @@ int monster_die(monsters *monster, killer_type killer,
         if (you.religion == GOD_TROG
             && !player_under_penance() && you.piety > random2(1000))
         {
-            const int bonus = 3 + random2avg( 10, 2 );
+            const int bonus = (3 + random2avg( 10, 2 )) / 2;
 
-            you.duration[DUR_BERSERKER] += bonus;
-            you.duration[DUR_MIGHT] += bonus;
-            haste_player(bonus);
+            you.increase_duration(DUR_BERSERKER, bonus);
+            you.increase_duration(DUR_MIGHT, bonus);
+            haste_player(bonus * 2);
 
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
         }
         else if (wearing_amulet(AMU_RAGE) && one_chance_in(30))
         {
-            const int bonus = 2 + random2(4);
+            const int bonus = (2 + random2(4)) / 2;;
 
-            you.duration[DUR_BERSERKER] += bonus;
-            you.duration[DUR_MIGHT] += bonus;
-            haste_player(bonus);
+
+            you.increase_duration(DUR_BERSERKER, bonus);
+            you.increase_duration(DUR_MIGHT, bonus);
+            haste_player(bonus * 2);
 
             mpr("Your amulet glows a violent red.");
         }

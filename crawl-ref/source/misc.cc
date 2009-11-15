@@ -2708,7 +2708,12 @@ bool go_berserk(bool intentional)
     mpr("You feel yourself moving faster!");
     mpr("You feel mighty!");
 
-    you.duration[DUR_BERSERKER] += 20 + random2avg(19, 2);
+    // Cutting the duration in half since berserk causes haste and hasted
+    // actions have half the usual delay. This keeps player turns
+    // approximately consistent withe previous versions. -cao
+    int berserk_duration = (20 + random2avg(19,2)) / 2;
+
+    you.increase_duration(DUR_BERSERKER, berserk_duration);
 
     calc_hp();
     you.hp *= 2;
@@ -2718,8 +2723,11 @@ bool go_berserk(bool intentional)
     if (!you.duration[DUR_MIGHT])
         modify_stat(STAT_STRENGTH, 5, true, "going berserk");
 
-    you.duration[DUR_MIGHT] += you.duration[DUR_BERSERKER];
-    haste_player(you.duration[DUR_BERSERKER]);
+    you.increase_duration(DUR_MIGHT, berserk_duration);
+    /// doubling the duration here since haste_player already cuts input
+    // durations in half
+    haste_player(berserk_duration * 2);
+
     did_god_conduct(DID_HASTY, 8, intentional);
 
     if (you.berserk_penalty != NO_BERSERK_PENALTY)

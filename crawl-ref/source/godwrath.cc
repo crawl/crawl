@@ -377,11 +377,11 @@ static bool _cheibriados_retribution()
         break;
 
     case 4:
-        if (you.duration[DUR_SLOW] < 90 * BASELINE_DELAY)
+        if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
         {
             dec_penance(god, 1);
             mpr("You feel the world leave you behind!", MSGCH_WARN);
-            you.set_duration(DUR_EXHAUSTED, 100);
+            you.set_duration(DUR_EXHAUSTED, 200);
             slow_player(100);
         }
         break;
@@ -595,11 +595,11 @@ static bool _trog_retribution()
 
         case 4:
         case 5:
-            if (you.duration[DUR_SLOW] < 90 * BASELINE_DELAY)
+            if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
                 dec_penance(god, 1);
                 mpr( "You suddenly feel exhausted!", MSGCH_WARN );
-                you.set_duration(DUR_EXHAUSTED, 100);
+                you.set_duration(DUR_EXHAUSTED, 200);
                 slow_player(100);
             }
             break;
@@ -1186,7 +1186,7 @@ bool divine_retribution(god_type god, bool no_bonus)
         }
         else
         {
-            if (you.duration[DUR_SLOW] < 90 * BASELINE_DELAY)
+            if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
                 mpr( "The divine experience leaves you feeling exhausted!",
                      MSGCH_WARN );

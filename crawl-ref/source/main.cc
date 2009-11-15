@@ -2503,7 +2503,9 @@ static void _decrement_durations()
         you.berserk_penalty = 0;
 
         int dur = 12 + roll_dice(2, 12);
-        you.increase_duration(DUR_EXHAUSTED, dur);
+        // For consistency with slow give exhaustion 2 times the nominal
+        // duration.
+        you.increase_duration(DUR_EXHAUSTED, dur * 2);
 
         // Don't trigger too many tutorial messages.
         const bool tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
@@ -2519,9 +2521,9 @@ static void _decrement_durations()
             {
                 if (wearing_amulet(AMU_RESIST_SLOW))
                 {
-                    if (you.duration[DUR_HASTE] > 6 * BASELINE_DELAY)
+                    if (you.duration[DUR_HASTE] > 3 * BASELINE_DELAY)
                     {
-                        you.set_duration(DUR_HASTE, 2 + coinflip());
+                        you.set_duration(DUR_HASTE, div_rand_round(2 + coinflip(), 2));
                         mpr("Your extra speed is starting to run out.",
                             MSGCH_DURATION);
                     }
