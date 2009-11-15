@@ -30,96 +30,6 @@
 #include "viewgeom.h"
 #include "viewmap.h"
 
-static bool _show_bloodcovered(const coord_def& where)
-{
-    if (!is_bloodcovered(where))
-        return (false);
-
-    dungeon_feature_type feat = env.grid(where);
-
-    // Altars, stairs (of any kind) and traps should not be coloured red.
-    return (!is_critical_feature(feat) && !feat_is_trap(feat));
-}
-
-static unsigned short _tree_colour(const coord_def& where)
-{
-    uint32_t h = where.x;
-    h+=h<<10; h^=h>>6;
-    h += where.y;
-    h+=h<<10; h^=h>>6;
-    h+=h<<3; h^=h>>11; h+=h<<15;
-    return (h>>30) ? GREEN : LIGHTGREEN;
-}
-
-static unsigned short _feat_colour(const coord_def &where,
-                                   const dungeon_feature_type feat,
-                                   unsigned short colour)
-{
-    const feature_def &fdef = get_feature_def(feat);
-    // TODO: consolidate with feat_is_stair etc.
-    bool excluded_stairs = (feat >= DNGN_STONE_STAIRS_DOWN_I
-                            && feat <= DNGN_ESCAPE_HATCH_UP
-                            && is_exclude_root(where));
-
-    if (excluded_stairs)
-        colour = Options.tc_excluded;
-    else if (feat >= DNGN_MINMOVE && you.get_beholder(where))
-    {
-        // Colour grids that cannot be reached due to beholders
-        // dark grey.
-        colour = DARKGREY;
-    }
-    else if (feat >= DNGN_MINMOVE && is_sanctuary(where))
-    {
-        if (testbits(env.pgrid(where), FPROP_SANCTUARY_1))
-            colour = YELLOW;
-        else if (testbits(env.pgrid(where), FPROP_SANCTUARY_2))
-        {
-            if (!one_chance_in(4))
-                colour = WHITE;     // 3/4
-            else if (!one_chance_in(3))
-                colour = LIGHTCYAN; // 1/6
-            else
-                colour = LIGHTGREY; // 1/12
-        }
-    }
-    else if (_show_bloodcovered(where))
-        colour = RED;
-    else if (env.grid_colours(where))
-        colour = env.grid_colours(where);
-    else
-    {
-        // Don't clobber with BLACK, because the colour should be
-        // already set.
-        if (fdef.colour != BLACK)
-            colour = fdef.colour;
-        else if (feat == DNGN_TREES)
-            colour = _tree_colour(where);
-
-        if (fdef.em_colour && fdef.em_colour != fdef.colour &&
-            emphasise(where, feat))
-        {
-            colour = fdef.em_colour;
-        }
-    }
-
-    // TODO: should be a feat_is_whatever(feat)
-    if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX
-        || feat == DNGN_UNDISCOVERED_TRAP)
-    {
-        if (!haloers(where).empty())
-        {
-            if (silenced(where))
-                colour = LIGHTCYAN;
-            else
-                colour = YELLOW;
-        }
-        else if (silenced(where))
-            colour = CYAN;
-    }
-    return (colour);
-}
-
 void get_symbol(const coord_def& where,
                 show_type object, unsigned *ch,
                 unsigned short *colour)
@@ -128,23 +38,8 @@ void get_symbol(const coord_def& where,
 
     if (object.cls < SH_MONSTER)
     {
-
-        // Don't recolor items
-        if (colour && object.cls == SH_FEATURE)
-        {
-            const int colmask = *colour & COLFLAG_MASK;
-            *colour = _feat_colour(where, object.feat, *colour) | colmask;
-        }
-
         const feature_def &fdef = get_feature_def(object);
         *ch = fdef.symbol;
-
-        // Note anything we see that's notable
-        if (!where.origin() && fdef.is_notable())
-        {
-            if (object.cls == SH_FEATURE)
-                seen_notable_thing(object.feat, where);
-        }
     }
     else
     {

@@ -5,13 +5,19 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "env.h"
+#include "fprop.h"
+#include "halo.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
+#include "overmap.h"
+#include "random.h"
 #include "showsymb.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 #include "viewgeom.h"
+#include "viewmap.h"
 
 show_type::show_type()
     : cls(SH_NOTHING), colour(0)
@@ -58,11 +64,101 @@ void show_def::_set_backup(const coord_def &ep)
     backup(ep) = grid(ep);
 }
 
+static bool _show_bloodcovered(const coord_def& where)
+{
+    if (!is_bloodcovered(where))
+        return (false);
+
+    dungeon_feature_type feat = env.grid(where);
+
+    // Altars, stairs (of any kind) and traps should not be coloured red.
+    return (!is_critical_feature(feat) && !feat_is_trap(feat));
+}
+
+static unsigned short _tree_colour(const coord_def& where)
+{
+    uint32_t h = where.x;
+    h+=h<<10; h^=h>>6;
+    h += where.y;
+    h+=h<<10; h^=h>>6;
+    h+=h<<3; h^=h>>11; h+=h<<15;
+    return (h>>30) ? GREEN : LIGHTGREEN;
+}
+
+static unsigned short _feat_colour(const coord_def &where,
+                                   const dungeon_feature_type feat)
+{
+    unsigned short colour;
+    const feature_def &fdef = get_feature_def(feat);
+    // TODO: consolidate with feat_is_stair etc.
+    bool excluded_stairs = (feat >= DNGN_STONE_STAIRS_DOWN_I
+                            && feat <= DNGN_ESCAPE_HATCH_UP
+                            && is_exclude_root(where));
+
+    if (excluded_stairs)
+        colour = Options.tc_excluded;
+    else if (feat >= DNGN_MINMOVE && you.get_beholder(where))
+    {
+        // Colour grids that cannot be reached due to beholders
+        // dark grey.
+        colour = DARKGREY;
+    }
+    else if (feat >= DNGN_MINMOVE && is_sanctuary(where))
+    {
+        if (testbits(env.pgrid(where), FPROP_SANCTUARY_1))
+            colour = YELLOW;
+        else if (testbits(env.pgrid(where), FPROP_SANCTUARY_2))
+        {
+            if (!one_chance_in(4))
+                colour = WHITE;     // 3/4
+            else if (!one_chance_in(3))
+                colour = LIGHTCYAN; // 1/6
+            else
+                colour = LIGHTGREY; // 1/12
+        }
+    }
+    else if (_show_bloodcovered(where))
+        colour = RED;
+    else if (env.grid_colours(where))
+        colour = env.grid_colours(where);
+    else
+    {
+        colour = fdef.colour;
+        if (colour == BLACK && feat == DNGN_TREES)
+            colour = _tree_colour(where);
+
+        if (fdef.em_colour && fdef.em_colour != fdef.colour &&
+            emphasise(where, feat))
+        {
+            colour = fdef.em_colour;
+        }
+    }
+
+    // TODO: should be a feat_is_whatever(feat)
+    if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX
+        || feat == DNGN_UNDISCOVERED_TRAP)
+    {
+        if (!haloers(where).empty())
+        {
+            if (silenced(where))
+                colour = LIGHTCYAN;
+            else
+                colour = YELLOW;
+        }
+        else if (silenced(where))
+            colour = CYAN;
+    }
+    return (colour);
+}
+
 void show_def::_update_feat_at(const coord_def &gp, const coord_def &ep)
 {
     grid(ep).cls = SH_FEATURE;
     grid(ep).feat = grid_appearance(gp);
-    grid(ep).colour = 0;
+    grid(ep).colour = _feat_colour(gp, grid(ep).feat);
+
+    if (get_feature_def(grid(ep)).is_notable())
+        seen_notable_thing(grid(ep).feat, gp);
 }
 
 static show_item_type _item_to_show_code(const item_def &item)
