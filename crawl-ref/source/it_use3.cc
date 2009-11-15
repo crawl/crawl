@@ -705,8 +705,8 @@ static bool _ball_of_fixation(void)
     mpr("You are mesmerised by a rainbow of scintillating colours!");
 
     const int duration = random_range(15, 40);
-    you.duration[DUR_PARALYSIS] = duration;
-    you.duration[DUR_SLOW]      = duration;
+    you.set_duration(DUR_PARALYSIS, duration);
+    you.set_duration(DUR_SLOW,      duration);
 
     return (true);
 }

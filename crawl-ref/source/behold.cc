@@ -23,21 +23,17 @@ void player::add_beholder(const monsters* mon)
 {
     if (!duration[DUR_MESMERISED])
     {
-        duration[DUR_MESMERISED] = 7;
+        you.set_duration(DUR_MESMERISED, 7, 12);
         beholders.push_back(mon->mindex());
         mprf(MSGCH_WARN, "You are mesmerised by %s!",
                          mon->name(DESC_NOCAP_THE).c_str());
     }
     else
     {
-        duration[DUR_MESMERISED] += 5;
+        you.increase_duration(DUR_MESMERISED, 5, 12);
         if (!beheld_by(mon))
             beholders.push_back(mon->mindex());
-    }
-
-    if (duration[DUR_MESMERISED] > 12)
-        duration[DUR_MESMERISED] = 12;
-}
+    }}
 
 // Whether player is mesmerised.
 bool player::beheld() const

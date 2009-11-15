@@ -2435,8 +2435,8 @@ static void _decrement_durations()
         you.clear_beholders();
     }
 
-    dec_slow_player();
-    dec_haste_player();
+    dec_slow_player(delay);
+    dec_haste_player(delay);
 
     if (_decrement_a_duration(DUR_MIGHT, delay,
                               "You feel a little less mighty now."))
@@ -2502,7 +2502,8 @@ static void _decrement_durations()
         // This resets from an actual penalty or from NO_BERSERK_PENALTY.
         you.berserk_penalty = 0;
 
-        you.increase_duration(DUR_EXHAUSTED, 12 + roll_dice(2,12));
+        int dur = 12 + roll_dice(2, 12);
+        you.increase_duration(DUR_EXHAUSTED, dur);
 
         // Don't trigger too many tutorial messages.
         const bool tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
@@ -2518,9 +2519,9 @@ static void _decrement_durations()
             {
                 if (wearing_amulet(AMU_RESIST_SLOW))
                 {
-                    if (you.duration[DUR_HASTE > 6])
+                    if (you.duration[DUR_HASTE] > 6 * BASELINE_DELAY)
                     {
-                        you.duration[DUR_HASTE] = 2 + coinflip();
+                        you.set_duration(DUR_HASTE, 2 + coinflip());
                         mpr("Your extra speed is starting to run out.",
                             MSGCH_DURATION);
                     }

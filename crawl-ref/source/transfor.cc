@@ -720,8 +720,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
         if (which_trans == TRAN_PIG)
         {   // no easy way around this!
             mpr("A dreadful feeling locks you in place!");
-            if (you.duration[DUR_PARALYSIS]<10 * BASELINE_DURATION)
-                you.duration[DUR_PARALYSIS]=10 * BASELINE_DURATION;
+            if (you.duration[DUR_PARALYSIS]<10 * BASELINE_DELAY)
+                you.duration[DUR_PARALYSIS]=10 * BASELINE_DELAY;
         }
         return (_abort_or_fizzle(just_check));
     }

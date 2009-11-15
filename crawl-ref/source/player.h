@@ -751,10 +751,10 @@ bool napalm_player(int amount);
 void dec_napalm_player(int delay);
 
 bool slow_player(int amount);
-void dec_slow_player();
+void dec_slow_player(int delay);
 
 void haste_player(int amount);
-void dec_haste_player();
+void dec_haste_player(int delay);
 
 bool disease_player(int amount);
 void dec_disease_player();

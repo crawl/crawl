@@ -4958,7 +4958,7 @@ bool slow_player(int amount)
 
         return (false);
     }
-    else if (you.duration[DUR_SLOW] >= 100)
+    else if (you.duration[DUR_SLOW] >= 100 * BASELINE_DELAY)
         mpr("You already are as slow as you could be.");
     else
     {
@@ -4967,32 +4967,27 @@ bool slow_player(int amount)
         else
             mpr("You feel as though you will be slow longer.");
 
-        you.duration[DUR_SLOW] += amount;
-
-        if (you.duration[DUR_SLOW] > 100)
-            you.duration[DUR_SLOW] = 100;
-
+        you.increase_duration(DUR_SLOW, amount, 100);
         learned_something_new(TUT_YOU_ENCHANTED);
     }
 
     return (true);
 }
 
-void dec_slow_player()
+void dec_slow_player(int delay)
 {
-    if (you.duration[DUR_SLOW] > 1)
+    if (!you.duration[DUR_SLOW])
+        return;
+
+    if (you.duration[DUR_SLOW] > BASELINE_DELAY)
     {
         // BCR - Amulet of resist slow affects slow counter.
         if (wearing_amulet(AMU_RESIST_SLOW))
-        {
-            you.duration[DUR_SLOW] -= 5;
-            if (you.duration[DUR_SLOW] < 1)
-                you.duration[DUR_SLOW] = 1;
-        }
+            you.duration[DUR_SLOW] -= 5 * delay;
         else
-            you.duration[DUR_SLOW]--;
+            you.duration[DUR_SLOW] -= delay;
     }
-    else if (you.duration[DUR_SLOW] == 1)
+    if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
         mpr("You feel yourself speed up.", MSGCH_DURATION);
         you.duration[DUR_SLOW] = 0;
@@ -5018,7 +5013,7 @@ void haste_player(int amount)
 
     if (you.duration[DUR_HASTE] == 0)
         mpr("You feel yourself speed up.");
-    else if (you.duration[DUR_HASTE] > 80 + 20 * amu_eff)
+    else if (you.duration[DUR_HASTE] > (80 + 20 * amu_eff) * BASELINE_DELAY)
         mpr("You already have as much speed as you can handle.");
     else
     {
@@ -5026,30 +5021,34 @@ void haste_player(int amount)
         contaminate_player(1, true); // always deliberate
     }
 
-    you.duration[DUR_HASTE] += amount;
-
-    if (you.duration[DUR_HASTE] > 80 + 20 * amu_eff)
-        you.duration[DUR_HASTE] = 80 + 20 * amu_eff;
+    you.increase_duration(DUR_HASTE, amount, 80 + 20 * amu_eff);
 
     did_god_conduct(DID_STIMULANTS, 4 + random2(4));
 }
 
-void dec_haste_player()
+void dec_haste_player(int delay)
 {
-    if (you.duration[DUR_HASTE] > 1)
+    if (!you.duration[DUR_HASTE])
+        return;
+
+    if (you.duration[DUR_HASTE] > BASELINE_DELAY)
     {
+        int old_dur = you.duration[DUR_HASTE];
+
         // BCR - Amulet of resist slow affects haste counter
         if (!wearing_amulet(AMU_RESIST_SLOW) || coinflip())
-            you.duration[DUR_HASTE]--;
+            you.duration[DUR_HASTE] -= delay;
 
-        if (you.duration[DUR_HASTE] == 6)
+        int threshold = 6 * BASELINE_DELAY;
+        // message if we cross the threshold
+        if (old_dur > threshold && you.duration[DUR_HASTE] <= threshold)
         {
             mpr("Your extra speed is starting to run out.", MSGCH_DURATION);
             if (coinflip())
-                you.duration[DUR_HASTE]--;
+                you.duration[DUR_HASTE] -= BASELINE_DELAY;
         }
     }
-    else if (you.duration[DUR_HASTE] == 1)
+    else if (you.duration[DUR_HASTE] <= BASELINE_DELAY)
     {
         mpr("You feel yourself slow down.", MSGCH_DURATION);
         you.duration[DUR_HASTE] = 0;
