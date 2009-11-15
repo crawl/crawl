@@ -6,10 +6,6 @@
 #include "AppHdr.h"
 #include "mon-cast.h"
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
@@ -27,13 +23,14 @@
 #include "mon-util.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "spl-util.h"
 #include "spl-cast.h"
 #include "spells1.h"
 #include "spells3.h"
 #include "stuff.h"
+#include "teleport.h"
 #include "view.h"
-#include "shout.h"
 #include "viewchar.h"
 
 static bool _valid_mon_spells[NUM_SPELLS];
@@ -625,6 +622,11 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_BLINK_OTHER_CLOSE:
+        beam.flavour    = BEAM_BLINK_CLOSE;
+        beam.is_beam    = true;
+        break;
+
     case SPELL_FIRE_BREATH:
         beam.name       = "blast of flame";
         beam.aux_source = "blast of fiery breath";
@@ -798,6 +800,9 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_KRAKEN_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
+    case SPELL_BLINK_RANGE:
+    case SPELL_BLINK_AWAY:
+    case SPELL_BLINK_CLOSE:
     case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_SUMMON_EYEBALLS:
@@ -1286,6 +1291,12 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
             else
                 return (false);
         }
+        else if (spell_cast == SPELL_BLINK_RANGE)
+            blink_range(monster);
+        else if (spell_cast == SPELL_BLINK_AWAY)
+            blink_away(monster);
+        else if (spell_cast == SPELL_BLINK_CLOSE)
+            blink_close(monster);
         else
         {
             if (spell_needs_foe(spell_cast))
@@ -2033,6 +2044,18 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         // Allow the caster to comment on moving the foe.
         std::string msg = getSpeakString(monster->name(DESC_PLAIN)
                                          + " blink_other");
+        if (!msg.empty() && msg != "__NONE")
+        {
+            mons_speaks_msg(monster, msg, MSGCH_TALK,
+                            silenced(you.pos()) || silenced(monster->pos()));
+        }
+        break;
+    }
+    case SPELL_BLINK_OTHER_CLOSE:
+    {
+        // Allow the caster to comment on moving the foe.
+        std::string msg = getSpeakString(monster->name(DESC_PLAIN)
+                                         + " blink_other_close");
         if (!msg.empty() && msg != "__NONE")
         {
             mons_speaks_msg(monster, msg, MSGCH_TALK,

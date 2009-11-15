@@ -986,45 +986,39 @@ NSUBST:     M = 4:1 / 1:2 / *:.
 NSUBST:     N = 6:1 / *:.
 SUBST:      " = ..'
 KFEAT:      ' = alarm trap
+:           set_border_fill_type("open_sea")
 :           fiery_humans(_G)
 :           volcano_setup(_G)
 :           place_chained_volcano(_G)
 MAP
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-########wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww########
-########wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww########
-########wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww########
-########wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww########
-########wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww########
-########wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww########
-########wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww########
-########wwwwwwwwWwWwWwWwWwWwWwWwWwWwWwWwWwwwwwwww########
-########wwwwwwwWWWWWWWWWWWWWWWWWWWWWWWWWWWwwwwwww########
-########wwwwwwx...."""....."""....."""....xxwwwww########
-########wwwxxxx...xx+xx...xxxxx...xx+xx...'xxwwww########
-########wwxx.xx..xxMMMxx.xxIIIxx.xxNNNxx..x.xxxww########
-########SSx.x.x..xMMMMMx.xIIIIIx.xNNNNNx..x.xAxSS########
-#######xSSx<x.x..xMMMMMx.xIIIIIx.xNNNNNx..x.x<xSSx#######
-#######xlRxxx.x..xxMMMxx.xxIIIxx.xxNNNxx..xx.xxRlx#######
-#######xRlllxx....xxxxx...xx+xx...xxxxx...xxxxllRx#######
-#######xlRlllxx...."""....."""....."""....xllllRlx#######
-#######xRllllllLLLLLLLLLLLLLLLLLLLLLLLLLLLllllllRx#######
-       xlRllllllLlLlLlLlLlLlLlLlLlLlLlLlLllllllRlx
-       xRlllVllllllllllllllllllllllllllllllVllllRx
-       xlRlllllllllllVllllllVllllllllVlllllllllRlx
-       xRlRlllllllllllllllllllllllllllllllllllRlRx
-       xRlllRlllRlllRlllRlllRlllRlllRlllRlllRlllRx
-       xlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlx
-       xRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRx
-       xRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRx
-       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+###########################################
+#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
+#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
+#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
+#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
+#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
+#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
+#wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
+#wwwwwwwwWwWwWwWwWwWwWwWwWwWwWwWwWwwwwwwww#
+#wwwwwwwWWWWWWWWWWWWWWWWWWWWWWWWWWWwwwwwww#
+#wwwwwwx...."""....."""....."""....xxwwwww#
+#wwwxxxx...xx+xx...xxxxx...xx+xx...'xxwwww#
+#wwxx.xx..xxMMMxx.xxIIIxx.xxNNNxx..x.xxxww#
+#SSx.x.x..xMMMMMx.xIIIIIx.xNNNNNx..x.xAxSS#
+xSSx<x.x..xMMMMMx.xIIIIIx.xNNNNNx..x.x<xSSx
+xlRxxx.x..xxMMMxx.xxIIIxx.xxNNNxx..xx.xxRlx
+xRlllxx....xxxxx...xx+xx...xxxxx...xxxxllRx
+xlRlllxx...."""....."""....."""....xllllRlx
+xRllllllLLLLLLLLLLLLLLLLLLLLLLLLLLLllllllRx
+xlRllllllLlLlLlLlLlLlLlLlLlLlLlLlLllllllRlx
+xRlllVllllllllllllllllllllllllllllllVllllRx
+xlRlllllllllllVllllllVllllllllVlllllllllRlx
+xRlRlllllllllllllllllllllllllllllllllllRlRx
+xRlllRlllRlllRlllRlllRlllRlllRlllRlllRlllRx
+xlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlx
+xRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRlRx
+xRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 ###############################################################################
 

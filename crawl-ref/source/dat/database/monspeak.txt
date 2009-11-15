@@ -3254,7 +3254,7 @@ _Roxanne_rare_
 
 @The_monster@ says @to_foe@, "They said I was crazy for my new spells... Turns out they were right."
 %%%%
-Roxanne blink_other
+Roxanne blink_other_closer
 
 w:20
 __NONE

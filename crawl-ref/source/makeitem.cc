@@ -1263,6 +1263,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(8))
                 rc = SPWPN_DRAINING;
 
+            if (one_chance_in(8))
+                rc = SPWPN_SPEED;
+
             if (one_chance_in(6))
                 rc = SPWPN_VENOM;
             break;
@@ -1275,6 +1278,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_SCIMITAR:
             if (one_chance_in(25))
                 rc = SPWPN_PAIN;
+
+            if (one_chance_in(7))
+                rc = SPWPN_SPEED;
             // **** intentional fall through here ****
         case WPN_GREAT_SWORD:
         case WPN_DOUBLE_SWORD:
@@ -1357,6 +1363,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_REACHING;
 
             if (one_chance_in(5))
+                rc = SPWPN_SPEED;
+
+            if (one_chance_in(5))
                 rc = SPWPN_ELECTROCUTION;
             break;
 
@@ -1373,6 +1382,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(4))
                 rc = SPWPN_PROTECTION;
+
+            if (one_chance_in(5))
+                rc = SPWPN_SPEED;
             // **** intentional fall through here ****
         case WPN_SPEAR:
             if (one_chance_in(25))
@@ -1415,14 +1427,16 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_FLAME;
             else if (tmp < 500)
                 rc = SPWPN_FROST;
-            else if (tmp < 660)
+            else if (tmp < 650)
                 rc = SPWPN_PENETRATION;
-            else if (tmp < 820)
+            else if (tmp < 800)
                 rc = SPWPN_REAPING;
-            else if (tmp < 940)
+            else if (tmp < 920)
                 rc = SPWPN_PROTECTION;
-            else
+            else if (tmp < 980)
                 rc = SPWPN_VORPAL;
+            else
+                rc = SPWPN_SPEED;
             if (item.sub_type == WPN_HAND_CROSSBOW || item.sub_type == WPN_CROSSBOW)
                 if (one_chance_in(5))
                     rc = SPWPN_ELECTROCUTION;
@@ -1438,6 +1452,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
 
+            if (one_chance_in(5))
+                rc = SPWPN_SPEED;
+
             if (one_chance_in(10))
                 rc = SPWPN_VORPAL;
 
@@ -1446,7 +1463,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_LAJATANG:
-            if (one_chance_in(12))
+            if (one_chance_in(8))
+                rc = SPWPN_SPEED;
+            else if (one_chance_in(12))
                 rc = SPWPN_PAIN;
             else if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
@@ -2734,12 +2753,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
         if (one_chance_in(4))
             item.plus = SK_SPELLCASTING + random2(NUM_SKILLS - SK_SPELLCASTING);
         else
-        {
             item.plus = random2(SK_UNARMED_COMBAT);
-
-            if (item.plus == SK_UNUSED_1)
-                item.plus = SK_UNARMED_COMBAT;
-        }
         // Set number of reads possible before it "crumbles to dust".
         item.plus2 = 3 + random2(15);
     }

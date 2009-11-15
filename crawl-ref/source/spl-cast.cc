@@ -56,10 +56,6 @@
 #include "view.h"
 #include "shout.h"
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 static int _calc_spell_range(spell_type spell, int power = 0,
                              bool real_cast = false);
 
@@ -816,7 +812,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 static bool _spell_is_utility_spell(spell_type spell_id)
 {
     return (spell_typematch(spell_id,
-                SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION | SPTYP_DIVINATION));
+                SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION));
 }
 
 bool maybe_identify_staff(item_def &item, spell_type spell)

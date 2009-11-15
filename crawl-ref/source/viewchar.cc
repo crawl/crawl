@@ -2,6 +2,7 @@
 
 #include "viewchar.h"
 
+#include "feature.h"
 #include "options.h"
 #include "state.h"
 
@@ -101,3 +102,7 @@ int multibyte_strlen(const std::string &s)
     return (s.length());
 }
 
+dungeon_char_type get_feature_dchar(dungeon_feature_type feat)
+{
+    return (get_feature_def(feat).dchar);
+}

@@ -129,6 +129,7 @@ public:
 
     void moveto(const coord_def& c);
     bool move_to_pos(const coord_def &newpos);
+    bool blink_to(const coord_def& c, bool quiet = false);
 
     kill_category kill_alignment() const;
 

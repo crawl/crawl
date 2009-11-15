@@ -4879,7 +4879,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_KIRKE, '@', YELLOW, "Kirke",
+    MONS_KIRKE, '@', LIGHTGREEN, "Kirke",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SEE_INVIS
         | M_SPEAKS,
     MR_NO_FLAGS,

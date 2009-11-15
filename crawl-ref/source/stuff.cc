@@ -35,10 +35,6 @@
 
 #include <stack>
 
-#ifdef TARGET_OS_DOS
- #include <conio.h>
-#endif
-
 #ifdef UNIX
  #ifndef USE_TILE
  #include "libunix.h"

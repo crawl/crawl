@@ -7,15 +7,6 @@
 #include "AppHdr.h"
 #include "mon-stuff.h"
 
-//#include <stdlib.h>
-//#include <string.h>
-//#include <stdio.h>
-//#include <algorithm>
-
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 #include "arena.h"
 #include "artefact.h"
 #include "attitude-change.h"
@@ -2618,29 +2609,8 @@ bool monster_blink(monsters *monster, bool quiet)
 {
     coord_def near = _random_monster_nearby_habitable_space(*monster, false,
                                                             true);
-    if (near == monster->pos())
-        return (false);
 
-    if (!quiet)
-        simple_monster_message(monster, " blinks!");
-
-    if (!(monster->flags & MF_WAS_IN_VIEW))
-        monster->seen_context = "thin air";
-
-    const coord_def oldplace = monster->pos();
-    if (!monster->move_to_pos(near))
-        return (false);
-
-    // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
-                monster->kill_alignment());
-
-    monster->check_redraw(oldplace);
-    monster->apply_location_effects(oldplace);
-
-    mons_relocated(monster);
-
-    return (true);
+    return (monster->blink_to(near));
 }
 
 bool mon_can_be_slimified(monsters *monster)

@@ -122,8 +122,7 @@ static unsigned short _feat_colour(const coord_def &where,
 
 void get_symbol(const coord_def& where,
                 show_type object, unsigned *ch,
-                unsigned short *colour,
-                bool magic_mapped)
+                unsigned short *colour)
 {
     ASSERT(ch != NULL);
 
@@ -138,8 +137,7 @@ void get_symbol(const coord_def& where,
         }
 
         const feature_def &fdef = get_feature_def(object);
-        *ch = magic_mapped ? fdef.magic_symbol
-                           : fdef.symbol;
+        *ch = fdef.symbol;
 
         // Note anything we see that's notable
         if (!where.origin() && fdef.is_notable())
@@ -156,13 +154,6 @@ void get_symbol(const coord_def& where,
 
     if (colour)
         *colour = real_colour(*colour);
-}
-
-unsigned get_symbol(show_type object, bool magic_mapped)
-{
-    unsigned ch;
-    get_symbol(coord_def(0,0), object, &ch, NULL, magic_mapped);
-    return (ch);
 }
 
 void get_show_symbol(show_type object, unsigned *ch,
@@ -186,11 +177,6 @@ unsigned grid_character_at(const coord_def &c)
 
     get_symbol(c, grd(c), &glych, &glycol);
     return glych;
-}
-
-dungeon_char_type get_feature_dchar(dungeon_feature_type feat)
-{
-    return (get_feature_def(feat).dchar);
 }
 
 int get_mons_colour(const monsters *mons)

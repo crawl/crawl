@@ -13,55 +13,144 @@
 #include "env.h"
 #include "fprop.h"
 #include "los.h"
+#include "monster.h"
+#include "mon-stuff.h"
 #include "player.h"
 #include "random.h"
 #include "random-weight.h"
 #include "state.h"
 #include "terrain.h"
 
+bool player::blink_to(const coord_def& dest, bool quiet)
+{
+    // We rely on the non-generalized move_player_to_cell.
+    ASSERT(this == &you);
+
+    if (dest == pos())
+        return (false);
+    if (!quiet)
+        mpr("You blink.");
+    const coord_def origin = pos();
+    if (!move_player_to_grid(dest, false, true, true))
+        return (false);
+    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+    return (true);
+}
+
+bool monsters::blink_to(const coord_def& dest, bool quiet)
+{
+    if (dest == pos())
+        return (false);
+    if (!quiet)
+        simple_monster_message(this, " blinks!");
+
+    if (!(flags & MF_WAS_IN_VIEW))
+        seen_context = "thin air";
+
+    const coord_def oldplace = pos();
+    if (!move_to_pos(dest))
+        return (false);
+
+    // Leave a purple cloud.
+    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
+                kill_alignment());
+
+    check_redraw(oldplace);
+    apply_location_effects(oldplace);
+
+    mons_relocated(this);
+
+    return (true);
+}
+
+
 typedef std::pair<coord_def, int> coord_weight;
 
-// Try to find a "safe" place for the victim close to the target.
-static coord_def random_close_space(actor* victim, actor* target)
+// Try to find a "safe" place for moved close or far from the target.
+// keep_los indicates that the destination should be in view of the target.
+static coord_def random_space_weighted(actor* moved, actor* target,
+                                       bool close, bool keep_los = true,
+                                       bool allow_sanct = true)
 {
-    std::vector<std::pair<coord_def, int> > dests;
+    std::vector<coord_weight> dests;
     const coord_def tpos = target->pos();
 
-    // XXX: should use actor::see_cell_no_trans.
-    const los_def* vlos = &victim->get_los_no_trans();
+    const los_def* mlos = &moved->get_los_no_trans();
     const los_def* tlos = &target->get_los_no_trans();
-    for (radius_iterator ri(vlos); ri; ++ri)
+    for (radius_iterator ri(mlos); ri; ++ri)
     {
-        if (!tlos->see_cell(*ri) || !victim->is_habitable(*ri)
-            || actor_at(*ri))
+        if (!moved->is_habitable(*ri) || actor_at(*ri)
+            || keep_los && !tlos->see_cell(*ri)
+            || !allow_sanct && is_sanctuary(*ri))
         {
             continue;
         }
-        int weight = (LOS_RADIUS+1)*(LOS_RADIUS+1) - (tpos - *ri).abs();
+        int weight;
+        int dist = (tpos - *ri).rdist();
+        if (close)
+            weight = (LOS_RADIUS - dist) * (LOS_RADIUS - dist);
+        else
+            weight = dist;
         if (weight < 0)
-            weight = 1;
+            weight = 0;
         dests.push_back(coord_weight(*ri, weight));
     }
     coord_def* choice = random_choose_weighted(dests);
     return (choice ? *choice : coord_def(0, 0));
 }
 
-// Blink the player closer to the monster at target.
-void blink_closer(const coord_def &target)
+// Blink the victim closer to the monster at target.
+void blink_other_close(actor* victim, const coord_def &target)
 {
     actor* caster = actor_at(target);
     if (!caster)
         return;
     if (is_sanctuary(you.pos()))
         return;
-    coord_def dest = random_close_space(&you, caster);
+    coord_def dest = random_space_weighted(victim, caster, true);
     if (dest.origin())
         return;
-    mpr("You blink.");
-    coord_def origin = you.pos();
-    bool success = move_player_to_grid(dest, false, true, true);
-    if (success)
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+    bool success = victim->blink_to(dest);
+    ASSERT(success);
+}
+
+// Blink the monster away from its foe.
+void blink_away(monsters* mon)
+{
+    actor* foe = mon->get_foe();
+    if (!foe || !mon->can_see(foe))
+        return;
+    coord_def dest = random_space_weighted(mon, foe, false, false);
+    if (dest.origin())
+        return;
+    bool success = mon->blink_to(dest);
+    ASSERT(success);
+}
+
+// Blink the monster within range but at distance to its foe.
+void blink_range(monsters* mon)
+{
+    actor* foe = mon->get_foe();
+    if (!foe || !mon->can_see(foe))
+        return;
+    coord_def dest = random_space_weighted(mon, foe, false, true);
+    if (dest.origin())
+        return;
+    bool success = mon->blink_to(dest);
+    ASSERT(success);
+}
+
+// Blink the monster close to its foe.
+void blink_close(monsters* mon)
+{
+    actor* foe = mon->get_foe();
+    if (!foe || !mon->can_see(foe))
+        return;
+    coord_def dest = random_space_weighted(mon, foe, true);
+    if (dest.origin())
+        return;
+    bool success = mon->blink_to(dest);
+    ASSERT(success);
 }
 
 bool random_near_space(const coord_def& origin, coord_def& target,

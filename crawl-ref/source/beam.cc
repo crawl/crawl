@@ -17,11 +17,6 @@
 #include <algorithm>
 #include <cmath>
 
-#ifdef TARGET_OS_DOS
-#include <dos.h>
-#include <conio.h>
-#endif
-
 #include "externs.h"
 #include "options.h"
 
@@ -59,12 +54,12 @@
 #include "spells4.h"
 #include "state.h"
 #include "stuff.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"
 #include "shout.h"
-#include "teleport.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "xom.h"
@@ -189,16 +184,34 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
 // Special front function for zap_animation to interpret enchantment flavours.
 static void _ench_animation(int flavour, const monsters *mon, bool force)
 {
-    const int elem = (flavour == BEAM_HEALING)       ? ETC_HEAL :
-                     (flavour == BEAM_PAIN)          ? ETC_UNHOLY :
-                     (flavour == BEAM_DISPEL_UNDEAD) ? ETC_HOLY :
-                     (flavour == BEAM_POLYMORPH)     ? ETC_MUTAGENIC :
-                     (flavour == BEAM_CHAOS
-                        || flavour == BEAM_RANDOM)   ? ETC_RANDOM :
-                     (flavour == BEAM_TELEPORT
-                        || flavour == BEAM_BANISH
-                        || flavour == BEAM_BLINK)    ? ETC_WARP
-                                                     : ETC_ENCHANT;
+    element_type elem;
+    switch (flavour)
+    {
+    case BEAM_HEALING:
+        elem = ETC_HEAL;
+        break;
+    case BEAM_PAIN:
+        elem = ETC_UNHOLY;
+        break;
+    case BEAM_DISPEL_UNDEAD:
+        elem = ETC_HOLY;
+        break;
+    case BEAM_POLYMORPH:
+        elem = ETC_MUTAGENIC;
+        break;
+    case BEAM_CHAOS:
+        elem = ETC_RANDOM;
+        break;
+    case BEAM_TELEPORT:
+    case BEAM_BANISH:
+    case BEAM_BLINK:
+    case BEAM_BLINK_CLOSE:
+        elem = ETC_WARP;
+        break;
+    default:
+        elem = ETC_ENCHANT;
+        break;
+    }
 
     _zap_animation(element_colour(elem), mon, force);
 }
@@ -3930,7 +3943,12 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_BLINK:
-        blink_closer(source);
+        random_blink(false);
+        obvious_effect = true;
+        break;
+
+    case BEAM_BLINK_CLOSE:
+        blink_other_close(&you, source);
         obvious_effect = true;
         break;
 
@@ -5145,6 +5163,12 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         monster_blink(mon);
         return (MON_AFFECTED);
 
+    case BEAM_BLINK_CLOSE:
+        if (mon->observable())
+            obvious_effect = true;
+        blink_other_close(mon, source);
+        return (MON_AFFECTED);
+
     case BEAM_POLYMORPH:
         if (mon->mutate())
             obvious_effect = true;
@@ -6208,6 +6232,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_DISINTEGRATION:       return ("disintegration");
     case BEAM_ENSLAVE_DEMON:        return ("enslave demon");
     case BEAM_BLINK:                return ("blink");
+    case BEAM_BLINK_CLOSE:          return ("blink close");
     case BEAM_PETRIFY:              return ("petrify");
     case BEAM_CORONA:               return ("backlight");
     case BEAM_PORKALATOR:           return ("porkalator");

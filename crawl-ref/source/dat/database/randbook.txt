@@ -539,26 +539,6 @@ Illusion
 w:2
 Slavery
 %%%%
-Divination
-
-Divination
-
-Augury
-
-Prophecy
-
-Foreboding
-
-Prediction
-
-Omens
-
-Sight
-
-Visions
-
-Truth
-%%%%
 Translocation
 
 Translocation
@@ -711,20 +691,6 @@ Summoning adj
 Creative
 
 Supportive
-%%%%
-Divination adj
-
-Divine
-
-Prophetic
-
-w:5
-All-Knowing
-
-w:5
-All-Seeing
-
-Spiritual
 %%%%
 Translocation adj
 
@@ -994,10 +960,6 @@ Frances
 Murray
 
 Nergalle
-%%%%
-Divination owner
-
-__NONE
 %%%%
 highlevel Translocation owner
 

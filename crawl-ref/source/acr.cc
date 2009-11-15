@@ -28,12 +28,6 @@
 #include <sstream>
 #include <iostream>
 
-#ifdef TARGET_OS_DOS
-#include <dos.h>
-#include <conio.h>
-#include <file.h>
-#endif
-
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
 #endif
@@ -1215,6 +1209,22 @@ static bool _marker_vetoes_stair()
     return marker_vetoes_operation("veto_stair");
 }
 
+// Maybe prompt to enter a portal, return true if we should enter the
+// portal, false if the user said no at the prompt.
+static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
+{
+    switch(ftype)
+    {
+    case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_ENTER_ABYSS:
+        return yesno("If you enter this portal you will not be able to return "
+                     "immediately. Continue?", false, 'n');
+
+    default:
+        return (true);
+    }
+}
+
 static void _go_downstairs();
 static void _go_upstairs()
 {
@@ -1262,6 +1272,9 @@ static void _go_upstairs()
             mpr("You can't go up here!");
         return;
     }
+
+    if (!_prompt_dangerous_portal(ygrd))
+        return;
 
     // Does the next level have a warning annotation?
     if (!check_annotation_exclusion_warning())
@@ -1332,6 +1345,9 @@ static void _go_downstairs()
         mpr("You're held in a net!");
         return;
     }
+
+    if (!_prompt_dangerous_portal(ygrd))
+        return;
 
     // Does the next level have a warning annotation?
     // Also checks for entering a labyrinth with teleportitis.
@@ -4412,12 +4428,12 @@ static void _compile_time_asserts()
 {
     // Check that the numbering comments in enum.h haven't been
     // disturbed accidentally.
-    COMPILE_CHECK(SK_UNARMED_COMBAT == 19       , c1);
-    COMPILE_CHECK(SK_EVOCATIONS == 39           , c2);
+    COMPILE_CHECK(SK_UNARMED_COMBAT == 18       , c1);
+    COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 103    , c4);
     COMPILE_CHECK(SPELL_RETURNING_AMMUNITION == 162          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 207             , c6);
+    COMPILE_CHECK(NUM_SPELLS == 211             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

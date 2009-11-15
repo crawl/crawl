@@ -13,10 +13,6 @@
 #include <stdio.h>
 #include <algorithm>
 
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
-
 #include "externs.h"
 #include "options.h"
 
@@ -587,6 +583,8 @@ bool melee_attack::attack()
     identify_mimic(attacker);
     identify_mimic(defender);
 
+    coord_def defender_pos = defender->pos();
+
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
         if (stop_attack_prompt(defender_as_monster(), false, attacker->pos()))
@@ -719,7 +717,7 @@ bool melee_attack::attack()
 
     if (attacker->atype() == ACT_PLAYER)
     {
-        handle_noise();
+        handle_noise(defender_pos);
 
         if (damage_brand == SPWPN_CHAOS)
             chaos_affects_attacker();
@@ -992,6 +990,7 @@ bool melee_attack::player_aux_unarmed()
     bool simple_miss_message = false;
     std::string miss_verb;
 
+    coord_def defender_pos = defender->pos();
     if (can_do_unarmed)
     {
         if (you.species == SP_NAGA)
@@ -1266,7 +1265,7 @@ bool melee_attack::player_aux_unarmed()
 
         make_hungry(2, true);
 
-        handle_noise();
+        handle_noise(defender_pos);
         alert_nearby_monsters();
 
         // XXX We're clobbering did_hit
@@ -3455,7 +3454,7 @@ bool melee_attack::apply_damage_brand()
 //
 //  * Randart property to make randart weapons louder or softer when
 //    they hit.
-void melee_attack::handle_noise()
+void melee_attack::handle_noise(const coord_def & pos)
 {
     // Successful stabs make no noise.
     if (stab_attempt)
@@ -3471,7 +3470,7 @@ void melee_attack::handle_noise()
         level = std::max(1, level);
 
     if (level > 0)
-        noisy(level, defender->pos(), attacker->mindex());
+        noisy(level, pos, attacker->mindex());
 
     noise_factor = 0;
     extra_noise  = 0;
@@ -5146,7 +5145,7 @@ void melee_attack::mons_perform_attack_rounds()
 {
     const int nrounds = attacker_as_monster()->has_hydra_multi_attack() ?
         attacker_as_monster()->number : 4;
-    const coord_def pos    = defender->pos();
+          coord_def pos    = defender->pos();
     const bool was_delayed = you_are_delayed();
 
     // Melee combat, tell attacker to wield its melee weapon.
@@ -5156,7 +5155,8 @@ void melee_attack::mons_perform_attack_rounds()
     for (attack_number = 0; attack_number < nrounds; ++attack_number)
     {
         // Handle noise from previous round.
-        handle_noise();
+        if(attack_number > 0)
+            handle_noise(pos);
 
         // Monster went away?
         if (!defender->alive() || defender->pos() != pos)
@@ -5188,6 +5188,7 @@ void melee_attack::mons_perform_attack_rounds()
                 {
                     defender = mons;
                     end = false;
+                    pos = mons->pos();
                     break;
                 }
             }
@@ -5525,7 +5526,7 @@ void melee_attack::mons_perform_attack_rounds()
     }
 
     // Handle noise from last round.
-    handle_noise();
+    handle_noise(pos);
 
     if (def_copy)
         delete def_copy;

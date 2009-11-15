@@ -14,7 +14,6 @@
 #include <ctype.h>
 
 #ifdef TARGET_OS_DOS
-#include <conio.h>
 #include <file.h>
 #endif
 

@@ -559,7 +559,7 @@
 
 {
     SPELL_DETECT_TRAPS, "Detect Traps",
-     SPTYP_DIVINATION,
+     0,
      SPFLAG_MAPPING,
      2,
      50,
@@ -571,7 +571,7 @@
 },
 
 {
-    SPELL_BLINK, "Blink",
+     SPELL_BLINK, "Blink",
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE,
      2,
@@ -581,6 +581,45 @@
      NULL,
      false,
      true
+},
+
+{
+     SPELL_BLINK_RANGE, "Blink Range", // XXX needs better name
+     SPTYP_TRANSLOCATION,
+     SPFLAG_ESCAPE | SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+     SPELL_BLINK_AWAY, "Blink Away",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_ESCAPE | SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+     SPELL_BLINK_CLOSE, "Blink Close",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
 },
 
 // The following name was found in the hack.exe file of an early version
@@ -729,7 +768,7 @@
 
 {
     SPELL_DETECT_ITEMS, "Detect Items",
-     SPTYP_DIVINATION,
+     0,
      SPFLAG_MAPPING,
      2,
      50,
@@ -1210,7 +1249,7 @@
 
 {
     SPELL_DETECT_CREATURES, "Detect Creatures",
-     SPTYP_DIVINATION,
+     0,
      SPFLAG_MAPPING,
      2,
      60,                        // not 50, note the fuzz
@@ -1691,7 +1730,7 @@
 
 {
     SPELL_DETECT_SECRET_DOORS, "Detect Secret Doors",
-     SPTYP_DIVINATION,
+     0,
      SPFLAG_NONE,
      1,
      200,
@@ -2229,6 +2268,19 @@
     SPELL_BLINK_OTHER, "Blink Other",
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE | SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     2,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+     SPELL_BLINK_OTHER_CLOSE, "Blink Other Close",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_TARGET | SPFLAG_MONSTER,
      2,
      0,
      LOS_RADIUS, LOS_RADIUS,

@@ -742,6 +742,20 @@ dungeon cell which they are on:
 * veto_shatter: If this property is set to "veto" then the cell will
       be unaffected by the Shatter spell.
 
+Special monster-related Lua marker properties
+---------------------------------------------
+
+Using the MonPropsMarker allows you to permanantly alter or mark a monster that
+the marker is placed upon. The options currently available are:
+
+* description: If this property is set, the monster's full description (accessed
+      via the 'xv' command) will be set to whatever string you pass it.
+
+* quote: Setting this property to a string will set the monster's quote.
+
+* monster_dies_lua_key: If this property is set to a function, that function
+      will be executed upon the monster's death.
+
 Lua API reference
 -----------------
 a. The Map.

@@ -32,13 +32,8 @@
 #include "religion.h"
 #include "spells4.h"
 #include "spl-cast.h"
-#include "spl-util.h"
 #include "terrain.h"
 
-
-#ifdef TARGET_OS_DOS
-#include <conio.h>
-#endif
 
 struct spell_desc
 {
@@ -859,7 +854,6 @@ int spell_type2skill(unsigned int spelltype)
     case SPTYP_TRANSMUTATION:  return (SK_TRANSMUTATIONS);
     case SPTYP_NECROMANCY:     return (SK_NECROMANCY);
     case SPTYP_SUMMONING:      return (SK_SUMMONINGS);
-    case SPTYP_DIVINATION:     return (SK_DIVINATIONS);
     case SPTYP_TRANSLOCATION:  return (SK_TRANSLOCATIONS);
     case SPTYP_POISON:         return (SK_POISON_MAGIC);
     case SPTYP_EARTH:          return (SK_EARTH_MAGIC);
@@ -867,36 +861,10 @@ int spell_type2skill(unsigned int spelltype)
 
     default:
     case SPTYP_HOLY:
+    case SPTYP_DIVINATION:
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "spell_type2skill: called with spelltype %u",
              spelltype );
-#endif
-        return (-1);
-    }
-}                               // end spell_type2skill()
-
-int spell_skill2type(unsigned int skill)
-{
-    switch (skill)
-    {
-    case SK_CONJURATIONS:   return (SPTYP_CONJURATION);
-    case SK_ENCHANTMENTS:   return (SPTYP_ENCHANTMENT);
-    case SK_FIRE_MAGIC:     return (SPTYP_FIRE);
-    case SK_ICE_MAGIC:      return (SPTYP_ICE);
-    case SK_TRANSMUTATIONS: return (SPTYP_TRANSMUTATION);
-    case SK_NECROMANCY:     return (SPTYP_NECROMANCY);
-    case SK_SUMMONINGS:     return (SPTYP_SUMMONING);
-    case SK_DIVINATIONS:    return (SPTYP_DIVINATION);
-    case SK_TRANSLOCATIONS: return (SPTYP_TRANSLOCATION);
-    case SK_POISON_MAGIC:   return (SPTYP_POISON);
-    case SK_EARTH_MAGIC:    return (SPTYP_EARTH);
-    case SK_AIR_MAGIC:      return (SPTYP_AIR);
-
-    default:
-    case SPTYP_HOLY:
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "spell_skill2type: called with skill %u",
-             skill);
 #endif
         return (-1);
     }

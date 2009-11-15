@@ -1721,7 +1721,7 @@ static int _spell_weight(spell_type spell)
 
 // When randomly picking a book for acquirement, use the sum of the
 // weights of all unknown spells in the book.
-static int _book_weight(int book)
+static int _book_weight(book_type book)
 {
     ASSERT(book >= 0 && book <= MAX_FIXED_BOOK);
 
@@ -1843,7 +1843,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 weights[bk] = 0;
                 continue;
             }
-            weights[bk]    = _book_weight(bk);
+            weights[bk]    = _book_weight(static_cast<book_type>(bk));
             total_weights += weights[bk];
         }
 

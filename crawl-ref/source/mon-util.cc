@@ -1443,9 +1443,31 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
     return (retval);
 }
 
-void define_monster(int index)
+static void _get_spells(mon_spellbook_type& book, monsters *mon)
 {
-    define_monster(menv[index]);
+    if (book == MST_NO_SPELLS && mons_class_flag(mon->type, M_SPELLCASTER))
+    {
+        mon_spellbook_type multi_book[6];
+        if (_get_spellbook_list(multi_book, mon->type))
+        {
+            do
+                book = multi_book[random2(6)];
+            while (book == MST_NO_SPELLS);
+        }
+    }
+
+    mon->load_spells(book);
+
+    // (Dumb) special casing to give ogre mages Haste Other. -cao
+    if (mon->type == MONS_OGRE_MAGE)
+        mon->spells[0] = SPELL_HASTE_OTHER;
+
+    mon->bind_spell_flags();
+}
+
+void define_monster(int midx)
+{
+    define_monster(menv[midx]);
 }
 
 // Generate a shiny new and unscarred monster.
@@ -1562,19 +1584,6 @@ void define_monster(monsters &mons)
     if (col == BLACK)
         col = random_colour();
 
-    if (m->sec == MST_NO_SPELLS && mons_class_flag(mons.type, M_SPELLCASTER))
-    {
-        mon_spellbook_type book[6];
-        if (_get_spellbook_list(book, mons.type))
-        {
-            do
-                spells = book[random2(6)];
-            while (spells == MST_NO_SPELLS);
-        }
-    }
-    else
-        spells = m->sec;
-
     // Some calculations.
     hp     = hit_points(hd, m->hpdice[1], m->hpdice[2]);
     hp    += m->hpdice[3];
@@ -1599,13 +1608,8 @@ void define_monster(monsters &mons)
     mons.experience = 0L;
     mons.colour     = col;
 
-    mons.load_spells(spells);
-
-    // (Dumb) special casing to give ogre mages Haste Other. -cao
-    if (mons.type == MONS_OGRE_MAGE)
-        mons.spells[0] = SPELL_HASTE_OTHER;
-
-    mons.bind_spell_flags();
+    spells = m->sec;
+    _get_spells(spells, &mons);
 
     // Reset monster enchantments.
     mons.enchantments.clear();
@@ -2258,6 +2262,11 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
         return true;
+    case SPELL_BLINK_AWAY:
+    case SPELL_BLINK_RANGE:
+        return true;
+    case SPELL_BLINK_OTHER:
+        return !targ_sanct && targ_adj;
     case SPELL_BLINK:
         return targ_adj;
     case SPELL_TOMB_OF_DOROKLOHE:
