@@ -267,6 +267,7 @@ namespace arena
 #ifdef USE_TILE
         TileNewLevel(true);
 #endif
+        env.markers.activate_all();
     }
 
     std::string find_monster_spec()
