@@ -122,6 +122,9 @@ void blink_other_close(actor* victim, const coord_def &target)
         return;
     bool success = victim->blink_to(dest);
     ASSERT(success);
+#ifndef DEBUG
+    UNUSED(success);
+#endif
 }
 
 // Blink the monster away from its foe.
@@ -135,6 +138,9 @@ void blink_away(monsters* mon)
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success);
+#ifndef DEBUG
+    UNUSED(success);
+#endif
 }
 
 // Blink the monster within range but at distance to its foe.
@@ -148,6 +154,9 @@ void blink_range(monsters* mon)
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success);
+#ifndef DEBUG
+    UNUSED(success);
+#endif
 }
 
 // Blink the monster close to its foe.
@@ -161,6 +170,9 @@ void blink_close(monsters* mon)
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success);
+#ifndef DEBUG
+    UNUSED(success);
+#endif
 }
 
 bool random_near_space(const coord_def& origin, coord_def& target,
