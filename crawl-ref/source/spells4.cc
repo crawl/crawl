@@ -340,11 +340,7 @@ void cast_phase_shift(int pow)
     else
         mpr("Your feel the material plane grow further away.");
 
-    you.duration[DUR_PHASE_SHIFT] += (5 + random2(pow)) * BASELINE_DELAY;
-
-    if (you.duration[DUR_PHASE_SHIFT] > 30 * BASELINE_DELAY)
-        you.duration[DUR_PHASE_SHIFT] = 30 * BASELINE_DELAY;
-
+    you.increase_duration(DUR_PHASE_SHIFT, 5 + random2(pow), 30);
     you.redraw_evasion = true;
 }
 
@@ -363,13 +359,8 @@ void cast_see_invisible(int pow)
         autotoggle_autopickup(false);
     }
 
-    int duration = 10 + random2(2 + (pow / 2));
-
     // No message if you already are under the spell.
-    you.duration[DUR_SEE_INVISIBLE] += duration * BASELINE_DELAY;
-
-    if (you.duration[DUR_SEE_INVISIBLE] > 100 * BASELINE_DELAY)
-        you.duration[DUR_SEE_INVISIBLE] = 100 * BASELINE_DELAY;
+    you.increase_duration(DUR_SEE_INVISIBLE, 10 + random2(2 + pow/2), 100);
 }
 
 // The description idea was okay, but this spell just isn't that exciting.
@@ -613,12 +604,11 @@ void cast_ignite_poison(int pow)
                  you.weapon()->name(DESC_CAP_YOUR).c_str());
 
             you.wield_change = true;
-            int increase = (1 + you.duration[DUR_WEAPON_BRAND]/2)
-                            * BASELINE_DELAY;
-            you.duration[DUR_WEAPON_BRAND] += increase;
 
-            if (you.duration[DUR_WEAPON_BRAND] > 80 * BASELINE_DELAY)
-                you.duration[DUR_WEAPON_BRAND] = 80 * BASELINE_DELAY;
+            int increase = 1 + you.duration[DUR_WEAPON_BRAND]
+                               /(2 * BASELINE_DELAY);
+
+            you.increase_duration(DUR_WEAPON_BRAND, increase, 80);
         }
     }
 
@@ -760,12 +750,7 @@ void cast_silence(int pow)
 
     you.attribute[ATTR_WAS_SILENCED] = 1;
 
-    int value = 10 + random2avg( pow, 2 );
-    value *= BASELINE_DELAY;
-    you.duration[DUR_SILENCE] += value;
-
-    if (you.duration[DUR_SILENCE] > 100 * BASELINE_DELAY)
-        you.duration[DUR_SILENCE] = 100 * BASELINE_DELAY;
+    you.increase_duration(DUR_SILENCE, 10 + random2avg(pow,2), 100);
 
     if (you.beheld())
     {
@@ -1914,19 +1899,16 @@ void cast_condensation_shield(int pow)
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
         {
             mpr("The disc of vapour around you crackles some more.");
-            int addition = (5 + roll_dice(2, 3)) * BASELINE_DELAY;
-            you.duration[DUR_CONDENSATION_SHIELD] += addition;
+            you.increase_duration(DUR_CONDENSATION_SHIELD,
+                                  5 + roll_dice(2,3), 30);
         }
         else
         {
             mpr("A crackling disc of dense vapour forms in the air!");
-            int delay = (10 + roll_dice(2, pow / 5)) * BASELINE_DELAY;
-            you.duration[DUR_CONDENSATION_SHIELD] = 10 + roll_dice(2, pow / 5);
+            you.increase_duration(DUR_CONDENSATION_SHIELD,
+                                  10 + roll_dice(2, pow / 5), 30);
             you.redraw_armour_class = true;
         }
-
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 30 * BASELINE_DELAY)
-            you.duration[DUR_CONDENSATION_SHIELD] = 30 * BASELINE_DELAY;
     }
 }
 
@@ -2079,11 +2061,7 @@ void cast_stoneskin(int pow)
         you.redraw_armour_class = true;
     }
 
-    int addition = (10 + random2(pow) + random2(pow)) * BASELINE_DELAY;
-    you.duration[DUR_STONESKIN] += addition;
-
-    if (you.duration[DUR_STONESKIN] > 50 * BASELINE_DELAY)
-        you.duration[DUR_STONESKIN] = 50 * BASELINE_DELAY;
+    you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
 }
 
 bool do_slow_monster(monsters* mon, kill_category whose_kill)

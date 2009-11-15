@@ -1353,12 +1353,7 @@ bool cast_death_channel(int pow, god_type god)
 
         mpr("Malign forces permeate your being, awaiting release.");
 
-        int addition = 15 + random2(1 + (pow / 3));
-        addition *= BASELINE_DELAY;
-        you.duration[DUR_DEATH_CHANNEL] += addition;
-
-        if (you.duration[DUR_DEATH_CHANNEL] > 100 * BASELINE_DELAY)
-            you.duration[DUR_DEATH_CHANNEL] = 100 * BASELINE_DELAY;
+        you.increase_duration(DUR_DEATH_CHANNEL, 15 + random2(1 + pow/3), 100);
 
         if (god != GOD_NO_GOD)
             you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = static_cast<int>(god);
@@ -1396,14 +1391,15 @@ void you_teleport(void)
     {
         mpr("You feel strangely unstable.");
 
-        you.duration[DUR_TELEPORT] = 3 + random2(3);
+        int teleport_delay = 3 + random2(3);
+
         if (you.level_type == LEVEL_ABYSS && !one_chance_in(5))
         {
             mpr("You have a feeling this translocation may take a while to kick in...");
-            you.duration[DUR_TELEPORT] += 5 + random2(10);
+            teleport_delay += 5 + random2(10);
         }
 
-        you.duration[DUR_TELEPORT] *= BASELINE_DELAY;
+        you.set_duration(DUR_TELEPORT, teleport_delay);
     }
 }
 

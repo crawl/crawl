@@ -1316,7 +1316,7 @@ static bool _do_ability(const ability_def& abil)
         else
         {
             zapping(ZAP_SPIT_POISON, pow, beam);
-            you.duration[DUR_BREATH_WEAPON] = (3 + random2(5)) * BASELINE_DELAY;
+            you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5) );
         }
         break;
     }
@@ -1421,10 +1421,8 @@ static bool _do_ability(const ability_def& abil)
 
         if (abil.ability != ABIL_SPIT_ACID)
         {
-            you.duration[DUR_BREATH_WEAPON] =
-                3 + random2(4) + random2(30 - you.experience_level) / 2;
-
-            you.duration[DUR_BREATH_WEAPON] *= BASELINE_DELAY;
+            you.increase_duration(DUR_BREATH_WEAPON,
+                      3 + random2(4) + random2(30 - you.experience_level) / 2);
 
             if (abil.ability == ABIL_BREATHE_STEAM)
                 you.duration[DUR_BREATH_WEAPON] /= 2;
@@ -1546,7 +1544,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_END_TRANSFORMATION:
         mpr("You feel almost normal.");
-        you.duration[DUR_TRANSFORMATION] = 2 * BASELINE_DELAY;
+        you.set_duration(DUR_TRANSFORMATION, 2);
         break;
 
     // INVOCATIONS:
@@ -2025,12 +2023,9 @@ static bool _do_ability(const ability_def& abil)
         }
 
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
-        int addition = you.skills[SK_INVOCATIONS] * 3 / 2 + 3;
-
-        you.duration[DUR_SLIMIFY] += addition * BASELINE_DELAY;
-
-        if (you.duration[DUR_SLIMIFY] > 100 * BASELINE_DELAY)
-            you.duration[DUR_SLIMIFY] = 100 * BASELINE_DELAY;
+        you.increase_duration(DUR_SLIMIFY,
+                              you.skills[SK_INVOCATIONS] * 3 / 2 + 3,
+                              100);
 
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;

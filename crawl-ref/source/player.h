@@ -526,6 +526,13 @@ public:
     void del_gold(int delta);
     void set_gold(int amount);
 
+    void increase_duration(duration_type dur, int turns, int cap = 0,
+                           const char* msg = NULL);
+    void set_duration(duration_type dur, int turns, int cap = 0,
+                      const char *msg = NULL);
+
+
+
 protected:
     void _removed_beholder();
     bool _possible_beholder(const monsters *mon) const;

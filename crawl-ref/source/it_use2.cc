@@ -328,12 +328,10 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
         // Now multiple invisiblity casts aren't as good. -- bwr
         if (!you.duration[DUR_INVIS])
-            you.duration[DUR_INVIS] = (15 + random2(pow)) * BASELINE_DELAY;
+            you.set_duration(DUR_INVIS, 15 + random2(pow), 100);
         else
-            you.duration[DUR_INVIS] += random2(pow) * BASELINE_DELAY;
+            you.increase_duration(DUR_INVIS, random2(pow), 100);
 
-        if (you.duration[DUR_INVIS] > 100 * BASELINE_DELAY)
-            you.duration[DUR_INVIS] = 100 * BASELINE_DELAY;
         break;
 
     case POT_PORRIDGE:          // oatmeal - always gluggy white/grey?
@@ -445,14 +443,10 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
     case POT_RESISTANCE:
         mpr("You feel protected.", MSGCH_DURATION);
-        you.duration[DUR_RESIST_FIRE]   +=
-            (random2(pow) + 35) * BASELINE_DELAY / factor;
-        you.duration[DUR_RESIST_COLD]   +=
-            (random2(pow) + 35) * BASELINE_DELAY / factor;
-        you.duration[DUR_RESIST_POISON] +=
-            (random2(pow) + 35) * BASELINE_DELAY / factor;
-        you.duration[DUR_INSULATION]    +=
-            (random2(pow) + 35) * BASELINE_DELAY/ factor;
+        you.increase_duration(DUR_RESIST_FIRE,   (random2(pow) + 35) / factor);
+        you.increase_duration(DUR_RESIST_COLD,   (random2(pow) + 35) / factor);
+        you.increase_duration(DUR_RESIST_POISON, (random2(pow) + 35) / factor);
+        you.increase_duration(DUR_INSULATION,    (random2(pow) + 35) / factor);
 
         // Just one point of contamination. These potions are really rare,
         // and contamination is nastier.

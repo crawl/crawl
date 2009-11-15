@@ -366,12 +366,8 @@ bool brand_weapon(brand_type which_brand, int power)
     else
         mprf("%s flashes.", weapon.name(DESC_CAP_YOUR).c_str());
 
-    const int dur_change = duration_affected + roll_dice(2, power);
-
-    you.duration[DUR_WEAPON_BRAND] += dur_change * BASELINE_DELAY;
-
-    if (you.duration[DUR_WEAPON_BRAND] > 50 * BASELINE_DELAY)
-        you.duration[DUR_WEAPON_BRAND] = 50 * BASELINE_DELAY;
+    you.increase_duration(DUR_WEAPON_BRAND,
+                          duration_affected + roll_dice(2, power), 50);
 
     return (true);
 }

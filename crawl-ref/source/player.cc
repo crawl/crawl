@@ -4718,10 +4718,7 @@ bool confuse_player(int amount, bool resistable)
     }
 
     const int old_value = you.duration[DUR_CONF];
-    you.duration[DUR_CONF] += amount * BASELINE_DELAY;
-
-    if (you.duration[DUR_CONF] > 40 * BASELINE_DELAY)
-        you.duration[DUR_CONF] = 40 * BASELINE_DELAY;
+    you.increase_duration(DUR_CONF, amount, 40);
 
     if (you.duration[DUR_CONF] > old_value)
     {
@@ -4887,10 +4884,7 @@ bool napalm_player(int amount)
         return (false);
 
     const int old_value = you.duration[DUR_LIQUID_FLAMES];
-    you.duration[DUR_LIQUID_FLAMES] += amount * BASELINE_DELAY;
-
-    if (you.duration[DUR_LIQUID_FLAMES] > 100 * BASELINE_DELAY)
-        you.duration[DUR_LIQUID_FLAMES] = 100 * BASELINE_DELAY;
+    you.increase_duration(DUR_LIQUID_FLAMES, amount, 100);
 
     if (you.duration[DUR_LIQUID_FLAMES] > old_value)
         mpr("You are covered in liquid flames!", MSGCH_WARN);
@@ -7017,8 +7011,7 @@ void player::hibernate(int)
     viewwindow(false);
 
     // Do this *after* redrawing the view, or viewwindow() will no-op.
-    duration[DUR_SLEEP] = 3 + random2avg(5, 2);
-    duration[DUR_SLEEP] *= BASELINE_DELAY;
+    set_duration(DUR_SLEEP, 3 + random2avg(5, 2));
 }
 
 void player::put_to_sleep(int power)
@@ -7035,8 +7028,7 @@ void player::put_to_sleep(int power)
     viewwindow(false);
 
     // As above, do this after redraw.
-    duration[DUR_SLEEP] = 5 + random2avg(power / 10, 5);
-    duration[DUR_SLEEP] *= BASELINE_DELAY;
+    set_duration(DUR_SLEEP, 5 + random2avg(power/10, 5));
 }
 
 void player::awake()
@@ -7348,3 +7340,25 @@ void player::set_gold(int amount)
         shopping_list.gold_changed(old_gold, gold);
     }
 }
+
+void player::increase_duration(duration_type dur, int turns, int cap,
+                               const char* msg)
+{
+    if (msg)
+        mpr(msg);
+    cap *= BASELINE_DELAY;
+
+    you.duration[dur] += turns * BASELINE_DELAY;
+    if (cap && you.duration[dur] > cap)
+        you.duration[dur] = cap;
+}
+
+void player::set_duration(duration_type dur, int turns,
+                          int cap, const char * msg)
+{
+    you.duration[dur] = 0;
+    increase_duration(dur, turns, cap, msg);
+}
+
+
+

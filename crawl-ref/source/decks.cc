@@ -1389,13 +1389,14 @@ static void _portal_card(int power, deck_rarity_type rarity)
             controlled = true;
     }
 
-    int threshold = 6 * BASELINE_DELAY;
+    int threshold = 6;
     const bool was_controlled = player_control_teleport();
     const bool short_control = (you.duration[DUR_CONTROL_TELEPORT] > 0
-                                && you.duration[DUR_CONTROL_TELEPORT] < threshold);
+                                && you.duration[DUR_CONTROL_TELEPORT]
+                                                < threshold * BASELINE_DELAY);
 
     if (controlled && (!was_controlled || short_control))
-        you.duration[DUR_CONTROL_TELEPORT] = threshold; // Long enough to kick in.
+        you.set_duration(DUR_CONTROL_TELEPORT, threshold); // Long enough to kick in.
 
     if (instant)
         you_teleport_now( true );
@@ -1736,13 +1737,13 @@ static void _battle_lust_card(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
     if (power_level >= 2)
     {
-        you.duration[DUR_SLAYING] = (random2(power/6) + 1) * BASELINE_DELAY;
-        mpr("You feel deadly.");
+        you.set_duration(DUR_SLAYING, random2(power/6) + 1,
+                         0, "You feel deadly.");
     }
     else if (power_level == 1)
     {
-        you.duration[DUR_BUILDING_RAGE] = 1 * BASELINE_DELAY;
-        mpr("You feel your rage building.");
+        you.set_duration(DUR_BUILDING_RAGE, 1,
+                         0, "You feel your rage building.");
     }
     else if (power_level == 0)
         potion_effect(POT_MIGHT, random2(power/4));
@@ -1821,8 +1822,7 @@ static void _helm_card(int power, deck_rarity_type rarity)
             if (x_chance_in_y(num_resists, 4-i))
             {
                 // Add a temporary resistance.
-                int duration = (random2(power/7) + 1) * BASELINE_DELAY;
-                you.duration[possible_resists[i]] += duration;
+                you.increase_duration(possible_resists[i], random2(power/7) +1);
                 msg::stream << "You feel resistant to " << resist_names[i]
                             << '.' << std::endl;
                 --num_resists;
@@ -1880,9 +1880,7 @@ static void _shadow_card(int power, deck_rarity_type rarity)
     {
         mpr(you.duration[DUR_STEALTH] ? "You feel more catlike."
                                       : "You feel stealthy.");
-        int duration = (random2(power/4) + 1 ) * BASELINE_DELAY;
-
-        you.duration[DUR_STEALTH] += duration;
+        you.increase_duration(DUR_STEALTH, random2(power/4) + 1);
     }
 
     potion_effect(POT_INVISIBILITY, random2(power/4));
@@ -2212,8 +2210,7 @@ static void _sage_card(int power, deck_rarity_type rarity)
         mpr("You feel omnipotent.");  // All skills maxed.
     else
     {
-        you.duration[DUR_SAGE] = random2(1800) + 200;
-        you.duration[DUR_SAGE] *= BASELINE_DELAY;
+        you.set_duration(DUR_SAGE, random2(1800) + 200);
         you.sage_bonus_skill   = static_cast<skill_type>(result);
         you.sage_bonus_degree  = power / 25;
         mprf(MSGCH_PLAIN, "You feel studious about %s.", skill_name(result));
@@ -2329,8 +2326,8 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
         detect_traps( random2(power/4) );
     if (things_to_do[2])
     {
-        mpr("You feel telepathic!");
-        you.duration[DUR_TELEPATHY] = random2(power/4) * BASELINE_DELAY;
+        you.set_duration(DUR_TELEPATHY, random2(power/4), 0,
+                         "You feel telepathic!");
     }
 }
 
@@ -2924,8 +2921,8 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_BARGAIN:
-        you.duration[DUR_BARGAIN] += (random2(power) + random2(power) + 2)
-                                     * BASELINE_DELAY;
+        you.increase_duration(DUR_BARGAIN,
+                              random2(power) + random2(power) + 2);
         break;
 
     case CARD_MAP:

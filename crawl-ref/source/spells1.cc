@@ -1271,10 +1271,9 @@ void extension(int pow)
         mpr("Your ring of flames roars with new vigour!");
     }
 
-    if ( !(you.duration[DUR_WEAPON_BRAND] < 1
-                 || you.duration[DUR_WEAPON_BRAND] > 80 * BASELINE_DELAY) )
+    if ( !you.duration[DUR_WEAPON_BRAND] < 1)
     {
-        you.duration[DUR_WEAPON_BRAND] += (5 + random2(8)) * BASELINE_DELAY;
+        you.increase_duration(DUR_WEAPON_BRAND, 5 + random2(8), 80);
     }
 
     if (you.duration[DUR_SWIFTNESS])
@@ -1300,9 +1299,8 @@ void extension(int pow)
             || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT))
     {
         mpr("Your transformation has been extended.");
-        you.duration[DUR_TRANSFORMATION] += random2(pow) * BASELINE_DELAY;
-        if (you.duration[DUR_TRANSFORMATION] > 100 * BASELINE_DELAY)
-            you.duration[DUR_TRANSFORMATION] = 100 * BASELINE_DELAY;
+        you.increase_duration(DUR_TRANSFORMATION, random2(pow), 100,
+                              "Your transformation has been extended.");
 
         // Give a warning if it won't last long enough for the
         // timeout messages.
@@ -1327,18 +1325,6 @@ void extension(int pow)
 
     if (contamination)
         contaminate_player( contamination, true );
-}
-
-static void _increase_duration(duration_type dur, int amount, int cap,
-                               const char* msg)
-{
-    if (msg)
-        mpr(msg);
-    cap *= BASELINE_DELAY;
-
-    you.duration[dur] += amount * BASELINE_DELAY;
-    if (you.duration[dur] > cap)
-        you.duration[dur] = cap;
 }
 
 void ice_armour(int pow, bool extending)
@@ -1371,8 +1357,8 @@ void ice_armour(int pow, bool extending)
         you.redraw_armour_class = true;
     }
 
-    _increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
-                       NULL);
+    you.increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
+                          NULL);
 }
 
 void stone_scales(int pow)
@@ -1396,21 +1382,21 @@ void stone_scales(int pow)
         you.redraw_armour_class = true;
     }
 
-    _increase_duration(DUR_STONEMAIL, 20 + random2(pow) + random2(pow), 100,
-                       NULL);
+    you.increase_duration(DUR_STONEMAIL, 20 + random2(pow) + random2(pow), 100,
+                          NULL);
     burden_change();
 }
 
 void missile_prot(int pow)
 {
-    _increase_duration(DUR_REPEL_MISSILES, 8 + roll_dice( 2, pow ), 100,
-                       "You feel protected from missiles.");
+    you.increase_duration(DUR_REPEL_MISSILES, 8 + roll_dice( 2, pow ), 100,
+                          "You feel protected from missiles.");
 }
 
 void deflection(int pow)
 {
-    _increase_duration(DUR_DEFLECT_MISSILES, 15 + random2(pow), 100,
-                       "You feel very safe from missiles.");
+    you.increase_duration(DUR_DEFLECT_MISSILES, 15 + random2(pow), 100,
+                          "You feel very safe from missiles.");
 }
 
 void remove_regen(bool divine_ability)
@@ -1426,8 +1412,8 @@ void remove_regen(bool divine_ability)
 
 void cast_regen(int pow, bool divine_ability)
 {
-    _increase_duration(DUR_REGENERATION, 5 + roll_dice(2, pow / 3 + 1), 100,
-                       "Your skin crawls.");
+    you.increase_duration(DUR_REGENERATION, 5 + roll_dice(2, pow / 3 + 1), 100,
+                          "Your skin crawls.");
 
     if (divine_ability)
     {
@@ -1457,8 +1443,8 @@ void cast_swiftness(int power)
 
     // [dshaligram] Removed the on-your-feet bit.  Sounds odd when
     // you're levitating, for instance.
-    _increase_duration(DUR_SWIFTNESS, 20 + random2(power), 100,
-                       "You feel quick.");
+    you.increase_duration(DUR_SWIFTNESS, 20 + random2(power), 100,
+                          "You feel quick.");
     did_god_conduct(DID_HASTY, 8, true);
 }
 
@@ -1494,20 +1480,20 @@ void cast_fly(int power)
 
 void cast_insulation(int power)
 {
-    _increase_duration(DUR_INSULATION, 10 + random2(power), 100,
-                       "You feel insulated.");
+    you.increase_duration(DUR_INSULATION, 10 + random2(power), 100,
+                          "You feel insulated.");
 }
 
 void cast_resist_poison(int power)
 {
-    _increase_duration(DUR_RESIST_POISON, 10 + random2(power), 100,
-                       "You feel resistant to poison.");
+    you.increase_duration(DUR_RESIST_POISON, 10 + random2(power), 100,
+                          "You feel resistant to poison.");
 }
 
 void cast_teleport_control(int power)
 {
-    _increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50,
-                       "You feel in control.");
+    you.increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50,
+                          "You feel in control.");
 }
 
 void cast_ring_of_flames(int power)
@@ -1518,9 +1504,9 @@ void cast_ring_of_flames(int power)
         mpr("Your spell sizzles in the rain.");
         return;
     }
-    _increase_duration(DUR_FIRE_SHIELD,
-                       5 + (power / 10) + (random2(power) / 5), 50,
-                       "The air around you leaps into flame!");
+    you.increase_duration(DUR_FIRE_SHIELD,
+                          5 + (power / 10) + (random2(power) / 5), 50,
+                          "The air around you leaps into flame!");
     manage_fire_shield();
 }
 
@@ -1530,7 +1516,8 @@ void cast_confusing_touch(int power)
                 << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
                 << "." << std::endl;
 
-    _increase_duration(DUR_CONFUSING_TOUCH, 5 + (random2(power) / 5), 50, NULL);
+    you.increase_duration(DUR_CONFUSING_TOUCH, 5 + (random2(power) / 5),
+                          50, NULL);
 
 }
 
@@ -1552,7 +1539,8 @@ bool cast_sure_blade(int power)
         else if (you.duration[DUR_SURE_BLADE] < 25)
             mpr("Your bond becomes stronger.");
 
-        _increase_duration(DUR_SURE_BLADE, 8 + (random2(power) / 10), 25, NULL);
+        you.increase_duration(DUR_SURE_BLADE, 8 + (random2(power) / 10),
+                              25, NULL);
         success = true;
     }
 

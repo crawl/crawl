@@ -559,10 +559,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
                 mpr("You feel you'll be a pig longer.");
             else
                 mpr("You extend your transformation's duration.");
-            you.duration[DUR_TRANSFORMATION] += random2(pow) * BASELINE_DELAY;
-
-            if (you.duration[DUR_TRANSFORMATION] > 100 * BASELINE_DELAY)
-                you.duration[DUR_TRANSFORMATION] = 100 * BASELINE_DELAY;
+            you.increase_duration(DUR_TRANSFORMATION, random2(pow), 100);
 
             return (true);
         }
@@ -756,7 +753,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     // Update your status.
     you.attribute[ATTR_TRANSFORMATION] = which_trans;
-    you.duration[DUR_TRANSFORMATION]   = dur * BASELINE_DELAY;
+    you.set_duration(DUR_TRANSFORMATION, dur);
     you.symbol = symbol;
     you.colour = colour;
 
