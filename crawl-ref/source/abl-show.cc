@@ -1316,7 +1316,7 @@ static bool _do_ability(const ability_def& abil)
         else
         {
             zapping(ZAP_SPIT_POISON, pow, beam);
-            you.duration[DUR_BREATH_WEAPON] = 3 + random2(5);
+            you.duration[DUR_BREATH_WEAPON] = (3 + random2(5)) * BASELINE_DELAY;
         }
         break;
     }
@@ -1423,6 +1423,8 @@ static bool _do_ability(const ability_def& abil)
         {
             you.duration[DUR_BREATH_WEAPON] =
                 3 + random2(4) + random2(30 - you.experience_level) / 2;
+
+            you.duration[DUR_BREATH_WEAPON] *= BASELINE_DELAY;
 
             if (abil.ability == ABIL_BREATHE_STEAM)
                 you.duration[DUR_BREATH_WEAPON] /= 2;
