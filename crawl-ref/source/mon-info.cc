@@ -48,7 +48,9 @@ monster_info::monster_info(const monsters *m)
     if (mons_looks_distracted(m))  m_brands |= (1 << MB_DISTRACTED);
     if (m->berserk())              m_brands |= (1 << MB_BERSERK);
 
-    get_mons_glyph(m_mon, &m_glyph, &m_glyph_colour);
+    glyph g = get_mons_glyph(m_mon);
+    m_glyph = g.ch;
+    m_glyph_colour = g.col;
 
     mons_get_damage_level(m_mon, m_damage_desc, m_damage_level);
     // If no messages about wounds, don't display damage level either.

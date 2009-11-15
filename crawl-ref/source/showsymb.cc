@@ -65,7 +65,7 @@ void get_show_symbol(show_type object, unsigned *ch,
     *colour = real_colour(*colour);
 }
 
-int get_mons_colour(const monsters *mons)
+static int _get_mons_colour(const monsters *mons)
 {
     int col = mons->colour;
 
@@ -124,11 +124,12 @@ glyph get_item_glyph(const item_def *item)
     return (g);
 }
 
-void get_mons_glyph(const monsters *mons, unsigned *glych,
-                    unsigned short *glycol)
+glyph get_mons_glyph(const monsters *mons)
 {
-    *glycol = get_mons_colour(mons);
-    get_symbol(coord_def(0,0), show_type(mons), glych, glycol);
+    glyph g;
+    g.ch = mons_char(mons->type);
+    g.col = _get_mons_colour(mons);
+    return (g);
 }
 
 unsigned get_screen_glyph( int x, int y )

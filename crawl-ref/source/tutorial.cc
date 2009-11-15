@@ -1338,11 +1338,7 @@ void tutorial_first_monster(const monsters &mon)
             "by hovering your mouse over its tile, and read the monster "
             "description by clicking on it with your <w>right mouse button</w>."
 #else
-    unsigned ch;
-    unsigned short col;
-    get_mons_glyph(&mon, &ch, &col);
-
-    text += _colourize_glyph(col, ch);
+    text += _colourize_glyph(get_mons_glyph(&mon));
     text += " is a monster, usually depicted by a letter. Some typical "
             "early monsters look like <brown>r</brown>, <green>l</green>, "
             "<brown>K</brown> or <lightgrey>g</lightgrey>. ";
@@ -3234,10 +3230,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         text << "is a ";
 #else
-        unsigned short col;
-        get_mons_glyph(m, &ch, &col);
-
-        text << _colourize_glyph(col, ch) << " is a ";
+        text << _colourize_glyph(get_mons_glyph(m)) << " is a ";
 #endif
         text << m->name(DESC_PLAIN).c_str() << ". ";
 

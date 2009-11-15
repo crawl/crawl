@@ -302,7 +302,7 @@ void show_def::_update_monster(const monsters* mons)
 
     grid(e).cls = SH_MONSTER;
     grid(e).mons = mons->type;
-    grid(e).colour = get_mons_colour(mons);
+    grid(e).colour = get_mons_glyph(mons).col;
 
 #ifdef USE_TILE
     tile_place_monster(mons->pos().x, mons->pos().y, mons->mindex(), true);

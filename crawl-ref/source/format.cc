@@ -503,11 +503,9 @@ void formatted_string::add_glyph(const item_def *item)
 void formatted_string::add_glyph(const monsters *mons)
 {
     const int last_col = find_last_colour();
-    unsigned ch;
-    unsigned short col;
-    get_mons_glyph(mons, &ch, &col);
-    this->textcolor(col);
-    this->cprintf("%s", stringize_glyph(ch).c_str());
+    glyph g = get_mons_glyph(mons);
+    this->textcolor(g.col);
+    this->cprintf("%s", stringize_glyph(g.ch).c_str());
     this->textcolor(last_col);
 }
 
