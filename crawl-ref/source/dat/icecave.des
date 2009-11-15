@@ -280,17 +280,18 @@ ENDMAP
 
 # The destination vaults ############
 #
-# Currently, there are five cave vaults (each of weight 6) and three
-# cavern vaults (each of weight 5).
+# Currently, there are five cave vaults (each of weight 6, total 30), three
+# cavern vaults (each of weight 5, total 15) and two ice statue gardens (weight
+# 5, total 10).
 
-############################################################################
-# small caves
+###############################################################################
+# The small caves.
 #
 # All have the starting point next to the exit, so you can always retreat;
 # a middle point/area where there is some loot; and the end, where there is a
 # bigger challenge and some major loot. Ideally weaker characters attempt
 # to overcome the midpoint and then go back to dungeon, and strong characters
-# can try to clear the whole cave.
+# can try to clear the whole cave. The cavey parts should have no chokepoints.
 
 # Foes: animals + frost giant & an ice statue.
 # Loot: heavy weapons and rC gear wearable by big races,
@@ -620,7 +621,7 @@ MONS:   grizzly bear simulacrum / bear simulacrum / dragon simulacrum /\
         human simulacrum / golden dragon simulacrum w:1
 MONS:   ice fiend w:2 / necromancer
 ITEM:   any potion / any scroll / any weapon good_item / any armour good_item
-KFEAT: ' = alarm trap / net trap / arrow trap / bolt trap w:5 / floor w:5
+KFEAT:  ' = alarm trap / net trap / arrow trap / bolt trap w:5 / floor w:5
 : ice_cave_colours(_G)
 : ice_cave_milestone(_G)
 : ice_cave_random_monster_list_undead_demon(_G)
@@ -675,7 +676,7 @@ ccccS.ccccc.Scccc
 ENDMAP
 
 ############################################################################
-# sprawling caverns
+# The sprawling caverns.
 #
 # A winding, tight cavern with a hard challenge at the end. You can always
 # go back to the beginning to retreat.
@@ -925,4 +926,120 @@ x::xx;;;xx  xx|x.xx...xx;xx
 x:::..;xx   xxx....xxxxxxx
 xx:..xxx     xxxxxxx
  xxxxxx
+ENDMAP
+
+###############################################################################
+# The ice statue gardens.
+#
+# These rely on devious placement of ice statues and forcing players to face
+# them (if they want loot, that is).
+
+NAME:   ice_cave_statue_garden_01
+TAGS:   ice_cave no_item_gen no_monster_gen no_pool_fixup
+LFLAGS: no_tele_control
+WEIGHT: 5
+ORIENT: encompass
+MONS:   ice beast
+MONS:   ice statue
+{{
+-- Find the slave of the teleporter and move to it.
+local function teleporter (data, triggerable, triggerer, marker, ev)
+  local position = dgn.point(marker:pos())
+  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+    data.teleport_spot)
+
+  -- In order to make you.moveto safe(ish), teleport anyy monster at the
+  -- destination randomly.
+  local monster = dgn.mons_at(my_slaves[1].x, my_slaves[1].y)
+  if monster ~= nil then
+    monster.random_teleport()
+  end
+
+  -- XXX: This is still unsafe! Should be replaced with aimed teleport.
+  you.moveto(my_slaves[1].x, my_slaves[1].y)
+  crawl.mpr("Your surroundings suddenly seem different!")
+
+  -- In order to mimic a normal teleport, even though this is certainly not.
+  dgn.apply_area_cloud(position.x, position.y, 1, 4, 1, 1,
+    "translocational energy", "you", -1)
+end
+
+-- Lua marker magic!
+local m_marker = TriggerableFunction:new {
+  func=teleporter,
+  data = {teleport_spot=1},
+  repeated=true }
+m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
+
+lua_marker('M', m_marker)
+
+-- And the slave.
+lua_marker('m', portal_desc { teleport_spot=1})
+}}
+COLOUR: M = yellow
+SUBST:  M = .
+SUBST:  m = .
+: dgn.set_random_mon_list("ice beast w:90 / nothing")
+: ice_cave_colours(_G)
+: ice_cave_milestone(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
+xxx.........xxxxxxxxxxxccccccccccccc.........ccc
+xx...G.M.G...xxxxxxxxxxcccccccccccc...G.|.G...cc
+xx....*.*....xxxxxxxxxxcccccccccccc....*.*....cc
+x......*......xxxxxxxxxccccccccccc......*......c
+x.1..G.1.G..1.xxxxxxxxxccccccccccc....2...2....c
+x.............xxxxxxxxxccccccccccc.............c
+xx..1.....1..xxxxxxxxxxcccccccccccc...........cc
+xx...........xxxxxxxxxxcccccccccccc...........cc
+xx.1...A...1.xxxxxxxxxxcccccccccccc.....m.....cc
+xxx.........xxxxxxxxxxxccccccccccccc.........ccc
+xxxx...<...xxxxxxxxxxxxcccccccccccccc...<...cccc
+xxxxx.....xxxxxxxxxxxxxccccccccccccccc.....ccccc
+xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
+ENDMAP
+
+NAME:   ice_cave_statue_garden_02
+TAGS:   ice_cave no_item_gen no_monster_gen no_pool_fixup
+LFLAGS: no_tele_control
+WEIGHT: 5
+ORIENT: encompass
+MONS:   ice beast, ice statue
+: dgn.set_random_mon_list("ice beast w:90 / nothing")
+: ice_cave_colours(_G)
+: ice_cave_milestone(_G)
+MAP
+ccccccccccc
+c|*.....*|c
+c*.......*c
+c.........c
+c.........c
+c.........c
+cc.......cc
+ccc.....ccc
+ccccc2ccccc
+ccc.....ccc
+cc.......cc
+c.........c
+c.........c
+c.........c
+c.........c
+c2.......2c
+ccccc.ccccc
+x$*.....*$x
+x*.......*x
+x.........x
+x...111...x
+x...111...x
+xx.......xx
+xxx.....xxx
+xxxxx.xxxxx
+xxx.....xxx
+xx.......xx
+x....A....x
+x.........x
+x.........x
+x....<....x
+x.........x
+xxxxxxxxxxx
 ENDMAP
