@@ -1917,35 +1917,43 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_POISON_AMMUNITION:
-        brand_ammo(SPMSL_POISONED);
+        if (!brand_ammo(SPMSL_POISONED))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_FLAME_AMMUNITION:
-        brand_ammo(SPMSL_FLAME);
+        if (!brand_ammo(SPMSL_FLAME))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_FROST_AMMUNITION:
-        brand_ammo(SPMSL_FROST);
+        if (!brand_ammo(SPMSL_FROST))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_WARP_AMMUNITION:
-        brand_ammo(SPMSL_DISPERSAL);
+        if (!brand_ammo(SPMSL_DISPERSAL))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_SHOCKING_AMMUNITION:
-        brand_ammo(SPMSL_ELECTRIC);
+        if (!brand_ammo(SPMSL_ELECTRIC))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_EXPLODING_AMMUNITION:
-        brand_ammo(SPMSL_EXPLODING);
+        if (!brand_ammo(SPMSL_EXPLODING))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_REAPING_AMMUNITION:
-        brand_ammo(SPMSL_REAPING);
+        if (!brand_ammo(SPMSL_REAPING))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_RETURNING_AMMUNITION:
-        brand_ammo(SPMSL_RETURNING);
+        if (!brand_ammo(SPMSL_RETURNING))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     // Transformations.
