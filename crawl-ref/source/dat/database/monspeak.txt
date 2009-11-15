@@ -1725,6 +1725,16 @@ Donald
 @_hostile_adventurer_@
 %%%%
 ############ DOWAN ### A vain elf caster, twin brother of Duvessa
+twin_died Dowan
+
+VISUAL:@The_monster@ shakes with grief.
+
+@The_monster@ says, "Magic will overcome all!"
+
+@The_monster@ says, "Her death will not be in vain!"
+
+@The_monster@ says, "How can I live without her?"
+%%%%
 Dowan
 
 @_Dowan_common_@
@@ -1787,6 +1797,22 @@ Duane
 @_mercenary_guard_@
 %%%%
 ############ DUVESSA ### An over-confident elf fighter, twin sister of Dowan
+twin_died Duvessa
+
+VISUAL:@The_monster@ shakes in a combination of rage and grief.
+
+VISUAL:@The_monster@ grits her teeth and focuses.
+
+@The_monster@ says, "The sword shall overcome grief!"
+
+@The_monster@ says, "His death shall not be in vain!"
+
+@The_monster@ says, "I will avenge him!"
+
+@The_monster@ says, "I will journey to Hell to retrieve him!"
+
+VISUAL:@The_monster@ weeps.
+%%%%
 Duvessa
 
 @_Duvessa_common_@

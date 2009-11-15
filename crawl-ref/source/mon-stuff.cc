@@ -1112,6 +1112,7 @@ static void _elven_twin_died(monsters* twin)
 
     // Okay, let them climb stairs now.
     monster->props["can_climb"] = "yes";
+    monster->props["speech_key"] = "twin_died";
 
     // If you've stabbed one of them, the other one is likely asleep still.
     if (monster->asleep())
