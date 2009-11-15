@@ -474,8 +474,8 @@ bool brand_ammo(special_missile_type which_type)
         case SPMSL_REAPING:
             if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_REAPING))
             {
-                mprf("%s %s of rotten flesh!", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "smells" : "smell");
+                mprf("%s %s briefly obscured by shadows.", old_desc,
+                    (you.inv[ammo].quantity == 1) ? "is" : "are");
 
                 if (ammo == you.equip[EQ_WEAPON])
                     you.wield_change = true;
