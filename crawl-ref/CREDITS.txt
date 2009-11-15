@@ -16,32 +16,33 @@ Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              R. Dan Henry              nyra
-Juha Arpiainen               Brendan Hickey            Dylan O'Donnell
-Roy Axenov                   Benoit Hudson             Stefan O'Rear
-Max Bane                     Sylvia 'Onia' Hörnke      Yuuma Oohara
-Bill Beher                   Iainuki                   Pedro
-Alexander Beisig             Ilyak                     Erik Piper
-Stu Black                    Mitsuhiro Itakura         Lemuel Pitkin
-Erik Inge Bolsø              Mikko Juola               Derek Ray
-Peter Borgmann               Jarmo Kielosto            Remsleep
-Jude Brown                   Kornel Kisielewicz        Will Rogers
-Trent W. Buck                Daniel Klein              David Rose
-Terje Bø                     Vambola Kotkas            Sebastian Salman
-Aaron Curtis                 Vsevolod Kozlov           Brett Scarborough
-Denzi                        Ryan Kusnery              Darshan Shaligram
-Rachel Elizabeth Dillon      Jukka Kuusisto            Robert Shimmin
-Mike Drinen                  Maciej Lapinski           Sigurd
-Kieron Dunbar                Jordan Lewis              Edgar Simo
-Micha Elsner                 Icy Lich                  Solf
-Christopher Evenstar         Jesse Luehrs              Johan Strandell
-Ben Goetter                  Markus Maier              Roman Sêk
-Rob Grant                    Arien Malec               William Tanksley, Jr.
-John Greenberg               Paul Maloney              Marc H. Thoben
-GreyKnight                   Neil 'Mu' Middleton       Matt Titus
-Joshua Gross                 Shawn M Moore             Steven Wheeler
-Brian Haase                  Eva Myers                 Thomas Willem
-Shayne Halvorson             Wille Mäntylä             Jeremey Wilson
-Ciaran Hamilton              Erkki Nurmi               Yelve Yakut
-Chris Hamons                 Mattias Nyberg            Zooko
+Warwick Allison              Brendan Hickey             Dylan O'Donnell
+Juha Arpiainen               Benoit Hudson              Stefan O'Rear
+Roy Axenov                   Sylvia 'Onia' Hörnke       Yuuma Oohara
+Max Bane                     Iainuki                    Pedro
+Bill Beher                   Ilyak                      Erik Piper
+Alexander Beisig             Mitsuhiro Itakura          Lemuel Pitkin
+Stu Black                    William Tanksley, Jr.      Derek Ray
+Erik Inge Bolsø              Mikko Juola                Remsleep
+Peter Borgmann               Jarmo Kielosto             Will Rogers
+Jude Brown                   Kornel Kisielewicz         David Rose
+Trent W. Buck                Daniel Klein               Sebastian Salman
+Terje Bø                     Vambola Kotkas             Brett Scarborough
+Aaron Curtis                 Vsevolod Kozlov            Darshan Shaligram
+Denzi                        Ryan Kusnery               Johnny Shelley
+Rachel Elizabeth Dillon      Jukka Kuusisto             Robert Shimmin
+Mike Drinen                  Maciej Lapinski            Sigurd
+Kieron Dunbar                Jordan Lewis               Edgar Simo
+Micha Elsner                 Icy Lich                   Solf
+Christopher Evenstar         Jesse Luehrs               Johan Strandell
+Ben Goetter                  Markus Maier               Roman Sêk
+Rob Grant                    Arien Malec                Marc H. Thoben
+John Greenberg               Paul Maloney               Matt Titus
+GreyKnight                   Neil 'Mu' Middleton        Steven Wheeler
+Joshua Gross                 Shawn M Moore              Thomas Willem
+Brian Haase                  Eva Myers                  Jeremey Wilson
+Shayne Halvorson             Wille Mäntylä              Yelve Yakut
+Ciaran Hamilton              Erkki Nurmi                Zooko
+Chris Hamons                 Mattias Nyberg
+R. Dan Henry                 nyra
 
