@@ -1796,17 +1796,6 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
     return (pl);
 }
 
-int _ponderous_count(){
-    int count = 0;
-   
-    for( int slot = EQ_CLOAK ; slot <= EQ_BODY_ARMOUR; ++slot){
-        if (player_equip_ego_type( slot, SPARM_PONDEROUSNESS ))
-            count += 1;
-    }
-
-    return count;
-}
-
 // New player movement speed system... allows for a bit more than
 // "player runs fast" and "player walks slow" in that the speed is
 // actually calculated (allowing for centaurs to get a bonus from
@@ -1842,7 +1831,7 @@ int player_movement_speed(void)
             mv -= 2;
 
         // ponderous brand
-        mv += 2 * _ponderous_count();
+        mv += 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
         
         // In the air, can fly fast (should be lightly burdened).
         if (you.light_flight())
@@ -2115,7 +2104,7 @@ int player_evasion(ev_ignore_type evit)
     ev += scan_artefacts( ARTP_EVASION );
 
     // ponderous ev mod
-    ev -= 2 * _ponderous_count();
+    ev -= 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
     if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
         ev += (player_mutation_level(MUT_REPULSION_FIELD) * 2) - 1;
