@@ -39,8 +39,6 @@ void set_map_knowledge_detected_mons(int x, int y, bool detected = true);
 inline void set_map_knowledge_detected_mons(const coord_def& c, bool detected = true) {
     set_map_knowledge_detected_mons(c.x, c.y, detected);
 }
-void set_map_knowledge_col( int x, int y, int colour, int flags );
-void set_map_knowledge_col( int x, int y, int colour );
 
 bool is_map_knowledge_detected_item(int x, int y);
 inline bool is_map_knowledge_detected_item(const coord_def& c) {

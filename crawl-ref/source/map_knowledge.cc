@@ -106,11 +106,6 @@ void set_map_knowledge_obj(const coord_def& where, show_type obj)
 #endif
 }
 
-void set_map_knowledge_col( int x, int y, int colour )
-{
-    env.map_knowledge[x][y].colour = colour;
-}
-
 bool is_map_knowledge_item(int x, int y)
 {
     return (env.map_knowledge[x][y].object.cls == SH_ITEM);
