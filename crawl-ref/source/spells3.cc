@@ -1395,12 +1395,13 @@ void you_teleport(void)
         mpr("You feel strangely unstable.");
 
         you.duration[DUR_TELEPORT] = 3 + random2(3);
-
         if (you.level_type == LEVEL_ABYSS && !one_chance_in(5))
         {
             mpr("You have a feeling this translocation may take a while to kick in...");
             you.duration[DUR_TELEPORT] += 5 + random2(10);
         }
+
+        you.duration[DUR_TELEPORT] *= BASELINE_DELAY;
     }
 }
 
