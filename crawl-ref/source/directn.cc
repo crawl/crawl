@@ -673,15 +673,12 @@ void full_describe_view()
             std::string desc = "";
 #ifndef USE_TILE
             const coord_def e  = c - you.pos() + coord_def(8,8);
-            show_type object         = env.show(e);
-            unsigned short col = object.colour;
-            unsigned ch;
-            get_show_symbol(object, &ch, &col);
 
-            const std::string colour_str = colour_to_str(col);
+            glyph g = get_show_glyph(env.show(e));
+            const std::string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
-            desc += stringize_glyph(ch);
-            if (ch == '<')
+            desc += stringize_glyph(g.ch);
+            if (g.ch == '<')
                 desc += '<';
 
             desc += "</" + colour_str +">) ";

@@ -1688,9 +1688,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
 #ifndef USE_TILE
     const coord_def e = gc - you.pos() + coord_def(9,9);
-    unsigned ch;
-    unsigned short colour;
-    show_type object;
 #endif
 
     Options.tut_just_triggered = true;
@@ -2037,11 +2034,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        object = env.show(e);
-        colour = object.colour;
-        { unsigned short dummy; get_show_symbol( object, &ch, &dummy ); }
-
-        text << _colourize_glyph(colour, ch) << " ";
+        text << _colourize_glyph(get_show_glyph(env.show(e))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Stairs", gc);
@@ -2068,11 +2061,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         text << "These ";
 #ifndef USE_TILE
-        object = env.show(e);
-        colour = object.colour;
-        get_show_symbol( object, &ch, &colour );
-
-        text << _colourize_glyph(colour, ch);
+        text << _colourize_glyph(get_show_glyph(env.show(e)));
         text << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -2097,11 +2086,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         // FIXME: Branch entrance character is not being colored yellow.
-        object = env.show(e);
-        colour = object.colour;
-        { unsigned short dummy; get_show_symbol( object, &ch, &dummy ); }
-
-        text << _colourize_glyph(colour, ch) << " ";
+        text << _colourize_glyph(get_show_glyph(env.show(e))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Branch stairs", gc);
@@ -2135,11 +2120,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        object = env.show(e);
-        colour = object.colour;
-        { unsigned short dummy; get_show_symbol( object, &ch, &dummy ); }
-
-        text << _colourize_glyph(colour, ch) << " ";
+        text << _colourize_glyph(get_show_glyph(env.show(e))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Portal", gc);
@@ -2208,14 +2189,12 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "An unwary adventurer will occasionally stumble into one "
                 "of these nasty constructions";
 #ifndef USE_TILE
-        object = env.show(e);
-        colour = object.colour;
-        get_show_symbol( object, &ch, &colour );
+        glyph g = get_show_glyph(env.show(e));
 
-        if (ch == ' ' || colour == BLACK)
-            colour = LIGHTCYAN;
+        if (g.ch == ' ' || g.col == BLACK)
+            g.col = LIGHTCYAN;
 
-        text << " depicted by " << _colourize_glyph(colour, '^');
+        text << " depicted by " << _colourize_glyph(g.col, '^');
 #endif
         text << ". They can do physical damage (with darts or needles, for "
                 "example) or have other, more magical effects, like "
@@ -2225,10 +2204,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     case TUT_SEEN_ALTAR:
         text << "That ";
 #ifndef USE_TILE
-        object = env.show(e);
-        colour = object.colour;
-        get_show_symbol( object, &ch, &colour );
-        text << _colourize_glyph(colour, ch) << " ";
+        text << _colourize_glyph(get_show_glyph(env.show(e))) << " ";
 #else
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);

@@ -51,18 +51,21 @@ void get_symbol(const coord_def& where,
         *colour = real_colour(*colour);
 }
 
-void get_show_symbol(show_type object, unsigned *ch,
-                     unsigned short *colour)
+glyph get_show_glyph(show_type object)
 {
+    glyph g;
+    g.col = object.colour;
     if (object.cls < SH_MONSTER)
     {
-        *ch = get_feature_def(object).symbol;
+        const feature_def &fdef = get_feature_def(object);
+        g.ch = fdef.symbol;
 
         // Don't clobber with BLACK, because the colour should be already set.
-        if (get_feature_def(object).colour != BLACK)
-            *colour = get_feature_def(object).colour;
+        if (fdef.colour != BLACK)
+            g.col = fdef.colour;
     }
-    *colour = real_colour(*colour);
+    g.col = real_colour(g.col);
+    return (g);
 }
 
 static int _get_mons_colour(const monsters *mons)

@@ -13,13 +13,13 @@ unsigned get_feat_symbol(dungeon_feature_type feat);
 unsigned get_item_symbol(show_item_type it);
 glyph get_item_glyph(const item_def *item);
 glyph get_mons_glyph(const monsters *mons);
+glyph get_show_glyph(show_type object);
 
 unsigned get_screen_glyph( const coord_def &p );
 
 void get_symbol(const coord_def& where,
                 show_type object, unsigned *ch,
                 unsigned short *colour);
-void get_show_symbol(show_type object, unsigned *ch, unsigned short *colour);
 
 #endif
 
