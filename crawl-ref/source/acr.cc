@@ -1217,8 +1217,8 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     {
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_ENTER_ABYSS:
-        return yesno("If you enter this portal you may not be able to return."
-                     " Continue?", false, 'n');
+        return yesno("If you enter this portal you will not be able to return "
+                     "immediately. Continue?", false, 'n');
 
     default:
         return (true);
