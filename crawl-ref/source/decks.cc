@@ -2211,6 +2211,7 @@ static void _sage_card(int power, deck_rarity_type rarity)
     else
     {
         you.duration[DUR_SAGE] = random2(1800) + 200;
+        you.duration[DUR_SAGE] *= BASELINE_DELAY;
         you.sage_bonus_skill   = static_cast<skill_type>(result);
         you.sage_bonus_degree  = power / 25;
         mprf(MSGCH_PLAIN, "You feel studious about %s.", skill_name(result));
@@ -2327,7 +2328,7 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     if (things_to_do[2])
     {
         mpr("You feel telepathic!");
-        you.duration[DUR_TELEPATHY] = random2(power/4);
+        you.duration[DUR_TELEPATHY] = random2(power/4) * BASELINE_DELAY;
     }
 }
 
@@ -2921,7 +2922,8 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_BARGAIN:
-        you.duration[DUR_BARGAIN] += random2(power) + random2(power) + 2;
+        you.duration[DUR_BARGAIN] += (random2(power) + random2(power) + 2)
+                                     * BASELINE_DELAY;
         break;
 
     case CARD_MAP:

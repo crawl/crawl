@@ -2808,7 +2808,8 @@ void world_reacts()
         in_a_cloud();
 
     if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
-        detect_creatures( 1 + you.duration[DUR_TELEPATHY] / 2, true );
+        detect_creatures( 1 + you.duration[DUR_TELEPATHY] /
+                         (2 * BASELINE_DELAY), true );
 
     _decrement_durations();
 
