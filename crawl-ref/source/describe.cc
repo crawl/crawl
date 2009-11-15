@@ -2770,7 +2770,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     // descriptions in Lua vaults by using MonPropsMarker. This is also the
     // method used by set_feature_desc_long, etc. {due}
     if (mons.props.exists("description"))
-        inf.body << std::string(mons.props["description"]);
+        inf.body << mons.props["description"].get_string();
     // Don't get description for player ghosts.
     else if (mons.type != MONS_PLAYER_GHOST)
         inf.body << getLongDescription(db_name);
