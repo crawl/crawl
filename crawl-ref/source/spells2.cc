@@ -368,10 +368,10 @@ bool brand_weapon(brand_type which_brand, int power)
 
     const int dur_change = duration_affected + roll_dice(2, power);
 
-    you.duration[DUR_WEAPON_BRAND] += dur_change;
+    you.duration[DUR_WEAPON_BRAND] += dur_change * BASELINE_DELAY;
 
-    if (you.duration[DUR_WEAPON_BRAND] > 50)
-        you.duration[DUR_WEAPON_BRAND] = 50;
+    if (you.duration[DUR_WEAPON_BRAND] > 50 * BASELINE_DELAY)
+        you.duration[DUR_WEAPON_BRAND] = 50 * BASELINE_DELAY;
 
     return (true);
 }

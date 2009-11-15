@@ -2250,50 +2250,55 @@ static void _decrement_durations()
     }
 
     //jmf: More flexible weapon branding code.
-    if (you.duration[DUR_WEAPON_BRAND] > 1)
-        you.duration[DUR_WEAPON_BRAND]--;
-    else if (you.duration[DUR_WEAPON_BRAND] == 1)
+    int last_value = you.duration[DUR_WEAPON_BRAND];
+
+    if(last_value > 0)
     {
-        item_def& weapon = *you.weapon();
-        const int temp_effect = get_weapon_brand(weapon);
+        you.duration[DUR_WEAPON_BRAND] -= delay;
 
-        you.duration[DUR_WEAPON_BRAND] = 0;
-        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
-        std::string msg = weapon.name(DESC_CAP_YOUR);
-
-        switch (temp_effect)
+        if (you.duration[DUR_WEAPON_BRAND] <= 0)
         {
-        case SPWPN_VORPAL:
-            if (get_vorpal_type(weapon) == DVORP_SLICING)
-                msg += " seems blunter.";
-            else
-                msg += " feels lighter.";
-            break;
-        case SPWPN_FLAMING:
-            msg += " goes out.";
-            break;
-        case SPWPN_FREEZING:
-            msg += " stops glowing.";
-            break;
-        case SPWPN_VENOM:
-            msg += " stops dripping with poison.";
-            break;
-        case SPWPN_DRAINING:
-            msg += " stops crackling.";
-            break;
-        case SPWPN_DISTORTION:
-            msg += " seems straighter.";
-            break;
-        case SPWPN_PAIN:
-            msg += " seems less painful.";
-            break;
-        default:
-            msg += " seems inexplicably less special.";
-            break;
-        }
+            you.duration[DUR_WEAPON_BRAND] = 0;
+            item_def& weapon = *you.weapon();
+            const int temp_effect = get_weapon_brand(weapon);
 
-        mpr(msg.c_str(), MSGCH_DURATION);
-        you.wield_change = true;
+            set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
+            std::string msg = weapon.name(DESC_CAP_YOUR);
+
+            switch (temp_effect)
+            {
+            case SPWPN_VORPAL:
+                if (get_vorpal_type(weapon) == DVORP_SLICING)
+                    msg += " seems blunter.";
+                else
+                    msg += " feels lighter.";
+                break;
+            case SPWPN_FLAMING:
+                msg += " goes out.";
+                break;
+            case SPWPN_FREEZING:
+                msg += " stops glowing.";
+                break;
+            case SPWPN_VENOM:
+                msg += " stops dripping with poison.";
+                break;
+            case SPWPN_DRAINING:
+                msg += " stops crackling.";
+                break;
+            case SPWPN_DISTORTION:
+                msg += " seems straighter.";
+                break;
+            case SPWPN_PAIN:
+                msg += " seems less painful.";
+                break;
+            default:
+                msg += " seems inexplicably less special.";
+                break;
+            }
+
+            mpr(msg.c_str(), MSGCH_DURATION);
+            you.wield_change = true;
+        }
     }
 
     // Vampire bat transformations are permanent (until ended).

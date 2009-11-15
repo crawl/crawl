@@ -1272,9 +1272,9 @@ void extension(int pow)
     }
 
     if ( !(you.duration[DUR_WEAPON_BRAND] < 1
-                 || you.duration[DUR_WEAPON_BRAND] > 80) )
+                 || you.duration[DUR_WEAPON_BRAND] > 80 * BASELINE_DELAY) )
     {
-        you.duration[DUR_WEAPON_BRAND] += 5 + random2(8);
+        you.duration[DUR_WEAPON_BRAND] += (5 + random2(8)) * BASELINE_DELAY;
     }
 
     if (you.duration[DUR_SWIFTNESS])

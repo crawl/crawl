@@ -611,11 +611,12 @@ void cast_ignite_poison(int pow)
                  you.weapon()->name(DESC_CAP_YOUR).c_str());
 
             you.wield_change = true;
-            you.duration[DUR_WEAPON_BRAND] +=
-                1 + you.duration[DUR_WEAPON_BRAND] / 2;
+            int increase = (1 + you.duration[DUR_WEAPON_BRAND]/2)
+                            * BASELINE_DELAY;
+            you.duration[DUR_WEAPON_BRAND] += increase;
 
-            if (you.duration[DUR_WEAPON_BRAND] > 80)
-                you.duration[DUR_WEAPON_BRAND] = 80;
+            if (you.duration[DUR_WEAPON_BRAND] > 80 * BASELINE_DELAY)
+                you.duration[DUR_WEAPON_BRAND] = 80 * BASELINE_DELAY;
         }
     }
 
