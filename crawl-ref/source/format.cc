@@ -494,11 +494,9 @@ formatted_string formatted_string::substr(size_t start, size_t substr_length) co
 void formatted_string::add_glyph(const item_def *item)
 {
     const int last_col = find_last_colour();
-    unsigned ch;
-    unsigned short col;
-    get_item_glyph(item, &ch, &col);
-    this->textcolor(col);
-    this->cprintf("%s", stringize_glyph(ch).c_str());
+    glyph g = get_item_glyph(item);
+    this->textcolor(g.col);
+    this->cprintf("%s", stringize_glyph(g.ch).c_str());
     this->textcolor(last_col);
 }
 

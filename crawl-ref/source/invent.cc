@@ -191,13 +191,11 @@ std::string InvEntry::get_text() const
 
     if (InvEntry::show_glyph)
     {
-        unsigned glyph_char;
-        unsigned short glyph_col;
-        get_item_glyph( item, &glyph_char, &glyph_col );
+        glyph g = get_item_glyph(item);
 
-        const std::string col_string = colour_to_str(glyph_col);
+        const std::string col_string = colour_to_str(g.col);
         const std::string prefix = " (<" + col_string + ">"
-                                   + static_cast<char>(glyph_char)
+                                   + static_cast<char>(g.ch)
                                    + "</" + col_string + ">)";
         tstr << prefix;
     }

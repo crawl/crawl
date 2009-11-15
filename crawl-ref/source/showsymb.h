@@ -9,8 +9,8 @@ struct glyph
     unsigned short col;
 };
 
-void get_item_glyph(const item_def *item, unsigned *glych,
-                    unsigned short *glycol);
+glyph get_item_glyph(const item_def *item);
+
 void get_mons_glyph(const monsters *mons, unsigned *glych,
                     unsigned short *glycol);
 unsigned get_screen_glyph( int x, int y );

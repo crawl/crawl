@@ -3014,9 +3014,7 @@ void init_item_name_cache()
             item.special = 0;
 
             std::string    name = item.name(DESC_DBNAME, true, true);
-            unsigned       glyph;
-            unsigned short colour;
-            get_item_glyph(&item, &glyph, &colour);
+            glyph g = get_item_glyph(&item);
             destroy_item(o, true);
             lowercase(name);
 
@@ -3032,8 +3030,8 @@ void init_item_name_cache()
             if (item_names_cache.find(name) == item_names_cache.end())
             {
                 item_names_cache[name] = pair;
-                if (glyph)
-                    item_names_by_glyph_cache[glyph].push_back(name);
+                if (g.ch)
+                    item_names_by_glyph_cache[g.ch].push_back(name);
             }
         }
     }

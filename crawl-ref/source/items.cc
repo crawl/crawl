@@ -690,11 +690,10 @@ void item_check(bool verbose)
         std::vector<unsigned short int> item_chars;
         for (unsigned int i = 0; i < items.size() && i < 50; ++i)
         {
-            unsigned glyph_char;
-            unsigned short glyph_col;
-            get_item_glyph( items[i], &glyph_char, &glyph_col );
-            item_chars.push_back( glyph_char * 0x100 +
-                                  (10 - item_name_specialness(*(items[i]))) );
+            glyph g = get_item_glyph(items[i]);
+            get_item_glyph(items[i]);
+            item_chars.push_back(g.ch * 0x100 +
+                                 (10 - item_name_specialness(*(items[i]))));
         }
         std::sort(item_chars.begin(), item_chars.end());
 

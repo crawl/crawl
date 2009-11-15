@@ -1206,6 +1206,11 @@ static std::string _colourize_glyph(int col, unsigned glyph)
     text << "</" << colour_str << ">";
     return text.str();
 }
+
+static std::string _colourize_glyph(glyph g)
+{
+    return (_colourize_glyph(g.col, g.ch));
+}
 #endif
 
 static bool _mons_is_highlighted(const monsters *mons)
@@ -1444,11 +1449,7 @@ void tutorial_first_item(const item_def &item)
 
     std::string text = "That ";
 #ifndef USE_TILE
-    unsigned ch;
-    unsigned short col;
-    get_item_glyph(&item, &ch, &col);
-
-    text += _colourize_glyph(col, ch);
+    text += _colourize_glyph(get_item_glyph(&item));
     text += " ";
 #else
     const coord_def gc = item.pos;
@@ -1906,10 +1907,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             {
                 text << "That ";
 #ifndef USE_TILE
-                unsigned short col;
-                get_item_glyph(&mitm[i], &ch, &col);
-
-                text << _colourize_glyph(col, ch);
+                text << _colourize_glyph(get_item_glyph(&mitm[i]));
                 text << " ";
 #else
                 tiles.place_cursor(CURSOR_TUTORIAL, gc);

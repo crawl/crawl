@@ -116,11 +116,12 @@ int get_mons_colour(const monsters *mons)
     return (col);
 }
 
-void get_item_glyph(const item_def *item, unsigned *glych,
-                    unsigned short *glycol)
+glyph get_item_glyph(const item_def *item)
 {
-    *glycol = item->colour;
-    get_symbol(coord_def(0,0), show_type(*item), glych, glycol);
+    glyph g;
+    g.ch = get_feature_def(show_type(*item)).symbol;
+    g.col = item->colour;
+    return (g);
 }
 
 void get_mons_glyph(const monsters *mons, unsigned *glych,

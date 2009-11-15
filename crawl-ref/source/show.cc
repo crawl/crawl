@@ -189,6 +189,8 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
     const item_def &eitem = mitm[igrd(gp)];
     unsigned short &ecol  = grid(ep).colour;
 
+    glyph g = get_item_glyph(&eitem);
+
     const dungeon_feature_type feat = grd(gp);
     if (Options.feature_item_brand && is_critical_feature(feat))
         ecol |= COLFLAG_FEATURE_ITEM;
@@ -198,7 +200,7 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
     {
         const unsigned short gcol = env.grid_colours(gp);
         ecol = (feat == DNGN_SHALLOW_WATER) ?
-               (gcol != BLACK ? gcol : CYAN) : eitem.colour;
+               (gcol != BLACK ? gcol : CYAN) : g.col;
         if (eitem.link != NON_ITEM && !crawl_state.arena)
             ecol |= COLFLAG_ITEM_HEAP;
         grid(ep).cls = SH_ITEM;
