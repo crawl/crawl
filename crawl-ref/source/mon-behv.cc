@@ -1027,6 +1027,23 @@ static void _guess_invis_foe_pos(monsters *mon, bool strict = true)
 //---------------------------------------------------------------
 void handle_behaviour(monsters *mon)
 {
+    // Test spawners should always be BEH_SEEK against a foe, since
+    // their only purpose is to spew out monsters for testing
+    // purposes.
+    if (mon->type == MONS_TEST_SPAWNER)
+    {
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mon->attitude != mi->attitude)
+            {
+                mon->foe       = mi->mindex();
+                mon->target    = mi->pos();
+                mon->behaviour = BEH_SEEK;
+                return;
+            }
+        }
+    }
+
     bool changed = true;
     bool isFriendly = mon->friendly();
     bool isNeutral  = mon->neutral();
