@@ -1820,7 +1820,8 @@ static void _helm_card(int power, deck_rarity_type rarity)
             if (x_chance_in_y(num_resists, 4-i))
             {
                 // Add a temporary resistance.
-                you.duration[possible_resists[i]] += random2(power/7) + 1;
+                int duration = (random2(power/7) + 1) * BASELINE_DELAY;
+                you.duration[possible_resists[i]] += duration;
                 msg::stream << "You feel resistant to " << resist_names[i]
                             << '.' << std::endl;
                 --num_resists;

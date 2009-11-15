@@ -445,10 +445,14 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
     case POT_RESISTANCE:
         mpr("You feel protected.", MSGCH_DURATION);
-        you.duration[DUR_RESIST_FIRE]   += (random2(pow) + 35) / factor;
-        you.duration[DUR_RESIST_COLD]   += (random2(pow) + 35) / factor;
-        you.duration[DUR_RESIST_POISON] += (random2(pow) + 35) / factor;
-        you.duration[DUR_INSULATION]    += (random2(pow) + 35) / factor;
+        you.duration[DUR_RESIST_FIRE]   +=
+            (random2(pow) + 35) * BASELINE_DURATION / factor;
+        you.duration[DUR_RESIST_COLD]   +=
+            (random2(pow) + 35) * BASELINE_DURATION / factor;
+        you.duration[DUR_RESIST_POISON] +=
+            (random2(pow) + 35) * BASELINE_DURATION / factor;
+        you.duration[DUR_INSULATION]    +=
+            (random2(pow) + 35) * BASELINE_DURATION / factor;
 
         // Just one point of contamination. These potions are really rare,
         // and contamination is nastier.
