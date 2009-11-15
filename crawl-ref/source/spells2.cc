@@ -384,7 +384,6 @@ bool brand_ammo(special_missile_type which_type)
         || get_ammo_brand(you.inv[ammo]) != SPMSL_NORMAL
         || you.inv[ammo].sub_type == MI_THROWING_NET)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
     }
 
@@ -405,8 +404,6 @@ bool brand_ammo(special_missile_type which_type)
 
                 retval = true;
             }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case SPMSL_FLAME:
@@ -420,8 +417,6 @@ bool brand_ammo(special_missile_type which_type)
 
                 retval = true;
             }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case SPMSL_FROST:
@@ -435,8 +430,6 @@ bool brand_ammo(special_missile_type which_type)
 
                 retval = true;
             }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case SPMSL_DISPERSAL:
@@ -450,8 +443,6 @@ bool brand_ammo(special_missile_type which_type)
 
                 retval = true;
             }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case SPMSL_ELECTRIC:
@@ -465,8 +456,6 @@ bool brand_ammo(special_missile_type which_type)
 
                 retval = true;
             }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case SPMSL_EXPLODING:
@@ -480,8 +469,6 @@ bool brand_ammo(special_missile_type which_type)
 
                 retval = true;
             }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case SPMSL_REAPING:
@@ -495,8 +482,6 @@ bool brand_ammo(special_missile_type which_type)
 
                 retval = true;
             }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         case SPMSL_RETURNING:
@@ -510,12 +495,9 @@ bool brand_ammo(special_missile_type which_type)
 
                 retval = true;
             }
-            else
-                canned_msg(MSG_NOTHING_HAPPENS);
             break;
 
         default:
-            canned_msg(MSG_NOTHING_HAPPENS);
             break;
     }
 
