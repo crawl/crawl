@@ -375,7 +375,7 @@ bool brand_weapon(brand_type which_brand, int power)
     return (true);
 }
 
-void brand_ammo(special_missile_type which_type)
+bool brand_ammo(special_missile_type which_type)
 {
     const int ammo = you.equip[EQ_WEAPON];
 
@@ -385,9 +385,10 @@ void brand_ammo(special_missile_type which_type)
         || you.inv[ammo].sub_type == MI_THROWING_NET)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return;
+        return (false);
     }
 
+    bool retval = false;
     preserve_quiver_slots q;
     const char *old_desc = you.inv[ammo].name(DESC_CAP_YOUR).c_str();
 
@@ -401,6 +402,8 @@ void brand_ammo(special_missile_type which_type)
 
                 if (ammo == you.equip[EQ_WEAPON])
                     you.wield_change = true;
+
+                retval = true;
             }
             else
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -414,6 +417,8 @@ void brand_ammo(special_missile_type which_type)
 
                 if (ammo == you.equip[EQ_WEAPON])
                     you.wield_change = true;
+
+                retval = true;
             }
             else
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -427,6 +432,8 @@ void brand_ammo(special_missile_type which_type)
 
                 if (ammo == you.equip[EQ_WEAPON])
                     you.wield_change = true;
+
+                retval = true;
             }
             else
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -440,6 +447,8 @@ void brand_ammo(special_missile_type which_type)
 
                 if (ammo == you.equip[EQ_WEAPON])
                     you.wield_change = true;
+
+                retval = true;
             }
             else
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -453,6 +462,8 @@ void brand_ammo(special_missile_type which_type)
 
                 if (ammo == you.equip[EQ_WEAPON])
                     you.wield_change = true;
+
+                retval = true;
             }
             else
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -466,6 +477,8 @@ void brand_ammo(special_missile_type which_type)
 
                 if (ammo == you.equip[EQ_WEAPON])
                     you.wield_change = true;
+
+                retval = true;
             }
             else
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -479,6 +492,8 @@ void brand_ammo(special_missile_type which_type)
 
                 if (ammo == you.equip[EQ_WEAPON])
                     you.wield_change = true;
+
+                retval = true;
             }
             else
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -492,6 +507,8 @@ void brand_ammo(special_missile_type which_type)
 
                 if (ammo == you.equip[EQ_WEAPON])
                     you.wield_change = true;
+
+                retval = true;
             }
             else
                 canned_msg(MSG_NOTHING_HAPPENS);
@@ -501,6 +518,8 @@ void brand_ammo(special_missile_type which_type)
             canned_msg(MSG_NOTHING_HAPPENS);
             break;
     }
+
+    return (retval);
 }
 
 // Restore the stat in which_stat by the amount in stat_gain, displaying
