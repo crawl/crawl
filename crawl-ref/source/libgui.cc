@@ -37,10 +37,6 @@ int tile_idx_unseen_terrain(int x, int y, int what)
     const coord_def gc(x,y);
     dungeon_feature_type feature = grd(gc);
 
-    unsigned int grid_symbol;
-    unsigned short grid_color;
-    get_show_symbol(show_type(feature), &grid_symbol, &grid_color);
-
     unsigned int t = tileidx_feature(feature, gc.x, gc.y);
     if (t == TILE_ERROR || what == ' ')
     {
