@@ -364,7 +364,7 @@ static int _abyss_rune_nearness()
     // See above comment about is_terrain_known().
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
-        if (get_screen_glyph(ri->x, ri->y) != ' ')
+        if (get_screen_glyph(*ri) != ' ')
         {
             for (stack_iterator si(*ri); si; ++si)
                 if (is_rune(*si) && si->plus == RUNE_ABYSSAL)

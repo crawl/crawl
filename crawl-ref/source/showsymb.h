@@ -12,7 +12,6 @@ struct glyph
 glyph get_item_glyph(const item_def *item);
 glyph get_mons_glyph(const monsters *mons);
 
-unsigned get_screen_glyph( int x, int y );
 unsigned get_screen_glyph( const coord_def &p );
 
 void get_symbol(const coord_def& where,

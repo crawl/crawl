@@ -492,9 +492,9 @@ std::string screenshot(bool fullscreen)
 
             int ch =
                   (!map_bounds(gc))             ? 0 :
-                  (!crawl_view.in_grid_los(gc)) ? get_map_knowledge_char(gc.x, gc.y) :
+                  (!crawl_view.in_grid_los(gc)) ? get_map_knowledge_char(gc) :
                   (gc == you.pos())             ? you.symbol
-                                                : get_screen_glyph(gc.x, gc.y);
+                                                : get_screen_glyph(gc);
 
             if (ch && !isprint(ch))
             {

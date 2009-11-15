@@ -132,22 +132,17 @@ glyph get_mons_glyph(const monsters *mons)
     return (g);
 }
 
-unsigned get_screen_glyph( int x, int y )
-{
-    return get_screen_glyph(coord_def(x,y));
-}
-
 unsigned get_screen_glyph(const coord_def& p)
 {
     const coord_def ep = view2show(grid2view(p));
 
     show_type object = env.show(ep);
-    unsigned short  colour = object.colour;
-    unsigned        ch;
 
     if (!object)
         return get_map_knowledge_char(p.x, p.y);
 
+    unsigned short  colour;
+    unsigned        ch;
     get_symbol(p, object, &ch, &colour);
     return (ch);
 }
