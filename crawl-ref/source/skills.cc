@@ -208,6 +208,14 @@ static int _exercise2(int exsk)
             bonus += random2(30);
         }
 
+        // Maces and Staves.
+        if ((exsk == SK_MACES_FLAILS || exsk == SK_STAVES)
+            && (you.skills[SK_MACES_FLAILS] > you.skills[exsk]
+                || you.skills[SK_STAVES] > you.skills[exsk]))
+        {
+            bonus += random2(30);
+        }
+
         // Slings and Throwing.
         if ((exsk == SK_SLINGS || exsk == SK_THROWING)
             && (you.skills[SK_SLINGS] > you.skills[exsk]
