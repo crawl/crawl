@@ -1582,6 +1582,31 @@ LUAFN(_dgn_reuse_map)
 
 LUAWRAP(_dgn_reset_level, dgn_reset_level())
 
+LUAFN(dgn_fill_grd_area)
+{
+    int x1 = luaL_checkint(ls, 1);
+    int y1 = luaL_checkint(ls, 2);
+    int x2 = luaL_checkint(ls, 3);
+    int y2 = luaL_checkint(ls, 4);
+    dungeon_feature_type feat = check_lua_feature(ls, 5);
+ 
+    x1 = std::min(std::max(x1, X_BOUND_1+1), X_BOUND_2-1);
+    y1 = std::min(std::max(y1, Y_BOUND_1+1), Y_BOUND_2-1);
+    x2 = std::min(std::max(x2, X_BOUND_1+1), X_BOUND_2-1);
+    y2 = std::min(std::max(y2, Y_BOUND_1+1), Y_BOUND_2-1);
+ 
+    if (x2 < x1)
+        std::swap(x1, x2);
+    if (y2 < y1)
+        std::swap(y1, y2);
+ 
+    for (int y = y1; y <= y2; y++)
+        for (int x = x1; x <= x2; x++)
+            grd[x][y] = feat;
+
+    return (0);
+}
+
 const struct luaL_reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
@@ -1668,6 +1693,8 @@ const struct luaL_reg dgn_dlib[] =
 { "marker_at_pos", _dgn_marker_at_pos },
 
 { "get_special_room_info", dgn_get_special_room_info },
+
+{ "fill_grd_area", dgn_fill_grd_area },
 
 { NULL, NULL }
 };

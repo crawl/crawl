@@ -730,7 +730,7 @@ end
 -- builds ziggurat maps consisting of two overimposed rectangles
 local function ziggurat_rectangle_builder(e)
   local grid = dgn.grid
-  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
+  dgn.fill_grd_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
 
   local area = map_area()
   area = math.floor(area*3/4)
@@ -750,7 +750,7 @@ local function ziggurat_rectangle_builder(e)
   local b2 = math.floor(b / 2) + (b % 2)
   local x1, y1 = clamp_in_bounds(cx - a2, cy - b2)
   local x2, y2 = clamp_in_bounds(cx + a2, cy + b2)
-  dgn.fill_area(x1, y1, x2, y2, "floor")
+  dgn.fill_grd_area(x1, y1, x2, y2, "floor")
 
   local zig_exc = zig().zig_exc
   local nx1 = cx + y1 - cy
@@ -759,7 +759,7 @@ local function ziggurat_rectangle_builder(e)
   local ny2 = cy + x2 - cx - math.floor(zig().depth/2*(200-zig_exc)/300)
   nx1, ny1 = clamp_in_bounds(nx1, ny1)
   nx2, ny2 = clamp_in_bounds(nx2, ny2)
-  dgn.fill_area(nx1, ny1, nx2, ny2, "floor")
+  dgn.fill_grd_area(nx1, ny1, nx2, ny2, "floor")
 
   local entry = dgn.point(x1, cy)
   local exit = dgn.point(x2, cy)
@@ -779,7 +779,7 @@ end
 -- a=b*3/2 for zig_exc=100
 local function ziggurat_ellipse_builder(e)
   local grid = dgn.grid
-  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
+  dgn.fill_grd_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
 
   local zig_exc = zig().zig_exc
 
@@ -813,7 +813,7 @@ end
 -- builds hexagonal ziggurat maps
 local function ziggurat_hexagon_builder(e)
   local grid = dgn.grid
-  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
+  dgn.fill_grd_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
 
   local zig_exc = zig().zig_exc
 
