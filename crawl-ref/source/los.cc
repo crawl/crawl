@@ -711,6 +711,7 @@ void fallback_ray(const coord_def& source, const coord_def& target,
     coord_def diff = target - source;
     ray.r.dir.x = diff.x;
     ray.r.dir.y = diff.y;
+    ray.on_corner = false;
 }
 
 // Count the number of matching features between two points along
