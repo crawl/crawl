@@ -1990,7 +1990,7 @@ void shop()
         mprf("Thank you for shopping at %s!", shopname.c_str());
 
     if (num_in_list > 0)
-        mpr("You can access your shopping list by pressing '$'");
+        mpr("You can access your shopping list by pressing '$'.");
 }
 
 shop_struct *get_shop(const coord_def& where)
@@ -2433,7 +2433,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 
         mpr_comma_separated_list("You now have enough gold to ", descs,
                                  ", or ");
-        mpr("You can access your shopping list by pressing '$'");
+        mpr("You can access your shopping list by pressing '$'.");
 
         // Reset max_buyable and min_unbuyable info
         refresh();

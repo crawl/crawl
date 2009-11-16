@@ -45,7 +45,7 @@ function TollStair:check_shopping_list(marker, first_time)
 
     you.shopping_list_add(name, verb, self.props.amount, marker)
 
-    crawl.mpr("You can access your shopping list by pressing '$'")
+    crawl.mpr("You can access your shopping list by pressing '$'.")
   end
 end
 
