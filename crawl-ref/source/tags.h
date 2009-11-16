@@ -49,7 +49,9 @@ enum tag_major_version
 // the dungeon Lua changes.
 enum tag_minor_version
 {
-    TAG_MINOR_VERSION = 0 // Current version.  (Keep equal to max.)
+    TAG_MINOR_RESET    = 0, // Minor tags were reset
+    TAG_MINOR_DISEASE  = 1, // you.disease changed to an integer
+    TAG_MINOR_VERSION  = 1 // Current version.  (Keep equal to max.)
 };
 
 struct enum_info

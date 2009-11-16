@@ -2641,7 +2641,7 @@ static void _decrement_durations()
         }
     }
 
-    dec_disease_player();
+    dec_disease_player(delay);
 
     dec_poison_player();
 

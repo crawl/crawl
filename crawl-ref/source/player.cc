@@ -3684,9 +3684,11 @@ void display_char_status()
 
     if (you.disease)
     {
+        int high = 120 * BASELINE_DELAY;
+        int low  =  40 * BASELINE_DELAY;
         mprf("You are %sdiseased.",
-             (you.disease > 120) ? "badly " :
-             (you.disease >  40) ? ""
+             (you.disease > high) ? "badly " :
+             (you.disease >  low) ? ""
                                  : "mildly ");
     }
 
@@ -5070,7 +5072,7 @@ bool disease_player(int amount)
     return you.sicken(amount);
 }
 
-void dec_disease_player()
+void dec_disease_player(int delay)
 {
     if (you.disease > 0)
     {
@@ -5083,15 +5085,17 @@ void dec_disease_player()
           return;
         }
 
-        you.disease--;
+        you.disease -= delay;
+        if(you.disease < 0)
+            you.disease = 0;
 
         // kobolds and regenerators recuperate quickly
-        if (you.disease > 5
+        if (you.disease > 5 * BASELINE_DELAY
             && (you.species == SP_KOBOLD
                 || you.duration[DUR_REGENERATION]
                 || player_mutation_level(MUT_REGENERATION) == 3))
         {
-            you.disease -= 2;
+            you.disease -= 2 * BASELINE_DELAY;
         }
 
         if (you.disease == 0)
@@ -6799,10 +6803,11 @@ bool player::sicken(int amount)
 
     mpr( "You feel ill." );
 
-    const int tmp = disease + amount;
-    disease = (tmp > 210) ? 210 : tmp;
-    learned_something_new(TUT_YOU_SICK);
+    disease += amount * BASELINE_DELAY;
+    if(disease > 210 * BASELINE_DELAY)
+        disease = 210 * BASELINE_DELAY;
 
+    learned_something_new(TUT_YOU_SICK);
     return (true);
 }
 

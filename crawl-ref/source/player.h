@@ -59,7 +59,7 @@ public:
 
   unsigned char synch_time;   // amount to wait before calling handle_time()
 
-  unsigned char disease;
+  int disease;
 
   char max_level;
 
@@ -757,7 +757,7 @@ void haste_player(int turns);
 void dec_haste_player(int delay);
 
 bool disease_player(int amount);
-void dec_disease_player();
+void dec_disease_player(int delay);
 
 bool player_weapon_wielded();
 

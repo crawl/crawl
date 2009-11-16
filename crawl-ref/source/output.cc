@@ -744,7 +744,8 @@ static void _get_status_lights(std::vector<status_light>& out)
 
     if (you.disease)
     {
-        int color = _bad_ench_colour( you.disease, 40, 120 );
+        int color = _bad_ench_colour( you.disease, 40 * BASELINE_DELAY,
+                                      120 * BASELINE_DELAY);
         out.push_back(status_light(color, "Sick"));
     }
 
@@ -2204,8 +2205,10 @@ std::string _status_mut_abilities()
 
     if (you.disease)
     {
-        std::string help = (you.disease > 120) ? "badly " :
-                           (you.disease >  40) ? ""
+        int high = 120 * BASELINE_DELAY;
+        int low  =  40 * BASELINE_DELAY;
+        std::string help = (you.disease > high) ? "badly " :
+                           (you.disease >  low) ? ""
                                                : "mildly ";
                     help += "diseased";
 
