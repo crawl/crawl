@@ -2050,6 +2050,7 @@ enum monster_type                      // (int) menv[].type
     MONS_AIZUL,
     MONS_PIKEL,
     MONS_CRAZY_YIUF,
+    MONS_SLAVE,
 
     // Testing monsters
     MONS_TEST_SPAWNER,

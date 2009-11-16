@@ -3372,6 +3372,18 @@ static monsterentry mondata[] = {
 },
 
 {
+    MONS_SLAVE, '@', WHITE, "slave",
+    M_WARM_BLOOD | M_SPEAKS,
+    MR_NO_FLAGS,
+    550, 10, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -3,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 5, 3, 5, 0 },
+    2, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
+{
     MONS_HELL_KNIGHT, '@', RED, "hell knight",
     M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
     MR_RES_HELLFIRE,
@@ -4467,11 +4479,11 @@ static monsterentry mondata[] = {
 },
 
 {
-    // XP modifier is very high to compensate for 1d3 created-friendly humans
+    // XP modifier is very high to compensate for 4 created-friendly humans
     MONS_PIKEL, 'K', BLUE, "Pikel",
     M_WARM_BLOOD | M_SPEAKS | M_UNIQUE | M_NO_WAND,
     MR_NO_FLAGS,
-    500, 40, MONS_KOBOLD, MONS_BIG_KOBOLD, MH_NATURAL, -3,
+    500, 55, MONS_KOBOLD, MONS_BIG_KOBOLD, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 6, 0, 0, 40 },
     4, 12, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT,

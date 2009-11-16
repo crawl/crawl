@@ -1009,9 +1009,7 @@ int place_monster(mgen_data mg, bool force_pos)
                 // Don't give XP for the slaves to discourage hunting.  Pikel
                 // has an artificially large XP modifier to compensate for
                 // this.
-                menv[band_id].flags |= MF_CREATED_FRIENDLY | MF_NAME_DESCRIPTOR
-                                        | MF_NAME_REPLACE;
-                menv[band_id].mname = "slave";
+                menv[band_id].flags |= MF_CREATED_FRIENDLY;
                 menv[band_id].props["pikel_band"] = true;
             }
         }
@@ -2369,7 +2367,7 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_PIKEL:
-        mon_type = MONS_HUMAN;
+        mon_type = MONS_SLAVE;
         break;
 
     default:

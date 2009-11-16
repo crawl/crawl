@@ -1161,18 +1161,17 @@ void pikel_band_neutralise ()
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_HUMAN
+        if (mi->type == MONS_SLAVE
             && testbits(mi->flags, MF_BAND_MEMBER)
             && mi->props.exists("pikel_band"))
         {
             if (mi->observable() && !message_made)
             {
-                mpr("Pikel's slaves thank you for their freedom.");
+                mpr("With Pikel's spell broken, the former slaves thank you for their freedom.");
                 message_made = true;
             }
-
+            mi->flags |= MF_NAME_DESCRIPTOR | MF_NAME_REPLACE;
             mi->mname = "freed slave";
-            // viewwindow();
             mons_pacify(*mi);
         }
     }

@@ -1281,6 +1281,7 @@ void give_armour(monsters *mon, int level)
                                                 0);
         break;
 
+    case MONS_SLAVE:
     case MONS_GRUM:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;

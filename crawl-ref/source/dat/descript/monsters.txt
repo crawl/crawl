@@ -332,6 +332,10 @@ Sigmund
 
 The bane of all young adventurers, Sigmund combines delusions of greatness with nasty tactics.
 %%%%
+slave
+
+A once proud human that has been magically enslaved, and is now a timid, simpering creature, ready to perform any dead at its master's command.
+%%%%
 Snorg
 
 A hairy troll, angry and mean.
