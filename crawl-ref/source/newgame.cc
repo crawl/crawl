@@ -4613,14 +4613,14 @@ bool _give_items_skills()
         case SP_SLUDGE_ELF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
-            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
+            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6, 1);
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
                                2);
             break;
 
         case SP_TROLL:
         case SP_OGRE:
-            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
+            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, 1);
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
                                3);
             break;
@@ -4629,7 +4629,7 @@ bool _give_items_skills()
         case SP_KOBOLD:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
-                               30);
+                               30, 1);
 
             // Wield the sling instead.
             you.equip[EQ_WEAPON] = 1;
@@ -4638,7 +4638,7 @@ bool _give_items_skills()
         case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, 1);
 
             // Wield the crossbow instead.
             you.equip[EQ_WEAPON] = 1;
@@ -4646,7 +4646,7 @@ bool _give_items_skills()
 
         default:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, 1);
 
             // Wield the bow instead.
             you.equip[EQ_WEAPON] = 1;
