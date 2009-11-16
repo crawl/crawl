@@ -1046,12 +1046,6 @@ command_type travel()
             delay(Options.travel_delay);
     }
 
-    if (!you.running && Options.travel_delay == -1
-        && (!you.running.is_explore() || Options.explore_delay == -1))
-    {
-        viewwindow(false);
-    }
-
     if (!you.running)
         return CMD_NO_CMD;
 
