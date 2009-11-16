@@ -1,5 +1,7 @@
 #include "AppHdr.h"
 
+#include <stdint.h>
+
 #include "show.h"
 
 #include "cloud.h"
