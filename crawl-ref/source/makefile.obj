@@ -105,14 +105,15 @@ mon-gear.o \
 mon-grow.o \
 mon-info.o \
 mon-iter.o \
+mon-movetarget.o \
 mon-pathfind.o \
 mon-pick.o \
-mon-util.o \
 mon-place.o \
+mon-util.o \
 mon-speak.o \
-monster.o \
 mon-stuff.o \
 mon-transit.o \
+monster.o \
 mt19937ar.o \
 mutation.o \
 newgame.o \
