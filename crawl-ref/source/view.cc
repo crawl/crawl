@@ -853,10 +853,9 @@ void viewwindow(bool monster_updates, bool show_updates)
 
     bool run_dont_draw = you.running && Options.travel_delay < 0
                 && (!you.running.is_explore() || Options.explore_delay < 0);
-#ifndef USE_TILE
-    if (run_dont_draw || you.asleep())
+
+    if (run_dont_draw || you.asleep() || is_resting())
         return;
-#endif
 
     cursor_control cs(false);
 
@@ -913,11 +912,6 @@ void viewwindow(bool monster_updates, bool show_updates)
     // Leaving it this way because short flashes can occur in long ones,
     // and this simply works without requiring a stack.
     you.flash_colour = BLACK;
-
-#ifdef USE_TILE
-    if (run_dont_draw || you.asleep() || is_resting())
-        return;
-#endif
 
 #ifndef USE_TILE
     you.last_view_update = you.num_turns;
