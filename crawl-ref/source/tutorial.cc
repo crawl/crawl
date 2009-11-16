@@ -1311,13 +1311,6 @@ void tutorial_first_monster(const monsters &mon)
         return;
     }
 
-    if (_mons_is_highlighted(&mon))
-    {
-        // Make first monster notice player, so we can explain the brand
-        // some time later.
-        monsters *m = monster_at(mon.pos());
-        behaviour_event( m, ME_ALERT, MHITYOU, you.pos() );
-    }
     stop_running();
 
     Options.tutorial_events[TUT_SEEN_MONSTER] = false;
