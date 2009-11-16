@@ -746,6 +746,12 @@ static bool _moth_incite_monsters(const monsters *mon)
     return (false);
 }
 
+static inline void _mons_cast_abil(monsters *monster, bolt &pbolt,
+                                   spell_type spell_cast)
+{
+    mons_cast(monster, pbolt, spell_cast, true, true);
+}
+ 
 //---------------------------------------------------------------
 //
 // mon_special_ability
@@ -943,7 +949,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             if (mons_should_fire(beem))
             {
                 make_mons_stop_fleeing(monster);
-                mons_cast(monster, beem, spell);
+                _mons_cast_abil(monster, beem, spell);
                 used = true;
             }
         }
@@ -1004,7 +1010,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
                 {
                     make_mons_stop_fleeing(monster);
                     spell_cast = SPELL_SYMBOL_OF_TORMENT;
-                    mons_cast(monster, beem, spell_cast);
+                    _mons_cast_abil(monster, beem, spell_cast);
                     used = true;
                     break;
                 }
@@ -1023,7 +1029,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
                 {
                     make_mons_stop_fleeing(monster);
 
-                    mons_cast(monster, beem, spell_cast);
+                    _mons_cast_abil(monster, beem, spell_cast);
                     used = true;
                 }
                 break;
@@ -1137,7 +1143,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             if (mons_should_fire(beem))
             {
                 make_mons_stop_fleeing(monster);
-                mons_cast(monster, beem, spell);
+                _mons_cast_abil(monster, beem, spell);
                 used = true;
             }
         }

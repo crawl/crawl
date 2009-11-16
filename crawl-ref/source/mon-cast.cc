@@ -1538,7 +1538,7 @@ void mons_cast_haunt(monsters *monster)
 }
 
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
-               bool do_noise)
+               bool do_noise, bool special_ability)
 {
     // Always do setup.  It might be done already, but it doesn't hurt
     // to do it again (cheap).
@@ -1566,14 +1566,15 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             if (monsterNearby)
             {
                 if (do_noise)
-                    mons_cast_noise(monster, pbolt, spell_cast);
+                    mons_cast_noise(monster, pbolt, spell_cast,
+                                    special_ability);
                 direct_effect(monster, spell_cast, pbolt, &you);
             }
             return;
         }
 
         if (do_noise)
-            mons_cast_noise(monster, pbolt, spell_cast);
+            mons_cast_noise(monster, pbolt, spell_cast, special_ability);
         direct_effect(monster, spell_cast, pbolt, monster->get_foe());
         return;
     }
@@ -1588,7 +1589,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 #endif
 
     if (do_noise)
-        mons_cast_noise(monster, pbolt, spell_cast);
+        mons_cast_noise(monster, pbolt, spell_cast, special_ability);
 
     // If the monster's a priest, assume summons come from priestly
     // abilities, in which case they'll have the same god.  If the
@@ -2156,11 +2157,12 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         pbolt.fire();
 }
 
-void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
+void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
+                     bool special_ability)
 {
     bool force_silent = false;
 
-    spell_type real_spell = spell_cast;
+    spell_type actual_spell = spell_cast;
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
     {
@@ -2171,11 +2173,11 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         switch (type)
         {
         case MONS_MOTTLED_DRACONIAN:
-            real_spell = SPELL_STICKY_FLAME_SPLASH;
+            actual_spell = SPELL_STICKY_FLAME_SPLASH;
             break;
 
         case MONS_YELLOW_DRACONIAN:
-            real_spell = SPELL_ACID_SPLASH;
+            actual_spell = SPELL_ACID_SPLASH;
             break;
 
         case MONS_PLAYER_GHOST:
@@ -2198,12 +2200,12 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     if (unseen && silent)
         return;
 
-    const unsigned int flags = get_spell_flags(real_spell);
+    const unsigned int flags = get_spell_flags(actual_spell);
 
     const bool priest = monster->is_priest();
     const bool wizard = monster->is_actual_spellcaster();
     const bool innate = !(priest || wizard || no_silent)
-                        || (flags & SPFLAG_INNATE);
+                        || (flags & SPFLAG_INNATE) || special_ability;
 
     int noise;
     if (silent
@@ -2223,26 +2225,62 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
             // Noise for targeted spells happens at where the spell hits,
             // rather than where the spell is cast. zappy() sets up the
             // noise for beams.
-            noise = (flags & SPFLAG_TARGETTING_MASK) ? 1
-                                                     : spell_noise(real_spell);
+            noise = (flags & SPFLAG_TARGETTING_MASK)
+                ? 1 : spell_noise(actual_spell);
         }
     }
 
     const std::string cast_str = " cast";
 
-    const std::string    spell_name = spell_title(real_spell);
+    const std::string    spell_name = spell_title(actual_spell);
     const mon_body_shape shape      = get_mon_shape(monster);
+    const bool           real_spell = !innate && (priest || wizard);
+
+    const bool visible_beam = pbolt.type != 0 && pbolt.type != ' '
+                              && pbolt.name[0] != '0'
+                              && !pbolt.is_enchantment();
+    const bool targeted = (flags & SPFLAG_TARGETTING_MASK)
+                           && (pbolt.target != monster->pos() || visible_beam);
 
     std::vector<std::string> key_list;
 
     // First try the spells name.
     if (shape <= MON_SHAPE_NAGA)
     {
-        if (!innate && (priest || wizard))
+        if (real_spell)
             key_list.push_back(spell_name + cast_str + " real");
         if (mons_intel(monster) >= I_NORMAL)
             key_list.push_back(spell_name + cast_str + " gestures");
     }
+    else if (real_spell)
+    {
+        // A real spell being cast by something with no hands?  Maybe
+        // it's a polymorphed spellcaster which kept its original spells.
+        // If so, the cast message for it's new type/species/genus probably
+        // won't look right.
+        if (!mons_class_flag(monster->type, M_ACTUAL_SPELLS | M_PRIEST))
+        {
+            // XXX: We should probably include the monster's shape,
+            // to get a variety of messages.
+            if (wizard)
+            {
+                std::string key = "polymorphed wizard" + cast_str;
+                key_list.push_back(key);
+
+                if (targeted)
+                    key_list.push_back(key + " targeted");
+            }
+            else if (priest)
+            {
+                std::string key = "polymorphed priest" + cast_str;
+                key_list.push_back(key);
+
+                if (targeted)
+                    key_list.push_back(key + " targeted");
+            }
+        }
+    }
+
     key_list.push_back(spell_name + cast_str);
 
     const unsigned int num_spell_keys = key_list.size();
@@ -2261,13 +2299,6 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         key_list.push_back("priest" + cast_str);
     else if (mons_is_demon(monster->type))
         key_list.push_back("demon" + cast_str);
-
-    const bool visible_beam = pbolt.type != 0 && pbolt.type != ' '
-                              && pbolt.name[0] != '0'
-                              && !pbolt.is_enchantment();
-
-    const bool targeted = (flags & SPFLAG_TARGETTING_MASK)
-                           && (pbolt.target != monster->pos() || visible_beam);
 
     if (targeted)
     {

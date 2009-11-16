@@ -2,21 +2,25 @@
 # "The wizard mumbles some strange words."  The messages are looked
 # up in the following order by the following keys:
 #
-# 1) The name of the spell being cast:
+# 1) If the monster is a wizard or priest which has been polymorphed into
+#    a wizard without hands which is trying to cast a spell it kept across
+#    the polymporh, then the first key will be "polymorphed wizard" or
+#    "polymorphed priest".
+# 2) The name of the spell being cast:
 #   a) If being cast by a wizard or priest monster with arms, first try
 #      with the suffix "real".
 #   b) If being cast by a monster of normal or higher intelligence with arms,
 #      try with the suffix "gestures".
 #   c) Next, try without any suffix.
-# 2) The name of the monster's type.
-# 3) The name of the monster's species.
-# 4) The name of the monster's genus.
-# 5) "priest" if the monster is a priest type, "wizard" if it's a wizard type,
+# 3) The name of the monster's type.
+# 4) The name of the monster's species.
+# 5) The name of the monster's genus.
+# 6) "priest" if the monster is a priest type, "wizard" if it's a wizard type,
 #    or "demon" if it's demonic.
-# 6) If the spell uses a targeted, visible beam, it will try
+# 7) If the spell uses a targeted, visible beam, it will try
 #    "<beam_short_name> beam cast", then "beam catchall cast".
 #
-# For 2 to 5, if the spell has a target it will first add the suffix
+# For 1 and 3 to 6, if the spell has a target it will first add the suffix
 # "targeted" to the lookup key before trying without the suffix.
 #
 # For all lookups, if the monster is unseen by the player it will add the
@@ -241,6 +245,22 @@ giant eyeball cast targeted
 giant eyeball cast
 
 @The_monster@ looks around.
+###########################################################################
+# Generic messages for priests and wizards which have been polymorphed into
+# something without hands.
+###########################################################################
+%%%%
+polymorphed wizard cast targeted
+
+@The_monster@ casts a spell at @target@.
+%%%%
+polymorphed wizard cast
+
+@The_monster@ casts a spell.
+%%%%
+polymorphed unseen wizard cast
+
+You hear some strange, mumbled words.
 ######################################################
 # Generic priest, wizard and demonic casting messages.
 ######################################################
