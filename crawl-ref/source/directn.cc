@@ -1516,7 +1516,7 @@ void direction(dist& moves, targetting_type restricts,
                 // To update visual branding of friendlies.  Only
                 // seems capabable of adding bolding, not removing it,
                 // though.
-                viewwindow(false);
+                viewwindow(false, true);
             }
             break;
 
@@ -1668,7 +1668,7 @@ void direction(dist& moves, targetting_type restricts,
         if (need_beam_redraw)
         {
 #ifndef USE_TILE
-            viewwindow(false);
+            viewwindow(false, false);
 #endif
             if (show_beam && have_beam)
             {
@@ -1704,7 +1704,7 @@ void direction(dist& moves, targetting_type restricts,
 #endif
             }
 #ifdef USE_TILE
-            viewwindow(false);
+            viewwindow(false, false);
 #endif
         }
         skip_iter = false;      // Only skip one iteration at most.

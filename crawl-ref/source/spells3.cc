@@ -1420,7 +1420,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
     // Update what we can see at the current location as well as its stash,
     // in case something happened in the exact turn that we teleported
     // (like picking up/dropping an item).
-    viewwindow(false);
+    viewwindow(false, true);
     StashTrack.update_stash();
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)

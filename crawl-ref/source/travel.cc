@@ -3847,7 +3847,7 @@ void runrest::stop()
     stop_delay();
 
     if (need_redraw)
-        viewwindow(false);
+        viewwindow(false, true);
 
     _reset_zigzag_info();
 }
