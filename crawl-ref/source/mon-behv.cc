@@ -990,7 +990,7 @@ static void _guess_invis_foe_pos(monsters *mon, bool strict = true)
 
     std::vector<coord_def> possibilities;
 
-    for (radius_iterator ri(mon->pos(), guess_radius); ri; ++ri)
+    for (radius_iterator ri(mon->pos(), guess_radius, C_ROUND); ri; ++ri)
     {
         // NOTE: This depends on mon_see_cell() ignoring clouds,
         // so that cells hidden by opaque clouds are included
