@@ -681,8 +681,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        likes.push_back("you kill demons");
-		likes.push_back("your undead slaves kill demons");
+        likes.push_back("you or your undead slaves kill demons");
         break;
 
     case GOD_BEOGH:
