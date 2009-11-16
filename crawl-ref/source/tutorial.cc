@@ -1678,7 +1678,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     std::ostringstream text;
 
 #ifndef USE_TILE
-    const coord_def e = gc - you.pos() + coord_def(9,9);
+    const coord_def e = grid2show(gc);
 #endif
 
     Options.tut_just_triggered = true;
