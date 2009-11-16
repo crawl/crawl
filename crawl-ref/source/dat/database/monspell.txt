@@ -140,12 +140,32 @@ unseen Sticky Flame Splash cast
 
 You hear a spitting sound.
 ########################################################################
-# Individual monsters
+# Unique monsters
 ########################################################################
 %%%%
-brain worm cast
+gastronok cast targeted
 
-@The_monster@'s bulging head throbs.
+@The_monster@ looks at @target@ while chanting.
+
+@The_monster@ looks at @target@ and mumbles some strange words.
+
+@The_monster@ casts a spell at @target@.
+%%%%
+dissolution cast
+
+@The_monster@ gurgles deeply, a call to fellow slimes.
+
+@The_monster@ says, "The Slime God sees all!"
+%%%%
+gastronok cast
+
+@The_monster@'s eyestalks quiver as @pronoun@ mumbles some strange words.
+
+@The_monster@ chants a spell, wobbling all the while.
+
+@The_monster@ mumbles some strange words.
+
+@The_monster@ casts a spell.
 %%%%
 Geryon cast
 
@@ -154,6 +174,13 @@ Geryon cast
 unseen Geryon cast
 
 You hear a weird and mournful sound.
+%%%%
+########################################################################
+# Individual monsters
+########################################################################
+brain worm cast
+
+@The_monster@'s bulging head throbs.
 %%%%
 giant orange brain cast
 
@@ -246,20 +273,6 @@ unseen priest cast
 
 You hear some strange, mumbled prayers to @God@.
 %%%%
-gastronok cast targeted
-
-@The_monster@ looks at @target@ while chanting.
-
-@The_monster@ looks at @target@ and mumbles some strange words.
-
-@The_monster@ casts a spell at @target@.
-%%%%
-dissolution cast
-
-@The_monster@ gurgles deeply, a call to fellow slimes.
-
-@The_monster@ says, "The Slime God sees all!"
-%%%%
 wizard cast targeted
 
 @The_monster@ gestures at @target@ while chanting.
@@ -267,16 +280,6 @@ wizard cast targeted
 @The_monster@ points at @target@ and mumbles some strange words.
 
 @The_monster@ casts a spell at @target@.
-%%%%
-gastronok cast
-
-@The_monster@'s eyestalks quiver as @pronoun@ mumbles some strange words.
-
-@The_monster@ chants a spell, wobbling all the while.
-
-@The_monster@ mumbles some strange words.
-
-@The_monster@ casts a spell.
 %%%%
 wizard cast
 
