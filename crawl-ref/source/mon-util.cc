@@ -215,6 +215,8 @@ void init_monsters()
 
 void init_monster_symbols()
 {
+    std::map<unsigned, monster_type> base_mons;
+    std::map<unsigned, monster_type>::iterator it;
     for (int i = 0; i < NUM_MONSTERS; ++i)
     {
         mon_display &md = monster_symbols[i];
@@ -223,6 +225,10 @@ void init_monster_symbols()
         {
             md.glyph  = me->showchar;
             md.colour = me->colour;
+            it = base_mons.find(md.glyph);
+            if (it == base_mons.end() || it->first == MONS_PROGRAM_BUG)
+                base_mons[md.glyph] = static_cast<monster_type>(i);
+            md.detected = base_mons[md.glyph];
         }
     }
 
@@ -696,6 +702,11 @@ monster_type mons_genus(int mc)
     ASSERT(smc);
     return (smc->genus);
 }
+
+monster_type mons_detected_base(monster_type mc)
+{
+    return (monster_symbols[mc].detected);
+}        
 
 monster_type draco_subspecies(const monsters *mon)
 {

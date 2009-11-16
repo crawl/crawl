@@ -720,10 +720,12 @@ struct mon_display
     monster_type type;
     unsigned     glyph;
     unsigned     colour;
+    monster_type detected; // What a monster of type "type" is detected as.
 
     mon_display(monster_type m = MONS_NO_MONSTER,
-                unsigned gly = 0,
-                unsigned col = 0) : type(m), glyph(gly), colour(col) { }
+                unsigned gly = 0, unsigned col = 0,
+                monster_type d = MONS_NO_MONSTER)
+       : type(m), glyph(gly), colour(col), detected(d) { }
 };
 
 #include "msvc.h"

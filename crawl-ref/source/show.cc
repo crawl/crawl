@@ -28,8 +28,8 @@ show_type::show_type()
     feat = (dungeon_feature_type) -1;
 }
 
-show_type::show_type(const monsters* m)
-    : cls(SH_MONSTER), mons(m->type), colour(0) {}
+show_type::show_type(monster_type montype)
+    : cls(SH_MONSTER), mons(montype), colour(0) {}
 
 show_type::show_type(dungeon_feature_type f)
     : cls(SH_FEATURE), feat(f), colour(0) {}

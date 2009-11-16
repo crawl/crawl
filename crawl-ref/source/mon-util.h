@@ -636,6 +636,7 @@ bool mons_eats_corpses(const monsters *mon);
 bool mons_eats_food(const monsters *mon);
 bool mons_has_lifeforce(const monsters *mon);
 monster_type mons_genus(int mc);
+monster_type mons_detected_base(monster_type mt);
 monster_type mons_species(int mc);
 
 bool mons_looks_stabbable(const monsters *m);

@@ -50,7 +50,7 @@ struct show_type
     show_type(dungeon_feature_type f);
     show_type(const item_def &item);
     show_type(show_item_type itemtype);
-    show_type(const monsters* mons);
+    show_type(monster_type montype);
 
     operator bool() const { return (cls != SH_NOTHING); }
 

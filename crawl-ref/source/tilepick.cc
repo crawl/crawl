@@ -123,7 +123,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // Show only base class for detected monsters.
     if (detected)
-        type = mons_genus(type);
+        type = mons_detected_base(mon->type);
 
     switch (type)
     {
