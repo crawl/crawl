@@ -90,7 +90,7 @@ static unsigned short _tree_colour(const coord_def& where)
 static unsigned short _feat_colour(const coord_def &where,
                                    const dungeon_feature_type feat)
 {
-    unsigned short colour;
+    unsigned short colour = BLACK;
     const feature_def &fdef = get_feature_def(feat);
     // TODO: consolidate with feat_is_stair etc.
     bool excluded_stairs = (feat >= DNGN_STONE_STAIRS_DOWN_I
