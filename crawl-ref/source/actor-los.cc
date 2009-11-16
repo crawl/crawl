@@ -66,7 +66,7 @@ void player::update_los()
 
 bool player::see_cell(const coord_def &c) const
 {
-    if (crawl_state.arena)
+    if (crawl_state.arena || crawl_state.arena_suspended)
         return (crawl_view.in_grid_los(c));
     else
         return (actor::see_cell(c));
@@ -74,7 +74,7 @@ bool player::see_cell(const coord_def &c) const
 
 bool player::can_see(const actor* a) const
 {
-    if (crawl_state.arena)
+    if (crawl_state.arena || crawl_state.arena_suspended)
         return (see_cell(a->pos()));
     else
         return (actor::can_see(a));
