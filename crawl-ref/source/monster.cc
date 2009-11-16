@@ -47,12 +47,13 @@ static mon_spellbook mspell_list[] = {
 
 monsters::monsters()
     : type(MONS_NO_MONSTER), hit_points(0), max_hit_points(0), hit_dice(0),
-      ac(0), ev(0), speed(0), speed_increment(0),
-      target(), patrol_point(), travel_target(MTRAV_NONE),
-      inv(NON_ITEM), spells(), attitude(ATT_HOSTILE), behaviour(BEH_WANDER),
-      foe(MHITYOU), enchantments(), flags(0L), experience(0), number(0),
-      colour(BLACK), foe_memory(0), shield_blocks(0), god(GOD_NO_GOD), ghost(),
-      seen_context(""), props()
+      ac(0), ev(0), speed(0), speed_increment(0), target(), patrol_point(),
+      travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
+      attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
+      enchantments(), flags(0L), experience(0), base_monster(MONS_NO_MONSTER),
+      number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
+      god(GOD_NO_GOD), ghost(), seen_context(""), props()
+
 {
     travel_path.clear();
     if (crawl_state.arena)
