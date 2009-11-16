@@ -1361,7 +1361,6 @@ void tutorial_first_monster(const monsters &mon)
             "death by misclicking.";
 #endif
 
-    viewwindow(false);
     formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
 
     if (Options.tutorial_type == TUT_RANGER_CHAR)
@@ -1453,7 +1452,6 @@ void tutorial_first_item(const item_def &item)
     tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_CAP_A), gc);
 #endif
 
-    viewwindow(false);
     text += "is an item. If you move there and press <w>g</w> or "
             "<w>,</w> you will pick it up. "
 #ifndef USE_TILE
@@ -2039,7 +2037,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Stairs", gc);
 #endif
-        viewwindow(false);
         text << "are some downstairs. You can enter the next (deeper) "
                 "level by following them down (<w>></w>). To get back to "
                 "this level again, press <w><<</w> while standing on the "
@@ -2067,7 +2064,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Escape hatch", gc);
 #endif
-        viewwindow(false);
         text << "are some kind of escape hatch. You can use them to "
                 "quickly leave a level with <w><<</w> and <w>></w>, "
                 "respectively "
@@ -2091,7 +2087,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Branch stairs", gc);
 #endif
-        viewwindow(false);
         text << "is the entrance to a different branch of the dungeon, "
                 "which might have different terrain, level layout and "
                 "monsters from the current main branch you're in. Branches "
@@ -2125,7 +2120,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Portal", gc);
 #endif
-        viewwindow(false);
         text << _describe_portal(gc);
         break;
 
@@ -2134,7 +2128,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (actor_at(gc))
             DELAY_EVENT;
 
-        viewwindow(false);
 #ifdef USE_TILE
         text << "A small question mark on a stair tile signifies that there "
                 "are items in that position that you may want to check out.";
@@ -2151,7 +2144,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (actor_at(gc))
             DELAY_EVENT;
 
-        viewwindow(false);
 #ifdef USE_TILE
         text << "A small question mark on an item tile signifies that there "
                 "is at least one other item in the same heap that you may want "
@@ -2173,7 +2165,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (actor_at(gc))
             DELAY_EVENT;
 
-        viewwindow(false);
         text << "If any items are covering a trap, then that will be "
                 "indicated by highlighting the <w>^</w> symbol, instead of "
                 "hiding the trap symbol with an item glyph.";
@@ -2215,7 +2206,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             tiles.add_text_tag(TAG_TUTORIAL, altar, gc);
         }
 #endif
-        viewwindow(false);
         text << "is an altar. You can get information about it by pressing "
                 "<w>p</w> while standing on the square. Before taking up "
                 "the corresponding faith you'll be asked for confirmation.";
@@ -2234,7 +2224,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, shop_name(gc), gc);
 #endif
-        viewwindow(false);
         text << "That "
 #ifndef USE_TILE
              << _colourize_glyph(YELLOW, get_screen_glyph(gc)) << " "
@@ -2259,7 +2248,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Closed door", gc);
 #endif
-        viewwindow(false);
 
         text << "That "
 #ifndef USE_TILE
@@ -2409,7 +2397,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_YOU_ENCHANTED:
-        viewwindow(false);
         text << "Enchantments of all types can befall you temporarily. "
                 "Brief descriptions of these appear at the lower end of the "
                 "stats area. Press <w>@</w> for more details. A list of all "
@@ -2475,7 +2462,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_YOU_CURSED:
-        viewwindow(false);
         text << "Curses are comparatively harmless, but they do mean that "
                 "you cannot remove cursed equipment and will have to suffer "
                 "the (possibly) bad effects until you find and read a scroll "
@@ -2553,7 +2539,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_HEAVY_LOAD:
-        viewwindow(false);
         if (you.burden_state != BS_UNENCUMBERED)
         {
             text << "It is not usually a good idea to run around encumbered; "
@@ -2719,7 +2704,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     case TUT_AUTO_EXCLUSION:
         // In the highly unlikely case the player encounters a
         // hostile statue or oklob plant during the tutorial...
-        viewwindow(false);
         if (Options.tut_explored)
         {
             // Hack: Reset tut_just_triggered, to force recursive calling of
@@ -2796,7 +2780,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_POSTBERSERK:
-        viewwindow(false);
         text << "Berserking is extremely exhausting! It burns a lot of "
                 "nutrition, and afterwards you are slowed down and "
                 "occasionally even pass out. Press <w>@</w> to see your "
@@ -3052,7 +3035,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (Options.tutorial_type != TUT_BERSERK_CHAR)
             return;
 
-        viewwindow(false);
         text << "Now that monster is scared of you! Note that you do not "
                 "absolutely have to follow it. Rather, you can let it run "
                 "away. Sometimes, though, it can be useful to attack a "
@@ -3068,7 +3050,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (const monsters *m = monster_at(gc))
             tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
 #endif
-        viewwindow(false);
         text << "That monster looks a bit unusual. You might wish to examine "
                 "it a bit more closely by "
 #ifdef USE_TILE
@@ -3128,7 +3109,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
         }
 #endif
-        viewwindow(false);
         if (!vis)
         {
             text << "Uh-oh, some monster noticed you, either one that's "
@@ -3162,7 +3142,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (!m || !you.can_see(m))
             DELAY_EVENT;
 
-        viewwindow(false);
         text << m->name(DESC_CAP_THE, true) << " didn't vanish, but merely "
                 "moved onto a square which you can't currently see. It's still "
                 "nearby, unless something happens to it in the short amount of "
@@ -3182,7 +3161,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (!m || !you.can_see(m))
             DELAY_EVENT;
 
-        viewwindow(false);
         text << "Sometimes toadstools will grow on decaying corpses, and "
                 "will wither away soon after appearing.  Worshipers of "
                 "Fedhas Madash, the plant god, can make use of them, "
@@ -3196,7 +3174,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         if (!m || !you.can_see(m))
             DELAY_EVENT;
-        viewwindow(false);
 
         text << "That ";
 #ifdef USE_TILE
@@ -3277,7 +3254,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_GLOWING:
-        viewwindow(false);
         text << "You've accumulated so much magical contamination that you're "
                 "glowing! You usually acquire magical contamination from using "
                 "some powerful magics, like invisibility, haste or potions of "
@@ -3322,7 +3298,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_CAUGHT_IN_NET:
-        viewwindow(false);
         text << "While you are held in a net, you cannot move around or engage "
                 "monsters in combat. Instead, any movement you take is counted "
                 "as an attempt to struggle free from the net. With a wielded "
@@ -3348,7 +3323,6 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
     case TUT_LOAD_SAVED_GAME:
     {
-        viewwindow(false);
         text << "Welcome back! If it's been a while since you last played this "
                 "character, you should take some time to refresh your memory "
                 "of your character's progress. It is recommended to at least "
