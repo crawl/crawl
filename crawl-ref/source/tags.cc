@@ -1973,7 +1973,6 @@ void marshallMonster(writer &th, const monsters &m)
     int help = m.travel_target;
     marshallByte(th, help);
 
-    // monster pathfinding (TAG_MINOR_PATHFIND)
     marshallShort(th, m.travel_path.size());
     for (unsigned int i = 0; i < m.travel_path.size(); i++)
         marshallCoord(th, m.travel_path[i]);
