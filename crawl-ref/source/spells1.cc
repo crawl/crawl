@@ -1115,7 +1115,7 @@ void cast_deaths_door(int pow)
         set_hp( allowed_deaths_door_hp(), false );
         deflate_hp( you.hp_max, false );
 
-        you.set_duration(DUR_DEAHTS_DOOR, 10 + random2avg(13, 3)
+        you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
                                            + (random2(pow) / 10));
 
         if (you.duration[DUR_DEATHS_DOOR] > 25 * BASELINE_DELAY)
@@ -1264,11 +1264,7 @@ void extension(int pow)
 
     if (you.duration[DUR_FIRE_SHIELD])
     {
-        you.duration[DUR_FIRE_SHIELD] += random2(pow / 20);
-
-        if (you.duration[DUR_FIRE_SHIELD] > 50)
-            you.duration[DUR_FIRE_SHIELD] = 50;
-
+        you.increase_duration(DUR_FIRE_SHIELD, random2(pow / 20), 50);
         mpr("Your ring of flames roars with new vigour!");
     }
 
@@ -1503,7 +1499,7 @@ void cast_ring_of_flames(int power)
     you.increase_duration(DUR_FIRE_SHIELD,
                           5 + (power / 10) + (random2(power) / 5), 50,
                           "The air around you leaps into flame!");
-    manage_fire_shield();
+    manage_fire_shield(1);
 }
 
 void cast_confusing_touch(int power)
@@ -1543,10 +1539,15 @@ bool cast_sure_blade(int power)
     return (success);
 }
 
-void manage_fire_shield()
+void manage_fire_shield(int delay)
 {
     ASSERT(you.duration[DUR_FIRE_SHIELD]);
-    you.duration[DUR_FIRE_SHIELD]--;
+
+    int old_dur = you.duration[DUR_FIRE_SHIELD];
+
+    you.duration[DUR_FIRE_SHIELD]-= delay;
+    if(you.duration[DUR_FIRE_SHIELD] < 0)
+        you.duration[DUR_FIRE_SHIELD] = 0;
 
     if (!you.duration[DUR_FIRE_SHIELD])
     {
@@ -1554,7 +1555,10 @@ void manage_fire_shield()
         return;
     }
 
-    if (you.duration[DUR_FIRE_SHIELD] == 5)
+    int threshold = get_expiration_threshold(DUR_FIRE_SHIELD);
+
+
+    if (old_dur > threshold && you.duration[DUR_FIRE_SHIELD] < threshold)
         mpr("Your ring of flames is guttering out.", MSGCH_WARN);
 
     // Place fire clouds all around you

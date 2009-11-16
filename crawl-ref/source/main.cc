@@ -2877,7 +2877,7 @@ void world_reacts()
     manage_clouds();
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
-        manage_fire_shield();
+        manage_fire_shield(you.time_taken);
 
     // Food death check.
     if (you.is_undead != US_UNDEAD && you.hunger <= 500)
