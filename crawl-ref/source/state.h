@@ -91,6 +91,9 @@ struct game_state
 
     bool level_annotation_shown;
 
+    // Range beyond which view should be darkend, -1 == disabled.
+    int darken_range;
+
 protected:
     void reset_cmd_repeat();
     void reset_cmd_again();

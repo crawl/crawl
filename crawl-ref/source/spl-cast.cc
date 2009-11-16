@@ -754,13 +754,13 @@ bool cast_a_spell(bool check_range, spell_type spell)
         mpr("There are no visible monsters within range! (Use <w>Z</w> to "
             "cast anyway.)");
 
-        if (Options.target_range != -1)
+        if (Options.darken_beyond_range)
         {
-            Options.target_range = _calc_spell_range(spell);
-            viewwindow(false);
+            crawl_state.darken_range = _calc_spell_range(spell);
+            viewwindow(false, false);
             delay(500);
-            Options.target_range = 0;
-            viewwindow(false);
+            crawl_state.darken_range = -1;
+            viewwindow(false, false);
         }
         return (false);
     }

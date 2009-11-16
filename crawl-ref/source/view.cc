@@ -895,9 +895,10 @@ void viewwindow(bool monster_updates, bool show_updates)
                                                    : DARKGREY;
 #endif
         }
-        else if (Options.target_range > 0)
+        else if (crawl_state.darken_range >= 0)
         {
-            bool out_of_range = grid_distance(you.pos(), gc) > Options.target_range
+            bool out_of_range = grid_distance(you.pos(), gc) >
+                                    crawl_state.darken_range
                                 || !you.see_cell(gc);
 #ifndef USE_TILE
             if (out_of_range)

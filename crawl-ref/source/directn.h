@@ -15,14 +15,11 @@
 #include "ray.h"
 #include "state.h"
 
-class range_view_annotator : public crawl_exit_hook
+class range_view_annotator
 {
 public:
     range_view_annotator(int range);
     virtual ~range_view_annotator();
-    virtual void restore_state();
-private:
-    bool do_anything;
 };
 
 // An object that modifies the behaviour of the direction prompt.

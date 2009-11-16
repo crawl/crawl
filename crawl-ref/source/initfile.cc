@@ -766,7 +766,7 @@ void game_options::reset_options()
     target_oos             = true;
     target_los_first       = true;
     target_unshifted_dirs  = false;
-    target_range           = 0; // -1 -> grey out targets out of range
+    darken_beyond_range    = true;
 
     dump_kill_places       = KDO_ONE_PLACE;
     dump_message_count     = 7;
@@ -3034,8 +3034,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "darken_beyond_range")
     {
-        if (!_read_bool(field, target_range != -1))
-            target_range = -1;
+        darken_beyond_range = _read_bool(field, darken_beyond_range);
     }
     else if (key == "drop_mode")
     {

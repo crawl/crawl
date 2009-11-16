@@ -875,24 +875,20 @@ crawl_exit_hook::~crawl_exit_hook()
 
 range_view_annotator::range_view_annotator(int range)
 {
-    if (range >= 0)
+    if (Options.darken_beyond_range && range >= 0)
     {
-#ifndef USE_TILE
-        if (Options.target_range != -1)
-#endif
-            Options.target_range = range;
+        crawl_state.darken_range = range;
+        viewwindow(false, false);
     }
 }
 
 range_view_annotator::~range_view_annotator()
 {
-    restore_state();
-    viewwindow(false);
-}
-
-void range_view_annotator::restore_state()
-{
-    Options.target_range = 0;
+    if (Options.darken_beyond_range && crawl_state.darken_range >= 0)
+    {
+        crawl_state.darken_range = -1;
+        viewwindow(false, false);
+    }
 }
 
 bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
@@ -1668,6 +1664,7 @@ void direction(dist& moves, targetting_type restricts,
         if (need_beam_redraw)
         {
 #ifndef USE_TILE
+            // Clear the old ray.
             viewwindow(false, false);
 #endif
             if (show_beam && have_beam)
