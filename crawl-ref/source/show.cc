@@ -258,14 +258,15 @@ void show_def::_update_monster(const monsters* mons)
 {
     _check_monster_pos(mons);
 
-    const coord_def e = grid2show(mons->pos());
+    const coord_def pos = mons->pos();
+    const coord_def e = grid2show(pos);
 
     if (!mons->visible_to(&you))
     {
         // ripple effect?
-        if (grd(mons->pos()) == DNGN_SHALLOW_WATER
+        if (grd(pos) == DNGN_SHALLOW_WATER
             && !mons_flies(mons)
-            && env.cgrid(mons->pos()) == EMPTY_CLOUD)
+            && env.cgrid(pos) == EMPTY_CLOUD)
         {
             _set_backup(e);
             grid(e).cls = SH_INVIS_EXPOSED;
@@ -273,7 +274,7 @@ void show_def::_update_monster(const monsters* mons)
             // Translates between colours used for shallow and deep water,
             // if not using the normal LIGHTCYAN / BLUE. The ripple uses
             // the deep water colour.
-            unsigned short base_colour = env.grid_colours(mons->pos());
+            unsigned short base_colour = env.grid_colours(pos);
 
             static const unsigned short ripple_table[] =
                 {BLUE,          // BLACK        => BLUE (default)
@@ -294,6 +295,13 @@ void show_def::_update_monster(const monsters* mons)
                  LIGHTGREY};    // WHITE        => LIGHTGREY
 
             grid(e).colour = ripple_table[base_colour & 0x0f];
+        }
+        else if (is_opaque_cloud(env.cgrid(pos)) && 
+                 !mons->submerged() &&
+                 !mons_is_insubstantial(mons->type))
+        {
+            grid(e).cls = SH_INVIS_EXPOSED;
+            grid(e).colour = get_cloud_colour(env.cgrid(pos));
         }
         return;
     }

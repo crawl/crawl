@@ -311,6 +311,21 @@ static bool _mon_submerged_in_water(const monsters *mon)
             && !mons_flies(mon));
 }
 
+static bool _mon_exposed_in_cloud(const monsters *mon)
+{
+    if (!mon)
+        return (false);
+
+    return (!mon->visible_to(&you) 
+            && is_opaque_cloud(env.cgrid(mon->pos()))
+            && !mons_is_insubstantial(mon->type));
+}
+
+static bool _mon_exposed(const monsters* mon)
+{
+    return (_mon_submerged_in_water(mon) || _mon_exposed_in_cloud(mon));
+}
+
 static bool _is_target_in_range(const coord_def& where, int range)
 {
     // Range doesn't matter.
@@ -1391,7 +1406,7 @@ void direction(dist& moves, targetting_type restricts,
             if (!moves.isEndpoint)
             {
                 const monsters* m = monster_at(moves.target);
-                if (m && _mon_submerged_in_water(m))
+                if (m && _mon_exposed(m))
                     moves.isEndpoint = true;
             }
             moves.isValid  = true;
@@ -1931,7 +1946,7 @@ static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
         // Also, don't target submerged monsters if there are other
         // targets in sight.  (This might be too restrictive.)
         return (mode != TARG_FRIEND
-                && _mon_submerged_in_water(mon)
+                && _mon_exposed(mon)
                 && i_feel_safe(false, false, true, range));
     }
 
@@ -3343,6 +3358,11 @@ static void _describe_cell(const coord_def& where, bool in_range)
         if (_mon_submerged_in_water(mon))
         {
             mpr("There is a strange disturbance in the water here.",
+                MSGCH_EXAMINE_FILTER);
+        }
+        else if (_mon_exposed_in_cloud(mon))
+        {
+            mpr("There is a strange disturbance in the cloud here.",
                 MSGCH_EXAMINE_FILTER);
         }
 
