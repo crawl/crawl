@@ -718,8 +718,6 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 ##########################################################################
 # Dependencies
 
-ifdef USE_DEPGEN
-
 DEPS := $(OBJECTS:.o=.d)
 
 ifeq ($(shell which fastdep 2> /dev/null),)
@@ -733,8 +731,8 @@ endif
 
 depend: $(DEPS)
 
+ifdef USE_DEPGEN
 -include $(DEPS)
-
 endif
 
 # This information is included in crash reports, and is printed with
