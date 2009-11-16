@@ -662,7 +662,7 @@ static bool player_view_update_at(const coord_def &gc)
     // Set excludes in a radius of 1 around harmful clouds genereated
     // by neither monsters nor the player.
     const int cloudidx = env.cgrid(gc);
-    if (cloudidx != EMPTY_CLOUD)
+    if (cloudidx != EMPTY_CLOUD && !crawl_state.arena)
     {
         cloud_struct &cl   = env.cloud[cloudidx];
         cloud_type   ctype = cl.type;
