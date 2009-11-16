@@ -2055,7 +2055,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
     case MONS_PIKEL:
         natural_leader = true;
         band = BAND_PIKEL;
-        band_size = 1 + random2(3);
+        band_size = 4;
         break;
 
     } // end switch
