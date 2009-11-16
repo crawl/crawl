@@ -1803,7 +1803,6 @@ static void tag_construct_level(writer &th)
         {
             marshallByte(th, grd[count_x][count_y]);
             marshallShowtype(th, env.map_knowledge[count_x][count_y].object);
-            marshallShort(th, env.map_knowledge[count_x][count_y].colour);
             marshallShort(th, env.map_knowledge[count_x][count_y].flags);
             marshallLong(th, env.pgrid[count_x][count_y]);
             marshallShort(th, env.cgrid[count_x][count_y]);
@@ -2186,7 +2185,8 @@ static void tag_read_level( reader &th, char minorVersion )
                     static_cast<unsigned char>(unmarshallByte(th)) );
 
             env.map_knowledge[i][j].object   = unmarshallShowtype(th);
-            env.map_knowledge[i][j].colour   = unmarshallShort(th);
+            if (minorVersion < TAG_MINOR_MAPCELL_NOCOLOUR)
+                unmarshallShort(th);
             env.map_knowledge[i][j].flags    = unmarshallShort(th);
             env.pgrid[i][j] = unmarshallLong(th);
 

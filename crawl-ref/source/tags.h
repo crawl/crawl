@@ -45,13 +45,12 @@ enum tag_major_version
 };
 
 // Minor version will be reset to zero when major version changes.
-// Tags are checked with >=, so a minor version of 11 would logically include
-// the dungeon Lua changes.
 enum tag_minor_version
 {
     TAG_MINOR_RESET    = 0, // Minor tags were reset
     TAG_MINOR_DISEASE  = 1, // you.disease changed to an integer
-    TAG_MINOR_VERSION  = 1 // Current version.  (Keep equal to max.)
+    TAG_MINOR_MAPCELL_NOCOLOUR = 2, // map_cell::colour removed
+    TAG_MINOR_VERSION  = 2 // Current version.  (Keep equal to max.)
 };
 
 struct enum_info
