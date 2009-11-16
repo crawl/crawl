@@ -530,6 +530,8 @@ bool mons_speaks(monsters *monster)
             prefixes.push_back("good god");
         else if (is_evil_god(god))
             prefixes.push_back("evil god");
+        else if (god == GOD_XOM)
+            prefixes.push_back("Xom");
     }
 
 #ifdef DEBUG_MONSPEAK

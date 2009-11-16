@@ -1324,6 +1324,36 @@ Crazy Yiuf
 
 @_crazy_yiuf_speech_@
 %%%%
+# Xom worshippers will find Crazy Yiuf to be somewhat more enlightening.
+Xom Crazy Yiuf
+
+# Socrates
+@The_monster@ says, "The life which is unexamined is not worth living."
+
+# Stephen Hawking
+@The_monster@ says, "My goal is simple. It is a complete understanding of the universe, why it is as it is and why it exists at all."
+
+# Einstein
+@The_monster@ says, "One may say the eternal mystery of the world is its comprehensibility."
+
+# Kierkegaard
+@The_monster@ says, "Which is more difficult, to awaken one who sleeps or to awaken one who, awake, dreams that he is awake?"
+
+# Chekhov
+@The_monster@ says, "Everyone has the same god; only people differ."
+
+# Nietzsche
+@The_monster@ says, "Against boredom even gods struggle in vain."
+
+VISUAL:@The_monster@ considers dialectic materialism.
+
+VISUAL:@The_monster@ ponders an existential dilemma.
+
+VISUAL:@The_monster@ shuffles his notes under his cloak.
+
+VISUAL:@The_monster@ heaves a sigh in contemplation.
+
+%%%%
 # Not quite so mad when he's confused.
 confused Crazy Yiuf
 
