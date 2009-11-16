@@ -439,13 +439,12 @@ static bool _kikubaaqudgha_retribution()
     // death/necromancy theme
     const god_type god = GOD_KIKUBAAQUDGHA;
 
-    god_speaks(god,
-        coinflip() ? "You hear Kikubaaqudgha cackling."
-                   : "Kikubaaqudgha's malice focuses upon you.");
+    god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
+                               : "Kikubaaqudgha's malice focuses upon you.");
 
     if (random2(you.experience_level) > 4)
     {
-        // Either zombies, or corpse rot + skeletons
+        // Either zombies, or corpse rot + skeletons.
         receive_corpses(you.experience_level * 4, you.pos());
 
         if (coinflip())
@@ -460,24 +459,27 @@ static bool _kikubaaqudgha_retribution()
             MiscastEffect(&you, -god, SPTYP_NECROMANCY,
                           5 + you.experience_level,
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
-        } while (one_chance_in(5));
-
-    } else if (one_chance_in(10)) {
+        }
+        while (one_chance_in(5));
+    }
+    else if (one_chance_in(10))
+    {
         // torment, or 3 necromancy miscasts
         if (!player_res_torment(false))
             torment(TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; ++i)
             {
                 MiscastEffect(&you, -god, SPTYP_NECROMANCY,
-                    5 + you.experience_level,
-                     random2avg(88, 3), "the malice of Kikubaaqudgha");
+                              5 + you.experience_level,
+                              random2avg(88, 3), "the malice of Kikubaaqudgha");
             }
         }
     }
 
-    // Every act of retribution causes corpses in view to rise against you.
+    // Every act of retribution causes corpses in view to rise against
+    // you.
     animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
                  "the malice of Kikubaaqudgha");
 
