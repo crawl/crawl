@@ -813,12 +813,13 @@ static void draw_los_backup(screen_buffer_t* buffy,
 // Draws the main window using the character set returned
 // by get_show_glyph().
 //
-// This function should not interfere with the game condition,
-// unless do_updates is set (ie. stealth checks for visible
-// monsters).
+// If monster_updates is set, stealth and conversion checks
+// take place. Should be set once per turn.
 //
+// If show_updates is set, env.show and dependent structures
+// are updated. Should be set if anything in view has changed.
 //---------------------------------------------------------------
-void viewwindow(bool do_updates)
+void viewwindow(bool monster_updates, bool show_updates)
 {
     if (you.duration[DUR_TIME_STEP])
         return;
@@ -826,7 +827,6 @@ void viewwindow(bool do_updates)
 
     screen_buffer_t *buffy(crawl_view.vbuf);
 
-    you.update_los();
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
@@ -834,12 +834,17 @@ void viewwindow(bool do_updates)
     mcache.clear_nonref();
 #endif
 
-    env.show.init();
+    if (show_updates)
+    {
+        you.update_los();
+        env.show.init();
+    }
 
-    if (do_updates && !crawl_state.arena)
+    if (monster_updates && !crawl_state.arena)
         monster_grid_updates();
 
-    player_view_update(); // XXX: also conditional on do_updates?
+    if (show_updates)
+        player_view_update();
 
 #ifdef USE_TILE
     tile_draw_rays(true);
