@@ -890,15 +890,15 @@ void viewwindow(bool do_updates)
                                                    : DARKGREY;
 #endif
         }
-        else
+        else if (Options.target_range > 0)
         {
-            bool out_of_range = Options.target_range > 0
-                 && (grid_distance(you.pos(), gc) > Options.target_range);
+            bool out_of_range = grid_distance(you.pos(), gc) > Options.target_range
+                                || !you.see_cell(gc);
 #ifndef USE_TILE
-            if (!you.see_cell(gc) || out_of_range)
+            if (out_of_range)
                 buffy[bufcount + 1] = DARKGREY;
 #else
-            if (out_of_range)
+            if (out_of_range && you.see_cell(gc))
                 buffy[bufcount + 1] |= TILE_FLAG_OOR;
 #endif
         }
