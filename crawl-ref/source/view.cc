@@ -686,7 +686,7 @@ static bool player_view_update_at(const coord_def &gc)
     }
 
     // Print tutorial messages for features in LOS.
-    if (Options.tutorial_left)
+    if (Tutorial.tutorial_left)
         tutorial_observe_cell(gc);
 
     if (!player_in_mappable_area())

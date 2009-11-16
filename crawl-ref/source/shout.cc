@@ -261,7 +261,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     const int  noise_level = get_shout_noise_level(s_type);
     const bool heard       = noisy(noise_level, monster->pos(), monster->mindex());
 
-    if (Options.tutorial_left && (heard || you.can_see(monster)))
+    if (Tutorial.tutorial_left && (heard || you.can_see(monster)))
         learned_something_new(TUT_MONSTER_SHOUT, monster->pos());
 }
 

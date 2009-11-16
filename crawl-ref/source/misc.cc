@@ -1843,7 +1843,7 @@ void up_stairs(dungeon_feature_type force_stair,
         && (!yesno("Are you sure you want to leave the Dungeon?", false, 'n')
             || !_check_carrying_orb()))
     {
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
         {
             if (!yesno("Are you *sure*?  Doing so will end the game!", false,
                        'n'))
@@ -2701,8 +2701,8 @@ bool go_berserk(bool intentional)
     if (!you.can_go_berserk(intentional))
         return (false);
 
-    if (Options.tutorial_left)
-        Options.tut_berserk_counter++;
+    if (Tutorial.tutorial_left)
+        Tutorial.tut_berserk_counter++;
 
     mpr("A red film seems to cover your vision as you go berserk!");
     mpr("You feel yourself moving faster!");

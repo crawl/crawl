@@ -867,8 +867,8 @@ bool melee_attack::player_attack()
     if (player_hits_monster())
     {
         did_hit = true;
-        if (Options.tutorial_left)
-            Options.tut_melee_counter++;
+        if (Tutorial.tutorial_left)
+            Tutorial.tut_melee_counter++;
 
         const bool shield_blocked = attack_shield_blocked(true);
 

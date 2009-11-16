@@ -219,7 +219,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
             print_formatted_paragraph(text, MSGCH_WARN);
         }
 
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
             tutorial_first_monster(*mon);
 #else
         formatted_string fs( channel_to_colour(MSGCH_WARN) );

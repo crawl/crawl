@@ -377,7 +377,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (show_weff_messages)
         wield_warning();
 
-    if (Options.tutorial_left && your_talents(false).size() > old_talents)
+    if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
         learned_something_new(TUT_NEW_ABILITY_ITEM);
 
     // Time calculations.
@@ -3119,8 +3119,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     else
     {
-        if (Options.tutorial_left)
-            Options.tut_throw_counter++;
+        if (Tutorial.tutorial_left)
+            Tutorial.tut_throw_counter++;
 
         // Dropping item copy, since the launched item might be different.
         pbolt.drop_item = !did_return;
@@ -3857,7 +3857,7 @@ bool puton_item(int item_slot)
     // And calculate the effects.
     jewellery_wear_effects(item);
 
-    if (Options.tutorial_left && your_talents(false).size() > old_talents)
+    if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
         learned_something_new(TUT_NEW_ABILITY_ITEM);
 
     // Putting on jewellery is as fast as wielding weapons.

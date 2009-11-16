@@ -50,6 +50,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "transfor.h"
+#include "tutorial.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -2333,7 +2334,7 @@ void list_commands(int hotkey, bool do_redraw_screen)
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 
-    if (Options.tutorial_left)
+    if (Tutorial.tutorial_left)
         _add_formatted_tutorial_help(cols);
     else
         _add_formatted_keyhelp(cols);

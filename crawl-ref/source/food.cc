@@ -247,7 +247,7 @@ static bool _find_butchering_implement(int &butcher_tool)
     if (!potential_candidate)
     {
         mpr("You don't carry any weapon you could use for butchering.");
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
         {
             mpr("You should pick up the first knife, dagger, sword or axe "
                 "you find so you can use it to butcher corpses.",

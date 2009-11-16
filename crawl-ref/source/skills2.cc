@@ -1675,7 +1675,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         }
     }
 
-    if (Options.tutorial_left)
+    if (Tutorial.tutorial_left)
     {
         if (show_description || maxln >= bottom_line - 5)
         {
@@ -1757,7 +1757,7 @@ void show_skills()
         {
             // Show skill description.
             show_description = !show_description;
-            if (Options.tutorial_left)
+            if (Tutorial.tutorial_left)
                 clrscr();
             continue;
         }

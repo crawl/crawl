@@ -1059,7 +1059,7 @@ void more(bool user_forced)
     {
         int keypress = 0;
 
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
         {
             message_out(crawl_view.msgsz.y - 1,
                         LIGHTGREY,

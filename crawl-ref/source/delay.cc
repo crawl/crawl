@@ -1587,7 +1587,7 @@ void armour_wear_effects(const int item_slot)
     if (eq_slot == EQ_SHIELD)
         warn_shield_penalties();
 
-    if (Options.tutorial_left && your_talents(false).size() > old_talents)
+    if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
         learned_something_new(TUT_NEW_ABILITY_ITEM);
 
     you.redraw_armour_class = true;
@@ -1897,7 +1897,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             const_cast<monsters*>(mon)->seen_context = "just seen";
         }
 
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
             tutorial_first_monster(*mon);
 
         return (true);
@@ -1920,10 +1920,10 @@ void autotoggle_autopickup(bool off)
             mprf(MSGCH_WARN,
                 "Deactivating autopickup; reactivate with <w>Ctrl+A</w>.");
         }
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
         {
             learned_something_new(TUT_INVISIBLE_DANGER);
-            Options.tut_seen_invisible = you.num_turns;
+            Tutorial.tut_seen_invisible = you.num_turns;
         }
     }
     else if (Options.autopickup_on < 0) // was turned off automatically

@@ -3101,7 +3101,7 @@ void level_change(bool skip_attribute_increase)
 
     // Increase tutorial time-out now that it's actually become useful
     // for a longer time.
-    if (Options.tutorial_left && you.experience_level >= 7)
+    if (Tutorial.tutorial_left && you.experience_level >= 7)
         tutorial_finished();
 }
 

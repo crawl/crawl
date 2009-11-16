@@ -3058,14 +3058,6 @@ enum tutorial_event_type
 };
 // NOTE: For numbers higher than 85 change size of tutorial_events in externs.h.
 
-enum tutorial_types
-{
-    TUT_BERSERK_CHAR,
-    TUT_MAGIC_CHAR,
-    TUT_RANGER_CHAR,
-    TUT_TYPES_NUM   // 3
-};
-
 enum undead_state_type                // you.is_undead
 {
     US_ALIVE = 0,

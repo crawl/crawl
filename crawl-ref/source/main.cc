@@ -284,7 +284,7 @@ int main( int argc, char *argv[] )
 
     if (game_start)
     {
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
             _startup_tutorial();
         _take_starting_note();
     }
@@ -458,7 +458,7 @@ static void _take_starting_note()
 static void _startup_tutorial()
 {
     // Don't allow triggering at game start.
-    Options.tut_just_triggered = true;
+    Tutorial.tut_just_triggered = true;
 
     msg::streams(MSGCH_TUTORIAL)
         << "Press any key to start the tutorial intro, or Escape to skip it."
@@ -694,8 +694,8 @@ static void _handle_wizard_command( void )
 // Set up the running variables for the current run.
 static void _start_running( int dir, int mode )
 {
-    if (Options.tutorial_events[TUT_SHIFT_RUN] && mode == RMODE_START)
-        Options.tutorial_events[TUT_SHIFT_RUN] = false;
+    if (Tutorial.tutorial_events[TUT_SHIFT_RUN] && mode == RMODE_START)
+        Tutorial.tutorial_events[TUT_SHIFT_RUN] = false;
 
     if (i_feel_safe(true))
         you.running.initialise(dir, mode);
@@ -950,9 +950,9 @@ static void _input()
 
     const bool player_feels_safe = i_feel_safe();
 
-    if (Options.tutorial_left)
+    if (Tutorial.tutorial_left)
     {
-        Options.tut_just_triggered = false;
+        Tutorial.tut_just_triggered = false;
 
         if (you.attribute[ATTR_HELD])
             learned_something_new(TUT_CAUGHT_IN_NET);
@@ -967,7 +967,7 @@ static void _input()
                 tutorial_healing_reminder();
             }
             else if (!you.running
-                     && Options.tutorial_events[TUT_SHIFT_RUN]
+                     && Tutorial.tutorial_events[TUT_SHIFT_RUN]
                      && you.num_turns >= 200
                      && you.hp == you.hp_max
                      && you.magic_points == you.max_magic_points)
@@ -975,7 +975,7 @@ static void _input()
                 learned_something_new(TUT_SHIFT_RUN);
             }
             else if (!you.running
-                     && Options.tutorial_events[TUT_MAP_VIEW]
+                     && Tutorial.tutorial_events[TUT_MAP_VIEW]
                      && you.num_turns >= 500
                      && you.hp == you.hp_max
                      && you.magic_points == you.max_magic_points)
@@ -983,7 +983,7 @@ static void _input()
                 learned_something_new(TUT_MAP_VIEW);
             }
             else if (!you.running
-                     && Options.tutorial_events[TUT_AUTO_EXPLORE]
+                     && Tutorial.tutorial_events[TUT_AUTO_EXPLORE]
                      && you.num_turns >= 700
                      && you.hp == you.hp_max
                      && you.magic_points == you.max_magic_points)
@@ -996,7 +996,7 @@ static void _input()
             if (2*you.hp < you.hp_max)
                 learned_something_new(TUT_RUN_AWAY);
 
-            if (Options.tutorial_type == TUT_MAGIC_CHAR && you.magic_points < 1)
+            if (Tutorial.tutorial_type == TUT_MAGIC_CHAR && you.magic_points < 1)
                 learned_something_new(TUT_RETREAT_CASTER);
         }
     }
@@ -1645,8 +1645,8 @@ void process_command( command_type cmd )
         break;
 
     case CMD_SEARCH_STASHES:
-        if (Options.tut_stashes)
-            Options.tut_stashes = 0;
+        if (Tutorial.tut_stashes)
+            Tutorial.tut_stashes = 0;
         StashTrack.search_stashes();
         break;
 
@@ -1813,8 +1813,8 @@ void process_command( command_type cmd )
             break;
         }
 
-        if (Options.tutorial_left)
-            Options.tut_spell_counter++;
+        if (Tutorial.tutorial_left)
+            Tutorial.tut_spell_counter++;
         if (!cast_a_spell(cmd == CMD_CAST_SPELL))
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
@@ -1837,8 +1837,8 @@ void process_command( command_type cmd )
         break;
 
     case CMD_INTERLEVEL_TRAVEL:
-        if (Options.tut_travel)
-            Options.tut_travel = 0;
+        if (Tutorial.tut_travel)
+            Tutorial.tut_travel = 0;
 
         if (!can_travel_interlevel())
         {
@@ -1879,8 +1879,8 @@ void process_command( command_type cmd )
         break;
 
     case CMD_DISPLAY_MAP:
-        if (Options.tutorial_events[TUT_MAP_VIEW])
-            Options.tutorial_events[TUT_MAP_VIEW] = false;
+        if (Tutorial.tutorial_events[TUT_MAP_VIEW])
+            Tutorial.tutorial_events[TUT_MAP_VIEW] = false;
 
 #if (!DEBUG_DIAGNOSTICS)
         if (!player_in_mappable_area())
@@ -2092,7 +2092,7 @@ void process_command( command_type cmd )
 
     case CMD_NO_CMD:
     default:
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
         {
            std::string msg = "Unknown command. (For a list of commands type "
                              "<w>?\?<lightgrey>.)";
@@ -2508,8 +2508,8 @@ static void _decrement_durations()
         you.increase_duration(DUR_EXHAUSTED, dur * 2);
 
         // Don't trigger too many tutorial messages.
-        const bool tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
-        Options.tutorial_events[TUT_YOU_ENCHANTED] = false;
+        const bool tut_slow = Tutorial.tutorial_events[TUT_YOU_ENCHANTED];
+        Tutorial.tutorial_events[TUT_YOU_ENCHANTED] = false;
 
         {
             // Don't give duplicate 'You feel yourself slow down' messages.
@@ -2551,7 +2551,7 @@ static void _decrement_durations()
         calc_hp();
 
         learned_something_new(TUT_POSTBERSERK);
-        Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
+        Tutorial.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
     if (you.duration[DUR_CORONA])
@@ -2766,7 +2766,7 @@ void world_reacts()
     }
 
 #ifdef USE_TILE
-    if (Options.tutorial_left)
+    if (Tutorial.tutorial_left)
     {
         tiles.clear_text_tags(TAG_TUTORIAL);
         tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
@@ -3829,10 +3829,10 @@ static bool _initialise(void)
 
         // For a new game, wipe out monsters in LOS, and
         // for new tutorial games also the items.
-        zap_los_monsters(Options.tutorial_events[TUT_SEEN_FIRST_OBJECT]);
+        zap_los_monsters(Tutorial.tutorial_events[TUT_SEEN_FIRST_OBJECT]);
 
         // For a newly started tutorial, turn secret doors into normal ones.
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
             tutorial_zap_secret_doors();
     }
 

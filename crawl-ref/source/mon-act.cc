@@ -3060,7 +3060,7 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     // this message to avoid confusion.
     if (monster->seen_context == _just_seen && !you.see_cell(f))
         simple_monster_message(monster, " moves out of view.");
-    else if (Options.tutorial_left && (monster->flags & MF_WAS_IN_VIEW)
+    else if (Tutorial.tutorial_left && (monster->flags & MF_WAS_IN_VIEW)
              && !you.see_cell(f))
     {
         learned_something_new(TUT_MONSTER_LEFT_LOS, monster->pos());

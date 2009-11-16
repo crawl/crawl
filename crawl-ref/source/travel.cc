@@ -2786,8 +2786,8 @@ void start_travel(const coord_def& p)
 
 void start_explore(bool grab_items)
 {
-    if (Options.tut_explored)
-        Options.tut_explored = false;
+    if (Tutorial.tut_explored)
+        Tutorial.tut_explored = false;
 
     if (!player_in_mappable_area())
     {

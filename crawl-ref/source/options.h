@@ -389,23 +389,6 @@ public:
     int         prev_wand;
     bool        prev_randpick;
 
-    ///////////////////////////////////////////////////////////////////////
-    // tutorial
-    FixedVector<bool, 85> tutorial_events;
-    bool tut_explored;
-    bool tut_stashes;
-    bool tut_travel;
-    unsigned int tut_spell_counter;
-    unsigned int tut_throw_counter;
-    unsigned int tut_berserk_counter;
-    unsigned int tut_melee_counter;
-    unsigned int tut_last_healed;
-    unsigned int tut_seen_invisible;
-
-    bool tut_just_triggered;
-    unsigned int tutorial_type;
-    unsigned int tutorial_left;
-
 private:
     typedef std::map<std::string, std::string> string_map;
     string_map               aliases;

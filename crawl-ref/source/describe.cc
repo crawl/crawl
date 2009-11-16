@@ -2107,7 +2107,7 @@ void describe_feature_wide(const coord_def& pos)
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    if (Options.tutorial_left)
+    if (Tutorial.tutorial_left)
         tutorial_describe_pos(pos.x, pos.y);
 
     if (getch() == 0)
@@ -2157,7 +2157,7 @@ void get_item_desc(const item_def &item, describe_info &inf, bool terse)
     // so we can actually output these spells if space is scarce.
     const bool verbose = !terse || !item.has_spells();
     inf.body << get_item_description(item, verbose, false,
-                                     Options.tutorial_left);
+                                     Tutorial.tutorial_left);
 }
 
 // Returns true if spells can be shown to player.
@@ -2167,7 +2167,7 @@ static bool _show_item_description(const item_def &item)
     const          int height    = get_number_of_lines();
 
     std::string desc =
-        get_item_description(item, true, false, Options.tutorial_left);
+        get_item_description(item, true, false, Tutorial.tutorial_left);
 
     int num_lines = count_desc_lines(desc, lineWidth) + 1;
 
@@ -2179,7 +2179,7 @@ static bool _show_item_description(const item_def &item)
         desc = get_item_description(item, 1, false, true);
 
     print_description(desc);
-    if (Options.tutorial_left)
+    if (Tutorial.tutorial_left)
         tutorial_describe_item(item);
 
     if (item.has_spells())
@@ -2337,7 +2337,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
             prompt = "<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
 
-            if (Options.tutorial_left && wherey() <= get_number_of_lines() - 5)
+            if (Tutorial.tutorial_left && wherey() <= get_number_of_lines() - 5)
                 tutorial_inscription_info(need_autoinscribe, prompt);
         }
         did_prompt = true;
@@ -2992,7 +2992,7 @@ void describe_monsters(const monsters& mons, bool force_seen)
 
     // TODO enne - this should really move into get_monster_db_desc
     // and an additional tutorial string added to describe_info.
-    if (Options.tutorial_left)
+    if (Tutorial.tutorial_left)
         tutorial_describe_monster(&mons);
 
     if (getch() == 0)

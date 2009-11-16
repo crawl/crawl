@@ -56,6 +56,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
+#include "tutorial.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 #define DEBUG_TEMPLES 1
@@ -2695,7 +2696,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
     // Disallow entry vaults for tutorial (only complicates things).
     if (!vault
         && lid.branch == BRANCH_MAIN_DUNGEON
-        && lid.depth == 1 && !Options.tutorial_left)
+        && lid.depth == 1 && !Tutorial.tutorial_left)
     {
         vault = random_map_for_tag("entry");
     }

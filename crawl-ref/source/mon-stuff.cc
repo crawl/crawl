@@ -498,7 +498,7 @@ int place_monster_corpse(const monsters *monster, bool silent,
 
 static void _tutorial_inspect_kill()
 {
-    if (Options.tutorial_events[TUT_KILLED_MONSTER])
+    if (Tutorial.tutorial_events[TUT_KILLED_MONSTER])
         learned_something_new(TUT_KILLED_MONSTER);
 }
 
@@ -3480,7 +3480,7 @@ void seen_monster(monsters *monster)
 
     if (!mons_is_mimic(monster->type))
     {
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
             tutorial_first_monster(*monster);
 
         if (MONST_INTERESTING(monster))

@@ -1305,7 +1305,7 @@ void end_game(scorefile_entry &se)
         flush_prev_message();
         viewwindow(false); // don't do for leaving/winning characters
 
-        if (Options.tutorial_left)
+        if (Tutorial.tutorial_left)
             tutorial_death_screen();
     }
 

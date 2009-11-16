@@ -2137,7 +2137,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
     abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE
                             | MF_ALWAYS_SHOW_MORE);
 
-    if (Options.tutorial_left)
+    if (Tutorial.tutorial_left)
     {
         // XXX: This could be buggy if you manage to pick up lots and
         // lots of abilities during the tutorial.

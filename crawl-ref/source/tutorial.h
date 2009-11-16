@@ -20,6 +20,14 @@ class formatted_string;
 class writer;
 class reader;
 
+enum tutorial_types
+{
+    TUT_BERSERK_CHAR,
+    TUT_MAGIC_CHAR,
+    TUT_RANGER_CHAR,
+    TUT_TYPES_NUM   // 3
+};
+    
 void save_tutorial(writer& outf);
 void load_tutorial(reader& inf);
 void init_tutorial_options(void);
@@ -56,5 +64,25 @@ bool tutorial_pos_interesting(int x, int y);
 void tutorial_describe_pos(int x, int y);
 bool tutorial_monster_interesting(const monsters *mons);
 void tutorial_describe_monster(const monsters *mons);
+
+struct tutorial_state
+{
+    FixedVector<bool, 85> tutorial_events;
+    bool tut_explored;
+    bool tut_stashes;
+    bool tut_travel;
+    unsigned int tut_spell_counter;
+    unsigned int tut_throw_counter;
+    unsigned int tut_berserk_counter;
+    unsigned int tut_melee_counter;
+    unsigned int tut_last_healed;
+    unsigned int tut_seen_invisible;
+
+    bool tut_just_triggered;
+    unsigned int tutorial_type;
+    unsigned int tutorial_left;
+};
+
+extern tutorial_state Tutorial;
 
 #endif

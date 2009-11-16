@@ -3384,7 +3384,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #if DEBUG_DIAGNOSTICS
         debug_stethoscope(mgrd(where));
 #endif
-        if (Options.tutorial_left && tutorial_monster_interesting(mon))
+        if (Tutorial.tutorial_left && tutorial_monster_interesting(mon))
         {
             std::string msg;
 #ifdef USE_TILE
@@ -3471,7 +3471,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
          marker.c_str(),
          traveldest.c_str());
 #else
-    if (Options.tutorial_left && tutorial_pos_interesting(where.x, where.y))
+    if (Tutorial.tutorial_left && tutorial_pos_interesting(where.x, where.y))
     {
 #ifdef USE_TILE
         feature_desc += " (<w>Right-click</w> for more information.)";

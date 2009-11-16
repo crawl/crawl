@@ -2403,7 +2403,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
 
-    if (Options.tutorial_left && your_talents(false).size() > old_talents)
+    if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
         learned_something_new(TUT_NEW_ABILITY_MUT);
 
     return (true);
