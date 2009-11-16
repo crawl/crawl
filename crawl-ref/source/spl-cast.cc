@@ -1258,19 +1258,20 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             // is a player controllable act. - bwr
             if (one_chance_in(12))
                 dec_penance(GOD_SIF_MUNA, 1);
-
-        } else if (spell_typematch(spell, SPTYP_NECROMANCY) &&
-            you.religion != GOD_KIKUBAAQUDGHA &&
-            you.penance[GOD_KIKUBAAQUDGHA] && one_chance_in(20))
+        }
+        else if (spell_typematch(spell, SPTYP_NECROMANCY)
+                 && you.religion != GOD_KIKUBAAQUDGHA
+                 && you.penance[GOD_KIKUBAAQUDGHA]
+                 && one_chance_in(20))
         {
             // And you thought you'd Necromutate your way out of penance...
-            god_speaks(GOD_KIKUBAAQUDGHA,
-            "Kikubaaqudgha does not allow the disloyal to dabble in death!");
+            simple_god_message(" does not allow the disloyal to dabble in "
+                               "death!", GOD_KIKUBAAQUDGHA);
 
             // The spell still goes through, but you get a miscast anyway.
             MiscastEffect(&you, -god, SPTYP_NECROMANCY,
-                (you.experience_level / 2) + (spell_mana(spell) * 2),
-                random2avg(88, 3), "the malice of Kikubaaqudgha");
+                          (you.experience_level / 2) + (spell_mana(spell) * 2),
+                          random2avg(88, 3), "the malice of Kikubaaqudgha");
         }
 
         const int spfail_chance = spell_fail(spell);
