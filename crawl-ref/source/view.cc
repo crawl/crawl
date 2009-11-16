@@ -619,6 +619,12 @@ bool view_update()
     return (false);
 }
 
+void flash_view(int colour)
+{
+    you.flash_colour = colour;
+    viewwindow(false, false);
+}
+
 static void _debug_pane_bounds()
 {
 #if DEBUG_PANE_BOUNDS

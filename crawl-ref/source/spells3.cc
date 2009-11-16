@@ -1826,8 +1826,7 @@ bool cast_sanctuary(const int power)
     else
         mpr("You are suddenly bathed in radiance!");
 
-    you.flash_colour = WHITE;
-    viewwindow(false);
+    flash_view(WHITE);
 
     holy_word(100, HOLY_WORD_ZIN, you.pos(), true);
 

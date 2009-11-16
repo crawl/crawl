@@ -2258,8 +2258,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         tiles.add_overlay(you.pos(), tileidx_zap(GREEN));
         update_screen();
 #else
-        you.flash_colour = LIGHTGREEN;
-        viewwindow(false);
+        flash_view(LIGHTGREEN);
 #endif
         mpr("The lock glows an eerie green colour!");
         more();

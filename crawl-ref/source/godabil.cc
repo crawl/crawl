@@ -1337,8 +1337,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     coord_def old_pos = you.pos();
 
     mpr("You step out of the flow of time.");
-    you.flash_colour = LIGHTBLUE;
-    viewwindow(false);
+    flash_view(LIGHTBLUE);
     you.moveto(coord_def(0, 0));
     you.duration[DUR_TIME_STEP] = pow;
 
@@ -1358,9 +1357,9 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     delay(1000);
 #endif
 
-    you.flash_colour = 0;
     you.moveto(old_pos);
     you.duration[DUR_TIME_STEP] = 0;
-    viewwindow(false);
+
+    flash_view(0);
     mpr("You return to the normal time flow.");
 }

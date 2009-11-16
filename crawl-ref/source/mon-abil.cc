@@ -295,8 +295,7 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
                  merge_to->name(DESC_NOCAP_A).c_str());
         }
 
-        you.flash_colour = LIGHTGREEN;
-        viewwindow(false);
+        flash_view(LIGHTGREEN);
 
         int flash_delay = 150;
         // Scale delay to match change in arena_delay.

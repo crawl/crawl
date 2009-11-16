@@ -948,8 +948,7 @@ bool lugonu_corrupt_level(int power)
 
     mpr("Lugonu's Hand of Corruption reaches out!", MSGCH_GOD);
 
-    you.flash_colour = MAGENTA;
-    viewwindow(false);
+    flash_view(MAGENTA);
 
     _initialise_level_corrupt_seeds(power);
 

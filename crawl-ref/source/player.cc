@@ -7024,8 +7024,7 @@ void player::hibernate(int)
     mpr("You fall asleep.");
 
     stop_delay();
-    flash_colour = DARKGREY;
-    viewwindow(false);
+    flash_view(DARKGREY);
 
     // Do this *after* redrawing the view, or viewwindow() will no-op.
     set_duration(DUR_SLEEP, 3 + random2avg(5, 2));
@@ -7041,8 +7040,7 @@ void player::put_to_sleep(int power)
     mpr("You fall asleep!");
 
     stop_delay();
-    flash_colour = DARKGREY;
-    viewwindow(false);
+    flash_view(DARKGREY);
 
     // As above, do this after redraw.
     set_duration(DUR_SLEEP, 5 + random2avg(power/10, 5));
@@ -7054,8 +7052,7 @@ void player::awake()
 
     duration[DUR_SLEEP] = 0;
     mpr("You wake up.");
-    this->flash_colour = BLACK;
-    viewwindow(false);
+    flash_view(BLACK);
 }
 
 void player::check_awaken(int disturbance)

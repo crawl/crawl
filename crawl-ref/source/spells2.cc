@@ -641,8 +641,7 @@ void cast_toxic_radiance()
 {
     mpr("You radiate a sickly green light!");
 
-    you.flash_colour = GREEN;
-    viewwindow(false);
+    flash_view(GREEN);
     more();
     mesclr();
 
@@ -707,8 +706,7 @@ void cast_refrigeration(int pow)
 {
     mpr("The heat is drained from your surroundings.");
 
-    you.flash_colour = LIGHTCYAN;
-    viewwindow(false);
+    flash_view(LIGHTCYAN);
     more();
     mesclr();
 
@@ -787,8 +785,7 @@ void drain_life(int pow)
     // this function with spell level power.
     ASSERT(pow <= 27);
 
-    you.flash_colour = DARKGREY;
-    viewwindow(false);
+    flash_view(DARKGREY);
     more();
     mesclr();
 

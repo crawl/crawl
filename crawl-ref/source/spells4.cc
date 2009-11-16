@@ -590,8 +590,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
 
 void cast_ignite_poison(int pow)
 {
-    you.flash_colour = RED;
-    viewwindow(false);
+    flash_view(RED);
 
     // Poison branding becomes fire branding.
     if (you.weapon()
@@ -739,8 +738,7 @@ void cast_ignite_poison(int pow)
 #ifndef USE_TILES
     delay(100); // show a brief flash
 #endif
-    you.flash_colour = 0;
-    viewwindow(false);
+    flash_view(0);
 }
 
 void cast_silence(int pow)
