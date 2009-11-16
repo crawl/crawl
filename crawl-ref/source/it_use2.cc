@@ -273,7 +273,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
     case POT_PARALYSIS:
         you.paralyse(NULL,
-                     (2 + random2( 6 + you.duration[DUR_PARALYSIS] )) / factor);
+                     (2 + random2( 6 + you.duration[DUR_PARALYSIS]
+                                       / BASELINE_DELAY )) / factor);
         xom_is_stimulated(64 / xom_factor);
         break;
 
