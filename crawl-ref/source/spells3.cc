@@ -670,7 +670,7 @@ bool receive_corpses(int pow, coord_def where)
     int percent_chance_a_square_receives_extra_corpse = // can be > 100
         int(float(expected_extra_corpses) / float(spaces_for_corpses) * 100.0);
 
-    int corpses_generated = 0;
+    int corpses_created = 0;
 
     for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
                             &you.get_los());
@@ -679,13 +679,13 @@ bool receive_corpses(int pow, coord_def where)
         bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, grd(*ri));
         bool square_is_player_square = (*ri == where);
         bool square_gets_corpse =
-            (random2(100) < percent_chance_a_square_receives_extra_corpse) ||
-            (square_is_player_square && random2(100) < 97);
+            (random2(100) < percent_chance_a_square_receives_extra_corpse)
+            || (square_is_player_square && random2(100) < 97);
 
         if (!square_is_walkable || !square_gets_corpse)
             continue;
 
-        corpses_generated++;
+        corpses_created++;
 
         // Find an appropriate monster corpse for level and power.
         monster_type mon_type = MONS_PROGRAM_BUG;
@@ -728,12 +728,12 @@ bool receive_corpses(int pow, coord_def where)
         move_item_to_grid(&index_of_corpse_created, *ri);
     }
 
-    if (corpses_generated)
+    if (corpses_created)
     {
         if (you.religion == GOD_KIKUBAAQUDGHA)
         {
-            simple_god_message(corpses_generated > 1 ? " delivers you corpses!"
-                                                 : " delivers you a corpse!");
+            simple_god_message(corpses_created > 1 ? " delivers you corpses!"
+                                                   : " delivers you a corpse!");
         }
         maybe_update_stashes();
         return (true);
@@ -741,9 +741,7 @@ bool receive_corpses(int pow, coord_def where)
     else
     {
         if (you.religion == GOD_KIKUBAAQUDGHA)
-        {
             simple_god_message(" can find no cadavers for you!");
-        }
         return (false);
     }
 }
