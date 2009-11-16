@@ -2166,7 +2166,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
 //  objects) which get installed at some point.
 static void _decrement_durations()
 {
-    int delay = (you.time_taken * BASELINE_DELAY) / 10;
+    int delay = you.time_taken;
 
     if (wearing_amulet(AMU_THE_GOURMAND))
     {
@@ -2713,14 +2713,17 @@ static void _check_sanctuary()
     decrease_sanctuary_radius();
 }
 
-static void _regenerate_hp_and_mp()
+static void _regenerate_hp_and_mp(int delay)
 {
     // XXX: using an int tmp to fix the fact that hit_points_regeneration
     // is only an unsigned char and is thus likely to overflow. -- bwr
     int tmp = you.hit_points_regeneration;
 
     if (you.hp < you.hp_max && !you.disease && !you.duration[DUR_DEATHS_DOOR])
-        tmp += player_regen();
+    {
+        int base_val = player_regen();
+        tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
+    }
 
     while (tmp >= 100)
     {
@@ -2736,7 +2739,10 @@ static void _regenerate_hp_and_mp()
     tmp = you.magic_points_regeneration;
 
     if (you.magic_points < you.max_magic_points)
-        tmp += 7 + you.max_magic_points / 2;
+    {
+        int base_val = 7 + you.max_magic_points / 2;
+        tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
+    }
 
     while (tmp >= 100)
     {
@@ -2827,7 +2833,7 @@ void world_reacts()
     if (food_use > 0 && you.hunger >= 40)
         make_hungry(food_use, true);
 
-    _regenerate_hp_and_mp();
+    _regenerate_hp_and_mp(you.time_taken);
 
     // If you're wielding a rod, it'll gradually recharge.
     _recharge_rods();
