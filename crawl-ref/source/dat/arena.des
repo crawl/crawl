@@ -479,3 +479,84 @@ o.o.o.o.o.o.o.o.o
 o...o...A...o...o
 ooooooooooooooooo
 ENDMAP
+
+NAME: arena_wall
+TAGS: arena_wall no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = o
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X...............X
+X.......B.......X
+X...............X
+X...............X
+X...............X
+X...............X
+X...............X
+Xxx.xxooOooxx.xxX
+X...............X
+X...............X
+X...............X
+X...............X
+X...............X
+X.......A.......X
+X...............X
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: arena_glasswall
+TAGS: arena_glasswall no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = o
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X...............X
+X.......B.......X
+X...............X
+X...............X
+X...............X
+X...............X
+X...............X
+Xxx.ooooOoooo.xxX
+X...............X
+X...............X
+X...............X
+X...............X
+X...............X
+X.......A.......X
+X...............X
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: arena_doorwall
+TAGS: arena_doorwall no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = o
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X...............X
+X.......B.......X
+X...............X
+X...............X
+X...............X
+X...............X
+X...............X
+XXX+XXooOooXX+XXX
+X...............X
+X...............X
+X...............X
+X...............X
+X...............X
+X.......A.......X
+X...............X
+XXXXXXXXXXXXXXXXX
+ENDMAP
