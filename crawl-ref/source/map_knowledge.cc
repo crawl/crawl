@@ -83,21 +83,6 @@ bool is_map_knowledge_detected_mons(int x, int y)
     return (env.map_knowledge[x][y].flags & MAP_DETECTED_MONSTER);
 }
 
-void set_map_knowledge_glyph(int x, int y, show_type object, int col)
-{
-    map_cell &c = env.map_knowledge[x][y];
-    c.object = object;
-    c.colour = col;
-#ifdef USE_TILE
-    tiles.update_minimap(x, y);
-#endif
-}
-
-void set_map_knowledge_glyph(const coord_def& c, show_type object, int col)
-{
-    set_map_knowledge_glyph(c.x, c.y, object, col);
-}
-
 void set_map_knowledge_obj(const coord_def& where, show_type obj)
 {
     env.map_knowledge(where).object = obj;

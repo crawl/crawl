@@ -688,11 +688,8 @@ static bool player_view_update_at(const coord_def &gc)
 
     bool need_excl_update = is_terrain_changed(gc) || !is_terrain_seen(gc);
 
-    show_type object = env.show(ep);
-    glyph g = get_show_glyph(object);
-
     set_terrain_seen(gc);
-    set_map_knowledge_glyph(gc, object, g.col);
+    set_map_knowledge_obj(gc, env.show(ep));
     set_map_knowledge_detected_mons(gc, false);
     set_map_knowledge_detected_item(gc, false);
 
@@ -707,10 +704,7 @@ static bool player_view_update_at(const coord_def &gc)
 #endif
 
     if (Options.clean_map && env.show.get_backup(ep))
-    {
-        glyph gb = get_show_glyph(env.show.get_backup(ep));
-        set_map_knowledge_glyph(gc, env.show.get_backup(ep), gb.col);
-    }
+        set_map_knowledge_obj(gc, env.show.get_backup(ep));
 
     return (need_excl_update);
 }
