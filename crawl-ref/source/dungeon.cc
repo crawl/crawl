@@ -43,6 +43,7 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "mon-pathfind.h"
 #include "notes.h"
 #include "place.h"
 #include "player.h"

@@ -21,6 +21,7 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-place.h"
+#include "mon-pathfind.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
 #include "mon-iter.h"

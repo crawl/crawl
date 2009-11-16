@@ -105,6 +105,7 @@ mon-gear.o \
 mon-grow.o \
 mon-info.o \
 mon-iter.o \
+mon-pathfind.o \
 mon-pick.o \
 mon-util.o \
 mon-place.o \
