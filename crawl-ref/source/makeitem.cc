@@ -1278,9 +1278,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_SCIMITAR:
             if (one_chance_in(25))
                 rc = SPWPN_PAIN;
-
-            if (one_chance_in(7))
-                rc = SPWPN_SPEED;
             // **** intentional fall through here ****
         case WPN_GREAT_SWORD:
         case WPN_DOUBLE_SWORD:
@@ -1363,9 +1360,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_REACHING;
 
             if (one_chance_in(5))
-                rc = SPWPN_SPEED;
-
-            if (one_chance_in(5))
                 rc = SPWPN_ELECTROCUTION;
             break;
 
@@ -1383,8 +1377,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(4))
                 rc = SPWPN_PROTECTION;
 
-            if (one_chance_in(5))
-                rc = SPWPN_SPEED;
             // **** intentional fall through here ****
         case WPN_SPEAR:
             if (one_chance_in(25))
