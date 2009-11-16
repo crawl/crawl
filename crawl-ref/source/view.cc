@@ -763,12 +763,6 @@ static void draw_player(screen_buffer_t* buffy,
             buffy[1] = CYAN;
     }
 #else
-    if (player_in_mappable_area())
-    {
-        env.tile_bk_bg(gc) = env.tile_bg(ep);
-        env.tile_bk_fg(gc) = env.tile_fg(ep);
-    }
-
     buffy[0] = env.tile_fg(ep) = tileidx_player(you.char_class);
     buffy[1] = env.tile_bg(ep);
 #endif
