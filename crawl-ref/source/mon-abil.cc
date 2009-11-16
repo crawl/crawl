@@ -1326,12 +1326,16 @@ void mon_nearby_ability(monsters *monster)
     case MONS_GOLDEN_EYE:
         if (_eyeball_will_use_ability(monster))
         {
-            if (you.can_see(monster) && you.can_see(foe))
+            const bool can_see = you.can_see(monster);
+            if (can_see && you.can_see(foe))
                 mprf("%s blinks at %s.",
                      monster->name(DESC_CAP_THE).c_str(),
                      foe->name(DESC_NOCAP_THE).c_str());
 
             int confuse_power = 2 + random2(3);
+
+            if (foe->atype() == ACT_PLAYER && !can_see)
+                mpr("You feel you are being watched by something.");
 
             if (foe->check_res_magic((monster->hit_dice * 5) * confuse_power))
             {
@@ -1352,10 +1356,14 @@ void mon_nearby_ability(monsters *monster)
     case MONS_GIANT_EYEBALL:
         if (_eyeball_will_use_ability(monster))
         {
-            if (you.can_see(monster) && you.can_see(foe))
+            const bool can_see = you.can_see(monster);
+            if (can_see && you.can_see(foe))
                 mprf("%s stares at %s.",
                      monster->name(DESC_CAP_THE).c_str(),
                      foe->name(DESC_NOCAP_THE).c_str());
+
+            if (foe->atype() == ACT_PLAYER && !can_see)
+                mpr("You feel you are being watched by something.");
 
             // Subtly different from old paralysis behaviour, but
             // it'll do.
@@ -1364,10 +1372,12 @@ void mon_nearby_ability(monsters *monster)
         break;
 
     case MONS_EYE_OF_DRAINING:
-        if (_eyeball_will_use_ability(monster)
-            && foe->atype() == ACT_PLAYER)
+        if (_eyeball_will_use_ability(monster) && foe->atype() == ACT_PLAYER)
         {
-            simple_monster_message(monster, " stares at you.");
+            if (you.can_see(monster))
+                simple_monster_message(monster, " stares at you.");
+            else
+                mpr("You feel you are being watched by something.");
 
             dec_mp(5 + random2avg(13, 3));
 
