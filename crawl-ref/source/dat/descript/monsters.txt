@@ -397,6 +397,10 @@ ball lightning
 
 An oddity of nature, ball lightning bounces around behaving almost, but not quite, entirely unlike regular lightning.
 %%%%
+ballistomycete
+
+A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the dank underground dungeon.
+%%%%
 bear
 
 A common cave bear.
