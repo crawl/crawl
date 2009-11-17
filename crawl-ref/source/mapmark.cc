@@ -12,6 +12,7 @@
 
 #include "clua.h"
 #include "cluautil.h"
+#include "coordit.h"
 #include "directn.h"
 #include "dlua.h"
 #include "libutil.h"

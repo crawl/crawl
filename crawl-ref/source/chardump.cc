@@ -29,6 +29,7 @@
 #include "hiscores.h"
 #include "initfile.h"
 #include "itemprop.h"
+#include "itemname.h"
 #include "items.h"
 #include "kills.h"
 #include "macro.h"

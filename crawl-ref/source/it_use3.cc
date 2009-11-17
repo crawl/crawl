@@ -17,6 +17,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
+#include "coordit.h"
 #include "database.h"
 #include "decks.h"
 #include "directn.h"

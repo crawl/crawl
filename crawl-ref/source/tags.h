@@ -9,7 +9,6 @@
 
 #include <cstdio>
 #include <stdint.h>
-#include "externs.h"
 
 struct show_type;
 

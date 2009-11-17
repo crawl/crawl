@@ -9,7 +9,6 @@
 #define FILES_H
 
 #include "externs.h"
-#include "fixedarray.h"
 #include "player.h"
 #include <stdio.h>
 #include <string>

@@ -34,10 +34,12 @@
 #include "spells4.h"
 #include "spl-mis.h"
 #include "stash.h"
+#include "state.h"
 #include "transfor.h"
 #include "shout.h"
 #include "xom.h"
 
+#include <sstream>
 
 static void _god_smites_you(god_type god, const char *message = NULL,
                             kill_method_type death_type = NUM_KILLBY);

@@ -7,7 +7,6 @@
 #ifndef __MAPMARK_H__
 #define __MAPMARK_H__
 
-#include "dungeon.h"
 #include "dgnevent.h"
 #include "clua.h"
 #include "dlua.h"

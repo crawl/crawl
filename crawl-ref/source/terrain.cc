@@ -13,6 +13,7 @@
 #include <sstream>
 
 #include "cloud.h"
+#include "coordit.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "map_knowledge.h"

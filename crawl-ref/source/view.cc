@@ -31,6 +31,7 @@
 #include "clua.h"
 #include "colour.h"
 #include "coord.h"
+#include "coordit.h"
 #include "database.h"
 #include "debug.h"
 #include "delay.h"

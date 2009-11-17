@@ -11,7 +11,6 @@
 #include "describe.h"
 #include "externs.h"
 #include "enum.h"
-#include "libgui.h"
 #include "ray.h"
 #include "state.h"
 

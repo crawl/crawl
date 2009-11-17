@@ -5,7 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "religion.h"
 #include "goditem.h"
 
 #include <algorithm>
@@ -15,7 +14,11 @@
 #include <stdio.h>
 #include <cmath>
 
-#include "externs.h"
+#include "itemname.h"
+#include "religion.h"
+#include "spl-book.h"
+#include "spl-cast.h"
+#include "spl-util.h"
 
 bool is_holy_item(const item_def& item)
 {

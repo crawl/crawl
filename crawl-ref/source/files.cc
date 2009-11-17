@@ -42,6 +42,7 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "clua.h"
+#include "coordit.h"
 #include "debug.h"
 #include "directn.h"
 #include "dungeon.h"

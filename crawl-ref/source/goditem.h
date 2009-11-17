@@ -5,11 +5,7 @@
 #include "externs.h"
 
 #include "artefact.h"
-#include "itemname.h"
 #include "player.h"
-#include "spl-book.h"
-#include "spl-cast.h"
-#include "spl-util.h"
 
 bool is_holy_item(const item_def& item);
 bool is_unholy_item(const item_def& item);

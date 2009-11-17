@@ -21,6 +21,7 @@
 #include "beam.h"
 #include "branch.h"
 #include "cloud.h"
+#include "coordit.h"
 #include "directn.h"
 #include "debug.h"
 #include "delay.h"

@@ -7,7 +7,6 @@
 #include "AppHdr.h"
 
 #include "maps.h"
-#include "tags.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -17,6 +16,7 @@
 #include <unistd.h>
 #endif
 
+#include "coordit.h"
 #include "dbg-maps.h"
 #include "dungeon.h"
 #include "enum.h"
@@ -27,6 +27,7 @@
 #include "mon-place.h"
 #include "random.h"
 #include "state.h"
+#include "tags.h"
 #include "terrain.h"
 
 static bool _safe_vault_place(const map_def &md,

@@ -12,12 +12,15 @@
 
 #include "clua.h"
 #include "coord.h"
+#include "coordit.h"
 #include "crash.h"
 #include "dbg-crsh.h"
 #include "dbg-scan.h"
 #include "dbg-util.h"
 #include "directn.h"
 #include "dlua.h"
+#include "dungeon.h"
+#include "env.h"
 #include "initfile.h"
 #include "jobs.h"
 #include "mapmark.h"
@@ -29,6 +32,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
+#include "travel.h"
 
 #ifdef DEBUG
 static std::string _assert_msg;

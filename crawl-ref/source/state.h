@@ -7,7 +7,6 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include "enum.h"
 #include "player.h"
 #include <vector>
 

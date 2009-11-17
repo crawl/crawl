@@ -9,7 +9,6 @@
 #define SHOPPING_H
 
 #include "externs.h"
-#include "itemname.h"
 
 int artefact_value(const item_def &item);
 

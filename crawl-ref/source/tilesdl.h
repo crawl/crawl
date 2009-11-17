@@ -8,9 +8,7 @@
 #ifndef TILESDL_H
 #define TILESDL_H
 
-#include "debug.h"
 #include "externs.h"
-#include "fixedvector.h"
 #include "tilereg.h"
 
 // This struct defines all of the state that any particular rendering needs.

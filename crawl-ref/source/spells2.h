@@ -8,7 +8,7 @@
 #define SPELLS2_H
 
 #include "enum.h"
-#include "itemprop.h"  // from brand_type()
+#include "itemprop.h"
 
 struct dist;
 

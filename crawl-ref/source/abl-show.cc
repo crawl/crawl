@@ -24,6 +24,7 @@
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
+#include "directn.h"
 #include "effects.h"
 #include "food.h"
 #include "godabil.h"

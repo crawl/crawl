@@ -9,6 +9,7 @@
 
 #include "cluautil.h"
 #include "coord.h"
+#include "coordit.h"
 #include "dungeon.h"
 #include "l_libs.h"
 #include "mapdef.h"

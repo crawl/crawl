@@ -8,10 +8,6 @@
 #ifndef SPELLS1_H
 #define SPELLS1_H
 
-
-#include "externs.h"
-#include "directn.h"
-
 struct bolt;
 
 bool cast_sure_blade(int power);

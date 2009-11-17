@@ -13,6 +13,7 @@
 #include "arena.h"
 #include "beam.h"
 #include "colour.h"
+#include "coordit.h"
 #include "directn.h"
 #include "fprop.h"
 #include "ghost.h"

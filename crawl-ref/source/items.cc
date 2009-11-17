@@ -16,12 +16,12 @@
 #include <ctype.h>
 
 #include "externs.h"
-#include "options.h"
 
 #include "arena.h"
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "coordit.h"
 #include "dbg-util.h"
 #include "debug.h"
 #include "decks.h"
@@ -44,6 +44,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "place.h"
 #include "player.h"
 #include "quiver.h"

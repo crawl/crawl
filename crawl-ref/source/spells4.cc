@@ -18,6 +18,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
+#include "coordit.h"
 #include "debug.h"
 #include "delay.h"
 #include "directn.h"

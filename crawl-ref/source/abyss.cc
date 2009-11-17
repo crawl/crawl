@@ -14,6 +14,7 @@
 #include "artefact.h"
 #include "cloud.h"
 #include "colour.h"
+#include "coordit.h"
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"

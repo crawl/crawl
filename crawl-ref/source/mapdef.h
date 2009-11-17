@@ -15,14 +15,12 @@
 #include <cstdio>
 #include <memory>
 
-#include "coordit.h"
 #include "dlua.h"
 #include "enum.h"
 #include "externs.h"
 #include "matrix.h"
 #include "fprop.h"
 #include "makeitem.h"
-#include "stuff.h"
 #include "travel.h"
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
@@ -231,6 +229,7 @@ private:
 };
 
 class map_def;
+class rectangle_iterator;
 class map_lines
 {
 public:

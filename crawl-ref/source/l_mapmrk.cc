@@ -3,6 +3,7 @@
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "env.h"
 #include "mapmark.h"
 
 static int mapmarker_pos(lua_State *ls)

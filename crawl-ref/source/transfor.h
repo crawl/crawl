@@ -10,7 +10,6 @@
 
 #include <set>
 
-#include "fixedvector.h"
 #include "enum.h"
 
 enum transformation_type

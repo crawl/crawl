@@ -8,7 +8,6 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
-#include "fixedvector.h"
 #include "fixedarray.h"
 #include "externs.h"
 #include "terrain.h"

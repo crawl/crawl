@@ -17,6 +17,7 @@
 #include "branch.h"
 #include "colour.h"
 #include "coord.h"
+#include "coordit.h"
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"

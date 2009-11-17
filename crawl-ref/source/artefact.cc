@@ -18,6 +18,7 @@
 #include "options.h"
 
 #include "colour.h"
+#include "coordit.h"
 #include "database.h"
 #include "describe.h"
 #include "itemname.h"

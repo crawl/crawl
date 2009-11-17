@@ -9,7 +9,6 @@
 #define CLOUD_H
 
 #include "externs.h"
-#include "travel.h"
 
 enum fog_machine_type
 {

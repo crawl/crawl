@@ -9,7 +9,6 @@
 #include "externs.h"
 
 #include "exclude.h"
-#include "los.h"
 
 #include <stdio.h>
 #include <string>

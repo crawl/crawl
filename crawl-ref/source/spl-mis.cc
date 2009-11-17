@@ -14,6 +14,7 @@
 
 #include "colour.h"
 #include "cloud.h"
+#include "directn.h"
 #include "effects.h"
 #include "it_use2.h"
 #include "kills.h"

@@ -24,6 +24,7 @@
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
+#include "coordit.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "effects.h"

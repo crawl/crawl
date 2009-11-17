@@ -12,7 +12,8 @@
 
 #include "arena.h"
 #include "branch.h"
-#include "directn.h" // for the Compass
+#include "coordit.h"
+#include "directn.h"
 #include "fprop.h"
 #include "externs.h"
 #include "options.h"

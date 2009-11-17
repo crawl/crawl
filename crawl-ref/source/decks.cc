@@ -11,10 +11,10 @@
 #include <algorithm>
 
 #include "externs.h"
-#include "options.h"
 
 #include "beam.h"
 #include "cio.h"
+#include "coordit.h"
 #include "database.h"
 #include "dungeon.h"
 #include "effects.h"
@@ -35,6 +35,7 @@
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mutation.h"
+#include "options.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"

@@ -24,6 +24,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dgnevent.h"
+#include "directn.h"
 #include "effects.h"
 #include "map_knowledge.h"
 #include "fight.h"

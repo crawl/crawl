@@ -46,6 +46,7 @@
 #include "cloud.h"
 #include "clua.h"
 #include "command.h"
+#include "coordit.h"
 #include "ctest.h"
 #include "crash.h"
 #include "database.h"

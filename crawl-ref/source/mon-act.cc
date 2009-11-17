@@ -11,6 +11,7 @@
 #include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
+#include "coordit.h"
 #include "dbg-scan.h"
 #include "delay.h"
 #include "directn.h"

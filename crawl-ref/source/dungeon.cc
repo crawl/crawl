@@ -20,6 +20,7 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
+#include "coordit.h"
 #include "defines.h"
 #include "effects.h"
 #include "enum.h"

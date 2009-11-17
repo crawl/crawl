@@ -16,6 +16,8 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
+#include "coordit.h"
+#include "dungeon.h"
 #include "fprop.h"
 #include "mapmark.h"
 #include "ouch.h"

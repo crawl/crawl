@@ -18,6 +18,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "describe.h"
+#include "directn.h"
 #include "effects.h"
 #include "map_knowledge.h"
 #include "food.h"

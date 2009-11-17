@@ -11,9 +11,9 @@
 
 #include "cio.h"
 #include "coord.h"
-#include "map_knowledge.h"
 #include "debug.h"
 #include "describe.h"
+#include "directn.h"
 #include "files.h"
 #include "food.h"
 #include "itemname.h"
@@ -25,6 +25,7 @@
 #include "misc.h"
 #include "menu.h"
 #include "newgame.h"
+#include "map_knowledge.h"
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"

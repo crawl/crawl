@@ -22,6 +22,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "command.h"
+#include "coordit.h"
 #include "debug.h"
 #include "decks.h"
 #include "delay.h"

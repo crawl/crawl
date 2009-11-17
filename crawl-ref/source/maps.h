@@ -9,7 +9,6 @@
 #define MAPS_H
 
 #include "dlua.h"
-#include "fixedvector.h"
 #include "dungeon.h"
 
 #include <vector>
