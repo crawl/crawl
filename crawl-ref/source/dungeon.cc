@@ -144,8 +144,9 @@ static void _check_doors();
 static void _hide_doors();
 static void _make_trail(int xs, int xr, int ys, int yr,int corrlength,
                         int intersect_chance,
-                        int no_corr, dungeon_feature_type begin,
-                        dungeon_feature_type end=DNGN_UNSEEN);
+                        int no_corr,
+                        int &xbegin, int &ybegin,
+                        int &xend, int &yend);
 static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel);
 static void _place_pool(dungeon_feature_type pool_type, unsigned char pool_x1,
                         unsigned char pool_y1, unsigned char pool_x2,
@@ -2929,14 +2930,29 @@ static builder_rc_type _builder_basic(int level_number)
                                       : 30 + random2(200));
     int intersect_chance = (one_chance_in(20) ? 400 : random2(20));
 
+    int xbegin = -1, ybegin = -1, xend = -1, yend = -1;
+
     _make_trail( 35, 30, 35, 20, corrlength, intersect_chance, no_corr,
-                 DNGN_STONE_STAIRS_DOWN_I, DNGN_STONE_STAIRS_UP_I );
+                 xbegin, ybegin, xend, yend);
+
+    grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_I;
+    grd[xend][yend]     = DNGN_STONE_STAIRS_UP_I;
+
+    xbegin = -1, ybegin = -1, xend = -1, yend = -1;
 
     _make_trail( 10, 15, 10, 15, corrlength, intersect_chance, no_corr,
-                 DNGN_STONE_STAIRS_DOWN_II, DNGN_STONE_STAIRS_UP_II );
+                 xbegin, ybegin, xend, yend);
+
+    grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_III;
+    grd[xend][yend]     = DNGN_STONE_STAIRS_UP_III;
+
+    xbegin = -1, ybegin = -1, xend = -1, yend = -1;
 
     _make_trail( 50, 20, 10, 15, corrlength, intersect_chance, no_corr,
-                 DNGN_STONE_STAIRS_DOWN_III, DNGN_STONE_STAIRS_UP_III);
+                 xbegin, ybegin, xend, yend);
+
+    grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_III;
+    grd[xend][yend]     = DNGN_STONE_STAIRS_UP_III;
 
     if (one_chance_in(4))
     {
@@ -3270,8 +3286,8 @@ static void _place_branch_entrances(int dlevel, char level_type)
 
 static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
                         int intersect_chance, int no_corr,
-                        dungeon_feature_type begin,
-                        dungeon_feature_type end)
+                        int &xbegin, int &ybegin,
+                        int &xend, int &yend)
 {
     int x_start, y_start;                   // begin point
     int x_ps, y_ps;                         // end point
@@ -3292,9 +3308,8 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     while (grd[x_start][y_start] != DNGN_ROCK_WALL
            && grd[x_start][y_start] != DNGN_FLOOR);
 
-    // assign begin feature
-    if (begin != DNGN_UNSEEN)
-        grd[x_start][y_start] = begin;
+    // assign begin position
+    xbegin = x_start; ybegin = y_start;
 
     x_ps = x_start;
     y_ps = y_start;
@@ -3422,9 +3437,8 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     }
     while (finish < no_corr);
 
-    // assign end feature
-    if (end != DNGN_UNSEEN)
-        grd[x_ps][y_ps] = end;
+    // assign end position
+    xend = x_ps, yend = y_ps;
 }
 
 static int _good_door_spot(int x, int y)
