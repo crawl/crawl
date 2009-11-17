@@ -862,6 +862,8 @@ bool plant_ring_from_fruit()
 int rain(const coord_def &target)
 {
     int spawned_count = 0;
+    int processed_count = 0;
+
     for (radius_iterator rad(target, LOS_RADIUS, true, true, true); rad; ++rad)
     {
         // Adjust the shape of the rainfall slightly to make it look
@@ -897,6 +899,8 @@ int rain(const coord_def &target)
 
                 if (plant != -1)
                     spawned_count++;
+
+                processed_count++;
             }
 
             continue;
@@ -906,6 +910,8 @@ int rain(const coord_def &target)
         if (ftype >= DNGN_FLOOR_MIN && ftype <= DNGN_FLOOR_MAX)
         {
             dungeon_terrain_changed(*rad, DNGN_SHALLOW_WATER);
+
+            processed_count++;
         }
         // We can also turn shallow water into deep water, but we're
         // just going to skip cases where there is something on the
@@ -916,6 +922,8 @@ int rain(const coord_def &target)
                  && ftype == DNGN_SHALLOW_WATER)
         {
             dungeon_terrain_changed(*rad, DNGN_DEEP_WATER);
+
+            processed_count++;
         }
 
         if (ftype >= DNGN_MINMOVE)
@@ -931,10 +939,12 @@ int rain(const coord_def &target)
                                           * you.skills[SK_INVOCATIONS], 27);
 
             if (x_chance_in_y(expected, 20))
+            {
                 place_cloud(CLOUD_RAIN, *rad, 10, KC_YOU);
+
+                processed_count++;
+            }
         }
-
-
     }
 
     if (spawned_count > 0)
@@ -944,7 +954,7 @@ int rain(const coord_def &target)
              (spawned_count > 1 ? "" : "s"));
     }
 
-    return (spawned_count);
+    return (processed_count);
 }
 
 // Destroy corpses in the player's LOS (first corpse on a stack only)
