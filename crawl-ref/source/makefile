@@ -113,6 +113,8 @@ ifdef CROSSHOST
 	NO_AUTO_OPT = YesPlease
 	NEED_STATIC = YesPlease
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
+	BUILD_LUA = yes
+	BUILD_SQLITE = yes
 
 	# If needed, override uname_S so we get the appropriate
 	# things compiled.
@@ -333,6 +335,23 @@ ifdef AUTO_OPT
 ifndef NO_AUTO_OPT
 CFOPTIMIZE += $(shell util/gcc-opt.pl $(GCC))
 endif
+endif
+
+ifndef BUILD_LUA
+  ifeq (,($wildcard /usr/include/lua5.1))
+    BUILD_LUA = yes
+  else
+    INCLUDES_L += -I/usr/include/lua5.1
+    LIBS += -llua5.1
+  endif
+endif
+
+ifndef BUILD_SQLITE
+  ifeq (,($wildcard /usr/include/sqlite3.h))
+    BUILD_SQLITE = yes
+  else
+    LIBS += -lsqlite3
+  endif
 endif
 
 RLTILES = rltiles
@@ -673,9 +692,14 @@ ifdef BUILD_ZLIB
 CONTRIBS += zlib
 CONTRIB_LIBS += $(LIBZ)
 endif
-
-CONTRIBS += lua/src sqlite
-CONTRIB_LIBS += $(LIBLUA) $(LIBSQLITE)
+ifdef BUILD_LUA
+CONTRIBS += lua/src
+CONTRIB_LIBS += $(LIBLUA)
+endif
+ifdef BUILD_SQLITE
+CONTRIBS += sqlite
+CONTRIB_LIBS += $(LIBSQLITE)
+endif
 
 EXTRA_OBJECTS += version.o
 
@@ -880,7 +904,9 @@ $(CONTRIB_LIBS): .contrib-libs
 	@:
 
 .contrib-libs: .cflags
-	+@$(MAKE) -C contrib $(CONTRIBS)
+ifneq (,$(CONTRIBS))
+	  +@$(MAKE) -C contrib $(CONTRIBS)
+endif
 	@touch $@
 
 $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
