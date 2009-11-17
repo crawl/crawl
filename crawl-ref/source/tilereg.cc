@@ -1182,16 +1182,19 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         if (desc == "floor")
             desc = "";
 
-        const int cloudidx = env.cgrid(gc);
-        if (cloudidx != EMPTY_CLOUD)
+        if (you.see_cell(gc))
         {
-            cloud_type ctype = env.cloud[cloudidx].type;
+            const int cloudidx = env.cgrid(gc);
+            if (cloudidx != EMPTY_CLOUD)
+            {
+                cloud_type ctype = env.cloud[cloudidx].type;
 
-            std::string terrain_desc = desc;
-            desc = cloud_name(ctype);
+                std::string terrain_desc = desc;
+                desc = cloud_name(ctype);
 
-            if (!terrain_desc.empty())
-                desc += "\n" + terrain_desc;
+                if (!terrain_desc.empty())
+                    desc += "\n" + terrain_desc;
+            }
         }
 
         if (!desc.empty())
@@ -1510,7 +1513,17 @@ bool DungeonRegion::update_alt_text(std::string &alt)
 
     describe_info inf;
     if (you.see_cell(gc))
+    {
         get_square_desc(gc, inf, true);
+        const int cloudidx = env.cgrid(gc);
+        if (cloudidx != EMPTY_CLOUD)
+        {
+            cloud_type ctype = env.cloud[cloudidx].type;
+
+            inf.prefix = "There is a cloud of " + cloud_name(ctype)
+                         + " here.$$";
+        }
+    }
     else if (grd(gc) != DNGN_FLOOR)
         get_feature_desc(gc, inf);
     else
@@ -1519,14 +1532,6 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         std::string stash = get_stash_desc(gc.x, gc.y);
         if (!stash.empty())
             inf.body << "$" << stash;
-    }
-
-    const int cloudidx = env.cgrid(gc);
-    if (cloudidx != EMPTY_CLOUD)
-    {
-        cloud_type ctype = env.cloud[cloudidx].type;
-
-        inf.prefix = "There is a cloud of " + cloud_name(ctype) + " here.$$";
     }
 
     alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
