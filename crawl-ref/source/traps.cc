@@ -733,6 +733,29 @@ int trap_def::shot_damage(actor& act)
     return (0);
 }
 
+int reveal_traps(const int range)
+{
+    int traps_found = 0;
+
+    for (int i = 0; i < MAX_TRAPS; i++)
+    {
+        trap_def& trap = env.trap[i];
+
+        if (!trap.active())
+            continue;
+
+        if (grid_distance(you.pos(), trap.pos) < range && !trap.is_known())
+        {
+            traps_found++;
+            trap.reveal();
+            set_map_knowledge_obj(trap.pos, show_type(grd(trap.pos)));
+            set_terrain_mapped(trap.pos);
+        }
+    }
+
+    return (traps_found);
+}
+
 void destroy_trap( const coord_def& pos )
 {
     if (trap_def* ptrap = find_trap(pos))

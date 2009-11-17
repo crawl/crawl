@@ -55,27 +55,10 @@ int detect_traps(int pow)
 {
     pow = std::min(50, pow);
 
-    int traps_found = 0;
+    // Trap detection moved to traps.cc.  -am
 
     const int range = 8 + random2(8) + pow;
-
-    for (int i = 0; i < MAX_TRAPS; i++)
-    {
-        trap_def& trap = env.trap[i];
-
-        if (!trap.active())
-            continue;
-
-        if (grid_distance(you.pos(), trap.pos) < range && !trap.is_known())
-        {
-            traps_found++;
-            trap.reveal();
-            set_map_knowledge_obj(trap.pos, show_type(grd(trap.pos)));
-            set_terrain_mapped(trap.pos);
-        }
-    }
-
-    return (traps_found);
+    return reveal_traps(range);
 }
 
 int detect_items(int pow)
