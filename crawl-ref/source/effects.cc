@@ -322,8 +322,8 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
         // because it can't kill them, and because hostile monsters use
         // it.  It does alert them, though.
         // XXX: attacker isn't passed through "int torment()".
-        if (attacker != NULL)
-            behaviour_event(monster, ME_ALERT, attacker->mindex());
+        behaviour_event(monster, ME_ALERT, 
+                        attacker ? attacker->mindex() : MHITNOT);
     }
 
     monster->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
