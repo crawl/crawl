@@ -1316,9 +1316,10 @@ bool is_valid_shaft_level(const level_id &place)
     if (place.level_type != LEVEL_DUNGEON)
         return (false);
 
-    // Disallow shafts on the first two levels.
-    if (place == BRANCH_MAIN_DUNGEON && you.your_level < 2)
-        return (false);
+    // Shafts are now allowed on the first two levels,
+    // as they have a good chance of being detected.
+    /* if (place == BRANCH_MAIN_DUNGEON && you.your_level < 2)
+        return (false); */
 
     // Don't generate shafts in branches where teleport control
     // is prevented.  Prevents player from going down levels without
@@ -1496,7 +1497,7 @@ static trap_type random_trap_default(int level_number, const level_id &place)
         type = TRAP_ZOT;
     }
 
-    if (one_chance_in(50) && is_valid_shaft_level(place))
+    if (one_chance_in(20) && is_valid_shaft_level(place))
         type = TRAP_SHAFT;
     if (one_chance_in(20))
         type = TRAP_TELEPORT;

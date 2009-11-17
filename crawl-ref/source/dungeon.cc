@@ -1238,13 +1238,13 @@ static void _fixup_branch_stairs()
     }
     else if (at_branch_bottom() && you.level_type == LEVEL_DUNGEON)
     {
-        // Bottom level of branch - replaces down stairs with up ladders.
+        // Bottom level of branch - wipes out down stairs.
         for (rectangle_iterator ri(1); ri; ++ri)
         {
             if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
                 && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
             {
-                grd(*ri) = DNGN_ESCAPE_HATCH_UP;
+                grd(*ri) = DNGN_FLOOR;
             }
         }
     }
@@ -1295,13 +1295,13 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         if (i == 0)
         {
             num_stairs = num_up_stairs;
-            replace = DNGN_ESCAPE_HATCH_UP;
+            replace = DNGN_FLOOR;
             base = DNGN_STONE_STAIRS_UP_I;
         }
         else
         {
             num_stairs = num_down_stairs;
-            replace = DNGN_ESCAPE_HATCH_DOWN;
+            replace = DNGN_FLOOR;
             base = DNGN_STONE_STAIRS_DOWN_I;
         }
 
@@ -2954,6 +2954,9 @@ static builder_rc_type _builder_basic(int level_number)
     grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_III;
     grd[xend][yend]     = DNGN_STONE_STAIRS_UP_III;
 
+    /*  Escape hatches are no longer randomly generated.
+        They are only used in vaults and for layout bubbles,
+        like in Slime and Orc.
     if (one_chance_in(4))
     {
         _make_trail( 10, 20, 40, 20, corrlength, intersect_chance, no_corr,
@@ -2965,6 +2968,47 @@ static builder_rc_type _builder_basic(int level_number)
         _make_trail( 50, 20, 40, 20, corrlength, intersect_chance, no_corr,
                      DNGN_ESCAPE_HATCH_UP );
     }
+    */
+
+    // Generate a random dead-end that /may/ have a shaft.  Good luck!
+    if (!one_chance_in(4)) // 3/4 times
+    {
+        // This is kinda hack-ish.  We're still early in the dungeon
+        // generation process, and we know that there will be no other
+        // traps.  If we promise to make /just one/, we can get away
+        // with making this trap the first trap.
+        // If we aren't careful, we'll trigger an assert in _place_traps().
+
+        xbegin = -1, ybegin = -1, xend = -1, yend = -1;
+
+        _make_trail( 50, 20, 40, 20, corrlength, intersect_chance, no_corr,
+                     xbegin, ybegin, xend, yend);
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Placing shaft trail...");
+#endif
+        if (!one_chance_in(3)) // 2/3 chance it ends in a shaft
+        {
+            trap_def& ts(env.trap[0]);
+            ts.type = TRAP_SHAFT;
+            ts.pos.x = xend;
+            ts.pos.y = yend;
+            grd[xend][yend] = DNGN_UNDISCOVERED_TRAP;
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Trail ends in shaft.");
+#endif
+        } else {
+            grd[xend][yend] = DNGN_FLOOR;
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Trail does not end in shaft..");
+#endif
+        }
+    }
+#ifdef DEBUG_DIAGNOSTICS
+    else {
+        mprf(MSGCH_DIAGNOSTICS, "Placing shaft trail...");
+    }
+#endif
 
 
     if (level_number > 1 && one_chance_in(16))
@@ -3139,7 +3183,15 @@ static void _place_traps(int level_number)
                     ts.type = TRAP_ALARM;
             }
         }
-        grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
+
+        if (ts.type == TRAP_SHAFT &&  // Shafts can be generated visible
+            coinflip() && // Starts about 50% of the time
+            random2(level_number) < 3) // And gets less frequent
+        {
+            ts.reveal();
+        } else {
+            grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
+        }
         ts.prepare_ammo();
     }
 }
