@@ -10,6 +10,7 @@
 #ifdef USE_TILE
 
 #include "cio.h"
+#include "cloud.h"
 #include "coord.h"
 #include "debug.h"
 #include "describe.h"
@@ -1176,9 +1177,24 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 
     if (event.event == MouseEvent::MOVE)
     {
-        const std::string &desc = get_terse_square_desc(gc);
+        std::string desc = get_terse_square_desc(gc);
         // Suppress floor description
-        if (desc != "floor")
+        if (desc == "floor")
+            desc = "";
+
+        const int cloudidx = env.cgrid(gc);
+        if (cloudidx != EMPTY_CLOUD)
+        {
+            cloud_type ctype = env.cloud[cloudidx].type;
+
+            std::string terrain_desc = desc;
+            desc = cloud_name(ctype);
+
+            if (!terrain_desc.empty())
+                desc += "\n" + terrain_desc;
+        }
+
+        if (!desc.empty())
             tiles.add_text_tag(TAG_CELL_DESC, desc, gc);
     }
 
@@ -1505,6 +1521,14 @@ bool DungeonRegion::update_alt_text(std::string &alt)
             inf.body << "$" << stash;
     }
 
+    const int cloudidx = env.cgrid(gc);
+    if (cloudidx != EMPTY_CLOUD)
+    {
+        cloud_type ctype = env.cloud[cloudidx].type;
+
+        inf.prefix = "There is a cloud of " + cloud_name(ctype) + " here.$$";
+    }
+
     alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
     process_description<alt_desc_proc>(proc, inf);
 
@@ -1516,7 +1540,6 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         alt.clear();
         return (false);
     }
-
     return (true);
 }
 
