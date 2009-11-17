@@ -336,11 +336,24 @@ int torment_monsters(coord_def where, int pow, int caster, actor *attacker)
 
 int torment(int caster, const coord_def& where)
 {
+    actor* attacker = NULL;
+
+    if (!invalid_monster_index(caster))
+        attacker = &menv[caster];
+    else if (caster < 0 && you.turn_is_over && where == you.pos()
+             && !(crawl_state.is_god_acting()
+                  &&crawl_state.is_god_retribution()))
+    {
+        // Maybe monsters should still consider it your fault if it's
+        // caused by divine retribution?
+        attacker = &you;
+    }
+
     los_def los(where);
     los.update();
     int r = 0;
     for (radius_iterator ri(&los); ri; ++ri)
-        r += torment_monsters(*ri, 0, caster);
+        r += torment_monsters(*ri, 0, caster, attacker);
     return (r);
 }
 
