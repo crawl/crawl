@@ -14,6 +14,7 @@
 #include "files.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "itemprop.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-iter.h"

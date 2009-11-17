@@ -7,7 +7,7 @@
 #ifndef MAKEITEM_H
 #define MAKEITEM_H
 
-#include "itemprop.h"
+#include "itemprop-enum.h"
 
 enum item_make_species_type
 {

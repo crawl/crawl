@@ -23,6 +23,7 @@
 #include "godabil.h"
 #include "hiscores.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "kills.h"
 #include "message.h"

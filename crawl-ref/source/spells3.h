@@ -8,7 +8,7 @@
 #ifndef SPELLS3_H
 #define SPELLS3_H
 
-#include "itemprop.h"  // from _raise_remains()
+#include "itemprop-enum.h"
 
 struct dist;
 struct bolt;

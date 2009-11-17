@@ -17,6 +17,7 @@
 #include "dbg-util.h"
 #include "decks.h"
 #include "effects.h"
+#include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
 #include "it_use2.h"

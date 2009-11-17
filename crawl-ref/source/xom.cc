@@ -20,6 +20,7 @@
 #include "feature.h"
 #include "goditem.h"
 #include "it_use2.h"
+#include "itemprop.h"
 #include "items.h"
 #include "kills.h"
 #include "los.h"

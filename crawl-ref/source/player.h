@@ -9,7 +9,7 @@
 #define PLAYER_H
 
 #include "actor.h"
-#include "itemprop.h"
+#include "itemprop-enum.h"
 #include "species.h"
 
 #include <vector>

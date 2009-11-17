@@ -8,7 +8,7 @@
 #define SPELLS2_H
 
 #include "enum.h"
-#include "itemprop.h"
+#include "itemprop-enum.h"
 
 struct dist;
 

@@ -15,6 +15,7 @@
 #include <cmath>
 
 #include "itemname.h"
+#include "itemprop.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "spl-cast.h"

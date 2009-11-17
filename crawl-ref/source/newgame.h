@@ -10,7 +10,7 @@
 
 
 #include "enum.h"
-#include "itemprop.h"
+#include "itemprop-enum.h"
 
 enum death_knight_type
 {

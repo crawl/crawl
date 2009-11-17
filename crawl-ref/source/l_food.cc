@@ -5,6 +5,7 @@
 
 #include "food.h"
 #include "invent.h"
+#include "itemprop.h"
 #include "items.h"
 #include "player.h"
 

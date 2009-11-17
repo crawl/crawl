@@ -18,6 +18,7 @@
 #include "files.h"
 #include "godabil.h"
 #include "invent.h"
+#include "itemprop.h"
 #include "items.h"
 #include "kills.h"
 #include "message.h"

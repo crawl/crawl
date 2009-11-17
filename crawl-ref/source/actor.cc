@@ -3,6 +3,7 @@
 #include "actor.h"
 #include "artefact.h"
 #include "env.h"
+#include "itemprop.h"
 #include "player.h"
 #include "random.h"
 #include "state.h"
