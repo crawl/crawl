@@ -1799,7 +1799,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     snprintf(info, INFO_SIZE,
              "Memorise %s, consuming %d spell level%s and leaving %d?",
              spell_title(specspell), spell_levels_required(specspell),
-             spell_levels_required(specspell) > 1 ? "s" : "",
+             spell_levels_required(specspell) != 1 ? "s" : "",
              player_spell_levels() - spell_levels_required(specspell));
 
     // Deactivate choice from tile inventory.
