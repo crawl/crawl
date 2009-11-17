@@ -2099,7 +2099,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
         if (defender_as_monster()->add_ench(mon_enchant(ENCH_CONFUSION, 0,
             KC_YOU, 20+random2(30)))) // 1-3 turns
         {
-            mprf("%s is stunned!", defender->name(DESC_NOCAP_THE).c_str());
+            mprf("%s is stunned!", defender->name(DESC_CAP_THE).c_str());
         }
     }
 
