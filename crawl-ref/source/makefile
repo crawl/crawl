@@ -38,7 +38,7 @@
 #
 #
 # Requirements:
-#    For tile builds, you need Gnome's pkg-config.
+#    For tile builds, you need pkg-config.
 #    You also need libpng, sdl, sdl-image and libfreetype -- if you got your
 #    source from git, you can 'git submodule update' to fetch them; you can also
 #    ask for a package with convenience libraries instead -- we'll try to provide
