@@ -1387,7 +1387,10 @@ int monster_die(monsters *monster, killer_type killer,
         monster->flags &= ~MF_BANISHED;
 
     if (!silent && _monster_avoided_death(monster, killer, killer_index))
+    {
+        monster->flags &= ~MF_EXPLODE_KILL;
         return (-1);
+    }
 
     crawl_state.inc_mon_acting(monster);
 
