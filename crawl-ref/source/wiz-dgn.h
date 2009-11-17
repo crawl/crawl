@@ -13,6 +13,7 @@ void wizard_create_portal();
 void wizard_create_feature_number();
 void wizard_create_feature_name();
 void wizard_list_branches();
+void wizard_reveal_traps();
 void wizard_map_level();
 void wizard_list_items();
 void wizard_place_stairs( bool down );

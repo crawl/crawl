@@ -530,6 +530,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case ')': wizard_create_feature_name();          break;
     case ':': wizard_list_branches();                break;
     case '{': wizard_map_level();                    break;
+	case '}': wizard_reveal_traps();                 break;
     case '@': wizard_set_stats();                    break;
     case '^': wizard_gain_piety();                   break;
     case '_': wizard_get_religion();                 break;
