@@ -523,18 +523,12 @@ namespace arena
         int orig_b = faction_b.active_members;
 
         if (orig_a < 0)
-        {
             mpr("Book-keeping says faction_a has negative active members.",
                 MSGCH_ERROR);
-            more();
-        }
 
         if (orig_b < 0)
-        {
             mpr("Book-keeping says faction_b has negative active members.",
                 MSGCH_ERROR);
-            more();
-        }
 
         faction_a.active_members = 0;
         faction_b.active_members = 0;
@@ -551,7 +545,6 @@ namespace arena
             || orig_b != faction_b.active_members)
         {
             mpr("Book-keeping error in faction member count.", MSGCH_ERROR);
-            more();
 
             if (faction_a.active_members > 0
                 && faction_b.active_members <= 0)
@@ -577,7 +570,6 @@ namespace arena
             {
                 mpr("Both factions alive but one declared the winner.",
                     MSGCH_ERROR);
-                more();
                 faction_a.won = false;
                 faction_b.won = false;
             }
@@ -678,7 +670,6 @@ namespace arena
         {
             mpr("ERROR: Both sides have spawners, but the active member "
                 "count of one side has been reduced to zero!", MSGCH_ERROR);
-            more();
             return;
         }
 
@@ -879,14 +870,12 @@ namespace arena
             if (faction_a.active_members > 0)
             {
                 mpr("Tie declared, but faction_a won.", MSGCH_ERROR);
-                more();
                 team_a_wins++;
                 faction_a.won = true;
             }
             else if (faction_b.active_members > 0)
             {
                 mpr("Tie declared, but faction_b won.", MSGCH_ERROR);
-                more();
                 faction_b.won = true;
             }
             else
@@ -918,7 +907,6 @@ namespace arena
                 ties++;
                 was_tied = true;
             }
-            more();
         }
         else if (faction_a.won)
             team_a_wins++;
@@ -1147,7 +1135,6 @@ void arena_placed_monster(monsters *monster)
         mprf(MSGCH_ERROR, "Placed neutral (%d) monster %s",
              (int) monster->attitude,
              monster->name(DESC_PLAIN, true).c_str());
-        more();
     }
 
     if (!arena::allow_summons || !arena::allow_animate)
