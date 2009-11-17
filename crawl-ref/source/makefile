@@ -346,7 +346,7 @@ endif
 endif
 
 ifndef BUILD_LUA
-  ifeq (,($wildcard /usr/include/lua5.1))
+  ifeq (,$(wildcard /usr/include/lua5.1))
     BUILD_LUA = yes
   else
     INCLUDES_L += -I/usr/include/lua5.1
@@ -355,7 +355,7 @@ ifndef BUILD_LUA
 endif
 
 ifndef BUILD_SQLITE
-  ifeq (,($wildcard /usr/include/sqlite3.h))
+  ifeq (,$(wildcard /usr/include/sqlite3.h))
     BUILD_SQLITE = yes
   else
     LIBS += -lsqlite3
