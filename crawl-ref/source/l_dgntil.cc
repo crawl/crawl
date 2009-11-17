@@ -12,6 +12,9 @@
 #include "mapdef.h"
 
 #ifdef USE_TILE
+
+#include "env.h"
+
 unsigned int get_tile_idx(lua_State *ls, int arg)
 {
     if (!lua_isstring(ls, arg))
