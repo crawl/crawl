@@ -1184,8 +1184,6 @@ static void _hogs_to_humans()
     // tell them apart anyway.
     // On the other hand, hogs which left the level are too far away to be
     // affected by the magic of Kirke's death.
-    // FIXME: If another monster was polymorphed into a hog by Kirke's
-    //        porkalator spell, they should be handled specially...
     int any = 0, human = 0;
 
     for (monster_iterator mi; mi; ++mi)
@@ -1199,20 +1197,17 @@ static void _hogs_to_humans()
 
         const bool could_see = you.can_see(*mi);
 
-        monsters  _orig;
-        monsters* orig;
+        monsters orig;
 
         if (mi->props.exists(ORIG_MONSTER_KEY))
-        {
-            orig = &(mi->props[ORIG_MONSTER_KEY].get_monster());
-        }
+            // Copy it, since the instance in props will get deleted
+            // as soon a **mi is assigned to.
+            orig = mi->props[ORIG_MONSTER_KEY].get_monster();
         else
         {
-            orig = &_orig;
-
-            orig->type     = MONS_HUMAN;
-            orig->attitude = mi->attitude;
-            define_monster(*orig);
+            orig.type     = MONS_HUMAN;
+            orig.attitude = mi->attitude;
+            define_monster(orig);
         }
 
         // Keep at same spot.
@@ -1227,18 +1222,12 @@ static void _hogs_to_humans()
         mon_enchant_list enchantments = mi->enchantments;
 
         // Restore original monster.
-        **mi = *orig;
+        **mi = orig;
 
         mi->set_position(pos);
         mi->enchantments = enchantments;
         mi->hit_points   = std::max(1, (int) (mi->max_hit_points * hp));
         mi->flags        = mi->flags | preserve_flags;
-
-        // Allow ORIG_MONSTER_KEY to be chained.
-        if (orig->props.exists(ORIG_MONSTER_KEY))
-            mi->props[ORIG_MONSTER_KEY] = orig->props[ORIG_MONSTER_KEY];
-        else
-            mi->props.erase(ORIG_MONSTER_KEY);
 
         const bool can_see = you.can_see(*mi);
 
