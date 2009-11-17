@@ -4541,13 +4541,9 @@ void tile_draw_floor()
             const coord_def ep(cx, cy);
             const coord_def gc = show2grid(ep);
 
-            // XXX: This should probably be handled a better way.
-            if (!in_bounds(gc))
-                continue;
-
             int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
 
-            if (you.see_cell(gc))
+            if (in_bounds(gc) && you.see_cell(gc))
             {
                 dungeon_feature_type feat = grid_appearance(gc);
                 bg = tileidx_feature(feat, gc.x, gc.y);
