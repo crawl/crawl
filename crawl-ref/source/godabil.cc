@@ -500,13 +500,14 @@ bool sunlight()
 
     int evap_count  = 0;
     int plant_count = 0;
+    int processed_count = 0;
 
     // FIXME: Uncomfortable level of code duplication here but the explosion
     // code in bolt subjects the input radius to r*(r+1) for the threshold and
     // since r is an integer we can never get just the 4-connected neighbours.
     // Anyway the bolt code doesn't seem to be well set up to handle the
     // 'occasional plant' gimmick.
-    for (int i = 0;i < c_size; ++i)
+    for (int i = 0; i < c_size; ++i)
     {
         coord_def target = base;
         target.x += x_offset[i];
@@ -539,8 +540,11 @@ bool sunlight()
         if (grd(target) != ftype)
         {
             dungeon_terrain_changed(target, ftype);
+
             if (you.see_cell(target))
                 evap_count++;
+
+            processed_count++;
         }
 
         monsters *mons = monster_at(target);
@@ -554,6 +558,8 @@ bool sunlight()
                 backlight_monsters(target, 1, 0);
                 behaviour_event(mons, ME_ALERT, MHITYOU);
             }
+
+            processed_count++;
         }
         else if (one_chance_in(100)
                  && ftype >= DNGN_FLOOR_MIN
@@ -572,10 +578,13 @@ bool sunlight()
 
             if (plant != -1 && you.see_cell(target))
                 plant_count++;
+
+            processed_count++;
         }
     }
-    // move the cursor out of the way (it looks weird ok)
+
 #ifndef USE_TILE
+    // Move the cursor out of the way (it looks weird).
     cgotoxy(base.x, base.y, GOTO_DNGN);
 #endif
     delay(200);
@@ -590,7 +599,7 @@ bool sunlight()
     if (evap_count)
         mprf("Some water evaporates in the bright sunlight.");
 
-    return (true);
+    return (processed_count);
 }
 
 template<typename T>
