@@ -1717,7 +1717,7 @@ void direction(dist& moves, targetting_type restricts,
 #endif
             }
 #ifdef USE_TILE
-            viewwindow(false, false);
+            viewwindow(false, true);
 #endif
         }
         skip_iter = false;      // Only skip one iteration at most.
