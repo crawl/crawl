@@ -4219,7 +4219,6 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 {
     item_def& wpn = *you.weapon();
 
-    // Only bless non-artefact melee weapons.
     if (is_artefact(wpn) || (is_range_weapon(wpn) && brand != SPWPN_HOLY_WRATH))
         return (false);
 
