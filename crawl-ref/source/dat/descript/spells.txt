@@ -232,7 +232,7 @@ This spell extends the duration of most enchantments affecting the caster. Be wa
 %%%%
 Exploding Ammunition
 
-This spell will make ammunition held by the caster extremely unstable.
+This spell will make ammunition held by the caster extremely unstable. With proper handling, they can still be stored indefinitely, though.
 %%%%
 Fire Brand
 
@@ -248,7 +248,7 @@ This spell hurls an exploding bolt of fire. This spell does not cost additional 
 %%%%
 Flame Ammunition
 
-This spell will make ammunition held by the caster ignite themselves upon being launched.
+This spell will make ammunition held by the caster ignite themselves upon being launched. This flammability lasts until the missile is used, at that point it burns away completely.
 %%%%
 Flame Tongue
 
@@ -276,7 +276,7 @@ This spell conjures up a large cloud of lethally cold vapour.
 %%%%
 Frost Ammunition
 
-This spell will freeze ammunition held by the caster.
+This spell will freeze ammunition held by the caster. Such missiles will shatter upon use, but won't thaw before that.
 %%%%
 Fulsome Distillation
 
@@ -408,7 +408,7 @@ This spell allows the caster to phase in and out of the material plane, allowing
 %%%%
 Poison Ammunition
 
-This spell envenoms missile ammunition held by the caster.
+This spell envenoms missile ammunition held by the caster. The poison is permanent.
 %%%%
 Poison Arrow
 
@@ -440,7 +440,7 @@ This spell produces a noise emanating from a place of the caster's own choosing.
 %%%%
 Reaping Ammunition
 
-This spell will infuse missiles held by the caster with necromantic magic which may create zombies from enemies slain by them.
+This spell will infuse missiles held by the caster with necromantic magic which may create zombies from enemies slain by them. This magic will last as long as the missiles last.
 %%%%
 Recall
 
@@ -460,7 +460,7 @@ This spell protects the caster from exposure to all poisons for a period of time
 %%%%
 Returning Ammunition
 
-This spell will cause the wielded missiles to return to the caster after being fired.
+This spell will cause the wielded missiles to return to the caster after being fired. This power is permanent.
 %%%%
 Ring of Flames
 
@@ -492,7 +492,7 @@ This spell throws a bouncing bolt of electricity.
 %%%%
 Shocking Ammunition
 
-This spell will electrically charge missiles held by the caster.
+This spell will electrically charge missiles held by the caster. They will retain the charge even after use.
 %%%%
 Silence
 
@@ -653,7 +653,7 @@ This spell throws a bolt of poison.
 %%%%
 Warp Ammunition
 
-This spell will infuse missiles held by the caster with translocational energy.
+This spell will infuse missiles held by the caster with translocational energy. That energy does not dissipate with time.
 %%%%
 Warp Weapon
 
