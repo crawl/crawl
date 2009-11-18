@@ -258,6 +258,7 @@ bool mons_abyss(int mcls)
     case MONS_SHADOW_DEMON:
     case MONS_SHADOW_IMP:
     case MONS_SHINING_EYE:
+    case MONS_SIXFIRHY:
     case MONS_SKELETAL_DRAGON:
     case MONS_SKELETAL_WARRIOR:
     case MONS_SKELETON_LARGE:
@@ -340,6 +341,7 @@ int mons_rare_abyss(int mcls)
         return 35;
 
     case MONS_SKELETAL_DRAGON:
+    case MONS_SIXFIRHY:
         return 20;
 
     case MONS_EFREET:
@@ -557,6 +559,7 @@ bool mons_pan(int mcls)
     case MONS_UFETUBUS:
     case MONS_WHITE_IMP:
     case MONS_YNOXINUL:
+    case MONS_SIXFIRHY:
         return (true);
     default:
         return (false);
@@ -2928,7 +2931,7 @@ int mons_tartarus_rare(int mcls)
     case MONS_SOUL_EATER:
         return 35;
 
-    case MONS_ICE_DEVIL:        // not really appropriate for a fiery hell
+    case MONS_ICE_DEVIL:
         return 34;
 
     case MONS_MUMMY:
