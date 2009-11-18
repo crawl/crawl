@@ -3111,6 +3111,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // Violating encapsulation somewhat...oh well.
         pbolt.use_target_as_pos = true;
         pbolt.affect_cell();
+        pbolt.affect_endpoint();
         if (acc_bonus != DEBUG_COOKIE)
             pbolt.drop_object();
     }
