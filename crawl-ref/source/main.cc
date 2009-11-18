@@ -3848,7 +3848,6 @@ static bool _initialise(void)
     maybe_update_stashes();
 
     // This just puts the view up for the first turn.
-    you.update_los(); // Needed for tiles to draw in-LOS terrain.
     viewwindow(false);
 
     activate_notes(true);
