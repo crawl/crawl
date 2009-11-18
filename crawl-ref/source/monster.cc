@@ -3052,7 +3052,8 @@ bool monsters::is_chaotic() const
     if (has_chaotic_spell())
         return (true);
 
-    if (has_attack_flavour(AF_HUNGER)
+    if (has_attack_flavour(AF_DISEASE)
+        || has_attack_flavour(AF_HUNGER)
         || has_attack_flavour(AF_MUTATE)
         || has_attack_flavour(AF_ROT)
         || has_attack_flavour(AF_KLOWN)
