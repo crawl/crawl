@@ -725,6 +725,7 @@ static void player_view_update()
     update_exclusion_los(update_excludes);
 }
 
+#ifdef USE_TILE
 void tile_draw_floor()
 {
     for (int cy = 0; cy < env.tile_fg.height(); cy++)
@@ -752,6 +753,7 @@ void tile_draw_floor()
             env.tile_fg[ep.x][ep.y] = 0;
         }
 }
+#endif
 
 static void draw_unseen(screen_buffer_t* buffy, const coord_def &gc)
 {
