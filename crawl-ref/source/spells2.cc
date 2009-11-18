@@ -1231,7 +1231,7 @@ bool cast_summon_swarm(int pow, god_type god)
         if (create_monster(
                 mgen_data(mon,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                          dur, SPELL_SUMMON_SWARM : 0,
+                          dur, SPELL_SUMMON_SWARM,
                           you.pos(),
                           MHITYOU,
                           0, god)) != -1)
