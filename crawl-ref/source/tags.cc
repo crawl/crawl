@@ -1906,7 +1906,9 @@ void unmarshallItem(reader &th, item_def &item)
 void marshallShowtype(writer &th, const show_type &obj)
 {
     marshallByte(th, obj.cls);
-    marshallShort(th, obj.feat); // union
+    marshallShort(th, obj.feat);
+    marshallShort(th, obj.item);
+    marshallShort(th, obj.mons);
     marshallShort(th, obj.colour);
 }
 
@@ -1914,7 +1916,30 @@ show_type unmarshallShowtype(reader &th)
 {
     show_type obj;
     obj.cls = static_cast<show_class>(unmarshallByte(th));
-    obj.feat = static_cast<dungeon_feature_type>(unmarshallShort(th));
+    if (th.getMinorVersion() < TAG_MINOR_SHOWTYPE_EXTENDED)
+    {
+        unsigned short d = unmarshallShort(th);
+        switch (obj.cls)
+        {
+        case SH_FEATURE:
+            obj.feat = static_cast<dungeon_feature_type>(d);
+            break;
+        case SH_ITEM:
+            obj.item = static_cast<show_item_type>(d);
+            break;
+        case SH_MONSTER:
+            obj.mons = static_cast<monster_type>(d);
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        obj.feat = static_cast<dungeon_feature_type>(unmarshallShort(th));
+        obj.item = static_cast<show_item_type>(unmarshallShort(th));
+        obj.mons = static_cast<monster_type>(unmarshallShort(th));
+    }
     obj.colour = unmarshallShort(th);
     return (obj);
 }
