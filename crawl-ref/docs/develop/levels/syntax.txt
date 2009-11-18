@@ -612,7 +612,7 @@ MONS:     (list of monsters)
 
           Will result in "Durwent" rather than "Durwent the Kobold".
 
-          In combinaton with name_replace, there are two further tags that
+          In combination with name_replace, there are two further tags that
           can be used when renaming monsters, but not giving them an actual
           "name": name_descriptor, and name_definite.
 
@@ -631,10 +631,17 @@ MONS:     (list of monsters)
           name_descriptor, therefore meaning that:
               MONS: kobold name:goblin name_replace name_definite
 
-          Is exactly the smae as:
+          Is exactly the same as:
               MONS: kobold name:goblin name_replace name_descriptor name_definite
 
-          This allows for shorter definitions. 
+          This allows for shorter definitions. For instances where space in
+          definitions is limited, you can use abbreviated forms of these tags:
+
+              name_suffix     -> n_suf
+              name_adjective  -> n_adj
+              name_replace    -> n_rpl
+              name_descriptor -> n_des
+              name_definite   -> n_the
 
           Monster names should be used very sparingly.
 
