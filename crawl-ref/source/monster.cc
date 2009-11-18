@@ -3464,7 +3464,7 @@ bool monsters::drain_exp(actor *agent, bool quiet, int pow)
 
 bool monsters::rot(actor *agent, int amount, int immediate, bool quiet)
 {
-    if (res_rotting() > 0 || amount <= 0)
+    if (res_rotting() || amount <= 0)
         return (false);
 
     if (!quiet && you.can_see(this))

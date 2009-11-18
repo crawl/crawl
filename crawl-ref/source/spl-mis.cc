@@ -1652,7 +1652,7 @@ void MiscastEffect::_necromancy(int severity)
             _potion_effect(POT_SLOWING, 15);
             break;
         case 2:
-            if (target->res_rotting() == 0)
+            if (!target->res_rotting())
             {
                 if (you.can_smell())
                 {

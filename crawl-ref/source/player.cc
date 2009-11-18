@@ -6441,8 +6441,8 @@ int player::res_poison() const
 
 int player::res_rotting() const
 {
-    if (this->is_undead
-       && (this->is_undead != US_SEMI_UNDEAD || this->hunger_state < HS_SATIATED))
+    if (is_undead
+        && (is_undead != US_SEMI_UNDEAD || hunger_state < HS_SATIATED))
     {
         return (1);
     }
@@ -6683,7 +6683,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     if (amount <= 0)
         return (false);
 
-    if (this->res_rotting())
+    if (res_rotting())
     {
         mpr("You feel terrible.");
         return (false);
@@ -6802,7 +6802,7 @@ bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.arena);
 
-    if (this->res_rotting() || amount <= 0)
+    if (res_rotting() || amount <= 0)
         return (false);
 
     mpr( "You feel ill." );
