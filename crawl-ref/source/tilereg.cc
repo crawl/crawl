@@ -31,6 +31,7 @@
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
+#include "quiver.h"
 #include "religion.h"
 #include "species.h"
 #include "spl-book.h"
@@ -1174,6 +1175,38 @@ static void _add_targeting_commands(const coord_def& pos)
     macro_buf_add(CMD_TARGET_MOUSE_SELECT);
 }
 
+static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
+{
+    const coord_def gc = mon->pos();
+
+    // Handle weapons of reaching.
+    if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
+    {
+        const item_def* weapon = you.weapon();
+        const coord_def delta  = you.pos() - mon->pos();
+        const int       x_dist = std::abs(delta.x);
+        const int       y_dist = std::abs(delta.y);
+
+        if (weapon && get_weapon_brand(*weapon) == SPWPN_REACHING
+            && std::max(x_dist, y_dist) == 2)
+        {
+            macro_buf_add(CMD_EVOKE_WIELDED);
+            _add_targeting_commands(mon->pos());
+            return (true);
+        }
+    }
+
+    // Handle firing quivered items.
+    if ((event.mod & MOD_SHIFT) && you.m_quiver->get_fire_item() != -1)
+    {
+        macro_buf_add(CMD_FIRE);
+        _add_targeting_commands(mon->pos());
+        return (true);
+    }
+
+    return (false);
+}
+
 int DungeonRegion::handle_mouse(MouseEvent &event)
 {
     tiles.clear_text_tags(TAG_CELL_DESC);
@@ -1303,23 +1336,11 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     if (event.button != MouseEvent::LEFT)
         return 0;
 
-    // Handle weapons of reaching.
-    const monsters* mon = monster_at(gc);
-    if (mon && !mon->wont_attack() && you.can_see(mon) 
-        && you.see_cell_no_trans(mon->pos()))
+    monsters* mon = monster_at(gc);
+    if (mon && you.can_see(mon))
     {
-        const item_def* weapon = you.weapon();
-        const coord_def delta  = you.pos() - mon->pos();
-        const int       x_dist = std::abs(delta.x);
-        const int       y_dist = std::abs(delta.y);
-
-        if (weapon && get_weapon_brand(*weapon) == SPWPN_REACHING
-            && std::max(x_dist, y_dist) == 2)
-        {
-            macro_buf_add(CMD_EVOKE_WIELDED);
-            _add_targeting_commands(mon->pos());
+        if (_handle_distant_monster(mon, event))
             return (CK_MOUSE_CMD);
-        }
     }
 
     return _click_travel(gc, event);
@@ -1461,14 +1482,22 @@ bool DungeonRegion::update_tip_text(std::string& tip)
                 tip += "\n[L-Click] Attack\n";
             }
         }
-
-        tip += "[R-Click] Describe";
     }
     else
     {
         if (i_feel_safe() && !cell_is_solid(m_cursor[CURSOR_MOUSE]))
             tip = "[L-Click] Travel\n";
 
+    }
+
+    if (m_cursor[CURSOR_MOUSE] != you.pos())
+    {
+        const monsters* mon = monster_at(m_cursor[CURSOR_MOUSE]);
+        if (mon && you.can_see(mon) && you.see_cell_no_trans(mon->pos())
+            && you.m_quiver->get_fire_item() != -1)
+        {
+            tip += "[Shift-L-Click] Fire\n";
+        }
         tip += "[R-Click] Describe";
     }
 
