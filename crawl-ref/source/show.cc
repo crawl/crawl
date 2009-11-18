@@ -23,25 +23,51 @@
 #include "viewmap.h"
 
 show_type::show_type()
-    : cls(SH_NOTHING), colour(0)
+    : cls(SH_NOTHING),
+      feat(DNGN_UNSEEN),
+      item(SHOW_ITEM_NONE),
+      mons(MONS_NO_MONSTER),
+      colour(0)
 {
-    // To quiet Valgrind warnings.
-    feat = (dungeon_feature_type) -1;
 }
 
 show_type::show_type(monster_type montype)
-    : cls(SH_MONSTER), mons(montype), colour(0) {}
+    : cls(SH_MONSTER),
+      feat(DNGN_UNSEEN),
+      item(SHOW_ITEM_NONE),
+      mons(montype),
+      colour(0)
+{
+}
 
 show_type::show_type(dungeon_feature_type f)
-    : cls(SH_FEATURE), feat(f), colour(0) {}
+    : cls(SH_FEATURE),
+      feat(f),
+      item(SHOW_ITEM_NONE),
+      mons(MONS_NO_MONSTER),
+      colour(0)
+{
+}
 
 static show_item_type _item_to_show_code(const item_def &item);
 
 show_type::show_type(const item_def &it)
-    : cls(SH_ITEM), item(_item_to_show_code(it)), colour(0) {}
+    : cls(SH_ITEM),
+      feat(DNGN_UNSEEN),
+      item(_item_to_show_code(it)),
+      mons(MONS_NO_MONSTER),
+      colour(0)
+{
+}
 
 show_type::show_type(show_item_type t)
-    : cls(SH_ITEM), item(t), colour(0) {}
+    : cls(SH_ITEM),
+      feat(DNGN_UNSEEN),
+      item(t),
+      mons(MONS_NO_MONSTER),
+      colour(0)
+{
+}
 
 bool show_type::operator < (const show_type &other) const
 {

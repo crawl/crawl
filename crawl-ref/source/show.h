@@ -5,6 +5,7 @@
 
 enum show_item_type
 {
+    SHOW_ITEM_NONE,
     SHOW_ITEM_ORB,
     SHOW_ITEM_WEAPON,
     SHOW_ITEM_ARMOUR,
@@ -38,12 +39,9 @@ enum show_class
 struct show_type
 {
     show_class cls;
-    union
-    {
-        dungeon_feature_type feat;
-        show_item_type item;
-        monster_type mons;
-    };
+    dungeon_feature_type feat;
+    show_item_type item;
+    monster_type mons;
     unsigned short colour;
 
     show_type();
