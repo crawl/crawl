@@ -27,7 +27,7 @@ Stb - Stabbing               Axs - Axes                  Sum - Summonings
 Shd - Shields                M&F - Maces & Flails        Nec - Necromancy
 T&D - Traps & Doors          Pla - Polearms              Trl - Translocations
                              Stv - Staves                Trm - Transmutations
-Inv - Invocations            U C - Unarmed Combat        Div - Divinations
+Inv - Invocations            U C - Unarmed Combat
 Evo - Evocations
                              Thr - Throwing              Fir - Fire Magic
                              Slg - Slings                Ice - Ice Magic
