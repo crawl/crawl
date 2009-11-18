@@ -1021,6 +1021,8 @@ PLUS:     +6
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
 TILE_EQ:  gong
+MAGIC:    50
+BOOL:     elec, life, spirit
 DESC:     This is a large gong; you wonder if it could be worn as a shield.
 DESC_ID:  This shield surely will be heard!
 

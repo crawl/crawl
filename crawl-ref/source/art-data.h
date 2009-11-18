@@ -1341,11 +1341,11 @@
     UNRAND_FLAG_NONE, 
     {
         SPARM_NORMAL, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 
+        0, 0, 1, 0, 1, 50, 
         0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 0, 
-        0, 
+        1, 
     },
     "This is a large gong; you wonder if it could be worn as a shield.", 
     "This shield surely will be heard!", 
