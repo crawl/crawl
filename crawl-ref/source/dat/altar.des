@@ -612,7 +612,11 @@ KFEAT:   _ = altar_fedhas
 MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
 SUBST:   x = TTPPPPP.
 SHUFFLE: PQR, TU, ..."
+: if you.absdepth() < 10 then
+SUBST:   P = 112 , Q = 115, R = 11125
+: else
 SUBST:   P = 112 , Q = 115, R = 111235
+: end
 SUBST:   T = xt, U = xx
 SUBST:   " = .....6
 COLOUR:  . = green / none
