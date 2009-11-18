@@ -1702,7 +1702,7 @@ enum monster_type                      // (int) menv[].type
     MONS_BLUE_DEVIL,
     MONS_BEAST,
     MONS_IRON_DEVIL,                   //   89
-    // 90
+    MONS_SIXFIRHY,
     //
     //
     //

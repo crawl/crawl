@@ -3687,6 +3687,19 @@ static monsterentry mondata[] = {
 },
 
 {
+    MONS_SIXFIRHY, '4', LIGHTBLUE, "sixfirhy",
+    M_NO_FLAGS,
+    MR_NO_FLAGS, // can't have RES_ELEC since most sources of damage do nothing
+                 // in that case.  We want to "suffer" the damage to get healed.
+    0, 6, MONS_SIXFIRHY, MONS_SIXFIRHY, MH_DEMONIC, -6,
+    { {AT_HIT, AF_ELEC, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 6, 3, 5, 0 },
+    2, 20, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_NORMAL, HT_LAND, FL_NONE, 30, MOVE_ENERGY(6), // speed is cut to 1/3 later
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LITTLE
+},
+
+{
     MONS_HELLWING, '4', LIGHTGREY, "hellwing",
     M_SPELLCASTER,
     MR_RES_POISON,

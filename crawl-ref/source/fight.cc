@@ -351,9 +351,11 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     final_attack_delay(0), noise_factor(0), extra_noise(0), weapon(NULL),
     damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
     hand_half_bonus(false), art_props(0), unrand_entry(NULL),
-    attack_verb("bug"), verb_degree(), no_damage_message(),
-    special_damage_message(), unarmed_attack(), shield(NULL),
-    defender_shield(NULL), heavy_armour_penalty(0), can_do_unarmed(false),
+    attack_verb("bug"), verb_degree(),
+    no_damage_message(), special_damage_message(), unarmed_attack(),
+    special_damage_flavour(BEAM_NONE),
+    shield(NULL), defender_shield(NULL),
+    heavy_armour_penalty(0), can_do_unarmed(false),
     water_attack(false), miscast_level(-1), miscast_type(SPTYP_NONE),
     miscast_target(NULL), final_effects()
 {
@@ -933,7 +935,7 @@ bool melee_attack::player_attack()
                              defender->name(DESC_NOCAP_THE).c_str());
         }
 
-        player_hurt_monster();
+        defender->hurt(&you, damage_done, special_damage_flavour, false);
 
         if (damage_done)
             player_exercise_combat_skills();
@@ -1922,12 +1924,6 @@ int melee_attack::player_weapon_type_modify(int damage)
     return (damage);
 }
 
-bool melee_attack::player_hurt_monster()
-{
-    return damage_done && (damage_done = defender->hurt(&you, damage_done,
-                                                        BEAM_MISSILE, false));
-}
-
 void melee_attack::player_exercise_combat_skills()
 {
     const bool helpless = defender->cannot_fight();
@@ -2077,12 +2073,12 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Special damage to %s: %d",
+    mprf(MSGCH_DIAGNOSTICS, "Special damage to %s: %d, flavour: %d",
          defender->name(DESC_NOCAP_THE).c_str(),
-         special_damage);
+         special_damage, special_damage_flavour);
 #endif
 
-    special_damage = defender->hurt(&you, special_damage, BEAM_MISSILE, false);
+    special_damage = defender->hurt(&you, special_damage, special_damage_flavour, false);
 
     if (!defender->alive())
     {
@@ -3194,6 +3190,7 @@ bool melee_attack::apply_damage_brand()
                    "You are electrocuted!"
                 :  "There is a sudden explosion of sparks!";
             special_damage = 10 + random2(15);
+            special_damage_flavour = BEAM_ELECTRICITY;
 
             // Check for arcing in water, and add the final effect.
             const coord_def& pos = defender->pos();
@@ -3639,6 +3636,7 @@ void melee_attack::player_apply_staff_damage()
             special_damage_message =
                 make_stringf("%s is jolted!",
                              defender->name(DESC_CAP_THE).c_str());
+            special_damage_flavour = BEAM_ELECTRICITY;
         }
 
         break;
@@ -4975,6 +4973,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                 defender->res_elec(),
                 attacker->get_experience_level() +
                 random2(attacker->get_experience_level() / 2));
+        special_damage_flavour = BEAM_ELECTRICITY;
 
         if (defender->airborne())
             special_damage = special_damage * 2 / 3;
@@ -5439,6 +5438,7 @@ void melee_attack::mons_perform_attack_rounds()
 
             special_damage = 0;
             special_damage_message.clear();
+            special_damage_flavour = BEAM_NONE;
 
             // Monsters attacking themselves don't get attack flavour.
             // The message sequences look too weird.
@@ -5461,7 +5461,7 @@ void melee_attack::mons_perform_attack_rounds()
                 break;
             }
 
-            defender->hurt(attacker, damage_done + special_damage);
+            defender->hurt(attacker, damage_done + special_damage, special_damage_flavour);
 
             if (!defender->alive())
             {
@@ -5488,6 +5488,7 @@ void melee_attack::mons_perform_attack_rounds()
 
             special_damage = 0;
             special_damage_message.clear();
+            special_damage_flavour = BEAM_NONE;
             apply_damage_brand();
 
             if (!special_damage_message.empty())
@@ -5500,7 +5501,7 @@ void melee_attack::mons_perform_attack_rounds()
             }
 
             if (special_damage > 0)
-                defender->hurt(attacker, special_damage);
+                defender->hurt(attacker, special_damage, special_damage_flavour);
 
             if (!defender->alive())
             {

@@ -1880,7 +1880,16 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
     if (victim->airborne() || victim->res_elec() > 0 || !one_chance_in(3))
         return (false);
 
-    dmg += 10 + random2(15);
+    // A hack and code duplication, but that's easier than adding accounting
+    // for each of multiple brands.
+    if (victim->id() == MONS_SIXFIRHY)
+    {
+        if (!beam.is_tracer)
+            victim->heal(10 + random2(15), false);
+        // physical damage is still done
+    }
+    else
+        dmg += 10 + random2(15);
 
     if (beam.is_tracer)
         return (false);
@@ -1888,6 +1897,8 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
     if (you.can_see(victim))
         if (victim->atype() == ACT_PLAYER)
             dmg_msg = "You are electrocuted!";
+        else if (victim->id() == MONS_SIXFIRHY)
+            dmg_msg = victim->name(DESC_CAP_THE) + " is charged up!";
         else
             dmg_msg = "There is a sudden explosion of sparks!";
 

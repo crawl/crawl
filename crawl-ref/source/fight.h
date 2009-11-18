@@ -127,6 +127,7 @@ public:
     std::string no_damage_message;
     std::string special_damage_message;
     std::string unarmed_attack;
+    beam_type special_damage_flavour;
 
     item_def  *shield;
     item_def  *defender_shield;
@@ -261,7 +262,6 @@ private:
     bool player_hits_monster();
     int  player_calc_base_weapon_damage();
     int  player_calc_base_unarmed_damage();
-    bool player_hurt_monster();
     void player_exercise_combat_skills();
     bool player_monattk_final_hit_effects(bool mondied);
     bool player_monattk_hit_effects(bool mondied);

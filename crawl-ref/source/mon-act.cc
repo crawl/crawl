@@ -1747,7 +1747,9 @@ static void _handle_monster_move(monsters *monster)
 
         _monster_regenerate(monster);
 
-        if (monster->cannot_act())
+        if (monster->cannot_act()
+            || monster->type == MONS_SIXFIRHY // these move only 4 of 12 turns
+               && ++monster->number / 4 % 3 != 2)  // but are not helpless
         {
             monster->speed_increment -= non_move_energy;
             continue;

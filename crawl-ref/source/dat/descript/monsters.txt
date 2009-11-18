@@ -1347,6 +1347,10 @@ A beautiful statue of silvery hue. Its eyes glow with an otherworldly radiance.
 
 It looks brittle.
 %%%%
+sixfirhy
+
+A small vile creature that moves in bursts, stopping then darting with lightning speed. The small trident it pokes people with seems to throw sparks all around.
+%%%%
 skeletal dragon
 
 A huge undead abomination, pieced together from the broken bones of many dragons.

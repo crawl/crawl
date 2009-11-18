@@ -5881,6 +5881,15 @@ item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
 
 void monsters::react_to_damage(int damage, beam_type flavour, kill_category whose)
 {
+    if (type == MONS_SIXFIRHY && flavour == BEAM_ELECTRICITY)
+    {
+        if (!alive()) // overcharging is deadly
+            simple_monster_message(this, " explodes in an explosion of sparks!");
+        else if (heal(damage*2, false))
+            simple_monster_message(this, " seems to be charged up!");
+        return;
+    }
+
     if (!alive())
         return;
 
