@@ -3,6 +3,7 @@
 #include "coord-circle.h"
 
 #include "coordit.h"
+#include "los.h"
 
 #include <cmath>
 
@@ -112,8 +113,10 @@ bool circle_def::contains(const coord_def &p) const
     case SH_SQUARE:
         return ((p - origin).rdist() <= radius);
     case SH_CIRCLE:
+    {
         int r_sq = los_radius ? get_los_radius_sq() : radius_sq;
         return ((p - origin).abs() <= r_sq);
+    }
     default:
         return (false);
     }
