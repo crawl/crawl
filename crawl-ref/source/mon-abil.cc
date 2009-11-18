@@ -1439,9 +1439,8 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
     }
 }
 
-// Increase the count of every ballistomycete on the level (only if
-// monster is of an appropriate type). If a ballisto has a count greater
-// than 0 it changes color and starts producing spores.
+// If 'monster' is a ballistomycete or spore activate some number of
+// ballistomycetes on the level.
 void activate_ballistomycetes( monsters * monster, const coord_def & origin)
 {
     if (!monster || monster->type != MONS_BALLISTOMYCETE
@@ -1464,10 +1463,26 @@ void activate_ballistomycetes( monsters * monster, const coord_def & origin)
         }
     }
 
+    if (candidates.empty())
+        return;
 
-    if (!candidates.empty())
+    // If a spore or inactive ballisto died we will only activate one
+    // other ballisto. If it was an active ballisto we will distribute
+    // its count to others on the level.
+    int activation_count = 1;
+    if (monster ->type == MONS_BALLISTOMYCETE)
     {
-        monsters * spawner = candidates[random2(candidates.size())];
+        activation_count += monster->number;
+    }
+
+    std::random_shuffle(candidates.begin(), candidates.end());
+
+    int index = 0;
+    for (int i=0; i<activation_count; ++i)
+    {
+        index = i % candidates.size();
+
+        monsters * spawner = candidates[index];
 
         spawner->number++;
         found_others = true;
