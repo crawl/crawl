@@ -1150,7 +1150,7 @@ static void _add_targeting_commands(const coord_def& pos)
 {
     // Force targetting cursor back onto center to start off on a clean
     // slate.
-    macro_buf_add(CMD_TARGET_CENTER);
+    macro_buf_add_cmd(CMD_TARGET_CENTER);
 
     const coord_def delta = pos - you.pos();
 
@@ -1162,7 +1162,7 @@ static void _add_targeting_commands(const coord_def& pos)
         cmd = CMD_TARGET_RIGHT;
 
     for (int i = 0; i < std::abs(delta.x); i++)
-        macro_buf_add(cmd);
+        macro_buf_add_cmd(cmd);
 
     if (delta.y < 0)
         cmd = CMD_TARGET_UP;
@@ -1170,9 +1170,9 @@ static void _add_targeting_commands(const coord_def& pos)
         cmd = CMD_TARGET_DOWN;
 
     for (int i = 0; i < std::abs(delta.y); i++)
-        macro_buf_add(cmd);
+        macro_buf_add_cmd(cmd);
 
-    macro_buf_add(CMD_TARGET_MOUSE_SELECT);
+    macro_buf_add_cmd(CMD_TARGET_MOUSE_SELECT);
 }
 
 static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
@@ -1190,7 +1190,7 @@ static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
         if (weapon && get_weapon_brand(*weapon) == SPWPN_REACHING
             && std::max(x_dist, y_dist) == 2)
         {
-            macro_buf_add(CMD_EVOKE_WIELDED);
+            macro_buf_add_cmd(CMD_EVOKE_WIELDED);
             _add_targeting_commands(mon->pos());
             return (true);
         }
@@ -1199,7 +1199,7 @@ static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
     // Handle firing quivered items.
     if ((event.mod & MOD_SHIFT) && you.m_quiver->get_fire_item() != -1)
     {
-        macro_buf_add(CMD_FIRE);
+        macro_buf_add_cmd(CMD_FIRE);
         _add_targeting_commands(mon->pos());
         return (true);
     }

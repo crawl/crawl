@@ -445,6 +445,18 @@ void macro_buf_add( int key, bool reverse )
         Buffer.push_back( key );
 }
 
+/*
+ * Add a command into the internal keybuffer.
+ */
+void macro_buf_add_cmd(command_type cmd, bool reverse)
+{
+    ASSERT(cmd > CMD_NO_CMD && cmd < CMD_MIN_SYNTHETIC);
+
+    // There should be plenty of room between the synthetic keys
+    // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
+    // command_type to fit (currently 1000 through 2069).
+    macro_buf_add( -((int) cmd), reverse);
+}
 
 /*
  * Adds keypresses from a sequence into the internal keybuffer. Does some
@@ -1090,9 +1102,9 @@ std::string command_to_name(command_type cmd)
 
 command_type key_to_command(int key, KeymapContext context)
 {
-    if (key >= CMD_NO_CMD && key < CMD_MIN_SYNTHETIC)
+    if (-key > CMD_NO_CMD && -key < CMD_MIN_SYNTHETIC)
     {
-        command_type  cmd         = (command_type) key;
+        command_type  cmd         = (command_type) -key;
         KeymapContext cmd_context = context_for_command(cmd);
 
         if (cmd == CMD_NO_CMD)
@@ -1103,8 +1115,8 @@ command_type key_to_command(int key, KeymapContext context)
             mprf(MSGCH_ERROR,
                  "key_to_command(): command '%s' (%d:%d) wrong for desired "
                  "context",
-                 command_to_name(cmd).c_str(), key - CMD_NO_CMD,
-                 CMD_MAX_CMD - key);
+                 command_to_name(cmd).c_str(), -key - CMD_NO_CMD,
+                 CMD_MAX_CMD + key);
             if (is_processing_macro())
                 flush_input_buffer(FLUSH_ABORT_MACRO);
             if (crawl_state.is_replaying_keys()
