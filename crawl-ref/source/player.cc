@@ -6805,10 +6805,10 @@ bool player::sicken(int amount)
     if (res_rotting() || amount <= 0)
         return (false);
 
-    mpr( "You feel ill." );
+    mpr("You feel ill.");
 
     disease += amount * BASELINE_DELAY;
-    if(disease > 210 * BASELINE_DELAY)
+    if (disease > 210 * BASELINE_DELAY)
         disease = 210 * BASELINE_DELAY;
 
     learned_something_new(TUT_YOU_SICK);
