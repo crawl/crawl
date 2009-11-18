@@ -1825,7 +1825,8 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rmuta = (wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                        || you.religion == GOD_ZIN && you.piety >= 150);
-    const int rrott = you.res_rotting();
+    const int rrott = (you.res_rotting()
+                       || you.religion == GOD_ZIN && you.piety >= 150);
     const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
 
     snprintf(buf, sizeof buf,

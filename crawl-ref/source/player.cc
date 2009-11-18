@@ -4867,6 +4867,13 @@ bool miasma_player()
     if (you.res_rotting())
         return (false);
 
+    // Zin's protection.
+    if (you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
+    {
+        simple_god_message(" protects your body from miasma!");
+        return (false);
+    }
+
     bool success = poison_player(1);
 
     if (you.hp_max > 4 && coinflip())
@@ -6689,6 +6696,13 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
         return (false);
     }
 
+    // Zin's protection.
+    if (religion == GOD_ZIN && x_chance_in_y(piety, MAX_PIETY))
+    {
+        simple_god_message(" protects your body from decay!");
+        return (false);
+    }
+
     if (immediate > 0)
         rot_hp(immediate);
 
@@ -6804,6 +6818,13 @@ bool player::sicken(int amount)
 
     if (res_rotting() || amount <= 0)
         return (false);
+
+    // Zin's protection.
+    if (religion == GOD_ZIN && x_chance_in_y(piety, MAX_PIETY))
+    {
+        simple_god_message(" protects your body from disease!");
+        return (false);
+    }
 
     mpr("You feel ill.");
 

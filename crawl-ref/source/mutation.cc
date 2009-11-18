@@ -2148,7 +2148,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY)
             && !stat_gain_potion)
         {
-            simple_god_message(" protects your body from chaos!");
+            simple_god_message(" protects your body from mutation!");
             return (false);
         }
     }
