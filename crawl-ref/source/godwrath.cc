@@ -172,64 +172,20 @@ static void _zin_remove_good_mutations()
 
 static bool _zin_retribution()
 {
-    // surveillance/creeping doom theme
+    // preaching/creeping doom theme
     const god_type god = GOD_ZIN;
 
-    int punishment = random2(10);
+    int punishment = random2(8);
 
     // If not mutated, do something else instead.
     if (punishment > 7 && !how_mutated())
-        punishment = random2(8);
+        punishment = random2(6);
 
     switch (punishment)
     {
     case 0:
     case 1:
-    case 2: // summon eyes or pestilence (30%)
-        if (random2(you.experience_level) > 7 && !one_chance_in(5))
-        {
-            const monster_type eyes[] = {
-                MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
-                MONS_EYE_OF_DEVASTATION, MONS_GOLDEN_EYE, MONS_GREAT_ORB_OF_EYES
-            };
-
-            int how_many = 1 + (you.experience_level / 10) + random2(3);
-            bool success = false;
-
-            for (; how_many > 0; --how_many)
-            {
-                const monster_type mon = RANDOM_ELEMENT(eyes);
-
-                coord_def mon_pos;
-                if (!monster_random_space(mon, mon_pos))
-                    mon_pos = you.pos();
-
-                if (mons_place(
-                        mgen_data::hostile_at(mon, "the power of Zin",
-                            true, 0, 0, mon_pos, 0, god)) != -1)
-                {
-                    success = true;
-                }
-            }
-
-            if (success)
-                god_speaks(god, "You feel Zin's eyes turn towards you...");
-            else
-            {
-                simple_god_message("'s eyes are elsewhere at the moment.",
-                                   god);
-            }
-        }
-        else
-        {
-            bool success = cast_summon_swarm(you.experience_level * 20,
-                                             god, true, true);
-            simple_god_message(success ? " sends a plague down upon you!"
-                                       : "'s plague fails to arrive.", god);
-        }
-        break;
-    case 3:
-    case 4: // recital (20%)
+    case 2: // recital
         simple_god_message(" recites the Axioms of Law to you!", god);
         switch (random2(3))
         {
@@ -244,17 +200,17 @@ static bool _zin_retribution()
             break;
         }
         break;
-    case 5:
-    case 6: // famine (20%)
+    case 3:
+    case 4: // famine
         simple_god_message(" sends a famine down upon you!", god);
         make_hungry(you.hunger / 2, false);
         break;
-    case 7: // noisiness (10%)
+    case 5: // noisiness
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
         noisy(25, you.pos()); // same as scroll of noise
         break;
-    case 8:
-    case 9: // remove good mutations (20%)
+    case 6:
+    case 7: // remove good mutations
         _zin_remove_good_mutations();
         break;
     }

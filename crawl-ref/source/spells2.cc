@@ -1208,12 +1208,10 @@ bool cast_summon_scorpions(int pow, god_type god)
 
 // Creates a mixed swarm of typical swarming animals.
 // Number, duration and friendlinesss depend on spell power.
-bool cast_summon_swarm(int pow, god_type god,
-                       bool force_hostile,
-                       bool permanent)
+bool cast_summon_swarm(int pow, god_type god)
 {
     bool success = false;
-    const int dur = permanent ? 0 : std::min(2 + (random2(pow) / 4), 6);
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
     const int how_many = stepdown_value(2 + random2(pow)/10 + random2(pow)/25,
                                         2, 2, 6, 8);
 
@@ -1228,12 +1226,12 @@ bool cast_summon_swarm(int pow, god_type god,
         };
 
         const monster_type mon = RANDOM_ELEMENT(swarmers);
-        const bool friendly = force_hostile ? false : (random2(pow) > 7);
+        const bool friendly = (random2(pow) > 7);
 
         if (create_monster(
                 mgen_data(mon,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                          dur, !permanent ? SPELL_SUMMON_SWARM : 0,
+                          dur, SPELL_SUMMON_SWARM : 0,
                           you.pos(),
                           MHITYOU,
                           0, god)) != -1)
