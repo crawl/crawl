@@ -2113,7 +2113,7 @@ _gastronok_debuff_
 w:20
 You feel sluggish.
 
-You feel an sudden, passing aversion to salt.
+You feel a sudden, passing aversion to salt.
 
 Your skin takes on a slight green cast.
 
