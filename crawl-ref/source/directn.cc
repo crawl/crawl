@@ -1484,6 +1484,12 @@ void direction(dist& moves, targetting_type restricts,
 #endif
             break;
 
+        case CMD_TARGET_CENTER:
+            moves.isValid  = true;
+            moves.isTarget = true;
+            moves.target   = you.pos();
+            break;
+
 #ifdef WIZARD
         case CMD_TARGET_WIZARD_MAKE_FRIENDLY:
             // Maybe we can skip this check...but it can't hurt
