@@ -1638,7 +1638,7 @@ int monster_die(monsters *monster, killer_type killer,
                     did_god_conduct(DID_KILL_LIVING,
                                     monster->hit_dice, true, monster);
 
-                    if (monster->is_evil())
+                    if (monster->is_unholy() || monster->is_evil())
                     {
                         did_god_conduct(DID_KILL_NATURAL_EVIL,
                                         monster->hit_dice, true, monster);
