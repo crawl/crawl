@@ -642,7 +642,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_SHINING_ONE:
-        likes.push_back("you or your allies kill living evil beings");
+        likes.push_back("you or your allies kill living unholy or evil beings");
         break;
 
     default:
