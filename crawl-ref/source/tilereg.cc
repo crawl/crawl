@@ -1145,6 +1145,35 @@ static int _click_travel(const coord_def &gc, MouseEvent &event)
     return _adjacent_cmd(dest, event);
 }
 
+static void _add_targeting_commands(const coord_def& pos)
+{
+    // Force targetting cursor back onto center to start off on a clean
+    // slate.
+    macro_buf_add(CMD_TARGET_CENTER);
+
+    const coord_def delta = pos - you.pos();
+
+    command_type cmd;
+
+    if (delta.x < 0)
+        cmd = CMD_TARGET_LEFT;
+    else
+        cmd = CMD_TARGET_RIGHT;
+
+    for (int i = 0; i < std::abs(delta.x); i++)
+        macro_buf_add(cmd);
+
+    if (delta.y < 0)
+        cmd = CMD_TARGET_UP;
+    else
+        cmd = CMD_TARGET_DOWN;
+
+    for (int i = 0; i < std::abs(delta.y); i++)
+        macro_buf_add(cmd);
+
+    macro_buf_add(CMD_TARGET_MOUSE_SELECT);
+}
+
 int DungeonRegion::handle_mouse(MouseEvent &event)
 {
     tiles.clear_text_tags(TAG_CELL_DESC);
@@ -1274,6 +1303,25 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     if (event.button != MouseEvent::LEFT)
         return 0;
 
+    // Handle weapons of reaching.
+    const monsters* mon = monster_at(gc);
+    if (mon && !mon->wont_attack() && you.can_see(mon) 
+        && you.see_cell_no_trans(mon->pos()))
+    {
+        const item_def* weapon = you.weapon();
+        const coord_def delta  = you.pos() - mon->pos();
+        const int       x_dist = std::abs(delta.x);
+        const int       y_dist = std::abs(delta.y);
+
+        if (weapon && get_weapon_brand(*weapon) == SPWPN_REACHING
+            && std::max(x_dist, y_dist) == 2)
+        {
+            macro_buf_add(CMD_EVOKE_WIELDED);
+            _add_targeting_commands(mon->pos());
+            return (CK_MOUSE_CMD);
+        }
+    }
+
     return _click_travel(gc, event);
 }
 
@@ -1354,6 +1402,11 @@ bool DungeonRegion::update_tip_text(std::string& tip)
     if (!map_bounds(m_cursor[CURSOR_MOUSE]))
         return (false);
 
+    const bool have_reach = you.weapon()
+        && get_weapon_brand(*(you.weapon())) == SPWPN_REACHING;
+    const int  attack_dist = have_reach ? 2 : 1;
+
+
     if (m_cursor[CURSOR_MOUSE] == you.pos())
     {
         tip = you.your_name;
@@ -1392,8 +1445,8 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         if (you.religion != GOD_NO_GOD)
             tip += "\n[Shift-R-Click] Religion (^)";
     }
-    else if (abs(m_cursor[CURSOR_MOUSE].x - you.pos().x) <= 1
-             && abs(m_cursor[CURSOR_MOUSE].y - you.pos().y) <= 1)
+    else if (abs(m_cursor[CURSOR_MOUSE].x - you.pos().x) <= attack_dist
+             && abs(m_cursor[CURSOR_MOUSE].y - you.pos().y) <= attack_dist)
     {
         tip = "";
 
