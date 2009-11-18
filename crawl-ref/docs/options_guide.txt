@@ -825,7 +825,7 @@ explore_greedy = true
         you're temporarily unable to pick up items (from uncontrolled
         levitation, for instance).
 
-explore_stop = items,greed_pickup,stairs,shops,altars,gates
+explore_stop = items,greedy_pickup,stairs,shops,altars,gates
         Explore will stop for one of these conditions. Whatever you
         set this option to, anything that stops travel will also stop
         explore. Multiple explore_stop lines are cumulative if you use
