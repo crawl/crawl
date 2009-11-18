@@ -725,6 +725,34 @@ static void player_view_update()
     update_exclusion_los(update_excludes);
 }
 
+void tile_draw_floor()
+{
+    for (int cy = 0; cy < env.tile_fg.height(); cy++)
+        for (int cx = 0; cx < env.tile_fg.width(); cx++)
+        {
+            const coord_def ep(cx, cy);
+            const coord_def gc = show2grid(ep);
+
+            int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
+
+            if (in_bounds(gc) && you.see_cell(gc))
+            {
+                dungeon_feature_type feat = grid_appearance(gc);
+                bg = tileidx_feature(feat, gc.x, gc.y);
+
+                if (feat == DNGN_DETECTED_SECRET_DOOR)
+                     bg |= TILE_FLAG_WAS_SECRET;
+                else if (is_unknown_stair(gc))
+                     bg |= TILE_FLAG_NEW_STAIR;
+            }
+
+
+            // init tiles
+            env.tile_bg[ep.x][ep.y] = bg;
+            env.tile_fg[ep.x][ep.y] = 0;
+        }
+}
+
 static void draw_unseen(screen_buffer_t* buffy, const coord_def &gc)
 {
 #ifndef USE_TILE

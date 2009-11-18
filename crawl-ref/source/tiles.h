@@ -72,7 +72,6 @@ int tilep_equ_gloves(const item_def &item);
 int tilep_equ_boots(const item_def &item);
 
 // Tile display related
-void tile_draw_floor();
 void tile_place_monster(int gx, int gy, int idx, bool foreground = true,
                         bool detected = false);
 void tile_place_item(int x, int y, int idx);
