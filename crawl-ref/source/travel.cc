@@ -549,8 +549,6 @@ bool prompt_stop_explore(int es_why)
 #define ES_portal (Options.explore_stop & ES_PORTAL)
 
 // Adds interesting stuff on (x, y) to explore_discoveries.
-//
-// NOTE: These are env.map_knowledge coords, add +1 to get grid coords.
 inline static void _check_interesting_square(int x, int y,
                                              explore_discoveries &ed)
 {
