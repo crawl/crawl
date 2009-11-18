@@ -1593,7 +1593,7 @@ static void _display_vampire_attributes()
 
     std::string result;
 
-    const int lines = 14;
+    const int lines = 15;
     std::string column[lines][7] =
     {
        {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
@@ -1614,6 +1614,8 @@ static void _display_vampire_attributes()
        {"Cold resistance      ", "           ", "        ", "          ", " +       ", " +       ", " ++   "},
 
        {"Negative resistance  ", "           ", "        ", " +        ", " ++      ", " +++     ", " +++  "},
+
+       {"Rotting resistance   ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
 
        {"Torment resistance   ", "           ", "        ", "          ", "         ", "         ", " +    "},
 

@@ -1825,6 +1825,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rmuta = (wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                        || you.religion == GOD_ZIN && you.piety >= 150);
+    const int rrott = you.res_rotting();
     const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
 
     snprintf(buf, sizeof buf,
@@ -1836,6 +1837,7 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sSpirit.Shd: %s\n"
              "%sSust.Abil.: %s\n"
              "%sRes.Mut.  : %s\n"
+             "%sRes.Rott. : %s\n"
              "%sRes.Slow  : %s\n",
              _determine_colour_string(rfire, 3), itosym3(rfire),
              _determine_colour_string(rcold, 3), itosym3(rcold),
@@ -1845,6 +1847,7 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rspir, 1), itosym1(rspir),
              _determine_colour_string(rsust, 1), itosym1(rsust),
              _determine_colour_string(rmuta, 1), itosym1(rmuta),
+             _determine_colour_string(rrott, 1), itosym1(rrott),
              _determine_colour_string(rslow, 1), itosym1(rslow));
     cols.add_formatted(0, buf, false);
 

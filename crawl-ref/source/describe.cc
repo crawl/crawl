@@ -2622,6 +2622,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "cold";
     case MR_RES_ACID:
         return "acid";
+    case MR_RES_ROTTING:
+        return "rotting";
     default:
         return "buggy resistance";
     }
@@ -2642,8 +2644,9 @@ static std::string _monster_stat_description(const monsters& mon)
             ? get_mons_class_resists(mon.type) : get_mons_resists(&mon);
 
     const mon_resist_flags resists[] = {
-        MR_RES_ELEC,  MR_RES_POISON, MR_RES_FIRE,
-        MR_RES_STEAM, MR_RES_COLD,   MR_RES_ACID
+        MR_RES_ELEC,   MR_RES_POISON, MR_RES_FIRE,
+        MR_RES_STEAM,  MR_RES_COLD,   MR_RES_ACID,
+        MR_RES_ROTTING
     };
 
     std::vector<std::string> extreme_resists;
@@ -3635,7 +3638,7 @@ void describe_god( god_type which_god, bool give_title )
                 _print_final_god_abil_desc(which_god, buf,
                                            ABIL_ZIN_SUSTENANCE);
             }
-            const char *how = (you.piety >= 150) ? "carefully" : // res mut. 3
+            const char *how = (you.piety >= 150) ? "carefully" :
                               (you.piety >= 100) ? "often" :
                               (you.piety >=  50) ? "sometimes" :
                                                    "occasionally";
@@ -3646,7 +3649,7 @@ void describe_god( god_type which_god, bool give_title )
         else if (which_god == GOD_SHINING_ONE)
         {
             have_any = true;
-            const char *how = (you.piety >= 150) ? "carefully" : // l.p. 3
+            const char *how = (you.piety >= 150) ? "carefully" :
                               (you.piety >= 100) ? "often" :
                               (you.piety >=  50) ? "sometimes" :
                                                    "occasionally";

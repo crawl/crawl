@@ -276,13 +276,14 @@ short mon_resist_def::get_resist_level(mon_resist_flags res_type) const
 {
     switch (res_type)
     {
-    case MR_RES_ELEC:   return elec;
-    case MR_RES_POISON: return poison;
-    case MR_RES_FIRE:   return fire;
-    case MR_RES_STEAM:  return steam;
-    case MR_RES_COLD:   return cold;
-    case MR_RES_ACID:   return acid;
-    default:            return (0);
+    case MR_RES_ELEC:    return elec;
+    case MR_RES_POISON:  return poison;
+    case MR_RES_FIRE:    return fire;
+    case MR_RES_STEAM:   return steam;
+    case MR_RES_COLD:    return cold;
+    case MR_RES_ACID:    return acid;
+    case MR_RES_ROTTING: return rotting;
+    default:             return (0);
     }
 }
 
