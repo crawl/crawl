@@ -1090,6 +1090,36 @@ std::string command_to_name(command_type cmd)
 
 command_type key_to_command(int key, KeymapContext context)
 {
+    if (key >= CMD_NO_CMD && key < CMD_MIN_SYNTHETIC)
+    {
+        command_type  cmd         = (command_type) key;
+        KeymapContext cmd_context = context_for_command(cmd);
+
+        if (cmd == CMD_NO_CMD)
+            return (CMD_NO_CMD);
+
+        if (cmd_context != context)
+        {
+            mprf(MSGCH_ERROR,
+                 "key_to_command(): command '%s' (%d:%d) wrong for desired "
+                 "context",
+                 command_to_name(cmd).c_str(), key - CMD_NO_CMD,
+                 CMD_MAX_CMD - key);
+            if (is_processing_macro())
+                flush_input_buffer(FLUSH_ABORT_MACRO);
+            if (crawl_state.is_replaying_keys()
+                || crawl_state.cmd_repeat_start)
+            {
+                flush_input_buffer(FLUSH_KEY_REPLAY_CANCEL);
+            }
+            flush_input_buffer(FLUSH_BEFORE_COMMAND);
+
+            return (CMD_NO_CMD);
+        }
+ 
+        return (cmd);
+    }
+
     key_to_cmd_map           &key_map = _keys_to_cmds[context];
     key_to_cmd_map::iterator it       = key_map.find(key);
 
@@ -1099,6 +1129,7 @@ command_type key_to_command(int key, KeymapContext context)
     command_type cmd = static_cast<command_type>(it->second);
 
     ASSERT(context_for_command(cmd) == context);
+
 
     return cmd;
 }
