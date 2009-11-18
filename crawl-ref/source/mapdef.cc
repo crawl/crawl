@@ -2599,21 +2599,21 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             name = replace_all_of(name, "_", " ");
             mspec.monname = name;
 
-            if (strip_tag(mon_str, "name_suffix"))
+            if (strip_tag(mon_str, "name_suffix") || strip_tag(mon_str, "n_suf"))
                 mspec.extra_monster_flags |= MF_NAME_SUFFIX;
-            else if (strip_tag(mon_str, "name_adjective"))
+            else if (strip_tag(mon_str, "name_adjective") || strip_tag(mon_str, "n_adj"))
                 mspec.extra_monster_flags |= MF_NAME_ADJECTIVE;
-            else if (strip_tag(mon_str, "name_replace"))
+            else if (strip_tag(mon_str, "name_replace") || strip_tag(mon_str, "n_rpl"))
                 mspec.extra_monster_flags |= MF_NAME_REPLACE;
 
             // We should be able to combine this with name_replace.
-            if (strip_tag(mon_str, "name_descriptor"))
+            if (strip_tag(mon_str, "name_descriptor") || strip_tag(mon_str, "n_des"))
                 mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
             // Reasoning for this setting both flags: it does nothing with the
             // description unless NAME_DESCRIPTOR is also set; thus, you end up
             // with bloated vault description lines akin to: "name:blah_blah
             // name_replace name_descrpitor name_definite".
-            if (strip_tag(mon_str, "name_definite"))
+            if (strip_tag(mon_str, "name_definite") || strip_tag(mon_str, "n_the"))
             {
                 mspec.extra_monster_flags |= MF_NAME_DEFINITE;
                 mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
