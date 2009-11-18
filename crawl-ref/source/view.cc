@@ -735,11 +735,11 @@ void tile_draw_floor()
 
             int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
 
-            if (in_bounds(gc) && you.see_cell(gc))
+            if (you.see_cell(gc))
             {
                 dungeon_feature_type feat = grid_appearance(gc);
                 bg = tileidx_feature(feat, gc.x, gc.y);
-
+            
                 if (feat == DNGN_DETECTED_SECRET_DOOR)
                      bg |= TILE_FLAG_WAS_SECRET;
                 else if (is_unknown_stair(gc))
