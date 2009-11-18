@@ -859,26 +859,26 @@ void viewwindow(bool monster_updates, bool show_updates)
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
-    tile_draw_floor();
     mcache.clear_nonref();
 #endif
 
     if (show_updates)
-    {
         you.update_los();
+
+#ifdef USE_TILE
+    tile_draw_floor();
+    tile_draw_rays(true);
+    tiles.clear_overlays();
+#endif
+
+    if (show_updates)
         env.show.init();
-    }
 
     if (monster_updates && !crawl_state.arena)
         monster_grid_updates();
 
     if (show_updates)
         player_view_update();
-
-#ifdef USE_TILE
-    tile_draw_rays(true);
-    tiles.clear_overlays();
-#endif
 
     bool run_dont_draw = you.running && Options.travel_delay < 0
                 && (!you.running.is_explore() || Options.explore_delay < 0);
