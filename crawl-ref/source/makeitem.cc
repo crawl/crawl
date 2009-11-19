@@ -1439,8 +1439,8 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
         }
 
-        // Quarterstaff - not powerful, as this would make
-        // the 'staves' skill just too good.
+        // Quarterstaff - not powerful, as this would make the 'staves'
+        // skill just too good.
         case WPN_QUARTERSTAFF:
             if (one_chance_in(30))
                 rc = SPWPN_PAIN;
@@ -1535,10 +1535,13 @@ bool is_weapon_brand_ok(int type, int brand)
 
     if (brand <= SPWPN_NORMAL)
         return (true);
+
     if (type == WPN_QUICK_BLADE && brand == SPWPN_SPEED)
         return (false);
-    if (vorp == DVORP_CRUSHING && brand == SPWPN_VENOM)
+
+    if (vorp == DVORP_CRUSHING && skill != SK_STAVES && brand == SPWPN_VENOM)
         return (false);
+
     if (skill != SK_POLEARMS && brand == SPWPN_DRAGON_SLAYING)
         return (false);
 
