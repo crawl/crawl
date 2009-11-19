@@ -1185,8 +1185,15 @@ static const bool _is_appropriate_spell(spell_type spell,
 {
     ASSERT(is_valid_spell(spell));
 
+    const unsigned int flags    = get_spell_flags(spell);
+    const bool         targeted = flags & SPFLAG_TARGETTING_MASK;
+
+    // We don't handle grid targeted spells yet.
+    if (flags & SPFLAG_GRID)
+        return (false);
+
     // Monst spells are blocked by transparent walls.
-    if (!you.see_cell_no_trans(target->pos()))
+    if (targeted && !you.see_cell_no_trans(target->pos()))
     {
         switch(spell)
         {
@@ -1202,8 +1209,7 @@ static const bool _is_appropriate_spell(spell_type spell,
         }
     }
 
-    const unsigned int flags   = get_spell_flags(spell);
-    const bool         helpful = flags & SPFLAG_HELPFUL;
+    const bool helpful = flags & SPFLAG_HELPFUL;
 
     if (target->atype() == ACT_PLAYER)
     {
@@ -1211,10 +1217,10 @@ static const bool _is_appropriate_spell(spell_type spell,
             return (false);
 
         return ((flags & (SPFLAG_HELPFUL | SPFLAG_ESCAPE | SPFLAG_RECOVERY)) ||
-                !(flags & SPFLAG_TARGETTING_MASK));
+                !targeted);
     }
 
-    if (!(flags & (SPFLAG_TARGETTING_MASK)))
+    if (!targeted)
         return (false);
 
     if (flags & SPFLAG_NEUTRAL)
@@ -1321,6 +1327,101 @@ static bool _evoke_item_on_target(actor* target)
     return (true);
 }
 
+static bool _spell_in_range(spell_type spell, actor* target)
+{
+    if (!(get_spell_flags(spell) & SPFLAG_TARGETTING_MASK))
+        return (true);
+
+    int range = calc_spell_range(spell);
+
+    switch(spell)
+    {
+    case SPELL_EVAPORATE:
+    case SPELL_MEPHITIC_CLOUD:
+    case SPELL_FIREBALL:
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_POISONOUS_CLOUD:
+        // Increase range by one due to cloud radius.
+        range++;
+        break;
+    default:
+        break;
+    }
+
+    return (range >= grid_distance(you.pos(), target->pos()));
+}
+
+static actor* _spell_target = NULL;
+
+static bool _spell_selector(spell_type spell, bool &grey)
+{
+    if (!_spell_in_range(spell, _spell_target))
+        grey = true;
+
+    return (_is_appropriate_spell(spell, _spell_target));
+}
+
+// TODO: Cast spells which target a particular cell.
+static bool _cast_spell_on_target(actor* target)
+{
+    ASSERT(_spell_target == NULL);
+    _spell_target = target;
+
+    const int letter = list_spells(true, false, -1, _spell_selector, false);
+
+    _spell_target = NULL;
+
+    if (letter == 0)
+    {
+        // We cancled out of selecting a spell, so don't take a step
+        // closer to the monster.
+        return (true);
+    }
+
+    const spell_type spell = get_spell_by_letter(letter);
+
+    ASSERT(is_valid_spell(spell));
+    ASSERT(_is_appropriate_spell(spell, target));
+
+    if (!_spell_in_range(spell, target))
+    {
+        mprf("%s is out of range for that spell.",
+             target->name(DESC_CAP_THE).c_str());
+        // Don't step closer to the monster.
+        return (true);
+    }
+
+    if (spell_mana(spell) > you.magic_points)
+    {
+        mpr( "You don't have enough mana to cast that spell.");
+        // Don't step closer to the monster.
+        return (true);
+    }
+
+    macro_buf_add_cmd(CMD_CAST_SPELL);
+    macro_buf_add(letter);
+
+    if (get_spell_flags(spell) & SPFLAG_TARGETTING_MASK)
+        _add_targeting_commands(target->pos());
+    return (true);
+}
+
+static const bool _have_appropriate_spell(const actor* target)
+{
+    for (size_t i = 0; i < you.spells.size(); i++)
+    {
+        spell_type spell = you.spells[i];
+
+        if (!is_valid_spell(spell))
+            continue;
+
+        if (_is_appropriate_spell(spell, target))
+            return (true);
+    }
+
+    return (false);
+}
+
 static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
 {
     const coord_def gc = mon->pos();
@@ -1354,6 +1455,10 @@ static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
     if ((event.mod & MOD_ALT) && _have_appropriate_evokable(mon))
         return _evoke_item_on_target(mon);
 
+    // Handle casting spells at monster.
+    if ((event.mod & MOD_CTRL) && _have_appropriate_spell(mon))
+        return _cast_spell_on_target(mon);
+
     return (false);
 }
 
@@ -1361,6 +1466,9 @@ static bool _handle_zap_player(MouseEvent &event)
 {
     if ((event.mod & MOD_ALT) && _have_appropriate_evokable(&you))
         return _evoke_item_on_target(&you);
+
+    if ((event.mod & MOD_CTRL) && _have_appropriate_spell(&you))
+        return _cast_spell_on_target(&you);
 
     return (false);
 }
