@@ -1495,11 +1495,8 @@ bool cast_summon_ugly_thing(int pow, god_type god)
 
 bool cast_summon_dragon(int pow, god_type god)
 {
-    // Removed the chance of multiple dragons... one should be more
-    // than enough, and if it isn't, the player can cast again...
-    // especially since these aren't on the Abjuration plan... they'll
-    // last until they die (maybe that should be changed, but this is
-    // a very high level spell so it might be okay).  -- bwr
+    // Removed the chance of multiple dragons.  One should be more than
+    // enough, and if it isn't, the player can cast again. - bwr
     const bool friendly = (random2(pow) > 5);
 
     if (create_monster(

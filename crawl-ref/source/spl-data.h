@@ -1679,7 +1679,7 @@
 {
     SPELL_SUMMON_DRAGON, "Summon Dragon",
      SPTYP_FIRE | SPTYP_SUMMONING,
-     SPFLAG_NONE, // Xom may cast this spell.
+     SPFLAG_NONE,
      9,
      200,
      -1, -1,
