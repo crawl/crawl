@@ -1185,6 +1185,10 @@ static const bool _is_appropriate_spell(spell_type spell,
 {
     ASSERT(is_valid_spell(spell));
 
+    // TODO: Implement tiles Evaporate interface.
+    if (spell == SPELL_EVAPORATE)
+        return (false);
+
     const unsigned int flags    = get_spell_flags(spell);
     const bool         targeted = flags & SPFLAG_TARGETTING_MASK;
 
@@ -1315,11 +1319,7 @@ static bool _evoke_item_on_target(actor* target)
     item_def* item = _get_evokable_item(target);
 
     if (item == NULL)
-    {
-        // We cancled out of selecting a wand, so don't take a step
-        // closer to the monster.
-        return (true);
-    }
+        return (false);
 
     macro_buf_add_cmd(CMD_EVOKE);
     macro_buf_add(index_to_letter(item->link)); // Inventory letter.
@@ -1372,11 +1372,7 @@ static bool _cast_spell_on_target(actor* target)
     _spell_target = NULL;
 
     if (letter == 0)
-    {
-        // We cancled out of selecting a spell, so don't take a step
-        // closer to the monster.
-        return (true);
-    }
+        return (false);
 
     const spell_type spell = get_spell_by_letter(letter);
 
@@ -1387,14 +1383,12 @@ static bool _cast_spell_on_target(actor* target)
     {
         mprf("%s is out of range for that spell.",
              target->name(DESC_CAP_THE).c_str());
-        // Don't step closer to the monster.
         return (true);
     }
 
     if (spell_mana(spell) > you.magic_points)
     {
         mpr( "You don't have enough mana to cast that spell.");
-        // Don't step closer to the monster.
         return (true);
     }
 
