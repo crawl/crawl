@@ -124,8 +124,17 @@ left mouseclick            Move to adjacent square.
 
 right mouseclick           Display grid information ('xv').
 
+Shift + left mouseclick    Fire ammo at monster.
+
 Ctrl + left mouseclick     Disarm adjacent trap ('Ctrl + Dir.')
                            Open ('O')/Close ('C') adjacent door.
+                           Cast spell at target (monster or player).
+                           Spell is chosen from menu after target is
+                           clicked.
+
+Alt + left mouseclick      Evoke item at target (monster or player).
+                           Item is chosen from menu after target is
+                           clicked.
 
 
 MINIMAP INTERACTION
