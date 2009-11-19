@@ -459,6 +459,17 @@ LUARET1(crawl_roll_dice, number,
         ? roll_dice( 1, luaL_checkint(ls, 1) )
         : roll_dice( luaL_checkint(ls, 1), luaL_checkint(ls, 2) ))
 
+static int crawl_is_tiles(lua_State *ls)
+{
+#ifdef USE_TILE
+    lua_pushboolean(ls, true);
+#else
+    lua_pushboolean(ls, false);
+#endif
+
+    return (1);
+}
+
 static int crawl_random_element(lua_State *ls)
 {
     const int table_idx = 1;
@@ -583,6 +594,7 @@ static const struct luaL_reg crawl_clib[] =
     { "grammar",        _crawl_grammar },
     { "article_a",      crawl_article_a },
     { "game_started",   crawl_game_started },
+    { "is_tiles",       crawl_is_tiles },
     { "err_trace",      crawl_err_trace },
 
     { NULL, NULL },
