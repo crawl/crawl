@@ -614,21 +614,39 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
             return (false);
 
         // Holy monsters and monsters that are gifts of good gods won't
-        // use unholy or evil weapons.
-        if ((is_holy() || is_good_god(god))
-            && (is_unholy_item(item) || is_evil_item(item)))
+        // use unholy weapons.
+        if ((is_holy() || is_good_god(god)) && is_unholy_item(item))
+            return (false);
+
+        // Holy monsters that aren't gifts of chaotic gods and monsters
+        // that are gifts of good gods or Fedhas won't use potentially
+        // evil weapons.
+        if (((is_holy() && !is_chaotic_god(god))
+                || (is_good_god(god) || god == GOD_FEDHAS))
+            && is_potentially_evil_item(item))
+        {
+            return (false);
+        }
+
+        // Holy monsters and monsters that are gifts of good gods or
+        // Fedhas won't use evil weapons.
+        if (((is_holy() || is_good_god(god)) || god == GOD_FEDHAS)
+            && is_evil_item(item))
         {
             return (false);
         }
 
         // Holy monsters that aren't gifts of chaotic gods and monsters
-        // that are gifts of good gods won't use unclean or chaotic
-        // weapons.
+        // that are gifts of good gods won't use chaotic weapons.
         if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
-            && (is_unclean_item(item) || is_chaotic_item(item)))
+            && is_chaotic_item(item))
         {
             return (false);
         }
+
+        // Monsters that are gifts of Zin won't use unclean weapons.
+        if (god == GOD_ZIN && is_unclean_item(item))
+            return (false);
     }
 
     return (true);
