@@ -1222,17 +1222,13 @@ static int _place_monster_aux(const mgen_data &mg,
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
         give_item(id, mg.power, summoned);
-        // Give these monsters a second weapon -- bwr
+        // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
             give_item(id, mg.power, summoned);
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(false);
     }
-
-    // Give manticores 8 to 16 spike volleys.
-    if (mg.cls == MONS_MANTICORE)
-        mon->number = 8 + random2(9);
 
     if (mg.cls == MONS_SLIME_CREATURE)
     {

@@ -1534,16 +1534,23 @@ void define_monster(monsters &mons)
         ev = 7 + random2(5);
         break;
 
+    case MONS_MANTICORE:
+        // Manticores start off with 8 to 16 spike volleys.
+        monnumber = 8 + random2(9);
+        break;
+
     case MONS_SLIME_CREATURE:
         // Slime creatures start off as only single un-merged blobs.
         monnumber = 1;
         break;
 
     case MONS_HYDRA:
+        // Hydras start off with 4 to 8 heads.
         monnumber = random_range(4, 8);
         break;
 
     case MONS_LERNAEAN_HYDRA:
+        // The Lernaean hydra starts off with 27 heads.
         monnumber = 27;
         break;
 
