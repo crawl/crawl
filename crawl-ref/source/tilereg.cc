@@ -17,6 +17,7 @@
 #include "directn.h"
 #include "files.h"
 #include "food.h"
+#include "invent.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1146,6 +1147,10 @@ static int _click_travel(const coord_def &gc, MouseEvent &event)
     return _adjacent_cmd(dest, event);
 }
 
+// FIXME: If the player is targeted, the game asks the player to target
+// something with the mouse, then targets the player anyways and treats
+// mouse click as if it hadn't come during targeting (moves the player
+// to the clicked cell, whatever).
 static void _add_targeting_commands(const coord_def& pos)
 {
     // Force targetting cursor back onto center to start off on a clean
@@ -1173,6 +1178,147 @@ static void _add_targeting_commands(const coord_def& pos)
         macro_buf_add_cmd(cmd);
 
     macro_buf_add_cmd(CMD_TARGET_MOUSE_SELECT);
+}
+
+static const bool _is_appropriate_spell(spell_type spell,
+                                        const actor* target)
+{
+    ASSERT(is_valid_spell(spell));
+
+    // Monst spells are blocked by transparent walls.
+    if (!you.see_cell_no_trans(target->pos()))
+    {
+        switch(spell)
+        {
+        case SPELL_HELLFIRE_BURST:
+        case SPELL_SMITING:
+        case SPELL_HAUNT:
+        case SPELL_FIRE_STORM:
+        case SPELL_AIRSTRIKE:
+            break;
+
+        default:
+            return (false);
+        }
+    }
+
+    const unsigned int flags   = get_spell_flags(spell);
+    const bool         helpful = flags & SPFLAG_HELPFUL;
+
+    if (target->atype() == ACT_PLAYER)
+    {
+        if (flags & SPFLAG_NOT_SELF)
+            return (false);
+
+        return ((flags & (SPFLAG_HELPFUL | SPFLAG_ESCAPE | SPFLAG_RECOVERY)) ||
+                !(flags & SPFLAG_TARGETTING_MASK));
+    }
+
+    if (!(flags & (SPFLAG_TARGETTING_MASK)))
+        return (false);
+
+    if (flags & SPFLAG_NEUTRAL)
+        return (false);
+
+    bool friendly = dynamic_cast<const monsters*>(target)->wont_attack();
+
+    return (friendly == helpful);
+}
+
+static const bool _is_appropriate_evokable(const item_def& item,
+                                           const actor* target)
+{
+    if (!item_is_evokable(item, false, true))
+        return (false);
+
+    // Only wands for now.
+    if (item.base_type != OBJ_WANDS)
+        return (false);
+
+    // Aren't yet any wands that can go through transparent walls.
+    if (!you.see_cell_no_trans(target->pos()))
+        return (false);
+
+    // We don't know what it is, so it *might* be appropriate.
+    if (!item_type_known(item))
+        return (true);
+
+    // Random effects are always (in)apropriate for all targets.
+    if (item.sub_type == WAND_RANDOM_EFFECTS)
+        return (true);
+
+    spell_type spell = zap_type_to_spell(item.zap());
+    if (spell == SPELL_TELEPORT_OTHER && target->atype() == ACT_PLAYER)
+        spell = SPELL_TELEPORT_SELF;
+
+    return(_is_appropriate_spell(spell, target));
+}
+
+static const bool _have_appropriate_evokable(const actor* target)
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &item(you.inv[i]);
+
+        if (!item.is_valid())
+            continue;
+
+        if (_is_appropriate_evokable(item, target))
+            return (true);
+   }
+
+    return (false);
+}
+
+static item_def* _get_evokable_item(const actor* target)
+{
+    std::vector<const item_def*> list;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &item(you.inv[i]);
+
+        if (!item.is_valid())
+            continue;
+
+        if (_is_appropriate_evokable(item, target))
+            list.push_back(&item);
+    }
+
+    ASSERT(!list.empty());
+
+    InvMenu menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                 | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
+    menu.set_type(MT_ANY);
+    menu.set_title("Wand to zap?");
+    menu.load_items(list);
+    menu.show();
+    std::vector<SelItem> sel = menu.get_selitems();
+
+    update_screen();
+    redraw_screen();
+
+    if (sel.empty())
+        return (NULL);
+
+    return ( const_cast<item_def*>(sel[0].item) );
+}
+
+static bool _evoke_item_on_target(actor* target)
+{
+    item_def* item = _get_evokable_item(target);
+
+    if (item == NULL)
+    {
+        // We cancled out of selecting a wand, so don't take a step
+        // closer to the monster.
+        return (true);
+    }
+
+    macro_buf_add_cmd(CMD_EVOKE);
+    macro_buf_add(index_to_letter(item->link)); // Inventory letter.
+    _add_targeting_commands(target->pos());
+    return (true);
 }
 
 static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
@@ -1203,6 +1349,18 @@ static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
         _add_targeting_commands(mon->pos());
         return (true);
     }
+
+    // Handle evoking items at monster.
+    if ((event.mod & MOD_ALT) && _have_appropriate_evokable(mon))
+        return _evoke_item_on_target(mon);
+
+    return (false);
+}
+
+static bool _handle_zap_player(MouseEvent &event)
+{
+    if ((event.mod & MOD_ALT) && _have_appropriate_evokable(&you))
+        return _evoke_item_on_target(&you);
 
     return (false);
 }
@@ -1295,6 +1453,12 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         {
         case MouseEvent::LEFT:
         {
+            if ((event.mod & (MOD_CTRL | MOD_ALT)))
+            {
+                if (_handle_zap_player(event))
+                    return 0;
+            }
+
             if (!(event.mod & MOD_SHIFT))
                 return 'g';
 
@@ -1427,7 +1591,6 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         && get_weapon_brand(*(you.weapon())) == SPWPN_REACHING;
     const int  attack_dist = have_reach ? 2 : 1;
 
-
     if (m_cursor[CURSOR_MOUSE] == you.pos())
     {
         tip = you.your_name;
@@ -1493,13 +1656,28 @@ bool DungeonRegion::update_tip_text(std::string& tip)
     if (m_cursor[CURSOR_MOUSE] != you.pos())
     {
         const monsters* mon = monster_at(m_cursor[CURSOR_MOUSE]);
-        if (mon && you.can_see(mon) && you.see_cell_no_trans(mon->pos())
-            && you.m_quiver->get_fire_item() != -1)
+        if (mon && you.can_see(mon))
         {
-            tip += "[Shift-L-Click] Fire\n";
+            if (you.see_cell_no_trans(mon->pos())
+                && you.m_quiver->get_fire_item() != -1)
+            {
+                tip += "[Shift-L-Click] Fire\n";
+            }
         }
-        tip += "[R-Click] Describe";
+
     }
+
+    const actor* target = actor_at(m_cursor[CURSOR_MOUSE]);
+    if (target && you.can_see(target)
+        && _have_appropriate_evokable(target))
+    {
+        if (m_cursor[CURSOR_MOUSE] == you.pos())
+            tip += "\n";
+        tip += "[Alt-L-Click] Wand\n";
+    }
+
+    if (m_cursor[CURSOR_MOUSE] != you.pos())
+        tip += "[R-Click] Describe";
 
     return (true);
 }
