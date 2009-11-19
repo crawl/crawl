@@ -1321,6 +1321,16 @@ static bool _evoke_item_on_target(actor* target)
     if (item == NULL)
         return (false);
 
+    if (item->base_type == OBJ_WANDS)
+    {
+        if (item->plus2 == ZAPCOUNT_EMPTY
+            || item_type_known(*item) && item->plus <= 0)
+        {
+            mpr("That wand is empty.");
+            return (false);
+        }
+    }
+
     macro_buf_add_cmd(CMD_EVOKE);
     macro_buf_add(index_to_letter(item->link)); // Inventory letter.
     _add_targeting_commands(target->pos());
