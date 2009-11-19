@@ -666,6 +666,24 @@ static int l_item_branded(lua_State *ls)
     return (1);
 }
 
+static int l_item_do_destroy(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    LUA_ITEM(item, 1);
+    if (!item || !item->is_valid())
+    {
+        lua_pushboolean(ls, false);
+        return (0);
+    }
+
+    item_was_destroyed(*item);
+    destroy_item(item->index());
+
+    lua_pushboolean(ls, true);
+    return (1);
+}
+
 static const struct luaL_reg item_lib[] =
 {
     { "artefact",          l_item_artefact },
@@ -696,6 +714,7 @@ static const struct luaL_reg item_lib[] =
     { "weap_skill",        l_item_weap_skill },
     { "dropped",           l_item_dropped },
     { "can_cut_meat",      l_item_can_cut_meat },
+    { "destroy",           l_item_do_destroy },
 
     { NULL, NULL },
 };
