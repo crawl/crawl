@@ -1379,8 +1379,8 @@ monster_type random_draconian_monster_species()
 // is_evil_spell()), and is_chaotic_spell().
 //
 // FIXME: This is not true for one set of spellbooks; MST_WIZARD_IV
-// contains the evil Banishment spell, but the other MST_WIZARD-type
-// spellbooks contain no evil spells.
+// contains the unholy Banishment spell, but the other MST_WIZARD-type
+// spellbooks contain no unholy or evil spells.
 static bool _get_spellbook_list(mon_spellbook_type book[6],
                                 monster_type mon_type)
 {
