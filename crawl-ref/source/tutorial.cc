@@ -3567,7 +3567,17 @@ void tutorial_describe_item(const item_def &item)
             {
                 if (is_range_weapon(item))
                 {
-                    ostr << "To attack a monster, you only need to "
+                    ostr << "To attack a monster, ";
+#ifdef USE_TILE
+                    ostr << "if you have appropriate ammo quivered you can "
+                            "<w>left mouse click</w> on the monster while "
+                            "prssing the <w>Shift key</w>.  Alternatively, "
+                            "you can <w>left mouse click</w> on the tile for "
+                            "the ammo you wish to fire, and then <w>left "
+                            "mouse click </w> on the monster.\n\n";
+                    ostr << "To launch ammunition using the keyboard, ";
+#endif
+                    ostr << "you only need to "
                             "<w>f</w>ire the appropriate type of ammunition. "
                             "You'll ";
                     ostr << _tut_target_mode();
@@ -3621,7 +3631,20 @@ void tutorial_describe_item(const item_def &item)
             else if (is_launched(&you, you.weapon(), item))
             {
                 ostr << "As you're already wielding the appropriate launcher, "
-                        "you can simply <w>f</w>ire "
+                        "you can simply ";
+#ifdef USE_TILE
+                ostr << "<w>left mouse click</w> on the monster you want "
+                        "to hit while pressing the <w>Shift key</w>.  "
+                        "Alternatively, you can <w>left mouse click</w> on "
+                        "this tile of the ammo you want to fire, and then "
+                        "<w>left mouse click</w> on the monster you want "
+                        "to hit.\n\n"
+                        
+                        "To launch this ammo using the keyboard, you can "
+                        "simply ";
+#endif 
+     
+                ostr << "<w>f</w>ire "
                      << (item.quantity > 1 ? "these" : "this")
                      << " " << item.name(DESC_BASENAME)
                      << (item.quantity > 1? "s" : "")
@@ -3749,7 +3772,12 @@ void tutorial_describe_item(const item_def &item)
             ostr << "The magic within can be unleashed by evoking "
                     "(<w>V</w>) it.";
 #ifdef USE_TILE
-            ostr << " Alternatively, simply click on its tile.";
+            ostr << " Alternatively, you can 1) <w>left mouse click</w> on "
+                    "the monster you wish to target (or your player character "
+                    "to target yourself) while pressing the <w>Alt key</w> "
+                    "and pick the wand from the menu, or 2) "
+                    "<w>left mouse click</w> on the wand tile and then "
+                    "<w>left mouse click</w> on your target.";
 #endif
             Tutorial.tutorial_events[TUT_SEEN_WAND] = false;
             break;
@@ -3903,7 +3931,17 @@ void tutorial_describe_item(const item_def &item)
 
                     if (you.spell_no)
                     {
-                        ostr << "\n\nTo do magic, type <w>z</w> and choose a "
+                        ostr << "\n\nTo do magic, ";
+#ifdef USE_TILE
+                        ostr << "you can <w>left mouse click</w> on the "
+                                "monster you wish to target (or on your "
+                                "player character to cast a spell on "
+                                "yourself) while pressing the <w>Control "
+                                "key</w>, and then select a spell from the "
+                                "menu. "
+                                "\n\nAlternatively, ";
+#endif
+                        ostr << "you can type <w>z</w> and choose a "
                                 "spell, e.g. <w>a</w> (check with <w>?</w>). "
                                 "For attack spells you'll ";
                         ostr << _tut_target_mode(true);
