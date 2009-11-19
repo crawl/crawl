@@ -641,6 +641,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
+    case GOD_ZIN:
+        likes.push_back("you kill unclean or chaotic beings");
+        break;
+
     case GOD_SHINING_ONE:
         likes.push_back("you or your allies kill living unholy or evil beings");
         break;
@@ -719,10 +723,6 @@ std::string get_god_likes(god_type which_god, bool verbose)
     // Especially appreciated kills.
     switch (which_god)
     {
-    case GOD_ZIN:
-        really_likes.push_back("you kill unclean and chaotic monsters");
-        break;
-
     case GOD_YREDELEMNUL:
         really_likes.push_back("you kill holy beings");
         break;
@@ -2866,7 +2866,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 if (you.religion == GOD_FEDHAS && (!victim
                         || !fedhas_protects(victim)
                         || victim->mons_species() == MONS_TOADSTOOL))
+                {
                     break;
+                }
                 // fall through
 
             case GOD_OKAWARU:
@@ -2949,7 +2951,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 // Holy gods are easier to please this way.
                 if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
                                           you.experience_level / 2)) > 4)
+                {
                     piety_change = 1;
+                }
                 break;
 
             default:
@@ -2999,8 +3003,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             if (you.religion == GOD_ZIN
                 && !god_hates_attacking_friend(you.religion, victim))
             {
-                simple_god_message(" appreciates your killing of a spawn of "
-                                   "chaos.");
+                simple_god_message(" accepts your kill.");
                 retval = true;
                 if (random2(level + 18) > 3)
                     piety_change = 1;
@@ -3037,7 +3040,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 simple_god_message(" appreciates the change of pace.");
                 retval = true;
-                if (random2(level+18) > 3)
+                if (random2(level + 18) > 3)
                     piety_change = 1;
             }
             break;
