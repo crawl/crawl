@@ -640,7 +640,7 @@
 {
     SPELL_SUMMON_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
-     SPFLAG_BATTLE, // rod of summoning, and Xom may cast this.
+     SPFLAG_CHAOTIC | SPFLAG_BATTLE,
      6,
      200,
      -1, -1,
