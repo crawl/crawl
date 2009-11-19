@@ -1876,6 +1876,14 @@ void process_command( command_type cmd )
             mpr("You need to eat something NOW!");
             break;
         }
+        else if (you.level_type == LEVEL_LABYRINTH)
+        {
+            if (!yesno("You will probably just end up going in circles. Are you"
+                       " sure you wish to explore this labyrinth?", false, 'n'))
+            {
+                break;
+            }
+        }
         // Start exploring
         start_explore(Options.explore_greedy);
         break;
