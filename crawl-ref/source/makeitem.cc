@@ -1429,9 +1429,13 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_VORPAL;
             else
                 rc = SPWPN_SPEED;
-            if (item.sub_type == WPN_HAND_CROSSBOW || item.sub_type == WPN_CROSSBOW)
-                if (one_chance_in(5))
-                    rc = SPWPN_ELECTROCUTION;
+
+            if ((item.sub_type == WPN_HAND_CROSSBOW
+                    || item.sub_type == WPN_CROSSBOW)
+                && one_chance_in(5))
+            {
+                rc = SPWPN_ELECTROCUTION;
+            }
             break;
         }
 
@@ -1537,7 +1541,8 @@ bool is_weapon_brand_ok(int type, int brand)
         return (false);
     if (skill != SK_POLEARMS && brand == SPWPN_DRAGON_SLAYING)
         return (false);
-    switch((brand_type)brand)
+
+    switch ((brand_type)brand)
     {
     // Universal brands.
     case SPWPN_NORMAL:
@@ -1550,6 +1555,7 @@ bool is_weapon_brand_ok(int type, int brand)
     case SPWPN_HOLY_WRATH:
     case SPWPN_ELECTROCUTION:
         break;
+
     // Melee-only brands.
     case SPWPN_FLAMING:
     case SPWPN_FREEZING:
@@ -1565,6 +1571,7 @@ bool is_weapon_brand_ok(int type, int brand)
         if (is_range_weapon(item))
             return (false);
         break;
+
     // Ranged-only brands.
     case SPWPN_FLAME:
     case SPWPN_FROST:
@@ -1572,12 +1579,15 @@ bool is_weapon_brand_ok(int type, int brand)
         if (!is_range_weapon(item))
             return (false);
         break;
+
     case SPWPN_FORBID_BRAND:
     case SPWPN_DEBUG_RANDART:
     case NUM_SPECIAL_WEAPONS:
     case SPWPN_DUMMY_CRUSHING:
         ASSERT(!"invalid brand");
+        break;
     }
+
     if (brand == SPWPN_RETURNING && !is_throwable(&you, item, true))
         return (false);
 
