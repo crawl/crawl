@@ -1615,6 +1615,11 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             return (CK_MOUSE_CMD);
     }
 
+    // Don't move if we've tried to fire/cast/evoke when there's nothing
+    // available.
+    if (event.mod & (MOD_SHIFT | MOD_CTRL | MOD_ALT))
+        return (CK_MOUSE_CMD);
+        
     return _click_travel(gc, event);
 }
 
@@ -1776,12 +1781,23 @@ bool DungeonRegion::update_tip_text(std::string& tip)
     }
 
     const actor* target = actor_at(m_cursor[CURSOR_MOUSE]);
-    if (target && you.can_see(target)
-        && _have_appropriate_evokable(target))
+    if (target && you.can_see(target))
     {
-        if (m_cursor[CURSOR_MOUSE] == you.pos())
-            tip += "\n";
-        tip += "[Alt-L-Click] Wand\n";
+        std::string str = "";
+
+        if (_have_appropriate_spell(target))
+            str += "[Ctrl-L-Click] Cast spell\n";
+
+        if (_have_appropriate_evokable(target))
+            str += "[Alt-L-Click] Zap wand\n";
+
+        if (!str.empty())
+        {
+            if (m_cursor[CURSOR_MOUSE] == you.pos())
+                tip += "\n";
+
+            tip += str;
+        }
     }
 
     if (m_cursor[CURSOR_MOUSE] != you.pos())
