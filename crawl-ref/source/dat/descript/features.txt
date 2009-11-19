@@ -313,7 +313,12 @@ An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are sur
 %%%%
 An open door
 
-A wooden door. You can close it by standing next to it and pressing 'C'.
+A wooden door. You can close it by standing next to it and {{
+if crawl.is_tiles() then
+    return "either doing Ctrl-L-Click on the door or pressing the 'C' key."
+else
+    return "pressing 'C'."
+end}}
 %%%%
 An orcish idol
 
