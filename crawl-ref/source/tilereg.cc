@@ -1426,6 +1426,22 @@ static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
 {
     const coord_def gc = mon->pos();
 
+    // Handle firing quivered items.
+    if ((event.mod & MOD_SHIFT) && you.m_quiver->get_fire_item() != -1)
+    {
+        macro_buf_add_cmd(CMD_FIRE);
+        _add_targeting_commands(mon->pos());
+        return (true);
+    }
+
+    // Handle evoking items at monster.
+    if ((event.mod & MOD_ALT) && _have_appropriate_evokable(mon))
+        return _evoke_item_on_target(mon);
+
+    // Handle casting spells at monster.
+    if ((event.mod & MOD_CTRL) && _have_appropriate_spell(mon))
+        return _cast_spell_on_target(mon);
+
     // Handle weapons of reaching.
     if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
     {
@@ -1442,22 +1458,6 @@ static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
             return (true);
         }
     }
-
-    // Handle firing quivered items.
-    if ((event.mod & MOD_SHIFT) && you.m_quiver->get_fire_item() != -1)
-    {
-        macro_buf_add_cmd(CMD_FIRE);
-        _add_targeting_commands(mon->pos());
-        return (true);
-    }
-
-    // Handle evoking items at monster.
-    if ((event.mod & MOD_ALT) && _have_appropriate_evokable(mon))
-        return _evoke_item_on_target(mon);
-
-    // Handle casting spells at monster.
-    if ((event.mod & MOD_CTRL) && _have_appropriate_spell(mon))
-        return _cast_spell_on_target(mon);
 
     return (false);
 }
