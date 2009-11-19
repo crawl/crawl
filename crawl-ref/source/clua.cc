@@ -636,6 +636,7 @@ void CLua::init_lua()
     lua_register(_state, "require", _clua_require);
 
     execfile("clua/util.lua", true, true);
+    execfile("clua/iter.lua", true, true);
     execfile("clua/init.lua", true, true);
 
     if (managed_vm)
