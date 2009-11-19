@@ -3058,7 +3058,7 @@ void bolt::drop_object()
     ASSERT( item != NULL && item->is_valid() );
 
     // Conditions: beam is missile and not tracer.
-    if (is_tracer || flavour != BEAM_MISSILE)
+    if (is_tracer || !was_missile)
         return;
 
     // Summoned creatures' thrown items disappear.

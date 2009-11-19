@@ -111,6 +111,8 @@ struct bolt
     bolt*       special_explosion;     // For exploding with a different
                                        // flavour/damage/etc than the beam
                                        // itself.
+    bool        was_missile;           // For determining if this was SPMSL_FLAME / FROST etc
+                                       // this is required in order to change mulch rate on these types
 
     // Various callbacks.
     std::vector<range_used_func>  range_funcs;

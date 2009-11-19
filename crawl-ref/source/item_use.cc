@@ -1975,6 +1975,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     }
 
     beam.type = dchar_glyph(zapsym);
+    beam.was_missile = true;
 
     returning = get_weapon_brand(item) == SPWPN_RETURNING
                 || get_ammo_brand(item) == SPMSL_RETURNING;
@@ -3206,6 +3207,8 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
     if (item->base_type == OBJ_MISSILES)
     {
         int brand = get_ammo_brand(*item);
+        if (brand == SPMSL_CHAOS || brand == SPMSL_DISPERSAL)
+            return(true);
         // [dshaligram] Removed influence of Throwing on ammo preservation.
         // The effect is nigh impossible to perceive.
         switch (item->sub_type)
@@ -3228,6 +3231,12 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
         }
         if (brand == SPMSL_STEEL)
             chance *= 10;
+        if (brand == SPMSL_FLAME)
+            chance -= 2;
+        if (brand == SPMSL_FROST)  // ice seems less destructive to the missile, right?
+            chance -= 1;
+        if (brand == SPMSL_REAPING)
+            chance -= 3;
     }
 
     // Enchanted projectiles get an extra shot at avoiding

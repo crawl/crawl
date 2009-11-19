@@ -1023,16 +1023,14 @@ static std::string _describe_ammo(const item_def &item)
         switch (item.special)
         {
         case SPMSL_FLAME:
-            bolt_name = "flame";
-            // Intentional fall-through.
+            description += "It turns into a bolt of flame.";
+            break;
         case SPMSL_FROST:
-            if (bolt_name.empty())
-                bolt_name = "frost";
-            // Intentional fall-through.
+            description += "It turns into a bolt of flame.";
+            break;
         case SPMSL_ELECTRIC:
-            if (bolt_name.empty())
-                bolt_name = "electricity";
-            // Intentional fall-through.
+            description += "The electricity stored in it may find a path to the ground.";
+            break;
         case SPMSL_CHAOS:
             if (bolt_name.empty())
                 bolt_name = "a random type";
@@ -1052,7 +1050,6 @@ static std::string _describe_ammo(const item_def &item)
             description += "it turns into a bolt of ";
             description += bolt_name;
             description += ".";
-
             always_destroyed = true;
             break;
         case SPMSL_POISONED:
@@ -1069,7 +1066,6 @@ static std::string _describe_ammo(const item_def &item)
             description += "If it kills a monster, causing it to leave "
                 "a corpse, the corpse will be animated as a zombie "
                 "friendly to the one who " + threw_or_fired + " it.";
-            always_destroyed = true;
             break;
         case SPMSL_PENETRATION:
             description += "It will pass through any targets it hits, "
