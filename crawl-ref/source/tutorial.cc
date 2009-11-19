@@ -633,7 +633,11 @@ static void _tutorial_message_intro()
 {
     std::string result;
 
-    result  = "This lower part of the screen is reserved for messages. "
+    result  = "This lower "
+#ifdef USE_TILE
+              "left "
+#endif
+              "part of the screen is reserved for messages. "
               "Everything related to the tutorial is shown in this colour. If "
               "you missed something, previous messages can be read again with "
               "<w>Ctrl-P</w>"
@@ -641,6 +645,14 @@ static void _tutorial_message_intro()
               " or by <w>clicking into the message area</w>"
 #endif
               "." EOL;
+
+#ifdef USE_TILE
+    result += EOL;
+    result += "To the bottom right of the screen is a set of items.  "
+              "The top four lines are the items in your inventory, and "
+              "the bottom two are items underneath you on the floor." EOL;
+#endif
+
     result += "<lightgrey> --more--                               "
               "Press <white>Escape</white> to skip the basics.</lightgrey>";
 
