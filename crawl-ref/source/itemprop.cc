@@ -190,7 +190,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_MORNINGSTAR,       "morningstar",        10, -1, 15, 140,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING | DAM_BLUDGEON, 10 },
-    { WPN_DEMON_WHIP,        "demon whip",         10,  1, 11,  30,  2,
+    { WPN_DEMON_WHIP,        "demon whip",         12,  1, 11,  30,  2,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        DAMV_SLASHING, 2 },
+    { WPN_HOLY_SCOURGE,      "holy scourge",       14,  0, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 2 },
     { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
@@ -427,7 +430,7 @@ void init_properties()
 {
     // Compare with enum comments, to catch changes.
     COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
-    COMPILE_CHECK(NUM_WEAPONS  == 55, c2);
+    COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
     COMPILE_CHECK(NUM_FOODS    == 22, c4);
 
@@ -1325,6 +1328,7 @@ int weapon_rarity( int w_type )
     case WPN_BLESSED_DOUBLE_SWORD:
     case WPN_BLESSED_GREAT_SWORD:
     case WPN_BLESSED_TRIPLE_SWORD:
+    case WPN_HOLY_SCOURGE:
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return (0);
 
@@ -1510,6 +1514,7 @@ bool is_blessed_blade(const item_def &item)
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
+        case WPN_HOLY_SCOURGE:
             return (true);
 
         default:
@@ -1588,7 +1593,10 @@ bool convert2good(item_def &item, bool allow_blessed)
         break;
 
     case WPN_DEMON_WHIP:
-        item.sub_type = WPN_WHIP;
+        if (!allow_blessed)
+            item.sub_type = WPN_WHIP;
+        else
+            item.sub_type = WPN_HOLY_SCOURGE;
         break;
 
     case WPN_DEMON_TRIDENT:
@@ -1642,6 +1650,10 @@ bool convert2bad(item_def &item)
 
     case WPN_BLESSED_TRIPLE_SWORD:
         item.sub_type = WPN_TRIPLE_SWORD;
+        break;
+
+    case WPN_HOLY_SCOURGE:
+        item.sub_type = WPN_DEMON_WHIP;
         break;
     }
 

@@ -660,6 +660,10 @@ helmet
 
 A piece of metal headgear.
 %%%%
+holy scourge
+
+A blessed weapon, woven by the saints in the Heaven, hated by the unholy.
+%%%%
 honeycomb
 
 A lump of the delicious honeycomb made by giant bees.

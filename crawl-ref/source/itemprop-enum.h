@@ -462,13 +462,13 @@ enum weapon_type
     WPN_BLESSED_LONG_SWORD,
     WPN_BLESSED_SCIMITAR,
     WPN_BLESSED_GREAT_SWORD,           //   50
-
     WPN_BLESSED_KATANA,
     WPN_BLESSED_EUDEMON_BLADE,
     WPN_BLESSED_DOUBLE_SWORD,
     WPN_BLESSED_TRIPLE_SWORD,
+    WPN_HOLY_SCOURGE,
 
-    NUM_WEAPONS,                       //   55 - must be last regular member {dlb}
+    NUM_WEAPONS,
 
 // special cases
     WPN_UNARMED = 500,                 //  500

@@ -1509,6 +1509,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
+        case WPN_HOLY_SCOURGE:
             rc = SPWPN_HOLY_WRATH;
             break;
 
