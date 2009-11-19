@@ -593,7 +593,7 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
     if (is_special_unrandom_artefact(item) && !crawl_state.arena)
         return (false);
 
-    // Wimpy monsters (e.g. kobold, goblin) can't use halberds, etc.
+    // Wimpy monsters (e.g. kobolds, goblins) can't use halberds, etc.
     if (!check_weapon_wieldable_size(item, body_size()))
         return (false);
 
@@ -614,14 +614,18 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
             return (false);
 
         // Holy monsters and monsters that are gifts of good gods won't
-        // use evil weapons.
-        if ((is_holy() || is_good_god(god)) && is_evil_item(item))
+        // use unholy or evil weapons.
+        if ((is_holy() || is_good_god(god))
+            && (is_unholy_item(item) || is_evil_item(item)))
+        {
             return (false);
+        }
 
         // Holy monsters that aren't gifts of chaotic gods and monsters
-        // that are gifts of good gods won't use chaotic weapons.
+        // that are gifts of good gods won't use unclean or chaotic
+        // weapons.
         if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
-            && is_chaotic_item(item))
+            && (is_unclean_item(item) || is_chaotic_item(item)))
         {
             return (false);
         }
