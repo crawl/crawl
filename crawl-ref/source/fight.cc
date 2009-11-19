@@ -4723,6 +4723,8 @@ static void _steal_item_from_player(monsters *mon)
         // TODO: Allow stealing of the wielded weapon?
         //       Needs to be unwielded properly and should never lead to
         //       fatal stat loss.
+        // 1KB: I'd say no, weapon is being held, it's different from pulling
+        //      a wand from your pocket.
         if (item_is_equipped(you.inv[m]))
             continue;
 
@@ -4861,6 +4863,8 @@ static void _steal_item_from_player(monsters *mon)
     unlink_item(index);
     mon->inv[mslot] = index;
     new_item.set_holding_monster(mon->mindex());
+    // You'll want to autopickup it after killing Maurice.
+    new_item.flags |= ISFLAG_THROWN;
     mon->equip(new_item, mslot, true);
 
     // Item is gone from player's inventory.
