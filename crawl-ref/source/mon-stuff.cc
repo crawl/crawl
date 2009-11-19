@@ -1883,7 +1883,7 @@ int monster_die(monsters *monster, killer_type killer,
                         notice |= did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
                                                   monster->hit_dice);
 
-                        if (monster->is_evil())
+                        if (monster->is_unholy() || monster->is_evil())
                         {
                             notice |= did_god_conduct(
                                           DID_NATURAL_EVIL_KILLED_BY_SERVANT,
