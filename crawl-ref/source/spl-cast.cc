@@ -57,9 +57,6 @@
 #include "view.h"
 #include "shout.h"
 
-static int _calc_spell_range(spell_type spell, int power = 0,
-                             bool real_cast = false);
-
 static bool _surge_identify_boosters(spell_type spell)
 {
     const unsigned int typeflags = get_spell_disciplines(spell);
@@ -222,7 +219,7 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
     if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
         return (false);
 
-    const int range = _calc_spell_range(spell);
+    const int range = calc_spell_range(spell);
     if (range < 0)
         return (false);
 
@@ -232,13 +229,15 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
     return (false);
 }
 
-int list_spells(bool toggle_with_I, bool viewing, int minRange)
+int list_spells(bool toggle_with_I, bool viewing, int minRange,
+                spell_selector selector, bool text_only)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
 
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                                |   MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
+                              | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
+                              text_only);
 #ifdef USE_TILE
     {
         // [enne] - Hack.  Make title an item so that it's aligned.
@@ -300,6 +299,10 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange)
             else
                 grey = false;
         }
+        if (is_valid_spell(spell) && selector
+            && !(*selector)(spell, grey))
+            continue;
+
         if (spell != SPELL_NO_SPELL)
         {
             ToggleableMenuEntry* me =
@@ -757,7 +760,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
         if (Options.darken_beyond_range)
         {
-            crawl_state.darken_range = _calc_spell_range(spell);
+            crawl_state.darken_range = calc_spell_range(spell);
             viewwindow(false, false);
             delay(500);
             crawl_state.darken_range = -1;
@@ -1184,7 +1187,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
         const bool dont_cancel_me = testbits(flags, SPFLAG_AREA);
 
-        const int range = _calc_spell_range(spell, powc, false);
+        const int range = calc_spell_range(spell, powc, false);
 
         if (!spell_direction(spd, beam, dir, targ, range,
                              needs_path, true, dont_cancel_me, prompt,
@@ -1202,7 +1205,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             }
         }
 
-        beam.range = _calc_spell_range(spell, powc, true);
+        beam.range = calc_spell_range(spell, powc, true);
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe)
         {
@@ -2403,7 +2406,7 @@ std::string spell_power_string(spell_type spell)
         return std::string(numbars, '#') + std::string(capbars - numbars, '.');
 }
 
-static int _calc_spell_range(spell_type spell, int power, bool real_cast)
+int calc_spell_range(spell_type spell, int power, bool real_cast)
 {
     if (power == 0)
         power = calc_spell_power(spell, true);
@@ -2415,7 +2418,7 @@ static int _calc_spell_range(spell_type spell, int power, bool real_cast)
 std::string spell_range_string(spell_type spell)
 {
     const int cap      = spell_power_cap(spell);
-    const int range    = _calc_spell_range(spell);
+    const int range    = calc_spell_range(spell);
     const int maxrange = spell_range(spell, cap, false);
 
     if (range < 0)

@@ -45,11 +45,16 @@ enum spret_type
     SPRET_SUCCESS
 };
 
+typedef bool (*spell_selector)(spell_type spell, bool &grey);
+
 int list_spells(bool toggle_with_I = true, bool viewing = false,
-                int minRange = -1);
+                int minRange = -1, spell_selector selector = NULL,
+                bool text_only = true);
 int spell_fail( spell_type spell );
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true);
+int calc_spell_range(spell_type spell, int power = 0,
+                     bool real_cast = false);
 int spell_enhancement( unsigned int typeflags );
 
 void exercise_spell(spell_type spell_ex, bool spc, bool divide);
