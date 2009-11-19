@@ -2388,7 +2388,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     bool did_return  = false;    // Returning item actually does return to pack.
     int slayDam      = 0;
 
-    if (target)
+    if (you.confused())
+        thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+    else if (target)
         thr = *target;
     else
     {
@@ -2530,12 +2532,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         val -= you.num_turns;
         item.props.clear();
         init_stack_blood_potions(item, val);
-    }
-
-    if (you.confused())
-    {
-        thr.isTarget = true;
-        thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
     }
 
     // Even though direction is allowed, we're throwing so we
