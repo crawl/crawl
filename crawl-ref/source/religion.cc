@@ -184,7 +184,7 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // Lugonu
     {
-        " & disappears into the void.",
+        " disappear% into the void.",
         " & consumed by the void.",
         " & voraciously consumed by the void.",
     },
