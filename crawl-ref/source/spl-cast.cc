@@ -940,11 +940,14 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
         did_god_conduct(DID_UNHOLY, 10 + spell_difficulty(spell));
     }
 
+    if (is_unclean_spell(spell))
+        did_god_conduct(DID_UNCLEAN, 10 + spell_difficulty(spell));
+
     if (is_chaotic_spell(spell))
         did_god_conduct(DID_CHAOS, 10 + spell_difficulty(spell));
 
     // Linley says: Condensation Shield needs some disadvantages to keep
-    // it from being a no-brainer... this isn't much, but its a start -- bwr
+    // it from being a no-brainer... this isn't much, but its a start. - bwr
     if (spell_typematch(spell, SPTYP_FIRE))
         expose_player_to_element(BEAM_FIRE, 0);
 

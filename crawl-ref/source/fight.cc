@@ -3416,7 +3416,7 @@ bool melee_attack::apply_damage_brand()
 
     if (attacker->atype() == ACT_PLAYER && damage_brand == SPWPN_CHAOS)
     {
-        // If your god objects to using chaos then it makes the
+        // If your god objects to using chaos, then it makes the
         // brand obvious.
         if (did_god_conduct(DID_CHAOS, 2 + random2(3), brand_was_known))
             obvious_effect = true;

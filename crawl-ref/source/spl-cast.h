@@ -12,30 +12,31 @@
 
 enum spflag_type
 {
-    SPFLAG_NONE                 = 0x00000,
-    SPFLAG_DIR_OR_TARGET        = 0x00001,      // use DIR_NONE targetting
-    SPFLAG_TARGET               = 0x00002,      // use DIR_TARGET targetting
-    SPFLAG_GRID                 = 0x00004,      // use DIR_GRID targetting
-    SPFLAG_DIR                  = 0x00008,      // use DIR_DIR targetting
-    SPFLAG_TARGETTING_MASK      = 0x0000f,      // used to test for targetting
-    SPFLAG_HELPFUL              = 0x00010,      // TARG_FRIENDS used
-    SPFLAG_NEUTRAL              = 0x00020,      // TARG_ANY used
-    SPFLAG_NOT_SELF             = 0x00040,      // aborts on isMe
-    SPFLAG_UNHOLY               = 0x00080,      // counts as "unholy"
-    SPFLAG_CHAOTIC              = 0x00100,      // counts as "chaotic"
-    SPFLAG_HASTY                = 0x00200,      // counts as "hasty"
-    SPFLAG_MAPPING              = 0x00400,      // a mapping spell of some kind
-    SPFLAG_ESCAPE               = 0x00800,      // useful for running away
-    SPFLAG_RECOVERY             = 0x01000,      // healing or recovery spell
-    SPFLAG_AREA                 = 0x02000,      // area affect
-    SPFLAG_BATTLE               = 0x04000,      // a non-Conjuration spell that
-                                                // is still a battle spell
-    SPFLAG_CARD                 = 0x08000,      // a card effect spell
-    SPFLAG_MONSTER              = 0x10000,      // monster-only spell
-    SPFLAG_INNATE               = 0x20000,      // an innate spell, even if
-                                                // use by a priest/wizard
-    SPFLAG_NOISY                = 0x40000,      // makes noise, even if innate
-    SPFLAG_TESTING              = 0x80000       // a testing/debugging spell
+    SPFLAG_NONE                 = 0x000000,
+    SPFLAG_DIR_OR_TARGET        = 0x000001,      // use DIR_NONE targetting
+    SPFLAG_TARGET               = 0x000002,      // use DIR_TARGET targetting
+    SPFLAG_GRID                 = 0x000004,      // use DIR_GRID targetting
+    SPFLAG_DIR                  = 0x000008,      // use DIR_DIR targetting
+    SPFLAG_TARGETTING_MASK      = 0x00000f,      // used to test for targetting
+    SPFLAG_HELPFUL              = 0x000010,      // TARG_FRIENDS used
+    SPFLAG_NEUTRAL              = 0x000020,      // TARG_ANY used
+    SPFLAG_NOT_SELF             = 0x000040,      // aborts on isMe
+    SPFLAG_UNHOLY               = 0x000080,      // counts as "unholy"
+    SPFLAG_UNCLEAN              = 0x000100,      // counts as "unclean"
+    SPFLAG_CHAOTIC              = 0x000200,      // counts as "chaotic"
+    SPFLAG_HASTY                = 0x000400,      // counts as "hasty"
+    SPFLAG_MAPPING              = 0x000800,      // a mapping spell of some kind
+    SPFLAG_ESCAPE               = 0x001000,      // useful for running away
+    SPFLAG_RECOVERY             = 0x002000,      // healing or recovery spell
+    SPFLAG_AREA                 = 0x004000,      // area affect
+    SPFLAG_BATTLE               = 0x008000,      // a non-Conjuration spell that
+                                                 // is still a battle spell
+    SPFLAG_CARD                 = 0x010000,      // a card effect spell
+    SPFLAG_MONSTER              = 0x020000,      // monster-only spell
+    SPFLAG_INNATE               = 0x040000,      // an innate spell, even if
+                                                 // use by a priest/wizard
+    SPFLAG_NOISY                = 0x080000,      // makes noise, even if innate
+    SPFLAG_TESTING              = 0x100000       // a testing/debugging spell
 };
 
 enum spret_type

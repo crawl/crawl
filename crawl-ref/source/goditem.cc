@@ -174,6 +174,32 @@ bool is_evil_item(const item_def& item)
     return (retval);
 }
 
+bool is_unclean_item(const item_def& item)
+{
+    bool retval = false;
+
+    if (is_unrandom_artefact(item))
+    {
+        unrandart_entry* entry = get_unrand_entry(item.special);
+
+        if (entry->flags & UNRAND_FLAG_UNCLEAN)
+            return (true);
+    }
+
+    switch (item.base_type)
+    {
+    case OBJ_BOOKS:
+        retval = is_unclean_spellbook(item);
+    case OBJ_STAVES:
+        retval = is_unclean_rod(item);
+        break;
+    default:
+        break;
+    }
+
+    return (retval);
+}
+
 bool is_chaotic_item(const item_def& item)
 {
     bool retval = false;
@@ -309,6 +335,15 @@ bool is_evil_spell(spell_type spell, god_type god)
     return (is_evil_discipline(disciplines));
 }
 
+bool is_unclean_spell(spell_type spell, god_type god)
+{
+    UNUSED(god);
+
+    unsigned int flags = get_spell_flags(spell);
+
+    return (flags & SPFLAG_UNCLEAN);
+}
+
 bool is_chaotic_spell(spell_type spell, god_type god)
 {
     UNUSED(god);
@@ -386,6 +421,11 @@ bool is_evil_spellbook(const item_def& item)
     return (is_spellbook_type(item, false, is_evil_spell));
 }
 
+bool is_unclean_spellbook(const item_def& item)
+{
+    return (is_spellbook_type(item, false, is_unclean_spell));
+}
+
 bool is_chaotic_spellbook(const item_def& item)
 {
     return (is_spellbook_type(item, false, is_chaotic_spell));
@@ -414,6 +454,11 @@ bool is_unholy_rod(const item_def& item)
 bool is_evil_rod(const item_def& item)
 {
     return (is_spellbook_type(item, true, is_evil_spell));
+}
+
+bool is_unclean_rod(const item_def& item)
+{
+    return (is_spellbook_type(item, true, is_unclean_spell));
 }
 
 bool is_chaotic_rod(const item_def& item)
@@ -458,7 +503,13 @@ conduct_type god_hates_item_handling(const item_def &item)
     switch (you.religion)
     {
     case GOD_ZIN:
-        if (item_type_known(item) && is_chaotic_item(item))
+        if (!item_type_known(item))
+            return (DID_NOTHING);
+
+        if (is_unclean_item(item))
+            return (DID_UNCLEAN);
+
+        if (is_chaotic_item(item))
             return (DID_CHAOS);
         break;
 
@@ -552,7 +603,7 @@ bool god_hates_spell_type(spell_type spell, god_type god)
     switch (god)
     {
     case GOD_ZIN:
-        if (is_chaotic_spell(spell))
+        if (is_unclean_spell(spell) || is_chaotic_spell(spell))
             return (true);
         break;
 

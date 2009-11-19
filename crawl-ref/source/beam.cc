@@ -2466,7 +2466,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             miasma_monster(monster, pbolt.whose_kill());
 
             if (YOU_KILL(pbolt.thrower))
-                did_god_conduct(DID_CHAOS, 2, pbolt.effect_known);
+                did_god_conduct(DID_UNCLEAN, 2, pbolt.effect_known);
         }
         break;
 

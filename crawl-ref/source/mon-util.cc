@@ -1376,7 +1376,7 @@ monster_type random_draconian_monster_species()
 // Note: For consistent behavior in player_will_anger_monster(), all
 // spellbooks a given monster can get here should produce the same
 // return values in is_holy_spell(), (is_unholy_spell() ||
-// is_evil_spell()), and is_chaotic_spell().
+// is_evil_spell()), and (is_unclean_spell() || is_chaotic_spell()).
 //
 // FIXME: This is not true for one set of spellbooks; MST_WIZARD_IV
 // contains the unholy Banishment spell, but the other MST_WIZARD-type

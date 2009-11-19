@@ -720,7 +720,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_ZIN:
-        really_likes.push_back("you kill chaotic monsters");
+        really_likes.push_back("you kill unclean and chaotic monsters");
         break;
 
     case GOD_YREDELEMNUL:
@@ -826,7 +826,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     case GOD_ZIN:
         dislikes.push_back("you deliberately mutate yourself");
         dislikes.push_back("you polymorph monsters");
-        dislikes.push_back("you use chaotic magic or items");
+        dislikes.push_back("you use unclean or chaotic magic or items");
         dislikes.push_back("you eat the flesh of sentient beings");
         break;
 
@@ -1436,7 +1436,7 @@ bool _has_jelly()
 bool is_good_lawful_follower(const monsters* mon)
 {
     return (mon->alive() && !mon->is_unholy() && !mon->is_evil()
-            && !mon->is_chaotic() && mon->friendly());
+            && !mon->is_unclean() && !mon->is_chaotic() && mon->friendly());
 }
 
 bool is_good_follower(const monsters* mon)
@@ -3384,6 +3384,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_UNCLEAN:
+            if (you.religion == GOD_ZIN)
+            {
+                retval = true;
+                if (!known)
+                {
+                    simple_god_message(" forgives your inadvertent unclean "
+                                       "act, just this once.");
+                    break;
+                }
+                piety_change = -level;
+                penance      = level;
+            }
+            break;
+
         case DID_CHAOS:
             if (you.religion == GOD_ZIN)
             {
@@ -3465,8 +3480,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Holy", "Spell Memorise", "Spell Cast",
                 "Spell Practise", "Spell Nonutility", "Cards", "Stimulants",
                 "Drink Blood", "Cannibalism", "Eat Meat", "Eat Souled Being",
-                "Deliberate Mutation", "Cause Glowing", "Use Chaos",
-                "Desecrate Orcish Remains", "Destroy Orcish Idol",
+                "Deliberate Mutation", "Cause Glowing", "Use Unclean",
+                "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
                 "Create Life", "Kill Slime", "Kill Plant", "Ally Kill Plant",
                 "Was Hasty"
             };

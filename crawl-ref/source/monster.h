@@ -305,6 +305,7 @@ public:
     bool is_holy() const;
     bool is_unholy() const;
     bool is_evil() const;
+    bool is_unclean() const;
     bool is_chaotic() const;
     int res_fire() const;
     int res_steam() const;
@@ -356,6 +357,7 @@ public:
     bool has_holy_spell() const;
     bool has_unholy_spell() const;
     bool has_evil_spell() const;
+    bool has_unclean_spell() const;
     bool has_chaotic_spell() const;
 
     bool has_attack_flavour(int flavour) const;

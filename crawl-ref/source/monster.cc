@@ -2766,6 +2766,15 @@ bool monsters::has_evil_spell() const
     return (false);
 }
 
+bool monsters::has_unclean_spell() const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (is_unclean_spell(spells[i]))
+            return (true);
+
+    return (false);
+}
+
 bool monsters::has_chaotic_spell() const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -3037,6 +3046,23 @@ bool monsters::is_evil() const
     return (false);
 }
 
+bool monsters::is_unclean() const
+{
+    if (has_unclean_spell())
+        return (true);
+
+    if (has_attack_flavour(AF_DISEASE)
+        || has_attack_flavour(AF_HUNGER)
+        || has_attack_flavour(AF_ROT)
+        || has_attack_flavour(AF_STEAL)
+        || has_attack_flavour(AF_STEAL_FOOD))
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
 bool monsters::is_chaotic() const
 {
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
@@ -3052,14 +3078,9 @@ bool monsters::is_chaotic() const
     if (has_chaotic_spell())
         return (true);
 
-    if (has_attack_flavour(AF_DISEASE)
-        || has_attack_flavour(AF_HUNGER)
-        || has_attack_flavour(AF_MUTATE)
-        || has_attack_flavour(AF_ROT)
+    if (has_attack_flavour(AF_MUTATE)
         || has_attack_flavour(AF_KLOWN)
-        || has_attack_flavour(AF_CHAOS)
-        || has_attack_flavour(AF_STEAL)
-        || has_attack_flavour(AF_STEAL_FOOD))
+        || has_attack_flavour(AF_CHAOS))
     {
         return (true);
     }

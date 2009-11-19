@@ -1655,8 +1655,8 @@ int monster_die(monsters *monster, killer_type killer,
                                     monster->hit_dice, true, monster);
                 }
 
-                // Zin hates chaotic beings.
-                if (monster->is_chaotic())
+                // Zin hates unclean and chaotic beings.
+                if (monster->is_unclean() || monster->is_chaotic())
                 {
                     did_god_conduct(DID_KILL_CHAOTIC,
                                     monster->hit_dice, true, monster);

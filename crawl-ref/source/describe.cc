@@ -3643,7 +3643,7 @@ void describe_god( god_type which_god, bool give_title )
                               (you.piety >=  50) ? "sometimes" :
                                                    "occasionally";
 
-            cprintf("%s %s shields you from chaotic effects." EOL,
+            cprintf("%s %s shields you from unclean and chaotic effects." EOL,
                     god_name(which_god).c_str(), how);
         }
         else if (which_god == GOD_SHINING_ONE)

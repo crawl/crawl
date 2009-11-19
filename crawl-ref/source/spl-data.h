@@ -180,7 +180,7 @@
 
 {
     SPELL_POLYMORPH_OTHER, "Polymorph Other",
-     SPTYP_TRANSMUTATION,  // removed enchantment, wasn't needed -- bwr
+     SPTYP_TRANSMUTATION,  // removed enchantment, wasn't needed - bwr
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC,
      5,
      200,
@@ -640,7 +640,7 @@
 {
     SPELL_SUMMON_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
-     SPFLAG_CHAOTIC | SPFLAG_BATTLE,
+     SPFLAG_UNCLEAN | SPFLAG_BATTLE,
      6,
      200,
      -1, -1,
@@ -1094,7 +1094,7 @@
 {
     SPELL_CORPSE_ROT, "Corpse Rot",
      SPTYP_NECROMANCY,
-     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_CHAOTIC,
+     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_UNCLEAN,
      2,
      0,
      -1, -1,
@@ -2241,7 +2241,7 @@
 {
     SPELL_MIASMA, "Miasma",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_UNCLEAN | SPFLAG_MONSTER,
      6,
      0,
      6, 6,
@@ -2254,7 +2254,7 @@
 {
     SPELL_SUMMON_DRAKES, "Summon Drakes",
      SPTYP_SUMMONING | SPTYP_NECROMANCY, // since it can summon shadow dragons
-     SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+     SPFLAG_UNCLEAN | SPFLAG_MONSTER,
      6,
      0,
      -1, -1,
