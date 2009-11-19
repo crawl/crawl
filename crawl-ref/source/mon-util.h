@@ -591,7 +591,7 @@ bool ms_quick_get_away(const monsters *mon, spell_type monspell);
 bool ms_waste_of_time(const monsters *mon, spell_type monspell);
 bool ms_low_hitpoint_cast(const monsters *mon, spell_type monspell);
 
-bool mons_has_los_ability(int mclass);
+bool mons_has_los_ability(monster_type mon_type);
 bool mons_has_los_attack(const monsters *mon);
 bool mons_has_ranged_spell(const monsters *mon, bool attack_only = false,
                            bool ench_too = true);

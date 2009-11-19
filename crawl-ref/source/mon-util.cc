@@ -2135,7 +2135,9 @@ static bool _mons_should_fire_beneficial(bolt &beam)
     // in that case.
     if (beam.friend_info.count == 0
         || beam.foe_info.count != 0)
+    {
         return (false);
+    }
 
     // Should beneficial monster enchantment beams be allowed in a
     // sanctuary? -cao
@@ -2173,13 +2175,13 @@ bool mons_should_fire(struct bolt &beam)
     // Use different evaluation criteria if the beam is a beneficial
     // enchantment (haste other).
     if (_beneficial_beam_flavour(beam.flavour))
-        return _mons_should_fire_beneficial(beam);
+        return (_mons_should_fire_beneficial(beam));
 
     // Friendly monsters shouldn't be targetting you: this will happen
     // often because the default behaviour for charmed monsters is to
-    // have you as a target. While foe_ratio will handle this, we
+    // have you as a target.  While foe_ratio will handle this, we
     // don't want a situation where a friendly dragon breathes through
-    // you to hit other creatures...it should target the other
+    // you to hit other creatures... it should target the other
     // creatures, and coincidentally hit you.
     //
     // FIXME: this can cause problems with reflection, bounces, etc.
@@ -2561,8 +2563,8 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_SWIFTNESS:
         return (false);
 
-    // The animation spells don't work through transparent walls and thus
-    // are listed here instead of above.
+    // The animation spells don't work through transparent walls and
+    // thus are listed here instead of above.
     case SPELL_ANIMATE_DEAD:
     case SPELL_ANIMATE_SKELETON:
         return (!attack_only);
@@ -2582,23 +2584,26 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
 
 // Returns true if the monster has an ability that only needs LOS to
 // affect the target.
-bool mons_has_los_ability(int mclass)
+bool mons_has_los_ability(monster_type mon_type)
 {
     // These two have Torment, but are handled specially.
-    if (mclass == MONS_FIEND || mclass == MONS_PIT_FIEND)
+    if (mon_type == MONS_FIEND || mon_type == MONS_PIT_FIEND)
         return (true);
 
     // These eyes only need LOS, as well.  (The other eyes use spells.)
-    if (mclass == MONS_GIANT_EYEBALL || mclass == MONS_EYE_OF_DRAINING
-        || mclass == MONS_GOLDEN_EYE)
+    if (mon_type == MONS_GIANT_EYEBALL
+        || mon_type == MONS_EYE_OF_DRAINING
+        || mon_type == MONS_GOLDEN_EYE)
+    {
         return (true);
+    }
 
     // Although not using spells, these are exceedingly dangerous.
-    if (mclass == MONS_SILVER_STATUE || mclass == MONS_ORANGE_STATUE)
+    if (mon_type == MONS_SILVER_STATUE || mon_type == MONS_ORANGE_STATUE)
         return (true);
 
     // Beholding just needs LOS.
-    if (mons_genus(mclass) == MONS_MERMAID)
+    if (mons_genus(mon_type) == MONS_MERMAID)
         return (true);
 
     return (false);
@@ -2606,15 +2611,13 @@ bool mons_has_los_ability(int mclass)
 
 bool mons_has_los_attack(const monsters *mon)
 {
-    const int mclass = mon->type;
-
     // Monsters may have spell like abilities.
-    if (mons_has_los_ability(mclass))
+    if (mons_has_los_ability(mon->type))
         return (true);
 
     if (mon->can_use_spells())
     {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             if (_ms_los_spell(mon->spells[i]))
                 return (true);
     }
@@ -2625,15 +2628,13 @@ bool mons_has_los_attack(const monsters *mon)
 bool mons_has_ranged_spell(const monsters *mon, bool attack_only,
                            bool ench_too)
 {
-    const int mclass = mon->type;
-
-    // Monsters may have spell like abilities.
-    if (mons_has_los_ability(mclass))
+    // Monsters may have spell-like abilities.
+    if (mons_has_los_ability(mon->type))
         return (true);
 
     if (mon->can_use_spells())
     {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             if (_ms_ranged_spell(mon->spells[i], attack_only, ench_too))
                 return (true);
     }
