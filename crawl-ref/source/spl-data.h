@@ -2253,8 +2253,8 @@
 
 {
     SPELL_SUMMON_DRAKES, "Summon Drakes",
-     SPTYP_SUMMONING,
-     SPFLAG_UNHOLY | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+     SPTYP_SUMMONING | SPTYP_NECROMANCY, // since it can summon shadow dragons
+     SPFLAG_CHAOTIC | SPFLAG_MONSTER,
      6,
      0,
      -1, -1,
