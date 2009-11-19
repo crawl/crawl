@@ -407,7 +407,8 @@ protected:
 class ToggleableMenu : public Menu
 {
 public:
-    ToggleableMenu( int _flags = MF_MULTISELECT ) : Menu(_flags) {}
+    ToggleableMenu( int _flags = MF_MULTISELECT, bool text_only = true )
+        : Menu(_flags, "", text_only) {}
     void add_toggle_key(int newkey) { toggle_keys.push_back(newkey); }
 protected:
     virtual int pre_process(int key);
