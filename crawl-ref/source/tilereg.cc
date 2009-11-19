@@ -1622,7 +1622,16 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     // Don't move if we've tried to fire/cast/evoke when there's nothing
     // available.
     if (event.mod & (MOD_SHIFT | MOD_CTRL | MOD_ALT))
-        return (CK_MOUSE_CMD);
+    {
+        // Ctrl-Click on adjacent open doors closes them.
+        if ((event.mod & MOD_CTRL) && grd(gc) == DNGN_OPEN_DOOR
+            && adjacent(you.pos(), gc) && (mon == NULL || !you.can_see(mon)))
+        {
+            return _click_travel(gc, event);
+        }
+        else
+            return (CK_MOUSE_CMD);
+    }
         
     return _click_travel(gc, event);
 }
