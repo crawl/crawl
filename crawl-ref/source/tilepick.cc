@@ -1324,9 +1324,6 @@ static int _tileidx_weapon_base(const item_def &item)
 
     case WPN_BLESSED_TRIPLE_SWORD:
         return TILE_WPN_TRIPLE_SWORD;
-
-    case WPN_HOLY_SCOURGE:
-        return TILE_WPN_DEMON_WHIP;
     }
 
     return TILE_ERROR;
@@ -3730,8 +3727,6 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_ANKUS:             return TILEP_HAND1_MACE;
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
     case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
-    // new blessed weapons
-    case WPN_HOLY_SCOURGE:      return TILEP_HAND1_BLACK_WHIP;
 
     // Edge
     case WPN_KNIFE:                 return TILEP_HAND1_DAGGER_SLANT;
