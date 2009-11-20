@@ -1332,8 +1332,10 @@ static bool _do_description(std::string key, std::string type,
         monster_type mon_num = get_monster_by_name(key, true);
         // Don't attempt to get more information on ghost demon
         // monsters, as the ghost struct has not been initialised, which
-        // will cause a crash.
-        if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num))
+        // will cause a crash. Similarly for zombified monsters, since
+        // they require a base monster.
+        if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num) &&
+            !mons_class_is_zombified(mon_num))
         {
             monsters mon;
             mon.type = mon_num;
