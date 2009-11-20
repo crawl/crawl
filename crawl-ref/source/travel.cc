@@ -195,11 +195,6 @@ static void _populate_stair_distances(const level_pos &target);
 static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c);
 
-bool is_player_seen(int feat_x, int feat_y)
-{
-    return (is_terrain_seen(feat_x, feat_y));
-}
-
 // Returns true if there is a known trap at (x,y). Returns false for non-trap
 // squares as also for undiscovered traps.
 //
