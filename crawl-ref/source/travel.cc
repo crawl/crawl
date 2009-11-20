@@ -200,7 +200,7 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
 //
 inline bool is_trap(const coord_def& c)
 {
-    return feat_is_trap(grd(c));
+    return feat_is_trap(env.map_knowledge(c).feat());
 }
 
 // Returns an estimate for the time needed to cross this feature.
@@ -217,12 +217,12 @@ inline int feature_traverse_cost(dungeon_feature_type feature)
 
 bool is_altar(const coord_def &c)
 {
-    return feat_is_altar(grd(c));
+    return feat_is_altar(env.map_knowledge(c).feat());
 }
 
 inline bool is_player_altar(const coord_def &c)
 {
-    return feat_is_player_altar(grd(c));
+    return feat_is_player_altar(env.map_knowledge(c).feat());
 }
 
 bool is_unknown_stair(const coord_def &p)
@@ -322,7 +322,7 @@ static bool _is_reseedable(const coord_def& c)
     if (is_excluded(c))
         return (true);
 
-    const dungeon_feature_type grid = grd(c);
+    const dungeon_feature_type grid = env.map_knowledge(c).feat();
     return (feat_is_water(grid)
                || grid == DNGN_LAVA
                || is_trap(c)
@@ -1340,7 +1340,7 @@ void travel_pathfind::get_features()
         for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
         {
             coord_def dc(x,y);
-            dungeon_feature_type feature = grd(dc);
+            dungeon_feature_type feature = env.map_knowledge(dc).feat();
 
             if ((feature != DNGN_FLOOR
                     && !feat_is_water(feature)
@@ -1374,7 +1374,7 @@ bool travel_pathfind::square_slows_movement(const coord_def &c)
     // c is a known (explored) location - we never put unknown points in the
     // circumference vector, so we don't need to examine the map array, just the
     // grid array.
-    const dungeon_feature_type feature = grd(c);
+    const dungeon_feature_type feature = env.map_knowledge(c).feat();
 
     // If this is a feature that'll take time to travel past, we simulate that
     // extra turn by taking this feature next turn, thereby artificially
@@ -1511,7 +1511,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
         if (features && !ignore_hostile)
         {
-            dungeon_feature_type feature = grd(dc);
+            dungeon_feature_type feature = env.map_knowledge(dc).feat();
 
             if (dc != start
                 && (feature != DNGN_FLOOR
@@ -1615,7 +1615,8 @@ void find_travel_pos(const coord_def& youpos,
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
             if (!you.see_cell(*ai)
-                && (!is_terrain_seen(*ai) || !feat_is_wall(grd(*ai))))
+                && (!is_terrain_seen(*ai)
+                    || !feat_is_wall(env.map_knowledge(*ai).feat())))
             {
                 unseen = *ai;
                 break;
@@ -1636,7 +1637,7 @@ void find_travel_pos(const coord_def& youpos,
             // happen by manual movement, so I don't think we need to worry
             // about this. (jpeg)
             if (!is_travelsafe_square(new_dest)
-                || !feat_is_traversable(grd(new_dest)))
+                || !feat_is_traversable(env.map_knowledge(new_dest).feat()))
             {
                 new_dest = dest;
             }
