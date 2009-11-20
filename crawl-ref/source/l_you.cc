@@ -227,6 +227,8 @@ LUARET1(you_see_cell, boolean,
 LUARET1(you_see_cell_no_trans, boolean,
         you.see_cell_no_trans(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2))))
 
+LUARET1(you_piety, number, you.piety)
+
 LUAFN(you_moveto)
 {
     const coord_def place(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
@@ -356,6 +358,7 @@ static const struct luaL_reg you_dlib[] =
 { "gold",               _you_gold },
 { "uniques",            _you_uniques },
 { "die",                _you_die },
+{ "piety",              you_piety },
 { "in_branch",          you_in_branch },
 { "shopping_list_has",  _you_shopping_list_has },
 { "shopping_list_add",  _you_shopping_list_add },
