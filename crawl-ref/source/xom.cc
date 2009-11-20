@@ -892,8 +892,8 @@ static bool _is_chaos_upgradeable(const item_def &item,
     if (item.flags & ISFLAG_SUMMONED)
         return (false);
 
-    // Blessed blades are protected, being gifts from good gods.
-    if (is_blessed_blade(item))
+    // Blessed weapons are protected, being gifts from good gods.
+    if (is_blessed(item))
         return (false);
 
     // God gifts from good gods are protected.  Also, Beogh hates all

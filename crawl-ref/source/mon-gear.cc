@@ -42,10 +42,10 @@ static void _give_monster_item(monsters *mon, int thing,
     unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
     if (mon->undead_or_demonic()
-        && (is_blessed_blade(mthing)
+        && (is_blessed(mthing)
             || get_weapon_brand(mthing) == SPWPN_HOLY_WRATH))
     {
-        if (is_blessed_blade(mthing))
+        if (is_blessed(mthing))
             convert2bad(mthing);
         if (get_weapon_brand(mthing) == SPWPN_HOLY_WRATH)
             set_item_ego_type(mthing, OBJ_WEAPONS, SPWPN_NORMAL);

@@ -981,9 +981,9 @@ std::string item_def::name_aux(description_level_type desc,
                                unsigned long ignore_flags) const
 {
     // Shortcuts
-    const int item_typ   = this->sub_type;
-    const int it_plus    = this->plus;
-    const int item_plus2 = this->plus2;
+    const int item_typ   = sub_type;
+    const int it_plus    = plus;
+    const int item_plus2 = plus2;
 
     const bool know_type = ident || item_type_known(*this);
 
@@ -1023,7 +1023,7 @@ std::string item_def::name_aux(description_level_type desc,
 
     std::ostringstream buff;
 
-    switch (this->base_type)
+    switch (base_type)
     {
     case OBJ_WEAPONS:
         if (know_curse && !terse)
@@ -1060,16 +1060,21 @@ std::string item_def::name_aux(description_level_type desc,
             buff << get_artefact_name(*this);
             break;
         }
-        else if (flags & ISFLAG_BLESSED_BLADE && !dbname)
-        {   // since Daevas can get blessed base items, we need a separate
-            // flag for this, so they can still have their eudemon blades
-            buff << "Blessed Blade";
+        else if (flags & ISFLAG_BLESSED_WEAPON && !dbname)
+        {   // Since Angels and Daevas can get blessed base items, we
+            // need a separate flag for this, so they can still have
+            // their holy scourges and blessed eudemon blades.
+            buff << "Blessed ";
+            if (weapon_skill(*this) == SK_MACES_FLAILS)
+                buff << "Scourge";
+            else
+                buff << "Blade";
             break;
         }
 
         // Now that we can have "glowing elven" weapons, it's
         // probably a good idea to cut out the descriptive
-        // term once it's become obsolete. -- bwr
+        // term once it's become obsolete. - bwr
         if (know_cosmetic)
         {
             switch (get_equip_desc(*this))
@@ -1214,7 +1219,7 @@ std::string item_def::name_aux(description_level_type desc,
 
         // Now that we can have "glowing elven" armour, it's
         // probably a good idea to cut out the descriptive
-        // term once it's become obsolete. -- bwr
+        // term once it's become obsolete. - bwr
         if (know_cosmetic)
         {
             switch (get_equip_desc(*this))
@@ -1287,7 +1292,7 @@ std::string item_def::name_aux(description_level_type desc,
 
         if (know_ego && !is_artefact(*this))
         {
-            const special_armour_type sparm = get_armour_ego_type( *this );
+            const special_armour_type sparm = get_armour_ego_type(*this);
 
             if (sparm != SPARM_NORMAL)
             {
@@ -1367,10 +1372,10 @@ std::string item_def::name_aux(description_level_type desc,
             COMPILE_CHECK( ARRAYSZ(potion_colours) == PDC_NCOLOURS, c1 );
 
             const char *qualifier =
-                (pqual < 0 || pqual >= PDQ_NQUALS)? "bug-filled "
+                (pqual < 0 || pqual >= PDQ_NQUALS) ? "bug-filled "
                                     : potion_qualifiers[pqual];
 
-            const char *clr =  (pcolour < 0 || pcolour >= PDC_NCOLOURS)?
+            const char *clr =  (pcolour < 0 || pcolour >= PDC_NCOLOURS) ?
                                    "bogus" : potion_colours[pcolour];
 
             buff << qualifier << clr << " potion";

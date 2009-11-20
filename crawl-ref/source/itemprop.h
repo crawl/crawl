@@ -110,8 +110,8 @@ hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
                            size_type size);
 
 bool is_demonic(const item_def &item);
-bool is_blessed_blade(const item_def &item);
-bool is_blessed_blade_convertible(const item_def &item);
+bool is_blessed(const item_def &item);
+bool is_blessed_convertible(const item_def &item);
 bool convert2good(item_def &item, bool allow_blessed = true);
 bool convert2bad(item_def &item);
 

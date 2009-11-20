@@ -4282,10 +4282,10 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     {
         convert2good(wpn);
 
-        if (is_blessed_blade_convertible(wpn))
+        if (is_blessed_convertible(wpn))
         {
             origin_acquired(wpn, GOD_SHINING_ONE);
-            wpn.flags |= ISFLAG_BLESSED_BLADE;
+            wpn.flags |= ISFLAG_BLESSED_WEAPON;
         }
 
         burden_change();
@@ -4418,7 +4418,8 @@ static bool _altar_prayer()
 
     bool did_bless = false;
 
-    // TSO blesses weapons with holy wrath, and long blades specially.
+    // TSO blesses weapons with holy wrath, and long blades and demon
+    // whips specially.
     if (you.religion == GOD_SHINING_ONE
         && !you.num_gifts[GOD_SHINING_ONE]
         && !player_under_penance()
@@ -4428,7 +4429,7 @@ static bool _altar_prayer()
 
         if (wpn
             && (get_weapon_brand(*wpn) != SPWPN_HOLY_WRATH
-            || is_blessed_blade_convertible(*wpn)))
+                || is_blessed_convertible(*wpn)))
         {
             did_bless = _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH,
                                       YELLOW);

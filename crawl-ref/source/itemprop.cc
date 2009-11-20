@@ -1500,7 +1500,7 @@ bool is_demonic(const item_def &item)
     return (false);
 }
 
-bool is_blessed_blade(const item_def &item)
+bool is_blessed(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS)
     {
@@ -1525,11 +1525,12 @@ bool is_blessed_blade(const item_def &item)
     return (false);
 }
 
-bool is_blessed_blade_convertible(const item_def &item)
+bool is_blessed_convertible(const item_def &item)
 {
     return (!is_artefact(item)
             && (item.base_type == OBJ_WEAPONS
                 && (is_demonic(item)
+                    || item.sub_type == WPN_HOLY_SCOURGE
                     || weapon_skill(item) == SK_LONG_BLADES)));
 }
 
@@ -1604,7 +1605,7 @@ bool convert2good(item_def &item, bool allow_blessed)
         break;
     }
 
-    if (is_blessed_blade(item))
+    if (is_blessed(item))
         item.flags &= ~ISFLAG_RACIAL_MASK;
 
     return (true);

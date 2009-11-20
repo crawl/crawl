@@ -36,7 +36,7 @@ bool is_holy_item(const item_def& item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        retval = (is_blessed_blade(item)
+        retval = (is_blessed(item)
                   || get_weapon_brand(item) == SPWPN_HOLY_WRATH);
         break;
     case OBJ_SCROLLS:

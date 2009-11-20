@@ -158,7 +158,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         {
             mpr("This weapon is holy and will not allow you to wield it.");
             // If it's a standard weapon, you know its ego now.
-            if (!is_artefact(*weapon) && !is_blessed_blade(*weapon)
+            if (!is_artefact(*weapon) && !is_blessed(*weapon)
                 && !item_type_known(*weapon))
             {
                 set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
@@ -177,7 +177,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         {
             mpr("You're too hungry to wield that.");
             // If it's a standard weapon, you know its ego now.
-            if (!is_artefact(*weapon) && !is_blessed_blade(*weapon)
+            if (!is_artefact(*weapon) && !is_blessed(*weapon)
                 && !item_type_known(*weapon))
             {
                 set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
