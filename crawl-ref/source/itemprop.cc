@@ -193,7 +193,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_DEMON_WHIP,        "demon whip",         12,  1, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 2 },
-    { WPN_HOLY_SCOURGE,      "holy scourge",       14,  0, 11,  30,  2,
+    { WPN_HOLY_SCOURGE,      "holy scourge",       13,  0, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLASHING, 2 },
     { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
