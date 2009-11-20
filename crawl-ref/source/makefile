@@ -355,7 +355,7 @@ ifndef BUILD_LUA
 endif
 
 ifndef BUILD_SQLITE
-  ifeq (,$(wildcard /usr/include/sqlite3.h))
+  ifneq ($(shell grep -q sqlite3_prepare_v2 /usr/include/sqlite3.h 2>/dev/null && echo yes),yes)
     BUILD_SQLITE = yes
   else
     LIBS += -lsqlite3
