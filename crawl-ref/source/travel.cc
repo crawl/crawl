@@ -339,9 +339,8 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
         return (false);
 
     // [dshaligram] At this point we're guaranteed to know the terrain (see
-    // check ^^^), which means we know what dungeon feature is here. Thus it's
-    // safe to use the actual dungeon feature directly.
-    const dungeon_feature_type grid = grd(c);
+    // check ^^^).
+    const dungeon_feature_type grid = env.map_knowledge(c).feat();
 
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
