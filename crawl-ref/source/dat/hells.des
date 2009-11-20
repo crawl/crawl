@@ -15,7 +15,7 @@ function dis_setup(e)
 -- you still have to colour the statues, if desired
    dgn.set_feature_desc_short("granite statue", "iron statue")
    dgn.set_feature_desc_long("granite statue", "A heavy-looking iron statue. " ..
-                             "You can't help but feel like it's watching you.")
+                             "You can't help but feel like it's watching you.\n")
 end
 
 function geh_setup(e)
@@ -32,9 +32,9 @@ function geh_setup(e)
    e.colour("c = darkgrey")
    dgn.set_feature_desc_short("Floor", "Ashen ground")
    dgn.set_feature_desc_long("Floor", "With every step, you walk on ash. " ..
-                             "It is warm and almost comfortable.")
+                             "It is warm and almost comfortable.\n")
    dgn.set_feature_desc_short("metal wall", "tempered metal wall")
-   dgn.set_feature_desc_long("metal wall", "These metal walls emit heat.")
+   dgn.set_feature_desc_long("metal wall", "These metal walls emit heat.\n")
 end
 
 function coc_setup(e)
@@ -49,12 +49,12 @@ function coc_setup(e)
    e.lfloortile("floor_ice")
    e.colour("c = lightcyan")
    dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
-   dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.")
+   dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.\n")
    dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
-   dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.")
+   dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.\n")
    dgn.set_feature_desc_short("Floor", "Frost-covered floor")
    dgn.set_feature_desc_long("Floor", "Frost-covered floor. It crunches " ..
-				"satisfyingly underfoot.")
+				"satisfyingly underfoot.\n")
 end
 
 function tar_setup(e)
@@ -477,18 +477,18 @@ xxxxxxv..........v||3v...v2||v...v$$$v...v$$$v..vv...v...4..v...vv.......vxxxxxx
 xxxxxxv..........v|..v...v..|v...v$|$v...v$|$v.vv..vvvvvvvvvvvv..vv......vxxxxxx
 xxxxxxv..........v...vvvvv...vvvvv.6.vvvvv.6.vvv..vvvvvvvvvvvvvv..vv.....vxxxxxx
 xxxxxxv........vvvv+vvW8Wvv+vvvvvv...+...+...vv..vvv.........vvvv..v.....vxxxxxx
-xxxxxxv.......vv.v...........vvvvvvvvv...vvvvvv.vvvv$$$$$vv...vvvv.vv....vxxxxxx
-xxxxxxv.....vvv..+.......44..vv|$|vvv.....vvvv..vvvv$$$vvv....vvvv..v....vxxxxxx
-xxxxxxv....vv....v...........vv$$$vv..vvv..vvv+vvvvv||vvo.....ovvvv+vvv..vxxxxxx
-xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v...v.v...v...vvvv|vvo..4v4..vvv...v5..vxxxxxx
-xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv.........+...vvvv|vv.........vv...vv..vxxxxxx
-xxxxxxv..vvv.WW..+................+..v...v..v...vvvvOv1...2.....+....v...vxxxxxx
-xxxxxxv..vvv.WW..+................+..5.W.5..v...vvvv|v6...3.....+....v...vxxxxxx
-xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv..v.W.v..v...vvvv|vv.........vv...vv..vxxxxxx
-xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v..5.W.5..v...vvvv|vvo..4v4..vvv...v5..vxxxxxx
-xxxxxxv....vv....v.......v...vv$$$v..v...v..vv+vvvvv||vvo.....ovvvv+vvv..vxxxxxx
-xxxxxxv.....vv...+.......+...vv|$|v.........vv..vvvv$$$vvv....vvvv..v....vxxxxxx
-xxxxxxv......vvv.v.......v...vvvvvv..vv+vv..vvv.vvvv$$$$$vv...vvvv.vv....vxxxxxx
+xxxxxxv.......vv.v...........vvvvvvvvv...vvvvvv.vvvv$$$$vvv...vvvv.vv....vxxxxxx
+xxxxxxv.....vvv..+.......44..vv|$|vvv.....vvvv..vvvv$$vvv...v.vvvv..v....vxxxxxx
+xxxxxxv....vv....v...........vv$$$vv..vvv..vvv+vvvvv||vvo......vvvv+vvv..vxxxxxx
+xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v...v.v...v...vvvv|vvo2......vvv...v5..vxxxxxx
+xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv.........+...vvvv|vv...v.v...vv...vv..vxxxxxx
+xxxxxxv..vvv.WW..+................+..v...v..v...vvvvOv1.........+..o.v...vxxxxxx
+xxxxxxv..vvv.WW..+................+..5.W.5..v...vvvv|v6.........+..o.v...vxxxxxx
+xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv..v.W.v..v...vvvv|vv...v.v...vv...vv..vxxxxxx
+xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v..5.W.5..v...vvvv|vvo3......vvv...v5..vxxxxxx
+xxxxxxv....vv....v.......v...vv$$$v..v...v..vv+vvvvv||vvo......vvvv+vvv..vxxxxxx
+xxxxxxv.....vv...+.......+...vv|$|v.........vv..vvvv$$vvv...v.vvvv..v....vxxxxxx
+xxxxxxv......vvv.v.......v...vvvvvv..vv+vv..vvv.vvvv$$$$vvv...vvvv.vv....vxxxxxx
 xxxxxxv........vvvv+vvW8Wv$$$vvvvvv..v...v..vvv..vvv.........vvvv..v.....vxxxxxx
 xxxxxxv..........v...vvvvv$$$vvvvvvvvv...vvvvvvv..vvvvvvvvvvvvvv..vv.....vxxxxxx
 xxxxxxv..........v$2$v...v$3$v...vvvvv...vvvvv.vv..vvvvvvvvvvvv..vv......vxxxxxx
@@ -582,46 +582,49 @@ ENDMAP
 NAME:   geh_mu
 ORIENT: encompass
 MONS:   Asmodeus, Fiend
-MONS:   Balrug, sun demon, hellion, Serpent of Hell, fire giant
-KMONS:  8 = molten gargoyle
-KMONS:  9 = imp
+MONS:   Balrug, sun demon, hellion, fire giant
+KMONS:  7 = molten gargoyle
+KMONS:  8 = imp
 # Place one Serpent in the inner circle.
-NSUBST: X = 1:6 / *:4
-SUBST:  4 = 344578899
+KFEAT:	H = lava
+KMONS:	H = Serpent of Hell
+NSUBST: X = 1:H / *:l
+SUBST:  4 = 344567788
 SUBST:  % = $ |
 SUBST:  " : """.l , " : ""; , " = .l , ; = ...l
 SUBST:  ' : '''.x , ' : ''; , ' = .x , ; = ...x
 : geh_setup(_G)
+COLOUR:	= = red
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...."llvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvlllll"xx
-x.(.."llv......v......................................v......vllll".{x
+x.(.."llv......=......................................=......vllll".{x
 x..."lllv.vvvv.v....4....llllllllllllllllllll.........v.vvvv.vllll".'x
 x..."lllv.v2|v.v.......llllllllllllllllllllllll...4...v.v|2v.vlll"..'x
 x'."llllv.v+vv.v.....llllllllllllllllllllllllllll.....v.vv+v.vll"..'xx
 x'."llllv.v....v...lllllllllcccccclccccccccccllllll...v....v.vll".'xxx
 x'."llllv.vvvvvv..llllllllllcc..ccccccccccccclllllll..vvvvvv.vll".'xxx
 x'."llllv.v......lllllllllllc....cc...c....ccllllllll......v.vll".'xxx
-x'.."lllv.v.4...llllllllllllc.X..++.X.+.XX.cccccccllll.....v.vll"..'xx
+x'.."lllv.v.4...llllllllllllc.4..++...+.4..cccccccllll.....v.vll"..'xx
 x'.."lllv.v.....llllllllllllc....cc...c....cccccccllll..4..v.vlll".'xx
 x'."llllv.v....llllccccccccccc....ccccccc+cccccccclllll....v.vlll".'xx
 x'."llllv.v....llllc%%%%%.cccccc..ccccccc+cccccccclllll....v.vlll"..'x
 x'."llllv.v...lllllc%%%%%.c.%%%c..c..........cccccllllll...v.vllll".'x
 x'.."lllv.v...lllllc%%%%%.+.%%%c..c.vvvv.....+...cllllll...v.vllll".[x
-xx."llllv.v...lllllc%%%%%.c.%%%c..c.=||n..X..ccc.cllllll...v.vllll".'x
+xx."llllv.v...lllllc%%%%%.c.%%%c..c.=||n..4..ccc.cllllll...v.vllll".'x
 x'.."lllv.v...lllllc%%%%%.c....c..c.=||n.....ccc.cllllll...v.vllll".'x
-x'.."lllv.v...lllllc......cc++cc..c.vvvv..X..+.c+cccclll...v.vlll"..'x
+x'.."lllv.v...lllllc......cc++cc..c.vvvv..4..+.c+cccclll...v.vlll"..'x
 x'.."lllv.v...lllllcln.|||c....c..c..........+.c...$clll...v.vll"...'x
 x'."llllv.v...lllllc.n.|||c....c..cccccccccccc.c..2$clll...v.vll"...'x
-x'.."lllv.v...lllllcOn.|||c.2.2c..c..........c.c$$$$clll...v.vll"...'x
+x'.."lllv.v...lllllcOn.|||c.2.2c..c.44....44.c.c$$$$clll...v.vll"...'x
 x'.."lllv.v...lllllcccccccc....c..c..........+.c$$$$clll...v.vll"...'x
-xx.."lllv.v....lllllllllccc.1..+..c.....XX...+.ccccccll....v.vll"...'x
+xx.."lllv.v....lllllllllccc.1..+..c..........+.ccccccll....v.vll"...'x
 xx.."lllv.v....lllllllllccc....c..c..........ccclllllll....v.vll"...'x
-xx.."lllv.v.....llllllllccccccccccc......XX..cccllllll.....v.vl"...'xx
+xx.."lllv.v.....llllllllccccccccccc..........cccllllll.....v.vl"...'xx
 x'.."lllv.v.....llllllllccccccccccc..........cccllllll.....v.vl".4.'xx
 x'.."lllv.v......llllllllllllllllcc+cccccccccccclllll......v.vl"...'xx
 x'.."lllv.v.4.....lllllllllllllllc...cllllllllllllll.......v.vll"...'x
-x'4."lllv.v........llllllllllllllc.X.clllllllllllll........v.vll"..4'x
+x'4."lllv.v........lllllllllllXllc.4.cllXllllllllll........v.vll"..4'x
 x'.."lllv.v..........llllllllllllc...clllllllllll......4...v.vlll"..'x
 xx.."lllv.v.....4......llllllllllcc+cclllllllll............v.vlll"..'x
 xx.4"lllv.v..............llllllllllllllllllll......4.......v.vllll".'x
@@ -643,7 +646,7 @@ xxx'..."""lllllllllllllllllllllll.....llllllllllllllllllll""...'xxxxxx
 xxx'......""""lllllllllllllllllll.....llllllllllllllll"""".....'xxxxxx
 xxx'.........."""llllllllllllllll.4.4.llllllllllll""""........'xxxxxxx
 xxx'............."""lllllllllll"l.....l""lllllll""...........'xxxxxxxx
-xxxx'..............."""lllll""".8.....8..""lll""............'xxxxxxxxx
+xxxx'..............."""lllll""".7.....7..""lll""............'xxxxxxxxx
 xxxxx'................."""""..............."""..............'xxxxxxxxx
 xxxxx'...''.............................................''.'xxxxxxxxxx
 xxxxxx''..''............................................'xxxxxxxxxxxxx
