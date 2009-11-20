@@ -1344,6 +1344,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_WHIP:
+            if (one_chance_in(12))
+                rc = SPWPN_HOLY_WRATH;
+
             if (one_chance_in(10))
                 rc = SPWPN_PAIN;
 
