@@ -118,11 +118,6 @@ blessed double sword
 A magical weapon with two razor-sharp blades.  It has been enhanced by
 the Shining One's power.
 %%%%
-blessed eudemon blade
-
-A glorious blade from the forges of heaven.  It is the favored weapon
-of the Shining One's servants.
-%%%%
 blessed falchion
 
 A sword with a broad slashing blade.  It has been enhanced by the
@@ -659,6 +654,11 @@ A piece of metal headgear.
 helmet
 
 A piece of metal headgear.
+%%%%
+holy eudemon blade
+
+A glorious blade from the forges of heaven.  It is the favored weapon
+of the Shining One's servants.
 %%%%
 holy scourge
 

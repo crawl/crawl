@@ -992,7 +992,7 @@ unsigned int item_value( item_def item, bool ident )
         case WPN_DEMON_BLADE:
         case WPN_TRIPLE_SWORD:
         case WPN_BLESSED_KATANA:
-        case WPN_BLESSED_EUDEMON_BLADE:
+        case WPN_HOLY_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:

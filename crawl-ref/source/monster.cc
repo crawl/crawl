@@ -1255,7 +1255,7 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         return (weapon.sub_type == WPN_HOLY_SCOURGE);
 
     if (monster->type == MONS_DAEVA)
-        return (weapon.sub_type == WPN_BLESSED_EUDEMON_BLADE);
+        return (weapon.sub_type == WPN_HOLY_EUDEMON_BLADE);
 
     // We might allow Sigmund to pick up a better scythe if he finds one...
     if (monster->type == MONS_SIGMUND)

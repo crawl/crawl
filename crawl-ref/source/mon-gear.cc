@@ -659,7 +659,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.base_type = OBJ_WEAPONS;
         item.colour    = YELLOW;       // forced by force_item above {dlb}
 
-        item.sub_type  = (one_chance_in(4) ? WPN_BLESSED_EUDEMON_BLADE
+        item.sub_type  = (one_chance_in(4) ? WPN_HOLY_EUDEMON_BLADE
                                            : WPN_LONG_SWORD);
 
         set_equip_desc(item, ISFLAG_GLOWING);

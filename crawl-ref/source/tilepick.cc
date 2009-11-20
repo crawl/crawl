@@ -1292,7 +1292,7 @@ static int _tileidx_weapon_base(const item_def &item)
     case WPN_DEMON_TRIDENT:
         return TILE_WPN_DEMON_TRIDENT;
 
-    case WPN_BLESSED_EUDEMON_BLADE:
+    case WPN_HOLY_EUDEMON_BLADE:
         return TILE_WPN_BLESSED_BLADE;
 
     case WPN_LONGBOW:
@@ -3747,8 +3747,8 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_KATANA:                return TILEP_HAND1_KATANA_SLANT;
     case WPN_DOUBLE_SWORD:          return TILEP_HAND1_DOUBLE_SWORD;
     case WPN_TRIPLE_SWORD:          return TILEP_HAND1_TRIPLE_SWORD;
-    case WPN_BLESSED_EUDEMON_BLADE: return TILEP_HAND1_BLESSED_BLADE;
-    // new blessed blades
+    case WPN_HOLY_EUDEMON_BLADE:    return TILEP_HAND1_BLESSED_BLADE;
+    // new blessed weapons
     case WPN_BLESSED_LONG_SWORD:    return TILEP_HAND1_LONG_SWORD_SLANT;
     case WPN_BLESSED_GREAT_SWORD:   return TILEP_HAND1_GREAT_SWORD_SLANT;
     case WPN_BLESSED_SCIMITAR:      return TILEP_HAND1_SCIMITAR;

@@ -260,7 +260,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_DEMON_BLADE,           "demon blade",           13, -1, 15, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_BLESSED_EUDEMON_BLADE, "blessed eudemon blade", 14, -2, 14, 200,  4,
+    { WPN_HOLY_EUDEMON_BLADE,    "holy eudemon blade",    14, -2, 14, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
     { WPN_DOUBLE_SWORD,          "double sword",          15, -2, 16, 220,  5,
@@ -1324,7 +1324,7 @@ int weapon_rarity( int w_type )
     case WPN_BLESSED_LONG_SWORD:
     case WPN_BLESSED_SCIMITAR:
     case WPN_BLESSED_KATANA:
-    case WPN_BLESSED_EUDEMON_BLADE:
+    case WPN_HOLY_EUDEMON_BLADE:
     case WPN_BLESSED_DOUBLE_SWORD:
     case WPN_BLESSED_GREAT_SWORD:
     case WPN_BLESSED_TRIPLE_SWORD:
@@ -1510,7 +1510,7 @@ bool is_blessed(const item_def &item)
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
         case WPN_BLESSED_KATANA:
-        case WPN_BLESSED_EUDEMON_BLADE:
+        case WPN_HOLY_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
@@ -1566,7 +1566,7 @@ bool convert2good(item_def &item, bool allow_blessed)
         if (!allow_blessed)
             item.sub_type = WPN_SCIMITAR;
         else
-            item.sub_type = WPN_BLESSED_EUDEMON_BLADE;
+            item.sub_type = WPN_HOLY_EUDEMON_BLADE;
         break;
 
     case WPN_KATANA:
@@ -1633,7 +1633,7 @@ bool convert2bad(item_def &item)
         item.sub_type = WPN_SCIMITAR;
         break;
 
-    case WPN_BLESSED_EUDEMON_BLADE:
+    case WPN_HOLY_EUDEMON_BLADE:
         item.sub_type = WPN_DEMON_BLADE;
         break;
 
