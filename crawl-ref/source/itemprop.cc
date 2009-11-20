@@ -340,7 +340,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         SK_DARTS,        HANDS_HALF,   SIZE_LITTLE, MI_NEEDLE, false,
         DAMV_NON_MELEE, 0 },
     { WPN_SLING,             "sling",               0,  2, 11,  20,  1,
-        SK_SLINGS,       HANDS_HALF,   SIZE_LITTLE, MI_STONE, false,
+        SK_SLINGS,       HANDS_ONE,   SIZE_LITTLE, MI_STONE, false,
         DAMV_NON_MELEE, 10 },
     { WPN_HAND_CROSSBOW,     "hand crossbow",       3,  4, 15,  70,  5,
         SK_CROSSBOWS,    HANDS_HALF,   SIZE_SMALL,  MI_DART, false,

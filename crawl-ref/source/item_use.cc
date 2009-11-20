@@ -1575,6 +1575,8 @@ int launcher_shield_slowdown(const item_def &launcher, const item_def *shield)
     {
     default:
     case HANDS_ONE:
+        break;
+
     case HANDS_HALF:
         speed_adjust = shield_type == ARM_BUCKLER  ? 105 :
                        shield_type == ARM_SHIELD   ? 125 :
