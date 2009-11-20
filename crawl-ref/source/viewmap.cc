@@ -1117,13 +1117,7 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
     }
 #endif
 
-    dungeon_feature_type feat_value = grd(p);
-    if (!you.see_cell(p))
-    {
-        const show_type remembered = get_map_knowledge_obj(p);
-        if (remembered.cls == SH_FEATURE)
-            feat_value = remembered.feat;
-    }
+    dungeon_feature_type feat_value = get_map_knowledge_obj(p).feat;
 
     unsigned tc = travel_colour ? _get_travel_colour(p) : DARKGREY;
 
