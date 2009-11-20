@@ -2742,7 +2742,7 @@ item_def find_item_type(object_class_type base_type, std::string name)
         0,              // unknown II
         NUM_BOOKS,
         NUM_STAVES,
-        0,              // Orbs         -- only one, handled specially
+        1,              // Orbs         -- only one, handled specially
         NUM_MISCELLANY,
         0,              // corpses      -- handled specially
         0,              // gold         -- handled specially
