@@ -376,12 +376,6 @@ void sighup_save_and_exit()
     {
         mpr("Received HUP signal, saved and exited game.", MSGCH_ERROR);
 
-        // Clean up all the hooks.
-        for (unsigned i = 0; i < crawl_state.exit_hooks.size(); ++i)
-            crawl_state.exit_hooks[i]->restore_state();
-
-        crawl_state.exit_hooks.clear();
-
         // save_game(true) exits from the game. The "true" is also required
         // to save changes to the current level.
         save_game(true, "Received HUP signal, saved game.");

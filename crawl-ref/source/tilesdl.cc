@@ -918,13 +918,7 @@ int TilesFramework::getch_ck()
 
             case SDL_QUIT:
                 if (crawl_state.need_save)
-                {
-                    for (unsigned i = 0; i < crawl_state.exit_hooks.size(); ++i)
-                        crawl_state.exit_hooks[i]->restore_state();
-
-                    crawl_state.exit_hooks.clear();
                     save_game(true);
-                }
                 exit(0);
                 break;
 

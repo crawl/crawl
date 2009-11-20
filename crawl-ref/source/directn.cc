@@ -876,19 +876,6 @@ static int _mlist_letter_to_index(char idx)
 }
 #endif
 
-crawl_exit_hook::crawl_exit_hook()
-{
-    crawl_state.exit_hooks.push_back(this);
-}
-
-crawl_exit_hook::~crawl_exit_hook()
-{
-    crawl_state.exit_hooks.erase(std::remove(crawl_state.exit_hooks.begin(),
-                                             crawl_state.exit_hooks.end(),
-                                             this),
-                                 crawl_state.exit_hooks.end());
-}
-
 range_view_annotator::range_view_annotator(int range)
 {
     if (Options.darken_beyond_range && range >= 0)

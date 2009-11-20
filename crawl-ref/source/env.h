@@ -5,8 +5,6 @@
 #include "monster.h"
 #include "show.h"
 
-class crawl_exit_hook;
-
 struct crawl_environment
 {
 public:
