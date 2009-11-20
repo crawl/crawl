@@ -3210,7 +3210,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
     {
         int brand = get_ammo_brand(*item);
         if (brand == SPMSL_CHAOS || brand == SPMSL_DISPERSAL)
-            return(true);
+            return (true);
         // [dshaligram] Removed influence of Throwing on ammo preservation.
         // The effect is nigh impossible to perceive.
         switch (item->sub_type)
