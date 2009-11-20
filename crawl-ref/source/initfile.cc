@@ -755,6 +755,8 @@ void game_options::reset_options()
     // reading options.
     explore_stop_prompt    = ES_NONE;
 
+    explore_stop_pickup_ignore.clear();
+
     explore_item_greed     = 10;
     explore_greedy         = true;
 
@@ -1598,10 +1600,10 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
         const std::string &c = stops[i];
         if (c == "item" || c == "items")
             conditions |= ES_ITEM;
-        else if (c == "pickup")
-            conditions |= ES_PICKUP;
         else if (c == "greedy_pickup" || c == "greedy pickup")
             conditions |= ES_GREEDY_PICKUP;
+        else if (c == "greedy_pickup_smart" || c == "greedy pickup smart")
+            conditions |= ES_GREEDY_PICKUP_SMART;
         else if (c == "shop" || c == "shops")
             conditions |= ES_SHOP;
         else if (c == "stair" || c == "stairs")
@@ -1975,6 +1977,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (key != "name" && key != "crawl_dir" && key != "macro_dir"
         && key != "species" && key != "job" && key != "ban_pickup"
         && key != "autopickup_exceptions"
+        && key != "explore_stop_pickup_ignore"
         && key != "stop_travel" && key != "sound"
         && key != "travel_stop_message" && key != "force_more_message"
         && key != "drop_filter" && key != "lua_file" && key != "terp_file"
@@ -2868,6 +2871,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             explore_stop_prompt &= ~new_conditions;
         else
             explore_stop_prompt |= new_conditions;
+    }
+    else if (key == "explore_stop_pickup_ignore")
+    {
+        append_vector(explore_stop_pickup_ignore, split_string(",", field));
     }
     else if (key == "explore_item_greed")
     {

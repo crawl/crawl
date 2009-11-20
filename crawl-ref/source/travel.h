@@ -157,18 +157,19 @@ extern travel_distance_grid_t travel_point_distance;
 
 enum explore_stop_type
 {
-    ES_NONE               = 0x000,
-    ES_ITEM               = 0x001,
-    ES_PICKUP             = 0x002,
-    ES_GREEDY_PICKUP      = 0x004,
-    ES_GREEDY_ITEM        = 0x008,
-    ES_STAIR              = 0x010,
-    ES_SHOP               = 0x020,
-    ES_ALTAR              = 0x040,
-    ES_PORTAL             = 0x080,
-    ES_GLOWING_ITEM       = 0x100,
-    ES_ARTEFACT           = 0x200,
-    ES_RUNE               = 0x400
+    ES_NONE                = 0x000,
+    ES_ITEM                = 0x001,
+    ES_GREEDY_PICKUP       = 0x002,
+    ES_GREEDY_PICKUP_SMART = 0x004,
+    ES_GREEDY_PICKUP_MASK  = (ES_GREEDY_PICKUP | ES_GREEDY_PICKUP_SMART),
+    ES_GREEDY_ITEM         = 0x008,
+    ES_STAIR               = 0x010,
+    ES_SHOP                = 0x020,
+    ES_ALTAR               = 0x040,
+    ES_PORTAL              = 0x080,
+    ES_GLOWING_ITEM        = 0x100,
+    ES_ARTEFACT            = 0x200,
+    ES_RUNE                = 0x400
 };
 
 ////////////////////////////////////////////////////////////////////////////

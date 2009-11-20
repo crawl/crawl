@@ -2323,10 +2323,215 @@ bool can_autopickup()
     return (true);
 }
 
+typedef bool (*item_comparer)(const item_def& pickup_item,
+                              const item_def& inv_item);
+
+static bool _identical_types(const item_def& pickup_item,
+                             const item_def& inv_item)
+{
+    return ((pickup_item.base_type == inv_item.base_type)
+            && (pickup_item.sub_type == inv_item.sub_type));
+}
+
+static bool _edible_food(const item_def& pickup_item,
+                         const item_def& inv_item)
+{
+    return (inv_item.base_type == OBJ_FOOD && !is_inedible(inv_item));
+}
+
+static bool _similar_equip(const item_def& pickup_item,
+                           const item_def& inv_item)
+{
+    const equipment_type inv_slot = get_item_slot(inv_item);
+
+    if (inv_slot == EQ_NONE)
+        return (false);
+
+    // If it's an unequipped cursed item the player might be looking
+    // for a replacement.
+    if (item_known_cursed(inv_item) && !item_is_equipped(inv_item))
+        return (false);
+
+    if (get_item_slot(pickup_item) != inv_slot)
+        return (false);
+
+    // Just filling the same slot is enough for armour to be considered
+    // similar.
+    if (pickup_item.base_type == OBJ_ARMOUR)
+        return (true);
+
+    // Launchers of the same type are similar.
+    if ((pickup_item.sub_type >= WPN_BLOWGUN &&
+         pickup_item.sub_type <= WPN_LONGBOW)
+        || pickup_item.sub_type == WPN_SLING)
+    {
+        return (pickup_item.sub_type != inv_item.sub_type);
+    }
+
+    return ((weapon_skill(pickup_item) == weapon_skill(inv_item))
+            && (get_damage_type(pickup_item) == get_damage_type(inv_item)));
+}
+
+static bool _similar_wands(const item_def& pickup_item,
+                           const item_def& inv_item)
+{
+    if (inv_item.base_type != OBJ_WANDS)
+        return (false);
+
+    if (pickup_item.sub_type != inv_item.sub_type)
+        return (false);
+
+    // Not similar if wand in inventory is known to be empty.
+    return (inv_item.plus2 != ZAPCOUNT_EMPTY
+            || (item_ident(inv_item, ISFLAG_KNOW_PLUSES)
+                && inv_item.plus > 0));
+}
+
+static bool _similar_jewellery(const item_def& pickup_item,
+                               const item_def& inv_item)
+{
+    if (inv_item.base_type != OBJ_JEWELLERY)
+        return (false);
+
+    if (pickup_item.sub_type != inv_item.sub_type)
+        return (false);
+
+    // For jewellery of the same sub-type, unidentified jewellery is
+    // always considered similar, as is identified jewellery whose
+    // effect doesn't stack.
+    return (!item_type_known(inv_item)
+            || (!jewellery_is_amulet(inv_item)
+                && !ring_has_stackable_effect(inv_item)));
+}
+
+static bool _item_different_than_inv(const item_def& pickup_item,
+                                     item_comparer comparer)
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        const item_def& inv_item(you.inv[i]);
+
+        if (!inv_item.is_valid())
+            continue;
+
+        if ( (*comparer)(pickup_item, inv_item) )
+            return (false);
+    }
+
+    return (true);
+}
+
+static bool _interesting_explore_pickup(const item_def& item)
+{
+    if (!(Options.explore_stop & ES_GREEDY_PICKUP_MASK))
+        return (false);
+
+    // Gold is boring.
+    if (item.base_type == OBJ_GOLD)
+        return (false);
+
+    std::vector<text_pattern> &ignore = Options.explore_stop_pickup_ignore;
+    if (!ignore.empty())
+    {
+        const std::string name = item.name(DESC_PLAIN);
+
+        for (unsigned int i = 0; i < ignore.size(); i++)
+            if (ignore[i].matches(name))
+                return (false);
+    }
+
+    if (!(Options.explore_stop & ES_GREEDY_PICKUP_SMART))
+        return (true);
+
+    // "Smart" code follows.
+    if (item.flags & ISFLAG_THROWN)
+        return (true);
+
+    if (is_artefact(item))
+        return (true);
+
+    // Possbible ego items.
+    if (!item_type_known(item) & (item.flags & ISFLAG_COSMETIC_MASK))
+        return (true);
+
+    switch(item.base_type)
+    {
+    case OBJ_WEAPONS:
+    case OBJ_MISSILES:
+    case OBJ_ARMOUR:
+        // Ego items.
+        if (item.special != 0)
+            return (true);
+        break;
+
+    default:
+        break;
+    }
+
+    switch(item.base_type)
+    {
+    case OBJ_WEAPONS:
+    case OBJ_ARMOUR:
+        return _item_different_than_inv(item, _similar_equip);
+
+    case OBJ_WANDS:
+        return _item_different_than_inv(item, _similar_wands);
+
+    case OBJ_JEWELLERY:
+        return _item_different_than_inv(item, _similar_jewellery);
+
+    case OBJ_FOOD:
+        if (you.religion == GOD_FEDHAS && is_fruit(item))
+            return (true);
+
+        if (is_inedible(item))
+            return (false);
+
+        // Interesting if we don't have any other edible food.
+        return _item_different_than_inv(item, _edible_food);
+
+    case OBJ_STAVES:
+        // Rods are always interesting, even if you already have one of
+        // the same type, since each rod has its own mana.
+        if (item_is_rod(item))
+            return (true);
+
+        // Intentional fall-through.
+    case OBJ_MISCELLANY:
+        // Runes are always interesting.
+        if (is_rune(item))
+            return (true);
+
+        // Decks always start out unidentified.
+        if (is_deck(item))
+            return (true);
+
+        // Intentional fall-through.
+    case OBJ_SCROLLS:
+    case OBJ_POTIONS:
+        // Item is boring only if there's an identical one in inventory.
+        return _item_different_than_inv(item, _identical_types);
+
+    case OBJ_BOOKS:
+        // Books always start out unidentified.
+        return (true);
+
+    case OBJ_ORBS:
+        // Orb is always interesting.
+        return (true);
+
+    default:
+        break;
+    }
+
+    return (false);
+}
+
 static void _do_autopickup()
 {
-    int n_did_pickup   = 0;
-    int n_tried_pickup = 0;
+    bool did_pickup     = false;
+    int  n_did_pickup   = 0;
+    int  n_tried_pickup = 0;
 
     will_autopickup = false;
 
@@ -2370,6 +2575,12 @@ static void _do_autopickup()
                 }
             }
 
+            // Do this before it's picked up, otherwise the picked up
+            // item will be in inventory and _interesting_explore_pickup()
+            // will always return false.
+            const bool interesting_pickup
+                = _interesting_explore_pickup(mitm[o]);
+
             const unsigned long iflags(mitm[o].flags);
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
@@ -2385,7 +2596,11 @@ static void _do_autopickup()
                 mitm[o].flags = iflags;
             }
             else
-                n_did_pickup++;
+            {
+                did_pickup = true;
+                if (interesting_pickup)
+                    n_did_pickup++;
+            }
         }
 
         o = next;
@@ -2394,7 +2609,7 @@ static void _do_autopickup()
     if (!pickup_warning.empty())
         mpr(pickup_warning.c_str());
 
-    if (n_did_pickup)
+    if (did_pickup)
         you.turn_is_over = true;
 
     item_check(false);

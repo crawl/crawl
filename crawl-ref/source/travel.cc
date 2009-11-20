@@ -795,8 +795,8 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     if (did_pickup)
     {
         const int estop =
-            (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP
-                                                  : ES_PICKUP;
+            (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP_MASK
+                                                  : ES_NONE;
 
         if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
         {
@@ -930,35 +930,6 @@ command_type travel()
             prev_travel_moves[prev_travel_index] =
                 delta_to_dir[(*move_x + 1) + 3 * (*move_y + 1)];
             prev_travel_index = !prev_travel_index;
-        }
-
-        if ((*move_x || *move_y) && you.running == RMODE_EXPLORE_GREEDY)
-        {
-            // Greedy explore should cut off on reaching an item. We can't
-            // check after reaching the item, because at that point the stash
-            // tracker will have verified the stash and say "false" to
-            // needs_visit.
-            const coord_def newpos = you.pos() + coord_def(*move_x, *move_y);
-
-            if (newpos == you.running.pos)
-            {
-                const LevelStashes *lev = StashTrack.find_current_level();
-                if (lev && lev->needs_visit(newpos)
-                    && !lev->shop_needs_visit(newpos))
-                {
-                    const int estop =
-                        (you.running == RMODE_EXPLORE_GREEDY) ?
-                            ES_GREEDY_PICKUP : ES_PICKUP;
-
-                    if ((Options.explore_stop & estop)
-                        && prompt_stop_explore(estop))
-                    {
-                        explore_stopped_pos = newpos;
-                        stop_running();
-                    }
-                    return direction_to_command( *move_x, *move_y );
-                }
-            }
         }
 
         if (!*move_x && !*move_y)
@@ -4053,8 +4024,9 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
     } // if (you.running == RMODE_EXPLORE_GREEDY)
 
     add_item(i);
-    es_flags |= (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP
-                                                      : ES_PICKUP;
+    // MATT
+    es_flags |= (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP_MASK
+                                                      : ES_NONE;
 }
 
 // Expensive O(n^2) duplicate search, but we can live with that.

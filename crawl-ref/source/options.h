@@ -245,6 +245,10 @@ public:
 
     int         explore_stop_prompt;
 
+    // Don't stop greedy explore when picking up an item which matches
+    // any of these patterns.
+    std::vector<text_pattern> explore_stop_pickup_ignore;
+
     bool        explore_greedy;    // Explore goes after items as well.
 
     // How much more eager greedy-explore is for items than to explore.

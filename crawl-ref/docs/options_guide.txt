@@ -48,8 +48,8 @@ The contents of this text are:
                 scroll_margin
 4-g     Travel and Exploration.
                 travel_delay, explore_delay, travel_avoid_terrain,
-                explore_greedy, explore_stop, explore_improved,
-                tc_reachable, tc_dangerous, tc_disconnected,
+                explore_greedy, explore_stop, explore_stop_pickup_ignore,
+                explore_improved, tc_reachable, tc_dangerous, tc_disconnected,
                 tc_excluded, tc_exclude_circle, travel_stop_message, 
                 runrest_ignore_message, runrest_ignore_poison,
                 runrest_ignore_monster, trapwalk_safe_hp,
@@ -845,8 +845,15 @@ explore_stop = items,greedy_pickup,stairs,shops,altars,gates
         greedy_items: stop when items that are eligible for autopickup
             come into view.
 
-        greedy_pickup: stop when you arrive at a square which contains
-            an item eligble for autopickup.
+        greedy_pickup: stop after you automatically pick up any item
+            eligible for autopickup (except for gold).  You can make
+            certain items *not* trigger this with the option
+            explore_stop_pickup_ignore
+
+        greedy_pickup_smart: Similar to greedy_pickup, but tries to be
+            smart about it, meaning only stopping for thrown items and
+            items which aren't similar to any you already have in your
+            inventory.
 
         glowing_items: like items, but only for items which are
             glowing/runed/embroidered/etc.
@@ -854,6 +861,15 @@ explore_stop = items,greedy_pickup,stairs,shops,altars,gates
         artefacts: like items, but only for artefacts.
 
         runes: like items, but only for runes.
+
+explore_stop_pickup_ignore = <regex list>
+        If explore_stop has greedy_pickup or greedy_pickup_smart set,
+        then picking up any items matching any of the regexes in the list
+        will *not* stop auto-explore.  For example, by default curare-
+        tipped needles are automatically picked up to keep them out of
+        the hands of monsters, even if you don't have a blowgun, so to
+        not stop auto-explore because of this use
+        "explore_stop_pickup_ignore = curare".
 
 explore_improved = false
         If set to true explore will attempt to reduce zig-zagging during
