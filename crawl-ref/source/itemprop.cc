@@ -340,7 +340,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         SK_DARTS,        HANDS_HALF,   SIZE_LITTLE, MI_NEEDLE, false,
         DAMV_NON_MELEE, 0 },
     { WPN_SLING,             "sling",               0,  2, 11,  20,  1,
-        SK_SLINGS,       HANDS_ONE,   SIZE_LITTLE, MI_STONE, false,
+        SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE, false,
         DAMV_NON_MELEE, 10 },
     { WPN_HAND_CROSSBOW,     "hand crossbow",       3,  4, 15,  70,  5,
         SK_CROSSBOWS,    HANDS_HALF,   SIZE_SMALL,  MI_DART, false,
@@ -452,7 +452,7 @@ void init_properties()
 
 // Some convenient functions to hide the bit operations and create
 // an interface layer between the code and the data in case this
-// gets changed again. -- bwr
+// gets changed again. - bwr
 
 //
 // Item cursed status functions:
@@ -478,7 +478,7 @@ void do_curse_item( item_def &item, bool quiet )
     if (item.flags & ISFLAG_CURSED)
         return;
 
-    // Holy weapons cannot be cursed.
+    // Holy wrath weapons cannot be cursed.
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
     {
@@ -501,8 +501,8 @@ void do_curse_item( item_def &item, bool quiet )
 
     item.flags |= ISFLAG_CURSED;
 
-    // Xom is amused by the player's items being cursed, especially
-    // if they're worn/equipped.
+    // Xom is amused by the player's items being cursed, especially if
+    // they're worn/equipped.
     if (in_inventory(item))
     {
         int amusement = 64;
