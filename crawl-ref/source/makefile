@@ -167,6 +167,7 @@ ifeq ($(uname_S),Darwin)
 	ifndef NO_APPLE_GCC
 		APPLE_GCC = YesPlease
 	endif
+	BUILD_SQLITE = YesPlease
 	ifdef TILES
 		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/lib/libSDLmain.a
 		BUILD_FREETYPE = YesPlease
