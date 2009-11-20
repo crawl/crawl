@@ -786,9 +786,6 @@ ENDMAP
 NAME:    tomb_1
 PLACE:   Tomb:1
 
-# The whole branch starts off with teleport control prevention.
-BFLAGS:  no_tele_control
-
 ORIENT:  encompass
 TAGS:    no_dump
 #
