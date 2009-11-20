@@ -3232,11 +3232,11 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
         if (brand == SPMSL_STEEL)
             chance *= 10;
         if (brand == SPMSL_FLAME)
-            chance -= 2;
-        if (brand == SPMSL_FROST)  // ice seems less destructive to the missile, right?
-            chance -= 1;
+            chance /= 2;
+        if (brand == SPMSL_FROST)
+            chance /= 2;
         if (brand == SPMSL_REAPING)
-            chance -= 3;
+            chance /= 4;
     }
 
     // Enchanted projectiles get an extra shot at avoiding
