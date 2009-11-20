@@ -2006,8 +2006,16 @@ void bolt::affect_cell(bool avoid_self)
     const coord_def old_pos = pos();
     const bool was_solid = feat_is_solid(grd(pos()));
 
-    bool avoid_monster = (avoid_self && thrower == KILL_MON_MISSILE);
-    bool avoid_player  = (avoid_self && thrower != KILL_MON_MISSILE);
+    bool avoid_monster = false;
+    bool avoid_player = false;
+
+    if (avoid_self)
+    {
+        if (YOU_KILL(thrower))
+            avoid_player = true;
+        else if (MON_KILL(thrower))
+            avoid_monster = true;
+    }
 
     if (was_solid)
     {
