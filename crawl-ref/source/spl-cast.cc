@@ -930,20 +930,16 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
     if (!_spell_is_utility_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell));
 
-    if (is_holy_spell(spell))
+    if (is_holy_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_HOLY, 10 + spell_difficulty(spell));
 
-    if (is_unholy_spell(spell)
-        && !you.banished
-        && !crawl_state.is_god_acting())
-    {
+    if (is_unholy_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_UNHOLY, 10 + spell_difficulty(spell));
-    }
 
-    if (is_unclean_spell(spell))
+    if (is_unclean_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_UNCLEAN, 10 + spell_difficulty(spell));
 
-    if (is_chaotic_spell(spell))
+    if (is_chaotic_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_CHAOS, 10 + spell_difficulty(spell));
 
     // Linley says: Condensation Shield needs some disadvantages to keep
