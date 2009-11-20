@@ -751,7 +751,7 @@ static inline void _mons_cast_abil(monsters *monster, bolt &pbolt,
 {
     mons_cast(monster, pbolt, spell_cast, true, true);
 }
- 
+
 //---------------------------------------------------------------
 //
 // mon_special_ability

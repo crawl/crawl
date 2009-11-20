@@ -1632,7 +1632,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         else
             return (CK_MOUSE_CMD);
     }
-        
+
     return _click_travel(gc, event);
 }
 

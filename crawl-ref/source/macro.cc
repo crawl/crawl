@@ -1128,7 +1128,7 @@ command_type key_to_command(int key, KeymapContext context)
 
             return (CMD_NO_CMD);
         }
- 
+
         return (cmd);
     }
 

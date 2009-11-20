@@ -323,7 +323,7 @@ void show_def::_update_monster(const monsters* mons)
 
             grid(e).colour = ripple_table[base_colour & 0x0f];
         }
-        else if (is_opaque_cloud(env.cgrid(pos)) && 
+        else if (is_opaque_cloud(env.cgrid(pos)) &&
                  !mons->submerged() &&
                  !mons_is_insubstantial(mons->type))
         {

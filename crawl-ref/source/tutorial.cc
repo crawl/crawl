@@ -3651,11 +3651,11 @@ void tutorial_describe_item(const item_def &item)
                         "this tile of the ammo you want to fire, and then "
                         "<w>left mouse click</w> on the monster you want "
                         "to hit.\n\n"
-                        
+
                         "To launch this ammo using the keyboard, you can "
                         "simply ";
-#endif 
-     
+#endif
+
                 ostr << "<w>f</w>ire "
                      << (item.quantity > 1 ? "these" : "this")
                      << " " << item.name(DESC_BASENAME)

@@ -27,7 +27,7 @@ enum tutorial_types
     TUT_RANGER_CHAR,
     TUT_TYPES_NUM   // 3
 };
-    
+
 void save_tutorial(writer& outf);
 void load_tutorial(reader& inf);
 void init_tutorial_options(void);

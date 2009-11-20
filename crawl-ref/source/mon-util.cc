@@ -707,7 +707,7 @@ monster_type mons_genus(int mc)
 monster_type mons_detected_base(monster_type mc)
 {
     return (monster_symbols[mc].detected);
-}        
+}
 
 monster_type draco_subspecies(const monsters *mon)
 {

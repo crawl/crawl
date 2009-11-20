@@ -10,8 +10,8 @@ class monster_pathfind
 public:
     monster_pathfind();
     virtual ~monster_pathfind();
-    
-    // public methods  
+
+    // public methods
     void set_range(int r);
     coord_def next_pos(const coord_def &p) const;
     bool init_pathfind(const monsters *mon, coord_def dest,

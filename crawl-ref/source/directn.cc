@@ -317,7 +317,7 @@ static bool _mon_exposed_in_cloud(const monsters *mon)
     if (!mon)
         return (false);
 
-    return (!mon->visible_to(&you) 
+    return (!mon->visible_to(&you)
             && is_opaque_cloud(env.cgrid(mon->pos()))
             && !mons_is_insubstantial(mon->type));
 }
