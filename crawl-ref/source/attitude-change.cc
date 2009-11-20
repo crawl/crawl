@@ -230,24 +230,24 @@ bool unholy_and_evil_beings_attitude_change()
     return (apply_to_all_dungeons(_unholy_and_evil_beings_on_level_attitude_change));
 }
 
-static bool _chaotic_beings_on_level_attitude_change()
+static bool _unclean_and_chaotic_beings_on_level_attitude_change()
 {
     bool success = false;
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mi->is_chaotic())
+        if (!mi->is_unclean() && !mi->is_chaotic())
             continue;
 
 #ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Chaotic attitude changing: %s on level %d, branch %d",
+        mprf(MSGCH_DIAGNOSTICS, "Unclean/chaotic attitude changing: %s on level %d, branch %d",
              mi->name(DESC_PLAIN).c_str(),
              static_cast<int>(you.your_level),
              static_cast<int>(you.where_are_you));
 #endif
 
         // If you worship Zin, you make all friendly and good neutral
-        // chaotic beings hostile.
+        // unclean and chaotic beings hostile.
         if (you.religion == GOD_ZIN && mi->wont_attack())
         {
             mi->attitude = ATT_HOSTILE;
@@ -261,9 +261,9 @@ static bool _chaotic_beings_on_level_attitude_change()
     return (success);
 }
 
-bool chaotic_beings_attitude_change()
+bool unclean_and_chaotic_beings_attitude_change()
 {
-    return (apply_to_all_dungeons(_chaotic_beings_on_level_attitude_change));
+    return (apply_to_all_dungeons(_unclean_and_chaotic_beings_on_level_attitude_change));
 }
 
 static bool _spellcasters_on_level_attitude_change()

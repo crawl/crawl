@@ -5013,14 +5013,14 @@ void god_pitch(god_type which_god)
 
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
-    // you make all non-hostile chaotic beings hostile; and when you
-    // start worshipping Trog, you make all non-hostile magic users
-    // hostile.
+    // you make all non-hostile unclean and chaotic beings hostile; and
+    // when you start worshipping Trog, you make all non-hostile magic
+    // users hostile.
     if (is_good_god(you.religion) && unholy_and_evil_beings_attitude_change())
         mpr("Your unholy and evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
 
-    if (you.religion == GOD_ZIN && chaotic_beings_attitude_change())
-        mpr("Your chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
+    if (you.religion == GOD_ZIN && unclean_and_chaotic_beings_attitude_change())
+        mpr("Your unclean and chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
     else if (you.religion == GOD_TROG && spellcasters_attitude_change())
         mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
 

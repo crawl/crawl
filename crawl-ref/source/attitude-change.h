@@ -8,7 +8,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit = false);
 void slime_convert(monsters *monster);
 bool holy_beings_attitude_change();
 bool unholy_and_evil_beings_attitude_change();
-bool chaotic_beings_attitude_change();
+bool unclean_and_chaotic_beings_attitude_change();
 bool spellcasters_attitude_change();
 bool yred_slaves_abandon_you();
 bool beogh_followers_abandon_you();
