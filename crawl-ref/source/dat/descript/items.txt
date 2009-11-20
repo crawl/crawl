@@ -1374,7 +1374,7 @@ and basil.
 sling
 
 A piece of cloth and leather for launching stones, which do a small
-amount of damage on impact.
+amount of damage on impact. Unlike with other launchers, wearing a shield does not slow down its rate of fire.
 %%%%
 sling bullet
 
