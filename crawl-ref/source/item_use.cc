@@ -2160,7 +2160,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         ammo_name = "silvery " + ammo_name;
     }
 
-    if (charged)
+    if (charged && ammo.special != SPMSL_ELECTRIC)
     {
         beam.name = "charged " + beam.name;
         ammo_name = "charged " + ammo_name;
