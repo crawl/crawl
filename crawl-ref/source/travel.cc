@@ -225,10 +225,9 @@ inline bool is_player_altar(const coord_def &c)
     return feat_is_player_altar(grd(c));
 }
 
-bool is_unknown_stair(const coord_def &p, dungeon_feature_type remembered_feat)
+bool is_unknown_stair(const coord_def &p)
 {
-    dungeon_feature_type feat = (remembered_feat == NUM_FEATURES)
-                                    ? env.grid(p) : remembered_feat;
+    dungeon_feature_type feat = env.map_knowledge(p).feat();
     return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p));
 }
 

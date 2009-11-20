@@ -1096,9 +1096,10 @@ static char _get_travel_colour( const coord_def& p )
                                         Options.tc_disconnected;
 }
 
-bool emphasise(const coord_def& where, dungeon_feature_type feat)
+bool emphasise(const coord_def& where)
 {
-    return (is_unknown_stair(where, feat)
+    dungeon_feature_type feat = env.map_knowledge(where).feat();
+    return (is_unknown_stair(where)
             && (you.your_level || feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
 }
@@ -1143,7 +1144,7 @@ screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
     const feature_def &fdef = get_feature_def(feat_value);
     feature_colour = terrain_seen ? fdef.seen_colour : fdef.map_colour;
 
-    if (terrain_seen && fdef.seen_em_colour && emphasise(p, feat_value))
+    if (terrain_seen && fdef.seen_em_colour && emphasise(p))
         feature_colour = fdef.seen_em_colour;
 
     if (feature_colour != DARKGREY)

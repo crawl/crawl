@@ -157,7 +157,7 @@ static unsigned short _feat_colour(const coord_def &where,
             colour = _tree_colour(where);
 
         if (fdef.em_colour && fdef.em_colour != fdef.colour &&
-            emphasise(where, feat))
+            emphasise(where))
         {
             colour = fdef.em_colour;
         }
