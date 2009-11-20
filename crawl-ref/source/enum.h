@@ -747,7 +747,9 @@ enum conduct_type
     DID_KILL_LIVING,
     DID_KILL_UNDEAD,
     DID_KILL_DEMON,
+    DID_KILL_NATURAL_UNHOLY,              // TSO
     DID_KILL_NATURAL_EVIL,                // TSO
+    DID_KILL_UNCLEAN,                     // Zin
     DID_KILL_CHAOTIC,                     // Zin
     DID_KILL_WIZARD,                      // Trog
     DID_KILL_PRIEST,                      // Beogh
@@ -759,6 +761,7 @@ enum conduct_type
     DID_UNDEAD_KILLED_BY_SERVANT,
     DID_DEMON_KILLED_BY_UNDEAD_SLAVE,
     DID_DEMON_KILLED_BY_SERVANT,
+    DID_NATURAL_UNHOLY_KILLED_BY_SERVANT, // TSO
     DID_NATURAL_EVIL_KILLED_BY_SERVANT,   // TSO
     DID_HOLY_KILLED_BY_UNDEAD_SLAVE,
     DID_HOLY_KILLED_BY_SERVANT,

@@ -1638,7 +1638,13 @@ int monster_die(monsters *monster, killer_type killer,
                     did_god_conduct(DID_KILL_LIVING,
                                     monster->hit_dice, true, monster);
 
-                    if (monster->is_unholy() || monster->is_evil())
+                    if (monster->is_unholy())
+                    {
+                        did_god_conduct(DID_KILL_NATURAL_UNHOLY,
+                                        monster->hit_dice, true, monster);
+                    }
+
+                    if (monster->is_evil())
                     {
                         did_god_conduct(DID_KILL_NATURAL_EVIL,
                                         monster->hit_dice, true, monster);
@@ -1656,7 +1662,13 @@ int monster_die(monsters *monster, killer_type killer,
                 }
 
                 // Zin hates unclean and chaotic beings.
-                if (monster->is_unclean() || monster->is_chaotic())
+                if (monster->is_unclean())
+                {
+                    did_god_conduct(DID_KILL_UNCLEAN,
+                                    monster->hit_dice, true, monster);
+                }
+
+                if (monster->is_chaotic())
                 {
                     did_god_conduct(DID_KILL_CHAOTIC,
                                     monster->hit_dice, true, monster);
@@ -1883,7 +1895,14 @@ int monster_die(monsters *monster, killer_type killer,
                         notice |= did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
                                                   monster->hit_dice);
 
-                        if (monster->is_unholy() || monster->is_evil())
+                        if (monster->is_unholy())
+                        {
+                            notice |= did_god_conduct(
+                                          DID_NATURAL_UNHOLY_KILLED_BY_SERVANT,
+                                          monster->hit_dice);
+                        }
+
+                        if (monster->is_evil())
                         {
                             notice |= did_god_conduct(
                                           DID_NATURAL_EVIL_KILLED_BY_SERVANT,

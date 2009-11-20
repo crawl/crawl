@@ -2988,6 +2988,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_KILL_NATURAL_UNHOLY:
         case DID_KILL_NATURAL_EVIL:
             if (you.religion == GOD_SHINING_ONE
                 && !god_hates_attacking_friend(you.religion, victim))
@@ -2999,6 +3000,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_KILL_UNCLEAN:
         case DID_KILL_CHAOTIC:
             if (you.religion == GOD_ZIN
                 && !god_hates_attacking_friend(you.religion, victim))
@@ -3261,6 +3263,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_NATURAL_UNHOLY_KILLED_BY_SERVANT:
         case DID_NATURAL_EVIL_KILLED_BY_SERVANT:
             if (you.religion == GOD_SHINING_ONE)
             {
@@ -3474,11 +3477,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Necromancy", "Holy", "Unholy", "Attack Holy", "Attack Neutral",
                 "Attack Friend", "Friend Died", "Stab", "Unchivalric Attack",
                 "Poison", "Field Sacrifice", "Kill Living", "Kill Undead",
-                "Kill Demon", "Kill Natural Evil", "Kill Chaotic",
-                "Kill Wizard", "Kill Priest", "Kill Holy", "Kill Fast",
-                "Undead Slave Kill Living", "Servant Kill Living",
-                "Undead Slave Kill Undead", "Servant Kill Undead",
-                "Undead Slave Kill Demon", "Servant Kill Demon",
+                "Kill Demon", "Kill Natural Unholy", "Kill Natural Evil",
+                "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
+                "Kill Holy", "Kill Fast", "Undead Slave Kill Living",
+                "Servant Kill Living", "Undead Slave Kill Undead",
+                "Servant Kill Undead", "Undead Slave Kill Demon",
+                "Servant Kill Demon", "Servant Kill Natural Unholy",
                 "Servant Kill Natural Evil", "Undead Slave Kill Holy",
                 "Servant Kill Holy", "Spell Memorise", "Spell Cast",
                 "Spell Practise", "Spell Nonutility", "Cards", "Stimulants",
