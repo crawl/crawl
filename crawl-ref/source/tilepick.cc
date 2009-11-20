@@ -1324,6 +1324,9 @@ static int _tileidx_weapon_base(const item_def &item)
 
     case WPN_BLESSED_TRIPLE_SWORD:
         return TILE_WPN_TRIPLE_SWORD;
+
+    case WPN_HOLY_SCOURGE:
+        return TILE_WPN_WHIP;
     }
 
     return TILE_ERROR;
