@@ -662,7 +662,7 @@ A piece of metal headgear.
 %%%%
 holy scourge
 
-A blessed weapon, woven by the saints in the Heaven, hated by the unholy.
+A blessed weapon, woven by the saints in Heaven and hated by the unholy.
 %%%%
 honeycomb
 
