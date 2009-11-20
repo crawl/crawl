@@ -657,12 +657,13 @@ A piece of metal headgear.
 %%%%
 holy eudemon blade
 
-A glorious blade from the forges of heaven.  It is the favored weapon
-of the Shining One's servants.
+A glorious blade from the forges of Heaven.  It is a favored weapon of
+the Shining One's servants.
 %%%%
 holy scourge
 
 A blessed weapon, woven by the saints in Heaven and hated by the unholy.
+It is a favored weapon of the Shining One's servants.
 %%%%
 honeycomb
 
