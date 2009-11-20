@@ -37,6 +37,11 @@ unsigned map_cell::glyph() const
         return (mons_char(object.mons));
 }
 
+dungeon_feature_type map_cell::feat() const
+{
+    return (object.feat);
+}
+
 bool map_cell::known() const
 {
     return (object && (flags & MAP_GRID_KNOWN));
