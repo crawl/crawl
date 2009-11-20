@@ -22,6 +22,7 @@
 #include "options.h"
 #include "player.h"
 #include "random.h"
+#include "religion.h"
 #include "stuff.h"
 #include "view.h"
 
@@ -672,11 +673,39 @@ std::string _crawl_make_name(lua_State *ls)
 
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())
 
+static int _crawl_god_speaks(lua_State *ls)
+{
+    if (!crawl_state.io_inited)
+        return (0);
+
+    const char *god_name = luaL_checkstring(ls, 1);
+    if (!god_name)
+    {
+        std::string err = "god_speaks requires a god!";
+        return (luaL_argerror(ls, 1, err.c_str()));
+    }
+
+    god_type god = str_to_god(god_name);
+    if (god == GOD_NO_GOD)
+    {
+        std::string err = make_stringf("'%s' matches no god.", god_name);
+        return (luaL_argerror(ls, 1, err.c_str()));
+    }
+
+    const char *message = luaL_checkstring(ls, 2);
+    if (!message)
+        return (0);
+
+    god_speaks(god, message);
+    return (0);
+}
+
 static const struct luaL_reg crawl_dlib[] =
 {
 { "args", _crawl_args },
 { "mark_milestone", _crawl_milestone },
 { "redraw_view", _crawl_redraw_view },
+{ "god_speaks", _crawl_god_speaks },
 #ifdef UNIX
 { "millis", _crawl_millis },
 #endif
