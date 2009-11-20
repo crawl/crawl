@@ -49,6 +49,7 @@ public:
   // Coordinates of last travel target; note that this is never used by
   // travel itself, only by the level-map to remember the last travel target.
   short travel_x, travel_y;
+  level_id travel_z;
 
   runrest running;            // Nonzero if running/traveling.
 

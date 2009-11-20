@@ -5398,6 +5398,7 @@ void player::init()
     running.clear();
     travel_x = 0;
     travel_y = 0;
+    travel_z = level_id();
 
     religion         = GOD_NO_GOD;
     piety            = 0;

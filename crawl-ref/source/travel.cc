@@ -472,9 +472,6 @@ void travel_init_new_level()
     you.running.clear();
     you.running = runmode;
 
-    // Zero out last travel coords
-    you.travel_x = you.travel_y  = 0;
-
     traps_inited = false;
     curr_excludes.clear();
     travel_cache.set_level_excludes();
@@ -2301,6 +2298,11 @@ void start_translevel_travel(const travel_target &pos)
         return;
     }
 
+    // Remember where we're going so we can easily go back if interrupted.
+    you.travel_x = pos.p.pos.x;
+    you.travel_y = pos.p.pos.y;
+    you.travel_z = pos.p.id;
+
     if (!can_travel_interlevel())
     {
         start_travel(pos.p.pos);
@@ -2727,10 +2729,6 @@ void start_travel(const coord_def& p)
     if (p == you.pos())
         return;
 
-    // Remember where we're going so we can easily go back if interrupted.
-    you.travel_x = p.x;
-    you.travel_y = p.y;
-
     if (!i_feel_safe(true, true))
         return;
 
@@ -2739,6 +2737,10 @@ void start_travel(const coord_def& p)
         return;
     if (!is_travelsafe_square(p, true))
         return;
+
+    you.travel_x = p.x;
+    you.travel_y = p.y;
+    you.travel_z = level_id::current();
 
     you.running.pos = p;
     level_target  = level_pos(level_id::current(), p);
