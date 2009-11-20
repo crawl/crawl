@@ -177,23 +177,12 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {
         const coord_def p = *ri;
-        // Don't expose new dug out areas:
-        // Note: assumptions are being made here about how
-        // terrain can change (eg it used to be solid, and
-        // thus monster/item free).
-
-        // This reasoning doesn't make sense when it comes to *clearing*
-        // the map! (jpeg)
-
-        if (get_map_knowledge_char(p) == 0)
+        if (!is_terrain_known(p))
             continue;
-
         if (is_map_knowledge_item(p))
             continue;
-
         if (!clear_detected_items && is_map_knowledge_detected_item(p))
             continue;
-
         if (!clear_detected_monsters && is_map_knowledge_detected_mons(p))
             continue;
 
@@ -202,12 +191,12 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             continue;
 #endif
 
-        set_map_knowledge_obj(p, show_type(is_terrain_seen(p) || is_terrain_mapped(p)
-                                    ? grd(p) : DNGN_UNSEEN));
+        set_map_knowledge_obj(p, show_type(env.map_knowledge(p).feat()));
         set_map_knowledge_detected_mons(p, false);
         set_map_knowledge_detected_item(p, false);
 
 #ifdef USE_TILE
+        // FIXME: shouldn't be referencing env.grid here.
         if (is_terrain_mapped(p))
         {
             unsigned int fg;
