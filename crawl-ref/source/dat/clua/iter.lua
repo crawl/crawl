@@ -110,19 +110,16 @@ end
 -- los_iterator
 -------------------------------------------------------------------------------
 
-function iter.los_iterator (include_center, filter, center)
-  local y_x, y_y
-  if center == nil then
-    y_x, y_y = you.pos()
-  else
+function iter.los_iterator (ic, filter, center)
+  local y_x, y_y = you.pos()
+
+  if center ~= nil then
     y_x, y_y = center:xy()
   end
+
+  local include_center = ic or false
   local top_corner = dgn.point(y_x - 8, y_y - 8)
   local bottom_corner = dgn.point(y_x + 8, y_y + 8)
-
-  if include_center ~= true then
-    include_center = false
-  end
 
   local function check_los (point)
     local _x, _y = point:xy()
@@ -137,13 +134,13 @@ function iter.los_iterator (include_center, filter, center)
       return include_center
     end
 
-    if you.see_cell(_x, _y) then
-      return true
-    else
+    if not you.see_cell(_x, _y) then
       return false
     end
 
+    return true
   end
+
   return iter.rect_iterator(top_corner, bottom_corner, check_los)
 end
 
@@ -151,19 +148,16 @@ end
 -- adjacent_iterator
 -------------------------------------------------------------------------------
 
-function iter.adjacent_iterator (include_center, filter, center)
-  local y_x, y_y
-  if center == nil then
-    y_x, y_y = you.pos()
-  else
+function iter.adjacent_iterator (ic, filter, center)
+  local y_x, y_y = you.pos()
+
+  if center ~= nil then
     y_x, y_y = center:xy()
   end
+
   local top_corner = dgn.point(y_x - 1, y_y - 1)
   local bottom_corner = dgn.point(y_x + 1, y_y + 1)
-
-  if include_center ~= true then
-    include_center = false
-  end
+  local include_center = ic or false
 
   local function check_adj (point)
     local _x, _y = point:xy()
@@ -180,6 +174,7 @@ function iter.adjacent_iterator (include_center, filter, center)
 
     return true
   end
+
   return iter.rect_iterator(top_corner, bottom_corner, check_adj)
 end
 
@@ -187,25 +182,21 @@ end
 -- circle_iterator
 -------------------------------------------------------------------------------
 
-function iter.circle_iterator (radius, include_center, filter, center)
+function iter.circle_iterator (radius, ic, filter, center)
   if radius == nil then
     error("circle_iterator needs a radius")
   end
 
-  local y_x, y_y
+  local y_x, y_y = you.pos()
 
-  if include_center ~= true then
-    include_center = false
-  end
-
-  if center == nil then
-    y_x, y_y = you.pos()
-  else
+  if center ~= nil then
     y_x, y_y = center:xy()
   end
 
+  local include_center = ic or false
   local top_corner = dgn.point(y_x - radius, y_y - radius)
   local bottom_corner = dgn.point(y_x + radius, y_y + radius)
+
   local function check_dist (point)
     local _x, _y = point:xy()
     local dist = dgn.distance(y_x, y_y, _x, _y)
@@ -226,6 +217,6 @@ function iter.circle_iterator (radius, include_center, filter, center)
 
     return true
   end
+
   return iter.rect_iterator(top_corner, bottom_corner, check_dist)
 end
-
