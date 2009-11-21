@@ -1633,6 +1633,44 @@ void define_monster(monsters &mons)
     // Reset monster enchantments.
     mons.enchantments.clear();
     mons.ench_countdown = 0;
+
+    // NOTE: For player ghosts and (very) ugly things this just ensures that
+    // the monster instance is valid and won't crash when used, though the
+    // (very) ugly thing generated should actually work.  The player ghost and
+    // (very) ugly thing code is currently only used for generating a monster
+    // for MonsterMenuEntry in _find_description() in command.cc
+    switch (mcls) {
+    case MONS_PANDEMONIUM_DEMON:
+    {
+        ghost_demon ghost;
+        ghost.init_random_demon();
+        mons.set_ghost(ghost);
+        mons.pandemon_init();
+        break;
+    }
+
+    case MONS_PLAYER_GHOST:
+    {
+        ghost_demon ghost;
+        ghost.init_player_ghost();
+        mons.set_ghost(ghost);
+        mons.ghost_init();
+        break;
+    }
+
+    case MONS_UGLY_THING:
+    case MONS_VERY_UGLY_THING:
+    {
+        ghost_demon ghost;
+        ghost.init_ugly_thing(mcls == MONS_VERY_UGLY_THING);
+        mons.set_ghost(ghost, false);
+        mons.uglything_init();
+        break;
+    }
+
+    default:
+        break;
+    }
 }
 
 static const unsigned char ugly_colour_values[] = {

@@ -1350,13 +1350,6 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->set_ghost(ghost, false);
         mon->uglything_init();
     }
-    else if (mon->type == MONS_PANDEMONIUM_DEMON)
-    {
-        ghost_demon ghost;
-        ghost.init_random_demon();
-        mon->set_ghost(ghost);
-        mon->pandemon_init();
-    }
     else if (mon->type == MONS_DANCING_WEAPON)
     {
         ghost_demon ghost;
