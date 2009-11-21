@@ -222,7 +222,7 @@ dragon cast targeted
 %%%%
 dragon cast
 
-@The_monster@ USED A NON-TARGETED DRAGON SPELL.  Please file a bug report.
+@The_monster@ roars!
 %%%%
 unseen dragon cast
 
