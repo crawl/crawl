@@ -2273,7 +2273,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SHINING_EYE, 'G', LIGHTMAGENTA, "shining eye",
-    M_NO_SKELETON | M_SPELLCASTER | M_SEE_INVIS | M_GLOWS,
+    M_SPELLCASTER | M_SEE_INVIS | M_GLOWS,
     MR_RES_ASPHYX,
     0, 14, MONS_GIANT_EYEBALL, MONS_SHINING_EYE, MH_NATURAL, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2285,7 +2285,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_EYE_OF_DEVASTATION, 'G', YELLOW, "eye of devastation",
-    M_NO_SKELETON | M_SPELLCASTER | M_SEE_INVIS | M_GLOWS,
+    M_SPELLCASTER | M_SEE_INVIS | M_GLOWS,
     MR_RES_ASPHYX,
     0, 11, MONS_GIANT_EYEBALL, MONS_EYE_OF_DEVASTATION, MH_NATURAL, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2297,7 +2297,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GOLDEN_EYE, 'G', ETC_GOLD, "golden eye",
-    M_NO_SKELETON | M_BATTY | M_GLOWS,
+    M_BATTY | M_GLOWS,
     MR_RES_ASPHYX,
     0, 17, MONS_GIANT_EYEBALL, MONS_GOLDEN_EYE, MH_NATURAL, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2389,7 +2389,7 @@ static monsterentry mondata[] = {
 // jellies ('J')
 {
     MONS_OOZE, 'J', LIGHTGREY, "ooze",
-    M_NO_SKELETON | M_SENSE_INVIS,
+    M_SENSE_INVIS,
     MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
     0, 5, MONS_JELLY, MONS_OOZE, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2425,7 +2425,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_PULSATING_LUMP, 'J', RED, "pulsating lump",
-    M_NO_SKELETON | M_SENSE_INVIS,
+    M_SENSE_INVIS,
     MR_RES_POISON | MR_RES_ASPHYX,
     0, 3, MONS_JELLY, MONS_PULSATING_LUMP, MH_NATURAL, -3,
     { {AT_HIT, AF_MUTATE, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2449,7 +2449,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BROWN_OOZE, 'J', BROWN, "brown ooze",
-    M_NO_SKELETON | M_SENSE_INVIS | M_ACID_SPLASH,
+    M_SENSE_INVIS | M_ACID_SPLASH,
     MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
     0, 11, MONS_JELLY, MONS_BROWN_OOZE, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2461,7 +2461,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_AZURE_JELLY, 'J', LIGHTBLUE, "azure jelly",
-    M_NO_SKELETON | M_SENSE_INVIS,
+    M_SENSE_INVIS,
     MR_RES_POISON | MR_RES_ASPHYX | MR_RES_COLD | MR_VUL_FIRE | MR_RES_ELEC
         | MR_RES_ACID,
     0, 11, MONS_JELLY, MONS_AZURE_JELLY, MH_NATURAL, -4,
@@ -2487,7 +2487,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ACID_BLOB, 'J', LIGHTGREEN, "acid blob",
-    M_NO_SKELETON | M_SENSE_INVIS | M_SPECIAL_ABILITY | M_ACID_SPLASH,
+    M_SENSE_INVIS | M_SPECIAL_ABILITY | M_ACID_SPLASH,
     MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
     0, 12, MONS_JELLY, MONS_ACID_BLOB, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 42}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3119,7 +3119,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ORB_GUARDIAN, 'X', MAGENTA, "Orb Guardian",
-    M_NO_SKELETON | M_FIGHTER | M_SEE_INVIS,
+    M_FIGHTER | M_SEE_INVIS,
     MR_NO_FLAGS,
     0, 20, MONS_ORB_GUARDIAN, MONS_ORB_GUARDIAN, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3471,7 +3471,7 @@ static monsterentry mondata[] = {
 {
     // Gold mimics are the only mimics that actually use their name. - bwr
     MONS_GOLD_MIMIC, '$', YELLOW, "pile of gold coins",
-    M_NO_SKELETON | M_STATIONARY,
+    M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_GOLD_MIMIC, MONS_GOLD_MIMIC, MH_NONLIVING, -3,
     { {AT_HIT, AF_POISON, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12},
@@ -3484,7 +3484,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_WEAPON_MIMIC, ')', BLACK, "mimic",
-    M_NO_SKELETON | M_STATIONARY,
+    M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_GOLD_MIMIC, MONS_GOLD_MIMIC, MH_NONLIVING, -3,
     { {AT_HIT, AF_POISON, 17}, {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17},
@@ -3497,7 +3497,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ARMOUR_MIMIC, '[', BLACK, "mimic",
-    M_NO_SKELETON | M_STATIONARY,
+    M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_GOLD_MIMIC, MONS_GOLD_MIMIC, MH_NONLIVING, -3,
     { {AT_HIT, AF_POISON, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12},
@@ -3510,7 +3510,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SCROLL_MIMIC, '?', LIGHTGREY, "mimic",
-    M_NO_SKELETON | M_STATIONARY,
+    M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_GOLD_MIMIC, MONS_GOLD_MIMIC, MH_NONLIVING, -3,
     { {AT_HIT, AF_POISON, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12},
@@ -3523,7 +3523,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_POTION_MIMIC, '!', BLACK, "mimic",
-    M_NO_SKELETON | M_STATIONARY,
+    M_STATIONARY,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_GOLD_MIMIC, MONS_GOLD_MIMIC, MH_NONLIVING, -3,
     { {AT_HIT, AF_POISON, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12},
@@ -4427,8 +4427,8 @@ static monsterentry mondata[] = {
 
 {
     MONS_ROYAL_JELLY, 'J', YELLOW, "the royal jelly",
-    M_NO_SKELETON | M_SENSE_INVIS | M_SPECIAL_ABILITY | M_ACID_SPLASH
-        | M_NO_REGEN | M_UNIQUE,
+    M_SENSE_INVIS | M_SPECIAL_ABILITY | M_ACID_SPLASH | M_NO_REGEN
+        | M_UNIQUE,
     MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
     0, 20, MONS_JELLY, MONS_ROYAL_JELLY, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },
@@ -4440,8 +4440,8 @@ static monsterentry mondata[] = {
 
 {
     MONS_DISSOLUTION, 'J', LIGHTMAGENTA, "Dissolution",
-    M_UNIQUE | M_NO_SKELETON | M_SENSE_INVIS | M_ACID_SPLASH | M_BURROWS
-        | M_PRIEST | M_SPEAKS | M_SPELLCASTER,
+    M_UNIQUE | M_SENSE_INVIS | M_ACID_SPLASH | M_BURROWS | M_PRIEST | M_SPEAKS
+        | M_SPELLCASTER,
     MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
     0, 11, MONS_JELLY, MONS_DISSOLUTION, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },
