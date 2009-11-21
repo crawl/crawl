@@ -1227,7 +1227,8 @@ bool ponderousify_armour()
             || get_armour_ego_type(arm) != SPARM_NORMAL
             || get_armour_slot(arm) != EQ_BODY_ARMOUR)
         {
-            mpr("Choose some type of armour to enchant, or Esc to abort.");
+            mpr("This armour can't be made ponderous. "
+                "Choose a different one, or Esc to abort.");
             if (Options.auto_list)
                 more();
 
