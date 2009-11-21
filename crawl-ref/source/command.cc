@@ -1725,6 +1725,7 @@ static bool _find_description(bool &again, std::string& error_inout)
             fake_mon.type = m_type;
             define_monster(fake_mon);
 
+            // FIXME: This doesn't generate proper draconian monsters.
             monster_list.push_back(fake_mon);
 
 #ifndef USE_TILE
@@ -1743,7 +1744,18 @@ static bool _find_description(bool &again, std::string& error_inout)
             str = prefix + str;
 #endif
 
-            me = new MonsterMenuEntry(str, &(monster_list.back()), letter);
+            // FIXME: Properly set up a dancing weapon monster to
+            // show in tiles.  There must be a weapon item in mitm[],
+            // which the dancing weapon has wielded.
+            if (m_type != MONS_DANCING_WEAPON)
+                me = new MonsterMenuEntry(str, &(monster_list.back()),
+                                          letter);
+            else
+            {
+                me = new MenuEntry(str, MEL_ITEM, 1, letter);
+
+                me->data = (void*) &(monster_list.back());
+            }
         }
         else
         {
