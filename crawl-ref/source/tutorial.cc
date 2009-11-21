@@ -3607,8 +3607,9 @@ void tutorial_describe_item(const item_def &item)
                 ostr << _tut_throw_stuff(item);
                 long_text = true;
             }
-            if (!item_type_known(item) &&
-                (is_artefact(item) || get_equip_desc( item ) != ISFLAG_NO_DESC))
+            if (!item_type_known(item)
+                && (is_artefact(item)
+                    || get_equip_desc(item) != ISFLAG_NO_DESC))
             {
                 ostr << "\n\nWeapons and armour that have unusual descriptions "
                      << "like this are much more likely to be of higher "

@@ -463,8 +463,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             }
             else if (random2(m->ev) > 8 || (trig_knows && random2(m->ev) > 8))
             {
-                if (in_sight &&
-                    !simple_monster_message(m,
+                if (in_sight
+                    && !simple_monster_message(m,
                                             " avoids a huge, swinging blade."))
                 {
                     mpr("A huge blade swings out!");

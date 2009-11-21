@@ -714,8 +714,8 @@ int getch_with_command_macros( void )
  */
 void flush_input_buffer( int reason )
 {
-    ASSERT(reason != FLUSH_KEY_REPLAY_CANCEL ||
-           crawl_state.is_replaying_keys() || crawl_state.cmd_repeat_start);
+    ASSERT(reason != FLUSH_KEY_REPLAY_CANCEL
+           || crawl_state.is_replaying_keys() || crawl_state.cmd_repeat_start);
 
     ASSERT(reason != FLUSH_ABORT_MACRO || is_processing_macro());
 
@@ -725,8 +725,8 @@ void flush_input_buffer( int reason )
         macro_keys_left = -1;
 
     if (crawl_state.is_replaying_keys() && reason != FLUSH_ABORT_MACRO
-        && reason != FLUSH_KEY_REPLAY_CANCEL &&
-        reason != FLUSH_REPLAY_SETUP_FAILURE)
+        && reason != FLUSH_KEY_REPLAY_CANCEL
+        && reason != FLUSH_REPLAY_SETUP_FAILURE)
     {
         return;
     }

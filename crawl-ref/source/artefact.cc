@@ -1665,8 +1665,8 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype,
             continue;
         }
 
-        if (specialness != UNRANDSPEC_EITHER &&
-            specialness != get_unrand_specialness(index))
+        if (specialness != UNRANDSPEC_EITHER
+            && specialness != get_unrand_specialness(index))
         {
             continue;
         }

@@ -286,8 +286,8 @@ public:
 
     bool valid() const
     {
-        return isvalid &&
-            (compiled_pattern || (isvalid = compile()));
+        return isvalid
+            && (compiled_pattern || (isvalid = compile()));
     }
 
     bool matches(const char *s, int length) const

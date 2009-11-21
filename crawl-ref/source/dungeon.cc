@@ -6089,9 +6089,9 @@ void spotty_level(bool seeded, int iterations, bool boxy)
 
     // Boxy levels have more clearing, so they get fewer iterations.
     if (l == 0)
-        l = 200 + random2( (boxy ? 750 : 1500) );
+        l = 200 + random2((boxy ? 750 : 1500));
 
-    for (i = 0; i < l; i++)
+    for (i = 0; i < l; ++i)
     {
         do
         {
@@ -6136,24 +6136,24 @@ void spotty_level(bool seeded, int iterations, bool boxy)
 void smear_feature(int iterations, bool boxy, dungeon_feature_type feature,
                    int x1, int y1, int x2, int y2)
 {
-    for (int i = 0; i < iterations; i++)
+    for (int i = 0; i < iterations; ++i)
     {
         int x, y;
         bool diagonals, straights;
         do
         {
-            x = random_range(x1+1, x2-1);
-            y = random_range(y1+1, y2-1);
+            x = random_range(x1 + 1, x2 - 1);
+            y = random_range(y1 + 1, y2 - 1);
 
-            diagonals = grd[x+1][y+1] == feature ||
-                        grd[x-1][y+1] == feature ||
-                        grd[x-1][y-1] == feature ||
-                        grd[x+1][y-1] == feature;
+            diagonals = grd[x + 1][y + 1] == feature
+                        || grd[x - 1][y + 1] == feature
+                        || grd[x - 1][y - 1] == feature
+                        || grd[x + 1][y - 1] == feature;
 
-            straights = grd[x+1][y] == feature ||
-                        grd[x-1][y] == feature ||
-                        grd[x][y+1] == feature ||
-                        grd[x][y-1] == feature;
+            straights = grd[x + 1][y] == feature
+                        || grd[x - 1][y] == feature
+                        || grd[x][y + 1] == feature
+                        || grd[x][y - 1] == feature;
         }
         while (grd[x][y] == feature || !straights && (boxy || !diagonals));
 

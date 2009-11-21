@@ -2362,9 +2362,9 @@ static bool _similar_equip(const item_def& pickup_item,
         return (true);
 
     // Launchers of the same type are similar.
-    if ((pickup_item.sub_type >= WPN_BLOWGUN &&
-         pickup_item.sub_type <= WPN_LONGBOW)
-        || pickup_item.sub_type == WPN_SLING)
+    if ((pickup_item.sub_type >= WPN_BLOWGUN
+         && pickup_item.sub_type <= WPN_LONGBOW)
+             || pickup_item.sub_type == WPN_SLING)
     {
         return (pickup_item.sub_type != inv_item.sub_type);
     }

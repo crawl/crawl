@@ -157,8 +157,8 @@ static unsigned short _feat_colour(const coord_def &where,
         if (colour == BLACK && feat == DNGN_TREES)
             colour = _tree_colour(where);
 
-        if (fdef.em_colour && fdef.em_colour != fdef.colour &&
-            emphasise(where))
+        if (fdef.em_colour && fdef.em_colour != fdef.colour
+            && emphasise(where))
         {
             colour = fdef.em_colour;
         }
@@ -324,9 +324,9 @@ void show_def::_update_monster(const monsters* mons)
 
             grid(e).colour = ripple_table[base_colour & 0x0f];
         }
-        else if (is_opaque_cloud(env.cgrid(pos)) &&
-                 !mons->submerged() &&
-                 !mons_is_insubstantial(mons->type))
+        else if (is_opaque_cloud(env.cgrid(pos))
+                 && !mons->submerged()
+                 && !mons_is_insubstantial(mons->type))
         {
             grid(e).cls = SH_INVIS_EXPOSED;
             grid(e).colour = get_cloud_colour(env.cgrid(pos));

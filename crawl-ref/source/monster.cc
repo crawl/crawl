@@ -1512,18 +1512,19 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
         break;
     // And another hack or two...
     case ARM_WIZARD_HAT:
-        if (this->type == MONS_GASTRONOK)
+        if (type == MONS_GASTRONOK)
             eq = EQ_BODY_ARMOUR;
         break;
     case ARM_CLOAK:
-        if (this->type == MONS_MAURICE || this->type == MONS_NIKOLA ||
-            this->type == MONS_CRAZY_YIUF)
+        if (type == MONS_MAURICE
+            || type == MONS_NIKOLA
+            || type == MONS_CRAZY_YIUF)
         {
             eq = EQ_BODY_ARMOUR;
         }
         break;
     case ARM_GLOVES:
-        if (this->type == MONS_NIKOLA)
+        if (type == MONS_NIKOLA)
             eq = EQ_SHIELD;
         break;
     default:
@@ -1580,7 +1581,7 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
             return (false);
     }
 
-    return pickup(item, mslot, near);
+    return (pickup(item, mslot, near));
 }
 
 bool monsters::pickup_weapon(item_def &item, int near, bool force)

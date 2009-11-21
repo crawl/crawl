@@ -823,8 +823,8 @@ bool feature_marker_at(const coord_def &pos, dungeon_feature_type feat)
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_marker *mark = markers[i];
-        if (mark->get_type() == MAT_FEATURE &&
-            dynamic_cast<map_feature_marker*>(mark)->feat == feat)
+        if (mark->get_type() == MAT_FEATURE
+            && dynamic_cast<map_feature_marker*>(mark)->feat == feat)
         {
             return (true);
         }

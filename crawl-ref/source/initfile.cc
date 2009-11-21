@@ -375,8 +375,9 @@ static unsigned curses_attribute(const std::string &field)
         return CHATTR_REVERSE;
     else if (field == "dim")
         return CHATTR_DIM;
-    else if (field.find("hi:") == 0 || field.find("hilite:") == 0 ||
-             field.find("highlight:") == 0)
+    else if (field.find("hi:") == 0
+             || field.find("hilite:") == 0
+             || field.find("highlight:") == 0)
     {
         int col = field.find(":");
         int colour = str_to_colour(field.substr(col + 1));
@@ -391,7 +392,7 @@ static unsigned curses_attribute(const std::string &field)
     else if (field != "none")
     {
         Options.report_error(
-            make_stringf( "Bad colour -- %s\n", field.c_str() ) );
+            make_stringf("Bad colour -- %s\n", field.c_str()));
     }
     return CHATTR_NORMAL;
 }

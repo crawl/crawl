@@ -124,9 +124,9 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
         if (one_chance_in(resist + 1))
             return (0);  // nothing happens, whew!
 
-        if (!one_chance_in(4) &&
-             mon->add_ench(mon_enchant(ENCH_HASTE, 0, KC_YOU,
-                                       (16 + random2avg(13, 2)) * 10)))
+        if (!one_chance_in(4)
+             && mon->add_ench(mon_enchant(ENCH_HASTE, 0, KC_YOU,
+                                          (16 + random2avg(13, 2)) * 10)))
         {
 
             simple_monster_message(mon, " speeds up in annoyance!");
@@ -2008,10 +2008,11 @@ bool interrupt_activity( activity_interrupt_type ai,
             // so that stop running Lua notifications happen.
             for (int j = i; j < size; ++j)
             {
-                if (is_run_delay( you.delay_queue[j].type ))
+                if (is_run_delay(you.delay_queue[j].type))
                 {
-                    was_monst = was_monst ||
-                            _monster_warning(ai, at, you.delay_queue[j].type);
+                    was_monst = (was_monst
+                                 || _monster_warning(ai, at,
+                                                     you.delay_queue[j].type));
 
                     stop_delay(ai == AI_TELEPORT);
                     if (was_monst)
@@ -2021,8 +2022,8 @@ bool interrupt_activity( activity_interrupt_type ai,
             }
 
             // Non-run queued delays can be discarded without any processing.
-            you.delay_queue.erase( you.delay_queue.begin() + i,
-                                   you.delay_queue.end() );
+            you.delay_queue.erase(you.delay_queue.begin() + i,
+                                  you.delay_queue.end());
             if (was_monst)
                 handle_interrupted_swap(false, true);
 

@@ -3583,8 +3583,8 @@ int dismiss_monsters(std::string pattern) {
     int ndismissed = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->alive() &&
-            (tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
+        if (mi->alive()
+            && (tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
         {
             if (!keep_item)
                 _vanish_orig_eq(*mi);

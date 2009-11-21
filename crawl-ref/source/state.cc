@@ -338,8 +338,8 @@ void game_state::inc_god_acting(god_type which_god, bool is_retribution)
 {
     ASSERT(which_god != GOD_NO_GOD);
 
-    if (god_act.which_god != GOD_NO_GOD &&
-        god_act.which_god != which_god)
+    if (god_act.which_god != GOD_NO_GOD
+        && god_act.which_god != which_god)
     {
         ASSERT(god_act.depth >= 1);
 

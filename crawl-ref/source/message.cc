@@ -87,8 +87,8 @@ namespace msg
 
     std::ostream& streams(msg_channel_type chan)
     {
-        ASSERT(chan >= 0 &&
-               static_cast<unsigned int>(chan) < stream_ptrs.size());
+        ASSERT(chan >= 0
+               && static_cast<unsigned int>(chan) < stream_ptrs.size());
         return *stream_ptrs[chan];
     }
 

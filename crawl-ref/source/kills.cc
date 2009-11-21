@@ -80,8 +80,8 @@ void KillMaster::load(reader& inf)
 {
     unsigned char major = unmarshallByte(inf),
                   minor = unmarshallByte(inf);
-    if (major != KILLS_MAJOR_VERSION ||
-        (minor != KILLS_MINOR_VERSION && minor > 0))
+    if (major != KILLS_MAJOR_VERSION
+        || (minor != KILLS_MINOR_VERSION && minor > 0))
     {
         return;
     }
@@ -543,16 +543,18 @@ std::string kill_def::info(const kill_monster_desc &md) const
 
     if (!mons_is_unique(md.monnum))
     {
-        // Pluralise as needed
+        // Pluralise as needed.
         name = n_names(name, kills);
 
-        // We brand shapeshifters with the (shapeshifter) qualifier. This
-        // has to be done after doing pluralise(), else we get very odd plurals
-        // :)
-        if (md.modifier == kill_monster_desc::M_SHAPESHIFTER &&
-                md.monnum != MONS_SHAPESHIFTER &&
-                md.monnum != MONS_GLOWING_SHAPESHIFTER)
+        // We brand shapeshifters with the (shapeshifter) qualifier.
+        // This has to be done after doing pluralise(), else we get very
+        // odd plurals :)
+        if (md.modifier == kill_monster_desc::M_SHAPESHIFTER
+            && md.monnum != MONS_SHAPESHIFTER
+            && md.monnum != MONS_GLOWING_SHAPESHIFTER)
+        {
             name += " (shapeshifter)";
+        }
     }
     else if (kills > 1)
     {
@@ -716,11 +718,11 @@ KILLEXP_ACCESS(base_name, string, base_name.c_str())
 KILLEXP_ACCESS(desc, string, desc.c_str())
 KILLEXP_ACCESS(monnum, number, monnum)
 KILLEXP_ACCESS(isghost, boolean,
-               monnum == -1 &&
-               ke->desc.find("The ghost of") != std::string::npos)
+               monnum == -1
+                   && ke->desc.find("The ghost of") != std::string::npos)
 KILLEXP_ACCESS(ispandemon, boolean,
-               monnum == -1 &&
-               ke->desc.find("The ghost of") == std::string::npos)
+               monnum == -1
+                   && ke->desc.find("The ghost of") == std::string::npos)
 KILLEXP_ACCESS(isunique, boolean,
                monnum != -1 && mons_is_unique(ke->monnum))
 

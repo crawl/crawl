@@ -721,8 +721,8 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
             // and the patrol point is out of sight, too. Such a case
             // will be handled below, though it might take a while until
             // a monster gets out of a deadlock. (5% chance per turn.)
-            if (!patrol.see_cell(*ri) &&
-                (!is_smart || !lm.see_cell(*ri)))
+            if (!patrol.see_cell(*ri)
+                && (!is_smart || !lm.see_cell(*ri)))
             {
                 continue;
             }
@@ -733,8 +733,8 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
             // make sure the new target brings us into reach of it.
             // This means that the target must be reachable BOTH from
             // the patrol point AND the current position.
-            if (!patrol.see_cell(*ri) ||
-                !lm.see_cell(*ri))
+            if (!patrol.see_cell(*ri)
+                || !lm.see_cell(*ri))
             {
                 continue;
             }

@@ -163,8 +163,8 @@ std::string &escape_path_spaces(std::string &s)
         result += *ch;
     }
 #elif defined(TARGET_OS_WINDOWS)
-    if (s.find(" ") != std::string::npos &&
-        s.find("\"") == std::string::npos)
+    if (s.find(" ") != std::string::npos
+        && s.find("\"") == std::string::npos)
     {
         result = "\"" + s + "\"";
     }

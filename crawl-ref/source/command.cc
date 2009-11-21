@@ -457,8 +457,8 @@ static void _adjust_ability(void)
 
         if (keyin == '?' || keyin == '*')
             selected = choose_ability_menu(talents);
-        else if (keyin == ESCAPE || keyin == ' ' ||
-                 keyin == '\r' || keyin == '\n')
+        else if (keyin == ESCAPE || keyin == ' '
+                 || keyin == '\r' || keyin == '\n')
         {
             canned_msg(MSG_OK);
             return;
@@ -825,9 +825,10 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
         }
         m.add_entry(me);
         // FIXME: There must be a better way to identify sections!
-        next_is_hotkey = auto_hotkeys &&
-            (strstr(buf, "------------------------------------------"
-                         "------------------------------") == buf);
+        next_is_hotkey =
+            (auto_hotkeys
+                && (strstr(buf, "------------------------------------------"
+                                "------------------------------") == buf));
         is_first = false;
     }
 }
@@ -1333,10 +1334,10 @@ static bool _do_description(std::string key, std::string type,
         monster_type mon_num = get_monster_by_name(key, true);
         // Don't attempt to get more information on ghost demon
         // monsters, as the ghost struct has not been initialised, which
-        // will cause a crash. Similarly for zombified monsters, since
+        // will cause a crash.  Similarly for zombified monsters, since
         // they require a base monster.
-        if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num) &&
-            !mons_class_is_zombified(mon_num))
+        if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
+            && !mons_class_is_zombified(mon_num))
         {
             monsters mon;
             mon.type = mon_num;

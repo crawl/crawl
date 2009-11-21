@@ -599,16 +599,16 @@ LUAFN(dgn_smear_map)
             while (onto[0] && !strchr(onto, lines(mc)));
 
             // Is there a "smear" feature along the diagonal from mc?
-            diagonals = lines(mc.x+1, mc.y+1) == smear ||
-                        lines(mc.x-1, mc.y+1) == smear ||
-                        lines(mc.x-1, mc.y-1) == smear ||
-                        lines(mc.x+1, mc.y-1) == smear;
+            diagonals = lines(mc.x + 1, mc.y + 1) == smear
+                        || lines(mc.x - 1, mc.y + 1) == smear
+                        || lines(mc.x - 1, mc.y - 1) == smear
+                        || lines(mc.x + 1, mc.y - 1) == smear;
 
             // Is there a "smear" feature up, down, left, or right from mc?
-            straights = lines(mc.x+1, mc.y) == smear ||
-                        lines(mc.x-1, mc.y) == smear ||
-                        lines(mc.x, mc.y+1) == smear ||
-                        lines(mc.x, mc.y-1) == smear;
+            straights = lines(mc.x + 1, mc.y) == smear
+                        || lines(mc.x - 1, mc.y) == smear
+                        || lines(mc.x, mc.y + 1) == smear
+                        || lines(mc.x, mc.y - 1) == smear;
         }
         while (!straights && (boxy || !diagonals));
 

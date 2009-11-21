@@ -852,8 +852,7 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
     default:
         if (you.equip[slot] != -1
             && you.inv[you.equip[slot]].sub_type == sub_type
-            && (calc_unid ||
-                item_type_known(you.inv[you.equip[slot]])))
+            && (calc_unid || item_type_known(you.inv[you.equip[slot]])))
         {
             ret++;
         }
@@ -6885,8 +6884,10 @@ bool player::visible_to(const actor *looker) const
         return (can_see_invisible() || !invisible());
 
     const monsters* mon = dynamic_cast<const monsters*>(looker);
-    return (!this->invisible() || this->in_water() ||
-            mon->can_see_invisible() || mons_sense_invis(mon));
+    return (!invisible()
+            || in_water()
+            || mon->can_see_invisible()
+            || mons_sense_invis(mon));
 }
 
 bool player::backlit(bool check_haloed) const

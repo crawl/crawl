@@ -54,8 +54,7 @@ static char _random_cons(int seed);
 bool is_vowel( const char chr )
 {
     const char low = tolower( chr );
-    return (low == 'a' || low == 'e' || low == 'i' ||
-            low == 'o' || low == 'u');
+    return (low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u');
 }
 
 // quant_name is useful since it prints out a different number of items
@@ -1776,16 +1775,18 @@ bool item_type_known( const item_def& item )
     if (is_artefact(item))
         return (false);
 
-    // Poisoned missiles are always identified. Also things made of obvious
-    // materials (steel, silver)
+    // Missiles that are poisoned or made of obvious materials (steel,
+    // silver) are always identified.
     if (item.base_type == OBJ_MISSILES)
     {
         int ammo_brand = get_ammo_brand(item);
-        if (ammo_brand == SPMSL_POISONED ||
-            ammo_brand == SPMSL_CURARE   ||
-            ammo_brand == SPMSL_STEEL    ||
-            ammo_brand == SPMSL_SILVER)
+        if (ammo_brand == SPMSL_POISONED
+            || ammo_brand == SPMSL_CURARE
+            || ammo_brand == SPMSL_STEEL
+            || ammo_brand == SPMSL_SILVER)
+        {
             return (true);
+        }
     }
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);

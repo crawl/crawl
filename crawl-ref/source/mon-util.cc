@@ -1375,8 +1375,13 @@ monster_type random_draconian_monster_species()
 
 // Note: For consistent behavior in player_will_anger_monster(), all
 // spellbooks a given monster can get here should produce the same
-// return values in is_holy_spell(), (is_unholy_spell() ||
-// is_evil_spell()), and (is_unclean_spell() || is_chaotic_spell()).
+// return values in the following:
+//
+//     is_holy_spell()
+//
+//     (is_unholy_spell() || is_evil_spell())
+//
+//     (is_unclean_spell() || is_chaotic_spell())
 //
 // FIXME: This is not true for one set of spellbooks; MST_WIZARD_IV
 // contains the unholy Banishment spell, but the other MST_WIZARD-type
@@ -3568,9 +3573,9 @@ mon_body_shape get_mon_shape(const int type)
         // a tail if it has a sting or tail-slap attack.
         monsterentry *mon_data = get_monster_data(type);
         bool tailed = false;
-        for (int i = 0; i < 4; i++)
-            if (mon_data->attack[i].type == AT_STING ||
-                mon_data->attack[i].type == AT_TAIL_SLAP)
+        for (int i = 0; i < 4; ++i)
+            if (mon_data->attack[i].type == AT_STING
+                || mon_data->attack[i].type == AT_TAIL_SLAP)
             {
                 tailed = true;
                 break;

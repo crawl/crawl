@@ -2075,14 +2075,23 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             // we can blink away the crowd, but only our allies
             if (monster_at(*ai)
                 && monster_at(*ai)->attitude != monster->attitude)
+            {
                 sumcount++;
+            }
+
             if (grd(*ai) != DNGN_FLOOR && grd(*ai) > DNGN_MAX_NONREACH
                 && !feat_is_trap(grd(*ai)))
+            {
                 sumcount++;
+            }
         }
-        if (abs(you.pos().x-monster->pos().x)<=1 &&
-            abs(you.pos().y-monster->pos().y)<=1)
+
+        if (abs(you.pos().x - monster->pos().x) <= 1
+            && abs(you.pos().y - monster->pos().y) <= 1)
+        {
             sumcount++;
+        }
+
         if (sumcount)
         {
             monster->blink();

@@ -177,8 +177,8 @@ static bool _advance_from_non_diamond(geom::ray *r)
 // The ray is in a legal state to be passed around externally.
 bool ray_def::_valid() const
 {
-    return (on_corner && is_corner(r.start) && bad_corner(r) ||
-            !on_corner && in_diamond_int(r.start));
+    return (on_corner && is_corner(r.start) && bad_corner(r)
+            || !on_corner && in_diamond_int(r.start));
 }
 
 geom::vector _normalize(const geom::vector &v)

@@ -907,8 +907,8 @@ void viewwindow(bool monster_updates, bool show_updates)
             draw_unseen(&buffy[bufcount], gc);
         else if (!crawl_view.in_grid_los(gc))
             draw_outside_los(&buffy[bufcount], gc);
-        else if (gc == you.pos() &&
-                 !crawl_state.arena && !crawl_state.arena_suspended)
+        else if (gc == you.pos()
+                 && !crawl_state.arena && !crawl_state.arena_suspended)
         {
             draw_player(&buffy[bufcount], gc, ep);
         }

@@ -98,8 +98,8 @@ std::string mapdef_split_key_item(const std::string &s,
     *key = trimmed_string(s.substr(0, sep));
     std::string substitute    = trimmed_string(s.substr(sep + 1));
 
-    if (key->empty() ||
-        (key_max_len != -1 && (int) key->length() > key_max_len))
+    if (key->empty()
+        || (key_max_len != -1 && (int) key->length() > key_max_len))
     {
         return make_stringf(
             "selector '%s' must be <= %d characters in '%s'",

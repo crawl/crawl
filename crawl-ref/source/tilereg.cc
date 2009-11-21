@@ -1220,8 +1220,8 @@ static const bool _is_appropriate_spell(spell_type spell,
         if (flags & SPFLAG_NOT_SELF)
             return (false);
 
-        return ((flags & (SPFLAG_HELPFUL | SPFLAG_ESCAPE | SPFLAG_RECOVERY)) ||
-                !targeted);
+        return ((flags & (SPFLAG_HELPFUL | SPFLAG_ESCAPE | SPFLAG_RECOVERY))
+                || !targeted);
     }
 
     if (!targeted)

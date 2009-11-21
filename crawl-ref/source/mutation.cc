@@ -2637,8 +2637,8 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     std::string result;
     bool innate = false;
 
-    if (mut == MUT_CLAWS &&
-        (you.species == SP_TROLL || you.species == SP_GHOUL))
+    if (mut == MUT_CLAWS
+        && (you.species == SP_TROLL || you.species == SP_GHOUL))
     {
         innate = true;
         if (you.species == SP_TROLL)

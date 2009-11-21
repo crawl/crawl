@@ -277,8 +277,8 @@ std::vector<std::string> database_find_bodies(DBM *database,
         datum dbBody = dbm_fetch(database, dbKey);
         std::string body((const char *)dbBody.dptr, dbBody.dsize);
 
-        if (tpat.matches(body) &&
-            key.find("__") == std::string::npos
+        if (tpat.matches(body)
+            && key.find("__") == std::string::npos
             && (filter == NULL || !(*filter)(key, body)))
         {
             matches.push_back(key);

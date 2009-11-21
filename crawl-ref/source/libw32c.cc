@@ -745,10 +745,12 @@ int vk_translate( WORD VirtCode, CHAR c, DWORD cKeys)
     bool altDown  = !!(cKeys & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED));
 
     // step 1 - we don't care about shift or control
-    if (VirtCode == VK_SHIFT || VirtCode == VK_CONTROL ||
-        VirtCode == VK_MENU || VirtCode == VK_CAPITAL ||
-        VirtCode == VK_NUMLOCK)
+    if (VirtCode == VK_SHIFT || VirtCode == VK_CONTROL
+        || VirtCode == VK_MENU || VirtCode == VK_CAPITAL
+        || VirtCode == VK_NUMLOCK)
+    {
         return 0;
+    }
 
     // step 2 - translate the <Esc> key to 0x1b
     if (VirtCode == VK_ESCAPE)

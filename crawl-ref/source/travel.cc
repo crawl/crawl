@@ -2678,14 +2678,16 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
             {
                 if ((_Src_Dest_Level_Delta <
                      level_distance(dest_stair->destination.id,
-                                    level_target.p.id) ||
-                     _Src_Dest_Level_Delta <
-                     level_distance(dest_stair->destination.id,
-                                    _Src_Level))
+                                    level_target.p.id)
+                        || _Src_Dest_Level_Delta <
+                           level_distance(dest_stair->destination.id,
+                                          _Src_Level))
                     && !_Route_Warning.warn_continue_travel(
                         level_target,
                         dest_stair->destination.id))
+                {
                     return (false);
+                }
             }
         }
 
