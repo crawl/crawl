@@ -1747,11 +1747,6 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 
     used = 0;
 
-    if (!beam.is_tracer && you.can_see(victim))
-    {
-        mprf("The %s passes through %s!", beam.name.c_str(),
-             victim->name(DESC_NOCAP_THE).c_str());
-    }
     return (true);
 }
 
@@ -2123,8 +2118,10 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.damage_funcs.push_back(_silver_damages_victim);
     if (poisoned)
         beam.hit_funcs.push_back(_poison_hit_victim);
-    if (penetrating)
+    if (penetrating) {
         beam.range_funcs.push_back(_item_penetrates_victim);
+        beam.hit_verb = "passes through";
+    }
     if (reaping)
         beam.hit_funcs.push_back(_reaping_hit_victim);
     if (disperses)
