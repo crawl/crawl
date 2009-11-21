@@ -109,6 +109,7 @@ public:
 };
 
 void save_ghost( bool force = false );
+bool load_ghost( bool creating_level );
 
 std::string make_filename(std::string prefix, int level, branch_type branch,
                           level_area_type lt, bool isGhost );

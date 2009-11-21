@@ -2417,7 +2417,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "\n"
                        "<yellow>Other player related effects</yellow>\n"
                        "<w>c</w>      : card effect\n"
-                       "<w>Ctrl-G</w> : save ghost (bones file)\n"
+                       "<w>Ctrl-G</w> : save/load ghost (bones file)\n"
                        "<w>h</w>/<w>H</w>    : heal yourself (super-Heal)\n"
                        "<w>Ctrl-H</w> : set hunger state\n"
                        "<w>X</w>      : make Xom do something now\n"

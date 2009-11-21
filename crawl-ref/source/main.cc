@@ -487,7 +487,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case CONTROL('D'): wizard_edit_durations(); break;
     case CONTROL('F'): debug_fight_statistics(false, true); break;
-    case CONTROL('G'): save_ghost(true); break;
+    case CONTROL('G'): debug_ghosts(); break;
     case CONTROL('H'): wizard_set_hunger_state(); break;
     case CONTROL('I'): debug_item_statistics(); break;
     case CONTROL('L'): wizard_set_xl(); break;

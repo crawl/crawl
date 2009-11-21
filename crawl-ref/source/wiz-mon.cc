@@ -12,13 +12,14 @@
 #include "colour.h"
 #include "dbg-util.h"
 #include "delay.h"
-#include "map_knowledge.h"
+#include "files.h"
 #include "ghost.h"
 #include "goditem.h"
 #include "invent.h"
 #include "items.h"
 #include "jobs.h"
 #include "macro.h"
+#include "map_knowledge.h"
 #include "message.h"
 #include "mon-place.h"
 #include "mon-pathfind.h"
@@ -1298,4 +1299,18 @@ void debug_miscast( int target_index )
 
     delete miscast;
 }
+
+void debug_ghosts()
+{
+    mpr("(C)reate or (L)oad bones file?", MSGCH_PROMPT);
+    const char c = tolower(getch());
+
+    if (c == 'c')
+        save_ghost(true);
+    else if (c == 'l')
+        load_ghost(false);
+    else
+        canned_msg(MSG_OK);
+}
+
 #endif

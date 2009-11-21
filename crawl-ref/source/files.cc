@@ -111,8 +111,6 @@ static void _restore_ghost_version( FILE *ghostFile, char major, char minor );
 static void _restore_tagged_file( FILE *restoreFile, int fileType,
                                   char minorVersion );
 
-static void _load_ghost();
-
 const short GHOST_SIGNATURE = short( 0xDC55 );
 
 static void _redraw_all(void)
@@ -1290,7 +1288,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         if ((you.your_level > 1 || you.level_type != LEVEL_DUNGEON)
             && one_chance_in(3))
         {
-            _load_ghost();
+            load_ghost(true);
         }
         env.turns_on_level = 0;
         // sanctuary
@@ -1739,8 +1737,36 @@ static std::string _make_ghost_filename()
     }
 }
 
-void _load_ghost(void)
+#define BONES_DIAGNOSTICS (WIZARD | DEBUG_BONES | DEBUG_DIAGNOSTICS)
+
+bool load_ghost(bool creating_level)
 {
+    const bool wiz_cmd = crawl_state.prev_cmd == CMD_WIZARD;
+
+    ASSERT(you.transit_stair == DNGN_UNSEEN || creating_level);
+    ASSERT(!you.entering_level || creating_level);
+    ASSERT(!creating_level
+           || (you.entering_level && you.transit_stair != DNGN_UNSEEN));
+    // Only way to load a ghost without creating a level is via a wizard
+    // command.
+    ASSERT(creating_level || wiz_cmd);
+
+#if !DEBUG && !WIZARD
+    UNUSED(creating_level);
+#endif
+
+#if BONES_DIAGNOSTICS
+
+    bool do_diagnostics = false;
+#if WIZARD
+    do_diagnostics = !creating_level;
+#endif
+#if DEBUG_BONES | DEBUG_DIAGNOSTICS
+    do_diagnostics = true;
+#endif
+
+#endif // BONES_DIAGNOSTICS
+
     char majorVersion;
     char minorVersion;
 
@@ -1748,24 +1774,43 @@ void _load_ghost(void)
     FILE *gfile = fopen(cha_fil.c_str(), "rb");
 
     if (gfile == NULL)
-        return;                 // no such ghost.
+    {
+        if (wiz_cmd)
+            mpr("No ghost files for this level.", MSGCH_PROMPT);
+        return (false);                 // no such ghost.
+    }
 
     if (!_determine_ghost_version(gfile, majorVersion, minorVersion))
     {
         fclose(gfile);
-#if DEBUG_BONES | DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "Ghost file \"%s\" seems to be invalid.", cha_fil.c_str());
-        more();
+#if BONES_DIAGNOSTICS
+        if (do_diagnostics)
+        {
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Ghost file \"%s\" seems to be invalid.", cha_fil.c_str());
+            more();
+        }
 #endif
-        return;
+        return (false);
     }
 
     if (majorVersion != TAG_MAJOR_VERSION || minorVersion > TAG_MINOR_VERSION)
     {
+#if BONES_DIAGNOSTICS
+        if (do_diagnostics)
+        {
+            if (majorVersion != TAG_MAJOR_VERSION)
+                mprf(MSGCH_DIAGNOSTICS,
+                     "Ghost file major version mismatch");
+            else
+                mprf(MSGCH_DIAGNOSTICS,
+                     "Ghost file minor version is too high.");
+            more();
+        }
+#endif
         fclose(gfile);
         unlink(cha_fil.c_str());
-        return;
+        return (false);
     }
 
     ghosts.clear();
@@ -1775,12 +1820,15 @@ void _load_ghost(void)
     if (!feof(gfile))
     {
         fclose(gfile);
-#if DEBUG_BONES | DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Incomplete read of \"%s\".",
-                  cha_fil.c_str() );
-        more();
+#if BONES_DIAGNOSTICS
+        if (do_diagnostics)
+        {
+            mprf(MSGCH_DIAGNOSTICS, "Incomplete read of \"%s\".",
+                 cha_fil.c_str() );
+            more();
+        }
 #endif
-        return;
+        return (false);
     }
 
     fclose(gfile);
@@ -1797,27 +1845,67 @@ void _load_ghost(void)
              "report.",
              cha_fil.c_str());
 
-        return;
+        return (false);
     }
 
-#if DEBUG_BONES | DEBUG_DIAGNOSTICS
-    mpr("Loaded ghost.", MSGCH_DIAGNOSTICS);
+#if BONES_DIAGNOSTICS
+    if (do_diagnostics)
+    {
+        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %lu ghost(s)",
+             ghosts.size());
+    }
 #endif
 
     // Remove bones file - ghosts are hardly permanent.
     unlink(cha_fil.c_str());
 
+#if BONES_DIAGNOSTICS
+    unsigned long unplaced_ghosts = ghosts.size();
+    bool          ghost_errors    = false;
+#endif
+
     // Translate ghost to monster and place.
     for (int imn = 0; imn < MAX_MONSTERS - 10 && !ghosts.empty(); ++imn)
     {
-        if (menv[imn].type != -1)
+        if (menv[imn].alive())
             continue;
 
         menv[imn].set_ghost(ghosts[0]);
         menv[imn].ghost_init();
 
         ghosts.erase(ghosts.begin());
+#if BONES_DIAGNOSTICS
+        if (do_diagnostics)
+        {
+            unplaced_ghosts--;
+            if (!menv[imn].alive())
+            {
+                mpr("Placed ghost is not alive.", MSGCH_DIAGNOSTICS);
+                ghost_errors = true;
+            }
+            else if (menv[imn].type != MONS_PLAYER_GHOST)
+            {
+                mprf(MSGCH_DIAGNOSTICS,
+                     "Placed ghost is not MONS_PLAYER_GHOST, but %s",
+                     menv[imn].name(DESC_PLAIN, true).c_str());
+                ghost_errors = true;
+            }
+        }
+#endif
     }
+
+#if BONES_DIAGNOSTICS
+    if (do_diagnostics && unplaced_ghosts > 0)
+    {
+        mprf(MSGCH_DIAGNOSTICS, "Unable to place %lu ghost(s)",
+             ghosts.size());
+        ghost_errors = true;
+    }
+    if (ghost_errors)
+        more();
+#endif
+
+    return (true);
 }
 
 void restore_game(void)
@@ -2128,6 +2216,18 @@ static void _restore_ghost_version( FILE *ghostFile,
 
 void save_ghost( bool force )
 {
+#if BONES_DIAGNOSTICS
+
+    bool do_diagnostics = false;
+#if WIZARD
+    do_diagnostics = you.wizard;
+#endif
+#if DEBUG_BONES | DEBUG_DIAGNOSTICS
+    do_diagnostics = true;
+#endif
+
+#endif // BONES_DIAGNOSTICS
+
     // No ghosts on levels 1, 2, or the ET.
     if (!force && (you.your_level < 2
                    || you.where_are_you == BRANCH_ECUMENICAL_TEMPLE))
@@ -2141,6 +2241,11 @@ void save_ghost( bool force )
     // Don't overwrite existing bones!
     if (gfile != NULL)
     {
+#if BONES_DIAGNOSTICS
+        if (do_diagnostics)
+            mpr("Ghost file for this level already exists.",
+                MSGCH_DIAGNOSTICS);
+#endif
         fclose(gfile);
         return;
     }
@@ -2148,7 +2253,14 @@ void save_ghost( bool force )
     ghosts = ghost_demon::find_ghosts();
 
     if (ghosts.empty())
-        return;
+    {
+#if BONES_DIAGNOSTICS
+        if (do_diagnostics)
+            mpr("Could not find any ghosts for this level.",
+                MSGCH_DIAGNOSTICS);
+#endif
+         return;
+    }
 
     gfile = lk_open("wb", cha_fil);
 
@@ -2163,8 +2275,9 @@ void save_ghost( bool force )
 
     lk_close(gfile, "wb", cha_fil);
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Saved ghost (%s).", cha_fil.c_str() );
+#if BONES_DIAGNOSTICS
+    if (do_diagnostics)
+        mprf(MSGCH_DIAGNOSTICS, "Saved ghost (%s).", cha_fil.c_str() );
 #endif
 
     DO_CHMOD_PRIVATE(cha_fil.c_str());

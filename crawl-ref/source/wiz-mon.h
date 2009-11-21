@@ -15,6 +15,7 @@ void wizard_dismiss_all_monsters(bool force_all = false);
 void debug_list_monsters();
 void debug_stethoscope(int mon);
 void debug_miscast(int target);
+void debug_ghosts();
 
 class monsters;
 struct coord_def;
