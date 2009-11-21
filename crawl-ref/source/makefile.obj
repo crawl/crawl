@@ -47,7 +47,6 @@ ghost.o \
 godabil.o \
 goditem.o \
 godwrath.o \
-halo.o \
 hiscores.o \
 initfile.o \
 invent.o \

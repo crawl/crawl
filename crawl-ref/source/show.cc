@@ -4,11 +4,11 @@
 
 #include "show.h"
 
+#include "areas.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
-#include "halo.h"
 #include "itemprop.h"
 #include "mon-util.h"
 #include "monster.h"

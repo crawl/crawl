@@ -7,5 +7,8 @@ void decrease_sanctuary_radius();
 
 bool silenced(const coord_def& p);
 
+// Actors within whose halo the given point is.
+std::list<actor*> haloers(const coord_def &c);
+
 #endif
 
