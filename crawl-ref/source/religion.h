@@ -79,7 +79,6 @@ void excommunication(god_type new_god = GOD_NO_GOD);
 void gain_piety(int pgn);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
-void offer_and_butcher_corpse(int corpse);
 std::string god_prayer_reaction();
 void pray();
 void end_prayer();

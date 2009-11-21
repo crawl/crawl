@@ -5229,21 +5229,6 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     return (HPT_NONE);
 }
 
-void offer_and_butcher_corpse(int corpse)
-{
-    // We always give the "good" (piety-gain) message when doing
-    // dedicated butchery.  Uh, call it a feature.
-    _print_sacrifice_message(you.religion, mitm[corpse], PIETY_SOME);
-
-    did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
-
-    // ritual sacrifice can also bloodify the ground
-    const monster_type mons_class = static_cast<monster_type>(mitm[corpse].plus);
-    const int max_chunks = mons_weight(mons_class) / 150;
-    bleed_onto_floor(you.pos(), mons_class, max_chunks, true);
-    destroy_item(corpse);
-}
-
 // Returns true if the player can use the good gods' passive piety gain.
 static bool _need_free_piety()
 {
