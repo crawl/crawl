@@ -1727,6 +1727,22 @@ static bool _find_description(bool &again, std::string& error_inout)
 
             monster_list.push_back(fake_mon);
 
+#ifndef USE_TILE
+            int colour = mons_class_colour(m_type);
+            if (colour == BLACK)
+                colour = LIGHTGREY;
+
+            std::string prefix = "(<";
+            prefix += colour_to_str(colour);
+            prefix += ">";
+            prefix += stringize_glyph(mons_char(fake_mon.type));
+            prefix += "</";
+            prefix += colour_to_str(colour);
+            prefix += ">) ";
+
+            str = prefix + str;
+#endif
+
             me = new MonsterMenuEntry(str, &(monster_list.back()), letter);
         }
         else
