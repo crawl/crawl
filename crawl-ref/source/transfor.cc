@@ -757,6 +757,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     you.symbol = symbol;
     you.colour = colour;
 
+    burden_change();
+
     if (str)
     {
         modify_stat(STAT_STRENGTH, str, true,
@@ -854,6 +856,8 @@ void untransform(bool skip_wielding)
 
     you.attribute[ATTR_TRANSFORMATION] = TRAN_NONE;
     you.duration[DUR_TRANSFORMATION]   = 0;
+
+    burden_change();
 
     int hp_downscale = 10;
 
