@@ -415,6 +415,7 @@ void clear_message_window()
 {
     (void)wattrset( Message_Window, curs_fg_attr(LIGHTGREY) );
     werase( Message_Window );
+    refresh();
     wrefresh( Message_Window );
 }
 
@@ -447,6 +448,7 @@ void message_out(int which_line, int color, const char *s, int firstcol,
         move(y + crawl_view.msgp.y - 1, crawl_view.msgp.x - 1 + x);
     }
 
+    refresh();
     wrefresh(Message_Window);
 }
 
@@ -670,7 +672,6 @@ int cprintf(const char *format,...)
     vsprintf(buffer, format, argp);
     va_end(argp);
     i = waddstr_with_altcharset(stdscr, buffer);
-    refresh();
     return (i);
 }
 
@@ -742,7 +743,6 @@ char getche()
 
     chr = getch();
     addch(chr);
-    refresh();
     return (chr);
 }
 
@@ -750,7 +750,7 @@ char getche()
 int window(int x1, int y1, int x2, int y2)
 {
     x1 = y1 = x2 = y2 = 0;      /* Do something to them.. makes gcc happy :) */
-    return (refresh());
+    return OK;
 }
 
 void put_colour_ch(int colour, unsigned ch)
@@ -806,7 +806,6 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
 // C++ string class.  -- bwr
 void update_screen(void)
 {
-    refresh();
 }
 
 void clear_to_end_of_line(void)
@@ -851,9 +850,7 @@ int clrscr()
     textcolor( LIGHTGREY );
     textbackground( BLACK );
     retval = clear();
-#ifndef DGAMELAUNCH
-    refresh();
-#else
+#ifdef DGAMELAUNCH
     printf("%s", DGL_CLEAR_SCREEN);
     fflush(stdout);
 #endif
@@ -1127,6 +1124,7 @@ int wherey()
 
 void delay( unsigned long time )
 {
+    refresh();
     usleep( time * 1000 );
 }
 
