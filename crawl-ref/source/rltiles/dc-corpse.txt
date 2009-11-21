@@ -193,6 +193,8 @@ shadow_dragon CORPSE_SHADOW_DRAGON
 giant_eyeball CORPSE_GIANT_EYEBALL
 eye_of_draining CORPSE_EYE_OF_DRAINING
 great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES
+shining_eye CORPSE_SHINING_EYE
+eye_of_devastation CORPSE_EYE_OF_DEVASTATION
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN
 
