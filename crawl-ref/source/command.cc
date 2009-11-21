@@ -855,14 +855,14 @@ help_file help_files[] = {
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    monster_type *a = static_cast<monster_type*>( entry_a->data );
-    monster_type *b = static_cast<monster_type*>( entry_b->data );
+    monsters *a = static_cast<monsters*>( entry_a->data );
+    monsters *b = static_cast<monsters*>( entry_b->data );
 
-    if (*a == *b)
+    if (a->type == b->type)
         return (false);
 
-    std::string a_name = mons_type_name(*a, DESC_PLAIN);
-    std::string b_name = mons_type_name(*b, DESC_PLAIN);
+    std::string a_name = mons_type_name(a->type, DESC_PLAIN);
+    std::string b_name = mons_type_name(b->type, DESC_PLAIN);
     return (lowercase(a_name) < lowercase(b_name));
 }
 
@@ -870,19 +870,19 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 // levels are equal, or by name if both level and hitdice are equal.
 static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    monster_type *a = static_cast<monster_type*>( entry_a->data );
-    monster_type *b = static_cast<monster_type*>( entry_b->data );
+    monsters *a = static_cast<monsters*>( entry_a->data );
+    monsters *b = static_cast<monsters*>( entry_b->data );
 
-    if (*a == *b)
+    if (a->type == b->type)
         return (false);
 
-    int a_toughness = mons_difficulty(*a);
-    int b_toughness = mons_difficulty(*b);
+    int a_toughness = mons_difficulty(a->type);
+    int b_toughness = mons_difficulty(b->type);
 
     if (a_toughness == b_toughness)
     {
-        std::string a_name = mons_type_name(*a, DESC_PLAIN);
-        std::string b_name = mons_type_name(*b, DESC_PLAIN);
+        std::string a_name = mons_type_name(a->type, DESC_PLAIN);
+        std::string b_name = mons_type_name(b->type, DESC_PLAIN);
         return (lowercase(a_name) < lowercase(b_name));
     }
     return (a_toughness > b_toughness);
@@ -891,8 +891,9 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 class DescMenu : public Menu
 {
 public:
-    DescMenu( int _flags, bool _show_mon )
-        : Menu(_flags), sort_alpha(true), showing_monsters(_show_mon)
+    DescMenu( int _flags, bool _show_mon, bool _text_only)
+        : Menu(_flags, "", _text_only), sort_alpha(true),
+          showing_monsters(_show_mon)
         {
             set_highlighter(NULL);
 
@@ -1694,42 +1695,47 @@ static bool _find_description(bool &again, std::string& error_inout)
     if (want_sort)
         std::sort(key_list.begin(), key_list.end());
 
+    // For tiles builds use a tiles menu to display monsters.
+    const bool text_only = 
+#ifdef USE_TILE
+        !doing_mons;
+#else
+        true;
+#endif
+
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
                        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
-                       doing_mons);
+                       doing_mons, text_only);
     desc_menu.set_tag("description");
-    std::list<monster_type> monster_types;
+    std::list<monsters> monster_list;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
         const char  letter = index_to_letter(i);
         std::string str    = uppercase_first(key_list[i]);
 
-        MenuEntry *me = new MenuEntry(uppercase_first(key_list[i]),
-                                      MEL_ITEM, 1, letter);
+        MenuEntry *me = NULL;
 
         if (doing_mons)
         {
-            monster_type  mon    = get_monster_by_name(str, true);
-            unsigned char colour = mons_class_colour(mon);
+            // Create and store fake monsters, so the menu code will
+            // have something valid to refer to.
+            monsters     fake_mon;
+            monster_type m_type = get_monster_by_name(str, true);
 
-            monster_types.push_back(mon);
+            fake_mon.type = m_type;
+            define_monster(fake_mon);
 
-            if (colour == BLACK)
-                colour = LIGHTGREY;
+            monster_list.push_back(fake_mon);
 
-            std::string prefix = "(<";
-            prefix += colour_to_str(colour);
-            prefix += ">";
-            prefix += stringize_glyph(mons_char(mon));
-            prefix += "</";
-            prefix += colour_to_str(colour);
-            prefix += ">) ";
-
-            me->text = prefix + str;
-            me->data = &*monster_types.rbegin();
+            me = new MonsterMenuEntry(str, &(monster_list.back()), letter);
         }
         else
+        {
+            me = new MenuEntry(uppercase_first(key_list[i]), MEL_ITEM, 1,
+                               letter);
+
             me->data = (void*) &key_list[i];
+        }
 
         desc_menu.add_entry(me);
     }
@@ -1755,7 +1761,10 @@ static bool _find_description(bool &again, std::string& error_inout)
             std::string key;
 
             if (doing_mons)
-                key = mons_type_name(*(monster_type*) sel[0]->data, DESC_PLAIN);
+            {
+                monsters* mon = (monsters*) sel[0]->data;
+                key = mons_type_name(mon->type, DESC_PLAIN);
+            }
             else
                 key = *((std::string*) sel[0]->data);
 
