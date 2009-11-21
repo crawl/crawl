@@ -474,13 +474,13 @@
     #ifdef SAVE_PACKAGE_TAR
       // The --absolute-names switch is only there to suppress noise on stdout.
       // All the paths are removed later by --transform.
-      #define PACKAGE_SUFFIX ".tgz"
-      #define SAVE_PACKAGE_CMD "tar -zcf %s.tgz --remove-files --absolute-names --transform=s:.*/:: %s.*"
-      #define LOAD_UNPACKAGE_CMD "tar -zxf %s.tgz -C %s"
+      #define PACKAGE_SUFFIX ".tar.gz"
+      #define SAVE_PACKAGE_CMD "tar -zcf %s"PACKAGE_SUFFIX" --remove-files --absolute-names --transform=s:.*/:: %s.*"
+      #define LOAD_UNPACKAGE_CMD "tar -zxf %s"PACKAGE_SUFFIX" -C %s"
     #else
       #define PACKAGE_SUFFIX ".zip"
-      #define SAVE_PACKAGE_CMD "/usr/bin/zip -m -q -j -1 %s.zip %s.*"
-      #define LOAD_UNPACKAGE_CMD "/usr/bin/unzip -q -o %s.zip -d %s"
+      #define SAVE_PACKAGE_CMD "/usr/bin/zip -m -q -j -1 %s"PACKAGE_SUFFIX" %s.*"
+      #define LOAD_UNPACKAGE_CMD "/usr/bin/unzip -q -o %s"PACKAGE_SUFFIX" -d %s"
     #endif
 
     // This is used to unpack a specific file from the archive.

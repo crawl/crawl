@@ -182,6 +182,9 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	NO_RDYNAMIC = YesPlease
 	BUILD_PCRE = YesPlease
 endif
+ifneq ($(GAME),crawl.exe)
+	DEFINES += -DSAVE_PACKAGE_TAR
+endif
 
 #
 # Set up object file dependencies for $(GAME) target.
