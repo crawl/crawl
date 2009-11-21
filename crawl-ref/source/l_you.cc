@@ -22,6 +22,7 @@
 #include "spells3.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "areas.h"
 #include "transfor.h"
 #include "travel.h"
 

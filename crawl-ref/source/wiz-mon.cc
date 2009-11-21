@@ -33,6 +33,7 @@
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "areas.h"
 #include "view.h"
 
 #ifdef WIZARD

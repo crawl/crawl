@@ -30,6 +30,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "tags.h"
 #include "travel.h"
 #include "tutorial.h"

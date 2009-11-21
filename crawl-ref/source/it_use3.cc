@@ -43,6 +43,7 @@
 #include "spl-cast.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"

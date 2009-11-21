@@ -47,6 +47,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "stuff.h"
+#include "areas.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"

@@ -50,6 +50,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transfor.h"

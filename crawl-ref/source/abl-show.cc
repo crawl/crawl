@@ -50,6 +50,7 @@
 #include "spells4.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "transfor.h"
 #include "tutorial.h"
 

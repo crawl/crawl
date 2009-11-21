@@ -51,6 +51,7 @@
 #include "showsymb.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "stash.h"
 #ifdef USE_TILE
  #include "tiles.h"

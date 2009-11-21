@@ -16,6 +16,7 @@
 #include "random.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "view.h"
 
 // Add a monster to the list of beholders.

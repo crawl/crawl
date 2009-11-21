@@ -26,6 +26,7 @@
 #include "skills.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "tutorial.h"
 #include "view.h"
 

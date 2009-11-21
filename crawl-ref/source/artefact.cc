@@ -17,6 +17,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "areas.h"
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"

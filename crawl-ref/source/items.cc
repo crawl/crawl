@@ -56,6 +56,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "stash.h"
 #include "state.h"
 #include "terrain.h"

@@ -26,6 +26,7 @@
 #include "religion.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "view.h"
 
 // Try the exact key lookup along with the entire prefix list.

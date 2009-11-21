@@ -17,6 +17,7 @@
 #include "mon-place.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
@@ -806,12 +807,6 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
                  _list_alternative_yes(alt_yes, alt_yes2, false, true).c_str());
         }
     }
-}
-
-bool silenced(const coord_def& p)
-{
-    // FIXME: implement for monsters
-    return (you.duration[DUR_SILENCE] && distance(p, you.pos()) <= 6*6 + 1);
 }
 
 bool player_can_hear(const coord_def& p)

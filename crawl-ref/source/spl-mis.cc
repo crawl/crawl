@@ -28,6 +28,7 @@
 #include "spells1.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "terrain.h"
 #include "transfor.h"
 #include "view.h"

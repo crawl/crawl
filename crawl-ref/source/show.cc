@@ -18,6 +18,7 @@
 #include "showsymb.h"
 #include "state.h"
 #include "stuff.h"
+#include "areas.h"
 #include "terrain.h"
 #include "viewgeom.h"
 #include "viewmap.h"

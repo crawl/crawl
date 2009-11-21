@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 #include "mon-act.h"
 
+#include "areas.h"
 #include "arena.h"
 #include "attitude-change.h"
 #include "beam.h"

@@ -27,6 +27,9 @@
 #include "travel.h"
 #include "viewgeom.h"
 
+///////////////
+// Sanctuary
+
 static void _remove_sanctuary_property(const coord_def& where)
 {
     env.pgrid(where) &= ~(FPROP_SANCTUARY_1 | FPROP_SANCTUARY_2);
@@ -241,3 +244,14 @@ void create_sanctuary(const coord_def& center, int time)
     else if (scare_count > 0)
         mpr("The monsters scatter in all directions!");
 }
+
+
+/////////////
+// Silence
+
+bool silenced(const coord_def& p)
+{
+    // FIXME: implement for monsters
+    return (you.duration[DUR_SILENCE] && distance(p, you.pos()) <= 6*6 + 1);
+}
+
