@@ -1726,7 +1726,10 @@ static bool _find_description(bool &again, std::string& error_inout)
             monsters     fake_mon;
             monster_type m_type = get_monster_by_name(str, true);
 
+            // NOTE: Initializing the demon_ghost part of (very) ugly
+            // things and player ghosts is taken care of in define_monster().
             fake_mon.type = m_type;
+            fake_mon.props["fake"] = true;
             define_monster(fake_mon);
 
             // FIXME: This doesn't generate proper draconian monsters.
@@ -1748,18 +1751,11 @@ static bool _find_description(bool &again, std::string& error_inout)
             str = prefix + str;
 #endif
 
-            // FIXME: Properly set up a dancing weapon monster to
-            // show in tiles.  There must be a weapon item in mitm[],
-            // which the dancing weapon has wielded.
-            if (m_type != MONS_DANCING_WEAPON)
-                me = new MonsterMenuEntry(str, &(monster_list.back()),
-                                          letter);
-            else
-            {
-                me = new MenuEntry(str, MEL_ITEM, 1, letter);
-
-                me->data = (void*) &(monster_list.back());
-            }
+            // NOTE: MonsterMenuEntry::get_tiles() takes care of setting
+            // up a fake weapon when displaying a fake dancing weapon's
+            // tile.
+            me = new MonsterMenuEntry(str, &(monster_list.back()),
+                                      letter);
         }
         else if (doing_features)
             me = new FeatureMenuEntry(str, feat_by_desc(str), letter);

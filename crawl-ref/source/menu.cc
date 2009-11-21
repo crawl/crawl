@@ -761,18 +761,35 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!m)
         return (false);
 
-    const coord_def c = m->pos();
-    int ch = tileidx_feature(grd(c), c.x, c.y);
-    if (ch == TILE_FLOOR_NORMAL)
-        ch = env.tile_flv(c).floor;
-    else if (ch == TILE_WALL_NORMAL)
-        ch = env.tile_flv(c).wall;
+    const bool      fake = m->props.exists("fake");
+    const coord_def c  = m->pos();
+          int       ch = TILE_FLOOR_NORMAL;
+
+    if (!fake)
+    {
+       ch = tileidx_feature(grd(c), c.x, c.y);
+       if (ch == TILE_FLOOR_NORMAL)
+           ch = env.tile_flv(c).floor;
+       else if (ch == TILE_WALL_NORMAL)
+           ch = env.tile_flv(c).wall;
+    }
 
     tileset.push_back(tile_def(ch, TEX_DUNGEON));
 
     if (m->type == MONS_DANCING_WEAPON)
     {
-        item_def item = mitm[m->inv[MSLOT_WEAPON]];
+        // For fake dancing weapons, just use a generic long sword, since
+        // fake monsters won't have a real item equipped.
+        item_def item;
+        if (fake)
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = WPN_LONG_SWORD;
+            item.quantity  = 1;
+        }
+        else
+            item = mitm[m->inv[MSLOT_WEAPON]];
+
         tileset.push_back(tile_def(tileidx_item(item), TEX_DEFAULT));
         tileset.push_back(tile_def(TILE_ANIMATED_WEAPON, TEX_DEFAULT));
     }
@@ -781,7 +798,9 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     else
         tileset.push_back(tile_def(tileidx_monster_base(m), TEX_PLAYER));
 
-    if (!mons_flies(m))
+    // A fake monster might not have it's ghost member set up properly,
+    // and mons_flies() looks at ghost.
+    if (!fake && !mons_flies(m))
     {
         if (ch == TILE_DNGN_LAVA)
             tileset.push_back(tile_def(TILE_MASK_LAVA, TEX_DEFAULT));
