@@ -16,7 +16,7 @@ to run the unit tests.  To run paricular unit tests, you can do
 and that will run all unit tests which have "foo" in their file name.
 
 If you want to write your own unit tests, take a look at the files in
-source/test for example.  test/los_maps.lua and test/bounce.lua have
+source/test for examples.  test/los_maps.lua and test/bounce.lua have
 examples which use vaults (maps) which are located in test/des.  You
 might need to create new Lua functions in the source/l_*.cc files if none of
 the crawl.foo()/dgn.foo()/etc functions do what you need.
@@ -58,7 +58,7 @@ Using the arena to test problems with specific monsters is rather easy:
 For specific ego items is not much harder.  Say you had a problem with chaos
 branded melee items.  You could do
 
-    crawl -arena "10 vault guard; long sword ego:chaos v 
+    crawl -arena "10 vault guard; long sword ego:chaos v
                   10 vault guard; long sword ego:chaos"
 
 to pit two groups of 10 vault guards against each other, all armed with chaos
@@ -116,7 +116,7 @@ can forbid monsters with certain glyphs from being randomly generated:
 B.3  Getting the arena to run for a long time
 ==============================================
 
-By default the arena exits when all the monsters on one team dies, ending the
+By default the arena exits when all the monsters on one team die, ending the
 round.  You can specify that multiple rounds happen by adding "t:num", but
 that's limited to 99 rounds.  A way to make it so that the arena will run
 forever (or until you press ESC to exit it) is to add the "respawn" tag to the
@@ -126,7 +126,7 @@ long enough.
 
 For example:
 
-    crawl -arena "respwan rat v kobold"
+    crawl -arena "respawn rat v kobold"
 
 Will make it so that whenever the rat dies it's replaced by a new rat, and the
 same for the kobold.
