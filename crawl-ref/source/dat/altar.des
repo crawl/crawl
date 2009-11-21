@@ -28,7 +28,9 @@
 #      Allows any of the overflow temple altars to be used.
 #      For this, use one B glyph in your map.
 #
-# If you want to check altar placement in wizard mode, use the &: command.
+# If you want to check overlfow temple placement in wizard mode, use the &:
+# command.  The levels overflow temples are placed on, and which gods are
+# in them, are chosen at new-game time.
 #
 ###############################################################################
 
