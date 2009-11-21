@@ -522,6 +522,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_SHINING_EYE;
     case MONS_EYE_OF_DEVASTATION:
         return TILEP_MONS_EYE_OF_DEVASTATION;
+    case MONS_GOLDEN_EYE:
+        return TILEP_MONS_GOLDEN_EYE;
 
     // hybrids ('H')
     case MONS_HIPPOGRIFF:
