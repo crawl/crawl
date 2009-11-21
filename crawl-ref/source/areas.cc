@@ -125,6 +125,7 @@ void create_sanctuary(const coord_def& center, int time)
     int       cloud_count = 0;
     monsters *seen_mon    = NULL;
 
+    int shape = random2(4);
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
     {
         const coord_def pos = *ri;
@@ -145,7 +146,7 @@ void create_sanctuary(const coord_def& center, int time)
         // forming patterns
         const int x = pos.x - center.x, y = pos.y - center.y;
         bool in_yellow = false;
-        switch (random2(4))
+        switch (shape)
         {
         case 0:                 // outward rays
             in_yellow = (x == 0 || y == 0 || x == y || x == -y);
