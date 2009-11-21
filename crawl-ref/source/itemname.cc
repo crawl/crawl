@@ -1776,11 +1776,15 @@ bool item_type_known( const item_def& item )
     if (is_artefact(item))
         return (false);
 
-    // Poisoned missiles are always identified.
+    // Poisoned missiles are always identified. Also things made of obvious
+    // materials (steel, silver)
     if (item.base_type == OBJ_MISSILES)
     {
         int ammo_brand = get_ammo_brand(item);
-        if (ammo_brand == SPMSL_POISONED || ammo_brand == SPMSL_CURARE)
+        if (ammo_brand == SPMSL_POISONED ||
+            ammo_brand == SPMSL_CURARE   ||
+            ammo_brand == SPMSL_STEEL    ||
+            ammo_brand == SPMSL_SILVER)
             return (true);
     }
 
