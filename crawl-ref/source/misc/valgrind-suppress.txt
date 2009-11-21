@@ -63,3 +63,13 @@
 	fun:__memp_fsync
 	fun:__db_sync
 }
+
+# An SDL "conditional jump or move" error, with the unitialized value
+# being supplied by Nvidia's OpenGL library.
+{
+	tiles_SDL_Nvida_GL_cond
+	Memcheck:Cond
+    fun:X11_SetKeyboardState
+	fun:X11_DispatchEvent
+	obj:*
+}
