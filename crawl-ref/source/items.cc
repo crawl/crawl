@@ -1575,7 +1575,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                 if (ident_flags(mitm[obj]) != ident_flags(you.inv[m]))
                 {
                     if (!quiet)
-                        mpr("These items seem quite similar!");
+                        mpr("These items seem quite similar.");
                     mitm[obj].flags |=
                         ident_flags(you.inv[m]) & you.inv[m].flags;
                     you.inv[m].flags |=

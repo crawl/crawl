@@ -2233,7 +2233,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             mpr("You fall through a shaft!");
 
         // Shafts are one-time-use.
-        mpr("The shaft crumbles and collapses!");
+        mpr("The shaft crumbles and collapses.");
         find_trap(you.pos())->destroy();
     }
 
