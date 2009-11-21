@@ -1518,6 +1518,7 @@ static bool _find_description(bool &again, std::string& error_inout)
     bool doing_items    = false;
     bool doing_gods     = false;
     bool doing_branches = false;
+    bool doing_features = false;
 
     switch (ch)
     {
@@ -1556,6 +1557,8 @@ static bool _find_description(bool &again, std::string& error_inout)
         type   = "feature";
         filter = _feature_filter;
         recap  = _recap_feat_keys;
+
+        doing_features = true;
         break;
     case 'G':
         type       = "god";
@@ -1698,7 +1701,7 @@ static bool _find_description(bool &again, std::string& error_inout)
     // For tiles builds use a tiles menu to display monsters.
     const bool text_only = 
 #ifdef USE_TILE
-        !doing_mons;
+        !(doing_mons || doing_features);
 #else
         true;
 #endif
@@ -1708,6 +1711,7 @@ static bool _find_description(bool &again, std::string& error_inout)
                        doing_mons, text_only);
     desc_menu.set_tag("description");
     std::list<monsters> monster_list;
+    std::list<item_def> item_list;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
         const char  letter = index_to_letter(i);
@@ -1757,6 +1761,8 @@ static bool _find_description(bool &again, std::string& error_inout)
                 me->data = (void*) &(monster_list.back());
             }
         }
+        else if (doing_features)
+            me = new FeatureMenuEntry(str, feat_by_desc(str), letter);
         else
         {
             me = new MenuEntry(uppercase_first(key_list[i]), MEL_ITEM, 1,
@@ -1793,6 +1799,8 @@ static bool _find_description(bool &again, std::string& error_inout)
                 monsters* mon = (monsters*) sel[0]->data;
                 key = mons_type_name(mon->type, DESC_PLAIN);
             }
+            else if (doing_features)
+                key = sel[0]->text;
             else
                 key = *((std::string*) sel[0]->data);
 
