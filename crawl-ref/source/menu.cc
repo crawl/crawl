@@ -721,9 +721,24 @@ FeatureMenuEntry::FeatureMenuEntry(const std::string &str, const coord_def p,
                                    int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
+    if (in_bounds(p))
+        feat = grd(p);
+    else
+        feat = DNGN_UNSEEN;
     pos      = p;
     quantity = 1;
 }
+
+FeatureMenuEntry::FeatureMenuEntry(const std::string &str,
+                                   const dungeon_feature_type f,
+                                   int hotkey) :
+    MenuEntry(str, MEL_ITEM, 1, hotkey)
+{
+    pos.reset();
+    feat     = f;
+    quantity = 1;
+}
+
 
 #ifdef USE_TILE
 PlayerMenuEntry::PlayerMenuEntry(const std::string &str) :
@@ -828,12 +843,13 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!Options.tile_menu_icons)
         return (false);
 
-    if (!in_bounds(pos))
+    if (feat == DNGN_UNSEEN)
         return (false);
 
-    tileset.push_back(tile_def(tileidx_feature(grd(pos), pos.x, pos.y),
+    tileset.push_back(tile_def(tileidx_feature(feat, pos.x, pos.y),
                                TEX_DUNGEON));
-    if (is_unknown_stair(pos))
+
+    if (in_bounds(pos) && is_unknown_stair(pos))
         tileset.push_back(tile_def(TILE_NEW_STAIR, TEX_DEFAULT));
 
     return (true);

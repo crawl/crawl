@@ -183,9 +183,12 @@ public:
 class FeatureMenuEntry : public MenuEntry
 {
 public:
-    coord_def pos;
+    coord_def            pos;
+    dungeon_feature_type feat;
 
     FeatureMenuEntry(const std::string &str, const coord_def p, int hotkey);
+    FeatureMenuEntry(const std::string &str, const dungeon_feature_type f,
+                     int hotkey);
 
 #ifdef USE_TILE
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
