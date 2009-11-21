@@ -3686,6 +3686,9 @@ static bool _initialise(void)
     // Read special levels and vaults.
     read_maps();
 
+    if (crawl_state.build_db)
+        end(0);
+
     cio_init();
 
     // System initialisation stuff.
