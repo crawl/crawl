@@ -1709,7 +1709,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_MOTH_OF_WRATH, 'y', BROWN, "moth of wrath",
-    M_NO_SKELETON | M_SPECIAL_ABILITY,
+    M_SPECIAL_ABILITY,
     MR_NO_FLAGS,
     0, 10, MONS_MOTH_OF_WRATH, MONS_MOTH_OF_WRATH, MH_NATURAL, -3,
     { {AT_BITE, AF_RAGE, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2297,7 +2297,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GOLDEN_EYE, 'G', ETC_GOLD, "golden eye",
-    M_NO_SKELETON | M_BATTY | M_GLOWS,
+    M_BATTY | M_GLOWS,
     MR_RES_ASPHYX,
     0, 17, MONS_GIANT_EYEBALL, MONS_GOLDEN_EYE, MH_NATURAL, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2425,7 +2425,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_PULSATING_LUMP, 'J', RED, "pulsating lump",
-    M_SENSE_INVIS,
+    M_NO_SKELETON | M_SENSE_INVIS,
     MR_RES_POISON | MR_RES_ASPHYX,
     0, 3, MONS_JELLY, MONS_PULSATING_LUMP, MH_NATURAL, -3,
     { {AT_HIT, AF_MUTATE, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2475,7 +2475,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEATH_OOZE, 'J', MAGENTA, "death ooze",
-    M_NO_SKELETON | M_SENSE_INVIS,
+    M_SENSE_INVIS,
     MR_RES_POISON | MR_RES_COLD | MR_RES_ACID,
     0, 13, MONS_JELLY, MONS_DEATH_OOZE, MH_UNDEAD, -8,
     { {AT_HIT, AF_ROT, 32}, {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK },
