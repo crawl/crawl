@@ -885,7 +885,7 @@ void viewwindow(bool monster_updates, bool show_updates)
     bool run_dont_draw = you.running && Options.travel_delay < 0
                 && (!you.running.is_explore() || Options.explore_delay < 0);
 
-    if (run_dont_draw || you.asleep() || is_resting())
+    if (run_dont_draw || you.asleep())
         return;
 
     cursor_control cs(false);
