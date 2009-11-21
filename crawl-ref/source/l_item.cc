@@ -722,4 +722,5 @@ static const struct luaL_reg item_lib[] =
 void cluaopen_item(lua_State *ls)
 {
     luaL_openlib(ls, "item", item_lib, 0);
+    luaL_openlib(ls, "items", item_lib, 0);
 }
