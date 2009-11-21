@@ -158,21 +158,10 @@ bool player::_possible_beholder(const monsters *mon) const
 {
     if (crawl_state.arena)
         return (false);
-    if (silenced(pos()))
-        return (false);
-    if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID
-        || !mons_near(mon) || mon->friendly()
-        || mon->submerged() || mon->confused() || mon->cannot_move()
-        || mon->asleep() || silenced(mon->pos()))
-    {
-        return (false);
-    }
 
-    // TODO: replace this by see/see_no_trans.
-    int walls = num_feats_between(pos(), mon->pos(),
-                                  DNGN_UNSEEN, DNGN_MAXOPAQUE);
-    if (walls > 0)
-        return (false);
-
-    return (true);
+    return (!silenced(pos()) && !silenced(mon->pos())
+         && see_cell(mon->pos()) && mon->see_cell(pos())
+         && mon->alive() && mons_genus(mon->type) == MONS_MERMAID
+         && !mon->submerged() && !mon->confused()
+         && !mon->asleep() && !mon->cannot_move());
 }
