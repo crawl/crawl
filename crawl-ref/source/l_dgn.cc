@@ -1239,6 +1239,57 @@ static int dgn_apply_area_cloud(lua_State *ls)
     return (0);
 }
 
+static int dgn_place_cloud(lua_State *ls)
+{
+    const int x         = luaL_checkint(ls, 1);
+    const int y         = luaL_checkint(ls, 2);
+    const cloud_type ctype = dgn_cloud_name_to_type(luaL_checkstring(ls, 3));
+    const int cl_range      = luaL_checkint(ls, 4);
+    const char*      kname = lua_isstring(ls, 5) ? luaL_checkstring(ls, 5)
+    : "";
+    const kill_category kc = dgn_kill_name_to_category(kname);
+
+    const int spread_rate = lua_isnumber(ls, 6) ? luaL_checkint(ls, 6) : -1;
+
+    if (!in_bounds(x, y))
+    {
+        char buf[80];
+        sprintf(buf, "Point (%d,%d) isn't in bounds.", x, y);
+        luaL_argerror(ls, 1, buf);
+        return (0);
+    }
+
+    if (ctype == CLOUD_NONE)
+    {
+        std::string error = "Invalid cloud type '";
+        error += luaL_checkstring(ls, 3);
+        error += "'";
+        luaL_argerror(ls, 3, error.c_str());
+        return (0);
+    }
+
+    if (kc == KC_NCATEGORIES)
+    {
+        std::string error = "Invalid kill category '";
+        error += kname;
+        error += "'";
+        luaL_argerror(ls, 5, error.c_str());
+        return (0);
+    }
+
+    if (spread_rate < -1 || spread_rate > 100)
+    {
+        luaL_argerror(ls, 6, "spread_rate must be between -1 and 100,"
+                      "inclusive");
+        return (0);
+    }
+
+    place_cloud(ctype, coord_def(x, y), cl_range, kc, spread_rate);
+
+    return (0);
+}
+
+
 static int _dgn_is_passable(lua_State *ls)
 {
     COORDS(c, 1, 2);
@@ -1668,6 +1719,7 @@ const struct luaL_reg dgn_dlib[] =
 { "floor_halo", dgn_floor_halo },
 { "random_walk", dgn_random_walk },
 { "apply_area_cloud", dgn_apply_area_cloud },
+{ "place_cloud", dgn_place_cloud },
 
 { "is_passable", _dgn_is_passable },
 
