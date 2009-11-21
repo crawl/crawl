@@ -10,6 +10,7 @@
 
 #include "cio.h"
 #include "colour.h"
+#include "coord.h"
 #include "env.h"
 #include "menu.h"
 #include "macro.h"
@@ -19,7 +20,6 @@
 #include "tutorial.h"
 
 #ifdef USE_TILE
- #include "coord.h"
  #include "mon-stuff.h"
  #include "mon-util.h"
  #include "newgame.h"
