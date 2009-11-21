@@ -27,25 +27,6 @@
 #include "travel.h"
 #include "viewgeom.h"
 
-// Is where inside a circle within LOS, with the given radius,
-// centered on the player's position?  If so, return the distance to it.
-// Otherwise, return -1.
-static int _inside_circle(const coord_def& where, int radius)
-{
-    if (!in_bounds(where))
-        return -1;
-
-    const coord_def ep = grid2view(where);
-    if (!in_los_bounds(ep))
-        return -1;
-
-    const int dist = distance(where, you.pos());
-    if (dist > radius*radius)
-        return -1;
-
-    return (dist);
-}
-
 static void _remove_sanctuary_property(const coord_def& where)
 {
     env.pgrid(where) &= ~(FPROP_SANCTUARY_1 | FPROP_SANCTUARY_2);
@@ -142,12 +123,9 @@ void create_sanctuary(const coord_def& center, int time)
 
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
     {
-        const int dist = _inside_circle(*ri, radius);
-
-        if (dist == -1)
-            continue;
-
         const coord_def pos = *ri;
+        const int dist = distance(center, pos);
+
         if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
             blood_count++;
 
