@@ -682,7 +682,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                 else
                     total_cost -= gp_value;
 
-                ASSERT(total_cost > 0);
+                ASSERT(total_cost >= 0);
             }
         }
     }
