@@ -327,11 +327,12 @@ public:
     bool can_see_invisible(bool unid) const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
-    bool see_cell(const coord_def& c) const;
 
     bool see_cell_no_trans(const coord_def &c) const;
     // Is c in view but behind a transparent wall?
     bool trans_wall_blocking(const coord_def &c) const;
+    // Override LOS for arena.
+    void set_arena_los(const coord_def &c);
     void update_los();
 
     bool is_icy() const;

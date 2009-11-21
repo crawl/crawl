@@ -64,12 +64,9 @@ void player::update_los()
 
 // Player LOS overrides for arena.
 
-bool player::see_cell(const coord_def &c) const
+void player::set_arena_los(const coord_def& c)
 {
-    if (crawl_state.arena || crawl_state.arena_suspended)
-        return (crawl_view.in_grid_los(c));
-    else
-        return (actor::see_cell(c));
+    los.init_arena(c);
 }
 
 bool player::can_see(const actor* a) const

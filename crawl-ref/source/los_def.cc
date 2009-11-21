@@ -10,19 +10,19 @@
 #include "coord-circle.h"
 
 los_def::los_def()
-    : show(0), opc(opc_default.clone()), bds(BDS_DEFAULT)
+    : show(0), opc(opc_default.clone()), bds(BDS_DEFAULT), arena(false)
 {
 }
 
 los_def::los_def(const coord_def& c, const opacity_func &o,
                                      const circle_def &b)
-    : show(0), center(c), opc(o.clone()), bds(b)
+    : show(0), center(c), opc(o.clone()), bds(b), arena(false)
 {
 }
 
 los_def::los_def(const los_def& los)
     : show(los.show), center(los.center),
-      opc(los.opc->clone()), bds(los.bds)
+      opc(los.opc->clone()), bds(los.bds), arena(los.arena)
 {
 }
 
@@ -30,6 +30,7 @@ los_def& los_def::operator=(const los_def& los)
 {
     init(los.center, *los.opc, los.bds);
     show = los.show;
+    arena = los.arena;
     return (*this);
 }
 
@@ -40,6 +41,14 @@ void los_def::init(const coord_def &c, const opacity_func &o,
     set_center(c);
     set_opacity(o);
     set_bounds(b);
+    arena = false;
+}
+
+void los_def::init_arena(const coord_def& c)
+{
+    center = c;
+    arena = true;
+    set_bounds(circle_def(LOS_MAX_RADIUS, C_SQUARE));
 }
 
 los_def::~los_def()
@@ -75,11 +84,13 @@ circle_def los_def::get_bounds() const
 
 bool los_def::in_bounds(const coord_def& p) const
 {
-    return (bds.contains(p));
+    return (bds.contains(p - center));
 }
 
 bool los_def::see_cell(const coord_def& p) const
 {
+    if (arena)
+        return (in_bounds(p));
     const coord_def sp = p - center;
     return (sp.rdist() <= LOS_MAX_RANGE && show(sp));
 }

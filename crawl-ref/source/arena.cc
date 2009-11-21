@@ -472,14 +472,12 @@ namespace arena
         you.char_class = JOB_FIGHTER;
         you.experience_level = 27;
 
-        you.mutation[MUT_ACUTE_VISION] = 3;
-
+        you.position.y = -1;
         coord_def yplace(dgn_find_feature_marker(DNGN_ESCAPE_HATCH_UP));
-        // Fix up the viewport.  Temporarily unset arena mode to avoid
-        // assertion.
-        crawl_state.arena = false;
-        you.moveto(yplace);
-        crawl_state.arena = true;
+        you.set_arena_los(yplace);
+        crawl_view.set_player_at(yplace);
+
+        you.mutation[MUT_ACUTE_VISION] = 3;
 
         you.your_name = "Arena";
 
@@ -733,11 +731,9 @@ namespace arena
 
         unwind_bool  ar     (crawl_state.arena,           false);
         unwind_bool  ar_susp(crawl_state.arena_suspended, true);
-
-        unwind_var<coord_def> pos(you.position);
         coord_def yplace(dgn_find_feature_marker(DNGN_ESCAPE_HATCH_UP));
-        you.moveto(yplace);
-
+        unwind_var<coord_def> pos(you.position);
+        you.position = yplace;
         process_command(cmd);
     }
 
@@ -837,9 +833,6 @@ namespace arena
                     count_foes();
 
                 viewwindow(false);
-                unwind_var<coord_def> pos(you.position);
-                // Move hero offscreen.
-                you.position.y = -1;
                 you.time_taken = 10;
                 // Make sure we don't starve.
                 you.hunger = 10999;
