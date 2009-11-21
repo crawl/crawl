@@ -1367,7 +1367,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
     mark_interesting_monst(mon, mg.behaviour);
 
-    if (you.can_see(mon))
+    if (!Generating_Level && you.can_see(mon))
         handle_seen_interrupt(mon);
 
     if (crawl_state.arena)
