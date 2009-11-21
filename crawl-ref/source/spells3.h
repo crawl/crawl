@@ -19,8 +19,6 @@ bool cast_bone_shards(int power, bolt &);
 
 bool cast_selective_amnesia(bool force);
 bool cast_smiting(int power, const coord_def& where);
-bool remove_sanctuary(bool did_attack = false);
-void decrease_sanctuary_radius();
 bool cast_sanctuary(const int power);
 bool project_noise();
 bool detect_curse(bool suppress_msg);

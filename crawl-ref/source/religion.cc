@@ -23,6 +23,7 @@
 #include "options.h"
 
 #include "abl-show.h"
+#include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"

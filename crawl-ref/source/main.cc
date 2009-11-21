@@ -38,6 +38,7 @@
 
 #include "abl-show.h"
 #include "abyss.h"
+#include "areas.h"
 #include "artefact.h"
 #include "arena.h"
 #include "branch.h"

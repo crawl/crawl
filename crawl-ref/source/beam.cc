@@ -20,6 +20,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "areas.h"
 #include "attitude-change.h"
 #include "cio.h"
 #include "cloud.h"

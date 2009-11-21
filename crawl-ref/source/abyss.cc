@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <algorithm>
 
+#include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "colour.h"
