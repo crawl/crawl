@@ -2476,8 +2476,8 @@ void pray()
         you.duration[DUR_PRAYER] = 20;
     }
 
-    // Gods who like fresh corpses, Kikuites, Beoghites and
-    // Nemelexites offer the items they're standing on.
+    // Gods who like fresh corpses, Kikuites, Beoghites and Nemelexites
+    // offer the items they're standing on.
     if (altar_god == GOD_NO_GOD
         && (god_likes_fresh_corpses(you.religion)
             || you.religion == GOD_BEOGH || you.religion == GOD_NEMELEX_XOBEH))
@@ -2638,16 +2638,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_DRINK_BLOOD:
             switch (you.religion)
             {
-            case GOD_SHINING_ONE:
-                if (!known)
-                {
-                    simple_god_message(" forgives your inadvertent "
-                                       "blood-drinking, just this once.");
-                    break;
-                }
-                penance = level;
-                // deliberate fall through
             case GOD_ZIN:
+            case GOD_SHINING_ONE:
             case GOD_ELYVILON:
                 if (!known)
                 {
@@ -2655,6 +2647,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                                        "blood-drinking, just this once.");
                     break;
                 }
+                if (you.religion == GOD_SHINING_ONE)
+                    penance = level;
                 piety_change = -2*level;
                 retval = true;
                 break;
