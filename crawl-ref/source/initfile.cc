@@ -42,6 +42,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
+#include "tags.h"
 #include "travel.h"
 #include "items.h"
 #include "view.h"
@@ -3509,8 +3510,8 @@ std::string find_executable_path()
 
 static void _print_version()
 {
-    printf("Crawl version %s" EOL, Version::Long().c_str());
-
+    printf("Crawl version %s%s", Version::Long().c_str(), EOL);
+    printf("Save file version %d.%d%s", TAG_MAJOR_VERSION, TAG_MINOR_VERSION, EOL);
     printf("%s", compilation_info().c_str());
 }
 
