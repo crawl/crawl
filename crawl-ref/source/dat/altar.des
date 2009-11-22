@@ -558,6 +558,107 @@ ENDMAP
 ######################################
 # IV   Overflow altars
 ######################################
+#
+# These must feature one of the temple_overflow_* TAGs (see header).
+# Altars are sorted alphabetically by god, with The Shining One coming
+# after Zin. At the end, there are altar vaults which can be used for 
+# more than just one god.
+#
+######################################
+
+### Cheibriados overflow altars ###############################################
+
+NAME:   cheibriados_altar_1
+TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
+KFEAT:  _ = altar_cheibriados
+MAP
+...
+._.
+...
+ENDMAP
+
+NAME:    cheibriados_altar_2
+TAGS:    uniq_altar_cheibriados
+DEPTH:   D:2-20
+WEIGHT:  1
+KFEAT:   _ = altar_cheibriados
+MONS:    giant slug, giant snail, elephant slug
+SUBST:   1 : 1:50 2:30 3:10 4:10
+NSUBST:  4 = 1:1 / 1:2 / 1:3
+MAP
+.......
+.mmm...
+.m1m...
+.mmmmm.
+.._m1m.
+.mmmmm.
+.m1m...
+.mmm...
+.......
+ENDMAP
+
+NAME:   cheibriados_altar_3
+TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
+DEPTH:  D:2-6
+KFEAT:  _ = altar_cheibriados
+ITEM:   potion of slowing
+ITEM:   apple, pear, orange, banana
+SUBST:  e : efgh
+MAP
+.d.
+e_e
+.d.
+ENDMAP
+
+# Golems are slow and they protect an altar to the slow god. (Lemuel)
+NAME:  golem_altar_1
+DEPTH: 3-12
+TAGS:  patrolling no_monster_gen no_item_gen 
+TAGS:  uniq_golem_altar temple_overflow_cheibriados
+KMONS: _ = iron golem
+KFEAT: _ = altar_cheibriados
+SUBST: x : xxxcccmnvb
+MAP
+xxx.....xxx
+xxx.....xxx
+xxx.....xxx
+...........
+...........
+....._.....
+...........
+...........
+xxx.....xxx
+xxx.....xxx
+xxx.....xxx
+ENDMAP
+
+NAME:    golem_altar_2
+DEPTH:   3-12
+TAGS:    patrolling no_monster_gen no_item_gen 
+TAGS:    uniq_golem_altar temple_overflow_cheibriados
+KMONS:   _ = iron golem
+KFEAT:   _ = altar_cheibriados
+SHUFFLE: ac / XX / XX
+SHUFFLE: bd / XX / XX
+SUBST:   a = = , c = * , b = = , d = *
+SUBST:   X : x
+SUBST:   x : xxxcccvb
+MAP
+x..G..x
+x.....x
+x.....x
+xx+++xx
+x.....x
+x.....x
+x.....x
+x.....x
+x.._..x
+xaxxxbx
+xcxxxdx
+xxxxxxx
+ENDMAP
+
+### Elyvilon overflow altars ##################################################
 
 ### Fedhas overflow altars ####################################################
 
@@ -680,97 +781,42 @@ cxxxxxxxxxc.cxxxxxxxxxc
 ccccccccccc@ccccccccccc
 ENDMAP
 
-### Cheibriados overflow altars ###############################################
+### Kikubaaqudgha overflow altars #############################################
 
-NAME:   cheibriados_altar_1
-TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
-KFEAT:  _ = altar_cheibriados
+### Makhleb overflow altars ###################################################
+
+NAME:    demons_altar
+DEPTH:   3-11
+TAGS:    no_monster_gen patrolling temple_overflow_makhleb
+TAGS:    layout_rooms layout_city layout_open layout_cross
+KFEAT:   _ = altar_makhleb
+# Either one slow type 3 demon (iron devil or demonic crawler)
+#     or two slow type 4 demons (smoke demons)
+#     or three slow type 5 demons (manes).
+SHUFFLE: 1234
+NSUBST:  1 = 1:1 / *:.
+NSUBST:  2 = 1:2 / *:.
+NSUBST:  3 = 2:3 / *:.
+MONS:    iron devil / demonic crawler / smoke demon / manes
 MAP
-...
-._.
-...
+xxxxxxxxxxxxxxx
+x.............x
+x.ll.......ll.x
+x.ll..1_1..ll.x
+x.ll...1...ll.x
+x..ll.....ll..x
+x...lll.lll...x
+x....llGll....x
+x......l......x
+x.............x
+x.............x
+x.............x
+x.............x
 ENDMAP
 
-NAME:    cheibriados_altar_2
-TAGS:    uniq_altar_cheibriados
-DEPTH:   D:2-20
-WEIGHT:  1
-KFEAT:   _ = altar_cheibriados
-MONS:    giant slug, giant snail, elephant slug
-SUBST:   1 : 1:50 2:30 3:10 4:10
-NSUBST:  4 = 1:1 / 1:2 / 1:3
-MAP
-.......
-.mmm...
-.m1m...
-.mmmmm.
-.._m1m.
-.mmmmm.
-.m1m...
-.mmm...
-.......
-ENDMAP
+### Nemelex overflow altars ###################################################
 
-NAME:   cheibriados_altar_3
-TAGS:   uniq_altar_cheibriados temple_overflow_cheibriados
-DEPTH:  D:2-6
-KFEAT:  _ = altar_cheibriados
-ITEM:   potion of slowing
-ITEM:   apple, pear, orange, banana
-SUBST:  e : efgh
-MAP
-.d.
-e_e
-.d.
-ENDMAP
-
-# Golems are slow and they protect an altar to the slow god. (Lemuel)
-NAME:  golem_altar_1
-DEPTH: 3-12
-TAGS:  patrolling no_monster_gen no_item_gen 
-TAGS:  uniq_golem_altar temple_overflow_cheibriados
-KMONS: _ = stone golem / iron golem / clay golem / toenail golem w:3
-KFEAT: _ = altar_cheibriados
-SUBST: x : xxxcccmnvb
-MAP
-xxx.....xxx
-xxx.....xxx
-xxx.....xxx
-...........
-...........
-....._.....
-...........
-...........
-xxx.....xxx
-xxx.....xxx
-xxx.....xxx
-ENDMAP
-
-NAME:    golem_altar_2
-DEPTH:   3-12
-TAGS:    patrolling no_monster_gen no_item_gen 
-TAGS:    uniq_golem_altar temple_overflow_cheibriados
-KMONS:   _ = stone golem / iron golem / clay golem / toenail golem w:3
-KFEAT:   _ = altar_cheibriados
-SHUFFLE: ac / XX / XX
-SHUFFLE: bd / XX / XX
-SUBST:   a = = , c = * , b = = , d = *
-SUBST:   X : x
-SUBST:   x : xxxcccvb
-MAP
-x..G..x
-x.....x
-x.....x
-xx+++xx
-x.....x
-x.....x
-x.....x
-x.....x
-x.._..x
-xaxxxbx
-xcxxxdx
-xxxxxxx
-ENDMAP
+### Okawaru overflow altars ###################################################
 
 ### Sif Muna overflow altars ##################################################
 
@@ -825,7 +871,7 @@ ENDMAP
 
 NAME:  bloody_trog
 TAGS:  uniq_altar_trog temple_overflow_trog
-DEPTH: D:2-20, Orc, Vault
+DEPTH: D:2-12, Orc, Vault
 KPROP: . = bloody / nothing
 KFEAT: _ = altar_trog
 KITEM: _ = animal skin, knife
@@ -837,14 +883,15 @@ ENDMAP
 
 # Features berserk monsters, so we're careful: no intelligent monsters, so you
 # close the door. Provide a chokepoint.
-NAME:       tgw_trog
-TAGS:       no_item_gen no_monster_gen patrolling
-TAGS:       temple_overflow_trog uniq_altar_trog
-KFEAT:      _ = altar_trog
-MONS:       moth of wrath, rat / worm w:5
-ITEM:       any weapon
-NSUBST:     M = 4:d / *:.
-SUBST:      + = +....
+NAME:   tgw_trog
+TAGS:   no_item_gen no_monster_gen patrolling
+TAGS:   temple_overflow_trog uniq_altar_trog
+DEPTH:  D:2-9
+KFEAT:  _ = altar_trog
+MONS:   moth of wrath, rat / worm w:5
+ITEM:   any weapon
+NSUBST: M = 4:d / *:.
+SUBST:  + = +....
 MAP
       xxxxxxx
      xxxMMMxxx
@@ -859,6 +906,94 @@ MAP
     xx.......xx
      xxxx+xxxx
        xx@xx
+ENDMAP
+
+NAME:   trog_book
+TAGS:   uniq_altar_trog temple_overflow_trog
+DEPTH:  D:2-10, Orc
+KFEAT:  _ = altar_trog
+{{
+function convert_book (data, triggerable, triggerer, marker, ev)
+  local m = dgn.find_marker_positions_by_prop("slave_name", "trog_book")[1]
+  if m ~= nil then
+    local _x, _y = m:xy()
+    --
+    -- Only burn the book when you see both the altar and the book. This gives
+    -- sneaky players the opportunity to apport the book.
+    if not you.see_cell(_x, _y) then
+      return
+    end
+--
+    local book = dgn.items_at(_x, _y)[1]
+    if book ~= nil then
+      items.destroy(book)
+      dgn.place_cloud(_x, _y, "flame", 15)
+      crawl.god_speaks("Trog", "The book burts into flames! "
+                            .. "Trog roars with delight!")
+      triggerable:remove(marker)
+    end
+  end
+end
+--
+local tm = TriggerableFunction:new{func=convert_book, repeated=true}
+tm:add_triggerer(DgnTriggerer:new{type="player_los"})
+lua_marker('_', tm)
+}}
+MARKER: b = lua:portal_desc {slave_name="trog_book"}
+KFEAT:  b = .
+KITEM:  b = any book
+MAP
+xxxxxx
+x....x
+x._.b.
+x....x
+xxxxxx
+ENDMAP
+
+### Vehumet overflow altars ###################################################
+
+# The cloud seems to be okay: automatic exclusion should prevent deaths.
+# You can safely step on a square diagonally adjacent to the altar.
+# Maximal damage is 32 per turn (at speed 10). If you want to go safe, 
+# wait for resistance (or have more than 32 HP).
+NAME:   fiery_altar_vehumet
+DEPTH:  2-10
+WEIGHT: 8
+TAGS:   temple_overflow_vehumet
+MARKER: _ = lua:fog_machine { cloud_type = "flame", \
+               pow_min = 6, pow_max = 8, delay_min = 35, delay_max = 55, \
+               size = 1, walk_dist = 0, spread_rate= 0 }
+KFEAT:  _ = altar_vehumet
+MAP
+.....
+.....
+.._..
+.....
+.....
+ENDMAP
+
+# A variation of the above. Use freezing vapours, so that the book won't 'burn'.
+# The fog generator for the altar has the same parameters as above but the one
+# for the book is more dangerous.
+NAME:   dangerous_book
+DEPTH:  2-10
+WEIGHT: 2
+TAGS:   temple_overflow_vehumet
+MARKER: _ = lua:fog_machine { cloud_type = "freezing vapour", \
+               pow_min = 6, pow_max = 8, delay_min = 35, delay_max = 55, \
+               size = 1, walk_dist = 0, spread_rate= 0 }
+KFEAT:  _ = altar_vehumet
+MARKER: + = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 10, pow_max = 12, delay = 30, \
+             size = 3, walk_dist = 1, spread_rate= 0 }
+KITEM:  + = book of conjurations [Fire] / book of conjurations [Ice]
+MAP
+......
+._....
+......
+...+..
+......
+......
 ENDMAP
 
 ### Xom overflow altars #######################################################
@@ -889,6 +1024,10 @@ xx'.............'xx
    xxxxxxxxxxxxx
 ENDMAP
 
+### Yredelemnul overflow altars ###############################################
+
+### Zin overflow altars #######################################################
+
 ### The Shining One overflow altars ###########################################
 
 # TSO's small temple (1KB)
@@ -910,77 +1049,6 @@ xc.._..cx
 xct...tcx
 xccc+cccx
 ENDMAP
-
-### Vehumet overflow altars ###################################################
-
-# The cloud seems to be okay: automatic exclusion should prevent deaths.
-# Expending some heal wounds or using rFire will do the trick.
-NAME:   fiery_altar_vehumet
-DEPTH:  2-10
-TAGS:   temple_overflow_vehumet
-MARKER: _ = lua:fog_machine { cloud_type = "flame", \
-               pow_min = 4, pow_max = 8, delay = 25, \
-               size = 1, walk_dist = 1, spread_rate= 33 }
-KFEAT:  _ = altar_vehumet
-MAP
-.....
-.....
-.._..
-.....
-.....
-ENDMAP
-
-NAME:   dangerous_book
-DEPTH:  2-10
-TAGS:   temple_overflow_vehumet
-MARKER: _ = lua:fog_machine { cloud_type = "freezing vapour", \
-             pow_min = 12, pow_max = 16, delay = 30, \
-             size = 3, walk_dist = 1, spread_rate= 0 }
-KFEAT:  _ = altar_vehumet
-KITEM:  _ = book of conjurations [Fire] / book of conjurations [Ice]
-MAP
-.....
-.....
-.._..
-.....
-.....
-ENDMAP
-
-### Makhleb overflow altars ###################################################
-
-NAME:  demons_altar
-DEPTH: 3-10
-TAGS:  no_monster_gen patrolling temple_overflow_makhleb
-TAGS:  layout_rooms layout_city layout_open layout_cross
-KFEAT: _ = altar_makhleb
-MONS:  orange demon / hairy devil / iron devil / nothing
-MAP
-xxxxxxxxxxxxxxx
-x.............x
-x.ll.......ll.x
-x.ll..1_1..ll.x
-x.ll...1...ll.x
-x..ll.....ll..x
-x...lll.lll...x
-x....llGll....x
-x......l......x
-x.............x
-x.............x
-x.............x
-x.............x
-ENDMAP
-
-### Nemelex overflow altars ###################################################
-
-### Elyvilon overflow altars ##################################################
-
-### Zin overflow altars #######################################################
-
-### Yredelemnul overflow altars ###############################################
-
-### Kikubaaqudgha overflow altars #############################################
-
-### Okawaru overflow altars ###################################################
 
 ### Variable overflow altars ##################################################
 
