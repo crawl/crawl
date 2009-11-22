@@ -1879,7 +1879,7 @@ void process_command( command_type cmd )
         }
         else if (you.level_type == LEVEL_LABYRINTH)
         {
-            mpr("You'd have to know where you are, first.");
+            mpr("No exploration algorithm can help you here."); 
             break;
         }
         // Start exploring
