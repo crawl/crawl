@@ -3761,6 +3761,10 @@ void MenuRegion::set_entry(int idx, const std::string &str, int colour,
         while (idx >= new_size)
             new_size *= 2;
         m_entries.resize(new_size);
+
+        // Quite valgrind warning about unitialized memory.
+        for (int i = idx + 1; i < new_size; i++)
+            m_entries[i].valid = false;
     }
 
     MenuRegionEntry &e = m_entries[idx];
