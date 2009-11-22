@@ -914,28 +914,39 @@ DEPTH:  D:2-10, Orc
 KFEAT:  _ = altar_trog
 {{
 function convert_book (data, triggerable, triggerer, marker, ev)
+  if data.turns ~= you.turns() then
+    data.tc = data.tc + 1
+    data.turns = you.turns()
+  end
+
+  if data.tc < 3 then
+    return
+  end
+
   local m = dgn.find_marker_positions_by_prop("slave_name", "trog_book")[1]
   if m ~= nil then
     local _x, _y = m:xy()
-    --
+
     -- Only burn the book when you see both the altar and the book. This gives
     -- sneaky players the opportunity to apport the book.
     if not you.see_cell(_x, _y) then
       return
     end
---
+
     local book = dgn.items_at(_x, _y)[1]
     if book ~= nil then
-      items.destroy(book)
-      dgn.place_cloud(_x, _y, "flame", 15)
-      crawl.god_speaks("Trog", "The book burts into flames! "
-                            .. "Trog roars with delight!")
-      triggerable:remove(marker)
+      if string.find(items.name(book), 'book') then
+        items.destroy(book)
+        dgn.place_cloud(_x, _y, "flame", 15)
+        crawl.god_speaks("Trog", "The book burts into flames! "
+                              .. "Trog roars with delight!")
+        triggerable:remove(marker)
+      end
     end
   end
 end
---
-local tm = TriggerableFunction:new{func=convert_book, repeated=true}
+
+local tm = TriggerableFunction:new{func=convert_book, repeated=true, data={turns=you.turns(), tc=0} }
 tm:add_triggerer(DgnTriggerer:new{type="player_los"})
 lua_marker('_', tm)
 }}
@@ -943,11 +954,11 @@ MARKER: b = lua:portal_desc {slave_name="trog_book"}
 KFEAT:  b = .
 KITEM:  b = any book
 MAP
-xxxxxx
-x....x
-x._.b.
-x....x
-xxxxxx
+xxxxxxx
+x.....xxx
+x._.b....@
+x.....xxx
+xxxxxxx
 ENDMAP
 
 ### Vehumet overflow altars ###################################################
