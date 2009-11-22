@@ -156,7 +156,17 @@ minotaur CORPSE_MINOTAUR
 ## Ugly things ('u')
 %sdir dc-mon/demons
 ugly_thing CORPSE_UGLY_THING
+ugly_thing1
+ugly_thing2
+ugly_thing3
+ugly_thing4
+ugly_thing5
 very_ugly_thing CORPSE_VERY_UGLY_THING
+very_ugly_thing1
+very_ugly_thing2
+very_ugly_thing3
+very_ugly_thing4
+very_ugly_thing5
 
 ## Giants ('C')
 %sdir dc-mon

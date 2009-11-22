@@ -1737,9 +1737,17 @@ static int _tileidx_corpse(const item_def &item)
 
     // ugly things ('u')
     case MONS_UGLY_THING:
-        return TILE_CORPSE_UGLY_THING;
     case MONS_VERY_UGLY_THING:
-        return TILE_CORPSE_VERY_UGLY_THING;
+    {
+        const int ugly_corpse_tile = (type == MONS_VERY_UGLY_THING) ?
+            TILE_CORPSE_VERY_UGLY_THING : TILE_CORPSE_UGLY_THING;
+        int colour_offset = ugly_thing_colour_offset(item.colour);
+
+        if (colour_offset == -1)
+            colour_offset = 0;
+
+        return (ugly_corpse_tile + colour_offset);
+    }
 
     // worms ('w')
     case MONS_KILLER_BEE_LARVA:
