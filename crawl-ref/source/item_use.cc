@@ -3445,6 +3445,8 @@ void jewellery_wear_effects(item_def &item)
         {
             set_mp(0, false);
             mpr("You feel your power drawn to a protective spirit.");
+            if (you.species == SP_DEEP_DWARF)
+                mpr("Now linked to your health, your magic stops regenerating.");
             ident = ID_KNOWN_TYPE;
         }
         break;
@@ -3983,6 +3985,9 @@ void jewellery_remove_effects(item_def &item, bool mesg)
     case AMU_THE_GOURMAND:
         you.duration[DUR_GOURMAND] = 0;
         break;
+
+    case AMU_GUARDIAN_SPIRIT:
+        mpr("Your magic begins regenerating once more.");
     }
 
     if (is_artefact(item))
@@ -5700,6 +5705,9 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
     {
         set_mp(0, false);
         mpr("You feel the spirits watch over you.");
+        if (you.species == SP_DEEP_DWARF)
+            mpr("Now linked to your health, your magic stops regenerating.");
+
         artefact_wpn_learn_prop(item, ARTP_SPIRIT_SHIELD);
     }
 

@@ -659,7 +659,11 @@ void unwear_armour(int slot)
 
     case SPARM_SPIRIT_SHIELD:
         if (!player_spirit_shield())
+        {
             mpr("You feel strangely alone.");
+            if (you.species == SP_DEEP_DWARF)
+                mpr("Your magic begins regenerating once more.");
+        }
         else if (player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, true))
         {
             item_def& amu(you.inv[you.equip[EQ_AMULET]]);

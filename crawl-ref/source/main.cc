@@ -2739,6 +2739,10 @@ static void _regenerate_hp_and_mp(int delay)
         tmp -= 100;
     }
 
+    // XXX: Don't let DD use guardian spirit for free HP. (due, dpeg)
+    if (player_spirit_shield() && you.species == SP_DEEP_DWARF)
+        return;
+
     ASSERT( tmp >= 0 && tmp < 100 );
     you.hit_points_regeneration = static_cast<unsigned char>(tmp);
 

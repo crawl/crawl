@@ -1547,7 +1547,9 @@ void armour_wear_effects(const int item_slot)
             {
                 set_mp(0, false);
                 mpr("You feel spirits watching over you.");
-            }
+                if (you.species == SP_DEEP_DWARF) 
+                    mpr("Now linked to your health, your magic stops regenerating.");
+           }
             break;
 
         case SPARM_ARCHERY:
