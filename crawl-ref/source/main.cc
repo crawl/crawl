@@ -312,17 +312,18 @@ int main( int argc, char *argv[] )
 static void _show_commandline_options_help()
 {
     puts("Command line options:");
-    puts("  -help            prints this list of options");
-    puts("  -name <string>   character name");
-    puts("  -species <arg>   preselect race (by letter, abbreviation, or name)");
-    puts("  -job <arg>       preselect class (by letter, abbreviation, or name)");
-    puts("  -plain           don't use IBM extended characters");
-    puts("  -dir <path>      crawl directory");
-    puts("  -rc <file>       init file name");
-    puts("  -rcdir <dir>     directory that contains (included) rc files");
-    puts("  -morgue <dir>    directory to save character dumps");
-    puts("  -macro <dir>     directory to save/find macro.txt");
-    puts("  -version         Crawl version (and compilation info)");
+    puts("  -help                 prints this list of options");
+    puts("  -name <string>        character name");
+    puts("  -species <arg>        preselect race (by letter, abbreviation, or name)");
+    puts("  -job <arg>            preselect class (by letter, abbreviation, or name)");
+    puts("  -plain                don't use IBM extended characters");
+    puts("  -dir <path>           crawl directory");
+    puts("  -rc <file>            init file name");
+    puts("  -rcdir <dir>          directory that contains (included) rc files");
+    puts("  -morgue <dir>         directory to save character dumps");
+    puts("  -macro <dir>          directory to save/find macro.txt");
+    puts("  -version              Crawl version (and compilation info)");
+    puts("  -save-version <name>  Save file version for the given player");
     puts("");
     puts("Command line options override init file options, which override");
     puts("environment options (CRAWL_NAME, CRAWL_DIR, CRAWL_RC).");
