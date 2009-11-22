@@ -1,10 +1,10 @@
 Stone Soup 0.6
 --------------
 * Three new gods:
-  * Jiyvagod, of slime.
+  * Jiyva, god of slime.
   * Fedhas, god of plants.
   * Cheibriados, god of slowness.
-* The main temple level (Evumenical Temple branch) now no longer
+* The main temple level (Ecumenical Temple branch) now no longer
   necessarily holds altars for all of the gods.  If the main temple
   chosen for a game doesn't have enough altars for all the gods, then
   some altars are randomly chosen to appear in the dungeon between
