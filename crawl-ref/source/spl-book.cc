@@ -1529,8 +1529,15 @@ static spell_type _choose_mem_spell(spell_list &spells,
 {
     std::sort(spells.begin(), spells.end(), _sort_mem_spells);
 
+#ifdef USE_TILE
+    const bool text_only = false;
+#else
+    const bool text_only = true;
+#endif
+
     Menu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                    | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
+                    | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
+                    "", text_only);
 #ifdef USE_TILE
     {
         // [enne] - Hack.  Make title an item so that it's aligned.
@@ -1609,6 +1616,11 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
                                       index_to_letter(i % 52));
+
+#ifdef USE_TILE
+        me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+#endif
+
         me->data = &spells[i];
         spell_menu.add_entry(me);
     }

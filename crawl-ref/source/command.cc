@@ -1520,6 +1520,7 @@ static bool _find_description(bool &again, std::string& error_inout)
     bool doing_gods     = false;
     bool doing_branches = false;
     bool doing_features = false;
+    bool doing_spells   = false;
 
     switch (ch)
     {
@@ -1532,8 +1533,9 @@ static bool _find_description(bool &again, std::string& error_inout)
         doing_mons = true;
         break;
     case 'S':
-        type   = "spell";
-        filter = _spell_filter;
+        type         = "spell";
+        filter       = _spell_filter;
+        doing_spells = true;
         break;
     case 'K':
         type   = "skill";
@@ -1702,7 +1704,7 @@ static bool _find_description(bool &again, std::string& error_inout)
     // For tiles builds use a tiles menu to display monsters.
     const bool text_only = 
 #ifdef USE_TILE
-        !(doing_mons || doing_features);
+        !(doing_mons || doing_features || doing_spells);
 #else
         true;
 #endif
@@ -1764,6 +1766,17 @@ static bool _find_description(bool &again, std::string& error_inout)
         {
             me = new MenuEntry(uppercase_first(key_list[i]), MEL_ITEM, 1,
                                letter);
+
+#ifdef USE_TILE
+            if (doing_spells)
+            {
+                spell_type spell = spell_by_name(str);
+                if (spell != SPELL_NO_SPELL)
+                    me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+            }
+#else
+            UNUSED(doing_spells);
+#endif
 
             me->data = (void*) &key_list[i];
         }
