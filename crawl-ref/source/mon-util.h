@@ -667,7 +667,7 @@ bool monster_senior(const monsters *first, const monsters *second,
                     bool fleeing = false);
 monster_type draco_subspecies(const monsters *mon);
 unsigned char ugly_thing_random_colour();
-int ugly_thing_colour_offset(const monsters *mon);
+int ugly_thing_colour_offset(const unsigned char colour);
 std::string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const std::string &colour);
 

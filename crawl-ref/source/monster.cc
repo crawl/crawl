@@ -1944,7 +1944,10 @@ static const char *ugly_colour_names[] = {
 
 static std::string _ugly_thing_colour_name(const monsters *mon)
 {
-    const int colour_offset = ugly_thing_colour_offset(mon);
+    int colour_offset = -1;
+
+    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
+        colour_offset = ugly_thing_colour_offset(mon->colour);
 
     if (colour_offset == -1)
         return ("buggy");

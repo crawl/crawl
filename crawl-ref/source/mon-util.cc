@@ -1689,14 +1689,11 @@ unsigned char ugly_thing_random_colour()
     return (RANDOM_ELEMENT(ugly_colour_values));
 }
 
-int ugly_thing_colour_offset(const monsters *mon)
+int ugly_thing_colour_offset(const unsigned char colour)
 {
-    if (mon->type != MONS_UGLY_THING && mon->type != MONS_VERY_UGLY_THING)
-        return (-1);
-
     for (unsigned i = 0; i < ARRAYSZ(ugly_colour_values); ++i)
     {
-        if (make_low_colour(mon->colour) == ugly_colour_values[i])
+        if (make_low_colour(colour) == ugly_colour_values[i])
             return (i);
     }
 
