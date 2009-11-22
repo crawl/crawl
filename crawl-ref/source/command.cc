@@ -2296,7 +2296,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>d#</w>: Drop exact number of items\n"
             "<w>c</w> : Chop up a corpse";
 
-    if (you.species == SP_VAMPIRE && you.experience >= 6)
+    if (you.species == SP_VAMPIRE && you.experience_level >= 6)
         interact += " or bottle its blood";
 
     interact +=
