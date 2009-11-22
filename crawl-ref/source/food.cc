@@ -1752,7 +1752,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
 
     case CE_HCL:
         you.rot(&you, 10 + random2(10));
-        if (disease_player( 50 + random2(100) ))
+        if (you.sicken(50 + random2(100)))
             xom_is_stimulated(random2(100));
         break;
 
@@ -1777,7 +1777,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         else
         {
             mpr("There is something wrong with this meat.");
-            if (disease_player(50 + random2(100)))
+            if (you.sicken(50 + random2(100)))
                 xom_is_stimulated(random2(100));
         }
         break;
@@ -2274,7 +2274,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
                 case CE_HCL:
                     you.rot(&you, 5 + random2(5));
-                    if (disease_player(50 + random2(100)))
+                    if (you.sicken(50 + random2(100)))
                         xom_is_stimulated(random2(100));
                     stop_delay();
                     break;

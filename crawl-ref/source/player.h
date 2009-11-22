@@ -758,7 +758,6 @@ void dec_slow_player(int delay);
 void haste_player(int turns);
 void dec_haste_player(int delay);
 
-bool disease_player(int amount);
 void dec_disease_player(int delay);
 
 bool player_weapon_wielded();

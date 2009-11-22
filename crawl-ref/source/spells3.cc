@@ -1337,7 +1337,7 @@ bool cast_haunt(int pow, const coord_def& where, god_type god)
         || player_under_penance() || you.piety < piety_breakpoint(3)
         || !x_chance_in_y(you.piety, MAX_PIETY))
     {
-        disease_player(25 + random2(50));
+        you.sicken(25 + random2(50));
     }
 
     return (success);

@@ -5078,11 +5078,6 @@ void dec_haste_player(int delay)
     }
 }
 
-bool disease_player(int amount)
-{
-    return you.sicken(amount);
-}
-
 void dec_disease_player(int delay)
 {
     if (you.disease > 0)
@@ -6720,7 +6715,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     }
 
     if (one_chance_in(4))
-        disease_player(50 + random2(100));
+        sicken(50 + random2(100));
 
     return (true);
 }
