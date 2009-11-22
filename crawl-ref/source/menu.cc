@@ -749,7 +749,18 @@ PlayerMenuEntry::PlayerMenuEntry(const std::string &str) :
 
 bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
-    return (false);
+    if (!Options.tile_menu_icons || tiles.empty())
+        return (false);
+
+    for (unsigned int i = 0; i < tiles.size(); i++)
+        tileset.push_back(tiles[i]);
+
+    return (true);
+}
+
+void MenuEntry::add_tile(tile_def tile)
+{
+    tiles.push_back(tile);
 }
 
 bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
@@ -760,6 +771,8 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     monsters *m = (monsters*)(data);
     if (!m)
         return (false);
+
+    MenuEntry::get_tiles(tileset);
 
     const bool      fake = m->props.exists("fake");
     const coord_def c  = m->pos();
@@ -865,6 +878,8 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (feat == DNGN_UNSEEN)
         return (false);
 
+    MenuEntry::get_tiles(tileset);
+
     tileset.push_back(tile_def(tileidx_feature(feat, pos.x, pos.y),
                                TEX_DUNGEON));
 
@@ -878,6 +893,8 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
         return (false);
+
+    MenuEntry::get_tiles(tileset);
 
     const player_save_info &player = *static_cast<player_save_info*>( data );
     dolls_data equip_doll = player.doll;

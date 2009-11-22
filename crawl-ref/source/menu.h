@@ -70,6 +70,11 @@ public:
     MenuEntryLevel level;
     void *data;
 
+#ifdef USE_TILE
+    std::vector<tile_def> tiles;
+#endif
+
+public:
     MenuEntry( const std::string &txt = std::string(),
                MenuEntryLevel lev = MEL_ITEM,
                int qty  = 0,
@@ -143,6 +148,8 @@ public:
 
 #ifdef USE_TILE
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
+
+    virtual void add_tile(tile_def tile);
 #endif
 };
 
