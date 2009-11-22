@@ -1,0 +1,20 @@
+Developers on IRC
+=================
+
+Some of the Crawl develoeprs hang out on the ##crawl-dev IRC channel on
+freenode (irc://freenode/##crawl-dev).  You can ask them development related
+questions.  Also, users with +v have commit access, so if you have a patch
+which is read to commit you can poke them about it.
+
+Chatzilla and Crawl's bug tracking system
+=========================================
+
+If you're using Chatzilla as your IRC client, you can make Chatzilla
+automatically link references to "bug NNN" or "bug #NNN" to Crawl
+bug tracker.  Simply open preferences, chose the ##craw-dev view,
+select the appearances tab, and set "Bugzilla URL" to
+
+    http://crawl.develz.org/mantis/view.php?id=%s
+
+(Note that even though the option is called "Bugzilla URL", Crawl doesn't use
+Bugzilla for bug/issue tracking, but Mantis)
