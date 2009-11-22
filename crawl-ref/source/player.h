@@ -533,7 +533,10 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = NULL);
 
-
+    // How large can the experience pool grow without loss?
+    int exp_pool_cutoff() const;
+    // Step down experience above cutoff.
+    void step_down_exp_pool();
 
 protected:
     void _removed_beholder();

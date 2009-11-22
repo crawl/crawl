@@ -2079,9 +2079,11 @@ static void _experience_card(int power, deck_rarity_type rarity)
         mpr("You feel knowledgeable.");
 
     // Put some free XP into pool; power_level 2 means fill pool
-    you.exp_available += power * 50;
-    if (power_level >= 2 || you.exp_available > FULL_EXP_POOL)
-        you.exp_available = FULL_EXP_POOL;
+    if (power_level >= 2)
+        you.exp_available = you.exp_pool_cutoff();
+    else
+        you.exp_available += power * 50;
+    you.step_down_exp_pool();
 
     level_change();
 }
