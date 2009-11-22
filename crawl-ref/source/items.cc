@@ -2431,6 +2431,12 @@ static bool _interesting_explore_pickup(const item_def& item)
     if (item.base_type == OBJ_GOLD)
         return (false);
 
+    if ((Options.explore_stop & ES_GREEDY_PICKUP_THROWN)
+        && (item.flags & ISFLAG_THROWN))
+    {
+        return (true);
+    }
+
     std::vector<text_pattern> &ignore = Options.explore_stop_pickup_ignore;
     if (!ignore.empty())
     {
@@ -2443,10 +2449,12 @@ static bool _interesting_explore_pickup(const item_def& item)
 
     if (!(Options.explore_stop & ES_GREEDY_PICKUP_SMART))
         return (true);
-
     // "Smart" code follows.
+
+    // If ES_GREEDY_PICKUP_THROWN isn't set, then smart greedy pickup
+    // will ignore thrown items.
     if (item.flags & ISFLAG_THROWN)
-        return (true);
+        return (false);
 
     if (is_artefact(item))
         return (true);

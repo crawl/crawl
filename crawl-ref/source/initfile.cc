@@ -1605,6 +1605,8 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
             conditions |= ES_GREEDY_PICKUP;
         else if (c == "greedy_pickup_smart" || c == "greedy pickup smart")
             conditions |= ES_GREEDY_PICKUP_SMART;
+        else if (c == "greedy_pickup_thrown" || c == "greedy pickup thrown")
+            conditions |= ES_GREEDY_PICKUP_THROWN;
         else if (c == "shop" || c == "shops")
             conditions |= ES_SHOP;
         else if (c == "stair" || c == "stairs")

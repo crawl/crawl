@@ -846,14 +846,21 @@ explore_stop = items,greedy_pickup,stairs,shops,altars,gates
             come into view.
 
         greedy_pickup: stop after you automatically pick up any item
-            eligible for autopickup (except for gold).  You can make
-            certain items *not* trigger this with the option
-            explore_stop_pickup_ignore
+            eligible for autopickup, excluding gold, but including
+            items thrown/fired by the player.  You can make certain items
+            *not* trigger this with the option explore_stop_pickup_ignore
 
         greedy_pickup_smart: Similar to greedy_pickup, but tries to be
-            smart about it, meaning only stopping for thrown items and
-            items which aren't similar to any you already have in your
-            inventory.
+            smart about it, meaning only stopping for items which aren't
+            similar to any you already have in your inventory.  It
+            doesn't stop for automatically picking up items which were
+            thrown/fired by the player; you can add "greedy_pickup_thrown"
+            if you want to stop for those.
+
+        greedy_pickup_thrown: Stops after you pick up any item you've
+            thrown/fired.   greedy_pickup automatically does this, but
+            greedy_pickup_smart does not.  explore_stop_pickup_ignore
+            does not affect this condition.
 
         glowing_items: like items, but only for items which are
             glowing/runed/embroidered/etc.
@@ -870,6 +877,9 @@ explore_stop_pickup_ignore = <regex list>
         the hands of monsters, even if you don't have a blowgun, so to
         not stop auto-explore because of this use
         "explore_stop_pickup_ignore = curare".
+
+        This options has no affect on items which were thrown by the
+        player.
 
 explore_improved = false
         If set to true explore will attempt to reduce zig-zagging during
