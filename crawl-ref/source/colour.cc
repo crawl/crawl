@@ -219,8 +219,14 @@ int element_colour( int element, bool no_random )
         break;
 
     case ETC_KRAKEN:
-        ret = random_choose(GREEN, LIGHTGREEN, LIGHTCYAN, LIGHTBLUE, RED,
-                            LIGHTRED, MAGENTA, -1);
+        ret = (tmp_rand <  15) ? GREEN :
+              (tmp_rand <  30) ? LIGHTGREEN :
+              (tmp_rand <  45) ? LIGHTCYAN :
+              (tmp_rand <  60) ? LIGHTBLUE :
+              (tmp_rand <  75) ? RED :
+              (tmp_rand <  90) ? LIGHTRED :
+              (tmp_rand < 105) ? MAGENTA
+                               : LIGHTMAGENTA;
         break;
 
     case ETC_STONE:
