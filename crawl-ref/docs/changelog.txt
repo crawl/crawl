@@ -52,7 +52,7 @@ Stone Soup 0.6
 * Call Canine Familiar only calls friendly canines.
 * Add some tiles "animations" whenever the screen is redrawn.
 * Sacrifice corpses with prayer ('p') rather than prayer and chop up ('pc').
-* Improvements to whips.
+* Improvements to whips and demon whips; the latter can now be blessed by TSO.
 * Reduced weight of large rocks.
 * Base carrying capacity depends on weight of the player species.
 * Strength effect on carrying capacity doubled.
