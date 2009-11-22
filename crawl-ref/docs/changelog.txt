@@ -14,6 +14,7 @@ Stone Soup 0.6
 * Added scroll of silence.
 * Added potions of brilliance and agility.
 * Several new uniques.
+* Swapped Kobolds' aptitudes for Bows and Crossbows.
 * Overhaul Wanderers.
 * Healers now start unarmed.
 * Starting stats and equipment are no longer assigned randomly.
