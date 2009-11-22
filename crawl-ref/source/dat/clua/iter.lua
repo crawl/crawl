@@ -220,3 +220,66 @@ function iter.circle_iterator (radius, ic, filter, center)
 
   return iter.rect_iterator(top_corner, bottom_corner, check_dist)
 end
+
+-------------------------------------------------------------------------------
+-- item stack-related functions
+--   not necessarily iterators
+-------------------------------------------------------------------------------
+
+function iter.stack_search (coord, term, extra)
+  local _x, _y
+  if extra ~= nil then
+    _x = coord
+    _y = term
+    term = extra
+  elseif coord == nil then
+    error("stack_search requires a location")
+  else
+    _x, _y = coord:xy()
+  end
+
+  if term == nil then
+    error("stack_search requires a search term")
+  end
+
+  local stack = dgn.items_at(_x, _y)
+  if #stack == 0 then
+    error("no stack at " .. _x .. "/" .. _y)
+  end
+
+  for _, item in ipairs(stack) do
+    if string.find(items.name(item), (term)) then
+      return item
+    end
+  end
+
+  return false
+end
+
+function iter.stack_destroy(coord, extra)
+  local _x, _y
+  if extra ~= nil then
+    _x = coord
+    _y = extra
+  elseif coord == nil then
+    error("stack_search requires a location")
+  else
+    _x, _y = coord:xy()
+  end
+
+  local stack = dgn.items_at(_x, _y)
+
+  while #stack ~= 0 do
+    if items.destroy(stack[1]) then
+      if #stack >= dgn.items_at(_x, _y) then
+        error("destroyed an item ('" .. items.name(stack[1]) .. "'), but the "
+              .. "stack size is the same")
+        return
+      end
+      stack = dgn.items_at(_x, _y)
+    else
+      error("couldn't destroy item '" .. items.name(stack[1]) .. "'")
+      return false
+    end
+  end
+end
