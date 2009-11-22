@@ -1,0 +1,4 @@
+# Miscellaneous dependencies.
+tiledef-main.h: dc-corpse.txt
+
+tiledef-player.h: dc-mon.txt

@@ -34,6 +34,9 @@ all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
 tiledef-%.h tiledef-%.cc %.png: dc-%.txt $(TILEGEN)
 	$(TILEGEN) $<
 
+# Miscellaneous dependencies.
+include makefile.dc
+
 clean:
 	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES)
 
