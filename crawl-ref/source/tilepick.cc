@@ -1545,10 +1545,12 @@ static int _tileidx_food(const item_def &item)
 }
 
 // Returns index of corpse tiles.
-// Parameter mon already holds the corpse type (monster species).
-static int _tileidx_corpse(int mon)
+// Parameter item holds the corpse.
+static int _tileidx_corpse(const item_def &item)
 {
-    switch (mon)
+    const int type = item.plus;
+
+    switch (type)
     {
     // insects ('a')
     case MONS_GIANT_COCKROACH:
@@ -2184,7 +2186,7 @@ int tileidx_item(const item_def &item)
         if (item.sub_type == CORPSE_SKELETON)
             return TILE_FOOD_BONE;
         else
-            return _tileidx_corpse(item.plus);
+            return _tileidx_corpse(item);
 
     case OBJ_ORBS:
         return TILE_ORB + random2(tile_main_count(TILE_ORB));
