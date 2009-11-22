@@ -1377,7 +1377,7 @@ static bool _cast_spell_on_target(actor* target)
     ASSERT(_spell_target == NULL);
     _spell_target = target;
 
-    const int letter = list_spells(true, false, -1, _spell_selector, false);
+    const int letter = list_spells(true, false, -1, _spell_selector);
 
     _spell_target = NULL;
 

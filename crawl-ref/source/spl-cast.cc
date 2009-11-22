@@ -231,10 +231,16 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
 }
 
 int list_spells(bool toggle_with_I, bool viewing, int minRange,
-                spell_selector selector, bool text_only)
+                spell_selector selector)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
+
+#ifdef USE_TILE
+    const bool text_only = false;
+#else
+    const bool text_only = true;
+#endif
 
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
@@ -310,6 +316,11 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
                 new ToggleableMenuEntry(_spell_base_description(spell, grey),
                                         _spell_extra_description(spell, grey),
                                         MEL_ITEM, 1, letter);
+
+#ifdef USE_TILE
+            me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+#endif
+
             spell_menu.add_entry(me);
         }
     }

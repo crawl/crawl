@@ -49,8 +49,7 @@ enum spret_type
 typedef bool (*spell_selector)(spell_type spell, bool &grey);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
-                int minRange = -1, spell_selector selector = NULL,
-                bool text_only = true);
+                int minRange = -1, spell_selector selector = NULL);
 int spell_fail( spell_type spell );
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true);
