@@ -241,7 +241,9 @@ int element_colour( int element, bool no_random )
         break;
 
     case ETC_SHIMMER_BLUE:
-        ret = random_choose_weighted(80, BLUE, 20, LIGHTBLUE, 5, CYAN, 0);
+        ret = (tmp_rand <  90) ? BLUE :
+              (tmp_rand < 110) ? LIGHTBLUE
+                               : CYAN;
         break;
 
     case ETC_DECAY:
