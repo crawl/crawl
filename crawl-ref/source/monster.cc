@@ -1956,7 +1956,7 @@ static std::string _invalid_monster_str(monster_type type)
 {
     std::string str = "INVALID MONSTER ";
 
-    switch(type)
+    switch (type)
     {
     case NUM_MONSTERS:
         return (str + "NUM_MONSTERS");
