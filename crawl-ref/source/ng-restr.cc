@@ -366,6 +366,7 @@ char_choice_restriction class_allowed(species_type speci,
             default:
                 return (CC_UNRESTRICTED);
         }
+
         case JOB_ARCANE_MARKSMAN:
             switch (speci)
         {

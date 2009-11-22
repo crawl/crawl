@@ -1127,7 +1127,7 @@ static bool _choose_weapon()
     ng.init(you);
 
     // Gladiators that are at least medium sized get to choose a trident
-    // rather than a spear
+    // rather than a spear.
     if (you.char_class == JOB_GLADIATOR
         && you.body_size(PSIZE_BODY) >= SIZE_MEDIUM)
     {
@@ -4280,7 +4280,6 @@ bool _give_items_skills()
     break;
 
     case JOB_ARCANE_MARKSMAN:
-
         _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
         switch (you.species)
@@ -4407,7 +4406,8 @@ bool _give_items_skills()
         // necessary. (jpeg)
         if (you.species == SP_SPRIGGAN)
             you.inv[0].sub_type = WPN_DAGGER;
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
+
+        if (player_genus(GENPC_OGRE) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
@@ -4525,11 +4525,11 @@ bool _give_items_skills()
         _newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
         _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
 
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
+        if (player_genus(GENPC_OGRE) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
-        you.skills[SK_FIGHTING]     = 1;
         weap_skill = 1;
+        you.skills[SK_FIGHTING]     = 1;
         you.skills[SK_POISON_MAGIC] = 1;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
@@ -4552,7 +4552,8 @@ bool _give_items_skills()
         // necessary. (jpeg)
         if (you.species == SP_SPRIGGAN)
             you.inv[0].sub_type = WPN_DAGGER;
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
+
+        if (player_genus(GENPC_OGRE) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 2;
@@ -4620,7 +4621,8 @@ bool _give_items_skills()
 
         case SP_TROLL:
         case SP_OGRE:
-            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, 1);
+            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5,
+                               1);
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
                                3);
             break;
