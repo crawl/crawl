@@ -1463,7 +1463,7 @@ static monsterentry mondata[] = {
 
 // ugly things ('u')
 {
-    MONS_UGLY_THING, 'u', ETC_UGLY, "ugly thing",
+    MONS_UGLY_THING, 'u', BLACK, "ugly thing",
     M_WARM_BLOOD | M_GLOWS,
     MR_NO_FLAGS,
     600, 10, MONS_UGLY_THING, MONS_UGLY_THING, MH_NATURAL, -3,
@@ -1475,7 +1475,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_VERY_UGLY_THING, 'u', ETC_VERY_UGLY, "very ugly thing",
+    MONS_VERY_UGLY_THING, 'u', BLACK, "very ugly thing",
     M_WARM_BLOOD | M_GLOWS,
     MR_NO_FLAGS,
     750, 10, MONS_UGLY_THING, MONS_VERY_UGLY_THING, MH_NATURAL, -3,
