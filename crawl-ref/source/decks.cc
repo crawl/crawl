@@ -2080,8 +2080,8 @@ static void _experience_card(int power, deck_rarity_type rarity)
 
     // Put some free XP into pool; power_level 2 means fill pool
     you.exp_available += power * 50;
-    if (power_level >= 2 || you.exp_available > 20000)
-        you.exp_available = 20000;
+    if (power_level >= 2 || you.exp_available > FULL_EXP_POOL)
+        you.exp_available = FULL_EXP_POOL;
 
     level_change();
 }
