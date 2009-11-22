@@ -1668,7 +1668,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     ok_weaps:
     case SK_LONG_BLADES:
         damage *= 10 + you.skills[SK_STABBING] /
-                       (stab_bonus + (wpn_skill == SK_SHORT_BLADES ? 0 : 1));
+                       (stab_bonus + (wpn_skill == SK_SHORT_BLADES ? 0 : 2));
         damage /= 10;
         // fall through
     default:
@@ -3984,29 +3984,31 @@ void melee_attack::player_stab_check()
     stab_attempt = (uat != UCAT_NO_ATTACK);
     const bool roll_needed = (uat != UCAT_SLEEPING && uat != UCAT_PARALYSED);
 
-    int roll = 155;
+    int roll = 100;
     if (uat == UCAT_INVISIBLE && !mons_sense_invis(defender_as_monster()))
-        roll -= 15;
+        roll -= 10;
 
     switch (uat)
     {
     case UCAT_NO_ATTACK:
         stab_bonus = 0;
         break;
-    case UCAT_HELD_IN_NET:
-    case UCAT_PETRIFYING:
-    case UCAT_PETRIFIED:
     case UCAT_SLEEPING:
     case UCAT_PARALYSED:
         stab_bonus = 1;
         break;
+    case UCAT_HELD_IN_NET:
+    case UCAT_PETRIFYING:
+    case UCAT_PETRIFIED:
+        stab_bonus = 2;
+        break;
     case UCAT_INVISIBLE:
     case UCAT_CONFUSED:
     case UCAT_FLEEING:
-        stab_bonus = 2;
+        stab_bonus = 4;
         break;
     case UCAT_DISTRACTED:
-        stab_bonus = 3;
+        stab_bonus = 6;
         break;
     }
 
@@ -5896,7 +5898,7 @@ static void stab_message(actor *defender, int stab_bonus)
 {
     switch (stab_bonus)
     {
-    case 3:     // big melee, monster surrounded/not paying attention
+    case 6:     // big melee, monster surrounded/not paying attention
         if (coinflip())
         {
             mprf( "You strike %s from a blind spot!",
@@ -5908,7 +5910,7 @@ static void stab_message(actor *defender, int stab_bonus)
                   defender->name(DESC_NOCAP_THE).c_str() );
         }
         break;
-    case 2:     // confused/fleeing
+    case 4:     // confused/fleeing
         if (!one_chance_in(3))
         {
             mprf( "You catch %s completely off-guard!",
@@ -5920,6 +5922,7 @@ static void stab_message(actor *defender, int stab_bonus)
                   defender->name(DESC_NOCAP_THE).c_str() );
         }
         break;
+    case 2:
     case 1:
         mprf( "%s fails to defend %s.",
               defender->name(DESC_CAP_THE).c_str(),
