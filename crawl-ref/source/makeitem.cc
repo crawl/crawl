@@ -755,7 +755,7 @@ void item_colour(item_def &item)
                     {ETC_EARTH, ETC_ELECTRICITY, ETC_ENCHANT, ETC_HEAL,
                      ETC_BLOOD, ETC_DEATH, ETC_UNHOLY, ETC_VEHUMET, ETC_BEOGH,
                      ETC_CRYSTAL, ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_GILA,
-                     ETC_KRAKEN, ETC_UGLY, ETC_VERY_UGLY};
+                     ETC_KRAKEN};
 
                 item.colour = RANDOM_ELEMENT(types);
                 break;

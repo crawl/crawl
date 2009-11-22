@@ -35,8 +35,6 @@ enum element_type
     ETC_ORCISH,         // used for colouring orc fabric items
     ETC_GILA,           // gila monster colours
     ETC_KRAKEN,         // kraken colours
-    ETC_UGLY,           // random ugly thing colours
-    ETC_VERY_UGLY,      // random very ugly thing colours
     ETC_FLOOR,          // colour of the area's floor
     ETC_ROCK,           // colour of the area's rock
     ETC_STONE,          // colour of the area's stone

@@ -3,7 +3,6 @@
 #include "colour.h"
 
 #include "env.h"
-#include "mon-util.h"
 #include "options.h"
 #include "player.h"
 #include "random.h"
@@ -224,13 +223,6 @@ int element_colour( int element, bool no_random )
                             LIGHTRED, MAGENTA, -1);
         break;
 
-    case ETC_UGLY:
-    case ETC_VERY_UGLY:
-        ret = ugly_thing_random_colour();
-        ret = (element == ETC_VERY_UGLY) ? make_high_colour(ret)
-                                         : make_low_colour(ret);
-        break;
-
     case ETC_STONE:
         if (player_in_branch(BRANCH_HALL_OF_ZOT))
             ret = env.rock_colour;
@@ -345,9 +337,9 @@ int str_to_colour( const std::string &str, int default_colour,
         "magic", "mutagenic", "warp", "enchant", "heal", "holy", "dark",
         "death", "necro", "unholy", "vehumet", "beogh", "crystal",
         "blood", "smoke", "slime", "jewel", "elven", "dwarven",
-        "orcish", "gila", "kraken", "ugly", "very_ugly", "floor",
-        "rock", "stone", "mist", "shimmer_blue", "decay", "silver",
-        "gold", "iron", "bone", "random"
+        "orcish", "gila", "kraken", "floor", "rock", "stone", "mist",
+        "shimmer_blue", "decay", "silver", "gold", "iron", "bone",
+        "random"
     };
 
     ASSERT(ARRAYSZ(element_cols) == (ETC_RANDOM - ETC_FIRE) + 1);
