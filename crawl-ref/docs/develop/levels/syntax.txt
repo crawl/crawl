@@ -921,8 +921,8 @@ KPROP:    x = bloody
           KFEAT: and KMONS:, it can be combined with these for the same place-
           holder.
 
-          Available properties are: 
-          
+          Available properties are:
+
           * "bloody": Causes features to appear as though splattered with
              blood. This should be used very, very sparingly!   
           * "force_exclude": Forces a single grid square or feature to be an 
@@ -933,6 +933,11 @@ KPROP:    x = bloody
              entering from nearby squares.
           * "no_rtele_into": Prevents random teleport from chosing to use this
              square. Should be used sparingly.
+          * "no_ctele_into": Prevents controlled teleportation into this square.
+             Will instead generate the message "A strong magical force throws
+             you back!". Should be used sparingly.
+          * "no_tele_into": Combines the above no_rtele_into and no_ctele_into
+             in one flag, and disallows both random and controlled teleports.
 
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the

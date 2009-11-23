@@ -1532,6 +1532,12 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
                 is_controlled = false;
                 large_change  = false;
             }
+            else if (testbits(env.pgrid(pos), FPROP_NO_CTELE_INTO))
+            {
+                is_controlled = false;
+                large_change = false;
+                mpr("A strong magical force throws you back!", MSGCH_WARN);
+            }
             else
             {
                 // Leave a purple cloud.

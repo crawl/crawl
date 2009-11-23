@@ -17,7 +17,9 @@ enum feature_property_type
     // NOTE: Bloody floor and sanctuary are exclusive.
     FPROP_FORCE_EXCLUDE = (1 << 6),
     FPROP_NO_CLOUD_GEN  = (1 << 7),
-    FPROP_NO_RTELE_INTO = (1 << 8)
+    FPROP_NO_RTELE_INTO = (1 << 8),
+    FPROP_NO_CTELE_INTO = (1 << 9),
+    FPROP_NO_TELE_INTO  = FPROP_NO_RTELE_INTO | FPROP_NO_CTELE_INTO
 };
 
 #endif
