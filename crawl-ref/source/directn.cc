@@ -1079,7 +1079,7 @@ void direction(dist& moves, const targetting_type restricts,
              skip_iter = true;
              found_autotarget = true;
         }
-        else if (Options.default_target && (mode == TARG_ENEMY || mode == TARG_HOSTILE))
+        else if (mode == TARG_ENEMY || mode == TARG_HOSTILE)
         {
             skip_iter = true;   // Skip first iteration...XXX mega-hack
             if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
@@ -1120,7 +1120,7 @@ void direction(dist& moves, const targetting_type restricts,
 
         // Prompts might get scrolled off if you have too few lines available.
         // We'll live with that.
-        if ( !just_looking && (show_prompt || beh->should_redraw()) )
+        if (!just_looking && (show_prompt || beh->should_redraw()))
         {
             mprf(MSGCH_PROMPT, "%s (%s)", prompt ? prompt : "Aim",
                  target_mode_help_text(restricts));
