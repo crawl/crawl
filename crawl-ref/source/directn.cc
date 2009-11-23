@@ -991,11 +991,11 @@ std::string _targ_mode_name(targ_mode_type mode)
     }
 }
 
-void direction(dist& moves, targetting_type restricts,
-               targ_mode_type mode, int range, bool just_looking,
-               bool needs_path, bool may_target_monster,
-               bool may_target_self, const char *prompt,
-               targetting_behaviour *beh, bool cancel_at_self)
+void direction(dist& moves, const targetting_type restricts,
+               targ_mode_type mode, const int range, const bool just_looking,
+               const bool needs_path, const bool may_target_monster,
+               const bool may_target_self, const char *prompt,
+               targetting_behaviour *beh, const bool cancel_at_self)
 {
     if (!beh)
     {
