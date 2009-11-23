@@ -1387,8 +1387,7 @@ int update_monster_pane()
         if (i_print >= skip_lines && i_mons < (int) mons.size())
         {
              _print_next_monster_desc(mons, i_mons, full_info,
-                        Options.mlist_targetting == MLIST_TARGET_ON ? i_print
-                                                                    : -1);
+                        crawl_state.mlist_targetting ? i_print : -1);
         }
         else
             cprintf("%s", blank.c_str());

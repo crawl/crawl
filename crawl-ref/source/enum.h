@@ -3167,15 +3167,6 @@ enum montravel_target_type
     MTRAV_KNOWN_UNREACHABLE // As above, and the player knows this.
 };
 
-#ifndef USE_TILE
-enum mlist_targetting_type
-{
-    MLIST_TARGET_OFF = 0,
-    MLIST_TARGET_HIDDEN,
-    MLIST_TARGET_ON
-};
-#endif
-
 #ifdef USE_TILE
 enum screen_mode
 {

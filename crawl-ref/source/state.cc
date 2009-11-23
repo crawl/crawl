@@ -34,7 +34,11 @@ game_state::game_state()
       repeat_cmd(CMD_NO_CMD), cmd_repeat_count(0), cmd_repeat_goal(0),
       prev_repetition_turn(0), cmd_repeat_started_unsafe(false),
       input_line_curr(0), level_annotation_shown(false),
+#ifndef USE_TILE
+      mlist_targetting(false),
+#endif
       darken_range(-1)
+     
 {
     reset_cmd_repeat();
     reset_cmd_again();

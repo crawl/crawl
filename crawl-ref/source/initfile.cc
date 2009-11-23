@@ -608,7 +608,7 @@ void game_options::reset_options()
     mlist_min_height = 5;
     msg_max_height   = 10;
     mlist_allow_alternate_layout = false;
-    mlist_targetting = 0;
+    mlist_targetting = false;
     classic_hud = false;
     msg_condense_repeats = true;
 

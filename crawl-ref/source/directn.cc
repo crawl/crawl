@@ -991,6 +991,19 @@ std::string _targ_mode_name(targ_mode_type mode)
     }
 }
 
+bool _init_mlist()
+{
+    const int full_info = update_monster_pane();
+    if (full_info != -1)
+    {
+        _fill_monster_list(full_info);
+        return (true);
+    }
+    else
+        return (false);
+}
+
+
 void direction(dist& moves, const targetting_type restricts,
                targ_mode_type mode, const int range, const bool just_looking,
                const bool needs_path, const bool may_target_monster,
@@ -1005,20 +1018,11 @@ void direction(dist& moves, const targetting_type restricts,
     beh->just_looking = just_looking;
 
 #ifndef USE_TILE
+    crawl_state.mlist_targetting = false;
     if (may_target_monster && restricts != DIR_DIR
-        && Options.mlist_targetting == MLIST_TARGET_HIDDEN)
+        && Options.mlist_targetting)
     {
-        Options.mlist_targetting = MLIST_TARGET_ON;
-
-        const int full_info = update_monster_pane();
-        if (full_info == -1)
-        {
-            // If there are no monsters after all, turn the the targetting
-            // off again.
-            Options.mlist_targetting = MLIST_TARGET_HIDDEN;
-        }
-        else
-            _fill_monster_list(full_info);
+        crawl_state.mlist_targetting = _init_mlist();
     }
 #endif
 
@@ -1285,22 +1289,11 @@ void direction(dist& moves, const targetting_type restricts,
 
 #ifndef USE_TILE
         case CMD_TARGET_TOGGLE_MLIST:
-        {
-            if (Options.mlist_targetting == MLIST_TARGET_ON)
-                Options.mlist_targetting = MLIST_TARGET_OFF;
+            if (!crawl_state.mlist_targetting)
+                crawl_state.mlist_targetting = _init_mlist();
             else
-                Options.mlist_targetting = MLIST_TARGET_ON;
-
-            const int full_info = update_monster_pane();
-            if (Options.mlist_targetting == MLIST_TARGET_ON)
-            {
-                if (full_info == -1)
-                    Options.mlist_targetting = MLIST_TARGET_HIDDEN;
-                else
-                    _fill_monster_list(full_info);
-            }
+                crawl_state.mlist_targetting = false;
             break;
-        }
 #endif
 
 #ifdef WIZARD
@@ -1435,10 +1428,6 @@ void direction(dist& moves, const targetting_type restricts,
             else
                 you.prev_grd_targ = moves.target;
 
-#ifndef USE_TILE
-            if (Options.mlist_targetting == MLIST_TARGET_ON)
-                Options.mlist_targetting = MLIST_TARGET_HIDDEN;
-#endif
             break;
 
         case CMD_TARGET_OBJ_CYCLE_BACK:
@@ -1488,11 +1477,6 @@ void direction(dist& moves, const targetting_type restricts,
             loop_done = true;
             moves.isCancel = true;
             beh->mark_ammo_nonchosen();
-
-#ifndef USE_TILE
-            if (Options.mlist_targetting == MLIST_TARGET_ON)
-                Options.mlist_targetting = MLIST_TARGET_HIDDEN;
-#endif
             break;
 
         case CMD_TARGET_CENTER:
@@ -3585,7 +3569,7 @@ command_type targetting_behaviour::get_command(int key)
 
 #ifndef USE_TILE
     // Overrides the movement keys while mlist_targetting is active.
-    if (Options.mlist_targetting == MLIST_TARGET_ON && islower(key))
+    if (crawl_state.mlist_targetting && islower(key))
         return static_cast<command_type> (CMD_TARGET_CYCLE_MLIST + (key - 'a'));
 #endif
 

@@ -80,6 +80,13 @@ struct game_state
 
     bool level_annotation_shown;
 
+#ifndef USE_TILE
+    // Are we currently targetting using the mlist?
+    // This is global because the monster pane uses this when
+    // drawing.
+    bool mlist_targetting;
+#endif
+
     // Range beyond which view should be darkend, -1 == disabled.
     int darken_range;
 
