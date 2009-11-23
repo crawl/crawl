@@ -2970,7 +2970,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_WATER_ELEMENTALS:
     case SPELL_PORKALATOR:
     default:
-        return TILE_ERROR;
+        return TILEG_ERROR;
     }
 }
 
