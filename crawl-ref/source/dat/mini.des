@@ -2478,28 +2478,31 @@ FTILE:  0 = floor_lair
 FTILE:  @ = floor_lair
 FTILE:  * = floor_lair
 MAP
-tttttttttttttttttttttttttt@tttttttttttttttttttttt
-tttttttttttttttttttttttttt...tttttttttttttttttttt
-tttttttttttttttttttttttttttt..tttttttttttttt0}ttt
-ttttttttt.tt......ttttttttttt..tttttttttttt..tttt
-tttttttt.t...ttt.0.tttttttttt.tttttttttt...tttttt
-tt......tttttttt...ttttttttttt.tttttt...ttttttttt
-t.ttttttttttttttt....tttttttttt.tttt.tttttttttttt
-@ttttttttttttttt..tttttttttttt..tt...tttttttttttt
-ttttttttttttttt..tttttttttttttt....tttttttttttttt
-tttttttttttttttt..ttttttttttttttt.ttttttttttttttt
-tttttttttttttttt....tttttttttttt.tttttttttt...ttt
-tttttttttttttttttt.....tttttttttt..ttttttt..*..tt
-ttttttttttttttttttttt....ttttttttt.ttttttt.000.tt
-ttttttttttttttttttttttt...tttttttt.ttttt......ttt
-ttttttttttttttttttttttttt....tttt.ttttttt.tt.t0tt
-tttttttttttttttttttttttttttt.....tttttttt.ttttttt
-....ttttttttttttttttttttttt...tttttttttt.tttttttt
-@....tttttttt...ttttttttttt...tttttttt..ttttttttt
-ttttt..ttt....tt...tt........0.ttttt..ttttttttttt
-ttttttt....ttttttt....ttttttt..ttt..ttttttttttttt
-tttttttttttttttttttttttttttttt....ttttttttttttttt
-ttttttttttttttttttttttttttttttttttttttttttttttttt
+        xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx
+    xxxxxtttttttttttttttttt.tttttttttttttttttttttxx
+ xxxxtttttttttttttttttttttt...ttttttttttttttttttttx
+xxttttttttttttttttttttttttttt..tttttttttttttt0}tttx
+xttttttttt.tt......ttttttttttt..tttttttttttt..ttttx
+xtttttttt.t...ttt.0.tttttttttt.tttttttttt...ttttttx
+xtt......tttttttt...ttttttttttt.tttttt...ttttttttxx
+xt.ttttttttttttttt....tttttttttt.tttt.tttttttttttxx
+@.ttttttttttttttt..tttttttttttt..tt...ttttttttttttx
+xttttttttttttttt..tttttttttttttt....ttttttttttttttx
+xtttttttttttttttt..ttttttttttttttt.tttttttttttttttx
+xtttttttttttttttt....tttttttttttt.tttttttttt...tttx
+xtttttttttttttttttt.....tttttttttt..ttttttt..*..ttx
+xttttttttttttttttttttt....ttttttttt.ttttttt.000.ttx
+xttttttttttttttttttttttt...tttttttt.ttttt......tttx
+xttttttttttttttttttttttttt....tttt.ttttttt.tt.t0ttx
+xtttttttttttttttttttttttttttt.....tttttttt.tttttttx
+.....ttttttttttttttttttttttt...tttttttttt.ttttttttx
+@.....tttttttt...ttttttttttt...tttttttt..ttttttttxx
+xttttt..ttt....tt...tt........0.ttttt..tttttttttxx
+xttttttt....ttttttt....ttttttt..ttt..ttttttttttxx
+xxxtttttttttttttttttttttttttttt....ttttttttttxxx
+  xxxtttttttttttttttttttttttttttttttttttttxxxx
+    xxxxxttttttttxxxxxxxxttttttttttttttxxxx
+        xxxxxxxxxx      xxxxxxxxxxxxxxxx
 ENDMAP
 
 #################################################################
