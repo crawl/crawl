@@ -426,7 +426,7 @@ static const char *kill_method_names[] =
     "tso_smiting", "petrification", "something",
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
-    "falling_through_gate"
+    "falling_through_gate", "disintegration",
 };
 
 const char *kill_method_name(kill_method_type kmt)
@@ -786,6 +786,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     // for death by monster
     if ((death_type == KILLED_BY_MONSTER
             || death_type == KILLED_BY_BEAM
+            || death_type == KILLED_BY_DISINT
             || death_type == KILLED_BY_SPORE
             || death_type == KILLED_BY_REFLECTION)
         && !invalid_monster_index(death_source)
@@ -1190,7 +1191,8 @@ const char *scorefile_entry::damage_verb() const
 
 std::string scorefile_entry::death_source_desc() const
 {
-    if (death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM)
+    if (death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM
+        && death_type != KILLED_BY_DISINT)
         return ("");
 
     // XXX no longer handles mons_num correctly! FIXME
@@ -1817,6 +1819,22 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             desc += "divine wrath";
         else
             desc += auxkilldata.empty() ? "Divine wrath" : auxkilldata;
+        needs_damage = true;
+        break;
+
+    case KILLED_BY_DISINT:
+        if (terse)
+            desc += "disintegration";
+        else
+        {
+            desc += "Blown up";
+            if (death_source == NON_MONSTER)
+                desc += " themselves";
+            else
+                desc += " by " + death_source_desc();
+            needs_beam_cause_line = true;
+        }
+
         needs_damage = true;
         break;
 

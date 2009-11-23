@@ -786,8 +786,15 @@ static void _xom_checks_damage(kill_method_type death_type,
             xom_is_stimulated(255);
             return;
         }
+        else if (death_type == KILLED_BY_DISINT)
+        {
+            // flying chunks...
+            xom_is_stimulated(128);
+            return;
+        }
         else if (death_type != KILLED_BY_MONSTER
                     && death_type != KILLED_BY_BEAM
+                    && death_type != KILLED_BY_DISINT
                  || invalid_monster_index(death_source))
         {
             return;
