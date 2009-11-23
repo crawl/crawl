@@ -2769,6 +2769,13 @@ int create_monster(mgen_data mg, bool fail_msg)
             dummy.base_monster = mg.base_type;
             dummy.god          = mg.god;
 
+            // FIXME: resistence checks use the ghost_demon member for
+            // monster types that use it, so a call to mons_avoids_cloud()
+            // will crash for dummy monsters which should have a
+            // ghost_demon setup.
+            if (mons_is_ghost_demon(dummy.type))
+                return (-1);
+
             int tries = 0;
             while (tries++ < 50
                    && (!in_bounds(mg.pos)
