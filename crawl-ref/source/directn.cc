@@ -361,6 +361,7 @@ static void _direction_again(dist& moves, targetting_type restricts,
         return;
     }
 
+#ifdef DEBUG
     int targ_types = 0;
     if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
         targ_types++;
@@ -368,6 +369,7 @@ static void _direction_again(dist& moves, targetting_type restricts,
         targ_types++;
     if (you.prev_grd_targ != coord_def(0, 0))
         targ_types++;
+#endif
     ASSERT(targ_types == 1);
 
     // Discard keys until we get to a set-target command
@@ -382,7 +384,8 @@ static void _direction_again(dist& moves, targetting_type restricts,
             || key_command == CMD_TARGET_SELECT
             || key_command == CMD_TARGET_SELECT_FORCE_ENDPOINT
             || key_command == CMD_TARGET_SELECT_FORCE
-            || key_command == CMD_TARGET_MAYBE_PREV_TARGET)
+            || key_command == CMD_TARGET_MAYBE_PREV_TARGET
+            || key_command == CMD_TARGET_MOUSE_SELECT)
         {
             break;
         }
@@ -996,11 +999,7 @@ void direction(dist& moves, targetting_type restricts,
 #endif
 
     if (crawl_state.is_replaying_keys() && restricts != DIR_DIR)
-    {
-        _direction_again(moves, restricts, mode, range, just_looking,
-                         prompt, beh);
         return;
-    }
 
     // NOTE: Even if just_looking is set, moves is still interesting,
     // because we can travel there!

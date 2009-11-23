@@ -4474,7 +4474,8 @@ static void _update_replay_state()
     }
 
     if (!crawl_state.is_replaying_keys() && !crawl_state.cmd_repeat_start
-        && crawl_state.prev_cmd != CMD_NO_CMD)
+        && crawl_state.prev_cmd != CMD_NO_CMD
+        && crawl_state.prev_cmd != CMD_NEXT_CMD)
     {
         if (repeat_again_rec.keys.size() > 0)
             crawl_state.prev_cmd_keys = repeat_again_rec.keys;

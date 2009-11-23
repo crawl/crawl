@@ -1316,7 +1316,13 @@ static item_def* _get_evokable_item(const actor* target)
 
 static bool _evoke_item_on_target(actor* target)
 {
-    item_def* item = _get_evokable_item(target);
+    item_def* item;
+    {
+        // Prevent the inventory letter from being recorded twice.
+        pause_all_key_recorders pause;
+
+        item = _get_evokable_item(target);
+    }
 
     if (item == NULL)
         return (false);
@@ -1377,7 +1383,13 @@ static bool _cast_spell_on_target(actor* target)
     ASSERT(_spell_target == NULL);
     _spell_target = target;
 
-    const int letter = list_spells(true, false, -1, _spell_selector);
+    int letter;
+    {
+        // Prevent the spell letter from being recorded twice.
+        pause_all_key_recorders pause;
+
+        letter = list_spells(true, false, -1, _spell_selector);
+    }
 
     _spell_target = NULL;
 
