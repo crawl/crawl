@@ -1198,8 +1198,7 @@ static bool _need_missile_gift()
             && !feat_destroys_items( grd(you.pos()) )
             && one_chance_in(8)
             && you.skills[ best_missile_skill ] >= 8
-            && (launcher || best_missile_skill == SK_DARTS)
-            && _ammo_count(launcher) < 20 + random2(35));
+            && (launcher || best_missile_skill == SK_DARTS));
 }
 
 static void _get_pure_deck_weights(int weights[])
