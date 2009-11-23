@@ -40,6 +40,15 @@ public:
     void clear();
 };
 
+class pause_all_key_recorders {
+public:
+    pause_all_key_recorders();
+    ~pause_all_key_recorders();
+
+private:
+    std::vector<bool> prev_pause_status;
+};
+
 int getchm(int (*rgetch)() = NULL);       // keymaps applied (ie for prompts)
 int getchm(KeymapContext context, int (*rgetch)() = NULL);
 

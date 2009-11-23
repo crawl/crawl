@@ -995,6 +995,21 @@ void key_recorder::clear()
     macro_trigger_keys.clear();
 }
 
+pause_all_key_recorders::pause_all_key_recorders()
+{
+    for (unsigned int i = 0; i < recorders.size(); i++)
+    {
+        prev_pause_status.push_back(recorders[i]->paused);
+        recorders[i]->paused = true;
+    }
+}
+
+pause_all_key_recorders::~pause_all_key_recorders()
+{
+    for (unsigned int i = 0; i < recorders.size(); i++)
+        recorders[i]->paused = prev_pause_status[i];
+}
+
 void add_key_recorder(key_recorder* recorder)
 {
     for (int i = 0, size = recorders.size(); i < size; i++)
