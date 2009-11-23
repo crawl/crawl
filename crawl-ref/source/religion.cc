@@ -1165,30 +1165,6 @@ static const item_def* _find_missile_launcher(int skill)
     return (NULL);
 }
 
-static int _ammo_count(const item_def *launcher)
-{
-    int count = 0;
-    const missile_type mt = launcher? fires_ammo_type(*launcher) : MI_DART;
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (!you.inv[i].is_valid())
-            continue;
-
-        const item_def &item = you.inv[i];
-        if (item.base_type != OBJ_MISSILES)
-            continue;
-
-        if (item.sub_type == mt
-            || mt == MI_STONE && item.sub_type == MI_SLING_BULLET)
-        {
-            count += item.quantity;
-        }
-    }
-
-    return (count);
-}
-
 static bool _need_missile_gift()
 {
     const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
