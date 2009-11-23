@@ -2914,8 +2914,6 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
 
             mprf(MSGCH_WARN, "Not with %s in view!", monname.c_str());
         }
-        else
-            tutorial_first_monster(m);
     }
     else if (announce && visible.size() > 1)
         mprf(MSGCH_WARN, "Not with these monsters around!");

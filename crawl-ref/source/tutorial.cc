@@ -1415,11 +1415,6 @@ void tutorial_first_monster(const monsters &mon)
         formatted_message_history(text, MSGCH_TUTORIAL, 0,
                                   _get_tutorial_cols());
     }
-
-    if (_mons_is_highlighted(&mon))
-        learned_something_new(TUT_MONSTER_BRAND, mon.pos());
-    if (mon.friendly())
-        learned_something_new(TUT_MONSTER_FRIENDLY, mon.pos());
 }
 
 void tutorial_first_item(const item_def &item)
