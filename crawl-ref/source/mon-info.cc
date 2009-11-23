@@ -11,11 +11,13 @@
 
 #include "fight.h"
 #include "misc.h"
+#include "mon-iter.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
 #include "religion.h"
 #include "showsymb.h"
+#include "state.h"
 
 #include <algorithm>
 #include <sstream>
@@ -311,7 +313,15 @@ void monster_info::to_string(int count, std::string& desc,
 
 void get_monster_info(std::vector<monster_info>& mons)
 {
-    std::vector<monsters*> visible = get_nearby_monsters();
+    std::vector<monsters*> visible;
+    if (crawl_state.arena)
+    {
+        for (monster_iterator mi; mi; ++mi)
+            visible.push_back(*mi);
+    }
+    else
+        visible = get_nearby_monsters();
+
     for (unsigned int i = 0; i < visible.size(); i++)
     {
         if (Options.target_zero_exp

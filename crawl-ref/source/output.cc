@@ -1332,7 +1332,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
 // they have to be consolidated, and 1 otherwise.
 int update_monster_pane()
 {
-    if (!map_bounds(you.pos()))
+    if (!map_bounds(you.pos()) && !crawl_state.arena)
         return (-1);
 
     const int max_print = crawl_view.mlistsz.y;

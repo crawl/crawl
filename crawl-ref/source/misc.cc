@@ -2841,6 +2841,8 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
                                            bool require_visible,
                                            int range)
 {
+    ASSERT(!crawl_state.arena);
+
     if (range == -1)
         range = LOS_RADIUS;
 
