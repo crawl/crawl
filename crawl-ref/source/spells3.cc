@@ -703,6 +703,9 @@ bool receive_corpses(int pow, coord_def where)
         dummy.type = mon_type;
         int index_of_corpse_created = get_item_slot();
 
+        if (index_of_corpse_created == NON_ITEM)
+            break;
+
         if (mons_genus(mon_type) == MONS_HYDRA)
             dummy.number = random2(20) + 1;
 
