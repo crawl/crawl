@@ -1609,20 +1609,22 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
     }
 
     if (large_change)
-        handle_interrupted_swap(true);
-
-    viewwindow(false, true);
-    for (monster_iterator mi; mi; ++mi)
     {
-        const bool see_cell = you.see_cell(mi->pos());
-
-        if (mi->foe == MHITYOU && !see_cell)
+        viewwindow(false, true);
+        for (monster_iterator mi; mi; ++mi)
         {
-            mi->foe_memory = 0;
-            behaviour_event(*mi, ME_EVAL);
+            const bool see_cell = you.see_cell(mi->pos());
+
+            if (mi->foe == MHITYOU && !see_cell)
+            {
+                mi->foe_memory = 0;
+                behaviour_event(*mi, ME_EVAL);
+            }
+            else if (see_cell)
+                behaviour_event(*mi, ME_EVAL);
         }
-        else if (see_cell)
-            behaviour_event(*mi, ME_EVAL);
+
+        handle_interrupted_swap(true);
     }
 
     // Might identify unknown ring of teleport control.
