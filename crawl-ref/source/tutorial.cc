@@ -1285,7 +1285,7 @@ static bool _advise_use_wand()
     return (false);
 }
 
-void tutorial_first_monster(const monsters &mon)
+void tutorial_monster_seen(const monsters &mon)
 {
     if (mons_class_flag(mon.type, M_NO_EXP_GAIN))
     {

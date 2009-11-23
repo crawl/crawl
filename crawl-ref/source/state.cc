@@ -220,7 +220,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         }
 
         if (Tutorial.tutorial_left)
-            tutorial_first_monster(*mon);
+            tutorial_monster_seen(*mon);
 #else
         formatted_string fs( channel_to_colour(MSGCH_WARN) );
         fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());

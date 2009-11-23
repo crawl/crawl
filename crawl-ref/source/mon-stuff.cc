@@ -3496,7 +3496,7 @@ void seen_monster(monsters *monster)
     if (!mons_is_mimic(monster->type))
     {
         if (Tutorial.tutorial_left)
-            tutorial_first_monster(*monster);
+            tutorial_monster_seen(*monster);
 
         if (MONST_INTERESTING(monster))
         {

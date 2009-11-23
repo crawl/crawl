@@ -1900,7 +1900,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         }
 
         if (Tutorial.tutorial_left)
-            tutorial_first_monster(*mon);
+            tutorial_monster_seen(*mon);
 
         return (true);
     }
