@@ -974,6 +974,23 @@ static bool _blocked_ray(const coord_def &where,
     return (true);
 }
 
+std::string _targ_mode_name(targ_mode_type mode)
+{
+    switch (mode)
+    {
+    case TARG_ANY:
+        return ("any");
+    case TARG_ENEMY:
+        return ("enemies");
+    case TARG_FRIEND:
+        return ("friends");
+    case TARG_HOSTILE:
+        return ("hostiles");
+    default:
+        return ("buggy");
+    }
+}
+
 void direction(dist& moves, targetting_type restricts,
                targ_mode_type mode, int range, bool just_looking,
                bool needs_path, bool may_target_monster,
@@ -1347,11 +1364,7 @@ void direction(dist& moves, targetting_type restricts,
 
         case CMD_TARGET_CYCLE_TARGET_MODE:
             mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
-            mprf("targetting mode is now: %s",
-                 (mode == TARG_ANY)     ? "any" :
-                 (mode == TARG_ENEMY)   ? "enemies" :
-                 (mode == TARG_HOSTILE) ? "hostiles"
-                                        : "friends");
+            mprf("targetting mode is now: %s", _targ_mode_name(mode).c_str());
             break;
 
         case CMD_TARGET_PREV_TARGET:
