@@ -26,7 +26,7 @@
 # Dummy, weight will need eventual adjustment.
 NAME:   uniq_dummy
 DEPTH:  1-50
-WEIGHT: 150
+WEIGHT: 200
 TAGS:   place_unique dummy
 MAP
 .
