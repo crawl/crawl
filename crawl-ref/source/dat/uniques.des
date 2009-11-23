@@ -481,7 +481,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_aizul
-DEPTH:  20-27, !Lair, !Slime
+DEPTH:  16-25, !Lair, !Slime, Snake:2-5
 WEIGHT: 100
 TAGS:   place_unique
 MONS:   Aizul
