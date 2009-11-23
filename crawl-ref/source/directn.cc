@@ -999,7 +999,11 @@ void direction(dist& moves, targetting_type restricts,
 #endif
 
     if (crawl_state.is_replaying_keys() && restricts != DIR_DIR)
+    {
+        _direction_again(moves, restricts, mode, range, just_looking,
+                         prompt, beh);
         return;
+    }
 
     // NOTE: Even if just_looking is set, moves is still interesting,
     // because we can travel there!
