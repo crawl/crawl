@@ -331,27 +331,6 @@ static std::string _player_ghost_speak_str(const monsters *monster,
     return msg;
 }
 
-// If the monster was originally a unique which has been polymorphed into
-// a non-unique, is its current monter type capable of using its old
-// speech?
-static bool _polyd_can_speak(const monsters* monster)
-{
-    // Priest and wizard monsters can always speak.
-    if (monster->is_priest() || monster->is_actual_spellcaster())
-        return (true);
-
-    // Silent or non-sentient monsters can't use the original speech.
-    if (mons_intel(monster) < I_NORMAL
-        || mons_shouts(monster->type) == S_SILENT)
-    {
-        return (false);
-    }
-
-    // Does it have the proper vocal equipment?
-    const mon_body_shape shape = get_mon_shape(monster);
-    return (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA);
-}
-
 // Returns true if the monster did speak, false otherwise.
 // Maybe monsters will speak!
 void maybe_mons_speaks (monsters *monster)
@@ -579,7 +558,10 @@ bool mons_speaks(monsters *monster)
     }
     else
     {
-        if (!monster->mname.empty() && _polyd_can_speak(monster))
+        // If the monster was originally a unique which has been polymorphed
+        // into a non-unique, is its current monter type capable of using its
+        // old speech?
+        if (!monster->mname.empty() && monster->can_speak())
         {
             msg = _get_speak_string(prefixes, monster->name(DESC_PLAIN),
                                     monster, no_player, no_foe, no_foe_name,

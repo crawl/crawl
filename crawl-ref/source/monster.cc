@@ -659,6 +659,24 @@ bool monsters::can_throw_large_rocks() const
             || ::mons_species(type) == MONS_OGRE);
 }
 
+bool monsters::can_speak()
+{
+    // Priest and wizard monsters can always speak.
+    if (is_priest() || is_actual_spellcaster())
+        return (true);
+
+    // Silent or non-sentient monsters can't use the original speech.
+    if (mons_intel(this) < I_NORMAL
+        || mons_shouts(type) == S_SILENT)
+    {
+        return (false);
+    }
+
+    // Does it have the proper vocal equipment?
+    const mon_body_shape shape = get_mon_shape(this);
+    return (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA);
+}
+
 bool monsters::has_spell_of_type(unsigned disciplines) const
 {
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)

@@ -364,6 +364,7 @@ public:
     bool has_damage_type(int dam_type);
 
     bool can_throw_large_rocks() const;
+    bool can_speak();
 
     int armour_class() const;
     int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
