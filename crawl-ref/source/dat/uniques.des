@@ -8,7 +8,7 @@
 # Boris vault.
 #
 # If you want to weight uniques differently for some vaults, the weights for
-# these vaults should all add up to 10 (the current default weight for uniques).
+# these vaults should all add up to 100 (the default weight for uniques).
 # You can use multiple vaults that are tagged "uniq_<name>", with different 
 # weights for each of the vaults.
 #
