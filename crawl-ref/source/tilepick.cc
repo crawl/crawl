@@ -2771,6 +2771,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_DEFLECT_MISSILES:         return TILEG_DEFLECT_MISSILES;
     case SPELL_CONJURE_BALL_LIGHTNING:   return TILEG_CONJURE_BALL_LIGHTNING;
     case SPELL_CHAIN_LIGHTNING:          return TILEG_CHAIN_LIGHTNING;
+    case SPELL_SHOCKING_AMMUNITION:      return TILEG_TODO;
 
     // Earth
     case SPELL_SANDBLAST:                return TILEG_SANDBLAST;
@@ -2798,12 +2799,13 @@ int tileidx_spell(spell_type spell)
     case SPELL_DELAYED_FIREBALL:         return TILEG_DELAYED_FIREBALL;
     case SPELL_RING_OF_FLAMES:           return TILEG_RING_OF_FLAMES;
     case SPELL_FIRE_STORM:               return TILEG_FIRE_STORM;
+    case SPELL_FLAME_AMMUNITION:         return TILEG_TODO;
 
     // Ice
     case SPELL_FREEZE:                   return TILEG_FREEZE;
     case SPELL_THROW_FROST:              return TILEG_THROW_FROST;
     case SPELL_FREEZING_AURA:            return TILEG_FREEZING_AURA;
-    case SPELL_HIBERNATION:                    return TILEG_ENSORCELLED_HIBERNATION;
+    case SPELL_HIBERNATION:              return TILEG_ENSORCELLED_HIBERNATION;
     case SPELL_OZOCUBUS_ARMOUR:          return TILEG_OZOCUBUS_ARMOUR;
     case SPELL_THROW_ICICLE:             return TILEG_THROW_ICICLE;
     case SPELL_CONDENSATION_SHIELD:      return TILEG_CONDENSATION_SHIELD;
@@ -2813,6 +2815,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_ENGLACIATION:               return TILEG_METABOLIC_ENGLACIATION;
     case SPELL_SIMULACRUM:               return TILEG_SIMULACRUM;
     case SPELL_ICE_STORM:                return TILEG_ICE_STORM;
+    case SPELL_FROST_AMMUNITION:         return TILEG_TODO;
 
     // Poison
     case SPELL_STING:                    return TILEG_STING;
@@ -2828,7 +2831,7 @@ int tileidx_spell(spell_type spell)
 
     // Enchantment
     case SPELL_CONFUSING_TOUCH:          return TILEG_CONFUSING_TOUCH;
-    case SPELL_CORONA:                return TILEG_CORONA;
+    case SPELL_CORONA:                   return TILEG_CORONA;
     case SPELL_PROJECTED_NOISE:          return TILEG_PROJECTED_NOISE;
     case SPELL_SURE_BLADE:               return TILEG_SURE_BLADE;
     case SPELL_TUKIMAS_VORPAL_BLADE:     return TILEG_TUKIMAS_VORPAL_BLADE;
@@ -2846,6 +2849,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_HASTE:                    return TILEG_HASTE;
     case SPELL_INVISIBILITY:             return TILEG_INVISIBILITY;
     case SPELL_MASS_CONFUSION:           return TILEG_MASS_CONFUSION;
+    case SPELL_EXPLODING_AMMUNITION:     return TILEG_TODO;
 
     // Translocation
     case SPELL_APPORTATION:              return TILEG_APPORTATION;
@@ -2860,6 +2864,8 @@ int tileidx_spell(spell_type spell)
     case SPELL_WARP_BRAND:               return TILEG_WARP_WEAPON;
     case SPELL_DISPERSAL:                return TILEG_DISPERSAL;
     case SPELL_PORTAL:                   return TILEG_PORTAL;
+    case SPELL_WARP_AMMUNITION:          return TILEG_TODO;
+    case SPELL_RETURNING_AMMUNITION:     return TILEG_TODO;
 
     // Summoning
     case SPELL_SUMMON_BUTTERFLIES:       return TILEG_SUMMON_BUTTERFLIES;
@@ -2901,7 +2907,8 @@ int tileidx_spell(spell_type spell)
     case SPELL_SYMBOL_OF_TORMENT:        return TILEG_SYMBOL_OF_TORMENT;
     case SPELL_DEATHS_DOOR:              return TILEG_DEATHS_DOOR;
     case SPELL_DEATH_CHANNEL:            return TILEG_DEATH_CHANNEL;
-
+    case SPELL_REAPING_AMMUNITION:       return TILEG_TODO;
+  
     // Transmutation
     case SPELL_STICKS_TO_SNAKES:         return TILEG_STICKS_TO_SNAKES;
     case SPELL_SPIDER_FORM:              return TILEG_SPIDER_FORM;
