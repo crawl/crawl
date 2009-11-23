@@ -40,8 +40,12 @@ public:
 };
 
 // output from direction() function:
-struct dist
+class dist
 {
+public:
+    dist();
+
+public:
     bool isValid;       // valid target chosen?
     bool isTarget;      // target (true), or direction (false)?
     bool isMe;          // selected self (convenience: target == you.pos())

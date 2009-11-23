@@ -129,6 +129,13 @@ static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
 static std::string _get_monster_desc(const monsters *mon);
 
+dist::dist()
+    : isValid(false), isTarget(false), isMe(false), isEndpoint(false),
+      isCancel(true), choseRay(false), target(), delta(), ray(),
+      prev_target(MHITNOT)
+{
+}
+
 void direction_choose_compass( dist& moves, targetting_behaviour *beh)
 {
     moves.isValid       = true;
