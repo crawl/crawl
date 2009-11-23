@@ -6,6 +6,7 @@
 
 #include "AppHdr.h"
 
+#include "areas.h"
 #include "beam.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -2765,7 +2766,24 @@ void monsters::expose_to_element(beam_type flavour, int strength)
 
 void monsters::banish(const std::string &)
 {
+    coord_def old_pos = pos();
+
+    if (!silenced(pos()) && can_speak())
+        simple_monster_message(this, (" screams as " + pronoun(PRONOUN_OBJECTIVE)
+            + " is devoured by a tear in reality.").c_str(),
+            MSGCH_BANISHMENT);
+    else
+        simple_monster_message(this, " is devoured by a tear in reality.",
+            MSGCH_BANISHMENT);
     monster_die(this, KILL_RESET, NON_MONSTER);
+
+    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), KC_OTHER);
+    for (adjacent_iterator ai(old_pos); ai; ++ai)
+        if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
+            && coinflip())
+        {
+            place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), KC_OTHER);
+        }
 }
 
 bool monsters::has_spells() const

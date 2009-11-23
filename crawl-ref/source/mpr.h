@@ -33,6 +33,7 @@ enum msg_channel_type
     MSGCH_FRIEND_ENCHANT,   // allied monsters' enchantments up and down
     MSGCH_MONSTER_DAMAGE,   // monster damage reports (param is level)
     MSGCH_MONSTER_TARGET,   // message marking the monster as a target
+    MSGCH_BANISHMENT,       // Abyss-related messages
     MSGCH_ROTTEN_MEAT,      // messages about chunks/corpses becoming rotten
     MSGCH_EQUIPMENT,        // equipment listing messages
     MSGCH_FLOOR_ITEMS,      // like equipment, but lists of floor items

@@ -2690,7 +2690,7 @@ static void _check_banished()
         you.banished = false;
         if (you.level_type != LEVEL_ABYSS)
         {
-            mpr("You are cast into the Abyss!");
+            mpr("You are cast into the Abyss!", MSGCH_BANISHMENT);
             more();
             banished(DNGN_ENTER_ABYSS, you.banished_by);
         }

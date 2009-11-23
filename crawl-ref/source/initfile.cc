@@ -112,7 +112,7 @@ static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
     "warning", "food", "recovery", "sound", "talk", "talk_visual",
     "intrinsic_gain", "mutation", "monster_spell", "monster_enchant",
     "friend_spell", "friend_enchant", "monster_damage", "monster_target",
-    "rotten_meat", "equipment", "floor", "multiturn", "examine",
+    "banishment", "rotten_meat", "equipment", "floor", "multiturn", "examine",
     "examine_filter", "diagnostic", "error", "tutorial"
 };
 

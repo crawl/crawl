@@ -338,6 +338,10 @@ int channel_to_colour( msg_channel_type channel, int param )
             ret = LIGHTMAGENTA;
             break;
 
+        case MSGCH_BANISHMENT:
+            ret = MAGENTA;
+            break;
+
         case MSGCH_MONSTER_DAMAGE:
             ret =  ((param == MDAM_DEAD)               ? RED :
                     (param >= MDAM_SEVERELY_DAMAGED)   ? LIGHTRED :
