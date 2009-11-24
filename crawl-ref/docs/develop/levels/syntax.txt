@@ -721,7 +721,7 @@ COLOUR:   . = green / blue:5 / red / none
           Available base colours are as follows: blue, green, cyan, 
           red, magenta, brown, lightgrey, darkgrey, lightblue, lightgreen, 
           lightcyan, lightred, lightmagenta, yellow and white. 
-          
+
           Elemental colours are: fire, ice, earth, electricity, air, poison,
           water, magic, mutagenic, warp, enchant, heal, holy, dark, death,
           necro, unholy, vehumet, beogh, crystal, blood, smoke, slime, jewel,
