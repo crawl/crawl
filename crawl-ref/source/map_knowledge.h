@@ -17,6 +17,7 @@ struct map_cell
 
     unsigned glyph() const;
     dungeon_feature_type feat() const;
+    show_item_type item() const;
     bool known() const;
     bool seen() const;
 };

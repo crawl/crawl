@@ -42,6 +42,11 @@ dungeon_feature_type map_cell::feat() const
     return (object.feat);
 }
 
+show_item_type map_cell::item() const
+{
+    return (object.item);
+}
+
 bool map_cell::known() const
 {
     return (object && (flags & MAP_GRID_KNOWN));
