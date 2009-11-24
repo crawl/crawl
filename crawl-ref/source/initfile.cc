@@ -769,7 +769,6 @@ void game_options::reset_options()
     explore_improved       = false;
     trap_prompt            = true;
 
-    target_wrap            = true;
     target_oos             = true;
     target_los_first       = true;
     target_unshifted_dirs  = false;

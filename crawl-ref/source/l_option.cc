@@ -54,7 +54,6 @@ static option_handler handlers[] =
     { "pickup_dropped",  &Options.pickup_dropped, option_hboolean },
     { "show_waypoints",  &Options.show_waypoints, option_hboolean },
     { "item_colour",     &Options.item_colour, option_hboolean },
-    { "target_wrap",     &Options.target_wrap, option_hboolean },
     { "easy_exit_menu",  &Options.easy_exit_menu, option_hboolean },
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                                       option_hboolean },

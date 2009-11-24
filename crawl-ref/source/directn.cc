@@ -1227,7 +1227,7 @@ void direction(dist& moves, const targetting_type restricts,
 
             if (_find_square_wrapper(moves.target, monsfind_pos, 1,
                                      _find_mlist, needs_path, idx, range,
-                                     Options.target_wrap))
+                                     true))
             {
                 moves.target = monsfind_pos;
             }
@@ -1451,7 +1451,7 @@ void direction(dist& moves, const targetting_type restricts,
             dir = (key_command == CMD_TARGET_CYCLE_BACK) ? -1 : 1;
             if (_find_square_wrapper( moves.target, monsfind_pos, dir,
                                       _find_monster, needs_path, mode, range,
-                                      Options.target_wrap))
+                                      true))
             {
                 moves.target = monsfind_pos;
             }
@@ -1460,7 +1460,7 @@ void direction(dist& moves, const targetting_type restricts,
                 if (needs_path && !just_looking
                     && _find_square_wrapper(moves.target, monsfind_pos, dir,
                                             _find_monster, false, mode,
-                                            range, Options.target_wrap))
+                                            range, true))
                 {
                     mpr("All monsters which could be auto-targeted "
                         "are covered by a wall or statue which interrupts "
