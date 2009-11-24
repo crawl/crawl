@@ -10,6 +10,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "itemprop.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
@@ -216,7 +217,16 @@ static show_item_type _item_to_show_code(const item_def &item)
 
 void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
 {
-    const item_def &eitem = mitm[igrd(gp)];
+    item_def eitem;
+    // Check for mimics.
+    const monsters* m = monster_at(gp);
+    if (m && mons_is_unknown_mimic(m))
+        get_mimic_item(m, eitem);
+    else if (igrd(gp) != NON_ITEM)
+        eitem = mitm[igrd(gp)];
+    else
+        return;
+
     unsigned short &ecol  = grid(ep).colour;
 
     glyph g = get_item_glyph(&eitem);
@@ -289,6 +299,9 @@ void show_def::_update_monster(const monsters* mons)
     const coord_def pos = mons->pos();
     const coord_def e = grid2show(pos);
 
+    if (mons_is_unknown_mimic(mons))
+        return;
+
     if (!mons->visible_to(&you))
     {
         // ripple effect?
@@ -354,8 +367,7 @@ void show_def::update_at(const coord_def &gp, const coord_def &ep)
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp, ep);
 
-    if (igrd(gp) != NON_ITEM)
-        _update_item_at(gp, ep);
+    _update_item_at(gp, ep);
 
     const int cloud = env.cgrid(gp);
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
