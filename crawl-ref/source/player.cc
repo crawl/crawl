@@ -5484,6 +5484,10 @@ void player::init()
     reset_escaped_death();
 
     on_current_level = true;
+
+#if WIZARD || DEBUG
+    you.never_die = false;
+#endif
 }
 
 player_save_info player_save_info::operator=(const player& rhs)

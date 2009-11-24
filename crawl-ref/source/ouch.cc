@@ -1137,6 +1137,15 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             death_type = KILLED_BY_XOM;
     }
 
+#if WIZARD || DEBUG
+    if (you.never_die)
+    {
+        mpr("you.never_die set to true, avoiding death",
+            MSGCH_DIAGNOSTICS);
+        return;
+    }
+#endif
+
     // Construct scorefile entry.
     scorefile_entry se(dam, death_source, death_type, aux);
 

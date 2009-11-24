@@ -295,6 +295,12 @@ public:
   // and restored.
   std::vector<int> beholders;
 
+#if WIZARD || DEBUG
+  // If set to true, then any call to ouch() which would cuase the player
+  // to die automatically returns without ending the game.
+  bool never_die;
+#endif
+
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
     FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
