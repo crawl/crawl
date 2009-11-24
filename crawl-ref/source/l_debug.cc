@@ -10,9 +10,14 @@
 
 #include "beam.h"
 #include "chardump.h"
+#include "coordit.h"
 #include "dungeon.h"
 #include "message.h"
+#include "mon-iter.h"
+#include "mon-stuff.h"
+#include "mon-util.h"
 #include "place.h"
+#include "view.h"
 #include "wiz-dgn.h"
 
 // WARNING: This is a very low-level call.
@@ -122,6 +127,48 @@ LUAFN(debug_never_die)
 
     return (0);
 }
+
+// If menv[] is full, dismiss all monsters not near the player.
+LUAFN(debug_cull_monsters)
+{
+    for (int il = 0; il < MAX_MONSTERS; il++)
+    {
+        if (menv[il].type == MONS_NO_MONSTER)
+            // At least one empty space in menv
+            return (0);
+    }
+
+    mpr("menv[] is full, dismissing non-near monsters",
+        MSGCH_DIAGNOSTICS);
+
+    // menv[] is full
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mons_near(*mi))
+            continue;
+
+        mi->flags |= MF_HARD_RESET;
+        monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
+    }
+
+    return (0);
+}
+
+LUAFN(debug_dismiss_adjacent)
+{
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        monsters* mon = monster_at(*ai);
+
+        if (mon)
+        {
+            mon->flags |= MF_HARD_RESET;
+            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        }
+    }
+
+    return (0);
+}
  
 const struct luaL_reg debug_dlib[] =
 {
@@ -132,6 +179,8 @@ const struct luaL_reg debug_dlib[] =
 { "test_explore", _debug_test_explore },
 { "bouncy_beam", debug_bouncy_beam },
 { "never_die", debug_never_die },
+{ "cull_monsters", debug_cull_monsters},
+{ "dismiss_adjacent", debug_dismiss_adjacent},
 
 { NULL, NULL }
 };
