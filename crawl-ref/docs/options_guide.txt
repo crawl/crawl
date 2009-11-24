@@ -1277,10 +1277,10 @@ status_caption_colour = brown
         Sets the colour that is used to display the captions in the status
         area (for instance the "Health:" in "Health: 10/10").
 
-delay_message_clear = false
-        Setting this option to true will delay the clearing of messages
-        until the message space is full (default is false which results
-        in clearing between player actions).
+delay_message_clear = true
+        Setting this option to false will cause messages to cleared
+        between player actions (default is false which will  delay the
+        clearing of messages until the message space is full).
 
 show_inventory_weights = false
         When this is set to true, inventory listings will mention the

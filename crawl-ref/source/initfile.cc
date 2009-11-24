@@ -694,7 +694,7 @@ void game_options::reset_options()
     // [ds] Grumble grumble.
     auto_list              = true;
 
-    delay_message_clear    = false;
+    delay_message_clear    = true;
     pickup_dropped         = false;
     pickup_thrown          = true;
 
