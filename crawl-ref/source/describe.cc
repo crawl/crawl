@@ -2811,7 +2811,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
 
     // And quotes {due}
     if (mons.props.exists("quote"))
-        inf.body << std::string(mons.props["quote"]);
+        inf.quote = mons.props["quote"].get_string();
     else
         inf.quote = getQuoteString(db_name);
 
