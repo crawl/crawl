@@ -1790,7 +1790,7 @@ void process_command( command_type cmd )
             "(v - describe square, ? - help)", MSGCH_PROMPT);
 
         struct dist lmove;   // Will be initialised by direction().
-        direction(lmove, DIR_TARGET, TARG_ANY, -1, true);
+        direction(lmove, DIR_TARGET, TARG_ANY, -1, true, false);
         if (lmove.isValid && lmove.isTarget && !lmove.isCancel
             && !crawl_state.arena_suspended)
         {
