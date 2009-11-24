@@ -769,7 +769,6 @@ void game_options::reset_options()
     explore_improved       = false;
     trap_prompt            = true;
 
-    target_zero_exp        = false;
     target_wrap            = true;
     target_oos             = true;
     target_los_first       = true;
@@ -3038,7 +3037,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(dump_book_spells);
     else BOOL_OPTION(level_map_title);
-    else BOOL_OPTION(target_zero_exp);
     else BOOL_OPTION(target_oos);
     else BOOL_OPTION(target_los_first);
     else if (key == "target_unshifted_dirs")

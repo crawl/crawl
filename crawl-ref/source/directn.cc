@@ -2069,9 +2069,8 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
     if (mon->friendly())
         return (false);
 
-    // Don't target zero xp monsters, unless target_zero_exp is set.
-    return (Options.target_zero_exp
-            || !mons_class_flag(mon->type, M_NO_EXP_GAIN));
+    // Don't target zero xp monsters.
+    return (!mons_class_flag(mon->type, M_NO_EXP_GAIN));
 }
 
 static bool _find_feature( const coord_def& where, int mode,
@@ -2171,9 +2170,6 @@ bool in_los_bounds(const coord_def& p)
 // starts to player's left) and puts its coordinates in mfp.
 // Returns 1 if it found something, zero otherwise. If direction
 // is -1, goes backwards.
-//
-// If the game option target_zero_exp is true, zero experience
-// monsters will be targeted.
 //
 //---------------------------------------------------------------
 static char _find_square( const coord_def& where,

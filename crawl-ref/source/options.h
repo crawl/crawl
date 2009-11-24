@@ -277,8 +277,6 @@ public:
     std::vector<std::string> dump_order;
 
     bool        level_map_title;    // Show title in level map
-    bool        target_zero_exp;    // If true, targetting targets zero-exp
-                                    // monsters.
     bool        target_wrap;        // Wrap around from last to first target
     bool        target_oos;         // 'x' look around can target out-of-LOS
     bool        target_los_first;   // 'x' look around first goes to visible

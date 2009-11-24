@@ -324,8 +324,7 @@ void get_monster_info(std::vector<monster_info>& mons)
 
     for (unsigned int i = 0; i < visible.size(); i++)
     {
-        if (Options.target_zero_exp
-            || !mons_class_flag( visible[i]->type, M_NO_EXP_GAIN )
+        if (!mons_class_flag( visible[i]->type, M_NO_EXP_GAIN )
             || visible[i]->type == MONS_KRAKEN_TENTACLE)
         {
             mons.push_back(monster_info(visible[i]));

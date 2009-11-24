@@ -112,7 +112,6 @@ drop_filter = useless_item
 
 ##### 4-b	Targetting ############################
 #
-# target_zero_exp = true
 # target_oos = false
 # target_los_first = false
 # default_target = false

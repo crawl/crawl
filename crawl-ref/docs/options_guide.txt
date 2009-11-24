@@ -29,9 +29,8 @@ The contents of this text are:
                 chunks_autopickup, assign_item_slot, drop_mode,
                 pickup_mode, drop_filter, default_friendly_pickup
 4-b     Targeting.
-                target_zero_exp, target_oos, target_los_first,
-                default_target, target_unshifted_dirs, 
-                darken_beyond_range
+                target_oos, target_los_first, default_target,
+                target_unshifted_dirs, darken_beyond_range
 4-c     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour, colour_map, clean_map
@@ -568,11 +567,6 @@ default_friendly_pickup = (friend | player | none | all)
 
 4-b     Targeting.
 -------------------
-
-target_zero_exp = false
-        Set to false to disable targeting zero exp monsters (i.e.
-        plants) in hostile targeting mode. This is usually convenient to
-        do. This also prevents the monster list from displaying them.
 
 target_oos = true
         When cycling through items with 'x' look-around, setting
