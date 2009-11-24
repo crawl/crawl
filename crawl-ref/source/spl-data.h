@@ -62,9 +62,9 @@
 },
 
 {
-    SPELL_APPORTATION, "Apportation",
+     SPELL_APPORTATION, "Apportation",
      SPTYP_TRANSLOCATION,
-     SPFLAG_GRID | SPFLAG_NOT_SELF,
+     SPFLAG_TARG_OBJ | SPFLAG_NOT_SELF,
      1,
      1000,
      LOS_RADIUS, LOS_RADIUS,
