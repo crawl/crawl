@@ -10,6 +10,7 @@
 #include "l_libs.h"
 
 #include "cio.h"
+#include "command.h"
 #include "delay.h"
 #include "directn.h"
 #include "format.h"
@@ -20,6 +21,7 @@
 #include "message.h"
 #include "notes.h"
 #include "options.h"
+#include "output.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -231,6 +233,40 @@ static int crawl_process_command(lua_State *ls)
     lua_pushboolean(ls, will_process);
     return (1);
 }
+
+static int crawl_process_keys(lua_State *ls)
+{
+    if (you_are_delayed() || you.turn_is_over)
+    {
+        luaL_error(ls, "Cannot currently process new keys");
+        return (0);
+    }
+
+    const char* keys = luaL_checkstring(ls, 1);
+
+    if (strlen(keys) == 0)
+    {
+        luaL_argerror(ls, 1, "Must have at least one key to process.");
+        return (0);
+    }
+
+    command_type cmd = key_to_command(keys[0], KMC_DEFAULT);
+
+    if (cmd == CMD_NO_CMD)
+    {
+        luaL_argerror(ls, 1, "First key is invalid command");
+        return (0);
+    }
+
+    flush_input_buffer(FLUSH_BEFORE_COMMAND);
+    for (int i = 1, len = strlen(keys); i < len; i++)
+        macro_buf_add(keys[i]);
+
+    process_command(cmd);
+
+    return (0);
+}
+
 
 static int crawl_playsound(lua_State *ls)
 {
@@ -592,6 +628,7 @@ static const struct luaL_reg crawl_clib[] =
     { "flush_input",    crawl_flush_input },
     { "sendkeys",       crawl_sendkeys },
     { "process_command", crawl_process_command },
+    { "process_keys",   crawl_process_keys },
     { "playsound",      crawl_playsound },
     { "runmacro",       crawl_runmacro },
     { "bindkey",        crawl_bindkey },
@@ -647,6 +684,25 @@ LUAFN(_crawl_redraw_view)
     viewwindow(false);
     return (0);
 }
+
+LUAFN(_crawl_redraw_stats)
+{
+    you.wield_change        = true;
+    you.redraw_quiver       = true;
+    you.redraw_hit_points   = true;
+    you.redraw_magic_points = true;
+    you.redraw_strength     = true;
+    you.redraw_intelligence = true;
+    you.redraw_dexterity    = true;
+    you.redraw_experience   = true;
+    you.redraw_armour_class = true;
+    you.redraw_evasion      = true;
+    you.redraw_status_flags = 0xFFFFFFFF;
+
+    print_stats();
+    return (0);
+}
+
 
 #ifdef UNIX
 LUAFN(_crawl_millis)
@@ -718,6 +774,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "args", _crawl_args },
 { "mark_milestone", _crawl_milestone },
 { "redraw_view", _crawl_redraw_view },
+{ "redraw_stats", _crawl_redraw_stats },
 { "god_speaks", _crawl_god_speaks },
 #ifdef UNIX
 { "millis", _crawl_millis },

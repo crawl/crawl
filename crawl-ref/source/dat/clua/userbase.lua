@@ -112,15 +112,3 @@ end
 function add_no_autopickup_func(func)
     table.insert(chk_deny_autopickup, func)
 end
-
--- Sends the characters in keys as keyboard input to crawl, then requests
--- that Crawl process one command.
-function crawl.process_keys(keys, yield_value)
-  if yield_value == nil then
-    yield_value = true
-  end
-
-  crawl.sendkeys(keys)
-  crawl.process_command()
-  coroutine.yield(yield_value)
-end
