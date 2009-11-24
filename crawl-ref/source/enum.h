@@ -3167,6 +3167,13 @@ enum montravel_target_type
     MTRAV_KNOWN_UNREACHABLE // As above, and the player knows this.
 };
 
+enum maybe_bool
+{
+    B_FALSE,
+    B_MAYBE,
+    B_TRUE
+};
+
 #ifdef USE_TILE
 enum screen_mode
 {

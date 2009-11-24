@@ -97,4 +97,8 @@ int integer_sqrt(int value);
 
 int random_rod_subtype();
 
+maybe_bool frombool(bool b);
+bool tobool(maybe_bool mb, bool def);
+bool tobool(maybe_bool mb);
+
 #endif

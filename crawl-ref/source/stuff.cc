@@ -936,3 +936,29 @@ int random_rod_subtype()
 {
     return STAFF_FIRST_ROD + random2(NUM_STAVES - STAFF_FIRST_ROD);
 }
+
+maybe_bool frombool(bool b)
+{
+    return (b ? B_TRUE : B_FALSE);
+}
+
+bool tobool(maybe_bool mb)
+{
+    ASSERT (mb != B_MAYBE);
+    return (mb == B_TRUE);
+}
+
+bool tobool(maybe_bool mb, bool def)
+{
+    switch (mb)
+    {
+    case B_TRUE:
+        return (true);
+    case B_FALSE:
+        return (false);
+    case B_MAYBE:
+    default:
+        return (def);
+    }
+}
+
