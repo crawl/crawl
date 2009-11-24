@@ -2077,25 +2077,16 @@ static bool _find_feature( const coord_def& where, int mode,
 }
 
 static bool _find_object(const coord_def& where, int mode,
-                         bool /* need_path */, int /* range */)
+                         bool need_path, int range)
 {
-    // First, check for mimics.
-    bool is_mimic = false;
-    const monsters* m = monster_at(where);
-    if (m
-        && m->visible_to(&you)
-        && mons_is_mimic(m->type)
-        && !(m->flags & MF_KNOWN_MIMIC))
-    {
-        is_mimic = true;
-    }
-
-    const int item = igrd(where);
-    if (item == NON_ITEM && !is_mimic)
+    // Don't target out of range.
+    if (!_is_target_in_range(where, range))
         return (false);
 
-    return (in_los(where) || is_terrain_seen(where)
-            && (is_stash(where.x,where.y) || is_mimic));
+    if (need_path && (!you.see_cell(where) || _blocked_ray(where)))
+        return (false);
+
+    return (env.map_knowledge(where).item() != SHOW_ITEM_NONE);
 }
 
 static int _next_los(int dir, int los, bool wrap)
