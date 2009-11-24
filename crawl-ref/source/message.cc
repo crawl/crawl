@@ -21,6 +21,7 @@
 #include "delay.h"
 #include "initfile.h"
 #include "libutil.h"
+#include "luaterp.h"
 #include "macro.h"
 #include "message.h"
 #include "mon-stuff.h"
@@ -1054,7 +1055,8 @@ void more(bool user_forced)
         return;
     }
 
-    if (crawl_state.is_replaying_keys() || autoclear_more)
+    if (crawl_state.is_replaying_keys() || autoclear_more
+        || luaterp_running())
     {
         mesclr();
         return;

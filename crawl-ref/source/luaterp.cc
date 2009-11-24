@@ -106,8 +106,12 @@ static int _report(lua_State *ls, int status)
     return status;
 }
 
+static bool _luaterp_running = false;
+
 void run_clua_interpreter(lua_State *ls)
 {
+    _luaterp_running = true;
+
     int status;
     mpr("[Hit ESC to exit interpreter.]");
     while ((status = _loadline(ls)) != -1)
@@ -127,6 +131,13 @@ void run_clua_interpreter(lua_State *ls)
         }
     }
     lua_settop(ls, 0); // clear stack
+
+    _luaterp_running = false;
+}
+
+bool luaterp_running()
+{
+    return (_luaterp_running);
 }
 
 static bool _loaded_terp_files = false;
@@ -135,6 +146,7 @@ void debug_terp_dlua()
 {
     if (!_loaded_terp_files)
     {
+        dlua.execfile("clua/debug.lua", false, false);
         for (unsigned int i = 0; i < Options.terp_files.size(); i++)
         {
             dlua.execfile(Options.terp_files[i].c_str(), false, false);
