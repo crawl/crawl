@@ -1602,6 +1602,11 @@ int monster_die(monsters *monster, killer_type killer,
         {
             const bool bad_kill    = god_hates_killing(you.religion, monster);
             const bool was_neutral = testbits(monster->flags, MF_WAS_NEUTRAL);
+            // killing friendlies is good, more bloodshed!
+            // Undead feel no pain though, tormenting them is not as satisfying.
+            const bool good_kill   = !created_friendly && gives_xp
+                || (is_evil_god(you.religion) && !monster->is_summoned()
+                    && (targ_holy == MH_NATURAL || targ_holy == MH_HOLY));
 
             if (death_message)
             {
@@ -1632,7 +1637,7 @@ int monster_die(monsters *monster, killer_type killer,
                 _tutorial_inspect_kill();
 
             // Prevent summoned creatures from being good kills.
-            if (bad_kill || !created_friendly && gives_xp)
+            if (bad_kill || good_kill)
             {
                 if (targ_holy == MH_NATURAL)
                 {
@@ -1720,7 +1725,7 @@ int monster_die(monsters *monster, killer_type killer,
             // killing born-friendly monsters.  The mutation still
             // applies, however.
             if (player_mutation_level(MUT_DEATH_STRENGTH)
-                || (!created_friendly && gives_xp
+                || (good_kill
                     && (you.religion == GOD_MAKHLEB
                         || you.religion == GOD_SHINING_ONE
                            && monster->is_evil())
@@ -1735,7 +1740,7 @@ int monster_die(monsters *monster, killer_type killer,
                 }
             }
 
-            if (!created_friendly && gives_xp
+            if (good_kill
                 && (you.religion == GOD_MAKHLEB
                     || you.religion == GOD_VEHUMET
                     || you.religion == GOD_SHINING_ONE
