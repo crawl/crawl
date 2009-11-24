@@ -503,7 +503,7 @@ bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
 {
     va_list args;
     va_start(args, params);
-    maybe_bool r = callmbooleanfn(fn, params, &args);
+    maybe_bool r = callmbooleanfn(fn, params, args);
     return (tobool(r, def));
 }
 
