@@ -8,6 +8,7 @@
 #include "l_libs.h"
 
 #include "cluautil.h"
+#include "coord.h"
 #include "env.h"
 #include "mon-info.h"
 
@@ -56,16 +57,6 @@ static const struct luaL_reg moninf_lib[] =
 bool in_show_bounds(const coord_def &s)
 {
     return (s.rdist() <= ENV_SHOW_OFFSET);
-}
-
-coord_def player2grid(const coord_def &s)
-{
-    return (you.pos() + s);
-}
-
-coord_def grid2player(const coord_def &g)
-{
-    return (g - you.pos());
 }
 
 LUAFN(mi_get_monster_at)

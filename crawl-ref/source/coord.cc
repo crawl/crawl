@@ -97,4 +97,15 @@ coord_def random_in_bounds()
                          random_range(MAPGEN_BORDER, GYM - MAPGEN_BORDER - 1));
 }
 
+// Coordinate system conversions.
+
+coord_def player2grid(const coord_def &pc)
+{
+    return (pc + you.pos());
+}
+
+coord_def grid2player(const coord_def &gc)
+{
+    return (gc - you.pos());
+}
 

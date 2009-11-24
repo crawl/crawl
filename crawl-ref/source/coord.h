@@ -32,4 +32,10 @@ int distance( const coord_def& p1, const coord_def& p2 );
 int distance( int x, int y, int x2, int y2);
 bool adjacent( const coord_def& p1, const coord_def& p2 );
 
+// Conversion between different coordinate systems.
+// XXX: collect all of these here?
+
+coord_def player2grid(const coord_def& pc);
+coord_def grid2player(const coord_def& pc);
+
 #endif
