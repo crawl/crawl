@@ -2657,21 +2657,21 @@ static void _generate_scroll_item(item_def& item, int force_type,
                 1305, SCR_REMOVE_CURSE,
                  802, SCR_TELEPORTATION,
                  642, SCR_DETECT_CURSE,
-                 321, SCR_FEAR,
-                 321, SCR_NOISE,
-                 321, SCR_MAGIC_MAPPING,
-                 321, SCR_FOG,
-                 321, SCR_RANDOM_USELESSNESS,
-                 321, SCR_CURSE_WEAPON,
-                 321, SCR_CURSE_ARMOUR,
-                 321, SCR_RECHARGING,
-                 321, SCR_BLINKING,
-                 321, SCR_ENCHANT_ARMOUR,
-                 321, SCR_ENCHANT_WEAPON_I,
-                 321, SCR_ENCHANT_WEAPON_II,
+                 331, SCR_FEAR,
+                 331, SCR_NOISE,
+                 331, SCR_MAGIC_MAPPING,
+                 331, SCR_FOG,
+                 331, SCR_RANDOM_USELESSNESS,
+                 331, SCR_CURSE_WEAPON,
+                 331, SCR_CURSE_ARMOUR,
+                 331, SCR_RECHARGING,
+                 331, SCR_BLINKING,
+                 331, SCR_ENCHANT_ARMOUR,
+                 331, SCR_ENCHANT_WEAPON_I,
+                 331, SCR_ENCHANT_WEAPON_II,
 
                  // Don't create ?oImmolation at low levels (encourage read-ID).
-                 321, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
+                 331, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
 
                  161, SCR_PAPER,
 
@@ -2680,13 +2680,16 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
                  140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
                  140, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
-                 140, (depth_mod < 4 ? SCR_PAPER :         SCR_SILENCE),
 
                  // High-level scrolls.
                  140, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
                  140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
                  140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
-                   0);
+
+                 // Balanced by rarity.
+                 10, SCR_SILENCE,
+
+                 0);
         }
         while (agent == GOD_XOM && _is_boring_item(OBJ_SCROLLS, item.sub_type));
     }
