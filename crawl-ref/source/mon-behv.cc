@@ -615,10 +615,12 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
     if (!in_bounds(p))
         return (false);
 
-    if (!friendly && !neutral && p == you.pos()
-        && you.visible_to(mon) && !is_sanctuary(p))
+    if (p == you.pos())
     {
-        return (true);
+        // The player: We don't return true here because
+        // otherwise wandering monsters will always
+        // attack the player.
+        return (false);
     }
 
     if (monsters *foe = monster_at(p))
