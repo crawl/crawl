@@ -114,15 +114,15 @@ static bool _find_mlist( const coord_def& where, int mode, bool need_path,
 static char _find_square_wrapper( const coord_def& targ,
                                   coord_def &mfp, char direction,
                                   bool (*find_targ)(const coord_def&, int, bool, int),
-                                  bool need_path = false, int mode = TARG_ANY,
-                                  int range = -1, bool wrap = false,
+                                  bool need_path, int mode,
+                                  int range, bool wrap,
                                   int los = LOS_ANY);
 
 static char _find_square( const coord_def& where,
                           coord_def &mfp, int direction,
                           bool (*find_targ)(const coord_def&, int, bool, int),
-                          bool need_path, int mode = TARG_ANY, int range = -1,
-                          bool wrap = false, int los = LOS_ANY);
+                          bool need_path, int mode, int range,
+                          bool wrap, int los = LOS_ANY);
 
 static int  _targetting_cmd_to_compass( command_type command );
 static void _describe_oos_square(const coord_def& where);
