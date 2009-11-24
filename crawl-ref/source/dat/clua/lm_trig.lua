@@ -190,7 +190,8 @@ function Triggerable:activate(marker)
   end
 
   if self.activated then
-    error("Triggerable already activated")
+    -- _loadlev_populate_stair_distances may reactive markers
+    return
   end
 
   self.activating = true
