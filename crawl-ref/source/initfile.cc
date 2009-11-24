@@ -769,8 +769,6 @@ void game_options::reset_options()
     explore_improved       = false;
     trap_prompt            = true;
 
-    target_oos             = true;
-    target_los_first       = true;
     target_unshifted_dirs  = false;
     darken_beyond_range    = true;
 
@@ -3036,8 +3034,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(dump_book_spells);
     else BOOL_OPTION(level_map_title);
-    else BOOL_OPTION(target_oos);
-    else BOOL_OPTION(target_los_first);
     else if (key == "target_unshifted_dirs")
     {
         target_unshifted_dirs = _read_bool(field, target_unshifted_dirs);

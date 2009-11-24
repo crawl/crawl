@@ -1342,8 +1342,7 @@ void direction(dist& moves, const targetting_type restricts,
             const int thing_to_find = _targetting_cmd_to_feature(key_command);
             if (_find_square_wrapper(moves.target, objfind_pos, 1,
                                      _find_feature, needs_path, thing_to_find,
-                                     range, true, Options.target_los_first ?
-                                        LOS_FLIPVH : LOS_ANY))
+                                     range, true, LOS_FLIPVH))
             {
                 moves.target = objfind_pos;
             }
@@ -1433,11 +1432,9 @@ void direction(dist& moves, const targetting_type restricts,
         case CMD_TARGET_OBJ_CYCLE_BACK:
         case CMD_TARGET_OBJ_CYCLE_FORWARD:
             dir = (key_command == CMD_TARGET_OBJ_CYCLE_BACK) ? -1 : 1;
-            if (_find_square_wrapper( moves.target, objfind_pos, dir,
-                                      _find_object, needs_path, TARG_ANY, range,
-                                      true, Options.target_los_first ?
-                                          (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
-                                           : LOS_ANY))
+            if (_find_square_wrapper(moves.target, objfind_pos, dir,
+                                     _find_object, needs_path, TARG_ANY, range,
+                                     true, (dir > 0 ? LOS_FLIPVH : LOS_FLIPHV)))
             {
                 moves.target = objfind_pos;
             }
@@ -2077,7 +2074,7 @@ static bool _find_feature( const coord_def& where, int mode,
                            bool /* need_path */, int /* range */)
 {
     // The stair need not be in LOS if the square is mapped.
-    if (!in_los(where) && (!Options.target_oos || !is_terrain_seen(where)))
+    if (!in_los(where) && !is_terrain_seen(where))
         return (false);
 
     return is_feature(mode, where);
@@ -2101,7 +2098,7 @@ static bool _find_object(const coord_def& where, int mode,
     if (item == NON_ITEM && !is_mimic)
         return (false);
 
-    return (in_los(where) || Options.target_oos && is_terrain_seen(where)
+    return (in_los(where) || is_terrain_seen(where)
             && (is_stash(where.x,where.y) || is_mimic));
 }
 

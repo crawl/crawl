@@ -29,8 +29,7 @@ The contents of this text are:
                 chunks_autopickup, assign_item_slot, drop_mode,
                 pickup_mode, drop_filter, default_friendly_pickup
 4-b     Targeting.
-                target_oos, target_los_first, default_target,
-                target_unshifted_dirs, darken_beyond_range
+                default_target, target_unshifted_dirs, darken_beyond_range
 4-c     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour, colour_map, clean_map
@@ -567,18 +566,6 @@ default_friendly_pickup = (friend | player | none | all)
 
 4-b     Targeting.
 -------------------
-
-target_oos = true
-        When cycling through items with 'x' look-around, setting
-        target_oos to true allows you to jump the cursor to dungeon
-        features (<> for stairs, Tab for shops, ^ for traps) and stashes
-        (with the '*' and '/' keys) that are outside line-of-sight but
-        in the main view. Also see target_los_first below.
-
-target_los_first = true
-        When cycling through items/features with the 'x' look-around
-        command, setting target_los_first to true will force the cursor
-        to squares in line-of-sight before going to squares outside LOS.
 
 default_target = true
         If set to true (the default), targeting will start on either

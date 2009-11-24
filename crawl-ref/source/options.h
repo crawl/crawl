@@ -277,10 +277,6 @@ public:
     std::vector<std::string> dump_order;
 
     bool        level_map_title;    // Show title in level map
-    bool        target_oos;         // 'x' look around can target out-of-LOS
-    bool        target_los_first;   // 'x' look around first goes to visible
-                                    // objects/features, then goes to stuff
-                                    // outside LOS.
     bool        target_unshifted_dirs; // Unshifted keys target if cursor is
                                        // on player.
 
