@@ -1142,6 +1142,12 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     {
         if (you.hp <= 0)
             you.hp = you.hp_max;
+        if (you.strength <= 0)
+            you.strength = you.max_strength;
+        if (you.dex <= 0)
+            you.dex = you.max_dex;
+        if (you.intel <= 0)
+            you.intel = you.max_intel;
         return;
     }
 #endif
