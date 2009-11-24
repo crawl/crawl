@@ -467,12 +467,13 @@ bool CLua::calltopfn(lua_State *ls, const char *params, va_list args,
     return (!err);
 }
 
-bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
+maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
+                                const va_list *args)
 {
     error.clear();
     lua_State *ls = state();
     if (!ls)
-        return (def);
+        return (B_MAYBE);
 
     int stacktop = lua_gettop(ls);
 
@@ -480,17 +481,30 @@ bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
     if (!lua_isfunction(ls, -1))
     {
         lua_pop(ls, 1);
-        CL_RESETSTACK_RETURN(ls, stacktop, def);
+        CL_RESETSTACK_RETURN(ls, stacktop, B_MAYBE);
     }
 
+    bool ret = calltopfn(ls, params, *args, 1);
+    if (!ret)
+        CL_RESETSTACK_RETURN(ls, stacktop, B_MAYBE);
+
+    maybe_bool r = frombool(lua_toboolean(ls, -1));
+    CL_RESETSTACK_RETURN(ls, stacktop, r);
+}
+
+maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
+{
     va_list args;
     va_start(args, params);
-    bool ret = calltopfn(ls, params, args, 1);
-    if (!ret)
-        CL_RESETSTACK_RETURN(ls, stacktop, def);
+    return (callmbooleanfn(fn, params, &args));
+}
 
-    def = lua_toboolean(ls, -1);
-    CL_RESETSTACK_RETURN(ls, stacktop, def);
+bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
+{
+    va_list args;
+    va_start(args, params);
+    maybe_bool r = callmbooleanfn(fn, params, &args);
+    return (tobool(r, def));
 }
 
 bool CLua::proc_returns(const char *par) const

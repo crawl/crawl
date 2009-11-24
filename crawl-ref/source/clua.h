@@ -128,6 +128,7 @@ public:
 
     void pushglobal(const std::string &name);
 
+    maybe_bool callmbooleanfn(const char *fn, const char *params, ...);
     bool callbooleanfn(bool defval, const char *fn, const char *params, ...);
     bool callfn(const char *fn, int nargs, int nret = 1);
     bool callfn(const char *fn, const char *params, ...);
@@ -189,6 +190,8 @@ private:
 
     bool calltopfn(lua_State *ls, const char *format, va_list args,
                    int retc = -1, va_list *fnr = NULL);
+    maybe_bool callmbooleanfn(const char *fn, const char *params,
+                              const va_list *args);
 
     int push_args(lua_State *ls, const char *format, va_list args,
                     va_list *cpto = NULL);
