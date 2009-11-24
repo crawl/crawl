@@ -846,7 +846,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
                  Options.delay_message_clear? 2 : 1 );
 
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
-        reset_more_autoclear();
+        set_more_autoclear(false);
 
     for (unsigned i = 0; i < Options.force_more_message.size(); ++i)
     {
@@ -921,7 +921,7 @@ void formatted_mpr(const formatted_string& fs, msg_channel_type channel,
     mpr_store_messages(imsg, channel, param, colour);
 
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
-        reset_more_autoclear();
+        set_more_autoclear(false);
 
     if (channel == MSGCH_ERROR)
         interrupt_activity( AI_FORCE_INTERRUPT );
@@ -1029,9 +1029,9 @@ void mesclr( bool force )
 
 static bool autoclear_more = false;
 
-void reset_more_autoclear()
+void set_more_autoclear(bool on)
 {
-    autoclear_more = false;
+    autoclear_more = on;
 }
 
 void more(bool user_forced)

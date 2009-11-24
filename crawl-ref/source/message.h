@@ -56,7 +56,7 @@ void replay_messages();
 
 void set_colour(char set_message_colour);
 
-void reset_more_autoclear();
+void set_more_autoclear(bool on);
 
 std::string get_last_messages(int mcount);
 

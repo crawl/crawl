@@ -338,7 +338,7 @@ void stop_delay( bool stop_stair_travel )
     if (you.delay_queue.empty())
         return;
 
-    reset_more_autoclear();
+    set_more_autoclear(false);
 
     ASSERT(!crawl_state.arena);
 
