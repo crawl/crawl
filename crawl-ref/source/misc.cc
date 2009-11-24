@@ -2112,6 +2112,13 @@ static void _player_change_level_downstairs(dungeon_feature_type stair_find,
     }
 }
 
+void _maybe_destroy_trap(const coord_def &p)
+{
+    trap_def* trap = find_trap(p);
+    if (trap)
+        trap->destroy();
+}
+
 void down_stairs( int old_level, dungeon_feature_type force_stair,
                   entry_cause_type entry_cause )
 {
@@ -2209,8 +2216,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         {
             if (known_trap)
                 mpr("The shaft disappears is a puff of logic!");
-
-            find_trap(you.pos())->destroy();
+            _maybe_destroy_trap(you.pos());
             return;
         }
 
@@ -2223,8 +2229,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
                 mpr("The strain on the space-time continuum destroys the "
                     "shaft!");
             }
-
-            find_trap(you.pos())->destroy();
+            _maybe_destroy_trap(you.pos());
             return;
         }
         shaft_level = absdungeon_depth(shaft_dest.branch, shaft_dest.depth);
@@ -2234,7 +2239,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
         // Shafts are one-time-use.
         mpr("The shaft crumbles and collapses.");
-        find_trap(you.pos())->destroy();
+        _maybe_destroy_trap(you.pos());
     }
 
     if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
