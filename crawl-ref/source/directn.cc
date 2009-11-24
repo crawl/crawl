@@ -111,18 +111,16 @@ static bool _find_mlist( const coord_def& where, int mode, bool need_path,
                          int range );
 #endif
 
-static char _find_square_wrapper( const coord_def& targ,
-                                  coord_def &mfp, char direction,
-                                  bool (*find_targ)(const coord_def&, int, bool, int),
-                                  bool need_path, int mode,
-                                  int range, bool wrap,
-                                  int los = LOS_ANY);
+static char _find_square_wrapper(coord_def &mfp, char direction,
+                                 bool (*find_targ)(const coord_def&, int, bool, int),
+                                 bool need_path, int mode,
+                                 int range, bool wrap,
+                                 int los = LOS_ANY);
 
-static char _find_square( const coord_def& where,
-                          coord_def &mfp, int direction,
-                          bool (*find_targ)(const coord_def&, int, bool, int),
-                          bool need_path, int mode, int range,
-                          bool wrap, int los = LOS_ANY);
+static char _find_square(coord_def &mfp, int direction,
+                         bool (*find_targ)(const coord_def&, int, bool, int),
+                         bool need_path, int mode, int range,
+                         bool wrap, int los = LOS_ANY);
 
 static int  _targetting_cmd_to_compass( command_type command );
 static void _describe_oos_square(const coord_def& where);
@@ -1058,7 +1056,7 @@ void direction(dist& moves, const targetting_type restricts,
 
     // init
     moves.delta.reset();
-    moves.target = you.pos();
+    moves.target = objfind_pos = monsfind_pos = you.pos();
 
     // If we show the beam on startup, we have to initialise it.
     if (show_beam)
@@ -1225,7 +1223,7 @@ void direction(dist& moves, const targetting_type restricts,
             const int idx = _mlist_letter_to_index(key_command + 'a'
                                                    - CMD_TARGET_CYCLE_MLIST);
 
-            if (_find_square_wrapper(moves.target, monsfind_pos, 1,
+            if (_find_square_wrapper(monsfind_pos, 1,
                                      _find_mlist, needs_path, idx, range,
                                      true))
             {
@@ -1340,8 +1338,8 @@ void direction(dist& moves, const targetting_type restricts,
         case CMD_TARGET_FIND_DOWNSTAIR:
         {
             const int thing_to_find = _targetting_cmd_to_feature(key_command);
-            if (_find_square_wrapper(moves.target, objfind_pos, 1,
-                                     _find_feature, needs_path, thing_to_find,
+            if (_find_square_wrapper(objfind_pos, 1, _find_feature,
+                                     needs_path, thing_to_find,
                                      range, true, LOS_FLIPVH))
             {
                 moves.target = objfind_pos;
@@ -1432,9 +1430,9 @@ void direction(dist& moves, const targetting_type restricts,
         case CMD_TARGET_OBJ_CYCLE_BACK:
         case CMD_TARGET_OBJ_CYCLE_FORWARD:
             dir = (key_command == CMD_TARGET_OBJ_CYCLE_BACK) ? -1 : 1;
-            if (_find_square_wrapper(moves.target, objfind_pos, dir,
-                                     _find_object, needs_path, TARG_ANY, range,
-                                     true, (dir > 0 ? LOS_FLIPVH : LOS_FLIPHV)))
+            if (_find_square_wrapper(objfind_pos, dir, _find_object,
+                                     needs_path, TARG_ANY, range, true,
+                                     (dir > 0 ? LOS_FLIPVH : LOS_FLIPHV)))
             {
                 moves.target = objfind_pos;
             }
@@ -1446,18 +1444,16 @@ void direction(dist& moves, const targetting_type restricts,
         case CMD_TARGET_CYCLE_FORWARD:
         case CMD_TARGET_CYCLE_BACK:
             dir = (key_command == CMD_TARGET_CYCLE_BACK) ? -1 : 1;
-            if (_find_square_wrapper( moves.target, monsfind_pos, dir,
-                                      _find_monster, needs_path, mode, range,
-                                      true))
+            if (_find_square_wrapper(monsfind_pos, dir, _find_monster,
+                                     needs_path, mode, range, true))
             {
                 moves.target = monsfind_pos;
             }
             else if (skip_iter)
             {
                 if (needs_path && !just_looking
-                    && _find_square_wrapper(moves.target, monsfind_pos, dir,
-                                            _find_monster, false, mode,
-                                            range, true))
+                    && _find_square_wrapper(monsfind_pos, dir, _find_monster,
+                                            false, mode, range, true))
                 {
                     mpr("All monsters which could be auto-targeted "
                         "are covered by a wall or statue which interrupts "
@@ -2169,18 +2165,16 @@ bool in_los_bounds(const coord_def& p)
 // is -1, goes backwards.
 //
 //---------------------------------------------------------------
-static char _find_square( const coord_def& where,
-                          coord_def &mfp, int direction,
-                          bool (*find_targ)( const coord_def& wh, int mode,
-                                             bool need_path, int range ),
-                          bool need_path, int mode, int range, bool wrap,
-                          int los )
+static char _find_square(coord_def &mfp, int direction,
+                         bool (*find_targ)(const coord_def& wh, int mode,
+                                           bool need_path, int range),
+                         bool need_path, int mode, int range, bool wrap,
+                         int los)
 {
     // the day will come when [unsigned] chars will be consigned to
     // the fires of Gehenna. Not quite yet, though.
-
-    int temp_xps = where.x;
-    int temp_yps = where.y;
+    int temp_xps = mfp.x;
+    int temp_yps = mfp.y;
     int x_change = 0;
     int y_change = 0;
 
@@ -2193,26 +2187,25 @@ static char _find_square( const coord_def& where,
 
     if (los == LOS_FLIPVH || los == LOS_FLIPHV)
     {
-        if (in_los_bounds(where))
+        if (in_los_bounds(mfp))
         {
             // We've been told to flip between visible/hidden, so we
             // need to find what we're currently on.
-            const bool vis = (env.show(view2show(where))
-                              || view2grid(where) == you.pos());
+            const bool vis = you.see_cell(view2grid(mfp));
 
             if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
             {
                 // We've already flipped over into the other direction,
                 // so correct the flip direction if we're wrapping.
-                los = los == LOS_FLIPHV? LOS_FLIPVH : LOS_FLIPHV;
+                los = (los == LOS_FLIPHV ? LOS_FLIPVH : LOS_FLIPHV);
             }
 
-            los = (los & ~LOS_VISMASK) | (vis? LOS_VISIBLE : LOS_HIDDEN);
+            los = (los & ~LOS_VISMASK) | (vis ? LOS_VISIBLE : LOS_HIDDEN);
         }
         else
         {
             if (wrap)
-                los = LOS_HIDDEN | (direction == 1? LOS_FLIPHV : LOS_FLIPVH);
+                los = LOS_HIDDEN | (direction > 0 ? LOS_FLIPHV : LOS_FLIPVH);
             else
                 los |= LOS_HIDDEN;
         }
@@ -2238,19 +2231,18 @@ static char _find_square( const coord_def& where,
     {
         if (direction == 1 && temp_xps == minx && temp_yps == maxy)
         {
+            mfp = vyou;
             if (find_targ(you.pos(), mode, need_path, range))
-            {
-                mfp = vyou;
                 return (1);
-            }
-            return _find_square(vyou, mfp, direction,
-                                find_targ, need_path, mode, range, false,
-                                _next_los(direction, los, wrap));
+            return (_find_square(mfp, direction,
+                                 find_targ, need_path, mode, range, false,
+                                 _next_los(direction, los, wrap)));
         }
         if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
         {
-            return _find_square(coord_def(minx, maxy), mfp, direction,
-                                find_targ, need_path, mode, range, false,
+            mfp = coord_def(minx, maxy);
+            return _find_square(mfp, direction, find_targ, need_path,
+                                mode, range, false,
                                 _next_los(direction, los, wrap));
         }
 
@@ -2361,10 +2353,6 @@ static char _find_square( const coord_def& where,
         const int targ_x = you.pos().x + temp_xps - ctrx;
         const int targ_y = you.pos().y + temp_yps - ctry;
 
-        // We don't want to be looking outside the bounds of the arrays:
-        //if (!in_los_bounds(temp_xps, temp_yps))
-        //    continue;
-
         if (!crawl_view.in_grid_viewport(coord_def(targ_x, targ_y)))
             continue;
 
@@ -2381,27 +2369,23 @@ static char _find_square( const coord_def& where,
         }
     }
 
-    return (direction == 1?
-      _find_square(coord_def(ctrx, ctry), mfp, direction, find_targ, need_path,
-                   mode, range, false, _next_los(direction, los, wrap))
-      : _find_square(coord_def(minx, maxy), mfp, direction, find_targ,
-                     need_path, mode, range, false,
-                     _next_los(direction, los, wrap)));
+    mfp = (direction > 0 ? coord_def(ctrx, ctry) : coord_def(minx, maxy));
+    return (_find_square(mfp, direction, find_targ, need_path,
+                         mode, range, false, _next_los(direction, los, wrap)));
 }
 
 // XXX Unbelievably hacky. And to think that my goal was to clean up the code.
-// Identical to find_square, except that input (tx, ty) and output
-// (mfp) are in grid coordinates rather than view coordinates.
-static char _find_square_wrapper( const coord_def& targ,
-                                  coord_def& mfp, char direction,
-                                  bool (*find_targ)(const coord_def& where, int mode,
-                                                    bool need_path, int range),
-                                  bool need_path, int mode, int range,
-                                  bool wrap, int los )
+// Identical to find_square, except that mfp is in grid coordinates
+// rather than view coordinates.
+static char _find_square_wrapper(coord_def& mfp, char direction,
+                                 bool (*find_targ)(const coord_def& where, int mode,
+                                                   bool need_path, int range),
+                                 bool need_path, int mode, int range,
+                                 bool wrap, int los )
 {
-    const char r =  _find_square(grid2view(targ), mfp,
-                                 direction, find_targ, need_path, mode, range,
-                                 wrap, los);
+    mfp = grid2view(mfp);
+    const char r =  _find_square(mfp, direction, find_targ, need_path,
+                                 mode, range, wrap, los);
     mfp = view2grid(mfp);
     return r;
 }
