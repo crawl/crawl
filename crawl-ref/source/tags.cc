@@ -1343,9 +1343,6 @@ static void tag_construct_lost_items(writer &th)
                  marshall_item_list );
 }
 
-// XXX: Minor version renumbering hack.
-extern bool _minor_renumbering_correction;
-
 static void tag_read_you(reader &th, char minorVersion)
 {
     char buff[20];      // For birth date.
@@ -1487,15 +1484,6 @@ static void tag_read_you(reader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
         you.attribute[j] = unmarshallLong(th);
-
-    // XXX: Hack to preserve compatibility despite renumbering the
-    // minor versions.
-    if (_minor_renumbering_correction)
-    {
-        // old: quiver info.  Discard it.
-        count_c = unmarshallByte(th);
-        ASSERT(count_c == 0);
-    }
 
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
