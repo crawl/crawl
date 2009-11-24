@@ -21,7 +21,6 @@
 #include "delay.h"
 #include "initfile.h"
 #include "libutil.h"
-#include "luaterp.h"
 #include "macro.h"
 #include "message.h"
 #include "mon-stuff.h"
@@ -40,6 +39,10 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "menu.h"
+
+#ifdef WIZARD
+#include "luaterp.h"
+#endif
 
 class message_item {
 public:
@@ -1055,12 +1058,19 @@ void more(bool user_forced)
         return;
     }
 
-    if (crawl_state.is_replaying_keys() || autoclear_more
-        || luaterp_running())
+    if (crawl_state.is_replaying_keys() || autoclear_more)
     {
         mesclr();
         return;
     }
+
+#ifdef WIZARD
+    if(luaterp_running())
+    {
+        mesclr();
+        return;
+    }
+#endif
 
     if (Options.show_more_prompt && !suppress_messages)
     {
