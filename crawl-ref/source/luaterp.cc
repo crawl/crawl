@@ -72,7 +72,7 @@ static int _loadline(lua_State *ls)
     for (;;)
     {
         status = luaL_loadbuffer(ls, lua_tostring(ls, 1),
-                                     lua_strlen(ls, 1), "=terp");
+                                     lua_strlen(ls, 1), "=repl");
 
         if (!_incomplete(ls, status))
             break;
