@@ -1140,8 +1140,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 #if WIZARD || DEBUG
     if (you.never_die)
     {
-        mpr("you.never_die set to true, avoiding death",
-            MSGCH_DIAGNOSTICS);
+        if (you.hp <= 0)
+            you.hp = you.hp_max;
         return;
     }
 #endif
