@@ -696,7 +696,7 @@ static void _point_point_distance(std::vector<coord_def> & origins,
         {
             // The minimum of current_distances is points(i)
             int min_dist = current_distances[0];
-            for (unsigned j = 1; i < current_distances.size(); ++i)
+            for (unsigned j = 1; j < current_distances.size(); ++j)
                 if (current_distances[j] < min_dist)
                     min_dist = current_distances[j];
 
