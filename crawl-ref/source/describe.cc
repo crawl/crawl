@@ -1664,7 +1664,8 @@ std::string get_item_description( const item_def &item, bool verbose,
                     << " link: " << item.link
                     << " slot: " << item.slot
                     << " ident_type: "
-                    << static_cast<int>(get_ident_type(item));
+                    << static_cast<int>(get_ident_type(item))
+                    << " book_number: " << item.book_number();
     }
 #endif
 
