@@ -92,6 +92,18 @@ LUAWRAP(crawl_more, more())
 LUAWRAP(crawl_mesclr, mesclr())
 LUAWRAP(crawl_redraw_screen, redraw_screen())
 
+static int crawl_set_more_autoclear(lua_State *ls)
+{
+    if (lua_isnone(ls, 1))
+    {
+        luaL_argerror(ls, 1, "needs a boolean argument");
+        return (0);
+    }
+    set_more_autoclear( lua_toboolean(ls, 1) );
+
+    return (0);
+}
+
 static int crawl_input_line(lua_State *ls)
 {
     // This is arbitrary, but anybody entering so many characters is psychotic.
@@ -561,6 +573,7 @@ static const struct luaL_reg crawl_clib[] =
     { "mpr",            crawl_mpr },
     { "formatted_mpr",  crawl_formatted_mpr },
     { "more",           crawl_more },
+    { "more_autoclear", crawl_set_more_autoclear },
     { "mesclr",         crawl_mesclr },
     { "random2",        crawl_random2 },
     { "one_chance_in",  crawl_one_chance_in },
