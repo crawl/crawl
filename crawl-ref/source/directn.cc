@@ -2020,6 +2020,17 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 static bool _find_monster( const coord_def& where, int mode, bool need_path,
                            int range = -1)
 {
+#ifdef CLUA_BINDINGS
+    {
+        coord_def dp = grid2player(where);
+        // We could pass more info here.
+        maybe_bool x = clua.callmbooleanfn("ch_target_monster", "dd",
+                                           dp.x, dp.y);
+        if (x != B_MAYBE)
+            return (tobool(x));
+    }
+#endif
+
     // Target the player for friendly and general spells.
     if ((mode == TARG_FRIEND || mode == TARG_ANY) && where == you.pos())
         return (true);
