@@ -1406,8 +1406,9 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                 gc.y = random2(GYM);
             }
             while (grd(gc) != DNGN_FLOOR);
-            mprf("add stair %d at pos(%d, %d)", s, gc.x, gc.y);
-
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "add stair %d at pos(%d, %d)", s, gc.x, gc.y);
+#endif
             // base gets fixed up to be the right stone stair below...
             grd(gc) = base;
             stair_list[num_stairs++] = gc;
