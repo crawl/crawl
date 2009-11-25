@@ -183,7 +183,9 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	BUILD_PCRE = YesPlease
 endif
 ifneq ($(GAME),crawl.exe)
-	DEFINES += -DSAVE_PACKAGE_TAR
+	DEFINES += -DUSE_TAR
+else
+	DEFINES += -DUSE_ZIP
 endif
 
 #

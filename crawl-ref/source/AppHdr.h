@@ -457,24 +457,24 @@
     FIXME: replace system(3) with fork(2) and execve(2).
 */
 
-    // The default behaviour is to compress with zip.
-    // To use GNU tar instead, define SAVE_PACKAGE_TAR.
+    // The default behaviour is to compress with tar on Unices, zip on Windows/DOS.
     // To avoid compression entirely, define SAVE_PACKAGE_NONE.
     #ifndef SAVE_PACKAGE_NONE
-    #ifdef SAVE_PACKAGE_TAR
+    #ifdef USE_TAR
       // The --absolute-names switch is only there to suppress noise on stdout.
       // All the paths are removed later by --transform.
       #define PACKAGE_SUFFIX ".tar.gz"
       #define SAVE_PACKAGE_CMD "tar -zcf %s"PACKAGE_SUFFIX" --remove-files --absolute-names --transform=s:.*/:: %s.*"
       #define LOAD_UNPACKAGE_CMD "tar -zxf %s"PACKAGE_SUFFIX" -C %s"
+      #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
     #else
+    #ifdef USE_ZIP
       #define PACKAGE_SUFFIX ".zip"
       #define SAVE_PACKAGE_CMD "/usr/bin/zip -m -q -j -1 %s"PACKAGE_SUFFIX" %s.*"
       #define LOAD_UNPACKAGE_CMD "/usr/bin/unzip -q -o %s"PACKAGE_SUFFIX" -d %s"
+      #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
     #endif
-
-    // This is used to unpack a specific file from the archive.
-    #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
+    #endif
     #endif // SAVE_PACKAGE_NONE
 
     // This defines the chmod permissions for score and bones files.
