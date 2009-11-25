@@ -770,6 +770,22 @@ std::string get_savedir_filename(const std::string &prefix,
 {
     std::string result = Options.save_dir;
 
+    result += get_save_filename(prefix, suffix, extension, suppress_uid);
+
+#ifdef TARGET_OS_DOS
+    uppercase(result);
+#endif
+
+    return result;
+}
+
+std::string get_save_filename(const std::string &prefix,
+                                 const std::string &suffix,
+                                 const std::string &extension,
+                                 bool suppress_uid)
+{
+    std::string result = "";
+
     // Shorten string as appropriate
     result += strip_filename_unsafe_chars(prefix).substr(0, kFileNameLen);
 
@@ -1681,20 +1697,33 @@ static void _save_game_exit()
     clrscr();
 
 #ifdef SAVE_PACKAGE_CMD
-    std::string basename = get_savedir_filename(you.your_name, "", "");
+    std::string dirname = get_savedir();
+    escape_path_spaces(dirname);
+    std::string basename = get_save_filename(you.your_name, "", "");
     escape_path_spaces(basename);
 
     char cmd_buff[1024];
 
+#ifdef USE_TAR
     snprintf( cmd_buff, sizeof(cmd_buff),
-              SAVE_PACKAGE_CMD, basename.c_str(), basename.c_str() );
+              "cd %s && "SAVE_PACKAGE_CMD" -zcf %s"PACKAGE_SUFFIX" --remove-files %s.*",
+              dirname.c_str(), basename.c_str(), basename.c_str());
+#else
+# ifdef USE_ZIP
+    snprintf( cmd_buff, sizeof(cmd_buff),
+              SAVE_PACKAGE_CMD" %s"PACKAGE_SUFFIX" %s.*",
+              (dirname+basename).c_str(), (dirname+basename).c_str());
+# else
+    No save package defined.
+#endif
+#endif
 
     if (system( cmd_buff ) != 0)
     {
         cprintf( EOL "Warning: Zip command (SAVE_PACKAGE_CMD) returned "
                      "non-zero value!" EOL );
     }
-    DO_CHMOD_PRIVATE ( (basename + PACKAGE_SUFFIX).c_str() );
+    DO_CHMOD_PRIVATE ( (dirname + basename + PACKAGE_SUFFIX).c_str() );
 #endif
 
 #ifdef DGL_WHEREIS

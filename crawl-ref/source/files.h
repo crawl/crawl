@@ -62,6 +62,10 @@ bool travel_load_map( branch_type branch, int absdepth );
 std::vector<player_save_info> find_saved_characters();
 
 std::string get_savedir();
+std::string get_save_filename(const std::string &pre,
+                              const std::string &suf,
+                              const std::string &ext,
+                              bool suppress_uid = false);
 std::string get_savedir_filename(const std::string &pre,
                                  const std::string &suf,
                                  const std::string &ext,

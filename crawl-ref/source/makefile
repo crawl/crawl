@@ -182,7 +182,7 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	NO_RDYNAMIC = YesPlease
 	BUILD_PCRE = YesPlease
 endif
-ifneq ($(GAME),crawl.exe)
+ifeq (,$(findstring .exe,$(GAME)))
 	DEFINES += -DUSE_TAR
 else
 	DEFINES += -DUSE_ZIP

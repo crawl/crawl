@@ -461,16 +461,14 @@
     // To avoid compression entirely, define SAVE_PACKAGE_NONE.
     #ifndef SAVE_PACKAGE_NONE
     #ifdef USE_TAR
-      // The --absolute-names switch is only there to suppress noise on stdout.
-      // All the paths are removed later by --transform.
       #define PACKAGE_SUFFIX ".tar.gz"
-      #define SAVE_PACKAGE_CMD "tar -zcf %s"PACKAGE_SUFFIX" --remove-files --absolute-names --transform=s:.*/:: %s.*"
+      #define SAVE_PACKAGE_CMD "tar"
       #define LOAD_UNPACKAGE_CMD "tar -zxf %s"PACKAGE_SUFFIX" -C %s"
       #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
     #else
     #ifdef USE_ZIP
       #define PACKAGE_SUFFIX ".zip"
-      #define SAVE_PACKAGE_CMD "/usr/bin/zip -m -q -j -1 %s"PACKAGE_SUFFIX" %s.*"
+      #define SAVE_PACKAGE_CMD "/usr/bin/zip -m -q -j"
       #define LOAD_UNPACKAGE_CMD "/usr/bin/unzip -q -o %s"PACKAGE_SUFFIX" -d %s"
       #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
     #endif
