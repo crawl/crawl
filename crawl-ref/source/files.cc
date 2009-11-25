@@ -1922,7 +1922,7 @@ void restore_game(void)
     char minorVersion;
     std::string reason;
     if (!_get_and_validate_version(charf, majorVersion, minorVersion, &reason))
-        end(-1, false, "\nSave file is invalid.  %s\n", reason.c_str());
+        end(-1, false, "\nSave file %s is invalid.  %s\n", charFile.c_str(), reason.c_str());
 
     _restore_tagged_file(charf, TAGTYPE_PLAYER, minorVersion);
 
