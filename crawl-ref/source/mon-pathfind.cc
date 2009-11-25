@@ -399,21 +399,23 @@ bool monster_pathfind::mons_traversable(const coord_def p)
 {
     const monster_type montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
                                                          : mons->type;
-
-    if (!mons->is_habitable_feat(grd(p)))
-        return (false);
-
     // Monsters that can't open doors won't be able to pass them.
     if (feat_is_closed_door(grd(p)) || grd(p) == DNGN_SECRET_DOOR)
     {
-        if (mons_is_zombified(mons))
+        if (mons->is_habitable_feat(DNGN_FLOOR))
         {
-            if (mons_class_itemuse(montype) < MONUSE_OPEN_DOORS)
-                return (false);
+            if (mons_is_zombified(mons))
+            {
+                if (mons_class_itemuse(montype) >= MONUSE_OPEN_DOORS)
+                    return (true);
+            }
+            else if (mons_itemuse(mons) >= MONUSE_OPEN_DOORS)
+                return (true);
         }
-        else if (mons_itemuse(mons) < MONUSE_OPEN_DOORS)
-            return (false);
     }
+
+    if (!mons->is_habitable_feat(grd(p)))
+        return (false);
 
     // Your friends only know about doors you know about, unless they feel
     // at home in this branch.
