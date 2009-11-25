@@ -7,7 +7,7 @@ all:
 
 clean distclean:
 	@for a in $(SUBDIRS); do \
-	    make -C $$a distclean; \
+	    $(MAKE) -C $$a distclean; \
 	done
 	rm -rf $(PREFIX)
 
