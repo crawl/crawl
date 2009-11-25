@@ -34,6 +34,7 @@ void item_set_appearance(item_def &item);
 
 bool is_weapon_brand_ok(int type, int brand);
 bool is_armour_brand_ok(int type, int brand);
+bool is_missile_brand_ok(int type, int brand);
 
 bool got_curare_roll(const int item_level);
 

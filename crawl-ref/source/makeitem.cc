@@ -1615,9 +1615,11 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         {
             item.sub_type = _determine_weapon_subtype(item_level);
             if (is_weapon_brand_ok(item.sub_type, item.special))
-                break;
+                goto brand_ok;
         }
+        item.sub_type = SPWPN_NORMAL; // fall back to no brand
     }
+brand_ok:
 
     // Forced randart.
     if (item_level == -6)
@@ -1870,7 +1872,14 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     if (item.sub_type == MI_THROWING_NET)
         rc = SPMSL_NORMAL;
 
+    ASSERT(is_missile_brand_ok(item.sub_type, rc));
     return rc;
+}
+
+bool is_missile_brand_ok(int type, int brand)
+{
+    // No checks for now...
+    return (true);
 }
 
 static void _generate_missile_item(item_def& item, int force_type,
@@ -3141,6 +3150,19 @@ int items(int allow_uniques,       // not just true-false,
         else
             item.quantity = 1 + random2avg(19, 2) + random2(item_level);
         break;
+    }
+
+    if (item.base_type == OBJ_WEAPONS
+          && !is_weapon_brand_ok(item.sub_type, item.special)
+        || item.base_type == OBJ_ARMOUR
+          && !is_armour_brand_ok(item.sub_type, item.special)
+        || item.base_type == OBJ_MISSILES
+          && !is_missile_brand_ok(item.sub_type, item.special))
+    {
+        mprf(MSGCH_ERROR, "Invalid brand on item %s, annulling.",
+            item.name(DESC_PLAIN, false, true, false, false, ISFLAG_KNOW_PLUSES
+                      | ISFLAG_KNOW_CURSE).c_str());
+        item.special = 0;
     }
 
     // Colour the item.
