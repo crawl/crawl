@@ -150,13 +150,6 @@ int exercise(int exsk, int deg)
         if (you.exp_available <= 0 || you.skills[exsk] >= 27)
             break;
 
-        // randomly deny skill excercise if not many points available
-        if (random2(you.exp_pool_cutoff()/10) >= you.exp_available)
-        {
-            deg--;
-            continue;
-        }
-
         if (you.practise_skill[exsk] || one_chance_in(4))
             ret += _exercise2( exsk );
 
