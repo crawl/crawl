@@ -841,14 +841,17 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             break;
         case SPWPN_REAPING:
             if (is_range_weapon(item))
+            {
                 description += "If ammo fired by it kills a monster, "
                     "causing it to leave a corpse, the corpse will be "
-                    "animated as a zombie friendly to the one who fired "
-                    "it.";
+                    "animated as a zombie friendly to the killer.";
+            }
             else
-                description += "All monsters killed with it which leave "
-                    "corpses in good enough shape will be reanimated as "
-                    "a zombie friendly to the killer.";
+            {
+                description += "If a monster killed with it leaves a "
+                    "corpse in good enough shape, the corpse will be "
+                    "animated as a zombie friendly to the killer.";
+            }
             break;
         }
     }
