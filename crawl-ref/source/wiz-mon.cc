@@ -1078,7 +1078,7 @@ void debug_pathfind(int mid)
     mprf("Attempting to calculate a path from (%d, %d) to (%d, %d)...",
          mon.pos().x, mon.pos().y, dest.x, dest.y);
     monster_pathfind mp;
-    bool success = mp.init_pathfind(&mon, dest, true);
+    bool success = mp.init_pathfind(&mon, dest, true, true);
     if (success)
     {
         std::vector<coord_def> path = mp.backtrack();
