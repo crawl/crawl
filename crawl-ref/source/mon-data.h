@@ -3711,19 +3711,6 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
 },
 
-// randomly created
-{
-    MONS_BEAST, '4', BROWN, "beast",
-    M_FIGHTER,
-    MR_NO_FLAGS,
-    0, 10, MONS_BEAST, MONS_BEAST, MH_DEMONIC, -3,
-    { {AT_BITE, AF_PLAIN, 28}, {AT_CLAW, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
-    { 7, 9, 6, 0 },
-    0, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_RANDOM,
-    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
-},
-
 // middle demons ('3')
 {
     MONS_SMOKE_DEMON, '3', LIGHTGREY, "smoke demon",
@@ -3848,6 +3835,19 @@ static monsterentry mondata[] = {
 },
 
 // reaper etc. ('2')
+
+{   // with randomized stats
+    MONS_BEAST, '2', BROWN, "beast",
+    M_FIGHTER,
+    MR_NO_FLAGS,
+    0, 10, MONS_BEAST, MONS_BEAST, MH_DEMONIC, -3,
+    { {AT_BITE, AF_PLAIN, 28}, {AT_CLAW, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
+    { 7, 9, 6, 0 },
+    0, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_RANDOM,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
+},
+
 {
     MONS_HELLION, '2', ETC_FIRE, "hellion",
     M_SPELLCASTER | M_GLOWS,
