@@ -1394,10 +1394,6 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
         if (num_stairs == 0)
             continue;
 
-        // The top level doesn't connect to anything, so don't fix it.
-        if (level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1) && i == 0)
-            continue;
-
         // Add extra stairs to get to exactly three.
         for (int s = num_stairs; s < 3; s++)
         {
