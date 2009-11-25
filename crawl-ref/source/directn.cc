@@ -989,6 +989,7 @@ std::string _targ_mode_name(targ_mode_type mode)
     }
 }
 
+#ifndef USE_TILE
 bool _init_mlist()
 {
     const int full_info = update_monster_pane();
@@ -1000,7 +1001,7 @@ bool _init_mlist()
     else
         return (false);
 }
-
+#endif
 
 void direction(dist& moves, const targetting_type restricts,
                targ_mode_type mode, const int range, const bool just_looking,
