@@ -1253,7 +1253,7 @@ static std::string morgue_directory()
     return (dir);
 }
 
-void dump_map(FILE *fp, bool debug)
+void dump_map(FILE *fp, bool debug, bool dist)
 {
     // Duplicate the screenshot() trick.
     FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
@@ -1274,6 +1274,12 @@ void dump_map(FILE *fp, bool debug)
                     fputc('@', fp);
                 else if (grd[x][y] == DNGN_FLOOR_SPECIAL)
                     fputc('?', fp);
+                else if (dist && grd[x][y] == DNGN_FLOOR
+                         && travel_point_distance[x][y] > 0
+                         && travel_point_distance[x][y] < 10)
+                {
+                    fputc('0' + travel_point_distance[x][y], fp);
+                }
                 else
                     fputc(get_feature_def(grd[x][y]).symbol, fp);
             }
@@ -1308,13 +1314,13 @@ void dump_map(FILE *fp, bool debug)
     init_show_table();
 }
 
-void dump_map(const char* fname, bool debug)
+void dump_map(const char* fname, bool debug, bool dist)
 {
     FILE* fp = fopen(fname, "w");
     if (!fp)
         return;
 
-    dump_map(fp, debug);
+    dump_map(fp, debug, dist);
 
     fclose(fp);
 }
