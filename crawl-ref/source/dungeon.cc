@@ -1504,7 +1504,7 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
                 }
 
 #ifdef DEBUG_DIAGNOSTICS
-            dump_map("debug.map", true);
+            dump_map("debug.map", true, true);
 #endif
             // [ds] Too many normal cases trigger this ASSERT, including
             // rivers that surround a stair with deep water.
