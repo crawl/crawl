@@ -1410,6 +1410,12 @@ int find_free_slot(const item_def &i)
     if (slotisfree(slot))
         return slot;
 
+    int disliked = -1;
+    if (i.base_type == OBJ_FOOD)
+        disliked = 'e' - 'a';
+    else if (i.base_type == OBJ_POTIONS)
+        disliked = 'y' - 'a';
+
     if (!searchforward)
     {
         // This is the new default free slot search. We look for the last
@@ -1417,13 +1423,13 @@ int find_free_slot(const item_def &i)
         bool accept_empty = false;
         for (slot = ENDOFPACK - 1; slot >= 0; --slot)
         {
-            if (you.inv[slot].is_valid())
+            if (slot == disliked)
+                continue;
+
+            if (slot > 0 && you.inv[slot - 1].is_valid())
             {
-                if (!accept_empty && slot + 1 < ENDOFPACK
-                    && !you.inv[slot + 1].is_valid())
-                {
-                    return (slot + 1);
-                }
+                if (!accept_empty && !you.inv[slot].is_valid())
+                    return slot;
                 accept_empty = true;
             }
             else if (accept_empty)
@@ -1438,8 +1444,12 @@ int find_free_slot(const item_def &i)
 
     // Return first free slot
     for (slot = 0; slot < ENDOFPACK; ++slot)
-        if (!you.inv[slot].is_valid())
+        if (slot != disliked && !you.inv[slot].is_valid())
             return slot;
+
+    // If the least preferred slot is the only choice, so be it.
+    if (disliked != -1 && you.inv[disliked].is_valid())
+        return disliked;
 
     return (-1);
 #undef slotisfree
