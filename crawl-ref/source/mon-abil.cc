@@ -840,15 +840,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             if (mons_atts_aligned(monster->attitude, targ->attitude))
                 continue;
 
-            // Faking LOS by checking the neighbouring square.
-            coord_def diff = targ->pos() - monster->pos();
-            coord_def sg(sgn(diff.x), sgn(diff.y));
-            coord_def t = monster->pos() + sg;
-
-            if (!in_bounds(t))
-                continue;
-
-            if (!feat_is_solid(grd(t)))
+            if (monster->can_see(*targ) && !feat_is_solid(grd(targ->pos())))
             {
                 monster->hit_points = -1;
                 used = true;
