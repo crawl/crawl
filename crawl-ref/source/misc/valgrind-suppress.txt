@@ -1,39 +1,3 @@
-# stashFile in save_game() never gets freed since the process exits
-# before save_game() returns.  Wildcards at start and end of function
-# names since they get mangled by the C++ compiler and mecheck goes
-# by the mangled names.
-#
-# Also, the first "obj:*" is for the new() operator, which gets mangled
-# in the valgrind library, and might be mangled differently in different
-# version of valgrind.
-#
-# NOTE: The number of copies of "obj:*libstdc++*" might need to be changed
-# for different versions of the C++ library.
-{
-	save_game_savedir_leak
-	Memcheck:Leak
-	obj:*
-	obj:*libstdc++*
-	obj:*libstdc++*
-	obj:*libstdc++*
-	obj:*libstdc++*
-	fun:*get_savedir_filename*
-	fun:*save_game*
-}
-
-# Not sure what causes escape_path_spaces() in save_game() to leak, but
-# since we're going to be exiting right away it doesn't really matter.
-{
-	save_game_escape_path_leak
-	Memcheck:Leak
-	obj:*
-	obj:*libstdc++*
-	obj:*libstdc++*
-	obj:*libstdc++*
-	fun:*escape_path_spaces*
-	fun:*save_game*
-}
-
 # The error variable in end() is stuff.cc never gets freed since
 # exit() is called before end() returns.  See above suppression for more
 # notes

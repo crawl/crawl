@@ -1561,13 +1561,10 @@ void _save_level(int level_saved, level_area_type old_ltype,
     DO_CHMOD_PRIVATE(cha_fil.c_str());
 }
 
-
-void save_game(bool leave_game, const char *farewellmsg)
+// Stack allocated std::string's go in seperate function, so Valgrind doesn't
+// complain.
+static void _save_game_base()
 {
-    unwind_bool saving_game(crawl_state.saving_game, true);
-
-    SavefileCallback::pre_save();
-
     /* Stashes */
     std::string stashFile = get_savedir_filename(you.your_name, "", "st");
     FILE *stashf = fopen(stashFile.c_str(), "wb");
@@ -1671,11 +1668,12 @@ void save_game(bool leave_game, const char *farewellmsg)
 
     fclose(charf);
     DO_CHMOD_PRIVATE(charFile.c_str());
+}
 
-    // If just save, early out.
-    if (!leave_game)
-        return;
-
+// Stack allocated std::string's go in seperate function, so Valgrind doesn't
+// complain.
+static void _save_game_exit()
+{
     // Must be exiting -- save level & goodbye!
     if (!you.entering_level)
         _save_level(you.your_level, you.level_type, you.where_are_you);
@@ -1708,6 +1706,25 @@ void save_game(bool leave_game, const char *farewellmsg)
         delete _callback_list;
         _callback_list = NULL;
     }
+}
+
+void save_game(bool leave_game, const char *farewellmsg)
+{
+    unwind_bool saving_game(crawl_state.saving_game, true);
+
+    SavefileCallback::pre_save();
+
+    // Stack allocated std::string's go in seperate function,
+    // so Valgrind doesn't complain.
+    _save_game_base();
+
+    // If just save, early out.
+    if (!leave_game)
+        return;
+
+    // Stack allocated std::string's go in seperate function,
+    // so Valgrind doesn't complain.
+    _save_game_exit();
 
     end(0, false, farewellmsg? "%s" : "See you soon, %s!",
         farewellmsg? farewellmsg : you.your_name.c_str());
