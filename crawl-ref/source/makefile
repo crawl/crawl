@@ -720,7 +720,7 @@ EXTRA_OBJECTS += version.o
 LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE := stone_soup
-SRC_VERSION  := $(shell git describe --tags --long)
+SRC_VERSION  := $(shell git describe --tags --long 2>/dev/null || cat util/release_ver)
 PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)
 SRC_PKG_TAR  := $(PKG_SRC_DIR).tar.bz2
 SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
@@ -956,6 +956,7 @@ clean-rltiles:
 # To package, you *must* have lex and yacc to generate the intermediates.
 BSRC = build/crawl-ref/source/
 package-source: prebuildyacc depend removeold
+	@git branch >/dev/null 2>/dev/null || (echo You can package source only from git. && false)
 	rm -rf build
 	mkdir build
 	(cd ../..;git ls-files| \
@@ -969,6 +970,9 @@ package-source: prebuildyacc depend removeold
 		tar xf - -C $(BSRC)contrib/$$x; \
 	  done
 	find build -name .gitignore -execdir rm -f '{}' +
+	(git describe --tags --long $(MERGE_BASE) 2> /dev/null || \
+	  git describe --tags $(MERGE_BASE) 2> /dev/null) \
+	  > $(BSRC)util/release_ver
 	cd build && mv crawl-ref $(PKG_SRC_DIR)
 	cd build && tar cfj ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
 	cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR)

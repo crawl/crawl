@@ -17,12 +17,6 @@ if (!$mergebase) {
 	$mergebase = "";
 }
 
-my $releasever;
-
-open IN, "<", "$scriptpath/release_ver";
-read IN, $releasever, 32;
-close IN;
-
 mkdir dirname($outfile);
 
 my $verstring = "";
@@ -30,8 +24,15 @@ my $verstring = "";
 $verstring = `git describe --tags --long $mergebase 2> /dev/null || git describe --tags $mergebase 2> /dev/null`;
 
 if (!$verstring) {
-	print STDERR "WARNING: Couldn't get revision information from Git. Using $scriptpath/release_ver.\n";
-	$verstring = $releasever;
+	if (open IN, "<", "$scriptpath/release_ver")
+	{
+		$verstring = <IN>;
+		close IN;
+	}
+	else
+	{
+		die "No Git, and $scriptpath/release_ver doesn't exist.\n";
+	}
 	$in_git = 0;
 }
 
