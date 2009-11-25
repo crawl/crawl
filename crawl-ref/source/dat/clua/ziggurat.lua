@@ -18,10 +18,11 @@ require("clua/lm_toll.lua")
 ZIGGURAT_MAX = 27
 
 function zig()
-  if not dgn.persist.ziggurat or not dgn.persist.ziggurat.depth then
+  if not dgn.persist.ziggurat or not dgn.persist.ziggurat.depth or
+   not dgn.persist.ziggurat.portal then
     dgn.persist.ziggurat = { }
     -- Initialise here to handle ziggurats accessed directly by &P.
-    initialise_ziggurat(dgn.persist.ziggurat)
+    initialise_ziggurat(dgn.persist.ziggurat, ziggurat_portal(nil, true))
   end
   return dgn.persist.ziggurat
 end
@@ -90,7 +91,7 @@ local function zig_depth()
 end
 
 -- Common setup for ziggurat entry vaults.
-function ziggurat_portal(e)
+function ziggurat_portal(e, portal_only)
   local d = crawl.roll_dice
   local entry_fee =
     10 * math.floor(200 + d(3,200) / 3 + d(10) * d(10) * d(10))
@@ -109,6 +110,10 @@ function ziggurat_portal(e)
       floor = "stone_arch",
       onclimb = ziggurat_initialiser
     }
+  end
+
+  if portal_only ~= nil then
+    return stair()
   end
 
   e.lua_marker("O", stair)
