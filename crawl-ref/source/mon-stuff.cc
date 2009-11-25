@@ -49,6 +49,7 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
+#include "spells3.h"
 #include "viewchar.h"
 #include "stash.h"
 #include "xom.h"
@@ -3957,4 +3958,44 @@ std::string summoned_poof_msg(const monsters* monster, const item_def &item)
     ASSERT(item.flags & ISFLAG_SUMMONED);
 
     return summoned_poof_msg(monster, item.quantity > 1);
+}
+
+bool mons_reaped(actor *killer, monsters *victim)
+{
+    beh_type beh;
+    unsigned short hitting;
+
+    if (killer->atype() == ACT_PLAYER)
+    {
+        hitting = MHITYOU;
+        beh     = BEH_FRIENDLY;
+    }
+    else
+    {
+        monsters *mon = dynamic_cast<monsters*>(killer);
+
+        beh = SAME_ATTITUDE(mon);
+
+        // Get a new foe for the zombie to target.
+        behaviour_event(mon, ME_EVAL);
+        hitting = mon->foe;
+    }
+
+    int midx = NON_MONSTER;
+    if (animate_remains(victim->pos(), CORPSE_BODY, beh, hitting, killer, "",
+                        GOD_NO_GOD, true, true, true, &midx) <= 0)
+    {
+        return (false);
+    }
+
+    monsters *zombie = &menv[midx];
+
+    if (you.can_see(victim))
+        mprf("%s turns into a zombie!", victim->name(DESC_CAP_THE).c_str());
+    else if (you.can_see(zombie))
+        mprf("%s appears out of thin air!", zombie->name(DESC_CAP_THE).c_str());
+
+    player_angers_monster(zombie);
+
+    return (true);
 }

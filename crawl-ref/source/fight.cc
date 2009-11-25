@@ -2111,10 +2111,11 @@ void melee_attack::_monster_die(monsters* monster, killer_type killer,
                                 int killer_index)
 {
     const bool chaos = (damage_brand == SPWPN_CHAOS);
+    const bool reaping = (damage_brand == SPWPN_REAPING);
 
     // Copy defender before it gets reset by monster_die().
     monsters* def_copy = NULL;
-    if (chaos)
+    if (chaos || reaping)
         def_copy = new monsters(*monster);
 
     // The monster is about to die, so restore its original attitude
@@ -2125,11 +2126,17 @@ void melee_attack::_monster_die(monsters* monster, killer_type killer,
     if (monster == defender && killer != KILL_RESET)
         monster->attitude = defender_starting_attitude;
 
-    monster_die(monster, killer, killer_index);
+    int corpse = monster_die(monster, killer, killer_index);
 
     if (chaos)
     {
         chaos_killed_defender(def_copy);
+        delete def_copy;
+    }
+    else if (reaping)
+    {
+        if (corpse != -1)
+            mons_reaped(attacker, def_copy);
         delete def_copy;
     }
 }

@@ -840,10 +840,15 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 "its path until it reaches maximum range.";
             break;
         case SPWPN_REAPING:
-            description += "If ammo fired by it kills a monster, "
-                "causing it to leave a corpse, the corpse will be "
-                "animated as a zombie friendly to the one who fired "
-                "it.";
+            if (is_range_weapon(item))
+                description += "If ammo fired by it kills a monster, "
+                    "causing it to leave a corpse, the corpse will be "
+                    "animated as a zombie friendly to the one who fired "
+                    "it.";
+            else
+                description += "All monsters killed with it which leave "
+                    "corpses in good enough shape will be reanimated as "
+                    "a zombie friendly to the killer.";
             break;
         }
     }

@@ -1767,48 +1767,12 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
 static bool _reaping_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
 {
     if (beam.is_tracer || victim->alive() || corpse == -1
-        || corpse == NON_ITEM)
+        || corpse == NON_ITEM || victim->atype() == ACT_PLAYER)
     {
         return (false);
     }
 
-    actor*   agent = beam.agent();
-    beh_type beh;
-    unsigned short hitting;
-
-    if (agent->atype() == ACT_PLAYER)
-    {
-        hitting = MHITYOU;
-        beh     = BEH_FRIENDLY;
-    }
-    else
-    {
-        monsters *mon = dynamic_cast<monsters*>(agent);
-
-        beh = SAME_ATTITUDE(mon);
-
-        // Get a new foe for the zombie to target.
-        behaviour_event(mon, ME_EVAL);
-        hitting = mon->foe;
-    }
-
-    int midx = NON_MONSTER;
-    if (animate_remains(victim->pos(), CORPSE_BODY, beh, hitting, agent, "",
-                        GOD_NO_GOD, true, true, true, &midx) <= 0)
-    {
-        return (false);
-    }
-
-    monsters *zombie = &menv[midx];
-
-    if (you.can_see(victim))
-        mprf("%s turns into a zombie!", victim->name(DESC_CAP_THE).c_str());
-    else if (you.can_see(zombie))
-        mprf("%s appears out of thin air!", zombie->name(DESC_CAP_THE).c_str());
-
-    player_angers_monster(zombie);
-
-    return (true);
+    return (mons_reaped(beam.agent(), dynamic_cast<monsters*>(victim)));
 }
 
 static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
