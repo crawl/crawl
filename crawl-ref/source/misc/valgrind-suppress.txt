@@ -13,21 +13,6 @@
 	fun:*end*
 }
 
-# The Berkeley DB code sometimes writes the contents of an unitialized buffer
-# when the save/db/ and save/des/ files are being generated.
-{
-	berkeley_db_write
-	Memcheck:Param
-	pwrite64(buf)
-	fun:pwrite64
-	fun:__os_io
-	fun:__memp_pgwrite
-	fun:__memp_bhwrite
-	fun:__memp_sync_int
-	fun:__memp_fsync
-	fun:__db_sync
-}
-
 # An SDL "conditional jump or move" error, with the unitialized value
 # being supplied by Nvidia's OpenGL library.
 {
