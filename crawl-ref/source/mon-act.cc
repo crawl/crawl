@@ -3277,6 +3277,8 @@ static bool _monster_move(monsters *monster)
                 mpr("The door mysteriously vanishes.");
                 interrupt_activity( AI_FORCE_INTERRUPT );
             }
+            else
+                simple_monster_message(monster, " eats the door!");
         }
     } // done door-eating jellies
 
