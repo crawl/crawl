@@ -406,7 +406,9 @@ bool monster_pathfind::mons_traversable(const coord_def p)
     {
         if (mons->is_habitable_feat(DNGN_FLOOR))
         {
-            if (mons_is_zombified(mons))
+            if (mons_eats_items(mons))
+                return (true);
+            else if (mons_is_zombified(mons))
             {
                 if (mons_class_itemuse(montype) >= MONUSE_OPEN_DOORS)
                     return (true);
