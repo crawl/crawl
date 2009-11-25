@@ -91,9 +91,8 @@ struct travel_target;
 level_id find_up_level(level_id curr, bool up_branch = false);
 level_id find_down_level(level_id curr);
 
+void start_translevel_travel_prompt();
 void start_translevel_travel(const travel_target &pos);
-
-void start_translevel_travel(bool prompt_for_destination = true);
 
 void start_travel(const coord_def& p);
 
@@ -465,7 +464,6 @@ public:
     void delete_waypoint();
     unsigned char is_waypoint(const level_pos &lp) const;
     void list_waypoints() const;
-    void travel_to_waypoint(int number);
     void update_waypoints() const;
 
 

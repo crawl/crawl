@@ -2278,6 +2278,37 @@ travel_target prompt_translevel_target(int prompt_flags,
     return target;
 }
 
+static void _start_translevel_travel()
+{
+    // Update information for this level.
+    travel_cache.get_level_info(level_id::current()).update();
+
+    if (level_id::current() == level_target.p.id
+        && (level_target.p.pos.x == -1 || level_target.p.pos == you.pos()))
+    {
+        mpr("You're already here!");
+        return ;
+    }
+
+    if (level_target.p.id.depth > 0)
+    {
+        // Forget interrupted butchering.
+        maybe_clear_weapon_swap();
+
+        you.running = RMODE_INTERLEVEL;
+        you.running.pos.reset();
+        last_stair.depth = -1;
+
+        _Route_Warning.new_dest(level_target);
+
+        _Src_Level = level_id::current();
+        _Src_Dest_Level_Delta = level_distance(_Src_Level,
+                                               level_target.p.id);
+
+        _start_running();
+    }
+}
+
 void start_translevel_travel(const travel_target &pos)
 {
     if (!i_feel_safe(true, true))
@@ -2317,10 +2348,10 @@ void start_translevel_travel(const travel_target &pos)
         _populate_stair_distances(pos.p);
 
     trans_travel_dest = get_trans_travel_dest(level_target);
-    start_translevel_travel(false);
+    _start_translevel_travel();
 }
 
-void start_translevel_travel(bool prompt_for_destination)
+void start_translevel_travel_prompt()
 {
     if (!i_feel_safe(true, true))
         return;
@@ -2329,40 +2360,12 @@ void start_translevel_travel(bool prompt_for_destination)
     // we can't wait to confirm that the user chose to initiate travel.
     travel_cache.get_level_info(level_id::current()).update();
 
-    if (prompt_for_destination)
-    {
-        travel_target target = prompt_translevel_target(TPF_DEFAULT_OPTIONS,
-                trans_travel_dest);
-        if (target.p.id.depth <= 0)
-            return;
+    travel_target target = prompt_translevel_target(TPF_DEFAULT_OPTIONS,
+            trans_travel_dest);
+    if (target.p.id.depth <= 0)
+        return;
 
-        level_target = target;
-    }
-
-    if (level_id::current() == level_target.p.id
-        && (level_target.p.pos.x == -1 || level_target.p.pos == you.pos()))
-    {
-        mpr("You're already here!");
-        return ;
-    }
-
-    if (level_target.p.id.depth > 0)
-    {
-        // Forget interrupted butchering.
-        maybe_clear_weapon_swap();
-
-        you.running = RMODE_INTERLEVEL;
-        you.running.pos.reset();
-        last_stair.depth = -1;
-
-        _Route_Warning.new_dest(level_target);
-
-        _Src_Level = level_id::current();
-        _Src_Dest_Level_Delta = level_distance(_Src_Level,
-                                               level_target.p.id);
-
-        _start_running();
-    }
+    start_translevel_travel(target);
 }
 
 command_type _trans_negotiate_stairs()
@@ -3394,17 +3397,6 @@ bool TravelCache::know_stair(const coord_def &c) const
 {
     travel_levels_map::const_iterator i = levels.find(level_id::current());
     return (i == levels.end() ? false : i->second.know_stair(c));
-}
-
-void TravelCache::travel_to_waypoint(int num)
-{
-    if (num < 0 || num >= TRAVEL_WAYPOINT_COUNT)
-        return;
-
-    if (waypoints[num].id.depth == -1)
-        return;
-
-    start_translevel_travel(waypoints[num]);
 }
 
 void TravelCache::list_waypoints() const

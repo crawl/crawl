@@ -1861,7 +1861,7 @@ void process_command( command_type cmd )
             start_travel(you.running.pos);
         }
         else
-            start_translevel_travel();
+            start_translevel_travel_prompt();
 
         if (you.running)
             mesclr();
