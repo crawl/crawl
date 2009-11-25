@@ -77,16 +77,6 @@
 #define COL_TO_REPLACE_DARKGREY     BLUE
 
 //
-// FreeBSD
-//
-#if defined(TARGET_OS_FREEBSD)
-
-    // There's no /usr/bin/zip in FreeBSD.
-    #define SAVE_PACKAGE_NONE
-
-#endif
-
-//
 // MinGW
 //
 #if defined(TARGET_COMPILER_MINGW)
