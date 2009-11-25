@@ -332,14 +332,11 @@ static bool _is_reseedable(const coord_def& c)
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
-bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
-                          bool ignore_terrain_knowledge)
+bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 {
-    if (!ignore_terrain_knowledge && !is_terrain_known(c))
+    if (!is_terrain_known(c))
         return (false);
 
-    // [dshaligram] At this point we're guaranteed to know the terrain (see
-    // check ^^^).
     const dungeon_feature_type grid = env.map_knowledge(c).feat();
 
     // Also make note of what's displayed on the level map for

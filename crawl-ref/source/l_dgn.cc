@@ -1293,7 +1293,7 @@ static int dgn_place_cloud(lua_State *ls)
 static int _dgn_is_passable(lua_State *ls)
 {
     COORDS(c, 1, 2);
-    lua_pushboolean(ls, is_travelsafe_square(c, false, true));
+    lua_pushboolean(ls, dgn_square_travel_ok(c));
     return (1);
 }
 

@@ -71,8 +71,7 @@ bool is_unknown_stair(const coord_def &p);
 void find_travel_pos(const coord_def& youpos, char *move_x, char *move_y,
                      std::vector<coord_def>* coords = NULL);
 
-bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false,
-                          bool ignore_terrain_knowledge = false);
+bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false);
 
 /* ***********************************************************************
  * Initiates explore - the character runs around the level to map it. Note

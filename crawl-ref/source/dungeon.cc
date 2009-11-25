@@ -538,9 +538,11 @@ static void _dgn_register_vault(const map_def &map)
     }
 }
 
-static bool _is_passable_ignore_vault(const coord_def &c)
+bool dgn_square_travel_ok(const coord_def &c)
 {
-    return (is_travelsafe_square(c, false, true) || grd(c) == DNGN_SECRET_DOOR);
+    const dungeon_feature_type feat = grd(c);
+    return (feat_is_traversable(feat) || feat_is_trap(feat)
+            || feat == DNGN_SECRET_DOOR);
 }
 
 bool dgn_square_is_passable(const coord_def &c)
@@ -551,7 +553,7 @@ bool dgn_square_is_passable(const coord_def &c)
     // default) because vaults may choose to create isolated regions,
     // or otherwise cause connectivity issues even if the map terrain
     // is travel-passable.
-    return (!(dgn_Map_Mask(c) & MMT_OPAQUE) && (_is_passable_ignore_vault(c)));
+    return (!(dgn_Map_Mask(c) & MMT_OPAQUE) && (dgn_square_travel_ok(c)));
 }
 
 static inline void _dgn_point_record_stub(const coord_def &) { }
@@ -1444,7 +1446,7 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
         for (int x = 0; x < GXM; ++x)
         {
             // [ds] Use dgn_square_is_passable instead of
-            // _is_passable_ignore_vault here, for we'll otherwise
+            // dgn_square_travel_ok here, for we'll otherwise
             // fail on floorless isolated pocket in vaults (like the
             // altar surrounded by deep water), and trigger the assert
             // downstairs.
@@ -7848,13 +7850,6 @@ struct nearest_point
     }
 };
 
-inline static bool _dgn_square_travel_ok(const coord_def &c)
-{
-    const dungeon_feature_type feat = grd(c);
-    return (feat_is_traversable(feat) || feat_is_trap(feat)
-            || feat == DNGN_SECRET_DOOR);
-}
-
 // Fill travel_point_distance out from all stone stairs on the level.
 static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
 {
@@ -7865,7 +7860,7 @@ static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
         for (int x = 0; x < GXM; ++x)
         {
             if (!travel_point_distance[x][y] && feat_is_stone_stair(grd[x][y]))
-                _dgn_fill_zone(coord_def(x, y), 1, np, _dgn_square_travel_ok);
+                _dgn_fill_zone(coord_def(x, y), 1, np, dgn_square_travel_ok);
         }
 
     return (np.nearest);
@@ -8291,13 +8286,13 @@ static bool _fixup_interlevel_connectivity()
             coord_def gc(x,y);
             if (!map_bounds(x, y)
                 || travel_point_distance[x][y]
-                || !_is_passable_ignore_vault(gc))
+                || !dgn_square_travel_ok(gc))
             {
                 continue;
             }
 
             _dgn_fill_zone(gc, ++nzones, _dgn_point_record_stub,
-                           _is_passable_ignore_vault, NULL);
+                           dgn_square_travel_ok, NULL);
         }
 
     int max_region = 0;

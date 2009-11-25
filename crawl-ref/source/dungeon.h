@@ -431,4 +431,7 @@ inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
 void remember_vault_placement(std::string key, vault_placement &place);
 
 std::string dump_vault_maps();
+
+bool dgn_square_travel_ok(const coord_def &c);
+
 #endif
