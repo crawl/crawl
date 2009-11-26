@@ -555,11 +555,11 @@ bool mons_pan(int mcls)
     case MONS_MIDGE:
     case MONS_NEQOXEC:
     case MONS_ORANGE_DEMON:
+    case MONS_SIXFIRHY:
     case MONS_SMOKE_DEMON:
     case MONS_UFETUBUS:
     case MONS_WHITE_IMP:
     case MONS_YNOXINUL:
-    case MONS_SIXFIRHY:
         return (true);
     default:
         return (false);
