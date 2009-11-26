@@ -483,6 +483,7 @@ SUBST:  " = wwW
 SUBST:  v : ccv
 ITEM:   any good_item
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
+KFEAT:  T = teleport trap
 #
 # Monsters defined in the header. Do not change order!
 : kobold_axe_returning(_G)
@@ -509,7 +510,7 @@ xxxc.=1+ww.......ww+1=.cxxx
 xxxc.cccww.......wwccc.cxxx
 xxxc.=1+ww.......ww+1=.cxxx
 xxxc.cccww.......wwccc.cxxx
-xxxc.=1+ww.......ww+1=.cxxx
+xxxcT=1+ww.......ww+1=Tcxxx
 xxxcccccww.......wwcccccxxx
 xxxxxxxccw.......wccxxxxxxx
 xxxxxxxxcccc+++ccccxxxxxxxx
