@@ -2307,6 +2307,8 @@ enum mon_spellbook_type
     MST_NIKOLA,
     MST_DISSOLUTION,                  // 170
     MST_AIZUL,
+    MST_EXECUTIONER,
+    MST_HAROLD,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,

@@ -1275,6 +1275,28 @@
       }
     },
 
+    {  MST_EXECUTIONER,
+      {
+       SPELL_NO_SPELL,
+       SPELL_PAIN,
+       SPELL_HASTE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_HASTE
+      }
+    },
+
+    {  MST_HAROLD,
+      {
+       SPELL_NO_SPELL,
+       SPELL_BOLT_OF_FIRE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_BLINK
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
