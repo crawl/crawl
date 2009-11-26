@@ -429,10 +429,10 @@ void message_out(int which_line, int color, const char *s, int firstcol,
     else
         firstcol--;
 
-    if (newline && which_line == crawl_view.msgsz.y - 1)
+    int x, y;
+    getyx(Message_Window, y, x);
+    if (newline && which_line == y && which_line == crawl_view.msgsz.y - 1)
     {
-        int x, y;
-        getyx(Message_Window, y, x);
         scroll(Message_Window);
         wmove(Message_Window, y - 1, x);
     }
@@ -443,7 +443,6 @@ void message_out(int which_line, int color, const char *s, int firstcol,
     // Fix stdscr cursor to same place as Message_Window cursor. This
     // is necessary because when reading input we use stdscr.
     {
-        int x, y;
         getyx(Message_Window, y, x);
         move(y + crawl_view.msgp.y - 1, crawl_view.msgp.x - 1 + x);
     }
