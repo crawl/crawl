@@ -93,7 +93,7 @@ public:
     void calculate_default_options();
     void clrscr();
 
-    void message_out(int which_line, int colour, const char *s, int firstcol, bool newline);
+    void message_out(int *which_line, int colour, const char *s, int firstcol);
 
     void cgotoxy(int x, int y, int region = GOTO_CRT);
     int get_number_of_lines();

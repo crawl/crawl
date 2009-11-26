@@ -313,7 +313,7 @@ int clrscr()
 
 void message_out(int *which_line, int colour, const char *s, int firstcol)
 {
-    tiles.message_out(*which_line, colour, s, firstcol);
+    tiles.message_out(which_line, colour, s, firstcol);
 }
 
 void cgotoxy(int x, int y, int region)

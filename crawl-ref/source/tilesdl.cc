@@ -1219,7 +1219,7 @@ void TilesFramework::message_out(int *which_line, int colour, const char *s,
         (*which_line)--;
     }
 
-    cgotoxy(firstcol, which_line + 1, GOTO_MSG);
+    cgotoxy(firstcol, (*which_line) + 1, GOTO_MSG);
     textcolor(colour);
 
     cprintf("%s", s);
