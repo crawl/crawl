@@ -2333,16 +2333,20 @@ void start_translevel_travel(const travel_target &pos)
 
     level_target = pos;
 
-    if (pos.p.id != level_id::current())
+    // Check that it's level + position, not just level.
+    if (pos.p.is_valid())
     {
-        if (!_loadlev_populate_stair_distances(pos.p))
+        if (pos.p.id != level_id::current())
         {
-            mpr("Level memory is imperfect, aborting.");
-            return ;
+            if (!_loadlev_populate_stair_distances(pos.p))
+            {
+                mpr("Level memory is imperfect, aborting.");
+                return ;
+            }
         }
+        else
+            _populate_stair_distances(pos.p);
     }
-    else
-        _populate_stair_distances(pos.p);
 
     trans_travel_dest = get_trans_travel_dest(level_target);
     _start_translevel_travel();
