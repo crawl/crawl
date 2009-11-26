@@ -57,20 +57,22 @@ static void scroll_message_window()
         cgotoxy(x, y - 1);
 }
 
-void message_out(int which_line, int colour, const char *s, int firstcol,
-                 bool newline)
+void message_out(int *which_line, int colour, const char *s, int firstcol)
 {
     if (!firstcol)
         firstcol = Options.delay_message_clear? 2 : 1;
+
+    while (*which_line > crawl_view.msgsz.y - 1)
+    {
+        scroll_message_window();
+        (*which_line)--;
+    }
 
     cgotoxy(firstcol + crawl_view.msgp.x - 1,
            which_line + crawl_view.msgp.y);
     textcolor(colour);
 
     cprintf("%s", s);
-
-    if (newline && which_line == crawl_view.msgsz.y - 1)
-        scroll_message_window();
 }
 
 void set_cursor_enabled(bool enabled)

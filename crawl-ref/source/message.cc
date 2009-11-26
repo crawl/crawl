@@ -676,8 +676,6 @@ static void mpr_store_messages(const std::string& message,
                                msg_channel_type channel, int param,
                                unsigned char colour, int repeats = 1)
 {
-    const int num_lines = crawl_view.msgsz.y;
-
     bool was_repeat = false;
 
     if (Options.msg_condense_repeats)
@@ -704,8 +702,7 @@ static void mpr_store_messages(const std::string& message,
     if (channel != MSGCH_PROMPT)
         New_Message_Count++;
 
-    if (Message_Line < num_lines - 1)
-        Message_Line++;
+    Message_Line++;
 
     // Reset colour.
     textcolor(LIGHTGREY);
@@ -725,8 +722,6 @@ static void mpr_store_messages(const std::string& message,
             Next_Message = 0;
     }
 }
-
-static bool did_prefix = false;
 
 // Does the work common to base_mpr and formatted_mpr.
 // Returns the default colour of the message, or MSGCOL_MUTED if
@@ -840,9 +835,8 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
         snprintf(info, INFO_SIZE, "%s (x%d)", inf, repeats);
         inf = info;
     }
-    message_out(Message_Line, colour, inf,
-                Options.delay_message_clear ? 2 : 1, !did_prefix);
-    did_prefix = false;
+    message_out(&Message_Line, colour, inf,
+                Options.delay_message_clear ? 2 : 1);
 
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
         set_more_autoclear(false);
@@ -885,15 +879,13 @@ static void mpr_formatted_output(formatted_string fs, int colour)
             colour = fs.ops[i].x;
             break;
         case FSOP_TEXT:
-            message_out(Message_Line, colour, fs.ops[i].text.c_str(), curcol,
-                        (i == last_text) && !did_prefix);
+            message_out(&Message_Line, colour, fs.ops[i].text.c_str(), curcol);
             curcol += multibyte_strlen(fs.ops[i].text);
             break;
         case FSOP_CURSOR:
             break;
         }
     }
-    did_prefix = false;
 }
 
 // Line wrapping is not available here!
@@ -993,7 +985,7 @@ bool any_messages(void)
     return (Message_Line > 0);
 }
 
-void mesclr( bool force )
+void mesclr(bool force)
 {
     if (crawl_state.game_crashed)
         return;
@@ -1009,9 +1001,7 @@ void mesclr( bool force )
 
     if (!force && Options.delay_message_clear)
     {
-        if (!did_prefix)
-            message_out( Message_Line, WHITE, "-", 1, true);
-        did_prefix = true;
+        message_out(&Message_Line, WHITE, "-", 1);
         return;
     }
 
@@ -1019,7 +1009,6 @@ void mesclr( bool force )
 
     cursor_control cs(false);
     clear_message_window();
-    did_prefix = false;
     Message_Line = 0;
 }
 
@@ -1070,19 +1059,22 @@ void more(bool user_forced)
 
         int keypress = 0;
 
+        int line = crawl_view.msgsz.y - 1;
+
+        // Force scroll.
+        if (Options.delay_message_clear)
+            line++;
+
         if (Tutorial.tutorial_left)
         {
-            message_out(crawl_view.msgsz.y - 1,
-                        LIGHTGREY,
+            message_out(&line, LIGHTGREY,
                         "--more--                        "
                         "Press Ctrl-P to reread old messages.",
-                        2, Options.delay_message_clear);
+                        2);
         }
         else
         {
-            message_out(crawl_view.msgsz.y - 1,
-                        LIGHTGREY, "--more--", 2,
-                        Options.delay_message_clear);
+            message_out(&line, LIGHTGREY, "--more--", 2);
         }
 
         mouse_control mc(MOUSE_MODE_MORE);

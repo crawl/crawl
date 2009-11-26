@@ -419,8 +419,7 @@ void clear_message_window()
     wrefresh( Message_Window );
 }
 
-void message_out(int which_line, int color, const char *s, int firstcol,
-                 bool newline)
+void message_out(int *which_line, int color, const char *s, int firstcol)
 {
     (void)wattrset( Message_Window, curs_fg_attr(color) );
 
@@ -429,20 +428,22 @@ void message_out(int which_line, int color, const char *s, int firstcol,
     else
         firstcol--;
 
-    int x, y;
-    getyx(Message_Window, y, x);
-    if (newline && which_line == y && which_line == crawl_view.msgsz.y - 1)
+    while (*which_line >= crawl_view.msgsz.y)
     {
+        int x, y;
+        getyx(Message_Window, y, x);
         scroll(Message_Window);
         wmove(Message_Window, y - 1, x);
+        (*which_line)--;
     }
 
-    wmove(Message_Window, which_line, firstcol);
+    wmove(Message_Window, *which_line, firstcol);
     waddstr_with_altcharset(Message_Window, s);
 
     // Fix stdscr cursor to same place as Message_Window cursor. This
     // is necessary because when reading input we use stdscr.
     {
+        int x, y;
         getyx(Message_Window, y, x);
         move(y + crawl_view.msgp.y - 1, crawl_view.msgp.x - 1 + x);
     }

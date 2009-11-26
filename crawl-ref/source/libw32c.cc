@@ -617,11 +617,16 @@ static void scroll_message_window()
         cgotoxy(wherex(), wherey() - 1);
 }
 
-void message_out(int which_line, int colour, const char *s, int firstcol,
-                 bool newline)
+void message_out(int *which_line, int colour, const char *s, int firstcol)
 {
     if (!firstcol)
         firstcol = Options.delay_message_clear? 2 : 1;
+
+    while (*which_line > crawl_view.msgsz.y - 1)
+    {
+        scroll_message_window();
+        (*which_line)--;
+    }
 
     cgotoxy(firstcol - 1 + crawl_view.msgp.x,
            which_line + crawl_view.msgp.y);
@@ -629,8 +634,6 @@ void message_out(int which_line, int colour, const char *s, int firstcol,
 
     cprintf("%s", s);
 
-    if (newline && which_line == crawl_view.msgsz.y - 1)
-        scroll_message_window();
 }
 
 static void cprintf_aux(const char *s)

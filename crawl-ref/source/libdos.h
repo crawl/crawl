@@ -28,8 +28,7 @@ void clear_to_end_of_line();
 int getch_ck();
 static inline void set_mouse_enabled(bool enabled) { }
 
-void message_out(int mline, int colour, const char *str, int firstcol = 0,
-                 bool newline = true);
+void message_out(int *mline, int colour, const char *str, int firstcol = 0);
 void clear_message_window();
 inline void update_screen()
 {

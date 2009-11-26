@@ -12,8 +12,7 @@ typedef unsigned short screen_buffer_t;
 void init_libw32c(void);
 void deinit_libw32c(void);
 
-void message_out(int mline, int colour, const char *str, int firstcol = 0,
-                 bool newline = true);
+void message_out(int *mline, int colour, const char *str, int firstcol = 0);
 void clear_message_window();
 
 int get_number_of_lines();
