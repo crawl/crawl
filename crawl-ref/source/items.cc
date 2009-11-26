@@ -1420,21 +1420,22 @@ int find_free_slot(const item_def &i)
     {
         // This is the new default free slot search. We look for the last
         // available slot that does not leave a gap in the inventory.
-        bool accept_empty = false;
         for (slot = ENDOFPACK - 1; slot >= 0; --slot)
         {
-            if (slot == disliked)
-                continue;
-
-            if (slot > 0 && you.inv[slot - 1].is_valid())
+            if (you.inv[slot].is_valid())
             {
-                if (!accept_empty && !you.inv[slot].is_valid())
-                    return slot;
-                accept_empty = true;
+                if (slot + 1 < ENDOFPACK && !you.inv[slot + 1].is_valid()
+                    && slot + 1 != disliked)
+                {
+                    return (slot + 1);
+                }
             }
-            else if (accept_empty)
+            else
             {
-                return slot;
+                if (slot + 1 < ENDOFPACK && you.inv[slot + 1].is_valid()
+                    && slot != disliked) {
+                    return (slot);
+                }
             }
         }
     }
@@ -1448,7 +1449,7 @@ int find_free_slot(const item_def &i)
             return slot;
 
     // If the least preferred slot is the only choice, so be it.
-    if (disliked != -1 && you.inv[disliked].is_valid())
+    if (disliked != -1 && !you.inv[disliked].is_valid())
         return disliked;
 
     return (-1);
