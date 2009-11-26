@@ -1076,12 +1076,13 @@ void more(bool user_forced)
                         LIGHTGREY,
                         "--more--                        "
                         "Press Ctrl-P to reread old messages.",
-                        2, false);
+                        2, Options.delay_message_clear);
         }
         else
         {
             message_out(crawl_view.msgsz.y - 1,
-                        LIGHTGREY, "--more--", 2, false);
+                        LIGHTGREY, "--more--", 2,
+                        Options.delay_message_clear);
         }
 
         mouse_control mc(MOUSE_MODE_MORE);
