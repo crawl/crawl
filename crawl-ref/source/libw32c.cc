@@ -629,7 +629,7 @@ void message_out(int *which_line, int colour, const char *s, int firstcol)
     }
 
     cgotoxy(firstcol - 1 + crawl_view.msgp.x,
-           which_line + crawl_view.msgp.y);
+           (*which_line) + crawl_view.msgp.y);
     textcolor(colour);
 
     cprintf("%s", s);
