@@ -405,9 +405,11 @@ ifdef PKGCONFIG
 # the contributing libraries are located.
 #
 
-PNG_INCLUDE := $(shell pkg-config libpng --cflags-only-I)
-PNG_CFLAGS  := $(shell pkg-config libpng --cflags-only-other)
-PNG_LDFLAGS := $(shell pkg-config libpng --libs-only-L) $(shell pkg-config libpng --libs-only-l)
+# 1KB: commented out instead of removing in case some weird system needs this.
+# Once it's proven to be not needed, please remove this.
+#PNG_INCLUDE := $(shell pkg-config libpng --cflags-only-I)
+#PNG_CFLAGS  := $(shell pkg-config libpng --cflags-only-other)
+#PNG_LDFLAGS := $(shell pkg-config libpng --libs-only-L) $(shell pkg-config libpng --libs-only-l)
 
 FREETYPE_INCLUDE := $(shell pkg-config freetype2 --cflags-only-I)
 FREETYPE_CFLAGS  := $(shell pkg-config freetype2 --cflags-only-other)
@@ -417,7 +419,8 @@ SDL_INCLUDE := $(shell pkg-config sdl --cflags-only-I)
 SDL_CFLAGS  := $(shell pkg-config sdl --cflags-only-other)
 SDL_LDFLAGS := $(shell pkg-config sdl --libs-only-L) $(shell pkg-config sdl --libs-only-l)
 
-LIBS += -lSDL_image $(SDL_LDFLAGS) $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS)
+#LIBS += -lSDL_image $(SDL_LDFLAGS) $(PNG_LDFLAGS) $(FREETYPE_LDFLAGS)
+LIBS += -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
@@ -608,7 +611,9 @@ endif
 
 endif
 
+ifndef TILES
 LIBS += -L$(NC_PREFIX)/lib -l$(NC_LIB)
+endif
 
 endif
 
