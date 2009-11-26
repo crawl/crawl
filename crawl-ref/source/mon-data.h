@@ -3689,7 +3689,7 @@ static monsterentry mondata[] = {
 {
     MONS_SIXFIRHY, '4', LIGHTBLUE, "sixfirhy",
     M_NO_FLAGS,
-    MR_NO_FLAGS, // can't have RES_ELEC since most sources of damage do nothing
+    MR_NO_FLAGS, // Can't have RES_ELEC since most sources of damage do nothing
                  // in that case.  We want to "suffer" the damage to get healed.
     0, 6, MONS_SIXFIRHY, MONS_SIXFIRHY, MH_DEMONIC, -6,
     { {AT_HIT, AF_ELEC, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
