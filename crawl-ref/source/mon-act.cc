@@ -2302,7 +2302,8 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
         if (death_ooze_ate_corpse)
         {
             place_cloud ( CLOUD_MIASMA, monster->pos(),
-                          4 + random2(5), monster->kill_alignment() );
+                          4 + random2(5), monster->kill_alignment(),
+                          KILL_MON_MISSILE );
         }
 
         if (death_ooze_ate_good)
@@ -3403,14 +3404,16 @@ static bool _monster_move(monsters *monster)
             || monster->type == MONS_FIRE_ELEMENTAL)
         {
             place_cloud( CLOUD_FIRE, monster->pos(),
-                         2 + random2(4), monster->kill_alignment() );
+                         2 + random2(4), monster->kill_alignment(),
+                         KILL_MON_MISSILE );
         }
 
         if (monster->type == MONS_ROTTING_DEVIL
             || monster->type == MONS_CURSE_TOE)
         {
             place_cloud( CLOUD_MIASMA, monster->pos(),
-                         2 + random2(3), monster->kill_alignment() );
+                         2 + random2(3), monster->kill_alignment(),
+                         KILL_MON_MISSILE );
         }
     }
     else

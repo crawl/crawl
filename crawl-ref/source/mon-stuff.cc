@@ -1084,7 +1084,7 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
     if (cloud != CLOUD_NONE)
     {
         place_cloud(cloud, monster->pos(), 1 + random2(3),
-                    monster->kill_alignment());
+                    monster->kill_alignment(), KILL_MON_MISSILE);
     }
 }
 
@@ -1539,7 +1539,7 @@ int monster_die(monsters *monster, killer_type killer,
             && !submerged)
         {
             place_cloud(CLOUD_FIRE, monster->pos(), 2 + random2(4),
-                        monster->kill_alignment());
+                        monster->kill_alignment(), KILL_MON_MISSILE);
         }
 
         if (killer == KILL_RESET)
@@ -1558,7 +1558,7 @@ int monster_die(monsters *monster, killer_type killer,
         if (!wizard && !mons_reset && !submerged)
         {
             place_cloud(CLOUD_COLD, monster->pos(), 2 + random2(4),
-                        monster->kill_alignment());
+                        monster->kill_alignment(), KILL_MON_MISSILE);
         }
 
         if (killer == KILL_RESET)
@@ -3731,7 +3731,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
 
     // Leave a purple cloud.
     place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
-                monster->kill_alignment());
+                monster->kill_alignment(), KILL_MON_MISSILE);
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects(oldplace);
