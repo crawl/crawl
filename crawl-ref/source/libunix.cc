@@ -429,9 +429,6 @@ void message_out(int which_line, int color, const char *s, int firstcol,
     else
         firstcol--;
 
-    wmove(Message_Window, which_line, firstcol);
-    waddstr_with_altcharset(Message_Window, s);
-
     if (newline && which_line == crawl_view.msgsz.y - 1)
     {
         int x, y;
@@ -439,6 +436,9 @@ void message_out(int which_line, int color, const char *s, int firstcol,
         scroll(Message_Window);
         wmove(Message_Window, y - 1, x);
     }
+
+    wmove(Message_Window, which_line, firstcol);
+    waddstr_with_altcharset(Message_Window, s);
 
     // Fix stdscr cursor to same place as Message_Window cursor. This
     // is necessary because when reading input we use stdscr.
