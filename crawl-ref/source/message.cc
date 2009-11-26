@@ -726,7 +726,7 @@ static void mpr_store_messages(const std::string& message,
     }
 }
 
-static bool need_prefix = false;
+static bool did_prefix = false;
 
 // Does the work common to base_mpr and formatted_mpr.
 // Returns the default colour of the message, or MSGCOL_MUTED if
@@ -835,19 +835,14 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
 
     handle_more(colour);
 
-    if (need_prefix)
-    {
-        message_out( Message_Line, colour, "-", 1, false );
-        need_prefix = false;
-    }
-
     if (repeats > 1)
     {
         snprintf(info, INFO_SIZE, "%s (x%d)", inf, repeats);
         inf = info;
     }
-    message_out( Message_Line, colour, inf,
-                 Options.delay_message_clear? 2 : 1 );
+    message_out(Message_Line, colour, inf,
+                Options.delay_message_clear ? 2 : 1, !did_prefix);
+    did_prefix = false;
 
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
         set_more_autoclear(false);
@@ -874,12 +869,6 @@ static void mpr_formatted_output(formatted_string fs, int colour)
 {
     int curcol = Options.delay_message_clear ? 2 : 1;
 
-    if (need_prefix)
-    {
-        message_out( Message_Line, colour, "-", 1, false );
-        need_prefix = false;
-    }
-
     // Find last text op so that we can scroll the output.
     unsigned last_text = fs.ops.size();
     for (unsigned i = 0; i < fs.ops.size(); ++i)
@@ -897,13 +886,14 @@ static void mpr_formatted_output(formatted_string fs, int colour)
             break;
         case FSOP_TEXT:
             message_out(Message_Line, colour, fs.ops[i].text.c_str(), curcol,
-                        (i == last_text));
+                        (i == last_text) && !did_prefix);
             curcol += multibyte_strlen(fs.ops[i].text);
             break;
         case FSOP_CURSOR:
             break;
         }
     }
+    did_prefix = false;
 }
 
 // Line wrapping is not available here!
@@ -1019,7 +1009,9 @@ void mesclr( bool force )
 
     if (!force && Options.delay_message_clear)
     {
-        need_prefix = true;
+        if (!did_prefix)
+            message_out( Message_Line, WHITE, "-", 1, true);
+        did_prefix = true;
         return;
     }
 
@@ -1027,7 +1019,7 @@ void mesclr( bool force )
 
     cursor_control cs(false);
     clear_message_window();
-    need_prefix = false;
+    did_prefix = false;
     Message_Line = 0;
 }
 
