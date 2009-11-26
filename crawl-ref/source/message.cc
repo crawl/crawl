@@ -1066,6 +1066,8 @@ void more(bool user_forced)
 
     if (Options.show_more_prompt && !suppress_messages)
     {
+        flush_prev_message();
+
         int keypress = 0;
 
         if (Tutorial.tutorial_left)
