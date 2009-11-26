@@ -852,7 +852,7 @@ endif
 	$(COPY) ../settings/* $(datadir_fp)/settings/
 ifdef TILES
 	mkdir -p $(datadir_fp)/dat/tiles
-	$(COPY) dat/tiles/*.png dat/tiles/*.ttf $(prefix_fp)/dat/tiles/
+	$(COPY) dat/tiles/*.png dat/tiles/*.ttf $(datadir_fp)/dat/tiles/
 endif
 ifeq ($(USE_DGAMELAUNCH),)
 	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
