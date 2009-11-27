@@ -632,6 +632,7 @@ static bool _dgn_shift_feature(const coord_def &pos)
 
         env.markers.move(pos, dest);
         dungeon_events.move_listeners(pos, dest);
+        shopping_list.move_things(pos, dest);
     }
     return (true);
 }

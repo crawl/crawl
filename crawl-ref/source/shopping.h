@@ -29,6 +29,7 @@ bool is_shop_item(const item_def &item);
 /////////////////////////////////////////////////////////////////////
 
 struct level_pos;
+class  Menu;
 
 class ShoppingList
 {
@@ -50,6 +51,7 @@ public:
     void gold_changed(int old_amount, int new_amount);
 
     void move_things(const coord_def &src, const coord_def &dst);
+    void forget_pos(const level_pos &pos);
 
     void display();
 
@@ -68,6 +70,8 @@ private:
 private:
     int find_thing(const item_def &item, const level_pos &pos) const;
     int find_thing(const std::string &desc, const level_pos &pos) const;
+
+    void fill_out_menu(Menu& shopmenu);
 
     static       bool        thing_is_item(const CrawlHashTable& thing);
     static const item_def&   get_thing_item(const CrawlHashTable& thing);

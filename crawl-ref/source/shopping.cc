@@ -2389,9 +2389,32 @@ int ShoppingList::size() const
     return ( list->size() );
 }
 
-void ShoppingList::move_things(const coord_def &src, const coord_def &dst)
+void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 {
-    ASSERT(false); // Not implemented yet
+    const level_pos src(level_id::current(), _src);
+    const level_pos dst(level_id::current(), _dst);
+
+    for (unsigned int i = 0; i < list->size(); i++)
+    {
+        CrawlHashTable &thing = (*list)[i];
+
+        if (thing_pos(thing) == src)
+            thing[SHOPPING_THING_POS_KEY] = dst;
+    }
+}
+
+void ShoppingList::forget_pos(const level_pos &pos)
+{
+    for (unsigned int i = 0; i < list->size(); i++)
+    {
+        const CrawlHashTable &thing = (*list)[i];
+
+        if (thing_pos(thing) == pos)
+        {
+            list->erase(i);
+            i--;
+        }
+    }
 }
 
 void ShoppingList::gold_changed(int old_amount, int new_amount)
@@ -2470,40 +2493,20 @@ void ShoppingListMenu::draw_title()
                 title->quantity > 1? "s" : "",
                 total_cost);
 
+        const char *verb = menu_action == ACT_EXECUTE ? "travel" :
+                           menu_action == ACT_EXAMINE ? "examine" :
+                                                        "delete";
         char buf[200];
         snprintf(buf, 200,
                  "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action]",
-                 menu_action == ACT_EXECUTE ? "travel" : "examine");
+                 verb);
 
         draw_title_suffix(formatted_string::parse_string(buf), false);
     }
 }
 
-void ShoppingList::display()
+void ShoppingList::fill_out_menu(Menu& shopmenu)
 {
-    if (list->empty())
-        return;
-
-    const bool travelable = can_travel_interlevel();
-
-    ShoppingListMenu shopmenu;
-    shopmenu.set_tag("shop");
-    shopmenu.menu_action  = travelable ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
-    shopmenu.allow_toggle = travelable;
-    std::string title     = "thing";
-
-    MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
-    // Abuse of the quantity field.
-    mtitle->quantity = list->size();
-    shopmenu.set_title(mtitle);
-
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (list->size() > 52
-        && (shopmenu.maxpagesize() > 52 || shopmenu.maxpagesize() == 0))
-    {
-        shopmenu.set_maxpagesize(52);
-    }
-
     menu_letter hotkey;
     for (unsigned i = 0; i < list->size(); ++i, ++hotkey)
     {
@@ -2536,6 +2539,32 @@ void ShoppingList::display()
 
         shopmenu.add_entry(me);
     }
+}
+
+void ShoppingList::display()
+{
+    if (list->empty())
+        return;
+
+    const bool travelable = can_travel_interlevel();
+
+    ShoppingListMenu shopmenu;
+    shopmenu.set_tag("shop");
+    shopmenu.menu_action  = travelable ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
+    shopmenu.action_cycle = travelable ? Menu::CYCLE_CYCLE : Menu::CYCLE_NONE;
+    std::string title     = "thing";
+
+    MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
+    // Abuse of the quantity field.
+    mtitle->quantity = list->size();
+    shopmenu.set_title(mtitle);
+
+    // Don't make a menu so tall that we recycle hotkeys on the same page.
+    if (list->size() > 52
+        && (shopmenu.maxpagesize() > 52 || shopmenu.maxpagesize() == 0))
+    {
+        shopmenu.set_maxpagesize(52);
+    }
 
     std::string more_str = make_stringf("<yellow>You have %d gp</yellow>",
                                         you.gold);
@@ -2543,6 +2572,8 @@ void ShoppingList::display()
 
     shopmenu.set_flags( MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE
                         | MF_ALLOW_FORMATTING );
+
+    fill_out_menu(shopmenu);
 
     std::vector<MenuEntry*> sel;
     while (true)
@@ -2573,16 +2604,43 @@ void ShoppingList::display()
                     continue;
             }
 
-            const travel_target lp(thing_pos(*thing), true);
+            const travel_target lp(thing_pos(*thing), false);
             start_translevel_travel(lp);
             break;
         }
-        else if (is_item)
+        else if (shopmenu.menu_action == Menu::ACT_EXAMINE && is_item)
         {
             clrscr();
             const item_def &item = get_thing_item(*thing);
             describe_item( const_cast<item_def&>(item) );
         }
+        else if (shopmenu.menu_action == Menu::ACT_MISC)
+        {
+            std::string prompt =
+                make_stringf("Delete %s from shopping list? (y/N)",
+                             describe_thing(*thing, DESC_NOCAP_A).c_str());
+            clrscr();
+            if (!yesno(prompt.c_str(), true, 'n'))
+                continue;
+
+            const int index = shopmenu.get_entry_index(sel[0]);
+            if (index == -1)
+            {
+                mpr("ERROR: Unable to delete thing from shopping list!",
+                    MSGCH_ERROR);
+                more();
+                continue;
+            }
+
+            list->erase(index);
+            if (list->size() == 0)
+                break;
+
+            shopmenu.clear();
+            fill_out_menu(shopmenu);
+        }
+        else
+            DEBUGSTR("Invalid menu action type");
     }
     redraw_screen();
 }

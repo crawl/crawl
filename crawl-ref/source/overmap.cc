@@ -606,6 +606,7 @@ static bool _unnotice_stair(const level_pos &pos)
 
 bool unnotice_feature(const level_pos &pos)
 {
+    shopping_list.forget_pos(pos);
     return (_unnotice_portal(pos)
             || _unnotice_portal_vault(pos)
             || _unnotice_altar(pos)

@@ -4049,7 +4049,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     // player, and a quarter has gone to sleep. A given monster has a
     // 95% chance of forgetting the player after 4*x turns, and going to
     // sleep after 10*x turns.
-    int x;
+    int x = 0; // Quiet unitialized variable compiler warning.
     switch (mons_intel(mon))
     {
     case I_HIGH:

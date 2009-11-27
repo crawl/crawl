@@ -604,7 +604,7 @@ void full_describe_view()
 
     desc_menu.set_tag("pickup");
     desc_menu.set_type(MT_PICKUP); // necessary for sorting of the item submenu
-    desc_menu.allow_toggle = true;
+    desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
 
     // Don't make a menu so tall that we recycle hotkeys on the same page.
     if (list_mons.size() + list_items.size() + list_features.size() > 52
