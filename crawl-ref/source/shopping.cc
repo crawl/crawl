@@ -2502,31 +2502,8 @@ void ShoppingListMenu::draw_title()
     }
 }
 
-void ShoppingList::display()
+void ShoppingList::fill_out_menu(Menu& shopmenu)
 {
-    if (list->empty())
-        return;
-
-    const bool travelable = can_travel_interlevel();
-
-    ShoppingListMenu shopmenu;
-    shopmenu.set_tag("shop");
-    shopmenu.menu_action  = travelable ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
-    shopmenu.action_cycle = travelable ? Menu::CYCLE_CYCLE : Menu::CYCLE_NONE;
-    std::string title     = "thing";
-
-    MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
-    // Abuse of the quantity field.
-    mtitle->quantity = list->size();
-    shopmenu.set_title(mtitle);
-
-    // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (list->size() > 52
-        && (shopmenu.maxpagesize() > 52 || shopmenu.maxpagesize() == 0))
-    {
-        shopmenu.set_maxpagesize(52);
-    }
-
     menu_letter hotkey;
     for (unsigned i = 0; i < list->size(); ++i, ++hotkey)
     {
@@ -2559,6 +2536,32 @@ void ShoppingList::display()
 
         shopmenu.add_entry(me);
     }
+}
+
+void ShoppingList::display()
+{
+    if (list->empty())
+        return;
+
+    const bool travelable = can_travel_interlevel();
+
+    ShoppingListMenu shopmenu;
+    shopmenu.set_tag("shop");
+    shopmenu.menu_action  = travelable ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
+    shopmenu.action_cycle = travelable ? Menu::CYCLE_CYCLE : Menu::CYCLE_NONE;
+    std::string title     = "thing";
+
+    MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
+    // Abuse of the quantity field.
+    mtitle->quantity = list->size();
+    shopmenu.set_title(mtitle);
+
+    // Don't make a menu so tall that we recycle hotkeys on the same page.
+    if (list->size() > 52
+        && (shopmenu.maxpagesize() > 52 || shopmenu.maxpagesize() == 0))
+    {
+        shopmenu.set_maxpagesize(52);
+    }
 
     std::string more_str = make_stringf("<yellow>You have %d gp</yellow>",
                                         you.gold);
@@ -2566,6 +2569,8 @@ void ShoppingList::display()
 
     shopmenu.set_flags( MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE
                         | MF_ALLOW_FORMATTING );
+
+    fill_out_menu(shopmenu);
 
     std::vector<MenuEntry*> sel;
     while (true)
@@ -2624,17 +2629,12 @@ void ShoppingList::display()
                 continue;
             }
 
-            if (shopmenu.del_entry(sel[0]))
-            {
-                list->erase(index);
-                delete (sel[0]);
-            }
-            else
-            {
-                mpr("ERROR: Unable to delete thing from shopping list!",
-                    MSGCH_ERROR);
-                more();
-            }
+            list->erase(index);
+            if (list->size() == 0)
+                break;
+
+            shopmenu.clear();
+            fill_out_menu(shopmenu);
         }
         else
             DEBUGSTR("Invalid menu action type");
