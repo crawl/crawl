@@ -2490,10 +2490,13 @@ void ShoppingListMenu::draw_title()
                 title->quantity > 1? "s" : "",
                 total_cost);
 
+        const char *verb = menu_action == ACT_EXECUTE ? "travel" :
+                           menu_action == ACT_EXAMINE ? "examine" :
+                                                        "delete";
         char buf[200];
         snprintf(buf, 200,
                  "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action]",
-                 menu_action == ACT_EXECUTE ? "travel" : "examine");
+                 verb);
 
         draw_title_suffix(formatted_string::parse_string(buf), false);
     }
@@ -2509,7 +2512,7 @@ void ShoppingList::display()
     ShoppingListMenu shopmenu;
     shopmenu.set_tag("shop");
     shopmenu.menu_action  = travelable ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
-    shopmenu.action_cycle = Menu::CYCLE_TOGGLE;
+    shopmenu.action_cycle = travelable ? Menu::CYCLE_CYCLE : Menu::CYCLE_NONE;
     std::string title     = "thing";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
@@ -2597,12 +2600,44 @@ void ShoppingList::display()
             start_translevel_travel(lp);
             break;
         }
-        else if (is_item)
+        else if (shopmenu.menu_action == Menu::ACT_EXAMINE && is_item)
         {
             clrscr();
             const item_def &item = get_thing_item(*thing);
             describe_item( const_cast<item_def&>(item) );
         }
+        else if (shopmenu.menu_action == Menu::ACT_MISC)
+        {
+            std::string prompt =
+                make_stringf("Delete %s from shopping list? (y/N)",
+                             describe_thing(*thing, DESC_NOCAP_A).c_str());
+            clrscr();
+            if (!yesno(prompt.c_str(), true, 'n'))
+                continue;
+
+            const int index = shopmenu.get_entry_index(sel[0]);
+            if (index == -1)
+            {
+                mpr("ERROR: Unable to delete thing from shopping list!",
+                    MSGCH_ERROR);
+                more();
+                continue;
+            }
+
+            if (shopmenu.del_entry(sel[0]))
+            {
+                list->erase(index);
+                delete (sel[0]);
+            }
+            else
+            {
+                mpr("ERROR: Unable to delete thing from shopping list!",
+                    MSGCH_ERROR);
+                more();
+            }
+        }
+        else
+            DEBUGSTR("Invalid menu action type");
     }
     redraw_screen();
 }
