@@ -2391,6 +2391,10 @@ int ShoppingList::size() const
 
 void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 {
+    if (crawl_state.map_stat_gen)
+        // Shopping list is unitialized and uneeded.
+        return;
+
     const level_pos src(level_id::current(), _src);
     const level_pos dst(level_id::current(), _dst);
 
@@ -2405,6 +2409,10 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 
 void ShoppingList::forget_pos(const level_pos &pos)
 {
+    if (crawl_state.map_stat_gen)
+        // Shopping list is unitialized and uneeded.
+        return;
+
     for (unsigned int i = 0; i < list->size(); i++)
     {
         const CrawlHashTable &thing = (*list)[i];

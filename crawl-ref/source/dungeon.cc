@@ -4926,6 +4926,8 @@ int dgn_place_monster(mons_spec &mspec,
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;
         mg.mname     = mspec.monname;
+        mg.hd        = mspec.hd;
+        mg.hp        = mspec.hp;
 
         // XXX: hack.
         if (mg.colour == -1)

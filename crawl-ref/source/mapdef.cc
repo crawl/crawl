@@ -2575,6 +2575,14 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (mspec.mlevel == TAG_UNFOUND)
             mspec.mlevel = 0;
 
+        mspec.hd = strip_number_tag(mon_str, "hd:");
+        if (mspec.hd == TAG_UNFOUND)
+            mspec.hd = 0;
+
+        mspec.hp = strip_number_tag(mon_str, "hp:");
+        if (mspec.hp == TAG_UNFOUND)
+            mspec.hp = 0;
+
         std::string colour = strip_tag_prefix(mon_str, "col:");
         if (!colour.empty())
         {

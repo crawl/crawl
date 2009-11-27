@@ -756,6 +756,14 @@ the marker is placed upon. The options currently available are:
 * monster_dies_lua_key: If this property is set to a function, that function
       will be executed upon the monster's death.
 
+* speech_key: This will override the initial key searched for in the speech
+      database. Setting this to "Edmund", for example, will give the relevant
+      monster Edmund's speech.
+
+* speech_prefix: This allows a single prefix to be added to the prefixes list.
+      These prefixes can be used to adjust monster speech dependant on
+      circumstances.
+
 An example of MonPropsMarker to replace the description and quote of a monster:
 
     MARKER: 8 = lua:MonPropsMarker:new {description="What a horrible sight!\n", \

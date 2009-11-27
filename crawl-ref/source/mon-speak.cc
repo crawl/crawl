@@ -461,8 +461,8 @@ bool mons_speaks(monsters *monster)
         prefixes.push_back("confused");
 
     // Allows monster speech to be altered slightly on-the-fly.
-    if (monster->props.exists("speech_key"))
-        prefixes.push_back(monster->props["speech_key"].get_string());
+    if (monster->props.exists("speech_prefix"))
+        prefixes.push_back(monster->props["speech_prefix"].get_string());
 
     const actor*    foe   = (!crawl_state.arena && monster->wont_attack()
                                 && invalid_monster_index(monster->foe)) ?
@@ -558,10 +558,19 @@ bool mons_speaks(monsters *monster)
     }
     else
     {
+
+        if (monster->props.exists("speech_key"))
+        {
+            msg = _get_speak_string(prefixes,
+                                     monster->props["speech_key"].get_string(),
+                                     monster, no_player, no_foe, no_foe_name,
+                                     no_god, unseen);
+        }
+
         // If the monster was originally a unique which has been polymorphed
         // into a non-unique, is its current monter type capable of using its
         // old speech?
-        if (!monster->mname.empty() && monster->can_speak())
+        if (!monster->mname.empty() && monster->can_speak() && msg.empty())
         {
             msg = _get_speak_string(prefixes, monster->name(DESC_PLAIN),
                                     monster, no_player, no_foe, no_foe_name,

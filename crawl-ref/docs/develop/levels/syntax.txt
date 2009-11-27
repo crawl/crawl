@@ -645,6 +645,21 @@ MONS:     (list of monsters)
 
           Monster names should be used very sparingly.
 
+          Further monster customisation can be made by using "hd" and "hp".
+          These two tags allow you to completely overwrite the original hit dice
+          and hit points of a monster:
+              MONS: kobold hd:20
+
+          Creates a kobold with a hit dice of 20. As its hp is randomised, based
+          on its hit dice, this will also be re-rolled. Monsters with a specific
+          hit point value will not have this value change.
+
+          You can also have a specific value for hit points:
+              MONS: kobold hp:20
+
+          Creates a kobold with 20 hit points. This is also useful for monsters
+          (such as statues) which come with non-randomised HP values.
+
           Overriding Monster Spells:
           --------------------------
           Monster spell sets can be overridden with a spells: tag,
