@@ -120,9 +120,7 @@ void trap_def::prepare_ammo()
 
 void trap_def::reveal()
 {
-    const dungeon_feature_type cat = this->category();
-    grd(this->pos) = cat;
-    set_map_knowledge_obj(this->pos, cat);
+    grd(this->pos) = this->category();
 }
 
 std::string trap_def::name(description_level_type desc) const
