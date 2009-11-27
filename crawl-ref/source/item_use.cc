@@ -3962,7 +3962,8 @@ void jewellery_remove_effects(item_def &item, bool mesg)
         break;
 
     case AMU_GUARDIAN_SPIRIT:
-        mpr("Your magic begins regenerating once more.");
+        if (you.species == SP_DEEP_DWARF)
+            mpr("Your magic begins regenerating once more.");
     }
 
     if (is_artefact(item))
