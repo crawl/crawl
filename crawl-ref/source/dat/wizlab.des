@@ -220,11 +220,11 @@ COLOUR:     = = darkgrey
 COLOUR:     mMV = silver
 KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
                     blink_other;blink_other;major_healing name:strange_machine \
-                    name_replace name_descriptor
+                    name_replace name_descriptor hd:13 hp:120
 KITEM:      8 = book of tukima
 KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
                     blink_other;blink_other;major_healing name:strange_machine \
-                    name_replace name_descriptor
+                    name_replace name_descriptor hd:13 hp:120
 KITEM:      9 = scroll of acquirement
 :           local mquote = '"The machine had stood there a long time. It was several '
 :                  .. "hundred feet long and could run on a thimbleful of earth or"
