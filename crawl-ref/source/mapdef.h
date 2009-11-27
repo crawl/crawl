@@ -472,6 +472,8 @@ class mons_spec
     bool patrolling;
     bool band;
     int  colour;
+    int  hd;
+    int  hp;
 
     item_list items;
     std::string monname;
@@ -488,8 +490,8 @@ class mons_spec
         : mid(id), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
           quantity(1), genweight(gw), mlevel(ml), fix_mons(_fixmons),
           generate_awake(awaken), patrolling(false), band(false),
-          colour(BLACK), items(), monname(""), explicit_spells(false),
-          spells(), extra_monster_flags(0L)
+          colour(BLACK), hd(0), hp(0), items(), monname(""),
+          explicit_spells(false), spells(), extra_monster_flags(0L)
     {
     }
 };

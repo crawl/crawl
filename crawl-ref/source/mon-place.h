@@ -191,6 +191,10 @@ struct mgen_data
     // be available (vault metadata is not preserved across game saves).
     unsigned        map_mask;
 
+    // XXX: Also rather hackish.
+    int             hd;
+    int             hp;
+
     // XXX: Rather hackish.
     std::string     mname;
 
@@ -213,6 +217,7 @@ struct mgen_data
               int monpower = you.your_level,
               proximity_type prox = PROX_ANYWHERE,
               level_area_type ltype = you.level_type,
+              int mhd = 0, int mhp = 0,
               std::string monname = "",
               std::string nas = "")
 
@@ -220,7 +225,7 @@ struct mgen_data
           abjuration_duration(abj), summon_type(st), pos(p), foe(mfoe),
           flags(monflags), god(which_god), number(monnumber), colour(moncolour),
           power(monpower), proximity(prox), level_type(ltype), map_mask(0),
-          mname(monname), non_actor_summoner(nas)
+          hd(mhd), hp(mhp), mname(monname), non_actor_summoner(nas)
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
                || mt == MONS_BALL_LIGHTNING);
@@ -257,7 +262,7 @@ struct mgen_data
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
                          monflags, god, base, 0, BLACK, you.your_level,
-                         PROX_ANYWHERE, you.level_type, "", summoner);
+                         PROX_ANYWHERE, you.level_type, 0, 0, "", summoner);
     }
 };
 
