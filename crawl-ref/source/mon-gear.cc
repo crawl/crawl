@@ -13,6 +13,7 @@
 
 #include "artefact.h"
 #include "dungeon.h"
+#include "env.h"
 #include "itemprop.h"
 #include "items.h"
 #include "makeitem.h"

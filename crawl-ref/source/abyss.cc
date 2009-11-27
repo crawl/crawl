@@ -34,6 +34,7 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "stuff.h"
+#include "env.h"
 #include "spells3.h"
 #include "terrain.h"
 #ifdef USE_TILE

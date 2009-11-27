@@ -13,6 +13,7 @@
 #include "delay.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "env.h"
 #include "fight.h"
 #include "ghost.h"
 #include "goditem.h"

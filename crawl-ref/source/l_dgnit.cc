@@ -10,6 +10,7 @@
 
 #include "coord.h"
 #include "dungeon.h"
+#include "env.h"
 #include "items.h"
 #include "mapdef.h"
 #include "stash.h"

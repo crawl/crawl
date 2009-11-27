@@ -33,6 +33,7 @@
 #include "shopping.h"
 #include "state.h"
 #include "stuff.h"
+#include "env.h"
 #include "terrain.h"
 #include "view.h"
 

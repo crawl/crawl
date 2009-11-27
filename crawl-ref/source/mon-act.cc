@@ -16,6 +16,7 @@
 #include "dbg-scan.h"
 #include "delay.h"
 #include "directn.h"
+#include "env.h"
 #include "map_knowledge.h"
 #include "food.h"
 #include "fprop.h"

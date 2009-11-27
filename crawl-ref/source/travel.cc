@@ -42,6 +42,7 @@
 #include "player.h"
 #include "stash.h"
 #include "stuff.h"
+#include "env.h"
 #include "tags.h"
 #include "terrain.h"
 #ifdef USE_TILE

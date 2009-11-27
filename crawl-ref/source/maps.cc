@@ -19,6 +19,7 @@
 #include "coordit.h"
 #include "dbg-maps.h"
 #include "dungeon.h"
+#include "env.h"
 #include "enum.h"
 #include "files.h"
 #include "message.h"

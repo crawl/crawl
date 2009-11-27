@@ -13,6 +13,7 @@
 #include "colour.h"
 #include "command.h"
 #include "dungeon.h"
+#include "env.h"
 #include "initfile.h"
 #include "items.h"
 #include "itemname.h" // for make_name()

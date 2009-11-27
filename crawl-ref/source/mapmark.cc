@@ -19,6 +19,7 @@
 #include "l_defs.h"
 #include "l_libs.h"
 #include "stuff.h"
+#include "env.h"
 #include "tags.h"
 
 ////////////////////////////////////////////////////////////////////////

@@ -13,6 +13,7 @@
 #include "coordit.h"
 #include "dbg-util.h"
 #include "dungeon.h"
+#include "env.h"
 #include "itemname.h"
 #include "message.h"
 #include "mon-util.h"

@@ -54,6 +54,7 @@
 #include "species.h"
 #include "state.h"
 #include "stuff.h"
+#include "env.h"
 #include "tags.h"
 
 #include "skills2.h"

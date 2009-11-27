@@ -12,6 +12,7 @@
 
 #include "beam.h"
 #include "dbg-util.h"
+#include "env.h"
 #include "fight.h"
 #include "itemprop.h"
 #include "items.h"

@@ -25,6 +25,7 @@
 #include "random.h"
 #include "spells4.h"
 #include "stuff.h"
+#include "env.h"
 #include "terrain.h"
 #include "mutation.h"
 

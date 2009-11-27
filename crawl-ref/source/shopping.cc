@@ -34,6 +34,7 @@
 #include "spl-book.h"
 #include "stash.h"
 #include "stuff.h"
+#include "env.h"
 
 #define SHOPPING_LIST_COST_KEY "shopping_list_cost_key"
 

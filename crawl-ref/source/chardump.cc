@@ -50,6 +50,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "stuff.h"
+#include "env.h"
 #include "transfor.h"
 #include "view.h"
 #include "viewchar.h"

@@ -11,6 +11,7 @@
 #include "coord.h"
 #include "enum.h"
 #include "dungeon.h"
+#include "player.h"
 
 enum band_type
 {

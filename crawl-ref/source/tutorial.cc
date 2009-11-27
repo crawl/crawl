@@ -50,6 +50,7 @@
 #include "species.h"
 #include "spl-book.h"
 #include "stuff.h"
+#include "env.h"
 #include "tags.h"
 #include "terrain.h"
 #ifdef USE_TILE

@@ -14,6 +14,7 @@
 #include "options.h"
 #include "overmap.h"
 #include "stuff.h"
+#include "env.h"
 #include "tags.h"
 #include "terrain.h"
 #include "travel.h"

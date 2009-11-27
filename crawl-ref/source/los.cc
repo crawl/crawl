@@ -59,6 +59,7 @@
 #include "ray.h"
 #include "state.h"
 #include "stuff.h"
+#include "env.h"
 #include "terrain.h"
 #include "viewgeom.h"
 

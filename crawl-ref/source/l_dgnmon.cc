@@ -9,6 +9,7 @@
 #include "l_libs.h"
 
 #include "dungeon.h"
+#include "env.h"
 #include "mapdef.h"
 #include "mon-util.h"
 #include "mon-place.h"
