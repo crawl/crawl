@@ -399,3 +399,156 @@ ctttttttttttttttttttyytyytttttttttttttttttttc
 ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
+
+
+###############################################################################
+# Doroklohe's Tomb
+# Todo:
+# Better loot. I was sloppy.
+# Better monsters?
+# I guess the starting area could be better. Traps?
+# The vault is slightly spoiling prone: the spoiler player will dig immediately to
+#     the centre, in order to take out the nasty monsters one on one.
+# Creepy messages, every 40-50 turns perhaps.
+# After 300-400 turns, remove all the (intact!) boxes. This is best done by using
+#     box_glyph(..., '!')
+#     in all places except for the broken boxes. Then give the ! their marker.
+# Dorokhloe's home. Seems as if he practised box casting. Wonder what that's good for.
+# Vault by dpeg. Thanks to Enne for box_glyph and to due for triggers.
+#
+# A bleach sun settles in the smog-stained sky
+# Dismembered bodies stray in disarray
+# Breakfast is served in the Manchester Morgue
+# The beginning of a horrifying day
+#                                    Impetigo 1992
+NAME:       wizlab_doroklohe
+ORIENT:     encompass
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+{{
+    function make_box(cenx, ceny, gly)
+        for ox = -1, 1 do
+            for oy = -1, 1 do
+                local x = cenx + ox
+                local y = ceny + oy
+                if (x >= 1 and y >= 1 and x <= width() and y <= height()) then
+                    if (ox ~= 0 or oy ~= 0) then
+                        mapgrd[x][y] = gly;
+                    end
+                end
+            end
+        end
+    end
+--
+    function box_glyph(findgly, boxgly)
+        local glyphs = {gly_points(findgly)}
+        for i = 1, #glyphs, 2 do
+            -- This is ugly.  gly_points should return 1-indexed coordinates.
+            make_box(glyphs[i] + 1, glyphs[i+1] + 1, boxgly)
+        end
+    end
+}}
+# There are two layouts: round and grid.
+# Round has 19 boxes: 12 + and 6 " and 1 *
+# Grid has 21 boxes: b-u and *
+# Layout for grid can be regular or random.
+#
+: local layout = crawl.random2(13)
+: if layout < 3 then
+# Preparation for the rare regular grid layout.
+SUBST:   b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
+SUBST:   l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
+SUBST:   B=b, C=c, D=d, E=e, F=f, G=g, H=h, I=i, J=j, K=k
+SUBST:   L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
+: end
+: if layout > 9 then
+# First the round layout...
+SUBST:   _ = x
+SUBST:   b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
+SUBST:   l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
+SUBST:   B=., C=., D=., E=., F=., G=., H=., I=., J=., K=.
+SUBST:   L=., M=., N=., O=., P=., Q=., R=., S=., T=., U=.
+: else
+# ...and now the grid layout.
+SUBST:   _ = .
+SUBST:   "=., +=.
+SUBST:   B=b, C=c, D=d, E=e, F=f, G=g, H=h, I=i, J=j, K=k
+SUBST:   L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
+NSUBST:  b = 1:b / *:.
+NSUBST:  c = 1:c / *:.
+NSUBST:  d = 1:d / *:.
+NSUBST:  e = 1:e / *:.
+NSUBST:  f = 1:f / *:.
+NSUBST:  g = 1:g / *:.
+NSUBST:  h = 1:h / *:.
+NSUBST:  i = 1:i / *:.
+NSUBST:  j = 1:j / *:.
+NSUBST:  k = 1:k / *:.
+NSUBST:  l = 1:l / *:.
+NSUBST:  m = 1:m / *:.
+NSUBST:  n = 1:n / *:.
+NSUBST:  o = 1:o / *:.
+NSUBST:  p = 1:p / *:.
+NSUBST:  q = 1:q / *:.
+NSUBST:  r = 1:r / *:.
+NSUBST:  s = 1:s / *:.
+NSUBST:  t = 1:t / *:.
+NSUBST:  u = 1:u / *:.
+# Of the outer boxes, three are damaged.
+SHUFFLE: bcdefghijklm
+: box_glyph('b', 'X')
+: box_glyph('c', 'Y')
+: box_glyph('d', 'Z')
+SUBST:   b = .
+SUBST:   c = .
+SUBST:   d = .
+NSUBST:  X = 1=. / *=x:20 .:1
+NSUBST:  Y = 1=. / *=x:30 .:1
+NSUBST:  Z = 1=. / *=x:50 .:1
+#
+# For the other boxes, prepare same setup as for the round layout.
+SHUFFLE: nqru
+SUBST:   e=+, f=+, g=+, h=+, j=+, k=+, l=+, m=+, n=+, q=+
+SUBST:   o=", p=", r=", s=", t=", u="
+: end
+#
+# Monsters and loot.
+: box_glyph('+', 'x')
+KITEM:  + = any scroll / any scroll q:2 w:5 / any scroll q:3 w:1 / nothing w:8
+KMONS:  + = place:D:20 zombie / guardian mummy
+: box_glyph('"', 'x')
+KITEM:  " = any 
+KMONS:  " = balrug / cacodemon / greater mummy / lich
+: box_glyph('*', 'x')
+KITEM:  * = any good_item book, any good_item scroll q:2
+KMONS:  * = executioner / ancient lich 
+:           wizlab_setup(_G, "Doroklohe's Forbidden Tomb")
+# Intentionally colouring the floor glyphs of the central room only.
+# The squares beneath the boxes and outside of the room to be uncoloured.
+COLOUR: . : darkgrey / lightgrey w:3 / yellow w:1
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x________________...........________________x
+x____________...................____________x
+x_________........................._________x
+x_______b....cc......d+d......ee....f_______x
+x_____bB.....cC+.....dDd.....+Ee.....Ff_____x
+x____bb...............................ff____x
+x___.....................................___x
+x__........+......o"....."p......+........__x
+x__.......nnN....oO.......Pp....Qqq.......__x
+x_........................................._x
+x_...mm...............................gg..._x
+x_...mM..+......".....*....."......+..Gg..._x
+x_...mm...............................gg..._x
+x_........................................._x
+x__.......uuU....tT.......Ss....Rrr.......__x
+x__........+......t"....."s......+........__x
+x___.....................................___x
+x____ll...............................hh____x
+x_____lL.....kK+.....jjj.....+Ii.....Hh_____x
+x_______l....kk......j+j......ii....h_______x
+x_________........................._________x
+x____________...................____________x
+x________________...<.A.....________________x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
