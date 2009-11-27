@@ -95,12 +95,12 @@ void MenuDisplayTile::set_num_columns(int columns)
 #endif
 
 Menu::Menu( int _flags, const std::string& tagname, bool text_only )
-  : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL), allow_toggle(false),
-    menu_action(ACT_EXAMINE), title(NULL), title2(NULL), flags(_flags),
-    tag(tagname), first_entry(0), y_offset(0), pagesize(0), max_pagesize(0),
-    more("-more-", true), items(), sel(), select_filter(),
-    highlighter(new MenuHighlighter), num(-1), lastch(0), alive(false),
-    last_selected(-1)
+  : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL),
+    action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(NULL),
+    title2(NULL), flags(_flags), tag(tagname), first_entry(0), y_offset(0),
+    pagesize(0), max_pagesize(0), more("-more-", true), items(), sel(),
+    select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
+    alive(false), last_selected(-1)
 {
 #ifdef USE_TILE
     if (text_only)
@@ -115,8 +115,9 @@ Menu::Menu( int _flags, const std::string& tagname, bool text_only )
 }
 
 Menu::Menu( const formatted_string &fs )
- : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL),  allow_toggle(false),
-   menu_action(ACT_EXAMINE), title(NULL), title2(NULL),
+ : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL),
+   action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(NULL),
+   title2(NULL),
 
    // This is a text-viewer menu, init flags to be easy on the user.
    flags(MF_NOSELECT | MF_EASY_EXIT),
@@ -348,10 +349,22 @@ bool Menu::process_key( int keyin )
         lastch = keyin;
         return (false);
     }
-    else if (allow_toggle && (keyin == '!' || keyin == '?'))
+    else if (action_cycle == CYCLE_TOGGLE && (keyin == '!' || keyin == '?'))
     {
+        ASSERT(menu_action != ACT_MISC);
+        if (menu_action == ACT_EXECUTE)
+            menu_action = ACT_EXAMINE;
+        else
+            menu_action = ACT_EXECUTE;
+
         sel.clear();
+        update_title();
+        return (true);
+    }
+    else if (action_cycle == CYCLE_CYCLE && (keyin == '!' || keyin == '?'))
+    {
         menu_action = (action)((menu_action+1) % ACT_NUM);
+        sel.clear();
         update_title();
         return (true);
     }
@@ -1102,7 +1115,8 @@ void Menu::draw_title()
 
 void Menu::write_title()
 {
-    const bool first = (!allow_toggle || menu_action == ACT_EXECUTE);
+    const bool first = (action_cycle == CYCLE_NONE
+                        || menu_action == ACT_EXECUTE);
     if (!first)
         ASSERT(title2);
 

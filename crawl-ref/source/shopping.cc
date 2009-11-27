@@ -2509,7 +2509,7 @@ void ShoppingList::display()
     ShoppingListMenu shopmenu;
     shopmenu.set_tag("shop");
     shopmenu.menu_action  = travelable ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
-    shopmenu.allow_toggle = travelable;
+    shopmenu.action_cycle = Menu::CYCLE_TOGGLE;
     std::string title     = "thing";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);

@@ -2169,7 +2169,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
                            "between ability selection and description."));
     }
 
-    abil_menu.allow_toggle = true;
+    abil_menu.action_cycle = Menu::CYCLE_TOGGLE;
     abil_menu.menu_action  = Menu::ACT_EXECUTE;
 
     int numbers[52];

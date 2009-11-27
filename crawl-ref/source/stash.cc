@@ -1863,7 +1863,7 @@ bool StashTracker::display_search_results(
     StashSearchMenu stashmenu(sort_style);
     stashmenu.set_tag("stash");
     stashmenu.can_travel   = travelable;
-    stashmenu.allow_toggle = true;
+    stashmenu.action_cycle = Menu::CYCLE_TOGGLE;
     stashmenu.menu_action  = Menu::ACT_EXECUTE;
     std::string title = "match";
 

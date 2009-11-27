@@ -349,8 +349,8 @@ public:
     drawitem_tfn     f_drawitem;
     keyfilter_tfn    f_keyfilter;
 
-    bool allow_toggle;
-    enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_NUM } menu_action;
+    enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
+    enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
 
 protected:
     MenuEntry *title;
