@@ -35,16 +35,6 @@ default-depth: D:8-27
 ##############################################################################
 # Minivault balancer
 #
-NAME:   mini_test
-MARKER:  G = lua:fog_machine { cloud_type= "purple smoke", \
-             pow_min = 10, pow_max = 20, delay_min = 15, delay_max = 35, \
-             size = 3, walk_dist = 2, spread_rate= 25 }
-MAP
-..
-Gw
-ww
-ENDMAP
-
 NAME: mini_dummy
 DEPTH: 1-50, !D:1-27
 TAGS: dummy
