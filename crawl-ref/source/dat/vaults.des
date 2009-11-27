@@ -302,7 +302,7 @@ local m_marker = TriggerableFunction:new {
   repeated=true }
 local e_marker = TriggerableFunction:new {
   func=teleporter,
-  data = {teleport_spot=1},
+  data = {teleport_spot=2},
   repeated=true }
 m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
 e_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
