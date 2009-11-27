@@ -1343,8 +1343,8 @@ level_id generic_shaft_dest(level_pos lpos, bool known = false)
     }
     else
     {
-        // 33.3% for 1, 2, 3
-        lid.depth += 1 + random2(3);
+        // 33.3% for 1, 2, 3 from D:3, less before
+        lid.depth += 1 + random2(std::min(lid.depth, 3));
     }
 
     if (lid.depth > branch.depth)
