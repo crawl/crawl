@@ -39,6 +39,8 @@
 #include "shout.h"
 #include "viewchar.h"
 
+#include <algorithm>
+
 bool ugly_thing_mutate(monsters *ugly, bool proximity)
 {
     bool success = false;

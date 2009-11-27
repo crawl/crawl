@@ -42,6 +42,8 @@
 #include "shout.h"
 #include "xom.h"
 
+#include <algorithm>
+
 struct mon_spellbook
 {
     mon_spellbook_type type;
