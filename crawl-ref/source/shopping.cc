@@ -2405,12 +2405,15 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 
 void ShoppingList::forget_pos(const level_pos &pos)
 {
-    for (unsigned int i = (list->size() - 1); i>= 0; i--)
+    for (unsigned int i = 0; i < list->size(); i++)
     {
         const CrawlHashTable &thing = (*list)[i];
 
         if (thing_pos(thing) == pos)
+        {
             list->erase(i);
+            i--;
+        }
     }
 }
 
