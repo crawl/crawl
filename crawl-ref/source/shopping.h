@@ -50,6 +50,7 @@ public:
     void gold_changed(int old_amount, int new_amount);
 
     void move_things(const coord_def &src, const coord_def &dst);
+    void forget_pos(const level_pos &pos);
 
     void display();
 

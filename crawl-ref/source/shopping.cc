@@ -2391,7 +2391,32 @@ int ShoppingList::size() const
 
 void ShoppingList::move_things(const coord_def &src, const coord_def &dst)
 {
-    ASSERT(false); // Not implemented yet
+    for (unsigned int i = 0; i < list->size(); i++)
+    {
+        CrawlHashTable &thing = (*list)[i];
+        level_pos       lpos  = ShoppingList::thing_pos(thing);
+
+        if (lpos.id != level_id::current())
+            continue;
+
+        if (lpos.pos == src)
+        {
+            lpos.pos = dst;
+            thing[SHOPPING_THING_POS_KEY] = lpos;
+        }
+    }
+}
+
+void ShoppingList::forget_pos(const level_pos &pos)
+{
+    for (unsigned int i = (list->size() - 1); i>= 0; i--)
+    {
+        const CrawlHashTable &thing = (*list)[i];
+        const level_pos       lpos  = ShoppingList::thing_pos(thing);
+
+        if (lpos == pos)
+            list->erase(i);
+    }
 }
 
 void ShoppingList::gold_changed(int old_amount, int new_amount)
