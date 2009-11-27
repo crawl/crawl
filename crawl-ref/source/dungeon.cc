@@ -1228,20 +1228,7 @@ static void _fixup_branch_stairs()
         }
     }
 
-    // Branches that consist of only 1 level (Hall of Blades).
-    // No down staircases, thanks!
-    if (player_branch_depth() == 1 && at_branch_bottom())
-    {
-        for (rectangle_iterator ri(1); ri; ++ri)
-        {
-            if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
-                && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
-            {
-                grd(*ri) = DNGN_FLOOR;
-            }
-        }
-    }
-    else if (at_branch_bottom() && you.level_type == LEVEL_DUNGEON)
+    if (at_branch_bottom() && you.level_type == LEVEL_DUNGEON)
     {
         // Bottom level of branch - wipes out down stairs.
         for (rectangle_iterator ri(1); ri; ++ri)
