@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
+#include "env.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "externs.h"

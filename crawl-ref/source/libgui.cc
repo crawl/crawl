@@ -15,6 +15,7 @@
 
 #include "cio.h"
 #include "defines.h"
+#include "env.h"
 #include "itemprop.h"
 #include "externs.h"
 #include "tilereg.h"

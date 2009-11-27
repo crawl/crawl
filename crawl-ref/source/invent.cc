@@ -22,6 +22,7 @@
 #include "colour.h"
 #include "decks.h"
 #include "describe.h"
+#include "env.h"
 #include "food.h"
 #include "initfile.h"
 #include "item_use.h"

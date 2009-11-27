@@ -6,6 +6,7 @@
 #include "cio.h"
 #include "coord.h"
 #include "directn.h"
+#include "env.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "files.h"

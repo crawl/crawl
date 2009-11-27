@@ -11,6 +11,7 @@
 #include <string.h>
 
 #include "branch.h"
+#include "env.h"
 #include "itemprop.h"
 #include "player.h"
 #include "stuff.h"
