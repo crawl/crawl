@@ -374,6 +374,35 @@ static std::string _level_description_string()
     return buf;
 }
 
+static void _draw_title(const coord_def& cpos)
+{
+    if (!Options.level_map_title)
+        return;
+
+    const formatted_string help =
+        formatted_string::parse_string("(Press <w>?</w> for help)");
+    const int helplen = std::string(help).length();
+
+    cgotoxy(1, 1);
+    textcolor(WHITE);
+    cprintf("%-*s",
+            get_number_of_cols() - helplen,
+            ("Level " + _level_description_string()).c_str());
+
+    textcolor(LIGHTGREY);
+    cgotoxy(get_number_of_cols() - helplen + 1, 1);
+    help.display();
+
+#ifdef WIZARD
+    if (you.wizard)
+    {
+        cgotoxy(get_number_of_cols() / 2, 1);
+        textcolor(WHITE);
+        cprintf("(%d, %d)", cpos.x, cpos.y);
+    }
+#endif // WIZARD
+}
+
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
 {
@@ -386,25 +415,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
     cursor_control cs(false);
 
     int top = 1 + Options.level_map_title;
-    if (Options.level_map_title)
-    {
-        const formatted_string help =
-            formatted_string::parse_string("(Press <w>?</w> for help)");
-        const int helplen = std::string(help).length();
-
-        cgotoxy(1, 1);
-        textcolor(WHITE);
-        cprintf("%-*s",
-                get_number_of_cols() - helplen,
-                ("Level " + _level_description_string()).c_str());
-
-        textcolor(LIGHTGREY);
-        cgotoxy(get_number_of_cols() - helplen + 1, 1);
-        help.display();
-    }
-
     cgotoxy(1, top);
-
     for (int screen_y = 0; screen_y < num_lines; screen_y++)
         for (int screen_x = 0; screen_x < num_cols; screen_x++)
         {
@@ -642,28 +653,15 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 
         if (redraw_map)
         {
+            coord_def cen(start_x + curs_x - 1, start_y + curs_y - 1);
 #ifdef USE_TILE
             // Note: Tile versions just center on the current cursor
             // location.  It silently ignores everything else going
             // on in this function.  --Enne
-            coord_def cen(start_x + curs_x - 1, start_y + curs_y - 1);
             tiles.load_dungeon(cen);
 #else
+            _draw_title(cen);
             _draw_level_map(start_x, start_y, travel_mode, on_level);
-
-#ifdef WIZARD
-            if (you.wizard)
-            {
-                cgotoxy(get_number_of_cols() / 2, 1);
-                textcolor(WHITE);
-                cprintf("(%d, %d)", start_x + curs_x - 1,
-                        start_y + curs_y - 1);
-
-                textcolor(LIGHTGREY);
-                cgotoxy(curs_x, curs_y + top - 1);
-            }
-#endif // WIZARD
-
 #endif // USE_TILE
         }
 #ifndef USE_TILE
