@@ -50,7 +50,7 @@ local function test_findray()
     rx, ry = ray:pos()
     ray_p = dgn.point(rx, ry)
     while(ray_p ~= p) do
-      if dgn.is_opaque(rx, ry) then
+      if feat.is_opaque(rx, ry) then
         dgn.grid(x, y, "floor_special")
         debug.dump_map(FAILMAP)
         assert(false,

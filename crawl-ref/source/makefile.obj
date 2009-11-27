@@ -68,6 +68,7 @@ l_dgnit.o \
 l_dgnlvl.o \
 l_dgnmon.o \
 l_dgntil.o \
+l_feat.o \
 l_file.o \
 l_food.o \
 l_global.o \
