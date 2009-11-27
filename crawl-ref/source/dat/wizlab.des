@@ -85,10 +85,6 @@ function wizlab_portal (e)
 end
 
 function wizlab_feat_descs()
-    dgn.set_feature_desc_short("gate leading back to the Dungeon",
-                               "portal leading out of here")
-    dgn.set_feature_desc_short("empty arch of ancient stone",
-                               "empty arch of stone")
 end
 
 dgn.set_lt_callback("wizlab", "wizlab_feat_descs")
@@ -99,6 +95,12 @@ function wizlab_setup (e, wizlab_desc)
     -- This is so that the note shows up properly.
     dgn.set_level_type_origin("in " .. wizlab_desc)
     crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".")
+    dgn.set_feature_desc_short("gate leading back to the Dungeon",
+                               "portal leading out of here")
+    if wizlab_desc ~= "Erinya's Formal Garden" then
+      dgn.set_feature_desc_short("empty arch of ancient stone",
+                               "empty arch of stone")
+    end
 end
 }}
 
@@ -278,27 +280,85 @@ ENDMAP
 ###############################################################################
 # Erinya's Garden
 #
-# Todo: arrival can be next to the centaurs, fix this somewhere.
-#       flowers should be able to grow randomly in LOS (hell effect)
+# Map was based on this image: http://upload.wikimedia.org/wikipedia/commons/5
+#          /58/Plan_du_ch%C3%A2teau_et_des_jardins_de_Clagny_dessin%C3%A9_par_
+#          Maraine_XVIIe_si%C3%A8cle.jpg (concat it back together to get the
+#          full link).
+# Todo:
+#       loot?
 NAME:       wizlab_erinya
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 MONS:       centaur col:green, centaur warrior col:lightgreen
 MONS:       oklob plant
 MONS:       stone golem name:vine_covered name_adjective
-MONS:       toadstool col:any name:flowers name_replace name_descriptor \
-            name_definite
+MONS:       toadstool col:any name:flowers n_rpl n_des n_the
 SUBST:      y = ct
 COLOUR:     G = yellow
 KFEAT:      / = stone_arch
 KFEAT:      _ = altar_fedhas
+MARKER:     A = feat:stone_arch
+{{
+
+function grow (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  local count = 0
+  local flowdesc = "A rather pretty cluster of flowers."
+  if you.can_smell then
+    flowdesc = flowdesc .. " They smell sweet."
+  end
+
+  if crawl.one_chance_in(10) then
+    -- Fruit!
+    for spot in iter.adjacent_iterator() do
+      if not feat.is_solid(spot:xy()) and not feat.destroys_items(spot:xy()) 
+         and crawl.one_chance_in(3) then
+        -- Do nothing.
+        dgn.create_item(spot.x, spot.y, "pear / apple / choko / apricot / orange"
+                          .. "/ banana / strawberry q:10 / lemon / rambutan "
+                          .. "/ grape q:10 / sultana q:10 / lychee")
+        count = count + 1
+      end
+    end
+    if count > 0 then
+      crawl.mpr("Fruit sprouts up around you!")
+    end
+  else
+    -- Flowers!
+    for spot in iter.adjacent_iterator() do
+      if not feat.is_solid(spot:xy()) and not feat.destroys_items(spot:xy())
+         and not crawl.one_chance_in(3) then
+        dgn.create_monster(spot.x, spot.y, "toadstool col:any name:flowers " ..
+                                 "name_replace name_descriptor name_definite")
+        dgn.mons_at(spot.x, spot.y).set_prop("description", flowdesc .. "\n")
+        count = count + 1
+      end
+    end
+    if count > 0 then
+      crawl.mpr("Flowers sprout up around you!")
+    end
+  end
+end
+
+local grow_marker = TriggerableFunction:new { func = grow, repeated = true }
+
+grow_marker:add_triggerer(DgnTriggerer:new { type="turn", 
+        delay_min=500, delay_max=800, })
+
+lua_marker("_", grow_marker)
+}}
 :           set_border_fill_type("stone_wall")
-:           wizlab_setup(_G, "Erinya's Garden")
-:           dgn.set_feature_desc_short("empty arch of ancient stone",
-:                               "rose-covered archway")
+:           wizlab_setup(_G, "Erinya's Formal Garden")
+:           dgn.set_feature_desc_short("empty arch of ancient stone", 
+:                                      "rose-covered archway")
 :           dgn.set_feature_desc_short("granite statue", "vine-covered statue")
 :           dgn.set_feature_desc_long("granite statue", "It looks almost like a " ..
 :                                     "monster made entirely from vines.\n")
+:           dgn.set_feature_desc_short("stone wall", "crumbing stone wall")
+:           dgn.set_feature_desc_long("stone wall", "It looks ancient.")
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
 ctttttttttttttttttttttttttttttttttttttttttttc
