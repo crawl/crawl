@@ -1315,6 +1315,19 @@ bool is_valid_shaft_level(const level_id &place)
     return ((branch.depth - place.depth) >= min_delta);
 }
 
+// Shafts can be generated visible.
+// 
+// Starts about 50% of the time and approaches 0% for randomly
+// placed traps, and starts at 100% and approaches 50% for
+// others (e.g. at end of corridor).
+bool shaft_known(int depth, bool randomly_placed)
+{
+    if (randomly_placed)
+        return (coinflip() && x_chance_in_y(3, depth));
+    else
+        return (coinflip() || x_chance_in_y(3, depth));
+}
+
 level_id generic_shaft_dest(level_pos lpos, bool known = false)
 {
     level_id  lid   = lpos.id;

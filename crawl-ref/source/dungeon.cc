@@ -2989,6 +2989,8 @@ static builder_rc_type _builder_basic(int level_number)
             ts.pos.x = xend;
             ts.pos.y = yend;
             grd[xend][yend] = DNGN_UNDISCOVERED_TRAP;
+            if (shaft_known(level_number, false))
+                ts.reveal();
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Trail ends in shaft.");
 #endif
@@ -3173,14 +3175,9 @@ static void _place_traps(int level_number)
             }
         }
 
-        if (ts.type == TRAP_SHAFT &&  // Shafts can be generated visible
-            coinflip() && // Starts about 50% of the time
-            random2(level_number) < 3) // And gets less frequent
-        {
+        grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
+        if (ts.type == TRAP_SHAFT && shaft_known(level_number, true))
             ts.reveal();
-        } else {
-            grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
-        }
         ts.prepare_ammo();
     }
 }
