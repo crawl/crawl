@@ -12,6 +12,7 @@
 #include "colour.h"
 #include "command.h"
 #include "coord.h"
+#include "coordit.h"
 #include "env.h"
 #include "map_knowledge.h"
 #include "fprop.h"
@@ -24,10 +25,12 @@
 #include "options.h"
 #include "place.h"
 #include "player.h"
+#include "showsymb.h"
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "travel.h"
+#include "viewchar.h"
 #include "viewgeom.h"
 
 unsigned get_sightmap_char(dungeon_feature_type feat)
@@ -374,35 +377,6 @@ static std::string _level_description_string()
     return buf;
 }
 
-static void _draw_title(const coord_def& cpos)
-{
-    if (!Options.level_map_title)
-        return;
-
-    const formatted_string help =
-        formatted_string::parse_string("(Press <w>?</w> for help)");
-    const int helplen = std::string(help).length();
-
-    cgotoxy(1, 1);
-    textcolor(WHITE);
-    cprintf("%-*s",
-            get_number_of_cols() - helplen,
-            ("Level " + _level_description_string()).c_str());
-
-    textcolor(LIGHTGREY);
-    cgotoxy(get_number_of_cols() - helplen + 1, 1);
-    help.display();
-
-#ifdef WIZARD
-    if (you.wizard)
-    {
-        cgotoxy(get_number_of_cols() / 2, 1);
-        textcolor(WHITE);
-        cprintf("(%d, %d)", cpos.x, cpos.y);
-    }
-#endif // WIZARD
-}
-
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
 {
@@ -492,6 +466,88 @@ static void _reset_travel_colours(std::vector<coord_def> &features,
     arrange_features(features);
 }
 
+#ifndef USE_TILE
+class feature_list
+{
+    std::vector<glyph> data;
+
+    void _maybe_add(const coord_def& gc)
+    {
+        if (!is_terrain_known(gc))
+            return;
+
+        // FIXME: duplicating code from colour_code_map and elsewhere
+        dungeon_feature_type feat = env.map_knowledge(gc).feat();
+        const bool terrain_seen = is_terrain_seen(gc);
+        const feature_def &fdef = get_feature_def(feat);
+        glyph g;
+        g.ch  = terrain_seen ? fdef.symbol : fdef.magic_symbol;
+        g.col = terrain_seen ? fdef.seen_colour : fdef.map_colour;
+        if (terrain_seen && fdef.seen_em_colour && emphasise(gc))
+            g.col = fdef.seen_em_colour;
+
+        if (feat_is_staircase(feat) || feat_is_trap(feat) ||
+            feat_is_altar(feat) || get_feature_dchar(feat) == DCHAR_ARCH)
+        {
+            data.push_back(g);
+        }
+    }
+
+public:
+    void init()
+    {
+        data.clear();
+        for (rectangle_iterator ri(0); ri; ++ri)
+            _maybe_add(*ri);
+    }
+
+    // FIXME: return a string instead of writing to screen.
+    void write() const
+    {
+        screen_buffer_t buffer[20];
+        int sz = std::min((int)data.size(), 10);
+        for (int i = 0; i < sz; ++i)
+        {
+            buffer[2*i] = data[i].ch;
+            buffer[2*i+1] = data[i].col;
+        }
+        int left = (get_number_of_cols() - sz) / 2;
+        puttext(left, 1, left + sz - 1, 1, buffer);
+    }
+};
+
+static void _draw_title(const coord_def& cpos, const feature_list& feats)
+{
+    if (!Options.level_map_title)
+        return;
+
+    const formatted_string help =
+        formatted_string::parse_string("(Press <w>?</w> for help)");
+    const int helplen = std::string(help).length();
+
+    std::string pstr = "";
+#ifdef WIZARD
+    if (you.wizard)
+    {
+        char buf[10];
+        snprintf(buf, sizeof(buf), " (%d, %d)", cpos.x, cpos.y);
+        pstr = std::string(buf);
+    }
+#endif // WIZARD
+
+    cgotoxy(1, 1);
+    textcolor(WHITE);
+    cprintf("%-*s",
+            get_number_of_cols() - helplen,
+            ("Level " + _level_description_string() + pstr).c_str());
+
+    textcolor(LIGHTGREY);
+    cgotoxy(get_number_of_cols() - helplen + 1, 1);
+    help.display();
+
+    feats.write();
+}
+#endif
 
 class levelview_excursion : public level_excursion
 {
@@ -526,6 +582,10 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 
     // Vector to track all features we can travel to, in order of distance.
     std::vector<coord_def> features;
+#ifndef USE_TILE
+    // List of all interesting features for display in the title.
+    feature_list feats;
+#endif
 
     int min_x = INT_MAX, max_x = INT_MIN, min_y = INT_MAX, max_y = INT_MIN;
     const int num_lines   = _get_number_of_lines_levelmap();
@@ -570,6 +630,10 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 
                 _reset_travel_colours(features, on_level);
             }
+
+#ifndef USE_TILE
+            feats.init();
+#endif
 
             min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
             bool found_y = false;
@@ -660,7 +724,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             // on in this function.  --Enne
             tiles.load_dungeon(cen);
 #else
-            _draw_title(cen);
+            _draw_title(cen, feats);
             _draw_level_map(start_x, start_y, travel_mode, on_level);
 #endif // USE_TILE
         }
