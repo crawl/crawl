@@ -8,12 +8,14 @@
 #ifndef MAPS_H
 #define MAPS_H
 
-#include "dlua.h"
-#include "dungeon.h"
-
 #include <vector>
 
+#include "mapdef.h"  // for typedef depth_ranges
+
+struct level_range;
 class map_def;
+struct map_file_place;
+struct vault_placement;
 
 int vault_main(vault_placement &vp, const map_def *vault,
                bool check_place = false);
