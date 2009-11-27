@@ -1,0 +1,342 @@
+###
+#
+# "Wizard"-themed portals.
+#
+# PLANNING AREA:
+#
+# Alistair's Brewery: mutated wizards, mephitic cloud generators,
+#    cupboards full of potions, confused monsters. 
+# Borgnjor's Mortuary: liches, miasma clouds, potions of decay, slaves that are
+#    having their life forces drained, vampire (knights, mages).
+# Cigotuvi's Chambers: "laboratory-esque", mutagenic fog machines, pulsating
+#    lumps and shining eyes in cages, ugly things in cages, degeneration.
+# Erinya's Formal Garden: trees, centaurs, fountains, flowers, oklobs, and
+#    crumbling stone walls.
+# Iskenderun's Mystic Tower: purple draconians, purple wizards with mystic
+#    blast, naga mages with mystic blast, purple fog and smoke outside windows,
+#    robes and cloaks of magic resistance as the loot.
+# Lee's Rapid Deconstructor: golems and "monk" or otherwise unarmed creatures,
+#    exploding features and exploding corpses. It's a timed vault, so you have
+#    to get to the loot quickly and avoid the hordes of monsters.
+# Lehudib's Crystal Cave:  crystal walls and crystal golems, crystal monsters,
+#    spear throwers (statues with crystal spear), possibly the unrand as the
+#    loot.
+# Maxwell's Forge: Maxwell employs a bunch of angels to churn out weapons;
+#    stashes of hammers, flame clouds, other "smithy" styled themes, with black
+#    smoke.
+# Olgreb's Toxic Laboratory: poisonous clouds, a toxic radiance effect,
+#    poisonous monsters, possibly even a "poison" effect that bypasses rPois,
+#    potions of poison and potions dropped converting into potions of poison.
+# Ozocubu's Refrigerator: simulacra, refrigeration effect, a solid stone room
+#    inside of an "ice cave", freezing clouds.
+# Doroklohe's Tomb: lots of small tombs with loot and monsters inside.
+# Tukima's Studio: dancing weapons, dancing weapon machine, tukima's book and a
+#    scroll of acquirement, statue guards, mirrors.
+# Cekugob's Oubliette: a randomised maze (though not a labyrinth) with skeletal
+#    guards, and with occasionally hidden. Cekugob's amulet as the loot,
+#    possibly.
+# Zonguldrok's Mausoleum: regenerating zombie monsters, sword as the loot.
+# Random named Wizard portals.
+#
+# TO-DO:
+#
+# We've currently got working vaults for Tukima and Erinya, and dpeg has a
+# working vault for Doroklohe (needs to be added to this file and
+# portal-vaultified). The flavour messages for the portal vault require flavour,
+# while the actual portals themselves could do with an overhaul and some new
+# ones.
+#
+##
+
+{{
+function wizlab_portal (e)
+    -- Flavour could use some improvement.
+    local desc_long = "This portal has been left open by a careless wizard."  ..
+                      "It might lead to their secret laboratory, but beware!" ..
+                      " Surely it will be guarded by magical traps and "      ..
+                      "terrible monsters."
+    local timeout_turns = crawl.random_range(1200, 1700)
+    local messager =
+        timed_msg {
+            visible = true,
+            -- $F{xxx} will be substituted with the 'entity' property of the timed
+            -- marker, or with the desc property (if entity is not set).
+            messages = time_messages(timeout_turns,
+                            "$F{The} shimmers.",
+                            "$F{The} vibrates and hums gently.",
+                            "$F{The} is slightly opaque.",
+                            "$F{The} is almost invisible now.")
+    }
+
+    e.lua_marker('O',
+      timed_marker {
+        disappear = "The portal disappears completely.",
+        desc = "magical portal",
+        desc_long = desc_long,
+        entity = 'portal',
+        dst = 'WizLab',
+        dstname_abbrev = "WizLab",
+        dstorigin = "in a Wizard's Laboratory",
+        overmap = "magical portal",
+        turns = timeout_turns,
+        floor = "stone_arch",
+        msg = messager })
+    e.kfeat("O = enter_portal_vault")
+end
+
+function wizlab_feat_descs()
+    dgn.set_feature_desc_short("gate leading back to the Dungeon",
+                               "portal leading out of here")
+    dgn.set_feature_desc_short("empty arch of ancient stone",
+                               "empty arch of stone")
+end
+
+dgn.set_lt_callback("wizlab", "wizlab_feat_descs")
+
+-- Destinations:
+function wizlab_setup (e, wizlab_desc)
+    e.kfeat("< = exit_portal_vault")
+    -- This is so that the note shows up properly.
+    dgn.set_level_type_origin("in " .. wizlab_desc)
+    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".")
+end
+}}
+
+###############################################################################
+# Portal entrances.
+#
+# Todo: more, and better.
+NAME:       enter_wizlab_1
+TAGS:       uniq_wizlab
+ORIENT:     float
+:           wizlab_portal(_G)
+MAP
+    wwwww
+   wwwwwww
+  wwxmxmxww
+ wwxx...xxww
+wwxm..O..mxww
+ wwxx...xxww
+  wwxx+xxww
+   www.www
+    w.@.w
+ENDMAP
+#
+#
+###############################################################################
+
+default-depth:
+
+###############################################################################
+# And arrivals!
+###############################################################################
+# Firstly, we have Tukima's Studio.
+#
+# Todo: clean up the code
+NAME:       wizlab_tukima
+ORIENT:     encompass
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+MONS:       dancing weapon
+KFEAT:      M = granite_statue
+MARKER:     M = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+                                  slaved_to="tukima"}
+{{
+function tukima_machine (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  local x, y = marker:pos()
+  local you_x, you_y = you.pos()
+
+  if data.weapon_count >= 5 then
+    if you.see_cell(x, y) then
+      crawl.mpr("The machine makes a dull noise.")
+    else
+      crawl.mpr("You hear a distant, dull noise.")
+    end
+    return
+  end
+
+  if (you_x == x and you_y == y) then return end
+  if dgn.mons_at(x, y) then return end
+
+  dgn.apply_area_cloud(x, y, 1, 6, 1, 10, "black smoke", "other", -1)
+
+  if (not dgn.create_monster(x, y, "generate_awake dancing weapon")) then
+    return
+  end
+
+  data.weapon_count = data.weapon_count + 1
+
+  if you.see_cell(x, y) then
+    crawl.mpr("The machine hisses, and spits out a dancing weapon!")
+  else
+    crawl.mpr("You hear a distant hissing noise.")
+  end
+end
+
+local tukima_marker = TriggerableFunction:new { 
+    func = tukima_machine,
+    repeated = true,
+    data = {weapon_count=0},
+}
+
+tukima_marker:add_triggerer(DgnTriggerer:new {
+    type="turn",
+    delay_min=500,
+    delay_max=800
+})
+
+lua_marker('?', tukima_marker)
+
+if crawl.coinflip() then
+  subst("Y = =")
+  subst("y = .")
+  subst("Rr = c")
+else
+  subst("Y = c")
+  subst("y = m")
+  subst("R = .")
+  subst("r = =")
+end
+
+if crawl.coinflip() then
+  subst("X = =")
+  subst("x = .")
+  subst("Ll = c")
+else
+  subst("X = c")
+  subst("x = m")
+  subst("L = .")
+  subst("l = =")
+end
+}}
+SUBST:      ? = .
+COLOUR:     c = darkgrey
+COLOUR:     = = darkgrey
+COLOUR:     mMV = silver
+KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
+                    blink_other;blink_other;major_healing name:strange_machine \
+                    name_replace name_descriptor
+KITEM:      8 = book of tukima
+KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
+                    blink_other;blink_other;major_healing name:strange_machine \
+                    name_replace name_descriptor
+KITEM:      9 = scroll of acquirement
+:           local mquote = '"The machine had stood there a long time. It was several '
+:                  .. "hundred feet long and could run on a thimbleful of earth or"
+:                  .. " water. It had been working seven and a half million years."
+:                  .. '"\n  -Sweet Their Blood and Sticky, Albert Teichner'
+MARKER:     8 = lua:MonPropsMarker:new {description="A glistening silver machine.\n",\
+                   quote=mquote}
+MARKER:     9 = lua:MonPropsMarker:new {description="A glistening silver machine.\n",\
+                   quote=mquote}
+:           dgn.set_feature_desc_short("translucent rock wall",
+:                                      "crystal clear mirror")
+:           dgn.set_feature_desc_long("translucent rock wall",
+:                                     "A glistening mirror, reflecting everything around it.\n")
+:           dgn.set_feature_desc_short("granite statue", "strange machine")
+:           dgn.set_feature_desc_long("granite statue", "A mechanical contraption," ..
+:                                     " all hisses and pops.\n")
+:           dgn.set_feature_desc_short("dry fountain", "glistening fountain")
+:           dgn.set_feature_desc_long("dry fountain", "A pristine fountain. " ..
+:                                     "The only thing it lacks is water.\n")
+:           dgn.set_feature_quote("A granite statue", mquote)
+:           wizlab_setup(_G, "Tukima's Studio")
+MAP
+                ccccccc
+                ccmmmcc
+            cccccm...mccccc
+           cc...+.A.<.+...cc
+          cc..cccm...mccc..cc
+          cc+cccccm.mccccc+cc
+          cc.cccccc+cccccc.cc
+         cc...cccc...cccc...cc
+         cm...mcm..1..mcm...mc
+         cm...mcm.....mcm...mc
+         cm.V.mcm.....mcm.V.mc
+         cm...mcm.....mcm...mc
+         cm...mcm..1..mcm...mc
+         cc...cccc...cccc...cc
+         ccc.cccccc+cccccc.ccc
+          cc+ccccm...mcccc+cc
+         ccm.mccm.....mccm.mcc
+         cm.1..+...V...+..1.mc
+        ccXm.mccm.....mccm.mYcc
+      cccxccmlcccm...mcccrmccycc
+      ccm.mcccLcccm.mcccRcccm.mcc
+     ccm...mLLcccm...mcccRRm...mcc
+    ccm..$..mcccm..?..mcccm..$..mcc
+    cm..$8$..mcm...M...mcm..$9$..mc
+    ccm..$..mcccm.....mcccm..$..mcc
+     ccm...mcc ccm...mcc ccm...mcc
+      ccmmmcc   ccmmmcc   ccmmmcc
+       ccccc     ccccc     ccccc
+ENDMAP
+
+###############################################################################
+# Erinya's Garden
+#
+# Todo: arrival can be next to the centaurs, fix this somewhere.
+#       flowers should be able to grow randomly in LOS (hell effect)
+NAME:       wizlab_erinya
+ORIENT:     encompass
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+MONS:       centaur col:green, centaur warrior col:lightgreen
+MONS:       oklob plant
+MONS:       stone golem name:vine_covered name_adjective
+MONS:       toadstool col:any name:flowers name_replace name_descriptor \
+            name_definite
+SUBST:      y = ct
+COLOUR:     G = yellow
+KFEAT:      / = stone_arch
+KFEAT:      _ = altar_fedhas
+:           set_border_fill_type("stone_wall")
+:           wizlab_setup(_G, "Erinya's Garden")
+:           dgn.set_feature_desc_short("empty arch of ancient stone",
+:                               "rose-covered archway")
+:           dgn.set_feature_desc_short("granite statue", "vine-covered statue")
+:           dgn.set_feature_desc_long("granite statue", "It looks almost like a " ..
+:                                     "monster made entirely from vines.\n")
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccc
+ctttttttttttttttttttttttttttttttttttttttttttc
+ctttttttt...........................ttttttttc
+ctttt.....tttttttttttt.tttttttttttt.....ttttc
+cttt..tt.tttttttttt.......tttttttttt.tt..tttc
+ct.1.tGt............<.T.A............tGt.1.tc
+cttt..tt.tttttttttt.......tttttttttt.tt..tttc
+ctttt.....tttttttttttt.tttttttttttt.....ttttc
+ctttttttt...........................ttttttttc
+cttttttttttttttttttttt.tttttttttttttttttttttc
+ctttttttttyyyttttttty...ytttttttyyytttttttttc
+ctttttttty...yttttty.....yttttty...yttttttttc
+cttttttt..111.........T.........111..tttttttc
+ctttttt...121.tttttc.....cttttt.121...ttttttc
+cttttt.tty...yttttttcc=cctttttty...ytt.tttttc
+ctttt.tttty.yttttttt.....ttttttty.ytttt.ttttc
+cttt.tttttt.tttttt...2.2...tttttt.tttttt.tttc
+cttt.tttttt..tttt.....3.....tttt..tttttt.tttc
+ctttt.tttttt..tttt.........tttt..tttttt.ttttc
+cttttt.tttttt..ttttttttttttttt..tttttt.tttttc
+ctttttt.tttttt..tttttcccttttt..tttttt.ttttttc
+cttttyyy/yyyttt..ttty...yttt..tttyyy/yyyttttc
+cttty...1...yttt..ty..1..yt..ttty...1...ytttc
+ctty...1T1...yttt....1T1....ttty...1T1...yttc
+cttty...1...yttt..ty..2..yt..ttty...1...ytttc
+cttttyyy/yyyttt..ttty...yttt..tttyyy/yyyttttc
+ctttttt.tttttt..tttttcccttttt..tttttt.ttttttc
+cttttt.tttttt..ttttttttttttttt..tttttt.tttttc
+ctttt.tttttt..ttttt.ww4ww.ttttt..tttttt.ttttc
+cttt.tttttt..ttttt.wwG_Gww.ttttt..tttttt.tttc
+cttt.ttttt..ttttt.....4.....ttttt..ttttt.tttc
+ctttt.ttty/ytttt....cc=cc....tttty/yttt.ttttc
+cttttt.ty...yttttttcc...cctttttty...yt.tttttc
+ctttttt./.1./.ttttcc..2..cctttt./.1./.ttttttc
+cttttttty...yt...../.1T1../....ty...ytttttttc
+cttttttttyyyttttttty.....ytttttttyyyttttttttc
+ctttttttttttttttttttyytyytttttttttttttttttttc
+ccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
