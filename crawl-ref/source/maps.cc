@@ -26,6 +26,7 @@
 #include "mapdef.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "coord.h"
 #include "random.h"
 #include "state.h"
 #include "tags.h"

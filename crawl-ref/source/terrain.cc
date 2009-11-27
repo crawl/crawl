@@ -24,6 +24,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-place.h"
+#include "coord.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"

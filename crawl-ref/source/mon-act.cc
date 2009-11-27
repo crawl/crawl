@@ -33,6 +33,8 @@
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mgen_data.h"
+#include "coord.h"
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
@@ -42,6 +44,7 @@
 #include "religion.h"
 #include "shopping.h" // for item values
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "tutorial.h"

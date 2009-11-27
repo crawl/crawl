@@ -21,6 +21,8 @@
 #include "kills.h"
 #include "misc.h"
 #include "mon-place.h"
+#include "mgen_data.h"
+#include "coord.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"

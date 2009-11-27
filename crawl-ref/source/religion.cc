@@ -20,7 +20,6 @@
 #endif
 
 #include "externs.h"
-#include "options.h"
 
 #include "abl-show.h"
 #include "areas.h"
@@ -35,6 +34,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "dgnevent.h"
+#include "dlua.h"
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
@@ -59,10 +59,13 @@
 #include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "mgen_data.h"
+#include "coord.h"
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "newgame.h"
 #include "notes.h"
+#include "options.h"
 #include "ouch.h"
 #include "output.h"
 #include "player.h"

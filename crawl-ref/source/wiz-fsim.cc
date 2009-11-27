@@ -20,6 +20,8 @@
 #include "it_use2.h"
 #include "message.h"
 #include "mon-place.h"
+#include "mgen_data.h"
+#include "coord.h"
 #include "monster.h"
 #include "mon-stuff.h"
 #include "options.h"

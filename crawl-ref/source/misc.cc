@@ -53,6 +53,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "mon-place.h"
+#include "coord.h"
 #include "mon-pathfind.h"
 #include "mon-iter.h"
 #include "mon-util.h"

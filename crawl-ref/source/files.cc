@@ -9,6 +9,7 @@
 #include "delay.h"
 #include "files.h"
 #include "mon-place.h"
+#include "coord.h"
 
 #include <errno.h>
 #include <string.h>

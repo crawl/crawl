@@ -23,6 +23,8 @@
 #include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "mgen_data.h"
+#include "coord.h"
 #include "mon-transit.h"
 #include "player.h"
 #include "dungeon.h"

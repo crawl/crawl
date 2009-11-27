@@ -33,8 +33,6 @@
 #endif
 
 #include "externs.h"
-#include "options.h"
-#include "species.h"
 
 #include "abl-show.h"
 #include "abyss.h"
@@ -47,6 +45,7 @@
 #include "cloud.h"
 #include "clua.h"
 #include "command.h"
+#include "coord.h"
 #include "coordit.h"
 #include "ctest.h"
 #include "crash.h"
@@ -94,6 +93,7 @@
 #include "newgame.h"
 #include "ng-init.h"
 #include "notes.h"
+#include "options.h"
 #include "ouch.h"
 #include "output.h"
 #include "overmap.h"
@@ -104,6 +104,7 @@
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
+#include "species.h"
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"

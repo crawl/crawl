@@ -21,6 +21,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "coord.h"
 #include "coordit.h"
 #include "dbg-util.h"
 #include "debug.h"
