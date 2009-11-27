@@ -105,7 +105,7 @@ const tracer_info& tracer_info::operator+=(const tracer_info &other)
 
 bool bolt::is_blockable() const
 {
-    // BEAM_ELECTRICITY is added here because chain lighting is not
+    // BEAM_ELECTRICITY is added here because chain lightning is not
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
     return (!is_beam && !is_explosion && flavour != BEAM_ELECTRICITY);
@@ -646,7 +646,7 @@ const zap_info zap_data[] = {
         true,
         true,
         false,
-        5 // XXX: Quiter because it's poison?
+        5 // XXX: Quieter because it's poison?
     },
 
     {
@@ -1780,7 +1780,7 @@ void bolt::fire_wall_effect()
 {
     dungeon_feature_type feat;
     // Fire only affects wax walls and trees.
-    if ((feat=grd(pos())) != DNGN_WAX_WALL && (feat != DNGN_TREES))
+    if ((feat = grd(pos())) != DNGN_WAX_WALL && feat != DNGN_TREES)
     {
         finish_beam();
         return;
