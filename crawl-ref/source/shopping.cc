@@ -2598,7 +2598,7 @@ void ShoppingList::display()
                     continue;
             }
 
-            const travel_target lp(thing_pos(*thing), true);
+            const travel_target lp(thing_pos(*thing), false);
             start_translevel_travel(lp);
             break;
         }
