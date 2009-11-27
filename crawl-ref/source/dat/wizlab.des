@@ -284,8 +284,6 @@ ENDMAP
 #          /58/Plan_du_ch%C3%A2teau_et_des_jardins_de_Clagny_dessin%C3%A9_par_
 #          Maraine_XVIIe_si%C3%A8cle.jpg (concat it back together to get the
 #          full link).
-# Todo:
-#       loot?
 NAME:       wizlab_erinya
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -298,6 +296,7 @@ COLOUR:     G = yellow
 KFEAT:      / = stone_arch
 KFEAT:      _ = altar_fedhas
 MARKER:     A = feat:stone_arch
+ITEM:       any fixed theme book, any fixed level book, any staff
 {{
 
 function grow (data, triggerable, triggerer, marker, ev)
@@ -376,9 +375,9 @@ cttttttt..111.........T.........111..tttttttc
 ctttttt...121.tttttc.....cttttt.121...ttttttc
 cttttt.tty...yttttttcc=cctttttty...ytt.tttttc
 ctttt.tttty.yttttttt.....ttttttty.ytttt.ttttc
-cttt.tttttt.tttttt...2.2...tttttt.tttttt.tttc
-cttt.tttttt..tttt.....3.....tttt..tttttt.tttc
-ctttt.tttttt..tttt.........tttt..tttttt.ttttc
+cttt.tttttt.ttttttty.232.yttttttt.tttttt.tttc
+cttt.tttttt..tttttttydefyttttttt..tttttt.tttc
+ctttt.tttttt..tttttttytyttttttt..tttttt.ttttc
 cttttt.tttttt..ttttttttttttttt..tttttt.tttttc
 ctttttt.tttttt..tttttcccttttt..tttttt.ttttttc
 cttttyyy/yyyttt..ttty...yttt..tttyyy/yyyttttc
@@ -388,9 +387,9 @@ cttty...1...yttt..ty..2..yt..ttty...1...ytttc
 cttttyyy/yyyttt..ttty...yttt..tttyyy/yyyttttc
 ctttttt.tttttt..tttttcccttttt..tttttt.ttttttc
 cttttt.tttttt..ttttttttttttttt..tttttt.tttttc
-ctttt.tttttt..ttttt.ww4ww.ttttt..tttttt.ttttc
+ctttt.tttttt..ttttt.wwWww.ttttt..tttttt.ttttc
 cttt.tttttt..ttttt.wwG_Gww.ttttt..tttttt.tttc
-cttt.ttttt..ttttt.....4.....ttttt..ttttt.tttc
+cttt.ttttt..ttttt....4.4....ttttt..ttttt.tttc
 ctttt.ttty/ytttt....cc=cc....tttty/yttt.ttttc
 cttttt.ty...yttttttcc...cctttttty...yt.tttttc
 ctttttt./.1./.ttttcc..2..cctttt./.1./.ttttttc
