@@ -553,7 +553,7 @@ local function ziggurat_create_loot_vault(entry, exit)
   local inc = (exit - entry):sgn()
 
   local function find_door_spot(p)
-    while not dgn.is_wall(dgn.grid(p.x, p.y)) do
+    while not feat.is_wall(p.x, p.y) do
       p = p + inc
     end
     return p
