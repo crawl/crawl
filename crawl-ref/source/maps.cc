@@ -281,7 +281,7 @@ static coord_def _find_minivault_place(
 
         if (check_place && !map_place_valid(place.map, v1, place.size))
         {
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_MINIVAULT_PLACEMENT
             mprf(MSGCH_DIAGNOSTICS,
                  "Skipping (%d,%d): not safe to place map",
                  v1.x, v1.y);
@@ -291,7 +291,7 @@ static coord_def _find_minivault_place(
 
         if (!_connected_minivault_place(v1, place))
         {
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_MINIVAULT_PLACEMENT
             mprf(MSGCH_DIAGNOSTICS,
                  "Skipping (%d,%d): not a good minivault place (tags: %s)",
                  v1.x, v1.y, place.map.tags.c_str());
