@@ -1599,7 +1599,16 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Warning: failed to preserve vault stairs.");
 #endif
-        _fixup_stone_stairs(false);
+        if (!_fixup_stone_stairs(false))
+        {
+            dgn_level_vetoed = true;
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS,
+                 "VETO: Failed to fix stone stairs: %s.",
+                 level_id::current().describe().c_str());
+#endif
+            return;
+        }
     }
 
     if (!_branch_entrances_are_connected())
