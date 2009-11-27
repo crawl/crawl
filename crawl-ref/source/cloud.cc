@@ -428,11 +428,12 @@ cloud_type cloud_type_at(const coord_def &c)
 cloud_type random_smoke_type()
 {
     // including black to keep variety
-    switch ( random2(3) )
+    switch ( random2(4) )
     {
     case 0: return CLOUD_GREY_SMOKE;
     case 1: return CLOUD_BLUE_SMOKE;
     case 2: return CLOUD_BLACK_SMOKE;
+    case 3: return CLOUD_PURPLE_SMOKE;
     }
     return CLOUD_DEBUGGING;
 }
@@ -461,6 +462,8 @@ cloud_type beam2cloud(beam_type flavour)
         return CLOUD_GREY_SMOKE;
     case BEAM_POTION_BLUE_SMOKE:
         return CLOUD_BLUE_SMOKE;
+    case BEAM_POTION_PURPLE_SMOKE:
+        return CLOUD_PURPLE_SMOKE;
     case BEAM_STEAM:
     case BEAM_POTION_STEAM:
         return CLOUD_STEAM;
@@ -483,21 +486,22 @@ beam_type cloud2beam(cloud_type flavour)
     switch (flavour)
     {
     default:
-    case CLOUD_NONE:        return BEAM_NONE;
-    case CLOUD_FIRE:        return BEAM_FIRE;
-    case CLOUD_FOREST_FIRE: return BEAM_FIRE;
-    case CLOUD_STINK:       return BEAM_POTION_STINKING_CLOUD;
-    case CLOUD_COLD:        return BEAM_COLD;
-    case CLOUD_POISON:      return BEAM_POISON;
-    case CLOUD_BLACK_SMOKE: return BEAM_POTION_BLACK_SMOKE;
-    case CLOUD_GREY_SMOKE:  return BEAM_POTION_GREY_SMOKE;
-    case CLOUD_BLUE_SMOKE:  return BEAM_POTION_BLUE_SMOKE;
-    case CLOUD_STEAM:       return BEAM_STEAM;
-    case CLOUD_MIASMA:      return BEAM_MIASMA;
-    case CLOUD_CHAOS:       return BEAM_CHAOS;
-    case CLOUD_RAIN:        return BEAM_POTION_RAIN;
-    case CLOUD_MUTAGENIC:   return BEAM_POTION_MUTAGENIC;
-    case CLOUD_RANDOM:      return BEAM_RANDOM;
+    case CLOUD_NONE:         return BEAM_NONE;
+    case CLOUD_FIRE:         return BEAM_FIRE;
+    case CLOUD_FOREST_FIRE:  return BEAM_FIRE;
+    case CLOUD_STINK:        return BEAM_POTION_STINKING_CLOUD;
+    case CLOUD_COLD:         return BEAM_COLD;
+    case CLOUD_POISON:       return BEAM_POISON;
+    case CLOUD_BLACK_SMOKE:  return BEAM_POTION_BLACK_SMOKE;
+    case CLOUD_GREY_SMOKE:   return BEAM_POTION_GREY_SMOKE;
+    case CLOUD_BLUE_SMOKE:   return BEAM_POTION_BLUE_SMOKE;
+    case CLOUD_PURPLE_SMOKE: return BEAM_POTION_PURPLE_SMOKE;
+    case CLOUD_STEAM:        return BEAM_STEAM;
+    case CLOUD_MIASMA:       return BEAM_MIASMA;
+    case CLOUD_CHAOS:        return BEAM_CHAOS;
+    case CLOUD_RAIN:         return BEAM_POTION_RAIN;
+    case CLOUD_MUTAGENIC:    return BEAM_POTION_MUTAGENIC;
+    case CLOUD_RANDOM:       return BEAM_RANDOM;
     }
 }
 
@@ -710,6 +714,7 @@ void in_a_cloud()
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLUE_SMOKE:
     case CLOUD_TLOC_ENERGY:
+    case CLOUD_PURPLE_SMOKE:
     case CLOUD_BLACK_SMOKE:
         mpr("You are engulfed in a cloud of smoke!");
         break;
@@ -825,6 +830,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_BLACK_SMOKE:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLUE_SMOKE:
+    case CLOUD_PURPLE_SMOKE:
     case CLOUD_TLOC_ENERGY:
     case CLOUD_MIST:
     case CLOUD_RAIN:
@@ -876,6 +882,8 @@ std::string cloud_name(cloud_type type)
         return "grey smoke";
     case CLOUD_BLUE_SMOKE:
         return "blue smoke";
+    case CLOUD_PURPLE_SMOKE:
+        return "purple smoke";
     case CLOUD_TLOC_ENERGY:
         return "translocational energy";
     case CLOUD_STEAM:
@@ -1002,6 +1010,7 @@ int get_cloud_colour(int cloudno)
         which_colour = LIGHTBLUE;
         break;
 
+    case CLOUD_PURPLE_SMOKE:
     case CLOUD_TLOC_ENERGY:
         which_colour = MAGENTA;
         break;
