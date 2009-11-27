@@ -272,6 +272,21 @@ void Menu::add_entry( MenuEntry *entry )
     items.push_back( entry );
 }
 
+bool Menu::del_entry( MenuEntry *entry )
+{
+    for (unsigned int i = first_entry; i < items.size(); i++)
+    {
+        if (items[i] == entry)
+        {
+            items.erase(items.begin() + i);
+            last_selected = -1;
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
 void Menu::reset()
 {
     first_entry = 0;
