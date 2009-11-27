@@ -2663,7 +2663,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         case SK_SLINGS:
         {
             // Slings are really easy to learn because they're not
-            // really all that good, and it's harder to get ammo anyways.
+            // really all that good, and it's harder to get ammo anyway.
             exercise(SK_SLINGS, 1 + random2avg(3, 2));
 
             // Sling bullets are designed for slinging and easier to aim.
@@ -2687,8 +2687,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             lnchDamBonus = std::min(0, lnchDamBonus);
             break;
         }
-        // Blowguns take a _very_ steady hand;  a lot of the bonus
-        // comes from dexterity.  (Dex bonus here as well as below).
+
+        // Blowguns take a _very_ steady hand; a lot of the bonus
+        // comes from dexterity.  (Dex bonus here as well as below.)
         case SK_DARTS:
             baseHit -= 2;
             exercise(SK_DARTS, (coinflip()? 2 : 1));
@@ -2922,6 +2923,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 if (you.can_throw_large_rocks())
                     baseHit = 1;
                 break;
+
             case MI_DART:
                 exHitBonus  = you.skills[SK_DARTS] * 2;
                 exHitBonus += (you.skills[SK_THROWING] * 2) / 3;
@@ -2931,6 +2933,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 // exercise skills
                 exercise(SK_DARTS, 1 + random2avg(3, 2));
                 break;
+
             case MI_JAVELIN:
                 // Javelins use throwing skill.
                 exHitBonus += skill_bump(SK_THROWING);
@@ -2946,6 +2949,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 // Javelins train throwing quickly.
                 exercise(SK_THROWING, 1 + coinflip());
                 break;
+
             case MI_THROWING_NET:
                 // Nets use throwing skill.  They don't do any damage!
                 baseDam = 0;
@@ -3115,7 +3119,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         bow_brand == SPWPN_CHAOS || ammo_brand_known);
     }
 
-    if (ammo_brand == SPMSL_REAPING || bow_brand == SPWPN_REAPING)
+    if (bow_brand == SPWPN_REAPING || ammo_brand == SPMSL_REAPING)
     {
         did_god_conduct(DID_NECROMANCY, 2,
                         bow_brand == SPWPN_REAPING || ammo_brand_known);
@@ -3188,6 +3192,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
         int brand = get_ammo_brand(*item);
         if (brand == SPMSL_CHAOS || brand == SPMSL_DISPERSAL)
             return (true);
+
         // [dshaligram] Removed influence of Throwing on ammo preservation.
         // The effect is nigh impossible to perceive.
         switch (item->sub_type)
@@ -3195,19 +3200,32 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
         case MI_NEEDLE:
             chance = (brand == SPMSL_CURARE ? 3 : 6);
             break;
+
         case MI_SLING_BULLET:
-        case MI_STONE:   chance =  4; break;
-        case MI_DART:    chance =  3; break;
-        case MI_ARROW:   chance =  4; break;
-        case MI_BOLT:    chance =  4; break;
-        case MI_JAVELIN: chance = 10; break;
-        case MI_THROWING_NET: break; // Doesn't get destroyed by throwing.
+        case MI_STONE:
+        case MI_ARROW:
+        case MI_BOLT:
+            chance = 4;
+            break;
+
+        case MI_DART:
+            chance = 3;
+            break;
+
+        case MI_JAVELIN:
+            chance = 10;
+            break;
+
+        case MI_THROWING_NET:
+            // Doesn't get destroyed by throwing.
+            break;
 
         case MI_LARGE_ROCK:
         default:
             chance = 25;
             break;
         }
+
         if (brand == SPMSL_STEEL)
             chance *= 10;
         if (brand == SPMSL_FLAME)
