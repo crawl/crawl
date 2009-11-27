@@ -4,6 +4,7 @@
 #include "map_knowledge.h"
 #include "monster.h"
 #include "show.h"
+#include "trap_def.h"
 
 struct crawl_environment
 {

@@ -6,8 +6,8 @@
 
 #include "AppHdr.h"
 
-#include "externs.h"
 #include "traps.h"
+#include "trap_def.h"
 
 #include <algorithm>
 

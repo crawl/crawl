@@ -12,6 +12,7 @@
 
 struct bolt;
 class  monsters;
+struct trap_def;
 
 void disarm_trap(const coord_def& where);
 void remove_net_from( monsters *mon );
