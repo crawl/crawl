@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
+#include "env.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"

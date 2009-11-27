@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "godabil.h"
 #include "stuff.h"
+#include "env.h"
 #include "macro.h"
 #include "mon-behv.h"
 #include "mon-util.h"

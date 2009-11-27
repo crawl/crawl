@@ -9,11 +9,14 @@
 #include <algorithm>
 
 #include "mon-place.h"
+#include "mgen_data.h"
 
 #include "arena.h"
 #include "branch.h"
+#include "coord.h"
 #include "coordit.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "fprop.h"
 #include "externs.h"
 #include "options.h"
@@ -32,6 +35,7 @@
 #include "religion.h"
 #include "state.h"
 #include "stuff.h"
+#include "env.h"
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"

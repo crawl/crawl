@@ -39,6 +39,7 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "env.h"
 #include "tags.h"
 
 static const char *map_section_names[] = {

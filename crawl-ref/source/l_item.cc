@@ -13,8 +13,10 @@
 #include "itemprop.h"
 #include "items.h"
 #include "output.h"
+#include "player.h"
 #include "skills2.h"
 #include "stuff.h"
+#include "env.h"
 
 /////////////////////////////////////////////////////////////////////
 // User bindings to get information on items. We must be careful

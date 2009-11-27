@@ -6,8 +6,8 @@
 
 #include "AppHdr.h"
 
-#include "externs.h"
 #include "traps.h"
+#include "trap_def.h"
 
 #include <algorithm>
 
@@ -35,6 +35,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "env.h"
 #include "areas.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -119,9 +120,7 @@ void trap_def::prepare_ammo()
 
 void trap_def::reveal()
 {
-    const dungeon_feature_type cat = this->category();
-    grd(this->pos) = cat;
-    set_map_knowledge_obj(this->pos, cat);
+    grd(this->pos) = this->category();
 }
 
 std::string trap_def::name(description_level_type desc) const
@@ -1316,6 +1315,19 @@ bool is_valid_shaft_level(const level_id &place)
     return ((branch.depth - place.depth) >= min_delta);
 }
 
+// Shafts can be generated visible.
+// 
+// Starts about 50% of the time and approaches 0% for randomly
+// placed traps, and starts at 100% and approaches 50% for
+// others (e.g. at end of corridor).
+bool shaft_known(int depth, bool randomly_placed)
+{
+    if (randomly_placed)
+        return (coinflip() && x_chance_in_y(3, depth));
+    else
+        return (coinflip() || x_chance_in_y(3, depth));
+}
+
 level_id generic_shaft_dest(level_pos lpos, bool known = false)
 {
     level_id  lid   = lpos.id;
@@ -1344,8 +1356,8 @@ level_id generic_shaft_dest(level_pos lpos, bool known = false)
     }
     else
     {
-        // 33.3% for 1, 2, 3
-        lid.depth += 1 + random2(3);
+        // 33.3% for 1, 2, 3 from D:3, less before
+        lid.depth += 1 + random2(std::min(lid.depth, 3));
     }
 
     if (lid.depth > branch.depth)

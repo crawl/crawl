@@ -12,8 +12,10 @@
 
 #include "artefact.h"
 #include "dungeon.h"
+#include "env.h"
 #include "items.h"
 #include "mon-place.h"
+#include "coord.h"
 #include "mon-util.h"
 #include "random.h"
 

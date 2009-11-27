@@ -40,6 +40,7 @@
 #include "spl-book.h"
 #include "state.h"
 #include "stuff.h"
+#include "env.h"
 #include "transfor.h"
 
 

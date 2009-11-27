@@ -97,6 +97,7 @@ mapmark.o \
 maps.o \
 menu.o \
 message.o \
+mgen_data.o \
 misc.o \
 mon-abil.o \
 mon-act.o \

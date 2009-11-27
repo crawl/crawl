@@ -9,9 +9,11 @@
 #include "l_libs.h"
 
 #include "dungeon.h"
+#include "env.h"
 #include "mapdef.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "coord.h"
 #include "mon-stuff.h"
 
 #define MONSLIST_METATABLE "crawldgn.monster_list"

@@ -12,6 +12,7 @@
 #include "chardump.h"
 #include "coord.h"
 #include "dungeon.h"
+#include "env.h"
 #include "map_knowledge.h"
 #include "initfile.h"
 #include "maps.h"

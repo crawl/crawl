@@ -12,6 +12,7 @@
 
 #include "beam.h"
 #include "dbg-util.h"
+#include "env.h"
 #include "fight.h"
 #include "itemprop.h"
 #include "items.h"
@@ -19,6 +20,8 @@
 #include "it_use2.h"
 #include "message.h"
 #include "mon-place.h"
+#include "mgen_data.h"
+#include "coord.h"
 #include "monster.h"
 #include "mon-stuff.h"
 #include "options.h"

@@ -25,6 +25,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "makeitem.h"
 #include "place.h"
 #include "player.h"
 #include "random.h"

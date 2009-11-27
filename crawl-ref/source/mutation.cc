@@ -25,6 +25,7 @@
 #include "delay.h"
 #include "defines.h"
 #include "effects.h"
+#include "env.h"
 #include "files.h"
 #include "format.h"
 #include "godabil.h"

@@ -77,6 +77,7 @@
 #include "skills.h"
 #include "skills2.h"
 #include "stuff.h"
+#include "env.h"
 #include "tags.h"
 #include "tiles.h"
 #include "tilemcache.h"

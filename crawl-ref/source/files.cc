@@ -9,6 +9,7 @@
 #include "delay.h"
 #include "files.h"
 #include "mon-place.h"
+#include "coord.h"
 
 #include <errno.h>
 #include <string.h>
@@ -47,6 +48,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "env.h"
 #include "ghost.h"
 #include "initfile.h"
 #include "itemprop.h"

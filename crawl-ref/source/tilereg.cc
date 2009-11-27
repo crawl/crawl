@@ -15,6 +15,7 @@
 #include "debug.h"
 #include "describe.h"
 #include "directn.h"
+#include "env.h"
 #include "files.h"
 #include "food.h"
 #include "invent.h"

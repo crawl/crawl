@@ -12,6 +12,7 @@
 #include "chardump.h"
 #include "coordit.h"
 #include "dungeon.h"
+#include "env.h"
 #include "message.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"

@@ -25,10 +25,12 @@
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
+#include "coord.h"
 #include "coordit.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "effects.h"
+#include "env.h"
 #include "enum.h"
 #include "map_knowledge.h"
 #include "fprop.h"
@@ -44,6 +46,7 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mgen_data.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -102,7 +105,7 @@ const tracer_info& tracer_info::operator+=(const tracer_info &other)
 
 bool bolt::is_blockable() const
 {
-    // BEAM_ELECTRICITY is added here because chain lighting is not
+    // BEAM_ELECTRICITY is added here because chain lightning is not
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
     return (!is_beam && !is_explosion && flavour != BEAM_ELECTRICITY);
@@ -643,7 +646,7 @@ const zap_info zap_data[] = {
         true,
         true,
         false,
-        5 // XXX: Quiter because it's poison?
+        5 // XXX: Quieter because it's poison?
     },
 
     {
@@ -1777,7 +1780,7 @@ void bolt::fire_wall_effect()
 {
     dungeon_feature_type feat;
     // Fire only affects wax walls and trees.
-    if ((feat=grd(pos())) != DNGN_WAX_WALL && (feat != DNGN_TREES))
+    if ((feat = grd(pos())) != DNGN_WAX_WALL && feat != DNGN_TREES)
     {
         finish_beam();
         return;
@@ -2996,6 +2999,9 @@ static int _potion_beam_flavour_to_colour(beam_type flavour)
     case BEAM_POTION_BLUE_SMOKE:
         return (LIGHTBLUE);
 
+    case BEAM_POTION_PURPLE_SMOKE:
+        return (MAGENTA);
+
     case BEAM_POTION_RANDOM:
     default:
         // Leave it the colour of the potion, the clouds will colour
@@ -3333,6 +3339,7 @@ void bolt::affect_place_explosion_clouds()
         case BEAM_POTION_BLACK_SMOKE:
         case BEAM_POTION_GREY_SMOKE:
         case BEAM_POTION_BLUE_SMOKE:
+        case BEAM_POTION_PURPLE_SMOKE:
         case BEAM_POTION_RAIN:
         case BEAM_POTION_MUTAGENIC:
             cl_type = beam2cloud(flavour);
@@ -3348,6 +3355,7 @@ void bolt::affect_place_explosion_clouds()
             case 4:  cl_type = CLOUD_BLACK_SMOKE;    break;
             case 5:  cl_type = CLOUD_GREY_SMOKE;     break;
             case 6:  cl_type = CLOUD_BLUE_SMOKE;     break;
+            case 7:  cl_type = CLOUD_PURPLE_SMOKE;   break;
             default: cl_type = CLOUD_STEAM;          break;
             }
             break;
@@ -6260,6 +6268,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_POTION_BLACK_SMOKE:   return ("black smoke");
     case BEAM_POTION_GREY_SMOKE:    return ("grey smoke");
     case BEAM_POTION_BLUE_SMOKE:    return ("blue smoke");
+    case BEAM_POTION_PURPLE_SMOKE:  return ("purple smoke");
     case BEAM_POTION_RAIN:          return ("rain");
     case BEAM_POTION_RANDOM:        return ("random potion");
     case BEAM_POTION_MUTAGENIC:     return ("mutagenic fog");

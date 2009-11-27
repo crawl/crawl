@@ -57,6 +57,7 @@
 #include "player.h"
 #include "random.h"
 #include "stuff.h"
+#include "env.h"
 #include "spells3.h"
 #include "stash.h"
 #include "tiles.h"

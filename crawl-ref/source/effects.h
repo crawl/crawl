@@ -8,9 +8,6 @@
 #ifndef EFFECTS_H
 #define EFFECTS_H
 
-#include "env.h"
-#include "externs.h"
-
 struct bolt;
 
 class monsters;
@@ -49,6 +46,7 @@ int place_ring(std::vector<coord_def>& ring_points,
                int arc_occupancy,
                int& seen_count);
 
+class los_def;
 // Collect lists of points that are within LOS (under the given losgrid),
 // unoccupied, and not solid (walls/statues).
 void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,

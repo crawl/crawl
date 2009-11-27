@@ -23,6 +23,8 @@
 #include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "mgen_data.h"
+#include "coord.h"
 #include "mon-transit.h"
 #include "player.h"
 #include "dungeon.h"
@@ -34,6 +36,7 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "stuff.h"
+#include "env.h"
 #include "spells3.h"
 #include "terrain.h"
 #ifdef USE_TILE

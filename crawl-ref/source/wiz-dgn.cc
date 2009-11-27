@@ -15,6 +15,7 @@
 #include "delay.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "env.h"
 #include "files.h"
 #include "items.h"
 #include "l_defs.h"

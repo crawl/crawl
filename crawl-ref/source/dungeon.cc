@@ -20,9 +20,11 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
+#include "coord.h"
 #include "coordit.h"
 #include "defines.h"
 #include "effects.h"
+#include "env.h"
 #include "enum.h"
 #include "map_knowledge.h"
 #include "fprop.h"
@@ -44,6 +46,7 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "mgen_data.h"
 #include "mon-pathfind.h"
 #include "notes.h"
 #include "place.h"
@@ -1225,20 +1228,7 @@ static void _fixup_branch_stairs()
         }
     }
 
-    // Branches that consist of only 1 level (Hall of Blades).
-    // No down staircases, thanks!
-    if (player_branch_depth() == 1 && at_branch_bottom())
-    {
-        for (rectangle_iterator ri(1); ri; ++ri)
-        {
-            if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
-                && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
-            {
-                grd(*ri) = DNGN_FLOOR;
-            }
-        }
-    }
-    else if (at_branch_bottom() && you.level_type == LEVEL_DUNGEON)
+    if (at_branch_bottom() && you.level_type == LEVEL_DUNGEON)
     {
         // Bottom level of branch - wipes out down stairs.
         for (rectangle_iterator ri(1); ri; ++ri)
@@ -1420,7 +1410,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             int s1 = s % num_stairs;
             int s2 = (s1 + 1) % num_stairs;
             ASSERT(grd(stair_list[s2]) >= base
-                   && grd(stair_list[s2]) <= base + 3);
+                   && grd(stair_list[s2]) < base + 3);
 
             if (grd(stair_list[s1]) == grd(stair_list[s2]))
             {
@@ -1599,7 +1589,16 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Warning: failed to preserve vault stairs.");
 #endif
-        _fixup_stone_stairs(false);
+        if (!_fixup_stone_stairs(false))
+        {
+            dgn_level_vetoed = true;
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS,
+                 "VETO: Failed to fix stone stairs: %s.",
+                 level_id::current().describe().c_str());
+#endif
+            return;
+        }
     }
 
     if (!_branch_entrances_are_connected())
@@ -2953,22 +2952,6 @@ static builder_rc_type _builder_basic(int level_number)
     grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_III;
     grd[xend][yend]     = DNGN_STONE_STAIRS_UP_III;
 
-    /*  Escape hatches are no longer randomly generated.
-        They are only used in vaults and for layout bubbles,
-        like in Slime and Orc.
-    if (one_chance_in(4))
-    {
-        _make_trail( 10, 20, 40, 20, corrlength, intersect_chance, no_corr,
-                     DNGN_ESCAPE_HATCH_DOWN );
-    }
-
-    if (one_chance_in(4))
-    {
-        _make_trail( 50, 20, 40, 20, corrlength, intersect_chance, no_corr,
-                     DNGN_ESCAPE_HATCH_UP );
-    }
-    */
-
     // Generate a random dead-end that /may/ have a shaft.  Good luck!
     if (!one_chance_in(4)) // 3/4 times
     {
@@ -2993,6 +2976,8 @@ static builder_rc_type _builder_basic(int level_number)
             ts.pos.x = xend;
             ts.pos.y = yend;
             grd[xend][yend] = DNGN_UNDISCOVERED_TRAP;
+            if (shaft_known(level_number, false))
+                ts.reveal();
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Trail ends in shaft.");
 #endif
@@ -3003,12 +2988,6 @@ static builder_rc_type _builder_basic(int level_number)
 #endif
         }
     }
-#ifdef DEBUG_DIAGNOSTICS
-    else {
-        mprf(MSGCH_DIAGNOSTICS, "Placing shaft trail...");
-    }
-#endif
-
 
     if (level_number > 1 && one_chance_in(16))
         _big_room(level_number);
@@ -3183,14 +3162,9 @@ static void _place_traps(int level_number)
             }
         }
 
-        if (ts.type == TRAP_SHAFT &&  // Shafts can be generated visible
-            coinflip() && // Starts about 50% of the time
-            random2(level_number) < 3) // And gets less frequent
-        {
+        grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
+        if (ts.type == TRAP_SHAFT && shaft_known(level_number, true))
             ts.reveal();
-        } else {
-            grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
-        }
         ts.prepare_ammo();
     }
 }

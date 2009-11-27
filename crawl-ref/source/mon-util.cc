@@ -23,6 +23,7 @@
 #include "kills.h"
 #include "mon-behv.h"
 #include "mon-place.h"
+#include "coord.h"
 #include "mon-stuff.h"
 #include "options.h"
 #include "random.h"
@@ -30,6 +31,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "env.h"
 #include "terrain.h"
 
 //jmf: moved from inside function

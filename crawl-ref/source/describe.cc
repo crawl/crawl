@@ -47,6 +47,7 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "stuff.h"
+#include "env.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "transfor.h"

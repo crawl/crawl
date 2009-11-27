@@ -82,6 +82,12 @@ class melee_attack;
 struct coord_def;
 class level_id;
 class player_quiver;
+class map_marker;
+class actor;
+class player;
+class monster;
+class KillMaster;
+class ghost_demon;
 
 struct coord_def
 {
@@ -552,13 +558,7 @@ public:
     PlaceInfo operator - (const PlaceInfo &other) const;
 };
 
-
 typedef std::vector<delay_queue_item> delay_queue_type;
-
-class KillMaster;
-
-
-
 
 class monster_spells : public FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>
 {
@@ -569,35 +569,6 @@ public:
     void clear() { init(SPELL_NO_SPELL); }
 };
 
-class ghost_demon;
-class actor;
-
-struct trap_def
-{
-    coord_def pos;
-    trap_type type;
-    int       ammo_qty;
-
-    dungeon_feature_type category() const;
-    std::string name(description_level_type desc = DESC_PLAIN) const;
-    bool is_known(const actor* act = 0) const;
-    void trigger(actor& triggerer, bool flat_footed = false);
-    void disarm();
-    void destroy();
-    void hide();
-    void reveal();
-    void prepare_ammo();
-    bool type_has_ammo() const;
-    bool active() const;
-
-private:
-    void message_trap_entry();
-    void shoot_ammo(actor& act, bool was_known);
-    item_def generate_trap_item();
-    int shot_damage(actor& act);
-};
-
-class map_marker;
 class reader;
 class writer;
 class map_markers

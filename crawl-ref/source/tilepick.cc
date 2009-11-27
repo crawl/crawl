@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
+#include "env.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "externs.h"
@@ -2595,6 +2596,7 @@ static int _tileidx_cloud(int type, int decay)
             ch = TILE_CLOUD_BLUE_SMOKE;
             break;
 
+        case CLOUD_PURPLE_SMOKE:
         case CLOUD_TLOC_ENERGY:
             ch = TILE_CLOUD_TLOC_ENERGY;
             break;

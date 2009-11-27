@@ -16,6 +16,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "effects.h"
+#include "env.h"
 #include "food.h"
 #include "item_use.h"
 #include "itemname.h"

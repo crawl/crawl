@@ -26,6 +26,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "effects.h"
+#include "env.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"

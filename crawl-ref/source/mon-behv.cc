@@ -12,6 +12,7 @@
 
 #include "coord.h"
 #include "coordit.h"
+#include "env.h"
 #include "fprop.h"
 #include "exclude.h"
 #include "los.h"

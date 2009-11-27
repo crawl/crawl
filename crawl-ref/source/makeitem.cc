@@ -19,6 +19,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "env.h"
 #include "food.h"
 #include "itemprop.h"
 #include "items.h"

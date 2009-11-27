@@ -47,6 +47,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
+#include "env.h"
 #include "transfor.h"
 #include "travel.h"
 #include "tutorial.h"

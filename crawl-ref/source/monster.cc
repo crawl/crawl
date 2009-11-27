@@ -13,7 +13,9 @@
 #include "delay.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "env.h"
 #include "fight.h"
+#include "fprop.h"
 #include "ghost.h"
 #include "goditem.h"
 #include "itemname.h"
@@ -23,6 +25,9 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-place.h"
+#include "terrain.h"
+#include "mgen_data.h"
+#include "coord.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
 #include "random.h"
@@ -30,11 +35,14 @@
 #include "shopping.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stuff.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"
+
+#include <algorithm>
 
 struct mon_spellbook
 {

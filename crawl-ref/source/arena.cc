@@ -13,6 +13,7 @@
 #include "colour.h"
 #include "command.h"
 #include "dungeon.h"
+#include "env.h"
 #include "initfile.h"
 #include "items.h"
 #include "itemname.h" // for make_name()
@@ -26,6 +27,8 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "mgen_data.h"
+#include "coord.h"
 #include "mon-stuff.h"
 #include "spl-mis.h"
 #include "spl-util.h"
