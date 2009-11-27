@@ -2281,18 +2281,16 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
             if (wizard)
             {
                 std::string key = "polymorphed wizard" + cast_str;
-                key_list.push_back(key);
-
                 if (targeted)
                     key_list.push_back(key + " targeted");
+                key_list.push_back(key);
             }
             else if (priest)
             {
                 std::string key = "polymorphed priest" + cast_str;
-                key_list.push_back(key);
-
                 if (targeted)
                     key_list.push_back(key + " targeted");
+                key_list.push_back(key);
             }
         }
     }
