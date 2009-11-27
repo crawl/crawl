@@ -1036,6 +1036,8 @@ static int _place_monster_aux(const mgen_data &mg,
 {
     coord_def fpos;
 
+    const monsterentry *m_ent = get_monster_data(mg.cls);
+
     monsters* mon = get_free_monster();
     if (!mon)
         return (-1);
@@ -1155,7 +1157,17 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->mname = mg.mname;
 
     if (mg.hd != 0)
+    {
         mon->hit_dice = mg.hd;
+        // Re-roll HP.
+        int hp = hit_points(mg.hd, m_ent->hpdice[1], m_ent->hpdice[2]);
+        // But only for monsters with random HP.
+        if (hp > 0)
+        {
+            mon->max_hit_points = hp;
+            mon->hit_points = hp;
+        }
+    }
 
     if (mg.hp != 0)
     {
