@@ -130,7 +130,7 @@ function iter.los_iterator (ic, filter, center)
       end
     end
 
-    if y_x == _x and y_y == y then
+    if y_x == _x and y_y == _y then
       return include_center
     end
 
@@ -168,7 +168,7 @@ function iter.adjacent_iterator (ic, filter, center)
       end
     end
 
-    if y_x == _x and y_y == y then
+    if y_x == _x and y_y == _y then
       return include_center
     end
 
@@ -207,7 +207,7 @@ function iter.circle_iterator (radius, ic, filter, center)
       end
     end
 
-    if y_x == _x and y_y == y then
+    if y_x == _x and y_y == _y then
       return include_center
     end
 
