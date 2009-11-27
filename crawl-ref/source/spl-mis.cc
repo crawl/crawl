@@ -16,6 +16,7 @@
 #include "cloud.h"
 #include "directn.h"
 #include "effects.h"
+#include "env.h"
 #include "it_use2.h"
 #include "kills.h"
 #include "misc.h"

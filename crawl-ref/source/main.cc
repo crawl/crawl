@@ -60,6 +60,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "env.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"

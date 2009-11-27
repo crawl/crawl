@@ -18,6 +18,7 @@
 #include "database.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "env.h"
 #include "files.h"
 #include "food.h"
 #include "ghost.h"

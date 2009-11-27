@@ -23,6 +23,7 @@
 #include "coordit.h"
 #include "defines.h"
 #include "effects.h"
+#include "env.h"
 #include "enum.h"
 #include "map_knowledge.h"
 #include "fprop.h"

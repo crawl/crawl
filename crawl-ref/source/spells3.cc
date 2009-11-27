@@ -26,6 +26,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
+#include "env.h"
 #include "fprop.h"
 #include "food.h"
 #include "goditem.h"

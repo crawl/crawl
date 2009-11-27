@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "effects.h"
+#include "env.h"
 #include "fprop.h"
 #include "fight.h"
 #include "ghost.h"

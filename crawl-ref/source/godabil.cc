@@ -15,6 +15,7 @@
 #include "database.h"
 #include "directn.h"
 #include "effects.h"
+#include "env.h"
 #include "files.h"
 #include "godabil.h"
 #include "invent.h"

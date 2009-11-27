@@ -23,6 +23,7 @@
 
 #include "cloud.h"    // For storm's bow rain
 #include "effects.h"  // For Sceptre of Torment tormenting
+#include "env.h"      // For storm bow env.cgrid
 #include "food.h"     // For evokes
 #include "mon-place.h" // For Sceptre of Asmodeus evoke
 #include "mon-stuff.h" // For Scythe of Curses cursing items

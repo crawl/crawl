@@ -26,6 +26,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "effects.h"
+#include "env.h"
 #include "food.h"
 #include "godabil.h"
 #include "it_use2.h"

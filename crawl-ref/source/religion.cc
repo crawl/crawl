@@ -36,6 +36,7 @@
 #include "describe.h"
 #include "dgnevent.h"
 #include "effects.h"
+#include "env.h"
 #include "enum.h"
 #include "fprop.h"
 #include "fight.h"

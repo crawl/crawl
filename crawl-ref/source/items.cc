@@ -29,6 +29,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "effects.h"
+#include "env.h"
 #include "food.h"
 #include "hiscores.h"
 #include "invent.h"

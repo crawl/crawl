@@ -47,6 +47,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
+#include "env.h"
 #include "ghost.h"
 #include "initfile.h"
 #include "itemprop.h"

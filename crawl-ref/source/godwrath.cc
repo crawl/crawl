@@ -14,6 +14,7 @@
 #include "database.h"
 #include "decks.h"
 #include "effects.h"
+#include "env.h"
 #include "enum.h"
 #include "food.h"
 #include "ghost.h"

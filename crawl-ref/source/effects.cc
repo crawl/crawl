@@ -29,6 +29,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dgnevent.h"
+#include "env.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "food.h"

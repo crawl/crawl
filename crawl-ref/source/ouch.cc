@@ -37,6 +37,7 @@
 #include "chardump.h"
 #include "delay.h"
 #include "effects.h"
+#include "env.h"
 #include "files.h"
 #include "fight.h"
 #include "godabil.h"

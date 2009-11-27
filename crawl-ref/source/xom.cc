@@ -16,6 +16,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "effects.h"
+#include "env.h"
 #include "map_knowledge.h"
 #include "feature.h"
 #include "goditem.h"
