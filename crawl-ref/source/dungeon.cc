@@ -1420,7 +1420,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
             int s1 = s % num_stairs;
             int s2 = (s1 + 1) % num_stairs;
             ASSERT(grd(stair_list[s2]) >= base
-                   && grd(stair_list[s2]) <= base + 3);
+                   && grd(stair_list[s2]) < base + 3);
 
             if (grd(stair_list[s1]) == grd(stair_list[s2]))
             {
