@@ -2389,21 +2389,17 @@ int ShoppingList::size() const
     return ( list->size() );
 }
 
-void ShoppingList::move_things(const coord_def &src, const coord_def &dst)
+void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 {
+    const level_pos src(level_id::current(), _src);
+    const level_pos dst(level_id::current(), _dst);
+
     for (unsigned int i = 0; i < list->size(); i++)
     {
         CrawlHashTable &thing = (*list)[i];
-        level_pos       lpos  = ShoppingList::thing_pos(thing);
 
-        if (lpos.id != level_id::current())
-            continue;
-
-        if (lpos.pos == src)
-        {
-            lpos.pos = dst;
-            thing[SHOPPING_THING_POS_KEY] = lpos;
-        }
+        if (thing_pos(thing) == src)
+            thing[SHOPPING_THING_POS_KEY] = dst;
     }
 }
 
@@ -2412,9 +2408,8 @@ void ShoppingList::forget_pos(const level_pos &pos)
     for (unsigned int i = (list->size() - 1); i>= 0; i--)
     {
         const CrawlHashTable &thing = (*list)[i];
-        const level_pos       lpos  = ShoppingList::thing_pos(thing);
 
-        if (lpos == pos)
+        if (thing_pos(thing) == pos)
             list->erase(i);
     }
 }
