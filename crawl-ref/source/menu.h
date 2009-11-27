@@ -316,8 +316,6 @@ public:
     void set_highlighter( MenuHighlighter *h );
     void set_title( MenuEntry *e, bool first = true );
     void add_entry( MenuEntry *entry );
-    bool del_entry( MenuEntry *entry );
-    bool del_entry( int entry_index );
     void get_selected( std::vector<MenuEntry*> *sel ) const;
 
     void set_maxpagesize(int max);
