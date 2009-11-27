@@ -2962,22 +2962,6 @@ static builder_rc_type _builder_basic(int level_number)
     grd[xbegin][ybegin] = DNGN_STONE_STAIRS_DOWN_III;
     grd[xend][yend]     = DNGN_STONE_STAIRS_UP_III;
 
-    /*  Escape hatches are no longer randomly generated.
-        They are only used in vaults and for layout bubbles,
-        like in Slime and Orc.
-    if (one_chance_in(4))
-    {
-        _make_trail( 10, 20, 40, 20, corrlength, intersect_chance, no_corr,
-                     DNGN_ESCAPE_HATCH_DOWN );
-    }
-
-    if (one_chance_in(4))
-    {
-        _make_trail( 50, 20, 40, 20, corrlength, intersect_chance, no_corr,
-                     DNGN_ESCAPE_HATCH_UP );
-    }
-    */
-
     // Generate a random dead-end that /may/ have a shaft.  Good luck!
     if (!one_chance_in(4)) // 3/4 times
     {
@@ -3012,12 +2996,6 @@ static builder_rc_type _builder_basic(int level_number)
 #endif
         }
     }
-#ifdef DEBUG_DIAGNOSTICS
-    else {
-        mprf(MSGCH_DIAGNOSTICS, "Placing shaft trail...");
-    }
-#endif
-
 
     if (level_number > 1 && one_chance_in(16))
         _big_room(level_number);
