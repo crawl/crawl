@@ -401,8 +401,13 @@ bool monster_pathfind::mons_traversable(const coord_def p)
 {
     const monster_type montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
                                                          : mons->type;
-    // Monsters that can't open doors won't be able to pass them.
-    if (feat_is_closed_door(grd(p)) || grd(p) == DNGN_SECRET_DOOR)
+    const dungeon_feature_type feat = grd(p);
+    // Monsters that can't open doors won't be able to pass them, and
+    // only monsters of normal or greater intelligence can pathfind through
+    // secret doors.
+    if (feat == DNGN_CLOSED_DOOR ||
+        (mons_intel(mons) >= I_NORMAL &&
+         (feat == DNGN_DETECTED_SECRET_DOOR || feat == DNGN_SECRET_DOOR)))
     {
         if (mons->is_habitable_feat(DNGN_FLOOR))
         {
