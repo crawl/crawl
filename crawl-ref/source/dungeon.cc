@@ -3595,7 +3595,7 @@ static int _place_uniques(int level_number, char level_type)
             break;
         }
 
-        if (dgn_place_map(uniq_map, true, false))
+        if (dgn_place_map(uniq_map, false, false))
         {
             num_placed++;
 #ifdef DEBUG_UNIQUE_PLACEMENT
