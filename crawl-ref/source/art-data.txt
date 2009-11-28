@@ -1110,6 +1110,17 @@ DESC:     A shield-shaped amulet.
 DESC_END: Back in the good old days, every adventurer had one of these
           handy devices. That, and a pony.
 
+ENUM:     RCLOUDS
+NAME:     robe of Clouds
+APPEAR:   flimsy blue robe
+OBJ:      OBJ_ARMOUR/ARM_ROBE
+PLUS:     +3
+COLOUR:   ETC_MIST
+TILE:     urand_clouds
+TILE_EQ:  robe_clouds
+BOOL:     elec, lev
+DESC:     A robe of a material so flimsy it could almost be clouds.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

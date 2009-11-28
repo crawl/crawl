@@ -13,7 +13,7 @@
 class bolt;
 
 // NOTE: NO_UNRANDARTS is automatically set by util/art-data.pl
-#define NO_UNRANDARTS 80
+#define NO_UNRANDARTS 81
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
@@ -116,6 +116,7 @@ enum unrand_type
     UNRAND_ROBUSTNESS,       // ring of Robustness
     UNRAND_MAGE,             // ring of the Mage
     UNRAND_SHIELDING,        // brooch of Shielding
+    UNRAND_RCLOUDS,          // robe of Clouds
     UNRAND_DUMMY2,           // DUMMY UNRANDART 2
     UNRAND_LAST = UNRAND_DUMMY2
 };
