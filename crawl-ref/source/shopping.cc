@@ -2814,9 +2814,9 @@ std::string ShoppingList::describe_thing(const CrawlHashTable& thing,
     return (desc);
 }
 
-// Item name without plusses, curse-status or inscription.
+// Item name without curse-status or inscription.
 std::string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
     return item.name(DESC_PLAIN, false, ident, false, false,
-                     ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
+                     ISFLAG_KNOW_CURSE);
 }
