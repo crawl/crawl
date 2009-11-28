@@ -1,8 +1,9 @@
 
-The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Matthew Cline,
-Paul Du Bois, Eino Keskitalo, Nat Lanza, Steven Noonan, Haran Pilpel, David 
-Ploog, Johanna Ploog, Charles Otto, David Lawrence Ramsey, Robert Vollmert, 
-Enne Walker) would like to thank:
+The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Jude Brown,
+Matthew Cline, Paul Du Bois, Eino Keskitalo, Vsevolod Kozlov, Nat Lanza, 
+Jesse Luehrs, Steven Noonan, Haran Pilpel, David Ploog, Johanna Ploog, 
+Stefan O'Rear, Charles Otto, David Lawrence Ramsey, Robert Vollmert, Enne
+Walker) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -19,23 +20,22 @@ contributed to Dungeon Crawl Stone Soup:
 Warwick Allison              R. Dan Henry               Mattias Nyberg
 Juha Arpiainen               Brendan Hickey             nyra
 Roy Axenov                   Benoit Hudson              Dylan O'Donnell
-Max Bane                     Sylvia 'Onia' Hörnke       Stefan O'Rear
-Bill Beher                   Iainuki                    Yuuma Oohara
-Alexander Beisig             Ilyak                      Pedro
-Stu Black                    Mitsuhiro Itakura          Erik Piper
-Erik Inge Bolsø              William Tanksley, Jr.      Lemuel Pitkin
-Peter Borgmann               Mikko Juola                Derek Ray
-Jude Brown                   Jarmo Kielosto             Remsleep
-Trent W. Buck                Kornel Kisielewicz         Will Rogers
-Terje Bø                     Daniel Klein               David Rose
-Aaron Curtis                 Vambola Kotkas             Sebastian Salman
-Denzi                        Vsevolod Kozlov            Brett Scarborough
-Rachel Elizabeth Dillon      Ryan Kusnery               Darshan Shaligram
-Mike Drinen                  Jukka Kuusisto             Robert Shimmin
-Kieron Dunbar                Maciej Lapinski            Sigurd
-Micha Elsner                 Jordan Lewis               Edgar Simo
-Christopher Evenstar         Icy Lich                   Solf
-Ben Goetter                  Jesse Luehrs               Johan Strandell
+Max Bane                     Sylvia 'Onia' Hörnke       Yuuma Oohara
+Bill Beher                   Iainuki                    Pedro
+Alexander Beisig             Ilyak                      Erik Piper
+Stu Black                    Matthew Ince               Lemuel Pitkin
+Erik Inge Bolsø              Mitsuhiro Itakura          Derek Ray
+Peter Borgmann               William Tanksley, Jr.      Remsleep
+Trent W. Buck                Mikko Juola                Will Rogers
+Terje Bø                     Jarmo Kielosto             David Rose
+Aaron Curtis                 Kornel Kisielewicz         Sebastian Salman
+Denzi                        Daniel Klein               Brett Scarborough
+Rachel Elizabeth Dillon      Vambola Kotkas             Darshan Shaligram
+Mike Drinen                  Ryan Kusnery               Robert Shimmin
+Kieron Dunbar                Jukka Kuusisto             Sigurd
+Micha Elsner                 Maciej Lapinski            Edgar Simo
+Christopher Evenstar         Jordan Lewis               Solf
+Ben Goetter                  Icy Lich                   Johan Strandell
 Rob Grant                    Markus Maier               Roman Sêk
 John Greenberg               Arien Malec                Marc H. Thoben
 GreyKnight                   Paul Maloney               Matt Titus
