@@ -592,11 +592,9 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             mon_type = MONS_DANCING_WEAPON;
         else
         {
-            if (you.level_type == LEVEL_PORTAL_VAULT)
+            if (you.level_type == LEVEL_PORTAL_VAULT 
+                && vault_mon_types.size() > 0)
             {
-                if (vault_mon_types.size() == 0)
-                    return (MONS_PROGRAM_BUG);
-
                 int i = choose_random_weighted(vault_mon_weights.begin(),
                                                vault_mon_weights.end());
                 int type = vault_mon_types[i];
@@ -629,6 +627,13 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                     }
                     return (mon_type);
                 }
+            }
+            else if (you.level_type == LEVEL_PORTAL_VAULT)
+            {
+                // XXX: We don't have a random monster list here, so pick one 
+                // from where we were.
+                place.level_type = LEVEL_DUNGEON;
+                *lev_mons = place.absdepth();
             }
 
             int tries = 0;
