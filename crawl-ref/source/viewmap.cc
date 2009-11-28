@@ -466,13 +466,26 @@ static void _reset_travel_colours(std::vector<coord_def> &features,
     arrange_features(features);
 }
 
-#ifndef USE_TILE
+static char _get_travel_colour( const coord_def& p )
+{
+    if (is_waypoint(p))
+        return LIGHTGREEN;
+
+    short dist = travel_point_distance[p.x][p.y];
+    return dist > 0?                    Options.tc_reachable        :
+           dist == PD_EXCLUDED?         Options.tc_excluded         :
+           dist == PD_EXCLUDED_RADIUS?  Options.tc_exclude_circle   :
+           dist < 0?                    Options.tc_dangerous        :
+                                        Options.tc_disconnected;
+}
+
 class feature_list
 {
     std::vector<glyph> data;
 
     void _maybe_add(const coord_def& gc)
     {
+#ifndef USE_TILE
         if (!is_terrain_known(gc))
             return;
 
@@ -485,12 +498,15 @@ class feature_list
         g.col = terrain_seen ? fdef.seen_colour : fdef.map_colour;
         if (terrain_seen && fdef.seen_em_colour && emphasise(gc))
             g.col = fdef.seen_em_colour;
+        if (is_waypoint(gc) || travel_point_distance[gc.x][gc.y] == PD_EXCLUDED)
+            g.col = real_colour(_get_travel_colour(gc));
 
         if (feat_is_staircase(feat) || feat_is_trap(feat) ||
             feat_is_altar(feat) || get_feature_dchar(feat) == DCHAR_ARCH)
         {
             data.push_back(g);
         }
+#endif
     }
 
 public:
@@ -504,8 +520,12 @@ public:
     // FIXME: return a string instead of writing to screen.
     void write() const
     {
-        screen_buffer_t buffer[20];
-        int sz = std::min((int)data.size(), 10);
+#ifndef USE_TILE
+#define MAX_FEATURE_WIDTH 20
+        screen_buffer_t buffer[2*MAX_FEATURE_WIDTH];
+        int sz = std::min((int)data.size(), MAX_FEATURE_WIDTH);
+#undef MAX_FEATURE_WIDTH
+
         for (int i = 0; i < sz; ++i)
         {
             buffer[2*i] = data[i].ch;
@@ -513,9 +533,11 @@ public:
         }
         int left = (get_number_of_cols() - sz) / 2;
         puttext(left, 1, left + sz - 1, 1, buffer);
+#endif
     }
 };
 
+#ifndef USE_TILE
 static void _draw_title(const coord_def& cpos, const feature_list& feats)
 {
     if (!Options.level_map_title)
@@ -582,10 +604,8 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 
     // Vector to track all features we can travel to, in order of distance.
     std::vector<coord_def> features;
-#ifndef USE_TILE
-    // List of all interesting features for display in the title.
+    // List of all interesting features for display in the (console) title.
     feature_list feats;
-#endif
 
     int min_x = INT_MAX, max_x = INT_MIN, min_y = INT_MAX, max_y = INT_MIN;
     const int num_lines   = _get_number_of_lines_levelmap();
@@ -630,10 +650,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 
                 _reset_travel_colours(features, on_level);
             }
-
-#ifndef USE_TILE
             feats.init();
-#endif
 
             min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
             bool found_y = false;
@@ -786,6 +803,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             // We need to do this all over again so that the user can jump
             // to the waypoint he just created.
             _reset_travel_colours(features, on_level);
+            feats.init();
             break;
 
         // Cycle the radius of an exclude.
@@ -795,12 +813,14 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             cycle_exclude_radius(p);
 
             _reset_travel_colours(features, on_level);
+            feats.init();
             break;
         }
 
         case CMD_MAP_CLEAR_EXCLUDES:
             clear_excludes();
             _reset_travel_colours(features, on_level);
+            feats.init();
             break;
 
 #ifdef WIZARD
@@ -810,6 +830,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             set_exclude(p, getchm() - '0');
 
             _reset_travel_colours(features, on_level);
+            feats.init();
             break;
         }
 #endif
@@ -1143,19 +1164,6 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 
     travel_init_new_level();
     travel_cache.update();
-}
-
-static char _get_travel_colour( const coord_def& p )
-{
-    if (is_waypoint(p))
-        return LIGHTGREEN;
-
-    short dist = travel_point_distance[p.x][p.y];
-    return dist > 0?                    Options.tc_reachable        :
-           dist == PD_EXCLUDED?         Options.tc_excluded         :
-           dist == PD_EXCLUDED_RADIUS?  Options.tc_exclude_circle   :
-           dist < 0?                    Options.tc_dangerous        :
-                                        Options.tc_disconnected;
 }
 
 bool emphasise(const coord_def& where)
