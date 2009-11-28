@@ -414,8 +414,6 @@ ctttttttttttttttttttyytyytttttttttttttttttttc
 ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
-
-
 ###############################################################################
 # Doroklohe's Tomb
 # Todo:
@@ -439,6 +437,8 @@ ENDMAP
 NAME:       wizlab_doroklohe
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+LROCKCOL:   yellow
+KFEAT:      ! = x
 {{
     function make_box(cenx, ceny, gly)
         for ox = -1, 1 do
@@ -477,7 +477,8 @@ SUBST:   L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
 : end
 : if layout > 9 then
 # First the round layout...
-SUBST:   _ = x
+COLOUR:  _ = darkgrey
+KFEAT:   _ = stone_wall
 SUBST:   b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
 SUBST:   l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
 SUBST:   B=., C=., D=., E=., F=., G=., H=., I=., J=., K=.
@@ -516,54 +517,103 @@ SHUFFLE: bcdefghijklm
 SUBST:   b = .
 SUBST:   c = .
 SUBST:   d = .
-NSUBST:  X = 1=. / *=x:20 .:1
-NSUBST:  Y = 1=. / *=x:30 .:1
-NSUBST:  Z = 1=. / *=x:50 .:1
-#
+NSUBST:  X = 1=. / *=!:20 .:1
+NSUBST:  Y = 1=. / *=!:30 .:1
+NSUBST:  Z = 1=. / *=!:50 .:1
 # For the other boxes, prepare same setup as for the round layout.
 SHUFFLE: nqru
 SUBST:   e=+, f=+, g=+, h=+, j=+, k=+, l=+, m=+, n=+, q=+
 SUBST:   o=", p=", r=", s=", t=", u="
 : end
-#
 # Monsters and loot.
-: box_glyph('+', 'x')
+: box_glyph('+', '!')
 KITEM:  + = any scroll / any scroll q:2 w:5 / any scroll q:3 w:1 / nothing w:8
 KMONS:  + = place:D:20 zombie / guardian mummy
-: box_glyph('"', 'x')
+: box_glyph('"', '!')
 KITEM:  " = any 
 KMONS:  " = balrug / cacodemon / greater mummy / lich
-: box_glyph('*', 'x')
+: box_glyph('*', '!')
 KITEM:  * = any good_item book, any good_item scroll q:2
 KMONS:  * = executioner / ancient lich 
 :           wizlab_setup(_G, "Doroklohe's Forbidden Tomb")
 # Intentionally colouring the floor glyphs of the central room only.
 # The squares beneath the boxes and outside of the room to be uncoloured.
-COLOUR: . : darkgrey / lightgrey w:3 / yellow w:1
+COLOUR:     )^ = darkgrey
+KFEAT:      )^ = stone_wall
+COLOUR:     . = darkgrey / blue w:3 / yellow w:1
+MARKER:     ! = lua:portal_desc {wall_drop=1}
+{{
+
+function convert_boxes (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  if data.phase == 1 then
+    data.phase = data.phase + 1
+    if you.silenced() then
+      crawl.mpr("The ground shakes.", "warning")
+    else
+      crawl.mpr("There is a faint hissing noise.", "warning")
+    end
+    return
+  elseif data.phase == 2 then
+    data.phase = data.phase + 1
+    if you.silenced() then
+      crawl.mpr("The ground shakes.", "warning")
+    else
+      crawl.mpr("There is a loud grinding noise.", "warning")
+    end
+    return
+  elseif data.phase == 3 then
+    data.phase = data.phase + 1
+    if you.silenced() then
+      crawl.mpr("The ground shakes.", "warning")
+    else
+      crawl.mpr("You hear a far off scream of machinery.", "warning")
+    end
+    crawl.mpr("The walls fall away!", "warning")
+    for _, i in ipairs(dgn.find_marker_positions_by_prop("wall_drop", 1)) do
+      dgn.terrain_changed(i.x, i.y, "floor", false, false, false)
+      dgn.place_cloud(i.x, i.y, "black smoke", 2)
+    end
+    return
+  else
+    return
+  end
+end
+
+local box_marker = TriggerableFunction:new { func = convert_boxes, repeated = true, data = {phase=1} }
+
+box_marker:add_triggerer(DgnTriggerer:new { type="turn", delay_min=500, delay_max=1000})
+
+lua_marker(")", box_marker)
+}}
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x________________...........________________x
-x____________...................____________x
-x_________........................._________x
-x_______b....cc......d+d......ee....f_______x
-x_____bB.....cC+.....dDd.....+Ee.....Ff_____x
-x____bb...............................ff____x
-x___.....................................___x
-x__........+......o"....."p......+........__x
-x__.......nnN....oO.......Pp....Qqq.......__x
-x_........................................._x
-x_...mm...............................gg..._x
-x_...mM..+......".....*....."......+..Gg..._x
-x_...mm...............................gg..._x
-x_........................................._x
-x__.......uuU....tT.......Ss....Rrr.......__x
-x__........+......t"....."s......+........__x
-x___.....................................___x
-x____ll...............................hh____x
-x_____lL.....kK+.....jjj.....+Ii.....Hh_____x
-x_______l....kk......j+j......ii....h_______x
-x_________........................._________x
-x____________...................____________x
-x________________...<.A.....________________x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^________________...........________________^
+^____________...................____________^
+^_________........................._________^
+^_______b....cc......d+d......ee....f_______^
+^_____bB.....cC+.....dDd.....+Ee.....Ff_____^
+^____bb...............................ff____^
+^___.....................................___^
+^__........+......o"....."p......+........__^
+^__.......nnN....oO.......Pp....Qqq.......__^
+^_........................................._^
+^_...mm...............................gg..._^
+^_...mM..+......".....*....."......+..Gg..._^
+^_...mm...............................gg..._^
+^_........................................._^
+^__.......uuU....tT.......Ss....Rrr.......__^
+^__........+......t"....."s......+........__^
+^___.....................................___^
+^____ll...............................hh____^
+^_____lL.....kK+.....jjj.....+Ii.....Hh_____^
+^_______l....kk......j+j......ii....h_______^
+^_________........................._________^
+^____________...................____________^
+^________________...<.A.....________________^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            )
 ENDMAP
