@@ -36,15 +36,16 @@ class ShoppingList
 public:
     ShoppingList();
 
-    bool add_thing(const item_def &item, int cost, level_pos* pos = NULL);
+    bool add_thing(const item_def &item, int cost,
+                   const level_pos* pos = NULL);
     bool add_thing(std::string desc, std::string buy_verb, int cost,
-                   level_pos* pos = NULL);
+                   const level_pos* pos = NULL);
 
-    bool is_on_list(const item_def &item, level_pos* pos = NULL) const;
-    bool is_on_list(std::string desc, level_pos* pos = NULL) const;
+    bool is_on_list(const item_def &item, const level_pos* pos = NULL) const;
+    bool is_on_list(std::string desc, const level_pos* pos = NULL) const;
 
-    bool del_thing(const item_def &item, level_pos* pos = NULL);
-    bool del_thing(std::string desc, level_pos* pos = NULL);
+    bool del_thing(const item_def &item, const level_pos* pos = NULL);
+    bool del_thing(std::string desc, const level_pos* pos = NULL);
 
     unsigned int cull_identical_items(const item_def& item, long cost = -1);
 
