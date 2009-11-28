@@ -1524,6 +1524,25 @@
     NULL, NULL, NULL, { NULL }, NULL, 
 },
 
+/* UNRAND_RCLOUDS */
+{
+    "robe of Clouds", "flimsy blue robe", 
+    OBJ_ARMOUR, ARM_ROBE, +3, 0, ETC_MIST, 0, 
+    UNRAND_FLAG_NONE, 
+    {
+        SPARM_NORMAL, 0, 0, 0, 0, 0, 
+        0, 0, 1, 0, 0, 0, 
+        0, 0, 1, 0, 0, 0, 
+        0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 
+        0, 
+    },
+    "A robe of a material so flimsy it could almost be clouds.", 
+    "", 
+    "", 
+    NULL, NULL, _RCLOUDS_world_reacts, { NULL }, NULL, 
+},
+
 /* UNRAND_DUMMY2 */
 {
     "DUMMY UNRANDART 2", "DUMMY UNRANDART 2", 

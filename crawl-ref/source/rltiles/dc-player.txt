@@ -257,6 +257,7 @@ robe_brown3 ROBE_BROWN3
 robe_gray2 ROBE_GRAY2
 # dresses
 robe_misfortune ROBE_MISFORTUNE
+robe_clouds ROBE_CLOUDS
 dress_white DRESS_WHITE
 arwen ARWEN
 skirt_onep_grey SKIRT_ONEP_GREY

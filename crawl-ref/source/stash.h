@@ -21,6 +21,7 @@
 class input_history;
 class reader;
 class writer;
+class StashMenu;
 
 // Stash definitions
 void stash_init_new_level();
@@ -53,7 +54,7 @@ public:
     std::string feature_description() const;
     std::vector<item_def> get_items() const;
 
-    bool show_menu(const std::string &place, bool can_travel) const;
+    bool show_menu(const level_pos &place, bool can_travel) const;
 
     // Returns true if this Stash contains items that are eligible for
     // autopickup.
@@ -132,7 +133,7 @@ public:
     void save(writer&) const;
     void load(reader&);
 
-    bool show_menu(const std::string &place, bool can_travel) const;
+    bool show_menu(const level_pos &place, bool can_travel) const;
     bool is_visited() const { return items.size() || visited; }
 
     void write(std::ostream &os, bool identify = false) const;
@@ -165,6 +166,7 @@ private:
     std::string shop_item_name(const shop_item &si) const;
     std::string shop_item_desc(const shop_item &si) const;
     void describe_shop_item(const shop_item &si) const;
+    void fill_out_menu(StashMenu &menu, const level_pos &place) const;
 
     friend class ST_ItemIterator;
 };

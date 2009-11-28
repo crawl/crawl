@@ -2123,7 +2123,7 @@ ShoppingList::ShoppingList()
     (*thing)[SHOPPING_THING_POS_KEY]  = pos;
 
 bool ShoppingList::add_thing(const item_def &item, int cost,
-                             level_pos* _pos)
+                             const level_pos* _pos)
 {
     ASSERT(item.is_valid());
     ASSERT(cost > 0);
@@ -2153,7 +2153,7 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 }
 
 bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
-                             level_pos* _pos)
+                             const level_pos* _pos)
 {
     ASSERT(!desc.empty());
     ASSERT(!buy_verb.empty());
@@ -2186,21 +2186,24 @@ bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
 
 #undef SETUP_THING
 
-bool ShoppingList::is_on_list(const item_def &item, level_pos* _pos) const
+bool ShoppingList::is_on_list(const item_def &item,
+                              const level_pos* _pos) const
 {
     SETUP_POS();
 
     return (find_thing(item, pos) != -1);
 }
 
-bool ShoppingList::is_on_list(std::string desc, level_pos* _pos) const
+bool ShoppingList::is_on_list(std::string desc,
+                              const level_pos* _pos) const
 {
     SETUP_POS();
 
     return (find_thing(desc, pos) != -1);
 }
 
-bool ShoppingList::del_thing(const item_def &item, level_pos* _pos)
+bool ShoppingList::del_thing(const item_def &item,
+                             const level_pos* _pos)
 {
     SETUP_POS();
 
@@ -2219,7 +2222,7 @@ bool ShoppingList::del_thing(const item_def &item, level_pos* _pos)
     return (true);
 }
 
-bool ShoppingList::del_thing(std::string desc, level_pos* _pos)
+bool ShoppingList::del_thing(std::string desc, const level_pos* _pos)
 {
     SETUP_POS();
 
@@ -2811,9 +2814,9 @@ std::string ShoppingList::describe_thing(const CrawlHashTable& thing,
     return (desc);
 }
 
-// Item name without plusses, curse-status or inscription.
+// Item name without curse-status or inscription.
 std::string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
     return item.name(DESC_PLAIN, false, ident, false, false,
-                     ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
+                     ISFLAG_KNOW_CURSE);
 }

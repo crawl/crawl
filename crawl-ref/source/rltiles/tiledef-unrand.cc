@@ -93,6 +93,7 @@ int unrandart_to_tile(int unrand)
     case UNRAND_ROBUSTNESS:        return TILE_UNRAND_ROBUSTNESS;
     case UNRAND_MAGE:              return TILE_UNRAND_MAGE;
     case UNRAND_SHIELDING:         return TILE_UNRAND_SHIELDING;
+    case UNRAND_RCLOUDS:           return TILE_UNRAND_RCLOUDS;
     default: return -1;
     }
 }
@@ -114,6 +115,7 @@ int unrandart_to_doll_tile(int unrand)
     case UNRAND_MAXWELL:           return TILEP_BODY_MAXWELL;
     case UNRAND_NIGHT:             return TILEP_BODY_ROBE_OF_NIGHT;
     case UNRAND_DRAGON_KING:       return TILEP_BODY_DRAGONARM_GOLD;
+    case UNRAND_RCLOUDS:           return TILEP_BODY_ROBE_CLOUDS;
     // BOOTS
     case UNRAND_BOOTS_ASSASSIN:    return TILEP_BOOTS_MIDDLE_GRAY;
     // CLOAK

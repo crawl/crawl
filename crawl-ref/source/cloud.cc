@@ -813,7 +813,7 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     case CLOUD_STEAM:
         return (player_res_steam(false, temp) <= 0);
     case CLOUD_MIASMA:
-        return (you.res_rotting());
+        return (!you.res_rotting());
     case CLOUD_MUTAGENIC:
         return (you.can_mutate());
 
