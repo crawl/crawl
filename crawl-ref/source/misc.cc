@@ -2236,6 +2236,12 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         }
         shaft_level = absdungeon_depth(shaft_dest.branch, shaft_dest.depth);
 
+#ifdef DGL_MILESTONES
+        if (!known_trap && shaft_level - you.your_level > 1)
+            mark_milestone("shaft", "fell down a shaft to " +
+                                    short_place_name(shaft_dest) + ".");
+#endif
+
         if (you.flight_mode() != FL_FLY || force_stair)
             mpr("You fall through a shaft!");
 
