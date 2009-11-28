@@ -16,21 +16,24 @@ public:
     void init(const Z &initial);
     Z &operator () (int x, int y)
     {
-        return data[x + y * width];
+        return data[x + y * mwidth];
     }
     const Z &operator () (int x, int y) const
     {
-        return data[x + y * width];
+        return data[x + y * mwidth];
     }
+
+    int width() const { return mwidth; }
+    int height() const { return mheight; }
 
 private:
     Z *data;
-    int width, height, size;
+    int mwidth, mheight, size;
 };
 
 template <typename Z>
 Matrix<Z>::Matrix(int _width, int _height, const Z &initial)
-    : data(NULL), width(_width), height(_height), size(_width * _height)
+    : data(NULL), mwidth(_width), mheight(_height), size(_width * _height)
 {
     data = new Z [ size ];
     init(initial);
@@ -38,7 +41,7 @@ Matrix<Z>::Matrix(int _width, int _height, const Z &initial)
 
 template <typename Z>
 Matrix<Z>::Matrix(int _width, int _height)
-    : data(NULL), width(_width), height(_height), size(_width * _height)
+    : data(NULL), mwidth(_width), mheight(_height), size(_width * _height)
 {
     data = new Z [ size ];
 }

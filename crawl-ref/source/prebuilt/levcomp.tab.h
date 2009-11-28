@@ -72,16 +72,17 @@
      LROCKTILE = 288,
      FTILE = 289,
      RTILE = 290,
-     COMMA = 291,
-     COLON = 292,
-     PERC = 293,
-     INTEGER = 294,
-     CHARACTER = 295,
-     STRING = 296,
-     MAP_LINE = 297,
-     MONSTER_NAME = 298,
-     ITEM_INFO = 299,
-     LUA_LINE = 300
+     SUBVAULT = 291,
+     COMMA = 292,
+     COLON = 293,
+     PERC = 294,
+     INTEGER = 295,
+     CHARACTER = 296,
+     STRING = 297,
+     MAP_LINE = 298,
+     MONSTER_NAME = 299,
+     ITEM_INFO = 300,
+     LUA_LINE = 301
    };
 #endif
 /* Tokens.  */
@@ -118,16 +119,17 @@
 #define LROCKTILE 288
 #define FTILE 289
 #define RTILE 290
-#define COMMA 291
-#define COLON 292
-#define PERC 293
-#define INTEGER 294
-#define CHARACTER 295
-#define STRING 296
-#define MAP_LINE 297
-#define MONSTER_NAME 298
-#define ITEM_INFO 299
-#define LUA_LINE 300
+#define SUBVAULT 291
+#define COMMA 292
+#define COLON 293
+#define PERC 294
+#define INTEGER 295
+#define CHARACTER 296
+#define STRING 297
+#define MAP_LINE 298
+#define MONSTER_NAME 299
+#define ITEM_INFO 300
+#define LUA_LINE 301
 
 
 
@@ -140,8 +142,8 @@ typedef union YYSTYPE
     const char *text;
     raw_range range;
 }
-/* Line 1489 of yacc.c.  */
-#line 145 "levcomp.tab.h"
+/* Line 1529 of yacc.c.  */
+#line 147 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -1016,6 +1016,105 @@ MARKER:   A = feat:<feature_name> or lua:<marker_expr>
           SHUFFLE: Oa/|c
           MARKER: O = lua:<expr>
 
+SUBVAULT: X : some_vault_tag / some_other_vault_tag:20
+
+          Pick a vault that matches the tag and replace matching glyphs in
+          the current map with the cells from that vault.
+
+          Multiple glyphs can be specified on the left hand side and
+          weighted sets of tags can be used on the right hand side.
+
+          The use of an equal sign to pick a different subvault per-glyph,
+          e.g. "X = some_vault_tag" is not supported at this time.  Use
+          a ':' instead to fix the choice of vault tag among all glyphs.
+
+          When a subvault is applied, the first step is finding the smallest
+          bounding box around the glyphs.  For example, in the following vault
+          definition, the smallest bounding box around the X glyph is a 4x3
+          rectangle:
+
+              ......
+              ..XXX.
+              ..XXX.
+              .XXX..
+              ......
+
+          After the bounding box is calculated, a valid subvault that matches
+          the given tags and is no larger than the bounding box will be found.
+          If no subvault can be found, the vault will throw an error.  If a
+          subvault is found that is smaller than the provided bounding box,
+          then it will be randomly placed and possibly rotated within the
+          bounding box.
+
+          There is not much optimization to best fit a subvault into the
+          glyphs provided by the parent vault.  So, take some care when using
+          non-rectangular subvaults.  The only special case is if you provide
+          a subvault that is the exact same shape as what the parent vault
+          requests.
+
+          Everything from the subvault cell (feature, items, monsters,
+          properties, markers) overwrite the glyph in the parent map.
+          Once replaced, this cell is immutable and cannot be changed
+          with something like SUBST, MARKER, or KFEAT.
+
+          Additional glyphs that are not replaced by the subvault will be left
+          untouched so that the parent vault can replace them with whatever
+          feature it desires.  These untouched glyphs can occur either because
+          the subvault was smaller than the bounding box or because the
+          subvault left the glyph blank (' ').  Because of this, a SUBVAULT
+          command should usually be followed by a SUBST command to clean up
+          these remaining glyphs.
+
+          Subvaults are allowed to include subvaults themselves, recursively.
+          However, there is no checking for infinite loops or cycles of
+          subvaults, so use this feature with some care.
+
+          During map verification, the SUBVAULT command does not do anything.
+          Therefore, the compilation step for Lua vaults will not catch errors
+          where no maps exist for a given tag or where all maps that do exist
+          are too big to fit into the provided space in the parent map.  (The
+          reasoning for not verifying the subvault command is so that you can
+          specify maps by tag that may be defined later in the file or even in
+          another file that hasn't been loaded yet.) So, test your subvaults!
+
+          As the size of the subvault may vary depending on the parent vault,
+          there are some helpful Lua functions (in the dgn library) that can
+          be used to get more information about what the parent vault is
+          requesting.  Here's a quick reference:
+
+          is_subvault()
+
+              This function returns true if the current map is being used as a
+              subvault and false if the current map is a normal vault.
+
+          local width, height = subvault_size()
+
+              This function returns the width and height of the subvault.
+              If not a subvault, it returns 0.
+
+          iter.subvault_iterator(_G)
+
+              Can be used to iterate through all the 0-indexed coordinates
+              in the subvault that will get copied back to the parent vault.
+              It will return no points if this is not a subvault.
+
+          default_subvault_glyphs()
+
+              This is a convenience function that replaces the current
+              subvault map with one that is the exact size of the bounding
+              box.  For any valid square that the parent map will replace with
+              the subvault, it will place a '.' in the map.  For any invalid
+              square that will not be replaced by the subvault, it will place
+              a ' ' in the map.  If not a subvault, it does nothing.
+
+              The advantage of this is that a vault author can then use nsubst
+              on the '.' feature to ensure that a fixed number of objects will
+              be created in the parent vault.
+
+              NOTE: This function will also entirely clear the current map, so
+              call it first in the subvault definition.
+
+
 Handling long lines
 -------------------
 

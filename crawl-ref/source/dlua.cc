@@ -281,6 +281,7 @@ void init_dungeon_lua()
     luaL_openlib(dlua, "dgn", dgn_item_dlib, 0);
     luaL_openlib(dlua, "dgn", dgn_level_dlib, 0);
     luaL_openlib(dlua, "dgn", dgn_mons_dlib, 0);
+    luaL_openlib(dlua, "dgn", dgn_subvault_dlib, 0);
     luaL_openlib(dlua, "dgn", dgn_tile_dlib, 0);
     luaL_openlib(dlua, "feat", feat_dlib, 0);
     luaL_openlib(dlua, "debug", debug_dlib, 0);

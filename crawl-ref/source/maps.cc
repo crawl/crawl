@@ -118,8 +118,7 @@ static int write_vault(map_def &mdef,
     return (place.orient);
 }
 
-// Mirror the map if appropriate, resolve substitutable symbols (?),
-static bool resolve_map(map_def &map)
+static bool resolve_map_lua(map_def &map)
 {
     map.reinit();
     std::string err = map.run_lua(true);
@@ -144,6 +143,15 @@ static bool resolve_map(map_def &map)
     if (!map.test_lua_validate(false))
         return (false);
 
+    return (true);
+}
+
+// Mirror the map if appropriate, resolve substitutable symbols (?),
+static bool resolve_map(map_def &map)
+{
+    if (!resolve_map_lua(map))
+        return false;
+
     // Mirroring is possible for any map that does not explicitly forbid it.
     // Note that mirroring also flips the orientation.
     if (coinflip())
@@ -154,8 +162,108 @@ static bool resolve_map(map_def &map)
 
     // The map may also refuse to be rotated.
     if (coinflip())
-        map.rotate( coinflip() );
+        map.rotate(coinflip());
 
+    return true;
+}
+
+bool resolve_subvault(map_def &map)
+{
+    ASSERT(map.is_subvault());
+    if (!map.is_subvault())
+        return false;
+
+    if (!resolve_map_lua(map))
+        return false;
+
+    int width = map.subvault_width();
+    int height = map.subvault_height();
+
+    bool can_rot = (map.map.width() <= height && map.map.height() <= width);
+    bool must_rot = (map.map.width() > width || map.map.height() > height);
+
+    // Too big, whether or not it is rotated.
+    if (must_rot && !can_rot)
+        return false;
+
+    if (must_rot || can_rot && coinflip())
+    {
+        bool dir = coinflip();
+        map.rotate(dir);
+
+        // Update post-rotation dimensions.
+        width = map.subvault_width();
+        height = map.subvault_height();
+    }
+
+    // Inexact fits with dimensions flipped will get rotated above.
+    bool exact_fit = (map.map.height() == height && map.map.width() == width);
+    if (!exact_fit)
+    {
+        if (coinflip())
+            map.hmirror();
+
+        if (coinflip())
+            map.vmirror();
+
+        // The map may have refused to have been rotated, so verify dimensions.
+        bool valid = (map.map.width() <= width && map.map.height() <= height);
+        return (valid);
+    }
+
+    // Don't bother flipping or rotating 1x1 subvaults.
+    // This just cuts down on level generation message spam.
+    if (exact_fit && width == height && width == 1)
+        return (true);
+
+    // Count original mismatches.  If mirroring the map causes more cells to
+    // not be written, then don't mirror.  This allows oddly shaped subvaults
+    // to be fit correctly into a parent vault that specifies the exact same
+    // shape.
+    const coord_def svplace(0, 0);
+
+    // 0 - normal
+    // 1 - flip horz
+    // 2 - flip vert + horz
+    // 3 - flip vert
+    int mismatch[4];
+
+    // Mirror map in all directions to find best fit.
+    mismatch[0] = map.subvault_mismatch_count(svplace);
+    map.hmirror();
+    mismatch[1] = map.subvault_mismatch_count(svplace);
+    map.vmirror();
+    mismatch[2] = map.subvault_mismatch_count(svplace);
+    map.hmirror();
+    mismatch[3] = map.subvault_mismatch_count(svplace);
+
+    int min_mismatch = std::min(mismatch[0], mismatch[1]);
+    min_mismatch = std::min(min_mismatch, mismatch[2]);
+    min_mismatch = std::min(min_mismatch, mismatch[3]);
+
+    // Pick a mirror combination with the minimum number of mismatches.
+    int idx = random2(4);
+    while (mismatch[idx] != min_mismatch)
+        idx = (idx + 1) % 4;
+
+    // Flip the map (currently vmirror'd) to the correct orientation.
+    if (idx == 0)
+    {
+        map.vmirror();
+    }
+    else if (idx == 1)
+    {
+        map.vmirror();
+        map.hmirror();
+    }
+    else if (idx == 2)
+    {
+        map.hmirror();
+    }
+
+    ASSERT(map.subvault_mismatch_count(svplace) == min_mismatch);
+
+    // We already know this is an exact fit, so this is a success.
     return (true);
 }
 

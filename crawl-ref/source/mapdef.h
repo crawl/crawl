@@ -228,8 +228,35 @@ private:
     map_marker *create_marker();
 };
 
+typedef std::pair<std::string, int> map_weighted_string;
+class map_string_list : public std::vector<map_weighted_string>
+{
+public:
+    bool parse(const std::string &fp, int weight);
+};
+class string_spec
+{
+public:
+    string_spec(std::string _key, bool _fix, const map_string_list &slist)
+        : key(_key), fix(_fix), fixed_str(""), strlist(slist)
+    {
+    }
+
+    std::string get_property();
+
+public:
+    std::string key;
+    bool fix;
+    std::string fixed_str;
+    map_string_list strlist;
+};
+
+template<class T>
+std::string parse_weighted_str(const std::string &cspec, T &list);
+
 class map_def;
 class rectangle_iterator;
+class keyed_mapspec;
 class map_lines
 {
 public:
@@ -305,6 +332,14 @@ public:
     char operator () (int x, int y) const;
     char& operator () (int x, int y);
 
+    const keyed_mapspec *mapspec_at(const coord_def &c) const;
+    keyed_mapspec *mapspec_at(const coord_def &c);
+
+    std::string add_key_item(const std::string &s);
+    std::string add_key_mons(const std::string &s);
+    std::string add_key_feat(const std::string &s);
+    std::string add_key_mask(const std::string &s);
+
     bool in_bounds(const coord_def &c) const;
 
     // Extend map dimensions with glyph 'fill' to minimum width and height.
@@ -317,6 +352,12 @@ public:
     int count_feature_in_box(const coord_def &tl, const coord_def &br,
                              const char *feat) const;
 
+    void fill_mask_matrix(const std::string &glyphs, const coord_def &tl,
+                          const coord_def &br, Matrix<bool> &flags);
+
+    // Merge vault onto the tl/br subregion, where mask is true.
+    void merge_subvault(const coord_def &tl, const coord_def &br,
+                        const Matrix<bool> &mask, const map_def &vault);
 private:
     void init_from(const map_lines &map);
     template <typename V> void clear_vector(V &vect);
@@ -335,6 +376,12 @@ private:
     void nsubst(nsubst_spec &);
     void overlay_colours(colour_spec &);
     void overlay_fprops(fprop_spec &);
+
+    // Merge cell (vx, vy) from vault onto this map's (x, y) cell.
+    typedef FixedVector<int, 256> keyspec_map;
+    void merge_cell(int x, int y, const map_def &vault, int vx, int vy,
+                    int keyspec_idx);
+
 #ifdef USE_TILE
     void overlay_tiles(tile_spec &);
 #endif
@@ -351,11 +398,19 @@ private:
                      subst_spec &spec);
     std::string parse_glyph_replacements(std::string s,
                                          glyph_replacements_t &gly);
-    template<class T>
-    std::string parse_weighted_str(const std::string &cspec, T &list);
+
 #ifdef USE_TILE
     std::string add_tile(const std::string &sub, bool is_floor);
 #endif
+
+    std::string add_key_field(
+        const std::string &s,
+        std::string (keyed_mapspec::*set_field)(
+            const std::string &s, bool fixed),
+        void (keyed_mapspec::*copy_field)(const keyed_mapspec &spec));
+
+    const keyed_mapspec *mapspec_for_key(int key) const;
+    keyed_mapspec *mapspec_for_key(int key);
 
     friend class subst_spec;
     friend class nsubst_spec;
@@ -370,14 +425,24 @@ private:
 
     struct overlay_def
     {
-        overlay_def() : colour(0), rocktile(0), floortile(0), property(0) {}
+        overlay_def() : colour(0), rocktile(0), floortile(0), property(0), keyspec_idx(0) {}
         int colour;
         int rocktile;
         int floortile;
         int property;
+        int keyspec_idx;
     };
     typedef Matrix<overlay_def> overlay_matrix;
     std::auto_ptr<overlay_matrix> overlay;
+
+    typedef std::map<int, keyed_mapspec> keyed_specs;
+    keyed_specs keyspecs;
+    int next_keyspec_idx;
+
+    enum
+    {
+        SUBVAULT_GLYPH = 1
+    };
 
     int map_width;
     bool solid_north, solid_east, solid_south, solid_west;
@@ -431,6 +496,9 @@ public:
 
     std::string add_item(const std::string &spec, bool fix = false);
     std::string set_item(int index, const std::string &spec);
+
+    // Set this list to be a copy of the item_spec_slot in list.
+    void set_from_slot(const item_list &list, int slot_index);
 
 private:
     struct item_spec_slot
@@ -502,6 +570,9 @@ public:
     mons_list();
 
     void clear();
+
+    // Set this list to be a copy of the mons_spec_slot in list.
+    void set_from_slot(const mons_list &list, int slot_index);
 
     mons_spec get_monster(int index);
     mons_spec get_monster(int slot_index, int list_index) const;
@@ -611,10 +682,10 @@ public:
 
     // Copy from the given mapspec.  If that entry is fixed,
     // it should be pre-selected prior to the copy.
-    void copy_feat(keyed_mapspec &spec);
-    void copy_mons(keyed_mapspec &spec);
-    void copy_item(keyed_mapspec &spec);
-    void copy_mask(keyed_mapspec &spec);
+    void copy_feat(const keyed_mapspec &spec);
+    void copy_mons(const keyed_mapspec &spec);
+    void copy_item(const keyed_mapspec &spec);
+    void copy_mask(const keyed_mapspec &spec);
 
     feature_spec get_feat();
     mons_list   &get_monsters();
@@ -630,8 +701,6 @@ private:
     feature_spec parse_shop(std::string s, int weight);
     feature_spec parse_trap(std::string s, int weight);
 };
-
-typedef std::map<int, keyed_mapspec> keyed_specs;
 
 typedef std::vector<level_range> depth_ranges;
 
@@ -709,11 +778,15 @@ public:
     mons_list       mons;
     item_list       items;
 
+    static bool valid_item_array_glyph(int gly);
+    static int item_array_glyph_to_slot(int gly);
+    static bool valid_monster_array_glyph(int gly);
+    static bool valid_monster_glyph(int gly);
+    static int monster_array_glyph_to_slot(int gly);
+
     std::vector<mons_spec> random_mons;
 
     map_flags       level_flags, branch_flags;
-
-    keyed_specs     keyspecs;
 
     dlua_chunk      prelude, mapchunk, main, validate, veto;
 
@@ -730,6 +803,12 @@ private:
     bool            index_only;
     long            cache_offset;
     std::string     file;
+
+    typedef Matrix<bool> subvault_mask;
+    subvault_mask *svmask;
+
+    // True if this map is in the process of being validated.
+    bool validating_map_flag;
 
 public:
     map_def();
@@ -763,6 +842,8 @@ public:
 
     std::string validate_map_def();
     std::string validate_temple_map();
+    // Returns true if this map is in the middle of validation.
+    bool is_validating() const { return (validating_map_flag); }
 
     void add_prelude_line(int line,  const std::string &s);
     void add_main_line(int line, const std::string &s);
@@ -776,18 +857,13 @@ public:
 
     bool is_usable_in(const level_id &lid) const;
 
-    keyed_mapspec *mapspec_for_key(int key);
-    const keyed_mapspec *mapspec_for_key(int key) const;
+    const keyed_mapspec *mapspec_at(const coord_def &c) const;
+    keyed_mapspec *mapspec_at(const coord_def &c);
 
     bool has_depth() const;
     void add_depth(const level_range &depth);
     void add_depths(depth_ranges::const_iterator s,
                     depth_ranges::const_iterator e);
-
-    std::string add_key_item(const std::string &s);
-    std::string add_key_mons(const std::string &s);
-    std::string add_key_feat(const std::string &s);
-    std::string add_key_mask(const std::string &s);
 
     bool can_dock(map_section_type) const;
     coord_def dock_pos(map_section_type) const;
@@ -808,6 +884,17 @@ public:
     std::vector<std::string> get_subst_strings() const;
 
     int glyph_at(const coord_def &c) const;
+
+    // Subvault functions.
+    std::string subvault_from_tagstring(const std::string &s);
+    bool is_subvault() const;
+    void apply_subvault_mask();
+    bool subvault_cell_valid(const coord_def &c) const;
+    int subvault_width() const;
+    int subvault_height() const;
+    // Returns the number of cells in the subvault map that
+    // will not get copied to parent vault at a given placement.
+    int subvault_mismatch_count(const coord_def &place) const;
 
 public:
     struct map_feature_finder
@@ -834,16 +921,12 @@ public:
     };
 
 private:
+
     void write_depth_ranges(writer&) const;
     void read_depth_ranges(reader&);
     bool test_lua_boolchunk(dlua_chunk &, bool def = false, bool croak = false);
     std::string rewrite_chunk_errors(const std::string &s) const;
-
-    std::string add_key_field(
-        const std::string &s,
-        std::string (keyed_mapspec::*set_field)(
-            const std::string &s, bool fixed),
-        void (keyed_mapspec::*copy_field)(keyed_mapspec &spec));
+    std::string apply_subvault(string_spec &);
 };
 
 const int CHANCE_ROLL = 10000;

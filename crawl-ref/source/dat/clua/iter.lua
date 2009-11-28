@@ -283,3 +283,39 @@ function iter.stack_destroy(coord, extra)
     end
   end
 end
+
+-------------------------------------------------------------------------------
+-- subvault_iterator
+-- Iterates through all map locations in a subvault that will get written
+-- back to a parent.
+-------------------------------------------------------------------------------
+function iter.subvault_iterator (e, filter)
+
+  if e == nil then
+    error("subvault_iterator requires the env to be passed, e.g. _G")
+  end
+
+  local top_corner = dgn.point(0, 0)
+  local bottom_corner
+
+  local w,h = e.subvault_size()
+  if w == 0 or h == 0 then
+    -- Construct a valid rectangle.  subvault_cell_valid will always fail.
+    bottom_corner = top_corner
+  else
+    bottom_corner = dgn.point(w-1, h-1)
+  end
+
+
+  local function check_mask (point)
+    if filter ~= nil then
+      if not filter(point) then
+        return false
+      end
+    end
+
+    return e.subvault_cell_valid(point.x, point.y)
+  end
+
+  return iter.rect_iterator(top_corner, bottom_corner, check_mask)
+end

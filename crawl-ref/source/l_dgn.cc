@@ -524,7 +524,7 @@ static int dgn_marker(lua_State *ls)
 static int dgn_kfeat(lua_State *ls)
 {
     MAP(ls, 1, map);
-    std::string err = map->add_key_feat(luaL_checkstring(ls, 2));
+    std::string err = map->map.add_key_feat(luaL_checkstring(ls, 2));
     if (!err.empty())
         luaL_error(ls, err.c_str());
     return (0);
@@ -533,7 +533,7 @@ static int dgn_kfeat(lua_State *ls)
 static int dgn_kmons(lua_State *ls)
 {
     MAP(ls, 1, map);
-    std::string err = map->add_key_mons(luaL_checkstring(ls, 2));
+    std::string err = map->map.add_key_mons(luaL_checkstring(ls, 2));
     if (!err.empty())
         luaL_error(ls, err.c_str());
     return (0);
@@ -542,7 +542,7 @@ static int dgn_kmons(lua_State *ls)
 static int dgn_kitem(lua_State *ls)
 {
     MAP(ls, 1, map);
-    std::string err = map->add_key_item(luaL_checkstring(ls, 2));
+    std::string err = map->map.add_key_item(luaL_checkstring(ls, 2));
     if (!err.empty())
         luaL_error(ls, err.c_str());
     return (0);
@@ -551,7 +551,7 @@ static int dgn_kitem(lua_State *ls)
 static int dgn_kmask(lua_State *ls)
 {
     MAP(ls, 1, map);
-    std::string err = map->add_key_mask(luaL_checkstring(ls, 2));
+    std::string err = map->map.add_key_mask(luaL_checkstring(ls, 2));
     if (!err.empty())
         luaL_error(ls, err.c_str());
     return (0);
@@ -568,6 +568,27 @@ static int dgn_map_size(lua_State *ls)
     lua_pushnumber(ls, map->map.width());
     lua_pushnumber(ls, map->map.height());
     return (2);
+}
+
+static int dgn_subvault(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (lua_gettop(ls) == 1)
+        luaL_error(ls, "Expected args, got none.");
+
+    for (int i = 2, size = lua_gettop(ls); i <= size; ++i)
+    {
+        if (lua_isnil(ls, i))
+            luaL_error(ls, "Unexpected nil.");
+        else
+        {
+            std::string err = map->subvault_from_tagstring(luaL_checkstring(ls, i));
+            if (!err.empty())
+                luaL_error(ls, err.c_str());
+        }
+    }
+
+    return (0);
 }
 
 static int dgn_name(lua_State *ls)
@@ -1566,6 +1587,13 @@ LUAFN(dgn_get_special_room_info)
     return (5);
 }
 
+LUAFN(dgn_is_validating)
+{
+    MAP(ls, 1, map);
+    lua_pushboolean(ls, map->is_validating());
+    return (1);
+}
+
 LUAFN(_dgn_resolve_map)
 {
     if (lua_isnil(ls, 1))
@@ -1694,6 +1722,7 @@ const struct luaL_reg dgn_dlib[] =
 { "kprop", dgn_kprop },
 { "kmask", dgn_kmask },
 { "mapsize", dgn_map_size },
+{ "subvault", dgn_subvault },
 
 { "colour_at", dgn_colour_at },
 
@@ -1747,6 +1776,7 @@ const struct luaL_reg dgn_dlib[] =
 { "marker_at_pos", _dgn_marker_at_pos },
 
 { "get_special_room_info", dgn_get_special_room_info },
+{ "is_validating", dgn_is_validating },
 
 { "fill_grd_area", dgn_fill_grd_area },
 

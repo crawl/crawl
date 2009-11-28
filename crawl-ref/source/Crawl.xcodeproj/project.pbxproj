@@ -67,6 +67,7 @@
 		7B3B07600BD13AF000F2980E /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B075F0BD13AF000F2980E /* libncurses.dylib */; };
 		7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED10B001B9E00CABB32 /* levcomp.lpp */; };
 		7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
+		93F94B1F10C178990077B142 /* l_subvault.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93F94B1E10C178990077B142 /* l_subvault.cc */; };
 		B032D686106C02070002D70D /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0EFD420BD12E9200002671 /* liblua.a */; };
 		B032D687106C02070002D70D /* libreadline.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B07560BD13A8100F2980E /* libreadline.dylib */; };
 		B032D688106C02070002D70D /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B075F0BD13AF000F2980E /* libncurses.dylib */; };
@@ -635,6 +636,7 @@
 		7B3B07560BD13A8100F2980E /* libreadline.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libreadline.dylib; path = /usr/lib/libreadline.dylib; sourceTree = "<absolute>"; };
 		7B3B075F0BD13AF000F2980E /* libncurses.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.dylib; path = /usr/lib/libncurses.dylib; sourceTree = "<absolute>"; };
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
+		93F94B1E10C178990077B142 /* l_subvault.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_subvault.cc; sourceTree = "<group>"; };
 		B02C574310670C63006AC96D /* libgui.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = libgui.cc; sourceTree = "<group>"; };
 		B02C574410670C63006AC96D /* libgui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libgui.h; sourceTree = "<group>"; };
 		B02C575F10670ED2006AC96D /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = "<group>"; };
@@ -1380,6 +1382,7 @@
 				E5D63FF810BD494400A99626 /* l_moninf.cc */,
 				E5D63FF910BD494400A99626 /* l_mons.cc */,
 				E5D63FFA10BD494400A99626 /* l_option.cc */,
+				93F94B1E10C178990077B142 /* l_subvault.cc */,
 				E5D63FFB10BD494400A99626 /* l_travel.cc */,
 				E5D63FFC10BD494400A99626 /* l_view.cc */,
 				E5D63FFD10BD494400A99626 /* l_you.cc */,
@@ -2260,6 +2263,7 @@
 				E5D6410E10BD494500A99626 /* l_moninf.cc in Sources */,
 				E5D6410F10BD494500A99626 /* l_mons.cc in Sources */,
 				E5D6411010BD494500A99626 /* l_option.cc in Sources */,
+				93F94B1F10C178990077B142 /* l_subvault.cc in Sources */,
 				E5D6411110BD494500A99626 /* l_travel.cc in Sources */,
 				E5D6411210BD494500A99626 /* l_view.cc in Sources */,
 				E5D6411310BD494500A99626 /* l_you.cc in Sources */,
