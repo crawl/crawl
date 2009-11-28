@@ -4,6 +4,8 @@
 #
 # PLANNING AREA:
 #
+# From spells:
+#
 # Alistair's Brewery: mutated wizards, mephitic cloud generators,
 #    cupboards full of potions, confused monsters. 
 # Borgnjor's Mortuary: liches, miasma clouds, potions of decay, slaves that are
@@ -32,10 +34,23 @@
 # Doroklohe's Tomb: lots of small tombs with loot and monsters inside.
 # Tukima's Studio: dancing weapons, dancing weapon machine, tukima's book and a
 #    scroll of acquirement, statue guards, mirrors.
+#
+# From unrands:
+#
 # Cekugob's Oubliette: a randomised maze (though not a labyrinth) with skeletal
 #    guards, and with occasionally hidden. Cekugob's amulet as the loot,
 #    possibly.
 # Zonguldrok's Mausoleum: regenerating zombie monsters, sword as the loot.
+# Wucad Mu's Monastery: a sprawling complex of rooms, set to appear something a
+#    Wu Xia kung fu monastery; unarmed human threats, everything appears to be
+#    "dark"; some humans may wield quarterstaves. Wucad Mu as loot! Orange
+#    crystal statues.
+# Botono's Bayou: A bay-like area with small huts, dark coloured wizards that
+#    cast negative-related spells, black draconians, rebranded swamp worms.
+# Ukta's Hut: phantoms, other "ghosts", ogre mages and ogres, druidic style,
+#    wooden walls set in a forest (more "earthy" than Erinya's Garden)
+# The Alchemist's Tower: gold turned into things, things turned into gold.
+#
 # Random named Wizard portals.
 #
 # TO-DO:
