@@ -536,14 +536,18 @@ void StashMenu::draw_title()
                                    title->quantity == 1? "" : "s");
         }
         cprintf(")");
+
+        if (action_cycle == Menu::CYCLE_TOGGLE)
+        {
+            cprintf("  [a-z: %s  ?/!: %s]",
+                    menu_action == ACT_EXAMINE ? "examine" : "shopping",
+                    menu_action == ACT_EXAMINE ? "shopping" : "examine");
+        }
+
         if (can_travel)
         {
             if (action_cycle == Menu::CYCLE_TOGGLE)
             {
-                cprintf("  [a-z: %s  ?/!: %s]",
-                        menu_action == ACT_EXAMINE ? "examine" : "shopping",
-                        menu_action == ACT_EXAMINE ? "shopping" : "examine");
-
                 // XXX: This won't fit in the title, so it goes into the
                 // footer/-more-.  Not ideal, but I don't know where else
                 // to put it.
