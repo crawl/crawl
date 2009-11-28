@@ -1507,8 +1507,11 @@ static bool _find_description(bool &again, std::string& error_inout)
         mpr(error_inout.c_str(), MSGCH_PROMPT);
     mpr("Describe a (M)onster, (S)pell, s(K)ill, (I)tem, (F)eature, (G)od, "
         "(A)bility, (B)ranch, or (C)ard? ", MSGCH_PROMPT);
-
-    int ch = toupper(getch());
+    int ch;
+    {
+        cursor_control con(true);
+        ch = toupper(getch());
+    }
     std::string    type;
     std::string    extra;
     db_find_filter filter     = NULL;

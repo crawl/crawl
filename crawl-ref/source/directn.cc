@@ -1042,7 +1042,7 @@ void direction(dist& moves, const targetting_type restricts,
         return;
     }
 
-    cursor_control con(!Options.use_fake_cursor);
+    cursor_control ccon(!Options.use_fake_cursor);
     mouse_control mc(needs_path && !just_looking ? MOUSE_MODE_TARGET_PATH
                                                  : MOUSE_MODE_TARGET);
     range_view_annotator rva(range);

@@ -300,6 +300,7 @@ public:
 
     bool        use_fake_cursor;    // Draw a fake cursor instead of relying
                                     // on the term's own cursor.
+    bool        use_fake_player_cursor;
 
     int         level_map_cursor_step;  // The cursor increment in the level
                                         // map.

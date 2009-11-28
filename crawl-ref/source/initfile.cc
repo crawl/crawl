@@ -751,6 +751,7 @@ void game_options::reset_options()
 #else
     use_fake_cursor        = false;
 #endif
+    use_fake_player_cursor = false;
 
     stash_tracking         = STM_ALL;
 
@@ -2756,6 +2757,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             level_map_cursor_step = 50;
     }
     else BOOL_OPTION(use_fake_cursor);
+    else BOOL_OPTION(use_fake_player_cursor);
     else BOOL_OPTION(macro_meta_entry);
     else if (key == "stop_travel" || key == "travel_stop_message")
     {

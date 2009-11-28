@@ -150,7 +150,6 @@ static int crawl_yesno(lua_State *ls)
     const bool noprompt =
         lua_isnone(ls, 6) ? false : lua_toboolean(ls, 6);
 
-    cursor_control con(true);
     lua_pushboolean(ls, yesno(prompt, safe, safeanswer, clear_after,
                               interrupt_delays, noprompt));
     return (1);
@@ -168,7 +167,6 @@ static int crawl_yesnoquit(lua_State *ls)
 
     // Skipping the other params until somebody needs them.
 
-    cursor_control con(true);
     lua_pushnumber(ls, yesnoquit(prompt, safe, safeanswer, allow_all,
                                  clear_after));
     return (1);
