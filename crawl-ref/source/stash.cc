@@ -537,7 +537,23 @@ void StashMenu::draw_title()
         }
         cprintf(")");
         if (can_travel)
-            cprintf("  [ENTER: travel]");
+        {
+            if (action_cycle == Menu::CYCLE_TOGGLE)
+            {
+                cprintf("  [a-z: %s  ?/!: %s]",
+                        menu_action == ACT_EXAMINE ? "examine" : "shopping",
+                        menu_action == ACT_EXAMINE ? "shopping" : "examine");
+
+                // XXX: This won't fit in the title, so it goes into the
+                // footer/-more-.  Not ideal, but I don't know where else
+                // to put it.
+                std::string str = "<w>[ENTER: travel]</w>";
+                set_more(formatted_string::parse_string(str));
+                flags |= MF_ALWAYS_SHOW_MORE;
+            }
+            else
+                cprintf("  [ENTER: travel]");
+        }
     }
 }
 
@@ -569,11 +585,12 @@ static MenuEntry *stash_menu_fixup(MenuEntry *me)
     return (me);
 }
 
-bool Stash::show_menu(const std::string &prefix, bool can_travel) const
+bool Stash::show_menu(const level_pos &prefix, bool can_travel) const
 {
+    const std::string prefix_str = short_place_name(prefix.id);
     StashMenu menu;
 
-    MenuEntry *mtitle = new MenuEntry("Stash (" + prefix, MEL_TITLE);
+    MenuEntry *mtitle = new MenuEntry("Stash (" + prefix_str, MEL_TITLE);
     menu.can_travel   = can_travel;
     mtitle->quantity  = items.size();
     menu.set_title(mtitle);
@@ -940,17 +957,36 @@ public:
     }
 };
 
-bool ShopInfo::show_menu(const std::string &place,
+void ShopInfo::fill_out_menu(StashMenu &menu, const level_pos &place) const
+{
+    menu.clear();
+
+    menu_letter hotkey;
+    for (int i = 0, count = items.size(); i < count; ++i)
+    {
+        ShopItemEntry *me = new ShopItemEntry(items[i],
+                                              shop_item_name(items[i]),
+                                              hotkey++);
+        if (shopping_list.is_on_list(items[i].item, &place))
+            me->colour = LIGHTCYAN;
+        menu.add_entry(me);
+    }
+}
+
+bool ShopInfo::show_menu(const level_pos &place,
                          bool can_travel) const
 {
+    const std::string place_str = short_place_name(place.id);
+
     StashMenu menu;
 
-    MenuEntry *mtitle = new MenuEntry(name + " (" + place, MEL_TITLE);
+    MenuEntry *mtitle = new MenuEntry(name + " (" + place_str, MEL_TITLE);
     menu.can_travel   = can_travel;
+    menu.action_cycle = Menu::CYCLE_TOGGLE;
+    menu.menu_action  = Menu::ACT_EXAMINE;
     mtitle->quantity  = items.size();
     menu.set_title(mtitle);
 
-    menu_letter hotkey;
     if (items.empty())
     {
         MenuEntry *me = new MenuEntry(
@@ -962,15 +998,7 @@ bool ShopInfo::show_menu(const std::string &place,
         menu.add_entry(me);
     }
     else
-    {
-        for (int i = 0, count = items.size(); i < count; ++i)
-        {
-            ShopItemEntry *me = new ShopItemEntry(items[i],
-                                                  shop_item_name(items[i]),
-                                                  hotkey++);
-            menu.add_entry(me);
-        }
-    }
+        fill_out_menu(menu, place);
 
     std::vector<MenuEntry*> sel;
     while (true)
@@ -983,7 +1011,21 @@ bool ShopInfo::show_menu(const std::string &place,
             break;
 
         const shop_item *item = static_cast<const shop_item *>( sel[0]->data );
-        describe_shop_item(*item);
+        if (menu.menu_action == Menu::ACT_EXAMINE)
+            describe_shop_item(*item);
+        else
+        {
+            if (shopping_list.is_on_list(item->item, &place))
+                shopping_list.del_thing(item->item, &place);
+            else
+                shopping_list.add_thing(item->item, item->price, &place);
+
+            // If the shop has identical items (like stacks of food in a
+            // food shop) then adding/removing one to the shopping list
+            // will have the same effect on the others, so the other
+            // identical items will need to be re-coloured.
+            fill_out_menu(menu, place);
+        }
     }
     return (false);
 }
@@ -1919,12 +1961,12 @@ bool StashTracker::display_search_results(
             bool dotravel = false;
             if (res->shop)
             {
-                dotravel = res->shop->show_menu(short_place_name(res->pos.id),
+                dotravel = res->shop->show_menu(res->pos,
                                                 can_travel_to(res->pos.id));
             }
             else if (res->stash)
             {
-                dotravel = res->stash->show_menu(short_place_name(res->pos.id),
+                dotravel = res->stash->show_menu(res->pos,
                                                  can_travel_to(res->pos.id));
             }
 
