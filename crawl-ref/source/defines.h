@@ -227,35 +227,31 @@ enum COLORS
 // try to get a brighter version using recommisioned attribute flags.
 #define COLFLAG_CURSES_BRIGHTEN          0x0080
 
-//#ifdef USE_COLOUR_OPTS
+#define COLFLAG_FRIENDLY_MONSTER         0x0100
+#define COLFLAG_NEUTRAL_MONSTER          0x0200
+#define COLFLAG_WILLSTAB                 0x0400
+#define COLFLAG_MAYSTAB                  0x0800
+#define COLFLAG_ITEM_HEAP                0x1000
+#define COLFLAG_FEATURE_ITEM             0x2000
+#define COLFLAG_TRAP_ITEM                0x4000
+#define COLFLAG_REVERSE                  0x8000
+#define COLFLAG_MASK                     0xFF00
 
-    #define COLFLAG_FRIENDLY_MONSTER         0x0100
-    #define COLFLAG_NEUTRAL_MONSTER          0x0200
-    #define COLFLAG_WILLSTAB                 0x0400
-    #define COLFLAG_MAYSTAB                  0x0800
-    #define COLFLAG_ITEM_HEAP                0x1000
-    #define COLFLAG_FEATURE_ITEM             0x2000
-    #define COLFLAG_TRAP_ITEM                0x4000
-    #define COLFLAG_REVERSE                  0x8000
-    #define COLFLAG_MASK                     0xFF00
+enum CHAR_ATTRIBUTES
+{
+    CHATTR_NORMAL,          /* 0 */
+    CHATTR_STANDOUT,
+    CHATTR_BOLD,
+    CHATTR_BLINK,
+    CHATTR_UNDERLINE,
+    CHATTR_REVERSE,         /* 5 */
+    CHATTR_DIM,
+    CHATTR_HILITE,
 
-    enum CHAR_ATTRIBUTES
-    {
-        CHATTR_NORMAL,          /* 0 */
-        CHATTR_STANDOUT,
-        CHATTR_BOLD,
-        CHATTR_BLINK,
-        CHATTR_UNDERLINE,
-        CHATTR_REVERSE,         /* 5 */
-        CHATTR_DIM,
-        CHATTR_HILITE,
+    CHATTR_ATTRMASK = 0xF,  /* 15 (well, obviously) */
 
-        CHATTR_ATTRMASK = 0xF,  /* 15 (well, obviously) */
-
-        CHATTR_COLMASK = 0xF00 // Mask with this to get extra colour info.
-    };
-
-//#endif
+    CHATTR_COLMASK = 0xF00 // Mask with this to get extra colour info.
+};
 
 #define PDESCS(colour) (colour)
 #define PDESCQ(qualifier, colour) (((qualifier) * PDC_NCOLOURS) + (colour))
