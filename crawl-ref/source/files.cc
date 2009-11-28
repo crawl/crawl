@@ -1082,11 +1082,21 @@ static void _grab_followers()
         if (fmenv == NULL)
             continue;
 
-        if (fmenv->type == MONS_DUVESSA && fmenv->alive())
+        if ((fmenv->type == MONS_DUVESSA 
+            || (fmenv->props.exists("original_name")
+                && fmenv->props["original_name"].get_string() == "Duvessa"))
+               && fmenv->alive())
+        {
             duvessa = fmenv;
+        }
 
-        if (fmenv->type == MONS_DOWAN && fmenv->alive())
+        if ((fmenv->type == MONS_DOWAN
+            || (fmenv->props.exists("original_name")
+                && fmenv->props["original_name"].get_string() == "Dowan"))
+               && fmenv->alive())
+        {
             dowan = fmenv;
+        }
 
         if (fmenv->wont_attack() && !mons_can_use_stairs(fmenv))
             non_stair_using_allies++;
