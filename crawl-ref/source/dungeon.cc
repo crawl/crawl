@@ -858,12 +858,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
     set_level_flags(place.map.level_flags.flags_set, true);
     unset_level_flags(place.map.level_flags.flags_unset, true);
 
-    if (place.map.random_mons.size() > 0)
-    {
-        ASSERT(you.level_type == LEVEL_PORTAL_VAULT);
-        set_vault_mon_list(place.map.random_mons);
-    }
-
     if (place.map.floor_colour != BLACK)
         env.floor_colour = place.map.floor_colour;
 
@@ -4467,6 +4461,14 @@ static bool _build_vaults(int level_number, const map_def *vault,
 
     if (gluggy == MAP_NONE)
         return (false);
+
+    // XXX: Moved this out of dgn_register_place so that vault-set monsters can
+    // be accessed with the '9' and '8' glyphs. (due)
+    if (place.map.random_mons.size() > 0)
+    {
+        ASSERT(you.level_type == LEVEL_PORTAL_VAULT);
+        set_vault_mon_list(place.map.random_mons);
+    }
 
     place.apply_grid();
     dgn_register_place(place, true);
