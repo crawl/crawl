@@ -466,7 +466,8 @@ function box_glyph(findgly, boxgly)
   local glyphs = {gly_points(findgly)}
   for i = 1, #glyphs, 2 do
     -- This is ugly.  gly_points should return 1-indexed coordinates.
-    make_box(glyphs[i] + 1, glyphs[i+1] + 1, boxgly)
+    -- No longer ugly, as mapgrd is 0-indexed, like gly points.
+    make_box(glyphs[i], glyphs[i+1], boxgly)
   end
 end
 }}
