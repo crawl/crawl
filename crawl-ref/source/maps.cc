@@ -150,7 +150,12 @@ static bool resolve_map_lua(map_def &map)
 static bool resolve_map(map_def &map)
 {
     if (!resolve_map_lua(map))
-        return false;
+        return (false);
+
+    // Don't bother flipping or rotating 1x1 subvaults.
+    // This just cuts down on level generation message spam.
+    if (map.map.width() == map.map.height() && map.map.width() == 1)
+        return (true);
 
     // Mirroring is possible for any map that does not explicitly forbid it.
     // Note that mirroring also flips the orientation.
@@ -164,7 +169,7 @@ static bool resolve_map(map_def &map)
     if (coinflip())
         map.rotate(coinflip());
 
-    return true;
+    return (true);
 }
 
 bool resolve_subvault(map_def &map)
