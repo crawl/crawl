@@ -564,10 +564,10 @@ TAGS: vault8_room
     for i in iter.subvault_iterator(_G) do
       if i.x == 0 or i.x == w-1 or i.y == 0 or i.y == h-1 then
         -- border
-        mapgrd[i.x+1][i.y+1] = '.'
+        mapgrd[i.x][i.y] = '.'
       else
         -- inside
-        mapgrd[i.x+1][i.y+1] = '*'
+        mapgrd[i.x][i.y] = '*'
       end
     end
 }}
@@ -589,9 +589,9 @@ TAGS: vault8_room
     local i
     for i in iter.subvault_iterator(_G) do
       if (i.x + i.y) % 2 == 0 then
-        mapgrd[i.x+1][i.y+1] = '$'
+        mapgrd[i.x][i.y] = '$'
       else
-        mapgrd[i.x+1][i.y+1] = '.'
+        mapgrd[i.x][i.y] = '.'
       end
     end
 }}

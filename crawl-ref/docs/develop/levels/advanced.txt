@@ -811,11 +811,11 @@ Additionally, the dgn module provides a global "mapgrd" variable that
 can access the current map glyphs.  The top left symbol in the map
 can be assigned like this:
 
- mapgrd[1][1] = 'x'
+ mapgrd[0][0] = 'x'
 
 The bottom right symbol can be assigned like this:
 
- mapgrd[width()][height()] = "."
+ mapgrd[width()-1][height()-1] = "."
 
 
 Lua API - global game state

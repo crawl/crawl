@@ -267,7 +267,7 @@ TAGS:    layout allow_dup
                 replace_first({
                     required = true,
                     x = gxm/2 + i - 2,
-                    y = 1,
+                    y = 0,
                     xdir = 0,
                     ydir = 1,
                     find = ".",
@@ -275,7 +275,7 @@ TAGS:    layout allow_dup
             elseif loc == 3 then
                 replace_first({
                     required = true,
-                    x = gxm,
+                    x = gxm - 1,
                     y = gym/2 + i - 2,
                     xdir = -1,
                     ydir = 0,
@@ -285,7 +285,7 @@ TAGS:    layout allow_dup
                 replace_first({
                     required = true,
                     x = gxm/2 + i - 2,
-                    y = gym,
+                    y = gym - 1,
                     xdir = 0,
                     ydir = -1,
                     find = ".",
@@ -293,7 +293,7 @@ TAGS:    layout allow_dup
             elseif loc == 5 then
                 replace_first({
                     required = true,
-                    x = 1,
+                    x = 0,
                     y = gym/2 + i - 2,
                     xdir = 1,
                     ydir = 0,

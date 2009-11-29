@@ -109,20 +109,15 @@ static bool _coords(lua_State *ls, map_lines &lines,
                     int &x1, int &y1, int &x2, int &y2, int border = 0)
 {
     const int idx = -1;
-    x1 = _table_int(ls, idx, "x1", 1);
-    y1 = _table_int(ls, idx, "y1", 1);
-    x2 = _table_int(ls, idx, "x2", lines.width());
-    y2 = _table_int(ls, idx, "y2", lines.height());
+    x1 = _table_int(ls, idx, "x1", 0);
+    y1 = _table_int(ls, idx, "y1", 0);
+    x2 = _table_int(ls, idx, "x2", lines.width() - 1);
+    y2 = _table_int(ls, idx, "y2", lines.height() - 1);
 
     if (x2 < x1)
         std::swap(x1, x2);
     if (y2 < y1)
         std::swap(y1, y2);
-
-    x1--;
-    y1--;
-    x2--;
-    y2--;
 
     return (x1 + border <= x2 - border && y1 + border <= y2 - border);
 }
@@ -186,7 +181,7 @@ LUAFN(dgn_count_neighbors)
     TABLE_INT(ls, x, -1);
     TABLE_INT(ls, y, -1);
 
-    if (!_valid_coord(ls, lines, --x, --y))
+    if (!_valid_coord(ls, lines, x, y))
         return (0);
 
     coord_def tl(x-1, y-1);
@@ -285,9 +280,9 @@ LUAFN(dgn_join_the_dots)
     TABLE_STR(ls, passable, traversable_glyphs);
     TABLE_CHAR(ls, fill, '.');
 
-    if (!_valid_coord(ls, lines, --x1, --y1))
+    if (!_valid_coord(ls, lines, x1, y1))
         return (0);
-    if (!_valid_coord(ls, lines, --x2, --y2))
+    if (!_valid_coord(ls, lines, x2, y2))
         return (0);
 
     coord_def from(x1, y1);
@@ -345,7 +340,7 @@ LUAFN(dgn_make_circle)
     TABLE_INT(ls, radius, 1);
     TABLE_CHAR(ls, fill, 'x');
 
-    if (!_valid_coord(ls, lines, --x, --y))
+    if (!_valid_coord(ls, lines, x, y))
         return (0);
 
     for (int ry = -radius; ry <= radius; ++ry)
@@ -365,7 +360,7 @@ LUAFN(dgn_make_diamond)
     TABLE_INT(ls, radius, 1);
     TABLE_CHAR(ls, fill, 'x');
 
-    if (!_valid_coord(ls, lines, --x, --y))
+    if (!_valid_coord(ls, lines, x, y))
         return (0);
 
     for (int ry = -radius; ry <= radius; ++ry)
@@ -385,7 +380,7 @@ LUAFN(dgn_make_rounded_square)
     TABLE_INT(ls, radius, 1);
     TABLE_CHAR(ls, fill, 'x');
 
-    if (!_valid_coord(ls, lines, --x, --y))
+    if (!_valid_coord(ls, lines, x, y))
         return (0);
 
     for (int ry = -radius; ry <= radius; ++ry)
@@ -405,7 +400,7 @@ LUAFN(dgn_make_square)
     TABLE_INT(ls, radius, 1);
     TABLE_CHAR(ls, fill, 'x');
 
-    if (!_valid_coord(ls, lines, --x, --y))
+    if (!_valid_coord(ls, lines, x, y))
         return (0);
 
     for (int ry = -radius; ry <= radius; ++ry)
@@ -492,7 +487,7 @@ LUAFN(dgn_replace_first)
     TABLE_CHAR(ls, replace, '\0');
     TABLE_BOOL(ls, required, false);
 
-    if (!_valid_coord(ls, lines, --x, --y))
+    if (!_valid_coord(ls, lines, x, y))
         return (0);
 
     if (xdir < -1 || xdir > 1)
