@@ -4556,6 +4556,8 @@ void tile_floor_halo(dungeon_feature_type target, int tile)
 // Called from item() in view.cc
 void tile_place_item(int x, int y, int idx)
 {
+    ASSERT(idx != NON_ITEM);
+
     int t = tileidx_item(mitm[idx]);
     if (mitm[idx].link != NON_ITEM)
         t |= TILE_FLAG_S_UNDER;
@@ -4569,6 +4571,8 @@ void tile_place_item(int x, int y, int idx)
 // Called from item() in view.cc
 void tile_place_item_marker(int x, int y, int idx)
 {
+    ASSERT(idx != NON_ITEM);
+
     env.tile_fg[x][y] |= TILE_FLAG_S_UNDER;
 
     if (item_needs_autopickup(mitm[idx]))
