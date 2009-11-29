@@ -580,7 +580,7 @@ void unixcurses_startup( void )
     start_color();
     setup_colour_pairs();
 
-    scrollok(stdscr, TRUE);
+    scrollok(stdscr, FALSE);
 
     crawl_view.init_geometry();
     setup_message_window();
@@ -779,11 +779,6 @@ void put_colour_ch(int colour, unsigned ch)
 
 void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
 {
-    const bool will_scroll = (x2 == get_number_of_cols());
-
-    if (will_scroll)
-        scrollok(stdscr, FALSE);
-
     for (int y = y1; y <= y2; ++y)
     {
         cgotoxy(x1, y);
@@ -794,9 +789,6 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
         }
     }
     update_screen();
-
-    if (will_scroll)
-        scrollok(stdscr, TRUE);
 }
 
 // These next four are front functions so that we can reduce
