@@ -8,7 +8,7 @@
 #define TRAPS_H
 
 #include "enum.h"
-#include "travel.h"
+#include "externs.h"
 
 struct bolt;
 class  monsters;

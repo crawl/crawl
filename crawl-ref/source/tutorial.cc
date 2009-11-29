@@ -56,6 +56,7 @@
 #ifdef USE_TILE
  #include "tiles.h"
 #endif
+#include "travel.h"
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"

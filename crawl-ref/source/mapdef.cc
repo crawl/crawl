@@ -21,6 +21,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "exclude.h"
 #include "files.h"
 #include "initfile.h"
 #include "invent.h"

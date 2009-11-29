@@ -8,7 +8,6 @@
 #define MON_TRANSIT_H
 
 #include "monster.h"
-#include "travel.h"
 #include <map>
 #include <list>
 

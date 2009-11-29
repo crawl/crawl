@@ -12,6 +12,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "flood_find.h"
 #include "l_defs.h"
 #include "mapmark.h"
 #include "maps.h"

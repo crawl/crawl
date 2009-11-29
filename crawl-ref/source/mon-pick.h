@@ -8,7 +8,7 @@
 #ifndef MONPICK_H
 #define MONPICK_H
 
-#include "travel.h"
+#include "externs.h"
 
 int mons_rarity(int mcls, const level_id &place = level_id::current());
 

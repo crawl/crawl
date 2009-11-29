@@ -15,7 +15,6 @@
 #include <vector>
 
 #include "externs.h"
-#include "travel.h"
 #include "player.h"
 
 class input_history;

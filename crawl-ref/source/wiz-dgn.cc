@@ -29,6 +29,7 @@
 #include "religion.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "travel.h"
 #include "traps.h"
 #include "view.h"
 #include "wiz-mon.h"

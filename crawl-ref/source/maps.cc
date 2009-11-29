@@ -22,6 +22,7 @@
 #include "env.h"
 #include "enum.h"
 #include "files.h"
+#include "flood_find.h"
 #include "message.h"
 #include "mapdef.h"
 #include "mon-util.h"

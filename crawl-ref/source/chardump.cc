@@ -52,6 +52,7 @@
 #include "stuff.h"
 #include "env.h"
 #include "transfor.h"
+#include "travel.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"

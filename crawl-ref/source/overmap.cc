@@ -35,6 +35,7 @@
 #include "stuff.h"
 #include "env.h"
 #include "terrain.h"
+#include "travel.h"
 #include "view.h"
 
 typedef std::map<branch_type, level_id> stair_map_type;

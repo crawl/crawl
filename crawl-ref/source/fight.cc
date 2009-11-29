@@ -64,6 +64,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "traps.h"
+#include "travel.h"
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"

@@ -62,6 +62,7 @@
 #include "stash.h"
 #include "state.h"
 #include "terrain.h"
+#include "travel.h"
 #include "tutorial.h"
 #include "viewgeom.h"
 #include "xom.h"
