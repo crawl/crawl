@@ -3600,7 +3600,7 @@ static int _place_uniques(int level_number, char level_type)
 
         bool map_placed = false;
 
-        for (int i = 0; i <= 3; i++)
+        for (int i = 0; i < 4; i++)
         {
             if (map_placed)
                 continue;
