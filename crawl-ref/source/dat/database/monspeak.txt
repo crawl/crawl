@@ -972,7 +972,7 @@ WARN:You feel cold.
 
 @The_monster@ wails.
 
-@The_monster@ @wails@, "What have you got that I didn't have?"
+@The_monster@ @wails@, "What do you have that I didn't have?"
 
 @The_monster@ says very slowly, "There's no hope."
 

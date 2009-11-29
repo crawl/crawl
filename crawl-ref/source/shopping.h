@@ -60,6 +60,9 @@ public:
 
     int size() const;
 
+    static bool items_are_same(const item_def& item_a,
+                               const item_def& item_b);
+
 private:
     CrawlVector* list;
 

@@ -138,6 +138,7 @@ static void _place_extra_vaults();
 static void _place_minivaults(const std::string &tag = "",
                               int fewest = -1, int most = -1,
                               bool force = false);
+static int _place_uniques(int level_number, char level_type);
 static void _place_traps( int level_number );
 static void _place_fog_machines( int level_number );
 static void _prepare_swamp();
@@ -248,6 +249,9 @@ static bool _fixup_interlevel_connectivity();
 map_mask dgn_Map_Mask;
 std::vector<vault_placement> Level_Vaults;
 std::vector<vault_placement> Temp_Vaults;
+FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
+FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
+
 std::set<std::string> Level_Unique_Maps;
 std::set<std::string> Level_Unique_Tags;
 std::string dgn_Build_Method;
@@ -954,6 +958,9 @@ void dgn_reset_level()
     dgn_level_vetoed = false;
     Level_Unique_Maps.clear();
     Level_Unique_Tags.clear();
+
+    you.unique_creatures = temp_unique_creatures;
+    you.unique_items = temp_unique_items;
 
     _portal_vault_map_name.clear();
     _you_vault_list.clear();
@@ -1822,11 +1829,20 @@ static void _build_dungeon_level(int level_number, int level_type)
             return;
     }
 
+    // Save a copy of unique creatures in case we get vetoed.
+    temp_unique_creatures = you.unique_creatures;
+    // And unrands
+    temp_unique_items = you.unique_items;
+
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
     _place_minivaults();
     _place_branch_entrances( level_number, level_type );
     _place_extra_vaults();
+
+    // XXX: Moved this here from builder_monsters so that connectivity can be
+    //      ensured
+    _place_uniques(level_number, level_type);
 
     // Place shops, if appropriate. This must be protected by the connectivity
     // check.
@@ -3749,8 +3765,6 @@ static void _builder_monsters(int level_number, char level_type, int mon_wanted)
 
         place_monster(mg);
     }
-
-    _place_uniques(level_number, level_type);
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters(level_number, level_type);
