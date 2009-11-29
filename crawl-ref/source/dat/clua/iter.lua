@@ -21,6 +21,31 @@
 iter = {}
 
 ------------------------------------------------------------------------------
+-- generic filters for use with iterators
+--   these always need to be used with 'rvi', and any filter that acts on them
+--   is assumed to as well (but only return a point)
+------------------------------------------------------------------------------
+
+function iter.monster_filter (filter)
+  local function filter_fn (point)
+    if filter ~= nil then
+      if filter(point) == nil then
+        return nil
+      else
+        point = filter(point)
+      end
+    end
+
+    if not dgn.in_bounds(point.x, point.y) then
+      return nil
+    end
+
+    return dgn.mons_at(point.x, point.y)
+  end
+  return filter_fn
+end
+
+------------------------------------------------------------------------------
 -- rectangle_iterator
 ------------------------------------------------------------------------------
 iter.rectangle_iterator = {}
@@ -107,53 +132,74 @@ function iter.rectangle_iterator:iter ()
   return function() return self:next() end, nil, nil
 end
 
-function iter.rect_iterator(top_corner, bottom_corner, filter)
-  return iter.rectangle_iterator:new(top_corner, bottom_corner, filter)
+function iter.rect_iterator(top_corner, bottom_corner, filter, rvi)
+  return iter.rectangle_iterator:new(top_corner, bottom_corner, filter, rvi)
+end
+
+function iter.mons_rect_iterator (top_corner, bottom_corner, filter)
+  return iter.rect_iterator(top_corner, bottom_corner, iter.monster_filter(filter), true)
 end
 
 -------------------------------------------------------------------------------
 -- los_iterator
 -------------------------------------------------------------------------------
 
-function iter.los_iterator (ic, filter, center)
+function iter.los_iterator (ic, filter, center, rvi)
   local y_x, y_y = you.pos()
 
   if center ~= nil then
     y_x, y_y = center:xy()
   end
 
-  local include_center = ic or false
+  local include_center = ic
   local top_corner = dgn.point(y_x - 8, y_y - 8)
   local bottom_corner = dgn.point(y_x + 8, y_y + 8)
 
   local function check_los (point)
     local _x, _y = point:xy()
+    local npoint = true
 
     if filter ~= nil then
+      if rvi then
+        npoint = filter(point)
+      end
+
       if not filter(point) then
-        return false
+        return nil
       end
     end
 
     if y_x == _x and y_y == _y then
-      return include_center
+      if rvi and include_center then
+        return npoint
+      else
+        return include_center
+      end
     end
 
     if not you.see_cell(_x, _y) then
-      return false
+      return nil
     end
 
-    return true
+    if rvi then
+      return npoint
+    else
+      return true
+    end
   end
 
-  return iter.rect_iterator(top_corner, bottom_corner, check_los)
+  return iter.rect_iterator(top_corner, bottom_corner, check_los, rvi)
+end
+
+function iter.mons_los_iterator (ic, filter, center)
+  return iter.los_iterator(ic, iter.monster_filter(filter), center, true)
 end
 
 -------------------------------------------------------------------------------
 -- adjacent_iterator
 -------------------------------------------------------------------------------
 
-function iter.adjacent_iterator (ic, filter, center)
+function iter.adjacent_iterator (ic, filter, center, rvi)
   local y_x, y_y = you.pos()
 
   if center ~= nil then
@@ -162,32 +208,49 @@ function iter.adjacent_iterator (ic, filter, center)
 
   local top_corner = dgn.point(y_x - 1, y_y - 1)
   local bottom_corner = dgn.point(y_x + 1, y_y + 1)
-  local include_center = ic or false
+  local include_center = ic
 
   local function check_adj (point)
     local _x, _y = point:xy()
+    local npoint = nil
 
     if filter ~= nil then
+      if rvi then
+        npoint = filter(point)
+      end
+
       if not filter(point) then
-        return false
+        return nil
       end
     end
 
     if y_x == _x and y_y == _y then
-      return include_center
+      if rvi and include_center then
+        return npoint
+      else
+        return include_center
+      end
     end
 
-    return true
+    if rvi then
+      return npoint
+    else
+      return true
+    end
   end
 
-  return iter.rect_iterator(top_corner, bottom_corner, check_adj)
+  return iter.rect_iterator(top_corner, bottom_corner, check_adj, rvi)
+end
+
+function iter.mons_adjacent_iterator (ic, filter, center)
+  return iter.adjacent_iterator(ic, iter.monster_filter(filter), center, true)
 end
 
 -------------------------------------------------------------------------------
 -- circle_iterator
 -------------------------------------------------------------------------------
 
-function iter.circle_iterator (radius, ic, filter, center)
+function iter.circle_iterator (radius, ic, filter, center, rvi)
   if radius == nil then
     error("circle_iterator needs a radius")
   end
@@ -198,32 +261,49 @@ function iter.circle_iterator (radius, ic, filter, center)
     y_x, y_y = center:xy()
   end
 
-  local include_center = ic or false
+  local include_center = ic
   local top_corner = dgn.point(y_x - radius, y_y - radius)
   local bottom_corner = dgn.point(y_x + radius, y_y + radius)
 
   local function check_dist (point)
     local _x, _y = point:xy()
     local dist = dgn.distance(y_x, y_y, _x, _y)
+    local npoint = nil
 
     if filter ~= nil then
+      if rvi then
+        npoint = filter(point)
+      end
+
       if not filter(point) then
-        return false
+        return nil
       end
     end
 
     if y_x == _x and y_y == _y then
-      return include_center
+      if rvi and include_center then
+        return npoint
+      else
+        return include_center
+      end
     end
 
     if dist >= (radius * radius) + 1 then
-      return false
+      return nil
     end
 
-    return true
+    if rvi then
+      return npoint
+    else
+      return true
+    end
   end
 
-  return iter.rect_iterator(top_corner, bottom_corner, check_dist)
+  return iter.rect_iterator(top_corner, bottom_corner, check_dist, rvi)
+end
+
+function iter.mons_circle_iterator (radius, ic, filter, center)
+  return iter.circle_iterator(radius, ic, iter.monster_filter(filter), center, true)
 end
 
 -------------------------------------------------------------------------------
