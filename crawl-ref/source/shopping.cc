@@ -281,6 +281,20 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
     return (purchasable);
 }
 
+static int _count_identical(const std::vector<int>& stock,
+                            const item_def& item)
+{
+    int count = 0;
+    for (unsigned int i = 0; i < stock.size(); i++)
+    {
+        const item_def &other = mitm[stock[i]];
+
+        if (ShoppingList::items_are_same(item, other))
+            count++;
+    }
+    return (count);
+}
+
 //  Rather than prompting for each individual item, shopping now works more
 //  like multi-pickup, in that pressing a letter only "selects" an item
 //  (changing the '-' next to its name to a '+'). Affordability is shown
@@ -338,20 +352,20 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
 
         stock = _shop_get_stock(shopidx);
 
-        // Deselect all, recompute what's in the shopping list.
+        in_list.clear();
+        in_list.resize(stock.size(), false);
+        for (unsigned int i = 0; i < stock.size(); i++)
+        {
+            const item_def& item = mitm[stock[i]];
+            in_list[i] = shopping_list.is_on_list(item);
+        }
+
+        // If items have been bought...
         if (stock.size() != selected.size())
         {
             total_cost = 0;
-            selected.resize(stock.size());
-            for (unsigned int i = 0; i < selected.size(); ++i)
-                selected[i] = false;
-
-            in_list.resize(stock.size());
-            for (unsigned int i = 0; i < stock.size(); i++)
-            {
-                const item_def& item = mitm[stock[i]];
-                in_list[i] = shopping_list.is_on_list(item);
-            }
+            selected.clear();
+            selected.resize(stock.size(), false);
         }
 
             num_in_list  = 0;
@@ -521,9 +535,16 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                         {
                             item_def& item = mitm[stock[i]];
 
-                            // Remove from shopping list.
-                            if (in_list[i])
+                            // Remove from shopping list if it's unique
+                            // (i.e., if the shop has multiple scrolls of
+                            // identify, don't remove the other scrolls
+                            // from the shopping list if there's any
+                            // left).
+                            if (in_list[i]
+                                && _count_identical(stock, item) == 1)
+                            {
                                 shopping_list.del_thing(item);
+                            }
 
                             const int gp_value = _shop_get_item_value(item,
                                                         shop.greed, id_stock);
@@ -586,9 +607,15 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                 // Move selected to shopping list.
                 for (unsigned int i = 0; i < stock.size(); i++)
                 {
-                    if (selected[i])
+                    const item_def &item = mitm[stock[i]];
+                    if (selected[i] && !shopping_list.is_on_list(item))
                     {
-                        in_list[i]  = true;
+                        // Ignore Bargaining.
+                        const int cost = _shop_get_item_value(item, shop.greed,
+                                                              id_stock, false);
+
+                        shopping_list.add_thing(item, cost);
+                        in_list[i]  = false;
                         selected[i] = false;
                     }
                 }
@@ -599,14 +626,17 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                 // Move shopping list to selected.
                 for (unsigned int i = 0; i < stock.size(); i++)
                 {
+                    const item_def &item = mitm[stock[i]];
                     if (in_list[i])
                     {
                         in_list[i]  = false;
                         selected[i] = true;
 
-                        const item_def& item = mitm[stock[i]];
                         total_cost += _shop_get_item_value(item, shop.greed,
                                                            id_stock);
+
+                        if (shopping_list.is_on_list(item))
+                            shopping_list.del_thing(item);
                     }
                 }
             }
@@ -658,6 +688,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                         if ( _shop_yesno("Remove from shopping list? (y/N)",
                                          'n') )
                         {
+                            shopping_list.del_thing(item);
                             in_list[key]  = false;
                             selected[key] = false;
                         }
@@ -668,6 +699,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                         if ( _shop_yesno("Remove item from shopping list and "
                                          "buy it? (Y/n)",  'y') )
                         {
+                            shopping_list.del_thing(item);
                             in_list[key] = false;
                             // Will be toggled to true later
                             selected[key] = false;
@@ -685,27 +717,6 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
 
                 ASSERT(total_cost >= 0);
             }
-        }
-    }
-
-    // Actually change shopping list.
-    for (unsigned int i = 0; i < stock.size(); i++)
-    {
-        const item_def& item = mitm[stock[i]];
-        bool on_list = shopping_list.is_on_list(item);
-
-        if (on_list != in_list[i])
-        {
-            if (in_list[i])
-            {
-                // Ignore Bargaining.
-                const int cost = _shop_get_item_value(item, shop.greed,
-                                                      id_stock, false);
-
-                shopping_list.add_thing(item, cost);
-            }
-            else
-                shopping_list.del_thing(item);
         }
     }
 
@@ -2391,6 +2402,12 @@ int ShoppingList::size() const
     }
 
     return ( list->size() );
+}
+
+bool ShoppingList::items_are_same(const item_def& item_a,
+                                  const item_def& item_b)
+{
+    return (item_name_simple(item_a) == item_name_simple(item_b));
 }
 
 void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
