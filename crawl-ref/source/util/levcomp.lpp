@@ -261,6 +261,7 @@ KITEM:              { CBEGIN(ARGUMENT); return KITEM; }
 KMONS:              { CBEGIN(ARGUMENT); return KMONS; }
 KMASK:              { CBEGIN(ARGUMENT); return KMASK; }
 KPROP:              { CBEGIN(ARGUMENT); return KPROP; }
+SUBVAULT:           { CBEGIN(ARGUMENT); return SUBVAULT; }
 
 ,                   return COMMA;
 

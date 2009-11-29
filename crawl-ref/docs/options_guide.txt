@@ -114,7 +114,8 @@ The contents of this text are:
 6-a     All OS.
                 mouse_input, wiz_mode, char_set, classic_item_colours,
                 colour, char_set, cset_ascii, cset_ibm, cset_dec,
-                cset_unicode, feature, mon_glyph, pizza
+                cset_unicode, feature, mon_glyph, pizza,
+                use_fake_player_cursor
 
 6-b     DOS and Windows.
                 dos_use_background_intensity
@@ -2094,6 +2095,11 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
 pizza = <topping name>
         The player's choice of pizza topping.
 
+use_fake_player_cursor = false
+        Makes the main view highlight the player without using the
+        terminal cursor. This means it won't flicker when the cursor
+        is turned off to move elsewhere for drawing, and allows
+        turning the cursor off by default.
 
 6-b     DOS and Windows.
 ------------------------

@@ -386,6 +386,7 @@ void dgn_reset_level();
 bool dgn_square_is_passable(const coord_def &c);
 
 void dgn_register_place(const vault_placement &place, bool register_vault);
+void dgn_register_vault(const map_def &map);
 
 struct spec_room
 {

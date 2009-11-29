@@ -1924,10 +1924,9 @@ std::string get_item_description( const item_def &item, bool verbose,
         }
         else
         {
-            description <<
-                "$Damage rating: 7    Accuracy rating: +6    "
-                "Attack delay: 120%";
-
+            std::string stats = "";
+            append_weapon_stats(stats, item);
+            description << stats;
             description << "$$It falls into the 'Staves' category.";
         }
         break;

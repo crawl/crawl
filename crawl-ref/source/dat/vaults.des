@@ -7,6 +7,25 @@
 # moved to mini.des, float.des and large.des. Portal vaults live in portal.des.
 ###############################################################################
 
+{{
+  -- Vault:8 common loot substitutions
+  function vault8_loot(e)
+    e.subst("? = | * .:40 ^:3")
+    e.subst("| = | *:2")
+    e.subst("* = * |:2")
+  end
+
+  -- Vault:8 cross-vault rune subsitution
+  -- Turn 'O' into a rune (if it doesn't exist yet) or a good item
+  function vault8_rune(e)
+    if dgn.map_by_tag("vault8_rune") then
+      e.subvault("O : vault8_rune")
+    else
+      e.subvault("O : vault8_norune")
+    end
+  end
+}}
+
 ##############################################################################
 # Vaults entries
 ##############################################################################
@@ -342,57 +361,31 @@ ENDMAP
 ##############################################################################
 #
 # This map traditionally allows controlled teleports. Even with the now
-# random placement of the rune, this seems fine: two of the spots are
+# random placement of the rune, this seems fine: some of the spots are
 # awkward to reach via teleport, and there is now always a monster on the
 # rune.
 #
-NAME:    vaults_vault
-PLACE:   Vault:8
-ORIENT:  encompass
-TAGS:    no_rotate no_dump
-#
-# the rune's spot, occassionally put nasty on the rune
-NSUBST:  O = O / o
-KMONS:   O = 8 / 9
-KMONS:   o = 8 / 9
-KFEAT:   O = O
-: local brnd = crawl.random2(13)
-: if brnd == 12 then
-KFEAT:   o = any shop
-: else
-KITEM:   o = any good_item
-: end
+# Vaults:8 extensively uses subvaults.  To provide another Vault:8 quadrant
+# variation, create a map tagged vault8_quadrant that is 27x24.  It should
+# have three blank cells on one corner (see any existing quadrant for an
+# example), which will be used to orient that corner towards the middle of
+# the map.  Each quadrant must be capable of generating a rune, which
+# should be done by placing an 'O' glyph and calling vault8_rune(_G).
 
+
+###############################################################################
+# The main vault for Vault:8.
 #
-# NW
-SHUFFLE: AC/BD, EG/FH, IKN/MJL, '"
-SUBST:   A=., B=xx=, C=+, D=x, E=+, F=xx=, G=., H=x
-SUBST:   I=., M=xx=, J=x, K=+, N=+, L=xx=
-SUBST:   ':$, ":*, ^=^., a:x.
-#
-# SW
-SHUFFLE: !_
-SUBST:   ! = | * .:20
-SUBST:   _ = 8 9 .:20
-#
-# NE
-NSUBST:  U = 1:. / *:xxxx=
-NSUBST:  V = 1:. / *:xxxx=
-SUBST:   - = 8 9 .:20
-#
-# SE (double use of Y=Y. and Z=Z. for decreasing variance)
-SUBST:   ? = | * .:40 ^:3
-SUBST:   Y = Y ., Z = Z .
-SUBST:   Y = Y ., Z = Z .
-SUBST:   Y = 9:30 8:10 .:40
-SUBST:   Z = 9:10 8:30 .:40
-#
-# general loot
-SUBST:   | = | *:2
-SUBST:   * = * |:2
-#
+NAME:     vaults_vault
+PLACE:    Vault:8
+ORIENT:   encompass
+TAGS:     no_rotate no_dump
+SUBVAULT: A : vault8_quadrant
+SUBVAULT: B : vault8_quadrant
+SUBVAULT: C : vault8_quadrant
+SUBVAULT: D : vault8_quadrant
+SUBST:    ABCD = .
 MONS: vault guard
-#
 {{
   local detail = "is etched with murals depicting, in great and gruesome "..
 "detail, exactly what will be done to anyone caught stealing from the "..
@@ -406,68 +399,338 @@ MONS: vault guard
   dgn.set_feature_desc_long("wall of green crystal",
                             "This wall of green crystal " .. detail)
 }}
-#
-validate {{ return glyphs_connected('O', '{') }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxx..............................................................xxxx
 xxxx..............................................................xxxx
-xxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx
-xxxx..x.........................x....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx
-xxxx..x.xxxxxxxxxxx..xxxxxxxxJxIx....xxxxx.................xxxxx..xxxx
-xxxx..x.x'.'.'.'.'x..x........x.x....xxx...........-.........xxx..xxxx
-xxxx..x.x.'.'.'.'.x..x..^^^^..x.x....xxx...-.................xxx..xxxx
-xxxx..x.x'.'.'.'.'x..x..^||^..x.x....xx.........-.......-.....xx..xxxx
-xxxx..x.x.'.'.'.'.x..x..^O|^..x.x....xx.......................xx..xxxx
-xxxx..x.x'.'.'.'.'x..x..^||^..x.x....xx.-....xxxxxxxxxxx....-.xx..xxxx
-xxxx..x.x.'.'.'.'.x..x..^^^^..x.x....xx......x.........x......xx..xxxx
-xxxx..x.x'.'.'.'.'L..K........x.x....xx....xxU.........Uxx....xx..xxxx
-xxxx..x.N.'.'.'.'.xxxxxxxxxxxxx.x....xx..-.x....xxxxx....x....xx..xxxx
-xxxx..xMxxxxxxxxxxx99988......A.x....xx....x.-.Vx$$$xx...x.-..xx..xxxx
-xxxx..x...........G99xxxxxxxxDx.x....xx....x..xx$***$xx..x....xx..xxxx
-xxxx..x.xxxxxxxxxFx99x........x.x....xx.-..x..x$$*O*$$x-.x....xx..xxxx
-xxxx..x.x?????????x88x."""""".x.x....xx....x..xx$***$xx..x....xx..xxxx
-xxxx..x.x?????????x..x."""""".x.x....xx....x...Vx$$$xV...x..-.xx..xxxx
-xxxx..x.x?????????x..x."""""".x.x....xx..-.xxx-.xxxxx..Uxx....xx..xxxx
-xxxx..x.x?????????x..x."""""".x.x....xx......x.........x......xx..xxxx
-xxxx..x.x?????????x..x."""""".x.x....xx......xxxxxxxxxxx.-....xx..xxxx
-xxxx..x.x?????????x..x."""""".x.x....xxx...-.................xxx..xxxx
-xxxx..x.x?????????x..C........x.x....xxx........-....-.......xxx..xxxx
-xxxx..x.xxxxxxxxxEx..xxxxxxxxxx.a..11....xx................xxxxx..xxxx
-xxxx..x...........H..B............1111...xxxxxxxxxxxxxxxxxxxxxxx..xxxx
-xxxx..xxxxxxxxxxxxxxxxxxxxxxxxa..1....1..xxxxxxxxxxxxxxxxxxxxxxx..xxxx
-xxxx............................1..(}..1..........................xxxx
-xxxx...........................11.[..{.11.........................xxxx
-xxxx............................1..])..1..........................xxxx
-xxxx.............................1....1...........................xxxx
-xxxx..xxxxxxxxxxxxxxxxxxxxxxx.a...1111.axaxxaaxaxxxxxxxxxxxxxxxx..xxxx
-xxxx..xx!x.x.x!x.x.x.x.x.x.x.x.a...11........................??x..xxxx
-xxxx..x.x.x.x.x.x.x.x!x.x.x_x.x.a....a................Y..Z...??x..xxxx
-xxxx..xx.x!x.x.x.x.x.x.x.x!x.x.x.....x..Y..Y..Y..Y..Y..Z..Y..Y.x..xxxx
-xxxx..x.x.x.x.x_x.x.x_x.x.x.x.x.x....a...Y..Y..Y..Z..Y..Y..Z...x..xxxx
-xxxx..xx.x.x.x.x.x.x.x.x.x.x.x_xx....x.Y..Y..Y..Y..Z..Y..Z..Y..x..xxxx
-xxxx..x.x.x!x.x.x.x.x.x.x!x.x.x.x....x..Y..Y..Z..Z..Y..Y..Y..Z.x..xxxx
-xxxx..xx.x_x.x.x!x.x.x.x.x.x.x.xx....a...Y..Z..Y..Y..Z..Y..Y...x..xxxx
-xxxx..x.x.x.x.x_x.x.x.x.x.x.x.x.x....a.Y..Y..Z..Z..Y..Y..Y..Z..x..xxxx
-xxxx..xx.x.x.x.x.x.x.x.x.x.x.x!xx....x..Z..Y..Y..Y..Z..Y..Y..Y.x..xxxx
-xxxx..x_x.x!x.x.x.x.x.x!x.x_x.x.x....x...Y..Y..Z..Y..Z..Z..Y...x..xxxx
-xxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x.Z..Z..Y..Y..Z..Y..Z..Z..x..xxxx
-xxxx..x.x.x_x.x.x.x.x.x.x.x.x_x.x....x..Y..Z..Y..Z..Z..Y..Z..Z.x..xxxx
-xxxx..xx.x.x.x.x.x.x_x.x.x.x.x.xx....x...Z..Z..Z..Y..Z..Z..Y...x..xxxx
-xxxx..x!x.x.x.x!x.x.x.x.x.x.x.x.x....x.Y..Z..Y..Z..Z..Z..Z..Z..x..xxxx
-xxxx..xx.x.x.x.x.x.x!x.x.x.x.x.xx....x..Z..Y..Z..Y.............x..xxxx
-xxxx..x.x.x.x.x.x.x.x.x.x_x.x.x.x....x...Y..Z..Z..Z...ZZZZZZZZ.x..xxxx
-xxxx..xx.x_x.x.x.x.x.x.x.x.x.x_xx....x....Z..Y..Z..Y..Z........x..xxxx
-xxxx..x.x!x.x.x.x.x.x.x!x.x.x.x.x....x..Z..Z..Y..Z....Z..??????x..xxxx
-xxxx..xx.x.x.x.x.x.x_x.x.x.x.x.xx....x...Z..Y..Z..Z...Z..??????x..xxxx
-xxxx..x.x.x.x.x.x_x.x.x.x.x.x.x.x....x??..Y..Z..Z..Z..Z..??????x..xxxx
-xxxx..xO.x.x_x.x.x!x.x.x.x.x!x_xx....x??.................?????Ox..xxxx
-xxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA.11.BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAA.1111.BBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx..AAAAAAAAAAAAAAAAAAAAAAAAA.1....1.BBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
+xxxx...........................1..(}..1...........................xxxx
+xxxx..........................11.[..{.11..........................xxxx
+xxxx...........................1..])..1...........................xxxx
+xxxx............................1....1............................xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCC..1111..DDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCC..11..DDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
+xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCCC....DDDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
 xxxx..............................................................xxxx
 xxxx..............................................................xxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+
+##############################################################################
+# Vault:8 - the subvault used to place the rune.
+#
+# Used by the 'vault8_rune()' function in the prelude.
+#
+NAME:  vault8_rune
+TAGS:  vault8_rune
+KMONS: O = 8 / 9
+KFEAT: O = O
+MAP
+O
+ENDMAP
+
+##############################################################################
+# Vault:8 - the subvault used for potential rune locations that do not
+# contain the real rune.
+#
+# Used by the 'vault8_rune()' function in the prelude.
+#
+NAME:  vault8_norune
+TAGS:  vault8_norune allow_dup
+KMONS: o = 8 / 9
+: if crawl.random2(13) == 12 then
+KFEAT:   o = any shop
+: else
+KITEM:   o = any good_item
+: end
+MAP
+o
+ENDMAP
+
+##############################################################################
+# Vault:8 - Rooms Quadrant
+#
+# This quadrant uses a subvault for each room.  Any subvault tagged
+# vault8_room_rune should be guaranteed to provide a rune.  Any subvault
+# tagged vault8_room should just provide loot.  Note that the rooms
+# are not all the same sizes.
+#
+NAME:     vault8_rooms
+TAGS:     vault8_quadrant
+SHUFFLE:  AC/BD, EG/FH, IKN/MJL
+SUBST:    A=., B=xx=, C=+, D=x, E=+, F=xx=, G=., H=x
+SUBST:    I=., M=xx=, J=x, K=+, N=+, L=xx=
+SUBST:    a:x.
+SHUFFLE:  VXYZ
+SUBVAULT: V : vault8_room_rune
+SUBVAULT: X : vault8_room
+SUBVAULT: Y : vault8_room
+SUBVAULT: Z : vault8_room
+SUBST:    VXYZ = .
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.........................x
+x.xxxxxxxxxxx..xxxxxxxxJxIx
+x.xVVVVVVVVVx..xXXXXXXXXx.x
+x.xVVVVVVVVVx..xXXXXXXXXx.x
+x.xVVVVVVVVVx..xXXXXXXXXx.x
+x.xVVVVVVVVVx..xXXXXXXXXx.x
+x.xVVVVVVVVVx..xXXXXXXXXx.x
+x.xVVVVVVVVVx..xXXXXXXXXx.x
+x.xVVVVVVVVVL..KXXXXXXXXx.x
+x.NVVVVVVVVVxxxxxxxxxxxxx.x
+xMxxxxxxxxxxx99988......A.x
+x...........G99xxxxxxxxDx.x
+x.xxxxxxxxxFx99xZZZZZZZZx.x
+x.xYYYYYYYYYx88xZZZZZZZZx.x
+x.xYYYYYYYYYx..xZZZZZZZZx.x
+x.xYYYYYYYYYx..xZZZZZZZZx.x
+x.xYYYYYYYYYx..xZZZZZZZZx.x
+x.xYYYYYYYYYx..xZZZZZZZZx.x
+x.xYYYYYYYYYx..CZZZZZZZZx.x
+x.xxxxxxxxxEx..xxxxxxxxxx.a
+x...........H..B..........
+xxxxxxxxxxxxxxxxxxxxxxxxa
+ENDMAP
+
+##############################################################################
+# Vault:8 - Rooms Quadrant - Traps and Loot Subvault
+#
+# Replace each square with traps or loot, but mostly floor.
+#
+NAME: vault8_room_traps_and_loot
+TAGS: vault8_room
+: default_subvault_glyphs()
+SUBST: . = ?
+: vault8_loot(_G)
+MAP
+ENDMAP
+
+##############################################################################
+# Vault:8 - Rooms Quadrant - Border Subvault
+#
+# Fill the room with loot, but leave an empty border.
+#
+NAME: vault8_room_border
+TAGS: vault8_room
+{{
+    default_subvault_glyphs()
+    local w, h = subvault_size()
+
+    local i
+    for i in iter.subvault_iterator(_G) do
+      if i.x == 0 or i.x == w-1 or i.y == 0 or i.y == h-1 then
+        -- border
+        mapgrd[i.x+1][i.y+1] = '.'
+      else
+        -- inside
+        mapgrd[i.x+1][i.y+1] = '*'
+      end
+    end
+}}
+: vault8_loot(_G)
+MAP
+ENDMAP
+
+##############################################################################
+# Vault:8 - Rooms Quadrant - Diamond Subvault
+#
+# Fill the room with money in a diamond pattern.
+#
+NAME: vault8_room_diamond
+TAGS: vault8_room
+{{
+    default_subvault_glyphs()
+    local w, h = subvault_size()
+
+    local i
+    for i in iter.subvault_iterator(_G) do
+      if (i.x + i.y) % 2 == 0 then
+        mapgrd[i.x+1][i.y+1] = '$'
+      else
+        mapgrd[i.x+1][i.y+1] = '.'
+      end
+    end
+}}
+: vault8_loot(_G)
+MAP
+ENDMAP
+
+##############################################################################
+# Vault:8 - Rooms Quadrant - Rune Subvault
+#
+# Potentially contains the rune.
+#
+NAME: vault8_room_rune
+TAGS: vault8_room_rune
+SUBST: ^ = ^.
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+......
+.^^^^.
+.^||^.
+.^O|^.
+.^||^.
+.^^^^.
+......
+ENDMAP
+
+
+##############################################################################
+# Vault:8 - Cross Quadrant
+#
+NAME: vault8_cross
+TAGS: vault8_quadrant
+NSUBST:  U = 1:. / *:xxxx=
+NSUBST:  V = 1:. / *:xxxx=
+SUBST:   - = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx.................xxxxx
+xxx.......-.....-.......xxx
+xxx...-.............-...xxx
+xx.......................xx
+xx.-....xxxxxxxxxxx....-.xx
+xx......x.........x......xx
+xx....xxU.........Uxx....xx
+xx..-.x....xxxxx....x....xx
+xx....x.-.Vx$$$xx...x.-..xx
+xx....x..xx$***$xx..x....xx
+xx.-..x..x$$*O*$$x-.x....xx
+xx....x..xx$***$xx..x....xx
+xx....x...Vx$$$xV...x..-.xx
+xx..-.xxx-.xxxxx..Uxx....xx
+xx......x.........x......xx
+xx......xxxxxxxxxxx.-....xx
+xxx...-.................xxx
+xxx........-....-.......xxx
+....xx................xxxxx
+ ...xxxxxxxxxxxxxxxxxxxxxxx
+  ..xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Vault:8 - Diamond Quadrant
+#
+NAME: vault8_diamond
+TAGS: vault8_quadrant
+SHUFFLE: !_
+SUBST:   ! = | * .:20
+SUBST:   _ = 8 9 .:20
+SUBST:   a:x.
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx.a
+xx!x.x.x!x.x.x.x.x.x.x.x.a
+x.x.x.x.x.x.x.x!x.x.x_x.x.a
+xx.x!x.x.x.x.x.x.x.x!x.x.x.
+x.x.x.x.x_x.x.x_x.x.x.x.x.x
+xx.x.x.x.x.x.x.x.x.x.x.x_xx
+x.x.x!x.x.x.x.x.x.x!x.x.x.x
+xx.x_x.x.x!x.x.x.x.x.x.x.xx
+x.x.x.x.x_x.x.x.x.x.x.x.x.x
+xx.x.x.x.x.x.x.x.x.x.x.x!xx
+x_x.x!x.x.x.x.x.x!x.x_x.x.x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+x.x.x_x.x.x.x.x.x.x.x.x_x.x
+xx.x.x.x.x.x.x_x.x.x.x.x.xx
+x!x.x.x.x!x.x.x.x.x.x.x.x.x
+xx.x.x.x.x.x.x!x.x.x.x.x.xx
+x.x.x.x.x.x.x.x.x.x_x.x.x.x
+xx.x_x.x.x.x.x.x.x.x.x.x_xx
+x.x!x.x.x.x.x.x.x!x.x.x.x.x
+xx.x.x.x.x.x.x_x.x.x.x.x.xx
+x.x.x.x.x.x_x.x.x.x.x.x.x.x
+xO.x.x_x.x.x!x.x.x.x.x!x_xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Vault:8 - Stripes Quadrant
+#
+NAME: vault8_stripes
+TAGS: vault8_quadrant
+# double use of Y=Y. and Z=Z. for decreasing variance
+SUBST:   Y = Y ., Z = Z .
+SUBST:   Y = Y ., Z = Z .
+SUBST:   Y = 9:30 8:10 .:40
+SUBST:   Z = 9:10 8:30 .:40
+SUBST:   a:x.
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+  axaxxaaxaxxxxxxxxxxxxxxxx
+ .......................??x
+a................Y..Z...??x
+x..Y..Y..Y..Y..Y..Z..Y..Y.x
+a...Y..Y..Y..Z..Y..Y..Z...x
+x.Y..Y..Y..Y..Z..Y..Z..Y..x
+x..Y..Y..Z..Z..Y..Y..Y..Z.x
+a...Y..Z..Y..Y..Z..Y..Y...x
+a.Y..Y..Z..Z..Y..Y..Y..Z..x
+x..Z..Y..Y..Y..Z..Y..Y..Y.x
+x...Y..Y..Z..Y..Z..Z..Y...x
+x.Z..Z..Y..Y..Z..Y..Z..Z..x
+x..Y..Z..Y..Z..Z..Y..Z..Z.x
+x...Z..Z..Z..Y..Z..Z..Y...x
+x.Y..Z..Y..Z..Z..Z..Z..Z..x
+x..Z..Y..Z..Y.............x
+x...Y..Z..Z..Z...ZZZZZZZZ.x
+x....Z..Y..Z..Y..Z........x
+x..Z..Z..Y..Z....Z..??????x
+x...Z..Y..Z..Z...Z..??????x
+x??..Y..Z..Z..Z..Z..??????x
+x??.................?????Ox
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 ##############################################################################
 # The Hall of Blades

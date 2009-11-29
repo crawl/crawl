@@ -406,3 +406,4 @@ note_monsters = orb of fire, ancient lich, Sigmund
 ##### 6-c   Unix ##################################
 #
 # use_fake_cursor = false
+# use_fake_player_cursor = true

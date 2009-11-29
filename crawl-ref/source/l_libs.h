@@ -48,6 +48,7 @@ extern const struct luaL_reg dgn_grid_dlib[];
 extern const struct luaL_reg dgn_item_dlib[];
 extern const struct luaL_reg dgn_level_dlib[];
 extern const struct luaL_reg dgn_mons_dlib[];
+extern const struct luaL_reg dgn_subvault_dlib[];
 extern const struct luaL_reg dgn_tile_dlib[];
 extern const struct luaL_reg feat_dlib[];
 extern const struct luaL_reg los_dlib[];

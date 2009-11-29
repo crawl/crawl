@@ -1103,13 +1103,17 @@ static void _elven_twin_died(monsters* twin)
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_DUVESSA)
+        if (mi->type == MONS_DUVESSA 
+            || (mi->props.exists("original_name")
+                && mi->props["original_name"].get_string() == "Duvessa"))
         {
             monster = *mi;
             found_duvessa = true;
             break;
         }
-        else if (mi->type == MONS_DOWAN)
+        else if (mi->type == MONS_DOWAN 
+                 || (mi->props.exists("original_name")
+                     && mi->props["original_name"].get_string() == "Dowan"))
         {
             monster = *mi;
             found_dowan = true;
@@ -2082,11 +2086,16 @@ int monster_die(monsters *monster, killer_type killer,
         // And his vault can  be placed again.
         you.uniq_map_names.erase("uniq_boris");
     }
-    else if (monster->type == MONS_KIRKE && !in_transit)
+    else if (monster->type == MONS_KIRKE 
+             || (monster->props.exists("original_name") 
+                && monster->props["original_name"].get_string() == "Kirke")
+                   && !in_transit)
     {
         _hogs_to_humans();
     }
-    else if (monster->type == MONS_PIKEL)
+    else if (monster->type == MONS_PIKEL
+            || (monster->props.exists("original_name")
+                && monster->props["original_name"].get_string() == "Pikel"))
     {
         // His slaves don't care if he's dead or not, just whether or not
         // he goes away.
@@ -2100,8 +2109,11 @@ int monster_die(monsters *monster, killer_type killer,
                 "back into the water like the carrion they now are.");
         }
     }
-    else if ((monster->type == MONS_DOWAN || monster->type == MONS_DUVESSA)
-              && mons_near(monster))
+    else if (((monster->type == MONS_DOWAN || monster->type == MONS_DUVESSA)
+              || (monster->props.exists("original_name")
+                 && (monster->props["original_name"].get_string() == "Dowan"
+                     || monster->props["original_name"].get_string() == "Duvessa")))
+               && mons_near(monster))
     {
         _elven_twin_died(monster);
     }
@@ -2484,6 +2496,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     define_monster(monster->mindex());
 
     monster->mname = name;
+    monster->props["original_name"] = name;
     monster->flags = flags;
     monster->god   = god;
 

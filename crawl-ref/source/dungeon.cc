@@ -213,10 +213,13 @@ static bool _build_vaults(int level_number,
                           bool check_collisions = false,
                           bool make_no_exits = false,
                           const coord_def &where = coord_def(-1, -1));
-static void _vault_grid( vault_placement &,
-                         int vgrid,
-                         const coord_def& where,
-                         bool recursive = false);
+static void _vault_grid(vault_placement &,
+                        int vgrid,
+                        const coord_def& where,
+                        keyed_mapspec *mapsp);
+static void _vault_grid(vault_placement &,
+                        int vgrid,
+                        const coord_def& where);
 
 static const map_def *_dgn_random_map_for_place(bool minivault);
 static void _dgn_load_colour_grid();
@@ -522,7 +525,7 @@ void dgn_set_grid_colour_at(const coord_def &c, int colour)
     }
 }
 
-static void _dgn_register_vault(const map_def &map)
+void dgn_register_vault(const map_def &map)
 {
     if (!map.has_tag("allow_dup"))
         you.uniq_map_names.insert(map.name);
@@ -817,7 +820,7 @@ static void _mask_vault(const vault_placement &place, unsigned mask)
 void dgn_register_place(const vault_placement &place, bool register_vault)
 {
     if (register_vault)
-        _dgn_register_vault(place.map);
+        dgn_register_vault(place.map);
 
     if (!place.map.has_tag("layout"))
         _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
@@ -842,8 +845,8 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         for (int x = place.pos.x + place.size.x - 1; x >= place.pos.x; --x)
             if (place.map.in_map(coord_def(x - place.pos.x, y - place.pos.y)))
             {
-                int key = place.map.map.glyph(x - place.pos.x, y - place.pos.y);
-                const keyed_mapspec* spec = place.map.mapspec_for_key(key);
+                coord_def c(x - place.pos.x, y - place.pos.y);
+                const keyed_mapspec* spec = place.map.mapspec_at(c);
 
                 if (spec != NULL)
                 {
@@ -3595,7 +3598,16 @@ static int _place_uniques(int level_number, char level_type)
             break;
         }
 
-        if (dgn_place_map(uniq_map, true, false))
+        bool map_placed = false;
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (map_placed)
+                continue;
+            map_placed = dgn_place_map(uniq_map, false, false);
+        }
+
+        if (map_placed)
         {
             num_placed++;
 #ifdef DEBUG_UNIQUE_PLACEMENT
@@ -4986,10 +4998,10 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c, int rawfea
     if (rawfeat == ' ')
         return (NUM_FEATURES);
 
-    keyed_mapspec *mapsp = map? map->mapspec_for_key(rawfeat) : NULL;
+    keyed_mapspec *mapsp = map? map->mapspec_at(c) : NULL;
     if (mapsp)
     {
-        const feature_spec f = mapsp->get_feat();
+        feature_spec f = mapsp->get_feat();
         if (f.trap >= 0)
         {
             // f.feat == 1 means trap is generated known.
@@ -5045,52 +5057,56 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c, int rawfea
                              : DNGN_FLOOR); // includes everything else
 }
 
-static void _vault_grid( vault_placement &place,
-                         int vgrid,
-                         const coord_def& where,
-                         bool recursive )
+static void _vault_grid(vault_placement &place,
+                        int vgrid,
+                        const coord_def& where,
+                        keyed_mapspec *mapsp)
 {
-    keyed_mapspec *mapsp = (recursive ? NULL
-                                      : place.map.mapspec_for_key(vgrid));
-    if (mapsp)
+    if (!mapsp)
     {
-        const feature_spec f = mapsp->get_feat();
-        if (f.trap >= 0)
-        {
-            const trap_type trap =
-                (f.trap == TRAP_INDEPTH)
-                    ? random_trap_for_place(place.level_number)
-                    : static_cast<trap_type>(f.trap);
-
-            place_specific_trap(where, trap);
-
-            // f.feat == 1 means trap is generated known.
-            if (f.feat == 1)
-                grd(where) = trap_category(trap);
-        }
-        else if (f.feat >= 0)
-        {
-            grd(where) = static_cast<dungeon_feature_type>( f.feat );
-            vgrid = -1;
-        }
-        else if (f.glyph >= 0)
-        {
-            _vault_grid( place, f.glyph, where, true );
-        }
-        else if (f.shop >= 0)
-            place_spec_shop(place.level_number, where, f.shop);
-        else
-            grd(where) = DNGN_FLOOR;
-
-        mons_list &mons = mapsp->get_monsters();
-        _dgn_place_one_monster(place, mons, place.level_number, where);
-
-        item_list &items = mapsp->get_items();
-        dgn_place_multiple_items(items, where, place.level_number);
-
+        _vault_grid(place, vgrid, where);
         return;
     }
 
+    const feature_spec f = mapsp->get_feat();
+    if (f.trap >= 0)
+    {
+        const trap_type trap =
+            (f.trap == TRAP_INDEPTH)
+                ? random_trap_for_place(place.level_number)
+                : static_cast<trap_type>(f.trap);
+
+        place_specific_trap(where, trap);
+
+        // f.feat == 1 means trap is generated known.
+        if (f.feat == 1)
+            grd(where) = trap_category(trap);
+    }
+    else if (f.feat >= 0)
+    {
+        grd(where) = static_cast<dungeon_feature_type>(f.feat);
+        vgrid = -1;
+    }
+    else if (f.glyph >= 0)
+    {
+        _vault_grid(place, f.glyph, where);
+    }
+    else if (f.shop >= 0)
+        place_spec_shop(place.level_number, where, f.shop);
+    else
+        grd(where) = DNGN_FLOOR;
+
+    mons_list &mons = mapsp->get_monsters();
+    _dgn_place_one_monster(place, mons, place.level_number, where);
+
+    item_list &items = mapsp->get_items();
+    dgn_place_multiple_items(items, where, place.level_number);
+}
+
+static void _vault_grid(vault_placement &place,
+                         int vgrid,
+                         const coord_def& where)
+{
     // First, set base tile for grids {dlb}:
     grd(where)  = ((vgrid == -1)  ? grd(where) :
                    (vgrid == 'x') ? DNGN_ROCK_WALL :
@@ -5234,11 +5250,14 @@ static void _vault_grid( vault_placement &place,
     }
 
     // defghijk - items
-    if (vgrid >= 'd' && vgrid <= 'k')
-        _dgn_place_item_explicit(vgrid - 'd', where, place, place.level_number);
+    if (map_def::valid_item_array_glyph(vgrid))
+    {
+        int slot = map_def::item_array_glyph_to_slot(vgrid);
+        _dgn_place_item_explicit(slot, where, place, place.level_number);
+    }
 
     // Finally, handle grids that place monsters {dlb}:
-    if (vgrid >= '0' && vgrid <= '9')
+    if (map_def::valid_monster_glyph(vgrid))
     {
         int monster_level;
         mons_spec monster_type_thing(RANDOM_MONSTER);
@@ -5254,7 +5273,8 @@ static void _vault_grid( vault_placement &place,
 
         if (vgrid != '8' && vgrid != '9' && vgrid != '0')
         {
-            monster_type_thing = place.map.mons.get_monster(vgrid - '1');
+            int slot = map_def::monster_array_glyph_to_slot(vgrid);
+            monster_type_thing = place.map.mons.get_monster(slot);
             monster_type mt = static_cast<monster_type>(monster_type_thing.mid);
             // Is a map for a specific place trying to place a unique which
             // somehow already got created?
@@ -5273,7 +5293,7 @@ static void _vault_grid( vault_placement &place,
 
         _dgn_place_monster(place, monster_type_thing, monster_level, where);
     }
-}                               // end vault_grid()
+}
 
 // Currently only used for Slime: branch end
 // where it will turn the stone walls into clear rock walls
@@ -8517,7 +8537,10 @@ void vault_placement::apply_grid()
                 continue;
 
             const dungeon_feature_type oldgrid = grd(*ri);
-            _vault_grid( *this, feat, *ri );
+
+            keyed_mapspec *mapsp = map.mapspec_at(dp);
+            _vault_grid(*this, feat, *ri, mapsp);
+
             if (!Generating_Level)
             {
                 // Have to link items each square at a time, or

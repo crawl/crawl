@@ -300,6 +300,7 @@ int main( int argc, char *argv[] )
     // to dismiss a level-up prompt.
     level_change();
 
+    cursor_control ccon(!Options.use_fake_player_cursor);
     while (true)
         _input();
 
@@ -658,8 +659,11 @@ static void _handle_wizard_command( void )
         }
     }
 
-    mpr("Enter Wizard Command (? - help): ", MSGCH_PROMPT);
-    wiz_command = getch();
+    {
+        mpr("Enter Wizard Command (? - help): ", MSGCH_PROMPT);
+        cursor_control con(true);
+        wiz_command = getch();
+    }
 
     if (crawl_state.cmd_repeat_start)
     {
@@ -1063,11 +1067,6 @@ static void _input()
 
 #ifdef USE_TILE
         cursor_control con(false);
-#else
-        // Enable the cursor to read input. The cursor stays on while
-        // the command is being processed, so subsidiary prompts
-        // shouldn't need to turn it on explicitly.
-        cursor_control con(true);
 #endif
         const command_type cmd = _get_next_cmd();
 
@@ -1595,8 +1594,11 @@ void process_command( command_type cmd )
 
         mpr("Change to (d)efault, (n)othing, (f)riend-dropped, (p)layer, "
             "or (a)ll? ", MSGCH_PROMPT);
-
-        char type = (char) getchm(KMC_DEFAULT);
+        char type;
+        {
+            cursor_control con(true);
+            type = (char) getchm(KMC_DEFAULT);
+        }
         type = tolower(type);
 
         if (type == 'd')
@@ -4292,9 +4294,7 @@ static void _setup_cmd_repeat()
             repeat_again_rec.keys.pop_back();
 
         mpr("Enter command to be repeated: ");
-        // Enable the cursor to read input. The cursor stays on while
-        // the command is being processed, so subsidiary prompts
-        // shouldn't need to turn it on explicitly.
+        // Enable the cursor to read input.
         cursor_control con(true);
 
         crawl_state.waiting_for_command = true;

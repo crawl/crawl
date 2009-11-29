@@ -597,7 +597,7 @@ std::string map_lines::parse_glyph_replacements(std::string s,
 }
 
 template<class T>
-std::string map_lines::parse_weighted_str(const std::string &spec, T &list)
+std::string parse_weighted_str(const std::string &spec, T &list)
 {
     std::vector<std::string> speclist = split_string("/", spec);
     for (int i = 0, vsize = speclist.size(); i < vsize; ++i)
@@ -700,6 +700,12 @@ std::string map_lines::add_fproperty(const std::string &sub)
     overlay_fprops(spec);
 
     return ("");
+}
+
+bool map_string_list::parse(const std::string &fp, int weight)
+{
+    push_back(map_weighted_string(fp, weight));
+    return (!fp.empty());
 }
 
 std::string map_lines::add_subst(const std::string &sub)
@@ -918,9 +924,13 @@ void map_lines::clear()
 {
     clear_markers();
     lines.clear();
+    keyspecs.clear();
     overlay.reset(NULL);
     map_width = 0;
     solid_checked = false;
+
+    // First non-legal character.
+    next_keyspec_idx = 256;
 }
 
 void map_lines::subst(std::string &s, subst_spec &spec)
@@ -967,6 +977,207 @@ void map_lines::overlay_fprops(fprop_spec &spec)
             ++pos;
         }
     }
+}
+
+void map_lines::fill_mask_matrix(const std::string &glyphs,
+                                 const coord_def &tl,
+                                 const coord_def &br,
+                                 Matrix<bool> &flags)
+{
+    ASSERT(tl.x >= 0);
+    ASSERT(tl.y >= 0);
+    ASSERT(br.x < width());
+    ASSERT(br.y < height());
+    ASSERT(tl.x <= br.x);
+    ASSERT(tl.y <= br.y);
+
+    for (int y = tl.y; y <= br.y; ++y)
+        for (int x = tl.x; x <= br.x; ++x)
+        {
+            int ox = x - tl.x;
+            int oy = y - tl.y;
+            flags(ox, oy) = (strchr(glyphs.c_str(), (*this)(x, y)) != NULL);
+        }
+}
+
+void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
+                               const Matrix<bool> &mask, const map_def &vmap)
+{
+    const map_lines &vlines = vmap.map;
+
+    // If vault is bigger than the mask region (mtl, mbr), then it gets
+    // randomly centered.  (vtl, vbr) stores the vault's region.
+    coord_def vtl = mtl;
+    coord_def vbr = mbr;
+
+    int width_diff = (mbr.x - mtl.x + 1) - vlines.width();
+    int height_diff = (mbr.y - mtl.y + 1) - vlines.height();
+
+    // Adjust vault coords with a random offset.
+    int ox = random2(width_diff + 1);
+    int oy = random2(height_diff + 1);
+    vtl.x += ox;
+    vtl.y += oy;
+    vbr.x -= (width_diff - ox);
+    vbr.y -= (height_diff - oy);
+
+    if (!overlay.get())
+        overlay.reset(new overlay_matrix(width(), height()));
+
+    // Clear any markers in the vault's grid
+    for (size_t i = 0; i < markers.size(); ++i)
+    {
+        map_marker *mm = markers[i];
+        if (mm->pos.x >= vtl.x && mm->pos.x <= vbr.x
+            && mm->pos.y >= vtl.y && mm->pos.y <= vbr.y)
+        {
+            // Erase this marker.
+            markers[i] = markers[markers.size() - 1];
+            markers.resize(markers.size() - 1);
+            i--;
+        }
+    }
+
+    // Copy markers and update locations.
+    for (size_t i = 0; i < vlines.markers.size(); ++i)
+    {
+        map_marker *mm = vlines.markers[i];
+        coord_def mapc = mm->pos + vtl;
+        coord_def maskc = mapc - mtl;
+
+        if (!mask(maskc.x, maskc.y))
+            continue;
+
+        map_marker *clone = mm->clone();
+        clone->pos = mapc;
+        add_marker(clone);
+    }
+
+    // Cache keyspecs we've already pushed into the extended keyspec space.
+    // If !ksmap[key], then we haven't seen the 'key' glyph before.
+    keyspec_map ksmap(0);
+
+    for (int y = mtl.y; y <= mbr.y; ++y)
+        for (int x = mtl.x; x <= mbr.x; ++x)
+        {
+            int mx = x - mtl.x;
+            int my = y - mtl.y;
+            if (!mask(mx, my))
+                continue;
+
+            // Outside subvault?
+            if (x < vtl.x || x > vbr.x || y < vtl.y || y > vbr.y)
+                continue;
+
+            int vx = x - vtl.x;
+            int vy = y - vtl.y;
+            coord_def vc(vx, vy);
+
+            char c = vlines(vc);
+            if (c == ' ')
+                continue;
+
+            // Merge keyspecs.
+            // Push vault keyspecs into extended keyspecs.
+            // Push MONS/ITEM into KMONS/KITEM keyspecs.
+            // Generate KFEAT keyspecs for any normal glyphs.
+            int idx;
+            if (ksmap[c])
+            {
+                // Already generated this keyed_pmapspec.
+                idx = ksmap[c];
+            }
+            else
+            {
+                idx = next_keyspec_idx++;
+                ASSERT(idx > 0);
+
+                if (c != SUBVAULT_GLYPH)
+                    ksmap[c] = idx;
+
+                const keyed_mapspec *kspec = vlines.mapspec_at(vc);
+
+                // If c is a SUBVAULT_GLYPH, it came from a sub-subvault.
+                // Sub-subvaults should always have mapspecs at this point.
+                ASSERT(c != SUBVAULT_GLYPH || kspec);
+
+                if (kspec)
+                {
+                    // Copy vault keyspec into the extended keyspecs.
+                    keyspecs[idx] = *kspec;
+                    keyspecs[idx].key_glyph = SUBVAULT_GLYPH;
+                }
+                else if (map_def::valid_monster_array_glyph(c))
+                {
+                    // Translate monster array into keyed_mapspec
+                    keyed_mapspec &km = keyspecs[idx];
+                    km.key_glyph = SUBVAULT_GLYPH;
+
+                    km.feat.feats.clear();
+                    feature_spec spec(-1);
+                    spec.glyph = '.';
+                    km.feat.feats.insert(km.feat.feats.begin(), spec);
+
+                    int slot = map_def::monster_array_glyph_to_slot(c);
+                    km.mons.set_from_slot(vmap.mons, slot);
+                }
+                else if (map_def::valid_item_array_glyph(c))
+                {
+                    // Translate item array into keyed_mapspec
+                    keyed_mapspec &km = keyspecs[idx];
+                    km.key_glyph = SUBVAULT_GLYPH;
+
+                    km.feat.feats.clear();
+                    feature_spec spec(-1);
+                    spec.glyph = '.';
+                    km.feat.feats.insert(km.feat.feats.begin(), spec);
+
+                    int slot = map_def::item_array_glyph_to_slot(c);
+                    km.item.set_from_slot(vmap.items, slot);
+                }
+                else
+                {
+                    // Normal glyph.  Turn into a feature keyspec.
+                    // This is valid for non-array items and monsters
+                    // as well, e.g. '$' and '8'.
+                    keyed_mapspec &km = keyspecs[idx];
+                    km.key_glyph = SUBVAULT_GLYPH;
+                    km.feat.feats.clear();
+
+                    feature_spec spec(-1);
+                    spec.glyph = c;
+                    km.feat.feats.insert(km.feat.feats.begin(), spec);
+                }
+            }
+
+            // Finally, handle merging the cell itself.
+
+            // Glyph becomes SUBVAULT_GLYPH.  (The old glyph gets merged into a
+            // keyspec, above).  This is so that the glyphs that are included
+            // from a subvault are immutable by the parent vault.  Otherwise,
+            // latent transformations (like KMONS or KITEM) from the parent
+            // vault might confusingly modify a glyph from the subvault.
+            //
+            // NOTE: It'd be possible to allow subvaults to be modified by the
+            // parent vault, but KMONS/KITEM/KFEAT/MONS/ITEM would have to
+            // apply immediately instead of latently.  They would also then
+            // need to be stored per-coord, rather than per-glyph.
+            (*this)(x, y) = SUBVAULT_GLYPH;
+
+            // Merge overlays
+            if (vlines.overlay.get())
+            {
+                (*overlay)(x, y) = (*vlines.overlay)(vx, vy);
+            }
+            else
+            {
+                // Erase any existing overlay, as the vault's doesn't exist.
+                (*overlay)(x, y) = overlay_def();
+            }
+
+            // Set keyspec index for this subvault.
+            (*overlay)(x, y).keyspec_idx = idx;
+        }
 }
 
 #ifdef USE_TILE
@@ -1220,6 +1431,112 @@ void map_lines::hmirror()
     hmirror_markers();
     solid_checked = false;
 }
+
+keyed_mapspec *map_lines::mapspec_for_key(int key)
+{
+    keyed_specs::iterator i = keyspecs.find(key);
+    return i != keyspecs.end()? &i->second : NULL;
+}
+
+const keyed_mapspec *map_lines::mapspec_for_key(int key) const
+{
+    keyed_specs::const_iterator i = keyspecs.find(key);
+    return i != keyspecs.end()? &i->second : NULL;
+}
+
+keyed_mapspec *map_lines::mapspec_at(const coord_def &c)
+{
+    int key = (*this)(c);
+
+    if (key == SUBVAULT_GLYPH)
+    {
+        // Any subvault should create the overlay.
+        ASSERT(overlay.get());
+        if (!overlay.get())
+            return NULL;
+
+        key = (*overlay)(c.x, c.y).keyspec_idx;
+        ASSERT(key);
+        if (!key)
+            return NULL;
+    }
+
+    return (mapspec_for_key(key));
+}
+
+const keyed_mapspec *map_lines::mapspec_at(const coord_def &c) const
+{
+    int key = (*this)(c);
+
+    if (key == SUBVAULT_GLYPH)
+    {
+        // Any subvault should create the overlay and set the keyspec idx.
+        ASSERT(overlay.get());
+        if (!overlay.get())
+            return NULL;
+
+        key = (*overlay)(c.x, c.y).keyspec_idx;
+        ASSERT(key);
+        if (!key)
+            return NULL;
+    }
+
+    return (mapspec_for_key(key));
+}
+
+std::string map_lines::add_key_field(
+    const std::string &s,
+    std::string (keyed_mapspec::*set_field)(const std::string &s, bool fixed),
+    void (keyed_mapspec::*copy_field)(const keyed_mapspec &spec))
+{
+    int separator = 0;
+    std::string key, arg;
+
+    std::string err = mapdef_split_key_item(s, &key, &separator, &arg, -1);
+    if (!err.empty())
+        return (err);
+
+    keyed_mapspec &kmbase = keyspecs[key[0]];
+    kmbase.key_glyph = key[0];
+    err = ((kmbase.*set_field)(arg, separator == ':'));
+    if (!err.empty())
+        return (err);
+
+    size_t len = key.length();
+    for (size_t i = 1; i < len; i++)
+    {
+        keyed_mapspec &km = keyspecs[key[i]];
+        km.key_glyph = key[i];
+        ((km.*copy_field)(kmbase));
+    }
+
+    return (err);
+}
+
+std::string map_lines::add_key_item(const std::string &s)
+{
+    return add_key_field(s, &keyed_mapspec::set_item,
+                         &keyed_mapspec::copy_item);
+}
+
+std::string map_lines::add_key_feat(const std::string &s)
+{
+    return add_key_field(s, &keyed_mapspec::set_feat,
+                         &keyed_mapspec::copy_feat);
+}
+
+std::string map_lines::add_key_mons(const std::string &s)
+{
+    return add_key_field(s, &keyed_mapspec::set_mons,
+                         &keyed_mapspec::copy_mons);
+}
+
+std::string map_lines::add_key_mask(const std::string &s)
+{
+    return add_key_field(s, &keyed_mapspec::set_mask,
+                         &keyed_mapspec::copy_mask);
+}
+
 
 std::vector<coord_def> map_lines::find_glyph(int gly) const
 {
@@ -1478,11 +1795,12 @@ dlua_set_map::~dlua_set_map()
 map_def::map_def()
     : name(), tags(), place(), depths(), orient(), chance(), weight(),
       weight_depth_mult(), weight_depth_div(), welcome_messages(), map(),
-      mons(), items(), random_mons(), keyspecs(), prelude("dlprelude"),
+      mons(), items(), random_mons(), prelude("dlprelude"),
       mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"),
       rock_colour(BLACK), floor_colour(BLACK), rock_tile(0), floor_tile(0),
-      border_fill_type(DNGN_ROCK_WALL), index_only(false), cache_offset(0L)
+      border_fill_type(DNGN_ROCK_WALL), index_only(false), cache_offset(0L),
+      validating_map_flag(false)
 {
     init();
 }
@@ -1501,13 +1819,16 @@ void map_def::init()
     veto.clear();
     place_loaded_from.clear();
     reinit();
+
+    // Subvault mask set and cleared externally.
+    // It should *not* be in reinit.
+    svmask = NULL;
 }
 
 void map_def::reinit()
 {
     items.clear();
     random_mons.clear();
-    keyspecs.clear();
     level_flags.clear();
     branch_flags.clear();
 
@@ -1547,6 +1868,33 @@ void map_def::reinit()
     // Clearing the map also zaps map transforms.
     map.clear();
     mons.clear();
+}
+
+bool map_def::valid_item_array_glyph(int gly)
+{
+    return (gly >= 'd' && gly <= 'k');
+}
+
+int map_def::item_array_glyph_to_slot(int gly)
+{
+    ASSERT(map_def::valid_item_array_glyph(gly));
+    return (gly - 'd');
+}
+
+bool map_def::valid_monster_glyph(int gly)
+{
+    return (gly >= '0' && gly <= '9');
+}
+
+bool map_def::valid_monster_array_glyph(int gly)
+{
+    return (gly >= '1' && gly <= '7');
+}
+
+int map_def::monster_array_glyph_to_slot(int gly)
+{
+    ASSERT(map_def::valid_monster_array_glyph(gly));
+    return (gly - '1');
 }
 
 bool map_def::in_map(const coord_def &c) const
@@ -1846,10 +2194,14 @@ std::string map_def::validate_temple_map()
 
     // TODO: check for substitutions and shuffles
 
-    keyed_mapspec *spec = mapspec_for_key('B');
-
-    if (spec != NULL && spec->feat.feats.size() > 0)
-        return ("Can't change feat 'B' in temple (KFEAT)");
+    std::vector<coord_def> b_glyphs = map.find_glyph('B');
+    for (std::vector<coord_def>::iterator i = b_glyphs.begin();
+        i != b_glyphs.end(); ++i)
+    {
+        const keyed_mapspec *spec = map.mapspec_at(*i);
+        if (spec != NULL && spec->feat.feats.size() > 0)
+            return ("Can't change feat 'B' in temple (KFEAT)");
+    }
 
     std::vector<god_type> god_list = temple_god_list();
 
@@ -1861,6 +2213,8 @@ std::string map_def::validate_temple_map()
 
 std::string map_def::validate_map_def()
 {
+    unwind_bool valid_flag(validating_map_flag, true);
+
     std::string err = run_lua(true);
     if (!err.empty())
         return (err);
@@ -2255,69 +2609,193 @@ std::vector<std::string> map_def::get_tags() const
     return split_string(" ", tags);
 }
 
-const keyed_mapspec *map_def::mapspec_for_key(int key) const
+keyed_mapspec *map_def::mapspec_at(const coord_def &c)
 {
-    keyed_specs::const_iterator i = keyspecs.find(key);
-    return i != keyspecs.end()? &i->second : NULL;
+    return (map.mapspec_at(c));
 }
 
-keyed_mapspec *map_def::mapspec_for_key(int key)
+const keyed_mapspec *map_def::mapspec_at(const coord_def &c) const
 {
-    keyed_specs::iterator i = keyspecs.find(key);
-    return i != keyspecs.end()? &i->second : NULL;
+    return (map.mapspec_at(c));
 }
 
-std::string map_def::add_key_field(
-    const std::string &s,
-    std::string (keyed_mapspec::*set_field)(const std::string &s, bool fixed),
-    void (keyed_mapspec::*copy_field)(keyed_mapspec &spec))
+std::string map_def::subvault_from_tagstring(const std::string &sub)
 {
-    int separator = 0;
-    std::string key, arg;
+    std::string s = trimmed_string(sub);
 
-    std::string err = mapdef_split_key_item(s, &key, &separator, &arg, -1);
+    if (s.empty())
+        return ("");
+
+    int sep = 0;
+    std::string key;
+    std::string substitute;
+
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
     if (!err.empty())
         return (err);
 
-    keyed_mapspec &kmbase = keyspecs[key[0]];
-    kmbase.key_glyph = key[0];
-    err = ((kmbase.*set_field)(arg, separator == ':'));
+    // Randomly picking a different vault per-glyph is not supported.
+    if (sep != ':')
+        return ("SUBVAULT does not support '='.  Use ':' instead.");
+
+    map_string_list vlist;
+    err = parse_weighted_str<map_string_list>(substitute, vlist);
     if (!err.empty())
         return (err);
 
-    size_t len = key.length();
-    for (size_t i = 1; i < len; i++)
+    bool fix = false;
+    string_spec spec(key, fix, vlist);
+
+    // Although it's unfortunate to not be able to validate subvaults except a
+    // run-time, this allows subvaults to reference maps by tag that may not
+    // have been loaded yet.
+    if (!is_validating())
+        err = apply_subvault(spec);
+
+    if (!err.empty())
+        return (err);
+
+    return ("");
+}
+
+std::string map_def::apply_subvault(string_spec &spec)
+{
+    // Find bounding box for key glyphs
+    coord_def tl, br;
+    if (!map.find_bounds(spec.key.c_str(), tl, br))
     {
-        keyed_mapspec &km = keyspecs[key[i]];
-        km.key_glyph = key[i];
-        ((km.*copy_field)(kmbase));
+        // No glyphs, so do nothing.
+        return ("");
     }
 
-    return (err);
+    int vwidth = br.x - tl.x + 1;
+    int vheight = br.y - tl.y + 1;
+    Matrix<bool> flags(vwidth, vheight);
+    map.fill_mask_matrix(spec.key, tl, br, flags);
+
+    // Backup pre-subvault unique tags and names.
+    const std::set<std::string> uniq_tags  = you.uniq_map_tags;
+    const std::set<std::string> uniq_names = you.uniq_map_names;
+
+    const int max_tries = 100;
+    int ntries = 0;
+
+    std::string tag = spec.get_property();
+    while (++ntries <= max_tries)
+    {
+        // Each iteration, restore tags and names.  This is because this vault
+        // may successfully load a subvault (registering its tag and name), but
+        // then itself fail.
+        you.uniq_map_tags = uniq_tags;
+        you.uniq_map_names = uniq_names;
+
+        const map_def *orig = random_map_for_tag(tag);
+        if (!orig)
+            return (make_stringf("No vault found for tag '%s'", tag.c_str()));
+
+        map_def vault = *orig;
+
+        vault.load();
+
+        // Temporarily set the subvault mask so this subvault can know
+        // that it is being generated as a subvault.
+        vault.svmask = &flags;
+
+        if (!resolve_subvault(vault))
+            continue;
+
+        ASSERT(vault.map.width() <= vwidth);
+        ASSERT(vault.map.height() <= vheight);
+
+        map.merge_subvault(tl, br, flags, vault);
+
+        dgn_register_vault(vault);
+
+        return ("");
+    }
+
+    // Failure, restore original unique tags and names.
+    you.uniq_map_tags = uniq_tags;
+    you.uniq_map_names = uniq_names;
+
+    return (make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
+                         tag.c_str(), tl.x, tl.y, br.x, br.y));
 }
 
-std::string map_def::add_key_item(const std::string &s)
+bool map_def::is_subvault() const
 {
-    return add_key_field(s, &keyed_mapspec::set_item,
-                         &keyed_mapspec::copy_item);
+    return (svmask != NULL);
 }
 
-std::string map_def::add_key_feat(const std::string &s)
+void map_def::apply_subvault_mask()
 {
-    return add_key_field(s, &keyed_mapspec::set_feat,
-                         &keyed_mapspec::copy_feat);
+    if (!svmask)
+        return;
+
+    map.clear();
+    map.extend(subvault_width(), subvault_height(), ' ');
+
+    for (rectangle_iterator ri(map.get_iter()); ri; ++ri)
+    {
+        const coord_def mc = *ri;
+        if (subvault_cell_valid(mc))
+            map(mc) = '.';
+        else
+            map(mc) = ' ';
+    }
 }
 
-std::string map_def::add_key_mons(const std::string &s)
+bool map_def::subvault_cell_valid(const coord_def &c) const
 {
-    return add_key_field(s, &keyed_mapspec::set_mons,
-                         &keyed_mapspec::copy_mons);
+    if (!svmask)
+        return false;
+
+    if (c.x < 0 || c.x >= subvault_width()
+        || c.y < 0 || c.y >= subvault_height())
+    {
+        return false;
+    }
+
+    return (*svmask)(c.x, c.y);
 }
 
-std::string map_def::add_key_mask(const std::string &s)
+int map_def::subvault_width() const
 {
-    return add_key_field(s, &keyed_mapspec::set_mask,
-                         &keyed_mapspec::copy_mask);
+    if (!svmask)
+        return 0;
+
+    return (svmask->width());
+}
+
+int map_def::subvault_height() const
+{
+    if (!svmask)
+        return 0;
+
+    return (svmask->height());
+}
+
+int map_def::subvault_mismatch_count(const coord_def &offset) const
+{
+    int count = 0;
+    if (!is_subvault())
+        return (count);
+
+    for (rectangle_iterator ri(map.get_iter()); ri; ++ri)
+    {
+        // Coordinate in the subvault
+        const coord_def sc = *ri;
+        // Coordinate in the mask
+        const coord_def mc = sc + offset;
+
+        bool valid_subvault_cell = (map(sc) != ' ');
+        bool valid_mask = (*svmask)(mc.x, mc.y);
+
+        if (valid_subvault_cell && !valid_mask)
+            count++;
+    }
+
+    return (count);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -2396,6 +2874,18 @@ mons_spec mons_list::get_monster(int slot_index, int list_index) const
 void mons_list::clear()
 {
     mons.clear();
+}
+
+void mons_list::set_from_slot(const mons_list &list, int slot_index)
+{
+    clear();
+
+    // Don't set anything if an invalid index.
+    // Future calls to get_monster will just return a random monster.
+    if (slot_index < 0 || (size_t)slot_index >= list.mons.size())
+        return;
+
+    mons.push_back(list.mons[slot_index]);
 }
 
 bool mons_list::check_mimic(const std::string &s, int *mid, bool *fix) const
@@ -3078,6 +3568,18 @@ std::string item_list::set_item(int index, const std::string &spec)
     return (error);
 }
 
+void item_list::set_from_slot(const item_list &list, int slot_index)
+{
+    clear();
+
+    // Don't set anything if an invalid index.
+    // Future calls to get_item will just return no item.
+    if (slot_index < 0 || (size_t)slot_index >= list.items.size())
+        return;
+
+    items.push_back(list.items[slot_index]);
+}
+
 // TODO: More checking for innapropriate combinations, like the holy
 // wrath brand on a demonic weapon or the running ego on a helmet.
 static int str_to_ego(item_spec &spec, std::string ego_str)
@@ -3590,6 +4092,24 @@ int fprop_spec::get_property()
 }
 
 //////////////////////////////////////////////////////////////////////////
+// string_spec
+
+std::string string_spec::get_property()
+{
+    if (!fixed_str.empty())
+        return fixed_str;
+
+    std::string chosen = "";
+    int cweight = 0;
+    for (int i = 0, size = strlist.size(); i < size; ++i)
+        if (x_chance_in_y(strlist[i].second, cweight += strlist[i].second))
+            chosen = strlist[i].first;
+    if (fix)
+        fixed_str = chosen;
+    return (chosen);
+}
+
+//////////////////////////////////////////////////////////////////////////
 // map_marker_spec
 
 std::string map_marker_spec::apply_transform(map_lines &map)
@@ -3696,7 +4216,7 @@ std::string keyed_mapspec::set_feat(const std::string &s, bool fix)
     return (err);
 }
 
-void keyed_mapspec::copy_feat(keyed_mapspec &spec)
+void keyed_mapspec::copy_feat(const keyed_mapspec &spec)
 {
     feat = spec.feat;
 }
@@ -3853,17 +4373,17 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
     return (err);
 }
 
-void keyed_mapspec::copy_mons(keyed_mapspec &spec)
+void keyed_mapspec::copy_mons(const keyed_mapspec &spec)
 {
     mons = spec.mons;
 }
 
-void keyed_mapspec::copy_item(keyed_mapspec &spec)
+void keyed_mapspec::copy_item(const keyed_mapspec &spec)
 {
     item = spec.item;
 }
 
-void keyed_mapspec::copy_mask(keyed_mapspec &spec)
+void keyed_mapspec::copy_mask(const keyed_mapspec &spec)
 {
     map_mask = spec.map_mask;
 }

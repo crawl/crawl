@@ -548,6 +548,8 @@ ENDMAP
 
 ###############################################################################
 # Crazy Yiuf! Only in his cottage.
+#
+# XXX: Hacked around like crazy to make it less likely to split a level.
 NAME:   uniq_crazy_yiuf_cottage
 DEPTH:  D:2-7
 WEIGHT: 100
@@ -555,15 +557,15 @@ TAGS:   place_unique no_monster_gen no_item_gen
 MONS:   Crazy Yiuf
 ITEM:   hammer
 MAP
-xxxxxxxxxxxxxxxx
-xxtttttttxxtttxx
-xxtttttttttttttx
-....t.tttccccctx
-.....t..tc...ctx
-....tttt....1ctx
-...ttttttc..dctx
-xxtttttttccccctx
-xxtttttttttttttx
-xxxxxttttttttxxx
-xxxxxxxxxxxxxxxx
+        tt t@t
+    tttttt@t.tt
+  ttttt...ttt.tt
+@...t..ttccccc.@
+.....t..tc...ctt
+....tttt....1cttt
+...ttttttc..dctt
+ tt.tttttccccc.@
+ ttt.tttttttt.tt
+  ttt..@tttt.tt
+    ttt  tt@tt
 ENDMAP

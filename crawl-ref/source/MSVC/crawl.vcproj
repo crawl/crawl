@@ -1321,6 +1321,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\l_subvault.cc"
+			>
+		</File>
+		<File
 			RelativePath="..\l_view.cc"
 			>
 		</File>

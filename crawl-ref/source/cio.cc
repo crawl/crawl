@@ -300,6 +300,7 @@ int cancelable_get_line( char *buf, int len, int maxcol,
                          input_history *mh, int (*keyproc)(int &ch) )
 {
     flush_prev_message();
+
     line_reader reader(buf, len, maxcol);
     reader.set_input_history(mh);
     reader.set_keyproc(keyproc);
@@ -408,7 +409,7 @@ int line_reader::read_line(bool clear_previous)
     if (bufsz <= 0)
         return (false);
 
-    cursor_control coff(true);
+    cursor_control con(true);
 
     if (clear_previous)
         *buffer = 0;

@@ -800,6 +800,8 @@ static void draw_player(screen_buffer_t* buffy,
         else
             buffy[1] = CYAN;
     }
+    if (Options.use_fake_player_cursor)
+        buffy[1] |= COLFLAG_REVERSE;
 #else
     buffy[0] = env.tile_fg(ep) = tileidx_player(you.char_class);
     buffy[1] = env.tile_bg(ep);
@@ -951,7 +953,6 @@ void viewwindow(bool monster_updates, bool show_updates)
             crawl_view.viewp.x + crawl_view.viewsz.x - 1,
             crawl_view.viewp.y + crawl_view.viewsz.y - 1,
             buffy);
-
     update_monster_pane();
 #else
     tiles.set_need_redraw();

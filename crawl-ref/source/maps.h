@@ -20,6 +20,8 @@ struct vault_placement;
 int vault_main(vault_placement &vp, const map_def *vault,
                bool check_place = false);
 
+bool resolve_subvault(map_def &vault);
+
 // Given a rectangular region, slides it to fit into the map. size must be
 // smaller than (GXM,GYM).
 void fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
