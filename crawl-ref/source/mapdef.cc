@@ -3830,12 +3830,12 @@ item_spec item_list::parse_single_spec(std::string s)
     if (s == "random" || s == "any" || s == "%")
         return (result);
 
-    if (s == "*")
+    if (s == "*" || s == "star_item")
     {
         result.level = ISPEC_GOOD;
         return (result);
     }
-    else if (s == "|")
+    else if (s == "|" || s == "superb_item")
     {
         result.level = ISPEC_SUPERB;
         return (result);
