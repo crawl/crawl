@@ -608,6 +608,7 @@ void game_options::reset_options()
     mlist_min_height = 5;
     msg_max_height   = 10;
     mlist_allow_alternate_layout = false;
+    messages_at_top  = false;
     mlist_targetting = false;
     classic_hud = false;
     msg_condense_repeats = true;
@@ -2425,6 +2426,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(mlist_min_height, 0, INT_MAX);
     else INT_OPTION(msg_max_height, 6, INT_MAX);
     else BOOL_OPTION(mlist_allow_alternate_layout);
+    else BOOL_OPTION(messages_at_top);
 #ifndef USE_TILE
     else BOOL_OPTION(mlist_targetting);
 #endif

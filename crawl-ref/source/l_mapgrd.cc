@@ -40,12 +40,12 @@ static char* mapgrd_glyph(lua_State *ls, int &col, int &row)
     col = mapc->col;
 
     map_lines &lines = mapc->map->map;
-    if (row < 1 || col < 1 || col > lines.width() || row > lines.height())
+    if (row < 0 || col < 0 || col >= lines.width() || row >= lines.height())
     {
         return (NULL);
     }
 
-    coord_def mc(col - 1, row - 1);
+    coord_def mc(col, row);
     return (&lines(mc));
 }
 

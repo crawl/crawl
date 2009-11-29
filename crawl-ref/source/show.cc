@@ -250,10 +250,13 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
 
 #ifdef USE_TILE
     int idx = igrd(gp);
-    if (feat_is_stair(feat))
-        tile_place_item_marker(ep.x, ep.y, idx);
-    else
-        tile_place_item(ep.x, ep.y, idx);
+    if (idx != NON_ITEM)
+    {
+        if (feat_is_stair(feat))
+            tile_place_item_marker(ep.x, ep.y, idx);
+        else
+            tile_place_item(ep.x, ep.y, idx);
+    }
 #endif
 }
 

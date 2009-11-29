@@ -60,6 +60,7 @@ public:
     int         mlist_min_height;
     int         msg_max_height;
     bool        mlist_allow_alternate_layout;
+    bool        messages_at_top;
     bool        mlist_targetting;
     bool        classic_hud;
     bool        msg_condense_repeats;

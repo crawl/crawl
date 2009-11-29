@@ -58,9 +58,6 @@ class _layout
 
         ASSERT( (msgp+msgsz - termp).x <= termsz.x );
         ASSERT( (msgp+msgsz - termp).y <= termsz.y );
-        // Don't stretch message all the way to the bottom-right
-        // character; it causes scrolling and badness.
-        ASSERT( (msgp+msgsz - termp) != termsz );
 
         ASSERT( (mlistp+mlistsz-termp).x <= termsz.x );
         ASSERT( (mlistp+mlistsz-termp).y <= termsz.y );
@@ -106,7 +103,7 @@ class _inline_layout : public _layout
         _increment(mlistsz.x,  leftover_x(), MLIST_MAX_WIDTH);
         _increment(hud_gutter, leftover_x(), HUD_MAX_GUTTER);
         _increment(mlistsz.x,  leftover_x(), INT_MAX);
-        msgsz.x = termsz.x-1; // Can't use last character.
+        msgsz.x = termsz.x;
 
         // y: View gets as much as it wants.
         // mlist tries to get at least its minimum.
@@ -133,8 +130,16 @@ class _inline_layout : public _layout
         }
 
         // Finish off by doing the positions.
-        viewp  = termp;
-        msgp   = termp + coord_def(0, std::max(viewsz.y, hudsz.y+mlistsz.y));
+        if (Options.messages_at_top)
+        {
+            msgp = termp;
+            viewp = termp + coord_def(0, msgsz.y);
+        }
+        else
+        {
+            viewp  = termp;
+            msgp   = termp + coord_def(0, std::max(viewsz.y, hudsz.y+mlistsz.y));
+        }
         hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
         mlistp = hudp  + coord_def(0, hudsz.y);
 

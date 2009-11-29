@@ -2808,20 +2808,20 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             case WPN_CROSSBOW:
                 if (returning && !one_chance_in(1 + skill_bump(SK_CROSSBOWS)))
                     did_return = true;
-                    break;
+                break;
             case WPN_SLING:
-                if(returning && !one_chance_in(1 + skill_bump(SK_SLINGS)))
+                if (returning && !one_chance_in(1 + skill_bump(SK_SLINGS)))
                     did_return = true;
-                    break;
+                break;
             case WPN_BOW:
             case WPN_LONGBOW:
-                if(returning && !one_chance_in(1 + skill_bump(SK_BOWS)))
+                if (returning && !one_chance_in(1 + skill_bump(SK_BOWS)))
                     did_return = true;
-                    break;
+                break;
             case WPN_BLOWGUN:
-                if(returning && !one_chance_in(1 + skill_bump(SK_DARTS)))
+                if (returning && !one_chance_in(1 + skill_bump(SK_DARTS)))
                     did_return = true;
-                    break;
+                break;
             default:
                 break;
         }
