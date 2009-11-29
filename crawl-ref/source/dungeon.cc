@@ -138,6 +138,7 @@ static void _place_extra_vaults();
 static void _place_minivaults(const std::string &tag = "",
                               int fewest = -1, int most = -1,
                               bool force = false);
+static int _place_uniques(int level_number, char level_type);
 static void _place_traps( int level_number );
 static void _place_fog_machines( int level_number );
 static void _prepare_swamp();
@@ -1838,6 +1839,10 @@ static void _build_dungeon_level(int level_number, int level_type)
     _place_minivaults();
     _place_branch_entrances( level_number, level_type );
     _place_extra_vaults();
+
+    // XXX: Moved this here from builder_monsters so that connectivity can be
+    //      ensured
+    _place_uniques(level_number, level_type);
 
     // Place shops, if appropriate. This must be protected by the connectivity
     // check.
@@ -3760,8 +3765,6 @@ static void _builder_monsters(int level_number, char level_type, int mon_wanted)
 
         place_monster(mg);
     }
-
-    _place_uniques(level_number, level_type);
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters(level_number, level_type);
