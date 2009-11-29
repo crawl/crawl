@@ -5,20 +5,20 @@
 # Tukima's Studio
 #    threat: 6 dancing weapons, dancing weapon machine generating up to 5 more
 #    loot:   the weapons, tukima's book and a scroll of acquirement
-#    xp:     ???
+#    xp:     14400 or so
 #    layout: mirrors; grey and white
 #
 # Erinya's Formal Garden
 #    crumbling stone walls.
 #    threat: centaurs, oklobs
-#    loot:   
-#    xp:
+#    loot:   a staff and four spellbooks
+#    xp:     10500 or so
 #    layout: formal (French) garden, flowers, crumbling stone walls
 #
 # Doroklohe's Tomb
 #    threat: either Tomb set or demons or golems
 #    loot:   either scrolls or armours or random items
-#    xp:
+#    xp:     10000+
 #    layout: lots of tombs with loot and monsters inside
 #    colour: yellow tombs, rest is dark, floor is randomised
 #
@@ -64,8 +64,8 @@
 #    Wu Xia kung fu monastery; unarmed human threats, everything appears to be
 #    "dark"; some humans may wield quarterstaves. Wucad Mu as loot! Orange
 #    crystal statues.
-# Botono's Bayou: A bay-like area with small huts, dark coloured wizards that
-#    cast negative-related spells, black draconians, rebranded swamp worms.
+# Botono's Bayou: A bay-like area with small huts, wizards that cast negative
+#    related spells, shadow dragons, rebranded swamp worms, wraiths, spectrals.
 # Ukta's Hut: phantoms, other "ghosts", ogre mages and ogres, druidic style,
 #    wooden walls set in a forest (more "earthy" than Erinya's Garden)
 # The Alchemist's Tower: gold turned into things, things turned into gold.
@@ -164,7 +164,7 @@ default-depth:
 ###############################################################################
 # And arrivals!
 ###############################################################################
-# Firstly, we have Tukima's Studio.
+# Firstly, we have Tukima's Dance Studio.
 #
 # Todo: clean up the code
 NAME:       wizlab_tukima
@@ -310,7 +310,7 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Erinya's Garden
+# Erinya's Formal Garden
 #
 # Map was based on this image: http://upload.wikimedia.org/wikipedia/commons/5
 #          /58/Plan_du_ch%C3%A2teau_et_des_jardins_de_Clagny_dessin%C3%A9_par_
@@ -407,7 +407,7 @@ cttttttt..111.........T.........111..tttttttc
 ctttttt...121.tttttc.....cttttt.121...ttttttc
 cttttt.tty...yttttttcc=cctttttty...ytt.tttttc
 ctttt.tttty.yttttttt.....ttttttty.ytttt.ttttc
-cttt.tttttt.ttttttty.232.yttttttt.tttttt.tttc
+cttt.tttttt.tttttttyd232eyttttttt.tttttt.tttc
 cttt.tttttt..tttttttydefyttttttt..tttttt.tttc
 ctttt.tttttt..tttttttytyttttttt..tttttt.ttttc
 cttttt.tttttt..ttttttttttttttt..tttttt.tttttc
@@ -432,7 +432,7 @@ ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
-# Doroklohe's Tomb
+# Doroklohe's Forbidden Tomb
 #
 # It seems as if he practised box casting. I wonder what that's good for.
 # Vault by dpeg. Thanks to Enne for box_glyph and to Jude for triggers.
@@ -448,139 +448,137 @@ TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 LROCKCOL:   yellow
 KFEAT:      ! = x
 {{
-    function make_box(cenx, ceny, gly)
-        for ox = -1, 1 do
-            for oy = -1, 1 do
-                local x = cenx + ox
-                local y = ceny + oy
-                if (x >= 1 and y >= 1 and x <= width() and y <= height()) then
-                    if (ox ~= 0 or oy ~= 0) then
-                        mapgrd[x][y] = gly;
-                    end
-                end
-            end
+function make_box(cenx, ceny, gly)
+  for ox = -1, 1 do
+    for oy = -1, 1 do
+      local x = cenx + ox
+      local y = ceny + oy
+      if (x >= 1 and y >= 1 and x <= width() and y <= height()) then
+        if (ox ~= 0 or oy ~= 0) then
+          mapgrd[x][y] = gly;
         end
+      end
     end
---
-    function box_glyph(findgly, boxgly)
-        local glyphs = {gly_points(findgly)}
-        for i = 1, #glyphs, 2 do
-            -- This is ugly.  gly_points should return 1-indexed coordinates.
-            make_box(glyphs[i] + 1, glyphs[i+1] + 1, boxgly)
-        end
-    end
+  end
+end
+
+function box_glyph(findgly, boxgly)
+  local glyphs = {gly_points(findgly)}
+  for i = 1, #glyphs, 2 do
+    -- This is ugly.  gly_points should return 1-indexed coordinates.
+    make_box(glyphs[i] + 1, glyphs[i+1] + 1, boxgly)
+  end
+end
 }}
-# There are two layouts: round and grid.
-# Round has 19 boxes: 12 % and 6 * and 1 |
-# Grid has 21 boxes: b-u and |
-# Layout for grid can be regular or random.
+#           There are two layouts: round and grid.
+#           Round has 19 boxes: 12 % and 6 * and 1 |
+#           Grid has 21 boxes: b-u and |
+#           Layout for grid can be regular or random.
 #
-: local layout = crawl.random2(13)
-: if layout < 3 then
-# Preparation for the rare regular grid layout.
-SUBST:   b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
-SUBST:   l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
-SUBST:   B=b, C=c, D=d, E=e, F=f, G=g, H=h, I=i, J=j, K=k
-SUBST:   L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
-: end
-: if layout > 9 then
-# First the round layout...
-COLOUR:  _ = darkgrey
-KFEAT:   _ = stone_wall
-SUBST:   b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
-SUBST:   l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
-SUBST:   B=., C=., D=., E=., F=., G=., H=., I=., J=., K=.
-SUBST:   L=., M=., N=., O=., P=., Q=., R=., S=., T=., U=.
-: else
-# ...and now the grid layout.
-SUBST:   _ = .
-SUBST:   *=., %=.
-SUBST:   B=b, C=c, D=d, E=e, F=f, G=g, H=h, I=i, J=j, K=k
-SUBST:   L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
-NSUBST:  b = 1:b / *:.
-NSUBST:  c = 1:c / *:.
-NSUBST:  d = 1:d / *:.
-NSUBST:  e = 1:e / *:.
-NSUBST:  f = 1:f / *:.
-NSUBST:  g = 1:g / *:.
-NSUBST:  h = 1:h / *:.
-NSUBST:  i = 1:i / *:.
-NSUBST:  j = 1:j / *:.
-NSUBST:  k = 1:k / *:.
-NSUBST:  l = 1:l / *:.
-NSUBST:  m = 1:m / *:.
-NSUBST:  n = 1:n / *:.
-NSUBST:  o = 1:o / *:.
-NSUBST:  p = 1:p / *:.
-NSUBST:  q = 1:q / *:.
-NSUBST:  r = 1:r / *:.
-NSUBST:  s = 1:s / *:.
-NSUBST:  t = 1:t / *:.
-NSUBST:  u = 1:u / *:.
-# Of the outer boxes, three are damaged.
-SHUFFLE: bcdefghijklm
-: box_glyph('b', 'X')
-: box_glyph('c', 'Y')
-: box_glyph('d', 'Z')
-SUBST:   b = .
-SUBST:   c = .
-SUBST:   d = .
-NSUBST:  X = 1=. / *=!:20 .:1
-NSUBST:  Y = 1=. / *=!:30 .:1
-NSUBST:  Z = 1=. / *=!:50 .:1
-# For the other boxes, prepare same setup as for the round layout (i.e. six *'s)
-SHUFFLE: nqru
-SUBST:   e=%, f=%, g=%, h=%, i=%, j=%, k=%, l=%, m=%, n=%
-SUBST:   o=*, p=*, q=%, r=*, s=*, t=*, u=*
-: end
-#
-# Monsters
-# 0 Tomb set: zombies, mummies
-# 1 Demons (if demons are added or reclassified, please change this set!)
-# 2 Golems
-# 3 Holy set (for later)
-: local mrnd = crawl.random2(4)
-: if mrnd == 0 then
-KMONS:  % = clay golem / wood golem / toenail golem w:2
-KMONS:  * = stone golem / crystal golem / iron golem
-KMONS:  | = electric golem
-: elseif mrnd == 1 then
-KMONS:  % = blue devil / iron devil / ynoxinul / neqoxec / hellion / chaos spawn /\
-            demonic crawler / hellwing / orange demon / shadow demon / tormentor
-KMONS:  * = lorocyproca / reaper / soul eater / ice devil / sun demon
-KMONS:  | = blue death / green death / pit fiend / fiend / shadow fiend / ice fiend /\
-            executioner / balrug / cacodemon
-: else
-KMONS:  % = place:D:15 zombie / guardian mummy w:2
-KMONS:  * = place:D:27 zombie / greater mummy w:5
-KMONS:  | = ancient lich
-: end
-#
-# Loot.
-# 0 = scrolls. 1 = armours. 2 = mixed.
-: local lrnd = crawl.random2(3)
-: if lrnd == 0 then
-KITEM:  % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
-: kitem("* = " .. dgn.good_scrolls)
-KITEM:  | = scroll of acquirement / scroll of enchant weapon III q:2 /\
-            scroll of blinking q:2, scroll of fog q:2, scroll of holy word q:2
-: elseif lrnd == 1 then
-KITEM:  % = any armour 
-KITEM:  * = any good_item armour
-KITEM:  | = cursed robe ego:resistance / cursed gold dragon armour
-: else
-KITEM:  % = any / star_item w:2
-KITEM:  * = star_item / superb_item w:2
-KITEM:  | = superb_item
-: end
-#
-# Boxification:
-: box_glyph('%', '!')
-: box_glyph('*', '!')
-: box_glyph('|', '!')
-:           wizlab_setup(_G, "Doroklohe's Forbidden Tomb")
-# Intentionally colouring the floor glyphs of the central room only.
-# The squares beneath the boxes and outside of the room to be uncoloured.
+:           local layout = crawl.random2(13)
+:           if layout < 3 then
+#           Preparation for the rare regular grid layout.
+SUBST:      b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
+SUBST:      l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
+SUBST:      B=b, C=c, D=d, E=e, F=f, G=g, H=h, I=i, J=j, K=k
+SUBST:      L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
+:           end
+:           if layout > 9 then
+#           First the round layout...
+COLOUR:     _ = darkgrey
+KFEAT:      _ = stone_wall
+SUBST:      b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
+SUBST:      l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
+SUBST:      B=., C=., D=., E=., F=., G=., H=., I=., J=., K=.
+SUBST:      L=., M=., N=., O=., P=., Q=., R=., S=., T=., U=.
+:           else
+#           ...and now the grid layout.
+SUBST:      _ = .
+SUBST:      *=., %=.
+SUBST:      B=b, C=c, D=d, E=e, F=f, G=g, H=h, I=i, J=j, K=k
+SUBST:      L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
+NSUBST:     b = 1:b / *:.
+NSUBST:     c = 1:c / *:.
+NSUBST:     d = 1:d / *:.
+NSUBST:     e = 1:e / *:.
+NSUBST:     f = 1:f / *:.
+NSUBST:     g = 1:g / *:.
+NSUBST:     h = 1:h / *:.
+NSUBST:     i = 1:i / *:.
+NSUBST:     j = 1:j / *:.
+NSUBST:     k = 1:k / *:.
+NSUBST:     l = 1:l / *:.
+NSUBST:     m = 1:m / *:.
+NSUBST:     n = 1:n / *:.
+NSUBST:     o = 1:o / *:.
+NSUBST:     p = 1:p / *:.
+NSUBST:     q = 1:q / *:.
+NSUBST:     r = 1:r / *:.
+NSUBST:     s = 1:s / *:.
+NSUBST:     t = 1:t / *:.
+NSUBST:     u = 1:u / *:.
+#           Of the outer boxes, three are damaged.
+SHUFFLE:    bcdefghijklm
+:           box_glyph('b', 'X')
+:           box_glyph('c', 'Y')
+:           box_glyph('d', 'Z')
+SUBST:      b = .
+SUBST:      c = .
+SUBST:      d = .
+NSUBST:     X = 1=. / *=!:20 .:1
+NSUBST:     Y = 1=. / *=!:30 .:1
+NSUBST:     Z = 1=. / *=!:50 .:1
+#           For the other boxes, prepare same setup as for the 
+#           round layout (i.e. six *'s)
+SHUFFLE:    nqru
+SUBST:      e=%, f=%, g=%, h=%, i=%, j=%, k=%, l=%, m=%, n=%
+SUBST:      o=*, p=*, q=%, r=*, s=*, t=*, u=*
+:           end
+#           Monsters
+#            0 Tomb set: zombies, mummies
+#            1 Demons (if demons are added or reclassified, please change!)
+#            2 Golems
+#            3 Holy set (for later)
+:           local mrnd = crawl.random2(4)
+:           if mrnd == 0 then
+KMONS:      % = clay golem / wood golem / toenail golem w:2
+KMONS:      * = stone golem / crystal golem / iron golem
+KMONS:      | = electric golem
+:           elseif mrnd == 1 then
+KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / hellion /\
+                / chaos spawn / demonic crawler / hellwing / orange demon /\
+                shadow demon / tormentor
+KMONS:      * = lorocyproca / reaper / soul eater / ice devil / sun demon
+KMONS:      | = blue death / green death / pit fiend / fiend / shadow fiend /\
+                ice fiend / executioner / balrug / cacodemon
+:           else
+KMONS:      % = place:D:15 zombie / guardian mummy w:2
+KMONS:      * = place:D:27 zombie / greater mummy w:5
+KMONS:      | = ancient lich
+:           end
+#           Loot.
+#           0 = scrolls. 1 = armours. 2 = mixed.
+:           local lrnd = crawl.random2(3)
+:           if lrnd == 0 then
+KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
+:           kitem("* = " .. dgn.good_scrolls)
+KITEM:      | = scroll of acquirement / scroll of enchant weapon III q:2 /\
+                scroll of blinking q:2, scroll of fog q:2, scroll of holy word q:2
+:           elseif lrnd == 1 then
+KITEM:      % = any armour 
+KITEM:      * = any good_item armour
+KITEM:      | = cursed robe ego:resistance / cursed gold dragon armour
+:           else
+KITEM:      % = any / star_item w:2
+KITEM:      * = star_item / superb_item w:2
+KITEM:      | = superb_item
+:           end
+#           Boxification:
+:           box_glyph('%', '!')
+:           box_glyph('*', '!')
+:           box_glyph('|', '!')
+#           Intentionally colouring the floor glyphs of the central room only.
+#           The squares beneath the boxes are to remain uncoloured.
 COLOUR:     ^ = darkgrey
 COLOUR:     = = yellow
 KFEAT:      ^ = stone_wall
@@ -623,12 +621,21 @@ function convert_boxes (data, triggerable, triggerer, marker, ev)
   end
 end
 
-local box_marker = TriggerableFunction:new { func = convert_boxes, repeated = true, data = {phase=1} }
+local box_marker = TriggerableFunction:new {func=convert_boxes,
+    repeated=true, data={phase=1} }
 
-box_marker:add_triggerer(DgnTriggerer:new { type="turn", delay_min=500, delay_max=1000})
+box_marker:add_triggerer(DgnTriggerer:new { type="turn",
+    delay_min=500, delay_max=1000})
 
 lua_marker("A", box_marker)
 }}
+:           dgn.set_feature_desc_short("rock wall", "strange rock wall")
+:           dgn.set_feature_desc_long("rock wall", "It is decorated with "
+:                                  .. "images you might see in a tomb.")
+:           dgn.set_feature_desc_short("stone wall", "highly decorated stone")
+:           dgn.set_feature_desc_long("stone wall", "It is covered with amazing"
+:                                  .. " images and art.")
+:           wizlab_setup(_G, "Doroklohe's Forbidden Tomb")
 MAP
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^________________...........________________^
@@ -665,3 +672,12 @@ MAP
                 ^^^^^^^^^^^^^
 ENDMAP
 
+###############################################################################
+# Wucad Mu's Monastery
+#
+NAME:       wizlab_wucad
+ORIENT:     encompass
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "Wucad Mu's Monastery")
+MAP
+ENDMAP
