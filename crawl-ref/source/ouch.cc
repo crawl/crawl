@@ -112,7 +112,7 @@ int check_your_resists(int hurted, beam_type flavour)
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original)
         {
-            mpr("The fire burns terribly!");
+            mpr("The fire burns you terribly!");
             xom_is_stimulated(200);
         }
         break;
@@ -204,7 +204,7 @@ int check_your_resists(int hurted, beam_type flavour)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
         else if (hurted > original)
         {
-            mpr("The lava burns terribly!");
+            mpr("The lava burns you terribly!");
             xom_is_stimulated(200);
         }
         break;
