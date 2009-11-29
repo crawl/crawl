@@ -32,7 +32,7 @@ function iter.rectangle_iterator:_new ()
   return m
 end
 
-function iter.rectangle_iterator:new (corner1, corner2, filter)
+function iter.rectangle_iterator:new (corner1, corner2, filter, rvi)
   if corner1 == nil or corner2 == nil then
     error("need two corners to a rectangle")
   end
@@ -51,6 +51,7 @@ function iter.rectangle_iterator:new (corner1, corner2, filter)
   mt.cur_x = corner1.x - 1
   mt.cur_y = corner1.y
   mt.filter = filter or nil
+  mt.rvi = rvi or false
 
   return mt:iter()
 end
@@ -64,15 +65,15 @@ function iter.rectangle_iterator:next()
       if self.cur_y > self.max_y then
         point = -1
       else
-        point = dgn.point(self.cur_x, self.cur_y)
-        if not self:check_filter(point) then
+        point = self:check_filter(dgn.point(self.cur_x, self.cur_y))
+        if point == nil then
           point = -2
         end
       end
     else
       self.cur_x = self.cur_x + 1
-      point = dgn.point(self.cur_x, self.cur_y)
-      if not self:check_filter(point) then
+      point = self:check_filter(dgn.point(self.cur_x, self.cur_y))
+      if point == nil then
         point = -2
       end
     end
@@ -89,12 +90,16 @@ end
 function iter.rectangle_iterator:check_filter(point)
   if self.filter ~= nil then
     if self.filter(point) then
-      return true
+      if self.rvi then
+        return self.filter(point)
+      else
+        return point
+      end
     else
-      return false
+      return nil
     end
   else
-    return true
+    return point
   end
 end
 
@@ -318,4 +323,70 @@ function iter.subvault_iterator (e, filter)
   end
 
   return iter.rect_iterator(top_corner, bottom_corner, check_mask)
+end
+
+-------------------------------------------------------------------------------
+-- Marker iterators
+--   firstly, a point iterator. It's really just a fancy ipairs(), but stateful
+--   and with the ability to filter points.
+-------------------------------------------------------------------------------
+
+iter.point_iterator = {}
+
+function iter.point_iterator:_new ()
+  local m = {}
+  setmetatable(m, self)
+  self.__index = self
+  return m
+end
+
+function iter.point_iterator:new (ptable, filter, rv_instead)
+  if ptable == nil then
+    error("ptable cannot be nil for point_iterator")
+  end
+
+  local mt  = iter.point_iterator:_new()
+  mt.cur_p  = 0
+  mt.table  = ptable
+  mt.rvi    = rv_instead or false
+  mt.filter = filter or nil
+
+  return mt:iter()
+end
+
+function iter.point_iterator:next()
+  local point = nil
+  local q = 0
+  repeat
+    q = q + 1
+    self.cur_p = self.cur_p + 1
+    point = self:check_filter(self.table[self.cur_p])
+  until point or q == 10
+
+  return point
+end
+
+function iter.point_iterator:check_filter(point)
+  if self.filter ~= nil then
+    if self.filter(point) then
+      if self.rvi then 
+        return self.filter(point)
+      else
+        return point
+      end
+    else
+      return nil
+    end
+  else
+    return point
+  end
+end
+
+function iter.point_iterator:iter ()
+  return function() return self:next() end, nil, nil
+end
+
+-- An easier and more posh way of interfacing with find_marker_positions_by_prop.
+function iter.slave_iterator (prop, value)
+  return iter.point_iterator:new(dgn.find_marker_positions_by_prop(prop, value))
 end
