@@ -27,6 +27,7 @@
 #include "env.h"
 #include "enum.h"
 #include "map_knowledge.h"
+#include "flood_find.h"
 #include "fprop.h"
 #include "externs.h"
 #include "options.h"

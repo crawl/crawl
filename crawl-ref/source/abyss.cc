@@ -44,6 +44,7 @@
 #endif
 #include "tiles.h"
 #include "traps.h"
+#include "travel.h"
 #include "view.h"
 #include "xom.h"
 

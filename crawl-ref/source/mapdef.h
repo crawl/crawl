@@ -21,7 +21,7 @@
 #include "matrix.h"
 #include "fprop.h"
 #include "makeitem.h"
-#include "travel.h"
+#include "travel_defs.h"
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
 // a suitable mirror.

@@ -35,6 +35,7 @@
 #include "spells3.h"
 #include "stuff.h"
 #include "env.h"
+#include "travel.h"
 #include "transfor.h"
 #include "traps.h"
 #include "view.h"

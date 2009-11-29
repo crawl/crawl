@@ -18,6 +18,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "dlua.h"
+#include "exclude.h"
 #include "fprop.h"
 #include "files.h"
 #include "food.h"

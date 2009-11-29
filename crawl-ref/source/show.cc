@@ -8,6 +8,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "env.h"
+#include "exclude.h"
 #include "fprop.h"
 #include "itemprop.h"
 #include "mon-stuff.h"

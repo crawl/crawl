@@ -450,6 +450,8 @@ ITEM:     (list of items, separated by comma)
           * "cursed" gets a curse plus plusses as in "damaged".
           * "any" by itself gives a random choice; you can combine "any" with
             "good_item."
+          * "star_item" by itself makes an item equivalent to the "*" glyph.
+          * "superb_item" by itself makes an item equivallent to the "|" glyph.
           * "any book", "any misc" etc. gives a random item of that class.
             Valid item class names are: gold, weapon, missile, armour, wand,
             food, scroll, jewelry, potion, book, staff, orb, misc, carrion.

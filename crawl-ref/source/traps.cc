@@ -35,6 +35,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "travel.h"
 #include "env.h"
 #include "areas.h"
 #include "terrain.h"

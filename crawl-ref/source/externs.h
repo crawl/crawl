@@ -400,6 +400,66 @@ public:
     void load(reader&);
 };
 
+// A position on a particular level.
+struct level_pos
+{
+    level_id      id;
+    coord_def     pos;      // The grid coordinates on this level.
+
+    level_pos() : id(), pos()
+    {
+        pos.x = pos.y = -1;
+    }
+
+    level_pos(const level_id &lid, const coord_def &coord)
+        : id(lid), pos(coord)
+    {
+    }
+
+    level_pos(const level_id &lid)
+        : id(lid), pos()
+    {
+        pos.x = pos.y = -1;
+    }
+
+    // Returns the level_pos of where the player is standing.
+    static level_pos current();
+
+    bool operator == ( const level_pos &lp ) const
+    {
+        return id == lp.id && pos == lp.pos;
+    }
+
+    bool operator != ( const level_pos &lp ) const
+    {
+        return id != lp.id || pos != lp.pos;
+    }
+
+    bool operator <  ( const level_pos &lp ) const
+    {
+        return (id < lp.id) || (id == lp.id && pos < lp.pos);
+    }
+
+    bool is_valid() const
+    {
+        return id.depth > -1 && pos.x != -1 && pos.y != -1;
+    }
+
+    bool is_on( const level_id _id)
+    {
+        return id == _id;
+    }
+
+    void clear()
+    {
+        id.clear();
+        pos = coord_def(-1, -1);
+    }
+
+    void save(writer&) const;
+    void load(reader&);
+};
+
 class monsters;
 
 struct item_def

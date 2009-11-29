@@ -38,6 +38,7 @@
 #include "env.h"
 #include "terrain.h"
 #include "traps.h"
+#include "travel.h"
 #include "view.h"
 
 static std::vector<int> vault_mon_types;

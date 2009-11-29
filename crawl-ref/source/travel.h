@@ -10,6 +10,9 @@
 
 #include "exclude.h"
 
+// For travel_distance_col and travel_distance_grid_t
+#include "travel_defs.h"
+
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -139,9 +142,6 @@ const int PD_EXCLUDED = -20099;
 // This square is within LOS radius of an excluded square
 const int PD_EXCLUDED_RADIUS = -20100;
 
-typedef int travel_distance_col[GYM];
-typedef travel_distance_col travel_distance_grid_t[GXM];
-
 /* ***********************************************************************
  * Array of points on the map, each value being the distance the character
  * would have to travel to get there. Negative distances imply that the point
@@ -173,67 +173,6 @@ enum explore_stop_type
 
 ////////////////////////////////////////////////////////////////////////////
 // Structs for interlevel travel.
-
-
-// A position on a particular level.
-struct level_pos
-{
-    level_id      id;
-    coord_def     pos;      // The grid coordinates on this level.
-
-    level_pos() : id(), pos()
-    {
-        pos.x = pos.y = -1;
-    }
-
-    level_pos(const level_id &lid, const coord_def &coord)
-        : id(lid), pos(coord)
-    {
-    }
-
-    level_pos(const level_id &lid)
-        : id(lid), pos()
-    {
-        pos.x = pos.y = -1;
-    }
-
-    // Returns the level_pos of where the player is standing.
-    static level_pos current();
-
-    bool operator == ( const level_pos &lp ) const
-    {
-        return id == lp.id && pos == lp.pos;
-    }
-
-    bool operator != ( const level_pos &lp ) const
-    {
-        return id != lp.id || pos != lp.pos;
-    }
-
-    bool operator <  ( const level_pos &lp ) const
-    {
-        return (id < lp.id) || (id == lp.id && pos < lp.pos);
-    }
-
-    bool is_valid() const
-    {
-        return id.depth > -1 && pos.x != -1 && pos.y != -1;
-    }
-
-    bool is_on( const level_id _id)
-    {
-        return id == _id;
-    }
-
-    void clear()
-    {
-        id.clear();
-        pos = coord_def(-1, -1);
-    }
-
-    void save(writer&) const;
-    void load(reader&);
-};
 
 struct travel_target
 {
