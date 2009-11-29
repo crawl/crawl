@@ -538,10 +538,12 @@ KMONS:  * = executioner / ancient lich
 :           wizlab_setup(_G, "Doroklohe's Forbidden Tomb")
 # Intentionally colouring the floor glyphs of the central room only.
 # The squares beneath the boxes and outside of the room to be uncoloured.
-COLOUR:     )^ = darkgrey
-KFEAT:      )^ = stone_wall
-COLOUR:     . = darkgrey / blue w:3 / yellow w:1
+COLOUR:     ^ = darkgrey
+COLOUR:     = = yellow
+KFEAT:      ^ = stone_wall
+COLOUR:     . = darkgrey / blue w:3 / cyan w:1
 MARKER:     ! = lua:portal_desc {wall_drop=1}
+MARKER:     = = lua:portal_desc {wall_drop=1}
 {{
 
 function convert_boxes (data, triggerable, triggerer, marker, ev)
@@ -587,7 +589,7 @@ local box_marker = TriggerableFunction:new { func = convert_boxes, repeated = tr
 
 box_marker:add_triggerer(DgnTriggerer:new { type="turn", delay_min=500, delay_max=1000})
 
-lua_marker(")", box_marker)
+lua_marker("A", box_marker)
 }}
 MAP
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -613,7 +615,14 @@ MAP
 ^_______l....kk......j+j......ii....h_______^
 ^_________........................._________^
 ^____________...................____________^
-^________________...<.A.....________________^
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            )
+^________________...........________________^
+^^^^^^^^^^^^^^^^^^^^^^.^^^^^^^^^^^^^^^^^^^^^^
+                ^____...____^
+                ^__.......__^
+                ^_...!=!..._^
+                ^_.<.=A=.<._^
+                ^_...!=!..._^
+                ^__.......__^
+                ^____...____^
+                ^^^^^^^^^^^^^
 ENDMAP
