@@ -130,8 +130,16 @@ class _inline_layout : public _layout
         }
 
         // Finish off by doing the positions.
-        viewp  = termp;
-        msgp   = termp + coord_def(0, std::max(viewsz.y, hudsz.y+mlistsz.y));
+        if (Options.messages_at_top)
+        {
+            msgp = termp;
+            viewp = termp + coord_def(0, msgsz.y);
+        }
+        else
+        {
+            viewp  = termp;
+            msgp   = termp + coord_def(0, std::max(viewsz.y, hudsz.y+mlistsz.y));
+        }
         hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
         mlistp = hudp  + coord_def(0, hudsz.y);
 

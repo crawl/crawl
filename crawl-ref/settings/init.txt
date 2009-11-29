@@ -247,6 +247,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # mlist_min_height             = 5
 # msg_max_height               = 10
 # mlist_allow_alternate_layout = true
+# messages_at_top              = true
 # mlist_targetting             = true
 # show_gold_turns              = true
 
