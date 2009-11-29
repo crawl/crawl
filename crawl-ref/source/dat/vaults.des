@@ -602,7 +602,7 @@ ENDMAP
 ##############################################################################
 # Vault:8 - Rooms Quadrant - Rune Subvault
 #
-# The room in the rooms quadrant that actually contains the rune.
+# Potentially contains the rune.
 #
 NAME: vault8_room_rune
 TAGS: vault8_room_rune
