@@ -2777,7 +2777,7 @@ void monsters::banish(const std::string &)
     coord_def old_pos = pos();
 
     if (!silenced(pos()) && can_speak())
-        simple_monster_message(this, (" screams as " + pronoun(PRONOUN_OBJECTIVE)
+        simple_monster_message(this, (" screams as " + pronoun(PRONOUN_NOCAP)
             + " is devoured by a tear in reality.").c_str(),
             MSGCH_BANISHMENT);
     else
