@@ -560,8 +560,8 @@ ITEM:   any good_item / any
 ITEM:   any jewellery good_item / any good_item
 ITEM:   acquire weapon / acquire armour / any good_item
 ITEM:   potion of cure mutation
+BORDER: deep_water
 : trove_setup_features(_G)
-: set_border_fill_type("deep_water")
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww

@@ -986,7 +986,7 @@ NSUBST:     M = 4:1 / 1:2 / *:.
 NSUBST:     N = 6:1 / *:.
 SUBST:      " = ..'
 KFEAT:      ' = alarm trap
-:           set_border_fill_type("open_sea")
+BORDER:     open_sea
 :           fiery_humans(_G)
 :           volcano_setup(_G)
 :           place_chained_volcano(_G)

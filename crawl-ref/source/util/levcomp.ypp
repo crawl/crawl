@@ -55,6 +55,7 @@ level_range set_range(const char *s, int start, int end)
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE WEIGHT MONS ITEM MARKER COLOUR
 %token <i>      PRELUDE MAIN VALIDATE VETO NSUBST WELCOME LFLAGS BFLAGS
 %token <i>      LFLOORCOL LROCKCOL LFLOORTILE LROCKTILE FTILE RTILE SUBVAULT
+%token <i>      BORDER
 
 %token <i>      COMMA COLON PERC INTEGER CHARACTER
 
@@ -164,6 +165,7 @@ metaline        : place
                 | lrockcol
                 | lfloortile
                 | lrocktile
+                | border
                 | ftile
                 | rtile
                 | shuffle
@@ -404,6 +406,14 @@ lrocktile       : LROCKTILE { }
                             quote_lua_string($2).c_str()));
                 }
 
+border          : BORDER { }
+                | BORDER STRING
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("border(\"%s\")",
+                            quote_lua_string($2).c_str()));
+                }
 
 ftile           : FTILE ftile_specifiers
                 ;
