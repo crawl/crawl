@@ -698,11 +698,11 @@ CONTRIB_LIBS += $(LIBSDL)
 endif
 ifdef BUILD_LIBPNG
 CONTRIBS += libpng
-# Links to rltiles, not to Crawl itself
+CONTRIB_LIBS += $(LIBPNG)
 endif
 ifdef BUILD_ZLIB
 CONTRIBS += zlib
-# Links to rltiles, not to Crawl itself
+CONTRIB_LIBS += $(LIBZ)
 endif
 ifdef BUILD_LUA
 CONTRIBS += lua/src
