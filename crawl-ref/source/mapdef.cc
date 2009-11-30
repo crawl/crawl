@@ -1989,7 +1989,6 @@ void map_def::write_index(writer& outf) const
     marshallString4(outf, place_loaded_from.filename);
     marshallLong(outf, place_loaded_from.lineno);
     marshallShort(outf, orient);
-    marshallShort(outf, static_cast<short>(border_fill_type));
     marshallLong(outf, chance_priority);
     marshallLong(outf, chance);
     marshallLong(outf, weight);
@@ -2006,7 +2005,6 @@ void map_def::read_index(reader& inf)
     unmarshallString4(inf, place_loaded_from.filename);
     place_loaded_from.lineno   = unmarshallLong(inf);
     orient       = static_cast<map_section_type>( unmarshallShort(inf) );
-    border_fill_type = static_cast<dungeon_feature_type>( unmarshallShort(inf) );
     chance_priority = unmarshallLong(inf);
     chance       = unmarshallLong(inf);
     weight       = unmarshallLong(inf);

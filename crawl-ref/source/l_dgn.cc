@@ -773,32 +773,6 @@ static int dgn_get_rock_colour(lua_State *ls)
     PLUARET(string, colour_to_str(env.rock_colour).c_str());
 }
 
-bool _valid_border_feat (dungeon_feature_type feat)
-{
-    return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
-            || (feat == DNGN_TREES || feat == DNGN_OPEN_SEA
-               || feat == DNGN_LAVA || feat == DNGN_DEEP_WATER
-               || feat == DNGN_SHALLOW_WATER || feat == DNGN_FLOOR));
-}
-
-static int dgn_border(lua_State *ls)
-{
-    MAP(ls, 1, map);
-    if (lua_gettop(ls) != 2)
-        luaL_error(ls, "set_border_fill_type requires a feature.");
-
-    std::string fill_string = luaL_checkstring(ls, 2);
-    dungeon_feature_type fill_type = dungeon_feature_by_name(fill_string);
-
-    if (_valid_border_feat(fill_type))
-        map->border_fill_type = fill_type;
-    else
-        luaL_error(ls, ("set_border_fill_type cannot be the feature '" +
-                         fill_string +"'.").c_str());
-
-    PLUARET(string, dungeon_feature_name(map->border_fill_type));
-}
-
 static int _lua_colour(lua_State *ls, int ndx,
                        int forbidden_colour = -1)
 {
@@ -942,6 +916,32 @@ static int lua_dgn_set_lt_callback(lua_State *ls)
         return (0);
 
     dgn_set_lt_callback(level_type, callback_name);
+
+    return (0);
+}
+
+bool _valid_border_feat (dungeon_feature_type feat)
+{
+    return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
+            || (feat == DNGN_TREES || feat == DNGN_OPEN_SEA
+               || feat == DNGN_LAVA || feat == DNGN_DEEP_WATER
+               || feat == DNGN_SHALLOW_WATER || feat == DNGN_FLOOR));
+}
+
+static int lua_dgn_set_border_fill_type (lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (lua_gettop(ls) != 2)
+        luaL_error(ls, "set_border_fill_type requires a feature.");
+
+    std::string fill_string = luaL_checkstring(ls, 2);
+    dungeon_feature_type fill_type = dungeon_feature_by_name(fill_string);
+
+    if (_valid_border_feat(fill_type))
+        map->border_fill_type = fill_type;
+    else
+        luaL_error(ls, ("set_border_fill_type cannot be the feature '" +
+                         fill_string +"'.").c_str());
 
     return (0);
 }
@@ -1711,7 +1711,6 @@ const struct luaL_reg dgn_dlib[] =
 { "colour", dgn_colour },
 { "lfloorcol", dgn_lfloorcol},
 { "lrockcol", dgn_lrockcol},
-{ "border", dgn_border},
 { "normalise", dgn_normalise },
 { "map", dgn_map },
 { "mons", dgn_mons },
@@ -1747,6 +1746,7 @@ const struct luaL_reg dgn_dlib[] =
 { "change_floor_colour", dgn_change_floor_colour },
 { "change_rock_colour",  dgn_change_rock_colour },
 { "set_lt_callback", lua_dgn_set_lt_callback },
+{ "set_border_fill_type", lua_dgn_set_border_fill_type },
 { "fixup_stairs", dgn_fixup_stairs },
 { "floor_halo", dgn_floor_halo },
 { "random_walk", dgn_random_walk },
