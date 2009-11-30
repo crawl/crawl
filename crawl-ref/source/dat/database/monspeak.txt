@@ -1765,6 +1765,14 @@ VISUAL:@The_monster@ shakes with grief.
 
 @The_monster@ says, "How can I live without her?"
 %%%%
+twin_banished Dowan
+
+VISUAL:@The_monster@ shakes with grief.
+
+@The_monster@ says, "I will find her! I will get her back!"
+
+@The_monster@ says, "She won't be lost forever!"
+%%%%
 Dowan
 
 @_Dowan_common_@
@@ -1842,6 +1850,16 @@ VISUAL:@The_monster@ grits her teeth and focuses.
 @The_monster@ says, "I will journey to Hell to retrieve him!"
 
 VISUAL:@The_monster@ weeps.
+%%%%
+twin_banished Duvessa
+
+VISUAL:@The_monster@ shakes in a combination of rage and grief.
+
+VISUAL:@The_monster@ grits her teeth and focuses.
+
+@The_monster@ says, "I will journey into the Abyss to retrieve him!"
+
+@The_monster@ says, "I will get him back!"
 %%%%
 Duvessa
 
