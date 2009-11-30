@@ -3,8 +3,8 @@ It aims to help people interested in contributing to the project to do so.
 Stone Soup, by its very nature, is a community-driven project. Participation
 is valued, wanted, and appreciated, and indeed, is what Stone Soup thrives on.
 
-Development communcation channels
----------------------------------
+Development communication channels
+----------------------------------
 
 The official development channels of are the mailing lists crawl-ref-discuss
 and crawl-ref-devel. Additionally, an issue tracker is used at SourceForge,
