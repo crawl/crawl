@@ -69,7 +69,7 @@ bool did_flush_message = false;
 
 int Next_Message = 0;                                 // end of messages
 
-int Message_Line = 0;                // line of next (previous?) message
+int Message_Line = -1;                // line of next (previous?) message
 int New_Message_Count = 0;
 
 static FILE* _msg_dump_file = NULL;
@@ -671,11 +671,24 @@ static bool channel_message_history(msg_channel_type channel)
     }
 }
 
+// Set (or reset if "force") Message_Line.
+// XXX: the uses of set_Message_Line(false) could be done
+//      once at startup
+static void set_Message_Line(bool force = false)
+{
+    if (!force && Message_Line >= 0)
+        return;
+    Message_Line = Options.delay_message_clear
+                 ? crawl_view.msgsz.y - 1
+                 : 0;
+}
+
 // Adds a given message to the message history.
 static void mpr_store_messages(const std::string& message,
                                msg_channel_type channel, int param,
                                unsigned char colour, int repeats = 1)
 {
+    set_Message_Line();
     bool was_repeat = false;
 
     if (Options.msg_condense_repeats)
@@ -835,6 +848,8 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param,
         snprintf(info, INFO_SIZE, "%s (x%d)", inf, repeats);
         inf = info;
     }
+
+    set_Message_Line();
     message_out(&Message_Line, colour, inf,
                 Options.delay_message_clear ? 2 : 1);
 
@@ -871,6 +886,7 @@ static void mpr_formatted_output(formatted_string fs, int colour)
             last_text = i;
     }
 
+    set_Message_Line();
     for (unsigned i = 0; i < fs.ops.size(); ++i)
     {
         switch (fs.ops[i].type)
@@ -1001,6 +1017,7 @@ void mesclr(bool force)
 
     if (!force && Options.delay_message_clear)
     {
+        set_Message_Line();
         message_out(&Message_Line, WHITE, "-", 1);
         return;
     }
@@ -1009,7 +1026,7 @@ void mesclr(bool force)
 
     cursor_control cs(false);
     clear_message_window();
-    Message_Line = 0;
+    set_Message_Line(true);
 }
 
 static bool autoclear_more = false;
