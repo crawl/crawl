@@ -1631,7 +1631,7 @@
      3,
      200,
      -1, -1,
-     0,
+     -3,        // make silent to keep passwall a viable stabbing spell [rob]
      NULL,
      false,
      true
