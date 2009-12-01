@@ -898,32 +898,33 @@ int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
     return 1;
 }
 
-static int _passwall(coord_def where, int pow, int, actor *)
+bool cast_passwall(const coord_def& delta, int pow)
 {
     int howdeep = 0;
     bool done = false;
     int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
+    coord_def n = you.pos() + delta;
 
     // Irony: you can start on a secret door but not a door.
     // Worked stone walls are out, they're not diggable and
     // are used for impassable walls... I'm not sure we should
     // even allow statues (should be contiguous rock). -- bwr
     // XXX: Allow statues as entry points?
-    if (grd(where) != DNGN_ROCK_WALL && grd(where) != DNGN_CLEAR_ROCK_WALL)
+    if (grd(n) != DNGN_ROCK_WALL && grd(n) != DNGN_CLEAR_ROCK_WALL)
     {
         mpr("That's not a passable wall.");
-        return 0;
+        return (false);
     }
 
-    coord_def delta = where - you.pos();
-    coord_def n = where;
+    // Below here, failing to cast yields information to the
+    // player, so we don't make the spell abort (return true).
 
     while (!done)
     {
         if (!in_bounds(n))
         {
             mpr("You sense an overwhelming volume of rock.");
-            return 0;
+            return (true);
         }
 
         switch (grd(n))
@@ -932,7 +933,7 @@ static int _passwall(coord_def where, int pow, int, actor *)
             if (feat_is_solid(grd(n)))
             {
                 mpr("Something is blocking your path through the rock.");
-                return 0;
+                return (true);
             }
             done = true;
             break;
@@ -952,22 +953,13 @@ static int _passwall(coord_def where, int pow, int, actor *)
     int maxrange = shallow + pow / 25;
 
     if (howdeep >= maxrange)
-    {
         mprf("This rock feels extremely deep.");
-        return 0;
-    }
-
-    if (howdeep > range)
+    else if (howdeep > range)
         mprf("You fail to penetrate the rock.");
     else // Passwall delay is reduced, and the delay cannot be interrupted.
         start_delay(DELAY_PASSWALL, 1 + howdeep, n.x, n.y);
 
-    return 1;
-}
-
-void cast_passwall(int pow)
-{
-    apply_one_neighbouring_square(_passwall, pow);
+    return (true);
 }
 
 static int _intoxicate_monsters(coord_def where, int pow, int, actor *)

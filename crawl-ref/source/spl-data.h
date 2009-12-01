@@ -1625,12 +1625,12 @@
 },
 
 {
-    SPELL_PASSWALL, "Passwall",
+     SPELL_PASSWALL, "Passwall",
      SPTYP_TRANSMUTATION | SPTYP_EARTH,
-     SPFLAG_ESCAPE,
+     SPFLAG_DIR | SPFLAG_ESCAPE,
      3,
      200,
-     -1, -1,
+     1, 1,
      -3,        // make silent to keep passwall a viable stabbing spell [rob]
      NULL,
      false,

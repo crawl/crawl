@@ -33,7 +33,7 @@ bool cast_apportation(int powc, const coord_def& where);
 void cast_ignite_poison(int pow);
 void cast_intoxicate(int pow);
 void cast_mass_sleep(int pow);
-void cast_passwall(int pow);
+bool cast_passwall(const coord_def& delta, int pow);
 bool wielding_rocks();
 bool cast_sandblast(int powc, bolt &beam);
 void cast_see_invisible(int pow);
