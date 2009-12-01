@@ -250,9 +250,10 @@ void reautomap_level( )
 void set_terrain_seen( int x, int y )
 {
     const dungeon_feature_type feat = grd[x][y];
+    map_cell* cell = &env.map_knowledge[x][y];
 
     // First time we've seen a notable feature.
-    if (!(env.map_knowledge[x][y].flags & MAP_SEEN_FLAG))
+    if (!(cell->flags & MAP_SEEN_FLAG))
     {
         _automap_from(x, y, player_mutation_level(MUT_PASSIVE_MAPPING));
 
@@ -283,12 +284,13 @@ void set_terrain_seen( int x, int y )
     }
 
 #ifdef USE_TILE
-    env.map_knowledge[x][y].flags &= ~(MAP_DETECTED_ITEM);
-    env.map_knowledge[x][y].flags &= ~(MAP_DETECTED_MONSTER);
+    cell->flags &= ~(MAP_DETECTED_ITEM);
+    cell->flags &= ~(MAP_DETECTED_MONSTER);
 #endif
 
-    env.map_knowledge[x][y].flags &= (~MAP_CHANGED_FLAG);
-    env.map_knowledge[x][y].flags |= MAP_SEEN_FLAG;
+    cell->flags &= (~MAP_CHANGED_FLAG);
+    cell->flags |= MAP_SEEN_FLAG;
+    cell->object.colour = get_feature_def(cell->object).seen_colour;
 }
 
 void clear_map_knowledge_grid( const coord_def& p )
