@@ -88,6 +88,7 @@ class player;
 class monster;
 class KillMaster;
 class ghost_demon;
+struct glyph;
 
 struct coord_def
 {
