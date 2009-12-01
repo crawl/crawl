@@ -1,0 +1,142 @@
+This document is about the development process of Dungeon Crawl Stone Soup.
+It aims to help people interested in contributing to the project to do so.
+Stone Soup, by its very nature, is a community-driven project. Participation
+is valued, wanted, and appreciated, and indeed, is what Stone Soup thrives on.
+
+Development communication channels
+----------------------------------
+
+The official development channels of are the mailing lists crawl-ref-discuss
+and crawl-ref-devel. Additionally, an issue tracker is used at SourceForge,
+and there is an IRC channel, ##crawl-dev, on Freenode.
+
+We are currently in the process of migrating the issue tracker from
+SourceForge to self-managed Mantis on http://crawl.develz.org/mantis/. As the
+dust settles, this document will be adjusted accordingly.
+
+Mailing lists
+-------------
+
+crawl-ref-discuss is where most of the discussion about the project, game
+design and so on takes place. The mailing list is open to subscription and
+the archives can be read freely. For new posters there's a moderation
+process where the first posts are approved to be not spam/otherwise
+inappropriate before the e-mail address is approved.
+
+crawl-ref-devel is a closed list for team personnel decisions, primarily the
+proposal and voting for giving out commit rights and access to this list.
+
+There are also two other non-discussion mailing lists: crawl-ref-commits
+and crawl-ref-builds. crawl-ref-commits generates automatic summary
+messages of code changes, and can and should be used for reviewing commits.
+Commit messages also document development and decisions. People with new 
+commit access will be on moderation on c-r-c, but that their messages will be
+approved and they will be added to the list when the administrator(s) get
+around to it.
+
+The replies to commit mails should be posted to crawl-ref-discuss.
+crawl-ref-builds generates automatic summary messages from Crawl BuildBot.
+Again, the replies should go to crawl-ref-discuss.
+
+The SourceForge tracker
+-----------------------
+
+The SourceForge page has issue trackers for bugs, feature requests, patches
+and support requests. Issues can be filed and comments on issues can be added
+by anybody without a need for SourceForge account, although signing your
+submissions with a name or nickname is preferred. Please search the tracker
+for similar items and duplicates before submitting a new item. Note that it
+is often better to use the filter bar (the Keyword field especially) than the
+tracker search for this (best to check with both though).
+
+Developers can assign issues to themselves or other developers. Self-assignment
+is used if the developer is working on the issue. Assigning to someone else is
+used if something's in their area of expertise or assigner wants their opinion.
+Either way, the reason for changing the assignment should be mentioned in the
+message.
+
+For feature requests, priority is used generally like this: 5 is the
+starting point, where there is not yet developer opinion if the suggested
+change/addition is supported. At priority 6 and above, the FR is seen as
+desirable. At priority 4 and below, the FR is considered ok but not
+essential. At priority 1, the FR is considered as turned down and to be
+closed soon. When closing, good ideas (often from comments) should be saved
+to other (possibly new) FRs.
+
+IRC
+---
+
+The IRC channel ##crawl-dev on Freenode is dedicated to Dungeon Crawl
+development. The channel is open to any participants but the discussion is
+expected to center on development. The channel is a bit less
+formal/official than the mailing list and the tracker. However, the
+turnaround for question is usually considerably shorter so it is usually a
+good place to come to if you have ideas for patches or, for instance,
+vaults. Also, users with +v have commit access, so if you have a patch which
+is ready to commit you can poke them about it.
+
+Developers often discuss what they are working on on the channel and request
+comments before commits. Therefore the channel is logged to archive
+discussion and decisions made there.
+
+Development team structure and decision policy
+----------------------------------------------
+
+The development team consists of a large variety of people: all have
+commit access, and administrators have the ability to grant commit
+access to new people. As mentioned in the section on mailing lists,
+this is usually discussed privately on the crawl-ref-devel mailing
+list. Administrators will make final design decisions where necessary,
+or where there is confusion or debate. All participation is welcomed
+and encouraged.
+
+From time to time there will be tensions or even clashes among developers.
+Minor ones (e.g. "Can we remove pizzas?") can be quickly sorted out.
+Resolving major ones ("Do we need the Swamp branch?", "How many gods should
+there be?") can often take even several releases. In these cases, only time,
+many words and pragmatism will help. It is crucial to remind oneself from
+occasionally that there are other acceptable situations apart from the own.
+There can be no formal rules for solving such problems, because we want
+neither design stagnation (i.e. adding only with mutual agreement) nor
+dictatorship (because other people do have good ideas sometimes, even if it's
+hard to believe).
+
+All developers are free and expected to commit changes on their own -- no
+need to ask in advance. This goes especially for features they are already
+introduced. For example, vault designers can and should apply changes to
+their vaults. However, there are cases which are less clear cut. If you
+are not sure about that, at least mention it in the commit message,
+allowing others to look into the commit and possibly comment. And it is
+always to okay to ask beforehand about a change. The best way to go about
+this is to prepare a short mail to the discussion list, mentioning the
+commit you are about to make, perhaps explain way, give a few option and
+point at the one you're about to implement if nobody objects. Waiting a
+day or two is probably enough -- if no one responds, either go ahead or
+demand replies.
+
+Stone Soup welcomes participating in the development. The difference between
+someone with commit access and someone without is that the former can add
+their changes to code (and other files, such as documentation, vaults, tiles
+and so on) directly. Those without need to submit patches to either to the
+mailing list, the patch tracker in the SourceForge page, or to developers on
+##crawl-dev.
+
+See docs/develop/patch_guide.txt for details.
+
+There may be instances where a patch or commit has to be reverted, either due
+to design issues, or due to a bug. Please do not be offended if this occurs.
+While patches and ideas are welcomed, please also understand that these may
+(and likely will) be altered to fit better into the overall design of Stone
+Soup.
+
+Giving commit rights to people
+------------------------------
+
+A member of the crawl-ref-devel list may suggest on it that commit rights are
+given to a contributor. As other members agree (or there are no objections),
+commit rights are usually given, and this is then announced.
+
+Generally, if a contributor supplies a substantial amount of patches of good
+quality (i.e. patches don't break things, don't need cleaning up before
+committing and are in line with the general direction of the development), it
+makes sense to give them commit rights.

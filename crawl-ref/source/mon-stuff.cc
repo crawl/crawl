@@ -1096,7 +1096,7 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
 
 // XXX: Another hackish function! May do weird things if multiple copies of
 //      the band have been placed using wizard mode. {due}
-static void _elven_twin_died(monsters* twin)
+static void _elven_twin_died(monsters* twin, bool in_transit)
 {
     bool found_duvessa = false;
     bool found_dowan = false;
@@ -1104,7 +1104,10 @@ static void _elven_twin_died(monsters* twin)
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_DUVESSA 
+        if (*mi == twin)
+            continue;
+
+        if (mi->type == MONS_DUVESSA
             || (mi->props.exists("original_name")
                 && mi->props["original_name"].get_string() == "Duvessa"))
         {
@@ -1127,7 +1130,10 @@ static void _elven_twin_died(monsters* twin)
 
     // Okay, let them climb stairs now.
     monster->props["can_climb"] = "yes";
-    monster->props["speech_prefix"] = "twin_died";
+    if (!in_transit)
+        monster->props["speech_prefix"] = "twin_died";
+    else
+        monster->props["speech_prefix"] = "twin_banished";
 
     // If you've stabbed one of them, the other one is likely asleep still.
     if (monster->asleep())
@@ -1146,9 +1152,10 @@ static void _elven_twin_died(monsters* twin)
 
     std::string death_message = getSpeakString(key);
 
-    if (mons_near(monster) && !death_message.empty())
+    // Check if they can speak or not: they may have been polymorphed.
+    if (mons_near(monster) && !death_message.empty() && monster->can_speak())
         mons_speaks_msg(monster, death_message, MSGCH_TALK, silenced(you.pos()));
-    else
+    else if (monster->can_speak())
         mprf("%s", death_message.c_str());
 
     if (found_duvessa)
@@ -1163,6 +1170,7 @@ static void _elven_twin_died(monsters* twin)
     else if (found_dowan)
     {
         // Doesn't provide any message, so needs one, but only if visible.
+        // Doesn't matter if has been polymorphed or not.
         if (monster->observable())
             simple_monster_message(monster, " turns to flee.");
         monster->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU));
@@ -2116,7 +2124,7 @@ int monster_die(monsters *monster, killer_type killer,
                      || monster->props["original_name"].get_string() == "Duvessa")))
                && mons_near(monster))
     {
-        _elven_twin_died(monster);
+        _elven_twin_died(monster, in_transit);
     }
     else if (!monster->is_summoned())
     {
