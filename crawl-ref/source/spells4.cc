@@ -903,7 +903,6 @@ static int _passwall(coord_def where, int pow, int, actor *)
     int howdeep = 0;
     bool done = false;
     int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
-    bool non_rock_barriers = false;
 
     // Irony: you can start on a secret door but not a door.
     // Worked stone walls are out, they're not diggable and
@@ -931,7 +930,10 @@ static int _passwall(coord_def where, int pow, int, actor *)
         {
         default:
             if (feat_is_solid(grd(n)))
-                non_rock_barriers = true;
+            {
+                mpr("Something is blocking your path through the rock.");
+                return 0;
+            }
             done = true;
             break;
 
@@ -947,32 +949,18 @@ static int _passwall(coord_def where, int pow, int, actor *)
     }
 
     int range = shallow + random2(pow) / 25;
+    int maxrange = shallow + pow / 25;
 
-    if (howdeep > shallow || non_rock_barriers)
+    if (howdeep >= maxrange)
     {
-        mprf("This rock feels %sdeep.",
-             non_rock_barriers || (howdeep > range)? "extremely " : "");
-
-        if (yesno("Try anyway?"))
-        {
-            if (howdeep > range || non_rock_barriers)
-            {
-                ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_PETRIFICATION);
-                //jmf: not return; if wizard, successful transport is option
-            }
-        }
-        else
-        {
-            if (one_chance_in(30))
-                mpr("Wuss.");
-            else
-                canned_msg(MSG_OK);
-            return 1;
-        }
+        mprf("This rock feels extremely deep.");
+        return 0;
     }
 
-    // Passwall delay is reduced, and the delay cannot be interrupted.
-    start_delay( DELAY_PASSWALL, 1 + howdeep, n.x, n.y );
+    if (howdeep > range)
+        mprf("You fail to penetrate the rock.");
+    else // Passwall delay is reduced, and the delay cannot be interrupted.
+        start_delay(DELAY_PASSWALL, 1 + howdeep, n.x, n.y);
 
     return 1;
 }
