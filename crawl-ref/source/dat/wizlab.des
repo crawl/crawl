@@ -686,7 +686,7 @@ ENDMAP
 ###############################################################################
 # Borgnjor's Mortuary
 #
-NAME:       wizlab_alistair
+NAME:       wizlab_borgnjor
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Borgnjor's Mortuary")
@@ -724,12 +724,12 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Lehudib's Crystal Cave
+# Lehudib's Crystal Spire
 #
 NAME:       wizlab_lehudib
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Lehudib's Crystal Caave")
+:           wizlab_setup(_G, "Lehudib's Crystal Spire")
 MAP
 ENDMAP
 
