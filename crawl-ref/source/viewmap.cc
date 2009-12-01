@@ -469,9 +469,14 @@ static void _reset_travel_colours(std::vector<coord_def> &features,
 
 class feature_list
 {
-    std::vector<glyph> data;
+    enum group
+    {
+        G_UP, G_DOWN, G_PORTAL, G_OTHER, G_NONE, NUM_GROUPS = G_NONE
+    };
 
-    glyph _get_glyph(const coord_def& gc)
+    std::vector<glyph> data[NUM_GROUPS];
+
+    glyph get_glyph(const coord_def& gc)
     {
         // XXX: it's unclear whether we want to display all features
         // or just those not obscured by remembered/detected stuff.
@@ -487,41 +492,66 @@ class feature_list
         return (g);
     }
 
-    bool _show(const coord_def& gc)
+    static group feat_dir(dungeon_feature_type feat)
+    {
+        switch (feat_stair_direction(feat))
+        {
+        case CMD_GO_UPSTAIRS:
+            return G_UP;
+        case CMD_GO_DOWNSTAIRS:
+            return G_DOWN;
+        default:
+            return G_NONE;
+        }
+    }
+
+    group get_group(const coord_def& gc)
     {
         show_type obj = env.map_knowledge(gc).object;
         if (obj != SH_FEATURE)
-            return (false);
+            return G_NONE;
+
         dungeon_feature_type feat = obj.feat;
-        return (feat_is_staircase(feat) || feat_is_trap(feat) ||
-                feat_is_altar(feat) || get_feature_dchar(feat) == DCHAR_ARCH);
+
+        if (feat_is_staircase(feat) || feat_is_escape_hatch(feat))
+            return feat_dir(feat);
+        if (feat == DNGN_TRAP_NATURAL)
+            return G_DOWN;
+        if (feat_is_altar(feat) || feat == DNGN_ENTER_SHOP)
+            return G_OTHER; 
+        if (get_feature_dchar(feat) == DCHAR_ARCH)
+            return G_PORTAL;
+        return G_NONE;
     }
 
-    void _maybe_add(const coord_def& gc)
+    void maybe_add(const coord_def& gc)
     {
 #ifndef USE_TILE
         if (!is_terrain_known(gc))
             return;
 
-        if (_show(gc))
-            data.push_back(_get_glyph(gc));
+        group grp = get_group(gc);
+        if (grp != G_NONE)
+            data[grp].push_back(get_glyph(gc));
 #endif
     }
 
 public:
     void init()
     {
-        data.clear();
+        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
+            data[i].clear();
         for (rectangle_iterator ri(0); ri; ++ri)
-            _maybe_add(*ri);
+            maybe_add(*ri);
     }
 
     formatted_string format() const
     {
         formatted_string s;
-        for (unsigned int i = 0; i < data.size(); ++i)
-            s.add_glyph(data[i]);
-        return (s);
+        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
+            for (unsigned int j = 0; j < data[i].size(); ++j)
+                s.add_glyph(data[i][j]);
+        return s;
     }
 };
 
