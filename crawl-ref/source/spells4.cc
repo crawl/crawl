@@ -902,14 +902,11 @@ bool _feat_is_passwallable(dungeon_feature_type feat)
 {
     // Irony: you can passwall through a secret door but not a door.
     // Worked stone walls are out, they're not diggable and
-    // are used for impassable walls... I'm not sure we should
-    // even allow statues (should be contiguous rock). -- bwr
+    // are used for impassable walls...
     switch (feat)
     {
     case DNGN_ROCK_WALL:
     case DNGN_CLEAR_ROCK_WALL:
-    case DNGN_ORCISH_IDOL:
-    case DNGN_GRANITE_STATUE:
     case DNGN_SECRET_DOOR:
         return (true);
     default:
