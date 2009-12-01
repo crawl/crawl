@@ -377,6 +377,9 @@ static std::string _level_description_string()
     return buf;
 }
 
+static bool _travel_colour_override(const coord_def& p);
+static unsigned _get_travel_colour(const coord_def& p);
+
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
 {
@@ -393,8 +396,6 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
     for (int screen_y = 0; screen_y < num_lines; screen_y++)
         for (int screen_x = 0; screen_x < num_cols; screen_x++)
         {
-            screen_buffer_t colour = DARKGREY;
-
             coord_def c(start_x + screen_x, start_y + screen_y);
 
             if (!map_bounds(c))
@@ -404,13 +405,13 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
             }
             else
             {
-                colour = colour_code_map(c,
-                                         Options.item_colour,
-                                         travel_mode,
-                                         on_level);
-
-                buffer2[bufcount2 + 1] = colour;
                 buffer2[bufcount2] = env.map_knowledge(c).glyph();
+
+                // Override some feature colours according to travel distance.
+                unsigned col = (travel_mode && _travel_colour_override(c))
+                             ? _get_travel_colour(c)
+                             : get_map_knowledge_col(c);
+                buffer2[bufcount2 + 1] = real_colour(col);
 
                 if (c == you.pos() && !crawl_state.arena_suspended && on_level)
                 {
@@ -466,43 +467,32 @@ static void _reset_travel_colours(std::vector<coord_def> &features,
     arrange_features(features);
 }
 
-static char _get_travel_colour( const coord_def& p )
-{
-    if (is_waypoint(p))
-        return LIGHTGREEN;
-
-    short dist = travel_point_distance[p.x][p.y];
-    return dist > 0?                    Options.tc_reachable        :
-           dist == PD_EXCLUDED?         Options.tc_excluded         :
-           dist == PD_EXCLUDED_RADIUS?  Options.tc_exclude_circle   :
-           dist < 0?                    Options.tc_dangerous        :
-                                        Options.tc_disconnected;
-}
-
 class feature_list
 {
     std::vector<glyph> data;
 
     glyph _get_glyph(const coord_def& gc)
     {
-        // FIXME: duplicating code from colour_code_map and elsewhere
+        // XXX: it's unclear whether we want to display all features
+        // or just those not obscured by remembered/detected stuff.
         dungeon_feature_type feat = env.map_knowledge(gc).feat();
         const bool terrain_seen = is_terrain_seen(gc);
         const feature_def &fdef = get_feature_def(feat);
         glyph g;
         g.ch  = terrain_seen ? fdef.symbol : fdef.magic_symbol;
-        g.col = terrain_seen ? fdef.seen_colour : fdef.map_colour;
-        if (terrain_seen && fdef.seen_em_colour && emphasise(gc))
-            g.col = fdef.seen_em_colour;
-        if (is_waypoint(gc) || travel_point_distance[gc.x][gc.y] == PD_EXCLUDED)
-            g.col = real_colour(_get_travel_colour(gc));
+        if (_travel_colour_override(gc))
+            g.col = _get_travel_colour(gc);
+        else
+            g.col = get_map_knowledge_col(gc);
         return (g);
     }
 
     bool _show(const coord_def& gc)
     {
-        dungeon_feature_type feat = env.map_knowledge(gc).feat();
-
+        show_type obj = env.map_knowledge(gc).object;
+        if (obj != SH_FEATURE)
+            return (false);
+        dungeon_feature_type feat = obj.feat;
         return (feat_is_staircase(feat) || feat_is_trap(feat) ||
                 feat_is_altar(feat) || get_feature_dchar(feat) == DCHAR_ARCH);
     }
@@ -1174,76 +1164,32 @@ bool emphasise(const coord_def& where)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
 }
 
-screen_buffer_t colour_code_map(const coord_def& p, bool item_colour,
-                                bool travel_colour, bool on_level)
+static unsigned _get_travel_colour(const coord_def& p)
 {
-    if (!is_terrain_known(p))
-        return (BLACK);
-
 #ifdef WIZARD
-    if (travel_colour && you.wizard
-        && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
-    {
+    if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
         return (LIGHTGREEN);
-    }
 #endif
 
-    dungeon_feature_type feat_value = get_map_knowledge_obj(p).feat;
+    if (is_waypoint(p))
+        return LIGHTGREEN;
 
-    unsigned tc = travel_colour ? _get_travel_colour(p) : DARKGREY;
-
-    if (is_map_knowledge_detected_item(p))
-        return real_colour(Options.detected_item_colour);
-
-    if (is_map_knowledge_detected_mons(p))
-    {
-        tc = Options.detected_monster_colour;
-        return real_colour(tc);
-    }
-
-    // If this is an important travel square, don't allow the colour
-    // to be overridden.
-    if (is_waypoint(p) || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
-        return real_colour(tc);
-
-    if (item_colour && is_map_knowledge_item(p))
-        return get_map_knowledge_col(p);
-
-    int feature_colour = DARKGREY;
-    const bool terrain_seen = is_terrain_seen(p);
-    const feature_def &fdef = get_feature_def(feat_value);
-    feature_colour = terrain_seen ? fdef.seen_colour : fdef.map_colour;
-
-    if (terrain_seen && fdef.seen_em_colour && emphasise(p))
-        feature_colour = fdef.seen_em_colour;
-
-    if (feature_colour != DARKGREY)
-        tc = feature_colour;
-    else if (on_level && you.beheld())
-    {
-        // If mesmerised, colour the few grids that can be reached anyway
-        // lightgrey.
-        const monsters *blocker = monster_at(p);
-        const bool seen_blocker = blocker && you.can_see(blocker);
-        if (grd(p) >= DNGN_MINMOVE && !seen_blocker && !you.get_beholder(p))
-            tc = LIGHTGREY;
-    }
-
-    if (Options.feature_item_brand
-        && is_critical_feature(feat_value)
-        && igrd(p) != NON_ITEM)
-    {
-        tc |= COLFLAG_FEATURE_ITEM;
-    }
-    else if (Options.trap_item_brand
-             && feat_is_trap(feat_value) && igrd(p) != NON_ITEM)
-    {
-        // FIXME: this uses the real igrd, which the player shouldn't
-        // be aware of.
-        tc |= COLFLAG_TRAP_ITEM;
-    }
-
-    return real_colour(tc);
+    short dist = travel_point_distance[p.x][p.y];
+    return dist > 0?                    Options.tc_reachable        :
+           dist == PD_EXCLUDED?         Options.tc_excluded         :
+           dist == PD_EXCLUDED_RADIUS?  Options.tc_exclude_circle   :
+           dist < 0?                    Options.tc_dangerous        :
+                                        Options.tc_disconnected;
 }
 
-
+static bool _travel_colour_override(const coord_def& p)
+{
+    if (is_waypoint(p) || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
+        return (true);
+#ifdef WIZARD
+    if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
+        return (true);
+#endif
+    show_type obj = get_map_knowledge_obj(p);
+    return (obj.cls == SH_FEATURE && obj.feat == DNGN_FLOOR);
+}

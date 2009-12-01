@@ -82,7 +82,6 @@ int detect_items(int pow)
             && (!get_map_knowledge_obj(*ri) || !is_map_knowledge_item(*ri)))
         {
             items_found++;
-
             set_map_knowledge_obj(*ri, show_type(SHOW_ITEM_DETECTED));
             set_map_knowledge_detected_item(*ri);
 #ifdef USE_TILE
