@@ -790,13 +790,17 @@ NAME:       wizlab_wucad
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 SUBST:      T = t.
-MONS:       human name:monk n_adj ; nothing, troll name:monk n_adj
-MONS:       draconian monk
-KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the
+MONS:       human name:monk n_suf col:white hd:10 ; robe good_item \
+            . quarterstaff good_item
+MONS:       rock troll name:monk n_suf
+MONS:       iron troll name:monk n_suf col:white
+KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the hd:20 hp:300
+KITEM:      8 = quarterstaff unrand:staff_of_wucad_mu, book of enchantments
 COLOUR:     =c = darkgrey
 COLOUR:     t = lightred / red w:3
-COLOUR:     A = red
+COLOUR:     AG = red
 COLOUR:     < = lightred
+KFEAT:      ' = open_door
 LROCKCOL:   darkgrey
 LFLOORCOL:  white
 :           wizlab_setup(_G, "Wucad Mu's Monastery")
@@ -807,29 +811,29 @@ ttttttttttttttTTTTTTTttttttttttttttttttt
 ttttttTTTTTTTT.......TTTTTTTTTTTTttttttt
 tttttT.........ccccc.............Ttttttt
 ttttT.........cc...cc.............Tttttt
-tttT.......cccc.....cccc...........Ttttt
-ttT.......cc..cc...cc..cc...........Tttt
-ttT......cc....cc+cc....cc...........Ttt
-ttT.....Tc....G.....G....cT..........Ttt
-ttT.....ccG.............Gcc..........Ttt
-ttT......+.......8.......+...........Ttt
-ttT.....ccG.............Gcc..........Ttt
+tttT.......cccc..3..cccc...........Ttttt
+ttT.......cc..cc...cc..cc......ccc..Tttt
+ttT......cc....cc=cc....cc....cc1cc..Ttt
+ttT.....Tc....G.....G....cT..cc1U1cc.Ttt
+ttT.....ccG......2......Gcc...cc1cc..Ttt
+ttT......+......181......+.....c+c...Ttt
+ttT.....ccG......3......Gcc..........Ttt
 ttT.....Tc....G.....G....cT..........Ttt
 ttT.c..cTcc.............cccT.........Ttt
 ttTcc++ccccccc.......ccccccc+cc......Ttt
-ttcc....ccc..ccc+++ccc..ccc...cc.....Ttt
-ttc......c...............c.....c....Tttt
-ttc......cc.............cc.....cc..ctttt
+ttcc....ccc32ccc===ccc23ccc...cc.....Ttt
+ttc..12..c...............c..2..c....Tttt
+ttc..23..cc.............cc.....cc..ctttt
 ttc......ccccccccccccccccccc+cccc++ccttt
-ttcc....=cc.............ccc...cc....cctt
-tttcccccc=...............+.....+.....ctt
+ttcc....ccc.............ccc...cc....cctt
+tttccccccc......212......+..2..+.22..ctt
 ttttttttccc..ccc+++ccc..ccc...cc....cctt
 tttttttttcccccTT...Ttccccccccccccccccttt
 ttttttttttttttT.....Tttttttttttttttttttt
 tttttttttttT.........TTTTTTttttttttttttt
-tttccccctttT..............Ttcccccttttttt
+tttccccctttT.....G........Ttcccccttttttt
 ttcc...cctT..............Ttcc...cctttttt
-ttc..A..+..................+..<..ctttttt
+ttc..A..'..................'..<..ctttttt
 ttcc...cctT.....TTTT.....Ttcc...cctttttt
 tttccccctttT...TTttTT....Tttcccccttttttt
 ttttttttttttTTTTttttTTTTTttttttttttttttt
