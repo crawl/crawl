@@ -483,12 +483,8 @@ class feature_list
 {
     std::vector<glyph> data;
 
-    void _maybe_add(const coord_def& gc)
+    glyph _get_glyph(const coord_def& gc)
     {
-#ifndef USE_TILE
-        if (!is_terrain_known(gc))
-            return;
-
         // FIXME: duplicating code from colour_code_map and elsewhere
         dungeon_feature_type feat = env.map_knowledge(gc).feat();
         const bool terrain_seen = is_terrain_seen(gc);
@@ -500,12 +496,25 @@ class feature_list
             g.col = fdef.seen_em_colour;
         if (is_waypoint(gc) || travel_point_distance[gc.x][gc.y] == PD_EXCLUDED)
             g.col = real_colour(_get_travel_colour(gc));
+        return (g);
+    }
 
-        if (feat_is_staircase(feat) || feat_is_trap(feat) ||
-            feat_is_altar(feat) || get_feature_dchar(feat) == DCHAR_ARCH)
-        {
-            data.push_back(g);
-        }
+    bool _show(const coord_def& gc)
+    {
+        dungeon_feature_type feat = env.map_knowledge(gc).feat();
+
+        return (feat_is_staircase(feat) || feat_is_trap(feat) ||
+                feat_is_altar(feat) || get_feature_dchar(feat) == DCHAR_ARCH);
+    }
+
+    void _maybe_add(const coord_def& gc)
+    {
+#ifndef USE_TILE
+        if (!is_terrain_known(gc))
+            return;
+
+        if (_show(gc))
+            data.push_back(_get_glyph(gc));
 #endif
     }
 
@@ -517,23 +526,12 @@ public:
             _maybe_add(*ri);
     }
 
-    // FIXME: return a string instead of writing to screen.
-    void write() const
+    formatted_string format() const
     {
-#ifndef USE_TILE
-#define MAX_FEATURE_WIDTH 20
-        screen_buffer_t buffer[2*MAX_FEATURE_WIDTH];
-        int sz = std::min((int)data.size(), MAX_FEATURE_WIDTH);
-#undef MAX_FEATURE_WIDTH
-
-        for (int i = 0; i < sz; ++i)
-        {
-            buffer[2*i] = data[i].ch;
-            buffer[2*i+1] = data[i].col;
-        }
-        int left = (get_number_of_cols() - sz) / 2;
-        puttext(left, 1, left + sz - 1, 1, buffer);
-#endif
+        formatted_string s;
+        for (unsigned int i = 0; i < data.size(); ++i)
+            s.add_glyph(data[i]);
+        return (s);
     }
 };
 
@@ -563,11 +561,13 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
             get_number_of_cols() - helplen,
             ("Level " + _level_description_string() + pstr).c_str());
 
+    formatted_string s = feats.format();
+    cgotoxy((get_number_of_cols() - s.length()) / 2, 1);
+    s.display();
+
     textcolor(LIGHTGREY);
     cgotoxy(get_number_of_cols() - helplen + 1, 1);
     help.display();
-
-    feats.write();
 }
 #endif
 
