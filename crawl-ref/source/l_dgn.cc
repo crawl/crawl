@@ -1555,8 +1555,8 @@ LUAFN(_dgn_find_markers_by_prop)
 
 LUAFN(_dgn_marker_at_pos)
 {
-    const int x = luaL_checknumber(ls, 1);
-    const int y = luaL_checknumber(ls, 2);
+    const int x = luaL_checkint(ls, 1);
+    const int y = luaL_checkint(ls, 2);
 
     coord_def p(x, y);
 
