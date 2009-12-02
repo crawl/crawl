@@ -80,3 +80,6 @@ makefile.dep
 /source/*.exe
 /source/*.[pi]db
 /source/*.dll
+
+# Packaging
+/source/util/release_ver
