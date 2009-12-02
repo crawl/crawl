@@ -6651,12 +6651,12 @@ void player::blink(bool allow_partial_control)
     random_blink(allow_partial_control);
 }
 
-void player::teleport(bool now, bool abyss_shift)
+void player::teleport(bool now, bool abyss_shift, bool wizard)
 {
     ASSERT(!crawl_state.arena);
 
     if (now)
-        you_teleport_now(true, abyss_shift);
+        you_teleport_now(true, abyss_shift, wizard);
     else
         you_teleport();
 }

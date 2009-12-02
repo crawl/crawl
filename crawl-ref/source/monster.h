@@ -382,7 +382,9 @@ public:
              bool cleanup_dead = true);
     bool heal(int amount, bool max_too = false);
     void blink(bool allow_partial_control = true);
-    void teleport(bool right_now = false, bool abyss_shift = false);
+    void teleport(bool right_now = false,
+                  bool abyss_shift = false,
+                  bool wizard = false);
 
     void hibernate(int power = 0);
     void check_awaken(int disturbance);
