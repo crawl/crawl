@@ -33,6 +33,9 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 
+static bool _travel_colour_override(const coord_def& p);
+static unsigned _get_travel_colour(const coord_def& p);
+
 unsigned get_sightmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
@@ -376,9 +379,6 @@ static std::string _level_description_string()
     }
     return buf;
 }
-
-static bool _travel_colour_override(const coord_def& p);
-static unsigned _get_travel_colour(const coord_def& p);
 
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
