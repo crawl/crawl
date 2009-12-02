@@ -911,7 +911,7 @@ KMONS:  Z = col:gila deep elf sorcerer \
         robe ego:resistance race:elven . dagger ego:freezing race:elven | \
         dagger ego:flaming race:elven | dagger ego:electrocution race:elven
 : else
-KMONS:  Z = col:gila vault guard \
+KMONS:  Z = col:gila wizard hd:15 name_descriptor \
         name:master_elementalist name_replace \
         spells:iron_shot;summon_air_elementals;sticky_flame;\
         summon_water_elementals;haste;blink actual_spells \
