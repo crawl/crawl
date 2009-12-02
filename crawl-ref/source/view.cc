@@ -681,8 +681,9 @@ static bool player_view_update_at(const coord_def &gc)
         {
             for (adjacent_iterator ai(gc, false); ai; ++ai)
             {
+                // Optionally add exclude, deferring updates.
                 if (!cell_is_solid(*ai) && !is_exclude_root(*ai))
-                    set_exclude(*ai, 0);
+                    set_exclude(*ai, 0, false, false, true);
             }
         }
     }
@@ -724,7 +725,10 @@ static void player_view_update()
     for (radius_iterator ri(&you.get_los()); ri; ++ri)
         if (player_view_update_at(*ri))
             update_excludes.push_back(*ri);
+    // Update exclusion LOS for possibly affected excludes.
     update_exclusion_los(update_excludes);
+    // Catch up on deferred updates for cloud excludes.
+    deferred_exclude_update();
 }
 
 #ifdef USE_TILE
