@@ -20,6 +20,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
+#include "showsymb.h"
 #include "state.h"
 #include "tutorial.h"
 
@@ -228,7 +229,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 #else
         formatted_string fs( channel_to_colour(MSGCH_WARN) );
         fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());
-        fs.add_glyph( mon );
+        fs.add_glyph(get_mons_glyph(mon));
         fs.cprintf(") in view: (%d,%d), see_cell: %s",
                    mon->pos().x, mon->pos().y,
                    you.see_cell(mon->pos())? "yes" : "no");

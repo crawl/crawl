@@ -491,19 +491,9 @@ formatted_string formatted_string::substr(size_t start, size_t substr_length) co
     return result;
 }
 
-void formatted_string::add_glyph(const item_def *item)
+void formatted_string::add_glyph(glyph g)
 {
     const int last_col = find_last_colour();
-    glyph g = get_item_glyph(item);
-    this->textcolor(g.col);
-    this->cprintf("%s", stringize_glyph(g.ch).c_str());
-    this->textcolor(last_col);
-}
-
-void formatted_string::add_glyph(const monsters *mons)
-{
-    const int last_col = find_last_colour();
-    glyph g = get_mons_glyph(mons);
     this->textcolor(g.col);
     this->cprintf("%s", stringize_glyph(g.ch).c_str());
     this->textcolor(last_col);

@@ -393,3 +393,19 @@ void show_def::init()
     for (radius_iterator ri(&you.get_los()); ri; ++ri)
         update_at(*ri, grid2show(*ri));
 }
+
+show_type to_knowledge(show_type obj, bool emph)
+{
+    if (Options.item_colour && obj.cls == SH_ITEM)
+        return (obj);
+    if (obj.cls == SH_MONSTER)
+    {
+        obj.colour = DARKGREY;
+        return (obj);
+    }
+    const feature_def& fdef = get_feature_def(obj);
+    obj.colour = fdef.seen_colour;
+    if (emph && fdef.seen_em_colour)
+        obj.colour = fdef.seen_em_colour;
+    return (obj);
+}

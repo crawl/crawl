@@ -1778,7 +1778,7 @@ enum monster_type                      // (int) menv[].type
     MONS_NAGA,
     MONS_FIRE_GIANT,
     MONS_FROST_GIANT,
-    MONS_FIREDRAKE,
+    MONS_FIRE_DRAKE,
     MONS_SHADOW_DRAGON,                //  165
     MONS_VIPER,
     MONS_GREY_SNAKE,
@@ -2057,6 +2057,7 @@ enum monster_type                      // (int) menv[].type
     MONS_PIKEL,
     MONS_CRAZY_YIUF,
     MONS_SLAVE,
+    MONS_GIANT_LEECH,
 
     // Testing monsters
     MONS_TEST_SPAWNER,

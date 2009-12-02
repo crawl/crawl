@@ -2051,6 +2051,9 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
              feature = rock wall { , , red }
          * Use # for metal walls in all character sets:
              feature = metal wall {#}
+         * Colour upstairs green and downstairs red:
+             feature = stone staircase leading up {,,,,green}
+             feature = stone staircase leading down {,,,,red}
 
         Symbols can be specified as with cset:
              feature = metal wall {#}

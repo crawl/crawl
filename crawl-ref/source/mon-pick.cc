@@ -1386,7 +1386,7 @@ int mons_lair_level(int mcls)
     case MONS_BLACK_MAMBA:
     case MONS_BRAIN_WORM:
     case MONS_BUMBLEBEE:
-    case MONS_FIREDRAKE:
+    case MONS_FIRE_DRAKE:
     case MONS_HYDRA:
     case MONS_OKLOB_PLANT:
     case MONS_WYVERN:
@@ -1476,7 +1476,7 @@ int mons_lair_rare(int mcls)
         return 45;
 
     case MONS_SHEEP:
-    case MONS_FIREDRAKE:
+    case MONS_FIRE_DRAKE:
         return 36;
 
     case MONS_WAR_DOG:
@@ -1591,6 +1591,7 @@ int mons_swamp_level(int mcls)
     case MONS_SLIME_CREATURE:
     case MONS_VERY_UGLY_THING:
     case MONS_VAPOUR:
+    case MONS_GIANT_LEECH:
     case MONS_TENTACLED_MONSTROSITY:
         mlev += 4;
         break;
@@ -1680,6 +1681,7 @@ int mons_swamp_rare(int mcls)
     case MONS_GIANT_NEWT:
     case MONS_GIANT_SLUG:
     case MONS_GIANT_SNAIL:
+    case MONS_GIANT_LEECH:
         return 10;
 
     case MONS_TENTACLED_MONSTROSITY:

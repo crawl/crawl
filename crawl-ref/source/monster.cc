@@ -3515,7 +3515,7 @@ void monsters::blink(bool)
     monster_blink(this);
 }
 
-void monsters::teleport(bool now, bool)
+void monsters::teleport(bool now, bool, bool)
 {
     monster_teleport(this, now, false);
 }

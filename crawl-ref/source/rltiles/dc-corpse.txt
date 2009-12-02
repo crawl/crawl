@@ -76,6 +76,7 @@ swamp_worm CORPSE_SWAMP_WORM
 spiny_worm CORPSE_SPINY_WORM
 brain_worm CORPSE_BRAIN_WORM
 rock_worm CORPSE_ROCK_WORM
+giant_leech CORPSE_GIANT_LEECH
 
 ## Wasps ('y')
 giant_blowfly CORPSE_GIANT_BLOWFLY
@@ -180,7 +181,7 @@ titan CORPSE_TITAN
 
 ## Drakes ('l')
 swamp_drake CORPSE_SWAMP_DRAKE
-firedrake CORPSE_FIREDRAKE
+fire_drake CORPSE_FIRE_DRAKE
 lindwurm CORPSE_LINDWURM
 death_drake CORPSE_DEATH_DRAKE
 

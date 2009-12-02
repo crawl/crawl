@@ -652,12 +652,7 @@ int apply_one_neighbouring_square(cell_func cf, int power, actor *agent)
         return (-1);
     }
 
-    int rv = cf(you.pos() + bmove.delta, power, 1, agent);
-
-    if (rv == 0)
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (rv);
+    return cf(you.pos() + bmove.delta, power, 1, agent);
 }
 
 int apply_area_within_radius(cell_func cf, const coord_def& where,

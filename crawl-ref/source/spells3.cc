@@ -1410,13 +1410,17 @@ void you_teleport(void)
     }
 }
 
-static bool _teleport_player(bool allow_control, bool new_abyss_area)
+static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
 {
     bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()
                           && allow_control_teleport());
 
-    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION))
+    // All wizard teleports are automatically controlled.
+    if (wizard_tele)
+        is_controlled = true;
+
+    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION) && !wizard_tele)
     {
         mpr("You feel a strange sense of stasis.");
         return (false);
@@ -1456,7 +1460,10 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
         mpr("You may choose your destination (press '.' or delete to select).");
         mpr("Expect minor deviation.");
         check_ring_TC = true;
-        more();
+
+        // Only have the more prompt for non-wizard.
+        if (!wizard_tele)
+            more();
 
         while (true)
         {
@@ -1503,13 +1510,21 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
             break;
         }
 
-        pos.x += random2(3) - 1;
-        pos.y += random2(3) - 1;
-
-        if (one_chance_in(4))
+        // Don't randomly walk wizard teleports.
+        if (!wizard_tele)
         {
             pos.x += random2(3) - 1;
             pos.y += random2(3) - 1;
+
+            if (one_chance_in(4))
+            {
+                pos.x += random2(3) - 1;
+                pos.y += random2(3) - 1;
+            }
+#if DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+             "Scattered target square (%d, %d)", pos.x, pos.y);
+#endif
         }
 
         if (!in_bounds(pos))
@@ -1517,11 +1532,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
             mpr("Nearby solid objects disrupt your rematerialisation!");
             is_controlled = false;
         }
-
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "Scattered target square (%d, %d)", pos.x, pos.y);
-#endif
 
         if (is_controlled)
         {
@@ -1536,10 +1546,14 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
                 || monster_at(pos)
                 || env.cgrid(pos) != EMPTY_CLOUD)
             {
+#if DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS,
+                    "Target square (%d, %d) vetoed, now random teleport.", pos.x, pos.y);
+#endif
                 is_controlled = false;
                 large_change  = false;
             }
-            else if (testbits(env.pgrid(pos), FPROP_NO_CTELE_INTO))
+            else if (testbits(env.pgrid(pos), FPROP_NO_CTELE_INTO) && !wizard_tele)
             {
                 is_controlled = false;
                 large_change = false;
@@ -1552,7 +1566,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
 
                 // Controlling teleport contaminates the player. - bwr
                 move_player_to_grid(pos, false, true, true);
-                contaminate_player(1, true);
+                if (!wizard_tele)
+                    contaminate_player(1, true);
             }
         }
     }
@@ -1653,9 +1668,10 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area)
     return (!is_controlled);
 }
 
-void you_teleport_now(bool allow_control, bool new_abyss_area)
+void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
 {
-    const bool randtele = _teleport_player(allow_control, new_abyss_area);
+    const bool randtele = _teleport_player(allow_control, new_abyss_area, 
+                                           wizard_tele);
 
     // Xom is amused by uncontrolled teleports that land you in a
     // dangerous place, unless the player is in the Abyss and

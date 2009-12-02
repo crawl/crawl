@@ -697,7 +697,7 @@ static bool player_view_update_at(const coord_def &gc)
     bool need_excl_update = is_terrain_changed(gc) || !is_terrain_seen(gc);
 
     set_terrain_seen(gc);
-    set_map_knowledge_obj(gc, env.show(ep));
+    set_map_knowledge_obj(gc, to_knowledge(env.show(ep), emphasise(gc)));
     set_map_knowledge_detected_mons(gc, false);
     set_map_knowledge_detected_item(gc, false);
 
@@ -712,7 +712,8 @@ static bool player_view_update_at(const coord_def &gc)
 #endif
 
     if (Options.clean_map && env.show.get_backup(ep))
-        set_map_knowledge_obj(gc, env.show.get_backup(ep));
+        set_map_knowledge_obj(gc, to_knowledge(env.show.get_backup(ep),
+                                               emphasise(gc)));
 
     return (need_excl_update);
 }
@@ -772,9 +773,8 @@ static void draw_outside_los(screen_buffer_t* buffy, const coord_def &gc)
     // Outside the env.show area.
     buffy[0] = get_map_knowledge_char(gc);
     buffy[1] = DARKGREY;
-
     if (Options.colour_map)
-        buffy[1] = colour_code_map(gc, Options.item_colour);
+        buffy[1] = real_colour(get_map_knowledge_col(gc));
 #else
     unsigned int bg = env.tile_bk_bg(gc);
     unsigned int fg = env.tile_bk_fg(gc);
@@ -829,7 +829,7 @@ static void draw_los_backup(screen_buffer_t* buffy,
     buffy[1] = DARKGREY;
 
     if (Options.colour_map)
-        buffy[1] = colour_code_map(gc, Options.item_colour);
+        buffy[1] = real_colour(get_map_knowledge_col(gc));
 #else
     if (env.tile_bk_fg(gc) != 0
         || env.tile_bk_bg(gc) != 0)

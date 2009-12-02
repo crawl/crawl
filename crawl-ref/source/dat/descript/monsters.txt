@@ -676,7 +676,7 @@ fire vortex
 
 A swirling cloud of flame.
 %%%%
-firedrake
+fire drake
 
 A small dragon, puffing clouds of smoke.
 %%%%
@@ -763,6 +763,10 @@ This is what happens when you give your pet goldfish too much food!
 giant iguana
 
 A huge lizard with great crunching jaws.
+%%%%
+giant leech
+
+A huge blood-sucking leech. How horrible!
 %%%%
 giant lizard
 

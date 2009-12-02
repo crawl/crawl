@@ -1150,8 +1150,8 @@ ORIENT: southeast
 TAGS:   no_monster_gen
 DEPTH:  D:20-26
 MONS:   golden dragon, any draconian, fungus, plant, oklob plant
-KMONS:  6 = firedrake / swamp drake / lindwurm
-KMONS:  D = firedrake w:5 / swamp drake w:5 / death drake / lindwurm w:5
+KMONS:  6 = fire drake / swamp drake / lindwurm
+KMONS:  D = fire drake w:5 / swamp drake w:5 / death drake / lindwurm w:5
 KITEM:  D = $
 SUBST:  $ = $|
 SUBST:  f : A B

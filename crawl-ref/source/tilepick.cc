@@ -261,8 +261,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     // drakes (also 'l', but dragon type)
     case MONS_SWAMP_DRAKE:
         return TILEP_MONS_SWAMP_DRAKE;
-    case MONS_FIREDRAKE:
-        return TILEP_MONS_FIREDRAKE;
+    case MONS_FIRE_DRAKE:
+        return TILEP_MONS_FIRE_DRAKE;
     case MONS_LINDWURM:
         return TILEP_MONS_LINDWURM;
     case MONS_DEATH_DRAKE:
@@ -394,6 +394,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_BRAIN_WORM;
     case MONS_SWAMP_WORM:
         return TILEP_MONS_SWAMP_WORM;
+    case MONS_GIANT_LEECH:
+        return TILEP_MONS_GIANT_LEECH;
     case MONS_SPINY_WORM:
         return TILEP_MONS_SPINY_WORM;
 
@@ -1674,8 +1676,8 @@ static int _tileidx_corpse(const item_def &item)
     // drakes (also 'l')
     case MONS_SWAMP_DRAKE:
         return TILE_CORPSE_SWAMP_DRAKE;
-    case MONS_FIREDRAKE:
-        return TILE_CORPSE_FIREDRAKE;
+    case MONS_FIRE_DRAKE:
+        return TILE_CORPSE_FIRE_DRAKE;
     case MONS_LINDWURM:
         return TILE_CORPSE_LINDWURM;
     case MONS_DEATH_DRAKE:
@@ -1761,6 +1763,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_BRAIN_WORM;
     case MONS_SWAMP_WORM:
         return TILE_CORPSE_SWAMP_WORM;
+    case MONS_GIANT_LEECH:
+        return TILE_CORPSE_GIANT_LEECH;
     case MONS_ROCK_WORM:
         return TILE_CORPSE_ROCK_WORM;
     case MONS_SPINY_WORM:

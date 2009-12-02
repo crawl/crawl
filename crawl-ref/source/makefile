@@ -551,7 +551,7 @@ ifneq ($(strip $(DATADIR)),)
 	override DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
     endif
   endif
-  CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))\"
+  CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))

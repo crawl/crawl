@@ -82,4 +82,8 @@ public:
     void update_at(const coord_def &gp, const coord_def &ep);
 };
 
+// Convert a show object as in env.show to one to be stored in
+// env.map_knowledge (dropping feature colour mainly).
+show_type to_knowledge(show_type obj, bool emph);
+
 #endif

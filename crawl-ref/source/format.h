@@ -35,8 +35,7 @@ public:
     void cprintf(const std::string &s);
     void cgotoxy(int x, int y);
     void movexy(int delta_x, int delta_y);
-    void add_glyph(const monsters *mons);
-    void add_glyph(const item_def *item);
+    void add_glyph(glyph g);
     void textcolor(int color);
     formatted_string substr(size_t index, size_t length=std::string::npos) const;
 

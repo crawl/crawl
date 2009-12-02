@@ -496,6 +496,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('I'): debug_item_statistics(); break;
     case CONTROL('L'): wizard_set_xl(); break;
     case CONTROL('T'): debug_terp_dlua(); break;
+    case CONTROL('B'): you.teleport(true, false, true); break;
 
     case 'O': debug_test_explore();                  break;
     case 'S': wizard_set_skill_level();              break;

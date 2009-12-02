@@ -565,7 +565,7 @@ NAME:    reptile_caves
 DEPTH:   D:10-13, Lair, Snake
 ORIENT:  float
 MONS:    giant gecko / giant newt, giant lizard, giant iguana
-MONS:    firedrake / swamp drake
+MONS:    fire drake / swamp drake
 MONS:    snake, water moccasin, viper
 SUBST:   4 = 34
 SUBST:   3 = 3:20 2
@@ -903,7 +903,7 @@ KMONS:  7 = fire vortex
 #
 : if you.in_branch("elf") then
 KMONS:  Z = col:gila deep elf sorcerer \
-        name:deep_elf_elementalist name_replace \
+        name:deep_elf_elementalist n_rpl n_des \
         spells:iron_shot;summon_air_elementals;sticky_flame;\
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance race:elven | \
@@ -911,7 +911,7 @@ KMONS:  Z = col:gila deep elf sorcerer \
         robe ego:resistance race:elven . dagger ego:freezing race:elven | \
         dagger ego:flaming race:elven | dagger ego:electrocution race:elven
 : else
-KMONS:  Z = col:gila vault guard \
+KMONS:  Z = col:gila wizard hd:15 name_descriptor \
         name:master_elementalist name_replace \
         spells:iron_shot;summon_air_elementals;sticky_flame;\
         summon_water_elementals;haste;blink actual_spells \

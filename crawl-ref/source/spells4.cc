@@ -898,88 +898,56 @@ int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
     return 1;
 }
 
-static int _passwall(coord_def where, int pow, int, actor *)
+bool _feat_is_passwallable(dungeon_feature_type feat)
 {
-    int howdeep = 0;
-    bool done = false;
-    int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
-    bool non_rock_barriers = false;
-
-    // Irony: you can start on a secret door but not a door.
+    // Irony: you can passwall through a secret door but not a door.
     // Worked stone walls are out, they're not diggable and
-    // are used for impassable walls... I'm not sure we should
-    // even allow statues (should be contiguous rock). -- bwr
-    // XXX: Allow statues as entry points?
-    if (grd(where) != DNGN_ROCK_WALL && grd(where) != DNGN_CLEAR_ROCK_WALL)
+    // are used for impassable walls...
+    switch (feat)
     {
-        mpr("That's not a passable wall.");
-        return 0;
+    case DNGN_ROCK_WALL:
+    case DNGN_CLEAR_ROCK_WALL:
+    case DNGN_SECRET_DOOR:
+        return (true);
+    default:
+        return (false);
     }
-
-    coord_def delta = where - you.pos();
-    coord_def n = where;
-
-    while (!done)
-    {
-        if (!in_bounds(n))
-        {
-            mpr("You sense an overwhelming volume of rock.");
-            return 0;
-        }
-
-        switch (grd(n))
-        {
-        default:
-            if (feat_is_solid(grd(n)))
-                non_rock_barriers = true;
-            done = true;
-            break;
-
-        case DNGN_ROCK_WALL:
-        case DNGN_CLEAR_ROCK_WALL:
-        case DNGN_ORCISH_IDOL:
-        case DNGN_GRANITE_STATUE:
-        case DNGN_SECRET_DOOR:
-            n += delta;
-            howdeep++;
-            break;
-        }
-    }
-
-    int range = shallow + random2(pow) / 25;
-
-    if (howdeep > shallow || non_rock_barriers)
-    {
-        mprf("This rock feels %sdeep.",
-             non_rock_barriers || (howdeep > range)? "extremely " : "");
-
-        if (yesno("Try anyway?"))
-        {
-            if (howdeep > range || non_rock_barriers)
-            {
-                ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_PETRIFICATION);
-                //jmf: not return; if wizard, successful transport is option
-            }
-        }
-        else
-        {
-            if (one_chance_in(30))
-                mpr("Wuss.");
-            else
-                canned_msg(MSG_OK);
-            return 1;
-        }
-    }
-
-    // Passwall delay is reduced, and the delay cannot be interrupted.
-    start_delay( DELAY_PASSWALL, 1 + howdeep, n.x, n.y );
-
-    return 1;
 }
 
-void cast_passwall(int pow)
+bool cast_passwall(const coord_def& delta, int pow)
 {
-    apply_one_neighbouring_square(_passwall, pow);
+    int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
+    int range = shallow + random2(pow) / 25;
+    int maxrange = shallow + pow / 25;
+
+    coord_def n = you.pos() + delta;
+    if (!_feat_is_passwallable(grid_appearance(n)))
+    {
+        mpr("That's not a passable wall.");
+        return (false);
+    }
+
+    // Below here, failing to cast yields information to the
+    // player, so we don't make the spell abort (return true).
+
+    int howdeep;
+    for (howdeep = 1; in_bounds(n) && _feat_is_passwallable(grd(n));
+                      n += delta, howdeep++);
+
+    if (!in_bounds(n))
+        mpr("You sense an overwhelming volume of rock.");
+    else if (feat_is_solid(grd(n)))
+        mpr("Something is blocking your path through the rock.");
+    else if (howdeep > maxrange)
+        mpr("This rock feels extremely deep.");
+    else if (howdeep > range)
+        mpr("You fail to penetrate the rock.");
+    else
+    {
+        // Passwall delay is reduced, and the delay cannot be interrupted.
+        start_delay(DELAY_PASSWALL, 1 + howdeep, n.x, n.y);
+    }
+    return (true);
 }
 
 static int _intoxicate_monsters(coord_def where, int pow, int, actor *)

@@ -195,6 +195,7 @@ static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_PROJECTED_NOISE:
     case SPELL_CONJURE_FLAME:
     case SPELL_DIG:
+    case SPELL_PASSWALL:
 
     // Airstrike has LOS_RANGE and can go through glass walls.
     case SPELL_AIRSTRIKE:
@@ -2192,7 +2193,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_PASSWALL:
-        cast_passwall(powc);
+        if (!cast_passwall(spd.delta, powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_APPORTATION:
