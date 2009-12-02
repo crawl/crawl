@@ -222,8 +222,6 @@ int str_to_fprop ( const std::string &str)
 {
     if (str == "bloody")
         return (FPROP_BLOODY);
-    if (str == "force_exclude")
-        return (FPROP_FORCE_EXCLUDE);
     if (str == "no_cloud_gen")
         return (FPROP_NO_CLOUD_GEN);
     if (str == "no_rtele_into")
