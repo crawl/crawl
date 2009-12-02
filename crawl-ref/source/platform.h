@@ -262,9 +262,16 @@
 #endif
 
 #if !defined (OS_DETECTED)
-#if defined (__APPLE__) || defined (__MACH__)
+#if defined (__APPLE__)
 #define OS_DETECTED
 #define TARGET_OS_MACOSX
+#endif
+#endif
+
+#if !defined (OS_DETECTED)
+#if defined (__hurd__)
+#define OS_DETECTED
+#define TARGET_OS_HURD
 #endif
 #endif
 

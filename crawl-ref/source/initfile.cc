@@ -52,10 +52,10 @@
 #ifdef TARGET_OS_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#elif defined ( __APPLE__ )
+extern char **NXArgv;
 #elif defined ( __linux__ )
 #include <unistd.h>
-#elif defined ( __MACH__ )
-extern char **NXArgv;
 #endif
 
 const std::string game_options::interrupt_prefix = "interrupt_";
