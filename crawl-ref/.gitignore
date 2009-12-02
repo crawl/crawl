@@ -83,3 +83,16 @@ makefile.dep
 
 # Packaging
 /source/util/release_ver
+
+# Debian packaging
+/build-console
+/build-tiles
+/build-stamp
+/tree-stamp
+/source/debian/*.debhelper.log
+/source/debian/*.debhelper
+/source/debian/*.substvars
+/source/debian/crawl-common
+/source/debian/crawl-tiles
+/source/debian/crawl
+/source/debian/files
