@@ -1410,6 +1410,33 @@ void you_teleport(void)
     }
 }
 
+// Should return true if we don't want anyone to teleport here.
+bool _cell_vetoes_teleport (const coord_def cell)
+{
+    // Monsters always veto teleport.
+    if (monster_at(cell))
+        return (true);
+
+    // As do all clouds; this may change.
+    if (env.cgrid(cell) != EMPTY_CLOUD)
+        return (true);
+
+    // But not all features.
+    switch (grd(cell))
+    {
+    case DNGN_FLOOR:
+    case DNGN_SHALLOW_WATER:
+        return (false);
+
+    case DNGN_DEEP_WATER:
+        if (you.species == SP_MERFOLK)
+            return (false);
+
+    default:
+        return (true);
+    }
+}
+
 static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
 {
     bool is_controlled = (allow_control && !you.confused()
@@ -1540,12 +1567,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
                 large_change = true;
 
             // Merfolk should be able to control-tele into deep water.
-            if (grd(pos) != DNGN_FLOOR
-                    && grd(pos) != DNGN_SHALLOW_WATER
-                    && (you.species != SP_MERFOLK
-                        || grd(pos) != DNGN_DEEP_WATER)
-                || monster_at(pos)
-                || env.cgrid(pos) != EMPTY_CLOUD)
+            if (_cell_vetoes_teleport(pos))
             {
 #if DEBUG_DIAGNOSTICS
                 mprf(MSGCH_DIAGNOSTICS,
