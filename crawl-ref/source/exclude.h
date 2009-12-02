@@ -9,12 +9,14 @@ void remove_auto_exclude(const monsters *mon, bool sleepy = false);
 
 void init_exclusion_los();
 void update_exclusion_los(std::vector<coord_def> changed);
+void deferred_exclude_update();
 
 bool is_exclude_root(const coord_def &p);
 void cycle_exclude_radius(const coord_def &p);
 void del_exclude(const coord_def &p);
 void set_exclude(const coord_def &p, int radius = LOS_RADIUS,
-                 bool autoexcl = false, bool vaultexcl = false);
+                 bool autoexcl = false, bool vaultexcl = false,
+                 bool defer_updates = false);
 void maybe_remove_autoexclusion(const coord_def &p);
 std::string get_exclusion_desc();
 void clear_excludes();

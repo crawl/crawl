@@ -378,6 +378,20 @@ static void _exclude_update(const coord_def &p)
     _exclude_update();
 }
 
+// Catch up exclude updates from set_exclude with defer_updates=true.
+//
+// Warning: For tiles, this assumes all changed exclude centres
+//          are still there, so this won't work as is for
+//          del_exclude.
+void deferred_exclude_update()
+{
+    _exclude_update();
+#ifdef USE_TILE
+    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
+        _tile_exclude_gmap_update(it->second.pos);
+#endif
+}
+
 void clear_excludes()
 {
     // Sanity checks
@@ -420,7 +434,8 @@ void del_exclude(const coord_def &p)
 }
 
 // Set or update an exclude.
-void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
+void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
+                 bool defer_updates)
 {
     // Sanity checks; excludes can be set in Pan and regular dungeon
     // levels only.
@@ -452,7 +467,8 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl)
         curr_excludes.add_exclude(p, radius, autoexcl, montype, vaultexcl);
     }
 
-    _exclude_update(p);
+    if (!defer_updates)
+        _exclude_update(p);
 }
 
 // If a cell that was placed automatically no longer contains the original
