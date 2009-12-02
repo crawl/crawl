@@ -120,7 +120,7 @@ const int LABYRINTH_BORDER = 4;
 #define VIEW_BASE_WIDTH 33      // FIXME: never used
 #define VIEW_MIN_WIDTH  ENV_SHOW_DIAMETER
 #define VIEW_MIN_HEIGHT ENV_SHOW_DIAMETER
-#define MSG_MIN_HEIGHT  7
+#define MSG_MIN_HEIGHT  6
 
 // max traps per level
 #define MAX_TRAPS 100
