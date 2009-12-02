@@ -723,7 +723,7 @@ PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)
 SRC_PKG_TAR  := $(PKG_SRC_DIR).tar.bz2
 SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
 
-.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source
+.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source
 
 all: $(GAME)
 
@@ -953,7 +953,10 @@ clean-rltiles:
 
 # To package, you *must* have lex and yacc to generate the intermediates.
 BSRC = build/crawl-ref/source/
-package-source: prebuildyacc depend removeold
+package-source: prebuildyacc
+	+@$(MAKE) source
+
+source: depend removeold
 	@git branch >/dev/null 2>/dev/null || (echo You can package source only from git. && false)
 	rm -rf build
 	mkdir build
