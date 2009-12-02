@@ -529,6 +529,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'L': debug_place_map();                     break;
     case 'i': wizard_identify_pack();                break;
     case 'I': wizard_unidentify_pack();              break;
+    case 'Z':
     case 'z': wizard_cast_spec_spell();              break;
     case '(': wizard_create_feature_number();        break;
     case ')': wizard_create_feature_name();          break;
