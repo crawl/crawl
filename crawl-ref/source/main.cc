@@ -530,7 +530,6 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'i': wizard_identify_pack();                break;
     case 'I': wizard_unidentify_pack();              break;
     case 'z': wizard_cast_spec_spell();              break;
-    case 'Z': wizard_cast_spec_spell_name();         break;
     case '(': wizard_create_feature_number();        break;
     case ')': wizard_create_feature_name();          break;
     case ':': wizard_list_branches();                break;

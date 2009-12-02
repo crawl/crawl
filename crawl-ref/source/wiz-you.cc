@@ -152,29 +152,13 @@ void wizard_change_species( void )
 #endif
 
 #ifdef WIZARD
-// Casts a specific spell by number.
+// Casts a specific spell by number or name.
 void wizard_cast_spec_spell(void)
 {
-    int spell = debug_prompt_for_int( "Cast which spell by number? ", true );
+    char specs[80], *end;
+    int spell;
 
-    if (spell == -1)
-        canned_msg( MSG_OK );
-    else if (your_spells( static_cast<spell_type>(spell), 0, false )
-                == SPRET_ABORT)
-    {
-        crawl_state.cancel_cmd_repeat();
-    }
-}
-#endif
-
-
-#ifdef WIZARD
-// Casts a specific spell by name.
-void wizard_cast_spec_spell_name(void)
-{
-    char specs[80];
-
-    mpr("Cast which spell by name? ", MSGCH_PROMPT);
+    mpr("Cast which spell? ", MSGCH_PROMPT);
     if (cancelable_get_line_autohist( specs, sizeof( specs ) )
         || specs[0] == '\0')
     {
@@ -183,17 +167,23 @@ void wizard_cast_spec_spell_name(void)
         return;
     }
 
-    spell_type type = spell_by_name(specs, true);
-    if (type == SPELL_NO_SPELL)
+    spell = strtol(specs, &end, 10);
+
+    if (spell < 0 || end == specs)
     {
-        mpr((one_chance_in(20)) ? "Maybe you should go back to WIZARD school."
-                                : "I couldn't find that spell.");
-        crawl_state.cancel_cmd_repeat();
-        return;
+        if ((spell = spell_by_name(specs, true)) == SPELL_NO_SPELL)
+        {
+            mpr("Cannot find that spell.");
+            crawl_state.cancel_cmd_repeat();
+            return;
+        }
     }
 
-    if (your_spells(type, 0, false) == SPRET_ABORT)
+    if (your_spells( static_cast<spell_type>(spell), 0, false )
+                == SPRET_ABORT)
+    {
         crawl_state.cancel_cmd_repeat();
+    }
 }
 #endif
 
