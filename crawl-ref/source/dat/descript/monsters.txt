@@ -764,6 +764,10 @@ giant iguana
 
 A huge lizard with great crunching jaws.
 %%%%
+giant leech
+
+A huge blood-sucking leech. How horrible!
+%%%%
 giant lizard
 
 A huge lizard with great crunching jaws.

@@ -201,6 +201,9 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     case HT_LAVA:
         return (grid == DNGN_LAVA);
 
+    case HT_AMPHIBIOUS_WATER:
+        return (mons->type == MONS_GIANT_LEECH && feat_is_watery(grid));
+
     default:
         return (false);
     }

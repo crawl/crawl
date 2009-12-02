@@ -1633,6 +1633,19 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
+// Deliberately excepted in mon-place.cc to allow submerging.
+{
+    MONS_GIANT_LEECH, 'w', RED, "giant leech",
+    M_NO_SKELETON | M_BLOOD_SCENT,
+    MR_NO_FLAGS,
+    1100, 10, MONS_WORM, MONS_GIANT_LEECH, MH_NATURAL, -3,
+    { {AT_BITE, AF_VAMPIRIC, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 6, 5, 5, 0 },
+    5, 15, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT,
+    I_PLANT, HT_AMPHIBIOUS_WATER, FL_NONE, 8, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
+},
+
 // small abominations ('x')
 {
     MONS_UNSEEN_HORROR, 'x', MAGENTA, "unseen horror",
