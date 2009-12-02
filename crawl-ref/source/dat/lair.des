@@ -41,7 +41,7 @@ ENDMAP
 #
 NAME:   david_lair_2
 TAGS:   lair_entry
-MONS:   plant, firedrake
+MONS:   plant, fire drake
 SUBST:  ' = 1.
 ORIENT: float
 MAP
@@ -546,10 +546,10 @@ DEPTH:  Lair:4-8
 TAGS:   no_monster_gen mini_float
 : if you.absdepth() >= 18 then
 MONS:   dragon
-MONS:   firedrake / w:2 mottled dragon / w:4 nothing
+MONS:   fire drake / w:2 mottled dragon / w:4 nothing
 : else
 MONS:   mottled dragon / steam dragon
-MONS:   firedrake / w:15 nothing
+MONS:   fire drake / w:15 nothing
 : end
 ITEM:   any good_item
 SUBST:  ! = $:3 d:2
@@ -1055,7 +1055,7 @@ NAME:    swamp_alternative
 PLACE:   Swamp:5
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
-MONS:    swamp dragon, swamp drake, hydra, firedrake
+MONS:    swamp dragon, swamp drake, hydra, fire drake
 ITEM:    nothing
 SUBST:   1=1., 2=2., 3=3., 4=4., L=l.
 SHUFFLE: Od, 123, lw

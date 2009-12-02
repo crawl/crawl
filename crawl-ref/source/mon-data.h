@@ -1034,10 +1034,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_FIREDRAKE, 'l', RED, "firedrake",
+    MONS_FIRE_DRAKE, 'l', RED, "fire drake",
     M_SPECIAL_ABILITY | M_WARM_BLOOD,
     MR_RES_FIRE,
-    900, 10, MONS_DRAGON, MONS_FIREDRAKE, MH_NATURAL, -3,
+    900, 10, MONS_DRAGON, MONS_FIRE_DRAKE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 6, 3, 5, 0 },
     3, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SILENT,

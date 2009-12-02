@@ -346,7 +346,7 @@ titan MONS_TITAN
 
 ## Drakes (also 'l')
 swamp_drake MONS_SWAMP_DRAKE
-firedrake MONS_FIREDRAKE
+fire_drake MONS_FIRE_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
 

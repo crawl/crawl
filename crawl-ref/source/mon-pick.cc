@@ -1386,7 +1386,7 @@ int mons_lair_level(int mcls)
     case MONS_BLACK_MAMBA:
     case MONS_BRAIN_WORM:
     case MONS_BUMBLEBEE:
-    case MONS_FIREDRAKE:
+    case MONS_FIRE_DRAKE:
     case MONS_HYDRA:
     case MONS_OKLOB_PLANT:
     case MONS_WYVERN:
@@ -1476,7 +1476,7 @@ int mons_lair_rare(int mcls)
         return 45;
 
     case MONS_SHEEP:
-    case MONS_FIREDRAKE:
+    case MONS_FIRE_DRAKE:
         return 36;
 
     case MONS_WAR_DOG:

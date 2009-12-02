@@ -2972,7 +2972,7 @@ monster_type summon_any_dragon(dragon_class_type dct)
         temp_rand = random2(100);
         mon = ((temp_rand > 80) ? MONS_SWAMP_DRAKE :
                (temp_rand > 59) ? MONS_KOMODO_DRAGON :
-               (temp_rand > 34) ? MONS_FIREDRAKE :
+               (temp_rand > 34) ? MONS_FIRE_DRAKE :
                (temp_rand > 11) ? MONS_DEATH_DRAKE :
                                   MONS_DRAGON);
         break;

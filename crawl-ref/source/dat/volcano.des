@@ -134,7 +134,7 @@ function volcano_setup (e, metal)
         e.lfloortile("floor_rough_red")
     end
     e.set_random_mon_list([[hog / fire elemental / fire vortex / giant ant / 
-                            bumblebee / firedrake / lindwurm / imp / redback /
+                            bumblebee / fire drake / lindwurm / imp / redback /
                             manticore / hell hound / hell hog / ghoul / 
                             flayed ghost / pulsating lump / toenail golem /
                             efreet / vampire]])
@@ -274,7 +274,7 @@ end
 --  nothing, minotuar (all on its lonesome)
 --
 -- Natural "packs" usually consist of a few fire/red-themed monsters
--- surrounding either a lindwurm, firedrake, or manticore.
+-- surrounding either a lindwurm, fire drake, or manticore.
 --
 -- Demonic "packs" usually consist high chance of imps, toenail golems
 -- and pulsating lumps, lower chance of red devils, hell hounds and ghouls
@@ -370,7 +370,7 @@ function fiery_guardians (e)
     if crawl.one_chance_in(3) then
         -- "Lair"-esque fire-themed monster pack.
         e.mons("hog / giant ant / redback w:1 / bumblebee w:1 / manticore")
-        e.mons("firedrake / lindwurm w:1")
+        e.mons("fire drake / lindwurm w:1")
         return
     end
 
@@ -464,7 +464,7 @@ ENDMAP
 NAME:       enter_volcano_3
 TAGS:       uniq_volcano
 ORIENT:     float
-MONS:       patrolling firedrake
+MONS:       patrolling fire drake
 #           His name is Robby.
 COLOUR:     X = red
 COLOUR:     S = red
@@ -716,7 +716,7 @@ KMONS:      u = flying skull
 #           We have a specific monster set for this vault.
 MONS:       mummy
 MONS:       menkaure / guardian mummy
-MONS:       firedrake skeleton w:5 / lindwurm skeleton w:1 / hog skeleton / hound skeleton
+MONS:       fire drake skeleton w:5 / lindwurm skeleton w:1 / hog skeleton / hound skeleton
 MONS:       mummy
 #           Loot: 4 gold, 8 items.
 SHUFFLE:    12K

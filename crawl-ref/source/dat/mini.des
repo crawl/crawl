@@ -2213,7 +2213,7 @@ ITEM:   nothing
 SUBST:  * = |**...
 SUBST:  * : *$
 SUBST:  L = ll.
-MONS:   molten gargoyle / firedrake / lindwurm / nothing w:20
+MONS:   molten gargoyle / fire drake / lindwurm / nothing w:20
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 1, walk_dist = 0, spread_rate= 0 }

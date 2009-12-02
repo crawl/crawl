@@ -1119,7 +1119,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     case MONS_DRAGON:
     case MONS_HELL_HOUND:
     case MONS_LINDWURM:
-    case MONS_FIREDRAKE:
+    case MONS_FIRE_DRAKE:
     case MONS_XTAHUA:
         if (spell == SPELL_NO_SPELL)
             spell = SPELL_FIRE_BREATH;

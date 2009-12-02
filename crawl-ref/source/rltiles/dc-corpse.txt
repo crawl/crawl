@@ -180,7 +180,7 @@ titan CORPSE_TITAN
 
 ## Drakes ('l')
 swamp_drake CORPSE_SWAMP_DRAKE
-firedrake CORPSE_FIREDRAKE
+fire_drake CORPSE_FIRE_DRAKE
 lindwurm CORPSE_LINDWURM
 death_drake CORPSE_DEATH_DRAKE
 
