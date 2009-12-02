@@ -441,6 +441,7 @@ i-recharging SCR_RECHARGING
 i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
 i-holy_word SCR_HOLY_WORD
 i-vulnerability SCR_VULNERABILITY
+i-silence SCR_SILENCE
 %back none
 
 ##################OBJ_JEWELLERY
