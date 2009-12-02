@@ -3776,6 +3776,12 @@ static bool _initialise(void)
          newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
          NUM_LEVEL_AREA_TYPES, -1, you.where_are_you);
 
+    // Make sure monsters have a valid LOS before the first turn starts.
+    // This prevents mesmerization from being broken when a game is
+    // restored.
+    for (monster_iterator mi; mi; ++mi)
+        mi->update_los();
+
     if (newc && you.char_direction == GDT_GAME_START)
     {
         // Randomise colours properly for the Abyss.
