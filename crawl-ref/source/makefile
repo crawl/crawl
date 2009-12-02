@@ -976,7 +976,12 @@ source: depend removeold
 	  > $(BSRC)util/release_ver
 	cd build && mv crawl-ref $(PKG_SRC_DIR)
 	cd build && tar cfj ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
-	cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR)
+	@if which zip >/dev/null; then \
+	  @echo "cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR)"; \
+	  cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR); \
+	else \
+	  echo "**** No ZIP installed -- not creating the zipball."; \
+	fi
 	rm -rf build
 
 removeold:
