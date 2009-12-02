@@ -267,7 +267,6 @@ MARKER: # = lua:fog_machine { \
 KFEAT:  # = l
 FTILE:  ' = floor_rough_red
 COLOUR: ' = red
-KPROP:  ' = force_exclude
 SUBST:  ' = .
 MAP
 bbbbbbbbb
