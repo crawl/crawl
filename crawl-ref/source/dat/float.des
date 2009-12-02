@@ -903,7 +903,7 @@ KMONS:  7 = fire vortex
 #
 : if you.in_branch("elf") then
 KMONS:  Z = col:gila deep elf sorcerer \
-        name:deep_elf_elementalist name_replace \
+        name:deep_elf_elementalist n_rpl n_des \
         spells:iron_shot;summon_air_elementals;sticky_flame;\
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance race:elven | \
