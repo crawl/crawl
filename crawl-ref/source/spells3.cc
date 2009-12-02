@@ -1490,15 +1490,16 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 
             if (pos == you.pos() || pos == coord_def(-1,-1))
             {
-                if (!yesno("Are you sure you want to cancel this teleport?",
-                           true, 'n'))
-                    continue;
+                if (!wizard_tele)
+                    if (!yesno("Are you sure you want to cancel this teleport?",
+                               true, 'n'))
+                        continue;
                 you.turn_is_over = false;
                 return (false);
             }
 
             monsters *beholder = you.get_beholder(pos);
-            if (beholder)
+            if (beholder && !wizard_tele)
             {
                 mprf("You cannot teleport away from %s!",
                      beholder->name(DESC_NOCAP_THE, true).c_str());
