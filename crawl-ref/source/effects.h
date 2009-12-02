@@ -95,6 +95,6 @@ bool forget_inventory(bool quiet = false);
 bool vitrify_area(int radius);
 void update_corpses(double elapsedTime);
 void update_level(double elapsedTime);
-void handle_time(long time_delta);
+void handle_time();
 
 #endif

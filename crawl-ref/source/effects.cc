@@ -3674,15 +3674,35 @@ static void _rot_inventory_food(long time_delta)
     }
 }
 
-// Do various time related actions...
-// This function is called about every 20 turns.
-void handle_time(long time_delta)
+// Get around C++ dividing integers towards 0.
+static int _div(int num, int denom)
 {
+    div_t res = div(num, denom);
+    return (res.rem >= 0 ? res.quot : res.quot - 1);
+}
+
+// Do various time related actions...
+void handle_time()
+{
+    int base_time = static_cast<int>(fmod(you.elapsed_time, 200));
+    int old_time = base_time - you.time_taken;
+
+    // The checks below assume the function is called at least
+    // once every 50 elapsed time units.
+
+    // Every 5 turns, spawn random monsters.
+    if (_div(base_time, 50) > _div(old_time, 50))
+        spawn_random_monsters();
+
+    // Every 20 turns, a variety of other effects.
+    if (! (_div(base_time, 200) > _div(old_time, 200)))
+        return;
+
+    int time_delta = 200;
+
     // Update all of the corpses, food chunks, and potions of blood on
     // the floor.
     update_corpses(time_delta);
-
-    spawn_random_monsters();
 
     if (crawl_state.arena)
         return;

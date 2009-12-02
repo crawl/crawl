@@ -2870,27 +2870,7 @@ void world_reacts()
 
     you.elapsed_time += you.time_taken;
 
-    if (you.synch_time <= you.time_taken)
-    {
-        handle_time(200 + (you.time_taken - you.synch_time));
-        you.synch_time = 200;
-        _check_banished();
-    }
-    else
-    {
-        const long old_synch_time = you.synch_time;
-        you.synch_time -= you.time_taken;
-
-        // Call spawn_random_monsters() more often than the rest of
-        // handle_time() so the spawning rates work out correctly.
-        if (old_synch_time >= 150 && you.synch_time < 150
-            || old_synch_time >= 100 && you.synch_time < 100
-            || old_synch_time >= 50 && you.synch_time < 50)
-        {
-            spawn_random_monsters();
-        }
-    }
-
+    handle_time();
     manage_clouds();
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
