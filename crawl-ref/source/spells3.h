@@ -63,7 +63,9 @@ bool cast_haunt(int pow, const coord_def& where, god_type god = GOD_NO_GOD);
 bool cast_death_channel(int pow, god_type god = GOD_NO_GOD);
 
 void you_teleport();
-void you_teleport_now(bool allow_control, bool new_abyss_area = false, bool wizard = false);
+void you_teleport_now(bool allow_control,
+                      bool new_abyss_area = false,
+                      bool wizard_tele = false);
 
 
 #endif

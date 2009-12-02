@@ -155,7 +155,7 @@ public:
     virtual void blink(bool allow_partial_control = true) = 0;
     virtual void teleport(bool right_now = false,
                           bool abyss_shift = false,
-                          bool wizard = false) = 0;
+                          bool wizard_tele = false) = 0;
     virtual void poison(actor *attacker, int amount = 1) = 0;
     virtual bool sicken(int amount) = 0;
     virtual void paralyse(actor *attacker, int strength) = 0;

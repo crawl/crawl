@@ -1410,17 +1410,17 @@ void you_teleport(void)
     }
 }
 
-static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard)
+static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
 {
     bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()
                           && allow_control_teleport());
 
     // All wizard teleports are automatically controlled.
-    if (wizard)
+    if (wizard_tele)
         is_controlled = true;
 
-    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION) && !wizard)
+    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION) && !wizard_tele)
     {
         mpr("You feel a strange sense of stasis.");
         return (false);
@@ -1462,7 +1462,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
         check_ring_TC = true;
 
         // Only have the more prompt for non-wizard.
-        if (!wizard)
+        if (!wizard_tele)
             more();
 
         while (true)
@@ -1511,7 +1511,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
         }
 
         // Don't randomly walk wizard teleports.
-        if (!wizard)
+        if (!wizard_tele)
         {
             pos.x += random2(3) - 1;
             pos.y += random2(3) - 1;
@@ -1553,7 +1553,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
                 is_controlled = false;
                 large_change  = false;
             }
-            else if (testbits(env.pgrid(pos), FPROP_NO_CTELE_INTO) && !wizard)
+            else if (testbits(env.pgrid(pos), FPROP_NO_CTELE_INTO) && !wizard_tele)
             {
                 is_controlled = false;
                 large_change = false;
@@ -1566,7 +1566,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 
                 // Controlling teleport contaminates the player. - bwr
                 move_player_to_grid(pos, false, true, true);
-                if (!wizard)
+                if (!wizard_tele)
                     contaminate_player(1, true);
             }
         }
@@ -1668,9 +1668,10 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     return (!is_controlled);
 }
 
-void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard)
+void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
 {
-    const bool randtele = _teleport_player(allow_control, new_abyss_area, wizard);
+    const bool randtele = _teleport_player(allow_control, new_abyss_area, 
+                                           wizard_tele);
 
     // Xom is amused by uncontrolled teleports that land you in a
     // dangerous place, unless the player is in the Abyss and

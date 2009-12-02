@@ -384,7 +384,7 @@ public:
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool abyss_shift = false,
-                  bool wizard = false);
+                  bool wizard_tele = false);
 
     void hibernate(int power = 0);
     void check_awaken(int disturbance);
