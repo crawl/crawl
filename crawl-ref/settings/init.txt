@@ -245,6 +245,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # status_caption_colour        = yellow
 # classic_hud                  = true
 # mlist_min_height             = 5
+# msg_min_height               = 6
 # msg_max_height               = 10
 # mlist_allow_alternate_layout = true
 # messages_at_top              = true

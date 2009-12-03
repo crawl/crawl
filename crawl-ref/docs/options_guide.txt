@@ -67,7 +67,8 @@ The contents of this text are:
                 status_caption_colour, delay_message_clear,
                 show_inventory_weights, show_gold_turns, show_beam,
                 item_stack_summary_minimum, list_rotten,
-                mlist_min_height, msg_max_height, messages_at_top,
+                mlist_min_height, msg_min_height, msg_max_height,
+                messages_at_top,
                 mlist_allow_alternate_layout, mlist_targetting, classic_hud,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
@@ -1323,6 +1324,9 @@ mlist_min_height = 5
         monster list, the monster list will expand to this height
         before letting the message area get more.
         (Note that the monster list is only available for ASCII.)
+
+msg_min_height = 6
+        You can reduce this to 5 give more space to the map display.
 
 msg_max_height = 10
         If there is extra space available after the monster list has

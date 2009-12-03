@@ -603,6 +603,7 @@ void game_options::reset_options()
     view_max_width   = std::max(33, VIEW_MIN_WIDTH);
     view_max_height  = std::max(21, VIEW_MIN_HEIGHT);
     mlist_min_height = 5;
+    msg_min_height   = std::max(6, MSG_MIN_HEIGHT);
     msg_max_height   = std::max(10, MSG_MIN_HEIGHT);
     mlist_allow_alternate_layout = false;
     messages_at_top  = false;
@@ -2405,6 +2406,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(view_max_width, VIEW_MIN_WIDTH, GXM + 1);
     else INT_OPTION(view_max_height, VIEW_MIN_HEIGHT, GYM + 1);
     else INT_OPTION(mlist_min_height, 0, INT_MAX);
+    else INT_OPTION(msg_min_height, MSG_MIN_HEIGHT, INT_MAX);
     else INT_OPTION(msg_max_height, MSG_MIN_HEIGHT, INT_MAX);
     else BOOL_OPTION(mlist_allow_alternate_layout);
     else BOOL_OPTION(messages_at_top);
