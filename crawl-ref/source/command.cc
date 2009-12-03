@@ -2493,6 +2493,9 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>O</w>      : measure exploration time\n"
                        "<w>Ctrl-t</w> : enter in-game Lua interpreter\n"
                        "\n"
+                       "<yellow>Wizard targetting commands</yellow>\n"
+                       "<w>x?</w>     : list targetted commands\n"
+                       "\n"
                        "<w>?</w>      : list wizard commands\n",
                        true, true);
 
