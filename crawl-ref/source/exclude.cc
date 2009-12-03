@@ -387,6 +387,7 @@ void deferred_exclude_update()
 {
     _exclude_update();
 #ifdef USE_TILE
+    exclude_set::iterator it;
     for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
         _tile_exclude_gmap_update(it->second.pos);
 #endif
