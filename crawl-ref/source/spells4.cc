@@ -920,8 +920,13 @@ bool cast_passwall(const coord_def& delta, int pow)
     int range = shallow + random2(pow) / 25;
     int maxrange = shallow + pow / 25;
 
-    coord_def n = you.pos() + delta;
-    if (!_feat_is_passwallable(grid_appearance(n)))
+    coord_def dest;
+    for (dest = you.pos() + delta; 
+         in_bounds(dest) && _feat_is_passwallable(grd(dest));
+         dest += delta) ;
+
+    int walls = (dest - you.pos()).rdist() - 1;
+    if (walls == 0)
     {
         mpr("That's not a passable wall.");
         return (false);
@@ -929,23 +934,18 @@ bool cast_passwall(const coord_def& delta, int pow)
 
     // Below here, failing to cast yields information to the
     // player, so we don't make the spell abort (return true).
-
-    int howdeep;
-    for (howdeep = 1; in_bounds(n) && _feat_is_passwallable(grd(n));
-                      n += delta, howdeep++);
-
-    if (!in_bounds(n))
+    if (!in_bounds(dest))
         mpr("You sense an overwhelming volume of rock.");
-    else if (feat_is_solid(grd(n)))
+    else if (feat_is_solid(grd(dest)))
         mpr("Something is blocking your path through the rock.");
-    else if (howdeep > maxrange)
+    else if (walls > maxrange)
         mpr("This rock feels extremely deep.");
-    else if (howdeep > range)
+    else if (walls > range)
         mpr("You fail to penetrate the rock.");
     else
     {
         // Passwall delay is reduced, and the delay cannot be interrupted.
-        start_delay(DELAY_PASSWALL, 1 + howdeep, n.x, n.y);
+        start_delay(DELAY_PASSWALL, 1 + walls, dest.x, dest.y);
     }
     return (true);
 }
