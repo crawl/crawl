@@ -1085,8 +1085,8 @@ NAME:    swamp_fiery
 PLACE:   Swamp:5
 TAGS:    no_pool_fixup
 ORIENT:  float
-MONS:    dragon, mottled dragon / hydra, firedrake / swamp drake / steam dragon
-MONS:    firedrake / lindwurm w:3
+MONS:    dragon, mottled dragon / hydra, fire drake / swamp drake / steam dragon
+MONS:    fire drake / lindwurm w:3
 SHUFFLE: OX
 SUBST:   S = llw, L = ll.
 SUBST:   ' = x., " = cx
