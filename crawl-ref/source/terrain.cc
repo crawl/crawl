@@ -489,10 +489,15 @@ void get_door_description(int door_size, const char** adjective, const char** no
 dungeon_feature_type grid_appearance(const coord_def &gc)
 {
     dungeon_feature_type feat = env.grid(gc);
-    if (feat == DNGN_SECRET_DOOR)
-        feat = grid_secret_door_appearance(gc);
-
-    return feat;
+    switch (feat)
+    {
+    case DNGN_SECRET_DOOR:
+        return grid_secret_door_appearance(gc);
+    case DNGN_UNDISCOVERED_TRAP:
+        return DNGN_FLOOR;
+    default:
+        return feat;
+    }
 }
 
 dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
