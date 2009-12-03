@@ -305,8 +305,11 @@ local function teleporter (data, triggerable, triggerer, marker, ev)
     monster.random_teleport()
   end
 
-  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
-  crawl.mpr("Your surroundings suddenly seem different!")
+  if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
+    crawl.mpr("Your surroundings suddenly seem different!")
+  else
+    crawl.mpr("There is a strange hissing noise.")
+  end
 end
 
 -- Lua marker magic!

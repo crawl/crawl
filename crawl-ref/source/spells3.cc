@@ -1411,10 +1411,10 @@ void you_teleport(void)
 }
 
 // Should return true if we don't want anyone to teleport here.
-bool _cell_vetoes_teleport (const coord_def cell)
+bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = true)
 {
     // Monsters always veto teleport.
-    if (monster_at(cell))
+    if (monster_at(cell) && check_monsters)
         return (true);
 
     // As do all clouds; this may change.
@@ -1431,9 +1431,19 @@ bool _cell_vetoes_teleport (const coord_def cell)
     case DNGN_DEEP_WATER:
         if (you.species == SP_MERFOLK)
             return (false);
+        else
+            return (true);
+
+    case DNGN_LAVA:
+        return (true);
 
     default:
-        return (true);
+        // Lava is really the only non-solid glyph above DNGN_MAXSOLID that is
+        // not a safe teleport location, and that's handled above.
+        if (cell_is_solid(cell))
+            return (true);
+
+        return (false);
     }
 }
 
@@ -1714,7 +1724,7 @@ bool you_teleport_to (const coord_def where_to, bool move_monsters)
 
     if (_cell_vetoes_teleport(where))
     {
-        if (monster_at(where) && move_monsters)
+        if (monster_at(where) && move_monsters && !_cell_vetoes_teleport(where, false))
         {
             monsters *mons = monster_at(where);
             mons->teleport(true);
@@ -1729,7 +1739,8 @@ bool you_teleport_to (const coord_def where_to, bool move_monsters)
                 }
                 else
                 {
-                    if (monster_at(*ai) && move_monsters)
+                    if (monster_at(*ai) && move_monsters 
+                            && !_cell_vetoes_teleport(*ai, false))
                     {
                         monsters *mons = monster_at(*ai);
                         mons->teleport(true);
