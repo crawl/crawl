@@ -1437,6 +1437,46 @@ bool _cell_vetoes_teleport (const coord_def cell)
     }
 }
 
+void _handle_teleport_update (bool large_change, bool check_ring_TC, 
+                            const coord_def old_pos)
+{
+    if (large_change)
+    {
+        viewwindow(false, true);
+        for (monster_iterator mi; mi; ++mi)
+        {
+            const bool see_cell = you.see_cell(mi->pos());
+
+            if (mi->foe == MHITYOU && !see_cell)
+            {
+                mi->foe_memory = 0;
+                behaviour_event(*mi, ME_EVAL);
+            }
+            else if (see_cell)
+                behaviour_event(*mi, ME_EVAL);
+        }
+
+        handle_interrupted_swap(true);
+    }
+
+    // Might identify unknown ring of teleport control.
+    if (check_ring_TC)
+        maybe_id_ring_TC();
+
+#ifdef USE_TILE
+    if (you.species == SP_MERFOLK)
+    {
+        const dungeon_feature_type new_grid = grd(you.pos());
+        const dungeon_feature_type old_grid = grd(old_pos);
+        if (feat_is_water(old_grid) && !feat_is_water(new_grid)
+            || !feat_is_water(old_grid) && feat_is_water(new_grid))
+        {
+            init_player_doll();
+        }
+    }
+#endif
+}
+
 static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
 {
     bool is_controlled = (allow_control && !you.confused()
@@ -1476,11 +1516,9 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     }
 
     coord_def pos(1, 0);
+    const coord_def old_pos = you.pos();
     bool      large_change  = false;
     bool      check_ring_TC = false;
-#ifdef USE_TILE
-    const dungeon_feature_type old_grid = grd(you.pos());
-#endif
 
     if (is_controlled)
     {
@@ -1585,7 +1623,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
             else
             {
                 // Leave a purple cloud.
-                place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
+                place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
 
                 // Controlling teleport contaminates the player. - bwr
                 move_player_to_grid(pos, false, true, true);
@@ -1628,16 +1666,11 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 
         do
             newpos = random_in_bounds();
-        while (grd(newpos) != DNGN_FLOOR
-                   && grd(newpos) != DNGN_SHALLOW_WATER
-                   && (you.species != SP_MERFOLK
-                       || grd(newpos) != DNGN_DEEP_WATER)
-               || monster_at(newpos)
-               || env.cgrid(newpos) != EMPTY_CLOUD
+        while (_cell_vetoes_teleport(newpos)
                || need_distance_check && (newpos - centre).abs() < 34*34
                || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO));
 
-        if (newpos == you.pos())
+        if (newpos == old_pos)
             mpr("Your surroundings flicker for a moment.");
         else if (you.see_cell(newpos))
             mpr("Your surroundings seem slightly different.");
@@ -1648,47 +1681,79 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
         }
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
+        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
 
         move_player_to_grid(newpos, false, true, true);
     }
 
-    if (large_change)
-    {
-        viewwindow(false, true);
-        for (monster_iterator mi; mi; ++mi)
-        {
-            const bool see_cell = you.see_cell(mi->pos());
-
-            if (mi->foe == MHITYOU && !see_cell)
-            {
-                mi->foe_memory = 0;
-                behaviour_event(*mi, ME_EVAL);
-            }
-            else if (see_cell)
-                behaviour_event(*mi, ME_EVAL);
-        }
-
-        handle_interrupted_swap(true);
-    }
-
-    // Might identify unknown ring of teleport control.
-    if (check_ring_TC)
-        maybe_id_ring_TC();
-
-#ifdef USE_TILE
-    if (you.species == SP_MERFOLK)
-    {
-        const dungeon_feature_type new_grid = grd(you.pos());
-        if (feat_is_water(old_grid) && !feat_is_water(new_grid)
-            || !feat_is_water(old_grid) && feat_is_water(new_grid))
-        {
-            init_player_doll();
-        }
-    }
-#endif
-
+    _handle_teleport_update(large_change, check_ring_TC, old_pos);
     return (!is_controlled);
+}
+
+bool you_teleport_to (const coord_def where_to, bool move_monsters)
+{
+    // Attempts to teleport the player from their current location to 'where'.
+    // Follows this line of reasoning:
+    //   1. Check the location (against _cell_vetoes_teleport), if valid,
+    //      teleport the player there.
+    //   2. If not because of a monster, and move_monster, teleport that
+    //      monster out of the way, then teleport the player there.
+    //   3. Otherwise, iterate over adjacent squares. If a sutiable position is
+    //      found (or a monster can be moved out of the way, with move_monster)
+    //      then teleport the player there.
+    //   4. If not, give up and return false.
+
+    bool check_ring_TC = false;
+    const coord_def old_pos = you.pos();
+    coord_def where = where_to;
+    coord_def old_where = where_to;
+
+    // Don't bother to calculate a possible new position if it's out of bounds.
+    if (!in_bounds(where))
+        return (false);
+
+    if (_cell_vetoes_teleport(where))
+    {
+        if (monster_at(where) && move_monsters)
+        {
+            monsters *mons = monster_at(where);
+            mons->teleport(true);
+        }
+        else {
+            for (adjacent_iterator ai(where); ai; ++ai)
+            {
+                if (!_cell_vetoes_teleport(*ai))
+                {
+                    where = *ai;
+                    break;
+                }
+                else
+                {
+                    if (monster_at(*ai) && move_monsters)
+                    {
+                        monsters *mons = monster_at(*ai);
+                        mons->teleport(true);
+                        where = *ai;
+                        break;
+                    }
+                }
+            }
+            // Give up, we can't find a suitable spot.
+            if (where == old_where)
+                return (false);
+        }
+    }
+
+    // If we got this far, we're teleporting the player.
+    // Leave a purple cloud.
+    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
+
+    bool large_change = you.see_cell(where);
+
+    move_player_to_grid(where, false, true, true);
+
+    _handle_teleport_update(large_change, check_ring_TC, old_pos);
+    return (true);
 }
 
 void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
