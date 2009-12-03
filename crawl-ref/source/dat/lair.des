@@ -1079,6 +1079,42 @@ MAP
       """"""""
 ENDMAP
 
+###############################################################################
+# Swamp:5 alternative (due)
+NAME:    swamp_fiery
+PLACE:   Swamp:5
+TAGS:    no_pool_fixup
+ORIENT:  float
+MONS:    dragon, mottled dragon / hydra, firedrake / swamp drake / steam dragon
+MONS:    firedrake / lindwurm w:3
+SHUFFLE: OX
+SUBST:   S = llw, L = ll.
+SUBST:   ' = x., " = cx
+MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
+             pow_max = 12, delay_min = 40, delay_max = 70, \
+             size = 1, walk_dist = 1, spread_rate= 3 }
+KFEAT:   XR = lava
+MAP
+                             @      .@
+                       lS     .  3.'
+              '.@    SlRl      '.
+              3       lS      '.
+          "cc.'              3'
+        ""cc3c"               .
+       "ccc2cc" """       "cc.c"
+       "c.L.2cc"cccc""""""ccLcc"
+      "ccL3ll.ccc34cccccccc2Lc""
+       "cc.LLl...Ll.33cc.c.L3ccc"
+      "cccc3llLLlllLLl..L2Lll.Lc"
+       "cc.LllllclllllLlllllL.cc"
+        "cc2LllRcclLllRll.332cc"
+        "ccL.Lllllccllll2lcccc"
+         "ccc2Lllcc"ccX2lcc"""
+          ""cc1Occ" "ccccc"
+            "cccc"   """"
+             """"
+ENDMAP
+
 ##################################################################
 # Alternative swamp end, by Lemuel
 #
