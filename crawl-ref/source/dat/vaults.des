@@ -305,13 +305,8 @@ local function teleporter (data, triggerable, triggerer, marker, ev)
     monster.random_teleport()
   end
 
-  -- XXX: This is still unsafe! Should be replaced with aimed teleport.
-  you.moveto(my_slaves[1].x, my_slaves[1].y)
+  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
   crawl.mpr("Your surroundings suddenly seem different!")
-
-  -- In order to mimic a normal teleport, even though this is certainly not. 
-  dgn.apply_area_cloud(position.x, position.y, 1, 4, 1, 1, 
-    "translocational energy", "you", -1) 
 end
 
 -- Lua marker magic!
