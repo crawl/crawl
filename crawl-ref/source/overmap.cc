@@ -460,7 +460,7 @@ std::string overview_description_string()
             else if (column_count != 0)
             {
                 disp += "  ";
-                ++column_count;
+                column_count += 2;
             }
             disp += "<brown>";
 
