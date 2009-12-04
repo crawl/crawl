@@ -890,16 +890,17 @@ void viewwindow(bool monster_updates, bool show_updates)
 #endif
 
     if (show_updates)
+    {
         you.update_los();
 
 #ifdef USE_TILE
-    tile_draw_floor();
-    tile_draw_rays(true);
-    tiles.clear_overlays();
+        tile_draw_floor();
+        tile_draw_rays(true);
+        tiles.clear_overlays();
 #endif
 
-    if (show_updates)
         env.show.init();
+    }
 
     if (monster_updates && !crawl_state.arena)
         monster_grid_updates();
