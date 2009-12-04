@@ -33,13 +33,14 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "jobs.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "newgame.h"
-#include "jobs.h"
+#include "output.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -2738,15 +2739,7 @@ static std::string _monster_stat_description(const monsters& mon)
         if (mr >= 10)
         {
             result << pronoun << make_stringf(" is %s resistant to magic.$",
-                 (mr <  30) ? "slightly" :
-                 (mr <  60) ? "somewhat" :
-                 (mr <  90) ? "quite" :
-                 (mr < 120) ? "very" :
-                 (mr < 150) ? "extremely" :
-                 (mr < 190) ? "extraordinarily" :
-                 (mr < 240) ? "incredibly" :
-                 (mr < 300) ? "uncannily"
-                            : "almost entirely");
+                                              magic_res_adjective(mr).c_str());
         }
     }
 

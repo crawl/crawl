@@ -3792,36 +3792,12 @@ void display_char_status()
 
     // magic resistance
     const int mr = you.res_magic();
-    mprf("You are %s resistant to magic.",
-         (mr <  10) ? "not" :
-         (mr <  30) ? "slightly" :
-         (mr <  60) ? "somewhat" :
-         (mr <  90) ? "quite" :
-         (mr < 120) ? "very" :
-         (mr < 150) ? "extremely" :
-         (mr < 190) ? "extraordinarily" :
-         (mr < 240) ? "incredibly" :
-         (mr < 300) ? "uncannily"
-                    : "almost entirely");
+    mprf("You are %s resistant to magic.", magic_res_adjective(mr).c_str());
 
     // character evaluates their ability to sneak around:
-    const int ustealth = check_stealth();
-
-    mprf("You feel %sstealthy.",
-         (ustealth <  10) ? "extremely un" :
-         (ustealth <  30) ? "very un" :
-         (ustealth <  60) ? "un" :
-         (ustealth <  90) ? "fairly " :
-         (ustealth < 120) ? "" :
-         (ustealth < 160) ? "quite " :
-         (ustealth < 220) ? "very " :
-         (ustealth < 300) ? "extremely " :
-         (ustealth < 400) ? "extraordinarily " :
-         (ustealth < 520) ? "incredibly "
-                          : "uncannily ");
-
+    mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
 #if DEBUG_DIAGNOSTICS
-    mprf("stealth: %d", ustealth);
+    mprf("stealth: %d", check_stealth());
 #endif
 }
 
