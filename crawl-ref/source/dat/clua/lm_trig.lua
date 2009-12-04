@@ -459,6 +459,15 @@ function TriggerableFunction:read(marker, th)
   return self
 end
 
+function function_at_spot(func, data, repeated, props)
+  local tf = TriggerableFunction:new 
+      { func = func, data = data, repeated = repeated, props = props }
+
+  tf:add_triggerer( DgnTriggerer:new { type   = "player_move" } )
+
+  return tf
+end
+
 --------------------------
 
 -- A simple class to give out messages.  Should be split out into own
@@ -484,6 +493,7 @@ function TriggerableMessage:new(pars)
   tm.msg      = pars.msg
   tm.channel  = pars.channel
   tm.repeated = pars.repeated
+  tm.props    = pars.props
 
   return tm
 end
@@ -516,9 +526,9 @@ function TriggerableMessage:read(marker, th)
   return self
 end
 
-function message_at_spot(msg, channel, repeated)
+function message_at_spot(msg, channel, repeated, props)
   local tm = TriggerableMessage:new 
-      { msg = msg, channel = channel, repeated = repeated }
+      { msg = msg, channel = channel, repeated = repeated, props = props }
 
   tm:add_triggerer( DgnTriggerer:new { type   = "player_move" } )
 
