@@ -39,6 +39,7 @@
 #include "player.h"
 #include "religion.h"
 #include "species.h"
+#include "spl-util.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -232,6 +233,28 @@ int str_to_fprop ( const std::string &str)
         return (FPROP_NO_TELE_INTO);
 
     return (FPROP_NONE);
+}
+
+// Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
+// spell.
+int str_to_summon_type (const std::string &str)
+{
+    if (str == "clone")
+        return (MON_SUMM_CLONE);
+    if (str == "animate")
+        return (MON_SUMM_ANIMATE);
+    if (str == "chaos")
+        return (MON_SUMM_CHAOS);
+    if (str == "miscast")
+        return (MON_SUMM_MISCAST);
+    if (str == "zot")
+        return (MON_SUMM_ZOT);
+    if (str == "wrath")
+        return (MON_SUMM_WRATH);
+    if (str == "aid")
+        return (MON_SUMM_AID);
+
+    return (spell_by_name(str));
 }
 
 static std::string _wand_to_str( int weapon )

@@ -2033,6 +2033,37 @@ std::string _get_expiration_string(duration_type dur, const char* msg)
     return (help);
 }
 
+std::string stealth_desc(int stealth)
+{
+    std::string prefix =
+         (stealth <  10) ? "extremely un" :
+         (stealth <  30) ? "very un" :
+         (stealth <  60) ? "un" :
+         (stealth <  90) ? "fairly " :
+         (stealth < 120) ? "" :
+         (stealth < 160) ? "quite " :
+         (stealth < 220) ? "very " :
+         (stealth < 300) ? "extremely " :
+         (stealth < 400) ? "extraordinarily " :
+         (stealth < 520) ? "incredibly "
+                         : "uncannily ";
+    return (prefix + "stealthy");
+}
+
+std::string magic_res_adjective(int mr)
+{
+    return ((mr <  10) ? "not" :
+            (mr <  30) ? "slightly" :
+            (mr <  60) ? "somewhat" :
+            (mr <  90) ? "quite" :
+            (mr < 120) ? "very" :
+            (mr < 150) ? "extremely" :
+            (mr < 190) ? "extraordinarily" :
+            (mr < 240) ? "incredibly" :
+            (mr < 300) ? "uncannily"
+                       : "almost entirely");
+}
+
 // Creates rows of short descriptions for current
 // status, mutations and abilities.
 std::string _status_mut_abilities()
@@ -2280,35 +2311,11 @@ std::string _status_mut_abilities()
     if (you.attribute[ATTR_HELD])
         status.push_back("held");
 
-    const int mr = you.res_magic();
-    snprintf(info, INFO_SIZE, "%s resistant to magic",
-             (mr <  10) ? "not" :
-             (mr <  30) ? "slightly" :
-             (mr <  60) ? "somewhat" :
-             (mr <  90) ? "quite" :
-             (mr < 120) ? "very" :
-             (mr < 140) ? "extremely"
-                        : "incredibly");
-
-    status.push_back(info);
+    status.push_back(magic_res_adjective(you.res_magic())
+                     + " resistant to magic");
 
     // character evaluates their ability to sneak around:
-    const int ustealth = check_stealth();
-
-    snprintf( info, INFO_SIZE, "%sstealthy",
-         (ustealth <  10) ? "extremely un" :
-         (ustealth <  30) ? "very un" :
-         (ustealth <  60) ? "un" :
-         (ustealth <  90) ? "fairly " :
-         (ustealth < 120) ? "" :
-         (ustealth < 160) ? "quite " :
-         (ustealth < 220) ? "very " :
-         (ustealth < 300) ? "extremely " :
-         (ustealth < 400) ? "extraordinarily " :
-         (ustealth < 520) ? "incredibly "
-                          : "uncannily ");
-
-    status.push_back(info);
+    status.push_back(stealth_desc(check_stealth()));
 
     text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
 

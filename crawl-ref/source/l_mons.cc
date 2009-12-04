@@ -5,6 +5,7 @@
 
 #include "delay.h"
 #include "dlua.h"
+#include "initfile.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 
@@ -152,6 +153,47 @@ static int l_mons_do_random_teleport(lua_State *ls)
 
 MDEFN(random_teleport, do_random_teleport)
 
+static int l_mons_do_mark_summoned(lua_State *ls)
+{
+    // And this should only be in dlua as well.
+    ASSERT_DLUA;
+
+    monsters *mons =
+        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+    if (mons->alive())
+    {
+        int longevity = luaL_checkint(ls, 1);
+        if (longevity < 1 || longevity > 6)
+        {
+            std::string err
+                = make_stringf("Invalid abjuration duration: '%d'.", longevity);
+            luaL_argerror(ls, 1, err.c_str());
+        }
+        else
+        {
+            bool mark_items = true;
+            int summon_type;
+
+            if (lua_gettop(ls) == 2)
+            {
+                if (!luaL_checkstring(ls, 2))
+                    mark_items = lua_toboolean(ls, 2);
+                else
+                    summon_type = str_to_summon_type(luaL_checkstring(ls, 2));
+            }
+            else if (lua_gettop(ls) == 3)
+                summon_type = str_to_summon_type(luaL_checkstring(ls, 3));
+            else
+                summon_type = static_cast<int>(SPELL_SHADOW_CREATURES);
+
+            mons->mark_summoned(longevity, mark_items, summon_type);
+        }
+    }
+    return (0);
+}
+
+MDEFN(mark_summoned, do_mark_summoned)
+
 MDEF(experience)
 {
     ASSERT_DLUA;
@@ -226,7 +268,8 @@ static MonsAccessor mons_attrs[] =
     { "experience",      l_mons_experience      },
     { "random_teleport", l_mons_random_teleport },
     { "set_prop",        l_mons_set_prop        },
-    { "you_can_see",     l_mons_you_can_see     }
+    { "you_can_see",     l_mons_you_can_see     },
+    { "mark_summoned",   l_mons_mark_summoned   }
 };
 
 static int monster_get(lua_State *ls)

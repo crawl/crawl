@@ -33,13 +33,14 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "jobs.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "newgame.h"
-#include "jobs.h"
+#include "output.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -2732,6 +2733,15 @@ static std::string _monster_stat_description(const monsters& mon)
     // Magic resistance at MAG_IMMUNE.
     if (mons_immune_magic(&mon))
         result << pronoun << " is immune to magical enchantments.$";
+    else // How resistant is it? Same scale as the player.
+    {
+        const int mr = mon.res_magic();
+        if (mr >= 10)
+        {
+            result << pronoun << make_stringf(" is %s resistant to magic.$",
+                                              magic_res_adjective(mr).c_str());
+        }
+    }
 
     if (mons_class_flag(mon.type, M_STATIONARY))
         result << pronoun << " cannot move.$";

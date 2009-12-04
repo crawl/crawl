@@ -59,5 +59,7 @@ void print_overview_screen(void);
 
 std::string dump_overview_screen(bool full_id);
 
+std::string magic_res_adjective(int mr);
+std::string stealth_desc(int stealth);
 
 #endif
