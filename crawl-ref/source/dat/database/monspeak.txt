@@ -4339,3 +4339,36 @@ beogh_converted_orc_reaction_speech_follower
 
 @beogh_converted_orc_reaction_speech@
 %%%%
+#################################
+# Monsters who worship Zin
+#################################
+zin_priest
+
+w:40
+@The_monster@ recites @axioms_of_law@
+
+@The_monster@ recites @recite_what@ @recite_subject@
+
+@The_monster@ preaches about @recite_subject@
+
+@The_monster@ @recites_start@ a @lecture_modifier@ lecture about @recite_subject@
+
+@The_monster@ explains in detail about @recite_subject@
+
+@The_monster@ explains the importance of @important_subject@
+
+@The_monster@ @recites_start@ a @lecture_modifier@ sermon about @recite_subject@
+
+@The_monster@ @recites_start@ a @lecture_modifier@ speech about @recite_subject@
+
+w:5
+@The_monster@ speaks about @recite_subject@
+%%%%
+recites_start
+
+begins
+
+launches into
+
+embarks on
+%%%%
