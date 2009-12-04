@@ -132,7 +132,7 @@ void player::update_beholder(const monsters *mon)
     if (_possible_beholder(mon))
         return;
     for (unsigned int i = 0; i < beholders.size(); i++)
-        if (beholders[i] = mon->mindex())
+        if (beholders[i] == mon->mindex())
         {
             beholders.erase(beholders.begin() + i);
             _removed_beholder();

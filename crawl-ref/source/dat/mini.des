@@ -2184,8 +2184,6 @@ SUBST:  * : *$
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 1, walk_dist = 0, spread_rate= 0 }
-KPROP:  d = force_exclude
-KPROP:  ' = force_exclude
 SUBST:  ' = .
 MAP
 ccccc...ccccc

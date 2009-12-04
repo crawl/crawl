@@ -52,10 +52,10 @@
 #ifdef TARGET_OS_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#elif defined ( __APPLE__ )
+extern char **NXArgv;
 #elif defined ( __linux__ )
 #include <unistd.h>
-#elif defined ( __MACH__ )
-extern char **NXArgv;
 #endif
 
 const std::string game_options::interrupt_prefix = "interrupt_";
@@ -222,8 +222,6 @@ int str_to_fprop ( const std::string &str)
 {
     if (str == "bloody")
         return (FPROP_BLOODY);
-    if (str == "force_exclude")
-        return (FPROP_FORCE_EXCLUDE);
     if (str == "no_cloud_gen")
         return (FPROP_NO_CLOUD_GEN);
     if (str == "no_rtele_into")
@@ -605,7 +603,8 @@ void game_options::reset_options()
     view_max_width   = std::max(33, VIEW_MIN_WIDTH);
     view_max_height  = std::max(21, VIEW_MIN_HEIGHT);
     mlist_min_height = 5;
-    msg_max_height   = 10;
+    msg_min_height   = std::max(6, MSG_MIN_HEIGHT);
+    msg_max_height   = std::max(10, MSG_MIN_HEIGHT);
     mlist_allow_alternate_layout = false;
     messages_at_top  = false;
     mlist_targetting = false;
@@ -2403,27 +2402,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(messaging);
 #endif
     else BOOL_OPTION(mouse_input);
-    else if (key == "view_max_width")
-    {
-        view_max_width = atoi(field.c_str());
-        if (view_max_width < VIEW_MIN_WIDTH)
-            view_max_width = VIEW_MIN_WIDTH;
-
-        // Allow the view to be one larger than GXM because the view width
-        // needs to be odd, and GXM is even.
-        else if (view_max_width > GXM + 1)
-            view_max_width = GXM + 1;
-    }
-    else if (key == "view_max_height")
-    {
-        view_max_height = atoi(field.c_str());
-        if (view_max_height < VIEW_MIN_HEIGHT)
-            view_max_height = VIEW_MIN_HEIGHT;
-        else if (view_max_height > GYM + 1)
-            view_max_height = GYM + 1;
-    }
+    // These need to be odd, hence allow +1.
+    else INT_OPTION(view_max_width, VIEW_MIN_WIDTH, GXM + 1);
+    else INT_OPTION(view_max_height, VIEW_MIN_HEIGHT, GYM + 1);
     else INT_OPTION(mlist_min_height, 0, INT_MAX);
-    else INT_OPTION(msg_max_height, 6, INT_MAX);
+    else INT_OPTION(msg_min_height, MSG_MIN_HEIGHT, INT_MAX);
+    else INT_OPTION(msg_max_height, MSG_MIN_HEIGHT, INT_MAX);
     else BOOL_OPTION(mlist_allow_alternate_layout);
     else BOOL_OPTION(messages_at_top);
 #ifndef USE_TILE

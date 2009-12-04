@@ -33,9 +33,6 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 
-static bool _travel_colour_override(const coord_def& p);
-static unsigned _get_travel_colour(const coord_def& p);
-
 unsigned get_sightmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
@@ -406,12 +403,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
             else
             {
                 buffer2[bufcount2] = env.map_knowledge(c).glyph();
-
-                // Override some feature colours according to travel distance.
-                unsigned col = (travel_mode && _travel_colour_override(c))
-                             ? _get_travel_colour(c)
-                             : get_map_knowledge_col(c);
-                buffer2[bufcount2 + 1] = real_colour(col);
+                buffer2[bufcount2 + 1] = real_colour(get_map_col(c, travel_mode));
 
                 if (c == you.pos() && !crawl_state.arena_suspended && on_level)
                 {
@@ -485,10 +477,7 @@ class feature_list
         const feature_def &fdef = get_feature_def(feat);
         glyph g;
         g.ch  = terrain_seen ? fdef.symbol : fdef.magic_symbol;
-        if (_travel_colour_override(gc))
-            g.col = _get_travel_colour(gc);
-        else
-            g.col = get_map_knowledge_col(gc);
+        g.col = get_map_col(gc);
         return (g);
     }
 
@@ -1222,4 +1211,12 @@ static bool _travel_colour_override(const coord_def& p)
 #endif
     show_type obj = get_map_knowledge_obj(p);
     return (obj.cls == SH_FEATURE && obj.feat == DNGN_FLOOR);
+}
+
+unsigned get_map_col(const coord_def& p, bool travel)
+{
+    if (travel && _travel_colour_override(p))
+        return _get_travel_colour(p);
+    else
+        return get_map_knowledge_col(p);
 }

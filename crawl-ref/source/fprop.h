@@ -15,7 +15,7 @@ enum feature_property_type
     FPROP_VAULT         = (1 << 4),
     FPROP_HIGHLIGHT     = (1 << 5),  // Highlight grids on the X map for debugging.
     // NOTE: Bloody floor and sanctuary are exclusive.
-    FPROP_FORCE_EXCLUDE = (1 << 6),
+    FPROP_UNUSED        = (1 << 6),  // used to be force_exclude
     FPROP_NO_CLOUD_GEN  = (1 << 7),
     FPROP_NO_RTELE_INTO = (1 << 8),
     FPROP_NO_CTELE_INTO = (1 << 9),

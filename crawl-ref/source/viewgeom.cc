@@ -18,7 +18,6 @@
 // define VIEW_MAX_WIDTH use Options.view_max_width
 #define HUD_WIDTH  42
 #define HUD_HEIGHT 12
-// #define MSG_MIN_HEIGHT defined elsewhere
 #define MSG_MAX_HEIGHT Options.msg_max_height
 #define MLIST_MIN_HEIGHT Options.mlist_min_height
 #define MLIST_MIN_WIDTH 25  // non-inline layout only
@@ -40,7 +39,7 @@ class _layout
         termp(1,1),    termsz(termsz_),
         viewp(-1,-1),  viewsz(VIEW_MIN_WIDTH, VIEW_MIN_HEIGHT),
         hudp(-1,-1),   hudsz(hudsz_),
-        msgp(-1,-1),   msgsz(0, MSG_MIN_HEIGHT),
+        msgp(-1,-1),   msgsz(0, Options.msg_min_height),
         mlistp(-1,-1), mlistsz(MLIST_MIN_WIDTH, 0),
         hud_gutter(HUD_MIN_GUTTER),
         valid(false) {}

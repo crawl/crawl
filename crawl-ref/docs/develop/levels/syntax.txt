@@ -942,9 +942,6 @@ KPROP:    x = bloody
 
           * "bloody": Causes features to appear as though splattered with
              blood. This should be used very, very sparingly!   
-          * "force_exclude": Forces a single grid square or feature to be an 
-             exclusion in auto-explore and automatic travel. Will be coloured
-             red in the overmap.
           * "no_cloud_gen": Prevents clouds from being generated over this
              feature (usually lava).  Does not stop fog generators or clouds
              entering from nearby squares.

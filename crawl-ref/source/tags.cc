@@ -965,7 +965,6 @@ static void tag_construct_you(writer &th)
     marshallString(th, you.level_type_ext);
     marshallByte(th, you.entry_cause);
     marshallByte(th, you.entry_cause_god);
-    marshallByte(th, you.synch_time);
 
     marshallLong(th, you.disease);
     marshallByte(th, you.species);
@@ -1389,7 +1388,8 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.entry_cause     = static_cast<entry_cause_type>( unmarshallByte(th) );
     you.entry_cause_god = static_cast<god_type>( unmarshallByte(th) );
-    you.synch_time      = unmarshallByte(th);
+    if (minorVersion < TAG_MINOR_SYNCH_TIME)
+        unmarshallByte(th);
     if (minorVersion >= TAG_MINOR_DISEASE)
         you.disease         = unmarshallLong(th);
     else

@@ -3138,8 +3138,11 @@ bool monsters::is_unclean() const
 
 bool monsters::is_chaotic() const
 {
-    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
+    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
+        || type == MONS_CRAZY_YIUF)
+    {
         return (true);
+    }
 
     if (is_shapeshifter())
         return (true);

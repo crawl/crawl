@@ -492,9 +492,7 @@ void map_lines::apply_grid_overlay(const coord_def &c)
                 dgn_set_grid_colour_at(gc, colour);
 
             const int property = (*overlay)(x, y).property;
-            if (testbits(property, FPROP_FORCE_EXCLUDE))
-                set_exclude(gc, 0, false, true);
-            else if (property >= FPROP_BLOODY)
+            if (property >= FPROP_BLOODY)
                  // Over-ride whatever property is already there.
                 env.pgrid(gc) |= property;
 #ifdef USE_TILE

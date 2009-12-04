@@ -5350,7 +5350,6 @@ void player::init()
     elapsed_time    = 0;
     rotting         = 0;
     unrand_reacts   = 0;
-    synch_time      = 0;
 
     magic_contamination = 0;
 

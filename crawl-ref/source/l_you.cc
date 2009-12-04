@@ -238,6 +238,18 @@ LUAFN(you_moveto)
     return (0);
 }
 
+LUAFN(you_teleport_to)
+{
+    const coord_def place(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
+    bool move_monsters = false;
+    if (lua_gettop(ls) == 3)
+        move_monsters = lua_toboolean(ls, 3);
+
+    lua_pushboolean(ls, you_teleport_to(place, move_monsters));
+
+    return (1);
+}
+
 LUAFN(you_random_teleport)
 {
     you_teleport_now(false, false);
@@ -355,6 +367,7 @@ static const struct luaL_reg you_dlib[] =
 { "see_cell",           you_see_cell },
 { "see_cell_no_trans",  you_see_cell_no_trans },
 { "random_teleport",    you_random_teleport },
+{ "teleport_to",        you_teleport_to },
 { "losight",            you_losight },
 { "gold",               _you_gold },
 { "uniques",            _you_uniques },

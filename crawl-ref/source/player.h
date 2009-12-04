@@ -58,8 +58,6 @@ public:
   double elapsed_time;        // total amount of elapsed time in the game
   // This is NOT a fraction; double is merely used as a portable long long here
 
-  unsigned char synch_time;   // amount to wait before calling handle_time()
-
   int disease;
 
   char max_level;

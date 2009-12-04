@@ -2439,7 +2439,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>h</w>/<w>H</w>    : heal yourself (super-Heal)\n"
                        "<w>Ctrl-H</w> : set hunger state\n"
                        "<w>X</w>      : make Xom do something now\n"
-                       "<w>z</w>/<w>Z</w>    : cast spell by number/name\n"
+                       "<w>z</w>      : cast spell by number/name\n"
                        "\n"
                        "<yellow>Item related commands</yellow>\n"
                        "<w>a</w>      : acquirement\n"
@@ -2492,6 +2492,9 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-X</w> : Xom effect stats\n"
                        "<w>O</w>      : measure exploration time\n"
                        "<w>Ctrl-t</w> : enter in-game Lua interpreter\n"
+                       "\n"
+                       "<yellow>Wizard targetting commands</yellow>\n"
+                       "<w>x?</w>     : list targetted commands\n"
                        "\n"
                        "<w>?</w>      : list wizard commands\n",
                        true, true);

@@ -1018,6 +1018,7 @@ void mesclr(bool force)
     if (!force && Options.delay_message_clear)
     {
         set_Message_Line();
+        cursor_control coff(false);
         message_out(&Message_Line, WHITE, "-", 1);
         return;
     }

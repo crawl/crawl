@@ -16,6 +16,9 @@
 
 #ifdef BACKTRACE_SUPPORTED
 #if defined(TARGET_CPU_MIPS) || \
+    defined(TARGET_OS_FREEBSD) || \
+    defined(TARGET_OS_NETBSD) || \
+    defined(TARGET_OS_OPENBSD) || \
     defined(TARGET_COMPILER_CYGWIN)
         #undef BACKTRACE_SUPPORTED
 #endif

@@ -529,13 +529,13 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'L': debug_place_map();                     break;
     case 'i': wizard_identify_pack();                break;
     case 'I': wizard_unidentify_pack();              break;
+    case 'Z':
     case 'z': wizard_cast_spec_spell();              break;
-    case 'Z': wizard_cast_spec_spell_name();         break;
     case '(': wizard_create_feature_number();        break;
     case ')': wizard_create_feature_name();          break;
     case ':': wizard_list_branches();                break;
     case '{': wizard_map_level();                    break;
-	case '}': wizard_reveal_traps();                 break;
+    case '}': wizard_reveal_traps();                 break;
     case '@': wizard_set_stats();                    break;
     case '^': wizard_gain_piety();                   break;
     case '_': wizard_get_religion();                 break;
@@ -2870,27 +2870,7 @@ void world_reacts()
 
     you.elapsed_time += you.time_taken;
 
-    if (you.synch_time <= you.time_taken)
-    {
-        handle_time(200 + (you.time_taken - you.synch_time));
-        you.synch_time = 200;
-        _check_banished();
-    }
-    else
-    {
-        const long old_synch_time = you.synch_time;
-        you.synch_time -= you.time_taken;
-
-        // Call spawn_random_monsters() more often than the rest of
-        // handle_time() so the spawning rates work out correctly.
-        if (old_synch_time >= 150 && you.synch_time < 150
-            || old_synch_time >= 100 && you.synch_time < 100
-            || old_synch_time >= 50 && you.synch_time < 50)
-        {
-            spawn_random_monsters();
-        }
-    }
-
+    handle_time();
     manage_clouds();
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
@@ -3775,6 +3755,12 @@ static bool _initialise(void)
          you.entering_level ? LOAD_ENTER_LEVEL :
          newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
          NUM_LEVEL_AREA_TYPES, -1, you.where_are_you);
+
+    // Make sure monsters have a valid LOS before the first turn starts.
+    // This prevents mesmerization from being broken when a game is
+    // restored.
+    for (monster_iterator mi; mi; ++mi)
+        mi->update_los();
 
     if (newc && you.char_direction == GDT_GAME_START)
     {
