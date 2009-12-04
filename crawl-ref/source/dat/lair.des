@@ -1083,7 +1083,7 @@ ENDMAP
 # Swamp:5 alternative (due)
 NAME:    swamp_fiery
 PLACE:   Swamp:5
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    dragon, mottled dragon / hydra, fire drake / swamp drake / steam dragon
 MONS:    fire drake / lindwurm w:3
@@ -1113,6 +1113,56 @@ MAP
           ""cc1Occ" "ccccc"
             "cccc"   """"
              """"
+ENDMAP
+
+###############################################################################
+# The way to icy death!
+#
+NAME:    swamp_icy
+PLACE:   Swamp:5
+TAGS:    no_pool_fixup no_rotate
+ORIENT:  southeast
+SHUFFLE: OR
+MARKER:  Q = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+KMONS:   ? = swamp worm simulacrum / giant goldfish simulacrum / electric eel \
+             simulacrum
+MONS:    ice dragon, hydra simulacrum, freezing wraith, azure jelly / ice dragon
+SUBST:   X = cc., RY = wWwww., Q=c
+MAP
+               wwxxxxxxxxx
+        @.  @ wwxxccccccxx
+          .  ..wwcc3c3ccxx
+           ..w?.wXXc..Xcxx
+            ?ww....Q.cXcxx
+           www.wwXc3c3Xcxx
+            w?.wXcXc.3ccxx
+             ww.wccc..ccxx
+               @xxcc..ccxx
+                 xcc2.ccxx
+                xxc..cccxx
+   @        x   xxcc2Xccxx
+    .      xxx   xcc.2.cxx
+     .    xxxxx  xc..cccxx
+      .   xxxxxxxxcc2.ccxx
+     .    .wwxxxxxccX2.cxx
+      .  ...?wxxxxccc2.ccx
+       .2..wwwwxxxxcc.2ccx
+    ? ....ww?wxxxxccc..ccx
+   xxww.wwwwwxxxxxcc..ccxx
+   xxw?ww?wwxxxcccc.2ccxxx
+  xxxxwwwwxxxcccccc2Xcxxxx
+  xxxxxxxxxcccwwwY2.Yccxxx
+  xxxxxxxcccwwQww.YY.wccxx
+   xxxxxccwwwww22Yww2wwcxx
+     xxccwwww22YwwwwY2wcxx
+    xxccwww.2YwwQwwwY2wcxx
+   xxccYw1.YwwwwwwwY2wwcxx
+  xxcccwRwwwwcccwY1.wwccxx
+ xxcccccwwwwcw4wwOYYcccxxx
+xxxccccccccccccccccccxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##################################################################
