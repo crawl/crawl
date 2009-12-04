@@ -22,6 +22,13 @@
 #    layout: lots of tombs with loot and monsters inside
 #    colour: yellow tombs, rest is dark, floor is randomised
 #
+# Wucad Mu's Monastery
+#    threat: "monks", OCS
+#    loot:   books, staff of wucad mu
+#    xp:     9000=
+#    layout: temple-esque!
+#    colour: dark walls, red and orangge.
+#
 ###
 
 ##
@@ -60,10 +67,6 @@
 #    guards, and with occasionally hidden. Cekugob's amulet as the loot,
 #    possibly.
 # Zonguldrok's Mausoleum: regenerating zombie monsters, sword as the loot.
-# Wucad Mu's Monastery: a sprawling complex of rooms, set to appear something a
-#    Wu Xia kung fu monastery; unarmed human threats, everything appears to be
-#    "dark"; some humans may wield quarterstaves. Wucad Mu as loot! Orange
-#    crystal statues.
 # Botono's Bayou: A bay-like area with small huts, wizards that cast negative
 #    related spells, shadow dragons, rebranded swamp worms, wraiths, spectrals.
 # Ukta's Hut: phantoms, other "ghosts", ogre mages and ogres, druidic style,
