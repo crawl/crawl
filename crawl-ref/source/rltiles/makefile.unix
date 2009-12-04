@@ -24,7 +24,7 @@ ifeq ($(uname_S),Darwin)
 LDFLAGS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL
 endif
 ifeq ($(uname_S),Linux)
-LDFLAGS += -ldl
+LDFLAGS += -ldl -lpthread
 endif
 
 # Attempt to use a full compiler name, to make
