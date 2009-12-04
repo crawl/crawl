@@ -709,7 +709,7 @@ static int player_view_update_at(const coord_def &gc)
         ret |= UF_AFFECT_EXCLUDES;
 
     set_terrain_seen(gc);
-    set_map_knowledge_obj(gc, to_knowledge(env.show(ep), emphasise(gc)));
+    set_map_knowledge_obj(gc, to_knowledge(env.show(ep)));
     set_map_knowledge_detected_mons(gc, false);
     set_map_knowledge_detected_item(gc, false);
 
@@ -724,8 +724,7 @@ static int player_view_update_at(const coord_def &gc)
 #endif
 
     if (Options.clean_map && env.show.get_backup(ep))
-        set_map_knowledge_obj(gc, to_knowledge(env.show.get_backup(ep),
-                                               emphasise(gc)));
+        set_map_knowledge_obj(gc, to_knowledge(env.show.get_backup(ep)));
 
     return (ret);
 }
