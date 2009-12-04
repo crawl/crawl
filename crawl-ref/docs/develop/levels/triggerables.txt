@@ -12,7 +12,7 @@ Contents:  A. Introduction
            F. Master and slaves
 
 This document describes the usage of Triggerables, a modular, extensible and
-highly flexible Lua marker systen used for making vaults. For more general
+highly flexible Lua marker system used for making vaults. For more general
 syntax and other advanced Lua topics, see introduction.txt, syntax.txt and
 advanced.txt.
 
@@ -433,6 +433,8 @@ Currently, convenience functions for Triggerables include:
 
   * message_at_spot, which can be used to trigger a single or repeated message
       whenever the player crosses or reaches a certain point.
+  * function_at_spot, as above, but accepts a function and data parameter
+      instead of message and channel.
 
 E.    List of triggerers
 ========================
@@ -472,6 +474,9 @@ parameters for each.
         countdown is performed.
    * entered_level: Called when player enters the level, after all level
         setup code has completed.
+   * wall_hit: Called whenever the relevant wall is hit with a solid object
+        (such as a missile or a wielded weapon using Ctrl+direction), or a bolt
+        spell (ice bolt, Lehudib's Crystal Spear, etc).
 
 F.     Master and slaves
 ========================
