@@ -2732,6 +2732,23 @@ static std::string _monster_stat_description(const monsters& mon)
     // Magic resistance at MAG_IMMUNE.
     if (mons_immune_magic(&mon))
         result << pronoun << " is immune to magical enchantments.$";
+    else // How resistant is it? Same scale as the player.
+    {
+        const int mr = mon.res_magic();
+        if (mr >= 10)
+        {
+            result << pronoun << make_stringf(" is %s resistant to magic.$",
+                 (mr <  30) ? "slightly" :
+                 (mr <  60) ? "somewhat" :
+                 (mr <  90) ? "quite" :
+                 (mr < 120) ? "very" :
+                 (mr < 150) ? "extremely" :
+                 (mr < 190) ? "extraordinarily" :
+                 (mr < 240) ? "incredibly" :
+                 (mr < 300) ? "uncannily"
+                            : "almost entirely");
+        }
+    }
 
     if (mons_class_flag(mon.type, M_STATIONARY))
         result << pronoun << " cannot move.$";

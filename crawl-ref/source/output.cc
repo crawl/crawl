@@ -2287,8 +2287,11 @@ std::string _status_mut_abilities()
              (mr <  60) ? "somewhat" :
              (mr <  90) ? "quite" :
              (mr < 120) ? "very" :
-             (mr < 140) ? "extremely"
-                        : "incredibly");
+             (mr < 150) ? "extremely" :
+             (mr < 190) ? "extraordinarily" :
+             (mr < 240) ? "incredibly" :
+             (mr < 300) ? "uncannily"
+                        : "almost entirely");
 
     status.push_back(info);
 
