@@ -683,7 +683,43 @@ NAME:       wizlab_alistair
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Alistair's Brewery")
+SHUFFLE:    CYHB
+KFEAT:      CYHB = .
+KPROP:      B = bloody / nothing
+KMONS:      CYH = swamp drake name:mutated_drake n_des n_rpl col:magenta w:30 \
+                spells:mephitic_cloud;mephitic_cloud;blink;mephitic_cloud;\
+                mephitic_cloud;blink /  wizard name:mutated name_adjective \
+                col:lightmagenta w:10 / nothing w:130
+COLOUR:     c = magenta, w = poison, n = blue
+LFLOORCOL:  white
+:           dgn.set_feature_desc_short("deep water", "toxic goo")
+:           dgn.set_feature_desc_long("deep water",  "It stinks.  Drinking it "
+:                    .. "might seem to be a good idea after a bottle or two.")
+ITEM:       potion of confusion w:20 / any potion
 MAP
+        ccccccc
+        c.....c
+  ccccccc..A..ccccccc
+  cCCCCC+.....cBBBBBc
+  cCCCCCc..<..cBBBBBc
+  cCCCCCc.....cBBBBBc
+  cCCCCCcccncccBBBBBc
+  cCCCCCc.....+BBBBBc
+ccccc+ccc.....ccccc+ccc
+c.....c...ccc..<c.....c
+c.www.c..ccdcc..c.www.c
+c.www.n..cdddc..n.www.c
+c.www.c..ccdcc..c.www.c
+c.....c...c+c...c.....c
+ccc+ccccc.....ccc+ccccc
+  cYYYYYc.....cHHHHHc
+  cYYYYYcccncccHHHHHc
+  cYYYYY+.....cHHHHHc
+  cYYYYYc.www.cHHHHHc
+  cYYYYYc.www.+HHHHHc
+  ccccccc.www.ccccccc
+        c.....c
+        ccccccc
 ENDMAP
 
 ###############################################################################
