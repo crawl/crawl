@@ -25,7 +25,7 @@
 # Wucad Mu's Monastery
 #    threat: "monks", OCS
 #    loot:   books, staff of wucad mu
-#    xp:     9000=
+#    xp:     9000+
 #    layout: temple-esque!
 #    colour: dark walls, red and orangge.
 #
@@ -831,10 +831,6 @@ NAME:       wizlab_wucad
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 SUBST:      T = t.
-MONS:       human name:monk n_suf col:white hd:10 ; robe good_item \
-            . quarterstaff good_item
-MONS:       rock troll name:monk n_suf
-MONS:       iron troll name:monk n_suf col:white
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the hd:20 hp:300
 KITEM:      8 = quarterstaff unrand:staff_of_wucad_mu, book of enchantments
 COLOUR:     =c = darkgrey
@@ -842,8 +838,99 @@ COLOUR:     t = lightred / red w:3
 COLOUR:     AG = red
 COLOUR:     < = lightred
 KFEAT:      ' = open_door
+KFEAT:      1234567 = .
+KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
 LFLOORCOL:  white
+{{
+local msp = "human name:monk n_suf col:white hd:10 ; robe good_item " ..
+            ". quarterstaff good_item / rock troll name:monk n_suf /" ..
+            "iron troll name:monk n_suf col:white"
+
+local function msgfn (data, triggerable, triggerer, marker, ev)
+  if data.trig == true then
+    return
+  end
+
+  if data.spot == 1 then
+    crawl.mpr("Strange, shadowy figures dance through the air in front of you.")
+    data.trig = true
+  elseif data.spot == 2 then
+    crawl.mpr("This room is filled with shadowy figures, quietly meditating.")
+    data.trig = true
+  elseif data.spot == 3 then
+    crawl.mpr("Here, spectral monks perform complicated, martial routines; they fade quickly.")
+    data.trig = true
+  elseif data.spot == 4 then
+    if you.silenced() then
+      return
+    end
+    crawl.mpr("Faint laughter comes from somewhere. Too faint to be real.")
+    data.trig = true
+  elseif data.spot == 5 then
+    if you.silenced() then
+      return
+    end
+    crawl.mpr("There is a faint scream of pain from a crouched figure. This too fades quickly.")
+    data.trig = true
+  elseif data.spot == 6 then
+    crawl.mpr("Grey monks gather around the fountain. They do not speak, nor look at each other.")
+    data.trig = true
+  elseif data.spot == 7 then
+    crawl.mpr("A figure sits in silent meditation. It spots you, gestures wildly, and disappears.")
+    data.trig = true
+  end
+end
+
+local function trigfn (spot)
+  return Triggerable.synchronized_markers(function_at_spot(msgfn,
+            { spot=spot, trig = false}, true, { only_at_slave = true,
+              listen_to_slaves = true }))
+end
+
+lua_marker('1', trigfn(1))
+lua_marker('2', trigfn(2))
+lua_marker('3', trigfn(3))
+lua_marker('4', trigfn(4))
+lua_marker('5', trigfn(5))
+lua_marker('6', trigfn(6))
+lua_marker('7', trigfn(7))
+
+local function summon_monks (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  local count = 0
+  for point in iter.circle_iterator(3) do
+    if crawl.one_chance_in(12) then
+      if feat.is_solid(point.x, point.y) or feat.destroys_items(point.x, point.y) then
+      else
+       local mon = dgn.create_monster(point.x, point.y, msp)
+       mon.mark_summoned(3)
+       count = count + 1
+      end
+    end
+  end
+
+  crawl.redraw_view()
+
+  if count == 1 then
+    crawl.mpr("One of the shadowy figures appears more solid!")
+  elseif count > 1 then
+    crawl.mpr("The shadowy figures no longer seem so shadowy.")
+  end
+end
+
+local summon_marker = TriggerableFunction:new ({ func=summon_monks,
+    repeated=true })
+
+summon_marker:add_triggerer(DgnTriggerer:new {type="turn", delay_min=500,
+    delay_max=800 })
+
+lua_marker('A', summon_marker)
+
+}}
 :           wizlab_setup(_G, "Wucad Mu's Monastery")
 MAP
 tttttttttttttttttttttttttttttttttttttttt
@@ -851,25 +938,25 @@ tttttttttttttttttttttttttttttttttttttttt
 ttttttttttttttTTTTTTTttttttttttttttttttt
 ttttttTTTTTTTT.......TTTTTTTTTTTTttttttt
 tttttT.........ccccc.............Ttttttt
-ttttT.........cc...cc.............Tttttt
-tttT.......cccc..3..cccc...........Ttttt
-ttT.......cc..cc...cc..cc......ccc..Tttt
-ttT......cc....cc=cc....cc....cc1cc..Ttt
-ttT.....Tc....G.....G....cT..cc1U1cc.Ttt
-ttT.....ccG......2......Gcc...cc1cc..Ttt
-ttT......+......181......+.....c+c...Ttt
-ttT.....ccG......3......Gcc..........Ttt
+ttttT.........cc777cc.............Tttttt
+tttT.......cccc77777cccc...........Ttttt
+ttT.......cc..cc777cc..cc......ccc..Tttt
+ttT......cc....cc=cc....cc....cc6cc..Ttt
+ttT.....Tc....G.....G....cT..cc6U6cc.Ttt
+ttT.....ccG.............Gcc...cc6cc..Ttt
+ttT......+.......8.......+.....c+c...Ttt
+ttT.....ccG.............Gcc..........Ttt
 ttT.....Tc....G.....G....cT..........Ttt
 ttT.c..cTcc.............cccT.........Ttt
 ttTcc++ccccccc.......ccccccc+cc......Ttt
-ttcc....ccc32ccc===ccc23ccc...cc.....Ttt
-ttc..12..c...............c..2..c....Tttt
-ttc..23..cc.............cc.....cc..ctttt
-ttc......ccccccccccccccccccc+cccc++ccttt
-ttcc....ccc.............ccc...cc....cctt
-tttccccccc......212......+..2..+.22..ctt
-ttttttttccc..ccc+++ccc..ccc...cc....cctt
-tttttttttcccccTT...Ttccccccccccccccccttt
+ttcc5555ccc..ccc===ccc..ccc444cc.....Ttt
+ttc555555c...............c44444c....Tttt
+ttc555555cc.............cc44444cc..ctttt
+ttc555555ccccccccccccccccccc+cccc++ccttt
+ttcc5555ccc.............ccc222cc3333cctt
+tttccccccc...............+22222+33333ctt
+ttttttttccc..ccc+++ccc..ccc222cc3333cctt
+tttttttttcccccTT111Ttccccccccccccccccttt
 ttttttttttttttT.....Tttttttttttttttttttt
 tttttttttttT.........TTTTTTttttttttttttt
 tttccccctttT.....G........Ttcccccttttttt
