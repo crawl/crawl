@@ -154,7 +154,7 @@ default-depth:
 
 ############################################################################
 # Sewer with a small kobold camp, potion treasure and Ely/Zin altar.
-# The easiest one, so most probable (5 out of 10 sewers).
+# The easiest one, so most probable (5 out of 11 sewers).
 #
 NAME:     sewer_kobolds
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
@@ -226,7 +226,7 @@ ENDMAP
 
 ############################################################################
 # Two fairly watery vaults with (usually) two giant frogs in the end.
-# More rare (3 out of 10 sewers are one of these).
+# More rare (3 out of 11 sewers are one of these).
 # Loot are good items, and often a scroll of blinking.
 #
 NAME:     sewer_frog_island_01
@@ -327,7 +327,7 @@ ENDMAP
 
 ############################################################################
 # The next two have a big, bad monster guarding some pretty good, if random
-# treasure. One out of ten Sewers is one of these.
+# treasure. One out of eleven Sewers is one of these.
 #
 NAME:     sewer_big_baddie
 TAGS:     sewer no_item_gen no_monster_gen
@@ -422,7 +422,7 @@ ENDMAP
 
 ###############################################################################
 # If you can get to the middle, there are four doors to try; two will give you
-# monsters, two will yield you treasure. As rare as the last one (1/10).
+# monsters, two will yield you treasure. As rare as the last one (1/11).
 #
 NAME:     sewer_fruit_machine
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
@@ -500,3 +500,62 @@ xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+###############################################################################
+# A sewer opening to sea by st_. Rarity 1/11.
+#
+NAME:   sewer_sea
+TAGS:   sewer no_item_gen no_monster_gen no_rotate no_pool_fixup
+ORIENT: encompass
+MONS:   rat w:3 / grey rat w:1 / nothing w:1, rat / grey rat / green rat
+KMONS:  G = mermaid hd:5
+KMONS:  H = siren hd:5
+KMONS:  hJ = giant newt / small snake / snake / nothing w:2
+KMONS:  g = giant newt / small snake / nothing w:3
+KFEAT:  gS = W
+KFEAT:  O = open_sea
+COLOUR: g = lightgreen
+COLOUR: HJ = blue
+KFEAT:  hGnNsHJ = w
+COLOUR: hG = green
+COLOUR: sS = cyan
+COLOUR: N = lightblue
+KITEM:  M = dart / stone
+: sewer_setup(_G)
+MAP
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO                        cccc       cccccccc
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO                       ccW.cc      cWW1..1c
+OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccWWW.ccccccccW..c..c
+OOOnnnnnnnnnnnnnJnnnnnOOOOOOOOOOOOOO                     c<AWWWW...1.2...1.cc.c
+OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO                     cccccccccccccccccccc.c
+OOOnnnnnnnnnJnnnscccccccccccccc  cccccccccccccccc ccccccccccwhwwwwwwwWwwwww2..c
+OOOnnnnnnnnnnnns.+.....+...%Wwc  c1.....cc1..1.McccwwWWWgWWWWWWWW..W..WW.Www..c
+OOOnnnnnnnnHnnnW.ccccccc...%*Wc  c.ccccc.c.2..1%cccwWWccccccccccccc11cccc.gwWwcc
+OOOnnnnnnnnnnnsW.ccc.1cc...%*Wc  c2cwwcc.cccc+cccwwwc.c           cccc  cc..WWwc
+OOOnnnnnnnnnJnsW.ccc..cc...|WWc ccwWgcwc.cGgwWWWWWWcc.c                  ccccwhc
+OOOnnnnnnnnnnNsWWccc1.cc<..WwccccwgWccwc.chwgWW..1....c            cccccccccccwc
+OOOnnnnnnnnNNswWWWwc.1ccccccccwwwWW.1cwWWcWWW..2ccccccc            cGwwwwwwwwwwc
+OOOnnnnnnnNsswWWWWWWWsswwswwwhcWW..1ccccWWWW1..cc                  ccccccccccccc
+OOOnnnnnnnnNNshWWWwc..cccccccccW.1.cc  ccW1..ccc
+OOOnnnnnnnnnnNswgccc.2c  cwg2....ccc    cccccc
+OOOnnnnnnnnnnnNswcccc1cc cgWcccccc
+OOOnnnnnnnnnnnnNccccc..ccc.1c
+OOOnnnnnnnnnnnnnNccccc1.1..cc
+OOOnnnnnnnnnnnnnnnnnnccccccc
+OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO
+OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO
+OOOnnnnnnnnnnnnnnnnnnnOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+ENDMAP
