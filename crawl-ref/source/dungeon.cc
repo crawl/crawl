@@ -4435,8 +4435,15 @@ bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
             {
                 std::vector<map_marker *> markers =
                     env.markers.get_markers_at(coord_def(x, y));
+                std::vector<map_marker*> to_remove;
                 for (int i = 0, size = markers.size(); i < size; ++i)
+                {
                     markers[i]->activate();
+                    if (markers[i]->property("post_activate_remove") != "")
+                        to_remove.push_back(markers[i]);
+                }
+                for (unsigned int i = 0; i < to_remove.size(); i++)
+                    env.markers.remove(to_remove[i]);
 
                 if (!you.see_cell(coord_def(x, y)))
                     set_terrain_changed(x, y);
