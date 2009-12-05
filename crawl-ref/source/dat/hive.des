@@ -561,7 +561,6 @@ ENDMAP
 # stuck in wax 
 NAME:   beehive2
 PLACE:  Hive:2
-WEIGHT: 100000000000
 ORIENT: encompass
 MONS:   queen bee, killer bee, killer bee larva, plant
 MONS:   random, random
@@ -645,7 +644,6 @@ ENDMAP
 ###
 NAME:   beehive_tunnels
 PLACE:  Hive:2
-WEIGHT: 1000000
 ORIENT: encompass
 MONS:   queen bee, killer bee larva, killer bee, plant
 MONS:   random, random
