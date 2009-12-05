@@ -568,6 +568,7 @@ ITEM:   wand of fire
 NSUBST: M = 10:N / *:a
 SUBST:  N = *:30 |
 SUBST:  X = xx.
+KITEM:  R = w:2 honeycomb / w:1 royal jelly
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -650,6 +651,7 @@ MONS:   random, random
 NSUBST: M = 1:. / *:a
 NSUBST: N = 10:% / 6:* / 2:| / *:.
 SUBST:  X = xx.
+KITEM:  R = w:2 honeycomb / w:1 royal jelly
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxXXXXxxXXxxxxxxxxxxxxxxxxxxxxxxxxxxXXxxXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
