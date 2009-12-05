@@ -552,3 +552,174 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+###############################################################################
+# Alternate hive bottoms by R1.
+#
+# A wand of fire is available at the bottom to melt wax, either to enter the
+# hive by the back (much easier fight) or in the middle to reveal the items
+# stuck in wax 
+NAME:   beehive2
+PLACE:  Hive:2
+WEIGHT: 100000000000
+ORIENT: encompass
+MONS:   queen bee, killer bee, killer bee larva, plant
+MONS:   random, random
+ITEM:   wand of fire
+NSUBST: M = 10:N / *:a
+SUBST:  N = *:30 |
+SUBST:  X = xx.
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX...................Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxX........................XXxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxXXXXXxXX.......{.......(........XXXXxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxX...............}.......)............XXXXxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxXXXXXXXX.....................P...................XXxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX...............4.....4.............................Xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxXXXXX........................P.4......4....4.......Xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.a................................................Xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxXXa.a............4............................a.a..a.axxxxxxxxxxxxxxx
+xxxxxxxxxxX.a.a..a.a.a..................................a.a.aa.aXxxxxxxxxxxxxxxx
+xxxxxxxxX.......a.aaa.a......a.a.a.........a.a.a.......aRaaaaRa.Xxxxxxxxxxxxxxxx
+xxxxxxxxXX....a..aaMaa....a.a.aaa.a.......a.aaa.a.....a.a3aMaa.aXxxxxxxxxxxxxxxx
+xxxxxxxxxX...a.aRaaaa.a..a.a.aaMaa.......a.aaMaa.a3a.a.aXxxxxXXXxxxxxxxxxxxxxxxx
+xxxxxxxMa.a.a.aaa2a..a....a.a2aaa.a.a...a.aRaaaRa.a.aXXXxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxaaa.a.aaMaa3a.......a3aRa.a.a.a.a.a3a.a.a.a.a...Xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxa.a.a.aaaRa....4..a.aRa2a.....aaa.a.a3a.a......XXXXxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxa.a...a.a.a.aa......aaaaa.....aaMaa.a.aaaa........a.XXXxxxxxxxxxxxxxxxxxx
+xxxxxxxxxX........aa.a....a.aMa.a.....aaa.a3aRaMaa........a.a.Xxxxxxxxxxxxxxxxxx
+xxxxxxxXa.a.......a.aRa.a..aaaaa.....a.a.a.a.aaaa.a.a.a..a.aaaXxxxxxxxxxxxxxxxxx
+xxxxxxxa.a.........a2aaa.a..a.a.a.....aaaaa.a2a..a.aaa....aXXxxxxxxxxxxxxxxxxxxx
+xxxxxxxxXXa...4.....aaMaa............a.aMa.aa.a.aRaaMa.....a.Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxX.........a.aaa.a..a.........aaaaa.aa.a3a.aaa....a.a.Xxxxxxxxxxxxxxxxxx
+xxxxxxxxxX..........a.a.a.a...a.a......a.a....aaaaa3a.a....aXXxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxXXX........a.a2a.a.aRa.a...........a3aMa.a......XXxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxX.....4.......a.aaa.a.............aaaaa.a.....a.Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxXX..........a.aaMaa...............aaMaa.....a.aXxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxX...........a.aaa...............a.aaa.a.a.a.a.Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxX.....P...........aaa..aaaaaa....a.a.a...XXXXXxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX...4...........aaaaaa3..aaaaaaa..........Xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxX...............aaa.a.a.a2a.a.a2aaa..........Xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxX............aaa.a.aRa.a.a.a.a.aaaaa.........XXxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxX...........aaaaRa.a2a.a3a.a.a2a.a.aaaa.........XXxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX.........aaaaaa.a3a.a.a.aRa.aRa.aRa.aaaa...4......Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX.......aaaaa3a.a.a.a3a2a.a.a3a.a.aRa.aaaa.........Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxX.........aaaa.a.a3aRa.a2a.a2a2a3a.a.a2a3aaaa........Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxX.........aaa.a2aRa.a2a.a.a.a3aRa.a.aRa.a.aaa........Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxX........aa.a.a.a.a.aRa.a3a.a.a2a3a.a.a.aaaa......XXxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX...4..aaaa.a.a3a.a.a.a.aRa3aRa2aRa.a2a.aaa......Xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxX......aa.a2a.a.aRa2a.a.a3a.a.a.a.aRa.3.aa......Xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxX....aa...2a.aRa.a2a.a.a.aRa.a2a3a.a.a..aa..4....Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX...aaaaa.a.a2a.a.a2a.a.a.a.a.a.a.aRaa.........Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX......aaa.a.a.a.a3a2aRa3a.a3a.a.a3aaaa.......Xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX.......aaa.aRaRa.a.a.a2a.a.aRa2aRaaaa........Xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxX........aaaa.a.a3a.aRa.a2aRa.a.a.a.aa..........Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX...4...aaa.a.a.a.a.a2a.a.a.a.a3a.aa............Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX........aaa.aRaRa.a2a.a.a.a.aRa.aa......4....XXXxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxXXX......aaa.a2aRaRaRa.aRa.a.aaaa............Xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxXXXX....aaaaaR3RRRRRR232aaaa..........XXXXxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxXXX..aaaaR3R2R13R.3aaaaaXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxXXaaaaaR23R2R3Raaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx.4...].[..4..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx......d......xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Engaging in the tunnels may be slightly dangerous as they are dead-ends and
+# are large enough to allow bees to surround you, but there might be some nice
+# items there.
+###
+NAME:   beehive_tunnels
+PLACE:  Hive:2
+WEIGHT: 1000000
+ORIENT: encompass
+MONS:   queen bee, killer bee larva, killer bee, plant
+MONS:   random, random
+NSUBST: M = 1:. / *:a
+NSUBST: N = 10:% / 6:* / 2:| / *:.
+SUBST:  X = xx.
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxXXXXxxXXxxxxxxxxxxxxxxxxxxxxxxxxxxXXxxXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX.........XxxxxxxxxxxxxxxxxxxxxxxxX......Xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX..{..}.4..XxxxxxxxxxxxxxxxxxxxxX...NNN...Xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX.........XxxxxxxxxxxxxxxxxxxxxX...4.334...Xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxWwwWxxXXXxxxxxxxxxxxxxxxxxxxxxxX.........Xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxWwwWxxxxxxxxxxxxxxxxxxxxxxxxxxxX.3...Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxWwwWWWWxxxxxxxxxxxxxxxxxxxxxxxX...Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxWwwwwWWxxxxxxxxxxxxxxxxxxxx.....Xxxxxxxxxxxxxxxxxwwwwwwwwxxxxxxxx
+xxxxxxxxxxxxxxxxxxWWwwWWWxxxxxxxxxxxxxxxx...XxxxxxxxxxxxxxxxxxwwwWWWwwWWwwxxxxxx
+xxxxxxxxxxxxxxxxxxxxxWwwwWWWxxxxxxxxxxxx..3XxxxxxxxxxxxxxxxxxwwW......3.Wwwxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxWWwWWWxxxxxxxx...XxxxxxxxxxxxxxxxxxxwwW.N4NNN4N.Wwwxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxWwwwWxxxxxxX.3.XxxxxxxxxxxxxxxxxxxxwwW..33...WWwxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxWwwWxxxxxx....xxxxxxxxxxxxxxxxxxxxxwwWW..33Wwwwwxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxWwwWxxxxxxxxX....xxxxxxxxxxxxxxxxxxxxwwwwWWWwWwxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxWWwwWxxxxxxxxxxxX....XxxxxxxxxxxxxxxxxxxxxwWWWwWxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxWwwwWxxxxxxxxxxxxxxX....XxxxxxxxxxxxxxxxxxxxWwwWxxxxxxxx
+xxxXX.4WWWwxxxxxxxxxxxWWwwWWxxxxxxxxxxxxxxxxxX3..XxxxxxxxxxxxxxxxxxWwwWxxxxxxxxx
+xxx..334WWwwxxxxxxxxWWwwwWxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxWwwWxxxxxxxxxx
+xxX.NNN.4WwwwxxxxxxxxWwwwWxxxxxxxxxxxxxxxxxxxxX.3.XxxxxxxxxxxxxxxWwwWxxxxxxxxxxx
+xxxXX..34WWwxxxxxxxxxxWWwwWxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxWwwWxxxxxxxxxxxx
+xxxxxxX3.WWwxxxxxxxxxxxxxWwWWWxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxWwwWxxxxxxxxxxxxx
+xxxxxxx.WWwxxxxxxxxxxxxxxxWWWwWWWxxxxxxxxxxxxxX...xxxxxxxxxxxxxWwwWxxxxxxxxxxxxx
+xxxxx.W.wwxxxxxxxxxxxxxxxxxxx..WWWWxxxxxxxxxx....XxxxxxxxxxxxxWwwWxxxxxxxxxxxxxx
+xxxx.WWwxxxxxxxxxxxxxxxxxxxxxxW..W.WW..xXXX.......XxxxxxxxxxWWwwwWxxxxxxxxxxxxxx
+xxxx.WwxxxxxxxxxxxxxxxxxxxxxxxxxW...WW.aaa..........XXXXXxxWww.wWWXxxxxxxxxxxxxx
+xxxx3WwxxxxxxxxxxxxxxxxxxxxXXXxa......aaaaaaa............WWW.3.XxXxxxxxxxxxxxxxx
+xxxx..WwwxxxxxxxxxxxxxxxXX...aaaaa....aaaaaaaaaaa.......WW....Xxxxxxxxxxxxxxxxxx
+xxxxx.3WWwxxxxxxxxxxxxX.......aaaaaa....a..aaaaaaa...........Xxxxxxxxxxxxxxxxxxx
+xxxxxxX..WwwxXXXXXXXx..........aaaa.aa.a.aa.aa.Raaaa.........Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxX.....................aaa..a.Ra.a.3a.a.a.aaa.....4...Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxX.............4........a.aaa..a.aa.a2a.a.a...a.......XxxxxxxxXXXXxxxxxx
+xxxxxxxxxxxX...............aaa.a.a.a2aa.a3.a.aRa.a.aaaaa.......XxxxxxX.....Xxxxx
+xxxxxxxxxxxxww............aaaa.a.a.aa.RaaMaa.2a.a.a..aaaaa.......xxxX...4...xxxx
+xxxxxxxxxxwwwwxxX....4....aaa.aRa.a..aaa23Raaa.Ra.a.a..aaa......XxxX...NNN..Xxxx
+xxxxxxxxxwwwxxxxx........aaa.a.a3a.a.aR2R2R23aaa.a.a.aaaaaa.....XxxxX...33..xxxx
+xxxxxxxxwwwxxxxxxX.......aaa.a.a2aaaaaRR2R23RRa.a3aRa.a3aaa.....xxxxxxX....Xxxxx
+xxxxxx.4444xxxxxxxx......aaaa.a3aRa.MR32R1R2RRMa.a.aaa.aaaaaaaXXxxxxxxX....xxxxx
+xxxxxx..3.33xxxxxxX.....aaaa.a.a.a.aaaRR2R2R3Ra.a2a.a.a.aaaaaaaxxxxxxX....Xxxxxx
+xxxxx.NNNN.xxxxxxxX...aaaaaa2a3a.aa.aaR23232Raa.a.a.aaRaaaaaaaxxxxxX.....Xxxxxxx
+xxxxxxNNNNxxxxxxxxxxxaaaa.aa.aRa3a.a.aaaR3Raaa.a.aRa.3a.aaa...XXxXx...XXxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxa...aaa.a.a.a.aR.aaMaa.Raaa3a.aa.aaaa.........XXxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxX....aaaa.a2a.a.aa.a.a.aa...a.32.aaaaa........Xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxX.........aaa.a.a.a.aRaa.a2a.3aaa.a.aa........XXxXxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.3..XxX....aa.a.a2a.aa.a.a.a.a.3.a.aR.a.....Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxX..WW..XxxxxX...aaaaa.a.a..a.a3aRa.aaa.a.aaaaa.3.Xxxxxxxxxxxxxxxxxxxx
+xxxxxN3WWWWWWW3.XxxxxxX.....aaa.a.a.aa.a.a.a.a...aaaaaaa.....Xxxxxxxxxxxxxxxxxxx
+xxxxN43wwWWW.xxxxxxxxxxX.4........aaaaaaaa....aaaaaa.......wwwxxxxxxxxxxxxxxxxxx
+xxxx.NwwwWxxxxxxxxxxxxX............aaaaaaa...aaaaaaaa....3.Wwwwwxxxxxxxxxxxxxxxx
+xxxxxxWWWWxxxxxxxxxxxxxxxxX........aaa.............aaa....wwWWWwwxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxW.....WWWXXxxxWWWW...4...WWxxxaxXXxxwwwWwwxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxW...WWxxxxxxxxxxxxxWWW...WWWxxxxxxxxxxxxxwWwwxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxW3.WWxxxxxxxxxxxxxxxxxxWWWWWWxxxxxxxxxxxxxxxwWWwxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxW..WxxxxxxxxxxxxxxxxxxxxxxWWWWWxxxxxxxxxxxxxxxwwWwxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxW..WxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxwwWwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxWW.WxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWxxxxxxxxxxxxxxxwwWwxxxxxxxxx
+xxxxxxxxxxxxxxxxWW.3WxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxwWwwxxxxxxx
+xxxxxxxxxxxxxxWW..4WWxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxWwwwxxxxxx
+xxxxxxxxxxxxxW..334..WxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWxxxxxxxxxxxxxxxxxxxWwwxxxxxx
+xxxxxxxxxxxxxxW.NNN.WxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWxxxxxxxxxxxxxxxxxxxwWwwxxxxxx
+xxxxxxxxxxxxxxx..W.WxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxX..4Wwxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxX..(...wwxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxxxxX..).Xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.WWWWWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.4[..4WWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....]..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
