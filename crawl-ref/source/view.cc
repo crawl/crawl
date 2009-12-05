@@ -87,8 +87,12 @@ void handle_seen_interrupt(monsters* monster)
     activity_interrupt_data aid(monster);
     if (!monster->seen_context.empty())
         aid.context = monster->seen_context;
-    else if (testbits(monster->flags, MF_WAS_IN_VIEW))
+    // XXX: Hack to make the 'seen' monster spec flag work.
+    else if (testbits(monster->flags, MF_WAS_IN_VIEW)
+        || testbits(monster->flags, MF_SEEN))
+    {
         aid.context = "already seen";
+    }
     else
         aid.context = "newly seen";
 
