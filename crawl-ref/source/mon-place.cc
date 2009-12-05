@@ -1188,6 +1188,9 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->hit_points = mg.hp;
     }
 
+    // Store the extra flags here.
+    mon->flags       |= mg.extra_flags;
+
     // The return of Boris is now handled in monster_die().  Not setting
     // this for Boris here allows for multiple Borises in the dungeon at
     // the same time. - bwr

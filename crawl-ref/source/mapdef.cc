@@ -3029,6 +3029,10 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mspec.patrolling     = strip_tag(mon_str, "patrolling");
         mspec.band           = strip_tag(mon_str, "band");
 
+        // Useful for summoned monsters.
+        if (strip_tag(mon_str, "seen"))
+            mspec.extra_monster_flags |= MF_SEEN;
+
         if (!mon_str.empty() && isdigit(mon_str[0]))
         {
             // Look for space after initial digits.

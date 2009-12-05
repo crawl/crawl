@@ -4967,6 +4967,9 @@ int dgn_place_monster(mons_spec &mspec,
         if (m_band)
             mg.flags |= MG_PERMIT_BANDS;
 
+        // Store any extra flags here.
+        mg.extra_flags |= mspec.extra_monster_flags;
+
         const int mindex = place_monster(mg, true);
         if (mindex != -1)
         {
@@ -4975,7 +4978,9 @@ int dgn_place_monster(mons_spec &mspec,
                 _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
             if (mspec.explicit_spells)
                 mons.spells = mspec.spells;
-            mons.flags |= mspec.extra_monster_flags;
+            // These are applied earlier to prevent issues with renamed monsters
+            // and "<monster> comes into view" (see delay.cc:_monster_warning).
+            //mons.flags |= mspec.extra_monster_flags;
             if (mons.is_priest() && mons.god == GOD_NO_GOD)
                 mons.god = GOD_NAMELESS;
         }
