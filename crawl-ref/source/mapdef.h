@@ -542,9 +542,12 @@ class mons_spec
     int  colour;
     int  hd;
     int  hp;
+    int  abjuration_duration;
+    int  summon_type;
 
     item_list items;
     std::string monname;
+    std::string non_actor_summoner;
 
     bool explicit_spells;
     monster_spells spells;
@@ -558,8 +561,9 @@ class mons_spec
         : mid(id), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
           quantity(1), genweight(gw), mlevel(ml), fix_mons(_fixmons),
           generate_awake(awaken), patrolling(false), band(false),
-          colour(BLACK), hd(0), hp(0), items(), monname(""),
-          explicit_spells(false), spells(), extra_monster_flags(0L)
+          colour(BLACK), hd(0), hp(0), abjuration_duration(0), summon_type(0),
+          items(), monname(""), non_actor_summoner(""), explicit_spells(false), 
+          spells(), extra_monster_flags(0L)
     {
     }
 };

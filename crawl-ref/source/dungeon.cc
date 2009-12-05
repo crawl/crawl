@@ -4933,6 +4933,11 @@ int dgn_place_monster(mons_spec &mspec,
         mg.hd        = mspec.hd;
         mg.hp        = mspec.hp;
 
+        // Marking monsters as summoned
+        mg.abjuration_duration = mspec.abjuration_duration;
+        mg.summon_type         = mspec.summon_type;
+        mg.non_actor_summoner  = mspec.non_actor_summoner;
+
         // XXX: hack.
         if (mg.colour == -1)
             mg.colour = random_colour();
