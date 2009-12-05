@@ -109,7 +109,7 @@ function wizlab_portal (e)
         desc = "magical portal",
         desc_long = desc_long,
         entity = 'portal',
-        dst = 'WizLab',
+        dst = 'wizlab',
         dstname_abbrev = "WizLab",
         dstorigin = "in a Wizard's Laboratory",
         overmap = "magical portal",
@@ -701,11 +701,11 @@ MAP
           ccccccc
           c.....c
     ccccccc..A..ccccccc
-cccccCCCCC+.....cBBBBBccccc
-c...cCCCCCc..<..cBBBBBc...c
-c...=CCCCCc.....cBBBBB=...c
-c...cCCCCCcccncccBBBBBc...c
-cccccCCCCCc.....+BBBBBccccc
+    cCCCCC+.....cBBBBBc
+    cCCCCCc..<..cBBBBBc
+    cCCCCCc.....cBBBBBc
+    cCCCCCcccncccBBBBBc
+    cCCCCCc.....+BBBBBc
   ccccc+ccc.....ccccc+ccc
   c.....c...ccc..<c.....c
   c.www.c..ccdcc..c.www.c
@@ -713,11 +713,11 @@ cccccCCCCCc.....+BBBBBccccc
   c.www.c..ccdcc..c.www.c
   c.....c...c+c...c.....c
   ccc+ccccc.....ccc+ccccc
-cccccYYYYYc.....cHHHHHccccc
-c...cYYYYYcccncccHHHHHc...c
-c...=YYYYY+.....cHHHHH=...c
-c...cYYYYYc.www.cHHHHHc...c
-cccccYYYYYc.www.+HHHHHccccc
+    cYYYYYc.....cHHHHHc
+    cYYYYYcccncccHHHHHc
+    cYYYYY+.....cHHHHHc
+    cYYYYYc.www.cHHHHHc
+    cYYYYYc.www.+HHHHHc
     ccccccc.www.ccccccc
           c.....c
           ccccccc
@@ -843,10 +843,6 @@ KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
 LFLOORCOL:  white
 {{
-local msp = "human name:monk n_suf col:white hd:10 ; robe good_item " ..
-            ". quarterstaff good_item / rock troll name:monk n_suf /" ..
-            "iron troll name:monk n_suf col:white"
-
 local function msgfn (data, triggerable, triggerer, marker, ev)
   if data.trig == true then
     return
@@ -901,13 +897,18 @@ local function summon_monks (data, triggerable, triggerer, marker, ev)
     return
   end
 
+  local msp = "human name:monk n_suf col:white hd:10 dur:6 sum:shadow_creatures" ..
+            " nas:old_memories seen / rock troll name:monk n_suf dur:6 seen " ..
+            " sum:shadow_creatures nas:old_memories" ..
+            " / iron troll name:monk n_suf col:white dur:6 sum:shadow_creatures " ..
+            " nas:old_memories seen"
+
   local count = 0
   for point in iter.circle_iterator(3) do
     if crawl.one_chance_in(12) then
       if feat.is_solid(point.x, point.y) or feat.destroys_items(point.x, point.y) then
       else
        local mon = dgn.create_monster(point.x, point.y, msp)
-       mon.mark_summoned(3)
        count = count + 1
       end
     end
