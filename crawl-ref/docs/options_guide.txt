@@ -716,12 +716,12 @@ viewport. (These options are not fully available on DOS.)
 None of these options affects gameplay. In particular, your character's
 line-of-sight is unaffected by these options.
 
-view_max_width = 33
+view_max_width = 33 (max 81)
         Sets the maximum width of the viewport (defaults to 33).
         Making this larger will allow Crawl to show a wider viewport
         on larger terminals.
 
-view_max_height = 17
+view_max_height = 17 (max 71)
         Similar to view_max_width, but sets the viewport's maximum
         height.
 
