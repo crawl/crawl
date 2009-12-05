@@ -308,6 +308,11 @@ bool builder(int level_number, int level_type)
     const std::set<std::string> uniq_tags  = you.uniq_map_tags;
     const std::set<std::string> uniq_names = you.uniq_map_names;
 
+    // Save a copy of unique creatures for vetoes.
+    temp_unique_creatures = you.unique_creatures;
+    // And unrands
+    temp_unique_items = you.unique_items;
+
     unwind_bool levelgen(Generating_Level, true);
 
     // N tries to build the level, after which we bail with a capital B.
@@ -1830,11 +1835,6 @@ static void _build_dungeon_level(int level_number, int level_type)
         if (dgn_level_vetoed)
             return;
     }
-
-    // Save a copy of unique creatures in case we get vetoed.
-    temp_unique_creatures = you.unique_creatures;
-    // And unrands
-    temp_unique_items = you.unique_items;
 
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
