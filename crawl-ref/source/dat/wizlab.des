@@ -825,8 +825,6 @@ ENDMAP
 
 ###############################################################################
 # Wucad Mu's Monastery
-#
-# Todo: it isn't really *that* interesting.
 NAME:       wizlab_wucad
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -841,10 +839,18 @@ KFEAT:      ' = open_door
 KFEAT:      1234567 = .
 KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
+ITEM:       potion of experience, manual of fighting / manual of armour / manual of \
+            spellcasting, manual of staves / manual of fighting / manual of dodging,\
+            potion of gain dexterity / potion of gain strength / potion of gain \
+            intelligence
 LFLOORCOL:  white
 {{
 local function msgfn (data, triggerable, triggerer, marker, ev)
   if data.trig == true then
+    return
+  end
+
+  if crawl.one_chance_in(3) then
     return
   end
 
@@ -897,15 +903,15 @@ local function summon_monks (data, triggerable, triggerer, marker, ev)
     return
   end
 
-  local msp = "human name:monk n_suf col:white hd:10 dur:6 sum:shadow_creatures" ..
-            " nas:old_memories seen / rock troll name:monk n_suf dur:6 seen " ..
+  local msp = "human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures" ..
+            " nas:old_memories seen / rock troll name:monk n_suf dur:2 seen " ..
             " sum:shadow_creatures nas:old_memories" ..
-            " / iron troll name:monk n_suf col:white dur:6 sum:shadow_creatures " ..
+            " / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures " ..
             " nas:old_memories seen"
 
   local count = 0
   for point in iter.circle_iterator(3) do
-    if crawl.one_chance_in(12) then
+    if crawl.one_chance_in(11) then
       if feat.is_solid(point.x, point.y) or feat.destroys_items(point.x, point.y) then
       else
        local mon = dgn.create_monster(point.x, point.y, msp)
@@ -919,15 +925,15 @@ local function summon_monks (data, triggerable, triggerer, marker, ev)
   if count == 1 then
     crawl.mpr("One of the shadowy figures appears more solid!")
   elseif count > 1 then
-    crawl.mpr("The shadowy figures no longer seem so shadowy.")
+    crawl.mpr("Shadows coalesce into solid form.")
   end
 end
 
 local summon_marker = TriggerableFunction:new ({ func=summon_monks,
     repeated=true })
 
-summon_marker:add_triggerer(DgnTriggerer:new {type="turn", delay_min=500,
-    delay_max=800 })
+summon_marker:add_triggerer(DgnTriggerer:new {type="turn", delay_min=50,
+    delay_max=290 })
 
 lua_marker('A', summon_marker)
 
@@ -942,7 +948,7 @@ tttttT.........ccccc.............Ttttttt
 ttttT.........cc777cc.............Tttttt
 tttT.......cccc77777cccc...........Ttttt
 ttT.......cc..cc777cc..cc......ccc..Tttt
-ttT......cc....cc=cc....cc....cc6cc..Ttt
+ttT......cc....cc+cc....cc....cc6cc..Ttt
 ttT.....Tc....G.....G....cT..cc6U6cc.Ttt
 ttT.....ccG.............Gcc...cc6cc..Ttt
 ttT......+.......8.......+.....c+c...Ttt
@@ -950,15 +956,15 @@ ttT.....ccG.............Gcc..........Ttt
 ttT.....Tc....G.....G....cT..........Ttt
 ttT.c..cTcc.............cccT.........Ttt
 ttTcc++ccccccc.......ccccccc+cc......Ttt
-ttcc5555ccc..ccc===ccc..ccc444cc.....Ttt
-ttc555555c...............c44444c....Tttt
+ttcc5555cccdeccc===cccfgccc444cc.....Ttt
+ttc555555c....c.....c....c44444c....Tttt
 ttc555555cc.............cc44444cc..ctttt
 ttc555555ccccccccccccccccccc+cccc++ccttt
 ttcc5555ccc.............ccc222cc3333cctt
 tttccccccc...............+22222+33333ctt
 ttttttttccc..ccc+++ccc..ccc222cc3333cctt
 tttttttttcccccTT111Ttccccccccccccccccttt
-ttttttttttttttT.....Tttttttttttttttttttt
+ttttttttttttttT11111Tttttttttttttttttttt
 tttttttttttT.........TTTTTTttttttttttttt
 tttccccctttT.....G........Ttcccccttttttt
 ttcc...cctT..............Ttcc...cctttttt
