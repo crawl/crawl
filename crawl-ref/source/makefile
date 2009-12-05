@@ -188,6 +188,17 @@ else
 	DEFINES += -DUSE_ZIP
 endif
 
+ifdef BUILD_ALL
+	BUILD_FREETYPE = YesPlease
+	BUILD_PCRE = YesPlease
+	BUILD_SDL = YesPlease
+	BUILD_SDLIMAGE = YesPlease
+	BUILD_SQLITE = YesPlease
+	BUILD_LUA = YesPlease
+	BUILD_LIBPNG = YesPlease
+	BUILD_ZLIB = YesPlease
+endif
+
 #
 # Set up object file dependencies for $(GAME) target.
 #

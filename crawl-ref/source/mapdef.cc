@@ -3073,6 +3073,48 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (mspec.hp == TAG_UNFOUND)
             mspec.hp = 0;
 
+        int dur = strip_number_tag(mon_str, "dur:");
+        if (dur == TAG_UNFOUND)
+            dur = 0;
+        else if (dur < 1 || dur > 6)
+            dur = 0;
+
+        mspec.abjuration_duration = dur;
+
+        int summon_type = 0;
+        std::string s_type = strip_tag_prefix(mon_str, "sum:");
+        if (!s_type.empty())
+        {
+            // In case of spells!
+            s_type = replace_all_of(s_type, "_", " ");
+            summon_type = static_cast<int>(str_to_summon_type(s_type));
+            if (summon_type == SPELL_NO_SPELL)
+            {
+                error = make_stringf("bad monster summon type: \"%s\"", 
+                                s_type.c_str());
+                return (slot);
+            }
+            if (mspec.abjuration_duration == 0)
+            {
+                error = "marked summon with no duration";
+                return (slot);
+            }
+        }
+
+        mspec.summon_type = summon_type;
+
+        std::string non_actor_summoner = strip_tag_prefix(mon_str, "nas:");
+        if (!non_actor_summoner.empty())
+        {
+            non_actor_summoner = replace_all_of(non_actor_summoner, "_", " ");
+            mspec.non_actor_summoner = non_actor_summoner;
+            if (mspec.abjuration_duration == 0)
+            {
+                error = "marked summon with no duration";
+                return (slot);
+            }
+        }
+
         std::string colour = strip_tag_prefix(mon_str, "col:");
         if (!colour.empty())
         {

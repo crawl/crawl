@@ -1217,6 +1217,14 @@ unsigned get_map_col(const coord_def& p, bool travel)
 {
     if (travel && _travel_colour_override(p))
         return _get_travel_colour(p);
-    else
-        return get_map_knowledge_col(p);
+
+    const show_type& obj = env.map_knowledge(p).object;
+    if (obj.cls == SH_FEATURE && emphasise(p))
+    {
+        const feature_def& fdef = get_feature_def(obj);
+        if (fdef.seen_em_colour)
+            return fdef.seen_em_colour;
+    }
+
+    return get_map_knowledge_col(p);
 }

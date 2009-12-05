@@ -83,7 +83,7 @@ public:
 };
 
 // Convert a show object as in env.show to one to be stored in
-// env.map_knowledge (dropping feature colour mainly).
-show_type to_knowledge(show_type obj, bool emph);
+// env.map_knowledge (re-setting feature colour mainly).
+show_type to_knowledge(show_type obj);
 
 #endif

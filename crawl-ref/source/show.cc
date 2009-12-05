@@ -394,7 +394,7 @@ void show_def::init()
         update_at(*ri, grid2show(*ri));
 }
 
-show_type to_knowledge(show_type obj, bool emph)
+show_type to_knowledge(show_type obj)
 {
     if (Options.item_colour && obj.cls == SH_ITEM)
         return (obj);
@@ -405,7 +405,5 @@ show_type to_knowledge(show_type obj, bool emph)
     }
     const feature_def& fdef = get_feature_def(obj);
     obj.colour = fdef.seen_colour;
-    if (emph && fdef.seen_em_colour)
-        obj.colour = fdef.seen_em_colour;
     return (obj);
 }
