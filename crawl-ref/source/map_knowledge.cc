@@ -11,6 +11,7 @@
 #include "notes.h"
 #include "options.h"
 #include "overmap.h"
+#include "show.h"
 #include "showsymb.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -205,7 +206,8 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             continue;
 #endif
 
-        set_map_knowledge_obj(p, show_type(env.map_knowledge(p).feat()));
+        show_type plain = show_type(env.map_knowledge(p).feat());
+        set_map_knowledge_obj(p, to_knowledge(plain));
         set_map_knowledge_detected_mons(p, false);
         set_map_knowledge_detected_item(p, false);
 
