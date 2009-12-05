@@ -799,7 +799,7 @@ static void draw_outside_los(screen_buffer_t* buffy, const coord_def &gc)
     buffy[0] = get_map_knowledge_char(gc);
     buffy[1] = DARKGREY;
     if (Options.colour_map)
-        buffy[1] = real_colour(get_map_knowledge_col(gc));
+        buffy[1] = real_colour(get_map_col(gc));
 #else
     unsigned int bg = env.tile_bk_bg(gc);
     unsigned int fg = env.tile_bk_fg(gc);
@@ -854,7 +854,7 @@ static void draw_los_backup(screen_buffer_t* buffy,
     buffy[1] = DARKGREY;
 
     if (Options.colour_map)
-        buffy[1] = real_colour(get_map_knowledge_col(gc));
+        buffy[1] = real_colour(get_map_col(gc));
 #else
     if (env.tile_bk_fg(gc) != 0
         || env.tile_bk_bg(gc) != 0)
