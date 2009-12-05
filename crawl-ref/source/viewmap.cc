@@ -345,38 +345,6 @@ static int _get_number_of_lines_levelmap()
 }
 
 #ifndef USE_TILE
-static std::string _level_description_string()
-{
-    if (you.level_type == LEVEL_PANDEMONIUM)
-        return "- Pandemonium";
-
-    if (you.level_type == LEVEL_ABYSS)
-        return "- The Abyss";
-
-    if (you.level_type == LEVEL_LABYRINTH)
-        return "- a Labyrinth";
-
-    if (you.level_type == LEVEL_PORTAL_VAULT)
-    {
-        if (!you.level_type_name.empty())
-            return "- " + article_a(upcase_first(you.level_type_name));
-        return "- a Portal Chamber";
-    }
-
-    // level_type == LEVEL_DUNGEON
-    char buf[200];
-    const int youbranch = you.where_are_you;
-    if ( branches[youbranch].depth == 1 )
-        snprintf(buf, sizeof buf, "- %s", branches[youbranch].longname);
-    else
-    {
-        const int curr_subdungeon_level = player_branch_depth();
-        snprintf(buf, sizeof buf, "%d of %s", curr_subdungeon_level,
-                 branches[youbranch].longname);
-    }
-    return buf;
-}
-
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
 {
@@ -566,9 +534,11 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
 
     cgotoxy(1, 1);
     textcolor(WHITE);
+
     cprintf("%-*s",
             get_number_of_cols() - helplen,
-            ("Level " + _level_description_string() + pstr).c_str());
+            (upcase_first(place_name(
+                    get_packed_place(), true, true)) + pstr).c_str());
 
     formatted_string s = feats.format();
     cgotoxy((get_number_of_cols() - s.length()) / 2, 1);
