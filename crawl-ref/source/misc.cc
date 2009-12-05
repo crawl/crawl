@@ -2655,17 +2655,10 @@ void new_level(void)
 {
     if (you.level_type == LEVEL_PORTAL_VAULT)
     {
-       // If there's more than one word in level_type_origin then skip
-       // the first, since it's most likely a preposition.
-       std::string desc  = "Entered ";
-       size_t      space = you.level_type_origin.find(" ");
-       if (space == std::string::npos)
-           desc += you.level_type_origin;
-       else
-           desc += you.level_type_origin.substr(space + 1);
-       desc += ".";
-
-       take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, 0, 0, NULL,
+        // This here because place_name can't find the name of a level that you 
+        // *are no longer on* when it spits out the new notes list.
+        std::string desc = "Entered " + place_name(get_packed_place(), true, true);
+        take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, 0, 0, NULL,
                       desc.c_str()));
     }
     else
