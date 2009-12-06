@@ -792,7 +792,7 @@ void full_describe_view()
                 // View database entry.
                 describe_monsters(*m);
                 redraw_screen();
-                mesclr(true);
+                mesclr();
             }
             else // ACT_EXECUTE, here used to display monster status.
             {
@@ -1696,7 +1696,7 @@ void direction(dist& moves, const targetting_type restricts,
             show_targetting_help();
             force_redraw = true;
             redraw_screen();
-            mesclr(true);
+            mesclr();
             show_prompt = true;
             break;
 
@@ -1744,7 +1744,7 @@ void direction(dist& moves, const targetting_type restricts,
 
         if (have_moved || force_redraw)
         {
-            mesclr(true);   // Maybe not completely necessary.
+            mesclr();   // Maybe not completely necessary.
 
             bool in_range = (range < 0
                              || grid_distance(moves.target,you.pos()) <= range);
@@ -1902,7 +1902,7 @@ void full_describe_square(const coord_def &c)
     }
 
     redraw_screen();
-    mesclr(true);
+    mesclr();
 }
 
 static void _extend_move_to_edge(dist &moves)

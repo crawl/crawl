@@ -86,7 +86,7 @@ bool cast_selective_amnesia(bool force)
         }
 
         if (!isalpha(keyin))
-            mesclr(true);
+            mesclr();
         else
             break;
     }

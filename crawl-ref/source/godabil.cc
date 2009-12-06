@@ -1253,7 +1253,7 @@ void _collect_adjacent_monsters(std::vector<monster_conversion> & available,
 
 void _cost_summary(int oklob_count, int wandering_count, int total_in_range)
 {
-    mesclr(true);
+    mesclr();
     if (oklob_count)
     {
         std::string str = (oklob_count > 1 ? "ts" : "t");

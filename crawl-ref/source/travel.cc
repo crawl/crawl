@@ -1916,7 +1916,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
     level_id curr = level_id::current();
     while (true)
     {
-        mesclr(true);
+        mesclr();
 
         if (waypoint_list)
             travel_cache.list_waypoints();
@@ -2189,7 +2189,7 @@ static travel_target _prompt_travel_depth(const level_id &id,
     target.p.id.depth = _get_nearest_level_depth(target.p.id.branch);
     while (true)
     {
-        mesclr(true);
+        mesclr();
         mprf(MSGCH_PROMPT, "What level of %s? "
              "(default %s, ? - help) ",
              branches[target.p.id.branch].longname,

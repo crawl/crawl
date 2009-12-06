@@ -1856,7 +1856,7 @@ static int _keyhelp_keyfilter(int ch)
                 getch();
 
             if (again)
-                mesclr(true);
+                mesclr();
         }
         while (again);
 
@@ -1874,7 +1874,7 @@ static int _keyhelp_keyfilter(int ch)
             // resets 'again'
             again = _handle_FAQ();
             if (again)
-                mesclr(true);
+                mesclr();
         }
         while (again);
 

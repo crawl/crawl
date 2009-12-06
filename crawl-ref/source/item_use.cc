@@ -5130,7 +5130,7 @@ static void handle_read_book(int item_slot)
 
         if (ltr < 'a' || ltr > 'h')     //jmf: was 'g', but 8=h
         {
-            mesclr(true);
+            mesclr();
             return;
         }
 
@@ -5138,7 +5138,7 @@ static void handle_read_book(int item_slot)
                                                      letter_to_index(ltr));
         if (spell == SPELL_NO_SPELL)
         {
-            mesclr(true);
+            mesclr();
             return;
         }
 
@@ -5701,7 +5701,7 @@ void examine_object(void)
 
     describe_item( you.inv[item_slot], true );
     redraw_screen();
-    mesclr(true);
+    mesclr();
 }                               // end original_name()
 
 void use_artefact(unsigned char item_wield_2, bool *show_msgs)
