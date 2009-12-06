@@ -41,6 +41,12 @@ void add_parsed_map(const map_def &md);
 
 std::vector<std::string> find_map_matches(const std::string &name);
 
+std::vector<map_def> find_maps_for_tag (const std::string tag,
+                                          bool check_depth = false,
+                                          bool check_used = true);
+
+int weight_map_vector (std::vector<map_def> maps);
+
 void read_maps();
 void read_map(const std::string &file);
 void run_map_preludes();
@@ -66,7 +72,7 @@ typedef std::vector<coord_def> point_vector;
 extern map_place_check_t map_place_valid;
 extern point_vector      map_anchor_points;
 
-const int              MAP_CACHE_VERSION = 1011;
+const int              MAP_CACHE_VERSION = 1012;
 
 
 #ifdef DEBUG_DIAGNOSTICS

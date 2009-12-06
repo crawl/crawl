@@ -724,6 +724,16 @@ static bool _valid_monster_generation_location(
         return (false);
     }
 
+    // Check player proximity to avoid band members being placed
+    // close to the player erroneously.
+    // XXX: This is a little redundant with proximity checks in
+    // place_monster.
+    if (mg.proximity == PROX_AWAY_FROM_PLAYER
+        && distance(you.pos(), mg_pos) <= LOS_RADIUS_SQ)
+    {
+        return (false);
+    }
+
     // Don't generate monsters on top of teleport traps.
     // (How did they get there?)
     const trap_def* ptrap = find_trap(mg_pos);
@@ -860,7 +870,8 @@ int place_monster(mgen_data mg, bool force_pos)
             case PROX_AWAY_FROM_PLAYER:
                 // If this is supposed to measure los vs not los,
                 // then see_cell(mg.pos) should be used instead. (jpeg)
-                close_to_player = (distance(you.pos(), mg.pos) < 64);
+                close_to_player = (distance(you.pos(), mg.pos) <=
+                                   LOS_RADIUS_SQ);
 
                 if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
                     || mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
@@ -2571,11 +2582,7 @@ int mons_place(mgen_data mg)
         if (!(mg.flags & MG_FORCE_BEH) && !crawl_state.arena)
             player_angers_monster(creation);
 
-        if (crawl_state.arena)
-            behaviour_event(creation, ME_EVAL);
-        else
-            // Make summoned being aware of player's presence.
-            behaviour_event(creation, ME_ALERT, MHITYOU);
+        behaviour_event(creation, ME_EVAL);
     }
 
     return (mid);

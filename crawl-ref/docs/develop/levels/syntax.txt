@@ -100,10 +100,13 @@ Monsters
  0 - normal monster
  9 - +5 depth monster
  8 - (+2) * 2 depth monster (aargh!). Can get golden dragons and titans
-     this way.
+     this way.[*]
  1-7 - monster array monster. See section below on MONS: arrays for more
      information
 
+[*]  (using '0', '9', and '8' in portal vaults will use monsters from the
+      level that the portal was entered from, unless a random monster list
+      has been set)
 
 H.   Header information
 =======================
@@ -277,7 +280,7 @@ PLACE:    Used to specify certain special levels. Existing special levels
 
           PLACE can be used with random vaults and minivaults for testing them.
 
-TAGS:     Tags go an a TAGS: line and are space-separated. You can have several
+TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           TAGS: lines, or use \ for very long ones. Valid tags are:
           * "allow_dup": Vaults are normally used only once per game. If you
              have a vault that can be used more than once, use allow_dup to tell
@@ -581,6 +584,9 @@ MONS:     (list of monsters)
           a random launcher, there is no way to force the ammo type to
           match the launcher type.
 
+          Overriding Monster Names:
+          -------------------------
+
           Individual monsters can be given names as follows:
               MONS: kobold name:Durwent
 
@@ -647,6 +653,9 @@ MONS:     (list of monsters)
 
           Monster names should be used very sparingly.
 
+          Overriding Monster Stats:
+          -------------------------
+
           Further monster customisation can be made by using "hd" and "hp".
           These two tags allow you to completely overwrite the original hit dice
           and hit points of a monster:
@@ -661,6 +670,23 @@ MONS:     (list of monsters)
 
           Creates a kobold with 20 hit points. This is also useful for monsters
           (such as statues) which come with non-randomised HP values.
+
+          Monsters can be marked as summoned by using "dur" and "sum" tags. The
+          "dur" tag accepts an integer between 1 and 6 inclusive. The "sum" tag
+          accepts the name of a spell (parsed as per the spells tag, described
+          below) or any of "clone" (Rakshasa), "animate" (from animate dead),
+          "chaos" (made from pure chaos), "miscast" (summoned from by spell
+          miscast effect), "zot" (summoned by a Zot trap), "wrath" (summoned by
+          a god in an act of retribution), "aid" (summoned by a god in order to
+          give aid).
+
+          Of the spells, "shadow_creatures" has the most significant effect, in
+          that monsters will dissipate into the shadows rather than disappear in
+          a puff of smoke. Using non-summoning spells will also have no effect.
+
+          Tagging a monster with "seen" will override the system and force that
+          player to be marked as already viewed; this means that it won't
+          generate messages such as "XYZ comes into view".
 
           Overriding Monster Spells:
           --------------------------

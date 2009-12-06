@@ -583,7 +583,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                     bought_something = true;
                 }
             }
-            _shop_more();
+            //_shop_more();
             continue;
         }
         else if (key == '!')
