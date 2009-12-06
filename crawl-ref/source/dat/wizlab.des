@@ -29,6 +29,14 @@
 #    layout: temple-esque!
 #    colour: dark walls, red and orangge.
 #
+# Cigotuvi's Fleshworks
+#    threat: lumps, uglies, abominations
+#    loot:   tmut. potions, books, rMut, ?oSumm, \oDeath
+#    xp:     about 9000
+#    layout: organic, irregular, twisty, NO SQUARES, NO HARD CORNERS, 
+#            NOTHING THAT LOOKS PRETTY
+#    colour: lightred walls, red doors, magenta floor, yellow 'glass'
+#
 ###
 
 ##
@@ -733,14 +741,158 @@ TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 MAP
 ENDMAP
 
+# NOTES
+###
+#
+# 
+# ~
+#
+# Cigotuvi has mastered the art of manipulating flesh, and his lab is a
+# living testament to this fact, seeming like the interior of some
+# ghastly beast. The walls and floor are slick and membranous, pulsing to an
+# unheard heartbeat and oozing thick, green ichor from every inch.
+#
+# The bulk of Cigotuvi's Fleshworks is devoted to cells that house test
+# subjects in various stages of degeneration. Most are sickly humanoids; the
+# others are ugly things, pulsating lumps and abominations.
+#
+# The central, circular chamber houses Cigotuvi's flesh golem.
+# The Eastern half of his lab is dominated by a snaking passageway filled with
+# pulsating lumps and the occasional ugly thing.
+# The western half of his lab is full of abominations, including the terrible
+# "Cigotuvi's Monster".
+#
+# ~
+#
+
+
 ###############################################################################
-# Cigotuvi's Chambers
+# Cigotuvi's Fleshworks (by Mu.)
 #
 NAME:       wizlab_cigotuvi
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Cigotuvi's Chambers")
+KPROP:      . = w:1 bloody / w:15 nothing
+KPROP:      ' = bloody / w:5 nothing
+KMONS:      a = human name:sickly name_adjective / \
+            human name:monstrous name_adjective / human name:deformed \
+            name_adjective / human name:twisted name_adjective / \
+            human name:grotesque name_adjective / human name:hideous \
+            name_adjective / human name:febrile name_adjective
+KMONS:      b = elf name:sickly name_adjective / \
+            elf name:monstrous name_adjective / elf name:deformed \
+            name_adjective / elf name:twisted name_adjective / \
+            elf name:grotesque name_adjective / elf name:hideous \
+            name_adjective / elf name:febrile name_adjective
+KMONS:      d = orc name:sickly name_adjective / \
+            orc name:monstrous name_adjective / orc name:deformed \
+            name_adjective / orc name:twisted name_adjective / \
+            orc name:grotesque name_adjective / orc name:hideous \
+            name_adjective / orc name:febrile name_adjective
+KMONS:      u = ugly thing / w:2 very ugly thing
+KMONS:      J = pulsating lump
+KMONS:      x = small abomination
+KMONS:      X = large abomination
+KMONS:      e = giant eyeball
+SUBST:      " = J:1 / .:6
+KMONS:      8 = col:red clay golem name:flesh_golem name_replace
+KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
+            name_replace
+MARKER:     M = lua:MonPropsMarker:new {description="This terrifying creation " \
+            .. "looks to have been constructed from the bodyparts of every monstrous " \
+            .. "creature imaginable.\n"}
+MARKER:     M = lua:MonPropsMarker:new {quote='\"I beheld the wretch -- the ' \
+            .. 'miserable monster whom I had created. He held up the curtain ' \
+            .. 'of the bed; and his eyes, if eyes they may be called, were ' \
+            .. 'fixed on me. His jaws opened, and he muttered some inarticulate ' \
+            .. 'sounds, while a grin wrinkled his cheeks."\n  -Frankenstein, Mary Shelley.'}
+MARKER:     8 = lua:MonPropsMarker:new {description="An animated mound of misshapen flesh.\n"}
+:           local sickdesc = "This poor creature looks hideously deformed.\n"
+MARKER:     a = lua:MonPropsMarker:new {description=sickdesc}
+MARKER:     b = lua:MonPropsMarker:new {description=sickdesc}
+MARKER:     d = lua:MonPropsMarker:new {description=sickdesc}
+MARKER:     ! = lua:fog_machine { \
+                 pow_max = 15, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 20, \
+                 size_buildup_time = 500, cloud_type = "mutagenic fog" \
+             }
+MARKER:     ? = lua:fog_machine { \
+                 pow_max = 20, delay_min = 10, delay_max = 40, \
+                 size = 5, size_buildup_amnt = 10, \
+                 size_buildup_time = 25, cloud_type = "mutagenic fog" \
+             }
+LFLOORCOL:  magenta
+COLOUR:     m = yellow
+COLOUR:     c+ = lightred
+COLOUR:     W = green
+:           dgn.set_feature_desc_short("Some shallow water", "Viscous fluid")
+:           dgn.set_feature_desc_long("Some shallow water", "This sticky "
+:            .. "fluid seems to be secreted by the nearby walls.\n")
+:           dgn.set_feature_desc_short("stone wall", "sinewy wall")
+:           dgn.set_feature_desc_long("stone wall", "These walls look"
+:            .. " strangely organic, but incredibly tough and durable.\n")
+:           dgn.set_feature_desc_short("translucent rock wall", "thin membrane")
+:           dgn.set_feature_desc_long("translucent rock wall", "This strange"
+:            .. " membrane is thin enough to see through.\n")
+:           dgn.set_feature_desc_short("Floor", "Pulsating floor")
+:           dgn.set_feature_desc_long("Floor", "This slick floor seems to pulse"
+:            .. " to an unknown beat.\n")
+# Changing door descriptions like this currently doesn't work, needs fixing.
+MARKER:     + = lua:props_marker { \
+              door_description_prefix="warning scrawled " \
+            }
+:           dgn.set_feature_desc_long("closed door", "A fleshy door.\n")
+:           dgn.set_feature_desc_long("open door", "A fleshy doorway.\n")
+:           wizlab_setup(_G, "Cigotuvi's Fleshworks")
+KITEM:      $ = potion of degeneration / potion of decay / \
+           potion of mutation / w:3 potion of strong poison / \
+            w:2 potion of poison / w:5 potion of healing / \
+            w:3 potion of heal wounds / w:1 potion of cure mutation
+KITEM:      * = gold
+KITEM:      % = amulet of resist mutation
+KITEM:      : = any book / acquire book
+KITEM:      | = staff of death
+KITEM:      l = scroll of summoning
+NSUBST:     L = 1:| / *:l
 MAP
+ccccccccccccccccccccccccccccccccccccccccccccc
+ccLLLcccc.cccccccccccAccccccccccccWWWW.u:cccc
+c.....c.....ccc...ccc+cccccccccccW......u:ccc
+c.X.........cc.u...m...m..ccccccW........u:cc
+c.M........cc...b..m.x.m.a.cccccW..........cc
+c.X........cc...d..m...m.u..ccccW.........Wcc
+c..........cc.cccccm...mc...ccccc........Wccc
+c.....ccc+ccccc..cccc+cccccccccccc......Wcccc
+ccLLLccc..ccccuuu.cm...m..d..ccccc+cccccccccc
+cccccccc..ccc..!...m.x.m.a..cccccc""ccccccccc
+cc$$cccc..ccc.uuu..m...m...ccccccc""cc**%**cc
+c$$$$cc...cccc....cm...m.cccWccccc""c.e.c.e.c
+c$$$$+...cccccc..cccc+cccc...Wcccc""c...c...c
+c$$$$c...ccccccccc.m...m.xx...Wccc""cmm+c+mmc
+cc$ccccc+cccccccc..m.x.m...u..Wccc""c.......c
+ccccccc...cccc...a.m...m....x.cc.c""c.......c
+cccc.........c..b..m...mc....cc..c""c...!...c
+c.xJ...ccc...cc..cccc+cccc..cc...c""c......cc
+c...ccccccc+cccccc.m.....ccccJJJJc""+.....ccc
+cc...ccccc'''cccc..m.....uccJJJJJc""ccccccccc
+cc...ccc''''''cc.!.m.....<uc.....+"""""""""cc
+c..cccc''''''''cc.......cuccc....cc"""""""""c
+c..ccc'''''''''cccccc+cccccccccccccccccccc""c
+c..cc''''''''''ccccc...ccccccc""""""""""""""c
+c..cc''''''''''ccc.......cccc""""""""""""""cc
+c..c'''''''''''cc.........ccc""cccccccccccccc
+c..c+c+c+c+c+ccc...........cc""""""""""""""cc
+c..cXcXcXcXcXccc...........ccc""""""""""""""c
+c..cccccccccccc.....c.c.....cccccccccccccc""c
+c...xJ........+......?......+"""""ccc"""""""c
+c...xJ........c.....c.c.....c""""""c"""""""cc
+ccmmmccccmmmcccc...........cccccc""c""ccccccc
+c.....cc.....cccWW.......WWcc""""""c""""""ccc
+cc.JJccccuuucccccWW..8..WWcc""""""ccc""""""cc
+ccJJ.cccc.a.ccccccWWWWWWWccc""ccccccccccc""cc
+cc.dccccccuuccccccccWWWccccc"""""""""""""""cc
+ccccccccccccccccccccccccccccc"""""""""""""ccc
+ccccccccccccccccccccccccccccccccccccccccccccc 
 ENDMAP
 
 ###############################################################################
