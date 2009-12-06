@@ -755,10 +755,7 @@ void cast_silence(int pow)
     you.increase_duration(DUR_SILENCE, 10 + random2avg(pow,2), 100);
 
     if (you.beheld())
-    {
-        you.clear_beholders();
-        mpr("You break out of your daze!", MSGCH_RECOVERY);
-    }
+        you.update_beholders();
 }
 
 static int _discharge_monsters(coord_def where, int pow, int, actor *)
