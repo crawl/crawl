@@ -808,9 +808,9 @@ MARKER:     M = lua:MonPropsMarker:new {quote='\"I beheld the wretch -- the ' \
             .. 'sounds, while a grin wrinkled his cheeks."\n  -Frankenstein, Mary Shelley.'}
 MARKER:     8 = lua:MonPropsMarker:new {description="An animated mound of misshapen flesh.\n"}
 :           local sickdesc = "This poor creature looks hideously deformed.\n"
-MARKER:     a = lua:MonPropsMarker:new {description=sickdesc}
-MARKER:     b = lua:MonPropsMarker:new {description=sickdesc}
-MARKER:     d = lua:MonPropsMarker:new {description=sickdesc}
+MARKER:     a = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
+MARKER:     b = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
+MARKER:     d = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 15, delay_min = 10, delay_max = 40, \
                  size = 1, size_buildup_amnt = 20, \

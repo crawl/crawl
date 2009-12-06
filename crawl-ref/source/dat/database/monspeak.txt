@@ -4372,3 +4372,30 @@ launches into
 
 embarks on
 %%%%
+###############################################################################
+# Speech keys used *specifically* in (portal) vaults.
+#
+###############################################################################
+Cigotuvi_creatures
+
+VISUAL:@The_monster@ howls in pain.
+
+VISUAL:@The_monster@ wails in agony.
+
+VISUAL:@The_monster@ weeps.
+
+VISUAL:@The_monster@ sobs.
+
+@The_monster@ screams, "The pain, the pain!"
+
+@The_monster@ yells, "Please, just kill me!"
+
+VISUAL:@The_monster@ stares vacantly at hideously deformed hands.
+
+@The_monster@ asks, "What has happened to me?"
+
+@The_monster@ asks, "What has been done to me?"
+
+VISUAL:@The_monster@ prays for aid.
+
+VISUAL:@The_monster@ begins coughing up blood.
