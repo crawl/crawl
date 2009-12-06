@@ -5344,6 +5344,7 @@ void read_scroll(int slot)
         // Doesn't destroy scrolls anymore, so no special check needed. (jpeg)
         immolation(10, IMMOLATION_SCROLL, you.pos(), alreadyknown, &you);
         bad_effect = true;
+        more();
         break;
 
     case SCR_CURSE_WEAPON:
