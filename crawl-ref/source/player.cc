@@ -6680,7 +6680,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
 {
     ASSERT(!crawl_state.arena);
 
-    if (amount <= 0)
+    if (amount <= 0 && immediate <= 0)
         return (false);
 
     if (res_rotting())

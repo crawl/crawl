@@ -1071,7 +1071,6 @@ void dgn_reset_level()
     // Clear custom tile settings from vaults
     tile_init_default_flavour();
     tile_clear_flavour();
-    tile_init_flavour();
 #endif
 
     lua_special_room_spec.created = false;
