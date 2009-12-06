@@ -164,5 +164,6 @@ bool player::_possible_beholder(const monsters *mon) const
          && see_cell(mon->pos()) && mon->see_cell(pos())
          && mon->alive() && mons_genus(mon->type) == MONS_MERMAID
          && !mon->submerged() && !mon->confused()
-         && !mon->asleep() && !mon->cannot_move());
+         && !mon->asleep() && !mon->cannot_move()
+         && !mon->wont_attack() && !mon->pacified());
 }
