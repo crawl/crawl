@@ -838,11 +838,18 @@ COLOUR:     W = green
 :           dgn.set_feature_desc_long("Floor", "This slick floor seems to pulse"
 :            .. " to an unknown beat.\n")
 # Changing door descriptions like this currently doesn't work, needs fixing.
-MARKER:     + = lua:props_marker { \
-              door_description_noun="fleshy orifice", \
-            }
-:           dgn.set_feature_desc_long("closed door", "A fleshy door.\n")
-:           dgn.set_feature_desc_long("open door", "A fleshy doorway.\n")
+: lua_marker('+', props_marker {
+:              door_description_noun="fleshy orifice",
+:              door_berserk_verb_open="You part the %s%s",
+:              door_berserk_adjective="with a squelch!",
+:              door_berserk_verb_close="You squeeze the %s%s closed",
+:              door_noisy_verb_open="You part the %s%s with a squelch!",
+:              door_noisy_verb_close="You squeeze the %s%s closed with a squelch!",
+:              door_airborne_verb_open="You reach down and part the %s%s.",
+:              door_airborne_verb_close="You reach down and squeeze the %s%s closed.",
+:              door_verb_open="You part the %s%s.",
+:              door_verb_close="You squeeze the %s%s shut."
+:            })
 :           wizlab_setup(_G, "Cigotuvi's Fleshworks")
 KITEM:      $ = potion of degeneration / potion of decay / \
            potion of mutation / w:3 potion of strong poison / \
