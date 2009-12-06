@@ -853,6 +853,7 @@ static short _get_exp_pool_colour(int pool)
 
 void print_stats(void)
 {
+    cursor_control coff(false);
     textcolor(LIGHTGREY);
 
     // Displayed evasion is now tied to dex.
