@@ -2877,18 +2877,42 @@ std::string feature_description(const coord_def& where, bool bloody,
         const std::string door_desc_suffix =
             env.markers.property_at(where, MAT_ANY,
                                     "door_description_suffix");
+        const std::string door_desc_noun =
+            env.markers.property_at(where, MAT_ANY,
+                                    "door_description_noun");
+        const std::string door_desc_adj  =
+            env.markers.property_at(where, MAT_ANY,
+                                    "door_description_adjective");
+        const std::string door_desc_veto =
+            env.markers.property_at(where, MAT_ANY,
+                                    "door_description_veto");
 
         std::set<coord_def> all_door;
         find_connected_identical(where, grd(where), all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
 
-        std::string desc = adj;
-        desc += (grid == DNGN_OPEN_DOOR) ? "open " : "closed ";
-        if (grid == DNGN_DETECTED_SECRET_DOOR)
-            desc += "detected secret ";
+        std::string desc;
+        if (!door_desc_adj.empty())
+            desc += door_desc_adj;
+        else
+            desc += adj;
 
-        desc += door_desc_prefix + noun + door_desc_suffix;
+        if (door_desc_veto.empty() || door_desc_veto != "veto")
+        {
+            desc += (grid == DNGN_OPEN_DOOR) ? "open " : "closed ";
+            if (grid == DNGN_DETECTED_SECRET_DOOR)
+                desc += "detected secret ";
+        }
+
+        desc += door_desc_prefix;
+
+        if (!door_desc_noun.empty())
+            desc += door_desc_noun;
+        else
+            desc += noun;
+
+        desc += door_desc_suffix;
 
         if (bloody)
             desc += ", spattered with blood";

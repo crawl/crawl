@@ -719,6 +719,29 @@ dungeon cell which they are on:
       before opening the door, with the value of the property used as
       the prompt string.
 
+* door_description_adjective: Overwrite the adjective for the door. Not
+      currently used.
+
+* door_description_noun: Overwrite the noun used by the door. Replaces, for
+      instance, "door" with "doorway".
+
+* door_description_veto: Vetoes the use of "open", "closed" and "detected
+      secret" when applying adjectives to door descriptions.
+
+* door_berserk_verb_open: Replace the verb used for opening the door while
+      berserk. Should include "%s%s", as it is printed as a formatted string.
+
+* door_berserk_adjective: Replaces the adjective "with a bang" when the player
+      is not silenced while opening a door.
+
+* door_noisy_verb_open: Replaces "opens with a creak". Also requires "%s%s" as
+      it is a formatted string.
+
+* door_airborne_verb_open: Replaces "reach down and open", also requires "%s%s".
+
+* door_open_verb: Replaces "You open". Also requires "%s%s". All of the above "open"
+      have "close" counterparts which are used when closing a door.
+
 * feature_description: What to use as the short description of the
       cell's feature.
 

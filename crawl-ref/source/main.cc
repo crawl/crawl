@@ -3310,6 +3310,10 @@ static void _open_door(coord_def move, bool check_confused)
     const coord_def doorpos = you.pos() + door_move.delta;
     const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
                                                           : DNGN_UNSEEN);
+    std::string door_already_open = "";
+    if (in_bounds(doorpos))
+        door_already_open = env.markers.property_at(doorpos, MAT_ANY,
+                                "door_verb_already_open");
 
     if (!feat_is_closed_door(feat))
     {
@@ -3322,8 +3326,12 @@ static void _open_door(coord_def move, bool check_confused)
         }
         switch (feat)
         {
+        // This doesn't ever sem to be triggered.
         case DNGN_OPEN_DOOR:
-            mpr("It's already open!");
+            if (!door_already_open.empty())
+                mpr(door_already_open.c_str());
+            else
+                mpr("It's already open!");
             break;
         default:
             mpr("There isn't anything that you can open there!");
@@ -3338,6 +3346,17 @@ static void _open_door(coord_def move, bool check_confused)
     find_connected_range(doorpos, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, all_door);
     const char *adj, *noun;
     get_door_description(all_door.size(), &adj, &noun);
+
+    const std::string door_desc_adj  =
+        env.markers.property_at(doorpos, MAT_ANY,
+                                "door_description_adjective");
+    const std::string door_desc_noun =
+        env.markers.property_at(doorpos, MAT_ANY,
+                                "door_description_noun");
+    if (!door_desc_adj.empty())
+        adj = door_desc_adj.c_str();
+    if (!door_desc_noun.empty())
+        noun = door_desc_noun.c_str();
 
     if (!(check_confused && you.confused()))
     {
@@ -3386,28 +3405,73 @@ static void _open_door(coord_def move, bool check_confused)
     int skill = you.dex
                 + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
+    std::string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
+                                        "door_berserk_verb_open");
+    std::string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
+                                        "door_berserk_adjective");
+    std::string door_open_creak = env.markers.property_at(doorpos, MAT_ANY,
+                                        "door_noisy_verb_open");
+    std::string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
+                                        "door_airborne_verb_open");
+    std::string door_open_verb = env.markers.property_at(doorpos, MAT_ANY,
+                                        "door_verb_open");
+
     if (you.berserk())
     {
         // XXX: Better flavour for larger doors?
         if (silenced(you.pos()))
-            mprf("The %s%s flies open!", adj, noun);
+        {
+            if (!berserk_open.empty())
+            {
+                berserk_open += ".";
+                mprf(berserk_open.c_str(), adj, noun);
+            }
+            else
+                mprf("The %s%s flies open!", adj, noun);
+        }
         else
         {
-            mprf(MSGCH_SOUND, "The %s%s flies open with a bang!", adj, noun);
+            if (!berserk_open.empty())
+            {
+                if (!berserk_adjective.empty())
+                    berserk_open += " " + berserk_adjective;
+                else
+                    berserk_open += ".";
+                mprf(MSGCH_SOUND, berserk_open.c_str(), adj, noun);
+            }
+            else
+                mprf(MSGCH_SOUND, "The %s%s flies open with a bang!", adj, noun);
             noisy(15, you.pos());
         }
     }
     else if (one_chance_in(skill) && !silenced(you.pos()))
     {
-        mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
-             adj, noun);
+        if (!door_open_creak.empty())
+            mprf(MSGCH_SOUND, door_open_creak.c_str(), adj, noun);
+        else
+            mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
+                 adj, noun);
         noisy(10, you.pos());
     }
     else
     {
-        const char* verb = (you.airborne() ? "reach down and open"
-                                           : "open");
-        mprf("You %s the %s%s.", verb, adj, noun);
+        const char* verb;
+        if (you.airborne())
+        {
+            if (!door_airborne.empty())
+                verb = door_airborne.c_str();
+            else
+                verb = "You reach down and open the %s%s.";
+        }
+        else
+        {
+            if (!door_open_verb.empty())
+               verb = door_open_verb.c_str();
+            else
+               verb = "You open the %s%s";
+        }
+
+        mprf(verb, adj, noun);
     }
 
     bool seen_secret = false;
@@ -3502,12 +3566,38 @@ static void _close_door(coord_def move)
     const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
                                                           : DNGN_UNSEEN);
 
+    std::string berserk_close = env.markers.property_at(doorpos, MAT_ANY,
+                                        "door_berserk_verb_close");
+    std::string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
+                                        "door_berserk_adjective");
+    std::string door_close_creak = env.markers.property_at(doorpos, MAT_ANY,
+                                        "door_noisy_verb_close");
+    std::string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
+                                        "door_airborne_verb_close");
+    std::string door_close_verb = env.markers.property_at(doorpos, MAT_ANY,
+                                        "door_verb_close");
+
     if (feat == DNGN_OPEN_DOOR)
     {
         std::set<coord_def> all_door;
         find_connected_identical(doorpos, grd(doorpos), all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
+        const char *waynoun = make_stringf("%sway", noun).c_str();
+
+        const std::string door_desc_adj  =
+            env.markers.property_at(doorpos, MAT_ANY,
+                                    "door_description_adjective");
+        const std::string door_desc_noun =
+            env.markers.property_at(doorpos, MAT_ANY,
+                                    "door_description_noun");
+        if (!door_desc_adj.empty())
+            adj = door_desc_adj.c_str();
+        if (!door_desc_noun.empty())
+        {
+            noun = door_desc_noun.c_str();
+            waynoun = noun;
+        }
 
         for (std::set<coord_def>::const_iterator i = all_door.begin();
              i != all_door.end(); ++i)
@@ -3519,23 +3609,23 @@ static void _close_door(coord_def move)
                 // creature is invisible.
                 if (!you.can_see(mon))
                 {
-                    mprf("Something is blocking the %sway!", noun);
+                    mprf("Something is blocking the %s!", waynoun);
                     you.turn_is_over = true;
                 }
                 else
-                    mprf("There's a creature in the %sway!", noun);
+                    mprf("There's a creature in the %s!", waynoun);
                 return;
             }
 
             if (igrd(dc) != NON_ITEM)
             {
-                mprf("There's something blocking the %sway.", noun);
+                mprf("There's something blocking the %s.", waynoun);
                 return;
             }
 
             if (you.pos() == dc)
             {
-                mprf("There's a thick-headed creature in the %sway!", noun);
+                mprf("There's a thick-headed creature in the %s!", waynoun);
                 return;
             }
         }
@@ -3546,26 +3636,58 @@ static void _close_door(coord_def move)
         if (you.berserk())
         {
             if (silenced(you.pos()))
-                mprf("You slam the %s%s shut!", adj, noun);
+            {
+                if (!berserk_close.empty())
+                {
+                    berserk_close += ".";
+                    mprf(berserk_close.c_str(), adj, noun);
+                }
+                else
+                    mprf("You slam the %s%s shut!", adj, noun);
+            }
             else
             {
-                mprf(MSGCH_SOUND, "You slam the %s%s shut with a bang!",
-                     adj, noun);
-                noisy(25, you.pos());
+                if (!berserk_close.empty())
+                {
+                    if (!berserk_adjective.empty())
+                        berserk_close += " " + berserk_adjective;
+                    else
+                        berserk_close += ".";
+                    mprf(MSGCH_SOUND, berserk_close.c_str(), adj, noun);
+                }
+                else
+                    mprf(MSGCH_SOUND, "You slam the %s%s shut with a bang!", adj, noun);
+                noisy(15, you.pos());
             }
         }
         else if (one_chance_in(skill) && !silenced(you.pos()))
         {
-            mprf(MSGCH_SOUND, "As you close the %s%s, it creaks loudly!",
-                 adj, noun);
+            if (!door_close_creak.empty())
+                mprf(MSGCH_SOUND, door_close_creak.c_str(), adj, noun);
+            else
+                mprf(MSGCH_SOUND, "As you close the %s%s, it creaks loudly!",
+                     adj, noun);
             noisy(10, you.pos());
         }
         else
         {
-            const char* verb = you.airborne() ? "reach down and close"
-                                              : "close";
+            const char* verb;
+            if (you.airborne())
+            {
+                if (!door_airborne.empty())
+                    verb = door_airborne.c_str();
+                else
+                    verb = "You reach down and cloose the %s%s.";
+            }
+            else
+            {
+                if (!door_close_verb.empty())
+                   verb = door_close_verb.c_str();
+                else
+                    verb = "You close the %s%s";
+            }
 
-            mprf("You %s the %s%s.", verb, adj, noun);
+            mprf(verb, adj, noun);
         }
 
         std::vector<coord_def> excludes;
