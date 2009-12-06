@@ -3970,7 +3970,6 @@ static bool _initialise(void)
     TileNewLevel(newc);
 #endif
 
-    set_cursor_enabled(false);
     maybe_update_stashes();
 
     // This just puts the view up for the first turn.
