@@ -724,6 +724,16 @@ static bool _valid_monster_generation_location(
         return (false);
     }
 
+    // Check player proximity to avoid band members being placed
+    // close to the player erroneously.
+    // XXX: This is a little redundant with proximity checks in
+    // place_monster.
+    if (mg.proximity == PROX_AWAY_FROM_PLAYER
+        && distance(you.pos(), mg_pos) <= LOS_RADIUS_SQ)
+    {
+        return (false);
+    }
+
     // Don't generate monsters on top of teleport traps.
     // (How did they get there?)
     const trap_def* ptrap = find_trap(mg_pos);
