@@ -979,7 +979,6 @@ static std::string _level_description_string_hud()
     return short_name;
 }
 
-// For some odd reason, only redrawn on level change.
 void print_stats_level()
 {
     int ypos = 8;

@@ -437,7 +437,7 @@ void redraw_screen(void)
 
     bool note_status = notes_are_active();
     activate_notes(false);
-    new_level();
+    print_stats_level();
 #ifdef DGL_SIMPLE_MESSAGING
     update_message_status();
 #endif
