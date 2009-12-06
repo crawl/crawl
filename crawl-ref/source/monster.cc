@@ -3729,14 +3729,14 @@ void monsters::ghost_init()
 void monsters::uglything_init(bool only_mutate)
 {
     // If we're mutating an ugly thing, leave its experience level, hit
-    // dice and maximum hit points as they are.
+    // dice and maximum and current hit points as they are.
     if (!only_mutate)
     {
         hit_dice        = ghost->xl;
         max_hit_points  = ghost->max_hp;
+        hit_points      = max_hit_points;
     }
 
-    hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
     speed           = ghost->speed;

@@ -1,8 +1,5 @@
 /*
  *  File:       overmap.cc
- *  Idea:       allow player to make notes about levels. I don't know how
- *              to do this (I expect it will require some kind of dynamic
- *              memory management thing). - LH
  *  Summary:    Records location of stairs etc
  *  Written by: Linley Henzell
  */

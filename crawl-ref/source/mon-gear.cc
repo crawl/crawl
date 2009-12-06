@@ -382,9 +382,9 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item_race = MAKE_ITEM_ELVEN;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose_weighted(
-            30, WPN_SHORT_SWORD, 30, WPN_SABRE,
-            15, WPN_BOW,         15, WPN_HAND_CROSSBOW,
-            10, WPN_LONGBOW,
+            22, WPN_LONG_SWORD, 22, WPN_SHORT_SWORD, 17, WPN_SCIMITAR,
+            17, WPN_BOW,        17, WPN_HAND_CROSSBOW,
+            5,  WPN_LONGBOW,
             0);
         break;
 
@@ -424,8 +424,9 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_DEEP_ELF_SUMMONER:
         item_race = MAKE_ITEM_ELVEN;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_SHORT_SWORD, WPN_SABRE,
-                                       WPN_DAGGER,      WPN_WHIP,
+        item.sub_type  = random_choose(WPN_LONG_SWORD,  WPN_LONG_SWORD,
+                                       WPN_SHORT_SWORD, WPN_SABRE,
+                                       WPN_DAGGER,
                                        -1);
         break;
 
