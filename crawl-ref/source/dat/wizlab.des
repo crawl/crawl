@@ -839,7 +839,7 @@ COLOUR:     W = green
 :            .. " to an unknown beat.\n")
 # Changing door descriptions like this currently doesn't work, needs fixing.
 MARKER:     + = lua:props_marker { \
-              door_description_prefix="warning scrawled " \
+              door_description_noun="fleshy orifice", \
             }
 :           dgn.set_feature_desc_long("closed door", "A fleshy door.\n")
 :           dgn.set_feature_desc_long("open door", "A fleshy doorway.\n")
