@@ -557,6 +557,37 @@ std::vector<std::string> find_map_matches(const std::string &name)
     return (matches);
 }
 
+std::vector<map_def> find_maps_for_tag (const std::string tag, bool check_depth,
+                                          bool check_used)
+{
+    std::vector<map_def> maps;
+    level_id place = level_id::current();
+
+    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
+    {
+        map_def mapdef = vdefs[i];
+        if (mapdef.has_tag(tag)
+            && (!check_depth || !mapdef.has_depth()
+                 || mapdef.is_usable_in(place))
+            && (!check_used || vault_unforbidden(mapdef)))
+        {
+                maps.push_back(mapdef);
+        }
+    }
+
+    return (maps);
+}
+
+int weight_map_vector (std::vector<map_def> maps)
+{
+    int weights = 0;
+
+    for (std::vector<map_def>::iterator mi = maps.begin(); mi != maps.end(); ++mi)
+        weights += mi->weight;
+
+    return (weights);
+}
+
 struct map_selector {
 private:
     enum select_type

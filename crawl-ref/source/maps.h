@@ -41,6 +41,12 @@ void add_parsed_map(const map_def &md);
 
 std::vector<std::string> find_map_matches(const std::string &name);
 
+std::vector<map_def> find_maps_for_tag (const std::string tag,
+                                          bool check_depth = false,
+                                          bool check_used = true);
+
+int weight_map_vector (std::vector<map_def> maps);
+
 void read_maps();
 void read_map(const std::string &file);
 void run_map_preludes();
