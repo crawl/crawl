@@ -216,10 +216,6 @@ Exclusion
 
 Repulsion
 
-Preservation
-
-Conservation
-
 Inviolability
 %%%%
 # other armour properties (beside protection)
