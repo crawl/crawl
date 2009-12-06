@@ -32,8 +32,8 @@
 # Cigotuvi's Fleshworks
 #    threat: lumps, uglies, abominations
 #    loot:   tmut. potions, books, rMut, ?oSumm, \oDeath
-#    xp:     about 9000
-#    layout: organic, irregular, twisty, NO SQUARES, NO HARD CORNERS, 
+#    xp:     16000+
+#    layout: organic, irregular, twisty, NO SQUARES, NO HARD CORNERS,
 #            NOTHING THAT LOOKS PRETTY
 #    colour: lightred walls, red doors, magenta floor, yellow 'glass'
 #
@@ -49,8 +49,6 @@
 #    cupboards full of potions, confused monsters. 
 # Borgnjor's Mortuary: liches, miasma clouds, potions of decay, slaves that are
 #    having their life forces drained, vampire (knights, mages).
-# Cigotuvi's Chambers: "laboratory-esque", mutagenic fog machines, pulsating
-#    lumps and shining eyes in cages, ugly things in cages, degeneration.
 # Iskenderun's Mystic Tower: purple draconians, purple wizards with mystic
 #    blast, naga mages with mystic blast, purple fog and smoke outside windows,
 #    robes and cloaks of magic resistance as the loot.
@@ -88,6 +86,8 @@
 # We've currently got working vaults for Tukima and Erinya and Doroklohe.
 # The flavour messages for the portal vault require flavour, while the actual
 # portals themselves could do with an overhaul and some new ones.
+#
+# *MUST* make these look awesome in tiles, too.
 #
 ##
 
@@ -287,6 +287,12 @@ MARKER:     9 = lua:MonPropsMarker:new {description="A glistening silver machine
 :           dgn.set_feature_desc_short("dry fountain", "glistening fountain")
 :           dgn.set_feature_desc_long("dry fountain", "A pristine fountain. " ..
 :                                     "The only thing it lacks is water.\n")
+:           dgn.set_feature_desc_short("stone wall", "black marble wall")
+:           dgn.set_feature_desc_long("stone wall", "The marble glistens and shines. It certainly " ..
+:                                     "is beautiful!\n")
+:           dgn.set_feature_desc_short("Floor", "marble floor")
+:           dgn.set_feature_desc_long("Floor", "Where the walls are black marble, the floor is " ..
+:                                     "a white and silver, with shades of pink here and there.\n")
 :           dgn.set_feature_quote("A granite statue", mquote)
 :           wizlab_setup(_G, "Tukima's Studio")
 MAP
@@ -396,11 +402,16 @@ lua_marker("_", grow_marker)
 :           wizlab_setup(_G, "Erinya's Formal Garden")
 :           dgn.set_feature_desc_short("empty arch of ancient stone", 
 :                                      "rose-covered archway")
+:           dgn.set_feature_desc_long("empty arch of ancient stone",
+:                                "The roses look beautiful!\n")
 :           dgn.set_feature_desc_short("granite statue", "vine-covered statue")
 :           dgn.set_feature_desc_long("granite statue", "It looks almost like a " ..
 :                                     "monster made entirely from vines.\n")
 :           dgn.set_feature_desc_short("stone wall", "crumbing stone wall")
-:           dgn.set_feature_desc_long("stone wall", "It looks ancient.")
+:           dgn.set_feature_desc_long("stone wall", "It looks ancient.\n")
+:           dgn.set_feature_desc_short("Floor", "grass-covered ground")
+:           dgn.set_feature_desc_long("Floor", "Strewn with leaves and twigs that" ..
+:                       "crunch loudly underfoot, the grass is crisp and fresh.\n")
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
 ctttttttttttttttttttttttttttttttttttttttttttc
@@ -643,11 +654,13 @@ lua_marker("A", box_marker)
 }}
 :           dgn.set_feature_desc_short("rock wall", "strange rock wall")
 :           dgn.set_feature_desc_long("rock wall", "It is decorated with "
-:                                  .. "images you might see in a tomb.")
-:           dgn.set_feature_desc_short("stone wall", "highly decorated stone")
-:           dgn.set_feature_desc_long("stone wall", "It is covered with amazing"
-:                                  .. " images and art.")
-:           wizlab_setup(_G, "Doroklohe's Forbidden Tomb")
+:                                  .. "images you might see in a tomb.\n")
+:           dgn.set_feature_desc_short("stone wall", "highly decorated stone wall")
+:           dgn.set_feature_desc_long("stone wall", "It is covered with disturbing"
+:                                  .. ", horrifying images.\n")
+:           dgn.set_feature_desc_short("Floor", "rough-hewn floor")
+:           dgn.set_feature_desc_long("Floor", "It is rough and uneven in places.\n")
+:           wizlab_setup(_G, "Doroklohe's Tomb")
 MAP
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^________________...........________________^
@@ -703,7 +716,7 @@ COLOUR:     =c = magenta, w = poison, n = blue
 LFLOORCOL:  white
 :           dgn.set_feature_desc_short("deep water", "toxic goo")
 :           dgn.set_feature_desc_long("deep water",  "It stinks.  Drinking it "
-:                    .. "might seem to be a good idea after a bottle or two.")
+:                    .. "might seem to be a good idea after a bottle or two.\n")
 ITEM:       potion of confusion w:20 / any potion
 MAP
           ccccccc
@@ -741,11 +754,8 @@ TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 MAP
 ENDMAP
 
-# NOTES
-###
-#
-# 
-# ~
+##############################################################################
+# Cigotuvi's Fleshworks (by Mu.)
 #
 # Cigotuvi has mastered the art of manipulating flesh, and his lab is a
 # living testament to this fact, seeming like the interior of some
@@ -761,14 +771,6 @@ ENDMAP
 # pulsating lumps and the occasional ugly thing.
 # The western half of his lab is full of abominations, including the terrible
 # "Cigotuvi's Monster".
-#
-# ~
-#
-
-
-###############################################################################
-# Cigotuvi's Fleshworks (by Mu.)
-#
 NAME:       wizlab_cigotuvi
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -834,7 +836,7 @@ COLOUR:     W = green
 :           dgn.set_feature_desc_short("translucent rock wall", "thin membrane")
 :           dgn.set_feature_desc_long("translucent rock wall", "This strange"
 :            .. " membrane is thin enough to see through.\n")
-:           dgn.set_feature_desc_short("Floor", "Pulsating floor")
+:           dgn.set_feature_desc_short("Floor", "pulsating floor")
 :           dgn.set_feature_desc_long("Floor", "This slick floor seems to pulse"
 :            .. " to an unknown beat.\n")
 # Changing door descriptions like this currently doesn't work, needs fixing.
@@ -850,9 +852,8 @@ COLOUR:     W = green
 :              door_verb_open="You part the %s%s.",
 :              door_verb_close="You squeeze the %s%s shut."
 :            })
-:           wizlab_setup(_G, "Cigotuvi's Fleshworks")
 KITEM:      $ = potion of degeneration / potion of decay / \
-           potion of mutation / w:3 potion of strong poison / \
+            potion of mutation / w:3 potion of strong poison / \
             w:2 potion of poison / w:5 potion of healing / \
             w:3 potion of heal wounds / w:1 potion of cure mutation
 KITEM:      * = gold
@@ -861,6 +862,7 @@ KITEM:      : = any book / acquire book
 KITEM:      | = staff of death
 KITEM:      l = scroll of summoning
 NSUBST:     L = 1:| / *:l
+:           wizlab_setup(_G, "Cigotuvi's Fleshworks")
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
 ccLLLcccc.cccccccccccAccccccccccccWWWW.u:cccc
@@ -984,6 +986,8 @@ ENDMAP
 
 ###############################################################################
 # Wucad Mu's Monastery
+#
+# TODO: Rebrand everything properly!
 NAME:       wizlab_wucad
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
