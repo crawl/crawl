@@ -2582,11 +2582,7 @@ int mons_place(mgen_data mg)
         if (!(mg.flags & MG_FORCE_BEH) && !crawl_state.arena)
             player_angers_monster(creation);
 
-        if (crawl_state.arena)
-            behaviour_event(creation, ME_EVAL);
-        else
-            // Make summoned being aware of player's presence.
-            behaviour_event(creation, ME_ALERT, MHITYOU);
+        behaviour_event(creation, ME_EVAL);
     }
 
     return (mid);
