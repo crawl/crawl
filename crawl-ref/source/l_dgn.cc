@@ -928,6 +928,10 @@ bool _valid_border_feat (dungeon_feature_type feat)
                || feat == DNGN_SHALLOW_WATER || feat == DNGN_FLOOR));
 }
 
+// XXX: Currently, this is hacked so that map_def->border_fill_type is marsalled
+//      when the maps are stored. This relies on the individual map Lua prelude
+//      being executed whenever maps are loaded and verified, which means that
+//      the next time the map is loaded, border_fill_type is already stored.
 static int lua_dgn_set_border_fill_type (lua_State *ls)
 {
     MAP(ls, 1, map);
