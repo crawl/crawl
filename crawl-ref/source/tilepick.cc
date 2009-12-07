@@ -1058,6 +1058,8 @@ int tileidx_monster(const monsters *mons, bool detected)
         ch |= TILE_FLAG_POISON;
     if (mons->has_ench(ENCH_STICKY_FLAME))
         ch |= TILE_FLAG_FLAME;
+    if (mons->berserk())
+        ch |= TILE_FLAG_BERSERK;
 
     if (mons->friendly())
         ch |= TILE_FLAG_PET;
@@ -2914,7 +2916,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_DEATHS_DOOR:              return TILEG_DEATHS_DOOR;
     case SPELL_DEATH_CHANNEL:            return TILEG_DEATH_CHANNEL;
     case SPELL_REAPING_AMMUNITION:       return TILEG_TODO;
-  
+
     // Transmutation
     case SPELL_STICKS_TO_SNAKES:         return TILEG_STICKS_TO_SNAKES;
     case SPELL_SPIDER_FORM:              return TILEG_SPIDER_FORM;
