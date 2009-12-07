@@ -3174,7 +3174,7 @@ static void _place_traps(int level_number)
 
                 // If we get shaft a second time, turn it into an alarm trap, or
                 // if we got nothing.
-                if (ts.type == TRAP_SHAFT || ts.type>= NUM_TRAPS)
+                if (ts.type == TRAP_SHAFT || ts.type >= NUM_TRAPS)
                     ts.type = TRAP_ALARM;
             }
         }
