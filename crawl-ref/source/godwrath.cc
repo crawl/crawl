@@ -1272,8 +1272,8 @@ static bool _tso_holy_revenge()
 
     // TSO watches evil god worshippers more closely.
     if (!is_good_god(you.religion)
-        && ((is_evil_god(you.religion) && one_chance_in(3))
-            || one_chance_in(4)))
+        && ((is_evil_god(you.religion) && one_chance_in(6))
+            || one_chance_in(8)))
     {
         const char *revenge;
 
