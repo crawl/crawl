@@ -201,8 +201,6 @@ Defence by Offence
 
 Offence
 
-Protection
-
 Reinforcement
 
 Expedience
@@ -355,8 +353,6 @@ Eggplant
 Turnip
 
 Whelk
-
-#fungi
 
 Mushroom
 

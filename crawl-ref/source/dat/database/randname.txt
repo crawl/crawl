@@ -21,7 +21,7 @@
 #  o  rand_all.txt  - keywords used for jewellery
 #                     as well as for all three types
 #  o  randbook.txt  - keywords used for randart books
-#  o  hardcoded (randart.cc)
+#  o  hardcoded (artefact.cc)
 #
 # The latter allows the use of phrases elsewhere defined in Crawl. The list of
 # hardcoded keywords is as follows:
@@ -36,7 +36,8 @@
 # fact, the god will not be picked entirely at random as there are some
 # restrictions to make sure that e.g. no good god is chosen for evil weapons,
 # that Beogh isn't matched with orc slaying, or that Zin doesn't get picked for
-# randarts with mutagenic properties.
+# randarts with mutagenic properties. Also, if this keyword appears on a divine
+# item gift it will always be replaced by the god doing the gifting.
 #
 # Randart names may only have a maximum length of 25 symbols (spaces included).
 # This comparison takes place after all replacements have been taken care of,
