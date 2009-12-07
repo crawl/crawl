@@ -149,7 +149,7 @@ static std::string _get_version_changes(void)
         help = buf;
 
         // Give up if you encounter an older version.
-        if (help.find("Stone Soup 0.4") != std::string::npos)
+        if (help.find("Stone Soup 0.5") != std::string::npos)
             break;
 
         if (help.find("Highlights") != std::string::npos)
@@ -184,8 +184,7 @@ static std::string _get_version_changes(void)
     {
         result += EOL;
         result += "For a more complete list of changes, see changelog.txt "
-                  "in the " EOL
-                  "/docs folder.";
+                  "in the /docs folder.";
     }
     else
     {
@@ -219,9 +218,9 @@ static void _print_version(void)
                               "                           Esc exits.]"));
 #endif
 
-    cmd_version.add_text(_get_version_information());
-    cmd_version.add_text(_get_version_features());
-    cmd_version.add_text(_get_version_changes());
+    cmd_version.add_text(_get_version_information(), true);
+    cmd_version.add_text(_get_version_features(), true);
+    cmd_version.add_text(_get_version_changes(), true);
 
     std::string fname = "key_changes.txt";
     // Read in information about changes in comparison to the latest version.
@@ -259,17 +258,20 @@ static void _print_version(void)
                 else
                     break;
             }
+            std::string text;
             if (first)
             {
                 // Highlight the first line (title).
-                std::string text  = "<w>";
-                            text += buf;
-                            text += "</w>";
-                cmd_version.add_text(text);
+                text  = "<w>";
+                text += buf;
+                text += "</w>";
                 first = false;
             }
             else
-                cmd_version.add_text(buf);
+                text = buf;
+
+            text += EOL;
+            cmd_version.add_text(text);
         }
         fclose(fp);
     }
@@ -1706,7 +1708,7 @@ static bool _find_description(bool &again, std::string& error_inout)
         std::sort(key_list.begin(), key_list.end());
 
     // For tiles builds use a tiles menu to display monsters.
-    const bool text_only = 
+    const bool text_only =
 #ifdef USE_TILE
         !(doing_mons || doing_features || doing_spells);
 #else

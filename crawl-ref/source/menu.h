@@ -534,7 +534,7 @@ public:
     virtual void add_item_formatted_string(const formatted_string& s,
                                            int hotkey = 0);
     virtual void add_item_string(const std::string& s, int hotkey = 0);
-    virtual void add_text(const std::string& s);
+    virtual void add_text(const std::string& s, bool new_line = false);
     virtual bool jump_to_hotkey( int keyin );
     virtual ~formatted_scroller();
 protected:
