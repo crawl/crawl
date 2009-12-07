@@ -3603,8 +3603,27 @@ static int _place_uniques(int level_number, char level_type)
 
     int num_placed = 0;
 
-    while (coinflip())
+    // Magic numbers for dpeg's unique system.
+    int A = 3;
+    int B = 5;
+    while (one_chance_in(A))
     {
+        // In dpeg's unique placement system, chances is always 1 in A of even
+        // starting to place a unique; reduced if there are less uniques to be
+        // placed or available. Then there is a chance of uniques_available /
+        // B; this only triggers on levels that have less than B uniques to be
+        // placed.
+        float this_chance = float(random2(100)) / 100.0;
+
+        std::vector<map_def> uniques_available =
+                                find_maps_for_tag("place_unique", true, true);
+
+        float unique_chance = float(std::min(B,
+                                   int(uniques_available.size()))) / float(B);
+
+        if (this_chance >= unique_chance)
+            break;
+
         const map_def *uniq_map = random_map_for_tag("place_unique", true);
 
         if (!uniq_map)
