@@ -3613,15 +3613,10 @@ static int _place_uniques(int level_number, char level_type)
         // placed or available. Then there is a chance of uniques_available /
         // B; this only triggers on levels that have less than B uniques to be
         // placed.
-        float this_chance = float(random2(100)) / 100.0;
-
         std::vector<map_def> uniques_available =
                                 find_maps_for_tag("place_unique", true, true);
 
-        float unique_chance = float(std::min(B,
-                                   int(uniques_available.size()))) / float(B);
-
-        if (this_chance >= unique_chance)
+        if (random2(B) >= min(B, uniques_available.size()))
             break;
 
         const map_def *uniq_map = random_map_for_tag("place_unique", true);
