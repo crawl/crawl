@@ -2509,6 +2509,12 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->flags = flags;
     monster->god   = god;
 
+    // Forget various speech/shout Lua functions.
+    monster->props.erase("speech_key");
+    monster->props.erase("speech_prefix");
+    monster->props.erase("speech_func");
+    monster->props.erase("shout_func");
+
     // Keep spells for named monsters, but don't override innate ones
     // for dragons and the like. This means that Sigmund polymorphed
     // into a goblin will still cast spells, but if he ends up as a

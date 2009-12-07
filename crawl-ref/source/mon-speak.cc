@@ -15,8 +15,10 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "cluautil.h"
 #include "database.h"
 #include "debug.h"
+#include "dlua.h"
 #include "ghost.h"
 #include "message.h"
 #include "mon-stuff.h"
@@ -558,8 +560,43 @@ bool mons_speaks(monsters *monster)
     }
     else
     {
+        if (monster->props.exists("speech_func"))
+        {
+#ifdef DEBUG_MONSPEAK
+            mpr("Trying Lua function for monster speech", MSGCH_DIAGNOSTICS);
+#endif
+            lua_stack_cleaner clean(dlua);
 
-        if (monster->props.exists("speech_key"))
+            dlua_chunk &chunk = monster->props["speech_func"];
+
+            if (!chunk.load(dlua))
+            {
+                push_monster(dlua, monster);
+                dlua.callfn(NULL, 1, 1);
+                dlua.fnreturns(">s", &msg);
+
+                // __NONE means to be silent, and __NEXT means to try the next
+                // method of getting a speech message.
+                if (msg == "__NONE")
+                {
+#ifdef DEBUG_MONSPEAK
+                    mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
+#endif
+                    return (false);
+                }
+                if (msg == "__NEXT")
+                    msg.clear();
+            }
+            else
+            {
+                mprf(MSGCH_ERROR,
+                     "Lua speech function for monster '%s' didn't load: %s",
+                     monster->full_name(DESC_PLAIN).c_str(),
+                     dlua.error.c_str());
+            }
+        }
+
+        if (msg.empty() && monster->props.exists("speech_key"))
         {
             msg = _get_speak_string(prefixes,
                                      monster->props["speech_key"].get_string(),

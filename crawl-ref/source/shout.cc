@@ -7,8 +7,10 @@
 
 #include "shout.h"
 
+#include "cluautil.h"
 #include "coord.h"
 #include "database.h"
+#include "dlua.h"
 #include "env.h"
 #include "ghost.h"
 #include "jobs.h"
@@ -148,7 +150,37 @@ void handle_monster_shouts(monsters* monster, bool force)
     else
         suffix = " unseen";
 
-    msg = getShoutString(key, suffix);
+    if (monster->props.exists("shout_func"))
+    {
+        lua_stack_cleaner clean(dlua);
+
+        dlua_chunk &chunk = monster->props["shout_func"];
+
+        if (!chunk.load(dlua))
+        {
+            push_monster(dlua, monster);
+            clua_pushcxxstring(dlua, suffix);
+            dlua.callfn(NULL, 2, 1);
+            dlua.fnreturns(">s", &msg);
+
+            // __NONE means to be silent, and __NEXT or __DEFAULT means to try
+            // the next method of getting a shout message.
+            if (msg == "__NONE")
+                return;
+            if (msg == "__DEFAULT" || msg == "__NEXT")
+                msg.clear();
+        }
+        else
+        {
+            mprf(MSGCH_ERROR,
+                 "Lua shout function for monster '%s' didn't load: %s",
+                 monster->full_name(DESC_PLAIN).c_str(),
+                 dlua.error.c_str());
+        }
+    }
+
+    if (msg.empty())
+        msg = getShoutString(key, suffix);
 
     if (msg == "__DEFAULT" || msg == "__NEXT")
         msg = getShoutString(default_msg_key, suffix);
