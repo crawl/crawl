@@ -23,12 +23,6 @@ typedef unsigned short screen_buffer_t;
 
 char getche(void);
 
-void message_out(int *mline, int colour, const char *str, int firstcol = 0);
-void clear_message_window();
-
-int get_number_of_lines();
-int get_number_of_cols();
-
 int getch_ck(void);
 int clrscr(void);
 int cprintf(const char *format,...);

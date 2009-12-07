@@ -387,69 +387,10 @@ void sighup_save_and_exit()
 
 #endif // USE_UNIX_SIGNALS
 
-static WINDOW *Message_Window;
-static void setup_message_window()
-{
-    Message_Window = newwin( crawl_view.msgsz.y, crawl_view.msgsz.x,
-                             crawl_view.msgp.y - 1, crawl_view.msgp.x - 1 );
-    if (!Message_Window)
-    {
-        if (crawl_state.need_save)
-            save_game(true);
-
-        // Never reaches here unless the game didn't need saving.
-        end(1, false, "Unable to create message window!");
-    }
-
-    scrollok(Message_Window, true);
-    idlok(Message_Window, true);
-}
-
 static void unix_handle_terminal_resize()
 {
     unixcurses_shutdown();
     unixcurses_startup();
-}
-
-void clear_message_window()
-{
-    (void)wattrset( Message_Window, curs_fg_attr(LIGHTGREY) );
-    werase( Message_Window );
-    refresh();
-    wrefresh( Message_Window );
-}
-
-void message_out(int *which_line, int color, const char *s, int firstcol)
-{
-    (void)wattrset( Message_Window, curs_fg_attr(color) );
-
-    if (!firstcol)
-        firstcol = Options.delay_message_clear? 1 : 0;
-    else
-        firstcol--;
-
-    while (*which_line >= crawl_view.msgsz.y)
-    {
-        int x, y;
-        getyx(Message_Window, y, x);
-        scroll(Message_Window);
-        wmove(Message_Window, y - 1, x);
-        (*which_line)--;
-    }
-
-    wmove(Message_Window, *which_line, firstcol);
-    waddstr_with_altcharset(Message_Window, s);
-
-    // Fix stdscr cursor to same place as Message_Window cursor. This
-    // is necessary because when reading input we use stdscr.
-    {
-        int x, y;
-        getyx(Message_Window, y, x);
-        move(y + crawl_view.msgp.y - 1, crawl_view.msgp.x - 1 + x);
-    }
-
-    refresh();
-    wrefresh(Message_Window);
 }
 
 static void unixcurses_defkeys( void )
@@ -583,7 +524,6 @@ void unixcurses_startup( void )
     scrollok(stdscr, FALSE);
 
     crawl_view.init_geometry();
-    setup_message_window();
 
     set_mouse_enabled(false);
 }
@@ -812,16 +752,6 @@ void clear_to_end_of_screen(void)
     textcolor( LIGHTGREY );
     textbackground( BLACK );
     clrtobot();
-}
-
-int get_number_of_lines(void)
-{
-    return (LINES);
-}
-
-int get_number_of_cols(void)
-{
-    return (COLS);
 }
 
 void get_input_line_from_curses( char *const buff, int len )

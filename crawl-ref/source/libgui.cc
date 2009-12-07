@@ -312,19 +312,9 @@ int clrscr()
     return 0;
 }
 
-void message_out(int *which_line, int colour, const char *s, int firstcol)
-{
-    tiles.message_out(which_line, colour, s, firstcol);
-}
-
 void cgotoxy(int x, int y, int region)
 {
     tiles.cgotoxy(x, y, region);
-}
-
-void clear_message_window()
-{
-    tiles.clear_message_window();
 }
 
 void delay(int ms)
