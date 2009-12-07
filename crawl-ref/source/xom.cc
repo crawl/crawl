@@ -13,6 +13,9 @@
 #include "branch.h"
 #include "coordit.h"
 #include "database.h"
+#ifdef WIZARD
+#include "dbg-util.h"
+#endif
 #include "delay.h"
 #include "directn.h"
 #include "effects.h"
@@ -3836,13 +3839,22 @@ static const char* _xom_effect_to_name(int effect)
     return (result.c_str());
 }
 
+#ifdef WIZARD
 // Loops over the entire piety spectrum and calls xom_acts() multiple
 // times for each value, then prints the results into a file.
 // TODO: Allow specification of niceness, tension, boredness, and repeats.
 void debug_xom_effects()
 {
+    const int N = debug_prompt_for_int("How many iterations? ", true);
+
+    if (N == 0)
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
     // Repeat N times.
-    const int N = 10;
+//     const int N = 10;
 
     FILE *ostat = fopen("xom_debug.stat", "a");
     if (!ostat)
@@ -3866,6 +3878,8 @@ void debug_xom_effects()
         fprintf(ostat, "You are under Xom's penance!\n");
     else if (_xom_is_bored())
         fprintf(ostat, "Xom is BORED.\n");
+    fprintf(ostat, "\nRunning %d times through entire mood cycle.\n", N);
+    fprintf(ostat, "---- OUTPUT EFFECT PERCENTAGES ----\n");
 
     std::vector<int>               mood_effects;
     std::vector<std::vector<int> > all_effects;
@@ -3979,4 +3993,6 @@ void debug_xom_effects()
     you.piety    = real_piety;
     you.religion = real_god;
 }
+#endif // WIZARD
+
 #endif
