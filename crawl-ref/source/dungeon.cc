@@ -3161,7 +3161,9 @@ static void _place_traps(int level_number)
         if (tries == 200)
             break;
 
-        ts.type = random_trap_for_place(level_number);
+        while (ts.type >= NUM_TRAPS)
+            ts.type = random_trap_for_place(level_number);
+
         if (ts.type == TRAP_SHAFT && level_number <= 7)
         {
             // Disallow shaft construction in corridors!
