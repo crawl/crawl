@@ -30,6 +30,7 @@ morgue
 *.map
 map.dump
 mapgen.log
+*.stat
 
 # Tile copied files
 /source/dat/tiles/dngn.png
