@@ -213,7 +213,7 @@ Branch branches[] = {
       NULL,
       false, true, GREEN, LIGHTGREEN,
       mons_pitslime_rare, mons_pitslime_level,
-      NULL, NULL, NULL, NULL,
+      NULL, random_trap_slime, NULL, NULL,
       5, 'M', false, true },
 
     { BRANCH_SNAKE_PIT, BRANCH_LAIR, 5, 7, 0, 0,
