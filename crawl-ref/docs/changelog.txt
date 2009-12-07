@@ -46,7 +46,7 @@ Items
 * New ammunition brands: dispersal, electric, exploding, penetrating, reaping.
 * Added amulet of the guardian spirit, making you take damage from mp, not hp.
 * Lowered gold dragon armour's AC value.
-* Post-berserk exhaustion cancels Haste, even with an amulet of remove slowing.
+* Post-berserk exhaustion cancels Haste, even with an amulet of resist slowing.
 * Armour acquirement is more likely to fill secondary slots.
 * Book acquirement doesn't give manuals to spellcasting specialists anymore.
 * Added wands as an acquirement option.
