@@ -1,78 +1,142 @@
 Stone Soup 0.6
 --------------
-* Three new gods:
-  * Jiyva, god of slime.
-  * Fedhas, god of plants.
-  * Cheibriados, god of slowness.
-* The main temple level (Ecumenical Temple branch) now no longer
-  necessarily holds altars for all of the gods.  If the main temple
-  chosen for a game doesn't have enough altars for all the gods, then
-  some altars are randomly chosen to appear in the dungeon between
-  levels 2 and 9 in "overflow" temples.
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+Also, list and features are still a work in progress.
+
+Breaks saves compatibility.
+
+
+0.6 Highlights
+--------------
+* Three new gods.
+* Altars for dungeon gods may now appear on levels 2 to 9 instead of the Temple.
+* New water based branch: the Shoals, sometimes replacing the Swamp.
+* Strength has a much greater effect on carrying capacity.
+* Nerf Summon Small Mammals, amulet of resist slowing, and gold dragon armour.
+* Slime creatures and ugly things are more interesting and dangerous.
+* Many cool new monsters, portal vaults and ammunition brands.
+
+Gods
+----
+* New god: Jiyva, god of slime.
+* New god: Fedhas, god of plants.
+* New god: Cheibriados, god of slowness.
+* Vehumet reduces mana cost and increases ranges of Conjurations spells.
+* Kikubaaqudgha gives torment resistance, hands out corpses and the Pain brand.
+* Ecumenical Temple may randomly contain 3 to 14 altars.
+* Dungeon gods not included in Ecumenical Temple get guaranteed altar on D:2-9.
+* Sacrifice corpses with prayer ('p') rather than prayer and chop up ('pc').
+
+Levels
+------
+* New branch: the Shoals, with a 50% chance of replacing the Swamp.
 * Shorten Lair to eight levels.
-* New portal vaults: Bailey and Trove.
+* New portal vaults: Bailey, Trove, Volcanoes.
+* Most escape hatches are replaced by (single-use) shafts.
+* New wall type "trees".  You can see through one tree, but two trees
+  in a row block vision.
+* Many new vaults.
+
+Items
+-----
 * Added scroll of silence.
 * Added potions of brilliance and agility.
+* Added shields of reflection.
+* New ammunition material: silver, steel.
+* New ammunition brands: dispersal, electric, exploding, penetrating, reaping.
+* Added amulet of the guardian spirit, making you take damage from mp, not hp.
+* Lowered gold dragon armour's AC value.
+* Post-berserk exhaustion cancels Haste, even with an amulet of remove slowing.
+* Armour acquirement is more likely to fill secondary slots.
+* Book acquirement doesn't give manuals to spellcasting specialists anymore.
+* Added wands as an acquirement option.
+* Weapons of holy wrath cannot be cursed.
+* Improvements to whips and demon whips; the latter can now be blessed by TSO.
+* Reduce the chances for artefacts with only one stat property.
+* Reduced weight of large rocks.
+* More generous stacking of ammunition.
+
+Monsters
+--------
+* New monster: ballistomycete, spawned by and spawning giant spores.
+* New monster: giant leech, a worm with a vampiric attack.
+* New monster: golden eye, can blink and cause confusion.
+* New monster: toadstool, growing on corpses.
+* New monster "bush":
+  * Two or more in a row block vision.
+  * You can fire ammo and spells through them.
+  * If they catch on fire, fire may spread to adjacent bushes.
+* Several new monsters for the Shoals.
+* (Very) ugly things get random resistances and attack flavours.
+* Slime creatures can merge to become larger and more powerful.
+* All spectral things can use stairs again.
 * Several new uniques.
-* Swapped Kobolds' aptitudes for Bows and Crossbows.
-* Overhaul Wanderers.
-* Healers now start unarmed.
+* Detected secret doors now remain unknown to stupid monsters.
+* Hungry ghosts eat corpses.
+* Bears can go berserk.
+* Bashing plants or fungi will only train Fighting/Unarmed Combat up to level 1.
+* Upgrade equipment of Sonja, Psyche and Terence.
+* Jessica casts Pain and is considered evil by the good gods.
+
+Characters
+----------
+* New profession: Arcane Marksman, combining Crusader, Warper and Hunter.
+* Strength effect on carrying capacity doubled.
+* Base carrying capacity depends on weight of the player species.
+* Demonspawn have been overhauled, mutations no longer depend on skill sets.
+* Wanderers have been overhauled and are much stronger now.
 * Starting stats and equipment are no longer assigned randomly.
 * Gain of Health and Magic Points on level up is no longer random.
 * Round all aptitudes to multiples of 10.
+* Miasma resistance is no longer tied to negative energy resistance; rotting
+  resistance now implies both disease and miasma resistance.
+* Hunter starting ammunition starts out at +1, leading to decreased mulching.
+* Healers now start unarmed.
+* Swapped Kobolds' aptitudes for Bows and Crossbows.
+
+Interface
+---------
 * New memorisation interface.
 * Autotravel doesn't cut corners and tries to avoid ambushes.
 * Exclusions are displayed in the overview screen ('Ctrl-O' command).
 * Autoexclusions get removed again once the trigger monster is no longer there.
 * Dangerous clouds that are generated by the dungeon itself ("fog machines")
   generate autoexclusions when seen by player.
-* Armour acquirement is more likely to fill secondary slots.
-* Book acquirement doesn't give manuals to spellcasting specialists anymore.
-* Added wands as an acquirement option.
-* Detected secret doors now remain unknown to stupid monsters.
-* Let toadstools grow on corpses.
-* Hungry ghosts eat corpses.
-* All spectral things can use stairs again.
-* (Very) ugly things get random resistances and attack flavours.
-* Abort some teleportation attempts with -TELE without losing the turn.
-* Weapons of holy wrath cannot be cursed.
-* Miasma resistance is no longer tied to negative energy resistance; rotting
-  resistance now implies both disease and miasma resistance.
-* Post-berserk exhaustion cancels Haste, even with an amulet of remove slowing.
-* Controlled blink causes glowing.
-* Lowered gold dragon armour's AC value.
-* Bears can go berserk.
-* Bashing plants or fungi will only train Fighting/Unarmed Combat up to level 1.
-* Reduce the chances for artefacts with only one stat property.
+* Allow viewing off-level maps from the 'X' overmap with '[' and ']'.
+* Level features (e.g. stairs, gates, altars) are listed in the 'X' map.
+* delay_message_clear defaults to true.
 * Add !a inscription to prompt when attacking with this wielded item.
-* Upgrade equipment of Sonja, Psyche and Terence.
-* Jessica casts Pain and is considered evil by the good gods.
-* Unrandarts and fixedarts share the same, cleaner coding structure.
-* More vaults.
-* Limit Summon Small Mammals to a maximum of two mammals per casting.
-* Call Canine Familiar only calls friendly canines.
-* Add some tiles "animations" whenever the screen is redrawn.
-* Sacrifice corpses with prayer ('p') rather than prayer and chop up ('pc').
-* Improvements to whips and demon whips; the latter can now be blessed by TSO.
-* Reduced weight of large rocks.
-* Base carrying capacity depends on weight of the player species.
-* Strength effect on carrying capacity doubled.
-* More generous stacking of ammunition.
-* Tiles: re-added doll editing screen ('-' command).
-* Tiles: added clickable spells display (toggle with '_' command).
-* Tiles: modifier keys for left-clicking on monsters or the player:
-  * Shift-Left-Click: fire quivered ammo at monster.
-  * Ctrl-Left-Click: cast spell at target (monster or player)
-  * Alt-Left-Click: zap wand at target (monster or player)
+* Abort some teleportation attempts with -TELE without losing the turn.
+* Food and potions are never autoassigned to slots 'e' and 'y', respectively.
 * Added option explore_delay, which can be used to make the delay
   between auto-explore moves different from the delay between other
   types of travel moves.
-* New wall type "trees".  You can see through one tree, but two trees
-  in a row block vision.
-* New monster "bush":
-  * Two or more in a row block vision.
-  * You can fire ammo and spells through them.
-  * If they catch on fire, fire may spread to adjacent bushes.
+
+Spells
+------
+* Limit Summon Small Mammals to a maximum of two mammals per casting.
+* Summon Small Mammals doesn't summon green or orange rats anymore.
+* Tukima's Dance weapon strength depends on spell power and weapon weight.
+* Summon Wraiths is replaced by Haunt, a smite-targetted summoning spell.
+* Call Canine Familiar only calls friendly canines.
+* Controlled blink causes glowing.
+
+Tiles
+-----
+* Re-added doll editing screen ('-' command).
+* Added clickable spells display (toggle with '_' command).
+* New modifier keys for left-clicking on monsters or the player:
+  * Shift-Left-Click: fire quivered ammo at monster.
+  * Ctrl-Left-Click: cast spell at target (monster or player)
+  * Alt-Left-Click: zap wand at target (monster or player)
+* Add some "animations" whenever the screen is redrawn.
+
+Code cleanup
+------------
+* Overhauled and improved the line of sight code.
+* Many new lua wrappers to make lua much more powerful in e.g. map creation.
+* Unrandarts and fixedarts share the same, cleaner coding structure.
+
 
 Stone Soup 0.5.2 (20091008)
 ---------------------------

@@ -318,6 +318,8 @@ void cio_init()
     init_libdos();
 #endif
 
+    set_cursor_enabled(false);
+
     crawl_view.init_geometry();
 
 #ifdef USE_TILE
