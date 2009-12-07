@@ -88,13 +88,22 @@ MAP
 1
 ENDMAP
 
-NAME:   uniq_prince_ribbit
-DEPTH:  4-7, 8-9, Lair:1-3
-WEIGHT: 100
-TAGS:   place_unique
+NAME:   uniq_prince_ribbit1
+DEPTH:  4-7, 8-9, !Lair
+WEIGHT: 70
+TAGS:   place_unique uniq_ribbit
 MONS:   Prince Ribbit
 MAP
 1
+ENDMAP
+
+NAME:   uniq_prince_ribbit2
+DEPTH:  Lair:1-3
+WEIGHT: 30
+TAGS:   place_unique uniq_ribbit
+MONS:   Prince Ribbit, blink frog band
+MAP
+12
 ENDMAP
 
 NAME:   uniq_purgy
