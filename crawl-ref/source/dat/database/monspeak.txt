@@ -1040,11 +1040,14 @@ _player_ghost_rare_
 @The_monster@ whispers, "It is all a dream - a grotesque and foolish dream."
 
 @The_monster@ whispers, "Soon you will have time, lots of time..."
+
+@The_monster@ @wails@, "You must not fail where I succeded!"
 ## END player ghost ##
 #######################################
 # Unique monsters
 #######################################
 %%%%
+############ AIZUL ### Renegade Guardian Naga Crusader whose vault got raided
 Aizul
 
 @_Aizul_common_@
@@ -2034,7 +2037,7 @@ Frances
 
 @_mercenary_guard_@
 %%%%
-# A wizard looking for body-parts as spell components
+############ FRANCIS ### A wizard looking for body-parts as spell components
 Francis
 
 @_Francis_common_@
@@ -2208,46 +2211,6 @@ _Grum_rare_
 @The_monster@ says, "You're dog chow, @player_name@!"
 ## END Grum ##
 %%%%
-############ IJYB ### A twisted goblin
-Ijyb
-
-@_Ijyb_common_@
-
-w:5
-@_Ijyb_rare_@
-
-%%%%
-_Ijyb_common_
-
-VISUAL:@The_monster@ grins evilly.
-
-@The_monster@ screams @at_foe@, "Die!"
-
-@The_monster@ screams @at_foe@, "Me kill you!"
-
-@The_monster@ screams @at_foe@, "Me stronger than you!"
-
-@The_monster@ screams @at_foe@, "It's all mine!"
-
-@The_monster@ screams @at_foe@, "Get away!"
-
-@The_monster@ screams @at_foe@, "Level is mine! All mine!"
-
-@The_monster@ screams @at_foe@, "You nasty! Big nasty!"
-%%%%
-_Ijyb_rare_
-
-@The_monster@ screams @at_foe@, "I cut your head off!"
-
-@The_monster@ screams @at_foe@, "I dance on your bones!"
-
-@The_monster@ screams @at_foe@, "Me very upset!"
-
-@The_monster@ screams @at_foe@, "No! No, no, no, no!"
-
-@The_monster@ screams @at_foe@, "I no like you!"
-## END Ijyb ##
-%%%%
 ############ HAROLD ### A middle aged man, hired to kill you. He is in a hurry.
 Harold
 
@@ -2290,6 +2253,46 @@ _Harold_rare_
 
 @The_monster@ says @to_foe@, "Mine is not to reason why.  Mine's to do, yours to die."
 ## END Harold ##
+%%%%
+############ IJYB ### A twisted goblin
+Ijyb
+
+@_Ijyb_common_@
+
+w:5
+@_Ijyb_rare_@
+
+%%%%
+_Ijyb_common_
+
+VISUAL:@The_monster@ grins evilly.
+
+@The_monster@ screams @at_foe@, "Die!"
+
+@The_monster@ screams @at_foe@, "Me kill you!"
+
+@The_monster@ screams @at_foe@, "Me stronger than you!"
+
+@The_monster@ screams @at_foe@, "It's all mine!"
+
+@The_monster@ screams @at_foe@, "Get away!"
+
+@The_monster@ screams @at_foe@, "Level is mine! All mine!"
+
+@The_monster@ screams @at_foe@, "You nasty! Big nasty!"
+%%%%
+_Ijyb_rare_
+
+@The_monster@ screams @at_foe@, "I cut your head off!"
+
+@The_monster@ screams @at_foe@, "I dance on your bones!"
+
+@The_monster@ screams @at_foe@, "Me very upset!"
+
+@The_monster@ screams @at_foe@, "No! No, no, no, no!"
+
+@The_monster@ screams @at_foe@, "I no like you!"
+## END Ijyb ##
 %%%%
 ############ ILSUIW ### a pretty merfolk witch
 Ilsuiw
@@ -2491,7 +2494,7 @@ SPELL:@The_monster@ smites.
 
 @The_monster@ declares, "When I'm finished with you, I will take on the gods!"
 
-@The_monster@ queries, "My people built me a pyramid -- what did your people build for you?"
+@The_monster@ queries, "My people built me a pyramid - what did your people build for you?"
 
 @The_monster@ says, "This hit and run is way beneath me."
 
@@ -2868,6 +2871,12 @@ Nikola
 @The_monster@ raves, "Can you feel it? Can you feel it? CAN YOU FEEL IT?"
 
 @The_monster@ warns, "If you see one of my golems, approach with caution, they bite."
+
+@The_monster@ asks, "Are you insulated?"
+
+@The_monster@ says, "You don't like like a good isolator."
+
+@The_monster@ mumbles, "Hm, I wonder if you're conductive."
 %%%%
 ############ NORBERT ### A skilled warrior looking for some fame.  More kills = more fame.
 Norbert
@@ -3241,41 +3250,6 @@ VISUAL:@The_monster@ clenches @possessive@ claws.
 
 VISUAL:@The_monster@ looks very sad for a moment.
 %%%%
-############ RUPERT ### A crazy adventurer
-Rupert
-
-@_Rupert_common_@
-
-w:5
-@_Rupert_rare_@
-%%%%
-_Rupert_common_
-
-VISUAL:@The_monster@ looks excited.
-
-VISUAL:@The_monster@ looks confused.
-
-@The_monster@ screams @at_foe@, "Die, monster!"
-
-@The_monster@ screams @at_foe@, "Give me the Holy Grail!"
-
-@The_monster@ screams @at_foe@, "You killed all those lovely monsters, you murderer!"
-
-@The_monster@ screams @at_foe@, "Hurray!"
-%%%%
-_Rupert_rare_
-
-@The_monster@ asks @foe,@ "You're a monster, aren't you?"
-
-@The_monster@ says @to_foe@, "My Mum always said: 'Kill them all'."
-
-@The_monster@ shouts @at_foe@, "I'm a great and powerful hero!"
-
-@The_monster@ screams @at_foe@, "Get ready!  I'll kill you!  Or something like that..."
-
-@The_monster@ screams @at_foe@, "Red!  No, blue!"
-## END Rupert ##
-%%%%
 ############ ROXANNE ### a sapphire statue of an earth mage
 Roxanne
 
@@ -3340,6 +3314,41 @@ __NONE
 w:5
 @The_monster@ says @to_foe@, "Don't just stand there! You can move, can't you?"
 ## END Roxanne ##
+%%%%
+############ RUPERT ### A crazy adventurer
+Rupert
+
+@_Rupert_common_@
+
+w:5
+@_Rupert_rare_@
+%%%%
+_Rupert_common_
+
+VISUAL:@The_monster@ looks excited.
+
+VISUAL:@The_monster@ looks confused.
+
+@The_monster@ screams @at_foe@, "Die, monster!"
+
+@The_monster@ screams @at_foe@, "Give me the Holy Grail!"
+
+@The_monster@ screams @at_foe@, "You killed all those lovely monsters, you murderer!"
+
+@The_monster@ screams @at_foe@, "Hurray!"
+%%%%
+_Rupert_rare_
+
+@The_monster@ asks @foe,@ "You're a monster, aren't you?"
+
+@The_monster@ says @to_foe@, "My Mum always said: 'Kill them all'."
+
+@The_monster@ shouts @at_foe@, "I'm a great and powerful hero!"
+
+@The_monster@ screams @at_foe@, "Get ready!  I'll kill you!  Or something like that..."
+
+@The_monster@ screams @at_foe@, "Red!  No, blue!"
+## END Rupert ##
 %%%%
 ############ SAINT ROKA ### orc warlord
 # Only used if the player is not a Hill Orc.
