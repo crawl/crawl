@@ -1464,6 +1464,25 @@ int num_traps_for_place(int level_number, const level_id &place)
     return 0;
 }
 
+trap_type random_trap_slime(int level_number)
+{
+    trap_type type = NUM_TRAPS;
+
+    if (random2(1 + level_number) > 14 && one_chance_in(3))
+    {
+        type = TRAP_ZOT;
+    }
+
+    if (one_chance_in(5) && is_valid_shaft_level(level_id::current()))
+        type = TRAP_SHAFT;
+    if (one_chance_in(5))
+        type = TRAP_TELEPORT;
+    if (one_chance_in(10))
+        type = TRAP_ALARM;
+
+    return (type);
+}
+
 static trap_type random_trap_default(int level_number, const level_id &place)
 {
     trap_type type = TRAP_DART;

@@ -567,6 +567,7 @@ std::vector<map_def> find_maps_for_tag (const std::string tag, bool check_depth,
     {
         map_def mapdef = vdefs[i];
         if (mapdef.has_tag(tag)
+            && !mapdef.has_tag("dummy")
             && (!check_depth || !mapdef.has_depth()
                  || mapdef.is_usable_in(place))
             && (!check_used || vault_unforbidden(mapdef)))

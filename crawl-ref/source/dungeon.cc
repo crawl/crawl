@@ -55,6 +55,8 @@
 #include "random.h"
 #include "religion.h"
 #include "spells3.h"
+#include "spl-book.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "tags.h"
@@ -3161,7 +3163,9 @@ static void _place_traps(int level_number)
         if (tries == 200)
             break;
 
-        ts.type = random_trap_for_place(level_number);
+        while (ts.type >= NUM_TRAPS)
+            ts.type = random_trap_for_place(level_number);
+
         if (ts.type == TRAP_SHAFT && level_number <= 7)
         {
             // Disallow shaft construction in corridors!
@@ -3170,8 +3174,9 @@ static void _place_traps(int level_number)
                 // Choose again!
                 ts.type = random_trap_for_place(level_number);
 
-                // If we get shaft a second time, turn it into an alarm trap.
-                if (ts.type == TRAP_SHAFT)
+                // If we get shaft a second time, turn it into an alarm trap, or
+                // if we got nothing.
+                if (ts.type == TRAP_SHAFT || ts.type >= NUM_TRAPS)
                     ts.type = TRAP_ALARM;
             }
         }
@@ -3603,8 +3608,22 @@ static int _place_uniques(int level_number, char level_type)
 
     int num_placed = 0;
 
-    while (coinflip())
+    // Magic numbers for dpeg's unique system.
+    int A = 3;
+    int B = 5;
+    while (one_chance_in(A))
     {
+        // In dpeg's unique placement system, chances is always 1 in A of even
+        // starting to place a unique; reduced if there are less uniques to be
+        // placed or available. Then there is a chance of uniques_available /
+        // B; this only triggers on levels that have less than B uniques to be
+        // placed.
+        std::vector<map_def> uniques_available =
+                                find_maps_for_tag("place_unique", true, true);
+
+        if (random2(B) >= std::min(B, int(uniques_available.size())))
+            break;
+
         const map_def *uniq_map = random_map_for_tag("place_unique", true);
 
         if (!uniq_map)
@@ -4701,6 +4720,19 @@ static void _dgn_place_item_explicit(const item_spec &spec,
     {
         item_def &item(mitm[item_made]);
         item.pos = where;
+        CrawlHashTable props = spec.props;
+
+        if (props.exists("make_book_theme_randart"))
+        {
+            make_book_theme_randart(item,
+                props["randbook_disc1"].get_short(),
+                props["randbook_disc2"].get_short(),
+                props["randbook_num_spells"].get_short(),
+                props["randbook_slevels"].get_short(),
+                spell_by_name(props["randbook_spell"].get_string()),
+                props["randbook_owner"].get_string());
+        }
+
         // Remove unsuitable inscriptions such as {god gift}.
         item.inscription.clear();
         // And wipe item origin to remove "this is a god gift!" from there.

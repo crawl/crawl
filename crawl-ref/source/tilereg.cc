@@ -832,8 +832,14 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
 
-    // Pet mark
     int status_shift = 0;
+    if (fg & TILE_FLAG_BERSERK)
+    {
+        m_buf_main.add(TILE_BERSERK, x, y);
+        status_shift += 10;
+    }
+
+    // Pet mark
     if (fg & TILE_FLAG_PET)
     {
         m_buf_main.add(TILE_HEART, x, y);

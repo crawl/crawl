@@ -166,7 +166,7 @@ Branch branches[] = {
       DNGN_ENTER_ORCISH_MINES, DNGN_RETURN_FROM_ORCISH_MINES,
       "Orcish Mines", "the Orcish Mines", "Orc",
       NULL,
-      true, false, BROWN, BROWN,
+      true, true, BROWN, BROWN,
       mons_mineorc_rare, mons_mineorc_level,
       NULL, NULL, NULL, NULL,
       20, 'O', false, false },
@@ -213,7 +213,7 @@ Branch branches[] = {
       NULL,
       false, true, GREEN, LIGHTGREEN,
       mons_pitslime_rare, mons_pitslime_level,
-      NULL, NULL, NULL, NULL,
+      NULL, random_trap_slime, NULL, NULL,
       5, 'M', false, true },
 
     { BRANCH_SNAKE_PIT, BRANCH_LAIR, 5, 7, 0, 0,

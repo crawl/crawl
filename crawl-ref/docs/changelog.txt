@@ -25,6 +25,7 @@ Gods
 * Kikubaaqudgha gives torment resistance, hands out corpses and the Pain brand.
 * Ecumenical Temple may randomly contain 3 to 14 altars.
 * Dungeon gods not included in Ecumenical Temple get guaranteed altar on D:2-9.
+* Recite has no food cost and no longer causes monsters to go berserk.
 * Sacrifice corpses with prayer ('p') rather than prayer and chop up ('pc').
 
 Levels
@@ -35,21 +36,31 @@ Levels
 * Most escape hatches are replaced by (single-use) shafts.
 * New wall type "trees".  You can see through one tree, but two trees
   in a row block vision.
+* Seal hell portals rather than Vestibule when the player picks up the orb.
+* Loosen restrictions about which branches may contain uniques.
+* Added mutagenic fog.
+* Limit alarm traps to 1-3 charges.
+* Lua maps are much more customizable.
 * Many new vaults.
 
 Items
 -----
+* Fixed occasional permanent stat loss/gain with stat-modifying equipment.
 * Added scroll of silence.
 * Added potions of brilliance and agility.
 * Added shields of reflection.
-* New ammunition material: silver, steel.
-* New ammunition brands: dispersal, electric, exploding, penetrating, reaping.
+* New missile materials: silver, steel.
+* New missile brands: dispersal, electricity, exploding, penetration, reaping.
 * Added amulet of the guardian spirit, making you take damage from mp, not hp.
 * Lowered gold dragon armour's AC value.
-* Post-berserk exhaustion cancels Haste, even with an amulet of remove slowing.
+* All randart weapons get a brand.
+* The speed brand is only created randomly for artefacts.
+* Lower damage bonus of the vorpal brand to 12.5%.
+* Post-berserk exhaustion cancels Haste, even with an amulet of resist slowing.
 * Armour acquirement is more likely to fill secondary slots.
 * Book acquirement doesn't give manuals to spellcasting specialists anymore.
 * Added wands as an acquirement option.
+* Potions of resistance last longer.
 * Weapons of holy wrath cannot be cursed.
 * Improvements to whips and demon whips; the latter can now be blessed by TSO.
 * Reduce the chances for artefacts with only one stat property.
@@ -71,10 +82,13 @@ Monsters
 * Slime creatures can merge to become larger and more powerful.
 * All spectral things can use stairs again.
 * Several new uniques.
+* Hydras pick new target for remaining attacks if their current foe dies.
 * Detected secret doors now remain unknown to stupid monsters.
-* Hungry ghosts eat corpses.
+* Monsters may quaff potions of might and berserk rage.
 * Bears can go berserk.
+* Hungry ghosts eat corpses.
 * Bashing plants or fungi will only train Fighting/Unarmed Combat up to level 1.
+* Buff monsters' Airstrike damage.
 * Upgrade equipment of Sonja, Psyche and Terence.
 * Jessica casts Pain and is considered evil by the good gods.
 
@@ -88,8 +102,9 @@ Characters
 * Starting stats and equipment are no longer assigned randomly.
 * Gain of Health and Magic Points on level up is no longer random.
 * Round all aptitudes to multiples of 10.
-* Miasma resistance is no longer tied to negative energy resistance; rotting
+* Decouple miasma resistance from negative energy resistance; rotting
   resistance now implies both disease and miasma resistance.
+* Allow Mummies to cast Summon Horrible Things, now temporary.
 * Hunter starting ammunition starts out at +1, leading to decreased mulching.
 * Healers now start unarmed.
 * Swapped Kobolds' aptitudes for Bows and Crossbows.
@@ -105,12 +120,14 @@ Interface
 * Allow viewing off-level maps from the 'X' overmap with '[' and ']'.
 * Level features (e.g. stairs, gates, altars) are listed in the 'X' map.
 * delay_message_clear defaults to true.
+* Disallow autoexplore and resting when starving.
 * Add !a inscription to prompt when attacking with this wielded item.
 * Abort some teleportation attempts with -TELE without losing the turn.
 * Food and potions are never autoassigned to slots 'e' and 'y', respectively.
 * Added option explore_delay, which can be used to make the delay
   between auto-explore moves different from the delay between other
   types of travel moves.
+* Allow more than 8 colours in Mac builds if the terminal supports it.
 
 Spells
 ------
@@ -134,7 +151,11 @@ Tiles
 Code cleanup
 ------------
 * Overhauled and improved the line of sight code.
+* Add lots of test cases for semi-automated bug catching.
+* Tidy up and clarify makefile usage.
+* Distribute code of large cc files into smaller ones.
 * Many new lua wrappers to make lua much more powerful in e.g. map creation.
+* Cleanup of included header files.
 * Unrandarts and fixedarts share the same, cleaner coding structure.
 
 

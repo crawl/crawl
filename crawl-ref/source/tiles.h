@@ -142,6 +142,7 @@ enum tile_flags
     TILE_FLAG_POISON     = 0x00020000,
     TILE_FLAG_FLAME      = 0x00040000,
     TILE_FLAG_ANIM_WEP   = 0x00080000,
+    TILE_FLAG_BERSERK    = 0x00100000,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x03800000,

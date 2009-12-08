@@ -43,6 +43,8 @@ int       num_traps_for_place(int level_number = -1,
 trap_type random_trap_for_place(int level_number = -1,
                                 const level_id &place = level_id::current());
 
+trap_type random_trap_slime(int level_number = -1);
+
 int traps_zero_number(int level_number = -1);
 
 int       traps_pan_number(int level_number = -1);

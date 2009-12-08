@@ -39,6 +39,7 @@
 #include "random.h"
 #include "religion.h"
 #include "spl-util.h"
+#include "spl-book.h"
 #include "stuff.h"
 #include "env.h"
 #include "tags.h"
@@ -3869,6 +3870,102 @@ item_spec item_list::parse_single_spec(std::string s)
         }
     }
 
+    // XXX: This is nice-ish now, but could probably do with being improved.
+    if (strip_tag(s, "randbook"))
+    {
+        result.props["make_book_theme_randart"] = true;
+        // make_book_theme_randart requires the following properties:
+        // disc: <first discipline>, disc2: <optional second discipline>
+        // numspells: <total number of spells>, slevels: <maximum levels>
+        // spell: <include this spell>, owner:<name of owner>
+        // None of these are required, but if you don't intend on using any
+        // of them, use "any fixed theme book" instead.
+        short disc1 = 0;
+        short disc2 = 0;
+
+        std::string st_disc1 = strip_tag_prefix(s, "disc:");
+        if (!st_disc1.empty())
+        {
+            disc1 = school_by_name(st_disc1);
+            if (disc1 == SPTYP_NONE)
+            {
+                error = make_stringf("Bad spell school: %s", st_disc1.c_str());
+                return (result);
+            }
+        }
+
+        std::string st_disc2 = strip_tag_prefix(s, "disc2:");
+        if (!st_disc2.empty())
+        {
+            disc2 = school_by_name(st_disc2);
+            if (disc2 == SPTYP_NONE)
+            {
+                error = make_stringf("Bad spell school: %s", st_disc2.c_str());
+                return (result);
+            }
+        }
+
+        if (disc1 != 0 && disc2 != 0)
+        {
+            if (disciplines_conflict(disc1, disc2))
+            {
+                error = make_stringf("Bad combination of spell schools: %s & %s.",
+                                    st_disc1.c_str(), st_disc2.c_str());
+                return (result);
+            }
+        }
+
+        if (disc1 == 0 && disc2 != 0)
+        {
+            // Don't fail, just quietly swap. Any errors in disc1's syntax will
+            // have been caught above, anyway.
+            disc1 = disc2;
+            disc2 = 0;
+        }
+
+        short num_spells = strip_number_tag(s, "numspells:");
+        if (num_spells == TAG_UNFOUND)
+            num_spells = -1;
+        else if (num_spells <= 0 || num_spells > SPELLBOOK_SIZE)
+        {
+            error = make_stringf("Bad spellbook size: %d", num_spells);
+            return (result);
+        }
+
+        short slevels = strip_number_tag(s, "slevels:");
+        if (slevels == TAG_UNFOUND)
+            slevels = -1;
+        else if (slevels == 0)
+        {
+            error = make_stringf("Bad slevels: %d.", slevels);
+            return (result);
+        }
+
+        const std::string spell = replace_all_of(strip_tag_prefix(s, "spell:"),
+                                                "_", " ");
+        if (!spell.empty() && spell_by_name(spell) == SPELL_NO_SPELL)
+        {
+            error = make_stringf("Bad spell: %s", spell.c_str());
+            return (result);
+        }
+
+        const std::string owner = replace_all_of(strip_tag_prefix(s, "owner:"),
+                                                "_", " ");
+        result.props["randbook_disc1"] = disc1;
+        result.props["randbook_disc2"] = disc2;
+        result.props["randbook_num_spells"] = num_spells;
+        result.props["randbook_slevels"] = slevels;
+        result.props["randbook_spell"] = spell;
+        result.props["randbook_owner"] = owner;
+
+        result.base_type = OBJ_BOOKS;
+        // This is changed in make_book_theme_randart.
+        result.sub_type = BOOK_MINOR_MAGIC_I;
+        result.plus = -1;
+
+        return (result);
+    }
+
     // Clean up after any tag brain damage.
     trim_string(s);
 
@@ -4051,7 +4148,7 @@ void item_list::parse_raw_name(std::string name, item_spec &spec)
 
 item_list::item_spec_slot item_list::parse_item_spec(std::string spec)
 {
-    lowercase(spec);
+    // lowercase(spec);
 
     item_spec_slot list;
 

@@ -1716,12 +1716,15 @@ formatted_scroller::formatted_scroller(int _flags, const std::string& s) :
     add_text(s);
 }
 
-void formatted_scroller::add_text(const std::string& s)
+void formatted_scroller::add_text(const std::string& s, bool new_line)
 {
     std::vector<formatted_string> parts;
     formatted_string::parse_string_to_multiple(s, parts);
     for (unsigned int i = 0; i < parts.size(); ++i)
         add_item_formatted_string(parts[i]);
+
+    if (new_line)
+        add_item_formatted_string(formatted_string::parse_string(EOL));
 }
 
 void formatted_scroller::add_item_formatted_string(const formatted_string& fs,

@@ -8,7 +8,7 @@
 # Boris vault.
 #
 # If you want to weight uniques differently for some vaults, the weights for
-# these vaults should all add up to 100 (the default weight for uniques).
+# these vaults should all add up to 10 (the default weight for uniques).
 # You can use multiple vaults that are tagged "uniq_<name>", with different 
 # weights for each of the vaults.
 #
@@ -23,9 +23,28 @@
 # NOTE: Does not deal with fixed-place uniques such as the Royal Jelly, the Hell
 # bosses, and the Pan bosses.
 ################################################################################
-# Dummy, weight will need eventual adjustment.
+
+################################################################################
+# Dummy, these are used to weight uniques per branch.
+################################################################################
 NAME:   uniq_dummy
-DEPTH:  1-50
+DEPTH:  1-50, !Lair, !Slime
+WEIGHT: 20
+TAGS:   place_unique dummy
+MAP
+.
+ENDMAP
+
+NAME:   uniq_dummy_lair
+DEPTH:  Lair
+WEIGHT: 80
+TAGS:   place_unique dummy
+MAP
+.
+ENDMAP
+
+NAME:   uniq_dummy_slime
+DEPTH:  Slime
 WEIGHT: 200
 TAGS:   place_unique dummy
 MAP
@@ -35,433 +54,39 @@ ENDMAP
 ################################################################################
 # General dungeon uniques:
 ################################################################################
-NAME:   uniq_terence
-DEPTH:  1-3
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Terence
-MAP
-1
-ENDMAP
-
-NAME:   uniq_jessica
-DEPTH:  1-3
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Jessica
-MAP
-1
-ENDMAP
-
-NAME:   uniq_iyjb
-DEPTH:  1-3, 4-7
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Ijyb
-MAP
-1
-ENDMAP
-
-NAME:   uniq_sigmund
-DEPTH:  1-3, 4-7
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Sigmund
-MAP
-1
-ENDMAP
-
-NAME:   uniq_blork_the_orc
-DEPTH:  4-7, 8-9, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Blork the orc
-MAP
-1
-ENDMAP
-
-NAME:   uniq_edmund
-DEPTH:  4-7, 8-9, !Lair, !Slime
-WEIGHT: 100
-MONS:   Edmund
-MAP
-1
-ENDMAP
-
-NAME:   uniq_prince_ribbit
-DEPTH:  4-7, 8-9, Lair:1-3
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Prince Ribbit
-MAP
-1
-ENDMAP
-
-NAME:   uniq_purgy
-DEPTH:  3-4
-WEIGHT: 10
-TAGS:   place_unique
-MONS:   Purgy
-MAP
-1
-ENDMAP
-
-NAME:   uniq_menkaure
-DEPTH:  4-7
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Menkaure
-MAP
-1
-ENDMAP
-
-NAME:   uniq_duvessa
-DEPTH:  4-7, 8-9, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Duvessa band
-MAP
-1
-ENDMAP
-
-NAME:   uniq_pikel
-DEPTH:  4-7, 8-9, !Lair, !Slime, !Orc
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Pikel band
-MAP
-1
-ENDMAP
-
-NAME:   uniq_psyche
-DEPTH:  8-9, 10-13, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Psyche
-MAP
-1
-ENDMAP
-
-NAME:   uniq_gastronok_1
-DEPTH:  8-9, 10-13, !Lair, !Slime
-TAGS:   place_unique uniq_gastronok
-WEIGHT: 50
-MONS:   Gastronok
-MAP
-1
-ENDMAP
-
-NAME:   uniq_gastronok_2
-DEPTH:  Lair:4-8
-TAGS:   place_unique uniq_gastronok
-WEIGHT: 150
-MONS:   Gastronok
-MAP
-1
-ENDMAP
-
-NAME:   uniq_erolcha
-DEPTH:  8-9, 10-13, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Erolcha
-MAP
-1
-ENDMAP
-
-NAME:   uniq_grum
-DEPTH:  8-9, 10-13, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Grum band
-MAP
-1
-ENDMAP
-
-NAME:   uniq_maurice
-DEPTH:  8-9, 10-13, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Maurice
-MAP
-1
-ENDMAP
-
-NAME:   uniq_donald
-DEPTH:  10-13, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Donald
-MAP
-1
-ENDMAP
-
-NAME:   uniq_urug
-DEPTH:  10-13, 14-16, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Urug
-MAP
-1
-ENDMAP
-
-NAME:   uniq_eustachio
-DEPTH:  10-13, 14-16, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Eustachio
-MAP
-1
-ENDMAP
-
-NAME:   uniq_sonja
-DEPTH:  10-13, 14-16, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Sonja
-MAP
-1
-ENDMAP
-
-NAME:   uniq_joseph
-DEPTH:  10-13, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Joseph
-MAP
-1
-ENDMAP
-
-NAME:   uniq_erica
-DEPTH:  10-13, 14-16, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Erica
-MAP
-1
-ENDMAP
-
-NAME:   uniq_josephine
-DEPTH:  10-13, 14-16, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Josephine band
-MAP
-1
-ENDMAP
-
-NAME:   uniq_jozef
-DEPTH:  10-13, 14-16, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Jozef
-MAP
-1
-ENDMAP
-
-NAME:   uniq_harold
-DEPTH:  10-13, 14-16, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Harold
-MAP
-1
-ENDMAP
-
-NAME:   uniq_norbert
-DEPTH:  10-13, 14-16, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Norbert
-MAP
-1
-ENDMAP
-
-NAME:   uniq_snorg
-DEPTH:  14-16, 17-19, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Snorg
-MAP
-1
-ENDMAP
-
-NAME:   uniq_roxanne
-DEPTH:  14-16, 17-19, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Roxanne
-MAP
-1
-ENDMAP
-
-NAME:   uniq_rupert
-DEPTH:  14-16, 17-19, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Rupert
-MAP
-1
-ENDMAP
-
-NAME:   uniq_azrael
-DEPTH:  14-16, 17-19, !Lair, !Slime, !Swamp, !Shoal
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Azrael band
-MAP
-1
-ENDMAP
-
-NAME:   uniq_nessos
-DEPTH:  14-16, 17-19, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Nessos
-MAP
-1
-ENDMAP
 
 NAME:   uniq_agnes
 DEPTH:  14-16, !Lair, !Slime
-WEIGHT: 100
+WEIGHT: 10
 TAGS:   place_unique
 MONS:   Agnes
 MAP
 1
 ENDMAP
 
-NAME:   uniq_nikola
-DEPTH:  14-16, 17-19, !Lair, !Slime
-WEIGHT: 100
+NAME:   uniq_aizul
+DEPTH:  16-25, !Lair, !Slime, Snake:2-5
+WEIGHT: 10
 TAGS:   place_unique
-MONS:   Nikola
+MONS:   Aizul
 MAP
 1
 ENDMAP
 
-NAME:   uniq_maud
-DEPTH:  14-16, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique uniq_maud
-MONS:   Maud
-MAP
-1
-ENDMAP
-
-NAME:   uniq_maud_exploring
-DEPTH:  Lair, Slime
-WEIGHT: 1
-TAGS:   place_unique uniq_maud
-MONS:   Maud
-MAP
-1
-ENDMAP
-
-NAME:   uniq_louise
-DEPTH:  14-16, 17-19, !Lair, !Slime
-WEIGHT: 100
+NAME:   uniq_azrael
+DEPTH:  14-16, 17-19, !Lair, !Slime, !Swamp, !Shoal
+WEIGHT: 10
 TAGS:   place_unique
-MONS:   Louise
+MONS:   Azrael band
 MAP
 1
 ENDMAP
 
-NAME:   uniq_nergalle
-DEPTH:  14-16, 17-19, !Lair, !Slime
-WEIGHT: 100
+NAME:   uniq_blork_the_orc
+DEPTH:  4-7, 8-9, !Lair, !Slime
+WEIGHT: 10
 TAGS:   place_unique
-MONS:   Nergalle
-MAP
-1
-ENDMAP
-
-NAME:   uniq_kirke
-DEPTH:  14-16, 17-19, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Kirke band
-MAP
-1
-ENDMAP
-
-NAME:   uniq_francis
-DEPTH:  17-19, 20-27, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Francis
-MAP
-1
-ENDMAP
-
-NAME:   uniq_frances
-DEPTH:  17-19, 20-27, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Frances
-MAP
-1
-ENDMAP
-
-NAME:   uniq_wayne
-DEPTH:  17-19, 20-27, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Wayne
-MAP
-1
-ENDMAP
-
-NAME:   uniq_duane
-DEPTH:  17-19, 20-27, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Duane
-MAP
-1
-ENDMAP
-
-NAME:   uniq_norris
-DEPTH:  17-19, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Norris
-MAP
-1
-ENDMAP
-
-NAME:   uniq_saint_roka
-DEPTH:  17-19, 20-27, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Saint Roka band
-MAP
-1
-ENDMAP
-
-NAME:   uniq_xtahua
-DEPTH:  20-27, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Xtahua
-MAP
-1
-ENDMAP
-
-NAME:   uniq_frederick
-DEPTH:  20-27, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Frederick
-MAP
-1
-ENDMAP
-
-NAME:   uniq_margery
-DEPTH:  20-27, !Lair, !Slime
-WEIGHT: 100
-TAGS:   place_unique
-MONS:   Margery band
+MONS:   Blork the orc
 MAP
 1
 ENDMAP
@@ -473,21 +98,418 @@ ENDMAP
 # remove the tag in monstuff.cc:monster_die.
 NAME:   uniq_boris
 DEPTH:  20-27, !Lair, !Slime
-WEIGHT: 100
+WEIGHT: 10
 TAGS:   place_unique
 MONS:   Boris
 MAP
 1
 ENDMAP
 
-NAME:   uniq_aizul
-DEPTH:  16-25, !Lair, !Slime, Snake:2-5
-WEIGHT: 100
+NAME:   uniq_donald
+DEPTH:  10-13, !Lair, !Slime
+WEIGHT: 10
 TAGS:   place_unique
-MONS:   Aizul
+MONS:   Donald
 MAP
 1
 ENDMAP
+
+NAME:   uniq_duane
+DEPTH:  17-19, 20-27, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Duane
+MAP
+1
+ENDMAP
+
+NAME:   uniq_duvessa
+DEPTH:  4-7, 8-9, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Duvessa band
+MAP
+1
+ENDMAP
+
+NAME:   uniq_edmund
+DEPTH:  4-7, 8-9, !Lair, !Slime
+WEIGHT: 10
+MONS:   Edmund
+MAP
+1
+ENDMAP
+
+NAME:   uniq_erica
+DEPTH:  10-13, 14-16, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Erica
+MAP
+1
+ENDMAP
+
+NAME:   uniq_erolcha
+DEPTH:  8-9, 10-13, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Erolcha
+MAP
+1
+ENDMAP
+
+NAME:   uniq_eustachio
+DEPTH:  10-13, 14-16, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Eustachio
+MAP
+1
+ENDMAP
+
+NAME:   uniq_frances
+DEPTH:  17-19, 20-27, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Frances
+MAP
+1
+ENDMAP
+
+NAME:   uniq_francis
+DEPTH:  17-19, 20-27, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Francis
+MAP
+1
+ENDMAP
+
+NAME:   uniq_frederick
+DEPTH:  20-27, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Frederick
+MAP
+1
+ENDMAP
+
+NAME:   uniq_gastronok_1
+DEPTH:  8-9, 10-13, !Lair, !Slime
+TAGS:   place_unique uniq_gastronok
+WEIGHT: 5
+MONS:   Gastronok
+MAP
+1
+ENDMAP
+
+NAME:   uniq_gastronok_2
+DEPTH:  Lair:4-8
+TAGS:   place_unique uniq_gastronok
+WEIGHT: 15
+MONS:   Gastronok
+MAP
+1
+ENDMAP
+
+NAME:   uniq_grum
+DEPTH:  8-9, 10-13, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Grum band
+MAP
+1
+ENDMAP
+
+NAME:   uniq_harold
+DEPTH:  10-13, 14-16, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Harold
+MAP
+1
+ENDMAP
+
+NAME:   uniq_iyjb
+DEPTH:  1-3, 4-7
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Ijyb
+MAP
+1
+ENDMAP
+
+NAME:   uniq_jessica
+DEPTH:  1-3
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Jessica
+MAP
+1
+ENDMAP
+
+NAME:   uniq_joseph
+DEPTH:  10-13, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Joseph
+MAP
+1
+ENDMAP
+
+NAME:   uniq_josephine
+DEPTH:  10-13, 14-16, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Josephine band
+MAP
+1
+ENDMAP
+
+NAME:   uniq_jozef
+DEPTH:  10-13, 14-16, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Jozef
+MAP
+1
+ENDMAP
+
+NAME:   uniq_kirke
+DEPTH:  14-16, 17-19, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Kirke band
+MAP
+1
+ENDMAP
+
+NAME:   uniq_louise
+DEPTH:  14-16, 17-19, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Louise
+MAP
+1
+ENDMAP
+
+NAME:   uniq_margery
+DEPTH:  20-27, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Margery band
+MAP
+1
+ENDMAP
+
+NAME:   uniq_maud
+DEPTH:  14-16
+WEIGHT: 10
+TAGS:   place_unique uniq_maud
+MONS:   Maud
+MAP
+1
+ENDMAP
+
+NAME:   uniq_maurice
+DEPTH:  8-9, 10-13, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Maurice
+MAP
+1
+ENDMAP
+
+NAME:   uniq_menkaure
+DEPTH:  4-7
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Menkaure
+MAP
+1
+ENDMAP
+
+NAME:   uniq_nergalle
+DEPTH:  14-16, 17-19, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Nergalle
+MAP
+1
+ENDMAP
+
+NAME:   uniq_nessos
+DEPTH:  14-16, 17-19, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Nessos
+MAP
+1
+ENDMAP
+
+NAME:   uniq_nikola
+DEPTH:  14-16, 17-19, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Nikola
+MAP
+1
+ENDMAP
+
+NAME:   uniq_norbert
+DEPTH:  10-13, 14-16, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Norbert
+MAP
+1
+ENDMAP
+
+NAME:   uniq_norris
+DEPTH:  17-19, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Norris
+MAP
+1
+ENDMAP
+
+NAME:   uniq_pikel
+DEPTH:  4-7, 8-9, !Lair, !Slime, !Orc
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Pikel band
+MAP
+1
+ENDMAP
+
+NAME:   uniq_prince_ribbit1
+DEPTH:  4-7, 8-9, !Lair
+WEIGHT: 7
+TAGS:   place_unique uniq_ribbit
+MONS:   Prince Ribbit
+MAP
+1
+ENDMAP
+
+NAME:   uniq_prince_ribbit2
+DEPTH:  Lair:1-3
+WEIGHT: 3
+TAGS:   place_unique uniq_ribbit
+MONS:   Prince Ribbit, blink frog band
+MAP
+12
+ENDMAP
+
+NAME:   uniq_psyche
+DEPTH:  8-9, 10-13, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Psyche
+MAP
+1
+ENDMAP
+
+NAME:   uniq_purgy
+DEPTH:  3-4
+WEIGHT: 1
+TAGS:   place_unique
+MONS:   Purgy
+MAP
+1
+ENDMAP
+
+NAME:   uniq_roxanne
+DEPTH:  14-16, 17-19, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Roxanne
+MAP
+1
+ENDMAP
+
+NAME:   uniq_rupert
+DEPTH:  14-16, 17-19, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Rupert
+MAP
+1
+ENDMAP
+
+NAME:   uniq_saint_roka
+DEPTH:  17-19, 20-27, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Saint Roka band
+MAP
+1
+ENDMAP
+
+NAME:   uniq_sigmund
+DEPTH:  1-3, 4-7
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Sigmund
+MAP
+1
+ENDMAP
+
+NAME:   uniq_snorg
+DEPTH:  14-16, 17-19, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Snorg
+MAP
+1
+ENDMAP
+
+NAME:   uniq_sonja
+DEPTH:  10-13, 14-16, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Sonja
+MAP
+1
+ENDMAP
+
+NAME:   uniq_terence
+DEPTH:  1-3
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Terence
+MAP
+1
+ENDMAP
+
+NAME:   uniq_urug
+DEPTH:  10-13, 14-16, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Urug
+MAP
+1
+ENDMAP
+
+NAME:   uniq_wayne
+DEPTH:  17-19, 20-27, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Wayne
+MAP
+1
+ENDMAP
+
+NAME:   uniq_xtahua
+DEPTH:  20-27, !Lair, !Slime
+WEIGHT: 10
+TAGS:   place_unique
+MONS:   Xtahua
+MAP
+1
+ENDMAP
+
+
 ################################################################################
 # Non-dungeon Uniques
 ################################################################################
@@ -503,7 +525,7 @@ ENDMAP
 
 NAME:   uniq_murray
 DEPTH:  Hell
-WEIGHT: 100
+WEIGHT: 10
 TAGS:   place_unique
 MONS:   Murray
 MAP
@@ -512,7 +534,7 @@ ENDMAP
 
 NAME:   uniq_polyphemus
 DEPTH:  Shoal:1-5
-WEIGHT: 100
+WEIGHT: 10
 TAGS:   place_unique
 MONS:   Polyphemus band
 MAP
@@ -521,7 +543,7 @@ ENDMAP
 
 NAME:   uniq_ilsuiw
 DEPTH:  Shoal:1-5
-WEIGHT: 100
+WEIGHT: 10
 TAGS:   place_unique
 MONS:   Ilsuiw band
 MAP
@@ -530,7 +552,7 @@ ENDMAP
 
 NAME:   uniq_khufu
 DEPTH:  Tomb, Crypt
-WEIGHT: 100
+WEIGHT: 10
 TAGS:   place_unique
 MONS:   Khufu band
 MAP
@@ -539,7 +561,7 @@ ENDMAP
 
 NAME:   uniq_tiamat
 DEPTH:  Zot
-WEIGHT: 100
+WEIGHT: 10
 TAGS:   place_unique
 MONS:   Tiamat band
 MAP
@@ -550,7 +572,7 @@ ENDMAP
 # Crazy Yiuf! Only in his cottage.
 NAME:   uniq_crazy_yiuf_cottage
 DEPTH:  D:2-7
-WEIGHT: 100
+WEIGHT: 10
 TAGS:   place_unique no_monster_gen no_item_gen
 MONS:   Crazy Yiuf
 ITEM:   hammer

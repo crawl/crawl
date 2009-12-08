@@ -490,8 +490,38 @@ ITEM:     (list of items, separated by comma)
           Limitations: You can't specify specific pluses or number of charges.
           You also can't lay down corpses, skeletons, or chunks.
 
-          You can place multiple items on the same square by using the KITEM
-          directive. See that section for more information.
+          Randart spell books
+          -------------------
+
+          You can specify random artefact spell books using:
+
+          * "any fixed theme book" will generate a book with a fixed theme
+            (set of spell schools).
+          * "any fixed level book" will generate a book with a fixed set of
+            spells around the same level.
+
+          You can further specify artefact spell books using "randbook" and any
+          combination of the following tags:
+
+          * "disc:spell_school", the first spell school that should be included
+            in the book. For example, "disc:earth" or "disc:ice".
+          * "disc2:spell_school" an optional second spell school that can be
+            included in the book. Note: specifying two spell schools doesn't
+            mean that they will both definitely be included, just that they
+            might be.
+          * "numspells:number" a number of spells to include in the book. Will
+            not always be followed.
+          * "slevels:max_levels" the total, combined level of spells to include
+            in the book. "slevels:6" will use three level two spells, two level
+            three spells, a level two and a level four spell, and so on.
+          * "spell:spell" a spell to include in the book. All of "_" will be
+            replaced with " " and will be parsed as such.
+          * "owner:name" will be used to generate the title of the book if
+            provided. For example, "owner:Roxanne" may create "Roxanne's
+            Treatise on Mountains".
+
+          NOTE: You can place multiple items on the same square by using the 
+          KITEM directive. See that section for more information.
 
 MONS:     (list of monsters)
           These are used to help place specific monsters at specific places
