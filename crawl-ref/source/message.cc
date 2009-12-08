@@ -172,14 +172,14 @@ msg_colour_type msg_colour(char col)
 #ifdef USE_COLOUR_MESSAGES
 
 // Returns a colour or MSGCOL_MUTED.
-int channel_to_colour( msg_channel_type channel, int param )
+msg_colour_type channel_to_colour(msg_channel_type channel, int param)
 {
     if (you.asleep())
-        return (DARKGREY);
+        return (MSGCOL_DARKGREY);
 
-    char ret;
+    msg_colour_type ret;
 
-    switch (Options.channels[ channel ])
+    switch (Options.channels[channel])
     {
     case MSGCOL_PLAIN:
         // Note that if the plain channel is muted, then we're protecting
@@ -187,7 +187,7 @@ int channel_to_colour( msg_channel_type channel, int param )
         // The intent of plain is to give non-coloured messages, not to
         // suppress them.
         if (Options.channels[ MSGCH_PLAIN ] >= MSGCOL_DEFAULT)
-            ret = LIGHTGREY;
+            ret = MSGCOL_LIGHTGREY;
         else
             ret = Options.channels[ MSGCH_PLAIN ];
         break;
@@ -198,77 +198,77 @@ int channel_to_colour( msg_channel_type channel, int param )
         {
         case MSGCH_GOD:
         case MSGCH_PRAY:
-            ret = (Options.channels[ channel ] == MSGCOL_DEFAULT)
-                   ? god_colour( static_cast<god_type>(param) )
-                   : god_message_altar_colour( static_cast<god_type>(param) );
+            ret = (Options.channels[channel] == MSGCOL_DEFAULT)
+                   ? msg_colour(god_colour(static_cast<god_type>(param)))
+                   : god_message_altar_colour(static_cast<god_type>(param));
             break;
 
         case MSGCH_DURATION:
-            ret = LIGHTBLUE;
+            ret = MSGCOL_LIGHTBLUE;
             break;
 
         case MSGCH_DANGER:
-            ret = RED;
+            ret = MSGCOL_RED;
             break;
 
         case MSGCH_WARN:
         case MSGCH_ERROR:
-            ret = LIGHTRED;
+            ret = MSGCOL_LIGHTRED;
             break;
 
         case MSGCH_FOOD:
             if (param) // positive change
-                ret = GREEN;
+                ret = MSGCOL_GREEN;
             else
-                ret = YELLOW;
+                ret = MSGCOL_YELLOW;
             break;
 
         case MSGCH_INTRINSIC_GAIN:
-            ret = GREEN;
+            ret = MSGCOL_GREEN;
             break;
 
         case MSGCH_RECOVERY:
-            ret = LIGHTGREEN;
+            ret = MSGCOL_LIGHTGREEN;
             break;
 
         case MSGCH_TALK:
         case MSGCH_TALK_VISUAL:
-            ret = WHITE;
+            ret = MSGCOL_WHITE;
             break;
 
         case MSGCH_MUTATION:
-            ret = LIGHTRED;
+            ret = MSGCOL_LIGHTRED;
             break;
 
         case MSGCH_TUTORIAL:
-            ret = MAGENTA;
+            ret = MSGCOL_MAGENTA;
             break;
 
         case MSGCH_MONSTER_SPELL:
         case MSGCH_MONSTER_ENCHANT:
         case MSGCH_FRIEND_SPELL:
         case MSGCH_FRIEND_ENCHANT:
-            ret = LIGHTMAGENTA;
+            ret = MSGCOL_LIGHTMAGENTA;
             break;
 
         case MSGCH_BANISHMENT:
-            ret = MAGENTA;
+            ret = MSGCOL_MAGENTA;
             break;
 
         case MSGCH_MONSTER_DAMAGE:
-            ret =  ((param == MDAM_DEAD)               ? RED :
-                    (param >= MDAM_SEVERELY_DAMAGED)   ? LIGHTRED :
-                    (param >= MDAM_MODERATELY_DAMAGED) ? YELLOW
-                                                       : LIGHTGREY);
+            ret =  ((param == MDAM_DEAD)               ? MSGCOL_RED :
+                    (param >= MDAM_SEVERELY_DAMAGED)   ? MSGCOL_LIGHTRED :
+                    (param >= MDAM_MODERATELY_DAMAGED) ? MSGCOL_YELLOW
+                                                       : MSGCOL_LIGHTGREY);
             break;
 
         case MSGCH_PROMPT:
-            ret = CYAN;
+            ret = MSGCOL_CYAN;
             break;
 
         case MSGCH_DIAGNOSTICS:
         case MSGCH_MULTITURN_ACTION:
-            ret = DARKGREY;     // makes it easier to ignore at times -- bwr
+            ret = MSGCOL_DARKGREY; // makes it easier to ignore at times -- bwr
             break;
 
         case MSGCH_PLAIN:
@@ -278,7 +278,7 @@ int channel_to_colour( msg_channel_type channel, int param )
         case MSGCH_EXAMINE:
         case MSGCH_EXAMINE_FILTER:
         default:
-            ret = param > 0? param : LIGHTGREY;
+            ret = param > 0 ? param : MSGCOL_LIGHTGREY;
             break;
         }
         break;
@@ -296,14 +296,14 @@ int channel_to_colour( msg_channel_type channel, int param )
             // the init system is improved)... selecting a specific
             // colour here will result in only the death messages coloured.
             if (param == MDAM_DEAD)
-                ret = Options.channels[ channel ];
-            else if (Options.channels[ MSGCH_PLAIN ] >= MSGCOL_DEFAULT)
-                ret = LIGHTGREY;
+                ret = Options.channels[channel];
+            else if (Options.channels[MSGCH_PLAIN] >= MSGCOL_DEFAULT)
+                ret = MSGCOL_LIGHTGREY;
             else
-                ret = Options.channels[ MSGCH_PLAIN ];
+                ret = Options.channels[MSGCH_PLAIN];
         }
         else
-            ret = Options.channels[ channel ];
+            ret = Options.channels[channel];
         break;
     }
 
@@ -312,9 +312,9 @@ int channel_to_colour( msg_channel_type channel, int param )
 
 #else // don't use colour messages
 
-int channel_to_colour( msg_channel_type channel, int param )
+msg_colour_type channel_to_colour(msg_channel_type channel, int param)
 {
-    return (LIGHTGREY);
+    return (MSGCOL_LIGHTGREY);
 }
 
 #endif

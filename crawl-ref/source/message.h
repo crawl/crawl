@@ -64,7 +64,7 @@ std::vector<std::string> get_recent_messages(int &message_pos,
                                              bool dumpworthy_only = true,
                                              std::vector<int> *channels = NULL);
 
-int channel_to_colour( msg_channel_type channel, int param = 0 );
+msg_colour_type channel_to_colour(msg_channel_type channel, int param = 0);
 
 namespace msg
 {
