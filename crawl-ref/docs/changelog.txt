@@ -34,8 +34,7 @@ Levels
 * Shorten Lair to eight levels.
 * New portal vaults: Bailey, Trove, Volcanoes.
 * Most escape hatches are replaced by (single-use) shafts.
-* New wall type "trees".  You can see through one tree, but two trees
-  in a row block vision.
+* New wall type "tree"; two trees in a row block vision.
 * Seal hell portals rather than Vestibule when the player picks up the orb.
 * Loosen restrictions about which branches may contain uniques.
 * Added mutagenic fog.
@@ -66,6 +65,16 @@ Items
 * Reduce the chances for artefacts with only one stat property.
 * Reduced weight of large rocks.
 * More generous stacking of ammunition.
+* Increase whip damage, availability and branding chances.
+* Weapons of electrocution discharge in water.
+* Remove evocable mapping/teleportation from artefacts.
+* Removing +Lev items cancels levitation and is disallowed over water.
+* Rings of slaying also apply to missile launchers.
+* Clubs and spears get moderate stabbing bonus.
+* Clubs may stun target upon successful stabbing.
+* Vampiric weapons can only be wielded at full and cause hunger when wielded.
+* Mummies and ghouls get no healing effect from vampiric weapons.
+* Shields can be enchanted maximum to +3.
 
 Monsters
 --------
@@ -102,15 +111,19 @@ Characters
 * Starting stats and equipment are no longer assigned randomly.
 * Gain of Health and Magic Points on level up is no longer random.
 * Round all aptitudes to multiples of 10.
+* Fighting is noisy depending on damage dealt, weapon type and brand.
 * Decouple miasma resistance from negative energy resistance; rotting
   resistance now implies both disease and miasma resistance.
-* Allow Mummies to cast Summon Horrible Things, now temporary.
+* Regeneration only increases hunger while regenerating.
+* Shield value SH transparently reflects blocking chance.
+* Changed Magic mapping mutation to work passively.
 * Hunter starting ammunition starts out at +1, leading to decreased mulching.
 * Healers now start unarmed.
 * Swapped Kobolds' aptitudes for Bows and Crossbows.
 
 Interface
 ---------
+* Add a shopping list ('$') to notify you when you can afford a listed item.
 * New memorisation interface.
 * Autotravel doesn't cut corners and tries to avoid ambushes.
 * Exclusions are displayed in the overview screen ('Ctrl-O' command).
@@ -135,8 +148,12 @@ Spells
 * Summon Small Mammals doesn't summon green or orange rats anymore.
 * Tukima's Dance weapon strength depends on spell power and weapon weight.
 * Summon Wraiths is replaced by Haunt, a smite-targetted summoning spell.
+* Directed non-enchantment spells make noise when they hit something.
 * Call Canine Familiar only calls friendly canines.
+* Condensation Shield is more effective.
+* Allow Mummies to cast Summon Horrible Things, now temporary.
 * Controlled blink causes glowing.
+* Disintegration is really messy.
 
 Tiles
 -----
@@ -155,8 +172,11 @@ Code cleanup
 * Tidy up and clarify makefile usage.
 * Distribute code of large cc files into smaller ones.
 * Many new lua wrappers to make lua much more powerful in e.g. map creation.
+* Unique placement code has been moved to lua.
+* Consolidate similar functions.
 * Cleanup of included header files.
 * Unrandarts and fixedarts share the same, cleaner coding structure.
+* Removed some dead code.
 
 
 Stone Soup 0.5.2 (20091008)
