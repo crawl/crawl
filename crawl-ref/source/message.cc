@@ -653,6 +653,9 @@ static unsigned char prepare_message(const std::string& imsg,
 
     unsigned char colour = (unsigned char) channel_to_colour( channel, param );
 
+    if (colour != MSGCOL_MUTED)
+        mpr_check_patterns(imsg, channel, param);
+
     const std::vector<message_colour_mapping>& mcm
                = Options.message_colour_mappings;
     typedef std::vector<message_colour_mapping>::const_iterator mcmci;
@@ -665,9 +668,6 @@ static unsigned char prepare_message(const std::string& imsg,
             break;
         }
     }
-
-    if (colour != MSGCOL_MUTED)
-        mpr_check_patterns(imsg, channel, param);
 
     return colour;
 }
