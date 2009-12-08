@@ -474,10 +474,13 @@ struct item_spec
     int acquirement_source;
     level_id place;
 
+    // Specifically for storing information about randart spell books.
+    CrawlHashTable props;
+
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
         plus(-1), plus2(-1), ego(0), allow_uniques(1), level(-1),
         race(MAKE_ITEM_RANDOM_RACE), qty(0), acquirement_source(0),
-        place()
+        place(), props()
     {
     }
 };
