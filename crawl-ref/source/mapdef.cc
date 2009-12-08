@@ -4051,7 +4051,7 @@ void item_list::parse_raw_name(std::string name, item_spec &spec)
 
 item_list::item_spec_slot item_list::parse_item_spec(std::string spec)
 {
-    lowercase(spec);
+    // lowercase(spec);
 
     item_spec_slot list;
 
