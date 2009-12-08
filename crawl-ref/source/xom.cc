@@ -3839,12 +3839,12 @@ static const char* _xom_effect_to_name(int effect)
     return (result.c_str());
 }
 
-#ifdef WIZARD
 // Loops over the entire piety spectrum and calls xom_acts() multiple
 // times for each value, then prints the results into a file.
 // TODO: Allow specification of niceness, tension, boredness, and repeats.
 void debug_xom_effects()
 {
+    // Repeat N times.
     const int N = debug_prompt_for_int("How many iterations? ", true);
 
     if (N == 0)
@@ -3852,9 +3852,6 @@ void debug_xom_effects()
         canned_msg( MSG_OK );
         return;
     }
-
-    // Repeat N times.
-//     const int N = 10;
 
     FILE *ostat = fopen("xom_debug.stat", "a");
     if (!ostat)
@@ -3994,5 +3991,3 @@ void debug_xom_effects()
     you.religion = real_god;
 }
 #endif // WIZARD
-
-#endif
