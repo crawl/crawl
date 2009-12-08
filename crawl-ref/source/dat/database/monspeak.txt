@@ -1041,7 +1041,7 @@ _player_ghost_rare_
 
 @The_monster@ whispers, "Soon you will have time, lots of time..."
 
-@The_monster@ @wails@, "You must not fail where I succeded!"
+@The_monster@ @wails@, "You must not fail where I succeeded!"
 ## END player ghost ##
 #######################################
 # Unique monsters
@@ -2874,7 +2874,7 @@ Nikola
 
 @The_monster@ asks, "Are you insulated?"
 
-@The_monster@ says, "You don't like like a good isolator."
+@The_monster@ says, "You don't look like a good insulator."
 
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
 %%%%
@@ -3341,7 +3341,7 @@ _Rupert_rare_
 
 @The_monster@ asks @foe,@ "You're a monster, aren't you?"
 
-@The_monster@ says @to_foe@, "My Mum always said: 'Kill them all'."
+@The_monster@ says @to_foe@, "My Mum always said: 'Kill them all.'"
 
 @The_monster@ shouts @at_foe@, "I'm a great and powerful hero!"
 
