@@ -175,8 +175,8 @@ bool can_wield(item_def *weapon, bool say_reason,
     }
 
     if (you.hunger_state < HS_FULL
-            && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
-            && you.species != SP_VAMPIRE)
+        && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
+        && you.species != SP_VAMPIRE)
     {
         if (say_reason)
         {
@@ -650,7 +650,6 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     {
                         mpr("You feel an empty sense of dread.");
                     }
-
                     break;
 
                 case SPWPN_RETURNING:
