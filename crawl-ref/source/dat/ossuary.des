@@ -138,7 +138,8 @@ ENDMAP
 
 NAME:   enter_ossuary_5
 TAGS:   uniq_ossuary no_monster_gen
-COLOUR: ' = yellow
+COLOUR: c = white, = = white, ' = yellow
+RTILE:  c = wall_tomb, = = wall_tomb
 FTILE:  ' = floor_tomb
 NSUBST: = = 1:= / *:c
 SUBST:  c : cx
