@@ -1180,7 +1180,10 @@ static bool _travel_colour_override(const coord_def& p)
         return (true);
 #endif
     show_type obj = get_map_knowledge_obj(p);
-    return (obj.cls == SH_FEATURE && obj.feat == DNGN_FLOOR);
+    return (obj.cls == SH_FEATURE && (obj.feat == DNGN_FLOOR ||
+                                      obj.feat == DNGN_LAVA ||
+                                      obj.feat == DNGN_DEEP_WATER ||
+                                      obj.feat == DNGN_SHALLOW_WATER));
 }
 
 unsigned get_map_col(const coord_def& p, bool travel)
