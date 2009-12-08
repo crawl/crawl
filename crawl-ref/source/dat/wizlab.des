@@ -858,7 +858,10 @@ KITEM:      $ = potion of degeneration / potion of decay / \
             w:3 potion of heal wounds / w:1 potion of cure mutation
 KITEM:      * = gold
 KITEM:      % = amulet of resist mutation
-KITEM:      : = any book / acquire book
+KITEM:      : = randbook disc:transmutation owner:Cigotuvi / any book / \
+                acquire book
+KITEM:      ^ = book of morphology / randbook disc:transmutation \
+                owner:Cigotuvi spell:cigotuvi's_degeneration
 KITEM:      | = staff of death
 KITEM:      l = scroll of summoning
 NSUBST:     L = 1:| / *:l
@@ -866,7 +869,7 @@ NSUBST:     L = 1:| / *:l
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
 ccLLLcccc.cccccccccccAccccccccccccWWWW.u:cccc
-c.....c.....ccc...ccc+cccccccccccW......u:ccc
+c.....c.....ccc...ccc+cccccccccccW......u^ccc
 c.X.........cc.u...m...m..ccccccW........u:cc
 c.M........cc...b..m.x.m.a.cccccW..........cc
 c.X........cc...d..m...m.u..ccccW.........Wcc
