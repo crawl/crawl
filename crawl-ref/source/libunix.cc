@@ -530,12 +530,6 @@ void unixcurses_startup( void )
 
 void unixcurses_shutdown()
 {
-    if (Message_Window)
-    {
-        delwin(Message_Window);
-        Message_Window = NULL;
-    }
-
     // resetty();
     endwin();
 
@@ -752,6 +746,16 @@ void clear_to_end_of_screen(void)
     textcolor( LIGHTGREY );
     textbackground( BLACK );
     clrtobot();
+}
+
+int get_number_of_lines(void)
+{
+    return (LINES);
+}
+
+int get_number_of_cols(void)
+{
+    return (COLS);
 }
 
 void get_input_line_from_curses( char *const buff, int len )

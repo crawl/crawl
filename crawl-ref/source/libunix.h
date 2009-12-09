@@ -23,6 +23,9 @@ typedef unsigned short screen_buffer_t;
 
 char getche(void);
 
+int get_number_of_lines();
+int get_number_of_cols();
+
 int getch_ck(void);
 int clrscr(void);
 int cprintf(const char *format,...);
