@@ -351,7 +351,7 @@ static void _tweak_randart(item_def &item)
 
         choice_num++;
     }
-    formatted_message_history(prompt, MSGCH_PROMPT, 0, 80);
+    mpr(prompt, MSGCH_PROMPT, 0);
 
     mpr("Change which field? ", MSGCH_PROMPT);
 

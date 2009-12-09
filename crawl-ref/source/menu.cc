@@ -1903,12 +1903,12 @@ void print_formatted_paragraph(std::string &s, msg_channel_type channel)
         if (s[loc] == '\n')
         {
             text = s.substr(oldloc, loc-oldloc);
-            formatted_message_history( text, channel );
+            mpr( text, channel );
             oldloc = ++loc;
         }
         loc++;
     }
-    formatted_message_history( s.substr(oldloc, loc-oldloc), channel );
+    mpr( s.substr(oldloc, loc-oldloc), channel );
 }
 
 bool formatted_scroller::jump_to( int i )

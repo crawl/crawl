@@ -4377,7 +4377,7 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
     msg.insert(0, itname);
     msg = tag_start + msg + tag_end;
 
-    formatted_message_history(msg, MSGCH_GOD);
+    mpr(msg, MSGCH_GOD);
 }
 
 static bool _altar_prayer()

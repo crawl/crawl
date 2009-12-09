@@ -1295,7 +1295,7 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
             << "</" << colour << ">";
     }
 
-    formatted_message_history(tagged_string_substr(msg.str(),
+    mpr(tagged_string_substr(msg.str(),
                                                    0, crawl_view.msgsz.x),
                               MSGCH_PROMPT);
 }

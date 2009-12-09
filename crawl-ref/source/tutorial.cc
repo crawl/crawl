@@ -598,8 +598,8 @@ static void _tutorial_stats_intro()
             "below provide an all-around account of the character's "
             "attributes. Don't worry about the rest for now.";
 
-    formatted_message_history(istr.str(), MSGCH_TUTORIAL, 0,
-                              _get_tutorial_cols());
+    mpr(istr.str(), MSGCH_TUTORIAL, 0);
+
 #else
     // Note: must fill up everything to override the map
     istr << "<"
@@ -659,7 +659,7 @@ static void _tutorial_message_intro()
               "Press <white>Escape</white> to skip the basics.</lightgrey>";
 
     mesclr();
-    formatted_message_history(result, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
+    mpr(result, MSGCH_TUTORIAL, 0);
 }
 
 static void _tutorial_movement_info()
@@ -677,7 +677,7 @@ static void _tutorial_movement_info()
         "A basic command list can be found under <w>?\?</w>, and the most "
         "important commands will be explained to you as it becomes necessary.";
     mesclr();
-    formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
+    mpr(text, MSGCH_TUTORIAL, 0);
 }
 
 // copied from display_mutations and adapted
@@ -888,7 +888,7 @@ void tutorial_death_screen()
                     "one.";
         }
     }
-    formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
+    mpr(text, MSGCH_TUTORIAL, 0);
     more();
 
     mpr( "See you next game!", MSGCH_TUTORIAL);
@@ -909,7 +909,7 @@ void tutorial_finished()
             "(<w>?\?</w>) will look very different from now on. Here's a last "
             "playing hint:";
 
-    formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
+    mpr(text, MSGCH_TUTORIAL, 0);
     more();
 
     if (Tutorial.tut_explored)
@@ -977,7 +977,7 @@ void tutorial_finished()
               text =  "Oops... No hint for now. Better luck next time!";
         }
     }
-    formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
+    mpr(text, MSGCH_TUTORIAL, 0);
     more();
 
     Tutorial.tutorial_events.init(false);
@@ -1019,8 +1019,8 @@ void tutorial_dissection_reminder(bool healthy)
         text += ". Whenever you view a corpse while in tutorial mode you can "
                 "reread this information.";
 
-        formatted_message_history(text, MSGCH_TUTORIAL, 0,
-                                  _get_tutorial_cols());
+        mpr(text, MSGCH_TUTORIAL, 0);
+
 
         if (is_resting())
             stop_running();
@@ -1079,8 +1079,8 @@ void tutorial_healing_reminder()
                       "hitpoints in the first place. To use your abilities type "
                       "<w>a</w>.";
             }
-            formatted_message_history(text, MSGCH_TUTORIAL, 0,
-                                      _get_tutorial_cols());
+            mpr(text, MSGCH_TUTORIAL, 0);
+
 
             if (is_resting())
                 stop_running();
@@ -1163,8 +1163,7 @@ void tut_gained_new_skill(int skill)
     case SK_THROWING:
     case SK_SPELLCASTING:
     {
-        formatted_message_history(get_skill_description(skill), MSGCH_TUTORIAL,
-                                  0, _get_tutorial_cols());
+        mpr(get_skill_description(skill), MSGCH_TUTORIAL, 0);
         stop_running();
         break;
     }
@@ -1370,7 +1369,7 @@ void tutorial_monster_seen(const monsters &mon)
             "death by misclicking.";
 #endif
 
-    formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
+    mpr(text, MSGCH_TUTORIAL, 0);
 
     if (Tutorial.tutorial_type == TUT_RANGER_CHAR)
     {
@@ -1400,8 +1399,8 @@ void tutorial_monster_seen(const monsters &mon)
 #endif
 
 
-        formatted_message_history(text, MSGCH_TUTORIAL, 0,
-                                  _get_tutorial_cols());
+        mpr(text, MSGCH_TUTORIAL, 0);
+
     }
     else if (Tutorial.tutorial_type == TUT_MAGIC_CHAR)
     {
@@ -1414,8 +1413,8 @@ void tutorial_monster_seen(const monsters &mon)
         text += EOL "As a short-cut you can also <w>right-click</w> on your "
                 "book in your inventory to read its description.";
 #endif
-        formatted_message_history(text, MSGCH_TUTORIAL, 0,
-                                  _get_tutorial_cols());
+        mpr(text, MSGCH_TUTORIAL, 0);
+
     }
 }
 
@@ -1479,7 +1478,7 @@ void tutorial_first_item(const item_def &item)
 #endif
             ", you can read about its properties and its description.";
 
-    formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
+    mpr(text, MSGCH_TUTORIAL, 0);
 }
 
 static void _new_god_conduct()
@@ -1500,8 +1499,8 @@ static void _new_god_conduct()
                 "randomly helping and harming you for his own amusement; "
                 "otherwise he'll treat you like a disfavoured plaything.";
 
-        formatted_message_history(text.str(), MSGCH_TUTORIAL, 0,
-                                  _get_tutorial_cols());
+        mpr(text.str(), MSGCH_TUTORIAL, 0);
+
         return;
     }
 
@@ -1524,8 +1523,8 @@ static void _new_god_conduct()
          << new_god_name << ". But don't panic: you start out with a decent "
             "amount of piety, so any danger of excommunication is far off.\n";
 
-    formatted_message_history(text.str(), MSGCH_TUTORIAL, 0,
-                              _get_tutorial_cols());
+    mpr(text.str(), MSGCH_TUTORIAL, 0);
+
     text.str("");
 
     text << "\nYou can check your god's likes and dislikes, as well as your "
@@ -1536,8 +1535,8 @@ static void _new_god_conduct()
 #endif
             ".";
 
-    formatted_message_history(text.str(), MSGCH_TUTORIAL, 0,
-                              _get_tutorial_cols());
+    mpr(text.str(), MSGCH_TUTORIAL, 0);
+
 }
 
 // If the player is wielding a cursed non-slicing weapon then butchery
@@ -3362,8 +3361,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
     if (!text.str().empty())
     {
-        formatted_message_history(text.str(), MSGCH_TUTORIAL, 0,
-                                  _get_tutorial_cols());
+        mpr(text.str(), MSGCH_TUTORIAL, 0);
+
         stop_running();
     }
 }
