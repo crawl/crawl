@@ -3105,6 +3105,26 @@ void bolt::drop_object()
         }
         copy_item_to_grid(*item, pos(), 1);
     }
+    else if (item->sub_type == MI_LARGE_ROCK
+             && !feat_destroys_items(grd(pos())))
+    {
+        // Large rocks mulch to stone.
+        std::string sound_msg = "You hear a cracking sound!";
+        if (you.see_cell(pos()))
+        {
+            mprf("%s shatters into pieces!",
+                 item->name(DESC_CAP_THE).c_str());
+            sound_msg = "";
+        }
+        noisy(12, pos(), sound_msg.c_str());
+
+        item->sub_type = MI_STONE;
+        item->quantity = 10 + random2(41);
+        // Remove thrown flag: we might not want to pick up the stones.
+        item->flags &= ~ISFLAG_THROWN;
+
+        copy_item_to_grid(*item, pos(), item->quantity);
+    }
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary

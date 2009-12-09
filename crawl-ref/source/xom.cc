@@ -13,6 +13,9 @@
 #include "branch.h"
 #include "coordit.h"
 #include "database.h"
+#ifdef WIZARD
+#include "dbg-util.h"
+#endif
 #include "delay.h"
 #include "directn.h"
 #include "effects.h"
@@ -20,6 +23,7 @@
 #include "map_knowledge.h"
 #include "feature.h"
 #include "goditem.h"
+#include "hiscores.h"
 #include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"
@@ -3784,6 +3788,124 @@ void xom_death_message(const kill_method_type killed_by)
     // All others just get ignored by Xom.
 }
 
+static int _death_is_worth_saving(const kill_method_type killed_by,
+                                  const char *aux)
+{
+    switch (killed_by)
+    {
+    // These don't count.
+    case KILLED_BY_LEAVING:
+    case KILLED_BY_WINNING:
+    case KILLED_BY_QUITTING:
+
+    // These are too much hassle.
+    case KILLED_BY_LAVA:
+    case KILLED_BY_WATER:
+    case KILLED_BY_DRAINING:
+    case KILLED_BY_STARVATION:
+    case KILLED_BY_ROTTING:
+
+    // Don't protect the player from these.
+    case KILLED_BY_SELF_AIMED:
+    case KILLED_BY_TARGETTING:
+        return (false);
+
+    // Only if not caused by equipment.
+    case KILLED_BY_STUPIDITY:
+    case KILLED_BY_WEAKNESS:
+    case KILLED_BY_CLUMSINESS:
+        if (strstr(aux, "wielding") == NULL && strstr(aux, "wearing") == NULL
+            && strstr(aux, "removing") == NULL)
+        {
+            return (true);
+        }
+        return (false);
+
+    // Everything else is fair game.
+    default:
+        return (true);
+    }
+}
+
+static std::string _get_death_type_keyword(const kill_method_type killed_by)
+{
+    switch (killed_by)
+    {
+    case KILLED_BY_MONSTER:
+    case KILLED_BY_BEAM:
+    case KILLED_BY_BEOGH_SMITING:
+    case KILLED_BY_TSO_SMITING:
+    case KILLED_BY_DIVINE_WRATH:
+        return "actor";
+    default:
+        return "general";
+    }
+}
+
+bool xom_saves_your_life(const int dam, const int death_source,
+                         const kill_method_type death_type, const char *aux,
+                         bool see_source)
+{
+    if (you.religion != GOD_XOM || _xom_feels_nasty())
+        return (false);
+
+    // If this happens, don't bother.
+    if (you.hp_max < 1 || you.experience_level < 1)
+        return (false);
+
+    // Generally a rare effect.
+    if (!one_chance_in(20))
+        return (false);
+
+    if (!_death_is_worth_saving(death_type, aux))
+        return (false);
+
+    // In addition, the chance depends on the current tension and Xom's mood.
+    const int death_tension = get_tension(GOD_XOM, false);
+    if (death_tension < random2(5) || !xom_is_nice(death_tension))
+        return (false);
+
+    // Fake death message.
+    mpr("You die...");
+    more();
+
+    const std::string key = _get_death_type_keyword(death_type);
+    std::string speech = _get_xom_speech("life saving " + key);
+    if (speech.find("@xom_plaything@") != std::string::npos)
+    {
+        std::string toy_name = (you.piety > 180) ? "teddy bear" :
+                               (you.piety >  80) ? "toy"
+                                                 : "plaything";
+
+        speech = replace_all(speech, "@xom_plaything@", toy_name);
+    }
+    god_speaks(GOD_XOM, speech.c_str());
+
+    // Give back some hp.
+    if (you.hp < 1)
+        you.hp = 1 + random2(you.hp_max/4);
+
+    // Make sure all stats are at least 1.
+    if (you.strength < 1)
+        you.strength = 1;
+    if (you.dex < 1)
+        you.dex = 1;
+    if (you.intel < 1)
+        you.intel = 1;
+
+    god_speaks(GOD_XOM, "Xom revives you!");
+
+    // Ideally, this should contain the death cause but that is too much
+    // trouble for now.
+    take_note( Note(NOTE_XOM_REVIVAL) );
+
+    // Make sure Xom doesn't get bored within the next couple of turns.
+    if (you.gift_timeout < 10)
+        you.gift_timeout = 10;
+
+    return (true);
+}
+
 #ifdef WIZARD
 struct xom_effect_count
 {
@@ -3842,7 +3964,13 @@ static const char* _xom_effect_to_name(int effect)
 void debug_xom_effects()
 {
     // Repeat N times.
-    const int N = 10;
+    const int N = debug_prompt_for_int("How many iterations? ", true);
+
+    if (N == 0)
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
 
     FILE *ostat = fopen("xom_debug.stat", "a");
     if (!ostat)
@@ -3866,6 +3994,8 @@ void debug_xom_effects()
         fprintf(ostat, "You are under Xom's penance!\n");
     else if (_xom_is_bored())
         fprintf(ostat, "Xom is BORED.\n");
+    fprintf(ostat, "\nRunning %d times through entire mood cycle.\n", N);
+    fprintf(ostat, "---- OUTPUT EFFECT PERCENTAGES ----\n");
 
     std::vector<int>               mood_effects;
     std::vector<std::vector<int> > all_effects;
@@ -3979,4 +4109,4 @@ void debug_xom_effects()
     you.piety    = real_piety;
     you.religion = real_god;
 }
-#endif
+#endif // WIZARD

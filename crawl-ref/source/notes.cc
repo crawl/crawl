@@ -123,6 +123,7 @@ static bool _is_noteworthy( const Note& note )
         || note.type == NOTE_PENANCE
         || note.type == NOTE_MOLLIFY_GOD
         || note.type == NOTE_DEATH
+        || note.type == NOTE_XOM_REVIVAL
         || note.type == NOTE_SEEN_FEAT)
     {
         return (true);
@@ -269,6 +270,9 @@ std::string Note::describe( bool when, bool where, bool what ) const
             // accommodate the cause for the loss of hitpoints.
             result << "HP: " << first << "/" << second
                    << " [" << name << "]";
+            break;
+        case NOTE_XOM_REVIVAL:
+            result << "Xom revived you";
             break;
         case NOTE_MP_CHANGE:
             result << "Mana: " << first << "/" << second;

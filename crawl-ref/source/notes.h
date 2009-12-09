@@ -46,6 +46,7 @@ enum NOTE_TYPES
     NOTE_DONATE_MONEY,          /* needs: amount of gold */
     NOTE_SEEN_FEAT,             /* needs: feature seen (string) */
     NOTE_XOM_EFFECT,            /* needs: description (name string) */
+    NOTE_XOM_REVIVAL,           /* needs: death cause (string) */
     NOTE_NUM_TYPES
 };
 

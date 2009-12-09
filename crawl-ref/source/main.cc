@@ -489,6 +489,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         return;
     }
 
+    case CONTROL('B'): you.teleport(true, false, true); break;
     case CONTROL('D'): wizard_edit_durations(); break;
     case CONTROL('F'): debug_fight_statistics(false, true); break;
     case CONTROL('G'): debug_ghosts(); break;
@@ -496,7 +497,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('I'): debug_item_statistics(); break;
     case CONTROL('L'): wizard_set_xl(); break;
     case CONTROL('T'): debug_terp_dlua(); break;
-    case CONTROL('B'): you.teleport(true, false, true); break;
+    case CONTROL('X'): debug_xom_effects(); break;
 
     case 'O': debug_test_explore();                  break;
     case 'S': wizard_set_skill_level();              break;
@@ -1884,7 +1885,7 @@ void process_command( command_type cmd )
         }
         else if (you.level_type == LEVEL_LABYRINTH)
         {
-            mpr("No exploration algorithm can help you here."); 
+            mpr("No exploration algorithm can help you here.");
             break;
         }
         // Start exploring

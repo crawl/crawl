@@ -55,6 +55,8 @@
 #include "random.h"
 #include "religion.h"
 #include "spells3.h"
+#include "spl-book.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "tags.h"
@@ -4718,6 +4720,19 @@ static void _dgn_place_item_explicit(const item_spec &spec,
     {
         item_def &item(mitm[item_made]);
         item.pos = where;
+        CrawlHashTable props = spec.props;
+
+        if (props.exists("make_book_theme_randart"))
+        {
+            make_book_theme_randart(item,
+                props["randbook_disc1"].get_short(),
+                props["randbook_disc2"].get_short(),
+                props["randbook_num_spells"].get_short(),
+                props["randbook_slevels"].get_short(),
+                spell_by_name(props["randbook_spell"].get_string()),
+                props["randbook_owner"].get_string());
+        }
+
         // Remove unsuitable inscriptions such as {god gift}.
         item.inscription.clear();
         // And wipe item origin to remove "this is a god gift!" from there.
