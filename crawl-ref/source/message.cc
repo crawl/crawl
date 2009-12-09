@@ -208,7 +208,7 @@ no_messages::~no_messages()
     suppress_messages = msuppressed;
 }
 
-msg_colour_type msg_colour(char col)
+msg_colour_type msg_colour(int col)
 {
     return static_cast<msg_colour_type>(col);
 }
@@ -734,3 +734,11 @@ void set_msg_dump_file(FILE* file)
 {
     _msg_dump_file = file;
 }
+
+
+void formatted_mpr(const formatted_string& fs,
+                   msg_channel_type channel, int param)
+{
+    mpr(fs.to_colour_string(), channel, param);
+}
+

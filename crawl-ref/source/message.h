@@ -16,7 +16,10 @@
 
 void mesclr(bool force = false);
 
-void flush_prev_message();
+inline void flush_prev_message()
+{
+  // TODO
+}
 
 void more(bool user_forced = false);
 
@@ -51,16 +54,26 @@ private:
 void save_messages(writer& outf);
 void load_messages(reader& inf);
 
-bool any_messages();
+inline bool any_messages()
+{
+    return true;
+}
+
 void replay_messages();
 
-void set_more_autoclear(bool on);
+inline void set_more_autoclear(bool on)
+{
+}
 
 std::string get_last_messages(int mcount);
 
-std::vector<std::string> get_recent_messages(int &message_pos,
+inline std::vector<std::string> get_recent_messages(int &message_pos,
                                              bool dumpworthy_only = true,
-                                             std::vector<int> *channels = NULL);
+                                             std::vector<int> *channels = NULL)
+{
+    return std::vector<std::string>();
+}
+
 
 msg_colour_type channel_to_colour(msg_channel_type channel, int param = 0);
 
