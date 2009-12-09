@@ -54,8 +54,6 @@ void load_messages(reader& inf);
 bool any_messages();
 void replay_messages();
 
-void set_colour(char set_message_colour);
-
 void set_more_autoclear(bool on);
 
 std::string get_last_messages(int mcount);
