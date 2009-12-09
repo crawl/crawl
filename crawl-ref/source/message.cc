@@ -164,6 +164,11 @@ static char god_message_altar_colour( god_type god )
     return (YELLOW);            // for stupid compilers
 }
 
+msg_colour_type msg_colour(char col)
+{
+    return static_cast<msg_colour_type>(col);
+}
+
 #ifdef USE_COLOUR_MESSAGES
 
 // Returns a colour or MSGCOL_MUTED.

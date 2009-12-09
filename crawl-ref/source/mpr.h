@@ -71,6 +71,8 @@ enum msg_colour_type
     MSGCOL_PLAIN                // same as plain channel
 };
 
+msg_colour_type msg_colour(int colour);
+
 void mpr(const char *inf, msg_channel_type channel = MSGCH_PLAIN, int param=0);
 
 // 4.1-style mpr, currently named mprf for minimal disruption.
