@@ -49,7 +49,7 @@ enum msg_channel_type
 
 enum msg_colour_type
 {
-    MSGCOL_BLACK        = 0,    // the order of these colours is important
+    MSGCOL_BLACK        = 0,
     MSGCOL_BLUE,
     MSGCOL_GREEN,
     MSGCOL_CYAN,
@@ -61,6 +61,7 @@ enum msg_colour_type
     MSGCOL_LIGHTBLUE,
     MSGCOL_LIGHTGREEN,
     MSGCOL_LIGHTCYAN,
+    MSGCOL_LIGHTRED,
     MSGCOL_LIGHTMAGENTA,
     MSGCOL_YELLOW,
     MSGCOL_WHITE,
