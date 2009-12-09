@@ -13,8 +13,7 @@
 #include <cstring>
 #include <sstream>
 
-#include "externs.h"
-#include "options.h"
+
 
 #include "cio.h"
 #include "colour.h"
@@ -25,6 +24,7 @@
 #include "message.h"
 #include "mon-stuff.h"
 #include "notes.h"
+#include "options.h"
 #include "random.h"
 #include "religion.h"
 #include "stash.h"
@@ -44,43 +44,159 @@
 #include "luaterp.h"
 #endif
 
-class message_item {
-public:
+struct message_item
+{
     msg_channel_type    channel;        // message channel
     int                 param;          // param for channel (god, enchantment)
-    unsigned char       colour;
-    std::string         text;           // text of message
+    std::string         text;           // text of message (tagged string...)
     int                 repeats;
+    bool                cleared_after;  // XXX: this may not stay
 
-    message_item() : channel(NUM_MESSAGE_CHANNELS), param(0), colour(BLACK),
-                     text(""), repeats(0)
+    message_item() : channel(NUM_MESSAGE_CHANNELS), param(0),
+                     text(""), repeats(0), cleared_after(false)
+    {
+    }
+
+    message_item(std::string msg, msg_channel_type chan, int par)
+        : channel(chan), param(par), text(msg), repeats(1),
+          cleared_after(false)
+    {
+    }
+
+    operator bool() const
+    {
+        return (repeats > 0);
+    }
+
+    operator std::string() const
+    {
+        return ""; // should strip tags from text
+    }
+
+    // Tries to condense the argument into this message.
+    // Either *this needs to be an empty item, or it must be the
+    // same as the argument.
+    bool merge(const message_item& other)
+    {
+        if (! *this)
         {
+            *this = other;
+            return true;
         }
 
-    ~message_item()
+        if (!Options.msg_condense_repeats)
+            return false;
+        if (other.channel == channel && other.param == param &&
+            other.text == text)
+        {
+            repeats += other.repeats;
+            return true;
+        }
+        else
+            return false;
+    }
+};
+
+static int _mod(int num, int denom)
+{
+    ASSERT(denom > 0);
+    div_t res = div(num, denom);
+    return (res.rem >= 0 ? res.rem : res.rem + denom);
+}
+
+template <typename T, int SIZE>
+class circ_vec
+{
+    T data[SIZE];
+
+    int start; // first filled index
+    int end;   // first unfilled index
+
+    static void inc(int* index)
     {
+        ASSERT(*index >= 0 && *index < SIZE);
+        *index = _mod(*index + 1, SIZE);
+    }
+
+    bool full()
+    {
+        // Wasting one slot so we don't need more
+        // than "start" and "end".
+        return (size() >= SIZE - 1);
+    }
+
+public:
+    circ_vec() : start(0), end(0) {}
+
+    int size()
+    {
+        return _mod(end - start, SIZE);
+    }
+
+    T& operator[](int i)
+    {
+        ASSERT(_mod(i, SIZE) < size());
+        return data[_mod(start + i, SIZE)];
+    }
+
+    const T& operator[](int i) const
+    {
+        ASSERT(_mod(i, SIZE) < size());
+        return data[_mod(start + i, SIZE)];
+    }
+
+    void push_back(const T& item)
+    {
+        if (full())
+            inc(&start);
+        data[end] = item;
+        inc(&end);
+    }
+};
+
+class message_store
+{
+    circ_vec<message_item, NUM_STORED_MESSAGES> msgs;
+    message_item prev_msg;
+
+public:
+    bool add(const message_item& msg)
+    {
+        if (prev_msg.merge(msg))
+            return false;
+        msgs.push_back(prev_msg);
+        prev_msg = msg;
+        return false; // need_more
+    }
+
+    bool have_prev()
+    {
+        return (prev_msg);
+    }
+
+    void flush_prev()
+    {
+        if (!prev_msg)
+            return;
+        msgs.push_back(prev_msg);
+        prev_msg = message_item();
+    }
+
+    void clear_after_last()
+    {
+        msgs[-1].cleared_after = true;
     }
 };
 
 // Circular buffer for keeping past messages.
-message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
-message_item prev_message;
-bool did_flush_message = false;
-
-int Next_Message = 0;                                 // end of messages
-
-int Message_Line = -1;                // line of next (previous?) message
-int New_Message_Count = 0;
+message_store messages;
 
 static FILE* _msg_dump_file = NULL;
 
 static bool suppress_messages = false;
-static void base_mpr(const char *inf, msg_channel_type channel, int param,
-                     unsigned char colour, int repeats = 1,
-                     bool check_previous_msg = true);
-static unsigned char prepare_message(const std::string& imsg,
-                                     msg_channel_type channel,
-                                     int param);
+static msg_colour_type prepare_message(const std::string& imsg,
+                                       msg_channel_type channel,
+                                       int param);
 
 no_messages::no_messages() : msuppressed(suppress_messages)
 {
@@ -114,10 +230,10 @@ msg_colour_type channel_to_colour(msg_channel_type channel, int param)
         // the player from having that spread to other channels here.
         // The intent of plain is to give non-coloured messages, not to
         // suppress them.
-        if (Options.channels[ MSGCH_PLAIN ] >= MSGCOL_DEFAULT)
+        if (Options.channels[MSGCH_PLAIN] >= MSGCOL_DEFAULT)
             ret = MSGCOL_LIGHTGREY;
         else
-            ret = Options.channels[ MSGCH_PLAIN ];
+            ret = Options.channels[MSGCH_PLAIN];
         break;
 
     case MSGCOL_DEFAULT:
@@ -128,7 +244,7 @@ msg_colour_type channel_to_colour(msg_channel_type channel, int param)
         case MSGCH_PRAY:
             ret = (Options.channels[channel] == MSGCOL_DEFAULT)
                    ? msg_colour(god_colour(static_cast<god_type>(param)))
-                   : god_message_altar_colour(static_cast<god_type>(param));
+                   : msg_colour(god_message_altar_colour(static_cast<god_type>(param)));
             break;
 
         case MSGCH_DURATION:
@@ -206,7 +322,7 @@ msg_colour_type channel_to_colour(msg_channel_type channel, int param)
         case MSGCH_EXAMINE:
         case MSGCH_EXAMINE_FILTER:
         default:
-            ret = param > 0 ? param : MSGCOL_LIGHTGREY;
+            ret = param > 0 ? msg_colour(param) : MSGCOL_LIGHTGREY;
             break;
         }
         break;
@@ -247,8 +363,8 @@ msg_colour_type channel_to_colour(msg_channel_type channel, int param)
 
 #endif
 
-static void do_message_print( msg_channel_type channel, int param,
-                              const char *format, va_list argp )
+static void do_message_print(msg_channel_type channel, int param,
+                             const char *format, va_list argp)
 {
     char buff[200];
     vsnprintf( buff, sizeof( buff ), format, argp );
@@ -257,72 +373,83 @@ static void do_message_print( msg_channel_type channel, int param,
     mpr(buff, channel, param);
 }
 
-void mprf( msg_channel_type channel, int param, const char *format, ... )
+void mprf(msg_channel_type channel, int param, const char *format, ...)
 {
-    va_list  argp;
-    va_start( argp, format );
-    do_message_print( channel, param, format, argp );
-    va_end( argp );
+    va_list argp;
+    va_start(argp, format);
+    do_message_print(channel, param, format, argp);
+    va_end(argp);
 }
 
-void mprf( msg_channel_type channel, const char *format, ... )
+void mprf(msg_channel_type channel, const char *format, ...)
 {
-    va_list  argp;
-    va_start( argp, format );
-    do_message_print( channel, channel == MSGCH_GOD ? you.religion : 0,
-                      format, argp );
-    va_end( argp );
+    va_list argp;
+    va_start(argp, format);
+    do_message_print(channel, channel == MSGCH_GOD ? you.religion : 0,
+                     format, argp);
+    va_end(argp);
 }
 
-void mprf( const char *format, ... )
+void mprf(const char *format, ...)
 {
     va_list  argp;
-    va_start( argp, format );
-    do_message_print( MSGCH_PLAIN, 0, format, argp );
-    va_end( argp );
+    va_start(argp, format);
+    do_message_print(MSGCH_PLAIN, 0, format, argp);
+    va_end(argp);
 }
 
 static bool _updating_view = false;
 
-void mpr(const char *inf, msg_channel_type channel, int param)
+static bool check_more(std::string line, msg_channel_type channel)
+{
+    for (unsigned i = 0; i < Options.force_more_message.size(); ++i)
+        if (Options.force_more_message[i].is_filtered(channel, line))
+            return true;
+    return false;
+}
+
+static void debug_channel_arena(msg_channel_type channel)
+{
+    switch (channel)
+    {
+    case MSGCH_PROMPT:
+    case MSGCH_GOD:
+    case MSGCH_PRAY:
+    case MSGCH_DURATION:
+    case MSGCH_FOOD:
+    case MSGCH_RECOVERY:
+    case MSGCH_INTRINSIC_GAIN:
+    case MSGCH_MUTATION:
+    case MSGCH_ROTTEN_MEAT:
+    case MSGCH_EQUIPMENT:
+    case MSGCH_FLOOR_ITEMS:
+    case MSGCH_MULTITURN_ACTION:
+    case MSGCH_EXAMINE:
+    case MSGCH_EXAMINE_FILTER:
+    case MSGCH_TUTORIAL:
+        DEBUGSTR("Invalid channel '%s' in arena mode",
+                 channel_to_str(channel).c_str());
+        break;
+    default:
+        break;
+    }
+}
+
+void mpr(std::string text, msg_channel_type channel, int param)
 {
     if (_msg_dump_file != NULL)
-        fprintf(_msg_dump_file, "%s\n", inf);
+        fprintf(_msg_dump_file, "%s\n", text.c_str());
 
     if (crawl_state.game_crashed)
         return;
 
     if (crawl_state.arena)
-    {
-        switch (channel)
-        {
-        case MSGCH_PROMPT:
-        case MSGCH_GOD:
-        case MSGCH_PRAY:
-        case MSGCH_DURATION:
-        case MSGCH_FOOD:
-        case MSGCH_RECOVERY:
-        case MSGCH_INTRINSIC_GAIN:
-        case MSGCH_MUTATION:
-        case MSGCH_ROTTEN_MEAT:
-        case MSGCH_EQUIPMENT:
-        case MSGCH_FLOOR_ITEMS:
-        case MSGCH_MULTITURN_ACTION:
-        case MSGCH_EXAMINE:
-        case MSGCH_EXAMINE_FILTER:
-        case MSGCH_TUTORIAL:
-            DEBUGSTR("Invalid channel '%s' in arena mode",
-                     channel_to_str(channel).c_str());
-            break;
-        default:
-            break;
-        }
-    }
+        debug_channel_arena(channel);
 
     if (!crawl_state.io_inited)
     {
         if (channel == MSGCH_ERROR)
-            fprintf(stderr, "%s\n", inf);
+            fprintf(stderr, "%s\n", text.c_str());
         return;
     }
 
@@ -338,61 +465,22 @@ void mpr(const char *inf, msg_channel_type channel, int param)
     if (channel == MSGCH_GOD && param == 0)
         param = you.religion;
 
-    std::string help = inf;
-    if (help.find("</") != std::string::npos)
-    {
-        std::string col = colour_to_str(channel_to_colour(channel));
-        if (!col.empty())
-            help = "<" + col + ">" + help + "</" + col + ">";
+    msg_colour_type colour = prepare_message(text, channel, param);
 
-        // Handing over to the experts...
-        formatted_mpr(formatted_string::parse_string(help), channel);
+    if (colour == MSGCOL_MUTED)
         return;
-    }
 
-    unsigned char colour = prepare_message(help, channel, param);
+    linebreak_string2(text, 80); // XXX: magic number
+    text = text + "\n";
+    // TODO: wrap text in <colour>.
 
-    char mbuf[400];
-    size_t i = 0;
-    const int stepsize  = get_number_of_cols() - 1;
-    const size_t msglen = strlen(inf);
-    const int lookback_size = (stepsize < 12 ? 0 : 12);
-
-    // If a message is exactly STEPSIZE characters long,
-    // it should precisely fit in one line. The printing is thus
-    // from I to I + STEPSIZE - 1. Stop when I reaches MSGLEN.
-    while (i < msglen || i == 0)
+    std::vector<std::string> lines = split_string("\n", text, false);
+    for (unsigned int i = 0; i < lines.size(); ++i)
     {
-        strncpy( mbuf, inf + i, stepsize );
-        mbuf[stepsize] = 0;
-        // Did the message break?
-        if (i + stepsize < msglen)
-        {
-            // Yes, find a nicer place to break it.
-            int lookback, where = 0;
-            for (lookback = 0; lookback < lookback_size; ++lookback)
-            {
-                where = stepsize - 1 - lookback;
-                if (where >= 0 && isspace(mbuf[where]))
-                {
-                    // aha!
-                    break;
-                }
-            }
-
-            if (lookback != lookback_size)
-            {
-                // Found a good spot to break.
-                mbuf[where] = 0;
-                i += where + 1; // Skip past the space!
-            }
-            else
-                i += stepsize;
-        }
-        else
-            i += stepsize;
-
-        base_mpr(mbuf, channel, param, colour);
+        bool need_more = messages.add(message_item(lines[i], channel, param));
+        bool force_more = check_more(lines[i], channel);
+        if (need_more || force_more)
+            more(force_more);
     }
 }
 
@@ -406,28 +494,18 @@ void mpr_comma_separated_list(const std::string prefix,
                               const int param)
 {
     std::string out = prefix;
-    unsigned width  = get_number_of_cols() - 1;
-
     for (int i = 0, size = list.size(); i < size; i++)
     {
-        std::string new_str = list[i];
+        out += list[i];
 
         if (size > 0 && i < (size - 2))
-            new_str += comma;
+            out += comma;
         else if (i == (size - 2))
-            new_str += andc;
+            out += andc;
         else if (i == (size - 1))
-            new_str += ".";
-
-        if (out.length() + new_str.length() >= width)
-        {
-            mpr(out.c_str(), channel, param);
-            out = new_str;
-        }
-        else
-            out += new_str;
+            out += ".";
     }
-    mpr(out.c_str(), channel, param);
+    mpr(out, channel, param);
 }
 
 
@@ -449,7 +527,7 @@ static void mpr_check_patterns(const std::string& message,
 
         if (Options.note_messages[i].matches(message))
         {
-            take_note(Note( NOTE_MESSAGE, channel, param, message.c_str() ));
+            take_note(Note(NOTE_MESSAGE, channel, param, message.c_str()));
             break;
         }
     }
@@ -459,8 +537,8 @@ static void mpr_check_patterns(const std::string& message,
         && channel != MSGCH_FRIEND_SPELL && channel != MSGCH_FRIEND_ENCHANT
         && channel != MSGCH_FRIEND_ACTION && channel != MSGCH_SOUND)
     {
-        interrupt_activity( AI_MESSAGE,
-                            channel_to_str(channel) + ":" + message );
+        interrupt_activity(AI_MESSAGE,
+                           channel_to_str(channel) + ":" + message);
     }
 
     // Any sound has a chance of waking the PC if the PC is asleep.
@@ -469,19 +547,14 @@ static void mpr_check_patterns(const std::string& message,
 
     // Check messages for all forms of running now.
     if (you.running)
-    {
         for (unsigned i = 0; i < Options.travel_stop_message.size(); ++i)
-        {
             if (Options.travel_stop_message[i].is_filtered( channel, message ))
             {
                 stop_running();
                 break;
             }
-        }
-    }
 
     if (!Options.sound_mappings.empty())
-    {
         for (unsigned i = 0; i < Options.sound_mappings.size(); i++)
         {
             // Maybe we should allow message channel matching as for
@@ -492,7 +565,6 @@ static void mpr_check_patterns(const std::string& message,
                 break;
             }
         }
-    }
 }
 
 static bool channel_message_history(msg_channel_type channel)
@@ -508,72 +580,11 @@ static bool channel_message_history(msg_channel_type channel)
     }
 }
 
-// Set (or reset if "force") Message_Line.
-// XXX: the uses of set_Message_Line(false) could be done
-//      once at startup
-static void set_Message_Line(bool force = false)
-{
-    if (!force && Message_Line >= 0)
-        return;
-    Message_Line = Options.delay_message_clear
-                 ? crawl_view.msgsz.y - 1
-                 : 0;
-}
-
-// Adds a given message to the message history.
-static void mpr_store_messages(const std::string& message,
-                               msg_channel_type channel, int param,
-                               unsigned char colour, int repeats = 1)
-{
-    set_Message_Line();
-    bool was_repeat = false;
-
-    if (Options.msg_condense_repeats)
-    {
-        int prev_message_num = Next_Message - 1;
-
-        if (prev_message_num < 0)
-            prev_message_num = NUM_STORED_MESSAGES - 1;
-
-        message_item &prev_msg = Store_Message[prev_message_num];
-
-        if (prev_msg.repeats > 0 && prev_msg.channel == channel
-            && prev_msg.param == param && prev_msg.text == message
-            && prev_msg.colour == colour)
-        {
-            prev_msg.repeats += repeats;
-            was_repeat = true;
-        }
-    }
-
-    New_Message_Count++;
-    Message_Line++;
-
-    // Reset colour.
-    textcolor(LIGHTGREY);
-
-    // Equipment lists just waste space in the message recall.
-    if (!was_repeat && channel_message_history(channel))
-    {
-        // Put the message into Store_Message, and move the '---' line forward
-        Store_Message[ Next_Message ].text    = message;
-        Store_Message[ Next_Message ].colour  = colour;
-        Store_Message[ Next_Message ].channel = channel;
-        Store_Message[ Next_Message ].param   = param;
-        Store_Message[ Next_Message ].repeats = repeats;
-        Next_Message++;
-
-        if (Next_Message >= NUM_STORED_MESSAGES)
-            Next_Message = 0;
-    }
-}
-
-// Does the work common to base_mpr and formatted_mpr.
 // Returns the default colour of the message, or MSGCOL_MUTED if
 // the message should be suppressed.
-static unsigned char prepare_message(const std::string& imsg,
-                                     msg_channel_type channel,
-                                     int param)
+static msg_colour_type prepare_message(const std::string& imsg,
+                                       msg_channel_type channel,
+                                       int param)
 {
     if (suppress_messages)
         return MSGCOL_MUTED;
@@ -584,7 +595,7 @@ static unsigned char prepare_message(const std::string& imsg,
         return MSGCOL_MUTED;
     }
 
-    unsigned char colour = (unsigned char) channel_to_colour( channel, param );
+    msg_colour_type colour = channel_to_colour(channel, param);
 
     if (colour != MSGCOL_MUTED)
         mpr_check_patterns(imsg, channel, param);
@@ -605,268 +616,21 @@ static unsigned char prepare_message(const std::string& imsg,
     return colour;
 }
 
-static void handle_more(int colour)
-{
-    if (colour != MSGCOL_MUTED)
-    {
-        flush_input_buffer( FLUSH_ON_MESSAGE );
-        const int num_lines = crawl_view.msgsz.y;
+// TODO: * make any refresh call flush_prev_message
+//       * actually write out to the message window
+//           delay: just write out last n messages
+//           nodelay: write out since last mesclr
+//       * "more" handling
 
-        if (New_Message_Count == num_lines - 1)
-            more();
-    }
-}
-
-// Output the previous message.
-// Needs to be called whenever the player gets a turn or needs to do
-// something, e.g. answer a prompt.
-void flush_prev_message()
-{
-    if (did_flush_message || prev_message.text.empty())
-        return;
-
-    did_flush_message = true;
-    base_mpr(prev_message.text.c_str(), prev_message.channel,
-             prev_message.param, prev_message.colour, prev_message.repeats,
-             false);
-
-    prev_message = message_item();
-}
-
-static void base_mpr(const char *inf, msg_channel_type channel, int param,
-                     unsigned char colour, int repeats, bool check_previous_msg)
-{
-    if (colour == MSGCOL_MUTED)
-        return;
-
-    const std::string imsg = inf;
-
-    if (check_previous_msg)
-    {
-        if (!prev_message.text.empty())
-        {
-            // If a message is identical to the previous one, increase the
-            // counter.
-            if (Options.msg_condense_repeats && prev_message.channel == channel
-                && prev_message.param == param && prev_message.text == imsg
-                && prev_message.colour == colour)
-            {
-                prev_message.repeats += repeats;
-                return;
-            }
-            flush_prev_message();
-        }
-
-        // Always output prompts right away.
-        if (channel == MSGCH_PROMPT)
-            prev_message = message_item();
-        else
-        {
-            // Store other messages until later.
-            prev_message.text    = imsg;
-            prev_message.channel = channel;
-            prev_message.param   = param;
-            prev_message.colour  = colour;
-            prev_message.repeats = repeats;
-            did_flush_message = false;
-            return;
-        }
-    }
-
-    handle_more(colour);
-
-    if (repeats > 1)
-    {
-        snprintf(info, INFO_SIZE, "%s (x%d)", inf, repeats);
-        inf = info;
-    }
-
-    set_Message_Line();
-    message_out(&Message_Line, colour, inf,
-                Options.delay_message_clear ? 2 : 1);
-
-    if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
-        set_more_autoclear(false);
-
-    for (unsigned i = 0; i < Options.force_more_message.size(); ++i)
-    {
-        if (Options.force_more_message[i].is_filtered( channel, imsg ))
-        {
-            more(true);
-            New_Message_Count = 0;
-            // One more() is quite enough, thank you!
-            break;
-        }
-    }
-
-    mpr_store_messages(imsg, channel, param, colour, repeats);
-
+/* TODO
     if (channel == MSGCH_ERROR)
-        interrupt_activity( AI_FORCE_INTERRUPT );
-}
-
-
-static void mpr_formatted_output(formatted_string fs, int colour)
-{
-    int curcol = Options.delay_message_clear ? 2 : 1;
-
-    // Find last text op so that we can scroll the output.
-    unsigned last_text = fs.ops.size();
-    for (unsigned i = 0; i < fs.ops.size(); ++i)
-    {
-        if (fs.ops[i].type == FSOP_TEXT)
-            last_text = i;
-    }
-
-    set_Message_Line();
-    for (unsigned i = 0; i < fs.ops.size(); ++i)
-    {
-        switch (fs.ops[i].type)
-        {
-        case FSOP_COLOUR:
-            colour = fs.ops[i].x;
-            break;
-        case FSOP_TEXT:
-            message_out(&Message_Line, colour, fs.ops[i].text.c_str(), curcol);
-            curcol += multibyte_strlen(fs.ops[i].text);
-            break;
-        case FSOP_CURSOR:
-            break;
-        }
-    }
-}
-
-// Line wrapping is not available here!
-// Note that the colour will be first set to the appropriate channel
-// colour before displaying the formatted_string.
-void formatted_mpr(const formatted_string& fs, msg_channel_type channel,
-                   int param)
-{
-    flush_prev_message();
-
-    const std::string imsg = fs.tostring();
-    const int colour = prepare_message(imsg, channel, param);
-    if (colour == MSGCOL_MUTED)
-        return;
-
-    handle_more(colour);
-
-    mpr_formatted_output(fs, colour);
-    mpr_store_messages(imsg, channel, param, colour);
-
-    if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
-        set_more_autoclear(false);
-
-    if (channel == MSGCH_ERROR)
-        interrupt_activity( AI_FORCE_INTERRUPT );
-}
-
-// Output given string as formatted message(s), but check patterns
-// for string stripped of tags and store the original tagged string
-// for message history.  Newlines break the string into multiple
-// messages.
-//
-// If wrap_col > 0, text is wrapped at that column.
-//
-void formatted_message_history(const std::string &st_nocolor,
-                               msg_channel_type channel,
-                               int param, int wrap_col)
-{
-    flush_prev_message();
-
-    if (suppress_messages)
-        return;
-
-    int colour = channel_to_colour( channel, param );
-    if (colour == MSGCOL_MUTED)
-        return;
-
-    // Apply channel color explicitly, so "foo <w>bar</w> baz"
-    // renders "baz" correctly
-    std::string st;
-    {
-        std::ostringstream text;
-        const std::string colour_str = colour_to_str(colour);
-        text << "<" << colour_str << ">"
-             << st_nocolor
-             << "</" << colour_str << ">";
-        text.str().swap(st);
-    }
-
-    if (wrap_col)
-        linebreak_string2(st, wrap_col);
-
-    std::vector<formatted_string> fss;
-    formatted_string::parse_string_to_multiple(st, fss);
-
-    for (unsigned int i = 0; i < fss.size(); i++)
-    {
-        const formatted_string& fs = fss[i];
-        const std::string unformatted = fs.tostring();
-        mpr_check_patterns(unformatted, channel, param);
-
-        flush_input_buffer( FLUSH_ON_MESSAGE );
-
-        const int num_lines = crawl_view.msgsz.y;
-
-        if (New_Message_Count == num_lines - 1)
-            more();
-
-        mpr_formatted_output(fs, colour);
-
-        for (unsigned f = 0; f < Options.force_more_message.size(); ++f)
-        {
-            if (Options.force_more_message[f].is_filtered(channel, st_nocolor))
-            {
-                more(true);
-                New_Message_Count = 0;
-                // One more() is quite enough, thank you!
-                break;
-            }
-        }
-        mpr_store_messages(fs.to_colour_string(), channel, param, colour);
-    }
-}
-
-bool any_messages(void)
-{
-    return (Message_Line > 0);
-}
+        interrupt_activity(AI_FORCE_INTERRUPT);
+*/
 
 void mesclr(bool force)
 {
-    if (crawl_state.game_crashed)
-        return;
-
-    New_Message_Count = 0;
-
-    // If no messages, return.
-    if (!any_messages() && !force)
-        return;
-
-    if (crawl_state.doing_prev_cmd_again && !force)
-        return;
-
-    if (!force && Options.delay_message_clear)
-    {
-        set_Message_Line();
-        cursor_control coff(false);
-        message_out(&Message_Line, WHITE, "-", 1);
-        return;
-    }
-
-    // Turn cursor off -- avoid 'cursor dance'.
-
-    cursor_control cs(false);
-    clear_message_window();
-    set_Message_Line(true);
-}
-
-static bool autoclear_more = false;
-
-void set_more_autoclear(bool on)
-{
-    autoclear_more = on;
+    //ASSERT(!messages.have_prev());
+    //messages.clear_after_last();
 }
 
 void more(bool user_forced)
@@ -889,7 +653,7 @@ void more(bool user_forced)
         return;
     }
 
-    if (crawl_state.is_replaying_keys() || autoclear_more)
+    if (crawl_state.is_replaying_keys())
     {
         mesclr();
         return;
@@ -906,39 +670,9 @@ void more(bool user_forced)
     if (Options.show_more_prompt && !suppress_messages)
     {
         flush_prev_message();
-
-        int keypress = 0;
-
-        int line = crawl_view.msgsz.y - 1;
-
-        // Force scroll.
-        if (Options.delay_message_clear)
-            line++;
-
-        if (Tutorial.tutorial_left)
-        {
-            message_out(&line, LIGHTGREY,
-                        "--more--                        "
-                        "Press Ctrl-P to reread old messages.",
-                        2);
-        }
-        else
-        {
-            message_out(&line, LIGHTGREY, "--more--", 2);
-        }
-
-        mouse_control mc(MOUSE_MODE_MORE);
-        do
-        {
-            keypress = getch();
-        }
-        while (keypress != ' ' && keypress != '\r' && keypress != '\n'
-               && keypress != ESCAPE && keypress != -1
-               && (user_forced || keypress != CK_MOUSE_CLICK));
-
-        if (keypress == ESCAPE)
-            autoclear_more = true;
+        // XXX: show more prompt here and wait for key
     }
+
     mesclr(true);
 }
 
@@ -951,295 +685,50 @@ static bool is_channel_dumpworthy(msg_channel_type channel)
 
 std::string get_last_messages(int mcount)
 {
-    if (mcount <= 0)
-        return "";
-
-    if (mcount > NUM_STORED_MESSAGES)
-        mcount = NUM_STORED_MESSAGES;
-
-    bool full_buffer = (Store_Message[NUM_STORED_MESSAGES - 1].text.empty());
-    int initial = Next_Message - mcount;
-    if (initial < 0 || initial > NUM_STORED_MESSAGES)
+    std::string text = EOL;
+/*
+    for (message_store::reverse_iterator msg = message_history.rbegin();
+         msg != message_history.rend() && mcount > 0; ++msg)
     {
-        if (full_buffer)
+        if (!msg->text.empty() && is_channel_dumpworth(msg->channel))
         {
-            initial++;
-            initial = (initial + NUM_STORED_MESSAGES) % NUM_STORED_MESSAGES;
+            text = formatted_string::parse_string(msg->text).tostring()
+                 + EOL + text;
+            mcount--;
         }
-        else
-            initial = 0;
-    }
-
-    std::string text;
-    int count = 0;
-    for (int i = initial; i != Next_Message; )
-    {
-        const message_item &msg = Store_Message[i];
-
-        if (!msg.text.empty() && is_channel_dumpworthy(msg.channel))
-        {
-            text += formatted_string::parse_string(msg.text).tostring();
-            text += EOL;
-            count++;
-        }
-
-        if (++i >= NUM_STORED_MESSAGES)
-            i -= NUM_STORED_MESSAGES;
     }
 
     // An extra line of clearance.
-    if (count)
+    if (!text.empty())
         text += EOL;
-
+*/
     return text;
-}
-
-std::vector<std::string> get_recent_messages(int &message_pos,
-                                             bool dumpworthy_only,
-                                             std::vector<int> *channels)
-{
-    ASSERT(message_pos >= 0 && message_pos < NUM_STORED_MESSAGES);
-
-    std::vector<int> _channels;
-    if (channels == NULL)
-        channels = &_channels;
-
-    std::vector<std::string> out;
-
-    while (message_pos != Next_Message)
-    {
-        const message_item &msg = Store_Message[message_pos++];
-
-        if (message_pos >= NUM_STORED_MESSAGES)
-            message_pos -= NUM_STORED_MESSAGES;
-
-        if (msg.text.empty())
-            continue;
-
-        if (dumpworthy_only && !is_channel_dumpworthy(msg.channel))
-            continue;
-
-        out.push_back(formatted_string::parse_string(msg.text).tostring());
-        channels->push_back( (int) msg.channel );
-    }
-
-    return (out);
 }
 
 void save_messages(writer& outf)
 {
-    marshallLong( outf, Next_Message );
-    for (int i = 0; i < Next_Message; ++i)
-    {
-         marshallString4( outf, Store_Message[i].text );
-         marshallLong( outf, (long) Store_Message[i].channel );
-         marshallLong( outf, Store_Message[i].param );
-         marshallByte( outf, Store_Message[i].colour );
-         marshallLong( outf, Store_Message[i].repeats );
-    }
+    marshallLong(outf, 0);
 }
 
 void load_messages(reader& inf)
 {
-    Next_Message = 0;
-    int num = unmarshallLong( inf );
+    int num = unmarshallLong(inf);
     for (int i = 0; i < num; ++i)
     {
         std::string text;
         unmarshallString4( inf, text );
 
-        msg_channel_type channel = (msg_channel_type) unmarshallLong( inf );
-        int           param      = unmarshallLong( inf );
-        unsigned char colour     = unmarshallByte( inf);
-        int           repeats    = unmarshallLong( inf );
-
-        for (int k = 0; k < repeats; k++)
-             mpr_store_messages(text, channel, param, colour);
+        msg_channel_type channel = (msg_channel_type) unmarshallLong(inf);
+        int           param      = unmarshallLong(inf);
+        unsigned char colour     = unmarshallByte(inf);
+        int           repeats    = unmarshallLong(inf);
     }
-    mesclr(true);
 }
 
 void replay_messages(void)
 {
-    int        win_start_line = 0;
-    int        keyin;
-
-    bool       full_buffer = true;
-    int        num_msgs = NUM_STORED_MESSAGES;
-    int        first_message = Next_Message;
-
-    const int  num_lines = get_number_of_lines();
-
-    if (Store_Message[NUM_STORED_MESSAGES - 1].text.empty())
-    {
-        full_buffer   = false;
-        first_message = 0;
-        num_msgs = Next_Message;
-    }
-
-    int last_message = Next_Message - 1;
-    if (last_message < 0)
-        last_message += NUM_STORED_MESSAGES;
-
-    // track back a screen's worth of messages from the end
-    win_start_line = Next_Message - (num_lines - 2);
-    if (win_start_line < 0)
-    {
-        if (full_buffer)
-            win_start_line += NUM_STORED_MESSAGES;
-        else
-            win_start_line = 0;
-    }
-
-    // Turn off the cursor
-    cursor_control cursoff(false);
-
-    while (true)
-    {
-        clrscr();
-
-        cgotoxy(1, 1, GOTO_CRT);
-
-        for (int i = 0; i < num_lines - 2; i++)
-        {
-            // Calculate line in circular buffer.
-            int line = win_start_line + i;
-            if (line >= NUM_STORED_MESSAGES)
-                line -= NUM_STORED_MESSAGES;
-
-            // Avoid wrap-around.
-            if (line == first_message && i != 0)
-                break;
-
-            unsigned char colour = Store_Message[ line ].colour;
-            ASSERT(colour != MSGCOL_MUTED);
-
-            textcolor( Store_Message[ line ].colour );
-
-            std::string text = Store_Message[line].text;
-
-            // Allow formatted output of tagged messages.
-            formatted_string fs = formatted_string::parse_string(text, true);
-            int curcol = 1;
-            for (unsigned int j = 0; j < fs.ops.size(); ++j)
-            {
-                switch ( fs.ops[j].type )
-                {
-                case FSOP_COLOUR:
-                    colour = fs.ops[j].x;
-                    break;
-                case FSOP_TEXT:
-                    textcolor( colour );
-                    cgotoxy(curcol, wherey(), GOTO_CRT);
-                    cprintf("%s", fs.ops[j].text.c_str());
-                    curcol += multibyte_strlen(fs.ops[j].text);
-                    break;
-                case FSOP_CURSOR:
-                    break;
-                }
-            }
-            textcolor(LIGHTGREY);
-            if (Store_Message[ line ].repeats > 1)
-                cprintf(" (x%d)", Store_Message[ line ].repeats);
-            cprintf(EOL);
-        }
-
-        // print a footer -- note: relative co-ordinates start at 1
-        int rel_start;
-        if (!full_buffer)
-        {
-            if (Next_Message == 0)      // no messages!
-                rel_start = 0;
-            else
-                rel_start = win_start_line + 1;
-        }
-        else if (win_start_line >= first_message)
-            rel_start = win_start_line - first_message + 1;
-        else
-            rel_start = (win_start_line + NUM_STORED_MESSAGES) - first_message + 1;
-
-        int rel_end = rel_start + (num_lines - 2) - 1;
-        if (rel_end > num_msgs)
-            rel_end = num_msgs;
-
-        cprintf( "-------------------------------------------------------------------------------" );
-        cprintf(EOL);
-        cprintf( "<< Lines %d-%d of %d (Up: k<-8, Down: j>+2) >>",
-                 rel_start, rel_end, num_msgs );
-
-        keyin = getch();
-
-        if (full_buffer && NUM_STORED_MESSAGES > num_lines - 2
-            || !full_buffer && Next_Message > num_lines - 2)
-        {
-            int new_line;
-            int end_mark;
-
-#ifdef USE_TILE
-            if (keyin == CK_MOUSE_B4) keyin = '8';
-            if (keyin == CK_MOUSE_B5) keyin = '2';
-#endif
-
-            if (keyin == 'k' || keyin == '8' || keyin == '-' || keyin == '<')
-            {
-                new_line = win_start_line - (num_lines - 2);
-
-                // end_mark is equivalent to Next_Message, but
-                // is always less than win_start_line.
-                end_mark = first_message;
-                if (end_mark > win_start_line)
-                    end_mark -= NUM_STORED_MESSAGES;
-
-                ASSERT( end_mark <= win_start_line );
-
-                if (new_line <= end_mark)
-                    new_line = end_mark;   // hit top
-
-                // handle wrap-around
-                if (new_line < 0)
-                {
-                    if (full_buffer)
-                        new_line += NUM_STORED_MESSAGES;
-                    else
-                        new_line = 0;
-                }
-            }
-            else if (keyin == 'j' || keyin == '2' || keyin == '+'
-                     || keyin == '>')
-            {
-                new_line = win_start_line + (num_lines - 2);
-
-                // As above, but since we're adding we want
-                // this mark to always be greater.
-                end_mark = last_message;
-                if (end_mark < win_start_line)
-                    end_mark += NUM_STORED_MESSAGES;
-
-                ASSERT( end_mark >= win_start_line );
-
-                // hit bottom
-                if (new_line >= end_mark - (num_lines - 2))
-                    new_line = end_mark - (num_lines - 2) + 1;
-
-                if (new_line >= NUM_STORED_MESSAGES)
-                    new_line -= NUM_STORED_MESSAGES;
-            }
-            else
-                break;
-
-            win_start_line = new_line;
-        }
-        else
-        {
-            if (keyin != 'k' && keyin != '8' && keyin != '-'
-                && keyin != 'j' && keyin != '2' && keyin != '+'
-                && keyin != '<' && keyin != '>')
-            {
-                break;
-            }
-        }
-    }
-}                               // end replay_messages()
+    // TODO: reimplement using formatted_scroller
+}
 
 void set_msg_dump_file(FILE* file)
 {
