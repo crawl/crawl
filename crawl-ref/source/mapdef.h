@@ -189,8 +189,8 @@ public:
 class tile_spec
 {
 public:
-    tile_spec(const std::string &_key, bool _fix, bool _floor, const map_tile_list &_tiles)
-        : key(_key), fix(_fix), chose_fixed(false), floor(_floor),
+    tile_spec(const std::string &_key, bool _fix, bool _floor, bool _feat, const map_tile_list &_tiles)
+        : key(_key), fix(_fix), chose_fixed(false), floor(_floor), feat(_feat),
           fixed_tile(0), tiles(_tiles)
     {
     }
@@ -202,6 +202,7 @@ public:
     bool fix;
     bool chose_fixed;
     bool floor;
+    bool feat;
     int fixed_tile;
     map_tile_list tiles;
 };
@@ -279,6 +280,7 @@ public:
 #ifdef USE_TILE
     std::string add_floortile(const std::string &s);
     std::string add_rocktile(const std::string &s);
+    std::string add_spec_tile(const std::string &s);
 #endif
 
     std::vector<coord_def> find_glyph(const std::string &glyphs) const;
@@ -400,7 +402,7 @@ private:
                                          glyph_replacements_t &gly);
 
 #ifdef USE_TILE
-    std::string add_tile(const std::string &sub, bool is_floor);
+    std::string add_tile(const std::string &sub, bool is_floor, bool is_feat);
 #endif
 
     std::string add_key_field(
@@ -425,10 +427,12 @@ private:
 
     struct overlay_def
     {
-        overlay_def() : colour(0), rocktile(0), floortile(0), property(0), keyspec_idx(0) {}
+        overlay_def() : colour(0), rocktile(0), floortile(0), tile(0),
+                        property(0), keyspec_idx(0) {}
         int colour;
         int rocktile;
         int floortile;
+        int tile;
         int property;
         int keyspec_idx;
     };
