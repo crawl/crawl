@@ -98,6 +98,7 @@ mapmark.o \
 maps.o \
 menu.o \
 message.o \
+message-stream.o \
 mgen_data.o \
 misc.o \
 mon-abil.o \
