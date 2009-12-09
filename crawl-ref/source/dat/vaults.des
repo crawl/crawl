@@ -298,13 +298,6 @@ local function teleporter (data, triggerable, triggerer, marker, ev)
   my_slaves = dgn.find_marker_positions_by_prop("teleport_spot", 
     data.teleport_spot)
 
-  -- In order to make you.moveto safe(ish), teleport anyy monster at the
-  -- destination randomly.
-  local monster = dgn.mons_at(my_slaves[1].x, my_slaves[1].y)
-  if monster ~= nil then
-    monster.random_teleport()
-  end
-
   if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
     crawl.mpr("Your surroundings suddenly seem different!")
   else
