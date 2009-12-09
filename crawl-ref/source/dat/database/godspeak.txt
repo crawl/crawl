@@ -419,6 +419,31 @@ Xom pokes at a nearby @staircase@.
 
 Xom alters the dungeon around you.
 %%%%
+Xom life saving general
+
+"What? Wait, NO!"
+
+"Hey, things were just getting interesting!"
+
+"NOOOOOOO, not my @xom_plaything@!"
+
+"Not here, not now."
+
+Xom is feeling generous.
+%%%%
+Xom life saving actor
+
+w:20
+@Xom life saving general@
+
+"Hey, that's my @xom_plaything@!"
+
+"Oh no, you don't!"
+
+"That's my @xom_plaything@, go get your own one!"
+
+"Leave my @xom_plaything@ alone!"
+%%%%
 Xom boring death
 
 Xom yawns loudly!
@@ -429,7 +454,7 @@ Xom yawns loudly!
 
 "I guess I need a new plaything now."
 
-"Hmm? Did I miss something?"
+"Huh? Did I miss anything?"
 %%%%
 # Xom laughing
 # (Currently only used post-game in response to "You die...")

@@ -1194,7 +1194,9 @@ std::string scorefile_entry::death_source_desc() const
 {
     if (death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM
         && death_type != KILLED_BY_DISINT)
+    {
         return ("");
+    }
 
     // XXX no longer handles mons_num correctly! FIXME
     return (!death_source_name.empty() ?
