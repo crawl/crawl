@@ -68,7 +68,8 @@ enum msg_colour_type
     MSGCOL_DEFAULT,             // use default colour
     MSGCOL_ALTERNATE,           // use secondary default colour scheme
     MSGCOL_MUTED,               // don't print messages
-    MSGCOL_PLAIN                // same as plain channel
+    MSGCOL_PLAIN,               // same as plain channel
+    MSGCOL_NONE                 // parsing failure, etc
 };
 
 msg_colour_type msg_colour(int colour);

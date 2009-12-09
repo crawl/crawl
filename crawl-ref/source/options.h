@@ -130,7 +130,7 @@ public:
 
     int         colour[16];      // macro fg colours to other colours
     int         background;      // select default background colour
-    int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
+    msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     bool        darken_beyond_range; // for whether targetting is out of range
 
     bool        use_old_selection_order; // use old order of species/classes in

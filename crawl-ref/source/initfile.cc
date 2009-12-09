@@ -88,11 +88,11 @@ god_type str_to_god(std::string god)
 }
 
 // Returns -1 if unmatched else returns 0-15.
-static int _str_to_channel_colour( const std::string &str )
+static msg_colour_type _str_to_channel_colour(const std::string &str)
 {
-    int ret = str_to_colour( str );
-
-    if (ret == -1)
+    int col = str_to_colour(str);
+    msg_colour_type ret = MSGCOL_NONE;
+    if (col == -1)
     {
         if (str == "mute")
             ret = MSGCOL_MUTED;
@@ -103,6 +103,8 @@ static int _str_to_channel_colour( const std::string &str )
         else if (str == "alternate")
             ret = MSGCOL_ALTERNATE;
     }
+    else
+        ret = msg_colour(str_to_colour(str));
 
     return (ret);
 }
@@ -1757,13 +1759,17 @@ void game_options::add_message_colour_mapping(const std::string &field)
     if (cmap.size() != 2)
         return;
 
-    const int col = (cmap[0] == "mute") ? MSGCOL_MUTED
-                                        : str_to_colour(cmap[0]);
-    if (col == -1)
+    const int col = str_to_colour(cmap[0]);
+    msg_colour_type mcol;
+    if (cmap[0] == "mute")
+        mcol = MSGCOL_MUTED;
+    else if (col == -1)
         return;
+    else
+        mcol = msg_colour(col);
 
-    message_colour_mapping m = { parse_message_filter( cmap[1] ), col };
-    message_colour_mappings.push_back( m );
+    message_colour_mapping m = { parse_message_filter(cmap[1]), mcol };
+    message_colour_mappings.push_back(m);
 }
 
 // Option syntax is:
@@ -2203,13 +2209,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "channel")
     {
         const int chnl = str_to_channel( subkey );
-        const int col  = _str_to_channel_colour( field );
+        const msg_colour_type col  = _str_to_channel_colour( field );
 
         if (chnl != -1 && col != -1)
             channels[chnl] = col;
         else if (chnl == -1)
             fprintf( stderr, "Bad channel -- %s\n", subkey.c_str() );
-        else if (col == -1)
+        else if (col == MSGCOL_NONE)
             fprintf( stderr, "Bad colour -- %s\n", field.c_str() );
     }
     else COLOUR_OPTION(background);
