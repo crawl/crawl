@@ -213,6 +213,11 @@ msg_colour_type msg_colour(int col)
     return static_cast<msg_colour_type>(col);
 }
 
+int colour_msg(msg_colour_type col)
+{
+    return static_cast<int>(col);
+}
+
 #ifdef USE_COLOUR_MESSAGES
 
 // Returns a colour or MSGCOL_MUTED.
@@ -470,18 +475,9 @@ void mpr(std::string text, msg_channel_type channel, int param)
     if (colour == MSGCOL_MUTED)
         return;
 
-    linebreak_string2(text, 80); // XXX: magic number
-    text = text + "\n";
-    // TODO: wrap text in <colour>.
-
-    std::vector<std::string> lines = split_string("\n", text, false);
-    for (unsigned int i = 0; i < lines.size(); ++i)
-    {
-        bool need_more = messages.add(message_item(lines[i], channel, param));
-        bool force_more = check_more(lines[i], channel);
-        if (need_more || force_more)
-            more(force_more);
-    }
+    std::string col = colour_to_str(colour_msg(colour));
+    text = "<" + col + ">" + text + "</" + col + ">"; // XXX
+    messages.add(message_item(text, channel, param));
 }
 
 // mpr() an arbitrarily long list of strings without truncation or risk
