@@ -26,8 +26,8 @@
 /* Portions of CPS.h */
 typedef struct CPSProcessSerNum
 {
-	UInt32		lo;
-	UInt32		hi;
+    UInt32      lo;
+    UInt32      hi;
 } CPSProcessSerNum;
 
 extern OSErr	CPSGetCurrentProcess( CPSProcessSerNum *psn);
@@ -87,15 +87,16 @@ static NSString *getApplicationName(void)
     if (shouldChdir)
     {
         char parentdir[MAXPATHLEN];
-		CFURLRef url = CFBundleCopyBundleURL(CFBundleGetMainBundle());
-		CFURLRef url2 = CFURLCreateCopyDeletingLastPathComponent(0, url);
-		if (CFURLGetFileSystemRepresentation(url2, true, (UInt8 *)parentdir, MAXPATHLEN)) {
-	        assert ( chdir (parentdir) == 0 );   /* chdir to the binary app's parent */
-		}
-		CFRelease(url);
-		CFRelease(url2);
-	}
-
+        CFURLRef url = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+        CFURLRef url2 = CFURLCreateCopyDeletingLastPathComponent(0, url);
+        if (CFURLGetFileSystemRepresentation(url2, true, (UInt8 *)parentdir,
+                                             MAXPATHLEN))
+        {
+            assert ( chdir (parentdir) == 0 );   /* chdir to the binary app's parent */
+        }
+        CFRelease(url);
+        CFRelease(url2);
+    }
 }
 
 #if SDL_USE_NIB_FILE
@@ -358,13 +359,16 @@ int main (int argc, char **argv)
 {
     /* Copy the arguments into a global variable */
     /* This is passed if we are launched by double-clicking */
-    if ( argc >= 2 && strncmp (argv[1], "-psn", 4) == 0 ) {
+    if ( argc >= 2 && strncmp (argv[1], "-psn", 4) == 0 )
+    {
         gArgv = (char **) SDL_malloc(sizeof (char *) * 2);
         gArgv[0] = argv[0];
         gArgv[1] = NULL;
         gArgc = 1;
         gFinderLaunch = YES;
-    } else {
+    }
+    else
+    {
         int i;
         gArgc = argc;
         gArgv = (char **) SDL_malloc(sizeof (char *) * (argc+1));
@@ -381,4 +385,3 @@ int main (int argc, char **argv)
 #endif
     return 0;
 }
-

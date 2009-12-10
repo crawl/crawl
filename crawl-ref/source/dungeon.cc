@@ -2997,7 +2997,9 @@ static builder_rc_type _builder_basic(int level_number)
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Trail ends in shaft.");
 #endif
-        } else {
+        }
+        else
+        {
             grd[xend][yend] = DNGN_FLOOR;
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Trail does not end in shaft..");

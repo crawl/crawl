@@ -907,7 +907,8 @@ void game_options::reset_options()
     // Otherwise, do a check to see if we're using Apple_Terminal.
 #ifndef USE_8_COLOUR_TERM_MAP
     const char *term_program = getenv("TERM_PROGRAM");
-    if (term_program && strcmp(term_program, "Apple_Terminal") == 0) {
+    if (term_program && strcmp(term_program, "Apple_Terminal") == 0)
+    {
 #endif
         for (int i = 0; i < 16; ++i)
             colour[i] = i % 8;

@@ -269,9 +269,11 @@ bool random_near_space(const coord_def& origin, coord_def& target,
 
         int walls_between = 0;
         if (!crawl_state.arena)
+        {
             walls_between = num_feats_between(target, you.pos(),
                                               DNGN_CLEAR_ROCK_WALL,
                                               DNGN_CLEAR_PERMAROCK_WALL);
+        }
 
         if (walls_between >= min_walls_between)
             return (true);
@@ -279,5 +281,3 @@ bool random_near_space(const coord_def& origin, coord_def& target,
 
     return (false);
 }
-
-

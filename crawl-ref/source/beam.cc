@@ -4948,7 +4948,9 @@ void bolt::affect_monster(monsters* mon)
             {
                 msg::stream << mon->name(DESC_CAP_THE) << " deflects the "
                             << name << '!' << std::endl;
-            } else {
+            }
+            else
+            {
                 msg::stream << "The " << name << " misses "
                             << mon->name(DESC_NOCAP_THE) << '.' << std::endl;
             }
@@ -5968,7 +5970,8 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     for (unsigned int i = 0; i < aoe_funcs.size(); ++i)
         hits = (*aoe_funcs[i])(*this, loc) && hits;
 
-    if (hits) {
+    if (hits)
+    {
         // Hmm, I think we're OK.
         m(delta + centre) = std::min(count, m(delta + centre));
     }

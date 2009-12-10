@@ -1115,7 +1115,7 @@ static void _elven_twin_died(monsters* twin, bool in_transit)
             found_duvessa = true;
             break;
         }
-        else if (mi->type == MONS_DOWAN 
+        else if (mi->type == MONS_DOWAN
                  || (mi->props.exists("original_name")
                      && mi->props["original_name"].get_string() == "Dowan"))
         {
@@ -2095,8 +2095,8 @@ int monster_die(monsters *monster, killer_type killer,
         // And his vault can  be placed again.
         you.uniq_map_names.erase("uniq_boris");
     }
-    else if (monster->type == MONS_KIRKE 
-             || (monster->props.exists("original_name") 
+    else if (monster->type == MONS_KIRKE
+             || (monster->props.exists("original_name")
                 && monster->props["original_name"].get_string() == "Kirke")
                    && !in_transit)
     {
@@ -3708,7 +3708,6 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
             monster->add_ench( mon_enchant(ENCH_TP, 0, KC_OTHER,
                                            random_range(20, 30)) );
         }
-
         return;
     }
 
