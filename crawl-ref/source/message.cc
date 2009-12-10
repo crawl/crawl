@@ -118,7 +118,7 @@ class circ_vec
         *index = _mod(*index + 1, SIZE);
     }
 
-    bool full()
+    bool full() const
     {
         // Wasting one slot so we don't need more
         // than "start" and "end".
@@ -128,7 +128,7 @@ class circ_vec
 public:
     circ_vec() : start(0), end(0) {}
 
-    int size()
+    int size() const
     {
         return _mod(end - start, SIZE);
     }
@@ -154,9 +154,11 @@ public:
     }
 };
 
+typedef circ_vec<message_item, NUM_STORED_MESSAGES> store_t;
+
 class message_store
 {
-    circ_vec<message_item, NUM_STORED_MESSAGES> msgs;
+    store_t msgs;
     message_item prev_msg;
 
 public:
@@ -185,6 +187,11 @@ public:
     void clear_after_last()
     {
         msgs[-1].cleared_after = true;
+    }
+
+    const store_t& get_store()
+    {
+        return msgs;
     }
 };
 
@@ -723,7 +730,11 @@ void load_messages(reader& inf)
 
 void replay_messages(void)
 {
-    // TODO: reimplement using formatted_scroller
+    formatted_scroller hist;
+    const store_t msgs = messages.get_store();
+    for (int i = 0; i < msgs.size(); ++i)
+        hist.add_text(msgs[i].text);
+    hist.show();    
 }
 
 void set_msg_dump_file(FILE* file)
