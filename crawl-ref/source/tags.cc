@@ -2165,7 +2165,7 @@ void tag_construct_level_tiles(writer &th)
             marshallShort(th, env.tile_flv[count_x][count_y].wall);
             marshallShort(th, env.tile_flv[count_x][count_y].floor);
             marshallShort(th, env.tile_flv[count_x][count_y].special);
-            marshallShort(th, env.tile_flv[count_x][count_y].ftile);
+            marshallShort(th, env.tile_flv[count_x][count_y].feat);
         }
 
     mcache.construct(th);
@@ -2523,7 +2523,7 @@ void tag_read_level_tiles(struct reader &th)
             env.tile_flv[x][y].wall    = unmarshallShort(th);
             env.tile_flv[x][y].floor   = unmarshallShort(th);
             env.tile_flv[x][y].special = unmarshallShort(th);
-            env.tile_flv[x][y].ftile   = unmarshallShort(th);
+            env.tile_flv[x][y].feat   = unmarshallShort(th);
         }
 
     if (ver > TILETAG_PRE_MCACHE)

@@ -513,7 +513,12 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             if (tile)
             {
                 int offset = random2(tile_dngn_count(tile));
-                env.tile_flv(gc).ftile = tile + offset;
+                if (grd(gc) == DNGN_FLOOR && !floor)
+                    env.tile_flv(gc).floor = tile + offset;
+                else if (grd(gc) == DNGN_ROCK_WALL && !rock)
+                    env.tile_flv(gc).wall = tile + offset;
+                else
+                    env.tile_flv(gc).feat = tile + offset;
             }
 #endif
         }
