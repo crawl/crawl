@@ -509,6 +509,17 @@ void map_lines::apply_grid_overlay(const coord_def &c)
                 int offset = random2(tile_dngn_count(rock));
                 env.tile_flv(gc).wall = rock + offset;
             }
+            const int tile = (*overlay)(x, y).tile;
+            if (tile)
+            {
+                int offset = random2(tile_dngn_count(tile));
+                if (grd(gc) == DNGN_FLOOR && !floor)
+                    env.tile_flv(gc).floor = tile + offset;
+                else if (grd(gc) == DNGN_ROCK_WALL && !rock)
+                    env.tile_flv(gc).wall = tile + offset;
+                else
+                    env.tile_flv(gc).feat = tile + offset;
+            }
 #endif
         }
 }
@@ -1193,6 +1204,8 @@ void map_lines::overlay_tiles(tile_spec &spec)
         {
             if (spec.floor)
                 (*overlay)(pos, y).floortile = spec.get_tile();
+            else if (spec.feat)
+                (*overlay)(pos, y).tile = spec.get_tile();
             else
                 (*overlay)(pos, y).rocktile = spec.get_tile();
             ++pos;
@@ -1715,7 +1728,7 @@ bool map_tile_list::parse(const std::string &s, int weight)
     return true;
 }
 
-std::string map_lines::add_tile(const std::string &sub, bool is_floor)
+std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_feat)
 {
     std::string s = trimmed_string(sub);
 
@@ -1735,7 +1748,7 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor)
     if (!err.empty())
         return (err);
 
-    tile_spec spec(key, sep == ':', is_floor, list);
+    tile_spec spec(key, sep == ':', is_floor, is_feat, list);
     overlay_tiles(spec);
 
     return ("");
@@ -1743,12 +1756,17 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor)
 
 std::string map_lines::add_rocktile(const std::string &sub)
 {
-    return add_tile(sub, false);
+    return add_tile(sub, false, false);
 }
 
 std::string map_lines::add_floortile(const std::string &sub)
 {
-    return add_tile(sub, true);
+    return add_tile(sub, true, false);
+}
+
+std::string map_lines::add_spec_tile(const std::string &sub)
+{
+    return add_tile(sub, false, true);
 }
 
 //////////////////////////////////////////////////////////////////////////

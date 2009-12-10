@@ -709,12 +709,7 @@ static void mpr_store_messages(const std::string& message,
         }
     }
 
-    // Prompt lines are presumably shown to / seen by the player accompanied
-    // by a request for input, which should do the equivalent of a more(); to
-    // save annoyance, don't bump New_Message_Count for prompts.
-    if (channel != MSGCH_PROMPT)
-        New_Message_Count++;
-
+    New_Message_Count++;
     Message_Line++;
 
     // Reset colour.

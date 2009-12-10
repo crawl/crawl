@@ -2365,6 +2365,10 @@ static int _tileidx_shop(coord_def where)
 
 int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
 {
+    int override = env.tile_flv[gx][gy].feat;
+    if (override)
+        return override;
+
     switch (feat)
     {
     case DNGN_UNSEEN:
@@ -4249,6 +4253,7 @@ void tile_clear_flavour()
         env.tile_flv(*ri).floor   = 0;
         env.tile_flv(*ri).wall    = 0;
         env.tile_flv(*ri).special = 0;
+        env.tile_flv(*ri).feat    = 0;
     }
 }
 

@@ -147,12 +147,22 @@ LUAFN(dgn_rtile)
 #endif
 }
 
+LUAFN(dgn_tile)
+{
+#ifdef USE_TILE
+    return dgn_map_add_transform(ls, &map_lines::add_spec_tile);
+#else
+    return 0;
+#endif
+}
+
 const struct luaL_reg dgn_tile_dlib[] =
 {
 { "lrocktile", dgn_lrocktile },
 { "lfloortile", dgn_lfloortile },
 { "rtile", dgn_rtile },
 { "ftile", dgn_ftile },
+{ "tile", dgn_tile },
 { "change_rock_tile", dgn_change_rock_tile },
 { "change_floor_tile", dgn_change_floor_tile },
 { "lev_floortile", dgn_lev_floortile },

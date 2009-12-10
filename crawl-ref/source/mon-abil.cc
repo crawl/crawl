@@ -463,7 +463,8 @@ bool slime_split_merge(monsters *thing)
 // Returns true if you resist the siren's call.
 static bool _siren_movement_effect(const monsters *monster)
 {
-    bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70));
+    bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70)
+                      || you.cannot_act() || you.asleep());
 
     if (!do_resist)
     {

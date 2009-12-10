@@ -101,6 +101,9 @@ struct mgen_data
     // Fiend ... summoned by the effects of Hell.
     std::string     non_actor_summoner;
 
+    // This can eventually be used to store relevant information.
+    CrawlHashTable  props;
+
     mgen_data(monster_type mt = RANDOM_MONSTER,
               beh_type beh = BEH_HOSTILE,
               actor* sner = 0,
@@ -126,7 +129,7 @@ struct mgen_data
           flags(monflags), god(which_god), number(monnumber), colour(moncolour),
           power(monpower), proximity(prox), level_type(ltype), map_mask(0),
           hd(mhd), hp(mhp), extra_flags(mflags), mname(monname),
-          non_actor_summoner(nas)
+          non_actor_summoner(nas), props()
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
                || mt == MONS_BALL_LIGHTNING);

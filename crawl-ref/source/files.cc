@@ -1082,7 +1082,7 @@ static void _grab_followers()
         if (fmenv == NULL)
             continue;
 
-        if ((fmenv->type == MONS_DUVESSA 
+        if ((fmenv->type == MONS_DUVESSA
             || (fmenv->props.exists("original_name")
                 && fmenv->props["original_name"].get_string() == "Duvessa"))
                && fmenv->alive())
@@ -1986,9 +1986,10 @@ void restore_game(void)
 
     // Sanity check - EOF
     if (!feof(charf))
+    {
         end(-1, false, "\nIncomplete read of \"%s\" - aborting.\n",
             charFile.c_str());
-
+    }
     fclose(charf);
 
     std::string stashFile = get_savedir_filename( you.your_name, "", "st" );

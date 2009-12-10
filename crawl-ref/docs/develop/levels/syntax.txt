@@ -825,6 +825,18 @@ RTILE:    x = wall_hive:15 / wall_lair / none
           Identical to FTILE, but for rock walls.  Not useful for anything
           but the rock wall feature.
 
+TILE:     x = wall_flesh
+          Identical to FTILE and RTILE in syntax, but closer to COLOUR in
+          functionality. Instead of replacing the floor or relevant rock tiles,
+          this can be used to replace the tile used for any specific feature.
+
+          This can be used in combination with FTILE and RTILE to change the
+          appearance of features. It can only be used with previously specified
+          tiles, however.
+
+          Like COLOUR and FTILE, this should be used sparingly and to good
+          effect.
+
 SHUFFLE:  def, 12/3?
           This allows you to randomly permute glyphs on the map. There are
           two ways:

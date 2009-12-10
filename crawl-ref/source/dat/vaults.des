@@ -298,13 +298,6 @@ local function teleporter (data, triggerable, triggerer, marker, ev)
   my_slaves = dgn.find_marker_positions_by_prop("teleport_spot", 
     data.teleport_spot)
 
-  -- In order to make you.moveto safe(ish), teleport anyy monster at the
-  -- destination randomly.
-  local monster = dgn.mons_at(my_slaves[1].x, my_slaves[1].y)
-  if monster ~= nil then
-    monster.random_teleport()
-  end
-
   if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
     crawl.mpr("Your surroundings suddenly seem different!")
   else
@@ -662,7 +655,7 @@ TAGS: vault8_quadrant
 SHUFFLE: !_
 SUBST:   ! = | * .:20
 SUBST:   _ = 8 9 .:20
-SUBST:   a:x.
+SUBST:   a : x .
 : vault8_loot(_G)
 : vault8_rune(_G)
 MAP
@@ -701,7 +694,7 @@ SUBST:   Y = Y ., Z = Z .
 SUBST:   Y = Y ., Z = Z .
 SUBST:   Y = 9:30 8:10 .:40
 SUBST:   Z = 9:10 8:30 .:40
-SUBST:   a:x.
+SUBST:   a : x .
 : vault8_loot(_G)
 : vault8_rune(_G)
 MAP
@@ -729,6 +722,162 @@ x??..Y..Z..Z..Z..Z..??????x
 x??.................?????Ox
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+##############################################################################
+# Vault:8 - Clover Quadrant (by Mu.)
+#
+NAME:   vault8_clover
+TAGS:   vault8_quadrant
+SUBST:  Q = 8 9 .:20
+NSUBST: ? = 1:O / *:*
+NSUBST: " = 1:. / *:x
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+  xxxxxxxxxxxxxxxxxxxxxxxxx
+ .........................x
+x.........................x
+x..xxxxxxxxxQQQxxxxxxxxx..x
+x..x?**....x...x....**?x..x
+x..x**..Q..x...x..Q..**x..x
+x..x*..Q...x...x...Q..*x..x
+x..x..Q....xx"xx....Q..x..x
+x..x...................x..x
+x..xxxxxxxx.....xxxxxxxx..x
+x..Q......x.....x......Q..x
+x..Q......"....."......Q..x
+x..Q......x.....x......Q..x
+x..xxxxxxxx.....xxxxxxxx..x
+x..x...................x..x
+x..x..Q....xx"xx....Q..x..x
+x..x*..Q...x...x...Q..*x..x
+x..x**..Q..x...x..Q..**x..x
+x..x?**....x...x....**?x..x
+x..xxxxxxxxxQQQxxxxxxxxx..x
+x.........................x
+x.........................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Vault:8 - Triangles Quadrant (by Mu.)
+#
+NAME:   vault8_triangles
+TAGS:   vault8_quadrant
+SUBST:  Q = 8 9 .:20
+NSUBST: ? = 1:O / *:|
+SUBST:  " = =:1 x:99
+SUBST:  ! = x:20 .
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.........................x
+x.!x..Q..xx............x!.x
+x..xx.....xx.Q...Q..Q.xx..x
+x...xx..Q..xx........xx.Q.x
+x....xx.....xx.Q..Q.xx....x
+x..Q..xx..Q..xx****xx.Q...x
+x......xx.....xx**xx......x
+x....Q..xx..Q.."xxx|Q.....x
+x........xx.....xx||....Q.x
+x......Q.*x"..Q.."x|Q.....x
+x..Q.....**xx.....xx......x
+x......Q.*xxx"..Q..xx.Q...x
+x........xx||xx.....xx....x
+x....Q..xx||||xx..Q..xx.Q.x
+x......xx..Q.Q.xx.....xx||x
+x..Q..xx........xx..Q..xx?x
+x....xx..Q.....Q.xx.....xxx
+x...xx............xx..Q..xx
+x..xx..Q....Q....Q.xx.....x
+x.!x...............|xx....x
+x..................|?xx...
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Vault:8 - Not Diamond Quadrant (by Mu.)
+#
+NAME:   vault8_not_diamond
+TAGS:   vault8_quadrant
+SUBST:  Q = 8 9 *:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xx.xQx.x.x.x.x.x.x.x.x.x..
+x.x.x.x.x.x.x.x.x.x.x.xQx.x
+xx.x.x.x.xQx.x.xQx.x.x.x.xx
+x.x.xxxxxxxxx.xxxxxxxxx.x.x
+xxQxxxxxxxxx.x.xxxxxxxxx.xx
+x.x.xxxxxxxx...xxxxxxxx.x.x
+xx.xxxxxxx...Q...xxxxxxxQxx
+x.x.xxxxx.........xxxxx.x.x
+xx.xxxxx...|$|$|...xxxxx.xx
+xQx.x.x....$***$....x.x.x.x
+xx.x.x.x.Q.|*O*|.Q.x.x.x.xx
+x.x.x.x....$***$....x.x.xQx
+xx.xxxxx...|$|$|...xxxxx.xx
+x.x.xxxxx.........xxxxx.x.x
+xx.xxxxxxx...Q...xxxxxxx.xx
+x.x.xxxxxxxx...xxxxxxxx.x.x
+xxQxxxxxxxxx.x.xxxxxxxxxQxx
+x.x.xxxxxxxxx.xxxxxxxxx.x.x
+xx.x.x.x.xQx.x.xQx.x.x.x.xx
+x.x.x.x.x.x.x.x.x.x.x.x.x.x
+xx.xQx.x.x.x.x.x.x.x.xQx.xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Vault:8 - Boxes (by Mu.)
+#
+NAME:   vault8_boxes
+TAGS:   vault8_quadrant
+NSUBST: a = 1:+ / *:x
+NSUBST: b = 1:+ / *:x
+NSUBST: c = 1:+ / *:x
+NSUBST: d = 1:+ / *:x
+NSUBST: e = 1:+ / *:x
+NSUBST: f = 1:+ / *:x
+NSUBST: g = 1:+ / *:x
+SHUFFLE:        ABCDEFG
+SUBST:  ABC = Q
+SUBST:  D = |*$Q
+SUBST:  E = |
+SUBST:  F = *
+NSUBST: G = 1:O / *:Q
+SUBST:  Q = 8 9 .:20
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.........................x
+x..........xxbxx..........x
+x..........xBBBx..........x
+x..xxaxx...bBBBb...xxcxx..x
+x..xAAAx...xBBBx...xCCCx..x
+x..aAAAa...xxbxx...cCCCc..x
+x..xAAAx...........xCCCx..x
+x..xxaxx...........xxcxx..x
+x..........xxdxx..........x
+x..........xDDDx..........x
+x....Q.....dDDDd.....Q....x
+x..........xDDDx..........x
+x..........xxdxx..........x
+x..xxfxx...........xxgxx..x
+x..xFFFx...........xGGGx..x
+x..fFFFf...xxexx...gGGGg..x
+x..xFFFx...xEEEx...xGGGx..x
+x..xxfxx...eEEEe...xxgxx..x
+x..........xEEEx..........x
+x..........xxexx..........x
+ .........................x
+  xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
 
 ##############################################################################
 # The Hall of Blades

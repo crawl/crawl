@@ -1130,7 +1130,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         // Okay, you *didn't* escape death.
         you.reset_escaped_death();
 
-        // Ensure some minimal information about Xom's involvment.
+        // Ensure some minimal information about Xom's involvement.
         if (aux == NULL || strlen(aux) == 0)
         {
             if (death_type != KILLED_BY_XOM)
@@ -1138,6 +1138,12 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         }
         else if (strstr(aux, "Xom") == NULL)
             death_type = KILLED_BY_XOM;
+    }
+    // Xom may still try to save your life.
+    else if (xom_saves_your_life(dam, death_source, death_type, aux,
+                                 see_source))
+    {
+        return;
     }
 
 #if WIZARD || DEBUG
