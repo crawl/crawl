@@ -1250,7 +1250,7 @@ int TilesFramework::get_number_of_cols()
     }
 }
 
-void TilesFramework::cgotoxy(int x, int y, int region)
+void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
     switch (region)
     {

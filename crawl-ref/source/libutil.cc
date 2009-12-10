@@ -699,7 +699,7 @@ int snprintf( char *str, size_t size, const char *format, ... )
 #endif
 
 #ifndef USE_TILE
-void cgotoxy(int x, int y, int region)
+void cgotoxy(int x, int y, GotoRegion region)
 {
     ASSERT(x >= 1);
     ASSERT(y >= 1);
