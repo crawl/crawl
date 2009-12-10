@@ -49,13 +49,13 @@
 #    cupboards full of potions, confused monsters. 
 # Borgnjor's Mortuary: liches, miasma clouds, potions of decay, slaves that are
 #    having their life forces drained, vampire (knights, mages).
-# Iskenderun's Mystic Tower: purple draconians, purple wizards with mystic
+# Iskenderun's Mystic Bastion: purple draconians, purple wizards with mystic
 #    blast, naga mages with mystic blast, purple fog and smoke outside windows,
 #    robes and cloaks of magic resistance as the loot.
 # Lee's Rapid Deconstructor: golems and "monk" or otherwise unarmed creatures,
 #    exploding features and exploding corpses. It's a timed vault, so you have
 #    to get to the loot quickly and avoid the hordes of monsters.
-# Lehudib's Crystal Cave:  crystal walls and crystal golems, crystal monsters,
+# Lehudib's Crystal Spire:  crystal walls and crystal golems, crystal monsters,
 #    spear throwers (statues with crystal spear), possibly the unrand as the
 #    loot.
 # Maxwell's Forge: Maxwell employs a bunch of angels to churn out weapons;
@@ -965,7 +965,45 @@ NAME:       wizlab_ozocubu
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Ozocubu's Refrigerator")
+LROCKCOL:   white
+LFLOORCOL:  lightblue
+LROCKTILE:  wall_ice
+LFLOORTILE: floor_ice
+KFEAT:      X = rock_wall
+KFEAT:      R = closed_door
+COLOUR:     =c = darkgrey
+{{
+smear_map({iterations=20, smear='x', onto='.xx', boxy=false})
+smear_map({iterations=40, smear='x', onto='.xx', boxy=false})
+}}
+validate {{ return glyphs_connected('A', 'R') }}
 MAP
+       xxxx
+     xxx..xxx
+    xxx.....xx
+   xx........xx   xxxx     xxx
+  xx....A.....xx xx..xx  xxx.xx   xxx
+  xx...........xxx....xxxx....xx xx.xx
+   xx..........................xxx...xx
+    xxx................c...........c..xx
+      xx..............cccccccRccccccc..xx
+       xx..............c....c.c....c....xx
+        xx.............c....c.c....c.....xx
+       xx..............c....c.c....c....xx
+      xx.............c.c....c.c....c.c...xx
+     xx.............cccc+cccc+cccc+cccc.xx
+      xx.............c...c.......c...c.xx    cccc
+      xxx.....xxx....c...c...<...c...c.xx   cccxxx
+        xxx.xxx xx...c...c.......c...c..xxcccxxx.xx
+          xxx    x...cc+ccccc+ccccc+cc...xccxx....xx
+                xx...c...c.......c...c..xxcccxx....x
+               xx....c...c.......c...c.xxccccxxx..xx
+               xxx..cc...c.......c...ccxccxxxx...xx
+                xxccccc+ccccc+ccccc+cccccxx.....xx
+                  c.......c.....c.......cx.......xx
+                  c.......+.....+.......=.xxx.....xx
+                  c.......c.....c.......cxx xxx.xxx
+                  cccccccccccccccccccccccxx   xxx
 ENDMAP
 
 ###############################################################################
