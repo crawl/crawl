@@ -3160,6 +3160,23 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             }
         }
 
+        std::string tile = strip_tag_prefix(mon_str, "tile:");
+#ifdef USE_TILE
+        if (!tile.empty())
+        {
+            // Modify the string to prevent them from using non-mons tiles.
+            if (tile.find("mons_") == std::string::npos)
+                tile = std::string("mons_" + tile);
+            unsigned int index;
+            if (!tile_player_index(tile.c_str(), index))
+            {
+                error = make_stringf("bad tile name: \"%s\".", tile.c_str());
+                return (slot);
+            }
+            mspec.props["monster_tile"] = short(index);
+        }
+#endif
+
         std::string name = strip_tag_prefix(mon_str, "name:");
         if (!name.empty())
         {
