@@ -678,9 +678,9 @@ static void set_Message_Line(bool force = false)
 {
     if (!force && Message_Line >= 0)
         return;
-    Message_Line = Options.delay_message_clear
-                 ? crawl_view.msgsz.y - 1
-                 : 0;
+
+    Message_Line = Options.delay_message_clear ? crawl_view.msgsz.y - 1
+                                               : 0;
 }
 
 // Adds a given message to the message history.
