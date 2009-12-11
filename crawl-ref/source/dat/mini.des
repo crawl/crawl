@@ -2661,3 +2661,18 @@ MAP
 @....21=@
 .....xxx
 ENDMAP
+
+##############################################################################
+# Caryatid's revenge (AKB)
+#
+NAME:   archer_statue
+DEPTH:  D:8-, Vault, Elf
+MONS:   statue name:archer name_adjective; longbow . arrow q:30
+MAP
+    ccc
+ccccc1ccccc
+...........
+...........
+ .........
+   .....
+ENDMAP
