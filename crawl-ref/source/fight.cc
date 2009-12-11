@@ -1898,8 +1898,22 @@ int melee_attack::player_weapon_type_modify(int damage)
     case DAM_WHIP:
         if (damage < HIT_MED)
             attack_verb = "whack";
-        else
+        else if (damage < HIT_STRONG)
             attack_verb = "thrash";
+        else
+        {
+            switch(defender->holiness())
+            {
+            case MH_HOLY:
+            case MH_NATURAL:
+            case MH_DEMONIC:
+                attack_verb = "punish";
+                verb_degree = " causing immense pain";
+                break;
+            default:
+                attack_verb = "devastate";
+            }
+        }
         break;
 
     case -1: // unarmed
