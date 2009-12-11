@@ -1447,7 +1447,7 @@ bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = true)
     }
 }
 
-void _handle_teleport_update (bool large_change, bool check_ring_TC, 
+void _handle_teleport_update (bool large_change, bool check_ring_TC,
                             const coord_def old_pos)
 {
     if (large_change)
@@ -1566,9 +1566,13 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
             if (pos == you.pos() || pos == coord_def(-1,-1))
             {
                 if (!wizard_tele)
+                {
                     if (!yesno("Are you sure you want to cancel this teleport?",
                                true, 'n'))
+                    {
                         continue;
+                    }
+                }
                 you.turn_is_over = false;
                 return (false);
             }
@@ -1582,7 +1586,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
                 more();
                 continue;
             }
-
             break;
         }
 
@@ -1598,8 +1601,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
                 pos.y += random2(3) - 1;
             }
 #if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "Scattered target square (%d, %d)", pos.x, pos.y);
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Scattered target square (%d, %d)", pos.x, pos.y);
 #endif
         }
 
@@ -1729,7 +1732,8 @@ bool you_teleport_to (const coord_def where_to, bool move_monsters)
             monsters *mons = monster_at(where);
             mons->teleport(true);
         }
-        else {
+        else
+        {
             for (adjacent_iterator ai(where); ai; ++ai)
             {
                 if (!_cell_vetoes_teleport(*ai))
@@ -1739,7 +1743,7 @@ bool you_teleport_to (const coord_def where_to, bool move_monsters)
                 }
                 else
                 {
-                    if (monster_at(*ai) && move_monsters 
+                    if (monster_at(*ai) && move_monsters
                             && !_cell_vetoes_teleport(*ai, false))
                     {
                         monsters *mons = monster_at(*ai);
@@ -1769,7 +1773,7 @@ bool you_teleport_to (const coord_def where_to, bool move_monsters)
 
 void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
 {
-    const bool randtele = _teleport_player(allow_control, new_abyss_area, 
+    const bool randtele = _teleport_player(allow_control, new_abyss_area,
                                            wizard_tele);
 
     // Xom is amused by uncontrolled teleports that land you in a

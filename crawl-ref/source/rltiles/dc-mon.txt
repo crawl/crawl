@@ -452,6 +452,7 @@ ogre_mage MONS_OGRE_MAGE
 
 ## Plants ('P')
 plant MONS_PLANT
+plant_crypt MONS_WITHERED_PLANT
 oklob_plant MONS_OKLOB_PLANT
 
 ## Trolls ('T')

@@ -85,7 +85,8 @@ enum mon_attack_flavour
     AF_NAPALM,
     AF_CHAOS,
     AF_STEAL,
-    AF_STEAL_FOOD
+    AF_STEAL_FOOD,
+    AF_WEAP_ONLY	// AF_PLAIN if wielding a weapon, nothing if not
 };
 
 // Non-spell "summoning" types to give to monsters::mark_summoned(), or

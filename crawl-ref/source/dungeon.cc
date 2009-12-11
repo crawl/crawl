@@ -2997,7 +2997,9 @@ static builder_rc_type _builder_basic(int level_number)
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Trail ends in shaft.");
 #endif
-        } else {
+        }
+        else
+        {
             grd[xend][yend] = DNGN_FLOOR;
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Trail does not end in shaft..");
@@ -4970,6 +4972,7 @@ int dgn_place_monster(mons_spec &mspec,
         mg.mname     = mspec.monname;
         mg.hd        = mspec.hd;
         mg.hp        = mspec.hp;
+        mg.props     = mspec.props;
 
         // Marking monsters as summoned
         mg.abjuration_duration = mspec.abjuration_duration;
@@ -5016,6 +5019,8 @@ int dgn_place_monster(mons_spec &mspec,
                 _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
             if (mspec.explicit_spells)
                 mons.spells = mspec.spells;
+            if (mspec.props.exists("monster_tile"))
+                mons.props["monster_tile"] = mspec.props["monster_tile"].get_short();
             // These are applied earlier to prevent issues with renamed monsters
             // and "<monster> comes into view" (see delay.cc:_monster_warning).
             //mons.flags |= mspec.extra_monster_flags;

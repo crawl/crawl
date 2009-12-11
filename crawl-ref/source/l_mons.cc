@@ -125,8 +125,8 @@ static int l_mons_do_dismiss(lua_State *ls)
     // dismiss is only callable from dlua, not from managed VMs (i.e.
     // end-user scripts cannot dismiss monsters).
     ASSERT_DLUA;
-    monsters *mons =
-        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+    monsters *mons = util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+
     if (mons->alive())
     {
         mons->flags |= MF_HARD_RESET;
@@ -142,12 +142,11 @@ static int l_mons_do_random_teleport(lua_State *ls)
     // We should only be able to teleport monsters from dlua.
     ASSERT_DLUA;
 
-    monsters *mons =
-        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+    monsters *mons = util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+
     if (mons->alive())
-    {
         mons->teleport(true);
-    }
+
     return (0);
 }
 
@@ -241,10 +240,8 @@ static int monster_get(lua_State *ls)
         return (0);
 
     for (unsigned i = 0; i < sizeof(mons_attrs) / sizeof(mons_attrs[0]); ++i)
-    {
         if (!strcmp(attr, mons_attrs[i].attribute))
             return (mons_attrs[i].accessor(ls, mw->mons, attr));
-    }
 
     return (0);
 }
@@ -259,11 +256,14 @@ static const char *_monster_behaviour_names[] = {
     "lurk"
 };
 
-static beh_type behaviour_by_name(const std::string &name) {
+static beh_type behaviour_by_name(const std::string &name)
+{
     ASSERT(ARRAYSZ(_monster_behaviour_names) == NUM_BEHAVIOURS);
+
     for (unsigned i = 0; i < ARRAYSZ(_monster_behaviour_names); ++i)
         if (name == _monster_behaviour_names[i])
             return static_cast<beh_type>(i);
+
     return NUM_BEHAVIOURS;
 }
 
@@ -281,12 +281,13 @@ static int monster_set(lua_State *ls)
     if (!attr)
         return (0);
 
-    if (!strcmp(attr, "beh")) {
+    if (!strcmp(attr, "beh"))
+    {
         const beh_type beh =
-            lua_isnumber(ls, 3) ?
-            static_cast<beh_type>(luaL_checkint(ls, 3)) :
-            lua_isstring(ls, 3) ? behaviour_by_name(lua_tostring(ls, 3)) :
-            NUM_BEHAVIOURS;
+            lua_isnumber(ls, 3) ? static_cast<beh_type>(luaL_checkint(ls, 3)) :
+            lua_isstring(ls, 3) ? behaviour_by_name(lua_tostring(ls, 3))
+                                : NUM_BEHAVIOURS;
+
         if (beh != NUM_BEHAVIOURS)
             mw->mons->behaviour = beh;
     }
@@ -294,17 +295,21 @@ static int monster_set(lua_State *ls)
     return (0);
 }
 
-static int mons_behaviour(lua_State *ls) {
+static int mons_behaviour(lua_State *ls)
+{
     if (lua_gettop(ls) < 1)
         return (0);
 
-    if (lua_isnumber(ls, 1)) {
+    if (lua_isnumber(ls, 1))
+    {
         lua_pushvalue(ls, 1);
         return (1);
     }
-    else if (lua_isstring(ls, 1)) {
+    else if (lua_isstring(ls, 1))
+    {
         const beh_type beh = behaviour_by_name(lua_tostring(ls, 1));
-        if (beh != NUM_BEHAVIOURS) {
+        if (beh != NUM_BEHAVIOURS)
+        {
             lua_pushnumber(ls, beh);
             return (1);
         }

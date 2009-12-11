@@ -2313,9 +2313,8 @@ bool item_needs_autopickup(const item_def &item)
     if ((item.flags & ISFLAG_THROWN) && Options.pickup_thrown)
         return (true);
 
-    if ((item.flags & ISFLAG_DROPPED) && !Options.pickup_dropped) {
+    if ((item.flags & ISFLAG_DROPPED) && !Options.pickup_dropped)
         return (false);
-    }
 
     std::string itemname;
     return _is_option_autopickup(item, itemname);

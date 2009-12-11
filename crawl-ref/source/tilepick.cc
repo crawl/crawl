@@ -126,6 +126,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     if (detected)
         type = mons_detected_base(mon->type);
 
+    if (mon->props.exists("monster_tile"))
+        return int(mon->props["monster_tile"].get_short());
+
     switch (type)
     {
     // program bug

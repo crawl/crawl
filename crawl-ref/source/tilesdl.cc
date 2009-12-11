@@ -1250,26 +1250,25 @@ int TilesFramework::get_number_of_cols()
     }
 }
 
-void TilesFramework::cgotoxy(int x, int y, int region)
+void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 {
-    if (region == GOTO_LAST)
+    switch (region)
     {
-        // nothing
-    }
-    else if (region == GOTO_CRT)
-    {
+    case GOTO_CRT:
         m_active_layer = LAYER_CRT;
         TextRegion::text_mode = m_region_crt;
-    }
-    else if (region == GOTO_MSG)
-    {
+        break;
+    case GOTO_MSG:
         m_active_layer = LAYER_NORMAL;
         TextRegion::text_mode = m_region_msg;
-    }
-    else if (region == GOTO_STAT)
-    {
+        break;
+    case GOTO_STAT:
         m_active_layer = LAYER_NORMAL;
         TextRegion::text_mode = m_region_stat;
+        break;
+    default:
+        DEBUGSTR("invalid cgotoxy region in tiles: %d", region);
+        break;
     }
 
     TextRegion::cgotoxy(x, y);

@@ -298,6 +298,7 @@ void spawn_random_monsters()
 
         mgen_data mg(WANDERING_MONSTER);
         mg.proximity = prox;
+        mg.foe = (you.char_direction == GDT_ASCENDING) ? MHITYOU : MHITNOT;
         mons_place(mg);
         viewwindow(false);
         return;

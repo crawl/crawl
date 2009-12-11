@@ -215,7 +215,8 @@ void write_stack_trace(FILE* file, int ignore_count)
 
     // Now we prettify the printout to even show demangled C++ function names.
     std::string bt = "";
-    for (int i = 0; i < num_frames; i++) {
+    for (int i = 0; i < num_frames; i++)
+    {
 #if defined (TARGET_OS_MACOSX)
         char *addr = ::strstr(symbols[i], "0x");
         char *mangled = ::strchr(addr, ' ') + 1;

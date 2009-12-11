@@ -2027,6 +2027,7 @@ enum monster_type                      // (int) menv[].type
     MONS_ORANGE_STATUE,
     MONS_SILVER_STATUE,
     MONS_ICE_STATUE,
+    MONS_STATUE,
 
     // Third batch of uniques
     MONS_ROXANNE = 450, // -- statue, too!

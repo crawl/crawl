@@ -58,7 +58,7 @@ extern "C" int getch();
 int getch_ck();
 int clrscr();
 void message_out(int *which_line, int colour, const char *s, int firstcol = 0);
-void cgotoxy(int x, int y, int region = GOTO_CRT);
+void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
 void clear_message_window();
 void delay(int ms);
 void update_screen();

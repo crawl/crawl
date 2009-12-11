@@ -4092,14 +4092,18 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     }
 
     bool changed = 0;
-    for  (int i = 0; i < range/x; i++) {
+    for  (int i = 0; i < range/x; i++)
+    {
         if (mon->behaviour == BEH_SLEEP)
             break;
-        if (coinflip()) {
+
+        if (coinflip())
+        {
             changed = 1;
-            if (coinflip()) {
+            if (coinflip())
                 mon->behaviour = BEH_SLEEP;
-            } else {
+            else
+            {
                 mon->behaviour = BEH_WANDER;
                 mon->foe = MHITNOT;
                 mon->target = random_in_bounds();

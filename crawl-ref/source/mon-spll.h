@@ -1270,7 +1270,7 @@
        SPELL_BLINK_OTHER,
        SPELL_SLEEP,
        SPELL_POISON_ARROW,
-       SPELL_SLOW,
+       SPELL_POISON_ARROW,
        SPELL_MINOR_HEALING
       }
     },

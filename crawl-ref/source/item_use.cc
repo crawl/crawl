@@ -2096,7 +2096,8 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.damage_funcs.push_back(_silver_damages_victim);
     if (poisoned)
         beam.hit_funcs.push_back(_poison_hit_victim);
-    if (penetrating) {
+    if (penetrating)
+    {
         beam.range_funcs.push_back(_item_penetrates_victim);
         beam.hit_verb = "passes through";
     }
