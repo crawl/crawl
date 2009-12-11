@@ -257,6 +257,10 @@ guardian serpent cast
 @The_monster@ coils @objective@self and performs some mystic snake dance.
 
 @The_monster@ casts a spell.
+
+@The_monster@ gestures with its tail.
+
+@The_monster@ weaves intricate patterns with the tip of its tongue.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.
