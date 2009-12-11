@@ -1109,10 +1109,10 @@ local function summon_monks (data, triggerable, triggerer, marker, ev)
   end
 
   local msp = "human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures" ..
-            " nas:old_memories seen / rock troll name:monk n_suf dur:2 seen " ..
-            " sum:shadow_creatures nas:old_memories" ..
+            " nas:old_memories tile:human_monk seen / rock troll name:monk n_suf"..
+            " dur:2 seen sum:shadow_creatures nas:old_memories tile:rock_troll_monk" ..
             " / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures " ..
-            " nas:old_memories seen"
+            " nas:old_memories seen tile:iron_troll_monk"
 
   local count = 0
   for point in iter.circle_iterator(3) do
@@ -1120,6 +1120,8 @@ local function summon_monks (data, triggerable, triggerer, marker, ev)
       if feat.is_solid(point.x, point.y) or feat.destroys_items(point.x, point.y) then
       else
        local mon = dgn.create_monster(point.x, point.y, msp)
+       mon.set_prop("description", "It seems a flimsy representation of a monk;"
+                                .. " nothing more than a half-formed memory.\n")
        count = count + 1
       end
     end
@@ -1144,6 +1146,7 @@ lua_marker('A', summon_marker)
 
 }}
 :           wizlab_setup(_G, "Wucad Mu's Monastery")
+:           set_border_fill_type("trees")
 MAP
 tttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt

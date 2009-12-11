@@ -326,6 +326,8 @@ vault_guard MONS_VAULT_GUARD
 shapeshifter MONS_SHAPESHIFTER
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 killer_klown MONS_KILLER_KLOWN
+## From the Wucad Mu wizlab
+human_monk_ghost MONS_HUMAN_MONK
 
 ## Angels ('A')
 angel MONS_ANGEL
@@ -464,6 +466,9 @@ troll MONS_TROLL
 rock_troll MONS_ROCK_TROLL
 iron_troll MONS_IRON_TROLL
 deep_troll MONS_DEEP_TROLL
+## From the Wucad Mu wizard laboratory
+rock_troll_monk_ghost MONS_ROCK_TROLL_MONK
+iron_troll_monk_ghost MONS_IRON_TROLL_MONK
 
 ## Vampires ('V')
 vampire MONS_VAMPIRE
