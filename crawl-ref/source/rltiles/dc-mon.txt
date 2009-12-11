@@ -437,10 +437,10 @@ mummy_priest MONS_MUMMY_PRIEST
 
 ## Nagas ('N')
 naga MONS_NAGA
-guardian_naga MONS_GUARDIAN_SERPENT
 naga_mage MONS_NAGA_MAGE
 naga_warrior MONS_NAGA_WARRIOR
 greater_naga MONS_GREATER_NAGA
+guardian_serpent MONS_GUARDIAN_SERPENT
 
 ## Ogres ('O')
 %sdir dc-mon/unique
