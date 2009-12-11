@@ -4875,6 +4875,10 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
                 destroy_item(item_made, true);
         }
     }
+
+    // Pre-wield ranged weapons.
+    if (mon.inv[MSLOT_WEAPON] == NON_ITEM && mon.inv[MSLOT_ALT_WEAPON] != NON_ITEM)
+        mon.swap_weapons(false);
 }
 
 
