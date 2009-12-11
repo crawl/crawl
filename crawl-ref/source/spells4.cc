@@ -121,6 +121,7 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     case MONS_IRON_GOLEM:
     case MONS_CRYSTAL_GOLEM:
     case MONS_ORANGE_STATUE:
+    case MONS_STATUE:
     case MONS_EARTH_ELEMENTAL:
     case MONS_GARGOYLE:
     case MONS_SKELETAL_DRAGON:
@@ -1391,6 +1392,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         case MONS_STONE_GOLEM:
         case MONS_EARTH_ELEMENTAL:
         case MONS_GARGOYLE:
+        case MONS_STATUE:
             explode         = true;
             beam.ex_size    = 2;
             beam.name       = "blast of rock fragments";

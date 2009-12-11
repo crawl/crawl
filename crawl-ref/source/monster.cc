@@ -370,6 +370,7 @@ int monsters::body_weight() const
 
         case MONS_QUICKSILVER_DRAGON:
         case MONS_SILVER_STATUE:
+        case MONS_STATUE:
             weight *= 4;
             break;
 
@@ -1932,7 +1933,7 @@ void monsters::wield_melee_weapon(int near)
 
         // Switch to the alternate weapon if it's not a ranged weapon, too,
         // or switch away from our main weapon if it's a ranged weapon.
-        if (alt && !is_range_weapon(*alt) || weap && !alt)
+        if (alt && !is_range_weapon(*alt) || weap && !alt && type != MONS_STATUE)
             swap_weapons(near);
     }
 }
