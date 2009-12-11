@@ -5227,8 +5227,17 @@ void melee_attack::mons_perform_attack_rounds()
 
         init_attack();
 
-        const mon_attack_def attk = mons_attack_spec(attacker_as_monster(),
+        mon_attack_def attk = mons_attack_spec(attacker_as_monster(),
                                                      attack_number);
+        if (attk.type == AT_WEAP_ONLY)
+        {
+            int weap = attacker_as_monster()->inv[MSLOT_WEAPON];
+            if (weap == NON_ITEM)
+                attk.type = AT_NONE;
+            else if (is_range_weapon(mitm[weap]))
+                attk.type = AT_SHOOT;
+        }
+
         if (attk.type == AT_NONE)
         {
             // Make sure the monster uses up some energy, even

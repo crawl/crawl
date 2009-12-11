@@ -53,7 +53,9 @@ enum mon_attack_type
     AT_GORE,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
-    AT_RANDOM       // Anything but AT_SHOOT.
+    AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap:
+                    //   use it, no weapon: stand there doing nothing.
+    AT_RANDOM       // Anything but AT_SHOOT and AT_WEAP_ONLY.
 };
 
 enum mon_attack_flavour
@@ -85,8 +87,7 @@ enum mon_attack_flavour
     AF_NAPALM,
     AF_CHAOS,
     AF_STEAL,
-    AF_STEAL_FOOD,
-    AF_WEAP_ONLY	// AF_PLAIN if wielding a weapon, nothing if not
+    AF_STEAL_FOOD
 };
 
 // Non-spell "summoning" types to give to monsters::mark_summoned(), or

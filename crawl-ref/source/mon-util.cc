@@ -1081,14 +1081,6 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
 
-    if (attk.flavour == AF_WEAP_ONLY)
-    {
-        if (mon->inv[MSLOT_WEAPON] != NON_ITEM) // not mon->weapon() !
-            attk.flavour = AF_PLAIN;
-        else
-            return (mon_attack_def::attk(0, AT_NONE));
-    }
-
     // Slime creature attacks are multiplied by the number merged.
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;

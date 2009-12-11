@@ -489,7 +489,7 @@ static int _mons_offhand_weapon_index(const monsters *m)
 item_def *monsters::weapon(int which_attack)
 {
     const mon_attack_def attk = mons_attack_spec(this, which_attack);
-    if (attk.type != AT_HIT)
+    if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY)
         return (NULL);
 
     // Even/odd attacks use main/offhand weapon.
