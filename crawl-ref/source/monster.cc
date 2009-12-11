@@ -5365,6 +5365,9 @@ bool monsters::can_go_berserk() const
     if (holiness() != MH_NATURAL || type == MONS_KRAKEN_TENTACLE)
         return (false);
 
+    if (mons_intel(this) == I_PLANT)
+        return (false);
+
     if (berserk() || has_ench(ENCH_FATIGUE))
         return (false);
 
