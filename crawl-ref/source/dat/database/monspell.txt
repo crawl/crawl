@@ -248,13 +248,13 @@ giant eyeball cast
 %%%%
 guardian serpent cast targeted
 
-@The monster@ coils and waves @possessive@ upper body at @target@.
+@The_monster@ coils @objective@self and waves @possessive@ upper body at @target@.
 
 @The_monster@ casts a spell at @target@.
 %%%%
 guardian serpent cast
 
-@The monster@ coils and performs some mystic snake dance.
+@The_monster@ coils @objective@self and performs some mystic snake dance.
 
 @The_monster@ casts a spell.
 ###########################################################################
@@ -304,6 +304,22 @@ You hear @something@ invoke the aid of @God@ against @target@.
 unseen priest cast
 
 You hear some strange, mumbled prayers to @God@.
+%%%%
+non-humanoid wizard cast targeted
+
+@The_monster@ stares at @target@ and mumbles some strange words.
+
+@The_monster@ casts a spell at @target@.
+%%%%
+non-humanoid wizard cast
+
+@The_monster@ mumbles some strange words.
+
+@The_monster@ casts a spell.
+%%%%
+unseen non-humanoid wizard cast
+
+You hear some strange, mumbled words.
 %%%%
 wizard cast targeted
 

@@ -3223,6 +3223,8 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                       monster->pronoun(PRONOUN_CAP_POSSESSIVE));
     msg = replace_all(msg, "@possessive@",
                       monster->pronoun(PRONOUN_NOCAP_POSSESSIVE));
+    msg = replace_all(msg, "@objective@",
+                      monster->pronoun(PRONOUN_OBJECTIVE));
 
     // Body parts.
     bool        can_plural = false;
