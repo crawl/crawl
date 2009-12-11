@@ -52,7 +52,7 @@
       }
     },
 
-    {  MST_GUARDIAN_NAGA,
+    {  MST_GUARDIAN_SERPENT,
       {
        SPELL_TELEPORT_OTHER,
        SPELL_TELEPORT_OTHER,

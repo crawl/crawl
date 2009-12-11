@@ -1394,7 +1394,7 @@ ENDMAP
 #
 NAME:  fake_naga_vault
 DEPTH: D:15-26, Vault, Elf, Snake
-MONS:  mimic, patrolling guardian naga
+MONS:  mimic, patrolling guardian serpent
 ITEM:  any good_item
 : local b = crawl.random2(10)
 : if b > 7 then
@@ -2416,7 +2416,7 @@ MONS:    wolf spider w:7 / giant mite w:3
 MONS:    oklob plant
 MONS:    jelly
 MONS:    trapdoor spider / wolf spider
-MONS:    guardian naga
+MONS:    guardian serpent
 MONS:    curse skull
 # Randomise wall type: in 50% of maps, you cannot dig to the stairs.
 SUBST:   x : xxxxxxvvvccb

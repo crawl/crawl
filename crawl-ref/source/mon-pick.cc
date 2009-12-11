@@ -222,7 +222,7 @@ bool mons_abyss(int mcls)
     case MONS_GREAT_ORB_OF_EYES:
     case MONS_GOLDEN_EYE:
     case MONS_GREEN_DEATH:
-    case MONS_GUARDIAN_NAGA:
+    case MONS_GUARDIAN_SERPENT:
     case MONS_HAIRY_DEVIL:
     case MONS_HELLION:
     case MONS_HELLWING:
@@ -383,7 +383,7 @@ int mons_rare_abyss(int mcls)
     case MONS_DEMONIC_CRAWLER:
     case MONS_EXECUTIONER:
     case MONS_GREEN_DEATH:
-    case MONS_GUARDIAN_NAGA:
+    case MONS_GUARDIAN_SERPENT:
     case MONS_HAIRY_DEVIL:
     case MONS_HELLION:
     case MONS_ICE_DEVIL:
@@ -689,7 +689,7 @@ int mons_standard_level(int mcls)
     case MONS_BLINK_FROG:
     case MONS_BUTTERFLY:
     case MONS_GIANT_BLOWFLY:
-    case MONS_GUARDIAN_NAGA:
+    case MONS_GUARDIAN_SERPENT:
     case MONS_RAKSHASA:
     case MONS_SLIME_CREATURE:
     case MONS_STONE_GOLEM:
@@ -1091,7 +1091,7 @@ int mons_standard_rare(int mcls)
     case MONS_DEEP_ELF_DEMONOLOGIST:
     case MONS_DEEP_ELF_PRIEST:
     case MONS_DEEP_ELF_SORCERER:
-    case MONS_GUARDIAN_NAGA:
+    case MONS_GUARDIAN_SERPENT:
         return 3;
 
     case MONS_PULSATING_LUMP:
@@ -1810,7 +1810,7 @@ int mons_pitsnake_level(int mcls)
         mlev += 3;
         break;
 
-    case MONS_GUARDIAN_NAGA:
+    case MONS_GUARDIAN_SERPENT:
         mlev += 4;
         break;
 
@@ -1848,7 +1848,7 @@ int mons_pitsnake_rare(int mcls)
         return 32;
 
     case MONS_GREATER_NAGA:
-    case MONS_GUARDIAN_NAGA:
+    case MONS_GUARDIAN_SERPENT:
     case MONS_SMALL_SNAKE:
         return 15;
 

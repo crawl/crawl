@@ -3518,7 +3518,10 @@ mon_body_shape get_mon_shape(const int type)
     case 'M': // mummies
         return (MON_SHAPE_HUMANOID);
     case 'N': // nagas
-        return (MON_SHAPE_NAGA);
+        if (mons_genus(type) == MONS_GUARDIAN_SERPENT)
+            return (MON_SHAPE_SNAKE);
+        else
+            return (MON_SHAPE_NAGA);
     case 'O': // ogres
         return (MON_SHAPE_HUMANOID);
     case 'P': // plants

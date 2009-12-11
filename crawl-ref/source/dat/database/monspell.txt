@@ -245,6 +245,18 @@ giant eyeball cast targeted
 giant eyeball cast
 
 @The_monster@ looks around.
+%%%%
+guardian serpent cast targeted
+
+@The monster@ coils and waves @possessive@ upper body at @target@.
+
+@The_monster@ casts a spell at @target@.
+%%%%
+guardian serpent cast
+
+@The monster@ coils and performs some mystic snake dance.
+
+@The_monster@ casts a spell.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

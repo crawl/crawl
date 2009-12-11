@@ -596,8 +596,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     // nagas ('N')
     case MONS_NAGA:
         return TILEP_MONS_NAGA;
-    case MONS_GUARDIAN_NAGA:
-        return TILEP_MONS_GUARDIAN_NAGA;
+    case MONS_GUARDIAN_SERPENT:
+        return TILEP_MONS_GUARDIAN_SERPENT;
     case MONS_NAGA_MAGE:
         return TILEP_MONS_NAGA_MAGE;
     case MONS_NAGA_WARRIOR:
@@ -1881,8 +1881,8 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
         return TILE_CORPSE_NAGA;
-    case MONS_GUARDIAN_NAGA:
-        return TILE_CORPSE_GUARDIAN_NAGA;
+    case MONS_GUARDIAN_SERPENT:
+        return TILE_CORPSE_GUARDIAN_SERPENT;
 
     // ogres ('O')
     case MONS_OGRE:

@@ -168,11 +168,9 @@ Grum
 
 A tough-looking gnoll, wearing the pelt of one of his former war dogs.
 %%%%
-guardian naga
+guardian serpent
 
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
-
-These nagas are often used as guardians by powerful creatures.
+Serpents are distinct and rare members of scaly society. They are light and swift like snakes, yet also intelligent like nagas. Their lack of hands, together with an extreme sense of duty, makes them renowned guardians. It is said that a guardian serpent would rather die in battle than leave anything to an intruder.
 %%%%
 Harold
 
