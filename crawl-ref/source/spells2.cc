@@ -48,7 +48,10 @@
 #include "religion.h"
 #include "stuff.h"
 #include "teleport.h"
+#ifdef USE_TILE
 #include "tiles.h"
+#include "tiledef-main.h"
+#endif
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"

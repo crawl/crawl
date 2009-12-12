@@ -8,9 +8,7 @@
 
 #ifdef USE_TILE
 
-#include "tiledef-main.h"
-#include "tiledef-dngn.h"
-#include "tiledef-player.h"
+#include "tiledef_defines.h"
 
 #include "beam.h"
 #include "enum.h"

@@ -27,6 +27,7 @@
 #include "viewgeom.h"
 
 #include "tiledef-dngn.h"
+#include "tiledef-main.h"
 #include "tilefont.h"
 
 #include <SDL.h>

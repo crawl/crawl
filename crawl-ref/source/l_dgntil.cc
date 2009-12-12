@@ -13,6 +13,8 @@
 
 #ifdef USE_TILE
 
+#include "tiledef-dngn.h"
+
 #include "env.h"
 
 unsigned int get_tile_idx(lua_State *ls, int arg)

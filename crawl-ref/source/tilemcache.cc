@@ -8,6 +8,8 @@
 #include "ghost.h"
 #include "mon-util.h"
 
+#include "tiledef-player.h"
+
 mcache_manager mcache;
 
 // Used internally for streaming.

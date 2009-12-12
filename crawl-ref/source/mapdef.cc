@@ -43,6 +43,10 @@
 #include "stuff.h"
 #include "env.h"
 #include "tags.h"
+#ifdef USE_TILE
+#include "tiledef-dngn.h"
+#include "tiledef-player.h"
+#endif
 
 static const char *map_section_names[] = {
     "",

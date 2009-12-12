@@ -27,6 +27,7 @@
 #include "terrain.h"
 #include "tiles.h"
 #include "tilesdl.h"
+#include "tiledef-main.h"
 #include "travel.h"
 #include "viewgeom.h"
 

@@ -70,6 +70,10 @@
 #include "tutorial.h"
 #include "xom.h"
 
+#ifdef USE_TILE
+#include "tiledef-dngn.h"
+#endif
+
 #define DEBUG_PANE_BOUNDS 0
 
 crawl_view_geometry crawl_view;

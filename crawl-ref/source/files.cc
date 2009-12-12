@@ -75,7 +75,10 @@
 #include "state.h"
 #include "stuff.h"
 #include "tags.h"
+#ifdef USE_TILE
 #include "tiles.h"
+#include "tiledef-player.h"
+#endif
 #include "terrain.h"
 #include "travel.h"
 #include "tutorial.h"
