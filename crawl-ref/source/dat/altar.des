@@ -790,14 +790,17 @@ DEPTH:   3-11
 TAGS:    no_monster_gen patrolling temple_overflow_makhleb
 TAGS:    layout_rooms layout_city layout_open layout_cross
 KFEAT:   _ = altar_makhleb
-# Either one slow type 3 demon (iron devil or demonic crawler)
-#     or two slow type 4 demons (smoke demons)
+# Either one slow type 3 or 4 demon (iron devil or demonic crawler or smoke demon)
 #     or three slow type 5 demons (manes).
+# The smoke demon can only come up in D:9-11.
 SHUFFLE: 1234
 NSUBST:  1 = 1:1 / *:.
 NSUBST:  2 = 1:2 / *:.
 NSUBST:  3 = 2:3 / *:.
-MONS:    iron devil / demonic crawler / smoke demon / manes
+: if you.absdepth() < 9 then
+SUBST:   3 = 12
+: end
+MONS:    iron devil, demonic crawler, smoke demon, manes
 MAP
 xxxxxxxxxxxxxxx
 x.............x
