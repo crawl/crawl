@@ -2483,7 +2483,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     mon_enchant abj       = monster->get_ench(ENCH_ABJ);
     mon_enchant charm     = monster->get_ench(ENCH_CHARM);
-    mon_enchant neutral   = monster->get_ench(ENCH_NEUTRAL);
+    mon_enchant temp_pacif= monster->get_ench(ENCH_TEMP_PACIF);
     mon_enchant shifter   = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                               ENCH_SHAPESHIFTER);
     mon_enchant sub       = monster->get_ench(ENCH_SUBMERGED);
@@ -2528,7 +2528,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     monster->add_ench(abj);
     monster->add_ench(charm);
-    monster->add_ench(neutral);
+    monster->add_ench(temp_pacif);
     monster->add_ench(shifter);
     monster->add_ench(sub);
     monster->add_ench(summon);

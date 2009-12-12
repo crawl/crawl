@@ -164,8 +164,8 @@ mon_attitude_type monsters::temp_attitude() const
 {
     if (has_ench(ENCH_CHARM))
         return ATT_FRIENDLY;
-    else if (has_ench(ENCH_NEUTRAL))
-        return ATT_NEUTRAL;
+    else if (has_ench(ENCH_TEMP_PACIF))
+        return ATT_GOOD_NEUTRAL;
     else
         return attitude;
 }
@@ -2945,14 +2945,14 @@ bool monsters::friendly() const
 
 bool monsters::neutral() const
 {
-    return (attitude == ATT_NEUTRAL || has_ench(ENCH_NEUTRAL)
+    return (attitude == ATT_NEUTRAL || has_ench(ENCH_TEMP_PACIF)
             || attitude == ATT_GOOD_NEUTRAL
             || attitude == ATT_STRICT_NEUTRAL);
 }
 
 bool monsters::good_neutral() const
 {
-    return (attitude == ATT_GOOD_NEUTRAL);
+    return (attitude == ATT_GOOD_NEUTRAL || has_ench(ENCH_TEMP_PACIF));
 }
 
 bool monsters::strict_neutral() const
@@ -4322,9 +4322,11 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
-    case ENCH_NEUTRAL:
+    case ENCH_TEMP_PACIF:
         if (!quiet)
-            simple_monster_message(this, " is no longer neutral.");
+            simple_monster_message(this, (" seems to come to "
+                + pronoun(PRONOUN_NOCAP_POSSESSIVE) + " senses.").c_str());
+        // Yeah, this _is_ offensive to Zin, but hey, he deserves it (1KB).
 
         behaviour_event(this, ME_EVAL);
         break;
@@ -4613,7 +4615,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_INVIS: case ENCH_CHARM:  case ENCH_SLEEP_WARY:
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
         case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
-        case ENCH_BATTLE_FRENZY: case ENCH_NEUTRAL:
+        case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF:
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE:
             lose_ench_levels(i->second, levels);
             break;
@@ -4750,7 +4752,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_MIGHT:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
-    case ENCH_NEUTRAL:
+    case ENCH_TEMP_PACIF:
     case ENCH_PETRIFYING:
     case ENCH_PETRIFIED:
     case ENCH_SICK:

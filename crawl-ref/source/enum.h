@@ -1240,7 +1240,7 @@ enum enchant_type
     ENCH_SLEEPY,         //   Monster can't wake until this wears off.
     ENCH_HELD,           //   25 -- Caught in a net.
     ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy
-    ENCH_NEUTRAL,
+    ENCH_TEMP_PACIF,
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
     ENCH_LOWERED_MR,                   //   30

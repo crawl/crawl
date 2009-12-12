@@ -173,7 +173,7 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
         case 10:
         case 11:
         case 12:
-            if (!mon->add_ench(mon_enchant(ENCH_NEUTRAL, 0, KC_YOU,
+            if (!mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
                                (16 + random2avg(13, 2)) * 10)))
             {
                 return (0);
@@ -203,7 +203,7 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
             {
                 if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
                 {
-                    if (!mon->add_ench(mon_enchant(ENCH_NEUTRAL, 0, KC_YOU,
+                    if (!mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
                                        (16 + random2avg(13, 2)) * 10)))
                     {
                         return (0);
