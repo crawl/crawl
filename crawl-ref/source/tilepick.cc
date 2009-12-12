@@ -2622,6 +2622,21 @@ static int _tileidx_cloud(int type, int decay)
             ch = TILE_CLOUD_BLACK_SMOKE;
             break;
 
+        case CLOUD_MUTAGENIC:
+            ch = (dur == 0 ? TILE_CLOUD_MUTAGENIC_0 :
+                  dur == 1 ? TILE_CLOUD_MUTAGENIC_1
+                           : TILE_CLOUD_MUTAGENIC_2);
+            ch += random2(tile_main_count(ch));
+            break;
+
+        case CLOUD_MIST:
+            ch = TILE_CLOUD_MIST;
+            break;
+
+        case CLOUD_RAIN:
+            ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
+            break;
+
         default:
             ch = TILE_CLOUD_GREY_SMOKE;
             break;
