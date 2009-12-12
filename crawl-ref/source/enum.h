@@ -738,7 +738,7 @@ enum conduct_type
     DID_HOLY,                             // holy wrath, holy word scrolls
     DID_UNHOLY,                           // demon weapons, demon spells
     DID_ATTACK_HOLY,
-    DID_ATTACK_NEUTRAL,
+    DID_ATTACK_GOOD_NEUTRAL,
     DID_ATTACK_FRIEND,
     DID_FRIEND_DIED,
     DID_STABBING,                         // unused

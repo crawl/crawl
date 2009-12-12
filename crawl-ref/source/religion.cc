@@ -2758,7 +2758,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
            }
            break;
 
-        case DID_ATTACK_NEUTRAL:
+        case DID_ATTACK_GOOD_NEUTRAL:
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
@@ -3538,8 +3538,8 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
             _first_attack_was_friendly[midx] = true;
         }
     }
-    else if (mon->neutral())
-        conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
+    else if (mon->good_neutral())
+        conduct[0].set(DID_ATTACK_GOOD_NEUTRAL, 5, known, mon);
 
     if (is_unchivalric_attack(&you, mon)
         && (_first_attack_conduct[midx]

@@ -3206,7 +3206,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                                 || is_sanctuary(mon->pos()));
     const bool wontAttack    = mon->wont_attack();
     const bool isFriendly    = mon->friendly();
-    const bool isNeutral     = mon->neutral();
+    const bool isGoodNeutral = mon->good_neutral();
     const bool isUnchivalric = is_unchivalric_attack(&you, mon);
     const bool isHoly        = mon->is_holy()
                                    && (mon->attitude != ATT_HOSTILE
@@ -3246,7 +3246,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     }
     else if (inSanctuary || wontAttack
              || (you.religion == GOD_JIYVA && mons_is_slime(mon))
-             || (isNeutral || isHoly) && is_good_god(you.religion)
+             || (isGoodNeutral || isHoly) && is_good_god(you.religion)
              || isUnchivalric
                 && you.religion == GOD_SHINING_ONE
                 && !tso_unchivalric_attack_safe_monster(mon))
@@ -3259,7 +3259,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                                  : "",
                  (isFriendly)    ? "friendly " :
                  (wontAttack)    ? "non-hostile " :
-                 (isNeutral)     ? "neutral "
+                 (isGoodNeutral) ? "neutral "
                                  : "",
                  (isHoly)        ? "holy "
                                  : "",
