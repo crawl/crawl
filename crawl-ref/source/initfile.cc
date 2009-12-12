@@ -3527,49 +3527,56 @@ static void _print_version()
 
 static void _print_save_version(char *name)
 {
+    bool need_unlink = false;
     std::string basename = get_savedir_filename(name, "", "");
     std::string filename = basename + ".sav";
 
+    FILE *charf = fopen(name, "rb");
+
+    if (!charf) {
 #ifdef LOAD_UNPACKAGE_CMD
-    std::string zipfile = basename + PACKAGE_SUFFIX;
-    FILE *handle = fopen(zipfile.c_str(), "rb+");
-    if (handle == NULL)
-    {
-        fprintf(stderr, "Unable to open %s for reading!\n", zipfile.c_str());
-        return;
-    }
-    else
-    {
-        fclose(handle);
-
-        // Create command.
-        char cmd_buff[1024];
-
-        std::string zipname = basename;
-        std::string directory = get_savedir();
-        std::string savefile = filename;
-        savefile.erase(0, savefile.rfind(FILE_SEPARATOR) + 1);
-
-        escape_path_spaces(zipname);
-        escape_path_spaces(directory);
-        escape_path_spaces(savefile);
-        snprintf( cmd_buff, sizeof(cmd_buff), UNPACK_SPECIFIC_FILE_CMD,
-                  zipname.c_str(),
-                  directory.c_str(),
-                  savefile.c_str() );
-
-        if (system( cmd_buff ) != 0)
+        std::string zipfile = basename + PACKAGE_SUFFIX;
+        FILE *handle = fopen(zipfile.c_str(), "rb+");
+        if (handle == NULL)
         {
-            fprintf(stderr, "Warning: Zip command (UNPACK_SPECIFIC_FILE_CMD) "
-                            "returned non-zero value!" EOL );
+            fprintf(stderr, "Unable to open %s for reading!\n",
+                            zipfile.c_str());
+            return;
         }
-    }
-#endif
+        else
+        {
+            fclose(handle);
 
-    FILE *charf = fopen(filename.c_str(), "rb");
+            // Create command.
+            char cmd_buff[1024];
+
+            std::string zipname = basename;
+            std::string directory = get_savedir();
+            std::string savefile = filename;
+            savefile.erase(0, savefile.rfind(FILE_SEPARATOR) + 1);
+
+            escape_path_spaces(zipname);
+            escape_path_spaces(directory);
+            escape_path_spaces(savefile);
+            snprintf( cmd_buff, sizeof(cmd_buff), UNPACK_SPECIFIC_FILE_CMD,
+                      zipname.c_str(),
+                      directory.c_str(),
+                      savefile.c_str() );
+
+            if (system( cmd_buff ) != 0)
+            {
+                fprintf(stderr, "Warning: Zip command "
+                                "(UNPACK_SPECIFIC_FILE_CMD) "
+                                "returned non-zero value!" EOL );
+            }
+            need_unlink = true;
+        }
+#endif
+        charf = fopen(filename.c_str(), "rb");
+    }
     if (!charf) {
         fprintf(stderr, "Unable to open %s for reading!\n", filename.c_str());
-        return;
+        goto cleanup;
     }
 
     char major, minor;
@@ -3580,8 +3587,11 @@ static void _print_save_version(char *name)
         printf("Save file version for %s is %d.%d\n", name, major, minor);
     }
 
+cleanup:
 #ifdef LOAD_UNPACKAGE_CMD
-    unlink(filename.c_str());
+    if (need_unlink) {
+        unlink(filename.c_str());
+    }
 #endif
 }
 
