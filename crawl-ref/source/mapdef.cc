@@ -3052,6 +3052,18 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mspec.patrolling     = strip_tag(mon_str, "patrolling");
         mspec.band           = strip_tag(mon_str, "band");
 
+        const std::string att = strip_tag_prefix(mon_str, "att:");
+        if (att.empty() || att == "hostile")
+            mspec.attitude = ATT_HOSTILE;
+        else if (att == "friendly")
+            mspec.attitude = ATT_FRIENDLY;
+        else if (att == "good_neutral")
+            mspec.attitude = ATT_GOOD_NEUTRAL;
+        else if (att == "fellow_slime" || att == "strict_neutral")
+            mspec.attitude = ATT_STRICT_NEUTRAL;
+        else if (att == "neutral")
+            mspec.attitude = ATT_NEUTRAL;
+
         // Useful for summoned monsters.
         if (strip_tag(mon_str, "seen"))
             mspec.extra_monster_flags |= MF_SEEN;
