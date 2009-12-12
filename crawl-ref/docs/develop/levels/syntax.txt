@@ -571,9 +571,8 @@ MONS:     (list of monsters)
           * att:hostile -- the default
           * att:friendly -- tame, will follow you
           * att:neutral -- hostile to both you and att:hostile monsters
-          * att:good_neutral -- won't actively follow anyone, can still hit
-               people (including you) when they randomly wander into them
-          * att:fellow_slime -- as att:friendly but won't follow you
+          * att:good_neutral -- hostile to att:hostile
+          * att:fellow_slime -- tame, won't follow you
 
           Note that 8, 9, 0 also place monsters (see the table).
 

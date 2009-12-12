@@ -3133,6 +3133,8 @@ static std::string _get_monster_desc(const monsters *mon)
 
     if (mon->attitude == ATT_FRIENDLY)
         text += pronoun + " is friendly.\n";
+    else if (mon->good_neutral())
+        text += pronoun + " seems to be peaceful towards you.\n";
     else if (mon->neutral()) // don't differentiate between permanent or not
         text += pronoun + " is indifferent to you.\n";
 
