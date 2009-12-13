@@ -529,3 +529,9 @@ static void _RCLOUDS_world_reacts(item_def *item)
             place_cloud( cloud, *ri, random2(10), KC_OTHER, 1);
         }
 }
+
+static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "A thin mist springs up around you!");
+}
+
