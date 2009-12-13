@@ -6,7 +6,6 @@
 %include dc-mon.txt
 
 effect/net_trap TRAP_NET
-dc-misc/error ERROR
 dc-misc/cursor CURSOR
 
 %rim 1

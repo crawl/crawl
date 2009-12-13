@@ -920,70 +920,125 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_DEATH_COB:
         return TILEP_MONS_DEATH_COB;
 
-    // non-human uniques
-    case MONS_IJYB:
-        return TILEP_MONS_IJYB;
-    case MONS_GRUM:
-        return TILEP_MONS_GRUM;
-    case MONS_MENKAURE:
-        return TILEP_MONS_MENKAURE;
-    case MONS_URUG:
-        return TILEP_MONS_URUG;
-    case MONS_EROLCHA:
-        return TILEP_MONS_EROLCHA;
-    case MONS_SNORG:
-        return TILEP_MONS_SNORG;
-    case MONS_PURGY:
-        return TILEP_MONS_PURGY;
-    case MONS_POLYPHEMUS:
-        return TILEP_MONS_POLYPHEMUS;
-    case MONS_ANTAEUS:
-        return TILEP_MONS_ANTAEUS;
+    // -------------------------------------
+    // non-human uniques, sorted by glyph, then difficulty
+    // -------------------------------------
+
+    // centaur ('c')
+    case MONS_NESSOS:
+        return TILEP_MONS_NESSOS;
+
+    // draconian ('d')
     case MONS_TIAMAT:
         return TILEP_MONS_TIAMAT;
-    case MONS_XTAHUA:
-        return TILEP_MONS_XTAHUA;
-    case MONS_BORIS:
-        return TILEP_MONS_BORIS;
-    case MONS_MURRAY:
-        return TILEP_MONS_MURRAY;
-    case MONS_ROXANNE:
-        return TILEP_MONS_ROXANNE;
-    case MONS_SONJA:
-        return TILEP_MONS_SONJA;
-    case MONS_AZRAEL:
-        return TILEP_MONS_AZRAEL;
+
+    // elves ('e')
+    case MONS_DOWAN:
+        return TILEP_MONS_DEEP_ELF_MAGE;    // TODO
+    case MONS_DUVESSA:
+        return TILEP_MONS_DEEP_ELF_FIGHTER; // TODO
+
+    // goblins and gnolls ('g')
+    case MONS_IJYB:
+        return TILEP_MONS_IJYB;
+    case MONS_CRAZY_YIUF:
+        return TILEP_MONS_CRAZY_YIUF;
+    case MONS_GRUM:
+        return TILEP_MONS_GRUM;
+
+    // slug ('j')
+    case MONS_GASTRONOK:
+        return TILEP_MONS_GASTRONOK;
+
+    // merfolk ('m')
     case MONS_ILSUIW:
         if (in_water)
             return TILEP_MONS_ILSUIW_WATER;
         else
             return TILEP_MONS_ILSUIW;
-    case MONS_PRINCE_RIBBIT:
-        return TILEP_MONS_PRINCE_RIBBIT;
-    case MONS_GASTRONOK:
-        return TILEP_MONS_GASTRONOK;
+
+    // orcs ('o')
+    case MONS_BLORK_THE_ORC:
+        return TILEP_MONS_BLORK_THE_ORC;
+    case MONS_URUG:
+        return TILEP_MONS_URUG;
     case MONS_NERGALLE:
         return TILEP_MONS_NERGALLE;
     case MONS_SAINT_ROKA:
         return TILEP_MONS_SAINT_ROKA;
-    case MONS_NESSOS:
-        return TILEP_MONS_NESSOS;
+
+    // curse skull ('z')
+    case MONS_MURRAY:
+        return TILEP_MONS_MURRAY;
+
+    // cyclops and giants ('C')
+    case MONS_POLYPHEMUS:
+        return TILEP_MONS_POLYPHEMUS;
+    case MONS_ANTAEUS:
+        return TILEP_MONS_ANTAEUS;
+
+    // dragons and hydras ('D')
     case MONS_LERNAEAN_HYDRA:
         return TILEP_MONS_LERNAEAN_HYDRA;
+    case MONS_XTAHUA:
+        return TILEP_MONS_XTAHUA;
+
+    // efreet ('E')
+    case MONS_AZRAEL:
+        return TILEP_MONS_AZRAEL;
+
+    // frog ('F')
+    case MONS_PRINCE_RIBBIT:
+        return TILEP_MONS_PRINCE_RIBBIT;
+
+    // jelly ('J')
     case MONS_DISSOLUTION:
         return TILEP_MONS_DISSOLUTION;
+
+    // kobolds ('K')
+    case MONS_SONJA:
+        return TILEP_MONS_SONJA;
+    case MONS_PIKEL:
+        return TILEP_MONS_BIG_KOBOLD;       // TODO
+
+    // lich ('L')
+    case MONS_BORIS:
+        return TILEP_MONS_BORIS;
+
+    // mummies ('M')
+    case MONS_MENKAURE:
+        return TILEP_MONS_MENKAURE;
+    case MONS_KHUFU:
+        return TILEP_MONS_GREATER_MUMMY;    // TODO
+
+    // guardian serpent ('N')
     case MONS_AIZUL:
         return TILEP_MONS_AIZUL;
 
-    // human uniques ('@')
+    // ogre ('O')
+    case MONS_EROLCHA:
+        return TILEP_MONS_EROLCHA;
+
+    // trolls ('T')
+    case MONS_PURGY:
+        return TILEP_MONS_PURGY;
+    case MONS_SNORG:
+        return TILEP_MONS_SNORG;
+
+    // statue ('8')
+    case MONS_ROXANNE:
+        return TILEP_MONS_ROXANNE;
+
+    // -------------------------------------
+    // non-human uniques ('@')
+    // -------------------------------------
+
     case MONS_TERENCE:
         return TILEP_MONS_TERENCE;
     case MONS_JESSICA:
         return TILEP_MONS_JESSICA;
     case MONS_SIGMUND:
         return TILEP_MONS_SIGMUND;
-    case MONS_BLORK_THE_ORC:
-        return TILEP_MONS_BLORK_THE_ORC;
     case MONS_EDMUND:
         return TILEP_MONS_EDMUND;
     case MONS_PSYCHE:
@@ -1028,6 +1083,10 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_EUSTACHIO;
     case MONS_KIRKE:
         return TILEP_MONS_KIRKE;
+    case MONS_NIKOLA:
+        return TILEP_TODO;                  // TODO
+    case MONS_MAURICE:
+        return TILEP_TODO;                  // TODO
 
     // unique major demons ('&')
     case MONS_MNOLEG:

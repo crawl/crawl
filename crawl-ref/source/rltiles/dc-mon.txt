@@ -526,6 +526,7 @@ wandering_mushroom MONS_WANDERING_MUSHROOM
 ## Goblins ('g')
 %sdir dc-mon/unique
 ijyb MONS_IJYB
+crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM
 %sdir dc-mon
 goblin MONS_GOBLIN
@@ -634,3 +635,6 @@ lich TRAN_LICH
 
 dc-misc/unseen_monster MONS_UNKNOWN
 dc-misc/unseen_monster MCACHE_START
+%sdir dc-misc
+todo TODO
+error ERROR
