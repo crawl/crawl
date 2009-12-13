@@ -972,6 +972,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_LERNAEAN_HYDRA;
     case MONS_DISSOLUTION:
         return TILEP_MONS_DISSOLUTION;
+    case MONS_AIZUL:
+        return TILEP_MONS_AIZUL;
 
     // human uniques ('@')
     case MONS_TERENCE:

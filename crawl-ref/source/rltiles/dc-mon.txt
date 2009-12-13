@@ -436,6 +436,9 @@ greater_mummy MONS_GREATER_MUMMY
 mummy_priest MONS_MUMMY_PRIEST
 
 ## Nagas ('N')
+%sdir dc-mon/unique
+aizul MONS_AIZUL
+%sdir dc-mon
 naga MONS_NAGA
 naga_mage MONS_NAGA_MAGE
 naga_warrior MONS_NAGA_WARRIOR
