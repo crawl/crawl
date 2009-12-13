@@ -780,7 +780,8 @@ void disarm_trap(const coord_def& where)
 #ifdef CLUA_BINDINGS
     // Prompt for any trap for which you might not survive setting it off.
     // (See trapwalk.lua)
-    if (!clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(where)))
+    if (Options.trap_prompt
+        && !clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(where)))
     {
         std::string prompt = make_stringf(
                                "Really try disarming that %s?",

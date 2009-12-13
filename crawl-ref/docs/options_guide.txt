@@ -48,7 +48,7 @@ The contents of this text are:
                 travel_delay, explore_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
                 explore_improved, tc_reachable, tc_dangerous, tc_disconnected,
-                tc_excluded, tc_exclude_circle, travel_stop_message, 
+                tc_excluded, tc_exclude_circle, travel_stop_message,
                 runrest_ignore_message, runrest_ignore_poison,
                 runrest_ignore_monster, trapwalk_safe_hp,
                 trap_prompt, rest_wait_both, auto_exclude
@@ -57,7 +57,7 @@ The contents of this text are:
                 annotate_item_dropped
 4-i     Command Enhancements.
                 auto_list, easy_open, easy_unequip, equip_unequip,
-                easy_confirm, allow_self_target, 
+                easy_confirm, allow_self_target,
                 easy_butcher, always_confirm_butcher, prefer_safe_chunks,
                 easy_eat_chunks, easy_eat_gourmand, easy_eat_contaminated,
                 prompt_for_swap, easy_quit_item_prompts,
@@ -686,7 +686,7 @@ trap_item_brand = reverse
         symbol (^) and the trap symbol is branded.
 
 verbose_monster_pane = true
-        If set to false using the console version of Crawl (rather than the 
+        If set to false using the console version of Crawl (rather than the
         tiles version), the pane listing the monsters in sight will give
         the older, less detailed information like "distracted" or "resting"
         rather than "fleeing", "sleeping", "unaware", etc.
@@ -964,8 +964,8 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
 trap_prompt = true
         If trap_prompt is set to true Crawl will use the trapwalk_safe_hp
         values to decide whether the player should be prompted before
-        stepping on a mechanical trap. Note that you'll always be prompted
-        for non-mechanical traps.
+        stepping on or trying to disarm a mechanical trap. Note that you'll
+        always be prompted before stepping on non-mechanical traps.
 
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop
