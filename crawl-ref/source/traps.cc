@@ -14,6 +14,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "clua.h"
 #include "coord.h"
 #include "delay.h"
 #include "describe.h"
@@ -776,6 +777,26 @@ void disarm_trap(const coord_def& where)
         break;
     }
 
+#ifdef CLUA_BINDINGS
+    // Prompt for any trap for which you might not survive setting it off.
+    // (See trapwalk.lua)
+    if (!clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(where)))
+    {
+        std::string prompt = make_stringf(
+                               "Really try disarming that %s?",
+                               feature_description(trap.category(),
+                                                   get_trap_type(where),
+                                                   false, DESC_BASENAME,
+                                                   false).c_str());
+
+        if (!yesno(prompt.c_str(), true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+    }
+#endif
+
     // Make the actual attempt
     you.turn_is_over = true;
     if (random2(you.skills[SK_TRAPS_DOORS] + 2) <= random2(you.your_level + 5))
@@ -1317,7 +1338,7 @@ bool is_valid_shaft_level(const level_id &place)
 }
 
 // Shafts can be generated visible.
-// 
+//
 // Starts about 50% of the time and approaches 0% for randomly
 // placed traps, and starts at 100% and approaches 50% for
 // others (e.g. at end of corridor).
