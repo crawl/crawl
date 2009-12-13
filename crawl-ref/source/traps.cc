@@ -29,6 +29,7 @@
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
+#include "options.h"
 #include "ouch.h"
 #include "player.h"
 #include "skills.h"
