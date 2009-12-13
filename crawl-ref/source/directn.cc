@@ -3147,35 +3147,6 @@ static std::string _get_monster_desc(const monsters *mon)
     if (mons_intel(mon) <= I_PLANT && mon->type != MONS_RAKSHASA_FAKE)
         text += pronoun + " is mindless.\n";
 
-    // Give an indication of monsters being capable of seeing/sensing
-    // invisible creatures.
-    if (mons_behaviour_perceptible(mon) && !mon->asleep()
-        && !mons_is_confused(mon)
-        && (mon->can_see_invisible() || mons_sense_invis(mon)))
-    {
-        const actor* foe = mon->get_foe();
-        if (foe && foe->invisible() && !mons_is_fleeing(mon))
-        {
-            if (!you.can_see(foe))
-                text += pronoun + " is looking at something unseen.\n";
-            else if (mon->can_see_invisible())
-            {
-                text += pronoun + " is watching "
-                        + foe->name(DESC_NOCAP_THE)
-                        + ".\n";
-            }
-            else
-            {
-                text += pronoun + " is looking in ";
-                std::string name = foe->atype() == ACT_PLAYER
-                                  ? "your" : (foe->name(DESC_NOCAP_THE) + "'s");
-                text += name + " general direction.\n";
-            }
-        }
-        else if (!foe || mons_is_fleeing(mon))
-            text += pronoun + " seems to be peering into the shadows.\n";
-    }
-
     if (mons_enslaved_body_and_soul(mon))
     {
         text += mon->pronoun(PRONOUN_CAP_POSSESSIVE)
