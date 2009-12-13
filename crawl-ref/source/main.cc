@@ -3188,7 +3188,10 @@ static bool _untrap_target(const coord_def move, bool check_confused)
                 mpr("You can't disarm traps in your present form.");
                 return (true);
             }
-            if (env.cgrid(target) != EMPTY_CLOUD)
+
+            const int cloud = env.cgrid(target);
+            if (cloud != EMPTY_CLOUD
+                && is_damaging_cloud(env.cloud[ cloud ].type, true))
             {
                 mpr("You can't get to that trap right now.");
                 return (true);
