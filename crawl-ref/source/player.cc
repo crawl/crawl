@@ -80,6 +80,12 @@ dolls_data::dolls_data()
 	memset(parts, 0, TILEP_PART_MAX * sizeof(int));
 }
 
+dolls_data::dolls_data(dolls_data const &_orig)
+{
+	parts = new int[TILEP_PART_MAX];
+	memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(int));
+}
+
 dolls_data::~dolls_data()
 {
 	delete [] parts;
