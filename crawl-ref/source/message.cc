@@ -9,23 +9,16 @@
 #include "message.h"
 #include "format.h"
 
-#include <cstdarg>
-#include <cstring>
-#include <sstream>
-
-
-
 #include "cio.h"
 #include "colour.h"
 #include "delay.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "macro.h"
-#include "message.h"
+#include "menu.h"
 #include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"
-#include "random.h"
 #include "religion.h"
 #include "stash.h"
 #include "state.h"
@@ -38,7 +31,6 @@
 #include "shout.h"
 #include "viewchar.h"
 #include "viewgeom.h"
-#include "menu.h"
 
 #ifdef WIZARD
 #include "luaterp.h"
