@@ -32,6 +32,8 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 
+#include <sstream>
+
 #ifdef WIZARD
 #include "luaterp.h"
 #endif
@@ -146,6 +148,117 @@ public:
     }
 };
 
+static std::vector<std::string> linebreak(std::string text, int col)
+{
+    linebreak_string2(text, col);
+    std::vector<std::string> ret;
+    std::istringstream ss(text);
+    std::string item;
+    while (std::getline(ss, item))
+        ret.push_back(item);
+    return ret;
+}
+
+class message_window
+{
+    int next_line;
+    std::vector<formatted_string> lines;
+
+    int out_height() const
+    {
+        // TODO: -1 if we want to keep a line for --more--
+        return crawl_view.msgsz.y;
+    }
+
+    int out_width() const
+    {
+        // TODO: -1 if we want the first column for -
+        return crawl_view.msgsz.x;
+    }
+
+    void out_line(const formatted_string& line, int n) const
+    {
+        // TODO: x+1 if we want the first column clear
+        cgotoxy(1, n + 1, GOTO_MSG);
+        line.display();
+        cprintf("%*s", out_width() - line.length(), "");
+    }
+
+    void scroll(int n)
+    {
+        for (int i = 0; i < out_height() - n; ++i)
+            lines[i] = lines[i + n];
+        next_line -= n;
+    }
+
+    bool more_enabled()
+    {
+        return false;
+    }
+
+    void make_space(int n)
+    {
+        int diff = out_height() - next_line - n;
+        if (diff >= 0)
+            return;
+        if (more_enabled())
+            more();
+//        if (Options.clear_messages)
+//            clear();
+        else
+            scroll(-diff);
+    }
+
+    void more()
+    {
+    }
+
+    void add_line(const formatted_string& line)
+    {
+        resize(); // TODO: get rid of this
+        lines[next_line] = line;
+        next_line++;
+    }
+
+public:
+    message_window()
+        : next_line(0)
+    {
+        clear(); // initialize this->lines
+    }
+
+    void resize()
+    {
+        // XXX: broken
+        lines.resize(out_height());
+    }
+
+    void clear()
+    {
+        lines.clear();
+        lines.resize(out_height());
+    }
+
+    // write to screen (without update)
+    void show()
+    {
+        for (size_t i = 0; i < lines.size(); ++i)
+            out_line(lines[i], i);
+        // TODO: maybe output a last line --more--
+    }
+
+    void add_item(std::string text)
+    {
+        std::vector<std::string> newlines = linebreak(text, out_width());
+        make_space(newlines.size());
+        for (size_t i = 0; i < newlines.size(); ++i)
+            add_line(formatted_string::parse_string(newlines[i]));
+        show();
+    }
+};
+
+message_window msgwin;
+
 typedef circ_vec<message_item, NUM_STORED_MESSAGES> store_t;
 
 class message_store
@@ -154,13 +267,13 @@ class message_store
     message_item prev_msg;
 
 public:
-    bool add(const message_item& msg)
+    void add(const message_item& msg)
     {
         if (prev_msg.merge(msg))
-            return false;
+            return;
         msgs.push_back(prev_msg);
+        msgwin.add_item(prev_msg.text);
         prev_msg = msg;
-        return false; // need_more
     }
 
     bool have_prev()
