@@ -5573,7 +5573,15 @@ int get_tension(god_type god, bool count_travelling)
     tension /= div;
 
     if (you.level_type == LEVEL_ABYSS)
-        tension = std::max(2, tension);
+    {
+        if (tension < 2)
+            tension = 2;
+        else
+        {
+            tension *= 3;
+            tension /= 2;
+        }
+    }
 
     if (you.cannot_act())
     {
