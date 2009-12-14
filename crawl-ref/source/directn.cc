@@ -521,11 +521,7 @@ void full_describe_view()
         const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
 
         if (unknown_mimic)      // It'll be on top.
-        {
-            item_def item;
-            get_mimic_item(mon, item);
-            list_items.push_back(item);
-        }
+            list_items.push_back(get_mimic_item(mon));
 
         const int oid = igrd(*ri);
         if (oid == NON_ITEM)
@@ -1754,11 +1750,7 @@ std::string get_terse_square_desc(const coord_def &gc)
         const monsters& mons = *monster_at(gc);
 
         if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
-        {
-            item_def item;
-            get_mimic_item(&mons, item);
-            desc = item.name(DESC_PLAIN);
-        }
+            desc = get_mimic_item(&mons).name(DESC_PLAIN);
         else
             desc = mons.full_name(DESC_PLAIN, true);
     }
@@ -3361,9 +3353,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
                 _describe_monster(mon);
             else
             {
-                item_def item;
-                get_mimic_item( mon, item );
-                std::string name = get_menu_colour_prefix_tags(item,
+                std::string name = get_menu_colour_prefix_tags(get_mimic_item(mon),
                                                                DESC_NOCAP_A);
                 mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
             }

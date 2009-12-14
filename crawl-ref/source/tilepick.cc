@@ -769,12 +769,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_ARMOUR_MIMIC:
     case MONS_SCROLL_MIMIC:
     case MONS_POTION_MIMIC:
-    {
-        // Use item tile.
-        item_def  item;
-        get_mimic_item( mon, item );
-        return tileidx_item(item);
-    }
+        return tileidx_item(get_mimic_item(mon));
 
     case MONS_DANCING_WEAPON:
     {
@@ -4696,9 +4691,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
                     t0 |= TILE_FLAG_S_UNDER;
             }
 
-            item_def item;
-            get_mimic_item( mon, item );
-            if (item_needs_autopickup(item))
+            if (item_needs_autopickup(get_mimic_item(mon))
             {
                 if (foreground)
                     env.tile_bg[ep.x][ep.y] |= TILE_FLAG_CURSOR3;

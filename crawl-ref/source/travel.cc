@@ -546,11 +546,7 @@ inline static void _check_interesting_square(int x, int y,
         if (const monsters *mons = monster_at(pos))
         {
             if (mons_is_unknown_mimic(mons))
-            {
-                item_def item;
-                get_mimic_item(mons, item);
-                ed.found_item(pos, item);
-            }
+                ed.found_item(pos, get_mimic_item(mons));
         }
 
         if (igrd(pos) != NON_ITEM)
@@ -1084,12 +1080,8 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
     if (const monsters *mons = monster_at(c))
     {
         if (mons_is_unknown_mimic(mons) && mons_was_seen(mons))
-        {
-            item_def mimic_item;
-            get_mimic_item(mons, mimic_item);
-            if (item_needs_autopickup(mimic_item))
+            if (item_needs_autopickup(get_mimic_item(mons)))
                 return (true);
-        }
     }
     return (false);
 }

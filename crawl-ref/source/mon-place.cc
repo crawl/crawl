@@ -1116,6 +1116,17 @@ static int _place_monster_aux(const mgen_data &mg,
     int id = mon->mindex();
     env.mgrid(fpos) = id;
 
+    if (mons_is_mimic(mg.cls))
+    {
+        // Mimics who mimic thin air get the axe.
+        if (!give_mimic_item(mon))
+        {
+            mon->reset();
+            mgrd(fpos) = NON_MONSTER;
+            return (-1);
+        }
+    }
+
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
         _define_zombie(id, mg.base_type, mg.cls, mg.power, fpos);

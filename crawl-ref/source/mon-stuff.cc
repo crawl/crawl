@@ -62,13 +62,14 @@
 
 static bool _wounded_damaged(monster_type mon_type);
 
-// This function creates an artificial item to represent a mimic's
-// appearance.  Eventually, mimics could be redone to be more like
-// dancing weapons: there'd only be one type and it would look like the
-// item it carries. - bwr
-void get_mimic_item( const monsters *mimic, item_def &item )
+int _make_mimic_item(monster_type type)
 {
-    ASSERT(mimic != NULL && mons_is_mimic( mimic->type));
+    int it = items(0, OBJ_UNASSIGNED, 0, true, 0, 0);
+
+    if (it == NON_ITEM)
+        return NON_ITEM;
+
+    item_def &item = mitm[it];
 
     item.base_type = OBJ_UNASSIGNED;
     item.sub_type  = 0;
@@ -78,22 +79,16 @@ void get_mimic_item( const monsters *mimic, item_def &item )
     item.quantity  = 1;
     item.plus      = 0;
     item.plus2     = 0;
-    item.pos       = mimic->pos();
     item.link      = NON_ITEM;
 
-    int prop = 127 * mimic->pos().x + 269 * mimic->pos().y;
-
-    rng_save_excursion exc;
-    seed_rng( prop );
-
-    switch (mimic->type)
+    int prop;
+    switch (type)
     {
     case MONS_WEAPON_MIMIC:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = (59 * mimic->pos().x + 79 * mimic->pos().y)
-                            % (WPN_MAX_NONBLESSED + 1);
+        item.sub_type = random2(WPN_MAX_NONBLESSED + 1);
 
-        prop %= 100;
+        prop = random2(100);
 
         if (prop < 20)
             make_item_randart(item);
@@ -111,10 +106,9 @@ void get_mimic_item( const monsters *mimic, item_def &item )
 
     case MONS_ARMOUR_MIMIC:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = (59 * mimic->pos().x + 79 * mimic->pos().y)
-                            % NUM_ARMOURS;
+        item.sub_type = random2(NUM_ARMOURS);
 
-        prop %= 100;
+        prop = random2(100);
 
         if (prop < 20)
             make_item_randart(item);
@@ -134,39 +128,55 @@ void get_mimic_item( const monsters *mimic, item_def &item )
 
     case MONS_SCROLL_MIMIC:
         item.base_type = OBJ_SCROLLS;
-        item.sub_type = prop % NUM_SCROLLS;
+        item.sub_type = random2(NUM_SCROLLS);
         break;
 
     case MONS_POTION_MIMIC:
         item.base_type = OBJ_POTIONS;
-        item.sub_type = prop % NUM_POTIONS;
+        item.sub_type = random2(NUM_POTIONS);
         break;
 
     case MONS_GOLD_MIMIC:
     default:
         item.base_type = OBJ_GOLD;
-        item.quantity = 5 + prop % 30;
+        item.quantity = 5 + random2(1000);
         break;
     }
 
     item_colour(item); // also sets special vals for scrolls/potions
+
+    return (it);
+}
+
+item_def *give_mimic_item(monsters *mimic)
+{
+    ASSERT(mimic != NULL && mons_is_mimic(mimic->type));
+
+    mimic->destroy_inventory();
+    int it = _make_mimic_item(mimic->type);
+    if (it == NON_ITEM)
+        return 0;
+    if (!mimic->pickup_misc(mitm[it], 0))
+        ASSERT("Mimic failed to pickup its item.");
+    return (&mitm[mimic->inv[MSLOT_MISCELLANY]]);
+}
+
+item_def &get_mimic_item(const monsters *mimic)
+{
+    ASSERT(mimic != NULL && mons_is_mimic(mimic->type));
+
+    ASSERT(mimic->inv[MSLOT_MISCELLANY] != NON_ITEM);
+
+    return (mitm[mimic->inv[MSLOT_MISCELLANY]]);
 }
 
 // Sets the colour of a mimic to match its description... should be called
 // whenever a mimic is created or teleported. -- bwr
 int get_mimic_colour( const monsters *mimic )
 {
-    ASSERT( mimic != NULL && mons_is_mimic( mimic->type ) );
+    ASSERT(mimic != NULL);
 
-    if (mimic->type == MONS_SCROLL_MIMIC)
-        return (LIGHTGREY);
-    else if (mimic->type == MONS_GOLD_MIMIC)
-        return (YELLOW);
-
-    item_def  item;
-    get_mimic_item( mimic, item );
-
-    return (item.colour);
+    return (get_mimic_item(mimic).colour);
 }
 
 // Monster curses a random player inventory item.
@@ -2126,6 +2136,8 @@ int monster_die(monsters *monster, killer_type killer,
     {
         _elven_twin_died(monster, in_transit);
     }
+    else if (mons_is_mimic(monster->type))
+        monster->destroy_inventory();
     else if (!monster->is_summoned())
     {
         if (mons_genus(monster->type) == MONS_MUMMY)
@@ -3733,7 +3745,10 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         monster_type old_type = monster->type;
         monster->type   = static_cast<monster_type>(
                                          MONS_GOLD_MIMIC + random2(5));
+        monster->destroy_inventory();
+        give_mimic_item(monster);
         monster->colour = get_mimic_colour(monster);
+        was_seen = false;
 
         // If it's changed form, you won't recognise it.
         // This assumes that a non-gold mimic turning into another item of

@@ -2802,9 +2802,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     // For undetected mimics describe mimicked item instead.
     if (!force_seen && mons_is_unknown_mimic(&mons))
     {
-        item_def item;
-        get_mimic_item(&mons, item);
-        get_item_desc(item, inf);
+        get_item_desc(get_mimic_item(&mons), inf);
         return;
     }
 
@@ -2812,12 +2810,6 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         inf.title = mons.full_name(DESC_CAP_A, true);
 
     std::string db_name = mons.base_name(DESC_DBNAME, force_seen);
-    if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
-    {
-        db_name   = "mimic";
-        if (inf.title.empty())
-            inf.title = "A mimic";
-    }
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the

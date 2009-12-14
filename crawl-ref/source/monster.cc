@@ -2065,12 +2065,8 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     // Various special cases:
     // non-gold mimics, dancing weapons, ghosts, Pan demons
-    if (mons_is_mimic(mon.type) && mon.type != MONS_GOLD_MIMIC)
-    {
-        item_def item;
-        get_mimic_item(&mon, item);
-        return (item.name(desc));
-    }
+    if (mons_is_mimic(mon.type))
+        return (get_mimic_item(&mon).name(desc));
 
     if (mon.type == MONS_DANCING_WEAPON && mon.inv[MSLOT_WEAPON] != NON_ITEM)
     {
