@@ -86,9 +86,15 @@ dolls_data::dolls_data(const dolls_data& _orig)
     memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(int));
 }
 
+const dolls_data& dolls_data::operator=(const dolls_data& other)
+{
+    memcpy(parts, other.parts, TILEP_PART_MAX * sizeof(int));
+    return (*this);
+}
+
 dolls_data::~dolls_data()
 {
-    delete [] parts;
+    delete[] parts;
     parts = NULL;
 }
 #endif
