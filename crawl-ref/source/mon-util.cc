@@ -2142,10 +2142,10 @@ void mons_stop_fleeing_from_sanctuary(monsters *monster)
         behaviour_event(monster, ME_EVAL, MHITYOU);
 }
 
-void mons_pacify(monsters *mon)
+void mons_pacify(monsters *mon, mon_attitude_type att)
 {
     // Make the monster permanently neutral.
-    mon->attitude = ATT_GOOD_NEUTRAL;
+    mon->attitude = att;
     mon->flags |= MF_WAS_NEUTRAL;
 
     if (!testbits(mon->flags, MF_GOT_HALF_XP) && !mon->is_summoned())

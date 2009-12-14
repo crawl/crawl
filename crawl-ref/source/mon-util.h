@@ -582,7 +582,7 @@ monster_type random_draconian_monster_species();
 void define_monster(int midx);
 void define_monster(monsters &mons);
 
-void mons_pacify(monsters *mon);
+void mons_pacify(monsters *mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
 
 bool mons_should_fire(struct bolt &beam);
 
