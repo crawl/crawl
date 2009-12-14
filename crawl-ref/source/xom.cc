@@ -4026,7 +4026,8 @@ static const char* _xom_effect_to_name(int effect)
         "miscast (pseudo)", "miscast (minor)", "miscast (major)",
         "miscast (nasty)", "stat loss", "teleportation", "swap weapons",
         "chaos upgrade", "mutation", "polymorph", "repel stairs", "confusion",
-        "draining", "torment", "animate weapon", "summon demons", "banishment"
+        "draining", "torment", "animate weapon", "summon demons",
+        "banishment (pseudo)", "banishment"
     };
 
     std::string result = "";
