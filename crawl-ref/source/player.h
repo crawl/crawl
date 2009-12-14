@@ -18,8 +18,8 @@
 struct dolls_data
 {
     dolls_data();
-	dolls_data(dolls_data const &);
-	~dolls_data();
+    dolls_data(const dolls_data& orig);
+    ~dolls_data();
 
     int *parts;
 };

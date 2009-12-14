@@ -76,20 +76,20 @@
 
 dolls_data::dolls_data()
 {
-	parts = new int[TILEP_PART_MAX];
-	memset(parts, 0, TILEP_PART_MAX * sizeof(int));
+    parts = new int[TILEP_PART_MAX];
+    memset(parts, 0, TILEP_PART_MAX * sizeof(int));
 }
 
-dolls_data::dolls_data(dolls_data const &_orig)
+dolls_data::dolls_data(const dolls_data& _orig)
 {
-	parts = new int[TILEP_PART_MAX];
-	memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(int));
+    parts = new int[TILEP_PART_MAX];
+    memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(int));
 }
 
 dolls_data::~dolls_data()
 {
-	delete [] parts;
-	parts = NULL;
+    delete [] parts;
+    parts = NULL;
 }
 #endif
 
