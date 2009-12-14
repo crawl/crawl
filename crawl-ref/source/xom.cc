@@ -3237,13 +3237,54 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
     return (result);
 }
 
+static bool _has_min_banishment_level()
+{
+    return (you.max_level >= 9);
+}
+
+// Rolls whether banishment will be averted.
+static bool _will_not_banish()
+{
+    return x_chance_in_y(5, you.max_level);
+}
+
+// Disallow early banishment and make it much rarer later-on.
+// While Xom is bored, the chance is increased.
+static bool _allow_xom_banishment()
+{
+    // Always allowed if under penance.
+    if (you.penance[GOD_XOM])
+        return (true);
+
+    // If Xom is bored, banishment becomes viable earlier.
+    if (_xom_is_bored() && _will_not_banish())
+        return (false);
+
+    // Below the minimum experience level, only fake banishment is allowed.
+    if (!_has_min_banishment_level())
+    {
+        // Allow banishment; it will be retracted right away.
+        if (one_chance_in(5) && x_chance_in_y(you.piety, 1000))
+            return (true);
+        else
+            return (false);
+    }
+    else if (_will_not_banish())
+        return (false);
+
+    return (true);
+}
+
 static int _xom_maybe_reverts_banishment(bool debug = false)
 {
+    // Never revert if Xom is bored or the player is under penance.
     if (_xom_feels_nasty())
         return XOM_BAD_BANISHMENT;
 
     // Sometimes Xom will immediately revert the banishment.
-    if (x_chance_in_y(you.piety, 1000))
+    // Always so, if the banishment happened below the minimum exp level.
+    if (!_xom_feels_nasty() && !_has_min_banishment_level()
+        || x_chance_in_y(you.piety, 1000))
     {
         if (!debug)
         {
@@ -3260,13 +3301,8 @@ static int _xom_maybe_reverts_banishment(bool debug = false)
 
 static int _xom_do_banishment(bool debug = false)
 {
-    // Disallow early banishment and make it much rarer later-on.
-    // While Xom is bored, the chance is increased.
-    if (!_xom_feels_nasty() && x_chance_in_y(8, you.max_level)
-        || _xom_is_bored() && x_chance_in_y(5, you.max_level))
-    {
+    if (!_allow_xom_banishment())
         return (XOM_DID_NOTHING);
-    }
 
     if (debug)
         return _xom_maybe_reverts_banishment(debug);
