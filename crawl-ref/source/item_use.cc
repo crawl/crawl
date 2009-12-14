@@ -3454,7 +3454,8 @@ void jewellery_wear_effects(item_def &item)
     // so we don't allow them to make the base types known.
     if (artefact)
     {
-        use_artefact(item);
+        bool show_msgs = true;
+        use_artefact(item, &show_msgs);
 
         if (learn_pluses && (item.plus != 0 || item.plus2 != 0))
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);

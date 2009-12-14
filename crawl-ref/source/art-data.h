@@ -1540,7 +1540,7 @@
     "A robe of a material so flimsy it could almost be clouds.", 
     "", 
     "", 
-    NULL, NULL, _RCLOUDS_world_reacts, { NULL }, NULL, 
+    _RCLOUDS_equip, NULL, _RCLOUDS_world_reacts, { NULL }, NULL, 
 },
 
 /* UNRAND_DUMMY2 */
