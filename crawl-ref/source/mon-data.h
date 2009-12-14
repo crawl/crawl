@@ -195,6 +195,24 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_HUGE
 },
 
+
+// Use this to replace removed monsters, to retain save compatibility.
+// Please put it in #if (TAG_MAJOR_VERSION <= X), so they will go away
+// after save compat is broken.
+#define AXED_MON(id) \
+{ \
+    id, 'X', LIGHTRED, "removed "#id, \
+    M_NO_EXP_GAIN, \
+    MR_NO_FLAGS, \
+    0, 10, MONS_PROGRAM_BUG, MONS_PROGRAM_BUG, MH_NONLIVING, -3, \
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK }, \
+    { 0, 0, 0, 0 }, \
+    0, 0, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, \
+    I_PLANT, HT_LAND, FL_NONE, 0, DEFAULT_ENERGY, \
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_HUGE \
+},
+
+
 // Real monsters begin here {dlb}:
 
 // insects ('a')
