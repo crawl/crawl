@@ -3589,9 +3589,10 @@ static void _print_save_version(char *name)
 
 cleanup:
 #ifdef LOAD_UNPACKAGE_CMD
-    if (need_unlink) {
+    if (need_unlink)
         unlink(filename.c_str());
-    }
+#else
+    ;
 #endif
 }
 
