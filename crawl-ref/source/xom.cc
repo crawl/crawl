@@ -3169,8 +3169,9 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
     const std::string speech = _get_xom_speech("hostile monster");
 
     int result = XOM_DID_NOTHING;
-    // Nasty, but fun.
-    if (player_weapon_wielded() && one_chance_in(4))
+
+    // Nasty, but fun. Only allow for xp >= 4.
+    if (player_weapon_wielded() && you.max_level >= 4 && one_chance_in(4))
     {
         if (debug)
             return (XOM_BAD_ANIMATE_WPN);
