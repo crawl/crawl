@@ -3630,8 +3630,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 
     const bool was_bored = _xom_is_bored();
     int result = XOM_DID_NOTHING;
-//     if (niceness && !one_chance_in(20))
-    if (false)
+    if (niceness && !one_chance_in(20))
     {
         // Good stuff.
         while (result == XOM_DID_NOTHING)
