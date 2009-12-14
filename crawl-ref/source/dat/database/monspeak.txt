@@ -2716,6 +2716,21 @@ Maurice nonstealing
 
 @The_monster@ groans, "What are you, a monk?"
 %%%%
+# Triggered when Maurice tries to steal but is too confused to do so.
+Maurice confused nonstealing
+
+w:70
+__NONE
+
+@The_monster@ makes a clumsy attempt to grab your valuables.
+
+@The_monster@ fumbles for your pockets and misses.
+
+@The_monster@ lunges for your pockets and trips.
+
+w:5
+@The_monster@ sings off-key, "You got some money for me?"
+%%%%
 ############ MENKAURE ### A mummy whose rest you've disturbed
 Menkaure
 

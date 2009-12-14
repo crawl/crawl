@@ -4739,6 +4739,17 @@ void melee_attack::splash_defender_with_acid(int strength)
 
 static void _steal_item_from_player(monsters *mon)
 {
+    if (mon->confused())
+    {
+        std::string msg = getSpeakString("Maurice confused nonstealing");
+        if (!msg.empty() && msg != "__NONE")
+        {
+            msg = replace_all(msg, "@The_monster@", mon->name(DESC_CAP_THE));
+            mpr(msg.c_str(), MSGCH_TALK);
+        }
+        return;
+    }
+
     mon_inv_type mslot = NUM_MONSTER_SLOTS;
     int steal_what  = -1;
     int total_value = 0;
