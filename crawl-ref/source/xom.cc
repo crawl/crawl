@@ -1254,6 +1254,11 @@ static int _xom_send_allies(int sever, bool debug = false)
         numdemons = random2(numdemons + 1);
     numdemons = std::min(numdemons + 2, 16);
 
+    // Limit number of demons by experience level.
+    const int maxdemons = (you.max_level * 3);
+    if (numdemons > maxdemons)
+        numdemons = maxdemons;
+
     int numdifferent = 0;
 
     // If we have a mix of demons and non-demons, there's a chance
@@ -3194,6 +3199,11 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
         for (int i = 0; i < 3; ++i)
             numdemons = random2(numdemons + 1);
         numdemons = std::min(numdemons + 1, 14);
+
+        // Limit number of demons by experience level.
+        const int maxdemons = (you.max_level * 2);
+        if (numdemons > maxdemons)
+            numdemons = maxdemons;
 
         int num_summoned = 0;
         for (int i = 0; i < numdemons; ++i)
