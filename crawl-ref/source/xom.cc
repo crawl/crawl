@@ -3227,6 +3227,49 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
     return (result);
 }
 
+static int _xom_maybe_reverts_banishment(bool debug = false)
+{
+    if (_xom_feels_nasty())
+        return XOM_BAD_BANISHMENT;
+
+    // Sometimes Xom will immediately revert the banishment.
+    if (x_chance_in_y(you.piety, 1000))
+    {
+        if (!debug)
+        {
+            more();
+            god_speaks(GOD_XOM, _get_xom_speech("revert banishment").c_str());
+            down_stairs(you.your_level, DNGN_EXIT_ABYSS);
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+                           "revert banishment"), true);
+        }
+        return XOM_BAD_PSEUDO_BANISHMENT;
+    }
+    return XOM_BAD_BANISHMENT;
+}
+
+static int _xom_do_banishment(bool debug = false)
+{
+    // Disallow early banishment and make it much rarer later-on.
+    // While Xom is bored, the chance is increased.
+    if (!_xom_feels_nasty() && x_chance_in_y(8, you.max_level)
+        || _xom_is_bored() && x_chance_in_y(5, you.max_level))
+    {
+        return (XOM_DID_NOTHING);
+    }
+
+    if (debug)
+        return _xom_maybe_reverts_banishment(debug);
+
+    god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
+
+    // Handles note taking.
+    banished(DNGN_ENTER_ABYSS, "Xom");
+    const int result = _xom_maybe_reverts_banishment(debug);
+
+    return (result);
+}
+
 static int _xom_is_bad(int sever, int tension, bool debug = false)
 {
     int done   = XOM_DID_NOTHING;
@@ -3354,14 +3397,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
         }
         else if (one_chance_in(sever) && you.level_type != LEVEL_ABYSS)
         {
-            if (!debug)
-            {
-                god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
-                // handles note taking
-                banished(DNGN_ENTER_ABYSS, "Xom");
-                badness = 5;
-            }
-            done = XOM_BAD_BANISHMENT;
+            done    = _xom_do_banishment(debug);
+            badness = (done == XOM_BAD_BANISHMENT ? 5 : 1);
         }
     }
 
@@ -3583,7 +3620,8 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 
     const bool was_bored = _xom_is_bored();
     int result = XOM_DID_NOTHING;
-    if (niceness && !one_chance_in(20))
+//     if (niceness && !one_chance_in(20))
+    if (false)
     {
         // Good stuff.
         while (result == XOM_DID_NOTHING)

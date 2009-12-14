@@ -309,6 +309,17 @@ Xom casts you into the Abyss!
 
 The world seems to spin as Xom's maniacal laughter rings in your ears.
 %%%%
+Xom revert banishment
+
+w:30
+"Kidding!"
+
+"On second thought, though..."
+
+"No, I've changed my mind."
+
+Xom pulls you back into the comparable quietude of the dungeon.
+%%%%
 # Xom upgrades a nearby hostile monster's weapon to a chaos brand
 Xom chaos upgrade
 
