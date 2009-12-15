@@ -52,7 +52,7 @@
       }
     },
 
-    {  MST_GUARDIAN_NAGA,
+    {  MST_GUARDIAN_SERPENT,
       {
        SPELL_TELEPORT_OTHER,
        SPELL_TELEPORT_OTHER,
@@ -1270,7 +1270,7 @@
        SPELL_BLINK_OTHER,
        SPELL_SLEEP,
        SPELL_POISON_ARROW,
-       SPELL_SLOW,
+       SPELL_POISON_ARROW,
        SPELL_MINOR_HEALING
       }
     },

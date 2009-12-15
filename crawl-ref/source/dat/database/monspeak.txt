@@ -1047,7 +1047,7 @@ _player_ghost_rare_
 # Unique monsters
 #######################################
 %%%%
-############ AIZUL ### Renegade Guardian Naga Crusader whose vault got raided
+############ AIZUL ### Renegade guardian serpent whose vault was raided.
 Aizul
 
 @_Aizul_common_@
@@ -1064,7 +1064,7 @@ VISUAL:@The_monster@ yawns, and then pretends he didn't.
 
 @The_monster@ says, "I wasn't actually sleeping!"
 
-VISUAL:@The_monster@ grinds his teeth.
+VISUAL:@The_monster@ hisses menacingly.
 
 @The_monster@ screams @at_foe@, "I'll haunt your nightmares!"
 %%%%
@@ -1074,11 +1074,17 @@ _Aizul_rare_
 
 @The_monster@ hums a lullaby.
 
-VISUAL:@The_monster@ stretches carefully.
+VISUAL:@The_monster@ coils and then uncoils.
 
 @The_monster@ says, "Everybody has to sleep sometimes."
 
 @The_monster@ says @to_foe@, "Fancy a snooze?"
+
+@The_monster@ says, "They said they'd gotten someone better!"
+
+@The_monster@ says, "Replaced! How does it feel to be replaced?"
+
+@The_monster@ moans, "No job prospects! Who wants sleepy Aizul to guard their treasure?"
 
 VISUAL:@The_monster@ winks several times @at_foe@.
 %%%%
@@ -2709,6 +2715,21 @@ Maurice nonstealing
 @The_monster@ mutters, "Now where did you hide it?"
 
 @The_monster@ groans, "What are you, a monk?"
+%%%%
+# Triggered when Maurice tries to steal but is too confused to do so.
+Maurice confused nonstealing
+
+w:70
+__NONE
+
+@The_monster@ makes a clumsy attempt to grab your valuables.
+
+@The_monster@ fumbles for your pockets and misses.
+
+@The_monster@ lunges for your pockets and trips.
+
+w:5
+@The_monster@ sings off-key, "You got some money for me?"
 %%%%
 ############ MENKAURE ### A mummy whose rest you've disturbed
 Menkaure

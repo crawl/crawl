@@ -905,10 +905,10 @@ KFEAT:   Z = weight:2 teleport trap / .
 KFEAT:   z = teleport trap / Zot trap / weight:20 .
 MONS:    naga / nothing
 MONS:    greater naga / nothing
-MONS:    guardian naga / nothing
+MONS:    guardian serpent / nothing
 MONS:    naga warrior / nothing
 MONS:    naga mage / nothing
-MONS:    greater naga / guardian naga
+MONS:    greater naga / guardian serpent
 SHUFFLE: 'X / "Y
 SHUFFLE: 'X / 'X / AB, "Y / CD
 SUBST:   A=x, B=x, C=x, D=x

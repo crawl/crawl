@@ -312,17 +312,18 @@ int main( int argc, char *argv[] )
 static void _show_commandline_options_help()
 {
     puts("Command line options:");
-    puts("  -help            prints this list of options");
-    puts("  -name <string>   character name");
-    puts("  -species <arg>   preselect race (by letter, abbreviation, or name)");
-    puts("  -job <arg>       preselect class (by letter, abbreviation, or name)");
-    puts("  -plain           don't use IBM extended characters");
-    puts("  -dir <path>      crawl directory");
-    puts("  -rc <file>       init file name");
-    puts("  -rcdir <dir>     directory that contains (included) rc files");
-    puts("  -morgue <dir>    directory to save character dumps");
-    puts("  -macro <dir>     directory to save/find macro.txt");
-    puts("  -version         Crawl version (and compilation info)");
+    puts("  -help                 prints this list of options");
+    puts("  -name <string>        character name");
+    puts("  -species <arg>        preselect race (by letter, abbreviation, or name)");
+    puts("  -job <arg>            preselect class (by letter, abbreviation, or name)");
+    puts("  -plain                don't use IBM extended characters");
+    puts("  -dir <path>           crawl directory");
+    puts("  -rc <file>            init file name");
+    puts("  -rcdir <dir>          directory that contains (included) rc files");
+    puts("  -morgue <dir>         directory to save character dumps");
+    puts("  -macro <dir>          directory to save/find macro.txt");
+    puts("  -version              Crawl version (and compilation info)");
+    puts("  -save-version <name>  Save file version for the given player");
     puts("");
     puts("Command line options override init file options, which override");
     puts("environment options (CRAWL_NAME, CRAWL_DIR, CRAWL_RC).");
@@ -3187,7 +3188,10 @@ static bool _untrap_target(const coord_def move, bool check_confused)
                 mpr("You can't disarm traps in your present form.");
                 return (true);
             }
-            if (env.cgrid(target) != EMPTY_CLOUD)
+
+            const int cloud = env.cgrid(target);
+            if (cloud != EMPTY_CLOUD
+                && is_damaging_cloud(env.cloud[ cloud ].type, true))
             {
                 mpr("You can't get to that trap right now.");
                 return (true);

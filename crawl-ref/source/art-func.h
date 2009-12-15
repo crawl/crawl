@@ -513,9 +513,6 @@ static void _GONG_melee_effect(item_def* item, actor* wearer,
 
 static void _RCLOUDS_world_reacts(item_def *item)
 {
-    if (one_chance_in(100))
-        return;
-
     cloud_type cloud;
     if (one_chance_in(4))
         cloud = CLOUD_RAIN;
@@ -529,3 +526,9 @@ static void _RCLOUDS_world_reacts(item_def *item)
             place_cloud( cloud, *ri, random2(10), KC_OTHER, 1);
         }
 }
+
+static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "A thin mist springs up around you!");
+}
+

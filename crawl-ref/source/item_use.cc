@@ -2096,7 +2096,8 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.damage_funcs.push_back(_silver_damages_victim);
     if (poisoned)
         beam.hit_funcs.push_back(_poison_hit_victim);
-    if (penetrating) {
+    if (penetrating)
+    {
         beam.range_funcs.push_back(_item_penetrates_victim);
         beam.hit_verb = "passes through";
     }
@@ -3453,7 +3454,8 @@ void jewellery_wear_effects(item_def &item)
     // so we don't allow them to make the base types known.
     if (artefact)
     {
-        use_artefact(item);
+        bool show_msgs = true;
+        use_artefact(item, &show_msgs);
 
         if (learn_pluses && (item.plus != 0 || item.plus2 != 0))
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);

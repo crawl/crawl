@@ -8,6 +8,8 @@
 #include "ghost.h"
 #include "mon-util.h"
 
+#include "tiledef-player.h"
+
 mcache_manager mcache;
 
 // Used internally for streaming.
@@ -404,7 +406,7 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_NAGA:
     case TILEP_MONS_GREATER_NAGA:
     case TILEP_MONS_NAGA_WARRIOR:
-    case TILEP_MONS_GUARDIAN_NAGA:
+    case TILEP_MONS_GUARDIAN_SERPENT:
     case TILEP_MONS_NAGA_MAGE:
         ofs_x = 0;
         ofs_y = 1;

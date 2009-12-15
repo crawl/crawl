@@ -1084,8 +1084,10 @@ void scorefile_entry::init()
     best_skill_lvl = you.skills[ best_skill ];
 
     // Note all skills at level 27.
-    for (int sk = 0; sk < NUM_SKILLS; ++sk) {
-        if (you.skills[sk] == 27) {
+    for (int sk = 0; sk < NUM_SKILLS; ++sk)
+    {
+        if (you.skills[sk] == 27)
+        {
             if (!maxed_skills.empty())
                 maxed_skills += ",";
             maxed_skills += skill_name(sk);

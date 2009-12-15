@@ -49,6 +49,34 @@ the item's letter. For pickup, this is only possible when choosing items
 from a menu, i.e. ',,' or 'gg'.
 Stacks that are selected only in part are marked with '#' rather than '+'.
 %%%%
+Q:roguelike difference
+
+What are the biggest differences to other popular roguelike games?
+%%%%
+A:roguelike difference
+
+First, you might want to read the philosophy section in the manual ('?N') to
+read about general important principles in Crawl Stonesoup game design.
+
+As for specific differences, the most important are probably the following:
+* Species is *much* more important the starting profession (or "class").
+* Bones files only contain ghosts, never the dead character's equipment.
+* You cannot sell items to shops or elsewhere.
+* Resistances can be gained via mutations or items, never through eating.
+* For most gods in Crawl, prayer doesn't have any effect at all. Where it
+  does, it has both benefits and drawbacks. Check '^' to find out more.
+
+Also, our aim is to give Crawl a really smooth interface, so you should really
+read through the command list ('??') some time. The most intriguing "newish"
+commands are probably the following:
+
+* o, for automatic exploration of an unknown level
+* G, for automatic travel to another level
+* 5, for waiting and searching 100 turns or until something happens
+* %, to access an overview screen for all your stats and resistances
+* X, to access the level map for easier travelling and more subcommands ('X?')
+* Ctrl-F, to find and travel to items or features you've seen before
+%%%%
 Q:downstairs
 
 I can't find any downstairs. Am I missing something?
@@ -61,9 +89,11 @@ looking corridors and along walls near empty terrain, you will eventually
 find one. Note that most levels feature three downstairs as well as three
 upstairs, not counting any escape hatches. If you get stuck, you might
 try another set of stairs from the level above.
+
 Alternatively, if you are in one of the branches, you might also have
 reached its lowest level and have to turn around to explore another one.
-Check the database ('?/b') for the number of levels per branch.
+Check the overmap ('Ctrl-O') to see how deep you've delved into a given
+branch, or the database ('?/b') for the number of levels for unseen branches.
 %%%%
 Q:stuck
 
@@ -85,6 +115,7 @@ A:survival
 A: If you've got trouble even reaching the Temple, you might want to try
 out the Tutorial for some general playing hints. (To do this, press
 'Ctrl-T' in the character selection menu.)
+
 Also, there are easy playing combinations and more challenging ones
 (marked in dark grey on the selection screen). If you are new to Crawl,
 sticking to the easier ones is advisable. In general, treat each new
@@ -158,8 +189,8 @@ where not enough monsters are generated to dine on. You might also be too
 choosy about what you eat: unless you are herbivorous you will have to
 occasionally eat monster chunks, even those that sometimes make you sick
 (coloured brown in the menu and the prompt). If you worship a god who
-enjoys sacrifices pay attention to your own hunger status and wait until
-the end of prayer before chopping a corpse if need be.
+enjoys sacrifices pay attention to your own hunger status instead of offering
+all corpses you come across.
 Also, casting (difficult) spells will make you hungry, but high
 Intelligence and Spellcasting will lessen this effect. If you press 'II',
 you can read about the hunger effects of your spells.
@@ -220,10 +251,10 @@ permanently. There is another type of special item that pops up a bit more
 frequently:
 
 * egoitem: these are ordinary items with one special property. For example,
-  a short sword of venom, a cap of see invisible or boots of running. These
-  can be affected by enchanting scrolls and also by corrosion and acids.
-  Weapons of this type are branded, and only divine intervention can change
-  the brand.
+  a short sword of venom, a cap of see invisible, or boots of running.
+  These can be affected by enchanting scrolls and also by corrosion and
+  acids. Weapons of this type are branded, and only divine intervention can
+  change the brand.
 %%%%
 Q:oklobs
 
@@ -273,14 +304,16 @@ The game keeps crashing. / I think I found a bug. What do I do?
 A:bug
 
 A: Please submit a bug report on SourceForge, and give as much information
-as you can. (What were you doing at the time? What did you expect to
-happen, what happened instead? etc.) Most importantly, what version are you
-playing? Sometimes a screenshot can be helpful. For crashes or
-monsters/items/levels behaving oddly, we probably need a save file. To be
-on the safe side, attach the entire zipped save of the character in
-question. If there are error messages, please write them down. Short of a
-save file, a guide on how to reproduce the crash (or bug) can be useful;
-you can use wizard mode for this.
+as you can: What were you doing at the time? What did you expect to
+happen, what happened instead? etc.
+Most importantly, what version are you playing? (If you're not sure, you can
+check in-game with '?v'.) Console or tiles?
+
+Sometimes a screenshot can be helpful. For crashes or monsters/items/levels
+behaving oddly, we probably need a save file. To be on the safe side, attach
+the entire zipped save of the character in question. If there are error
+messages, please write them down. Short of a save file, a guide on how to
+reproduce the crash (or bug) can be useful; you can use wizard mode for this.
 
 If you don't log in to SourceForge or leave an email address at least check
 the thread from time to time in case we have some more questions. In any case
@@ -354,7 +387,7 @@ We really appreciate your help!
 %%%%
 Q:help
 
-I cannot code, but I'd really like to help improve the game. What can I do?
+I cannot code, but I'd like to help improve the game. What can I do?
 %%%%
 A:help
 
@@ -370,7 +403,7 @@ patch_guide.txt in the docs/ folder.
 
 If you've got some cool addition, you can send it over the mailing list, or
 post it as a SourceForge item. You can also help us by giving feedback on
-the most recent version or trunk (available via SVN, Windows binaries
+the most recent version or trunk (available via git, Windows binaries
 downloadable from http://crawl.develz.org/trunk/).
 
 Thanks a lot for your support!
@@ -388,7 +421,7 @@ many changes will invalidate your saved games. If that doesn't bother you,
 go ahead and play!
 
 Be sure to leave some feedback/suggestions/bug reports on the SourceForge
-trackers. When doing so please mention the version (r?????) you're
+trackers. When doing so please mention the version (see '?v') you're
 currently playing, in case the bug's already been fixed or the feature
 already implemented.
 %%%%
@@ -422,17 +455,17 @@ out changelog.txt in the docs/ folder.
 ##############################################
 Q:tiles lag
 
-The tiles version is awfully slow on Windows! What can I do to improve that?
+The tiles version is awfully slow on Windows! How can I improve that?
 %%%%
 A:tiles lag
 
 First, we're really sorry about that! Stonesoup 0.5 was tested on several
-systems and the gigantic lag on some Windows systems was completely unexpected.
-
+systems and the gigantic lag on some Windows systems was completely
+unexpected.
 Crawl 0.5 renders graphics using OpenGL and SDL. For most video cards, this
 should be faster than the 0.4 version. However, the default driver that ships
-with Windows is extremely slow. If you are having performance problems, be sure
-to update your video card driver as a first step.
+with Windows is extremely slow. If you are having performance problems, be
+sure to update your video card driver as a first step.
 
 We're working on a solution for this problem, but in the meantime you can try
 to see whether tweaking some options will improve performance. See
@@ -442,11 +475,11 @@ solved, or you could try the non-graphical console version.
 
 We'd like to apologize for the grief that this has caused some players, but we
 hope that it's understandable that making this change in 0.5 has allowed a lot
-of graphical improvements: Uniques get on-screen names. All monsters get health
-bars. Graphical menus. Full screen mode. Eee PC support.
-None of those things would have been possible in previous tiles versions. On
-top of that, if you have an adequate driver 0.5 can often be faster than 0.4,
-because the GPU can easily do the work that used to take the CPU a lot of time.
+of graphical improvements: Uniques get on-screen names. All monsters get
+health bars. Graphical menus. Full screen mode. Eee PC support. None of those
+things would have been possible in previous tiles versions. On top of that, if
+you have an adequate driver 0.5 can often be faster than 0.4, because the GPU
+can easily do the work that used to take the CPU a lot of time.
 
 At any rate, it'll be fixed.  Just be patient.  :)
 %%%%

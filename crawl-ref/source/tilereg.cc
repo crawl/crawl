@@ -51,7 +51,10 @@
 #include "tilefont.h"
 #include "tilesdl.h"
 #include "tilemcache.h"
+#include "tiledef-dngn.h"
 #include "tiledef-gui.h"
+#include "tiledef-main.h"
+#include "tiledef-player.h"
 
 #include <sys/stat.h>
 #include <SDL_opengl.h>

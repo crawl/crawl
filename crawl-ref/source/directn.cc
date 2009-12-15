@@ -521,11 +521,7 @@ void full_describe_view()
         const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
 
         if (unknown_mimic)      // It'll be on top.
-        {
-            item_def item;
-            get_mimic_item(mon, item);
-            list_items.push_back(item);
-        }
+            list_items.push_back(get_mimic_item(mon));
 
         const int oid = igrd(*ri);
         if (oid == NON_ITEM)
@@ -1754,11 +1750,7 @@ std::string get_terse_square_desc(const coord_def &gc)
         const monsters& mons = *monster_at(gc);
 
         if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
-        {
-            item_def item;
-            get_mimic_item(&mons, item);
-            desc = item.name(DESC_PLAIN);
-        }
+            desc = get_mimic_item(&mons).name(DESC_PLAIN);
         else
             desc = mons.full_name(DESC_PLAIN, true);
     }
@@ -3133,6 +3125,8 @@ static std::string _get_monster_desc(const monsters *mon)
 
     if (mon->attitude == ATT_FRIENDLY)
         text += pronoun + " is friendly.\n";
+    else if (mon->good_neutral())
+        text += pronoun + " seems to be peaceful towards you.\n";
     else if (mon->neutral()) // don't differentiate between permanent or not
         text += pronoun + " is indifferent to you.\n";
 
@@ -3144,35 +3138,6 @@ static std::string _get_monster_desc(const monsters *mon)
 
     if (mons_intel(mon) <= I_PLANT && mon->type != MONS_RAKSHASA_FAKE)
         text += pronoun + " is mindless.\n";
-
-    // Give an indication of monsters being capable of seeing/sensing
-    // invisible creatures.
-    if (mons_behaviour_perceptible(mon) && !mon->asleep()
-        && !mons_is_confused(mon)
-        && (mon->can_see_invisible() || mons_sense_invis(mon)))
-    {
-        const actor* foe = mon->get_foe();
-        if (foe && foe->invisible() && !mons_is_fleeing(mon))
-        {
-            if (!you.can_see(foe))
-                text += pronoun + " is looking at something unseen.\n";
-            else if (mon->can_see_invisible())
-            {
-                text += pronoun + " is watching "
-                        + foe->name(DESC_NOCAP_THE)
-                        + ".\n";
-            }
-            else
-            {
-                text += pronoun + " is looking in ";
-                std::string name = foe->atype() == ACT_PLAYER
-                                  ? "your" : (foe->name(DESC_NOCAP_THE) + "'s");
-                text += name + " general direction.\n";
-            }
-        }
-        else if (!foe || mons_is_fleeing(mon))
-            text += pronoun + " seems to be peering into the shadows.\n";
-    }
 
     if (mons_enslaved_body_and_soul(mon))
     {
@@ -3388,9 +3353,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
                 _describe_monster(mon);
             else
             {
-                item_def item;
-                get_mimic_item( mon, item );
-                std::string name = get_menu_colour_prefix_tags(item,
+                std::string name = get_menu_colour_prefix_tags(get_mimic_item(mon),
                                                                DESC_NOCAP_A);
                 mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
             }

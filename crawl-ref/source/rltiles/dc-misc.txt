@@ -24,6 +24,17 @@ cloud_blue_smoke CLOUD_BLUE_SMOKE
 cloud_grey_smoke CLOUD_GREY_SMOKE
 cloud_miasma CLOUD_MIASMA
 cloud_tloc_energy CLOUD_TLOC_ENERGY
+cloud_mutagenic_small1 CLOUD_MUTAGENIC_0
+cloud_mutagenic_small2
+cloud_mutagenic_medium1 CLOUD_MUTAGENIC_1
+cloud_mutagenic_medium2
+cloud_mutagenic_large1 CLOUD_MUTAGENIC_2
+cloud_mutagenic_large2
+cloud_mutagenic_large3
+cloud_mutagenic_large4
+cloud_rain1 CLOUD_RAIN
+cloud_rain2
+cloud_grey_smoke CLOUD_MIST
 
 #########MAP
 %sdir dc-misc

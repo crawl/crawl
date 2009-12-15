@@ -68,8 +68,36 @@
 #include "view.h"
 #include "shout.h"
 #include "viewgeom.h"
-#include "tiles.h"
 #include "xom.h"
+
+#ifdef USE_TILE
+#include "tiles.h"
+#include "tiledef-player.h"
+
+dolls_data::dolls_data()
+{
+    parts = new int[TILEP_PART_MAX];
+    memset(parts, 0, TILEP_PART_MAX * sizeof(int));
+}
+
+dolls_data::dolls_data(const dolls_data& _orig)
+{
+    parts = new int[TILEP_PART_MAX];
+    memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(int));
+}
+
+const dolls_data& dolls_data::operator=(const dolls_data& other)
+{
+    memcpy(parts, other.parts, TILEP_PART_MAX * sizeof(int));
+    return (*this);
+}
+
+dolls_data::~dolls_data()
+{
+    delete[] parts;
+    parts = NULL;
+}
+#endif
 
 std::string pronoun_you(description_level_type desc)
 {

@@ -557,6 +557,23 @@ MONS:     (list of monsters)
           The colour "any" can be given, in which case a random colour
           will be chosen when the monster is placed.
 
+          You can override the displayed monster tile using the "tile:"
+          specifier as follows:
+              MONS: rat tile:giant_bat
+
+          In tiles version, this would create a monster that uses the
+          'giant_bat' tile, but is otherwise identical to a rat. Obviously, this
+          substition of one monster onto another should never be used, but it
+          can be useful for customised vault monsters if an alternate tile
+          exists. In ASCII mode, this will do nothing.
+
+	  You can set the monster's faction by specifying "att:" one of:
+          * att:hostile -- the default
+          * att:friendly -- tame, will follow you
+          * att:neutral -- hostile to both you and att:hostile monsters
+          * att:good_neutral -- hostile to att:hostile
+          * att:fellow_slime -- tame, won't follow you
+
           Note that 8, 9, 0 also place monsters (see the table).
 
           If you want to place a random monster suitable for the level

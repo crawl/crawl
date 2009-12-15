@@ -15,16 +15,14 @@
 #include <vector>
 
 #ifdef USE_TILE
-// This used to be in tiles.h. (jpeg)
-#include "tiledef-main.h"
-#include "tiledef-dngn.h"
-#include "tiledef-player.h"
-
 struct dolls_data
 {
-    dolls_data() { memset(parts, 0, sizeof(parts)); }
+    dolls_data();
+    dolls_data(const dolls_data& orig);
+    const dolls_data& operator=(const dolls_data& other);
+    ~dolls_data();
 
-    int parts[TILEP_PART_MAX];
+    int *parts;
 };
 #endif
 

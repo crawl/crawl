@@ -27,6 +27,7 @@
 #include "terrain.h"
 #include "tiles.h"
 #include "tilesdl.h"
+#include "tiledef-main.h"
 #include "travel.h"
 #include "viewgeom.h"
 
@@ -312,7 +313,7 @@ int clrscr()
     return 0;
 }
 
-void cgotoxy(int x, int y, int region)
+void cgotoxy(int x, int y, GotoRegion region)
 {
     tiles.cgotoxy(x, y, region);
 }

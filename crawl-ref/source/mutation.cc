@@ -2624,7 +2624,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
 {
     const bool fully_active = mutation_is_fully_active(mut);
     const bool fully_inactive =
-        (!fully_active) && _mutation_is_fully_inactive(mut);
+        (!fully_active && _mutation_is_fully_inactive(mut));
 
     // level == -1 means default action of current level
     if (level == -1)
@@ -2677,7 +2677,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 
-    if (fully_inactive)
+    if (fully_inactive || player_mutation_level(mut) < you.mutation[mut])
     {
         result = "(" + result;
         result += ")";
@@ -2686,7 +2686,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     if (colour)
     {
         const char* colourname = "lightgrey"; // the default
-        const bool permanent = (you.demon_pow[mut] > 0);
+        const bool permanent   = (you.demon_pow[mut] > 0);
         if (innate)
             colourname = (level > 0 ? "cyan" : "lightblue");
         else if (permanent)
@@ -2703,6 +2703,8 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
             else
                 colourname = demonspawn ? "red"      : "lightblue";
         }
+        else if (fully_inactive)
+            colourname = "darkgrey";
 
         // Build the result
         std::ostringstream ostr;

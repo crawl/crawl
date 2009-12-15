@@ -61,8 +61,9 @@ enum xom_event_type
     XOM_BAD_TORMENT,
     XOM_BAD_ANIMATE_WPN,
     XOM_BAD_SUMMON_DEMONS,      //  35
+    XOM_BAD_PSEUDO_BANISHMENT,
     XOM_BAD_BANISHMENT,
-    XOM_LAST_BAD_ACT = XOM_BAD_BANISHMENT,  // 36
+    XOM_LAST_BAD_ACT = XOM_BAD_BANISHMENT,  // 37
 
     XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
     NUM_XOM_EVENTS

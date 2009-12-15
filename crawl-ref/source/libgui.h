@@ -57,7 +57,7 @@ int window(int x1, int y1, int x2, int y2);
 extern "C" int getch();
 int getch_ck();
 int clrscr();
-void cgotoxy(int x, int y, int region = GOTO_CRT);
+void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
 void delay(int ms);
 void update_screen();
 int kbhit();

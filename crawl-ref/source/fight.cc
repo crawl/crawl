@@ -1898,8 +1898,22 @@ int melee_attack::player_weapon_type_modify(int damage)
     case DAM_WHIP:
         if (damage < HIT_MED)
             attack_verb = "whack";
-        else
+        else if (damage < HIT_STRONG)
             attack_verb = "thrash";
+        else
+        {
+            switch(defender->holiness())
+            {
+            case MH_HOLY:
+            case MH_NATURAL:
+            case MH_DEMONIC:
+                attack_verb = "punish";
+                verb_degree = " causing immense pain";
+                break;
+            default:
+                attack_verb = "devastate";
+            }
+        }
         break;
 
     case -1: // unarmed
@@ -4725,6 +4739,17 @@ void melee_attack::splash_defender_with_acid(int strength)
 
 static void _steal_item_from_player(monsters *mon)
 {
+    if (mon->confused())
+    {
+        std::string msg = getSpeakString("Maurice confused nonstealing");
+        if (!msg.empty() && msg != "__NONE")
+        {
+            msg = replace_all(msg, "@The_monster@", mon->name(DESC_CAP_THE));
+            mpr(msg.c_str(), MSGCH_TALK);
+        }
+        return;
+    }
+
     mon_inv_type mslot = NUM_MONSTER_SLOTS;
     int steal_what  = -1;
     int total_value = 0;
@@ -5227,8 +5252,17 @@ void melee_attack::mons_perform_attack_rounds()
 
         init_attack();
 
-        const mon_attack_def attk = mons_attack_spec(attacker_as_monster(),
+        mon_attack_def attk = mons_attack_spec(attacker_as_monster(),
                                                      attack_number);
+        if (attk.type == AT_WEAP_ONLY)
+        {
+            int weap = attacker_as_monster()->inv[MSLOT_WEAPON];
+            if (weap == NON_ITEM)
+                attk.type = AT_NONE;
+            else if (is_range_weapon(mitm[weap]))
+                attk.type = AT_SHOOT;
+        }
+
         if (attk.type == AT_NONE)
         {
             // Make sure the monster uses up some energy, even

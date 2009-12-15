@@ -771,14 +771,13 @@ void in_a_cloud()
     case CLOUD_MUTAGENIC:
         mpr("You are engulfed in a mutagenic fog!");
 
-        if (coinflip()) {
+        if (coinflip())
+        {
             mpr("Strange energies course through your body.");
             if (one_chance_in(3))
                 you.mutate();
             else
-            {
                 give_bad_mutation();
-            }
         }
         break;
 

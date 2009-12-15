@@ -34,9 +34,8 @@ struct tile_flavour
     unsigned short wall;
     // Used as a random value or for special cases e.g. (bazaars, gates).
     unsigned short special;
-    // Used by the vault 'TILE' overlay. Called ftile as it was originally
-    // to be for features and 'tile' is obtuse.
-    unsigned short ftile;
+    // Used (primarily) by the vault 'TILE' overlay.
+    unsigned short feat;
 };
 
 // A glorified unsigned int that assists with ref-counting the mcache.

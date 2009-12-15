@@ -25,6 +25,9 @@
  #include "newgame.h"
  #include "terrain.h"
  #include "tiles.h"
+ #include "tiledef-dngn.h"
+ #include "tiledef-main.h"
+ #include "tiledef-player.h"
  #include "travel.h"
 #endif
 

@@ -2142,10 +2142,10 @@ void mons_stop_fleeing_from_sanctuary(monsters *monster)
         behaviour_event(monster, ME_EVAL, MHITYOU);
 }
 
-void mons_pacify(monsters *mon)
+void mons_pacify(monsters *mon, mon_attitude_type att)
 {
     // Make the monster permanently neutral.
-    mon->attitude = ATT_NEUTRAL;
+    mon->attitude = att;
     mon->flags |= MF_WAS_NEUTRAL;
 
     if (!testbits(mon->flags, MF_GOT_HALF_XP) && !mon->is_summoned())
@@ -3223,6 +3223,8 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                       monster->pronoun(PRONOUN_CAP_POSSESSIVE));
     msg = replace_all(msg, "@possessive@",
                       monster->pronoun(PRONOUN_NOCAP_POSSESSIVE));
+    msg = replace_all(msg, "@objective@",
+                      monster->pronoun(PRONOUN_OBJECTIVE));
 
     // Body parts.
     bool        can_plural = false;
@@ -3518,7 +3520,10 @@ mon_body_shape get_mon_shape(const int type)
     case 'M': // mummies
         return (MON_SHAPE_HUMANOID);
     case 'N': // nagas
-        return (MON_SHAPE_NAGA);
+        if (mons_genus(type) == MONS_GUARDIAN_SERPENT)
+            return (MON_SHAPE_SNAKE);
+        else
+            return (MON_SHAPE_NAGA);
     case 'O': // ogres
         return (MON_SHAPE_HUMANOID);
     case 'P': // plants

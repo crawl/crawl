@@ -274,16 +274,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             do_curse_item(item);
         break;
 
-    case MONS_AIZUL:
-        if (one_chance_in(3))
-            level = MAKE_GOOD_ITEM;
-
-        item_race      = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_HALBERD, WPN_SCIMITAR, WPN_GREAT_MACE,
-                                       WPN_LONG_SWORD, WPN_EVENINGSTAR, -1);
-        break;
-
     case MONS_GNOLL:
     case MONS_OGRE_MAGE:
     case MONS_NAGA_WARRIOR:
@@ -1193,7 +1183,6 @@ void give_shield(monsters *mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
         break;
-    case MONS_AIZUL:
     case MONS_DONALD:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
@@ -1488,13 +1477,6 @@ void give_armour(monsters *mon, int level)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
         force_colour   = LIGHTCYAN;
-        break;
-
-    case MONS_AIZUL:
-        item_race      = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_NAGA_BARDING;
-        force_colour   = RED;
         break;
 
     default:

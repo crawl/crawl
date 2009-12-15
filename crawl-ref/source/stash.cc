@@ -380,20 +380,15 @@ void Stash::update()
 
         // There's something on this square. Take a squint at it.
         const item_def *pitem;
-        item_def mimic_item;
         if (_grid_has_mimic_item(p))
-        {
-            get_mimic_item(monster_at(p), mimic_item);
-            pitem = &mimic_item;
-        }
+            pitem = &get_mimic_item(monster_at(p));
         else
         {
             pitem = &mitm[igrd(p)];
+            tutorial_first_item(*pitem);
         }
 
         const item_def& item = *pitem;
-
-        tutorial_first_item(item);
 
         if (!_grid_has_perceived_multiple_items(p))
             items.clear();

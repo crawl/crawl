@@ -47,10 +47,6 @@ enum tag_major_version
 enum tag_minor_version
 {
     TAG_MINOR_RESET    = 0, // Minor tags were reset
-    TAG_MINOR_DISEASE  = 1, // you.disease changed to an integer
-    TAG_MINOR_MAPCELL_NOCOLOUR = 2, // map_cell::colour removed
-    TAG_MINOR_SHOWTYPE_EXTENDED = 3, // map_cell::object stores more data
-    TAG_MINOR_SYNCH_TIME = 4, // player::synch_time removed
     TAG_MINOR_VERSION  = 4 // Current version.  (Keep equal to max.)
 };
 

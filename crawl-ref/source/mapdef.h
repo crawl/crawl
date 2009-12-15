@@ -560,6 +560,8 @@ class mons_spec
     monster_spells spells;
     unsigned long extra_monster_flags;
 
+    CrawlHashTable props;
+
     mons_spec(int id = RANDOM_MONSTER,
               monster_type base = MONS_NO_MONSTER,
               int num = 0,
@@ -570,7 +572,7 @@ class mons_spec
           generate_awake(awaken), patrolling(false), band(false),
           colour(BLACK), hd(0), hp(0), abjuration_duration(0), summon_type(0),
           items(), monname(""), non_actor_summoner(""), explicit_spells(false), 
-          spells(), extra_monster_flags(0L)
+          spells(), extra_monster_flags(0L), props()
     {
     }
 };

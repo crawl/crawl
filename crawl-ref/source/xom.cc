@@ -1254,6 +1254,11 @@ static int _xom_send_allies(int sever, bool debug = false)
         numdemons = random2(numdemons + 1);
     numdemons = std::min(numdemons + 2, 16);
 
+    // Limit number of demons by experience level.
+    const int maxdemons = (you.max_level * 3);
+    if (numdemons > maxdemons)
+        numdemons = maxdemons;
+
     int numdifferent = 0;
 
     // If we have a mix of demons and non-demons, there's a chance
@@ -3164,8 +3169,9 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
     const std::string speech = _get_xom_speech("hostile monster");
 
     int result = XOM_DID_NOTHING;
-    // Nasty, but fun.
-    if (player_weapon_wielded() && one_chance_in(4))
+
+    // Nasty, but fun. Only allow for xp >= 4.
+    if (player_weapon_wielded() && you.max_level >= 4 && one_chance_in(4))
     {
         if (debug)
             return (XOM_BAD_ANIMATE_WPN);
@@ -3195,6 +3201,11 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
             numdemons = random2(numdemons + 1);
         numdemons = std::min(numdemons + 1, 14);
 
+        // Limit number of demons by experience level.
+        const int maxdemons = (you.max_level * 2);
+        if (numdemons > maxdemons)
+            numdemons = maxdemons;
+
         int num_summoned = 0;
         for (int i = 0; i < numdemons; ++i)
         {
@@ -3223,6 +3234,85 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
 
     if (rc)
         god_speaks(GOD_XOM, speech.c_str());
+
+    return (result);
+}
+
+static bool _has_min_banishment_level()
+{
+    return (you.max_level >= 9);
+}
+
+// Rolls whether banishment will be averted.
+static bool _will_not_banish()
+{
+    return x_chance_in_y(5, you.max_level);
+}
+
+// Disallow early banishment and make it much rarer later-on.
+// While Xom is bored, the chance is increased.
+static bool _allow_xom_banishment()
+{
+    // Always allowed if under penance.
+    if (you.penance[GOD_XOM])
+        return (true);
+
+    // If Xom is bored, banishment becomes viable earlier.
+    if (_xom_is_bored() && _will_not_banish())
+        return (false);
+
+    // Below the minimum experience level, only fake banishment is allowed.
+    if (!_has_min_banishment_level())
+    {
+        // Allow banishment; it will be retracted right away.
+        if (one_chance_in(5) && x_chance_in_y(you.piety, 1000))
+            return (true);
+        else
+            return (false);
+    }
+    else if (_will_not_banish())
+        return (false);
+
+    return (true);
+}
+
+static int _xom_maybe_reverts_banishment(bool debug = false)
+{
+    // Never revert if Xom is bored or the player is under penance.
+    if (_xom_feels_nasty())
+        return XOM_BAD_BANISHMENT;
+
+    // Sometimes Xom will immediately revert the banishment.
+    // Always so, if the banishment happened below the minimum exp level.
+    if (!_xom_feels_nasty() && !_has_min_banishment_level()
+        || x_chance_in_y(you.piety, 1000))
+    {
+        if (!debug)
+        {
+            more();
+            god_speaks(GOD_XOM, _get_xom_speech("revert banishment").c_str());
+            down_stairs(you.your_level, DNGN_EXIT_ABYSS);
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+                           "revert banishment"), true);
+        }
+        return XOM_BAD_PSEUDO_BANISHMENT;
+    }
+    return XOM_BAD_BANISHMENT;
+}
+
+static int _xom_do_banishment(bool debug = false)
+{
+    if (!_allow_xom_banishment())
+        return (XOM_DID_NOTHING);
+
+    if (debug)
+        return _xom_maybe_reverts_banishment(debug);
+
+    god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
+
+    // Handles note taking.
+    banished(DNGN_ENTER_ABYSS, "Xom");
+    const int result = _xom_maybe_reverts_banishment(debug);
 
     return (result);
 }
@@ -3354,14 +3444,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
         }
         else if (one_chance_in(sever) && you.level_type != LEVEL_ABYSS)
         {
-            if (!debug)
-            {
-                god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
-                // handles note taking
-                banished(DNGN_ENTER_ABYSS, "Xom");
-                badness = 5;
-            }
-            done = XOM_BAD_BANISHMENT;
+            done    = _xom_do_banishment(debug);
+            badness = (done == XOM_BAD_BANISHMENT ? 5 : 1);
         }
     }
 
@@ -3942,7 +4026,8 @@ static const char* _xom_effect_to_name(int effect)
         "miscast (pseudo)", "miscast (minor)", "miscast (major)",
         "miscast (nasty)", "stat loss", "teleportation", "swap weapons",
         "chaos upgrade", "mutation", "polymorph", "repel stairs", "confusion",
-        "draining", "torment", "animate weapon", "summon demons", "banishment"
+        "draining", "torment", "animate weapon", "summon demons",
+        "banishment (pseudo)", "banishment"
     };
 
     std::string result = "";

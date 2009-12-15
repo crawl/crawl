@@ -164,8 +164,8 @@ mon_attitude_type monsters::temp_attitude() const
 {
     if (has_ench(ENCH_CHARM))
         return ATT_FRIENDLY;
-    else if (has_ench(ENCH_NEUTRAL))
-        return ATT_NEUTRAL;
+    else if (has_ench(ENCH_TEMP_PACIF))
+        return ATT_GOOD_NEUTRAL;
     else
         return attitude;
 }
@@ -370,6 +370,7 @@ int monsters::body_weight() const
 
         case MONS_QUICKSILVER_DRAGON:
         case MONS_SILVER_STATUE:
+        case MONS_STATUE:
             weight *= 4;
             break;
 
@@ -488,7 +489,7 @@ static int _mons_offhand_weapon_index(const monsters *m)
 item_def *monsters::weapon(int which_attack)
 {
     const mon_attack_def attk = mons_attack_spec(this, which_attack);
-    if (attk.type != AT_HIT)
+    if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY)
         return (NULL);
 
     // Even/odd attacks use main/offhand weapon.
@@ -1932,7 +1933,7 @@ void monsters::wield_melee_weapon(int near)
 
         // Switch to the alternate weapon if it's not a ranged weapon, too,
         // or switch away from our main weapon if it's a ranged weapon.
-        if (alt && !is_range_weapon(*alt) || weap && !alt)
+        if (alt && !is_range_weapon(*alt) || weap && !alt && type != MONS_STATUE)
             swap_weapons(near);
     }
 }
@@ -2064,12 +2065,8 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     // Various special cases:
     // non-gold mimics, dancing weapons, ghosts, Pan demons
-    if (mons_is_mimic(mon.type) && mon.type != MONS_GOLD_MIMIC)
-    {
-        item_def item;
-        get_mimic_item(&mon, item);
-        return (item.name(desc));
-    }
+    if (mons_is_mimic(mon.type))
+        return (get_mimic_item(&mon).name(desc));
 
     if (mon.type == MONS_DANCING_WEAPON && mon.inv[MSLOT_WEAPON] != NON_ITEM)
     {
@@ -2944,14 +2941,14 @@ bool monsters::friendly() const
 
 bool monsters::neutral() const
 {
-    return (attitude == ATT_NEUTRAL || has_ench(ENCH_NEUTRAL)
+    return (attitude == ATT_NEUTRAL || has_ench(ENCH_TEMP_PACIF)
             || attitude == ATT_GOOD_NEUTRAL
             || attitude == ATT_STRICT_NEUTRAL);
 }
 
 bool monsters::good_neutral() const
 {
-    return (attitude == ATT_GOOD_NEUTRAL);
+    return (attitude == ATT_GOOD_NEUTRAL || has_ench(ENCH_TEMP_PACIF));
 }
 
 bool monsters::strict_neutral() const
@@ -4321,9 +4318,11 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
-    case ENCH_NEUTRAL:
+    case ENCH_TEMP_PACIF:
         if (!quiet)
-            simple_monster_message(this, " is no longer neutral.");
+            simple_monster_message(this, (" seems to come to "
+                + pronoun(PRONOUN_NOCAP_POSSESSIVE) + " senses.").c_str());
+        // Yeah, this _is_ offensive to Zin, but hey, he deserves it (1KB).
 
         behaviour_event(this, ME_EVAL);
         break;
@@ -4612,7 +4611,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_INVIS: case ENCH_CHARM:  case ENCH_SLEEP_WARY:
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
         case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
-        case ENCH_BATTLE_FRENZY: case ENCH_NEUTRAL:
+        case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF:
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE:
             lose_ench_levels(i->second, levels);
             break;
@@ -4749,7 +4748,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_MIGHT:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
-    case ENCH_NEUTRAL:
+    case ENCH_TEMP_PACIF:
     case ENCH_PETRIFYING:
     case ENCH_PETRIFIED:
     case ENCH_SICK:
@@ -5362,6 +5361,9 @@ int monsters::foe_distance() const
 bool monsters::can_go_berserk() const
 {
     if (holiness() != MH_NATURAL || type == MONS_KRAKEN_TENTACLE)
+        return (false);
+
+    if (mons_intel(this) == I_PLANT)
         return (false);
 
     if (berserk() || has_ench(ENCH_FATIGUE))
