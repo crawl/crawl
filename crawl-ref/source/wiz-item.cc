@@ -1212,7 +1212,9 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         item.sub_type = i;
 
-        std::string name = item.name(DESC_DBNAME, true, true);
+        std::string name =
+            type == OBJ_BOOKS ? item.name(DESC_PLAIN, false, true)
+                              : item.name(DESC_DBNAME, true, true);
 
         fprintf(ostat, format_str, name.c_str(),
                 (float) subtype_quants[i] * 100.0 / (float) total_quant);
