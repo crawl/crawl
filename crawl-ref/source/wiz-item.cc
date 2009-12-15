@@ -913,7 +913,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             {
                 if (item.sub_type == BOOK_RANDART_THEME)
                 {
-                    const int disc1 = item.plus  & 0xFF;
+                    const int disc1 = item.plus & 0xFF;
                     ego_quants[disc1]++;
                 }
                 else if (item.sub_type == BOOK_RANDART_LEVEL)
@@ -925,6 +925,13 @@ static void _debug_acquirement_stats(FILE *ostat)
         }
         else if (type == OBJ_ARMOUR) // Exclude artefacts when counting egos.
             ego_quants[get_armour_ego_type(item)]++;
+        else if (type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+        {
+            // Store skills in subtype array, so as not to overlap
+            // with artefact spell disciplines/levels.
+            const int skill = item.plus;
+            subtype_quants[200 + skill]++;
+        }
 
         // Include artefacts for weapon brands.
         if (type == OBJ_WEAPONS)
@@ -1144,40 +1151,61 @@ static void _debug_acquirement_stats(FILE *ostat)
     }
     else if (type == OBJ_BOOKS)
     {
-        // TODO: Count themed books' main spell school.
-        fprintf(ostat, "Primary disciplines of themed randart books:\n");
-
-        const char* names[] = {
-            "conjuration",
-            "enchantment",
-            "fire magic",
-            "ice magic",
-            "transmutation",
-            "necromancy",
-            "summoning",
-            "divination",
-            "translocation",
-            "poison magic",
-            "earth magic",
-            "air magic",
-            "holy magic"
-         };
-
-        for (int i = 0; i < SPTYP_LAST_EXPONENT; ++i)
+        // Print disciplines of artefact spellbooks.
+        if (subtype_quants[BOOK_RANDART_THEME]
+            + subtype_quants[BOOK_RANDART_LEVEL] > 0)
         {
-            if (ego_quants[i] > 0)
+            fprintf(ostat, "Primary disciplines/levels of randart books:\n");
+
+            const char* names[] = {
+                "conjuration",
+                "enchantment",
+                "fire magic",
+                "ice magic",
+                "transmutation",
+                "necromancy",
+                "summoning",
+                "divination",
+                "translocation",
+                "poison magic",
+                "earth magic",
+                "air magic",
+                "holy magic"
+            };
+
+            for (int i = 0; i < SPTYP_LAST_EXPONENT; ++i)
             {
-                fprintf(ostat, "%17s: %5.2f\n", names[i],
-                        100.0 * (float) ego_quants[i] / (float) num_arts);
+                if (ego_quants[i] > 0)
+                {
+                    fprintf(ostat, "%17s: %5.2f\n", names[i],
+                            100.0 * (float) ego_quants[i] / (float) num_arts);
+                }
+            }
+            // List levels for fixed level randarts.
+            for (int i = 1; i < 9; ++i)
+            {
+                const int k = SPTYP_LAST_EXPONENT + i;
+                if (ego_quants[k] > 0)
+                {
+                    fprintf(ostat, "%15s %d: %5.2f\n", "level", i,
+                            100.0 * (float) ego_quants[i] / (float) num_arts);
+                }
             }
         }
-        for (int i = 1; i < 9; ++i)
+
+        // Also list skills for manuals.
+        if (subtype_quants[BOOK_MANUAL] > 0)
         {
-            const int k = SPTYP_LAST_EXPONENT + i;
-            if (ego_quants[k] > 0)
+            const int mannum = subtype_quants[BOOK_MANUAL];
+            fprintf(ostat, "\nManuals:\n");
+            for (int i = SK_FIGHTING; i <= SK_EVOCATIONS; ++i)
             {
-                fprintf(ostat, "%15s %d: %5.2f\n", "level", i,
-                        100.0 * (float) ego_quants[i] / (float) num_arts);
+                const int k = 200 + i;
+                if (subtype_quants[k] > 0)
+                {
+                    fprintf(ostat, "%17s: %5.2f\n", skill_name(i),
+                            100.0 * (float) subtype_quants[k] / (float) mannum);
+                }
             }
         }
         fprintf(ostat, "\n\n");
@@ -1187,16 +1215,22 @@ static void _debug_acquirement_stats(FILE *ostat)
     item.quantity  = 1;
     item.base_type = type;
 
+    const description_level_type desc = (type == OBJ_BOOKS ? DESC_PLAIN
+                                                           : DESC_DBNAME);
+    const bool terse = (type == OBJ_BOOKS ? false : true);
+
     // First, get the maximum name length.
     int max_width = 0;
     for (int i = 0; i < 256; ++i)
     {
+        if (type == OBJ_BOOKS && i >= 200)
+            break;
+
         if (subtype_quants[i] == 0)
             continue;
 
         item.sub_type = i;
-
-        std::string name = item.name(DESC_DBNAME, true, true);
+        std::string name = item.name(desc, terse, true);
 
         max_width = std::max(max_width, (int) name.length());
     }
@@ -1207,14 +1241,14 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     for (int i = 0; i < 256; ++i)
     {
+        if (type == OBJ_BOOKS && i >= 200)
+            break;
+
         if (subtype_quants[i] == 0)
             continue;
 
         item.sub_type = i;
-
-        std::string name =
-            type == OBJ_BOOKS ? item.name(DESC_PLAIN, false, true)
-                              : item.name(DESC_DBNAME, true, true);
+        std::string name = item.name(desc, terse, true);
 
         fprintf(ostat, format_str, name.c_str(),
                 (float) subtype_quants[i] * 100.0 / (float) total_quant);
