@@ -5701,16 +5701,6 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
     if (proprt[ARTP_NOISES])
         you.attribute[ATTR_NOISES] = 1;
 
-    if (proprt[ARTP_SPIRIT_SHIELD])
-    {
-        set_mp(0, false);
-        mpr("You feel the spirits watch over you.");
-        if (you.species == SP_DEEP_DWARF)
-            mpr("Now linked to your health, your magic stops regenerating.");
-
-        artefact_wpn_learn_prop(item, ARTP_SPIRIT_SHIELD);
-    }
-
     if (!alreadyknown && Options.autoinscribe_artefacts)
         add_autoinscription(item, artefact_auto_inscription(item));
 

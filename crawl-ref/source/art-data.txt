@@ -798,7 +798,8 @@ PLUS:     +2
 COLOUR:   DARKGREY
 TILE:     urand_bear
 TILE_EQ:  bear
-BOOL:     life, berserk, spirit
+BRAND:    SPARM_SPIRIT_SHIELD
+BOOL:     life, berserk
 MAGIC:    50
 DESC_END: Once owned by Ukta, a powerful ogre shaman, this fur hat houses
           the spirit of an especially mighty bear.
@@ -1021,8 +1022,9 @@ PLUS:     +6
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
 TILE_EQ:  gong
+BRAND:    SPARM_SPIRIT_SHIELD
 MAGIC:    50
-BOOL:     elec, life, spirit
+BOOL:     elec, life
 DESC:     This is a large gong; you wonder if it could be worn as a shield.
 DESC_ID:  This shield surely will be heard!
 

@@ -270,8 +270,7 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Dam",
     "Curse",
     "Stlth",
-    "MP",
-    "Spirit"
+    "MP"
 };
 
 #define ARTP_VAL_BOOL 0
@@ -307,8 +306,7 @@ char _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_ANY,  //DAMAGE
     ARTP_VAL_POS,  //CURSED
     ARTP_VAL_ANY,  //STEALTH
-    ARTP_VAL_ANY,  //MAGICAL_POWER
-    ARTP_VAL_BOOL  //SPIRIT_SHIELD
+    ARTP_VAL_ANY   //MAGICAL_POWER
 };
 
 static void _tweak_randart(item_def &item)

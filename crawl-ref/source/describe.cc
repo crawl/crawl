@@ -201,7 +201,6 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         { "rC",     ARTP_COLD,                  1 },
         { "rN",     ARTP_NEGATIVE_ENERGY,       1 },
         { "MR",     ARTP_MAGIC,                 2 },
-        { "Spirit", ARTP_SPIRIT_SHIELD,         2 },
 
         // Quantitative attributes
         { "AC",     ARTP_AC,                    0 },
@@ -393,7 +392,6 @@ static std::string _randart_descrip( const item_def &item )
         { ARTP_LEVITATE, "It lets you levitate.", false},
         { ARTP_BLINK, "It lets you blink.", false},
         { ARTP_BERSERK, "It lets you go berserk.", false},
-        { ARTP_SPIRIT_SHIELD, "It shields you from harm at the cost of magical power.", false},
         { ARTP_NOISES, "It makes noises.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
         { ARTP_CAUSE_TELEPORTATION, "It causes teleportation.", false},
