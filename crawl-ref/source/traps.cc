@@ -642,8 +642,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             break;
         }
 
-        // If the shaft isn't triggered, don't reveal it.
-        if (!triggerer.will_trigger_shaft() && !you_know)
+        // If the shaft isn't known, don't reveal it.
+        // The shafting code in downstairs() needs to know
+        // whether it's undiscovered.
+        if (!you_know)
             this->hide();
 
         // Known shafts don't trigger as traps.
