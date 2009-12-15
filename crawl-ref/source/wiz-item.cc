@@ -952,10 +952,14 @@ static void _debug_acquirement_stats(FILE *ostat)
                                    : "buggy items");
 
     // Print player species/profession.
-    fprintf(ostat, "%s the %s (%s %s)\n\n",
+    std::string godname = "";
+    if (you.religion != GOD_NO_GOD)
+        godname += " of " + god_name(you.religion);
+
+    fprintf(ostat, "%s the %s, %s %s%s\n\n",
             you.your_name.c_str(), player_title().c_str(),
             species_name(you.species, you.experience_level).c_str(),
-            you.class_name);
+            you.class_name, godname.c_str());
 
     // Print player equipment.
     const int e_order[] =
@@ -1036,7 +1040,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             if (disc & SPTYP_DIVINATION)
                 continue;
 
-            fprintf(ostat, "%-13s:  %d/%d spells unseen\n",
+            fprintf(ostat, "%-13s:  %2d/%2d spells unseen\n",
                     spelltype_long_name(disc),
                     unseen_spells[d], total_spells[d]);
         }
