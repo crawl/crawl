@@ -836,7 +836,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     mesclr();
     mpr("[a] Weapons [b] Armours [c] Jewellery      [d] Books");
-    mpr("[e] Staves  [f] Food    [g] Miscellaneous");
+    mpr("[e] Staves  [f] Wands   [g] Miscellaneous  [h] Food");
     mpr("What kind of item would you like to get acquirement stats on? ",
         MSGCH_PROMPT);
 
@@ -849,8 +849,9 @@ static void _debug_acquirement_stats(FILE *ostat)
     case 'c': type = OBJ_JEWELLERY;  break;
     case 'd': type = OBJ_BOOKS;      break;
     case 'e': type = OBJ_STAVES;     break;
-    case 'f': type = OBJ_FOOD;       break;
+    case 'f': type = OBJ_WANDS;      break;
     case 'g': type = OBJ_MISCELLANY; break;
+    case 'h': type = OBJ_FOOD;       break;
     default:
         canned_msg( MSG_OK );
         return;
@@ -939,7 +940,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     }
 
     // Print the overview screen to get information about species
-    // and equipped items.
+    // and equipped items. (This is probably overkill.)
     fprintf(ostat, "%s\n\n", dump_overview_screen(false).c_str());
 
     // Also print the skills, in case they matter.
