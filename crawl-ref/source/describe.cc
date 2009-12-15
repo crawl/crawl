@@ -227,10 +227,13 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         if (!type.empty())
             propnames.push_back(type);
     }
-    else if (item.base_type == OBJ_WEAPONS
-             && item_ident(item, ISFLAG_KNOW_TYPE))
+    else if (item_ident(item, ISFLAG_KNOW_TYPE))
     {
-        std::string ego = weapon_brand_name(item, true);
+        std::string ego;
+        if (item.base_type == OBJ_WEAPONS)
+            ego = weapon_brand_name(item, true);
+        else if (item.base_type == OBJ_ARMOUR)
+            ego = armour_ego_name(item, true);
         if (!ego.empty())
         {
             // XXX: Ugly hack to remove the brackets...

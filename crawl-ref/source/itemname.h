@@ -97,6 +97,7 @@ std::string make_name(unsigned long seed, bool all_caps, int maxlen = -1,
                       char start = 0);
 
 const char* weapon_brand_name(const item_def& item, bool terse);
+const char* armour_ego_name(const item_def& item, bool terse);
 
 void init_properties();
 

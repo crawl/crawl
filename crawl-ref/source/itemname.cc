@@ -350,11 +350,11 @@ const char* weapon_brand_name(const item_def& item, bool terse)
 }
 
 
-static const char* armour_ego_name( special_armour_type sparm, bool terse )
+const char* armour_ego_name(const item_def& item, bool terse)
 {
     if (!terse)
     {
-        switch ( sparm )
+        switch (get_armour_ego_type(item))
         {
         case SPARM_RUNNING:           return "running";
         case SPARM_FIRE_RESISTANCE:   return "fire resistance";
@@ -382,7 +382,7 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
     }
     else
     {
-        switch (sparm)
+        switch (get_armour_ego_type(item))
         {
         case SPARM_RUNNING:           return " {run}";
         case SPARM_FIRE_RESISTANCE:   return " {rF+}";
@@ -1304,7 +1304,7 @@ std::string item_def::name_aux(description_level_type desc,
                 if (sub_type == ARM_NAGA_BARDING && sparm == SPARM_RUNNING)
                     buff << (terse ? "speed" : "speedy slithering");
                 else
-                    buff << armour_ego_name(sparm, terse);
+                    buff << armour_ego_name(*this, terse);
             }
         }
 
