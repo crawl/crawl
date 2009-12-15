@@ -2291,6 +2291,12 @@ bool is_armour_brand_ok(int type, int brand)
     case SPARM_FIRE_RESISTANCE:
     case SPARM_COLD_RESISTANCE:
     case SPARM_RESISTANCE:
+        if (type == ARM_DRAGON_ARMOUR
+            || type == ARM_ICE_DRAGON_ARMOUR
+            || type == ARM_GOLD_DRAGON_ARMOUR)
+        {
+            return (false); // contradictory or redundant
+        }
         return (true); // in portal vaults, these can happen on every slot
 
     case SPARM_MAGIC_RESISTANCE:
