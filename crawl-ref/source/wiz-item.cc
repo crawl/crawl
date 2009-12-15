@@ -32,6 +32,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "spl-book.h"
+#include "spl-util.h"
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -905,7 +906,14 @@ static void _debug_acquirement_stats(FILE *ostat)
         total_plus += item.plus + item.plus2;
 
         if (is_artefact(item))
+        {
             num_arts++;
+            if (type == OBJ_BOOKS && item.sub_type == BOOK_RANDART_THEME)
+            {
+                const int disc1 = item.plus  & 0xFF;
+                ego_quants[disc1]++;
+            }
+        }
         else if (type == OBJ_ARMOUR) // Exclude artefacts when counting egos.
             ego_quants[get_armour_ego_type(item)]++;
 
@@ -944,6 +952,9 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     fprintf(ostat, "%5.2f%% artefacts.\n",
             100.0 * (float) num_arts / (float) acq_calls);
+
+    // TODO: For spellbooks, for each spell discipline list the number of
+    //       known spells and castable seen/unseen spells
 
     if (type == OBJ_WEAPONS)
     {
@@ -1029,6 +1040,33 @@ static void _debug_acquirement_stats(FILE *ostat)
     else if (type == OBJ_BOOKS)
     {
         // TODO: Count themed books' main spell school.
+        fprintf(ostat, "Primary disciplines of themed randart books:\n");
+
+        const char* names[] = {
+            "conjuration",
+            "enchantment",
+            "fire magic",
+            "ice magic",
+            "transmutation",
+            "necromancy",
+            "summoning",
+            "divination",
+            "translocation",
+            "poison magic",
+            "earth magic",
+            "air magic",
+            "holy magic"
+         };
+
+        for (int i = 0; i < SPTYP_LAST_EXPONENT; ++i)
+        {
+            if (ego_quants[i] > 0)
+            {
+                fprintf(ostat, "%17s: %5.2f\n", names[i],
+                        100.0 * (float) ego_quants[i] / (float) num_arts);
+            }
+        }
+        fprintf(ostat, "\n\n");
     }
 
     item_def item;
