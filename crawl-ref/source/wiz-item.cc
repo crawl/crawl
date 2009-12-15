@@ -909,10 +909,18 @@ static void _debug_acquirement_stats(FILE *ostat)
         if (is_artefact(item))
         {
             num_arts++;
-            if (type == OBJ_BOOKS && item.sub_type == BOOK_RANDART_THEME)
+            if (type == OBJ_BOOKS)
             {
-                const int disc1 = item.plus  & 0xFF;
-                ego_quants[disc1]++;
+                if (item.sub_type == BOOK_RANDART_THEME)
+                {
+                    const int disc1 = item.plus  & 0xFF;
+                    ego_quants[disc1]++;
+                }
+                else if (item.sub_type == BOOK_RANDART_LEVEL)
+                {
+                    const int level = item.plus;
+                    ego_quants[SPTYP_LAST_EXPONENT + level]++;
+                }
             }
         }
         else if (type == OBJ_ARMOUR) // Exclude artefacts when counting egos.
@@ -940,7 +948,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     }
 
     // Print acquirement base type.
-    fprintf(ostat, "Acquiring %s for:  ",
+    fprintf(ostat, "Acquiring %s for:\n\n",
             type == OBJ_WEAPONS    ? "weapons" :
             type == OBJ_ARMOUR     ? "armour"  :
             type == OBJ_JEWELLERY  ? "jewellery" :
@@ -956,8 +964,9 @@ static void _debug_acquirement_stats(FILE *ostat)
     if (you.religion != GOD_NO_GOD)
         godname += " of " + god_name(you.religion);
 
-    fprintf(ostat, "%s the %s, %s %s%s\n\n",
+    fprintf(ostat, "%s the %s, Level %d %s %s%s\n\n",
             you.your_name.c_str(), player_title().c_str(),
+            you.experience_level,
             species_name(you.species, you.experience_level).c_str(),
             you.class_name, godname.c_str());
 
@@ -1159,6 +1168,15 @@ static void _debug_acquirement_stats(FILE *ostat)
             if (ego_quants[i] > 0)
             {
                 fprintf(ostat, "%17s: %5.2f\n", names[i],
+                        100.0 * (float) ego_quants[i] / (float) num_arts);
+            }
+        }
+        for (int i = 1; i < 9; ++i)
+        {
+            const int k = SPTYP_LAST_EXPONENT + i;
+            if (ego_quants[k] > 0)
+            {
+                fprintf(ostat, "%15s %d: %5.2f\n", "level", i,
                         100.0 * (float) ego_quants[i] / (float) num_arts);
             }
         }
