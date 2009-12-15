@@ -1,7 +1,25 @@
 /*
  *  File:       message.cc
  *  Summary:    Functions used to print messages.
- *  Written by: Linley Henzell
+ *
+ * Todo:
+ *   - Prompts are broken.
+ *     + the clear-to-eol moves the cursor to the wrong position
+ *     + the entered text needs to be merged into the message item
+ *   - Optionally really clear message windw.
+ *   - --more-- for full message window
+ *   - --more-- for user-forced more (these two should be somewhat indep)
+ *   - MSGCH_ERROR issuing interrupt.
+ *   - Ctrl-P should start at end of messages
+ *   - message window needs to be redisplayed when leaving something
+ *     fullscreen
+ *   - saving and restoring and dumping messages
+ *   - filtering of messages for various purposes
+ *   - delay_message_clear (better Options.clear_messages)
+ *   - First column.
+ *   - Handle resizing properly, in particular initial resize.
+ *   - Optionally initialize message window from message history.
+ *   - Get rid of print_formatted_paragraph.
  */
 
 #include "AppHdr.h"
@@ -723,12 +741,6 @@ static msg_colour_type prepare_message(const std::string& imsg,
 
     return colour;
 }
-
-// TODO: * make any refresh call flush_prev_message
-//       * actually write out to the message window
-//           delay: just write out last n messages
-//           nodelay: write out since last mesclr
-//       * "more" handling
 
 /* TODO
     if (channel == MSGCH_ERROR)
