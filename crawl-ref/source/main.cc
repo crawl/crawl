@@ -553,7 +553,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 's':
-        you.exp_available = you.exp_pool_cutoff();
+        you.exp_available = FULL_EXP_POOL;
         you.redraw_experience = true;
         break;
 

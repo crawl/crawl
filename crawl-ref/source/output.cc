@@ -848,10 +848,9 @@ static bool _need_stats_printed()
 
 static short _get_exp_pool_colour(int pool)
 {
-    int cutoff = you.exp_pool_cutoff();
-    if (pool < cutoff*3/4)
+    if (pool < MAX_EXP_POOL/2)
         return (HUD_VALUE_COLOUR);
-    else if (pool < cutoff)
+    else if (pool < MAX_EXP_POOL*3/4)
         return (YELLOW);
     else
         return (RED);
