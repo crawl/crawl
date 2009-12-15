@@ -220,6 +220,11 @@ void wizard_create_spec_object()
             destroy_item(thing_created);
             return;
         }
+        if (Options.autoinscribe_artefacts && is_artefact(mitm[thing_created]))
+        {
+            mitm[thing_created].inscription
+                = artefact_auto_inscription(mitm[thing_created]);
+        }
     }
 
     // Deck colour (which control rarity) already set.
@@ -317,6 +322,8 @@ static void _tweak_randart(item_def &item)
             MSGCH_PROMPT);
         return;
     }
+    else
+        mesclr();
 
     artefact_properties_t props;
     artefact_wpn_properties(item, props);
