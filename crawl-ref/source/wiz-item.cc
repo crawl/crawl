@@ -939,23 +939,64 @@ static void _debug_acquirement_stats(FILE *ostat)
         return;
     }
 
-    // Print the overview screen to get information about species
-    // and equipped items. (This is probably overkill.)
-    fprintf(ostat, "%s\n\n", dump_overview_screen(false).c_str());
+    // Print acquirement base type.
+    fprintf(ostat, "Acquiring %s for:  ",
+            type == OBJ_WEAPONS    ? "weapons" :
+            type == OBJ_ARMOUR     ? "armour"  :
+            type == OBJ_JEWELLERY  ? "jewellery" :
+            type == OBJ_BOOKS      ? "books" :
+            type == OBJ_STAVES     ? "staves" :
+            type == OBJ_WANDS      ? "wands" :
+            type == OBJ_MISCELLANY ? "misc. items" :
+            type == OBJ_FOOD       ? "food"
+                                   : "buggy items");
+
+    // Print player species/profession.
+    fprintf(ostat, "%s the %s (%s %s)\n\n",
+            you.your_name.c_str(), player_title().c_str(),
+            species_name(you.species, you.experience_level).c_str(),
+            you.class_name);
+
+    // Print player equipment.
+    const int e_order[] =
+    {
+        EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
+        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
+    };
+
+    for (int i = 0; i < NUM_EQUIP; i++)
+    {
+        int eqslot = e_order[i];
+
+        // Only output filled slots.
+        if (you.equip[ e_order[i] ] != -1)
+        {
+            // The player has something equipped.
+            const int item_idx   = you.equip[e_order[i]];
+            const item_def& item = you.inv[item_idx];
+            const bool melded    = !player_wearing_slot(e_order[i]);
+
+            fprintf(ostat, "%-7s: %s %s\n", equip_slot_to_name(eqslot),
+                    item.name(DESC_PLAIN, true).c_str(),
+                    melded ? "(melded)" : "");
+        }
+//         else if (e_order[i] == EQ_WEAPON)
+//             fprintf(ostat, "%-7s: unarmed\n", equip_slot_to_name(eqslot));
+    }
 
     // Also print the skills, in case they matter.
-    std::string skills = "Skills:\n";
+    std::string skills = "\nSkills:\n";
     dump_skills(skills);
     fprintf(ostat, "%s\n\n", skills.c_str());
 
-    fprintf(ostat, "acquirement called %d times, total quantity = %d\n\n",
+    // TODO: For spellbooks, for each spell discipline list the number of
+    //       known spells and castable seen/unseen spells
+
+    fprintf(ostat, "Acquirement called %d times, total quantity = %d\n\n",
             acq_calls, total_quant);
 
     fprintf(ostat, "%5.2f%% artefacts.\n",
             100.0 * (float) num_arts / (float) acq_calls);
-
-    // TODO: For spellbooks, for each spell discipline list the number of
-    //       known spells and castable seen/unseen spells
 
     if (type == OBJ_WEAPONS)
     {
@@ -1104,7 +1145,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         fprintf(ostat, format_str, name.c_str(),
                 (float) subtype_quants[i] * 100.0 / (float) total_quant);
     }
-    fprintf(ostat, "----------------------\n");
+    fprintf(ostat, "-----------------------------------------\n\n");
 
     mpr("Results written into 'items.stat'.");
 }
