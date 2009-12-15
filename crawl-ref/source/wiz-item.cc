@@ -28,7 +28,9 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
+#include "output.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-book.h"
 #include "stash.h"
 #include "stuff.h"
@@ -928,6 +930,15 @@ static void _debug_acquirement_stats(FILE *ostat)
         return;
     }
 
+    // Print the overview screen to get information about species
+    // and equipped items.
+    fprintf(ostat, "%s\n\n", dump_overview_screen(false).c_str());
+
+    // Also print the skills, in case they matter.
+    std::string skills = "Skills:\n";
+    dump_skills(skills);
+    fprintf(ostat, "%s\n\n", skills.c_str());
+
     fprintf(ostat, "acquirement called %d times, total quantity = %d\n\n",
             acq_calls, total_quant);
 
@@ -1015,11 +1026,16 @@ static void _debug_acquirement_stats(FILE *ostat)
         }
         fprintf(ostat, "\n\n");
     }
+    else if (type == OBJ_BOOKS)
+    {
+        // TODO: Count themed books' main spell school.
+    }
 
     item_def item;
     item.quantity  = 1;
     item.base_type = type;
 
+    // First, get the maximum name length.
     int max_width = 0;
     for (int i = 0; i < 256; ++i)
     {
@@ -1033,6 +1049,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         max_width = std::max(max_width, (int) name.length());
     }
 
+    // Now output the sub types.
     char format_str[80];
     sprintf(format_str, "%%%ds: %%6.2f\n", max_width);
 

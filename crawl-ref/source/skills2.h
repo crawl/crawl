@@ -33,5 +33,6 @@ unsigned int skill_exp_needed(int lev);
 void show_skills();
 void wield_warning(bool newWeapon = true);
 bool is_invalid_skill(int skill);
+void dump_skills(std::string &text);
 
 #endif
