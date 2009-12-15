@@ -4691,7 +4691,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
                     t0 |= TILE_FLAG_S_UNDER;
             }
 
-            if (item_needs_autopickup(get_mimic_item(mon))
+            if (item_needs_autopickup(get_mimic_item(mon)))
             {
                 if (foreground)
                     env.tile_bg[ep.x][ep.y] |= TILE_FLAG_CURSOR3;
