@@ -271,8 +271,7 @@ public:
     {
         if (prev_msg.merge(msg))
             return;
-        msgs.push_back(prev_msg);
-        msgwin.add_item(prev_msg.text);
+        flush_prev();
         prev_msg = msg;
     }
 
@@ -286,6 +285,7 @@ public:
         if (!prev_msg)
             return;
         msgs.push_back(prev_msg);
+        msgwin.add_item(prev_msg.text);
         prev_msg = message_item();
     }
 
@@ -735,10 +735,14 @@ static msg_colour_type prepare_message(const std::string& imsg,
         interrupt_activity(AI_FORCE_INTERRUPT);
 */
 
+void flush_prev_message()
+{
+    messages.flush_prev();
+}
+
 void mesclr(bool force)
 {
-    //ASSERT(!messages.have_prev());
-    //messages.clear_after_last();
+    flush_prev_message();
 }
 
 void more(bool user_forced)

@@ -16,13 +16,9 @@
 
 void mesclr(bool force = false);
 
-inline void flush_prev_message()
-{
-  // TODO
-}
+void flush_prev_message();
 
 void more(bool user_forced = false);
-
 
 class formatted_string;
 
