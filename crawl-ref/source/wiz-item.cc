@@ -991,8 +991,56 @@ static void _debug_acquirement_stats(FILE *ostat)
     dump_skills(skills);
     fprintf(ostat, "%s\n\n", skills.c_str());
 
-    // TODO: For spellbooks, for each spell discipline list the number of
-    //       known spells and castable seen/unseen spells
+    if (type == OBJ_BOOKS && you.skills[SK_SPELLCASTING])
+    {
+        // For spellbooks, for each spell discipline, list the number of
+        // unseen and total spells available.
+        std::vector<int> total_spells(SPTYP_LAST_EXPONENT);
+        std::vector<int> unseen_spells(SPTYP_LAST_EXPONENT);
+
+        for (int i = 0; i < NUM_SPELLS; ++i)
+        {
+            const spell_type spell = (spell_type) i;
+
+            if (!is_valid_spell(spell))
+                continue;
+
+            if (you_cannot_memorise(spell))
+                continue;
+
+            // Only use spells available in books you might find lying about
+            // the dungeon.
+            if (spell_rarity(spell) == -1)
+                continue;
+
+            const bool seen = you.seen_spell[spell];
+
+            const unsigned int disciplines = get_spell_disciplines(spell);
+            for (int d = 0; d < SPTYP_LAST_EXPONENT; ++d)
+            {
+                const int disc = 1 << d;
+                if (disc & SPTYP_DIVINATION)
+                    continue;
+
+                if (disciplines & disc)
+                {
+                    total_spells[d]++;
+                    if (!seen)
+                        unseen_spells[d]++;
+                }
+            }
+        }
+        for (int d = 0; d < SPTYP_LAST_EXPONENT; ++d)
+        {
+            const int disc = 1 << d;
+            if (disc & SPTYP_DIVINATION)
+                continue;
+
+            fprintf(ostat, "%-13s:  %d/%d spells unseen\n",
+                    spelltype_long_name(disc),
+                    unseen_spells[d], total_spells[d]);
+        }
+    }
 
     fprintf(ostat, "\nAcquirement called %d times, total quantity = %d\n\n",
             acq_calls, total_quant);
