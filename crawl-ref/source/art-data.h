@@ -1543,6 +1543,25 @@
     _RCLOUDS_equip, NULL, _RCLOUDS_world_reacts, { NULL }, NULL, 
 },
 
+/* UNRAND_PONDERING */
+{
+    "hat of Pondering", "slimy wizard hat", 
+    OBJ_ARMOUR, ARM_WIZARD_HAT, +3, 0, LIGHTRED, 0, 
+    UNRAND_FLAG_NONE, 
+    {
+        SPARM_PONDEROUSNESS, 0, 0, 0, +5, 0, 
+        0, 0, 0, 0, 0, 30, 
+        0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, +10, 
+        0, 
+    },
+    "A slimy wizard hat.", 
+    "", 
+    "The favorite hat of the slug wizard Gastronok, stained with reddish slime and enchanted to aid in his arcane pondering. It has been specially enchanted to protect against the effects of salt, though you probably don't care.", 
+    NULL, NULL, NULL, { NULL }, NULL, 
+},
+
 /* UNRAND_DUMMY2 */
 {
     "DUMMY UNRANDART 2", "DUMMY UNRANDART 2", 

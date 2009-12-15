@@ -1121,6 +1121,23 @@ TILE_EQ:  robe_clouds
 BOOL:     elec, lev
 DESC:     A robe of a material so flimsy it could almost be clouds.
 
+NAME:     hat of Pondering
+APPEAR:   slimy wizard hat
+OBJ:      OBJ_ARMOUR/ARM_WIZARD_HAT
+PLUS:     +3
+COLOUR:   LIGHTRED
+TILE:     urand_pondering
+TILE_EQ:  wizard_bluegreen
+BRAND:    SPARM_PONDEROUSNESS
+INT:      +5
+MP:       +10
+MAGIC:    30
+DESC:     A slimy wizard hat.
+DESC_END: The favorite hat of the slug wizard Gastronok, stained with reddish
+          slime and enchanted to aid in his arcane pondering. It has been
+          specially enchanted to protect against the effects of salt, though
+          you probably don't care.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

@@ -28,6 +28,7 @@ urand_starlight UNRAND_STARLIGHT
 urand_ratskin_cloak UNRAND_RATSKIN_CLOAK
 urand_gong UNRAND_GONG
 urand_clouds UNRAND_RCLOUDS
+urand_pondering UNRAND_PONDERING
 
 %sdir item/weapon/artefact
 spwpn_singing_sword UNRAND_SINGING_SWORD
