@@ -1384,6 +1384,9 @@ void give_armour(monsters *mon, int level)
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_WIZARD_HAT;
+
+        // Not as good as it sounds. Still just +0 a lot of the time.
+        level          = MAKE_GOOD_ITEM;
         break;
 
     case MONS_MAURICE:
