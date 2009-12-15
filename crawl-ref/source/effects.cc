@@ -1959,9 +1959,8 @@ static int _failed_acquirement(bool quiet)
 }
 
 int acquirement_create_item(object_class_type class_wanted,
-                            int agent,
-                            bool quiet,
-                            const coord_def &pos)
+                            int agent, bool quiet,
+                            const coord_def &pos, bool debug)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
@@ -2145,7 +2144,10 @@ int acquirement_create_item(object_class_type class_wanted,
             destroy_item(thing, true);
             return _failed_acquirement(quiet);
         }
-        mark_had_book(thing);
+        // Don't mark books as seen if only generated for the
+        // acquirement statistics.
+        if (!debug)
+            mark_had_book(thing);
     }
     else if (thing.base_type == OBJ_JEWELLERY)
     {
@@ -2288,7 +2290,7 @@ int acquirement_create_item(object_class_type class_wanted,
 }
 
 bool acquirement(object_class_type class_wanted, int agent,
-                 bool quiet, int* item_index)
+                 bool quiet, int* item_index, bool debug)
 {
     ASSERT(!crawl_state.arena);
 
@@ -2369,7 +2371,7 @@ bool acquirement(object_class_type class_wanted, int agent,
     }
 
     *item_index =
-        acquirement_create_item(class_wanted, agent, quiet, you.pos());
+        acquirement_create_item(class_wanted, agent, quiet, you.pos(), debug);
 
     return (*item_index != NON_ITEM);
 }

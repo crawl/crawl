@@ -889,7 +889,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         int item_index = NON_ITEM;
 
-        if (!acquirement(type, AQ_WIZMODE, true, &item_index)
+        if (!acquirement(type, AQ_WIZMODE, true, &item_index, true)
             || item_index == NON_ITEM
             || !mitm[item_index].is_valid())
         {
@@ -964,6 +964,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
     };
 
+    bool naked = true;
     for (int i = 0; i < NUM_EQUIP; i++)
     {
         int eqslot = e_order[i];
@@ -979,10 +980,11 @@ static void _debug_acquirement_stats(FILE *ostat)
             fprintf(ostat, "%-7s: %s %s\n", equip_slot_to_name(eqslot),
                     item.name(DESC_PLAIN, true).c_str(),
                     melded ? "(melded)" : "");
+            naked = false;
         }
-//         else if (e_order[i] == EQ_WEAPON)
-//             fprintf(ostat, "%-7s: unarmed\n", equip_slot_to_name(eqslot));
     }
+    if (naked)
+        fprintf(ostat, "Not wearing or wielding anything.\n");
 
     // Also print the skills, in case they matter.
     std::string skills = "\nSkills:\n";
@@ -992,7 +994,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     // TODO: For spellbooks, for each spell discipline list the number of
     //       known spells and castable seen/unseen spells
 
-    fprintf(ostat, "Acquirement called %d times, total quantity = %d\n\n",
+    fprintf(ostat, "\nAcquirement called %d times, total quantity = %d\n\n",
             acq_calls, total_quant);
 
     fprintf(ostat, "%5.2f%% artefacts.\n",
