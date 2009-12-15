@@ -148,7 +148,7 @@ int _make_mimic_item(monster_type type)
     return (it);
 }
 
-item_def *give_mimic_item(monsters *mimic)
+const item_def *give_mimic_item(monsters *mimic)
 {
     ASSERT(mimic != NULL && mons_is_mimic(mimic->type));
 
@@ -161,7 +161,7 @@ item_def *give_mimic_item(monsters *mimic)
     return (&mitm[mimic->inv[MSLOT_MISCELLANY]]);
 }
 
-item_def &get_mimic_item(const monsters *mimic)
+const item_def &get_mimic_item(const monsters *mimic)
 {
     ASSERT(mimic != NULL && mons_is_mimic(mimic->type));
 

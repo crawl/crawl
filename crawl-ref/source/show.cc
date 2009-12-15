@@ -218,7 +218,7 @@ static show_item_type _item_to_show_code(const item_def &item)
 
 void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
 {
-    item_def *eitem;
+    const item_def *eitem;
     // Check for mimics.
     const monsters* m = monster_at(gp);
     if (m && mons_is_unknown_mimic(m))
