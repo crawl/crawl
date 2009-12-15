@@ -383,10 +383,9 @@ MONS:   bear / black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
 MONS:   hound / wolf / hog
-SUBST:  1 = 1:30 2 3 4 .:20
+SUBST:  1 = 1:30 2 3 4 .
 MAP
 cccccccccc
-c1.1.1.1.c
 c.1.1.1.1c
 c1.1.1.1.c
 c.1.1.1.1c
