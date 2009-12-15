@@ -1528,19 +1528,11 @@ void give_armour(monsters *mon, int level)
     if (force_item)
         mitm[thing_created] = item;
 
-    mprf("thing_created: %d", thing_created);
-    if (!item.is_valid())
-        mpr("Item is invalid.");
-    if (!mitm[thing_created].is_valid())
-        mpr("mitm[thing_created] is invalid.");
-    delay(500);
-
-#if 0
     item_def &i = mitm[thing_created];
 
     if (force_item)
         item_set_appearance(i);
-#endif
+
     _give_monster_item(mon, thing_created, force_item);
 
     // mv: All items with force_colour = 0 are colored via items().
