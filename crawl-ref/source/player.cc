@@ -2510,7 +2510,7 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
     mprf(MSGCH_DIAGNOSTICS, "gain_exp: %d", exp_gained );
 #endif
 
-    if (you.experience + exp_gained > MAX_EXP_TOTAL)
+    if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
         you.experience = MAX_EXP_TOTAL;
     else
         you.experience += exp_gained;
@@ -2525,7 +2525,7 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
         exp_gained /= 2;
     }
 
-    if (you.exp_available + exp_gained > MAX_EXP_POOL)
+    if (you.exp_available + exp_gained > (unsigned int)MAX_EXP_POOL)
         you.exp_available = MAX_EXP_POOL;
     else
         you.exp_available += exp_gained;
