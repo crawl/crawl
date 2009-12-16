@@ -219,6 +219,10 @@ the tinkle of an enormous bell
 %%%%
 SHT_int_loss
 
+Your mind reels, touched by the horrors through the portal.
+
+Your quiver within your mortal coil, caressed by the liquid insanity through the scintillating gateway.
+
 # Bal-Sagoth
 The summoning rite seemed to take a not insignificant toll on your sanity.
 
