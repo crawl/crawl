@@ -217,3 +217,14 @@ the chiming of a distant gong
 
 the tinkle of an enormous bell
 %%%%
+SHT_int_loss
+
+# Bal-Sagoth
+The summoning rite seemed to take a not insignificant toll on your sanity.
+
+You have a brief vision of a great black cyclopean cityscape with towering stygian walls.
+
+Your vision is obscured by outlandish glyphs which seem to writhe squamously and alter their shape.
+
+You feel inexorably dogged by some nameless and implacable gloom.
+%%%%
