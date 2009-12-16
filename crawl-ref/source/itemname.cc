@@ -356,6 +356,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
     {
         switch (get_armour_ego_type(item))
         {
+        case SPARM_NORMAL:            return "";
         case SPARM_RUNNING:           return "running";
         case SPARM_FIRE_RESISTANCE:   return "fire resistance";
         case SPARM_COLD_RESISTANCE:   return "cold resistance";
@@ -384,6 +385,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
     {
         switch (get_armour_ego_type(item))
         {
+        case SPARM_NORMAL:            return "";
         case SPARM_RUNNING:           return " {run}";
         case SPARM_FIRE_RESISTANCE:   return " {rF+}";
         case SPARM_COLD_RESISTANCE:   return " {rC+}";
