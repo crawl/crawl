@@ -634,7 +634,7 @@ SUBST:  F = f ?
 SUBST:  f = p:1 .:1
 KFEAT:  p = .
 # "withered plant" instead of "plant"
-KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective          \
+KMONS:  p = w:2 col:darkgrey plant name:withered name_adjective          \
             tile:withered_plant / w:1 col:lightgrey plant name:withered  \
             name_adjective tile:withered_plant
 ####### hidden skeleton; sometimes good pain weapon, but draining short sword
