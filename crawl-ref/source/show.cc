@@ -245,7 +245,7 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
         if (eitem->link > NON_ITEM && igrd(gp) != NON_ITEM)
             ecol |= COLFLAG_ITEM_HEAP;
-        else if (eitem->link == NON_ITEM && !crawl_state.arena)
+        else if (eitem->link != NON_ITEM && !crawl_state.arena)
             ecol |= COLFLAG_ITEM_HEAP;
         grid(ep).cls = SH_ITEM;
         grid(ep).item = _item_to_show_code(*eitem);
