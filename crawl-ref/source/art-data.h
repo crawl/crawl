@@ -816,7 +816,7 @@
         
     },
     "", 
-    "A double-ended whip made from the cured hides of the Lair of Beasts' deadly grey snakes.", 
+    "A double-ended whip made from the cured hides of the Lair of Beasts' deadly anacondas.", 
     "", 
     NULL, NULL, NULL, { NULL }, NULL, 
 },

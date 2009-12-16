@@ -1487,7 +1487,7 @@ ENDMAP
 #DEPTH:   D:20-26
 #TAGS:    no_monster_gen no_pool_fixup
 #KMONS:   1 = yaktaur captain
-#KMONS:   2 = grey snake
+#KMONS:   2 = anaconda
 #KMONS:   3 = storm dragon
 #ITEM:    potion of cure mutation/potion of gain dexterity/potion of gain strength
 #ITEM:    potion of gain intelligence/potion of experience/w:40 potion of heal wounds

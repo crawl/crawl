@@ -681,7 +681,7 @@ TILE_EQ: serpent_scourge
 BRAND:   SPWPN_VENOM
 BOOL:    poison, tilerim
 DESC_ID: A double-ended whip made from the cured hides of the Lair of Beasts'
-         deadly grey snakes.
+         deadly anacondas.
 
 NAME:     knife of Accuracy
 APPEAR:   thin dagger
