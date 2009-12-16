@@ -51,6 +51,7 @@ enum mon_attack_type
     AT_TENTACLE_SLAP,
     AT_TAIL_SLAP,
     AT_GORE,
+    AT_CONSTRICT,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
     AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap:
@@ -87,7 +88,8 @@ enum mon_attack_flavour
     AF_NAPALM,
     AF_CHAOS,
     AF_STEAL,
-    AF_STEAL_FOOD
+    AF_STEAL_FOOD,
+    AF_CRUSH
 };
 
 // Non-spell "summoning" types to give to monsters::mark_summoned(), or

@@ -129,7 +129,7 @@ small_snake MONS_SMALL_SNAKE
 snake MONS_SNAKE
 black_mamba MONS_BLACK_MAMBA
 water_moccasin MONS_WATER_MOCCASIN
-grey_snake MONS_GREY_SNAKE
+anaconda MONS_ANACONDA
 lava_snake MONS_LAVA_SNAKE
 viper MONS_VIPER
 salamander MONS_SALAMANDER

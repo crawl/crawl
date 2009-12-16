@@ -4530,7 +4530,8 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "kick",
         "tentacle-slap",
         "tail-slap",
-        "gore"
+        "gore",
+        "constrict"
     };
 
     return (attack_types[attk.type]);
@@ -5186,6 +5187,13 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                  atk_name(DESC_CAP_THE).c_str());
         }
         break;
+
+    case AF_CRUSH:
+        mprf("%s %s being crushed%s",
+             def_name(DESC_CAP_THE).c_str(),
+             defender->conj_verb("are").c_str(),
+             special_attack_punctuation().c_str());
+        break;
     }
 }
 
@@ -5299,6 +5307,7 @@ void melee_attack::mons_perform_attack_rounds()
 
             case AT_BITE:
             case AT_PECK:
+            case AT_CONSTRICT:
                 noise_factor = 100;
                 break;
 

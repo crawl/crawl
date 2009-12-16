@@ -1154,7 +1154,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             mon = MONS_BLACK_MAMBA;
 
         if (pow > 90 && one_chance_in(3))
-            mon = MONS_GREY_SNAKE;
+            mon = MONS_ANACONDA;
 
         if (create_monster(
                 mgen_data(mon, beha, &you,

@@ -1781,7 +1781,7 @@ enum monster_type                      // (int) menv[].type
     MONS_FIRE_DRAKE,
     MONS_SHADOW_DRAGON,                //  165
     MONS_VIPER,
-    MONS_GREY_SNAKE,
+    MONS_ANACONDA,
     MONS_DEEP_TROLL,
     MONS_GIANT_BLOWFLY,
     MONS_RED_WASP,                     //  170
