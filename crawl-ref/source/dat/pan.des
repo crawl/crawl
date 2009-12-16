@@ -6,7 +6,7 @@
 
 {{
 function pan_lord_warning(e)
-  crawl.mpr("Be careful! A famous pandemonium lord has residence here!", "warning")
+  crawl.mpr("You feel a terrible weight on your shoulders! A mighty lord of Pandemonium must reside here.", "warning")
 end
 }}
 
