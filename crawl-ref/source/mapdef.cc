@@ -3180,9 +3180,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 #ifdef USE_TILE
         if (!tile.empty())
         {
-            // Modify the string to prevent them from using non-mons tiles.
-            if (tile.find("mons_") == std::string::npos)
-                tile = std::string("mons_" + tile);
             unsigned int index;
             if (!tile_player_index(tile.c_str(), index))
             {

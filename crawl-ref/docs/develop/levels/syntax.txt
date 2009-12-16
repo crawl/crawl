@@ -559,15 +559,15 @@ MONS:     (list of monsters)
 
           You can override the displayed monster tile using the "tile:"
           specifier as follows:
-              MONS: rat tile:giant_bat
+              MONS: rat tile:mons_giant_bat
 
           In tiles version, this would create a monster that uses the
-          'giant_bat' tile, but is otherwise identical to a rat. Obviously, this
-          substition of one monster onto another should never be used, but it
-          can be useful for customised vault monsters if an alternate tile
-          exists. In ASCII mode, this will do nothing.
+          'monst_giant_bat' tile, but is otherwise identical to a rat.
+          Obviously, this substition of one monster onto another should
+          never be used, but it can be useful for customised vault monsters
+          if an alternate tile exists. In ASCII mode, this will do nothing.
 
-	  You can set the monster's faction by specifying "att:" one of:
+      You can set the monster's faction by specifying "att:" one of:
           * att:hostile -- the default
           * att:friendly -- tame, will follow you
           * att:neutral -- hostile to both you and att:hostile monsters
