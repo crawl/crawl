@@ -1430,10 +1430,9 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
     {
-        snprintf( scratch, sizeof scratch, " (%s)",
-                  place_name(get_packed_place(branch, dlvl, level_type),
-                             false, true).c_str());
-        return (scratch);
+        return (make_stringf(" (%s)",
+                             place_name(get_packed_place(branch, dlvl, level_type),
+                             false, true).c_str()));
     }
 
     if (verbose && death_type != KILLED_BY_QUITTING)
@@ -2122,10 +2121,9 @@ void xlog_fields::add_field(const std::string &key,
                             const char *format,
                             ...)
 {
-    char buf[500];
     va_list args;
     va_start(args, format);
-    vsnprintf(buf, sizeof buf, format, args);
+    std::string buf = make_stringf(format, args);
     va_end(args);
 
     fields.push_back( std::pair<std::string, std::string>( key, buf ) );

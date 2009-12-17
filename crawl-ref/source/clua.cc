@@ -839,9 +839,7 @@ void lua_text_pattern::post_pattern(std::string &pat, std::string &fn) const
 
 std::string lua_text_pattern::new_fn_name()
 {
-    char buf[100];
-    snprintf(buf, sizeof buf, "__ch_stash_search_%lu", lfndx++);
-    return (buf);
+    return (make_stringf("__ch_stash_search_%lu", lfndx++));
 }
 
 bool lua_text_pattern::translate() const

@@ -149,15 +149,13 @@ std::string make_file_time(time_t when)
 {
     if (tm *loc = TIME_FN(&when))
     {
-        char buf[25];
-        snprintf(buf, sizeof buf, "%04d%02d%02d-%02d%02d%02d",
+        return make_stringf("%04d%02d%02d-%02d%02d%02d",
                  loc->tm_year + 1900,
                  loc->tm_mon + 1,
                  loc->tm_mday,
                  loc->tm_hour,
                  loc->tm_min,
                  loc->tm_sec);
-        return (buf);
     }
     return ("");
 }

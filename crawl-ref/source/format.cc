@@ -514,13 +514,10 @@ void formatted_string::clear()
 
 void formatted_string::cprintf(const char *s, ...)
 {
-    char buf[1000];
     va_list args;
     va_start(args, s);
-    vsnprintf(buf, sizeof buf, s, args);
+    cprintf(make_stringf(s, args));
     va_end(args);
-
-    cprintf(std::string(buf));
 }
 
 void formatted_string::cprintf(const std::string &s)

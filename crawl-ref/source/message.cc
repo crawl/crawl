@@ -413,6 +413,7 @@ int channel_to_colour( msg_channel_type channel, int param )
 static void do_message_print( msg_channel_type channel, int param,
                               const char *format, va_list argp )
 {
+    // Is this limit intentional?
     char buff[200];
     vsnprintf( buff, sizeof( buff ), format, argp );
     buff[199] = 0;

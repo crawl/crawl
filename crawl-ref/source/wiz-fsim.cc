@@ -300,15 +300,13 @@ static std::string _fsim_time_string()
     struct tm *ltime = TIME_FN(&curr_time);
     if (ltime)
     {
-        char buf[100];
-        snprintf(buf, sizeof buf, "%4d%02d%02d/%2d:%02d:%02d",
+        return make_stringf("%4d%02d%02d/%2d:%02d:%02d",
                  ltime->tm_year + 1900,
                  ltime->tm_mon  + 1,
                  ltime->tm_mday,
                  ltime->tm_hour,
                  ltime->tm_min,
                  ltime->tm_sec);
-        return (buf);
     }
     return ("");
 }

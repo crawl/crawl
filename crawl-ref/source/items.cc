@@ -2010,7 +2010,6 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
 static std::string _drop_menu_invstatus(const Menu *menu)
 {
-    char buf[100];
     const int cap = carrying_capacity(BS_UNENCUMBERED);
 
     std::string s_newweight;
@@ -2024,15 +2023,13 @@ static std::string _drop_menu_invstatus(const Menu *menu)
             newweight -= item_mass(*item) * se[i]->selected_qty;
         }
 
-        snprintf(buf, sizeof buf, ">%.0f", newweight * BURDEN_TO_AUM);
-        s_newweight = buf;
+        s_newweight = make_stringf(">%.0f", newweight * BURDEN_TO_AUM);
     }
 
-    snprintf(buf, sizeof buf, "(Inv: %.0f%s/%.0f aum)",
+    return (make_stringf("(Inv: %.0f%s/%.0f aum)",
              you.burden * BURDEN_TO_AUM,
              s_newweight.c_str(),
-             cap * BURDEN_TO_AUM);
-    return (buf);
+             cap * BURDEN_TO_AUM));
 }
 
 static std::string _drop_menu_title(const Menu *menu, const std::string &oldt)
@@ -2081,7 +2078,6 @@ mon_inv_type get_mon_equip_slot(const monsters* mon, const item_def &item)
 
 static std::string _drop_selitem_text( const std::vector<MenuEntry*> *s )
 {
-    char buf[130];
     bool extraturns = false;
 
     if (s->empty())
@@ -2098,11 +2094,10 @@ static std::string _drop_selitem_text( const std::vector<MenuEntry*> *s )
         }
     }
 
-    snprintf( buf, sizeof buf, " (%lu%s turn%s)",
+    return (make_stringf( " (%lu%s turn%s)",
                 (unsigned long) (s->size()),
                 extraturns? "+" : "",
-                s->size() > 1? "s" : "" );
-    return buf;
+                s->size() > 1? "s" : "" ));
 }
 
 std::vector<SelItem> items_for_multidrop;

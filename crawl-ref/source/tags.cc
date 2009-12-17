@@ -603,23 +603,18 @@ bool unmarshallBoolean(reader &th)
 // Saving the date as a string so we're not reliant on a particular epoch.
 std::string make_date_string( time_t in_date )
 {
-    char buff[20];
-
     if (in_date <= 0)
     {
-        buff[0] = 0;
-        return (buff);
+        return ("");
     }
 
     struct tm *date = TIME_FN( &in_date );
 
-    snprintf( buff, sizeof buff,
+    return make_stringf(
               "%4d%02d%02d%02d%02d%02d%s",
               date->tm_year + 1900, date->tm_mon, date->tm_mday,
               date->tm_hour, date->tm_min, date->tm_sec,
               ((date->tm_isdst > 0) ? "D" : "S") );
-
-    return (buff);
 }
 
 void marshallEnumVal(writer& wr, const enum_info *ei, int val)
