@@ -1081,7 +1081,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_NIKOLA:
         return TILEP_TODO;                  // TODO
     case MONS_MAURICE:
-        return TILEP_TODO;                  // TODO
+        return TILEP_MONS_MAURICE;
 
     // unique major demons ('&')
     case MONS_MNOLEG:

@@ -309,6 +309,7 @@ kirke MONS_KIRKE
 louise MONS_LOUISE
 margery MONS_MARGERY
 maud MONS_MAUD
+maurice MONS_MAURICE
 norbert MONS_NORBERT
 norris MONS_NORRIS
 psyche MONS_PSYCHE
