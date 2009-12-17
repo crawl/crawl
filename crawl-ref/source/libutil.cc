@@ -141,12 +141,14 @@ std::string make_stringf(const char *s, ...)
     va_list args;
     va_start(args, s);
 
-    char buf[400];
-    vsnprintf(buf, sizeof buf, s, args);
+    size_t len = vsnprintf(NULL, 0, s, args);
+    char *buf = (char *)malloc(len + 1);
+    vsnprintf(buf, len + 1, s, args);
+    std::string ret(buf);
+    free(buf);
 
     va_end(args);
-
-    return (buf);
+    return (ret);
 }
 
 std::string &escape_path_spaces(std::string &s)
