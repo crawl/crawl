@@ -778,6 +778,7 @@ static const char *targetting_help_1 =
     "<w>w</w>: calculate shortest path to any point on the map\n"
     "<w>D</w>: get debugging information about the monster\n"
     "<w>~</w>: polymorph monster to specific type\n"
+    "<w>,</w>: bring down the monster to 1hp\n"
 #endif
 ;
 

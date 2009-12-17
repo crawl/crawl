@@ -1595,6 +1595,16 @@ void direction(dist& moves, const targetting_type restricts,
             if (monster_at(moves.target))
                 debug_stethoscope(mgrd(moves.target));
             break;
+
+        case CMD_TARGET_WIZARD_HURT_MONSTER:
+            if (!you.wizard || !in_bounds(moves.target))
+                break;
+            if (monster_at(moves.target))
+            {
+                monster_at(moves.target)->hit_points = 1;
+                mpr("Brought the mon down to near death.");
+            }
+            break;
 #endif
         case CMD_TARGET_DESCRIBE:
             full_describe_square(moves.target);
