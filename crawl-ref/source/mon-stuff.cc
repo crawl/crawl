@@ -532,6 +532,11 @@ static std::string _milestone_kill_verb(killer_type killer)
 static void _check_kill_milestone(const monsters *mons,
                                  killer_type killer, int i)
 {
+    // XXX: See comment in monster_polymorph.
+    bool is_unique = mons_is_unique(mons->type);
+    if (mons->props.exists("original_was_unique"))
+        is_unique = mons->props["original_was_unique"].get_bool();
+
     if (mons->type == MONS_PLAYER_GHOST)
     {
         std::string milestone = _milestone_kill_verb(killer) + "the ghost of ";
@@ -539,7 +544,7 @@ static void _check_kill_milestone(const monsters *mons,
         milestone += ".";
         mark_milestone("ghost", milestone);
     }
-    else if (mons_is_unique(mons->type))
+    else if (is_unique)
     {
         mark_milestone("unique",
                        _milestone_kill_verb(killer)
@@ -2493,6 +2498,15 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     const bool old_mon_caught     = monster->caught();
     const char old_ench_countdown = monster->ench_countdown;
 
+    // XXX: mons_is_unique should be converted to monster::is_unique, and that
+    // function should be testing the value of props["original_was_unique"]
+    // which would make things a lot simpler.
+    // See also _check_kill_milestone.
+    bool old_mon_unique           = mons_is_unique(monster->type);
+    if (monster->props.exists("original_was_unique"))
+        if (monster->props["original_was_unique"].get_bool())
+            old_mon_unique = true;
+
     mon_enchant abj       = monster->get_ench(ENCH_ABJ);
     mon_enchant charm     = monster->get_ench(ENCH_CHARM);
     mon_enchant temp_pacif= monster->get_ench(ENCH_TEMP_PACIF);
@@ -2518,6 +2532,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     monster->mname = name;
     monster->props["original_name"] = name;
+    monster->props["original_was_unique"] = old_mon_unique;
     monster->flags = flags;
     monster->god   = god;
 
