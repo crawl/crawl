@@ -2411,7 +2411,7 @@ bool ShoppingList::items_are_same(const item_def& item_a,
 
 void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 {
-    if (crawl_state.map_stat_gen)
+    if (crawl_state.map_stat_gen || crawl_state.test)
         // Shopping list is unitialized and uneeded.
         return;
 
@@ -2429,7 +2429,7 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 
 void ShoppingList::forget_pos(const level_pos &pos)
 {
-    if (crawl_state.map_stat_gen)
+    if (crawl_state.map_stat_gen || crawl_state.test)
         // Shopping list is unitialized and uneeded.
         return;
 
