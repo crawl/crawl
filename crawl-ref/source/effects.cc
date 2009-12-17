@@ -1011,13 +1011,13 @@ void random_uselessness(int scroll_slot)
 
     case 6:
         mpr("You hear the tinkle of a tiny bell.", MSGCH_SOUND);
-        noisy(10, you.pos());
+        noisy(2, you.pos());
         cast_summon_butterflies(100);
         break;
 
     case 7:
         mprf(MSGCH_SOUND, "You hear %s.", weird_sound().c_str());
-        noisy(10, you.pos());
+        noisy(2, you.pos());
         break;
     }
 }
