@@ -161,10 +161,6 @@ std::string comma_separated_line(Z start, Z end,
 void usleep( unsigned long time );
 #endif
 
-#ifdef NEED_SNPRINTF
-int snprintf( char *str, size_t size, const char *format, ... );
-#endif
-
 #ifndef USE_TILE
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
 #endif

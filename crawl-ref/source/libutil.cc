@@ -667,42 +667,6 @@ void usleep(unsigned long time)
 }
 #endif
 
-// Not the greatest version of snprintf, but a functional one that's
-// a bit safer than raw sprintf().  Note that this doesn't do the
-// special behaviour for size == 0, largely because the return value
-// in that case varies depending on which standard is being used (SUSv2
-// returns an unspecified value < 1, whereas C99 allows str == NULL
-// and returns the number of characters that would have been written). -- bwr
-#ifdef NEED_SNPRINTF
-
-#include <string.h>
-
-int snprintf( char *str, size_t size, const char *format, ... )
-{
-    va_list argp;
-    va_start( argp, format );
-
-    char *buff = new char [ 10 * size ];  // hopefully enough
-    if (!buff)
-        end(1, false, "Out of memory\n");
-
-    vsprintf( buff, format, argp );
-    strncpy( str, buff, size );
-    str[ size - 1 ] = 0;
-
-    int ret = strlen( str );
-    if ((unsigned int) ret == size - 1 && strlen( buff ) >= size)
-        ret = -1;
-
-    delete [] buff;
-
-    va_end( argp );
-
-    return (ret);
-}
-
-#endif
-
 #ifndef USE_TILE
 void cgotoxy(int x, int y, GotoRegion region)
 {

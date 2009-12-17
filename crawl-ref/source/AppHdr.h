@@ -179,14 +179,6 @@
     #include <string>
     #include "libdos.h"
 
-    #ifdef __DJGPP__
-        #define NEED_SNPRINTF
-
-        // [dshaligram] This is distressing, but djgpp lacks (v)snprintf, and
-        // we have to support DOS. Ow. FIXME
-        #define vsnprintf(buf, size, format, args) vsprintf(buf, format, args)
-    #endif
-
     #include <dos.h>
 
     #define round(x) floor((x)+0.5)
@@ -506,7 +498,6 @@
 
 // Uncomment these if you can't find these functions on your system
 // #define NEED_USLEEP
-// #define NEED_SNPRINTF
 
 #ifdef __cplusplus
 
