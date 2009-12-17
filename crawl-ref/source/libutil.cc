@@ -143,6 +143,8 @@ std::string make_stringf(const char *s, ...)
 
     size_t len = vsnprintf(NULL, 0, s, args);
     char *buf = (char *)malloc(len + 1);
+    va_end(args);
+    va_start(args, s);
     vsnprintf(buf, len + 1, s, args);
     std::string ret(buf);
     free(buf);
