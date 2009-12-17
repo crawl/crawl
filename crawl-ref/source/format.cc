@@ -516,7 +516,7 @@ void formatted_string::cprintf(const char *s, ...)
 {
     va_list args;
     va_start(args, s);
-    cprintf(make_stringf(s, args));
+    cprintf(vmake_stringf(s, args));
     va_end(args);
 }
 

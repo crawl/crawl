@@ -2123,7 +2123,7 @@ void xlog_fields::add_field(const std::string &key,
 {
     va_list args;
     va_start(args, format);
-    std::string buf = make_stringf(format, args);
+    std::string buf = vmake_stringf(format, args);
     va_end(args);
 
     fields.push_back( std::pair<std::string, std::string>( key, buf ) );

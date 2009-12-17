@@ -136,22 +136,28 @@ std::string strip_filename_unsafe_chars(const std::string &s)
     return replace_all_of(s, " .&`\"\'|;{}()[]<>*%$#@!~?", "");
 }
 
+std::string vmake_stringf(const char* s, va_list args)
+{
+    char buf1[400];
+    size_t len = vsnprintf(buf1, sizeof buf1, s, args);
+    if (len < sizeof buf1)
+        return (buf1);
+
+    char *buf2 = (char*)malloc(len + 1);
+    vsnprintf(buf2, len + 1, s, args);
+    std::string ret(buf2);
+    free(buf2);
+
+    return (ret);
+}
+
 std::string make_stringf(const char *s, ...)
 {
     va_list args;
     va_start(args, s);
-    char buf1[400];
-    size_t len = vsnprintf(buf1, sizeof buf1, s, args);
+    std::string ret = vmake_stringf(s, args);
     va_end(args);
-    if (len < sizeof buf1)
-        return (buf1);
-    char *buf2 = (char*)malloc(len + 1);
-    va_start(args, s);
-    vsnprintf(buf2, len + 1, s, args);
-    std::string ret(buf2);
-    free(buf2);
-    va_end(args);
-    return (ret);
+    return ret;
 }
 
 std::string &escape_path_spaces(std::string &s)
