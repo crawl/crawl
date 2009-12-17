@@ -6,6 +6,7 @@
 
 #include "areas.h"
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
 #include "env.h"
 #include "exclude.h"
@@ -373,6 +374,11 @@ void show_def::update_at(const coord_def &gp, const coord_def &ep)
 
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp, ep);
+
+    // If there's items on the boundary (shop inventory),
+    // we don't show them.
+    if (!in_bounds(gp))
+        return;
 
     _update_item_at(gp, ep);
 
