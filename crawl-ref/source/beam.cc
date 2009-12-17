@@ -2236,16 +2236,16 @@ void bolt::do_fire()
         avoid_self = false;
     }
 
-    if (!in_bounds(pos()))
+    if (!map_bounds(pos()))
     {
         ASSERT(!aimed_at_spot);
 
         int tries = std::max(GXM, GYM);
-        while (!in_bounds(ray.pos()) && tries-- > 0)
+        while (!map_bounds(ray.pos()) && tries-- > 0)
             ray.regress();
 
         // Something bizarre happening if we can't get back onto the map.
-        ASSERT(in_bounds(pos()));
+        ASSERT(map_bounds(pos()));
     }
 
     // The beam has terminated.
