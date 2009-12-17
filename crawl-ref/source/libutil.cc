@@ -140,15 +140,16 @@ std::string make_stringf(const char *s, ...)
 {
     va_list args;
     va_start(args, s);
-
-    size_t len = vsnprintf(NULL, 0, s, args);
-    char *buf = (char *)malloc(len + 1);
+    char buf1[400];
+    size_t len = vsnprintf(buf1, sizeof buf1, s, args);
     va_end(args);
+    if (len < sizeof buf1)
+        return (buf1);
+    char *buf2 = (char*)malloc(len + 1);
     va_start(args, s);
-    vsnprintf(buf, len + 1, s, args);
-    std::string ret(buf);
-    free(buf);
-
+    vsnprintf(buf2, len + 1, s, args);
+    std::string ret(buf2);
+    free(buf2);
     va_end(args);
     return (ret);
 }
