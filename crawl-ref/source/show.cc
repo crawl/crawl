@@ -218,19 +218,19 @@ static show_item_type _item_to_show_code(const item_def &item)
 
 void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
 {
-    item_def eitem;
+    const item_def *eitem;
     // Check for mimics.
     const monsters* m = monster_at(gp);
     if (m && mons_is_unknown_mimic(m))
-        get_mimic_item(m, eitem);
+        eitem = &get_mimic_item(m);
     else if (igrd(gp) != NON_ITEM)
-        eitem = mitm[igrd(gp)];
+        eitem = &mitm[igrd(gp)];
     else
         return;
 
     unsigned short &ecol  = grid(ep).colour;
 
-    glyph g = get_item_glyph(&eitem);
+    glyph g = get_item_glyph(eitem);
 
     const dungeon_feature_type feat = grd(gp);
     if (Options.feature_item_brand && is_critical_feature(feat))
@@ -242,10 +242,13 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
         const unsigned short gcol = env.grid_colours(gp);
         ecol = (feat == DNGN_SHALLOW_WATER) ?
                (gcol != BLACK ? gcol : CYAN) : g.col;
-        if (eitem.link != NON_ITEM && !crawl_state.arena)
+        // monster(mimic)-owned items have link = NON_ITEM+1+midx
+        if (eitem->link > NON_ITEM && igrd(gp) != NON_ITEM)
+            ecol |= COLFLAG_ITEM_HEAP;
+        else if (eitem->link < NON_ITEM && !crawl_state.arena)
             ecol |= COLFLAG_ITEM_HEAP;
         grid(ep).cls = SH_ITEM;
-        grid(ep).item = _item_to_show_code(eitem);
+        grid(ep).item = _item_to_show_code(*eitem);
     }
 
 #ifdef USE_TILE

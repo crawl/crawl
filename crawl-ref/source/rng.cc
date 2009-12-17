@@ -29,6 +29,12 @@ void seed_rng(unsigned long* seed_key, size_t num_keys)
     // MT19937 -- see mt19937ar.cc for details/licence
     init_by_array(seed_key, num_keys);
 
+    // Reset the sha256 generator to get predictable random numbers in case
+    // of a saved rng state.
+#ifdef MORE_HARDENED_PRNG
+    reset_sha256_state();
+#endif
+
     // for std::random_shuffle()
     srand(seed_key[0]);
 }
@@ -37,6 +43,12 @@ void seed_rng(long seed)
 {
     // MT19937 -- see mt19937ar.cc for details/licence
     init_genrand(seed);
+
+    // Reset the sha256 generator to get predictable random numbers in case
+    // of a saved rng state.
+#ifdef MORE_HARDENED_PRNG
+    reset_sha256_state();
+#endif
 
     // for std::random_shuffle()
     srand(seed);
@@ -87,11 +99,19 @@ unsigned long random_int( void )
 
 void push_rng_state()
 {
+#ifndef MORE_HARDENED_PRNG
     push_mt_state();
+#else
+    push_sha256_state();
+#endif
 }
 
 void pop_rng_state()
 {
+#ifndef MORE_HARDENED_PRNG
     pop_mt_state();
+#else
+    pop_sha256_state();
+#endif
 }
 

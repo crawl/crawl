@@ -2178,3 +2178,24 @@ bool is_invalid_skill(int skill)
 
     return (false);
 }
+
+void dump_skills(std::string &text)
+{
+    char tmp_quant[20];
+    for (unsigned char i = 0; i < 50; i++)
+    {
+        if (you.skills[i] > 0)
+        {
+            text += ( (you.skills[i] == 27)   ? " * " :
+                      (you.practise_skill[i]) ? " + "
+                                              : " - " );
+
+            text += "Level ";
+            itoa( you.skills[i], tmp_quant, 10 );
+            text += tmp_quant;
+            text += " ";
+            text += skill_name(i);
+            text += "\n";
+        }
+    }
+}

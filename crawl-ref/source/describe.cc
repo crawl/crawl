@@ -201,7 +201,6 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         { "rC",     ARTP_COLD,                  1 },
         { "rN",     ARTP_NEGATIVE_ENERGY,       1 },
         { "MR",     ARTP_MAGIC,                 2 },
-        { "Spirit", ARTP_SPIRIT_SHIELD,         2 },
 
         // Quantitative attributes
         { "AC",     ARTP_AC,                    0 },
@@ -228,10 +227,13 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         if (!type.empty())
             propnames.push_back(type);
     }
-    else if (item.base_type == OBJ_WEAPONS
-             && item_ident(item, ISFLAG_KNOW_TYPE))
+    else if (item_ident(item, ISFLAG_KNOW_TYPE))
     {
-        std::string ego = weapon_brand_name(item, true);
+        std::string ego;
+        if (item.base_type == OBJ_WEAPONS)
+            ego = weapon_brand_name(item, true);
+        else if (item.base_type == OBJ_ARMOUR)
+            ego = armour_ego_name(item, true);
         if (!ego.empty())
         {
             // XXX: Ugly hack to remove the brackets...
@@ -393,7 +395,6 @@ static std::string _randart_descrip( const item_def &item )
         { ARTP_LEVITATE, "It lets you levitate.", false},
         { ARTP_BLINK, "It lets you blink.", false},
         { ARTP_BERSERK, "It lets you go berserk.", false},
-        { ARTP_SPIRIT_SHIELD, "It shields you from harm at the cost of magical power.", false},
         { ARTP_NOISES, "It makes noises.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
         { ARTP_CAUSE_TELEPORTATION, "It causes teleportation.", false},
@@ -2802,9 +2803,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     // For undetected mimics describe mimicked item instead.
     if (!force_seen && mons_is_unknown_mimic(&mons))
     {
-        item_def item;
-        get_mimic_item(&mons, item);
-        get_item_desc(item, inf);
+        get_item_desc(get_mimic_item(&mons), inf);
         return;
     }
 
@@ -2812,12 +2811,6 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         inf.title = mons.full_name(DESC_CAP_A, true);
 
     std::string db_name = mons.base_name(DESC_DBNAME, force_seen);
-    if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
-    {
-        db_name   = "mimic";
-        if (inf.title.empty())
-            inf.title = "A mimic";
-    }
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the

@@ -75,7 +75,10 @@
 #include "state.h"
 #include "stuff.h"
 #include "tags.h"
+#ifdef USE_TILE
 #include "tiles.h"
+#include "tiledef-player.h"
+#endif
 #include "terrain.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -2149,6 +2152,23 @@ bool apply_to_all_dungeons(bool (*applicator)())
     return (success);
 }
 
+bool get_save_version(FILE *file, char &major, char &minor)
+{
+    // Read first two bytes.
+    char buf[2];
+    if (read2(file, buf, 2) != 2)
+    {
+        // Empty file?
+        major = minor = -1;
+        return (false);
+    }
+
+    major = buf[0];
+    minor = buf[1];
+
+    return (true);
+}
+
 static bool _get_and_validate_version(FILE *restoreFile, char &major,
                                       char &minor, std::string* reason)
 {
@@ -2156,18 +2176,11 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major,
     if (reason == 0)
         reason = &dummy;
 
-    // Read first two bytes.
-    char buf[2];
-    if (read2(restoreFile, buf, 2) != 2)
+    if (!get_save_version(restoreFile, major, minor))
     {
-        // Empty file?
-        major = minor = -1;
         *reason = "File is corrupt.";
         return (false);
     }
-
-    major = buf[0];
-    minor = buf[1];
 
     if (major != TAG_MAJOR_VERSION)
     {

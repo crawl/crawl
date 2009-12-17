@@ -16,6 +16,8 @@
 #include "player.h"
 #include "stuff.h"
 #include "tiles.h"
+#include "tiledef-dngn.h"
+#include "tiledef-player.h"
 
 void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 {

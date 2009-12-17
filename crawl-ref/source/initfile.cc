@@ -3474,6 +3474,7 @@ enum commandline_option_type {
     CLO_BUILDDB,
     CLO_HELP,
     CLO_VERSION,
+    CLO_SAVE_VERSION,
     CLO_EXTRA_OPT_FIRST,
     CLO_EXTRA_OPT_LAST,
 
@@ -3483,7 +3484,7 @@ enum commandline_option_type {
 static const char *cmd_ops[] = {
     "scores", "name", "species", "job", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "arena", "test", "builddb", "help", "version",
+    "mapstat", "arena", "test", "builddb", "help", "version", "save-version",
     "extra-opt-first", "extra-opt-last",
 };
 
@@ -3522,6 +3523,77 @@ static void _print_version()
     printf("Crawl version %s%s", Version::Long().c_str(), EOL);
     printf("Save file version %d.%d%s", TAG_MAJOR_VERSION, TAG_MINOR_VERSION, EOL);
     printf("%s", compilation_info().c_str());
+}
+
+static void _print_save_version(char *name)
+{
+    bool need_unlink = false;
+    std::string basename = get_savedir_filename(name, "", "");
+    std::string filename = basename + ".sav";
+
+    FILE *charf = fopen(name, "rb");
+
+    if (!charf) {
+#ifdef LOAD_UNPACKAGE_CMD
+        std::string zipfile = basename + PACKAGE_SUFFIX;
+        FILE *handle = fopen(zipfile.c_str(), "rb+");
+        if (handle == NULL)
+        {
+            fprintf(stderr, "Unable to open %s for reading!\n",
+                            zipfile.c_str());
+            return;
+        }
+        else
+        {
+            fclose(handle);
+
+            // Create command.
+            char cmd_buff[1024];
+
+            std::string zipname = basename;
+            std::string directory = get_savedir();
+            std::string savefile = filename;
+            savefile.erase(0, savefile.rfind(FILE_SEPARATOR) + 1);
+
+            escape_path_spaces(zipname);
+            escape_path_spaces(directory);
+            escape_path_spaces(savefile);
+            snprintf( cmd_buff, sizeof(cmd_buff), UNPACK_SPECIFIC_FILE_CMD,
+                      zipname.c_str(),
+                      directory.c_str(),
+                      savefile.c_str() );
+
+            if (system( cmd_buff ) != 0)
+            {
+                fprintf(stderr, "Warning: Zip command "
+                                "(UNPACK_SPECIFIC_FILE_CMD) "
+                                "returned non-zero value!" EOL );
+            }
+            need_unlink = true;
+        }
+#endif
+        charf = fopen(filename.c_str(), "rb");
+    }
+    if (!charf) {
+        fprintf(stderr, "Unable to open %s for reading!\n", filename.c_str());
+        goto cleanup;
+    }
+
+    char major, minor;
+    if (!get_save_version(charf, major, minor)) {
+        fprintf(stderr, "Save file is invalid.\n");
+    }
+    else {
+        printf("Save file version for %s is %d.%d\n", name, major, minor);
+    }
+
+cleanup:
+#ifdef LOAD_UNPACKAGE_CMD
+    if (need_unlink)
+        unlink(filename.c_str());
+#else
+    ;
+#endif
 }
 
 static bool _check_extra_opt(char* _opt)
@@ -3815,6 +3887,14 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
         case CLO_VERSION:
             _print_version();
+            end(0);
+
+        case CLO_SAVE_VERSION:
+            // Always parse.
+            if (!next_is_param)
+                return (false);
+
+            _print_save_version(next_arg);
             end(0);
 
         case CLO_EXTRA_OPT_FIRST:

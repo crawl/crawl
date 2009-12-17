@@ -126,7 +126,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         return (false);
 
     const int brand = get_weapon_brand(item);
-    const int ego = get_armour_ego_type(item);
+    const int ego   = get_armour_ego_type(item);
 
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return (false);
@@ -1067,7 +1067,7 @@ void static _get_randart_properties(const item_def &item,
     if (!done_powers && one_chance_in(10) && aclass == OBJ_ARMOUR
         && (atype == ARM_CAP || atype == ARM_SHIELD))
     {
-        proprt[ARTP_SPIRIT_SHIELD] = 1;
+        proprt[ARTP_BRAND] = SPARM_SPIRIT_SHIELD;
         power_level++;
     }
 
@@ -1881,8 +1881,7 @@ bool randart_is_bad( const item_def &item, artefact_properties_t &proprt )
     if (_artefact_num_props( proprt ) == 0)
         return (true);
 
-    if ((item.base_type == OBJ_WEAPONS)
-            && (proprt[ARTP_BRAND] == SPWPN_NORMAL))
+    if (item.base_type == OBJ_WEAPONS && proprt[ARTP_BRAND] == SPWPN_NORMAL)
         return (true);
 
     return (_randart_is_redundant( item, proprt )
@@ -2000,7 +1999,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     item.flags |= ISFLAG_UNRANDART;
     _init_artefact_properties(item);
 
-    if (unrand->prpty[ARTP_BRAND] != 0)
+    if (unrand->prpty[ARTP_CURSED] != 0)
         do_curse_item( item );
 
     // get true artefact name

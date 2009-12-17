@@ -91,6 +91,8 @@ void save_game(bool leave_game, const char *bye = NULL);
 // Save game without exiting (used when changing levels).
 void save_game_state();
 
+bool get_save_version(FILE *file, char &major, char &minor);
+
 void restore_game(void);
 
 bool apply_to_all_dungeons(bool (*applicator)());

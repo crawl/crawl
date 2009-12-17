@@ -15,16 +15,14 @@
 #include <vector>
 
 #ifdef USE_TILE
-// This used to be in tiles.h. (jpeg)
-#include "tiledef-main.h"
-#include "tiledef-dngn.h"
-#include "tiledef-player.h"
-
 struct dolls_data
 {
-    dolls_data() { memset(parts, 0, sizeof(parts)); }
+    dolls_data();
+    dolls_data(const dolls_data& orig);
+    const dolls_data& operator=(const dolls_data& other);
+    ~dolls_data();
 
-    int parts[TILEP_PART_MAX];
+    int *parts;
 };
 #endif
 
@@ -539,10 +537,7 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = NULL);
 
-    // How large can the experience pool grow without loss?
-    int exp_pool_cutoff() const;
-    // Step down experience above cutoff.
-    void step_down_exp_pool();
+
 
 protected:
     void _removed_beholder();

@@ -180,6 +180,7 @@ runrest_ignore_message = pray:
 runrest_ignore_message = You feel.*sick
 runrest_ignore_message = disappears in a puff of smoke
 runrest_ignore_message = engulfed in a cloud of smoke
+runrest_ignore_message = standing in the rain
 runrest_ignore_message = safely over a trap
 runrest_ignore_message = You feel.*sick
 runrest_ignore_message = A.*toadstool withers and dies

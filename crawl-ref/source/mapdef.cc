@@ -43,6 +43,10 @@
 #include "stuff.h"
 #include "env.h"
 #include "tags.h"
+#ifdef USE_TILE
+#include "tiledef-dngn.h"
+#include "tiledef-player.h"
+#endif
 
 static const char *map_section_names[] = {
     "",
@@ -3052,6 +3056,18 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mspec.patrolling     = strip_tag(mon_str, "patrolling");
         mspec.band           = strip_tag(mon_str, "band");
 
+        const std::string att = strip_tag_prefix(mon_str, "att:");
+        if (att.empty() || att == "hostile")
+            mspec.attitude = ATT_HOSTILE;
+        else if (att == "friendly")
+            mspec.attitude = ATT_FRIENDLY;
+        else if (att == "good_neutral")
+            mspec.attitude = ATT_GOOD_NEUTRAL;
+        else if (att == "fellow_slime" || att == "strict_neutral")
+            mspec.attitude = ATT_STRICT_NEUTRAL;
+        else if (att == "neutral")
+            mspec.attitude = ATT_NEUTRAL;
+
         // Useful for summoned monsters.
         if (strip_tag(mon_str, "seen"))
             mspec.extra_monster_flags |= MF_SEEN;
@@ -3164,9 +3180,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 #ifdef USE_TILE
         if (!tile.empty())
         {
-            // Modify the string to prevent them from using non-mons tiles.
-            if (tile.find("mons_") == std::string::npos)
-                tile = std::string("mons_" + tile);
             unsigned int index;
             if (!tile_player_index(tile.c_str(), index))
             {

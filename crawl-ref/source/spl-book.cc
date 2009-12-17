@@ -2467,6 +2467,9 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
     {
         int disc = 1 << i;
+        if (disc & SPTYP_DIVINATION)
+            continue;
+
         if (god_dislikes_spell_discipline(disc, god))
             continue;
 
@@ -3052,8 +3055,9 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     set_artefact_name(book, name);
 
-    book.plus  = disc1;
-    book.plus2 = disc2;
+    // Save primary/secondary disciplines back into the book.
+    book.plus  = max1;
+    book.plus2 = max2;
 
     return (true);
 }

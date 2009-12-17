@@ -11,11 +11,12 @@
 #include <stdint.h>
 
 typedef uint32_t u32;
-typedef uint64_t u64;
 
 #include "mt19937ar.h"
 
 #ifdef MORE_HARDENED_PRNG
+
+#include <stack>
 
 #include <cstring>
 #include <cstdio>
@@ -137,12 +138,50 @@ void sha256chunk(const char* chunk, sha256state* ss)
     }
 }
 
-// 256 bits
-u32 mt_sha256_block[8], mt_block[8];
-u32 mt_block_index = 0;
+struct sha256mt_state
+{
+    // 256 bits
+    u32 mt_sha256_block[8], mt_block[8];
+    u32 mt_block_index;
+
+    sha256mt_state()
+    {
+        mt_block_index = 0;
+    }
+};
+
+sha256mt_state effective_state;
+
+std::stack<sha256mt_state> sha256mt_state_stack;
+
+void reset_sha256_state()
+{
+    effective_state.mt_block_index = 0;
+}
+
+void push_sha256_state()
+{
+    sha256mt_state_stack.push(effective_state);
+    push_mt_state();
+}
+
+void pop_sha256_state()
+{
+    if (sha256mt_state_stack.empty())
+        return;
+
+    effective_state = sha256mt_state_stack.top();
+
+    sha256mt_state_stack.pop();
+    pop_mt_state();
+}
 
 unsigned long sha256_genrand()
 {
+    u32 &mt_block_index = effective_state.mt_block_index;
+    u32 *mt_sha256_block = effective_state.mt_sha256_block;
+    u32 *mt_block = effective_state.mt_block;
+
     // Needs some hashing
     if (!(mt_block_index % 8))
     {
@@ -166,7 +205,21 @@ unsigned long sha256_genrand()
     return mt_sha256_block[mt_block_index++];
 }
 #else // MORE_HARDENED_PRNG
-// Stub this to MT function
+// Stub these to MT functions
+void push_sha256_state()
+{
+    push_mt_state();
+}
+
+void pop_sha256_state()
+{
+    pop_mt_state();
+}
+
+void reset_sha256_state()
+{
+}
+
 unsigned long sha256_genrand()
 {
     return genrand_int32();

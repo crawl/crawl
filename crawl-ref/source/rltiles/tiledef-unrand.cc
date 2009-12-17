@@ -94,6 +94,7 @@ int unrandart_to_tile(int unrand)
     case UNRAND_MAGE:              return TILE_UNRAND_MAGE;
     case UNRAND_SHIELDING:         return TILE_UNRAND_SHIELDING;
     case UNRAND_RCLOUDS:           return TILE_UNRAND_RCLOUDS;
+    case UNRAND_PONDERING:         return TILE_UNRAND_PONDERING;
     default: return -1;
     }
 }
@@ -179,6 +180,7 @@ int unrandart_to_doll_tile(int unrand)
     case UNRAND_BEAR_SPIRIT:       return TILEP_HELM_BEAR;
     case UNRAND_DRAGONMASK:        return TILEP_HELM_ART_DRAGONHELM;
     case UNRAND_ALCHEMIST:         return TILEP_HELM_TURBAN_PURPLE;
+    case UNRAND_PONDERING:         return TILEP_HELM_WIZARD_BLUEGREEN;
     default: return -1;
     }
 }

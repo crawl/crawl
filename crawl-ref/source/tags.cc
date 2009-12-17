@@ -1388,12 +1388,7 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.entry_cause     = static_cast<entry_cause_type>( unmarshallByte(th) );
     you.entry_cause_god = static_cast<god_type>( unmarshallByte(th) );
-    if (minorVersion < TAG_MINOR_SYNCH_TIME)
-        unmarshallByte(th);
-    if (minorVersion >= TAG_MINOR_DISEASE)
-        you.disease         = unmarshallLong(th);
-    else
-        you.disease         = unmarshallByte(th);
+    you.disease         = unmarshallLong(th);
 
     you.species         = static_cast<species_type>(unmarshallByte(th));
     you.hp              = unmarshallShort(th);
@@ -1905,30 +1900,9 @@ show_type unmarshallShowtype(reader &th)
 {
     show_type obj;
     obj.cls = static_cast<show_class>(unmarshallByte(th));
-    if (th.getMinorVersion() < TAG_MINOR_SHOWTYPE_EXTENDED)
-    {
-        unsigned short d = unmarshallShort(th);
-        switch (obj.cls)
-        {
-        case SH_FEATURE:
-            obj.feat = static_cast<dungeon_feature_type>(d);
-            break;
-        case SH_ITEM:
-            obj.item = static_cast<show_item_type>(d);
-            break;
-        case SH_MONSTER:
-            obj.mons = static_cast<monster_type>(d);
-            break;
-        default:
-            break;
-        }
-    }
-    else
-    {
-        obj.feat = static_cast<dungeon_feature_type>(unmarshallShort(th));
-        obj.item = static_cast<show_item_type>(unmarshallShort(th));
-        obj.mons = static_cast<monster_type>(unmarshallShort(th));
-    }
+    obj.feat = static_cast<dungeon_feature_type>(unmarshallShort(th));
+    obj.item = static_cast<show_item_type>(unmarshallShort(th));
+    obj.mons = static_cast<monster_type>(unmarshallShort(th));
     obj.colour = unmarshallShort(th);
     return (obj);
 }
@@ -2199,8 +2173,6 @@ static void tag_read_level( reader &th, char minorVersion )
                     static_cast<unsigned char>(unmarshallByte(th)) );
 
             env.map_knowledge[i][j].object   = unmarshallShowtype(th);
-            if (minorVersion < TAG_MINOR_MAPCELL_NOCOLOUR)
-                unmarshallShort(th);
             env.map_knowledge[i][j].flags    = unmarshallShort(th);
             env.pgrid[i][j] = unmarshallLong(th);
 

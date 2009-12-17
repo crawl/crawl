@@ -681,7 +681,7 @@ TILE_EQ: serpent_scourge
 BRAND:   SPWPN_VENOM
 BOOL:    poison, tilerim
 DESC_ID: A double-ended whip made from the cured hides of the Lair of Beasts'
-         deadly grey snakes.
+         deadly anacondas.
 
 NAME:     knife of Accuracy
 APPEAR:   thin dagger
@@ -798,7 +798,8 @@ PLUS:     +2
 COLOUR:   DARKGREY
 TILE:     urand_bear
 TILE_EQ:  bear
-BOOL:     life, berserk, spirit
+BRAND:    SPARM_SPIRIT_SHIELD
+BOOL:     life, berserk
 MAGIC:    50
 DESC_END: Once owned by Ukta, a powerful ogre shaman, this fur hat houses
           the spirit of an especially mighty bear.
@@ -1021,8 +1022,9 @@ PLUS:     +6
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
 TILE_EQ:  gong
+BRAND:    SPARM_SPIRIT_SHIELD
 MAGIC:    50
-BOOL:     elec, life, spirit
+BOOL:     elec, life
 DESC:     This is a large gong; you wonder if it could be worn as a shield.
 DESC_ID:  This shield surely will be heard!
 
@@ -1120,6 +1122,23 @@ TILE:     urand_clouds
 TILE_EQ:  robe_clouds
 BOOL:     elec, lev
 DESC:     A robe of a material so flimsy it could almost be clouds.
+
+NAME:     hat of Pondering
+APPEAR:   slimy wizard hat
+OBJ:      OBJ_ARMOUR/ARM_WIZARD_HAT
+PLUS:     +3
+COLOUR:   LIGHTRED
+TILE:     urand_pondering
+TILE_EQ:  wizard_bluegreen
+BRAND:    SPARM_PONDEROUSNESS
+INT:      +5
+MP:       +10
+MAGIC:    30
+DESC:     A slimy wizard hat.
+DESC_END: The favorite hat of the slug wizard Gastronok, stained with reddish
+          slime and enchanted to aid in his arcane pondering. It has been
+          specially enchanted to protect against the effects of salt, though
+          you probably don't care.
 
 # This entry must always be last.
 ENUM:   DUMMY2

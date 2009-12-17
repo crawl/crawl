@@ -2201,12 +2201,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         const bool known_trap = (grd(you.pos()) != DNGN_UNDISCOVERED_TRAP
                                  && !force_stair);
 
-        if (!known_trap && !force_stair)
-        {
-            mpr("You can't go down here!");
-            return;
-        }
-
         if (you.flight_mode() == FL_LEVITATE && !force_stair)
         {
             if (known_trap)

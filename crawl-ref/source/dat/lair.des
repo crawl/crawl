@@ -585,7 +585,7 @@ NAME:   hibernation_bobbens
 DEPTH:  Lair:4-8
 TAGS:   allow_dup no_monster_gen no_item_gen mini_float
 MONS:   w:5 death drake / ice dragon / dragon / swamp dragon
-MONS:   swamp dragon / hydra / grey snake
+MONS:   swamp dragon / hydra / anaconda
 MONS:   swamp drake / w:20 spiny frog / w:20 komodo dragon /\
         w:20 gila monster / w:20 black mamba
 : if you.absdepth() >= 18 then
@@ -905,10 +905,10 @@ KFEAT:   Z = weight:2 teleport trap / .
 KFEAT:   z = teleport trap / Zot trap / weight:20 .
 MONS:    naga / nothing
 MONS:    greater naga / nothing
-MONS:    guardian naga / nothing
+MONS:    guardian serpent / nothing
 MONS:    naga warrior / nothing
 MONS:    naga mage / nothing
-MONS:    greater naga / guardian naga
+MONS:    greater naga / guardian serpent
 SHUFFLE: 'X / "Y
 SHUFFLE: 'X / 'X / AB, "Y / CD
 SUBST:   A=x, B=x, C=x, D=x

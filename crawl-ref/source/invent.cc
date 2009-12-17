@@ -38,7 +38,11 @@
 #include "mon-util.h"
 #include "state.h"
 
+#ifdef USE_TILE
 #include "tiles.h"
+#include "tiledef-main.h"
+#include "tiledef-dngn.h"
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 // Inventory menu shenanigans

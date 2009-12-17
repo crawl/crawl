@@ -14,6 +14,7 @@
 #include "artefact.h"
 #include "beam.h"
 #include "branch.h"
+#include "clua.h"
 #include "coord.h"
 #include "delay.h"
 #include "describe.h"
@@ -28,6 +29,7 @@
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
+#include "options.h"
 #include "ouch.h"
 #include "player.h"
 #include "skills.h"
@@ -640,8 +642,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             break;
         }
 
-        // If the shaft isn't triggered, don't reveal it.
-        if (!triggerer.will_trigger_shaft() && !you_know)
+        // If the shaft isn't known, don't reveal it.
+        // The shafting code in downstairs() needs to know
+        // whether it's undiscovered.
+        if (!you_know)
             this->hide();
 
         // Known shafts don't trigger as traps.
@@ -775,6 +779,27 @@ void disarm_trap(const coord_def& where)
     default:
         break;
     }
+
+#ifdef CLUA_BINDINGS
+    // Prompt for any trap for which you might not survive setting it off.
+    // (See trapwalk.lua)
+    if (Options.trap_prompt
+        && !clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(where)))
+    {
+        std::string prompt = make_stringf(
+                               "Really try disarming that %s?",
+                               feature_description(trap.category(),
+                                                   get_trap_type(where),
+                                                   false, DESC_BASENAME,
+                                                   false).c_str());
+
+        if (!yesno(prompt.c_str(), true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+    }
+#endif
 
     // Make the actual attempt
     you.turn_is_over = true;
@@ -1317,7 +1342,7 @@ bool is_valid_shaft_level(const level_id &place)
 }
 
 // Shafts can be generated visible.
-// 
+//
 // Starts about 50% of the time and approaches 0% for randomly
 // placed traps, and starts at 100% and approaches 50% for
 // others (e.g. at end of corridor).

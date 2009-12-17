@@ -2308,7 +2308,8 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     // Last, generic wizard, priest or demon.
     if (wizard)
-        key_list.push_back("wizard" + cast_str);
+        key_list.push_back((std::string)((shape <= MON_SHAPE_NAGA) ? "" : "non-humanoid ")
+                           + "wizard" + cast_str);
     else if (priest)
         key_list.push_back("priest" + cast_str);
     else if (mons_is_demon(monster->type))

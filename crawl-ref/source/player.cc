@@ -68,8 +68,36 @@
 #include "view.h"
 #include "shout.h"
 #include "viewgeom.h"
-#include "tiles.h"
 #include "xom.h"
+
+#ifdef USE_TILE
+#include "tiles.h"
+#include "tiledef-player.h"
+
+dolls_data::dolls_data()
+{
+    parts = new int[TILEP_PART_MAX];
+    memset(parts, 0, TILEP_PART_MAX * sizeof(int));
+}
+
+dolls_data::dolls_data(const dolls_data& _orig)
+{
+    parts = new int[TILEP_PART_MAX];
+    memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(int));
+}
+
+const dolls_data& dolls_data::operator=(const dolls_data& other)
+{
+    memcpy(parts, other.parts, TILEP_PART_MAX * sizeof(int));
+    return (*this);
+}
+
+dolls_data::~dolls_data()
+{
+    delete[] parts;
+    parts = NULL;
+}
+#endif
 
 std::string pronoun_you(description_level_type desc)
 {
@@ -2466,21 +2494,6 @@ void forget_map(unsigned char chance_forgotten, bool force)
 #endif
 }
 
-int player::exp_pool_cutoff() const
-{
-    int total = std::max(total_skill_points, skill_cost_needed(2));
-    // total = std::min(total, skill_cost_needed(27));
-    return (total / 3);
-}
-
-void player::step_down_exp_pool()
-{
-    int cutoff = you.exp_pool_cutoff();
-    int step = cutoff/4;
-    you.exp_available = stepdown_value(you.exp_available,
-                                       cutoff, step, 3*step, 4*step);
-}
-
 void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
                unsigned int* actual_avail_gain)
 {
@@ -2493,7 +2506,11 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
     const unsigned long old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
-    if (you.experience + exp_gained > MAX_EXP_TOTAL)
+#if DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "gain_exp: %d", exp_gained );
+#endif
+
+    if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
         you.experience = MAX_EXP_TOTAL;
     else
         you.experience += exp_gained;
@@ -2508,13 +2525,10 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
         exp_gained /= 2;
     }
 
-    you.exp_available += exp_gained;
-    you.step_down_exp_pool();
-
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "gain_exp: %d of %d",
-         you.exp_available - old_avail, exp_gained);
-#endif
+    if (you.exp_available + exp_gained > (unsigned int)MAX_EXP_POOL)
+        you.exp_available = MAX_EXP_POOL;
+    else
+        you.exp_available += exp_gained;
 
     level_change();
 
@@ -3819,8 +3833,7 @@ int player_mental_clarity(bool calc_unid, bool items)
 int player_spirit_shield(bool calc_unid)
 {
     return player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid)
-           + player_equip_ego_type(EQ_HELMET, SPARM_SPIRIT_SHIELD)
-           + scan_artefacts(ARTP_SPIRIT_SHIELD);
+           + player_equip_ego_type(EQ_HELMET, SPARM_SPIRIT_SHIELD);
 }
 
 // Returns whether the player has the effect of the amulet from a

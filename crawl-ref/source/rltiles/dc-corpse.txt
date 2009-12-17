@@ -107,7 +107,7 @@ small_snake CORPSE_SMALL_SNAKE
 snake CORPSE_SNAKE
 black_mamba CORPSE_BLACK_MAMBA
 water_moccasin CORPSE_WATER_MOCCASIN
-grey_snake CORPSE_GREY_SNAKE
+anaconda CORPSE_ANACONDA
 viper CORPSE_VIPER
 
 ## Bears ('U')
@@ -224,7 +224,7 @@ big_kobold CORPSE_BIG_KOBOLD
 
 ## Nagas ('N')
 naga CORPSE_NAGA
-guardian_naga CORPSE_GUARDIAN_NAGA
+guardian_serpent CORPSE_GUARDIAN_SERPENT
 
 ## Ogres ('O')
 ogre CORPSE_OGRE

@@ -19,6 +19,9 @@
 #include "random.h"
 #include "spl-util.h"
 #include "state.h"
+#ifdef USE_TILE
+#include "tiledef-dngn.h"
+#endif
 #include "view.h"
 
 ///////////////////////////////////////////////////////////////////////////

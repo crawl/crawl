@@ -3454,7 +3454,8 @@ void jewellery_wear_effects(item_def &item)
     // so we don't allow them to make the base types known.
     if (artefact)
     {
-        use_artefact(item);
+        bool show_msgs = true;
+        use_artefact(item, &show_msgs);
 
         if (learn_pluses && (item.plus != 0 || item.plus2 != 0))
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);
@@ -5699,16 +5700,6 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
 
     if (proprt[ARTP_NOISES])
         you.attribute[ATTR_NOISES] = 1;
-
-    if (proprt[ARTP_SPIRIT_SHIELD])
-    {
-        set_mp(0, false);
-        mpr("You feel the spirits watch over you.");
-        if (you.species == SP_DEEP_DWARF)
-            mpr("Now linked to your health, your magic stops regenerating.");
-
-        artefact_wpn_learn_prop(item, ARTP_SPIRIT_SHIELD);
-    }
 
     if (!alreadyknown && Options.autoinscribe_artefacts)
         add_autoinscription(item, artefact_auto_inscription(item));

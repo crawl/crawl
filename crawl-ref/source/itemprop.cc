@@ -946,10 +946,15 @@ int get_ammo_brand( const item_def &item )
 
 special_armour_type get_armour_ego_type( const item_def &item )
 {
-    // Artefact armours have no ego type, must look up powers
-    // separately.
-    if (item.base_type != OBJ_ARMOUR || is_artefact( item ))
+    // Armour ego types are "brands", so we do the randart lookup here.
+    if (item.base_type != OBJ_ARMOUR)
         return (SPARM_NORMAL);
+
+    if (is_artefact( item ))
+    {
+        return (static_cast<special_armour_type>(
+                    artefact_wpn_property( item, ARTP_BRAND )));
+    }
 
     return (static_cast<special_armour_type>(item.special));
 }

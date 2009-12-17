@@ -76,9 +76,9 @@ DEPTH:  Crypt
 MONS:   death ooze
 KFEAT:  f = .
 # "withered plant" instead of "plant"
-KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective          \
-            tile:withered_plant / w:1 col:lightgrey plant name:withered  \
-            name_adjective tile:withered_plant
+KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective               \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant
 SUBST:  p = f:2 .:1
 SUBST:  1 = 1:3 .:1
 MAP
@@ -318,9 +318,9 @@ ORIENT: float
 TAGS:   tomb_entry no_monster_gen
 KFEAT:  f = .
 # "withered plant" instead of "plant"
-KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective          \
-            tile:withered_plant / w:1 col:lightgrey plant name:withered  \
-            name_adjective tile:withered_plant
+KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective              \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
+            name_adjective tile:mons_withered_plant
 SUBST:  p = f.
 MAP
 cccccccccc
@@ -634,9 +634,9 @@ SUBST:  F = f ?
 SUBST:  f = p:1 .:1
 KFEAT:  p = .
 # "withered plant" instead of "plant"
-KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective          \
-            tile:withered_plant / w:1 col:lightgrey plant name:withered  \
-            name_adjective tile:withered_plant
+KMONS:  p = w:2 col:darkgrey plant name:withered name_adjective               \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant
 ####### hidden skeleton; sometimes good pain weapon, but draining short sword
 KFEAT:  ! = .
 KMONS:  ! = skeletal warrior ; w:2 dagger ego:pain | short sword ego:draining |\

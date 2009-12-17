@@ -28,7 +28,7 @@ void list_commands(int hotkey = 0, bool do_redraw_screen = false);
 int list_wizard_commands(bool do_redraw_screen = false);
 #endif
 
-// XXX: Actually defined in acr.cc; we may want to move this to command.cc.
+// XXX: Actually defined in main.cc; we may want to move this to command.cc.
 void process_command(command_type cmd);
 
 #endif

@@ -1240,7 +1240,7 @@ enum enchant_type
     ENCH_SLEEPY,         //   Monster can't wake until this wears off.
     ENCH_HELD,           //   25 -- Caught in a net.
     ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy
-    ENCH_NEUTRAL,
+    ENCH_TEMP_PACIF,
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
     ENCH_LOWERED_MR,                   //   30
@@ -1653,7 +1653,7 @@ enum monster_type                      // (int) menv[].type
     MONS_KOBOLD,
     MONS_LICH,
     MONS_MUMMY,
-    MONS_GUARDIAN_NAGA,
+    MONS_GUARDIAN_SERPENT,
     MONS_OGRE,                         //   40
     MONS_PLANT,
     MONS_QUEEN_BEE,
@@ -1781,7 +1781,7 @@ enum monster_type                      // (int) menv[].type
     MONS_FIRE_DRAKE,
     MONS_SHADOW_DRAGON,                //  165
     MONS_VIPER,
-    MONS_GREY_SNAKE,
+    MONS_ANACONDA,
     MONS_DEEP_TROLL,
     MONS_GIANT_BLOWFLY,
     MONS_RED_WASP,                     //  170
@@ -2198,7 +2198,7 @@ enum mon_spellbook_type
     MST_ORC_WIZARD_I     = 0,
     MST_ORC_WIZARD_II,
     MST_ORC_WIZARD_III,
-    MST_GUARDIAN_NAGA    = 10,
+    MST_GUARDIAN_SERPENT    = 10,
     MST_LICH_I           = 20,
     MST_LICH_II,
     MST_LICH_III,
@@ -2560,7 +2560,6 @@ enum artefact_prop_type
     ARTP_CURSED,
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,
-    ARTP_SPIRIT_SHIELD,
     ARTP_NUM_PROPERTIES                 //   30
 };
 

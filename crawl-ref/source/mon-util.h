@@ -51,9 +51,12 @@ enum mon_attack_type
     AT_TENTACLE_SLAP,
     AT_TAIL_SLAP,
     AT_GORE,
+    AT_CONSTRICT,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
-    AT_RANDOM       // Anything but AT_SHOOT.
+    AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap:
+                    //   use it, no weapon: stand there doing nothing.
+    AT_RANDOM       // Anything but AT_SHOOT and AT_WEAP_ONLY.
 };
 
 enum mon_attack_flavour
@@ -86,7 +89,7 @@ enum mon_attack_flavour
     AF_CHAOS,
     AF_STEAL,
     AF_STEAL_FOOD,
-    AF_WEAP_ONLY	// AF_PLAIN if wielding a weapon, nothing if not
+    AF_CRUSH
 };
 
 // Non-spell "summoning" types to give to monsters::mark_summoned(), or
@@ -581,7 +584,7 @@ monster_type random_draconian_monster_species();
 void define_monster(int midx);
 void define_monster(monsters &mons);
 
-void mons_pacify(monsters *mon);
+void mons_pacify(monsters *mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
 
 bool mons_should_fire(struct bolt &beam);
 

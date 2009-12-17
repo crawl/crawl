@@ -61,7 +61,8 @@ public:
 // for definition of type monsters {dlb}
 #include "externs.h"
 
-void get_mimic_item( const monsters *mimic, item_def & item );
+const item_def *give_mimic_item(monsters *mimic);
+const item_def &get_mimic_item(const monsters *mimic);
 int  get_mimic_colour( const monsters *mimic );
 
 void alert_nearby_monsters(void);
