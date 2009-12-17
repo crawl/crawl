@@ -776,38 +776,44 @@ ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 KPROP:      . = w:1 bloody / w:15 nothing
 KPROP:      ' = bloody / w:5 nothing
-KMONS:      a = human name:sickly name_adjective / \
-            human name:monstrous name_adjective / human name:deformed \
-            name_adjective / human name:twisted name_adjective / \
-            human name:grotesque name_adjective / human name:hideous \
-            name_adjective / human name:febrile name_adjective
-KMONS:      b = elf name:sickly name_adjective / \
-            elf name:monstrous name_adjective / elf name:deformed \
-            name_adjective / elf name:twisted name_adjective / \
-            elf name:grotesque name_adjective / elf name:hideous \
-            name_adjective / elf name:febrile name_adjective
-KMONS:      d = orc name:sickly name_adjective / \
-            orc name:monstrous name_adjective / orc name:deformed \
-            name_adjective / orc name:twisted name_adjective / \
-            orc name:grotesque name_adjective / orc name:hideous \
-            name_adjective / orc name:febrile name_adjective
+KMONS:      a = human name:sickly name_adjective tile:mons_deformed_human / \
+            human name:monstrous name_adjective tile:mons_deformed_human  / \
+            human name:deformed name_adjective tile:mons_deformed_human   / \
+            human name:twisted name_adjective tile:mons_deformed_human    / \
+            human name:grotesque name_adjective tile:mons_deformed_human  / \
+            human name:hideous name_adjective tile:mons_deformed_human    / \
+            human name:febrile name_adjective tile:mons_deformed_human
+KMONS:      b = elf name:sickly name_adjective tile:mons_deformed_elf     / \
+            elf name:monstrous name_adjective tile:mons_deformed_elf      / \
+            elf name:deformed name_adjective tile:mons_deformed_elf       / \
+            elf name:twisted name_adjective tile:mons_deformed_elf        / \
+            elf name:grotesque name_adjective tile:mons_deformed_elf      / \
+            elf name:hideous name_adjective tile:mons_deformed_elf        / \
+            elf name:febrile name_adjective tile:mons_deformed_elf
+KMONS:      d = orc name:sickly name_adjective tile:mons_deformed_orc     / \
+            orc name:monstrous name_adjective tile:mons_deformed_orc      / \
+            orc name:deformed name_adjective tile:mons_deformed_orc       / \
+            orc name:twisted name_adjective tile:mons_deformed_orc        / \
+            orc name:grotesque name_adjective tile:mons_deformed_orc      / \
+            orc name:hideous name_adjective tile:mons_deformed_orc        / \
+            orc name:febrile name_adjective tile:mons_deformed_orc
 KMONS:      u = ugly thing / w:2 very ugly thing
 KMONS:      J = pulsating lump
 KMONS:      x = small abomination
 KMONS:      X = large abomination
 KMONS:      e = giant eyeball
 SUBST:      " = J:1 / .:6
-KMONS:      8 = col:red clay golem name:flesh_golem name_replace
+KMONS:      8 = col:red clay golem name:flesh_golem name_replace \
+            tile:mons_flesh_golem name_descriptor
 KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
             name_replace
 MARKER:     M = lua:MonPropsMarker:new {description="This terrifying creation " \
             .. "looks to have been constructed from the bodyparts of every monstrous " \
-            .. "creature imaginable.\n"}
-MARKER:     M = lua:MonPropsMarker:new {quote='\"I beheld the wretch -- the ' \
-            .. 'miserable monster whom I had created. He held up the curtain ' \
-            .. 'of the bed; and his eyes, if eyes they may be called, were ' \
-            .. 'fixed on me. His jaws opened, and he muttered some inarticulate ' \
-            .. 'sounds, while a grin wrinkled his cheeks."\n  -Frankenstein, Mary Shelley.'}
+            .. "creature imaginable.\n", quote="\"I beheld the wretch -- the "    \
+            .. "miserable monster whom I had created. He held up the curtain "    \
+            .. "of the bed; and his eyes, if eyes they may be called, were "      \
+            .. "fixed on me. His jaws opened, and he muttered some inarticulate " \
+            .. "sounds, while a grin wrinkled his cheeks.\"\n  -Frankenstein, Mary Shelley."}
 MARKER:     8 = lua:MonPropsMarker:new {description="An animated mound of misshapen flesh.\n"}
 :           local sickdesc = "This poor creature looks hideously deformed.\n"
 MARKER:     a = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
