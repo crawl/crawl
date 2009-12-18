@@ -3202,9 +3202,12 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
         numdemons = std::min(numdemons + 1, 14);
 
         // Limit number of demons by experience level.
-        const int maxdemons = (you.max_level * 2);
-        if (numdemons > maxdemons)
-            numdemons = maxdemons;
+        if (!you.penance[GOD_XOM])
+        {
+            const int maxdemons = (you.max_level * 2);
+            if (numdemons > maxdemons)
+                numdemons = maxdemons;
+        }
 
         int num_summoned = 0;
         for (int i = 0; i < numdemons; ++i)
