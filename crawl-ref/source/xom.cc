@@ -3261,8 +3261,8 @@ static bool _allow_xom_banishment()
         return (true);
 
     // If Xom is bored, banishment becomes viable earlier.
-    if (_xom_is_bored() && _will_not_banish())
-        return (false);
+    if (_xom_is_bored())
+        return (!_will_not_banish());
 
     // Below the minimum experience level, only fake banishment is allowed.
     if (!_has_min_banishment_level())
@@ -3287,8 +3287,7 @@ static int _xom_maybe_reverts_banishment(bool debug = false)
 
     // Sometimes Xom will immediately revert the banishment.
     // Always so, if the banishment happened below the minimum exp level.
-    if (!_xom_feels_nasty() && !_has_min_banishment_level()
-        || x_chance_in_y(you.piety, 1000))
+    if (!_has_min_banishment_level() || x_chance_in_y(you.piety, 1000))
     {
         if (!debug)
         {
