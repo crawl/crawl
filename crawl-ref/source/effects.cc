@@ -1912,7 +1912,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
             int skill = you.skills[i];
 
-            if (skill == 27)
+            if (skill == 27 || you.species == SP_DEMIGOD && i == SK_INVOCATIONS)
             {
                 weights[i] = 0;
                 continue;
