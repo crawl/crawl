@@ -33,6 +33,7 @@
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "mgen_data.h"
 #include "coord.h"
 #include "mon-stuff.h"
@@ -1707,6 +1708,14 @@ static void _handle_monster_move(monsters *monster)
             continue;
         }
         old_energy = monster->speed_increment;
+
+        if (mons_is_projectile(monster->type))
+        {
+            if (iood_act(*monster))
+                return;
+            monster->lose_energy(EUT_MOVE);
+            continue;
+        }
 
         monster->shield_blocks = 0;
 
@@ -3413,6 +3422,13 @@ static bool _monster_move(monsters *monster)
             || monster->type == MONS_CURSE_TOE)
         {
             place_cloud( CLOUD_MIASMA, monster->pos(),
+                         2 + random2(3), monster->kill_alignment(),
+                         KILL_MON_MISSILE );
+        }
+
+        if (monster->type == MONS_ORB_OF_DESTRUCTION)
+        {
+            place_cloud( CLOUD_TLOC_ENERGY, monster->pos(),
                          2 + random2(3), monster->kill_alignment(),
                          KILL_MON_MISSILE );
         }

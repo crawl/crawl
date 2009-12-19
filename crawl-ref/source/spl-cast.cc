@@ -37,6 +37,7 @@
 #include "message.h"
 #include "mon-cast.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -1511,6 +1512,13 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         // Should only be available from Staff of Dispater and Sceptre
         // of Asmodeus.
         if (!zapping(ZAP_HELLFIRE, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_IOOD:
+        if (!player_tracer(ZAP_IOOD, powc, beam))
+            return (SPRET_ABORT);
+        if (!cast_iood(&you, powc, &beam))
             return (SPRET_ABORT);
         break;
 

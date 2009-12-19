@@ -2590,6 +2590,19 @@
 },
 
 {
+    SPELL_IOOD, "Iskenderun's Orb of Destruction",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET,
+     7,
+     200,
+     9, 9,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

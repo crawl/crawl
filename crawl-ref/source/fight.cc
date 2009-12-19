@@ -4306,7 +4306,8 @@ bool melee_attack::mons_attack_mons()
 bool melee_attack::mons_self_destructs()
 {
     if (attacker->id() == MONS_GIANT_SPORE
-        || attacker->id() == MONS_BALL_LIGHTNING)
+        || attacker->id() == MONS_BALL_LIGHTNING
+        || attacker->id() == MONS_ORB_OF_DESTRUCTION)
     {
         attacker_as_monster()->hit_points = -1;
         // Do the explosion right now.

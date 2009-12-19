@@ -1357,7 +1357,23 @@ const zap_info zap_data[] = {
         false,
         false,
         0
-    }
+    },
+
+    {
+        ZAP_IOOD,
+        "0",
+        200,
+        NULL,
+        new tohit_calculator<AUTOMATIC_HIT>,
+        WHITE,
+        false,
+        BEAM_NUKE,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false,
+        0
+    },
 };
 
 static void _zappy(zap_type z_type, int power, bolt &pbolt)

@@ -2010,7 +2010,8 @@ bool mons_wields_two_weapons(const monsters *mon)
 
 bool mons_self_destructs(const monsters *m)
 {
-    return (m->type == MONS_GIANT_SPORE || m->type == MONS_BALL_LIGHTNING);
+    return (m->type == MONS_GIANT_SPORE || m->type == MONS_BALL_LIGHTNING
+        || m->type == MONS_ORB_OF_DESTRUCTION);
 }
 
 int mons_base_damage_brand(const monsters *m)
