@@ -6028,6 +6028,12 @@ bool bolt::nasty_to(const monsters *mon) const
     if (flavour == BEAM_HOLY)
         return (mon->res_holy_energy(agent()) <= 0);
 
+    // The orbs are made of pure disintegration energy.  This also has the side
+    // effect of not stopping us from firing further orbs when the previous one
+    // is still flying.
+    if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
+        return (mon->type != MONS_ORB_OF_DESTRUCTION);
+
     // Take care of other non-enchantments.
     if (!is_enchantment())
         return (true);
