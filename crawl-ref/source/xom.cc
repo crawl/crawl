@@ -3163,6 +3163,17 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     return (rc);
 }
 
+static bool _has_min_animated_weapon_level()
+{
+    if (you.penance[GOD_XOM])
+        return (true);
+
+    if (_xom_is_bored())
+        return (you.max_level >= 4);
+
+    return (you.max_level >= 7);
+}
+
 static int _xom_summon_hostiles(int sever, bool debug = false)
 {
     bool rc = false;
@@ -3170,8 +3181,9 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
 
     int result = XOM_DID_NOTHING;
 
-    // Nasty, but fun. Only allow for xp >= 4.
-    if (player_weapon_wielded() && you.max_level >= 4 && one_chance_in(4))
+    // Nasty, but fun.
+    if (player_weapon_wielded() && _has_min_animated_weapon_level()
+        && one_chance_in(4))
     {
         if (debug)
             return (XOM_BAD_ANIMATE_WPN);
