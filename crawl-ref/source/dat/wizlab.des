@@ -830,7 +830,11 @@ MARKER:     ? = lua:fog_machine { \
                  size_buildup_time = 25, cloud_type = "mutagenic fog" \
              }
 LFLOORCOL:  magenta
+LFLOORTILE: floor_nerves
+LROCKTILE:  wall_flesh
 TILE:       c = wall_flesh
+TILE:       m = wall_transparent_flesh
+TILE:       + = no_random dngn_fleshy_orifice
 COLOUR:     m = yellow
 COLOUR:     c+ = lightred
 COLOUR:     W = green
