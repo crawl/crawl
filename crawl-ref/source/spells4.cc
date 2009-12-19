@@ -1765,8 +1765,9 @@ bool cast_apportation(int pow, const coord_def& where)
     }
 
     // Let's look at the top item in that square...
+    // And don't allow apporting from shop inventories.
     const int item_idx = igrd(where);
-    if (item_idx == NON_ITEM)
+    if (item_idx == NON_ITEM || !in_bounds(where))
     {
         // Maybe the player *thought* there was something there (a mimic.)
         if (monsters* m = monster_at(where))

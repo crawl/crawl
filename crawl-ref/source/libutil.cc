@@ -136,19 +136,28 @@ std::string strip_filename_unsafe_chars(const std::string &s)
     return replace_all_of(s, " .&`\"\'|;{}()[]<>*%$#@!~?", "");
 }
 
+std::string vmake_stringf(const char* s, va_list args)
+{
+    char buf1[400];
+    size_t len = vsnprintf(buf1, sizeof buf1, s, args);
+    if (len < sizeof buf1)
+        return (buf1);
+
+    char *buf2 = (char*)malloc(len + 1);
+    vsnprintf(buf2, len + 1, s, args);
+    std::string ret(buf2);
+    free(buf2);
+
+    return (ret);
+}
+
 std::string make_stringf(const char *s, ...)
 {
     va_list args;
     va_start(args, s);
-
-    size_t len = vsnprintf(NULL, 0, s, args);
-    char *buf = (char *)malloc(len + 1);
-    vsnprintf(buf, len + 1, s, args);
-    std::string ret(buf);
-    free(buf);
-
+    std::string ret = vmake_stringf(s, args);
     va_end(args);
-    return (ret);
+    return ret;
 }
 
 std::string &escape_path_spaces(std::string &s)
@@ -662,42 +671,6 @@ void usleep(unsigned long time)
 
     select(0, NULL, NULL, NULL, &timer);
 }
-#endif
-
-// Not the greatest version of snprintf, but a functional one that's
-// a bit safer than raw sprintf().  Note that this doesn't do the
-// special behaviour for size == 0, largely because the return value
-// in that case varies depending on which standard is being used (SUSv2
-// returns an unspecified value < 1, whereas C99 allows str == NULL
-// and returns the number of characters that would have been written). -- bwr
-#ifdef NEED_SNPRINTF
-
-#include <string.h>
-
-int snprintf( char *str, size_t size, const char *format, ... )
-{
-    va_list argp;
-    va_start( argp, format );
-
-    char *buff = new char [ 10 * size ];  // hopefully enough
-    if (!buff)
-        end(1, false, "Out of memory\n");
-
-    vsprintf( buff, format, argp );
-    strncpy( str, buff, size );
-    str[ size - 1 ] = 0;
-
-    int ret = strlen( str );
-    if ((unsigned int) ret == size - 1 && strlen( buff ) >= size)
-        ret = -1;
-
-    delete [] buff;
-
-    va_end( argp );
-
-    return (ret);
-}
-
 #endif
 
 #ifndef USE_TILE

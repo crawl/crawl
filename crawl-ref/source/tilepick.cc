@@ -2425,7 +2425,7 @@ static int _tileidx_shop(coord_def where)
 int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
 {
     int override = env.tile_flv[gx][gy].feat;
-    if (override)
+    if (override && !feat_is_door(grd[gx][gy]))
         return override;
 
     switch (feat)
@@ -3067,6 +3067,60 @@ int tileidx_spell(spell_type spell)
     }
 }
 
+// Specifically for vault-overwritten doors. We have three "sets" of tiles that
+// can be dealt with. The tile sets should be 2, 3, 8 and 9 respectively. They
+// are:
+//  2. Closed, open.
+//  3. Detected, closed, open.
+//  8. Closed, open, gate left closed, gate middle closed, gate right closed,
+//     gate left open, gate middle open, gate right open.
+//  9. Detected, closed, open, gate left closed, gate middle closed, gate right
+//     closed, gate left open, gate middle open, gate right open.
+int _get_door_offset (int base_tile, bool opened = false,
+                      bool detected = false, int gateway_type = 0)
+{
+    int count = tile_dngn_count(base_tile);
+    if (count == 1)
+        return 0;
+
+    // The location of the default "closed" tile.
+    int offset;
+
+    switch (count)
+    {
+    case 2:
+        return ((opened) ? 1: 0);
+    case 3:
+        if (opened)
+            return 2;
+        else if (detected)
+            return 0;
+        else
+            return 1;
+    case 8:
+        // But is BASE_TILE for others.
+        offset = 0;
+        break;
+    case 9:
+        // It's located at BASE_TILE+1 for tile sets with detected doors
+        offset = 1;
+        break;
+    default:
+        // Passed a non-door tile base, pig out now.
+        ASSERT(false);
+    }
+
+    // If we've reached this point, we're dealing with a gate.
+    // Don't believe gateways deal differently with detection.
+    if (detected)
+        return 0;
+
+    if (!opened && !detected && gateway_type == 0)
+        return 0;
+
+    return offset + gateway_type;
+}
+
 // Modify wall tile index depending on floor/wall flavour.
 static inline void _finalise_tile(unsigned int *tile,
                                   unsigned char wall_flv,
@@ -3093,7 +3147,18 @@ static inline void _finalise_tile(unsigned int *tile,
     else if (orig == TILE_WALL_NORMAL)
         (*tile) = wall_flv;
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
-        (*tile) = orig + std::min((int)special_flv, 3);
+    {
+        int override = env.tile_flv(gc).feat;
+        if (override)
+        {
+            // XXX: This doesn't deal properly with detected doors.
+            bool opened = (orig == TILE_DNGN_OPEN_DOOR);
+            int offset = _get_door_offset(override, opened, false, special_flv);
+            (*tile) = override + offset;
+        }
+        else
+            (*tile) = orig + std::min((int)special_flv, 3);
+    }
     else if (orig < TILE_DNGN_MAX)
     {
         // Some tiles may change from turn to turn, but only if in view.
@@ -4356,7 +4421,7 @@ void tile_init_flavour(const coord_def &gc)
         env.tile_flv(gc).wall = env.tile_default.wall + wall_rnd;
     }
 
-    if (grd(gc) == DNGN_OPEN_DOOR || feat_is_closed_door(grd(gc)))
+    if (feat_is_door(grd(gc)))
     {
         // Check for horizontal gates.
 

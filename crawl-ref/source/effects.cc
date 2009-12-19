@@ -1011,13 +1011,13 @@ void random_uselessness(int scroll_slot)
 
     case 6:
         mpr("You hear the tinkle of a tiny bell.", MSGCH_SOUND);
-        noisy(10, you.pos());
+        noisy(2, you.pos());
         cast_summon_butterflies(100);
         break;
 
     case 7:
         mprf(MSGCH_SOUND, "You hear %s.", weird_sound().c_str());
-        noisy(10, you.pos());
+        noisy(2, you.pos());
         break;
     }
 }
@@ -1762,6 +1762,30 @@ static int _book_weight(book_type book)
     return (total_weight);
 }
 
+static bool _is_magic_skill(int skill)
+{
+    return (skill >= SK_SPELLCASTING && skill < SK_INVOCATIONS);
+}
+
+static bool _skill_useless_with_god(int skill)
+{
+    switch (you.religion)
+    {
+    case GOD_TROG:
+        return (_is_magic_skill(skill) || skill == SK_INVOCATIONS);
+    case GOD_ZIN:
+    case GOD_SHINING_ONE:
+    case GOD_ELYVILON:
+    case GOD_FEDHAS:
+        return (skill == SK_NECROMANCY);
+    case GOD_XOM:
+    case GOD_NEMELEX_XOBEH:
+        return (skill == SK_INVOCATIONS);
+    default:
+        return (false);
+    }
+}
+
 static bool _do_book_acquirement(item_def &book, int agent)
 {
     // items() shouldn't make book a randart for acquirement items.
@@ -1813,7 +1837,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             if (i == SK_SPELLCASTING && weight >= 1)
                 weight--;
 
-            if (i >= SK_SPELLCASTING && i <= SK_POISON_MAGIC)
+            if (_is_magic_skill(i))
                 magic_weights += weight;
             else
                 other_weights += weight;
@@ -1912,7 +1936,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
             int skill = you.skills[i];
 
-            if (skill == 27)
+            if (skill == 27 || you.species == SP_DEMIGOD && i == SK_INVOCATIONS)
             {
                 weights[i] = 0;
                 continue;
@@ -1928,9 +1952,14 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 w += 5;
             }
 
+            // Greatly reduce the chances of getting a manual for a skill
+            // you couldn't use unless you switched your religion.
+            if (_skill_useless_with_god(i))
+                w /= 2;
+
             // If we don't have any magic skills, make non-magic skills
             // more likely.
-            if (!knows_magic && (i < SK_SPELLCASTING || i > SK_POISON_MAGIC))
+            if (!knows_magic && !_is_magic_skill(i))
                 w *= 2;
 
             weights[i] = w;
@@ -1946,8 +1975,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
         // Set number of reads possible before it "crumbles to dust".
         book.plus2    = 3 + random2(15);
         break;
-    }
-    }
+    } // manuals
+    } // switch book choice
     return (true);
 }
 

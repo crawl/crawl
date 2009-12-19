@@ -1324,21 +1324,18 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
 
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
-    char throw_buff[ITEMNAME_SIZE];
     if (projected == LRET_LAUNCHED)
     {
-        snprintf(throw_buff, sizeof(throw_buff), "Shot with a%s %s by %s",
+        pbolt.aux_source = make_stringf("Shot with a%s %s by %s",
                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
                  monster->name(DESC_NOCAP_A).c_str());
     }
     else
     {
-        snprintf(throw_buff, sizeof(throw_buff), "Hit by a%s %s thrown by %s",
+        pbolt.aux_source = make_stringf("Hit by a%s %s thrown by %s",
                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
                  monster->name(DESC_NOCAP_A).c_str());
     }
-
-    pbolt.aux_source = throw_buff;
 
     // Add everything up.
     pbolt.hit = baseHit + random2avg(exHitBonus, 2) + ammoHitBonus;

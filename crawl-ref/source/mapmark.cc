@@ -379,8 +379,12 @@ std::string map_lua_marker::property(const std::string &pname) const
     push_fn_args("property");
     lua_pushstring(dlua, pname.c_str());
     if (!callfn("property", false, 4))
+    {
+        mprf(MSGCH_ERROR, "Lua marker property (%s) error: %s",
+             pname.c_str(), dlua.error.c_str());
         return make_stringf("error (prop:%s): %s",
                             pname.c_str(), dlua.error.c_str());
+    }
     std::string result;
     if (lua_isstring(dlua, -1))
         result = lua_tostring(dlua, -1);

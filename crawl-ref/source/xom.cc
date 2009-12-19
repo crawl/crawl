@@ -3202,9 +3202,12 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
         numdemons = std::min(numdemons + 1, 14);
 
         // Limit number of demons by experience level.
-        const int maxdemons = (you.max_level * 2);
-        if (numdemons > maxdemons)
-            numdemons = maxdemons;
+        if (!you.penance[GOD_XOM])
+        {
+            const int maxdemons = (you.max_level * 2);
+            if (numdemons > maxdemons)
+                numdemons = maxdemons;
+        }
 
         int num_summoned = 0;
         for (int i = 0; i < numdemons; ++i)
@@ -3258,8 +3261,8 @@ static bool _allow_xom_banishment()
         return (true);
 
     // If Xom is bored, banishment becomes viable earlier.
-    if (_xom_is_bored() && _will_not_banish())
-        return (false);
+    if (_xom_is_bored())
+        return (!_will_not_banish());
 
     // Below the minimum experience level, only fake banishment is allowed.
     if (!_has_min_banishment_level())
@@ -3284,8 +3287,7 @@ static int _xom_maybe_reverts_banishment(bool debug = false)
 
     // Sometimes Xom will immediately revert the banishment.
     // Always so, if the banishment happened below the minimum exp level.
-    if (!_xom_feels_nasty() && !_has_min_banishment_level()
-        || x_chance_in_y(you.piety, 1000))
+    if (!_has_min_banishment_level() || x_chance_in_y(you.piety, 1000))
     {
         if (!debug)
         {
@@ -3666,9 +3668,21 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 #endif
 
     const bool was_bored = _xom_is_bored();
+    const bool good_act = niceness && !one_chance_in(20);
     int result = XOM_DID_NOTHING;
-    if (niceness && !one_chance_in(20))
+    if (good_act)
     {
+        // Make good acts at zero tension less likely, especially if Xom
+        // is in a bad mood.
+        if (tension == 0 && !x_chance_in_y(you.piety, MAX_PIETY))
+        {
+#ifdef NOTE_DEBUG_XOM
+            take_note(Note(NOTE_MESSAGE, 0, 0, "suppress good act because of "
+                           "zero tension"), true);
+#endif
+            return (XOM_GOOD_NOTHING);
+        }
+
         // Good stuff.
         while (result == XOM_DID_NOTHING)
             result = _xom_is_good(sever, tension, debug);
@@ -3687,6 +3701,19 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
                       true);
         }
 #endif
+
+        // Make bad acts at non-zero tension less likely, especially if Xom
+        // is in a good mood.
+        if (!_xom_feels_nasty() && tension > random2(10)
+            && x_chance_in_y(you.piety, MAX_PIETY))
+        {
+#ifdef NOTE_DEBUG_XOM
+            snprintf(info, INFO_SIZE, "suppress bad act because of %d tension",
+                     tension);
+            take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
+#endif
+            return (XOM_BAD_NOTHING);
+        }
 
         // Bad mojo.
         while (result == XOM_DID_NOTHING)
@@ -4015,15 +4042,15 @@ static const char* _xom_effect_to_name(int effect)
     // See xom.h
     static const char* _xom_effect_names[] =
     {
-        "nothing",
+        "bugginess",
         // good acts
-        "potion", "spell (tension)", "spell (no tension)", "mapping",
-        "confuse monsters", "single ally", "animate monster weapon",
+        "nothing", "potion", "spell (tension)", "spell (no tension)",
+        "mapping", "confuse monsters", "single ally", "animate monster weapon",
         "annoyance gift", "random item gift", "acquirement", "summon allies",
         "polymorph", "swap monsters", "teleportation", "vitrification",
         "mutation", "permanent ally", "lightning", "change scenery",
         // bad acts
-        "miscast (pseudo)", "miscast (minor)", "miscast (major)",
+        "nothing", "miscast (pseudo)", "miscast (minor)", "miscast (major)",
         "miscast (nasty)", "stat loss", "teleportation", "swap weapons",
         "chaos upgrade", "mutation", "polymorph", "repel stairs", "confusion",
         "draining", "torment", "animate weapon", "summon demons",
@@ -4118,8 +4145,9 @@ void debug_xom_effects()
         // Repeat N times.
         for (int i = 0; i < N; ++i)
         {
-            bool niceness = xom_is_nice(tension);
-            int result    = xom_acts(niceness, sever, tension, true);
+            const bool niceness = xom_is_nice(tension);
+            const int  result   = xom_acts(niceness, sever, tension, true);
+
             mood_effects.push_back(result);
             all_effects[0].push_back(result);
 

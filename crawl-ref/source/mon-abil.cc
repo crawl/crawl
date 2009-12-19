@@ -647,7 +647,7 @@ static bool _orc_battle_cry(monsters *chief)
             }
 
             // The yell happens whether you happen to see it or not.
-            noisy(15, chief->pos(), chief->mindex());
+            noisy(LOS_RADIUS, chief->pos(), chief->mindex());
 
             // Disabling detailed frenzy announcement because it's so spammy.
             const msg_channel_type channel =
@@ -1203,7 +1203,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         if (one_chance_in(5)
             || monster->foe == MHITYOU && !already_mesmerised && coinflip())
         {
-            noisy(12, monster->pos(), monster->mindex(), true);
+            noisy(LOS_RADIUS, monster->pos(), monster->mindex(), true);
 
             bool did_resist = false;
             if (you.can_see(monster))

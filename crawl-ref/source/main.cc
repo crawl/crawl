@@ -592,12 +592,18 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'X':
-        if (you.religion == GOD_XOM)
-            xom_acts(abs(you.piety - HALF_MAX_PIETY));
-        else
-            xom_acts(coinflip(), random_range(0, HALF_MAX_PIETY));
+    {
+        int result = 0;
+        do
+        {
+            if (you.religion == GOD_XOM)
+                result = xom_acts(abs(you.piety - HALF_MAX_PIETY));
+            else
+                result = xom_acts(coinflip(), random_range(0, HALF_MAX_PIETY));
+        }
+        while (result == 0);
         break;
-
+    }
     case 'p':
         dungeon_terrain_changed(you.pos(), DNGN_ENTER_PANDEMONIUM, false);
         break;

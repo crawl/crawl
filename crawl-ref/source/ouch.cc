@@ -1082,8 +1082,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             std::string damage_desc;
             if (!see_source)
             {
-                snprintf(info, INFO_SIZE, "something (%d)", dam);
-                damage_desc = info;
+                damage_desc = make_stringf("something (%d)", dam);
             }
             else
             {

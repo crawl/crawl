@@ -2227,6 +2227,14 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
 
     default:
+        if (armour_is_hide(item, true)
+            || item.sub_type == ARM_ANIMAL_SKIN
+            || item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
+        {
+            rc = SPARM_NORMAL;
+            break;
+        }
+
         rc = coinflip() ? SPARM_COLD_RESISTANCE : SPARM_FIRE_RESISTANCE;
 
         if (one_chance_in(9))
@@ -2435,16 +2443,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     // into armour).
     if (force_good)
         hide2armour(item);
-
-    // Skin armours and crystal plate mail normally don't get egos, but
-    // can be randarts.
-    if (armour_is_hide(item, true)
-        || item.sub_type == ARM_ANIMAL_SKIN
-        || item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
-    {
-        if (!forced_ego)
-            set_item_ego_type(item, OBJ_ARMOUR, SPARM_NORMAL);
-    }
 
     // Don't overenchant items.
     if (item.plus > armour_max_enchant(item))

@@ -228,7 +228,7 @@ DEPTH:  14-16, 17-19, Orc:3-4, !Lair, !Slime
 : place_unique(_G, "Nergalle")
 
 NAME:   uniq_nessos
-DEPTH:  14-16, 17-19, !Lair, !Slime
+DEPTH:  11-17, !Lair, !Slime
 : place_unique(_G, "Nessos")
 
 NAME:   uniq_nikola

@@ -136,9 +136,7 @@ static void _redraw_all(void)
 static std::string _uid_as_string()
 {
 #ifdef MULTIUSER
-    char struid[20];
-    snprintf( struid, sizeof struid, "-%d", static_cast<int>(getuid()) );
-    return std::string(struid);
+    return make_stringf("-%d", static_cast<int>(getuid()));
 #else
     return std::string();
 #endif

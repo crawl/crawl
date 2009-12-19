@@ -375,8 +375,8 @@ static void _direction_again(dist& moves, targetting_type restricts,
         targ_types++;
     if (you.prev_grd_targ != coord_def(0, 0))
         targ_types++;
-#endif
     ASSERT(targ_types == 1);
+#endif
 
     // Discard keys until we get to a set-target command
     command_type key_command = CMD_NO_CMD;
@@ -1594,6 +1594,16 @@ void direction(dist& moves, const targetting_type restricts,
                 break;
             if (monster_at(moves.target))
                 debug_stethoscope(mgrd(moves.target));
+            break;
+
+        case CMD_TARGET_WIZARD_HURT_MONSTER:
+            if (!you.wizard || !in_bounds(moves.target))
+                break;
+            if (monster_at(moves.target))
+            {
+                monster_at(moves.target)->hit_points = 1;
+                mpr("Brought the mon down to near death.");
+            }
             break;
 #endif
         case CMD_TARGET_DESCRIBE:

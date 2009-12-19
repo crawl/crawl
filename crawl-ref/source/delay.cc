@@ -16,6 +16,7 @@
 #include "attitude-change.h"
 #include "clua.h"
 #include "command.h"
+#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
@@ -1602,7 +1603,7 @@ void armour_wear_effects(const int item_slot)
 
 static command_type _get_running_command()
 {
-    if (kbhit())
+    if (kbhit() || !in_bounds(you.pos() + you.running.pos))
     {
         stop_running();
         return CMD_NO_CMD;

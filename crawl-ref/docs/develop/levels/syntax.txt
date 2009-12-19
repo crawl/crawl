@@ -854,6 +854,10 @@ TILE:     x = wall_flesh
           Like COLOUR and FTILE, this should be used sparingly and to good
           effect.
 
+          To override doors, use the specific tile set in combination with the
+          "no_random" specifier. Example:
+              + = no_random dngn_fleshy_orifice
+
 SHUFFLE:  def, 12/3?
           This allows you to randomly permute glyphs on the map. There are
           two ways:
@@ -996,6 +1000,8 @@ KMASK:    Z = no_monster_gen
              entry vaults.
           * "no_pool_fixup": prevents a water square next to land from being
              randomly converted from deep water (the default) to shallow.
+          * "no_wall_fixup": prevents (rock) walls from being converted to
+             the level's default wall type, such as in Vaults.
           * "no_secret_doors": prevents a door from randomly being turned
              into a secret door.
 

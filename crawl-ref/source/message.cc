@@ -413,6 +413,7 @@ int channel_to_colour( msg_channel_type channel, int param )
 static void do_message_print( msg_channel_type channel, int param,
                               const char *format, va_list argp )
 {
+    // Is this limit intentional?
     char buff[200];
     vsnprintf( buff, sizeof( buff ), format, argp );
     buff[199] = 0;
@@ -709,7 +710,12 @@ static void mpr_store_messages(const std::string& message,
         }
     }
 
-    New_Message_Count++;
+    // Prompt lines are presumably shown to / seen by the player accompanied
+    // by a request for input, which should do the equivalent of a more(); to
+    // save annoyance, don't bump New_Message_Count for prompts.
+    if (channel != MSGCH_PROMPT || New_Message_Count > 0)
+        New_Message_Count++;
+
     Message_Line++;
 
     // Reset colour.
@@ -1072,11 +1078,7 @@ void more(bool user_forced)
 
         int keypress = 0;
 
-        int line = crawl_view.msgsz.y - 1;
-
-        // Force scroll.
-        if (Options.delay_message_clear)
-            line++;
+        int line = std::max(Message_Line, crawl_view.msgsz.y - 1);
 
         if (Tutorial.tutorial_left)
         {

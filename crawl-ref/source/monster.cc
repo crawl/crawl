@@ -5969,6 +5969,13 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
             && menv[number].type == MONS_KRAKEN)
         {
             menv[number].hurt(&you, damage, flavour);
+
+            // We could be removed, undo this or certain post-hit effects will cry.
+            if (invalid_monster(this))
+            {
+                type = MONS_KRAKEN_TENTACLE;
+                hit_points = -1;
+            }
         }
     }
     else if (type == MONS_BUSH && flavour == BEAM_FIRE

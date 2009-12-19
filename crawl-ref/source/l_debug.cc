@@ -13,6 +13,8 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "env.h"
+#include "initfile.h"
+#include "godwrath.h"
 #include "message.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
@@ -170,7 +172,29 @@ LUAFN(debug_dismiss_adjacent)
 
     return (0);
 }
- 
+
+LUAFN(debug_god_wrath)
+{
+    const char *god_name = luaL_checkstring(ls, 1);
+    if (!god_name)
+    {
+        std::string err = "god_wrath requires a god!";
+        return (luaL_argerror(ls, 1, err.c_str()));
+    }
+
+    god_type god = str_to_god(god_name);
+    if (god == GOD_NO_GOD)
+    {
+        std::string err = make_stringf("'%s' matches no god.", god_name);
+        return (luaL_argerror(ls, 1, err.c_str()));
+    }
+
+    bool no_bonus = lua_toboolean(ls, 2);
+
+    divine_retribution(god, no_bonus);
+    return (0);
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
@@ -182,6 +206,7 @@ const struct luaL_reg debug_dlib[] =
 { "never_die", debug_never_die },
 { "cull_monsters", debug_cull_monsters},
 { "dismiss_adjacent", debug_dismiss_adjacent},
+{ "god_wrath", debug_god_wrath},
 
 { NULL, NULL }
 };

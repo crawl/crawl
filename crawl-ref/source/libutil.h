@@ -65,6 +65,7 @@ int  ends_with(const std::string &s, const char *suffixes[]);
 
 std::string strip_filename_unsafe_chars(const std::string &s);
 
+std::string vmake_stringf(const char *format, va_list args);
 std::string make_stringf(const char *format, ...);
 
 std::string replace_all(std::string s,
@@ -159,10 +160,6 @@ std::string comma_separated_line(Z start, Z end,
 
 #ifdef NEED_USLEEP
 void usleep( unsigned long time );
-#endif
-
-#ifdef NEED_SNPRINTF
-int snprintf( char *str, size_t size, const char *format, ... );
 #endif
 
 #ifndef USE_TILE

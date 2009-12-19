@@ -1963,7 +1963,7 @@ bool bolt::hit_wall()
 
     // Press trigger/switch/button in wall if hit by something solid
     // or solid-ish.
-    if (!is_explosion && !is_tracer && !monster_at(pos())
+    if (in_bounds(pos()) && !is_explosion && !is_tracer && !monster_at(pos())
         && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
     {
         dgn_event event(DET_WALL_HIT, pos());;
@@ -1972,7 +1972,7 @@ bool bolt::hit_wall()
         dungeon_events.fire_vetoable_position_event(event, target);
     }
 
-    if (affects_wall(feat))
+    if (in_bounds(pos()) && affects_wall(feat))
         affect_wall();
     else if (is_bouncy(feat) && !in_explosion_phase)
         bounce();
@@ -2186,7 +2186,7 @@ void bolt::do_fire()
         oldValue = set_buffering(false);
 #endif
 
-    while (in_bounds(pos()))
+    while (map_bounds(pos()))
     {
         path_taken.push_back(pos());
 
@@ -2236,16 +2236,16 @@ void bolt::do_fire()
         avoid_self = false;
     }
 
-    if (!in_bounds(pos()))
+    if (!map_bounds(pos()))
     {
         ASSERT(!aimed_at_spot);
 
         int tries = std::max(GXM, GYM);
-        while (!in_bounds(ray.pos()) && tries-- > 0)
+        while (!map_bounds(ray.pos()) && tries-- > 0)
             ray.regress();
 
         // Something bizarre happening if we can't get back onto the map.
-        ASSERT(in_bounds(pos()));
+        ASSERT(map_bounds(pos()));
     }
 
     // The beam has terminated.
@@ -3668,7 +3668,7 @@ void bolt::reflect()
 
     // If it bounced off a wall before being reflected then head back towards
     // the wall.
-    if (bounces > 0 && in_bounds(bounce_pos))
+    if (bounces > 0 && map_bounds(bounce_pos))
         target = bounce_pos;
     else
         target = source;
