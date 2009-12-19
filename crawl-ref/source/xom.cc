@@ -3680,7 +3680,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
             take_note(Note(NOTE_MESSAGE, 0, 0, "suppress good act because of "
                            "zero tension"), true);
 #endif
-            return (XOM_GOOD_NOTHING);
+            return (debug ? XOM_GOOD_NOTHING : XOM_DID_NOTHING);
         }
 
         // Good stuff.
@@ -3712,7 +3712,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
                      tension);
             take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
 #endif
-            return (XOM_BAD_NOTHING);
+            return (debug ? XOM_BAD_NOTHING : XOM_DID_NOTHING);
         }
 
         // Bad mojo.
