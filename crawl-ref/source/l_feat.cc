@@ -36,6 +36,7 @@ FEATF(_feat_destroys_items, feat_destroys_items)
 FEATF(_feat_is_wall, feat_is_wall)
 FEATF(_feat_is_solid, feat_is_solid)
 FEATF(_feat_is_opaque, feat_is_opaque)
+FEATF(_feat_is_door, feat_is_door)
 FEATF(_feat_is_closed_door, feat_is_closed_door)
 FEATF(_feat_is_secret_door, feat_is_secret_door)
 FEATF(_feat_is_statue_or_idol, feat_is_statue_or_idol)
@@ -63,6 +64,7 @@ const struct luaL_reg feat_dlib[] =
 { "is_wall", _feat_is_wall },
 { "is_solid", _feat_is_solid },
 { "is_opaque", _feat_is_opaque },
+{ "is_door", _feat_is_door },
 { "is_closed_door", _feat_is_closed_door },
 { "is_secret_door", _feat_is_secret_door },
 { "is_statue_or_idol", _feat_is_statue_or_idol },
