@@ -813,6 +813,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_SUMMON_EYEBALLS:
+    case SPELL_SUMMON_BUTTERFLIES:
         return (true);
     default:
         if (check_validity)
@@ -2155,6 +2156,19 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(monster), monster, duration,
                           spell_cast, monster->pos(), monster->foe, 0, god));
+        }
+        return;
+    case SPELL_SUMMON_BUTTERFLIES:
+        if (_mons_abjured(monster, monsterNearby))
+            return;
+
+        duration = std::min(2 + monster->hit_dice / 5, 6);
+        for (int i = 0; i < 15; ++i)
+        {
+            create_monster(
+                mgen_data(MONS_BUTTERFLY, SAME_ATTITUDE(monster),
+                          monster, duration, spell_cast, monster->pos(),
+                          monster->foe, 0, god));
         }
         return;
     }
