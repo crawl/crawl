@@ -430,6 +430,7 @@ ancient_lich MONS_ANCIENT_LICH
 ## Mummies ('M')
 %sdir dc-mon/unique
 menkaure MONS_MENKAURE
+khufu MONS_KHUFU
 %sdir dc-mon
 mummy MONS_MUMMY
 guardian_mummy MONS_GUARDIAN_MUMMY

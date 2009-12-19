@@ -1004,7 +1004,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_MENKAURE:
         return TILEP_MONS_MENKAURE;
     case MONS_KHUFU:
-        return TILEP_MONS_GREATER_MUMMY;    // TODO
+        return TILEP_MONS_KHUFU;
 
     // guardian serpent ('N')
     case MONS_AIZUL:
