@@ -3425,13 +3425,6 @@ static bool _monster_move(monsters *monster)
                          2 + random2(3), monster->kill_alignment(),
                          KILL_MON_MISSILE );
         }
-
-        if (monster->type == MONS_ORB_OF_DESTRUCTION)
-        {
-            place_cloud( CLOUD_TLOC_ENERGY, monster->pos(),
-                         2 + random2(3), monster->kill_alignment(),
-                         KILL_MON_MISSILE );
-        }
     }
     else
     {

@@ -15,6 +15,7 @@
 
 #include "externs.h"
 
+#include "cloud.h"
 #include "coord.h"
 #include "env.h"
 #include "mgen_data.h"
@@ -61,7 +62,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     mon.flags &= ~MF_JUST_SUMMONED;
 
     // Move away from the caster's square.
-    iood_act(mon);
+    iood_act(mon, true);
     mon.lose_energy(EUT_MOVE);
     return (true);
 }
@@ -105,7 +106,7 @@ bool _iood_hit(monsters &mon, const coord_def &pos)
 }
 
 // returns true if the orb is gone
-bool iood_act(monsters &mon)
+bool iood_act(monsters &mon, bool no_trail)
 {
     ASSERT(mons_is_projectile(mon.type));
 
@@ -166,6 +167,13 @@ bool iood_act(monsters &mon)
             monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
             return (true);
         }
+    }
+
+    if (!no_trail)
+    {
+        place_cloud(CLOUD_TLOC_ENERGY, mon.pos(),
+                    2 + random2(3), mon.kill_alignment(),
+                    KILL_MON_MISSILE);
     }
 
     if (!mon.move_to_pos(pos))

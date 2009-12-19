@@ -12,6 +12,6 @@
 bool mons_is_projectile(monster_type mt);
 
 bool cast_iood(actor *caster, int pow, bolt *beam);
-bool iood_act(monsters &mon);
+bool iood_act(monsters &mon, bool no_trail = false);
 
 #endif
