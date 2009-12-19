@@ -172,8 +172,9 @@ bool iood_act(monsters &mon, bool no_trail)
     {
         if (cell_is_solid(pos))
         {
-            simple_monster_message(&mon, (" hits " + feature_description(pos,
-                                    false, DESC_NOCAP_A)).c_str());
+            if (you.see_cell(pos))
+                mprf("%s hits %s", mon.name(DESC_CAP_THE, true).c_str(),
+                     feature_description(pos, false, DESC_NOCAP_A).c_str());
         }
         if (victim && mons_is_projectile(victim->id()))
         {
