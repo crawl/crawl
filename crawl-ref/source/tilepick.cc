@@ -3907,7 +3907,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_SCIMITAR:              return TILEP_HAND1_SCIMITAR;
     case WPN_FALCHION:              return TILEP_HAND1_FALCHION;
     case WPN_SABRE:                 return TILEP_HAND1_SABRE;
-    case WPN_DEMON_BLADE:           return TILEP_HAND1_SWORD_BLACK;
+    case WPN_DEMON_BLADE:           return TILEP_HAND1_DEMON_BLADE;
     case WPN_QUICK_BLADE:           return TILEP_HAND1_DAGGER;
     case WPN_KATANA:                return TILEP_HAND1_KATANA_SLANT;
     case WPN_DOUBLE_SWORD:          return TILEP_HAND1_DOUBLE_SWORD;
