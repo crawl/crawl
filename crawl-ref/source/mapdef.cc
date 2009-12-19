@@ -522,7 +522,11 @@ void map_lines::apply_grid_overlay(const coord_def &c)
                 else if (grd(gc) == DNGN_ROCK_WALL && !rock)
                     env.tile_flv(gc).wall = tile + offset;
                 else
+                {
+                    if ((*overlay)(x, y).no_random)
+                        offset = 0;
                     env.tile_flv(gc).feat = tile + offset;
+                }
             }
 #endif
         }
@@ -1212,6 +1216,8 @@ void map_lines::overlay_tiles(tile_spec &spec)
                 (*overlay)(pos, y).tile = spec.get_tile();
             else
                 (*overlay)(pos, y).rocktile = spec.get_tile();
+
+            (*overlay)(pos, y).no_random = spec.no_random;
             ++pos;
         }
     }
@@ -1739,11 +1745,13 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
     if (s.empty())
         return ("");
 
+    bool no_random = strip_tag(s, "no_random");
+
     int sep = 0;
     std::string key;
     std::string substitute;
 
-    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
+    std::string err = mapdef_split_key_item(s, &key, &sep, &substitute, -1);
     if (!err.empty())
         return (err);
 
@@ -1752,7 +1760,7 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
     if (!err.empty())
         return (err);
 
-    tile_spec spec(key, sep == ':', is_floor, is_feat, list);
+    tile_spec spec(key, sep == ':', no_random, is_floor, is_feat, list);
     overlay_tiles(spec);
 
     return ("");
