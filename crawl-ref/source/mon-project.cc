@@ -16,6 +16,7 @@
 #include "externs.h"
 
 #include "cloud.h"
+#include "directn.h"
 #include "coord.h"
 #include "env.h"
 #include "mgen_data.h"
@@ -162,6 +163,12 @@ bool iood_act(monsters &mon, bool no_trail)
 
     if (cell_is_solid(pos) || actor_at(pos))
     {
+        if (cell_is_solid(pos))
+        {
+            simple_monster_message(&mon, (" hits " + feature_description(pos,
+                                    false, DESC_NOCAP_A)).c_str());
+        }
+
         if (_iood_hit(mon, pos))
         {
             monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
