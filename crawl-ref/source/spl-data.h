@@ -2592,7 +2592,7 @@
 {
     SPELL_IOOD, "Iskenderun's Orb of Destruction",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      7,
      200,
      9, 9,
