@@ -5450,6 +5450,9 @@ int get_tension(god_type god, bool count_travelling)
         if (!mons->alive())
             continue;
 
+        if (!mons_can_hurt_player(*mons))
+            continue;
+
         if (you.see_cell(mons->pos()))
         {
             // Monster is nearby.

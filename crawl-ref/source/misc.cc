@@ -2649,7 +2649,7 @@ void new_level(void)
 {
     if (you.level_type == LEVEL_PORTAL_VAULT)
     {
-        // This here because place_name can't find the name of a level that you 
+        // This here because place_name can't find the name of a level that you
         // *are no longer on* when it spits out the new notes list.
         std::string desc = "Entered " + place_name(get_packed_place(), true, true);
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, 0, 0, NULL,
@@ -2749,6 +2749,7 @@ static bool _mons_has_path_to_player(const monsters *mon)
 {
     // Don't consider sleeping monsters safe, in case the player would
     // rather retreat and try another path for maximum stabbing chances.
+    // TODO: This doesn't cover monsters encaged in glass.
     if (mon->asleep())
         return (true);
 
@@ -2776,6 +2777,26 @@ static bool _mons_has_path_to_player(const monsters *mon)
     return (false);
 }
 
+bool mons_can_hurt_player(const monsters *mon)
+{
+    // FIXME: This takes into account whether the player knows the map!
+    // It also always returns true for sleeping monsters, but that's okay
+    // for its current purposes. (Travel interruptions and tension.)
+    if (_mons_has_path_to_player(mon))
+        return (true);
+
+    // The monster need only see you to hurt you.
+    if (mons_has_los_attack(mon))
+        return (true);
+
+    // Even if the monster can not actually reach the player it might
+    // still use some ranged form of attack.
+    if (you.see_cell_no_trans(mon->pos()) && mons_has_ranged_ability(mon))
+        return (true);
+
+    return (false);
+}
+
 bool mons_is_safe(const monsters *mon, bool want_move,
                   bool consider_user_options)
 {
@@ -2796,10 +2817,7 @@ bool mons_is_safe(const monsters *mon, bool want_move,
                     || (!you.see_cell_no_trans(mon->pos())
                             || mons_class_habitat(mon->type) == HT_WATER
                             || mons_class_habitat(mon->type) == HT_LAVA)
-                        && !_mons_has_path_to_player(mon)
-                        && !mons_has_los_attack(mon)
-                        && (!you.see_cell_no_trans(mon->pos())
-                            || !mons_has_ranged_ability(mon)));
+                        && !mons_can_hurt_player(mon));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
