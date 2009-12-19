@@ -22,6 +22,7 @@
 #include "mgen_data.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
+#include "shout.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "viewchar.h"
@@ -86,7 +87,7 @@ void _iood_dissipate(monsters &mon)
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 }
 
-bool _iood_hit(monsters &mon, const coord_def &pos)
+bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
 {
     bolt beam;
     beam.name = "orb of destruction";
@@ -101,8 +102,13 @@ bool _iood_hit(monsters &mon, const coord_def &pos)
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
     beam.damage = dice_def(3, 20);
-    beam.fire();
+    beam.ex_size = 1;
+    if (big_boom)
+        beam.explode(true, true);
+    else
+        beam.fire();
 
+    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
     return (true);
 }
 
@@ -161,19 +167,27 @@ bool iood_act(monsters &mon, bool no_trail)
     if (pos == mon.pos())
         return (false);
 
-    if (cell_is_solid(pos) || actor_at(pos))
+    actor *victim = actor_at(pos);
+    if (cell_is_solid(pos) || victim)
     {
         if (cell_is_solid(pos))
         {
             simple_monster_message(&mon, (" hits " + feature_description(pos,
                                     false, DESC_NOCAP_A)).c_str());
         }
-
-        if (_iood_hit(mon, pos))
+        if (victim && mons_is_projectile(victim->id()))
         {
-            monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+            if (mon.observable())
+                mpr("The orbs collide in a blinding explosion!");
+            else
+                noisy(40, pos, "You hear a loud magical explosion!");
+            monster_die((monsters*)victim, KILL_DISMISSED, NON_MONSTER);
+            _iood_hit(mon, pos, true);
             return (true);
         }
+
+        if (_iood_hit(mon, pos))
+            return (true);
     }
 
     if (!no_trail)
