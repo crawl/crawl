@@ -1000,6 +1000,8 @@ KMASK:    Z = no_monster_gen
              entry vaults.
           * "no_pool_fixup": prevents a water square next to land from being
              randomly converted from deep water (the default) to shallow.
+          * "no_wall_fixup": prevents (rock) walls from being converted to
+             the level's default wall type, such as in Vaults.
           * "no_secret_doors": prevents a door from randomly being turned
              into a secret door.
 
