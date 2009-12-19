@@ -78,7 +78,9 @@ void _normalize(float &x, float &y)
 void _iood_dissipate(monsters &mon)
 {
     simple_monster_message(&mon, " dissipates.");
-    mpr("iood: dissipating");
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "iood: dissipating");
+#endif
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 }
 
@@ -112,8 +114,12 @@ bool iood_act(monsters &mon)
     float vx = mon.props["iood_vx"];
     float vy = mon.props["iood_vy"];
 
-    mprf("iood_act: pos (%d,%d) rpos (%f,%f) v (%f,%f)", mon.pos().x, mon.pos().y,
-        x, y, vx, vy);
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+         "iood_act: pos (%d,%d) rpos (%f,%f) v (%f,%f)",
+         mon.pos().x, mon.pos().y,
+         x, y, vx, vy);
+#endif
 
     if (!vx && !vy) // not initialized
     {
