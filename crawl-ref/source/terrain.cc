@@ -321,6 +321,12 @@ bool cell_is_solid(const coord_def &c)
     return (feat_is_solid(grd(c)));
 }
 
+bool feat_is_door(dungeon_feature_type feat)
+{
+    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_DETECTED_SECRET_DOOR
+            || feat == DNGN_OPEN_DOOR);
+}
+
 bool feat_is_closed_door(dungeon_feature_type feat)
 {
     return (feat == DNGN_CLOSED_DOOR || feat == DNGN_DETECTED_SECRET_DOOR);
