@@ -5977,7 +5977,7 @@ bool player::can_go_berserk() const
     return (can_go_berserk(false));
 }
 
-bool player::can_go_berserk(bool verbose) const
+bool player::can_go_berserk(bool verbose, bool no_clarity) const
 {
     if (berserk())
     {
@@ -6010,6 +6010,25 @@ bool player::can_go_berserk(bool verbose) const
             mpr("You cannot raise a blood rage in your lifeless body.");
 
         // or else you won't notice -- no message here
+        return (false);
+    }
+
+    if (!no_clarity && player_mental_clarity(true))
+    {
+        if (verbose)
+        {
+            mpr("You're too calm and focused to rage.");
+            item_def *amu;
+            if (!player_mental_clarity(false) && wearing_amulet(AMU_CLARITY)
+                && (amu = &you.inv[you.equip[EQ_AMULET]]) && !item_type_known(*amu))
+            {
+                set_ident_type(amu->base_type, amu->sub_type, ID_KNOWN_TYPE);
+                set_ident_flags(*amu, ISFLAG_KNOW_PROPERTIES);
+                mprf("You are wearing: %s",
+                     amu->name(DESC_INVENTORY_EQUIP).c_str());
+            }
+        }
+
         return (false);
     }
 

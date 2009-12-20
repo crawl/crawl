@@ -702,6 +702,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_TROG_BERSERK:    // piety >= 30
         invoc = true;
         failure = 30 - you.piety;       // starts at 0%
+        if (player_mental_clarity(true))
+            failure += 80;
         break;
 
     case ABIL_TROG_REGEN_MR:            // piety >= 50
@@ -1102,7 +1104,8 @@ static bool _check_ability_possible(const ability_def& abil,
             mpr("You're too hungry to berserk.");
             return (false);
         }
-        return (you.can_go_berserk(true) && berserk_check_wielded_weapon());
+        return (you.can_go_berserk(true, abil.ability == ABIL_TROG_BERSERK)
+                && berserk_check_wielded_weapon());
 
     case ABIL_FLY_II:
         if (you.duration[DUR_EXHAUSTED])
@@ -1161,7 +1164,7 @@ static bool _activate_talent(const talent& tal)
     }
 
     if ((tal.which == ABIL_EVOKE_BERSERK || tal.which == ABIL_TROG_BERSERK)
-        && !you.can_go_berserk(true))
+        && !you.can_go_berserk(true, tal.which == ABIL_TROG_BERSERK))
     {
         crawl_state.zero_turns_taken();
         return (false);
@@ -1745,7 +1748,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_TROG_BERSERK:
         // Trog abilities don't use or train invocations.
-        go_berserk(true);
+        go_berserk(true, true);
         break;
 
     case ABIL_TROG_REGEN_MR:
