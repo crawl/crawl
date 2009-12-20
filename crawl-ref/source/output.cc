@@ -497,39 +497,37 @@ static void _print_stats_ev(int x, int y)
 
 static void _print_stats_wp(int y)
 {
-    cgotoxy(1, y, GOTO_STAT);
-    textcolor(Options.status_caption_colour);
-    cprintf("Wp: ");
+    int col;
+    std::string text;
     if (you.weapon())
     {
         const item_def& wpn = *you.weapon();
-        textcolor(wpn.colour);
+        col = wpn.colour;
 
         const std::string prefix = menu_colour_item_prefix(wpn);
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
-            textcolor(prefcol);
+            col = prefcol;
 
-        cprintf("%s",
-                wpn.name(DESC_INVENTORY, true, false, true)
-                .substr(0, crawl_view.hudsz.x - 4).c_str());
-        textcolor(LIGHTGREY);
+        text = wpn.name(DESC_INVENTORY, true, false, true);
+    }
+    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    {
+        col = RED;
+        text = "Blade Hands";
     }
     else
     {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-        {
-            textcolor(RED);
-            cprintf("Blade Hands");
-            textcolor(LIGHTGREY);
-        }
-        else
-        {
-            textcolor(LIGHTGREY);
-            cprintf("Nothing wielded");
-        }
+        col = LIGHTGREY;
+        text = "Nothing wielded";
     }
-    clear_to_end_of_line();
+    cgotoxy(1, y, GOTO_STAT);
+    textcolor(Options.status_caption_colour);
+    cprintf("Wp: ");
+    textcolor(col);
+    int w = crawl_view.hudsz.x - 4;
+    cprintf("%-*s", w, text.substr(0, w).c_str());
+    textcolor(LIGHTGREY);
 }
 
 static void _print_stats_qv(int y)
