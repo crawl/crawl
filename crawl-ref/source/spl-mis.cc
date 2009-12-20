@@ -291,10 +291,8 @@ void MiscastEffect::do_miscast()
     // killed a target which was alive when the object was created.
     if (!target->alive())
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Miscast target '%s' already dead",
+        dprf("Miscast target '%s' already dead",
              target->name(DESC_PLAIN, true).c_str());
-#endif
         return;
     }
 

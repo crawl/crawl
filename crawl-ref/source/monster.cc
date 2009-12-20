@@ -5035,9 +5035,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             // Don't clean up the monster in order to credit properly.
             hurt(NULL, dam, BEAM_NAPALM, false);
 
-#if DEBUG_DIAGNOSTICS
-            mprf( MSGCH_DIAGNOSTICS, "sticky flame damage: %d", dam );
-#endif
+            dprf("sticky flame damage: %d", dam);
 
             // Credit the kill.
             if (hit_points < 1)

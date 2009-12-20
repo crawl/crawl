@@ -1371,10 +1371,7 @@ static int _monster_abjure_square(const coord_def &pos,
         shielded = true;
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Abj: dur: %d, pow: %d, ndur: %d",
-         duration, pow, duration - pow);
-#endif
+    dprf("Abj: dur: %d, pow: %d, ndur: %d", duration, pow, duration - pow);
 
     mon_enchant abj = target->get_ench(ENCH_ABJ);
     if (!target->lose_ench_duration(abj, pow))

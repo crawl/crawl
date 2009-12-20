@@ -977,11 +977,8 @@ static bool _check_ability_possible(const ability_def& abil,
     if (hungerCheck && you.species != SP_VAMPIRE)
     {
         const int expected_hunger = you.hunger - abil.food_cost * 2;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "hunger: %d, max. food_cost: %d, expected hunger: %d",
+        dprf("hunger: %d, max. food_cost: %d, expected hunger: %d",
              you.hunger, abil.food_cost * 2, expected_hunger);
-#endif
         // Safety margin for natural hunger, mutations etc.
         if (expected_hunger <= 150)
         {
@@ -2083,9 +2080,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_CHEIBRIADOS_SLOUCH:
         mpr("You can feel time thicken.");
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "your speed is %d", player_movement_speed());
-#endif
+        dprf("your speed is %d", player_movement_speed());
         exercise(SK_INVOCATIONS, 4 + random2(4));
         cheibriados_slouch(0);
         break;
@@ -2121,10 +2116,8 @@ static void _pay_ability_costs(const ability_def& abil)
     const int piety_cost = abil.piety_cost.cost();
     const int hp_cost    = abil.hp_cost.cost(you.hp_max);
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Cost: mp=%d; hp=%d; food=%d; piety=%d",
+    dprf("Cost: mp=%d; hp=%d; food=%d; piety=%d",
          abil.mp_cost, hp_cost, food_cost, piety_cost );
-#endif
 
     if (abil.mp_cost)
     {

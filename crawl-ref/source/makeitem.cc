@@ -884,9 +884,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
 static bool _try_make_item_special_unrand(item_def& item, int force_type,
                                           int item_level)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Making special unrand artefact.");
-#endif
+    dprf("Making special unrand artefact.");
 
     bool abyss = item_level == level_id(LEVEL_ABYSS).absdepth();
     int idx = find_okay_unrandart(item.base_type, force_type,

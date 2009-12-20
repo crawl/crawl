@@ -1196,19 +1196,13 @@ static void _fixup_misplaced_items()
             if (feat >= DNGN_MINITEM)
                 continue;
 
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Item buggily placed in feature at (%d, %d).",
+            dprf("Item buggily placed in feature at (%d, %d).",
                  item.pos.x, item.pos.y);
-#endif
         }
         else
         {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Item buggily placed out of bounds at (%d, %d).",
+            dprf("Item buggily placed out of bounds at (%d, %d).",
                  item.pos.x, item.pos.y);
-#endif
         }
 
         // Can't just unlink item because it might not have been linked yet.
@@ -1406,9 +1400,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
                 gc.y = random2(GYM);
             }
             while (grd(gc) != DNGN_FLOOR);
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "add stair %d at pos(%d, %d)", s, gc.x, gc.y);
-#endif
+            dprf("add stair %d at pos(%d, %d)", s, gc.x, gc.y);
             // base gets fixed up to be the right stone stair below...
             grd(gc) = base;
             stair_list[num_stairs++] = gc;
@@ -1598,9 +1590,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 
     if (!_fixup_stone_stairs(true))
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Warning: failed to preserve vault stairs.");
-#endif
+        dprf("Warning: failed to preserve vault stairs.");
         if (!_fixup_stone_stairs(false))
         {
             dgn_level_vetoed = true;
@@ -2982,9 +2972,7 @@ static builder_rc_type _builder_basic(int level_number)
         _make_trail( 50, 20, 40, 20, corrlength, intersect_chance, no_corr,
                      xbegin, ybegin, xend, yend);
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Placing shaft trail...");
-#endif
+        dprf("Placing shaft trail...");
         if (!one_chance_in(3)) // 2/3 chance it ends in a shaft
         {
             trap_def& ts(env.trap[0]);
@@ -2994,16 +2982,12 @@ static builder_rc_type _builder_basic(int level_number)
             grd[xend][yend] = DNGN_UNDISCOVERED_TRAP;
             if (shaft_known(level_number, false))
                 ts.reveal();
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Trail ends in shaft.");
-#endif
+            dprf("Trail ends in shaft.");
         }
         else
         {
             grd[xend][yend] = DNGN_FLOOR;
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Trail does not end in shaft..");
-#endif
+            dprf("Trail does not end in shaft..");
         }
     }
 
@@ -3316,10 +3300,7 @@ static void _place_branch_entrances(int dlevel, char level_type)
             && player_branch_depth() == branches[i].startdepth)
         {
             // Place a stair.
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Placing stair to %s",
-                 branches[i].shortname);
-#endif
+            dprf("Placing stair to %s", branches[i].shortname);
 
             std::string entry_tag = std::string(branches[i].abbrevname);
             entry_tag += "_entry";
@@ -5793,9 +5774,7 @@ static void _place_altars()
             if (random2(100) >= prob)
                 break;
 
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Placing an altar");
-#endif
+            dprf("Placing an altar");
             _place_altar();
             // Reduce the chance and try to place another.
             prob /= 5;
@@ -8004,9 +7983,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             return (pos);
 
         // Couldn't find a good place, warn, and use old behaviour.
-#ifdef DEBUG_DIAGNOSTICS
-        mpr("Oops, couldn't find labyrinth entry marker.", MSGCH_DIAGNOSTICS);
-#endif
+        dprf("Oops, couldn't find labyrinth entry marker.");
         stair_to_find = DNGN_FLOOR;
     }
 

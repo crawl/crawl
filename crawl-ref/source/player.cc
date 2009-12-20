@@ -2506,9 +2506,7 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
     const unsigned long old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "gain_exp: %d", exp_gained );
-#endif
+    dprf("gain_exp: %d", exp_gained );
 
     if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
         you.experience = MAX_EXP_TOTAL;
@@ -3810,9 +3808,7 @@ void display_char_status()
 
     // character evaluates their ability to sneak around:
     mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
-#if DEBUG_DIAGNOSTICS
-    mprf("stealth: %d", check_stealth());
-#endif
+    dprf("stealth: %d", check_stealth());
 }
 
 bool player_item_conserve(bool calc_unid)

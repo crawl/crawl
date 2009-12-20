@@ -2577,13 +2577,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
             pbolt.ench_power = AUTOMATIC_HIT;
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-                "Base hit == %d; Base damage == %d "
+        dprf(   "Base hit == %d; Base damage == %d "
                 "(item %d + launcher %d)",
                         baseHit, baseDam,
                         item_base_dam, lnch_base_dam);
-#endif
 
         // Fix ammo damage bonus, since missiles only use inv_plus.
         ammoDamBonus = ammoHitBonus;
@@ -2625,9 +2622,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         effSkill    = shoot_skill;
 
         const int speed = launcher_final_speed(launcher, you.shield());
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Final launcher speed: %d", speed);
-#endif
+        dprf("Final launcher speed: %d", speed);
         you.time_taken = speed * you.time_taken / 100;
 
         // [dshaligram] Improving missile weapons:
@@ -3031,10 +3026,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // blowguns.
             exHitBonus -= (30 - you.skills[SK_DARTS]) / 3;
             baseHit    -= (30 - you.skills[SK_DARTS]) / 3;
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Needle base hit = %d, exHitBonus = %d",
+            dprf("Needle base hit = %d, exHitBonus = %d",
                     baseHit, exHitBonus);
-#endif
         }
     }
 
@@ -3065,13 +3058,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     scale_dice(pbolt.damage);
 
-#if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS,
-            "H:%d+%d;a%dl%d.  D:%d+%d;a%dl%d -> %d,%dd%d",
+    dprf(   "H:%d+%d;a%dl%d.  D:%d+%d;a%dl%d -> %d,%dd%d",
               baseHit, exHitBonus, ammoHitBonus, lnchHitBonus,
               baseDam, exDamBonus, ammoDamBonus, lnchDamBonus,
               pbolt.hit, pbolt.damage.num, pbolt.damage.size );
-#endif
 
     // Create message.
     mprf( "%s %s%s %s.",

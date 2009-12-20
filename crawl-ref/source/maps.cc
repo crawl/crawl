@@ -478,10 +478,8 @@ static bool apply_vault_grid(map_def &def,
 
     if (check_place && !_safe_vault_place(def, start, size))
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d,%d) dim (%d,%d)",
+        dprf("Bad vault place: (%d,%d) dim (%d,%d)",
              start.x, start.y, size.x, size.y);
-#endif
         return (false);
     }
 

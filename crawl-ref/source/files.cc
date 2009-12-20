@@ -1442,9 +1442,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         timeval -= (stepdown_value( check_stealth(), 50, 50, 150, 150 ) / 10);
 
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "arrival time: %d", timeval );
-#endif
+        dprf("arrival time: %d", timeval );
 
         if (timeval > 0)
         {

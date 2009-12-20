@@ -3043,10 +3043,7 @@ int how_mutated(bool all, bool levels)
         }
     }
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "how_mutated(): all = %u, levels = %u, j = %d",
-         all, levels, j);
-#endif
+    dprf("how_mutated(): all = %u, levels = %u, j = %d", all, levels, j);
 
     return (j);
 }
