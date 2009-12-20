@@ -2915,7 +2915,7 @@ bool monsters::asleep() const
 
 bool monsters::backlit(bool check_haloed) const
 {
-    return (has_ench(ENCH_CORONA)
+    return (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
         || ((check_haloed) ? haloed() : false));
 }
 

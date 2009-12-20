@@ -6898,7 +6898,8 @@ bool player::visible_to(const actor *looker) const
 bool player::backlit(bool check_haloed) const
 {
     return (get_contamination_level() > 0 || duration[DUR_CORONA]
-            || (check_haloed ? haloed() : false));
+            || (check_haloed ? haloed() : false)
+            || duration[DUR_LIQUID_FLAMES]);
 }
 
 // This is the imperative version.
