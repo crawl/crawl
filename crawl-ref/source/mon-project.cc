@@ -107,12 +107,14 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     beam.hit = AUTOMATIC_HIT;
     beam.damage = dice_def(3, 20);
     beam.ex_size = 1;
+
+    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+
     if (big_boom)
-        beam.explode(true, true);
+        beam.explode(true, false);
     else
         beam.fire();
 
-    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
     return (true);
 }
 
