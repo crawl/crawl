@@ -446,6 +446,16 @@ void mprf( const char *format, ... )
     va_end( argp );
 }
 
+#ifdef DEBUG_DIAGNOSTICS
+void dprf( const char *format, ... )
+{
+    va_list  argp;
+    va_start( argp, format );
+    do_message_print( MSGCH_DIAGNOSTICS, 0, format, argp );
+    va_end( argp );
+}
+#endif
+
 static bool _updating_view = false;
 
 void mpr(const char *inf, msg_channel_type channel, int param)
