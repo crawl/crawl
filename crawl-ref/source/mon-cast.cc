@@ -20,6 +20,7 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "terrain.h"
 #include "mgen_data.h"
 #include "coord.h"
@@ -666,6 +667,11 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.type     = 0;
         beam.flavour  = BEAM_PORKALATOR;
         beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
+        break;
+
+    case SPELL_IOOD: // tracer only
+        beam.flavour  = BEAM_NUKE;
         beam.is_beam  = true;
         break;
 
@@ -2170,6 +2176,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                           monster, duration, spell_cast, monster->pos(),
                           monster->foe, 0, god));
         }
+        return;
+    case SPELL_IOOD:
+        cast_iood(monster, 6 * monster->hit_dice, &pbolt);
         return;
     }
 
