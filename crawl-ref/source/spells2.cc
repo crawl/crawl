@@ -100,9 +100,7 @@ int detect_items(int pow)
 
 static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "dc_fuzz: Power is %d", pow);
-#endif
+    dprf("dc_fuzz: Power is %d", pow);
 
     pow = std::max(1, pow);
 

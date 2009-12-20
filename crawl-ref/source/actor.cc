@@ -103,11 +103,8 @@ bool actor::check_res_magic(int power)
     const int mrchance = (100 + mrs) - power;
     const int mrch2 = random2(100) + random2(101);
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Power: %d, MR: %d, target: %d, roll: %d",
+    dprf("Power: %d, MR: %d, target: %d, roll: %d",
          power, mrs, mrchance, mrch2);
-#endif
 
     return (mrch2 < mrchance);
 }

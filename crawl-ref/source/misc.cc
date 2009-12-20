@@ -1109,11 +1109,8 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
 
     if (x_chance_in_y(amount, 20))
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "might bleed now; square: (%d, %d); amount = %d",
+        dprf("might bleed now; square: (%d, %d); amount = %d",
              where.x, where.y, amount);
-#endif
         if (may_bleed)
         {
             env.pgrid(where) |= FPROP_BLOODY;
@@ -1299,10 +1296,7 @@ void search_around(bool only_adjacent)
                     // Maybe we shouldn't kill the trap for debugging
                     // purposes - oh well.
                     grd(*ri) = DNGN_FLOOR;
-#if DEBUG_DIAGNOSTICS
-                    mpr("You found a buggy trap! It vanishes!",
-                        MSGCH_DIAGNOSTICS);
-#endif
+                    dprf("You found a buggy trap! It vanishes!");
                 }
             }
         }
@@ -2701,11 +2695,11 @@ bool scramble(void)
         return (true);
 }
 
-bool go_berserk(bool intentional)
+bool go_berserk(bool intentional, bool no_clarity)
 {
     ASSERT(!crawl_state.arena);
 
-    if (!you.can_go_berserk(intentional))
+    if (!you.can_go_berserk(intentional, no_clarity))
         return (false);
 
     if (Tutorial.tutorial_left)

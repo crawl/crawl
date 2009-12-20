@@ -1480,10 +1480,7 @@ bool melee_attack::player_hits_monster()
     const int evasion = defender->melee_evasion(attacker);
     const int evasion_helpful
         = defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "your to-hit: %d; defender effective EV: %d",
-         to_hit, evasion);
-#endif
+    dprf("your to-hit: %d; defender effective EV: %d", to_hit, evasion);
 
     if (to_hit >= evasion_helpful || one_chance_in(20))
     {
@@ -2037,11 +2034,8 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
             // More than if not killed.
             const int heal = 1 + random2(damage_done);
 
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Vampiric healing: damage %d, healed %d",
+            dprf("Vampiric healing: damage %d, healed %d",
                  damage_done, heal);
-#endif
             inc_hp(heal, false);
 
             if (you.hunger_state != HS_ENGORGED)
@@ -3776,10 +3770,8 @@ bool melee_attack::player_check_monster_died()
 {
     if (!defender->alive())
     {
-#if DEBUG_DIAGNOSTICS
         // note: doesn't take account of special weapons, etc.
-        mprf(MSGCH_DIAGNOSTICS, "Hit for %d.", damage_done);
-#endif
+        dprf("Hit for %d.", damage_done);
 
         player_monattk_hit_effects(true);
 
@@ -3928,8 +3920,7 @@ int melee_attack::player_to_hit(bool random_factor)
     your_to_hit = maybe_random2(your_to_hit, random_factor);
 
 #if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS,
-          "to hit die: %d; rolled value: %d; base: %d",
+    dprf( "to hit die: %d; rolled value: %d; base: %d",
           roll_hit, your_to_hit, base_to_hit );
 #endif
 
@@ -4058,11 +4049,8 @@ void melee_attack::player_apply_attack_delay()
     you.time_taken =
         std::max(2, div_rand_round(you.time_taken * final_attack_delay, 10));
 
-#if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS,
-          "Weapon speed: %d; min: %d; attack time: %d",
+    dprf( "Weapon speed: %d; min: %d; attack time: %d",
           final_attack_delay, min_delay, you.time_taken );
-#endif
 }
 
 int melee_attack::player_weapon_speed()
@@ -4264,10 +4252,7 @@ bool melee_attack::mons_attack_mons()
         // Non-friendly monsters should never violate sanctuary.
         else
         {
-#ifdef DEBUG_DIAGNOSTICS
-            mpr("Preventing hostile violation of sanctuary.",
-                MSGCH_DIAGNOSTICS);
-#endif
+            dprf("Preventing hostile violation of sanctuary.");
             cancel_attack = true;
             return (false);
         }
@@ -5020,9 +5005,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                  special_attack_punctuation().c_str());
         }
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Shock damage: %d", special_damage);
-#endif
+        dprf("Shock damage: %d", special_damage);
         break;
 
     case AF_VAMPIRIC:
@@ -5460,10 +5443,8 @@ void melee_attack::mons_perform_attack_rounds()
 
         if (damage_done > 0)
         {
-#ifdef DEBUG_DIAGNOSTICS
             if (shield_blocked)
-                mpr("ERROR: Non-zero damage after shield block!");
-#endif
+                dprf("ERROR: Non-zero damage after shield block!");
             mons_announce_hit(attk);
             check_defender_train_armour();
 

@@ -226,9 +226,7 @@ static void _ench_animation(int flavour, const monsters *mon, bool force)
 bool zapping(zap_type ztype, int power, bolt &pbolt,
              bool needs_tracer, const char* msg)
 {
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "zapping: power=%d", power);
-#endif
+    dprf("zapping: power=%d", power);
 
     pbolt.thrower = KILL_YOU_MISSILE;
 
@@ -307,9 +305,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     // "Fire through friendly?" prompts.
     if (pbolt.beam_cancelled)
     {
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s", "Beam cancelled.");
-#endif
+        dprf("%s", "Beam cancelled.");
         canned_msg(MSG_OK);
         you.turn_is_over = false;
         return (false);
@@ -3539,9 +3535,7 @@ static bool _test_beam_hit(int attack, int defence, bool is_beam,
         attack = r[0].random2(attack);
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Beam attack: %d, defence: %d", attack, defence);
-#endif
+    dprf("Beam attack: %d, defence: %d", attack, defence);
     // Reproducing old behavior here; magic dart is dodgable with DMsl
     if (attack == AUTOMATIC_HIT)
         return (true);
@@ -3549,9 +3543,7 @@ static bool _test_beam_hit(int attack, int defence, bool is_beam,
     attack = r[1].random2(attack);
     defence = r[2].random2avg(defence, 2);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Beam new attack: %d, defence: %d", attack, defence);
-#endif
+    dprf("Beam new attack: %d, defence: %d", attack, defence);
 
     return (attack >= defence);
 }
@@ -3614,9 +3606,7 @@ bool bolt::is_harmless(const monsters *mon) const
 
 bool bolt::harmless_to_player() const
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "beam flavour: %d", flavour);
-#endif
+    dprf("beam flavour: %d", flavour);
 
     switch (flavour)
     {
@@ -3794,10 +3784,7 @@ bool bolt::misses_player()
 
         const int block = you.shield_bonus();
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Beamshield: hit: %d, block %d",
-             testhit, block);
-#endif
+        dprf("Beamshield: hit: %d, block %d", testhit, block);
         if (testhit < block)
         {
             if (is_reflectable(you.shield()))
@@ -4328,9 +4315,7 @@ void bolt::affect_player()
             expose_player_to_element(BEAM_SPORE, burn_power);
     }
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Damage: %d", hurted );
-#endif
+    dprf("Damage: %d", hurted );
 
     was_affected = apply_hit_funcs(&you, hurted) || was_affected;
 
@@ -5267,10 +5252,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         const god_type god =
             (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                           : GOD_NO_GOD;
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "HD: %d; pow: %d", mon->hit_dice, ench_power);
-#endif
+        dprf("HD: %d; pow: %d", mon->hit_dice, ench_power);
 
         obvious_effect = true;
         if (player_will_anger_monster(mon))
@@ -5292,10 +5274,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
     case BEAM_ENSLAVE_SOUL:
     {
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "HD: %d; pow: %d", mon->hit_dice, ench_power);
-#endif
+        dprf("HD: %d; pow: %d", mon->hit_dice, ench_power);
 
         if (!mons_can_be_zombified(mon) || mons_intel(mon) < I_NORMAL)
         {
@@ -5319,10 +5298,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
     }
 
     case BEAM_ENSLAVE_DEMON:
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "HD: %d; pow: %d", mon->hit_dice, ench_power);
-#endif
+        dprf("HD: %d; pow: %d", mon->hit_dice, ench_power);
 
         if (mon->hit_dice * 11 / 2 >= random2(ench_power)
             || mons_is_unique(mon->type))

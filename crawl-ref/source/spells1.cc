@@ -737,12 +737,9 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     const int random_factor = random2((you.skills[SK_INVOCATIONS] + 1) *
                                       healed / divisor);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
+    dprf("pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
          mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,
          you.skills[SK_INVOCATIONS], healed, random_factor);
-#endif
 
     if (mon->max_hit_points < factor * random_factor)
         return (true);
@@ -1142,10 +1139,8 @@ void abjuration(int pow)
         if (mon->is_summoned(&duration))
         {
             int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "%s abj: dur: %d, abj: %d",
+            dprf("%s abj: dur: %d, abj: %d",
                  mon->name(DESC_PLAIN).c_str(), duration, sockage);
-#endif
 
             bool shielded = false;
             // TSO and Trog's abjuration protection.

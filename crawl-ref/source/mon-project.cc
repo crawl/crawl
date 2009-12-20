@@ -87,9 +87,7 @@ static bool _in_front(float vx, float vy, float dx, float dy, float angle)
 void _iood_dissipate(monsters &mon)
 {
     simple_monster_message(&mon, " dissipates.");
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "iood: dissipating");
-#endif
+    dprf("iood: dissipating");
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 }
 
@@ -118,13 +116,6 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     return (true);
 }
 
-#ifdef DEBUG_DIAGNOSTICS
-#define dprf(...) mprf(MSGCH_DIAGNOSTICS, __VA_ARGS__)
-#else
-static void nada();
-#define dprf(...) nada()
-#endif
-
 // returns true if the orb is gone
 bool iood_act(monsters &mon, bool no_trail)
 {
@@ -135,12 +126,9 @@ bool iood_act(monsters &mon, bool no_trail)
     float vx = mon.props["iood_vx"];
     float vy = mon.props["iood_vy"];
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "iood_act: pos (%d,%d) rpos (%f,%f) v (%f,%f)",
+    dprf("iood_act: pos (%d,%d) rpos (%f,%f) v (%f,%f)",
          mon.pos().x, mon.pos().y,
          x, y, vx, vy);
-#endif
 
     if (!vx && !vy) // not initialized
     {
@@ -195,8 +183,6 @@ bool iood_act(monsters &mon, bool no_trail)
                 ax = vy, ay = -vx, dprf("iood: veering left");
             else
                 ax = -vy, ay = vx, dprf("iood: veering right");
-            mprf(MSGCH_DIAGNOSTICS, "iood: veering %s", (dy*vx < dx*vy) ?
-                 "left" : "right");
             vx += ax * 0.3;
             vy += ay * 0.3;
         }

@@ -998,10 +998,8 @@ void free_self_from_net()
 
     int hold = mitm[net].plus;
     int do_what = damage_or_escape_net(hold);
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "net.plus: %d, ATTR_HELD: %d, do_what: %d",
+    dprf("net.plus: %d, ATTR_HELD: %d, do_what: %d",
          hold, you.attribute[ATTR_HELD], do_what);
-#endif
 
     if (do_what <= 0) // You try to destroy the net
     {

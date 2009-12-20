@@ -221,10 +221,8 @@ static bool _tag_follower_at(const coord_def &pos)
     fmenv->travel_path.clear();
     fmenv->travel_target = MTRAV_NONE;
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
+    dprf("%s is marked for following.",
          fmenv->name(DESC_CAP_THE, true).c_str() );
-#endif
 
     return (true);
 }
@@ -905,10 +903,9 @@ void zap_los_monsters(bool items_also)
         if (mon == NULL || mons_class_flag(mon->type, M_NO_EXP_GAIN))
             continue;
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
+        dprf("Dismissing %s",
              mon->name(DESC_PLAIN, true).c_str() );
-#endif
+
         // Do a hard reset so the monster's items will be discarded.
         mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the

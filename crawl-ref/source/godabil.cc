@@ -158,9 +158,7 @@ bool trog_burn_spellbooks()
             else
                 totalpiety++;
 
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Burned book rarity: %d", rarity);
-#endif
+            dprf("Burned book rarity: %d", rarity);
             destroy_item(si.link());
             count++;
         }
