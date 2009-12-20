@@ -69,13 +69,19 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     return (true);
 }
 
-void _normalize(float &x, float &y)
+static void _normalize(float &x, float &y)
 {
     const float d = sqrt(x*x + y*y);
     if (d <= 0.000001)
         return;
     x/=d;
     y/=d;
+}
+
+// angle measured in chord length
+static bool _in_front(float vx, float vy, float dx, float dy, float angle)
+{
+    return ((dx-vx)*(dx-vx) + (dy-vy)*(dy-vy) <= (angle*angle));
 }
 
 void _iood_dissipate(monsters &mon)
@@ -111,6 +117,13 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
     return (true);
 }
+
+#ifdef DEBUG_DIAGNOSTICS
+#define dprf(...) mprf(MSGCH_DIAGNOSTICS, __VA_ARGS__)
+#else
+static void nada();
+#define dprf(...) nada()
+#endif
 
 // returns true if the orb is gone
 bool iood_act(monsters &mon, bool no_trail)
@@ -150,6 +163,50 @@ bool iood_act(monsters &mon, bool no_trail)
         target = menv[mon.foe].pos();
 
     _normalize(vx, vy);
+
+    if (target != coord_def(-1, -1))
+    {
+        float dx = target.x - x;
+        float dy = target.y - y;
+        _normalize(dx, dy);
+
+        // Special case:
+        // Moving diagonally when the orb is just about to hit you
+        //      2
+        //    ->*1
+        // (from 1 to 2) would be a guaranteed escape.  This may be
+        // realistic (strafing!), but since the game has no non-cheesy
+        // means of waiting a small fraction of a turn, we don't want it.
+        const int old_t_pos = mon.props["iood_tpos"].get_short();
+        if (old_t_pos && old_t_pos != (256 * target.x + target.y)
+            && (coord_def(round(x), round(y)) - target).rdist() <= 1
+            // ... but following an orb is ok.
+            && _in_front(vx, vy, dx, dy, 1.5)) // ~97 degrees
+        {
+            vx = dx;
+            vy = dy;
+        }
+        mon.props["iood_tpos"].get_short() = 256 * target.x + target.y;
+
+        if (!_in_front(vx, vy, dx, dy, 0.5)) // ~29 degrees
+        {
+            float ax, ay;
+            if (dy*vx < dx*vy)
+                ax = vy, ay = -vx, dprf("iood: veering left");
+            else
+                ax = -vy, ay = vx, dprf("iood: veering right");
+            mprf(MSGCH_DIAGNOSTICS, "iood: veering %s", (dy*vx < dx*vy) ?
+                 "left" : "right");
+            vx += ax * 0.3;
+            vy += ay * 0.3;
+        }
+        else
+            dprf("iood: keeping course");
+
+        _normalize(vx, vy);
+        mon.props["iood_vx"] = vx;
+        mon.props["iood_vy"] = vy;
+    }
 
     x += vx;
     y += vy;
