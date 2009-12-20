@@ -1371,6 +1371,7 @@ unsigned int item_value( item_def item, bool ident )
 
             case SPARM_DARKNESS:
             case SPARM_RESISTANCE:
+            case SPARM_REFLECTION:
                 valued *= 60;
                 break;
 
