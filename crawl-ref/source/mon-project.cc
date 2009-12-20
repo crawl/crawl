@@ -27,11 +27,6 @@
 #include "terrain.h"
 #include "viewchar.h"
 
-bool mons_is_projectile(monster_type mt)
-{
-    return (mt == MONS_ORB_OF_DESTRUCTION);
-}
-
 bool cast_iood(actor *caster, int pow, bolt *beam)
 {
     int mtarg = mgrd(beam->target);

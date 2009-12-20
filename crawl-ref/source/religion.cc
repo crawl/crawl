@@ -4484,6 +4484,8 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
 
 bool god_hates_attacking_friend(god_type god, int species)
 {
+    if (mons_is_projectile(species))
+        return (false);
     switch (god)
     {
         case GOD_ZIN:

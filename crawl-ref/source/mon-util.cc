@@ -484,6 +484,11 @@ bool mons_is_fast(const monsters *mon)
     return (mon->speed > pspeed);
 }
 
+bool mons_is_projectile(int mc)
+{
+    return (mc == MONS_ORB_OF_DESTRUCTION);
+}
+
 bool mons_is_insubstantial(int mc)
 {
     return (mons_class_flag(mc, M_INSUBSTANTIAL));
