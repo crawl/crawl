@@ -176,7 +176,7 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     if (you.hunger_state < HS_FULL
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
-        && you.species != SP_VAMPIRE)
+        && you.species != SP_VAMPIRE && you.species != SP_MUMMY)
     {
         if (say_reason)
         {

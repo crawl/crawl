@@ -2024,7 +2024,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     // Vampiric *weapon* effects for the killing blow.
     else if (mondied && damage_brand == SPWPN_VAMPIRICISM
              && you.equip[EQ_WEAPON] != -1
-             && you.is_undead == US_ALIVE)
+             && you.species != SP_VAMPIRE) // vampires get their bonus elsewhere
     {
         if (defender->holiness() == MH_NATURAL
             && !defender->is_summoned()
