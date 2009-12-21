@@ -680,6 +680,8 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
     ASSERT(src >= 0 && src <= MHITYOU);
     ASSERT(!crawl_state.arena || src != MHITYOU);
     ASSERT(in_bounds(src_pos) || src_pos.origin());
+    if (mons_is_projectile(mon->type))
+        return; // projectiles have no AI
 
     const beh_type old_behaviour = mon->behaviour;
 

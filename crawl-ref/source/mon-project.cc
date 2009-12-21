@@ -30,6 +30,8 @@
 bool cast_iood(actor *caster, int pow, bolt *beam)
 {
     int mtarg = mgrd(beam->target);
+    if (beam->target == you.pos())
+        mtarg = MHITYOU;
     
     int mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :
@@ -38,8 +40,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
                 0,
                 SPELL_IOOD,
                 coord_def(-1, -1),
-                (mtarg != NON_MONSTER) ? mtarg :
-                    (you.pos() == beam->target) ? MHITYOU : MHITNOT,
+                mtarg,
                 0,
                 GOD_NO_GOD));
     if (mind == -1)
@@ -124,9 +125,9 @@ bool iood_act(monsters &mon, bool no_trail)
     float vx = mon.props["iood_vx"];
     float vy = mon.props["iood_vy"];
 
-    dprf("iood_act: pos (%d,%d) rpos (%f,%f) v (%f,%f)",
+    dprf("iood_act: pos=(%d,%d) rpos=(%f,%f) v=(%f,%f) foe=%d",
          mon.pos().x, mon.pos().y,
-         x, y, vx, vy);
+         x, y, vx, vy, mon.foe);
 
     if (!vx && !vy) // not initialized
     {
