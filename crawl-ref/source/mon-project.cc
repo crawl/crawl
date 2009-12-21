@@ -58,6 +58,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     mon.props["iood_foe"].get_short() = mtarg;
     mon.props["iood_kc"].get_byte() = (caster->atype() == ACT_PLAYER) ? KC_YOU :
             ((monsters*)caster)->wont_attack() ? KC_FRIENDLY : KC_OTHER;
+    mon.props["iood_pow"].get_short() = pow;
     mon.flags &= ~MF_JUST_SUMMONED;
 
     // Move away from the caster's square.
@@ -102,7 +103,7 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     beam.source = pos;
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
-    beam.damage = dice_def(3, 20);
+    beam.damage = dice_def(6, mon.props["iood_pow"].get_short()/4);
     beam.ex_size = 1;
 
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
