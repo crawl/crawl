@@ -30,8 +30,6 @@
 bool cast_iood(actor *caster, int pow, bolt *beam)
 {
     int mtarg = mgrd(beam->target);
-    if (you.pos() == beam->target)
-        mtarg = MHITYOU;
     
     int mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :
@@ -40,7 +38,8 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
                 0,
                 SPELL_IOOD,
                 coord_def(-1, -1),
-                mtarg,
+                (mtarg != NON_MONSTER) ? mtarg :
+                    (you.pos() == beam->target) ? MHITYOU : MHITNOT,
                 0,
                 GOD_NO_GOD));
     if (mind == -1)
@@ -55,7 +54,6 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     mon.props["iood_y"] = (float)pos.y;
     mon.props["iood_vx"] = (float)(beam->target.x - pos.x);
     mon.props["iood_vy"] = (float)(beam->target.y - pos.y);
-    mon.props["iood_foe"].get_short() = mtarg;
     mon.props["iood_kc"].get_byte() = (caster->atype() == ACT_PLAYER) ? KC_YOU :
             ((monsters*)caster)->wont_attack() ? KC_FRIENDLY : KC_OTHER;
     mon.props["iood_pow"].get_short() = pow;
@@ -137,20 +135,18 @@ bool iood_act(monsters &mon, bool no_trail)
     }
 
     coord_def target(-1, -1);
-    int foe = mon.props["iood_foe"].get_short();
-    if (foe == MHITYOU)
+    if (mon.foe == MHITYOU)
         target = you.pos();
-    else if (invalid_monster_index(foe))
+    else if (invalid_monster_index(mon.foe))
         ;
-    else if (invalid_monster_type(menv[foe].type))
+    else if (invalid_monster_type(menv[mon.foe].type))
     {
         // Our target is gone.  Since picking a new one would require
         // intelligence, the orb continues on a ballistic course.
-        foe = MHITNOT;
-        mon.props["iood_foe"].get_short() = foe;
+        mon.foe = MHITNOT;
     }
     else
-        target = menv[foe].pos();
+        target = menv[mon.foe].pos();
 
     _normalize(vx, vy);
 
