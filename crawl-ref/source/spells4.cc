@@ -575,10 +575,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *)
         damage = mons_adjust_flavoured(mon, beam, damage);
         simple_monster_message(mon, " seems to burn from within!");
 
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Dice: %dd%d; Damage: %d",
-             dam_dice.num, dam_dice.size, damage);
-#endif
+        dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
 
         if (!_player_hurt_monster(*mon, damage))
         {
@@ -820,9 +817,7 @@ void cast_discharge(int pow)
     dam = apply_random_around_square(_discharge_monsters, you.pos(),
                                      true, pow, num_targs);
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Arcs: %d Damage: %d", num_targs, dam);
-#endif
+    dprf("Arcs: %d Damage: %d", num_targs, dam);
 
     if (dam == 0)
     {

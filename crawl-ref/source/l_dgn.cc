@@ -1355,10 +1355,8 @@ static bool _lua_map_place_valid(const map_def &map,
                                  const coord_def &c,
                                  const coord_def &size)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "lua_map_place_invalid: (%d,%d) (%d,%d)",
+    dprf("lua_map_place_invalid: (%d,%d) (%d,%d)",
          c.x, c.y, size.x, size.y);
-#endif
 
     lua_stack_cleaner clean(_dgn_map_safe_bounds_fn->lua);
 

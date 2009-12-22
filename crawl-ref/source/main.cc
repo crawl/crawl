@@ -2893,6 +2893,8 @@ void world_reacts()
             stop_running();
 
             you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
+            if (you.religion == GOD_XOM)
+                xom_is_stimulated(get_tension() > 0 ? 255 : 128);
         }
 
         if (you.hunger <= 100)

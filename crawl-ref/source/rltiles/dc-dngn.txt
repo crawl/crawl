@@ -492,7 +492,7 @@ dngn_altar_jiyva DNGN_ALTAR_JIYVA
 %rim 1
 dngn_altar_fedhas DNGN_ALTAR_FEDHAS
 %rim 0
-dngn_altar DNGN_ALTAR_CHEIBRIADOS
+dngn_altar_cheibriados DNGN_ALTAR_CHEIBRIADOS
 
 %sdir dc-dngn
 dngn_blue_fountain DNGN_BLUE_FOUNTAIN

@@ -1004,7 +1004,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_MENKAURE:
         return TILEP_MONS_MENKAURE;
     case MONS_KHUFU:
-        return TILEP_MONS_GREATER_MUMMY;    // TODO
+        return TILEP_MONS_KHUFU;
 
     // guardian serpent ('N')
     case MONS_AIZUL:
@@ -1079,7 +1079,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_KIRKE:
         return TILEP_MONS_KIRKE;
     case MONS_NIKOLA:
-        return TILEP_TODO;                  // TODO
+        return TILEP_MONS_NIKOLA;                  // TODO
     case MONS_MAURICE:
         return TILEP_MONS_MAURICE;
 
@@ -3907,7 +3907,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_SCIMITAR:              return TILEP_HAND1_SCIMITAR;
     case WPN_FALCHION:              return TILEP_HAND1_FALCHION;
     case WPN_SABRE:                 return TILEP_HAND1_SABRE;
-    case WPN_DEMON_BLADE:           return TILEP_HAND1_SWORD_BLACK;
+    case WPN_DEMON_BLADE:           return TILEP_HAND1_DEMON_BLADE;
     case WPN_QUICK_BLADE:           return TILEP_HAND1_DAGGER;
     case WPN_KATANA:                return TILEP_HAND1_KATANA_SLANT;
     case WPN_DOUBLE_SWORD:          return TILEP_HAND1_DOUBLE_SWORD;

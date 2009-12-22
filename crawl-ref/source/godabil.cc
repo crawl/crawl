@@ -158,9 +158,7 @@ bool trog_burn_spellbooks()
             else
                 totalpiety++;
 
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Burned book rarity: %d", rarity);
-#endif
+            dprf("Burned book rarity: %d", rarity);
             destroy_item(si.link());
             count++;
         }
@@ -1258,7 +1256,7 @@ bool ponderousify_armour()
 static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
 {
     monsters* mon = monster_at(where);
-    if (mon == NULL)
+    if (mon == NULL || mons_is_stationary(mon))
         return (0);
 
     int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());

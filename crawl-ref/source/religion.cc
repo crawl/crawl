@@ -2467,9 +2467,7 @@ void pray()
     if (!was_praying)
         _do_god_gift(true);
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "piety: %d (-%d)", you.piety, you.piety_hysteresis );
-#endif
+    dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis );
 }
 
 void end_prayer(void)
@@ -3284,10 +3282,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 // melee).  This means high level spells probably work
                 // pretty much like they used to (use spell, get piety).
                 piety_change = div_rand_round(level + 10, 80);
-#ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS, "Spell practise, level: %d, dpiety: %d",
-                        level, piety_change);
-#endif
+                dprf("Spell practise, level: %d, dpiety: %d", level, piety_change);
                 retval = true;
             }
             break;
@@ -3839,9 +3834,7 @@ bool ely_destroy_weapons()
 
         // item_value() multiplies by quantity.
         const int value = item_value(item, true) / item.quantity;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Destroyed weapon value: %d", value);
-#endif
+        dprf("Destroyed weapon value: %d", value);
 
         piety_gain_t pgain = PIETY_NONE;
         const bool unholy_weapon = is_unholy_item(item);
@@ -5452,6 +5445,9 @@ int get_tension(god_type god, bool count_travelling)
 
         if (you.see_cell(mons->pos()))
         {
+            if (!mons_can_hurt_player(*mons))
+                continue;
+
             // Monster is nearby.
             if (!nearby_monster && !mons->wont_attack())
                 nearby_monster = true;

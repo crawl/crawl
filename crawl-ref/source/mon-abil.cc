@@ -1164,9 +1164,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             if (delay.type == DELAY_ASCENDING_STAIRS
                 || delay.type == DELAY_DESCENDING_STAIRS)
             {
-#ifdef DEBUG_DIAGNOSTICS
-                mpr("Taking stairs, don't mesmerise.", MSGCH_DIAGNOSTICS);
-#endif
+                dprf("Taking stairs, don't mesmerise.");
                 break;
             }
         }

@@ -403,10 +403,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
         cp.x += random_range(-LOS_RADIUS, LOS_RADIUS);
         cp.y += random_range(-LOS_RADIUS, LOS_RADIUS);
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Trying to scatter chunk to %d, %d...",
-             cp.x, cp.y);
-#endif
+        dprf("Trying to scatter chunk to %d, %d...", cp.x, cp.y);
 
         if (! in_bounds(cp))
             continue;
@@ -414,9 +411,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
         if (! ld.see_cell(cp))
             continue;
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Cell is visible...");
-#endif
+        dprf("Cell is visible...");
 
         if (feat_is_solid(grd(cp)) || actor_at(cp))
             continue;
@@ -431,9 +426,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
             continue;
         }
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Success");
-#endif
+        dprf("Success");
 
         copy_item_to_grid(corpse, cp);
     }
@@ -730,18 +723,12 @@ static bool _ely_heal_monster(monsters *monster, killer_type killer, int i)
     else if (!YOU_KILL(killer))
         return (false);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "monster hp: %d, max hp: %d",
-         monster->hit_points, monster->max_hit_points);
-#endif
+    dprf("monster hp: %d, max hp: %d", monster->hit_points, monster->max_hit_points);
 
     monster->hit_points = std::min(1 + random2(ely_penance/3),
                                    monster->max_hit_points);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "new hp: %d, ely penance: %d",
-         monster->hit_points, ely_penance);
-#endif
+    dprf("new hp: %d, ely penance: %d", monster->hit_points, ely_penance);
 
     snprintf(info, INFO_SIZE, "%s heals %s%s",
              god_name(god, false).c_str(),

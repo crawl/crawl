@@ -137,6 +137,8 @@ lajatang2
 %sdir item/weapon/brands
 %shrink 0
 %rim 0
+# The order of weapon brands must be identical to the one defined
+# in itemprop-enum.h.
 i-flaming BRAND_FLAMING
 i-freezing BRAND_FREEZING
 i-holy_wrath BRAND_HOLY_WRATH
@@ -156,6 +158,10 @@ i-distortion BRAND_DISTORTION
 i-reaching BRAND_REACHING
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
+# confuse
+# penetration
+i-reaping BRAND_REAPING
+# missile-only brands
 i-venom BRAND_POISONED
 i-curare BRAND_CURARE
 %rim 1

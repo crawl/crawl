@@ -481,6 +481,7 @@ sabre SABRE
 sword3 SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
+demonblade DEMON_BLADE
 
 ## blunt
 club CLUB

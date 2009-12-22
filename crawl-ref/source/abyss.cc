@@ -674,9 +674,7 @@ static void _initialise_level_corrupt_seeds(int power)
     const int low = power / 2, high = power * 3 / 2;
     int nseeds = random_range(1, std::min(2 + power / 110, 4));
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Placing %d corruption seeds", nseeds);
-#endif
+    dprf("Placing %d corruption seeds", nseeds);
 
     // The corruption centered on the player is free.
     _place_corruption_seed(you.pos(), high + 300);

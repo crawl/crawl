@@ -703,6 +703,41 @@ MAP
 ENDMAP
 
 ##############################################################################
+# A variety of statues, with loot. (1KB)
+#
+NAME:    statue_cache
+ORIENT:  north
+TAGS:    no_monster_gen
+DEPTH:   D:12-20, Elf, Vault
+MONS: statue name:archer name_adjective ; crossbow ego:flame . bolt q:30
+MONS: statue name:archer name_adjective ; crossbow ego:frost . bolt q:30
+MONS: statue name:warrior name_adjective ; battleaxe ego:flaming good_item
+MONS: statue name:warrior name_adjective ; battleaxe ego:freezing good_item
+MONS: statue name:warrior name_adjective ; great mace ego:flaming good_item
+MONS: statue name:warrior name_adjective ; great mace ego:freezing good_item
+MONS: silver statue
+KMONS: 8 = statue name:wizard name_adjective spells:lehudib's_crystal_spear;iskenderun's_mystic_blast;slow;stone_arrow
+KMONS: 9 = statue name:wizard name_adjective spells:freezing_cloud;mephitic_cloud;throw_icicle;confuse
+MAP
+  cccccccccccccc
+  cccccccc7ccccc
+  cccccc.....ccc
+  cccc..ccccc.cc
+  ccc.ccccc5c.cc
+  ccc.cccccc.ccc
+  cc8.9cc3c.c6cc
+  c$$$$$cc.ccccc
+  c|*|*|c.c4cccc
+ccccccccc.ccccccccc
+........1.2........
+...................
+...................
+ .................
+   .............
+      ...@...
+ENDMAP
+
+##############################################################################
 # The Shining One Protects a Powerful Item 1 (by abrahamwl)
 #
 # The basic theme of this vault is that the the Shining one has placed a

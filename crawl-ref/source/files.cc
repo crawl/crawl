@@ -1442,9 +1442,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         timeval -= (stepdown_value( check_stealth(), 50, 50, 150, 150 ) / 10);
 
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "arrival time: %d", timeval );
-#endif
+        dprf("arrival time: %d", timeval );
 
         if (timeval > 0)
         {
@@ -1803,7 +1801,7 @@ static std::string _make_ghost_filename()
 
 bool load_ghost(bool creating_level)
 {
-    const bool wiz_cmd = crawl_state.prev_cmd == CMD_WIZARD;
+    const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
 
     ASSERT(you.transit_stair == DNGN_UNSEEN || creating_level);
     ASSERT(!you.entering_level || creating_level);
@@ -1837,7 +1835,7 @@ bool load_ghost(bool creating_level)
 
     if (gfile == NULL)
     {
-        if (wiz_cmd)
+        if (wiz_cmd && !creating_level)
             mpr("No ghost files for this level.", MSGCH_PROMPT);
         return (false);                 // no such ghost.
     }

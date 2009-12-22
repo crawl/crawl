@@ -1338,9 +1338,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         }
     }
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Spell #%d, power=%d", spell, powc);
-#endif
+    dprf("Spell #%d, power=%d", spell, powc);
 
     switch (spell)
     {
@@ -1788,10 +1786,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     {
         const int sleep_power =
             stepdown_value(powc * 9 / 10, 5, 35, 45, 50);
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Sleep power stepdown: %d -> %d",
-             powc, sleep_power);
-#endif
+        dprf("Sleep power stepdown: %d -> %d", powc, sleep_power);
         if (!zapping(ZAP_HIBERNATION, sleep_power, beam, true))
             return (SPRET_ABORT);
         break;

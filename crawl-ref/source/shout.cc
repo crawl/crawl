@@ -470,11 +470,8 @@ static const char* _player_vampire_smells_blood(int dist)
 void blood_smell(int strength, const coord_def& where)
 {
     const int range = strength * strength;
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "blood stain at (%d, %d), range of smell = %d",
+    dprf("blood stain at (%d, %d), range of smell = %d",
          where.x, where.y, range);
-#endif
 
     // Of the player species, only Vampires can smell blood.
     if (you.species == SP_VAMPIRE)
@@ -489,11 +486,8 @@ void blood_smell(int strength, const coord_def& where)
 
             if (player_distance <= vamp_range)
             {
-#ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS,
-                     "Player smells blood, pos: (%d, %d), dist = %d)",
+                dprf("Player smells blood, pos: (%d, %d), dist = %d)",
                      you.pos().x, you.pos().y, player_distance);
-#endif
                 you.check_awaken(range - player_distance);
                 // Don't message if you can see the square.
                 if (!you.see_cell(where))
@@ -523,21 +517,17 @@ void blood_smell(int strength, const coord_def& where)
             {
                 if (coinflip())
                 {
-#ifdef DEBUG_DIAGNOSTICS
-                    mprf(MSGCH_DIAGNOSTICS, "disturbing %s (%d, %d)",
+                    dprf("disturbing %s (%d, %d)",
                          mi->name(DESC_PLAIN).c_str(),
                          mi->pos().x, mi->pos().y);
-#endif
                     behaviour_event(*mi, ME_DISTURB, MHITNOT, where);
                 }
                 continue;
             }
         }
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "alerting %s (%d, %d)",
+        dprf("alerting %s (%d, %d)",
              mi->name(DESC_PLAIN).c_str(),
              mi->pos().x, mi->pos().y);
-#endif
         behaviour_event(*mi, ME_ALERT, MHITNOT, where);
 
         if (mi->type == MONS_SHARK)

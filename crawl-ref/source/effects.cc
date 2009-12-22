@@ -4180,9 +4180,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
                 }
             }
 
-#if DEBUG_DIAGNOSTICS
-            mpr("backing off...", MSGCH_DIAGNOSTICS);
-#endif
+            dprf("backing off...");
         }
         else
         {

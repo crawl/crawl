@@ -13,7 +13,7 @@ struct bolt;
 struct dist;
 struct activity_interrupt_data;
 
-bool go_berserk(bool intentional);
+bool go_berserk(bool intentional, bool no_clarity = false);
 void search_around(bool only_adjacent = false);
 void down_stairs(int old_level,
                  dungeon_feature_type force_stair = DNGN_UNSEEN,
@@ -59,6 +59,7 @@ std::string weird_smell();
 
 std::string weird_sound();
 
+bool mons_can_hurt_player(const monsters *mon);
 bool mons_is_safe(const monsters *mon, bool want_move = false,
                   bool consider_user_options = true);
 

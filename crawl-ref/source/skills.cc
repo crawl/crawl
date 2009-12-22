@@ -156,13 +156,8 @@ int exercise(int exsk, int deg)
         deg--;
     }
 
-#ifdef DEBUG_DIAGNOSTICS
     if (ret)
-    {
-        mprf(MSGCH_DIAGNOSTICS, "Exercised %s (deg: %d) by %d",
-                                skill_name(exsk), deg, ret);
-    }
-#endif
+        dprf("Exercised %s (deg: %d) by %d", skill_name(exsk), deg, ret);
 
     return (ret);
 }                               // end exercise()

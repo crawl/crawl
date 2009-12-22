@@ -655,10 +655,8 @@ bool cast_summon_horrible_things(int pow, god_type god)
 
 bool receive_corpses(int pow, coord_def where)
 {
-#if DEBUG_DIAGNOSTICS
     // pow = invocations * 4, ranges from 0 to 108
-    mprf(MSGCH_DIAGNOSTICS, "receive_corpses() power: %d", pow);
-#endif
+    dprf("receive_corpses() power: %d", pow);
 
     // Kiku gives branch-appropriate corpses (like shadow creatures).
     int expected_extra_corpses = 3 + pow / 18; // 3 at 0 Inv, 9 at 27 Inv.
@@ -1200,9 +1198,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
         return (false);
     }
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Mass for abomination: %d", total_mass);
-#endif
+    dprf("Mass for abomination: %d", total_mass);
 
     // This is what the old statement pretty much boils down to,
     // the average will be approximately 10 * pow (or about 1000
@@ -1211,9 +1207,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     // material components are far more important to this spell. - bwr
     total_mass += roll_dice(20, pow);
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Mass including power bonus: %d", total_mass);
-#endif
+    dprf("Mass including power bonus: %d", total_mass);
 
     if (total_mass < 400 + roll_dice(2, 500)
         || how_many_corpses < (coinflip() ? 3 : 2))
@@ -1561,9 +1555,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
             }
 #endif
 
-#if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
-#endif
+            dprf("Target square (%d,%d)", pos.x, pos.y );
 
             if (pos == you.pos() || pos == coord_def(-1,-1))
             {
@@ -1602,10 +1594,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
                 pos.x += random2(3) - 1;
                 pos.y += random2(3) - 1;
             }
-#if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Scattered target square (%d, %d)", pos.x, pos.y);
-#endif
+            dprf("Scattered target square (%d, %d)", pos.x, pos.y);
         }
 
         if (!in_bounds(pos))
@@ -1622,10 +1611,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
             // Merfolk should be able to control-tele into deep water.
             if (_cell_vetoes_teleport(pos))
             {
-#if DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS,
-                    "Target square (%d, %d) vetoed, now random teleport.", pos.x, pos.y);
-#endif
+                dprf("Target square (%d, %d) vetoed, now random teleport.", pos.x, pos.y);
                 is_controlled = false;
                 large_change  = false;
             }
@@ -1910,9 +1896,7 @@ bool project_noise(void)
 
     redraw_screen();
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
-#endif
+    dprf("Target square (%d,%d)", pos.x, pos.y );
 
     if (!silenced( pos ))
     {

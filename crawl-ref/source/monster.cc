@@ -1783,7 +1783,7 @@ bool monsters::pickup_gold(item_def &item, int near)
 bool monsters::pickup_misc(item_def &item, int near)
 {
     // Never pick up runes.
-    if (item.sub_type == MISC_RUNE_OF_ZOT)
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_RUNE_OF_ZOT)
         return (false);
 
     // Holy monsters and worshippers of good gods won't pick up evil
@@ -2915,7 +2915,7 @@ bool monsters::asleep() const
 
 bool monsters::backlit(bool check_haloed) const
 {
-    return (has_ench(ENCH_CORONA)
+    return (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
         || ((check_haloed) ? haloed() : false));
 }
 
@@ -5035,9 +5035,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             // Don't clean up the monster in order to credit properly.
             hurt(NULL, dam, BEAM_NAPALM, false);
 
-#if DEBUG_DIAGNOSTICS
-            mprf( MSGCH_DIAGNOSTICS, "sticky flame damage: %d", dam );
-#endif
+            dprf("sticky flame damage: %d", dam);
 
             // Credit the kill.
             if (hit_points < 1)
