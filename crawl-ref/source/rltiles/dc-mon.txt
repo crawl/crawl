@@ -310,6 +310,7 @@ louise MONS_LOUISE
 margery MONS_MARGERY
 maud MONS_MAUD
 maurice MONS_MAURICE
+nikola MONS_NIKOLA
 norbert MONS_NORBERT
 norris MONS_NORRIS
 psyche MONS_PSYCHE
