@@ -276,6 +276,8 @@ toenail_golem MONS_TOENAIL_GOLEM
 wood_golem MONS_WOOD_GOLEM
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
+# For the Erinya WizLab
+vine-covered_golem MONS_VINE_GOLEM
 
 ## Statues (also '8')
 %sdir dc-mon/unique
