@@ -1097,7 +1097,7 @@ static monsterentry mondata[] = {
 {
     MONS_MERFOLK, 'm', LIGHTBLUE, "merfolk",
     M_WARM_BLOOD | M_SPEAKS,
-    MR_RES_POISON | MR_RES_COLD,
+    MR_NO_FLAGS,
     500, 10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 2, 4, 0 },
@@ -1109,7 +1109,7 @@ static monsterentry mondata[] = {
 {
     MONS_MERMAID, 'm', CYAN, "mermaid",
     M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS,
-    MR_RES_POISON | MR_RES_COLD,
+    MR_NO_FLAGS,
     500, 10, MONS_MERMAID, MONS_MERMAID, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 2, 3, 0 },
@@ -1121,7 +1121,7 @@ static monsterentry mondata[] = {
 {
     MONS_SIREN, 'm', LIGHTCYAN, "siren",
     M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS,
-    MR_RES_POISON | MR_RES_COLD,
+    MR_NO_FLAGS,
     500, 12, MONS_MERMAID, MONS_SIREN, MH_NATURAL, -7,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 2, 3, 0 },
