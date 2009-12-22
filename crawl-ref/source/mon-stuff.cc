@@ -133,7 +133,9 @@ int _make_mimic_item(monster_type type)
 
     case MONS_POTION_MIMIC:
         item.base_type = OBJ_POTIONS;
-        item.sub_type = random2(NUM_POTIONS);
+        do
+            item.sub_type = random2(NUM_POTIONS);
+        while (is_blood_potion(item));
         break;
 
     case MONS_GOLD_MIMIC:
