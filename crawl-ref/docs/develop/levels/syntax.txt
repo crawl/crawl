@@ -821,6 +821,9 @@ COLOUR:   . = green / blue:5 / red / none
           Even more so than base colours, elemental colours should be used
           very, very, very sparingly.
 
+          Colours apply automatically to floor and rock wall tiles, although
+          not all branches have coloured variations for their tile set.
+
 FTILE:    . = floor_grass:20 / floor_dirt / none
           Similar to COLOUR, FTILE allows you to attach explicit floor
           tiles to any glyph.  In non-tiles builds, this does nothing.
@@ -838,6 +841,9 @@ FTILE:    . = floor_grass:20 / floor_dirt / none
 
           Like COLOUR, this should be used sparingly.
 
+          If COLOUR is also specified and there is a coloured variation
+          of this tile, then it will be used.
+
 RTILE:    x = wall_hive:15 / wall_lair / none
           Identical to FTILE, but for rock walls.  Not useful for anything
           but the rock wall feature.
@@ -853,6 +859,9 @@ TILE:     x = wall_flesh
 
           Like COLOUR and FTILE, this should be used sparingly and to good
           effect.
+
+          If COLOUR is also specified and there is a coloured variation
+          of this tile, then it will be used.
 
           To override doors, use the specific tile set in combination with the
           "no_random" specifier. Example:

@@ -88,6 +88,31 @@ bool tile_page::place_images()
     return (true);
 }
 
+int tile_page::find(const std::string &enumname) const
+{
+    for (size_t i = 0; i < m_tiles.size(); ++i)
+    {
+        for (int c = 0; c < m_tiles[i]->enumcount(); ++c)
+        {
+            if (m_tiles[i]->enumname(c) == enumname)
+                return (i);
+        }
+    }
+
+    return (-1);
+}
+
+bool tile_page::add_synonym(const std::string &enumname, const std::string &syn)
+{
+    int idx = find(enumname);
+    if (idx == -1)
+        return (false);
+
+    m_tiles[idx]->add_enumname(syn);
+
+    return (true);
+}
+
 bool tile_page::write_image(const char *filename)
 {
     if (m_width * m_height <= 0)
@@ -123,3 +148,12 @@ bool tile_page::write_image(const char *filename)
     delete[] pixels;
     return success;
 }
+
+void tile_page::add_variation(int var_idx, int base_idx, int colour)
+{
+    assert(var_idx < (2 << 15));
+    assert(base_idx < (2 << 15));
+
+    m_tiles[base_idx]->add_variation(colour, var_idx);
+}
+

@@ -3123,9 +3123,9 @@ int _get_door_offset (int base_tile, bool opened = false,
 
 // Modify wall tile index depending on floor/wall flavour.
 static inline void _finalise_tile(unsigned int *tile,
-                                  unsigned char wall_flv,
-                                  unsigned char floor_flv,
-                                  unsigned char special_flv,
+                                  unsigned int wall_flv,
+                                  unsigned int floor_flv,
+                                  unsigned int special_flv,
                                   coord_def gc)
 {
     int orig = (*tile) & TILE_FLAG_MASK;
@@ -4411,14 +4411,22 @@ void tile_init_flavour(const coord_def &gc)
 
     if (!env.tile_flv(gc).floor)
     {
-        int floor_rnd = random2(tile_dngn_count(env.tile_default.floor));
-        env.tile_flv(gc).floor = env.tile_default.floor + floor_rnd;
+        int floor_base = env.tile_default.floor;
+        int colour = env.grid_colours(gc);
+        if (colour)
+            floor_base = tile_dngn_coloured(floor_base, colour);
+        int floor_rnd = random2(tile_dngn_count(floor_base));
+        env.tile_flv(gc).floor = floor_base + floor_rnd;
     }
 
     if (!env.tile_flv(gc).wall)
     {
-        int wall_rnd = random2(tile_dngn_count(env.tile_default.wall));
-        env.tile_flv(gc).wall = env.tile_default.wall + wall_rnd;
+        int wall_base = env.tile_default.wall;
+        int colour = env.grid_colours(gc);
+        if (colour)
+            wall_base = tile_dngn_coloured(wall_base, colour);
+        int wall_rnd = random2(tile_dngn_count(wall_base));
+        env.tile_flv(gc).wall = wall_base + wall_rnd;
     }
 
     if (feat_is_door(grd(gc)))
@@ -4884,9 +4892,9 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                                  + coord_def(cx, cy) - crawl_view.vgrdc;
             const coord_def gc = view2grid(ep);
 
-            unsigned char wall_flv    = 0;
-            unsigned char floor_flv   = 0;
-            unsigned char special_flv = 0;
+            unsigned int wall_flv    = 0;
+            unsigned int floor_flv   = 0;
+            unsigned int special_flv = 0;
             const bool in_bounds = (map_bounds(gc));
 
             if (in_bounds)

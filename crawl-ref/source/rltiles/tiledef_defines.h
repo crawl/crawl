@@ -2,6 +2,7 @@
 #define TILEDEF_DEFINES_H
 
 #include <cassert>
+#include <vector>
 
 class tile_info
 {
@@ -46,5 +47,51 @@ public:
 typedef unsigned int (tile_count_func)(unsigned int);
 typedef const char *(tile_name_func)(unsigned int);
 typedef tile_info &(tile_info_func)(unsigned int);
+
+typedef struct tile_variation
+{
+    tile_variation(int i, int c) : idx(i), col(c) { }
+    int idx;
+    int col;
+
+    static int cmp(tile_variation left, tile_variation right)
+    {
+        if (left.idx < right.idx)
+            return (-1);
+        if (left.idx > right.idx)
+            return (1);
+        if (left.col < right.col)
+            return (-1);
+        if (left.col > right.col)
+            return (1);
+        return (0);
+    }
+};
+
+template<class F, class R>
+bool binary_search(F find, std::pair<F, R> *arr, int num_pairs,
+                   int (*cmpfnc)(F, F), R &result)
+{
+    int first = 0;
+    int last = num_pairs - 1;
+
+    do
+    {
+        int half = (last - first) / 2 + first;
+        int cmp = cmpfnc(find, arr[half].first);
+        if (cmp < 0)
+            last = half - 1;
+        else if (cmp > 0)
+            first = half + 1;
+        else
+        {
+            result = arr[half].second;
+            return true;
+        }
+
+    } while (first <= last);
+
+    return false;
+}
 
 #endif

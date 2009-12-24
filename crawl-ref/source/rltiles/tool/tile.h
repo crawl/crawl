@@ -3,6 +3,7 @@
 
 #include "tile_colour.h"
 #include <string>
+#include <vector>
 
 class tile
 {
@@ -30,25 +31,32 @@ public:
     void replace_colour(tile_colour &find, tile_colour &replace);
     void fill(const tile_colour &col);
 
-    const std::string &filename();
-    const std::string &enumname();
-    const std::string &parts_ctg();
-    int width();
-    int height();
+    const std::string &filename() const;
+    int enumcount() const;
+    const std::string &enumname(int idx) const;
+    void add_enumname(const std::string &name);
+    const std::string &parts_ctg() const;
+    int width() const;
+    int height() const;
     bool shrink();
     void set_shrink(bool new_shrink);
 
     void get_bounding_box(int &x0, int &y0, int &w, int &h);
 
     tile_colour &get_pixel(unsigned int x, unsigned int y);
+
+    void add_variation(int colour, int idx);
+    bool get_variation(int colour, int &idx);
 protected:
     int m_width;
     int m_height;
     std::string m_filename;
-    std::string m_enumname;
+    std::vector<std::string> m_enumname;
     std::string m_parts_ctg;
     tile_colour *m_pixels;
     bool m_shrink;
+
+    int m_variations[MAX_COLOUR];
 };
 
 #endif
