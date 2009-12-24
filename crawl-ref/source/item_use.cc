@@ -175,12 +175,13 @@ bool can_wield(item_def *weapon, bool say_reason,
     }
 
     if (you.hunger_state < HS_FULL
+        && you.hunger < you_max_hunger() - 500 // ghouls
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
         && you.species != SP_VAMPIRE && you.species != SP_MUMMY)
     {
         if (say_reason)
         {
-            mpr("You're too hungry to wield that.");
+            mpr("As you grasp it, you feel a great hunger.  Being not satiated, you stop.");
             // If it's a standard weapon, you know its ego now.
             if (!is_artefact(*weapon) && !is_blessed(*weapon)
                 && !item_type_known(*weapon))
