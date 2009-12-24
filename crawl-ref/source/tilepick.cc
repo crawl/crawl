@@ -121,6 +121,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     bool in_water = feat_is_water(grd(mon->pos()));
 
     int type = mon->type;
+    if (!crawl_state.arena && you.misled())
+        type = mon->get_mislead_type();
 
     // Show only base class for detected monsters.
     if (detected)
@@ -1013,6 +1015,12 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     // ogre ('O')
     case MONS_EROLCHA:
         return TILEP_MONS_EROLCHA;
+
+    // rakshasas ('R')
+    case MONS_MARA:
+        return TILEP_MONS_MARA;
+    case MONS_MARA_FAKE:
+        return TILEP_MONS_MARA_FAKE;
 
     // trolls ('T')
     case MONS_PURGY:

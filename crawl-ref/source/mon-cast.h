@@ -27,5 +27,6 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                      bool check_validity = false);
 
 void mons_cast_haunt(monsters *monster);
+void mons_cast_mislead(monsters *monster);
 
 #endif

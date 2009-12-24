@@ -3140,8 +3140,11 @@ static std::string _get_monster_desc(const monsters *mon)
     else if (mon->neutral()) // don't differentiate between permanent or not
         text += pronoun + " is indifferent to you.\n";
 
-    if (mon->is_summoned() && mon->type != MONS_RAKSHASA_FAKE)
+    if (mon->is_summoned() && (mon->type != MONS_RAKSHASA_FAKE
+                               && mon->type != MONS_MARA_FAKE))
+    {
         text += pronoun + " has been summoned.\n";
+    }
 
     if (mon->haloed())
         text += pronoun + " is illuminated by a divine halo.\n";
@@ -3242,7 +3245,8 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     std::string weap = "";
 
     // We don't report rakshasa equipment in order not to give away the
-    // true rakshasa when it summons.
+    // true rakshasa when it summons. But Mara is fine, because his weapons
+    // and armour are cloned with him.
 
     if (mon->type != MONS_DANCING_WEAPON
         && (mon->type != MONS_RAKSHASA || mon->friendly()))
@@ -3258,7 +3262,8 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     }
 
     // Print the rest of the equipment only for full descriptions.
-    if (full_desc && (mon->type != MONS_RAKSHASA || mon->friendly()))
+    if (full_desc && ((mon->type != MONS_RAKSHASA && mon->type != MONS_MARA
+                       && mon->type != MONS_MARA_FAKE) || mon->friendly()))
     {
         const int mon_arm = mon->inv[MSLOT_ARMOUR];
         const int mon_shd = mon->inv[MSLOT_SHIELD];

@@ -2731,16 +2731,21 @@ static std::string _monster_stat_description(const monsters& mon)
                << ".$";
     }
 
-    // Magic resistance at MAG_IMMUNE.
-    if (mons_immune_magic(&mon))
-        result << pronoun << " is immune to magical enchantments.$";
-    else // How resistant is it? Same scale as the player.
+    // Magic resistance at MAG_IMMUNE, but not for Rs, as there is then
+    // too much information leak.
+    if (mon.type != MONS_RAKSHASA && mon.type != MONS_MARA
+        && mon.type != MONS_RAKSHASA_FAKE && mon.type != MONS_MARA_FAKE)
     {
-        const int mr = mon.res_magic();
-        if (mr >= 10)
+        if (mons_immune_magic(&mon))
+            result << pronoun << " is immune to magical enchantments.$";
+        else // How resistant is it? Same scale as the player.
         {
-            result << pronoun << make_stringf(" is %s resistant to magic.$",
-                                              magic_res_adjective(mr).c_str());
+            const int mr = mon.res_magic();
+            if (mr >= 10)
+            {
+                result << pronoun << make_stringf(" is %s resistant to magic.$",
+                                                  magic_res_adjective(mr).c_str());
+            }
         }
     }
 
@@ -2929,7 +2934,8 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
                  << " is incapable of using stairs.$";
     }
 
-    if (mons.is_summoned() && mons.type != MONS_RAKSHASA_FAKE)
+    if (mons.is_summoned() && (mons.type != MONS_RAKSHASA_FAKE
+                               && mons.type != MONS_MARA_FAKE))
     {
         inf.body << "$" << "This monster has been summoned, and is thus only "
                        "temporary. Killing it yields no experience, nutrition "

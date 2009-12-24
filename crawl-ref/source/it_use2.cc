@@ -76,6 +76,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         you.rotting = 0;
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
+        you.duration[DUR_MISLED] = 0;
         break;
 
     case POT_HEAL_WOUNDS:

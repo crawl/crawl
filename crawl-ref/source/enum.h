@@ -1203,6 +1203,7 @@ enum duration_type
     DUR_SLIMIFY,
     DUR_TIME_STEP,
     DUR_ICEMAIL_DEPLETED,     // Wait this many turns for full Icemail
+    DUR_MISLED,
 
     NUM_DURATIONS
 };
@@ -2060,6 +2061,8 @@ enum monster_type                      // (int) menv[].type
     MONS_CRAZY_YIUF,
     MONS_SLAVE,
     MONS_GIANT_LEECH,
+    MONS_MARA,
+    MONS_MARA_FAKE,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2314,6 +2317,8 @@ enum mon_spellbook_type
     MST_AIZUL,
     MST_EXECUTIONER,
     MST_HAROLD,
+    MST_MARA,
+    MST_MARA_FAKE,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2912,6 +2917,10 @@ enum spell_type
     SPELL_BLINK_CLOSE,
     SPELL_BLINK_RANGE,
     SPELL_BLINK_AWAY,
+    SPELL_MISLEAD,
+    SPELL_FAKE_MARA_SUMMON,
+    SPELL_SUMMON_RAKSHASA,
+    SPELL_SUMMON_PLAYER_GHOST,
 
     NUM_SPELLS
 };

@@ -360,7 +360,8 @@ void show_def::_update_monster(const monsters* mons)
         _set_backup(e);
 
     grid(e).cls = SH_MONSTER;
-    grid(e).mons = mons->type;
+    grid(e).mons = (!crawl_state.arena && you.misled()) ?
+                        mons->get_mislead_type() : mons->type;
     grid(e).colour = get_mons_glyph(mons).col;
 
 #ifdef USE_TILE

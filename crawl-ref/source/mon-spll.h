@@ -1297,6 +1297,28 @@
       }
     },
 
+    {  MST_MARA,
+      {
+       SPELL_MISLEAD,
+       SPELL_FAKE_MARA_SUMMON,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_SUMMON_PLAYER_GHOST,
+       SPELL_PAIN,
+       SPELL_TELEPORT_SELF,
+      }
+    },
+
+    {  MST_MARA_FAKE,
+      {
+       SPELL_MISLEAD,
+       SPELL_NO_SPELL,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_PAIN,
+       SPELL_TELEPORT_SELF,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

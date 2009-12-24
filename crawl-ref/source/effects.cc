@@ -937,6 +937,13 @@ void direct_effect(monsters *source, spell_type spell,
         mons_cast_haunt(source);
         break;
 
+    case SPELL_MISLEAD:
+        if (!def)
+            mons_cast_mislead(source);
+        else
+            defender->confuse(source, source->hit_dice * 12);
+        break;
+
     default:
         ASSERT(false);
     }

@@ -280,7 +280,7 @@ void Kills::merge(const Kills &k)
 void Kills::record_kill(const struct monsters *mon)
 {
     // Handle player ghosts separately.
-    if (mon->type == MONS_PLAYER_GHOST)
+    if (mon->type == MONS_PLAYER_GHOST && !mon->is_summoned())
     {
         record_ghost_kill(mon);
         return ;
@@ -533,6 +533,9 @@ std::string kill_def::base_name(const kill_monster_desc &md) const
       case MONS_RAKSHASA_FAKE:
         name = "illusory " + name;
         break;
+      case MONS_MARA_FAKE:
+        name = "illusory " + name;
+        break;
     }
     return name;
 }
@@ -622,7 +625,7 @@ kill_ghost::kill_ghost(const monsters *mon)
 
     // Check whether this is really a ghost, since we also have to handle
     // the Pandemonic demons.
-    if (mon->type == MONS_PLAYER_GHOST)
+    if (mon->type == MONS_PLAYER_GHOST && !mon->is_summoned())
         ghost_name = "The ghost of " + get_ghost_description(*mon, true);
 }
 
