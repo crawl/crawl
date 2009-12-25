@@ -1,4 +1,5 @@
 #include "tile_colour.h"
+#include <cassert>
 #include <vector>
 #include <stdlib.h>
 #include <stdio.h>
