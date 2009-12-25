@@ -1447,15 +1447,11 @@ static bool _get_mem_list(spell_list &mem_spells,
              "You cannot memorise any of the available spells because you "
              "are a %s.", lowercase_string(species).c_str());
     }
-    else if (num_low_levels > 0)
+    else if (num_low_levels > 0 || num_low_xl > 0)
     {
-        mpr("You do not have enough free spell levels to memorise any of the "
-            "available spells.", MSGCH_PROMPT);
-    }
-    else if (num_low_xl > 0)
-    {
-        mpr("You aren't experienced enough to memorise any of the "
-            "available spells.", MSGCH_PROMPT);
+        // Just because we can't memorise them doesn't mean we don't want to
+        // see what we have available. See FR #235. {due}
+        return (true);
     }
     else
     {
