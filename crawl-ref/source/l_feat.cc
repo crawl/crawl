@@ -1,5 +1,5 @@
 /*
- * File:     l_featfeat.cc
+ * File:     l_feat.cc
  * Summary:  Boolean feat-related functions lua library "feat".
  */
 
