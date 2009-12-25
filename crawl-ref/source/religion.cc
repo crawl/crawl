@@ -5151,7 +5151,7 @@ bool god_likes_fresh_corpses(god_type god)
 
 bool god_hates_butchery(god_type god)
 {
-    return (god == GOD_ELYVILON);
+    return (false);
 }
 
 harm_protection_type god_protects_from_harm(god_type god, bool actual)
