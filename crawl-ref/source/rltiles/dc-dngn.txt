@@ -418,7 +418,12 @@ wall/wall_flesh3
 wall/wall_flesh4
 wall/wall_flesh5
 wall/wall_flesh6
-wall/transparent_flesh WALL_TRANSPARENT_FLESH
+wall/transparent_flesh1 WALL_TRANSPARENT_FLESH
+wall/transparent_flesh2
+wall/transparent_flesh3
+wall/transparent_flesh4
+wall/transparent_flesh5
+wall/transparent_flesh6
 
 wall/wall_vines0 WALL_VINES
 wall/wall_vines1
