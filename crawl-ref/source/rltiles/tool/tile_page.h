@@ -2,6 +2,8 @@
 #define TILE_PAGE_H
 
 #include <vector>
+#include <string>
+
 class tile;
 
 class tile_page

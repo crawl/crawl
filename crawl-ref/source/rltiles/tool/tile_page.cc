@@ -2,6 +2,7 @@
 #include "tile_colour.h"
 #include <stdio.h>
 #include <string.h>
+#include <cassert>
 #include "tile.h"
 
 tile_page::tile_page() : m_width(1024), m_height(0)
