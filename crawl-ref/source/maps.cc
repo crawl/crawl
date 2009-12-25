@@ -337,7 +337,7 @@ static bool _safe_vault_place(const map_def &map,
         if (lines[dp.y][dp.x] == ' ')
             continue;
 
-        if (dgn_Map_Mask[cp.x][cp.y])
+        if (dgn_Map_Mask[cp.x][cp.y] == MMT_VAULT)
             return (false);
 
         const dungeon_feature_type dfeat = grd(cp);
