@@ -734,6 +734,9 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.duration[DUR_LIQUID_FLAMES])
         out.push_back(status_light(RED, "Fire"));
 
+    if (you.duration[DUR_MISLED])
+        out.push_back(status_light(LIGHTMAGENTA, "Misled"));
+
     if (you.duration[DUR_POISONING])
     {
         int color = _bad_ench_colour( you.duration[DUR_POISONING], 5, 10 );

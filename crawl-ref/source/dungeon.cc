@@ -3592,7 +3592,7 @@ static int _place_uniques(int level_number, char level_type)
     int num_placed = 0;
 
     // Magic numbers for dpeg's unique system.
-    int A = 3;
+    int A = 2;
     int B = 5;
     while (one_chance_in(A))
     {

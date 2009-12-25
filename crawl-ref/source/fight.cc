@@ -5670,7 +5670,7 @@ int melee_attack::mons_to_hit()
 
 ///////////////////////////////////////////////////////////////////////////
 
-static bool wielded_weapon_check(const item_def *weapon)
+bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
     bool weapon_warning  = false;
     bool unarmed_warning = false;
@@ -5694,6 +5694,9 @@ static bool wielded_weapon_check(const item_def *weapon)
     if (!you.received_weapon_warning && !you.confused()
         && (weapon_warning || unarmed_warning))
     {
+        if (no_message)
+            return (false);
+
         std::string prompt  = "Really attack while ";
         if (unarmed_warning)
             prompt += "being unarmed?";

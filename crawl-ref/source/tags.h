@@ -40,7 +40,7 @@ enum tag_file_type   // file types supported by tag system
 enum tag_major_version
 {
     TAG_MAJOR_START   = 5,
-    TAG_MAJOR_VERSION = 10
+    TAG_MAJOR_VERSION = 11
 };
 
 // Minor version will be reset to zero when major version changes.

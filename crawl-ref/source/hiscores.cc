@@ -1200,6 +1200,10 @@ std::string scorefile_entry::death_source_desc() const
         return ("");
     }
 
+    // XXX: Deals specially with Mara's clones.
+    if (death_source == MONS_MARA_FAKE)
+        return ("an illusion of Mara");
+
     // XXX no longer handles mons_num correctly! FIXME
     return (!death_source_name.empty() ?
             death_source_name : mons_type_name(death_source, DESC_NOCAP_A));

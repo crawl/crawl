@@ -56,6 +56,11 @@ glyph get_show_glyph(show_type object)
 static int _get_mons_colour(const monsters *mons)
 {
     int col = mons->colour;
+    if (!crawl_state.arena && you.misled())
+    {
+        const monsterentry* mdat = get_monster_data(mons->get_mislead_type());
+        col = mdat->colour;
+    }
 
     if (mons->berserk())
         col = RED;
@@ -125,7 +130,11 @@ glyph get_item_glyph(const item_def *item)
 glyph get_mons_glyph(const monsters *mons)
 {
     glyph g;
-    g.ch = mons_char(mons->type);
+
+    if (!crawl_state.arena && you.misled())
+        g.ch = mons_char(mons->get_mislead_type());
+    else
+        g.ch = mons_char(mons->type);
     g.col = _get_mons_colour(mons);
     return (g);
 }

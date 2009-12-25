@@ -2500,93 +2500,145 @@
 
 {
     SPELL_FLAME_AMMUNITION, "Flame Ammunition",
-      SPTYP_ENCHANTMENT | SPTYP_FIRE,
-      SPFLAG_HELPFUL | SPFLAG_BATTLE,
-      3,
-      0,
-      -1,-1,
-      0,
-      NULL,
-      false,
-      true
+     SPTYP_ENCHANTMENT | SPTYP_FIRE,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     3,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
 },
 
 {
     SPELL_FROST_AMMUNITION, "Frost Ammunition",
-      SPTYP_ENCHANTMENT | SPTYP_ICE,
-      SPFLAG_HELPFUL | SPFLAG_BATTLE,
-      3,
-      0,
-      -1,-1,
-      0,
-      NULL,
-      false,
-      true
+     SPTYP_ENCHANTMENT | SPTYP_ICE,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     3,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
 },
 
 {
     SPELL_SHOCKING_AMMUNITION, "Shocking Ammunition",
-        SPTYP_ENCHANTMENT | SPTYP_AIR,
-        SPFLAG_HELPFUL | SPFLAG_BATTLE,
-        5,
-        0,
-        -1,-1,
-        0,
-        NULL,
-        false,
-        true
+     SPTYP_ENCHANTMENT | SPTYP_AIR,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     5,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
 },
 
 {
     SPELL_EXPLODING_AMMUNITION, "Exploding Ammunition",
-        SPTYP_ENCHANTMENT | SPTYP_FIRE | SPTYP_AIR,
-        SPFLAG_HELPFUL | SPFLAG_BATTLE,
-        5,
-        0,
-        -1,-1,
-        0,
-        NULL,
-        false,
-        true
+     SPTYP_ENCHANTMENT | SPTYP_FIRE | SPTYP_AIR,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     5,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
 },
 
 {
     SPELL_WARP_AMMUNITION, "Warp Ammunition",
-        SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
-        SPFLAG_HELPFUL | SPFLAG_BATTLE,
-        5,
-        0,
-        -1,-1,
-        0,
-        NULL,
-        false,
-        true
+     SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     5,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
 },
 
 {
     SPELL_REAPING_AMMUNITION, "Reaping Ammunition",
-        SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
-        SPFLAG_HELPFUL | SPFLAG_BATTLE,
-        7,
-        0,
-        -1,-1,
-        0,
-        NULL,
-        false,
-        true
+     SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     7,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
 },
 
 {
     SPELL_RETURNING_AMMUNITION, "Returning Ammunition",
-        SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
-        SPFLAG_HELPFUL | SPFLAG_BATTLE,
-        3,
-        0,
-        -1,-1,
-        0,
-        NULL,
-        false,
-        true
+     SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     3,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_FAKE_MARA_SUMMON, "Mara Summon",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SUMMON_RAKSHASA, "Summon Rakshasa",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_MISLEAD, "Mislead",
+     SPTYP_ENCHANTMENT,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SUMMON_PLAYER_GHOST, "Summon Player Ghost",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
 },
 
 {

@@ -501,21 +501,27 @@ void map_lines::apply_grid_overlay(const coord_def &c)
                  // Over-ride whatever property is already there.
                 env.pgrid(gc) |= property;
 #ifdef USE_TILE
-            const int floor = (*overlay)(x, y).floortile;
+            int floor = (*overlay)(x, y).floortile;
             if (floor)
             {
+                if (colour)
+                    floor = tile_dngn_coloured(floor, colour);
                 int offset = random2(tile_dngn_count(floor));
                 env.tile_flv(gc).floor = floor + offset;
             }
-            const int rock = (*overlay)(x, y).rocktile;
+            int rock = (*overlay)(x, y).rocktile;
             if (rock)
             {
+                if (colour)
+                    rock = tile_dngn_coloured(rock, colour);
                 int offset = random2(tile_dngn_count(rock));
                 env.tile_flv(gc).wall = rock + offset;
             }
-            const int tile = (*overlay)(x, y).tile;
+            int tile = (*overlay)(x, y).tile;
             if (tile)
             {
+                if (colour)
+                    tile = tile_dngn_coloured(tile, colour);
                 int offset = random2(tile_dngn_count(tile));
                 if (grd(gc) == DNGN_FLOOR && !floor)
                     env.tile_flv(gc).floor = tile + offset;

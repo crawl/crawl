@@ -133,7 +133,9 @@ int _make_mimic_item(monster_type type)
 
     case MONS_POTION_MIMIC:
         item.base_type = OBJ_POTIONS;
-        item.sub_type = random2(NUM_POTIONS);
+        do
+            item.sub_type = random2(NUM_POTIONS);
+        while (is_blood_potion(item));
         break;
 
     case MONS_GOLD_MIMIC:
@@ -158,6 +160,7 @@ const item_def *give_mimic_item(monsters *mimic)
         return 0;
     if (!mimic->pickup_misc(mitm[it], 0))
         ASSERT("Mimic failed to pickup its item.");
+    ASSERT(mimic->inv[MSLOT_MISCELLANY] != NON_ITEM);
     return (&mitm[mimic->inv[MSLOT_MISCELLANY]]);
 }
 
@@ -1461,7 +1464,7 @@ int monster_die(monsters *monster, killer_type killer,
     const bool gives_xp      = (!summoned && !mons_class_flag(monster->type,
                                                               M_NO_EXP_GAIN));
 
-    const bool drop_items    = !hard_reset;
+    bool drop_items    = !hard_reset;
 
     const bool mons_reset(killer == KILL_RESET || killer == KILL_DISMISSED);
 
@@ -1728,7 +1731,7 @@ int monster_die(monsters *monster, killer_type killer,
                 }
 
                 // Cheibriados hates fast monsters.
-                if (mons_is_fast(monster))
+                if (mons_is_fast(monster) && !monster->cannot_move())
                 {
                     did_god_conduct(DID_KILL_FAST, monster->hit_dice,
                                     true, monster);
@@ -2047,7 +2050,7 @@ int monster_die(monsters *monster, killer_type killer,
                 // A banished monster that doesn't go on the transit list
                 // loses all items.
                 if (!monster->is_summoned())
-                    monster->destroy_inventory();
+                    drop_items = false;
                 break;
             }
 
@@ -2055,7 +2058,7 @@ int monster_die(monsters *monster, killer_type killer,
             monster->flags |= MF_BANISHED;
             monster->set_transit(level_id(LEVEL_ABYSS));
             in_transit = true;
-            monster->destroy_inventory();
+            drop_items = false;
             // Make monster stop patrolling and/or travelling.
             monster->patrol_point.reset();
             monster->travel_path.clear();
@@ -2066,7 +2069,7 @@ int monster_die(monsters *monster, killer_type killer,
             break;
 
         default:
-            monster->destroy_inventory();
+            drop_items = false;
             break;
     }
 
@@ -2129,7 +2132,7 @@ int monster_die(monsters *monster, killer_type killer,
         _elven_twin_died(monster, in_transit);
     }
     else if (mons_is_mimic(monster->type))
-        monster->destroy_inventory();
+        drop_items = false;
     else if (!monster->is_summoned())
     {
         if (mons_genus(monster->type) == MONS_MUMMY)

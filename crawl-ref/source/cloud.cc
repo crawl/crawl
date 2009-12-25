@@ -765,6 +765,12 @@ void in_a_cloud()
         if (you.duration[DUR_FIRE_SHIELD])
             you.duration[DUR_FIRE_SHIELD] = 1;
 
+        if (you.misled())
+        {
+            mpr("The rain washes away illusions!", MSGCH_DURATION);
+            you.duration[DUR_MISLED] = 0;
+        }
+
         mpr("You are standing in the rain.");
         break;
 

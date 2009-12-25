@@ -2927,8 +2927,9 @@ monster_type summon_any_demon(demon_class_type dct)
         break;
 
     case DEMON_COMMON:
-        temp_rand = random2(3948);
-        mon = ((temp_rand > 3367) ? MONS_NEQOXEC :         // 14.69%
+        temp_rand = random2(4066);
+        mon = ((temp_rand > 3947) ? MONS_SIXFIRHY :        //  3.00%
+               (temp_rand > 3367) ? MONS_NEQOXEC :         // 14.69%
                (temp_rand > 2787) ? MONS_ORANGE_DEMON :    // 14.69%
                (temp_rand > 2207) ? MONS_HELLWING :        // 14.69%
                (temp_rand > 1627) ? MONS_SMOKE_DEMON :     // 14.69%

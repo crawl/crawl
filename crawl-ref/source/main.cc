@@ -1296,6 +1296,12 @@ static void _go_upstairs()
     if (_marker_vetoes_stair())
         return;
 
+    if (you.duration[DUR_MISLED])
+    {
+        mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
+        you.duration[DUR_MISLED] = 0;
+    }
+
     tag_followers(); // Only those beside us right now can follow.
     start_delay(DELAY_ASCENDING_STAIRS,
                 1 + (you.burden_state > BS_UNENCUMBERED));
@@ -1366,6 +1372,12 @@ static void _go_downstairs()
     // Also checks for entering a labyrinth with teleportitis.
     if (!check_annotation_exclusion_warning())
         return;
+
+    if (you.duration[DUR_MISLED])
+    {
+        mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
+        you.duration[DUR_MISLED] = 0;
+    }
 
     if (shaft)
     {
@@ -2427,6 +2439,7 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel more resistant to magic.");
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
+    _decrement_a_duration(DUR_MISLED, delay, "Your thoughts are your own once more.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
@@ -4618,7 +4631,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 103    , c4);
     COMPILE_CHECK(SPELL_RETURNING_AMMUNITION == 162          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 211             , c6);
+    COMPILE_CHECK(NUM_SPELLS == 215             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

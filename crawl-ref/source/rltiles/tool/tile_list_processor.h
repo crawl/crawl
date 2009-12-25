@@ -18,6 +18,7 @@ protected:
     bool load_image(tile &img, const char *filename);
     bool process_line(char *read_line, const char *list_file, int line);
     void add_image(tile &img, const char *enumname);
+    void recolour(tile &img);
 
     std::string m_name;
 
@@ -38,6 +39,22 @@ protected:
     std::vector<std::string> m_categories;
     std::vector<int> m_ctg_counts;
     tile m_compose;
+    int m_variation_idx;
+    int m_variation_col;
+
+    typedef std::pair<tile_colour, tile_colour> palette_entry;
+    typedef std::vector<palette_entry> palette_list;
+    palette_list m_palette;
+
+    typedef std::pair<int, int> int_pair;
+    typedef std::vector<int_pair> hue_list;
+    hue_list m_hues;
+
+    typedef std::vector<int> desat_list;
+    desat_list m_desat;
+
+    typedef std::vector<int_pair> lum_list;
+    lum_list m_lum;
 };
 
 #endif

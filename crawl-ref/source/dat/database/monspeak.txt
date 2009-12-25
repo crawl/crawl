@@ -2552,6 +2552,56 @@ Louise
 @_mercenary_guard_@
 ### END Louise
 %%%%
+############ MARA ### A powerful demon lord, Lord of Illusions
+Mara
+
+@_Mara_common_@
+
+w:5
+
+@_Mara_rare_@
+%%%%
+_Mara_common_
+
+VISUAL:@The_monster@'s face changes twice.
+
+@The_monster@ says, "I mislead the hearts of men!"
+
+@The_monster@ says, "What good are steel and magic against my illusions?"
+
+# Buddhism
+@The_monster@ says, "Entranced by some poetic flight, are you?"
+
+@The_monster@ says, "Bound art thou by all the snares!"
+
+# And original
+@The_monster@ growls.
+
+VISUAL SPELL:@The_monster@ gestures.
+
+VISUAL SPELL:@The_monster@ points ostentatiously.
+
+SPELL:@The_monster@ weaves an illusion.
+%%%%
+_Mara_rare_
+
+# Lord of Light
+@The_monster@ screams, "Tenfold be your damnation!"
+
+@The_monster@'s features momentarily become yours. "Wouldst slay thyself?"
+
+@The_monster@ says, "I stand as high above you as a star above the ocean's bottom."
+
+@The_monster@ smirks. "I am one who seeks the Path and the Right."
+
+@The_monster@ says, "Thou art lean, ill-favoured, death is in thy neighbourhood!"
+
+@The_monster@ says, "Difficult is the way of exertion, difficult to pass, difficult to enter upon."
+
+@The_monster@ calls, "Stop! In seven days from now the wheel of empire will appear!"
+
+@The_monster@ boasts, "I am lord over the four continents and the two thousand adjacent isles."
+%%%%
 ############ MARGERY ### A powerful sorceress, guarding the ORB
 Margery
 

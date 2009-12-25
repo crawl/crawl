@@ -232,8 +232,13 @@ azrael MONS_AZRAEL
 efreet MONS_EFREET
 
 ## Rakshasa ('R')
+%sdir dc-mon/unique
+mara MONS_MARA
+mara MONS_MARA_FAKE
+%sdir dc-mon/demons
 rakshasa MONS_RAKSHASA
 rakshasa MONS_RAKSHASA_FAKE
+
 
 ## Abominations ('X')
 abomination_large MONS_ABOMINATION_LARGE
