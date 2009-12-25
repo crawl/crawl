@@ -48,7 +48,7 @@ typedef unsigned int (tile_count_func)(unsigned int);
 typedef const char *(tile_name_func)(unsigned int);
 typedef tile_info &(tile_info_func)(unsigned int);
 
-typedef struct tile_variation
+struct tile_variation
 {
     tile_variation(int i, int c) : idx(i), col(c) { }
     int idx;
