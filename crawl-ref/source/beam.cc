@@ -5052,7 +5052,12 @@ void bolt::affect_monster(monsters* mon)
             corpse = monster_die(mon, KILL_MON, beam_source_as_target());
         }
         else
-            corpse = monster_die(mon, thrower, beam_source_as_target());
+        {
+            killer_type killer = thrower;
+            if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
+                killer = KILL_YOU_MISSILE;
+            corpse = monster_die(mon, killer, beam_source_as_target());
+        }
     }
 
     // Give the callbacks a dead-but-valid monster object.
