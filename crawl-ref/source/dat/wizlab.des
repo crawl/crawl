@@ -986,6 +986,7 @@ COLOUR:     =c = darkgrey
 {{
 smear_map({iterations=20, smear='x', onto='.xx', boxy=false})
 smear_map({iterations=40, smear='x', onto='.xx', boxy=false})
+fill_disconnected({wanted='.'})
 }}
 validate {{ return glyphs_connected('A', 'R') }}
 MAP
