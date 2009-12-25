@@ -1978,6 +1978,7 @@ bool check_item_knowledge(bool quiet)
         InvMenu menu;
         menu.set_title("You recognise:");
         menu.set_flags(MF_NOSELECT);
+        menu.set_type(MT_KNOW);
         menu.load_items(items, discoveries_item_mangle);
         menu.show();
         redraw_screen();

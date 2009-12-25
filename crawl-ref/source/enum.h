@@ -1590,8 +1590,8 @@ enum menu_type
 
     MT_INVLIST,                        // List inventory
     MT_DROP,
-
-    MT_PICKUP
+    MT_PICKUP,
+    MT_KNOW
 };
 
 enum mon_holy_type

@@ -86,18 +86,12 @@ function util.set(list)
 end
 
 -- Appends the elements in any number of additional tables to the first table.
-function util.append(table, ...)
-  local res = table
+function util.append(first, ...)
+  local res = first
   local tables = { ... }
-  if #tables == 0 then
-    return res
-  elseif #tables == 1 and #res == 0 then
-    return tables[1]
-  else
-    for _, tab in ipairs(tables) do
-      for _, val in ipairs(tab) do
-        table.insert(res, val)
-      end
+  for _, tab in ipairs(tables) do
+    for _, val in ipairs(tab) do
+      table.insert(res, val)
     end
   end
   return res
