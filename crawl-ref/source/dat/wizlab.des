@@ -975,47 +975,98 @@ ENDMAP
 NAME:       wizlab_ozocubu
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Ozocubu's Refrigerator")
+MONS:       skeletal warrior patrolling col:lightblue ; any weapon good_item \
+            . ice dragon armour
+MONS:       ice statue spells:ice_storm col:darkgrey name:black name_adjective
+MONS:       polar bear, white imp / wraith / freezing wraith, ice beast
+MONS:       ice dragon, nothing
+SHUFFLE:    BC
+:           local int = crawl.random2(3)
+:           if int == 0 then
+SUBST:      B = 3
+SUBST:      C = 4
+:           elseif int == 1 then
+SUBST:      B = 4
+SUBST:      C = 5
+:           elseif int == 2 then
+SUBST:      B = 3
+SUBST:      C = 5
+:           end
 LROCKCOL:   white
 LFLOORCOL:  lightblue
 LROCKTILE:  wall_ice
 LFLOORTILE: floor_ice
-KFEAT:      X = rock_wall
+KFEAT:      XQ = rock_wall
 KFEAT:      R = closed_door
 COLOUR:     =c = darkgrey
+MARKER:     U = lua:fog_machine { \
+                 pow_max = 10, delay_min = 30, delay_max = 40, \
+                 size = 6, cloud_type = "freezing vapour" \
+             }
 {{
+-- Map prettyfication
 smear_map({iterations=20, smear='x', onto='.xx', boxy=false})
 smear_map({iterations=40, smear='x', onto='.xx', boxy=false})
-fill_disconnected({wanted='.'})
+--fill_disconnected({fill='x'})
+
+function fridge (data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  local loudlines = {'A voice screams, "Out, out, out!"',
+                     'There is a horrible grinding noise.',
+                     'There is a sudden noise, like that of ice cracking.',
+                     'A voice screams, "Freeze!"'}
+
+  local speechlines = {'You feel a sudden draft.',
+                       'Snow coalesces in the air in front of you.',
+                       'You feel a sudden chill.',
+                       'The air becomes thick with cold.'}
+
+  if not (you.silenced()) then
+    speechlines = util.append(speechlines, loudlines)
+  end
+  crawl.mpr(util.random_from(speechlines), "warning")
+  spells.refrigeration(crawl.random2avg(40, 6))
+end
+
+local fridge_marker = TriggerableFunction:new { func = fridge, repeated = true }
+
+fridge_marker:add_triggerer(DgnTriggerer:new { type="turn", 
+        delay_min=500, delay_max=800, })
+
+lua_marker("Q", fridge_marker)
 }}
-validate {{ return glyphs_connected('A', 'R') }}
+validate {{ return glyphs_connected('A', 'R') and glyphs_connected('A', '<')}}
+:           wizlab_setup(_G, "Ozocubu's Refrigerator")
 MAP
        xxxx
      xxx..xxx
     xxx.....xx
    xx........xx   xxxx     xxx
   xx....A.....xx xx..xx  xxx.xx   xxx
-  xx...........xxx....xxxx....xx xx.xx
+  xx...<.......xxx....xxxx....xx xx.xx
    xx..........................xxx...xx
     xxx................c...........c..xx
       xx..............cccccccRccccccc..xx
-       xx..............c....c.c....c....xx
-        xx.............c....c.c....c.....xx
-       xx..............c....c.c....c....xx
-      xx.............c.c....c.c....c.c...xx
-     xx.............cccc+cccc+cccc+cccc.xx
-      xx.............c...c.......c...c.xx    cccc
-      xxx.....xxx....c...c...<...c...c.xx   cccxxx
-        xxx.xxx xx...c...c.......c...c..xxcccxxx.xx
-          xxx    x...cc+ccccc+ccccc+cc...xccxx....xx
-                xx...c...c.......c...c..xxcccxx....x
-               xx....c...c.......c...c.xxccccxxx..xx
-               xxx..cc...c.......c...ccxccxxxx...xx
-                xxccccc+ccccc+ccccc+cccccxx.....xx
-                  c.......c.....c.......cx.......xx
-                  c.......+.....+.......=.xxx.....xx
-                  c.......c.....c.......cxx xxx.xxx
-                  cccccccccccccccccccccccxx   xxx
+       xx..............cBBBBc.cCCCCc....xx
+        xx.............cBBBBc.cCCCCc.....xx
+       xx..............cBBBBc.cCCCCc....xx
+      xx.............c.cBBBBc.cCCCCc.c...xx
+     xx.............2ccc=cccc+cccc=cccc.xx
+      xx.....www.....c...c.......c...c.xx    cccc
+      xxx...wwxww....c.1.c...<...c.1.c.xx   cccxxx
+        xxx.xxxwxx...c...c.......c...c..xxcccxxx$xx
+          xxxxwwwx...cc+ccccc+ccccc+cc...xccxx$$$$xx
+           Qxxwwxx...c...c.......c...c..xxcccxx$$$$x
+        xxxxxwwxx....c.1.c...U...c.1.c.xxccccxxx$$xx
+       xx.xxwwwxxx..cc...c.......c...ccxccxxxx333xx
+      xx...x.wwwxxccccc+ccccc+ccccc+cccccxx.....xx
+      x..6..xwwwwxc.......c.....c.......cx.......xx
+      xx...xxxwwww+.1.....+..1..+.....1.=.xxx.....xx
+       xx.xxxxxwxxc.......c.....c.......cxx xxx.xxx
+        xxxx xxxxxcccccccccccccccccccccccxx   xxx
 ENDMAP
 
 ###############################################################################
