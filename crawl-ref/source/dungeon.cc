@@ -2191,6 +2191,30 @@ static coord_def _pick_shoals_island()
     return c;
 }
 
+struct point_sort_distance_from
+{
+    coord_def bad_place;
+    point_sort_distance_from(coord_def c) : bad_place(c) { }
+    bool operator () (coord_def a, coord_def b) const
+    {
+        const int dista = (a - bad_place).abs(), distb = (b - bad_place).abs();
+        return dista >= distb;
+    }
+};
+
+static coord_def _pick_shoals_island_distant_from(coord_def bad_place)
+{
+    ASSERT(!_shoals_islands.empty());
+
+    std::sort(_shoals_islands.begin(), _shoals_islands.end(),
+              point_sort_distance_from(bad_place));
+    const int top_picks = std::min(4, int(_shoals_islands.size()));
+    const int choice = random2(top_picks);
+    coord_def chosen = _shoals_islands[choice];
+    _shoals_islands.erase(_shoals_islands.begin() + choice);
+    return chosen;
+}
+
 static void _shoals_furniture(int margin)
 {
     if (at_branch_bottom())
@@ -2201,7 +2225,7 @@ static void _shoals_furniture(int margin)
         grd(c + coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_II;
         grd(c - coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_III;
 
-        const coord_def p = _pick_shoals_island();
+        const coord_def p = _pick_shoals_island_distant_from(c);
         // Place the rune
         const map_def *vault = random_map_for_tag("shoal_rune");
         _build_secondary_vault(you.your_level, vault, -1, false, true,
