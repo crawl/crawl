@@ -2138,7 +2138,7 @@ static void _shoals_build_island()
 
 static void _shoals_init_islands(int depth)
 {
-    const int nislands = 25 - depth * 3;
+    const int nislands = 20 - depth * 2;
     for (int i = 0; i < nislands; ++i)
         _shoals_build_island();
 }
