@@ -95,7 +95,7 @@ ENDMAP
 ################################################################################
 
 NAME:   uniq_agnes
-DEPTH:  14-16, !Lair, !Slime
+DEPTH:  12-18, !Lair, !Slime
 : place_unique(_G, "Agnes")
 
 NAME:   uniq_aizul
