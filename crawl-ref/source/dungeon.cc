@@ -13,7 +13,6 @@
 #include <set>
 #include <sstream>
 #include <algorithm>
-#include <cmath>
 
 #include "abyss.h"
 #include "artefact.h"
@@ -24,6 +23,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "defines.h"
+#include "dgn-shoals.h"
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
@@ -113,18 +113,6 @@ static bool _make_box(int room_x1, int room_y1, int room_x2, int room_y2,
                       dungeon_feature_type floor=DNGN_UNSEEN,
                       dungeon_feature_type wall=DNGN_UNSEEN,
                       dungeon_feature_type avoid=DNGN_UNSEEN);
-static void _replace_area(const coord_def& p1, const coord_def& p2,
-                          dungeon_feature_type replace,
-                          dungeon_feature_type feature,
-                          unsigned mmask = 0, bool needs_update = false);
-static void _replace_area(int sx, int sy, int ex, int ey,
-                          dungeon_feature_type replace,
-                          dungeon_feature_type feature,
-                          unsigned mmask = 0, bool needs_update = false)
-{
-    _replace_area( coord_def(sx, sy), coord_def(ex, ey),
-                   replace, feature, mmask, needs_update );
-}
 
 static builder_rc_type _builder_by_type(int level_number, char level_type);
 static builder_rc_type _builder_by_branch(int level_number);
@@ -146,7 +134,6 @@ static int _place_uniques(int level_number, char level_type);
 static void _place_traps( int level_number );
 static void _place_fog_machines( int level_number );
 static void _prepare_swamp();
-static void _prepare_shoals( int level_number );
 static void _prepare_water( int level_number );
 static void _check_doors();
 static void _hide_doors();
@@ -1172,8 +1159,8 @@ static void _fixup_walls()
         else if (player_in_branch(BRANCH_CRYPT))
             vault_wall = DNGN_STONE_WALL;
 
-        _replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, vault_wall,
-                      MMT_NO_WALL);
+        dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, vault_wall,
+                         MMT_NO_WALL);
     }
 }
 
@@ -1808,9 +1795,10 @@ static void _build_dungeon_level(int level_number, int level_type)
         _hide_doors();
 
     // Change pre-rock to rock, and pre-floor to floor.
-    _replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_WALL,
-                                      DNGN_ROCK_WALL);
-    _replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_FLOOR, DNGN_FLOOR);
+    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_WALL,
+                     DNGN_ROCK_WALL);
+    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_FLOOR,
+                     DNGN_FLOOR);
 
     const unsigned nvaults = Level_Vaults.size();
 
@@ -2039,253 +2027,6 @@ static void _connected_flood(int margin, int i, int j, bool taken[GXM][GYM])
     for (int idelta = -1; idelta <= 1; ++idelta)
         for (int jdelta = -1; jdelta <= 1; ++jdelta)
             _connected_flood(margin, i + idelta, j + jdelta, taken);
-}
-
-static int _shoals_heights[GYM][GXM];
-static std::vector<coord_def> _shoals_islands;
-
-const int ISLAND_COLLIDE_DIST2 = 5 * 5;
-const int N_PERTURB_ISLAND_CENTER = 50;
-const int ISLAND_CENTER_RADIUS_LOW = 3;
-const int ISLAND_CENTER_RADIUS_HIGH = 10;
-
-const int N_PERTURB_OFFSET_LOW  = 25;
-const int N_PERTURB_OFFSET_HIGH = 45;
-const int PERTURB_OFFSET_RADIUS_LOW = 2;
-const int PERTURB_OFFSET_RADIUS_HIGH = 7;
-
-const int _shoals_margin = 6;
-
-static void _shoals_init_heights()
-{
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
-            _shoals_heights[y][x] = -17;
-}
-
-static coord_def _random_point_from(const coord_def &c, int radius)
-{
-    while (true) {
-        const double angle = random2(360) * M_PI / 180;
-        coord_def res = c + coord_def(radius * cos(angle), radius * sin(angle));
-        if (res.x >= _shoals_margin && res.x < GXM - _shoals_margin
-            && res.y >= _shoals_margin && res.y < GYM - _shoals_margin)
-        {
-            return res;
-        }
-    }
-}
-
-static coord_def _random_point(int offset = 0) {
-    return coord_def(random_range(offset, GXM - offset - 1),
-                     random_range(offset, GYM - offset - 1));
-}
-
-static void _shoals_island_center(const coord_def &c, int n_perturb, int radius,
-                                  int bounce_low, int bounce_high)
-{
-    for (int i = 0; i < n_perturb; ++i) {
-        coord_def p = _random_point_from(c, random2(1 + radius));
-        _shoals_heights[p.y][p.x] += random_range(bounce_low, bounce_high);
-    }
-}
-
-static coord_def _shoals_pick_island_spot()
-{
-    coord_def c;
-    for (int i = 0; i < 15; ++i)
-    {
-        c = _random_point(_shoals_margin * 2);
-
-        bool collides = false;
-        for (int j = 0, size = _shoals_islands.size(); j < size; ++j)
-        {
-            const coord_def island = _shoals_islands[j];
-            const coord_def dist = island - c;
-            if (dist.abs() < ISLAND_COLLIDE_DIST2)
-            {
-                collides = true;
-                break;
-            }
-        }
-        if (!collides)
-            break;
-    }
-    _shoals_islands.push_back(c);
-    return c;
-}
-
-static void _shoals_build_island()
-{
-    coord_def c = _shoals_pick_island_spot();
-    _shoals_island_center(c, N_PERTURB_ISLAND_CENTER,
-                          random_range(ISLAND_CENTER_RADIUS_LOW,
-                                       ISLAND_CENTER_RADIUS_HIGH),
-                          40, 60);
-    const int additional_heights = random2(4);
-    for (int i = 0; i < additional_heights; ++i) {
-        const int addition_offset = random_range(2, 10);
-
-        coord_def offsetC = _random_point_from(c, addition_offset);
-
-        _shoals_island_center(offsetC, random_range(N_PERTURB_OFFSET_LOW,
-                                                    N_PERTURB_OFFSET_HIGH),
-                              random_range(PERTURB_OFFSET_RADIUS_LOW,
-                                           PERTURB_OFFSET_RADIUS_HIGH),
-                              25, 35);
-    }
-}
-
-static void _shoals_init_islands(int depth)
-{
-    const int nislands = 20 - depth * 2;
-    for (int i = 0; i < nislands; ++i)
-        _shoals_build_island();
-}
-
-static void _shoals_smooth_at(const coord_def &c, int radius)
-{
-    int max_delta = radius * radius * 2 + 2;
-    int divisor = 0;
-    int total = 0;
-    for (int y = c.y - radius; y <= c.y + radius; ++y) {
-        for (int x = c.x - radius; x <= c.x + radius; ++x) {
-            const coord_def p(x, y);
-            if (!in_bounds(p))
-                continue;
-            const coord_def off = c - p;
-            int weight = max_delta - off.abs();
-            divisor += weight;
-            total += _shoals_heights[p.y][p.x] * weight;
-        }
-    }
-    _shoals_heights[c.y][c.x] = total / divisor;
-}
-
-static void _shoals_smooth()
-{
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
-            _shoals_smooth_at(coord_def(x, y), 1);
-}
-
-static dungeon_feature_type _shoals_feature_at(int x, int y)
-{
-    const int height = _shoals_heights[y][x];
-    return height >= 0? DNGN_FLOOR :
-        height >= -14? DNGN_SHALLOW_WATER : DNGN_DEEP_WATER;
-}
-
-static void _shoals_apply_level()
-{
-    for (int y = 1; y < GYM - 1; ++y)
-        for (int x = 1; x < GXM - 1; ++x)
-            grd[x][y] = _shoals_feature_at(x, y);
-}
-
-static coord_def _pick_shoals_island()
-{
-    const int lucky_island = random2(_shoals_islands.size());
-    const coord_def c = _shoals_islands[lucky_island];
-    _shoals_islands.erase(_shoals_islands.begin() + lucky_island);
-    return c;
-}
-
-struct point_sort_distance_from
-{
-    coord_def bad_place;
-    point_sort_distance_from(coord_def c) : bad_place(c) { }
-    bool operator () (coord_def a, coord_def b) const
-    {
-        const int dista = (a - bad_place).abs(), distb = (b - bad_place).abs();
-        return dista >= distb;
-    }
-};
-
-static coord_def _pick_shoals_island_distant_from(coord_def bad_place)
-{
-    ASSERT(!_shoals_islands.empty());
-
-    std::sort(_shoals_islands.begin(), _shoals_islands.end(),
-              point_sort_distance_from(bad_place));
-    const int top_picks = std::min(4, int(_shoals_islands.size()));
-    const int choice = random2(top_picks);
-    coord_def chosen = _shoals_islands[choice];
-    _shoals_islands.erase(_shoals_islands.begin() + choice);
-    return chosen;
-}
-
-static void _shoals_furniture(int margin)
-{
-    if (at_branch_bottom())
-    {
-        const coord_def c = _pick_shoals_island();
-        // Put all the stairs on one island.
-        grd(c) = DNGN_STONE_STAIRS_UP_I;
-        grd(c + coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_II;
-        grd(c - coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_III;
-
-        const coord_def p = _pick_shoals_island_distant_from(c);
-        // Place the rune
-        const map_def *vault = random_map_for_tag("shoal_rune");
-        _build_secondary_vault(you.your_level, vault, -1, false, true,
-                               p);
-
-        const int nhuts = std::min(8, int(_shoals_islands.size()));
-        for (int i = 2; i < nhuts; ++i)
-        {
-            // Place (non-rune) minivaults on the other islands
-            do
-                vault = random_map_for_tag("shoal");
-            while (!vault);
-
-            _build_secondary_vault(you.your_level, vault, -1, false, true,
-                                   _pick_shoals_island());
-        }
-    }
-    else
-    {
-        // Place stairs randomly. No elevators.
-        for (int i = 0; i < 3; ++i)
-        {
-            int x, y;
-            do
-            {
-                x = margin + random2(GXM - 2*margin);
-                y = margin + random2(GYM - 2*margin);
-            }
-            while (grd[x][y] != DNGN_FLOOR);
-
-            grd[x][y]
-              = static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i);
-
-            do
-            {
-                x = margin + random2(GXM - 2*margin);
-                y = margin + random2(GYM - 2*margin);
-            }
-            while (grd[x][y] != DNGN_FLOOR);
-
-            grd[x][y]
-                = static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i);
-        }
-    }
-
-}
-
-static void _prepare_shoals(int level_number)
-{
-    dgn_Build_Method += make_stringf(" shoals+ [%d]", level_number);
-    dgn_Layout_Type   = "shoals";
-
-    const int shoals_depth = level_id::current().depth - 1;
-    _replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
-    _shoals_init_heights();
-    _shoals_islands.clear();
-    _shoals_init_islands(shoals_depth);
-    _shoals_smooth();
-    _shoals_apply_level();
-    _shoals_furniture(6);
 }
 
 static void _prepare_swamp()
@@ -2556,7 +2297,8 @@ static void _portal_vault_level(int level_number)
     {
         // XXX: This is pretty hackish, I confess.
         if (vault->border_fill_type != DNGN_ROCK_WALL)
-            _replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, vault->border_fill_type);
+            dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL,
+                             vault->border_fill_type);
 
         _ensure_vault_placed( _build_vaults(level_number, vault), true );
     }
@@ -2681,7 +2423,7 @@ static builder_rc_type _builder_by_branch(int level_number)
         return BUILD_SKIP;
     }
     case BRANCH_SHOALS:
-        _prepare_shoals(level_number);
+        prepare_shoals(level_number);
         return BUILD_SKIP;
 
     default:
@@ -3984,8 +3726,8 @@ static void _build_rooms(const dgn_region_list &excluded,
         }
 
         const coord_def end = myroom.end();
-        _replace_area(myroom.pos.x, myroom.pos.y, end.x, end.y,
-                      DNGN_ROCK_WALL, DNGN_FLOOR);
+        dgn_replace_area(myroom.pos.x, myroom.pos.y, end.x, end.y,
+                         DNGN_ROCK_WALL, DNGN_FLOOR);
 
         if (which_room > 0)
         {
@@ -5302,10 +5044,19 @@ bool seen_replace_feat(dungeon_feature_type old_feat,
     return (seen);
 }
 
-static void _replace_area( const coord_def& p1, const coord_def& p2,
-                           dungeon_feature_type replace,
-                           dungeon_feature_type feature, unsigned mapmask,
-                           bool needs_update)
+void dgn_replace_area(int sx, int sy, int ex, int ey,
+                      dungeon_feature_type replace,
+                      dungeon_feature_type feature,
+                      unsigned mmask, bool needs_update)
+{
+    dgn_replace_area( coord_def(sx, sy), coord_def(ex, ey),
+                      replace, feature, mmask, needs_update );
+}
+
+void dgn_replace_area( const coord_def& p1, const coord_def& p2,
+                       dungeon_feature_type replace,
+                       dungeon_feature_type feature, unsigned mapmask,
+                       bool needs_update)
 {
     for (rectangle_iterator ri(p1, p2); ri; ++ri)
     {
@@ -6211,7 +5962,7 @@ static void _plan_main(int level_number, int force_plan)
     }
 
     if (one_chance_in(20))
-        _replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, special_grid);
+        dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, special_grid);
 }
 
 static bool _plan_1(int level_number)
@@ -6292,7 +6043,8 @@ static bool _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
                                    : DNGN_METAL_WALL);  // odds:  3 in 18 {dlb}
     }
 
-    _replace_area(10, 10, (GXM - 10), (GYM - 10), DNGN_ROCK_WALL, DNGN_FLOOR);
+    dgn_replace_area(10, 10, (GXM - 10), (GYM - 10), DNGN_ROCK_WALL,
+                     DNGN_FLOOR);
 
     // replace_area can also be used to fill in:
     for (i = 0; i < number_boxes; i++)
@@ -6338,7 +6090,7 @@ static bool _plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
         temp_rand = random2(210);
 
         if (temp_rand > 71)     // odds: 138 in 210 {dlb}
-            _replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing);
+            dgn_replace_area(b1x, b1y, b2x, b2y, DNGN_FLOOR, drawing);
         else                    // odds:  72 in 210 {dlb}
             _box_room(b1x, b2x - 1, b1y, b2y - 1, drawing);
     }
@@ -7151,12 +6903,12 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
     int temp_rand, new_doors, doors_placed;
 
     // Do top & bottom walls.
-    _replace_area(bx1, by1, bx2, by1, DNGN_FLOOR, wall_type);
-    _replace_area(bx1, by2, bx2, by2, DNGN_FLOOR, wall_type);
+    dgn_replace_area(bx1, by1, bx2, by1, DNGN_FLOOR, wall_type);
+    dgn_replace_area(bx1, by2, bx2, by2, DNGN_FLOOR, wall_type);
 
     // Do left & right walls.
-    _replace_area(bx1, by1+1, bx1, by2-1, DNGN_FLOOR, wall_type);
-    _replace_area(bx2, by1+1, bx2, by2-1, DNGN_FLOOR, wall_type);
+    dgn_replace_area(bx1, by1+1, bx1, by2-1, DNGN_FLOOR, wall_type);
+    dgn_replace_area(bx2, by1+1, bx2, by2-1, DNGN_FLOOR, wall_type);
 
     // Sometimes we have to place doors, or else we shut in other
     // buildings' doors.
@@ -7394,8 +7146,8 @@ static void _big_room(int level_number)
     }
 
     // Make the big room.
-    _replace_area(sr.tl, sr.br, DNGN_ROCK_WALL, type_floor);
-    _replace_area(sr.tl, sr.br, DNGN_CLOSED_DOOR, type_floor);
+    dgn_replace_area(sr.tl, sr.br, DNGN_ROCK_WALL, type_floor);
+    dgn_replace_area(sr.tl, sr.br, DNGN_CLOSED_DOOR, type_floor);
 
     if (type_floor == DNGN_FLOOR)
     {
@@ -7493,8 +7245,8 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
 
     for (i = 0; i < 25; i++)
     {
-        _replace_area( rox1[i], roy1[i], rox2[i], roy2[i],
-                       DNGN_ROCK_WALL, DNGN_FLOOR );
+        dgn_replace_area( rox1[i], roy1[i], rox2[i], roy2[i],
+                          DNGN_ROCK_WALL, DNGN_FLOOR );
 
         // Inner room?
         if (rox2[i] - rox1[i] > 5 && roy2[i] - roy1[i] > 5
@@ -7612,36 +7364,36 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         // by something else (or put monsters in walls, etc...)
 
         // top
-        _replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
-                      DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        _replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
-                      DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        _replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
-                      DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
+                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
+        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
+                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.br.x+1,sr.tl.y-1,
+                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
 
         // bottom
-        _replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
-                      DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        _replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
-                      DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        _replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
-                      DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        dgn_replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
+                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
+        dgn_replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
+                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        dgn_replace_area(sr.tl.x-1, sr.br.y+1, sr.br.x+1,sr.br.y+1,
+                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
 
         // left
-        _replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
-                      DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        _replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
-                      DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        _replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
-                      DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
+                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
+        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
+                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        dgn_replace_area(sr.tl.x-1, sr.tl.y-1, sr.tl.x-1, sr.br.y+1,
+                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
 
         // right
-        _replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
-                      DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
-        _replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
-                      DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
-        _replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
-                      DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        dgn_replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
+                         DNGN_ROCK_WALL, DNGN_BUILDER_SPECIAL_WALL);
+        dgn_replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
+                         DNGN_FLOOR, DNGN_BUILDER_SPECIAL_FLOOR);
+        dgn_replace_area(sr.br.x+1, sr.tl.y-1, sr.br.x+1, sr.br.y+1,
+                         DNGN_CLOSED_DOOR, DNGN_BUILDER_SPECIAL_FLOOR);
     }
 
     if (!make_stairs)
