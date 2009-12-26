@@ -520,7 +520,7 @@ ITEM:     (list of items, separated by comma)
             provided. For example, "owner:Roxanne" may create "Roxanne's
             Treatise on Mountains".
 
-          NOTE: You can place multiple items on the same square by using the 
+          NOTE: You can place multiple items on the same square by using the
           KITEM directive. See that section for more information.
 
 MONS:     (list of monsters)
@@ -562,7 +562,7 @@ MONS:     (list of monsters)
               MONS: rat tile:mons_giant_bat
 
           In tiles version, this would create a monster that uses the
-          'monst_giant_bat' tile, but is otherwise identical to a rat.
+          'mons_giant_bat' tile, but is otherwise identical to a rat.
           Obviously, this substition of one monster onto another should
           never be used, but it can be useful for customised vault monsters
           if an alternate tile exists. In ASCII mode, this will do nothing.
@@ -808,9 +808,9 @@ COLOUR:   . = green / blue:5 / red / none
           the COLOUR will transfer to the resulting transformed glyph.
 
           There are two types of colour available: base and "elemental".
-          Available base colours are as follows: blue, green, cyan, 
-          red, magenta, brown, lightgrey, darkgrey, lightblue, lightgreen, 
-          lightcyan, lightred, lightmagenta, yellow and white. 
+          Available base colours are as follows: blue, green, cyan,
+          red, magenta, brown, lightgrey, darkgrey, lightblue, lightgreen,
+          lightcyan, lightred, lightmagenta, yellow and white.
 
           Elemental colours are: fire, ice, earth, electricity, air, poison,
           water, magic, mutagenic, warp, enchant, heal, holy, dark, death,
@@ -1041,7 +1041,7 @@ KPROP:    x = bloody
           Available properties are:
 
           * "bloody": Causes features to appear as though splattered with
-             blood. This should be used very, very sparingly!   
+             blood. This should be used very, very sparingly!
           * "no_cloud_gen": Prevents clouds from being generated over this
              feature (usually lava).  Does not stop fog generators or clouds
              entering from nearby squares.
