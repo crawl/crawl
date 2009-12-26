@@ -165,7 +165,7 @@ void wizard_create_spec_object()
         if (mons_weight(mon) <= 0)
         {
             if (!yesno("That monster doesn't leave corpses; make one "
-                       "anyway?"))
+                       "anyway?", true, 'y'))
             {
                 return;
             }
@@ -630,7 +630,7 @@ void wizard_make_object_randart()
 
     if (is_random_artefact(item))
     {
-        if (!yesno("Is already a randart; wipe and re-use?"))
+        if (!yesno("Is already a randart; wipe and re-use?", true, 'n'))
         {
             canned_msg(MSG_OK);
             return;

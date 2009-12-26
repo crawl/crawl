@@ -4155,7 +4155,7 @@ static bool _dont_use_invis()
     }
     else if (get_contamination_level() > 0
              && !yesno("Invisibility will do you no good right now; "
-                       "use anyways?"))
+                       "use anyways?", false, 'n'))
     {
         return (true);
     }
@@ -4560,14 +4560,14 @@ bool _drink_fountain()
     potion_type fountain_effect = POT_WATER;
     if (feat == DNGN_FOUNTAIN_BLUE)
     {
-        if (!yesno("Drink from the fountain?"))
+        if (!yesno("Drink from the fountain?", true, 'n'))
             return (false);
 
         mpr("You drink the pure, clear water.");
     }
     else if (feat == DNGN_FOUNTAIN_BLOOD)
     {
-        if (!yesno("Drink from the fountain of blood?"))
+        if (!yesno("Drink from the fountain of blood?", true, 'n'))
             return (false);
 
         mpr("You drink the blood.");
@@ -4575,7 +4575,7 @@ bool _drink_fountain()
     }
     else
     {
-        if (!yesno("Drink from the sparkling fountain?"))
+        if (!yesno("Drink from the sparkling fountain?", true, 'n'))
             return (false);
 
         mpr("You drink the sparkling water.");

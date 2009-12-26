@@ -1856,7 +1856,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 #ifdef WIZARD
         if (!you.wizard)
             return (false);
-        else if (!yesno("Memorise anyway?"))
+        else if (!yesno("Memorise anyway?", true, 'n'))
             return (false);
 #else
         return (false);

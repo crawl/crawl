@@ -454,7 +454,13 @@ bool wizard_add_mutation()
         }
     }
 
-    bool force = yesno("Force mutation to happen?", true, 'n');
+    int answer = yesnoquit("Force mutation to happen?", true, 'n');
+    if (answer == -1)
+    {
+        canned_msg(MSG_OK);
+        return (false);
+    }
+    const bool force = (answer == 1);
 
     if (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3 && !force)
     {
@@ -463,7 +469,13 @@ bool wizard_add_mutation()
         return (false);
     }
 
-    bool god_gift = yesno("Treat mutation as god gift?", true, 'n');
+    answer = yesnoquit("Treat mutation as god gift?", true, 'n');
+    if (answer == -1)
+    {
+        canned_msg(MSG_OK);
+        return (false);
+    }
+    const bool god_gift = (answer == 1);
 
     mpr("Which mutation (name, 'good', 'bad', 'any', 'xom')? ", MSGCH_PROMPT);
     get_input_line( specs, sizeof( specs ) );
