@@ -4091,7 +4091,7 @@ bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
         }
     }
 
-    dungeon_feature_type rune_subst = DNGN_FLOOR;
+    int rune_subst = -1;
     if (mdef->has_tag_suffix("_entry"))
         rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
     did_map = _build_secondary_vault(you.your_level, mdef, rune_subst,

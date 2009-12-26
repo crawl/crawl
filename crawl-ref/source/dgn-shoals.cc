@@ -143,7 +143,9 @@ static void _shoals_smooth()
 static dungeon_feature_type _shoals_feature_at(int x, int y)
 {
     const int height = _shoals_heights[y][x];
-    return height >= 0? DNGN_FLOOR :
+    return height >= 230 ? DNGN_STONE_WALL :
+        height >= 170? DNGN_ROCK_WALL :
+        height >= 0? DNGN_FLOOR :
         height >= -14? DNGN_SHALLOW_WATER : DNGN_DEEP_WATER;
 }
 
