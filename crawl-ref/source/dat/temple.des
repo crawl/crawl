@@ -1000,14 +1000,16 @@ WEIGHT:  5
 SHUFFLE: {([
 MAP
             bbbbb
+            b...b
+            b.(.b
         bbbbb...bbbbb
-        b...b.(.b...b
+        b...bb.bb...b
         b.B.......B.b
-    bbbbb...bbbbb...bbbbb
-    b...bb.bbbbbbbbbb...b
-bbbbb.{.b...bbbbb.....[.bbbbb
-b...b...b.B.......B.b...b...b
-b.B....bb...b...b...bb....B.b
+    bbbbb...b...b...bbbbb
+    b...bb.bb.B.bbbbb...b
+bbbbb.{.b...b...b.....[.bbbbb
+b...b...b.B.bbbbb.B.b...b...b
+b.B....bb...........bb....B.b
 b...b...bbbbb.B.bbbbb...b...b
 bbbbb.B....bb...bb....B.bbbbb
     b...b...bbbbb...b...b
