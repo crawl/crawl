@@ -533,7 +533,7 @@ static void _check_kill_milestone(const monsters *mons,
     if (mons->props.exists("original_was_unique"))
         is_unique = mons->props["original_was_unique"].get_bool();
 
-    if (mons->type == MONS_PLAYER_GHOST)
+    if (mons->type == MONS_PLAYER_GHOST && !mons->is_summoned())
     {
         std::string milestone = _milestone_kill_verb(killer) + "the ghost of ";
         milestone += get_ghost_description(*mons, true);
