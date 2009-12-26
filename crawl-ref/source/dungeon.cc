@@ -13,6 +13,7 @@
 #include <set>
 #include <sstream>
 #include <algorithm>
+#include <cmath>
 
 #include "abyss.h"
 #include "artefact.h"
@@ -1104,8 +1105,7 @@ static void _build_layout_skeleton(int level_number, int level_type,
 
         if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
         {
-            if (!player_in_branch(BRANCH_SHOALS))
-                skip_build = _builder_basic(level_number);
+            skip_build = _builder_basic(level_number);
             if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
                 _builder_extras(level_number, level_type);
         }
@@ -1798,8 +1798,6 @@ static void _build_dungeon_level(int level_number, int level_type)
     // Time to make the swamp or shoals {dlb}:
     if (player_in_branch(BRANCH_SWAMP))
         _prepare_swamp();
-    else if (player_in_branch(BRANCH_SHOALS))
-        _prepare_shoals(level_number);
 
     if (dgn_level_vetoed)
         return;
@@ -2003,19 +2001,6 @@ static void _hide_doors()
         }
 }
 
-// Places a randomised ellipse with centre (x, y) and half axes a and b.
-static void _place_ellipse(int x, int y, int a, int b,
-                           dungeon_feature_type feat, int margin)
-{
-    for (int i = std::max(x-a, margin); i < std::min(x+a, GXM-margin); ++i)
-        for (int j = std::max(y-b, margin); j < std::min(y+b, GYM-margin); ++j)
-            if ( (x-i)*(x-i)*b*b + (y-j)*(y-j)*a*a
-                  <= a*a*b*b/2 + roll_dice(2, a*a*b*b)/4 + random2(3) )
-            {
-                grd[i][j] = feat;
-            }
-}
-
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat)
 {
@@ -2042,18 +2027,6 @@ int count_neighbours(int x, int y, dungeon_feature_type feat)
     return count_feature_in_box(x-1, y-1, x+2, y+2, feat);
 }
 
-static void _replace_in_grid(int x1, int y1, int x2, int y2,
-                             dungeon_feature_type oldfeat,
-                             dungeon_feature_type newfeat)
-{
-    for (int x = x1; x < x2; ++x)
-        for (int y = y1; y < y2; ++y)
-        {
-            if (grd[x][y] == oldfeat)
-                grd[x][y] = newfeat;
-        }
-}
-
 static void _connected_flood(int margin, int i, int j, bool taken[GXM][GYM])
 {
     if (i < margin || i >= GXM - margin || j < margin || j >= GYM - margin
@@ -2068,270 +2041,182 @@ static void _connected_flood(int margin, int i, int j, bool taken[GXM][GYM])
             _connected_flood(margin, i + idelta, j + jdelta, taken);
 }
 
-// Yes, yes, this can probably use travel to avoid duplicating code.
-static int _count_connected(int margin)
+static int _shoals_heights[GYM][GXM];
+static std::vector<coord_def> _shoals_islands;
+
+const int ISLAND_COLLIDE_DIST2 = 5 * 5;
+const int N_PERTURB_ISLAND_CENTER = 50;
+const int ISLAND_CENTER_RADIUS_LOW = 3;
+const int ISLAND_CENTER_RADIUS_HIGH = 10;
+
+const int N_PERTURB_OFFSET_LOW  = 25;
+const int N_PERTURB_OFFSET_HIGH = 45;
+const int PERTURB_OFFSET_RADIUS_LOW = 2;
+const int PERTURB_OFFSET_RADIUS_HIGH = 7;
+
+const int _shoals_margin = 6;
+
+static void _shoals_init_heights()
 {
-    bool taken[GXM][GYM];
-
-    for (int i = margin; i < GXM - margin; ++i)
-        for (int j = margin; j < GYM - margin; ++j)
-            taken[i][j] = feat_is_water(grd[i][j]);
-
-    int count = 0;
-
-    for (int i = margin; i < GXM - margin; ++i)
-        for (int j = margin; j < GYM - margin; ++j)
-            if (!taken[i][j])
-            {
-                ++count;
-                _connected_flood(margin,i,j,taken);
-            }
-
-    return count;
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+            _shoals_heights[y][x] = -17;
 }
 
-static void _place_base_islands(int margin, int num_islands, int estradius,
-                                coord_def centres[10])
+static coord_def _random_point_from(const coord_def &c, int radius)
 {
-    for (int i = 0; i < num_islands; ++i)
-    {
-        // smaller axis
-        int b = (2 * estradius + roll_dice(3, estradius)) / 4;
-        b = std::max(b, 4);
-        b = std::min(b, (GYM - 2*margin - 2) / 2);
-
-        int a = b + roll_dice(2, b)/3; // more wide than tall
-        a = std::min(a, (GXM - 2*margin - 2) / 2);
-
-        int island_distance = estradius*estradius * (2 + num_islands/3);
-
-        // Make sure an island fits into the map without getting
-        // cut off on the edges, i.e. leave margin + radius space
-        // at each side.
-        const int rnd_x_size = GXM - 2*(margin+a) - 1;
-        const int rnd_y_size = GYM - 2*(margin+b) - 1;
-        ASSERT(rnd_x_size > 0);
-        ASSERT(rnd_y_size > 0);
-
-        bool centre_ok = false;
-        int tries      = 1000;
-        do
+    while (true) {
+        const double angle = random2(360) * M_PI / 180;
+        coord_def res = c + coord_def(radius * cos(angle), radius * sin(angle));
+        if (res.x >= _shoals_margin && res.x < GXM - _shoals_margin
+            && res.y >= _shoals_margin && res.y < GYM - _shoals_margin)
         {
-            centre_ok = true;
-
-            centres[i].x = margin + a + random2(rnd_x_size);
-            centres[i].y = margin + b + random2(rnd_y_size);
-
-            for (int j = 0; j < i; ++j)
-            {
-                // Calculate the distance from the centers of
-                // previous islands.
-                if (distance(centres[i].x, centres[i].y,
-                             centres[j].x, centres[j].y) < island_distance)
-                {
-                    centre_ok = false;
-                    break;
-                }
-            }
-            if (island_distance && !one_chance_in(num_islands))
-                --island_distance;
-        }
-        while (!centre_ok && --tries > 0);
-
-#ifdef DEBUG_DIAGNOSTICS
-        if (tries == 0)
-            mprf(MSGCH_ERROR, "Failure to place island #%d!", i);
-#endif
-        // Eventually, place an ellipse around the new coordinate.
-        _place_ellipse( centres[i].x, centres[i].y, a, b, DNGN_FLOOR, margin);
-    }
-}
-
-typedef std::pair<coord_def, dungeon_feature_type> located_feature;
-typedef std::list<located_feature> located_feature_list;
-
-bool _is_critical_feature(dungeon_feature_type feat)
-{
-    return (feat == DNGN_ENTER_PORTAL_VAULT
-            || feat == DNGN_ENTER_LABYRINTH
-            || feat == DNGN_ENTER_SHOP);
-}
-
-static located_feature_list _save_critical_features()
-{
-    located_feature_list result;
-
-    for (rectangle_iterator ri(1); ri; ++ri)
-        if (_is_critical_feature(grd(*ri)))
-            result.push_back(located_feature(*ri, grd(*ri)));
-
-    return result;
-}
-
-static void _restore_critical_features(const located_feature_list& lfl)
-{
-    for (located_feature_list::const_iterator ci = lfl.begin();
-         ci != lfl.end(); ++ci)
-    {
-        grd(ci->first) = ci->second;
-    }
-}
-
-static void _prepare_shoals(int level_number)
-{
-    // Don't destroy portals, etc.
-    const located_feature_list lfl = _save_critical_features();
-
-    dgn_Build_Method += make_stringf(" shoals [%d]", level_number);
-    dgn_Layout_Type   = "shoals";
-
-    // dpeg's algorithm.
-    // We could have just used spotty_level() and changed rock to
-    // water, but this is much cooler. Right?
-    const int margin = 6;
-
-    int num_islands = player_branch_depth() + 1;
-
-    if (at_branch_bottom())
-        num_islands += random2(3);
-
-    const int estradius = 50 / num_islands - (num_islands == 2 ? 5 : 0);
-
-    int num_tries = 0;
-    coord_def centres[10];
-    do
-    {
-        for (int x = margin; x < GXM-margin; ++x)
-            for (int y = margin; y < GYM-margin; ++y)
-                grd[x][y] = DNGN_DEEP_WATER;
-
-        _place_base_islands(margin, num_islands, estradius, centres);
-    }
-    while (++num_tries < 100 && _count_connected(margin) != num_islands);
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Num tries: %d Connected components: %d",
-         num_tries, _count_connected(margin));
-#endif
-
-    // Adding shallow water at deep water adjacent to floor.
-    // Randomisation: place shallow water if at least 1d(1d3) floor neighbours
-    for (int i = margin; i < GXM - margin; ++i)
-        for (int j = margin; j < GYM - margin; ++j)
-            if (grd[i][j] == DNGN_DEEP_WATER
-                && count_neighbours(i, j, DNGN_FLOOR) > random2(random2(3)+1))
-            {
-                grd[i][j] = DNGN_SHALLOW_WATER;
-            }
-
-    // Placing sandbanks.
-    for (int banks = 0; banks < 8; ++banks)
-    {
-        int xsize = 3 + random2(3);  // random rectangle
-        int ysize = 3 + random2(3);
-        int xb = margin + 2 + random2(GXM - 2 * margin - xsize - 2);
-        int yb = margin + 2 + random2(GYM - 2 * margin - ysize - 2);
-
-        bool ok_place = true;
-        for (int i = xb; i < xb + xsize; ++i)
-            for (int j = yb; j < yb + ysize; ++j)
-            {
-                if (grd[i][j] != DNGN_DEEP_WATER)
-                {
-                    ok_place = false;
-                    break;
-                }
-            }
-
-        if (ok_place)
-        {
-            for (int i = xb; i < xb + xsize; ++i)
-                for (int j = yb; j < yb + ysize; ++j)
-                {
-                    if (!one_chance_in(3))
-                        grd[i][j] = DNGN_SHALLOW_WATER;
-                }
+            return res;
         }
     }
+}
 
-    // Fractalisation
+static coord_def _random_point(int offset = 0) {
+    return coord_def(random_range(offset, GXM - offset - 1),
+                     random_range(offset, GYM - offset - 1));
+}
 
-    // LAVA is a placeholder for cells which will become shallow water
-    // at the end of the current iteration.
-    // WATER_RESERVED is a placeholder for last iteration's generated water.
-    _replace_in_grid(margin, margin, GXM-margin, GYM-margin,
-                     DNGN_SHALLOW_WATER, DNGN_WATER_RESERVED);
-
-    for (int iteration = 0; iteration < 6; ++iteration)
-    {
-        for (int x = margin; x < GXM - margin; ++x)
-            for (int y = margin; y < GYM - margin; ++y)
-                if (grd[x][y] == DNGN_DEEP_WATER)
-                {
-                    int badness = count_neighbours(x, y, DNGN_WATER_RESERVED);
-                    if (random2(badness) >= 2 && coinflip())
-                        grd[x][y] = DNGN_LAVA;
-                }
-
-        _replace_in_grid(margin, margin, GXM-margin, GYM-margin,
-                         DNGN_LAVA, DNGN_WATER_RESERVED);
+static void _shoals_island_center(const coord_def &c, int n_perturb, int radius,
+                                  int bounce_low, int bounce_high)
+{
+    for (int i = 0; i < n_perturb; ++i) {
+        coord_def p = _random_point_from(c, random2(1 + radius));
+        _shoals_heights[p.y][p.x] += random_range(bounce_low, bounce_high);
     }
-    _replace_in_grid(margin, margin, GXM-margin, GYM-margin,
-                     DNGN_WATER_RESERVED, DNGN_SHALLOW_WATER);
+}
 
-    // Turn rock walls into deep water and "open sea". This must happen
-    // before vaults are placed as those may contain rock as well.
-    const int margin2 = margin - 1;
-    _replace_in_grid(margin2, margin2, GXM-margin2, GYM-margin2,
-                     DNGN_ROCK_WALL, DNGN_DEEP_WATER);
-
-    _replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_WALL,
-                                      DNGN_ROCK_WALL);
-    _replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
-
-    // Put important things back.
-    _restore_critical_features(lfl);
-
-    if (at_branch_bottom())
+static coord_def _shoals_pick_island_spot()
+{
+    coord_def c;
+    for (int i = 0; i < 15; ++i)
     {
-        // Find an island to place the stairs up on.
-        int j;
-        const coord_def d1(1,0), d2(-1,0);
-        for (j = 0; j < num_islands; ++j)
+        c = _random_point(_shoals_margin * 2);
+
+        bool collides = false;
+        for (int j = 0, size = _shoals_islands.size(); j < size; ++j)
         {
-            if (!_is_critical_feature(grd(centres[j]))
-                && !_is_critical_feature(grd(centres[j] + d1))
-                && !_is_critical_feature(grd(centres[j] + d2)))
+            const coord_def island = _shoals_islands[j];
+            const coord_def dist = island - c;
+            if (dist.abs() < ISLAND_COLLIDE_DIST2)
             {
+                collides = true;
                 break;
             }
         }
-        if (j == num_islands)
-        {
-            // Oh well.
-            j = 0;
-            mprf(MSGCH_ERROR, "Clobbering critical features: %d %d %d.",
-                 grd(centres[j]), grd(centres[j] + d1), grd(centres[j] + d2));
-        }
-        // Put all the stairs on one island.
-        grd[centres[j].x  ][centres[j].y] = DNGN_STONE_STAIRS_UP_I;
-        grd[centres[j].x+1][centres[j].y] = DNGN_STONE_STAIRS_UP_II;
-        grd[centres[j].x-1][centres[j].y] = DNGN_STONE_STAIRS_UP_III;
+        if (!collides)
+            break;
+    }
+    _shoals_islands.push_back(c);
+    return c;
+}
 
+static void _shoals_build_island()
+{
+    coord_def c = _shoals_pick_island_spot();
+    _shoals_island_center(c, N_PERTURB_ISLAND_CENTER,
+                          random_range(ISLAND_CENTER_RADIUS_LOW,
+                                       ISLAND_CENTER_RADIUS_HIGH),
+                          40, 60);
+    const int additional_heights = random2(4);
+    for (int i = 0; i < additional_heights; ++i) {
+        const int addition_offset = random_range(2, 10);
+
+        coord_def offsetC = _random_point_from(c, addition_offset);
+
+        _shoals_island_center(offsetC, random_range(N_PERTURB_OFFSET_LOW,
+                                                    N_PERTURB_OFFSET_HIGH),
+                              random_range(PERTURB_OFFSET_RADIUS_LOW,
+                                           PERTURB_OFFSET_RADIUS_HIGH),
+                              25, 35);
+    }
+}
+
+static void _shoals_init_islands(int depth)
+{
+    const int nislands = 25 - depth * 3;
+    for (int i = 0; i < nislands; ++i)
+        _shoals_build_island();
+}
+
+static void _shoals_smooth_at(const coord_def &c, int radius)
+{
+    int max_delta = radius * radius * 2 + 2;
+    int divisor = 0;
+    int total = 0;
+    for (int y = c.y - radius; y <= c.y + radius; ++y) {
+        for (int x = c.x - radius; x <= c.x + radius; ++x) {
+            const coord_def p(x, y);
+            if (!in_bounds(p))
+                continue;
+            const coord_def off = c - p;
+            int weight = max_delta - off.abs();
+            divisor += weight;
+            total += _shoals_heights[p.y][p.x] * weight;
+        }
+    }
+    _shoals_heights[c.y][c.x] = total / divisor;
+}
+
+static void _shoals_smooth()
+{
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+            _shoals_smooth_at(coord_def(x, y), 1);
+}
+
+static dungeon_feature_type _shoals_feature_at(int x, int y)
+{
+    const int height = _shoals_heights[y][x];
+    return height >= 0? DNGN_FLOOR :
+        height >= -14? DNGN_SHALLOW_WATER : DNGN_DEEP_WATER;
+}
+
+static void _shoals_apply_level()
+{
+    for (int y = 1; y < GYM - 1; ++y)
+        for (int x = 1; x < GXM - 1; ++x)
+            grd[x][y] = _shoals_feature_at(x, y);
+}
+
+static coord_def _pick_shoals_island()
+{
+    const int lucky_island = random2(_shoals_islands.size());
+    const coord_def c = _shoals_islands[lucky_island];
+    _shoals_islands.erase(_shoals_islands.begin() + lucky_island);
+    return c;
+}
+
+static void _shoals_furniture(int margin)
+{
+    if (at_branch_bottom())
+    {
+        const coord_def c = _pick_shoals_island();
+        // Put all the stairs on one island.
+        grd(c) = DNGN_STONE_STAIRS_UP_I;
+        grd(c + coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_II;
+        grd(c - coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_III;
+
+        const coord_def p = _pick_shoals_island();
         // Place the rune
         const map_def *vault = random_map_for_tag("shoal_rune");
-        _build_secondary_vault(level_number, vault, -1, false, true,
-                               centres[1]);
+        _build_secondary_vault(you.your_level, vault, -1, false, true,
+                               p);
 
-        for (int i = 2; i < num_islands; ++i)
+        const int nhuts = std::min(8, int(_shoals_islands.size()));
+        for (int i = 2; i < nhuts; ++i)
         {
             // Place (non-rune) minivaults on the other islands
             do
                 vault = random_map_for_tag("shoal");
             while (!vault);
 
-            _build_secondary_vault(level_number, vault, -1, false, true,
-                                   centres[i]);
+            _build_secondary_vault(you.your_level, vault, -1, false, true,
+                                   _pick_shoals_island());
         }
     }
     else
@@ -2361,6 +2246,22 @@ static void _prepare_shoals(int level_number)
                 = static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i);
         }
     }
+
+}
+
+static void _prepare_shoals(int level_number)
+{
+    dgn_Build_Method += make_stringf(" shoals+ [%d]", level_number);
+    dgn_Layout_Type   = "shoals";
+
+    const int shoals_depth = level_id::current().depth - 1;
+    _replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
+    _shoals_init_heights();
+    _shoals_islands.clear();
+    _shoals_init_islands(shoals_depth);
+    _shoals_smooth();
+    _shoals_apply_level();
+    _shoals_furniture(6);
 }
 
 static void _prepare_swamp()
@@ -2755,6 +2656,9 @@ static builder_rc_type _builder_by_branch(int level_number)
         spotty_level(false, iterations, false);
         return BUILD_SKIP;
     }
+    case BRANCH_SHOALS:
+        _prepare_shoals(level_number);
+        return BUILD_SKIP;
 
     default:
         break;
