@@ -287,6 +287,7 @@ roxanne MONS_ROXANNE
 ice_statue MONS_ICE_STATUE
 silver_statue MONS_SILVER_STATUE
 orange_crystal_statue MONS_ORANGE_CRYSTAL_STATUE
+statue_archer MONS_ARCHER_STATUE
 
 ## Gargoyles ('9')
 %sdir dc-mon
