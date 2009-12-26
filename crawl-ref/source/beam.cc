@@ -5053,10 +5053,10 @@ void bolt::affect_monster(monsters* mon)
         }
         else
         {
-            killer_type killer = thrower;
+            killer_type ref_killer = thrower;
             if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
-                killer = KILL_YOU_MISSILE;
-            corpse = monster_die(mon, killer, beam_source_as_target());
+                ref_killer = KILL_YOU_MISSILE;
+            corpse = monster_die(mon, ref_killer, beam_source_as_target());
         }
     }
 
