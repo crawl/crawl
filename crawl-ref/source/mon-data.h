@@ -215,19 +215,7 @@ static monsterentry mondata[] = {
 
 // Real monsters begin here {dlb}:
 
-// insects ('a')
-{
-    MONS_GIANT_COCKROACH, 'a', BROWN, "giant cockroach",
-    M_NO_SKELETON,
-    MR_NO_FLAGS,
-    250, 10, MONS_GIANT_COCKROACH, MONS_GIANT_COCKROACH, MH_NATURAL, -1,
-    { {AT_BITE, AF_PLAIN, 2}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 3, 4, 0 },
-    3, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT,
-    I_INSECT, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
-},
-
+// ants ('a')
 {
     MONS_GIANT_ANT, 'a', RED, "giant ant",
     M_NO_SKELETON,
@@ -238,6 +226,18 @@ static monsterentry mondata[] = {
     4, 10, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
     I_INSECT, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
+},
+
+{
+    MONS_QUEEN_ANT, 'a', LIGHTRED, "queen ant",
+    M_NO_SKELETON | M_NO_FLAGS,
+    MR_VUL_POISON,
+    1200, 10, MONS_GIANT_ANT, MONS_QUEEN_ANT, MH_NATURAL, -3,
+    { {AT_STING, AF_POISON_NASTY, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 13, 3, 5, 0 },
+    14, 3, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
+    I_INSECT, HT_LAND, FL_NONE, 7, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
 {
@@ -941,7 +941,19 @@ static monsterentry mondata[] = {
 
 // killer bees ('k')
 {
-    MONS_KILLER_BEE, 'k', YELLOW, "killer bee",
+    MONS_QUEEN_BEE, 'k', YELLOW, "queen bee",
+    M_NO_SKELETON,
+    MR_VUL_POISON,
+    200, 14, MONS_KILLER_BEE, MONS_QUEEN_BEE, MH_NATURAL, -3,
+    { {AT_STING, AF_POISON_NASTY, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 7, 3, 5, 0 },
+    10, 10, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
+    I_INSECT, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
+},
+
+{
+    MONS_KILLER_BEE, 'k', BROWN, "killer bee",
     M_NO_SKELETON,
     MR_VUL_POISON,
     150, 11, MONS_KILLER_BEE, MONS_KILLER_BEE, MH_NATURAL, -3,
@@ -1393,7 +1405,19 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },
 
-// spiders and scorpions ('s')
+// spiders and insects ('s')
+{
+    MONS_GIANT_COCKROACH, 's', BROWN, "giant cockroach",
+    M_NO_SKELETON,
+    MR_NO_FLAGS,
+    250, 10, MONS_GIANT_COCKROACH, MONS_GIANT_COCKROACH, MH_NATURAL, -1,
+    { {AT_BITE, AF_PLAIN, 2}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 1, 3, 4, 0 },
+    3, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT,
+    I_INSECT, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
+},
+
 {
     MONS_GIANT_MITE, 's', LIGHTRED, "giant mite",
     M_NO_SKELETON,
@@ -1431,7 +1455,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_WOLF_SPIDER, 's', BROWN, "wolf spider",
+    MONS_WOLF_SPIDER, 's', WHITE, "wolf spider",
     M_NO_SKELETON,
     MR_VUL_POISON,
     800, 10, MONS_WOLF_SPIDER, MONS_WOLF_SPIDER, MH_NATURAL, -3,
@@ -1443,7 +1467,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_TRAPDOOR_SPIDER, 's', BROWN, "trapdoor spider",
+    MONS_TRAPDOOR_SPIDER, 's', LIGHTCYAN, "trapdoor spider",
     M_NO_SKELETON,
     MR_VUL_POISON,
     800, 10, MONS_TRAPDOOR_SPIDER, MONS_TRAPDOOR_SPIDER, MH_NATURAL, -3,
@@ -1464,19 +1488,6 @@ static monsterentry mondata[] = {
     2, 12, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
     I_INSECT, HT_LAND, FL_NONE, 15, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
-},
-
-// minotaur ('t')
-{
-    MONS_MINOTAUR, 't', RED, "minotaur",
-    M_FIGHTER | M_WARM_BLOOD | M_SPEAKS,
-    MR_NO_FLAGS,
-    1500, 10, MONS_MINOTAUR, MONS_MINOTAUR, MH_NATURAL, -3,
-    { {AT_HIT, AF_PLAIN, 35}, {AT_GORE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
-    { 13, 3, 5, 0 },
-    5, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_BELLOW,
-    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 // ugly things ('u')
@@ -2366,6 +2377,18 @@ static monsterentry mondata[] = {
 },
 
 {
+    MONS_MINOTAUR, 'H', LIGHTRED, "minotaur",
+    M_FIGHTER | M_WARM_BLOOD | M_SPEAKS,
+    MR_NO_FLAGS,
+    1500, 10, MONS_MINOTAUR, MONS_MINOTAUR, MH_NATURAL, -3,
+    { {AT_HIT, AF_PLAIN, 35}, {AT_GORE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
+    { 13, 3, 5, 0 },
+    5, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_BELLOW,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
+{
     MONS_GRIFFON, 'H', YELLOW, "griffon",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
@@ -2775,31 +2798,6 @@ static monsterentry mondata[] = {
     30, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 0, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
-},
-
-// queen insects ('Q')
-{
-    MONS_QUEEN_BEE, 'Q', YELLOW, "queen bee",
-    M_NO_SKELETON,
-    MR_VUL_POISON,
-    200, 14, MONS_KILLER_BEE, MONS_QUEEN_BEE, MH_NATURAL, -3,
-    { {AT_STING, AF_POISON_NASTY, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
-    10, 10, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
-    I_INSECT, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
-},
-
-{
-    MONS_QUEEN_ANT, 'Q', LIGHTGREY, "queen ant",
-    M_NO_SKELETON | M_NO_FLAGS,
-    MR_VUL_POISON,
-    1200, 10, MONS_GIANT_ANT, MONS_QUEEN_ANT, MH_NATURAL, -3,
-    { {AT_STING, AF_POISON_NASTY, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 3, 5, 0 },
-    14, 3, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
-    I_INSECT, HT_LAND, FL_NONE, 7, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
 // rakshasas ('R')
