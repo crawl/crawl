@@ -2,6 +2,7 @@
 
 #include "branch.h"
 #include "coord.h"
+#include "coordit.h"
 #include "dungeon.h"
 #include "dgn-shoals.h"
 #include "env.h"
@@ -27,6 +28,29 @@ const int PERTURB_OFFSET_RADIUS_HIGH = 7;
 
 const int _shoals_margin = 6;
 
+enum shoals_height_thresholds
+{
+    SHT_STONE = 230,
+    SHT_ROCK  = 170,
+    SHT_FLOOR = 0,
+    SHT_SHALLOW_WATER = -14
+};
+
+static double _to_radians(int degrees)
+{
+    return degrees * M_PI / 180;
+}
+
+static dungeon_feature_type _shoals_feature_at(const coord_def &c)
+{
+    const int height = _shoals_heights[c.y][c.x];
+    return height >= SHT_STONE ? DNGN_STONE_WALL :
+        height >= SHT_ROCK? DNGN_ROCK_WALL :
+        height >= SHT_FLOOR? DNGN_FLOOR :
+        height >= SHT_SHALLOW_WATER? DNGN_SHALLOW_WATER
+        : DNGN_DEEP_WATER;
+}
+
 static void _shoals_init_heights()
 {
     for (int y = 0; y < GYM; ++y)
@@ -34,11 +58,24 @@ static void _shoals_init_heights()
             _shoals_heights[y][x] = -17;
 }
 
-static coord_def _random_point_from(const coord_def &c, int radius)
+static double _angle_fuzz()
 {
+    double fuzz = _to_radians(random2(15));
+    return coinflip()? fuzz : -fuzz;
+}
+
+static coord_def _random_point_from(const coord_def &c, int radius,
+                                    int directed_angle = -1)
+{
+    const double directed_radians(
+        directed_angle == -1? 0.0 : _to_radians(directed_angle));
     while (true) {
-        const double angle = random2(360) * M_PI / 180;
-        coord_def res = c + coord_def(radius * cos(angle), radius * sin(angle));
+        const double angle =
+            directed_angle == -1? _to_radians(random2(360))
+            : ((coinflip()? directed_radians : -directed_radians)
+               + _angle_fuzz());
+        coord_def res = c + coord_def(radius * cos(angle),
+                                      radius * sin(angle));
         if (res.x >= _shoals_margin && res.x < GXM - _shoals_margin
             && res.y >= _shoals_margin && res.y < GYM - _shoals_margin)
         {
@@ -114,6 +151,36 @@ static void _shoals_init_islands(int depth)
         _shoals_build_island();
 }
 
+// Cliffs are usually constructed in shallow water adjacent to deep
+// water (for effect).
+static void _shoals_build_cliff()
+{
+    coord_def cliffc = _random_point(_shoals_margin * 2);
+    if (in_bounds(cliffc))
+    {
+        const int length = random_range(6, 15);
+        double angle = _to_radians(random2(360));
+        for (int i = 0; i < length; i += 3)
+        {
+            int distance = i - length / 2;
+            coord_def place = cliffc + coord_def(distance * cos(angle),
+                                                 distance * sin(angle));
+            coord_def fuzz = coord_def(random_range(-2, 2),
+                                       random_range(-2, 2));
+            place += fuzz;
+            _shoals_island_center(place, random_range(40, 60), 3,
+                                  100, 130);
+        }
+    }
+}
+
+static void _shoals_cliffs()
+{
+    const int ncliffs = random_range(0, 6, 2);
+    for (int i = 0; i < ncliffs; ++i)
+        _shoals_build_cliff();
+}
+
 static void _shoals_smooth_at(const coord_def &c, int radius)
 {
     int max_delta = radius * radius * 2 + 2;
@@ -135,25 +202,14 @@ static void _shoals_smooth_at(const coord_def &c, int radius)
 
 static void _shoals_smooth()
 {
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
-            _shoals_smooth_at(coord_def(x, y), 1);
-}
-
-static dungeon_feature_type _shoals_feature_at(int x, int y)
-{
-    const int height = _shoals_heights[y][x];
-    return height >= 230 ? DNGN_STONE_WALL :
-        height >= 170? DNGN_ROCK_WALL :
-        height >= 0? DNGN_FLOOR :
-        height >= -14? DNGN_SHALLOW_WATER : DNGN_DEEP_WATER;
+    for (rectangle_iterator ri(0); ri; ++ri)
+        _shoals_smooth_at(*ri, 1);
 }
 
 static void _shoals_apply_level()
 {
-    for (int y = 1; y < GYM - 1; ++y)
-        for (int x = 1; x < GXM - 1; ++x)
-            grd[x][y] = _shoals_feature_at(x, y);
+    for (rectangle_iterator ri(1); ri; ++ri)
+        grd(*ri) = _shoals_feature_at(*ri);
 }
 
 static coord_def _pick_shoals_island()
@@ -253,7 +309,8 @@ void prepare_shoals(int level_number)
     _shoals_init_heights();
     _shoals_islands.clear();
     _shoals_init_islands(shoals_depth);
+    _shoals_cliffs();
     _shoals_smooth();
     _shoals_apply_level();
-    _shoals_furniture(6);
+    _shoals_furniture(_shoals_margin);
 }
