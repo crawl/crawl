@@ -517,6 +517,19 @@ void wield_effects(int item_wield_2, bool showMsgs)
             // Right now that's always "uncursed". -- bwr
             set_ident_flags(item, ISFLAG_KNOW_CURSE);
         }
+        // Automatically identify rods; you can do this by wielding and then
+        // evoking them, so do it automatically instead. We don't need to give
+        // a message either, as the game will do that automatically. {due}
+        if (item_is_rod(item))
+        {
+            if (!item_type_known(item))
+            {
+                set_ident_type( OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE );
+                set_ident_flags( item, ISFLAG_KNOW_TYPE );
+            }
+            if (!item_ident( item, ISFLAG_KNOW_PLUSES))
+                set_ident_flags( item, ISFLAG_KNOW_PLUSES );
+        }
         break;
     }
 
