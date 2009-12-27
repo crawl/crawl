@@ -567,21 +567,6 @@ bool item_ident( const item_def &item, unsigned long flags )
     return ((item.flags & flags) == flags);
 }
 
-// The Orb of Zot and unique runes are considered critical.
-bool item_is_critical(const item_def &item)
-{
-    if (!item.is_valid())
-        return (false);
-
-    if (item.base_type == OBJ_ORBS)
-        return (true);
-
-    return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_RUNE_OF_ZOT
-            && item.plus != RUNE_DEMONIC
-            && item.plus != RUNE_ABYSSAL);
-}
-
 // Is item something that no one would usually bother enchanting?
 bool item_is_mundane(const item_def &item)
 {

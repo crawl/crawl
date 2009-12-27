@@ -533,6 +533,9 @@ public:
 
     bool is_valid() const;
 
+    // Returns true if this item should be preserved as far as possible.
+    bool is_critical() const;
+
 private:
     std::string name_aux(description_level_type desc,
                          bool terse, bool ident,

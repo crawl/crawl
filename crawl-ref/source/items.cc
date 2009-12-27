@@ -2919,6 +2919,21 @@ bool item_def::is_valid() const
     return (base_type != OBJ_UNASSIGNED && quantity > 0);
 }
 
+// The Orb of Zot and unique runes are considered critical.
+bool item_def::is_critical() const
+{
+    if (!is_valid())
+        return (false);
+
+    if (base_type == OBJ_ORBS)
+        return (true);
+
+    return (base_type == OBJ_MISCELLANY
+            && sub_type == MISC_RUNE_OF_ZOT
+            && plus != RUNE_DEMONIC
+            && plus != RUNE_ABYSSAL);
+}
+
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];
