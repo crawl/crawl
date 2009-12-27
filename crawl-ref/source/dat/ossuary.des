@@ -476,11 +476,21 @@ TAGS:    ossuary no_item_gen no_monster_gen
 ITEM:    any scroll / any potion
 MONS:    kobold skeleton / goblin skeleton / gnoll skeleton / \
          orc skeleton
+MONS:    mummy
 # Loot: 10-19
+# Some random content.
+SHUFFLE: Bb/Zz, Dd/Ww, Ee/Vv
+SUBST:   Z=c, z=c, W=c, w=c, V=c, v=c
+SUBST:   B=X, D=X, E=X
+NSUBST:  b = 1:= / c
+NSUBST:  d = 1:= / c
+NSUBST:  e = 1:= / c
+SUBST:   X = x2
 # Guaranteed 10 items and 10 mummies, two in hidden rooms.
 # 50/50 chance of loot for each of the eleven rats in the rat room.
 KITEM:   x = any scroll / any potion
 KMONS:   x = mummy
+NSUBST:  ' = 10:^ / *:.
 KFEAT:   ^ = dart trap / arrow trap
 KITEM:   y = any scroll w:5 / any potion w:5 / nothing w:10
 KMONS:   y = rat skeleton
@@ -489,23 +499,23 @@ KMONS:   y = rat skeleton
 MAP
            ccc
          cccxccccc
-       ccc....+.^c      cccccc
-      cc.1.ccccc.c     cc.+^.cc
-     cc..ccc  cc+cc   cc..cc..cc
-    cc.^cc   cc...ccccc..cccc.1ccc
-ccc cc+cc    c+.x.+...1.cc  cc...cc
-cAccc...cc   cc...cccxccc    ccc.cc
-c..+.^1.+c    cc+cc ccc   ccc cc+cc
-c<ccc...cc   cc..cc   cccccxccc...c
-ccc cc+cc   cc^1=cc  cc..+.^..+.x.+
-     c.cc  cc..cc.cc c.1ccccccc...c
-     c^cc cc..cccc.ccc.cc     cc+cc
-     c..cccc+cc  cc.cc+cc      ccc
-     cc1.cc...cccccc=yyyccccc
-      cc.+..x..+...+yyyyy+.^cc
-       cccc...cccxcccyyyccc..cc
-          cc=cc ccc cc+cc cc1.ccccc
-           cxc       ccc   cc...=xc
+       ccc''''+''c      cccccc
+      cc'''ccccc'c     cc'+.1cc
+     cc1'ccc  cc+cc   cc''cc''cc
+    cc..cc   cc...ccccc''cccc''ccc
+ccc cc+cc    c+.x.+.1'''cc  cc'''cc
+cAccc'''cc  ccb...cccxccc   cecc'cc
+c..+..1'+c  cBcc+cc ccc   cceEec+cc
+c<ccc'''cc  ccb''cc   cccccxccc...ccc
+ccc cc+cc   cc''=cccccc''+''''+.x.+Xc
+     c.cc  cc1'cc'cdDd.1ccccccc...ccc
+     c1cc cc..cccc'cdd.cc     cc+cc
+     c''cccc+cc  cc'cc+cc      cXc
+     cc''cc...cccccc=yyyccccc  ccc 
+      cc'+..x..+'''+yyyyy+.1cc
+       cccc...cccxcccyyyccc''cc
+          cc=cc ccc cc+cc cc''ccccc
+           cxc       ccc   cc'''+Xc
            ccc              ccccccc
 ENDMAP
 
