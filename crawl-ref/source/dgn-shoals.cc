@@ -424,7 +424,7 @@ void prepare_shoals(int level_number)
 // of X implies that the tide will advance visibly about once in X turns.
 const int TIDE_MULTIPLIER = 30;
 
-const int LOW_TIDE = -25 * TIDE_MULTIPLIER;
+const int LOW_TIDE = -18 * TIDE_MULTIPLIER;
 const int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
 const int TIDE_DECEL_MARGIN = 8;
 const int START_TIDE_RISE = 2;
