@@ -83,9 +83,10 @@ ENDMAP
 
 #############################################################################
 # Green exit
-NAME: labyrinth_green
-TAGS: minotaur generate_loot allow_dup
-MONS: patrolling minotaur
+NAME:   labyrinth_green
+TAGS:   minotaur generate_loot allow_dup
+MONS:   patrolling minotaur
+WEIGHT: 2
 MAP
 ........
 .bbbbbb.
@@ -119,7 +120,7 @@ ENDMAP
 NAME:   labyrinth_hidden_loot
 TAGS:   minotaur generate_loot allow_dup
 MONS:   patrolling minotaur, minotaur zombie
-SUBST:  d = 2%
+SUBST:  d = 2%*
 SUBST:  c : cvv
 MAP
 ............
@@ -183,11 +184,11 @@ WEIGHT:  2
 MAP
 ..............
 .cccccccccccc.
-.g..ddD+.cccc.
+.g.dddD+.cccc.
 .c.ccccc.cccc.
-.g..ddD+.+1<c.
+.g.dddD+.+1<c.
 .c.ccccc.cccc.
-.g..ddD+.cccc.
+.g.dddD+.cccc.
 .cccccccccccc.
 ..............
 ENDMAP
@@ -336,7 +337,7 @@ ENDMAP
 # Baited teleport trap - this is evil!
 NAME:    labyrinth_baited_teleportation_trap
 TAGS:    lab allow_dup
-KFEAT:   Y = teleport trap
+KFEAT:   Y = teleport trap / zot trap / .
 KITEM:   Y = any good_item
 SHUFFLE: cxv
 WEIGHT:  1
@@ -368,6 +369,7 @@ ENDMAP
 # A few monsters: Nothing is as it seems.
 NAME:   labyrinth_single_monster
 TAGS:   lab allow_dup generate_awake
+WEIGHT: 20
 KFEAT:  x = .
 KMONS:  x = trapdoor spider / w:2 wandering mushroom
 MAP
@@ -377,7 +379,7 @@ ENDMAP
 # Death by starvation?
 NAME:   labyrinth_hungry_ghost
 TAGS:   lab allow_dup generate_awake
-WEIGHT: 2
+WEIGHT: 40
 KFEAT:  x = .
 KMONS:  x = hungry ghost
 MAP
