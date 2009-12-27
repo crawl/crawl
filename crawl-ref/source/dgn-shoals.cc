@@ -482,7 +482,7 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
 static bool _shoals_tide_sweep_actors_clear(coord_def c)
 {
     actor *victim = actor_at(c);
-    if (!victim)
+    if (!victim || victim->airborne() || victim->swimming())
         return true;
 
     if (victim->atype() == ACT_MONSTER)
