@@ -679,36 +679,26 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
 int trap_def::shot_damage(actor& act)
 {
-    if (act.atype() == ACT_PLAYER)
+    int level = you.your_level;
+
+    // Trap damage to monsters is not a function of level, because
+    // they are fairly stupid and tend to have fewer hp than
+    // players -- this choice prevents traps from easily killing
+    // large monsters fairly deep within the dungeon.
+    if (act.atype() == ACT_MONSTER)
+	level = 0;
+
+    switch (this->type)
     {
-        switch (this->type)
-        {
         case TRAP_NEEDLE: return 0;
-        case TRAP_DART:   return random2( 4 + you.your_level/2) + 1;
-        case TRAP_ARROW:  return random2( 7 + you.your_level)   + 1;
-        case TRAP_SPEAR:  return random2(10 + you.your_level)   + 1;
-        case TRAP_BOLT:   return random2(13 + you.your_level)   + 1;
-        case TRAP_AXE:    return random2(15 + you.your_level)   + 1;
+        case TRAP_DART:   return random2( 4 + level/2) + 1;
+        case TRAP_ARROW:  return random2( 7 + level)   + 1;
+        case TRAP_SPEAR:  return random2(10 + level)   + 1;
+        case TRAP_BOLT:   return random2(13 + level)   + 1;
+        case TRAP_AXE:    return random2(15 + level)   + 1;
         default:          return 0;
-        }
     }
-    else if (act.atype() == ACT_MONSTER)
-    {
-        // Trap damage to monsters is not a function of level, because
-        // they are fairly stupid and tend to have fewer hp than
-        // players -- this choice prevents traps from easily killing
-        // large monsters fairly deep within the dungeon.
-        switch (this->type)
-        {
-        case TRAP_NEEDLE: return 0;
-        case TRAP_DART:   return random2( 4) + 1;
-        case TRAP_ARROW:  return random2( 7) + 1;
-        case TRAP_SPEAR:  return random2(10) + 1;
-        case TRAP_BOLT:   return random2(13) + 1;
-        case TRAP_AXE:    return random2(15) + 1;
-        default:          return 0;
-        }
-    }
+
     return (0);
 }
 
