@@ -13,7 +13,11 @@
 #include <vector>
 #include <cmath>
 
-static int _shoals_heights[GYM][GXM];
+inline short &shoals_heights(const coord_def &c)
+{
+    return (*env.heightmap)(c);
+}
+
 static std::vector<coord_def> _shoals_islands;
 
 const int ISLAND_COLLIDE_DIST2 = 5 * 5;
@@ -43,7 +47,7 @@ static double _to_radians(int degrees)
 
 static dungeon_feature_type _shoals_feature_at(const coord_def &c)
 {
-    const int height = _shoals_heights[c.y][c.x];
+    const int height = shoals_heights(c);
     return height >= SHT_STONE ? DNGN_STONE_WALL :
         height >= SHT_ROCK? DNGN_ROCK_WALL :
         height >= SHT_FLOOR? DNGN_FLOOR :
@@ -53,9 +57,9 @@ static dungeon_feature_type _shoals_feature_at(const coord_def &c)
 
 static void _shoals_init_heights()
 {
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
-            _shoals_heights[y][x] = -17;
+    env.heightmap.reset(new grid_heightmap);
+    for (rectangle_iterator ri(0); ri; ++ri)
+        shoals_heights(*ri) = SHT_SHALLOW_WATER - 3;
 }
 
 static double _angle_fuzz()
@@ -94,7 +98,7 @@ static void _shoals_island_center(const coord_def &c, int n_perturb, int radius,
 {
     for (int i = 0; i < n_perturb; ++i) {
         coord_def p = _random_point_from(c, random2(1 + radius));
-        _shoals_heights[p.y][p.x] += random_range(bounce_low, bounce_high);
+        shoals_heights(p) += random_range(bounce_low, bounce_high);
     }
 }
 
@@ -194,10 +198,10 @@ static void _shoals_smooth_at(const coord_def &c, int radius)
             const coord_def off = c - p;
             int weight = max_delta - off.abs();
             divisor += weight;
-            total += _shoals_heights[p.y][p.x] * weight;
+            total += shoals_heights(p) * weight;
         }
     }
-    _shoals_heights[c.y][c.x] = total / divisor;
+    shoals_heights(c) = total / divisor;
 }
 
 static void _shoals_smooth()

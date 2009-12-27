@@ -975,6 +975,7 @@ void dgn_reset_level()
 
     // Forget level properties.
     env.properties.clear();
+    env.heightmap.reset(NULL);
 
     // Set up containers for storing some level generation info.
     env.properties[LEVEL_VAULTS_KEY].new_table();
