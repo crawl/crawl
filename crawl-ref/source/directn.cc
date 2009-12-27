@@ -3468,14 +3468,19 @@ static void _describe_cell(const coord_def& where, bool in_range)
         marker = " (" + desc + ")";
     }
     const std::string traveldest = _stair_destination_description(where);
+    std::string height_desc;
+    if (env.heightmap.get())
+        height_desc = make_stringf(" (height: %d)", (*env.heightmap)(where));
     const dungeon_feature_type feat = grd(where);
-    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s", where.x, where.y,
+    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s",
+         where.x, where.y,
          stringize_glyph(get_screen_glyph(where)).c_str(),
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),
          marker.c_str(),
-         traveldest.c_str());
+         traveldest.c_str(),
+         height_desc.c_str());
 #else
     if (Tutorial.tutorial_left && tutorial_pos_interesting(where.x, where.y))
     {

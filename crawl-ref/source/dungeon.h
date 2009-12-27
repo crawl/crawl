@@ -163,6 +163,7 @@ public:
 
 extern bool Generating_Level;
 extern std::string dgn_Layout_Type;
+extern std::string dgn_Build_Method;
 
 extern std::set<std::string> Level_Unique_Maps;
 extern std::set<std::string> Level_Unique_Tags;
@@ -187,6 +188,7 @@ void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
 bool dgn_place_map(const map_def *map, bool clobber, bool make_no_exits,
                    const coord_def &pos = coord_def(-1, -1));
+
 void level_clear_vault_memory();
 void level_welcome_messages();
 
@@ -256,6 +258,16 @@ bool octa_room(spec_room &sr, int oblique_max,
 
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
+
+void dgn_replace_area(const coord_def& p1, const coord_def& p2,
+                      dungeon_feature_type replace,
+                      dungeon_feature_type feature,
+                      unsigned mmask = 0, bool needs_update = false);
+void dgn_replace_area(int sx, int sy, int ex, int ey,
+                      dungeon_feature_type replace,
+                      dungeon_feature_type feature,
+                      unsigned mmask = 0, bool needs_update = false);
+
 inline int count_feature_in_box( const coord_def& p1, const coord_def& p2,
                           dungeon_feature_type feat )
 {
