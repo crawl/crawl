@@ -2934,6 +2934,33 @@ bool item_def::is_critical() const
             && plus != RUNE_ABYSSAL);
 }
 
+// Is item something that no one would usually bother enchanting?
+bool item_def::is_mundane() const
+{
+    switch (base_type)
+    {
+    case OBJ_WEAPONS:
+        if (sub_type == WPN_CLUB
+            || sub_type == WPN_GIANT_CLUB
+            || sub_type == WPN_GIANT_SPIKED_CLUB
+            || sub_type == WPN_KNIFE)
+        {
+            return (true);
+        }
+        break;
+
+    case OBJ_ARMOUR:
+        if (sub_type == ARM_ANIMAL_SKIN)
+            return (true);
+        break;
+
+    default:
+        break;
+    }
+
+    return (false);
+}
+
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];

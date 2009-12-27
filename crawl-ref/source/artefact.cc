@@ -1923,7 +1923,7 @@ bool make_item_randart( item_def &item, bool force_mundane )
     if (item.flags & ISFLAG_UNRANDART)
         return (false);
 
-    if (item_is_mundane(item) && !one_chance_in(5) && !force_mundane)
+    if (item.is_mundane() && !one_chance_in(5) && !force_mundane)
         return (false);
 
     ASSERT(!item.props.exists(KNOWN_PROPS_KEY));
