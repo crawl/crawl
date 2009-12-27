@@ -36,6 +36,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
+#include "dgn-shoals.h"
 #include "directn.h"
 #include "dgnevent.h"
 #include "directn.h"
@@ -3092,6 +3093,7 @@ void run_environment_effects()
     }
 
     run_corruption_effects(you.time_taken);
+    shoals_apply_tides(div_rand_round(you.time_taken, 10));
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)

@@ -7031,6 +7031,17 @@ void player::moveto(const coord_def &c)
     set_position(c);
 }
 
+bool player::move_to_pos(const coord_def &c)
+{
+    actor *target = actor_at(c);
+    if (!target || target->submerged())
+    {
+        moveto(c);
+        return true;
+    }
+    return false;
+}
+
 void player::shiftto(const coord_def &c)
 {
     crawl_view.shift_player_to(c);
@@ -7423,6 +7434,3 @@ void player::set_duration(duration_type dur, int turns,
     you.duration[dur] = 0;
     increase_duration(dur, turns, cap, msg);
 }
-
-
-
