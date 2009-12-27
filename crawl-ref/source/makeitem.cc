@@ -1849,7 +1849,8 @@ static special_missile_type _determine_missile_brand(const item_def& item,
             rc = SPMSL_REAPING;
         else if (temp_rand < 110)
             rc = SPMSL_SILVER;
-        else if (temp_rand < 120)
+        // Make steel rarer at lower levels. {due}
+        else if (temp_rand < 120 && (you.your_level > 10 || one_chance_in(3)))
             rc = SPMSL_STEEL;
         else if (temp_rand < 130)
             rc = SPMSL_DISPERSAL;

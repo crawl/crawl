@@ -1995,7 +1995,7 @@ bool bolt::hit_wall()
     return (false);
 }
 
-void bolt::affect_cell(bool avoid_self)
+void bolt::affect_cell()
 {
     // Shooting through clouds affects accuracy.
     if (env.cgrid(pos()) != EMPTY_CLOUD)
@@ -2006,25 +2006,14 @@ void bolt::affect_cell(bool avoid_self)
     const coord_def old_pos = pos();
     const bool was_solid = feat_is_solid(grd(pos()));
 
-    bool avoid_monster = false;
-    bool avoid_player = false;
-
-    if (avoid_self)
-    {
-        if (YOU_KILL(thrower))
-            avoid_player = true;
-        else if (MON_KILL(thrower))
-            avoid_monster = true;
-    }
-
     if (was_solid)
     {
         // Some special casing.
         if (monsters* mon = monster_at(pos()))
         {
-            if (can_affect_wall_monster(mon) && !avoid_monster)
+            if (can_affect_wall_monster(mon))
                 affect_monster(mon);
-            else if (!avoid_monster)
+            else
             {
                 mprf("The %s protects %s from harm.",
                      raw_feature_description(grd(mon->pos())).c_str(),
@@ -2040,26 +2029,19 @@ void bolt::affect_cell(bool avoid_self)
             return;
     }
 
-    const bool still_wall = (was_solid && old_pos == pos());
-
-    bool hit_player = false;
     // If the player can ever walk through walls, this will need
     // special-casing too.
-    if (found_player() && !avoid_player)
-    {
+    bool hit_player = found_player();
+    if (hit_player)
         affect_player();
-        hit_player = true;
-    }
 
-    // We don't want to hit a monster in a wall square twice.  Also,
+    // We don't want to hit a monster in a wall square twice. Also,
     // stop single target beams from affecting a monster if they already
     // affected the player on this square. -cao
-    if ((!hit_player || is_beam || is_explosion)
-         && !still_wall && !avoid_monster)
-    {
-        if (monsters* m = monster_at(pos()) )
+    const bool still_wall = (was_solid && old_pos == pos());
+    if ((!hit_player || is_beam || is_explosion) && !still_wall)
+        if (monsters* m = monster_at(pos()))
             affect_monster(m);
-    }
 
     if (!feat_is_solid(grd(pos())))
         affect_ground();
@@ -2167,12 +2149,12 @@ void bolt::do_fire()
     }
 #endif
 
-    bool avoid_self = (!aimed_at_feet && (!is_explosion || !in_explosion_phase));
-
     msg_generated = false;
     if (!aimed_at_feet)
     {
         choose_ray();
+        // Take *one* step, so as not to hurt the source.
+        ray.advance();
     }
 
 #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
@@ -2187,11 +2169,9 @@ void bolt::do_fire()
         path_taken.push_back(pos());
 
         if (!affects_nothing)
-            affect_cell(avoid_self);
+            affect_cell();
 
-        if (!avoid_self)
-            range_used++;
-
+        range_used++;
         if (range_used >= range)
             break;
 
@@ -2205,7 +2185,7 @@ void bolt::do_fire()
                 break;
         }
 
-        ASSERT((!feat_is_solid(grd(pos())) || avoid_self)
+        ASSERT(!feat_is_solid(grd(pos()))
                || is_tracer && affects_wall(grd(pos())));
 
         const bool was_seen = seen;
@@ -2228,8 +2208,6 @@ void bolt::do_fire()
         draw(pos());
 
         ray.advance();
-
-        avoid_self = false;
     }
 
     if (!map_bounds(pos()))
@@ -5052,7 +5030,12 @@ void bolt::affect_monster(monsters* mon)
             corpse = monster_die(mon, KILL_MON, beam_source_as_target());
         }
         else
-            corpse = monster_die(mon, thrower, beam_source_as_target());
+        {
+            killer_type ref_killer = thrower;
+            if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
+                ref_killer = KILL_YOU_MISSILE;
+            corpse = monster_die(mon, ref_killer, beam_source_as_target());
+        }
     }
 
     // Give the callbacks a dead-but-valid monster object.

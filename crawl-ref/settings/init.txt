@@ -165,8 +165,7 @@ drop_filter = useless_item
 # explore_improved = true
 #
 # explore_stop_pickup_ignore = curare
-auto_exclude = oklob plant,silver statue,orange crystal statue,ice statue
-auto_exclude = curse skull,roxanne
+auto_exclude = oklob plant,statue,curse skull,roxanne
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan

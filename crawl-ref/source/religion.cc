@@ -4809,7 +4809,7 @@ void offer_items()
             const std::string msg =
                   "Really sacrifice " + item.name(DESC_NOCAP_A) + "?";
 
-            if (!yesno(msg.c_str()))
+            if (!yesno(msg.c_str(), false, 'n'))
             {
                 i = next;
                 continue;

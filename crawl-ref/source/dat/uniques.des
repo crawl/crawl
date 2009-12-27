@@ -95,7 +95,7 @@ ENDMAP
 ################################################################################
 
 NAME:   uniq_agnes
-DEPTH:  14-16, !Lair, !Slime
+DEPTH:  12-18, !Lair, !Slime
 : place_unique(_G, "Agnes")
 
 NAME:   uniq_aizul
@@ -216,7 +216,7 @@ DEPTH:  14-16
 : place_unique(_G, "Maud")
 
 NAME:   uniq_mara
-DEPTH:  20-27, !Lair, !Slime
+DEPTH:  22-27, !Lair, !Slime
 : place_unique(_G, "Mara")
 
 NAME:   uniq_maurice

@@ -487,7 +487,7 @@ void tome_of_power(int slot)
     set_ident_flags(you.inv[slot], ISFLAG_KNOW_TYPE);
     you.turn_is_over = true;
 
-    if (!yesno("Read it?"))
+    if (!yesno("Read it?", false, 'n'))
         return;
 
     if (player_mutation_level(MUT_BLURRY_VISION) > 0

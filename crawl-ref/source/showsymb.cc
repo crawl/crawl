@@ -60,6 +60,14 @@ static int _get_mons_colour(const monsters *mons)
     {
         const monsterentry* mdat = get_monster_data(mons->get_mislead_type());
         col = mdat->colour;
+        // Some monsters (specifically, ugly things and butterflies) are generated
+        // black. Ugly things are an object of mislead, but never a subject; however
+        // if a monster summons ugly things (such as Kirke) while under the Misled
+        // status effect, they will show up black instead of their assigned colour.
+        // Likewise with any other black-coloured monsters on-screen but not yet
+        // mislead. {due}
+        if (col == BLACK)
+            col = mons->colour;
     }
 
     if (mons->berserk())

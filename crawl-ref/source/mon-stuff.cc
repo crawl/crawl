@@ -533,14 +533,16 @@ static void _check_kill_milestone(const monsters *mons,
     if (mons->props.exists("original_was_unique"))
         is_unique = mons->props["original_was_unique"].get_bool();
 
-    if (mons->type == MONS_PLAYER_GHOST)
+    // Don't give milestones for summoned ghosts {due}
+    if (mons->type == MONS_PLAYER_GHOST && !mons->is_summoned())
     {
         std::string milestone = _milestone_kill_verb(killer) + "the ghost of ";
         milestone += get_ghost_description(*mons, true);
         milestone += ".";
         mark_milestone("ghost", milestone);
     }
-    else if (is_unique)
+    // Or summoned uniques, which a summoned ghost is treated as {due}
+    else if (is_unique && !mons->is_summoned())
     {
         mark_milestone("unique",
                        _milestone_kill_verb(killer)
@@ -3125,6 +3127,11 @@ bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
 
     if (placement)
         extra_careful = true;
+
+    // Berserk monsters are less careful and will blindly plow through any
+    // dangerous cloud, just to kill you. {due}
+    if (!extra_careful && monster->berserk())
+        return (true);
 
     switch (cl_type)
     {

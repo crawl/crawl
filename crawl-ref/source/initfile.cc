@@ -3527,7 +3527,9 @@ static void _print_version()
 
 static void _print_save_version(char *name)
 {
+#ifdef LOAD_UNPACKAGE_CMD
     bool need_unlink = false;
+#endif
     std::string basename = get_savedir_filename(name, "", "");
     std::string filename = basename + ".sav";
 

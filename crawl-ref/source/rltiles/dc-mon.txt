@@ -287,12 +287,14 @@ vine-covered_golem MONS_VINE_GOLEM
 ## Statues (also '8')
 %sdir dc-mon/unique
 roxanne MONS_ROXANNE
-%sdir dc-mon
+%sdir dc-mon/statues
 ice_statue MONS_ICE_STATUE
 silver_statue MONS_SILVER_STATUE
 orange_crystal_statue MONS_ORANGE_CRYSTAL_STATUE
+statue_archer MONS_ARCHER_STATUE
 
 ## Gargoyles ('9')
+%sdir dc-mon
 gargoyle MONS_GARGOYLE
 metal_gargoyle MONS_METAL_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
