@@ -2236,16 +2236,13 @@ static void tag_read_level( reader &th, char minorVersion )
 
     // Restore heightmap
     env.heightmap.reset(NULL);
-    if (_tag_minor_version >= TAG_MINOR_HEIGHTMAP)
+    const bool have_heightmap(unmarshallByte(th));
+    if (have_heightmap)
     {
-        const bool have_heightmap(unmarshallByte(th));
-        if (have_heightmap)
-        {
-            env.heightmap.reset(new grid_heightmap);
-            grid_heightmap &heightmap(*env.heightmap);
-            for (rectangle_iterator ri(0); ri; ++ri)
-                heightmap(*ri) = unmarshallShort(th);
-        }
+        env.heightmap.reset(new grid_heightmap);
+        grid_heightmap &heightmap(*env.heightmap);
+        for (rectangle_iterator ri(0); ri; ++ri)
+            heightmap(*ri) = unmarshallShort(th);
     }
 }
 
