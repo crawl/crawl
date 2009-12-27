@@ -48,6 +48,14 @@ enum shoals_height_thresholds
     SHT_SHALLOW_WATER = -14
 };
 
+enum tide_direction
+{
+    TIDE_RISING,
+    TIDE_FALLING
+};
+
+static tide_direction _shoals_tide_direction;
+
 static double _to_radians(int degrees)
 {
     return degrees * M_PI / 180;
@@ -541,6 +549,33 @@ static void _shoals_apply_tide_feature_at(coord_def c,
     dungeon_terrain_changed(c, feat, true, false, true);
 }
 
+static int _shoals_feature_height(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_FLOOR:
+        return SHT_FLOOR;
+    case DNGN_SHALLOW_WATER:
+        return SHT_SHALLOW_WATER;
+    case DNGN_DEEP_WATER:
+        return SHT_SHALLOW_WATER - 1;
+    default:
+        return 0;
+    }
+}
+
+// Determines if the
+static tide_direction _shoals_feature_tide_height_change(
+    dungeon_feature_type oldfeat,
+    dungeon_feature_type newfeat)
+{
+    const int height_delta =
+        _shoals_feature_height(newfeat) - _shoals_feature_height(oldfeat);
+    // If the apparent height of the new feature is greater (floor vs water),
+    // the tide is receding.
+    return height_delta < 0? TIDE_RISING : TIDE_FALLING;
+}
+
 static void _shoals_apply_tide_at(coord_def c, int tide)
 {
     const int effective_height = shoals_heights(c) - tide;
@@ -549,6 +584,14 @@ static void _shoals_apply_tide_at(coord_def c, int tide)
     // Make sure we're not sprouting new walls.
     if (feat_is_wall(newfeat))
         newfeat = DNGN_FLOOR;
+    const dungeon_feature_type oldfeat = grd(c);
+
+    if (oldfeat == newfeat
+        || (_shoals_feature_tide_height_change(oldfeat, newfeat) !=
+            _shoals_tide_direction))
+    {
+        return;
+    }
 
     _shoals_apply_tide_feature_at(c, newfeat);
 }
@@ -630,9 +673,15 @@ void shoals_apply_tides(int turns_elapsed)
     _shoals_init_tide();
     int tide = env.properties[ENVP_SHOALS_TIDE_KEY].get_short();
     int acc = env.properties[ENVP_SHOALS_TIDE_VEL].get_short();
+    const int old_tide = tide;
     while (turns_elapsed-- > 0)
         _shoals_run_tide(tide, acc);
     env.properties[ENVP_SHOALS_TIDE_KEY] = short(tide);
     env.properties[ENVP_SHOALS_TIDE_VEL] = short(acc);
-    _shoals_apply_tide(tide / TIDE_MULTIPLIER);
+    if (old_tide / TIDE_MULTIPLIER != tide / TIDE_MULTIPLIER)
+    {
+        _shoals_tide_direction =
+            tide > old_tide ? TIDE_RISING : TIDE_FALLING;
+        _shoals_apply_tide(tide / TIDE_MULTIPLIER);
+    }
 }
