@@ -628,6 +628,7 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
     {
         if (foe != mon
             && mon->can_see(foe)
+            && !mons_is_projectile(foe->type)
             && (friendly || !is_sanctuary(p))
             && (foe->friendly() != friendly
                 || (neutral && !foe->neutral())))
