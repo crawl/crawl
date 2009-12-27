@@ -2889,14 +2889,15 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
         // check clouds
         if (in_bounds(you.pos()) && env.cgrid(you.pos()) != EMPTY_CLOUD)
         {
-            const cloud_type type = env.cloud[env.cgrid(you.pos())].type;
+            const int cloudidx = env.cgrid(you.pos());
+            const cloud_type type = env.cloud[cloudidx].type;
 
             if (is_damaging_cloud(type, want_move))
             {
                 if (announce)
                 {
                     mprf(MSGCH_WARN, "You're standing in a cloud of %s!",
-                         cloud_name(type).c_str());
+                         cloud_name(cloudidx).c_str());
                 }
                 return (false);
             }

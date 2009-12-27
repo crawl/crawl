@@ -16,7 +16,8 @@ struct bolt;
 bool backlight_monsters(coord_def where, int pow, int garbage);
 int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
                         cloud_type ctype, kill_category,
-                        killer_type killer = KILL_NONE);
+                        killer_type killer = KILL_NONE, int colour = -1,
+                        std::string name = "", std::string tile = "");
 int disperse_monsters(coord_def where, int pow);
 
 void remove_condensation_shield();

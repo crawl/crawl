@@ -34,19 +34,30 @@ void delete_cloud( int cloud );
 void move_cloud( int cloud, const coord_def& newpos );
 
 void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
-                        kill_category whose, int spread_rate = -1 );
+                        kill_category whose, int spread_rate = -1,
+                        int colour = -1, std::string name = "",
+                        std::string tile = "");
 void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
-                        killer_type killer, int spread_rate = -1 );
+                        killer_type killer, int spread_rate = -1,
+                        int colour = -1, std::string name = "",
+                        std::string tile = "");
 void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
                         kill_category whose, killer_type killer,
-                        int spread_rate = -1 );
+                        int spread_rate = -1,
+                        int colour = -1, std::string name = "",
+                        std::string tile = "");
 void place_cloud( cloud_type cl_type, const coord_def& ctarget,
-                  int cl_range, kill_category whose, int spread_rate = -1 );
+                  int cl_range, kill_category whose, int spread_rate = -1,
+                  int colour = -1, std::string name = "",
+                  std::string tile = "");
 void place_cloud( cloud_type cl_type, const coord_def& ctarget,
-                  int cl_range, killer_type killer, int spread_rate = -1 );
+                  int cl_range, killer_type killer, int spread_rate = -1,
+                  int colour = -1, std::string name = "",
+                  std::string tile = "");
 void place_cloud( cloud_type cl_type, const coord_def& ctarget,
                   int cl_range, kill_category whose, killer_type killer,
-                  int spread_rate = -1 );
+                  int spread_rate = -1, int colour = -1, std::string name = "",
+                  std::string tile = "");
 
 void manage_clouds(void);
 
@@ -61,6 +72,7 @@ int resist_fraction(int resist, int bonus_res = 0);
 int  max_cloud_damage(cloud_type cl_type, int power = -1);
 void in_a_cloud(void);
 
+std::string cloud_name(int cloudno);
 std::string cloud_name(cloud_type type);
 int get_cloud_colour(int cloudno);
 

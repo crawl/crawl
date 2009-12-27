@@ -1541,10 +1541,8 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             const int cloudidx = env.cgrid(gc);
             if (cloudidx != EMPTY_CLOUD)
             {
-                cloud_type ctype = env.cloud[cloudidx].type;
-
                 std::string terrain_desc = desc;
-                desc = cloud_name(ctype);
+                desc = cloud_name(cloudidx);
 
                 if (!terrain_desc.empty())
                     desc += "\n" + terrain_desc;
@@ -1937,9 +1935,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         const int cloudidx = env.cgrid(gc);
         if (cloudidx != EMPTY_CLOUD)
         {
-            cloud_type ctype = env.cloud[cloudidx].type;
-
-            inf.prefix = "There is a cloud of " + cloud_name(ctype)
+            inf.prefix = "There is a cloud of " + cloud_name(cloudidx)
                          + " here.$$";
         }
     }

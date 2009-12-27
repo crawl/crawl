@@ -3418,10 +3418,9 @@ static void _describe_cell(const coord_def& where, bool in_range)
     if (env.cgrid(where) != EMPTY_CLOUD)
     {
         const int cloud_inspected = env.cgrid(where);
-        const cloud_type ctype = (cloud_type) env.cloud[cloud_inspected].type;
 
         mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
-             cloud_name(ctype).c_str());
+             cloud_name(cloud_inspected).c_str());
 
         cloud_described = true;
     }

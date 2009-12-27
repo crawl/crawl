@@ -165,7 +165,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
             {
                 std::string prompt = make_stringf(
                                         "Really step into that cloud of %s?",
-                                        cloud_name(ctype).c_str());
+                                        cloud_name(cloud).c_str());
 
                 if (!yesno(prompt.c_str(), false, 'n'))
                 {

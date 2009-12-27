@@ -2649,64 +2649,89 @@ int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
     }
 }
 
-static int _tileidx_cloud(int type, int decay)
+static int _tileidx_cloud(cloud_struct cl)
 {
+    int type = cl.type;
+    int decay = cl.decay;
+    std::string override = cl.tile;
+    int colour = cl.colour;
+
     int ch = TILE_ERROR;
     int dur = decay/20;
     if (dur > 2)
         dur = 2;
 
-    switch (type)
+    if (!override.empty())
     {
-        case CLOUD_FIRE:
-            ch = TILE_CLOUD_FIRE_0 + dur;
-            break;
-
-        case CLOUD_COLD:
-            ch = TILE_CLOUD_COLD_0 + dur;
-            break;
-
-        case CLOUD_STINK:
-        case CLOUD_POISON:
-            ch = TILE_CLOUD_POISON_0 + dur;
-            break;
-
-        case CLOUD_BLUE_SMOKE:
-            ch = TILE_CLOUD_BLUE_SMOKE;
-            break;
-
-        case CLOUD_PURPLE_SMOKE:
-        case CLOUD_TLOC_ENERGY:
-            ch = TILE_CLOUD_TLOC_ENERGY;
-            break;
-
-        case CLOUD_MIASMA:
-            ch = TILE_CLOUD_MIASMA;
-            break;
-
-        case CLOUD_BLACK_SMOKE:
-            ch = TILE_CLOUD_BLACK_SMOKE;
-            break;
-
-        case CLOUD_MUTAGENIC:
-            ch = (dur == 0 ? TILE_CLOUD_MUTAGENIC_0 :
-                  dur == 1 ? TILE_CLOUD_MUTAGENIC_1
-                           : TILE_CLOUD_MUTAGENIC_2);
-            ch += random2(tile_main_count(ch));
-            break;
-
-        case CLOUD_MIST:
-            ch = TILE_CLOUD_MIST;
-            break;
-
-        case CLOUD_RAIN:
-            ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
-            break;
-
-        default:
-            ch = TILE_CLOUD_GREY_SMOKE;
-            break;
+        unsigned int index;
+        if (!tile_main_index(override.c_str(), index))
+        {
+            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", override.c_str());
+        }
+        else
+        {
+            int offset = tile_main_count(index);
+            ch = index + offset;
+        }
     }
+    else
+    {
+        switch (type)
+        {
+            case CLOUD_FIRE:
+                ch = TILE_CLOUD_FIRE_0 + dur;
+                break;
+
+            case CLOUD_COLD:
+                ch = TILE_CLOUD_COLD_0 + dur;
+                break;
+
+            case CLOUD_STINK:
+            case CLOUD_POISON:
+                ch = TILE_CLOUD_POISON_0 + dur;
+                break;
+
+            case CLOUD_BLUE_SMOKE:
+                ch = TILE_CLOUD_BLUE_SMOKE;
+                break;
+
+            case CLOUD_PURPLE_SMOKE:
+            case CLOUD_TLOC_ENERGY:
+                ch = TILE_CLOUD_TLOC_ENERGY;
+                break;
+
+            case CLOUD_MIASMA:
+                ch = TILE_CLOUD_MIASMA;
+                break;
+
+            case CLOUD_BLACK_SMOKE:
+                ch = TILE_CLOUD_BLACK_SMOKE;
+                break;
+
+            case CLOUD_MUTAGENIC:
+                ch = (dur == 0 ? TILE_CLOUD_MUTAGENIC_0 :
+                      dur == 1 ? TILE_CLOUD_MUTAGENIC_1
+                               : TILE_CLOUD_MUTAGENIC_2);
+                ch += random2(tile_main_count(ch));
+                break;
+
+            case CLOUD_MIST:
+                ch = TILE_CLOUD_MIST;
+                break;
+
+            case CLOUD_RAIN:
+                ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
+                break;
+
+            default:
+                ch = TILE_CLOUD_GREY_SMOKE;
+                break;
+        }
+    }
+
+    if (colour != -1)
+        ch = tile_main_coloured(ch, colour);
+
     return (ch | TILE_FLAG_FLYING);
 }
 
@@ -4852,9 +4877,9 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     }
 }
 
-void tile_place_cloud(int x, int y, int type, int decay)
+void tile_place_cloud(int x, int y, cloud_struct cl)
 {
-    env.tile_fg[x][y] = _tileidx_cloud(type, decay);
+    env.tile_fg[x][y] = _tileidx_cloud(cl);
 }
 
 unsigned int num_tile_rays = 0;

@@ -27,6 +27,11 @@
 #include "stuff.h"
 #include "env.h"
 #include "terrain.h"
+#ifdef USE_TILE
+#include "tiles.h"
+#include "tiledef-gui.h"
+#include "tiledef-main.h"
+#endif
 #include "mutation.h"
 
 static int _actual_spread_rate(cloud_type type, int spread_rate)
@@ -70,7 +75,8 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
 
 static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
                         int decay, kill_category whose, killer_type killer,
-                        unsigned char spread_rate )
+                        unsigned char spread_rate, int colour, std::string name,
+                        std::string tile)
 {
     ASSERT( env.cloud[cloud].type == CLOUD_NONE );
     ASSERT(_killer_whose_match(whose, killer));
@@ -83,13 +89,28 @@ static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
     c.whose       = whose;
     c.killer      = killer;
     c.spread_rate = spread_rate;
+    c.colour      = colour;
+    c.name        = name;
+#ifdef USE_TILE
+    if (!tile.empty())
+    {
+        unsigned int index;
+        if (!tile_main_index(tile.c_str(), index))
+        {
+            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", tile.c_str());
+            tile = "";
+        }
+    }
+#endif
+    c.tile        = tile;
     env.cgrid(p)  = cloud;
     env.cloud_no++;
 }
 
 static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
                              kill_category whose, killer_type killer,
-                             int spread_rate)
+                             int spread_rate, int colour, std::string name,
+                             std::string tile)
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
@@ -99,7 +120,8 @@ static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
     {
         if (env.cloud[ci].type == CLOUD_NONE)   // i.e., is empty
         {
-            _new_cloud( ci, cltype, p, decay, whose, killer, spread_rate );
+            _new_cloud( ci, cltype, p, decay, whose, killer, spread_rate, colour,
+                        name, tile );
             break;
         }
     }
@@ -129,7 +151,7 @@ static int _spread_cloud(const cloud_struct &cloud)
             newdecay = cloud.decay - 1;
 
         _place_new_cloud( cloud.type, *ai, newdecay, cloud.whose, cloud.killer,
-                          cloud.spread_rate );
+                          cloud.spread_rate, cloud.colour, cloud.name, cloud.tile );
 
         extra_decay += 8;
     }
@@ -151,7 +173,8 @@ static void _spread_fire(const cloud_struct &cloud)
         // burning trees produce flames all around
         if (!cell_is_solid(*ai) && make_flames)
             _place_new_cloud( CLOUD_FIRE, *ai, cloud.decay/2+1, cloud.whose,
-                              cloud.killer, cloud.spread_rate );
+                              cloud.killer, cloud.spread_rate, cloud.colour,
+                              cloud.name, cloud.tile );
 
         // forest fire doesn't spread in all directions at once,
         // every neighbouring square gets a separate roll
@@ -161,7 +184,8 @@ static void _spread_fire(const cloud_struct &cloud)
                 mpr("The forest fire spreads!");
             grd(*ai) = DNGN_FLOOR;
             _place_new_cloud( cloud.type, *ai, random2(30)+25, cloud.whose,
-                              cloud.killer, cloud.spread_rate );
+                              cloud.killer, cloud.spread_rate, cloud.colour,
+                              cloud.name, cloud.tile );
         }
 
     }
@@ -248,6 +272,9 @@ void delete_cloud( int cloud )
         c.whose       = KC_OTHER;
         c.killer      = KILL_NONE;
         c.spread_rate = 0;
+        c.colour      = -1;
+        c.name        = "";
+        c.tile        = "";
 
         env.cgrid(c.pos) = EMPTY_CLOUD;
         c.pos.reset();
@@ -271,32 +298,37 @@ void move_cloud( int cloud, const coord_def& newpos )
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
 void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
-                        kill_category whose, int spread_rate )
+                        kill_category whose, int spread_rate, int colour,
+                        std::string name, std::string tile)
 {
     check_place_cloud(cl_type, p, lifetime, whose,
-                      cloud_struct::whose_to_killer(whose), spread_rate);
+                      cloud_struct::whose_to_killer(whose), spread_rate, colour,
+                      name, tile);
 }
 
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
 void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
-                        killer_type killer, int spread_rate )
+                        killer_type killer, int spread_rate, int colour,
+                        std::string name, std::string tile)
 {
     check_place_cloud(cl_type, p, lifetime,
                       cloud_struct::killer_to_whose(killer), killer,
-                      spread_rate);
+                      spread_rate, colour, name, tile);
 }
 
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
 void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
                         kill_category whose, killer_type killer,
-                        int spread_rate )
+                        int spread_rate, int colour, std::string name,
+                        std::string tile)
 {
     if (!in_bounds(p) || env.cgrid(p) != EMPTY_CLOUD)
         return;
 
-    place_cloud( cl_type, p, lifetime, whose, killer, spread_rate );
+    place_cloud( cl_type, p, lifetime, whose, killer, spread_rate, colour,
+                 name, tile );
 }
 
 int steam_cloud_damage(const cloud_struct &cloud)
@@ -317,27 +349,32 @@ int steam_cloud_damage(int decay)
 //   make way if there are too many on level. Will overwrite an old
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
-                 kill_category whose, int _spread_rate)
+                 kill_category whose, int _spread_rate, int colour,
+                 std::string name, std::string tile)
 {
     place_cloud(cl_type, ctarget, cl_range, whose,
-                cloud_struct::whose_to_killer(whose), _spread_rate);
+                cloud_struct::whose_to_killer(whose), _spread_rate,
+                colour, name, tile);
 }
 
 //   Places a cloud with the given stats. May delete old clouds to
 //   make way if there are too many on level. Will overwrite an old
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
-                 killer_type killer, int _spread_rate)
+                 killer_type killer, int _spread_rate, int colour,
+                 std::string name, std::string tile)
 {
     place_cloud(cl_type, ctarget, cl_range,
-                cloud_struct::killer_to_whose(killer), killer, _spread_rate);
+                cloud_struct::killer_to_whose(killer), killer, _spread_rate,
+                colour, name, tile);
 }
 
 //   Places a cloud with the given stats. May delete old clouds to
 //   make way if there are too many on level. Will overwrite an old
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
-                 kill_category whose, killer_type killer, int _spread_rate)
+                 kill_category whose, killer_type killer, int _spread_rate,
+                 int colour, std::string name, std::string tile)
 {
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
@@ -393,7 +430,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (cl_new != -1)
     {
         _new_cloud( cl_new, cl_type, ctarget, cl_range * 10,
-                    whose, killer, spread_rate );
+                    whose, killer, spread_rate, colour, name, tile );
     }
     else
     {
@@ -403,7 +440,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
             if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
             {
                 _new_cloud( ci, cl_type, ctarget, cl_range * 10,
-                            whose, killer, spread_rate );
+                            whose, killer, spread_rate, colour, name, tile );
                 break;
             }
         }
@@ -609,6 +646,7 @@ void in_a_cloud()
     int cl = env.cgrid(you.pos());
     int hurted = 0;
     int resist;
+    std::string name = env.cloud[cl].name;
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
         remove_condensation_shield();
@@ -620,7 +658,7 @@ void in_a_cloud()
         if (you.duration[DUR_FIRE_SHIELD])
             return;
 
-        mpr("You are engulfed in roaring flames!");
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "roaring flames");
 
         resist = player_res_fire();
 
@@ -650,7 +688,8 @@ void in_a_cloud()
 
     case CLOUD_STINK:
         // If you don't have to breathe, unaffected
-        mpr("You are engulfed in noxious fumes!");
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "noxious fumes");
+
         if (player_res_poison())
             break;
 
@@ -674,7 +713,7 @@ void in_a_cloud()
         if (you.mutation[MUT_PASSIVE_FREEZE])
             break;
 
-        mpr("You are engulfed in freezing vapours!");
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "freezing vapours");
 
         resist = player_res_cold();
 
@@ -703,7 +742,8 @@ void in_a_cloud()
 
     case CLOUD_POISON:
         // If you don't have to breathe, unaffected
-        mpr("You are engulfed in poison gas!");
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "poison gas");
+
         if (!player_res_poison())
         {
             ouch((random2(10) * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
@@ -717,12 +757,14 @@ void in_a_cloud()
     case CLOUD_TLOC_ENERGY:
     case CLOUD_PURPLE_SMOKE:
     case CLOUD_BLACK_SMOKE:
-        mpr("You are engulfed in a cloud of smoke!");
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "a cloud of smoke");
+
         break;
 
     case CLOUD_STEAM:
     {
-        mpr("You are engulfed in a cloud of scalding steam!");
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "a cloud of scalding steam");
+
         if (player_res_steam() > 0)
         {
             mpr("It doesn't seem to affect you.");
@@ -746,7 +788,7 @@ void in_a_cloud()
     }
 
     case CLOUD_MIASMA:
-        mpr("You are engulfed in a dark miasma.");
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "a dark miasma");
 
         if (you.res_rotting())
             return;
@@ -771,11 +813,12 @@ void in_a_cloud()
             you.duration[DUR_MISLED] = 0;
         }
 
-        mpr("You are standing in the rain.");
+        mprf("You are engulfed in %s.", !name.empty() ? name.c_str() : "the rain");
+
         break;
 
     case CLOUD_MUTAGENIC:
-        mpr("You are engulfed in a mutagenic fog!");
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "a mutagenic fog");
 
         if (coinflip())
         {
@@ -868,6 +911,14 @@ cloud_type in_what_cloud()
         return (CLOUD_NONE);
 
     return (env.cloud[cl].type);
+}
+
+std::string cloud_name(int cloudno)
+{
+    if (!env.cloud[cloudno].name.empty())
+        return (env.cloud[cloudno].name);
+    else
+        return cloud_name(env.cloud[cloudno].type);
 }
 
 std::string cloud_name(cloud_type type)
@@ -975,6 +1026,9 @@ void cloud_struct::set_killer(killer_type _killer)
 int get_cloud_colour(int cloudno)
 {
     int which_colour = LIGHTGREY;
+    if (env.cloud[cloudno].colour != -1)
+        return (env.cloud[cloudno].colour);
+
     switch (env.cloud[cloudno].type)
     {
     case CLOUD_FIRE:

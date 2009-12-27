@@ -3243,17 +3243,18 @@ void bolt::affect_place_clouds()
             if (p == you.pos())
             {
                 mprf("The %s you are in turns into %s!",
-                     cloud_name(ctype).c_str(), cloud_name(new_type).c_str());
+                     cloud_name(cloudidx).c_str(), cloud_name(new_type).c_str());
                 obvious_effect = true;
             }
             else if (you.see_cell(p))
             {
                 mprf("A cloud of %s turns into %s.",
-                     cloud_name(ctype).c_str(), cloud_name(new_type).c_str());
+                     cloud_name(cloudidx).c_str(), cloud_name(new_type).c_str());
                 obvious_effect = true;
             }
 
             ctype = new_type;
+            env.cloud[cloudidx].name = "";
             return;
         }
 
