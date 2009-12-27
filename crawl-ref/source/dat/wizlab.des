@@ -166,6 +166,139 @@ wwxm..O..mxww
    www.www
     w.@.w
 ENDMAP
+
+###############################################################################
+# Basic Entrance 2 (by Mu.)
+#
+NAME:       enter_wizlab_2
+TAGS:       uniq_wizlab no_item_gen no_monster_gen
+ORIENT:     float
+SUBST:      x = b
+SHUFFLE:    tU
+:           wizlab_portal(_G)
+MAP
+.................
+.xxxxxxxmxxxxxxx.
+.xx...x...x...xx.
+.n..U...O...U..n.
+.xx...x...x...xx.
+.xxxxxxx+xxxxxxx.
+..xx...x.x...xx..
+..n..t.....t..n..
+..xx...x.x...xx..
+..xxxxxx+xxxxxx..
+.................
+......c...c......
+.....ccc.ccc.....
+.................
+ENDMAP
+
+
+###############################################################################
+# Basic Entrance 3 (by Mu.)
+#
+NAME:       enter_wizlab_3
+TAGS:       uniq_wizlab no_item_gen no_monster_gen
+ORIENT:     float
+:           wizlab_portal(_G)
+MARKER:     ! = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "flame" \
+             }
+MARKER:     ? = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "freezing vapour" \
+             }
+SUBST:      n = cn
+COLOUR:     . = red / blue
+KPROP:      .?! = no_rtele_into
+MAP
+ ccccccccc
+cc..!.?..cc
+c?.......!c
+c..nnnnn..c
+c..n...n..c
+c..n.O.n..c
+c.?n...n!.c
+c..nn.nn..c
+c..nn.nn..c
+cc!n.n.n?cc
+ ccnn.nncc
+  cc.n.cc
+   cc.cc
+    c@c
+ENDMAP
+
+###############################################################################
+# Basic Entrance 4 (by Mu.)
+#
+NAME:       enter_wizlab_4
+TAGS:       uniq_wizlab no_item_gen no_monster_gen
+ORIENT:     float
+:           wizlab_portal(_G)
+MAP
+    xxxxx
+    w...x
+   ww.O.x
+  www...x
+ www..www
+www..www
+ww..www
+w..www
+@.www
+@www
+ENDMAP
+
+###############################################################################
+# Basic Entrance 5 (by Mu.)
+#
+NAME:       enter_wizlab_5
+TAGS:       uniq_wizlab no_item_gen no_monster_gen
+ORIENT:     float
+SUBST:      x = b
+COLOUR:     U = random
+COLOUR:     W = mutagenic
+KFEAT:      o = granite_statue
+:           wizlab_portal(_G)
+MAP
+xxxxxxxxxxx
+xxxx...xxxx
+xWWU.O.UWWx
+xWxx...xxWx
+xWWWW.WWWWx
+xxxxW.Wxxxx
+xxxxW.Wxxxx
+xxxxW.Wxxxx
+xxxxW.Wxxxx
+xxxxo.oxxxx
+xxxx...xxxx
+     @
+ENDMAP
+
+###############################################################################
+# Basic Entrance 6 (by Mu.)
+#
+NAME:       enter_wizlab_6
+TAGS:       uniq_wizlab no_item_gen no_monster_gen
+ORIENT:     float
+SUBST:      x = mc.
+:           wizlab_portal(_G)
+MAP
+c.c.ccccccc
+x.x.x.x..Oc
+.x.x.x.x..c
+x.x.x.x.x.c
+.x.x.x.x.xc
+x.x.x.x.x.c
+.x.x.x.x.xc
+x.x.x.x.x..
+.x.x.x.x.xc
+x.x.x.x.x..
+.x.x.x.x.xc
+ENDMAP
+
 #
 #
 ###############################################################################
@@ -1275,4 +1408,343 @@ ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "The Alchemist's Tower")
 MAP
+ENDMAP
+
+###############################################################################
+# Random and semi-random Wizard vaults
+###############################################################################
+
+###############################################################################
+# Chambers of the Cloud Mage
+#
+NAME:       wizlab_cloud
+ORIENT:     encompass
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+KMONS:      1 = col:silver patrolling wizard name:Cloud_Mage name_replace \
+            name_definite spells:mephitic_cloud;freezing_cloud;poisonous_cloud;\
+            airstrike;blink_range;blink_range hd:20 hp:150 ; \
+            longbow . arrow q:30
+KMONS:      * = vapour / air elemental
+SUBST:      . = .:120 *
+MARKER:     ! = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 1, size_buildup_amnt = 5, \
+                size_buildup_time = 25, cloud_type = "steam" \
+            }
+KITEM:      % = w:20 potion of levitation / w:20 potion of water / \
+            potion of magic / potion of speed / potion of resistance / \
+            gold / potion of agility / potion of brilliance
+KITEM:      ? = randbook disc:air
+KITEM:      $ = wand of lightning / staff of air / ring of levitation /\
+            gold / scroll of silence / ring of teleport control / \
+            amulet of controlled flight / quick blade / ring of evasion /\
+            ring of see invisible
+NSUBST:     $ = 1:? / *:$
+SUBST:      $ = $%
+:           wizlab_setup(_G, "The Cloud Mage's Chambers")
+MAP
+cccccccccccccccccccccccccccccccccccccccccccc
+cccccccc............................cccccccc
+cccccc...wwwwwwwwwwwwwwwwwwwwwwwwww...cccccc
+cccc...wwwwwwwccccccccccccccccccccwww...cccc
+ccc..wwwwwwwccccccccccccccccccccccwwwww..ccc
+ccc.wwwwwwcccccccc..c..c..c..c..ccwwwwww.ccc
+cc..wwwwwcc.....c.!............!.cwwwwww..cc
+cc.wwwwwwcc.$$$.c................cwwwwwww.cc
+c..wwwwwccc.$$$.c................cWWWWWWW..c
+c..wwwwwccc.$$$.+...1............+.........c
+c..wwwwwccc.$$$.c................cWWWWWWW..c
+cc.wwwwwwcc.$$$.c................cwwwwwww.cc
+cc..wwwwwcc.....c.!............!.cwwwwww..cc
+ccc.wwwwwwcccccccc..c..c..c..c..ccwwwwww.ccc
+ccc..wwwwwwwccccccccccccccccccccccwwwww..ccc
+cccc...wwwwwwwccccccccccccccccccccwww...cccc
+cccccc...wwwwwwwwwwwwwwwwwwwwwwwwww...cccccc
+cccccccc............................cccccccc
+cccccccccc.......ccccccccccccccccccccccccccc
+ccccccccc.......cccccccccccccccccccccccccccc
+cccccccc.......ccccccccc.ccccccccccccccccccc
+ccccccc.......ccccccccc.!.cccccccccccccccccc
+cccccc!.....!ccccccccc.....ccccccccccccccccc
+cccccccc.......cccccc........ccccccccccccccc
+cccccccccc.......ccc..........cccccccccccccc
+cccccccccccc!.....ccc..........ccccccccccccc
+ccccccccccc.....!ccccc+cc......ccccccccccccc
+cccccccccccc......ccc...cc!.....cccccccccccc
+ccccccccccc......ccc.....cc.....cccccccccccc
+cccccccccccc......c.......c......ccccccccccc
+cccccccccc.!.....cc.<.A.<.c......ccccccccccc
+cccccccccc.c......c.......cc...!cccccccccccc
+cccccccccc.cc.....cc.....cc......ccccccccccc
+cccccccccc+cccc....cc...cc!.....cccccccccccc
+cccccccccc....cc...!ccccc......ccccccccccccc
+cccccccccc.%%.cc.............ccccccccccccccc
+cccccccccc.%%.ccc...........cccccccccccccccc
+cccccccccc....ccc..........!...+....cccccccc
+cccccccccccccccccc........cccccc.%%.cccccccc
+ccccccccccccccccccc......ccccccc.%%.cccccccc
+cccccccccccccccccccc.!..cccccccc....cccccccc
+cccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# Random wizlab (death theme) (by Mu.)
+#
+NAME:       wizlab_random1
+ORIENT:     encompass
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+LFLOORCOL:  darkgrey
+COLOUR:     =c = white
+COLOUR:     " = red
+KMONS:      a = slave
+KMONS:      b = human
+KMONS:      d = troll
+NSUBST:     b = 3:d / *:b
+KMONS:      p = vampire knight / w:5 vampire
+KMONS:      V = vampire mage
+KMONS:      L = patrolling lich / w:5 patrolling ancient lich
+KMONS:      u = patrolling mummy / w:2 patrolling guardian mummy
+KMONS:      M = patrolling mummy priest / w:2 patrolling greater mummy
+MARKER:     u = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "foul pestilence" \
+             }
+MARKER:     M = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "foul pestilence" \
+             }
+KITEM:      $ = potion of healing / potion of heal wounds / potion of decay / \
+            scroll of torment / potion of blood / w:20 gold
+KITEM:      | = ring of regeneration / ring of life protection / amulet of warding / \
+            wand of draining / wand of healing / any book / acquire book / \
+            staff of death / potion of healing / potion of heal wounds / \
+            potion of decay / potion of blood
+SUBST:    | = |$
+:           wizlab_setup(_G, "Random1")
+MAP
+cccccccccccccccccccccccccccccccccccccccccccccc
+ccc....LccccccccccccucM.cucccccccccccccccccccc
+ccc.....c...c$$$cccc.c..c.cccccccccccccc.....c
+ccc.....+.<..$$$cccc.c..c.c..................c
+ccc.....c...c$$$cccc+c++c+c.cccccccccccc.....c
+ccc.....cccccccccccc......c+cccccccccccc.....c
+cccc.ccccccccccc...c......c....ccccccccc....Lc
+cccc.ccccccc.......+......+........ccccccc+ccc
+cccc.ccccc.........c......c......p...cccc...cc
+cccc.cccc....nnnnnncccccccc...........ccc.<.cc
+cccc.ccc.p..nna.aaccc|||||ccc..........cc...cc
+cccc.ccc....n..cccc...nnn...ccccnnnnn..ccc.ccc
+cccc.cc....nnacc......nbn......ccaaan...c$$$cc
+cccc.cc....n..c..nnn..nnn..nnn..c..an...c$$$cc
+cccc.cc....nacc..nbn..."...nbn..cca.n...c$$$cc
+cccc..+....n.c...nnn..."...nnn...cccc+cccccccc
+ccccccccc+cccc......"..".."......cc......+..uc
+ccu..+......c|......."V"V".......|c......ccccc
+cccccc......c|.nnn...V"""V...nnn.|c......+..Mc
+ccM..+......c|.nbn"""""Y"""""nbn.|c......+...c
+cc...+......c|.nnn...V"""V...nnn.|c......ccccc
+cccccc......c|.......".".".......|c......+..uc
+ccu..+......cc......"..".."......cccc+cccccccc
+ccccccccc+cccc...nnn..."...nnn...c.n....+...cc
+cc...cc...n.acc..nbn..."...nbn..cc.n....ccc.cc
+cc.A.cc...n.a.c..nnn..nnn..nnn..c.an....ccc.cc
+cc...cc...na..cc......nbn......cc.nn....ccc.cc
+ccc.cccc..nnnnncccc...nnn...cccc.an....cccc.cc
+cc...ccc..........ccc.....ccca...nn....cccc.cc
+cc.<.cccc...........ccc+ccccnnnnnn..p.ccccc.cc
+cc...ccccc....p.....c......c.........cccccc.cc
+ccc+cccccccc........c......+.......cccccccc.cc
+c.....cccccccccc....c......c...cccccccccccc.cc
+c.aaa.ccccccccccccc+c......ccccccccccccc.....c
+c..p..ccccccccccccc.c+c++c+ccccc$$$c...c.....c
+c..p................c.c..c.ccccc$$$..<.+.....c
+c.....ccccccccccccccc.c..c.ccccc$$$c...c.....c
+cccccccccccccccccccccuc.McucccccccccccccL....c
+cccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# Random wizard (Death theme) (by Mu.)
+#
+NAME:       wizlab_random2
+ORIENT:     encompass
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+LFLOORCOL:  darkgrey
+COLOUR:     =c = white
+COLOUR:     " = red
+KFEAT:      _ = altar_kikubaaqudgha
+KMONS:      s = slave
+NSUBST:     ' = 1:= / *:c
+NSUBST:     ; = 1:= / *:c
+KMONS:      V = vampire / vampire knight / vampire mage
+KMONS:      a = patrolling vampire
+KMONS:      z = skeletal warrior
+KMONS:      p = shadow
+### statue needs a description still
+### This statue really needs vampiric draining as a monster spell!
+KMONS:      8 = ice statue col:darkgrey spells:pain;bolt_of_draining;pain;\
+                pain;pain;major_healing name:black_statue \
+                name_replace name_descriptor hd:15 hp:150
+KMONS:      L = patrolling lich / w:5 patrolling ancient lich
+KMONS:      u = patrolling mummy / w:2 patrolling guardian mummy
+KMONS:      M = patrolling mummy priest / w:2 patrolling greater mummy
+MARKER:     u = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "foul pestilence" \
+             }
+MARKER:     M = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "foul pestilence" \
+             }
+MARKER:     ! = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "foul pestilence" \
+             }
+KFEAT:      ! = granite_statue
+KITEM:      * = book of unlife
+KITEM:      % = dagger unrand:morg / demon blade unrand:leech / dagger unrand:vampires_tooth
+KITEM:      $ = potion of healing / potion of heal wounds / potion of decay / \
+            scroll of torment / potion of blood / w:20 gold
+KITEM:      ^ = potion of healing / potion of heal wounds / potion of decay / \
+            scroll of torment / potion of blood / w:20 gold
+KFEAT:      ^ = alarm trap
+KITEM:      | = ring of life protection / amulet of warding / \
+            wand of draining / wand of healing / any book / acquire book / \
+            staff of death / potion of healing / potion of heal wounds / \
+            potion of decay / potion of blood
+SUBST:      B = $$|..
+:           wizlab_setup(_G, "Random")
+MAP
+cccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccc|*|ccccccccccccccccccccc
+ccccccccccccccccccccc|...|cccccccccccccccccccc
+cccccccccccccccccccc.......ccccccccccccccccccc
+cccccccc$$$c...c...c..._...c...c...c$$$ccccccc
+cccccccc$$$+.L.+.!.+.......+.!.+.L.+$$$ccccccc
+cccccccc$$$c...c...c.......c...c...c$$$ccccccc
+cccccccccccccccccccc.......ccccccccccccccccccc
+ccccccccccccccccccccccc+cccccccccccccccccccccc
+cccccccccccccccccccccc...ccccccccccccccccccccc
+cccccccccccccccccccc.......ccccccccccccccccccc
+cccccccccccccccccc.....c.....ccccccccccccccccc
+ccccccccccccccccc......c......cccccccccccccccc
+cccccccccccccccc.......c.......ccccccccccccccc
+cccccccccccccccc.......c.......cccccccc..ccccc
+cccccccccccccccc.......c.......ccccccc....cccc
+cccccccccccccccc.szs...cnnn....cccccc..cc..ccc
+cccccccccccccccc.sss.G.cnsn....ccccc..cccc..cc
+cc............cc.......cnnn....cccc..ccccc..cc
+cc............cc.......c.".....ccc..ccccc..ccc
+cc.ccccccccc..cc.......c.".....cc..ccccc..cccc
+cc.cG$....|c..cc.......c.".....c..ccccc..ccccc
+cc.c$L.....c..cc.......c.".....c..ccc...cccccc
+cc.c.......c..cc.....G.c.Y.V.V.+.ccn...ccccccc
+cc.c.......c..cc.......c.".....cccsn....cccccc
+cc.c.......c..cc.......c.".....ccs.n...ccccccc
+cc.c.......+..cc.......c.".....ccc.n....cccccc
+cc.c%......+..cc.......c.".....ccccn.....ncccc
+cc.ccccccccccccc.......cnnn....cccsn..p..nsccc
+cc.............+.....G.cnsn....cc..n.ppp.n.scc
+cccccccccccccccc.......cnnn....cccsn.p8p.n..cc
+cccccccccccccccc.......c.......cccccpppppncccc
+cccccccccccccccc.......c.......ccccccccccccccc
+cccBBBBBBBBBBccc.......c.......ccccacacacacccc
+cccBBBBBBBBBBccc.......cnnn....cccc+c+c+c+cccc
+cccBBBc''cBBBccc.....G.cnsn....ccc.........ccc
+ccc'c'cM.c'ccccc.......cnnn....ccc.........+ac
+cccucuc..cuccccc.......c.".....ccc.........ccc
+ccc.c.c..c.ccccc.......c.".....cc..........+ac
+ccc+c+c++c+ccccc.......c.".....cc..........ccc
+cc.............c.......c.".....c.....^^^...+ac
+cc.T...........+.....G.c.Y.....+.....^Y^...ccc
+cc.............c.......c.".....c.....^^^...+ac
+ccc+c+c+c++ccccc.......c.".....cc..........ccc
+ccc.c.c.c..ccccc.......c.".....cc..........+ac
+cccucucuc..ccccc.......c.".....ccc.........ccc
+ccc;c;c;c.Mccccc.szs...cnnn....ccc.........+ac
+cccBBBBBc;;ccccc.sss.G.cnsnV.V.ccc.........ccc
+cccBBBBBBBBBcccc.......cnnn....cccc+c+c+c+cccc
+cccBBBBBBBBBcccc.......c.......ccccacacacacccc
+cccccccccccccccc.......c.......ccccccccccccccc
+cccccccccccccccc.......c.......ccccccccccccccc
+cccccccccccccccc.......c.......ccccccccccccccc
+cccccccccccccccc.....ccccc.....ccccccccccccccc
+cccccccccccccccc...ccc...ccc...ccccccccccccccc
+ccccccccccccccccc+cc.......cc+cccccccccccccccc
+cccccccccccccccc...............ccccccccccccccc
+cccccccccccccccc.....<.A.<.....ccccccccccccccc
+cccccccccccccccc...............ccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:       wizlab_random3
+ORIENT:     encompass
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+MAP
+cccccccccccccccccccccccccccccccvvvvvvvvvvvvvvv
+ccccccccccccccclllllll.........+.v.!.v......%v
+ccccccccccccclllllllllll.......+.v.v.v.v...8%v
+ccccccccccclllllllllllllll.....v.!.v.!.v....%v
+cccccccccclllllllllllllllll....vvvvvvvvv.8.1%v
+ccccccccclllllllllllllllllll...vcccccccc%%%%%v
+ccccccccclllllll....llllllll...vcccccccccccccv
+cccccccclllllll......llllllll..vvvvvvvvvvvvvvv
+cccccccclllllll..18..........................c
+cccccccllllllll..22..........................c
+cccccccllllllll......lllllllllvv+vvvvvvvvvvvvv
+ccccccclllllllll....llllllllllv.......+......v
+cccccccllllllllll..lllllllllllv.......v.....2v
+cccccccllllllllll..lllllllllllv.......v.....2v
+cccccccllllllllll..lllllllllllv|||||||v.....2v
+cccccccllllllllll..lllllllllllvvvvvvvvv.....2v
+cccccccclllllllll..llllllllllllcccccccv......v
+cccccccclllllllll..lllllllllllccccccccv......v
+cccccccccllllllll..lllllllllllllccccccv......v
+cccccccccllllllll..llllllllllllllccccvv+vvv+vv
+cccccccccccclllll..llllllllllllllccccv%%%v%%%v
+cccccvvvvvvvvvvll..lllllllllllllcllccv%%%v%%%v
+cccccvll......v.....llllllllllllllcccv%%%v%%%v
+cccccvl1......v......llllllllllllllllvvAvvvBvv
+cccccvcc......+.......vlllllllllllllllvavcv.vc
+cccccvll......v.......vclclllllllllllcvavcvbvc
+cccccvl1......v.......vvvvlllllllllcccvavcvbvc
+cccccvcl......v...........llllllllllllvavcvbvc
+cccccvlllll.lllll.lllllllllllllllllllcvavcvbvc
+cccccvcl......v.......vvvvvvlllllllllcvavcvbvc
+cccccvll......v.......vccclllllllllllcvavcvbvc
+cccccvl1......vvvvvv+vvcccllllllllllccvavvvbvc
+cccccvcc......v.......vccccllllllllllcvaa.bbvc
+cccccvll......v8..2..8vcccclllllllllccvvv+vvvc
+cccccvl1......v.......vccccclllllllllllcv.vccc
+cccccvvvvvvvvvv.......vccccllllllllllllcv.vccc
+ccccccccccccccv.......vcccllllllllllllccv.vccc
+cvvvvvvvccccccvvvv++vvvc....lllllllcllccv.vccc
+cv.....vccccc....o..o........lllllllllccv.vccc
+cv.<A<.vcccc................llllllllllccv.vccc
+cv.....vc..c.................lllllllllccv.vccc
+cv.....v.....................llllllllcccv.vccc
+cv.o.o.v..8................8...llllllcccv.vccc
+cvvv=vvv.....................llllllllllcv.vccc
+ccc..ccccccc..................clllllllccv.vccc
+ccc...ccccc..................ccclllllllcv.vccc
+cc...cc...c.............c....cclllllllccv.vccc
+cc......................cc..cccclllllllcv.vccc
+c.........c.............cc.ccccccclllllcv.vccc
+c......ccccc............ccccccccllllllllv.vccc
+ccc.cccccccc.............cccccccllllllccv.vccc
+cccccccccc..........cccccccccccccllllllcv.vccc
+ccccccccc..........cccccccccccccclllllccv.vccc
+cccccccc...............cccccccccclllllccv.vccc
+ccccccc..........c.....ccccccccccclllcvvv.vvvv
+cccccc....8....ccc..cc.ccccccccccllllcv......v
+ccccc.........cccc....8.ccccccccclllllv......v
+cccccc.....ccccccccc....ccccccccclllllv......v
+cccccccc..ccccccccccccc.cccccccccclllcv.....$v
+ccccccccc.ccccccccccccccccccccccccccccv....$*v
+ccccccccccccccccccccccccccccccccccccccvvvvvvvv
 ENDMAP
