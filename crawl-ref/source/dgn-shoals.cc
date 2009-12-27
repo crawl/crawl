@@ -216,6 +216,71 @@ static void _shoals_apply_level()
         grd(*ri) = _shoals_feature_at(*ri);
 }
 
+static bool _has_adjacent_feat(coord_def c, dungeon_feature_type feat)
+{
+    for (adjacent_iterator ai(c); ai; ++ai)
+        if (grd(*ai) == feat)
+            return true;
+    return false;
+}
+
+// Returns all points in deep water with an adjacent square in shallow water.
+static std::vector<coord_def> _shoals_water_depth_change_points()
+{
+    std::vector<coord_def> points;
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        coord_def c(*ri);
+        if (grd(c) == DNGN_DEEP_WATER
+            && _has_adjacent_feat(c, DNGN_SHALLOW_WATER))
+            points.push_back(c);
+    }
+    return points;
+}
+
+static inline void _shoals_deepen_water_at(coord_def p, int distance)
+{
+    shoals_heights(p) -= distance * 5;
+}
+
+static void _shoals_deepen_water()
+{
+    std::vector<coord_def> pages[2];
+    int current_page = 0;
+    pages[current_page] = _shoals_water_depth_change_points();
+    FixedArray<bool, GXM, GYM> seen_points(false);
+
+    for (int i = 0, size = pages[current_page].size(); i < size; ++i)
+        seen_points(pages[current_page][i]) = true;
+
+    int distance = 0;
+    while (!pages[current_page].empty())
+    {
+        const int next_page = !current_page;
+        std::vector<coord_def> &cpage(pages[current_page]);
+        std::vector<coord_def> &npage(pages[next_page]);
+        for (int i = 0, size = cpage.size(); i < size; ++i)
+        {
+            coord_def c(cpage[i]);
+            if (distance)
+                _shoals_deepen_water_at(c, distance);
+
+            for (adjacent_iterator ai(c); ai; ++ai)
+            {
+                coord_def adj(*ai);
+                if (!seen_points(adj) && grd(adj) == DNGN_DEEP_WATER)
+                {
+                    npage.push_back(adj);
+                    seen_points(adj) = true;
+                }
+            }
+        }
+        cpage.clear();
+        current_page = next_page;
+        distance++;
+    }
+}
+
 static coord_def _pick_shoals_island()
 {
     const int lucky_island = random2(_shoals_islands.size());
@@ -316,5 +381,6 @@ void prepare_shoals(int level_number)
     _shoals_cliffs();
     _shoals_smooth();
     _shoals_apply_level();
+    _shoals_deepen_water();
     _shoals_furniture(_shoals_margin);
 }
