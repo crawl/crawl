@@ -1528,13 +1528,15 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 
     if (is_controlled)
     {
-        mpr("You may choose your destination (press '.' or delete to select).");
-        mpr("Expect minor deviation.");
         check_ring_TC = true;
 
-        // Only have the more prompt for non-wizard.
+        // Only have the messages and the more prompt for non-wizard.
         if (!wizard_tele)
+        {
+            mpr("You may choose your destination (press '.' or delete to select).");
+            mpr("Expect minor deviation.");
             more();
+        }
 
         while (true)
         {
