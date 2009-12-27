@@ -3898,20 +3898,17 @@ item_spec item_list::parse_single_spec(std::string s)
         }
     }
 
-    if (s.find("damaged ") == 0)
+    if (strip_tag(s, "damaged"))
     {
         result.level = ISPEC_DAMAGED;
-        s = s.substr(8);
     }
-    if (s.find("cursed ") == 0)
+    if (strip_tag(s, "cursed"))
     {
         result.level = ISPEC_BAD; // damaged + cursed, actually
-        s = s.substr(7);
     }
-    if (s.find("randart ") == 0)
+    if (strip_tag(s, "randart"))
     {
         result.level = ISPEC_RANDART;
-        s = s.substr(8);
     }
 
     if (strip_tag(s, "no_uniq"))
