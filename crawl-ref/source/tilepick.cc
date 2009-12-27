@@ -910,6 +910,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_BALL_LIGHTNING;
     case MONS_ORB_OF_FIRE:
         return TILEP_MONS_ORB_OF_FIRE;
+    case MONS_ORB_OF_DESTRUCTION:
+        return TILEP_MONS_ORB_OF_DESTRUCTION;
 
     // other symbols
     case MONS_VAPOUR:
@@ -3044,6 +3046,7 @@ int tileidx_spell(spell_type spell)
     // pure Conjuration
     case SPELL_MAGIC_DART:               return TILEG_MAGIC_DART;
     case SPELL_ISKENDERUNS_MYSTIC_BLAST: return TILEG_ISKENDERUNS_MYSTIC_BLAST;
+    case SPELL_IOOD:                     return TILEG_IOOD;
 
     // Divination (soon to be obsolete, or moved to abilities)
     case SPELL_DETECT_SECRET_DOORS:      return TILEG_DETECT_SECRET_DOORS;
