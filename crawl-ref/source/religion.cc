@@ -609,7 +609,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    if (god_likes_fresh_corpses(which_god))
+    if (god_likes_fresh_corpses(which_god) && which_god != GOD_KIKUBAAQUDGHA)
     {
         snprintf(info, INFO_SIZE, "you sacrifice fresh corpses%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
