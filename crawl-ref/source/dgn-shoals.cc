@@ -41,6 +41,7 @@ const int _shoals_margin = 6;
 
 enum shoals_height_thresholds
 {
+    SHT_UNDEFINED = -10000,
     SHT_STONE = 230,
     SHT_ROCK  = 170,
     SHT_FLOOR = 0,
@@ -197,8 +198,13 @@ static void _shoals_cliffs()
         _shoals_build_cliff();
 }
 
-static void _shoals_smooth_at(const coord_def &c, int radius)
+static void _shoals_smooth_at(const coord_def &c, int radius,
+                              int max_height = SHT_UNDEFINED)
 {
+    const int height = shoals_heights(c);
+    if (max_height != SHT_UNDEFINED && height > max_height)
+        return;
+
     int max_delta = radius * radius * 2 + 2;
     int divisor = 0;
     int total = 0;
@@ -207,10 +213,13 @@ static void _shoals_smooth_at(const coord_def &c, int radius)
             const coord_def p(x, y);
             if (!in_bounds(p))
                 continue;
+            const int nheight = shoals_heights(p);
+            if (max_height != SHT_UNDEFINED && nheight > max_height)
+                continue;
             const coord_def off = c - p;
             int weight = max_delta - off.abs();
             divisor += weight;
-            total += shoals_heights(p) * weight;
+            total += nheight * weight;
         }
     }
     shoals_heights(c) = total / divisor;
@@ -220,6 +229,12 @@ static void _shoals_smooth()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
         _shoals_smooth_at(*ri, 1);
+}
+
+static void _shoals_smooth_water()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+        _shoals_smooth_at(*ri, 1, SHT_SHALLOW_WATER - 1);
 }
 
 static void _shoals_apply_level()
@@ -416,6 +431,7 @@ void prepare_shoals(int level_number)
     _shoals_apply_level();
     _shoals_deepen_water();
     _shoals_deepen_edges();
+    _shoals_smooth_water();
     _shoals_furniture(_shoals_margin);
 }
 
