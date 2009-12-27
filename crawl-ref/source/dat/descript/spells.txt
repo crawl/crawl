@@ -378,6 +378,12 @@ Olgreb's Toxic Radiance
 
 This spell bathes the caster's surroundings in poisonous green light.
 %%%%
+Orb of Destruction
+
+This spell conjures an orb made of pure destructive magic.  Compared to most other projectiles, these orbs travel at a relatively slow pace.  The orbs home onto their targets, yet because of their huge inertia, especially agile opponents may be able to outmaneuver them.
+
+It is said that most copies of this spell suffer from a scribal error that makes the orbs unstable beyond a short range.  Certain individuals may have access to spellbooks without this flaw, so be ware!
+%%%%
 Ozocubu's Armour
 
 This spell envelops the caster's body in a protective layer of ice, the power of which depends on his or her skill with ice magic. The caster and the caster's equipment are protected from the cold, but the spell will not function for casters already wearing heavy armour. The effects of this spell are boosted if the caster is in ice form.
