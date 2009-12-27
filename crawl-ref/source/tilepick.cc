@@ -764,6 +764,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GLOWING_SHAPESHIFTER;
     case MONS_KILLER_KLOWN:
         return TILEP_MONS_KILLER_KLOWN;
+    case MONS_SLAVE:
+        return TILEP_MONS_SLAVE;
 
     // mimics
     case MONS_GOLD_MIMIC:

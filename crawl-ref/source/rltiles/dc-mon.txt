@@ -335,6 +335,7 @@ vault_guard MONS_VAULT_GUARD
 shapeshifter MONS_SHAPESHIFTER
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 killer_klown MONS_KILLER_KLOWN
+slave MONS_SLAVE
 
 ## Angels ('A')
 angel MONS_ANGEL
