@@ -198,7 +198,7 @@ bool curse_an_item( bool decay_potions, bool quiet )
             || you.inv[i].base_type == OBJ_JEWELLERY
             || you.inv[i].base_type == OBJ_POTIONS)
         {
-            if (item_cursed( you.inv[i] ))
+            if (you.inv[i] .cursed())
                 continue;
 
             if (you.inv[i].base_type != OBJ_POTIONS

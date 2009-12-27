@@ -109,7 +109,7 @@ const std::string &InvEntry::get_fullname() const
 
 bool InvEntry::is_item_cursed() const
 {
-    return (item_ident(*item, ISFLAG_KNOW_CURSE) && item_cursed(*item));
+    return (item_ident(*item, ISFLAG_KNOW_CURSE) && item->cursed());
 }
 
 bool InvEntry::is_item_glowing() const

@@ -4230,7 +4230,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     wpn.colour = colour;
 
-    const bool is_cursed = item_cursed(wpn);
+    const bool is_cursed = wpn.cursed();
 
     enchant_weapon(ENCHANT_TO_HIT, true, wpn);
 

@@ -18,7 +18,6 @@ void init_properties(void);
 bool item_is_mundane(const item_def &item);
 
 // cursed:
-bool item_cursed( const item_def &item );
 bool item_known_cursed( const item_def &item );
 bool item_known_uncursed( const item_def &item );
 void do_curse_item( item_def &item, bool quiet = true );

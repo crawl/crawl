@@ -2924,7 +2924,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 
     if (item.sub_type == RING_SLAYING ) // requires plus2 too
     {
-        if (item_cursed(item) && !one_chance_in(20))
+        if (item.cursed() && !one_chance_in(20))
             item.plus2 = -1 - random2avg(6, 2);
         else
         {

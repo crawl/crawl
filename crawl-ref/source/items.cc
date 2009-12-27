@@ -1921,7 +1921,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
     if (item_dropped == you.equip[EQ_WEAPON]
         && you.inv[item_dropped].base_type == OBJ_WEAPONS
-        && item_cursed( you.inv[item_dropped] ))
+        && you.inv[item_dropped] .cursed())
     {
         mpr("That object is stuck to you!");
         return (false);
@@ -2821,7 +2821,7 @@ int item_def::book_number() const
 
 bool item_def::cursed() const
 {
-    return (item_cursed(*this));
+    return (flags & ISFLAG_CURSED);
 }
 
 bool item_def::launched_by(const item_def &launcher) const

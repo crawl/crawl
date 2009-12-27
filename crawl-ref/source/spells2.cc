@@ -1101,7 +1101,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
 
     const int dur = std::min(3 + random2(pow) / 20, 5);
     int how_many_max = 1 + random2(1 + you.skills[SK_TRANSMUTATIONS]) / 4;
-    const bool friendly = (!item_cursed(wpn));
+    const bool friendly = (!wpn.cursed());
     const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
 
     int count = 0;
@@ -1712,7 +1712,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     if (success)
     {
         // Cursed weapons become hostile.
-        const bool friendly = (!force_hostile && !item_cursed(you.inv[wpn]));
+        const bool friendly = (!force_hostile && !you.inv[wpn].cursed());
 
         mgen_data mg(MONS_DANCING_WEAPON,
                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,

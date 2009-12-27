@@ -130,7 +130,7 @@ bool remove_curse(bool suppress_msg)
     // Only cursed *weapons* in hand count as cursed. - bwr
     if (you.weapon()
         && you.weapon()->base_type == OBJ_WEAPONS
-        && item_cursed(*you.weapon()))
+        && you.weapon()->cursed())
     {
         // Also sets wield_change.
         do_uncurse_item(*you.weapon());
@@ -142,7 +142,7 @@ bool remove_curse(bool suppress_msg)
     for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; i++)
     {
         // Melded equipment can also get uncursed this way.
-        if (you.equip[i] != -1 && item_cursed(you.inv[you.equip[i]]))
+        if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
         {
             do_uncurse_item(you.inv[you.equip[i]]);
             success = true;

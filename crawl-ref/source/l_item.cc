@@ -463,7 +463,7 @@ static int l_item_cursed(lua_State *ls)
 {
     LUA_ITEM(item, 1);
     bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE)
-                       && item_cursed(*item);
+                       && item->cursed();
     lua_pushboolean(ls, cursed);
     return (1);
 }

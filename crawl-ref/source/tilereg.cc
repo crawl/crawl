@@ -2484,7 +2484,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
                 && mons_has_blood(item.plus));
     }
 
-    if (equipped && item_cursed(item))
+    if (equipped && item.cursed())
     {
         // Misc. items/rods can always be evoked, cursed or not.
         if (item.base_type == OBJ_MISCELLANY || item_is_rod(item))
@@ -2770,7 +2770,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         tip += "\n[R-Click] Info";
         // Has to be non-equipped or non-cursed to drop.
         if (!equipped || !_is_true_equipped_item(you.inv[idx])
-            || !item_cursed(you.inv[idx]))
+            || !you.inv[idx].cursed())
         {
             tip += "\n[Shift-L-Click] Drop (d)";
         }

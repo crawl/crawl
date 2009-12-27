@@ -374,7 +374,7 @@ void melee_attack::check_hand_half_bonus_eligible()
                        && !can_do_unarmed
                        && !shield
                        && weapon
-                       && !item_cursed(*weapon)
+                       && !weapon->cursed()
                        && hands == HANDS_HALF);
 }
 
@@ -3832,7 +3832,7 @@ int melee_attack::player_to_hit(bool random_factor)
                       && !can_do_unarmed
                       && !shield
                       && weapon
-                      && !item_cursed( *weapon )
+                      && !weapon ->cursed()
                       && hands == HANDS_HALF;
 
     int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);

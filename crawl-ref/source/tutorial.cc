@@ -1549,7 +1549,7 @@ static bool _cant_butcher()
     if (!wpn || wpn->base_type != OBJ_WEAPONS)
         return false;
 
-    return (item_cursed(*wpn) && !can_cut_meat(*wpn));
+    return (wpn->cursed() && !can_cut_meat(*wpn));
 }
 
 static int _num_butchery_tools()
@@ -3012,7 +3012,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         int wpn = you.equip[EQ_WEAPON];
         if (wpn != -1
             && you.inv[wpn].base_type == OBJ_WEAPONS
-            && item_cursed(you.inv[wpn]))
+            && you.inv[wpn].cursed())
         {
             // Don't trigger if the wielded weapon is cursed.
             Tutorial.tutorial_events[seen_what] = true;

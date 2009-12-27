@@ -1037,7 +1037,7 @@ std::string item_def::name_aux(description_level_type desc,
             // this behaviour, *please* make it so that there is an option
             // that maintains this behaviour. -- bwr
             // Nor for artefacts. Again, the state should be obvious. --jpeg
-            if (item_cursed(*this))
+            if (cursed())
                 buff << "cursed ";
             else if (Options.show_uncursed && !know_pluses
                      && (!know_type || !is_artefact(*this)))
@@ -1108,7 +1108,7 @@ std::string item_def::name_aux(description_level_type desc,
         if (know_brand)
             buff << weapon_brand_name(*this, terse);
 
-        if (know_curse && item_cursed(*this) && terse)
+        if (know_curse && cursed() && terse)
             buff << " (curse)";
         break;
 
@@ -1197,7 +1197,7 @@ std::string item_def::name_aux(description_level_type desc,
     case OBJ_ARMOUR:
         if (know_curse && !terse)
         {
-            if (item_cursed(*this))
+            if (cursed())
                 buff << "cursed ";
             else if (Options.show_uncursed && !know_pluses)
                 buff << "uncursed ";
@@ -1310,7 +1310,7 @@ std::string item_def::name_aux(description_level_type desc,
             }
         }
 
-        if (know_curse && item_cursed(*this) && terse)
+        if (know_curse && cursed() && terse)
             buff << " (curse)";
         break;
 
@@ -1462,7 +1462,7 @@ std::string item_def::name_aux(description_level_type desc,
 
         if (know_curse)
         {
-            if (item_cursed(*this))
+            if (cursed())
                 buff << "cursed ";
             else if (Options.show_uncursed && !terse
                      && (!is_randart || !know_type)

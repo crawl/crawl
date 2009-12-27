@@ -5732,7 +5732,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 {
     if (equip[EQ_WEAPON] != -1 && !ignore_curse)
     {
-        if (item_cursed(inv[equip[EQ_WEAPON]]))
+        if (inv[equip[EQ_WEAPON]].cursed())
             return (false);
     }
 
