@@ -686,18 +686,18 @@ int trap_def::max_damage(const actor& act)
     // players -- this choice prevents traps from easily killing
     // large monsters fairly deep within the dungeon.
     if (act.atype() == ACT_MONSTER)
-	level = 0;
+        level = 0;
 
     switch (this->type)
     {
-        case TRAP_NEEDLE: return 0;
+        case TRAP_NEEDLE: return  0;
         case TRAP_DART:   return  4 + level/2;
         case TRAP_ARROW:  return  7 + level;
         case TRAP_SPEAR:  return 10 + level;
         case TRAP_BOLT:   return 13 + level;
         case TRAP_AXE:    return 15 + level;
-        default:          return 0;
-        case TRAP_BLADE:  return (level ? level*2 : 10) + 28;
+        case TRAP_BLADE:  return (level ? 2*level : 10) + 28;
+        default:          return  0;
     }
 
     return (0);
@@ -762,7 +762,7 @@ static bool _disarm_is_deadly(trap_def& trap)
     if (trap.type == TRAP_NEEDLE && you.res_poison() <= 0)
         dam += 15; // arbitrary
 
-    return you.hp <= dam;
+    return (you.hp <= dam);
 }
 
 // where *must* point to a valid, discovered trap.
