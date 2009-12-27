@@ -210,7 +210,8 @@ void wizard_heal(bool super_heal)
     // Clear most status ailments.
     you.rotting = 0;
     you.disease = 0;
-    you.duration[DUR_CONF] = 0;
+    you.duration[DUR_CONF]      = 0;
+    you.duration[DUR_MISLED]    = 0;
     you.duration[DUR_POISONING] = 0;
     set_hp(you.hp_max, false);
     set_mp(you.max_magic_points, false);
@@ -453,7 +454,13 @@ bool wizard_add_mutation()
         }
     }
 
-    bool force = yesno("Force mutation to happen?", true, 'n');
+    int answer = yesnoquit("Force mutation to happen?", true, 'n');
+    if (answer == -1)
+    {
+        canned_msg(MSG_OK);
+        return (false);
+    }
+    const bool force = (answer == 1);
 
     if (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3 && !force)
     {
@@ -462,7 +469,13 @@ bool wizard_add_mutation()
         return (false);
     }
 
-    bool god_gift = yesno("Treat mutation as god gift?", true, 'n');
+    answer = yesnoquit("Treat mutation as god gift?", true, 'n');
+    if (answer == -1)
+    {
+        canned_msg(MSG_OK);
+        return (false);
+    }
+    const bool god_gift = (answer == 1);
 
     mpr("Which mutation (name, 'good', 'bad', 'any', 'xom')? ", MSGCH_PROMPT);
     get_input_line( specs, sizeof( specs ) );

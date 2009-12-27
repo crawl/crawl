@@ -1564,7 +1564,7 @@ void armour_wear_effects(const int item_slot)
         use_artefact(arm, &show_msgs, melded);
     }
 
-    if (item_cursed(arm) && !melded)
+    if (arm.cursed() && !melded)
     {
         mpr("Oops, that feels deathly cold.");
         learned_something_new(TUT_YOU_CURSED);

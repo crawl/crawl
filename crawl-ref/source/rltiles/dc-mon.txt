@@ -232,8 +232,13 @@ azrael MONS_AZRAEL
 efreet MONS_EFREET
 
 ## Rakshasa ('R')
+%sdir dc-mon/unique
+mara MONS_MARA
+mara MONS_MARA_FAKE
+%sdir dc-mon/demons
 rakshasa MONS_RAKSHASA
 rakshasa MONS_RAKSHASA_FAKE
+
 
 ## Abominations ('X')
 abomination_large MONS_ABOMINATION_LARGE
@@ -278,12 +283,14 @@ wood_golem MONS_WOOD_GOLEM
 ## Statues (also '8')
 %sdir dc-mon/unique
 roxanne MONS_ROXANNE
-%sdir dc-mon
+%sdir dc-mon/statues
 ice_statue MONS_ICE_STATUE
 silver_statue MONS_SILVER_STATUE
 orange_crystal_statue MONS_ORANGE_CRYSTAL_STATUE
+statue_archer MONS_ARCHER_STATUE
 
 ## Gargoyles ('9')
+%sdir dc-mon
 gargoyle MONS_GARGOYLE
 metal_gargoyle MONS_METAL_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
@@ -310,6 +317,7 @@ louise MONS_LOUISE
 margery MONS_MARGERY
 maud MONS_MAUD
 maurice MONS_MAURICE
+nikola MONS_NIKOLA
 norbert MONS_NORBERT
 norris MONS_NORRIS
 psyche MONS_PSYCHE
@@ -327,6 +335,7 @@ vault_guard MONS_VAULT_GUARD
 shapeshifter MONS_SHAPESHIFTER
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 killer_klown MONS_KILLER_KLOWN
+slave MONS_SLAVE
 
 ## Angels ('A')
 angel MONS_ANGEL

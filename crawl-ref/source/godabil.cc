@@ -1256,7 +1256,8 @@ bool ponderousify_armour()
 static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
 {
     monsters* mon = monster_at(where);
-    if (mon == NULL || mons_is_stationary(mon) || mons_is_projectile(mon->type))
+    if (mon == NULL || mons_is_stationary(mon) || mon->cannot_move()
+        || mons_is_projectile(mon->type))
         return (0);
 
     int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());

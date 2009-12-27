@@ -3140,8 +3140,11 @@ static std::string _get_monster_desc(const monsters *mon)
     else if (mon->neutral()) // don't differentiate between permanent or not
         text += pronoun + " is indifferent to you.\n";
 
-    if (mon->is_summoned() && mon->type != MONS_RAKSHASA_FAKE)
+    if (mon->is_summoned() && (mon->type != MONS_RAKSHASA_FAKE
+                               && mon->type != MONS_MARA_FAKE))
+    {
         text += pronoun + " has been summoned.\n";
+    }
 
     if (mon->haloed())
         text += pronoun + " is illuminated by a divine halo.\n";
@@ -3242,7 +3245,8 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     std::string weap = "";
 
     // We don't report rakshasa equipment in order not to give away the
-    // true rakshasa when it summons.
+    // true rakshasa when it summons. But Mara is fine, because his weapons
+    // and armour are cloned with him.
 
     if (mon->type != MONS_DANCING_WEAPON
         && (mon->type != MONS_RAKSHASA || mon->friendly()))
@@ -3258,7 +3262,8 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     }
 
     // Print the rest of the equipment only for full descriptions.
-    if (full_desc && (mon->type != MONS_RAKSHASA || mon->friendly()))
+    if (full_desc && ((mon->type != MONS_RAKSHASA && mon->type != MONS_MARA
+                       && mon->type != MONS_MARA_FAKE) || mon->friendly()))
     {
         const int mon_arm = mon->inv[MSLOT_ARMOUR];
         const int mon_shd = mon->inv[MSLOT_SHIELD];
@@ -3413,10 +3418,9 @@ static void _describe_cell(const coord_def& where, bool in_range)
     if (env.cgrid(where) != EMPTY_CLOUD)
     {
         const int cloud_inspected = env.cgrid(where);
-        const cloud_type ctype = (cloud_type) env.cloud[cloud_inspected].type;
 
         mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
-             cloud_name(ctype).c_str());
+             cloud_name(cloud_inspected).c_str());
 
         cloud_described = true;
     }
@@ -3463,14 +3467,19 @@ static void _describe_cell(const coord_def& where, bool in_range)
         marker = " (" + desc + ")";
     }
     const std::string traveldest = _stair_destination_description(where);
+    std::string height_desc;
+    if (env.heightmap.get())
+        height_desc = make_stringf(" (height: %d)", (*env.heightmap)(where));
     const dungeon_feature_type feat = grd(where);
-    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s", where.x, where.y,
+    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s",
+         where.x, where.y,
          stringize_glyph(get_screen_glyph(where)).c_str(),
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),
          marker.c_str(),
-         traveldest.c_str());
+         traveldest.c_str(),
+         height_desc.c_str());
 #else
     if (Tutorial.tutorial_left && tutorial_pos_interesting(where.x, where.y))
     {

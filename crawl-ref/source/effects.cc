@@ -27,6 +27,7 @@
 #include "coordit.h"
 #include "decks.h"
 #include "delay.h"
+#include "dgn-shoals.h"
 #include "dungeon.h"
 #include "directn.h"
 #include "dgnevent.h"
@@ -935,6 +936,13 @@ void direct_effect(monsters *source, spell_type spell,
         else
             mpr("You sense an evil presence.");
         mons_cast_haunt(source);
+        break;
+
+    case SPELL_MISLEAD:
+        if (!def)
+            mons_cast_mislead(source);
+        else
+            defender->confuse(source, source->hit_dice * 12);
         break;
 
     default:
@@ -4256,6 +4264,7 @@ void update_level(double elapsedTime)
 #endif
 
     update_corpses(elapsedTime);
+    shoals_apply_tides(turns);
 
     if (env.sanctuary_time)
     {

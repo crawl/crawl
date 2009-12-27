@@ -121,6 +121,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     bool in_water = feat_is_water(grd(mon->pos()));
 
     int type = mon->type;
+    if (!crawl_state.arena && you.misled())
+        type = mon->get_mislead_type();
 
     // Show only base class for detected monsters.
     if (detected)
@@ -762,6 +764,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GLOWING_SHAPESHIFTER;
     case MONS_KILLER_KLOWN:
         return TILEP_MONS_KILLER_KLOWN;
+    case MONS_SLAVE:
+        return TILEP_MONS_SLAVE;
 
     // mimics
     case MONS_GOLD_MIMIC:
@@ -1014,6 +1018,12 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_EROLCHA:
         return TILEP_MONS_EROLCHA;
 
+    // rakshasas ('R')
+    case MONS_MARA:
+        return TILEP_MONS_MARA;
+    case MONS_MARA_FAKE:
+        return TILEP_MONS_MARA_FAKE;
+
     // trolls ('T')
     case MONS_PURGY:
         return TILEP_MONS_PURGY;
@@ -1079,7 +1089,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_KIRKE:
         return TILEP_MONS_KIRKE;
     case MONS_NIKOLA:
-        return TILEP_TODO;                  // TODO
+        return TILEP_MONS_NIKOLA;                  // TODO
     case MONS_MAURICE:
         return TILEP_MONS_MAURICE;
 
@@ -2639,64 +2649,89 @@ int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
     }
 }
 
-static int _tileidx_cloud(int type, int decay)
+static int _tileidx_cloud(cloud_struct cl)
 {
+    int type = cl.type;
+    int decay = cl.decay;
+    std::string override = cl.tile;
+    int colour = cl.colour;
+
     int ch = TILE_ERROR;
     int dur = decay/20;
     if (dur > 2)
         dur = 2;
 
-    switch (type)
+    if (!override.empty())
     {
-        case CLOUD_FIRE:
-            ch = TILE_CLOUD_FIRE_0 + dur;
-            break;
-
-        case CLOUD_COLD:
-            ch = TILE_CLOUD_COLD_0 + dur;
-            break;
-
-        case CLOUD_STINK:
-        case CLOUD_POISON:
-            ch = TILE_CLOUD_POISON_0 + dur;
-            break;
-
-        case CLOUD_BLUE_SMOKE:
-            ch = TILE_CLOUD_BLUE_SMOKE;
-            break;
-
-        case CLOUD_PURPLE_SMOKE:
-        case CLOUD_TLOC_ENERGY:
-            ch = TILE_CLOUD_TLOC_ENERGY;
-            break;
-
-        case CLOUD_MIASMA:
-            ch = TILE_CLOUD_MIASMA;
-            break;
-
-        case CLOUD_BLACK_SMOKE:
-            ch = TILE_CLOUD_BLACK_SMOKE;
-            break;
-
-        case CLOUD_MUTAGENIC:
-            ch = (dur == 0 ? TILE_CLOUD_MUTAGENIC_0 :
-                  dur == 1 ? TILE_CLOUD_MUTAGENIC_1
-                           : TILE_CLOUD_MUTAGENIC_2);
-            ch += random2(tile_main_count(ch));
-            break;
-
-        case CLOUD_MIST:
-            ch = TILE_CLOUD_MIST;
-            break;
-
-        case CLOUD_RAIN:
-            ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
-            break;
-
-        default:
-            ch = TILE_CLOUD_GREY_SMOKE;
-            break;
+        unsigned int index;
+        if (!tile_main_index(override.c_str(), index))
+        {
+            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", override.c_str());
+        }
+        else
+        {
+            int offset = tile_main_count(index);
+            ch = index + offset;
+        }
     }
+    else
+    {
+        switch (type)
+        {
+            case CLOUD_FIRE:
+                ch = TILE_CLOUD_FIRE_0 + dur;
+                break;
+
+            case CLOUD_COLD:
+                ch = TILE_CLOUD_COLD_0 + dur;
+                break;
+
+            case CLOUD_STINK:
+            case CLOUD_POISON:
+                ch = TILE_CLOUD_POISON_0 + dur;
+                break;
+
+            case CLOUD_BLUE_SMOKE:
+                ch = TILE_CLOUD_BLUE_SMOKE;
+                break;
+
+            case CLOUD_PURPLE_SMOKE:
+            case CLOUD_TLOC_ENERGY:
+                ch = TILE_CLOUD_TLOC_ENERGY;
+                break;
+
+            case CLOUD_MIASMA:
+                ch = TILE_CLOUD_MIASMA;
+                break;
+
+            case CLOUD_BLACK_SMOKE:
+                ch = TILE_CLOUD_BLACK_SMOKE;
+                break;
+
+            case CLOUD_MUTAGENIC:
+                ch = (dur == 0 ? TILE_CLOUD_MUTAGENIC_0 :
+                      dur == 1 ? TILE_CLOUD_MUTAGENIC_1
+                               : TILE_CLOUD_MUTAGENIC_2);
+                ch += random2(tile_main_count(ch));
+                break;
+
+            case CLOUD_MIST:
+                ch = TILE_CLOUD_MIST;
+                break;
+
+            case CLOUD_RAIN:
+                ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
+                break;
+
+            default:
+                ch = TILE_CLOUD_GREY_SMOKE;
+                break;
+        }
+    }
+
+    if (colour != -1)
+        ch = tile_main_coloured(ch, colour);
+
     return (ch | TILE_FLAG_FLYING);
 }
 
@@ -3123,9 +3158,9 @@ int _get_door_offset (int base_tile, bool opened = false,
 
 // Modify wall tile index depending on floor/wall flavour.
 static inline void _finalise_tile(unsigned int *tile,
-                                  unsigned char wall_flv,
-                                  unsigned char floor_flv,
-                                  unsigned char special_flv,
+                                  unsigned int wall_flv,
+                                  unsigned int floor_flv,
+                                  unsigned int special_flv,
                                   coord_def gc)
 {
     int orig = (*tile) & TILE_FLAG_MASK;
@@ -4411,14 +4446,22 @@ void tile_init_flavour(const coord_def &gc)
 
     if (!env.tile_flv(gc).floor)
     {
-        int floor_rnd = random2(tile_dngn_count(env.tile_default.floor));
-        env.tile_flv(gc).floor = env.tile_default.floor + floor_rnd;
+        int floor_base = env.tile_default.floor;
+        int colour = env.grid_colours(gc);
+        if (colour)
+            floor_base = tile_dngn_coloured(floor_base, colour);
+        int floor_rnd = random2(tile_dngn_count(floor_base));
+        env.tile_flv(gc).floor = floor_base + floor_rnd;
     }
 
     if (!env.tile_flv(gc).wall)
     {
-        int wall_rnd = random2(tile_dngn_count(env.tile_default.wall));
-        env.tile_flv(gc).wall = env.tile_default.wall + wall_rnd;
+        int wall_base = env.tile_default.wall;
+        int colour = env.grid_colours(gc);
+        if (colour)
+            wall_base = tile_dngn_coloured(wall_base, colour);
+        int wall_rnd = random2(tile_dngn_count(wall_base));
+        env.tile_flv(gc).wall = wall_base + wall_rnd;
     }
 
     if (feat_is_door(grd(gc)))
@@ -4834,9 +4877,9 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     }
 }
 
-void tile_place_cloud(int x, int y, int type, int decay)
+void tile_place_cloud(int x, int y, cloud_struct cl)
 {
-    env.tile_fg[x][y] = _tileidx_cloud(type, decay);
+    env.tile_fg[x][y] = _tileidx_cloud(cl);
 }
 
 unsigned int num_tile_rays = 0;
@@ -4884,9 +4927,9 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                                  + coord_def(cx, cy) - crawl_view.vgrdc;
             const coord_def gc = view2grid(ep);
 
-            unsigned char wall_flv    = 0;
-            unsigned char floor_flv   = 0;
-            unsigned char special_flv = 0;
+            unsigned int wall_flv    = 0;
+            unsigned int floor_flv   = 0;
+            unsigned int special_flv = 0;
             const bool in_bounds = (map_bounds(gc));
 
             if (in_bounds)

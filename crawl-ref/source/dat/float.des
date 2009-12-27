@@ -954,8 +954,10 @@ KMONS:  Z = col:gila wizard hd:15 name_descriptor \
         . dagger ego:freezing | dagger ego:flaming | \
         dagger ego:electrocution
 : end
-KITEM:  B = any book
-KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air
+KITEM:  B = randbook disc:air / randbook disc:fire / randbook disc:ice / \
+            randbook disc:earth
+KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air / \
+            quarterstaff unrand:elemental_staff
 MAP
        ccccccccc
       ccE+'''cwcc

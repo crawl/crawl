@@ -625,9 +625,12 @@ static std::string _describe_monsters(const counted_monster_list &list)
 // Poisonous light passes right through invisible players
 // and monsters, and so, they are unaffected by this spell --
 // assumes only you can cast this spell (or would want to).
-void cast_toxic_radiance()
+void cast_toxic_radiance(bool non_player)
 {
-    mpr("You radiate a sickly green light!");
+    if (non_player)
+        mpr("The air is filled with a sickly green light!");
+    else
+        mpr("You radiate a sickly green light!");
 
     flash_view(GREEN);
     more();
@@ -655,10 +658,13 @@ void cast_toxic_radiance()
             // this check should not be !monster->invisible().
             if (!mi->has_ench(ENCH_INVIS))
             {
+                kill_category kc = KC_YOU;
+                if (non_player)
+                    kc = KC_OTHER;
                 bool affected =
-                    poison_monster(*mi, KC_YOU, 1, false, false);
+                    poison_monster(*mi, kc, 1, false, false);
 
-                if (coinflip() && poison_monster(*mi, KC_YOU, false, false))
+                if (coinflip() && poison_monster(*mi, kc, false, false))
                     affected = true;
 
                 if (affected)
@@ -685,14 +691,20 @@ void cast_toxic_radiance()
         {
             // Exclamation mark to suggest that a lot of creatures were
             // affected.
-            mpr("The monsters around you are poisoned!");
+            if (non_player)
+                mpr("Nearby monsters are poisoned!");
+            else
+                mpr("The monsters around you are poisoned!");
         }
     }
 }
 
-void cast_refrigeration(int pow)
+void cast_refrigeration(int pow, bool non_player)
 {
-    mpr("The heat is drained from your surroundings.");
+    if (non_player)
+        mpr("Something drains the heat from around you.");
+    else
+        mpr("The heat is drained from your surroundings.");
 
     flash_view(LIGHTCYAN);
     more();
@@ -752,7 +764,10 @@ void cast_refrigeration(int pow)
 
         // Calculate damage and apply.
         int hurt = mons_adjust_flavoured(*mi, beam, dam_dice.roll());
-        mi->hurt(&you, hurt, BEAM_COLD);
+        if (non_player)
+            mi->hurt(NULL, hurt, BEAM_COLD);
+        else
+            mi->hurt(&you, hurt, BEAM_COLD);
 
         // Cold-blooded creatures can be slowed.
         if (mi->alive()
@@ -1086,7 +1101,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
 
     const int dur = std::min(3 + random2(pow) / 20, 5);
     int how_many_max = 1 + random2(1 + you.skills[SK_TRANSMUTATIONS]) / 4;
-    const bool friendly = (!item_cursed(wpn));
+    const bool friendly = (!wpn.cursed());
     const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
 
     int count = 0;
@@ -1697,7 +1712,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     if (success)
     {
         // Cursed weapons become hostile.
-        const bool friendly = (!force_hostile && !item_cursed(you.inv[wpn]));
+        const bool friendly = (!force_hostile && !you.inv[wpn].cursed());
 
         mgen_data mg(MONS_DANCING_WEAPON,
                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,

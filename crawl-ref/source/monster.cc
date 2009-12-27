@@ -326,6 +326,7 @@ int monsters::body_weight() const
     case MONS_SPECTRAL_WARRIOR:
     case MONS_ELECTRIC_GOLEM:
     case MONS_RAKSHASA_FAKE:
+    case MONS_MARA_FAKE:
         return (0);
 
     case MONS_ZOMBIE_SMALL:
@@ -576,11 +577,11 @@ bool monsters::can_wield(const item_def& item, bool ignore_curse,
     if (!ignore_curse)
     {
         int num_cursed = 0;
-        if (weap1 && item_cursed(*weap1))
+        if (weap1 && weap1->cursed())
             num_cursed++;
-        if (weap2 && item_cursed(*weap2))
+        if (weap2 && weap2->cursed())
             num_cursed++;
-        if (_shield && item_cursed(*_shield))
+        if (_shield && _shield->cursed())
             num_cursed++;
 
         if (two_handed && num_cursed > 0 || num_cursed >= avail_slots)
@@ -1783,7 +1784,7 @@ bool monsters::pickup_gold(item_def &item, int near)
 bool monsters::pickup_misc(item_def &item, int near)
 {
     // Never pick up runes.
-    if (item.sub_type == MISC_RUNE_OF_ZOT)
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_RUNE_OF_ZOT)
         return (false);
 
     // Holy monsters and worshippers of good gods won't pick up evil
@@ -2039,10 +2040,14 @@ static std::string _invalid_monster_str(monster_type type)
 static std::string _str_monam(const monsters& mon, description_level_type desc,
                               bool force_seen)
 {
-    if (mon.type == MONS_NO_MONSTER)
+    monster_type type = mon.type;
+    if (!crawl_state.arena && you.misled())
+        type = mon.get_mislead_type();
+
+    if (type == MONS_NO_MONSTER)
         return ("DEAD MONSTER");
-    else if (invalid_monster_type(mon.type) && mon.type != MONS_PROGRAM_BUG)
-        return _invalid_monster_str(mon.type);
+    else if (invalid_monster_type(type) && type != MONS_PROGRAM_BUG)
+        return _invalid_monster_str(type);
 
     const bool arena_submerged = crawl_state.arena && !force_seen
                                      && mon.submerged();
@@ -2065,10 +2070,10 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     // Various special cases:
     // non-gold mimics, dancing weapons, ghosts, Pan demons
-    if (mons_is_mimic(mon.type))
+    if (mons_is_mimic(type))
         return (get_mimic_item(&mon).name(desc));
 
-    if (mon.type == MONS_DANCING_WEAPON && mon.inv[MSLOT_WEAPON] != NON_ITEM)
+    if (type == MONS_DANCING_WEAPON && mon.inv[MSLOT_WEAPON] != NON_ITEM)
     {
         unsigned long ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
         bool          use_inscrip  = true;
@@ -2085,16 +2090,16 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     }
 
     if (desc == DESC_DBNAME)
-        return (get_monster_data(mon.type)->name);
+        return (get_monster_data(type)->name);
 
-    if (mon.type == MONS_PLAYER_GHOST)
+    if (type == MONS_PLAYER_GHOST)
         return (apostrophise(mon.mname) + " ghost");
 
     // Some monsters might want the name of a different creature.
-    monster_type nametype = mon.type;
+    monster_type nametype = type;
 
     // Tack on other prefixes.
-    switch (mon.type)
+    switch (type)
     {
     case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
     case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
@@ -2159,7 +2164,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         result += "submerged ";
 
     // Tack on other prefixes.
-    switch (mon.type)
+    switch (type)
     {
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
@@ -2185,7 +2190,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         break;
     }
 
-    if (mon.type == MONS_SLIME_CREATURE && desc != DESC_DBNAME)
+    if (type == MONS_SLIME_CREATURE && desc != DESC_DBNAME)
     {
         ASSERT(mon.number <= 5);
         const char* cardinals[] = {"buggy ", "", "large ", "very large ",
@@ -2193,7 +2198,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         result += cardinals[mon.number];
     }
 
-    if (mon.type == MONS_BALLISTOMYCETE && desc != DESC_DBNAME)
+    if (type == MONS_BALLISTOMYCETE && desc != DESC_DBNAME)
     {
         result += mon.number ? "active " : "";
     }
@@ -2231,7 +2236,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     }
 
     // Add suffixes.
-    switch (mon.type)
+    switch (type)
     {
     case MONS_ZOMBIE_SMALL:
     case MONS_ZOMBIE_LARGE:
@@ -2260,7 +2265,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         result.insert(1, "n");
     }
 
-    if (mons_is_unique(mon.type) && starts_with(result, "the "))
+    if (mons_is_unique(type) && starts_with(result, "the "))
     {
         switch (desc)
         {
@@ -2278,7 +2283,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     {
         // If momentarily in original form, don't display "shaped
         // shifter".
-        if (mons_genus(mon.type) != MONS_SHAPESHIFTER)
+        if (mons_genus(type) != MONS_SHAPESHIFTER)
             result += " shaped shifter";
     }
 
@@ -2350,7 +2355,10 @@ std::string monsters::full_name(description_level_type desc,
         }
     }
 
-    const int _type = mons_is_zombified(this) ? base_monster : type;
+    int _type = mons_is_zombified(this) ? base_monster : type;
+    if (!crawl_state.arena && you.misled())
+        _type = get_mislead_type();
+
     if (mons_genus(_type) == MONS_HYDRA && flag == 0)
         return (title);
 
@@ -3720,7 +3728,11 @@ void monsters::ghost_init()
     enchantments.clear();
     ench_countdown = 0;
 
-    find_place_to_live();
+    // Summoned player ghosts are already given a position; calling this
+    // in those instances will cause a segfault. Instead, check to see
+    // if we have a home first. {due}
+    if (!in_bounds(pos()))
+        find_place_to_live();
 }
 
 void monsters::uglything_init(bool only_mutate)
@@ -5703,6 +5715,14 @@ const monsterentry *monsters::find_monsterentry() const
 {
     return (type == MONS_NO_MONSTER || type == MONS_PROGRAM_BUG) ? NULL
                                                     : get_monster_data(type);
+}
+
+monster_type monsters::get_mislead_type() const
+{
+    if (props.exists("mislead_as"))
+        return static_cast<monster_type>(props["mislead_as"].get_short());
+    else
+        return type;
 }
 
 int monsters::action_energy(energy_use_type et) const

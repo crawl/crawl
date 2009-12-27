@@ -1447,15 +1447,11 @@ static bool _get_mem_list(spell_list &mem_spells,
              "You cannot memorise any of the available spells because you "
              "are a %s.", lowercase_string(species).c_str());
     }
-    else if (num_low_levels > 0)
+    else if (num_low_levels > 0 || num_low_xl > 0)
     {
-        mpr("You do not have enough free spell levels to memorise any of the "
-            "available spells.", MSGCH_PROMPT);
-    }
-    else if (num_low_xl > 0)
-    {
-        mpr("You aren't experienced enough to memorise any of the "
-            "available spells.", MSGCH_PROMPT);
+        // Just because we can't memorise them doesn't mean we don't want to
+        // see what we have available. See FR #235. {due}
+        return (true);
     }
     else
     {
@@ -1860,7 +1856,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 #ifdef WIZARD
         if (!you.wizard)
             return (false);
-        else if (!yesno("Memorise anyway?"))
+        else if (!yesno("Memorise anyway?", true, 'n'))
             return (false);
 #else
         return (false);
@@ -1928,23 +1924,7 @@ int staff_spell( int staff )
         return (-1);
     }
 
-    bool need_id = false;
-    if (!item_type_known(istaff))
-    {
-        set_ident_type( OBJ_STAVES, istaff.sub_type, ID_KNOWN_TYPE );
-        set_ident_flags( istaff, ISFLAG_KNOW_TYPE );
-        need_id = true;
-    }
-    if (!item_ident( istaff, ISFLAG_KNOW_PLUSES))
-    {
-        set_ident_flags( istaff, ISFLAG_KNOW_PLUSES );
-        need_id = true;
-    }
-    if (need_id)
-    {
-        mprf(MSGCH_EQUIPMENT, "%s", istaff.name(DESC_INVENTORY_EQUIP).c_str());
-        you.wield_change = true;
-    }
+    // ID code got moved to item_use::wield_effects. {due}
 
     const int num_spells = count_staff_spells(istaff, false);
 

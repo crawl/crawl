@@ -40,14 +40,14 @@ enum tag_file_type   // file types supported by tag system
 enum tag_major_version
 {
     TAG_MAJOR_START   = 5,
-    TAG_MAJOR_VERSION = 10
+    TAG_MAJOR_VERSION = 12
 };
 
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
 {
-    TAG_MINOR_RESET    = 0, // Minor tags were reset
-    TAG_MINOR_VERSION  = 0  // Current version.  (Keep equal to max.)
+    TAG_MINOR_RESET     = 0, // Minor tags were reset
+    TAG_MINOR_VERSION   = 0  // Current version.  (Keep equal to max.)
 };
 
 struct enum_info

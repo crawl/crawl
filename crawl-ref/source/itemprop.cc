@@ -457,11 +457,6 @@ void init_properties()
 //
 // Item cursed status functions:
 //
-bool item_cursed( const item_def &item )
-{
-    return (item.flags & ISFLAG_CURSED);
-}
-
 bool item_known_cursed( const item_def &item )
 {
     return ((item.flags & ISFLAG_KNOW_CURSE) && (item.flags & ISFLAG_CURSED));
@@ -565,21 +560,6 @@ bool item_is_stationary( const item_def &item )
 bool item_ident( const item_def &item, unsigned long flags )
 {
     return ((item.flags & flags) == flags);
-}
-
-// The Orb of Zot and unique runes are considered critical.
-bool item_is_critical(const item_def &item)
-{
-    if (!item.is_valid())
-        return (false);
-
-    if (item.base_type == OBJ_ORBS)
-        return (true);
-
-    return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_RUNE_OF_ZOT
-            && item.plus != RUNE_DEMONIC
-            && item.plus != RUNE_ABYSSAL);
 }
 
 // Is item something that no one would usually bother enchanting?
@@ -1210,7 +1190,7 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
             || first && wpn.plus >= MAX_WPN_ENCHANT
             || !first && wpn.plus2 >= MAX_WPN_ENCHANT)
         {
-            return (uncurse && item_cursed(wpn));
+            return (uncurse && wpn.cursed());
         }
     }
     // Highly enchanted missiles, which have only one stat, cannot be
@@ -1243,7 +1223,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-        return (uncurse && item_cursed(arm));
+        return (uncurse && arm.cursed());
 
     return (true);
 }

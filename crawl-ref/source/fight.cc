@@ -374,7 +374,7 @@ void melee_attack::check_hand_half_bonus_eligible()
                        && !can_do_unarmed
                        && !shield
                        && weapon
-                       && !item_cursed(*weapon)
+                       && !weapon->cursed()
                        && hands == HANDS_HALF);
 }
 
@@ -3832,7 +3832,7 @@ int melee_attack::player_to_hit(bool random_factor)
                       && !can_do_unarmed
                       && !shield
                       && weapon
-                      && !item_cursed( *weapon )
+                      && !weapon ->cursed()
                       && hands == HANDS_HALF;
 
     int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
@@ -5671,7 +5671,7 @@ int melee_attack::mons_to_hit()
 
 ///////////////////////////////////////////////////////////////////////////
 
-static bool wielded_weapon_check(const item_def *weapon)
+bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
     bool weapon_warning  = false;
     bool unarmed_warning = false;
@@ -5695,6 +5695,9 @@ static bool wielded_weapon_check(const item_def *weapon)
     if (!you.received_weapon_warning && !you.confused()
         && (weapon_warning || unarmed_warning))
     {
+        if (no_message)
+            return (false);
+
         std::string prompt  = "Really attack while ";
         if (unarmed_warning)
             prompt += "being unarmed?";

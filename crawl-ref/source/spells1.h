@@ -21,11 +21,14 @@ void remove_divine_stamina();
 bool cast_vitalisation();
 
 void big_cloud(cloud_type cl_type, kill_category whose, const coord_def& where,
-               int pow, int size, int spread_rate = -1);
+               int pow, int size, int spread_rate = -1, int colour = -1,
+               std::string name = "", std::string tile = "");
 void big_cloud(cloud_type cl_type, killer_type killer, const coord_def& where,
-               int pow, int size, int spread_rate = -1);
+               int pow, int size, int spread_rate = -1, int colour = -1,
+               std::string name = "", std::string tile = "");
 void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
-               const coord_def& where, int pow, int size, int spread_rate = -1);
+               const coord_def& where, int pow, int size, int spread_rate = -1,
+               int colour = -1, std::string name = "", std::string tile = "");
 
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false);
 

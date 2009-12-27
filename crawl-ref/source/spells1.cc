@@ -661,29 +661,32 @@ bool stinking_cloud( int pow, bolt &beem )
 
 int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 {
-    big_cloud( cty, whose, beam.target, pow, 8 + random2(3) );
+    big_cloud( cty, whose, beam.target, pow, 8 + random2(3), -1 );
     return (1);
 }
 
 void big_cloud(cloud_type cl_type, kill_category whose,
-               const coord_def& where, int pow, int size, int spread_rate)
+               const coord_def& where, int pow, int size, int spread_rate,
+               int colour, std::string name, std::string tile)
 {
     big_cloud(cl_type, whose, cloud_struct::whose_to_killer(whose),
-              where, pow, size, spread_rate);
+              where, pow, size, spread_rate, colour, name, tile);
 }
 
 void big_cloud(cloud_type cl_type, killer_type killer,
-               const coord_def& where, int pow, int size, int spread_rate)
+               const coord_def& where, int pow, int size, int spread_rate,
+               int colour, std::string name, std::string tile)
 {
     big_cloud(cl_type, cloud_struct::killer_to_whose(killer), killer,
-              where, pow, size, spread_rate);
+              where, pow, size, spread_rate, colour, name, tile);
 }
 
 void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
-               const coord_def& where, int pow, int size, int spread_rate)
+               const coord_def& where, int pow, int size, int spread_rate,
+               int colour, std::string name, std::string tile)
 {
     apply_area_cloud(make_a_normal_cloud, where, pow, size,
-                     cl_type, whose, killer, spread_rate);
+                     cl_type, whose, killer, spread_rate, colour, name, tile);
 }
 
 static bool _mons_hostile(const monsters *mon)

@@ -60,6 +60,7 @@ bool monster_attack(monsters* attacker, bool allow_unarmed = true);
 bool monsters_fight(monsters* attacker, monsters* attacked,
                     bool allow_unarmed = true);
 
+bool wielded_weapon_check(item_def *weapon, bool no_message = false);
 int calc_your_to_hit(bool random_factor);
 int calc_heavy_armour_penalty(bool random_factor);
 

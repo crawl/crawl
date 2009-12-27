@@ -148,7 +148,8 @@ void init_mon_name_cache()
             if (mon == MONS_RAKSHASA_FAKE
                 || mon == MONS_ARMOUR_MIMIC
                 || mon == MONS_SCROLL_MIMIC
-                || mon == MONS_POTION_MIMIC)
+                || mon == MONS_POTION_MIMIC
+                || mon == MONS_MARA_FAKE)
             {
                 // Keep previous entry.
                 continue;
@@ -2575,6 +2576,7 @@ static bool _ms_los_spell(spell_type monspell)
     if (monspell == SPELL_SMITING
         || monspell == SPELL_AIRSTRIKE
         || monspell == SPELL_HAUNT
+        || monspell == SPELL_MISLEAD
         || spell_typematch(monspell, SPTYP_SUMMONING))
     {
         return (true);
@@ -2590,7 +2592,8 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     // Check for Smiting specially, so it's not filtered along
     // with the summon spells.
     if (attack_only
-        && (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE))
+        && (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE
+            || monspell == SPELL_MISLEAD))
     {
         return (true);
     }
@@ -2738,6 +2741,10 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     {
         gender = GENDER_FEMALE;
     }
+    // Mara's fakes aren't a unique, but should still be classified
+    // as male.
+    else if (mon_type == MONS_MARA_FAKE)
+        gender = GENDER_MALE;
     else if (mons_is_unique(mon_type) && mon_type != MONS_PLAYER_GHOST)
     {
         switch (mon_type)
@@ -2818,7 +2825,8 @@ bool mons_has_smite_attack(const monsters *monster)
             || hspell_pass[i] == SPELL_SMITING
             || hspell_pass[i] == SPELL_HELLFIRE_BURST
             || hspell_pass[i] == SPELL_FIRE_STORM
-            || hspell_pass[i] == SPELL_AIRSTRIKE)
+            || hspell_pass[i] == SPELL_AIRSTRIKE
+            || hspell_pass[i] == SPELL_MISLEAD)
         {
             return (true);
         }

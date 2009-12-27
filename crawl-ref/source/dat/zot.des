@@ -416,7 +416,7 @@ ORIENT:     float
 LFLOORCOL:  lightgrey
 LROCKCOL:   lightgrey
 LFLOORTILE: floor_tomb
-LROCKTILE:  wall_zot_gray
+LROCKTILE:  wall_zot_white
 MAP
 .
 ENDMAP

@@ -273,8 +273,7 @@ void show_def::_update_cloud(int cloudno)
     grid(e).colour = which_colour;
 
 #ifdef USE_TILE
-    tile_place_cloud(e.x, e.y, env.cloud[cloudno].type,
-                     env.cloud[cloudno].decay);
+    tile_place_cloud(e.x, e.y, env.cloud[cloudno]);
 #endif
 }
 
@@ -360,7 +359,8 @@ void show_def::_update_monster(const monsters* mons)
         _set_backup(e);
 
     grid(e).cls = SH_MONSTER;
-    grid(e).mons = mons->type;
+    grid(e).mons = (!crawl_state.arena && you.misled()) ?
+                        mons->get_mislead_type() : mons->type;
     grid(e).colour = get_mons_glyph(mons).col;
 
 #ifdef USE_TILE

@@ -24,6 +24,7 @@
 #include "directn.h"
 #include "map_knowledge.h"
 #include "exclude.h"
+#include "fight.h"
 #include "godabil.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -2208,6 +2209,9 @@ static travel_target _prompt_travel_depth(const level_id &id,
 
 bool travel_kill_monster(const monsters * monster)
 {
+    if (!wielded_weapon_check(you.weapon(), true))
+        return (false);
+
     return (monster->type == MONS_TOADSTOOL);
 }
 

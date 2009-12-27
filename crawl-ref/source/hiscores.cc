@@ -777,6 +777,13 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     death_type   = dtype;
     damage       = dam;
 
+    // Save this here. We don't want to completely remove the status, as that
+    // would look odd in the "screenshot", but having DUR_MISLED as a non-zero
+    // value at his point in time will generate such odities as "killed by a
+    // golden eye, wielding an orcish crossbo [19 damage]", etc. {due}
+    int misled = you.duration[DUR_MISLED];
+    you.duration[DUR_MISLED] = 0;
+
     // Set the default aux data value...
     // If aux is passed in (ie for a trap), we'll default to that.
     if (aux == NULL)
@@ -887,6 +894,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         if (auxkilldata.empty())
             auxkilldata = "unknown source";
     }
+
+    // And restore it here.
+    you.duration[DUR_MISLED] = misled;
 }
 
 void scorefile_entry::reset()
@@ -1199,6 +1209,10 @@ std::string scorefile_entry::death_source_desc() const
     {
         return ("");
     }
+
+    // XXX: Deals specially with Mara's clones.
+    if (death_source == MONS_MARA_FAKE)
+        return ("an illusion of Mara");
 
     // XXX no longer handles mons_num correctly! FIXME
     return (!death_source_name.empty() ?

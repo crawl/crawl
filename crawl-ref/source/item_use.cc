@@ -112,7 +112,7 @@ bool can_wield(item_def *weapon, bool say_reason,
     if (!ignore_temporary_disability
         && you.weapon()
         && you.weapon()->base_type == OBJ_WEAPONS
-        && item_cursed(*you.weapon()))
+        && you.weapon()->cursed())
     {
         SAY(mpr("You can't unwield your weapon to draw a new one!"));
         return (false);
@@ -175,12 +175,13 @@ bool can_wield(item_def *weapon, bool say_reason,
     }
 
     if (you.hunger_state < HS_FULL
+        && you.hunger < you_max_hunger() - 500 // ghouls
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
         && you.species != SP_VAMPIRE && you.species != SP_MUMMY)
     {
         if (say_reason)
         {
-            mpr("You're too hungry to wield that.");
+            mpr("As you grasp it, you feel a great hunger.  Being not satiated, you stop.");
             // If it's a standard weapon, you know its ego now.
             if (!is_artefact(*weapon) && !is_blessed(*weapon)
                 && !item_type_known(*weapon))
@@ -516,6 +517,19 @@ void wield_effects(int item_wield_2, bool showMsgs)
             // Right now that's always "uncursed". -- bwr
             set_ident_flags(item, ISFLAG_KNOW_CURSE);
         }
+        // Automatically identify rods; you can do this by wielding and then
+        // evoking them, so do it automatically instead. We don't need to give
+        // a message either, as the game will do that automatically. {due}
+        if (item_is_rod(item))
+        {
+            if (!item_type_known(item))
+            {
+                set_ident_type( OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE );
+                set_ident_flags( item, ISFLAG_KNOW_TYPE );
+            }
+            if (!item_ident( item, ISFLAG_KNOW_PLUSES))
+                set_ident_flags( item, ISFLAG_KNOW_PLUSES );
+        }
         break;
     }
 
@@ -707,7 +721,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             }
         }
 
-        if (item_cursed(item))
+        if (item.cursed())
         {
             mpr("It sticks to your hand!");
             int amusement = 16;
@@ -1045,7 +1059,7 @@ bool do_wear_armour(int item, bool quiet)
         && you.equip[EQ_CLOAK] != -1 && !cloak_is_being_removed())
     {
         if (you.equip[EQ_BODY_ARMOUR] != -1
-            && item_cursed(you.inv[you.equip[EQ_BODY_ARMOUR]]))
+            && you.inv[you.equip[EQ_BODY_ARMOUR]].cursed())
         {
             if (!quiet)
             {
@@ -1055,7 +1069,7 @@ bool do_wear_armour(int item, bool quiet)
             }
             return (false);
         }
-        if (!item_cursed(you.inv[you.equip[EQ_CLOAK]]))
+        if (!you.inv[you.equip[EQ_CLOAK]].cursed())
         {
             cloak = you.equip[EQ_CLOAK];
             if (!takeoff_armour(you.equip[EQ_CLOAK]))
@@ -1135,7 +1149,7 @@ bool takeoff_armour(int item)
     }
 
     // If we get here, we're wearing the item.
-    if (item_cursed(invitem))
+    if (invitem.cursed())
     {
         mprf("%s is stuck to your body!", invitem.name(DESC_CAP_YOUR).c_str());
         return (false);
@@ -1151,7 +1165,7 @@ bool takeoff_armour(int item)
     {
         if (you.equip[EQ_CLOAK] != -1 && !cloak_is_being_removed())
         {
-            if (!item_cursed(you.inv[you.equip[EQ_CLOAK]]))
+            if (!you.inv[you.equip[EQ_CLOAK]].cursed())
             {
                 cloak = you.equip[ EQ_CLOAK ];
                 if (!takeoff_armour(you.equip[EQ_CLOAK]))
@@ -1439,7 +1453,7 @@ static bool _fire_validate_item(int slot, std::string &err)
 {
     if (slot == you.equip[EQ_WEAPON]
         && you.inv[slot].base_type == OBJ_WEAPONS
-        && item_cursed(you.inv[slot]))
+        && you.inv[slot].cursed())
     {
         err = "That weapon is stuck to your hand!";
         return (false);
@@ -3467,7 +3481,7 @@ void jewellery_wear_effects(item_def &item)
             set_ident_flags(item, ISFLAG_EQ_JEWELLERY_MASK);
     }
 
-    if (item_cursed(item))
+    if (item.cursed())
     {
         mprf("Oops, that %s feels deathly cold.",
              jewellery_is_amulet(item)? "amulet" : "ring");
@@ -3496,7 +3510,7 @@ static int _prompt_ring_to_remove(int new_ring)
     const item_def *left  = you.slot_item(EQ_LEFT_RING);
     const item_def *right = you.slot_item(EQ_RIGHT_RING);
 
-    if (item_cursed(*left) && item_cursed(*right))
+    if (left->cursed() && right->cursed())
     {
         mprf("You're already wearing two cursed rings!");
         return (-1);
@@ -3716,7 +3730,7 @@ static bool _swap_rings(int ring_slot)
     const item_def* lring = you.slot_item(EQ_LEFT_RING);
     const item_def* rring = you.slot_item(EQ_RIGHT_RING);
 
-    if (item_cursed(*lring) && item_cursed(*rring))
+    if (lring->cursed() && rring->cursed())
     {
         mprf("You're already wearing two cursed rings!");
         return (false);
@@ -3730,7 +3744,7 @@ static bool _swap_rings(int ring_slot)
         && lring->plus2 == rring->plus2
         && !is_artefact(*lring) && !is_artefact(*rring))
     {
-        if (item_cursed(*lring))
+        if (lring->cursed())
             unwanted = you.equip[EQ_RIGHT_RING];
         else
             unwanted = you.equip[EQ_LEFT_RING];
@@ -3797,7 +3811,7 @@ bool puton_item(int item_slot)
     if (!is_amulet)     // i.e. it's a ring
     {
         const item_def* gloves = you.slot_item(EQ_GLOVES);
-        if (gloves && item_cursed(*gloves))
+        if (gloves && gloves->cursed())
         {
             mpr("You can't take your gloves off to put on a ring!");
             return (false);
@@ -4011,7 +4025,7 @@ bool remove_ring(int slot, bool announce)
     }
 
     if (you.equip[EQ_GLOVES] != -1
-        && item_cursed( you.inv[you.equip[EQ_GLOVES]] )
+        && you.inv[you.equip[EQ_GLOVES]] .cursed()
         && you.equip[EQ_AMULET] == -1)
     {
         mpr("You can't take your gloves off to remove any rings!");
@@ -4075,7 +4089,7 @@ bool remove_ring(int slot, bool announce)
     }
 
     if (you.equip[EQ_GLOVES] != -1
-        && item_cursed( you.inv[you.equip[EQ_GLOVES]] )
+        && you.inv[you.equip[EQ_GLOVES]] .cursed()
         && (hand_used == EQ_LEFT_RING || hand_used == EQ_RIGHT_RING))
     {
         mpr("You can't take your gloves off to remove any rings!");
@@ -4088,7 +4102,7 @@ bool remove_ring(int slot, bool announce)
         return (false);
     }
 
-    if (item_cursed( you.inv[you.equip[hand_used]] ))
+    if (you.inv[you.equip[hand_used]] .cursed())
     {
         if (announce)
         {
@@ -4141,7 +4155,7 @@ static bool _dont_use_invis()
     }
     else if (get_contamination_level() > 0
              && !yesno("Invisibility will do you no good right now; "
-                       "use anyways?"))
+                       "use anyways?", false, 'n'))
     {
         return (true);
     }
@@ -4546,14 +4560,14 @@ bool _drink_fountain()
     potion_type fountain_effect = POT_WATER;
     if (feat == DNGN_FOUNTAIN_BLUE)
     {
-        if (!yesno("Drink from the fountain?"))
+        if (!yesno("Drink from the fountain?", true, 'n'))
             return (false);
 
         mpr("You drink the pure, clear water.");
     }
     else if (feat == DNGN_FOUNTAIN_BLOOD)
     {
-        if (!yesno("Drink from the fountain of blood?"))
+        if (!yesno("Drink from the fountain of blood?", true, 'n'))
             return (false);
 
         mpr("You drink the blood.");
@@ -4561,7 +4575,7 @@ bool _drink_fountain()
     }
     else
     {
-        if (!yesno("Drink from the sparkling fountain?"))
+        if (!yesno("Drink from the sparkling fountain?", true, 'n'))
             return (false);
 
         mpr("You drink the sparkling water.");
@@ -4757,7 +4771,7 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
         return (false);
     }
 
-    const bool is_cursed = item_cursed(wpn);
+    const bool is_cursed = wpn.cursed();
 
     // Missiles only have one stat.
     if (wpn.base_type == OBJ_MISSILES)
@@ -4868,7 +4882,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         return (false);
     }
 
-    const bool is_cursed = item_cursed(arm);
+    const bool is_cursed = arm.cursed();
 
     // Turn hides into mails where applicable.
     // NOTE: It is assumed that armour which changes in this way does
@@ -5341,7 +5355,7 @@ void read_scroll(int slot)
     case SCR_CURSE_WEAPON:
         if (!you.weapon()
             || you.weapon()->base_type != OBJ_WEAPONS
-            || item_cursed(*you.weapon()))
+            || you.weapon()->cursed())
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             id_the_scroll = false;
@@ -5369,7 +5383,7 @@ void read_scroll(int slot)
         {
             item_def& wpn = *you.weapon();
 
-            const bool is_cursed = item_cursed(wpn);
+            const bool is_cursed = wpn.cursed();
 
             if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES
                 || !is_cursed
@@ -5477,7 +5491,7 @@ void read_scroll(int slot)
         int affected = EQ_WEAPON;
         for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
         {
-            if (you.equip[i] != -1 && !item_cursed(you.inv[you.equip[i]]))
+            if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
             {
                 count++;
                 if (one_chance_in(count))
@@ -5681,7 +5695,7 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
         artefact_wpn_learn_prop(item, ARTP_BERSERK);
     }
 
-    if (!unmeld && !item_cursed(item) && proprt[ARTP_CURSED] > 0
+    if (!unmeld && !item.cursed() && proprt[ARTP_CURSED] > 0
          && one_chance_in(proprt[ARTP_CURSED]))
     {
         do_curse_item( item, false );

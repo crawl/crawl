@@ -1849,7 +1849,8 @@ static special_missile_type _determine_missile_brand(const item_def& item,
             rc = SPMSL_REAPING;
         else if (temp_rand < 110)
             rc = SPMSL_SILVER;
-        else if (temp_rand < 120)
+        // Make steel rarer at lower levels. {due}
+        else if (temp_rand < 120 && (you.your_level > 10 || one_chance_in(3)))
             rc = SPMSL_STEEL;
         else if (temp_rand < 130)
             rc = SPMSL_DISPERSAL;
@@ -2923,7 +2924,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 
     if (item.sub_type == RING_SLAYING ) // requires plus2 too
     {
-        if (item_cursed(item) && !one_chance_in(20))
+        if (item.cursed() && !one_chance_in(20))
             item.plus2 = -1 - random2avg(6, 2);
         else
         {

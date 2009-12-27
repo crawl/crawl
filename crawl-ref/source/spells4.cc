@@ -879,14 +879,15 @@ void cast_dispersal(int pow)
 
 int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
                         cloud_type ctype, kill_category whose,
-                        killer_type killer)
+                        killer_type killer, int colour, std::string name,
+                        std::string tile)
 {
     if (killer == KILL_NONE)
         killer = cloud_struct::whose_to_killer(whose);
 
     place_cloud( ctype, where,
                  (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
-                 whose, killer, spread_rate );
+                 whose, killer, spread_rate, colour, name, tile );
 
     return 1;
 }

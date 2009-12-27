@@ -609,7 +609,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    if (god_likes_fresh_corpses(which_god))
+    if (god_likes_fresh_corpses(which_god) && which_god != GOD_KIKUBAAQUDGHA)
     {
         snprintf(info, INFO_SIZE, "you sacrifice fresh corpses%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
@@ -4230,7 +4230,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     wpn.colour = colour;
 
-    const bool is_cursed = item_cursed(wpn);
+    const bool is_cursed = wpn.cursed();
 
     enchant_weapon(ENCHANT_TO_HIT, true, wpn);
 
@@ -4811,7 +4811,7 @@ void offer_items()
             const std::string msg =
                   "Really sacrifice " + item.name(DESC_NOCAP_A) + "?";
 
-            if (!yesno(msg.c_str()))
+            if (!yesno(msg.c_str(), false, 'n'))
             {
                 i = next;
                 continue;
@@ -5153,7 +5153,7 @@ bool god_likes_fresh_corpses(god_type god)
 
 bool god_hates_butchery(god_type god)
 {
-    return (god == GOD_ELYVILON);
+    return (false);
 }
 
 harm_protection_type god_protects_from_harm(god_type god, bool actual)

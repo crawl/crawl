@@ -3527,7 +3527,9 @@ static void _print_version()
 
 static void _print_save_version(char *name)
 {
+#ifdef LOAD_UNPACKAGE_CMD
     bool need_unlink = false;
+#endif
     std::string basename = get_savedir_filename(name, "", "");
     std::string filename = basename + ".sav";
 
@@ -4038,7 +4040,8 @@ void menu_sort_condition::set_menu_type(std::string &s)
           { "any:",    MT_ANY       },
           { "inv:",    MT_INVLIST   },
           { "drop:",   MT_DROP      },
-          { "pickup:", MT_PICKUP    }
+          { "pickup:", MT_PICKUP    },
+          { "know:",   MT_KNOW      }
       };
 
     for (unsigned mi = 0; mi < ARRAYSZ(menu_type_map); ++mi)

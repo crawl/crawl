@@ -1042,6 +1042,10 @@ manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey.
 %%%%
+Mara
+
+This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers. He is capable of creating intricately detailed illusions, able to mislead even the minds of the mightiest and most brilliant spell-casters.
+%%%%
 merfolk
 
 Half fish, half man, the merfolk are citizens of both water and land, and they'll fiercely protect their chosen territory.

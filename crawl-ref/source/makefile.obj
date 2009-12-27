@@ -34,6 +34,7 @@ dgnevent.o \
 directn.o \
 dlua.o \
 dungeon.o \
+dgn-shoals.o \
 effects.o \
 exclude.o \
 feature.o \
@@ -79,6 +80,7 @@ l_mapmrk.o \
 l_moninf.o \
 l_mons.o \
 l_option.o \
+l_spells.o \
 l_subvault.o \
 l_travel.o \
 l_view.o \

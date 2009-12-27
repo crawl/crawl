@@ -81,30 +81,29 @@ bool GenericTexture::load_texture(const char *filename,
     GLenum texture_format;
     if (bpp == 4)
     {
-        if (new_width != img->w || new_height != img->h)
+        // Even if the size is the same, still go through
+        // SDL_GetRGBA to put the image in the right format.
+        SDL_LockSurface(img);
+        pixels = new unsigned char[4 * new_width * new_height];
+        memset(pixels, 0, 4 * new_width * new_height);
+
+        int dest = 0;
+        for (int y = 0; y < img->h; y++)
         {
-            SDL_LockSurface(img);
-            pixels = new unsigned char[4 * new_width * new_height];
-            memset(pixels, 0, 4 * new_width * new_height);
-
-            int dest = 0;
-            for (int y = 0; y < img->h; y++)
+            for (int x = 0; x < img->w; x++)
             {
-                for (int x = 0; x < img->w; x++)
-                {
-                    unsigned char *p = ((unsigned char*)img->pixels
-                                      + y * img->pitch + x * bpp);
-                    unsigned int pixel = *(unsigned int*)p;
-                    SDL_GetRGBA(pixel, img->format, &pixels[dest],
-                                &pixels[dest+1], &pixels[dest+2],
-                                &pixels[dest+3]);
-                    dest += 4;
-                }
-                dest += 4 * (new_width - img->w);
+                unsigned char *p = ((unsigned char*)img->pixels
+                                  + y * img->pitch + x * bpp);
+                unsigned int pixel = *(unsigned int*)p;
+                SDL_GetRGBA(pixel, img->format, &pixels[dest],
+                            &pixels[dest+1], &pixels[dest+2],
+                            &pixels[dest+3]);
+                dest += 4;
             }
-
-            SDL_UnlockSurface(img);
+            dest += 4 * (new_width - img->w);
         }
+
+        SDL_UnlockSurface(img);
         texture_format = GL_RGBA;
     }
     else if (bpp == 3)

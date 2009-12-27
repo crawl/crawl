@@ -257,9 +257,13 @@ struct cloud_struct
     unsigned char spread_rate;
     kill_category whose;
     killer_type   killer;
+    int           colour;
+    std::string   name;
+    std::string   tile;
 
     cloud_struct() : pos(), type(CLOUD_NONE), decay(0), spread_rate(0),
-                     whose(KC_OTHER), killer(KILL_NONE)
+                     whose(KC_OTHER), killer(KILL_NONE), colour(-1),
+                     name(""), tile("")
     {
     }
 
@@ -528,6 +532,9 @@ public:
     bool held_by_monster() const;
 
     bool is_valid() const;
+
+    // Returns true if this item should be preserved as far as possible.
+    bool is_critical() const;
 
 private:
     std::string name_aux(description_level_type desc,
