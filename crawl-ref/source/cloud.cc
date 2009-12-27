@@ -813,7 +813,10 @@ void in_a_cloud()
             you.duration[DUR_MISLED] = 0;
         }
 
-        mprf("You are engulfed in %s.", !name.empty() ? name.c_str() : "the rain");
+        if (name.empty() || name == "the rain")
+            mpr("You are standing in the rain.");
+        else
+            mprf("You are engulfed in %s.", name.c_str());
 
         break;
 
