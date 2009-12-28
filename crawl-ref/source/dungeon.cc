@@ -202,7 +202,7 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
 static bool _build_vaults(int level_number,
                           const map_def *vault,
                           int rune_subst = -1, bool build_only = false,
-                          bool check_collisions = false,
+                          bool check_collisions = true,
                           bool make_no_exits = false,
                           const coord_def &where = coord_def(-1, -1));
 static void _vault_grid(vault_placement &,
@@ -823,7 +823,17 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         dgn_register_vault(place.map);
 
     if (!place.map.has_tag("layout"))
-        _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
+    {
+        if (place.map.orient == MAP_ENCOMPASS)
+        {
+            for (rectangle_iterator ri(0); ri; ++ri)
+                dgn_Map_Mask(*ri) |= MMT_VAULT | MMT_NO_DOOR;
+        }
+        else
+        {
+            _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
+        }
+    }
 
     if (place.map.has_tag("no_monster_gen"))
         _mask_vault(place, MMT_NO_MONS);
