@@ -561,10 +561,11 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
         return true;
 
     const coord_def target(_shoals_escape_place_from(c, false));
-    if (target.origin())
-        return false;
-
-    move_item_stack_to_grid(c, target);
+    // Don't abort tide entry because of items. If we can't sweep the
+    // item clear here, let dungeon_terrain_changed teleport the item
+    // to the nearest safe square.
+    if (!target.origin())
+        move_item_stack_to_grid(c, target);
     return true;
 }
 
