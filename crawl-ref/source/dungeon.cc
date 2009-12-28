@@ -4533,6 +4533,11 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
         if (item_made != NON_ITEM && item_made != -1)
         {
             item_def &item(mitm[item_made]);
+
+            // Mark items on summoned monsters as such.
+            if (mspec.abjuration_duration != 0)
+                item.flags |= ISFLAG_SUMMONED;
+
             if (!mon.pickup_item(item, 0, true))
                 destroy_item(item_made, true);
         }
