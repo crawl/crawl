@@ -1423,13 +1423,16 @@ TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 KMONS:      1 = col:silver patrolling wizard name:Cloud_Mage name_replace \
             name_definite spells:mephitic_cloud;freezing_cloud;poisonous_cloud;\
             airstrike;blink_range;blink_range hd:20 hp:150 ; \
-            longbow . arrow q:30
-KMONS:      * = vapour / air elemental
+            robe unrand:robe_of_clouds . quick blade ego:electrocution | \
+            quick blade ego:freezing | dagger ego:speed | dagger ego:electrocution \
+            | dagger ego:freezing
+KMONS:      * = w:5 vapour / w:20 air elemental
 SUBST:      . = .:120 *
 MARKER:     ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 1, size_buildup_amnt = 5, \
-                size_buildup_time = 25, cloud_type = "steam" \
+                size_buildup_time = 25, cloud_type = "grey smoke", \
+                colour = "white", name = "white smoke" \
             }
 KITEM:      % = w:20 potion of levitation / w:20 potion of water / \
             potion of magic / potion of speed / potion of resistance / \
@@ -1439,52 +1442,75 @@ KITEM:      $ = wand of lightning / staff of air / ring of levitation /\
             gold / scroll of silence / ring of teleport control / \
             amulet of controlled flight / quick blade / ring of evasion /\
             ring of see invisible
+KFEAT:      # = deep_water
 NSUBST:     $ = 1:? / *:$
 SUBST:      $ = $%
+COLOUR:     .+<co = white
+COLOUR:     wW# = silver
+:           set_border_fill_type('open_sea')
 :           wizlab_setup(_G, "The Cloud Mage's Chambers")
 MAP
-cccccccccccccccccccccccccccccccccccccccccccc
-cccccccc............................cccccccc
-cccccc...wwwwwwwwwwwwwwwwwwwwwwwwww...cccccc
-cccc...wwwwwwwccccccccccccccccccccwww...cccc
-ccc..wwwwwwwccccccccccccccccccccccwwwww..ccc
-ccc.wwwwwwcccccccc..c..c..c..c..ccwwwwww.ccc
-cc..wwwwwcc.....c.!............!.cwwwwww..cc
-cc.wwwwwwcc.$$$.c................cwwwwwww.cc
-c..wwwwwccc.$$$.c................cWWWWWWW..c
-c..wwwwwccc.$$$.+...1............+.........c
-c..wwwwwccc.$$$.c................cWWWWWWW..c
-cc.wwwwwwcc.$$$.c................cwwwwwww.cc
-cc..wwwwwcc.....c.!............!.cwwwwww..cc
-ccc.wwwwwwcccccccc..c..c..c..c..ccwwwwww.ccc
-ccc..wwwwwwwccccccccccccccccccccccwwwww..ccc
-cccc...wwwwwwwccccccccccccccccccccwww...cccc
-cccccc...wwwwwwwwwwwwwwwwwwwwwwwwww...cccccc
-cccccccc............................cccccccc
-cccccccccc.......ccccccccccccccccccccccccccc
-ccccccccc.......cccccccccccccccccccccccccccc
-cccccccc.......ccccccccc.ccccccccccccccccccc
-ccccccc.......ccccccccc.!.cccccccccccccccccc
-cccccc!.....!ccccccccc.....ccccccccccccccccc
-cccccccc.......cccccc........ccccccccccccccc
-cccccccccc.......ccc..........cccccccccccccc
-cccccccccccc!.....ccc..........ccccccccccccc
-ccccccccccc.....!ccccc+cc......ccccccccccccc
-cccccccccccc......ccc...cc!.....cccccccccccc
-ccccccccccc......ccc.....cc.....cccccccccccc
-cccccccccccc......c.......c......ccccccccccc
-cccccccccc.!.....cc.<.A.<.c......ccccccccccc
-cccccccccc.c......c.......cc...!cccccccccccc
-cccccccccc.cc.....cc.....cc......ccccccccccc
-cccccccccc+cccc....cc...cc!.....cccccccccccc
-cccccccccc....cc...!ccccc......ccccccccccccc
-cccccccccc.%%.cc.............ccccccccccccccc
-cccccccccc.%%.ccc...........cccccccccccccccc
-cccccccccc....ccc..........!...+....cccccccc
-cccccccccccccccccc........cccccc.%%.cccccccc
-ccccccccccccccccccc......ccccccc.%%.cccccccc
-cccccccccccccccccccc.!..cccccccc....cccccccc
-cccccccccccccccccccccccccccccccccccccccccccc
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################oooooooooooooooooooooooooooooo##################
+###################ooo............................ooo################
+#################ooo...wwwwwwwwwwwwwwwwwwwwwwwwww...ooo##############
+################oo...wwwwwwwccccccccccccccccccccwww...oo#############
+################o..wwwwwwwccccccccccccccccccccccwwwww..o#############
+###############oo.wwwwwwcccccccc..c..c..c..c..ccwwwwww.oo############
+###############o..wwwwwcc.....c.!............!.cwwwwww..o############
+##############oo.wwwwwwcc.$$$.c................cwwwwwww.oo###########
+##############o..wwwwwccc.$$$.c................cWWWWWWW..o###########
+##############o..wwwwwccc.$$$.+...1............+.........o###########
+##############o..wwwwwccc.$$$.c................cWWWWWWW..o###########
+##############oo.wwwwwwcc.$$$.c................cwwwwwww.oo###########
+###############o..wwwwwcc.....c.!............!.cwwwwww..o############
+###############oo.wwwwwwcccccccc..c..c..c..c..ccwwwwww.oo############
+################o..wwwwwwwccccccccccccccccccccccwwwww..o#############
+################oo...wwwwwwwccccccccccccccccccccwww...oo#############
+#################oo....wwwwwwwwwwwwwwwwwwwwwwwwww...ooo##############
+##################oooo............................ooo################
+#####################ccc.......cccccccccccccccccccc##################
+#####################oo.......oo#####ooo#############################
+####################oo.......oo#####oo.oo############################
+###################oo.......oo#####oo.!.oo###########################
+###################o!.....!ooo####oo.....ooo#########################
+###################ooo.......ooo#oo........oo########################
+####################oooo.......ooo..........oo#######################
+#######################ooo!.....ooo..........o#######################
+########################o.....!ooocc+cc......oo######################
+#######################ooo......occ...cc!.....o######################
+########################o......occ.....cc.....oo#####################
+#######################ooo......c.......c......o#####################
+#######################o.!.....oc.<.A.<.c......o#####################
+#######################o.c......c.......co...!oo#####################
+#######################o.co.....cc.....cc......o#####################
+#######################c+cccc....cc...cc!.....oo#####################
+#######################o....co...!ccccc......oo######################
+#######################o.%%.co.............ooc#######################
+#######################o.%%.coo...........ccccccccc##################
+#######################o....c#o..........!...+....o##################
+#######################oooooc#oo........oooooc.%%.o##################
+###############################oo......oo####c.%%.o##################
+################################oo.!..oo#####c....o##################
+#################################oooooo######cooooo##################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
+#####################################################################
 ENDMAP
 
 ###############################################################################
