@@ -63,7 +63,7 @@ public:
 
     virtual size_type body_size(size_part_type psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
-    virtual int       body_weight() const;
+    virtual int       body_weight(bool base = false) const;
     virtual int       total_weight() const = 0;
 
     virtual int       damage_brand(int which_attack = -1) = 0;

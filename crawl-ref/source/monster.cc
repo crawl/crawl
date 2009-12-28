@@ -316,7 +316,7 @@ size_type monsters::body_size(size_part_type /* psize */, bool /* base */) const
     return (ret);
 }
 
-int monsters::body_weight() const
+int monsters::body_weight(bool /*base*/) const
 {
     int mclass = type;
 
