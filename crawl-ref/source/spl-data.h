@@ -927,7 +927,7 @@
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      1,
-     50,
+     100,
      -1, -1,
      0,
      NULL,

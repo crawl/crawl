@@ -1179,7 +1179,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 // using up the corpse might also lead to game balance problems. - bwr
 void cast_fulsome_distillation(int pow)
 {
-    pow = std::min(50, pow);
+    pow = std::min(100, pow);
 
     int corpse = -1;
 
@@ -1205,96 +1205,73 @@ void cast_fulsome_distillation(int pow)
         return;
     }
 
-    const bool rotten      = food_is_rotten(mitm[corpse]);
-    const bool big_monster = (mons_type_hit_dice(mitm[corpse].plus) >= 5);
-    const bool power_up    = (rotten && big_monster);
-
     potion_type pot_type = POT_WATER;
+    int difficulty = 0;
 
-    switch (mitm[corpse].plus)
+    switch (mons_corpse_effect(mitm[corpse].plus))
     {
-    case MONS_GIANT_BAT:             // extracting batty behaviour : 1
-    case MONS_GIANT_BLOWFLY:         // extracting batty behaviour : 5
-        pot_type = POT_CONFUSION;
+    case CE_CLEAN:
+        pot_type = POT_WATER;
+        difficulty = 0;
         break;
 
-    case MONS_RED_WASP:              // paralysis attack : 8
-    case MONS_YELLOW_WASP:           // paralysis attack : 4
-        pot_type = POT_PARALYSIS;
+    case CE_CONTAMINATED:
+        pot_type = (mons_weight(mitm[corpse].plus) >= 900)
+            ? POT_DEGENERATION : POT_POISON;
+        difficulty = (pot_type == POT_DEGENERATION) ? 100 : 40;
         break;
 
-    case MONS_SNAKE:                 // clean meat, but poisonous attack : 2
-    case MONS_GIANT_ANT:             // clean meat, but poisonous attack : 3
-        pot_type = (power_up ? POT_POISON : POT_CONFUSION);
+    case CE_POISONOUS:
+        pot_type = POT_POISON;
+        difficulty = 50;
         break;
 
-    case MONS_ORANGE_RAT:            // poisonous meat, but draining attack : 3
-        pot_type = (power_up ? POT_DECAY : POT_POISON);
+    case CE_MUTAGEN_RANDOM:
+    case CE_MUTAGEN_GOOD:   // unused
+    case CE_RANDOM:         // unused
+        pot_type = POT_MUTATION;
+        // this is a potentially good potion, so it never tries to get into you
+        difficulty = 0;
         break;
 
-    case MONS_SPINY_WORM:            // 12
-        pot_type = (power_up ? POT_DECAY : POT_STRONG_POISON);
+    case CE_MUTAGEN_BAD:    // unused
+    case CE_ROTTEN:         // actually this only occurs via mangling
+    case CE_HCL:            // necrophage
+        pot_type = POT_DECAY;
+        difficulty = 100;
         break;
 
+    case CE_NOCORPSE:       // shouldn't occur
     default:
-        switch (mons_corpse_effect(mitm[corpse].plus))
-        {
-        case CE_CLEAN:
-            pot_type = (power_up ? POT_CONFUSION : POT_WATER);
-            break;
-
-        case CE_CONTAMINATED:
-            pot_type = (power_up ? POT_DEGENERATION : POT_POISON);
-            break;
-
-        case CE_POISONOUS:
-            pot_type = (power_up ? POT_STRONG_POISON : POT_POISON);
-            break;
-
-        case CE_MUTAGEN_RANDOM:
-        case CE_MUTAGEN_GOOD:   // unused
-        case CE_RANDOM:         // unused
-            pot_type = POT_MUTATION;
-            break;
-
-        case CE_MUTAGEN_BAD:    // unused
-        case CE_ROTTEN:         // actually this only occurs via mangling
-        case CE_HCL:            // necrophage
-            pot_type = (power_up ? POT_DECAY : POT_STRONG_POISON);
-            break;
-
-        case CE_NOCORPSE:       // shouldn't occur
-        default:
-            break;
-        }
         break;
     }
 
-    // If not powerful enough, we downgrade the potion.
-    if (random2(50) > pow + 10 * rotten)
+    switch (mitm[corpse].plus)
     {
-        switch (pot_type)
+    case MONS_RED_WASP:              // paralysis attack
+        pot_type = POT_PARALYSIS;
+        difficulty = 100;
+        break;
+
+    case MONS_YELLOW_WASP:           // slowing attack
+        pot_type = POT_SLOWING;
+        difficulty = 50;
+        break;
+
+    default:
+        break;
+    }
+
+    struct monsterentry* smc = get_monster_data(mitm[corpse].plus);
+
+    for (int nattk = 0; nattk < 4; ++nattk)
+    {
+        if (smc->attack[nattk].flavour == AF_POISON_MEDIUM ||
+                smc->attack[nattk].flavour == AF_POISON_STRONG ||
+                smc->attack[nattk].flavour == AF_POISON_STR)
         {
-        case POT_DECAY:
-        case POT_DEGENERATION:
-        case POT_STRONG_POISON:
-            pot_type = POT_POISON;
-            break;
-
-        case POT_MUTATION:
-        case POT_POISON:
-            pot_type = POT_CONFUSION;
-            break;
-
-        case POT_PARALYSIS:
-            pot_type = POT_SLOWING;
-            break;
-
-        case POT_CONFUSION:
-        case POT_SLOWING:
-        default:
-            pot_type = POT_WATER;
-            break;
+            pot_type = POT_STRONG_POISON;
+            difficulty = 75;
         }
     }
 
@@ -1310,8 +1287,16 @@ void cast_fulsome_distillation(int pow)
     mitm[corpse].inscription.clear();
     item_colour(mitm[corpse]); // sets special as well
 
+    set_ident_type(mitm[corpse], ID_KNOWN_TYPE);
+
     mprf("You extract %s from the corpse.",
          mitm[corpse].name(DESC_NOCAP_A).c_str());
+
+    if (random2(difficulty + 1) > pow)
+    {
+        mpr("Oops!  You accidentally inhaled the fumes!");
+        potion_effect(pot_type, 40);
+    }
 
     // Try to move the potion to the player (for convenience).
     if (move_item_to_player(corpse, 1) != 1)
