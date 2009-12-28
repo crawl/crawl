@@ -1177,10 +1177,8 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 // Producing helpful potions would break game balance here...
 // and producing more than one potion from a corpse, or not
 // using up the corpse might also lead to game balance problems. - bwr
-void cast_fulsome_distillation(int pow)
+void cast_fulsome_distillation(int /*pow*/)
 {
-    pow = std::min(100, pow);
-
     int corpse = -1;
 
     // Search items at the player's location for corpses.
@@ -1206,39 +1204,32 @@ void cast_fulsome_distillation(int pow)
     }
 
     potion_type pot_type = POT_WATER;
-    int difficulty = 0;
 
     switch (mons_corpse_effect(mitm[corpse].plus))
     {
     case CE_CLEAN:
         pot_type = POT_WATER;
-        difficulty = 0;
         break;
 
     case CE_CONTAMINATED:
         pot_type = (mons_weight(mitm[corpse].plus) >= 900)
-            ? POT_DEGENERATION : POT_POISON;
-        difficulty = (pot_type == POT_DEGENERATION) ? 100 : 40;
+            ? POT_DEGENERATION : POT_CONFUSION;
         break;
 
     case CE_POISONOUS:
         pot_type = POT_POISON;
-        difficulty = 50;
         break;
 
     case CE_MUTAGEN_RANDOM:
     case CE_MUTAGEN_GOOD:   // unused
     case CE_RANDOM:         // unused
         pot_type = POT_MUTATION;
-        // this is a potentially good potion, so it never tries to get into you
-        difficulty = 0;
         break;
 
     case CE_MUTAGEN_BAD:    // unused
     case CE_ROTTEN:         // actually this only occurs via mangling
     case CE_HCL:            // necrophage
         pot_type = POT_DECAY;
-        difficulty = 100;
         break;
 
     case CE_NOCORPSE:       // shouldn't occur
@@ -1250,12 +1241,10 @@ void cast_fulsome_distillation(int pow)
     {
     case MONS_RED_WASP:              // paralysis attack
         pot_type = POT_PARALYSIS;
-        difficulty = 100;
         break;
 
     case MONS_YELLOW_WASP:           // slowing attack
         pot_type = POT_SLOWING;
-        difficulty = 50;
         break;
 
     default:
@@ -1271,7 +1260,6 @@ void cast_fulsome_distillation(int pow)
                 smc->attack[nattk].flavour == AF_POISON_STR)
         {
             pot_type = POT_STRONG_POISON;
-            difficulty = 75;
         }
     }
 
@@ -1291,12 +1279,6 @@ void cast_fulsome_distillation(int pow)
 
     mprf("You extract %s from the corpse.",
          mitm[corpse].name(DESC_NOCAP_A).c_str());
-
-    if (random2(difficulty + 1) > pow)
-    {
-        mpr("Oops!  You accidentally inhaled the fumes!");
-        potion_effect(pot_type, 40);
-    }
 
     // Try to move the potion to the player (for convenience).
     if (move_item_to_player(corpse, 1) != 1)
