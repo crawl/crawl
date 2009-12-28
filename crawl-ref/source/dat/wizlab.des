@@ -1417,6 +1417,7 @@ ENDMAP
 ###############################################################################
 # Chambers of the Cloud Mage
 #
+# To-do: make it look as cool in tiles.
 NAME:       wizlab_cloud
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -1432,7 +1433,7 @@ MARKER:     ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 1, size_buildup_amnt = 5, \
                 size_buildup_time = 25, cloud_type = "grey smoke", \
-                colour = "white", name = "white smoke" \
+                colour = "white", name = "fluffy clouds" \
             }
 KITEM:      % = w:20 potion of levitation / w:20 potion of water / \
             potion of magic / potion of speed / potion of resistance / \
