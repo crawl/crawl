@@ -697,7 +697,7 @@ void wizard_uncurse_item()
     {
         item_def& item(you.inv[i]);
 
-        if (item_cursed(item))
+        if (item.cursed())
             do_uncurse_item(item);
         else if (_item_type_can_be_cursed(item.base_type))
             do_curse_item(item);

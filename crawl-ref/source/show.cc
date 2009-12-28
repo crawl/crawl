@@ -273,8 +273,7 @@ void show_def::_update_cloud(int cloudno)
     grid(e).colour = which_colour;
 
 #ifdef USE_TILE
-    tile_place_cloud(e.x, e.y, env.cloud[cloudno].type,
-                     env.cloud[cloudno].decay);
+    tile_place_cloud(e.x, e.y, env.cloud[cloudno]);
 #endif
 }
 

@@ -18,6 +18,7 @@ struct trap_def
     void prepare_ammo();
     bool type_has_ammo() const;
     bool active() const;
+    int max_damage(const actor& act);
 
 private:
     void message_trap_entry();

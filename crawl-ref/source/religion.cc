@@ -609,7 +609,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    if (god_likes_fresh_corpses(which_god))
+    if (god_likes_fresh_corpses(which_god) && which_god != GOD_KIKUBAAQUDGHA)
     {
         snprintf(info, INFO_SIZE, "you sacrifice fresh corpses%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
@@ -4230,7 +4230,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     wpn.colour = colour;
 
-    const bool is_cursed = item_cursed(wpn);
+    const bool is_cursed = wpn.cursed();
 
     enchant_weapon(ENCHANT_TO_HIT, true, wpn);
 

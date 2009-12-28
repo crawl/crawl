@@ -1433,7 +1433,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
 
     desc.special = tile_known_weapon_brand(item);
     desc.flag = 0;
-    if (item_cursed(item) && item_ident(item, ISFLAG_KNOW_CURSE))
+    if (item.cursed() && item_ident(item, ISFLAG_KNOW_CURSE))
         desc.flag |= TILEI_FLAG_CURSE;
     if (item_type_tried(item))
         desc.flag |= TILEI_FLAG_TRIED;

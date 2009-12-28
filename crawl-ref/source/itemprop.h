@@ -14,14 +14,7 @@ struct bolt;
 
 void init_properties(void);
 
-// Returns true if this item should be preserved as far as possible.
-bool item_is_critical(const item_def &item);
-
-// Returns true if this item should not normally be enchanted.
-bool item_is_mundane(const item_def &item);
-
 // cursed:
-bool item_cursed( const item_def &item );
 bool item_known_cursed( const item_def &item );
 bool item_known_uncursed( const item_def &item );
 void do_curse_item( item_def &item, bool quiet = true );

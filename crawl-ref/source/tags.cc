@@ -61,6 +61,7 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "coordit.h"
 #include "describe.h"
 #include "dungeon.h"
 #include "enum.h"
@@ -1802,6 +1803,9 @@ static void tag_construct_level(writer &th)
         marshallByte(th,  (char) env.cloud[i].spread_rate);
         marshallByte(th, env.cloud[i].whose);
         marshallByte(th, env.cloud[i].killer);
+        marshallShort(th, env.cloud[i].colour);
+        marshallString(th, env.cloud[i].name);
+        marshallString(th, env.cloud[i].tile);
     }
 
     // how many shops?
@@ -1825,6 +1829,15 @@ static void tag_construct_level(writer &th)
 
     env.markers.write(th);
     env.properties.write(th);
+
+    // Save heightmap, if present.
+    marshallByte(th, !!env.heightmap.get());
+    if (env.heightmap.get())
+    {
+        grid_heightmap &heightmap(*env.heightmap);
+        for (rectangle_iterator ri(0); ri; ++ri)
+            marshallShort(th, heightmap(*ri));
+    }
 }
 
 void marshallItem(writer &th, const item_def &item)
@@ -2191,6 +2204,9 @@ static void tag_read_level( reader &th, char minorVersion )
         env.cloud[i].spread_rate = (unsigned char) unmarshallByte(th);
         env.cloud[i].whose = static_cast<kill_category>(unmarshallByte(th));
         env.cloud[i].killer = static_cast<killer_type>(unmarshallByte(th));
+        env.cloud[i].colour = unmarshallShort(th);
+        env.cloud[i].name = unmarshallString(th);
+        env.cloud[i].tile = unmarshallString(th);
     }
 
     // how many shops?
@@ -2217,6 +2233,17 @@ static void tag_read_level( reader &th, char minorVersion )
 
     env.properties.clear();
     env.properties.read(th);
+
+    // Restore heightmap
+    env.heightmap.reset(NULL);
+    const bool have_heightmap(unmarshallByte(th));
+    if (have_heightmap)
+    {
+        env.heightmap.reset(new grid_heightmap);
+        grid_heightmap &heightmap(*env.heightmap);
+        for (rectangle_iterator ri(0); ri; ++ri)
+            heightmap(*ri) = unmarshallShort(th);
+    }
 }
 
 static void tag_read_level_items(reader &th, char minorVersion)

@@ -28,7 +28,15 @@ public:
     virtual bool is_summoned(int* duration = NULL,
                              int* summon_type = NULL) const = 0;
 
+    // [ds] Low-level moveto() - moves the actor without updating relevant
+    // grids, such as mgrd.
     virtual void moveto(const coord_def &c) = 0;
+
+    // High-level actor movement. If in doubt, use this. Returns true if the
+    // actor cannot be moved to the target, possibly because it is already
+    // occupied.
+    virtual bool move_to_pos(const coord_def &c) = 0;
+
     virtual void set_position(const coord_def &c);
     virtual const coord_def& pos() const { return position; }
 

@@ -677,39 +677,39 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         this->destroy();
 }
 
+int trap_def::max_damage(const actor& act)
+{
+    int level = you.your_level;
+
+    // Trap damage to monsters is not a function of level, because
+    // they are fairly stupid and tend to have fewer hp than
+    // players -- this choice prevents traps from easily killing
+    // large monsters fairly deep within the dungeon.
+    if (act.atype() == ACT_MONSTER)
+        level = 0;
+
+    switch (this->type)
+    {
+        case TRAP_NEEDLE: return  0;
+        case TRAP_DART:   return  4 + level/2;
+        case TRAP_ARROW:  return  7 + level;
+        case TRAP_SPEAR:  return 10 + level;
+        case TRAP_BOLT:   return 13 + level;
+        case TRAP_AXE:    return 15 + level;
+        case TRAP_BLADE:  return (level ? 2*level : 10) + 28;
+        default:          return  0;
+    }
+
+    return (0);
+}
+
 int trap_def::shot_damage(actor& act)
 {
-    if (act.atype() == ACT_PLAYER)
-    {
-        switch (this->type)
-        {
-        case TRAP_NEEDLE: return 0;
-        case TRAP_DART:   return random2( 4 + you.your_level/2) + 1;
-        case TRAP_ARROW:  return random2( 7 + you.your_level)   + 1;
-        case TRAP_SPEAR:  return random2(10 + you.your_level)   + 1;
-        case TRAP_BOLT:   return random2(13 + you.your_level)   + 1;
-        case TRAP_AXE:    return random2(15 + you.your_level)   + 1;
-        default:          return 0;
-        }
-    }
-    else if (act.atype() == ACT_MONSTER)
-    {
-        // Trap damage to monsters is not a function of level, because
-        // they are fairly stupid and tend to have fewer hp than
-        // players -- this choice prevents traps from easily killing
-        // large monsters fairly deep within the dungeon.
-        switch (this->type)
-        {
-        case TRAP_NEEDLE: return 0;
-        case TRAP_DART:   return random2( 4) + 1;
-        case TRAP_ARROW:  return random2( 7) + 1;
-        case TRAP_SPEAR:  return random2(10) + 1;
-        case TRAP_BOLT:   return random2(13) + 1;
-        case TRAP_AXE:    return random2(15) + 1;
-        default:          return 0;
-        }
-    }
-    return (0);
+    const int dam = max_damage(act);
+
+    if (!dam)
+        return 0;
+    return random2(dam) + 1;
 }
 
 int reveal_traps(const int range)
@@ -756,6 +756,15 @@ trap_type get_trap_type(const coord_def& pos)
     return (TRAP_UNASSIGNED);
 }
 
+static bool _disarm_is_deadly(trap_def& trap)
+{
+    int dam = trap.max_damage(you);
+    if (trap.type == TRAP_NEEDLE && you.res_poison() <= 0)
+        dam += 15; // arbitrary
+
+    return (you.hp <= dam);
+}
+
 // where *must* point to a valid, discovered trap.
 void disarm_trap(const coord_def& where)
 {
@@ -780,11 +789,8 @@ void disarm_trap(const coord_def& where)
         break;
     }
 
-#ifdef CLUA_BINDINGS
     // Prompt for any trap for which you might not survive setting it off.
-    // (See trapwalk.lua)
-    if (Options.trap_prompt
-        && !clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(where)))
+    if (_disarm_is_deadly(trap))
     {
         std::string prompt = make_stringf(
                                "Really try disarming that %s?",
@@ -799,7 +805,6 @@ void disarm_trap(const coord_def& where)
             return;
         }
     }
-#endif
 
     // Make the actual attempt
     you.turn_is_over = true;

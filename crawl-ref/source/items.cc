@@ -1921,7 +1921,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
     if (item_dropped == you.equip[EQ_WEAPON]
         && you.inv[item_dropped].base_type == OBJ_WEAPONS
-        && item_cursed( you.inv[item_dropped] ))
+        && you.inv[item_dropped] .cursed())
     {
         mpr("That object is stuck to you!");
         return (false);
@@ -2821,7 +2821,7 @@ int item_def::book_number() const
 
 bool item_def::cursed() const
 {
-    return (item_cursed(*this));
+    return (flags & ISFLAG_CURSED);
 }
 
 bool item_def::launched_by(const item_def &launcher) const
@@ -2917,6 +2917,48 @@ bool item_def::held_by_monster() const
 bool item_def::is_valid() const
 {
     return (base_type != OBJ_UNASSIGNED && quantity > 0);
+}
+
+// The Orb of Zot and unique runes are considered critical.
+bool item_def::is_critical() const
+{
+    if (!is_valid())
+        return (false);
+
+    if (base_type == OBJ_ORBS)
+        return (true);
+
+    return (base_type == OBJ_MISCELLANY
+            && sub_type == MISC_RUNE_OF_ZOT
+            && plus != RUNE_DEMONIC
+            && plus != RUNE_ABYSSAL);
+}
+
+// Is item something that no one would usually bother enchanting?
+bool item_def::is_mundane() const
+{
+    switch (base_type)
+    {
+    case OBJ_WEAPONS:
+        if (sub_type == WPN_CLUB
+            || sub_type == WPN_GIANT_CLUB
+            || sub_type == WPN_GIANT_SPIKED_CLUB
+            || sub_type == WPN_KNIFE)
+        {
+            return (true);
+        }
+        break;
+
+    case OBJ_ARMOUR:
+        if (sub_type == ARM_ANIMAL_SKIN)
+            return (true);
+        break;
+
+    default:
+        break;
+    }
+
+    return (false);
 }
 
 static void _rune_from_specs(const char* _specs, item_def &item)

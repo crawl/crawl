@@ -577,11 +577,11 @@ bool monsters::can_wield(const item_def& item, bool ignore_curse,
     if (!ignore_curse)
     {
         int num_cursed = 0;
-        if (weap1 && item_cursed(*weap1))
+        if (weap1 && weap1->cursed())
             num_cursed++;
-        if (weap2 && item_cursed(*weap2))
+        if (weap2 && weap2->cursed())
             num_cursed++;
-        if (_shield && item_cursed(*_shield))
+        if (_shield && _shield->cursed())
             num_cursed++;
 
         if (two_handed && num_cursed > 0 || num_cursed >= avail_slots)

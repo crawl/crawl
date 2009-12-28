@@ -1699,7 +1699,7 @@ brand_ok:
     }
     else if ((force_good || is_demonic(item) || forced_ego
                     || x_chance_in_y(51 + item_level, 200))
-                && (!item_is_mundane(item) || force_good))
+                && (!item.is_mundane() || force_good))
     {
         // Make a better item (possibly ego).
         if (!no_brand)
@@ -2399,7 +2399,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
     else if ((force_good || forced_ego || item.sub_type == ARM_WIZARD_HAT
                     || x_chance_in_y(51 + item_level, 250))
-                && (!item_is_mundane(item) || force_good))
+                && (!item.is_mundane() || force_good))
     {
         // Make a good item...
         item.plus += random2(3);
@@ -2924,7 +2924,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 
     if (item.sub_type == RING_SLAYING ) // requires plus2 too
     {
-        if (item_cursed(item) && !one_chance_in(20))
+        if (item.cursed() && !one_chance_in(20))
             item.plus2 = -1 - random2avg(6, 2);
         else
         {
@@ -3233,7 +3233,7 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item))
         return (true);
 
-    if (item_is_mundane(item))
+    if (item.is_mundane())
         return (false);
 
     if ((item.plus || item.plus2)
@@ -3256,7 +3256,7 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item))
         return (true);
 
-    if (item_is_mundane(item))
+    if (item.is_mundane())
         return (false);
 
     if (item.plus && !one_chance_in(3))

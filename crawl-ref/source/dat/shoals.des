@@ -243,13 +243,13 @@ SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x=, D=+
 LROCKTILE:  wall_vines
 MAP
-.xxCxx.
+ xxCxx
 xx...xx
 x.....x
 B..O..D
 x.....x
 xx...xx
-.xxAxx
+ xxAxx
 ENDMAP
 
 ################################################################################
@@ -262,11 +262,11 @@ TAGS:    allow_dup water_ok shoal no_dump
 SHUFFLE: ABCD
 SUBST:   A:x, B:x, C:x=, D=+
 MAP
-.xxCxx.
+ xxCxx
 xx...xx
 x.....x
 B..|..D
 x.....x
 xx...xx
-.xxAxx
+ xxAxx
 ENDMAP

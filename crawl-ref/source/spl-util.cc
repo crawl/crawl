@@ -73,7 +73,8 @@ static struct spell_desc *_seekspell(spell_type spellid);
 static bool _cloud_helper(cloud_func func, const coord_def& where,
                           int pow, int spread_rate,
                           cloud_type ctype, kill_category whose,
-                          killer_type killer);
+                          killer_type killer, int colour,
+                          std::string name, std::string tile);
 
 //
 //             BEGIN PUBLIC FUNCTIONS
@@ -677,13 +678,14 @@ int apply_area_within_radius(cell_func cf, const coord_def& where,
 void apply_area_cloud( cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
                        kill_category whose, killer_type killer,
-                       int spread_rate )
+                       int spread_rate, int colour, std::string name,
+                       std::string tile)
 {
     int good_squares = 0;
     int neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     if (number && _cloud_helper(func, where, pow, spread_rate, ctype, whose,
-                                killer))
+                                killer, colour, name, tile))
         number--;
 
     if (number == 0)
@@ -703,7 +705,8 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
         {
             const int aux = arrs[m][i];
             if ( _cloud_helper(func, where + Compass[aux],
-                               pow, spread_rate, ctype, whose, killer))
+                               pow, spread_rate, ctype, whose, killer, colour,
+                               name, tile))
             {
                 number--;
                 good_squares++;
@@ -729,7 +732,7 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
         number -= spread;
         good_squares--;
         apply_area_cloud(func, where + Compass[j], pow, spread, ctype, whose,
-                         killer, spread_rate);
+                         killer, spread_rate, colour, name, tile);
     }
 }
 
@@ -893,11 +896,13 @@ bool is_valid_spell(spell_type spell)
 static bool _cloud_helper(cloud_func func, const coord_def& where,
                           int pow, int spread_rate,
                           cloud_type ctype, kill_category whose,
-                          killer_type killer)
+                          killer_type killer, int colour, std::string name,
+                          std::string tile)
 {
     if (!feat_is_solid(grd(where)) && env.cgrid(where) == EMPTY_CLOUD)
     {
-        func(where, pow, spread_rate, ctype, whose, killer);
+        func(where, pow, spread_rate, ctype, whose, killer, colour, name,
+             tile);
         return (true);
     }
 

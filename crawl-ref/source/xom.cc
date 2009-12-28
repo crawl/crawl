@@ -2308,7 +2308,7 @@ static void _xom_zero_miscast()
     {
         const item_def &item(you.inv[i]);
         if (item.is_valid() && !item_is_equipped(item)
-            && !item_is_critical(item))
+            && !item.is_critical())
         {
             inv_items.push_back(i);
         }

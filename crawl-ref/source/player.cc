@@ -165,7 +165,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
             {
                 std::string prompt = make_stringf(
                                         "Really step into that cloud of %s?",
-                                        cloud_name(ctype).c_str());
+                                        cloud_name(cloud).c_str());
 
                 if (!yesno(prompt.c_str(), false, 'n'))
                 {
@@ -5732,7 +5732,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 {
     if (equip[EQ_WEAPON] != -1 && !ignore_curse)
     {
-        if (item_cursed(inv[equip[EQ_WEAPON]]))
+        if (inv[equip[EQ_WEAPON]].cursed())
             return (false);
     }
 
@@ -7031,6 +7031,17 @@ void player::moveto(const coord_def &c)
     set_position(c);
 }
 
+bool player::move_to_pos(const coord_def &c)
+{
+    actor *target = actor_at(c);
+    if (!target || target->submerged())
+    {
+        moveto(c);
+        return true;
+    }
+    return false;
+}
+
 void player::shiftto(const coord_def &c)
 {
     crawl_view.shift_player_to(c);
@@ -7423,6 +7434,3 @@ void player::set_duration(duration_type dur, int turns,
     you.duration[dur] = 0;
     increase_duration(dur, turns, cap, msg);
 }
-
-
-

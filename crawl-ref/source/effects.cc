@@ -27,6 +27,7 @@
 #include "coordit.h"
 #include "decks.h"
 #include "delay.h"
+#include "dgn-shoals.h"
 #include "dungeon.h"
 #include "directn.h"
 #include "dgnevent.h"
@@ -4263,6 +4264,7 @@ void update_level(double elapsedTime)
 #endif
 
     update_corpses(elapsedTime);
+    shoals_apply_tides(turns);
 
     if (env.sanctuary_time)
     {
