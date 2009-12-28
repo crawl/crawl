@@ -102,6 +102,7 @@ menu.o \
 message.o \
 mgen_data.o \
 misc.o \
+mislead.o \
 mon-abil.o \
 mon-act.o \
 mon-behv.o \

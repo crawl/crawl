@@ -24,6 +24,7 @@
 #include "lev-pand.h"
 #include "makeitem.h"
 #include "message.h"
+#include "mislead.h"
 #include "mon-behv.h"
 #include "mon-gear.h"
 #include "mon-iter.h"
@@ -1241,6 +1242,9 @@ static int _place_monster_aux(const mgen_data &mg,
         // simultaneous die-offs of mushroom rings.
         mon->add_ench(ENCH_SLOWLY_DYING);
     }
+
+    if (!crawl_state.arena && you.misled())
+        update_mislead_monster(mon);
 
     if (monster_can_submerge(mon, grd(fpos)) && !one_chance_in(5))
         mon->add_ench(ENCH_SUBMERGED);
