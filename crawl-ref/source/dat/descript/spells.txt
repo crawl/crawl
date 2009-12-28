@@ -280,7 +280,7 @@ This spell will freeze ammunition held by the caster. Such missiles will shatter
 %%%%
 Fulsome Distillation
 
-This spell extracts the vile and poisonous essences from a corpse. A rotten corpse may produce a stronger potion. You probably don't want to drink the results.
+This spell extracts the vile and poisonous essences from a corpse. You probably don't want to drink the results. The type of potion produced corresponds roughly to the effects of eating said corpse.
 %%%%
 Major Healing
 
