@@ -6,6 +6,7 @@
 #include "dungeon.h"
 #include "dgn-shoals.h"
 #include "env.h"
+#include "flood_find.h"
 #include "items.h"
 #include "maps.h"
 #include "mon-place.h"
@@ -74,6 +75,40 @@ static dungeon_feature_type _shoals_feature_at(const coord_def &c)
 {
     const int height = shoals_heights(c);
     return _shoals_feature_by_height(height);
+}
+
+static int _shoals_feature_height(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_FLOOR:
+        return SHT_FLOOR;
+    case DNGN_SHALLOW_WATER:
+        return SHT_SHALLOW_WATER;
+    case DNGN_DEEP_WATER:
+        return SHT_SHALLOW_WATER - 1;
+    default:
+        return 0;
+    }
+}
+
+// Returns true if the given feature can be affected by Shoals tides.
+static bool _shoals_tide_susceptible_feat(dungeon_feature_type feat)
+{
+    return (feat_is_water(feat) || feat == DNGN_FLOOR);
+}
+
+// Return true if tide effects can propagate through this square.
+// NOTE: uses RNG!
+static bool _shoals_tide_passable_feat(dungeon_feature_type feat)
+{
+    return (feat_is_watery(feat)
+            // The Shoals tide can sometimes lap past the doorways of rooms
+            // near the water. Note that the actual probability of the tide
+            // getting through a doorway is this probability * 0.5 --
+            // see _shoals_apply_tide.
+            || (feat == DNGN_OPEN_DOOR && !one_chance_in(3))
+            || (feat == DNGN_CLOSED_DOOR && one_chance_in(3)));
 }
 
 static void _shoals_init_heights()
@@ -448,6 +483,31 @@ void prepare_shoals(int level_number)
     _shoals_furniture(_shoals_margin);
 }
 
+// Search the map for vaults and set the terrain heights for features
+// in the vault to reasonable levels.
+void shoals_postprocess_level()
+{
+    if (!player_in_branch(BRANCH_SHOALS) || !env.heightmap.get())
+        return;
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        const coord_def c(*ri);
+        if (!(dgn_Map_Mask(c) & MMT_VAULT))
+            continue;
+
+        const dungeon_feature_type feat(grd(c));
+        if (!_shoals_tide_susceptible_feat(feat))
+            continue;
+
+        const dungeon_feature_type expected_feat(_shoals_feature_at(c));
+        // It would be nice to do actual height contours within
+        // vaults, but for now, keep it simple.
+        if (feat != expected_feat)
+            shoals_heights(c) = _shoals_feature_height(feat);
+    }
+}
+
 // The raw tide height / TIDE_MULTIPLIER is the actual tide height. The higher
 // the tide multiplier, the slower the tide advances and recedes. A multiplier
 // of X implies that the tide will advance visibly about once in X turns.
@@ -554,22 +614,8 @@ static void _shoals_apply_tide_feature_at(coord_def c,
     dungeon_terrain_changed(c, feat, true, false, true);
 }
 
-static int _shoals_feature_height(dungeon_feature_type feat)
-{
-    switch (feat)
-    {
-    case DNGN_FLOOR:
-        return SHT_FLOOR;
-    case DNGN_SHALLOW_WATER:
-        return SHT_SHALLOW_WATER;
-    case DNGN_DEEP_WATER:
-        return SHT_SHALLOW_WATER - 1;
-    default:
-        return 0;
-    }
-}
-
-// Determines if the
+// Determines if the tide is rising or falling based on before and
+// after features at the same square.
 static tide_direction _shoals_feature_tide_height_change(
     dungeon_feature_type oldfeat,
     dungeon_feature_type newfeat)
@@ -623,12 +669,16 @@ static void _shoals_apply_tide(int tide)
         for (int i = 0, size = cpage.size(); i < size; ++i)
         {
             coord_def c(cpage[i]);
-            const bool was_wet(feat_is_water(grd(c)));
+            const bool was_wet(_shoals_tide_passable_feat(grd(c)));
             seen_points(c) = true;
             _shoals_apply_tide_at(c, tide);
 
-            // Only wet squares can propagate the tide onwards.
-            if (was_wet)
+            const bool is_wet(feat_is_water(grd(c)));
+            // Only squares that were wet (before applying tide
+            // effects!) can propagate the tide onwards. If the tide is
+            // receding and just left the square dry, there's only a chance of
+            // it continuing past and draining other squares through this one.
+            if (was_wet && (is_wet || coinflip()))
             {
                 for (adjacent_iterator ai(c); ai; ++ai)
                 {
@@ -638,7 +688,7 @@ static void _shoals_apply_tide(int tide)
                     if (!seen_points(adj))
                     {
                         const dungeon_feature_type feat = grd(adj);
-                        if (feat_is_water(feat) || feat == DNGN_FLOOR)
+                        if (_shoals_tide_susceptible_feat(feat))
                         {
                             npage.push_back(adj);
                             seen_points(adj) = true;

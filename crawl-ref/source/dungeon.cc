@@ -233,6 +233,8 @@ typedef std::list<coord_def> coord_list;
 static void _dgn_set_floor_colours();
 static bool _fixup_interlevel_connectivity();
 
+void dgn_postprocess_level();
+
 //////////////////////////////////////////////////////////////////////////
 // Static data
 
@@ -374,6 +376,8 @@ bool builder(int level_number, int level_type)
                 vault_names.push_back(you.level_type_name);
             }
 
+            dgn_postprocess_level();
+
             dgn_Layout_Type.clear();
             Level_Unique_Maps.clear();
             Level_Unique_Tags.clear();
@@ -396,6 +400,13 @@ bool builder(int level_number, int level_type)
 
     dgn_Layout_Type.clear();
     return (false);
+}
+
+// Should be called after a level is constructed to perform any final
+// fixups.
+void dgn_postprocess_level()
+{
+    shoals_postprocess_level();
 }
 
 void level_welcome_messages()
@@ -4132,6 +4143,7 @@ bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
             }
 
         setup_environment_effects();
+        dgn_postprocess_level();
     }
 
     return (did_map);
