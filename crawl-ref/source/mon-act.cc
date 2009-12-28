@@ -332,6 +332,24 @@ static void _maybe_set_patrol_route(monsters *monster)
     }
 }
 
+// Keep kraken tentacles from wandering too far away from the boss monster.
+static void _kraken_tentacle_movement_clamp(monsters *tentacle)
+{
+    if (tentacle->type != MONS_KRAKEN_TENTACLE)
+        return;
+
+    const int kraken_idx = tentacle->number;
+    ASSERT(!invalid_monster_index(kraken_idx));
+
+    monsters *kraken = &menv[kraken_idx];
+    const int distance_to_head =
+        grid_distance(tentacle->pos(), kraken->pos());
+    // Beyond max distance, the only move the tentacle can make is
+    // back towards the head.
+    if (distance_to_head >= KRAKEN_TENTACLE_RANGE)
+        mmov = (kraken->pos() - tentacle->pos()).sgn();
+}
+
 //---------------------------------------------------------------
 //
 // handle_movement
@@ -378,8 +396,7 @@ static void _handle_movement(monsters *monster)
         delta = monster->target - monster->pos();
 
     // Move the monster.
-    mmov.x = (delta.x > 0) ? 1 : ((delta.x < 0) ? -1 : 0);
-    mmov.y = (delta.y > 0) ? 1 : ((delta.y < 0) ? -1 : 0);
+    mmov = delta.sgn();
 
     if (mons_is_fleeing(monster) && monster->travel_target != MTRAV_WALL
         && (!monster->friendly()
@@ -1849,6 +1866,7 @@ static void _handle_monster_move(monsters *monster)
         {
             // Calculates mmov based on monster target.
             _handle_movement(monster);
+            _kraken_tentacle_movement_clamp(monster);
 
             if (mons_is_confused(monster)
                 || monster->type == MONS_AIR_ELEMENTAL

@@ -83,11 +83,6 @@ inline bool testbits(unsigned long flags, unsigned long test)
     return ((flags & test) == test);
 }
 
-template <typename Z> inline Z sgn(Z x)
-{
-    return (x < 0 ? -1 : (x > 0 ? 1 : 0));
-}
-
 bool is_trap_square(dungeon_feature_type grid);
 void zap_los_monsters(bool items_also);
 

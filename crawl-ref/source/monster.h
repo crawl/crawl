@@ -3,6 +3,8 @@
 
 #include "actor.h"
 
+const int KRAKEN_TENTACLE_RANGE = 3;
+
 class mon_enchant
 {
 public:
