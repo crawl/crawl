@@ -94,7 +94,9 @@ static coord_def _random_point_from(const coord_def &c, int radius,
 {
     const double directed_radians(
         directed_angle == -1? 0.0 : _to_radians(directed_angle));
-    while (true) {
+    int attempts = 70;
+    while (attempts-- > 0)
+    {
         const double angle =
             directed_angle == -1? _to_radians(random2(360))
             : ((coinflip()? directed_radians : -directed_radians)
@@ -107,9 +109,11 @@ static coord_def _random_point_from(const coord_def &c, int radius,
             return res;
         }
     }
+    return coord_def();
 }
 
-static coord_def _random_point(int offset = 0) {
+static coord_def _random_point(int offset = 0)
+{
     return coord_def(random_range(offset, GXM - offset - 1),
                      random_range(offset, GYM - offset - 1));
 }
@@ -119,7 +123,8 @@ static void _shoals_island_center(const coord_def &c, int n_perturb, int radius,
 {
     for (int i = 0; i < n_perturb; ++i) {
         coord_def p = _random_point_from(c, random2(1 + radius));
-        shoals_heights(p) += random_range(bounce_low, bounce_high);
+        if (!p.origin())
+            shoals_heights(p) += random_range(bounce_low, bounce_high);
     }
 }
 
@@ -160,12 +165,12 @@ static void _shoals_build_island()
         const int addition_offset = random_range(2, 10);
 
         coord_def offsetC = _random_point_from(c, addition_offset);
-
-        _shoals_island_center(offsetC, random_range(N_PERTURB_OFFSET_LOW,
-                                                    N_PERTURB_OFFSET_HIGH),
-                              random_range(PERTURB_OFFSET_RADIUS_LOW,
-                                           PERTURB_OFFSET_RADIUS_HIGH),
-                              25, 35);
+        if (!offsetC.origin())
+            _shoals_island_center(offsetC, random_range(N_PERTURB_OFFSET_LOW,
+                                                        N_PERTURB_OFFSET_HIGH),
+                                  random_range(PERTURB_OFFSET_RADIUS_LOW,
+                                               PERTURB_OFFSET_RADIUS_HIGH),
+                                  25, 35);
     }
 }
 
