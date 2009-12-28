@@ -9,6 +9,7 @@
 #include "flood_find.h"
 #include "items.h"
 #include "maps.h"
+#include "mgen_data.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "random.h"
@@ -17,6 +18,9 @@
 #include <algorithm>
 #include <vector>
 #include <cmath>
+
+typedef FixedArray<bool, GXM, GYM> grid_bool;
+typedef FixedArray<short, GXM, GYM> grid_short;
 
 const char *ENVP_SHOALS_TIDE_KEY = "shoals-tide-height";
 const char *ENVP_SHOALS_TIDE_VEL = "shoals-tide-velocity";
@@ -401,7 +405,8 @@ static void _shoals_furniture(int margin)
         const coord_def p = _pick_shoals_island_distant_from(c);
         // Place the rune
         const map_def *vault = random_map_for_tag("shoal_rune");
-        dgn_place_map(vault, false, true, p);
+        dgn_ensure_vault_placed(dgn_place_map(vault, false, true, p),
+                                false);
 
         const int nhuts = std::min(8, int(_shoals_islands.size()));
         for (int i = 2; i < nhuts; ++i)
@@ -464,6 +469,334 @@ static void _shoals_deepen_edges()
     }
 }
 
+static int _shoals_contiguous_feature_flood(
+    FixedArray<short, GXM, GYM> &rmap,
+    coord_def c,
+    dungeon_feature_type feat,
+    int nregion,
+    int size_limit)
+{
+    std::vector<coord_def> visit;
+    visit.push_back(c);
+    int npoints = 1;
+    for (size_t i = 0; i < visit.size() && npoints < size_limit; ++i)
+    {
+        const coord_def p(visit[i]);
+        rmap(p) = nregion;
+
+        if (npoints < size_limit)
+        {
+            for (adjacent_iterator ai(p); ai && npoints < size_limit; ++ai)
+            {
+                const coord_def adj(*ai);
+                if (in_bounds(adj) && !rmap(adj) && grd(adj) == feat
+                    && unforbidden(adj, MMT_VAULT))
+                {
+                    rmap(adj) = nregion;
+                    visit.push_back(adj);
+                    ++npoints;
+                }
+            }
+        }
+    }
+    return npoints;
+}
+
+static coord_def _shoals_region_center(
+    FixedArray<short, GXM, GYM> &rmap,
+    coord_def c)
+{
+    const int nregion(rmap(c));
+    int nseen = 0;
+
+    double cx = 0.0, cy = 0.0;
+    std::vector<coord_def> visit;
+    visit.push_back(c);
+    FixedArray<bool, GXM, GYM> visited(false);
+    for (size_t i = 0; i < visit.size(); ++i)
+    {
+        const coord_def p(visit[i]);
+        visited(p) = true;
+
+        ++nseen;
+        if (nseen == 1)
+        {
+            cx = p.x;
+            cy = p.y;
+        }
+        else
+        {
+            cx = (cx * (nseen - 1) + p.x) / nseen;
+            cy = (cy * (nseen - 1) + p.y) / nseen;
+        }
+
+        for (adjacent_iterator ai(p); ai; ++ai)
+        {
+            const coord_def adj(*ai);
+            if (in_bounds(adj) && !visited(adj) && rmap(adj) == nregion)
+            {
+                visited(adj) = true;
+                visit.push_back(adj);
+            }
+        }
+    }
+
+    const coord_def cgravity(cx, cy);
+    coord_def closest_to_center;
+    int closest_distance = 0;
+    for (int i = 0, size = visit.size(); i < size; ++i)
+    {
+        const coord_def p(visit[i]);
+        const int dist2 = (p - cgravity).abs();
+        if (closest_to_center.origin() || closest_distance > dist2)
+        {
+            closest_to_center = p;
+            closest_distance = dist2;
+        }
+    }
+    return closest_to_center;
+}
+
+struct weighted_region
+{
+    int weight;
+    coord_def pos;
+
+    weighted_region(int _weight, coord_def _pos) : weight(_weight), pos(_pos)
+    {
+    }
+};
+
+static std::vector<weighted_region>
+_shoals_point_feat_cluster(dungeon_feature_type feat,
+                           const int wanted_count,
+                           grid_short &region_map)
+{
+    std::vector<weighted_region> regions;
+    int region = 1;
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        coord_def c(*ri);
+        if (!region_map(c) && grd(c) == feat
+            && unforbidden(c, MMT_VAULT))
+        {
+            const int featcount =
+                _shoals_contiguous_feature_flood(region_map,
+                                                 c,
+                                                 feat,
+                                                 region++,
+                                                 wanted_count * 3 / 2);
+            if (featcount >= wanted_count)
+                regions.push_back(weighted_region(featcount, c));
+        }
+    }
+    return (regions);
+}
+
+static coord_def _shoals_pick_region(
+    grid_short &region_map,
+    const std::vector<weighted_region> &regions)
+{
+    if (regions.empty())
+        return coord_def();
+    return _shoals_region_center(region_map,
+                                 regions[random2(regions.size())].pos);
+}
+
+static void _shoals_make_plant_at(coord_def p)
+{
+    // [ds] Why is hostile_at() saddled with unnecessary parameters
+    // related to summoning?
+    mons_place(mgen_data::hostile_at(MONS_PLANT, "", false, 0, 0, p));
+}
+
+static bool _shoals_plantworthy_feat(dungeon_feature_type feat)
+{
+    return (feat == DNGN_SHALLOW_WATER || feat == DNGN_FLOOR);
+}
+
+static void _shoals_make_plant_near(coord_def c, int radius,
+                                    dungeon_feature_type preferred_feat,
+                                    grid_bool *verboten)
+{
+    const int ntries = 5;
+    for (int i = 0; i < ntries; ++i)
+    {
+        const coord_def plant_place(_random_point_from(c, random2(1 + radius)));
+        if (!plant_place.origin()
+            && !monster_at(plant_place))
+        {
+            const dungeon_feature_type feat(grd(plant_place));
+            if (_shoals_plantworthy_feat(feat)
+                && (feat == preferred_feat || coinflip())
+                && (!verboten || !(*verboten)(plant_place)))
+            {
+                _shoals_make_plant_at(plant_place);
+                return;
+            }
+        }
+    }
+}
+
+static void _shoals_plant_cluster(coord_def c, int nplants, int radius,
+                                  dungeon_feature_type favoured_feat,
+                                  grid_bool *verboten)
+{
+    for (int i = 0; i < nplants; ++i)
+        _shoals_make_plant_near(c, radius, favoured_feat, verboten);
+}
+
+static void _shoals_plant_supercluster(coord_def c,
+                                       dungeon_feature_type favoured_feat,
+                                       grid_bool *verboten = NULL)
+{
+    _shoals_plant_cluster(c, random_range(10, 25, 2),
+                          random_range(3, 9), favoured_feat,
+                          verboten);
+
+    const int nadditional_clusters(std::max(0, random_range(-1, 4, 2)));
+    for (int i = 0; i < nadditional_clusters; ++i)
+    {
+        const coord_def satellite(
+            _random_point_from(c, random_range(2, 12)));
+        if (!satellite.origin())
+            _shoals_plant_cluster(satellite, random_range(5, 23, 2),
+                                  random_range(2, 7),
+                                  favoured_feat,
+                                  verboten);
+    }
+}
+
+static void _shoals_generate_water_plants(coord_def mangrove_central)
+{
+    if (!mangrove_central.origin())
+        _shoals_plant_supercluster(mangrove_central, DNGN_SHALLOW_WATER);
+}
+
+struct coord_dbl
+{
+    double x, y;
+
+    coord_dbl(double _x, double _y) : x(_x), y(_y) { }
+    coord_dbl operator + (const coord_dbl &o) const
+    {
+        return coord_dbl(x + o.x, y + o.y);
+    }
+    coord_dbl &operator += (const coord_dbl &o)
+    {
+        x += o.x;
+        y += o.y;
+        return *this;
+    }
+};
+
+static coord_def _int_coord(const coord_dbl &c)
+{
+    return coord_def(c.x, c.y);
+}
+
+static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
+{
+    const int wind_angle_degrees = random2(360);
+    const double wind_angle(_to_radians(wind_angle_degrees));
+    const coord_dbl wi(cos(wind_angle), sin(wind_angle));
+    const double epsilon = 1e-5;
+
+    std::vector<coord_dbl> wind_points;
+    if (wi.x > epsilon || wi.x < -epsilon)
+    {
+        for (int y = 1; y < GYM - 1; ++y)
+            wind_points.push_back(coord_dbl(wi.x > epsilon ? 1 : GXM - 2, y));
+    }
+    if (wi.y > epsilon || wi.y < -epsilon)
+    {
+        for (int x = 1; x < GXM - 1; ++x)
+            wind_points.push_back(coord_dbl(x, wi.y > epsilon ? 1 : GYM - 2));
+    }
+
+    for (size_t i = 0; i < wind_points.size(); ++i)
+    {
+        const coord_def here(_int_coord(wind_points[i]));
+        windy(here) = true;
+
+        coord_dbl next = wind_points[i] + wi;
+        while (_int_coord(next) == here)
+            next += wi;
+
+        const coord_def nextp(_int_coord(next));
+        if (in_bounds(nextp) && !windy(nextp) && !feat_is_solid(grd(nextp)))
+        {
+            windy(nextp) = true;
+            wind_points.push_back(next);
+        }
+    }
+
+    // To avoid plants cropping up inside vaults, mark everything inside
+    // vaults as "windy".
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (!unforbidden(*ri, MMT_VAULT))
+            windy(*ri) = true;
+
+    // Now we know the places in the wind shadow:
+    std::vector<coord_def> wind_shadows;
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        const coord_def p(*ri);
+        if (!windy(p) && grd(p) == DNGN_FLOOR
+            && (_has_adjacent_feat(p, DNGN_STONE_WALL)
+                || _has_adjacent_feat(p, DNGN_ROCK_WALL)))
+            wind_shadows.push_back(p);
+    }
+    return wind_shadows;
+}
+
+static void _shoals_generate_wind_sheltered_plants(
+    std::vector<coord_def> &places, grid_bool &windy)
+{
+    if (places.empty())
+        return;
+
+    const int chosen = random2(places.size());
+    const coord_def spot = places[random2(places.size())];
+    places.erase(places.begin() + chosen);
+
+    _shoals_plant_supercluster(spot, DNGN_FLOOR, &windy);
+}
+
+static void _shoals_generate_flora()
+{
+    // Water clusters are groups of plants clustered near the water.
+    // Wind clusters are groups of plants clustered in wind shadow --
+    // possibly because they can grow better without being exposed to the
+    // strong winds of the Shoals.
+    //
+    // Yeah, the strong winds aren't there yet, but they could be!
+    //
+    const int n_water_clusters = std::max(0, random_range(-1, 6, 2));
+    const int n_wind_clusters = std::max(0, random_range(-2, 2, 2));
+
+    if (n_water_clusters)
+    {
+        grid_short region_map(0);
+        std::vector<weighted_region> regions(
+            _shoals_point_feat_cluster(DNGN_SHALLOW_WATER, 6, region_map));
+
+        for (int i = 0; i < n_water_clusters; ++i)
+        {
+            const coord_def p(_shoals_pick_region(region_map, regions));
+            _shoals_generate_water_plants(p);
+        }
+    }
+
+    if (n_wind_clusters)
+    {
+        grid_bool windy(false);
+        std::vector<coord_def> wind_shadows = _shoals_windshadows(windy);
+        for (int i = 0; i < n_wind_clusters; ++i)
+            _shoals_generate_wind_sheltered_plants(wind_shadows, windy);
+    }
+}
+
 void prepare_shoals(int level_number)
 {
     dgn_Build_Method += make_stringf(" shoals+ [%d]", level_number);
@@ -481,6 +814,9 @@ void prepare_shoals(int level_number)
     _shoals_deepen_edges();
     _shoals_smooth_water();
     _shoals_furniture(_shoals_margin);
+
+    // This has to happen after placing shoal rune vault!
+    _shoals_generate_flora();
 }
 
 // Search the map for vaults and set the terrain heights for features

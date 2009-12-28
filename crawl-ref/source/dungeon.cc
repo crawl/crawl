@@ -897,8 +897,8 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
 #endif
 }
 
-static bool _ensure_vault_placed(bool vault_success,
-                                 bool disable_further_vaults)
+bool dgn_ensure_vault_placed(bool vault_success,
+                             bool disable_further_vaults)
 {
     if (!vault_success)
         dgn_level_vetoed = true;
@@ -909,9 +909,9 @@ static bool _ensure_vault_placed(bool vault_success,
 
 static bool _ensure_vault_placed_ex( bool vault_success, const map_def *vault )
 {
-    return _ensure_vault_placed( vault_success,
-                                 (!vault->has_tag("extra")
-                                  && vault->orient == MAP_ENCOMPASS) );
+    return dgn_ensure_vault_placed( vault_success,
+                                    (!vault->has_tag("extra")
+                                     && vault->orient == MAP_ENCOMPASS) );
 }
 
 static coord_def _find_level_feature(int feat)
@@ -1766,7 +1766,7 @@ static void _build_overflow_temples(int level_number)
             // find the overflow temple map, so don't veto the level.
             return;
 
-        if (!_ensure_vault_placed(_build_vaults(level_number, vault), false))
+        if (!dgn_ensure_vault_placed(_build_vaults(level_number, vault), false))
         {
 #ifdef DEBUG_TEMPLES
             mprf(MSGCH_DIAGNOSTICS, "Couldn't place overlfow temple '%s', "
@@ -2245,7 +2245,7 @@ static builder_rc_type _builder_by_type(int level_number, char level_type)
                     pandemon_level_names[which_demon]);
             }
 
-            _ensure_vault_placed( _build_vaults(level_number, vault), true );
+            dgn_ensure_vault_placed( _build_vaults(level_number, vault), true );
         }
         else
         {
@@ -2322,7 +2322,7 @@ static void _portal_vault_level(int level_number)
             dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL,
                              vault->border_fill_type);
 
-        _ensure_vault_placed( _build_vaults(level_number, vault), true );
+        dgn_ensure_vault_placed( _build_vaults(level_number, vault), true );
     }
     else
     {
@@ -6002,7 +6002,7 @@ static bool _plan_1(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(success, false);
 
     return false;
 }
@@ -6016,7 +6016,7 @@ static bool _plan_2(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(success, false);
 
     return false;
 }
@@ -6030,7 +6030,7 @@ static bool _plan_3(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(success, false);
 
     return true;
 }
@@ -6174,7 +6174,7 @@ static bool _plan_6(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(success, false);
 
     // This "back door" is often one of the easier ways to get out of
     // pandemonium... the easiest is to use the banish spell.

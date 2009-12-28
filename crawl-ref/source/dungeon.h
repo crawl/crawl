@@ -268,6 +268,9 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
                       dungeon_feature_type feature,
                       unsigned mmask = 0, bool needs_update = false);
 
+bool dgn_ensure_vault_placed(bool vault_success,
+                             bool disable_further_vaults);
+
 inline int count_feature_in_box( const coord_def& p1, const coord_def& p2,
                           dungeon_feature_type feat )
 {
