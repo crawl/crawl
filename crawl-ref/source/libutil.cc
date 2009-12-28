@@ -69,6 +69,10 @@ description_level_type description_type_by_name(const char *desc)
         return DESC_INVENTORY;
     else if (!strcmp("none", desc))
         return DESC_NONE;
+    else if (!strcmp("base", desc))
+        return DESC_BASENAME;
+    else if (!strcmp("qual", desc))
+        return DESC_QUALNAME;
 
     return DESC_PLAIN;
 }
