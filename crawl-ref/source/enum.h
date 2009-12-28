@@ -1818,6 +1818,10 @@ enum monster_type                      // (int) menv[].type
     MONS_TOADSTOOL,
     MONS_BUSH,
     MONS_BALLISTOMYCETE,               //  200
+
+    // Shoals guardians
+    MONS_MERFOLK_GLADIATOR,
+
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,
