@@ -532,6 +532,8 @@ deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
 ## Fungi ('f')
 fungus MONS_TOADSTOOL
 fungus MONS_FUNGUS
+ballistomycete MONS_BALLISTOMYCETE_INACTIVE
+active_ballistomycete MONS_BALLISTOMYCETE_ACTIVE
 wandering_mushroom MONS_WANDERING_MUSHROOM
 
 ## Goblins ('g')

@@ -199,7 +199,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // fungi ('f')
     case MONS_BALLISTOMYCETE:
-        return TILEP_MONS_FUNGUS;
+        if (!detected && mon->has_ench(ENCH_SPORE_PRODUCTION))
+            return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
+        return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
     case MONS_TOADSTOOL:
         return TILEP_MONS_TOADSTOOL;
     case MONS_FUNGUS:
