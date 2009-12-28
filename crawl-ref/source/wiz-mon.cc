@@ -285,7 +285,7 @@ void debug_list_monsters()
         int exp = exper_value(*mi);
         total_exp += exp;
 
-        if ((mi->flags & (MF_WAS_NEUTRAL | MF_CREATED_FRIENDLY))
+        if ((mi->flags & (MF_WAS_NEUTRAL | MF_NO_REWARD))
             || mi->has_ench(ENCH_ABJ))
         {
             continue;

@@ -3219,7 +3219,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     const bool isUnchivalric = is_unchivalric_attack(&you, mon);
     const bool isHoly        = mon->is_holy()
                                    && (mon->attitude != ATT_HOSTILE
-                                       || testbits(mon->flags, MF_CREATED_FRIENDLY)
+                                       || testbits(mon->flags, MF_NO_REWARD)
                                        || testbits(mon->flags, MF_WAS_NEUTRAL));
 
     if (isFriendly)

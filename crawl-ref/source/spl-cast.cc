@@ -1058,7 +1058,7 @@ static void _try_monster_cast(spell_type spell, int powc,
     mon->type       = MONS_HUMAN;
     mon->behaviour  = BEH_SEEK;
     mon->attitude   = ATT_FRIENDLY;
-    mon->flags      = (MF_CREATED_FRIENDLY | MF_JUST_SUMMONED | MF_SEEN
+    mon->flags      = (MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
                        | MF_WAS_IN_VIEW | MF_HARD_RESET);
     mon->hit_points = you.hp;
     mon->hit_dice   = you.experience_level;

@@ -2683,7 +2683,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 }
 
                 if (thing_done == DID_ATTACK_HOLY && victim
-                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;
@@ -3029,7 +3029,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
                 if (victim
-                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;
@@ -3097,7 +3097,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
                 if (victim
-                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;

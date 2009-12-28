@@ -2426,7 +2426,7 @@ void tag_missing_level_attitude()
         if (menv[i].type < 0)
             continue;
 
-        is_friendly = testbits(menv[i].flags, MF_CREATED_FRIENDLY);
+        is_friendly = testbits(menv[i].flags, MF_NO_REWARD);
 
         menv[i].foe = MHITNOT;
 
