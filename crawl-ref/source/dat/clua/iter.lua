@@ -470,3 +470,75 @@ end
 function iter.slave_iterator (prop, value)
   return iter.point_iterator:new(dgn.find_marker_positions_by_prop(prop, value))
 end
+
+-------------------------------------------------------------------------------
+-- Inventory iterator
+-------------------------------------------------------------------------------
+
+iter.invent_iterator = {}
+
+function iter.invent_iterator:_new ()
+  local m = {}
+  setmetatable(m, self)
+  self.__index = self
+  return m
+end
+
+function iter.invent_iterator:new (itable, filter, rv_instead)
+  if itable == nil then
+    error("itable cannot be nil for invent_iterator")
+  end
+
+  local mt  = iter.invent_iterator:_new()
+  mt.cur_p  = 0
+  mt.table  = itable
+  mt.rvi    = rv_instead or false
+  mt.filter = filter or nil
+
+  return mt:iter()
+end
+
+function iter.invent_iterator:next()
+  local point = nil
+  local q = 0
+  repeat
+    q = q + 1
+    self.cur_p = self.cur_p + 1
+    point = self:check_filter(self.table[self.cur_p])
+  until point or q == 10
+
+  return point
+end
+
+function iter.invent_iterator:check_filter(item)
+  if self.filter ~= nil then
+    if self.filter(item) then
+      if self.rvi then 
+        return self.filter(item)
+      else
+        return item
+      end
+    else
+      return nil
+    end
+  else
+    return item
+  end
+end
+
+function iter.invent_iterator:iter ()
+  return function() return self:next() end, nil, nil
+end
+
+-- An easier and more posh way of interfacing with find_marker_positions_by_prop.
+function iter.inventory_iterator ()
+  return iter.invent_iterator:new(items.inventory())
+end
+
+function iter.stash_iterator (point, y)
+  if y == nil then
+    return iter.invent_iterator:new(dgn.items_at(point.x, point.y))
+  else
+    return iter.invent_iterator:new(dgn.items_at(point, y))
+  end
+end
