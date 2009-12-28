@@ -202,7 +202,7 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
 static bool _build_vaults(int level_number,
                           const map_def *vault,
                           int rune_subst = -1, bool build_only = false,
-                          bool check_collisions = true,
+                          bool check_collisions = false,
                           bool make_no_exits = false,
                           const coord_def &where = coord_def(-1, -1));
 static void _vault_grid(vault_placement &,
