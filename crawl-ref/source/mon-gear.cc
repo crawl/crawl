@@ -590,7 +590,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         }
         break;
 
-    case MONS_MERFOLK_GLADIATOR:
+    case MONS_MERFOLK_IMPALER:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         // Weapon types are not strictly sorted by quality. This is intentional.
@@ -1057,7 +1057,7 @@ static void _give_ammo(monsters *mon, int level,
             qty = random_range(4, 7);
             break;
 
-        case MONS_MERFOLK_GLADIATOR:
+        case MONS_MERFOLK_IMPALER:
             // Gladiators rarely get javelins.
             if (one_chance_in(4))
             {
@@ -1381,7 +1381,7 @@ void give_armour(monsters *mon, int level)
         break;
     }
 
-    case MONS_MERFOLK_GLADIATOR:
+    case MONS_MERFOLK_IMPALER:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(100, ARM_ROBE,

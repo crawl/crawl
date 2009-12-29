@@ -1821,7 +1821,7 @@ enum monster_type                      // (int) menv[].type
     MONS_BALLISTOMYCETE,               //  200
 
     // Shoals guardians
-    MONS_MERFOLK_GLADIATOR,
+    MONS_MERFOLK_IMPALER,
     MONS_MERFOLK_AQUAMANCER,
 
     //jmf: end new monsters

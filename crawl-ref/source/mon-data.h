@@ -1119,7 +1119,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_MERFOLK_GLADIATOR, 'm', LIGHTBLUE, "merfolk gladiator",
+    MONS_MERFOLK_IMPALER, 'm', LIGHTBLUE, "merfolk impaler",
     M_WARM_BLOOD,
     MR_NO_FLAGS,
     500, 10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -3,
