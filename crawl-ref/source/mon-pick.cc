@@ -1706,8 +1706,6 @@ int mons_shoals_level(int mcls)
     case MONS_MERFOLK:
     case MONS_MERMAID:
     case MONS_CENTAUR:
-    case MONS_ETTIN:
-    case MONS_SHEEP:
     case MONS_HIPPOGRIFF:
         mlev++;
         break;
@@ -1751,8 +1749,6 @@ int mons_shoals_rare(int mcls)
     case MONS_PLANT:
         return 150;
 
-    case MONS_ETTIN:
-    case MONS_SHEEP:
     case MONS_MERFOLK:
         return 50;
 
