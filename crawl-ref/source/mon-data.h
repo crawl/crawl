@@ -4586,7 +4586,7 @@ static monsterentry mondata[] = {
 {
     MONS_ILSUIW, 'm', GREEN, "Ilsuiw",
     M_UNIQUE | M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS,
-    MR_RES_POISON | MR_RES_COLD,
+    MR_NO_FLAGS,
     500, 10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -7,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 0, 0, 54 },
