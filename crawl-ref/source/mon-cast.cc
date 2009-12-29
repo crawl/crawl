@@ -839,6 +839,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_EYEBALLS:
     case SPELL_SUMMON_BUTTERFLIES:
     case SPELL_MISLEAD:
+    case SPELL_CALL_TIDE:
         return (true);
     default:
         if (check_validity)
@@ -1677,6 +1678,18 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         monster->add_ench(ENCH_SWIFT);
         simple_monster_message(monster, " seems to move somewhat quicker.");
         return;
+
+    case SPELL_CALL_TIDE:
+    {
+        const int tide_duration = random_range(18, 50, 2);
+        monster->add_ench(mon_enchant(ENCH_TIDE, 0, KC_OTHER,
+                                      tide_duration * 10));
+        monster->props[TIDE_CALL_TURN] = you.num_turns;
+        simple_monster_message(monster,
+                               " sings a water chant to call the tide!");
+        flash_view_delay(ETC_WATER, 300);
+        return;
+    }
 
     case SPELL_SUMMON_SMALL_MAMMALS:
     case SPELL_VAMPIRE_SUMMON:

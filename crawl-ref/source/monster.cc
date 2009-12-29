@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dgnevent.h"
+#include "dgn-shoals.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
@@ -4305,6 +4306,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 {
     switch (me.ench)
     {
+    case ENCH_TIDE:
+        shoals_release_tide(this);
+        break;
+
     case ENCH_BERSERK:
         scale_hp(2, 3);
         break;
@@ -6031,7 +6036,7 @@ static const char *enchant_names[] =
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
     "soul-ripe", "decay", "hungry", "flopping", "spore-producing",
-    "downtrodden", "swift", "bug"
+    "downtrodden", "swift", "tide", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

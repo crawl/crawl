@@ -12,6 +12,7 @@
 #include "mon-gear.h"
 
 #include "artefact.h"
+#include "colour.h"
 #include "dungeon.h"
 #include "env.h"
 #include "itemprop.h"
@@ -580,6 +581,17 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             item.sub_type = (one_chance_in(10) ? WPN_DIRE_FLAIL
                                                : WPN_GREAT_MACE);
         }
+        break;
+
+    case MONS_ILSUIW:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = WPN_TRIDENT;
+        item.special = SPWPN_FREEZING;
+        item.plus = random_range(-1, 6, 2);
+        item.plus2 = random_range(-1, 6, 2);
+        item.colour = ETC_ICE;
+        force_item = true;
         break;
 
     case MONS_MERFOLK_IMPALER:

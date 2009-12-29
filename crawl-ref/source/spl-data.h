@@ -2654,6 +2654,18 @@
      false
 },
 
+{
+    SPELL_CALL_TIDE, "Call Tide",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_MONSTER,
+     7,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
 
 {
     SPELL_NO_SPELL, "nonexistent spell",

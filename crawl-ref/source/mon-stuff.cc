@@ -1422,6 +1422,9 @@ int monster_die(monsters *monster, killer_type killer,
         return (-1);
     }
 
+    // If the monster was calling the tide, let go now.
+    monster->del_ench(ENCH_TIDE);
+
     crawl_state.inc_mon_acting(monster);
 
     ASSERT(!( YOU_KILL(killer) && crawl_state.arena ));

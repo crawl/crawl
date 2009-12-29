@@ -1254,6 +1254,7 @@ enum enchant_type
     ENCH_SPORE_PRODUCTION,             //   35
     ENCH_SLOUCH,
     ENCH_SWIFT,
+    ENCH_TIDE,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
@@ -2930,6 +2931,7 @@ enum spell_type
     SPELL_SUMMON_RAKSHASA,
     SPELL_SUMMON_PLAYER_GHOST,
     SPELL_PRIMAL_WAVE,
+    SPELL_CALL_TIDE,
 
     NUM_SPELLS
 };

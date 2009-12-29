@@ -635,6 +635,19 @@ void flash_view(int colour)
     viewwindow(false, false);
 }
 
+void flash_view_delay(int colour, long flash_delay)
+{
+    flash_view(colour);
+    // Scale delay to match change in arena_delay.
+    if (crawl_state.arena)
+    {
+        flash_delay *= Options.arena_delay;
+        flash_delay /= 600;
+    }
+
+    delay(flash_delay);
+}
+
 static void _debug_pane_bounds()
 {
 #if DEBUG_PANE_BOUNDS

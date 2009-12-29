@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 
 #include "branch.h"
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
@@ -10,10 +11,12 @@
 #include "items.h"
 #include "maps.h"
 #include "mgen_data.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "random.h"
 #include "terrain.h"
+#include "view.h"
 
 #include <algorithm>
 #include <vector>
@@ -42,6 +45,23 @@ const int N_PERTURB_OFFSET_HIGH = 45;
 const int PERTURB_OFFSET_RADIUS_LOW = 2;
 const int PERTURB_OFFSET_RADIUS_HIGH = 7;
 
+// The raw tide height / TIDE_MULTIPLIER is the actual tide height. The higher
+// the tide multiplier, the slower the tide advances and recedes. A multiplier
+// of X implies that the tide will advance visibly about once in X turns.
+const int TIDE_MULTIPLIER = 30;
+
+const int LOW_TIDE = -18 * TIDE_MULTIPLIER;
+const int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
+
+// The highest a tide can be called by a tide caller such as Ilsuiw.
+const int HIGH_CALLED_TIDE = 25;
+const int TIDE_DECEL_MARGIN = 8;
+const int PEAK_TIDE_ACCEL = 2;
+
+// The area around the user of a call tide spell that is subject to
+// local tide elevation.
+const int TIDE_CALL_RADIUS = 8;
+
 const int _shoals_margin = 6;
 
 enum shoals_height_thresholds
@@ -60,6 +80,10 @@ enum tide_direction
 };
 
 static tide_direction _shoals_tide_direction;
+static monsters *tide_caller = NULL;
+static coord_def tide_caller_pos;
+static long tide_called_turns = 0L;
+static int tide_called_peak = 0;
 
 static dungeon_feature_type _shoals_feature_by_height(int height)
 {
@@ -816,18 +840,16 @@ void shoals_postprocess_level()
     }
 }
 
-// The raw tide height / TIDE_MULTIPLIER is the actual tide height. The higher
-// the tide multiplier, the slower the tide advances and recedes. A multiplier
-// of X implies that the tide will advance visibly about once in X turns.
-const int TIDE_MULTIPLIER = 30;
-
-const int LOW_TIDE = -18 * TIDE_MULTIPLIER;
-const int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
-const int TIDE_DECEL_MARGIN = 8;
-const int START_TIDE_RISE = 2;
-
 static void _shoals_run_tide(int &tide, int &acc)
 {
+    // If someone is calling the tide, the acceleration is clamped high.
+    if (tide_caller)
+        acc = 15;
+    // If there's no tide caller and our acceleration is suspiciously high,
+    // reset it to a falling tide at peak acceleration.
+    else if (abs(acc) > PEAK_TIDE_ACCEL)
+        acc = -PEAK_TIDE_ACCEL;
+
     tide += acc;
     tide = std::max(std::min(tide, HIGH_TIDE), LOW_TIDE);
     if ((tide == HIGH_TIDE && acc > 0)
@@ -836,7 +858,7 @@ static void _shoals_run_tide(int &tide, int &acc)
     bool in_decel_margin =
         (abs(tide - HIGH_TIDE) < TIDE_DECEL_MARGIN)
         || (abs(tide - LOW_TIDE) < TIDE_DECEL_MARGIN);
-    if ((abs(acc) == 2) == in_decel_margin)
+    if ((abs(acc) > 1) == in_decel_margin)
         acc = in_decel_margin? acc / 2 : acc * 2;
 }
 
@@ -956,6 +978,23 @@ static void _shoals_apply_tide_at(coord_def c, int tide)
     _shoals_apply_tide_feature_at(c, newfeat);
 }
 
+static int _shoals_tide_at(coord_def pos, int base_tide)
+{
+    if (!tide_caller)
+        return base_tide;
+
+    const int rl_distance = grid_distance(pos, tide_caller_pos);
+    if (rl_distance > TIDE_CALL_RADIUS)
+        return base_tide;
+
+    const int distance =
+        static_cast<int>(sqrt((pos - tide_caller->pos()).abs()));
+    if (distance > TIDE_CALL_RADIUS)
+        return base_tide;
+
+    return (base_tide + std::max(0, tide_called_peak - distance * 3));
+}
+
 static void _shoals_apply_tide(int tide)
 {
     std::vector<coord_def> pages[2];
@@ -980,7 +1019,7 @@ static void _shoals_apply_tide(int tide)
             coord_def c(cpage[i]);
             const bool was_wet(_shoals_tide_passable_feat(grd(c)));
             seen_points(c) = true;
-            _shoals_apply_tide_at(c, tide);
+            _shoals_apply_tide_at(c, _shoals_tide_at(c, tide));
 
             const bool is_wet(feat_is_water(grd(c)));
             // Only squares that were wet (before applying tide
@@ -1017,13 +1056,22 @@ static void _shoals_init_tide()
     if (!env.properties.exists(ENVP_SHOALS_TIDE_KEY))
     {
         env.properties[ENVP_SHOALS_TIDE_KEY] = short(0);
-        env.properties[ENVP_SHOALS_TIDE_VEL] = short(2);
+        env.properties[ENVP_SHOALS_TIDE_VEL] = short(PEAK_TIDE_ACCEL);
     }
 }
 
-void shoals_apply_tides(int turns_elapsed)
+static monsters *_shoals_find_tide_caller()
 {
-    if (!player_in_branch(BRANCH_SHOALS) || !turns_elapsed
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->has_ench(ENCH_TIDE))
+            return *mi;
+    return NULL;
+}
+
+void shoals_apply_tides(int turns_elapsed, bool force)
+{
+    if (!player_in_branch(BRANCH_SHOALS)
+        || (!turns_elapsed && !force)
         || !env.heightmap.get())
     {
         return;
@@ -1035,6 +1083,20 @@ void shoals_apply_tides(int turns_elapsed)
         turns_elapsed = turns_elapsed % TIDE_UNIT + TIDE_UNIT;
 
     _shoals_init_tide();
+
+    unwind_var<monsters*> tide_caller_unwind(tide_caller,
+                                             _shoals_find_tide_caller());
+    if (tide_caller)
+    {
+        tide_called_turns = tide_caller->props[TIDE_CALL_TURN].get_long();
+        tide_called_turns = you.num_turns - tide_called_turns;
+        if (tide_called_turns < 1L)
+            tide_called_turns = 1L;
+        tide_called_peak  = std::min(HIGH_CALLED_TIDE,
+                                     int(tide_called_turns * 5));
+        tide_caller_pos = tide_caller->pos();
+    }
+
     int tide = env.properties[ENVP_SHOALS_TIDE_KEY].get_short();
     int acc = env.properties[ENVP_SHOALS_TIDE_VEL].get_short();
     const int old_tide = tide;
@@ -1042,10 +1104,24 @@ void shoals_apply_tides(int turns_elapsed)
         _shoals_run_tide(tide, acc);
     env.properties[ENVP_SHOALS_TIDE_KEY] = short(tide);
     env.properties[ENVP_SHOALS_TIDE_VEL] = short(acc);
-    if (old_tide / TIDE_MULTIPLIER != tide / TIDE_MULTIPLIER)
+    if (force
+        || tide_caller
+        || old_tide / TIDE_MULTIPLIER != tide / TIDE_MULTIPLIER)
     {
         _shoals_tide_direction =
             tide > old_tide ? TIDE_RISING : TIDE_FALLING;
         _shoals_apply_tide(tide / TIDE_MULTIPLIER);
+    }
+}
+
+void shoals_release_tide(monsters *mons)
+{
+    if (player_in_branch(BRANCH_SHOALS)
+        && player_can_hear(you.pos()))
+    {
+        mprf(MSGCH_SOUND, "The tide is released from %s call.",
+             mons->name(DESC_NOCAP_YOUR, true).c_str());
+        flash_view_delay(ETC_WATER, 150);
+        shoals_apply_tides(0, true);
     }
 }

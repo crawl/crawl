@@ -37,6 +37,7 @@ std::string screenshot(bool fullscreen = false);
 bool view_update();
 void view_update_at(const coord_def &pos);
 void flash_view(int colour = BLACK); // inside #ifndef USE_TILE?
+void flash_view_delay(int colour = BLACK, long delay = 150);
 #ifndef USE_TILE
 void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
                           int fmc_delay);

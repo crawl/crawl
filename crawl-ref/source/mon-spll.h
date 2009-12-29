@@ -1043,8 +1043,8 @@
 
     { MST_ILSUIW,
       {
-       SPELL_THROW_FROST, // was: SPELL_CONFUSED (jpeg)
-       SPELL_SLOW,
+       SPELL_THROW_ICICLE,
+       SPELL_CALL_TIDE,
        SPELL_INVISIBILITY,
        SPELL_BLINK,
        SPELL_WATER_ELEMENTALS,
@@ -1323,7 +1323,6 @@
        {
         SPELL_PRIMAL_WAVE,
         SPELL_BOLT_OF_COLD,
-        // Ice form would be neat.
         SPELL_THROW_ICICLE,
         SPELL_NO_SPELL,
         SPELL_NO_SPELL,
