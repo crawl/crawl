@@ -416,7 +416,9 @@ skeletal_dragon MONS_SKELETAL_DRAGON
 serpent_of_hell MONS_SERPENT_OF_HELL
 
 ## Eyes ('G')
+%sdir dc-mon/fungi_plants
 giant_spore MONS_GIANT_SPORE
+%sdir dc-mon
 giant_eyeball MONS_GIANT_EYEBALL
 eye_of_draining MONS_EYE_OF_DRAINING
 giant_orange_brain MONS_GIANT_ORANGE_BRAIN
