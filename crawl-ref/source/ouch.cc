@@ -91,6 +91,13 @@ int check_your_resists(int hurted, beam_type flavour)
 
     switch (flavour)
     {
+    case BEAM_WATER:
+        hurted = resist_adjust_damage(&you, flavour,
+                                      you.res_water_drowning(), hurted, true);
+        if (!hurted)
+            mpr("You shrug off the wave.");
+        break;
+
     case BEAM_STEAM:
         hurted = resist_adjust_damage(&you, flavour,
                                       player_res_steam(), hurted, true);

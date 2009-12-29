@@ -13,6 +13,7 @@
 #include <set>
 #include <sstream>
 #include <algorithm>
+#include <cmath>
 
 #include "abyss.h"
 #include "artefact.h"
@@ -7617,6 +7618,46 @@ static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
         }
 
     return (np.nearest);
+}
+
+
+double dgn_degrees_to_radians(int degrees)
+{
+    return degrees * M_PI / 180;
+}
+
+coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
+{
+    int attempts = 70;
+    while (attempts-- > 0)
+    {
+        const double angle = dgn_degrees_to_radians(random2(360));
+        const coord_def res = c + coord_def(radius * cos(angle),
+                                            radius * sin(angle));
+        if (res.x >= margin && res.x < GXM - margin
+            && res.y >= margin && res.y < GYM - margin)
+        {
+            return res;
+        }
+    }
+    return coord_def();
+}
+
+coord_def dgn_random_point_visible_from(const coord_def &c,
+                                        int radius,
+                                        int margin,
+                                        int tries)
+{
+    while (tries-- > 0)
+    {
+        const coord_def point = dgn_random_point_from(c, radius, margin);
+        if (point.origin())
+            continue;
+        if (!cell_see_cell(c, point))
+            continue;
+        return point;
+    }
+    return coord_def();
 }
 
 coord_def dgn_find_feature_marker(dungeon_feature_type feat)

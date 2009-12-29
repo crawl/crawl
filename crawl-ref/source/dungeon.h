@@ -179,6 +179,12 @@ bool builder(int level_number, int level_type);
 
 void dgn_flush_map_memory();
 
+double dgn_degrees_to_radians(int degrees);
+coord_def dgn_random_point_from(const coord_def &c, int radius, int margin = 1);
+coord_def dgn_random_point_visible_from(const coord_def &c,
+                                        int radius,
+                                        int margin = 1,
+                                        int tries = 5);
 coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 
 // Set floor/wall colour based on the mons_alloc array. Used for

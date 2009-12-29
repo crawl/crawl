@@ -37,6 +37,10 @@ public:
     // occupied.
     virtual bool move_to_pos(const coord_def &c) = 0;
 
+    virtual void apply_location_effects(const coord_def &oldpos,
+                                        killer_type killer = KILL_NONE,
+                                        int killernum = -1) = 0;
+
     virtual void set_position(const coord_def &c);
     virtual const coord_def& pos() const { return position; }
 
@@ -213,6 +217,7 @@ public:
     virtual int res_poison() const = 0;
     virtual int res_rotting() const = 0;
     virtual int res_asphyx() const = 0;
+    virtual int res_water_drowning() const = 0;
     virtual int res_sticky_flame() const = 0;
     virtual int res_holy_energy(const actor *attacker) const = 0;
     virtual int res_negative_energy() const = 0;

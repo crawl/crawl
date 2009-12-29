@@ -61,11 +61,6 @@ enum tide_direction
 
 static tide_direction _shoals_tide_direction;
 
-static double _to_radians(int degrees)
-{
-    return degrees * M_PI / 180;
-}
-
 static dungeon_feature_type _shoals_feature_by_height(int height)
 {
     return height >= SHT_STONE ? DNGN_STONE_WALL :
@@ -122,33 +117,9 @@ static void _shoals_init_heights()
         shoals_heights(*ri) = SHT_SHALLOW_WATER - 3;
 }
 
-static double _angle_fuzz()
+static coord_def _random_point_from(const coord_def &c, int radius)
 {
-    double fuzz = _to_radians(random2(15));
-    return coinflip()? fuzz : -fuzz;
-}
-
-static coord_def _random_point_from(const coord_def &c, int radius,
-                                    int directed_angle = -1)
-{
-    const double directed_radians(
-        directed_angle == -1? 0.0 : _to_radians(directed_angle));
-    int attempts = 70;
-    while (attempts-- > 0)
-    {
-        const double angle =
-            directed_angle == -1? _to_radians(random2(360))
-            : ((coinflip()? directed_radians : -directed_radians)
-               + _angle_fuzz());
-        coord_def res = c + coord_def(radius * cos(angle),
-                                      radius * sin(angle));
-        if (res.x >= _shoals_margin && res.x < GXM - _shoals_margin
-            && res.y >= _shoals_margin && res.y < GYM - _shoals_margin)
-        {
-            return res;
-        }
-    }
-    return coord_def();
+    return dgn_random_point_from(c, radius, _shoals_margin);
 }
 
 static coord_def _random_point(int offset = 0)
@@ -228,7 +199,7 @@ static void _shoals_build_cliff()
     if (in_bounds(cliffc))
     {
         const int length = random_range(6, 15);
-        double angle = _to_radians(random2(360));
+        double angle = dgn_degrees_to_radians(random2(360));
         for (int i = 0; i < length; i += 3)
         {
             int distance = i - length / 2;
@@ -698,7 +669,7 @@ static coord_def _int_coord(const coord_dbl &c)
 static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
 {
     const int wind_angle_degrees = random2(360);
-    const double wind_angle(_to_radians(wind_angle_degrees));
+    const double wind_angle(dgn_degrees_to_radians(wind_angle_degrees));
     const coord_dbl wi(cos(wind_angle), sin(wind_angle));
     const double epsilon = 1e-5;
 

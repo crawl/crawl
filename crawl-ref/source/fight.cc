@@ -2158,6 +2158,8 @@ static bool is_boolean_resist(beam_type flavour)
     case BEAM_ELECTRICITY:
     case BEAM_MIASMA: // rotting
     case BEAM_NAPALM:
+    case BEAM_WATER:  // water asphyxiation damage,
+                      // bypassed by being water inhabitant.
         return (true);
     default:
         return (false);
@@ -2170,6 +2172,11 @@ static inline int get_resistible_fraction(beam_type flavour)
 {
     switch (flavour)
     {
+    // Drowning damage from water is resistible by being a water thing, or
+    // otherwise asphyx resistant.
+    case BEAM_WATER:
+        return (40);
+
     // Assume ice storm and throw icicle are mostly solid.
     case BEAM_ICE:
         return (25);

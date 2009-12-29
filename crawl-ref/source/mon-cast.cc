@@ -217,6 +217,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
 
     beam.type = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
+    beam.origin_spell = real_spell;
 
     // FIXME: this should use the zap_data[] struct from beam.cc!
     switch (real_spell)
@@ -359,6 +360,19 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_COLD;
         beam.hit      = 17 + power / 25;
         beam.is_beam  = true;
+        break;
+
+    case SPELL_PRIMAL_WAVE:
+        beam.name     = "great wave of water";
+        // Water attack is weaker than the pure elemental damage
+        // attacks, but also less resistible.
+        beam.damage   = dice_def( 3, 6 + power / 12 );
+        beam.colour   = LIGHTBLUE;
+        beam.flavour  = BEAM_WATER;
+        // Huge wave of water is hard to dodge.
+        beam.hit      = 20 + power / 20;
+        beam.is_beam  = false;
+        beam.type     = dchar_glyph(DCHAR_WAVY);
         break;
 
     case SPELL_FREEZING_CLOUD:
@@ -840,6 +854,8 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     bolt theBeam         = mons_spells(monster, spell_cast, power);
 
+    // [ds] remind me again why we're doing this piecemeal copying?
+    pbolt.origin_spell   = theBeam.origin_spell;
     pbolt.colour         = theBeam.colour;
     pbolt.range          = theBeam.range;
     pbolt.hit            = theBeam.hit;
@@ -1821,7 +1837,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             if (created == -1)
                 continue;
 
-            // Mara's clones are special; they have the same stats as him, and 
+            // Mara's clones are special; they have the same stats as him, and
             // are exact clones, so they are created damaged if necessary, with
             // identical enchants and with the same items.
             monsters *new_fake = &menv[created];

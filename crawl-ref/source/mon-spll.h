@@ -1319,6 +1319,18 @@
       }
     },
 
+    {  MST_MERFOLK_ELEMENTALIST,
+       {
+        SPELL_PRIMAL_WAVE,
+        SPELL_BOLT_OF_COLD,
+        // Ice form would be neat.
+        SPELL_THROW_ICICLE,
+        SPELL_NO_SPELL,
+        SPELL_NO_SPELL,
+        SPELL_BLINK
+       }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

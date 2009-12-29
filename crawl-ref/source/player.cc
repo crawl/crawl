@@ -6452,6 +6452,12 @@ int player::res_elec() const
     return (player_res_electricity() * 2);
 }
 
+int player::res_water_drowning() const
+{
+    return (res_asphyx() ||
+            (you.species == SP_MERFOLK && !transform_changed_physiology()));
+}
+
 int player::res_asphyx() const
 {
     // The undead are immune to asphyxiation, or so we'll assume.
@@ -7047,6 +7053,13 @@ bool player::move_to_pos(const coord_def &c)
         return true;
     }
     return false;
+}
+
+void player::apply_location_effects(const coord_def &oldpos,
+                                    killer_type killer,
+                                    int killernum)
+{
+    move_player_to_grid(pos(), false, true, true, false);
 }
 
 void player::shiftto(const coord_def &c)

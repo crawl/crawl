@@ -128,7 +128,9 @@ public:
     bool is_summoned(int* duration = NULL, int* summon_type = NULL) const;
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;
-    void apply_location_effects(const coord_def &oldpos);
+    void apply_location_effects(const coord_def &oldpos,
+                                killer_type killer = KILL_NONE,
+                                int killernum = -1);
 
     void moveto(const coord_def& c);
     bool move_to_pos(const coord_def &newpos);
@@ -317,6 +319,7 @@ public:
     int res_poison() const;
     int res_rotting() const;
     int res_asphyx() const;
+    int res_water_drowning() const;
     int res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;

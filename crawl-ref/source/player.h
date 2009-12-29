@@ -464,6 +464,7 @@ public:
     int res_poison() const;
     int res_rotting() const;
     int res_asphyx() const;
+    int res_water_drowning() const;
     int res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;
@@ -512,6 +513,10 @@ public:
     int  skill(skill_type skill, bool skill_bump = false) const;
 
     bool do_shaft();
+
+    void apply_location_effects(const coord_def &oldpos,
+                                killer_type killer = KILL_NONE,
+                                int killernum = -1);
 
     ////////////////////////////////////////////////////////////////
 

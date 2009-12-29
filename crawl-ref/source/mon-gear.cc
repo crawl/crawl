@@ -412,6 +412,14 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.sub_type  = WPN_LONGBOW;
         break;
 
+    case MONS_MERFOLK_ELEMENTALIST:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_SABRE;
+        if (coinflip())
+            level = MAKE_GOOD_ITEM;
+        break;
+
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_CONJURER:
     case MONS_DEEP_ELF_DEATH_MAGE:
@@ -1489,6 +1497,7 @@ void give_armour(monsters *mon, int level)
     case MONS_WIZARD:
     case MONS_ILSUIW:
     case MONS_MARA:
+    case MONS_MERFOLK_ELEMENTALIST:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;

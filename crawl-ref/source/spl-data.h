@@ -2642,6 +2642,20 @@
 },
 
 {
+    SPELL_PRIMAL_WAVE, "Primal Wave",
+     SPTYP_CONJURATION | SPTYP_ICE,
+     SPFLAG_DIR_OR_TARGET,
+     6,
+     200,
+     7, 7,
+     0,
+     NULL,
+     true,
+     false
+},
+
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
