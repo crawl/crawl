@@ -1319,7 +1319,7 @@
       }
     },
 
-    {  MST_MERFOLK_ELEMENTALIST,
+    {  MST_MERFOLK_AQUAMANCER,
        {
         SPELL_PRIMAL_WAVE,
         SPELL_BOLT_OF_COLD,

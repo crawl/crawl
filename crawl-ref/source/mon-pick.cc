@@ -1722,7 +1722,7 @@ int mons_shoals_level(int mcls)
     case MONS_SIREN:
     case MONS_HARPY:
     case MONS_MERFOLK_GLADIATOR:
-    case MONS_MERFOLK_ELEMENTALIST:
+    case MONS_MERFOLK_AQUAMANCER:
         mlev += 3;
         break;
 
@@ -1767,7 +1767,7 @@ int mons_shoals_rare(int mcls)
 
     case MONS_SIREN:
     case MONS_YAKTAUR:
-    case MONS_MERFOLK_ELEMENTALIST:
+    case MONS_MERFOLK_AQUAMANCER:
         return 25;
 
     case MONS_CYCLOPS:

@@ -1822,7 +1822,7 @@ enum monster_type                      // (int) menv[].type
 
     // Shoals guardians
     MONS_MERFOLK_GLADIATOR,
-    MONS_MERFOLK_ELEMENTALIST,
+    MONS_MERFOLK_AQUAMANCER,
 
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
@@ -2325,7 +2325,7 @@ enum mon_spellbook_type
     MST_HAROLD,
     MST_MARA,
     MST_MARA_FAKE,
-    MST_MERFOLK_ELEMENTALIST,
+    MST_MERFOLK_AQUAMANCER,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
