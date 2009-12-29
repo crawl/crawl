@@ -31,7 +31,7 @@ enum mon_resist_type
     MON_OTHER                   // monster unaffected, but for other reasons
 };
 
-struct dist;
+class dist;
 
 typedef FixedArray<int, 19, 19> explosion_map;
 

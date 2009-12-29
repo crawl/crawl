@@ -25,7 +25,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    coord_def origin = coord_def(-1, -1));
 void reautomap_level();
 
-class level_pos;
+struct level_pos;
 void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc = false );
 bool is_feature(int feature, const coord_def& where);
 

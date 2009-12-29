@@ -32,7 +32,7 @@ enum spschool_flag_type
 };
 
 struct bolt;
-struct dist;
+class dist;
 
 bool is_valid_spell(spell_type spell);
 void init_spell_descs(void);

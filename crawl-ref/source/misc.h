@@ -10,7 +10,7 @@
 #include "externs.h"
 
 struct bolt;
-struct dist;
+class dist;
 struct activity_interrupt_data;
 
 bool go_berserk(bool intentional);
