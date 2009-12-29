@@ -414,7 +414,7 @@ public:
 
     void attacking(actor *other);
     bool can_go_berserk() const;
-    bool can_go_berserk(bool verbose, bool no_clarity = false) const;
+    bool can_go_berserk(bool intentional) const;
     void go_berserk(bool intentional);
     bool berserk() const;
     bool can_mutate() const;

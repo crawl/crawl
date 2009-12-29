@@ -5980,8 +5980,10 @@ bool player::can_go_berserk() const
     return (can_go_berserk(false));
 }
 
-bool player::can_go_berserk(bool verbose, bool no_clarity) const
+bool player::can_go_berserk(bool intentional) const
 {
+    const bool verbose = intentional;
+
     if (berserk())
     {
         if (verbose)
@@ -6016,7 +6018,7 @@ bool player::can_go_berserk(bool verbose, bool no_clarity) const
         return (false);
     }
 
-    if (!no_clarity && player_mental_clarity(true))
+    if (!intentional && player_mental_clarity(true))
     {
         if (verbose)
         {

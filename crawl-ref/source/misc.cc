@@ -2696,11 +2696,11 @@ bool scramble(void)
         return (true);
 }
 
-bool go_berserk(bool intentional, bool no_clarity)
+bool go_berserk(bool intentional)
 {
     ASSERT(!crawl_state.arena);
 
-    if (!you.can_go_berserk(intentional, no_clarity))
+    if (!you.can_go_berserk(intentional))
         return (false);
 
     if (Tutorial.tutorial_left)
