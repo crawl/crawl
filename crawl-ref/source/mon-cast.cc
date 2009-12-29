@@ -1686,9 +1686,12 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             monster->add_ench(mon_enchant(ENCH_TIDE, 0, KC_OTHER,
                                           tide_duration * 10));
             monster->props[TIDE_CALL_TURN] = you.num_turns;
-            simple_monster_message(monster,
-                                   " sings a water chant to call the tide!");
-            flash_view_delay(ETC_WATER, 300);
+            if (simple_monster_message(
+                    monster,
+                    " sings a water chant to call the tide!"))
+            {
+                flash_view_delay(ETC_WATER, 300);
+            }
         }
         return;
 

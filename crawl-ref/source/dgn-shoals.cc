@@ -1116,12 +1116,15 @@ void shoals_apply_tides(int turns_elapsed, bool force)
 
 void shoals_release_tide(monsters *mons)
 {
-    if (player_in_branch(BRANCH_SHOALS)
-        && player_can_hear(you.pos()))
+    if (player_in_branch(BRANCH_SHOALS))
     {
-        mprf(MSGCH_SOUND, "The tide is released from %s call.",
-             mons->name(DESC_NOCAP_YOUR, true).c_str());
-        flash_view_delay(ETC_WATER, 150);
+        if (player_can_hear(mons->pos()))
+        {
+            mprf(MSGCH_SOUND, "The tide is released from %s call.",
+                 mons->name(DESC_NOCAP_YOUR, true).c_str());
+            if (you.see_cell(mons->pos()))
+                flash_view_delay(ETC_WATER, 150);
+        }
         shoals_apply_tides(0, true);
     }
 }
