@@ -203,8 +203,9 @@ static void _shoals_build_cliff()
         for (int i = 0; i < length; i += 3)
         {
             int distance = i - length / 2;
-            coord_def place = cliffc + coord_def(distance * cos(angle),
-                                                 distance * sin(angle));
+            coord_def place =
+                cliffc + coord_def(static_cast<int>(distance * cos(angle)),
+                                   static_cast<int>(distance * sin(angle)));
             coord_def fuzz = coord_def(random_range(-2, 2),
                                        random_range(-2, 2));
             place += fuzz;
@@ -512,7 +513,7 @@ static coord_def _shoals_region_center(
         }
     }
 
-    const coord_def cgravity(cx, cy);
+    const coord_def cgravity(static_cast<int>(cx), static_cast<int>(cy));
     coord_def closest_to_center;
     int closest_distance = 0;
     for (int i = 0, size = visit.size(); i < size; ++i)
@@ -663,7 +664,7 @@ struct coord_dbl
 
 static coord_def _int_coord(const coord_dbl &c)
 {
-    return coord_def(c.x, c.y);
+    return coord_def(static_cast<int>(c.x), static_cast<int>(c.y));
 }
 
 static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)

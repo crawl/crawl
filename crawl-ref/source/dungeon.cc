@@ -7632,8 +7632,9 @@ coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
     while (attempts-- > 0)
     {
         const double angle = dgn_degrees_to_radians(random2(360));
-        const coord_def res = c + coord_def(radius * cos(angle),
-                                            radius * sin(angle));
+        const coord_def res =
+            c + coord_def(static_cast<int>(radius * cos(angle)),
+                          static_cast<int>(radius * sin(angle)));
         if (res.x >= margin && res.x < GXM - margin
             && res.y >= margin && res.y < GYM - margin)
         {
