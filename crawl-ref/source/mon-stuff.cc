@@ -1323,7 +1323,7 @@ static int _tentacle_too_far(monsters *head, monsters *tentacle)
     // If this ever changes, we'd need to check if the head and tentacle
     // are still in the same pool.
     // XXX: Actually, using Fedhas's Sunlight power you can separate pools...
-    return grid_distance(head->pos(), tentacle->pos()) > LOS_RADIUS;
+    return grid_distance(head->pos(), tentacle->pos()) > KRAKEN_TENTACLE_RANGE;
 }
 
 void mons_relocated(monsters *monster)
@@ -1421,6 +1421,9 @@ int monster_die(monsters *monster, killer_type killer,
         monster->flags &= ~MF_EXPLODE_KILL;
         return (-1);
     }
+
+    // If the monster was calling the tide, let go now.
+    monster->del_ench(ENCH_TIDE);
 
     crawl_state.inc_mon_acting(monster);
 

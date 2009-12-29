@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dgnevent.h"
+#include "dgn-shoals.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
@@ -3308,6 +3309,21 @@ int monsters::res_asphyx() const
     return (res);
 }
 
+int monsters::res_water_drowning() const
+{
+    const int res = res_asphyx();
+    if (res)
+        return res;
+    switch (mons_habitat(this))
+    {
+    case HT_WATER:
+    case HT_AMPHIBIOUS_WATER:
+        return 1;
+    default:
+        return 0;
+    }
+}
+
 int monsters::res_poison() const
 {
     int u = get_mons_resists(this).poison;
@@ -4290,6 +4306,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 {
     switch (me.ench)
     {
+    case ENCH_TIDE:
+        shoals_release_tide(this);
+        break;
+
     case ENCH_BERSERK:
         scale_hp(2, 3);
         break;
@@ -5550,7 +5570,9 @@ void monsters::check_redraw(const coord_def &old) const
     }
 }
 
-void monsters::apply_location_effects(const coord_def &oldpos)
+void monsters::apply_location_effects(const coord_def &oldpos,
+                                      killer_type killer,
+                                      int killernum)
 {
     if (oldpos != pos())
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
@@ -5583,7 +5605,7 @@ void monsters::apply_location_effects(const coord_def &oldpos)
         ptrap->trigger(*this);
 
     if (alive())
-        mons_check_pool(this, pos());
+        mons_check_pool(this, pos(), killer, killernum);
 
     if (alive() && has_ench(ENCH_SUBMERGED)
         && (!monster_can_submerge(this, grd(pos()))
@@ -6014,7 +6036,7 @@ static const char *enchant_names[] =
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
     "soul-ripe", "decay", "hungry", "flopping", "spore-producing",
-    "downtrodden", "swift", "bug"
+    "downtrodden", "swift", "tide", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

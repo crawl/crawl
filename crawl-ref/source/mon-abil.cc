@@ -303,17 +303,7 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
                  merge_to->name(DESC_NOCAP_A).c_str());
         }
 
-        flash_view(LIGHTGREEN);
-
-        int flash_delay = 150;
-        // Scale delay to match change in arena_delay.
-        if (crawl_state.arena)
-        {
-            flash_delay *= Options.arena_delay;
-            flash_delay /= 600;
-        }
-
-        delay(flash_delay);
+        flash_view_delay(LIGHTGREEN, 150);
     }
     else if (you.can_see(initial_slime))
         mpr("A slime creature suddenly disappears!");

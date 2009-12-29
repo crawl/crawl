@@ -62,6 +62,8 @@ typedef bool (*explosion_aoe_func)(bolt& beam, const coord_def& target);
 struct bolt
 {
     // INPUT parameters set by caller
+    spell_type  origin_spell;          // may be SPELL_NO_SPELL for non-spell
+                                       // beams.
     int         range;
     unsigned    type;                  // missile gfx
     int         colour;
@@ -192,6 +194,7 @@ public:
 
     // Return whether any affected cell was seen.
     bool explode(bool show_more = true, bool hole_in_the_middle = false);
+    bool knockback_actor(actor *actor);
 
 private:
     void do_fire();
@@ -213,6 +216,7 @@ private:
     bool nasty_to(const monsters* mon) const;
     bool nice_to(const monsters* mon) const;
     bool found_player() const;
+    bool need_regress() const;
 
     int beam_source_as_target() const;
     int range_used_on_hit(const actor* victim) const;
@@ -240,6 +244,8 @@ public:
     void affect_place_clouds();
     void affect_place_explosion_clouds();
     void affect_endpoint();
+
+    void water_hits_actor(actor *act);
 
     // Stuff when a monster or player is hit.
     void affect_player_enchantment();

@@ -1139,6 +1139,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     dist spd;
     bolt beam;
+    beam.origin_spell = spell;
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch().
@@ -1416,6 +1417,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_BOLT_OF_COLD:
         if (!zapping(ZAP_COLD, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_PRIMAL_WAVE:
+        if (!zapping(ZAP_PRIMAL_WAVE, powc, beam, true))
             return (SPRET_ABORT);
         break;
 

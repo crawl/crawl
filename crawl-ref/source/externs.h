@@ -92,6 +92,11 @@ class KillMaster;
 class ghost_demon;
 struct glyph;
 
+template <typename Z> inline Z sgn(Z x)
+{
+    return (x < 0 ? -1 : (x > 0 ? 1 : 0));
+}
+
 struct coord_def
 {
     int         x;
@@ -213,6 +218,11 @@ struct coord_def
     {
         coord_def copy = *this;
         return (copy *= mul);
+    }
+
+    coord_def sgn() const
+    {
+        return coord_def(::sgn(x), ::sgn(y));
     }
 
     int abs() const

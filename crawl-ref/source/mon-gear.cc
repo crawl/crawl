@@ -12,6 +12,7 @@
 #include "mon-gear.h"
 
 #include "artefact.h"
+#include "colour.h"
 #include "dungeon.h"
 #include "env.h"
 #include "itemprop.h"
@@ -582,6 +583,52 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         }
         break;
 
+    case MONS_ILSUIW:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = WPN_TRIDENT;
+        item.special = SPWPN_FREEZING;
+        item.plus = random_range(-1, 6, 2);
+        item.plus2 = random_range(-1, 6, 2);
+        item.colour = ETC_ICE;
+        force_item = true;
+        break;
+
+    case MONS_MERFOLK_IMPALER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose_weighted(100, WPN_TRIDENT,
+                                               15, WPN_DEMON_TRIDENT,
+                                               0);
+        if (coinflip())
+            level = MAKE_GOOD_ITEM;
+        else if (coinflip())
+        {
+            // Per dpeg request :)
+            item.special = SPWPN_REACHING;
+            item.plus = random_range(-1, 6, 2);
+            item.plus2 = random_range(-1, 5, 2);
+            force_item = true;
+        }
+        break;
+
+
+    case MONS_MERFOLK_AQUAMANCER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_SABRE;
+        if (coinflip())
+            level = MAKE_GOOD_ITEM;
+        break;
+
+    case MONS_MERFOLK_JAVELINEER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = WPN_SPEAR;
+        if (!one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
+        break;
+
     case MONS_MERFOLK:
         if (one_chance_in(3))
         {
@@ -1028,6 +1075,15 @@ static void _give_ammo(monsters *mon, int level,
             qty = random_range(4, 7);
             break;
 
+        case MONS_MERFOLK_JAVELINEER:
+            weap_class = OBJ_MISSILES;
+            weap_type  = MI_JAVELIN;
+            item_race  = MAKE_ITEM_NO_RACE;
+            qty        = random_range(9, 23, 2);
+            if (one_chance_in(3))
+                level = MAKE_GOOD_ITEM;
+            break;
+
         case MONS_MERFOLK:
             if (!one_chance_in(3))
             {
@@ -1342,6 +1398,22 @@ void give_armour(monsters *mon, int level)
         break;
     }
 
+    case MONS_MERFOLK_IMPALER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = random_choose_weighted(100, ARM_ROBE,
+                                               60, ARM_LEATHER_ARMOUR,
+                                               5, ARM_TROLL_LEATHER_ARMOUR,
+                                               5, ARM_STEAM_DRAGON_ARMOUR,
+                                               0);
+        break;
+
+    case MONS_MERFOLK_JAVELINEER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_LEATHER_ARMOUR;
+        break;
+
     case MONS_ANGEL:
     case MONS_SIGMUND:
     case MONS_WIGHT:
@@ -1448,6 +1520,7 @@ void give_armour(monsters *mon, int level)
     case MONS_WIZARD:
     case MONS_ILSUIW:
     case MONS_MARA:
+    case MONS_MERFOLK_AQUAMANCER:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;

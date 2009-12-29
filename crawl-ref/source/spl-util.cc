@@ -997,6 +997,8 @@ spell_type zap_type_to_spell(zap_type zap)
         return(SPELL_BOLT_OF_FIRE);
     case ZAP_COLD:
         return(SPELL_BOLT_OF_COLD);
+    case ZAP_PRIMAL_WAVE:
+        return(SPELL_PRIMAL_WAVE);
     case ZAP_CONFUSION:
         return(SPELL_CONFUSE);
     case ZAP_INVISIBILITY:
