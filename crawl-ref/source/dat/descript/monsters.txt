@@ -1048,7 +1048,19 @@ This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers. 
 %%%%
 merfolk
 
-Half fish, half man, the merfolk are citizens of both water and land, and they'll fiercely protect their chosen territory.
+Half fish, half man, the merfolk are citizens of both water and land, and fierce protectors of their chosen territory.
+%%%%
+merfolk impaler
+
+A powerfully muscled merfolk warrior, bearing a great trident.
+%%%%
+merfolk aquamancer
+
+A slender merfolk mystic with unusually webby hands. Its form shifts and glistens as if seen through ocean spray.
+%%%%
+merfolk javelineer
+
+A sinewy merfolk fighter with a piercing gaze and a large bundle of javelins.
 %%%%
 mermaid
 

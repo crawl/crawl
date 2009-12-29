@@ -1139,7 +1139,12 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
     {
         const mon_attack_def attk = mons_attack_spec(monster, 0);
         if (attk.type == AT_SHOOT)
-            ammoDamBonus += random2avg(attk.damage, 2);
+        {
+            if (projected == LRET_THROWN && wepClass == OBJ_MISSILES)
+                ammoHitBonus += random2avg(attk.damage, 2);
+            else
+                ammoDamBonus += random2avg(attk.damage, 2);
+        }
     }
 
     if (projected == LRET_THROWN)

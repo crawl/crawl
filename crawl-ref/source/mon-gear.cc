@@ -412,14 +412,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.sub_type  = WPN_LONGBOW;
         break;
 
-    case MONS_MERFOLK_AQUAMANCER:
-        item_race = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SABRE;
-        if (coinflip())
-            level = MAKE_GOOD_ITEM;
-        break;
-
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_CONJURER:
     case MONS_DEEP_ELF_DEATH_MAGE:
@@ -593,11 +585,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_MERFOLK_IMPALER:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        // Weapon types are not strictly sorted by quality. This is intentional.
         item.sub_type = random_choose_weighted(100, WPN_TRIDENT,
-                                               45, WPN_BARDICHE,
                                                15, WPN_DEMON_TRIDENT,
-                                               15, WPN_HALBERD,
                                                0);
         if (coinflip())
             level = MAKE_GOOD_ITEM;
@@ -609,6 +598,23 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             item.plus2 = random_range(-1, 5, 2);
             force_item = true;
         }
+        break;
+
+
+    case MONS_MERFOLK_AQUAMANCER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_SABRE;
+        if (coinflip())
+            level = MAKE_GOOD_ITEM;
+        break;
+
+    case MONS_MERFOLK_JAVELINEER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = WPN_SPEAR;
+        if (!one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
         break;
 
     case MONS_MERFOLK:
@@ -1057,14 +1063,13 @@ static void _give_ammo(monsters *mon, int level,
             qty = random_range(4, 7);
             break;
 
-        case MONS_MERFOLK_IMPALER:
-            // Gladiators rarely get javelins.
-            if (one_chance_in(4))
-            {
-                weap_class = OBJ_MISSILES;
-                weap_type  = MI_JAVELIN;
-                qty        = random_range(3, 8, 2);
-            }
+        case MONS_MERFOLK_JAVELINEER:
+            weap_class = OBJ_MISSILES;
+            weap_type  = MI_JAVELIN;
+            item_race  = MAKE_ITEM_NO_RACE;
+            qty        = random_range(9, 23, 2);
+            if (one_chance_in(3))
+                level = MAKE_GOOD_ITEM;
             break;
 
         case MONS_MERFOLK:
@@ -1389,6 +1394,12 @@ void give_armour(monsters *mon, int level)
                                                5, ARM_TROLL_LEATHER_ARMOUR,
                                                5, ARM_STEAM_DRAGON_ARMOUR,
                                                0);
+        break;
+
+    case MONS_MERFOLK_JAVELINEER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_LEATHER_ARMOUR;
         break;
 
     case MONS_ANGEL:

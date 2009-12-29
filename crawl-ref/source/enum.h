@@ -1823,6 +1823,7 @@ enum monster_type                      // (int) menv[].type
     // Shoals guardians
     MONS_MERFOLK_IMPALER,
     MONS_MERFOLK_AQUAMANCER,
+    MONS_MERFOLK_JAVELINEER,
 
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
