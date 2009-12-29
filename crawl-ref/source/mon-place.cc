@@ -598,7 +598,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             mon_type = MONS_DANCING_WEAPON;
         else
         {
-            if (you.level_type == LEVEL_PORTAL_VAULT 
+            if (you.level_type == LEVEL_PORTAL_VAULT
                 && vault_mon_types.size() > 0)
             {
                 int i = choose_random_weighted(vault_mon_weights.begin(),
@@ -636,7 +636,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             }
             else if (you.level_type == LEVEL_PORTAL_VAULT)
             {
-                // XXX: We don't have a random monster list here, so pick one 
+                // XXX: We don't have a random monster list here, so pick one
                 // from where we were.
                 place.level_type = LEVEL_DUNGEON;
                 *lev_mons = place.absdepth();
@@ -2401,7 +2401,12 @@ static monster_type _band_member(band_type band, int power)
         break;
     }
     case BAND_ILSUIW:
-        mon_type = coinflip()? MONS_MERFOLK : MONS_MERMAID;
+        mon_type = static_cast<monster_type>(
+            random_choose_weighted(30, MONS_MERMAID,
+                                   15, MONS_MERFOLK,
+                                   10, MONS_MERFOLK_JAVELINEER,
+                                   10, MONS_MERFOLK_IMPALER,
+                                   0));
         break;
 
     case BAND_AZRAEL:
