@@ -1652,7 +1652,10 @@ void melee_attack::player_weapon_auto_id()
 int melee_attack::player_stab_weapon_bonus(int damage)
 {
     if (weapon && weapon->base_type == OBJ_WEAPONS
-        && (weapon->sub_type == WPN_CLUB || weapon->sub_type == WPN_SPEAR))
+        && (weapon->sub_type == WPN_CLUB
+            || weapon->sub_type == WPN_SPEAR
+            || weapon->sub_type == WPN_TRIDENT
+            || weapon->sub_type == WPN_DEMON_TRIDENT))
     {
         goto ok_weaps;
     }
