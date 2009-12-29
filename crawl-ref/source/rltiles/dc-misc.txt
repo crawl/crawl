@@ -22,6 +22,12 @@ cloud_poison2 CLOUD_POISON_2
 cloud_black_smoke CLOUD_BLACK_SMOKE
 cloud_blue_smoke CLOUD_BLUE_SMOKE
 cloud_grey_smoke CLOUD_GREY_SMOKE
+
+%variation CLOUD_GREY_SMOKE white
+%lum 0 30
+%repeat CLOUD_GREY_SMOKE CLOUD_WHITE_SMOKE
+%resetcol
+
 cloud_miasma CLOUD_MIASMA
 cloud_tloc_energy CLOUD_TLOC_ENERGY
 cloud_mutagenic_small1 CLOUD_MUTAGENIC_0
