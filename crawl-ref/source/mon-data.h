@@ -1144,9 +1144,9 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_MERFOLK_AQUAMANCER, 'm', LIGHTGREEN, "merfolk aquamancer",
+    MONS_MERFOLK_AQUAMANCER, 'm', GREEN, "merfolk aquamancer",
     M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS,
-    MR_RES_COLD,
+    MR_NO_FLAGS,
     500, 10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 15, 3, 3, 0 },
@@ -4621,7 +4621,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_ILSUIW, 'm', GREEN, "Ilsuiw",
+    MONS_ILSUIW, 'm', LIGHTGREEN, "Ilsuiw",
     M_UNIQUE | M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS,
     MR_NO_FLAGS,
     500, 10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -7,
