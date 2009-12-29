@@ -1680,16 +1680,17 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CALL_TIDE:
-    {
-        const int tide_duration = random_range(18, 50, 2);
-        monster->add_ench(mon_enchant(ENCH_TIDE, 0, KC_OTHER,
-                                      tide_duration * 10));
-        monster->props[TIDE_CALL_TURN] = you.num_turns;
-        simple_monster_message(monster,
-                               " sings a water chant to call the tide!");
-        flash_view_delay(ETC_WATER, 300);
+        if (player_in_branch(BRANCH_SHOALS))
+        {
+            const int tide_duration = random_range(18, 50, 2);
+            monster->add_ench(mon_enchant(ENCH_TIDE, 0, KC_OTHER,
+                                          tide_duration * 10));
+            monster->props[TIDE_CALL_TURN] = you.num_turns;
+            simple_monster_message(monster,
+                                   " sings a water chant to call the tide!");
+            flash_view_delay(ETC_WATER, 300);
+        }
         return;
-    }
 
     case SPELL_SUMMON_SMALL_MAMMALS:
     case SPELL_VAMPIRE_SUMMON:
