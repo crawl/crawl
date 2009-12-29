@@ -316,7 +316,7 @@ size_type monsters::body_size(size_part_type /* psize */, bool /* base */) const
     return (ret);
 }
 
-int monsters::body_weight() const
+int monsters::body_weight(bool /*base*/) const
 {
     int mclass = type;
 
@@ -5955,7 +5955,7 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
             if (nmons != -1 && nmons != NON_MONSTER)
             {
                 // Don't allow milking the royal jelly.
-                menv[nmons].flags |= MF_CREATED_FRIENDLY;
+                menv[nmons].flags |= MF_NO_REWARD;
                 spawned++;
             }
         }

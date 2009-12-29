@@ -13,7 +13,13 @@
 
 {{
 function ossuary_portal(e)
- local timeout_turns = crawl.random_range(1500, 2000)
+  local desc_long =
+"You can make out a staircase leading downwards into a small tomb. Sand "..
+"surrounds the staircase and is continuously pouring onto it. Before long the "..
+"staircase will be gone. They say that some distant relatives of the pharaohs "..
+"were entombed here."
+
+  local timeout_turns = crawl.random_range(1500, 2000)
 
   local messager =
     timed_msg {
@@ -31,6 +37,7 @@ function ossuary_portal(e)
       timed_marker {
         disappear = "The staircase has disappeared completely beneath the sand.",
         desc = "A sand-covered staircase",
+        desc_long = desc_long,
         entity = 'staircase',
         dst = "ossuary",
         dstorigin = "in a tomb",

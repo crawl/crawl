@@ -473,6 +473,7 @@ two_headed_ogre MONS_TWO_HEADED_OGRE
 ogre_mage MONS_OGRE_MAGE
 
 ## Plants ('P')
+%sdir dc-mon/fungi_plants
 plant MONS_PLANT
 plant_crypt MONS_WITHERED_PLANT
 oklob_plant MONS_OKLOB_PLANT
@@ -543,8 +544,11 @@ deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
 deformed_elf MONS_DEFORMED_ELF
 
 ## Fungi ('f')
+%sdir dc-mon/fungi_plants
 fungus MONS_TOADSTOOL
 fungus MONS_FUNGUS
+ballistomycete MONS_BALLISTOMYCETE_INACTIVE
+active_ballistomycete MONS_BALLISTOMYCETE_ACTIVE
 wandering_mushroom MONS_WANDERING_MUSHROOM
 
 ## Goblins ('g')

@@ -881,6 +881,9 @@ wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_G
 %repeat DNGN_CRYSTAL DNGN_CRYSTAL_WHITE
 %resetcol
 
+wall/tree1 DNGN_TREE
+wall/tree2
+
 ## doors
 dngn_detected_secret_door DNGN_DETECTED_SECRET_DOOR
 dngn_closed_door DNGN_CLOSED_DOOR

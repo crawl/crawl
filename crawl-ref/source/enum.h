@@ -993,10 +993,10 @@ enum dungeon_feature_type
     // Highest grid value which can't be reached through.
     DNGN_MAX_NONREACH = DNGN_CLEAR_PERMAROCK_WALL,
 
-    DNGN_TREES,
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
 
     // Can be seen through and reached past.
+    DNGN_TREES,
     DNGN_ORCISH_IDOL = 15,
     DNGN_GRANITE_STATUE = 21,          //   21
     DNGN_STATUE_RESERVED,
@@ -2122,7 +2122,7 @@ enum mon_attitude_type
 // These are now saved in an unsigned long in the monsters struct.
 enum monster_flag_type
 {
-    MF_CREATED_FRIENDLY   = 0x01,    // no benefit from killing
+    MF_NO_REWARD          = 0x01,    // no benefit from killing
     MF_JUST_SUMMONED      = 0x02,    // monster skips next available action
     MF_TAKING_STAIRS      = 0x04,    // is following player through stairs
     MF_INTERESTING        = 0x08,    // Player finds monster interesting

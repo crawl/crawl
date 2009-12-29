@@ -279,7 +279,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
 
     mon->colour = ETC_UNHOLY;
 
-    mon->flags |= MF_CREATED_FRIENDLY;
+    mon->flags |= MF_NO_REWARD;
     mon->flags |= MF_ENSLAVED_SOUL;
 
     if (twisted)
@@ -1146,7 +1146,7 @@ bool evolve_flora()
         current_plant->upgrade_type(current_target.new_type, true, true);
         current_plant->god = GOD_FEDHAS;
         current_plant->attitude = ATT_FRIENDLY;
-        current_plant->flags |= MF_CREATED_FRIENDLY;
+        current_plant->flags |= MF_NO_REWARD;
         current_plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 
         // Try to remove slowly dying in case we are upgrading a

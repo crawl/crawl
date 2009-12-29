@@ -362,7 +362,9 @@ ENDMAP
 # example), which will be used to orient that corner towards the middle of
 # the map.  Each quadrant must be capable of generating a rune, which
 # should be done by placing an 'O' glyph and calling vault8_rune(_G).
-
+#
+# There is a lot of variance among the possible quadrants but we do ensure
+# that (exactly) one quadrant with rich loot is generated.
 
 ###############################################################################
 # The main vault for Vault:8.
@@ -371,7 +373,7 @@ NAME:     vaults_vault
 PLACE:    Vault:8
 ORIENT:   encompass
 TAGS:     no_rotate no_dump
-SUBVAULT: A : vault8_quadrant
+SUBVAULT: A : vault8_quadrant_prize
 SUBVAULT: B : vault8_quadrant
 SUBVAULT: C : vault8_quadrant
 SUBVAULT: D : vault8_quadrant
@@ -491,7 +493,7 @@ ENDMAP
 #
 # about 24 |
 NAME:     vault8_rooms
-TAGS:     vault8_quadrant uniq_vault8_prize
+TAGS:     vault8_quadrant_prize
 SHUFFLE:  AC/BD, EG/FH, IKN/MJL
 SUBST:    A=., B=xx=, C=+, D=x, E=+, F=xx=, G=., H=x
 SUBST:    I=., M=xx=, J=x, K=+, N=+, L=xx=
@@ -764,7 +766,7 @@ ENDMAP
 # Vault:8 - Triangles Quadrant (by Mu.)
 # about 19 |
 NAME:   vault8_triangles
-TAGS:   vault8_quadrant uniq_vault8_prize
+TAGS:   vault8_quadrant_prize
 SUBST:  Q = 8 9 .:20
 NSUBST: ? = 1:O / *:|
 SUBST:  " = =:1 x:99
@@ -882,7 +884,7 @@ ENDMAP
 # Vault:8 - Corners Quadrant (by Mu.)
 # about 25 |
 NAME:   vault8_corners
-TAGS:   vault8_quadrant uniq_vault8_prize
+TAGS:   vault8_quadrant_prize
 SUBST:  Q = 8 9 .:10
 NSUBST: $ = 1:O / *:$
 SUBST:  $ = | *:20 $
@@ -919,7 +921,7 @@ ENDMAP
 # Vault:8 - Flips Quadrant (by Mu.)
 # about 21 | 
 NAME:   vault8_flips
-TAGS:   vault8_quadrant uniq_vault8_prize
+TAGS:   vault8_quadrant_prize
 NSUBST: ; = 3:l / 3:z / 3:a / *:.
 SUBST:  Q = 8 9
 SUBST:  $ = | * $
@@ -960,7 +962,7 @@ ENDMAP
 # Vault:8 - Construction Quadrant (by Mu.)
 # about 21 |
 NAME:   vault8_construction
-TAGS:   vault8_quadrant uniq_vault8_prize
+TAGS:   vault8_quadrant_prize
 SUBST:  Q = 8 9 .
 NSUBST: $ = 1:O / *:$
 SUBST:  $ = |*$.

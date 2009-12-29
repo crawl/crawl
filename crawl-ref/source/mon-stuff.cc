@@ -595,7 +595,7 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
     const int experience = exper_value(monster);
 
     const bool created_friendly =
-        testbits(monster->flags, MF_CREATED_FRIENDLY);
+        testbits(monster->flags, MF_NO_REWARD);
     const bool was_neutral = testbits(monster->flags, MF_WAS_NEUTRAL);
     const bool no_xp = monster->has_ench(ENCH_ABJ) || !experience;
     const bool already_got_half_xp = testbits(monster->flags, MF_GOT_HALF_XP);
@@ -1616,7 +1616,7 @@ int monster_die(monsters *monster, killer_type killer,
                                && monster->visible_to(&you);
     const bool exploded      = monster->flags & MF_EXPLODE_KILL;
 
-    const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
+    const bool created_friendly = testbits(monster->flags, MF_NO_REWARD);
           bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = monster->holiness();
 

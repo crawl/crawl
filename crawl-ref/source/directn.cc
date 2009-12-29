@@ -1498,7 +1498,7 @@ void direction(dist& moves, const targetting_type restricts,
                 {
                 case ATT_FRIENDLY:
                     m->attitude = ATT_GOOD_NEUTRAL;
-                    m->flags &= ~MF_CREATED_FRIENDLY;
+                    m->flags &= ~MF_NO_REWARD;
                     m->flags |= MF_WAS_NEUTRAL;
                     break;
                 case ATT_GOOD_NEUTRAL:
@@ -1513,7 +1513,7 @@ void direction(dist& moves, const targetting_type restricts,
                     break;
                 case ATT_HOSTILE:
                     m->attitude = ATT_FRIENDLY;
-                    m->flags |= MF_CREATED_FRIENDLY;
+                    m->flags |= MF_NO_REWARD;
                     break;
                 }
 

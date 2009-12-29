@@ -1499,7 +1499,5 @@ void activate_ballistomycetes( monsters * monster, const coord_def & origin)
     }
 
     if (you.see_cell(origin) && found_others)
-    {
         mprf("You feel the ballistomycetes will spawn a replacement spore.");
-    }
 }

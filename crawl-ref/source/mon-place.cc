@@ -1036,7 +1036,7 @@ int place_monster(mgen_data mg, bool force_pos)
                 // Don't give XP for the slaves to discourage hunting.  Pikel
                 // has an artificially large XP modifier to compensate for
                 // this.
-                menv[band_id].flags |= MF_CREATED_FRIENDLY;
+                menv[band_id].flags |= MF_NO_REWARD;
                 menv[band_id].props["pikel_band"] = true;
             }
         }
@@ -2578,7 +2578,7 @@ int mons_place(mgen_data mg)
     if (mg.behaviour > NUM_BEHAVIOURS)
     {
         if (mg.behaviour == BEH_FRIENDLY)
-            creation->flags |= MF_CREATED_FRIENDLY;
+            creation->flags |= MF_NO_REWARD;
 
         if (mg.behaviour == BEH_NEUTRAL || mg.behaviour == BEH_GOOD_NEUTRAL
             || mg.behaviour == BEH_STRICT_NEUTRAL)

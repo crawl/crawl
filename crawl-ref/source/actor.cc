@@ -161,9 +161,9 @@ void actor::shield_block_succeeded(actor *foe)
     }
 }
 
-int actor::body_weight() const
+int actor::body_weight(bool base) const
 {
-    switch (body_size(PSIZE_BODY))
+    switch (body_size(PSIZE_BODY, base))
     {
     case SIZE_TINY:
         return (150);
