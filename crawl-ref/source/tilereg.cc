@@ -12,6 +12,7 @@
 #include "cio.h"
 #include "cloud.h"
 #include "coord.h"
+#include "coordit.h"
 #include "debug.h"
 #include "describe.h"
 #include "directn.h"
@@ -301,6 +302,76 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
             tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
             int offset = flv.special % tile_dngn_count(TILE_BLOOD);
             m_buf_dngn.add(TILE_BLOOD + offset, x, y);
+        }
+
+        if (player_in_branch(BRANCH_SHOALS))
+        {
+            // Add wave tiles on floor adjacent to shallow water.
+            const coord_def pos = coord_def(x + m_cx_to_gx, y + m_cy_to_gy);
+            const dungeon_feature_type feat = env.map_knowledge(pos).feat();
+            if (feat == DNGN_FLOOR || feat == DNGN_UNDISCOVERED_TRAP)
+            {
+                const coord_def pos = coord_def(x + m_cx_to_gx, y + m_cy_to_gy);
+                bool north = false, south = false, east = false, west = false;
+                bool ne = false, nw = false, se = false, sw = false;
+                for (radius_iterator ri(pos, 1, true, false, true); ri; ++ri)
+                {
+                    if (env.map_knowledge(*ri).feat() != DNGN_SHALLOW_WATER)
+                        continue;
+
+                    if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
+                        continue;
+
+                    if (ri->x == pos.x) // orthogonals
+                    {
+                        if (ri->y < pos.y)
+                            north = true;
+                        else
+                            south = true;
+                    }
+                    else if (ri->y == pos.y)
+                    {
+                        if (ri->x < pos.x)
+                            west = true;
+                        else
+                            east = true;
+                    }
+                    else // diagonals
+                    {
+                        if (ri->x < pos.x)
+                        {
+                            if (ri->y < pos.y)
+                                nw = true;
+                            else
+                                sw = true;
+                        }
+                        else
+                        {
+                            if (ri->y < pos.y)
+                                ne = true;
+                            else
+                                se = true;
+                        }
+                    }
+                }
+
+                if (north)
+                    m_buf_dngn.add(TILE_WAVE_N, x, y);
+                if (south)
+                    m_buf_dngn.add(TILE_WAVE_S, x, y);
+                if (east)
+                    m_buf_dngn.add(TILE_WAVE_E, x, y);
+                if (west)
+                    m_buf_dngn.add(TILE_WAVE_W, x, y);
+                if (ne && !north && !east)
+                    m_buf_dngn.add(TILE_WAVE_CORNER_NE, x, y);
+                if (nw && !north && !west)
+                    m_buf_dngn.add(TILE_WAVE_CORNER_NW, x, y);
+                if (se && !south && !east)
+                    m_buf_dngn.add(TILE_WAVE_CORNER_SE, x, y);
+                if (sw && !south && !west)
+                    m_buf_dngn.add(TILE_WAVE_CORNER_SW, x, y);
+            }
         }
 
         if (bg & TILE_FLAG_HALO)
