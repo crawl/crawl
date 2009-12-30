@@ -180,20 +180,21 @@ SHUFFLE:  deef
 ITEM:     potion of heal wounds / potion of healing
 ITEM:     potion of healing / potion of healing q:2 w:5 / \
           potion of heal wounds / potion of heal wounds q:2 w:5
-ITEM:     potion of restore abilities w:7 / potion of cure mutation / \
+KITEM:    f = potion of levitation q:2, \
+          potion of restore abilities w:7 / potion of cure mutation / \
           potion of gain intelligence / potion of gain strength / \
           potion of gain dexterity
+KFEAT:    f = shallow water
 MONS:     rat / grey rat / green rat w:2 / nothing w:3
 MAP
-          xxxxxxxxxxxxxx
-        cccCCCCCCCCCCCCxxx       xxxxx
-        cwXvvvvvvvvvvvCCCxxxx   xxCCCxxx
-        cwccCCCCCCCCCvvVCCCCxxxxxxC*CCCx
-        cwwcxxxxxxxxCCCvvvvCCCCxxCCvvvCx
-        ccwc       xxxCCCCvvvvCCCCvvvvCx
-         cwcc        xxxxCCCCvvvvvvvvvCx
-        ccwwc           xxxxCCCCCCCCCCCx
-        cwwwc              xxxxxxxxxxxxx
+        cccCCCCCCCCCCCC               
+        cwXvvvvvvvvvvvCCC         CCC   
+        cwccCCCCCCCCCvvVCCCC      C*CCC 
+        cwwc        CCCvvvvCCCC  CCvvvC 
+        ccwc          CCCCvvvvCCCCvvvvC 
+         cwcc            CCCCvvvvvvvvvC 
+        ccwwc               CCCCCCCCCCC
+        cwwwc                           
         cwwwc
         cwwwc
         cWwwc
