@@ -248,6 +248,7 @@ FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
 std::set<std::string> Level_Unique_Maps;
 std::set<std::string> Level_Unique_Tags;
+dungeon_feature_set dgn_Vault_Excavatable_Feats;
 std::string dgn_Build_Method;
 std::string dgn_Layout_Type;
 
@@ -971,6 +972,12 @@ static bool _valid_dungeon_level(int level_number, int level_type)
     return (true);
 }
 
+static void _dgn_init_vault_excavatable_feats()
+{
+    dgn_Vault_Excavatable_Feats.clear();
+    dgn_Vault_Excavatable_Feats.insert(DNGN_ROCK_WALL);
+}
+
 void dgn_reset_level()
 {
     dgn_level_vetoed = false;
@@ -986,6 +993,8 @@ void dgn_reset_level()
     dgn_Layout_Type.clear();
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
+
+    _dgn_init_vault_excavatable_feats();
 
     can_create_vault = true;
     use_random_maps  = true;
@@ -3835,12 +3844,22 @@ static coord_def _dig_away_dir(const vault_placement &place,
     return (dig_dir);
 }
 
-static void _dig_away_from(vault_placement &place, const coord_def &pos)
+// Returns true if the feature can be ovewritten by floor when digging a path
+// from a vault to its surroundings.
+bool dgn_vault_excavatable_feat(dungeon_feature_type feat)
 {
-    coord_def dig_dir = _dig_away_dir(place, pos);
-    coord_def dig_at  = pos;
-    bool dug = false;
+    return (dgn_Vault_Excavatable_Feats.find(feat) !=
+            dgn_Vault_Excavatable_Feats.end());
+}
 
+coord_def dgn_random_direction()
+{
+    return Compass[random2(8)];
+}
+
+void dgn_excavate(coord_def dig_at, coord_def dig_dir)
+{
+    bool dug = false;
     for (int i = 0; i < GXM; i++)
     {
         dig_at += dig_dir;
@@ -3851,12 +3870,13 @@ static void _dig_away_from(vault_placement &place, const coord_def &pos)
             break;
         }
 
-        if (grd(dig_at) == DNGN_ROCK_WALL)
+        const dungeon_feature_type dig_feat(grd(dig_at));
+        if (dgn_vault_excavatable_feat(dig_feat))
         {
             grd(dig_at) = DNGN_FLOOR;
             dug = true;
         }
-        else if (grd(dig_at) == DNGN_FLOOR && i > 0)
+        else if (dig_feat == DNGN_FLOOR && i > 0)
         {
             // If the floor square has at least two neighbouring
             // non-solid squares, we're done.
@@ -3875,6 +3895,13 @@ static void _dig_away_from(vault_placement &place, const coord_def &pos)
                 }
         }
     }
+}
+
+static void _dig_away_from(vault_placement &place, const coord_def &pos)
+{
+    coord_def dig_dir = _dig_away_dir(place, pos);
+    coord_def dig_at  = pos;
+    dgn_excavate(dig_at, dig_dir);
 }
 
 static void _dig_vault_loose( vault_placement &place,
@@ -4162,9 +4189,7 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
                       no_exits, where))
     {
         const vault_placement &vp = Level_Vaults[ Level_Vaults.size() - 1 ];
-        if (!player_in_branch(BRANCH_SHOALS))
-            _connect_vault(vp);
-
+        _connect_vault(vp);
         return (true);
     }
     return (false);

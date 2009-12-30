@@ -392,16 +392,20 @@ static void _shoals_furniture(int margin)
 {
     if (at_branch_bottom())
     {
+        unwind_var<dungeon_feature_set> vault_exc(dgn_Vault_Excavatable_Feats);
+        dgn_Vault_Excavatable_Feats.insert(DNGN_STONE_WALL);
+
         const coord_def c = _pick_shoals_island();
         // Put all the stairs on one island.
         grd(c) = DNGN_STONE_STAIRS_UP_I;
         grd(c + coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_II;
         grd(c - coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_III;
+        dgn_excavate(c, dgn_random_direction());
 
         const coord_def p = _pick_shoals_island_distant_from(c);
         // Place the rune
         const map_def *vault = random_map_for_tag("shoal_rune");
-        dgn_ensure_vault_placed(dgn_place_map(vault, false, true, p),
+        dgn_ensure_vault_placed(dgn_place_map(vault, false, false, p),
                                 false);
 
         const int nhuts = std::min(8, int(_shoals_islands.size()));
