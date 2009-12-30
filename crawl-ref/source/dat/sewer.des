@@ -184,7 +184,7 @@ KITEM:    f = potion of levitation q:2, \
           potion of restore abilities w:7 / potion of cure mutation / \
           potion of gain intelligence / potion of gain strength / \
           potion of gain dexterity
-KFEAT:    f = shallow water
+KFEAT:    f = shallow_water
 MONS:     rat / grey rat / green rat w:2 / nothing w:3
 MAP
         cccCCCCCCCCCCCC               
