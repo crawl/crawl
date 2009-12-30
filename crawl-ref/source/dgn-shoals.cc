@@ -938,9 +938,12 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
             return true;
     }
     coord_def evacuation_point(_shoals_escape_place_from(c, victim, NULL));
-    // The tide moves on even if we cannot evacuate the tile!
-    if (!evacuation_point.origin())
-        victim->move_to_pos(evacuation_point);
+    // The tide no longer drowns monster/player if it cannot push them
+    // out of the way.
+    if (evacuation_point.origin())
+        return false;
+
+    victim->move_to_pos(evacuation_point);
     return true;
 }
 
