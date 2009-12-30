@@ -2319,6 +2319,17 @@ int acquirement_create_item(object_class_type class_wanted,
     if (thing_created != NON_ITEM && !quiet)
         canned_msg(MSG_SOMETHING_APPEARS);
 
+    // If a god wants to give you something but the floor doesn't want it,
+    // it counts as a failed acquirement - no piety, etc cost.
+    if (feat_destroys_item(grd(pos), thing) && (agent > GOD_NO_GOD) &&
+        (agent < NUM_GODS))
+    {
+        if (agent == GOD_XOM)
+            simple_god_message(" snickers.", GOD_XOM);
+        else
+            return _failed_acquirement(quiet);
+    }
+
     move_item_to_grid( &thing_created, pos );
 
     return (thing_created);
@@ -2375,23 +2386,6 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
 #endif
            break;
-        }
-    }
-
-    if (feat_destroys_items(grd(you.pos())))
-    {
-        if (agent > GOD_NO_GOD && agent < NUM_GODS)
-        {
-            if (agent == GOD_XOM)
-                simple_god_message(" snickers.", GOD_XOM);
-            else
-            {
-                ASSERT(!"God gave gift item while player was on grid which "
-                        "destroys items.");
-                mprf(MSGCH_ERROR, "%s gave a god gift while you were on "
-                                  "terrain which destroys items.",
-                     god_name((god_type) agent).c_str());
-            }
         }
     }
 
@@ -2956,11 +2950,6 @@ static void _hell_effects()
     }
 }
 
-static bool _is_floor(const dungeon_feature_type feat)
-{
-    return (!feat_is_solid(feat) && !feat_destroys_items(feat));
-}
-
 // This function checks whether we can turn a wall into a floor space and
 // still keep a corridor-like environment. The wall in position x is a
 // a candidate for switching if it's flanked by floor grids to two sides
@@ -2982,8 +2971,8 @@ static bool _feat_is_flanked_by_walls(const coord_def &p)
             return (false);
 
     return (feat_is_wall(grd(adjs[0])) && feat_is_wall(grd(adjs[1]))
-               && _is_floor(grd(adjs[2])) && _is_floor(grd(adjs[3]))
-            || _is_floor(grd(adjs[0])) && _is_floor(grd(adjs[1]))
+               && feat_has_solid_floor(grd(adjs[2])) && feat_has_solid_floor(grd(adjs[3]))
+            || feat_has_solid_floor(grd(adjs[0])) && feat_has_solid_floor(grd(adjs[1]))
                && feat_is_wall(grd(adjs[2])) && feat_is_wall(grd(adjs[3])));
 }
 
@@ -3088,7 +3077,7 @@ static bool _deadend_check_floor(const coord_def &p)
                 continue;
 
             const coord_def a(p.x, p.y+2*i);
-            if (!in_bounds(a) || _is_floor(grd(a)))
+            if (!in_bounds(a) || feat_has_solid_floor(grd(a)))
                 continue;
 
             for (int j = -1; j <= 1; j++)
@@ -3101,7 +3090,7 @@ static bool _deadend_check_floor(const coord_def &p)
                     continue;
 
                 const coord_def c(p.x+j, p.y+i);
-                if (_is_floor(grd(c)) && !_is_floor(grd(b)))
+                if (feat_has_solid_floor(grd(c)) && !feat_has_solid_floor(grd(b)))
                     return (false);
             }
         }
@@ -3114,7 +3103,7 @@ static bool _deadend_check_floor(const coord_def &p)
                 continue;
 
             const coord_def a(p.x+2*i, p.y);
-            if (!in_bounds(a) || _is_floor(grd(a)))
+            if (!in_bounds(a) || feat_has_solid_floor(grd(a)))
                 continue;
 
             for (int j = -1; j <= 1; j++)
@@ -3127,7 +3116,7 @@ static bool _deadend_check_floor(const coord_def &p)
                     continue;
 
                 const coord_def c(p.x+i, p.y+j);
-                if (_is_floor(grd(c)) && !_is_floor(grd(b)))
+                if (feat_has_solid_floor(grd(c)) && !feat_has_solid_floor(grd(b)))
                     return (false);
             }
         }
@@ -3236,7 +3225,7 @@ void change_labyrinth(bool msg)
         // Use the adjacent floor grids as source and destination.
         coord_def src(c.x-1,c.y);
         coord_def dst(c.x+1,c.y);
-        if (!_is_floor(grd(src)) || !_is_floor(grd(dst)))
+        if (!feat_has_solid_floor(grd(src)) || !feat_has_solid_floor(grd(dst)))
         {
             src = coord_def(c.x, c.y-1);
             dst = coord_def(c.x, c.y+1);
@@ -3375,7 +3364,7 @@ void change_labyrinth(bool msg)
                 int floor_count = 0;
                 coord_def new_adj(p);
                 for (adjacent_iterator ai(c); ai; ++ai)
-                    if (_is_floor(grd(*ai)) && one_chance_in(++floor_count))
+                    if (feat_has_solid_floor(grd(*ai)) && one_chance_in(++floor_count))
                         new_adj = *ai;
 
                 if (new_adj != p && maybe_bloodify_square(new_adj))
@@ -3423,7 +3412,7 @@ void change_labyrinth(bool msg)
             if (!in_bounds(p))
                 continue;
 
-            if (_is_floor(grd(p)))
+            if (feat_has_solid_floor(grd(p)))
             {
                 // Once a valid grid is found, move all items from the
                 // stack onto it.

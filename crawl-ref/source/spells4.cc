@@ -1714,13 +1714,6 @@ bool cast_portal_projectile(int pow)
 
 bool cast_apportation(int pow, const coord_def& where)
 {
-    // Protect the player from destroying the item.
-    if (feat_destroys_items(grd(you.pos())))
-    {
-        mpr( "That would be silly while over this terrain!" );
-        return (false);
-    }
-
     if (you.trans_wall_blocking(where))
     {
         mpr("A translucent wall is in the way.");
@@ -1749,6 +1742,13 @@ bool cast_apportation(int pow, const coord_def& where)
     }
 
     item_def& item = mitm[item_idx];
+
+    // Protect the player from destroying the item.
+    if (feat_destroys_item(grd(you.pos()), item))
+    {
+        mpr( "That would be silly while over this terrain!" );
+        return (false);
+    }
 
     // Mass of one unit.
     const int unit_mass = item_mass(item);

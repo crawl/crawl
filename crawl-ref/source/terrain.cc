@@ -321,6 +321,12 @@ bool cell_is_solid(const coord_def &c)
     return (feat_is_solid(grd(c)));
 }
 
+bool feat_has_solid_floor(dungeon_feature_type feat)
+{
+    return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER &&
+            feat != DNGN_LAVA);
+}
+
 bool feat_is_door(dungeon_feature_type feat)
 {
     return (feat == DNGN_CLOSED_DOOR || feat == DNGN_DETECTED_SECRET_DOOR
@@ -374,11 +380,6 @@ bool feat_is_water(dungeon_feature_type feat)
 bool feat_is_watery(dungeon_feature_type feat)
 {
     return (feat_is_water(feat) || feat == DNGN_FOUNTAIN_BLUE);
-}
-
-bool feat_destroys_items(dungeon_feature_type feat)
-{
-    return (feat == DNGN_LAVA || feat == DNGN_DEEP_WATER);
 }
 
 // Returns GOD_NO_GOD if feat is not an altar, otherwise returns the
@@ -543,16 +544,30 @@ dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
                                 : ret);
 }
 
-const char *feat_item_destruction_message(dungeon_feature_type feat)
+bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
+                        bool noisy)
 {
-    return (feat == DNGN_DEEP_WATER ? "You hear a splash." :
-            feat == DNGN_LAVA       ? "You hear a sizzling splash."
-                                    : "You hear a crunching noise.");
+    switch (feat)
+    {
+    case DNGN_DEEP_WATER:
+        if (noisy)
+            mprf(MSGCH_SOUND, "You hear a splash.");
+        return (true);
+
+    case DNGN_LAVA:
+        if (noisy)
+            mprf(MSGCH_SOUND, "You hear a sizzling splash.");
+        return (true);
+
+    default:
+        return (false);
+    }
 }
 
 static coord_def _dgn_find_nearest_square(
     const coord_def &pos,
-    bool (*acceptable)(const coord_def &),
+    void *thing,
+    bool (*acceptable)(const coord_def &, void *thing),
     bool (*traversable)(const coord_def &) = NULL)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
@@ -568,7 +583,7 @@ static coord_def _dgn_find_nearest_square(
         {
             const coord_def &p = *i;
 
-            if (p != pos && acceptable(p))
+            if (p != pos && acceptable(p, thing))
                 return (p);
 
             travel_point_distance[p.x][p.y] = 1;
@@ -597,16 +612,17 @@ static coord_def _dgn_find_nearest_square(
     return (unfound);
 }
 
-static bool _item_safe_square(const coord_def &pos)
+static bool _item_safe_square(const coord_def &pos, void *item)
 {
     const dungeon_feature_type feat = grd(pos);
-    return (feat_is_traversable(feat) && !feat_destroys_items(feat));
+    return (feat_is_traversable(feat) &&
+            !feat_destroys_item(feat, *static_cast<item_def *>(item)));
 }
 
 // Moves an item on the floor to the nearest adjacent floor-space.
 static bool _dgn_shift_item(const coord_def &pos, item_def &item)
 {
-    const coord_def np = _dgn_find_nearest_square(pos, _item_safe_square);
+    const coord_def np = _dgn_find_nearest_square(pos, &item, _item_safe_square);
     if (in_bounds(np) && np != pos)
     {
         int index = item.index();
@@ -622,7 +638,7 @@ bool is_critical_feature(dungeon_feature_type feat)
             || feat_altar_god(feat) != GOD_NO_GOD);
 }
 
-static bool _is_feature_shift_target(const coord_def &pos)
+static bool _is_feature_shift_target(const coord_def &pos, void*)
 {
     return (grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos));
 }
@@ -634,7 +650,7 @@ static bool _dgn_shift_feature(const coord_def &pos)
         return (false);
 
     const coord_def dest =
-        _dgn_find_nearest_square(pos, _is_feature_shift_target);
+        _dgn_find_nearest_square(pos, NULL, _is_feature_shift_target);
 
     if (in_bounds(dest) && dest != pos)
     {
@@ -654,27 +670,27 @@ static bool _dgn_shift_feature(const coord_def &pos)
 static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 {
     const dungeon_feature_type feat = grd(pos);
-    if (feat_is_solid(feat) || feat_destroys_items(feat))
-    {
-        int item = igrd(pos);
-        bool did_destroy = false;
-        while (item != NON_ITEM)
-        {
-            const int curr = item;
-            item = mitm[item].link;
 
-            // Game-critical item.
-            if (preserve_items || mitm[curr].is_critical())
-                _dgn_shift_item(pos, mitm[curr]);
-            else
-            {
-                item_was_destroyed(mitm[curr]);
-                destroy_item(curr);
-                did_destroy = true;
-            }
+    int item = igrd(pos);
+    bool did_destroy = false;
+    while (item != NON_ITEM)
+    {
+        const int curr = item;
+        item = mitm[item].link;
+
+        if (!feat_is_solid(feat) && !feat_destroys_item(feat, mitm[curr]))
+            continue;
+
+        // Game-critical item.
+        if (preserve_items || mitm[curr].is_critical())
+            _dgn_shift_item(pos, mitm[curr]);
+        else
+        {
+            feat_destroys_item(feat, mitm[curr], true);
+            item_was_destroyed(mitm[curr]);
+            destroy_item(curr);
+            did_destroy = true;
         }
-        if (did_destroy && player_can_hear(pos))
-            mprf(MSGCH_SOUND, feat_item_destruction_message(feat));
     }
 }
 
@@ -704,7 +720,7 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
     else
     {
         if (feat_is_solid(old_feat) != feat_is_solid(new_feat)
-            || feat_is_water(new_feat) || feat_destroys_items(new_feat)
+            || feat_is_water(new_feat) || new_feat == DNGN_LAVA
             || is_critical_feature(new_feat))
         {
             env.pgrid(pos) &= ~(FPROP_BLOODY);

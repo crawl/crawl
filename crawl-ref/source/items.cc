@@ -1733,11 +1733,8 @@ bool move_item_to_grid( int *const obj, const coord_def& p, bool silent )
 
     item_def& item(mitm[ob]);
 
-    if (feat_destroys_items(grd(p)))
+    if (feat_destroys_item(grd(p), mitm[ob], !silenced(p) && !silent))
     {
-        if (!silenced(p) && !silent)
-            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(p)));
-
         item_was_destroyed(item, NON_MONSTER);
         destroy_item(ob);
         ob = NON_ITEM;
@@ -1833,11 +1830,8 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
     if (quant_drop == 0)
         return (false);
 
-    if (feat_destroys_items(grd(p)))
+    if (feat_destroys_item(grd(p), item, !silenced(p) && !silent))
     {
-        if (!silenced(p))
-            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(p)));
-
         item_was_destroyed(item, NON_MONSTER);
 
         return (true);
@@ -2001,11 +1995,8 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     mprf("You drop %s.",
          quant_name(you.inv[item_dropped], quant_drop, DESC_NOCAP_A).c_str());
 
-    if (feat_destroys_items(my_grid))
-    {
-        if (!silenced(you.pos()))
-            mprf(MSGCH_SOUND, feat_item_destruction_message(my_grid));
-    }
+    if (feat_destroys_item(my_grid, you.inv[item_dropped], !silenced(you.pos())))
+        ;
     else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
         StashTrack.add_stash();
 

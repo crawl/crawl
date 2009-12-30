@@ -867,7 +867,7 @@ static void _shoals_run_tide(int &tide, int &acc)
 }
 
 static coord_def _shoals_escape_place_from(coord_def bad_place,
-                                           bool monster_free)
+                                           actor *act, item_def *it)
 {
     int best_height = -1000;
     coord_def chosen;
@@ -875,8 +875,8 @@ static coord_def _shoals_escape_place_from(coord_def bad_place,
     {
         coord_def p(*ai);
         const dungeon_feature_type feat(grd(p));
-        if (!feat_is_solid(feat) && !feat_destroys_items(feat)
-            && (!monster_free || !actor_at(p)))
+        if ((!act || (feat_has_solid_floor(feat) && !actor_at(p)))
+            && (!it || !feat_destroys_item(feat, *it)))
         {
             if (best_height == -1000 || shoals_heights(p) > best_height)
             {
@@ -894,12 +894,18 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
     if (link == NON_ITEM)
         return true;
 
-    const coord_def target(_shoals_escape_place_from(c, false));
-    // Don't abort tide entry because of items. If we can't sweep the
-    // item clear here, let dungeon_terrain_changed teleport the item
-    // to the nearest safe square.
-    if (!target.origin())
-        move_item_stack_to_grid(c, target);
+    for (stack_iterator si(c); si; ++si)
+    {
+        const coord_def target(_shoals_escape_place_from(c, NULL, &*si));
+        // Don't abort tide entry because of items. If we can't sweep the
+        // item clear here, let dungeon_terrain_changed teleport the item
+        // to the nearest safe square.
+        int id = si.link();
+
+        if (!target.origin())
+            move_item_to_grid(&id, target);
+    }
+
     return true;
 }
 
@@ -921,7 +927,7 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
         if (monster_habitable_grid(mvictim, DNGN_DEEP_WATER))
             return true;
     }
-    coord_def evacuation_point(_shoals_escape_place_from(c, true));
+    coord_def evacuation_point(_shoals_escape_place_from(c, victim, NULL));
     // The tide moves on even if we cannot evacuate the tile!
     if (!evacuation_point.origin())
         victim->move_to_pos(evacuation_point);

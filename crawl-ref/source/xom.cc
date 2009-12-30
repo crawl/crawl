@@ -659,11 +659,8 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
         items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE,
               0, 0, GOD_XOM);
 
-    if (feat_destroys_items(grd(you.pos())))
+    if (feat_destroys_item(grd(you.pos()), mitm[thing_created], !silenced(you.pos())))
     {
-        if (!silenced(you.pos()))
-            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(you.pos())));
-
         simple_god_message(" snickers.", GOD_XOM);
         destroy_item(thing_created, true);
         thing_created = NON_ITEM;
@@ -2425,7 +2422,7 @@ static void _xom_zero_miscast()
         }
     }
 
-    if (!feat_destroys_items(feat) && !feat_is_solid(feat)
+    if (feat_has_solid_floor(feat)
         && inv_items.size() > 0)
     {
         int idx = inv_items[random2(inv_items.size())];

@@ -822,13 +822,6 @@ void wizard_list_items()
 //---------------------------------------------------------------
 static void _debug_acquirement_stats(FILE *ostat)
 {
-    if (feat_destroys_items(grd(you.pos())))
-    {
-        mpr("You must stand on a square which doesn't destroy items "
-            "in order to do this.");
-        return;
-    }
-
     int p = get_item_slot(11);
     if (p == NON_ITEM)
     {
