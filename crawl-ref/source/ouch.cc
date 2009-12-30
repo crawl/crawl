@@ -551,6 +551,10 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
     if (target_class == OBJ_UNASSIGNED)
         return (false);
 
+    // Beams fly *over* water and lava.
+    if (grd(where) == DNGN_LAVA || grd(where) == DNGN_DEEP_WATER)
+        return (false);
+
     for (stack_iterator si(where); si; ++si)
     {
         if (!si->is_valid())

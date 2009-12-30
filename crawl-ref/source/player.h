@@ -323,6 +323,7 @@ public:
 
     bool in_water() const;
     bool can_swim() const;
+    int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
     bool cannot_speak() const;
     bool invisible() const;

@@ -48,7 +48,7 @@ void lua_set_exclusive_item(const item_def *item)
 
 void lua_push_floor_items(lua_State *ls)
 {
-    lua_push_items(ls, igrd(you.pos()));
+    lua_push_items(ls, you.visible_igrd(you.pos()));
 }
 
 void lua_push_inv_items(lua_State *ls = NULL)

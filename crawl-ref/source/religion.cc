@@ -2266,7 +2266,7 @@ static bool _confirm_pray_sacrifice(god_type god)
         return (false);
     }
 
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (_god_likes_item(god, *si)
             && (_is_risky_sacrifice(*si)
@@ -3811,7 +3811,7 @@ bool ely_destroy_weapons()
     god_acting gdact;
 
     bool success = false;
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         item_def& item(*si);
         if (item.base_type != OBJ_WEAPONS
@@ -4692,7 +4692,8 @@ void offer_items()
 
     int i = igrd(you.pos());
 
-    if (!god_likes_items(you.religion) && i != NON_ITEM)
+    if (!god_likes_items(you.religion) && i != NON_ITEM
+        && you.visible_igrd(you.pos()) != NON_ITEM)
     {
         simple_god_message(" doesn't care about such mundane gifts.",
                            you.religion);

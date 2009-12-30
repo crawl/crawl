@@ -24,7 +24,7 @@ class stack_iterator : public std::iterator<std::forward_iterator_tag,
                                             item_def>
 {
 public:
-    explicit stack_iterator( const coord_def& pos );
+    explicit stack_iterator( const coord_def& pos, bool accessible = false );
     explicit stack_iterator( int start_link );
 
     operator bool() const;

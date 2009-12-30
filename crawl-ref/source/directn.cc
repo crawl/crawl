@@ -523,7 +523,7 @@ void full_describe_view()
         if (unknown_mimic)      // It'll be on top.
             list_items.push_back(get_mimic_item(mon));
 
-        const int oid = igrd(*ri);
+        const int oid = you.visible_igrd(*ri);
         if (oid == NON_ITEM)
             continue;
 
@@ -1764,10 +1764,10 @@ std::string get_terse_square_desc(const coord_def &gc)
         else
             desc = mons.full_name(DESC_PLAIN, true);
     }
-    else if (igrd(gc) != NON_ITEM)
+    else if (you.visible_igrd(gc) != NON_ITEM)
     {
-        if (mitm[igrd(gc)].is_valid())
-            desc = mitm[igrd(gc)].name(DESC_PLAIN);
+        if (mitm[you.visible_igrd(gc)].is_valid())
+            desc = mitm[you.visible_igrd(gc)].name(DESC_PLAIN);
     }
     else
         desc = feature_description(gc, false, DESC_PLAIN, false);
@@ -1793,7 +1793,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
         return;
 
     const monsters* mons = monster_at(c);
-    const int oid = igrd(c);
+    const int oid = you.visible_igrd(c);
 
     if (mons && mons->visible_to(&you))
     {
@@ -1836,7 +1836,7 @@ void full_describe_square(const coord_def &c)
         return;
 
     const monsters* mons = monster_at(c);
-    const int oid = igrd(c);
+    const int oid = you.visible_igrd(c);
 
     if (mons && mons->visible_to(&you))
     {
@@ -3425,7 +3425,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         cloud_described = true;
     }
 
-    int targ_item = igrd(where);
+    int targ_item = you.visible_igrd(where);
 
     if (targ_item != NON_ITEM)
     {

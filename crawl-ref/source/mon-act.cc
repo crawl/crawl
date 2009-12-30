@@ -2183,6 +2183,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
     bool death_ooze_ate_good = false;
     bool death_ooze_ate_corpse = false;
 
+    // Jellies can swim, so don't check water
     for (stack_iterator si(monster->pos());
          si && eaten < max_eat && hps_changed < 50; ++si)
     {
@@ -2464,6 +2465,14 @@ static bool _monster_eat_food(monsters *monster, bool nearby)
 static bool _handle_pickup(monsters *monster)
 {
     if (monster->asleep() || monster->submerged())
+        return (false);
+
+    // Hack - Harpies fly over water, but we don't have a general
+    // system for monster igrd yet.  Flying intelligent monsters
+    // (kenku!) would also count here.
+    dungeon_feature_type feat = grd(monster->pos());
+
+    if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && !monster->flight_mode())
         return (false);
 
     const bool nearby = mons_near(monster);

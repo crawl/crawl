@@ -4795,7 +4795,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         if (!mons_is_known_mimic(mon))
         {
             // If necessary add item brand.
-            if (igrd(gc) != NON_ITEM)
+            if (you.visible_igrd(gc) != NON_ITEM)
             {
                 if (foreground)
                     t |= TILE_FLAG_S_UNDER;
@@ -4815,7 +4815,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     else if (menv[idx].holiness() == MH_PLANT)
     {
         // If necessary add item brand.
-        if (igrd(gc) != NON_ITEM)
+        if (you.visible_igrd(gc) != NON_ITEM)
         {
             if (foreground)
                 t |= TILE_FLAG_S_UNDER;
