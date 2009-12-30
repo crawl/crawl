@@ -4853,9 +4853,9 @@ void offer_items()
 
     if (num_sacced > 0 && you.religion == GOD_KIKUBAAQUDGHA)
     {
-		simple_god_message(" torments the living!");
+        simple_god_message(" torments the living!");
         torment(TORMENT_KIKUBAAQUDGHA, you.pos());
-		you.piety -= 8 + random2(4);	// costs 8 - 12 piety
+        lose_piety(random_range(8, 12));
     }
 
     // Explanatory messages if nothing the god likes is sacrificed.
