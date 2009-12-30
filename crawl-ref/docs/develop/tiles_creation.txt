@@ -216,7 +216,8 @@ odds of the player running into a look-alike are low.
 4.2 Pixel art tutorials
 -----------------------
 
-We really recommend the following tutorials to anyone interested in tiles design:
+We really recommend the following tutorials to anyone interested in tiles
+design:
 
   * http://www.derekyu.com/?page_id=219
     A well-written introduction to the techniques of pixel art.
@@ -228,7 +229,7 @@ We really recommend the following tutorials to anyone interested in tiles design
     A detailed explanation of how to create the perfect pixels. Several
     chapters dealing with scenery and sprite design. Also covers the elusive
     difference between art and _good_ art. Makes me want to go back and redo
-    all my tiles designs.
+    all my tiles designs. (jpeg)
 
 4.3 Wielded weapons
 -------------------
@@ -417,9 +418,9 @@ rec.games.roguelike.misc newsgroup.
 In case you'd like to draw some tiles but have run out of ideas, check out the
 following links:
 
-   * dcss:brainstorm:tiles:tiles_missing_for_0.6
-   * dcss:brainstorm:tiles:tiles_improvement
-   * dcss:brainstorm:tiles:tiles_missing_for_wizlabs
+http://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:tiles:tiles_missing_for_0.6
+http://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:tiles:tiles_improvement
+http://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:tiles:tiles_missing_for_wizlabs
 
 (Should these links be invalid, check this document's online version:
  http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation)
