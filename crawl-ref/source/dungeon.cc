@@ -13,6 +13,7 @@
 #include <set>
 #include <sstream>
 #include <algorithm>
+#include <cmath>
 
 #include "abyss.h"
 #include "artefact.h"
@@ -233,6 +234,8 @@ typedef std::list<coord_def> coord_list;
 static void _dgn_set_floor_colours();
 static bool _fixup_interlevel_connectivity();
 
+void dgn_postprocess_level();
+
 //////////////////////////////////////////////////////////////////////////
 // Static data
 
@@ -374,6 +377,8 @@ bool builder(int level_number, int level_type)
                 vault_names.push_back(you.level_type_name);
             }
 
+            dgn_postprocess_level();
+
             dgn_Layout_Type.clear();
             Level_Unique_Maps.clear();
             Level_Unique_Tags.clear();
@@ -396,6 +401,13 @@ bool builder(int level_number, int level_type)
 
     dgn_Layout_Type.clear();
     return (false);
+}
+
+// Should be called after a level is constructed to perform any final
+// fixups.
+void dgn_postprocess_level()
+{
+    shoals_postprocess_level();
 }
 
 void level_welcome_messages()
@@ -823,7 +835,17 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         dgn_register_vault(place.map);
 
     if (!place.map.has_tag("layout"))
-        _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
+    {
+        if (place.map.orient == MAP_ENCOMPASS)
+        {
+            for (rectangle_iterator ri(0); ri; ++ri)
+                dgn_Map_Mask(*ri) |= MMT_VAULT | MMT_NO_DOOR;
+        }
+        else
+        {
+            _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
+        }
+    }
 
     if (place.map.has_tag("no_monster_gen"))
         _mask_vault(place, MMT_NO_MONS);
@@ -876,8 +898,8 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
 #endif
 }
 
-static bool _ensure_vault_placed(bool vault_success,
-                                 bool disable_further_vaults)
+bool dgn_ensure_vault_placed(bool vault_success,
+                             bool disable_further_vaults)
 {
     if (!vault_success)
         dgn_level_vetoed = true;
@@ -888,9 +910,9 @@ static bool _ensure_vault_placed(bool vault_success,
 
 static bool _ensure_vault_placed_ex( bool vault_success, const map_def *vault )
 {
-    return _ensure_vault_placed( vault_success,
-                                 (!vault->has_tag("extra")
-                                  && vault->orient == MAP_ENCOMPASS) );
+    return dgn_ensure_vault_placed( vault_success,
+                                    (!vault->has_tag("extra")
+                                     && vault->orient == MAP_ENCOMPASS) );
 }
 
 static coord_def _find_level_feature(int feat)
@@ -1745,7 +1767,7 @@ static void _build_overflow_temples(int level_number)
             // find the overflow temple map, so don't veto the level.
             return;
 
-        if (!_ensure_vault_placed(_build_vaults(level_number, vault), false))
+        if (!dgn_ensure_vault_placed(_build_vaults(level_number, vault), false))
         {
 #ifdef DEBUG_TEMPLES
             mprf(MSGCH_DIAGNOSTICS, "Couldn't place overlfow temple '%s', "
@@ -2224,7 +2246,7 @@ static builder_rc_type _builder_by_type(int level_number, char level_type)
                     pandemon_level_names[which_demon]);
             }
 
-            _ensure_vault_placed( _build_vaults(level_number, vault), true );
+            dgn_ensure_vault_placed( _build_vaults(level_number, vault), true );
         }
         else
         {
@@ -2301,7 +2323,7 @@ static void _portal_vault_level(int level_number)
             dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL,
                              vault->border_fill_type);
 
-        _ensure_vault_placed( _build_vaults(level_number, vault), true );
+        dgn_ensure_vault_placed( _build_vaults(level_number, vault), true );
     }
     else
     {
@@ -4063,8 +4085,11 @@ void _fixup_after_vault()
 // clobber: If true, assumes the newly placed vault can clobber existing
 //          items and monsters (items may be destroyed, monsters may be
 //          teleported).
-bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
-                   const coord_def &where)
+bool dgn_place_map(const map_def *mdef,
+                   bool clobber,
+                   bool make_no_exits,
+                   const coord_def &where,
+                   int rune_subst)
 {
     const dgn_colour_override_manager colour_man;
 
@@ -4092,8 +4117,7 @@ bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
         }
     }
 
-    int rune_subst = -1;
-    if (mdef->has_tag_suffix("_entry"))
+    if (rune_subst == -1 && mdef->has_tag_suffix("_entry"))
         rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
     did_map = _build_secondary_vault(you.your_level, mdef, rune_subst,
                                      clobber, make_no_exits, where);
@@ -4122,6 +4146,7 @@ bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
             }
 
         setup_environment_effects();
+        dgn_postprocess_level();
     }
 
     return (did_map);
@@ -4523,6 +4548,11 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
         if (item_made != NON_ITEM && item_made != -1)
         {
             item_def &item(mitm[item_made]);
+
+            // Mark items on summoned monsters as such.
+            if (mspec.abjuration_duration != 0)
+                item.flags |= ISFLAG_SUMMONED;
+
             if (!mon.pickup_item(item, 0, true))
                 destroy_item(item_made, true);
         }
@@ -4909,6 +4939,11 @@ static void _vault_grid(vault_placement &place,
             unsigned char which_type = OBJ_RANDOM;
             int which_depth;
             int spec = 250;
+
+            // If rune_subst is set to 0, the rune was already placed,
+            // take appropriate steps.
+            if (place.rune_subst == 0 && vgrid == 'O')
+                place.num_runes++;
 
             if (vgrid == '$')
             {
@@ -5975,7 +6010,7 @@ static bool _plan_1(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(success, false);
 
     return false;
 }
@@ -5989,7 +6024,7 @@ static bool _plan_2(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(success, false);
 
     return false;
 }
@@ -6003,7 +6038,7 @@ static bool _plan_3(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(success, false);
 
     return true;
 }
@@ -6147,7 +6182,7 @@ static bool _plan_6(int level_number)
     ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
-    _ensure_vault_placed(success, false);
+    dgn_ensure_vault_placed(success, false);
 
     // This "back door" is often one of the easier ways to get out of
     // pandemonium... the easiest is to use the banish spell.
@@ -7590,6 +7625,47 @@ static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
         }
 
     return (np.nearest);
+}
+
+
+double dgn_degrees_to_radians(int degrees)
+{
+    return degrees * M_PI / 180;
+}
+
+coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
+{
+    int attempts = 70;
+    while (attempts-- > 0)
+    {
+        const double angle = dgn_degrees_to_radians(random2(360));
+        const coord_def res =
+            c + coord_def(static_cast<int>(radius * cos(angle)),
+                          static_cast<int>(radius * sin(angle)));
+        if (res.x >= margin && res.x < GXM - margin
+            && res.y >= margin && res.y < GYM - margin)
+        {
+            return res;
+        }
+    }
+    return coord_def();
+}
+
+coord_def dgn_random_point_visible_from(const coord_def &c,
+                                        int radius,
+                                        int margin,
+                                        int tries)
+{
+    while (tries-- > 0)
+    {
+        const coord_def point = dgn_random_point_from(c, radius, margin);
+        if (point.origin())
+            continue;
+        if (!cell_see_cell(c, point))
+            continue;
+        return point;
+    }
+    return coord_def();
 }
 
 coord_def dgn_find_feature_marker(dungeon_feature_type feat)

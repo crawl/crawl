@@ -3113,7 +3113,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.fire();
 
         // The item can be destroyed before returning.
-        if (did_return && thrown_object_destroyed(&item, pbolt.target, true))
+        if (did_return && thrown_object_destroyed(&item, pbolt.target))
             did_return = false;
     }
 
@@ -3178,8 +3178,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     return (hit);
 }
 
-bool thrown_object_destroyed(item_def *item, const coord_def& where,
-                             bool returning)
+bool thrown_object_destroyed(item_def *item, const coord_def& where)
 {
     ASSERT(item != NULL);
 
@@ -3244,22 +3243,6 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
     // destruction: plus / (1 + plus) chance of survival.
     bool destroyed = (chance == 0) ? false : (one_chance_in(chance)
                                               && one_chance_in(item->plus + 1));
-    bool hostile_grid = feat_destroys_items(grd(where));
-
-    // Non-returning items thrown into item-destroying grids are always
-    // destroyed.  Returning items are only destroyed if they would have
-    // been randomly destroyed anyway.
-    if (returning && !destroyed)
-        hostile_grid = false;
-
-    if (hostile_grid)
-    {
-        if (player_can_hear(where))
-            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(where)));
-
-        item_was_destroyed(*item, NON_MONSTER);
-        destroyed = true;
-    }
 
     return destroyed;
 }

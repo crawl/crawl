@@ -927,7 +927,7 @@
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      1,
-     50,
+     0,
      -1, -1,
      0,
      NULL,
@@ -2633,6 +2633,32 @@
      SPTYP_SUMMONING,
      SPFLAG_MONSTER,
      5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_PRIMAL_WAVE, "Primal Wave",
+     SPTYP_CONJURATION | SPTYP_ICE,
+     SPFLAG_DIR_OR_TARGET,
+     6,
+     200,
+     7, 7,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_CALL_TIDE, "Call Tide",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_MONSTER,
+     7,
      0,
      -1, -1,
      0,

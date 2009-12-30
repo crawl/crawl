@@ -1175,7 +1175,6 @@ static bool _need_missile_gift()
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
     return (you.piety > 80
             && random2( you.piety ) > 70
-            && !feat_destroys_items( grd(you.pos()) )
             && one_chance_in(8)
             && you.skills[ best_missile_skill ] >= 8
             && (launcher || best_missile_skill == SK_DARTS));
@@ -1263,9 +1262,6 @@ static void _show_pure_deck_chances()
 
 static void _give_nemelex_gift()
 {
-    if (feat_destroys_items(grd(you.pos())))
-        return;
-
     // Nemelex will give at least one gift early.
     if (!you.num_gifts[GOD_NEMELEX_XOBEH]
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
@@ -1289,14 +1285,16 @@ static void _give_nemelex_gift()
 #if DEBUG_GIFTS || DEBUG_CARDS
         _show_pure_deck_chances();
 #endif
-        _update_sacrifice_weights(choice);
-
         int thing_created = items( 1, OBJ_MISCELLANY, gift_type,
                                    true, 1, MAKE_ITEM_RANDOM_RACE,
                                    0, 0, GOD_NEMELEX_XOBEH );
 
+        move_item_to_grid(&thing_created, you.pos(), true);
+
         if (thing_created != NON_ITEM)
         {
+            _update_sacrifice_weights(choice);
+
             // Piety|Common  | Rare  |Legendary
             // --------------------------------
             //     0:  95.00%,  5.00%,  0.00%
@@ -1328,8 +1326,6 @@ static void _give_nemelex_gift()
             deck.special = rarity;
             deck.colour  = deck_rarity_to_color(rarity);
             deck.inscription = "god gift";
-
-            move_item_to_grid(&thing_created, you.pos());
 
             simple_god_message(" grants you a gift!");
             more();
@@ -2046,7 +2042,6 @@ static void _do_god_gift(bool prayed_for)
         case GOD_TROG:
             if (you.piety > 130
                 && random2(you.piety) > 120
-                && !feat_destroys_items(grd(you.pos()))
                 && one_chance_in(4))
             {
                 if (you.religion == GOD_TROG
@@ -2058,7 +2053,8 @@ static void _do_god_gift(bool prayed_for)
                 {
                     success = acquirement(OBJ_ARMOUR, you.religion);
                     // Okawaru charges extra for armour acquirements.
-                    _inc_gift_timeout(30 + random2avg(15, 2));
+                    if (success)
+                        _inc_gift_timeout(30 + random2avg(15, 2));
                 }
 
                 if (success)
@@ -2194,8 +2190,7 @@ static void _do_god_gift(bool prayed_for)
                 }
             }
 
-            if (gift != NUM_BOOKS
-                && !feat_destroys_items(grd(you.pos())))
+            if (gift != NUM_BOOKS)
             {
                 if (gift == OBJ_RANDOM)
                 {
@@ -2216,7 +2211,7 @@ static void _do_god_gift(bool prayed_for)
                     // reason.
                     mark_had_book(gift);
 
-                    move_item_to_grid( &thing_created, you.pos() );
+                    move_item_to_grid( &thing_created, you.pos(), true );
 
                     if (thing_created != NON_ITEM)
                     {
@@ -2271,7 +2266,7 @@ static bool _confirm_pray_sacrifice(god_type god)
         return (false);
     }
 
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (_god_likes_item(god, *si)
             && (_is_risky_sacrifice(*si)
@@ -2683,7 +2678,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 }
 
                 if (thing_done == DID_ATTACK_HOLY && victim
-                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;
@@ -3029,7 +3024,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
                 if (victim
-                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;
@@ -3097,7 +3092,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
                 if (victim
-                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;
@@ -3816,7 +3811,7 @@ bool ely_destroy_weapons()
     god_acting gdact;
 
     bool success = false;
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         item_def& item(*si);
         if (item.base_type != OBJ_WEAPONS
@@ -4699,7 +4694,8 @@ void offer_items()
 
     int i = igrd(you.pos());
 
-    if (!god_likes_items(you.religion) && i != NON_ITEM)
+    if (!god_likes_items(you.religion) && i != NON_ITEM
+        && you.visible_igrd(you.pos()) != NON_ITEM)
     {
         simple_god_message(" doesn't care about such mundane gifts.",
                            you.religion);
@@ -4859,9 +4855,9 @@ void offer_items()
 
     if (num_sacced > 0 && you.religion == GOD_KIKUBAAQUDGHA)
     {
-		simple_god_message(" torments the living!");
+        simple_god_message(" torments the living!");
         torment(TORMENT_KIKUBAAQUDGHA, you.pos());
-		you.piety -= 8 + random2(4);	// costs 8 - 12 piety
+        lose_piety(random_range(8, 12));
     }
 
     // Explanatory messages if nothing the god likes is sacrificed.

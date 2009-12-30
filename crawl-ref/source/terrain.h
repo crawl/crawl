@@ -24,6 +24,7 @@ bool cell_is_solid(const coord_def &c);
 bool feat_is_wall(dungeon_feature_type feat);
 bool feat_is_opaque(dungeon_feature_type feat);
 bool feat_is_solid(dungeon_feature_type feat);
+bool feat_has_solid_floor(dungeon_feature_type feat);
 bool feat_is_door(dungeon_feature_type feat);
 bool feat_is_closed_door(dungeon_feature_type feat);
 bool feat_is_secret_door(dungeon_feature_type feat);
@@ -63,9 +64,7 @@ void find_connected_range(coord_def d, dungeon_feature_type ft_min,
 void get_door_description(int door_size, const char** adjective, const char** noun);
 dungeon_feature_type grid_secret_door_appearance(const coord_def &where);
 dungeon_feature_type grid_appearance(const coord_def &gc);
-bool feat_destroys_items(dungeon_feature_type feat);
-
-const char *feat_item_destruction_message( dungeon_feature_type feat );
+bool feat_destroys_item(dungeon_feature_type feat, const item_def &item, bool noisy = false);
 
 // Terrain changed under 'pos', perform necessary effects.
 void dungeon_terrain_changed(const coord_def &pos,

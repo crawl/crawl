@@ -10,7 +10,7 @@
 #include "enum.h"
 
 class monsters;
-class bolt;
+struct bolt;
 
 void init_mons_spells();
 bool is_valid_mon_spell(spell_type spell);

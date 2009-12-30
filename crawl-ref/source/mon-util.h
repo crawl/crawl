@@ -557,6 +557,7 @@ bool mons_can_regenerate(const monsters *mon);
 int mons_zombie_size(int mc);
 monster_type mons_zombie_base(const monsters *mon);
 bool mons_class_is_zombified(int mc);
+monster_type mons_base_type(const monsters *mon);
 bool mons_is_zombified(const monsters *monster);
 bool mons_class_can_be_zombified(int mc);
 bool mons_can_be_zombified(const monsters *mon);

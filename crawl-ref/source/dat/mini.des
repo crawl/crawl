@@ -2667,7 +2667,7 @@ ENDMAP
 #
 NAME:   archer_statue
 DEPTH:  D:8-, Vault, Elf
-MONS:   statue tile:mons_archer_statue name:archer name_adjective; longbow . arrow q:30
+MONS:   statue tile:mons_statue_archer name:archer name_adjective; longbow . arrow q:30
 MAP
     ccc
 ccccc1ccccc

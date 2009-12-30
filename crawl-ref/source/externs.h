@@ -92,6 +92,11 @@ class KillMaster;
 class ghost_demon;
 struct glyph;
 
+template <typename Z> inline Z sgn(Z x)
+{
+    return (x < 0 ? -1 : (x > 0 ? 1 : 0));
+}
+
 struct coord_def
 {
     int         x;
@@ -213,6 +218,11 @@ struct coord_def
     {
         coord_def copy = *this;
         return (copy *= mul);
+    }
+
+    coord_def sgn() const
+    {
+        return coord_def(::sgn(x), ::sgn(y));
     }
 
     int abs() const
@@ -535,6 +545,9 @@ public:
 
     // Returns true if this item should be preserved as far as possible.
     bool is_critical() const;
+
+    // Returns true if this item should not normally be enchanted.
+    bool is_mundane() const;
 
 private:
     std::string name_aux(description_level_type desc,

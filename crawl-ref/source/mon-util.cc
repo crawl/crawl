@@ -927,6 +927,11 @@ bool mons_is_zombified(const monsters *mon)
     return (mons_class_is_zombified(mon->type));
 }
 
+monster_type mons_base_type(const monsters *mon)
+{
+    return mons_is_zombified(mon) ? mon->base_monster : mon->type;
+}
+
 bool mons_class_can_be_zombified(int mc)
 {
     int ms = mons_species(mc);
@@ -2396,6 +2401,13 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     // handled here as well. - bwr
     switch (monspell)
     {
+    case SPELL_CALL_TIDE:
+        return (!player_in_branch(BRANCH_SHOALS)
+                || mon->has_ench(ENCH_TIDE)
+                || !foe
+                || (grd(mon->pos()) == DNGN_DEEP_WATER
+                    && grd(foe->pos()) == DNGN_DEEP_WATER));
+
     case SPELL_BRAIN_FEED:
         ret = (foe != &you);
         break;

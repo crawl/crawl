@@ -1177,14 +1177,12 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 // Producing helpful potions would break game balance here...
 // and producing more than one potion from a corpse, or not
 // using up the corpse might also lead to game balance problems. - bwr
-void cast_fulsome_distillation(int pow)
+void cast_fulsome_distillation(int /*pow*/)
 {
-    pow = std::min(50, pow);
-
     int corpse = -1;
 
     // Search items at the player's location for corpses.
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
@@ -1205,96 +1203,63 @@ void cast_fulsome_distillation(int pow)
         return;
     }
 
-    const bool rotten      = food_is_rotten(mitm[corpse]);
-    const bool big_monster = (mons_type_hit_dice(mitm[corpse].plus) >= 5);
-    const bool power_up    = (rotten && big_monster);
-
     potion_type pot_type = POT_WATER;
 
-    switch (mitm[corpse].plus)
+    switch (mons_corpse_effect(mitm[corpse].plus))
     {
-    case MONS_GIANT_BAT:             // extracting batty behaviour : 1
-    case MONS_GIANT_BLOWFLY:         // extracting batty behaviour : 5
-        pot_type = POT_CONFUSION;
+    case CE_CLEAN:
+        pot_type = POT_WATER;
         break;
 
-    case MONS_RED_WASP:              // paralysis attack : 8
-    case MONS_YELLOW_WASP:           // paralysis attack : 4
-        pot_type = POT_PARALYSIS;
+    case CE_CONTAMINATED:
+        pot_type = (mons_weight(mitm[corpse].plus) >= 900)
+            ? POT_DEGENERATION : POT_CONFUSION;
         break;
 
-    case MONS_SNAKE:                 // clean meat, but poisonous attack : 2
-    case MONS_GIANT_ANT:             // clean meat, but poisonous attack : 3
-        pot_type = (power_up ? POT_POISON : POT_CONFUSION);
+    case CE_POISONOUS:
+        pot_type = POT_POISON;
         break;
 
-    case MONS_ORANGE_RAT:            // poisonous meat, but draining attack : 3
-        pot_type = (power_up ? POT_DECAY : POT_POISON);
+    case CE_MUTAGEN_RANDOM:
+    case CE_MUTAGEN_GOOD:   // unused
+    case CE_RANDOM:         // unused
+        pot_type = POT_MUTATION;
         break;
 
-    case MONS_SPINY_WORM:            // 12
-        pot_type = (power_up ? POT_DECAY : POT_STRONG_POISON);
+    case CE_MUTAGEN_BAD:    // unused
+    case CE_ROTTEN:         // actually this only occurs via mangling
+    case CE_HCL:            // necrophage
+        pot_type = POT_DECAY;
         break;
 
+    case CE_NOCORPSE:       // shouldn't occur
     default:
-        switch (mons_corpse_effect(mitm[corpse].plus))
-        {
-        case CE_CLEAN:
-            pot_type = (power_up ? POT_CONFUSION : POT_WATER);
-            break;
-
-        case CE_CONTAMINATED:
-            pot_type = (power_up ? POT_DEGENERATION : POT_POISON);
-            break;
-
-        case CE_POISONOUS:
-            pot_type = (power_up ? POT_STRONG_POISON : POT_POISON);
-            break;
-
-        case CE_MUTAGEN_RANDOM:
-        case CE_MUTAGEN_GOOD:   // unused
-        case CE_RANDOM:         // unused
-            pot_type = POT_MUTATION;
-            break;
-
-        case CE_MUTAGEN_BAD:    // unused
-        case CE_ROTTEN:         // actually this only occurs via mangling
-        case CE_HCL:            // necrophage
-            pot_type = (power_up ? POT_DECAY : POT_STRONG_POISON);
-            break;
-
-        case CE_NOCORPSE:       // shouldn't occur
-        default:
-            break;
-        }
         break;
     }
 
-    // If not powerful enough, we downgrade the potion.
-    if (random2(50) > pow + 10 * rotten)
+    switch (mitm[corpse].plus)
     {
-        switch (pot_type)
+    case MONS_RED_WASP:              // paralysis attack
+        pot_type = POT_PARALYSIS;
+        break;
+
+    case MONS_YELLOW_WASP:           // slowing attack
+        pot_type = POT_SLOWING;
+        break;
+
+    default:
+        break;
+    }
+
+    struct monsterentry* smc = get_monster_data(mitm[corpse].plus);
+
+    for (int nattk = 0; nattk < 4; ++nattk)
+    {
+        if (smc->attack[nattk].flavour == AF_POISON_MEDIUM ||
+                smc->attack[nattk].flavour == AF_POISON_STRONG ||
+                smc->attack[nattk].flavour == AF_POISON_STR)
         {
-        case POT_DECAY:
-        case POT_DEGENERATION:
-        case POT_STRONG_POISON:
-            pot_type = POT_POISON;
-            break;
-
-        case POT_MUTATION:
-        case POT_POISON:
-            pot_type = POT_CONFUSION;
-            break;
-
-        case POT_PARALYSIS:
-            pot_type = POT_SLOWING;
-            break;
-
-        case POT_CONFUSION:
-        case POT_SLOWING:
-        default:
-            pot_type = POT_WATER;
-            break;
+            pot_type = POT_STRONG_POISON;
         }
     }
 
@@ -1309,6 +1274,8 @@ void cast_fulsome_distillation(int pow)
     mitm[corpse].flags     = 0;
     mitm[corpse].inscription.clear();
     item_colour(mitm[corpse]); // sets special as well
+
+    set_ident_type(mitm[corpse], ID_KNOWN_TYPE);
 
     mprf("You extract %s from the corpse.",
          mitm[corpse].name(DESC_NOCAP_A).c_str());
@@ -1509,7 +1476,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         goto all_done;
     }
 
-    for (stack_iterator si(spd.target); si; ++si)
+    for (stack_iterator si(spd.target, true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES)
         {
@@ -1747,16 +1714,18 @@ bool cast_portal_projectile(int pow)
 
 bool cast_apportation(int pow, const coord_def& where)
 {
-    // Protect the player from destroying the item.
-    if (feat_destroys_items(grd(you.pos())))
-    {
-        mpr( "That would be silly while over this terrain!" );
-        return (false);
-    }
-
     if (you.trans_wall_blocking(where))
     {
         mpr("A translucent wall is in the way.");
+        return (false);
+    }
+
+    // Letting mostly-melee characters spam apport after every Shoals
+    // fight seems like it has too much grinding potential.  We could
+    // weaken this for high power.
+    if (grd(where) == DNGN_DEEP_WATER || grd(where) == DNGN_LAVA)
+    {
+        mpr("The density of the terrain blocks your spell.");
         return (false);
     }
 
@@ -1782,6 +1751,13 @@ bool cast_apportation(int pow, const coord_def& where)
     }
 
     item_def& item = mitm[item_idx];
+
+    // Protect the player from destroying the item.
+    if (feat_destroys_item(grd(you.pos()), item))
+    {
+        mpr( "That would be silly while over this terrain!" );
+        return (false);
+    }
 
     // Mass of one unit.
     const int unit_mass = item_mass(item);

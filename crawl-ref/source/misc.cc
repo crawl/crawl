@@ -1041,23 +1041,18 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         }
     }
 
-    // Only bother creating a distinct stack of potions
-    // if it won't get destroyed right away.
-    if (!feat_destroys_items(grd(you.pos())))
-    {
-        item_def potion2;
-        potion2.base_type = OBJ_POTIONS;
-        potion2.sub_type  = POT_DECAY;
-        // Keep description as it was.
-        potion2.plus      = potion.plus;
-        potion2.quantity  = amount;
-        potion2.colour    = potion.colour;
-        potion2.plus2     = 0;
-        potion2.flags     = 0;
-        potion2.special   = 0;
+    item_def potion2;
+    potion2.base_type = OBJ_POTIONS;
+    potion2.sub_type  = POT_DECAY;
+    // Keep description as it was.
+    potion2.plus      = potion.plus;
+    potion2.quantity  = amount;
+    potion2.colour    = potion.colour;
+    potion2.plus2     = 0;
+    potion2.flags     = 0;
+    potion2.special   = 0;
 
-        copy_item_to_grid(potion2, you.pos());
-    }
+    copy_item_to_grid(potion2, you.pos());
 
     // Is decreased even if the decay stack goes splat.
     dec_inv_item_quantity(obj, amount);
@@ -2696,11 +2691,11 @@ bool scramble(void)
         return (true);
 }
 
-bool go_berserk(bool intentional, bool no_clarity)
+bool go_berserk(bool intentional)
 {
     ASSERT(!crawl_state.arena);
 
-    if (!you.can_go_berserk(intentional, no_clarity))
+    if (!you.can_go_berserk(intentional))
         return (false);
 
     if (Tutorial.tutorial_left)
@@ -3219,7 +3214,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     const bool isUnchivalric = is_unchivalric_attack(&you, mon);
     const bool isHoly        = mon->is_holy()
                                    && (mon->attitude != ATT_HOSTILE
-                                       || testbits(mon->flags, MF_CREATED_FRIENDLY)
+                                       || testbits(mon->flags, MF_NO_REWARD)
                                        || testbits(mon->flags, MF_WAS_NEUTRAL));
 
     if (isFriendly)

@@ -25,6 +25,7 @@
 #include "mon-project.h"
 #include "terrain.h"
 #include "tutorial.h"
+#include "mislead.h"
 #include "mgen_data.h"
 #include "coord.h"
 #include "mon-speak.h"
@@ -217,6 +218,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
 
     beam.type = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
+    beam.origin_spell = real_spell;
 
     // FIXME: this should use the zap_data[] struct from beam.cc!
     switch (real_spell)
@@ -359,6 +361,19 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_COLD;
         beam.hit      = 17 + power / 25;
         beam.is_beam  = true;
+        break;
+
+    case SPELL_PRIMAL_WAVE:
+        beam.name     = "great wave of water";
+        // Water attack is weaker than the pure elemental damage
+        // attacks, but also less resistible.
+        beam.damage   = dice_def( 3, 6 + power / 12 );
+        beam.colour   = LIGHTBLUE;
+        beam.flavour  = BEAM_WATER;
+        // Huge wave of water is hard to dodge.
+        beam.hit      = 20 + power / 20;
+        beam.is_beam  = false;
+        beam.type     = dchar_glyph(DCHAR_WAVY);
         break;
 
     case SPELL_FREEZING_CLOUD:
@@ -830,6 +845,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_EYEBALLS:
     case SPELL_SUMMON_BUTTERFLIES:
     case SPELL_MISLEAD:
+    case SPELL_CALL_TIDE:
         return (true);
     default:
         if (check_validity)
@@ -845,6 +861,8 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     bolt theBeam         = mons_spells(monster, spell_cast, power);
 
+    // [ds] remind me again why we're doing this piecemeal copying?
+    pbolt.origin_spell   = theBeam.origin_spell;
     pbolt.colour         = theBeam.colour;
     pbolt.range          = theBeam.range;
     pbolt.hit            = theBeam.hit;
@@ -1570,108 +1588,6 @@ int _count_mara_fakes()
     return count;
 }
 
-bool _unsuitable_misled_monster(monster_type mons)
-{
-    return (mons_is_unique(mons) || mons_is_mimic(mons) 
-            || mons_class_is_stationary(mons) || mons_genus(mons) == MONS_DRACONIAN
-            || mons == MONS_DANCING_WEAPON || mons == MONS_UGLY_THING 
-            || mons == MONS_VERY_UGLY_THING || mons == MONS_ZOMBIE_SMALL
-            || mons == MONS_ZOMBIE_LARGE || mons == MONS_SKELETON_SMALL
-            || mons == MONS_SKELETON_LARGE || mons == MONS_SIMULACRUM_SMALL
-            || mons == MONS_SIMULACRUM_LARGE || mons == MONS_SPECTRAL_THING
-            || mons == MONS_SLIME_CREATURE || mons == MONS_BALLISTOMYCETE 
-            || mons == MONS_HYDRA || mons == MONS_PLAYER_GHOST 
-            || mons == MONS_SHAPESHIFTER || mons == MONS_PANDEMONIUM_DEMON 
-            || mons == MONS_KILLER_KLOWN || mons == MONS_KRAKEN 
-            || mons == MONS_KRAKEN_TENTACLE
-            || mons == MONS_GLOWING_SHAPESHIFTER);
-}
-
-monster_type _get_misled_monster (monsters *monster)
-{
-    monster_type mons = random_monster_at_grid(monster->pos());
-    if (_unsuitable_misled_monster(mons))
-        mons = random_monster_at_grid(monster->pos());
-
-    if (_unsuitable_misled_monster(mons))
-        return (MONS_GIANT_BAT);
-
-    return mons;
-}
-
-int _update_mislead_monsters(monsters* monster)
-{
-    int count = 0;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (*mi == monster)
-            continue;
-
-        // Don't affect uniques, named monsters, and monsters with special tiles.
-        if (mons_is_unique(mi->type) || !mi->mname.empty()
-            || mi->props.exists("monster_tile") || mi->props.exists("mislead_as"))
-        {
-            continue;
-        }
-        else
-        {
-            mi->props["mislead_as"] = short(_get_misled_monster(*mi));
-            count++;
-        }
-    }
-
-    return count;
-}
-
-void mons_cast_mislead(monsters *monster)
-{
-    // This really only affects the player; it causes confusion when cast on
-    // non-player foes, but that is dealt with inside ye-great-Switch-of-Doom.
-    if (monster->foe != MHITYOU)
-        return;
-
-    // Prevents Mislead spam by Mara and co. {due}
-    if (you.duration[DUR_MISLED] > 10 && one_chance_in(3))
-        return;
-
-    if (wearing_amulet(AMU_CLARITY))
-    {
-        mpr("Your vision blurs momentarily.");
-        return;
-    }
-
-    _update_mislead_monsters(monster);
-
-    const int old_value = you.duration[DUR_MISLED];
-    you.increase_duration(DUR_MISLED, monster->hit_dice * 12 / 3, 50);
-    if (you.duration[DUR_MISLED] > old_value)
-    {
-        you.check_awaken(500);
-
-        if (old_value <= 0)
-        {
-            mpr("But for a moment, strange images dance in front of your eyes.", MSGCH_WARN);
-#ifdef USE_TILE
-            tiles.add_overlay(you.pos(), tileidx_zap(MAGENTA));
-            update_screen();
-#else
-            flash_view(MAGENTA);
-#endif
-            more();
-        }
-        else
-            mpr("You are even more misled!", MSGCH_WARN);
-
-        learned_something_new(TUT_YOU_ENCHANTED);
-
-        xom_is_stimulated((you.duration[DUR_MISLED] - old_value)
-                           / BASELINE_DELAY);
-    }
-
-    return;
-}
-
 bool _find_players_ghost ()
 {
     bool found = false;
@@ -1767,6 +1683,22 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SWIFTNESS:
         monster->add_ench(ENCH_SWIFT);
         simple_monster_message(monster, " seems to move somewhat quicker.");
+        return;
+
+    case SPELL_CALL_TIDE:
+        if (player_in_branch(BRANCH_SHOALS))
+        {
+            const int tide_duration = random_range(18, 50, 2);
+            monster->add_ench(mon_enchant(ENCH_TIDE, 0, KC_OTHER,
+                                          tide_duration * 10));
+            monster->props[TIDE_CALL_TURN] = you.num_turns;
+            if (simple_monster_message(
+                    monster,
+                    " sings a water chant to call the tide!"))
+            {
+                flash_view_delay(ETC_WATER, 300);
+            }
+        }
         return;
 
     case SPELL_SUMMON_SMALL_MAMMALS:
@@ -1892,14 +1824,20 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             // Tentacles aren't really summoned (controlled by spell_cast
             // being passed to summon_type), so I'm not sure what the
             // abjuration value (3) is doing there. (jpeg)
-            if (create_monster(
+            int tentacle = create_monster(
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster), monster,
                           3, spell_cast, monster->pos(), monster->foe, 0, god,
                           MONS_NO_MONSTER, kraken_index, monster->colour,
                           you.your_level, PROX_CLOSE_TO_PLAYER,
-                          you.level_type)) == -1)
+                          you.level_type));
+
+            if (tentacle < 0)
             {
                 sumcount2--;
+            }
+            else if (monster->holiness() == MH_UNDEAD)
+            {
+                menv[tentacle].flags |= MF_HONORARY_UNDEAD;
             }
         }
         if (sumcount2 == 1)
@@ -1928,7 +1866,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             if (created == -1)
                 continue;
 
-            // Mara's clones are special; they have the same stats as him, and 
+            // Mara's clones are special; they have the same stats as him, and
             // are exact clones, so they are created damaged if necessary, with
             // identical enchants and with the same items.
             monsters *new_fake = &menv[created];

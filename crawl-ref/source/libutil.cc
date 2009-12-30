@@ -69,6 +69,10 @@ description_level_type description_type_by_name(const char *desc)
         return DESC_INVENTORY;
     else if (!strcmp("none", desc))
         return DESC_NONE;
+    else if (!strcmp("base", desc))
+        return DESC_BASENAME;
+    else if (!strcmp("qual", desc))
+        return DESC_QUALNAME;
 
     return DESC_PLAIN;
 }
@@ -139,12 +143,15 @@ std::string strip_filename_unsafe_chars(const std::string &s)
 std::string vmake_stringf(const char* s, va_list args)
 {
     char buf1[400];
+    va_list orig_args;
+    va_copy(orig_args, args);
     size_t len = vsnprintf(buf1, sizeof buf1, s, args);
     if (len < sizeof buf1)
         return (buf1);
 
     char *buf2 = (char*)malloc(len + 1);
-    vsnprintf(buf2, len + 1, s, args);
+    vsnprintf(buf2, len + 1, s, orig_args);
+    va_end(orig_args);
     std::string ret(buf2);
     free(buf2);
 

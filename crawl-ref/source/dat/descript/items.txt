@@ -8,7 +8,8 @@ one is skilled in the appropriate elemental magic.
 %%%%
 amulet of clarity
 
-This amulet protects its wearer from some forms of mental confusion.
+This amulet protects its wearer from some forms of mental confusion,
+including being infuriated against one's will.
 %%%%
 amulet of conservation
 

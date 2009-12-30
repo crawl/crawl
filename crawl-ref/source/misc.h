@@ -10,10 +10,10 @@
 #include "externs.h"
 
 struct bolt;
-struct dist;
+class dist;
 struct activity_interrupt_data;
 
-bool go_berserk(bool intentional, bool no_clarity = false);
+bool go_berserk(bool intentional);
 void search_around(bool only_adjacent = false);
 void down_stairs(int old_level,
                  dungeon_feature_type force_stair = DNGN_UNSEEN,

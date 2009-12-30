@@ -214,7 +214,7 @@ void place_transiting_items()
                                   pos, true);
 
         // List of items we couldn't place.
-        if (!copy_item_to_grid(*item, where_to_go))
+        if (!copy_item_to_grid(*item, where_to_go, 1, false, true))
             keep.push_back(*item);
     }
 

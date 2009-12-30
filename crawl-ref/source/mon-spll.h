@@ -1043,8 +1043,8 @@
 
     { MST_ILSUIW,
       {
-       SPELL_THROW_FROST, // was: SPELL_CONFUSED (jpeg)
-       SPELL_SLOW,
+       SPELL_THROW_ICICLE,
+       SPELL_CALL_TIDE,
        SPELL_INVISIBILITY,
        SPELL_BLINK,
        SPELL_WATER_ELEMENTALS,
@@ -1317,6 +1317,17 @@
        SPELL_PAIN,
        SPELL_TELEPORT_SELF,
       }
+    },
+
+    {  MST_MERFOLK_AQUAMANCER,
+       {
+        SPELL_PRIMAL_WAVE,
+        SPELL_BOLT_OF_COLD,
+        SPELL_THROW_ICICLE,
+        SPELL_NO_SPELL,
+        SPELL_NO_SPELL,
+        SPELL_BLINK
+       }
     },
 
     {  MST_TEST_SPAWNER,

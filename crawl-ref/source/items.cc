@@ -1171,7 +1171,7 @@ void pickup()
         return;
     }
 
-    int o = igrd(you.pos());
+    int o = you.visible_igrd(you.pos());
     const int num_nonsquelched = _count_nonsquelched_items(o);
 
     if (o == NON_ITEM)
@@ -1719,7 +1719,10 @@ void mark_items_non_pickup_at(const coord_def &pos)
 //
 // Done this way in the hopes that it will be obvious from
 // calling code that "obj" is possibly modified.
-bool move_item_to_grid( int *const obj, const coord_def& p )
+//
+// Returns false on error or level full - cases where you
+// keep the item.
+bool move_item_to_grid( int *const obj, const coord_def& p, bool silent )
 {
     ASSERT(in_bounds(p));
 
@@ -1729,6 +1732,15 @@ bool move_item_to_grid( int *const obj, const coord_def& p )
         return (false);
 
     item_def& item(mitm[ob]);
+
+    if (feat_destroys_item(grd(p), mitm[ob], !silenced(p) && !silent))
+    {
+        item_was_destroyed(item, NON_MONSTER);
+        destroy_item(ob);
+        ob = NON_ITEM;
+
+        return (true);
+    }
 
     // If it's a stackable type...
     if (is_stackable_item( item ))
@@ -1761,7 +1773,7 @@ bool move_item_to_grid( int *const obj, const coord_def& p )
         while (item.quantity > 1)
         {
             // If we can't copy the items out, we lose the surplus.
-            if (copy_item_to_grid(item, p, 1, false))
+            if (copy_item_to_grid(item, p, 1, false, true))
                 --item.quantity;
             else
                 item.quantity = 1;
@@ -1809,14 +1821,21 @@ void move_item_stack_to_grid( const coord_def& from, const coord_def& to )
 }
 
 
-// Returns quantity dropped.
+// Returns false iff no items could be dropped.
 bool copy_item_to_grid( const item_def &item, const coord_def& p,
-                        int quant_drop, bool mark_dropped )
+                        int quant_drop, bool mark_dropped, bool silent )
 {
     ASSERT(in_bounds(p));
 
     if (quant_drop == 0)
         return (false);
+
+    if (feat_destroys_item(grd(p), item, !silenced(p) && !silent))
+    {
+        item_was_destroyed(item, NON_MONSTER);
+
+        return (true);
+    }
 
     // default quant_drop == -1 => drop all
     if (quant_drop < 0)
@@ -1864,7 +1883,7 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
         origin_set_unknown(new_item);
     }
 
-    move_item_to_grid( &new_item_idx, p );
+    move_item_to_grid( &new_item_idx, p, true );
     if (is_blood_potion(item)
         && item.quantity != quant_drop) // partial drop only
     {
@@ -1966,9 +1985,8 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
     const dungeon_feature_type my_grid = grd(you.pos());
 
-    if (!feat_destroys_items(my_grid)
-        && !copy_item_to_grid( you.inv[item_dropped],
-                               you.pos(), quant_drop, true ))
+    if (!copy_item_to_grid( you.inv[item_dropped],
+                            you.pos(), quant_drop, true, true ))
     {
         mpr("Too many items on this level, not dropping the item.");
         return (false);
@@ -1977,13 +1995,15 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     mprf("You drop %s.",
          quant_name(you.inv[item_dropped], quant_drop, DESC_NOCAP_A).c_str());
 
-    if (feat_destroys_items(my_grid))
-    {
-        if (!silenced(you.pos()))
-            mprf(MSGCH_SOUND, feat_item_destruction_message(my_grid));
+    bool quiet = silenced(you.pos());
 
-        item_was_destroyed(you.inv[item_dropped], NON_MONSTER);
-    }
+    // If you drop an item in as a merfolk, it is below the water line and
+    // makes no noise falling.
+    if (you.swimming())
+        quiet = true;
+
+    if (feat_destroys_item(my_grid, you.inv[item_dropped], !quiet))
+        ;
     else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
         StashTrack.add_stash();
 
@@ -2558,7 +2578,7 @@ static void _do_autopickup()
         return;
     }
 
-    int o = igrd(you.pos());
+    int o = you.visible_igrd(you.pos());
 
     std::string pickup_warning;
     while (o != NON_ITEM)
@@ -2932,6 +2952,33 @@ bool item_def::is_critical() const
             && sub_type == MISC_RUNE_OF_ZOT
             && plus != RUNE_DEMONIC
             && plus != RUNE_ABYSSAL);
+}
+
+// Is item something that no one would usually bother enchanting?
+bool item_def::is_mundane() const
+{
+    switch (base_type)
+    {
+    case OBJ_WEAPONS:
+        if (sub_type == WPN_CLUB
+            || sub_type == WPN_GIANT_CLUB
+            || sub_type == WPN_GIANT_SPIKED_CLUB
+            || sub_type == WPN_KNIFE)
+        {
+            return (true);
+        }
+        break;
+
+    case OBJ_ARMOUR:
+        if (sub_type == ARM_ANIMAL_SKIN)
+            return (true);
+        break;
+
+    default:
+        break;
+    }
+
+    return (false);
 }
 
 static void _rune_from_specs(const char* _specs, item_def &item)

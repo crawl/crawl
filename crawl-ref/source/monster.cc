@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dgnevent.h"
+#include "dgn-shoals.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
@@ -187,7 +188,7 @@ static bool _player_near_water()
 bool monsters::wants_submerge() const
 {
     // Krakens never retreat when food (the player) is in range.
-    if (type == MONS_KRAKEN)
+    if (mons_base_type(this) == MONS_KRAKEN)
         if (_player_near_water())
             return (false);
 
@@ -316,7 +317,7 @@ size_type monsters::body_size(size_part_type /* psize */, bool /* base */) const
     return (ret);
 }
 
-int monsters::body_weight() const
+int monsters::body_weight(bool /*base*/) const
 {
     int mclass = type;
 
@@ -1153,12 +1154,8 @@ bool monsters::drop_item(int eslot, int near)
         was_unequipped = true;
     }
 
-    bool on_floor = true;
-
     if (pitem->flags & ISFLAG_SUMMONED)
     {
-        on_floor = false;
-
         if (need_message(near))
             mprf("%s %s as %s drops %s!",
                  pitem->name(DESC_CAP_THE).c_str(),
@@ -1169,38 +1166,30 @@ bool monsters::drop_item(int eslot, int near)
         item_was_destroyed(*pitem, mindex());
         destroy_item(item_index);
     }
-    else if (!move_item_to_grid(&item_index, pos()))
+    else
     {
-        // Re-equip item if we somehow failed to drop it.
-        if (was_unequipped)
-            equip(*pitem, eslot, near);
-
-        return (false);
-    }
-
-    // move_item_to_grid could change item_index, so
-    // update pitem.
-    pitem = &mitm[item_index];
-
-    if (on_floor)
-    {
-        if (friendly())
-            pitem->flags |= ISFLAG_DROPPED_BY_ALLY;
-
         if (need_message(near))
         {
             mprf("%s drops %s.", name(DESC_CAP_THE).c_str(),
                  pitem->name(DESC_NOCAP_A).c_str());
         }
 
-        dungeon_feature_type feat = grd(pos());
-        if (feat_destroys_items(feat))
+        if (!move_item_to_grid(&item_index, pos(), swimming()))
         {
-            if ( player_can_hear(pos()) )
-                mprf(MSGCH_SOUND, feat_item_destruction_message(feat));
+            // Re-equip item if we somehow failed to drop it.
+            if (was_unequipped)
+                equip(*pitem, eslot, near);
 
-            item_was_destroyed(*pitem, mindex());
-            unlink_item(item_index);
+            return (false);
+        }
+
+        if (friendly() && item_index != NON_ITEM)
+        {
+            // move_item_to_grid could change item_index, so
+            // update pitem.
+            pitem = &mitm[item_index];
+
+            pitem->flags |= ISFLAG_DROPPED_BY_ALLY;
         }
     }
 
@@ -3308,6 +3297,21 @@ int monsters::res_asphyx() const
     return (res);
 }
 
+int monsters::res_water_drowning() const
+{
+    const int res = res_asphyx();
+    if (res)
+        return res;
+    switch (mons_habitat(this))
+    {
+    case HT_WATER:
+    case HT_AMPHIBIOUS_WATER:
+        return 1;
+    default:
+        return 0;
+    }
+}
+
 int monsters::res_poison() const
 {
     int u = get_mons_resists(this).poison;
@@ -4290,6 +4294,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 {
     switch (me.ench)
     {
+    case ENCH_TIDE:
+        shoals_release_tide(this);
+        break;
+
     case ENCH_BERSERK:
         scale_hp(2, 3);
         break;
@@ -5550,7 +5558,9 @@ void monsters::check_redraw(const coord_def &old) const
     }
 }
 
-void monsters::apply_location_effects(const coord_def &oldpos)
+void monsters::apply_location_effects(const coord_def &oldpos,
+                                      killer_type killer,
+                                      int killernum)
 {
     if (oldpos != pos())
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
@@ -5583,7 +5593,7 @@ void monsters::apply_location_effects(const coord_def &oldpos)
         ptrap->trigger(*this);
 
     if (alive())
-        mons_check_pool(this, pos());
+        mons_check_pool(this, pos(), killer, killernum);
 
     if (alive() && has_ench(ENCH_SUBMERGED)
         && (!monster_can_submerge(this, grd(pos()))
@@ -5955,7 +5965,7 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
             if (nmons != -1 && nmons != NON_MONSTER)
             {
                 // Don't allow milking the royal jelly.
-                menv[nmons].flags |= MF_CREATED_FRIENDLY;
+                menv[nmons].flags |= MF_NO_REWARD;
                 spawned++;
             }
         }
@@ -5984,7 +5994,7 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
     else if (type == MONS_KRAKEN_TENTACLE && flavour != BEAM_TORMENT_DAMAGE)
     {
         if (!invalid_monster_index(number)
-            && menv[number].type == MONS_KRAKEN)
+            && mons_base_type(&menv[number]) == MONS_KRAKEN)
         {
             menv[number].hurt(&you, damage, flavour);
 
@@ -6014,7 +6024,7 @@ static const char *enchant_names[] =
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
     "soul-ripe", "decay", "hungry", "flopping", "spore-producing",
-    "downtrodden", "swift", "bug"
+    "downtrodden", "swift", "tide", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

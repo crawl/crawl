@@ -10,7 +10,7 @@
 
 #include "externs.h"
 
-struct dist;
+class dist;
 struct bolt;
 
 bool backlight_monsters(coord_def where, int pow, int garbage);

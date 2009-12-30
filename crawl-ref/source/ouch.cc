@@ -91,6 +91,13 @@ int check_your_resists(int hurted, beam_type flavour)
 
     switch (flavour)
     {
+    case BEAM_WATER:
+        hurted = resist_adjust_damage(&you, flavour,
+                                      you.res_water_drowning(), hurted, true);
+        if (!hurted)
+            mpr("You shrug off the wave.");
+        break;
+
     case BEAM_STEAM:
         hurted = resist_adjust_damage(&you, flavour,
                                       player_res_steam(), hurted, true);
@@ -542,6 +549,10 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 
     const int target_class = _get_target_class(flavour);
     if (target_class == OBJ_UNASSIGNED)
+        return (false);
+
+    // Beams fly *over* water and lava.
+    if (grd(where) == DNGN_LAVA || grd(where) == DNGN_DEEP_WATER)
         return (false);
 
     for (stack_iterator si(where); si; ++si)

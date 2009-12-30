@@ -179,6 +179,12 @@ bool builder(int level_number, int level_type);
 
 void dgn_flush_map_memory();
 
+double dgn_degrees_to_radians(int degrees);
+coord_def dgn_random_point_from(const coord_def &c, int radius, int margin = 1);
+coord_def dgn_random_point_visible_from(const coord_def &c,
+                                        int radius,
+                                        int margin = 1,
+                                        int tries = 5);
 coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 
 // Set floor/wall colour based on the mons_alloc array. Used for
@@ -187,7 +193,8 @@ void dgn_set_colours_from_monsters();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
 bool dgn_place_map(const map_def *map, bool clobber, bool make_no_exits,
-                   const coord_def &pos = coord_def(-1, -1));
+                   const coord_def &pos = coord_def(-1, -1),
+                   int rune_subst = -1);
 
 void level_clear_vault_memory();
 void level_welcome_messages();
@@ -267,6 +274,9 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
                       dungeon_feature_type replace,
                       dungeon_feature_type feature,
                       unsigned mmask = 0, bool needs_update = false);
+
+bool dgn_ensure_vault_placed(bool vault_success,
+                             bool disable_further_vaults);
 
 inline int count_feature_in_box( const coord_def& p1, const coord_def& p2,
                           dungeon_feature_type feat )

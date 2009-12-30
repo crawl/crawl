@@ -2430,7 +2430,7 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 
 void ShoppingList::forget_pos(const level_pos &pos)
 {
-    if (crawl_state.map_stat_gen || crawl_state.test)
+    if (!crawl_state.need_save)
         // Shopping list is unitialized and uneeded.
         return;
 

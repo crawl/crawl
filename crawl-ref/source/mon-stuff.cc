@@ -255,10 +255,6 @@ bool curse_an_item( bool decay_potions, bool quiet )
 void monster_drop_ething(monsters *monster, bool mark_item_origins,
                          int owner_id)
 {
-    const bool hostile_grid = feat_destroys_items(grd(monster->pos()));
-
-    bool destroyed = false;
-
     // Drop weapons & missiles last (ie on top) so others pick up.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; i--)
     {
@@ -268,30 +264,26 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
         {
             const bool summoned_item =
                 testbits(mitm[item].flags, ISFLAG_SUMMONED);
-            if (hostile_grid || summoned_item)
+            if (summoned_item)
             {
                 item_was_destroyed(mitm[item], monster->mindex());
                 destroy_item( item );
-                if (!summoned_item)
-                    destroyed = true;
             }
             else
             {
                 if (monster->friendly() && mitm[item].is_valid())
                     mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
 
-                move_item_to_grid(&item, monster->pos());
-
                 if (mark_item_origins && mitm[item].is_valid())
                     origin_set_monster(mitm[item], monster);
+
+                // If a monster is swimming, the items are ALREADY underwater
+                move_item_to_grid(&item, monster->pos(), monster->swimming());
             }
 
             monster->inv[i] = NON_ITEM;
         }
     }
-
-    if (destroyed)
-        mprf(MSGCH_SOUND, feat_item_destruction_message(grd(monster->pos())));
 }
 
 monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
@@ -421,14 +413,6 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
         --nchunks;
 
-        if (feat_destroys_items(grd(cp)))
-        {
-            if (!silenced(cp))
-                mprf(MSGCH_SOUND, feat_item_destruction_message(grd(cp)));
-
-            continue;
-        }
-
         dprf("Success");
 
         copy_item_to_grid(corpse, cp);
@@ -483,16 +467,8 @@ int place_monster_corpse(const monsters *monster, bool silent,
         return (-1);
     }
 
-    if (feat_destroys_items(grd(monster->pos())))
-    {
-        item_was_destroyed(corpse);
-        destroy_item(o);
-        return (-1);
-    }
+    move_item_to_grid(&o, monster->pos(), !monster->swimming());
 
-    // Don't care if 'o' is changed, and it shouldn't be (corpses don't
-    // stack).
-    move_item_to_grid(&o, monster->pos());
     if (you.see_cell(monster->pos()))
     {
         if (force && !silent)
@@ -507,10 +483,12 @@ int place_monster_corpse(const monsters *monster, bool silent,
         }
         const bool poison = (mons_corpse_effect(corpse_class) == CE_POISONOUS
                              && player_res_poison() <= 0);
-        tutorial_dissection_reminder(!poison);
+
+        if (o != NON_ITEM)
+            tutorial_dissection_reminder(!poison);
     }
 
-    return (o);
+    return (o == NON_ITEM ? -1 : o);
 }
 
 static void _tutorial_inspect_kill()
@@ -595,7 +573,7 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
     const int experience = exper_value(monster);
 
     const bool created_friendly =
-        testbits(monster->flags, MF_CREATED_FRIENDLY);
+        testbits(monster->flags, MF_NO_REWARD);
     const bool was_neutral = testbits(monster->flags, MF_WAS_NEUTRAL);
     const bool no_xp = monster->has_ench(ENCH_ABJ) || !experience;
     const bool already_got_half_xp = testbits(monster->flags, MF_GOT_HALF_XP);
@@ -1323,12 +1301,12 @@ static int _tentacle_too_far(monsters *head, monsters *tentacle)
     // If this ever changes, we'd need to check if the head and tentacle
     // are still in the same pool.
     // XXX: Actually, using Fedhas's Sunlight power you can separate pools...
-    return grid_distance(head->pos(), tentacle->pos()) > LOS_RADIUS;
+    return grid_distance(head->pos(), tentacle->pos()) > KRAKEN_TENTACLE_RANGE;
 }
 
 void mons_relocated(monsters *monster)
 {
-    if (monster->type == MONS_KRAKEN)
+    if (mons_base_type(monster) == MONS_KRAKEN)
     {
         int headnum = monster->mindex();
 
@@ -1421,6 +1399,9 @@ int monster_die(monsters *monster, killer_type killer,
         monster->flags &= ~MF_EXPLODE_KILL;
         return (-1);
     }
+
+    // If the monster was calling the tide, let go now.
+    monster->del_ench(ENCH_TIDE);
 
     crawl_state.inc_mon_acting(monster);
 
@@ -1616,7 +1597,7 @@ int monster_die(monsters *monster, killer_type killer,
                                && monster->visible_to(&you);
     const bool exploded      = monster->flags & MF_EXPLODE_KILL;
 
-    const bool created_friendly = testbits(monster->flags, MF_CREATED_FRIENDLY);
+    const bool created_friendly = testbits(monster->flags, MF_NO_REWARD);
           bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = monster->holiness();
 
@@ -2117,7 +2098,7 @@ int monster_die(monsters *monster, killer_type killer,
         // he goes away.
         pikel_band_neutralise();
     }
-    else if (monster->type == MONS_KRAKEN)
+    else if (mons_base_type(monster) == MONS_KRAKEN)
     {
         if (_destroy_tentacles(monster) && !in_transit)
         {

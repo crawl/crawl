@@ -1550,7 +1550,7 @@ void TilesFramework::update_inventory()
     memset(inv_shown, 0, sizeof(inv_shown));
 
     int num_ground = 0;
-    for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         num_ground++;
 
     // If the inventory is full, show at least one row of the ground.
@@ -1676,7 +1676,7 @@ void TilesFramework::update_inventory()
             type = (object_class_type)(find - obj_syms);
         }
 
-        for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+        for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         {
             if ((int)inv.size() >= mx * my)
                 break;

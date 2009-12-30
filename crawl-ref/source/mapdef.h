@@ -258,7 +258,7 @@ std::string parse_weighted_str(const std::string &cspec, T &list);
 
 class map_def;
 class rectangle_iterator;
-class keyed_mapspec;
+struct keyed_mapspec;
 class map_lines
 {
 public:

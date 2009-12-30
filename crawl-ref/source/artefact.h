@@ -10,7 +10,7 @@
 
 #include "externs.h"
 
-class bolt;
+struct bolt;
 
 // NOTE: NO_UNRANDARTS is automatically set by util/art-data.pl
 #define NO_UNRANDARTS 82

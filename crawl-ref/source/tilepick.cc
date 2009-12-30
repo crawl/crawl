@@ -199,7 +199,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // fungi ('f')
     case MONS_BALLISTOMYCETE:
-        return TILEP_MONS_FUNGUS;
+        if (!detected && mon->has_ench(ENCH_SPORE_PRODUCTION))
+            return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
+        return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
     case MONS_TOADSTOOL:
         return TILEP_MONS_TOADSTOOL;
     case MONS_FUNGUS:
@@ -2474,6 +2476,8 @@ int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
         return TILE_DNGN_ORCISH_IDOL;
     case DNGN_WAX_WALL:
         return TILE_DNGN_WAX_WALL;
+    case DNGN_TREES:
+        return TILE_DNGN_TREE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
     case DNGN_LAVA:
@@ -4794,7 +4798,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         if (!mons_is_known_mimic(mon))
         {
             // If necessary add item brand.
-            if (igrd(gc) != NON_ITEM)
+            if (you.visible_igrd(gc) != NON_ITEM)
             {
                 if (foreground)
                     t |= TILE_FLAG_S_UNDER;
@@ -4814,7 +4818,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     else if (menv[idx].holiness() == MH_PLANT)
     {
         // If necessary add item brand.
-        if (igrd(gc) != NON_ITEM)
+        if (you.visible_igrd(gc) != NON_ITEM)
         {
             if (foreground)
                 t |= TILE_FLAG_S_UNDER;

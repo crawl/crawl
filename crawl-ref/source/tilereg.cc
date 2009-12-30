@@ -1745,7 +1745,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         tip += get_class_abbrev(you.char_class);
         tip += ")";
 
-        if (igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM)
+        if (you.visible_igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM)
             tip += "\n[L-Click] Pick up items (g)";
 
         const dungeon_feature_type feat = grd(m_cursor[CURSOR_MOUSE]);

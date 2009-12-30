@@ -8,7 +8,7 @@
 #define MONABIL_H
 
 class monsters;
-class bolt;
+struct bolt;
 
 bool mon_special_ability(monsters *monster, bolt & beem);
 void mon_nearby_ability(monsters *monster);

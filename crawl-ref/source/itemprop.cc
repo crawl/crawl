@@ -562,33 +562,6 @@ bool item_ident( const item_def &item, unsigned long flags )
     return ((item.flags & flags) == flags);
 }
 
-// Is item something that no one would usually bother enchanting?
-bool item_is_mundane(const item_def &item)
-{
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        if (item.sub_type == WPN_CLUB
-            || item.sub_type == WPN_GIANT_CLUB
-            || item.sub_type == WPN_GIANT_SPIKED_CLUB
-            || item.sub_type == WPN_KNIFE)
-        {
-            return (true);
-        }
-        break;
-
-    case OBJ_ARMOUR:
-        if (item.sub_type == ARM_ANIMAL_SKIN)
-            return (true);
-        break;
-
-    default:
-        break;
-    }
-
-    return (false);
-}
-
 void set_ident_flags( item_def &item, unsigned long flags )
 {
     preserve_quiver_slots p;

@@ -550,8 +550,8 @@ inline static void _check_interesting_square(int x, int y,
                 ed.found_item(pos, get_mimic_item(mons));
         }
 
-        if (igrd(pos) != NON_ITEM)
-            ed.found_item( pos, mitm[ igrd(pos) ] );
+        if (you.visible_igrd(pos) != NON_ITEM)
+            ed.found_item( pos, mitm[ you.visible_igrd(pos) ] );
     }
 
     ed.found_feature( pos, grd(pos) );

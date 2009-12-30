@@ -48,7 +48,7 @@ void lua_set_exclusive_item(const item_def *item)
 
 void lua_push_floor_items(lua_State *ls)
 {
-    lua_push_items(ls, igrd(you.pos()));
+    lua_push_items(ls, you.visible_igrd(you.pos()));
 }
 
 void lua_push_inv_items(lua_State *ls = NULL)
@@ -686,6 +686,53 @@ static int l_item_do_destroy(lua_State *ls)
     return (1);
 }
 
+static int l_item_do_dec_quantity(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    LUA_ITEM(item, 1);
+    if (!item || !item->is_valid())
+    {
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+
+    // The quantity to reduce by.
+    int quantity = luaL_checkint(ls, 2);
+
+    bool destroyed = false;
+
+    if (in_inventory(*item))
+        destroyed = dec_inv_item_quantity(item->link, quantity);
+    else
+        destroyed = dec_mitm_item_quantity(item->index(), quantity);
+
+    lua_pushboolean(ls, destroyed);
+    return (1);
+}
+
+static int l_item_do_inc_quantity(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    LUA_ITEM(item, 1);
+    if (!item || !item->is_valid())
+    {
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+
+    // The quantity to increase by.
+    int quantity = luaL_checkint(ls, 2);
+
+    if (in_inventory(*item))
+        inc_inv_item_quantity(item->link, quantity);
+    else
+        inc_mitm_item_quantity(item->index(), quantity);
+
+    return (0);
+}
+
 static const struct luaL_reg item_lib[] =
 {
     { "artefact",          l_item_artefact },
@@ -717,6 +764,8 @@ static const struct luaL_reg item_lib[] =
     { "dropped",           l_item_dropped },
     { "can_cut_meat",      l_item_can_cut_meat },
     { "destroy",           l_item_do_destroy },
+    { "dec_quantity",      l_item_do_dec_quantity },
+    { "inc_quantity",      l_item_do_inc_quantity },
 
     { NULL, NULL },
 };

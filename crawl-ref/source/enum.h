@@ -199,23 +199,24 @@ enum beam_type                  // beam[].flavour
     BEAM_MMISSILE,                //    and similarly irresistible things
     BEAM_FIRE,
     BEAM_COLD,
-    BEAM_MAGIC,                   // 5
+    BEAM_WATER,
+    BEAM_MAGIC,
     BEAM_ELECTRICITY,
     BEAM_POISON,
     BEAM_NEG,
     BEAM_ACID,
-    BEAM_MIASMA,                  // 10
+    BEAM_MIASMA,
 
     BEAM_SPORE,
     BEAM_POISON_ARROW,
     BEAM_HELLFIRE,
     BEAM_NAPALM,
-    BEAM_STEAM,                   // 15
+    BEAM_STEAM,
     BEAM_ENERGY,
     BEAM_HOLY,
     BEAM_FRAG,
     BEAM_LAVA,
-    BEAM_ICE,                     // 20
+    BEAM_ICE,
     BEAM_NUKE,
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
@@ -223,22 +224,22 @@ enum beam_type                  // beam[].flavour
     // Enchantments
     BEAM_SLOW,
     BEAM_FIRST_ENCHANTMENT = BEAM_SLOW,
-    BEAM_HASTE,                   // 25
+    BEAM_HASTE,
     BEAM_MIGHT,
     BEAM_HEALING,
     BEAM_PARALYSIS,
     BEAM_CONFUSION,
-    BEAM_INVISIBILITY,            // 30
+    BEAM_INVISIBILITY,
     BEAM_DIGGING,
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
     BEAM_CHARM,
-    BEAM_BANISH,                  // 35
+    BEAM_BANISH,
     BEAM_DEGENERATE,
     BEAM_ENSLAVE_UNDEAD,
     BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
-    BEAM_DISPEL_UNDEAD,           // 40
+    BEAM_DISPEL_UNDEAD,
     BEAM_DISINTEGRATION,
     BEAM_ENSLAVE_DEMON,
     BEAM_BLINK,
@@ -993,10 +994,10 @@ enum dungeon_feature_type
     // Highest grid value which can't be reached through.
     DNGN_MAX_NONREACH = DNGN_CLEAR_PERMAROCK_WALL,
 
-    DNGN_TREES,
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
 
     // Can be seen through and reached past.
+    DNGN_TREES,
     DNGN_ORCISH_IDOL = 15,
     DNGN_GRANITE_STATUE = 21,          //   21
     DNGN_STATUE_RESERVED,
@@ -1253,6 +1254,7 @@ enum enchant_type
     ENCH_SPORE_PRODUCTION,             //   35
     ENCH_SLOUCH,
     ENCH_SWIFT,
+    ENCH_TIDE,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
@@ -1818,6 +1820,12 @@ enum monster_type                      // (int) menv[].type
     MONS_TOADSTOOL,
     MONS_BUSH,
     MONS_BALLISTOMYCETE,               //  200
+
+    // Shoals guardians
+    MONS_MERFOLK_IMPALER,
+    MONS_MERFOLK_AQUAMANCER,
+    MONS_MERFOLK_JAVELINEER,
+
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,
@@ -2122,7 +2130,7 @@ enum mon_attitude_type
 // These are now saved in an unsigned long in the monsters struct.
 enum monster_flag_type
 {
-    MF_CREATED_FRIENDLY   = 0x01,    // no benefit from killing
+    MF_NO_REWARD          = 0x01,    // no benefit from killing
     MF_JUST_SUMMONED      = 0x02,    // monster skips next available action
     MF_TAKING_STAIRS      = 0x04,    // is following player through stairs
     MF_INTERESTING        = 0x08,    // Player finds monster interesting
@@ -2319,6 +2327,7 @@ enum mon_spellbook_type
     MST_HAROLD,
     MST_MARA,
     MST_MARA_FAKE,
+    MST_MERFOLK_AQUAMANCER,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2921,6 +2930,8 @@ enum spell_type
     SPELL_FAKE_MARA_SUMMON,
     SPELL_SUMMON_RAKSHASA,
     SPELL_SUMMON_PLAYER_GHOST,
+    SPELL_PRIMAL_WAVE,
+    SPELL_CALL_TIDE,
     SPELL_IOOD,
 
     NUM_SPELLS
@@ -3112,6 +3123,7 @@ enum zap_type
     ZAP_PARALYSIS,
     ZAP_FIRE,
     ZAP_COLD,
+    ZAP_PRIMAL_WAVE,
     ZAP_CONFUSION,
     ZAP_INVISIBILITY,
     ZAP_DIGGING,

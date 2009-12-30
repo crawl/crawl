@@ -1887,7 +1887,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             text << "Ah, a corpse!";
         else
         {
-            int i = igrd(gc);
+            int i = you.visible_igrd(gc);
             while (i != NON_ITEM)
             {
                 if (mitm[i].base_type == OBJ_CORPSES)
@@ -4680,7 +4680,7 @@ void tutorial_observe_cell(const coord_def& gc)
     else if (grd(gc) == DNGN_ENTER_PORTAL_VAULT)
         learned_something_new(TUT_SEEN_PORTAL, gc);
 
-    const int it = igrd(gc);
+    const int it = you.visible_igrd(gc);
     if (it != NON_ITEM)
     {
         const item_def& item(mitm[it]);

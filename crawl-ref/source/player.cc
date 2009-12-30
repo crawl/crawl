@@ -2379,7 +2379,11 @@ int player_sust_abil(bool calc_unid)
 
 int carrying_capacity(burden_state_type bs)
 {
-    int cap = (2 * you.body_weight()) + (you.strength * 300)
+    // Yuck.  We need this for gameplay - it nerfs small forms too much
+    // otherwise - but there's no good way to rationalize here...  --sorear
+    int used_weight = std::max(you.body_weight(), you.body_weight(true));
+
+    int cap = (2 * used_weight) + (you.strength * 300)
               + (you.airborne() ? 1000 : 0);
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
@@ -5545,6 +5549,17 @@ bool player::can_swim() const
     return (species == SP_MERFOLK && merfolk_change_is_safe(true));
 }
 
+int player::visible_igrd(const coord_def &where) const
+{
+    if (grd(where) == DNGN_LAVA
+        || (grd(where) == DNGN_DEEP_WATER && species != SP_MERFOLK))
+    {
+        return (NON_ITEM);
+    }
+
+    return igrd(where);
+}
+
 bool player::swimming() const
 {
     return in_water() && can_swim();
@@ -5593,9 +5608,12 @@ size_type player::body_size(size_part_type psize, bool base) const
     }
 }
 
-int player::body_weight() const
+int player::body_weight(bool base) const
 {
-    int weight = actor::body_weight();
+    int weight = actor::body_weight(base);
+
+    if (base)
+        return (weight);
 
     switch (attribute[ATTR_TRANSFORMATION])
     {
@@ -5973,8 +5991,10 @@ bool player::can_go_berserk() const
     return (can_go_berserk(false));
 }
 
-bool player::can_go_berserk(bool verbose, bool no_clarity) const
+bool player::can_go_berserk(bool intentional) const
 {
+    const bool verbose = intentional;
+
     if (berserk())
     {
         if (verbose)
@@ -6009,7 +6029,7 @@ bool player::can_go_berserk(bool verbose, bool no_clarity) const
         return (false);
     }
 
-    if (!no_clarity && player_mental_clarity(true))
+    if (!intentional && player_mental_clarity(true))
     {
         if (verbose)
         {
@@ -6443,6 +6463,12 @@ int player::res_cold() const
 int player::res_elec() const
 {
     return (player_res_electricity() * 2);
+}
+
+int player::res_water_drowning() const
+{
+    return (res_asphyx() ||
+            (you.species == SP_MERFOLK && !transform_changed_physiology()));
 }
 
 int player::res_asphyx() const
@@ -7040,6 +7066,13 @@ bool player::move_to_pos(const coord_def &c)
         return true;
     }
     return false;
+}
+
+void player::apply_location_effects(const coord_def &oldpos,
+                                    killer_type killer,
+                                    int killernum)
+{
+    move_player_to_grid(pos(), false, true, true, false);
 }
 
 void player::shiftto(const coord_def &c)
