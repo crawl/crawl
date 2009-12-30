@@ -1480,7 +1480,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SCORPION, 's', LIGHTGREY, "scorpion",
+    MONS_SCORPION, 's', YELLOW, "scorpion",
     M_NO_SKELETON,
     MR_VUL_POISON,
     500, 10, MONS_SCORPION, MONS_SCORPION, MH_NATURAL, -3,
