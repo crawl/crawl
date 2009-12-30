@@ -3368,6 +3368,25 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
     for (int i = 0; i < num_to_place; i++)
     {
         mg.cls = montypes[random2(montypes.size())];
+
+        if (player_in_branch( BRANCH_COCYTUS ) &&
+            x_chance_in_y(95, 100) &&
+            mons_class_can_be_zombified(mg.cls))
+        {
+            static const monster_type lut[3][2] =
+            {
+                { MONS_SKELETON_SMALL, MONS_SKELETON_LARGE },
+                { MONS_ZOMBIE_SMALL, MONS_ZOMBIE_LARGE },
+                { MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE },
+            };
+
+            mg.base_type = mg.cls;
+            mg.cls = lut[random_choose_weighted(2, 0, 8, 1, 1, 2, 0)]
+                        [mons_zombie_size(mg.base_type) == Z_BIG];
+        }
+
+        else
+            mg.base_type = MONS_NO_MONSTER;
         if (place_monster(mg) != -1)
             ++result;
     }
@@ -3430,6 +3449,16 @@ static void _place_aquatic_monsters(int level_number, char level_type)
                 else if (one_chance_in(20))
                     swimming_things[i] = MONS_KRAKEN;
             }
+            else if (player_in_branch( BRANCH_COCYTUS ))
+            {
+                // Eels are useless when zombified
+                if (swimming_things[i] == MONS_ELECTRIC_EEL &&
+                    !one_chance_in(20))
+                {
+                    swimming_things[i] = one_chance_in(4) ? MONS_KRAKEN :
+                                             MONS_WATER_ELEMENTAL;
+                }
+            }
         }
 
         // Don't place sharks in the Swamp.
@@ -3441,9 +3470,6 @@ static void _place_aquatic_monsters(int level_number, char level_type)
 
         if (level_number >= 25 && one_chance_in(5))
             swimming_things[0] = MONS_WATER_ELEMENTAL;
-
-        if (player_in_branch(BRANCH_COCYTUS))
-            swimming_things[3] = MONS_WATER_ELEMENTAL;
 
         _place_monster_vector(swimming_things, level_number,
                               std::min(random2avg(9, 2)
