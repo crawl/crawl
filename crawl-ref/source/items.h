@@ -34,7 +34,8 @@ bool dec_mitm_item_quantity(int obj, int amount);
 void inc_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
 void inc_mitm_item_quantity(int obj, int amount);
 
-bool move_item_to_grid( int *const obj, const coord_def& p );
+bool move_item_to_grid( int *const obj, const coord_def& p,
+                        bool silent = false );
 void move_item_stack_to_grid( const coord_def& from, const coord_def& to );
 void note_inscribe_item(item_def &item);
 int  move_item_to_player(int obj, int quant_got, bool quiet = false,
@@ -77,7 +78,8 @@ void item_list_on_square( std::vector<const item_def*>& items,
 
 bool copy_item_to_grid( const item_def &item, const coord_def& p,
                         int quant_drop = -1,    // item.quantity by default
-                        bool mark_dropped = false);
+                        bool mark_dropped = false,
+                        bool silent = false );
 
 bool move_top_item( const coord_def &src, const coord_def &dest );
 

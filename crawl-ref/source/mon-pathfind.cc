@@ -392,7 +392,7 @@ bool monster_pathfind::traversable(const coord_def p)
     if (mons)
         return mons_traversable(p);
 
-    return (!feat_is_solid(grd(p)) && !feat_destroys_items(grd(p)));
+    return feat_has_solid_floor(grd(p));
 }
 
 // Checks whether a given monster can pass over a certain position, respecting

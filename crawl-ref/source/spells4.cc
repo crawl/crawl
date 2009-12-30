@@ -1714,16 +1714,18 @@ bool cast_portal_projectile(int pow)
 
 bool cast_apportation(int pow, const coord_def& where)
 {
-    // Protect the player from destroying the item.
-    if (feat_destroys_items(grd(you.pos())))
-    {
-        mpr( "That would be silly while over this terrain!" );
-        return (false);
-    }
-
     if (you.trans_wall_blocking(where))
     {
         mpr("A translucent wall is in the way.");
+        return (false);
+    }
+
+    // Letting mostly-melee characters spam apport after every Shoals
+    // fight seems like it has too much grinding potential.  We could
+    // weaken this for high power.
+    if (grd(where) == DNGN_DEEP_WATER || grd(where) == DNGN_LAVA)
+    {
+        mpr("The density of the terrain blocks your spell.");
         return (false);
     }
 
@@ -1749,6 +1751,13 @@ bool cast_apportation(int pow, const coord_def& where)
     }
 
     item_def& item = mitm[item_idx];
+
+    // Protect the player from destroying the item.
+    if (feat_destroys_item(grd(you.pos()), item))
+    {
+        mpr( "That would be silly while over this terrain!" );
+        return (false);
+    }
 
     // Mass of one unit.
     const int unit_mass = item_mass(item);

@@ -1175,7 +1175,6 @@ static bool _need_missile_gift()
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
     return (you.piety > 80
             && random2( you.piety ) > 70
-            && !feat_destroys_items( grd(you.pos()) )
             && one_chance_in(8)
             && you.skills[ best_missile_skill ] >= 8
             && (launcher || best_missile_skill == SK_DARTS));
@@ -1263,9 +1262,6 @@ static void _show_pure_deck_chances()
 
 static void _give_nemelex_gift()
 {
-    if (feat_destroys_items(grd(you.pos())))
-        return;
-
     // Nemelex will give at least one gift early.
     if (!you.num_gifts[GOD_NEMELEX_XOBEH]
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
@@ -1289,14 +1285,16 @@ static void _give_nemelex_gift()
 #if DEBUG_GIFTS || DEBUG_CARDS
         _show_pure_deck_chances();
 #endif
-        _update_sacrifice_weights(choice);
-
         int thing_created = items( 1, OBJ_MISCELLANY, gift_type,
                                    true, 1, MAKE_ITEM_RANDOM_RACE,
                                    0, 0, GOD_NEMELEX_XOBEH );
 
+        move_item_to_grid(&thing_created, you.pos(), true);
+
         if (thing_created != NON_ITEM)
         {
+            _update_sacrifice_weights(choice);
+
             // Piety|Common  | Rare  |Legendary
             // --------------------------------
             //     0:  95.00%,  5.00%,  0.00%
@@ -1328,8 +1326,6 @@ static void _give_nemelex_gift()
             deck.special = rarity;
             deck.colour  = deck_rarity_to_color(rarity);
             deck.inscription = "god gift";
-
-            move_item_to_grid(&thing_created, you.pos());
 
             simple_god_message(" grants you a gift!");
             more();
@@ -2046,7 +2042,6 @@ static void _do_god_gift(bool prayed_for)
         case GOD_TROG:
             if (you.piety > 130
                 && random2(you.piety) > 120
-                && !feat_destroys_items(grd(you.pos()))
                 && one_chance_in(4))
             {
                 if (you.religion == GOD_TROG
@@ -2058,7 +2053,8 @@ static void _do_god_gift(bool prayed_for)
                 {
                     success = acquirement(OBJ_ARMOUR, you.religion);
                     // Okawaru charges extra for armour acquirements.
-                    _inc_gift_timeout(30 + random2avg(15, 2));
+                    if (success)
+                        _inc_gift_timeout(30 + random2avg(15, 2));
                 }
 
                 if (success)
@@ -2194,8 +2190,7 @@ static void _do_god_gift(bool prayed_for)
                 }
             }
 
-            if (gift != NUM_BOOKS
-                && !feat_destroys_items(grd(you.pos())))
+            if (gift != NUM_BOOKS)
             {
                 if (gift == OBJ_RANDOM)
                 {
@@ -2216,7 +2211,7 @@ static void _do_god_gift(bool prayed_for)
                     // reason.
                     mark_had_book(gift);
 
-                    move_item_to_grid( &thing_created, you.pos() );
+                    move_item_to_grid( &thing_created, you.pos(), true );
 
                     if (thing_created != NON_ITEM)
                     {

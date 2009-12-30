@@ -3140,7 +3140,7 @@ void bolt::drop_object()
         return;
     }
 
-    if (!thrown_object_destroyed(item, pos(), false))
+    if (!thrown_object_destroyed(item, pos()))
     {
         if (item->sub_type == MI_THROWING_NET)
         {
@@ -3154,10 +3154,10 @@ void bolt::drop_object()
                     set_item_stationary(*item);
             }
         }
+
         copy_item_to_grid(*item, pos(), 1);
     }
-    else if (item->sub_type == MI_LARGE_ROCK
-             && !feat_destroys_items(grd(pos())))
+    else if (item->sub_type == MI_LARGE_ROCK)
     {
         // Large rocks mulch to stone.
         std::string sound_msg = "You hear a cracking sound!";
@@ -3175,6 +3175,10 @@ void bolt::drop_object()
         item->flags &= ~ISFLAG_THROWN;
 
         copy_item_to_grid(*item, pos(), item->quantity);
+    }
+    else
+    {
+        item_was_destroyed(*item, NON_MONSTER);
     }
 }
 
