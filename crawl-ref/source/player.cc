@@ -5980,8 +5980,10 @@ bool player::can_go_berserk() const
     return (can_go_berserk(false));
 }
 
-bool player::can_go_berserk(bool verbose, bool no_clarity) const
+bool player::can_go_berserk(bool intentional) const
 {
+    const bool verbose = intentional;
+
     if (berserk())
     {
         if (verbose)
@@ -6016,7 +6018,7 @@ bool player::can_go_berserk(bool verbose, bool no_clarity) const
         return (false);
     }
 
-    if (!no_clarity && player_mental_clarity(true))
+    if (!intentional && player_mental_clarity(true))
     {
         if (verbose)
         {
@@ -6450,6 +6452,12 @@ int player::res_cold() const
 int player::res_elec() const
 {
     return (player_res_electricity() * 2);
+}
+
+int player::res_water_drowning() const
+{
+    return (res_asphyx() ||
+            (you.species == SP_MERFOLK && !transform_changed_physiology()));
 }
 
 int player::res_asphyx() const
@@ -7047,6 +7055,13 @@ bool player::move_to_pos(const coord_def &c)
         return true;
     }
     return false;
+}
+
+void player::apply_location_effects(const coord_def &oldpos,
+                                    killer_type killer,
+                                    int killernum)
+{
+    move_player_to_grid(pos(), false, true, true, false);
 }
 
 void player::shiftto(const coord_def &c)

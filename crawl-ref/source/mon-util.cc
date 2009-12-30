@@ -2390,6 +2390,13 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     // handled here as well. - bwr
     switch (monspell)
     {
+    case SPELL_CALL_TIDE:
+        return (!player_in_branch(BRANCH_SHOALS)
+                || mon->has_ench(ENCH_TIDE)
+                || !foe
+                || (grd(mon->pos()) == DNGN_DEEP_WATER
+                    && grd(foe->pos()) == DNGN_DEEP_WATER));
+
     case SPELL_BRAIN_FEED:
         ret = (foe != &you);
         break;

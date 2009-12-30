@@ -291,7 +291,36 @@ roxanne MONS_ROXANNE
 ice_statue MONS_ICE_STATUE
 silver_statue MONS_SILVER_STATUE
 orange_crystal_statue MONS_ORANGE_CRYSTAL_STATUE
-statue_archer MONS_ARCHER_STATUE
+
+%back statue_base
+overlay_axe MONS_STATUE_AXE
+overlay_bow MONS_STATUE_ARCHER
+overlay_crossbow MONS_STATUE_CROSSBOW
+overlay_mace MONS_STATUE_MACE
+overlay_mage_hat MONS_STATUE_MAGE
+overlay_scythe MONS_STATUE_SCYTHE
+overlay_sword MONS_STATUE_SWORD
+%back none
+
+%back light_vine_statue_base
+overlay_axe MONS_LIGHT_VINE_STATUE_AXE
+overlay_bow MONS_LIGHT_VINE_STATUE_ARCHER
+overlay_crossbow MONS_LIGHT_VINE_STATUE_CROSSBOW
+overlay_mace MONS_LIGHT_VINE_STATUE_MACE
+overlay_mage MONS_LIGHT_VINE_STATUE_MAGE
+overlay_scythe MONS_LIGHT_VINE_STATUE_SCYTHE
+overlay_sword MONS_LIGHT_VINE_STATUE_SWORD
+%back none
+
+%back dark_vine_statue_base
+overlay_axe MONS_DARK_VINE_STATUE_AXE
+overlay_bow MONS_DARK_VINE_STATUE_ARCHER
+overlay_crossbow MONS_DARK_VINE_STATUE_CROSSBOW
+overlay_mace MONS_DARK_VINE_STATUE_MACE
+overlay_mage MONS_DARK_VINE_STATUE_MAGE
+overlay_scythe MONS_DARK_VINE_STATUE_SCYTHE
+overlay_sword MONS_DARK_VINE_STATUE_SWORD
+%back none
 
 ## Gargoyles ('9')
 %sdir dc-mon
@@ -395,7 +424,9 @@ skeletal_dragon MONS_SKELETAL_DRAGON
 serpent_of_hell MONS_SERPENT_OF_HELL
 
 ## Eyes ('G')
+%sdir dc-mon/fungi_plants
 giant_spore MONS_GIANT_SPORE
+%sdir dc-mon
 giant_eyeball MONS_GIANT_EYEBALL
 eye_of_draining MONS_EYE_OF_DRAINING
 giant_orange_brain MONS_GIANT_ORANGE_BRAIN

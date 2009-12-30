@@ -184,7 +184,6 @@ public:
     const CrawlStoreValue &operator [] (const vec_size &index)  const;
 
     // Typecast operators
-#ifdef TARGET_COMPILER_VC
     operator bool&();
     operator char&();
     operator short&();
@@ -199,22 +198,6 @@ public:
     operator level_pos&();
     operator monsters&();
     operator dlua_chunk&();
-#else
-    &operator bool();
-    &operator char();
-    &operator short();
-    &operator long();
-    &operator float();
-    &operator std::string();
-    &operator coord_def();
-    &operator CrawlHashTable();
-    &operator CrawlVector();
-    &operator item_def();
-    &operator level_id();
-    &operator level_pos();
-    &operator monsters();
-    &operator dlua_chunk();
-#endif
 
     operator bool()        const;
     operator char()        const;

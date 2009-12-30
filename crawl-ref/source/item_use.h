@@ -39,7 +39,7 @@ enum fire_type
 };
 
 struct bolt;
-struct dist;
+class dist;
 
 bool armour_prompt(const std::string & mesg, int *index, operation_types oper);
 

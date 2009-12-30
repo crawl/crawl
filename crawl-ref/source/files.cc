@@ -1677,13 +1677,6 @@ static void _save_game_base()
         fclose(dollf);
         DO_CHMOD_PRIVATE(dollFile.c_str());
     }
-#else
-    // Don't overwrite old tile dolls.
-    if (!file_exists(dollFile))
-    {
-        FILE *dollf = fopen(dollFile.c_str(), "wb");
-        fclose(dollf);
-    }
 #endif
 
     std::string charFile = get_savedir_filename(you.your_name, "", "sav");
