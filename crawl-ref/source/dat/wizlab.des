@@ -884,12 +884,12 @@ ENDMAP
 ###############################################################################
 # Borgnjor's Mortuary
 #
-NAME:       wizlab_borgnjor
-ORIENT:     encompass
+#NAME:       wizlab_borgnjor
+#ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Borgnjor's Mortuary")
-MAP
-ENDMAP
+#:           wizlab_setup(_G, "Borgnjor's Mortuary")
+#MAP
+#ENDMAP
 
 ##############################################################################
 # Cigotuvi's Fleshworks (by Mu.)
@@ -1068,42 +1068,42 @@ ENDMAP
 ###############################################################################
 # Lee's Rapid Deconstructor
 #
-NAME:       wizlab_lee
-ORIENT:     encompass
+#NAME:       wizlab_lee
+#ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Lee's Rapid Deconstructor")
-MAP
-ENDMAP
+#:           wizlab_setup(_G, "Lee's Rapid Deconstructor")
+#MAP
+#ENDMAP
 
 ###############################################################################
 # Lehudib's Crystal Spire
 #
-NAME:       wizlab_lehudib
-ORIENT:     encompass
+#NAME:       wizlab_lehudib
+#ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Lehudib's Crystal Spire")
-MAP
-ENDMAP
+#:           wizlab_setup(_G, "Lehudib's Crystal Spire")
+#MAP
+#ENDMAP
 
 ###############################################################################
 # Maxwell's Forge
 #
-NAME:       wizlab_maxwell
-ORIENT:     encompass
+#NAME:       wizlab_maxwell
+#ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Maxwell's Forge")
-MAP
-ENDMAP
+#:           wizlab_setup(_G, "Maxwell's Forge")
+#MAP
+#ENDMAP
 
 ###############################################################################
 # Olgreb's Toxic Laboratory
 #
-NAME:       wizlab_olgreb
-ORIENT:     encompass
+#NAME:       wizlab_olgreb
+#ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Olgreb's Toxic Laboratory")
-MAP
-ENDMAP
+#:           wizlab_setup(_G, "Olgreb's Toxic Laboratory")
+#MAP
+#ENDMAP
 
 ###############################################################################
 # Ozocubu's Refrigerator
@@ -1209,22 +1209,22 @@ ENDMAP
 ###############################################################################
 # Cekugob's Oubliette
 #
-NAME:       wizlab_cekugob
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Cekugob's Oubliette")
-MAP
-ENDMAP
+#NAME:       wizlab_cekugob
+#ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+#:           wizlab_setup(_G, "Cekugob's Oubliette")
+#MAP
+#ENDMAP
 
 ###############################################################################
 # Zonguldrok's Shrine
 #
-NAME:       wizlab_zonguldrok
-ORIENT:     encompass
+#NAME:       wizlab_zonguldrok
+#ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Zonguldrok's Shrine")
-MAP
-ENDMAP
+#:           wizlab_setup(_G, "Zonguldrok's Shrine")
+#MAP
+#ENDMAP
 
 ###############################################################################
 # Wucad Mu's Monastery
@@ -1387,32 +1387,32 @@ ENDMAP
 ###############################################################################
 # Boton's Bayou
 #
-NAME:       wizlab_botono
-ORIENT:     encompass
+#NAME:       wizlab_botono
+#ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Botono's Bayou")
-MAP
-ENDMAP
+#:           wizlab_setup(_G, "Botono's Bayou")
+#MAP
+#ENDMAP
 
 ###############################################################################
 # Ukta's Hut
 #
-NAME:       wizlab_ukta
-ORIENT:     encompass
+#NAME:       wizlab_ukta
+#ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Ukta's Hut")
-MAP
-ENDMAP
+#:           wizlab_setup(_G, "Ukta's Hut")
+#MAP
+#ENDMAP
 
 ###############################################################################
 # The Alchemist's Tower
 #
-NAME:       wizlab_alchemist
-ORIENT:     encompass
+#NAME:       wizlab_alchemist
+#ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "The Alchemist's Tower")
-MAP
-ENDMAP
+#:           wizlab_setup(_G, "The Alchemist's Tower")
+#MAP
+#ENDMAP
 
 ###############################################################################
 # Random and semi-random Wizard vaults
