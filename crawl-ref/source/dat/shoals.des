@@ -270,3 +270,23 @@ x.1.1.x
 xx.1.xx
  xxAxx
 ENDMAP
+
+################################################################################
+# Shoal hangout of Ilsuiw. Using PLACE: makes this quite likely to turn up.
+# The hut itself may be empty if Ilsuiw had other engagements.
+
+NAME:    shoal_ilsuiw
+PLACE:   Shoal:$
+TAGS:    water_ok
+KMONS:   1 = Ilsuiw band, siren
+KMONS:   2 = merfolk impaler / merfolk javelineer
+KFEAT:   12 = w
+MAP
+ xxxxx
+xxw2wxx
+xwwww*x
++ww1w|x
+xwwww*x
+xxw2wxx
+ xxxxx
+ENDMAP
