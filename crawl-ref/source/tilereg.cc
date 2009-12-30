@@ -311,7 +311,6 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
             const dungeon_feature_type feat = env.map_knowledge(pos).feat();
             if (feat == DNGN_FLOOR || feat == DNGN_UNDISCOVERED_TRAP)
             {
-                const coord_def pos = coord_def(x + m_cx_to_gx, y + m_cy_to_gy);
                 bool north = false, south = false, east = false, west = false;
                 bool ne = false, nw = false, se = false, sw = false;
                 for (radius_iterator ri(pos, 1, true, false, true); ri; ++ri)
