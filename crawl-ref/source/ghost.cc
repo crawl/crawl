@@ -850,7 +850,7 @@ void ghost_demon::announce_ghost(const ghost_demon &g)
 
 void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
 {
-    for (monster_iterator mi; mi; ++mi)
+    for (monster_iterator mi; mi && n > 0; ++mi)
     {
         if (mi->type == MONS_PLAYER_GHOST && mi->ghost.get())
         {
