@@ -549,15 +549,16 @@ bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
 {
     switch (feat)
     {
+    case DNGN_SHALLOW_WATER:
     case DNGN_DEEP_WATER:
         if (noisy)
             mprf(MSGCH_SOUND, "You hear a splash.");
-        return (true);
+        return (false);
 
     case DNGN_LAVA:
         if (noisy)
             mprf(MSGCH_SOUND, "You hear a sizzling splash.");
-        return (true);
+        return (item.base_type == OBJ_SCROLLS);
 
     default:
         return (false);
