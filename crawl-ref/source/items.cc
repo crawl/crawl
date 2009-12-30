@@ -1773,7 +1773,7 @@ bool move_item_to_grid( int *const obj, const coord_def& p, bool silent )
         while (item.quantity > 1)
         {
             // If we can't copy the items out, we lose the surplus.
-            if (copy_item_to_grid(item, p, 1, false))
+            if (copy_item_to_grid(item, p, 1, false, true))
                 --item.quantity;
             else
                 item.quantity = 1;
@@ -1883,7 +1883,7 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
         origin_set_unknown(new_item);
     }
 
-    move_item_to_grid( &new_item_idx, p );
+    move_item_to_grid( &new_item_idx, p, true );
     if (is_blood_potion(item)
         && item.quantity != quant_drop) // partial drop only
     {
