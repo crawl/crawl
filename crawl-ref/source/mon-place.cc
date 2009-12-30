@@ -42,6 +42,8 @@
 #include "travel.h"
 #include "view.h"
 
+band_type active_monster_band = BAND_NO_BAND;
+
 static std::vector<int> vault_mon_types;
 static std::vector<int> vault_mon_bases;
 static std::vector<int> vault_mon_weights;
@@ -775,6 +777,7 @@ int place_monster(mgen_data mg, bool force_pos)
     int band_size = 1;
     bool leader = false;
     monster_type band_monsters[BIG_BAND];        // band monster types
+    band_type band = BAND_NO_BAND;
     band_monsters[0] = mg.cls;
 
     // The (very) ugly thing band colour.
@@ -785,10 +788,8 @@ int place_monster(mgen_data mg, bool force_pos)
 #ifdef DEBUG_MON_CREATION
         mpr("Choose band members...", MSGCH_DIAGNOSTICS);
 #endif
-        const band_type band = _choose_band(mg.cls, mg.power, band_size,
-                                            leader);
+        band = _choose_band(mg.cls, mg.power, band_size, leader);
         band_size++;
-
         for (int i = 1; i < band_size; ++i)
         {
             band_monsters[i] = _band_member(band, mg.power);
@@ -1006,6 +1007,7 @@ int place_monster(mgen_data mg, bool force_pos)
         band_template.flags |= MG_BAND_MINION;
     }
 
+    unwind_var<band_type> current_band(active_monster_band, band);
     // (5) For each band monster, loop call to place_monster_aux().
     for (int i = 1; i < band_size; i++)
     {
@@ -2110,6 +2112,23 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 4;
         break;
 
+    case MONS_MERFOLK_AQUAMANCER:
+        natural_leader = true;
+        band = BAND_MERFOLK_AQUAMANCER;
+        band_size = random_range(3, 6);
+        break;
+
+    case MONS_MERFOLK_JAVELINEER:
+        natural_leader = true;
+        band = BAND_MERFOLK_JAVELINEER;
+        band_size = random_range(3, 5);
+        break;
+
+    case MONS_MERFOLK_IMPALER:
+        natural_leader = true;
+        band = BAND_MERFOLK_IMPALER;
+        band_size = random_range(3, 5);
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2427,6 +2446,18 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_PIKEL:
         mon_type = MONS_SLAVE;
+        break;
+
+    case BAND_MERFOLK_AQUAMANCER:
+        mon_type = static_cast<monster_type>(
+            random_choose_weighted(8, MONS_MERFOLK,
+                                   10, MONS_ICE_BEAST,
+                                   0));
+        break;
+
+    case BAND_MERFOLK_IMPALER:
+    case BAND_MERFOLK_JAVELINEER:
+        mon_type = MONS_MERFOLK;
         break;
 
     default:

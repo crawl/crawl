@@ -18,6 +18,8 @@
 #include "itemprop.h"
 #include "items.h"
 #include "makeitem.h"
+#include "mgen_enum.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "random.h"
 #include "spl-book.h"
@@ -630,6 +632,17 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         break;
 
     case MONS_MERFOLK:
+        if (active_monster_band == BAND_MERFOLK_IMPALER)
+        {
+            item_race = MAKE_ITEM_NO_RACE;
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = random_choose_weighted(10, WPN_SPEAR,
+                                                    10, WPN_TRIDENT,
+                                                    5, WPN_HALBERD,
+                                                    5, WPN_GLAIVE,
+                                                    0);
+            break;
+        }
         if (one_chance_in(3))
         {
             item_race = MAKE_ITEM_NO_RACE;
@@ -1085,7 +1098,8 @@ static void _give_ammo(monsters *mon, int level,
             break;
 
         case MONS_MERFOLK:
-            if (!one_chance_in(3))
+            if (!one_chance_in(3)
+                || active_monster_band == BAND_MERFOLK_JAVELINEER)
             {
                 item_race = MAKE_ITEM_NO_RACE;
                 if (coinflip())
@@ -1099,6 +1113,8 @@ static void _give_ammo(monsters *mon, int level,
                     weap_type = MI_JAVELIN;
                     qty       = 3 + random2(6);
                 }
+                if (active_monster_band == BAND_MERFOLK_JAVELINEER)
+                    break;
             }
             if (one_chance_in(6) && !mons_summoned)
             {
