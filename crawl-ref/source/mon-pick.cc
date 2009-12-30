@@ -1699,7 +1699,6 @@ int mons_shoals_level(int mcls)
     switch (mcls)
     {
     case MONS_BUTTERFLY:
-    case MONS_PLANT:
     case MONS_GIANT_BAT:
         break;
 
@@ -1746,9 +1745,6 @@ int mons_shoals_rare(int mcls)
 {
     switch (mcls)
     {
-    case MONS_PLANT:
-        return 150;
-
     case MONS_MERFOLK:
         return 50;
 

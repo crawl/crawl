@@ -244,11 +244,11 @@ SUBST:     A:x, B:x, C:x=, D=+
 LROCKTILE:  wall_vines
 MAP
  xxCxx
-xx...xx
-x.....x
-B..O..D
-x.....x
-xx...xx
+xx.1.xx
+x.1.1.x
+B1.O.1D
+x.1.1.x
+xx.1.xx
  xxAxx
 ENDMAP
 
@@ -263,10 +263,10 @@ SHUFFLE: ABCD
 SUBST:   A:x, B:x, C:x=, D=+
 MAP
  xxCxx
-xx...xx
-x.....x
-B..|..D
-x.....x
-xx...xx
+xx.1.xx
+x.1.1.x
+B1.|.1D
+x.1.1.x
+xx.1.xx
  xxAxx
 ENDMAP

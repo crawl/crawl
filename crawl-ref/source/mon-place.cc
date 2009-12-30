@@ -770,7 +770,7 @@ int place_monster(mgen_data mg, bool force_pos)
                                    mg.pos, mg.map_mask,
                                    &stair_type, &mg.power);
 
-    if (mg.cls == MONS_NO_MONSTER)
+    if (mg.cls == MONS_NO_MONSTER || mg.cls == MONS_PROGRAM_BUG)
         return (-1);
 
     // (3) Decide on banding (good lord!)
