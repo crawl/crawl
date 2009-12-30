@@ -104,8 +104,7 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo);
 bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
               int acc_bonus = 0, dist *target = NULL);
 
-bool thrown_object_destroyed(item_def *item, const coord_def& where,
-                              bool returning);
+bool thrown_object_destroyed(item_def *item, const coord_def& where);
 
 void prompt_inscribe_item();
 int launcher_shield_slowdown(const item_def &launcher,

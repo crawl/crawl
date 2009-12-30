@@ -682,9 +682,9 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
              mitm[thing_created].name(DESC_PLAIN).c_str());
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, gift_buf), true);
 
-    move_item_to_grid(&thing_created, you.pos());
     mitm[thing_created].inscription = "god gift";
     canned_msg(MSG_SOMETHING_APPEARS);
+    move_item_to_grid(&thing_created, you.pos());
 
     stop_running();
 }

@@ -255,10 +255,6 @@ bool curse_an_item( bool decay_potions, bool quiet )
 void monster_drop_ething(monsters *monster, bool mark_item_origins,
                          int owner_id)
 {
-    const bool hostile_grid = feat_destroys_items(grd(monster->pos()));
-
-    bool destroyed = false;
-
     // Drop weapons & missiles last (ie on top) so others pick up.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; i--)
     {
@@ -268,30 +264,25 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
         {
             const bool summoned_item =
                 testbits(mitm[item].flags, ISFLAG_SUMMONED);
-            if (hostile_grid || summoned_item)
+            if (summoned_item)
             {
                 item_was_destroyed(mitm[item], monster->mindex());
                 destroy_item( item );
-                if (!summoned_item)
-                    destroyed = true;
             }
             else
             {
                 if (monster->friendly() && mitm[item].is_valid())
                     mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
 
-                move_item_to_grid(&item, monster->pos());
-
                 if (mark_item_origins && mitm[item].is_valid())
                     origin_set_monster(mitm[item], monster);
+
+                move_item_to_grid(&item, monster->pos());
             }
 
             monster->inv[i] = NON_ITEM;
         }
     }
-
-    if (destroyed)
-        mprf(MSGCH_SOUND, feat_item_destruction_message(grd(monster->pos())));
 }
 
 monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
@@ -421,14 +412,6 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
         --nchunks;
 
-        if (feat_destroys_items(grd(cp)))
-        {
-            if (!silenced(cp))
-                mprf(MSGCH_SOUND, feat_item_destruction_message(grd(cp)));
-
-            continue;
-        }
-
         dprf("Success");
 
         copy_item_to_grid(corpse, cp);
@@ -483,16 +466,8 @@ int place_monster_corpse(const monsters *monster, bool silent,
         return (-1);
     }
 
-    if (feat_destroys_items(grd(monster->pos())))
-    {
-        item_was_destroyed(corpse);
-        destroy_item(o);
-        return (-1);
-    }
-
-    // Don't care if 'o' is changed, and it shouldn't be (corpses don't
-    // stack).
     move_item_to_grid(&o, monster->pos());
+
     if (you.see_cell(monster->pos()))
     {
         if (force && !silent)
@@ -507,10 +482,12 @@ int place_monster_corpse(const monsters *monster, bool silent,
         }
         const bool poison = (mons_corpse_effect(corpse_class) == CE_POISONOUS
                              && player_res_poison() <= 0);
-        tutorial_dissection_reminder(!poison);
+
+        if (o != NON_ITEM)
+            tutorial_dissection_reminder(!poison);
     }
 
-    return (o);
+    return (o == NON_ITEM ? -1 : o);
 }
 
 static void _tutorial_inspect_kill()

@@ -2315,13 +2315,11 @@ int acquirement_create_item(object_class_type class_wanted,
     if (agent > GOD_NO_GOD && agent < NUM_GODS && agent == you.religion)
         thing.inscription = "god gift";
 
-    move_item_to_grid( &thing_created, pos );
-
-    // This should never actually be NON_ITEM because of the way
-    // move_item_to_grid works (doesn't create a new item ever),
-    // but we're checking it anyways. -- bwr
+    // Moving this above the move since it might not exist after falling.
     if (thing_created != NON_ITEM && !quiet)
         canned_msg(MSG_SOMETHING_APPEARS);
+
+    move_item_to_grid( &thing_created, pos );
 
     return (thing_created);
 }
@@ -2382,10 +2380,6 @@ bool acquirement(object_class_type class_wanted, int agent,
 
     if (feat_destroys_items(grd(you.pos())))
     {
-        // How sad (and stupid).
-        if (!silenced(you.pos()) && !quiet)
-            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(you.pos())));
-
         if (agent > GOD_NO_GOD && agent < NUM_GODS)
         {
             if (agent == GOD_XOM)
@@ -2399,18 +2393,11 @@ bool acquirement(object_class_type class_wanted, int agent,
                      god_name((god_type) agent).c_str());
             }
         }
-
-        *item_index = NON_ITEM;
-
-        // Well, the item may have fallen in the drink, but the intent is
-        // that acquirement happened. -- bwr
-        return (true);
     }
 
-    *item_index =
-        acquirement_create_item(class_wanted, agent, quiet, you.pos(), debug);
+    acquirement_create_item(class_wanted, agent, quiet, you.pos(), debug);
 
-    return (*item_index != NON_ITEM);
+    return (true);
 }
 
 bool recharge_wand(int item_slot)

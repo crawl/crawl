@@ -50,6 +50,9 @@ static void _make_all_books()
 
         move_item_to_grid(&thing, you.pos());
 
+        if (thing == NON_ITEM)
+            continue;
+
         item_def book(mitm[thing]);
 
         mark_had_book(book);

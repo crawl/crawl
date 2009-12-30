@@ -1719,7 +1719,10 @@ void mark_items_non_pickup_at(const coord_def &pos)
 //
 // Done this way in the hopes that it will be obvious from
 // calling code that "obj" is possibly modified.
-bool move_item_to_grid( int *const obj, const coord_def& p )
+//
+// Returns false on error or level full - cases where you
+// keep the item.
+bool move_item_to_grid( int *const obj, const coord_def& p, bool silent )
 {
     ASSERT(in_bounds(p));
 
@@ -1729,6 +1732,18 @@ bool move_item_to_grid( int *const obj, const coord_def& p )
         return (false);
 
     item_def& item(mitm[ob]);
+
+    if (feat_destroys_items(grd(p)))
+    {
+        if (!silenced(p) && !silent)
+            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(p)));
+
+        item_was_destroyed(item, NON_MONSTER);
+        destroy_item(ob);
+        ob = NON_ITEM;
+
+        return (true);
+    }
 
     // If it's a stackable type...
     if (is_stackable_item( item ))
@@ -1809,14 +1824,24 @@ void move_item_stack_to_grid( const coord_def& from, const coord_def& to )
 }
 
 
-// Returns quantity dropped.
+// Returns false iff no items could be dropped.
 bool copy_item_to_grid( const item_def &item, const coord_def& p,
-                        int quant_drop, bool mark_dropped )
+                        int quant_drop, bool mark_dropped, bool silent )
 {
     ASSERT(in_bounds(p));
 
     if (quant_drop == 0)
         return (false);
+
+    if (feat_destroys_items(grd(p)))
+    {
+        if (!silenced(p))
+            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(p)));
+
+        item_was_destroyed(item, NON_MONSTER);
+
+        return (true);
+    }
 
     // default quant_drop == -1 => drop all
     if (quant_drop < 0)
@@ -1966,9 +1991,8 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 
     const dungeon_feature_type my_grid = grd(you.pos());
 
-    if (!feat_destroys_items(my_grid)
-        && !copy_item_to_grid( you.inv[item_dropped],
-                               you.pos(), quant_drop, true ))
+    if (!copy_item_to_grid( you.inv[item_dropped],
+                            you.pos(), quant_drop, true, true ))
     {
         mpr("Too many items on this level, not dropping the item.");
         return (false);
@@ -1981,8 +2005,6 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     {
         if (!silenced(you.pos()))
             mprf(MSGCH_SOUND, feat_item_destruction_message(my_grid));
-
-        item_was_destroyed(you.inv[item_dropped], NON_MONSTER);
     }
     else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
         StashTrack.add_stash();

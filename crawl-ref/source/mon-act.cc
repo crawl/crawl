@@ -1413,7 +1413,7 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
     pbolt.fire();
 
     // The item can be destroyed before returning.
-    if (really_returns && thrown_object_destroyed(&item, pbolt.target, true))
+    if (really_returns && thrown_object_destroyed(&item, pbolt.target))
     {
         really_returns = false;
     }
