@@ -153,10 +153,12 @@ static coord_def _random_point(int offset = 0)
 }
 
 static void _shoals_island_center(const coord_def &c, int n_perturb, int radius,
-                                  int bounce_low, int bounce_high)
+                                  int bounce_low, int bounce_high,
+                                  bool make_atoll = false)
 {
     for (int i = 0; i < n_perturb; ++i) {
-        coord_def p = _random_point_from(c, random2(1 + radius));
+        const int thisrad = make_atoll? radius : random2(1 + radius);
+        coord_def p = _random_point_from(c, thisrad);
         if (!p.origin())
             shoals_heights(p) += random_range(bounce_low, bounce_high);
     }
@@ -193,7 +195,7 @@ static void _shoals_build_island()
     _shoals_island_center(c, N_PERTURB_ISLAND_CENTER,
                           random_range(ISLAND_CENTER_RADIUS_LOW,
                                        ISLAND_CENTER_RADIUS_HIGH),
-                          40, 60);
+                          40, 60, one_chance_in(5));
     const int additional_heights = random2(4);
     for (int i = 0; i < additional_heights; ++i) {
         const int addition_offset = random_range(2, 10);
@@ -204,7 +206,7 @@ static void _shoals_build_island()
                                                         N_PERTURB_OFFSET_HIGH),
                                   random_range(PERTURB_OFFSET_RADIUS_LOW,
                                                PERTURB_OFFSET_RADIUS_HIGH),
-                                  25, 35);
+                                  25, 35, one_chance_in(5));
     }
 }
 
