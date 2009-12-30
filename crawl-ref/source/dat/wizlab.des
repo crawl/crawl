@@ -1775,3 +1775,100 @@ cccccccc..ccccccccccccc.cccccccccclllcv.....$v
 ccccccccc.ccccccccccccccccccccccccccccv....$*v
 ccccccccccccccccccccccccccccccccccccccvvvvvvvv
 ENDMAP
+
+###############################################################################
+# Halls of the Hellbinder (by Mu.)
+#
+NAME:       wizlab_demon
+ORIENT:     encompass
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+LFLOORCOL:  red
+LROCKCOL:   red
+COLOUR:     c = darkgrey
+COLOUR:     " = yellow
+KPROP:      ' = bloody / nothing
+KFEAT:      _ = altar_makhleb
+KPROP:      _ = bloody
+MARKER:     ! = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 1, size_buildup_amnt = 5, \
+                size_buildup_time = 25, cloud_type = "flame" }
+KMONS:      2 = w:1 Lorocyproca / w:20 soul eater / w:20 reaper /\
+            w:20 ice devil / w:20 sun demon / hellion
+KMONS:      3 = blue devil / iron devil / shadow demon / neqoxec /\
+            w:5 tormentor / ynoxinul
+KMONS:      4 = kobold demonologist / deep elf demonologist
+KMONS:      5 = blue death / green death / cacodemon
+KMONS:      1 = col:fire patrolling wizard name:Hellbinder name_replace \
+                name_definite spells:call_imp;summon_demon;haste;\
+                hellfire;blink_away;throw_flame hd:20 hp:150 ; demon blade \
+                . robe
+KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
+KITEM:      | = rod of demonology / ring of fire / ring of protection from fire /\
+            amulet of conservation / scroll of torment / scroll of summoning /\
+            demon blade / demon whip / demon trident / gold / wand of fire /\
+            wand of draining / staff of summoning / any book / any good_item
+KITEM:      B = randbook disc:summoning
+NSUBST:     | = 1:B / *:|
+MAP
+cccccccccccccccccccccccccccccccccccccccccccccc
+ccccccc.cccccc...................cccccc.cccccc
+ccccc.....cccc.cc+ccccc+ccccc+cc.cccc.....cccc
+cccc.."""..ccc.c...cccc.cccc...c.ccc..."...ccc
+ccc.."..."..cc.+.A.ccc...ccc.<.+.cc.."....."cc
+ccc."...3.".cc.c...cc.....cc...c.cc.""".3.".cc
+cc.."..3.."....ccccc..c.c..ccccc.....".3."...c
+cc..".3..."....cccc..cc.cc..cccc......3."....c
+ccc.".....".cc.ccc.....4.....ccc.cc...."""""cc
+ccc.."..."..cc.cc..cccc.cccc..cc.cc...".....cc
+cccc.."""..ccc.+...............+.ccc.".....ccc
+ccccc.....cccc.ccccccccccccccccc.cccc.....cccc
+ccccccc.cccccc...................cccccc.cccccc
+ccccccc.cccccc.cccccccc.cccccccc.cccccc.cccccc
+ccccccc.ccccccc.cccccc.c.cccccc.ccccccc.cccccc
+ccccccc.cccccccc.cccc.ccc.cccc.cccccccc.cccccc
+ccccccc.ccccccccc.cc.ccccc.cc.ccccccccc.cccccc
+ccccccc.cccccccccc..ccccccc..cccccccccc.cccccc
+ccccccc.cccc.5...................5.cccc.cccccc
+ccccccc.cccc..ccccccccc.ccccccccc..cccc.cccccc
+ccccccc.ccccc..cccc$$$c.c$$$cccc..ccccc.cccccc
+ccccccc.cccccc..ccc$$$+.+$$$ccc..cccccc.cccccc
+ccccccc.cc.cccc..cc$$$c.c$$$cc..cccc.cc.cccccc
+ccccccc......ccc..ccccc.ccccc..ccc.."...cccccc
+ccccccc..."...ccc..cccc.cccc..ccc.."..".cccccc
+cccccc.."..."..ccc..ccc.ccc..ccc.."..""".ccccc
+cccccc..."2"...cccc..cc.cc..cccc."2222"..ccccc
+ccccc.."2"""2"..cccc.......cccc.".........cccc
+cccccc..""2""...ccccc."4".ccccc""""""""""ccccc
+cccccc..."."....ccccc.."..ccccc........".ccccc
+ccccccc.."""....ccccc.."..ccccc.......".cccccc
+cccccccc........ccccc.....ccccc......".ccccccc
+cccccccccc......cccc..ccc..cccc......ccccccccc
+ccccccccccc.....ccc..ccccc..ccc.....cccccccccc
+cccccccccccc.....c...ccccc...c.....ccccccccccc
+cccccccccccc.."."..cc.ccc.cc.."."..ccccccccccc
+ccccccccccccc.."..cccc.c.cccc.."..cccccccccccc
+ccccccccccccc."...ccccc!ccccc...".cccccccccccc
+cccccccccccccc.....ccc.c.ccc.....ccccccccccccc
+ccccccccccccccc.....c.ccc.c.....cccccccccccccc
+ccccccccccccccccc.....ccc.....cccccccccccccccc
+ccccccccccccccccccc.........cccccccccccccccccc
+ccccccccccccccccccccc.....cccccccccccccccccccc
+ccccccccccccccccccccccc+cccccccccccccccccccccc
+ccccccccccccccccccccc.....cccccccccccccccccccc
+ccccccccccccccccccc..."""...cccccccccccccccccc
+ccccccccccccccccc...""...""...cccccccccccccccc
+cccccccccccccccc.."".......""..ccccccccccccccc
+ccccccccccccccc.."..".....".."..cccccccccccccc
+ccccccccccccccc."....lllll....".cccccccccccccc
+cccccccccccccc.."...ll"."ll..."..ccccccccccccc
+cccccccccccccc.".".ll"..."ll.".".ccccccccccccc
+ccccccccccccc.."...."..1.."...."..cccccccccccc
+ccccccccccccc.."..."".'''.""..."..cccccccccccc
+ccccccccccccc..".."xx"'_'"xx".."..cccccccccccc
+cccccccccccc....""..xx"'"xx..""....ccccccccccc
+cccccccccccc|..."..".xxxxx.".."...|ccccccccccc
+cccccccccccc||..."".........""...||ccccccccccc
+cccccccccccc|||.................|||ccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
