@@ -147,6 +147,8 @@ function wizlab_setup (e, wizlab_desc)
 end
 }}
 
+default-depth: Vault:2-7, Crypt, D:22-27
+
 ###############################################################################
 # Portal entrances.
 #
