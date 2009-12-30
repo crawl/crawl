@@ -277,6 +277,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // merfolk ('m')
     case MONS_MERFOLK:
+    case MONS_MERFOLK_IMPALER:      // TODO
+    case MONS_MERFOLK_AQUAMANCER:   // TODO
+    case MONS_MERFOLK_JAVELINEER:   // TODO
         if (in_water)
             return TILEP_MONS_MERFOLK_FIGHTER_WATER;
         else
