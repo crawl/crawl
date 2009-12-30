@@ -4085,8 +4085,11 @@ void _fixup_after_vault()
 // clobber: If true, assumes the newly placed vault can clobber existing
 //          items and monsters (items may be destroyed, monsters may be
 //          teleported).
-bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
-                   const coord_def &where)
+bool dgn_place_map(const map_def *mdef,
+                   bool clobber,
+                   bool make_no_exits,
+                   const coord_def &where,
+                   int rune_subst)
 {
     const dgn_colour_override_manager colour_man;
 
@@ -4114,8 +4117,7 @@ bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
         }
     }
 
-    int rune_subst = -1;
-    if (mdef->has_tag_suffix("_entry"))
+    if (rune_subst == -1 && mdef->has_tag_suffix("_entry"))
         rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
     did_map = _build_secondary_vault(you.your_level, mdef, rune_subst,
                                      clobber, make_no_exits, where);
@@ -4937,6 +4939,11 @@ static void _vault_grid(vault_placement &place,
             unsigned char which_type = OBJ_RANDOM;
             int which_depth;
             int spec = 250;
+
+            // If rune_subst is set to 0, the rune was already placed,
+            // take appropriate steps.
+            if (place.rune_subst == 0 && vgrid == 'O')
+                place.num_runes++;
 
             if (vgrid == '$')
             {

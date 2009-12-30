@@ -407,11 +407,15 @@ static void _shoals_furniture(int margin)
         const int nhuts = std::min(8, int(_shoals_islands.size()));
         for (int i = 2; i < nhuts; ++i)
         {
-            // Place (non-rune) minivaults on the other islands
+            // Place (non-rune) minivaults on the other islands. We
+            // reuse the shoal rune huts, but do not place the rune
+            // again.
+            int tries = 5;
             do
-                vault = random_map_for_tag("shoal");
-            while (!vault);
-            dgn_place_map(vault, false, true, _pick_shoals_island());
+                vault = random_map_for_tag("shoal_rune");
+            while (!vault && --tries > 0);
+            if (vault)
+                dgn_place_map(vault, false, true, _pick_shoals_island(), 0);
         }
     }
     else

@@ -234,11 +234,13 @@ wwwwwwwww
 ENDMAP
 
 ################################################################################
-# Shoal hut with rune inside
+# Shoal hut with rune inside.
 #
-# Shoal:$ is hand-hacked to force lots of minivaults.
+# This hut is also used for the decoy huts, with the rune replaced with a good
+# item.
+#
 NAME:      shoalhut_rune
-TAGS:      shoal_rune water_ok no_dump
+TAGS:      shoal_rune water_ok no_dump allow_dup
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x=, D=+
 LROCKTILE:  wall_vines
@@ -247,25 +249,6 @@ MAP
 xx.1.xx
 x.1.1.x
 B1.O.1D
-x.1.1.x
-xx.1.xx
- xxAxx
-ENDMAP
-
-################################################################################
-# Shoal hut with no rune inside
-#
-# Shoal:$ is hand-hacked to force lots of minivaults.
-NAME:    shoalhut_norune
-DEPTH:   Shoal:$
-TAGS:    allow_dup water_ok shoal no_dump
-SHUFFLE: ABCD
-SUBST:   A:x, B:x, C:x=, D=+
-MAP
- xxCxx
-xx.1.xx
-x.1.1.x
-B1.|.1D
 x.1.1.x
 xx.1.xx
  xxAxx
@@ -281,6 +264,7 @@ TAGS:    water_ok
 KMONS:   1 = Ilsuiw band, siren
 KMONS:   2 = merfolk impaler / merfolk javelineer
 KFEAT:   12 = w
+LROCKTILE:  wall_vines
 MAP
  xxxxx
 xxw2wxx
