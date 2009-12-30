@@ -2576,7 +2576,7 @@ static bool _ms_los_spell(spell_type monspell)
     // True, the tentacles _are_ summoned, but they are restricted to
     // water just like the kraken is, so it makes more sense not to
     // count them here.
-    if (SPELL_KRAKEN_TENTACLES)
+    if (monspell == SPELL_KRAKEN_TENTACLES)
         return (false);
 
     if (monspell == SPELL_SMITING
