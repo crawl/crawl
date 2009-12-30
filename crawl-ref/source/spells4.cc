@@ -1720,6 +1720,15 @@ bool cast_apportation(int pow, const coord_def& where)
         return (false);
     }
 
+    // Letting mostly-melee characters spam apport after every Shoals
+    // fight seems like it has too much grinding potential.  We could
+    // weaken this for high power.
+    if (grd(where) == DNGN_DEEP_WATER || grd(where) == DNGN_LAVA)
+    {
+        mpr("The density of the terrain blocks your spell.");
+        return (false);
+    }
+
     // Let's look at the top item in that square...
     // And don't allow apporting from shop inventories.
     const int item_idx = igrd(where);
