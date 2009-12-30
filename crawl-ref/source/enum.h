@@ -442,6 +442,7 @@ enum cloud_type
     CLOUD_CHAOS,
     CLOUD_RAIN,
     CLOUD_MUTAGENIC,
+    CLOUD_MAGIC_TRAIL,
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}
 };

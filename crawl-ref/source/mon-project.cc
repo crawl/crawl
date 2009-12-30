@@ -242,7 +242,7 @@ bool iood_act(monsters &mon, bool no_trail)
 
     if (!no_trail)
     {
-        place_cloud(CLOUD_GREY_SMOKE, mon.pos(),
+        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(),
                     2 + random2(3), mon.kill_alignment(),
                     KILL_MON_MISSILE);
     }

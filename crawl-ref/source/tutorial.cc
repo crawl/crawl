@@ -4462,6 +4462,7 @@ static void _tutorial_describe_cloud(int x, int y)
     case CLOUD_TLOC_ENERGY:
     case CLOUD_PURPLE_SMOKE:
     case CLOUD_MIST:
+    case CLOUD_MAGIC_TRAIL:
         ostr << "harmless. ";
         break;
 
