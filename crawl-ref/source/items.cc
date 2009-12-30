@@ -1995,7 +1995,14 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     mprf("You drop %s.",
          quant_name(you.inv[item_dropped], quant_drop, DESC_NOCAP_A).c_str());
 
-    if (feat_destroys_item(my_grid, you.inv[item_dropped], !silenced(you.pos())))
+    bool quiet = silenced(you.pos());
+
+    // If you drop an item in as a merfolk, it is below the water line and
+    // makes no noise falling.
+    if (you.swimming())
+        quiet = true;
+
+    if (feat_destroys_item(my_grid, you.inv[item_dropped], !quiet))
         ;
     else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
         StashTrack.add_stash();

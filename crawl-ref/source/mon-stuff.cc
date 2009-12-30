@@ -277,7 +277,8 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
                 if (mark_item_origins && mitm[item].is_valid())
                     origin_set_monster(mitm[item], monster);
 
-                move_item_to_grid(&item, monster->pos());
+                // If a monster is swimming, the items are ALREADY underwater
+                move_item_to_grid(&item, monster->pos(), monster->swimming());
             }
 
             monster->inv[i] = NON_ITEM;
@@ -466,7 +467,7 @@ int place_monster_corpse(const monsters *monster, bool silent,
         return (-1);
     }
 
-    move_item_to_grid(&o, monster->pos());
+    move_item_to_grid(&o, monster->pos(), !monster->swimming());
 
     if (you.see_cell(monster->pos()))
     {
