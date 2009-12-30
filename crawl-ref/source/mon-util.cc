@@ -922,6 +922,11 @@ bool mons_is_zombified(const monsters *mon)
     return (mons_class_is_zombified(mon->type));
 }
 
+monster_type mons_base_type(const monsters *mon)
+{
+    return mons_is_zombified(mon) ? mon->base_monster : mon->type;
+}
+
 bool mons_class_can_be_zombified(int mc)
 {
     int ms = mons_species(mc);

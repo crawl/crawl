@@ -188,7 +188,7 @@ static bool _player_near_water()
 bool monsters::wants_submerge() const
 {
     // Krakens never retreat when food (the player) is in range.
-    if (type == MONS_KRAKEN)
+    if (mons_base_type(this) == MONS_KRAKEN)
         if (_player_near_water())
             return (false);
 
@@ -5994,7 +5994,7 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
     else if (type == MONS_KRAKEN_TENTACLE && flavour != BEAM_TORMENT_DAMAGE)
     {
         if (!invalid_monster_index(number)
-            && menv[number].type == MONS_KRAKEN)
+            && mons_base_type(&menv[number]) == MONS_KRAKEN)
         {
             menv[number].hurt(&you, damage, flavour);
 

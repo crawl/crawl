@@ -2793,7 +2793,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     // The kraken is so large it cannot enter shallow water.
     // Its tentacles can, and will, though.
-    if (monster->type == MONS_KRAKEN && target_grid == DNGN_SHALLOW_WATER)
+    if (mons_base_type(monster) == MONS_KRAKEN && target_grid == DNGN_SHALLOW_WATER)
         return (false);
 
     // Effectively slows down monster movement across water.

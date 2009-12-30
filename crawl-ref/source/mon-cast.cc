@@ -1818,14 +1818,20 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             // Tentacles aren't really summoned (controlled by spell_cast
             // being passed to summon_type), so I'm not sure what the
             // abjuration value (3) is doing there. (jpeg)
-            if (create_monster(
+            int tentacle = create_monster(
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster), monster,
                           3, spell_cast, monster->pos(), monster->foe, 0, god,
                           MONS_NO_MONSTER, kraken_index, monster->colour,
                           you.your_level, PROX_CLOSE_TO_PLAYER,
-                          you.level_type)) == -1)
+                          you.level_type));
+
+            if (tentacle < 0)
             {
                 sumcount2--;
+            }
+            else if (monster->holiness() == MH_UNDEAD)
+            {
+                menv[tentacle].flags |= MF_HONORARY_UNDEAD;
             }
         }
         if (sumcount2 == 1)

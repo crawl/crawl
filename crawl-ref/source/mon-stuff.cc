@@ -1306,7 +1306,7 @@ static int _tentacle_too_far(monsters *head, monsters *tentacle)
 
 void mons_relocated(monsters *monster)
 {
-    if (monster->type == MONS_KRAKEN)
+    if (mons_base_type(monster) == MONS_KRAKEN)
     {
         int headnum = monster->mindex();
 
@@ -2098,7 +2098,7 @@ int monster_die(monsters *monster, killer_type killer,
         // he goes away.
         pikel_band_neutralise();
     }
-    else if (monster->type == MONS_KRAKEN)
+    else if (mons_base_type(monster) == MONS_KRAKEN)
     {
         if (_destroy_tentacles(monster) && !in_transit)
         {
