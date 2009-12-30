@@ -310,7 +310,7 @@ bool builder(int level_number, int level_type)
     unwind_bool levelgen(Generating_Level, true);
 
     // N tries to build the level, after which we bail with a capital B.
-    int tries = 20;
+    int tries = 50;
     while (tries-- > 0)
     {
 #ifdef DEBUG_DIAGNOSTICS
@@ -846,6 +846,9 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         {
             _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
         }
+
+        if (!place.map.has_tag("transparent"))
+            _mask_vault(place, MMT_OPAQUE);
     }
 
     if (place.map.has_tag("no_monster_gen"))
@@ -859,9 +862,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
 
     if (place.map.has_tag("no_wall_fixup"))
         _mask_vault(place, MMT_NO_WALL);
-
-    if (!place.map.has_tag("transparent"))
-        _mask_vault(place, MMT_OPAQUE);
 
     // Now do per-square by-symbol masking.
     for (int y = place.pos.y + place.size.y - 1; y >= place.pos.y; --y)
