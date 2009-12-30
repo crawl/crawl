@@ -260,17 +260,18 @@ ENDMAP
 
 NAME:    shoal_ilsuiw
 PLACE:   Shoal:$
-TAGS:    water_ok
+TAGS:    mini_float
 KMONS:   1 = Ilsuiw band, siren
+KITEM:   1 = |
 KMONS:   2 = merfolk impaler / merfolk javelineer
-KFEAT:   12 = w
+KFEAT:   2 = w
 LROCKTILE:  wall_vines
 MAP
- xxxxx
-xxw2wxx
-xwwww*x
-+ww1w|x
-xwwww*x
-xxw2wxx
- xxxxx
+ wxwxw
+wxw2wxw
+xwwWwwx
+wwW1Www
+xwwWwwx
+wxw2wxw
+ wxwxw
 ENDMAP
