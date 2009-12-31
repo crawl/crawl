@@ -12,6 +12,7 @@
 #include "externs.h"
 #include "options.h"
 #include "makeitem.h"
+#include "message.h"
 
 #include "artefact.h"
 #include "colour.h"
@@ -1819,6 +1820,10 @@ static item_status_flag_type _determine_missile_race(const item_def& item,
     return rc;
 }
 
+// Current list is based on dpeg's original post to the Wiki, found at the
+// page: <http://crawl.develz.org/wiki/doku.php?id=DCSS%3Aissue%3A41>.
+// Remember to update the code in is_missile_brand_ok if adding or altering
+// brands that are applied to missiles. {due}
 static special_missile_type _determine_missile_brand(const item_def& item,
                                                      int item_level)
 {
@@ -1829,57 +1834,132 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
     special_missile_type rc = SPMSL_NORMAL;
 
-    // All needles are either poison or curare.
-    if (item.sub_type == MI_NEEDLE)
-        rc = got_curare_roll(item_level) ? SPMSL_CURARE : SPMSL_POISONED;
-    else
+    // "Normal weight" of SPMSL_NORMAL.
+    int nw = force_good ? 0 : random2(2000 - 55 * item_level);
+
+    switch (item.sub_type)
     {
-        const int temp_rand =
-            (force_good ? random2(150) : random2(2000 - 55 * item_level));
-
-        if (temp_rand < 30)
-            rc = SPMSL_FLAME;
-        else if (temp_rand < 60)
-            rc = SPMSL_FROST;
-        else if (temp_rand < 80)
-            rc = SPMSL_POISONED;
-        else if (temp_rand < 90)
-            rc = SPMSL_PENETRATION;
-        else if (temp_rand < 100)
-            rc = SPMSL_REAPING;
-        else if (temp_rand < 110)
-            rc = SPMSL_SILVER;
-        // Make steel rarer at lower levels. {due}
-        else if (temp_rand < 120 && (you.your_level > 10 || one_chance_in(3)))
-            rc = SPMSL_STEEL;
-        else if (temp_rand < 130)
-            rc = SPMSL_DISPERSAL;
-        else if (temp_rand < 150)
-            rc = SPMSL_EXPLODING;
-        else
-            rc = SPMSL_NORMAL;
+    case MI_NEEDLE:
+        rc = got_curare_roll(item_level) ? SPMSL_CURARE : SPMSL_POISONED;
+        break;
+    case MI_DART:
+        rc = static_cast<special_missile_type>(
+                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
+                                                20, SPMSL_POISONED, 12, SPMSL_REAPING,
+                                                12, SPMSL_SILVER, 12, SPMSL_STEEL,
+                                                12, SPMSL_DISPERSAL, 20, SPMSL_EXPLODING,
+                                                nw, SPMSL_NORMAL,
+                                                0));
+        break;
+    case MI_ARROW:
+        rc = static_cast<special_missile_type>(
+                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
+                                               20, SPMSL_POISONED, 10, SPMSL_CHAOS,
+                                               10, SPMSL_REAPING, 10, SPMSL_DISPERSAL,
+                                               nw, SPMSL_NORMAL,
+                                               0));
+        break;
+    case MI_BOLT:
+        rc = static_cast<special_missile_type>(
+                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
+                                               20, SPMSL_POISONED, 10, SPMSL_PENETRATION,
+                                               10, SPMSL_CHAOS, 10, SPMSL_SILVER,
+                                               10, SPMSL_STEEL, nw, SPMSL_NORMAL,
+                                               0));
+        break;
+    case MI_JAVELIN:
+        rc = static_cast<special_missile_type>(
+                        random_choose_weighted(30, SPMSL_RETURNING, 30, SPMSL_PENETRATION,
+                                               20, SPMSL_STEEL, 20, SPMSL_SILVER,
+                                               10, SPMSL_CHAOS, nw, SPMSL_NORMAL,
+                                               0));
+        break;
+    case MI_STONE:
+        // deliberate fall through
+    case MI_LARGE_ROCK:
+        // Stones get no brands. Slings may be branded.
+        rc = SPMSL_NORMAL;
+        break;
+    case MI_SLING_BULLET:
+        rc = static_cast<special_missile_type>(
+                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
+                                               20, SPMSL_POISONED, 10, SPMSL_CHAOS,
+                                               10, SPMSL_STEEL, 10, SPMSL_SILVER,
+                                               20, SPMSL_EXPLODING, nw, SPMSL_NORMAL,
+                                               0));
+        break;
+    case MI_THROWING_NET:
+        rc = static_cast<special_missile_type>(
+                        random_choose_weighted(30, SPMSL_STEEL, 30, SPMSL_SILVER,
+                                               20, SPMSL_CHAOS, nw, SPMSL_NORMAL,
+                                               0));
+        break;
     }
-
-    // Javelins can be returning.
-    if (item.sub_type == MI_JAVELIN && one_chance_in(25))
-        rc = SPMSL_RETURNING;
 
     // Orcish ammo gets poisoned a lot more often.
     if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
         rc = SPMSL_POISONED;
 
-    // Unbrand throwing nets.
-    if (item.sub_type == MI_THROWING_NET)
-        rc = SPMSL_NORMAL;
+    bool missile_brand_ok = is_missile_brand_ok(item.sub_type, rc);
+    if (!missile_brand_ok)
+    {
+        ASSERT(false);
+    }
 
-    ASSERT(is_missile_brand_ok(item.sub_type, rc));
     return rc;
 }
 
 bool is_missile_brand_ok(int type, int brand)
 {
-    // No checks for now...
-    return (true);
+    // Stones can never be branded.
+    if ((type == MI_STONE || type == MI_LARGE_ROCK) && brand != SPMSL_NORMAL)
+        return (false);
+
+    // In contrast, needles should always be branded.
+    if (type == MI_NEEDLE && (brand == SPMSL_POISONED || brand == SPMSL_CURARE))
+        return (true);
+
+    // Everything else doesn't matter.
+    if (brand == SPMSL_NORMAL)
+        return (true);
+
+    // Not a missile?
+    if (type == 0)
+        return (true);
+
+    // Specifics
+    switch (brand)
+    {
+    case SPMSL_FLAME:
+        return (type == MI_SLING_BULLET || type == MI_ARROW
+                || type == MI_BOLT || type == MI_DART);
+    case SPMSL_FROST:
+        return (type == MI_SLING_BULLET || type == MI_ARROW
+                || type == MI_BOLT || type == MI_DART);
+    case SPMSL_POISONED:
+        return (type == MI_SLING_BULLET || type == MI_ARROW
+                || type == MI_BOLT || type == MI_DART);
+    case SPMSL_RETURNING:
+        return (type == MI_JAVELIN);
+    case SPMSL_CHAOS:
+        return (type == MI_SLING_BULLET || type == MI_ARROW
+                || type == MI_BOLT || type == MI_DART
+                || type == MI_JAVELIN || type == MI_THROWING_NET);
+    case SPMSL_PENETRATION:
+        return (type == MI_JAVELIN || type == MI_BOLT);
+    case SPMSL_REAPING: // deliberate fall through
+    case SPMSL_DISPERSAL:
+        return (type == MI_ARROW || type == MI_DART);
+    case SPMSL_EXPLODING:
+        return (type == MI_SLING_BULLET || type == MI_DART);
+    case SPMSL_STEEL: // deliberate fall through
+    case SPMSL_SILVER:
+        return (type == MI_BOLT || type == MI_SLING_BULLET
+                || type == MI_JAVELIN || type == MI_THROWING_NET);
+    }
+
+    // Assume yes, if we've gotten this far.
+    return (false);
 }
 
 static void _generate_missile_item(item_def& item, int force_type,
