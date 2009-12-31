@@ -1110,7 +1110,7 @@ static monsterentry mondata[] = {
     MONS_MERFOLK, 'm', BLUE, "merfolk",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    500, 10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -3,
+    500, 4, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 2, 4, 0 },
     4, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
