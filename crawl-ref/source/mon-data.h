@@ -3310,7 +3310,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_JELLYFISH, 'J', CYAN, "jellyfish",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_RES_POISON,
     1000, 10, MONS_JELLYFISH, MONS_JELLYFISH, MH_NATURAL, -3,
     { {AT_STING, AF_POISON_STR, 1}, {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK,
@@ -3322,9 +3322,11 @@ static monsterentry mondata[] = {
 },
 
 // A shark goes into a battle frenzy when it smells blood.
+// Technically they have skeletons, but Crawl needs skeletons made
+// of bone or similar materials (e.g. chitin)
 {
     MONS_SHARK, ';', WHITE, "shark",
-    M_COLD_BLOOD | M_BLOOD_SCENT,
+    M_NO_SKELETON | M_COLD_BLOOD | M_BLOOD_SCENT,
     MR_NO_FLAGS,
     2000, 12, MONS_SHARK, MONS_SHARK, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 15}, {AT_BITE, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK },
@@ -3337,7 +3339,7 @@ static monsterentry mondata[] = {
 // A kraken and its tentacles get a random colour from ETC_KRAKEN.
 {
     MONS_KRAKEN, 'X', BLACK, "kraken",
-    M_COLD_BLOOD | M_SPELLCASTER,
+    M_NO_SKELETON | M_COLD_BLOOD | M_SPELLCASTER,
     MR_NO_FLAGS,
     3500, 20, MONS_KRAKEN, MONS_KRAKEN, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 50}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

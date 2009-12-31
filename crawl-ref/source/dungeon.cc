@@ -3381,7 +3381,8 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
             };
 
             mg.base_type = mg.cls;
-            mg.cls = lut[random_choose_weighted(2, 0, 8, 1, 1, 2, 0)]
+            int s = mons_skeleton(mg.cls) ? 2 : 0;
+            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)]
                         [mons_zombie_size(mg.base_type) == Z_BIG];
         }
 
