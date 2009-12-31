@@ -1381,7 +1381,7 @@ static int _acquirement_weapon_subtype()
     int count = 0;
     int skill = SK_FIGHTING;
 
-    for (int i = SK_SHORT_BLADES; i <= SK_DARTS; i++)
+    for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
     {
         if (is_invalid_skill(i))
             continue;
@@ -1452,7 +1452,7 @@ static missile_type _acquirement_missile_subtype()
     int count = 0;
     int skill = SK_THROWING;
 
-    for (int i = SK_SLINGS; i <= SK_DARTS; i++)
+    for (int i = SK_SLINGS; i <= SK_THROWING; i++)
     {
         if (you.skills[i])
         {
@@ -1478,7 +1478,7 @@ static missile_type _acquirement_missile_subtype()
                                                                    : MI_DART);
         break;
 
-    case SK_DARTS:
+    case SK_THROWING:
         // Assuming that blowgun in inventory means that they
         // may want needles for it (but darts might also be
         // wanted).  Maybe expand this... see above comment.

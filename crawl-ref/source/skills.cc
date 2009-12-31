@@ -295,7 +295,7 @@ static int _exercise2(int exsk)
         // practise.  Increasing the "deg"ree of exercise would make
         // missile weapons too easy earlier on, so, instead, we're
         // giving them a special case here.
-        if (exsk != SK_DARTS && exsk != SK_BOWS && exsk != SK_CROSSBOWS
+        if (exsk != SK_THROWING && exsk != SK_BOWS && exsk != SK_CROSSBOWS
             || skill_change > you.exp_available)
         {
             int fraction = (spending_limit * 10) / skill_change;

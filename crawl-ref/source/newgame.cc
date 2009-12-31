@@ -1748,7 +1748,7 @@ static void _newgame_make_item(int slot, equipment_type eqslot,
 static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
 {
     // Darts skill also gets you some needles.
-    if (wpn_skill == SK_DARTS)
+    if (wpn_skill == SK_THROWING)
     {
         // Plus is set if we are getting a good item.  In that case, we
         // get curare here.
@@ -1801,7 +1801,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         you.inv[slot].sub_type = WPN_QUARTERSTAFF;
         break;
 
-    case SK_DARTS:
+    case SK_THROWING:
         you.inv[slot].sub_type = WPN_BLOWGUN;
         break;
 
@@ -2312,7 +2312,7 @@ void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_POLEARMS:
     case SK_BOWS:
     case SK_CROSSBOWS:
-    case SK_DARTS:
+    case SK_THROWING:
     case SK_STAVES:
     case SK_SHORT_BLADES:
         _give_wanderer_weapon(slot, skill, 3);
@@ -2493,7 +2493,7 @@ void _wanderer_decent_equipment(skill_type & skill,
     case SK_POLEARMS:
     case SK_BOWS:
     case SK_CROSSBOWS:
-    case SK_DARTS:
+    case SK_THROWING:
     case SK_STAVES:
     case SK_SHORT_BLADES:
         _give_wanderer_weapon(slot, skill, 0);
@@ -2637,7 +2637,7 @@ static void _create_wanderer(void)
 
     // Regardless of roles, players get a couple levels in these skills.
     const skill_type util_skills[] =
-        { SK_DARTS, SK_STABBING, SK_TRAPS_DOORS, SK_STEALTH,
+        { SK_THROWING, SK_STABBING, SK_TRAPS_DOORS, SK_STEALTH,
           SK_SHIELDS, SK_EVOCATIONS, SK_INVOCATIONS };
 
     int util_size = sizeof(util_skills) / sizeof(skill_type);
@@ -4259,7 +4259,7 @@ bool _give_items_skills()
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_SPELLCASTING]   = 2;
         you.skills[SK_TRANSLOCATIONS] = 3;
-        you.skills[SK_DARTS]          = 1;
+        you.skills[SK_THROWING]       = 1;
         weap_skill = 3;
     break;
 
@@ -4395,7 +4395,7 @@ bool _give_items_skills()
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
-        you.skills[SK_DARTS]        = 1;
+        you.skills[SK_THROWING]     = 1;
         you.skills[SK_ENCHANTMENTS] = 4;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_DODGING]      = 2;
@@ -4566,7 +4566,7 @@ bool _give_items_skills()
         you.skills[SK_DODGING]      = 1;
         you.skills[SK_STEALTH]      = 3;
         you.skills[SK_STABBING]     = 2;
-        you.skills[SK_DARTS]        = 2;
+        you.skills[SK_THROWING]     = 2;
         break;
 
     case JOB_HUNTER:

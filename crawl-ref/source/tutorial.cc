@@ -1197,7 +1197,6 @@ void tut_gained_new_skill(int skill)
     case SK_SLINGS:
     case SK_BOWS:
     case SK_CROSSBOWS:
-    case SK_DARTS:
         learned_something_new(TUT_GAINED_RANGED_SKILL);
         break;
 
@@ -3547,7 +3546,7 @@ void tutorial_describe_item(const item_def &item)
                 {
                     // Then only compare with other launcher skills.
                     curr_wpskill = range_skill(item);
-                    best_wpskill = best_skill(SK_SLINGS, SK_DARTS, 99);
+                    best_wpskill = best_skill(SK_SLINGS, SK_THROWING, 99);
                 }
                 else
                 {

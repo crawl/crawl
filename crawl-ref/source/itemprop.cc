@@ -337,7 +337,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     // - slings get a bonus from dex, not str (as tension is meaningless)
     // - str weight is used for speed and applying dex to skill
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,  20,  0,
-        SK_DARTS,        HANDS_HALF,   SIZE_LITTLE, MI_NEEDLE, false,
+        SK_THROWING,        HANDS_HALF,   SIZE_LITTLE, MI_NEEDLE, false,
         DAMV_NON_MELEE, 0 },
     { WPN_SLING,             "sling",               0,  2, 11,  20,  1,
         SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE, false,
@@ -1660,7 +1660,7 @@ skill_type range_skill( const item_def &item )
     {
         switch (item.sub_type)
         {
-        case MI_DART:    return (SK_DARTS);
+        case MI_DART:    return (SK_THROWING);
         case MI_JAVELIN: return (SK_POLEARMS);
         default:         break;
         }

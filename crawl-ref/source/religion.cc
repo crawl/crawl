@@ -1177,7 +1177,7 @@ static bool _need_missile_gift()
             && random2( you.piety ) > 70
             && one_chance_in(8)
             && you.skills[ best_missile_skill ] >= 8
-            && (launcher || best_missile_skill == SK_DARTS));
+            && (launcher || best_missile_skill == SK_THROWING));
 }
 
 static void _get_pure_deck_weights(int weights[])

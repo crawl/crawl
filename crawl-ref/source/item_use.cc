@@ -1691,7 +1691,7 @@ static int _item_to_skill_level(const item_def *item)
 {
     skill_type type = range_skill(*item);
 
-    if (type == SK_DARTS || type == SK_SLINGS)
+    if (type == SK_SLINGS)
         return (you.skills[type] + you.skills[SK_THROWING]);
 
     return (2 * you.skills[type]);
@@ -2695,9 +2695,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Blowguns take a _very_ steady hand; a lot of the bonus
         // comes from dexterity.  (Dex bonus here as well as below.)
-        case SK_DARTS:
+        case SK_THROWING:
             baseHit -= 2;
-            exercise(SK_DARTS, (coinflip()? 2 : 1));
+            exercise(SK_THROWING, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 3) / 2 + you.dex / 2;
 
             // No extra damage for blowguns.
@@ -2748,7 +2748,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
 
         // Slings and Darts train Throwing a bit.
-        if (launcher_skill == SK_SLINGS || launcher_skill == SK_DARTS)
+        if (launcher_skill == SK_SLINGS)
         {
             if (coinflip())
                 exercise(SK_THROWING, 1);
@@ -2816,7 +2816,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                     did_return = true;
                 break;
             case WPN_BLOWGUN:
-                if (returning && !one_chance_in(1 + skill_bump(SK_DARTS)))
+                if (returning && !one_chance_in(1 + skill_bump(SK_THROWING)))
                     did_return = true;
                 break;
             default:
@@ -2922,13 +2922,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 break;
 
             case MI_DART:
-                exHitBonus  = you.skills[SK_DARTS] * 2;
-                exHitBonus += (you.skills[SK_THROWING] * 2) / 3;
-                exDamBonus  = you.skills[SK_DARTS] / 3;
-                exDamBonus += you.skills[SK_THROWING] / 5;
+                // Darts also using throwing skills, now.
+                exHitBonus += skill_bump(SK_THROWING);
+                exDamBonus += you.skills[SK_THROWING] * 3 / 5;
 
                 // exercise skills
-                exercise(SK_DARTS, 1 + random2avg(3, 2));
+                exercise(SK_THROWING, 1 + random2avg(3, 2));
                 break;
 
             case MI_JAVELIN:
@@ -3026,8 +3025,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // Throwing needles is now seriously frowned upon; it's difficult
             // to grip a fiddly little needle, and not penalising it cheapens
             // blowguns.
-            exHitBonus -= (30 - you.skills[SK_DARTS]) / 3;
-            baseHit    -= (30 - you.skills[SK_DARTS]) / 3;
+            exHitBonus -= (30 - you.skills[SK_THROWING]) / 3;
+            baseHit    -= (30 - you.skills[SK_THROWING]) / 3;
             dprf("Needle base hit = %d, exHitBonus = %d",
                     baseHit, exHitBonus);
         }

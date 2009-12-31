@@ -82,7 +82,7 @@ static int _newwave_weapon_colour(const item_def &item)
         case SK_CROSSBOWS:
             item_colour = LIGHTBLUE;
             break;
-        case SK_DARTS:
+        case SK_THROWING:
             item_colour = WHITE;
             break;
         case SK_SLINGS:
