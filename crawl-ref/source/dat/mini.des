@@ -2682,7 +2682,7 @@ ENDMAP
 #
 NAME:   iood_simple
 DEPTH:  D:18-, Vault
-MONS:   statue spells:orb_of_destruction
+MONS:   statue spells:orb_of_destruction tile:mons_statue_mage
 MAP
        ...
     .........
