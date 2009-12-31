@@ -1424,8 +1424,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_PROTECTION;
             else if (tmp < 980)
                 rc = SPWPN_VORPAL;
-            else
-                rc = SPWPN_SPEED;
 
             if (item.sub_type == WPN_CROSSBOW && one_chance_in(5))
                 rc = SPWPN_ELECTROCUTION;
