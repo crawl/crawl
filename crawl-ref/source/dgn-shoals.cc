@@ -56,7 +56,8 @@ const int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
 // The highest a tide can be called by a tide caller such as Ilsuiw.
 const int HIGH_CALLED_TIDE = 25;
 const int TIDE_DECEL_MARGIN = 8;
-const int PEAK_TIDE_ACCEL = 2;
+const int PEAK_TIDE_VELOCITY = 2;
+const int CALL_TIDE_VELOCITY = 21;
 
 // The area around the user of a call tide spell that is subject to
 // local tide elevation.
@@ -116,21 +117,21 @@ static int _shoals_feature_height(dungeon_feature_type feat)
 }
 
 // Returns true if the given feature can be affected by Shoals tides.
-static bool _shoals_tide_susceptible_feat(dungeon_feature_type feat)
+static inline bool _shoals_tide_susceptible_feat(dungeon_feature_type feat)
 {
     return (feat_is_water(feat) || feat == DNGN_FLOOR);
 }
 
 // Return true if tide effects can propagate through this square.
 // NOTE: uses RNG!
-static bool _shoals_tide_passable_feat(dungeon_feature_type feat)
+static inline bool _shoals_tide_passable_feat(dungeon_feature_type feat)
 {
     return (feat_is_watery(feat)
             // The Shoals tide can sometimes lap past the doorways of rooms
             // near the water. Note that the actual probability of the tide
             // getting through a doorway is this probability * 0.5 --
             // see _shoals_apply_tide.
-            || (feat == DNGN_OPEN_DOOR && !one_chance_in(3))
+            || feat == DNGN_OPEN_DOOR
             || (feat == DNGN_CLOSED_DOOR && one_chance_in(3)));
 }
 
@@ -855,13 +856,13 @@ void shoals_postprocess_level()
 
 static void _shoals_run_tide(int &tide, int &acc)
 {
-    // If someone is calling the tide, the acceleration is clamped high.
+    // If someone is calling the tide, the tide velocity is clamped high.
     if (tide_caller)
-        acc = 15;
-    // If there's no tide caller and our acceleration is suspiciously high,
-    // reset it to a falling tide at peak acceleration.
-    else if (abs(acc) > PEAK_TIDE_ACCEL)
-        acc = -PEAK_TIDE_ACCEL;
+        acc = CALL_TIDE_VELOCITY;
+    // If there's no tide caller and our velocity is suspiciously high,
+    // reset it to a falling tide at peak velocity.
+    else if (abs(acc) > PEAK_TIDE_VELOCITY)
+        acc = -PEAK_TIDE_VELOCITY;
 
     tide += acc;
     tide = std::max(std::min(tide, HIGH_TIDE), LOW_TIDE);
@@ -1045,11 +1046,14 @@ static void _shoals_apply_tide(int tide)
         for (int i = 0, size = cpage.size(); i < size; ++i)
         {
             coord_def c(cpage[i]);
-            const bool was_wet(_shoals_tide_passable_feat(grd(c)));
+            const dungeon_feature_type herefeat(grd(c));
+            const bool was_wet(_shoals_tide_passable_feat(herefeat));
             seen_points(c) = true;
-            _shoals_apply_tide_at(c, _shoals_tide_at(c, tide));
+            if (_shoals_tide_susceptible_feat(herefeat))
+                _shoals_apply_tide_at(c, _shoals_tide_at(c, tide));
 
             const bool is_wet(feat_is_water(grd(c)));
+
             // Only squares that were wet (before applying tide
             // effects!) can propagate the tide onwards. If the tide is
             // receding and just left the square dry, there's only a chance of
@@ -1064,7 +1068,8 @@ static void _shoals_apply_tide(int tide)
                     if (!seen_points(adj))
                     {
                         const dungeon_feature_type feat = grd(adj);
-                        if (_shoals_tide_susceptible_feat(feat))
+                        if (_shoals_tide_passable_feat(feat)
+                            || _shoals_tide_susceptible_feat(feat))
                         {
                             npage.push_back(adj);
                             seen_points(adj) = true;
@@ -1084,7 +1089,7 @@ static void _shoals_init_tide()
     if (!env.properties.exists(ENVP_SHOALS_TIDE_KEY))
     {
         env.properties[ENVP_SHOALS_TIDE_KEY] = short(0);
-        env.properties[ENVP_SHOALS_TIDE_VEL] = short(PEAK_TIDE_ACCEL);
+        env.properties[ENVP_SHOALS_TIDE_VEL] = short(PEAK_TIDE_VELOCITY);
     }
 }
 
