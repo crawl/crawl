@@ -429,13 +429,13 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // Book of Power
     {SPELL_ANIMATE_DEAD,
+     SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_TELEPORT_OTHER,
      SPELL_VENOM_BOLT,
      SPELL_IRON_SHOT,
      SPELL_INVISIBILITY,
      SPELL_MASS_CONFUSION,
      SPELL_POISONOUS_CLOUD,
-     SPELL_NO_SPELL,
      },
 
     // Book of Cantrips
@@ -516,13 +516,13 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of Annihilations - Vehumet special
-    {SPELL_ISKENDERUNS_MYSTIC_BLAST,
-     SPELL_POISON_ARROW,
+    {SPELL_POISON_ARROW,
      SPELL_IOOD,
      SPELL_CHAIN_LIGHTNING,
      SPELL_LEHUDIBS_CRYSTAL_SPEAR,
      SPELL_ICE_STORM,
      SPELL_FIRE_STORM,
+     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 
