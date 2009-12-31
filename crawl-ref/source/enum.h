@@ -3122,7 +3122,6 @@ enum zap_type
     ZAP_PARALYSIS,
     ZAP_FIRE,
     ZAP_COLD,
-    ZAP_PRIMAL_WAVE,
     ZAP_CONFUSION,
     ZAP_INVISIBILITY,
     ZAP_DIGGING,
@@ -3180,6 +3179,7 @@ enum zap_type
     ZAP_SLIME,
     ZAP_PORKALATOR,
     ZAP_SLEEP,
+    ZAP_PRIMAL_WAVE,
     NUM_ZAPS
 };
 
