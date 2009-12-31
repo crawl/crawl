@@ -898,9 +898,7 @@ void direct_effect(monsters *source, spell_type spell,
         pbolt.flavour    = BEAM_MISSILE;
         pbolt.aux_source = "by the air";
 
-        damage_taken     = 8 + random2(random2(4)
-                                       + (random2(12 * source->hit_dice) / 6)
-                                       + (random2(12 * source->hit_dice) / 7));
+        damage_taken     = 10 + 2 * source->hit_dice;
 
         // Apply "bonus" against flying/levitating characters after AC
         // has been checked.
@@ -911,7 +909,8 @@ void direct_effect(monsters *source, spell_type spell,
         }
 
         // Previous method of damage calculation (in line with player
-        // airstrike) favoured high-AC player characters.
+        // airstrike) had absurd variance.
+        damage_taken = random2avg(damage_taken, 3);
         damage_taken -= random2(defender->armour_class());
         break;
 
