@@ -3370,7 +3370,6 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
         mg.cls = montypes[random2(montypes.size())];
 
         if (player_in_branch( BRANCH_COCYTUS ) &&
-            x_chance_in_y(95, 100) &&
             mons_class_can_be_zombified(mg.cls))
         {
             static const monster_type lut[3][2] =
@@ -3453,8 +3452,7 @@ static void _place_aquatic_monsters(int level_number, char level_type)
             else if (player_in_branch( BRANCH_COCYTUS ))
             {
                 // Eels are useless when zombified
-                if (swimming_things[i] == MONS_ELECTRIC_EEL &&
-                    !one_chance_in(20))
+                if (swimming_things[i] == MONS_ELECTRIC_EEL)
                 {
                     swimming_things[i] = one_chance_in(4) ? MONS_KRAKEN :
                                              MONS_WATER_ELEMENTAL;
