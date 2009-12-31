@@ -116,7 +116,8 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     beam.source = pos;
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
-    beam.damage = dice_def(6, mon.props["iood_pow"].get_short()/4);
+    const int pow = mon.props["iood_pow"].get_short();
+    beam.damage = dice_def(8, stepdown_value(pow, 30, 30, 200, -1) / 4);
     beam.ex_size = 1;
 
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
