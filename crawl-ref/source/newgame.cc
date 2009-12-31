@@ -1810,7 +1810,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         break;
 
     case SK_CROSSBOWS:
-        you.inv[slot].sub_type = WPN_HAND_CROSSBOW;
+        you.inv[slot].sub_type = WPN_CROSSBOW;
         break;
     }
 
@@ -2586,39 +2586,23 @@ static void _wanderer_cover_equip_holes(int & slot)
         }
     }
 
-    // The player gets a stack of darts if they have a hand
-    // crossbow/darts skill but no blowgun.
-    bool need_darts = false;
+    // The player needs a stack of bolts if they have a crossbow.
+    bool need_bolts = false;
 
     for (int i = 0; i < slot; ++i)
     {
         if (you.inv[i].base_type == OBJ_WEAPONS
-            && you.inv[i].sub_type == WPN_HAND_CROSSBOW)
+            && you.inv[i].sub_type == WPN_CROSSBOW)
         {
-            need_darts = true;
+            need_bolts = true;
             break;
         }
     }
 
-    if (!need_darts && you.skills[SK_DARTS])
+    if (need_bolts)
     {
-        need_darts = true;
-
-        for (int i = 0; i < slot; ++i)
-        {
-            if (you.inv[i].base_type == OBJ_WEAPONS
-                && you.inv[i].sub_type == WPN_BLOWGUN)
-            {
-                need_darts = false;
-                break;
-            }
-        }
-    }
-
-    if (need_darts)
-    {
-        _newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                           8 + roll_dice(2, 8));
+        _newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1,
+                           15 + random2avg(21, 5));
         slot++;
     }
 
@@ -4540,12 +4524,9 @@ bool _give_items_skills()
 
     case JOB_THIEF:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HAND_CROSSBOW);
-
-        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
 
         // Spriggans used to get a rod of striking, but now that anyone
         // can get one when playing an Artificer, this is no longer

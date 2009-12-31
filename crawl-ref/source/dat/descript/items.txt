@@ -461,7 +461,7 @@ It causes massive damage when used for backstabbing.
 %%%%
 dart
 
-A small throwing weapon. It can also be fired from a hand crossbow.
+A small throwing weapon.
 %%%%
 deck of changes
 
@@ -643,10 +643,6 @@ The kind of thing you hit nails with, adapted for battle.
 hand axe
 
 A small axe designed for either hand combat or throwing.
-%%%%
-hand crossbow
-
-A small crossbow, for firing darts.
 %%%%
 helm
 

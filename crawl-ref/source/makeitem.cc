@@ -1129,11 +1129,6 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
                 rc = ISFLAG_DWARVEN;
             break;
 
-        case WPN_HAND_CROSSBOW:
-            if (one_chance_in(3))
-                rc = ISFLAG_ELVEN;
-            break;
-
         case WPN_BLOWGUN:
             if (one_chance_in(6))
                 rc = ISFLAG_ELVEN;
@@ -1409,7 +1404,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
 
         case WPN_SLING:
-        case WPN_HAND_CROSSBOW:
             if (coinflip())
                 break;
             // **** possible intentional fall through here ****
@@ -1433,12 +1427,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             else
                 rc = SPWPN_SPEED;
 
-            if ((item.sub_type == WPN_HAND_CROSSBOW
-                    || item.sub_type == WPN_CROSSBOW)
-                && one_chance_in(5))
-            {
+            if (item.sub_type == WPN_CROSSBOW && one_chance_in(5))
                 rc = SPWPN_ELECTROCUTION;
-            }
+
             break;
         }
 

@@ -1218,11 +1218,6 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
             hitMult = 70;
             damMult = 30;
             break;
-        case WPN_HAND_CROSSBOW:
-            baseHit = 2;
-            hitMult = 50;
-            damMult = 20;
-            break;
         case WPN_SLING:
             baseHit = 10;
             hitMult = 40;

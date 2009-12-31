@@ -162,8 +162,7 @@ void choose_item_for_quiver()
              t == AMMO_BLOWGUN  ? "blowgun" :
              t == AMMO_SLING    ? "sling" :
              t == AMMO_BOW      ? "bow" :
-             t == AMMO_CROSSBOW ? "crossbow"
-                                : "hand crossbow");
+                                  "crossbow");
         return;
     }
     else if (slot == you.equip[EQ_WEAPON]
@@ -202,8 +201,7 @@ void choose_item_for_quiver()
          t == AMMO_BLOWGUN  ? "blowguns" :
          t == AMMO_SLING    ? "slings" :
          t == AMMO_BOW      ? "bows" :
-         t == AMMO_CROSSBOW ? "crossbows"
-                            : "hand crossbows");
+                              "crossbows");
 }
 
 // Notification that item was fired with 'f'.
@@ -606,8 +604,6 @@ static ammo_t _get_weapon_ammo_type(const item_def* weapon)
             return AMMO_BOW;
         case WPN_CROSSBOW:
             return AMMO_CROSSBOW;
-        case WPN_HAND_CROSSBOW:
-            return AMMO_HAND_CROSSBOW;
         default:
             return AMMO_THROW;
     }

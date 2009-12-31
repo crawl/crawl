@@ -180,17 +180,6 @@ enum attribute_type
     NUM_ATTRIBUTES
 };
 
-enum quiver_type
-{
-    QUIVER_THROW,           // no launcher wielded -> darts, stones, ...
-    QUIVER_BOW,             // wielded bow -> arrows
-    QUIVER_SLING,           // wielded sling -> stones, sling bullets
-    QUIVER_CROSSBOW,        // wielded crossbow -> bolts
-    QUIVER_HAND_CROSSBOW,   // wielded hand crossbow -> darts
-    QUIVER_BLOWGUN,         // wielded blowgun -> needles
-    NUM_QUIVER
-};
-
 enum beam_type                  // beam[].flavour
 {
     BEAM_NONE,                    // 0

@@ -2327,10 +2327,6 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 1;
         msg   = "You hear a whirring sound.";
         break;
-    case WPN_HAND_CROSSBOW:
-        level = 3;
-        msg   = "You hear a small twanging sound.";
-        break;
      case WPN_BOW:
         level = 5;
         msg   = "You hear a twanging sound.";
@@ -2747,13 +2743,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             dice_mult = dice_mult * (22 + random2(1 + effSkill)) / 22;
 
-            if (lnchType == WPN_HAND_CROSSBOW)
-            {
-                exHitBonus -= 2;
-                dice_mult = dice_mult * 26 / 30;
-            }
-            break;
-
         default:
             break;
         }
@@ -2813,7 +2802,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         switch (lnchType)
         {
-            case WPN_HAND_CROSSBOW:
             case WPN_CROSSBOW:
                 if (returning && !one_chance_in(1 + skill_bump(SK_CROSSBOWS)))
                     did_return = true;

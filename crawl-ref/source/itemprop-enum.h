@@ -396,49 +396,49 @@ enum stave_type
 
 enum weapon_type
 {
-    WPN_CLUB,                          //    0
+    WPN_CLUB,
     WPN_WHIP,
     WPN_HAMMER,
     WPN_MACE,
     WPN_FLAIL,
-    WPN_MORNINGSTAR,                   //    5
+    WPN_MORNINGSTAR,
     WPN_SPIKED_FLAIL,
     WPN_DIRE_FLAIL,
     WPN_EVENINGSTAR,
     WPN_GREAT_MACE,
 
-    WPN_DAGGER,                        //   10
+    WPN_DAGGER,
     WPN_QUICK_BLADE,
     WPN_SHORT_SWORD,
     WPN_SABRE,
 
     WPN_FALCHION,
-    WPN_LONG_SWORD,                    //   15
+    WPN_LONG_SWORD,
     WPN_SCIMITAR,
     WPN_GREAT_SWORD,
 
     WPN_HAND_AXE,
     WPN_WAR_AXE,
-    WPN_BROAD_AXE,                     //   20
+    WPN_BROAD_AXE,
     WPN_BATTLEAXE,
     WPN_EXECUTIONERS_AXE,
 
     WPN_SPEAR,
     WPN_TRIDENT,
-    WPN_HALBERD,                       //   25
+    WPN_HALBERD,
     WPN_GLAIVE,
     WPN_BARDICHE,
 
     WPN_BLOWGUN,
-    WPN_HAND_CROSSBOW,
-    WPN_CROSSBOW,                      //   30
+    WPN_CROSSBOW,
+    // Was hand crossbows, they are gone.
     WPN_BOW,
     WPN_LONGBOW,
     WPN_MAX_RACIAL = WPN_LONGBOW,
 
     WPN_ANKUS,
     WPN_DEMON_WHIP,
-    WPN_GIANT_CLUB,                    //   35
+    WPN_GIANT_CLUB,
     WPN_GIANT_SPIKED_CLUB,
 
     WPN_KNIFE,

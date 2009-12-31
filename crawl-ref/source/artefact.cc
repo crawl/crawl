@@ -773,11 +773,8 @@ void static _get_randart_properties(const item_def &item,
                     proprt[ARTP_BRAND] = SPWPN_NORMAL;
                 }
 
-                if (atype == WPN_CROSSBOW && one_chance_in(5)
-                    || atype == WPN_HAND_CROSSBOW && one_chance_in(10))
-                {
+                if (atype == WPN_CROSSBOW && one_chance_in(5))
                     proprt[ARTP_BRAND] = SPWPN_ELECTROCUTION;
-                }
             }
         }
 

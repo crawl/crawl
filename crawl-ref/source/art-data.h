@@ -672,7 +672,7 @@
 /* UNRAND_SNIPER */
 {
     "hand crossbow \"Sniper\"", "black crossbow", 
-    OBJ_WEAPONS, WPN_HAND_CROSSBOW, +10, +0, ETC_DARK, 0, 
+    OBJ_WEAPONS, WPN_CROSSBOW, +10, +0, ETC_DARK, 0, 
     UNRAND_FLAG_NONE, 
     {
         SPWPN_VENOM, 0, 0, 0, 0, 0, 
@@ -682,7 +682,7 @@
         0, 0, 0, 0, 0, 0, 
         
     },
-    "A hand crossbow made of some black material.", 
+    "A crossbow made of some black material.", 
     "", 
     "", 
     NULL, NULL, NULL, { NULL }, NULL, 

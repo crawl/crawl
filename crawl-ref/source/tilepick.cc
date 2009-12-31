@@ -109,7 +109,6 @@ static int _bow_offset(const monsters *mon)
     case WPN_BOW:
     case WPN_LONGBOW:
     case WPN_CROSSBOW:
-    case WPN_HAND_CROSSBOW:
         return (0);
     default:
         return (1);
@@ -1301,9 +1300,6 @@ static int _tileidx_weapon_base(const item_def &item)
 
     case WPN_CROSSBOW:
         return TILE_WPN_CROSSBOW;
-
-    case WPN_HAND_CROSSBOW:
-        return TILE_WPN_HAND_CROSSBOW;
 
     case WPN_SPEAR:
         return TILE_WPN_SPEAR;
@@ -4002,7 +3998,6 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_SLING:         return TILEP_HAND1_SLING;
     case WPN_BOW:           return TILEP_HAND1_BOW2;
     case WPN_CROSSBOW:      return TILEP_HAND1_CROSSBOW;
-    case WPN_HAND_CROSSBOW: return TILEP_HAND1_CROSSBOW;
     case WPN_BLOWGUN:       return TILEP_HAND1_BLOWGUN;
     case WPN_LONGBOW:       return TILEP_HAND1_BOW3;
 
