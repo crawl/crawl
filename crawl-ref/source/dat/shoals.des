@@ -243,14 +243,15 @@ NAME:      shoalhut_rune
 TAGS:      shoal_rune water_ok no_dump allow_dup
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x=, D=+
+SUBST:     0 = 0.
 LROCKTILE:  wall_vines
 MAP
  xxCxx
-xx.1.xx
-x.1.1.x
-B1.O.1D
-x.1.1.x
-xx.1.xx
+xx.0.xx
+x.0.0.x
+B0.O.0D
+x.0.0.x
+xx.0.xx
  xxAxx
 ENDMAP
 
