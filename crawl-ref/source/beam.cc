@@ -3720,12 +3720,6 @@ bool bolt::is_reflectable(const item_def *it) const
     return (it && is_shield(*it) && shield_reflects(*it));
 }
 
-static void _ident_reflector(item_def *item)
-{
-    if (!is_artefact(*item))
-        set_ident_flags(*item, ISFLAG_KNOW_TYPE);
-}
-
 // Reflect a beam back the direction it came. This is used
 // by shields of reflection.
 void bolt::reflect()
@@ -3852,7 +3846,7 @@ bool bolt::misses_player()
                 mprf( "Your %s reflects the %s!",
                       you.shield()->name(DESC_PLAIN).c_str(),
                       name.c_str() );
-                _ident_reflector(you.shield());
+                ident_reflector(you.shield());
                 reflect();
             }
             else
@@ -4818,7 +4812,7 @@ bool bolt::attempt_block(monsters* mon)
                          name.c_str(),
                          mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
                          shield->name(DESC_PLAIN).c_str());
-                    _ident_reflector(shield);
+                    ident_reflector(shield);
                 }
                 else if (you.see_cell(pos()))
                     mprf("The %s bounces off of thin air!", name.c_str());

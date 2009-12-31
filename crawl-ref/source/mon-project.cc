@@ -19,6 +19,7 @@
 #include "directn.h"
 #include "coord.h"
 #include "env.h"
+#include "itemprop.h"
 #include "mgen_data.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
@@ -86,6 +87,19 @@ void _iood_dissipate(monsters &mon)
     simple_monster_message(&mon, " dissipates.");
     dprf("iood: dissipating");
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+}
+
+// Alas, too much differs to reuse beam shield blocks :(
+bool _iood_shielded(monsters &mon, actor &victim)
+{
+    if (!victim.shield() || victim.incapacitated())
+        return (false);
+
+    const int to_hit = 15 + mon.props["iood_pow"].get_short()/12;
+    const int con_block = random2(to_hit + victim.shield_block_penalty());
+    const int pro_block = victim.shield_bonus();
+    dprf("iood shield: pro %d, con %d", pro_block, con_block);
+    return (pro_block >= con_block);
 }
 
 bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
@@ -193,6 +207,8 @@ bool iood_act(monsters &mon, bool no_trail)
         mon.props["iood_vy"] = vy;
     }
 
+reflected:
+
     x += vx;
     y += vy;
 
@@ -234,6 +250,62 @@ bool iood_act(monsters &mon, bool no_trail)
             monster_die((monsters*)victim, KILL_DISMISSED, NON_MONSTER);
             _iood_hit(mon, pos, true);
             return (true);
+        }
+
+        if (victim && _iood_shielded(mon, *victim))
+        {
+            item_def *shield = victim->shield();
+            if (!shield_reflects(*shield))
+            {
+                if (victim->atype() == ACT_PLAYER)
+                {
+                    mprf("You block %s.", mon.name(DESC_NOCAP_THE, true).c_str());
+                }
+                else
+                {
+                    simple_monster_message((monsters*)victim, (" blocks the "
+                        + mon.name(DESC_NOCAP_THE, true) + ".").c_str());
+                }
+                victim->shield_block_succeeded(&mon);
+                _iood_dissipate(mon);
+                return (true);
+            }
+
+            if (victim->atype() == ACT_PLAYER)
+            {
+                mprf("Your %s reflects %s!",
+                    shield->name(DESC_PLAIN).c_str(),
+                    mon.name(DESC_NOCAP_THE, true).c_str());
+                ident_reflector(shield);
+            }
+            else if (you.see_cell(pos))
+            {
+                if (victim->observable())
+                {
+                    mprf("%s reflects %s with %s %s!",
+                        victim->name(DESC_CAP_THE, true).c_str(),
+                        mon.name(DESC_NOCAP_THE, true).c_str(),
+                        mon.pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                        shield->name(DESC_PLAIN).c_str());
+                    ident_reflector(shield);
+                }
+                else
+                {
+                    mprf("%s bounces off thin air!",
+                        mon.name(DESC_CAP_THE, true).c_str());
+                }
+            }
+            victim->shield_block_succeeded(&mon);
+
+            mon.props["iood_vx"] = vx = -vx;
+            mon.props["iood_vy"] = vy = -vy;
+
+            // Need to get out of the victim's square.
+
+            // If you're next to the caster and both of you wear shields of
+            // reflection, this can lead to a brief game of ping-pong, but
+            // rapidly increasing shield penalties will make it short.
+            goto reflected;
         }
 
         if (_iood_hit(mon, pos))
