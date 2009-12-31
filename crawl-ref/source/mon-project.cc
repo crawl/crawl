@@ -36,7 +36,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     
     int mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :
-                    ((monsters*)caster)->wont_attack() ? BEH_FRIENDLY : BEH_HOSTILE,
+                    ((monsters*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 caster,
                 0,
                 SPELL_IOOD,
@@ -57,7 +57,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     mon.props["iood_vx"] = (float)(beam->target.x - pos.x);
     mon.props["iood_vy"] = (float)(beam->target.y - pos.y);
     mon.props["iood_kc"].get_byte() = (caster->atype() == ACT_PLAYER) ? KC_YOU :
-            ((monsters*)caster)->wont_attack() ? KC_FRIENDLY : KC_OTHER;
+            ((monsters*)caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
     mon.props["iood_pow"].get_short() = pow;
     mon.flags &= ~MF_JUST_SUMMONED;
 
