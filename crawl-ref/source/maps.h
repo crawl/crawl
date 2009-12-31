@@ -68,12 +68,24 @@ typedef bool (*map_place_check_t)(const map_def &, const coord_def &c,
                                   const coord_def &size);
 
 typedef std::vector<coord_def> point_vector;
+typedef std::vector<std::string> string_vector;
 
 extern map_place_check_t map_place_valid;
 extern point_vector      map_anchor_points;
 
+// Use dgn_map_parameters to modify:
+extern string_vector     map_parameters;
+
 const int              MAP_CACHE_VERSION = 1012;
 
+class dgn_map_parameters
+{
+public:
+    dgn_map_parameters(const std::string &astring);
+    dgn_map_parameters(const string_vector &parameters);
+private:
+    unwind_var<string_vector> mpar;
+};
 
 #ifdef DEBUG_DIAGNOSTICS
 void mg_report_random_maps(FILE *outf, const level_id &place);

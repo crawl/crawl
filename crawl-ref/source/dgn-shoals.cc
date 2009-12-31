@@ -405,10 +405,13 @@ static void _shoals_furniture(int margin)
         dgn_excavate(c, dgn_random_direction());
 
         const coord_def p = _pick_shoals_island_distant_from(c);
-        // Place the rune
         const map_def *vault = random_map_for_tag("shoal_rune");
-        dgn_ensure_vault_placed(dgn_place_map(vault, false, false, p),
-                                false);
+        {
+            // Place the rune
+            dgn_map_parameters mp("rune");
+            dgn_ensure_vault_placed(dgn_place_map(vault, false, false, p),
+                                    false);
+        }
 
         const int nhuts = std::min(8, int(_shoals_islands.size()));
         for (int i = 2; i < nhuts; ++i)

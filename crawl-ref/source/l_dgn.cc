@@ -1522,6 +1522,11 @@ LUAFN(_dgn_in_vault)
     return (1);
 }
 
+LUAFN(_dgn_map_parameters)
+{
+    return clua_stringtable(ls, map_parameters);
+}
+
 LUAFN(_dgn_find_marker_position_by_prop)
 {
     const char *prop = luaL_checkstring(ls, 1);
@@ -1784,6 +1789,8 @@ const struct luaL_reg dgn_dlib[] =
 { "reuse_map", _dgn_reuse_map },
 { "resolve_map", _dgn_resolve_map },
 { "in_vault", _dgn_in_vault },
+
+{ "map_parameters", _dgn_map_parameters },
 
 { "find_marker_position_by_prop", _dgn_find_marker_position_by_prop },
 { "find_marker_positions_by_prop", _dgn_find_marker_positions_by_prop },

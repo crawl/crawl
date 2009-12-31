@@ -61,6 +61,21 @@ point_vector map_anchor_points;
 typedef std::vector<map_def> map_vector;
 static map_vector vdefs;
 
+// Parameter array that vault code can use.
+string_vector map_parameters;
+
+dgn_map_parameters::dgn_map_parameters(const std::string &astring)
+    : mpar(map_parameters)
+{
+    map_parameters.push_back(astring);
+}
+
+dgn_map_parameters::dgn_map_parameters(const string_vector &parameters)
+    : mpar(map_parameters)
+{
+    map_parameters = parameters;
+}
+
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************* */
 
 // Remember (!!!) - if a member of the monster array isn't specified
