@@ -1052,6 +1052,14 @@ mon_attack_def downscale_zombie_attack(const monsters *mons,
 mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
 {
     int mc = mon->type;
+
+    if (mc == MONS_KRAKEN_TENTACLE
+        && !invalid_monster_index(mon->number))
+    {
+        // Use the zombie, etc info from the kraken
+        mon = &menv[mon->number];
+    }
+
     const bool zombified = mons_is_zombified(mon);
 
     if (attk_number < 0 || attk_number > 3 || mon->has_hydra_multi_attack())
@@ -1069,7 +1077,7 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
         return (mon_attack_def::attk(0, AT_NONE));
     }
 
-    if (zombified)
+    if (zombified && mc != MONS_KRAKEN_TENTACLE)
         mc = mons_zombie_base(mon);
 
     ASSERT(smc);
