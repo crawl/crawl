@@ -2010,6 +2010,20 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_DEATH_YAK:
         return TILE_CORPSE_DEATH_YAK;
 
+    // water monsters
+    case MONS_BIG_FISH:
+        return TILE_CORPSE_BIG_FISH;
+    case MONS_GIANT_GOLDFISH:
+        return TILE_CORPSE_GIANT_GOLDFISH;
+    case MONS_ELECTRIC_EEL:
+        return TILE_CORPSE_ELECTRIC_EEL;
+    case MONS_SHARK:
+        return TILE_CORPSE_SHARK;
+    case MONS_KRAKEN:
+        return TILE_CORPSE_KRAKEN;
+    case MONS_JELLYFISH:
+        return TILE_CORPSE_JELLYFISH;
+
     // humans ('@')
     case MONS_HUMAN:
     case MONS_HELL_KNIGHT:
