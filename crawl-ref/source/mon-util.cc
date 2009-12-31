@@ -947,7 +947,8 @@ bool mons_can_be_zombified(const monsters *mon)
 
 bool mons_class_can_use_stairs(int mc)
 {
-    return (!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING);
+    return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
+            && mc != MONS_KRAKEN_TENTACLE);
 }
 
 bool mons_can_use_stairs(const monsters *mon)
