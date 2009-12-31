@@ -518,11 +518,11 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of Annihilations - Vehumet special
     {SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_POISON_ARROW,
+     SPELL_IOOD,
      SPELL_CHAIN_LIGHTNING,
      SPELL_LEHUDIBS_CRYSTAL_SPEAR,
      SPELL_ICE_STORM,
      SPELL_FIRE_STORM,
-     SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
 

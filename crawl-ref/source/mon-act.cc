@@ -33,6 +33,7 @@
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "mgen_data.h"
 #include "coord.h"
 #include "mon-stuff.h"
@@ -1724,6 +1725,14 @@ static void _handle_monster_move(monsters *monster)
             continue;
         }
         old_energy = monster->speed_increment;
+
+        if (mons_is_projectile(monster->type))
+        {
+            if (iood_act(*monster))
+                return;
+            monster->lose_energy(EUT_MOVE);
+            continue;
+        }
 
         monster->shield_blocks = 0;
 

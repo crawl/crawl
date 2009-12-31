@@ -431,6 +431,7 @@ enum cloud_type
     CLOUD_CHAOS,
     CLOUD_RAIN,
     CLOUD_MUTAGENIC,
+    CLOUD_MAGIC_TRAIL,
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}
 };
@@ -1663,8 +1664,8 @@ enum monster_type                      // (int) menv[].type
     MONS_KOBOLD_DEMONOLOGIST,
     MONS_ORC_WIZARD,
     MONS_ORC_KNIGHT,                   //   55
-    //MONS_WORM_TAIL = 56, // deprecated and now officially removed {dlb}
-    MONS_WYVERN = 57,                  //   57
+    MONS_ORB_OF_DESTRUCTION, // a projectile, not a real mon
+    MONS_WYVERN,
     MONS_BIG_KOBOLD,
     MONS_GIANT_EYEBALL,
     MONS_WIGHT,                        //   60
@@ -2921,6 +2922,7 @@ enum spell_type
     SPELL_SUMMON_PLAYER_GHOST,
     SPELL_PRIMAL_WAVE,
     SPELL_CALL_TIDE,
+    SPELL_IOOD,
 
     NUM_SPELLS
 };
@@ -3169,6 +3171,7 @@ enum zap_type
     ZAP_PORKALATOR,
     ZAP_SLEEP,
     ZAP_PRIMAL_WAVE,
+    ZAP_IOOD,
     NUM_ZAPS
 };
 

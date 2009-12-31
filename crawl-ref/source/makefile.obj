@@ -115,6 +115,7 @@ mon-movetarget.o \
 mon-pathfind.o \
 mon-pick.o \
 mon-place.o \
+mon-project.o \
 mon-util.o \
 mon-speak.o \
 mon-stuff.o \

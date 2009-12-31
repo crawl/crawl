@@ -160,6 +160,7 @@ death_cob MONS_DEATH_COB /*'%'*/
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %rim 0
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
+orb_of_destruction MONS_ORB_OF_DESTRUCTION /*'*'*/
 %rim 1
 
 ### Demonic monsters

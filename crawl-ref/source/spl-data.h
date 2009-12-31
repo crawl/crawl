@@ -2668,6 +2668,19 @@
 },
 
 {
+    SPELL_IOOD, "Orb of Destruction",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     7,
+     200,
+     9, 9,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

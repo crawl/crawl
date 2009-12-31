@@ -2456,6 +2456,12 @@ bool shield_reflects(const item_def &shield)
     return (get_armour_ego_type(shield) == SPARM_REFLECTION);
 }
 
+void ident_reflector(item_def *item)
+{
+    if (!is_artefact(*item))
+        set_ident_flags(*item, ISFLAG_KNOW_TYPE);
+}
+
 std::string item_base_name(const item_def &item)
 {
     switch (item.base_type)

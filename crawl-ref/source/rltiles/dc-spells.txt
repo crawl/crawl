@@ -30,6 +30,7 @@ swiftness SWIFTNESS
 %sdir spells/conjuration
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
 magic_dart MAGIC_DART
+orb_of_destruction IOOD
 
 %sdir spells/divination
 detect_creatures DETECT_CREATURES

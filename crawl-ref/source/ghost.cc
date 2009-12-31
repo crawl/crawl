@@ -39,7 +39,6 @@ std::vector<ghost_demon> ghosts;
 // Order for looking for conjurations for the 1st & 2nd spell slots,
 // when finding spells to be remembered by a player's ghost.
 static spell_type search_order_conj[] = {
-// 0
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_FIRE_STORM,
     SPELL_ICE_STORM,
@@ -50,8 +49,8 @@ static spell_type search_order_conj[] = {
     SPELL_LIGHTNING_BOLT,
     SPELL_AIRSTRIKE,
     SPELL_STICKY_FLAME,
-// 10
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
+    SPELL_IOOD,
     SPELL_BOLT_OF_MAGMA,
     SPELL_THROW_ICICLE,
     SPELL_BOLT_OF_FIRE,
@@ -61,7 +60,6 @@ static spell_type search_order_conj[] = {
     SPELL_VENOM_BOLT,
     SPELL_IRON_SHOT,
     SPELL_STONE_ARROW,
-// 20
     SPELL_THROW_FLAME,
     SPELL_THROW_FROST,
     SPELL_PAIN,
@@ -285,6 +283,8 @@ void ghost_demon::init_random_demon()
             spells[1] = SPELL_ISKENDERUNS_MYSTIC_BLAST;
         if (one_chance_in(25))
             spells[1] = SPELL_HELLFIRE;
+        if (one_chance_in(25))
+            spells[1] = SPELL_IOOD;
 
         if (one_chance_in(25))
             spells[2] = SPELL_SMITING;
