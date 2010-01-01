@@ -2330,7 +2330,7 @@ static void _decrement_durations()
                 msg += " seems straighter.";
                 break;
             case SPWPN_PAIN:
-                msg += " seems less painful.";
+                msg += " seems less pained.";
                 break;
             default:
                 msg += " seems inexplicably less special.";
