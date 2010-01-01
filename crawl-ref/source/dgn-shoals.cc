@@ -196,7 +196,7 @@ static void _shoals_build_island()
     _shoals_island_center(c, N_PERTURB_ISLAND_CENTER,
                           random_range(ISLAND_CENTER_RADIUS_LOW,
                                        ISLAND_CENTER_RADIUS_HIGH),
-                          40, 60, one_chance_in(5));
+                          40, 60, one_chance_in(10));
     const int additional_heights = random2(4);
     for (int i = 0; i < additional_heights; ++i) {
         const int addition_offset = random_range(2, 10);
@@ -207,7 +207,7 @@ static void _shoals_build_island()
                                                         N_PERTURB_OFFSET_HIGH),
                                   random_range(PERTURB_OFFSET_RADIUS_LOW,
                                                PERTURB_OFFSET_RADIUS_HIGH),
-                                  25, 35, one_chance_in(5));
+                                  25, 35, one_chance_in(10));
     }
 }
 
