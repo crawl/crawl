@@ -347,17 +347,10 @@ book of wizardry
 
 A book of magic spells.
 %%%%
-book of elemental missiles
+book of brands
 
-This book contains spells relating to ammunition and forms of ranged combat.
-%%%%
-book of warped missiles
-
-This book contains spells relating to ammunition and forms of ranged combat.
-%%%%
-book of devastating missiles
-
-This book contains spells relating to ammunition and forms of ranged combat.
+This book contains magical spells related to the branding of weapons and
+launchers, as well as spells that are helpful in all forms of ranged combat.
 %%%%
 bottled efreet
 

@@ -13,7 +13,6 @@
 class dist;
 
 bool brand_weapon(brand_type which_brand, int power);
-bool brand_ammo(special_missile_type which_brand);
 bool burn_freeze(int pow, beam_type flavour, monsters *monster);
 
 void corpse_rot();

@@ -236,7 +236,7 @@ This spell will make ammunition held by the caster extremely unstable. With prop
 %%%%
 Fire Brand
 
-This spell sets a weapon held by the caster ablaze. It will not affect weapons otherwise subject to special enchantments.
+This spell sets a weapon or launcher held by the caster ablaze. It will not affect weapons otherwise subject to special enchantments.
 %%%%
 Fire Storm
 
@@ -268,7 +268,7 @@ This spell freezes a creature. This may temporarily slow the metabolism of a col
 %%%%
 Freezing Aura
 
-This spell surrounds a weapon held by the caster with an aura of freezing cold. It will not affect weapons which are otherwise subject to special enchantments.
+This spell surrounds a weapon or launcher held by the caster with an aura of freezing cold. It will not affect weapons which are otherwise subject to special enchantments.
 %%%%
 Freezing Cloud
 
@@ -422,7 +422,7 @@ This spell hurls a magical arrow coated with the most vile and noxious toxin. No
 %%%%
 Poison Weapon
 
-This spell temporarily coats any sharp bladed weapon with poison. It will only work on weapons without an existing enchantment.
+This spell temporarily coats any weapon or launcher with poison. It will only work on weapons without an existing enchantment.
 %%%%
 Poisonous Cloud
 

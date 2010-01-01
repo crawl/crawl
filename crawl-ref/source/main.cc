@@ -2310,11 +2310,15 @@ static void _decrement_durations()
                 else
                     msg += " feels lighter.";
                 break;
+            case SPWPN_FLAME:
             case SPWPN_FLAMING:
                 msg += " goes out.";
                 break;
             case SPWPN_FREEZING:
                 msg += " stops glowing.";
+                break;
+            case SPWPN_FROST:
+                msg += "'s frost melts away.";
                 break;
             case SPWPN_VENOM:
                 msg += " stops dripping with poison.";
@@ -4629,9 +4633,9 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SK_UNARMED_COMBAT == 18       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
-    COMPILE_CHECK(SPELL_DEBUGGING_RAY == 103    , c4);
-    COMPILE_CHECK(SPELL_RETURNING_AMMUNITION == 162          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 218             , c6);
+    COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
+    COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
+    COMPILE_CHECK(NUM_SPELLS == 198             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

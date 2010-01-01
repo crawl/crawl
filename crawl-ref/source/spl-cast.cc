@@ -1954,46 +1954,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             canned_msg(MSG_SPELL_FIZZLES);
         break;
 
-    case SPELL_POISON_AMMUNITION:
-        if (!brand_ammo(SPMSL_POISONED))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_FLAME_AMMUNITION:
-        if (!brand_ammo(SPMSL_FLAME))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_FROST_AMMUNITION:
-        if (!brand_ammo(SPMSL_FROST))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_WARP_AMMUNITION:
-        if (!brand_ammo(SPMSL_DISPERSAL))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_SHOCKING_AMMUNITION:
-        if (!brand_ammo(SPMSL_ELECTRIC))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_EXPLODING_AMMUNITION:
-        if (!brand_ammo(SPMSL_EXPLODING))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_REAPING_AMMUNITION:
-        if (!brand_ammo(SPMSL_REAPING))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_RETURNING_AMMUNITION:
-        if (!brand_ammo(SPMSL_RETURNING))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
     // Transformations.
     case SPELL_BLADE_HANDS:
         if (!transform(powc, TRAN_BLADE_HANDS))

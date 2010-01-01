@@ -875,9 +875,7 @@ static const char* book_type_name(int booktype)
     case BOOK_CANTRIPS:               return "Cantrips";
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
     case BOOK_STALKING:               return "Stalking";
-    case BOOK_ELEMENTAL_MISSILES:     return "Elemental Missiles";
-    case BOOK_WARPED_MISSILES:        return "Warped Missiles";
-    case BOOK_DEVASTATING_MISSILES:   return "Devastating Missiles";
+    case BOOK_BRANDS:                 return "Brands";
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";

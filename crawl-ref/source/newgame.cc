@@ -4268,21 +4268,6 @@ bool _give_items_skills()
 
         switch (you.species)
         {
-        case SP_SLUDGE_ELF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               2);
-            break;
-
-        case SP_TROLL:
-        case SP_OGRE:
-            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               3);
-            break;
-
         case SP_HALFLING:
         case SP_KOBOLD:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
@@ -4311,26 +4296,13 @@ bool _give_items_skills()
             break;
         }
 
-        if (is_range_weapon(you.inv[1]))
-            you.skills[range_skill(you.inv[1])] = 3;
-        else
-            you.skills[SK_THROWING] = 3;
+        // And give them a book
+        _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_BRANDS);
 
-        if (!_choose_book(3, BOOK_ELEMENTAL_MISSILES, 2))
-            return (false);
-
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_SPELLCASTING]   = 2;
-
-        switch (you.inv[3].sub_type)
-        {
-        case BOOK_ELEMENTAL_MISSILES:
-            you.skills[SK_ENCHANTMENTS] = 3;
-            break;
-        case BOOK_WARPED_MISSILES:
-            you.skills[SK_TRANSLOCATIONS] = 3;
-            break;
-        }
+        you.skills[range_skill(you.inv[1])] = 2;
+        you.skills[SK_DODGING]              = 1;
+        you.skills[SK_SPELLCASTING]         = 2;
+        you.skills[SK_ENCHANTMENTS]         = 2;
         break;
 
     case JOB_WIZARD:

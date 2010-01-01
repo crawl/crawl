@@ -380,8 +380,6 @@ char_choice_restriction class_allowed(species_type speci,
             case SP_HALFLING:
             case SP_KOBOLD:
             case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
             case SP_MINOTAUR:
             case SP_KENKU:
             case SP_RED_DRACONIAN:
@@ -390,6 +388,12 @@ char_choice_restriction class_allowed(species_type speci,
             case SP_GHOUL:
             case SP_VAMPIRE:
                 return (CC_RESTRICTED);
+            case SP_OGRE:
+            case SP_TROLL:
+                // XXX: Temp at the minute. They have rubbbish apt for launchers
+                // and there's no point giving them large rocks and throwings nets
+                // and then a book with spells that are useless for them. {due}
+                return (CC_BANNED);
             default:
                 return (CC_UNRESTRICTED);
         }

@@ -4671,13 +4671,18 @@ static bool _vorpalise_weapon()
             mprf("%s's heaviness feels very stable.", itname.c_str());
         break;
 
+    case SPWPN_FLAME:
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
         immolation(10, IMMOLATION_SPELL, you.pos(), true, &you);
         break;
 
+    case SPWPN_FROST:
     case SPWPN_FREEZING:
-        mprf("%s glows brilliantly blue for a moment.", itname.c_str());
+        if (get_weapon_brand(wpn) == SPWPN_FROST)
+            mprf("%s is covered with a thick layer of frost!", itname.c_str());
+        else
+            mprf("%s glows brilliantly blue for a moment.", itname.c_str());
         cast_refrigeration(60);
         break;
 
