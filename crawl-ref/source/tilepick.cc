@@ -3131,7 +3131,7 @@ int _get_door_offset (int base_tile, bool opened = false,
         return 0;
 
     // The location of the default "closed" tile.
-    int offset;
+    int offset = 0;
 
     switch (count)
     {
