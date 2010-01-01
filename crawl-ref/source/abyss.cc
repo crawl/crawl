@@ -908,13 +908,8 @@ static void _corrupt_level_features(const crawl_environment &oenv)
 
 static bool _is_level_corrupted()
 {
-    if (you.level_type == LEVEL_ABYSS
-        || you.level_type == LEVEL_PANDEMONIUM
-        || player_in_hell()
-        || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-    {
+    if (you.level_type == LEVEL_ABYSS)
         return (true);
-    }
 
     return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
 }
