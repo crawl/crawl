@@ -869,7 +869,7 @@ $(UTIL)%.o: $(UTIL)%.cc .cflags
 
 ifdef PCH
 %.h.gch: %.h
-	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$(subst .o,.d,$@) -c $< -o $@
+	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
