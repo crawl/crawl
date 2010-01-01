@@ -1412,21 +1412,16 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_CROSSBOW:
         {
             const int tmp = random2(1000);
-            if (tmp < 250)
+            if (tmp < 480)
                 rc = SPWPN_FLAME;
-            else if (tmp < 500)
+            else if (tmp < 730)
                 rc = SPWPN_FROST;
-            else if (tmp < 650)
-                rc = SPWPN_PENETRATION;
-            else if (tmp < 800)
+            else if (tmp < 880 && (item.sub_type == WPN_BOW || item.sub_type == WPN_LONGBOW))
                 rc = SPWPN_REAPING;
-            else if (tmp < 920)
+            else if (tmp < 880)
                 rc = SPWPN_PROTECTION;
-            else if (tmp < 980)
+            else if (tmp < 990)
                 rc = SPWPN_VORPAL;
-
-            if (item.sub_type == WPN_CROSSBOW && one_chance_in(5))
-                rc = SPWPN_ELECTROCUTION;
 
             break;
         }
