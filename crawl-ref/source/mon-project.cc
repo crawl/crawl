@@ -264,7 +264,7 @@ reflected:
                 }
                 else
                 {
-                    simple_monster_message((monsters*)victim, (" blocks the "
+                    simple_monster_message((monsters*)victim, (" blocks "
                         + mon.name(DESC_NOCAP_THE, true) + ".").c_str());
                 }
                 victim->shield_block_succeeded(&mon);
