@@ -2048,8 +2048,18 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 || ammo_brand == SPMSL_ELECTRIC;
     const bool blessed      = bow_brand == SPWPN_HOLY_WRATH
                               && ammo_brand != SPMSL_REAPING;
+    const bool flaming      = bow_brand == SPWPN_FLAME
+                                || ammo_brand == SPMSL_FLAME;
 
     ASSERT(!exploding || !is_artefact(item));
+
+    if (flaming && poisoned)
+        ; // Do nothing. A specific exclusion to launcher not overwriting
+          // ammunition brands.
+    else
+        // XXX: Launcher brand does not affect its ammunition. This may change.
+        if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
+            bow_brand = SPWPN_NORMAL;
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
 
