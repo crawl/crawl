@@ -98,27 +98,27 @@ vampire_f VAMPIRE
 vampire_m
 deep_dwarf_f DEEP_DWARF
 deep_dwarf_m
-%end
+%end_ctg
 
 ###SHADOW
 %parts_ctg SHADOW
 %rim 0
 shadow SHADOW
-%end
+%end_ctg
 
 %parts_ctg HALO
 %rim 0
 %sdir player/halo
 halo_player TSO
 %rim 1
-%end
+%end_ctg
 
 %parts_ctg ENCH
 %rim 0
 %sdir player/ench
 sticky_flame STICKY_FLAME
 %rim 1
-%end
+%end_ctg
 
 ###Cloak
 %parts_ctg CLOAK
@@ -134,7 +134,7 @@ brown LBROWN
 green GREEN
 cyan CYAN
 white WHITE
-%end
+%end_ctg
 
 ###Boots
 %parts_ctg BOOTS
@@ -172,7 +172,7 @@ centaur_barding_metal CENTAUR_BARDING_METAL
 centaur_barding_magenta CENTAUR_BARDING_MAGENTA
 centaur_barding_red CENTAUR_BARDING_RED
 %rim 0
-%end
+%end_ctg
 
 ### Body armour
 %parts_ctg LEG
@@ -216,7 +216,7 @@ skirt_white2
 metal_gray LOWARM1
 metal_green LOWARM2
 pants16 LOWARM3
-%end
+%end_ctg
 
 ### Leg armour
 %parts_ctg BODY
@@ -368,7 +368,7 @@ vanhel1
 
 maxwell MAXWELL
 lears_chain_mail LEARS_CHAIN_MAIL
-%end
+%end_ctg
 
 
 ### Arms
@@ -395,7 +395,7 @@ glove_short_green GLOVE_SHORT_GREEN
 glove_short_blue GLOVE_SHORT_BLUE
 glove_short_gray GLOVE_SHORT_GRAY
 claws CLAWS
-%end
+%end_ctg
 
 # Hand 1
 %parts_ctg HAND1
@@ -646,7 +646,7 @@ legolas LEGOLAS
 saruman SARUMAN
 
 bladehands BLADEHAND
-%end
+%end_ctg
 
 ### Hand 2
 %parts_ctg HAND2
@@ -725,7 +725,7 @@ bladehands BLADEHAND
 dagger DAGGER
 sabre SABRE
 short_sword_slant SHORT_SWORD_SLANT
-%end
+%end_ctg
 
 ###Hair
 %parts_ctg HAIR
@@ -761,7 +761,7 @@ ponytail_yellow PONYTAIL_YELLOW
 knot_red KNOT_RED
 brown1 BROWN1
 brown2 BROWN2
-%end
+%end_ctg
 
 ###Beard
 %parts_ctg BEARD
@@ -776,7 +776,7 @@ long_red LONG_RED
 long_yellow LONG_YELLOW
 long_white LONG_WHITE
 pj PJ
-%end
+%end_ctg
 
 ###Helms
 %parts_ctg HELM
@@ -868,7 +868,7 @@ hood_white2 HOOD_WHITE2
 hood_ybrown HOOD_YBROWN
 hood_green HOOD_GREEN
 ninja_black MASK_NINJA_BLACK
-%end
+%end_ctg
 
 # draconian wings and heads, need same order as draconians
 %parts_ctg DRCWING
@@ -883,7 +883,7 @@ drcwing_pale PALE
 drcwing_purple PURPLE
 drcwing_red RED
 drcwing_white WHITE
-%end
+%end_ctg
 
 %parts_ctg DRCHEAD
 %sdir player/drchead
@@ -897,5 +897,5 @@ drchead_pale PALE
 drchead_purple PURPLE
 drchead_red RED
 drchead_white WHITE
-%end
+%end_ctg
 

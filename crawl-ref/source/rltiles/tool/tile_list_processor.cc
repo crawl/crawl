@@ -350,7 +350,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             CHECK_ARG(1);
             m_corpsify = (bool)atoi(m_args[1]);
         }
-        else if (strcmp(arg, "end") == 0)
+        else if (strcmp(arg, "end_ctg") == 0)
         {
             CHECK_NO_ARG(1);
 
