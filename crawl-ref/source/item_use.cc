@@ -4288,7 +4288,8 @@ void zap_wand(int slot)
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;
 
-    beam.source = you.pos();
+    beam.source   = you.pos();
+    beam.attitude = ATT_FRIENDLY;
     beam.set_target(zap_wand);
 
     bool aimed_at_self = (beam.target == you.pos());

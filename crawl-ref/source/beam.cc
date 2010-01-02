@@ -4183,8 +4183,7 @@ void bolt::affect_player_enchantment()
         else
             foe_info.hurt++;
     }
-
-    if (nice)
+    else if (nice)
     {
         if (mons_att_wont_attack(attitude))
             friend_info.helped++;
