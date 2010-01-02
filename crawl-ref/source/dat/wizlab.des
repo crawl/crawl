@@ -839,8 +839,7 @@ ENDMAP
 # Todo: work out what happens next???
 NAME:       wizlab_alistair
 ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup 
-# unfinished
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Alistair's Brewery")
 SHUFFLE:    CYHB
 KFEAT:      CYHB = .
@@ -886,7 +885,7 @@ ENDMAP
 #
 NAME:       wizlab_borgnjor
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Borgnjor's Mortuary")
 MAP
 ENDMAP
@@ -1060,7 +1059,7 @@ ENDMAP
 #
 NAME:       wizlab_iskenderun
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Iskenderun's Mystic Tower")
 MAP
 ENDMAP
@@ -1070,7 +1069,7 @@ ENDMAP
 #
 NAME:       wizlab_lee
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Lee's Rapid Deconstructor")
 MAP
 ENDMAP
@@ -1080,7 +1079,7 @@ ENDMAP
 #
 NAME:       wizlab_lehudib
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Lehudib's Crystal Spire")
 MAP
 ENDMAP
@@ -1090,7 +1089,7 @@ ENDMAP
 #
 NAME:       wizlab_maxwell
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Maxwell's Forge")
 MAP
 ENDMAP
@@ -1100,7 +1099,7 @@ ENDMAP
 #
 NAME:       wizlab_olgreb
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Olgreb's Toxic Laboratory")
 MAP
 ENDMAP
@@ -1110,8 +1109,7 @@ ENDMAP
 #
 NAME:       wizlab_ozocubu
 ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-# unfinished
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 MONS:       skeletal warrior patrolling col:lightblue ; any weapon good_item \
             . ice dragon armour
 MONS:       ice statue spells:ice_storm col:darkgrey name:black name_adjective
@@ -1221,7 +1219,7 @@ ENDMAP
 #
 NAME:       wizlab_zonguldrok
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Zonguldrok's Shrine")
 MAP
 ENDMAP
@@ -1389,7 +1387,7 @@ ENDMAP
 #
 NAME:       wizlab_botono
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Botono's Bayou")
 MAP
 ENDMAP
@@ -1399,7 +1397,7 @@ ENDMAP
 #
 NAME:       wizlab_ukta
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Ukta's Hut")
 MAP
 ENDMAP
@@ -1409,7 +1407,7 @@ ENDMAP
 #
 NAME:       wizlab_alchemist
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "The Alchemist's Tower")
 MAP
 ENDMAP
@@ -1523,7 +1521,7 @@ ENDMAP
 #
 NAME:       wizlab_random1
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 LFLOORCOL:  darkgrey
 COLOUR:     =c = white
 COLOUR:     " = red
