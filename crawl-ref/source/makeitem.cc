@@ -3215,6 +3215,7 @@ int items(int allow_uniques,       // not just true-false,
         if (force_good)
         {
             // New gold acquirement formula from dpeg.
+	    // Min=220, Max=5520, Mean=1218, Std=911
             item.quantity = 10 * (20
                                   + roll_dice(1, 20)
                                   + (roll_dice(1, 8)
