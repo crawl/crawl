@@ -3214,8 +3214,12 @@ int items(int allow_uniques,       // not just true-false,
         item.base_type = OBJ_GOLD;
         if (force_good)
         {
-            item.quantity = 150 + random2(150)
-                            + random2(random2(random2(2000)));
+            // New gold acquirement formula from dpeg.
+            item.quantity = 10 * (20
+                                  + roll_dice(1, 20)
+                                  + (roll_dice(1, 8)
+                                     * roll_dice(1, 8)
+                                     * roll_dice(1, 8)));
         }
         else
             item.quantity = 1 + random2avg(19, 2) + random2(item_level);

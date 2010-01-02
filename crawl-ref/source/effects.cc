@@ -2159,10 +2159,7 @@ int acquirement_create_item(object_class_type class_wanted,
     // Easier to read this way.
     item_def& thing(mitm[thing_created]);
 
-    // Give some more gold.
-    if (class_wanted == OBJ_GOLD)
-        thing.quantity += 150;
-    else if (class_wanted == OBJ_WANDS)
+    if (class_wanted == OBJ_WANDS)
         thing.plus = std::max((int) thing.plus, 3 + random2(3));
     else if (quant > 1)
         thing.quantity = quant;
