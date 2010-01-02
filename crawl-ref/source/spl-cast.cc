@@ -37,6 +37,7 @@
 #include "message.h"
 #include "mon-cast.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -1518,6 +1519,13 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         break;
 
+    case SPELL_IOOD:
+        if (!player_tracer(ZAP_IOOD, powc, beam))
+            return (SPRET_ABORT);
+        if (!cast_iood(&you, powc, &beam))
+            return (SPRET_ABORT);
+        break;
+
     // Clouds and explosions.
     case SPELL_MEPHITIC_CLOUD:
         if (!stinking_cloud(powc, beam))
@@ -1943,46 +1951,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_WARP_BRAND:
         if (!brand_weapon(SPWPN_DISTORTION, powc))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_POISON_AMMUNITION:
-        if (!brand_ammo(SPMSL_POISONED))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_FLAME_AMMUNITION:
-        if (!brand_ammo(SPMSL_FLAME))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_FROST_AMMUNITION:
-        if (!brand_ammo(SPMSL_FROST))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_WARP_AMMUNITION:
-        if (!brand_ammo(SPMSL_DISPERSAL))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_SHOCKING_AMMUNITION:
-        if (!brand_ammo(SPMSL_ELECTRIC))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_EXPLODING_AMMUNITION:
-        if (!brand_ammo(SPMSL_EXPLODING))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_REAPING_AMMUNITION:
-        if (!brand_ammo(SPMSL_REAPING))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_RETURNING_AMMUNITION:
-        if (!brand_ammo(SPMSL_RETURNING))
             canned_msg(MSG_SPELL_FIZZLES);
         break;
 

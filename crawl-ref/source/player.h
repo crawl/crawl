@@ -9,6 +9,7 @@
 #define PLAYER_H
 
 #include "actor.h"
+#include "quiver.h"
 #include "itemprop-enum.h"
 #include "species.h"
 
@@ -142,7 +143,7 @@ public:
   int berserk_penalty;                // penalty for moving while berserk
 
   FixedVector<unsigned long, NUM_ATTRIBUTES> attribute;
-  FixedVector<unsigned char, NUM_QUIVER> quiver; // default items for quiver
+  FixedVector<unsigned char, NUM_AMMO> quiver; // default items for quiver
   FixedVector<long, NUM_OBJECT_CLASSES> sacrifice_value;
 
   undead_state_type is_undead;
@@ -323,6 +324,7 @@ public:
 
     bool in_water() const;
     bool can_swim() const;
+    int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
     bool cannot_speak() const;
     bool invisible() const;

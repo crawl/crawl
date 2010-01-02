@@ -22,6 +22,7 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "terrain.h"
 #include "tutorial.h"
 #include "mislead.h"
@@ -685,6 +686,11 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.type     = 0;
         beam.flavour  = BEAM_PORKALATOR;
         beam.thrower  = KILL_MON_MISSILE;
+        beam.is_beam  = true;
+        break;
+
+    case SPELL_IOOD: // tracer only
+        beam.flavour  = BEAM_NUKE;
         beam.is_beam  = true;
         break;
 
@@ -1818,14 +1824,20 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             // Tentacles aren't really summoned (controlled by spell_cast
             // being passed to summon_type), so I'm not sure what the
             // abjuration value (3) is doing there. (jpeg)
-            if (create_monster(
+            int tentacle = create_monster(
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster), monster,
                           3, spell_cast, monster->pos(), monster->foe, 0, god,
                           MONS_NO_MONSTER, kraken_index, monster->colour,
                           you.your_level, PROX_CLOSE_TO_PLAYER,
-                          you.level_type)) == -1)
+                          you.level_type));
+
+            if (tentacle < 0)
             {
                 sumcount2--;
+            }
+            else if (monster->holiness() == MH_UNDEAD)
+            {
+                menv[tentacle].flags |= MF_HONORARY_UNDEAD;
             }
         }
         if (sumcount2 == 1)
@@ -2324,6 +2336,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                           monster, duration, spell_cast, monster->pos(),
                           monster->foe, 0, god));
         }
+        return;
+    case SPELL_IOOD:
+        cast_iood(monster, 6 * monster->hit_dice, &pbolt);
         return;
     }
 

@@ -588,14 +588,14 @@ DESC_END: This powerful staff used to belong to the leader of the Guild of
 
 NAME:    hand crossbow "Sniper"
 APPEAR:  black crossbow
-OBJ:     OBJ_WEAPONS/WPN_HAND_CROSSBOW
+OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
 PLUS:    +10/+0
 COLOUR:  ETC_DARK
 TILE:    urand_sniper
 TILE_EQ: sniper
 BRAND:   SPWPN_VENOM
 BOOL:    seeinv
-DESC:    A hand crossbow made of some black material.
+DESC:    A crossbow made of some black material.
 
 NAME:    longbow "Piercer"
 APPEAR:  very long metal bow

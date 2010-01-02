@@ -633,7 +633,7 @@ ENDMAP
 NAME:   hourglass_vault
 ORIENT: southeast
 DEPTH:  D:12-26
-TAGS:   no_rotate
+TAGS:   no_rotate no_hmirror
 MAP
 xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 xxxxxx.................xxxxxxxx

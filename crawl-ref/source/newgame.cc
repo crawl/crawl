@@ -1748,7 +1748,7 @@ static void _newgame_make_item(int slot, equipment_type eqslot,
 static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
 {
     // Darts skill also gets you some needles.
-    if (wpn_skill == SK_DARTS)
+    if (wpn_skill == SK_THROWING)
     {
         // Plus is set if we are getting a good item.  In that case, we
         // get curare here.
@@ -1801,7 +1801,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         you.inv[slot].sub_type = WPN_QUARTERSTAFF;
         break;
 
-    case SK_DARTS:
+    case SK_THROWING:
         you.inv[slot].sub_type = WPN_BLOWGUN;
         break;
 
@@ -1810,7 +1810,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         break;
 
     case SK_CROSSBOWS:
-        you.inv[slot].sub_type = WPN_HAND_CROSSBOW;
+        you.inv[slot].sub_type = WPN_CROSSBOW;
         break;
     }
 
@@ -2312,7 +2312,7 @@ void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_POLEARMS:
     case SK_BOWS:
     case SK_CROSSBOWS:
-    case SK_DARTS:
+    case SK_THROWING:
     case SK_STAVES:
     case SK_SHORT_BLADES:
         _give_wanderer_weapon(slot, skill, 3);
@@ -2493,7 +2493,7 @@ void _wanderer_decent_equipment(skill_type & skill,
     case SK_POLEARMS:
     case SK_BOWS:
     case SK_CROSSBOWS:
-    case SK_DARTS:
+    case SK_THROWING:
     case SK_STAVES:
     case SK_SHORT_BLADES:
         _give_wanderer_weapon(slot, skill, 0);
@@ -2586,39 +2586,23 @@ static void _wanderer_cover_equip_holes(int & slot)
         }
     }
 
-    // The player gets a stack of darts if they have a hand
-    // crossbow/darts skill but no blowgun.
-    bool need_darts = false;
+    // The player needs a stack of bolts if they have a crossbow.
+    bool need_bolts = false;
 
     for (int i = 0; i < slot; ++i)
     {
         if (you.inv[i].base_type == OBJ_WEAPONS
-            && you.inv[i].sub_type == WPN_HAND_CROSSBOW)
+            && you.inv[i].sub_type == WPN_CROSSBOW)
         {
-            need_darts = true;
+            need_bolts = true;
             break;
         }
     }
 
-    if (!need_darts && you.skills[SK_DARTS])
+    if (need_bolts)
     {
-        need_darts = true;
-
-        for (int i = 0; i < slot; ++i)
-        {
-            if (you.inv[i].base_type == OBJ_WEAPONS
-                && you.inv[i].sub_type == WPN_BLOWGUN)
-            {
-                need_darts = false;
-                break;
-            }
-        }
-    }
-
-    if (need_darts)
-    {
-        _newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                           8 + roll_dice(2, 8));
+        _newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1,
+                           15 + random2avg(21, 5));
         slot++;
     }
 
@@ -2653,7 +2637,7 @@ static void _create_wanderer(void)
 
     // Regardless of roles, players get a couple levels in these skills.
     const skill_type util_skills[] =
-        { SK_DARTS, SK_STABBING, SK_TRAPS_DOORS, SK_STEALTH,
+        { SK_THROWING, SK_STABBING, SK_TRAPS_DOORS, SK_STEALTH,
           SK_SHIELDS, SK_EVOCATIONS, SK_INVOCATIONS };
 
     int util_size = sizeof(util_skills) / sizeof(skill_type);
@@ -4275,7 +4259,7 @@ bool _give_items_skills()
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_SPELLCASTING]   = 2;
         you.skills[SK_TRANSLOCATIONS] = 3;
-        you.skills[SK_DARTS]          = 1;
+        you.skills[SK_THROWING]       = 1;
         weap_skill = 3;
     break;
 
@@ -4284,21 +4268,6 @@ bool _give_items_skills()
 
         switch (you.species)
         {
-        case SP_SLUDGE_ELF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               2);
-            break;
-
-        case SP_TROLL:
-        case SP_OGRE:
-            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               3);
-            break;
-
         case SP_HALFLING:
         case SP_KOBOLD:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
@@ -4327,26 +4296,13 @@ bool _give_items_skills()
             break;
         }
 
-        if (is_range_weapon(you.inv[1]))
-            you.skills[range_skill(you.inv[1])] = 3;
-        else
-            you.skills[SK_THROWING] = 3;
+        // And give them a book
+        _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_BRANDS);
 
-        if (!_choose_book(3, BOOK_ELEMENTAL_MISSILES, 2))
-            return (false);
-
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_SPELLCASTING]   = 2;
-
-        switch (you.inv[3].sub_type)
-        {
-        case BOOK_ELEMENTAL_MISSILES:
-            you.skills[SK_ENCHANTMENTS] = 3;
-            break;
-        case BOOK_WARPED_MISSILES:
-            you.skills[SK_TRANSLOCATIONS] = 3;
-            break;
-        }
+        you.skills[range_skill(you.inv[1])] = 2;
+        you.skills[SK_DODGING]              = 1;
+        you.skills[SK_SPELLCASTING]         = 2;
+        you.skills[SK_ENCHANTMENTS]         = 2;
         break;
 
     case JOB_WIZARD:
@@ -4411,7 +4367,7 @@ bool _give_items_skills()
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
-        you.skills[SK_DARTS]        = 1;
+        you.skills[SK_THROWING]     = 1;
         you.skills[SK_ENCHANTMENTS] = 4;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_DODGING]      = 2;
@@ -4540,12 +4496,9 @@ bool _give_items_skills()
 
     case JOB_THIEF:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HAND_CROSSBOW);
-
-        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
 
         // Spriggans used to get a rod of striking, but now that anyone
         // can get one when playing an Artificer, this is no longer
@@ -4585,7 +4538,7 @@ bool _give_items_skills()
         you.skills[SK_DODGING]      = 1;
         you.skills[SK_STEALTH]      = 3;
         you.skills[SK_STABBING]     = 2;
-        you.skills[SK_DARTS]        = 2;
+        you.skills[SK_THROWING]     = 2;
         break;
 
     case JOB_HUNTER:

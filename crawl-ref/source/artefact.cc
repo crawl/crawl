@@ -767,16 +767,23 @@ void static _get_randart_properties(const item_def &item,
                     proprt[ARTP_BRAND] = SPWPN_NORMAL;
                 }
 
-                if (atype == WPN_SLING
-                    && proprt[ARTP_BRAND] == SPWPN_VENOM)
+                // Removed slings from getting the venom attribute: they can
+                // be branded with it now using Poison Weapon, and perma-branded
+                // via vorpalise weapon.
+
+                if (atype == WPN_CROSSBOW && one_chance_in(5))
+                    proprt[ARTP_BRAND] = SPWPN_ELECTROCUTION;
+
+                // XXX: Penetration is only allowed on crossbows. This may change
+                // in future.
+                if (atype != WPN_CROSSBOW && proprt[ARTP_BRAND] == SPWPN_PENETRATION)
+                    proprt[ARTP_BRAND] = SPWPN_NORMAL;
+
+                // XXX: Only allow reaping brand on bows. This may change.
+                if (atype != WPN_BOW && atype != WPN_LONGBOW 
+                    && proprt[ARTP_BRAND] == SPWPN_REAPING)
                 {
                     proprt[ARTP_BRAND] = SPWPN_NORMAL;
-                }
-
-                if (atype == WPN_CROSSBOW && one_chance_in(5)
-                    || atype == WPN_HAND_CROSSBOW && one_chance_in(10))
-                {
-                    proprt[ARTP_BRAND] = SPWPN_ELECTROCUTION;
                 }
             }
         }

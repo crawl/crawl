@@ -275,6 +275,9 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
                       dungeon_feature_type feature,
                       unsigned mmask = 0, bool needs_update = false);
 
+void dgn_excavate(coord_def dig_at, coord_def dig_dir);
+coord_def dgn_random_direction();
+
 bool dgn_ensure_vault_placed(bool vault_success,
                              bool disable_further_vaults);
 
@@ -296,5 +299,8 @@ void remember_vault_placement(std::string key, vault_placement &place);
 std::string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
+
+typedef std::set<dungeon_feature_type> dungeon_feature_set;
+extern dungeon_feature_set dgn_Vault_Excavatable_Feats;
 
 #endif

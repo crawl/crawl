@@ -1177,7 +1177,7 @@ static bool _need_missile_gift()
             && random2( you.piety ) > 70
             && one_chance_in(8)
             && you.skills[ best_missile_skill ] >= 8
-            && (launcher || best_missile_skill == SK_DARTS));
+            && (launcher || best_missile_skill == SK_THROWING));
 }
 
 static void _get_pure_deck_weights(int weights[])
@@ -2266,7 +2266,7 @@ static bool _confirm_pray_sacrifice(god_type god)
         return (false);
     }
 
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (_god_likes_item(god, *si)
             && (_is_risky_sacrifice(*si)
@@ -3811,7 +3811,7 @@ bool ely_destroy_weapons()
     god_acting gdact;
 
     bool success = false;
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         item_def& item(*si);
         if (item.base_type != OBJ_WEAPONS
@@ -4479,6 +4479,8 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
 
 bool god_hates_attacking_friend(god_type god, int species)
 {
+    if (mons_is_projectile(species))
+        return (false);
     switch (god)
     {
         case GOD_ZIN:
@@ -4692,7 +4694,8 @@ void offer_items()
 
     int i = igrd(you.pos());
 
-    if (!god_likes_items(you.religion) && i != NON_ITEM)
+    if (!god_likes_items(you.religion) && i != NON_ITEM
+        && you.visible_igrd(you.pos()) != NON_ITEM)
     {
         simple_god_message(" doesn't care about such mundane gifts.",
                            you.religion);
@@ -4852,9 +4855,9 @@ void offer_items()
 
     if (num_sacced > 0 && you.religion == GOD_KIKUBAAQUDGHA)
     {
-		simple_god_message(" torments the living!");
+        simple_god_message(" torments the living!");
         torment(TORMENT_KIKUBAAQUDGHA, you.pos());
-		you.piety -= 8 + random2(4);	// costs 8 - 12 piety
+        lose_piety(random_range(8, 12));
     }
 
     // Explanatory messages if nothing the god likes is sacrificed.

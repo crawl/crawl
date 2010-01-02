@@ -452,7 +452,7 @@ static bool _have_corpses_in_pack(bool remind)
 
 bool butchery(int which_corpse)
 {
-    if (igrd(you.pos()) == NON_ITEM)
+    if (you.visible_igrd(you.pos()) == NON_ITEM)
     {
         if (!_have_corpses_in_pack(false))
             mpr("There isn't anything here!");
@@ -503,7 +503,7 @@ bool butchery(int which_corpse)
     int num_corpses = 0;
     int corpse_id   = -1;
     bool prechosen  = (which_corpse != -1);
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
@@ -577,7 +577,7 @@ bool butchery(int which_corpse)
     bool did_weap_swap = false;
     bool first_corpse  = true;
     int keyin;
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
             continue;
@@ -790,7 +790,7 @@ bool eat_food(int slot)
 
         if (result != -2) // else skip ahead to inventory
         {
-            if (igrd(you.pos()) != NON_ITEM)
+            if (you.visible_igrd(you.pos()) != NON_ITEM)
             {
                 result = eat_from_floor(true);
                 if (result == 1)
@@ -1186,7 +1186,7 @@ int eat_from_floor(bool skip_chunks)
     bool found_valid = false;
 
     std::vector<item_def *> food_items;
-    for (stack_iterator si(you.pos()); si; ++si )
+    for (stack_iterator si(you.pos(), true); si; ++si )
     {
         if (you.species == SP_VAMPIRE)
         {
@@ -1483,7 +1483,7 @@ int prompt_eat_chunks()
     // First search the stash on the floor, unless levitating.
     if (you.flight_mode() != FL_LEVITATE)
     {
-        for (stack_iterator si(you.pos()); si; ++si)
+        for (stack_iterator si(you.pos(), true); si; ++si)
         {
             if (you.species == SP_VAMPIRE)
             {

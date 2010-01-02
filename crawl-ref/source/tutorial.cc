@@ -1197,7 +1197,6 @@ void tut_gained_new_skill(int skill)
     case SK_SLINGS:
     case SK_BOWS:
     case SK_CROSSBOWS:
-    case SK_DARTS:
         learned_something_new(TUT_GAINED_RANGED_SKILL);
         break;
 
@@ -1887,7 +1886,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             text << "Ah, a corpse!";
         else
         {
-            int i = igrd(gc);
+            int i = you.visible_igrd(gc);
             while (i != NON_ITEM)
             {
                 if (mitm[i].base_type == OBJ_CORPSES)
@@ -3547,7 +3546,7 @@ void tutorial_describe_item(const item_def &item)
                 {
                     // Then only compare with other launcher skills.
                     curr_wpskill = range_skill(item);
-                    best_wpskill = best_skill(SK_SLINGS, SK_DARTS, 99);
+                    best_wpskill = best_skill(SK_SLINGS, SK_THROWING, 99);
                 }
                 else
                 {
@@ -4462,6 +4461,7 @@ static void _tutorial_describe_cloud(int x, int y)
     case CLOUD_TLOC_ENERGY:
     case CLOUD_PURPLE_SMOKE:
     case CLOUD_MIST:
+    case CLOUD_MAGIC_TRAIL:
         ostr << "harmless. ";
         break;
 
@@ -4680,7 +4680,7 @@ void tutorial_observe_cell(const coord_def& gc)
     else if (grd(gc) == DNGN_ENTER_PORTAL_VAULT)
         learned_something_new(TUT_SEEN_PORTAL, gc);
 
-    const int it = igrd(gc);
+    const int it = you.visible_igrd(gc);
     if (it != NON_ITEM)
     {
         const item_def& item(mitm[it]);

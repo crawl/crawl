@@ -33,6 +33,7 @@
 #include "itemname.h"
 #include "items.h"
 #include "it_use2.h"
+#include "makeitem.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -234,6 +235,54 @@ void corpse_rot()
     // Should make zombies decay into skeletons?
 }
 
+// We need to know what brands equate with what missile brands to know if
+// we should disallow temporary branding or not.
+special_missile_type _convert_to_missile(brand_type which_brand)
+{
+    switch (which_brand)
+    {
+    case SPWPN_NORMAL: return SPMSL_NORMAL;
+    case SPWPN_FLAME: // deliberate fall through
+    case SPWPN_FLAMING: return SPMSL_FLAME;
+    case SPWPN_FROST: // deliberate fall through
+    case SPWPN_FREEZING: return SPMSL_FROST;
+    case SPWPN_VENOM: return SPMSL_POISONED;
+    case SPWPN_CHAOS: return SPMSL_CHAOS;
+    case SPWPN_RETURNING: return SPMSL_RETURNING;
+    default: return SPMSL_NORMAL; // there are no equivalents for the rest
+                                  // of the ammo brands.
+    }
+}
+
+// Some launchers need to convert different brands.
+brand_type _convert_to_launcher(brand_type which_brand)
+{
+    switch (which_brand)
+    {
+    case SPWPN_FREEZING: return SPWPN_FROST; case SPWPN_FLAMING: return SPWPN_FLAME;
+    default: return (which_brand);
+    }
+}
+
+bool _ok_for_launchers(brand_type which_brand)
+{
+    switch (which_brand)
+    {
+    case SPWPN_NORMAL:
+    case SPWPN_FREEZING:
+    case SPWPN_FROST:
+    case SPWPN_FLAMING:
+    case SPWPN_FLAME:
+    case SPWPN_VENOM:
+    //case SPWPN_PAIN: -- no pain missile type yat
+    case SPWPN_RETURNING:
+    case SPWPN_CHAOS:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 bool brand_weapon(brand_type which_brand, int power)
 {
     if (!you.weapon())
@@ -242,8 +291,12 @@ bool brand_weapon(brand_type which_brand, int power)
     const bool temp_brand = you.duration[DUR_WEAPON_BRAND];
     item_def& weapon = *you.weapon();
 
-    // Can't brand non-weapons.
-    if (weapon.base_type != OBJ_WEAPONS || is_range_weapon(weapon))
+    // Can't brand non-weapons, but can brand some launchers (see later).
+    if (weapon.base_type != OBJ_WEAPONS)
+        return (false);
+
+    // But not blowguns.
+    if (weapon.sub_type == WPN_BLOWGUN)
         return (false);
 
     // Can't brand artefacts.
@@ -258,6 +311,29 @@ bool brand_weapon(brand_type which_brand, int power)
     if (temp_brand && (get_weapon_brand(weapon) != which_brand))
         return (false);
 
+    // Can only brand launchers with sensical brands
+    if (is_range_weapon(weapon))
+    {
+        // If the new missile type wouldn't match the launcher, say no
+        missile_type missile = fires_ammo_type(weapon);
+
+        // XXX: To deal with the fact that is_missile_brand_ok will be unhappy
+        // if we attempt to brand stones, tell it we're using sling bullets instead.
+        if (weapon.sub_type == WPN_SLING)
+            missile = MI_SLING_BULLET;
+
+        if (!is_missile_brand_ok(missile, _convert_to_missile(which_brand)))
+            return (false);
+
+        // If the brand isn't appropriate for that launcher, also say no.
+        if (!_ok_for_launchers(which_brand))
+            return (false);
+
+        // Otherwise, convert to the correct brand type, most specifically (but
+        // not necessarily only) flaming -> flame, freezing -> frost.
+        which_brand = _convert_to_launcher(which_brand);
+    }
+
     std::string msg = weapon.name(DESC_CAP_YOUR);
     const int wpn_type = get_vorpal_type(weapon);
 
@@ -265,8 +341,14 @@ bool brand_weapon(brand_type which_brand, int power)
     int duration_affected = 0;
     switch (which_brand)
     {
+    case SPWPN_FLAME:
     case SPWPN_FLAMING:
         msg += " bursts into flame!";
+        duration_affected = 7;
+        break;
+
+    case SPWPN_FROST:
+        msg += " frosts over!";
         duration_affected = 7;
         break;
 
@@ -358,135 +440,6 @@ bool brand_weapon(brand_type which_brand, int power)
                           duration_affected + roll_dice(2, power), 50);
 
     return (true);
-}
-
-bool brand_ammo(special_missile_type which_type)
-{
-    const int ammo = you.equip[EQ_WEAPON];
-
-    if (ammo == -1
-        || you.inv[ammo].base_type != OBJ_MISSILES
-        || get_ammo_brand(you.inv[ammo]) != SPMSL_NORMAL
-        || you.inv[ammo].sub_type == MI_THROWING_NET)
-    {
-        return (false);
-    }
-
-    bool retval = false;
-    preserve_quiver_slots q;
-    const char *old_desc = you.inv[ammo].name(DESC_CAP_YOUR).c_str();
-
-    switch (which_type)
-    {
-        case SPMSL_POISONED:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_POISONED))
-            {
-                mprf("%s %s covered in a thin film of poison.", old_desc,
-                     (you.inv[ammo].quantity == 1) ? "is" : "are");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_FLAME:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_FLAME))
-            {
-                mprf("%s %s warm to the touch.", old_desc,
-                     (you.inv[ammo].quantity == 1) ? "feels" : "feel");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_FROST:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_FROST))
-            {
-                mprf("%s %s cool to the touch.", old_desc,
-                     (you.inv[ammo].quantity == 1) ? "feels" : "feel");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_DISPERSAL:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_DISPERSAL))
-            {
-                mprf("%s %s rather jumpy.", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "seems" : "seem");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_ELECTRIC:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_ELECTRIC))
-            {
-                mprf("%s %s you!", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "shocks" : "shock");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_EXPLODING:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_EXPLODING))
-            {
-                mprf("%s %s unstable!", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "seems" : "seem");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_REAPING:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_REAPING))
-            {
-                mprf("%s %s briefly obscured by shadows.", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "is" : "are");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_RETURNING:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_RETURNING))
-            {
-                mprf("%s %s in your hand.", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "wiggles" : "wiggle");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        default:
-            break;
-    }
-
-    return (retval);
 }
 
 // Restore the stat in which_stat by the amount in stat_gain, displaying

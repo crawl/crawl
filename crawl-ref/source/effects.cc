@@ -898,9 +898,7 @@ void direct_effect(monsters *source, spell_type spell,
         pbolt.flavour    = BEAM_MISSILE;
         pbolt.aux_source = "by the air";
 
-        damage_taken     = 8 + random2(random2(4)
-                                       + (random2(12 * source->hit_dice) / 6)
-                                       + (random2(12 * source->hit_dice) / 7));
+        damage_taken     = 10 + 2 * source->hit_dice;
 
         // Apply "bonus" against flying/levitating characters after AC
         // has been checked.
@@ -911,7 +909,8 @@ void direct_effect(monsters *source, spell_type spell,
         }
 
         // Previous method of damage calculation (in line with player
-        // airstrike) favoured high-AC player characters.
+        // airstrike) had absurd variance.
+        damage_taken = random2avg(damage_taken, 3);
         damage_taken -= random2(defender->armour_class());
         break;
 
@@ -1382,7 +1381,7 @@ static int _acquirement_weapon_subtype()
     int count = 0;
     int skill = SK_FIGHTING;
 
-    for (int i = SK_SHORT_BLADES; i <= SK_DARTS; i++)
+    for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
     {
         if (is_invalid_skill(i))
             continue;
@@ -1453,7 +1452,7 @@ static missile_type _acquirement_missile_subtype()
     int count = 0;
     int skill = SK_THROWING;
 
-    for (int i = SK_SLINGS; i <= SK_DARTS; i++)
+    for (int i = SK_SLINGS; i <= SK_THROWING; i++)
     {
         if (you.skills[i])
         {
@@ -1479,7 +1478,7 @@ static missile_type _acquirement_missile_subtype()
                                                                    : MI_DART);
         break;
 
-    case SK_DARTS:
+    case SK_THROWING:
         // Assuming that blowgun in inventory means that they
         // may want needles for it (but darts might also be
         // wanted).  Maybe expand this... see above comment.

@@ -2310,11 +2310,15 @@ static void _decrement_durations()
                 else
                     msg += " feels lighter.";
                 break;
+            case SPWPN_FLAME:
             case SPWPN_FLAMING:
                 msg += " goes out.";
                 break;
             case SPWPN_FREEZING:
                 msg += " stops glowing.";
+                break;
+            case SPWPN_FROST:
+                msg += "'s frost melts away.";
                 break;
             case SPWPN_VENOM:
                 msg += " stops dripping with poison.";
@@ -2326,7 +2330,7 @@ static void _decrement_durations()
                 msg += " seems straighter.";
                 break;
             case SPWPN_PAIN:
-                msg += " seems less painful.";
+                msg += " seems less pained.";
                 break;
             default:
                 msg += " seems inexplicably less special.";
@@ -3609,7 +3613,8 @@ static void _close_door(coord_def move)
         find_connected_identical(doorpos, grd(doorpos), all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
-        const char *waynoun = make_stringf("%sway", noun).c_str();
+        const std::string waynoun_str = make_stringf("%sway", noun);
+        const char *waynoun = waynoun_str.c_str();
 
         const std::string door_desc_adj  =
             env.markers.property_at(doorpos, MAT_ANY,
@@ -4629,9 +4634,9 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SK_UNARMED_COMBAT == 18       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
-    COMPILE_CHECK(SPELL_DEBUGGING_RAY == 103    , c4);
-    COMPILE_CHECK(SPELL_RETURNING_AMMUNITION == 162          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 217             , c6);
+    COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
+    COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
+    COMPILE_CHECK(NUM_SPELLS == 198             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

@@ -484,6 +484,7 @@ static bool _siren_movement_effect(const monsters *monster)
                 coord_def swapdest;
                 if (mon->wont_attack()
                     && !mons_is_stationary(mon)
+                    && !mons_is_projectile(mon->type)
                     && !mon->cannot_act()
                     && !mon->asleep()
                     && swap_check(mon, swapdest, true))

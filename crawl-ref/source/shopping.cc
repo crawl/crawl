@@ -954,10 +954,6 @@ unsigned int item_value( item_def item, bool ident )
         case WPN_BLESSED_SCIMITAR:
             valued += 50;
 
-        case WPN_HAND_CROSSBOW:
-            valued += 51;
-            break;
-
         case WPN_HALBERD:
             valued += 52;
             break;

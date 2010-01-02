@@ -1182,7 +1182,7 @@ void cast_fulsome_distillation(int /*pow*/)
     int corpse = -1;
 
     // Search items at the player's location for corpses.
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
@@ -1476,7 +1476,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         goto all_done;
     }
 
-    for (stack_iterator si(spd.target); si; ++si)
+    for (stack_iterator si(spd.target, true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES)
         {

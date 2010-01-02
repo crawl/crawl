@@ -886,6 +886,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_TLOC_ENERGY:
     case CLOUD_MIST:
     case CLOUD_RAIN:
+    case CLOUD_MAGIC_TRAIL:
     case CLOUD_DEBUGGING:
         return (true);
     default:
@@ -960,6 +961,8 @@ std::string cloud_name(cloud_type type)
         return "rain";
     case CLOUD_MUTAGENIC:
         return "mutagenic fog";
+    case CLOUD_MAGIC_TRAIL:
+        return "magical condensation";
     default:
         return "buggy goodness";
     }
@@ -1094,6 +1097,10 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_MUTAGENIC:
         which_colour = ETC_MUTAGENIC;
+        break;
+
+    case CLOUD_MAGIC_TRAIL:
+        which_colour = ETC_MAGIC;
         break;
 
     default:

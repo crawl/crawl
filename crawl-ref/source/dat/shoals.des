@@ -243,14 +243,22 @@ NAME:      shoalhut_rune
 TAGS:      shoal_rune water_ok no_dump allow_dup
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x=, D=+
+SUBST:     0 = 0.
+KMONS:     g = merfolk impaler / merfolk javelineer / merfolk aquamancer
 LROCKTILE:  wall_vines
+{{
+  local mapmode = unpack(dgn.map_parameters())
+  if mapmode ~= 'rune' then
+    subst("g = .")
+  end
+}}
 MAP
  xxCxx
-xx.1.xx
-x.1.1.x
-B1.O.1D
-x.1.1.x
-xx.1.xx
+xx.0.xx
+x.0g0.x
+B0gOg0D
+x.0g0.x
+xx.0.xx
  xxAxx
 ENDMAP
 

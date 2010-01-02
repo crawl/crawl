@@ -1171,7 +1171,7 @@ void pickup()
         return;
     }
 
-    int o = igrd(you.pos());
+    int o = you.visible_igrd(you.pos());
     const int num_nonsquelched = _count_nonsquelched_items(o);
 
     if (o == NON_ITEM)
@@ -2578,7 +2578,7 @@ static void _do_autopickup()
         return;
     }
 
-    int o = igrd(you.pos());
+    int o = you.visible_igrd(you.pos());
 
     std::string pickup_warning;
     while (o != NON_ITEM)

@@ -263,7 +263,7 @@ void debug_list_monsters()
 
     std::sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
 
-    int total_exp = 0, total_adj_exp = 0;
+    long total_exp = 0, total_adj_exp = 0, total_nonuniq_exp = 0;
 
     std::string prev_name = "";
     int         count     = 0;
@@ -297,6 +297,8 @@ void debug_list_monsters()
 
         int exp = exper_value(mi);
         total_exp += exp;
+        if (!mons_is_unique(mi->type))
+            total_nonuniq_exp += exp;
 
         if ((mi->flags & (MF_WAS_NEUTRAL | MF_NO_REWARD))
             || mi->has_ench(ENCH_ABJ))
@@ -320,13 +322,13 @@ void debug_list_monsters()
 
     if (total_adj_exp == total_exp)
     {
-        mprf("%d monsters, %d total exp value",
-             nfound, total_exp);
+        mprf("%d monsters, %ld total exp value (%ld non-uniq)",
+             nfound, total_exp, total_nonuniq_exp);
     }
     else
     {
-        mprf("%d monsters, %d total exp value (%d adjusted)",
-             nfound, total_exp, total_adj_exp);
+        mprf("%d monsters, %ld total exp value (%ld non-uniq, %ld adjusted)",
+             nfound, total_exp, total_nonuniq_exp, total_adj_exp);
     }
 }
 

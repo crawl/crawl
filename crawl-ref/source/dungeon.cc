@@ -248,6 +248,7 @@ FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
 std::set<std::string> Level_Unique_Maps;
 std::set<std::string> Level_Unique_Tags;
+dungeon_feature_set dgn_Vault_Excavatable_Feats;
 std::string dgn_Build_Method;
 std::string dgn_Layout_Type;
 
@@ -309,7 +310,7 @@ bool builder(int level_number, int level_type)
     unwind_bool levelgen(Generating_Level, true);
 
     // N tries to build the level, after which we bail with a capital B.
-    int tries = 20;
+    int tries = 50;
     while (tries-- > 0)
     {
 #ifdef DEBUG_DIAGNOSTICS
@@ -845,6 +846,9 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         {
             _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
         }
+
+        if (!place.map.has_tag("transparent"))
+            _mask_vault(place, MMT_OPAQUE);
     }
 
     if (place.map.has_tag("no_monster_gen"))
@@ -858,9 +862,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
 
     if (place.map.has_tag("no_wall_fixup"))
         _mask_vault(place, MMT_NO_WALL);
-
-    if (!place.map.has_tag("transparent"))
-        _mask_vault(place, MMT_OPAQUE);
 
     // Now do per-square by-symbol masking.
     for (int y = place.pos.y + place.size.y - 1; y >= place.pos.y; --y)
@@ -971,6 +972,12 @@ static bool _valid_dungeon_level(int level_number, int level_type)
     return (true);
 }
 
+static void _dgn_init_vault_excavatable_feats()
+{
+    dgn_Vault_Excavatable_Feats.clear();
+    dgn_Vault_Excavatable_Feats.insert(DNGN_ROCK_WALL);
+}
+
 void dgn_reset_level()
 {
     dgn_level_vetoed = false;
@@ -986,6 +993,8 @@ void dgn_reset_level()
     dgn_Layout_Type.clear();
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
+
+    _dgn_init_vault_excavatable_feats();
 
     can_create_vault = true;
     use_random_maps  = true;
@@ -3359,6 +3368,25 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
     for (int i = 0; i < num_to_place; i++)
     {
         mg.cls = montypes[random2(montypes.size())];
+
+        if (player_in_branch( BRANCH_COCYTUS ) &&
+            mons_class_can_be_zombified(mg.cls))
+        {
+            static const monster_type lut[3][2] =
+            {
+                { MONS_SKELETON_SMALL, MONS_SKELETON_LARGE },
+                { MONS_ZOMBIE_SMALL, MONS_ZOMBIE_LARGE },
+                { MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE },
+            };
+
+            mg.base_type = mg.cls;
+            int s = mons_skeleton(mg.cls) ? 2 : 0;
+            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)]
+                        [mons_zombie_size(mg.base_type) == Z_BIG];
+        }
+
+        else
+            mg.base_type = MONS_NO_MONSTER;
         if (place_monster(mg) != -1)
             ++result;
     }
@@ -3421,6 +3449,15 @@ static void _place_aquatic_monsters(int level_number, char level_type)
                 else if (one_chance_in(20))
                     swimming_things[i] = MONS_KRAKEN;
             }
+            else if (player_in_branch( BRANCH_COCYTUS ))
+            {
+                // Eels are useless when zombified
+                if (swimming_things[i] == MONS_ELECTRIC_EEL)
+                {
+                    swimming_things[i] = one_chance_in(4) ? MONS_KRAKEN :
+                                             MONS_WATER_ELEMENTAL;
+                }
+            }
         }
 
         // Don't place sharks in the Swamp.
@@ -3432,9 +3469,6 @@ static void _place_aquatic_monsters(int level_number, char level_type)
 
         if (level_number >= 25 && one_chance_in(5))
             swimming_things[0] = MONS_WATER_ELEMENTAL;
-
-        if (player_in_branch(BRANCH_COCYTUS))
-            swimming_things[3] = MONS_WATER_ELEMENTAL;
 
         _place_monster_vector(swimming_things, level_number,
                               std::min(random2avg(9, 2)
@@ -3835,12 +3869,22 @@ static coord_def _dig_away_dir(const vault_placement &place,
     return (dig_dir);
 }
 
-static void _dig_away_from(vault_placement &place, const coord_def &pos)
+// Returns true if the feature can be ovewritten by floor when digging a path
+// from a vault to its surroundings.
+bool dgn_vault_excavatable_feat(dungeon_feature_type feat)
 {
-    coord_def dig_dir = _dig_away_dir(place, pos);
-    coord_def dig_at  = pos;
-    bool dug = false;
+    return (dgn_Vault_Excavatable_Feats.find(feat) !=
+            dgn_Vault_Excavatable_Feats.end());
+}
 
+coord_def dgn_random_direction()
+{
+    return Compass[random2(8)];
+}
+
+void dgn_excavate(coord_def dig_at, coord_def dig_dir)
+{
+    bool dug = false;
     for (int i = 0; i < GXM; i++)
     {
         dig_at += dig_dir;
@@ -3851,12 +3895,13 @@ static void _dig_away_from(vault_placement &place, const coord_def &pos)
             break;
         }
 
-        if (grd(dig_at) == DNGN_ROCK_WALL)
+        const dungeon_feature_type dig_feat(grd(dig_at));
+        if (dgn_vault_excavatable_feat(dig_feat))
         {
             grd(dig_at) = DNGN_FLOOR;
             dug = true;
         }
-        else if (grd(dig_at) == DNGN_FLOOR && i > 0)
+        else if (dig_feat == DNGN_FLOOR && i > 0)
         {
             // If the floor square has at least two neighbouring
             // non-solid squares, we're done.
@@ -3875,6 +3920,13 @@ static void _dig_away_from(vault_placement &place, const coord_def &pos)
                 }
         }
     }
+}
+
+static void _dig_away_from(vault_placement &place, const coord_def &pos)
+{
+    coord_def dig_dir = _dig_away_dir(place, pos);
+    coord_def dig_at  = pos;
+    dgn_excavate(dig_at, dig_dir);
 }
 
 static void _dig_vault_loose( vault_placement &place,
@@ -4162,9 +4214,7 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
                       no_exits, where))
     {
         const vault_placement &vp = Level_Vaults[ Level_Vaults.size() - 1 ];
-        if (!player_in_branch(BRANCH_SHOALS))
-            _connect_vault(vp);
-
+        _connect_vault(vp);
         return (true);
     }
     return (false);

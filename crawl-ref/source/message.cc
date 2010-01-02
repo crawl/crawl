@@ -587,6 +587,9 @@ void mpr_comma_separated_list(const std::string prefix,
     std::string out = prefix;
     unsigned width  = get_number_of_cols() - 1;
 
+    if (Options.delay_message_clear)
+        width--;
+
     for (int i = 0, size = list.size(); i < size; i++)
     {
         std::string new_str = list[i];

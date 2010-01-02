@@ -143,12 +143,17 @@ std::string strip_filename_unsafe_chars(const std::string &s)
 std::string vmake_stringf(const char* s, va_list args)
 {
     char buf1[400];
-    size_t len = vsnprintf(buf1, sizeof buf1, s, args);
+    va_list orig_args;
+    va_copy(orig_args, args);
+    size_t len = vsnprintf(buf1, sizeof buf1, s, orig_args);
+    va_end(orig_args);
     if (len < sizeof buf1)
         return (buf1);
 
     char *buf2 = (char*)malloc(len + 1);
-    vsnprintf(buf2, len + 1, s, args);
+    va_copy(orig_args, args);
+    vsnprintf(buf2, len + 1, s, orig_args);
+    va_end(orig_args);
     std::string ret(buf2);
     free(buf2);
 

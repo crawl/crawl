@@ -1691,7 +1691,7 @@ static int _item_to_skill_level(const item_def *item)
 {
     skill_type type = range_skill(*item);
 
-    if (type == SK_DARTS || type == SK_SLINGS)
+    if (type == SK_SLINGS)
         return (you.skills[type] + you.skills[SK_THROWING]);
 
     return (2 * you.skills[type]);
@@ -2048,8 +2048,18 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 || ammo_brand == SPMSL_ELECTRIC;
     const bool blessed      = bow_brand == SPWPN_HOLY_WRATH
                               && ammo_brand != SPMSL_REAPING;
+    const bool flaming      = bow_brand == SPWPN_FLAME
+                                || ammo_brand == SPMSL_FLAME;
 
     ASSERT(!exploding || !is_artefact(item));
+
+    if (flaming && poisoned)
+        ; // Do nothing. A specific exclusion to launcher not overwriting
+          // ammunition brands.
+    else
+        // XXX: Launcher brand does not affect its ammunition. This may change.
+        if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
+            bow_brand = SPWPN_NORMAL;
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
 
@@ -2326,10 +2336,6 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     case WPN_SLING:
         level = 1;
         msg   = "You hear a whirring sound.";
-        break;
-    case WPN_HAND_CROSSBOW:
-        level = 3;
-        msg   = "You hear a small twanging sound.";
         break;
      case WPN_BOW:
         level = 5;
@@ -2699,9 +2705,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Blowguns take a _very_ steady hand; a lot of the bonus
         // comes from dexterity.  (Dex bonus here as well as below.)
-        case SK_DARTS:
+        case SK_THROWING:
             baseHit -= 2;
-            exercise(SK_DARTS, (coinflip()? 2 : 1));
+            exercise(SK_THROWING, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 3) / 2 + you.dex / 2;
 
             // No extra damage for blowguns.
@@ -2747,19 +2753,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             dice_mult = dice_mult * (22 + random2(1 + effSkill)) / 22;
 
-            if (lnchType == WPN_HAND_CROSSBOW)
-            {
-                exHitBonus -= 2;
-                dice_mult = dice_mult * 26 / 30;
-            }
-            break;
-
         default:
             break;
         }
 
         // Slings and Darts train Throwing a bit.
-        if (launcher_skill == SK_SLINGS || launcher_skill == SK_DARTS)
+        if (launcher_skill == SK_SLINGS)
         {
             if (coinflip())
                 exercise(SK_THROWING, 1);
@@ -2813,7 +2812,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         switch (lnchType)
         {
-            case WPN_HAND_CROSSBOW:
             case WPN_CROSSBOW:
                 if (returning && !one_chance_in(1 + skill_bump(SK_CROSSBOWS)))
                     did_return = true;
@@ -2828,7 +2826,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                     did_return = true;
                 break;
             case WPN_BLOWGUN:
-                if (returning && !one_chance_in(1 + skill_bump(SK_DARTS)))
+                if (returning && !one_chance_in(1 + skill_bump(SK_THROWING)))
                     did_return = true;
                 break;
             default:
@@ -2934,13 +2932,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 break;
 
             case MI_DART:
-                exHitBonus  = you.skills[SK_DARTS] * 2;
-                exHitBonus += (you.skills[SK_THROWING] * 2) / 3;
-                exDamBonus  = you.skills[SK_DARTS] / 3;
-                exDamBonus += you.skills[SK_THROWING] / 5;
+                // Darts also using throwing skills, now.
+                exHitBonus += skill_bump(SK_THROWING);
+                exDamBonus += you.skills[SK_THROWING] * 3 / 5;
 
                 // exercise skills
-                exercise(SK_DARTS, 1 + random2avg(3, 2));
+                exercise(SK_THROWING, 1 + random2avg(3, 2));
                 break;
 
             case MI_JAVELIN:
@@ -3038,8 +3035,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // Throwing needles is now seriously frowned upon; it's difficult
             // to grip a fiddly little needle, and not penalising it cheapens
             // blowguns.
-            exHitBonus -= (30 - you.skills[SK_DARTS]) / 3;
-            baseHit    -= (30 - you.skills[SK_DARTS]) / 3;
+            exHitBonus -= (30 - you.skills[SK_THROWING]) / 3;
+            baseHit    -= (30 - you.skills[SK_THROWING]) / 3;
             dprf("Needle base hit = %d, exHitBonus = %d",
                     baseHit, exHitBonus);
         }
@@ -4684,13 +4681,18 @@ static bool _vorpalise_weapon()
             mprf("%s's heaviness feels very stable.", itname.c_str());
         break;
 
+    case SPWPN_FLAME:
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
         immolation(10, IMMOLATION_SPELL, you.pos(), true, &you);
         break;
 
+    case SPWPN_FROST:
     case SPWPN_FREEZING:
-        mprf("%s glows brilliantly blue for a moment.", itname.c_str());
+        if (get_weapon_brand(wpn) == SPWPN_FROST)
+            mprf("%s is covered with a thick layer of frost!", itname.c_str());
+        else
+            mprf("%s glows brilliantly blue for a moment.", itname.c_str());
         cast_refrigeration(60);
         break;
 
@@ -5628,15 +5630,11 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
         }
     }
 
-    if (proprt[ARTP_MAGICAL_POWER])
+    if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
-        you.redraw_magic_points = true;
-        if (!known[ARTP_MAGICAL_POWER])
-        {
-            mprf("You feel your mana capacity %s.",
-                 proprt[ARTP_MAGICAL_POWER] > 0? "increase" : "decrease");
-            artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
-        }
+        mprf("You feel your mana capacity %s.",
+             proprt[ARTP_MAGICAL_POWER] > 0? "increase" : "decrease");
+        artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
     }
 
     // Modify ability scores.
@@ -5697,6 +5695,10 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
         // there is a dangerous monster nearby...
         xom_is_stimulated(128);
     }
+
+    // Let's try this here instead of up there.
+    if (proprt[ARTP_MAGICAL_POWER])
+        calc_mp();
 #undef unknown_proprt
 }
 

@@ -104,8 +104,6 @@ bow WPN_BOW
 bow2
 crossbow WPN_CROSSBOW
 crossbow2
-hand_crossbow WPN_HAND_CROSSBOW
-hand_crossbow2
 
 ##Pole
 quarterstaff WPN_QUARTERSTAFF

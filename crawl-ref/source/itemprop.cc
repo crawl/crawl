@@ -337,13 +337,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     // - slings get a bonus from dex, not str (as tension is meaningless)
     // - str weight is used for speed and applying dex to skill
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,  20,  0,
-        SK_DARTS,        HANDS_HALF,   SIZE_LITTLE, MI_NEEDLE, false,
+        SK_THROWING,        HANDS_HALF,   SIZE_LITTLE, MI_NEEDLE, false,
         DAMV_NON_MELEE, 0 },
     { WPN_SLING,             "sling",               0,  2, 11,  20,  1,
         SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE, false,
-        DAMV_NON_MELEE, 10 },
-    { WPN_HAND_CROSSBOW,     "hand crossbow",       3,  4, 15,  70,  5,
-        SK_CROSSBOWS,    HANDS_HALF,   SIZE_SMALL,  MI_DART, false,
         DAMV_NON_MELEE, 10 },
     { WPN_CROSSBOW,          "crossbow",            5,  4, 15, 150,  8,
         SK_CROSSBOWS,    HANDS_TWO,    SIZE_MEDIUM, MI_BOLT, false,
@@ -430,7 +427,7 @@ void init_properties()
 {
     // Compare with enum comments, to catch changes.
     COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
-    COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
+    COMPILE_CHECK(NUM_WEAPONS  == 55, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
     COMPILE_CHECK(NUM_FOODS    == 22, c4);
 
@@ -743,7 +740,6 @@ void set_equip_race( item_def &item, unsigned long flags )
                     && item.sub_type != WPN_LONG_SWORD)
                 || weapon_skill(item) == SK_POLEARMS
                 || item.sub_type == WPN_BLOWGUN
-                || item.sub_type == WPN_HAND_CROSSBOW
                 || item.sub_type == WPN_BOW
                 || item.sub_type == WPN_LONGBOW)
             {
@@ -776,7 +772,6 @@ void set_equip_race( item_def &item, unsigned long flags )
         {
         case OBJ_WEAPONS:
             if (item.sub_type == WPN_QUICK_BLADE
-                || item.sub_type == WPN_HAND_CROSSBOW
                 || item.sub_type == WPN_LONGBOW)
                 return;
             break;
@@ -1248,7 +1243,6 @@ int weapon_rarity( int w_type )
         return (5);
 
     case WPN_BROAD_AXE:
-    case WPN_HAND_CROSSBOW:
     case WPN_SPIKED_FLAIL:
     case WPN_WHIP:
         return (4);
@@ -1666,7 +1660,7 @@ skill_type range_skill( const item_def &item )
     {
         switch (item.sub_type)
         {
-        case MI_DART:    return (SK_DARTS);
+        case MI_DART:    return (SK_THROWING);
         case MI_JAVELIN: return (SK_POLEARMS);
         default:         break;
         }
@@ -2460,6 +2454,12 @@ bool shield_reflects(const item_def &shield)
     ASSERT(is_shield(shield));
 
     return (get_armour_ego_type(shield) == SPARM_REFLECTION);
+}
+
+void ident_reflector(item_def *item)
+{
+    if (!is_artefact(*item))
+        set_ident_flags(*item, ISFLAG_KNOW_TYPE);
 }
 
 std::string item_base_name(const item_def &item)

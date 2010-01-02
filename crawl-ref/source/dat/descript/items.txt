@@ -347,17 +347,10 @@ book of wizardry
 
 A book of magic spells.
 %%%%
-book of elemental missiles
+book of brands
 
-This book contains spells relating to ammunition and forms of ranged combat.
-%%%%
-book of warped missiles
-
-This book contains spells relating to ammunition and forms of ranged combat.
-%%%%
-book of devastating missiles
-
-This book contains spells relating to ammunition and forms of ranged combat.
+This book contains magical spells related to the branding of weapons and
+launchers, as well as spells that are helpful in all forms of ranged combat.
 %%%%
 bottled efreet
 
@@ -461,7 +454,7 @@ It causes massive damage when used for backstabbing.
 %%%%
 dart
 
-A small throwing weapon. It can also be fired from a hand crossbow.
+A small throwing weapon.
 %%%%
 deck of changes
 
@@ -643,10 +636,6 @@ The kind of thing you hit nails with, adapted for battle.
 hand axe
 
 A small axe designed for either hand combat or throwing.
-%%%%
-hand crossbow
-
-A small crossbow, for firing darts.
 %%%%
 helm
 

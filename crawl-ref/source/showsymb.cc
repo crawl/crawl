@@ -100,7 +100,7 @@ static int _get_mons_colour(const monsters *mons)
             col |= COLFLAG_FEATURE_ITEM;
         }
         else if (Options.heap_brand != CHATTR_NORMAL
-                 && igrd(mons->pos()) != NON_ITEM
+                 && you.visible_igrd(mons->pos()) != NON_ITEM
                  && !crawl_state.arena)
         {
             col |= COLFLAG_ITEM_HEAP;

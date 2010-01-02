@@ -224,8 +224,8 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
     const monsters* m = monster_at(gp);
     if (m && mons_is_unknown_mimic(m))
         eitem = &get_mimic_item(m);
-    else if (igrd(gp) != NON_ITEM)
-        eitem = &mitm[igrd(gp)];
+    else if (you.visible_igrd(gp) != NON_ITEM)
+        eitem = &mitm[you.visible_igrd(gp)];
     else
         return;
 
@@ -234,10 +234,6 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
     glyph g = get_item_glyph(eitem);
 
     const dungeon_feature_type feat = grd(gp);
-
-    if ((feat == DNGN_DEEP_WATER && you.species != SP_MERFOLK)
-            || feat == DNGN_LAVA)
-        return;
 
     if (Options.feature_item_brand && is_critical_feature(feat))
         ecol |= COLFLAG_FEATURE_ITEM;
@@ -251,7 +247,7 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
             ecol = _feat_colour(gp, feat);
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (eitem->link > NON_ITEM && igrd(gp) != NON_ITEM)
+        if (eitem->link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
             ecol |= COLFLAG_ITEM_HEAP;
         else if (eitem->link < NON_ITEM && !crawl_state.arena)
             ecol |= COLFLAG_ITEM_HEAP;
@@ -260,7 +256,7 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
     }
 
 #ifdef USE_TILE
-    int idx = igrd(gp);
+    int idx = you.visible_igrd(gp);
     if (idx != NON_ITEM)
     {
         if (feat_is_stair(feat))

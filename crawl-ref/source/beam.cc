@@ -1370,7 +1370,23 @@ const zap_info zap_data[] = {
         false,
         false,
         0
-    }
+    },
+
+    {
+        ZAP_IOOD,
+        "0",
+        200,
+        NULL,
+        new tohit_calculator<AUTOMATIC_HIT>,
+        WHITE,
+        false,
+        BEAM_NUKE,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false,
+        0
+    },
 };
 
 static void _zappy(zap_type z_type, int power, bolt &pbolt)
@@ -3704,12 +3720,6 @@ bool bolt::is_reflectable(const item_def *it) const
     return (it && is_shield(*it) && shield_reflects(*it));
 }
 
-static void _ident_reflector(item_def *item)
-{
-    if (!is_artefact(*item))
-        set_ident_flags(*item, ISFLAG_KNOW_TYPE);
-}
-
 // Reflect a beam back the direction it came. This is used
 // by shields of reflection.
 void bolt::reflect()
@@ -3836,7 +3846,7 @@ bool bolt::misses_player()
                 mprf( "Your %s reflects the %s!",
                       you.shield()->name(DESC_PLAIN).c_str(),
                       name.c_str() );
-                _ident_reflector(you.shield());
+                ident_reflector(you.shield());
                 reflect();
             }
             else
@@ -4802,7 +4812,7 @@ bool bolt::attempt_block(monsters* mon)
                          name.c_str(),
                          mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
                          shield->name(DESC_PLAIN).c_str());
-                    _ident_reflector(shield);
+                    ident_reflector(shield);
                 }
                 else if (you.see_cell(pos()))
                     mprf("The %s bounces off of thin air!", name.c_str());
@@ -6102,6 +6112,12 @@ bool bolt::nasty_to(const monsters *mon) const
     // Cleansing flame.
     if (flavour == BEAM_HOLY)
         return (mon->res_holy_energy(agent()) <= 0);
+
+    // The orbs are made of pure disintegration energy.  This also has the side
+    // effect of not stopping us from firing further orbs when the previous one
+    // is still flying.
+    if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
+        return (mon->type != MONS_ORB_OF_DESTRUCTION);
 
     // Take care of other non-enchantments.
     if (!is_enchantment())

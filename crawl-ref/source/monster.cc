@@ -182,15 +182,15 @@ static bool _player_near_water()
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
         if (feat_is_water(grd(*ai)))
             return (true);
+
     return (false);
 }
 
 bool monsters::wants_submerge() const
 {
     // Krakens never retreat when food (the player) is in range.
-    if (type == MONS_KRAKEN)
-        if (_player_near_water())
-            return (false);
+    if (mons_base_type(this) == MONS_KRAKEN && _player_near_water())
+        return (false);
 
     // If we're in distress, we usually want to submerge.
     if (env.cgrid(pos()) != EMPTY_CLOUD
@@ -5994,7 +5994,7 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
     else if (type == MONS_KRAKEN_TENTACLE && flavour != BEAM_TORMENT_DAMAGE)
     {
         if (!invalid_monster_index(number)
-            && menv[number].type == MONS_KRAKEN)
+            && mons_base_type(&menv[number]) == MONS_KRAKEN)
         {
             menv[number].hurt(&you, damage, flavour);
 

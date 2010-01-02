@@ -56,7 +56,8 @@ const int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
 // The highest a tide can be called by a tide caller such as Ilsuiw.
 const int HIGH_CALLED_TIDE = 25;
 const int TIDE_DECEL_MARGIN = 8;
-const int PEAK_TIDE_ACCEL = 2;
+const int PEAK_TIDE_VELOCITY = 2;
+const int CALL_TIDE_VELOCITY = 21;
 
 // The area around the user of a call tide spell that is subject to
 // local tide elevation.
@@ -116,21 +117,21 @@ static int _shoals_feature_height(dungeon_feature_type feat)
 }
 
 // Returns true if the given feature can be affected by Shoals tides.
-static bool _shoals_tide_susceptible_feat(dungeon_feature_type feat)
+static inline bool _shoals_tide_susceptible_feat(dungeon_feature_type feat)
 {
     return (feat_is_water(feat) || feat == DNGN_FLOOR);
 }
 
 // Return true if tide effects can propagate through this square.
 // NOTE: uses RNG!
-static bool _shoals_tide_passable_feat(dungeon_feature_type feat)
+static inline bool _shoals_tide_passable_feat(dungeon_feature_type feat)
 {
     return (feat_is_watery(feat)
             // The Shoals tide can sometimes lap past the doorways of rooms
             // near the water. Note that the actual probability of the tide
             // getting through a doorway is this probability * 0.5 --
             // see _shoals_apply_tide.
-            || (feat == DNGN_OPEN_DOOR && !one_chance_in(3))
+            || feat == DNGN_OPEN_DOOR
             || (feat == DNGN_CLOSED_DOOR && one_chance_in(3)));
 }
 
@@ -153,10 +154,12 @@ static coord_def _random_point(int offset = 0)
 }
 
 static void _shoals_island_center(const coord_def &c, int n_perturb, int radius,
-                                  int bounce_low, int bounce_high)
+                                  int bounce_low, int bounce_high,
+                                  bool make_atoll = false)
 {
     for (int i = 0; i < n_perturb; ++i) {
-        coord_def p = _random_point_from(c, random2(1 + radius));
+        const int thisrad = make_atoll? radius : random2(1 + radius);
+        coord_def p = _random_point_from(c, thisrad);
         if (!p.origin())
             shoals_heights(p) += random_range(bounce_low, bounce_high);
     }
@@ -193,7 +196,7 @@ static void _shoals_build_island()
     _shoals_island_center(c, N_PERTURB_ISLAND_CENTER,
                           random_range(ISLAND_CENTER_RADIUS_LOW,
                                        ISLAND_CENTER_RADIUS_HIGH),
-                          40, 60);
+                          40, 60, one_chance_in(10));
     const int additional_heights = random2(4);
     for (int i = 0; i < additional_heights; ++i) {
         const int addition_offset = random_range(2, 10);
@@ -204,7 +207,7 @@ static void _shoals_build_island()
                                                         N_PERTURB_OFFSET_HIGH),
                                   random_range(PERTURB_OFFSET_RADIUS_LOW,
                                                PERTURB_OFFSET_RADIUS_HIGH),
-                                  25, 35);
+                                  25, 35, one_chance_in(10));
     }
 }
 
@@ -392,17 +395,24 @@ static void _shoals_furniture(int margin)
 {
     if (at_branch_bottom())
     {
+        unwind_var<dungeon_feature_set> vault_exc(dgn_Vault_Excavatable_Feats);
+        dgn_Vault_Excavatable_Feats.insert(DNGN_STONE_WALL);
+
         const coord_def c = _pick_shoals_island();
         // Put all the stairs on one island.
         grd(c) = DNGN_STONE_STAIRS_UP_I;
         grd(c + coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_II;
         grd(c - coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_III;
+        dgn_excavate(c, dgn_random_direction());
 
         const coord_def p = _pick_shoals_island_distant_from(c);
-        // Place the rune
         const map_def *vault = random_map_for_tag("shoal_rune");
-        dgn_ensure_vault_placed(dgn_place_map(vault, false, true, p),
-                                false);
+        {
+            // Place the rune
+            dgn_map_parameters mp("rune");
+            dgn_ensure_vault_placed(dgn_place_map(vault, false, false, p),
+                                    false);
+        }
 
         const int nhuts = std::min(8, int(_shoals_islands.size()));
         for (int i = 2; i < nhuts; ++i)
@@ -846,13 +856,13 @@ void shoals_postprocess_level()
 
 static void _shoals_run_tide(int &tide, int &acc)
 {
-    // If someone is calling the tide, the acceleration is clamped high.
+    // If someone is calling the tide, the tide velocity is clamped high.
     if (tide_caller)
-        acc = 15;
-    // If there's no tide caller and our acceleration is suspiciously high,
-    // reset it to a falling tide at peak acceleration.
-    else if (abs(acc) > PEAK_TIDE_ACCEL)
-        acc = -PEAK_TIDE_ACCEL;
+        acc = CALL_TIDE_VELOCITY;
+    // If there's no tide caller and our velocity is suspiciously high,
+    // reset it to a falling tide at peak velocity.
+    else if (abs(acc) > PEAK_TIDE_VELOCITY)
+        acc = -PEAK_TIDE_VELOCITY;
 
     tide += acc;
     tide = std::max(std::min(tide, HIGH_TIDE), LOW_TIDE);
@@ -866,7 +876,8 @@ static void _shoals_run_tide(int &tide, int &acc)
         acc = in_decel_margin? acc / 2 : acc * 2;
 }
 
-static coord_def _shoals_escape_place_from(coord_def bad_place, actor *act)
+static coord_def _shoals_escape_place_from(coord_def bad_place,
+                                           actor *act, item_def *it)
 {
     int best_height = -1000;
     coord_def chosen;
@@ -874,7 +885,10 @@ static coord_def _shoals_escape_place_from(coord_def bad_place, actor *act)
     {
         coord_def p(*ai);
         const dungeon_feature_type feat(grd(p));
-        if (feat_has_solid_floor(feat) && !actor_at(p))
+        if (!feat_has_solid_floor(feat))
+            continue;
+
+        if (!act || !actor_at(p))
         {
             if (best_height == -1000 || shoals_heights(p) > best_height)
             {
@@ -884,6 +898,31 @@ static coord_def _shoals_escape_place_from(coord_def bad_place, actor *act)
         }
     }
     return chosen;
+}
+
+static bool _shoals_tide_sweep_items_clear(coord_def c)
+{
+    int link = igrd(c);
+    if (link == NON_ITEM)
+        return true;
+
+    for (stack_iterator si(c); si; ++si)
+    {
+        const coord_def target(_shoals_escape_place_from(c, NULL, &*si));
+        // Don't abort tide entry because of items. If we can't sweep the
+        // item clear here, let dungeon_terrain_changed teleport the item
+        // to the nearest safe square.
+        int id = si.link();
+
+        // Let the tide break up stacks
+        if (!one_chance_in(2))
+            continue;
+
+        if (!target.origin())
+            move_item_to_grid(&id, target);
+    }
+
+    return true;
 }
 
 static bool _shoals_tide_sweep_actors_clear(coord_def c)
@@ -904,18 +943,22 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
         if (monster_habitable_grid(mvictim, DNGN_DEEP_WATER))
             return true;
     }
-    coord_def evacuation_point(_shoals_escape_place_from(c, victim));
-    // The tide moves on even if we cannot evacuate the tile!
-    if (!evacuation_point.origin())
-        victim->move_to_pos(evacuation_point);
+    coord_def evacuation_point(_shoals_escape_place_from(c, victim, NULL));
+    // The tide no longer drowns monster/player if it cannot push them
+    // out of the way.
+    if (evacuation_point.origin())
+        return false;
+
+    victim->move_to_pos(evacuation_point);
     return true;
 }
 
-// The tide will attempt to push non-water-capable monsters to
+// The tide will attempt to push items and non-water-capable monsters to
 // adjacent squares.
 static bool _shoals_tide_sweep_clear(coord_def c)
 {
-    return _shoals_tide_sweep_actors_clear(c);
+    return _shoals_tide_sweep_items_clear(c)
+        && _shoals_tide_sweep_actors_clear(c);
 }
 
 static void _shoals_apply_tide_feature_at(coord_def c,
@@ -1003,11 +1046,14 @@ static void _shoals_apply_tide(int tide)
         for (int i = 0, size = cpage.size(); i < size; ++i)
         {
             coord_def c(cpage[i]);
-            const bool was_wet(_shoals_tide_passable_feat(grd(c)));
+            const dungeon_feature_type herefeat(grd(c));
+            const bool was_wet(_shoals_tide_passable_feat(herefeat));
             seen_points(c) = true;
-            _shoals_apply_tide_at(c, _shoals_tide_at(c, tide));
+            if (_shoals_tide_susceptible_feat(herefeat))
+                _shoals_apply_tide_at(c, _shoals_tide_at(c, tide));
 
             const bool is_wet(feat_is_water(grd(c)));
+
             // Only squares that were wet (before applying tide
             // effects!) can propagate the tide onwards. If the tide is
             // receding and just left the square dry, there's only a chance of
@@ -1022,7 +1068,8 @@ static void _shoals_apply_tide(int tide)
                     if (!seen_points(adj))
                     {
                         const dungeon_feature_type feat = grd(adj);
-                        if (_shoals_tide_susceptible_feat(feat))
+                        if (_shoals_tide_passable_feat(feat)
+                            || _shoals_tide_susceptible_feat(feat))
                         {
                             npage.push_back(adj);
                             seen_points(adj) = true;
@@ -1042,7 +1089,7 @@ static void _shoals_init_tide()
     if (!env.properties.exists(ENVP_SHOALS_TIDE_KEY))
     {
         env.properties[ENVP_SHOALS_TIDE_KEY] = short(0);
-        env.properties[ENVP_SHOALS_TIDE_VEL] = short(PEAK_TIDE_ACCEL);
+        env.properties[ENVP_SHOALS_TIDE_VEL] = short(PEAK_TIDE_VELOCITY);
     }
 }
 

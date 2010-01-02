@@ -1306,7 +1306,7 @@ static int _tentacle_too_far(monsters *head, monsters *tentacle)
 
 void mons_relocated(monsters *monster)
 {
-    if (monster->type == MONS_KRAKEN)
+    if (mons_base_type(monster) == MONS_KRAKEN)
     {
         int headnum = monster->mindex();
 
@@ -2098,7 +2098,7 @@ int monster_die(monsters *monster, killer_type killer,
         // he goes away.
         pikel_band_neutralise();
     }
-    else if (monster->type == MONS_KRAKEN)
+    else if (mons_base_type(monster) == MONS_KRAKEN)
     {
         if (_destroy_tentacles(monster) && !in_transit)
         {
@@ -2798,6 +2798,13 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
     if (is_feat_dangerous(grd(monster->pos())))
     {
         canned_msg(MSG_UNTHINKING_ACT);
+        return (false);
+    }
+
+    if (mons_is_projectile(monster->type))
+    {
+        if (!quiet)
+            mpr("It's unwise to walk into this.");
         return (false);
     }
 

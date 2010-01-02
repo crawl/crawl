@@ -180,17 +180,6 @@ enum attribute_type
     NUM_ATTRIBUTES
 };
 
-enum quiver_type
-{
-    QUIVER_THROW,           // no launcher wielded -> darts, stones, ...
-    QUIVER_BOW,             // wielded bow -> arrows
-    QUIVER_SLING,           // wielded sling -> stones, sling bullets
-    QUIVER_CROSSBOW,        // wielded crossbow -> bolts
-    QUIVER_HAND_CROSSBOW,   // wielded hand crossbow -> darts
-    QUIVER_BLOWGUN,         // wielded blowgun -> needles
-    NUM_QUIVER
-};
-
 enum beam_type                  // beam[].flavour
 {
     BEAM_NONE,                    // 0
@@ -320,10 +309,8 @@ enum book_type
     BOOK_PARTY_TRICKS,
     BOOK_BEASTS,
     BOOK_STALKING,
-    BOOK_ELEMENTAL_MISSILES,
-    BOOK_WARPED_MISSILES,
-    BOOK_DEVASTATING_MISSILES,
-    MAX_NORMAL_BOOK = BOOK_DEVASTATING_MISSILES,
+    BOOK_BRANDS,
+    MAX_NORMAL_BOOK = BOOK_BRANDS,
 
     MIN_GOD_ONLY_BOOK,
     BOOK_ANNIHILATIONS = MIN_GOD_ONLY_BOOK,
@@ -442,6 +429,7 @@ enum cloud_type
     CLOUD_CHAOS,
     CLOUD_RAIN,
     CLOUD_MUTAGENIC,
+    CLOUD_MAGIC_TRAIL,
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}
 };
@@ -1674,8 +1662,8 @@ enum monster_type                      // (int) menv[].type
     MONS_KOBOLD_DEMONOLOGIST,
     MONS_ORC_WIZARD,
     MONS_ORC_KNIGHT,                   //   55
-    //MONS_WORM_TAIL = 56, // deprecated and now officially removed {dlb}
-    MONS_WYVERN = 57,                  //   57
+    MONS_ORB_OF_DESTRUCTION, // a projectile, not a real mon
+    MONS_WYVERN,
     MONS_BIG_KOBOLD,
     MONS_GIANT_EYEBALL,
     MONS_WIGHT,                        //   60
@@ -2636,8 +2624,8 @@ enum skill_type
     SK_SLINGS,
     SK_BOWS,
     SK_CROSSBOWS,
-    SK_DARTS,
-    SK_THROWING,
+    // was darts, now unused
+    SK_THROWING = 11,
     SK_ARMOUR,
     SK_DODGING,
     SK_STEALTH,
@@ -2823,7 +2811,6 @@ enum spell_type
     SPELL_DETECT_CREATURES,
     SPELL_CURE_POISON,
     SPELL_CONTROL_TELEPORT,
-    SPELL_POISON_AMMUNITION,
     SPELL_POISON_WEAPON,
     SPELL_RESIST_POISON,
     SPELL_PROJECTED_NOISE,
@@ -2881,16 +2868,9 @@ enum spell_type
     SPELL_PORTAL_PROJECTILE,
     SPELL_SUMMON_UGLY_THING,
     SPELL_PETRIFY,
-    SPELL_FLAME_AMMUNITION,
-    SPELL_FROST_AMMUNITION,
-    SPELL_SHOCKING_AMMUNITION,
-    SPELL_WARP_AMMUNITION,
-    SPELL_EXPLODING_AMMUNITION,
-    SPELL_REAPING_AMMUNITION,
-    SPELL_RETURNING_AMMUNITION,
 
     // Mostly monster-only spells after this point:
-    SPELL_HELLFIRE_BURST = 175,
+    SPELL_HELLFIRE_BURST = 155,
     SPELL_VAMPIRE_SUMMON,
     SPELL_BRAIN_FEED,
     SPELL_FAKE_RAKSHASA_SUMMON,
@@ -2932,6 +2912,7 @@ enum spell_type
     SPELL_SUMMON_PLAYER_GHOST,
     SPELL_PRIMAL_WAVE,
     SPELL_CALL_TIDE,
+    SPELL_IOOD,
 
     NUM_SPELLS
 };
@@ -3122,7 +3103,6 @@ enum zap_type
     ZAP_PARALYSIS,
     ZAP_FIRE,
     ZAP_COLD,
-    ZAP_PRIMAL_WAVE,
     ZAP_CONFUSION,
     ZAP_INVISIBILITY,
     ZAP_DIGGING,
@@ -3180,6 +3160,8 @@ enum zap_type
     ZAP_SLIME,
     ZAP_PORKALATOR,
     ZAP_SLEEP,
+    ZAP_PRIMAL_WAVE,
+    ZAP_IOOD,
     NUM_ZAPS
 };
 

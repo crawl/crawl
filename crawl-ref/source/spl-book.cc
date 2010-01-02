@@ -342,7 +342,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of Envenomations
     {SPELL_SPIDER_FORM,
      SPELL_SUMMON_SCORPIONS,
-     SPELL_POISON_AMMUNITION,
+     SPELL_POISON_WEAPON,
      SPELL_RESIST_POISON,
      SPELL_OLGREBS_TOXIC_RADIANCE,
      SPELL_POISONOUS_CLOUD,
@@ -429,13 +429,13 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // Book of Power
     {SPELL_ANIMATE_DEAD,
+     SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_TELEPORT_OTHER,
      SPELL_VENOM_BOLT,
      SPELL_IRON_SHOT,
      SPELL_INVISIBILITY,
      SPELL_MASS_CONFUSION,
      SPELL_POISONOUS_CLOUD,
-     SPELL_NO_SPELL,
      },
 
     // Book of Cantrips
@@ -482,42 +482,20 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // Book of Elemental Missiles
+    // Book of Brands
     {SPELL_CORONA,
      SPELL_SWIFTNESS,
-     SPELL_REPEL_MISSILES,
-     SPELL_FLAME_AMMUNITION,
-     SPELL_FROST_AMMUNITION,
-     SPELL_POISON_AMMUNITION,
+     SPELL_CAUSE_FEAR,
+     SPELL_FIRE_BRAND,
+     SPELL_FREEZING_AURA,
+     SPELL_POISON_WEAPON,
      SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     },
-
-    // Book of Warped Missiles
-    {SPELL_APPORTATION,
-     SPELL_PORTAL_PROJECTILE,
-     SPELL_REPEL_MISSILES,
-     SPELL_BLINK,
-     SPELL_RETURNING_AMMUNITION,
-     SPELL_WARP_AMMUNITION,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     },
-
-    // Book of Devastating Missiles
-    {SPELL_POISON_AMMUNITION,
-     SPELL_WARP_AMMUNITION,
-     SPELL_SHOCKING_AMMUNITION,
-     SPELL_EXPLODING_AMMUNITION,
-     SPELL_HASTE,
-     SPELL_DEFLECT_MISSILES,
-     SPELL_REAPING_AMMUNITION,
      SPELL_NO_SPELL,
      },
 
     // Book of Annihilations - Vehumet special
-    {SPELL_ISKENDERUNS_MYSTIC_BLAST,
-     SPELL_POISON_ARROW,
+    {SPELL_POISON_ARROW,
+     SPELL_IOOD,
      SPELL_CHAIN_LIGHTNING,
      SPELL_LEHUDIBS_CRYSTAL_SPEAR,
      SPELL_ICE_STORM,
@@ -935,8 +913,7 @@ int book_rarity(unsigned char which_book)
     case BOOK_YOUNG_POISONERS:
     case BOOK_STALKING:    //jmf: added 24jun2000
     case BOOK_WAR_CHANTS:
-    case BOOK_ELEMENTAL_MISSILES:
-    case BOOK_WARPED_MISSILES:
+    case BOOK_BRANDS:
         return 5;
 
     case BOOK_CLOUDS:
@@ -957,7 +934,6 @@ int book_rarity(unsigned char which_book)
     case BOOK_UNLIFE:
     case BOOK_CONTROL:
     case BOOK_SPATIAL_TRANSLOCATIONS:
-    case BOOK_DEVASTATING_MISSILES:
         return 10;
 
     case BOOK_TEMPESTS:

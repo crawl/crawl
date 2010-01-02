@@ -109,7 +109,6 @@ static int _bow_offset(const monsters *mon)
     case WPN_BOW:
     case WPN_LONGBOW:
     case WPN_CROSSBOW:
-    case WPN_HAND_CROSSBOW:
         return (0);
     default:
         return (1);
@@ -277,6 +276,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // merfolk ('m')
     case MONS_MERFOLK:
+    case MONS_MERFOLK_IMPALER:      // TODO
+    case MONS_MERFOLK_AQUAMANCER:   // TODO
+    case MONS_MERFOLK_JAVELINEER:   // TODO
         if (in_water)
             return TILEP_MONS_MERFOLK_FIGHTER_WATER;
         else
@@ -912,6 +914,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_BALL_LIGHTNING;
     case MONS_ORB_OF_FIRE:
         return TILEP_MONS_ORB_OF_FIRE;
+    case MONS_ORB_OF_DESTRUCTION:
+        return TILEP_MONS_ORB_OF_DESTRUCTION;
 
     // other symbols
     case MONS_VAPOUR:
@@ -1298,9 +1302,6 @@ static int _tileidx_weapon_base(const item_def &item)
 
     case WPN_CROSSBOW:
         return TILE_WPN_CROSSBOW;
-
-    case WPN_HAND_CROSSBOW:
-        return TILE_WPN_HAND_CROSSBOW;
 
     case WPN_SPEAR:
         return TILE_WPN_SPEAR;
@@ -2006,6 +2007,20 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_YAK;
     case MONS_DEATH_YAK:
         return TILE_CORPSE_DEATH_YAK;
+
+    // water monsters
+    case MONS_BIG_FISH:
+        return TILE_CORPSE_BIG_FISH;
+    case MONS_GIANT_GOLDFISH:
+        return TILE_CORPSE_GIANT_GOLDFISH;
+    case MONS_ELECTRIC_EEL:
+        return TILE_CORPSE_ELECTRIC_EEL;
+    case MONS_SHARK:
+        return TILE_CORPSE_SHARK;
+    case MONS_KRAKEN:
+        return TILE_CORPSE_KRAKEN;
+    case MONS_JELLYFISH:
+        return TILE_CORPSE_JELLYFISH;
 
     // humans ('@')
     case MONS_HUMAN:
@@ -2896,7 +2911,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_DEFLECT_MISSILES:         return TILEG_DEFLECT_MISSILES;
     case SPELL_CONJURE_BALL_LIGHTNING:   return TILEG_CONJURE_BALL_LIGHTNING;
     case SPELL_CHAIN_LIGHTNING:          return TILEG_CHAIN_LIGHTNING;
-    case SPELL_SHOCKING_AMMUNITION:      return TILEG_TODO;
 
     // Earth
     case SPELL_SANDBLAST:                return TILEG_SANDBLAST;
@@ -2924,7 +2938,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_DELAYED_FIREBALL:         return TILEG_DELAYED_FIREBALL;
     case SPELL_RING_OF_FLAMES:           return TILEG_RING_OF_FLAMES;
     case SPELL_FIRE_STORM:               return TILEG_FIRE_STORM;
-    case SPELL_FLAME_AMMUNITION:         return TILEG_TODO;
 
     // Ice
     case SPELL_FREEZE:                   return TILEG_FREEZE;
@@ -2940,7 +2953,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_ENGLACIATION:               return TILEG_METABOLIC_ENGLACIATION;
     case SPELL_SIMULACRUM:               return TILEG_SIMULACRUM;
     case SPELL_ICE_STORM:                return TILEG_ICE_STORM;
-    case SPELL_FROST_AMMUNITION:         return TILEG_TODO;
 
     // Poison
     case SPELL_STING:                    return TILEG_STING;
@@ -2948,7 +2960,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_POISON_WEAPON:            return TILEG_POISON_BRAND;
     case SPELL_INTOXICATE:               return TILEG_ALISTAIRS_INTOXICATION;
     case SPELL_OLGREBS_TOXIC_RADIANCE:   return TILEG_OLGREBS_TOXIC_RADIANCE;
-    case SPELL_POISON_AMMUNITION:        return TILEG_POISON_AMMUNITION;
     case SPELL_RESIST_POISON:            return TILEG_RESIST_POISON;
     case SPELL_VENOM_BOLT:               return TILEG_VENOM_BOLT;
     case SPELL_POISON_ARROW:             return TILEG_POISON_ARROW;
@@ -2974,7 +2985,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_HASTE:                    return TILEG_HASTE;
     case SPELL_INVISIBILITY:             return TILEG_INVISIBILITY;
     case SPELL_MASS_CONFUSION:           return TILEG_MASS_CONFUSION;
-    case SPELL_EXPLODING_AMMUNITION:     return TILEG_TODO;
 
     // Translocation
     case SPELL_APPORTATION:              return TILEG_APPORTATION;
@@ -2989,8 +2999,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_WARP_BRAND:               return TILEG_WARP_WEAPON;
     case SPELL_DISPERSAL:                return TILEG_DISPERSAL;
     case SPELL_PORTAL:                   return TILEG_PORTAL;
-    case SPELL_WARP_AMMUNITION:          return TILEG_TODO;
-    case SPELL_RETURNING_AMMUNITION:     return TILEG_TODO;
 
     // Summoning
     case SPELL_SUMMON_BUTTERFLIES:       return TILEG_SUMMON_BUTTERFLIES;
@@ -3032,7 +3040,6 @@ int tileidx_spell(spell_type spell)
     case SPELL_SYMBOL_OF_TORMENT:        return TILEG_SYMBOL_OF_TORMENT;
     case SPELL_DEATHS_DOOR:              return TILEG_DEATHS_DOOR;
     case SPELL_DEATH_CHANNEL:            return TILEG_DEATH_CHANNEL;
-    case SPELL_REAPING_AMMUNITION:       return TILEG_TODO;
 
     // Transmutation
     case SPELL_STICKS_TO_SNAKES:         return TILEG_STICKS_TO_SNAKES;
@@ -3048,6 +3055,7 @@ int tileidx_spell(spell_type spell)
     // pure Conjuration
     case SPELL_MAGIC_DART:               return TILEG_MAGIC_DART;
     case SPELL_ISKENDERUNS_MYSTIC_BLAST: return TILEG_ISKENDERUNS_MYSTIC_BLAST;
+    case SPELL_IOOD:                     return TILEG_IOOD;
 
     // Divination (soon to be obsolete, or moved to abilities)
     case SPELL_DETECT_SECRET_DOORS:      return TILEG_DETECT_SECRET_DOORS;
@@ -3123,7 +3131,7 @@ int _get_door_offset (int base_tile, bool opened = false,
         return 0;
 
     // The location of the default "closed" tile.
-    int offset;
+    int offset = 0;
 
     switch (count)
     {
@@ -3985,7 +3993,6 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_SLING:         return TILEP_HAND1_SLING;
     case WPN_BOW:           return TILEP_HAND1_BOW2;
     case WPN_CROSSBOW:      return TILEP_HAND1_CROSSBOW;
-    case WPN_HAND_CROSSBOW: return TILEP_HAND1_CROSSBOW;
     case WPN_BLOWGUN:       return TILEP_HAND1_BLOWGUN;
     case WPN_LONGBOW:       return TILEP_HAND1_BOW3;
 
@@ -4795,7 +4802,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         if (!mons_is_known_mimic(mon))
         {
             // If necessary add item brand.
-            if (igrd(gc) != NON_ITEM)
+            if (you.visible_igrd(gc) != NON_ITEM)
             {
                 if (foreground)
                     t |= TILE_FLAG_S_UNDER;
@@ -4815,7 +4822,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     else if (menv[idx].holiness() == MH_PLANT)
     {
         // If necessary add item brand.
-        if (igrd(gc) != NON_ITEM)
+        if (you.visible_igrd(gc) != NON_ITEM)
         {
             if (foreground)
                 t |= TILE_FLAG_S_UNDER;

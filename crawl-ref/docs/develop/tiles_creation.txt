@@ -1,106 +1,441 @@
 A short guide to Tiles creation
 ===============================
 
-This is a short guide to creating tiles. We assume that you've got some kind of
-image editing software (such as Photoshop or the GIMP) as well as some basic
-knowledge of how to use it. While the fancier functions can occasionally come
-in useful, the simple tools for drawing, selection and erasing of pixels will
-usually suffice.
+This document aims to give a simultaneously short and detailed explanation
+about everything you need to know if you want to design tiles for Dungeon Crawl
+Stonesoup. You can also find this text, and potentially a more up-to-date
+version of it, at:
+http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation
 
-You may want to download the latest source or even the trunk version. Either
+
+Table of Contents
+=================
+1. The Tools
+2. Grabbing the source
+3. Basic design principles
+   3.1 Format and size
+   3.2 Icons
+   3.3 Proportions
+   3.4 Perspective
+   3.5 Colouring
+   3.6 Outline
+   3.7 Shading
+   3.8 Transparency
+4. Creating tiles
+   4.1 Reuse existing tiles
+   4.2 Pixel art tutorials
+   4.3 Wielded weapons
+   4.4 Semi-transparency
+5. Modifying the code base
+   5.1 Defining tiles
+   5.2 Making Crawl use the tiles
+   5.3 Artefact tiles
+   5.4 Dynamic weapons
+   5.5 Variant tiles
+6. Compiling the game
+7. Tiles suggestions
+8. Submitting your tiles
+
+
+1. The Tools
+============
+
+First, you'll need some image editing software such as Photoshop or
+the GIMP (http://www.gimp.org/downloads/) as well as some basic knowledge of
+how to use it.
+
+While the fancier functions and filters can occasionally come in useful, the
+simpler tools for drawing and selection will usually suffice. Before starting,
+try to acquaint yourself with the different-sized "pencils" and erasers,
+different-shaped selection tools, the paint bucket used for filling larger
+areas, and the colour selection.
+
+Also, while a drawing tablet is certainly useful, it is by no means required.
+
+
+2. Grabbing the source
+======================
+
+You may want to download the source package or even the trunk version. Either
 way, the source/rltiles/ directory contains all tiles used in the game, and
 some more that are currently unused. While you can create new tiles without
 having access to existing ones, it can be useful to have them around for
-comparison. Also, you'll probably want to compile them into the game to test
-your creations. (You don't have to, though.) For compiling the game, see
-INSTALL.txt.
-If you're going to change anything in the main code you'll probably want to
+comparison.
+
+You can download the latest source from the usual release site:
+http://sourceforge.net/projects/crawl-ref/files/
+
+To download the development version, you'll need to install and use git.
+See docs/develop/git/quickstart.txt for further instructions.
+
+Also, you'll probably want to compile your tiles into the game to test your
+creations. (You don't have to, though.)
+It is recommended that you first try to get the game compiled without any
+changes. See INSTALL.txt for instructions.
+
+If you're going to change anything in the main code you might also want to
 create a patch. See docs/patch_guide.txt for help with that.
 
-Crawl's tiles are png files in a format of 32x32 pixels. Larger tiles such
+
+3. Basic design principles
+==========================
+
+3.1 Format and size
+-------------------
+
+Stonesoup's tiles are png files in a format of 32x32 pixels. Larger tiles such
 as for the pandemonium demons are possible, but require additional coding and
-should be used sparingly. The tile background should be transparent, but if
-your image software doesn't support png files with transparent background you
-can also submit a png or bmp with the background coloured differently from the
-rest of the tile, so we can easily remove it later.
+should be used sparingly.
+
+Background tiles (walls and floor) should cover the entire square, whereas
+foreground images can use the whole area but are usually smaller. Also keep
+in mind that hiding the background often equals a loss of information, and
+that especially for monsters we might also need to fit some status icons into
+the tile.
+
+In the inventory area, items and spells are getting displayed with a two-pixel
+coloured border around them. Tiles may overlap this border, but it looks a bit
+odd if they do, so it's better to keep their size at 28x28 pixels.
+
+3.2 Icons
+---------
+
+Subtype icons for potions need to fit inside the label, so may be at most
+14x15 pixels large. It seems prudent to apply the same size restrictions to
+other subtype or brand icons.
+
+For status effect icons, you need to take into account that we might need to
+display several of them at the same time, so these icons should have a customary
+size of up to 8x8 or 10x10 pixels, though they don't need to be square, of
+course. Larger icons are of course possible, but should be used sparingly as
+there's always the danger that they might not fit.
+
+Icon tiles are always placed on top of the base tile, beginning at its top left
+corner for icons smaller than 32x32 pixels, and then moved by an offset that
+is hardcoded for the status effects, numbers etc.
+
+3.3 Proportions
+---------------
+
+Humans and other creatures are proportioned more or less realistically, with the
+entire body usually equaling about five times the height of its head. The less
+humanoid the creature, the less important this becomes, but really //cartoonish//
+monster tiles would stand out against the others.
+
+The height of monsters is independent of monster size, i.e. a dragon, goblin and
+curse toe may all fill their respective tiles. Similarly, the greater size of
+pandemonium lords does not reflect their body size, but rather is supposed to
+underline their being special monsters.
+
+The same holds for items, which is why armour and weapon tiles usually come in two
+varieties: a large version for the inventory display and a smaller one for the
+player doll (and, in the case of weapons, monsters).
+
+3.4 Perspective
+---------------
+
+Any item or monster should fit into the allocated space in its entirety, legs
+and all. This restriction may only be loosened if the chopped portions are
+never visible to the player, for example because they are always covered by
+water or lava.
+
+Ideally, both monsters and items should be depicted at a slight angle from the
+front or side, so you can see both its face and profile.
+
+3.5 Colouring
+-------------
+
+In theory, tiles can use any colour within the spectrum of visible colours.
+However, very small gradients are almost unnoticeable, so try to pick sensible
+colours that are easy to see even on dark background. It is generally
+recommended to pick two or, rarely, three base colours and use gradients for
+further differentiation.
+
+Avoid really dark colours as they tend to blend into the background for most
+level types. Also, for monsters take into account on which textures you'll
+usually be encountering the tile, and try to choose colours that are easy to
+make out against such background.
+
+At the same time, try to avoid garish colours or contrasts, as they can be
+quite distracting in a game.
+
+3.6 Outline
+-----------
+
+All tiles that don't fill the entire square should get a black outline. You can
+add it manually or tell Crawl to do it later when creating the tile maps. In
+particular, this means that for non-outlined tiles there should be a border of
+at least 1 pixel around the entire tile.
+
+3.7 Shading
+-----------
+
+Item and monster tiles should always include a shadow on the ground, which you
+can draw using standard black.
+
+The imaginary light source is always above and in front of the depicted object,
+so that most of it is properly lighted and the shadow falls (for animals) in
+direction of its tail or backside.
+
+For creatures directly facing the player as well as inanimate items and
+features the default light source origin is in front of it and to the upper
+left, so that the resulting shadow falls slightly behind the tile and to its
+lower right.
+
+Icons may use shading to make them look more 3dimensional, but they don't have
+to, and they don't get a shadow of their own.
+
+3.8 Transparency
+----------------
+
+Foreground tiles should have a transparent background, so they can be properly
+drawn on top of the background tile, but if your image software doesn't support
+png files with transparent background you can also submit a png or bmp with the
+background coloured differently from the rest of the tile, so we can easily
+make it transparent later-on.
 
 
-1.) Before setting out to draw a new tile, you may want to check out the
-    UNUSED/ directory in case there's already a tile that could be used for
-    this purpose.
+4. Creating tiles
+=================
 
-2.) When creating new tiles you often don't need to start from zero. A lot of
-    the time existing tiles can be repurposed to other uses. If you tweak them
-    enough no-one will even notice you cheated.
-    For example, the spell tile deaths_door.png is basically a modified version
-    of the reaper, with the hour glass copied over from the slowing potion's
-    i-slowing.png that was then changed significantly.
+4.1 Reuse existing tiles
+------------------------
 
-3.) For items and monsters don't forget to add a shadow. You can use standard
-    black for this.
+Whenever you're faced with the task of creating a new tile, consider whether
+you can reuse an existing tile, either because it is currently not seeing use
+(check out the rltiles/UNUSED directory for this) or because it can easily be
+tweaked by adding details or changing its colour. Flipping or rotating (part
+of) a tile can make a huge difference already, and sometimes a combinition of
+parts taken from different existing tiles can be used to great effect.
 
-4.) New randart weapons and armour items need not only a tile for the item
-    itself but also a smaller variant for the player doll to wield or wear.
-    To define the new artefact tiles, you'll need to modify two files:
-    source/art-data.txt, and rltiles/dc-player.txt, with the details nicely
-    described in art-data.txt.
-    If you have perl installed, run "perl art-data.pl" from source/util. If you
-    made any mistakes in modifying the two files the script will complain.
+For human monsters, usually uniques, in addition the in-game doll editor
+(reachable via the '-' command) can be used to create good-looking tiles. If
+you do this, please use non-standard equipment for your player doll, so the
+odds of the player running into a look-alike are low.
 
-    If an artefact doesn't get a special equipment tile the base type's tile
-    will be used instead.
+4.2 Pixel art tutorials
+-----------------------
 
-5.) Otherwise, add the tile to the relevant dc-xxxx.txt file and use the same
-    (uppercase) definition in the matching tileidx_xxxx() function in
-    tilepick.cc. Note that the latter is not necessary if you are adding tiles
-    for the player doll.
+We really recommend the following tutorials to anyone interested in tiles
+design:
 
-    Tiles are assumed to have been placed within the rltiles/ directory
-    structure. You can use a relative path for the tile definition, or you can
-    use the %sdir command to change the current default relative path.
+  * http://www.derekyu.com/?page_id=219
+    A well-written introduction to the techniques of pixel art.
 
-    Use the %rim property to control whether Crawl needs to draw a black
-    outline around your tile or whether it already has one. To change the rim
-    property for your tile, use e.g.:
-        %rim 1
-        new_tile NEW_TILE
-        %rim 0
+  * http://gamesprites.wikicomplete.info/tutorial:sprite-art-101-basic-depth
+    A simple little tutorial on shading and depth perception.
 
-6.) For humanoid monsters' tiles you may want to add a line in
-    get_weapon_offset() in tilemcache.cc to allow it to be drawn with a wielded
-    weapon.
+  * http://gas13.ru/v3/tutorials/sywtbapa_almighty_grass_tile.php
+    A detailed explanation of how to create the perfect pixels. Several
+    chapters dealing with scenery and sprite design. Also covers the elusive
+    difference between art and _good_ art. Makes me want to go back and redo
+    all my tiles designs. (jpeg)
 
-7.) New monsters may also need a unique corpse tile. In that case you'll also
-    need to modify dc-corpse.txt and add a tile in _tileidx_corpse() of
-    tilepick.cc.
+4.3 Wielded weapons
+-------------------
 
+Humanoid monsters, in particular uniques, will usually be facing to the left
+with their right hand outstretched so they can be displayed wielding their
+current weapon, which is added into the tile dynamically.
+(For this to look good, the hand needs to be or at least include a rectangle of
+2x3 pixels, which can be a bit tricky sometimes.)
+
+If the monster is a spellcaster or has a predefined weapon it is guaranteed to
+wield you can ignore this step and get by without a weapon or add a static one.
+Even for melee-centric monsters this is not necessary, but displaying the
+wielded weapon is a really nice perk to playing the tiles version and should be
+used whenever possible.
+
+4.4 Semi-transparency
+---------------------
+
+For some features or monsters you might need part or the entirety of the tile
+to be see-though semi-transparent. Examples include ghosts, the water/lava
+masks, or clouds.
+
+I usually do this by means of the eraser, set the size to the maximum possible
+and the opacity to around 34%, and then "erase" the entire area I want to be
+semi-transparent, having previously selected it.
+
+
+5. Modifying the code base
+==========================
+
+If you are uncomfortable with changing the code or compiling the game, you can
+simply submit your creations and leave the rest to us. :)
+
+5.1 Defining tiles
+------------------
+
+Tiles are assumed to have been placed within the rltiles/ directory structure.
+You can use a relative path for the tile definition, or you can use the %sdir
+command to change the current default relative path.
+
+The definition files are as follows:
+  * dc-corpse.txt: Define corpse tiles that are created automatically based on
+                    the corresponding monster tiles.
+  * dc-demon.txt:  Define tiles used for the pandemonium lords.
+  * dc-dngn.txt:   Define wall, floor and dungeon feature tiles. All tiles
+                    defined herein are collapsed into dngn.png and dngn.html.
+  * dc-gui.txt:    Includes some other files, whose tiles are included in
+                    gui.png and gui.html.
+  * dc-item.txt:   Define mundane item tiles.
+  * dc-main.txt:   Includes some other files, whose tiles are included in
+                    main.png and main.html.
+  * dc-misc.txt:   Define tiles for clouds, special effects and status icons.
+  * dc-mon.txt:    Define monster tiles excepting pandemonium lords.
+  * dc-player.txt: Define player doll and equipment tiles. All tiles defined
+                    here and in included files form player.png and player.html.
+  * dc-spells.txt: Define spell tiles.
+  * dc-unrand.txt: Auto-generated file defining artefact tiles.
+
+Remember that new monsters may also need a new corpse tile if they don't share
+their genus with an already existing monster, in which case you'll need to
+declare the same monster tile in both dc-mon.txt and dc-corpse.txt.
+
+If you are unsure how to add your tile, you can simply check how similar tiles
+are defined, and add yours below, following their example.
+
+Use the %rim property to control whether Crawl needs to draw a black outline
+around your tile or whether it already has one. To change the rim property for
+your tile, use e.g.:
+   %rim 1
+   new_tile NEW_TILE
+   %rim 0
+
+5.2 Making Crawl use the tiles
+------------------------------
+
+If your tile doesn't replace an existing one, you might have to modify the
+code, which is to say tilepick.cc.
+
+Jewellery, potions, scrolls and staves use a hard-coded item order, so you
+really shouldn't have to change anything in the code.
+
+For all others search the file, as necessary, for:
+  * tileidx_armour_base
+  * tileidx_cloud
+  * tileidx_corpse
+  * tileidx_feature
+  * tileidx_food
+  * tileidx_misc
+  * tileidx_missile
+  * tileidx_monster_base
+  * tileidx_rune
+  * tileidx_player (transformations, only)
+  * tileidx_shop
+  * tileidx_spell
+  * tileidx_trap
+  * tileidx_weapon_base
+
+There's probably a TODO comment next to the monster, item, feature or spell in
+question. If not, you will need to add a case/return statement similar to the
+others at the end of the switch loop. This is likely because the object is
+completely new, in which case you're probably the one to add it, so you should
+know the required enum. If you don't know, you can try to find out or simply
+submit the tile and leave the code modifications to the devteam. :)
+
+For the tile enum, use the same (uppercase) definition as defined in the
+dc-xxxx.txt file, while copying the prefix from the other tiles.
+
+5.3 Artefact tiles
+------------------
+
+New randart weapons and armour items need not only a tile for the item
+itself but also a smaller variant for the player doll to wield or wear.
+To define the new artefact tiles, you'll need to modify two files:
+source/art-data.txt, and rltiles/dc-player.txt, with the details nicely
+described in art-data.txt.
+
+If you have perl installed, run "perl art-data.pl" from source/util. If you
+made any mistakes in modifying the two files the script will complain.
+
+If an artefact doesn't get a special equipment tile the base type's tile
+will be used instead.
+
+For the base items you'll need to modify dc-item.txt or dc-unrand.txt as well
+as tilepick.cc, as defined above. For the doll equipment, however, this is
+handled by the perl script and won't be necessary.
+
+5.4 Dynamic weapons
+-------------------
+
+For humanoid monsters' tiles you may want to add a line in get_weapon_offset()
+of tilemcache.cc to allow it to be drawn with a wielded weapon.
+
+The best course of action is probably to start out with adding the monster to
+the first list of monsters with an offset of 0 along either axis, then compile
+to check how it looks. You can use the wizmode &m command to create the monster
+and, if it happens to be unarmed, use 'x' to target the monster, then use the
+&g command to give it a weapon from your inventory. If the monster refuses to
+take your weapon this might be because it is incapable of using weapons, in
+which case you can skip this entire step, or because it can only use weapons it
+was created with, in which case you'll need to make sure it does get a weapon
+in mon-gear.cc and repeat the &m command until you get a version of it wielding
+something. Once you've got this set up, you can just save and restore without
+taking any further steps until you are satisfied with the result.
+
+If the weapon doesn't appear to be held in the monster's hand, add a new case
+block just for your monster and take a guess at the number of pixels the weapon
+needs to move the left/right and up/down to fit. You'll probably have to
+recompile a couple of times, tweaking the offset values each time, until you
+get it right.
+
+5.5 Variant tiles
+-----------------
+
+If your tile is one more variant of a tile that already has several versions,
+you shouldn't need to take any further steps, and the tile should already be
+picked randomly from time to time. The same applies to animated feature tiles.
+
+If you are animating something other than a feature that used to be static,
+more code will be necessary, but this is something that is probably better left
+to the devteam.
+
+
+6. Compiling the game
+=====================
 
 When compiling the game you may need to delete or rename the relevant tile
 section's png file, i.e. main.png (for items), player.png (for player, doll
 equipment, and monsters), dngn.png (for dungeon features) or gui.png (for
 spells), to make the changes take effect. The first step during the compilation
 will be to rebuild this file, so you can check right away whether your new tile
-was added correctly. Changes in dc-xxxx.txt automatically cause the relevant
-image files to be recreated.
+was added correctly.
+
+Changes in dc-xxxx.txt automatically cause the relevant image files to be
+recreated.
+
+See INSTALL.txt for compilation instructions. It is recommended that you first
+try to get the game compiled without any changes. If you face any problems,
+don't hesitate to send an email to our crawl-ref-discuss mailing list or the
+rec.games.roguelike.misc newsgroup.
 
 
-In case you'd like to draw some tiles but have run out of ideas, here's an
-incomplete (and possibly outdated) list of suggestions:
+7. Tiles suggestions
+====================
 
-* tiles of the various runes
-* zombie/skeleton tiles taking into account the monster type
-* tiles for abilities
-* alternative tiles for dungeon features to allow for "animations"
-* equipment tiles for the player doll
-* improvement of existing tiles
-etc.
+In case you'd like to draw some tiles but have run out of ideas, check out the
+following links:
 
-You can also check the SourceForge Feature Requests for tracker items
-containing the "\o/" emblem in the title. At least one of them will be a call
-for more tiles.
+http://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:tiles:tiles_missing_for_0.6
+http://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:tiles:tiles_improvement
+http://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:tiles:tiles_missing_for_wizlabs
 
-Please submit your new tiles as a new item on our feature request or patches
-tracker, or send one of the tiles developers (ennewalker, evktalo, j-p-e-g) an
-email containing your tiles.
+(Should these links be invalid, check this document's online version:
+ http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation)
+
+Also, if you have any further suggestions, feel free to add them.
+
+
+8. Submitting your tiles
+========================
+
+Please submit your new tiles as a new item in the Graphics category of our
+Mantis tracker (http://crawl.develz.org/mantis/bug_report_page.php), or send an
+email containing your tiles to one of the tiles developers
+(ennewalker, evktalo, jpeg).
 
 Thanks a lot for your support!
+
+The Dungeon Crawl DevTeam

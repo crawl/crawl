@@ -5549,6 +5549,17 @@ bool player::can_swim() const
     return (species == SP_MERFOLK && merfolk_change_is_safe(true));
 }
 
+int player::visible_igrd(const coord_def &where) const
+{
+    if (grd(where) == DNGN_LAVA
+        || (grd(where) == DNGN_DEEP_WATER && species != SP_MERFOLK))
+    {
+        return (NON_ITEM);
+    }
+
+    return igrd(where);
+}
+
 bool player::swimming() const
 {
     return in_water() && can_swim();

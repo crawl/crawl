@@ -204,9 +204,6 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     case HT_LAVA:
         return (grid == DNGN_LAVA);
 
-    case HT_AMPHIBIOUS_WATER:
-        return (mons->type == MONS_GIANT_LEECH && feat_is_watery(grid));
-
     default:
         return (false);
     }
@@ -1681,7 +1678,9 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     define_monster(mid);
 
     // Turn off all spellcasting flags.
-    menv[mid].flags &= ~MF_SPELLCASTER & ~MF_ACTUAL_SPELLS & ~MF_PRIEST;
+    // Hack - kraken get to keep their spell-like ability.
+    if (menv[mid].base_monster != MONS_KRAKEN)
+        menv[mid].flags &= ~MF_SPELLCASTER & ~MF_ACTUAL_SPELLS & ~MF_PRIEST;
 
     menv[mid].hit_points     = hit_points(menv[mid].hit_dice, 6, 5);
     menv[mid].max_hit_points = menv[mid].hit_points;

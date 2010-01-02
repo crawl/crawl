@@ -326,7 +326,7 @@ static bool _grid_has_mimic_item(const coord_def& pos)
 
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
-    return (igrd(pos) != NON_ITEM || _grid_has_mimic_item(pos));
+    return (you.visible_igrd(pos) != NON_ITEM || _grid_has_mimic_item(pos));
 }
 
 static bool _grid_has_perceived_multiple_items(const coord_def& pos)
@@ -336,7 +336,7 @@ static bool _grid_has_perceived_multiple_items(const coord_def& pos)
     if (_grid_has_mimic_item(pos))
         ++count;
 
-    for (stack_iterator si(pos); si && count < 2; ++si)
+    for (stack_iterator si(pos, true); si && count < 2; ++si)
         ++count;
 
     return (count > 1);
@@ -361,7 +361,7 @@ void Stash::update()
         items.clear();
 
         // Now, grab all items on that square and fill our vector
-        for (stack_iterator si(p); si; ++si)
+        for (stack_iterator si(p, true); si; ++si)
             if (!is_filtered(*si))
                 add_item(*si);
 
@@ -384,7 +384,7 @@ void Stash::update()
             pitem = &get_mimic_item(monster_at(p));
         else
         {
-            pitem = &mitm[igrd(p)];
+            pitem = &mitm[you.visible_igrd(p)];
             tutorial_first_item(*pitem);
         }
 

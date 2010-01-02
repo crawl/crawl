@@ -994,6 +994,18 @@ dngn_shoals_shallow_water_disturbance1 SHOALS_SHALLOW_WATER_DISTURBANCE
 dngn_shoals_shallow_water_disturbance2
 dngn_shoals_shallow_water_disturbance3
 
+# corner waves (diagonals)
+shallow_water_wave_corner_NE WAVE_CORNER_NE
+shallow_water_wave_corner_NW WAVE_CORNER_NW
+shallow_water_wave_corner_SE WAVE_CORNER_SE
+shallow_water_wave_corner_SW WAVE_CORNER_SW
+
+# orthogonal waves
+shallow_water_wave_N WAVE_N
+shallow_water_wave_S WAVE_S
+shallow_water_wave_E WAVE_E
+shallow_water_wave_W WAVE_W
+
 %sdir dc-dngn/gateways
 dngn_entrance DNGN_UNSEEN_ENTRANCE
 %rim 1
