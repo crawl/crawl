@@ -865,7 +865,7 @@ wizard: $(GAME)
 # test.
 
 $(UTIL)%.o: $(UTIL)%.cc .cflags
-	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -Wp,-MD,$(patsubst %.o,%.d,$@) -c $< -o $@
+	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
 
 ifdef PCH
 %.h.gch: %.h
@@ -877,10 +877,10 @@ endif
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
 %.o: %.m .cflags
-	$(QUIET_CXX)$(CC) $(ALL_CFLAGS) -Wp,-MD,$(patsubst %.o,%.d,$@) -c $< -o $@
+	$(QUIET_CXX)$(CC) $(ALL_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
 
 %.o: %.cc .cflags
-	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$(patsubst %.o,%.d,$@) -c $< -o $@
+	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
 
 icon.o: util/crawl.rc util/crawl.ico
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
