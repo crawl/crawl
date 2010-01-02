@@ -3613,7 +3613,8 @@ static void _close_door(coord_def move)
         find_connected_identical(doorpos, grd(doorpos), all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
-        const char *waynoun = make_stringf("%sway", noun).c_str();
+        const std::string waynoun_str = make_stringf("%sway", noun);
+        const char *waynoun = waynoun_str.c_str();
 
         const std::string door_desc_adj  =
             env.markers.property_at(doorpos, MAT_ANY,
