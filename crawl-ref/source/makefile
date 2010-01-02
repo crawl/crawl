@@ -876,6 +876,9 @@ endif
 
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
+%.d: %.cc .cflags
+	$(QUIET_DEPEND)$(CXX) -MM $(ALL_CFLAGS) $< > $*.d
+
 %.o: %.m .cflags
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
 
