@@ -719,68 +719,6 @@ static void _start_running( int dir, int mode )
         you.running.initialise(dir, mode);
 }
 
-static bool _recharge_rod( item_def &rod, bool wielded )
-{
-    if (!item_is_rod(rod) || rod.plus >= rod.plus2 || !enough_mp(1, true))
-        return (false);
-
-    const int charge = rod.plus / ROD_CHARGE_MULT;
-
-    int rate = ((charge + 1) * ROD_CHARGE_MULT) / 10;
-
-    rate *= (10 + skill_bump( SK_EVOCATIONS ));
-    rate = div_rand_round( rate, 100 );
-
-    if (rate < 5)
-        rate = 5;
-    else if (rate > ROD_CHARGE_MULT / 2)
-        rate = ROD_CHARGE_MULT / 2;
-
-    // If not wielded, the rod charges far more slowly.
-    if (!wielded)
-        rate /= 5;
-    // Shields hamper recharging for wielded rods.
-    else if (you.shield())
-        rate /= 2;
-
-    if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
-    {
-        dec_mp(1);
-        if (wielded)
-            you.wield_change = true;
-    }
-
-    rod.plus += rate;
-    if (rod.plus > rod.plus2)
-        rod.plus = rod.plus2;
-
-    if (wielded && rod.plus == rod.plus2)
-    {
-        mpr("Your rod has recharged.");
-        if (is_resting())
-            stop_running();
-    }
-
-    return (true);
-}
-
-static void _recharge_rods()
-{
-    const int wielded = you.equip[EQ_WEAPON];
-    if (wielded != -1 && _recharge_rod( you.inv[wielded], true ))
-        return;
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (i != wielded && you.inv[i].is_valid()
-            && one_chance_in(3)
-            && _recharge_rod( you.inv[i], false ))
-        {
-            return;
-        }
-    }
-}
-
 static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 {
     switch (cmd)
@@ -2880,7 +2818,7 @@ void world_reacts()
     _regenerate_hp_and_mp(you.time_taken);
 
     // If you're wielding a rod, it'll gradually recharge.
-    _recharge_rods();
+    recharge_rods(you.time_taken, false);
 
     viewwindow(true);
 

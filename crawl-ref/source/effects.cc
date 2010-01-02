@@ -70,6 +70,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
+#include "travel.h"
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
@@ -4237,6 +4238,7 @@ void update_level(double elapsedTime)
 
     update_corpses(elapsedTime);
     shoals_apply_tides(turns);
+    recharge_rods((long)turns, true);
 
     if (env.sanctuary_time)
     {
@@ -4843,5 +4845,60 @@ void update_corpses(double elapsedTime)
                 _maybe_restart_fountain_flow(*ri, fountain_checks);
             }
         }
+    }
+}
+
+static void _recharge_rod( item_def &rod, long aut, bool in_inv )
+{
+    if (!item_is_rod(rod) || rod.plus >= rod.plus2)
+        return;
+
+    const int charge = rod.plus / ROD_CHARGE_MULT;
+
+    int rate = ((charge + 1) * ROD_CHARGE_MULT) / 10;
+
+    rate *= (10 + skill_bump( SK_EVOCATIONS ));
+    rate = div_rand_round( rate, 100 );
+    rate = div_rand_round( rate * aut, 10 );
+
+    if (rate < 5)
+        rate = 5;
+    else if (rate > ROD_CHARGE_MULT / 2)
+        rate = ROD_CHARGE_MULT / 2;
+
+    if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
+    {
+        if (item_is_equipped( rod, true ))
+            you.wield_change = true;
+    }
+
+    rod.plus += rate;
+    if (rod.plus > rod.plus2)
+        rod.plus = rod.plus2;
+
+    if (in_inv && rod.plus == rod.plus2)
+    {
+        msg::stream << "Your " << rod.name(DESC_QUALNAME) << " has recharged."
+                    << std::endl;
+        if (is_resting())
+            stop_running();
+    }
+
+    return;
+}
+
+void recharge_rods(long aut, bool level_only)
+{
+    if (!level_only)
+    {
+        for (int item = 0; item < ENDOFPACK; ++item)
+        {
+            _recharge_rod( you.inv[item], aut, true );
+        }
+    }
+
+    for (int item = 0; item < MAX_ITEMS; ++item)
+    {
+        _recharge_rod( mitm[item], aut, false );
     }
 }
