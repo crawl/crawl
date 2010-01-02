@@ -1866,33 +1866,13 @@ int count_staff_spells(const item_def &item, bool need_id)
     return (nspel);
 }
 
-// Returns a measure of the rod spell power disrupted by a worn shield.
-int rod_shield_leakage()
-{
-    const item_def *shield = you.shield();
-    int leakage = 100;
-
-    if (shield)
-    {
-        const int shield_type = shield->sub_type;
-        leakage = shield_type == ARM_BUCKLER? 125 :
-                  shield_type == ARM_SHIELD ? 150 :
-                                              200;
-        // Adjust for shields skill.
-        leakage -= ((leakage - 100) * 5 / 10) * you.skills[SK_SHIELDS] / 27;
-    }
-    return (leakage);
-}
-
 int staff_spell( int staff )
 {
     item_def& istaff(you.inv[staff]);
     // Spell staves are mostly for the benefit of non-spellcasters, so we're
     // not going to involve INT or Spellcasting skills for power. -- bwr
     int powc = (5 + you.skills[SK_EVOCATIONS]
-                 + roll_dice( 2, you.skills[SK_EVOCATIONS] ))
-                * 100
-                / rod_shield_leakage();
+                 + roll_dice( 2, you.skills[SK_EVOCATIONS] ));
 
     if (!item_is_rod(istaff))
     {

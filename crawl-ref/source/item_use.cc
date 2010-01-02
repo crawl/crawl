@@ -411,21 +411,6 @@ static const char *shield_impact_degree(int impact)
                          : NULL);
 }
 
-static void warn_rod_shield_interference(const item_def &)
-{
-    const int leakage = rod_shield_leakage();
-    const char *leak_degree = shield_impact_degree(leakage);
-
-    // Any way to avoid the double entendre? :-)
-    if (leak_degree)
-    {
-        mprf(MSGCH_WARN,
-                "Your %s %sreduces the effectiveness of your rod.",
-                shield_base_name(you.shield()),
-                leak_degree);
-    }
-}
-
 static void warn_launcher_shield_slowdown(const item_def &launcher)
 {
     const int slowspeed =
@@ -455,14 +440,12 @@ void warn_shield_penalties()
     if (!you.shield())
         return;
 
-    // Warnings are limited to rods, bows, and quarterstaves at the moment.
+    // Warnings are limited to bows and quarterstaves at the moment.
     const item_def *weapon = you.weapon();
     if (!weapon)
         return;
 
-    if (item_is_rod(*weapon))
-        warn_rod_shield_interference(*weapon);
-    else if (is_range_weapon(*weapon))
+    if (is_range_weapon(*weapon))
         warn_launcher_shield_slowdown(*weapon);
     else if (weapon->base_type == OBJ_WEAPONS
              && weapon_skill(*weapon) == SK_STAVES)
