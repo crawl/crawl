@@ -498,7 +498,7 @@ function grow (data, triggerable, triggerer, marker, ev)
   if crawl.one_chance_in(10) then
     -- Fruit!
     for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and not feat.destroys_items(spot:xy()) 
+      if not feat.is_solid(spot:xy()) and not feat.has_solid_floor(spot:xy()) 
          and crawl.one_chance_in(3) then
         -- Do nothing.
         dgn.create_item(spot.x, spot.y, "pear / apple / choko / apricot / orange"
@@ -513,7 +513,7 @@ function grow (data, triggerable, triggerer, marker, ev)
   else
     -- Flowers!
     for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and not feat.destroys_items(spot:xy())
+      if not feat.is_solid(spot:xy()) and not feat.has_solid_floor(spot:xy())
          and not crawl.one_chance_in(3) then
         dgn.create_monster(spot.x, spot.y, "toadstool col:any name:flowers " ..
                                  "name_replace name_descriptor name_definite")
@@ -1315,7 +1315,7 @@ local function summon_monks (data, triggerable, triggerer, marker, ev)
   local count = 0
   for point in iter.circle_iterator(3) do
     if crawl.one_chance_in(11) then
-      if feat.is_solid(point.x, point.y) or feat.destroys_items(point.x, point.y) then
+      if feat.is_solid(point.x, point.y) or not feat.has_solid_floor(point.x, point.y) then
       else
        local mon = dgn.create_monster(point.x, point.y, msp)
        mon.set_prop("description", "It seems a flimsy representation of a monk;"
