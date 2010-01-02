@@ -5630,15 +5630,11 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
         }
     }
 
-    if (proprt[ARTP_MAGICAL_POWER])
+    if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
-        you.redraw_magic_points = true;
-        if (!known[ARTP_MAGICAL_POWER])
-        {
-            mprf("You feel your mana capacity %s.",
-                 proprt[ARTP_MAGICAL_POWER] > 0? "increase" : "decrease");
-            artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
-        }
+        mprf("You feel your mana capacity %s.",
+             proprt[ARTP_MAGICAL_POWER] > 0? "increase" : "decrease");
+        artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
     }
 
     // Modify ability scores.
@@ -5699,6 +5695,10 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
         // there is a dangerous monster nearby...
         xom_is_stimulated(128);
     }
+
+    // Let's try this here instead of up there.
+    if (proprt[ARTP_MAGICAL_POWER])
+        calc_mp();
 #undef unknown_proprt
 }
 
