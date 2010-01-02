@@ -744,7 +744,7 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 ##########################################################################
 # Dependencies
 
-DEPS := $(OBJECTS:.o=.d)
+DEPS := $(shell ls $(OBJECTS:.o=.d) 2> /dev/null)
 
 -include $(DEPS)
 
