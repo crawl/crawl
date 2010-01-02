@@ -1282,7 +1282,7 @@ Before you stands a draconian.
 %%%%
 red wasp
 
-A huge red wasp with a viciously barbed stinger.
+A huge red wasp with a viciously barbed stinger.  Potent paralytic poison drips from its tip.
 %%%%
 redback
 
