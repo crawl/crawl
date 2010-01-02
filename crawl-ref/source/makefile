@@ -865,7 +865,7 @@ wizard: $(GAME)
 # test.
 
 $(UTIL)%.o: $(UTIL)%.cc .cflags
-	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
+	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -Wp,-MD,$(UTIL)$*.d -c $< -o $(UTIL)$*.o
 
 ifdef PCH
 %.h.gch: %.h
