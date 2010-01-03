@@ -2134,6 +2134,10 @@ int player_evasion(ev_ignore_type evit)
         ev -= 2;
 
     ev += player_equip( EQ_RINGS_PLUS, RING_EVASION );
+
+    if (player_equip_ego_type( EQ_WEAPON, SPWPN_EVASION ))
+        ev += 5;
+
     ev += scan_artefacts( ARTP_EVASION );
 
     // ponderous ev mod

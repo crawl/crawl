@@ -523,6 +523,12 @@ bool unwield_item(bool showMsgs)
                 you.redraw_armour_class = true;
                 break;
 
+            case SPWPN_EVASION:
+                if (showMsgs)
+                    mpr("You feel like more of a target.");
+                you.redraw_evasion = true;
+                break;
+
             case SPWPN_VAMPIRICISM:
                 if (showMsgs)
                 {

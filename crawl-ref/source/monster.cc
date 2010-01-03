@@ -788,6 +788,8 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
     const int brand = get_weapon_brand(item);
     if (brand == SPWPN_PROTECTION)
         ac += 5;
+    if (brand == SPWPN_EVASION)
+        ev += 5;
 
     if (msg)
     {
@@ -915,6 +917,8 @@ void monsters::unequip_weapon(item_def &item, int near, bool msg)
     const int brand = get_weapon_brand(item);
     if (brand == SPWPN_PROTECTION)
         ac -= 5;
+    if (brand == SPWPN_EVASION)
+        ev -= 5;
 
     if (msg && brand != SPWPN_NORMAL)
     {
@@ -1299,9 +1303,10 @@ static int _ego_damage_bonus(item_def &item)
     switch (get_weapon_brand(item))
     {
     case SPWPN_NORMAL:      return 0;
-    case SPWPN_PROTECTION:  return 1;
+    case SPWPN_VORPAL:      // deliberate
+    case SPWPN_PROTECTION:  // fall through
+    case SPWPN_EVASION:     return 1;
     default:                return 2;
-    case SPWPN_VORPAL:      return 1;
     }
 }
 

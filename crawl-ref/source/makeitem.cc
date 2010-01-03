@@ -1419,7 +1419,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             else if (tmp < 880 && (item.sub_type == WPN_BOW || item.sub_type == WPN_LONGBOW))
                 rc = SPWPN_REAPING;
             else if (tmp < 880)
-                rc = SPWPN_PROTECTION;
+                rc = SPWPN_EVASION;
             else if (tmp < 990)
                 rc = SPWPN_VORPAL;
 
@@ -1441,7 +1441,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VORPAL;
 
-            if (one_chance_in(5))
+            if (one_chance_in(6))
                 rc = SPWPN_PROTECTION;
             break;
 
@@ -1567,6 +1567,7 @@ bool is_weapon_brand_ok(int type, int brand)
     case SPWPN_FLAME:
     case SPWPN_FROST:
     case SPWPN_PENETRATION:
+    case SPWPN_EVASION:
         if (!is_range_weapon(item))
             return (false);
         break;

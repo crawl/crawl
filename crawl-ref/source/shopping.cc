@@ -1061,6 +1061,7 @@ unsigned int item_value( item_def item, bool ident )
 
             case SPWPN_VORPAL:
             case SPWPN_PROTECTION:
+            case SPWPN_EVASION:
                 valued *= 20;
                 break;
             }
@@ -1197,6 +1198,12 @@ unsigned int item_value( item_def item, bool ident )
                 break;
 
             case SPMSL_POISONED:
+            case SPMSL_PARALYSIS:
+            case SPMSL_SLOW:
+            case SPMSL_SLEEP:
+            case SPMSL_CONFUSION:
+            case SPMSL_SICKNESS:
+            case SPMSL_RAGE:
                 valued *= 23;
                 break;
             }

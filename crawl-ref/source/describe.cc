@@ -776,6 +776,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += "It protects the one who wields it against "
                 "injury (+5 to AC).";
             break;
+        case SPWPN_EVASION:
+            description += "It affects your evasion (+5 to EV).";
+            break;
         case SPWPN_DRAINING:
             description += "A truly terrible weapon, it drains the "
                 "life of those it strikes.";

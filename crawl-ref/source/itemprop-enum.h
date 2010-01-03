@@ -95,8 +95,9 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_REACHING,
     SPWPN_RETURNING,                   //   18
     SPWPN_CHAOS,
+    SPWPN_EVASION,
 
-    MAX_PAN_LORD_BRANDS = SPWPN_CHAOS,
+    MAX_PAN_LORD_BRANDS = SPWPN_EVASION,
 
     SPWPN_CONFUSE,                     //   20
     SPWPN_PENETRATION,

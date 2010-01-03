@@ -308,6 +308,7 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_DRAGON_SLAYING: return ((terse) ? " (slay drac)":" of dragon slaying");
     case SPWPN_VENOM: return ((terse) ? " (venom)" : " of venom");
     case SPWPN_PROTECTION: return ((terse) ? " (protect)" : " of protection");
+    case SPWPN_EVASION: return ((terse) ? " (evade)" : " of evasion");
     case SPWPN_DRAINING: return ((terse) ? " (drain)" : " of draining");
     case SPWPN_SPEED: return ((terse) ? " (speed)" : " of speed");
     case SPWPN_PAIN: return ((terse) ? " (pain)" : " of pain");

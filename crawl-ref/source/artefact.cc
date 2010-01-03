@@ -742,8 +742,8 @@ void static _get_randart_properties(const item_def &item,
         if (one_chance_in(6))
             proprt[ARTP_BRAND] = SPWPN_VORPAL;
 
-        if (proprt[ARTP_BRAND] == SPWPN_PROTECTION)
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;      // no protection
+        if (proprt[ARTP_BRAND] == SPWPN_PROTECTION || proprt[ARTP_BRAND] == SPWPN_EVASION)
+            proprt[ARTP_BRAND] = SPWPN_NORMAL;      // no protection or evasion
 
         if (is_range_weapon(item))
         {
@@ -756,13 +756,13 @@ void static _get_randart_properties(const item_def &item,
                 proprt[ARTP_BRAND] = (tmp >= 18) ? SPWPN_SPEED :
                                      (tmp >= 16) ? SPWPN_PENETRATION :
                                      (tmp >= 13) ? SPWPN_REAPING :
-                                     (tmp >= 10) ? SPWPN_PROTECTION :
+                                     (tmp >= 10) ? SPWPN_EVASION :
                                      (tmp >=  7) ? SPWPN_VENOM
                                                  : SPWPN_VORPAL + random2(3);
 
                 if (atype == WPN_BLOWGUN
                     && proprt[ARTP_BRAND] != SPWPN_SPEED
-                    && proprt[ARTP_BRAND] != SPWPN_PROTECTION)
+                    && proprt[ARTP_BRAND] != SPWPN_EVASION)
                 {
                     proprt[ARTP_BRAND] = SPWPN_NORMAL;
                 }

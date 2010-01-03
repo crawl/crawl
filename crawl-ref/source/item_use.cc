@@ -613,6 +613,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     mpr("You feel protected!");
                     break;
 
+                case SPWPN_EVASION:
+                    mpr("You feel nimbler!");
+                    break;
+
                 case SPWPN_DRAINING:
                     mpr("You sense an unholy aura.");
                     break;
