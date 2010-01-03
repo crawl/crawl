@@ -555,6 +555,18 @@ xdddx
 xxxxx
 ENDMAP
 
+NAME:  fedhas_bush_and_centaur_altar
+KFEAT: _ = altar_fedhas
+MONS:  centaur, bush
+MAP
+......
+.2222..
+.21222.
+.22_22.
+...22..
+.222..
+ENDMAP
+
 ######################################
 # IV   Overflow altars
 ######################################
@@ -660,6 +672,107 @@ ENDMAP
 
 ### Elyvilon overflow altars ##################################################
 
+NAME:   elyvilon_altar_1
+TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon
+DEPTH:  D:2-20
+KFEAT:  C = altar_elyvilon
+SUBST:  X : T G t 1 2 3
+MONS:   plant, bush, fungus
+KMASK:  T = no_monster_gen
+MAP
+      xx@xx
+      x...x
+      x.X.x
+      x...x
+      xx.xx
+       x.x
+xxxxx xx.xx xxxxx
+x...xxx...xxx...x
+@.X.....C.....X.@
+x...xxx...xxx...x
+xxxxx xx.xx xxxxx
+       x.x
+      xx.xx
+      x...x
+      x.X.x
+      x...x
+      xx@xx
+ENDMAP
+
+NAME:   elyvilon_altar_2
+TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon no_pool_fixup no_monster_gen
+DEPTH:  D:2-20
+KFEAT:  C = altar_elyvilon
+NSUBST: W = 1:Z / *:W
+KMONS:  Z = big fish att:good_neutral
+KFEAT:  Z = W
+MAP
+@wWw@
+wwWww
+WWCWW
+wwWww
+@wWw@
+ENDMAP
+
+NAME:   elyvilon_altar_3
+TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon no_pool_fixup
+DEPTH:  D:2-20
+KFEAT:  C = altar_elyvilon
+KMASK:  w = no_monster_gen
+KMASK:  W = no_monster_gen
+MONS:   butterfly
+MAP
+        ttttttttttttt
+       ttttttttttttttt
+      tttttttt.tttttttt
+  .....ttttt..1..ttttt.....
+ .......ttt.......ttt.......
+...wWw...t...wWw...t...wWw...
+..wwWww.....wwWww.....wwWww..
+@.WWtWW.1.1.WWCWW.1.1.WWtWW.@
+..wwWww.....wwWww.....wwWww..
+...wWw...t...wWw...t...wWw...
+ .......ttt.......ttt.......
+  .....ttttt..1..ttttt.....
+      tttttttt.tttttttt
+       ttttttttttttttt
+        ttttttttttttt
+ENDMAP
+
+NAME:   elyvilon_altar_4
+TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon no_monster_gen
+DEPTH:  D:2-20
+KFEAT:  C = altar_elyvilon
+MONS:   patrolling quokka att:good_neutral
+MAP
+xxx.@.xxx
+xWW...WWx
+xW..t..Wx
+....1....
+@.t.C.t.@
+.........
+xW..t..Wx
+xWW...WWx
+xxx.@.xxx
+ENDMAP
+
+NAME:   elyvilon_altar_5
+TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon
+DEPTH:  D:2-20
+KFEAT:  C = altar_elyvilon
+KMASK:  T = no_monster_gen
+MAP
+.............
+.c.c.c.c.c.c.
+.............
+...T.....T...
+@.....C.....@
+...T.....T...
+.............
+.c.c.c.c.c.c.
+.............
+ENDMAP
+
 ### Fedhas overflow altars ####################################################
 
 NAME:   fedhas_altar_1
@@ -722,19 +835,6 @@ xxxxttttttttt..
 xxxxxxttttttttx
 xxxxxxxtttttttx
 xxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:  fedhas_altar_5
-TAGS:  uniq_altar_fedhas
-KFEAT: _ = altar_fedhas
-MONS:  centaur, bush
-MAP
-......
-.2222..
-.21222.
-.22_22.
-...22..
-.222..
 ENDMAP
 
 # Threat: two big fish. Loot: some fruits.
@@ -1039,6 +1139,21 @@ xx'.............'xx
 ENDMAP
 
 ### Yredelemnul overflow altars ###############################################
+
+NAME:   yredelemnul_altar_1
+TAGS:   uniq_altar_yredelemnul temple_overflow_yredelemnul
+DEPTH:  D:2-20
+KFEAT:  C = altar_yredelemnul
+KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective               \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant
+MAP
+.....
+.f.f.
+..C..
+.f.f.
+.....
+ENDMAP
 
 ### Zin overflow altars #######################################################
 

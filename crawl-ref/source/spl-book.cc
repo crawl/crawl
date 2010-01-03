@@ -485,10 +485,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of Brands
     {SPELL_CORONA,
      SPELL_SWIFTNESS,
-     SPELL_CAUSE_FEAR,
      SPELL_FIRE_BRAND,
      SPELL_FREEZING_AURA,
      SPELL_POISON_WEAPON,
+     SPELL_CAUSE_FEAR,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },

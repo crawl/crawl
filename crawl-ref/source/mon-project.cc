@@ -52,10 +52,15 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
 
     monsters &mon = menv[mind];
     const coord_def pos = caster->pos();
-    mon.props["iood_x"] = (float)pos.x;
-    mon.props["iood_y"] = (float)pos.y;
-    mon.props["iood_vx"] = (float)(beam->target.x - pos.x);
-    mon.props["iood_vy"] = (float)(beam->target.y - pos.y);
+    beam->choose_ray();
+    dprf("beam (%d,%d)+t*(%d,%d)  ray (%f,%f)+t*(%f,%f)",
+        pos.x, pos.y, beam->target.x - pos.x, beam->target.y - pos.y,
+        beam->ray.r.start.x - 0.5, beam->ray.r.start.y - 0.5,
+        beam->ray.r.dir.x, beam->ray.r.dir.y);
+    mon.props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
+    mon.props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
+    mon.props["iood_vx"].get_float() = beam->ray.r.dir.x;
+    mon.props["iood_vy"].get_float() = beam->ray.r.dir.y;
     mon.props["iood_kc"].get_byte() = (caster->atype() == ACT_PLAYER) ? KC_YOU :
             ((monsters*)caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
     mon.props["iood_pow"].get_short() = pow;
