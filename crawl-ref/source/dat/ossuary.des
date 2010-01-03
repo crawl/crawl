@@ -89,7 +89,7 @@ ENDMAP
 
 NAME:    enter_ossuary_2
 TAGS:    uniq_ossuary no_monster_gen
-SHUFFLE: CD / c=
+SHUFFLE: CD / c+
 COLOUR:  ' = yellow
 COLOUR:  C = yellow
 COLOUR:  D = yellow
