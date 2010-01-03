@@ -720,6 +720,9 @@ all: $(GAME)
 test:
 	./$(GAME) -test > /dev/null
 
+
+ifeq (,$(findstring clean,$(MAKECMDGOALS)))
+
 #
 # CFLAGS difference check
 #
@@ -747,6 +750,8 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 DEPS := $(shell ls $(OBJECTS:.o=.d) 2> /dev/null)
 
 -include $(DEPS)
+
+endif
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
