@@ -2,10 +2,14 @@
 
 dolinks() {
     mkdir -p source
+    mkdir -p docs
     cd source
     ln -sf ../../source/*.{cc,h,txt} .
     ln -sf ../../source/makefile* .
     ln -sf ../../source/{util,contrib,rltiles,prebuilt,dat} .
+    cd ..
+    cd docs
+    ln -sf ../../docs/* .
 }
 
 mkdir -p NORMAL
