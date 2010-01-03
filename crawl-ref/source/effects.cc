@@ -1284,8 +1284,7 @@ static bool _try_give_plain_armour(item_def &arm)
             {
                 const item_def weapon = you.inv[you.equip[EQ_WEAPON]];
                 const hands_reqd_type hand = hands_reqd(weapon, you.body_size());
-                if (hand == HANDS_TWO || item_is_rod(weapon)
-                    || is_range_weapon(weapon))
+                if (hand == HANDS_TWO || is_range_weapon(weapon))
                 {
                     continue;
                 }
