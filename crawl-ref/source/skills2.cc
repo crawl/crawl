@@ -369,7 +369,7 @@ const int spec_skills[NUM_SPECIES][40] =
       70,                       // SK_DODGING
       60,                       // SK_STEALTH
       70,                       // SK_STABBING
-     130,                       // SK_SHIELDS
+      90,                       // SK_SHIELDS
      100,                       // SK_TRAPS_DOORS
      140,                       // SK_UNARMED_COMBAT
      100,                       // undefined
