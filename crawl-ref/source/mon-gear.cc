@@ -1100,18 +1100,10 @@ static void _give_ammo(monsters *mon, int level,
             if (!one_chance_in(3)
                 || active_monster_band == BAND_MERFOLK_JAVELINEER)
             {
-                item_race = MAKE_ITEM_NO_RACE;
-                if (coinflip())
-                {
-                    weap_type = WPN_SPEAR;
-                    qty       = 1 + random2(3);
-                }
-                else
-                {
-                    weap_class = OBJ_MISSILES;
-                    weap_type = MI_JAVELIN;
-                    qty       = 3 + random2(6);
-                }
+                item_race  = MAKE_ITEM_NO_RACE;
+                weap_class = OBJ_WEAPONS;
+                weap_type  = WPN_SPEAR;
+                qty        = random_range(4, 8);
                 if (active_monster_band == BAND_MERFOLK_JAVELINEER)
                     break;
             }
