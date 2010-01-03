@@ -749,8 +749,8 @@ bool monsters::can_use_missile(const item_def &item) const
         return (is_throwable(this, item));
     }
 
-    // Darts and stones are allowed even without launcher.
-    if (item.sub_type == MI_DART || item.sub_type == MI_STONE)
+    // Stones are allowed even without launcher.
+    if (item.sub_type == MI_STONE)
         return (true);
 
     item_def *launch;
