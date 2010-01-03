@@ -559,7 +559,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_JELLY:
         return TILEP_MONS_JELLY;
     case MONS_SLIME_CREATURE:
-        return TILEP_MONS_SLIME_CREATURE;
+        ASSERT(mon->number <= 5);
+        return TILEP_MONS_SLIME_CREATURE + mon->number / 2;
     case MONS_PULSATING_LUMP:
         return TILEP_MONS_PULSATING_LUMP;
     case MONS_GIANT_AMOEBA:

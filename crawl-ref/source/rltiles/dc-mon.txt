@@ -454,6 +454,8 @@ dissolution MONS_DISSOLUTION
 ooze MONS_OOZE
 jelly MONS_JELLY
 slime_creature MONS_SLIME_CREATURE
+slime_creature_large MONS_SLIME_CREATURE_LARGE
+slime_creature_titanic MONS_SLIME_CREATURE_TITANIC
 pulsating_lump MONS_PULSATING_LUMP
 giant_amoeba MONS_GIANT_AMOEBA
 brown_ooze MONS_BROWN_OOZE
