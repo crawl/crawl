@@ -401,7 +401,7 @@ void line_reader::cursorto(int ncx)
 {
     int x = (start_x + ncx - 1) % wrapcol + 1;
     int y = start_y + (start_x + ncx - 1) / wrapcol;
-    ::cgotoxy(x, y);
+    ::cgotoxy(x, y, get_cursor_region());
 }
 
 int line_reader::read_line(bool clear_previous)
