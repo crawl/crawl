@@ -6,6 +6,7 @@
 
 #include "areas.h"
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
 #include "env.h"
 #include "exclude.h"
@@ -218,13 +219,13 @@ static show_item_type _item_to_show_code(const item_def &item)
 
 void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
 {
-    item_def *eitem;
+    const item_def *eitem;
     // Check for mimics.
     const monsters* m = monster_at(gp);
     if (m && mons_is_unknown_mimic(m))
         eitem = &get_mimic_item(m);
-    else if (igrd(gp) != NON_ITEM)
-        eitem = &mitm[igrd(gp)];
+    else if (you.visible_igrd(gp) != NON_ITEM)
+        eitem = &mitm[you.visible_igrd(gp)];
     else
         return;
 
@@ -233,26 +234,29 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
     glyph g = get_item_glyph(eitem);
 
     const dungeon_feature_type feat = grd(gp);
+
     if (Options.feature_item_brand && is_critical_feature(feat))
         ecol |= COLFLAG_FEATURE_ITEM;
     else if (Options.trap_item_brand && feat_is_trap(feat))
         ecol |= COLFLAG_TRAP_ITEM;
     else
     {
-        const unsigned short gcol = env.grid_colours(gp);
-        ecol = (feat == DNGN_SHALLOW_WATER) ?
-               (gcol != BLACK ? gcol : CYAN) : g.col;
+        ecol = g.col;
+
+        if (feat_is_water(feat))
+            ecol = _feat_colour(gp, feat);
+
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (eitem->link > NON_ITEM && igrd(gp) != NON_ITEM)
+        if (eitem->link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
             ecol |= COLFLAG_ITEM_HEAP;
-        else if (eitem->link == NON_ITEM && !crawl_state.arena)
+        else if (eitem->link < NON_ITEM && !crawl_state.arena)
             ecol |= COLFLAG_ITEM_HEAP;
         grid(ep).cls = SH_ITEM;
         grid(ep).item = _item_to_show_code(*eitem);
     }
 
 #ifdef USE_TILE
-    int idx = igrd(gp);
+    int idx = you.visible_igrd(gp);
     if (idx != NON_ITEM)
     {
         if (feat_is_stair(feat))
@@ -272,8 +276,7 @@ void show_def::_update_cloud(int cloudno)
     grid(e).colour = which_colour;
 
 #ifdef USE_TILE
-    tile_place_cloud(e.x, e.y, env.cloud[cloudno].type,
-                     env.cloud[cloudno].decay);
+    tile_place_cloud(e.x, e.y, env.cloud[cloudno]);
 #endif
 }
 
@@ -359,7 +362,8 @@ void show_def::_update_monster(const monsters* mons)
         _set_backup(e);
 
     grid(e).cls = SH_MONSTER;
-    grid(e).mons = mons->type;
+    grid(e).mons = (!crawl_state.arena && you.misled()) ?
+                        mons->get_mislead_type() : mons->type;
     grid(e).colour = get_mons_glyph(mons).col;
 
 #ifdef USE_TILE
@@ -373,6 +377,11 @@ void show_def::update_at(const coord_def &gp, const coord_def &ep)
 
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp, ep);
+
+    // If there's items on the boundary (shop inventory),
+    // we don't show them.
+    if (!in_bounds(gp))
+        return;
 
     _update_item_at(gp, ep);
 

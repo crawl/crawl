@@ -2853,6 +2853,7 @@ try_again:
     int slow_dig = 0;
     int regen = 0;
     int slots_lost = 0;
+    int breath_weapons = 0;
 
     std::set<const facet_def *> facets_used;
 
@@ -2887,6 +2888,10 @@ try_again:
                 if (m == MUT_REGENERATION)
                     regen = 1;
 
+                if (m == MUT_SPIT_POISON || m == MUT_BREATHE_POISON
+                        || m == MUT_BREATHE_FLAMES)
+                    breath_weapons++;
+
                 if (m == MUT_CLAWS && i == 2 || m == MUT_HORNS && i == 0)
                     ++slots_lost;
             }
@@ -2902,6 +2907,9 @@ try_again:
         goto try_again;
 
     if (slow_dig && regen)
+        goto try_again;
+
+    if (breath_weapons > 1)
         goto try_again;
 
     return ret;
@@ -3043,10 +3051,7 @@ int how_mutated(bool all, bool levels)
         }
     }
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "how_mutated(): all = %u, levels = %u, j = %d",
-         all, levels, j);
-#endif
+    dprf("how_mutated(): all = %u, levels = %u, j = %d", all, levels, j);
 
     return (j);
 }

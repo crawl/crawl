@@ -22,6 +22,7 @@
 #include "branch.h"
 #include "cloud.h"
 #include "coordit.h"
+#include "database.h"
 #include "directn.h"
 #include "debug.h"
 #include "delay.h"
@@ -129,7 +130,7 @@ bool remove_curse(bool suppress_msg)
     // Only cursed *weapons* in hand count as cursed. - bwr
     if (you.weapon()
         && you.weapon()->base_type == OBJ_WEAPONS
-        && item_cursed(*you.weapon()))
+        && you.weapon()->cursed())
     {
         // Also sets wield_change.
         do_uncurse_item(*you.weapon());
@@ -141,7 +142,7 @@ bool remove_curse(bool suppress_msg)
     for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; i++)
     {
         // Melded equipment can also get uncursed this way.
-        if (you.equip[i] != -1 && item_cursed(you.inv[you.equip[i]]))
+        if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
         {
             do_uncurse_item(you.inv[you.equip[i]]);
             success = true;
@@ -588,11 +589,12 @@ bool cast_shadow_creatures(god_type god)
 
 bool cast_summon_horrible_things(int pow, god_type god)
 {
-    if (one_chance_in(3)
-        && !lose_stat(STAT_INTELLIGENCE, 1, true, "summoning horrible things"))
+    if (one_chance_in(3))
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return (false);
+        // if someone deletes the db, no message is ok
+        mpr(getMiscString("SHT_int_loss").c_str());
+        lose_stat(STAT_INTELLIGENCE, 1, true, "summoning horrible things");
+        // Since sustAbil no longer helps here, this can't fail anymore -- 1KB
     }
 
     int how_many_small =
@@ -653,10 +655,8 @@ bool cast_summon_horrible_things(int pow, god_type god)
 
 bool receive_corpses(int pow, coord_def where)
 {
-#if DEBUG_DIAGNOSTICS
     // pow = invocations * 4, ranges from 0 to 108
-    mprf(MSGCH_DIAGNOSTICS, "receive_corpses() power: %d", pow);
-#endif
+    dprf("receive_corpses() power: %d", pow);
 
     // Kiku gives branch-appropriate corpses (like shadow creatures).
     int expected_extra_corpses = 3 + pow / 18; // 3 at 0 Inv, 9 at 27 Inv.
@@ -1198,9 +1198,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
         return (false);
     }
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Mass for abomination: %d", total_mass);
-#endif
+    dprf("Mass for abomination: %d", total_mass);
 
     // This is what the old statement pretty much boils down to,
     // the average will be approximately 10 * pow (or about 1000
@@ -1209,9 +1207,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     // material components are far more important to this spell. - bwr
     total_mass += roll_dice(20, pow);
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Mass including power bonus: %d", total_mass);
-#endif
+    dprf("Mass including power bonus: %d", total_mass);
 
     if (total_mass < 400 + roll_dice(2, 500)
         || how_many_corpses < (coinflip() ? 3 : 2))
@@ -1532,13 +1528,15 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 
     if (is_controlled)
     {
-        mpr("You may choose your destination (press '.' or delete to select).");
-        mpr("Expect minor deviation.");
         check_ring_TC = true;
 
-        // Only have the more prompt for non-wizard.
+        // Only have the messages and the more prompt for non-wizard.
         if (!wizard_tele)
+        {
+            mpr("You may choose your destination (press '.' or delete to select).");
+            mpr("Expect minor deviation.");
             more();
+        }
 
         while (true)
         {
@@ -1559,9 +1557,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
             }
 #endif
 
-#if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
-#endif
+            dprf("Target square (%d,%d)", pos.x, pos.y );
 
             if (pos == you.pos() || pos == coord_def(-1,-1))
             {
@@ -1600,10 +1596,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
                 pos.x += random2(3) - 1;
                 pos.y += random2(3) - 1;
             }
-#if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Scattered target square (%d, %d)", pos.x, pos.y);
-#endif
+            dprf("Scattered target square (%d, %d)", pos.x, pos.y);
         }
 
         if (!in_bounds(pos))
@@ -1620,10 +1613,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
             // Merfolk should be able to control-tele into deep water.
             if (_cell_vetoes_teleport(pos))
             {
-#if DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS,
-                    "Target square (%d, %d) vetoed, now random teleport.", pos.x, pos.y);
-#endif
+                dprf("Target square (%d, %d) vetoed, now random teleport.", pos.x, pos.y);
                 is_controlled = false;
                 large_change  = false;
             }
@@ -1908,9 +1898,7 @@ bool project_noise(void)
 
     redraw_screen();
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
-#endif
+    dprf("Target square (%d,%d)", pos.x, pos.y );
 
     if (!silenced( pos ))
     {

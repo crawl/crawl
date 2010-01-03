@@ -3,6 +3,9 @@
 
 #include "actor.h"
 
+const int KRAKEN_TENTACLE_RANGE = 3;
+#define TIDE_CALL_TURN "tide-call-turn"
+
 class mon_enchant
 {
 public:
@@ -117,6 +120,7 @@ public:
     bool has_base_name() const;
 
     const monsterentry *find_monsterentry() const;
+    monster_type get_mislead_type() const;
 
     void init_experience();
 
@@ -125,7 +129,9 @@ public:
     bool is_summoned(int* duration = NULL, int* summon_type = NULL) const;
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;
-    void apply_location_effects(const coord_def &oldpos);
+    void apply_location_effects(const coord_def &oldpos,
+                                killer_type killer = KILL_NONE,
+                                int killernum = -1);
 
     void moveto(const coord_def& c);
     bool move_to_pos(const coord_def &newpos);
@@ -220,7 +226,7 @@ public:
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
     size_type body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
-    int       body_weight() const;
+    int       body_weight(bool base = false) const;
     int       total_weight() const;
     int       damage_brand(int which_attack = -1);
     int       damage_type(int which_attack = -1);
@@ -314,6 +320,7 @@ public:
     int res_poison() const;
     int res_rotting() const;
     int res_asphyx() const;
+    int res_water_drowning() const;
     int res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;
@@ -387,6 +394,7 @@ public:
                   bool wizard_tele = false);
 
     void hibernate(int power = 0);
+    void put_to_sleep(actor *attacker, int power = 0);
     void check_awaken(int disturbance);
 
     int stat_hp() const    { return hit_points; }

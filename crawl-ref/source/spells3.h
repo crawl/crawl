@@ -10,7 +10,7 @@
 
 #include "itemprop-enum.h"
 
-struct dist;
+class dist;
 struct bolt;
 
 bool allow_control_teleport(bool quiet = false);

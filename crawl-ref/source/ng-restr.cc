@@ -380,14 +380,14 @@ char_choice_restriction class_allowed(species_type speci,
             case SP_HALFLING:
             case SP_KOBOLD:
             case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
             case SP_MINOTAUR:
             case SP_KENKU:
             case SP_RED_DRACONIAN:
             case SP_DEMONSPAWN:
             case SP_MUMMY:
             case SP_GHOUL:
+            case SP_OGRE:
+            case SP_TROLL:
             case SP_VAMPIRE:
                 return (CC_RESTRICTED);
             default:

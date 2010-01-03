@@ -124,7 +124,6 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
 {
     ASSERT(total_stock > 0);
 
-    char buf[200];
     const int numlines = get_number_of_lines();
     cgotoxy(1, numlines - 1, GOTO_CRT);
 
@@ -159,7 +158,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
         pkeys = "[" + pkeys + "] Select Item to "
                 + (viewing ? "Examine" : "Buy");
     }
-    snprintf(buf, sizeof buf,
+    formatted_string fs = formatted_string::parse_string(make_stringf(
             "[<w>x</w>/<w>Esc</w>"
 #ifdef USE_TILE
             "/<w>R-Click</w>"
@@ -167,9 +166,8 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
             "] exit            [<w>!</w>] %s   %s%s",
             (viewing ? "to select items " : "to examine items"),
             pkeys.c_str(),
-            shop_list.c_str());
+            shop_list.c_str()));
 
-    formatted_string fs = formatted_string::parse_string(buf);
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
     fs.display();
     cgotoxy(1, numlines, GOTO_CRT);
@@ -956,10 +954,6 @@ unsigned int item_value( item_def item, bool ident )
         case WPN_BLESSED_SCIMITAR:
             valued += 50;
 
-        case WPN_HAND_CROSSBOW:
-            valued += 51;
-            break;
-
         case WPN_HALBERD:
             valued += 52;
             break;
@@ -1067,6 +1061,7 @@ unsigned int item_value( item_def item, bool ident )
 
             case SPWPN_VORPAL:
             case SPWPN_PROTECTION:
+            case SPWPN_EVASION:
                 valued *= 20;
                 break;
             }
@@ -1203,6 +1198,12 @@ unsigned int item_value( item_def item, bool ident )
                 break;
 
             case SPMSL_POISONED:
+            case SPMSL_PARALYSIS:
+            case SPMSL_SLOW:
+            case SPMSL_SLEEP:
+            case SPMSL_CONFUSION:
+            case SPMSL_SICKNESS:
+            case SPMSL_RAGE:
                 valued *= 23;
                 break;
             }
@@ -1373,6 +1374,7 @@ unsigned int item_value( item_def item, bool ident )
 
             case SPARM_DARKNESS:
             case SPARM_RESISTANCE:
+            case SPARM_REFLECTION:
                 valued *= 60;
                 break;
 
@@ -2413,7 +2415,7 @@ bool ShoppingList::items_are_same(const item_def& item_a,
 
 void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 {
-    if (crawl_state.map_stat_gen)
+    if (crawl_state.map_stat_gen || crawl_state.test)
         // Shopping list is unitialized and uneeded.
         return;
 
@@ -2431,7 +2433,7 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 
 void ShoppingList::forget_pos(const level_pos &pos)
 {
-    if (crawl_state.map_stat_gen)
+    if (!crawl_state.need_save)
         // Shopping list is unitialized and uneeded.
         return;
 
@@ -2526,12 +2528,9 @@ void ShoppingListMenu::draw_title()
         const char *verb = menu_action == ACT_EXECUTE ? "travel" :
                            menu_action == ACT_EXAMINE ? "examine" :
                                                         "delete";
-        char buf[200];
-        snprintf(buf, 200,
-                 "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action]",
-                 verb);
-
-        draw_title_suffix(formatted_string::parse_string(buf), false);
+        draw_title_suffix(formatted_string::parse_string(make_stringf(
+            "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action]",
+            verb)), false);
     }
 }
 

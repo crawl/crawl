@@ -34,6 +34,7 @@ dgnevent.o \
 directn.o \
 dlua.o \
 dungeon.o \
+dgn-shoals.o \
 effects.o \
 exclude.o \
 feature.o \
@@ -79,6 +80,7 @@ l_mapmrk.o \
 l_moninf.o \
 l_mons.o \
 l_option.o \
+l_spells.o \
 l_subvault.o \
 l_travel.o \
 l_view.o \
@@ -101,6 +103,7 @@ message.o \
 message-stream.o \
 mgen_data.o \
 misc.o \
+mislead.o \
 mon-abil.o \
 mon-act.o \
 mon-behv.o \
@@ -113,6 +116,7 @@ mon-movetarget.o \
 mon-pathfind.o \
 mon-pick.o \
 mon-place.o \
+mon-project.o \
 mon-util.o \
 mon-speak.o \
 mon-stuff.o \

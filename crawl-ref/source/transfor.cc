@@ -311,7 +311,7 @@ static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
             continue;
 
         const item_def& item = you.inv[ you.equip[e] ];
-        if (item_cursed(item))
+        if (item.cursed())
         {
             if (e != EQ_WEAPON && _tran_may_meld_cursed(trans))
                 continue;

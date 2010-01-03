@@ -911,26 +911,10 @@ static void _sdump_skills(dump_params &par)
     text += "   Skills:";
     text += "\n";
 
-    for (unsigned char i = 0; i < 50; i++)
-    {
-        if (you.skills[i] > 0)
-        {
-            text += ( (you.skills[i] == 27)   ? " * " :
-                      (you.practise_skill[i]) ? " + "
-                                              : " - " );
-
-            text += "Level ";
-            itoa( you.skills[i], tmp_quant, 10 );
-            text += tmp_quant;
-            text += " ";
-            text += skill_name(i);
-            text += "\n";
-        }
-    }
-
+    dump_skills(text);
     text += "\n";
     text += "\n";
-}                               // end dump_skills()
+}
 
 //---------------------------------------------------------------
 //

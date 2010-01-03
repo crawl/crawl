@@ -234,39 +234,52 @@ wwwwwwwww
 ENDMAP
 
 ################################################################################
-# Shoal hut with rune inside
+# Shoal hut with rune inside.
 #
-# Shoal:$ is hand-hacked to force lots of minivaults.
+# This hut is also used for the decoy huts, with the rune replaced with a good
+# item.
+#
 NAME:      shoalhut_rune
-TAGS:      shoal_rune water_ok no_dump
+TAGS:      shoal_rune water_ok no_dump allow_dup
 SHUFFLE:   ABCD
 SUBST:     A:x, B:x, C:x=, D=+
+SUBST:     0 = 0.
+KMONS:     g = merfolk impaler / merfolk javelineer / merfolk aquamancer
 LROCKTILE:  wall_vines
+{{
+  local mapmode = unpack(dgn.map_parameters())
+  if mapmode ~= 'rune' then
+    subst("g = .")
+  end
+}}
 MAP
-.xxCxx.
-xx...xx
-x.....x
-B..O..D
-x.....x
-xx...xx
-.xxAxx
+ xxCxx
+xx.0.xx
+x.0g0.x
+B0gOg0D
+x.0g0.x
+xx.0.xx
+ xxAxx
 ENDMAP
 
 ################################################################################
-# Shoal hut with no rune inside
-#
-# Shoal:$ is hand-hacked to force lots of minivaults.
-NAME:    shoalhut_norune
-DEPTH:   Shoal:$
-TAGS:    allow_dup water_ok shoal no_dump
-SHUFFLE: ABCD
-SUBST:   A:x, B:x, C:x=, D=+
+# Shoal hangout of Ilsuiw. Using PLACE: makes this quite likely to turn up.
+# The hut itself may be empty if Ilsuiw had other engagements.
+
+NAME:    shoal_ilsuiw
+PLACE:   Shoal:$
+TAGS:    mini_float
+KMONS:   1 = Ilsuiw band, siren
+KITEM:   1 = |
+KMONS:   2 = merfolk impaler / merfolk javelineer
+KFEAT:   2 = w
+LROCKTILE:  wall_vines
 MAP
-.xxCxx.
-xx...xx
-x.....x
-B..|..D
-x.....x
-xx...xx
-.xxAxx
+ wxwxw
+wxw2wxw
+xwwWwwx
+wwW1Www
+xwwWwwx
+wxw2wxw
+ wxwxw
 ENDMAP

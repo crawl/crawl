@@ -228,6 +228,11 @@ static bool _sort_monster_list(int a, int b)
     const monsters* m1 = &menv[a];
     const monsters* m2 = &menv[b];
 
+    if (m1->alive() != m2->alive())
+        return m1->alive();
+    else if (!m1->alive())
+        return a < b;
+
     if (m1->type == m2->type)
     {
         if (!m1->alive() || !m2->alive())
@@ -258,13 +263,21 @@ void debug_list_monsters()
 
     std::sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
 
-    int total_exp = 0, total_adj_exp = 0;
+    long total_exp = 0, total_adj_exp = 0, total_nonuniq_exp = 0;
 
     std::string prev_name = "";
     int         count     = 0;
 
-    for (monster_iterator mi; mi; ++mi)
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
+        const int idx = mon_nums[i];
+        if (invalid_monster_index(idx))
+            continue;
+
+        const monsters *mi(&menv[idx]);
+        if (!mi->alive())
+            continue;
+
         std::string name = mi->name(DESC_PLAIN, true);
 
         if (prev_name != name && count > 0)
@@ -282,10 +295,12 @@ void debug_list_monsters()
         count++;
         prev_name = name;
 
-        int exp = exper_value(*mi);
+        int exp = exper_value(mi);
         total_exp += exp;
+        if (!mons_is_unique(mi->type))
+            total_nonuniq_exp += exp;
 
-        if ((mi->flags & (MF_WAS_NEUTRAL | MF_CREATED_FRIENDLY))
+        if ((mi->flags & (MF_WAS_NEUTRAL | MF_NO_REWARD))
             || mi->has_ench(ENCH_ABJ))
         {
             continue;
@@ -307,13 +322,13 @@ void debug_list_monsters()
 
     if (total_adj_exp == total_exp)
     {
-        mprf("%d monsters, %d total exp value",
-             nfound, total_exp);
+        mprf("%d monsters, %ld total exp value (%ld non-uniq)",
+             nfound, total_exp, total_nonuniq_exp);
     }
     else
     {
-        mprf("%d monsters, %d total exp value (%d adjusted)",
-             nfound, total_exp, total_adj_exp);
+        mprf("%d monsters, %ld total exp value (%ld non-uniq, %ld adjusted)",
+             nfound, total_exp, total_nonuniq_exp, total_adj_exp);
     }
 }
 

@@ -342,7 +342,7 @@ LROCKTILE:  wall_zot_magenta
 KITEM:      Z = Orb of Zot
 
 #traps
-SUBST:    C = c:1000 =
+SUBST:    C = X:900 c:100 =
 KFEAT:    1 = any trap / w:20 floor
 KMONS:    1 = patrolling Orb Guardian
 KFEAT:    8 = any trap / w:20 floor
@@ -387,9 +387,9 @@ xxxxxxxxxXX.......?....?..........XX..1...1..XX..........?....2.......XXxxxxxxxx
 xxxxxxxxxX.....8..........8.8.....XXX...1...XXX.....8.8..........8.....Xxxxxxxxx
 xxxxxxxxxX...8....................cXXXXXXXXXXXc....................8...Xxxxxxxxx
 xxxxxxxxxXX.....8.8.8..8.........ccccccccccccccc........8...8.8.8.....XXxxxxxxxx
-xxxxxxxxxxXX...............8...ccccccccccccccccccc...8............8..XXxxxxxxxxx
-xxxxxxxxxxxXX........8..8...ccccccccccccccccccccccccc...8..8........XXxxxxxxxxxx
-xxxxxxxxxxxxXXa111acCCCCCCCcccccccccccccccccccccccccccCCCCCCCcb111bXXxxxxxxxxxxx
+xxxxxxxxxxXX...............8...XcccccccccccccccccX...8............8..XXxxxxxxxxx
+xxxxxxxxxxxXX........8..8...XXXXcccccccccccccccccXXXX...8..8........XXxxxxxxxxxx
+xxxxxxxxxxxxXXa111accCCCCCCXXXXXcccccccccccccccccXXXXXCCCCCCccb111bXXxxxxxxxxxxx
 xxxxxxxxxxxcc...............AA1.ccccccccccccccccc.1BB...............ccxxxxxxxxxx
 xxxxxxxxxxcc...8.8..8.8.....cc1...ccccccccccccc...1cc.......8..8.8.8.ccxxxxxxxxx
 xxxxxxxxxcc.8...8......8.8...ccc...ccccccccccc...ccc...8.8.8..8.......ccxxxxxxxx
@@ -416,7 +416,7 @@ ORIENT:     float
 LFLOORCOL:  lightgrey
 LROCKCOL:   lightgrey
 LFLOORTILE: floor_tomb
-LROCKTILE:  wall_zot_gray
+LROCKTILE:  wall_zot_white
 MAP
 .
 ENDMAP

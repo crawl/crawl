@@ -609,7 +609,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    if (god_likes_fresh_corpses(which_god))
+    if (god_likes_fresh_corpses(which_god) && which_god != GOD_KIKUBAAQUDGHA)
     {
         snprintf(info, INFO_SIZE, "you sacrifice fresh corpses%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
@@ -1175,10 +1175,9 @@ static bool _need_missile_gift()
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
     return (you.piety > 80
             && random2( you.piety ) > 70
-            && !feat_destroys_items( grd(you.pos()) )
             && one_chance_in(8)
             && you.skills[ best_missile_skill ] >= 8
-            && (launcher || best_missile_skill == SK_DARTS));
+            && (launcher || best_missile_skill == SK_THROWING));
 }
 
 static void _get_pure_deck_weights(int weights[])
@@ -1263,9 +1262,6 @@ static void _show_pure_deck_chances()
 
 static void _give_nemelex_gift()
 {
-    if (feat_destroys_items(grd(you.pos())))
-        return;
-
     // Nemelex will give at least one gift early.
     if (!you.num_gifts[GOD_NEMELEX_XOBEH]
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
@@ -1289,14 +1285,16 @@ static void _give_nemelex_gift()
 #if DEBUG_GIFTS || DEBUG_CARDS
         _show_pure_deck_chances();
 #endif
-        _update_sacrifice_weights(choice);
-
         int thing_created = items( 1, OBJ_MISCELLANY, gift_type,
                                    true, 1, MAKE_ITEM_RANDOM_RACE,
                                    0, 0, GOD_NEMELEX_XOBEH );
 
+        move_item_to_grid(&thing_created, you.pos(), true);
+
         if (thing_created != NON_ITEM)
         {
+            _update_sacrifice_weights(choice);
+
             // Piety|Common  | Rare  |Legendary
             // --------------------------------
             //     0:  95.00%,  5.00%,  0.00%
@@ -1328,8 +1326,6 @@ static void _give_nemelex_gift()
             deck.special = rarity;
             deck.colour  = deck_rarity_to_color(rarity);
             deck.inscription = "god gift";
-
-            move_item_to_grid(&thing_created, you.pos());
 
             simple_god_message(" grants you a gift!");
             more();
@@ -2046,7 +2042,6 @@ static void _do_god_gift(bool prayed_for)
         case GOD_TROG:
             if (you.piety > 130
                 && random2(you.piety) > 120
-                && !feat_destroys_items(grd(you.pos()))
                 && one_chance_in(4))
             {
                 if (you.religion == GOD_TROG
@@ -2058,7 +2053,8 @@ static void _do_god_gift(bool prayed_for)
                 {
                     success = acquirement(OBJ_ARMOUR, you.religion);
                     // Okawaru charges extra for armour acquirements.
-                    _inc_gift_timeout(30 + random2avg(15, 2));
+                    if (success)
+                        _inc_gift_timeout(30 + random2avg(15, 2));
                 }
 
                 if (success)
@@ -2194,8 +2190,7 @@ static void _do_god_gift(bool prayed_for)
                 }
             }
 
-            if (gift != NUM_BOOKS
-                && !feat_destroys_items(grd(you.pos())))
+            if (gift != NUM_BOOKS)
             {
                 if (gift == OBJ_RANDOM)
                 {
@@ -2216,7 +2211,7 @@ static void _do_god_gift(bool prayed_for)
                     // reason.
                     mark_had_book(gift);
 
-                    move_item_to_grid( &thing_created, you.pos() );
+                    move_item_to_grid( &thing_created, you.pos(), true );
 
                     if (thing_created != NON_ITEM)
                     {
@@ -2271,7 +2266,7 @@ static bool _confirm_pray_sacrifice(god_type god)
         return (false);
     }
 
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (_god_likes_item(god, *si)
             && (_is_risky_sacrifice(*si)
@@ -2467,9 +2462,7 @@ void pray()
     if (!was_praying)
         _do_god_gift(true);
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "piety: %d (-%d)", you.piety, you.piety_hysteresis );
-#endif
+    dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis );
 }
 
 void end_prayer(void)
@@ -2685,7 +2678,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 }
 
                 if (thing_done == DID_ATTACK_HOLY && victim
-                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;
@@ -3031,7 +3024,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
                 if (victim
-                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;
@@ -3099,7 +3092,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
                 if (victim
-                    && !testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    && !testbits(victim->flags, MF_NO_REWARD)
                     && !testbits(victim->flags, MF_WAS_NEUTRAL))
                 {
                     break;
@@ -3284,10 +3277,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 // melee).  This means high level spells probably work
                 // pretty much like they used to (use spell, get piety).
                 piety_change = div_rand_round(level + 10, 80);
-#ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS, "Spell practise, level: %d, dpiety: %d",
-                        level, piety_change);
-#endif
+                dprf("Spell practise, level: %d, dpiety: %d", level, piety_change);
                 retval = true;
             }
             break;
@@ -3821,7 +3811,7 @@ bool ely_destroy_weapons()
     god_acting gdact;
 
     bool success = false;
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         item_def& item(*si);
         if (item.base_type != OBJ_WEAPONS
@@ -3839,9 +3829,7 @@ bool ely_destroy_weapons()
 
         // item_value() multiplies by quantity.
         const int value = item_value(item, true) / item.quantity;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Destroyed weapon value: %d", value);
-#endif
+        dprf("Destroyed weapon value: %d", value);
 
         piety_gain_t pgain = PIETY_NONE;
         const bool unholy_weapon = is_unholy_item(item);
@@ -4237,7 +4225,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     wpn.colour = colour;
 
-    const bool is_cursed = item_cursed(wpn);
+    const bool is_cursed = wpn.cursed();
 
     enchant_weapon(ENCHANT_TO_HIT, true, wpn);
 
@@ -4491,6 +4479,8 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
 
 bool god_hates_attacking_friend(god_type god, int species)
 {
+    if (mons_is_projectile(species))
+        return (false);
     switch (god)
     {
         case GOD_ZIN:
@@ -4704,7 +4694,8 @@ void offer_items()
 
     int i = igrd(you.pos());
 
-    if (!god_likes_items(you.religion) && i != NON_ITEM)
+    if (!god_likes_items(you.religion) && i != NON_ITEM
+        && you.visible_igrd(you.pos()) != NON_ITEM)
     {
         simple_god_message(" doesn't care about such mundane gifts.",
                            you.religion);
@@ -4816,7 +4807,7 @@ void offer_items()
             const std::string msg =
                   "Really sacrifice " + item.name(DESC_NOCAP_A) + "?";
 
-            if (!yesno(msg.c_str()))
+            if (!yesno(msg.c_str(), false, 'n'))
             {
                 i = next;
                 continue;
@@ -4864,9 +4855,9 @@ void offer_items()
 
     if (num_sacced > 0 && you.religion == GOD_KIKUBAAQUDGHA)
     {
-		simple_god_message(" torments the living!");
+        simple_god_message(" torments the living!");
         torment(TORMENT_KIKUBAAQUDGHA, you.pos());
-		you.piety -= 8 + random2(4);	// costs 8 - 12 piety
+        lose_piety(random_range(8, 12));
     }
 
     // Explanatory messages if nothing the god likes is sacrificed.
@@ -5158,7 +5149,7 @@ bool god_likes_fresh_corpses(god_type god)
 
 bool god_hates_butchery(god_type god)
 {
-    return (god == GOD_ELYVILON);
+    return (false);
 }
 
 harm_protection_type god_protects_from_harm(god_type god, bool actual)
@@ -5520,6 +5511,9 @@ int get_tension(god_type god, bool count_travelling)
 
         if (you.see_cell(mons->pos()))
         {
+            if (!mons_can_hurt_player(*mons))
+                continue;
+
             // Monster is nearby.
             if (!nearby_monster && !mons->wont_attack())
                 nearby_monster = true;

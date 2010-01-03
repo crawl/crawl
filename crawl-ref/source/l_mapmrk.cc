@@ -22,10 +22,18 @@ static int mapmarker_move(lua_State *ls)
     return (0);
 }
 
+static int mapmarker_remove(lua_State *ls)
+{
+    MAPMARKER(ls, 1, mark);
+    env.markers.remove(mark);
+    return (0);
+}
+
 const struct luaL_reg mapmarker_dlib[] =
 {
 { "pos", mapmarker_pos },
 { "move", mapmarker_move },
+{ "remove", mapmarker_remove },
 { NULL, NULL }
 };
 

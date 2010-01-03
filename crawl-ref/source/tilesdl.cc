@@ -1378,7 +1378,10 @@ int tile_known_weapon_brand(const item_def item)
 
     if (item.base_type == OBJ_WEAPONS)
     {
-        if (get_weapon_brand(item) != SPWPN_NORMAL)
+        const int brand = get_weapon_brand(item);
+        if (brand == SPWPN_REAPING)
+            return TILE_BRAND_REAPING;
+        if (brand != SPWPN_NORMAL)
             return (TILE_BRAND_FLAMING + get_weapon_brand(item) - 1);
     }
     else if (item.base_type == OBJ_MISSILES)
@@ -1397,6 +1400,8 @@ int tile_known_weapon_brand(const item_def item)
             return TILE_BRAND_RETURNING;
         case SPMSL_CHAOS:
             return TILE_BRAND_CHAOS;
+        case SPMSL_REAPING:
+            return TILE_BRAND_REAPING;
         default:
             break;
         }
@@ -1428,7 +1433,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
 
     desc.special = tile_known_weapon_brand(item);
     desc.flag = 0;
-    if (item_cursed(item) && item_ident(item, ISFLAG_KNOW_CURSE))
+    if (item.cursed() && item_ident(item, ISFLAG_KNOW_CURSE))
         desc.flag |= TILEI_FLAG_CURSE;
     if (item_type_tried(item))
         desc.flag |= TILEI_FLAG_TRIED;
@@ -1545,7 +1550,7 @@ void TilesFramework::update_inventory()
     memset(inv_shown, 0, sizeof(inv_shown));
 
     int num_ground = 0;
-    for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         num_ground++;
 
     // If the inventory is full, show at least one row of the ground.
@@ -1671,7 +1676,7 @@ void TilesFramework::update_inventory()
             type = (object_class_type)(find - obj_syms);
         }
 
-        for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+        for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         {
             if ((int)inv.size() >= mx * my)
                 break;

@@ -500,7 +500,7 @@ MONS:    dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
 ITEM:    gold dragon hide / storm dragon hide / dragon hide / troll hide / any armour good_item
 ITEM:    arrow good_item / dart good_item / bolt good_item / any missile good_item
-ITEM:    bow good_item / crossbow good_item / hand crossbow good_item / any weapon good_item
+ITEM:    bow good_item / crossbow good_item / any weapon good_item
 SHUFFLE: 123
 SHUFFLE: defg
 : trove_setup_features(_G)

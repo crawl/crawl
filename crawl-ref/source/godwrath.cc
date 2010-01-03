@@ -336,7 +336,7 @@ static bool _cheibriados_retribution()
     case 2:
     case 3:
         mpr("You lose track of time.");
-        you.hibernate();
+        you.put_to_sleep(NULL, 50);
         break;
 
     case 4:
@@ -1249,7 +1249,8 @@ static void _tso_blasts_cleansing_flame(const char *message)
         simple_god_message(" blasts you with cleansing flame!",
                            GOD_SHINING_ONE);
 
-        cleansing_flame(20 + (you.experience_level * 7) / 3,
+        // damage is 2d(pow), *3/2 for undead and demonspawn
+        cleansing_flame(5 + (you.experience_level * 7) / 12,
                         CLEANSING_FLAME_TSO, you.pos());
     }
 }

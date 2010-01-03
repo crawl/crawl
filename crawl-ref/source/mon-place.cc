@@ -24,6 +24,7 @@
 #include "lev-pand.h"
 #include "makeitem.h"
 #include "message.h"
+#include "mislead.h"
 #include "mon-behv.h"
 #include "mon-gear.h"
 #include "mon-iter.h"
@@ -40,6 +41,8 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+
+band_type active_monster_band = BAND_NO_BAND;
 
 static std::vector<int> vault_mon_types;
 static std::vector<int> vault_mon_bases;
@@ -200,9 +203,6 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
 
     case HT_LAVA:
         return (grid == DNGN_LAVA);
-
-    case HT_AMPHIBIOUS_WATER:
-        return (mons->type == MONS_GIANT_LEECH && feat_is_watery(grid));
 
     default:
         return (false);
@@ -597,7 +597,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             mon_type = MONS_DANCING_WEAPON;
         else
         {
-            if (you.level_type == LEVEL_PORTAL_VAULT 
+            if (you.level_type == LEVEL_PORTAL_VAULT
                 && vault_mon_types.size() > 0)
             {
                 int i = choose_random_weighted(vault_mon_weights.begin(),
@@ -635,7 +635,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             }
             else if (you.level_type == LEVEL_PORTAL_VAULT)
             {
-                // XXX: We don't have a random monster list here, so pick one 
+                // XXX: We don't have a random monster list here, so pick one
                 // from where we were.
                 place.level_type = LEVEL_DUNGEON;
                 *lev_mons = place.absdepth();
@@ -767,13 +767,14 @@ int place_monster(mgen_data mg, bool force_pos)
                                    mg.pos, mg.map_mask,
                                    &stair_type, &mg.power);
 
-    if (mg.cls == MONS_NO_MONSTER)
+    if (mg.cls == MONS_NO_MONSTER || mg.cls == MONS_PROGRAM_BUG)
         return (-1);
 
     // (3) Decide on banding (good lord!)
     int band_size = 1;
     bool leader = false;
     monster_type band_monsters[BIG_BAND];        // band monster types
+    band_type band = BAND_NO_BAND;
     band_monsters[0] = mg.cls;
 
     // The (very) ugly thing band colour.
@@ -784,10 +785,8 @@ int place_monster(mgen_data mg, bool force_pos)
 #ifdef DEBUG_MON_CREATION
         mpr("Choose band members...", MSGCH_DIAGNOSTICS);
 #endif
-        const band_type band = _choose_band(mg.cls, mg.power, band_size,
-                                            leader);
+        band = _choose_band(mg.cls, mg.power, band_size, leader);
         band_size++;
-
         for (int i = 1; i < band_size; ++i)
         {
             band_monsters[i] = _band_member(band, mg.power);
@@ -1005,6 +1004,7 @@ int place_monster(mgen_data mg, bool force_pos)
         band_template.flags |= MG_BAND_MINION;
     }
 
+    unwind_var<band_type> current_band(active_monster_band, band);
     // (5) For each band monster, loop call to place_monster_aux().
     for (int i = 1; i < band_size; i++)
     {
@@ -1035,7 +1035,7 @@ int place_monster(mgen_data mg, bool force_pos)
                 // Don't give XP for the slaves to discourage hunting.  Pikel
                 // has an artificially large XP modifier to compensate for
                 // this.
-                menv[band_id].flags |= MF_CREATED_FRIENDLY;
+                menv[band_id].flags |= MF_NO_REWARD;
                 menv[band_id].props["pikel_band"] = true;
             }
         }
@@ -1241,6 +1241,9 @@ static int _place_monster_aux(const mgen_data &mg,
         // simultaneous die-offs of mushroom rings.
         mon->add_ench(ENCH_SLOWLY_DYING);
     }
+
+    if (!crawl_state.arena && you.misled())
+        update_mislead_monster(mon);
 
     if (monster_can_submerge(mon, grd(fpos)) && !one_chance_in(5))
         mon->add_ench(ENCH_SUBMERGED);
@@ -1675,7 +1678,9 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     define_monster(mid);
 
     // Turn off all spellcasting flags.
-    menv[mid].flags &= ~MF_SPELLCASTER & ~MF_ACTUAL_SPELLS & ~MF_PRIEST;
+    // Hack - kraken get to keep their spell-like ability.
+    if (menv[mid].base_monster != MONS_KRAKEN)
+        menv[mid].flags &= ~MF_SPELLCASTER & ~MF_ACTUAL_SPELLS & ~MF_PRIEST;
 
     menv[mid].hit_points     = hit_points(menv[mid].hit_dice, 6, 5);
     menv[mid].max_hit_points = menv[mid].hit_points;
@@ -2106,6 +2111,23 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 4;
         break;
 
+    case MONS_MERFOLK_AQUAMANCER:
+        natural_leader = true;
+        band = BAND_MERFOLK_AQUAMANCER;
+        band_size = random_range(3, 6);
+        break;
+
+    case MONS_MERFOLK_JAVELINEER:
+        natural_leader = true;
+        band = BAND_MERFOLK_JAVELINEER;
+        band_size = random_range(3, 5);
+        break;
+
+    case MONS_MERFOLK_IMPALER:
+        natural_leader = true;
+        band = BAND_MERFOLK_IMPALER;
+        band_size = random_range(3, 5);
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -2397,7 +2419,12 @@ static monster_type _band_member(band_type band, int power)
         break;
     }
     case BAND_ILSUIW:
-        mon_type = coinflip()? MONS_MERFOLK : MONS_MERMAID;
+        mon_type = static_cast<monster_type>(
+            random_choose_weighted(30, MONS_MERMAID,
+                                   15, MONS_MERFOLK,
+                                   10, MONS_MERFOLK_JAVELINEER,
+                                   10, MONS_MERFOLK_IMPALER,
+                                   0));
         break;
 
     case BAND_AZRAEL:
@@ -2418,6 +2445,18 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_PIKEL:
         mon_type = MONS_SLAVE;
+        break;
+
+    case BAND_MERFOLK_AQUAMANCER:
+        mon_type = static_cast<monster_type>(
+            random_choose_weighted(8, MONS_MERFOLK,
+                                   10, MONS_ICE_BEAST,
+                                   0));
+        break;
+
+    case BAND_MERFOLK_IMPALER:
+    case BAND_MERFOLK_JAVELINEER:
+        mon_type = MONS_MERFOLK;
         break;
 
     default:
@@ -2574,7 +2613,7 @@ int mons_place(mgen_data mg)
     if (mg.behaviour > NUM_BEHAVIOURS)
     {
         if (mg.behaviour == BEH_FRIENDLY)
-            creation->flags |= MF_CREATED_FRIENDLY;
+            creation->flags |= MF_NO_REWARD;
 
         if (mg.behaviour == BEH_NEUTRAL || mg.behaviour == BEH_GOOD_NEUTRAL
             || mg.behaviour == BEH_STRICT_NEUTRAL)
@@ -2927,8 +2966,9 @@ monster_type summon_any_demon(demon_class_type dct)
         break;
 
     case DEMON_COMMON:
-        temp_rand = random2(3948);
-        mon = ((temp_rand > 3367) ? MONS_NEQOXEC :         // 14.69%
+        temp_rand = random2(4066);
+        mon = ((temp_rand > 3947) ? MONS_SIXFIRHY :        //  3.00%
+               (temp_rand > 3367) ? MONS_NEQOXEC :         // 14.69%
                (temp_rand > 2787) ? MONS_ORANGE_DEMON :    // 14.69%
                (temp_rand > 2207) ? MONS_HELLWING :        // 14.69%
                (temp_rand > 1627) ? MONS_SMOKE_DEMON :     // 14.69%

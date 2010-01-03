@@ -375,8 +375,8 @@ static void _direction_again(dist& moves, targetting_type restricts,
         targ_types++;
     if (you.prev_grd_targ != coord_def(0, 0))
         targ_types++;
-#endif
     ASSERT(targ_types == 1);
+#endif
 
     // Discard keys until we get to a set-target command
     command_type key_command = CMD_NO_CMD;
@@ -523,7 +523,7 @@ void full_describe_view()
         if (unknown_mimic)      // It'll be on top.
             list_items.push_back(get_mimic_item(mon));
 
-        const int oid = igrd(*ri);
+        const int oid = you.visible_igrd(*ri);
         if (oid == NON_ITEM)
             continue;
 
@@ -1498,7 +1498,7 @@ void direction(dist& moves, const targetting_type restricts,
                 {
                 case ATT_FRIENDLY:
                     m->attitude = ATT_GOOD_NEUTRAL;
-                    m->flags &= ~MF_CREATED_FRIENDLY;
+                    m->flags &= ~MF_NO_REWARD;
                     m->flags |= MF_WAS_NEUTRAL;
                     break;
                 case ATT_GOOD_NEUTRAL:
@@ -1513,7 +1513,7 @@ void direction(dist& moves, const targetting_type restricts,
                     break;
                 case ATT_HOSTILE:
                     m->attitude = ATT_FRIENDLY;
-                    m->flags |= MF_CREATED_FRIENDLY;
+                    m->flags |= MF_NO_REWARD;
                     break;
                 }
 
@@ -1594,6 +1594,16 @@ void direction(dist& moves, const targetting_type restricts,
                 break;
             if (monster_at(moves.target))
                 debug_stethoscope(mgrd(moves.target));
+            break;
+
+        case CMD_TARGET_WIZARD_HURT_MONSTER:
+            if (!you.wizard || !in_bounds(moves.target))
+                break;
+            if (monster_at(moves.target))
+            {
+                monster_at(moves.target)->hit_points = 1;
+                mpr("Brought the mon down to near death.");
+            }
             break;
 #endif
         case CMD_TARGET_DESCRIBE:
@@ -1754,10 +1764,10 @@ std::string get_terse_square_desc(const coord_def &gc)
         else
             desc = mons.full_name(DESC_PLAIN, true);
     }
-    else if (igrd(gc) != NON_ITEM)
+    else if (you.visible_igrd(gc) != NON_ITEM)
     {
-        if (mitm[igrd(gc)].is_valid())
-            desc = mitm[igrd(gc)].name(DESC_PLAIN);
+        if (mitm[you.visible_igrd(gc)].is_valid())
+            desc = mitm[you.visible_igrd(gc)].name(DESC_PLAIN);
     }
     else
         desc = feature_description(gc, false, DESC_PLAIN, false);
@@ -1783,7 +1793,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
         return;
 
     const monsters* mons = monster_at(c);
-    const int oid = igrd(c);
+    const int oid = you.visible_igrd(c);
 
     if (mons && mons->visible_to(&you))
     {
@@ -1826,7 +1836,7 @@ void full_describe_square(const coord_def &c)
         return;
 
     const monsters* mons = monster_at(c);
-    const int oid = igrd(c);
+    const int oid = you.visible_igrd(c);
 
     if (mons && mons->visible_to(&you))
     {
@@ -3130,8 +3140,11 @@ static std::string _get_monster_desc(const monsters *mon)
     else if (mon->neutral()) // don't differentiate between permanent or not
         text += pronoun + " is indifferent to you.\n";
 
-    if (mon->is_summoned() && mon->type != MONS_RAKSHASA_FAKE)
+    if (mon->is_summoned() && (mon->type != MONS_RAKSHASA_FAKE
+                               && mon->type != MONS_MARA_FAKE))
+    {
         text += pronoun + " has been summoned.\n";
+    }
 
     if (mon->haloed())
         text += pronoun + " is illuminated by a divine halo.\n";
@@ -3232,7 +3245,8 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     std::string weap = "";
 
     // We don't report rakshasa equipment in order not to give away the
-    // true rakshasa when it summons.
+    // true rakshasa when it summons. But Mara is fine, because his weapons
+    // and armour are cloned with him.
 
     if (mon->type != MONS_DANCING_WEAPON
         && (mon->type != MONS_RAKSHASA || mon->friendly()))
@@ -3248,7 +3262,8 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     }
 
     // Print the rest of the equipment only for full descriptions.
-    if (full_desc && (mon->type != MONS_RAKSHASA || mon->friendly()))
+    if (full_desc && ((mon->type != MONS_RAKSHASA && mon->type != MONS_MARA
+                       && mon->type != MONS_MARA_FAKE) || mon->friendly()))
     {
         const int mon_arm = mon->inv[MSLOT_ARMOUR];
         const int mon_shd = mon->inv[MSLOT_SHIELD];
@@ -3403,15 +3418,14 @@ static void _describe_cell(const coord_def& where, bool in_range)
     if (env.cgrid(where) != EMPTY_CLOUD)
     {
         const int cloud_inspected = env.cgrid(where);
-        const cloud_type ctype = (cloud_type) env.cloud[cloud_inspected].type;
 
         mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
-             cloud_name(ctype).c_str());
+             cloud_name(cloud_inspected).c_str());
 
         cloud_described = true;
     }
 
-    int targ_item = igrd(where);
+    int targ_item = you.visible_igrd(where);
 
     if (targ_item != NON_ITEM)
     {
@@ -3453,14 +3467,19 @@ static void _describe_cell(const coord_def& where, bool in_range)
         marker = " (" + desc + ")";
     }
     const std::string traveldest = _stair_destination_description(where);
+    std::string height_desc;
+    if (env.heightmap.get())
+        height_desc = make_stringf(" (height: %d)", (*env.heightmap)(where));
     const dungeon_feature_type feat = grd(where);
-    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s", where.x, where.y,
+    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s",
+         where.x, where.y,
          stringize_glyph(get_screen_glyph(where)).c_str(),
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),
          marker.c_str(),
-         traveldest.c_str());
+         traveldest.c_str(),
+         height_desc.c_str());
 #else
     if (Tutorial.tutorial_left && tutorial_pos_interesting(where.x, where.y))
     {

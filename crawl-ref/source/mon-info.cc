@@ -42,6 +42,8 @@ monster_info::monster_info(const monsters *m)
     int mtype = m->type;
     if (mtype == MONS_RAKSHASA_FAKE)
         mtype = MONS_RAKSHASA;
+    else if (mtype == MONS_MARA_FAKE)
+        mtype = MONS_MARA;
 
     // Currently, difficulty is defined as "average hp".
     m_difficulty = mons_difficulty(mtype);
@@ -79,12 +81,21 @@ bool monster_info::less_than(const monster_info& m1,
 
     int m1type = m1.m_mon->type;
     int m2type = m2.m_mon->type;
+    if (!crawl_state.arena && you.misled())
+    {
+        m1type = m1.m_mon->get_mislead_type();
+        m2type = m2.m_mon->get_mislead_type();
+    }
 
     // Don't differentiate real rakshasas from fake ones.
     if (m1type == MONS_RAKSHASA_FAKE)
         m1type = MONS_RAKSHASA;
+    else if (m1type == MONS_MARA_FAKE)
+        m1type = MONS_MARA;
     if (m2type == MONS_RAKSHASA_FAKE)
         m2type = MONS_RAKSHASA;
+    else if (m2type == MONS_MARA_FAKE)
+        m2type = MONS_MARA;
 
     // Force plain but different coloured draconians to be treated like the
     // same sub-type.
@@ -207,11 +218,15 @@ void monster_info::to_string(int count, std::string& desc,
                                   int& desc_color) const
 {
     std::ostringstream out;
+    monster_type type = m_mon->type;
+    if (!crawl_state.arena && you.misled())
+        type = m_mon->get_mislead_type();
+
 
     if (count == 1)
     {
-        if (mons_is_mimic(m_mon->type))
-            out << mons_type_name(m_mon->type, DESC_PLAIN);
+        if (mons_is_mimic(type))
+            out << mons_type_name(type, DESC_PLAIN);
         else
             out << m_mon->full_name(DESC_PLAIN);
     }
@@ -220,7 +235,9 @@ void monster_info::to_string(int count, std::string& desc,
         // Don't pluralise uniques, ever.  Multiple copies of the same unique
         // are unlikely in the dungeon currently, but quite common in the
         // arena.  This prevens "4 Gra", etc. {due}
-        if (mons_is_unique(m_mon->type))
+        // Unless it's Mara, who summons illusions of himself.
+        if (mons_is_unique(type) && type != MONS_MARA
+            && type != MONS_MARA_FAKE)
         {
             out << count << " "
                 << m_mon->name(DESC_PLAIN);
@@ -228,18 +245,18 @@ void monster_info::to_string(int count, std::string& desc,
         // Don't differentiate between dancing weapons, mimics, (very)
         // ugly things or draconians of different types.
         else if (m_fullname
-            && m_mon->type != MONS_DANCING_WEAPON
-            && mons_genus(m_mon->type) != MONS_DRACONIAN
-            && m_mon->type != MONS_UGLY_THING
-            && m_mon->type != MONS_VERY_UGLY_THING
-            && !mons_is_mimic(m_mon->type)
+            && type != MONS_DANCING_WEAPON
+            && mons_genus(type) != MONS_DRACONIAN
+            && type != MONS_UGLY_THING
+            && type != MONS_VERY_UGLY_THING
+            && !mons_is_mimic(type)
             && m_mon->mname.empty())
         {
             out << count << " "
                 << pluralise(m_mon->name(DESC_PLAIN));
         }
-        else if (m_mon->type >= MONS_DRACONIAN
-                 && m_mon->type <= MONS_PALE_DRACONIAN)
+        else if (type >= MONS_DRACONIAN
+                 && type <= MONS_PALE_DRACONIAN)
         {
             out << count << " "
                 << pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
@@ -247,7 +264,7 @@ void monster_info::to_string(int count, std::string& desc,
         else
         {
             out << count << " "
-                << pluralise(mons_type_name(m_mon->type, DESC_PLAIN));
+                << pluralise(mons_type_name(type, DESC_PLAIN));
         }
     }
 

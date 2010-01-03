@@ -308,6 +308,7 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_DRAGON_SLAYING: return ((terse) ? " (slay drac)":" of dragon slaying");
     case SPWPN_VENOM: return ((terse) ? " (venom)" : " of venom");
     case SPWPN_PROTECTION: return ((terse) ? " (protect)" : " of protection");
+    case SPWPN_EVASION: return ((terse) ? " (evade)" : " of evasion");
     case SPWPN_DRAINING: return ((terse) ? " (drain)" : " of draining");
     case SPWPN_SPEED: return ((terse) ? " (speed)" : " of speed");
     case SPWPN_PAIN: return ((terse) ? " (pain)" : " of pain");
@@ -350,12 +351,13 @@ const char* weapon_brand_name(const item_def& item, bool terse)
 }
 
 
-static const char* armour_ego_name( special_armour_type sparm, bool terse )
+const char* armour_ego_name(const item_def& item, bool terse)
 {
     if (!terse)
     {
-        switch ( sparm )
+        switch (get_armour_ego_type(item))
         {
+        case SPARM_NORMAL:            return "";
         case SPARM_RUNNING:           return "running";
         case SPARM_FIRE_RESISTANCE:   return "fire resistance";
         case SPARM_COLD_RESISTANCE:   return "cold resistance";
@@ -382,8 +384,9 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
     }
     else
     {
-        switch (sparm)
+        switch (get_armour_ego_type(item))
         {
+        case SPARM_NORMAL:            return "";
         case SPARM_RUNNING:           return " {run}";
         case SPARM_FIRE_RESISTANCE:   return " {rF+}";
         case SPARM_COLD_RESISTANCE:   return " {rC+}";
@@ -873,9 +876,7 @@ static const char* book_type_name(int booktype)
     case BOOK_CANTRIPS:               return "Cantrips";
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
     case BOOK_STALKING:               return "Stalking";
-    case BOOK_ELEMENTAL_MISSILES:     return "Elemental Missiles";
-    case BOOK_WARPED_MISSILES:        return "Warped Missiles";
-    case BOOK_DEVASTATING_MISSILES:   return "Devastating Missiles";
+    case BOOK_BRANDS:                 return "Brands";
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";
@@ -1035,7 +1036,7 @@ std::string item_def::name_aux(description_level_type desc,
             // this behaviour, *please* make it so that there is an option
             // that maintains this behaviour. -- bwr
             // Nor for artefacts. Again, the state should be obvious. --jpeg
-            if (item_cursed(*this))
+            if (cursed())
                 buff << "cursed ";
             else if (Options.show_uncursed && !know_pluses
                      && (!know_type || !is_artefact(*this)))
@@ -1106,7 +1107,7 @@ std::string item_def::name_aux(description_level_type desc,
         if (know_brand)
             buff << weapon_brand_name(*this, terse);
 
-        if (know_curse && item_cursed(*this) && terse)
+        if (know_curse && cursed() && terse)
             buff << " (curse)";
         break;
 
@@ -1123,7 +1124,7 @@ std::string item_def::name_aux(description_level_type desc,
             case SPMSL_CURARE:
                 buff << ((terse) ? "curare " : "curare-tipped ");
                 break;
-            case SPMSL_EXPLODING:
+           case SPMSL_EXPLODING:
                 buff << ((terse) ? "explode " : "exploding ");
                 break;
             case SPMSL_STEEL:
@@ -1137,6 +1138,17 @@ std::string item_def::name_aux(description_level_type desc,
                 break;
             }
 
+        }
+
+        if (know_cosmetic && !know_brand)
+        {
+            switch (get_equip_desc(*this))
+            {
+            case ISFLAG_GLOWING:
+                if (!testbits(ignore_flags, ISFLAG_GLOWING))
+                    buff << "glowing ";
+                break;
+            }
         }
 
         if (know_pluses)
@@ -1167,6 +1179,24 @@ std::string item_def::name_aux(description_level_type desc,
             case SPMSL_STEEL:
             case SPMSL_SILVER:
                 break;
+            case SPMSL_PARALYSIS:
+                buff << ((terse) ? " (paralysis)" : " of paralysis");
+                break;
+            case SPMSL_SLOW:
+                buff << ((terse) ? " (slow)" : " of slowing");
+                break;
+            case SPMSL_SLEEP:
+                buff << ((terse) ? " (sleep)" : " of sleeping");
+                break;
+            case SPMSL_CONFUSION:
+                buff << ((terse) ? " (conf)" : " of confusion");
+                break;
+            case SPMSL_SICKNESS:
+                buff << ((terse) ? " (sick)" : " of sickening");
+                break;
+            case SPMSL_RAGE:
+                buff << ((terse) ? " (wrath)" : " of wrath");
+                break;
             case SPMSL_RETURNING:
                 buff << ((terse) ? " (return)" : " of returning");
                 break;
@@ -1195,7 +1225,7 @@ std::string item_def::name_aux(description_level_type desc,
     case OBJ_ARMOUR:
         if (know_curse && !terse)
         {
-            if (item_cursed(*this))
+            if (cursed())
                 buff << "cursed ";
             else if (Options.show_uncursed && !know_pluses)
                 buff << "uncursed ";
@@ -1304,11 +1334,11 @@ std::string item_def::name_aux(description_level_type desc,
                 if (sub_type == ARM_NAGA_BARDING && sparm == SPARM_RUNNING)
                     buff << (terse ? "speed" : "speedy slithering");
                 else
-                    buff << armour_ego_name(sparm, terse);
+                    buff << armour_ego_name(*this, terse);
             }
         }
 
-        if (know_curse && item_cursed(*this) && terse)
+        if (know_curse && cursed() && terse)
             buff << " (curse)";
         break;
 
@@ -1460,7 +1490,7 @@ std::string item_def::name_aux(description_level_type desc,
 
         if (know_curse)
         {
-            if (item_cursed(*this))
+            if (cursed())
                 buff << "cursed ";
             else if (Options.show_uncursed && !terse
                      && (!is_randart || !know_type)
@@ -1618,6 +1648,17 @@ std::string item_def::name_aux(description_level_type desc,
         }
         else
         {
+            if (item_is_rod(*this) && know_type && know_pluses
+                && !basename && !qualname && !dbname)
+            {
+                short rmod = 0;
+                if (props.exists("rod_enchantment"))
+                    rmod = props["rod_enchantment"];
+
+                output_with_sign(buff, rmod);
+                buff << " ";
+            }
+
             buff << (item_is_rod(*this) ? "rod" : "staff")
                  << " of " << staff_type_name(item_typ);
         }
@@ -1783,6 +1824,7 @@ bool item_type_known( const item_def& item )
         int ammo_brand = get_ammo_brand(item);
         if (ammo_brand == SPMSL_POISONED
             || ammo_brand == SPMSL_CURARE
+            || (ammo_brand >= SPMSL_PARALYSIS && ammo_brand <= SPMSL_RAGE)
             || ammo_brand == SPMSL_STEEL
             || ammo_brand == SPMSL_SILVER)
         {
@@ -1976,6 +2018,7 @@ bool check_item_knowledge(bool quiet)
         InvMenu menu;
         menu.set_title("You recognise:");
         menu.set_flags(MF_NOSELECT);
+        menu.set_type(MT_KNOW);
         menu.load_items(items, discoveries_item_mangle);
         menu.show();
         redraw_screen();

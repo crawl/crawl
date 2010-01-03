@@ -9,6 +9,7 @@
 #define PLAYER_H
 
 #include "actor.h"
+#include "quiver.h"
 #include "itemprop-enum.h"
 #include "species.h"
 
@@ -142,7 +143,7 @@ public:
   int berserk_penalty;                // penalty for moving while berserk
 
   FixedVector<unsigned long, NUM_ATTRIBUTES> attribute;
-  FixedVector<unsigned char, NUM_QUIVER> quiver; // default items for quiver
+  FixedVector<unsigned char, NUM_AMMO> quiver; // default items for quiver
   FixedVector<long, NUM_OBJECT_CLASSES> sacrifice_value;
 
   undead_state_type is_undead;
@@ -314,6 +315,7 @@ public:
     void set_position(const coord_def &c);
     // Low-level move the player. Use this instead of changing pos directly.
     void moveto(const coord_def &c);
+    bool move_to_pos(const coord_def &c);
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false);
@@ -322,9 +324,11 @@ public:
 
     bool in_water() const;
     bool can_swim() const;
+    int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
     bool cannot_speak() const;
     bool invisible() const;
+    bool misled() const;
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid) const;
     bool visible_to(const actor *looker) const;
@@ -381,7 +385,7 @@ public:
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
     size_type body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
-    int       body_weight() const;
+    int       body_weight(bool base = false) const;
     int       total_weight() const;
     int       damage_brand(int which_attack = -1);
     int       damage_type(int which_attack = -1);
@@ -412,7 +416,7 @@ public:
 
     void attacking(actor *other);
     bool can_go_berserk() const;
-    bool can_go_berserk(bool verbose) const;
+    bool can_go_berserk(bool intentional) const;
     void go_berserk(bool intentional);
     bool berserk() const;
     bool can_mutate() const;
@@ -462,6 +466,7 @@ public:
     int res_poison() const;
     int res_rotting() const;
     int res_asphyx() const;
+    int res_water_drowning() const;
     int res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;
@@ -485,7 +490,7 @@ public:
 
     bool asleep() const;
     void hibernate(int power = 0);
-    void put_to_sleep(int power = 0);
+    void put_to_sleep(actor *, int power = 0);
     void awake();
     void check_awaken(int disturbance);
 
@@ -510,6 +515,10 @@ public:
     int  skill(skill_type skill, bool skill_bump = false) const;
 
     bool do_shaft();
+
+    void apply_location_effects(const coord_def &oldpos,
+                                killer_type killer = KILL_NONE,
+                                int killernum = -1);
 
     ////////////////////////////////////////////////////////////////
 
@@ -537,10 +546,7 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = NULL);
 
-    // How large can the experience pool grow without loss?
-    int exp_pool_cutoff() const;
-    // Step down experience above cutoff.
-    void step_down_exp_pool();
+
 
 protected:
     void _removed_beholder();

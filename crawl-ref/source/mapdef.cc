@@ -501,28 +501,38 @@ void map_lines::apply_grid_overlay(const coord_def &c)
                  // Over-ride whatever property is already there.
                 env.pgrid(gc) |= property;
 #ifdef USE_TILE
-            const int floor = (*overlay)(x, y).floortile;
+            int floor = (*overlay)(x, y).floortile;
             if (floor)
             {
+                if (colour)
+                    floor = tile_dngn_coloured(floor, colour);
                 int offset = random2(tile_dngn_count(floor));
                 env.tile_flv(gc).floor = floor + offset;
             }
-            const int rock = (*overlay)(x, y).rocktile;
+            int rock = (*overlay)(x, y).rocktile;
             if (rock)
             {
+                if (colour)
+                    rock = tile_dngn_coloured(rock, colour);
                 int offset = random2(tile_dngn_count(rock));
                 env.tile_flv(gc).wall = rock + offset;
             }
-            const int tile = (*overlay)(x, y).tile;
+            int tile = (*overlay)(x, y).tile;
             if (tile)
             {
+                if (colour)
+                    tile = tile_dngn_coloured(tile, colour);
                 int offset = random2(tile_dngn_count(tile));
                 if (grd(gc) == DNGN_FLOOR && !floor)
                     env.tile_flv(gc).floor = tile + offset;
                 else if (grd(gc) == DNGN_ROCK_WALL && !rock)
                     env.tile_flv(gc).wall = tile + offset;
                 else
+                {
+                    if ((*overlay)(x, y).no_random)
+                        offset = 0;
                     env.tile_flv(gc).feat = tile + offset;
+                }
             }
 #endif
         }
@@ -1212,6 +1222,8 @@ void map_lines::overlay_tiles(tile_spec &spec)
                 (*overlay)(pos, y).tile = spec.get_tile();
             else
                 (*overlay)(pos, y).rocktile = spec.get_tile();
+
+            (*overlay)(pos, y).no_random = spec.no_random;
             ++pos;
         }
     }
@@ -1739,11 +1751,13 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
     if (s.empty())
         return ("");
 
+    bool no_random = strip_tag(s, "no_random");
+
     int sep = 0;
     std::string key;
     std::string substitute;
 
-    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
+    std::string err = mapdef_split_key_item(s, &key, &sep, &substitute, -1);
     if (!err.empty())
         return (err);
 
@@ -1752,7 +1766,7 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
     if (!err.empty())
         return (err);
 
-    tile_spec spec(key, sep == ':', is_floor, is_feat, list);
+    tile_spec spec(key, sep == ':', no_random, is_floor, is_feat, list);
     overlay_tiles(spec);
 
     return ("");
@@ -3180,9 +3194,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 #ifdef USE_TILE
         if (!tile.empty())
         {
-            // Modify the string to prevent them from using non-mons tiles.
-            if (tile.find("mons_") == std::string::npos)
-                tile = std::string("mons_" + tile);
             unsigned int index;
             if (!tile_player_index(tile.c_str(), index))
             {
@@ -3749,6 +3760,13 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "exploding",
         "steel",
         "silver",
+        "electric",
+        "paralysis",
+        "slow",
+        "sleep",
+        "confusion",
+        "sickness",
+        "wrath",
         NULL
     };
 
@@ -3887,20 +3905,17 @@ item_spec item_list::parse_single_spec(std::string s)
         }
     }
 
-    if (s.find("damaged ") == 0)
+    if (strip_tag(s, "damaged"))
     {
         result.level = ISPEC_DAMAGED;
-        s = s.substr(8);
     }
-    if (s.find("cursed ") == 0)
+    if (strip_tag(s, "cursed"))
     {
         result.level = ISPEC_BAD; // damaged + cursed, actually
-        s = s.substr(7);
     }
-    if (s.find("randart ") == 0)
+    if (strip_tag(s, "randart"))
     {
         result.level = ISPEC_RANDART;
-        s = s.substr(8);
     }
 
     if (strip_tag(s, "no_uniq"))
@@ -4550,7 +4565,7 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
     {
         static std::string flag_list[] =
             {"vault", "no_item_gen", "no_monster_gen", "no_pool_fixup",
-             "no_secret_doors", "opaque", ""};
+             "no_secret_doors", "no_wall_fixup", "opaque", ""};
         map_mask = map_flags::parse(flag_list, s);
     }
     catch (const std::string &error)

@@ -61,6 +61,21 @@ point_vector map_anchor_points;
 typedef std::vector<map_def> map_vector;
 static map_vector vdefs;
 
+// Parameter array that vault code can use.
+string_vector map_parameters;
+
+dgn_map_parameters::dgn_map_parameters(const std::string &astring)
+    : mpar(map_parameters)
+{
+    map_parameters.push_back(astring);
+}
+
+dgn_map_parameters::dgn_map_parameters(const string_vector &parameters)
+    : mpar(map_parameters)
+{
+    map_parameters = parameters;
+}
+
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************* */
 
 // Remember (!!!) - if a member of the monster array isn't specified
@@ -337,7 +352,7 @@ static bool _safe_vault_place(const map_def &map,
         if (lines[dp.y][dp.x] == ' ')
             continue;
 
-        if (dgn_Map_Mask[cp.x][cp.y])
+        if (dgn_Map_Mask[cp.x][cp.y] & MMT_VAULT)
             return (false);
 
         const dungeon_feature_type dfeat = grd(cp);
@@ -478,10 +493,8 @@ static bool apply_vault_grid(map_def &def,
 
     if (check_place && !_safe_vault_place(def, start, size))
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d,%d) dim (%d,%d)",
+        dprf("Bad vault place: (%d,%d) dim (%d,%d)",
              start.x, start.y, size.x, size.y);
-#endif
         return (false);
     }
 

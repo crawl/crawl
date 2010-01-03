@@ -36,6 +36,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
+#include "dgn-shoals.h"
 #include "directn.h"
 #include "dgnevent.h"
 #include "directn.h"
@@ -1040,23 +1041,18 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         }
     }
 
-    // Only bother creating a distinct stack of potions
-    // if it won't get destroyed right away.
-    if (!feat_destroys_items(grd(you.pos())))
-    {
-        item_def potion2;
-        potion2.base_type = OBJ_POTIONS;
-        potion2.sub_type  = POT_DECAY;
-        // Keep description as it was.
-        potion2.plus      = potion.plus;
-        potion2.quantity  = amount;
-        potion2.colour    = potion.colour;
-        potion2.plus2     = 0;
-        potion2.flags     = 0;
-        potion2.special   = 0;
+    item_def potion2;
+    potion2.base_type = OBJ_POTIONS;
+    potion2.sub_type  = POT_DECAY;
+    // Keep description as it was.
+    potion2.plus      = potion.plus;
+    potion2.quantity  = amount;
+    potion2.colour    = potion.colour;
+    potion2.plus2     = 0;
+    potion2.flags     = 0;
+    potion2.special   = 0;
 
-        copy_item_to_grid(potion2, you.pos());
-    }
+    copy_item_to_grid(potion2, you.pos());
 
     // Is decreased even if the decay stack goes splat.
     dec_inv_item_quantity(obj, amount);
@@ -1109,11 +1105,8 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
 
     if (x_chance_in_y(amount, 20))
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "might bleed now; square: (%d, %d); amount = %d",
+        dprf("might bleed now; square: (%d, %d); amount = %d",
              where.x, where.y, amount);
-#endif
         if (may_bleed)
         {
             env.pgrid(where) |= FPROP_BLOODY;
@@ -1299,10 +1292,7 @@ void search_around(bool only_adjacent)
                     // Maybe we shouldn't kill the trap for debugging
                     // purposes - oh well.
                     grd(*ri) = DNGN_FLOOR;
-#if DEBUG_DIAGNOSTICS
-                    mpr("You found a buggy trap! It vanishes!",
-                        MSGCH_DIAGNOSTICS);
-#endif
+                    dprf("You found a buggy trap! It vanishes!");
                 }
             }
         }
@@ -2201,12 +2191,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         const bool known_trap = (grd(you.pos()) != DNGN_UNDISCOVERED_TRAP
                                  && !force_stair);
 
-        if (!known_trap && !force_stair)
-        {
-            mpr("You can't go down here!");
-            return;
-        }
-
         if (you.flight_mode() == FL_LEVITATE && !force_stair)
         {
             if (known_trap)
@@ -2655,7 +2639,7 @@ void new_level(void)
 {
     if (you.level_type == LEVEL_PORTAL_VAULT)
     {
-        // This here because place_name can't find the name of a level that you 
+        // This here because place_name can't find the name of a level that you
         // *are no longer on* when it spits out the new notes list.
         std::string desc = "Entered " + place_name(get_packed_place(), true, true);
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, 0, 0, NULL,
@@ -2755,6 +2739,7 @@ static bool _mons_has_path_to_player(const monsters *mon)
 {
     // Don't consider sleeping monsters safe, in case the player would
     // rather retreat and try another path for maximum stabbing chances.
+    // TODO: This doesn't cover monsters encaged in glass.
     if (mon->asleep())
         return (true);
 
@@ -2782,6 +2767,26 @@ static bool _mons_has_path_to_player(const monsters *mon)
     return (false);
 }
 
+bool mons_can_hurt_player(const monsters *mon)
+{
+    // FIXME: This takes into account whether the player knows the map!
+    // It also always returns true for sleeping monsters, but that's okay
+    // for its current purposes. (Travel interruptions and tension.)
+    if (_mons_has_path_to_player(mon))
+        return (true);
+
+    // The monster need only see you to hurt you.
+    if (mons_has_los_attack(mon))
+        return (true);
+
+    // Even if the monster can not actually reach the player it might
+    // still use some ranged form of attack.
+    if (you.see_cell_no_trans(mon->pos()) && mons_has_ranged_ability(mon))
+        return (true);
+
+    return (false);
+}
+
 bool mons_is_safe(const monsters *mon, bool want_move,
                   bool consider_user_options)
 {
@@ -2802,10 +2807,7 @@ bool mons_is_safe(const monsters *mon, bool want_move,
                     || (!you.see_cell_no_trans(mon->pos())
                             || mons_class_habitat(mon->type) == HT_WATER
                             || mons_class_habitat(mon->type) == HT_LAVA)
-                        && !_mons_has_path_to_player(mon)
-                        && !mons_has_los_attack(mon)
-                        && (!you.see_cell_no_trans(mon->pos())
-                            || !mons_has_ranged_ability(mon)));
+                        && !mons_can_hurt_player(mon));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
@@ -2882,14 +2884,15 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
         // check clouds
         if (in_bounds(you.pos()) && env.cgrid(you.pos()) != EMPTY_CLOUD)
         {
-            const cloud_type type = env.cloud[env.cgrid(you.pos())].type;
+            const int cloudidx = env.cgrid(you.pos());
+            const cloud_type type = env.cloud[cloudidx].type;
 
             if (is_damaging_cloud(type, want_move))
             {
                 if (announce)
                 {
                     mprf(MSGCH_WARN, "You're standing in a cloud of %s!",
-                         cloud_name(type).c_str());
+                         cloud_name(cloudidx).c_str());
                 }
                 return (false);
             }
@@ -3086,6 +3089,7 @@ void run_environment_effects()
     }
 
     run_corruption_effects(you.time_taken);
+    shoals_apply_tides(div_rand_round(you.time_taken, 10));
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)
@@ -3210,7 +3214,7 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     const bool isUnchivalric = is_unchivalric_attack(&you, mon);
     const bool isHoly        = mon->is_holy()
                                    && (mon->attitude != ATT_HOSTILE
-                                       || testbits(mon->flags, MF_CREATED_FRIENDLY)
+                                       || testbits(mon->flags, MF_NO_REWARD)
                                        || testbits(mon->flags, MF_WAS_NEUTRAL));
 
     if (isFriendly)

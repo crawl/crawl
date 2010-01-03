@@ -33,6 +33,7 @@
 #include "itemname.h"
 #include "items.h"
 #include "it_use2.h"
+#include "makeitem.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -100,9 +101,7 @@ int detect_items(int pow)
 
 static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "dc_fuzz: Power is %d", pow);
-#endif
+    dprf("dc_fuzz: Power is %d", pow);
 
     pow = std::max(1, pow);
 
@@ -236,6 +235,54 @@ void corpse_rot()
     // Should make zombies decay into skeletons?
 }
 
+// We need to know what brands equate with what missile brands to know if
+// we should disallow temporary branding or not.
+special_missile_type _convert_to_missile(brand_type which_brand)
+{
+    switch (which_brand)
+    {
+    case SPWPN_NORMAL: return SPMSL_NORMAL;
+    case SPWPN_FLAME: // deliberate fall through
+    case SPWPN_FLAMING: return SPMSL_FLAME;
+    case SPWPN_FROST: // deliberate fall through
+    case SPWPN_FREEZING: return SPMSL_FROST;
+    case SPWPN_VENOM: return SPMSL_POISONED;
+    case SPWPN_CHAOS: return SPMSL_CHAOS;
+    case SPWPN_RETURNING: return SPMSL_RETURNING;
+    default: return SPMSL_NORMAL; // there are no equivalents for the rest
+                                  // of the ammo brands.
+    }
+}
+
+// Some launchers need to convert different brands.
+brand_type _convert_to_launcher(brand_type which_brand)
+{
+    switch (which_brand)
+    {
+    case SPWPN_FREEZING: return SPWPN_FROST; case SPWPN_FLAMING: return SPWPN_FLAME;
+    default: return (which_brand);
+    }
+}
+
+bool _ok_for_launchers(brand_type which_brand)
+{
+    switch (which_brand)
+    {
+    case SPWPN_NORMAL:
+    case SPWPN_FREEZING:
+    case SPWPN_FROST:
+    case SPWPN_FLAMING:
+    case SPWPN_FLAME:
+    case SPWPN_VENOM:
+    //case SPWPN_PAIN: -- no pain missile type yat
+    case SPWPN_RETURNING:
+    case SPWPN_CHAOS:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 bool brand_weapon(brand_type which_brand, int power)
 {
     if (!you.weapon())
@@ -244,8 +291,12 @@ bool brand_weapon(brand_type which_brand, int power)
     const bool temp_brand = you.duration[DUR_WEAPON_BRAND];
     item_def& weapon = *you.weapon();
 
-    // Can't brand non-weapons.
-    if (weapon.base_type != OBJ_WEAPONS || is_range_weapon(weapon))
+    // Can't brand non-weapons, but can brand some launchers (see later).
+    if (weapon.base_type != OBJ_WEAPONS)
+        return (false);
+
+    // But not blowguns.
+    if (weapon.sub_type == WPN_BLOWGUN)
         return (false);
 
     // Can't brand artefacts.
@@ -260,6 +311,29 @@ bool brand_weapon(brand_type which_brand, int power)
     if (temp_brand && (get_weapon_brand(weapon) != which_brand))
         return (false);
 
+    // Can only brand launchers with sensical brands
+    if (is_range_weapon(weapon))
+    {
+        // If the new missile type wouldn't match the launcher, say no
+        missile_type missile = fires_ammo_type(weapon);
+
+        // XXX: To deal with the fact that is_missile_brand_ok will be unhappy
+        // if we attempt to brand stones, tell it we're using sling bullets instead.
+        if (weapon.sub_type == WPN_SLING)
+            missile = MI_SLING_BULLET;
+
+        if (!is_missile_brand_ok(missile, _convert_to_missile(which_brand)))
+            return (false);
+
+        // If the brand isn't appropriate for that launcher, also say no.
+        if (!_ok_for_launchers(which_brand))
+            return (false);
+
+        // Otherwise, convert to the correct brand type, most specifically (but
+        // not necessarily only) flaming -> flame, freezing -> frost.
+        which_brand = _convert_to_launcher(which_brand);
+    }
+
     std::string msg = weapon.name(DESC_CAP_YOUR);
     const int wpn_type = get_vorpal_type(weapon);
 
@@ -267,8 +341,14 @@ bool brand_weapon(brand_type which_brand, int power)
     int duration_affected = 0;
     switch (which_brand)
     {
+    case SPWPN_FLAME:
     case SPWPN_FLAMING:
         msg += " bursts into flame!";
+        duration_affected = 7;
+        break;
+
+    case SPWPN_FROST:
+        msg += " frosts over!";
         duration_affected = 7;
         break;
 
@@ -360,135 +440,6 @@ bool brand_weapon(brand_type which_brand, int power)
                           duration_affected + roll_dice(2, power), 50);
 
     return (true);
-}
-
-bool brand_ammo(special_missile_type which_type)
-{
-    const int ammo = you.equip[EQ_WEAPON];
-
-    if (ammo == -1
-        || you.inv[ammo].base_type != OBJ_MISSILES
-        || get_ammo_brand(you.inv[ammo]) != SPMSL_NORMAL
-        || you.inv[ammo].sub_type == MI_THROWING_NET)
-    {
-        return (false);
-    }
-
-    bool retval = false;
-    preserve_quiver_slots q;
-    const char *old_desc = you.inv[ammo].name(DESC_CAP_YOUR).c_str();
-
-    switch (which_type)
-    {
-        case SPMSL_POISONED:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_POISONED))
-            {
-                mprf("%s %s covered in a thin film of poison.", old_desc,
-                     (you.inv[ammo].quantity == 1) ? "is" : "are");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_FLAME:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_FLAME))
-            {
-                mprf("%s %s warm to the touch.", old_desc,
-                     (you.inv[ammo].quantity == 1) ? "feels" : "feel");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_FROST:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_FROST))
-            {
-                mprf("%s %s cool to the touch.", old_desc,
-                     (you.inv[ammo].quantity == 1) ? "feels" : "feel");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_DISPERSAL:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_DISPERSAL))
-            {
-                mprf("%s %s rather jumpy.", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "seems" : "seem");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_ELECTRIC:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_ELECTRIC))
-            {
-                mprf("%s %s you!", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "shocks" : "shock");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_EXPLODING:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_EXPLODING))
-            {
-                mprf("%s %s unstable!", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "seems" : "seem");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_REAPING:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_REAPING))
-            {
-                mprf("%s %s briefly obscured by shadows.", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "is" : "are");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        case SPMSL_RETURNING:
-            if (set_item_ego_type(you.inv[ammo], OBJ_MISSILES, SPMSL_RETURNING))
-            {
-                mprf("%s %s in your hand.", old_desc,
-                    (you.inv[ammo].quantity == 1) ? "wiggles" : "wiggle");
-
-                if (ammo == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
-
-                retval = true;
-            }
-            break;
-
-        default:
-            break;
-    }
-
-    return (retval);
 }
 
 // Restore the stat in which_stat by the amount in stat_gain, displaying
@@ -627,9 +578,12 @@ static std::string _describe_monsters(const counted_monster_list &list)
 // Poisonous light passes right through invisible players
 // and monsters, and so, they are unaffected by this spell --
 // assumes only you can cast this spell (or would want to).
-void cast_toxic_radiance()
+void cast_toxic_radiance(bool non_player)
 {
-    mpr("You radiate a sickly green light!");
+    if (non_player)
+        mpr("The air is filled with a sickly green light!");
+    else
+        mpr("You radiate a sickly green light!");
 
     flash_view(GREEN);
     more();
@@ -657,10 +611,13 @@ void cast_toxic_radiance()
             // this check should not be !monster->invisible().
             if (!mi->has_ench(ENCH_INVIS))
             {
+                kill_category kc = KC_YOU;
+                if (non_player)
+                    kc = KC_OTHER;
                 bool affected =
-                    poison_monster(*mi, KC_YOU, 1, false, false);
+                    poison_monster(*mi, kc, 1, false, false);
 
-                if (coinflip() && poison_monster(*mi, KC_YOU, false, false))
+                if (coinflip() && poison_monster(*mi, kc, false, false))
                     affected = true;
 
                 if (affected)
@@ -687,14 +644,20 @@ void cast_toxic_radiance()
         {
             // Exclamation mark to suggest that a lot of creatures were
             // affected.
-            mpr("The monsters around you are poisoned!");
+            if (non_player)
+                mpr("Nearby monsters are poisoned!");
+            else
+                mpr("The monsters around you are poisoned!");
         }
     }
 }
 
-void cast_refrigeration(int pow)
+void cast_refrigeration(int pow, bool non_player)
 {
-    mpr("The heat is drained from your surroundings.");
+    if (non_player)
+        mpr("Something drains the heat from around you.");
+    else
+        mpr("The heat is drained from your surroundings.");
 
     flash_view(LIGHTCYAN);
     more();
@@ -754,7 +717,10 @@ void cast_refrigeration(int pow)
 
         // Calculate damage and apply.
         int hurt = mons_adjust_flavoured(*mi, beam, dam_dice.roll());
-        mi->hurt(&you, hurt, BEAM_COLD);
+        if (non_player)
+            mi->hurt(NULL, hurt, BEAM_COLD);
+        else
+            mi->hurt(&you, hurt, BEAM_COLD);
 
         // Cold-blooded creatures can be slowed.
         if (mi->alive()
@@ -1088,7 +1054,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
 
     const int dur = std::min(3 + random2(pow) / 20, 5);
     int how_many_max = 1 + random2(1 + you.skills[SK_TRANSMUTATIONS]) / 4;
-    const bool friendly = (!item_cursed(wpn));
+    const bool friendly = (!wpn.cursed());
     const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
 
     int count = 0;
@@ -1154,7 +1120,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             mon = MONS_BLACK_MAMBA;
 
         if (pow > 90 && one_chance_in(3))
-            mon = MONS_GREY_SNAKE;
+            mon = MONS_ANACONDA;
 
         if (create_monster(
                 mgen_data(mon, beha, &you,
@@ -1699,7 +1665,7 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     if (success)
     {
         // Cursed weapons become hostile.
-        const bool friendly = (!force_hostile && !item_cursed(you.inv[wpn]));
+        const bool friendly = (!force_hostile && !you.inv[wpn].cursed());
 
         mgen_data mg(MONS_DANCING_WEAPON,
                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,

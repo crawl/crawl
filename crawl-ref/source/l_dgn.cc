@@ -1173,14 +1173,16 @@ static int lua_cloud_pow_rolls;
 
 static int make_a_lua_cloud(coord_def where, int garbage, int spread_rate,
                             cloud_type ctype, kill_category whose,
-                            killer_type killer)
+                            killer_type killer, int colour, std::string name,
+                            std::string tile)
 {
     UNUSED( garbage );
 
     const int pow = random_range(lua_cloud_pow_min,
                                  lua_cloud_pow_max,
                                  lua_cloud_pow_rolls);
-    place_cloud( ctype, where, pow, whose, killer, spread_rate );
+    place_cloud( ctype, where, pow, whose, killer, spread_rate, colour, name,
+                 tile );
     return 1;
 }
 
@@ -1199,6 +1201,10 @@ static int dgn_apply_area_cloud(lua_State *ls)
     const kill_category kc = dgn_kill_name_to_category(kname);
 
     const int spread_rate = lua_isnumber(ls, 9) ? luaL_checkint(ls, 9) : -1;
+
+    const int colour    = lua_isstring(ls, 10) ? str_to_colour(luaL_checkstring(ls, 10)) : -1;
+    std::string name = lua_isstring(ls, 11) ? luaL_checkstring(ls, 11) : "";
+    std::string tile = lua_isstring(ls, 12) ? luaL_checkstring(ls, 12) : "";
 
     if (!in_bounds(x, y))
     {
@@ -1265,7 +1271,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
 
     apply_area_cloud(make_a_lua_cloud, coord_def(x, y), 0, size,
                      ctype, kc, cloud_struct::whose_to_killer(kc),
-                     spread_rate);
+                     spread_rate, colour, name, tile);
 
     return (0);
 }
@@ -1281,6 +1287,10 @@ static int dgn_place_cloud(lua_State *ls)
     const kill_category kc = dgn_kill_name_to_category(kname);
 
     const int spread_rate = lua_isnumber(ls, 6) ? luaL_checkint(ls, 6) : -1;
+
+    const int colour    = lua_isstring(ls, 7) ? str_to_colour(luaL_checkstring(ls, 7)) : -1;
+    std::string name = lua_isstring(ls, 8) ? luaL_checkstring(ls, 8) : "";
+    std::string tile = lua_isstring(ls, 9) ? luaL_checkstring(ls, 9) : "";
 
     if (!in_bounds(x, y))
     {
@@ -1315,7 +1325,7 @@ static int dgn_place_cloud(lua_State *ls)
         return (0);
     }
 
-    place_cloud(ctype, coord_def(x, y), cl_range, kc, spread_rate);
+    place_cloud(ctype, coord_def(x, y), cl_range, kc, spread_rate, colour, name, tile);
 
     return (0);
 }
@@ -1355,10 +1365,8 @@ static bool _lua_map_place_valid(const map_def &map,
                                  const coord_def &c,
                                  const coord_def &size)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "lua_map_place_invalid: (%d,%d) (%d,%d)",
+    dprf("lua_map_place_invalid: (%d,%d) (%d,%d)",
          c.x, c.y, size.x, size.y);
-#endif
 
     lua_stack_cleaner clean(_dgn_map_safe_bounds_fn->lua);
 
@@ -1512,6 +1520,11 @@ LUAFN(_dgn_in_vault)
     const int mask = lua_isnone(ls, 3) ? MMT_VAULT : lua_tointeger(ls, 3);
     lua_pushboolean(ls, dgn_Map_Mask(c) & mask);
     return (1);
+}
+
+LUAFN(_dgn_map_parameters)
+{
+    return clua_stringtable(ls, map_parameters);
 }
 
 LUAFN(_dgn_find_marker_position_by_prop)
@@ -1776,6 +1789,8 @@ const struct luaL_reg dgn_dlib[] =
 { "reuse_map", _dgn_reuse_map },
 { "resolve_map", _dgn_resolve_map },
 { "in_vault", _dgn_in_vault },
+
+{ "map_parameters", _dgn_map_parameters },
 
 { "find_marker_position_by_prop", _dgn_find_marker_position_by_prop },
 { "find_marker_positions_by_prop", _dgn_find_marker_positions_by_prop },

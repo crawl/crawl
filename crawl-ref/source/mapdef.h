@@ -189,8 +189,8 @@ public:
 class tile_spec
 {
 public:
-    tile_spec(const std::string &_key, bool _fix, bool _floor, bool _feat, const map_tile_list &_tiles)
-        : key(_key), fix(_fix), chose_fixed(false), floor(_floor), feat(_feat),
+    tile_spec(const std::string &_key, bool _fix, bool _rand, bool _floor, bool _feat, const map_tile_list &_tiles)
+        : key(_key), fix(_fix), chose_fixed(false), no_random(_rand), floor(_floor), feat(_feat),
           fixed_tile(0), tiles(_tiles)
     {
     }
@@ -201,6 +201,7 @@ public:
     std::string key;
     bool fix;
     bool chose_fixed;
+    bool no_random;
     bool floor;
     bool feat;
     int fixed_tile;
@@ -257,7 +258,7 @@ std::string parse_weighted_str(const std::string &cspec, T &list);
 
 class map_def;
 class rectangle_iterator;
-class keyed_mapspec;
+struct keyed_mapspec;
 class map_lines
 {
 public:
@@ -428,11 +429,12 @@ private:
     struct overlay_def
     {
         overlay_def() : colour(0), rocktile(0), floortile(0), tile(0),
-                        property(0), keyspec_idx(0) {}
+                        no_random(false), property(0), keyspec_idx(0) {}
         int colour;
         int rocktile;
         int floortile;
         int tile;
+        bool no_random;
         int property;
         int keyspec_idx;
     };

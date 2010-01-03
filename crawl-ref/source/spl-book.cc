@@ -342,7 +342,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of Envenomations
     {SPELL_SPIDER_FORM,
      SPELL_SUMMON_SCORPIONS,
-     SPELL_POISON_AMMUNITION,
+     SPELL_POISON_WEAPON,
      SPELL_RESIST_POISON,
      SPELL_OLGREBS_TOXIC_RADIANCE,
      SPELL_POISONOUS_CLOUD,
@@ -429,13 +429,13 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // Book of Power
     {SPELL_ANIMATE_DEAD,
+     SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_TELEPORT_OTHER,
      SPELL_VENOM_BOLT,
      SPELL_IRON_SHOT,
      SPELL_INVISIBILITY,
      SPELL_MASS_CONFUSION,
      SPELL_POISONOUS_CLOUD,
-     SPELL_NO_SPELL,
      },
 
     // Book of Cantrips
@@ -482,42 +482,20 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // Book of Elemental Missiles
+    // Book of Brands
     {SPELL_CORONA,
      SPELL_SWIFTNESS,
-     SPELL_REPEL_MISSILES,
-     SPELL_FLAME_AMMUNITION,
-     SPELL_FROST_AMMUNITION,
-     SPELL_POISON_AMMUNITION,
+     SPELL_FIRE_BRAND,
+     SPELL_FREEZING_AURA,
+     SPELL_POISON_WEAPON,
+     SPELL_CAUSE_FEAR,
      SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     },
-
-    // Book of Warped Missiles
-    {SPELL_APPORTATION,
-     SPELL_PORTAL_PROJECTILE,
-     SPELL_REPEL_MISSILES,
-     SPELL_BLINK,
-     SPELL_RETURNING_AMMUNITION,
-     SPELL_WARP_AMMUNITION,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     },
-
-    // Book of Devastating Missiles
-    {SPELL_POISON_AMMUNITION,
-     SPELL_WARP_AMMUNITION,
-     SPELL_SHOCKING_AMMUNITION,
-     SPELL_EXPLODING_AMMUNITION,
-     SPELL_HASTE,
-     SPELL_DEFLECT_MISSILES,
-     SPELL_REAPING_AMMUNITION,
      SPELL_NO_SPELL,
      },
 
     // Book of Annihilations - Vehumet special
-    {SPELL_ISKENDERUNS_MYSTIC_BLAST,
-     SPELL_POISON_ARROW,
+    {SPELL_POISON_ARROW,
+     SPELL_IOOD,
      SPELL_CHAIN_LIGHTNING,
      SPELL_LEHUDIBS_CRYSTAL_SPEAR,
      SPELL_ICE_STORM,
@@ -935,8 +913,7 @@ int book_rarity(unsigned char which_book)
     case BOOK_YOUNG_POISONERS:
     case BOOK_STALKING:    //jmf: added 24jun2000
     case BOOK_WAR_CHANTS:
-    case BOOK_ELEMENTAL_MISSILES:
-    case BOOK_WARPED_MISSILES:
+    case BOOK_BRANDS:
         return 5;
 
     case BOOK_CLOUDS:
@@ -957,7 +934,6 @@ int book_rarity(unsigned char which_book)
     case BOOK_UNLIFE:
     case BOOK_CONTROL:
     case BOOK_SPATIAL_TRANSLOCATIONS:
-    case BOOK_DEVASTATING_MISSILES:
         return 10;
 
     case BOOK_TEMPESTS:
@@ -1447,15 +1423,11 @@ static bool _get_mem_list(spell_list &mem_spells,
              "You cannot memorise any of the available spells because you "
              "are a %s.", lowercase_string(species).c_str());
     }
-    else if (num_low_levels > 0)
+    else if (num_low_levels > 0 || num_low_xl > 0)
     {
-        mpr("You do not have enough free spell levels to memorise any of the "
-            "available spells.", MSGCH_PROMPT);
-    }
-    else if (num_low_xl > 0)
-    {
-        mpr("You aren't experienced enough to memorise any of the "
-            "available spells.", MSGCH_PROMPT);
+        // Just because we can't memorise them doesn't mean we don't want to
+        // see what we have available. See FR #235. {due}
+        return (true);
     }
     else
     {
@@ -1860,7 +1832,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 #ifdef WIZARD
         if (!you.wizard)
             return (false);
-        else if (!yesno("Memorise anyway?"))
+        else if (!yesno("Memorise anyway?", true, 'n'))
             return (false);
 #else
         return (false);
@@ -1894,33 +1866,13 @@ int count_staff_spells(const item_def &item, bool need_id)
     return (nspel);
 }
 
-// Returns a measure of the rod spell power disrupted by a worn shield.
-int rod_shield_leakage()
-{
-    const item_def *shield = you.shield();
-    int leakage = 100;
-
-    if (shield)
-    {
-        const int shield_type = shield->sub_type;
-        leakage = shield_type == ARM_BUCKLER? 125 :
-                  shield_type == ARM_SHIELD ? 150 :
-                                              200;
-        // Adjust for shields skill.
-        leakage -= ((leakage - 100) * 5 / 10) * you.skills[SK_SHIELDS] / 27;
-    }
-    return (leakage);
-}
-
 int staff_spell( int staff )
 {
     item_def& istaff(you.inv[staff]);
     // Spell staves are mostly for the benefit of non-spellcasters, so we're
     // not going to involve INT or Spellcasting skills for power. -- bwr
     int powc = (5 + you.skills[SK_EVOCATIONS]
-                 + roll_dice( 2, you.skills[SK_EVOCATIONS] ))
-                * 100
-                / rod_shield_leakage();
+                 + roll_dice( 2, you.skills[SK_EVOCATIONS] ));
 
     if (!item_is_rod(istaff))
     {
@@ -1928,23 +1880,7 @@ int staff_spell( int staff )
         return (-1);
     }
 
-    bool need_id = false;
-    if (!item_type_known(istaff))
-    {
-        set_ident_type( OBJ_STAVES, istaff.sub_type, ID_KNOWN_TYPE );
-        set_ident_flags( istaff, ISFLAG_KNOW_TYPE );
-        need_id = true;
-    }
-    if (!item_ident( istaff, ISFLAG_KNOW_PLUSES))
-    {
-        set_ident_flags( istaff, ISFLAG_KNOW_PLUSES );
-        need_id = true;
-    }
-    if (need_id)
-    {
-        mprf(MSGCH_EQUIPMENT, "%s", istaff.name(DESC_INVENTORY_EQUIP).c_str());
-        you.wield_change = true;
-    }
+    // ID code got moved to item_use::wield_effects. {due}
 
     const int num_spells = count_staff_spells(istaff, false);
 
@@ -2467,6 +2403,9 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
     {
         int disc = 1 << i;
+        if (disc & SPTYP_DIVINATION)
+            continue;
+
         if (god_dislikes_spell_discipline(disc, god))
             continue;
 
@@ -3052,8 +2991,9 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     set_artefact_name(book, name);
 
-    book.plus  = disc1;
-    book.plus2 = disc2;
+    // Save primary/secondary disciplines back into the book.
+    book.plus  = max1;
+    book.plus2 = max2;
 
     return (true);
 }

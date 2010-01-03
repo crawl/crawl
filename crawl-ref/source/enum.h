@@ -180,17 +180,6 @@ enum attribute_type
     NUM_ATTRIBUTES
 };
 
-enum quiver_type
-{
-    QUIVER_THROW,           // no launcher wielded -> darts, stones, ...
-    QUIVER_BOW,             // wielded bow -> arrows
-    QUIVER_SLING,           // wielded sling -> stones, sling bullets
-    QUIVER_CROSSBOW,        // wielded crossbow -> bolts
-    QUIVER_HAND_CROSSBOW,   // wielded hand crossbow -> darts
-    QUIVER_BLOWGUN,         // wielded blowgun -> needles
-    NUM_QUIVER
-};
-
 enum beam_type                  // beam[].flavour
 {
     BEAM_NONE,                    // 0
@@ -199,23 +188,24 @@ enum beam_type                  // beam[].flavour
     BEAM_MMISSILE,                //    and similarly irresistible things
     BEAM_FIRE,
     BEAM_COLD,
-    BEAM_MAGIC,                   // 5
+    BEAM_WATER,
+    BEAM_MAGIC,
     BEAM_ELECTRICITY,
     BEAM_POISON,
     BEAM_NEG,
     BEAM_ACID,
-    BEAM_MIASMA,                  // 10
+    BEAM_MIASMA,
 
     BEAM_SPORE,
     BEAM_POISON_ARROW,
     BEAM_HELLFIRE,
     BEAM_NAPALM,
-    BEAM_STEAM,                   // 15
+    BEAM_STEAM,
     BEAM_ENERGY,
     BEAM_HOLY,
     BEAM_FRAG,
     BEAM_LAVA,
-    BEAM_ICE,                     // 20
+    BEAM_ICE,
     BEAM_NUKE,
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
@@ -223,22 +213,22 @@ enum beam_type                  // beam[].flavour
     // Enchantments
     BEAM_SLOW,
     BEAM_FIRST_ENCHANTMENT = BEAM_SLOW,
-    BEAM_HASTE,                   // 25
+    BEAM_HASTE,
     BEAM_MIGHT,
     BEAM_HEALING,
     BEAM_PARALYSIS,
     BEAM_CONFUSION,
-    BEAM_INVISIBILITY,            // 30
+    BEAM_INVISIBILITY,
     BEAM_DIGGING,
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
     BEAM_CHARM,
-    BEAM_BANISH,                  // 35
+    BEAM_BANISH,
     BEAM_DEGENERATE,
     BEAM_ENSLAVE_UNDEAD,
     BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
-    BEAM_DISPEL_UNDEAD,           // 40
+    BEAM_DISPEL_UNDEAD,
     BEAM_DISINTEGRATION,
     BEAM_ENSLAVE_DEMON,
     BEAM_BLINK,
@@ -319,10 +309,8 @@ enum book_type
     BOOK_PARTY_TRICKS,
     BOOK_BEASTS,
     BOOK_STALKING,
-    BOOK_ELEMENTAL_MISSILES,
-    BOOK_WARPED_MISSILES,
-    BOOK_DEVASTATING_MISSILES,
-    MAX_NORMAL_BOOK = BOOK_DEVASTATING_MISSILES,
+    BOOK_BRANDS,
+    MAX_NORMAL_BOOK = BOOK_BRANDS,
 
     MIN_GOD_ONLY_BOOK,
     BOOK_ANNIHILATIONS = MIN_GOD_ONLY_BOOK,
@@ -441,6 +429,7 @@ enum cloud_type
     CLOUD_CHAOS,
     CLOUD_RAIN,
     CLOUD_MUTAGENIC,
+    CLOUD_MAGIC_TRAIL,
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}
 };
@@ -687,6 +676,7 @@ enum command_type
     CMD_TARGET_WIZARD_MAKE_SUMMONED,
     CMD_TARGET_WIZARD_POLYMORPH,
     CMD_TARGET_WIZARD_DEBUG_MONSTER,
+    CMD_TARGET_WIZARD_HURT_MONSTER,
     CMD_TARGET_MOUSE_MOVE,
     CMD_TARGET_MOUSE_SELECT,
     CMD_TARGET_HELP,
@@ -992,10 +982,10 @@ enum dungeon_feature_type
     // Highest grid value which can't be reached through.
     DNGN_MAX_NONREACH = DNGN_CLEAR_PERMAROCK_WALL,
 
-    DNGN_TREES,
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
 
     // Can be seen through and reached past.
+    DNGN_TREES,
     DNGN_ORCISH_IDOL = 15,
     DNGN_GRANITE_STATUE = 21,          //   21
     DNGN_STATUE_RESERVED,
@@ -1202,6 +1192,7 @@ enum duration_type
     DUR_SLIMIFY,
     DUR_TIME_STEP,
     DUR_ICEMAIL_DEPLETED,     // Wait this many turns for full Icemail
+    DUR_MISLED,
 
     NUM_DURATIONS
 };
@@ -1251,6 +1242,7 @@ enum enchant_type
     ENCH_SPORE_PRODUCTION,             //   35
     ENCH_SLOUCH,
     ENCH_SWIFT,
+    ENCH_TIDE,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
@@ -1588,8 +1580,8 @@ enum menu_type
 
     MT_INVLIST,                        // List inventory
     MT_DROP,
-
-    MT_PICKUP
+    MT_PICKUP,
+    MT_KNOW
 };
 
 enum mon_holy_type
@@ -1670,8 +1662,8 @@ enum monster_type                      // (int) menv[].type
     MONS_KOBOLD_DEMONOLOGIST,
     MONS_ORC_WIZARD,
     MONS_ORC_KNIGHT,                   //   55
-    //MONS_WORM_TAIL = 56, // deprecated and now officially removed {dlb}
-    MONS_WYVERN = 57,                  //   57
+    MONS_ORB_OF_DESTRUCTION, // a projectile, not a real mon
+    MONS_WYVERN,
     MONS_BIG_KOBOLD,
     MONS_GIANT_EYEBALL,
     MONS_WIGHT,                        //   60
@@ -1781,7 +1773,7 @@ enum monster_type                      // (int) menv[].type
     MONS_FIRE_DRAKE,
     MONS_SHADOW_DRAGON,                //  165
     MONS_VIPER,
-    MONS_GREY_SNAKE,
+    MONS_ANACONDA,
     MONS_DEEP_TROLL,
     MONS_GIANT_BLOWFLY,
     MONS_RED_WASP,                     //  170
@@ -1816,6 +1808,12 @@ enum monster_type                      // (int) menv[].type
     MONS_TOADSTOOL,
     MONS_BUSH,
     MONS_BALLISTOMYCETE,               //  200
+
+    // Shoals guardians
+    MONS_MERFOLK_IMPALER,
+    MONS_MERFOLK_AQUAMANCER,
+    MONS_MERFOLK_JAVELINEER,
+
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,
@@ -2059,6 +2057,8 @@ enum monster_type                      // (int) menv[].type
     MONS_CRAZY_YIUF,
     MONS_SLAVE,
     MONS_GIANT_LEECH,
+    MONS_MARA,
+    MONS_MARA_FAKE,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2118,7 +2118,7 @@ enum mon_attitude_type
 // These are now saved in an unsigned long in the monsters struct.
 enum monster_flag_type
 {
-    MF_CREATED_FRIENDLY   = 0x01,    // no benefit from killing
+    MF_NO_REWARD          = 0x01,    // no benefit from killing
     MF_JUST_SUMMONED      = 0x02,    // monster skips next available action
     MF_TAKING_STAIRS      = 0x04,    // is following player through stairs
     MF_INTERESTING        = 0x08,    // Player finds monster interesting
@@ -2313,6 +2313,9 @@ enum mon_spellbook_type
     MST_AIZUL,
     MST_EXECUTIONER,
     MST_HAROLD,
+    MST_MARA,
+    MST_MARA_FAKE,
+    MST_MERFOLK_AQUAMANCER,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2560,7 +2563,6 @@ enum artefact_prop_type
     ARTP_CURSED,
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,
-    ARTP_SPIRIT_SHIELD,
     ARTP_NUM_PROPERTIES                 //   30
 };
 
@@ -2622,8 +2624,8 @@ enum skill_type
     SK_SLINGS,
     SK_BOWS,
     SK_CROSSBOWS,
-    SK_DARTS,
-    SK_THROWING,
+    // was darts, now unused
+    SK_THROWING = 11,
     SK_ARMOUR,
     SK_DODGING,
     SK_STEALTH,
@@ -2809,7 +2811,6 @@ enum spell_type
     SPELL_DETECT_CREATURES,
     SPELL_CURE_POISON,
     SPELL_CONTROL_TELEPORT,
-    SPELL_POISON_AMMUNITION,
     SPELL_POISON_WEAPON,
     SPELL_RESIST_POISON,
     SPELL_PROJECTED_NOISE,
@@ -2867,16 +2868,9 @@ enum spell_type
     SPELL_PORTAL_PROJECTILE,
     SPELL_SUMMON_UGLY_THING,
     SPELL_PETRIFY,
-    SPELL_FLAME_AMMUNITION,
-    SPELL_FROST_AMMUNITION,
-    SPELL_SHOCKING_AMMUNITION,
-    SPELL_WARP_AMMUNITION,
-    SPELL_EXPLODING_AMMUNITION,
-    SPELL_REAPING_AMMUNITION,
-    SPELL_RETURNING_AMMUNITION,
 
     // Mostly monster-only spells after this point:
-    SPELL_HELLFIRE_BURST = 175,
+    SPELL_HELLFIRE_BURST = 155,
     SPELL_VAMPIRE_SUMMON,
     SPELL_BRAIN_FEED,
     SPELL_FAKE_RAKSHASA_SUMMON,
@@ -2912,6 +2906,13 @@ enum spell_type
     SPELL_BLINK_CLOSE,
     SPELL_BLINK_RANGE,
     SPELL_BLINK_AWAY,
+    SPELL_MISLEAD,
+    SPELL_FAKE_MARA_SUMMON,
+    SPELL_SUMMON_RAKSHASA,
+    SPELL_SUMMON_PLAYER_GHOST,
+    SPELL_PRIMAL_WAVE,
+    SPELL_CALL_TIDE,
+    SPELL_IOOD,
 
     NUM_SPELLS
 };
@@ -3159,6 +3160,8 @@ enum zap_type
     ZAP_SLIME,
     ZAP_PORKALATOR,
     ZAP_SLEEP,
+    ZAP_PRIMAL_WAVE,
+    ZAP_IOOD,
     NUM_ZAPS
 };
 

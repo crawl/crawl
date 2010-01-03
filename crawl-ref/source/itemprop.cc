@@ -337,13 +337,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     // - slings get a bonus from dex, not str (as tension is meaningless)
     // - str weight is used for speed and applying dex to skill
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,  20,  0,
-        SK_DARTS,        HANDS_HALF,   SIZE_LITTLE, MI_NEEDLE, false,
+        SK_THROWING,        HANDS_HALF,   SIZE_LITTLE, MI_NEEDLE, false,
         DAMV_NON_MELEE, 0 },
     { WPN_SLING,             "sling",               0,  2, 11,  20,  1,
         SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE, false,
-        DAMV_NON_MELEE, 10 },
-    { WPN_HAND_CROSSBOW,     "hand crossbow",       3,  4, 15,  70,  5,
-        SK_CROSSBOWS,    HANDS_HALF,   SIZE_SMALL,  MI_DART, false,
         DAMV_NON_MELEE, 10 },
     { WPN_CROSSBOW,          "crossbow",            5,  4, 15, 150,  8,
         SK_CROSSBOWS,    HANDS_TWO,    SIZE_MEDIUM, MI_BOLT, false,
@@ -430,7 +427,7 @@ void init_properties()
 {
     // Compare with enum comments, to catch changes.
     COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
-    COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
+    COMPILE_CHECK(NUM_WEAPONS  == 55, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
     COMPILE_CHECK(NUM_FOODS    == 22, c4);
 
@@ -457,11 +454,6 @@ void init_properties()
 //
 // Item cursed status functions:
 //
-bool item_cursed( const item_def &item )
-{
-    return (item.flags & ISFLAG_CURSED);
-}
-
 bool item_known_cursed( const item_def &item )
 {
     return ((item.flags & ISFLAG_KNOW_CURSE) && (item.flags & ISFLAG_CURSED));
@@ -565,48 +557,6 @@ bool item_is_stationary( const item_def &item )
 bool item_ident( const item_def &item, unsigned long flags )
 {
     return ((item.flags & flags) == flags);
-}
-
-// The Orb of Zot and unique runes are considered critical.
-bool item_is_critical(const item_def &item)
-{
-    if (!item.is_valid())
-        return (false);
-
-    if (item.base_type == OBJ_ORBS)
-        return (true);
-
-    return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_RUNE_OF_ZOT
-            && item.plus != RUNE_DEMONIC
-            && item.plus != RUNE_ABYSSAL);
-}
-
-// Is item something that no one would usually bother enchanting?
-bool item_is_mundane(const item_def &item)
-{
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        if (item.sub_type == WPN_CLUB
-            || item.sub_type == WPN_GIANT_CLUB
-            || item.sub_type == WPN_GIANT_SPIKED_CLUB
-            || item.sub_type == WPN_KNIFE)
-        {
-            return (true);
-        }
-        break;
-
-    case OBJ_ARMOUR:
-        if (item.sub_type == ARM_ANIMAL_SKIN)
-            return (true);
-        break;
-
-    default:
-        break;
-    }
-
-    return (false);
 }
 
 void set_ident_flags( item_def &item, unsigned long flags )
@@ -790,7 +740,6 @@ void set_equip_race( item_def &item, unsigned long flags )
                     && item.sub_type != WPN_LONG_SWORD)
                 || weapon_skill(item) == SK_POLEARMS
                 || item.sub_type == WPN_BLOWGUN
-                || item.sub_type == WPN_HAND_CROSSBOW
                 || item.sub_type == WPN_BOW
                 || item.sub_type == WPN_LONGBOW)
             {
@@ -823,7 +772,6 @@ void set_equip_race( item_def &item, unsigned long flags )
         {
         case OBJ_WEAPONS:
             if (item.sub_type == WPN_QUICK_BLADE
-                || item.sub_type == WPN_HAND_CROSSBOW
                 || item.sub_type == WPN_LONGBOW)
                 return;
             break;
@@ -946,10 +894,15 @@ int get_ammo_brand( const item_def &item )
 
 special_armour_type get_armour_ego_type( const item_def &item )
 {
-    // Artefact armours have no ego type, must look up powers
-    // separately.
-    if (item.base_type != OBJ_ARMOUR || is_artefact( item ))
+    // Armour ego types are "brands", so we do the randart lookup here.
+    if (item.base_type != OBJ_ARMOUR)
         return (SPARM_NORMAL);
+
+    if (is_artefact( item ))
+    {
+        return (static_cast<special_armour_type>(
+                    artefact_wpn_property( item, ARTP_BRAND )));
+    }
 
     return (static_cast<special_armour_type>(item.special));
 }
@@ -1143,7 +1096,9 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
         if (item_ident(it, ISFLAG_KNOW_PLUSES))
         {
             return (it.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT
-                    || it.plus < it.plus2);
+                    || it.plus < it.plus2
+                    || !it.props.exists("rod_enchantment")
+                    || short(it.props["rod_enchantment"]) < MAX_WPN_ENCHANT);
         }
         return (true);
     }
@@ -1205,7 +1160,7 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
             || first && wpn.plus >= MAX_WPN_ENCHANT
             || !first && wpn.plus2 >= MAX_WPN_ENCHANT)
         {
-            return (uncurse && item_cursed(wpn));
+            return (uncurse && wpn.cursed());
         }
     }
     // Highly enchanted missiles, which have only one stat, cannot be
@@ -1238,7 +1193,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-        return (uncurse && item_cursed(arm));
+        return (uncurse && arm.cursed());
 
     return (true);
 }
@@ -1290,7 +1245,6 @@ int weapon_rarity( int w_type )
         return (5);
 
     case WPN_BROAD_AXE:
-    case WPN_HAND_CROSSBOW:
     case WPN_SPIKED_FLAIL:
     case WPN_WHIP:
         return (4);
@@ -1353,6 +1307,8 @@ int get_damage_type(const item_def &item)
 {
     int ret = DAM_BASH;
 
+    if (item_is_rod(item))
+        ret = DAM_BLUDGEON;
     if (item.base_type == OBJ_WEAPONS)
         ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAM_MASK);
 
@@ -1681,6 +1637,8 @@ skill_type weapon_skill( const item_def &item )
 {
     if (item.base_type == OBJ_WEAPONS && !is_range_weapon( item ))
         return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
+    else if (item_is_rod( item ))
+        return (SK_MACES_FLAILS); // Rods are short and stubby
     else if (item.base_type == OBJ_STAVES)
         return (SK_STAVES);
 
@@ -1708,7 +1666,7 @@ skill_type range_skill( const item_def &item )
     {
         switch (item.sub_type)
         {
-        case MI_DART:    return (SK_DARTS);
+        case MI_DART:    return (SK_THROWING);
         case MI_JAVELIN: return (SK_POLEARMS);
         default:         break;
         }
@@ -1884,7 +1842,8 @@ const char *ammo_name(const item_def &bow)
 bool has_launcher(const item_def &ammo)
 {
     ASSERT(ammo.base_type == OBJ_MISSILES);
-    return (ammo.sub_type != MI_LARGE_ROCK
+    return (ammo.sub_type != MI_DART
+            && ammo.sub_type != MI_LARGE_ROCK
             && ammo.sub_type != MI_JAVELIN
             && ammo.sub_type != MI_THROWING_NET);
 }
@@ -2109,6 +2068,8 @@ int corpse_freshness(const item_def &item)
 //
 int property(const item_def &item, int prop_type)
 {
+    weapon_type weapon_sub;
+
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
@@ -2135,12 +2096,14 @@ int property(const item_def &item, int prop_type)
         break;
 
     case OBJ_STAVES:
+        weapon_sub = item_is_rod(item) ? WPN_CLUB : WPN_QUARTERSTAFF;
+
         if (prop_type == PWPN_DAMAGE)
-            return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].dam);
+            return (Weapon_prop[ Weapon_index[weapon_sub] ].dam);
         else if (prop_type == PWPN_HIT)
-            return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].hit);
+            return (Weapon_prop[ Weapon_index[weapon_sub] ].hit);
         else if (prop_type == PWPN_SPEED)
-            return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].speed);
+            return (Weapon_prop[ Weapon_index[weapon_sub] ].speed);
         break;
 
     default:
@@ -2502,6 +2465,12 @@ bool shield_reflects(const item_def &shield)
     ASSERT(is_shield(shield));
 
     return (get_armour_ego_type(shield) == SPARM_REFLECTION);
+}
+
+void ident_reflector(item_def *item)
+{
+    if (!is_artefact(*item))
+        set_ident_flags(*item, ISFLAG_KNOW_TYPE);
 }
 
 std::string item_base_name(const item_def &item)

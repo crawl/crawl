@@ -24,7 +24,7 @@ class stack_iterator : public std::iterator<std::forward_iterator_tag,
                                             item_def>
 {
 public:
-    explicit stack_iterator( const coord_def& pos );
+    explicit stack_iterator( const coord_def& pos, bool accessible = false );
     explicit stack_iterator( int start_link );
 
     operator bool() const;
@@ -81,11 +81,6 @@ int near_stairs(const coord_def &p, int max_dist,
 inline bool testbits(unsigned long flags, unsigned long test)
 {
     return ((flags & test) == test);
-}
-
-template <typename Z> inline Z sgn(Z x)
-{
-    return (x < 0 ? -1 : (x > 0 ? 1 : 0));
 }
 
 bool is_trap_square(dungeon_feature_type grid);

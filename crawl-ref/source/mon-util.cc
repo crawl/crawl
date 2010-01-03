@@ -148,7 +148,8 @@ void init_mon_name_cache()
             if (mon == MONS_RAKSHASA_FAKE
                 || mon == MONS_ARMOUR_MIMIC
                 || mon == MONS_SCROLL_MIMIC
-                || mon == MONS_POTION_MIMIC)
+                || mon == MONS_POTION_MIMIC
+                || mon == MONS_MARA_FAKE)
             {
                 // Keep previous entry.
                 continue;
@@ -482,6 +483,11 @@ bool mons_is_fast(const monsters *mon)
         player_movement_speed(), pspeed, mon->speed);
 #endif
     return (mon->speed > pspeed);
+}
+
+bool mons_is_projectile(int mc)
+{
+    return (mc == MONS_ORB_OF_DESTRUCTION);
 }
 
 bool mons_is_insubstantial(int mc)
@@ -921,6 +927,11 @@ bool mons_is_zombified(const monsters *mon)
     return (mons_class_is_zombified(mon->type));
 }
 
+monster_type mons_base_type(const monsters *mon)
+{
+    return mons_is_zombified(mon) ? mon->base_monster : mon->type;
+}
+
 bool mons_class_can_be_zombified(int mc)
 {
     int ms = mons_species(mc);
@@ -936,7 +947,8 @@ bool mons_can_be_zombified(const monsters *mon)
 
 bool mons_class_can_use_stairs(int mc)
 {
-    return (!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING);
+    return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
+            && mc != MONS_KRAKEN_TENTACLE);
 }
 
 bool mons_can_use_stairs(const monsters *mon)
@@ -1046,6 +1058,14 @@ mon_attack_def downscale_zombie_attack(const monsters *mons,
 mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
 {
     int mc = mon->type;
+
+    if (mc == MONS_KRAKEN_TENTACLE
+        && !invalid_monster_index(mon->number))
+    {
+        // Use the zombie, etc info from the kraken
+        mon = &menv[mon->number];
+    }
+
     const bool zombified = mons_is_zombified(mon);
 
     if (attk_number < 0 || attk_number > 3 || mon->has_hydra_multi_attack())
@@ -1063,7 +1083,7 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
         return (mon_attack_def::attk(0, AT_NONE));
     }
 
-    if (zombified)
+    if (zombified && mc != MONS_KRAKEN_TENTACLE)
         mc = mons_zombie_base(mon);
 
     ASSERT(smc);
@@ -2010,7 +2030,8 @@ bool mons_wields_two_weapons(const monsters *mon)
 
 bool mons_self_destructs(const monsters *m)
 {
-    return (m->type == MONS_GIANT_SPORE || m->type == MONS_BALL_LIGHTNING);
+    return (m->type == MONS_GIANT_SPORE || m->type == MONS_BALL_LIGHTNING
+        || m->type == MONS_ORB_OF_DESTRUCTION);
 }
 
 int mons_base_damage_brand(const monsters *m)
@@ -2389,6 +2410,13 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     // handled here as well. - bwr
     switch (monspell)
     {
+    case SPELL_CALL_TIDE:
+        return (!player_in_branch(BRANCH_SHOALS)
+                || mon->has_ench(ENCH_TIDE)
+                || !foe
+                || (grd(mon->pos()) == DNGN_DEEP_WATER
+                    && grd(foe->pos()) == DNGN_DEEP_WATER));
+
     case SPELL_BRAIN_FEED:
         ret = (foe != &you);
         break;
@@ -2563,12 +2591,13 @@ static bool _ms_los_spell(spell_type monspell)
     // True, the tentacles _are_ summoned, but they are restricted to
     // water just like the kraken is, so it makes more sense not to
     // count them here.
-    if (SPELL_KRAKEN_TENTACLES)
+    if (monspell == SPELL_KRAKEN_TENTACLES)
         return (false);
 
     if (monspell == SPELL_SMITING
         || monspell == SPELL_AIRSTRIKE
         || monspell == SPELL_HAUNT
+        || monspell == SPELL_MISLEAD
         || spell_typematch(monspell, SPTYP_SUMMONING))
     {
         return (true);
@@ -2584,7 +2613,8 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     // Check for Smiting specially, so it's not filtered along
     // with the summon spells.
     if (attack_only
-        && (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE))
+        && (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE
+            || monspell == SPELL_MISLEAD))
     {
         return (true);
     }
@@ -2732,6 +2762,10 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     {
         gender = GENDER_FEMALE;
     }
+    // Mara's fakes aren't a unique, but should still be classified
+    // as male.
+    else if (mon_type == MONS_MARA_FAKE)
+        gender = GENDER_MALE;
     else if (mons_is_unique(mon_type) && mon_type != MONS_PLAYER_GHOST)
     {
         switch (mon_type)
@@ -2812,7 +2846,8 @@ bool mons_has_smite_attack(const monsters *monster)
             || hspell_pass[i] == SPELL_SMITING
             || hspell_pass[i] == SPELL_HELLFIRE_BURST
             || hspell_pass[i] == SPELL_FIRE_STORM
-            || hspell_pass[i] == SPELL_AIRSTRIKE)
+            || hspell_pass[i] == SPELL_AIRSTRIKE
+            || hspell_pass[i] == SPELL_MISLEAD)
         {
             return (true);
         }

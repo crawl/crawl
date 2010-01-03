@@ -112,7 +112,7 @@ bool can_wield(item_def *weapon, bool say_reason,
     if (!ignore_temporary_disability
         && you.weapon()
         && you.weapon()->base_type == OBJ_WEAPONS
-        && item_cursed(*you.weapon()))
+        && you.weapon()->cursed())
     {
         SAY(mpr("You can't unwield your weapon to draw a new one!"));
         return (false);
@@ -175,12 +175,13 @@ bool can_wield(item_def *weapon, bool say_reason,
     }
 
     if (you.hunger_state < HS_FULL
+        && you.hunger < you_max_hunger() - 500 // ghouls
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
-        && you.species != SP_VAMPIRE)
+        && you.species != SP_VAMPIRE && you.species != SP_MUMMY)
     {
         if (say_reason)
         {
-            mpr("You're too hungry to wield that.");
+            mpr("As you grasp it, you feel a great hunger.  Being not satiated, you stop.");
             // If it's a standard weapon, you know its ego now.
             if (!is_artefact(*weapon) && !is_blessed(*weapon)
                 && !item_type_known(*weapon))
@@ -410,21 +411,6 @@ static const char *shield_impact_degree(int impact)
                          : NULL);
 }
 
-static void warn_rod_shield_interference(const item_def &)
-{
-    const int leakage = rod_shield_leakage();
-    const char *leak_degree = shield_impact_degree(leakage);
-
-    // Any way to avoid the double entendre? :-)
-    if (leak_degree)
-    {
-        mprf(MSGCH_WARN,
-                "Your %s %sreduces the effectiveness of your rod.",
-                shield_base_name(you.shield()),
-                leak_degree);
-    }
-}
-
 static void warn_launcher_shield_slowdown(const item_def &launcher)
 {
     const int slowspeed =
@@ -454,14 +440,12 @@ void warn_shield_penalties()
     if (!you.shield())
         return;
 
-    // Warnings are limited to rods, bows, and quarterstaves at the moment.
+    // Warnings are limited to bows and quarterstaves at the moment.
     const item_def *weapon = you.weapon();
     if (!weapon)
         return;
 
-    if (item_is_rod(*weapon))
-        warn_rod_shield_interference(*weapon);
-    else if (is_range_weapon(*weapon))
+    if (is_range_weapon(*weapon))
         warn_launcher_shield_slowdown(*weapon);
     else if (weapon->base_type == OBJ_WEAPONS
              && weapon_skill(*weapon) == SK_STAVES)
@@ -515,6 +499,19 @@ void wield_effects(int item_wield_2, bool showMsgs)
             // Give curse status when wielded.
             // Right now that's always "uncursed". -- bwr
             set_ident_flags(item, ISFLAG_KNOW_CURSE);
+        }
+        // Automatically identify rods; you can do this by wielding and then
+        // evoking them, so do it automatically instead. We don't need to give
+        // a message either, as the game will do that automatically. {due}
+        if (item_is_rod(item))
+        {
+            if (!item_type_known(item))
+            {
+                set_ident_type( OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE );
+                set_ident_flags( item, ISFLAG_KNOW_TYPE );
+            }
+            if (!item_ident( item, ISFLAG_KNOW_PLUSES))
+                set_ident_flags( item, ISFLAG_KNOW_PLUSES );
         }
         break;
     }
@@ -616,6 +613,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     mpr("You feel protected!");
                     break;
 
+                case SPWPN_EVASION:
+                    mpr("You feel nimbler!");
+                    break;
+
                 case SPWPN_DRAINING:
                     mpr("You sense an unholy aura.");
                     break;
@@ -707,7 +708,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             }
         }
 
-        if (item_cursed(item))
+        if (item.cursed())
         {
             mpr("It sticks to your hand!");
             int amusement = 16;
@@ -1045,7 +1046,7 @@ bool do_wear_armour(int item, bool quiet)
         && you.equip[EQ_CLOAK] != -1 && !cloak_is_being_removed())
     {
         if (you.equip[EQ_BODY_ARMOUR] != -1
-            && item_cursed(you.inv[you.equip[EQ_BODY_ARMOUR]]))
+            && you.inv[you.equip[EQ_BODY_ARMOUR]].cursed())
         {
             if (!quiet)
             {
@@ -1055,7 +1056,7 @@ bool do_wear_armour(int item, bool quiet)
             }
             return (false);
         }
-        if (!item_cursed(you.inv[you.equip[EQ_CLOAK]]))
+        if (!you.inv[you.equip[EQ_CLOAK]].cursed())
         {
             cloak = you.equip[EQ_CLOAK];
             if (!takeoff_armour(you.equip[EQ_CLOAK]))
@@ -1135,7 +1136,7 @@ bool takeoff_armour(int item)
     }
 
     // If we get here, we're wearing the item.
-    if (item_cursed(invitem))
+    if (invitem.cursed())
     {
         mprf("%s is stuck to your body!", invitem.name(DESC_CAP_YOUR).c_str());
         return (false);
@@ -1151,7 +1152,7 @@ bool takeoff_armour(int item)
     {
         if (you.equip[EQ_CLOAK] != -1 && !cloak_is_being_removed())
         {
-            if (!item_cursed(you.inv[you.equip[EQ_CLOAK]]))
+            if (!you.inv[you.equip[EQ_CLOAK]].cursed())
             {
                 cloak = you.equip[ EQ_CLOAK ];
                 if (!takeoff_armour(you.equip[EQ_CLOAK]))
@@ -1439,7 +1440,7 @@ static bool _fire_validate_item(int slot, std::string &err)
 {
     if (slot == you.equip[EQ_WEAPON]
         && you.inv[slot].base_type == OBJ_WEAPONS
-        && item_cursed(you.inv[slot]))
+        && you.inv[slot].cursed())
     {
         err = "That weapon is stuck to your hand!";
         return (false);
@@ -1677,7 +1678,7 @@ static int _item_to_skill_level(const item_def *item)
 {
     skill_type type = range_skill(*item);
 
-    if (type == SK_DARTS || type == SK_SLINGS)
+    if (type == SK_SLINGS)
         return (you.skills[type] + you.skills[SK_THROWING]);
 
     return (2 * you.skills[type]);
@@ -1929,6 +1930,92 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
     return (false);
 }
 
+int _blowgun_power_roll (bolt &beam)
+{
+    actor* agent = beam.agent();
+    int base_power = 1;
+    int blowgun_base = 0;
+
+    if (agent->atype() == ACT_MONSTER)
+    {
+        monsters* mons = static_cast<monsters*>(agent);
+        base_power += mons->hit_dice;
+        blowgun_base += (*mons).launcher()->plus;
+    }
+    else
+    {
+        base_power += you.skills[SK_THROWING];
+        blowgun_base += (you.weapon())->plus;
+    }
+
+    return (base_power + blowgun_base);
+}
+
+static bool _paralysis_hit_victim (bolt& beam, actor* victim, int dmg,
+                                  int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->paralyse(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _sleep_hit_victim (bolt& beam, actor* victim, int dmg,
+                                  int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->put_to_sleep(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _confusion_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->confuse(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _slow_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->slow_down(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _sickness_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->sicken(40 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _rage_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    victim->go_berserk(false);
+    return (true);
+}
+
 bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                         std::string &ammo_name, bool &returning)
 {
@@ -2034,8 +2121,26 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 || ammo_brand == SPMSL_ELECTRIC;
     const bool blessed      = bow_brand == SPWPN_HOLY_WRATH
                               && ammo_brand != SPMSL_REAPING;
+    const bool flaming      = bow_brand == SPWPN_FLAME
+                                || ammo_brand == SPMSL_FLAME;
+
+    const bool paralysis    = ammo_brand == SPMSL_PARALYSIS;
+    const bool slow         = ammo_brand == SPMSL_SLOW;
+    const bool sleep        = ammo_brand == SPMSL_SLEEP;
+    const bool confusion    = ammo_brand == SPMSL_CONFUSION;
+    const bool sickness     = ammo_brand == SPMSL_SICKNESS;
+    const bool rage         = ammo_brand == SPMSL_RAGE;
+
 
     ASSERT(!exploding || !is_artefact(item));
+
+    if (flaming && poisoned)
+        ; // Do nothing. A specific exclusion to launcher not overwriting
+          // ammunition brands.
+    else
+        // XXX: Launcher brand does not affect its ammunition. This may change.
+        if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
+            bow_brand = SPWPN_NORMAL;
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
 
@@ -2109,6 +2214,19 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.damage_funcs.push_back(_charged_hit_victim);
     if (blessed)
         beam.damage_funcs.push_back(_blessed_hit_victim);
+
+    if (paralysis)
+        beam.hit_funcs.push_back(_paralysis_hit_victim);
+    if (slow)
+        beam.hit_funcs.push_back(_slow_hit_victim);
+    if (sleep)
+        beam.hit_funcs.push_back(_sleep_hit_victim);
+    if (confusion)
+        beam.hit_funcs.push_back(_confusion_hit_victim);
+    if (sickness)
+        beam.hit_funcs.push_back(_sickness_hit_victim);
+    if (rage)
+        beam.hit_funcs.push_back(_rage_hit_victim);
 
     if (reaping && ammo.special != SPMSL_REAPING)
     {
@@ -2312,10 +2430,6 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     case WPN_SLING:
         level = 1;
         msg   = "You hear a whirring sound.";
-        break;
-    case WPN_HAND_CROSSBOW:
-        level = 3;
-        msg   = "You hear a small twanging sound.";
         break;
      case WPN_BOW:
         level = 5;
@@ -2577,13 +2691,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
             pbolt.ench_power = AUTOMATIC_HIT;
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-                "Base hit == %d; Base damage == %d "
+        dprf(   "Base hit == %d; Base damage == %d "
                 "(item %d + launcher %d)",
                         baseHit, baseDam,
                         item_base_dam, lnch_base_dam);
-#endif
 
         // Fix ammo damage bonus, since missiles only use inv_plus.
         ammoDamBonus = ammoHitBonus;
@@ -2625,9 +2736,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         effSkill    = shoot_skill;
 
         const int speed = launcher_final_speed(launcher, you.shield());
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Final launcher speed: %d", speed);
-#endif
+        dprf("Final launcher speed: %d", speed);
         you.time_taken = speed * you.time_taken / 100;
 
         // [dshaligram] Improving missile weapons:
@@ -2690,9 +2799,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Blowguns take a _very_ steady hand; a lot of the bonus
         // comes from dexterity.  (Dex bonus here as well as below.)
-        case SK_DARTS:
+        case SK_THROWING:
             baseHit -= 2;
-            exercise(SK_DARTS, (coinflip()? 2 : 1));
+            exercise(SK_THROWING, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 3) / 2 + you.dex / 2;
 
             // No extra damage for blowguns.
@@ -2738,19 +2847,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             dice_mult = dice_mult * (22 + random2(1 + effSkill)) / 22;
 
-            if (lnchType == WPN_HAND_CROSSBOW)
-            {
-                exHitBonus -= 2;
-                dice_mult = dice_mult * 26 / 30;
-            }
-            break;
-
         default:
             break;
         }
 
         // Slings and Darts train Throwing a bit.
-        if (launcher_skill == SK_SLINGS || launcher_skill == SK_DARTS)
+        if (launcher_skill == SK_SLINGS)
         {
             if (coinflip())
                 exercise(SK_THROWING, 1);
@@ -2804,7 +2906,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         switch (lnchType)
         {
-            case WPN_HAND_CROSSBOW:
             case WPN_CROSSBOW:
                 if (returning && !one_chance_in(1 + skill_bump(SK_CROSSBOWS)))
                     did_return = true;
@@ -2819,7 +2920,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                     did_return = true;
                 break;
             case WPN_BLOWGUN:
-                if (returning && !one_chance_in(1 + skill_bump(SK_DARTS)))
+                if (returning && !one_chance_in(1 + skill_bump(SK_THROWING)))
                     did_return = true;
                 break;
             default:
@@ -2925,13 +3026,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 break;
 
             case MI_DART:
-                exHitBonus  = you.skills[SK_DARTS] * 2;
-                exHitBonus += (you.skills[SK_THROWING] * 2) / 3;
-                exDamBonus  = you.skills[SK_DARTS] / 3;
-                exDamBonus += you.skills[SK_THROWING] / 5;
+                // Darts also using throwing skills, now.
+                exHitBonus += skill_bump(SK_THROWING);
+                exDamBonus += you.skills[SK_THROWING] * 3 / 5;
 
                 // exercise skills
-                exercise(SK_DARTS, 1 + random2avg(3, 2));
+                exercise(SK_THROWING, 1 + random2avg(3, 2));
                 break;
 
             case MI_JAVELIN:
@@ -3029,12 +3129,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // Throwing needles is now seriously frowned upon; it's difficult
             // to grip a fiddly little needle, and not penalising it cheapens
             // blowguns.
-            exHitBonus -= (30 - you.skills[SK_DARTS]) / 3;
-            baseHit    -= (30 - you.skills[SK_DARTS]) / 3;
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Needle base hit = %d, exHitBonus = %d",
+            exHitBonus -= (30 - you.skills[SK_THROWING]) / 3;
+            baseHit    -= (30 - you.skills[SK_THROWING]) / 3;
+            dprf("Needle base hit = %d, exHitBonus = %d",
                     baseHit, exHitBonus);
-#endif
         }
     }
 
@@ -3065,13 +3163,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     scale_dice(pbolt.damage);
 
-#if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS,
-            "H:%d+%d;a%dl%d.  D:%d+%d;a%dl%d -> %d,%dd%d",
+    dprf(   "H:%d+%d;a%dl%d.  D:%d+%d;a%dl%d -> %d,%dd%d",
               baseHit, exHitBonus, ammoHitBonus, lnchHitBonus,
               baseDam, exDamBonus, ammoDamBonus, lnchDamBonus,
               pbolt.hit, pbolt.damage.num, pbolt.damage.size );
-#endif
 
     // Create message.
     mprf( "%s %s%s %s.",
@@ -3109,7 +3204,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.fire();
 
         // The item can be destroyed before returning.
-        if (did_return && thrown_object_destroyed(&item, pbolt.target, true))
+        if (did_return && thrown_object_destroyed(&item, pbolt.target))
             did_return = false;
     }
 
@@ -3174,8 +3269,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     return (hit);
 }
 
-bool thrown_object_destroyed(item_def *item, const coord_def& where,
-                             bool returning)
+bool thrown_object_destroyed(item_def *item, const coord_def& where)
 {
     ASSERT(item != NULL);
 
@@ -3240,22 +3334,6 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where,
     // destruction: plus / (1 + plus) chance of survival.
     bool destroyed = (chance == 0) ? false : (one_chance_in(chance)
                                               && one_chance_in(item->plus + 1));
-    bool hostile_grid = feat_destroys_items(grd(where));
-
-    // Non-returning items thrown into item-destroying grids are always
-    // destroyed.  Returning items are only destroyed if they would have
-    // been randomly destroyed anyway.
-    if (returning && !destroyed)
-        hostile_grid = false;
-
-    if (hostile_grid)
-    {
-        if (player_can_hear(where))
-            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(where)));
-
-        item_was_destroyed(*item, NON_MONSTER);
-        destroyed = true;
-    }
 
     return destroyed;
 }
@@ -3477,7 +3555,7 @@ void jewellery_wear_effects(item_def &item)
             set_ident_flags(item, ISFLAG_EQ_JEWELLERY_MASK);
     }
 
-    if (item_cursed(item))
+    if (item.cursed())
     {
         mprf("Oops, that %s feels deathly cold.",
              jewellery_is_amulet(item)? "amulet" : "ring");
@@ -3506,7 +3584,7 @@ static int _prompt_ring_to_remove(int new_ring)
     const item_def *left  = you.slot_item(EQ_LEFT_RING);
     const item_def *right = you.slot_item(EQ_RIGHT_RING);
 
-    if (item_cursed(*left) && item_cursed(*right))
+    if (left->cursed() && right->cursed())
     {
         mprf("You're already wearing two cursed rings!");
         return (-1);
@@ -3726,7 +3804,7 @@ static bool _swap_rings(int ring_slot)
     const item_def* lring = you.slot_item(EQ_LEFT_RING);
     const item_def* rring = you.slot_item(EQ_RIGHT_RING);
 
-    if (item_cursed(*lring) && item_cursed(*rring))
+    if (lring->cursed() && rring->cursed())
     {
         mprf("You're already wearing two cursed rings!");
         return (false);
@@ -3740,7 +3818,7 @@ static bool _swap_rings(int ring_slot)
         && lring->plus2 == rring->plus2
         && !is_artefact(*lring) && !is_artefact(*rring))
     {
-        if (item_cursed(*lring))
+        if (lring->cursed())
             unwanted = you.equip[EQ_RIGHT_RING];
         else
             unwanted = you.equip[EQ_LEFT_RING];
@@ -3807,7 +3885,7 @@ bool puton_item(int item_slot)
     if (!is_amulet)     // i.e. it's a ring
     {
         const item_def* gloves = you.slot_item(EQ_GLOVES);
-        if (gloves && item_cursed(*gloves))
+        if (gloves && gloves->cursed())
         {
             mpr("You can't take your gloves off to put on a ring!");
             return (false);
@@ -4021,7 +4099,7 @@ bool remove_ring(int slot, bool announce)
     }
 
     if (you.equip[EQ_GLOVES] != -1
-        && item_cursed( you.inv[you.equip[EQ_GLOVES]] )
+        && you.inv[you.equip[EQ_GLOVES]] .cursed()
         && you.equip[EQ_AMULET] == -1)
     {
         mpr("You can't take your gloves off to remove any rings!");
@@ -4085,7 +4163,7 @@ bool remove_ring(int slot, bool announce)
     }
 
     if (you.equip[EQ_GLOVES] != -1
-        && item_cursed( you.inv[you.equip[EQ_GLOVES]] )
+        && you.inv[you.equip[EQ_GLOVES]] .cursed()
         && (hand_used == EQ_LEFT_RING || hand_used == EQ_RIGHT_RING))
     {
         mpr("You can't take your gloves off to remove any rings!");
@@ -4098,7 +4176,7 @@ bool remove_ring(int slot, bool announce)
         return (false);
     }
 
-    if (item_cursed( you.inv[you.equip[hand_used]] ))
+    if (you.inv[you.equip[hand_used]] .cursed())
     {
         if (announce)
         {
@@ -4151,7 +4229,7 @@ static bool _dont_use_invis()
     }
     else if (get_contamination_level() > 0
              && !yesno("Invisibility will do you no good right now; "
-                       "use anyways?"))
+                       "use anyways?", false, 'n'))
     {
         return (true);
     }
@@ -4304,7 +4382,8 @@ void zap_wand(int slot)
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;
 
-    beam.source = you.pos();
+    beam.source   = you.pos();
+    beam.attitude = ATT_FRIENDLY;
     beam.set_target(zap_wand);
 
     bool aimed_at_self = (beam.target == you.pos());
@@ -4556,14 +4635,14 @@ bool _drink_fountain()
     potion_type fountain_effect = POT_WATER;
     if (feat == DNGN_FOUNTAIN_BLUE)
     {
-        if (!yesno("Drink from the fountain?"))
+        if (!yesno("Drink from the fountain?", true, 'n'))
             return (false);
 
         mpr("You drink the pure, clear water.");
     }
     else if (feat == DNGN_FOUNTAIN_BLOOD)
     {
-        if (!yesno("Drink from the fountain of blood?"))
+        if (!yesno("Drink from the fountain of blood?", true, 'n'))
             return (false);
 
         mpr("You drink the blood.");
@@ -4571,7 +4650,7 @@ bool _drink_fountain()
     }
     else
     {
-        if (!yesno("Drink from the sparkling fountain?"))
+        if (!yesno("Drink from the sparkling fountain?", true, 'n'))
             return (false);
 
         mpr("You drink the sparkling water.");
@@ -4697,13 +4776,18 @@ static bool _vorpalise_weapon()
             mprf("%s's heaviness feels very stable.", itname.c_str());
         break;
 
+    case SPWPN_FLAME:
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
         immolation(10, IMMOLATION_SPELL, you.pos(), true, &you);
         break;
 
+    case SPWPN_FROST:
     case SPWPN_FREEZING:
-        mprf("%s glows brilliantly blue for a moment.", itname.c_str());
+        if (get_weapon_brand(wpn) == SPWPN_FROST)
+            mprf("%s is covered with a thick layer of frost!", itname.c_str());
+        else
+            mprf("%s glows brilliantly blue for a moment.", itname.c_str());
         cast_refrigeration(60);
         break;
 
@@ -4767,7 +4851,7 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
         return (false);
     }
 
-    const bool is_cursed = item_cursed(wpn);
+    const bool is_cursed = wpn.cursed();
 
     // Missiles only have one stat.
     if (wpn.base_type == OBJ_MISSILES)
@@ -4878,7 +4962,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         return (false);
     }
 
-    const bool is_cursed = item_cursed(arm);
+    const bool is_cursed = arm.cursed();
 
     // Turn hides into mails where applicable.
     // NOTE: It is assumed that armour which changes in this way does
@@ -5351,7 +5435,7 @@ void read_scroll(int slot)
     case SCR_CURSE_WEAPON:
         if (!you.weapon()
             || you.weapon()->base_type != OBJ_WEAPONS
-            || item_cursed(*you.weapon()))
+            || you.weapon()->cursed())
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             id_the_scroll = false;
@@ -5379,7 +5463,7 @@ void read_scroll(int slot)
         {
             item_def& wpn = *you.weapon();
 
-            const bool is_cursed = item_cursed(wpn);
+            const bool is_cursed = wpn.cursed();
 
             if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES
                 || !is_cursed
@@ -5487,7 +5571,7 @@ void read_scroll(int slot)
         int affected = EQ_WEAPON;
         for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
         {
-            if (you.equip[i] != -1 && !item_cursed(you.inv[you.equip[i]]))
+            if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
             {
                 count++;
                 if (one_chance_in(count))
@@ -5641,15 +5725,11 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
         }
     }
 
-    if (proprt[ARTP_MAGICAL_POWER])
+    if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
-        you.redraw_magic_points = true;
-        if (!known[ARTP_MAGICAL_POWER])
-        {
-            mprf("You feel your mana capacity %s.",
-                 proprt[ARTP_MAGICAL_POWER] > 0? "increase" : "decrease");
-            artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
-        }
+        mprf("You feel your mana capacity %s.",
+             proprt[ARTP_MAGICAL_POWER] > 0? "increase" : "decrease");
+        artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
     }
 
     // Modify ability scores.
@@ -5691,7 +5771,7 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
         artefact_wpn_learn_prop(item, ARTP_BERSERK);
     }
 
-    if (!unmeld && !item_cursed(item) && proprt[ARTP_CURSED] > 0
+    if (!unmeld && !item.cursed() && proprt[ARTP_CURSED] > 0
          && one_chance_in(proprt[ARTP_CURSED]))
     {
         do_curse_item( item, false );
@@ -5700,16 +5780,6 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
 
     if (proprt[ARTP_NOISES])
         you.attribute[ATTR_NOISES] = 1;
-
-    if (proprt[ARTP_SPIRIT_SHIELD])
-    {
-        set_mp(0, false);
-        mpr("You feel the spirits watch over you.");
-        if (you.species == SP_DEEP_DWARF)
-            mpr("Now linked to your health, your magic stops regenerating.");
-
-        artefact_wpn_learn_prop(item, ARTP_SPIRIT_SHIELD);
-    }
 
     if (!alreadyknown && Options.autoinscribe_artefacts)
         add_autoinscription(item, artefact_auto_inscription(item));
@@ -5720,6 +5790,10 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
         // there is a dangerous monster nearby...
         xom_is_stimulated(128);
     }
+
+    // Let's try this here instead of up there.
+    if (proprt[ARTP_MAGICAL_POWER])
+        calc_mp();
 #undef unknown_proprt
 }
 

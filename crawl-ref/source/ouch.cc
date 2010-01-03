@@ -80,9 +80,7 @@ int check_your_resists(int hurted, beam_type flavour)
     int resist;
     int original = hurted;
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "checking resistance: flavour=%d", flavour );
-#endif
+    dprf("checking resistance: flavour=%d", flavour );
 
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG)
@@ -93,6 +91,13 @@ int check_your_resists(int hurted, beam_type flavour)
 
     switch (flavour)
     {
+    case BEAM_WATER:
+        hurted = resist_adjust_damage(&you, flavour,
+                                      you.res_water_drowning(), hurted, true);
+        if (!hurted)
+            mpr("You shrug off the wave.");
+        break;
+
     case BEAM_STEAM:
         hurted = resist_adjust_damage(&you, flavour,
                                       player_res_steam(), hurted, true);
@@ -310,9 +315,7 @@ void _item_corrode(int slot)
     // Anti-corrosion items protect against 90% of corrosion.
     if (wearing_amulet(AMU_RESIST_CORROSION) && !one_chance_in(10))
     {
-#if DEBUG_DIAGNOSTICS
-        mpr( "Amulet protects.", MSGCH_DIAGNOSTICS );
-#endif
+        dprf("Amulet protects.");
         return;
     }
 
@@ -548,6 +551,10 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
     if (target_class == OBJ_UNASSIGNED)
         return (false);
 
+    // Beams fly *over* water and lava.
+    if (grd(where) == DNGN_LAVA || grd(where) == DNGN_DEEP_WATER)
+        return (false);
+
     for (stack_iterator si(where); si; ++si)
     {
         if (!si->is_valid())
@@ -747,10 +754,8 @@ bool drain_exp(bool announce_full)
 
         you.exp_available = std::max(0, you.exp_available);
 
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "You lose %ld experience points, %ld from pool.",
+        dprf("You lose %ld experience points, %ld from pool.",
              exp_drained, pool_drained);
-#endif
 
         you.redraw_experience = true;
 
@@ -1013,9 +1018,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     {
         // Deep Dwarves get to shave _any_ hp loss.
         int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "HP shaved: %d.", shave);
-#endif
+        dprf("HP shaved: %d.", shave);
         dam -= shave;
         if (dam <= 0)
             return;
@@ -1082,8 +1085,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             std::string damage_desc;
             if (!see_source)
             {
-                snprintf(info, INFO_SIZE, "something (%d)", dam);
-                damage_desc = info;
+                damage_desc = make_stringf("something (%d)", dam);
             }
             else
             {
@@ -1175,9 +1177,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 = se.death_description(scorefile_entry::DDV_VERBOSE);
 #ifdef USE_OPTIONAL_WIZARD_DEATH
 
-#if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Damage: %d; Hit points: %d", dam, you.hp);
-#endif
+            dprf("Damage: %d; Hit points: %d", dam, you.hp);
 
             if (crawl_state.test || !yesno("Die?", false, 'n'))
             {

@@ -94,7 +94,7 @@ namespace msg
     {
     public:
         mpr_stream_buf(msg_channel_type chan);
-        virtual ~mpr_stream_buf() {};
+        virtual ~mpr_stream_buf() {}
         void set_param(int p);
         void set_muted(bool m);
     protected:

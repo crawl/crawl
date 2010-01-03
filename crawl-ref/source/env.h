@@ -6,6 +6,7 @@
 #include "show.h"
 #include "trap_def.h"
 
+typedef FixedArray<short, GXM, GYM> grid_heightmap;
 struct crawl_environment
 {
 public:
@@ -21,6 +22,8 @@ public:
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned short, GXM, GYM >   cgrid; // cloud grid
     FixedArray< unsigned short, GXM, GYM >   grid_colours; // colour overrides
+
+    std::auto_ptr<grid_heightmap>            heightmap;
 
     // Player-remembered terrain. TODO: move to class player.
     FixedArray< map_cell, GXM, GYM >         map_knowledge;

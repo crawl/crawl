@@ -1699,15 +1699,12 @@ int mons_shoals_level(int mcls)
     switch (mcls)
     {
     case MONS_BUTTERFLY:
-    case MONS_PLANT:
     case MONS_GIANT_BAT:
         break;
 
     case MONS_MERFOLK:
     case MONS_MERMAID:
     case MONS_CENTAUR:
-    case MONS_ETTIN:
-    case MONS_SHEEP:
     case MONS_HIPPOGRIFF:
         mlev++;
         break;
@@ -1728,6 +1725,9 @@ int mons_shoals_level(int mcls)
     case MONS_OKLOB_PLANT:
     case MONS_SHARK:
     case MONS_KRAKEN:
+    case MONS_MERFOLK_IMPALER:
+    case MONS_MERFOLK_AQUAMANCER:
+    case MONS_MERFOLK_JAVELINEER:
         mlev += 4;
         break;
 
@@ -1745,11 +1745,6 @@ int mons_shoals_rare(int mcls)
 {
     switch (mcls)
     {
-    case MONS_PLANT:
-        return 150;
-
-    case MONS_ETTIN:
-    case MONS_SHEEP:
     case MONS_MERFOLK:
         return 50;
 
@@ -1764,11 +1759,14 @@ int mons_shoals_rare(int mcls)
 
     case MONS_SIREN:
     case MONS_YAKTAUR:
+    case MONS_MERFOLK_IMPALER:
+    case MONS_MERFOLK_JAVELINEER:
         return 25;
 
     case MONS_CYCLOPS:
     case MONS_CENTAUR_WARRIOR:
     case MONS_HARPY:
+    case MONS_MERFOLK_AQUAMANCER:
         return 20;
 
     case MONS_STONE_GIANT:
@@ -1800,7 +1798,7 @@ int mons_pitsnake_level(int mcls)
     case MONS_WATER_MOCCASIN:
     case MONS_BLACK_MAMBA:
     case MONS_VIPER:
-    case MONS_GREY_SNAKE:
+    case MONS_ANACONDA:
     case MONS_NAGA:
         mlev += 2;
         break;
@@ -1844,7 +1842,7 @@ int mons_pitsnake_rare(int mcls)
         return 34;
 
     case MONS_VIPER:
-    case MONS_GREY_SNAKE:
+    case MONS_ANACONDA:
         return 32;
 
     case MONS_GREATER_NAGA:

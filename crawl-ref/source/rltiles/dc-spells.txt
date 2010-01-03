@@ -30,6 +30,7 @@ swiftness SWIFTNESS
 %sdir spells/conjuration
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
 magic_dart MAGIC_DART
+orb_of_destruction IOOD
 
 %sdir spells/divination
 detect_creatures DETECT_CREATURES
@@ -133,7 +134,6 @@ alistairs_intoxication ALISTAIRS_INTOXICATION
 cure_poison CURE_POISON
 mephitic_cloud MEPHITIC_CLOUD
 olgrebs_toxic_radiance OLGREBS_TOXIC_RADIANCE
-poison_ammunition POISON_AMMUNITION
 poison_arrow POISON_ARROW
 poison_brand POISON_BRAND
 poisonous_cloud POISONOUS_CLOUD

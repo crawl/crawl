@@ -303,17 +303,7 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
                  merge_to->name(DESC_NOCAP_A).c_str());
         }
 
-        flash_view(LIGHTGREEN);
-
-        int flash_delay = 150;
-        // Scale delay to match change in arena_delay.
-        if (crawl_state.arena)
-        {
-            flash_delay *= Options.arena_delay;
-            flash_delay /= 600;
-        }
-
-        delay(flash_delay);
+        flash_view_delay(LIGHTGREEN, 150);
     }
     else if (you.can_see(initial_slime))
         mpr("A slime creature suddenly disappears!");
@@ -494,6 +484,7 @@ static bool _siren_movement_effect(const monsters *monster)
                 coord_def swapdest;
                 if (mon->wont_attack()
                     && !mons_is_stationary(mon)
+                    && !mons_is_projectile(mon->type)
                     && !mon->cannot_act()
                     && !mon->asleep()
                     && swap_check(mon, swapdest, true))
@@ -647,7 +638,7 @@ static bool _orc_battle_cry(monsters *chief)
             }
 
             // The yell happens whether you happen to see it or not.
-            noisy(15, chief->pos(), chief->mindex());
+            noisy(LOS_RADIUS, chief->pos(), chief->mindex());
 
             // Disabling detailed frenzy announcement because it's so spammy.
             const msg_channel_type channel =
@@ -1043,6 +1034,8 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     case MONS_BLINK_FROG:
     case MONS_KILLER_KLOWN:
     case MONS_PRINCE_RIBBIT:
+    case MONS_MARA:
+    case MONS_MARA_FAKE:
     case MONS_GOLDEN_EYE:
         if (one_chance_in(7) || monster->caught() && one_chance_in(3))
             used = monster_blink(monster);
@@ -1164,9 +1157,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             if (delay.type == DELAY_ASCENDING_STAIRS
                 || delay.type == DELAY_DESCENDING_STAIRS)
             {
-#ifdef DEBUG_DIAGNOSTICS
-                mpr("Taking stairs, don't mesmerise.", MSGCH_DIAGNOSTICS);
-#endif
+                dprf("Taking stairs, don't mesmerise.");
                 break;
             }
         }
@@ -1203,7 +1194,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         if (one_chance_in(5)
             || monster->foe == MHITYOU && !already_mesmerised && coinflip())
         {
-            noisy(12, monster->pos(), monster->mindex(), true);
+            noisy(LOS_RADIUS, monster->pos(), monster->mindex(), true);
 
             bool did_resist = false;
             if (you.can_see(monster))
@@ -1499,7 +1490,5 @@ void activate_ballistomycetes( monsters * monster, const coord_def & origin)
     }
 
     if (you.see_cell(origin) && found_others)
-    {
         mprf("You feel the ballistomycetes will spawn a replacement spore.");
-    }
 }

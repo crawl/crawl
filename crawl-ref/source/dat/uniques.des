@@ -95,7 +95,7 @@ ENDMAP
 ################################################################################
 
 NAME:   uniq_agnes
-DEPTH:  14-16, !Lair, !Slime
+DEPTH:  12-18, !Lair, !Slime
 : place_unique(_G, "Agnes")
 
 NAME:   uniq_aizul
@@ -215,6 +215,10 @@ NAME:   uniq_maud
 DEPTH:  14-16
 : place_unique(_G, "Maud")
 
+NAME:   uniq_mara
+DEPTH:  22-27, !Lair, !Slime
+: place_unique(_G, "Mara")
+
 NAME:   uniq_maurice
 DEPTH:  8-9, 10-13, !Lair, !Slime
 : place_unique(_G, "Maurice")
@@ -228,7 +232,7 @@ DEPTH:  14-16, 17-19, Orc:3-4, !Lair, !Slime
 : place_unique(_G, "Nergalle")
 
 NAME:   uniq_nessos
-DEPTH:  14-16, 17-19, !Lair, !Slime
+DEPTH:  11-17, !Lair, !Slime
 : place_unique(_G, "Nessos")
 
 NAME:   uniq_nikola

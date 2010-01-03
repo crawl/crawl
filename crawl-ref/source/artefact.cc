@@ -126,7 +126,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         return (false);
 
     const int brand = get_weapon_brand(item);
-    const int ego = get_armour_ego_type(item);
+    const int ego   = get_armour_ego_type(item);
 
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return (false);
@@ -742,8 +742,8 @@ void static _get_randart_properties(const item_def &item,
         if (one_chance_in(6))
             proprt[ARTP_BRAND] = SPWPN_VORPAL;
 
-        if (proprt[ARTP_BRAND] == SPWPN_PROTECTION)
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;      // no protection
+        if (proprt[ARTP_BRAND] == SPWPN_PROTECTION || proprt[ARTP_BRAND] == SPWPN_EVASION)
+            proprt[ARTP_BRAND] = SPWPN_NORMAL;      // no protection or evasion
 
         if (is_range_weapon(item))
         {
@@ -756,27 +756,34 @@ void static _get_randart_properties(const item_def &item,
                 proprt[ARTP_BRAND] = (tmp >= 18) ? SPWPN_SPEED :
                                      (tmp >= 16) ? SPWPN_PENETRATION :
                                      (tmp >= 13) ? SPWPN_REAPING :
-                                     (tmp >= 10) ? SPWPN_PROTECTION :
+                                     (tmp >= 10) ? SPWPN_EVASION :
                                      (tmp >=  7) ? SPWPN_VENOM
                                                  : SPWPN_VORPAL + random2(3);
 
                 if (atype == WPN_BLOWGUN
                     && proprt[ARTP_BRAND] != SPWPN_SPEED
-                    && proprt[ARTP_BRAND] != SPWPN_PROTECTION)
+                    && proprt[ARTP_BRAND] != SPWPN_EVASION)
                 {
                     proprt[ARTP_BRAND] = SPWPN_NORMAL;
                 }
 
-                if (atype == WPN_SLING
-                    && proprt[ARTP_BRAND] == SPWPN_VENOM)
-                {
-                    proprt[ARTP_BRAND] = SPWPN_NORMAL;
-                }
+                // Removed slings from getting the venom attribute: they can
+                // be branded with it now using Poison Weapon, and perma-branded
+                // via vorpalise weapon.
 
-                if (atype == WPN_CROSSBOW && one_chance_in(5)
-                    || atype == WPN_HAND_CROSSBOW && one_chance_in(10))
-                {
+                if (atype == WPN_CROSSBOW && one_chance_in(5))
                     proprt[ARTP_BRAND] = SPWPN_ELECTROCUTION;
+
+                // XXX: Penetration is only allowed on crossbows. This may change
+                // in future.
+                if (atype != WPN_CROSSBOW && proprt[ARTP_BRAND] == SPWPN_PENETRATION)
+                    proprt[ARTP_BRAND] = SPWPN_NORMAL;
+
+                // XXX: Only allow reaping brand on bows. This may change.
+                if (atype != WPN_BOW && atype != WPN_LONGBOW 
+                    && proprt[ARTP_BRAND] == SPWPN_REAPING)
+                {
+                    proprt[ARTP_BRAND] = SPWPN_NORMAL;
                 }
             }
         }
@@ -1067,7 +1074,7 @@ void static _get_randart_properties(const item_def &item,
     if (!done_powers && one_chance_in(10) && aclass == OBJ_ARMOUR
         && (atype == ARM_CAP || atype == ARM_SHIELD))
     {
-        proprt[ARTP_SPIRIT_SHIELD] = 1;
+        proprt[ARTP_BRAND] = SPARM_SPIRIT_SHIELD;
         power_level++;
     }
 
@@ -1881,8 +1888,7 @@ bool randart_is_bad( const item_def &item, artefact_properties_t &proprt )
     if (_artefact_num_props( proprt ) == 0)
         return (true);
 
-    if ((item.base_type == OBJ_WEAPONS)
-            && (proprt[ARTP_BRAND] == SPWPN_NORMAL))
+    if (item.base_type == OBJ_WEAPONS && proprt[ARTP_BRAND] == SPWPN_NORMAL)
         return (true);
 
     return (_randart_is_redundant( item, proprt )
@@ -1924,7 +1930,7 @@ bool make_item_randart( item_def &item, bool force_mundane )
     if (item.flags & ISFLAG_UNRANDART)
         return (false);
 
-    if (item_is_mundane(item) && !one_chance_in(5) && !force_mundane)
+    if (item.is_mundane() && !one_chance_in(5) && !force_mundane)
         return (false);
 
     ASSERT(!item.props.exists(KNOWN_PROPS_KEY));
@@ -2000,7 +2006,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     item.flags |= ISFLAG_UNRANDART;
     _init_artefact_properties(item);
 
-    if (unrand->prpty[ARTP_BRAND] != 0)
+    if (unrand->prpty[ARTP_CURSED] != 0)
         do_curse_item( item );
 
     // get true artefact name

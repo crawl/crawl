@@ -129,12 +129,15 @@ void debug_dump_levgen()
     else
     {
         const CrawlHashTable &vaults = props[TEMP_VAULTS_KEY].get_table();
-        CrawlHashTable::const_iterator i = vaults.begin();
-
-        for (; i != vaults.end(); ++i)
+        if (!vaults.empty())
         {
-            mprf("    %s: %s", i->first.c_str(),
-                 i->second.get_string().c_str());
+            CrawlHashTable::const_iterator i = vaults.begin();
+
+            for (; i != vaults.end(); ++i)
+            {
+                mprf("    %s: %s", i->first.c_str(),
+                     i->second.get_string().c_str());
+            }
         }
     }
     mpr("");
@@ -413,5 +416,3 @@ int debug_cap_stat(int stat)
             stat > 127 ? 127
                        : stat);
 }
-
-

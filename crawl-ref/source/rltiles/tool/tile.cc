@@ -17,9 +17,12 @@ tile::tile(const tile &img, const char *enumnam, const char *parts) :
     copy(img);
 
     if (enumnam)
-        m_enumname = enumnam;
+        m_enumname.push_back(enumnam);
     if (parts)
         m_parts_ctg = parts;
+
+    for (int i = 0; i < MAX_COLOUR; ++i)
+        m_variations[i] = -1;
 }
 
 tile::~tile()
@@ -39,27 +42,37 @@ bool tile::valid() const
     return m_pixels && m_width && m_height;
 }
 
-const std::string &tile::filename()
+const std::string &tile::filename() const
 {
     return m_filename;
 }
 
-const std::string &tile::enumname()
+int tile::enumcount() const
 {
-    return m_enumname;
+    return m_enumname.size();
 }
 
-const std::string &tile::parts_ctg()
+const std::string &tile::enumname(int idx) const
+{
+    return m_enumname[idx];
+}
+
+void tile::add_enumname(const std::string &name)
+{
+    m_enumname.push_back(name);
+}
+
+const std::string &tile::parts_ctg() const
 {
     return m_parts_ctg;
 }
 
-int tile::width()
+int tile::width() const
 {
     return m_width;
 }
 
-int tile::height()
+int tile::height() const
 {
     return m_height;
 }
@@ -483,4 +496,20 @@ void tile::get_bounding_box(int &x0, int &y0, int &w, int &h)
 
     w = x1 - x0 + 1;
     h = y1 - y0 + 1;
+}
+
+void tile::add_variation(int colour, int idx)
+{
+    assert(colour >= 0);
+    assert(colour < MAX_COLOUR);
+    m_variations[colour] = idx;
+}
+
+bool tile::get_variation(int colour, int &idx)
+{
+    if (m_variations[colour] == -1)
+        return (false);
+
+    idx = m_variations[colour];
+    return (true);
 }

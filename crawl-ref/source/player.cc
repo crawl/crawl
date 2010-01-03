@@ -165,7 +165,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
             {
                 std::string prompt = make_stringf(
                                         "Really step into that cloud of %s?",
-                                        cloud_name(ctype).c_str());
+                                        cloud_name(cloud).c_str());
 
                 if (!yesno(prompt.c_str(), false, 'n'))
                 {
@@ -2134,6 +2134,10 @@ int player_evasion(ev_ignore_type evit)
         ev -= 2;
 
     ev += player_equip( EQ_RINGS_PLUS, RING_EVASION );
+
+    if (player_equip_ego_type( EQ_WEAPON, SPWPN_EVASION ))
+        ev += 5;
+
     ev += scan_artefacts( ARTP_EVASION );
 
     // ponderous ev mod
@@ -2379,7 +2383,11 @@ int player_sust_abil(bool calc_unid)
 
 int carrying_capacity(burden_state_type bs)
 {
-    int cap = (2 * you.body_weight()) + (you.strength * 300)
+    // Yuck.  We need this for gameplay - it nerfs small forms too much
+    // otherwise - but there's no good way to rationalize here...  --sorear
+    int used_weight = std::max(you.body_weight(), you.body_weight(true));
+
+    int cap = (2 * used_weight) + (you.strength * 300)
               + (you.airborne() ? 1000 : 0);
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
@@ -2494,21 +2502,6 @@ void forget_map(unsigned char chance_forgotten, bool force)
 #endif
 }
 
-int player::exp_pool_cutoff() const
-{
-    int total = std::max(total_skill_points, skill_cost_needed(2));
-    // total = std::min(total, skill_cost_needed(27));
-    return (total / 3);
-}
-
-void player::step_down_exp_pool()
-{
-    int cutoff = you.exp_pool_cutoff();
-    int step = cutoff/4;
-    you.exp_available = stepdown_value(you.exp_available,
-                                       cutoff, step, 3*step, 4*step);
-}
-
 void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
                unsigned int* actual_avail_gain)
 {
@@ -2521,7 +2514,9 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
     const unsigned long old_exp   = you.experience;
     const int           old_avail = you.exp_available;
 
-    if (you.experience + exp_gained > MAX_EXP_TOTAL)
+    dprf("gain_exp: %d", exp_gained );
+
+    if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
         you.experience = MAX_EXP_TOTAL;
     else
         you.experience += exp_gained;
@@ -2536,13 +2531,10 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
         exp_gained /= 2;
     }
 
-    you.exp_available += exp_gained;
-    you.step_down_exp_pool();
-
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "gain_exp: %d of %d",
-         you.exp_available - old_avail, exp_gained);
-#endif
+    if (you.exp_available + exp_gained > (unsigned int)MAX_EXP_POOL)
+        you.exp_available = MAX_EXP_POOL;
+    else
+        you.exp_available += exp_gained;
 
     level_change();
 
@@ -3824,9 +3816,7 @@ void display_char_status()
 
     // character evaluates their ability to sneak around:
     mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
-#if DEBUG_DIAGNOSTICS
-    mprf("stealth: %d", check_stealth());
-#endif
+    dprf("stealth: %d", check_stealth());
 }
 
 bool player_item_conserve(bool calc_unid)
@@ -3847,8 +3837,7 @@ int player_mental_clarity(bool calc_unid, bool items)
 int player_spirit_shield(bool calc_unid)
 {
     return player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid)
-           + player_equip_ego_type(EQ_HELMET, SPARM_SPIRIT_SHIELD)
-           + scan_artefacts(ARTP_SPIRIT_SHIELD);
+           + player_equip_ego_type(EQ_HELMET, SPARM_SPIRIT_SHIELD);
 }
 
 // Returns whether the player has the effect of the amulet from a
@@ -4744,6 +4733,19 @@ bool confuse_player(int amount, bool resistable)
     if (resistable && wearing_amulet(AMU_CLARITY))
     {
         mpr("You feel momentarily confused.");
+        // Identify the amulet if necessary.
+        if (!extrinsic_amulet_effect(AMU_CLARITY))
+        {
+            // Since it's not extrinsic, it must be from the amulet.
+            ASSERT(player_wearing_slot(EQ_AMULET));
+            item_def* const amu = you.slot_item(EQ_AMULET);
+            if (!item_ident(*amu, ISFLAG_KNOW_TYPE))
+            {
+                set_ident_flags(*amu, ISFLAG_KNOW_TYPE);
+                mprf("You are wearing: %s",
+                     amu->name(DESC_INVENTORY_EQUIP).c_str());
+            }
+        }
         return (false);
     }
 
@@ -5564,6 +5566,17 @@ bool player::can_swim() const
     return (species == SP_MERFOLK && merfolk_change_is_safe(true));
 }
 
+int player::visible_igrd(const coord_def &where) const
+{
+    if (grd(where) == DNGN_LAVA
+        || (grd(where) == DNGN_DEEP_WATER && species != SP_MERFOLK))
+    {
+        return (NON_ITEM);
+    }
+
+    return igrd(where);
+}
+
 bool player::swimming() const
 {
     return in_water() && can_swim();
@@ -5612,9 +5625,12 @@ size_type player::body_size(size_part_type psize, bool base) const
     }
 }
 
-int player::body_weight() const
+int player::body_weight(bool base) const
 {
-    int weight = actor::body_weight();
+    int weight = actor::body_weight(base);
+
+    if (base)
+        return (weight);
 
     switch (attribute[ATTR_TRANSFORMATION])
     {
@@ -5751,7 +5767,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 {
     if (equip[EQ_WEAPON] != -1 && !ignore_curse)
     {
-        if (item_cursed(inv[equip[EQ_WEAPON]]))
+        if (inv[equip[EQ_WEAPON]].cursed())
             return (false);
     }
 
@@ -5992,8 +6008,10 @@ bool player::can_go_berserk() const
     return (can_go_berserk(false));
 }
 
-bool player::can_go_berserk(bool verbose) const
+bool player::can_go_berserk(bool intentional) const
 {
+    const bool verbose = intentional;
+
     if (berserk())
     {
         if (verbose)
@@ -6025,6 +6043,25 @@ bool player::can_go_berserk(bool verbose) const
             mpr("You cannot raise a blood rage in your lifeless body.");
 
         // or else you won't notice -- no message here
+        return (false);
+    }
+
+    if (!intentional && player_mental_clarity(true))
+    {
+        if (verbose)
+        {
+            mpr("You're too calm and focused to rage.");
+            item_def *amu;
+            if (!player_mental_clarity(false) && wearing_amulet(AMU_CLARITY)
+                && (amu = &you.inv[you.equip[EQ_AMULET]]) && !item_type_known(*amu))
+            {
+                set_ident_type(amu->base_type, amu->sub_type, ID_KNOWN_TYPE);
+                set_ident_flags(*amu, ISFLAG_KNOW_PROPERTIES);
+                mprf("You are wearing: %s",
+                     amu->name(DESC_INVENTORY_EQUIP).c_str());
+            }
+        }
+
         return (false);
     }
 
@@ -6443,6 +6480,12 @@ int player::res_cold() const
 int player::res_elec() const
 {
     return (player_res_electricity() * 2);
+}
+
+int player::res_water_drowning() const
+{
+    return (res_asphyx() ||
+            (you.species == SP_MERFOLK && !transform_changed_physiology()));
 }
 
 int player::res_asphyx() const
@@ -6895,6 +6938,11 @@ bool player::invisible() const
     return (duration[DUR_INVIS] && !backlit());
 }
 
+bool player::misled() const
+{
+    return (duration[DUR_MISLED]);
+}
+
 bool player::visible_to(const actor *looker) const
 {
     if (crawl_state.arena)
@@ -6913,7 +6961,8 @@ bool player::visible_to(const actor *looker) const
 bool player::backlit(bool check_haloed) const
 {
     return (get_contamination_level() > 0 || duration[DUR_CORONA]
-            || (check_haloed ? haloed() : false));
+            || (check_haloed ? haloed() : false)
+            || duration[DUR_LIQUID_FLAMES]);
 }
 
 // This is the imperative version.
@@ -7025,6 +7074,24 @@ void player::moveto(const coord_def &c)
     set_position(c);
 }
 
+bool player::move_to_pos(const coord_def &c)
+{
+    actor *target = actor_at(c);
+    if (!target || target->submerged())
+    {
+        moveto(c);
+        return true;
+    }
+    return false;
+}
+
+void player::apply_location_effects(const coord_def &oldpos,
+                                    killer_type killer,
+                                    int killernum)
+{
+    move_player_to_grid(pos(), false, true, true, false);
+}
+
 void player::shiftto(const coord_def &c)
 {
     crawl_view.shift_player_to(c);
@@ -7075,7 +7142,7 @@ void player::hibernate(int)
     set_duration(DUR_SLEEP, 3 + random2avg(5, 2));
 }
 
-void player::put_to_sleep(int power)
+void player::put_to_sleep(actor*, int power)
 {
     ASSERT(!crawl_state.arena);
 
@@ -7417,6 +7484,3 @@ void player::set_duration(duration_type dur, int turns,
     you.duration[dur] = 0;
     increase_duration(dur, turns, cap, msg);
 }
-
-
-

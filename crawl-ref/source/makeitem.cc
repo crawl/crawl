@@ -12,6 +12,7 @@
 #include "externs.h"
 #include "options.h"
 #include "makeitem.h"
+#include "message.h"
 
 #include "artefact.h"
 #include "colour.h"
@@ -21,6 +22,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "food.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "misc.h"
@@ -81,7 +83,7 @@ static int _newwave_weapon_colour(const item_def &item)
         case SK_CROSSBOWS:
             item_colour = LIGHTBLUE;
             break;
-        case SK_DARTS:
+        case SK_THROWING:
             item_colour = WHITE;
             break;
         case SK_SLINGS:
@@ -884,9 +886,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
 static bool _try_make_item_special_unrand(item_def& item, int force_type,
                                           int item_level)
 {
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Making special unrand artefact.");
-#endif
+    dprf("Making special unrand artefact.");
 
     bool abyss = item_level == level_id(LEVEL_ABYSS).absdepth();
     int idx = find_okay_unrandart(item.base_type, force_type,
@@ -1128,11 +1128,6 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
                 rc = ISFLAG_ORCISH;
             if (one_chance_in(4))
                 rc = ISFLAG_DWARVEN;
-            break;
-
-        case WPN_HAND_CROSSBOW:
-            if (one_chance_in(3))
-                rc = ISFLAG_ELVEN;
             break;
 
         case WPN_BLOWGUN:
@@ -1410,7 +1405,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
 
         case WPN_SLING:
-        case WPN_HAND_CROSSBOW:
             if (coinflip())
                 break;
             // **** possible intentional fall through here ****
@@ -1419,27 +1413,17 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_CROSSBOW:
         {
             const int tmp = random2(1000);
-            if (tmp < 250)
+            if (tmp < 480)
                 rc = SPWPN_FLAME;
-            else if (tmp < 500)
+            else if (tmp < 730)
                 rc = SPWPN_FROST;
-            else if (tmp < 650)
-                rc = SPWPN_PENETRATION;
-            else if (tmp < 800)
+            else if (tmp < 880 && (item.sub_type == WPN_BOW || item.sub_type == WPN_LONGBOW))
                 rc = SPWPN_REAPING;
-            else if (tmp < 920)
-                rc = SPWPN_PROTECTION;
-            else if (tmp < 980)
+            else if (tmp < 880)
+                rc = SPWPN_EVASION;
+            else if (tmp < 990)
                 rc = SPWPN_VORPAL;
-            else
-                rc = SPWPN_SPEED;
 
-            if ((item.sub_type == WPN_HAND_CROSSBOW
-                    || item.sub_type == WPN_CROSSBOW)
-                && one_chance_in(5))
-            {
-                rc = SPWPN_ELECTROCUTION;
-            }
             break;
         }
 
@@ -1458,7 +1442,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VORPAL;
 
-            if (one_chance_in(5))
+            if (one_chance_in(6))
                 rc = SPWPN_PROTECTION;
             break;
 
@@ -1584,6 +1568,7 @@ bool is_weapon_brand_ok(int type, int brand)
     case SPWPN_FLAME:
     case SPWPN_FROST:
     case SPWPN_PENETRATION:
+    case SPWPN_EVASION:
         if (!is_range_weapon(item))
             return (false);
         break;
@@ -1701,7 +1686,7 @@ brand_ok:
     }
     else if ((force_good || is_demonic(item) || forced_ego
                     || x_chance_in_y(51 + item_level, 200))
-                && (!item_is_mundane(item) || force_good))
+                && (!item.is_mundane() || force_good))
     {
         // Make a better item (possibly ego).
         if (!no_brand)
@@ -1821,6 +1806,10 @@ static item_status_flag_type _determine_missile_race(const item_def& item,
     return rc;
 }
 
+// Current list is based on dpeg's original post to the Wiki, found at the
+// page: <http://crawl.develz.org/wiki/doku.php?id=DCSS%3Aissue%3A41>.
+// Remember to update the code in is_missile_brand_ok if adding or altering
+// brands that are applied to missiles. {due}
 static special_missile_type _determine_missile_brand(const item_def& item,
                                                      int item_level)
 {
@@ -1831,56 +1820,150 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
     special_missile_type rc = SPMSL_NORMAL;
 
-    // All needles are either poison or curare.
-    if (item.sub_type == MI_NEEDLE)
-        rc = got_curare_roll(item_level) ? SPMSL_CURARE : SPMSL_POISONED;
-    else
+    // "Normal weight" of SPMSL_NORMAL.
+    int nw = force_good ? 0 : random2(2000 - 55 * item_level);
+
+    switch (item.sub_type)
     {
-        const int temp_rand =
-            (force_good ? random2(150) : random2(2000 - 55 * item_level));
+    case MI_NEEDLE:
+        // Curare is special cased, all the others aren't.
+        if (got_curare_roll(item_level))
+        {
+            rc = SPMSL_CURARE;
+            break;
+        }
 
-        if (temp_rand < 30)
-            rc = SPMSL_FLAME;
-        else if (temp_rand < 60)
-            rc = SPMSL_FROST;
-        else if (temp_rand < 80)
-            rc = SPMSL_POISONED;
-        else if (temp_rand < 90)
-            rc = SPMSL_PENETRATION;
-        else if (temp_rand < 100)
-            rc = SPMSL_REAPING;
-        else if (temp_rand < 110)
-            rc = SPMSL_SILVER;
-        else if (temp_rand < 120)
-            rc = SPMSL_STEEL;
-        else if (temp_rand < 130)
-            rc = SPMSL_DISPERSAL;
-        else if (temp_rand < 150)
-            rc = SPMSL_EXPLODING;
-        else
-            rc = SPMSL_NORMAL;
+        rc = static_cast<special_missile_type>(
+                         random_choose_weighted(30, SPMSL_PARALYSIS, 30, SPMSL_SLOW,
+                                                30, SPMSL_SLEEP, 40, SPMSL_CONFUSION,
+                                                20, SPMSL_SICKNESS, 10, SPMSL_RAGE,
+                                                nw, SPMSL_POISONED, 0));
+        break;
+    case MI_DART:
+        rc = static_cast<special_missile_type>(
+                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
+                                                20, SPMSL_POISONED, 12, SPMSL_REAPING,
+                                                12, SPMSL_SILVER, 12, SPMSL_STEEL,
+                                                12, SPMSL_DISPERSAL, 20, SPMSL_EXPLODING,
+                                                nw, SPMSL_NORMAL,
+                                                0));
+        break;
+    case MI_ARROW:
+        rc = static_cast<special_missile_type>(
+                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
+                                               20, SPMSL_POISONED, 10, SPMSL_CHAOS,
+                                               10, SPMSL_REAPING, 10, SPMSL_DISPERSAL,
+                                               nw, SPMSL_NORMAL,
+                                               0));
+        break;
+    case MI_BOLT:
+        rc = static_cast<special_missile_type>(
+                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
+                                               20, SPMSL_POISONED, 10, SPMSL_PENETRATION,
+                                               10, SPMSL_CHAOS, 10, SPMSL_SILVER,
+                                               10, SPMSL_STEEL, nw, SPMSL_NORMAL,
+                                               0));
+        break;
+    case MI_JAVELIN:
+        rc = static_cast<special_missile_type>(
+                        random_choose_weighted(30, SPMSL_RETURNING, 30, SPMSL_PENETRATION,
+                                               30, SPMSL_POISONED,
+                                               20, SPMSL_STEEL, 20, SPMSL_SILVER,
+                                               10, SPMSL_CHAOS, nw, SPMSL_NORMAL,
+                                               0));
+        break;
+    case MI_STONE:
+        // deliberate fall through
+    case MI_LARGE_ROCK:
+        // Stones get no brands. Slings may be branded.
+        rc = SPMSL_NORMAL;
+        break;
+    case MI_SLING_BULLET:
+        rc = static_cast<special_missile_type>(
+                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
+                                               20, SPMSL_POISONED, 10, SPMSL_CHAOS,
+                                               10, SPMSL_STEEL, 10, SPMSL_SILVER,
+                                               20, SPMSL_EXPLODING, nw, SPMSL_NORMAL,
+                                               0));
+        break;
+    case MI_THROWING_NET:
+        rc = static_cast<special_missile_type>(
+                        random_choose_weighted(30, SPMSL_STEEL, 30, SPMSL_SILVER,
+                                               20, SPMSL_CHAOS, nw, SPMSL_NORMAL,
+                                               0));
+        break;
     }
-
-    // Javelins can be returning.
-    if (item.sub_type == MI_JAVELIN && one_chance_in(25))
-        rc = SPMSL_RETURNING;
 
     // Orcish ammo gets poisoned a lot more often.
     if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
         rc = SPMSL_POISONED;
 
-    // Unbrand throwing nets.
-    if (item.sub_type == MI_THROWING_NET)
-        rc = SPMSL_NORMAL;
-
     ASSERT(is_missile_brand_ok(item.sub_type, rc));
+
     return rc;
 }
 
 bool is_missile_brand_ok(int type, int brand)
 {
-    // No checks for now...
-    return (true);
+    // Stones can never be branded.
+    if ((type == MI_STONE || type == MI_LARGE_ROCK) && brand != SPMSL_NORMAL)
+        return (false);
+
+    // In contrast, needles should always be branded.
+    if (type == MI_NEEDLE)
+    {
+        switch (brand)
+        {
+        case SPMSL_POISONED: case SPMSL_CURARE: case SPMSL_PARALYSIS:
+        case SPMSL_SLOW: case SPMSL_SLEEP: case SPMSL_CONFUSION:
+        case SPMSL_SICKNESS: case SPMSL_RAGE: return (true);
+        default: return (false);
+        }
+    }
+
+    // Everything else doesn't matter.
+    if (brand == SPMSL_NORMAL)
+        return (true);
+
+    // Not a missile?
+    if (type == 0)
+        return (true);
+
+    // Specifics
+    switch (brand)
+    {
+    case SPMSL_FLAME:
+        return (type == MI_SLING_BULLET || type == MI_ARROW
+                || type == MI_BOLT || type == MI_DART);
+    case SPMSL_FROST:
+        return (type == MI_SLING_BULLET || type == MI_ARROW
+                || type == MI_BOLT || type == MI_DART);
+    case SPMSL_POISONED:
+        return (type == MI_SLING_BULLET || type == MI_ARROW
+                || type == MI_BOLT || type == MI_DART
+                || type == MI_JAVELIN);
+    case SPMSL_RETURNING:
+        return (type == MI_JAVELIN);
+    case SPMSL_CHAOS:
+        return (type == MI_SLING_BULLET || type == MI_ARROW
+                || type == MI_BOLT || type == MI_DART
+                || type == MI_JAVELIN || type == MI_THROWING_NET);
+    case SPMSL_PENETRATION:
+        return (type == MI_JAVELIN || type == MI_BOLT);
+    case SPMSL_REAPING: // deliberate fall through
+    case SPMSL_DISPERSAL:
+        return (type == MI_ARROW || type == MI_DART);
+    case SPMSL_EXPLODING:
+        return (type == MI_SLING_BULLET || type == MI_DART);
+    case SPMSL_STEEL: // deliberate fall through
+    case SPMSL_SILVER:
+        return (type == MI_BOLT || type == MI_SLING_BULLET
+                || type == MI_JAVELIN || type == MI_THROWING_NET);
+    default: break;
+    }
+
+    // Assume yes, if we've gotten this far.
+    return (false);
 }
 
 static void _generate_missile_item(item_def& item, int force_type,
@@ -1901,8 +1984,8 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    20, MI_DART,
                                    20, MI_ARROW,
                                    12, MI_BOLT,
+                                   12, MI_SLING_BULLET,
                                    10, MI_NEEDLE,
-                                   5,  MI_SLING_BULLET,
                                    2,  MI_JAVELIN,
                                    1,  MI_THROWING_NET,
                                    0);
@@ -2227,6 +2310,14 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
 
     default:
+        if (armour_is_hide(item, true)
+            || item.sub_type == ARM_ANIMAL_SKIN
+            || item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
+        {
+            rc = SPARM_NORMAL;
+            break;
+        }
+
         rc = coinflip() ? SPARM_COLD_RESISTANCE : SPARM_FIRE_RESISTANCE;
 
         if (one_chance_in(9))
@@ -2291,6 +2382,12 @@ bool is_armour_brand_ok(int type, int brand)
     case SPARM_FIRE_RESISTANCE:
     case SPARM_COLD_RESISTANCE:
     case SPARM_RESISTANCE:
+        if (type == ARM_DRAGON_ARMOUR
+            || type == ARM_ICE_DRAGON_ARMOUR
+            || type == ARM_GOLD_DRAGON_ARMOUR)
+        {
+            return (false); // contradictory or redundant
+        }
         return (true); // in portal vaults, these can happen on every slot
 
     case SPARM_MAGIC_RESISTANCE:
@@ -2386,7 +2483,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
     else if ((force_good || forced_ego || item.sub_type == ARM_WIZARD_HAT
                     || x_chance_in_y(51 + item_level, 250))
-                && (!item_is_mundane(item) || force_good))
+                && (!item.is_mundane() || force_good))
     {
         // Make a good item...
         item.plus += random2(3);
@@ -2429,16 +2526,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     // into armour).
     if (force_good)
         hide2armour(item);
-
-    // Skin armours and crystal plate mail normally don't get egos, but
-    // can be randarts.
-    if (armour_is_hide(item, true)
-        || item.sub_type == ARM_ANIMAL_SKIN
-        || item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
-    {
-        if (!forced_ego)
-            set_item_ego_type(item, OBJ_ARMOUR, SPARM_NORMAL);
-    }
 
     // Don't overenchant items.
     if (item.plus > armour_max_enchant(item))
@@ -2807,7 +2894,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
     }
 }
 
-static void _generate_staff_item(item_def& item, int force_type)
+static void _generate_staff_item(item_def& item, int force_type, int item_level)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -2830,7 +2917,7 @@ static void _generate_staff_item(item_def& item, int force_type)
     }
 
     if (item_is_rod(item))
-        init_rod_mp(item);
+        init_rod_mp(item, -1, item_level);
 }
 
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
@@ -2921,7 +3008,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 
     if (item.sub_type == RING_SLAYING ) // requires plus2 too
     {
-        if (item_cursed(item) && !one_chance_in(20))
+        if (item.cursed() && !one_chance_in(20))
             item.plus2 = -1 - random2avg(6, 2);
         else
         {
@@ -3129,7 +3216,7 @@ int items(int allow_uniques,       // not just true-false,
         break;
 
     case OBJ_STAVES:
-        _generate_staff_item(item, force_type);
+        _generate_staff_item(item, force_type, item_level);
         break;
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
@@ -3145,8 +3232,13 @@ int items(int allow_uniques,       // not just true-false,
         item.base_type = OBJ_GOLD;
         if (force_good)
         {
-            item.quantity = 150 + random2(150)
-                            + random2(random2(random2(2000)));
+            // New gold acquirement formula from dpeg.
+	    // Min=220, Max=5520, Mean=1218, Std=911
+            item.quantity = 10 * (20
+                                  + roll_dice(1, 20)
+                                  + (roll_dice(1, 8)
+                                     * roll_dice(1, 8)
+                                     * roll_dice(1, 8)));
         }
         else
             item.quantity = 1 + random2avg(19, 2) + random2(item_level);
@@ -3201,19 +3293,44 @@ int items(int allow_uniques,       // not just true-false,
     return (p);
 }
 
-void init_rod_mp(item_def &item, int ncharges)
+static int _roll_rod_enchant(int item_level)
+{
+    int value = 0;
+
+    if (one_chance_in(4))
+        value -= random_range(1, 3);
+
+    if (item_level == MAKE_GOOD_ITEM)
+        value += 2;
+
+    int pr = 20 + item_level * 2;
+
+    if (pr > 80)
+        pr = 80;
+
+    while (random2(100) < pr) value++;
+
+    return stepdown_value(value, 4, 4, 4, 9);
+}
+
+void init_rod_mp(item_def &item, int ncharges, int item_level)
 {
     if (!item_is_rod(item))
         return;
 
     if (ncharges != -1)
+    {
         item.plus2 = ncharges * ROD_CHARGE_MULT;
+        item.props["rod_enchantment"] = (short)0;
+    }
     else
     {
         if (item.sub_type == STAFF_STRIKING)
             item.plus2 = random_range(6, 9) * ROD_CHARGE_MULT;
         else
             item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
+
+        item.props["rod_enchantment"] = (short)_roll_rod_enchant(item_level);
     }
 
     item.plus = item.plus2;
@@ -3230,7 +3347,7 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item))
         return (true);
 
-    if (item_is_mundane(item))
+    if (item.is_mundane())
         return (false);
 
     if ((item.plus || item.plus2)
@@ -3253,10 +3370,29 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item))
         return (true);
 
-    if (item_is_mundane(item))
+    if (item.is_mundane())
         return (false);
 
     if (item.plus && !one_chance_in(3))
+        return (true);
+
+    return (false);
+}
+
+static bool _missile_is_visibly_special(const item_def &item)
+{
+    const int brand = item.special;
+
+    // Obviously branded missiles don't get any special stuff.
+    if (item_type_known(item))
+        return (false);
+
+    // All ego missiles do.
+    if (brand != SPMSL_NORMAL)
+        return (true);
+
+    // And positively enchanted do, too.
+    if (item.plus)
         return (true);
 
     return (false);
@@ -3419,6 +3555,11 @@ void item_set_appearance(item_def &item)
 
             set_equip_desc(item, RANDOM_ELEMENT(descs));
         }
+        break;
+
+    case OBJ_MISSILES:
+        if (_missile_is_visibly_special(item))
+            set_equip_desc(item, ISFLAG_GLOWING);
         break;
 
     default:

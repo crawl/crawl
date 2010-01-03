@@ -46,6 +46,12 @@ static unsigned char _random_potion_description()
     return static_cast<unsigned char>(desc);
 }
 
+// [dshaligram] FIXME: This is to push more playtesting towards Shoals,
+// should be removed before release.
+#ifdef DGAMELAUNCH
+#define SHOALS_TESTING
+#endif
+
 // Determine starting depths of branches.
 void initialise_branch_depths()
 {
@@ -55,12 +61,14 @@ void initialise_branch_depths()
     branches[BRANCH_LAIR].startdepth              = random_range(8, 13);
     branches[BRANCH_HIVE].startdepth              = random_range(11, 16);
     branches[BRANCH_SLIME_PITS].startdepth        = random_range(5, 8);
+#ifndef SHOALS_TESTING
     if ( coinflip() )
     {
         branches[BRANCH_SWAMP].startdepth  = random_range(2, 5);
         branches[BRANCH_SHOALS].startdepth = -1;
     }
     else
+#endif
     {
         branches[BRANCH_SWAMP].startdepth  = -1;
         branches[BRANCH_SHOALS].startdepth = random_range(2, 5);

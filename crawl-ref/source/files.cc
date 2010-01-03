@@ -136,9 +136,7 @@ static void _redraw_all(void)
 static std::string _uid_as_string()
 {
 #ifdef MULTIUSER
-    char struid[20];
-    snprintf( struid, sizeof struid, "-%d", static_cast<int>(getuid()) );
-    return std::string(struid);
+    return make_stringf("-%d", static_cast<int>(getuid()));
 #else
     return std::string();
 #endif
@@ -1444,9 +1442,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         timeval -= (stepdown_value( check_stealth(), 50, 50, 150, 150 ) / 10);
 
-#if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "arrival time: %d", timeval );
-#endif
+        dprf("arrival time: %d", timeval );
 
         if (timeval > 0)
         {
@@ -1681,13 +1677,6 @@ static void _save_game_base()
         fclose(dollf);
         DO_CHMOD_PRIVATE(dollFile.c_str());
     }
-#else
-    // Don't overwrite old tile dolls.
-    if (!file_exists(dollFile))
-    {
-        FILE *dollf = fopen(dollFile.c_str(), "wb");
-        fclose(dollf);
-    }
 #endif
 
     std::string charFile = get_savedir_filename(you.your_name, "", "sav");
@@ -1805,7 +1794,7 @@ static std::string _make_ghost_filename()
 
 bool load_ghost(bool creating_level)
 {
-    const bool wiz_cmd = crawl_state.prev_cmd == CMD_WIZARD;
+    const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
 
     ASSERT(you.transit_stair == DNGN_UNSEEN || creating_level);
     ASSERT(!you.entering_level || creating_level);
@@ -1839,7 +1828,7 @@ bool load_ghost(bool creating_level)
 
     if (gfile == NULL)
     {
-        if (wiz_cmd)
+        if (wiz_cmd && !creating_level)
             mpr("No ghost files for this level.", MSGCH_PROMPT);
         return (false);                 // no such ghost.
     }

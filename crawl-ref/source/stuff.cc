@@ -65,9 +65,9 @@
 #include "tutorial.h"
 #include "view.h"
 
-stack_iterator::stack_iterator(const coord_def& pos)
+stack_iterator::stack_iterator(const coord_def& pos, bool accesible)
 {
-    cur_link = igrd(pos);
+    cur_link = accesible ? you.visible_igrd(pos) : igrd(pos);
     if ( cur_link != NON_ITEM )
         next_link = mitm[cur_link].link;
     else
@@ -149,15 +149,13 @@ std::string make_file_time(time_t when)
 {
     if (tm *loc = TIME_FN(&when))
     {
-        char buf[25];
-        snprintf(buf, sizeof buf, "%04d%02d%02d-%02d%02d%02d",
+        return make_stringf("%04d%02d%02d-%02d%02d%02d",
                  loc->tm_year + 1900,
                  loc->tm_mon + 1,
                  loc->tm_mday,
                  loc->tm_hour,
                  loc->tm_min,
                  loc->tm_sec);
-        return (buf);
     }
     return ("");
 }
@@ -223,10 +221,8 @@ static bool _tag_follower_at(const coord_def &pos)
     fmenv->travel_path.clear();
     fmenv->travel_target = MTRAV_NONE;
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
+    dprf("%s is marked for following.",
          fmenv->name(DESC_CAP_THE, true).c_str() );
-#endif
 
     return (true);
 }
@@ -907,10 +903,9 @@ void zap_los_monsters(bool items_also)
         if (mon == NULL || mons_class_flag(mon->type, M_NO_EXP_GAIN))
             continue;
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
+        dprf("Dismissing %s",
              mon->name(DESC_PLAIN, true).c_str() );
-#endif
+
         // Do a hard reset so the monster's items will be discarded.
         mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the

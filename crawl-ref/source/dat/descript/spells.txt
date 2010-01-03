@@ -236,7 +236,7 @@ This spell will make ammunition held by the caster extremely unstable. With prop
 %%%%
 Fire Brand
 
-This spell sets a weapon held by the caster ablaze. It will not affect weapons otherwise subject to special enchantments.
+This spell sets a weapon or launcher held by the caster ablaze. It will not affect weapons otherwise subject to special enchantments.
 %%%%
 Fire Storm
 
@@ -268,7 +268,7 @@ This spell freezes a creature. This may temporarily slow the metabolism of a col
 %%%%
 Freezing Aura
 
-This spell surrounds a weapon held by the caster with an aura of freezing cold. It will not affect weapons which are otherwise subject to special enchantments.
+This spell surrounds a weapon or launcher held by the caster with an aura of freezing cold. It will not affect weapons which are otherwise subject to special enchantments.
 %%%%
 Freezing Cloud
 
@@ -280,7 +280,7 @@ This spell will freeze ammunition held by the caster. Such missiles will shatter
 %%%%
 Fulsome Distillation
 
-This spell extracts the vile and poisonous essences from a corpse. A rotten corpse may produce a stronger potion. You probably don't want to drink the results.
+This spell extracts the vile and poisonous essences from a corpse. You probably don't want to drink the results. The type of potion produced corresponds roughly to the effects of eating said corpse.
 %%%%
 Major Healing
 
@@ -378,6 +378,12 @@ Olgreb's Toxic Radiance
 
 This spell bathes the caster's surroundings in poisonous green light.
 %%%%
+Orb of Destruction
+
+This spell conjures an orb made of pure destructive magic.  Compared to most other projectiles, these orbs travel at a relatively slow pace.  The orbs home onto their targets, yet because of their huge inertia, especially agile opponents may be able to outmaneuver them.
+
+It is said that most copies of this spell suffer from a scribal error that makes the orbs unstable beyond a short range.  Certain individuals may have access to spellbooks without this flaw, so be ware!
+%%%%
 Ozocubu's Armour
 
 This spell envelops the caster's body in a protective layer of ice, the power of which depends on his or her skill with ice magic. The caster and the caster's equipment are protected from the cold, but the spell will not function for casters already wearing heavy armour. The effects of this spell are boosted if the caster is in ice form.
@@ -416,7 +422,7 @@ This spell hurls a magical arrow coated with the most vile and noxious toxin. No
 %%%%
 Poison Weapon
 
-This spell temporarily coats any sharp bladed weapon with poison. It will only work on weapons without an existing enchantment.
+This spell temporarily coats any weapon or launcher with poison. It will only work on weapons without an existing enchantment.
 %%%%
 Poisonous Cloud
 

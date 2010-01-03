@@ -33,6 +33,7 @@
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "mgen_data.h"
 #include "coord.h"
 #include "mon-stuff.h"
@@ -332,6 +333,24 @@ static void _maybe_set_patrol_route(monsters *monster)
     }
 }
 
+// Keep kraken tentacles from wandering too far away from the boss monster.
+static void _kraken_tentacle_movement_clamp(monsters *tentacle)
+{
+    if (tentacle->type != MONS_KRAKEN_TENTACLE)
+        return;
+
+    const int kraken_idx = tentacle->number;
+    ASSERT(!invalid_monster_index(kraken_idx));
+
+    monsters *kraken = &menv[kraken_idx];
+    const int distance_to_head =
+        grid_distance(tentacle->pos(), kraken->pos());
+    // Beyond max distance, the only move the tentacle can make is
+    // back towards the head.
+    if (distance_to_head >= KRAKEN_TENTACLE_RANGE)
+        mmov = (kraken->pos() - tentacle->pos()).sgn();
+}
+
 //---------------------------------------------------------------
 //
 // handle_movement
@@ -378,8 +397,7 @@ static void _handle_movement(monsters *monster)
         delta = monster->target - monster->pos();
 
     // Move the monster.
-    mmov.x = (delta.x > 0) ? 1 : ((delta.x < 0) ? -1 : 0);
-    mmov.y = (delta.y > 0) ? 1 : ((delta.y < 0) ? -1 : 0);
+    mmov = delta.sgn();
 
     if (mons_is_fleeing(monster) && monster->travel_target != MTRAV_WALL
         && (!monster->friendly()
@@ -1122,7 +1140,12 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
     {
         const mon_attack_def attk = mons_attack_spec(monster, 0);
         if (attk.type == AT_SHOOT)
-            ammoDamBonus += random2avg(attk.damage, 2);
+        {
+            if (projected == LRET_THROWN && wepClass == OBJ_MISSILES)
+                ammoHitBonus += random2avg(attk.damage, 2);
+            else
+                ammoDamBonus += random2avg(attk.damage, 2);
+        }
     }
 
     if (projected == LRET_THROWN)
@@ -1195,11 +1218,6 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
             baseHit = 4;
             hitMult = 70;
             damMult = 30;
-            break;
-        case WPN_HAND_CROSSBOW:
-            baseHit = 2;
-            hitMult = 50;
-            damMult = 20;
             break;
         case WPN_SLING:
             baseHit = 10;
@@ -1324,21 +1342,18 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
 
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
-    char throw_buff[ITEMNAME_SIZE];
     if (projected == LRET_LAUNCHED)
     {
-        snprintf(throw_buff, sizeof(throw_buff), "Shot with a%s %s by %s",
+        pbolt.aux_source = make_stringf("Shot with a%s %s by %s",
                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
                  monster->name(DESC_NOCAP_A).c_str());
     }
     else
     {
-        snprintf(throw_buff, sizeof(throw_buff), "Hit by a%s %s thrown by %s",
+        pbolt.aux_source = make_stringf("Hit by a%s %s thrown by %s",
                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
                  monster->name(DESC_NOCAP_A).c_str());
     }
-
-    pbolt.aux_source = throw_buff;
 
     // Add everything up.
     pbolt.hit = baseHit + random2avg(exHitBonus, 2) + ammoHitBonus;
@@ -1394,7 +1409,7 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
     pbolt.fire();
 
     // The item can be destroyed before returning.
-    if (really_returns && thrown_object_destroyed(&item, pbolt.target, true))
+    if (really_returns && thrown_object_destroyed(&item, pbolt.target))
     {
         really_returns = false;
     }
@@ -1711,6 +1726,14 @@ static void _handle_monster_move(monsters *monster)
         }
         old_energy = monster->speed_increment;
 
+        if (mons_is_projectile(monster->type))
+        {
+            if (iood_act(*monster))
+                return;
+            monster->lose_energy(EUT_MOVE);
+            continue;
+        }
+
         monster->shield_blocks = 0;
 
         cloud_type cl_type;
@@ -1852,6 +1875,7 @@ static void _handle_monster_move(monsters *monster)
         {
             // Calculates mmov based on monster target.
             _handle_movement(monster);
+            _kraken_tentacle_movement_clamp(monster);
 
             if (mons_is_confused(monster)
                 || monster->type == MONS_AIR_ELEMENTAL
@@ -2163,6 +2187,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
     bool death_ooze_ate_good = false;
     bool death_ooze_ate_corpse = false;
 
+    // Jellies can swim, so don't check water
     for (stack_iterator si(monster->pos());
          si && eaten < max_eat && hps_changed < 50; ++si)
     {
@@ -2444,6 +2469,14 @@ static bool _monster_eat_food(monsters *monster, bool nearby)
 static bool _handle_pickup(monsters *monster)
 {
     if (monster->asleep() || monster->submerged())
+        return (false);
+
+    // Hack - Harpies fly over water, but we don't have a general
+    // system for monster igrd yet.  Flying intelligent monsters
+    // (kenku!) would also count here.
+    dungeon_feature_type feat = grd(monster->pos());
+
+    if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && !monster->flight_mode())
         return (false);
 
     const bool nearby = mons_near(monster);
@@ -2764,7 +2797,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     // The kraken is so large it cannot enter shallow water.
     // Its tentacles can, and will, though.
-    if (monster->type == MONS_KRAKEN && target_grid == DNGN_SHALLOW_WATER)
+    if (mons_base_type(monster) == MONS_KRAKEN && target_grid == DNGN_SHALLOW_WATER)
         return (false);
 
     // Effectively slows down monster movement across water.

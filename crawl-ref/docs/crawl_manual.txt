@@ -1007,7 +1007,8 @@ memorise the more powerful spells. When casting a spell, you temporarily
 expend some of your magical energy and become hungrier (although high
 intelligence and Spellcasting help against hunger from spells). Pressing
 'II' (or 'I!') displays the hunger costs of your spells in terms of food,
-on a rough scale of none, grape, apple, choko, ration.
+on a scale of none, sultana, strawberry, choko, honeycomb and ration.
+Casting the spell five times will cost at most the displayed fruit.
 
 You activate a memorised spell by pressing 'z' (for Zap). Use 'I' to
 display a list of all memorised spells without actually casting one. The
@@ -1963,7 +1964,7 @@ Reavers are warriors who learn the magics of destruction in order to
 complement their deadliness in hand combat.
 
 Warpers:
- --------
+--------
 Warpers specialise in translocation magic, and are experts in travelling
 long distances and positioning themselves precisely and use this to
 their advantage in melee or missile combat.

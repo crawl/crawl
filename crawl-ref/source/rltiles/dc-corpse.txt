@@ -84,6 +84,17 @@ giant_mosquito CORPSE_GIANT_MOSQUITO
 yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
 
+## Aquatics (';')
+%back dc-misc/blood_red
+big_fish CORPSE_BIG_FISH
+giant_goldfish CORPSE_GIANT_GOLDFISH
+electric_eel CORPSE_ELECTRIC_EEL
+#lava_fish CORPSE_LAVA_FISH
+shark CORPSE_SHARK
+kraken_head CORPSE_KRAKEN /*'x'*/
+%back dc-misc/blood_green
+jellyfish CORPSE_JELLYFISH /*'J'*/
+
 ## Beetles ('B')
 giant_beetle CORPSE_GIANT_BEETLE
 boring_beetle CORPSE_BORING_BEETLE
@@ -107,7 +118,7 @@ small_snake CORPSE_SMALL_SNAKE
 snake CORPSE_SNAKE
 black_mamba CORPSE_BLACK_MAMBA
 water_moccasin CORPSE_WATER_MOCCASIN
-grey_snake CORPSE_GREY_SNAKE
+anaconda CORPSE_ANACONDA
 viper CORPSE_VIPER
 
 ## Bears ('U')

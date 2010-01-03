@@ -374,7 +374,7 @@ void melee_attack::check_hand_half_bonus_eligible()
                        && !can_do_unarmed
                        && !shield
                        && weapon
-                       && !item_cursed(*weapon)
+                       && !weapon->cursed()
                        && hands == HANDS_HALF);
 }
 
@@ -1480,10 +1480,7 @@ bool melee_attack::player_hits_monster()
     const int evasion = defender->melee_evasion(attacker);
     const int evasion_helpful
         = defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "your to-hit: %d; defender effective EV: %d",
-         to_hit, evasion);
-#endif
+    dprf("your to-hit: %d; defender effective EV: %d", to_hit, evasion);
 
     if (to_hit >= evasion_helpful || one_chance_in(20))
     {
@@ -1554,7 +1551,7 @@ int melee_attack::player_apply_water_attack_bonus(int damage)
 int melee_attack::player_apply_weapon_skill(int damage)
 {
     if (weapon && (weapon->base_type == OBJ_WEAPONS
-                   || item_is_staff( *weapon )))
+                   || weapon->base_type == OBJ_STAVES))
     {
         damage *= 25 + (random2( you.skills[ wpn_skill ] + 1 ));
         damage /= 25;
@@ -1586,9 +1583,13 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 
 int melee_attack::player_apply_weapon_bonuses(int damage)
 {
-    if (weapon && weapon->base_type == OBJ_WEAPONS)
+    if (weapon && (weapon->base_type == OBJ_WEAPONS
+                   || item_is_rod( *weapon )))
     {
         int wpn_damage_plus = weapon->plus2;
+
+        if (item_is_rod( *weapon ))
+            wpn_damage_plus = (short)weapon->props["rod_enchantment"];
 
         damage += (wpn_damage_plus > -1) ? (random2(1 + wpn_damage_plus))
                                          : -(1 + random2(-wpn_damage_plus));
@@ -1655,7 +1656,10 @@ void melee_attack::player_weapon_auto_id()
 int melee_attack::player_stab_weapon_bonus(int damage)
 {
     if (weapon && weapon->base_type == OBJ_WEAPONS
-        && (weapon->sub_type == WPN_CLUB || weapon->sub_type == WPN_SPEAR))
+        && (weapon->sub_type == WPN_CLUB
+            || weapon->sub_type == WPN_SPEAR
+            || weapon->sub_type == WPN_TRIDENT
+            || weapon->sub_type == WPN_DEMON_TRIDENT))
     {
         goto ok_weaps;
     }
@@ -1767,6 +1771,8 @@ int melee_attack::player_weapon_type_modify(int damage)
         weap_type = WPN_UNARMED;
     else if (item_is_staff(*weapon))
         weap_type = WPN_QUARTERSTAFF;
+    else if (item_is_rod(*weapon))
+        weap_type = WPN_CLUB;
     else if (weapon->base_type == OBJ_WEAPONS)
         weap_type = weapon->sub_type;
 
@@ -2024,7 +2030,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     // Vampiric *weapon* effects for the killing blow.
     else if (mondied && damage_brand == SPWPN_VAMPIRICISM
              && you.equip[EQ_WEAPON] != -1
-             && you.is_undead == US_ALIVE)
+             && you.species != SP_VAMPIRE) // vampires get their bonus elsewhere
     {
         if (defender->holiness() == MH_NATURAL
             && !defender->is_summoned()
@@ -2037,11 +2043,8 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
             // More than if not killed.
             const int heal = 1 + random2(damage_done);
 
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Vampiric healing: damage %d, healed %d",
+            dprf("Vampiric healing: damage %d, healed %d",
                  damage_done, heal);
-#endif
             inc_hp(heal, false);
 
             if (you.hunger_state != HS_ENGORGED)
@@ -2164,6 +2167,8 @@ static bool is_boolean_resist(beam_type flavour)
     case BEAM_ELECTRICITY:
     case BEAM_MIASMA: // rotting
     case BEAM_NAPALM:
+    case BEAM_WATER:  // water asphyxiation damage,
+                      // bypassed by being water inhabitant.
         return (true);
     default:
         return (false);
@@ -2176,6 +2181,11 @@ static inline int get_resistible_fraction(beam_type flavour)
 {
     switch (flavour)
     {
+    // Drowning damage from water is resistible by being a water thing, or
+    // otherwise asphyx resistant.
+    case BEAM_WATER:
+        return (40);
+
     // Assume ice storm and throw icicle are mostly solid.
     case BEAM_ICE:
         return (25);
@@ -3776,10 +3786,8 @@ bool melee_attack::player_check_monster_died()
 {
     if (!defender->alive())
     {
-#if DEBUG_DIAGNOSTICS
         // note: doesn't take account of special weapons, etc.
-        mprf(MSGCH_DIAGNOSTICS, "Hit for %d.", damage_done);
-#endif
+        dprf("Hit for %d.", damage_done);
 
         player_monattk_hit_effects(true);
 
@@ -3840,7 +3848,7 @@ int melee_attack::player_to_hit(bool random_factor)
                       && !can_do_unarmed
                       && !shield
                       && weapon
-                      && !item_cursed( *weapon )
+                      && !weapon ->cursed()
                       && hands == HANDS_HALF;
 
     int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
@@ -3903,10 +3911,13 @@ int melee_attack::player_to_hit(bool random_factor)
             }
 
         }
-        else if (item_is_staff( *weapon ))
+        else if (weapon->base_type == OBJ_STAVES)
         {
             // magical staff
             your_to_hit += property( *weapon, PWPN_HIT );
+
+            if (item_is_rod( *weapon ))
+                your_to_hit += (short)weapon->props["rod_enchantment"];
         }
     }
 
@@ -3928,8 +3939,7 @@ int melee_attack::player_to_hit(bool random_factor)
     your_to_hit = maybe_random2(your_to_hit, random_factor);
 
 #if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS,
-          "to hit die: %d; rolled value: %d; base: %d",
+    dprf( "to hit die: %d; rolled value: %d; base: %d",
           roll_hit, your_to_hit, base_to_hit );
 #endif
 
@@ -4058,11 +4068,8 @@ void melee_attack::player_apply_attack_delay()
     you.time_taken =
         std::max(2, div_rand_round(you.time_taken * final_attack_delay, 10));
 
-#if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS,
-          "Weapon speed: %d; min: %d; attack time: %d",
+    dprf( "Weapon speed: %d; min: %d; attack time: %d",
           final_attack_delay, min_delay, you.time_taken );
-#endif
 }
 
 int melee_attack::player_weapon_speed()
@@ -4070,7 +4077,7 @@ int melee_attack::player_weapon_speed()
     int attack_delay = 0;
 
     if (weapon && (weapon->base_type == OBJ_WEAPONS
-                   || item_is_staff( *weapon )))
+                   || weapon->base_type == OBJ_STAVES))
     {
         attack_delay = property( *weapon, PWPN_SPEED );
         attack_delay -= you.skills[ wpn_skill ] / 2;
@@ -4214,7 +4221,7 @@ int melee_attack::player_calc_base_weapon_damage()
 {
     int damage = 0;
 
-    if (weapon->base_type == OBJ_WEAPONS || item_is_staff( *weapon ))
+    if (weapon->base_type == OBJ_WEAPONS || weapon->base_type == OBJ_STAVES)
         damage = property( *weapon, PWPN_DAMAGE );
 
     // Staves can be wielded with a worn shield, but are much less
@@ -4264,10 +4271,7 @@ bool melee_attack::mons_attack_mons()
         // Non-friendly monsters should never violate sanctuary.
         else
         {
-#ifdef DEBUG_DIAGNOSTICS
-            mpr("Preventing hostile violation of sanctuary.",
-                MSGCH_DIAGNOSTICS);
-#endif
+            dprf("Preventing hostile violation of sanctuary.");
             cancel_attack = true;
             return (false);
         }
@@ -4306,7 +4310,8 @@ bool melee_attack::mons_attack_mons()
 bool melee_attack::mons_self_destructs()
 {
     if (attacker->id() == MONS_GIANT_SPORE
-        || attacker->id() == MONS_BALL_LIGHTNING)
+        || attacker->id() == MONS_BALL_LIGHTNING
+        || attacker->id() == MONS_ORB_OF_DESTRUCTION)
     {
         attacker_as_monster()->hit_points = -1;
         // Do the explosion right now.
@@ -4530,7 +4535,8 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "kick",
         "tentacle-slap",
         "tail-slap",
-        "gore"
+        "gore",
+        "constrict"
     };
 
     return (attack_types[attk.type]);
@@ -5018,9 +5024,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                  special_attack_punctuation().c_str());
         }
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Shock damage: %d", special_damage);
-#endif
+        dprf("Shock damage: %d", special_damage);
         break;
 
     case AF_VAMPIRIC:
@@ -5186,6 +5190,13 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                  atk_name(DESC_CAP_THE).c_str());
         }
         break;
+
+    case AF_CRUSH:
+        mprf("%s %s being crushed%s",
+             def_name(DESC_CAP_THE).c_str(),
+             defender->conj_verb("are").c_str(),
+             special_attack_punctuation().c_str());
+        break;
     }
 }
 
@@ -5299,6 +5310,7 @@ void melee_attack::mons_perform_attack_rounds()
 
             case AT_BITE:
             case AT_PECK:
+            case AT_CONSTRICT:
                 noise_factor = 100;
                 break;
 
@@ -5450,10 +5462,8 @@ void melee_attack::mons_perform_attack_rounds()
 
         if (damage_done > 0)
         {
-#ifdef DEBUG_DIAGNOSTICS
             if (shield_blocked)
-                mpr("ERROR: Non-zero damage after shield block!");
-#endif
+                dprf("ERROR: Non-zero damage after shield block!");
             mons_announce_hit(attk);
             check_defender_train_armour();
 
@@ -5680,7 +5690,7 @@ int melee_attack::mons_to_hit()
 
 ///////////////////////////////////////////////////////////////////////////
 
-static bool wielded_weapon_check(const item_def *weapon)
+bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
     bool weapon_warning  = false;
     bool unarmed_warning = false;
@@ -5704,6 +5714,9 @@ static bool wielded_weapon_check(const item_def *weapon)
     if (!you.received_weapon_warning && !you.confused()
         && (weapon_warning || unarmed_warning))
     {
+        if (no_message)
+            return (false);
+
         std::string prompt  = "Really attack while ";
         if (unarmed_warning)
             prompt += "being unarmed?";

@@ -533,8 +533,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'I': wizard_unidentify_pack();              break;
     case 'Z':
     case 'z': wizard_cast_spec_spell();              break;
-    case '(': wizard_create_feature_number();        break;
-    case ')': wizard_create_feature_name();          break;
+    case '(':
+    case ')': wizard_create_feature();               break;
     case ':': wizard_list_branches();                break;
     case '{': wizard_map_level();                    break;
     case '}': wizard_reveal_traps();                 break;
@@ -553,7 +553,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 's':
-        you.exp_available = you.exp_pool_cutoff();
+        you.exp_available = FULL_EXP_POOL;
         you.redraw_experience = true;
         break;
 
@@ -592,12 +592,18 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'X':
-        if (you.religion == GOD_XOM)
-            xom_acts(abs(you.piety - HALF_MAX_PIETY));
-        else
-            xom_acts(coinflip(), random_range(0, HALF_MAX_PIETY));
+    {
+        int result = 0;
+        do
+        {
+            if (you.religion == GOD_XOM)
+                result = xom_acts(abs(you.piety - HALF_MAX_PIETY));
+            else
+                result = xom_acts(coinflip(), random_range(0, HALF_MAX_PIETY));
+        }
+        while (result == 0);
         break;
-
+    }
     case 'p':
         dungeon_terrain_changed(you.pos(), DNGN_ENTER_PANDEMONIUM, false);
         break;
@@ -711,68 +717,6 @@ static void _start_running( int dir, int mode )
 
     if (i_feel_safe(true))
         you.running.initialise(dir, mode);
-}
-
-static bool _recharge_rod( item_def &rod, bool wielded )
-{
-    if (!item_is_rod(rod) || rod.plus >= rod.plus2 || !enough_mp(1, true))
-        return (false);
-
-    const int charge = rod.plus / ROD_CHARGE_MULT;
-
-    int rate = ((charge + 1) * ROD_CHARGE_MULT) / 10;
-
-    rate *= (10 + skill_bump( SK_EVOCATIONS ));
-    rate = div_rand_round( rate, 100 );
-
-    if (rate < 5)
-        rate = 5;
-    else if (rate > ROD_CHARGE_MULT / 2)
-        rate = ROD_CHARGE_MULT / 2;
-
-    // If not wielded, the rod charges far more slowly.
-    if (!wielded)
-        rate /= 5;
-    // Shields hamper recharging for wielded rods.
-    else if (you.shield())
-        rate /= 2;
-
-    if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
-    {
-        dec_mp(1);
-        if (wielded)
-            you.wield_change = true;
-    }
-
-    rod.plus += rate;
-    if (rod.plus > rod.plus2)
-        rod.plus = rod.plus2;
-
-    if (wielded && rod.plus == rod.plus2)
-    {
-        mpr("Your rod has recharged.");
-        if (is_resting())
-            stop_running();
-    }
-
-    return (true);
-}
-
-static void _recharge_rods()
-{
-    const int wielded = you.equip[EQ_WEAPON];
-    if (wielded != -1 && _recharge_rod( you.inv[wielded], true ))
-        return;
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (i != wielded && you.inv[i].is_valid()
-            && one_chance_in(3)
-            && _recharge_rod( you.inv[i], false ))
-        {
-            return;
-        }
-    }
 }
 
 static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
@@ -1290,6 +1234,12 @@ static void _go_upstairs()
     if (_marker_vetoes_stair())
         return;
 
+    if (you.duration[DUR_MISLED])
+    {
+        mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
+        you.duration[DUR_MISLED] = 0;
+    }
+
     tag_followers(); // Only those beside us right now can follow.
     start_delay(DELAY_ASCENDING_STAIRS,
                 1 + (you.burden_state > BS_UNENCUMBERED));
@@ -1360,6 +1310,12 @@ static void _go_downstairs()
     // Also checks for entering a labyrinth with teleportitis.
     if (!check_annotation_exclusion_warning())
         return;
+
+    if (you.duration[DUR_MISLED])
+    {
+        mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
+        you.duration[DUR_MISLED] = 0;
+    }
 
     if (shaft)
     {
@@ -2292,11 +2248,15 @@ static void _decrement_durations()
                 else
                     msg += " feels lighter.";
                 break;
+            case SPWPN_FLAME:
             case SPWPN_FLAMING:
                 msg += " goes out.";
                 break;
             case SPWPN_FREEZING:
                 msg += " stops glowing.";
+                break;
+            case SPWPN_FROST:
+                msg += "'s frost melts away.";
                 break;
             case SPWPN_VENOM:
                 msg += " stops dripping with poison.";
@@ -2308,7 +2268,7 @@ static void _decrement_durations()
                 msg += " seems straighter.";
                 break;
             case SPWPN_PAIN:
-                msg += " seems less painful.";
+                msg += " seems less pained.";
                 break;
             default:
                 msg += " seems inexplicably less special.";
@@ -2421,6 +2381,7 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel more resistant to magic.");
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
+    _decrement_a_duration(DUR_MISLED, delay, "Your thoughts are your own once more.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
@@ -2857,7 +2818,7 @@ void world_reacts()
     _regenerate_hp_and_mp(you.time_taken);
 
     // If you're wielding a rod, it'll gradually recharge.
-    _recharge_rods();
+    recharge_rods(you.time_taken, false);
 
     viewwindow(true);
 
@@ -2887,6 +2848,8 @@ void world_reacts()
             stop_running();
 
             you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
+            if (you.religion == GOD_XOM)
+                xom_is_stimulated(get_tension() > 0 ? 255 : 128);
         }
 
         if (you.hunger <= 100)
@@ -3588,7 +3551,8 @@ static void _close_door(coord_def move)
         find_connected_identical(doorpos, grd(doorpos), all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
-        const char *waynoun = make_stringf("%sway", noun).c_str();
+        const std::string waynoun_str = make_stringf("%sway", noun);
+        const char *waynoun = waynoun_str.c_str();
 
         const std::string door_desc_adj  =
             env.markers.property_at(doorpos, MAT_ANY,
@@ -4608,9 +4572,9 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SK_UNARMED_COMBAT == 18       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
-    COMPILE_CHECK(SPELL_DEBUGGING_RAY == 103    , c4);
-    COMPILE_CHECK(SPELL_RETURNING_AMMUNITION == 162          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 211             , c6);
+    COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
+    COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
+    COMPILE_CHECK(NUM_SPELLS == 198             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

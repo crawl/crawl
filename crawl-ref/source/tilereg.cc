@@ -12,6 +12,7 @@
 #include "cio.h"
 #include "cloud.h"
 #include "coord.h"
+#include "coordit.h"
 #include "debug.h"
 #include "describe.h"
 #include "directn.h"
@@ -301,6 +302,75 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
             tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
             int offset = flv.special % tile_dngn_count(TILE_BLOOD);
             m_buf_dngn.add(TILE_BLOOD + offset, x, y);
+        }
+
+        if (player_in_branch(BRANCH_SHOALS))
+        {
+            // Add wave tiles on floor adjacent to shallow water.
+            const coord_def pos = coord_def(x + m_cx_to_gx, y + m_cy_to_gy);
+            const dungeon_feature_type feat = env.map_knowledge(pos).feat();
+            if (feat == DNGN_FLOOR || feat == DNGN_UNDISCOVERED_TRAP)
+            {
+                bool north = false, south = false, east = false, west = false;
+                bool ne = false, nw = false, se = false, sw = false;
+                for (radius_iterator ri(pos, 1, true, false, true); ri; ++ri)
+                {
+                    if (env.map_knowledge(*ri).feat() != DNGN_SHALLOW_WATER)
+                        continue;
+
+                    if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
+                        continue;
+
+                    if (ri->x == pos.x) // orthogonals
+                    {
+                        if (ri->y < pos.y)
+                            north = true;
+                        else
+                            south = true;
+                    }
+                    else if (ri->y == pos.y)
+                    {
+                        if (ri->x < pos.x)
+                            west = true;
+                        else
+                            east = true;
+                    }
+                    else // diagonals
+                    {
+                        if (ri->x < pos.x)
+                        {
+                            if (ri->y < pos.y)
+                                nw = true;
+                            else
+                                sw = true;
+                        }
+                        else
+                        {
+                            if (ri->y < pos.y)
+                                ne = true;
+                            else
+                                se = true;
+                        }
+                    }
+                }
+
+                if (north)
+                    m_buf_dngn.add(TILE_WAVE_N, x, y);
+                if (south)
+                    m_buf_dngn.add(TILE_WAVE_S, x, y);
+                if (east)
+                    m_buf_dngn.add(TILE_WAVE_E, x, y);
+                if (west)
+                    m_buf_dngn.add(TILE_WAVE_W, x, y);
+                if (ne && !north && !east)
+                    m_buf_dngn.add(TILE_WAVE_CORNER_NE, x, y);
+                if (nw && !north && !west)
+                    m_buf_dngn.add(TILE_WAVE_CORNER_NW, x, y);
+                if (se && !south && !east)
+                    m_buf_dngn.add(TILE_WAVE_CORNER_SE, x, y);
+                if (sw && !south && !west)
+                    m_buf_dngn.add(TILE_WAVE_CORNER_SW, x, y);
+            }
         }
 
         if (bg & TILE_FLAG_HALO)
@@ -1541,10 +1611,8 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             const int cloudidx = env.cgrid(gc);
             if (cloudidx != EMPTY_CLOUD)
             {
-                cloud_type ctype = env.cloud[cloudidx].type;
-
                 std::string terrain_desc = desc;
-                desc = cloud_name(ctype);
+                desc = cloud_name(cloudidx);
 
                 if (!terrain_desc.empty())
                     desc += "\n" + terrain_desc;
@@ -1747,7 +1815,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         tip += get_class_abbrev(you.char_class);
         tip += ")";
 
-        if (igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM)
+        if (you.visible_igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM)
             tip += "\n[L-Click] Pick up items (g)";
 
         const dungeon_feature_type feat = grd(m_cursor[CURSOR_MOUSE]);
@@ -1937,9 +2005,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         const int cloudidx = env.cgrid(gc);
         if (cloudidx != EMPTY_CLOUD)
         {
-            cloud_type ctype = env.cloud[cloudidx].type;
-
-            inf.prefix = "There is a cloud of " + cloud_name(ctype)
+            inf.prefix = "There is a cloud of " + cloud_name(cloudidx)
                          + " here.$$";
         }
     }
@@ -2488,7 +2554,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
                 && mons_has_blood(item.plus));
     }
 
-    if (equipped && item_cursed(item))
+    if (equipped && item.cursed())
     {
         // Misc. items/rods can always be evoked, cursed or not.
         if (item.base_type == OBJ_MISCELLANY || item_is_rod(item))
@@ -2774,7 +2840,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         tip += "\n[R-Click] Info";
         // Has to be non-equipped or non-cursed to drop.
         if (!equipped || !_is_true_equipped_item(you.inv[idx])
-            || !item_cursed(you.inv[idx]))
+            || !you.inv[idx].cursed())
         {
             tip += "\n[Shift-L-Click] Drop (d)";
         }

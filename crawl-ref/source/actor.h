@@ -28,7 +28,19 @@ public:
     virtual bool is_summoned(int* duration = NULL,
                              int* summon_type = NULL) const = 0;
 
+    // [ds] Low-level moveto() - moves the actor without updating relevant
+    // grids, such as mgrd.
     virtual void moveto(const coord_def &c) = 0;
+
+    // High-level actor movement. If in doubt, use this. Returns true if the
+    // actor cannot be moved to the target, possibly because it is already
+    // occupied.
+    virtual bool move_to_pos(const coord_def &c) = 0;
+
+    virtual void apply_location_effects(const coord_def &oldpos,
+                                        killer_type killer = KILL_NONE,
+                                        int killernum = -1) = 0;
+
     virtual void set_position(const coord_def &c);
     virtual const coord_def& pos() const { return position; }
 
@@ -55,7 +67,7 @@ public:
 
     virtual size_type body_size(size_part_type psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
-    virtual int       body_weight() const;
+    virtual int       body_weight(bool base = false) const;
     virtual int       total_weight() const = 0;
 
     virtual int       damage_brand(int which_attack = -1) = 0;
@@ -162,6 +174,7 @@ public:
     virtual void petrify(actor *attacker, int strength) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
+    virtual void put_to_sleep(actor *attacker, int strength) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
     virtual void drain_stat(int stat, int amount, actor* attacker) { }
     virtual bool can_hibernate(bool holi_only = false) const;
@@ -205,6 +218,7 @@ public:
     virtual int res_poison() const = 0;
     virtual int res_rotting() const = 0;
     virtual int res_asphyx() const = 0;
+    virtual int res_water_drowning() const = 0;
     virtual int res_sticky_flame() const = 0;
     virtual int res_holy_energy(const actor *attacker) const = 0;
     virtual int res_negative_energy() const = 0;

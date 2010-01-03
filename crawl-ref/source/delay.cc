@@ -16,6 +16,7 @@
 #include "attitude-change.h"
 #include "clua.h"
 #include "command.h"
+#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
@@ -738,12 +739,10 @@ int check_recital_audience()
             return (1);
     }
 
-#ifdef DEBUG_DIAGNOSTICS
     if (!found_monsters)
-        mprf(MSGCH_DIAGNOSTICS, "No audience found!");
+        dprf("No audience found!");
     else
-        mprf(MSGCH_DIAGNOSTICS, "No sensible audience found!");
-#endif
+        dprf("No sensible audience found!");
 
    // No use preaching to the choir, nor to common animals.
    if (found_monsters)
@@ -1565,7 +1564,7 @@ void armour_wear_effects(const int item_slot)
         use_artefact(arm, &show_msgs, melded);
     }
 
-    if (item_cursed(arm) && !melded)
+    if (arm.cursed() && !melded)
     {
         mpr("Oops, that feels deathly cold.");
         learned_something_new(TUT_YOU_CURSED);
@@ -1602,7 +1601,7 @@ void armour_wear_effects(const int item_slot)
 
 static command_type _get_running_command()
 {
-    if (kbhit())
+    if (kbhit() || !in_bounds(you.pos() + you.running.pos))
     {
         stop_running();
         return CMD_NO_CMD;

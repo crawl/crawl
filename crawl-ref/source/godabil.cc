@@ -158,9 +158,7 @@ bool trog_burn_spellbooks()
             else
                 totalpiety++;
 
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Burned book rarity: %d", rarity);
-#endif
+            dprf("Burned book rarity: %d", rarity);
             destroy_item(si.link());
             count++;
         }
@@ -281,7 +279,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
 
     mon->colour = ETC_UNHOLY;
 
-    mon->flags |= MF_CREATED_FRIENDLY;
+    mon->flags |= MF_NO_REWARD;
     mon->flags |= MF_ENSLAVED_SOUL;
 
     if (twisted)
@@ -1148,7 +1146,7 @@ bool evolve_flora()
         current_plant->upgrade_type(current_target.new_type, true, true);
         current_plant->god = GOD_FEDHAS;
         current_plant->attitude = ATT_FRIENDLY;
-        current_plant->flags |= MF_CREATED_FRIENDLY;
+        current_plant->flags |= MF_NO_REWARD;
         current_plant->flags |= MF_ATT_CHANGE_ATTEMPT;
 
         // Try to remove slowly dying in case we are upgrading a
@@ -1258,7 +1256,8 @@ bool ponderousify_armour()
 static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
 {
     monsters* mon = monster_at(where);
-    if (mon == NULL)
+    if (mon == NULL || mons_is_stationary(mon) || mon->cannot_move()
+        || mons_is_projectile(mon->type))
         return (0);
 
     int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());

@@ -16,11 +16,16 @@
 #include "fprop.h"
 #include "fight.h"
 #include "ghost.h"
+#include "items.h"
 #include "misc.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "terrain.h"
+#include "tutorial.h"
+#include "mislead.h"
 #include "mgen_data.h"
 #include "coord.h"
 #include "mon-speak.h"
@@ -39,6 +44,7 @@
 #include "teleport.h"
 #include "view.h"
 #include "viewchar.h"
+#include "xom.h"
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
@@ -212,6 +218,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
 
     beam.type = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
+    beam.origin_spell = real_spell;
 
     // FIXME: this should use the zap_data[] struct from beam.cc!
     switch (real_spell)
@@ -354,6 +361,19 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_COLD;
         beam.hit      = 17 + power / 25;
         beam.is_beam  = true;
+        break;
+
+    case SPELL_PRIMAL_WAVE:
+        beam.name     = "great wave of water";
+        // Water attack is weaker than the pure elemental damage
+        // attacks, but also less resistible.
+        beam.damage   = dice_def( 3, 6 + power / 12 );
+        beam.colour   = LIGHTBLUE;
+        beam.flavour  = BEAM_WATER;
+        // Huge wave of water is hard to dodge.
+        beam.hit      = 20 + power / 20;
+        beam.is_beam  = false;
+        beam.type     = dchar_glyph(DCHAR_WAVY);
         break;
 
     case SPELL_FREEZING_CLOUD:
@@ -669,6 +689,11 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
+    case SPELL_IOOD: // tracer only
+        beam.flavour  = BEAM_NUKE;
+        beam.is_beam  = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -727,7 +752,8 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_SMITING
         || spell_cast == SPELL_HAUNT
         || spell_cast == SPELL_FIRE_STORM
-        || spell_cast == SPELL_AIRSTRIKE);
+        || spell_cast == SPELL_AIRSTRIKE
+        || spell_cast == SPELL_MISLEAD);
 }
 
 // Set up bolt structure for monster spell casting.
@@ -762,6 +788,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         case SPELL_BRAIN_FEED:
             pbolt.type = DMNBM_BRAIN_FEED;
             return (true);
+        case SPELL_MISLEAD:
         case SPELL_SMITING:
         case SPELL_AIRSTRIKE:
             pbolt.type = DMNBM_SMITING;
@@ -781,6 +808,9 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_VAMPIRE_SUMMON:
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_FAKE_RAKSHASA_SUMMON:
+    case SPELL_FAKE_MARA_SUMMON:
+    case SPELL_SUMMON_PLAYER_GHOST:
+    case SPELL_SUMMON_RAKSHASA:
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_UGLY_THING:
     case SPELL_ANIMATE_DEAD:
@@ -813,6 +843,9 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_SUMMON_EYEBALLS:
+    case SPELL_SUMMON_BUTTERFLIES:
+    case SPELL_MISLEAD:
+    case SPELL_CALL_TIDE:
         return (true);
     default:
         if (check_validity)
@@ -828,6 +861,8 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     bolt theBeam         = mons_spells(monster, spell_cast, power);
 
+    // [ds] remind me again why we're doing this piecemeal copying?
+    pbolt.origin_spell   = theBeam.origin_spell;
     pbolt.colour         = theBeam.colour;
     pbolt.range          = theBeam.range;
     pbolt.hit            = theBeam.hit;
@@ -1370,10 +1405,7 @@ static int _monster_abjure_square(const coord_def &pos,
         shielded = true;
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Abj: dur: %d, pow: %d, ndur: %d",
-         duration, pow, duration - pow);
-#endif
+    dprf("Abj: dur: %d, pow: %d, ndur: %d", duration, pow, duration - pow);
 
     mon_enchant abj = target->get_ench(ENCH_ABJ);
     if (!target->lose_ench_duration(abj, pow))
@@ -1544,6 +1576,28 @@ void mons_cast_haunt(monsters *monster)
                           _pick_random_wraith, random_range(3, 6), GOD_NO_GOD, &fpos);
 }
 
+int _count_mara_fakes()
+{
+    int count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_MARA_FAKE)
+            count++;
+    }
+
+    return count;
+}
+
+bool _find_players_ghost ()
+{
+    bool found = false;
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->type == MONS_PLAYER_GHOST && mi->mname == you.your_name)
+            found = true;
+
+    return found;
+}
+
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                bool do_noise, bool special_ability)
 {
@@ -1607,8 +1661,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     const bool wizard = monster->is_actual_spellcaster();
     god_type god = (priest || !(priest || wizard)) ? monster->god : GOD_NO_GOD;
 
-    // Used for summon X elemental, and nothing else. {bookofjude}
-    monster_type el_summon_type = MONS_NO_MONSTER;
+    // Used for summon X elemental and nothing else. {bookofjude}
+    monster_type summon_type = MONS_NO_MONSTER;
 
     switch (spell_cast)
     {
@@ -1629,6 +1683,22 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SWIFTNESS:
         monster->add_ench(ENCH_SWIFT);
         simple_monster_message(monster, " seems to move somewhat quicker.");
+        return;
+
+    case SPELL_CALL_TIDE:
+        if (player_in_branch(BRANCH_SHOALS))
+        {
+            const int tide_duration = random_range(18, 50, 2);
+            monster->add_ench(mon_enchant(ENCH_TIDE, 0, KC_OTHER,
+                                          tide_duration * 10));
+            monster->props[TIDE_CALL_TURN] = you.num_turns;
+            if (simple_monster_message(
+                    monster,
+                    " sings a water chant to call the tide!"))
+            {
+                flash_view_delay(ETC_WATER, 300);
+            }
+        }
         return;
 
     case SPELL_SUMMON_SMALL_MAMMALS:
@@ -1669,20 +1739,20 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_WATER_ELEMENTALS:
-        if (el_summon_type == MONS_NO_MONSTER)
-            el_summon_type = MONS_WATER_ELEMENTAL;
+        if (summon_type == MONS_NO_MONSTER)
+            summon_type = MONS_WATER_ELEMENTAL;
         // Deliberate fall through
     case SPELL_EARTH_ELEMENTALS:
-        if (el_summon_type == MONS_NO_MONSTER)
-            el_summon_type = MONS_EARTH_ELEMENTAL;
+        if (summon_type == MONS_NO_MONSTER)
+            summon_type = MONS_EARTH_ELEMENTAL;
         // Deliberate fall through
     case SPELL_AIR_ELEMENTALS:
-        if (el_summon_type == MONS_NO_MONSTER)
-            el_summon_type = MONS_AIR_ELEMENTAL;
+        if (summon_type == MONS_NO_MONSTER)
+            summon_type = MONS_AIR_ELEMENTAL;
         // Deliberate fall through
     case SPELL_FIRE_ELEMENTALS:
-        if (el_summon_type == MONS_NO_MONSTER)
-            el_summon_type = MONS_FIRE_ELEMENTAL;
+        if (summon_type == MONS_NO_MONSTER)
+            summon_type = MONS_FIRE_ELEMENTAL;
 
         if (_mons_abjured(monster, monsterNearby))
             return;
@@ -1692,9 +1762,40 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
-                mgen_data(el_summon_type, SAME_ATTITUDE(monster), monster,
+                mgen_data(summon_type, SAME_ATTITUDE(monster), monster,
                           3, spell_cast, monster->pos(), monster->foe, 0, god));
         }
+        return;
+
+    case SPELL_SUMMON_RAKSHASA:
+        sumcount2 = 1 + random2(4) + random2(monster->hit_dice / 7 + 1);
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            create_monster(
+                mgen_data(MONS_RAKSHASA, SAME_ATTITUDE(monster), monster,
+                          3, spell_cast, monster->pos(), monster->foe, 0, god));
+        }
+        return;
+
+    case SPELL_SUMMON_PLAYER_GHOST:
+
+        // Do nothing in the arena; this could instead create a ghost of an
+        // existant monster, but that would require the spell being dealth with
+        // as a bolt instead.
+        if (crawl_state.arena)
+            return;
+
+        // Only summon one ghost.
+        if (_find_players_ghost())
+            return;
+
+        mpr("There is a horrible, sudden wrenching feeling in your soul!", MSGCH_WARN);
+
+        create_monster(
+            mgen_data(MONS_PLAYER_GHOST, SAME_ATTITUDE(monster), monster,
+                          6, spell_cast, monster->pos(), monster->foe, 0, god));
+
         return;
 
     case SPELL_KRAKEN_TENTACLES:
@@ -1723,14 +1824,20 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             // Tentacles aren't really summoned (controlled by spell_cast
             // being passed to summon_type), so I'm not sure what the
             // abjuration value (3) is doing there. (jpeg)
-            if (create_monster(
+            int tentacle = create_monster(
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster), monster,
                           3, spell_cast, monster->pos(), monster->foe, 0, god,
                           MONS_NO_MONSTER, kraken_index, monster->colour,
                           you.your_level, PROX_CLOSE_TO_PLAYER,
-                          you.level_type)) == -1)
+                          you.level_type));
+
+            if (tentacle < 0)
             {
                 sumcount2--;
+            }
+            else if (monster->holiness() == MH_UNDEAD)
+            {
+                menv[tentacle].flags |= MF_HONORARY_UNDEAD;
             }
         }
         if (sumcount2 == 1)
@@ -1739,6 +1846,66 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             mpr("Tentacles burst out of the water!");
         return;
     }
+    case SPELL_FAKE_MARA_SUMMON:
+        // We only want there to be two fakes, which, plus Mara, means
+        // a total of three Maras; if we already have two, give up, otherwise
+        // we want to summon either one more or two more.
+        sumcount2 = 2 - _count_mara_fakes();
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            mgen_data summ_mon = mgen_data(MONS_MARA_FAKE, SAME_ATTITUDE(monster),
+                                 monster, 3, spell_cast, monster->pos(),
+                                 monster->foe, 0, god);
+            // This is somewhat hacky, to prevent "A Mara", and such, as MONS_FAKE_MARA
+            // is not M_UNIQUE.
+            summ_mon.mname = "Mara";
+            summ_mon.extra_flags |= MF_NAME_REPLACE;
+
+            int created = create_monster(summ_mon);
+            if (created == -1)
+                continue;
+
+            // Mara's clones are special; they have the same stats as him, and
+            // are exact clones, so they are created damaged if necessary, with
+            // identical enchants and with the same items.
+            monsters *new_fake = &menv[created];
+            new_fake->hit_points = monster->hit_points;
+            new_fake->max_hit_points = monster->max_hit_points;
+            mon_enchant_list::iterator ei;
+            for (ei = monster->enchantments.begin(); ei != monster->enchantments.end(); ++ei)
+            {
+                new_fake->enchantments.insert(*ei);
+            }
+
+            // Code basically lifted from clone_monster. In theory, it only needs
+            // to copy weapon and armour slots; instead, copy the whole inventory.
+            for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+            {
+                const int old_index = monster->inv[i];
+
+                if (old_index == NON_ITEM)
+                    continue;
+
+                const int new_index = get_item_slot(0);
+                if (new_index == NON_ITEM)
+                {
+                    new_fake->unequip(mitm[old_index], i, 0, true);
+                    new_fake->inv[i] = NON_ITEM;
+                    continue;
+                }
+
+                new_fake->inv[i] = new_index;
+                mitm[new_index]  = mitm[old_index];
+                mitm[new_index].set_holding_monster(new_fake->mindex());
+
+                // Mark items as summoned, so there's no way to get three nice
+                // weapons or such out of him.
+                mitm[new_index].flags |= ISFLAG_SUMMONED;
+            }
+        }
+        return;
+
     case SPELL_FAKE_RAKSHASA_SUMMON:
         sumcount2 = (coinflip() ? 2 : 3);
 
@@ -2156,6 +2323,22 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 mgen_data(mon, SAME_ATTITUDE(monster), monster, duration,
                           spell_cast, monster->pos(), monster->foe, 0, god));
         }
+        return;
+    case SPELL_SUMMON_BUTTERFLIES:
+        if (_mons_abjured(monster, monsterNearby))
+            return;
+
+        duration = std::min(2 + monster->hit_dice / 5, 6);
+        for (int i = 0; i < 15; ++i)
+        {
+            create_monster(
+                mgen_data(MONS_BUTTERFLY, SAME_ATTITUDE(monster),
+                          monster, duration, spell_cast, monster->pos(),
+                          monster->foe, 0, god));
+        }
+        return;
+    case SPELL_IOOD:
+        cast_iood(monster, 6 * monster->hit_dice, &pbolt);
         return;
     }
 

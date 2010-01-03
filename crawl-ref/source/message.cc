@@ -502,10 +502,16 @@ static void do_message_print(msg_channel_type channel, int param,
                              const char *format, va_list argp)
 {
     char buff[200];
-    vsnprintf( buff, sizeof( buff ), format, argp );
-    buff[199] = 0;
-
-    mpr(buff, channel, param);
+    size_t len = vsnprintf( buff, sizeof( buff ), format, argp );
+    if (len < sizeof( buff )) {
+        mpr( buff, channel, param );
+    }
+    else {
+        char *heapbuf = (char*)malloc( len + 1 );
+        vsnprintf( heapbuf, len + 1, format, argp );
+        mpr( heapbuf, channel, param );
+        free( heapbuf );
+    }
 }
 
 void mprf(msg_channel_type channel, int param, const char *format, ...)
@@ -532,6 +538,16 @@ void mprf(const char *format, ...)
     do_message_print(MSGCH_PLAIN, 0, format, argp);
     va_end(argp);
 }
+
+#ifdef DEBUG_DIAGNOSTICS
+void dprf( const char *format, ... )
+{
+    va_list  argp;
+    va_start( argp, format );
+    do_message_print( MSGCH_DIAGNOSTICS, 0, format, argp );
+    va_end( argp );
+}
+#endif
 
 static bool _updating_view = false;
 
@@ -620,6 +636,7 @@ void mpr_comma_separated_list(const std::string prefix,
                               const int param)
 {
     std::string out = prefix;
+
     for (int i = 0, size = list.size(); i < size; i++)
     {
         out += list[i];

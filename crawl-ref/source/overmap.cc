@@ -831,7 +831,7 @@ void annotate_level()
     {
         if (get_level_annotation(li, true).length() > 0)
         {
-            if (!yesno("Really clear the annotation?"))
+            if (!yesno("Really clear the annotation?", false, 'n'))
                 return;
         }
         else

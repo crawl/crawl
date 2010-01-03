@@ -85,6 +85,30 @@ Greater Healing cast
 
 @The_monster@ briefly glows brightly.
 %%%%
+Mislead cast
+
+@The_monster@ weaves an illusion.
+
+@The_monster@ misleads you.
+
+@The_monster@ clouds your mind.
+%%%%
+unseen Mislead cast
+
+Something tries to mislead you!
+
+Something weaves an illusion around you!
+%%%%
+Mara Summon cast
+
+@The_monster@ weaves an illusion.
+
+@The_monster@ shimmers.
+%%%%
+unseen Mara summon cast
+
+Something weaves an illusion!
+%%%%
 Symbol of Torment cast
 
 @The_monster@ calls on the powers of Hell!
@@ -92,6 +116,14 @@ Symbol of Torment cast
 unseen Symbol of Torment cast
 
 @The_something@ calls on the powers of Hell!
+%%%%
+Orb of Destruction cast
+
+@The_monster@ conjures a glowing orb.
+
+@The_monster@ conjures an orb of pure magic.
+
+@The_monster@ launches a ball of destructive magic.
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################

@@ -201,7 +201,6 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         { "rC",     ARTP_COLD,                  1 },
         { "rN",     ARTP_NEGATIVE_ENERGY,       1 },
         { "MR",     ARTP_MAGIC,                 2 },
-        { "Spirit", ARTP_SPIRIT_SHIELD,         2 },
 
         // Quantitative attributes
         { "AC",     ARTP_AC,                    0 },
@@ -228,10 +227,13 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         if (!type.empty())
             propnames.push_back(type);
     }
-    else if (item.base_type == OBJ_WEAPONS
-             && item_ident(item, ISFLAG_KNOW_TYPE))
+    else if (item_ident(item, ISFLAG_KNOW_TYPE))
     {
-        std::string ego = weapon_brand_name(item, true);
+        std::string ego;
+        if (item.base_type == OBJ_WEAPONS)
+            ego = weapon_brand_name(item, true);
+        else if (item.base_type == OBJ_ARMOUR)
+            ego = armour_ego_name(item, true);
         if (!ego.empty())
         {
             // XXX: Ugly hack to remove the brackets...
@@ -393,7 +395,6 @@ static std::string _randart_descrip( const item_def &item )
         { ARTP_LEVITATE, "It lets you levitate.", false},
         { ARTP_BLINK, "It lets you blink.", false},
         { ARTP_BERSERK, "It lets you go berserk.", false},
-        { ARTP_SPIRIT_SHIELD, "It shields you from harm at the cost of magical power.", false},
         { ARTP_NOISES, "It makes noises.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
         { ARTP_CAUSE_TELEPORTATION, "It causes teleportation.", false},
@@ -775,6 +776,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += "It protects the one who wields it against "
                 "injury (+5 to AC).";
             break;
+        case SPWPN_EVASION:
+            description += "It affects your evasion (+5 to EV).";
+            break;
         case SPWPN_DRAINING:
             description += "A truly terrible weapon, it drains the "
                 "life of those it strikes.";
@@ -1068,7 +1072,25 @@ static std::string _describe_ammo(const item_def &item)
         case SPMSL_CURARE:
             description += "It is tipped with asphyxiating poison.";
             break;
-        case SPMSL_RETURNING:
+        case SPMSL_PARALYSIS:
+            description += "It is tipped with a paralyzing poison."; 
+            break;
+        case SPMSL_SLOW:
+            description += "It is coated with a poison that causes slowness of the body.";
+            break;
+        case SPMSL_SLEEP:
+            description += "It is coated with a fast-acting tranquilizer.";
+            break;
+        case SPMSL_CONFUSION:
+            description += "It is tipped with a substance that causes confusion.";
+            break;
+        case SPMSL_SICKNESS:
+            description += "It has been contaminated by something likely to cause disease.";
+            break;
+        case SPMSL_RAGE:
+            description += "It is tipped with a substance that causes a mindless, berserk rage.";
+            break;
+       case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
                 "that it will return to its owner.";
             break;
@@ -1922,6 +1944,10 @@ std::string get_item_description( const item_def &item, bool verbose,
                 else
                     description << desc;
             }
+            std::string stats = "";
+            append_weapon_stats(stats, item);
+            description << stats;
+            description << "$$It falls into the 'Maces & Flails' category.";
         }
         else
         {
@@ -2730,16 +2756,21 @@ static std::string _monster_stat_description(const monsters& mon)
                << ".$";
     }
 
-    // Magic resistance at MAG_IMMUNE.
-    if (mons_immune_magic(&mon))
-        result << pronoun << " is immune to magical enchantments.$";
-    else // How resistant is it? Same scale as the player.
+    // Magic resistance at MAG_IMMUNE, but not for Rs, as there is then
+    // too much information leak.
+    if (mon.type != MONS_RAKSHASA && mon.type != MONS_MARA
+        && mon.type != MONS_RAKSHASA_FAKE && mon.type != MONS_MARA_FAKE)
     {
-        const int mr = mon.res_magic();
-        if (mr >= 10)
+        if (mons_immune_magic(&mon))
+            result << pronoun << " is immune to magical enchantments.$";
+        else // How resistant is it? Same scale as the player.
         {
-            result << pronoun << make_stringf(" is %s resistant to magic.$",
-                                              magic_res_adjective(mr).c_str());
+            const int mr = mon.res_magic();
+            if (mr >= 10)
+            {
+                result << pronoun << make_stringf(" is %s resistant to magic.$",
+                                                  magic_res_adjective(mr).c_str());
+            }
         }
     }
 
@@ -2928,7 +2959,8 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
                  << " is incapable of using stairs.$";
     }
 
-    if (mons.is_summoned() && mons.type != MONS_RAKSHASA_FAKE)
+    if (mons.is_summoned() && (mons.type != MONS_RAKSHASA_FAKE
+                               && mons.type != MONS_MARA_FAKE))
     {
         inf.body << "$" << "This monster has been summoned, and is thus only "
                        "temporary. Killing it yields no experience, nutrition "

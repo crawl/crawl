@@ -8,7 +8,7 @@
 
 #include "abyss.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <algorithm>
 
 #include "areas.h"
@@ -671,12 +671,12 @@ static void _place_corruption_seed(const coord_def &pos, int duration)
 
 static void _initialise_level_corrupt_seeds(int power)
 {
-    const int low = power / 2, high = power * 3 / 2;
-    int nseeds = random_range(1, std::min(2 + power / 110, 4));
+    const int low = power * 40 / 100, high = power * 140 / 100;
+    const int nseeds = random_range(-1, std::min(2 + power / 110, 4), 2);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Placing %d corruption seeds", nseeds);
-#endif
+    const int aux_seed_radius = 4;
+
+    dprf("Placing %d corruption seeds (power: %d)", nseeds, power);
 
     // The corruption centered on the player is free.
     _place_corruption_seed(you.pos(), high + 300);
@@ -684,19 +684,33 @@ static void _initialise_level_corrupt_seeds(int power)
     for (int i = 0; i < nseeds; ++i)
     {
         coord_def where;
-        do
+        int tries = 100;
+        while (tries-- > 0)
         {
-            where = coord_def(random2(GXM), random2(GYM));
+            where = dgn_random_point_from(you.pos(), aux_seed_radius, 2);
+            if (grd(where) == DNGN_FLOOR
+                && !env.markers.find(where, MAT_ANY))
+            {
+                break;
+            }
+            where.reset();
         }
-        while (!in_bounds(where) || grd(where) != DNGN_FLOOR
-               || env.markers.find(where, MAT_ANY));
 
-        _place_corruption_seed(where, random_range(low, high, 2) + 300);
+        if (!where.origin())
+            _place_corruption_seed(where, random_range(low, high, 2) + 300);
     }
 }
 
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
+    const beh_type beh =
+        one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4) ? BEH_HOSTILE
+        : BEH_NEUTRAL;
+
+    // [ds] No longer summon hostiles.
+    if (beh == BEH_HOSTILE)
+        return false;
+
     // Thirty tries for a place.
     for (int i = 0; i < 30; ++i)
     {
@@ -713,15 +727,11 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         if (mons == MONS_PROGRAM_BUG)
             return (false);
 
-        const beh_type beh =
-            one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4) ? BEH_HOSTILE
-                                                              : BEH_NEUTRAL;
         mgen_data mg(mons, beh, 0, 5, 0, p);
         mg.non_actor_summoner = "Lugonu's corruption";
 
         const int mid = create_monster(mg);
-
-        return (mid != -1);
+        return !invalid_monster_index(mid);
     }
 
     return (false);
@@ -733,6 +743,9 @@ static void _apply_corruption_effect( map_marker *marker, int duration)
         return;
 
     map_corruption_marker *cmark = dynamic_cast<map_corruption_marker*>(marker);
+    if (cmark->duration < 1)
+        return;
+
     const coord_def center = cmark->pos;
     const int neffects = std::max(div_rand_round(duration, 5), 1);
 
@@ -745,8 +758,6 @@ static void _apply_corruption_effect( map_marker *marker, int duration)
         }
     }
     cmark->duration -= duration;
-    if (cmark->duration < 1)
-        env.markers.remove(cmark);
 }
 
 void run_corruption_effects(int duration)
@@ -892,31 +903,32 @@ static void _corrupt_level_features(const crawl_environment &oenv)
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
-        int distance = GXM * GXM + GYM * GYM;
+        int idistance2 = GXM * GXM + GYM * GYM;
         for (int i = 0, size = corrupt_seeds.size(); i < size; ++i)
         {
-            const int dist = (*ri - corrupt_seeds[i]).rdist();
-            if (dist < distance)
-                distance = dist;
+            const int idist2 = (*ri - corrupt_seeds[i]).abs();
+            if (idist2 < idistance2)
+                idistance2 = idist2;
         }
 
-        if ((distance < 6 || one_chance_in(1 + distance - 6))
-            && _is_grid_corruptible(*ri))
-        {
+        const int ground_zero_radius2 = 7;
+
+        // Corruption odds are 100% within about 2 squares, decaying to 30%
+        // at LOS range (radius 8). Even if the corruption roll is made,
+        // the feature still gets a chance to resist if it's a wall.
+        const int corrupt_perc_chance =
+            idistance2 <= ground_zero_radius2 ? 100 :
+            std::max(1, 100 - (idistance2 - ground_zero_radius2) * 70 / 57);
+
+        if (random2(100) < corrupt_perc_chance && _is_grid_corruptible(*ri))
             _corrupt_square(oenv, *ri);
-        }
     }
 }
 
 static bool _is_level_corrupted()
 {
-    if (you.level_type == LEVEL_ABYSS
-        || you.level_type == LEVEL_PANDEMONIUM
-        || player_in_hell()
-        || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-    {
+    if (you.level_type == LEVEL_ABYSS)
         return (true);
-    }
 
     return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
 }

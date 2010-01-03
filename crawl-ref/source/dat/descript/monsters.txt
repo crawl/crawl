@@ -1042,9 +1042,25 @@ manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey.
 %%%%
+Mara
+
+This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers. He is capable of creating intricately detailed illusions, able to mislead even the minds of the mightiest and most brilliant spell-casters.
+%%%%
 merfolk
 
-Half fish, half man, the merfolk are citizens of both water and land, and they'll fiercely protect their chosen territory.
+Half fish, half man, the merfolk are citizens of both water and land, and fierce protectors of their chosen territory.
+%%%%
+merfolk impaler
+
+A powerfully muscled merfolk warrior, bearing a great trident.
+%%%%
+merfolk aquamancer
+
+A slender merfolk mystic with unusually webby hands. Its form shifts and glistens as if seen through ocean spray.
+%%%%
+merfolk javelineer
+
+A sinewy merfolk fighter with a piercing gaze and a large bundle of javelins.
 %%%%
 mermaid
 
@@ -1266,7 +1282,7 @@ Before you stands a draconian.
 %%%%
 red wasp
 
-A huge red wasp with a viciously barbed stinger.
+A huge red wasp with a viciously barbed stinger.  Potent paralytic poison drips from its tip.
 %%%%
 redback
 

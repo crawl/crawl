@@ -114,21 +114,18 @@ std::string place_name( unsigned short place, bool long_name,
 
     if (include_number && branches[branch].depth != 1)
     {
-        char buf[200];
         if (long_name)
         {
             // decapitalise 'the'
             if ( result.find("The") == 0 )
                 result[0] = 't';
-            snprintf( buf, sizeof buf, "Level %d of %s",
-                      lev, result.c_str() );
+            result = make_stringf("Level %d of %s",
+                      lev, result.c_str());
         }
         else if (lev)
-            snprintf( buf, sizeof buf, "%s:%d", result.c_str(), lev );
+            result = make_stringf("%s:%d", result.c_str(), lev);
         else
-            snprintf( buf, sizeof buf, "%s:$", result.c_str() );
-
-        result = buf;
+            result = make_stringf("%s:$", result.c_str());
     }
     return result;
 }

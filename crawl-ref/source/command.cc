@@ -778,6 +778,7 @@ static const char *targetting_help_1 =
     "<w>w</w>: calculate shortest path to any point on the map\n"
     "<w>D</w>: get debugging information about the monster\n"
     "<w>~</w>: polymorph monster to specific type\n"
+    "<w>,</w>: bring down the monster to 1hp\n"
 #endif
 ;
 
@@ -2424,7 +2425,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>A</w>      : set all skills to level\n"
                        "<w>g</w>      : exercise a skill\n"
                        "<w>r</w>      : change character's species\n"
-                       "<w>s</w>      : fill experience pool\n"
+                       "<w>s</w>      : gain 20000 skill points\n"
                        "<w>S</w>      : set skill to level\n"
                        "<w>x</w>      : gain an experience level\n"
                        "<w>Ctrl-L</w> : change experience level\n"

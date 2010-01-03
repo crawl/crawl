@@ -864,7 +864,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
     // The monster is not really *created* friendly, but should it
     // become hostile later on, it won't count as a good kill.
-    orc->flags |= MF_CREATED_FRIENDLY;
+    orc->flags |= MF_NO_REWARD;
 
     // Prevent assertion if the orc was previously worshipping a
     // different god, rather than already worshipping Beogh or being an

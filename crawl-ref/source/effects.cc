@@ -27,6 +27,7 @@
 #include "coordit.h"
 #include "decks.h"
 #include "delay.h"
+#include "dgn-shoals.h"
 #include "dungeon.h"
 #include "directn.h"
 #include "dgnevent.h"
@@ -69,6 +70,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
+#include "travel.h"
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
@@ -897,9 +899,7 @@ void direct_effect(monsters *source, spell_type spell,
         pbolt.flavour    = BEAM_MISSILE;
         pbolt.aux_source = "by the air";
 
-        damage_taken     = 8 + random2(random2(4)
-                                       + (random2(12 * source->hit_dice) / 6)
-                                       + (random2(12 * source->hit_dice) / 7));
+        damage_taken     = 10 + 2 * source->hit_dice;
 
         // Apply "bonus" against flying/levitating characters after AC
         // has been checked.
@@ -910,7 +910,8 @@ void direct_effect(monsters *source, spell_type spell,
         }
 
         // Previous method of damage calculation (in line with player
-        // airstrike) favoured high-AC player characters.
+        // airstrike) had absurd variance.
+        damage_taken = random2avg(damage_taken, 3);
         damage_taken -= random2(defender->armour_class());
         break;
 
@@ -935,6 +936,13 @@ void direct_effect(monsters *source, spell_type spell,
         else
             mpr("You sense an evil presence.");
         mons_cast_haunt(source);
+        break;
+
+    case SPELL_MISLEAD:
+        if (!def)
+            mons_cast_mislead(source);
+        else
+            defender->confuse(source, source->hit_dice * 12);
         break;
 
     default:
@@ -1011,13 +1019,13 @@ void random_uselessness(int scroll_slot)
 
     case 6:
         mpr("You hear the tinkle of a tiny bell.", MSGCH_SOUND);
-        noisy(10, you.pos());
+        noisy(2, you.pos());
         cast_summon_butterflies(100);
         break;
 
     case 7:
         mprf(MSGCH_SOUND, "You hear %s.", weird_sound().c_str());
-        noisy(10, you.pos());
+        noisy(2, you.pos());
         break;
     }
 }
@@ -1276,8 +1284,7 @@ static bool _try_give_plain_armour(item_def &arm)
             {
                 const item_def weapon = you.inv[you.equip[EQ_WEAPON]];
                 const hands_reqd_type hand = hands_reqd(weapon, you.body_size());
-                if (hand == HANDS_TWO || item_is_rod(weapon)
-                    || is_range_weapon(weapon))
+                if (hand == HANDS_TWO || is_range_weapon(weapon))
                 {
                     continue;
                 }
@@ -1374,7 +1381,7 @@ static int _acquirement_weapon_subtype()
     int count = 0;
     int skill = SK_FIGHTING;
 
-    for (int i = SK_SHORT_BLADES; i <= SK_DARTS; i++)
+    for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
     {
         if (is_invalid_skill(i))
             continue;
@@ -1445,7 +1452,7 @@ static missile_type _acquirement_missile_subtype()
     int count = 0;
     int skill = SK_THROWING;
 
-    for (int i = SK_SLINGS; i <= SK_DARTS; i++)
+    for (int i = SK_SLINGS; i <= SK_THROWING; i++)
     {
         if (you.skills[i])
         {
@@ -1471,7 +1478,7 @@ static missile_type _acquirement_missile_subtype()
                                                                    : MI_DART);
         break;
 
-    case SK_DARTS:
+    case SK_THROWING:
         // Assuming that blowgun in inventory means that they
         // may want needles for it (but darts might also be
         // wanted).  Maybe expand this... see above comment.
@@ -1762,6 +1769,30 @@ static int _book_weight(book_type book)
     return (total_weight);
 }
 
+static bool _is_magic_skill(int skill)
+{
+    return (skill >= SK_SPELLCASTING && skill < SK_INVOCATIONS);
+}
+
+static bool _skill_useless_with_god(int skill)
+{
+    switch (you.religion)
+    {
+    case GOD_TROG:
+        return (_is_magic_skill(skill) || skill == SK_INVOCATIONS);
+    case GOD_ZIN:
+    case GOD_SHINING_ONE:
+    case GOD_ELYVILON:
+    case GOD_FEDHAS:
+        return (skill == SK_NECROMANCY);
+    case GOD_XOM:
+    case GOD_NEMELEX_XOBEH:
+        return (skill == SK_INVOCATIONS);
+    default:
+        return (false);
+    }
+}
+
 static bool _do_book_acquirement(item_def &book, int agent)
 {
     // items() shouldn't make book a randart for acquirement items.
@@ -1813,7 +1844,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             if (i == SK_SPELLCASTING && weight >= 1)
                 weight--;
 
-            if (i >= SK_SPELLCASTING && i <= SK_POISON_MAGIC)
+            if (_is_magic_skill(i))
                 magic_weights += weight;
             else
                 other_weights += weight;
@@ -1912,7 +1943,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
             int skill = you.skills[i];
 
-            if (skill == 27)
+            if (skill == 27 || you.species == SP_DEMIGOD && i == SK_INVOCATIONS)
             {
                 weights[i] = 0;
                 continue;
@@ -1928,9 +1959,14 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 w += 5;
             }
 
+            // Greatly reduce the chances of getting a manual for a skill
+            // you couldn't use unless you switched your religion.
+            if (_skill_useless_with_god(i))
+                w /= 2;
+
             // If we don't have any magic skills, make non-magic skills
             // more likely.
-            if (!knows_magic && (i < SK_SPELLCASTING || i > SK_POISON_MAGIC))
+            if (!knows_magic && !_is_magic_skill(i))
                 w *= 2;
 
             weights[i] = w;
@@ -1946,8 +1982,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
         // Set number of reads possible before it "crumbles to dust".
         book.plus2    = 3 + random2(15);
         break;
-    }
-    }
+    } // manuals
+    } // switch book choice
     return (true);
 }
 
@@ -1959,9 +1995,8 @@ static int _failed_acquirement(bool quiet)
 }
 
 int acquirement_create_item(object_class_type class_wanted,
-                            int agent,
-                            bool quiet,
-                            const coord_def &pos)
+                            int agent, bool quiet,
+                            const coord_def &pos, bool debug)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
@@ -2124,10 +2159,7 @@ int acquirement_create_item(object_class_type class_wanted,
     // Easier to read this way.
     item_def& thing(mitm[thing_created]);
 
-    // Give some more gold.
-    if (class_wanted == OBJ_GOLD)
-        thing.quantity += 150;
-    else if (class_wanted == OBJ_WANDS)
+    if (class_wanted == OBJ_WANDS)
         thing.plus = std::max((int) thing.plus, 3 + random2(3));
     else if (quant > 1)
         thing.quantity = quant;
@@ -2145,7 +2177,10 @@ int acquirement_create_item(object_class_type class_wanted,
             destroy_item(thing, true);
             return _failed_acquirement(quiet);
         }
-        mark_had_book(thing);
+        // Don't mark books as seen if only generated for the
+        // acquirement statistics.
+        if (!debug)
+            mark_had_book(thing);
     }
     else if (thing.base_type == OBJ_JEWELLERY)
     {
@@ -2276,19 +2311,28 @@ int acquirement_create_item(object_class_type class_wanted,
     if (agent > GOD_NO_GOD && agent < NUM_GODS && agent == you.religion)
         thing.inscription = "god gift";
 
-    move_item_to_grid( &thing_created, pos );
-
-    // This should never actually be NON_ITEM because of the way
-    // move_item_to_grid works (doesn't create a new item ever),
-    // but we're checking it anyways. -- bwr
+    // Moving this above the move since it might not exist after falling.
     if (thing_created != NON_ITEM && !quiet)
         canned_msg(MSG_SOMETHING_APPEARS);
+
+    // If a god wants to give you something but the floor doesn't want it,
+    // it counts as a failed acquirement - no piety, etc cost.
+    if (feat_destroys_item(grd(pos), thing) && (agent > GOD_NO_GOD) &&
+        (agent < NUM_GODS))
+    {
+        if (agent == GOD_XOM)
+            simple_god_message(" snickers.", GOD_XOM);
+        else
+            return _failed_acquirement(quiet);
+    }
+
+    move_item_to_grid( &thing_created, pos );
 
     return (thing_created);
 }
 
 bool acquirement(object_class_type class_wanted, int agent,
-                 bool quiet, int* item_index)
+                 bool quiet, int* item_index, bool debug)
 {
     ASSERT(!crawl_state.arena);
 
@@ -2341,37 +2385,9 @@ bool acquirement(object_class_type class_wanted, int agent,
         }
     }
 
-    if (feat_destroys_items(grd(you.pos())))
-    {
-        // How sad (and stupid).
-        if (!silenced(you.pos()) && !quiet)
-            mprf(MSGCH_SOUND, feat_item_destruction_message(grd(you.pos())));
+    acquirement_create_item(class_wanted, agent, quiet, you.pos(), debug);
 
-        if (agent > GOD_NO_GOD && agent < NUM_GODS)
-        {
-            if (agent == GOD_XOM)
-                simple_god_message(" snickers.", GOD_XOM);
-            else
-            {
-                ASSERT(!"God gave gift item while player was on grid which "
-                        "destroys items.");
-                mprf(MSGCH_ERROR, "%s gave a god gift while you were on "
-                                  "terrain which destroys items.",
-                     god_name((god_type) agent).c_str());
-            }
-        }
-
-        *item_index = NON_ITEM;
-
-        // Well, the item may have fallen in the drink, but the intent is
-        // that acquirement happened. -- bwr
-        return (true);
-    }
-
-    *item_index =
-        acquirement_create_item(class_wanted, agent, quiet, you.pos());
-
-    return (*item_index != NON_ITEM);
+    return (true);
 }
 
 bool recharge_wand(int item_slot)
@@ -2461,7 +2477,7 @@ bool recharge_wand(int item_slot)
 
             if (wand.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
             {
-                wand.plus2 += ROD_CHARGE_MULT;
+                wand.plus2 += ROD_CHARGE_MULT * random_range(1,2);
 
                 if (wand.plus2 > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
                     wand.plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
@@ -2472,6 +2488,17 @@ bool recharge_wand(int item_slot)
             if (wand.plus < wand.plus2)
             {
                 wand.plus = wand.plus2;
+                work = true;
+            }
+
+            if (short(wand.props["rod_enchantment"]) < MAX_WPN_ENCHANT)
+            {
+                static_cast<short&>(wand.props["rod_enchantment"])
+                    += random_range(1,2);
+
+                if (short(wand.props["rod_enchantment"]) > MAX_WPN_ENCHANT)
+                    wand.props["rod_enchantment"] = short(MAX_WPN_ENCHANT);
+
                 work = true;
             }
 
@@ -2930,11 +2957,6 @@ static void _hell_effects()
     }
 }
 
-static bool _is_floor(const dungeon_feature_type feat)
-{
-    return (!feat_is_solid(feat) && !feat_destroys_items(feat));
-}
-
 // This function checks whether we can turn a wall into a floor space and
 // still keep a corridor-like environment. The wall in position x is a
 // a candidate for switching if it's flanked by floor grids to two sides
@@ -2956,8 +2978,8 @@ static bool _feat_is_flanked_by_walls(const coord_def &p)
             return (false);
 
     return (feat_is_wall(grd(adjs[0])) && feat_is_wall(grd(adjs[1]))
-               && _is_floor(grd(adjs[2])) && _is_floor(grd(adjs[3]))
-            || _is_floor(grd(adjs[0])) && _is_floor(grd(adjs[1]))
+               && feat_has_solid_floor(grd(adjs[2])) && feat_has_solid_floor(grd(adjs[3]))
+            || feat_has_solid_floor(grd(adjs[0])) && feat_has_solid_floor(grd(adjs[1]))
                && feat_is_wall(grd(adjs[2])) && feat_is_wall(grd(adjs[3])));
 }
 
@@ -3062,7 +3084,7 @@ static bool _deadend_check_floor(const coord_def &p)
                 continue;
 
             const coord_def a(p.x, p.y+2*i);
-            if (!in_bounds(a) || _is_floor(grd(a)))
+            if (!in_bounds(a) || feat_has_solid_floor(grd(a)))
                 continue;
 
             for (int j = -1; j <= 1; j++)
@@ -3075,7 +3097,7 @@ static bool _deadend_check_floor(const coord_def &p)
                     continue;
 
                 const coord_def c(p.x+j, p.y+i);
-                if (_is_floor(grd(c)) && !_is_floor(grd(b)))
+                if (feat_has_solid_floor(grd(c)) && !feat_has_solid_floor(grd(b)))
                     return (false);
             }
         }
@@ -3088,7 +3110,7 @@ static bool _deadend_check_floor(const coord_def &p)
                 continue;
 
             const coord_def a(p.x+2*i, p.y);
-            if (!in_bounds(a) || _is_floor(grd(a)))
+            if (!in_bounds(a) || feat_has_solid_floor(grd(a)))
                 continue;
 
             for (int j = -1; j <= 1; j++)
@@ -3101,7 +3123,7 @@ static bool _deadend_check_floor(const coord_def &p)
                     continue;
 
                 const coord_def c(p.x+i, p.y+j);
-                if (_is_floor(grd(c)) && !_is_floor(grd(b)))
+                if (feat_has_solid_floor(grd(c)) && !feat_has_solid_floor(grd(b)))
                     return (false);
             }
         }
@@ -3210,7 +3232,7 @@ void change_labyrinth(bool msg)
         // Use the adjacent floor grids as source and destination.
         coord_def src(c.x-1,c.y);
         coord_def dst(c.x+1,c.y);
-        if (!_is_floor(grd(src)) || !_is_floor(grd(dst)))
+        if (!feat_has_solid_floor(grd(src)) || !feat_has_solid_floor(grd(dst)))
         {
             src = coord_def(c.x, c.y-1);
             dst = coord_def(c.x, c.y+1);
@@ -3349,7 +3371,7 @@ void change_labyrinth(bool msg)
                 int floor_count = 0;
                 coord_def new_adj(p);
                 for (adjacent_iterator ai(c); ai; ++ai)
-                    if (_is_floor(grd(*ai)) && one_chance_in(++floor_count))
+                    if (feat_has_solid_floor(grd(*ai)) && one_chance_in(++floor_count))
                         new_adj = *ai;
 
                 if (new_adj != p && maybe_bloodify_square(new_adj))
@@ -3397,7 +3419,7 @@ void change_labyrinth(bool msg)
             if (!in_bounds(p))
                 continue;
 
-            if (_is_floor(grd(p)))
+            if (feat_has_solid_floor(grd(p)))
             {
                 // Once a valid grid is found, move all items from the
                 // stack onto it.
@@ -4149,9 +4171,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
                 }
             }
 
-#if DEBUG_DIAGNOSTICS
-            mpr("backing off...", MSGCH_DIAGNOSTICS);
-#endif
+            dprf("backing off...");
         }
         else
         {
@@ -4227,6 +4247,8 @@ void update_level(double elapsedTime)
 #endif
 
     update_corpses(elapsedTime);
+    shoals_apply_tides(turns);
+    recharge_rods((long)turns, true);
 
     if (env.sanctuary_time)
     {
@@ -4833,5 +4855,56 @@ void update_corpses(double elapsedTime)
                 _maybe_restart_fountain_flow(*ri, fountain_checks);
             }
         }
+    }
+}
+
+static void _recharge_rod( item_def &rod, long aut, bool in_inv )
+{
+    if (!item_is_rod(rod) || rod.plus >= rod.plus2)
+        return;
+
+    long rate = 4 + short(rod.props["rod_enchantment"]);
+
+    rate *= (10 + skill_bump( SK_EVOCATIONS ));
+    rate *= aut;
+    rate = div_rand_round( rate, 100 );
+
+    if (rate > rod.plus2 - rod.plus) // Prevent overflow
+        rate = rod.plus2 - rod.plus;
+
+    // With this, a +0 rod with no skill gets 1 mana per 25.0 turns
+
+    if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
+    {
+        if (item_is_equipped( rod, true ))
+            you.wield_change = true;
+    }
+
+    rod.plus += rate;
+
+    if (in_inv && rod.plus == rod.plus2)
+    {
+        msg::stream << "Your " << rod.name(DESC_QUALNAME) << " has recharged."
+                    << std::endl;
+        if (is_resting())
+            stop_running();
+    }
+
+    return;
+}
+
+void recharge_rods(long aut, bool level_only)
+{
+    if (!level_only)
+    {
+        for (int item = 0; item < ENDOFPACK; ++item)
+        {
+            _recharge_rod( you.inv[item], aut, true );
+        }
+    }
+
+    for (int item = 0; item < MAX_ITEMS; ++item)
+    {
+        _recharge_rod( mitm[item], aut, false );
     }
 }

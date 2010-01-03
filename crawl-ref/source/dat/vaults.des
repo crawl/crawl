@@ -230,7 +230,7 @@ ENDMAP
 #
 NAME:   metal_show
 ORIENT: float
-DEPTH:  Vault:3-
+DEPTH:  Vault:3-7
 TAGS:   no_secret_doors no_monster_gen no_item_gen no_wall_fixup
 COLOUR: M = magenta
 COLOUR: K = magenta
@@ -325,7 +325,7 @@ lua_marker('e', portal_desc { teleport_spot=1})
 lua_marker('m', portal_desc { teleport_spot=2})
 }}
 ORIENT:     float
-DEPTH:      Vault:3-
+DEPTH:      Vault:3-7
 TAGS:       no_secret_doors no_monster_gen no_item_gen uniq_the_teleporter \
             patrolling
 COLOUR:     ME = yellow
@@ -362,7 +362,9 @@ ENDMAP
 # example), which will be used to orient that corner towards the middle of
 # the map.  Each quadrant must be capable of generating a rune, which
 # should be done by placing an 'O' glyph and calling vault8_rune(_G).
-
+#
+# There is a lot of variance among the possible quadrants but we do ensure
+# that (exactly) one quadrant with rich loot is generated.
 
 ###############################################################################
 # The main vault for Vault:8.
@@ -371,7 +373,7 @@ NAME:     vaults_vault
 PLACE:    Vault:8
 ORIENT:   encompass
 TAGS:     no_rotate no_dump
-SUBVAULT: A : vault8_quadrant
+SUBVAULT: A : vault8_quadrant_prize
 SUBVAULT: B : vault8_quadrant
 SUBVAULT: C : vault8_quadrant
 SUBVAULT: D : vault8_quadrant
@@ -417,9 +419,9 @@ xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA....BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
 xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAAA.11.BBBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
 xxxx..AAAAAAAAAAAAAAAAAAAAAAAAAA.1111.BBBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
 xxxx..AAAAAAAAAAAAAAAAAAAAAAAAA.1....1.BBBBBBBBBBBBBBBBBBBBBBBBB..xxxx
-xxxx...........................1..(}..1...........................xxxx
+xxxx...........................1..(<..1...........................xxxx
 xxxx..........................11.[..{.11..........................xxxx
-xxxx...........................1..])..1...........................xxxx
+xxxx...........................1..<<..1...........................xxxx
 xxxx............................1....1............................xxxx
 xxxx..CCCCCCCCCCCCCCCCCCCCCCCCC..1111..DDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
 xxxx..CCCCCCCCCCCCCCCCCCCCCCCCCC..11..DDDDDDDDDDDDDDDDDDDDDDDDDD..xxxx
@@ -489,8 +491,9 @@ ENDMAP
 # tagged vault8_room should just provide loot.  Note that the rooms
 # are not all the same sizes.
 #
+# about 24 |
 NAME:     vault8_rooms
-TAGS:     vault8_quadrant
+TAGS:     vault8_quadrant_prize
 SHUFFLE:  AC/BD, EG/FH, IKN/MJL
 SUBST:    A=., B=xx=, C=+, D=x, E=+, F=xx=, G=., H=x
 SUBST:    I=., M=xx=, J=x, K=+, N=+, L=xx=
@@ -613,7 +616,7 @@ ENDMAP
 
 ##############################################################################
 # Vault:8 - Cross Quadrant
-#
+# about 2 |
 NAME: vault8_cross
 TAGS: vault8_quadrant
 NSUBST:  U = 1:. / *:xxxx=
@@ -649,7 +652,7 @@ ENDMAP
 
 ##############################################################################
 # Vault:8 - Diamond Quadrant
-#
+# about 4 |
 NAME: vault8_diamond
 TAGS: vault8_quadrant
 SHUFFLE: !_
@@ -686,7 +689,7 @@ ENDMAP
 
 ##############################################################################
 # Vault:8 - Stripes Quadrant
-#
+# about 5 |
 NAME: vault8_stripes
 TAGS: vault8_quadrant
 # double use of Y=Y. and Z=Z. for decreasing variance
@@ -725,7 +728,7 @@ ENDMAP
 
 ##############################################################################
 # Vault:8 - Clover Quadrant (by Mu.)
-#
+# about 4 |
 NAME:   vault8_clover
 TAGS:   vault8_quadrant
 SUBST:  Q = 8 9 .:20
@@ -761,9 +764,9 @@ ENDMAP
 
 ##############################################################################
 # Vault:8 - Triangles Quadrant (by Mu.)
-#
+# about 19 |
 NAME:   vault8_triangles
-TAGS:   vault8_quadrant
+TAGS:   vault8_quadrant_prize
 SUBST:  Q = 8 9 .:20
 NSUBST: ? = 1:O / *:|
 SUBST:  " = =:1 x:99
@@ -781,11 +784,11 @@ x..Q..xx..Q..xx****xx.Q...x
 x......xx.....xx**xx......x
 x....Q..xx..Q.."xxx|Q.....x
 x........xx.....xx||....Q.x
-x......Q.*x"..Q.."x|Q.....x
-x..Q.....**xx.....xx......x
-x......Q.*xxx"..Q..xx.Q...x
+x......Q.|x"..Q.."x|Q.....x
+x..Q.....*|xx.....xx......x
+x......Q.|xxx"..Q..xx.Q...x
 x........xx||xx.....xx....x
-x....Q..xx||||xx..Q..xx.Q.x
+x....Q..xx||||xx..Q..xx.Q|x
 x......xx..Q.Q.xx.....xx||x
 x..Q..xx........xx..Q..xx?x
 x....xx..Q.....Q.xx.....xxx
@@ -798,9 +801,9 @@ ENDMAP
 
 ##############################################################################
 # Vault:8 - Not Diamond Quadrant (by Mu.)
-#
+# about 8 |
 NAME:   vault8_not_diamond
-TAGS:   vault8_quadrant
+TAGS:   vault8_quadrant 
 SUBST:  Q = 8 9 *:20
 : vault8_loot(_G)
 : vault8_rune(_G)
@@ -832,7 +835,7 @@ ENDMAP
 
 ##############################################################################
 # Vault:8 - Boxes (by Mu.)
-#
+# about 11 |
 NAME:   vault8_boxes
 TAGS:   vault8_quadrant
 NSUBST: a = 1:+ / *:x
@@ -875,6 +878,160 @@ x..........xEEEx..........x
 x..........xxexx..........x
  .........................x
   xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Vault:8 - Corners Quadrant (by Mu.)
+# about 25 |
+NAME:   vault8_corners
+TAGS:   vault8_quadrant_prize
+SUBST:  Q = 8 9 .:10
+NSUBST: $ = 1:O / *:$
+SUBST:  $ = | *:20 $
+SUBST:  a = x.
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+x$$$$x.......xQQ...x..$$$$x
+x$$$$x.......xQQ...x.x$$$$x
+x$$$$x..xxx..x..x..x.x$$$$x
+x$$$$x..xxx..x..x..x.x$$$$x
+x.xxxx..xxx..x..x..x.xxxxxx
+x.......xxx.....xQQ.......x
+xxxxxx..xxx.....xQQ.......x
+x.......xxxxxxxxxxxxxxxx..x
+x.......xQQ...$$$$xQQ.....x
+x..xxxxxxQQxxx$$$$xQQ.....x
+xQQ.....x..xxx$$$$x..xxxxxx
+xQQ.....x..xxx$$$$x.....QQx
+xxxxxx..x..xxxxxxxx.....QQx
+x.......x..xxxxxxxxxxxxx..x
+x.......x.................x
+x..xxxxxx.................x
+xQQ.....x..xxxxxxxxx.xxxxxx
+xQQ.....x..xxx$$$$xx.x$$$$x
+xxxxxx..x..xxx$$$$xx.x$$$$x
+a.......xQQxxx$$$$xx.x$$$$x
+ .......xQQ...$$$$xx..$$$$x
+  axxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Vault:8 - Flips Quadrant (by Mu.)
+# about 21 | 
+NAME:   vault8_flips
+TAGS:   vault8_quadrant_prize
+NSUBST: ; = 3:l / 3:z / 3:a / *:.
+SUBST:  Q = 8 9
+SUBST:  $ = | * $
+KFEAT:  l = teleport trap
+KFEAT:  z = zot trap
+KFEAT:  a = alarm trap
+SUBST:  s = .:250 =:1
+SUBST:  a = x.
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xQQQ......................x
+xQQQxxxxxxxxxxxxxxxxxxxxs.x
+xQQQ....................x.x
+x.x.xxxxxxxxxxxxxxxxxxs.x.x
+x.x.xQQQ..............x.x.x
+x.x.xQQQxxxxxxxxxxxxs.x.x.x
+x.x.xQQQ;;;;;;;;$$$$x.x.x.x
+x.x.x.x;;;;;;;;;$$$$x.x.x.x
+x.x.x.x;;;;;;;;;$$$$x.x.x.x
+x.x.x.x;;;;;;;;;$$$$x.x.x.x
+x.x.x.x;;;;;;;;;$$$$x.x.x.x
+x.x.x.x;;;;;;;;;$$$$x.x.x.x
+x.x.x.x$$$$$$$$$$$$$x.x.x.x
+x.x.x.x$$$$$$$$$$$$$x.x.x.x
+x.x.x.x$$$$$$$$$$$$Ox.x.x.x
+x.x.x.sxxxxxxxxxxxxxx.x.x.x
+x.x.x................QQQx.x
+x.x.sxxxxxxxxxxxxxxxxQQQx.x
+x.x..................QQQx.x
+x.sxxxxxxxxxxxxxxxxxxxxxx.a
+x.........................
+xxxxxxxxxxxxxxxxxxxxxxxxa
+ENDMAP
+
+##############################################################################
+# Vault:8 - Construction Quadrant (by Mu.)
+# about 21 |
+NAME:   vault8_construction
+TAGS:   vault8_quadrant_prize
+NSUBST: $ = 1:O / *:$
+SUBST:  $ = |*$.
+SUBST:  c = xnQ.
+SUBST:  Q = 8 9 .
+NSUBST: D = 1:+ / *:x
+SUBST:  a = xn..
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+  axxxxxxxxxxxxxxxxxxxxxxxx
+ ..c.c.c.c.c.c.c.c.c.c.c.cx
+a.c.c.c.c.c.c.c.c.c.c.c.c.x
+xc.c.c.c.c.c.c.c.c.c.c.c.cx
+x.c.c.c.c.c.c.c.c.c.c.c.c.x
+xc.c.c.c.c.c.c.c.c.c.c.c.cx
+x.c.c.c.c.c.c.c.c.c.c.c.c.x
+xc.c.c.c.c.c.c.c.c.c.c.c.cx
+x.c.c.c.c.c.c.c.c.c.c.c.c.x
+xc.c.c.c.c.c.c.c.c.c.c.c.cx
+x.c.c.c.c.c.c.c.c.c.c.c.c.x
+xDxDxDxDxDxDxDxDxDxDxDxDxDx
+x.........................x
+x.........................x
+x.Qx..x..x..xQx..x..x..xQ.x
+x.........................x
+x.........................x
+xxx+xxxx+xxxx+xxxx+xxxx+xxx
+x$$$$x$$$$$x$$$x$$$$$x$$$$x
+x$$$$x$$$$$x$$$x$$$$$x$$$$x
+x$$$$x$$$$$x$$$x$$$$$x$$$$x
+x$$$$x$$$$$x$$$x$$$$$x$$$$x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Vault:8 - Long Quadrant (by Mu.)
+# about 8 |
+NAME:   vault8_long
+TAGS:   vault8_quadrant
+SUBST:  Q = 8 9 .:10
+NSUBST: $ = 1:O / *:$
+SUBST:  $ = |**$
+SUBST:  a = x.
+: vault8_loot(_G)
+: vault8_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxa
+x.........................
+x.........................a
+x.........................x
+x..xxxxxxxxxxxxxxxxxxxxx..x
+x....QQQ............$$$x..x
+x....QQQ............$$$x..x
+x..xxxxxxxxxxxxxxxxxxxxx..x
+x..x$$$............QQQ....x
+x..x$$$............QQQ....x
+x..xxxxxxxxxxxxxxxxxxxxx..x
+x....QQQ............$$$x..x
+x....QQQ............$$$x..x
+x..xxxxxxxxxxxxxxxxxxxxx..x
+x..x$$$............QQQ....x
+x..x$$$............QQQ....x
+x..xxxxxxxxxxxxxxxxxxxxx..x
+x....QQQ............$$$x..x
+x....QQQ............$$$x..x
+x..xxxxxxxxxxxxxxxxxxxxx..x
+x.........................x
+x.........................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 

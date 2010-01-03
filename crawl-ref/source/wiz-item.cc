@@ -28,8 +28,11 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
+#include "output.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-book.h"
+#include "spl-util.h"
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -46,6 +49,9 @@ static void _make_all_books()
             continue;
 
         move_item_to_grid(&thing, you.pos());
+
+        if (thing == NON_ITEM)
+            continue;
 
         item_def book(mitm[thing]);
 
@@ -162,7 +168,7 @@ void wizard_create_spec_object()
         if (mons_weight(mon) <= 0)
         {
             if (!yesno("That monster doesn't leave corpses; make one "
-                       "anyway?"))
+                       "anyway?", true, 'y'))
             {
                 return;
             }
@@ -220,6 +226,11 @@ void wizard_create_spec_object()
             destroy_item(thing_created);
             return;
         }
+        if (Options.autoinscribe_artefacts && is_artefact(mitm[thing_created]))
+        {
+            mitm[thing_created].inscription
+                = artefact_auto_inscription(mitm[thing_created]);
+        }
     }
 
     // Deck colour (which control rarity) already set.
@@ -270,8 +281,7 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Dam",
     "Curse",
     "Stlth",
-    "MP",
-    "Spirit"
+    "MP"
 };
 
 #define ARTP_VAL_BOOL 0
@@ -307,8 +317,7 @@ char _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_ANY,  //DAMAGE
     ARTP_VAL_POS,  //CURSED
     ARTP_VAL_ANY,  //STEALTH
-    ARTP_VAL_ANY,  //MAGICAL_POWER
-    ARTP_VAL_BOOL  //SPIRIT_SHIELD
+    ARTP_VAL_ANY   //MAGICAL_POWER
 };
 
 static void _tweak_randart(item_def &item)
@@ -319,6 +328,8 @@ static void _tweak_randart(item_def &item)
             MSGCH_PROMPT);
         return;
     }
+    else
+        mesclr();
 
     artefact_properties_t props;
     artefact_wpn_properties(item, props);
@@ -622,7 +633,7 @@ void wizard_make_object_randart()
 
     if (is_random_artefact(item))
     {
-        if (!yesno("Is already a randart; wipe and re-use?"))
+        if (!yesno("Is already a randart; wipe and re-use?", true, 'n'))
         {
             canned_msg(MSG_OK);
             return;
@@ -689,7 +700,7 @@ void wizard_uncurse_item()
     {
         item_def& item(you.inv[i]);
 
-        if (item_cursed(item))
+        if (item.cursed())
             do_uncurse_item(item);
         else if (_item_type_can_be_cursed(item.base_type))
             do_curse_item(item);
@@ -811,13 +822,6 @@ void wizard_list_items()
 //---------------------------------------------------------------
 static void _debug_acquirement_stats(FILE *ostat)
 {
-    if (feat_destroys_items(grd(you.pos())))
-    {
-        mpr("You must stand on a square which doesn't destroy items "
-            "in order to do this.");
-        return;
-    }
-
     int p = get_item_slot(11);
     if (p == NON_ITEM)
     {
@@ -828,7 +832,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     mesclr();
     mpr("[a] Weapons [b] Armours [c] Jewellery      [d] Books");
-    mpr("[e] Staves  [f] Food    [g] Miscellaneous");
+    mpr("[e] Staves  [f] Wands   [g] Miscellaneous  [h] Food");
     mpr("What kind of item would you like to get acquirement stats on? ",
         MSGCH_PROMPT);
 
@@ -841,8 +845,9 @@ static void _debug_acquirement_stats(FILE *ostat)
     case 'c': type = OBJ_JEWELLERY;  break;
     case 'd': type = OBJ_BOOKS;      break;
     case 'e': type = OBJ_STAVES;     break;
-    case 'f': type = OBJ_FOOD;       break;
+    case 'f': type = OBJ_WANDS;      break;
     case 'g': type = OBJ_MISCELLANY; break;
+    case 'h': type = OBJ_FOOD;       break;
     default:
         canned_msg( MSG_OK );
         return;
@@ -880,7 +885,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         int item_index = NON_ITEM;
 
-        if (!acquirement(type, AQ_WIZMODE, true, &item_index)
+        if (!acquirement(type, AQ_WIZMODE, true, &item_index, true)
             || item_index == NON_ITEM
             || !mitm[item_index].is_valid())
         {
@@ -898,9 +903,31 @@ static void _debug_acquirement_stats(FILE *ostat)
         total_plus += item.plus + item.plus2;
 
         if (is_artefact(item))
+        {
             num_arts++;
+            if (type == OBJ_BOOKS)
+            {
+                if (item.sub_type == BOOK_RANDART_THEME)
+                {
+                    const int disc1 = item.plus & 0xFF;
+                    ego_quants[disc1]++;
+                }
+                else if (item.sub_type == BOOK_RANDART_LEVEL)
+                {
+                    const int level = item.plus;
+                    ego_quants[SPTYP_LAST_EXPONENT + level]++;
+                }
+            }
+        }
         else if (type == OBJ_ARMOUR) // Exclude artefacts when counting egos.
             ego_quants[get_armour_ego_type(item)]++;
+        else if (type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+        {
+            // Store skills in subtype array, so as not to overlap
+            // with artefact spell disciplines/levels.
+            const int skill = item.plus;
+            subtype_quants[200 + skill]++;
+        }
 
         // Include artefacts for weapon brands.
         if (type == OBJ_WEAPONS)
@@ -923,7 +950,115 @@ static void _debug_acquirement_stats(FILE *ostat)
         return;
     }
 
-    fprintf(ostat, "acquirement called %d times, total quantity = %d\n\n",
+    // Print acquirement base type.
+    fprintf(ostat, "Acquiring %s for:\n\n",
+            type == OBJ_WEAPONS    ? "weapons" :
+            type == OBJ_ARMOUR     ? "armour"  :
+            type == OBJ_JEWELLERY  ? "jewellery" :
+            type == OBJ_BOOKS      ? "books" :
+            type == OBJ_STAVES     ? "staves" :
+            type == OBJ_WANDS      ? "wands" :
+            type == OBJ_MISCELLANY ? "misc. items" :
+            type == OBJ_FOOD       ? "food"
+                                   : "buggy items");
+
+    // Print player species/profession.
+    std::string godname = "";
+    if (you.religion != GOD_NO_GOD)
+        godname += " of " + god_name(you.religion);
+
+    fprintf(ostat, "%s the %s, Level %d %s %s%s\n\n",
+            you.your_name.c_str(), player_title().c_str(),
+            you.experience_level,
+            species_name(you.species, you.experience_level).c_str(),
+            you.class_name, godname.c_str());
+
+    // Print player equipment.
+    const int e_order[] =
+    {
+        EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
+        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
+    };
+
+    bool naked = true;
+    for (int i = 0; i < NUM_EQUIP; i++)
+    {
+        int eqslot = e_order[i];
+
+        // Only output filled slots.
+        if (you.equip[ e_order[i] ] != -1)
+        {
+            // The player has something equipped.
+            const int item_idx   = you.equip[e_order[i]];
+            const item_def& item = you.inv[item_idx];
+            const bool melded    = !player_wearing_slot(e_order[i]);
+
+            fprintf(ostat, "%-7s: %s %s\n", equip_slot_to_name(eqslot),
+                    item.name(DESC_PLAIN, true).c_str(),
+                    melded ? "(melded)" : "");
+            naked = false;
+        }
+    }
+    if (naked)
+        fprintf(ostat, "Not wearing or wielding anything.\n");
+
+    // Also print the skills, in case they matter.
+    std::string skills = "\nSkills:\n";
+    dump_skills(skills);
+    fprintf(ostat, "%s\n\n", skills.c_str());
+
+    if (type == OBJ_BOOKS && you.skills[SK_SPELLCASTING])
+    {
+        // For spellbooks, for each spell discipline, list the number of
+        // unseen and total spells available.
+        std::vector<int> total_spells(SPTYP_LAST_EXPONENT);
+        std::vector<int> unseen_spells(SPTYP_LAST_EXPONENT);
+
+        for (int i = 0; i < NUM_SPELLS; ++i)
+        {
+            const spell_type spell = (spell_type) i;
+
+            if (!is_valid_spell(spell))
+                continue;
+
+            if (you_cannot_memorise(spell))
+                continue;
+
+            // Only use spells available in books you might find lying about
+            // the dungeon.
+            if (spell_rarity(spell) == -1)
+                continue;
+
+            const bool seen = you.seen_spell[spell];
+
+            const unsigned int disciplines = get_spell_disciplines(spell);
+            for (int d = 0; d < SPTYP_LAST_EXPONENT; ++d)
+            {
+                const int disc = 1 << d;
+                if (disc & SPTYP_DIVINATION)
+                    continue;
+
+                if (disciplines & disc)
+                {
+                    total_spells[d]++;
+                    if (!seen)
+                        unseen_spells[d]++;
+                }
+            }
+        }
+        for (int d = 0; d < SPTYP_LAST_EXPONENT; ++d)
+        {
+            const int disc = 1 << d;
+            if (disc & SPTYP_DIVINATION)
+                continue;
+
+            fprintf(ostat, "%-13s:  %2d/%2d spells unseen\n",
+                    spelltype_long_name(disc),
+                    unseen_spells[d], total_spells[d]);
+        }
+    }
+
+    fprintf(ostat, "\nAcquirement called %d times, total quantity = %d\n\n",
             acq_calls, total_quant);
 
     fprintf(ostat, "%5.2f%% artefacts.\n",
@@ -1010,40 +1145,111 @@ static void _debug_acquirement_stats(FILE *ostat)
         }
         fprintf(ostat, "\n\n");
     }
+    else if (type == OBJ_BOOKS)
+    {
+        // Print disciplines of artefact spellbooks.
+        if (subtype_quants[BOOK_RANDART_THEME]
+            + subtype_quants[BOOK_RANDART_LEVEL] > 0)
+        {
+            fprintf(ostat, "Primary disciplines/levels of randart books:\n");
+
+            const char* names[] = {
+                "conjuration",
+                "enchantment",
+                "fire magic",
+                "ice magic",
+                "transmutation",
+                "necromancy",
+                "summoning",
+                "divination",
+                "translocation",
+                "poison magic",
+                "earth magic",
+                "air magic",
+                "holy magic"
+            };
+
+            for (int i = 0; i < SPTYP_LAST_EXPONENT; ++i)
+            {
+                if (ego_quants[i] > 0)
+                {
+                    fprintf(ostat, "%17s: %5.2f\n", names[i],
+                            100.0 * (float) ego_quants[i] / (float) num_arts);
+                }
+            }
+            // List levels for fixed level randarts.
+            for (int i = 1; i < 9; ++i)
+            {
+                const int k = SPTYP_LAST_EXPONENT + i;
+                if (ego_quants[k] > 0)
+                {
+                    fprintf(ostat, "%15s %d: %5.2f\n", "level", i,
+                            100.0 * (float) ego_quants[i] / (float) num_arts);
+                }
+            }
+        }
+
+        // Also list skills for manuals.
+        if (subtype_quants[BOOK_MANUAL] > 0)
+        {
+            const int mannum = subtype_quants[BOOK_MANUAL];
+            fprintf(ostat, "\nManuals:\n");
+            for (int i = SK_FIGHTING; i <= SK_EVOCATIONS; ++i)
+            {
+                const int k = 200 + i;
+                if (subtype_quants[k] > 0)
+                {
+                    fprintf(ostat, "%17s: %5.2f\n", skill_name(i),
+                            100.0 * (float) subtype_quants[k] / (float) mannum);
+                }
+            }
+        }
+        fprintf(ostat, "\n\n");
+    }
 
     item_def item;
     item.quantity  = 1;
     item.base_type = type;
 
+    const description_level_type desc = (type == OBJ_BOOKS ? DESC_PLAIN
+                                                           : DESC_DBNAME);
+    const bool terse = (type == OBJ_BOOKS ? false : true);
+
+    // First, get the maximum name length.
     int max_width = 0;
     for (int i = 0; i < 256; ++i)
     {
+        if (type == OBJ_BOOKS && i >= 200)
+            break;
+
         if (subtype_quants[i] == 0)
             continue;
 
         item.sub_type = i;
-
-        std::string name = item.name(DESC_DBNAME, true, true);
+        std::string name = item.name(desc, terse, true);
 
         max_width = std::max(max_width, (int) name.length());
     }
 
+    // Now output the sub types.
     char format_str[80];
     sprintf(format_str, "%%%ds: %%6.2f\n", max_width);
 
     for (int i = 0; i < 256; ++i)
     {
+        if (type == OBJ_BOOKS && i >= 200)
+            break;
+
         if (subtype_quants[i] == 0)
             continue;
 
         item.sub_type = i;
-
-        std::string name = item.name(DESC_DBNAME, true, true);
+        std::string name = item.name(desc, terse, true);
 
         fprintf(ostat, format_str, name.c_str(),
                 (float) subtype_quants[i] * 100.0 / (float) total_quant);
     }
-    fprintf(ostat, "----------------------\n");
+    fprintf(ostat, "-----------------------------------------\n\n");
 
     mpr("Results written into 'items.stat'.");
 }

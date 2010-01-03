@@ -61,8 +61,8 @@ public:
 // for definition of type monsters {dlb}
 #include "externs.h"
 
-item_def *give_mimic_item(monsters *mimic);
-item_def &get_mimic_item(const monsters *mimic);
+const item_def *give_mimic_item(monsters *mimic);
+const item_def &get_mimic_item(const monsters *mimic);
 int  get_mimic_colour( const monsters *mimic );
 
 void alert_nearby_monsters(void);
@@ -148,7 +148,8 @@ int mons_missile_damage(monsters *mons, const item_def *launch,
                         const item_def *missile);
 int mons_pick_best_missile(monsters *mons, item_def **launcher,
                            bool ignore_melee = false);
-int mons_thrown_weapon_damage(const item_def *weap);
+int mons_thrown_weapon_damage(const item_def *weap,
+                              bool only_returning_weapons = false);
 
 int mons_natural_regen_rate(monsters *monster);
 

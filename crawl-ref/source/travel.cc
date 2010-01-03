@@ -24,6 +24,7 @@
 #include "directn.h"
 #include "map_knowledge.h"
 #include "exclude.h"
+#include "fight.h"
 #include "godabil.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -549,8 +550,8 @@ inline static void _check_interesting_square(int x, int y,
                 ed.found_item(pos, get_mimic_item(mons));
         }
 
-        if (igrd(pos) != NON_ITEM)
-            ed.found_item( pos, mitm[ igrd(pos) ] );
+        if (you.visible_igrd(pos) != NON_ITEM)
+            ed.found_item( pos, mitm[ you.visible_igrd(pos) ] );
     }
 
     ed.found_feature( pos, grd(pos) );
@@ -2208,6 +2209,9 @@ static travel_target _prompt_travel_depth(const level_id &id,
 
 bool travel_kill_monster(const monsters * monster)
 {
+    if (!wielded_weapon_check(you.weapon(), true))
+        return (false);
+
     return (monster->type == MONS_TOADSTOOL);
 }
 

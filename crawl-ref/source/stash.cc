@@ -326,7 +326,7 @@ static bool _grid_has_mimic_item(const coord_def& pos)
 
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
-    return (igrd(pos) != NON_ITEM || _grid_has_mimic_item(pos));
+    return (you.visible_igrd(pos) != NON_ITEM || _grid_has_mimic_item(pos));
 }
 
 static bool _grid_has_perceived_multiple_items(const coord_def& pos)
@@ -336,7 +336,7 @@ static bool _grid_has_perceived_multiple_items(const coord_def& pos)
     if (_grid_has_mimic_item(pos))
         ++count;
 
-    for (stack_iterator si(pos); si && count < 2; ++si)
+    for (stack_iterator si(pos, true); si && count < 2; ++si)
         ++count;
 
     return (count > 1);
@@ -361,7 +361,7 @@ void Stash::update()
         items.clear();
 
         // Now, grab all items on that square and fill our vector
-        for (stack_iterator si(p); si; ++si)
+        for (stack_iterator si(p, true); si; ++si)
             if (!is_filtered(*si))
                 add_item(*si);
 
@@ -384,7 +384,7 @@ void Stash::update()
             pitem = &get_mimic_item(monster_at(p));
         else
         {
-            pitem = &mitm[igrd(p)];
+            pitem = &mitm[you.visible_igrd(p)];
             tutorial_first_item(*pitem);
         }
 
@@ -887,21 +887,15 @@ void ShopInfo::add_item(const item_def &sitem, unsigned price)
 
 std::string ShopInfo::shop_item_name(const shop_item &si) const
 {
-    char shopitem[ITEMNAME_SIZE * 2];
-
     const unsigned long oldflags = si.item.flags;
 
     if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
 
-    const std::string itemname = Stash::stash_item_name(si.item);
-    snprintf(shopitem, sizeof shopitem, "%s (%u gold)",
-             itemname.c_str(), si.price);
-
     if (oldflags != si.item.flags)
         const_cast<shop_item&>(si).item.flags = oldflags;
 
-    return shopitem;
+    return make_stringf("%s (%u gold)", Stash::stash_item_name(si.item).c_str(), si.price);
 }
 
 std::string ShopInfo::shop_item_desc(const shop_item &si) const
@@ -1871,12 +1865,9 @@ void StashSearchMenu::draw_title()
                 title->quantity > 1? "es" : "",
                 sort_style);
 
-        char buf[200];
-        snprintf(buf, 200,
+        draw_title_suffix(formatted_string::parse_string(make_stringf(
                  "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action  <w>/</w>: change sort]",
-                 menu_action == ACT_EXECUTE ? "travel" : "examine");
-
-        draw_title_suffix(formatted_string::parse_string(buf), false);
+                 menu_action == ACT_EXECUTE ? "travel" : "examine")), false);
     }
 }
 

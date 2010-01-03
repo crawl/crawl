@@ -4496,7 +4496,7 @@ MONS:    giant cockroach / giant ant / butterfly / killer bee / bumblebee /\
 MONS:    swamp worm / lindwurm / worm / spiny worm
 MONS:    swamp drake / hydra / wyvern / fire drake
 MONS:    bear / polar bear / grizzly bear / black bear
-MONS:    black mamba / water moccasin / grey snake / salamander / viper
+MONS:    black mamba / water moccasin / anaconda / salamander / viper
 MAP
 xxxxxxxx@xxxxxxxx
 xxxxxx.G.G.xxxxxx
@@ -4520,7 +4520,7 @@ SHUFFLE: 12
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    ettin / frost giant / hill giant / stone giant / fire giant
 MONS:    rat / green rat / orange rat / grey rat / quokka
-MONS:    giant cockroach / giant ant / soldier ant
+MONS:    giant ant / soldier ant
 MONS:    spiny worm / ant larva / worm
 MONS:    giant lizard / lindwurm / gila monster / komodo dragon
 MAP
@@ -4908,8 +4908,8 @@ tttttttttttt1ttttttwwtttttttttttttttttttttt
 tttt...1ttttt..tttwwwttt.tttttttt....ttttt
 ttt..{..ttttt.t.tttwwwt...tttt.....t...tt
 tt......tttttt.ttttttwww...t.....ttttt..
-tttt..tttttttt.ttttttttwww...ttttttttt..
-ttttt.ttttttt.ttttttttttwwwWttttttttttt..
+tttt..t.tttttt.ttttttttwww...ttttttttt..
+ttttt..tttttt.ttttttttttwwwWttttttttttt..
 ttttt.tttttt.tttttttttttttwWWtttttttttt.
 tttt..tttttt..tttttttttttt..wwwtttttt..
 tttt.ttttttttt..tttttttt...tttttt.....

@@ -8,7 +8,8 @@ one is skilled in the appropriate elemental magic.
 %%%%
 amulet of clarity
 
-This amulet protects its wearer from some forms of mental confusion.
+This amulet protects its wearer from some forms of mental confusion,
+including being infuriated against one's will.
 %%%%
 amulet of conservation
 
@@ -346,17 +347,10 @@ book of wizardry
 
 A book of magic spells.
 %%%%
-book of elemental missiles
+book of brands
 
-This book contains spells relating to ammunition and forms of ranged combat.
-%%%%
-book of warped missiles
-
-This book contains spells relating to ammunition and forms of ranged combat.
-%%%%
-book of devastating missiles
-
-This book contains spells relating to ammunition and forms of ranged combat.
+This book contains magical spells related to the branding of weapons and
+launchers, as well as spells that are helpful in all forms of ranged combat.
 %%%%
 bottled efreet
 
@@ -460,7 +454,7 @@ It causes massive damage when used for backstabbing.
 %%%%
 dart
 
-A small throwing weapon. It can also be fired from a hand crossbow.
+A small throwing weapon.
 %%%%
 deck of changes
 
@@ -642,10 +636,6 @@ The kind of thing you hit nails with, adapted for battle.
 hand axe
 
 A small axe designed for either hand combat or throwing.
-%%%%
-hand crossbow
-
-A small crossbow, for firing darts.
 %%%%
 helm
 
@@ -1378,7 +1368,7 @@ amount of damage on impact. Unlike with other launchers, wearing a shield does n
 %%%%
 sling bullet
 
-A small heavy projectile made of lead. It can be fired from a sling.
+A small heavy projectile made of lead. It can be fired from a sling. They are more effective as ammunition than simple stones, and can also come with various enchantments.
 %%%%
 snozzcumber
 

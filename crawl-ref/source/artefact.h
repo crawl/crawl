@@ -10,10 +10,10 @@
 
 #include "externs.h"
 
-class bolt;
+struct bolt;
 
 // NOTE: NO_UNRANDARTS is automatically set by util/art-data.pl
-#define NO_UNRANDARTS 81
+#define NO_UNRANDARTS 82
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
@@ -117,6 +117,7 @@ enum unrand_type
     UNRAND_MAGE,             // ring of the Mage
     UNRAND_SHIELDING,        // brooch of Shielding
     UNRAND_RCLOUDS,          // robe of Clouds
+    UNRAND_PONDERING,        // hat of Pondering
     UNRAND_DUMMY2,           // DUMMY UNRANDART 2
     UNRAND_LAST = UNRAND_DUMMY2
 };

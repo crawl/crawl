@@ -51,6 +51,7 @@ enum mon_attack_type
     AT_TENTACLE_SLAP,
     AT_TAIL_SLAP,
     AT_GORE,
+    AT_CONSTRICT,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
     AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap:
@@ -87,7 +88,8 @@ enum mon_attack_flavour
     AF_NAPALM,
     AF_CHAOS,
     AF_STEAL,
-    AF_STEAL_FOOD
+    AF_STEAL_FOOD,
+    AF_CRUSH
 };
 
 // Non-spell "summoning" types to give to monsters::mark_summoned(), or
@@ -555,6 +557,7 @@ bool mons_can_regenerate(const monsters *mon);
 int mons_zombie_size(int mc);
 monster_type mons_zombie_base(const monsters *mon);
 bool mons_class_is_zombified(int mc);
+monster_type mons_base_type(const monsters *mon);
 bool mons_is_zombified(const monsters *monster);
 bool mons_class_can_be_zombified(int mc);
 bool mons_can_be_zombified(const monsters *mon);
@@ -655,7 +658,7 @@ bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monsters *mon);
 
 bool mons_is_fast( const monsters *mon );
-
+bool mons_is_projectile(int mc);
 bool mons_is_insubstantial(int mc);
 bool mons_has_blood(int mc);
 

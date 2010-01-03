@@ -661,29 +661,32 @@ bool stinking_cloud( int pow, bolt &beem )
 
 int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 {
-    big_cloud( cty, whose, beam.target, pow, 8 + random2(3) );
+    big_cloud( cty, whose, beam.target, pow, 8 + random2(3), -1 );
     return (1);
 }
 
 void big_cloud(cloud_type cl_type, kill_category whose,
-               const coord_def& where, int pow, int size, int spread_rate)
+               const coord_def& where, int pow, int size, int spread_rate,
+               int colour, std::string name, std::string tile)
 {
     big_cloud(cl_type, whose, cloud_struct::whose_to_killer(whose),
-              where, pow, size, spread_rate);
+              where, pow, size, spread_rate, colour, name, tile);
 }
 
 void big_cloud(cloud_type cl_type, killer_type killer,
-               const coord_def& where, int pow, int size, int spread_rate)
+               const coord_def& where, int pow, int size, int spread_rate,
+               int colour, std::string name, std::string tile)
 {
     big_cloud(cl_type, cloud_struct::killer_to_whose(killer), killer,
-              where, pow, size, spread_rate);
+              where, pow, size, spread_rate, colour, name, tile);
 }
 
 void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
-               const coord_def& where, int pow, int size, int spread_rate)
+               const coord_def& where, int pow, int size, int spread_rate,
+               int colour, std::string name, std::string tile)
 {
     apply_area_cloud(make_a_normal_cloud, where, pow, size,
-                     cl_type, whose, killer, spread_rate);
+                     cl_type, whose, killer, spread_rate, colour, name, tile);
 }
 
 static bool _mons_hostile(const monsters *mon)
@@ -737,12 +740,9 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     const int random_factor = random2((you.skills[SK_INVOCATIONS] + 1) *
                                       healed / divisor);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
+    dprf("pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
          mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,
          you.skills[SK_INVOCATIONS], healed, random_factor);
-#endif
 
     if (mon->max_hit_points < factor * random_factor)
         return (true);
@@ -1142,10 +1142,8 @@ void abjuration(int pow)
         if (mon->is_summoned(&duration))
         {
             int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "%s abj: dur: %d, abj: %d",
+            dprf("%s abj: dur: %d, abj: %d",
                  mon->name(DESC_PLAIN).c_str(), duration, sockage);
-#endif
 
             bool shielded = false;
             // TSO and Trog's abjuration protection.

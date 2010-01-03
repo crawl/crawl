@@ -76,6 +76,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         you.rotting = 0;
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
+        you.duration[DUR_MISLED] = 0;
         break;
 
     case POT_HEAL_WOUNDS:
@@ -522,6 +523,12 @@ bool unwield_item(bool showMsgs)
                 you.redraw_armour_class = true;
                 break;
 
+            case SPWPN_EVASION:
+                if (showMsgs)
+                    mpr("You feel like more of a target.");
+                you.redraw_evasion = true;
+                break;
+
             case SPWPN_VAMPIRICISM:
                 if (showMsgs)
                 {
@@ -718,14 +725,10 @@ void unuse_artefact(const item_def &item, bool *show_msgs)
         }
     }
 
-    if (proprt[ARTP_MAGICAL_POWER])
+    if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
-        you.redraw_magic_points = true;
-        if (!known[ARTP_MAGICAL_POWER])
-        {
-            mprf("You feel your mana capacity %s.",
-                 proprt[ARTP_MAGICAL_POWER] > 0 ? "decrease" : "increase");
-        }
+        mprf("You feel your mana capacity %s.",
+              proprt[ARTP_MAGICAL_POWER] > 0 ? "decrease" : "increase");
     }
 
     // Modify ability scores; always output messages.
@@ -748,6 +751,9 @@ void unuse_artefact(const item_def &item, bool *show_msgs)
 
     if (proprt[ARTP_INVISIBLE] != 0 && you.duration[DUR_INVIS] > 1)
         you.duration[DUR_INVIS] = 1;
+
+    if (proprt[ARTP_MAGICAL_POWER])
+        calc_mp();
 
     if (is_unrandom_artefact(item))
     {

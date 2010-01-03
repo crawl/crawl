@@ -180,20 +180,21 @@ SHUFFLE:  deef
 ITEM:     potion of heal wounds / potion of healing
 ITEM:     potion of healing / potion of healing q:2 w:5 / \
           potion of heal wounds / potion of heal wounds q:2 w:5
-ITEM:     potion of restore abilities w:7 / potion of cure mutation / \
+KITEM:    f = potion of levitation q:2, \
+          potion of restore abilities w:7 / potion of cure mutation / \
           potion of gain intelligence / potion of gain strength / \
           potion of gain dexterity
+KFEAT:    f = shallow_water
 MONS:     rat / grey rat / green rat w:2 / nothing w:3
 MAP
-          xxxxxxxxxxxxxx
-        cccCCCCCCCCCCCCxxx       xxxxx
-        cwXvvvvvvvvvvvCCCxxxx   xxCCCxxx
-        cwccCCCCCCCCCvvVCCCCxxxxxxC*CCCx
-        cwwcxxxxxxxxCCCvvvvCCCCxxCCvvvCx
-        ccwc       xxxCCCCvvvvCCCCvvvvCx
-         cwcc        xxxxCCCCvvvvvvvvvCx
-        ccwwc           xxxxCCCCCCCCCCCx
-        cwwwc              xxxxxxxxxxxxx
+        cccCCCCCCCCCCCC               
+        cwXvvvvvvvvvvvCCC         CCC   
+        cwccCCCCCCCCCvvVCCCC      C*CCC 
+        cwwc        CCCvvvvCCCC  CCvvvC 
+        ccwc          CCCCvvvvCCCCvvvvC 
+         cwcc            CCCCvvvvvvvvvC 
+        ccwwc               CCCCCCCCCCC
+        cwwwc                           
         cwwwc
         cwwwc
         cWwwc
@@ -507,8 +508,8 @@ NAME:   sewer_sea
 TAGS:   sewer no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 MONS:   rat w:3 / grey rat w:1 / nothing w:1, rat / grey rat / green rat
-KMONS:  G = mermaid hd:5
-KMONS:  H = siren hd:5
+KMONS:  G = mermaid hd:3 name:malarious name_adjective
+KMONS:  H = siren hd:3 name:sickly name_adjective
 KMONS:  hJ = giant newt / small snake / snake / nothing w:2
 KMONS:  g = giant newt / small snake / nothing w:3
 KFEAT:  gS = W
@@ -520,6 +521,12 @@ COLOUR: hG = green
 COLOUR: sS = cyan
 COLOUR: N = lightblue
 KITEM:  M = dart / stone
+MARKER: H = lua:MonPropsMarker:new { description="A young woman with a fish tail " .. \
+                       "in place of legs. She looks quite sick, but still capable" .. \
+                       " of bespelling her audience.\n"}
+MARKER: G = lua:MonPropsMarker:new { description="A young woman with a fish tail " .. \
+                       "in place of legs. She looks quite sick, but still capable" .. \
+                       " of bespelling her audience.\n"}
 : sewer_setup(_G)
 MAP
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO

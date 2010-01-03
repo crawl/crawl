@@ -703,6 +703,49 @@ MAP
 ENDMAP
 
 ##############################################################################
+# A variety of statues, with loot. (1KB)
+#
+NAME:    statue_cache
+ORIENT:  north
+TAGS:    no_monster_gen
+DEPTH:   D:12-20, Elf, Vault
+MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
+      ego:flame . bolt q:30 
+MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
+      ego:frost . bolt q:30
+MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
+      ego:flaming good_item
+MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
+      ego:freezing good_item
+MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
+      ego:flaming good_item
+MONS: statue name:warrior name_adjective tile:mons_statue_mace ; great mace \
+      ego:freezing good_item
+MONS: silver statue
+KMONS: 8 = statue name:wizard name_adjective tile:mons_statue_mage \
+           spells:lehudib's_crystal_spear;iskenderun's_mystic_blast;slow;stone_arrow
+KMONS: 9 = statue name:wizard name_adjective tile:mons_statue_mage \
+           spells:freezing_cloud;mephitic_cloud;throw_icicle;confuse
+MAP
+  cccccccccccccc
+  cccccccc7ccccc
+  cccccc.....ccc
+  cccc..ccccc.cc
+  ccc.ccccc5c.cc
+  ccc.cccccc.ccc
+  cc8.9cc3c.c6cc
+  c$$$$$cc.ccccc
+  c|*|*|c.c4cccc
+ccccccccc.ccccccccc
+........1.2........
+...................
+...................
+ .................
+   .............
+      ...@...
+ENDMAP
+
+##############################################################################
 # The Shining One Protects a Powerful Item 1 (by abrahamwl)
 #
 # The basic theme of this vault is that the the Shining one has placed a
@@ -919,8 +962,10 @@ KMONS:  Z = col:gila wizard hd:15 name_descriptor \
         . dagger ego:freezing | dagger ego:flaming | \
         dagger ego:electrocution
 : end
-KITEM:  B = any book
-KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air
+KITEM:  B = randbook disc:air / randbook disc:fire / randbook disc:ice / \
+            randbook disc:earth
+KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air / \
+            quarterstaff unrand:elemental_staff
 MAP
        ccccccccc
       ccE+'''cwcc

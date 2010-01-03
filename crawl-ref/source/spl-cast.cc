@@ -37,6 +37,7 @@
 #include "message.h"
 #include "mon-cast.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -1058,7 +1059,7 @@ static void _try_monster_cast(spell_type spell, int powc,
     mon->type       = MONS_HUMAN;
     mon->behaviour  = BEH_SEEK;
     mon->attitude   = ATT_FRIENDLY;
-    mon->flags      = (MF_CREATED_FRIENDLY | MF_JUST_SUMMONED | MF_SEEN
+    mon->flags      = (MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
                        | MF_WAS_IN_VIEW | MF_HARD_RESET);
     mon->hit_points = you.hp;
     mon->hit_dice   = you.experience_level;
@@ -1139,6 +1140,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     dist spd;
     bolt beam;
+    beam.origin_spell = spell;
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch().
@@ -1338,9 +1340,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         }
     }
 
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Spell #%d, power=%d", spell, powc);
-#endif
+    dprf("Spell #%d, power=%d", spell, powc);
 
     switch (spell)
     {
@@ -1418,6 +1418,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_BOLT_OF_COLD:
         if (!zapping(ZAP_COLD, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_PRIMAL_WAVE:
+        if (!zapping(ZAP_PRIMAL_WAVE, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1511,6 +1516,13 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         // Should only be available from Staff of Dispater and Sceptre
         // of Asmodeus.
         if (!zapping(ZAP_HELLFIRE, powc, beam, true))
+            return (SPRET_ABORT);
+        break;
+
+    case SPELL_IOOD:
+        if (!player_tracer(ZAP_IOOD, powc, beam))
+            return (SPRET_ABORT);
+        if (!cast_iood(&you, powc, &beam))
             return (SPRET_ABORT);
         break;
 
@@ -1788,10 +1800,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     {
         const int sleep_power =
             stepdown_value(powc * 9 / 10, 5, 35, 45, 50);
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Sleep power stepdown: %d -> %d",
-             powc, sleep_power);
-#endif
+        dprf("Sleep power stepdown: %d -> %d", powc, sleep_power);
         if (!zapping(ZAP_HIBERNATION, sleep_power, beam, true))
             return (SPRET_ABORT);
         break;
@@ -1942,46 +1951,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_WARP_BRAND:
         if (!brand_weapon(SPWPN_DISTORTION, powc))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_POISON_AMMUNITION:
-        if (!brand_ammo(SPMSL_POISONED))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_FLAME_AMMUNITION:
-        if (!brand_ammo(SPMSL_FLAME))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_FROST_AMMUNITION:
-        if (!brand_ammo(SPMSL_FROST))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_WARP_AMMUNITION:
-        if (!brand_ammo(SPMSL_DISPERSAL))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_SHOCKING_AMMUNITION:
-        if (!brand_ammo(SPMSL_ELECTRIC))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_EXPLODING_AMMUNITION:
-        if (!brand_ammo(SPMSL_EXPLODING))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_REAPING_AMMUNITION:
-        if (!brand_ammo(SPMSL_REAPING))
-            canned_msg(MSG_SPELL_FIZZLES);
-        break;
-
-    case SPELL_RETURNING_AMMUNITION:
-        if (!brand_ammo(SPMSL_RETURNING))
             canned_msg(MSG_SPELL_FIZZLES);
         break;
 

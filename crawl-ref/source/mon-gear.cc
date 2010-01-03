@@ -12,11 +12,14 @@
 #include "mon-gear.h"
 
 #include "artefact.h"
+#include "colour.h"
 #include "dungeon.h"
 #include "env.h"
 #include "itemprop.h"
 #include "items.h"
 #include "makeitem.h"
+#include "mgen_enum.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "random.h"
 #include "spl-book.h"
@@ -364,6 +367,13 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
                                                0);
         break;
 
+    case MONS_MARA:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose(WPN_DEMON_BLADE, WPN_DEMON_TRIDENT,
+                                      WPN_DEMON_WHIP, -1);
+        level = MAKE_GOOD_ITEM;
+        break;
+
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_KNIGHT:
@@ -373,8 +383,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose_weighted(
             22, WPN_LONG_SWORD, 22, WPN_SHORT_SWORD, 17, WPN_SCIMITAR,
-            17, WPN_BOW,        17, WPN_HAND_CROSSBOW,
-            5,  WPN_LONGBOW,
+            17, WPN_BOW,        5,  WPN_LONGBOW,
             0);
         break;
 
@@ -575,7 +584,64 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         }
         break;
 
+    case MONS_ILSUIW:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = WPN_TRIDENT;
+        item.special = SPWPN_FREEZING;
+        item.plus = random_range(-1, 6, 2);
+        item.plus2 = random_range(-1, 6, 2);
+        item.colour = ETC_ICE;
+        force_item = true;
+        break;
+
+    case MONS_MERFOLK_IMPALER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose_weighted(100, WPN_TRIDENT,
+                                               15, WPN_DEMON_TRIDENT,
+                                               0);
+        if (coinflip())
+            level = MAKE_GOOD_ITEM;
+        else if (coinflip())
+        {
+            // Per dpeg request :)
+            item.special = SPWPN_REACHING;
+            item.plus = random_range(-1, 6, 2);
+            item.plus2 = random_range(-1, 5, 2);
+            force_item = true;
+        }
+        break;
+
+
+    case MONS_MERFOLK_AQUAMANCER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_SABRE;
+        if (coinflip())
+            level = MAKE_GOOD_ITEM;
+        break;
+
+    case MONS_MERFOLK_JAVELINEER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = WPN_SPEAR;
+        if (!one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
+        break;
+
     case MONS_MERFOLK:
+        if (active_monster_band == BAND_MERFOLK_IMPALER)
+        {
+            item_race = MAKE_ITEM_NO_RACE;
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = random_choose_weighted(10, WPN_SPEAR,
+                                                    10, WPN_TRIDENT,
+                                                    5, WPN_HALBERD,
+                                                    5, WPN_GLAIVE,
+                                                    0);
+            break;
+        }
         if (one_chance_in(3))
         {
             item_race = MAKE_ITEM_NO_RACE;
@@ -1021,21 +1087,25 @@ static void _give_ammo(monsters *mon, int level,
             qty = random_range(4, 7);
             break;
 
+        case MONS_MERFOLK_JAVELINEER:
+            weap_class = OBJ_MISSILES;
+            weap_type  = MI_JAVELIN;
+            item_race  = MAKE_ITEM_NO_RACE;
+            qty        = random_range(9, 23, 2);
+            if (one_chance_in(3))
+                level = MAKE_GOOD_ITEM;
+            break;
+
         case MONS_MERFOLK:
-            if (!one_chance_in(3))
+            if (!one_chance_in(3)
+                || active_monster_band == BAND_MERFOLK_JAVELINEER)
             {
-                item_race = MAKE_ITEM_NO_RACE;
-                if (coinflip())
-                {
-                    weap_type = WPN_SPEAR;
-                    qty       = 1 + random2(3);
-                }
-                else
-                {
-                    weap_class = OBJ_MISSILES;
-                    weap_type = MI_JAVELIN;
-                    qty       = 3 + random2(6);
-                }
+                item_race  = MAKE_ITEM_NO_RACE;
+                weap_class = OBJ_WEAPONS;
+                weap_type  = WPN_SPEAR;
+                qty        = random_range(4, 8);
+                if (active_monster_band == BAND_MERFOLK_JAVELINEER)
+                    break;
             }
             if (one_chance_in(6) && !mons_summoned)
             {
@@ -1091,9 +1161,10 @@ static void _give_ammo(monsters *mon, int level,
             }
 
             w.quantity = qty;
-
             _give_monster_item(mon, thing_created, false,
-                               &monsters::pickup_throwable_weapon);
+                               (weap_class == OBJ_WEAPONS?
+                                &monsters::pickup_melee_weapon
+                                : &monsters::pickup_throwable_weapon));
         }
     }
 }
@@ -1204,13 +1275,17 @@ void give_shield(monsters *mon, int level)
 
 void give_armour(monsters *mon, int level)
 {
+    item_def               item;
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
+
+    item.base_type = OBJ_UNASSIGNED;
+    item.quantity  = 1;
 
     int force_colour = 0; // mv: Important!!! Items with force_colour = 0
                           // are colored by default after following
                           // switch. Others will get force_colour.
 
-    item_def item;
+    bool force_item = false;
 
     switch (mon->type)
     {
@@ -1331,6 +1406,22 @@ void give_armour(monsters *mon, int level)
         break;
     }
 
+    case MONS_MERFOLK_IMPALER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = random_choose_weighted(100, ARM_ROBE,
+                                               60, ARM_LEATHER_ARMOUR,
+                                               5, ARM_TROLL_LEATHER_ARMOUR,
+                                               5, ARM_STEAM_DRAGON_ARMOUR,
+                                               0);
+        break;
+
+    case MONS_MERFOLK_JAVELINEER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_LEATHER_ARMOUR;
+        break;
+
     case MONS_ANGEL:
     case MONS_SIGMUND:
     case MONS_WIGHT:
@@ -1381,9 +1472,20 @@ void give_armour(monsters *mon, int level)
         break;
 
     case MONS_GASTRONOK:
-        item_race      = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_WIZARD_HAT;
+        if (one_chance_in(10))
+        {
+            force_item = true;
+            make_item_unrandart(item, UNRAND_PONDERING);
+        }
+        else
+        {
+            item_race      = MAKE_ITEM_NO_RACE;
+            item.base_type = OBJ_ARMOUR;
+            item.sub_type  = ARM_WIZARD_HAT;
+
+            // Not as good as it sounds. Still just +0 a lot of the time.
+            level          = MAKE_GOOD_ITEM;
+        }
         break;
 
     case MONS_MAURICE:
@@ -1425,6 +1527,8 @@ void give_armour(monsters *mon, int level)
     case MONS_DRACONIAN_KNIGHT:
     case MONS_WIZARD:
     case MONS_ILSUIW:
+    case MONS_MARA:
+    case MONS_MERFOLK_AQUAMANCER:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
@@ -1483,10 +1587,14 @@ void give_armour(monsters *mon, int level)
         return;
     }
 
+    // Only happens if something in above switch doesn't set it. {dlb}
+    if (item.base_type == OBJ_UNASSIGNED)
+        return;
+
     const object_class_type xitc = item.base_type;
     const int xitt = item.sub_type;
 
-    if (mons_is_unique(mon->type) && level != MAKE_GOOD_ITEM)
+    if (!force_item && mons_is_unique(mon->type) && level != MAKE_GOOD_ITEM)
     {
         if (x_chance_in_y(9 + mon->hit_dice, 100))
             level = MAKE_GOOD_ITEM;
@@ -1494,17 +1602,33 @@ void give_armour(monsters *mon, int level)
             level = level * 2 + 5;
     }
 
-    const int thing_created = items(0, xitc, xitt, true, level, item_race);
+    // Note this mess, all the work above doesn't mean much unless
+    // force_item is set... otherwise we're just going to take the base
+    // and subtype and create a new item. - bwr
+    const int thing_created =
+        ((force_item) ? get_item_slot() : items(0, xitc, xitt, true,
+                                                level, item_race));
 
     if (thing_created == NON_ITEM)
         return;
 
-    _give_monster_item(mon, thing_created);
+    // Copy temporary item into the item array if were forcing it, since
+    // items() won't have done it for us.
+    if (force_item)
+        mitm[thing_created] = item;
+
+    item_def &i = mitm[thing_created];
+
+    if (force_item)
+        item_set_appearance(i);
+
+    _give_monster_item(mon, thing_created, force_item);
 
     // mv: All items with force_colour = 0 are colored via items().
     if (force_colour)
         mitm[thing_created].colour = force_colour;
-    switch(mon->type)
+
+    switch (mon->type)
     {
     case MONS_NIKOLA:
         mitm[thing_created].plus2 = TGLOV_DESC_GAUNTLETS;

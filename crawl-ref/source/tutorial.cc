@@ -1196,7 +1196,6 @@ void tut_gained_new_skill(int skill)
     case SK_SLINGS:
     case SK_BOWS:
     case SK_CROSSBOWS:
-    case SK_DARTS:
         learned_something_new(TUT_GAINED_RANGED_SKILL);
         break;
 
@@ -1548,7 +1547,7 @@ static bool _cant_butcher()
     if (!wpn || wpn->base_type != OBJ_WEAPONS)
         return false;
 
-    return (item_cursed(*wpn) && !can_cut_meat(*wpn));
+    return (wpn->cursed() && !can_cut_meat(*wpn));
 }
 
 static int _num_butchery_tools()
@@ -1886,7 +1885,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             text << "Ah, a corpse!";
         else
         {
-            int i = igrd(gc);
+            int i = you.visible_igrd(gc);
             while (i != NON_ITEM)
             {
                 if (mitm[i].base_type == OBJ_CORPSES)
@@ -3011,7 +3010,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         int wpn = you.equip[EQ_WEAPON];
         if (wpn != -1
             && you.inv[wpn].base_type == OBJ_WEAPONS
-            && item_cursed(you.inv[wpn]))
+            && you.inv[wpn].cursed())
         {
             // Don't trigger if the wielded weapon is cursed.
             Tutorial.tutorial_events[seen_what] = true;
@@ -3546,7 +3545,7 @@ void tutorial_describe_item(const item_def &item)
                 {
                     // Then only compare with other launcher skills.
                     curr_wpskill = range_skill(item);
-                    best_wpskill = best_skill(SK_SLINGS, SK_DARTS, 99);
+                    best_wpskill = best_skill(SK_SLINGS, SK_THROWING, 99);
                 }
                 else
                 {
@@ -4439,7 +4438,7 @@ static void _tutorial_describe_cloud(int x, int y)
     if (ctype == CLOUD_NONE)
         return;
 
-    std::string cname = cloud_name(ctype);
+    std::string cname = cloud_name(env.cgrid(coord_def(x, y)));
 
     std::ostringstream ostr;
 
@@ -4461,6 +4460,7 @@ static void _tutorial_describe_cloud(int x, int y)
     case CLOUD_TLOC_ENERGY:
     case CLOUD_PURPLE_SMOKE:
     case CLOUD_MIST:
+    case CLOUD_MAGIC_TRAIL:
         ostr << "harmless. ";
         break;
 
@@ -4679,7 +4679,7 @@ void tutorial_observe_cell(const coord_def& gc)
     else if (grd(gc) == DNGN_ENTER_PORTAL_VAULT)
         learned_something_new(TUT_SEEN_PORTAL, gc);
 
-    const int it = igrd(gc);
+    const int it = you.visible_igrd(gc);
     if (it != NON_ITEM)
     {
         const item_def& item(mitm[it]);

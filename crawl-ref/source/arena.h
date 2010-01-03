@@ -10,7 +10,7 @@
 
 class level_id;
 class monsters;
-class mgen_data;
+struct mgen_data;
 
 struct coord_def;
 
