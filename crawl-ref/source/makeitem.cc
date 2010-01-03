@@ -3275,19 +3275,42 @@ int items(int allow_uniques,       // not just true-false,
     return (p);
 }
 
+// Formula from Eronarn on ##crawl-dev; subject to revision
+static int _roll_rod_enchant()
+{
+    int total_prob = 0, cur_ench = 0;
+
+    for (int i = -3; i <= 9; ++i)
+    {
+        int extremeness = (i < 0) ? (21 - i) : (15 + i);
+
+        int prob = 600 - extremeness * extremeness;
+
+        if (random2(total_prob += prob) < prob)
+            cur_ench = i;
+    }
+
+    return cur_ench;
+}
+
 void init_rod_mp(item_def &item, int ncharges)
 {
     if (!item_is_rod(item))
         return;
 
     if (ncharges != -1)
+    {
         item.plus2 = ncharges * ROD_CHARGE_MULT;
+        item.props["rod_enchantment"] = (short)0;
+    }
     else
     {
         if (item.sub_type == STAFF_STRIKING)
             item.plus2 = random_range(6, 9) * ROD_CHARGE_MULT;
         else
             item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
+
+        item.props["rod_enchantment"] = (short)_roll_rod_enchant();
     }
 
     item.plus = item.plus2;

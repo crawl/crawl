@@ -4853,18 +4853,16 @@ static void _recharge_rod( item_def &rod, long aut, bool in_inv )
     if (!item_is_rod(rod) || rod.plus >= rod.plus2)
         return;
 
-    const int charge = rod.plus / ROD_CHARGE_MULT;
-
-    int rate = ((charge + 1) * ROD_CHARGE_MULT) / 10;
+    long rate = 4 + short(rod.props["rod_enchantment"]);
 
     rate *= (10 + skill_bump( SK_EVOCATIONS ));
+    rate *= aut;
     rate = div_rand_round( rate, 100 );
-    rate = div_rand_round( rate * aut, 10 );
 
-    if (rate < 5)
-        rate = 5;
-    else if (rate > ROD_CHARGE_MULT / 2)
-        rate = ROD_CHARGE_MULT / 2;
+    if (rate > rod.plus2 - rod.plus) // Prevent overflow
+        rate = rod.plus2 - rod.plus;
+
+    // With this, a +0 rod with no skill gets 1 mana per 25.0 turns
 
     if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
     {
@@ -4873,8 +4871,6 @@ static void _recharge_rod( item_def &rod, long aut, bool in_inv )
     }
 
     rod.plus += rate;
-    if (rod.plus > rod.plus2)
-        rod.plus = rod.plus2;
 
     if (in_inv && rod.plus == rod.plus2)
     {
