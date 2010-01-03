@@ -2478,7 +2478,7 @@ bool recharge_wand(int item_slot)
 
             if (wand.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
             {
-                wand.plus2 += ROD_CHARGE_MULT;
+                wand.plus2 += ROD_CHARGE_MULT * random_range(1,2);
 
                 if (wand.plus2 > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
                     wand.plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
@@ -2489,6 +2489,17 @@ bool recharge_wand(int item_slot)
             if (wand.plus < wand.plus2)
             {
                 wand.plus = wand.plus2;
+                work = true;
+            }
+
+            if (short(wand.props["rod_enchantment"]) < MAX_WPN_ENCHANT)
+            {
+                static_cast<short&>(wand.props["rod_enchantment"])
+                    += random_range(1,2);
+
+                if (short(wand.props["rod_enchantment"]) > MAX_WPN_ENCHANT)
+                    wand.props["rod_enchantment"] = short(MAX_WPN_ENCHANT);
+
                 work = true;
             }
 

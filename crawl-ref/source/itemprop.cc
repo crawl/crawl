@@ -1096,7 +1096,9 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
         if (item_ident(it, ISFLAG_KNOW_PLUSES))
         {
             return (it.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT
-                    || it.plus < it.plus2);
+                    || it.plus < it.plus2
+                    || !it.props.exists("rod_enchantment")
+                    || short(it.props["rod_enchantment"]) < MAX_WPN_ENCHANT);
         }
         return (true);
     }
