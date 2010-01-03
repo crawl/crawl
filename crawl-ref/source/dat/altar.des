@@ -1140,6 +1140,21 @@ ENDMAP
 
 ### Yredelemnul overflow altars ###############################################
 
+NAME:   yredelemnul_altar_1
+TAGS:   uniq_altar_yredelemnul temple_overflow_yredelemnul
+DEPTH:  D:2-20
+KFEAT:  C = altar_yredelemnul
+KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective               \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant
+MAP
+.....
+.f.f.
+..C..
+.f.f.
+.....
+ENDMAP
+
 ### Zin overflow altars #######################################################
 
 NAME:   zin_angel
