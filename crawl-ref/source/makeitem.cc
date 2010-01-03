@@ -22,6 +22,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "food.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "misc.h"
@@ -3382,6 +3383,25 @@ static bool _armour_is_visibly_special(const item_def &item)
     return (false);
 }
 
+static bool _missile_is_visibly_special(const item_def &item)
+{
+    const int brand = item.special;
+
+    // Obviously branded missiles don't get any special stuff.
+    if (item_type_known(item))
+        return (false);
+
+    // All ego missiles do.
+    if (brand != SPMSL_NORMAL)
+        return (true);
+
+    // And positively enchanted do, too.
+    if (item.plus)
+        return (true);
+
+    return (false);
+}
+
 jewellery_type get_random_amulet_type()
 {
     return (jewellery_type)
@@ -3539,6 +3559,11 @@ void item_set_appearance(item_def &item)
 
             set_equip_desc(item, RANDOM_ELEMENT(descs));
         }
+        break;
+
+    case OBJ_MISSILES:
+        if (_missile_is_visibly_special(item))
+            set_equip_desc(item, ISFLAG_GLOWING);
         break;
 
     default:

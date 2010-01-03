@@ -635,10 +635,6 @@ int item_name_specialness(const item_def& item)
         return ( branded ? 1 : 0 );
     }
 
-    // Missiles don't get name descriptors.
-    if (item.base_type == OBJ_MISSILES)
-        return 0;
-
     std::string itname = item.name(DESC_PLAIN, false, false, false);
     lowercase(itname);
 
