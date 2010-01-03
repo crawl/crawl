@@ -1628,7 +1628,7 @@ std::string item_def::name_aux(description_level_type desc,
                 output_with_sign(buff, rmod);
             }
 
-            buff << (item_is_rod(*this) ? " rod" : " staff")
+            buff << (item_is_rod(*this) ? " rod" : "staff")
                  << " of " << staff_type_name(item_typ);
         }
         break;
