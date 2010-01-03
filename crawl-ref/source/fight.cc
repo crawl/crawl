@@ -1551,7 +1551,7 @@ int melee_attack::player_apply_water_attack_bonus(int damage)
 int melee_attack::player_apply_weapon_skill(int damage)
 {
     if (weapon && (weapon->base_type == OBJ_WEAPONS
-                   || item_is_staff( *weapon )))
+                   || weapon->base_type == OBJ_STAVES))
     {
         damage *= 25 + (random2( you.skills[ wpn_skill ] + 1 ));
         damage /= 25;
@@ -1583,9 +1583,13 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 
 int melee_attack::player_apply_weapon_bonuses(int damage)
 {
-    if (weapon && weapon->base_type == OBJ_WEAPONS)
+    if (weapon && (weapon->base_type == OBJ_WEAPONS
+                   || item_is_rod( *weapon )))
     {
         int wpn_damage_plus = weapon->plus2;
+
+        if (item_is_rod( *weapon ))
+            wpn_damage_plus = (short)weapon->props["rod_enchantment"];
 
         damage += (wpn_damage_plus > -1) ? (random2(1 + wpn_damage_plus))
                                          : -(1 + random2(-wpn_damage_plus));
@@ -1767,6 +1771,8 @@ int melee_attack::player_weapon_type_modify(int damage)
         weap_type = WPN_UNARMED;
     else if (item_is_staff(*weapon))
         weap_type = WPN_QUARTERSTAFF;
+    else if (item_is_rod(*weapon))
+        weap_type = WPN_CLUB;
     else if (weapon->base_type == OBJ_WEAPONS)
         weap_type = weapon->sub_type;
 
@@ -3905,10 +3911,13 @@ int melee_attack::player_to_hit(bool random_factor)
             }
 
         }
-        else if (item_is_staff( *weapon ))
+        else if (weapon->base_type == OBJ_STAVES)
         {
             // magical staff
             your_to_hit += property( *weapon, PWPN_HIT );
+
+            if (item_is_rod( *weapon ))
+                your_to_hit += (short)weapon->props["rod_enchantment"];
         }
     }
 
@@ -4068,7 +4077,7 @@ int melee_attack::player_weapon_speed()
     int attack_delay = 0;
 
     if (weapon && (weapon->base_type == OBJ_WEAPONS
-                   || item_is_staff( *weapon )))
+                   || weapon->base_type == OBJ_STAVES))
     {
         attack_delay = property( *weapon, PWPN_SPEED );
         attack_delay -= you.skills[ wpn_skill ] / 2;
@@ -4212,7 +4221,7 @@ int melee_attack::player_calc_base_weapon_damage()
 {
     int damage = 0;
 
-    if (weapon->base_type == OBJ_WEAPONS || item_is_staff( *weapon ))
+    if (weapon->base_type == OBJ_WEAPONS || weapon->base_type == OBJ_STAVES)
         damage = property( *weapon, PWPN_DAMAGE );
 
     // Staves can be wielded with a worn shield, but are much less

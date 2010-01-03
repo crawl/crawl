@@ -1307,6 +1307,8 @@ int get_damage_type(const item_def &item)
 {
     int ret = DAM_BASH;
 
+    if (item_is_rod(item))
+        ret = DAM_BLUDGEON;
     if (item.base_type == OBJ_WEAPONS)
         ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAM_MASK);
 
@@ -1635,6 +1637,8 @@ skill_type weapon_skill( const item_def &item )
 {
     if (item.base_type == OBJ_WEAPONS && !is_range_weapon( item ))
         return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
+    else if (item_is_rod( item ))
+        return (SK_MACES_FLAILS); // Rods are short and stubby
     else if (item.base_type == OBJ_STAVES)
         return (SK_STAVES);
 
@@ -2063,6 +2067,8 @@ int corpse_freshness(const item_def &item)
 //
 int property(const item_def &item, int prop_type)
 {
+    weapon_type weapon_sub;
+
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
@@ -2089,12 +2095,14 @@ int property(const item_def &item, int prop_type)
         break;
 
     case OBJ_STAVES:
+        weapon_sub = item_is_rod(item) ? WPN_CLUB : WPN_QUARTERSTAFF;
+
         if (prop_type == PWPN_DAMAGE)
-            return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].dam);
+            return (Weapon_prop[ Weapon_index[weapon_sub] ].dam);
         else if (prop_type == PWPN_HIT)
-            return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].hit);
+            return (Weapon_prop[ Weapon_index[weapon_sub] ].hit);
         else if (prop_type == PWPN_SPEED)
-            return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].speed);
+            return (Weapon_prop[ Weapon_index[weapon_sub] ].speed);
         break;
 
     default:

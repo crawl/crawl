@@ -1923,6 +1923,10 @@ std::string get_item_description( const item_def &item, bool verbose,
                 else
                     description << desc;
             }
+            std::string stats = "";
+            append_weapon_stats(stats, item);
+            description << stats;
+            description << "$$It falls into the 'Maces & Flails' category.";
         }
         else
         {
