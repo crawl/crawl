@@ -1123,7 +1123,7 @@ std::string item_def::name_aux(description_level_type desc,
             case SPMSL_CURARE:
                 buff << ((terse) ? "curare " : "curare-tipped ");
                 break;
-            case SPMSL_EXPLODING:
+           case SPMSL_EXPLODING:
                 buff << ((terse) ? "explode " : "exploding ");
                 break;
             case SPMSL_STEEL:
@@ -1166,6 +1166,24 @@ std::string item_def::name_aux(description_level_type desc,
             case SPMSL_EXPLODING:
             case SPMSL_STEEL:
             case SPMSL_SILVER:
+                break;
+            case SPMSL_PARALYSIS:
+                buff << ((terse) ? " (paralysis)" : " of paralysis");
+                break;
+            case SPMSL_SLOW:
+                buff << ((terse) ? " (slow)" : " of slowing");
+                break;
+            case SPMSL_SLEEP:
+                buff << ((terse) ? " (sleep)" : " of sleeping");
+                break;
+            case SPMSL_CONFUSION:
+                buff << ((terse) ? " (conf)" : " of confusion");
+                break;
+            case SPMSL_SICKNESS:
+                buff << ((terse) ? " (sick)" : " of sickening");
+                break;
+            case SPMSL_RAGE:
+                buff << ((terse) ? " (wrath)" : " of wrath");
                 break;
             case SPMSL_RETURNING:
                 buff << ((terse) ? " (return)" : " of returning");
@@ -1794,6 +1812,7 @@ bool item_type_known( const item_def& item )
         int ammo_brand = get_ammo_brand(item);
         if (ammo_brand == SPMSL_POISONED
             || ammo_brand == SPMSL_CURARE
+            || (ammo_brand >= SPMSL_PARALYSIS && ammo_brand <= SPMSL_RAGE)
             || ammo_brand == SPMSL_STEEL
             || ammo_brand == SPMSL_SILVER)
         {

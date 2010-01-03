@@ -1824,7 +1824,18 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     switch (item.sub_type)
     {
     case MI_NEEDLE:
-        rc = got_curare_roll(item_level) ? SPMSL_CURARE : SPMSL_POISONED;
+        // Curare is special cased, all the others aren't.
+        if (got_curare_roll(item_level))
+        {
+            rc = SPMSL_CURARE;
+            break;
+        }
+
+        rc = static_cast<special_missile_type>(
+                         random_choose_weighted(30, SPMSL_PARALYSIS, 30, SPMSL_SLOW,
+                                                30, SPMSL_SLEEP, 40, SPMSL_CONFUSION,
+                                                20, SPMSL_SICKNESS, 10, SPMSL_RAGE,
+                                                nw, SPMSL_POISONED));
         break;
     case MI_DART:
         rc = static_cast<special_missile_type>(
@@ -1901,8 +1912,16 @@ bool is_missile_brand_ok(int type, int brand)
         return (false);
 
     // In contrast, needles should always be branded.
-    if (type == MI_NEEDLE && (brand == SPMSL_POISONED || brand == SPMSL_CURARE))
-        return (true);
+    if (type == MI_NEEDLE)
+    {
+        switch (brand)
+        {
+        case SPMSL_POISONED: case SPMSL_CURARE: case SPMSL_PARALYSIS:
+        case SPMSL_SLOW: case SPMSL_SLEEP: case SPMSL_CONFUSION:
+        case SPMSL_SICKNESS: case SPMSL_RAGE: return (true);
+        default: return (false);
+        }
+    }
 
     // Everything else doesn't matter.
     if (brand == SPMSL_NORMAL)
@@ -1942,6 +1961,7 @@ bool is_missile_brand_ok(int type, int brand)
     case SPMSL_SILVER:
         return (type == MI_BOLT || type == MI_SLING_BULLET
                 || type == MI_JAVELIN || type == MI_THROWING_NET);
+    default: break;
     }
 
     // Assume yes, if we've gotten this far.

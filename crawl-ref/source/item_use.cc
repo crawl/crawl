@@ -1926,6 +1926,92 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
     return (false);
 }
 
+int _blowgun_power_roll (bolt &beam)
+{
+    actor* agent = beam.agent();
+    int base_power = 1;
+    int blowgun_base = 0;
+
+    if (agent->atype() == ACT_MONSTER)
+    {
+        monsters* mons = static_cast<monsters*>(agent);
+        base_power += mons->hit_dice;
+        blowgun_base += (*mons).launcher()->plus;
+    }
+    else
+    {
+        base_power += you.skills[SK_THROWING];
+        blowgun_base += (you.weapon())->plus;
+    }
+
+    return (base_power + blowgun_base);
+}
+
+static bool _paralysis_hit_victim (bolt& beam, actor* victim, int dmg,
+                                  int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->paralyse(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _sleep_hit_victim (bolt& beam, actor* victim, int dmg,
+                                  int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->put_to_sleep(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _confusion_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->confuse(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _slow_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->slow_down(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _sickness_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->sicken(40 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _rage_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    victim->go_berserk(false);
+    return (true);
+}
+
 bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                         std::string &ammo_name, bool &returning)
 {
@@ -2034,6 +2120,14 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     const bool flaming      = bow_brand == SPWPN_FLAME
                                 || ammo_brand == SPMSL_FLAME;
 
+    const bool paralysis    = ammo_brand == SPMSL_PARALYSIS;
+    const bool slow         = ammo_brand == SPMSL_SLOW;
+    const bool sleep        = ammo_brand == SPMSL_SLEEP;
+    const bool confusion    = ammo_brand == SPMSL_CONFUSION;
+    const bool sickness     = ammo_brand == SPMSL_SICKNESS;
+    const bool rage         = ammo_brand == SPMSL_RAGE;
+
+
     ASSERT(!exploding || !is_artefact(item));
 
     if (flaming && poisoned)
@@ -2116,6 +2210,19 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.damage_funcs.push_back(_charged_hit_victim);
     if (blessed)
         beam.damage_funcs.push_back(_blessed_hit_victim);
+
+    if (paralysis)
+        beam.hit_funcs.push_back(_paralysis_hit_victim);
+    if (slow)
+        beam.hit_funcs.push_back(_slow_hit_victim);
+    if (sleep)
+        beam.hit_funcs.push_back(_sleep_hit_victim);
+    if (confusion)
+        beam.hit_funcs.push_back(_confusion_hit_victim);
+    if (sickness)
+        beam.hit_funcs.push_back(_sickness_hit_victim);
+    if (rage)
+        beam.hit_funcs.push_back(_rage_hit_victim);
 
     if (reaping && ammo.special != SPMSL_REAPING)
     {

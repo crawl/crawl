@@ -343,7 +343,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_FLAME,
     SPMSL_FROST,
     SPMSL_POISONED,
-    SPMSL_CURARE,
+    SPMSL_CURARE,                      // Needle-only brand
     SPMSL_RETURNING,                   //    5
     SPMSL_CHAOS,
     SPMSL_PENETRATION,
@@ -353,7 +353,13 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_STEEL,
     SPMSL_SILVER,
     SPMSL_ELECTRIC,
-    NUM_SPECIAL_MISSILES               //   13
+    SPMSL_PARALYSIS,                   // paralysis, needle only from here in
+    SPMSL_SLOW,                        // makes slow
+    SPMSL_SLEEP,                       // sleep
+    SPMSL_CONFUSION,                   // confusing
+    SPMSL_SICKNESS,                    // sickness/disease
+    SPMSL_RAGE,                        // berserk rage
+    NUM_SPECIAL_MISSILES               // 20
 };
 
 enum special_ring_type // jewellery mitm[].special values

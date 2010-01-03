@@ -1069,7 +1069,25 @@ static std::string _describe_ammo(const item_def &item)
         case SPMSL_CURARE:
             description += "It is tipped with asphyxiating poison.";
             break;
-        case SPMSL_RETURNING:
+        case SPMSL_PARALYSIS:
+            description += "It is tipped with a paralyzing poison."; 
+            break;
+        case SPMSL_SLOW:
+            description += "It is coated with a poison that causes slowness of the body.";
+            break;
+        case SPMSL_SLEEP:
+            description += "It is coated with a fast-acting tranquilizer.";
+            break;
+        case SPMSL_CONFUSION:
+            description += "It is tipped with a substance that causes confusion.";
+            break;
+        case SPMSL_SICKNESS:
+            description += "It has been contaminated by something likely to cause disease.";
+            break;
+        case SPMSL_RAGE:
+            description += "It is tipped with a substance that causes a mindless, berserk rage.";
+            break;
+       case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
                 "that it will return to its owner.";
             break;
