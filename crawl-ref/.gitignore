@@ -23,6 +23,9 @@ DEADJOE
 # Vim can generate extra swap files for the same file
 *.sw[nop]
 
+# Generated documentation
+docs/aptitudes.txt
+
 # Crawl generated junk
 arena.result
 saves

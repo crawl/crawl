@@ -1,0 +1,51 @@
+TABLES OF APTITUDES
+
+The following three tables describe all aptitudes of the various species
+for the various skills. These are not necessary for winning in Crawl,
+neither explicit nor implicit. The qualitative information behind this
+sheet (i.e., which species is good at which tasks) can be obtained in
+two other, less sophisticated ways:
+- Read the species section in the manual about strengths and weaknesses.
+- Look at which combinations of species and job are recommended
+  (lightgrey).
+
+If you consider figuring out such things yourself to be fun, stop
+reading now. Otherwise, just go ahead. The lower a value, the better the
+aptitude. 100 is the Human standard. Please note that many things affect
+how quickly a character will actually learn a skill. Thus, the numbers
+below are good enough for comparisons among species, but not necessarily
+among skills.
+
+The abbreviations used for the skills are:
+
+General skills, Experience   Melee and Ranged Combat     Spellcasting and Magic
+--------------------------   -----------------------     ----------------------
+Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
+Ddg - Dodging                SBl - Short Blades          Coj - Conjurations
+Sth - Stealth                LBl - Long Blades           Enc - Enchantments
+Stb - Stabbing               Axs - Axes                  Sum - Summonings
+Shd - Shields                M&F - Maces & Flails        Nec - Necromancy
+T&D - Traps & Doors          Pla - Polearms              Trl - Translocations
+                             Stv - Staves                Trm - Transmutations
+Inv - Invocations            UC  - Unarmed Combat
+Evo - Evocations
+                             Thr - Throwing              Fir - Fire Magic
+                             Slg - Slings                Ice - Ice Magic
+Exp - Experience             Bws - Bows                  Air - Air Magic
+                             Crb - Crossbows             Ear - Earth Magic
+                                                         Poi - Poison Magic
+
+Please do not edit this table directly in docs/aptitudes.txt -- make
+changes to the template in docs/template/apt-tmpl.txt.
+
+
+                Arm Ddg Sth Stb Shd T&D   Inv Evo                 Exp
+---------------------------------------------------------------------
+
+
+                Fgt SBl LBl Axs M&F Pla Stv UC    Thr Slg Bws Crb
+---------------------------------------------------------------------
+
+
+                Spc Coj Enc Sum Nec Trl Trm       Fir Ice Air Ear Poi
+---------------------------------------------------------------------

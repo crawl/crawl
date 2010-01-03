@@ -706,16 +706,21 @@ endif
 EXTRA_OBJECTS += version.o
 
 LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
-GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
-SRC_PKG_BASE := stone_soup
-SRC_VERSION  := $(shell git describe --tags --long 2>/dev/null || cat util/release_ver)
-PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)
-SRC_PKG_TAR  := $(PKG_SRC_DIR).tar.bz2
-SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
+
+DOC_BASE      := ../docs
+DOC_TEMPLATES := $(DOC_BASE)/template
+GENERATE_DOCS := $(DOC_BASE)/aptitudes.txt
+
+GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
+SRC_PKG_BASE  := stone_soup
+SRC_VERSION   := $(shell git describe --tags --long 2>/dev/null || cat util/release_ver)
+PKG_SRC_DIR   := $(SRC_PKG_BASE)-$(SRC_VERSION)
+SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
+SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source
 
-all: $(GAME)
+all: $(GAME) $(GENERATE_DOCS)
 
 test:
 	./$(GAME) -test > /dev/null
@@ -764,6 +769,13 @@ build.h: $(OBJECTS:.o=.cc)
 version.cc: build.h compflag.h
 
 ##########################################################################
+# Documentation
+#
+$(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt player.cc skills2.cc \
+						   util/gen-apt.pl
+	$(QUIET_GEN)./util/gen-apt.pl $@ $^
+
+##########################################################################
 # The level compiler
 #
 
@@ -802,7 +814,7 @@ endif
 ##########################################################################
 # The actual build targets
 #
-install: $(GAME)
+install: all
 ifeq ($(DESTDIR)$(prefix),)
 	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
 	@exit 1
@@ -861,9 +873,9 @@ distclean: clean clean-contrib clean-rltiles
 $(GAME): $(GAME_DEPENDS)
 	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
-debug: $(GAME)
-profile: $(GAME)
-wizard: $(GAME)
+debug: all
+profile: all
+wizard: all
 
 # [ds] Note we don't use the standard CFLAGS here; that's intentional, most
 # flex/bison combos I've tried don't produce code that passes the warnings
