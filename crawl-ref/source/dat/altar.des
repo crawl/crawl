@@ -672,6 +672,107 @@ ENDMAP
 
 ### Elyvilon overflow altars ##################################################
 
+NAME:   elyvilon_altar_1
+TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon
+DEPTH:  D:2-20
+KFEAT:  C = altar_elyvilon
+SUBST:  X : T G t 1 2 3
+MONS:   plant, bush, fungus
+KMASK:  T = no_monster_gen
+MAP
+      xx@xx
+      x...x
+      x.X.x
+      x...x
+      xx.xx
+       x.x
+xxxxx xx.xx xxxxx
+x...xxx...xxx...x
+@.X.....C.....X.@
+x...xxx...xxx...x
+xxxxx xx.xx xxxxx
+       x.x
+      xx.xx
+      x...x
+      x.X.x
+      x...x
+      xx@xx
+ENDMAP
+
+NAME:   elyvilon_altar_2
+TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon no_pool_fixup no_monster_gen
+DEPTH:  D:2-20
+KFEAT:  C = altar_elyvilon
+NSUBST: W = 1:Z / *:W
+KMONS:  Z = big fish att:good_neutral
+KFEAT:  Z = W
+MAP
+@wWw@
+wwWww
+WWCWW
+wwWww
+@wWw@
+ENDMAP
+
+NAME:   elyvilon_altar_3
+TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon no_pool_fixup
+DEPTH:  D:2-20
+KFEAT:  C = altar_elyvilon
+KMASK:  w = no_monster_gen
+KMASK:  W = no_monster_gen
+MONS:   butterfly
+MAP
+        ttttttttttttt
+       ttttttttttttttt
+      tttttttt.tttttttt
+  .....ttttt..1..ttttt.....
+ .......ttt.......ttt.......
+...wWw...t...wWw...t...wWw...
+..wwWww.....wwWww.....wwWww..
+@.WWtWW.1.1.WWCWW.1.1.WWtWW.@
+..wwWww.....wwWww.....wwWww..
+...wWw...t...wWw...t...wWw...
+ .......ttt.......ttt.......
+  .....ttttt..1..ttttt.....
+      tttttttt.tttttttt
+       ttttttttttttttt
+        ttttttttttttt
+ENDMAP
+
+NAME:   elyvilon_altar_4
+TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon no_monster_gen
+DEPTH:  D:2-20
+KFEAT:  C = altar_elyvilon
+MONS:   patrolling quokka att:good_neutral
+MAP
+xxx.@.xxx
+xWW...WWx
+xW..t..Wx
+....1....
+@.t.C.t.@
+.........
+xW..t..Wx
+xWW...WWx
+xxx.@.xxx
+ENDMAP
+
+NAME:   elyvilon_altar_5
+TAGS:   uniq_altar_elyvilon temple_overflow_elyvilon
+DEPTH:  D:2-20
+KFEAT:  C = altar_elyvilon
+KMASK:  T = no_monster_gen
+MAP
+.............
+.c.c.c.c.c.c.
+.............
+...T.....T...
+@.....C.....@
+...T.....T...
+.............
+.c.c.c.c.c.c.
+.............
+ENDMAP
+
 ### Fedhas overflow altars ####################################################
 
 NAME:   fedhas_altar_1
