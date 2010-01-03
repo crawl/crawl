@@ -200,6 +200,8 @@ class message_window
         cgotoxy(1, n + 1, GOTO_MSG);
         line.display();
         cprintf("%*s", out_width() - line.length(), "");
+        // move cursor back in case of prompts
+        cgotoxy(line.length() + 1, n + 1, GOTO_MSG);
     }
 
     void scroll(int n)
