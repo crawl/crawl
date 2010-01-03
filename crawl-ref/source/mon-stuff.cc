@@ -3277,10 +3277,14 @@ bool mons_avoids_cloud(const monsters *monster, int cloud_num,
 }
 
 // Returns a rough estimate of damage from throwing the wielded weapon.
-int mons_thrown_weapon_damage(const item_def *weap)
+int mons_thrown_weapon_damage(const item_def *weap,
+                              bool only_returning_weapons)
 {
-    if (!weap || get_weapon_brand(*weap) != SPWPN_RETURNING)
+    if (!weap ||
+        (only_returning_weapons && get_weapon_brand(*weap) != SPWPN_RETURNING))
+    {
         return (0);
+    }
 
     return std::max(0, (property(*weap, PWPN_DAMAGE) + weap->plus2 / 2));
 }
@@ -3314,6 +3318,7 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
 {
     *launcher = NULL;
     item_def *melee = NULL, *launch = NULL;
+    int melee_weapon_count = 0;
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
@@ -3321,7 +3326,10 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
             if (is_range_weapon(*item))
                 launch = item;
             else if (!ignore_melee)
+            {
                 melee = item;
+                ++melee_weapon_count;
+            }
         }
     }
 
@@ -3329,7 +3337,10 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
     if (launch && missiles && !missiles->launched_by(*launch))
         launch = NULL;
 
-    const int tdam = mons_thrown_weapon_damage(melee);
+    const int tdam =
+        mons_thrown_weapon_damage(
+            melee,
+            melee_weapon_count == 1 && melee->quantity == 1);
     const int fdam = mons_missile_damage(mons, launch, missiles);
 
     if (!tdam && !fdam)

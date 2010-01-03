@@ -1169,9 +1169,10 @@ static void _give_ammo(monsters *mon, int level,
             }
 
             w.quantity = qty;
-
             _give_monster_item(mon, thing_created, false,
-                               &monsters::pickup_throwable_weapon);
+                               (weap_class == OBJ_WEAPONS?
+                                &monsters::pickup_melee_weapon
+                                : &monsters::pickup_throwable_weapon));
         }
     }
 }
