@@ -490,7 +490,7 @@ public:
 
     bool asleep() const;
     void hibernate(int power = 0);
-    void put_to_sleep(int power = 0);
+    void put_to_sleep(actor *, int power = 0);
     void awake();
     void check_awaken(int disturbance);
 

@@ -394,6 +394,7 @@ public:
                   bool wizard_tele = false);
 
     void hibernate(int power = 0);
+    void put_to_sleep(actor *attacker, int power = 0);
     void check_awaken(int disturbance);
 
     int stat_hp() const    { return hit_points; }

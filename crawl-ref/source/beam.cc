@@ -3961,7 +3961,7 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_SLEEP:
-        you.put_to_sleep(ench_power);
+        you.put_to_sleep(NULL, ench_power);
         break;
 
     case BEAM_CORONA:
@@ -5529,11 +5529,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         if (mon->has_ench(ENCH_SLEEPY))
             return (MON_UNAFFECTED);
 
-        if (mon->add_ench(mon_enchant(ENCH_SLEEPY, 0, whose_kill())))
-        {
-            if (simple_monster_message(mon, " falls asleep!"))
-                obvious_effect = true;
-        }
+        mon->put_to_sleep(agent(), 0);
+        if (simple_monster_message(mon, " falls asleep!"))
+            obvious_effect = true;
+
         return (MON_AFFECTED);
 
     case BEAM_INVISIBILITY:

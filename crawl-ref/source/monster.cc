@@ -5716,6 +5716,15 @@ void monsters::hibernate(int)
     add_ench(ENCH_SLEEP_WARY);
 }
 
+void monsters::put_to_sleep(actor *attacker, int strength)
+{
+    if (has_ench(ENCH_SLEEPY))
+        return;
+
+    behaviour = BEH_SLEEP;
+    add_ench(ENCH_SLEEPY);
+}
+
 void monsters::check_awaken(int)
 {
     // XXX

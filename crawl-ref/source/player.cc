@@ -7125,7 +7125,7 @@ void player::hibernate(int)
     set_duration(DUR_SLEEP, 3 + random2avg(5, 2));
 }
 
-void player::put_to_sleep(int power)
+void player::put_to_sleep(actor*, int power)
 {
     ASSERT(!crawl_state.arena);
 

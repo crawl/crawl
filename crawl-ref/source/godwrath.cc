@@ -336,7 +336,7 @@ static bool _cheibriados_retribution()
     case 2:
     case 3:
         mpr("You lose track of time.");
-        you.put_to_sleep(50);
+        you.put_to_sleep(NULL, 50);
         break;
 
     case 4:
