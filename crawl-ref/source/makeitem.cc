@@ -2876,7 +2876,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
     }
 }
 
-static void _generate_staff_item(item_def& item, int force_type)
+static void _generate_staff_item(item_def& item, int force_type, int item_level)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -2899,7 +2899,7 @@ static void _generate_staff_item(item_def& item, int force_type)
     }
 
     if (item_is_rod(item))
-        init_rod_mp(item);
+        init_rod_mp(item, -1, item_level);
 }
 
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
@@ -3198,7 +3198,7 @@ int items(int allow_uniques,       // not just true-false,
         break;
 
     case OBJ_STAVES:
-        _generate_staff_item(item, force_type);
+        _generate_staff_item(item, force_type, item_level);
         break;
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
@@ -3275,25 +3275,27 @@ int items(int allow_uniques,       // not just true-false,
     return (p);
 }
 
-// Formula from Eronarn on ##crawl-dev; subject to revision
-static int _roll_rod_enchant()
+static int _roll_rod_enchant(int item_level)
 {
-    int total_prob = 0, cur_ench = 0;
+    int value = 0;
 
-    for (int i = -3; i <= 9; ++i)
-    {
-        int extremeness = (i < 0) ? (21 - i) : (15 + i);
+    if (one_chance_in(4))
+        value -= random_range(1, 3);
 
-        int prob = 600 - extremeness * extremeness;
+    if (item_level == MAKE_GOOD_ITEM)
+        value += 2;
 
-        if (random2(total_prob += prob) < prob)
-            cur_ench = i;
-    }
+    int pr = 20 + item_level * 2;
 
-    return cur_ench;
+    if (pr > 80)
+        pr = 80;
+
+    while (random2(100) < pr) value++;
+
+    return stepdown_value(value, 4, 4, 4, 9);
 }
 
-void init_rod_mp(item_def &item, int ncharges)
+void init_rod_mp(item_def &item, int ncharges, int item_level)
 {
     if (!item_is_rod(item))
         return;
@@ -3310,7 +3312,7 @@ void init_rod_mp(item_def &item, int ncharges)
         else
             item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
 
-        item.props["rod_enchantment"] = (short)_roll_rod_enchant();
+        item.props["rod_enchantment"] = (short)_roll_rod_enchant(item_level);
     }
 
     item.plus = item.plus2;

@@ -24,7 +24,7 @@ int items( int allow_uniques, object_class_type force_class, int force_type,
            unsigned mapmask = 0, int force_ego = 0, int agent = -1 );
 
 void item_colour(item_def &item);
-void init_rod_mp(item_def &item, int ncharges = -1);
+void init_rod_mp(item_def &item, int ncharges = -1, int item_level = -1);
 
 jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();
