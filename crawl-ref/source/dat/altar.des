@@ -612,7 +612,7 @@ ENDMAP
 
 # Golems are slow and they protect an altar to the slow god. (Lemuel)
 NAME:  golem_altar_1
-DEPTH: 3-12
+DEPTH: 8-12
 TAGS:  patrolling no_monster_gen no_item_gen 
 TAGS:  uniq_golem_altar temple_overflow_cheibriados
 KMONS: _ = iron golem
@@ -633,7 +633,7 @@ xxx.....xxx
 ENDMAP
 
 NAME:    golem_altar_2
-DEPTH:   3-12
+DEPTH:   8-12
 TAGS:    patrolling no_monster_gen no_item_gen 
 TAGS:    uniq_golem_altar temple_overflow_cheibriados
 KMONS:   _ = iron golem
