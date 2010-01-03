@@ -1842,7 +1842,8 @@ const char *ammo_name(const item_def &bow)
 bool has_launcher(const item_def &ammo)
 {
     ASSERT(ammo.base_type == OBJ_MISSILES);
-    return (ammo.sub_type != MI_LARGE_ROCK
+    return (ammo.sub_type != MI_DART
+            && ammo.sub_type != MI_LARGE_ROCK
             && ammo.sub_type != MI_JAVELIN
             && ammo.sub_type != MI_THROWING_NET);
 }
