@@ -125,7 +125,10 @@ sub aptitude_table {
       if ($pos > length($line)) {
         $line .= " " x ($pos - length($line));
       }
-      $line .= sprintf("%*d", length($abbr), $skill);
+
+      my $cwidth = length($abbr);
+      $cwidth = 3 if $cwidth < 3;
+      $line .= sprintf("%*d", $cwidth, $skill);
     }
     $text .= "$line\n";
   }
