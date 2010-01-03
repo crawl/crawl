@@ -555,6 +555,18 @@ xdddx
 xxxxx
 ENDMAP
 
+NAME:  fedhas_bush_and_centaur_altar
+KFEAT: _ = altar_fedhas
+MONS:  centaur, bush
+MAP
+......
+.2222..
+.21222.
+.22_22.
+...22..
+.222..
+ENDMAP
+
 ######################################
 # IV   Overflow altars
 ######################################
@@ -722,19 +734,6 @@ xxxxttttttttt..
 xxxxxxttttttttx
 xxxxxxxtttttttx
 xxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:  fedhas_altar_5
-TAGS:  uniq_altar_fedhas
-KFEAT: _ = altar_fedhas
-MONS:  centaur, bush
-MAP
-......
-.2222..
-.21222.
-.22_22.
-...22..
-.222..
 ENDMAP
 
 # Threat: two big fish. Loot: some fruits.
