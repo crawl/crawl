@@ -1837,7 +1837,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                          random_choose_weighted(30, SPMSL_PARALYSIS, 30, SPMSL_SLOW,
                                                 30, SPMSL_SLEEP, 40, SPMSL_CONFUSION,
                                                 20, SPMSL_SICKNESS, 10, SPMSL_RAGE,
-                                                nw, SPMSL_POISONED));
+                                                nw, SPMSL_POISONED, 0));
         break;
     case MI_DART:
         rc = static_cast<special_missile_type>(
@@ -1898,11 +1898,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
         rc = SPMSL_POISONED;
 
-    bool missile_brand_ok = is_missile_brand_ok(item.sub_type, rc);
-    if (!missile_brand_ok)
-    {
-        ASSERT(false);
-    }
+    ASSERT(is_missile_brand_ok(item.sub_type, rc));
 
     return rc;
 }
