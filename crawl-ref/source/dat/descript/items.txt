@@ -1368,7 +1368,7 @@ amount of damage on impact. Unlike with other launchers, wearing a shield does n
 %%%%
 sling bullet
 
-A small heavy projectile made of lead. It can be fired from a sling.
+A small heavy projectile made of lead. It can be fired from a sling. They are more effective as ammunition than simple stones, and can also come with various enchantments.
 %%%%
 snozzcumber
 
