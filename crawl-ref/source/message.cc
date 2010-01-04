@@ -9,11 +9,9 @@
  *   - --more-- for user-forced more (these two should be somewhat indep)
  *   - MSGCH_ERROR issuing interrupt.
  *   - Ctrl-P should start at end of messages
- *   - message window needs to be redisplayed when leaving something
- *     fullscreen
  *   - saving and restoring and dumping messages
  *   - filtering of messages for various purposes
- *   - delay_message_clear (better Options.clear_messages)
+ *   - implement Options.clear_messages
  *   - First column.
  *   - Handle resizing properly, in particular initial resize.
  *   - Optionally initialize message window from message history.
