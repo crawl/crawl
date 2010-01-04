@@ -1423,6 +1423,9 @@ static int _acquirement_weapon_subtype()
         else
             acqweight = acqweight * want_shield / dont_shield;
 
+        if (!you.seen_weapon[i])
+            acqweight *= 5; // strong emphasis on type variety, brands go only second
+
         int wskill = range_skill(OBJ_WEAPONS, i);
         if (wskill == SK_THROWING)
             wskill = weapon_skill(OBJ_WEAPONS, i);
@@ -2022,6 +2025,18 @@ int acquirement_create_item(object_class_type class_wanted,
             continue;
 
         item_def &doodad(mitm[thing_created]);
+
+        // Try to not generate brands that were already seen, although unlike
+        // jewelry and books, this is not absolute.
+        while (!is_artefact(doodad)
+               && (doodad.base_type == OBJ_WEAPONS
+                     && you.seen_weapon[doodad.sub_type] & (1<<get_weapon_brand(doodad))
+                   || doodad.base_type == OBJ_ARMOUR
+                     && you.seen_armour[doodad.sub_type] & (1<<get_weapon_brand(doodad)))
+               && !one_chance_in(5))
+        {
+            reroll_brand(doodad, MAKE_GOOD_ITEM);
+        }
 
         // For plain armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.
