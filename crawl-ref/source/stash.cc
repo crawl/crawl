@@ -724,6 +724,8 @@ void Stash::add_item(const item_def &item, bool add_to_front)
     else
         items.push_back(item);
 
+    seen_item(item);
+
     if (!_is_rottable(item))
         return;
 

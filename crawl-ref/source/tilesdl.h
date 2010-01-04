@@ -94,6 +94,7 @@ public:
     void clrscr();
 
     void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
+    GotoRegion get_cursor_region() const;
     int get_number_of_lines();
     int get_number_of_cols();
     void clear_message_window();

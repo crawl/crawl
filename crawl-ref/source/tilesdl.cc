@@ -1257,6 +1257,19 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
     TextRegion::cgotoxy(x, y);
 }
 
+GotoRegion TilesFramework::get_cursor_region() const
+{
+    if (TextRegion::text_mode == m_region_crt)
+        return (GOTO_CRT);
+    if (TextRegion::text_mode == m_region_msg)
+        return (GOTO_MSG);
+    if (TextRegion::text_mode == m_region_stat)
+        return (GOTO_STAT);
+
+    ASSERT(!"Bogus region");
+    return (GOTO_CRT);
+}
+
 // #define DEBUG_TILES_REDRAW
 void TilesFramework::redraw()
 {

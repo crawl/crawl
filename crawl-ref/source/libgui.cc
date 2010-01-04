@@ -318,6 +318,11 @@ void cgotoxy(int x, int y, GotoRegion region)
     tiles.cgotoxy(x, y, region);
 }
 
+GotoRegion get_cursor_region()
+{
+    return (tiles.get_cursor_region());
+}
+
 void delay(int ms)
 {
     tiles.redraw();

@@ -90,7 +90,7 @@ static inline int player_weapon_dex_weight( void );
 static inline int calc_stat_to_hit_base( void );
 static inline int calc_stat_to_dam_base( void );
 static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
-                                    int which_attack);
+                                    int which_attack, int effective_attack);
 
 /*
  **************************************************
@@ -5211,10 +5211,12 @@ void melee_attack::mons_perform_attack_rounds()
     attacker_as_monster()->wield_melee_weapon();
 
     monsters* def_copy = NULL;
-    for (attack_number = 0; attack_number < nrounds; ++attack_number)
+    int effective_attack_number = 0;
+    for (attack_number = 0; attack_number < nrounds;
+         ++attack_number, ++effective_attack_number)
     {
         // Handle noise from previous round.
-        if(attack_number > 0)
+        if (effective_attack_number > 0)
             handle_noise(pos);
 
         // Monster went away?
@@ -5278,17 +5280,18 @@ void melee_attack::mons_perform_attack_rounds()
         {
             // Make sure the monster uses up some energy, even
             // though it didn't actually attack.
-            if (attack_number == 0)
+            if (effective_attack_number == 0)
                 attacker_as_monster()->lose_energy(EUT_ATTACK);
-
             break;
         }
 
-        if (attk.type != AT_HIT && !unarmed_ok)
+        // Skip dummy attacks.
+        if ((attk.type != AT_HIT && !unarmed_ok)
+            || attk.type == AT_SHOOT)
+        {
+            --effective_attack_number;
             continue;
-
-        if (attk.type == AT_SHOOT)
-            continue;
+        }
 
         if (weapon == NULL)
         {
@@ -5368,7 +5371,9 @@ void melee_attack::mons_perform_attack_rounds()
             final_attack_delay = final_attack_delay / 2 + 1;
 
         mons_lose_attack_energy(attacker_as_monster(),
-                                final_attack_delay, attack_number);
+                                final_attack_delay,
+                                attack_number,
+                                effective_attack_number);
 
         bool shield_blocked = false;
         bool this_round_hit = false;
@@ -5769,19 +5774,20 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     return (true);
 }
 
-// Lose attack energy for attacking with a weapon. The monster has already lost
-// the base attack cost by this point.
+// Lose attack energy for attacking with a weapon. which_attack is the actual
+// attack number, effective_attack is the attack number excluding synthetic
+// attacks (i.e. excluding M_ARCHER monsters' AT_SHOOT attacks).
 static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
-                                    int which_attack)
+                                    int which_attack, int effective_attack)
 {
     // Initial attack causes energy to be used for all attacks.  No
     // additional energy is used for unarmed attacks.
-    if (which_attack == 0)
+    if (effective_attack == 0)
         attacker->lose_energy(EUT_ATTACK);
 
     // Monsters lose additional energy only for the first two weapon
     // attacks; subsequent hits are free.
-    if (which_attack > 1)
+    if (effective_attack > 1)
         return;
 
     // speed adjustment for weapon using monsters
@@ -5789,7 +5795,7 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
     {
         const int atk_speed = attacker->action_energy(EUT_ATTACK);
         // only get one third penalty/bonus for second weapons.
-        if (which_attack > 0)
+        if (effective_attack > 0)
             wpn_speed = div_rand_round( (2 * atk_speed + wpn_speed), 3 );
 
         int delta = div_rand_round( (wpn_speed - 10 + (atk_speed - 10)), 2 );

@@ -14,6 +14,7 @@
 #include "species.h"
 
 #include <vector>
+#include <stdint.h>
 
 #ifdef USE_TILE
 struct dolls_data
@@ -234,6 +235,8 @@ public:
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;
   FixedVector<bool, NUM_SPELLS>      seen_spell;
+  FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
+  FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
 
   unsigned char normal_vision;        // how far the species gets to see
   unsigned char current_vision;       // current sight radius (cells)

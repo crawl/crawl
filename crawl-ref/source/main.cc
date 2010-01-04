@@ -4259,6 +4259,13 @@ static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
     return reader.read_line(true);
 }
 
+static void _cancel_cmd_repeat()
+{
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+    flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
+}
+
 static void _setup_cmd_repeat()
 {
     if (is_processing_macro())
@@ -4287,9 +4294,7 @@ static void _setup_cmd_repeat()
         {
             // Was just a single ESCAPE key, so not a macro trigger.
             canned_msg( MSG_OK );
-            crawl_state.cancel_cmd_again();
-            crawl_state.cancel_cmd_repeat();
-            flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
+            _cancel_cmd_repeat();
             return;
         }
         ch = getchm();
@@ -4312,9 +4317,7 @@ static void _setup_cmd_repeat()
                 // Wasn't a macro trigger, just an ordinary escape.
                 canned_msg( MSG_OK );
 
-            crawl_state.cancel_cmd_again();
-            crawl_state.cancel_cmd_repeat();
-            flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
+            _cancel_cmd_repeat();
             return;
         }
         // *WAS* a macro trigger, keep going.
@@ -4323,11 +4326,7 @@ static void _setup_cmd_repeat()
     if (strlen(buf) == 0)
     {
         mpr("You must enter the number of times for the command to repeat.");
-
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
-
+        _cancel_cmd_repeat();
         return;
     }
 
@@ -4339,9 +4338,7 @@ static void _setup_cmd_repeat()
     if (count <= 0)
     {
         canned_msg( MSG_OK );
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
+        _cancel_cmd_repeat();
         return;
     }
 
@@ -4370,7 +4367,7 @@ static void _setup_cmd_repeat()
         if (!crawl_state.doing_prev_cmd_again)
             repeat_again_rec.keys.pop_back();
 
-        mpr("Enter command to be repeated: ");
+        mpr("Enter command to be repeated: ", MSGCH_PROMPT);
         // Enable the cursor to read input.
         cursor_control con(true);
 
@@ -4388,9 +4385,7 @@ static void _setup_cmd_repeat()
 
     if (!is_processing_macro() && !_cmd_is_repeatable(cmd))
     {
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
+        _cancel_cmd_repeat();
         return;
     }
 
@@ -4413,7 +4408,12 @@ static void _setup_cmd_repeat()
         while (isdigit(ch) || ch == ' ' || ch == CK_ENTER)
         {
             keys.pop_back();
-            ASSERT(keys.size() > 0);
+            // Handle the case where the user has macroed enter to itself.
+            if (keys.empty())
+            {
+                _cancel_cmd_repeat();
+                return;
+            }
             ch = keys[keys.size() - 1];
         }
     }
@@ -4569,7 +4569,7 @@ static void _compile_time_asserts()
 {
     // Check that the numbering comments in enum.h haven't been
     // disturbed accidentally.
-    COMPILE_CHECK(SK_UNARMED_COMBAT == 18       , c1);
+    COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
@@ -4587,6 +4587,12 @@ static void _compile_time_asserts()
     // Non-artefact brands and unrandart indexes both go into
     // item.special, so make sure they don't overlap.
     COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START, c10);
+
+    // We have space for 32 brands in the bitfield.
+    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]), c11);
+    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]), c12);
+    COMPILE_CHECK(NUM_SPECIAL_WEAPONS <= SP_UNKNOWN_BRAND, c13);
+    COMPILE_CHECK(NUM_SPECIAL_ARMOURS <= SP_UNKNOWN_BRAND, c14);
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

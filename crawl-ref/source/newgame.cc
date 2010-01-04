@@ -4646,9 +4646,17 @@ bool _give_items_skills()
 
         // If an offensive wand or the rod of striking was chosen,
         // don't hand out a weapon.
-        if (you.inv[3].base_type != OBJ_WANDS
-            || you.inv[3].sub_type != WAND_CONFUSION
-               && you.inv[3].sub_type != WAND_ENSLAVEMENT)
+        if (item_is_rod(you.inv[2]))
+        {
+            // If the rod of striking was chosen, put it in the first
+            // slot and wield it.
+            you.inv[0] = you.inv[2];
+            you.equip[EQ_WEAPON] = 0;
+            _newgame_clear_item(2);
+        }
+        else if (you.inv[3].base_type != OBJ_WANDS
+                 || you.inv[3].sub_type != WAND_CONFUSION
+                    && you.inv[3].sub_type != WAND_ENSLAVEMENT)
         {
             _newgame_clear_item(0);
         }
