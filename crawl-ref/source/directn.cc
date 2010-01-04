@@ -610,6 +610,7 @@ void full_describe_view()
         desc_menu.set_maxpagesize(52);
     }
 
+    // Start with hotkey 'a' and count from there.
     menu_letter hotkey;
     // Build menu entries for monsters.
     if (!list_mons.empty())
