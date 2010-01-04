@@ -82,7 +82,6 @@ const char *skills[50][6] =
     {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult"},
     {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@"},
     {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest"},
-    {"Darts",          "Dart Thrower",  "Hurler",          "Hedgehog",        "Darts Champion", "Perforator"},
     {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Adj@ Ballista"},
     {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable"},
     {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible"},
@@ -93,6 +92,7 @@ const char *skills[50][6] =
     // STR based fighters, for DEX/martial arts titles see below
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
+    {NULL},
     {NULL},
     {NULL},
     {NULL},
