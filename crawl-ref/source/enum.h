@@ -2624,8 +2624,7 @@ enum skill_type
     SK_SLINGS,
     SK_BOWS,
     SK_CROSSBOWS,
-    // was darts, now unused
-    SK_THROWING = 11,
+    SK_THROWING,
     SK_ARMOUR,
     SK_DODGING,
     SK_STEALTH,
