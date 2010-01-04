@@ -33,10 +33,6 @@
 #include "tags.h"
 #include "terrain.h"
 
-static bool _safe_vault_place(const map_def &md,
-                              const coord_def &c,
-                              const coord_def &size);
-
 static int write_vault(map_def &mdef,
                        vault_placement &,
                        bool check_place);
@@ -50,7 +46,7 @@ static bool resolve_map(map_def &def);
 // Globals: Use unwind_var to modify!
 
 // Checks whether a map place is valid.
-map_place_check_t map_place_valid = _safe_vault_place;
+map_place_check_t map_place_valid = map_safe_vault_place;
 
 // If non-empty, any floating vault's @ exit must land on these point.
 point_vector map_anchor_points;
@@ -334,9 +330,9 @@ static bool _may_overwrite_feature(const dungeon_feature_type grid,
     return (true);
 }
 
-static bool _safe_vault_place(const map_def &map,
-                              const coord_def &c,
-                              const coord_def &size)
+bool map_safe_vault_place(const map_def &map,
+                          const coord_def &c,
+                          const coord_def &size)
 {
     if (size.zero())
         return (true);
@@ -346,14 +342,21 @@ static bool _safe_vault_place(const map_def &map,
 
     for (rectangle_iterator ri(c, c + size - 1); ri; ++ri)
     {
-        const coord_def &cp(*ri);
-        const coord_def &dp(cp - c);
+        const coord_def cp(*ri);
+        const coord_def dp(cp - c);
 
         if (lines[dp.y][dp.x] == ' ')
             continue;
 
-        if (dgn_Map_Mask[cp.x][cp.y] & MMT_VAULT)
-            return (false);
+        // Also check adjacent squares for collisions, because being next
+        // to another vault may block off one of this vault's exits.
+        for (int y = -1; y <= 1; ++y)
+            for (int x = -1; x <= 1; ++x)
+            {
+                const coord_def vp(x + cp.x, y + cp.y);
+                if (map_bounds(vp) && (dgn_Map_Mask(vp) & MMT_VAULT))
+                    return (false);
+            }
 
         const dungeon_feature_type dfeat = grd(cp);
 
@@ -491,7 +494,7 @@ static bool apply_vault_grid(map_def &def,
     if (!map_bounds(start))
         return (false);
 
-    if (check_place && !_safe_vault_place(def, start, size))
+    if (check_place && !map_place_valid(def, start, size))
     {
         dprf("Bad vault place: (%d,%d) dim (%d,%d)",
              start.x, start.y, size.x, size.y);

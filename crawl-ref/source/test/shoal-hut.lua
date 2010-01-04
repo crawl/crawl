@@ -37,15 +37,16 @@ local function shoal_hut_doors()
   return doors
 end
 
--- The hut door is blocked if there is no adjacent square that is not solid
--- or in a vault.
+-- The hut door is blocked if we cannot move from the door to a non-vault
+-- square without crossing solid terrain.
 local function hut_door_blocked(door)
-  for p in iter.adjacent_iterator_to(door) do
-    if not feat.is_solid(dgn.grid(p.x, p.y)) then
-      return false
-    end
+  local function good_square(p)
+    return not dgn.in_vault(p.x, p.y)
   end
-  return true
+  local function passable_square(p)
+    return not feat.is_solid(dgn.grid(p.x, p.y))
+  end
+  return not dgn.find_adjacent_point(door, good_square, passable_square)
 end
 
 local function verify_stair_connected(p)
