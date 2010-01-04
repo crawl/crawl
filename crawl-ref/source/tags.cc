@@ -1176,6 +1176,14 @@ static void tag_construct_you_items(writer &th)
     marshallShort(th, NUM_SPELLS);
     for (j = 0; j < NUM_SPELLS; ++j)
         marshallByte(th,you.seen_spell[j]);
+
+    marshallShort(th, NUM_WEAPONS);
+    for (j = 0; j < NUM_WEAPONS; ++j)
+        marshallLong(th,you.seen_weapon[j]);
+
+    marshallShort(th, NUM_ARMOURS);
+    for (j = 0; j < NUM_ARMOURS; ++j)
+        marshallLong(th,you.seen_armour[j]);
 }
 
 static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
@@ -1633,8 +1641,30 @@ static void tag_read_you_items(reader &th, char minorVersion)
 
     // how many spells?
     count_s = unmarshallShort(th);
+    if (count_s > NUM_SPELLS)
+        count_s = NUM_SPELLS;
     for (j = 0; j < count_s; ++j)
         you.seen_spell[j] = unmarshallByte(th);
+
+#if (TAG_MAJOR_VERSION == 14)
+if (th.getMinorVersion() >= 1)
+{
+#endif
+    count_s = unmarshallShort(th);
+    if (count_s > NUM_WEAPONS)
+        count_s = NUM_WEAPONS;
+    for (j = 0; j < count_s; ++j)
+        you.seen_weapon[j] = unmarshallLong(th);
+
+    count_s = unmarshallShort(th);
+    if (count_s > NUM_ARMOURS)
+        count_s = NUM_ARMOURS;
+    for (j = 0; j < count_s; ++j)
+        you.seen_armour[j] = unmarshallLong(th);
+#if (TAG_MAJOR_VERSION == 14)
+}
+#endif
+
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)

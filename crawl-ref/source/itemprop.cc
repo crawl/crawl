@@ -583,6 +583,14 @@ void set_ident_flags( item_def &item, unsigned long flags )
         // don't note twice in those cases.
         item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
     }
+
+    if (item.flags & ISFLAG_KNOW_TYPE && !is_artefact(item))
+    {
+        if (item.base_type == OBJ_WEAPONS)
+            you.seen_weapon[item.sub_type] |= 1 << item.special;
+        if (item.base_type == OBJ_ARMOUR)
+            you.seen_armour[item.sub_type] |= 1 << item.special;
+    }
 }
 
 void unset_ident_flags( item_def &item, unsigned long flags )
@@ -2493,4 +2501,16 @@ std::string item_base_name(const item_def &item)
 const char* weapon_base_name(unsigned char subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
+}
+
+void seen_item(const item_def &item)
+{
+    if (!is_artefact(item))
+    {
+        // Known brands will be set in set_item_flags().
+        if (item.base_type == OBJ_WEAPONS)
+            you.seen_weapon[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
+        if (item.base_type == OBJ_ARMOUR)
+            you.seen_armour[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
+    }
 }

@@ -1460,6 +1460,7 @@ int find_free_slot(const item_def &i)
 
 static void _got_item(item_def& item, int quant)
 {
+    seen_item(item);
     shopping_list.cull_identical_items(item);
 
     if (!is_rune(item))
