@@ -300,10 +300,12 @@ class message_store
 public:
     void add(const message_item& msg)
     {
-        if (prev_msg.merge(msg))
+        if (msg.channel != MSGCH_PROMPT && prev_msg.merge(msg))
             return;
         flush_prev();
         prev_msg = msg;
+        if (msg.channel == MSGCH_PROMPT)
+            flush_prev();
     }
 
     bool have_prev()
