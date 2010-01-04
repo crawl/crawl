@@ -14,6 +14,9 @@
 #include "enum.h"
 #include "mpr.h"
 
+// Write the message window contents out.
+void display_message_window();
+
 void mesclr(bool force = false);
 
 void flush_prev_message();

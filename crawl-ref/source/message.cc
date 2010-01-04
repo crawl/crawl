@@ -277,6 +277,11 @@ public:
 
 message_window msgwin;
 
+void display_message_window()
+{
+    msgwin.show();
+}
+
 typedef circ_vec<message_item, NUM_STORED_MESSAGES> store_t;
 
 class message_store
