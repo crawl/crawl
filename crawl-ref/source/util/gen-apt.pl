@@ -184,24 +184,23 @@ sub load_aptitudes {
   while (<$inf>) {
     last if /\*{40,}/;
     if (!$seen_skill_start) {
-      $seen_skill_start = 1 if /spec_skills\[/;
+      $seen_skill_start = 1 if /species_skill_aptitudes\[/;
     }
     else {
-      if (m{//\s*SP_(\w+)\s*$}) {
+      if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(\d+)\s*\)/) {
         $species = propercase_string(fix_underscores($1));
-        die "$skillfile:$.: Repeated skill def for $species.\n"
-          if $SEEN_SPECIES{$species};
-        $SEEN_SPECIES{$species} = 1;
-        push @SPECIES, $species;
-      }
-      if (m{//\s*SK_(\w+)\s*$} && /^\s*\d+/) {
-        m{//\s*SK_(\w+)\s*$};
-        my $skill = skill_name($1);
+        if (!$SEEN_SPECIES{$species}) {
+          $SEEN_SPECIES{$species} = 1;
+          push @SPECIES, $species;
+        }
+
+        my $apt = $3;
+        my $skill = skill_name($2);
         die "$skillfile:$.: Unknown skill: $skill\n"
           unless $SKILL_ABBR{$skill};
         die "$skillfile:$.: Repeated skill def $1 for $species.\n"
           if $SPECIES_SKILLS{$species}{$skill};
-        ($SPECIES_SKILLS{$species}{$skill}) = /^\s*(\d+)/;
+        ($SPECIES_SKILLS{$species}{$skill}) = $apt;
       }
     }
   }
