@@ -1209,24 +1209,6 @@ void TilesFramework::clrscr()
     cgotoxy(1,1);
 }
 
-void TilesFramework::message_out(int *which_line, int colour, const char *s,
-                                 int firstcol)
-{
-    if (!firstcol)
-        firstcol = Options.delay_message_clear ? 2 : 1;
-
-    while (*which_line > crawl_view.msgsz.y - 1)
-    {
-        m_region_msg->scroll();
-        (*which_line)--;
-    }
-
-    cgotoxy(firstcol, (*which_line) + 1, GOTO_MSG);
-    textcolor(colour);
-
-    cprintf("%s", s);
-}
-
 void TilesFramework::clear_message_window()
 {
     m_region_msg->clear();
