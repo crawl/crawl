@@ -398,15 +398,36 @@ static void _shoals_furniture(int margin)
         unwind_var<dungeon_feature_set> vault_exc(dgn_Vault_Excavatable_Feats);
         dgn_Vault_Excavatable_Feats.insert(DNGN_STONE_WALL);
 
-        const coord_def c = _pick_shoals_island();
-        // Put all the stairs on one island.
-        grd(c) = DNGN_STONE_STAIRS_UP_I;
-        grd(c + coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_II;
-        grd(c - coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_III;
-        dgn_excavate(c, dgn_random_direction());
+        int stair_tries = 50;
+        bool did_place_stairs = false;
+        coord_def stair_place;
+        while (stair_tries-- > 0)
+        {
+            stair_place = _pick_shoals_island();
+            if (grd(stair_place) == DNGN_FLOOR)
+            {
+                // Put all the stairs on one island.
+                grd(stair_place) = DNGN_STONE_STAIRS_UP_I;
+                grd(stair_place + coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_II;
+                grd(stair_place - coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_III;
+                did_place_stairs = true;
+                break;
+            }
+            else
+            {
+                _shoals_islands.push_back(stair_place);
+            }
+        }
 
-        const coord_def p = _pick_shoals_island_distant_from(c);
-        const map_def *vault = random_map_for_tag("shoal_rune");
+        if (!did_place_stairs)
+        {
+            dgn_veto_level();
+            return;
+        }
+
+        const coord_def p = _pick_shoals_island_distant_from(stair_place);
+        const char *SHOAL_RUNE_HUT = "shoal_rune";
+        const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
         {
             // Place the rune
             dgn_map_parameters mp("rune");
@@ -425,7 +446,15 @@ static void _shoals_furniture(int margin)
                 vault = random_map_for_tag("shoal_rune");
             while (!vault && --tries > 0);
             if (vault)
-                dgn_place_map(vault, false, true, _pick_shoals_island(), 0);
+                dgn_place_map(vault, false, false, _pick_shoals_island(), 0);
+        }
+
+        // Fixup pass to connect vaults.
+        for (int i = 0, size = Level_Vaults.size(); i < size; ++i)
+        {
+            vault_placement &vp(Level_Vaults[i]);
+            if (vp.map.has_tag(SHOAL_RUNE_HUT))
+                dgn_dig_vault_loose(vp);
         }
     }
     else

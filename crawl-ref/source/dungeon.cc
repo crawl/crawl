@@ -978,6 +978,11 @@ static void _dgn_init_vault_excavatable_feats()
     dgn_Vault_Excavatable_Feats.insert(DNGN_ROCK_WALL);
 }
 
+void dgn_veto_level()
+{
+    dgn_level_vetoed = true;
+}
+
 void dgn_reset_level()
 {
     dgn_level_vetoed = false;
@@ -4202,6 +4207,11 @@ bool dgn_place_map(const map_def *mdef,
     }
 
     return (did_map);
+}
+
+void dgn_dig_vault_loose(vault_placement &vp)
+{
+    _dig_vault_loose(vp, vp.exits);
 }
 
 // Places a vault somewhere in an already built level if possible.

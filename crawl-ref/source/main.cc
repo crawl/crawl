@@ -3792,7 +3792,6 @@ static bool _initialise(void)
         tiles.initialise_items();
 #endif
         Options.show_more_prompt = false;
-        makeitem_tests();
         crawl_tests::run_tests(true);
         // Superfluous, just to make it clear that this is the end of
         // the line.

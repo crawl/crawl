@@ -75,6 +75,7 @@ namespace crawl_tests
     {
         lua_stack_cleaner clean(dlua);
         luaL_openlib(dlua, "crawl", crawl_test_lib, 0);
+        dlua.execfile("clua/test.lua", true, true);
     }
 
     bool is_test_selected(const std::string &testname)
@@ -118,6 +119,13 @@ namespace crawl_tests
         reset_test_data();
 
         init_test_bindings();
+
+        if (crawl_state.tests_selected.empty()
+            || (crawl_state.tests_selected[0].find("makeitem") !=
+                std::string::npos))
+        {
+            makeitem_tests();
+        }
 
         // Get a list of Lua files in test. Order of execution of
         // tests should be irrelevant.
