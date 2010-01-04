@@ -4157,6 +4157,16 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
+    case BEAM_BERSERK:
+        potion_effect( POT_BERSERK_RAGE, ench_power );
+        obvious_effect = true;
+        break;
+
+    case BEAM_MIGHT:
+        potion_effect( POT_MIGHT, ench_power );
+        obvious_effect = true;
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
