@@ -196,8 +196,17 @@ class message_window
         cgotoxy(1, n + 1, GOTO_MSG);
         line.display();
         cprintf("%*s", out_width() - line.length(), "");
-        // move cursor back in case of prompts
-        cgotoxy(line.length() + 1, n + 1, GOTO_MSG);
+    }
+
+    // Place cursor at end of last non-empty line to handle prompts.
+    // TODO: might get rid of this by clearing the whole window when writing,
+    //       and then just writing the actual non-empty lines.
+    void place_cursor() const
+    {
+        size_t i;
+        for (i = lines.size() - 1; i >= 0 && lines[i].length() == 0; --i);
+        if (i >= 0)
+            cgotoxy(lines[i].length() + 1, i + 1, GOTO_MSG);
     }
 
     void scroll(int n)
@@ -255,11 +264,12 @@ public:
         lines.resize(out_height());
     }
 
-    // write to screen (without update)
+    // write to screen (without refresh)
     void show()
     {
         for (size_t i = 0; i < lines.size(); ++i)
             out_line(lines[i], i);
+        place_cursor();
         // TODO: maybe output a last line --more--
     }
 
