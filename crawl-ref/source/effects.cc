@@ -1374,7 +1374,7 @@ void _acquirement_determine_food(int& type_wanted, int& quantity,
     }
 }
 
-static int _acquirement_weapon_subtype()
+static int _acquirement_weapon_subtype(bool divine)
 {
     // Asking for a weapon is biased towards your skills.
     // First pick a skill, weighting towards those you have.
@@ -1418,7 +1418,20 @@ static int _acquirement_weapon_subtype()
         if (!acqweight)
             continue;
 
-        if (hands_reqd(item_considered, you.body_size()) >= HANDS_TWO) // HANDS_DOUBLE > HANDS_TWO
+        // HANDS_DOUBLE > HANDS_TWO
+        const bool two_handed = hands_reqd(item_considered, you.body_size()) >= HANDS_TWO;
+
+        // For non-Trog/Okawaru acquirements, give a boost to high-end items.
+        if (!divine && !is_range_weapon(item_considered))
+        {
+            int damage = property(item_considered, PWPN_DAMAGE);
+            if (!two_handed)
+                damage = damage * 3 / 2;
+            damage *= damage * damage;
+            acqweight *= damage / property(item_considered, PWPN_SPEED);
+        }
+
+        if (two_handed)
             acqweight = acqweight * dont_shield / want_shield;
         else
             acqweight = acqweight * want_shield / dont_shield;
@@ -1682,6 +1695,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
     do
     {
+        const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM);
         switch (class_wanted)
         {
         case OBJ_FOOD:
@@ -1689,14 +1703,9 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
             _acquirement_determine_food(type_wanted, quantity, already_has);
             break;
 
-        case OBJ_WEAPONS:  type_wanted = _acquirement_weapon_subtype();  break;
-        case OBJ_MISSILES: type_wanted = _acquirement_missile_subtype(); break;
-        case OBJ_ARMOUR:
-        {
-            const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM);
-            type_wanted = _acquirement_armour_subtype(divine);
-            break;
-        }
+        case OBJ_WEAPONS:    type_wanted = _acquirement_weapon_subtype(divine);  break;
+        case OBJ_MISSILES:   type_wanted = _acquirement_missile_subtype(); break;
+        case OBJ_ARMOUR:     type_wanted = _acquirement_armour_subtype(divine); break;
         case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype(); break;
         case OBJ_WANDS:      type_wanted = _acquirement_wand_subtype(); break;
         case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype(already_has);
