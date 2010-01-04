@@ -1696,43 +1696,10 @@ static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
 
     actor* agent = beam.agent();
 
-    if (agent->atype() == ACT_MONSTER)
+    if (dmg > 0 || beam.ench_power == AUTOMATIC_HIT
+                   && x_chance_in_y(90 - 3 * victim->armour_class(), 100))
     {
-        if (dmg > 0 || beam.ench_power == AUTOMATIC_HIT
-                       && x_chance_in_y(90 - 3 * victim->armour_class(), 100))
-        {
-            levels = 1 + random2(3);
-        }
-    }
-    else
-    {
-        if (beam.ench_power == AUTOMATIC_HIT
-            && x_chance_in_y(90 - 3 * victim->armour_class(), 100))
-        {
-            levels = 2;
-        }
-        else if (random2(dmg) > random2(victim->armour_class()))
-            levels = 1;
-
-        int num_success = 0;
-        if (YOU_KILL(beam.thrower))
-        {
-            const int skill_level = _item_to_skill_level(beam.item);
-            if (x_chance_in_y(skill_level + 25, 50))
-                num_success++;
-            if (x_chance_in_y(skill_level, 50))
-                num_success++;
-        }
-        else
-            num_success = 1;
-
-        if (num_success == 0)
-            return (false);
-        else
-        {
-            if (num_success == 2)
-                levels++;
-        }
+        levels = 1 + random2(3);
     }
 
     if (levels <= 0)
