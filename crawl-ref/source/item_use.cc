@@ -1674,16 +1674,6 @@ bool elemental_missile_beam(int launcher_brand, int ammo_brand)
     return (element != 0);
 }
 
-static int _item_to_skill_level(const item_def *item)
-{
-    skill_type type = range_skill(*item);
-
-    if (type == SK_SLINGS)
-        return (you.skills[type] + you.skills[SK_THROWING]);
-
-    return (2 * you.skills[type]);
-}
-
 static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
 {
     if (!victim->alive() || victim->res_poison() > 0)
