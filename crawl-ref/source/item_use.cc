@@ -2204,7 +2204,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (penetrating)
     {
         beam.range_funcs.push_back(_item_penetrates_victim);
-        beam.hit_verb = "passes through";
+        beam.hit_verb = "pierces through";
     }
     if (reaping)
         beam.hit_funcs.push_back(_reaping_hit_victim);
