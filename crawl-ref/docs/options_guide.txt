@@ -64,7 +64,7 @@ The contents of this text are:
                 easy_exit_menu, sort_menus
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
-                status_caption_colour, delay_message_clear,
+                status_caption_colour, clear_messages,
                 show_inventory_weights, show_gold_turns, show_beam,
                 item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_min_height, msg_max_height,
@@ -216,7 +216,7 @@ Note that, in the tutorial, some of your options settings may get
 overwritten to facilitate the explanations. This concerns the
 following options, and their enforced setting for tutorial games
 are as follows:
-   delay_message_clear = false
+   clear_messages      = true
    auto_list           = true
    weapon              = hand axe, for Berserkers
    book                = random, for Conjurers
@@ -1279,9 +1279,9 @@ status_caption_colour = brown
         Sets the colour that is used to display the captions in the status
         area (for instance the "Health:" in "Health: 10/10").
 
-delay_message_clear = true
-        Setting this option to false will cause messages to cleared
-        between player actions (default is false which will  delay the
+clear_messages = false
+        Setting this option to true will cause messages to cleared
+        between player actions (default is false which will delay the
         clearing of messages until the message space is full).
 
 show_inventory_weights = false
@@ -1335,8 +1335,8 @@ msg_max_height = 10
 
 messages_at_top = false
         Put the message window at the top of the screen. This moves
-        the last message close to the center of the view in conjunction
-        with delay_message_clear.
+        the last message close to the center of the view when not
+        using clear_messages=true.
 
 mlist_allow_alternate_layout = false
         Display the monster list wherever Crawl may find space on

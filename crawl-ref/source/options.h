@@ -148,7 +148,7 @@ public:
     int         magic_point_warning;    // percentage mp for danger warning
     char        race;            // preselected race
     char        cls;             // preselected class
-    bool        delay_message_clear;    // avoid clearing messages each turn
+    bool        clear_messages;   // clear messages each turn
     unsigned    friend_brand;     // Attribute for branding friendly monsters
     unsigned    neutral_brand;    // Attribute for branding neutral monsters
     bool        no_dark_brand;    // Attribute for branding friendly monsters

@@ -718,7 +718,7 @@ void game_options::reset_options()
     // [ds] Grumble grumble.
     auto_list              = true;
 
-    delay_message_clear    = true;
+    clear_messages         = false;
     pickup_dropped         = false;
     pickup_thrown          = true;
 
@@ -2483,7 +2483,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(note_skill_max);
     else BOOL_OPTION(note_all_spells);
     else BOOL_OPTION(note_xom_effects);
-    else BOOL_OPTION(delay_message_clear);
+    else BOOL_OPTION(clear_messages);
     else if (key == "flush")
     {
         if (subkey == "failure")

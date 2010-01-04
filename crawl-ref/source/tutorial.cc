@@ -114,7 +114,7 @@ void init_tutorial_options()
     if (!Tutorial.tutorial_left)
         return;
 
-    Options.delay_message_clear = false;
+    Options.clear_messages = true;
     Options.auto_list = true;
 
 #ifdef USE_TILE
