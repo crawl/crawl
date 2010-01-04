@@ -1893,25 +1893,7 @@ std::string get_linebreak_string(const std::string& s, int maxcol)
 // prints it into the given message channel.
 void print_formatted_paragraph(std::string &s, msg_channel_type channel)
 {
-    int maxcol = get_number_of_cols();
-    if (Options.delay_message_clear)
-        --maxcol;
-
-    linebreak_string2(s,maxcol);
-    std::string text;
-
-    size_t loc = 0, oldloc = 0;
-    while ( loc < s.size() )
-    {
-        if (s[loc] == '\n')
-        {
-            text = s.substr(oldloc, loc-oldloc);
-            mpr( text, channel );
-            oldloc = ++loc;
-        }
-        loc++;
-    }
-    mpr( s.substr(oldloc, loc-oldloc), channel );
+    mpr(s, channel);
 }
 
 bool formatted_scroller::jump_to( int i )
