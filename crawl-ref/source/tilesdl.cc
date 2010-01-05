@@ -1209,12 +1209,6 @@ void TilesFramework::clrscr()
     cgotoxy(1,1);
 }
 
-void TilesFramework::clear_message_window()
-{
-    m_region_msg->clear();
-    m_active_layer = LAYER_NORMAL;
-}
-
 int TilesFramework::get_number_of_lines()
 {
     return m_region_crt->my;

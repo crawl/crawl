@@ -97,7 +97,6 @@ public:
     GotoRegion get_cursor_region() const;
     int get_number_of_lines();
     int get_number_of_cols();
-    void clear_message_window();
 
     void update_minimap(int gx, int gy);
     void update_minimap(int gx, int gy, map_feature f);
