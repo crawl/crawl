@@ -1396,7 +1396,8 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
         // Adjust handedness for size only for non-whip melee weapons.
         if (!is_range_weapon(item)
             && item.sub_type != WPN_WHIP
-            && item.sub_type != WPN_DEMON_WHIP)
+            && item.sub_type != WPN_DEMON_WHIP
+            && item.sub_type != WPN_HOLY_SCOURGE)
         {
             fit = cmp_weapon_size(item, size);
 
