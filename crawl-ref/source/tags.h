@@ -47,8 +47,8 @@ enum tag_major_version
 enum tag_minor_version
 {
     TAG_MINOR_RESET     = 0, // Minor tags were reset
-    TAG_MINOR_BEHELD16  = 1, // Use correct type sizes for beholders
-    TAG_MINOR_VERSION   = 1  // Current version.  (Keep equal to max.)
+    TAG_MINOR_BEHELD16  = 2, // Use correct type sizes for beholders
+    TAG_MINOR_VERSION   = 2  // Current version.  (Keep equal to max.)
 };
 
 struct enum_info
