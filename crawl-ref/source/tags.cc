@@ -1646,10 +1646,6 @@ static void tag_read_you_items(reader &th, char minorVersion)
     for (j = 0; j < count_s; ++j)
         you.seen_spell[j] = unmarshallByte(th);
 
-#if (TAG_MAJOR_VERSION == 14)
-if (th.getMinorVersion() >= 1)
-{
-#endif
     count_s = unmarshallShort(th);
     if (count_s > NUM_WEAPONS)
         count_s = NUM_WEAPONS;
@@ -1661,10 +1657,6 @@ if (th.getMinorVersion() >= 1)
         count_s = NUM_ARMOURS;
     for (j = 0; j < count_s; ++j)
         you.seen_armour[j] = unmarshallLong(th);
-#if (TAG_MAJOR_VERSION == 14)
-}
-#endif
-
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)
