@@ -1655,17 +1655,20 @@ static void tag_read_you_items(reader &th, char minorVersion)
     for (j = 0; j < count_s; ++j)
         you.seen_spell[j] = unmarshallByte(th);
 
-    count_s = unmarshallShort(th);
-    if (count_s > NUM_WEAPONS)
-        count_s = NUM_WEAPONS;
-    for (j = 0; j < count_s; ++j)
-        you.seen_weapon[j] = unmarshallLong(th);
+    if (minorVersion >= TAG_MINOR_SEEN_WEAPONS_ARMOUR)
+    {
+        count_s = unmarshallShort(th);
+        if (count_s > NUM_WEAPONS)
+            count_s = NUM_WEAPONS;
+        for (j = 0; j < count_s; ++j)
+            you.seen_weapon[j] = unmarshallLong(th);
 
-    count_s = unmarshallShort(th);
-    if (count_s > NUM_ARMOURS)
-        count_s = NUM_ARMOURS;
-    for (j = 0; j < count_s; ++j)
-        you.seen_armour[j] = unmarshallLong(th);
+        count_s = unmarshallShort(th);
+        if (count_s > NUM_ARMOURS)
+            count_s = NUM_ARMOURS;
+        for (j = 0; j < count_s; ++j)
+            you.seen_armour[j] = unmarshallLong(th);
+    }
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)

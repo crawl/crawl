@@ -47,6 +47,7 @@ enum tag_major_version
 enum tag_minor_version
 {
     TAG_MINOR_RESET     = 0, // Minor tags were reset
+    TAG_MINOR_SEEN_WEAPONS_ARMOUR = 1,
     TAG_MINOR_BEHELD16  = 2, // Use correct type sizes for beholders
     TAG_MINOR_VERSION   = 2  // Current version.  (Keep equal to max.)
 };
