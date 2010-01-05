@@ -1113,9 +1113,9 @@ static void tag_construct_you(writer &th)
     // be recalculated on game start.
 
     // List of currently beholding monsters (usually empty).
-    marshallByte(th, you.beholders.size());
+    marshallShort(th, you.beholders.size());
     for (unsigned int k = 0; k < you.beholders.size(); k++)
-         marshallByte(th, you.beholders[k]);
+         marshallShort(th, you.beholders[k]);
 
     marshallByte(th, you.piety_hysteresis);
 
@@ -1165,8 +1165,8 @@ static void tag_construct_you_items(writer &th)
             marshallByte(th, static_cast<char>(identy[i][j]));
 
     // how many unique items?
-    marshallByte(th, 50);
-    for (j = 0; j < 50; ++j)
+    marshallByte(th, MAX_UNRANDARTS);
+    for (j = 0; j < MAX_UNRANDARTS; ++j)
         marshallByte(th,you.unique_items[j]);
 
     marshallByte(th, NUM_FIXED_BOOKS);
@@ -1547,9 +1547,18 @@ static void tag_read_you(reader &th, char minorVersion)
     you.water_in_sight = -1;
 
     // List of currently beholding monsters (usually empty).
-    count_c = unmarshallByte(th);
-    for (i = 0; i < count_c; i++)
-         you.beholders.push_back(unmarshallByte(th));
+    if (minorVersion >= TAG_MINOR_BEHELD16)
+    {
+        count_c = unmarshallShort(th);
+        for (i = 0; i < count_c; i++)
+             you.beholders.push_back(unmarshallShort(th));
+    }
+    else
+    {
+        count_c = unmarshallByte(th);
+        for (i = 0; i < count_c; i++)
+             you.beholders.push_back(unmarshallByte(th));
+    }
 
     you.piety_hysteresis = unmarshallByte(th);
 
