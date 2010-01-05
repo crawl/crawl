@@ -149,8 +149,10 @@ void travel_exclude::set_los()
 bool travel_exclude::affects(const coord_def& p) const
 {
     if (!uptodate)
+    {
         mprf(MSGCH_ERROR, "exclusion not up-to-date: e (%d,%d) p (%d,%d)",
              pos.x, pos.y, p.x, p.y);
+    }
     if (radius == 0)
         return (p == pos);
     else if (radius == 1)
@@ -219,10 +221,8 @@ void exclude_set::add_exclude_points(travel_exclude& ex)
         ex.los.update();
 
     for (radius_iterator ri(ex.pos, ex.radius, C_ROUND); ri; ++ri)
-    {
         if (ex.affects(*ri))
             exclude_points.insert(*ri);
-    }
 }
 
 void exclude_set::update_excluded_points()
@@ -367,7 +367,7 @@ static void _exclude_update()
         LevelInfo &li = travel_cache.get_level_info(level_id::current());
         li.update();
     }
-    set_level_exclusion_annotation(get_exclusion_desc());
+    set_level_exclusion_annotation(curr_excludes.get_exclusion_desc());
 }
 
 static void _exclude_update(const coord_def &p)
@@ -488,12 +488,12 @@ void maybe_remove_autoexclusion(const coord_def &p)
 }
 
 // Lists all exclusions on the current level.
-std::string get_exclusion_desc()
+std::string exclude_set::get_exclusion_desc()
 {
     std::vector<std::string> monsters;
     int count_other = 0;
-    exclude_set::iterator it;
-    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
+    for (exclmap::iterator it = exclude_roots.begin();
+         it != exclude_roots.end(); ++it)
     {
         travel_exclude &ex = it->second;
         if (!invalid_monster_type(ex.mon))
