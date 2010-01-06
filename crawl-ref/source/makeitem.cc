@@ -2018,8 +2018,9 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     // Reduced quantity if special.
     if (item.sub_type == MI_JAVELIN
-        || get_ammo_brand( item ) == SPMSL_CURARE
-        || get_ammo_brand( item ) == SPMSL_RETURNING)
+        || get_ammo_brand( item ) == SPMSL_RETURNING
+        || (item.sub_type == MI_NEEDLE
+            && get_ammo_brand( item ) != SPMSL_POISONED))
     {
         item.quantity = random_range(2, 8);
     }
@@ -3291,6 +3292,27 @@ int items(int allow_uniques,       // not just true-false,
     // Note that item might be invalidated now, since p could have changed.
     ASSERT(mitm[p].is_valid());
     return (p);
+}
+
+void reroll_brand(item_def &item, int item_level)
+{
+    ASSERT(!is_artefact(item));
+    switch(item.base_type)
+    {
+    case OBJ_WEAPONS:
+        item.special = _determine_weapon_brand(item, item_level);
+        break;
+    case OBJ_MISSILES:
+        item.special = _determine_missile_brand(item, item_level);
+        break;
+    case OBJ_ARMOUR:
+        // Robe of the Archmagi has an ugly hack of unknown purpose,
+        // as one of side effects it won't ever generate here.
+        item.special = _determine_armour_ego(item, OBJ_ARMOUR, item_level);
+        break;
+    default:
+        ASSERT(!"can't reroll brands of this type");
+    }
 }
 
 static int _roll_rod_enchant(int item_level)

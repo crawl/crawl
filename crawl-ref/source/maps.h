@@ -17,6 +17,10 @@ class map_def;
 struct map_file_place;
 struct vault_placement;
 
+bool map_safe_vault_place(const map_def &md,
+                          const coord_def &c,
+                          const coord_def &size);
+
 int vault_main(vault_placement &vp, const map_def *vault,
                bool check_place = false);
 

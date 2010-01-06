@@ -1674,16 +1674,6 @@ bool elemental_missile_beam(int launcher_brand, int ammo_brand)
     return (element != 0);
 }
 
-static int _item_to_skill_level(const item_def *item)
-{
-    skill_type type = range_skill(*item);
-
-    if (type == SK_SLINGS)
-        return (you.skills[type] + you.skills[SK_THROWING]);
-
-    return (2 * you.skills[type]);
-}
-
 static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
 {
     if (!victim->alive() || victim->res_poison() > 0)
@@ -3334,7 +3324,6 @@ void jewellery_wear_effects(item_def &item)
     case RING_SUSTENANCE:
     case RING_SLAYING:
     case RING_WIZARDRY:
-    case RING_REGENERATION:
     case RING_TELEPORT_CONTROL:
         break;
 
@@ -3491,6 +3480,13 @@ void jewellery_wear_effects(item_def &item)
                 mpr("Now linked to your health, your magic stops regenerating.");
             ident = ID_KNOWN_TYPE;
         }
+        break;
+
+    case RING_REGENERATION:
+        // To be exact, bloodless vampires should get the id only after they
+        // drink anything.  Not worth complicating the code, IMHO. [1KB]
+        if (player_mutation_level(MUT_SLOW_HEALING) < 3)
+            ident = ID_KNOWN_TYPE;
         break;
 
     }

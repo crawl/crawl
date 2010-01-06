@@ -68,7 +68,7 @@ void dluaopen_file(lua_State *ls);
 void dluaopen_mapgrd(lua_State *ls);
 void dluaopen_monsters(lua_State *ls);
 void dluaopen_you(lua_State *ls);
-
+void dluaopen_dgn(lua_State *ls);
 
 /*
  * Some shared helper functions.

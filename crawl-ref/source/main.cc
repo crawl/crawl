@@ -3436,7 +3436,7 @@ static void _open_door(coord_def move, bool check_confused)
             if (!door_open_verb.empty())
                verb = door_open_verb.c_str();
             else
-               verb = "You open the %s%s";
+               verb = "You open the %s%s.";
         }
 
         mprf(verb, adj, noun);
@@ -3646,14 +3646,14 @@ static void _close_door(coord_def move)
                 if (!door_airborne.empty())
                     verb = door_airborne.c_str();
                 else
-                    verb = "You reach down and cloose the %s%s.";
+                    verb = "You reach down and close the %s%s.";
             }
             else
             {
                 if (!door_close_verb.empty())
                    verb = door_close_verb.c_str();
                 else
-                    verb = "You close the %s%s";
+                    verb = "You close the %s%s.";
             }
 
             mprf(verb, adj, noun);
@@ -3792,7 +3792,6 @@ static bool _initialise(void)
         tiles.initialise_items();
 #endif
         Options.show_more_prompt = false;
-        makeitem_tests();
         crawl_tests::run_tests(true);
         // Superfluous, just to make it clear that this is the end of
         // the line.

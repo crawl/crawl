@@ -1374,7 +1374,7 @@ void _acquirement_determine_food(int& type_wanted, int& quantity,
     }
 }
 
-static int _acquirement_weapon_subtype()
+static int _acquirement_weapon_subtype(bool divine)
 {
     // Asking for a weapon is biased towards your skills.
     // First pick a skill, weighting towards those you have.
@@ -1418,10 +1418,26 @@ static int _acquirement_weapon_subtype()
         if (!acqweight)
             continue;
 
-        if (hands_reqd(item_considered, you.body_size()) >= HANDS_TWO) // HANDS_DOUBLE > HANDS_TWO
+        // HANDS_DOUBLE > HANDS_TWO
+        const bool two_handed = hands_reqd(item_considered, you.body_size()) >= HANDS_TWO;
+
+        // For non-Trog/Okawaru acquirements, give a boost to high-end items.
+        if (!divine && !is_range_weapon(item_considered))
+        {
+            int damage = property(item_considered, PWPN_DAMAGE);
+            if (!two_handed)
+                damage = damage * 3 / 2;
+            damage *= damage * damage;
+            acqweight *= damage / property(item_considered, PWPN_SPEED);
+        }
+
+        if (two_handed)
             acqweight = acqweight * dont_shield / want_shield;
         else
             acqweight = acqweight * want_shield / dont_shield;
+
+        if (!you.seen_weapon[i])
+            acqweight *= 5; // strong emphasis on type variety, brands go only second
 
         int wskill = range_skill(OBJ_WEAPONS, i);
         if (wskill == SK_THROWING)
@@ -1679,6 +1695,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
     do
     {
+        const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM);
         switch (class_wanted)
         {
         case OBJ_FOOD:
@@ -1686,14 +1703,9 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
             _acquirement_determine_food(type_wanted, quantity, already_has);
             break;
 
-        case OBJ_WEAPONS:  type_wanted = _acquirement_weapon_subtype();  break;
-        case OBJ_MISSILES: type_wanted = _acquirement_missile_subtype(); break;
-        case OBJ_ARMOUR:
-        {
-            const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM);
-            type_wanted = _acquirement_armour_subtype(divine);
-            break;
-        }
+        case OBJ_WEAPONS:    type_wanted = _acquirement_weapon_subtype(divine);  break;
+        case OBJ_MISSILES:   type_wanted = _acquirement_missile_subtype(); break;
+        case OBJ_ARMOUR:     type_wanted = _acquirement_armour_subtype(divine); break;
         case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype(); break;
         case OBJ_WANDS:      type_wanted = _acquirement_wand_subtype(); break;
         case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype(already_has);
@@ -2022,6 +2034,18 @@ int acquirement_create_item(object_class_type class_wanted,
             continue;
 
         item_def &doodad(mitm[thing_created]);
+
+        // Try to not generate brands that were already seen, although unlike
+        // jewelry and books, this is not absolute.
+        while (!is_artefact(doodad)
+               && (doodad.base_type == OBJ_WEAPONS
+                     && you.seen_weapon[doodad.sub_type] & (1<<get_weapon_brand(doodad))
+                   || doodad.base_type == OBJ_ARMOUR
+                     && you.seen_armour[doodad.sub_type] & (1<<get_weapon_brand(doodad)))
+               && !one_chance_in(5))
+        {
+            reroll_brand(doodad, MAKE_GOOD_ITEM);
+        }
 
         // For plain armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.

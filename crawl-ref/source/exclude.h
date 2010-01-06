@@ -18,7 +18,6 @@ void set_exclude(const coord_def &p, int radius = LOS_RADIUS,
                  bool autoexcl = false, bool vaultexcl = false,
                  bool defer_updates = false);
 void maybe_remove_autoexclusion(const coord_def &p);
-std::string get_exclusion_desc();
 void clear_excludes();
 
 class travel_exclude
@@ -73,6 +72,7 @@ public:
 
     bool is_excluded(const coord_def &p) const;
     bool is_exclude_root(const coord_def &p) const;
+    std::string get_exclusion_desc();
 
     size_t size()  const;
     bool   empty() const;

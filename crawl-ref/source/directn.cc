@@ -610,6 +610,7 @@ void full_describe_view()
         desc_menu.set_maxpagesize(52);
     }
 
+    // Start with hotkey 'a' and count from there.
     menu_letter hotkey;
     // Build menu entries for monsters.
     if (!list_mons.empty())
@@ -647,7 +648,7 @@ void full_describe_view()
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new MonsterMenuEntry(prefix+str, mi->m_mon, hotkey);
+                    me = new MonsterMenuEntry(prefix+str, mi->m_mon, hotkey++);
 #ifndef USE_TILE
                 else
                 {
@@ -671,7 +672,7 @@ void full_describe_view()
         desc_menu.sort_menu(all_items, cond);
 
         desc_menu.add_entry( new MenuEntry( "Items", MEL_SUBTITLE ) );
-        for (unsigned int i = 0; i < all_items.size(); ++i, ++hotkey)
+        for (unsigned int i = 0; i < all_items.size(); ++i, hotkey++)
         {
             InvEntry *me = all_items[i];
 #ifndef USE_TILE
@@ -689,7 +690,7 @@ void full_describe_view()
     if (!list_features.empty())
     {
         desc_menu.add_entry( new MenuEntry("Features", MEL_SUBTITLE) );
-        for (unsigned int i = 0; i < list_features.size(); ++i, ++hotkey)
+        for (unsigned int i = 0; i < list_features.size(); ++i, hotkey++)
         {
             const coord_def c = list_features[i];
             std::string desc = "";

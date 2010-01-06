@@ -1535,7 +1535,8 @@ static spell_type _choose_mem_spell(spell_list &spells,
     std::string more_str = make_stringf("<lightgreen>%d spell level%s left"
                                         "<lightgreen>",
                                         player_spell_levels(),
-                                        player_spell_levels() > 1 ? "s" : "");
+                                        (player_spell_levels() > 1 
+                                         || player_spell_levels() == 0) ? "s" : "");
 
     if (num_unreadable > 0)
     {
