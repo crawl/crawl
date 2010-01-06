@@ -1415,6 +1415,18 @@ int tile_known_weapon_brand(const item_def item)
             return TILE_BRAND_CHAOS;
         case SPMSL_REAPING:
             return TILE_BRAND_REAPING;
+        case SPMSL_ELECTRIC:
+            return TILE_BRAND_ELECTRIC;
+        case SPMSL_CONFUSION:
+            return TILE_BRAND_CONFUSION;
+        case SPMSL_PARALYSIS:
+            return TILE_BRAND_PARALYSIS;
+        case SPMSL_SLOW:
+            return TILE_BRAND_SLOWING;
+        case SPMSL_SICKNESS:
+            return TILE_BRAND_SICKNESS;
+        case SPMSL_RAGE:
+            return TILE_BRAND_RAGE;
         default:
             break;
         }

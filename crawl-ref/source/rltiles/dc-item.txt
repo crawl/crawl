@@ -156,12 +156,17 @@ i-distortion BRAND_DISTORTION
 i-reaching BRAND_REACHING
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
-# confuse
+i-confusion BRAND_CONFUSION
 # penetration
 i-reaping BRAND_REAPING
-# missile-only brands
+# missile-only brands, order doesn't matter
 i-venom BRAND_POISONED
 i-curare BRAND_CURARE
+i-electrocution BRAND_ELECTRIC
+i-sickness BRAND_SICKNESS
+i-slowing BRAND_SLOWING
+i-paralysis BRAND_PARALYSIS
+i-berserk-rage BRAND_RAGE
 %rim 1
 %shrink 1
 %sdir item/weapon
