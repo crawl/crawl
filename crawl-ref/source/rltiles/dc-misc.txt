@@ -69,6 +69,7 @@ cursor_green CURSOR3
 tutorial_cursor TUTORIAL_CURSOR
 %rim 1
 heart HEART
+good_neutral GOOD_NEUTRAL
 neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
 poison POISON

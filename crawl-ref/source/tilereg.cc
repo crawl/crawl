@@ -918,17 +918,22 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
         m_buf_main.add(TILE_HEART, x, y);
         status_shift += 10;
     }
-    else if ((fg & TILE_FLAG_MAY_STAB) == TILE_FLAG_NEUTRAL)
+    else if (fg & TILE_FLAG_GD_NEUTRAL)
+    {
+        m_buf_main.add(TILE_GOOD_NEUTRAL, x, y);
+        status_shift += 8;
+    }
+    else if (fg & TILE_FLAG_NEUTRAL)
     {
         m_buf_main.add(TILE_NEUTRAL, x, y);
         status_shift += 8;
     }
-    else if ((fg & TILE_FLAG_MAY_STAB) == TILE_FLAG_STAB)
+    else if (fg & TILE_FLAG_STAB)
     {
         m_buf_main.add(TILE_STAB_BRAND, x, y);
         status_shift += 8;
     }
-    else if ((fg & TILE_FLAG_MAY_STAB) == TILE_FLAG_MAY_STAB)
+    else if (fg & TILE_FLAG_MAY_STAB)
     {
         m_buf_main.add(TILE_MAY_STAB_BRAND, x, y);
         status_shift += 5;
