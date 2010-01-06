@@ -858,6 +858,7 @@ void game_options::reset_options()
     tile_player_col      = MAP_WHITE;
     tile_monster_col     = MAP_RED;
     tile_neutral_col     = MAP_RED;
+    tile_peaceful_col    = MAP_LTRED;
     tile_friendly_col    = MAP_LTRED;
     tile_plant_col       = MAP_DKGREEN;
     tile_item_col        = MAP_GREEN;

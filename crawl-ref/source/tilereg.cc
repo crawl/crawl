@@ -2947,9 +2947,10 @@ void MapRegion::init_colours()
     m_colours[MF_MAP_WALL]      = (map_colour)Options.tile_mapped_wall_col;
     m_colours[MF_DOOR]          = (map_colour)Options.tile_door_col;
     m_colours[MF_ITEM]          = (map_colour)Options.tile_item_col;
-    m_colours[MF_MONS_HOSTILE]  = (map_colour)Options.tile_monster_col;
     m_colours[MF_MONS_FRIENDLY] = (map_colour)Options.tile_friendly_col;
+    m_colours[MF_MONS_PEACEFUL] = (map_colour)Options.tile_peaceful_col;
     m_colours[MF_MONS_NEUTRAL]  = (map_colour)Options.tile_neutral_col;
+    m_colours[MF_MONS_HOSTILE]  = (map_colour)Options.tile_monster_col;
     m_colours[MF_MONS_NO_EXP]   = (map_colour)Options.tile_plant_col;
     m_colours[MF_STAIR_UP]      = (map_colour)Options.tile_upstairs_col;
     m_colours[MF_STAIR_DOWN]    = (map_colour)Options.tile_downstairs_col;

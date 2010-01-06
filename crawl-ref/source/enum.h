@@ -1555,23 +1555,24 @@ enum map_feature
     MF_MAP_WALL,
     MF_DOOR,            //  5
     MF_ITEM,
-    MF_MONS_HOSTILE,
     MF_MONS_FRIENDLY,
+    MF_MONS_PEACEFUL,
     MF_MONS_NEUTRAL,
-    MF_MONS_NO_EXP,     // 10
+    MF_MONS_HOSTILE,    // 10
+    MF_MONS_NO_EXP,
     MF_STAIR_UP,
     MF_STAIR_DOWN,
     MF_STAIR_BRANCH,
-    MF_FEATURE,
-    MF_WATER,           // 15
+    MF_FEATURE,         // 15
+    MF_WATER,
     MF_LAVA,
     MF_TRAP,
     MF_EXCL_ROOT,
-    MF_EXCL,
-    MF_PLAYER,          // 20
+    MF_EXCL,            // 20
+    MF_PLAYER,
     MF_MAX,
 
-    MF_SKIP             // 22
+    MF_SKIP             // 23
 };
 
 enum menu_type
