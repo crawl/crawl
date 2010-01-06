@@ -33,6 +33,7 @@
 #include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"
+#include "player.h"
 #include "religion.h"
 #include "stash.h"
 #include "state.h"
@@ -58,16 +59,16 @@ struct message_item
     int                 param;          // param for channel (god, enchantment)
     std::string         text;           // text of message (tagged string...)
     int                 repeats;
-    bool                cleared_after;  // XXX: this may not stay
+    long                turn;
 
     message_item() : channel(NUM_MESSAGE_CHANNELS), param(0),
-                     text(""), repeats(0), cleared_after(false)
+                     text(""), repeats(0), turn(-1)
     {
     }
 
     message_item(std::string msg, msg_channel_type chan, int par)
         : channel(chan), param(par), text(msg), repeats(1),
-          cleared_after(false)
+          turn(you.num_turns)
     {
     }
 
@@ -320,11 +321,6 @@ public:
         msgs.push_back(prev_msg);
         msgwin.add_item(prev_msg.text);
         prev_msg = message_item();
-    }
-
-    void clear_after_last()
-    {
-        msgs[-1].cleared_after = true;
     }
 
     const store_t& get_store()
