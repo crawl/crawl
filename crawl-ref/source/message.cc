@@ -118,7 +118,6 @@ class circ_vec
 {
     T data[SIZE];
 
-    int start; // first filled index
     int end;   // first unfilled index
 
     static void inc(int* index)
@@ -127,37 +126,28 @@ class circ_vec
         *index = _mod(*index + 1, SIZE);
     }
 
-    bool full() const
-    {
-        // Wasting one slot so we don't need more
-        // than "start" and "end".
-        return (size() >= SIZE - 1);
-    }
-
 public:
-    circ_vec() : start(0), end(0) {}
+    circ_vec() : end(0) {}
 
     int size() const
     {
-        return _mod(end - start, SIZE);
+        return SIZE;
     }
 
     T& operator[](int i)
     {
         ASSERT(_mod(i, SIZE) < size());
-        return data[_mod(start + i, SIZE)];
+        return data[_mod(end + i, SIZE)];
     }
 
     const T& operator[](int i) const
     {
         ASSERT(_mod(i, SIZE) < size());
-        return data[_mod(start + i, SIZE)];
+        return data[_mod(end + i, SIZE)];
     }
 
     void push_back(const T& item)
     {
-        if (full())
-            inc(&start);
         data[end] = item;
         inc(&end);
     }
@@ -178,6 +168,7 @@ class message_window
 {
     int next_line;
     std::vector<formatted_string> lines;
+    bool use_first_col;
 
     int out_height() const
     {
@@ -187,13 +178,14 @@ class message_window
 
     int out_width() const
     {
-        // TODO: -1 if we want the first column for -
-        return crawl_view.msgsz.x;
+        int w = crawl_view.msgsz.x;
+        if (use_first_col)
+            w--;
+        return w;
     }
 
     void out_line(const formatted_string& line, int n) const
     {
-        // TODO: x+1 if we want the first column clear
         cgotoxy(1, n + 1, GOTO_MSG);
         line.display();
         cprintf("%*s", out_width() - line.length(), "");
@@ -248,14 +240,14 @@ class message_window
 
 public:
     message_window()
-        : next_line(0)
+        : next_line(0), use_first_col(true)
     {
         clear(); // initialize this->lines
     }
 
     void resize()
     {
-        // XXX: broken
+        // XXX: broken (why?)
         lines.resize(out_height());
     }
 
@@ -274,12 +266,21 @@ public:
         // TODO: maybe output a last line --more--
     }
 
-    void add_item(std::string text)
+    void add_item(std::string text, char first_col = ' ')
     {
         std::vector<std::string> newlines = linebreak(text, out_width());
         make_space(newlines.size());
         for (size_t i = 0; i < newlines.size(); ++i)
-            add_line(formatted_string::parse_string(newlines[i]));
+        {
+            std::string fc = "";
+            if (use_first_col)
+            {
+                fc = " ";
+                if (i == 0)
+                    fc[0] = first_col;
+            }
+            add_line(formatted_string::parse_string(fc + newlines[i]));
+        }
         show();
     }
 };
@@ -319,7 +320,8 @@ public:
         if (!prev_msg)
             return;
         msgs.push_back(prev_msg);
-        msgwin.add_item(prev_msg.text);
+        bool newturn = (prev_msg.turn > msgs[-2].turn);
+        msgwin.add_item(prev_msg.text, newturn ? '-' : ' ');
         prev_msg = message_item();
     }
 
