@@ -3324,7 +3324,6 @@ void jewellery_wear_effects(item_def &item)
     case RING_SUSTENANCE:
     case RING_SLAYING:
     case RING_WIZARDRY:
-    case RING_REGENERATION:
     case RING_TELEPORT_CONTROL:
         break;
 
@@ -3481,6 +3480,13 @@ void jewellery_wear_effects(item_def &item)
                 mpr("Now linked to your health, your magic stops regenerating.");
             ident = ID_KNOWN_TYPE;
         }
+        break;
+
+    case RING_REGENERATION:
+        // To be exact, bloodless vampires should get the id only after they
+        // drink anything.  Not worth complicating the code, IMHO. [1KB]
+        if (player_mutation_level(MUT_SLOW_HEALING) < 3)
+            ident = ID_KNOWN_TYPE;
         break;
 
     }
