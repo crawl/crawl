@@ -2172,18 +2172,22 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (blessed)
         beam.damage_funcs.push_back(_blessed_hit_victim);
 
-    if (paralysis)
-        beam.hit_funcs.push_back(_paralysis_hit_victim);
-    if (slow)
-        beam.hit_funcs.push_back(_slow_hit_victim);
-    if (sleep)
-        beam.hit_funcs.push_back(_sleep_hit_victim);
-    if (confusion)
-        beam.hit_funcs.push_back(_confusion_hit_victim);
-    if (sickness)
-        beam.hit_funcs.push_back(_sickness_hit_victim);
-    if (rage)
-        beam.hit_funcs.push_back(_rage_hit_victim);
+    // New needle brands have no affect when thrown without launcher.
+    if (launcher != NULL)
+    {
+        if (paralysis)
+            beam.hit_funcs.push_back(_paralysis_hit_victim);
+        if (slow)
+            beam.hit_funcs.push_back(_slow_hit_victim);
+        if (sleep)
+            beam.hit_funcs.push_back(_sleep_hit_victim);
+        if (confusion)
+            beam.hit_funcs.push_back(_confusion_hit_victim);
+        if (sickness)
+            beam.hit_funcs.push_back(_sickness_hit_victim);
+        if (rage)
+            beam.hit_funcs.push_back(_rage_hit_victim);
+    }
 
     if (reaping && ammo.special != SPMSL_REAPING)
     {
