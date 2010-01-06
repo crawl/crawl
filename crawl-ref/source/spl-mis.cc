@@ -237,14 +237,16 @@ void MiscastEffect::init()
     // Explosion stuff.
     beam.is_explosion = true;
 
+    // [ds] Don't attribute the beam's cause to the actor, because the
+    // death message will name the actor anyway.
     if (cause.empty())
-        cause = get_default_cause();
+        cause = get_default_cause(false);
     beam.aux_source  = cause;
     beam.beam_source = kill_source;
     beam.thrower     = kt;
 }
 
-std::string MiscastEffect::get_default_cause()
+std::string MiscastEffect::get_default_cause(bool attribute_to_user) const
 {
     // This is only for true miscasts, which means both a spell and that
     // the source of the miscast is the same as the target of the miscast.
@@ -255,7 +257,7 @@ std::string MiscastEffect::get_default_cause()
     if (source == NON_MONSTER)
     {
         ASSERT(target->atype() == ACT_PLAYER);
-        std::string str = "your miscasting ";
+        std::string str = "miscasting ";
         str += spell_title(spell);
         return str;
     }
@@ -263,13 +265,17 @@ std::string MiscastEffect::get_default_cause()
     ASSERT(act_source->atype() == ACT_MONSTER);
     ASSERT(act_source == target);
 
-    if (you.can_see(act_source))
+    if (attribute_to_user)
     {
-        return apostrophise(source_as_monster()->base_name(DESC_PLAIN))
-            + " spell miscasting";
+        return (std::string(you.can_see(act_source)?
+                            act_source->name(DESC_NOCAP_A)
+                            : "something")
+                + " miscasting " + spell_title(spell));
     }
     else
-        return "something's spell miscasting";
+    {
+        return std::string("miscast of ") + spell_title(spell);
+    }
 }
 
 bool MiscastEffect::neither_end_silenced()
@@ -711,7 +717,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
                                       : GOD_NO_GOD;
 
     if (cause.empty())
-        cause = get_default_cause();
+        cause = get_default_cause(true);
     mgen_data data = mgen_data::hostile_at(what, cause, alert,
                                            abj_deg, 0, target->pos(), 0, god);
 
