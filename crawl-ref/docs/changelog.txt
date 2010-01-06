@@ -57,7 +57,7 @@ Items
 * Removed hand crossbows and Darts skill.
 * Fixed occasional permanent stat loss/gain with stat-modifying equipment.
 * Fixed wall-stopped item beams getting two chances to hit their target.
-* Added scroll of silence,
+* Added scroll of silence.
 * Added potions of brilliance and agility.
 * Added shields of reflection.
 * New missile materials: silver, steel.
@@ -165,7 +165,7 @@ Interface
 * New lua file autofight.lua which allows auto-attacking of the nearest enemy.
 * Abort some teleportation attempts with -TELE without losing the turn.
 * Food and potions are never autoassigned to slots 'e' and 'y', respectively.
-* Vampire's inactive mutations are coloured darkgrey and/or bracketed.
+* Vampires' inactive mutations are coloured darkgrey and/or bracketed.
 * Added option explore_delay, which can be used to make the delay
   between auto-explore moves different from the delay between other
   types of travel moves.
