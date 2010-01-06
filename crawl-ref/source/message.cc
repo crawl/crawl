@@ -12,7 +12,6 @@
  *   - saving and restoring and dumping messages
  *   - filtering of messages for various purposes
  *   - implement Options.clear_messages
- *   - First column.
  *   - Handle resizing properly, in particular initial resize.
  *   - Optionally initialize message window from message history.
  *   - Get rid of print_formatted_paragraph.
@@ -231,11 +230,12 @@ class message_window
     {
     }
 
-    void add_line(const formatted_string& line)
+    void add_line(const formatted_string& line, bool inc)
     {
         resize(); // TODO: get rid of this
         lines[next_line] = line;
-        next_line++;
+        if (inc)
+            next_line++;
     }
 
 public:
@@ -266,7 +266,9 @@ public:
         // TODO: maybe output a last line --more--
     }
 
-    void add_item(std::string text, char first_col = ' ')
+    // temporary: to be overwritten with next item, e.g. new turn
+    //            leading dash or prompt without response
+    void add_item(std::string text, char first_col = ' ', bool temporary)
     {
         std::vector<std::string> newlines = linebreak(text, out_width());
         make_space(newlines.size());
@@ -279,7 +281,8 @@ public:
                 if (i == 0)
                     fc[0] = first_col;
             }
-            add_line(formatted_string::parse_string(fc + newlines[i]));
+            bool inc = !(temporary && i == newlines.size() - 1);
+            add_line(formatted_string::parse_string(fc + newlines[i]), inc);
         }
         show();
     }
@@ -321,7 +324,7 @@ public:
             return;
         msgs.push_back(prev_msg);
         bool newturn = (prev_msg.turn > msgs[-2].turn);
-        msgwin.add_item(prev_msg.text, newturn ? '-' : ' ');
+        msgwin.add_item(prev_msg.text, newturn ? '-' : ' ', false);
         prev_msg = message_item();
     }
 
