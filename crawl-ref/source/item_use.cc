@@ -1890,7 +1890,7 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
 int _blowgun_power_roll (bolt &beam)
 {
     actor* agent = beam.agent();
-    int base_power = 1;
+    int base_power = 0;
     int blowgun_base = 0;
 
     if (agent->atype() == ACT_MONSTER)
@@ -1908,10 +1908,43 @@ int _blowgun_power_roll (bolt &beam)
     return (base_power + blowgun_base);
 }
 
+bool _blowgun_check (bolt &beam, actor* victim, bool message = true)
+{
+    actor* agent = beam.agent();
+
+    if (agent->atype() == ACT_MONSTER)
+        return (true);
+
+    monsters* mons = static_cast<monsters*>(victim);
+
+    int skill = you.skills[SK_THROWING];
+    int enchantment = (you.weapon())->plus;
+
+    // You have a really minor chance of hitting with no skills or good
+    // enchants.
+    if (mons->hit_dice < 15 && random2(100) <= 2)
+        return (true);
+
+    int resist_roll = 2 + random2(4 + skill + enchantment);
+
+    dprf("Brand rolled %d against monster HD: %d.", resist_roll, mons->hit_dice);
+
+    if (resist_roll < mons->hit_dice)
+    {
+        simple_monster_message(mons, " resists!");
+        return (false);
+    }
+
+    return (true);
+}
+
 static bool _paralysis_hit_victim (bolt& beam, actor* victim, int dmg,
                                   int corpse)
 {
     if (beam.is_tracer)
+        return (false);
+
+    if (!_blowgun_check(beam, victim))
         return (false);
 
     int blowgun_power = _blowgun_power_roll(beam);
@@ -1925,6 +1958,9 @@ static bool _sleep_hit_victim (bolt& beam, actor* victim, int dmg,
     if (beam.is_tracer)
         return (false);
 
+    if (!_blowgun_check(beam, victim))
+        return (false);
+
     int blowgun_power = _blowgun_power_roll(beam);
     victim->put_to_sleep(beam.agent(), 5 + random2(blowgun_power));
     return (true);
@@ -1934,6 +1970,9 @@ static bool _confusion_hit_victim (bolt &beam, actor* victim, int dmg,
                                    int corpse)
 {
     if (beam.is_tracer)
+        return (false);
+
+    if (!_blowgun_check(beam, victim))
         return (false);
 
     int blowgun_power = _blowgun_power_roll(beam);
@@ -1947,6 +1986,9 @@ static bool _slow_hit_victim (bolt &beam, actor* victim, int dmg,
     if (beam.is_tracer)
         return (false);
 
+    if (!_blowgun_check(beam, victim))
+        return (false);
+
     int blowgun_power = _blowgun_power_roll(beam);
     victim->slow_down(beam.agent(), 5 + random2(blowgun_power));
     return (true);
@@ -1958,6 +2000,9 @@ static bool _sickness_hit_victim (bolt &beam, actor* victim, int dmg,
     if (beam.is_tracer)
         return (false);
 
+    if (!_blowgun_check(beam, victim))
+        return (false);
+
     int blowgun_power = _blowgun_power_roll(beam);
     victim->sicken(40 + random2(blowgun_power));
     return (true);
@@ -1967,6 +2012,9 @@ static bool _rage_hit_victim (bolt &beam, actor* victim, int dmg,
                                    int corpse)
 {
     if (beam.is_tracer)
+        return (false);
+
+    if (!_blowgun_check(beam, victim))
         return (false);
 
     victim->go_berserk(false);
