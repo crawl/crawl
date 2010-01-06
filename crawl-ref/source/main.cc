@@ -3646,7 +3646,7 @@ static void _close_door(coord_def move)
                 if (!door_airborne.empty())
                     verb = door_airborne.c_str();
                 else
-                    verb = "You reach down and cloose the %s%s.";
+                    verb = "You reach down and close the %s%s.";
             }
             else
             {
