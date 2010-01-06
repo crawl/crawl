@@ -3436,7 +3436,7 @@ static void _open_door(coord_def move, bool check_confused)
             if (!door_open_verb.empty())
                verb = door_open_verb.c_str();
             else
-               verb = "You open the %s%s";
+               verb = "You open the %s%s.";
         }
 
         mprf(verb, adj, noun);
@@ -3653,7 +3653,7 @@ static void _close_door(coord_def move)
                 if (!door_close_verb.empty())
                    verb = door_close_verb.c_str();
                 else
-                    verb = "You close the %s%s";
+                    verb = "You close the %s%s.";
             }
 
             mprf(verb, adj, noun);
