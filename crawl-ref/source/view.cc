@@ -949,7 +949,7 @@ void viewwindow(bool monster_updates, bool show_updates)
         flash_colour = _viewmap_flash_colour();
 
     const coord_def &tl = crawl_view.viewp;
-    const coord_def br = tl + crawl_view.viewsz - coord_def(1,1);
+    const coord_def br  = tl + crawl_view.viewsz - coord_def(1,1);
     int bufcount = 0;
     for (rectangle_iterator ri(tl, br); ri; ++ri, bufcount += 2)
     {
@@ -992,6 +992,14 @@ void viewwindow(bool monster_updates, bool show_updates)
                 buffy[bufcount + 1] |= TILE_FLAG_OOR;
 #endif
         }
+#ifdef USE_TILE
+        // Grey out grids that cannot be reached due to beholders.
+        else if (/*you.see_cell(gc) && grd(gc) >= DNGN_MINMOVE
+                 && */you.get_beholder(gc))
+        {
+            buffy[bufcount + 1] |= TILE_FLAG_OOR;
+        }
+#endif
     }
 
     // Leaving it this way because short flashes can occur in long ones,
