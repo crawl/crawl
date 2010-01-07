@@ -188,13 +188,13 @@ enum beam_type                  // beam[].flavour
     BEAM_MMISSILE,                //    and similarly irresistible things
     BEAM_FIRE,
     BEAM_COLD,
-    BEAM_WATER,
     BEAM_MAGIC,
     BEAM_ELECTRICITY,
     BEAM_POISON,
     BEAM_NEG,
     BEAM_ACID,
     BEAM_MIASMA,
+    BEAM_WATER,
 
     BEAM_SPORE,
     BEAM_POISON_ARROW,

@@ -4413,7 +4413,7 @@ void bolt::affect_player()
 
     range_used += range_used_on_hit(&you);
 
-    if (flavour == BEAM_WATER)
+    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
         water_hits_actor(&you);
 }
 
@@ -4782,7 +4782,7 @@ void bolt::monster_post_hit(monsters* mon, int dmg)
     else if (dmg)
         beogh_follower_convert(mon, true);
 
-    if (flavour == BEAM_WATER)
+    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
         water_hits_actor(mon);
 }
 
