@@ -275,7 +275,9 @@ void monster_info::to_string(int count, std::string& desc,
 
     if (count == 1)
     {
-        if (m_mon->berserk())
+        if (m_mon->frenzied())
+            out << " (frenzied)";
+        else if (m_mon->berserk())
             out << " (berserk)";
         else if (Options.verbose_monster_pane)
             out << _verbose_info(m_mon);

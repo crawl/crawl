@@ -1243,6 +1243,7 @@ enum enchant_type
     ENCH_SLOUCH,
     ENCH_SWIFT,
     ENCH_TIDE,
+    ENCH_INSANE,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.

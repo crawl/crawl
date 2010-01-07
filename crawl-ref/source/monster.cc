@@ -2731,6 +2731,37 @@ void monsters::attacking(actor * /* other */)
 {
 }
 
+// Sends a monster into a frenzy.
+void monsters::go_frenzy()
+{
+    if (!can_go_berserk())
+        return;
+
+    if (has_ench(ENCH_SLOW))
+    {
+        del_ench(ENCH_SLOW, true); // Give no additional message.
+        simple_monster_message(this,
+            make_stringf(" shakes off %s lethargy.",
+                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str()).c_str());
+    }
+    del_ench(ENCH_HASTE, true);
+    del_ench(ENCH_FATIGUE, true); // Give no additional message.
+
+    const int duration = 16 + random2avg(13, 2);
+
+    // store the attitude for later retrieval
+    props["old_attitude"] = short(attitude);
+
+    attitude = ATT_NEUTRAL;
+    add_ench(mon_enchant(ENCH_INSANE, 0, KC_OTHER, duration * 10));
+    add_ench(mon_enchant(ENCH_HASTE, 0, KC_OTHER, duration * 10));
+    add_ench(mon_enchant(ENCH_MIGHT, 0, KC_OTHER, duration * 10));
+
+    if (simple_monster_message(this, " flies into a frenzy!"))
+        // Xom likes monsters going insane.
+        xom_is_stimulated(friendly() ? 32 : 128);
+}
+
 void monsters::go_berserk(bool /* intentional */)
 {
     if (!can_go_berserk())
@@ -4087,6 +4118,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     // Check for slow/haste.
     switch (ench.ench)
     {
+    case ENCH_INSANE:
     case ENCH_BERSERK:
         // Inflate hp.
         scale_hp(2, 1);
@@ -4302,6 +4334,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_TIDE:
         shoals_release_tide(this);
         break;
+
+    case ENCH_INSANE:
+        attitude = static_cast<mon_attitude_type>(props["old_attitude"].get_short());
+        // deliberate fall through
 
     case ENCH_BERSERK:
         scale_hp(1, 2);
@@ -4641,6 +4677,7 @@ void monsters::timeout_enchantments(int levels)
             lose_ench_levels(i->second, levels);
             break;
 
+        case ENCH_INSANE:
         case ENCH_BERSERK:
             del_ench(i->first);
             del_ench(ENCH_HASTE, true);
@@ -4747,6 +4784,18 @@ void monsters::apply_enchantment(const mon_enchant &me)
     const int spd = 10;
     switch (me.ench)
     {
+    case ENCH_INSANE:
+        if (decay_enchantment(me))
+        {
+            simple_monster_message(this, " is no longer in an insane frenzy.");
+            del_ench(ENCH_HASTE, true);
+            del_ench(ENCH_MIGHT, true);
+            const int duration = random_range(70, 130);
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, KC_OTHER, duration));
+        }
+        break;
+
     case ENCH_BERSERK:
         if (decay_enchantment(me))
         {
@@ -5400,9 +5449,14 @@ bool monsters::can_go_berserk() const
     return (true);
 }
 
+bool monsters::frenzied() const
+{
+    return (has_ench(ENCH_INSANE));
+}
+
 bool monsters::berserk() const
 {
-    return (has_ench(ENCH_BERSERK));
+    return (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE));
 }
 
 bool monsters::needs_berserk(bool check_spells) const
@@ -6038,7 +6092,7 @@ static const char *enchant_names[] =
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
     "soul-ripe", "decay", "hungry", "flopping", "spore-producing",
-    "downtrodden", "swift", "tide", "bug"
+    "downtrodden", "swift", "tide", "frenzied", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

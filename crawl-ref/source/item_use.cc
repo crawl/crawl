@@ -2017,7 +2017,14 @@ static bool _rage_hit_victim (bolt &beam, actor* victim, int dmg,
     if (!_blowgun_check(beam, victim))
         return (false);
 
-    victim->go_berserk(false);
+    if (victim->atype() == ACT_MONSTER)
+    {
+        monsters* mons = static_cast<monsters*>(victim);
+        mons->go_frenzy();
+    }
+    else
+        victim->go_berserk(false);
+
     return (true);
 }
 

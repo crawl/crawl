@@ -1195,7 +1195,7 @@ std::string item_def::name_aux(description_level_type desc,
                 buff << ((terse) ? " (sick)" : " of sickening");
                 break;
             case SPMSL_RAGE:
-                buff << ((terse) ? " (wrath)" : " of wrath");
+                buff << ((terse) ? " (frenzy)" : " of frenzy");
                 break;
             case SPMSL_RETURNING:
                 buff << ((terse) ? " (return)" : " of returning");

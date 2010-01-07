@@ -296,7 +296,9 @@ public:
     void attacking(actor *other);
     bool can_go_berserk() const;
     void go_berserk(bool intentional);
+    void go_frenzy();
     bool berserk() const;
+    bool frenzied() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed() const;
