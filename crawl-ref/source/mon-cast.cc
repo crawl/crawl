@@ -351,7 +351,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.colour   = WHITE;
         beam.flavour  = BEAM_ICE;
         beam.hit      = 17 + power / 25;
-        beam.is_beam  = true;
         break;
 
     case SPELL_BOLT_OF_COLD:
