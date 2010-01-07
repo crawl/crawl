@@ -112,9 +112,9 @@ static int write_vault(map_def &mdef,
                                               place, check_place);
 
         if (place.orient != MAP_NONE)
-            break;
+            return (place.orient);
     }
-    return (place.orient);
+    return (MAP_NONE);
 }
 
 // Mirror the map if appropriate, resolve substitutable symbols (?),
