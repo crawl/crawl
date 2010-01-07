@@ -156,6 +156,7 @@ i-distortion BRAND_DISTORTION
 i-reaching BRAND_REACHING
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
+i-evasion BRAND_EVASION
 i-confusion BRAND_CONFUSION
 # penetration
 i-reaping BRAND_REAPING
