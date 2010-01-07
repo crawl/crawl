@@ -460,11 +460,6 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
         ofs_x = -4;
         ofs_y = -2;
         break;
-    // Shift downwards and to the left.
-    case TILEP_MONS_HELL_KNIGHT:
-        ofs_x = -1;
-        ofs_y = 3;
-        break;
     // Shift upwards and to the right.
     case TILEP_MONS_WIZARD:
         ofs_x = 2;
@@ -473,6 +468,11 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_RED_DEVIL:
         ofs_x = 2;
         ofs_y = -3;
+        break;
+    // Shift downwards and to the left.
+    case TILEP_MONS_HELL_KNIGHT:
+        ofs_x = -1;
+        ofs_y = 3;
         break;
     // Shift downwards and to the right.
     case TILEP_MONS_BIG_KOBOLD:
