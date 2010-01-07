@@ -1125,6 +1125,8 @@ void read_maps()
     // Clean up cached environments.
     dlua.callfn("dgn_flush_map_environments", 0, 0);
     lc_loaded_maps.clear();
+
+    sanity_check_maps();
 }
 
 void add_parsed_map( const map_def &md )
