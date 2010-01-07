@@ -366,7 +366,7 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
         ofs_x = 0;
         ofs_y = 0;
         break;
-    // Shift upwards.
+    // Shift to the left.
     case TILEP_MONS_GNOLL:
     case TILEP_MONS_GRUM:
     case TILEP_MONS_CRAZY_YIUF:
@@ -378,7 +378,7 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
         ofs_x = -2;
         ofs_y = 0;
         break;
-    // Shift downwards.
+    // Shift to the right.
     case TILEP_MONS_YAKTAUR_MELEE:
         ofs_x = 2;
         ofs_y = 0;
@@ -387,7 +387,7 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
         ofs_x = 4;
         ofs_y = 0;
         break;
-    // Shift to the left.
+    // Shift upwards.
     case TILEP_MONS_CENTAUR_WARRIOR_MELEE:
     case TILEP_MONS_DEEP_ELF_SORCERER:
     case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
@@ -402,7 +402,7 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
         ofs_x = 0;
         ofs_y = -10;
         break;
-    // Shift to the right.
+    // Shift downwards.
     case TILEP_MONS_DEEP_ELF_KNIGHT:
     case TILEP_MONS_NAGA:
     case TILEP_MONS_GREATER_NAGA:
@@ -460,12 +460,12 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
         ofs_x = -4;
         ofs_y = -2;
         break;
-    // Shift upwards and to the right.
+    // Shift downwards and to the left.
     case TILEP_MONS_HELL_KNIGHT:
         ofs_x = -1;
         ofs_y = 3;
         break;
-    // Shift downwards and to the left.
+    // Shift upwards and to the right.
     case TILEP_MONS_WIZARD:
         ofs_x = 2;
         ofs_y = -2;
