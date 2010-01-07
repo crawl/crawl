@@ -5998,9 +5998,9 @@ void player::attacking(actor *other)
     }
 }
 
-void player::go_berserk(bool intentional)
+void player::go_berserk(bool intentional, bool potion)
 {
-    ::go_berserk(intentional);
+    ::go_berserk(intentional, potion);
 }
 
 bool player::can_go_berserk() const
@@ -6008,9 +6008,9 @@ bool player::can_go_berserk() const
     return (can_go_berserk(false));
 }
 
-bool player::can_go_berserk(bool intentional) const
+bool player::can_go_berserk(bool intentional, bool potion) const
 {
-    const bool verbose = intentional;
+    const bool verbose = intentional || potion;
 
     if (berserk())
     {
@@ -6046,7 +6046,7 @@ bool player::can_go_berserk(bool intentional) const
         return (false);
     }
 
-    if (!intentional && player_mental_clarity(true))
+    if (!intentional && !potion && player_mental_clarity(true))
     {
         if (verbose)
         {

@@ -2762,7 +2762,7 @@ void monsters::go_frenzy()
         xom_is_stimulated(friendly() ? 32 : 128);
 }
 
-void monsters::go_berserk(bool /* intentional */)
+void monsters::go_berserk(bool /* intentional */, bool /* potion */)
 {
     if (!can_go_berserk())
         return;
