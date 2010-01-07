@@ -152,6 +152,14 @@ void monster_grid_updates()
             mi->flags &= ~MF_GOING_BERSERK;
             mi->go_berserk(true);
         }
+
+        // XXX: Hack for triggering Dowan's spell changes.
+        if (mi->props.exists("dowan_upgrade"))
+        {
+            mi->add_ench(ENCH_HASTE);
+            mi->props.erase("dowan_upgrade");
+            simple_monster_message(*mi, " seems to find hidden reserves of power!");
+        }
     }
 }
 
