@@ -3226,6 +3226,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         bow_brand == SPWPN_REAPING || ammo_brand_known);
     }
 
+    if (ammo_brand == SPMSL_RAGE)
+    {
+        did_god_conduct(DID_HASTY, 6 + random2(3), ammo_brand_known);
+    }
+
     if (did_return)
     {
         // Fire beam in reverse.
