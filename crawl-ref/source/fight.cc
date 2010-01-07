@@ -3995,7 +3995,7 @@ int melee_attack::player_to_hit(bool random_factor)
     // Check for backlight (Corona).
     if (defender && defender->atype() == ACT_MONSTER)
     {
-        if (defender->backlit())
+        if (defender->backlit() && !defender->halo_radius())
             your_to_hit += 2 + random2(8);
         // Invisible monsters are hard to hit.
         else if (!defender->visible_to(&you))
@@ -5674,7 +5674,7 @@ int melee_attack::mons_to_hit()
     if (attacker->confused())
         mhit -= 5;
 
-    if (defender->backlit())
+    if (defender->backlit() && !defender->halo_radius())
         mhit += 2 + random2(8);
 
     // Invisible defender is hard to hit if you can't see invis. Note

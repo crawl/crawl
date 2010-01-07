@@ -3818,7 +3818,7 @@ bool bolt::misses_player()
     if (you.invisible() && !can_see_invis)
         real_tohit /= 2;
 
-    if (you.backlit())
+    if (you.backlit() && !you.halo_radius())
         real_tohit += 2 + random2(8);
 
     // Wow, what a horrid test.  These cannot be blocked or dodged
@@ -5012,7 +5012,7 @@ void bolt::affect_monster(monsters* mon)
     if (mon->invisible() && !can_see_invis)
         beam_hit /= 2;
 
-    if (mon->backlit())
+    if (mon->backlit() && !mon->halo_radius())
         beam_hit += 2 + random2(8);
 
     defer_rand r;
