@@ -21,3 +21,14 @@ function test.regenerate_level(place)
   dgn.reset_level()
   debug.generate_level()
 end
+
+function test.level_contains_item(item)
+  for y = 1, dgn.GYM - 2 do
+    for x = 1, dgn.GXM - 2 do
+      if iter.stack_search(x, y, item) then
+        return true
+      end
+    end
+  end
+  return false
+end
