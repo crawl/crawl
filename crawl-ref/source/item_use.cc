@@ -2107,7 +2107,8 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     if (bow_brand == SPWPN_VENOM && ammo_brand != SPMSL_CURARE)
     {
-        if (ammo_brand == SPMSL_NORMAL)
+        // Don't perma-poison with a temp-branded weapon.
+        if (ammo_brand == SPMSL_NORMAL && !you.duration[DUR_WEAPON_BRAND])
             item.special = SPMSL_POISONED;
 
         poisoned = true;
