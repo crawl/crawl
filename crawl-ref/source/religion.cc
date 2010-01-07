@@ -2255,7 +2255,8 @@ static void _do_god_gift(bool prayed_for)
 
 static bool _is_risky_sacrifice(const item_def& item)
 {
-    return item.base_type == OBJ_ORBS || is_rune(item);
+    return (item.base_type == OBJ_ORBS || is_rune(item) 
+            || item.sub_type == MISC_HORN_OF_GERYON);
 }
 
 static bool _confirm_pray_sacrifice(god_type god)
