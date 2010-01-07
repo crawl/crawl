@@ -2867,16 +2867,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             break;
         }
 
-        // Slings and Darts train Throwing a bit.
-        if (launcher_skill == SK_SLINGS)
-        {
-            if (coinflip())
-                exercise(SK_THROWING, 1);
-
-            // They also get a minor tohit boost from throwing skill.
-            exHitBonus += you.skills[SK_THROWING] / 5;
-        }
-
         if (bow_brand == SPWPN_VORPAL)
         {
             // Vorpal brand adds 30% damage bonus. Increased from 25%
