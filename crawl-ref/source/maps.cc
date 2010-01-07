@@ -1163,6 +1163,11 @@ const map_def *map_by_index(int index)
     return (&vdefs[index]);
 }
 
+void sanity_check_maps()
+{
+    dlua.execfile("clua/sanity.lua", true, true);
+}
+
 ///////////////////////////////////////////////////////////////////////////
 // Debugging code
 

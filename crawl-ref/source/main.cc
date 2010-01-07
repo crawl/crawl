@@ -3765,6 +3765,8 @@ static bool _initialise(void)
     if (crawl_state.build_db)
         end(0);
 
+    sanity_check_maps();
+
     cio_init();
 
     // System initialisation stuff.
