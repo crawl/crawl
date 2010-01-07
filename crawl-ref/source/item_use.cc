@@ -2175,7 +2175,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.effect_known = false;
 
         beam.flavour = BEAM_CHAOS;
-        beam.name    = "chaos";
+        beam.name    += " of chaos";
         beam.colour  = ETC_RANDOM;
 
         ammo.special = SPMSL_CHAOS;
@@ -2184,7 +2184,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
              && ammo_brand != SPMSL_FROST && bow_brand != SPWPN_FROST)
     {
         beam.flavour = BEAM_FIRE;
-        beam.name    = "flame";
+        beam.name    += " of flame";
         beam.colour  = RED;
 
         ammo.special = SPMSL_FLAME;
@@ -2193,7 +2193,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
              && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
     {
         beam.flavour = BEAM_COLD;
-        beam.name    = "frost";
+        beam.name    += " of frost";
         beam.colour  = WHITE;
 
         ammo.special = SPMSL_FROST;
@@ -2319,7 +2319,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         returning = false;
 
         beam.type = dchar_glyph(DCHAR_FIRED_BOLT);
-        beam.name = "bolt of " + beam.name;
     }
 
     if (!is_artefact(item))
