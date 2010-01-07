@@ -38,7 +38,7 @@
 #include "tiledef-player.h"
 #include "tiledef-gui.h"
 #include "tiledef-unrand.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"

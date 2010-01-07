@@ -36,7 +36,7 @@
 #include "stuff.h"
 #include "env.h"
 #include "travel.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "view.h"
 

@@ -42,7 +42,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "stuff.h"
-#include "transfor.h"
+#include "transform.h"
 #include "travel.h"
 #include "viewchar.h"
 #include "viewgeom.h"

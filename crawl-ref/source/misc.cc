@@ -78,7 +78,7 @@
 #include "areas.h"
 #include "tiles.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"

@@ -40,7 +40,7 @@
 #include "spl-mis.h"
 #include "stash.h"
 #include "state.h"
-#include "transfor.h"
+#include "transform.h"
 #include "shout.h"
 #include "xom.h"
 

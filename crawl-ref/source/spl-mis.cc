@@ -33,7 +33,7 @@
 #include "stuff.h"
 #include "areas.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "view.h"
 #include "shout.h"
 #include "viewchar.h"

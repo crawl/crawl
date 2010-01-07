@@ -117,7 +117,7 @@
 #include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"

@@ -23,7 +23,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "areas.h"
-#include "transfor.h"
+#include "transform.h"
 #include "travel.h"
 
 /////////////////////////////////////////////////////////////////////

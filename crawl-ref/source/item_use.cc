@@ -73,7 +73,7 @@
 #include "stuff.h"
 #include "areas.h"
 #include "teleport.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"

@@ -62,7 +62,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"

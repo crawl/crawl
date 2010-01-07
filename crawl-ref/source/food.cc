@@ -44,7 +44,7 @@
 #include "spells2.h"
 #include "state.h"
 #include "stuff.h"
-#include "transfor.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "xom.h"
 

@@ -41,7 +41,7 @@
 #include "env.h"
 #include "areas.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"

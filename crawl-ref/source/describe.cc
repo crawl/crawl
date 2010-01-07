@@ -51,7 +51,7 @@
 #include "env.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "transfor.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "xom.h"
 

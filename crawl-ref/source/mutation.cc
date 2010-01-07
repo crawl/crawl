@@ -38,7 +38,7 @@
 #include "religion.h"
 #include "random.h"
 #include "skills2.h"
-#include "transfor.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "view.h"
 #include "xom.h"

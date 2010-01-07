@@ -43,7 +43,7 @@
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "travel.h"
 #include "viewgeom.h"
 
