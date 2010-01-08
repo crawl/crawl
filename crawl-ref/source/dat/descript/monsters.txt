@@ -1048,13 +1048,11 @@ This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers. 
 %%%%
 snapping turtle
 
-A large belligerent reptile, armoured in a carapace. Its neck is
-surprisingly extensible and can reach out and bite from afar.
+A large belligerent reptile, armoured in a carapace. Its neck is surprisingly extensible and can reach out and bite from afar.
 %%%%
 alligator snapping turtle
 
-A huge snapping turtle of unpleasant disposition. It can reach out and
-bite from afar.
+A huge snapping turtle of unpleasant disposition. It can reach out and bite from afar.
 %%%%
 sea snake
 
