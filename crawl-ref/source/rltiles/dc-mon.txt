@@ -163,7 +163,7 @@ orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
 orb_of_destruction MONS_ORB_OF_DESTRUCTION /*'*'*/
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
-%sdir dc-mon
+%sdir dc-mon/undead
 death_cob MONS_DEATH_COB /*'%'*/
 
 ### Demonic monsters
@@ -424,7 +424,7 @@ iron_dragon MONS_IRON_DRAGON
 storm_dragon MONS_STORM_DRAGON
 golden_dragon MONS_GOLDEN_DRAGON
 shadow_dragon MONS_SHADOW_DRAGON
-skeletal_dragon MONS_SKELETAL_DRAGON
+undead/skeletal_dragon MONS_SKELETAL_DRAGON
 serpent_of_hell MONS_SERPENT_OF_HELL
 
 ## Eyes ('G')
@@ -463,7 +463,7 @@ pulsating_lump MONS_PULSATING_LUMP
 giant_amoeba MONS_GIANT_AMOEBA
 brown_ooze MONS_BROWN_OOZE
 azure_jelly MONS_AZURE_JELLY
-death_ooze MONS_DEATH_OOZE
+undead/death_ooze MONS_DEATH_OOZE
 acid_blob MONS_ACID_BLOB
 
 ## Kobolds ('K')
@@ -477,7 +477,7 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 ## Liches ('L')
 %sdir dc-mon/unique
 boris MONS_BORIS
-%sdir dc-mon
+%sdir dc-mon/undead
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
 
@@ -485,7 +485,7 @@ ancient_lich MONS_ANCIENT_LICH
 %sdir dc-mon/unique
 menkaure MONS_MENKAURE
 khufu MONS_KHUFU
-%sdir dc-mon
+%sdir dc-mon/undead
 mummy MONS_MUMMY
 guardian_mummy MONS_GUARDIAN_MUMMY
 greater_mummy MONS_GREATER_MUMMY
@@ -529,6 +529,7 @@ rock_troll_monk_ghost MONS_ROCK_TROLL_MONK
 iron_troll_monk_ghost MONS_IRON_TROLL_MONK
 
 ## Vampires ('V')
+%sdir dc-mon/undead
 vampire MONS_VAMPIRE
 vampire_knight MONS_VAMPIRE_KNIGHT
 vampire_mage MONS_VAMPIRE_MAGE
@@ -541,9 +542,11 @@ freezing_wraith MONS_FREEZING_WRAITH
 spectral_warrior MONS_SPECTRAL_WARRIOR
 spectral_thing MONS_SPECTRAL_THING
 
+%sdir dc-mon
 orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 
 ## Large zombified monsters ('Z')
+%sdir dc-mon/undead
 zombie_large MONS_ZOMBIE_LARGE
 skeleton_large MONS_SKELETON_LARGE
 simulacrum_large MONS_SIMULACRUM_LARGE
@@ -612,6 +615,7 @@ siren MONS_SIREN
 siren_water MONS_SIREN_WATER
 
 ## Rotting monsters ('n')
+%sdir dc-mon/undead
 necrophage MONS_NECROPHAGE
 ghoul MONS_GHOUL
 rotting_hulk MONS_ROTTING_HULK
@@ -633,6 +637,7 @@ orc_high_priest MONS_ORC_HIGH_PRIEST
 deformed_orc MONS_DEFORMED_ORC
 
 ## Ghosts ('p')
+%sdir dc-mon/undead
 %rim 0
 shadow MONS_SHADOW /*' '*/
 phantom MONS_PHANTOM
@@ -641,11 +646,13 @@ ghost MONS_PLAYER_GHOST
 %rim 1
 flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
+%sdir dc-mon
 nonliving/insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 
 minotaur MONS_MINOTAUR /*'t'*/
 
 ## Small zombified monsters ('z')
+%sdir dc-mon/undead
 zombie_small MONS_ZOMBIE_SMALL
 %rim 0
 skeleton_small MONS_SKELETON_SMALL
@@ -657,7 +664,7 @@ flaming_corpse MONS_FLAMING_CORPSE
 %rim 1
 %sdir dc-mon/unique
 murray MONS_MURRAY
-%sdir dc-mon
+%sdir dc-mon/undead
 curse_skull MONS_CURSE_SKULL
 curse_toe MONS_CURSE_TOE
 flying_skull MONS_FLYING_SKULL
@@ -697,7 +704,7 @@ hog_player TRAN_PIG
 ice_beast TRAN_ICE_BEAST
 nonliving/stone_golem TRAN_STATUE
 dragon TRAN_DRAGON
-lich TRAN_LICH
+undead/lich TRAN_LICH
 
 dc-misc/unseen_monster MONS_UNKNOWN
 dc-misc/unseen_monster MCACHE_START

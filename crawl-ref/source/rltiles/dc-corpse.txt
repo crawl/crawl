@@ -160,11 +160,13 @@ siren_water CORPSE_SIREN
 
 ## Rotting monsters ('n')
 %back dc-misc/blood_green
+%sdir dc-mon/undead
 necrophage CORPSE_NECROPHAGE
 ghoul CORPSE_GHOUL
 
 ## Orcs ('o')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%sdir dc-mon
 orc CORPSE_ORC
 
 ## Ugly things ('u')
