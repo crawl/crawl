@@ -347,6 +347,7 @@ static void _show_commandline_options_help()
 #if DEBUG_DIAGNOSTICS
     puts("");
     puts("  -test            run test cases in ./test");
+    puts("  -script <name>   run script matching <name> in ./scripts");
 #endif
 }
 
