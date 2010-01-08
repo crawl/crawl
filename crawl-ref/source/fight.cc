@@ -5185,17 +5185,29 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_STEAL_FOOD:
+    {
         // Monsters don't carry food.
         if (defender->atype() != ACT_PLAYER)
             break;
 
-        if (expose_player_to_element(BEAM_STEAL_FOOD, 10) && needs_message)
+        const bool stolen = expose_player_to_element(BEAM_STEAL_FOOD, 10);
+        const bool ground = expose_items_to_element(BEAM_STEAL_FOOD, you.pos(),
+                                                    10);
+        if (needs_message)
         {
-            mprf("%s steals some of your food!",
-                 atk_name(DESC_CAP_THE).c_str());
+            if (stolen)
+            {
+                mprf("%s steals some of your food!",
+                     atk_name(DESC_CAP_THE).c_str());
+            }
+            else if (ground)
+            {
+                mprf("%s steals some of the food from beneath you!",
+                     atk_name(DESC_CAP_THE).c_str());
+            }
         }
         break;
-
+    }
     case AF_CRUSH:
         mprf("%s %s being crushed%s",
              def_name(DESC_CAP_THE).c_str(),
