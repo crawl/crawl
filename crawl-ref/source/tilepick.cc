@@ -654,6 +654,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_VIPER;
     case MONS_ANACONDA:
         return TILEP_MONS_ANACONDA;
+    case MONS_SEA_SNAKE:
+        return TILEP_MONS_SEA_SNAKE;
 
     // trolls ('T')
     case MONS_TROLL:
@@ -1988,6 +1990,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_BLACK_MAMBA;
     case MONS_VIPER:
         return TILE_CORPSE_VIPER;
+    case MONS_SEA_SNAKE:
+        return TILE_CORPSE_SEA_SNAKE;
 
     // trolls ('T')
     case MONS_TROLL:
