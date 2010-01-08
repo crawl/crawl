@@ -740,7 +740,7 @@ static int l_item_pluses(lua_State *ls)
     if (!item || !item->is_valid() || !item_ident(*item, ISFLAG_KNOW_PLUSES))
     {
         lua_pushboolean(ls, false);
-        return (0);
+        return (1);
     }
 
     lua_pushnumber(ls, item->plus);
