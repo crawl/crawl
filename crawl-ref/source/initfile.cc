@@ -3472,6 +3472,7 @@ enum commandline_option_type {
     CLO_MAPSTAT,
     CLO_ARENA,
     CLO_TEST,
+    CLO_SCRIPT,
     CLO_BUILDDB,
     CLO_HELP,
     CLO_VERSION,
@@ -3485,8 +3486,8 @@ enum commandline_option_type {
 static const char *cmd_ops[] = {
     "scores", "name", "species", "job", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "arena", "test", "builddb", "help", "version", "save-version",
-    "extra-opt-first", "extra-opt-last",
+    "mapstat", "arena", "test", "script", "builddb", "help", "version",
+    "save-version", "extra-opt-first", "extra-opt-last"
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3790,6 +3791,21 @@ bool parse_args( int argc, char **argv, bool rc_only )
                 crawl_state.tests_selected = split_string(",", next_arg);
                 nextUsed = true;
             }
+            break;
+
+        case CLO_SCRIPT:
+            crawl_state.test   = true;
+            crawl_state.script = true;
+            if (current < argc - 1)
+            {
+                crawl_state.tests_selected = split_string(",", next_arg);
+                for (int extra = current + 2; extra < argc; ++extra)
+                    crawl_state.script_args.push_back(argv[extra]);
+                current = argc;
+            }
+            else
+                end(1, false,
+                    "-script must specify comma-separated script names");
             break;
 
         case CLO_BUILDDB:

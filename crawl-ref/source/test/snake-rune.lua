@@ -1,3 +1,7 @@
+-- Walks down the dungeon to Snake:$ and tests for the existence of the rune.
+-- This is a more exhaustive test than rune-gen.lua since it generates all
+-- intermediate levels and activates the dungeon connectivity code.
+
 local niters = 500
 local current_iter = 0
 
@@ -7,9 +11,6 @@ local branch_entrance_feats = {
 }
 
 local junk_feat_fn = dgn.feature_set_fn("rock_wall", "floor", "stone_wall")
-local down_stair_fn = dgn.feature_set_fn("stone_stairs_down_i",
-                                         "stone_stairs_down_ii",
-                                         "stone_stairs_down_iii")
 
 local function thing_exists_fn(thing)
   return function()
@@ -38,7 +39,7 @@ local function visit_branch_end_from(start, stair_places, final_predicate)
             end
           end
 
-          if down_stair_fn(dfeat) then
+          if test.is_down_stair(dfeat) then
             table.insert(downstairs, dgn.point(x, y))
           end
         end
