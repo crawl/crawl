@@ -588,40 +588,6 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 ##############################################################################
-#       eye to eye with the evil
-#
-NAME:   david_glass_crypt
-ORIENT: float
-TAGS:   no_item_gen no_rotate
-PLACE:  Crypt:5
-SUBST:  m : mnn
-MONS:   lich / ancient lich
-MONS:   skeletal dragon / curse skull / curse toe
-MONS:   flying skull / skeletal warrior / w:40 nothing
-KFEAT:  ^ = alarm trap
-SUBST:  F = G:100 F:1
-KMONS:  F = orange crystal statue / silver statue / ice statue
-MAP
-.....................
-.....................
-..vvvvnnnnnnnnnvvvv..
-..vlllllllllllllllv..
-..vlllllllllllllllv..
-..vllll..|||..llllv..
-..vll...|||||...llv..
-..vl.....|||.....lv..
-..vl.............lv..
-..vmm..F.vvv.F..mmv..
-..v1m...^^^^^...m1v..
-..vvvvvvv+++vvvvvvv..
-...vv..2.....2..vv...
- ..vv.333333333.vv..
- ...vvv.......vvv...
-   ...vv+++++vv...
-    .............
-ENDMAP
-
-##############################################################################
 #       Four quadrants (by mu)
 #       burial hoard (NE), chapel of kikubaaqudgha (NW), catacombs (SE), crematory (SW)
 #
