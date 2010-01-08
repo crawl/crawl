@@ -1849,7 +1849,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
     case MONS_CENTAUR_WARRIOR:
         natural_leader = true;
     case MONS_CENTAUR:
-        if (power > 9 && one_chance_in(3))
+        if (power > 9 && one_chance_in(3) && you.where_are_you != BRANCH_SHOALS)
         {
             band = BAND_CENTAURS;
             band_size = 2 + random2(4);
