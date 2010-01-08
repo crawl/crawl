@@ -2722,11 +2722,9 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_DEXTERITY, 1, false, "level gain");
 
-                if (you.experience_level < 17)
+                if (you.experience_level % 3)
                     hp_adjust--;
 
-                if (!(you.experience_level % 2))
-                    hp_adjust--;
                 break;
 
             case SP_KOBOLD:
