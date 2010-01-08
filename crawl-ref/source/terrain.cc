@@ -1304,8 +1304,8 @@ const char *dngn_feature_names[] =
 "unseen", "closed_door", "detected_secret_door", "secret_door",
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall", "stone_wall",
 "permarock_wall",
-"clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "trees",
-"open_sea", "orcish_idol", "", "", "", "", "",
+"clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "open_sea",
+"trees", "orcish_idol", "", "", "", "", "",
 "granite_statue", "statue_reserved_1", "statue_reserved_2",
 "", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
@@ -1391,4 +1391,3 @@ const char *dungeon_feature_name(dungeon_feature_type rfeat)
 
     return dngn_feature_names[feat];
 }
-
