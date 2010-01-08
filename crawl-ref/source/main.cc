@@ -2280,12 +2280,14 @@ static void _decrement_durations()
         }
     }
 
-#if (TAG_MAJOR_VERSION == 15)
-    // The TAG_MAJOR #define is merely bait to make sure someone deletes this
-    // check after the affected games are fixed.
-    if (you.duration[DUR_TRANSFORMATION] < 0)
-        you.duration[DUR_TRANSFORMATION] = 1);
-#endif
+    if (TAG_MAJOR_VERSION == 15)
+    {
+        // FIXME: The TAG_MAJOR check is merely bait to make sure
+        // someone deletes this check after the affected games are
+        // fixed.
+        if (you.duration[DUR_TRANSFORMATION] < 0)
+            you.duration[DUR_TRANSFORMATION] = 1;
+    }
 
     // Vampire bat transformations are permanent (until ended).
     if (you.species != SP_VAMPIRE || !player_in_bat_form()
