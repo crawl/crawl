@@ -840,7 +840,7 @@ A very large grey rat.
 %%%%
 anaconda
 
-A very large grey python.
+A very large grey constrictor snake.
 %%%%
 griffon
 
