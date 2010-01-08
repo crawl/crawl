@@ -146,7 +146,7 @@ yak MONS_YAK
 death_yak MONS_DEATH_YAK
 
 ### Elemental monsters
-%sdir dc-mon
+%sdir dc-mon/nonliving
 earth_elemental MONS_EARTH_ELEMENTAL /*'#'*/
 fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
 water_elemental MONS_WATER_ELEMENTAL /*'{'*/
@@ -155,13 +155,12 @@ fire_vortex MONS_FIRE_VORTEX /*'v'*/
 spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
 %rim 0
 vapour MONS_VAPOUR /*'#'*/
-%rim 1
-death_cob MONS_DEATH_COB /*'%'*/
-ball_lightning MONS_BALL_LIGHTNING /*'*'*/
-%rim 0
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
 orb_of_destruction MONS_ORB_OF_DESTRUCTION /*'*'*/
 %rim 1
+ball_lightning MONS_BALL_LIGHTNING /*'*'*/
+%sdir dc-mon
+death_cob MONS_DEATH_COB /*'%'*/
 
 ### Demonic monsters
 ## Arch demons ('&')
@@ -270,7 +269,7 @@ unseen_horror MONS_UNSEEN_HORROR
 abomination_small MONS_ABOMINATION_SMALL
 
 ## Golems ('8')
-%sdir dc-mon
+%sdir dc-mon/nonliving
 clay_golem MONS_CLAY_GOLEM
 crystal_golem MONS_CRYSTAL_GOLEM
 %rim 0
@@ -324,7 +323,7 @@ overlay_sword MONS_DARK_VINE_STATUE_SWORD
 %back none
 
 ## Gargoyles ('9')
-%sdir dc-mon
+%sdir dc-mon/nonliving
 gargoyle MONS_GARGOYLE
 metal_gargoyle MONS_METAL_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
@@ -632,13 +631,13 @@ deformed_orc MONS_DEFORMED_ORC
 ## Ghosts ('p')
 %rim 0
 shadow MONS_SHADOW /*' '*/
-insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 phantom MONS_PHANTOM
 ## used for Detect Creatures
 ghost MONS_PLAYER_GHOST
 %rim 1
 flayed_ghost MONS_FLAYED_GHOST
 hungry_ghost MONS_HUNGRY_GHOST
+nonliving/insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 
 minotaur MONS_MINOTAUR /*'t'*/
 
@@ -680,7 +679,7 @@ draco-job-scorcher DRACO_SCORCHER
 draco-job-shifter DRACO_SHIFTER
 draco-job-zealot DRACO_ZEALOT
 
-%sdir dc-mon
+%sdir dc-mon/nonliving
 test_spawner MONS_TEST_SPAWNER
 
 dc-misc/unseen PLAYER
@@ -692,7 +691,7 @@ wolf_spider TRAN_SPIDER
 hog_player TRAN_PIG
 %sdir dc-mon
 ice_beast TRAN_ICE_BEAST
-stone_golem TRAN_STATUE
+nonliving/stone_golem TRAN_STATUE
 dragon TRAN_DRAGON
 lich TRAN_LICH
 
