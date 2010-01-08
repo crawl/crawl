@@ -1162,9 +1162,9 @@ static void _elven_twin_died(monsters* twin, bool in_transit)
         else
             monster->props["dowan_upgrade"] = bool(true);
 
-        monster->spells[0] = SPELL_FIREBALL;
+        monster->spells[0] = SPELL_THROW_ICICLE;
         monster->spells[1] = SPELL_BLINK;
-        monster->spells[3] = SPELL_FIREBALL;
+        monster->spells[3] = SPELL_STONE_ARROW;
         monster->spells[4] = SPELL_HASTE;
         // Nothing with 6.
     }
