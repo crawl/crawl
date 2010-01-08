@@ -2280,13 +2280,11 @@ static void _decrement_durations()
         }
     }
 
-    if (TAG_MAJOR_VERSION == 15)
+    // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
+    if (you.duration[DUR_TRANSFORMATION] <= 0
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
     {
-        // FIXME: The TAG_MAJOR check is merely bait to make sure
-        // someone deletes this check after the affected games are
-        // fixed.
-        if (you.duration[DUR_TRANSFORMATION] < 0)
-            you.duration[DUR_TRANSFORMATION] = 1;
+        you.duration[DUR_TRANSFORMATION] = 1;
     }
 
     // Vampire bat transformations are permanent (until ended).
