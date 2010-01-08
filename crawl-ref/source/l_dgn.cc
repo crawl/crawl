@@ -17,6 +17,7 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "random.h"
+#include "shout.h"
 #include "spl-util.h"
 #include "state.h"
 #ifdef USE_TILE
@@ -1332,6 +1333,16 @@ static int dgn_place_cloud(lua_State *ls)
     return (0);
 }
 
+// XXX: Doesn't allow for messages or specifying the noise source.
+LUAFN(dgn_noisy)
+{
+    const int loudness = luaL_checkint(ls, 1);
+    COORDS(pos, 2, 3);
+
+    noisy(loudness, pos);
+
+    return (0);
+}
 
 static int _dgn_is_passable(lua_State *ls)
 {
@@ -1784,6 +1795,7 @@ const struct luaL_reg dgn_dlib[] =
 { "random_walk", dgn_random_walk },
 { "apply_area_cloud", dgn_apply_area_cloud },
 { "place_cloud", dgn_place_cloud },
+{ "noisy", dgn_noisy },
 
 { "is_passable", _dgn_is_passable },
 
