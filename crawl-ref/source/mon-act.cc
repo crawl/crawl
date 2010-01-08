@@ -737,7 +737,8 @@ static bool _handle_potion(monsters *monster, bolt & beem)
 static bool _handle_reaching(monsters *monster)
 {
     bool       ret = false;
-    const int  wpn = monster->inv[MSLOT_WEAPON];
+    item_def *wpn = monster->weapon(0);
+    const mon_attack_def attk(mons_attack_spec(monster, 0));
 
     if (monster->submerged())
         return (false);
@@ -745,7 +746,8 @@ static bool _handle_reaching(monsters *monster)
     if (mons_aligned(monster->mindex(), monster->foe))
         return (false);
 
-    if (wpn != NON_ITEM && get_weapon_brand(mitm[wpn]) == SPWPN_REACHING)
+    if ((wpn && get_weapon_brand(*wpn) == SPWPN_REACHING)
+        || (attk.flavour == AF_REACH && attk.damage))
     {
         if (monster->foe == MHITYOU)
         {
@@ -782,8 +784,8 @@ static bool _handle_reaching(monsters *monster)
     }
 
     // Player saw the item reach.
-    if (ret && !is_artefact(mitm[wpn]) && you.can_see(monster))
-        set_ident_flags(mitm[wpn], ISFLAG_KNOW_TYPE);
+    if (ret && wpn && !is_artefact(*wpn) && you.can_see(monster))
+        set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
 
     return (ret);
 }

@@ -838,7 +838,7 @@ grey rat
 
 A very large grey rat.
 %%%%
-grey snake
+anaconda
 
 A very large grey python.
 %%%%
@@ -1045,6 +1045,20 @@ A hideous cross-breed, bearing the features of a human and a lion, with great ba
 Mara
 
 This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers. He is capable of creating intricately detailed illusions, able to mislead even the minds of the mightiest and most brilliant spell-casters.
+%%%%
+snapping turtle
+
+A large belligerent reptile, armoured in a carapace. Its neck is
+surprisingly extensible and can reach out and bite from afar.
+%%%%
+alligator snapping turtle
+
+A huge snapping turtle of unpleasant disposition. It can reach out and
+bite from afar.
+%%%%
+sea snake
+
+A brightly coloured snake with a potent venomous bite.
 %%%%
 merfolk
 

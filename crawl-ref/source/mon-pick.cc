@@ -1704,35 +1704,30 @@ int mons_shoals_level(int mcls)
 
     case MONS_MERFOLK:
     case MONS_MERMAID:
-    case MONS_CENTAUR:
     case MONS_HIPPOGRIFF:
+    case MONS_SEA_SNAKE:
         mlev++;
         break;
 
-    case MONS_YAKTAUR:
     case MONS_MANTICORE:
+    case MONS_SNAPPING_TURTLE:
         mlev += 2;
         break;
 
-    case MONS_CENTAUR_WARRIOR:
     case MONS_CYCLOPS:          // will have a sheep band
     case MONS_SIREN:
     case MONS_HARPY:
         mlev += 3;
         break;
 
-    case MONS_STONE_GIANT:
     case MONS_OKLOB_PLANT:
     case MONS_SHARK:
     case MONS_KRAKEN:
+    case MONS_ALLIGATOR_SNAPPING_TURTLE:
     case MONS_MERFOLK_IMPALER:
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_MERFOLK_JAVELINEER:
         mlev += 4;
-        break;
-
-    case MONS_YAKTAUR_CAPTAIN:
-        mlev += 5;
         break;
 
     default:
@@ -1746,38 +1741,36 @@ int mons_shoals_rare(int mcls)
     switch (mcls)
     {
     case MONS_MERFOLK:
-        return 50;
+        return 90;
+
+    case MONS_SNAPPING_TURTLE:
+        return 45;
 
     case MONS_MERMAID:
+    case MONS_MANTICORE:
+    case MONS_SEA_SNAKE:
         return 40;
 
     case MONS_HIPPOGRIFF:
     case MONS_GIANT_BAT:
     case MONS_BUTTERFLY:
-    case MONS_CENTAUR:
         return 35;
 
+    case MONS_CYCLOPS:
+    case MONS_HARPY:
     case MONS_SIREN:
-    case MONS_YAKTAUR:
+    case MONS_MERFOLK_AQUAMANCER:
     case MONS_MERFOLK_IMPALER:
     case MONS_MERFOLK_JAVELINEER:
-        return 25;
-
-    case MONS_CYCLOPS:
-    case MONS_CENTAUR_WARRIOR:
-    case MONS_HARPY:
-    case MONS_MERFOLK_AQUAMANCER:
         return 20;
 
-    case MONS_STONE_GIANT:
-    case MONS_YAKTAUR_CAPTAIN:
     case MONS_SHARK:
-    case MONS_KRAKEN:
-        return 10;
+    case MONS_ALLIGATOR_SNAPPING_TURTLE:
+        return 18;
 
     case MONS_OKLOB_PLANT:
-    case MONS_MANTICORE:
-        return 5;
+    case MONS_KRAKEN:
+        return 10;
     default:
         return 0;
     }

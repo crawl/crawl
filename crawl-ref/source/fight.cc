@@ -4542,7 +4542,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
     return (attack_types[attk.type]);
 }
 
-std::string melee_attack::mons_weapon_desc()
+std::string melee_attack::mons_attack_desc(const mon_attack_def &attk)
 {
     if (!you.can_see(attacker))
         return ("");
@@ -4564,6 +4564,11 @@ std::string melee_attack::mons_weapon_desc()
         }
 
         return (result);
+    }
+    else if (attk.flavour == AF_REACH
+             && grid_distance(attacker->pos(), defender->pos()) == 2)
+    {
+        return " from afar";
     }
 
     return ("");
@@ -4592,7 +4597,7 @@ void melee_attack::mons_announce_hit(const mon_attack_def &attk)
              attacker->conj_verb( mons_attack_verb(attk) ).c_str(),
              mons_defender_name().c_str(),
              debug_damage_number().c_str(),
-             mons_weapon_desc().c_str(),
+             mons_attack_desc(attk).c_str(),
              attack_strength_punctuation().c_str());
     }
 }
@@ -5286,7 +5291,7 @@ void melee_attack::mons_perform_attack_rounds()
         }
 
         // Skip dummy attacks.
-        if ((attk.type != AT_HIT && !unarmed_ok)
+        if ((!unarmed_ok && attk.type != AT_HIT && attk.flavour != AF_REACH)
             || attk.type == AT_SHOOT)
         {
             --effective_attack_number;

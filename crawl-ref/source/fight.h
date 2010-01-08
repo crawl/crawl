@@ -229,7 +229,7 @@ private:
     void mons_perform_attack_rounds();
     void mons_check_attack_perceived();
     std::string mons_attack_verb(const mon_attack_def &attk);
-    std::string mons_weapon_desc();
+    std::string mons_attack_desc(const mon_attack_def &attk);
     void mons_announce_hit(const mon_attack_def &attk);
     void mons_announce_dud_hit(const mon_attack_def &attk);
     void mons_set_weapon(const mon_attack_def &attk);

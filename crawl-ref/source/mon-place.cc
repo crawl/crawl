@@ -199,7 +199,8 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     {
     case HT_WATER:
         // Monsters can submerge in shallow water - this is intentional.
-        return (feat_is_watery(grid));
+        return (feat_is_watery(grid)
+                && mons_genus(mons_base_type(mons)) != MONS_MERFOLK);
 
     case HT_LAVA:
         return (grid == DNGN_LAVA);

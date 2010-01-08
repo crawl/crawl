@@ -1816,6 +1816,10 @@ enum monster_type                      // (int) menv[].type
     MONS_MERFOLK_AQUAMANCER,
     MONS_MERFOLK_JAVELINEER,
 
+    MONS_SNAPPING_TURTLE,
+    MONS_ALLIGATOR_SNAPPING_TURTLE,
+    MONS_SEA_SNAKE,
+
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,
