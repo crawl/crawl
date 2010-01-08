@@ -2916,7 +2916,10 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     }
 
     case MONS_PLAYER_GHOST:
-        inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
+        if (mons.is_summoned())
+            inf.body << "An illusion of " << get_ghost_description(mons) << ".$";
+        else
+            inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:

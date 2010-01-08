@@ -3235,7 +3235,12 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
                 else if (mon->type == MONS_PANDEMONIUM_DEMON)
                     str += "pandemonium demon";
                 else if (mon->type == MONS_PLAYER_GHOST)
-                    str += "ghost";
+                {
+                    if (mon->is_summoned())
+                        str += "illusion";
+                    else
+                        str += "ghost";
+                }
                 else
                     str += "mimic";
             }
