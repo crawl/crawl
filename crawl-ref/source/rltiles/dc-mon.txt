@@ -66,6 +66,9 @@ wolf_spider MONS_WOLF_SPIDER
 trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
 
+## Turtles ('t')
+turtle.png MONS_TURTLE
+
 ## Worms and larvae ('w')
 killer_bee_larva MONS_ANT_LARVA
 killer_bee_larva MONS_KILLER_BEE_LARVA

@@ -358,9 +358,10 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_REDBACK:
         return TILEP_MONS_REDBACK;
 
-    // minotaur ('t')
-    case MONS_MINOTAUR:
-        return TILEP_MONS_MINOTAUR;
+    // turtles ('t')
+    case MONS_SNAPPING_TURTLE:
+    case MONS_ALLIGATOR_SNAPPING_TURTLE: // TODO
+        return TILEP_MONS_TURTLE;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -548,6 +549,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_SPHINX;
     case MONS_HARPY:
         return TILEP_MONS_HARPY;
+    case MONS_MINOTAUR:
+        return TILEP_MONS_MINOTAUR;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
@@ -1811,9 +1814,10 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_REDBACK:
         return TILE_CORPSE_REDBACK;
 
-    // minotaur ('t')
-    case MONS_MINOTAUR:
-        return TILE_CORPSE_MINOTAUR;
+    // turtles ('t')
+    case MONS_SNAPPING_TURTLE:
+    case MONS_ALLIGATOR_SNAPPING_TURTLE: // TODO
+        return TILE_CORPSE_TURTLE;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -1936,6 +1940,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GRIFFON;
     case MONS_HARPY:
         return TILE_CORPSE_HARPY;
+    case MONS_MINOTAUR:
+        return TILE_CORPSE_MINOTAUR;
 
     // jellies ('J')
     case MONS_GIANT_AMOEBA:

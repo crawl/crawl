@@ -67,8 +67,12 @@ wolf_spider CORPSE_WOLF_SPIDER
 trapdoor_spider CORPSE_TRAPDOOR_SPIDER
 redback CORPSE_REDBACK
 
+## Turtles ('t')
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+turtle CORPSE_TURTLE
+
 ## Worms ('w')
-%sdir dc-mon/animals
+%back dc-misc/blood_green
 killer_bee_larva CORPSE_ANT_LARVA
 killer_bee_larva CORPSE_KILLER_BEE_LARVA
 worm CORPSE_WORM
@@ -162,9 +166,6 @@ ghoul CORPSE_GHOUL
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 orc CORPSE_ORC
 
-## Minotaur ('t')
-minotaur CORPSE_MINOTAUR
-
 ## Ugly things ('u')
 %sdir dc-mon/demons
 ugly_thing CORPSE_UGLY_THING
@@ -223,6 +224,7 @@ hippogriff CORPSE_HIPPOGRIFF
 griffon CORPSE_GRIFFON
 manticore CORPSE_MANTICORE
 harpy CORPSE_HARPY
+minotaur CORPSE_MINOTAUR
 
 ## Jellies ('J')
 %back dc-misc/blood_green
