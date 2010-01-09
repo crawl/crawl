@@ -7,6 +7,7 @@
 #include "coord.h"
 #include "directn.h"
 #include "env.h"
+#include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "files.h"
@@ -1436,6 +1437,23 @@ int tile_known_weapon_brand(const item_def item)
     return 0;
 }
 
+int tile_corpse_brand(const item_def item)
+{
+    if (is_poisonous(item))
+        return TILE_FOOD_POISONED;
+
+    if (is_mutagenic(item))
+        return TILE_FOOD_MUTAGENIC;
+
+    if (causes_rot(item))
+        return TILE_FOOD_ROTTING;
+
+    if (is_forbidden_food(item))
+        return TILE_FOOD_FORBIDDEN;
+
+    return 0;
+}
+
 static void _fill_item_info(InventoryTile &desc, const item_def &item)
 {
     desc.tile = tileidx_item(item);
@@ -1458,7 +1476,11 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     else
         desc.quantity = -1;
 
-    desc.special = tile_known_weapon_brand(item);
+    if (type == OBJ_WEAPONS || type == OBJ_MISSILES)
+        desc.special = tile_known_weapon_brand(item);
+    else if (type == OBJ_CORPSES)
+        desc.special = tile_corpse_brand(item);
+
     desc.flag = 0;
     if (item.cursed() && item_ident(item, ISFLAG_KNOW_CURSE))
         desc.flag |= TILEI_FLAG_CURSE;

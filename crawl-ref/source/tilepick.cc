@@ -1594,6 +1594,42 @@ static int _tileidx_armour(const item_def &item)
     return _apply_variations(item, tile);
 }
 
+static int _tileidx_chunk(const item_def &item)
+{
+    if (food_is_rotten(item))
+    {
+        if (!is_inedible(item))
+        {
+            if (is_poisonous(item))
+                return TILE_FOOD_CHUNK_ROTTEN_POISONED;
+
+            if (is_mutagenic(item))
+                return TILE_FOOD_CHUNK_ROTTEN_MUTAGENIC;
+
+            if (causes_rot(item))
+                return TILE_FOOD_CHUNK_ROTTEN_ROTTING;
+
+            if (is_forbidden_food(item))
+                return TILE_FOOD_CHUNK_ROTTEN_FORBIDDEN;
+        }
+        return TILE_FOOD_CHUNK_ROTTEN;
+    }
+
+    if (is_poisonous(item))
+        return TILE_FOOD_CHUNK_POISONED;
+
+    if (is_mutagenic(item))
+        return TILE_FOOD_CHUNK_MUTAGENIC;
+
+    if (causes_rot(item))
+        return TILE_FOOD_CHUNK_ROTTING;
+
+    if (is_forbidden_food(item))
+        return TILE_FOOD_CHUNK_FORBIDDEN;
+
+    return TILE_FOOD_CHUNK;
+}
+
 static int _tileidx_food(const item_def &item)
 {
     switch (item.sub_type)
@@ -1619,11 +1655,7 @@ static int _tileidx_food(const item_def &item)
     case FOOD_BEEF_JERKY:   return TILE_FOOD_BEEF_JERKY;
     case FOOD_CHEESE:       return TILE_FOOD_CHEESE;
     case FOOD_SAUSAGE:      return TILE_FOOD_SAUSAGE;
-
-    case FOOD_CHUNK:
-        if (food_is_rotten(item))
-            return TILE_FOOD_CHUNK_ROTTEN;
-        return TILE_FOOD_CHUNK;
+    case FOOD_CHUNK:        return _tileidx_chunk(item);
     }
 
     return TILE_ERROR;

@@ -123,6 +123,7 @@ void save_doll_file(FILE *dollf);
 
 int item_unid_type(const item_def &item);
 int tile_known_weapon_brand(const item_def item);
+int tile_corpse_brand(const item_def item);
 
 int get_clean_map_idx(int tile_idx);
 
