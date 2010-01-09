@@ -37,12 +37,12 @@ Micha Elsner                 Jordan Lewis               Solf
 Christopher Evenstar         Icy Lich                   Johan Strandell
 Ben Goetter                  Markus Maier               Roman Sêk
 Rob Grant                    Arien Malec                Marc H. Thoben
-John Greenberg               Paul Maloney               Matt Titus
-GreyKnight                   Neil 'Mu' Middleton        Steven Wheeler
-Joshua Gross                 Shawn M Moore              Thomas Willem
-Brian Haase                  Eva Myers                  Jeremey Wilson
-Shayne Halvorson             Wille Mäntylä              Yelve Yakut
-Ciaran Hamilton              Erkki Nurmi                Zooko
-Chris Hamons                 Mattias Nyberg
+John Greenberg               Paul Maloney               Jared 'Twinge' Tinney
+GreyKnight                   Neil 'Mu' Middleton        Matt Titus
+Joshua Gross                 Shawn M Moore              Steven Wheeler
+Brian Haase                  Eva Myers                  Thomas Willem
+Shayne Halvorson             Wille Mäntylä              Jeremey Wilson
+Ciaran Hamilton              Erkki Nurmi                Yelve Yakut
+Chris Hamons                 Mattias Nyberg             Zooko
 R. Dan Henry                 nyra
 
