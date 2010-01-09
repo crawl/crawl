@@ -465,11 +465,16 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
     else
     {
         monster_type montype = MONS_NO_MONSTER;
-        const monsters *m = monster_at(p);
-        if (m && (you.can_see(m) || mons_is_stationary(m)
-                                    && testbits(m->flags, MF_SEEN)))
+        if (!defer_updates)
         {
-            montype = m->type;
+            // Don't list a monster in the exclusion annotation if the
+            // exclusion was triggered by e.g. the flamethrowers' lua check.
+            const monsters *m = monster_at(p);
+            if (m && (you.can_see(m) || mons_is_stationary(m)
+                                        && testbits(m->flags, MF_SEEN)))
+            {
+                montype = m->type;
+            }
         }
 
         curr_excludes.add_exclude(p, radius, autoexcl, montype, vaultexcl);
