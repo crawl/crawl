@@ -2916,6 +2916,91 @@ static void _place_fog_machines(int level_number)
     }
 }
 
+bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat)
+{
+    for (adjacent_iterator ai(c); ai; ++ai)
+        if (grd(*ai) == feat)
+            return true;
+    return false;
+}
+
+static inline bool _point_matches_feat(coord_def c,
+                                       dungeon_feature_type searchfeat,
+                                       unsigned mapmask,
+                                       dungeon_feature_type adjacent_feat,
+                                       bool monster_free)
+{
+    return (grd(c) == searchfeat
+            && (!monster_free || !monster_at(c))
+            && unforbidden(c, mapmask)
+            && (adjacent_feat == DNGN_UNSEEN ||
+                dgn_has_adjacent_feat(c, adjacent_feat)));
+}
+
+// Returns a random point in map bounds matching the given search feature,
+// and respecting the map mask (a map mask of MMT_VAULT ensures that
+// positions inside vaults will not be returned).
+//
+// If adjacent_feat is not DNGN_UNSEEN, the chosen square will be
+// adjacent to a square containing adjacent_feat.
+//
+// If monster_free is true, the chosen square will never be occupied by
+// a monster.
+//
+// If tries is set to anything other than -1, this function will make tries
+// attempts to find a suitable square, and may fail if the map is crowded.
+// If tries is set to -1, this function will examine the entire map and
+// guarantees to find a suitable point if available.
+//
+// If a suitable point is not available (or was not found in X tries),
+// returns coord_def(0,0)
+//
+coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
+                                     unsigned mapmask,
+                                     dungeon_feature_type adjacent_feat,
+                                     bool monster_free,
+                                     int tries)
+{
+    if (tries == -1)
+    {
+        // Try a quick and dirty random search:
+        coord_def chosen = dgn_random_point_in_bounds(searchfeat,
+                                                      mapmask,
+                                                      adjacent_feat,
+                                                      monster_free,
+                                                      10);
+        if (!chosen.origin())
+            return chosen;
+
+        // Exhaustive search; will never fail if a suitable place is
+        // available, but is also far more expensive.
+        int nfound = 0;
+        for (rectangle_iterator ri(1); ri; ++ri)
+        {
+            const coord_def c(*ri);
+            if (_point_matches_feat(c, searchfeat, mapmask, adjacent_feat,
+                                    monster_free)
+                && one_chance_in(++nfound))
+            {
+                chosen = c;
+            }
+        }
+        return (chosen);
+    }
+    else
+    {
+        // Random search.
+        while (--tries >= 0)
+        {
+            const coord_def c = random_in_bounds();
+            if (_point_matches_feat(c, searchfeat, mapmask, adjacent_feat,
+                                    monster_free))
+                return c;
+        }
+        return (coord_def(0, 0));
+    }
+}
+
 static void _place_specific_feature(dungeon_feature_type feat)
 {
     coord_def c;
