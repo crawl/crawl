@@ -868,7 +868,7 @@ clean-contrib:
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
-	$(RM) scores $(GAME) core *.0* *.lab $(DEPENDENCY_MKF)
+	$(RM) scores $(GAME) core $(DEPENDENCY_MKF)
 
 $(GAME): $(GAME_DEPENDS)
 	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
