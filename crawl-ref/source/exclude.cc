@@ -63,6 +63,13 @@ void set_auto_exclude(const monsters *mon)
     if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
         set_exclude(mon->pos(), LOS_RADIUS, true);
+        // FIXME: If this happens for several monsters in the same turn
+        //        (as is possible for some vaults), this could be really
+        //        annoying. (jpeg)
+        mprf(MSGCH_WARN,
+             "Marking area around %s as unsafe for travelling.",
+             mon->name(DESC_NOCAP_THE).c_str());
+
 #ifdef USE_TILE
         viewwindow(false);
 #endif
