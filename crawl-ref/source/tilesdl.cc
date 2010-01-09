@@ -1439,6 +1439,11 @@ int tile_known_weapon_brand(const item_def item)
 
 int tile_corpse_brand(const item_def item)
 {
+    // Brands are mostly meaningless to herbivores.
+    // Could still be interesting for Fulsome Distillation, though.
+    if (player_mutation_level(MUT_HERBIVOROUS) == 3)
+        return (0);
+
     if (is_poisonous(item))
         return TILE_FOOD_POISONED;
 

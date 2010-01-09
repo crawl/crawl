@@ -1618,6 +1618,9 @@ static int _tileidx_chunk(const item_def &item)
         return TILE_FOOD_CHUNK_ROTTEN;
     }
 
+    if (is_inedible(item))
+        return TILE_FOOD_CHUNK;
+
     if (is_poisonous(item))
         return TILE_FOOD_CHUNK_POISONED;
 
