@@ -1322,8 +1322,8 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
 {
     // Throwable weapons may be picked up as though dual-wielding.
     const bool dual_wielding = (mons_wields_two_weapons(this)
-                                   || is_throwable(this, item));
-    if (dual_wielding)
+                                || is_throwable(this, item));
+    if (dual_wielding && item.quantity == 1)
     {
         // If we have either weapon slot free, pick up the weapon.
         if (inv[MSLOT_WEAPON] == NON_ITEM)
@@ -1346,6 +1346,11 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         weap = mslot_item(static_cast<mon_inv_type>(i));
+
+        // If the weapon is a stack of throwing weaons, the monster
+        // will not use the stack as their primary melee weapon.
+        if (item.quantity != 1 && i == MSLOT_WEAPON)
+            continue;
 
         if (!weap)
         {
@@ -1928,8 +1933,13 @@ void monsters::wield_melee_weapon(int near)
 
         // Switch to the alternate weapon if it's not a ranged weapon, too,
         // or switch away from our main weapon if it's a ranged weapon.
-        if (alt && !is_range_weapon(*alt) || weap && !alt && type != MONS_STATUE)
+        //
+        // Don't switch to alt weapon if it's a stack of throwing weapons.
+        if (alt && !is_range_weapon(*alt) && alt->quantity == 1
+            || weap && !alt && type != MONS_STATUE)
+        {
             swap_weapons(near);
+        }
     }
 }
 
