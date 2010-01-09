@@ -1073,7 +1073,7 @@ static std::string _describe_ammo(const item_def &item)
             description += "It is tipped with asphyxiating poison.";
             break;
         case SPMSL_PARALYSIS:
-            description += "It is tipped with a paralyzing poison."; 
+            description += "It is tipped with a paralyzing poison.";
             break;
         case SPMSL_SLOW:
             description += "It is coated with a poison that causes slowness of the body.";
@@ -3261,7 +3261,7 @@ static std::string _religion_help(god_type god)
             && !you.num_gifts[god])
         {
             result += "You can pray at an altar to have your weapon "
-                      "blessed.";
+                      "corrupted.";
         }
         break;
 
