@@ -49,7 +49,8 @@ enum tag_minor_version
     TAG_MINOR_RESET     = 0, // Minor tags were reset
     TAG_MINOR_SEEN_WEAPONS_ARMOUR = 1,
     TAG_MINOR_BEHELD16  = 2, // Use correct type sizes for beholders
-    TAG_MINOR_VERSION   = 2  // Current version.  (Keep equal to max.)
+    TAG_MINOR_EXCLUSION_DESC = 3, // Mark exclusion reason in annotation.
+    TAG_MINOR_VERSION   = 3  // Current version.  (Keep equal to max.)
 };
 
 struct enum_info

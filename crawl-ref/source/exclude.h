@@ -28,11 +28,11 @@ public:
     los_def       los;          // los from exclusion centre
     bool          uptodate;     // Is los up to date?
     bool          autoex;       // Was set automatically.
-    monster_type  mon;          // Monster around which exclusion is centered.
+    std::string   desc;         // Exclusion description.
     bool          vault;        // Is this exclusion set by a vault?
 
     travel_exclude(const coord_def &p, int r = LOS_RADIUS,
-                   bool autoex = false, monster_type mons = MONS_NO_MONSTER,
+                   bool autoex = false, std::string desc = "",
                    bool vault = false);
     // For exclude_map[p] = foo;
     travel_exclude();
@@ -62,7 +62,7 @@ public:
     void add_exclude(travel_exclude &ex);
     void add_exclude(const coord_def &p, int radius = LOS_RADIUS,
                      bool autoexcl = false,
-                     monster_type mons = MONS_NO_MONSTER,
+                     std::string desc = "",
                      bool vaultexcl = false);
 
     void update_excluded_points();

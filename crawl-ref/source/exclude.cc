@@ -7,6 +7,7 @@
 
 #include "exclude.h"
 
+#include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "map_knowledge.h"
@@ -124,10 +125,10 @@ static opacity_excl opc_excl;
 // skip LOS calculation in that case anyway since it doesn't
 // currently short-cut for small bounds. So radius 0, 1 are special-cased.
 travel_exclude::travel_exclude(const coord_def &p, int r,
-                               bool autoexcl, monster_type mons, bool vaultexcl)
+                               bool autoexcl, std::string dsc, bool vaultexcl)
     : pos(p), radius(r),
       los(los_def(p, opc_excl, circle_def(r, C_ROUND))),
-      uptodate(false), autoex(autoexcl), mon(mons), vault(vaultexcl)
+      uptodate(false), autoex(autoexcl), desc(dsc), vault(vaultexcl)
 {
     set_los();
 }
@@ -136,7 +137,7 @@ travel_exclude::travel_exclude(const coord_def &p, int r,
 travel_exclude::travel_exclude()
     : pos(-1, -1), radius(-1),
       los(coord_def(-1, -1), opc_excl, circle_def(-1, C_ROUND)),
-      uptodate(false), autoex(false), mon(MONS_NO_MONSTER), vault(false)
+      uptodate(false), autoex(false), desc(""), vault(false)
 {
 }
 
@@ -207,10 +208,10 @@ void exclude_set::add_exclude(travel_exclude &ex)
 }
 
 void exclude_set::add_exclude(const coord_def &p, int radius,
-                              bool autoexcl, monster_type mons,
+                              bool autoexcl, std::string desc,
                               bool vaultexcl)
 {
-    travel_exclude ex(p, radius, autoexcl, mons, vaultexcl);
+    travel_exclude ex(p, radius, autoexcl, desc, vaultexcl);
     add_exclude(ex);
 }
 
@@ -464,7 +465,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
     }
     else
     {
-        monster_type montype = MONS_NO_MONSTER;
+        std::string desc = "";
         if (!defer_updates)
         {
             // Don't list a monster in the exclusion annotation if the
@@ -473,11 +474,18 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
             if (m && (you.can_see(m) || mons_is_stationary(m)
                                         && testbits(m->flags, MF_SEEN)))
             {
-                montype = m->type;
+                desc = mons_type_name(m->type, DESC_PLAIN);
             }
         }
+        else
+        {
+            int cl = env.cgrid(p);
 
-        curr_excludes.add_exclude(p, radius, autoexcl, montype, vaultexcl);
+            if (env.cgrid(p) != EMPTY_CLOUD)
+                desc = cloud_name(cl);
+        }
+
+        curr_excludes.add_exclude(p, radius, autoexcl, desc, vaultexcl);
     }
 
     if (!defer_updates)
@@ -490,9 +498,13 @@ void maybe_remove_autoexclusion(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
+        if (!exc->autoex)
+            return;
+
         const monsters *m = monster_at(p);
-        if (exc->autoex && (!m || !you.can_see(m) || m->type != exc->mon
-                            || m->attitude != ATT_HOSTILE))
+        if (!m || !you.can_see(m) || m->attitude != ATT_HOSTILE
+            || strcmp(mons_type_name(m->type, DESC_PLAIN).c_str(),
+                      exc->desc.c_str()) != 0)
         {
             del_exclude(p);
         }
@@ -502,14 +514,14 @@ void maybe_remove_autoexclusion(const coord_def &p)
 // Lists all exclusions on the current level.
 std::string exclude_set::get_exclusion_desc()
 {
-    std::vector<std::string> monsters;
+    std::vector<std::string> desc;
     int count_other = 0;
     for (exclmap::iterator it = exclude_roots.begin();
          it != exclude_roots.end(); ++it)
     {
         travel_exclude &ex = it->second;
-        if (!invalid_monster_type(ex.mon))
-            monsters.push_back(mons_type_name(ex.mon, DESC_PLAIN));
+        if (ex.desc != "")
+            desc.push_back(ex.desc);
         else
             count_other++;
     }
@@ -517,22 +529,22 @@ std::string exclude_set::get_exclusion_desc()
     if (count_other > 0)
     {
         snprintf(info, INFO_SIZE, "%d %sexclusion%s",
-                 count_other, monsters.empty() ? "" : "more ",
+                 count_other, desc.empty() ? "" : "more ",
                  count_other > 1 ? "s" : "");
-        monsters.push_back(info);
+        desc.push_back(info);
     }
-    else if (monsters.empty())
+    else if (desc.empty())
         return "";
 
-    std::string desc = "";
-    if (monsters.size() > 1 || count_other == 0)
+    std::string desc_str = "";
+    if (desc.size() > 1 || count_other == 0)
     {
         snprintf(info, INFO_SIZE, "exclusion%s: ",
-                 monsters.size() > 1 ? "s" : "");
-        desc += info;
+                 desc.size() > 1 ? "s" : "");
+        desc_str += info;
     }
-    return (desc + comma_separated_line(monsters.begin(), monsters.end(),
-                                        ", and ", ", "));
+    return (desc_str + comma_separated_line(desc.begin(), desc.end(),
+                                            ", and ", ", "));
 }
 
 
@@ -548,7 +560,7 @@ void marshallExcludes(writer& outf, const exclude_set& excludes)
             marshallCoord(outf, ex.pos);
             marshallShort(outf, ex.radius);
             marshallBoolean(outf, ex.autoex);
-            marshallShort(outf, ex.mon);
+            marshallString(outf, ex.desc);
             // XXX: marshall travel_exclude::vault?
         }
     }
@@ -566,11 +578,18 @@ void unmarshallExcludes(reader& inf, char minorVersion, exclude_set &excludes)
             unmarshallCoord(inf, c);
             const int radius = unmarshallShort(inf);
             bool autoexcl    = false;
-            monster_type mon = MONS_NO_MONSTER;
             autoexcl         = unmarshallBoolean(inf);
-            mon              = static_cast<monster_type>(unmarshallShort(inf));
+            std::string desc = "";
+            if (minorVersion < TAG_MINOR_EXCLUSION_DESC)
+            {
+                monster_type mon = static_cast<monster_type>(unmarshallShort(inf));
+                if (mon != MONS_NO_MONSTER)
+                    desc = mons_type_name(mon, DESC_PLAIN);
+            }
+            else
+                desc = unmarshallString(inf);
 
-            excludes.add_exclude(c, radius, autoexcl, mon);
+            excludes.add_exclude(c, radius, autoexcl, desc);
         }
     }
 }

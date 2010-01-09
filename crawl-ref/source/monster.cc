@@ -1161,11 +1161,13 @@ bool monsters::drop_item(int eslot, int near)
     if (pitem->flags & ISFLAG_SUMMONED)
     {
         if (need_message(near))
+        {
             mprf("%s %s as %s drops %s!",
                  pitem->name(DESC_CAP_THE).c_str(),
                  summoned_poof_msg(this, *pitem).c_str(),
                  name(DESC_NOCAP_THE).c_str(),
                  pitem->quantity > 1 ? "them" : "it");
+        }
 
         item_was_destroyed(*pitem, mindex());
         destroy_item(item_index);
