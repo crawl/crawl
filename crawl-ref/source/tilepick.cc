@@ -1611,6 +1611,9 @@ static int _tileidx_chunk(const item_def &item)
 
             if (is_forbidden_food(item))
                 return TILE_FOOD_CHUNK_ROTTEN_FORBIDDEN;
+
+            if (is_contaminated(item))
+                return TILE_FOOD_CHUNK_ROTTEN_CONTAMINATED;
         }
         return TILE_FOOD_CHUNK_ROTTEN;
     }
@@ -1626,6 +1629,9 @@ static int _tileidx_chunk(const item_def &item)
 
     if (is_forbidden_food(item))
         return TILE_FOOD_CHUNK_FORBIDDEN;
+
+    if (is_contaminated(item))
+        return TILE_FOOD_CHUNK_CONTAMINATED;
 
     return TILE_FOOD_CHUNK;
 }

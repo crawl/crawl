@@ -1451,6 +1451,9 @@ int tile_corpse_brand(const item_def item)
     if (is_forbidden_food(item))
         return TILE_FOOD_FORBIDDEN;
 
+    if (is_contaminated(item))
+        return TILE_FOOD_CONTAMINATED;
+
     return 0;
 }
 

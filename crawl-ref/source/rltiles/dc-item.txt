@@ -424,17 +424,20 @@ chunk_brands/i-poison FOOD_CHUNK_POISONED
 chunk_brands/i-mutation FOOD_CHUNK_MUTAGENIC
 chunk_brands/i-decay FOOD_CHUNK_ROTTING
 chunk_brands/i-forbidden FOOD_CHUNK_FORBIDDEN
+chunk_brands/i-sickness FOOD_CHUNK_CONTAMINATED
 %back chunk_rotten
 chunk_brands/i-poison FOOD_CHUNK_ROTTEN_POISONED
 chunk_brands/i-mutation FOOD_CHUNK_ROTTEN_MUTAGENIC
 chunk_brands/i-decay FOOD_CHUNK_ROTTEN_ROTTING
 chunk_brands/i-forbidden FOOD_CHUNK_ROTTEN_FORBIDDEN
+chunk_brands/i-sickness FOOD_CHUNK_ROTTEN_CONTAMINATED
 %back none
 %shrink 0
 chunk_brands/i-poison FOOD_POISONED
 chunk_brands/i-mutation FOOD_MUTAGENIC
 chunk_brands/i-decay FOOD_ROTTING
 chunk_brands/i-forbidden FOOD_FORBIDDEN
+chunk_brands/i-sickness FOOD_CONTAMINATED
 %shrink 1
 
 #################OBJ_UNKNOWN_I
