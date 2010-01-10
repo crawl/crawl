@@ -7778,10 +7778,12 @@ static void _ruin_level()
             grd(*it) = DNGN_FLOOR;
         }
 
-        /* replace some ruined walls with plants/fungi */
+        /* replace some ruined walls with plants/fungi/bushes */
         if (one_chance_in(5)) {
             mgen_data mg;
-            mg.cls = coinflip() ? MONS_PLANT : MONS_FUNGUS;
+            mg.cls = one_chance_in(20) ? MONS_BUSH  :
+                     coinflip()        ? MONS_PLANT :
+                                         MONS_FUNGUS;
             mg.pos = *it;
             mons_place(mgen_data(mg));
         }
@@ -7797,8 +7799,9 @@ static void _add_plant_clumps()
         {
             /* clump plants around things that already exist */
             monster_type type = menv[mgrd(*ri)].type;
-            if ((type == MONS_PLANT || type == MONS_FUNGUS) &&
-                one_chance_in(10)) {
+            if ((type == MONS_PLANT  ||
+                 type == MONS_FUNGUS ||
+                 type == MONS_BUSH) && one_chance_in(10)) {
                 mg.cls = type;
             }
             else {
