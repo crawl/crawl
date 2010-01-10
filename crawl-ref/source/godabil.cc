@@ -485,7 +485,7 @@ int fungal_bloom()
     return (processed_count);
 }
 
-static int _create_plant(coord_def & target)
+static int _create_plant(coord_def & target, int hp_adjust = 0)
 {
     if (actor_at(target) || !mons_class_can_pass(MONS_PLANT, grd(target)))
         return (0);
@@ -504,8 +504,16 @@ static int _create_plant(coord_def & target)
     if (plant != -1)
     {
         env.mons[plant].flags |= MF_ATT_CHANGE_ATTEMPT;
+        env.mons[plant].max_hit_points += hp_adjust;
+        env.mons[plant].hit_points += hp_adjust;
+
         if (you.see_cell(target))
-            mpr("A plant grows up from the ground.");
+        {
+            if (hp_adjust)
+                mpr("A plant grows up from the ground, it is strengthened by Fedhas.");
+            else
+                mpr("A plant grows up from the ground.");
+        }
     }
 
 
@@ -981,10 +989,12 @@ bool plant_ring_from_fruit()
     if ((int)adjacent.size() > target_count)
         prioritise_adjacent(you.pos(), adjacent);
 
+    int hp_adjust = you.skills[SK_INVOCATIONS] * 10;
+
     int created_count = 0;
     for (int i = 0; i < target_count; ++i)
     {
-        if (_create_plant(adjacent[i]))
+        if (_create_plant(adjacent[i], hp_adjust))
             created_count++;
     }
 
