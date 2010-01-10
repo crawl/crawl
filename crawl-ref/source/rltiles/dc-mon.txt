@@ -193,6 +193,7 @@ pit_fiend MONS_PIT_FIEND
 shadow_fiend MONS_SHADOW_FIEND
 
 # type '2' demons
+beast MONS_BEAST
 ice_devil MONS_ICE_DEVIL
 lorocyproca MONS_LOROCYPROCA
 reaper MONS_REAPER
@@ -204,7 +205,6 @@ blue_devil MONS_BLUE_DEVIL
 chaos_spawn MONS_CHAOS_SPAWN
 demonic_crawler MONS_DEMONIC_CRAWLER
 hellion MONS_HELLION
-hellwing MONS_HELLWING
 iron_devil MONS_IRON_DEVIL
 neqoxec MONS_NEQOXEC
 orange_demon MONS_ORANGE_DEMON
@@ -213,11 +213,12 @@ tormentor MONS_TORMENTOR
 ynoxinul MONS_YNOXINUL
 
 # type '4' demons
-beast MONS_BEAST
 hairy_devil MONS_HAIRY_DEVIL
 red_devil MONS_RED_DEVIL
 rotting_devil MONS_ROTTING_DEVIL
 smoke_demon MONS_SMOKE_DEMON
+#sixfirhy MONS_SIXFIRHY
+hellwing MONS_HELLWING
 
 # type '5' demons
 imp MONS_IMP

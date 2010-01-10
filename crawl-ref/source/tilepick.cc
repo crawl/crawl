@@ -817,10 +817,12 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_HAIRY_DEVIL;
     case MONS_ROTTING_DEVIL:
         return TILEP_MONS_ROTTING_DEVIL;
-    case MONS_BEAST:
-        return TILEP_MONS_BEAST;
     case MONS_SMOKE_DEMON:
         return TILEP_MONS_SMOKE_DEMON;
+//     case MONS_SIXFIRHY:              // TODO
+//         return TILEP_MONS_SIXFIRHY;
+    case MONS_HELLWING:
+        return TILEP_MONS_HELLWING;
 
     // '3' demons
     case MONS_HELLION:
@@ -835,8 +837,6 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_NEQOXEC;
     case MONS_ORANGE_DEMON:
         return TILEP_MONS_ORANGE_DEMON;
-    case MONS_HELLWING:
-        return TILEP_MONS_HELLWING;
     case MONS_YNOXINUL:
         return TILEP_MONS_YNOXINUL;
     case MONS_DEMONIC_CRAWLER:
@@ -847,6 +847,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_CHAOS_SPAWN;
 
     // '2' demon
+    case MONS_BEAST:
+        return TILEP_MONS_BEAST;
     case MONS_SUN_DEMON:
         return TILEP_MONS_SUN_DEMON;
     case MONS_REAPER:
