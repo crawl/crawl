@@ -345,7 +345,7 @@ bool fedhas_shoot_through(const bolt & beam, const monsters * victim)
     {
         monsters * temp = dynamic_cast<monsters *> (originator);
         if (!temp)
-            return false;
+            return (false);
         origin_worships_fedhas = temp->god == GOD_FEDHAS;
         origin_attitude = temp->attitude;
     }
@@ -684,7 +684,7 @@ bool sunlight()
 template<typename T>
 bool less_second(const T & left, const T & right)
 {
-    return left.second < right.second;
+    return (left.second < right.second);
 }
 
 typedef std::pair<coord_def, int> point_distance;
@@ -904,19 +904,19 @@ bool _prompt_amount(int max, int & selected)
 
         // Default is max
         if (keyin == '\n'  || keyin == '\r')
-            return true;
+            return (true);
 
         // Otherwise they should enter a digit
         if (isdigit(keyin))
         {
             selected = keyin - '0';
             if (selected > 0 && selected <= max)
-                return true;
+                return (true);
         }
         // else they entered some garbage?
     }
 
-    return max;
+    return (max);
 }
 
 
@@ -934,12 +934,12 @@ int _collect_fruit(std::vector<std::pair<int,int>  > & available_fruit)
         }
     }
 
-    return total;
+    return (total);
 }
 
 bool _less_first(const std::pair<int, int> & left, const std::pair<int, int> & right)
 {
-    return left.first < right.first;
+    return (left.first < right.first);
 }
 void _decrease_amount(std::vector<std::pair<int, int> > & available, int amount)
 {
@@ -979,11 +979,16 @@ bool plant_ring_from_fruit()
 
     int max_use = std::min(total_fruit, int(adjacent.size()) );
 
+    // Don't prompt if we can't do anything (due to having no fruit or
+    // no squares to place plants on).
+    if (max_use == 0)
+        return (false);
+
     // And how many plants does the user want to create?
     int target_count;
     if (!_prompt_amount(max_use, target_count))
     {
-        return false;
+        return (false);
     }
 
     if ((int)adjacent.size() > target_count)
