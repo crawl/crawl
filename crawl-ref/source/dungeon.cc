@@ -7778,6 +7778,23 @@ static void _ruin_level()
             grd(*it) = DNGN_FLOOR;
         }
 
+        /* but remove doors if we've removed all adjacent walls */
+        for (adjacent_iterator wai(*it); wai; ++wai)
+        {
+            if (feat_is_door(grd(*wai))) {
+                bool remove = true;
+                for (adjacent_iterator dai(*wai); dai; ++dai)
+                {
+                    if (feat_is_wall(grd(*dai))) {
+                        remove = false;
+                    }
+                }
+                if (remove) {
+                    grd(*wai) = DNGN_FLOOR;
+                }
+            }
+        }
+
         /* replace some ruined walls with plants/fungi/bushes */
         if (one_chance_in(5)) {
             mgen_data mg;
