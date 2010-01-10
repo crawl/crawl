@@ -2531,7 +2531,7 @@ static void _decrement_durations()
         you.hunger = std::max(50, you.hunger);
 
         // 1KB: No berserk healing.
-        you.hp = (you.hp + 1) / 2;
+        you.hp = (you.hp + 1) * 2 / 3;
         calc_hp();
 
         learned_something_new(TUT_POSTBERSERK);

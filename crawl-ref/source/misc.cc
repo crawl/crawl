@@ -2713,7 +2713,7 @@ bool go_berserk(bool intentional, bool potion)
     you.increase_duration(DUR_BERSERKER, berserk_duration);
 
     calc_hp();
-    you.hp *= 2;
+    you.hp = you.hp * 3 / 2;
 
     deflate_hp(you.hp_max, false);
 

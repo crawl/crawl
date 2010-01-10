@@ -4138,7 +4138,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_INSANE:
     case ENCH_BERSERK:
         // Inflate hp.
-        scale_hp(2, 1);
+        scale_hp(3, 2);
 
         if (has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
@@ -4357,7 +4357,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         // deliberate fall through
 
     case ENCH_BERSERK:
-        scale_hp(1, 2);
+        scale_hp(2, 3);
         break;
 
     case ENCH_HASTE:
