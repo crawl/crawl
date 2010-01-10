@@ -33,6 +33,7 @@
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
+#include "godabil.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"
@@ -4485,41 +4486,6 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
 bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
 {
-    // Fedhas worshippers can fire through monsters of the same
-    // alignment.  This means Fedhas-worshipping players can fire through
-    // allied plants, and also means that Fedhas-worshipping oklob plants
-    // can fire through plants with the same attitude.
-    bool originator_worships_fedhas = false;
-
-    // Checking beam_source to decide whether the player or a monster
-    // fired the beam (so we can check their religion).  This is
-    // complicated by the fact that this beam may in fact be an
-    // explosion caused by a miscast effect.  In that case, the value of
-    // beam_source may be negative (god-induced miscast) or greater than
-    // NON_MONSTER (various other miscast sources).  So we check whether
-    // or not this is an explosion, and also the range of beam_source
-    // before attempting to reference env.mons with it. -cao
-    if (!is_explosion && beam_source == NON_MONSTER)
-        originator_worships_fedhas = (you.religion == GOD_FEDHAS);
-    else if (!is_explosion && beam_source >= 0 && beam_source < MAX_MONSTERS)
-        originator_worships_fedhas = (env.mons[beam_source].god == GOD_FEDHAS);
-
-    if (!is_enchantment()
-        && attitude == mon->attitude
-        && originator_worships_fedhas
-        && fedhas_protects(mon))
-    {
-        if (!is_tracer)
-        {
-            // FIXME: Could use a better message, something about
-            // dodging that doesn't sound excessively weird would be
-            // nice.
-            mprf(MSGCH_GOD, "Fedhas protects %s plant from harm.",
-                 attitude == ATT_FRIENDLY ? "your" : "a");
-        }
-        return (false);
-    }
-
     // preac: damage before AC modifier
     // postac: damage after AC modifier
     // final: damage after AC and resists
@@ -4899,6 +4865,19 @@ void bolt::affect_monster(monsters* mon)
         && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
     {
         apply_hit_funcs(mon, 0);
+        return;
+    }
+    if (fedhas_shoot_through(*this, mon))
+    {
+        apply_hit_funcs(mon, 0);
+        if (!is_tracer)
+        {
+            // FIXME: Could use a better message, something about
+            // dodging that doesn't sound excessively weird would be
+            // nice.
+            mprf(MSGCH_GOD, "Fedhas protects %s plant from harm.",
+                 attitude == ATT_FRIENDLY ? "your" : "a");
+        }
         return;
     }
 
