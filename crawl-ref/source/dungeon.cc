@@ -7841,7 +7841,7 @@ static void _add_plant_clumps()
                 }
 
                 /* make sure the iterator stays valid */
-                to_place.reserve((2 * i + 1) * (2 * i + 1));
+                std::vector<coord_def> more_to_place;
                 for (std::vector<coord_def>::const_iterator it = to_place.begin();
                      it != to_place.end();
                      ++it)
@@ -7854,10 +7854,11 @@ static void _add_plant_clumps()
                     if (abs(rad->x - it->x) <= 1 && abs(rad->y - it->y) <= 1)
                     {
                         if (one_chance_in(12)) {
-                            to_place.push_back(*rad);
+                            more_to_place.push_back(*rad);
                         }
                     }
                 }
+                to_place.insert(to_place.end(), more_to_place.begin(), more_to_place.end());
             }
         }
 
