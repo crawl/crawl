@@ -1788,7 +1788,7 @@ static void _build_overflow_temples(int level_number)
         if (!dgn_ensure_vault_placed(_build_vaults(level_number, vault), false))
         {
 #ifdef DEBUG_TEMPLES
-            mprf(MSGCH_DIAGNOSTICS, "Couldn't place overlfow temple '%s', "
+            mprf(MSGCH_DIAGNOSTICS, "Couldn't place overflow temple '%s', "
                  "vetoing level.", vault->name.c_str());
 #endif
             return;
