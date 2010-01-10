@@ -594,6 +594,8 @@ static const char* jewellery_type_name(int jeweltype)
     case AMU_INACCURACY:        return "amulet of inaccuracy";
     case AMU_RESIST_MUTATION:   return "amulet of resist mutation";
     case AMU_GUARDIAN_SPIRIT:   return "amulet of guardian spirit";
+    case AMU_FAITH:             return "amulet of faith";
+    case AMU_STASIS:            return "amulet of stasis";
     default: return "buggy jewellery";
     }
 }
@@ -2732,6 +2734,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return (player_likes_chunks(true)
                        || (player_mutation_level(MUT_HERBIVOROUS) == 3)
                        || you.species == SP_MUMMY);
+
+        case AMU_FAITH:
+            return (you.species == SP_DEMIGOD);
 
         case RING_LIFE_PROTECTION:
             return (player_prot_life(false, temp, false) == 3);

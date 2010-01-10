@@ -3512,6 +3512,14 @@ void jewellery_wear_effects(item_def &item)
         }
         break;
 
+    case AMU_FAITH:
+        if (you.religion != GOD_NO_GOD)
+        {
+            mpr("You feel a surge of divine interest.", MSGCH_GOD);
+            ident = ID_KNOWN_TYPE;
+        }
+        break;
+
     case AMU_THE_GOURMAND:
         // What's this supposed to achieve? (jpeg)
         you.duration[DUR_GOURMAND] = 0;
@@ -4006,6 +4014,27 @@ bool puton_ring(int slot)
     return puton_item(item_slot);
 }
 
+void remove_amulet_of_faith(item_def &item)
+{
+    if (you.religion != GOD_NO_GOD
+        && you.religion != GOD_XOM)
+    {
+        simple_god_message(" seems less interested in you.");
+
+        const int piety_loss = div_rand_round(you.piety, 3);
+        // Piety penalty for removing the Amulet of Faith.
+        if (you.piety - piety_loss > 10)
+        {
+            mprf(MSGCH_GOD,
+                 "%s leaches power out of you as you remove it.",
+                 item.name(DESC_CAP_YOUR).c_str());
+            dprf("%s: piety leach: %d",
+                 item.name(DESC_PLAIN).c_str(), piety_loss);
+            lose_piety(piety_loss);
+        }
+    }
+}
+
 void jewellery_remove_effects(item_def &item, bool mesg)
 {
     // The ring/amulet must already be removed from you.equip at this point.
@@ -4077,6 +4106,10 @@ void jewellery_remove_effects(item_def &item, bool mesg)
 
     case AMU_THE_GOURMAND:
         you.duration[DUR_GOURMAND] = 0;
+        break;
+
+    case AMU_FAITH:
+        remove_amulet_of_faith(item);
         break;
 
     case AMU_GUARDIAN_SPIRIT:
@@ -4173,7 +4206,7 @@ bool remove_ring(int slot, bool announce)
     }
 
     if (!check_warning_inscriptions(you.inv[you.equip[hand_used]],
-                                         OPER_REMOVE))
+                                    OPER_REMOVE))
     {
         canned_msg(MSG_OK);
         return (false);

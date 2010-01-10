@@ -279,7 +279,7 @@ void InvEntry::add_class_hotkeys(const item_def &i)
     const int type = i.base_type;
     if (type == OBJ_JEWELLERY)
     {
-        add_hotkey(i.sub_type >= AMU_RAGE ? '"' : '=');
+        add_hotkey(i.sub_type >= AMU_FIRST_AMULET ? '"' : '=');
         return;
     }
 
@@ -1490,11 +1490,21 @@ static std::string _operation_verb(operation_types oper)
     }
 }
 
+bool _removing_amulet_of_faith(const item_def &item, operation_types oper)
+{
+    return (oper == OPER_REMOVE
+            && item.base_type == OBJ_JEWELLERY
+            && item.sub_type == AMU_FAITH);
+}
+
 // Returns true if user OK'd it (or no warning), false otherwise.
 bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
-    if (item.is_valid() && has_warning_inscription(item, oper) )
+    if (item.is_valid()
+        && (has_warning_inscription(item, oper)
+            || (_removing_amulet_of_faith(item, oper)
+                && you.religion != GOD_NO_GOD)))
     {
         // When it's about destroying an item, don't even ask.
         // If the player really wants to do that, they'll have
