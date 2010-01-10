@@ -7,6 +7,8 @@
 
 #include "exclude.h"
 
+#include <algorithm>
+
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
