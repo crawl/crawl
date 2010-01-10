@@ -157,7 +157,8 @@ static void _build_river(dungeon_feature_type river_type); //mv
 static void _build_lake(dungeon_feature_type lake_type); //mv
 static void _ruin_level(int iterations = 1, int ruination = 10,
                         int plant_density = 5);
-static void _add_plant_clumps();
+static void _add_plant_clumps(int frequency = 10, int clump_density = 12,
+                              int clump_radius = 4);
 
 static void _bigger_room();
 static void _plan_main(int level_number, int force_plan);
@@ -7823,7 +7824,9 @@ static void _ruin_level(int iterations /* = 1 */, int ruination /* = 10 */,
     }
 }
 
-static void _add_plant_clumps()
+static void _add_plant_clumps(int frequency /* = 10 */,
+                              int clump_density /* = 12 */,
+                              int clump_radius /* = 4 */)
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -7834,7 +7837,7 @@ static void _add_plant_clumps()
             monster_type type = menv[mgrd(*ri)].type;
             if ((type == MONS_PLANT  ||
                  type == MONS_FUNGUS ||
-                 type == MONS_BUSH) && one_chance_in(10)) {
+                 type == MONS_BUSH) && one_chance_in(frequency)) {
                 mg.cls = type;
             }
             else {
@@ -7847,7 +7850,7 @@ static void _add_plant_clumps()
 
         std::vector<coord_def> to_place;
         to_place.push_back(*ri);
-        for (int i = 1; i < 4; ++i)
+        for (int i = 1; i < clump_radius; ++i)
         {
             for (radius_iterator rad(*ri, i, C_SQUARE); rad; ++rad)
             {
@@ -7869,7 +7872,7 @@ static void _add_plant_clumps()
                     /* only place plants next to previously placed plants */
                     if (abs(rad->x - it->x) <= 1 && abs(rad->y - it->y) <= 1)
                     {
-                        if (one_chance_in(12)) {
+                        if (one_chance_in(clump_density)) {
                             more_to_place.push_back(*rad);
                         }
                     }
