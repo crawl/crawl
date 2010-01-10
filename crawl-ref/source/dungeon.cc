@@ -1844,8 +1844,8 @@ static void _build_dungeon_level(int level_number, int level_type)
     if (player_in_branch(BRANCH_LAIR))
     {
         int depth = player_branch_depth() + 1;
-        _ruin_level(depth / 2, 10, 5 + depth / 2);
-        _add_plant_clumps();
+        _ruin_level(depth / 4 + 1, depth, depth / 2 + 5);
+        _add_plant_clumps(20 - depth * 2, 20 - depth / 2, depth / 2);
     }
 
     const unsigned nvaults = Level_Vaults.size();
