@@ -299,11 +299,11 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Jiyva to remove your harmful mutations"
     },
     // Fedhas
-    { "call sunshine",
+    { "induce evolution",
+      "call sunshine",
       "cause a ring of plants to grow",
-      "control the weather",
       "spawn explosive spores",
-      "induce evolution"
+      "control the weather"
     },
     // Cheibriados
     { "Cheibriados is slowing your {biology}.",
@@ -406,11 +406,11 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Jiyva to remove your harmful mutations"
     },
     // Fedhas
-    { "call sunshine",
+    { "induce evolution",
+      "call sunshine",
       "cause a ring of plants to grow",
-      "control the weather",
       "spawn explosive spores",
-      "induce evolution"
+      "control the weather"
     },
     // Cheibriados
     { "Cheibriados will no longer slow your {biology}.",
