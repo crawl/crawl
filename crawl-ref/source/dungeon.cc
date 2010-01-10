@@ -1136,12 +1136,6 @@ static void _build_layout_skeleton(int level_number, int level_type,
                 _builder_extras(level_number, level_type);
         }
     }
-
-    if (player_in_branch(BRANCH_LAIR))
-    {
-        _ruin_level();
-        _add_plant_clumps();
-    }
 }
 
 static int _num_items_wanted(int level_number)
@@ -1844,6 +1838,12 @@ static void _build_dungeon_level(int level_number, int level_type)
                      DNGN_ROCK_WALL);
     dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_FLOOR,
                      DNGN_FLOOR);
+
+    if (player_in_branch(BRANCH_LAIR))
+    {
+        _ruin_level();
+        _add_plant_clumps();
+    }
 
     const unsigned nvaults = Level_Vaults.size();
 
