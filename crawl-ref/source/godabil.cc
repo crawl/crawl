@@ -547,6 +547,21 @@ bool sunlight()
             if (you.see_cell(target))
                 evap_count++;
 
+            // This is a little awkward but if we evaporated all the way to
+            // the dungeon floor that may have given a monster
+            // ENCH_AQUATIC_LAND, and if that happened the player should get
+            // credit if the monster dies. The enchantment is inflicted via
+            // the dungeon_terrain_changed call chain and that doesn't keep
+            // track of what caused the terrain change. -cao
+            monsters * monster = monster_at(target);
+            if (monster && ftype == DNGN_FLOOR
+                && monster->has_ench(ENCH_AQUATIC_LAND))
+            {
+                mon_enchant temp = monster->get_ench(ENCH_AQUATIC_LAND);
+                temp.who = KC_YOU;
+                monster->add_ench(temp);
+            }
+
             processed_count++;
         }
 
