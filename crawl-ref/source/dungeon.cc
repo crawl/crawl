@@ -7792,21 +7792,65 @@ static void _add_plant_clumps()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (grd(*ri) != DNGN_FLOOR || !one_chance_in(500))
+        mgen_data mg;
+        if (mgrd(*ri) != NON_MONSTER)
         {
+            /* clump plants around things that already exist */
+            monster_type type = menv[mgrd(*ri)].type;
+            if ((type == MONS_PLANT || type == MONS_FUNGUS) &&
+                one_chance_in(10)) {
+                mg.cls = type;
+            }
+            else {
+                continue;
+            }
+        }
+        else {
             continue;
         }
-        mgen_data mg;
-        mg.cls = coinflip() ? MONS_PLANT : MONS_FUNGUS;
-        mg.pos = *ri;
-        mons_place(mgen_data(mg));
-        for (adjacent_iterator ai(*ri); ai; ++ai)
+
+        std::vector<coord_def> to_place;
+        to_place.push_back(*ri);
+        for (int i = 1; i < 4; ++i)
         {
-            if (grd(*ai) == DNGN_FLOOR && coinflip())
+            for (radius_iterator rad(*ri, i, C_SQUARE); rad; ++rad)
             {
-                mg.pos = *ai;
-                mons_place(mgen_data(mg));
+                if (grd(*rad) != DNGN_FLOOR)
+                {
+                    continue;
+                }
+
+                /* make sure the iterator stays valid */
+                to_place.reserve((2 * i + 1) * (2 * i + 1));
+                for (std::vector<coord_def>::const_iterator it = to_place.begin();
+                     it != to_place.end();
+                     ++it)
+                {
+                    if (*rad == *it)
+                    {
+                        continue;
+                    }
+                    /* only place plants next to previously placed plants */
+                    if (abs(rad->x - it->x) <= 1 && abs(rad->y - it->y) <= 1)
+                    {
+                        if (one_chance_in(12)) {
+                            to_place.push_back(*rad);
+                        }
+                    }
+                }
             }
+        }
+
+        for (std::vector<coord_def>::const_iterator it = to_place.begin();
+             it != to_place.end();
+             ++it)
+        {
+            if (*it == *ri)
+            {
+                continue;
+            }
+            mg.pos = *it;
+            mons_place(mgen_data(mg));
         }
     }
 }
