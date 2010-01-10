@@ -2796,6 +2796,10 @@ static int _tileidx_cloud(cloud_struct cl)
                 ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
                 break;
 
+            case CLOUD_GLOOM:
+                ch = TILE_CLOUD_GLOOM;
+                break;
+
             default:
                 ch = TILE_CLOUD_GREY_SMOKE;
                 break;

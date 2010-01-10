@@ -536,6 +536,9 @@ bool sunlight()
     int plant_count = 0;
     int processed_count = 0;
 
+    // This is dealt with outside of the main loop.
+    int cloud_count = 0;
+
     // FIXME: Uncomfortable level of code duplication here but the explosion
     // code in bolt subjects the input radius to r*(r+1) for the threshold and
     // since r is an integer we can never get just the 4-connected neighbours.
@@ -634,6 +637,20 @@ bool sunlight()
         }
     }
 
+    // We damage clousd for a large radius, though.
+    for (radius_iterator ai(base, 7); ai; ++ai)
+    {
+        if (env.cgrid(*ai) != EMPTY_CLOUD)
+        {
+            const int cloudidx = env.cgrid(*ai);
+            if (env.cloud[cloudidx].type == CLOUD_GLOOM)
+            {
+                cloud_count++;
+                delete_cloud(cloudidx);
+            }
+        }
+    }
+
 #ifndef USE_TILE
     // Move the cursor out of the way (it looks weird).
     cgotoxy(base.x, base.y, GOTO_DNGN);
@@ -649,6 +666,9 @@ bool sunlight()
 
     if (evap_count)
         mprf("Some water evaporates in the bright sunlight.");
+
+    if (cloud_count)
+        mprf("Sunlight penetrates the thick gloom.");
 
     return (processed_count);
 }

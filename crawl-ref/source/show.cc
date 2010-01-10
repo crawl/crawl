@@ -272,7 +272,11 @@ void show_def::_update_cloud(int cloudno)
     const coord_def e = grid2show(env.cloud[cloudno].pos);
     int which_colour = get_cloud_colour(cloudno);
     _set_backup(e);
-    grid(e).cls = SH_CLOUD;
+    if (env.cloud[cloudno].type != CLOUD_GLOOM)
+    {
+        grid(e).cls = SH_CLOUD;
+    }
+
     grid(e).colour = which_colour;
 
 #ifdef USE_TILE

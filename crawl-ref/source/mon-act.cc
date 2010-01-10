@@ -44,6 +44,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h" // for item values
+#include "spells1.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -3454,6 +3455,13 @@ static bool _monster_move(monsters *monster)
                          2 + random2(3), monster->kill_alignment(),
                          KILL_MON_MISSILE );
         }
+
+        // Commented out, but left in as an example of gloom. {due}
+        //if (monster->type == MONS_SHADOW)
+        //{
+        //    big_cloud (CLOUD_GLOOM, monster->kill_alignment(), monster->pos(), 10 + random2(5), 2 + random2(8));
+        //}
+
     }
     else
     {

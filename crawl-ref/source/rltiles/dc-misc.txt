@@ -42,6 +42,8 @@ cloud_rain1 CLOUD_RAIN
 cloud_rain2
 cloud_grey_smoke CLOUD_MIST
 
+cloud_gloom CLOUD_GLOOM
+
 #########MAP
 %sdir dc-misc
 %corpse 0

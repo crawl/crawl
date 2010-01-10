@@ -6396,6 +6396,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_VISUAL:               return ("visual effects");
     case BEAM_TORMENT_DAMAGE:       return ("torment damage");
     case BEAM_STEAL_FOOD:           return ("steal food");
+    case BEAM_GLOOM:                return ("gloom");
 
     case NUM_BEAMS:                 DEBUGSTR("invalid beam type");
                                     return ("INVALID");
