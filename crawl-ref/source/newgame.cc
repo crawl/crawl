@@ -4515,7 +4515,7 @@ bool _give_items_skills()
         you.skills[SK_STEALTH]  = 2;
         you.skills[SK_STABBING] = 2;
         you.skills[SK_TRAPS_DOORS] = 2;
-        you.skills[SK_CROSSBOWS] = 1;
+        you.skills[SK_THROWING] = 2;
         break;
 
     case JOB_ASSASSIN:
