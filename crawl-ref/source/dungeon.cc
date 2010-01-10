@@ -7775,7 +7775,10 @@ static void _ruin_level()
 
         /* replace some ruined walls with plants/fungi */
         if (one_chance_in(5)) {
-            mons_place(mgen_data(coinflip() ? MONS_PLANT : MONS_FUNGUS));
+            mgen_data mg;
+            mg.cls = coinflip() ? MONS_PLANT : MONS_FUNGUS;
+            mg.pos = *it;
+            mons_place(mgen_data(mg));
         }
     }
 }
