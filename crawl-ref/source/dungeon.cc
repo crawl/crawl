@@ -7744,8 +7744,8 @@ static void _ruin_level()
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        /* only try to replace wall tiles */
-        if (!feat_is_wall(grd(*ri)))
+        /* only try to replace wall and door tiles */
+        if (!feat_is_wall(grd(*ri)) && !feat_is_door(grd(*ri)))
         {
             continue;
         }
@@ -7753,7 +7753,7 @@ static void _ruin_level()
         int floor_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
         {
-            if (!feat_is_wall(grd(*ai)))
+            if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai)))
             {
                 floor_count++;
             }
@@ -7771,9 +7771,12 @@ static void _ruin_level()
          it != to_replace.end();
          ++it)
     {
+        /* only remove some doors, to preserve tactical options */
         /* XXX: should this pick a random adjacent floor type, rather than
          * just hardcoding DNGN_FLOOR? */
-        grd(*it) = DNGN_FLOOR;
+        if (feat_is_wall(grd(*it)) || (coinflip() && feat_is_door(grd(*it)))) {
+            grd(*it) = DNGN_FLOOR;
+        }
 
         /* replace some ruined walls with plants/fungi */
         if (one_chance_in(5)) {
