@@ -525,6 +525,7 @@ bool sunlight()
 
         // If this is a water square we will evaporate it.
         dungeon_feature_type ftype = grd(target);
+        dungeon_feature_type orig_type = ftype;
 
         switch (ftype)
         {
@@ -540,7 +541,7 @@ bool sunlight()
             break;
         }
 
-        if (grd(target) != ftype)
+        if (orig_type != ftype)
         {
             dungeon_terrain_changed(target, ftype);
 
@@ -581,7 +582,8 @@ bool sunlight()
         }
         else if (one_chance_in(100)
                  && ftype >= DNGN_FLOOR_MIN
-                 && ftype <= DNGN_FLOOR_MAX)
+                 && ftype <= DNGN_FLOOR_MAX
+                 && orig_type == DNGN_SHALLOW_WATER)
         {
             // Create a plant.
             const int plant = create_monster(mgen_data(MONS_PLANT,
