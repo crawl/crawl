@@ -482,7 +482,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
             int cl = env.cgrid(p);
 
             if (env.cgrid(p) != EMPTY_CLOUD)
-                desc = cloud_name(cl);
+                desc = cloud_name(cl) + " cloud";
         }
 
         curr_excludes.add_exclude(p, radius, autoexcl, desc, vaultexcl);
@@ -526,6 +526,48 @@ std::string exclude_set::get_exclusion_desc()
             count_other++;
     }
 
+    if (desc.size() > 1)
+    {
+        // Combine identical descriptions.
+        std::sort(desc.begin(), desc.end());
+        std::vector<std::string> help = desc;
+        desc.clear();
+        std::string old_desc = "";
+        int count = 1;
+        for (unsigned int i = 0; i < help.size(); ++i)
+        {
+            std::string tmp = help[i];
+            if (i == 0)
+                old_desc = tmp;
+            else
+            {
+                if (strcmp(tmp.c_str(), old_desc.c_str()) == 0)
+                    count++;
+                else
+                {
+                    if (count == 1)
+                        desc.push_back(old_desc);
+                    else
+                    {
+                        snprintf(info, INFO_SIZE, "%d %s",
+                                 count, pluralise(old_desc).c_str());
+                        desc.push_back(info);
+                        count = 1;
+                    }
+                    old_desc = tmp;
+                }
+            }
+        }
+        if (count == 1)
+            desc.push_back(old_desc);
+        else
+        {
+            snprintf(info, INFO_SIZE, "%d %s",
+                     count, pluralise(old_desc).c_str());
+            desc.push_back(info);
+        }
+    }
+
     if (count_other > 0)
     {
         snprintf(info, INFO_SIZE, "%d %sexclusion%s",
@@ -544,7 +586,7 @@ std::string exclude_set::get_exclusion_desc()
         desc_str += info;
     }
     return (desc_str + comma_separated_line(desc.begin(), desc.end(),
-                                            ", and ", ", "));
+                                            " and ", ", "));
 }
 
 
