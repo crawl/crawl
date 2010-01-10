@@ -1535,7 +1535,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
     std::string more_str = make_stringf("<lightgreen>%d spell level%s left"
                                         "<lightgreen>",
                                         player_spell_levels(),
-                                        (player_spell_levels() > 1 
+                                        (player_spell_levels() > 1
                                          || player_spell_levels() == 0) ? "s" : "");
 
     if (num_unreadable > 0)
@@ -1555,6 +1555,14 @@ static spell_type _choose_mem_spell(spell_list &spells,
     }
 
     spell_menu.set_more(formatted_string::parse_string(more_str));
+
+    // Don't make a menu so tall that we recycle hotkeys on the same page.
+    if (spells.size() > 52
+        && (spell_menu.maxpagesize() > 52 || spell_menu.maxpagesize() == 0))
+    {
+        spell_menu.set_maxpagesize(52);
+    }
+
 
     for (unsigned int i = 0; i < spells.size(); i++)
     {
