@@ -156,6 +156,7 @@ static bool _join_the_dots_rigorous(const coord_def &from,
 static void _build_river(dungeon_feature_type river_type); //mv
 static void _build_lake(dungeon_feature_type lake_type); //mv
 static void _ruin_level();
+static void _add_plant_clumps();
 
 static void _bigger_room();
 static void _plan_main(int level_number, int force_plan);
@@ -1139,6 +1140,7 @@ static void _build_layout_skeleton(int level_number, int level_type,
     if (player_in_branch(BRANCH_LAIR))
     {
         _ruin_level();
+        _add_plant_clumps();
     }
 }
 
@@ -7779,6 +7781,29 @@ static void _ruin_level()
             mg.cls = coinflip() ? MONS_PLANT : MONS_FUNGUS;
             mg.pos = *it;
             mons_place(mgen_data(mg));
+        }
+    }
+}
+
+static void _add_plant_clumps()
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (grd(*ri) != DNGN_FLOOR || !one_chance_in(500))
+        {
+            continue;
+        }
+        mgen_data mg;
+        mg.cls = coinflip() ? MONS_PLANT : MONS_FUNGUS;
+        mg.pos = *ri;
+        mons_place(mgen_data(mg));
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+        {
+            if (grd(*ai) == DNGN_FLOOR && coinflip())
+            {
+                mg.pos = *ai;
+                mons_place(mgen_data(mg));
+            }
         }
     }
 }
