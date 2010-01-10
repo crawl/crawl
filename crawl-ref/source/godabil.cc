@@ -886,12 +886,12 @@ int _prompt_for_fruit(int & count, const char * prompt_string)
     return (rc);
 }
 
-bool _prompt_amount(int max, int & selected)
+bool _prompt_amount(int max, int & selected, const std::string & prompt)
 {
     selected = max;
     while (true)
     {
-        msg::streams(MSGCH_PROMPT) << "How many plants will you create? (" << max << " max)"<< std::endl;
+        msg::streams(MSGCH_PROMPT) << prompt <<" (" << max << " max)"<< std::endl;
 
         unsigned char keyin = get_ch();
 
@@ -943,6 +943,7 @@ bool _less_first(const std::pair<int, int> & left, const std::pair<int, int> & r
 }
 void _decrease_amount(std::vector<std::pair<int, int> > & available, int amount)
 {
+    int total_decrease = amount;
     for (unsigned i=0; i < available.size() && amount > 0; i++)
     {
 
@@ -954,6 +955,11 @@ void _decrease_amount(std::vector<std::pair<int, int> > & available, int amount)
         amount -= decrease_amount;
         dec_inv_item_quantity(available[i].second, decrease_amount);
     }
+    if (total_decrease > 1)
+        mprf("%d pieces of fruit are consumed!", total_decrease);
+    else
+        mpr("A piece of fruit is consumed!");
+
 }
 
 // Create a ring or partial ring around the caster.  The user is
@@ -986,7 +992,7 @@ bool plant_ring_from_fruit()
 
     // And how many plants does the user want to create?
     int target_count;
-    if (!_prompt_amount(max_use, target_count))
+    if (!_prompt_amount(max_use, target_count, "How many plants will you create?"))
     {
         return (false);
     }
@@ -1164,19 +1170,19 @@ int corpse_spores(beh_type behavior)
 
 struct monster_conversion
 {
+    monster_conversion()
+    {
+        base_monster = NULL;
+        piety_cost = 0;
+        fruit_cost = 0;
+
+    }
     monsters * base_monster;
-    int cost;
+    int piety_cost;
+    int fruit_cost;
     monster_type new_type;
 };
 
-bool operator<(const monster_conversion & left,
-               const monster_conversion & right)
-{
-    if (left.cost == right.cost)
-        return (coinflip());
-
-    return (left.cost < right.cost);
-}
 
 // Given a monster (which should be a plant/fungus), see if
 // evolve_flora() can upgrade it, and set up a monster_conversion
@@ -1185,27 +1191,24 @@ bool operator<(const monster_conversion & left,
 bool _possible_evolution(monsters * input,
                          monster_conversion & possible_monster)
 {
-    int plant_cost = 10;
-    int toadstool_cost = 1;
-    int fungus_cost = 5;
-
     possible_monster.base_monster = input;
     switch (input->mons_species())
     {
     case MONS_PLANT:
-        possible_monster.cost = plant_cost;
+    case MONS_BUSH:
         possible_monster.new_type = MONS_OKLOB_PLANT;
+        possible_monster.fruit_cost = 1;
         break;
 
     case MONS_FUNGUS:
     case MONS_BALLISTOMYCETE:
-        possible_monster.cost = fungus_cost;
         possible_monster.new_type = MONS_WANDERING_MUSHROOM;
+        possible_monster.piety_cost = 1;
         break;
 
     case MONS_TOADSTOOL:
-        possible_monster.cost = toadstool_cost;
-        possible_monster.new_type = MONS_BALLISTOMYCETE;
+        possible_monster.new_type = MONS_WANDERING_MUSHROOM;
+        possible_monster.piety_cost = 2;
         break;
 
     default:
@@ -1215,70 +1218,138 @@ bool _possible_evolution(monsters * input,
     return (true);
 }
 
-bool evolve_flora()
+void _collect_adjacent_monsters(std::vector<monster_conversion> & available,
+                                const coord_def &  center)
 {
-    int rc;
-    int available_count;
-
-    int points_per_fruit = 8;
-    int oklob_cost = 10;
-
-    float approx_oklob_rate = float(points_per_fruit)/float(oklob_cost);
-
-    char prompt_string[100];
-    memset(prompt_string,0,100);
-    sprintf(prompt_string,
-            "Use which fruit?  %1.1f oklob plants per fruit, [0-9] specify amount",
-            approx_oklob_rate);
-
-    rc = _prompt_for_fruit(available_count, prompt_string);
-
-    // Prompt failed?
-    if (rc < 0)
-        return (false);
-
-    int points = points_per_fruit * available_count;
-    int starting_points = points;
-
-    std::priority_queue<monster_conversion> available_targets;
-
-    monster_conversion temp_conversion;
-
-    for (radius_iterator rad(you.pos(), LOS_RADIUS, true, true, true);
-         rad; ++rad)
+    for (adjacent_iterator adjacent(center, false); adjacent; ++adjacent)
     {
-        monsters * target = monster_at(*rad);
+        monsters * candidate = monster_at(*adjacent);
+        monster_conversion monster_upgrade;
+        if (candidate && _possible_evolution(candidate, monster_upgrade))
+            available.push_back(monster_upgrade);
+    }
+}
 
-        if (!target)
-            continue;
-
-        if (_possible_evolution(target, temp_conversion))
-            available_targets.push(temp_conversion);
+void _cost_summary(int oklob_count, int wandering_count, int total_in_range)
+{
+    mesclr(true);
+    if (oklob_count)
+    {
+        std::string str = (oklob_count > 1 ? "ts" : "t");
+        mprf("Upgrading %d plan%s to oklob plan%s (%d fruit)",
+              oklob_count, str.c_str(), str.c_str(), oklob_count);
     }
 
-    // Nothing available to upgrade.
-    if (available_targets.empty())
+    if (wandering_count)
+        mprf("Upgrading %d fungi to wandering mushroo%s (piety cost)",
+             wandering_count, (wandering_count > 1 ? "ms" : "m "));
+}
+
+bool evolve_flora()
+{
+    // Collect adjacent monsters
+    std::vector<monster_conversion> available_monsters;
+    _collect_adjacent_monsters(available_monsters, you.pos());
+
+    // No monsters in range can be upgraded.
+    if (available_monsters.empty() )
     {
-        mpr("No flora in sight can be evolved.");
+        mpr("No flora in range can be evolved.");
         return (false);
+    }
+
+    // What are the total costs of all adjacent upgrades?
+    int piety_cost = 0;
+    int fruit_cost = 0;
+
+    int oklob_generation = 0;
+    int wandering_generation = 0;
+
+    for (unsigned i=0; i < available_monsters.size(); i++)
+    {
+        piety_cost += available_monsters[i].piety_cost;
+        fruit_cost += available_monsters[i].fruit_cost;
+        switch(available_monsters[i].new_type)
+        {
+        case MONS_OKLOB_PLANT:
+            oklob_generation++;
+            break;
+        case MONS_WANDERING_MUSHROOM:
+            wandering_generation++;
+            break;
+
+        default:
+            break;
+        }
+    }
+
+
+    std::vector<std::pair<int, int> > collected_fruit;
+    int total_fruit = _collect_fruit(collected_fruit);
+    int useable_fruit = std::min(total_fruit, fruit_cost);
+
+    _cost_summary(useable_fruit, wandering_generation, available_monsters.size());
+
+    crawl_state.darken_range = 1;
+    viewwindow(false, false);
+
+    int target_fruit = useable_fruit;
+    // Ask the user how many fruit to use
+    if (useable_fruit > 1)
+    {
+        if(!_prompt_amount(useable_fruit, target_fruit,
+                           "How many oklobs will you create?"))
+        {
+            crawl_state.darken_range = -1;
+            viewwindow(false,false);
+            return (false);
+        }
+    }
+    else
+    {
+        delay(500);
+    }
+
+    crawl_state.darken_range = -1;
+    viewwindow(false, false);
+
+    int fruit_used = target_fruit;
+    int reduction = fruit_cost - target_fruit;
+
+    if (int(available_monsters.size()) <= reduction)
+    {
+        mprf("Not enough fruit available.");
+        return false;
     }
 
     int plants_evolved = 0;
     int toadstools_evolved = 0;
     int fungi_evolved = 0;
 
-    while (!available_targets.empty() && points > 0)
+
+    std::random_shuffle(available_monsters.begin(), available_monsters.end() );
+
+    for (unsigned i=0; i < available_monsters.size(); i++)
     {
-        monster_conversion current_target = available_targets.top();
+        monsters * current_plant = available_monsters[i].base_monster;
+        monster_conversion current_target = available_monsters[i];
 
-        monsters * current_plant = current_target.base_monster;
-        available_targets.pop();
-
-        // Can we afford this thing?
-        if (current_target.cost > points)
+        if (current_target.new_type == MONS_OKLOB_PLANT)
+        {
+            if (target_fruit)
+                target_fruit--;
+            else
+                continue;
+        }
+        else if (you.piety > current_target.piety_cost)
+        {
+            lose_piety(current_target.piety_cost);
+        }
+        // This would wipe out our remaining piety, so don't do it.
+        else
+        {
             continue;
-
-        points -= current_target.cost;
+        }
 
         switch (current_plant->mons_species())
         {
@@ -1304,58 +1375,15 @@ bool evolve_flora()
 
         // Try to remove slowly dying in case we are upgrading a
         // toadstool, and spore production in case we are upgrading a
-        // fungus.
+        // ballistomycete.
         current_plant->del_ench(ENCH_SLOWLY_DYING);
         current_plant->del_ench(ENCH_SPORE_PRODUCTION);
-
-        // Maybe we can upgrade it again?
-        if (_possible_evolution(current_plant, temp_conversion)
-            && temp_conversion.cost <= points)
-        {
-            available_targets.push(temp_conversion);
-        }
     }
 
-    // How many pieces of fruit did we use up?
-    int points_used = starting_points - points;
-    int fruit_used = points_used / points_per_fruit;
-    if (points_used % points_per_fruit)
-        fruit_used++;
-
-    // The player didn't have enough points to upgrade anything (probably
-    // supplied only one fruit).
-    if (!fruit_used)
+    if (fruit_used)
     {
-        mpr("Not enough fruit to cause evolution.");
-        return (false);
+        _decrease_amount(collected_fruit, fruit_used);
     }
-
-    dec_inv_item_quantity(rc, fruit_used);
-
-    // Mention how many plants were used.
-    if (fruit_used > 1)
-        mprf("%d pieces of fruit are consumed!", fruit_used);
-    else
-        mpr("A piece of fruit is consumed!");
-
-    // Messaging for generated plants.
-    if (plants_evolved > 1)
-        mprf("%d plants can now spit acid.", plants_evolved);
-    else if (plants_evolved == 1)
-        mpr("A plant can now spit acid.");
-
-    if (toadstools_evolved > 1)
-        mprf("%d toadstools gained stability.", toadstools_evolved);
-    else if (toadstools_evolved == 1)
-        mpr("A toadstool gained stability.");
-
-    if (fungi_evolved > 1)
-    {
-        mprf("%d fungal colonies can now pick up their mycelia and move.",
-             fungi_evolved);
-    }
-    else if (fungi_evolved == 1)
-        mpr("A fungal colony can now pick up its mycelia and move.");
 
     return (true);
 }

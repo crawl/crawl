@@ -1990,7 +1990,6 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_FEDHAS_EVOLUTION:
         if (!evolve_flora())
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
         }
 
