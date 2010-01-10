@@ -155,6 +155,7 @@ static bool _join_the_dots_rigorous(const coord_def &from,
 
 static void _build_river(dungeon_feature_type river_type); //mv
 static void _build_lake(dungeon_feature_type lake_type); //mv
+static void _ruin_level();
 
 static void _bigger_room();
 static void _plan_main(int level_number, int force_plan);
@@ -1133,6 +1134,11 @@ static void _build_layout_skeleton(int level_number, int level_type,
             if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
                 _builder_extras(level_number, level_type);
         }
+    }
+
+    if (player_in_branch(BRANCH_LAIR))
+    {
+        _ruin_level();
     }
 }
 
@@ -2444,9 +2450,6 @@ static builder_rc_type _builder_by_branch(int level_number)
 
     switch (you.where_are_you)
     {
-    case BRANCH_LAIR:
-        if (!one_chance_in(3))
-            break;
     case BRANCH_HIVE:
     case BRANCH_SLIME_PITS:
     case BRANCH_ORCISH_MINES:
@@ -7730,6 +7733,50 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
                     env.markers.remove_markers_at(coord_def(i, j), MAT_ANY);
                 }
             }
+    }
+}
+
+static void _ruin_level()
+{
+    std::vector<coord_def> to_replace;
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        /* only try to replace wall tiles */
+        if (!feat_is_wall(grd(*ri)))
+        {
+            continue;
+        }
+
+        int floor_count = 0;
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+        {
+            if (!feat_is_wall(grd(*ai)))
+            {
+                floor_count++;
+            }
+        }
+
+        /* chance of removing the tile is dependent on the number of adjacent
+         * floor tiles */
+        if (x_chance_in_y(floor_count, 10))
+        {
+            to_replace.push_back(*ri);
+        }
+    }
+
+    for (std::vector<coord_def>::const_iterator it = to_replace.begin();
+         it != to_replace.end();
+         ++it)
+    {
+        /* XXX: should this pick a random adjacent floor type, rather than
+         * just hardcoding DNGN_FLOOR? */
+        grd(*it) = DNGN_FLOOR;
+
+        /* replace some ruined walls with plants/fungi */
+        if (one_chance_in(5)) {
+            mons_place(mgen_data(coinflip() ? MONS_PLANT : MONS_FUNGUS));
+        }
     }
 }
 
