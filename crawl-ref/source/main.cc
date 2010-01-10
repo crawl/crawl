@@ -2503,26 +2503,8 @@ static void _decrement_durations()
             // slowing, exhaustion still ends haste.
             if (you.duration[DUR_HASTE] > 0)
             {
-                if (wearing_amulet(AMU_RESIST_SLOW))
-                {
-                    if (you.duration[DUR_HASTE] > 3 * BASELINE_DELAY)
-                    {
-                        you.set_duration(DUR_HASTE, div_rand_round(2 + coinflip(), 2));
-                        mpr("Your extra speed is starting to run out.",
-                            MSGCH_DURATION);
-                    }
-                    else
-                    {
-                        mpr("You feel yourself slow down.", MSGCH_DURATION);
-                        you.duration[DUR_HASTE] = 0;
-                    }
-                    did_god_conduct(DID_HASTY, 3, true);
-                }
-                else
-                {
-                    // Silently cancel haste, then slow player.
-                    you.duration[DUR_HASTE] = 0;
-                }
+                // Silently cancel haste, then slow player.
+                you.duration[DUR_HASTE] = 0;
             }
             slow_player(dur);
         }

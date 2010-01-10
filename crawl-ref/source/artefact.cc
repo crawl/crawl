@@ -102,11 +102,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_QUICK_BLADE)
             type_bad = true;
 
-        if (item.base_type == OBJ_JEWELLERY && (item.sub_type == AMU_RAGE
-            || item.sub_type == AMU_RESIST_SLOW))
-        {
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
             type_bad = true;
-        }
         break;
 
     default:

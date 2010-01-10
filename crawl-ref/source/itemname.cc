@@ -585,7 +585,6 @@ static const char* jewellery_type_name(int jeweltype)
     case RING_ICE:                   return "ring of ice";
     case RING_TELEPORT_CONTROL:      return "ring of teleport control";
     case AMU_RAGE:              return "amulet of rage";
-    case AMU_RESIST_SLOW:       return "amulet of resist slowing";
     case AMU_CLARITY:           return "amulet of clarity";
     case AMU_WARDING:           return "amulet of warding";
     case AMU_RESIST_CORROSION:  return "amulet of resist corrosion";

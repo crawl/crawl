@@ -1798,7 +1798,6 @@ unsigned int item_value( item_def item, bool ident )
             case AMU_CLARITY:
             case AMU_RESIST_CORROSION:
             case AMU_RESIST_MUTATION:
-            case AMU_RESIST_SLOW:
             case AMU_WARDING:
                 valued += 30;
                 break;

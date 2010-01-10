@@ -178,7 +178,6 @@ enum jewellery_type
 
     AMU_FIRST_AMULET = 35,
     AMU_RAGE = AMU_FIRST_AMULET,       //   35
-    AMU_RESIST_SLOW,
     AMU_CLARITY,
     AMU_WARDING,
     AMU_RESIST_CORROSION,
@@ -574,4 +573,3 @@ enum zap_count_type
 };
 
 #endif
-

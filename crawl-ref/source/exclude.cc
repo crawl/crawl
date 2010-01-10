@@ -620,19 +620,9 @@ void unmarshallExcludes(reader& inf, char minorVersion, exclude_set &excludes)
         {
             coord_def c;
             unmarshallCoord(inf, c);
-            const int radius = unmarshallShort(inf);
-            bool autoexcl    = false;
-            autoexcl         = unmarshallBoolean(inf);
-            std::string desc = "";
-            if (minorVersion < TAG_MINOR_EXCLUSION_DESC)
-            {
-                monster_type mon = static_cast<monster_type>(unmarshallShort(inf));
-                if (mon != MONS_NO_MONSTER)
-                    desc = mons_type_name(mon, DESC_PLAIN);
-            }
-            else
-                desc = unmarshallString(inf);
-
+            const int radius       = unmarshallShort(inf);
+            const bool autoexcl    = unmarshallBoolean(inf);
+            const std::string desc = unmarshallString(inf);
             excludes.add_exclude(c, radius, autoexcl, desc);
         }
     }

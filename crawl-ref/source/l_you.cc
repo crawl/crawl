@@ -89,7 +89,6 @@ LUARET1(you_res_draining, number, player_prot_life(false))
 LUARET1(you_res_shock, number, player_res_electricity(false))
 LUARET1(you_res_statdrain, number, player_sust_abil(false))
 LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
-LUARET1(you_res_slowing, number, wearing_amulet(AMU_RESIST_SLOW, false))
 LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
 LUARET1(you_saprovorous, number, player_mutation_level(MUT_SAPROVOROUS))
 LUARET1(you_levitating, boolean, you.flight_mode() == FL_LEVITATE)
@@ -181,7 +180,6 @@ static const struct luaL_reg you_clib[] =
     { "res_shock"   , you_res_shock },
     { "res_statdrain", you_res_statdrain },
     { "res_mutation", you_res_mutation },
-    { "res_slowing",  you_res_slowing },
     { "saprovorous",  you_saprovorous },
     { "gourmand",     you_gourmand },
     { "levitating",   you_levitating },
