@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
@@ -236,6 +237,9 @@ void manage_clouds()
                 if (env.cgrid(*ai) != EMPTY_CLOUD)
                     if (env.cloud[env.cgrid(*ai)].type == CLOUD_GLOOM)
                         count++;
+
+            if (!haloers(cloud.pos).empty() && !silenced(cloud.pos))
+                count = 0;
 
             if (count < 4)
                 dissipate *= 50;
