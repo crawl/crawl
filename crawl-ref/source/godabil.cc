@@ -878,23 +878,88 @@ int _prompt_for_fruit(int & count, const char * prompt_string)
     return (rc);
 }
 
+bool _prompt_amount(int max, int & selected)
+{
+    selected = max;
+    while (true)
+    {
+        msg::streams(MSGCH_PROMPT) << "How many plants will you create? (" << max << " max)"<< std::endl;
+
+        unsigned char keyin = get_ch();
+
+        // Cancel
+        if (keyin == ESCAPE || keyin == ' ')
+        {
+            canned_msg( MSG_OK );
+            return (false);
+        }
+
+        // Default is max
+        if (keyin == '\n'  || keyin == '\r')
+            return true;
+
+        // Otherwise they should enter a digit
+        if (isdigit(keyin))
+        {
+            selected = keyin - '0';
+            if (selected > 0 && selected <= max)
+                return true;
+        }
+        // else they entered some garbage?
+    }
+
+    return max;
+}
+
+
+int _collect_fruit(std::vector<std::pair<int,int>  > & available_fruit)
+{
+    int total=0;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].is_valid()
+            && is_fruit(you.inv[i]) )
+        {
+            total += you.inv[i].quantity;
+            available_fruit.push_back(std::pair<int,int> (you.inv[i].quantity, i));
+        }
+    }
+
+    return total;
+}
+
+bool _less_first(const std::pair<int, int> & left, const std::pair<int, int> & right)
+{
+    return left.first < right.first;
+}
+void _decrease_amount(std::vector<std::pair<int, int> > & available, int amount)
+{
+    for (unsigned i=0; i < available.size() && amount > 0; i++)
+    {
+
+        int decrease_amount = available[i].first;
+        if (decrease_amount > amount)
+        {
+            decrease_amount = amount;
+        }
+        amount -= decrease_amount;
+        dec_inv_item_quantity(available[i].second, decrease_amount);
+    }
+}
+
 // Create a ring or partial ring around the caster.  The user is
 // prompted to select a stack of fruit, and then plants are placed on open
 // squares adjacent to the user.  Of course, one piece of fruit is
 // consumed per plant, so a complete ring may not be formed.
 bool plant_ring_from_fruit()
 {
-    int possible_count;
-    int created_count = 0;
-    int rc = _prompt_for_fruit(possible_count,
-                               "Use which fruit? [0-9] specify amount");
+    // How much fruit is available?
+    std::vector<std::pair<int, int> > collected_fruit;
+    int total_fruit = _collect_fruit(collected_fruit);
 
-    // Prompt failed?
-    if (rc < 0)
-        return (false);
-
+    // How many adjacent open spaces are there?
     std::vector<coord_def> adjacent;
-
     for (adjacent_iterator adj_it(you.pos()); adj_it; ++adj_it)
     {
         if (mons_class_can_pass(MONS_PLANT, env.grid(*adj_it))
@@ -904,22 +969,27 @@ bool plant_ring_from_fruit()
         }
     }
 
-    if ((int)adjacent.size() > possible_count)
+    int max_use = std::min(total_fruit, int(adjacent.size()) );
+
+    // And how many plants does the user want to create?
+    int target_count;
+    if (!_prompt_amount(max_use, target_count))
     {
-        prioritise_adjacent(you.pos(), adjacent);
+        return false;
     }
 
-    unsigned target_count =
-        (possible_count < (int)adjacent.size()) ? possible_count
-                                                : adjacent.size();
+    if ((int)adjacent.size() > target_count)
+        prioritise_adjacent(you.pos(), adjacent);
 
-    for (unsigned i = 0; i < target_count; ++i)
+    int created_count = 0;
+    for (int i = 0; i < target_count; ++i)
     {
         if (_create_plant(adjacent[i]))
             created_count++;
     }
 
-    dec_inv_item_quantity(rc, created_count);
+    std::sort(collected_fruit.begin(), collected_fruit.end(), _less_first);
+    _decrease_amount(collected_fruit, created_count);
 
     return (created_count);
 }
