@@ -2812,6 +2812,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_FRIEND_DIED:
             switch (you.religion)
             {
+
+            case GOD_FEDHAS:
+                // Toadstools are exempt from this conduct
+                if (victim && fedhas_protects(victim)
+                    && victim->mons_species() != MONS_TOADSTOOL)
+                {
+                    // level is (1 + monsterHD/2) for this conduct,
+                    // trying a fixed cost since plant HD aren't that
+                    // meaningful. -cao
+                    piety_change = -1;
+                    retval = true;
+                    break;
+                }
+                break;
+
             case GOD_ELYVILON: // healer god cares more about this
                 // Converted allies (marked as TSOites) can be martyrs.
                 if (victim && victim->god == GOD_SHINING_ONE)
@@ -2827,17 +2842,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 // Converted allies (marked as TSOites) can be martyrs.
                 if (victim && victim->god == GOD_SHINING_ONE)
                     break;
-                // fall through
-
-            case GOD_FEDHAS:
-                // double-check god because of fall-throughs from other gods
-                // Toadstools are an exception for this conduct
-                if (you.religion == GOD_FEDHAS && (!victim
-                        || !fedhas_protects(victim)
-                        || victim->mons_species() == MONS_TOADSTOOL))
-                {
-                    break;
-                }
                 // fall through
 
             case GOD_OKAWARU:

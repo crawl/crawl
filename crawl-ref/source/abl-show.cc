@@ -328,7 +328,7 @@ static const ability_def Ability_List[] =
     // Fedhas
     { ABIL_FEDHAS_FUNGAL_BLOOM, "Decomposition", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight", 2, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_FEDHAS_PLANT_RING, "Growth", 2, 0, 0, 1, ABFLAG_FRUIT},
+    { ABIL_FEDHAS_PLANT_RING, "Growth", 2, 0, 0, 0, ABFLAG_FRUIT},
     { ABIL_FEDHAS_RAIN, "Rain", 4, 0, 100, 2, ABFLAG_NONE},
     { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction", 4, 0, 50, 2, ABFLAG_NONE},
     { ABIL_FEDHAS_EVOLUTION, "Evolution", 4, 0, 0, 2, ABFLAG_FRUIT},
