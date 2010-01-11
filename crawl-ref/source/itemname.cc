@@ -2613,8 +2613,6 @@ bool is_useless_item(const item_def &item, bool temp)
         {
         case SPWPN_HOLY_WRATH:
             return (you.is_undead);
-        case SPWPN_PAIN:
-            return (temp && !you.skills[SK_NECROMANCY] && !is_artefact(item));
         }
         return (false);
 
