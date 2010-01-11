@@ -167,10 +167,6 @@ A shop
 
 A shop in the dungeon, beyond sight of the world above, manned by a secretive and reclusive shopkeeper who cannot be bargained with, grants no refunds, and is interested in nothing you may have to sell. Some shops hawk antiques of unknown provenance, and offer little hint as to the quality or nature of their goods.
 %%%%
-A white marble altar of Elyvilon
-
-An altar to Elyvilon the Healer, made from purest white marble and topped by a sculpture of the Chalice of Purification.
-%%%%
 A slime covered rock wall
 
 This rock wall is thickly coated with bright green slime. Ewwwwww.
@@ -290,6 +286,10 @@ These walls are built by bees. Occasionally a dungeon architect will manipulate 
 A wall of the weird stuff which makes up Pandemonium
 
 This wall is made from the weird stuff which makes up Pandemonium, but seems to be like rock in most other aspects.
+%%%%
+A white marble altar of Elyvilon
+
+An altar to Elyvilon the Healer, made from purest white marble and topped by a sculpture of the Chalice of Purification.
 %%%%
 An abandoned shop
 
