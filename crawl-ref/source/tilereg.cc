@@ -2174,8 +2174,9 @@ void InventoryRegion::render()
 
         bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
 
-        int x = m_cursor.x * dx + sx + ox + dx / 2;
-        int y = m_cursor.y * dy + sy + oy;
+        // Always draw the description in the inventory header. (jpeg)
+        int x = sx + ox + dx / 2;
+        int y = sy + oy;
 
         const coord_def min_pos(sx, sy - dy);
         const coord_def max_pos(ex, ey);
