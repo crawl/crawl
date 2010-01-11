@@ -980,8 +980,9 @@ dngn_shallow_water DNGN_SHALLOW_WATER
 dngn_shallow_water2
 dngn_shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE
 dngn_shallow_water_disturbance2
+%weight 2
 dngn_deep_water_murky DNGN_DEEP_WATER_MURKY
-dngn_deep_water_murky
+%weight 1
 dngn_deep_water_murky2
 %weight 3
 dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
