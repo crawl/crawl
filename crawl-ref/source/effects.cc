@@ -1482,17 +1482,9 @@ static missile_type _acquirement_missile_subtype()
 
     switch (skill)
     {
-    case SK_SLINGS: result = MI_STONE; break;
-    case SK_BOWS:   result = MI_ARROW; break;
-
-    case SK_CROSSBOWS:
-        // Assuming that crossbow in inventory means that they
-        // want bolts for it (not darts for a hand crossbow)...
-        // perhaps we should check for both and compare ammo
-        // amounts on hand?
-        result = (_have_item_with_types(OBJ_WEAPONS, WPN_CROSSBOW) ? MI_BOLT
-                                                                   : MI_DART);
-        break;
+    case SK_SLINGS:    result = MI_SLING_BULLET; break;
+    case SK_BOWS:      result = MI_ARROW; break;
+    case SK_CROSSBOWS: result = MI_BOLT; break;
 
     case SK_THROWING:
         // Assuming that blowgun in inventory means that they
