@@ -1283,10 +1283,13 @@ static const skill_type skill_display_order[] =
 
     SK_BLANK_LINE,
 
-    SK_ARMOUR, SK_DODGING, SK_STEALTH, SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS,
+    SK_ARMOUR, SK_DODGING, SK_STABBING, SK_SHIELDS,
+
+    SK_COLUMN_BREAK,
+
+    SK_STEALTH, SK_TRAPS_DOORS,
 
     SK_BLANK_LINE,
-    SK_COLUMN_BREAK,
 
     SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS, SK_SUMMONINGS,
     SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS,
@@ -1450,6 +1453,12 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         {
             cprintf("Press the letter of a skill to choose whether you want to "
                     "practise it.");
+#if 0
+            cprintf("Press the letter of a skill to choose whether you want to "
+                    "practise it. A" EOL
+                    "greyish skill will increase at a slower rate and ease "
+                    "training of others.");
+#endif
         }
 
         cgotoxy(1, bottom_line-1);
