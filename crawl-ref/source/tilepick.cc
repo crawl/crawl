@@ -3228,6 +3228,26 @@ int _get_door_offset (int base_tile, bool opened = false,
     return offset + gateway_type;
 }
 
+static int _pick_random_dngn_tile(unsigned int idx, int value = -1)
+{
+    ASSERT(idx >= 0 && idx < TILE_DNGN_MAX);
+    const int count = tile_dngn_count(idx);
+    if (count == 1)
+        return (idx);
+
+    const int total = tile_dngn_probs(idx + count - 1);
+    const int rand  = (value == -1 ? random2(total) : value % total);
+
+    for (int i = 0; i < count; ++i)
+    {
+        int curr = idx + i;
+        if (rand < tile_dngn_probs(curr))
+            return (curr);
+    }
+
+    return (idx);
+}
+
 // Modify wall tile index depending on floor/wall flavour.
 static inline void _finalise_tile(unsigned int *tile,
                                   unsigned int wall_flv,
@@ -3272,7 +3292,7 @@ static inline void _finalise_tile(unsigned int *tile,
         if (orig >= TILE_DNGN_LAVA && orig < TILE_BLOOD && you.see_cell(gc))
             env.tile_flv(gc).special = random2(256);
 
-        (*tile) = orig + (special_flv % tile_dngn_count(orig));
+        (*tile) = _pick_random_dngn_tile(orig, special_flv);
     }
 
     (*tile) |= flag;
@@ -4508,26 +4528,6 @@ void tile_init_flavour()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
         tile_init_flavour(*ri);
-}
-
-static int _pick_random_dngn_tile(unsigned int idx)
-{
-    ASSERT(idx >= 0 && idx < TILE_DNGN_MAX);
-    const int count = tile_dngn_count(idx);
-    if (count == 1)
-        return (idx);
-
-    const int total = tile_dngn_probs(idx + count - 1);
-    const int rand  = random2(total);
-
-    for (int i = 0; i < count; ++i)
-    {
-        int curr = idx + i;
-        if (rand < tile_dngn_probs(curr))
-            return (curr);
-    }
-
-    return (idx);
 }
 
 void tile_init_flavour(const coord_def &gc)
