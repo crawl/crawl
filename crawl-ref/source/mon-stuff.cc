@@ -2679,7 +2679,7 @@ bool monster_blink(monsters *monster, bool quiet)
     coord_def near = _random_monster_nearby_habitable_space(*monster, false,
                                                             true);
 
-    return (monster->blink_to(near));
+    return (monster->blink_to(near, quiet));
 }
 
 bool mon_can_be_slimified(monsters *monster)
