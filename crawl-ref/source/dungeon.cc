@@ -155,8 +155,7 @@ static bool _join_the_dots_rigorous(const coord_def &from,
 
 static void _build_river(dungeon_feature_type river_type); //mv
 static void _build_lake(dungeon_feature_type lake_type); //mv
-static void _ruin_level(int iterations = 1, int ruination = 10,
-                        int plant_density = 5);
+static void _ruin_level(int ruination = 10, int plant_density = 5);
 static void _add_plant_clumps(int frequency = 10, int clump_density = 12,
                               int clump_radius = 4);
 
@@ -1844,8 +1843,11 @@ static void _build_dungeon_level(int level_number, int level_type)
     if (player_in_branch(BRANCH_LAIR))
     {
         int depth = player_branch_depth() + 1;
-        _ruin_level(depth / 4 + 1, depth, depth / 2 + 5);
-        _add_plant_clumps(20 - depth * 2, 20 - depth / 2, depth / 2);
+        do {
+            _ruin_level(20 - depth, depth / 2 + 5);
+            _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
+            depth -= 3;
+        } while (depth > 0);
     }
 
     const unsigned nvaults = Level_Vaults.size();
@@ -7741,85 +7743,82 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
     }
 }
 
-static void _ruin_level(int iterations /* = 1 */, int ruination /* = 10 */,
-                        int plant_density /* = 5 */)
+static void _ruin_level(int ruination /* = 10 */, int plant_density /* = 5 */)
 {
-    for (; iterations; iterations--) {
-        std::vector<coord_def> to_replace;
+    std::vector<coord_def> to_replace;
 
-        for (rectangle_iterator ri(1); ri; ++ri)
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        /* only try to replace wall and door tiles */
+        if (!feat_is_wall(grd(*ri)) && !feat_is_door(grd(*ri)))
         {
-            /* only try to replace wall and door tiles */
-            if (!feat_is_wall(grd(*ri)) && !feat_is_door(grd(*ri)))
-            {
-                continue;
-            }
+            continue;
+        }
 
-            /* don't mess with permarock */
-            if (grd(*ri) == DNGN_PERMAROCK_WALL) {
-                continue;
-            }
+        /* don't mess with permarock */
+        if (grd(*ri) == DNGN_PERMAROCK_WALL) {
+            continue;
+        }
 
-            int floor_count = 0;
-            for (adjacent_iterator ai(*ri); ai; ++ai)
+        int floor_count = 0;
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+        {
+            if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai)))
             {
-                if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai)))
-                {
-                    floor_count++;
-                }
-            }
-
-            /* chance of removing the tile is dependent on the number of adjacent
-            * floor tiles */
-            if (x_chance_in_y(floor_count, 20 - ruination))
-            {
-                to_replace.push_back(*ri);
+                floor_count++;
             }
         }
 
-        for (std::vector<coord_def>::const_iterator it = to_replace.begin();
-             it != to_replace.end();
-             ++it)
+        /* chance of removing the tile is dependent on the number of adjacent
+         * floor tiles */
+        if (x_chance_in_y(floor_count, ruination))
         {
-            /* only remove some doors, to preserve tactical options */
-            /* XXX: should this pick a random adjacent floor type, rather than
-            * just hardcoding DNGN_FLOOR? */
-            if (feat_is_wall(grd(*it)) ||
-                (coinflip() && feat_is_door(grd(*it))))
-            {
-                grd(*it) = DNGN_FLOOR;
-            }
+            to_replace.push_back(*ri);
+        }
+    }
 
-            /* but remove doors if we've removed all adjacent walls */
-            for (adjacent_iterator wai(*it); wai; ++wai)
+    for (std::vector<coord_def>::const_iterator it = to_replace.begin();
+         it != to_replace.end();
+         ++it)
+    {
+        /* only remove some doors, to preserve tactical options */
+        /* XXX: should this pick a random adjacent floor type, rather than
+         * just hardcoding DNGN_FLOOR? */
+        if (feat_is_wall(grd(*it)) ||
+            (coinflip() && feat_is_door(grd(*it))))
+        {
+            grd(*it) = DNGN_FLOOR;
+        }
+
+        /* but remove doors if we've removed all adjacent walls */
+        for (adjacent_iterator wai(*it); wai; ++wai)
+        {
+            if (feat_is_door(grd(*wai)))
             {
-                if (feat_is_door(grd(*wai)))
+                bool remove = true;
+                for (adjacent_iterator dai(*wai); dai; ++dai)
                 {
-                    bool remove = true;
-                    for (adjacent_iterator dai(*wai); dai; ++dai)
+                    if (feat_is_wall(grd(*dai)))
                     {
-                        if (feat_is_wall(grd(*dai)))
-                        {
-                            remove = false;
-                        }
-                    }
-                    if (remove)
-                    {
-                        grd(*wai) = DNGN_FLOOR;
+                        remove = false;
                     }
                 }
+                if (remove)
+                {
+                    grd(*wai) = DNGN_FLOOR;
+                }
             }
+        }
 
-            /* replace some ruined walls with plants/fungi/bushes */
-            if (one_chance_in(plant_density))
-            {
-                mgen_data mg;
-                mg.cls = one_chance_in(20) ? MONS_BUSH  :
-                         coinflip()        ? MONS_PLANT :
-                                             MONS_FUNGUS;
-                mg.pos = *it;
-                mons_place(mgen_data(mg));
-            }
+        /* replace some ruined walls with plants/fungi/bushes */
+        if (one_chance_in(plant_density))
+        {
+            mgen_data mg;
+            mg.cls = one_chance_in(20) ? MONS_BUSH  :
+                     coinflip()        ? MONS_PLANT :
+                     MONS_FUNGUS;
+            mg.pos = *it;
+            mons_place(mgen_data(mg));
         }
     }
 }
