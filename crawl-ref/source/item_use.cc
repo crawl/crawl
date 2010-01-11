@@ -658,7 +658,12 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_PAIN:
-                    mpr("A searing pain shoots up your arm!");
+                    if(you.skills[SK_NECROMANCY] == 0)
+                        mpr("You have a feeling of ineptitude.");
+                    else if(you.skills[SK_NECROMANCY] <= 4)
+                        mpr("Pain shudders through your arm!");
+                    else
+                        mpr("A searing pain shoots up your arm!");
                     break;
 
                 case SPWPN_CHAOS:
