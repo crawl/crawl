@@ -1128,7 +1128,8 @@ bool tile_list_processor::write_data()
 
             if (m_page.m_tiles[i]->enumcount() == 0)
             {
-                fprintf(fp, "<td></td><td></td>");
+                const int prob = m_page.m_probs[i] - m_page.m_probs[i-1];
+                fprintf(fp, "<td>(%d)</td><td></td>", prob);
             }
             else
             {
@@ -1136,7 +1137,11 @@ bool tile_list_processor::write_data()
                 for (unsigned int c = 0; c < lcenum.size(); c++)
                     lcenum[c] = std::tolower(lcenum[c]);
 
-                fprintf(fp, "<td>%s</td>", lcenum.c_str());
+                const int prob = m_page.m_probs[i];
+                if (m_page.m_counts[i] > 1)
+                    fprintf(fp, "<td>%s (%d)</td>", lcenum.c_str(), prob);
+                else
+                    fprintf(fp, "<td>%s</td>", lcenum.c_str());
 
                 const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
                 if (parts_ctg.empty())
