@@ -33,6 +33,7 @@ morgue
 *.map
 map.dump
 mapgen.log
+*.out
 *.stat
 
 # Tile copied files

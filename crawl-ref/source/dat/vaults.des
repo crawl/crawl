@@ -928,7 +928,7 @@ SUBST:  $ = | * $
 KFEAT:  l = teleport trap
 KFEAT:  z = zot trap
 KFEAT:  a = alarm trap
-SUBST:  s = .:250 =:1
+SUBST:  s = x:250 =:1
 SUBST:  a = x.
 : vault8_loot(_G)
 : vault8_rune(_G)

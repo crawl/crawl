@@ -1161,11 +1161,13 @@ bool monsters::drop_item(int eslot, int near)
     if (pitem->flags & ISFLAG_SUMMONED)
     {
         if (need_message(near))
+        {
             mprf("%s %s as %s drops %s!",
                  pitem->name(DESC_CAP_THE).c_str(),
                  summoned_poof_msg(this, *pitem).c_str(),
                  name(DESC_NOCAP_THE).c_str(),
                  pitem->quantity > 1 ? "them" : "it");
+        }
 
         item_was_destroyed(*pitem, mindex());
         destroy_item(item_index);
@@ -1322,8 +1324,8 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
 {
     // Throwable weapons may be picked up as though dual-wielding.
     const bool dual_wielding = (mons_wields_two_weapons(this)
-                                   || is_throwable(this, item));
-    if (dual_wielding)
+                                || is_throwable(this, item));
+    if (dual_wielding && item.quantity == 1)
     {
         // If we have either weapon slot free, pick up the weapon.
         if (inv[MSLOT_WEAPON] == NON_ITEM)
@@ -1346,6 +1348,11 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         weap = mslot_item(static_cast<mon_inv_type>(i));
+
+        // If the weapon is a stack of throwing weaons, the monster
+        // will not use the stack as their primary melee weapon.
+        if (item.quantity != 1 && i == MSLOT_WEAPON)
+            continue;
 
         if (!weap)
         {
@@ -1928,8 +1935,13 @@ void monsters::wield_melee_weapon(int near)
 
         // Switch to the alternate weapon if it's not a ranged weapon, too,
         // or switch away from our main weapon if it's a ranged weapon.
-        if (alt && !is_range_weapon(*alt) || weap && !alt && type != MONS_STATUE)
+        //
+        // Don't switch to alt weapon if it's a stack of throwing weapons.
+        if (alt && !is_range_weapon(*alt) && alt->quantity == 1
+            || weap && !alt && type != MONS_STATUE)
+        {
             swap_weapons(near);
+        }
     }
 }
 
@@ -2087,7 +2099,12 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         return (get_monster_data(type)->name);
 
     if (type == MONS_PLAYER_GHOST)
-        return (apostrophise(mon.mname) + " ghost");
+    {
+        if (mon.is_summoned())
+            return (apostrophise(mon.mname) + " illusion");
+        else
+            return (apostrophise(mon.mname) + " ghost");
+    }
 
     // Some monsters might want the name of a different creature.
     monster_type nametype = type;
@@ -2731,7 +2748,38 @@ void monsters::attacking(actor * /* other */)
 {
 }
 
-void monsters::go_berserk(bool /* intentional */)
+// Sends a monster into a frenzy.
+void monsters::go_frenzy()
+{
+    if (!can_go_berserk())
+        return;
+
+    if (has_ench(ENCH_SLOW))
+    {
+        del_ench(ENCH_SLOW, true); // Give no additional message.
+        simple_monster_message(this,
+            make_stringf(" shakes off %s lethargy.",
+                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str()).c_str());
+    }
+    del_ench(ENCH_HASTE, true);
+    del_ench(ENCH_FATIGUE, true); // Give no additional message.
+
+    const int duration = 16 + random2avg(13, 2);
+
+    // store the attitude for later retrieval
+    props["old_attitude"] = short(attitude);
+
+    attitude = ATT_NEUTRAL;
+    add_ench(mon_enchant(ENCH_INSANE, 0, KC_OTHER, duration * 10));
+    add_ench(mon_enchant(ENCH_HASTE, 0, KC_OTHER, duration * 10));
+    add_ench(mon_enchant(ENCH_MIGHT, 0, KC_OTHER, duration * 10));
+
+    if (simple_monster_message(this, " flies into a frenzy!"))
+        // Xom likes monsters going insane.
+        xom_is_stimulated(friendly() ? 32 : 128);
+}
+
+void monsters::go_berserk(bool /* intentional */, bool /* potion */)
 {
     if (!can_go_berserk())
         return;
@@ -4087,9 +4135,10 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     // Check for slow/haste.
     switch (ench.ench)
     {
+    case ENCH_INSANE:
     case ENCH_BERSERK:
         // Inflate hp.
-        scale_hp(2, 1);
+        scale_hp(3, 2);
 
         if (has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
@@ -4303,8 +4352,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         shoals_release_tide(this);
         break;
 
+    case ENCH_INSANE:
+        attitude = static_cast<mon_attitude_type>(props["old_attitude"].get_short());
+        // deliberate fall through
+
     case ENCH_BERSERK:
-        scale_hp(1, 2);
+        scale_hp(2, 3);
         break;
 
     case ENCH_HASTE:
@@ -4641,6 +4694,7 @@ void monsters::timeout_enchantments(int levels)
             lose_ench_levels(i->second, levels);
             break;
 
+        case ENCH_INSANE:
         case ENCH_BERSERK:
             del_ench(i->first);
             del_ench(ENCH_HASTE, true);
@@ -4747,6 +4801,18 @@ void monsters::apply_enchantment(const mon_enchant &me)
     const int spd = 10;
     switch (me.ench)
     {
+    case ENCH_INSANE:
+        if (decay_enchantment(me))
+        {
+            simple_monster_message(this, " is no longer in an insane frenzy.");
+            del_ench(ENCH_HASTE, true);
+            del_ench(ENCH_MIGHT, true);
+            const int duration = random_range(70, 130);
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, KC_OTHER, duration));
+            add_ench(mon_enchant(ENCH_SLOW, 0, KC_OTHER, duration));
+        }
+        break;
+
     case ENCH_BERSERK:
         if (decay_enchantment(me))
         {
@@ -5400,9 +5466,14 @@ bool monsters::can_go_berserk() const
     return (true);
 }
 
+bool monsters::frenzied() const
+{
+    return (has_ench(ENCH_INSANE));
+}
+
 bool monsters::berserk() const
 {
-    return (has_ench(ENCH_BERSERK));
+    return (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE));
 }
 
 bool monsters::needs_berserk(bool check_spells) const
@@ -6032,13 +6103,14 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
 
 static const char *enchant_names[] =
 {
-    "none", "slow", "haste", "might", "fear", "conf", "inv", "pois", "bers",
-    "rot", "summon", "abj", "backlit", "charm", "fire",
-    "gloshifter", "shifter", "tp", "wary", "submerged",
-    "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
-    "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
-    "soul-ripe", "decay", "hungry", "flopping", "spore-producing",
-    "downtrodden", "swift", "tide", "bug"
+    "none", "berserk", "haste", "might", "fatigue", "slow", "fear",
+    "confusion", "invis", "poison", "rot", "summon", "abj", "corona",
+    "charm", "sticky_flame", "glowing_shapeshifter", "shapeshifter", "tp",
+    "sleep_wary", "submerged", "short_lived", "paralysis", "sick",
+    "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
+    "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
+    "aquatic_land", "spore_production", "slouch", "swift", "tide",
+    "insane", "buggy"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

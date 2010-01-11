@@ -294,14 +294,6 @@ static void _shoals_apply_level()
         grd(*ri) = _shoals_feature_at(*ri);
 }
 
-static bool _has_adjacent_feat(coord_def c, dungeon_feature_type feat)
-{
-    for (adjacent_iterator ai(c); ai; ++ai)
-        if (grd(*ai) == feat)
-            return true;
-    return false;
-}
-
 // Returns all points in deep water with an adjacent square in shallow water.
 static std::vector<coord_def> _shoals_water_depth_change_points()
 {
@@ -310,7 +302,7 @@ static std::vector<coord_def> _shoals_water_depth_change_points()
     {
         coord_def c(*ri);
         if (grd(c) == DNGN_DEEP_WATER
-            && _has_adjacent_feat(c, DNGN_SHALLOW_WATER))
+            && dgn_has_adjacent_feat(c, DNGN_SHALLOW_WATER))
             points.push_back(c);
     }
     return points;
@@ -367,28 +359,26 @@ static coord_def _pick_shoals_island()
     return c;
 }
 
-struct point_sort_distance_from
+void place_feature_at_random_floor_square(dungeon_feature_type feat,
+                                          unsigned mask = MMT_VAULT)
 {
-    coord_def bad_place;
-    point_sort_distance_from(coord_def c) : bad_place(c) { }
-    bool operator () (coord_def a, coord_def b) const
+    const coord_def place =
+        dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
+    if (place.origin())
+        dgn_veto_level();
+    else
+        grd(place) = feat;
+}
+
+static void _shoals_place_stairs()
+{
+    for (int i = 0; i < 3; ++i)
     {
-        const int dista = (a - bad_place).abs(), distb = (b - bad_place).abs();
-        return dista >= distb;
+        place_feature_at_random_floor_square(
+            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
+        place_feature_at_random_floor_square(
+            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i));
     }
-};
-
-static coord_def _pick_shoals_island_distant_from(coord_def bad_place)
-{
-    ASSERT(!_shoals_islands.empty());
-
-    std::sort(_shoals_islands.begin(), _shoals_islands.end(),
-              point_sort_distance_from(bad_place));
-    const int top_picks = std::min(4, int(_shoals_islands.size()));
-    const int choice = random2(top_picks);
-    coord_def chosen = _shoals_islands[choice];
-    _shoals_islands.erase(_shoals_islands.begin() + choice);
-    return chosen;
 }
 
 static void _shoals_furniture(int margin)
@@ -398,34 +388,7 @@ static void _shoals_furniture(int margin)
         unwind_var<dungeon_feature_set> vault_exc(dgn_Vault_Excavatable_Feats);
         dgn_Vault_Excavatable_Feats.insert(DNGN_STONE_WALL);
 
-        int stair_tries = 50;
-        bool did_place_stairs = false;
-        coord_def stair_place;
-        while (stair_tries-- > 0)
-        {
-            stair_place = _pick_shoals_island();
-            if (grd(stair_place) == DNGN_FLOOR)
-            {
-                // Put all the stairs on one island.
-                grd(stair_place) = DNGN_STONE_STAIRS_UP_I;
-                grd(stair_place + coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_II;
-                grd(stair_place - coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_III;
-                did_place_stairs = true;
-                break;
-            }
-            else
-            {
-                _shoals_islands.push_back(stair_place);
-            }
-        }
-
-        if (!did_place_stairs)
-        {
-            dgn_veto_level();
-            return;
-        }
-
-        const coord_def p = _pick_shoals_island_distant_from(stair_place);
+        const coord_def p = _pick_shoals_island();
         const char *SHOAL_RUNE_HUT = "shoal_rune";
         const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
         {
@@ -457,33 +420,8 @@ static void _shoals_furniture(int margin)
                 dgn_dig_vault_loose(vp);
         }
     }
-    else
-    {
-        // Place stairs randomly. No elevators.
-        for (int i = 0; i < 3; ++i)
-        {
-            int x, y;
-            do
-            {
-                x = margin + random2(GXM - 2*margin);
-                y = margin + random2(GYM - 2*margin);
-            }
-            while (grd[x][y] != DNGN_FLOOR);
 
-            grd[x][y]
-              = static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i);
-
-            do
-            {
-                x = margin + random2(GXM - 2*margin);
-                y = margin + random2(GYM - 2*margin);
-            }
-            while (grd[x][y] != DNGN_FLOOR);
-
-            grd[x][y]
-                = static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i);
-        }
-    }
+    _shoals_place_stairs();
 }
 
 static void _shoals_deepen_edges()
@@ -782,8 +720,8 @@ static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
     {
         const coord_def p(*ri);
         if (!windy(p) && grd(p) == DNGN_FLOOR
-            && (_has_adjacent_feat(p, DNGN_STONE_WALL)
-                || _has_adjacent_feat(p, DNGN_ROCK_WALL)))
+            && (dgn_has_adjacent_feat(p, DNGN_STONE_WALL)
+                || dgn_has_adjacent_feat(p, DNGN_ROCK_WALL)))
             wind_shadows.push_back(p);
     }
     return wind_shadows;

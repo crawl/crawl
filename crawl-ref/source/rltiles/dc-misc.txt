@@ -42,6 +42,8 @@ cloud_rain1 CLOUD_RAIN
 cloud_rain2
 cloud_grey_smoke CLOUD_MIST
 
+cloud_gloom CLOUD_GLOOM
+
 #########MAP
 %sdir dc-misc
 %corpse 0
@@ -69,6 +71,7 @@ cursor_green CURSOR3
 tutorial_cursor TUTORIAL_CURSOR
 %rim 1
 heart HEART
+good_neutral GOOD_NEUTRAL
 neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
 poison POISON

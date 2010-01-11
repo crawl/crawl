@@ -89,8 +89,8 @@ The contents of this text are:
 4-o     Tiles Options.
                 tile_show_items, tile_title_screen, tile_menu_icons,
                 tile_player_col, tile_monster_col, tile_neutral_col,
-                tile_friendly_col, tile_plant_col, tile_item_col,
-                tile_unseen_col, tile_floor_col, tile_wall_col,
+                tile_peaceful_col, tile_friendly_col, tile_plant_col,
+                tile_item_col, tile_unseen_col, tile_floor_col, tile_wall_col,
                 tile_mapped_wall_col, tile_door_col, tile_downstairs_col,
                 tile_upstairs_col, tile_feature_col, tile_trap_col,
                 tile_water_col, tile_lava_col, tile_excluded_col,
@@ -1653,6 +1653,7 @@ tile_menu_icons = true
 tile_player_col      = white
 tile_monster_col     = red
 tile_neutral_col     = red
+tile_peaceful_col    = lightred
 tile_friendly_col    = lightred
 tile_plant_col       = darkgreen
 tile_item_col        = green
@@ -1677,6 +1678,7 @@ the dungeon level.
                            map centre during level map mode ('X')
    tile_monster_col      - colour of hostile monsters
    tile_neutral_col      - colour of neutral monsters
+   tile_peaceful_col     - colour of peaceful monsters
    tile_friendly_col     - colour of friendly monsters
    tile_plant_col        - colour of zero xp monsters (plant and fungus)
    tile_item_col         - colour of known or detected items

@@ -54,7 +54,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
-#include "transfor.h"
+#include "transform.h"
 #include "tutorial.h"
 
 #ifdef UNIX
@@ -145,8 +145,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_JIYVA_CALL_JELLY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATION },
     // Fedhas
-    { ABIL_FEDHAS_SUNLIGHT, ABIL_FEDHAS_PLANT_RING, ABIL_FEDHAS_RAIN,
-      ABIL_FEDHAS_SPAWN_SPORES, ABIL_FEDHAS_EVOLUTION },
+    { ABIL_FEDHAS_EVOLUTION, ABIL_FEDHAS_SUNLIGHT, ABIL_FEDHAS_PLANT_RING,
+      ABIL_FEDHAS_SPAWN_SPORES, ABIL_FEDHAS_RAIN},
     // Cheibriados
     { ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_TIME_BEND, ABIL_NON_ABILITY,
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
@@ -327,11 +327,12 @@ static const ability_def Ability_List[] =
 
     // Fedhas
     { ABIL_FEDHAS_FUNGAL_BLOOM, "Decomposition", 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_FEDHAS_EVOLUTION, "Evolution", 2, 0, 0, 0, ABFLAG_FRUIT},
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight", 2, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_FEDHAS_PLANT_RING, "Growth", 2, 0, 0, 1, ABFLAG_FRUIT},
-    { ABIL_FEDHAS_RAIN, "Rain", 4, 0, 100, 2, ABFLAG_NONE},
+    { ABIL_FEDHAS_PLANT_RING, "Growth", 2, 0, 0, 0, ABFLAG_FRUIT},
     { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction", 4, 0, 50, 2, ABFLAG_NONE},
-    { ABIL_FEDHAS_EVOLUTION, "Evolution", 4, 0, 0, 2, ABFLAG_FRUIT},
+    { ABIL_FEDHAS_RAIN, "Rain", 4, 0, 100, 4, ABFLAG_NONE},
+
 
     // Cheibriados
     { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous", 2, 0, 0, 0, ABFLAG_NONE },
@@ -682,6 +683,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_JIYVA_CALL_JELLY:
     case ABIL_FEDHAS_SUNLIGHT:
+    case ABIL_FEDHAS_EVOLUTION:
         invoc = true;
         failure = 30 - (you.piety / 20) - (6 * you.skills[SK_INVOCATIONS]);
         break;
@@ -767,7 +769,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_OKAWARU_HASTE:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
-    case ABIL_FEDHAS_EVOLUTION:
         invoc = true;
         failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -1953,12 +1954,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_FEDHAS_SUNLIGHT:
-        if (!sunlight())
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return (false);
-        }
-
+        sunlight();
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
@@ -1995,7 +1991,6 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_FEDHAS_EVOLUTION:
         if (!evolve_flora())
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
         }
 

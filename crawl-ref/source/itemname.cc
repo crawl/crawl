@@ -41,7 +41,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
-#include "transfor.h"
+#include "transform.h"
 
 
 id_arr type_ids;
@@ -585,7 +585,6 @@ static const char* jewellery_type_name(int jeweltype)
     case RING_ICE:                   return "ring of ice";
     case RING_TELEPORT_CONTROL:      return "ring of teleport control";
     case AMU_RAGE:              return "amulet of rage";
-    case AMU_RESIST_SLOW:       return "amulet of resist slowing";
     case AMU_CLARITY:           return "amulet of clarity";
     case AMU_WARDING:           return "amulet of warding";
     case AMU_RESIST_CORROSION:  return "amulet of resist corrosion";
@@ -595,6 +594,8 @@ static const char* jewellery_type_name(int jeweltype)
     case AMU_INACCURACY:        return "amulet of inaccuracy";
     case AMU_RESIST_MUTATION:   return "amulet of resist mutation";
     case AMU_GUARDIAN_SPIRIT:   return "amulet of guardian spirit";
+    case AMU_FAITH:             return "amulet of faith";
+    case AMU_STASIS:            return "amulet of stasis";
     default: return "buggy jewellery";
     }
 }
@@ -1195,7 +1196,7 @@ std::string item_def::name_aux(description_level_type desc,
                 buff << ((terse) ? " (sick)" : " of sickening");
                 break;
             case SPMSL_RAGE:
-                buff << ((terse) ? " (wrath)" : " of wrath");
+                buff << ((terse) ? " (frenzy)" : " of frenzy");
                 break;
             case SPMSL_RETURNING:
                 buff << ((terse) ? " (return)" : " of returning");
@@ -2733,6 +2734,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return (player_likes_chunks(true)
                        || (player_mutation_level(MUT_HERBIVOROUS) == 3)
                        || you.species == SP_MUMMY);
+
+        case AMU_FAITH:
+            return (you.species == SP_DEMIGOD);
 
         case RING_LIFE_PROTECTION:
             return (player_prot_life(false, temp, false) == 3);

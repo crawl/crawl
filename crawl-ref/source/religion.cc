@@ -299,11 +299,11 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Jiyva to remove your harmful mutations"
     },
     // Fedhas
-    { "call sunshine",
+    { "induce evolution",
+      "call sunshine",
       "cause a ring of plants to grow",
-      "control the weather",
       "spawn explosive spores",
-      "induce evolution"
+      "control the weather"
     },
     // Cheibriados
     { "Cheibriados is slowing your {biology}.",
@@ -406,11 +406,11 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Jiyva to remove your harmful mutations"
     },
     // Fedhas
-    { "call sunshine",
+    { "induce evolution",
+      "call sunshine",
       "cause a ring of plants to grow",
-      "control the weather",
       "spawn explosive spores",
-      "induce evolution"
+      "control the weather"
     },
     // Cheibriados
     { "Cheibriados will no longer slow your {biology}.",
@@ -2255,7 +2255,9 @@ static void _do_god_gift(bool prayed_for)
 
 static bool _is_risky_sacrifice(const item_def& item)
 {
-    return item.base_type == OBJ_ORBS || is_rune(item);
+    return (item.base_type == OBJ_ORBS || is_rune(item)
+            || item.base_type == OBJ_MISCELLANY
+               && item.sub_type == MISC_HORN_OF_GERYON);
 }
 
 static bool _confirm_pray_sacrifice(god_type god)
@@ -2810,6 +2812,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_FRIEND_DIED:
             switch (you.religion)
             {
+
+            case GOD_FEDHAS:
+                // Toadstools are exempt from this conduct
+                if (victim && fedhas_protects(victim)
+                    && victim->mons_species() != MONS_TOADSTOOL)
+                {
+                    // level is (1 + monsterHD/2) for this conduct,
+                    // trying a fixed cost since plant HD aren't that
+                    // meaningful. -cao
+                    piety_change = -1;
+                    retval = true;
+                    break;
+                }
+                break;
+
             case GOD_ELYVILON: // healer god cares more about this
                 // Converted allies (marked as TSOites) can be martyrs.
                 if (victim && victim->god == GOD_SHINING_ONE)
@@ -2825,17 +2842,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 // Converted allies (marked as TSOites) can be martyrs.
                 if (victim && victim->god == GOD_SHINING_ONE)
                     break;
-                // fall through
-
-            case GOD_FEDHAS:
-                // double-check god because of fall-throughs from other gods
-                // Toadstools are an exception for this conduct
-                if (you.religion == GOD_FEDHAS && (!victim
-                        || !fedhas_protects(victim)
-                        || victim->mons_species() == MONS_TOADSTOOL))
-                {
-                    break;
-                }
                 // fall through
 
             case GOD_OKAWARU:
@@ -3597,6 +3603,9 @@ static void _dock_piety(int piety_loss, int penance)
     if (piety_loss <= 0 && penance <= 0)
         return;
 
+    piety_loss = piety_scale(piety_loss);
+    penance    = piety_scale(penance);
+
     if (piety_loss)
     {
         if (last_piety_lecture != you.num_turns)
@@ -3627,14 +3636,28 @@ static void _dock_piety(int piety_loss, int penance)
     }
 }
 
-void gain_piety(int pgn)
+// Scales a piety number, applying boosters (amulet of faith).
+int piety_scale(int piety)
 {
-    if (pgn <= 0)
+    if (piety < 0)
+        return (-piety_scale(-piety));
+
+    if (wearing_amulet(AMU_FAITH))
+        return (piety + div_rand_round(piety, 3));
+
+    return (piety);
+}
+
+void gain_piety(int original_gain)
+{
+    if (original_gain <= 0)
         return;
 
     // Xom uses piety differently...
     if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
         return;
+
+    int pgn = piety_scale(original_gain);
 
     // check to see if we owe anything first
     if (you.penance[you.religion] > 0)
@@ -3695,7 +3718,8 @@ void gain_piety(int pgn)
 
 #if DEBUG_PIETY
         mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from "
-                                "hysteresis)", pgn, pgn_borrowed);
+                                "hysteresis, %d original)",
+             pgn, pgn_borrowed, original_gain);
 #endif
     }
 
@@ -3921,13 +3945,17 @@ void lose_piety(int pgn)
             redraw_skill(you.your_name, player_title());
 
             if (you.religion == GOD_ZIN)
-                simple_god_message(" is no longer ready to cure all your mutations.");
+                simple_god_message(
+                    " is no longer ready to cure all your mutations.");
             else if (you.religion == GOD_SHINING_ONE)
-                simple_god_message(" is no longer ready to bless your weapon.");
+                simple_god_message(
+                    " is no longer ready to bless your weapon.");
             else if (you.religion == GOD_KIKUBAAQUDGHA)
-                simple_god_message(" is no longer ready to enhance your necromancy.");
+                simple_god_message(
+                    " is no longer ready to enhance your necromancy.");
             else if (you.religion == GOD_LUGONU)
-                simple_god_message(" is no longer ready to corrupt your weapon.");
+                simple_god_message(
+                    " is no longer ready to corrupt your weapon.");
         }
 
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
@@ -4894,6 +4922,21 @@ bool player_can_join_god(god_type which_god)
     return (true);
 }
 
+// Identify any interesting equipment when the player signs up with a
+// new Service Pro^W^Wdeity.
+void god_welcome_identify_gear()
+{
+    // Check for amulets of faith.
+    item_def *amulet = you.slot_item(EQ_AMULET);
+    if (amulet && amulet->sub_type == AMU_FAITH)
+    {
+        // The flash happens independent of item id.
+        mpr("Your amulet flashes!", MSGCH_GOD);
+        flash_view_delay(god_colour(you.religion), 300);
+        set_ident_type(*amulet, ID_KNOWN_TYPE);
+    }
+}
+
 void god_pitch(god_type which_god)
 {
     mprf("You %s the altar of %s.",
@@ -4975,6 +5018,8 @@ void god_pitch(god_type which_god)
         make_stringf(" welcomes you%s!",
                      you.worshipped[which_god] ? " back" : "").c_str());
     more();
+
+    god_welcome_identify_gear();
 
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
@@ -5156,9 +5201,10 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
 {
     const int min_piety = piety_breakpoint(0);
     bool praying = (you.duration[DUR_PRAYER]
-                    && random2(you.piety) >= min_piety);
+                    && random2(piety_scale(you.piety)) >= min_piety);
     bool reliable = (you.piety > 130);
-    bool anytime = (one_chance_in(10) || x_chance_in_y(you.piety, 1000));
+    bool anytime = (one_chance_in(10) ||
+                    x_chance_in_y(piety_scale(you.piety), 1000));
     bool penance = (you.penance[god] > 0);
 
     // If actual is true, return HPT_NONE if the given god can protect

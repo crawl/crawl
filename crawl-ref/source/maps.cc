@@ -125,9 +125,9 @@ static int write_vault(map_def &mdef,
                                               place, check_place);
 
         if (place.orient != MAP_NONE)
-            break;
+            return (place.orient);
     }
-    return (place.orient);
+    return (MAP_NONE);
 }
 
 static bool resolve_map_lua(map_def &map)
@@ -1125,6 +1125,8 @@ void read_maps()
     // Clean up cached environments.
     dlua.callfn("dgn_flush_map_environments", 0, 0);
     lc_loaded_maps.clear();
+
+    sanity_check_maps();
 }
 
 void add_parsed_map( const map_def &md )
@@ -1161,6 +1163,11 @@ void run_map_preludes()
 const map_def *map_by_index(int index)
 {
     return (&vdefs[index]);
+}
+
+void sanity_check_maps()
+{
+    dlua.execfile("clua/sanity.lua", true, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////

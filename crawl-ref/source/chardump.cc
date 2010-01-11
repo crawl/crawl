@@ -51,7 +51,7 @@
 #include "stash.h"
 #include "stuff.h"
 #include "env.h"
-#include "transfor.h"
+#include "transform.h"
 #include "travel.h"
 #include "view.h"
 #include "viewchar.h"

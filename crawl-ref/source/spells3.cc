@@ -34,6 +34,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -1383,8 +1384,10 @@ bool allow_control_teleport(bool quiet)
 
 void you_teleport(void)
 {
-    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION))
+    if (item_blocks_teleport(true))
+    {
         mpr("You feel a weird sense of stasis.");
+    }
     else if (you.duration[DUR_TELEPORT])
     {
         mpr("You feel strangely stable.");
@@ -1493,7 +1496,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     if (wizard_tele)
         is_controlled = true;
 
-    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION) && !wizard_tele)
+    if (item_blocks_teleport(true) && !wizard_tele)
     {
         mpr("You feel a strange sense of stasis.");
         return (false);

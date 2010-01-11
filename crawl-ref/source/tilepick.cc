@@ -38,7 +38,7 @@
 #include "tiledef-player.h"
 #include "tiledef-gui.h"
 #include "tiledef-unrand.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -358,9 +358,10 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_REDBACK:
         return TILEP_MONS_REDBACK;
 
-    // minotaur ('t')
-    case MONS_MINOTAUR:
-        return TILEP_MONS_MINOTAUR;
+    // turtles ('t')
+    case MONS_SNAPPING_TURTLE:
+    case MONS_ALLIGATOR_SNAPPING_TURTLE: // TODO
+        return TILEP_MONS_TURTLE;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -548,6 +549,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_SPHINX;
     case MONS_HARPY:
         return TILEP_MONS_HARPY;
+    case MONS_MINOTAUR:
+        return TILEP_MONS_MINOTAUR;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
@@ -651,6 +654,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_VIPER;
     case MONS_ANACONDA:
         return TILEP_MONS_ANACONDA;
+    case MONS_SEA_SNAKE:
+        return TILEP_MONS_SEA_SNAKE;
 
     // trolls ('T')
     case MONS_TROLL:
@@ -812,10 +817,12 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_HAIRY_DEVIL;
     case MONS_ROTTING_DEVIL:
         return TILEP_MONS_ROTTING_DEVIL;
-    case MONS_BEAST:
-        return TILEP_MONS_BEAST;
     case MONS_SMOKE_DEMON:
         return TILEP_MONS_SMOKE_DEMON;
+//     case MONS_SIXFIRHY:              // TODO
+//         return TILEP_MONS_SIXFIRHY;
+    case MONS_HELLWING:
+        return TILEP_MONS_HELLWING;
 
     // '3' demons
     case MONS_HELLION:
@@ -830,8 +837,6 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_NEQOXEC;
     case MONS_ORANGE_DEMON:
         return TILEP_MONS_ORANGE_DEMON;
-    case MONS_HELLWING:
-        return TILEP_MONS_HELLWING;
     case MONS_YNOXINUL:
         return TILEP_MONS_YNOXINUL;
     case MONS_DEMONIC_CRAWLER:
@@ -842,6 +847,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_CHAOS_SPAWN;
 
     // '2' demon
+    case MONS_BEAST:
+        return TILEP_MONS_BEAST;
     case MONS_SUN_DEMON:
         return TILEP_MONS_SUN_DEMON;
     case MONS_REAPER:
@@ -1139,6 +1146,8 @@ int tileidx_monster(const monsters *mons, bool detected)
 
     if (mons->friendly())
         ch |= TILE_FLAG_PET;
+    else if (mons->good_neutral())
+        ch |= TILE_FLAG_GD_NEUTRAL;
     else if (mons->neutral())
         ch |= TILE_FLAG_NEUTRAL;
     else if (mons_looks_stabbable(mons))
@@ -1587,6 +1596,51 @@ static int _tileidx_armour(const item_def &item)
     return _apply_variations(item, tile);
 }
 
+static int _tileidx_chunk(const item_def &item)
+{
+    if (food_is_rotten(item))
+    {
+        if (!is_inedible(item))
+        {
+            if (is_poisonous(item))
+                return TILE_FOOD_CHUNK_ROTTEN_POISONED;
+
+            if (is_mutagenic(item))
+                return TILE_FOOD_CHUNK_ROTTEN_MUTAGENIC;
+
+            if (causes_rot(item))
+                return TILE_FOOD_CHUNK_ROTTEN_ROTTING;
+
+            if (is_forbidden_food(item))
+                return TILE_FOOD_CHUNK_ROTTEN_FORBIDDEN;
+
+            if (is_contaminated(item))
+                return TILE_FOOD_CHUNK_ROTTEN_CONTAMINATED;
+        }
+        return TILE_FOOD_CHUNK_ROTTEN;
+    }
+
+    if (is_inedible(item))
+        return TILE_FOOD_CHUNK;
+
+    if (is_poisonous(item))
+        return TILE_FOOD_CHUNK_POISONED;
+
+    if (is_mutagenic(item))
+        return TILE_FOOD_CHUNK_MUTAGENIC;
+
+    if (causes_rot(item))
+        return TILE_FOOD_CHUNK_ROTTING;
+
+    if (is_forbidden_food(item))
+        return TILE_FOOD_CHUNK_FORBIDDEN;
+
+    if (is_contaminated(item))
+        return TILE_FOOD_CHUNK_CONTAMINATED;
+
+    return TILE_FOOD_CHUNK;
+}
+
 static int _tileidx_food(const item_def &item)
 {
     switch (item.sub_type)
@@ -1612,11 +1666,7 @@ static int _tileidx_food(const item_def &item)
     case FOOD_BEEF_JERKY:   return TILE_FOOD_BEEF_JERKY;
     case FOOD_CHEESE:       return TILE_FOOD_CHEESE;
     case FOOD_SAUSAGE:      return TILE_FOOD_SAUSAGE;
-
-    case FOOD_CHUNK:
-        if (food_is_rotten(item))
-            return TILE_FOOD_CHUNK_ROTTEN;
-        return TILE_FOOD_CHUNK;
+    case FOOD_CHUNK:        return _tileidx_chunk(item);
     }
 
     return TILE_ERROR;
@@ -1809,9 +1859,10 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_REDBACK:
         return TILE_CORPSE_REDBACK;
 
-    // minotaur ('t')
-    case MONS_MINOTAUR:
-        return TILE_CORPSE_MINOTAUR;
+    // turtles ('t')
+    case MONS_SNAPPING_TURTLE:
+    case MONS_ALLIGATOR_SNAPPING_TURTLE: // TODO
+        return TILE_CORPSE_TURTLE;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -1934,6 +1985,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GRIFFON;
     case MONS_HARPY:
         return TILE_CORPSE_HARPY;
+    case MONS_MINOTAUR:
+        return TILE_CORPSE_MINOTAUR;
 
     // jellies ('J')
     case MONS_GIANT_AMOEBA:
@@ -1980,6 +2033,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_BLACK_MAMBA;
     case MONS_VIPER:
         return TILE_CORPSE_VIPER;
+    case MONS_SEA_SNAKE:
+        return TILE_CORPSE_SEA_SNAKE;
 
     // trolls ('T')
     case MONS_TROLL:
@@ -2741,6 +2796,10 @@ static int _tileidx_cloud(cloud_struct cl)
 
             case CLOUD_RAIN:
                 ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
+                break;
+
+            case CLOUD_GLOOM:
+                ch = TILE_CLOUD_GLOOM;
                 break;
 
             default:

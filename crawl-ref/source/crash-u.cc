@@ -156,6 +156,14 @@ void init_crash_handler()
         if (i == SIGPROF)
             continue;
 #endif
+#ifdef SIGTTOU
+        if (i == SIGTTOU)
+            continue;
+#endif
+#ifdef SIGTTIN
+        if (i == SIGTTIN)
+            continue;
+#endif
         if (i == SIGWINCH)
             continue;
 

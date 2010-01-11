@@ -2212,6 +2212,10 @@ bool travel_kill_monster(const monsters * monster)
     if (!wielded_weapon_check(you.weapon(), true))
         return (false);
 
+    // Don't auto-kill things with berserkitis or *rage.
+    if (player_mutation_level(MUT_BERSERK) || scan_artefacts(ARTP_ANGRY))
+        return (false);
+
     return (monster->type == MONS_TOADSTOOL);
 }
 

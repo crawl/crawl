@@ -50,7 +50,7 @@
 #include "stuff.h"
 #include "env.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "view.h"
 #include "viewchar.h"

@@ -635,7 +635,7 @@ void do_crash_dump()
 static void _BreakStrToDebugger(const char *mesg)
 {
 #if defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
-    fprintf(stderr, mesg);
+    fprintf(stderr, "%s", mesg);
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
     *p = 0;
@@ -687,4 +687,3 @@ void DEBUGSTR(const char *format, ...)
 }
 
 #endif
-

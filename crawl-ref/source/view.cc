@@ -152,6 +152,14 @@ void monster_grid_updates()
             mi->flags &= ~MF_GOING_BERSERK;
             mi->go_berserk(true);
         }
+
+        // XXX: Hack for triggering Dowan's spell changes.
+        if (mi->props.exists("dowan_upgrade"))
+        {
+            mi->add_ench(ENCH_HASTE);
+            mi->props.erase("dowan_upgrade");
+            simple_monster_message(*mi, " seems to find hidden reserves of power!");
+        }
     }
 }
 
@@ -941,7 +949,7 @@ void viewwindow(bool monster_updates, bool show_updates)
         flash_colour = _viewmap_flash_colour();
 
     const coord_def &tl = crawl_view.viewp;
-    const coord_def br = tl + crawl_view.viewsz - coord_def(1,1);
+    const coord_def br  = tl + crawl_view.viewsz - coord_def(1,1);
     int bufcount = 0;
     for (rectangle_iterator ri(tl, br); ri; ++ri, bufcount += 2)
     {
@@ -984,6 +992,11 @@ void viewwindow(bool monster_updates, bool show_updates)
                 buffy[bufcount + 1] |= TILE_FLAG_OOR;
 #endif
         }
+#ifdef USE_TILE
+        // Grey out grids that cannot be reached due to beholders.
+        else if (you.get_beholder(gc))
+            buffy[bufcount + 1] |= TILE_FLAG_OOR;
+#endif
     }
 
     // Leaving it this way because short flashes can occur in long ones,

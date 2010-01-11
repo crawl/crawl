@@ -188,13 +188,13 @@ enum beam_type                  // beam[].flavour
     BEAM_MMISSILE,                //    and similarly irresistible things
     BEAM_FIRE,
     BEAM_COLD,
-    BEAM_WATER,
     BEAM_MAGIC,
     BEAM_ELECTRICITY,
     BEAM_POISON,
     BEAM_NEG,
     BEAM_ACID,
     BEAM_MIASMA,
+    BEAM_WATER,
 
     BEAM_SPORE,
     BEAM_POISON_ARROW,
@@ -254,6 +254,7 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_BLUE_SMOKE,
     BEAM_POTION_PURPLE_SMOKE,
     BEAM_POTION_RAIN,
+    BEAM_GLOOM,
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
@@ -420,9 +421,10 @@ enum cloud_type
     CLOUD_TLOC_ENERGY,
     CLOUD_FOREST_FIRE,
     CLOUD_STEAM,
+    CLOUD_GLOOM,
 
     CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
-    CLOUD_OPAQUE_LAST  = CLOUD_STEAM,
+    CLOUD_OPAQUE_LAST  = CLOUD_GLOOM,
 
     CLOUD_MIASMA,
     CLOUD_MIST,
@@ -1243,6 +1245,7 @@ enum enchant_type
     ENCH_SLOUCH,
     ENCH_SWIFT,
     ENCH_TIDE,
+    ENCH_INSANE,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
@@ -1555,23 +1558,24 @@ enum map_feature
     MF_MAP_WALL,
     MF_DOOR,            //  5
     MF_ITEM,
-    MF_MONS_HOSTILE,
     MF_MONS_FRIENDLY,
+    MF_MONS_PEACEFUL,
     MF_MONS_NEUTRAL,
-    MF_MONS_NO_EXP,     // 10
+    MF_MONS_HOSTILE,    // 10
+    MF_MONS_NO_EXP,
     MF_STAIR_UP,
     MF_STAIR_DOWN,
     MF_STAIR_BRANCH,
-    MF_FEATURE,
-    MF_WATER,           // 15
+    MF_FEATURE,         // 15
+    MF_WATER,
     MF_LAVA,
     MF_TRAP,
     MF_EXCL_ROOT,
-    MF_EXCL,
-    MF_PLAYER,          // 20
+    MF_EXCL,            // 20
+    MF_PLAYER,
     MF_MAX,
 
-    MF_SKIP             // 22
+    MF_SKIP             // 23
 };
 
 enum menu_type
@@ -1813,6 +1817,10 @@ enum monster_type                      // (int) menv[].type
     MONS_MERFOLK_IMPALER,
     MONS_MERFOLK_AQUAMANCER,
     MONS_MERFOLK_JAVELINEER,
+
+    MONS_SNAPPING_TURTLE,
+    MONS_ALLIGATOR_SNAPPING_TURTLE,
+    MONS_SEA_SNAKE,
 
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220

@@ -155,6 +155,9 @@ static bool _join_the_dots_rigorous(const coord_def &from,
 
 static void _build_river(dungeon_feature_type river_type); //mv
 static void _build_lake(dungeon_feature_type lake_type); //mv
+static void _ruin_level(int ruination = 10, int plant_density = 5);
+static void _add_plant_clumps(int frequency = 10, int clump_density = 12,
+                              int clump_radius = 4);
 
 static void _bigger_room();
 static void _plan_main(int level_number, int force_plan);
@@ -1784,7 +1787,7 @@ static void _build_overflow_temples(int level_number)
         if (!dgn_ensure_vault_placed(_build_vaults(level_number, vault), false))
         {
 #ifdef DEBUG_TEMPLES
-            mprf(MSGCH_DIAGNOSTICS, "Couldn't place overlfow temple '%s', "
+            mprf(MSGCH_DIAGNOSTICS, "Couldn't place overflow temple '%s', "
                  "vetoing level.", vault->name.c_str());
 #endif
             return;
@@ -1830,6 +1833,16 @@ static void _build_dungeon_level(int level_number, int level_type)
 
     if (!player_in_branch(BRANCH_DIS) && !player_in_branch(BRANCH_VAULTS))
         _hide_doors();
+
+    if (player_in_branch(BRANCH_LAIR))
+    {
+        int depth = player_branch_depth() + 1;
+        do {
+            _ruin_level(20 - depth, depth / 2 + 5);
+            _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
+            depth -= 3;
+        } while (depth > 0);
+    }
 
     // Change pre-rock to rock, and pre-floor to floor.
     dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_WALL,
@@ -2444,9 +2457,6 @@ static builder_rc_type _builder_by_branch(int level_number)
 
     switch (you.where_are_you)
     {
-    case BRANCH_LAIR:
-        if (!one_chance_in(3))
-            break;
     case BRANCH_HIVE:
     case BRANCH_SLIME_PITS:
     case BRANCH_ORCISH_MINES:
@@ -2913,6 +2923,91 @@ static void _place_fog_machines(int level_number)
             break;
 
         place_fog_machine(data, x, y);
+    }
+}
+
+bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat)
+{
+    for (adjacent_iterator ai(c); ai; ++ai)
+        if (grd(*ai) == feat)
+            return true;
+    return false;
+}
+
+static inline bool _point_matches_feat(coord_def c,
+                                       dungeon_feature_type searchfeat,
+                                       unsigned mapmask,
+                                       dungeon_feature_type adjacent_feat,
+                                       bool monster_free)
+{
+    return (grd(c) == searchfeat
+            && (!monster_free || !monster_at(c))
+            && unforbidden(c, mapmask)
+            && (adjacent_feat == DNGN_UNSEEN ||
+                dgn_has_adjacent_feat(c, adjacent_feat)));
+}
+
+// Returns a random point in map bounds matching the given search feature,
+// and respecting the map mask (a map mask of MMT_VAULT ensures that
+// positions inside vaults will not be returned).
+//
+// If adjacent_feat is not DNGN_UNSEEN, the chosen square will be
+// adjacent to a square containing adjacent_feat.
+//
+// If monster_free is true, the chosen square will never be occupied by
+// a monster.
+//
+// If tries is set to anything other than -1, this function will make tries
+// attempts to find a suitable square, and may fail if the map is crowded.
+// If tries is set to -1, this function will examine the entire map and
+// guarantees to find a suitable point if available.
+//
+// If a suitable point is not available (or was not found in X tries),
+// returns coord_def(0,0)
+//
+coord_def dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
+                                     unsigned mapmask,
+                                     dungeon_feature_type adjacent_feat,
+                                     bool monster_free,
+                                     int tries)
+{
+    if (tries == -1)
+    {
+        // Try a quick and dirty random search:
+        coord_def chosen = dgn_random_point_in_bounds(searchfeat,
+                                                      mapmask,
+                                                      adjacent_feat,
+                                                      monster_free,
+                                                      10);
+        if (!chosen.origin())
+            return chosen;
+
+        // Exhaustive search; will never fail if a suitable place is
+        // available, but is also far more expensive.
+        int nfound = 0;
+        for (rectangle_iterator ri(1); ri; ++ri)
+        {
+            const coord_def c(*ri);
+            if (_point_matches_feat(c, searchfeat, mapmask, adjacent_feat,
+                                    monster_free)
+                && one_chance_in(++nfound))
+            {
+                chosen = c;
+            }
+        }
+        return (chosen);
+    }
+    else
+    {
+        // Random search.
+        while (--tries >= 0)
+        {
+            const coord_def c = random_in_bounds();
+            if (_point_matches_feat(c, searchfeat, mapmask, adjacent_feat,
+                                    monster_free))
+                return c;
+        }
+        return (coord_def(0, 0));
     }
 }
 
@@ -7645,6 +7740,157 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
                     env.markers.remove_markers_at(coord_def(i, j), MAT_ANY);
                 }
             }
+    }
+}
+
+static void _ruin_level(int ruination /* = 10 */, int plant_density /* = 5 */)
+{
+    std::vector<coord_def> to_replace;
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        /* only try to replace wall and door tiles */
+        if (!feat_is_wall(grd(*ri)) && !feat_is_door(grd(*ri)))
+        {
+            continue;
+        }
+
+        /* don't mess with permarock */
+        if (grd(*ri) == DNGN_PERMAROCK_WALL) {
+            continue;
+        }
+
+        int floor_count = 0;
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+        {
+            if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai)))
+            {
+                floor_count++;
+            }
+        }
+
+        /* chance of removing the tile is dependent on the number of adjacent
+         * floor tiles */
+        if (x_chance_in_y(floor_count, ruination))
+        {
+            to_replace.push_back(*ri);
+        }
+    }
+
+    for (std::vector<coord_def>::const_iterator it = to_replace.begin();
+         it != to_replace.end();
+         ++it)
+    {
+        /* only remove some doors, to preserve tactical options */
+        /* XXX: should this pick a random adjacent floor type, rather than
+         * just hardcoding DNGN_FLOOR? */
+        if (feat_is_wall(grd(*it)) ||
+            (coinflip() && feat_is_door(grd(*it))))
+        {
+            grd(*it) = DNGN_FLOOR;
+        }
+
+        /* but remove doors if we've removed all adjacent walls */
+        for (adjacent_iterator wai(*it); wai; ++wai)
+        {
+            if (feat_is_door(grd(*wai)))
+            {
+                bool remove = true;
+                for (adjacent_iterator dai(*wai); dai; ++dai)
+                {
+                    if (feat_is_wall(grd(*dai)))
+                    {
+                        remove = false;
+                    }
+                }
+                if (remove)
+                {
+                    grd(*wai) = DNGN_FLOOR;
+                }
+            }
+        }
+
+        /* replace some ruined walls with plants/fungi/bushes */
+        if (one_chance_in(plant_density))
+        {
+            mgen_data mg;
+            mg.cls = one_chance_in(20) ? MONS_BUSH  :
+                     coinflip()        ? MONS_PLANT :
+                     MONS_FUNGUS;
+            mg.pos = *it;
+            mons_place(mgen_data(mg));
+        }
+    }
+}
+
+static void _add_plant_clumps(int frequency /* = 10 */,
+                              int clump_density /* = 12 */,
+                              int clump_radius /* = 4 */)
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        mgen_data mg;
+        if (mgrd(*ri) != NON_MONSTER)
+        {
+            /* clump plants around things that already exist */
+            monster_type type = menv[mgrd(*ri)].type;
+            if ((type == MONS_PLANT  ||
+                 type == MONS_FUNGUS ||
+                 type == MONS_BUSH) && one_chance_in(frequency)) {
+                mg.cls = type;
+            }
+            else {
+                continue;
+            }
+        }
+        else {
+            continue;
+        }
+
+        std::vector<coord_def> to_place;
+        to_place.push_back(*ri);
+        for (int i = 1; i < clump_radius; ++i)
+        {
+            for (radius_iterator rad(*ri, i, C_SQUARE); rad; ++rad)
+            {
+                if (grd(*rad) != DNGN_FLOOR)
+                {
+                    continue;
+                }
+
+                /* make sure the iterator stays valid */
+                std::vector<coord_def> more_to_place;
+                for (std::vector<coord_def>::const_iterator it = to_place.begin();
+                     it != to_place.end();
+                     ++it)
+                {
+                    if (*rad == *it)
+                    {
+                        continue;
+                    }
+                    /* only place plants next to previously placed plants */
+                    if (abs(rad->x - it->x) <= 1 && abs(rad->y - it->y) <= 1)
+                    {
+                        if (one_chance_in(clump_density)) {
+                            more_to_place.push_back(*rad);
+                        }
+                    }
+                }
+                to_place.insert(to_place.end(), more_to_place.begin(), more_to_place.end());
+            }
+        }
+
+        for (std::vector<coord_def>::const_iterator it = to_place.begin();
+             it != to_place.end();
+             ++it)
+        {
+            if (*it == *ri)
+            {
+                continue;
+            }
+            mg.pos = *it;
+            mons_place(mgen_data(mg));
+        }
     }
 }
 

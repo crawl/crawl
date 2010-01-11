@@ -2994,6 +2994,7 @@ static std::string _describe_mons_enchantment(const monsters &mons,
     case ENCH_ROT:           return "rotting away"; //jmf: "covered in sores"?
     case ENCH_CORONA:     return "softly glowing";
     case ENCH_SLOW:          return "moving slowly";
+    case ENCH_INSANE:        return "frenzied and insane";
     case ENCH_BERSERK:       return "berserk";
     case ENCH_BATTLE_FRENZY: return "consumed by blood-lust";
     case ENCH_HASTE:         return "moving very quickly";
@@ -3234,7 +3235,12 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
                 else if (mon->type == MONS_PANDEMONIUM_DEMON)
                     str += "pandemonium demon";
                 else if (mon->type == MONS_PLAYER_GHOST)
-                    str += "ghost";
+                {
+                    if (mon->is_summoned())
+                        str += "illusion";
+                    else
+                        str += "ghost";
+                }
                 else
                     str += "mimic";
             }

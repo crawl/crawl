@@ -102,11 +102,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_QUICK_BLADE)
             type_bad = true;
 
-        if (item.base_type == OBJ_JEWELLERY && (item.sub_type == AMU_RAGE
-            || item.sub_type == AMU_RESIST_SLOW))
-        {
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
             type_bad = true;
-        }
         break;
 
     default:
@@ -780,7 +777,7 @@ void static _get_randart_properties(const item_def &item,
                     proprt[ARTP_BRAND] = SPWPN_NORMAL;
 
                 // XXX: Only allow reaping brand on bows. This may change.
-                if (atype != WPN_BOW && atype != WPN_LONGBOW 
+                if (atype != WPN_BOW && atype != WPN_LONGBOW
                     && proprt[ARTP_BRAND] == SPWPN_REAPING)
                 {
                     proprt[ARTP_BRAND] = SPWPN_NORMAL;
@@ -1812,6 +1809,10 @@ static bool _randart_is_redundant( const item_def &item,
     case AMU_INACCURACY:
         provides = ARTP_ACCURACY;
         break;
+
+    case AMU_STASIS:
+        provides = ARTP_PREVENT_TELEPORTATION;
+        break;
     }
 
     if (provides == ARTP_NUM_PROPERTIES)
@@ -1947,11 +1948,12 @@ bool make_item_randart( item_def &item, bool force_mundane )
     god_type god_gift;
     (void) origin_is_god_gift(item, &god_gift);
 
+    int randart_tries = 500;
     do
     {
         item.special = (random_int() & RANDART_SEED_MASK);
         // Now that we found something, initialise the props array.
-        if (!_init_artefact_properties(item))
+        if (--randart_tries <= 0 || !_init_artefact_properties(item))
         {
             // Something went wrong that no amount of changing
             // item.special will fix.

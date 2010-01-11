@@ -338,7 +338,7 @@ function iter.stack_search (coord, term, extra)
 
   local stack = dgn.items_at(_x, _y)
   if #stack == 0 then
-    error("no stack at " .. _x .. "/" .. _y)
+    return nil
   end
 
   for _, item in ipairs(stack) do
@@ -347,7 +347,7 @@ function iter.stack_search (coord, term, extra)
     end
   end
 
-  return false
+  return nil
 end
 
 function iter.stack_destroy(coord, extra)

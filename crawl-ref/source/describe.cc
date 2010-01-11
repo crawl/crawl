@@ -51,7 +51,7 @@
 #include "env.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "transfor.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "xom.h"
 
@@ -144,7 +144,6 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_FIRE:              return "Fire";
     case RING_ICE:               return "Ice";
     case RING_TELEPORT_CONTROL:  return "cTele";
-    case AMU_RESIST_SLOW:        return "rSlow";
     case AMU_CLARITY:            return "Clar";
     case AMU_WARDING:            return "Ward";
     case AMU_RESIST_CORROSION:   return "rCorr";
@@ -153,6 +152,8 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_CONTROLLED_FLIGHT:  return "cFly";
     case AMU_RESIST_MUTATION:    return "rMut";
     case AMU_GUARDIAN_SPIRIT:    return "Spirit";
+    case AMU_FAITH:              return "Faith";
+    case AMU_STASIS:             return "Stasis";
     }
     return "";
 }
@@ -1073,7 +1074,7 @@ static std::string _describe_ammo(const item_def &item)
             description += "It is tipped with asphyxiating poison.";
             break;
         case SPMSL_PARALYSIS:
-            description += "It is tipped with a paralyzing poison."; 
+            description += "It is tipped with a paralyzing poison.";
             break;
         case SPMSL_SLOW:
             description += "It is coated with a poison that causes slowness of the body.";
@@ -2916,7 +2917,10 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     }
 
     case MONS_PLAYER_GHOST:
-        inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
+        if (mons.is_summoned())
+            inf.body << "An illusion of " << get_ghost_description(mons) << ".$";
+        else
+            inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
@@ -3258,7 +3262,7 @@ static std::string _religion_help(god_type god)
             && !you.num_gifts[god])
         {
             result += "You can pray at an altar to have your weapon "
-                      "blessed.";
+                      "corrupted.";
         }
         break;
 
@@ -3368,11 +3372,9 @@ const char *divine_title[NUM_GODS][8] =
     {"Scum",               "Jelly",                 "Squelcher",                "Dissolver",
      "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"},
 
-    // Fedhas Madash -- nature theme.  Titles could use some work, but the
-    // progression is generally from nature lover to walking disaster.
-    // -cao
-    {"Walking Fertiliser", "Green %s",              "Photosynthesist",          "Planter",
-     "Nimbus",             "Sporadic Warrior",      "Green Death",              "Force of Nature"},
+    // Fedhas Madash -- nature theme.  Titles could use some work
+    {"Walking Fertiliser", "Green %s",           "Inducer",                  "Photosynthesist",
+     "Planter",            "Sporadic Warrior",   "Nimbus",                   "Force of Nature"},
 
     // Cheibriados -- slow theme
     {"Unwound %s",         "Timekeeper",            "Righteous Timekeeper",     "Chronographer",

@@ -53,7 +53,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "view.h"
 #include "xom.h"
@@ -2956,7 +2956,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_SWINE:
-        if (!transform(random2(power), TRAN_PIG, true))
+        if (!transform(1 + power/2 + random2(power/2), TRAN_PIG, true))
         {
             mpr("You feel like a pig.");
             break;

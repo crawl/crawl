@@ -351,7 +351,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.colour   = WHITE;
         beam.flavour  = BEAM_ICE;
         beam.hit      = 17 + power / 25;
-        beam.is_beam  = true;
         break;
 
     case SPELL_BOLT_OF_COLD:
@@ -414,7 +413,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.damage   = dice_def( 3, 7 + power / 10 );
         beam.hit      = 40;
         beam.flavour  = BEAM_FIRE;
-        beam.foe_ratio = 60;
+        beam.foe_ratio = 80;
         beam.is_explosion = true;
         break;
 

@@ -62,7 +62,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -3995,7 +3995,7 @@ int melee_attack::player_to_hit(bool random_factor)
     // Check for backlight (Corona).
     if (defender && defender->atype() == ACT_MONSTER)
     {
-        if (defender->backlit())
+        if (defender->backlit() && !defender->halo_radius())
             your_to_hit += 2 + random2(8);
         // Invisible monsters are hard to hit.
         else if (!defender->visible_to(&you))
@@ -4542,7 +4542,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
     return (attack_types[attk.type]);
 }
 
-std::string melee_attack::mons_weapon_desc()
+std::string melee_attack::mons_attack_desc(const mon_attack_def &attk)
 {
     if (!you.can_see(attacker))
         return ("");
@@ -4564,6 +4564,11 @@ std::string melee_attack::mons_weapon_desc()
         }
 
         return (result);
+    }
+    else if (attk.flavour == AF_REACH
+             && grid_distance(attacker->pos(), defender->pos()) == 2)
+    {
+        return " from afar";
     }
 
     return ("");
@@ -4592,7 +4597,7 @@ void melee_attack::mons_announce_hit(const mon_attack_def &attk)
              attacker->conj_verb( mons_attack_verb(attk) ).c_str(),
              mons_defender_name().c_str(),
              debug_damage_number().c_str(),
-             mons_weapon_desc().c_str(),
+             mons_attack_desc(attk).c_str(),
              attack_strength_punctuation().c_str());
     }
 }
@@ -5180,17 +5185,29 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_STEAL_FOOD:
+    {
         // Monsters don't carry food.
         if (defender->atype() != ACT_PLAYER)
             break;
 
-        if (expose_player_to_element(BEAM_STEAL_FOOD, 10) && needs_message)
+        const bool stolen = expose_player_to_element(BEAM_STEAL_FOOD, 10);
+        const bool ground = expose_items_to_element(BEAM_STEAL_FOOD, you.pos(),
+                                                    10);
+        if (needs_message)
         {
-            mprf("%s steals some of your food!",
-                 atk_name(DESC_CAP_THE).c_str());
+            if (stolen)
+            {
+                mprf("%s steals some of your food!",
+                     atk_name(DESC_CAP_THE).c_str());
+            }
+            else if (ground)
+            {
+                mprf("%s steals some of the food from beneath you!",
+                     atk_name(DESC_CAP_THE).c_str());
+            }
         }
         break;
-
+    }
     case AF_CRUSH:
         mprf("%s %s being crushed%s",
              def_name(DESC_CAP_THE).c_str(),
@@ -5286,7 +5303,7 @@ void melee_attack::mons_perform_attack_rounds()
         }
 
         // Skip dummy attacks.
-        if ((attk.type != AT_HIT && !unarmed_ok)
+        if ((!unarmed_ok && attk.type != AT_HIT && attk.flavour != AF_REACH)
             || attk.type == AT_SHOOT)
         {
             --effective_attack_number;
@@ -5674,7 +5691,7 @@ int melee_attack::mons_to_hit()
     if (attacker->confused())
         mhit -= 5;
 
-    if (defender->backlit())
+    if (defender->backlit() && !defender->halo_radius())
         mhit += 2 + random2(8);
 
     // Invisible defender is hard to hit if you can't see invis. Note
@@ -5802,6 +5819,16 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
         if (delta > 0)
             attacker->speed_increment -= delta;
     }
+}
+
+bool monster_attack_actor(monsters *attacker, actor *defender,
+                          bool allow_unarmed)
+{
+    ASSERT(defender == &you || defender->atype() == ACT_MONSTER);
+    return (defender->atype() == ACT_PLAYER ?
+              monster_attack(attacker, allow_unarmed)
+            : monsters_fight(attacker, dynamic_cast<monsters*>(defender),
+                             allow_unarmed));
 }
 
 // A monster attacking the player.

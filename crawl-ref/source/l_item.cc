@@ -733,6 +733,24 @@ static int l_item_do_inc_quantity(lua_State *ls)
     return (0);
 }
 
+static int l_item_pluses(lua_State *ls)
+{
+    LUA_ITEM(item, 1);
+
+    if (!item || !item->is_valid() || !item_ident(*item, ISFLAG_KNOW_PLUSES))
+    {
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+
+    lua_pushnumber(ls, item->plus);
+    // XXX: May cause issues on items that don't use plus2, ie ammunition.
+    lua_pushnumber(ls, item->plus2);
+
+    return (2);
+}
+
+
 static const struct luaL_reg item_lib[] =
 {
     { "artefact",          l_item_artefact },
@@ -766,6 +784,7 @@ static const struct luaL_reg item_lib[] =
     { "destroy",           l_item_do_destroy },
     { "dec_quantity",      l_item_do_dec_quantity },
     { "inc_quantity",      l_item_do_inc_quantity },
+    { "pluses",            l_item_pluses },
 
     { NULL, NULL },
 };

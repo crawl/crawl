@@ -33,7 +33,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "xom.h"
 
@@ -61,7 +61,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
     switch (pot_eff)
     {
     case POT_HEALING:
-
         inc_hp((5 + random2(7)) / factor, false);
         mpr("You feel better.");
 
@@ -138,8 +137,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
 
     case POT_SPEED:
-        haste_player((40 + random2(pow)) / factor);
-        did_god_conduct(DID_HASTY, 10, was_known);
+        if (haste_player((40 + random2(pow)) / factor))
+            did_god_conduct(DID_HASTY, 10, was_known);
         break;
 
     case POT_MIGHT:
@@ -409,7 +408,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         }
         else
         {
-            if (go_berserk(was_known))
+            if (go_berserk(was_known, true))
                 xom_is_stimulated(64);
         }
         break;

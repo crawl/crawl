@@ -100,7 +100,7 @@ private:
 
 private:
     void init();
-    std::string get_default_cause();
+    std::string get_default_cause(bool attribute_to_user) const;
 
     monsters* target_as_monster()
     {

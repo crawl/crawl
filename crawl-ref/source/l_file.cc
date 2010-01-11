@@ -168,6 +168,23 @@ LUAFN(_file_datadir_files)
     return clua_stringtable(ls, files);
 }
 
+LUAFN(_file_writefile)
+{
+    const std::string fname(luaL_checkstring(ls, 1));
+    FILE *f = fopen(fname.c_str(), "w");
+    if (f)
+    {
+        fprintf(f, "%s", luaL_checkstring(ls, 2));
+        fclose(f);
+        lua_pushboolean(ls, true);
+    }
+    else
+    {
+        lua_pushboolean(ls, false);
+    }
+    return (1);
+}
+
 static const struct luaL_reg file_dlib[] =
 {
     { "marshall",   file_marshall },
@@ -176,7 +193,7 @@ static const struct luaL_reg file_dlib[] =
     { "unmarshall_number", file_unmarshall_number },
     { "unmarshall_string", file_unmarshall_string },
     { "unmarshall_fn", file_unmarshall_fn },
-
+    { "writefile", _file_writefile },
     { "datadir_files", _file_datadir_files },
     { NULL, NULL }
 };

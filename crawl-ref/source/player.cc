@@ -35,6 +35,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "it_use2.h"
 #include "kills.h"
 #include "macro.h"
@@ -61,7 +62,7 @@
 #include "stuff.h"
 #include "areas.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -2722,11 +2723,9 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_DEXTERITY, 1, false, "level gain");
 
-                if (you.experience_level < 17)
+                if (you.experience_level % 3)
                     hp_adjust--;
 
-                if (!(you.experience_level % 2))
-                    hp_adjust--;
                 break;
 
             case SP_KOBOLD:
@@ -4983,24 +4982,15 @@ bool slow_player(int turns)
     if (turns <= 0)
         return (false);
 
+    if (stasis_blocks_effect(true, "%s rumbles.", 20, "%s rumbles."))
+        return (false);
+
     // Doubling these values because moving while slowed takes twice the
     // usual delay.
     turns *= 2;
     int threshold = 100 * 2;
 
-    if (wearing_amulet(AMU_RESIST_SLOW))
-    {
-        mpr("You feel momentarily lethargic.");
-
-        // Identify amulet.
-        item_def *amulet = you.slot_item(EQ_AMULET);
-        did_god_conduct(DID_HASTY, 5, !amulet || item_type_known(*amulet));
-        if (amulet && !item_type_known(*amulet))
-            set_ident_type(*amulet, ID_KNOWN_TYPE);
-
-        return (false);
-    }
-    else if (you.duration[DUR_SLOW] >= threshold * BASELINE_DELAY)
+    if (you.duration[DUR_SLOW] >= threshold * BASELINE_DELAY)
         mpr("You already are as slow as you could be.");
     else
     {
@@ -5024,10 +5014,7 @@ void dec_slow_player(int delay)
     if (you.duration[DUR_SLOW] > BASELINE_DELAY)
     {
         // BCR - Amulet of resist slow affects slow counter.
-        if (wearing_amulet(AMU_RESIST_SLOW))
-            you.duration[DUR_SLOW] -= 5 * delay;
-        else
-            you.duration[DUR_SLOW] -= delay;
+        you.duration[DUR_SLOW] -= delay;
     }
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
@@ -5036,27 +5023,23 @@ void dec_slow_player(int delay)
     }
 }
 
-void haste_player(int turns)
+bool haste_player(int turns)
 {
     ASSERT(!crawl_state.arena);
 
     if (turns <= 0)
-        return;
+        return (false);
 
-    bool amu_eff = wearing_amulet(AMU_RESIST_SLOW);
-
-    if (amu_eff)
+    if (stasis_blocks_effect(true, "%s emits a piercing whistle.", 20,
+                             "%s makes your neck tingle."))
     {
-        mpr("Your amulet glows brightly.");
-        item_def *amulet = you.slot_item(EQ_AMULET);
-        if (amulet && !item_type_known(*amulet))
-            set_ident_type(*amulet, ID_KNOWN_TYPE);
+        return (false);
     }
 
     // Cutting the nominal turns in half since hasted actions take half the
     // usual delay.
     turns /= 2;
-    int threshold = (80 + 20 * amu_eff) / 2;
+    const int threshold = 40;
 
     if (you.duration[DUR_HASTE] == 0)
         mpr("You feel yourself speed up.");
@@ -5069,8 +5052,9 @@ void haste_player(int turns)
     }
 
     you.increase_duration(DUR_HASTE, turns, threshold);
-
     did_god_conduct(DID_STIMULANTS, 4 + random2(4));
+
+    return (true);
 }
 
 void dec_haste_player(int delay)
@@ -5082,9 +5066,7 @@ void dec_haste_player(int delay)
     {
         int old_dur = you.duration[DUR_HASTE];
 
-        // BCR - Amulet of resist slow affects haste counter
-        if (!wearing_amulet(AMU_RESIST_SLOW) || coinflip())
-            you.duration[DUR_HASTE] -= delay;
+        you.duration[DUR_HASTE] -= delay;
 
         int threshold = 6 * BASELINE_DELAY;
         // message if we cross the threshold
@@ -5998,9 +5980,9 @@ void player::attacking(actor *other)
     }
 }
 
-void player::go_berserk(bool intentional)
+void player::go_berserk(bool intentional, bool potion)
 {
-    ::go_berserk(intentional);
+    ::go_berserk(intentional, potion);
 }
 
 bool player::can_go_berserk() const
@@ -6008,9 +5990,9 @@ bool player::can_go_berserk() const
     return (can_go_berserk(false));
 }
 
-bool player::can_go_berserk(bool intentional) const
+bool player::can_go_berserk(bool intentional, bool potion) const
 {
-    const bool verbose = intentional;
+    const bool verbose = intentional || potion;
 
     if (berserk())
     {
@@ -6046,7 +6028,22 @@ bool player::can_go_berserk(bool intentional) const
         return (false);
     }
 
-    if (!intentional && player_mental_clarity(true))
+    // Stasis, but only for identified amulets; unided amulets will
+    // trigger when the player attempts to activate berserk,
+    // auto-iding at that point, but also killing the berserk and
+    // wasting a turn.
+    if (wearing_amulet(AMU_STASIS, false))
+    {
+        if (verbose)
+        {
+            const item_def *amulet = you.slot_item(EQ_AMULET);
+            mprf("You cannot go berserk with %s on.",
+                 amulet? amulet->name(DESC_NOCAP_YOUR).c_str() : "your amulet");
+        }
+        return (false);
+    }
+
+    if (!intentional && !potion && player_mental_clarity(true))
     {
         if (verbose)
         {
@@ -6620,7 +6617,7 @@ bool player::confusable() const
 
 bool player::slowable() const
 {
-    return (!wearing_amulet(AMU_RESIST_SLOW));
+    return true;
 }
 
 flight_type player::flight_mode() const
@@ -6802,6 +6799,10 @@ void player::paralyse(actor *who, int str)
 {
     ASSERT(!crawl_state.arena);
 
+    // The shock is too mild to do damage.
+    if (stasis_blocks_effect(true, "%s gives you a mild electric shock."))
+        return;
+
     int &paralysis(duration[DUR_PARALYSIS]);
 
     mprf("You %s the ability to move!",
@@ -6818,6 +6819,9 @@ void player::paralyse(actor *who, int str)
 void player::petrify(actor *who, int str)
 {
     ASSERT(!crawl_state.arena);
+
+    if (stasis_blocks_effect(true, "%s gives you a mild electric shock."))
+        return;
 
     str *= BASELINE_DELAY;
     int &petrif(duration[DUR_PETRIFIED]);

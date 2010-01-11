@@ -117,7 +117,7 @@
 #include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -347,6 +347,7 @@ static void _show_commandline_options_help()
 #if DEBUG_DIAGNOSTICS
     puts("");
     puts("  -test            run test cases in ./test");
+    puts("  -script <name>   run script matching <name> in ./scripts");
 #endif
 }
 
@@ -2280,6 +2281,13 @@ static void _decrement_durations()
         }
     }
 
+    // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
+    if (you.duration[DUR_TRANSFORMATION] <= 0
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+    {
+        you.duration[DUR_TRANSFORMATION] = 1;
+    }
+
     // Vampire bat transformations are permanent (until ended).
     if (you.species != SP_VAMPIRE || !player_in_bat_form()
         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY)
@@ -2495,26 +2503,8 @@ static void _decrement_durations()
             // slowing, exhaustion still ends haste.
             if (you.duration[DUR_HASTE] > 0)
             {
-                if (wearing_amulet(AMU_RESIST_SLOW))
-                {
-                    if (you.duration[DUR_HASTE] > 3 * BASELINE_DELAY)
-                    {
-                        you.set_duration(DUR_HASTE, div_rand_round(2 + coinflip(), 2));
-                        mpr("Your extra speed is starting to run out.",
-                            MSGCH_DURATION);
-                    }
-                    else
-                    {
-                        mpr("You feel yourself slow down.", MSGCH_DURATION);
-                        you.duration[DUR_HASTE] = 0;
-                    }
-                    did_god_conduct(DID_HASTY, 3, true);
-                }
-                else
-                {
-                    // Silently cancel haste, then slow player.
-                    you.duration[DUR_HASTE] = 0;
-                }
+                // Silently cancel haste, then slow player.
+                you.duration[DUR_HASTE] = 0;
             }
             slow_player(dur);
         }
@@ -2523,7 +2513,7 @@ static void _decrement_durations()
         you.hunger = std::max(50, you.hunger);
 
         // 1KB: No berserk healing.
-        you.hp = (you.hp + 1) / 2;
+        you.hp = (you.hp + 1) * 2 / 3;
         calc_hp();
 
         learned_something_new(TUT_POSTBERSERK);

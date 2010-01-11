@@ -199,7 +199,8 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     {
     case HT_WATER:
         // Monsters can submerge in shallow water - this is intentional.
-        return (feat_is_watery(grid));
+        return (feat_is_watery(grid)
+                && mons_genus(mons_base_type(mons)) != MONS_MERFOLK);
 
     case HT_LAVA:
         return (grid == DNGN_LAVA);
@@ -1848,7 +1849,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
     case MONS_CENTAUR_WARRIOR:
         natural_leader = true;
     case MONS_CENTAUR:
-        if (power > 9 && one_chance_in(3))
+        if (power > 9 && one_chance_in(3) && you.where_are_you != BRANCH_SHOALS)
         {
             band = BAND_CENTAURS;
             band_size = 2 + random2(4);

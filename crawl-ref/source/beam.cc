@@ -33,6 +33,7 @@
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
+#include "godabil.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"
@@ -62,7 +63,7 @@
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "view.h"
 #include "shout.h"
@@ -3818,7 +3819,7 @@ bool bolt::misses_player()
     if (you.invisible() && !can_see_invis)
         real_tohit /= 2;
 
-    if (you.backlit())
+    if (you.backlit() && !you.halo_radius())
         real_tohit += 2 + random2(8);
 
     // Wow, what a horrid test.  These cannot be blocked or dodged
@@ -4413,7 +4414,7 @@ void bolt::affect_player()
 
     range_used += range_used_on_hit(&you);
 
-    if (flavour == BEAM_WATER)
+    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
         water_hits_actor(&you);
 }
 
@@ -4485,41 +4486,6 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
 bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
                             std::vector<std::string>& messages)
 {
-    // Fedhas worshippers can fire through monsters of the same
-    // alignment.  This means Fedhas-worshipping players can fire through
-    // allied plants, and also means that Fedhas-worshipping oklob plants
-    // can fire through plants with the same attitude.
-    bool originator_worships_fedhas = false;
-
-    // Checking beam_source to decide whether the player or a monster
-    // fired the beam (so we can check their religion).  This is
-    // complicated by the fact that this beam may in fact be an
-    // explosion caused by a miscast effect.  In that case, the value of
-    // beam_source may be negative (god-induced miscast) or greater than
-    // NON_MONSTER (various other miscast sources).  So we check whether
-    // or not this is an explosion, and also the range of beam_source
-    // before attempting to reference env.mons with it. -cao
-    if (!is_explosion && beam_source == NON_MONSTER)
-        originator_worships_fedhas = (you.religion == GOD_FEDHAS);
-    else if (!is_explosion && beam_source >= 0 && beam_source < MAX_MONSTERS)
-        originator_worships_fedhas = (env.mons[beam_source].god == GOD_FEDHAS);
-
-    if (!is_enchantment()
-        && attitude == mon->attitude
-        && originator_worships_fedhas
-        && fedhas_protects(mon))
-    {
-        if (!is_tracer)
-        {
-            // FIXME: Could use a better message, something about
-            // dodging that doesn't sound excessively weird would be
-            // nice.
-            mprf(MSGCH_GOD, "Fedhas protects %s plant from harm.",
-                 attitude == ATT_FRIENDLY ? "your" : "a");
-        }
-        return (false);
-    }
-
     // preac: damage before AC modifier
     // postac: damage after AC modifier
     // final: damage after AC and resists
@@ -4782,7 +4748,7 @@ void bolt::monster_post_hit(monsters* mon, int dmg)
     else if (dmg)
         beogh_follower_convert(mon, true);
 
-    if (flavour == BEAM_WATER)
+    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
         water_hits_actor(mon);
 }
 
@@ -4901,6 +4867,19 @@ void bolt::affect_monster(monsters* mon)
         apply_hit_funcs(mon, 0);
         return;
     }
+    if (fedhas_shoot_through(*this, mon))
+    {
+        apply_hit_funcs(mon, 0);
+        if (!is_tracer)
+        {
+            // FIXME: Could use a better message, something about
+            // dodging that doesn't sound excessively weird would be
+            // nice.
+            mprf(MSGCH_GOD, "Fedhas protects %s plant from harm.",
+                 attitude == ATT_FRIENDLY ? "your" : "a");
+        }
+        return;
+    }
 
     // Fire storm creates these, so we'll avoid affecting them
     if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
@@ -5012,7 +4991,7 @@ void bolt::affect_monster(monsters* mon)
     if (mon->invisible() && !can_see_invis)
         beam_hit /= 2;
 
-    if (mon->backlit())
+    if (mon->backlit() && !mon->halo_radius())
         beam_hit += 2 + random2(8);
 
     defer_rand r;
@@ -6417,6 +6396,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_VISUAL:               return ("visual effects");
     case BEAM_TORMENT_DAMAGE:       return ("torment damage");
     case BEAM_STEAL_FOOD:           return ("steal food");
+    case BEAM_GLOOM:                return ("gloom");
 
     case NUM_BEAMS:                 DEBUGSTR("invalid beam type");
                                     return ("INVALID");

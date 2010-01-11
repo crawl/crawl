@@ -1283,10 +1283,13 @@ static const skill_type skill_display_order[] =
 
     SK_BLANK_LINE,
 
-    SK_ARMOUR, SK_DODGING, SK_STEALTH, SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS,
+    SK_ARMOUR, SK_DODGING, SK_STABBING, SK_SHIELDS,
+
+    SK_COLUMN_BREAK,
+
+    SK_STEALTH, SK_TRAPS_DOORS,
 
     SK_BLANK_LINE,
-    SK_COLUMN_BREAK,
 
     SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS, SK_SUMMONINGS,
     SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS,
@@ -1370,7 +1373,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
             if (you.skills[x] == 27)
                 textcolor(YELLOW);
 
-            if (you.skills[x] == 0 || you.skills[x] == 27)
+            if (you.skills[x] == 0 || !show_description && you.skills[x] == 27)
                 putch(' ');
             else
                 putch(lcount++);
@@ -1437,7 +1440,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
     else
     {
         // NOTE: If any more skills added, must adapt letters to go into caps.
-        cgotoxy(1, bottom_line-2);
+        cgotoxy(1, bottom_line-3);
         textcolor(LIGHTGREY);
 
         if (show_description)
@@ -1449,7 +1452,8 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         else
         {
             cprintf("Press the letter of a skill to choose whether you want to "
-                    "practise it.");
+                    "practise it." EOL "Skills marked with '+' will train more "
+                    "quickly than those with '-'.");
         }
 
         cgotoxy(1, bottom_line-1);
@@ -1517,7 +1521,10 @@ void show_skills()
             if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
                 continue;
 
-            if (you.skills[x] == 0 || you.skills[x] == 27)
+            if (you.skills[x] == 0)
+                continue;
+
+            if (!show_description && you.skills[x] == 27)
                 continue;
 
             if (keyin == lcount)

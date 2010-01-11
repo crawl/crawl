@@ -50,7 +50,7 @@
 #include "env.h"
 #include "areas.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
@@ -1154,12 +1154,19 @@ static void _elven_twin_died(monsters* twin, bool in_transit)
     }
     else if (found_dowan)
     {
-        // Doesn't provide any message, so needs one, but only if visible.
-        // Doesn't matter if has been polymorphed or not.
         if (monster->observable())
-            simple_monster_message(monster, " turns to flee.");
-        monster->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU));
-        behaviour_event(monster, ME_SCARE, MHITNOT);
+        {
+            monster->add_ench(ENCH_HASTE);
+            simple_monster_message(monster, " seems to find hidden reserves of power!");
+        }
+        else
+            monster->props["dowan_upgrade"] = bool(true);
+
+        monster->spells[0] = SPELL_THROW_ICICLE;
+        monster->spells[1] = SPELL_BLINK;
+        monster->spells[3] = SPELL_STONE_ARROW;
+        monster->spells[4] = SPELL_HASTE;
+        // Nothing with 6.
     }
 }
 

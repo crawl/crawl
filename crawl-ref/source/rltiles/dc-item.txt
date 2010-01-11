@@ -81,6 +81,9 @@ katana3
 double_sword WPN_DOUBLE_SWORD
 triple_sword WPN_TRIPLE_SWORD
 demon_blade WPN_DEMON_BLADE
+%rim 0
+blessed_blade WPN_BLESSED_BLADE
+%rim 1
 
 ##Axe
 hand_axe WPN_HAND_AXE
@@ -96,22 +99,12 @@ battle_axe3
 executioner_axe WPN_EXECUTIONERS_AXE
 executioner_axe2
 
-##Ranged
-blowgun WPN_BLOWGUN
-blowgun2
-sling WPN_SLING
-bow WPN_BOW
-bow2
-crossbow WPN_CROSSBOW
-crossbow2
-
-##Pole
-quarterstaff WPN_QUARTERSTAFF
-
+##Polearm
 elven_spear WPN_SPEAR
 spear2
 trident WPN_TRIDENT
 trident2
+demon_trident WPN_DEMON_TRIDENT
 halberd WPN_HALBERD
 halberd2
 scythe WPN_SCYTHE
@@ -122,15 +115,22 @@ orcish_glaive WPN_GLAIVE_ORC
 bardiche WPN_BARDICHE
 bardiche2
 
-demon_trident WPN_DEMON_TRIDENT
-
-# SS new weapons
-%rim 0
-blessed_blade WPN_BLESSED_BLADE
-%rim 1
-longbow WPN_LONGBOW
+##Staff
+quarterstaff WPN_QUARTERSTAFF
 lajatang WPN_LAJATANG
 lajatang2
+
+
+##Ranged
+%sdir item/weapon/ranged
+blowgun WPN_BLOWGUN
+blowgun2
+sling WPN_SLING
+bow WPN_BOW
+bow2
+crossbow WPN_CROSSBOW
+crossbow2
+longbow WPN_LONGBOW
 
 %sdir item/weapon/brands
 %shrink 0
@@ -156,18 +156,24 @@ i-distortion BRAND_DISTORTION
 i-reaching BRAND_REACHING
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
-# confuse
+i-evasion BRAND_EVASION
+i-confusion BRAND_CONFUSION
 # penetration
 i-reaping BRAND_REAPING
-# missile-only brands
+# missile-only brands, order doesn't matter
 i-venom BRAND_POISONED
 i-curare BRAND_CURARE
+i-electrocution BRAND_ELECTRIC
+i-sickness BRAND_SICKNESS
+i-slowing BRAND_SLOWING
+i-paralysis BRAND_PARALYSIS
+i-berserk-rage BRAND_RAGE
 %rim 1
 %shrink 1
-%sdir item/weapon
+%sdir item/weapon/ranged
 
 ######OBJ_MISSILES
-item/gem/stone MI_STONE
+stone MI_STONE
 effect/stone0 MI_STONE0
 sling_bullet MI_SLING_BULLET
 effect/sling_bullet0 MI_SLING_BULLET0
@@ -233,7 +239,7 @@ effect/throwing_net5 MI_THROWING_NET5
 effect/throwing_net6 MI_THROWING_NET6
 effect/throwing_net7 MI_THROWING_NET7
 
-item/gem/rock MI_LARGE_ROCK
+rock MI_LARGE_ROCK
 effect/rock0 MI_LARGE_ROCK0
 
 ######OBJ_ARMOUR
@@ -410,9 +416,30 @@ lychee FOOD_LYCHEE
 beef_jerky FOOD_BEEF_JERKY
 cheese FOOD_CHEESE
 sausage FOOD_SAUSAGE
-corpse FOOD_CHUNK
-corpse_rotten FOOD_CHUNK_ROTTEN
 bone FOOD_BONE
+chunk FOOD_CHUNK
+chunk_rotten FOOD_CHUNK_ROTTEN
+%back chunk
+chunk_brands/i-poison FOOD_CHUNK_POISONED
+chunk_brands/i-mutation FOOD_CHUNK_MUTAGENIC
+chunk_brands/i-decay FOOD_CHUNK_ROTTING
+chunk_brands/i-forbidden FOOD_CHUNK_FORBIDDEN
+chunk_brands/i-sickness FOOD_CHUNK_CONTAMINATED
+%back chunk_rotten
+chunk_brands/i-poison FOOD_CHUNK_ROTTEN_POISONED
+chunk_brands/i-mutation FOOD_CHUNK_ROTTEN_MUTAGENIC
+chunk_brands/i-decay FOOD_CHUNK_ROTTEN_ROTTING
+chunk_brands/i-forbidden FOOD_CHUNK_ROTTEN_FORBIDDEN
+chunk_brands/i-sickness FOOD_CHUNK_ROTTEN_CONTAMINATED
+%back none
+%shrink 0
+chunk_brands/i-poison FOOD_POISONED
+chunk_brands/i-mutation FOOD_MUTAGENIC
+chunk_brands/i-decay FOOD_ROTTING
+chunk_brands/i-forbidden FOOD_FORBIDDEN
+chunk_brands/i-sickness FOOD_CONTAMINATED
+%shrink 1
+
 #################OBJ_UNKNOWN_I
 ##################OBJ_SCROLLS
 %sdir item/scroll
@@ -869,6 +896,4 @@ runes/rune_lom_lobon MISC_RUNE_LOM_LOBON
 #handled in dc-corpse.txt
 
 #OBJ_GOLD
-%sdir item/gem
-gold_piece GOLD
-#OBJ_GEMSTONES
+gold_pile GOLD

@@ -599,7 +599,7 @@ void item_colour(item_def &item)
             break;
         }
 
-        if (item.sub_type >= AMU_RAGE)
+        if (item.sub_type >= AMU_FIRST_AMULET)
         {
             switch (switchnum)
             {
@@ -1851,25 +1851,25 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_ARROW:
         rc = static_cast<special_missile_type>(
                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED, 10, SPMSL_CHAOS,
-                                               10, SPMSL_REAPING, 10, SPMSL_DISPERSAL,
+                                               20, SPMSL_POISONED, 15, SPMSL_REAPING,
+                                               15, SPMSL_DISPERSAL,
                                                nw, SPMSL_NORMAL,
                                                0));
         break;
     case MI_BOLT:
         rc = static_cast<special_missile_type>(
                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED, 10, SPMSL_PENETRATION,
-                                               10, SPMSL_CHAOS, 10, SPMSL_SILVER,
+                                               20, SPMSL_POISONED, 15, SPMSL_PENETRATION,
+                                               15, SPMSL_SILVER,
                                                10, SPMSL_STEEL, nw, SPMSL_NORMAL,
                                                0));
         break;
     case MI_JAVELIN:
         rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_RETURNING, 30, SPMSL_PENETRATION,
-                                               30, SPMSL_POISONED,
-                                               20, SPMSL_STEEL, 20, SPMSL_SILVER,
-                                               10, SPMSL_CHAOS, nw, SPMSL_NORMAL,
+                        random_choose_weighted(30, SPMSL_RETURNING, 32, SPMSL_PENETRATION,
+                                               32, SPMSL_POISONED,
+                                               21, SPMSL_STEEL, 20, SPMSL_SILVER,
+                                               nw, SPMSL_NORMAL,
                                                0));
         break;
     case MI_STONE:
@@ -1881,15 +1881,15 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_SLING_BULLET:
         rc = static_cast<special_missile_type>(
                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED, 10, SPMSL_CHAOS,
-                                               10, SPMSL_STEEL, 10, SPMSL_SILVER,
+                                               20, SPMSL_POISONED,
+                                               15, SPMSL_STEEL, 15, SPMSL_SILVER,
                                                20, SPMSL_EXPLODING, nw, SPMSL_NORMAL,
                                                0));
         break;
     case MI_THROWING_NET:
         rc = static_cast<special_missile_type>(
                         random_choose_weighted(30, SPMSL_STEEL, 30, SPMSL_SILVER,
-                                               20, SPMSL_CHAOS, nw, SPMSL_NORMAL,
+                                               nw, SPMSL_NORMAL,
                                                0));
         break;
     }

@@ -52,12 +52,6 @@ amulet of resist mutation
 This amulet protects its wearer from mutations, although not
 infallibly so.
 %%%%
-amulet of resist slowing
-
-This amulet protects its wearer from some magically induced forms of
-slowness, and increases the duration of enchantments which speed his
-or her actions.
-%%%%
 amulet of the gourmand
 
 This amulet protects its wearer from sickness due to eating fresh raw
@@ -69,6 +63,22 @@ amulet of warding
 This amulet repels some of the attacks of creatures which have been
 magically summoned, and also makes the wearer more resistant to
 draining attacks.
+%%%%
+amulet of faith
+
+This is a talisman crafted to call the attention of the gods to its
+wearer. This divine attention makes it easier to please your god, but
+your god is also less likely to forgive your transgressions, and the
+amulet will drain some of your divine favour when removed.
+%%%%
+amulet of stasis
+
+An amulet meticulously constructed with magical wards to block magical
+and physiological effects that would otherwise teleport, slow, haste,
+or paralyse its wearer.
+
+While the amulet is effective against most translocular magic, plane
+shifts such as banishment are beyond its ability to block.
 %%%%
 ankus
 
