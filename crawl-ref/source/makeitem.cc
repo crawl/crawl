@@ -599,7 +599,7 @@ void item_colour(item_def &item)
             break;
         }
 
-        if (item.sub_type >= AMU_RAGE)
+        if (item.sub_type >= AMU_FIRST_AMULET)
         {
             switch (switchnum)
             {
@@ -1851,7 +1851,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_ARROW:
         rc = static_cast<special_missile_type>(
                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED, 15, SPMSL_REAPING, 
+                                               20, SPMSL_POISONED, 15, SPMSL_REAPING,
                                                15, SPMSL_DISPERSAL,
                                                nw, SPMSL_NORMAL,
                                                0));

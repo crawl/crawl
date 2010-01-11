@@ -1793,12 +1793,12 @@ unsigned int item_value( item_def item, bool ident )
                 break;
             case AMU_THE_GOURMAND:
             case AMU_GUARDIAN_SPIRIT:
+            case AMU_FAITH:
                 valued += 35;
                 break;
             case AMU_CLARITY:
             case AMU_RESIST_CORROSION:
             case AMU_RESIST_MUTATION:
-            case AMU_RESIST_SLOW:
             case AMU_WARDING:
                 valued += 30;
                 break;

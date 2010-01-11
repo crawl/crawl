@@ -771,7 +771,7 @@ void dec_napalm_player(int delay);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 
-void haste_player(int turns);
+bool haste_player(int turns);
 void dec_haste_player(int delay);
 
 void dec_disease_player(int delay);

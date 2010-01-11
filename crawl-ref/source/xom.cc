@@ -233,7 +233,7 @@ static void _xom_is_stimulated(int maxinterestingness,
     if (crawl_state.which_god_acting() == GOD_XOM)
         return;
 
-    int interestingness = random2(maxinterestingness);
+    int interestingness = random2(piety_scale(maxinterestingness));
 
     interestingness = std::min(255, interestingness);
 
@@ -292,7 +292,7 @@ void xom_tick()
     int size = abs(you.piety - HALF_MAX_PIETY);
 
     // Piety slowly drifts towards the extremes.
-    int delta = (x_chance_in_y(511, 1000) ? 1 : -1);
+    const int delta = piety_scale(x_chance_in_y(511, 1000) ? 1 : -1);
     size += delta;
     if (size > HALF_MAX_PIETY)
         size = HALF_MAX_PIETY;
@@ -333,7 +333,7 @@ void xom_tick()
     if (you.gift_timeout == 1)
         simple_god_message(" is getting BORED.");
 
-    if (one_chance_in(3))
+    if (wearing_amulet(AMU_FAITH)? coinflip() : one_chance_in(3))
     {
         const int tension = get_tension(GOD_XOM);
         const int chance = (tension ==  0 ? 1 :
@@ -469,7 +469,7 @@ static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
     {
     case SPELL_BLINK:
     case SPELL_TELEPORT_SELF:
-        return (!scan_artefacts(ARTP_PREVENT_TELEPORTATION));
+        return (!item_blocks_teleport(false));
     default:
         return (true);
     }

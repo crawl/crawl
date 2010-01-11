@@ -1547,18 +1547,9 @@ static void tag_read_you(reader &th, char minorVersion)
     you.water_in_sight = -1;
 
     // List of currently beholding monsters (usually empty).
-    if (minorVersion >= TAG_MINOR_BEHELD16)
-    {
-        count_c = unmarshallShort(th);
-        for (i = 0; i < count_c; i++)
-             you.beholders.push_back(unmarshallShort(th));
-    }
-    else
-    {
-        count_c = unmarshallByte(th);
-        for (i = 0; i < count_c; i++)
-             you.beholders.push_back(unmarshallByte(th));
-    }
+    count_c = unmarshallShort(th);
+    for (i = 0; i < count_c; i++)
+        you.beholders.push_back(unmarshallShort(th));
 
     you.piety_hysteresis = unmarshallByte(th);
 
@@ -1655,20 +1646,17 @@ static void tag_read_you_items(reader &th, char minorVersion)
     for (j = 0; j < count_s; ++j)
         you.seen_spell[j] = unmarshallByte(th);
 
-    if (minorVersion >= TAG_MINOR_SEEN_WEAPONS_ARMOUR)
-    {
-        count_s = unmarshallShort(th);
-        if (count_s > NUM_WEAPONS)
-            count_s = NUM_WEAPONS;
-        for (j = 0; j < count_s; ++j)
-            you.seen_weapon[j] = unmarshallLong(th);
+    count_s = unmarshallShort(th);
+    if (count_s > NUM_WEAPONS)
+        count_s = NUM_WEAPONS;
+    for (j = 0; j < count_s; ++j)
+        you.seen_weapon[j] = unmarshallLong(th);
 
-        count_s = unmarshallShort(th);
-        if (count_s > NUM_ARMOURS)
-            count_s = NUM_ARMOURS;
-        for (j = 0; j < count_s; ++j)
-            you.seen_armour[j] = unmarshallLong(th);
-    }
+    count_s = unmarshallShort(th);
+    if (count_s > NUM_ARMOURS)
+        count_s = NUM_ARMOURS;
+    for (j = 0; j < count_s; ++j)
+        you.seen_armour[j] = unmarshallLong(th);
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)

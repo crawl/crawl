@@ -116,6 +116,11 @@ void warn_shield_penalties();
 
 bool wearing_slot(int inv_slot);
 
+bool item_blocks_teleport(bool permit_id);
+bool stasis_blocks_effect(bool identify,
+                          const char *msg, int noise = 0,
+                          const char *silencedmsg = NULL);
+
 #ifdef USE_TILE
 void tile_item_use_floor(int idx);
 void tile_item_pickup(int idx);

@@ -144,7 +144,6 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_FIRE:              return "Fire";
     case RING_ICE:               return "Ice";
     case RING_TELEPORT_CONTROL:  return "cTele";
-    case AMU_RESIST_SLOW:        return "rSlow";
     case AMU_CLARITY:            return "Clar";
     case AMU_WARDING:            return "Ward";
     case AMU_RESIST_CORROSION:   return "rCorr";
@@ -153,6 +152,8 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_CONTROLLED_FLIGHT:  return "cFly";
     case AMU_RESIST_MUTATION:    return "rMut";
     case AMU_GUARDIAN_SPIRIT:    return "Spirit";
+    case AMU_FAITH:              return "Faith";
+    case AMU_STASIS:             return "Stasis";
     }
     return "";
 }
