@@ -1440,7 +1440,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
     else
     {
         // NOTE: If any more skills added, must adapt letters to go into caps.
-        cgotoxy(1, bottom_line-2);
+        cgotoxy(1, bottom_line-3);
         textcolor(LIGHTGREY);
 
         if (show_description)
@@ -1452,13 +1452,8 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         else
         {
             cprintf("Press the letter of a skill to choose whether you want to "
-                    "practise it.");
-#if 0
-            cprintf("Press the letter of a skill to choose whether you want to "
-                    "practise it. A" EOL
-                    "greyish skill will increase at a slower rate and ease "
-                    "training of others.");
-#endif
+                    "practise it." EOL "Skills marked with '+' will train more "
+                    "quickly than those with '-'.");
         }
 
         cgotoxy(1, bottom_line-1);
