@@ -740,6 +740,10 @@ static bool _handle_reaching(monsters *monster)
     bool       ret = false;
     item_def *wpn = monster->weapon(0);
     const mon_attack_def attk(mons_attack_spec(monster, 0));
+    actor *foe = monster->get_foe();
+
+    if (!foe)
+        return (false);
 
     if (monster->submerged())
         return (false);
@@ -747,46 +751,34 @@ static bool _handle_reaching(monsters *monster)
     if (mons_aligned(monster->mindex(), monster->foe))
         return (false);
 
-    if ((wpn && get_weapon_brand(*wpn) == SPWPN_REACHING)
-        || (attk.flavour == AF_REACH && attk.damage))
+    const coord_def foepos(foe->pos());
+    const coord_def delta(foepos - monster->pos());
+    const int grid_distance(delta.rdist());
+    const coord_def middle(monster->pos() + delta / 2);
+
+    if (grid_distance == 2
+        // The monster has to be attacking the correct position.
+        && monster->target == foepos
+        // With a reaching weapon OR ...
+        && ((wpn && get_weapon_brand(*wpn) == SPWPN_REACHING)
+            // ... with a native reaching attack, provided the attack
+            // is not on a full diagonal.
+            || (attk.flavour == AF_REACH && attk.damage
+                && delta.abs() <= 5))
+        // And with no dungeon furniture in the way of the reaching
+        // attack; if the middle square is empty, skip the LOS check.
+        && (grd(middle) > DNGN_MAX_NONREACH
+            || (monster->foe == MHITYOU?
+                you.see_cell_no_trans(monster->pos())
+                : monster->mon_see_cell(foepos, true))))
     {
-        if (monster->foe == MHITYOU)
-        {
-            const coord_def delta = monster->pos() - you.pos();
-            const int x_middle = std::max(monster->pos().x, you.pos().x)
-                                    - (abs(delta.x) / 2);
-            const int y_middle = std::max(monster->pos().y, you.pos().y)
-                                    - (abs(delta.y) / 2);
-            const coord_def middle(x_middle, y_middle);
+        ret = true;
+        monster_attack_actor(monster, foe, false);
 
-            // This check isn't redundant -- player may be invisible.
-            if (monster->target == you.pos()
-                && grid_distance(monster->pos(), you.pos()) == 2
-                && (you.see_cell_no_trans(monster->pos())
-                    || grd(middle) > DNGN_MAX_NONREACH))
-            {
-                ret = true;
-                monster_attack(monster, false);
-            }
-        }
-        else if (monster->foe != MHITNOT)
-        {
-            monsters& mfoe = menv[monster->foe];
-            coord_def foepos = mfoe.pos();
-            // Same comments as to invisibility as above.
-            if (monster->target == foepos
-                && monster->mon_see_cell(foepos, true)
-                && grid_distance(monster->pos(), foepos) == 2)
-            {
-                ret = true;
-                monsters_fight(monster, &mfoe, false);
-            }
-        }
+        // Player saw the item reach.
+        if (wpn && !is_artefact(*wpn) && you.can_see(monster))
+            set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
     }
-
-    // Player saw the item reach.
-    if (ret && wpn && !is_artefact(*wpn) && you.can_see(monster))
-        set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
 
     return (ret);
 }

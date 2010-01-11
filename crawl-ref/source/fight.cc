@@ -5821,6 +5821,16 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
     }
 }
 
+bool monster_attack_actor(monsters *attacker, actor *defender,
+                          bool allow_unarmed)
+{
+    ASSERT(defender == &you || defender->atype() == ACT_MONSTER);
+    return (defender->atype() == ACT_PLAYER ?
+              monster_attack(attacker, allow_unarmed)
+            : monsters_fight(attacker, dynamic_cast<monsters*>(defender),
+                             allow_unarmed));
+}
+
 // A monster attacking the player.
 bool monster_attack(monsters* attacker, bool allow_unarmed)
 {
