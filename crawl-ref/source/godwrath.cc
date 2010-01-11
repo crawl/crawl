@@ -91,8 +91,9 @@ static bool _okawaru_random_servant()
                                  : MONS_TITAN);            //  5%
 
     return (create_monster(
-                    mgen_data::hostile_at(mon_type, "the fury of Okawaru",
-                        true, 0, 0, you.pos(), 0, GOD_OKAWARU)) != -1);
+                mgen_data::hostile_at(mon_type, "the fury of Okawaru",
+                                      true, 6, MON_SUMM_WRATH, you.pos(), 0,
+                                      GOD_OKAWARU)) != -1);
 }
 
 static bool _tso_retribution()
