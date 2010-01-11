@@ -436,10 +436,6 @@ static int _exercise2(int exsk)
             you.redraw_armour_class = true;
         }
 
-        // For wielded weapons of pain.
-        if (exsk == SK_NECROMANCY && you.skills[exsk] == 1)
-            you.wield_change = true;
-
         const unsigned char best = best_skill(SK_FIGHTING,
                                               (NUM_SKILLS - 1), 99);
 
