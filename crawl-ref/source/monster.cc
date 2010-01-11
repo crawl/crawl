@@ -2210,9 +2210,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     }
 
     if (type == MONS_BALLISTOMYCETE && desc != DESC_DBNAME)
-    {
         result += mon.number ? "active " : "";
-    }
 
     // Done here to cover cases of undead versions of hydras.
     if (mons_species(nametype) == MONS_HYDRA
