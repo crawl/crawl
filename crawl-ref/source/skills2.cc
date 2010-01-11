@@ -1373,7 +1373,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
             if (you.skills[x] == 27)
                 textcolor(YELLOW);
 
-            if (you.skills[x] == 0 || you.skills[x] == 27)
+            if (you.skills[x] == 0 || !show_description && you.skills[x] == 27)
                 putch(' ');
             else
                 putch(lcount++);
@@ -1521,7 +1521,10 @@ void show_skills()
             if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
                 continue;
 
-            if (you.skills[x] == 0 || you.skills[x] == 27)
+            if (you.skills[x] == 0)
+                continue;
+
+            if (!show_description && you.skills[x] == 27)
                 continue;
 
             if (keyin == lcount)
