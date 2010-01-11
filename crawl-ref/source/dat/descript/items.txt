@@ -71,6 +71,15 @@ wearer. This divine attention makes it easier to please your god, but
 your god is also less likely to forgive your transgressions, and the
 amulet will drain some of your divine favour when removed.
 %%%%
+amulet of stasis
+
+An amulet meticulously constructed with magical wards to block magical
+and physiological effects that would otherwise teleport, slow, haste,
+or paralyse its wearer.
+
+While the amulet is effective against most translocular magic, plane
+shifts such as banishment are beyond its ability to block.
+%%%%
 ankus
 
 What mahouts steer their elephants with. It basically resembles a

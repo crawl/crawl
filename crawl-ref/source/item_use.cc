@@ -5856,6 +5856,49 @@ bool wearing_slot(int inv_slot)
     return (false);
 }
 
+bool item_blocks_teleport(bool permit_id)
+{
+    return (scan_artefacts(ARTP_PREVENT_TELEPORTATION)
+            || stasis_blocks_effect(permit_id, NULL));
+}
+
+bool stasis_blocks_effect(bool identify,
+                          const char *msg, int noise,
+                          const char *silenced_msg)
+{
+    if (wearing_amulet(AMU_STASIS))
+    {
+        item_def *amulet = you.slot_item(EQ_AMULET);
+
+        if (msg)
+        {
+            const std::string name(amulet? amulet->name(DESC_CAP_YOUR) :
+                                   "Something");
+            const std::string message =
+                make_stringf(msg, name.c_str());
+
+            if (noise)
+            {
+                if (!noisy(noise, you.pos(), message.c_str())
+                    && silenced_msg)
+                {
+                    mprf(silenced_msg, name.c_str());
+                }
+            }
+            else
+            {
+                mpr(message.c_str());
+            }
+        }
+
+        // In all cases, the amulet auto-ids if requested.
+        if (amulet && identify)
+            set_ident_type(*amulet, ID_KNOWN_TYPE);
+        return (true);
+    }
+    return (false);
+}
+
 #ifdef USE_TILE
 // Interactive menu for item drop/use.
 

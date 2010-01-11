@@ -1809,6 +1809,10 @@ static bool _randart_is_redundant( const item_def &item,
     case AMU_INACCURACY:
         provides = ARTP_ACCURACY;
         break;
+
+    case AMU_STASIS:
+        provides = ARTP_PREVENT_TELEPORTATION;
+        break;
     }
 
     if (provides == ARTP_NUM_PROPERTIES)

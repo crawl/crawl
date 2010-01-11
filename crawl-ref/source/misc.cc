@@ -48,6 +48,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "lev-pand.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -2697,6 +2698,14 @@ bool go_berserk(bool intentional, bool potion)
 
     if (!you.can_go_berserk(intentional, potion))
         return (false);
+
+    if (stasis_blocks_effect(true,
+                             "%s thrums violently and saps your rage.",
+                             3,
+                             "%s vibrates violently and saps your rage."))
+    {
+        return (false);
+    }
 
     if (Tutorial.tutorial_left)
         Tutorial.tut_berserk_counter++;

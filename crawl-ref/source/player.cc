@@ -35,6 +35,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "it_use2.h"
 #include "kills.h"
 #include "macro.h"
@@ -4981,6 +4982,9 @@ bool slow_player(int turns)
     if (turns <= 0)
         return (false);
 
+    if (stasis_blocks_effect(true, "%s rumbles.", 20, "%s rumbles."))
+        return (false);
+
     // Doubling these values because moving while slowed takes twice the
     // usual delay.
     turns *= 2;
@@ -5019,12 +5023,18 @@ void dec_slow_player(int delay)
     }
 }
 
-void haste_player(int turns)
+bool haste_player(int turns)
 {
     ASSERT(!crawl_state.arena);
 
     if (turns <= 0)
-        return;
+        return (false);
+
+    if (stasis_blocks_effect(true, "%s emits a piercing whistle.", 20,
+                             "%s makes your neck tingle."))
+    {
+        return (false);
+    }
 
     // Cutting the nominal turns in half since hasted actions take half the
     // usual delay.
@@ -5043,6 +5053,8 @@ void haste_player(int turns)
 
     you.increase_duration(DUR_HASTE, turns, threshold);
     did_god_conduct(DID_STIMULANTS, 4 + random2(4));
+
+    return (true);
 }
 
 void dec_haste_player(int delay)
@@ -6016,6 +6028,21 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
+    // Stasis, but only for identified amulets; unided amulets will
+    // trigger when the player attempts to activate berserk,
+    // auto-iding at that point, but also killing the berserk and
+    // wasting a turn.
+    if (wearing_amulet(AMU_STASIS, false))
+    {
+        if (verbose)
+        {
+            const item_def *amulet = you.slot_item(EQ_AMULET);
+            mprf("You cannot go berserk with %s on.",
+                 amulet? amulet->name(DESC_NOCAP_YOUR).c_str() : "your amulet");
+        }
+        return (false);
+    }
+
     if (!intentional && !potion && player_mental_clarity(true))
     {
         if (verbose)
@@ -6772,6 +6799,10 @@ void player::paralyse(actor *who, int str)
 {
     ASSERT(!crawl_state.arena);
 
+    // The shock is too mild to do damage.
+    if (stasis_blocks_effect(true, "%s gives you a mild electric shock."))
+        return;
+
     int &paralysis(duration[DUR_PARALYSIS]);
 
     mprf("You %s the ability to move!",
@@ -6788,6 +6819,9 @@ void player::paralyse(actor *who, int str)
 void player::petrify(actor *who, int str)
 {
     ASSERT(!crawl_state.arena);
+
+    if (stasis_blocks_effect(true, "%s gives you a mild electric shock."))
+        return;
 
     str *= BASELINE_DELAY;
     int &petrif(duration[DUR_PETRIFIED]);
