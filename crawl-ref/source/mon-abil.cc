@@ -401,9 +401,9 @@ static bool _slime_merge(monsters *thing)
 // we can find a square to place the new slime creature on.
 static bool _slime_split(monsters *thing)
 {
-    if (!thing
-        || _disabled_slime(thing)
-        || thing->number <= 1)
+    if (!thing || thing->number <= 1
+        || coinflip() // Don't make splitting quite so reliable. (jpeg)
+        || _disabled_slime(thing))
     {
         return (false);
     }
