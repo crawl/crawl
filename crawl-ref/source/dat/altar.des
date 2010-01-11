@@ -1036,16 +1036,15 @@ function convert_book (data, triggerable, triggerer, marker, ev)
       return
     end
 
-    local book = dgn.items_at(_x, _y)[1]
-    if book ~= nil then
+    for book in iter.stash_iterator(_x, _y) do
       if string.find(items.name(book), 'book') then
         items.destroy(book)
         dgn.place_cloud(_x, _y, "flame", 15)
         crawl.god_speaks("Trog", "The book bursts into flames! "
                               .. "Trog roars with delight!")
-        triggerable:remove(marker)
       end
     end
+    triggerable:remove(marker)
   end
 end
 
