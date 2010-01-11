@@ -601,7 +601,6 @@ MONS:   flying skull / skeletal warrior / w:40 nothing
 KFEAT:  ^ = alarm trap
 SUBST:  F = G:100 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue
-WEIGHT: 10000000000
 {{
 lua_marker("m", portal_desc { wall_phase =1 })
 
