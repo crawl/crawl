@@ -62,6 +62,7 @@ const int CALL_TIDE_VELOCITY = 21;
 // The area around the user of a call tide spell that is subject to
 // local tide elevation.
 const int TIDE_CALL_RADIUS = 8;
+const int MAX_SHOAL_PLANTS = 180;
 
 const int _shoals_margin = 6;
 
@@ -85,6 +86,7 @@ static monsters *tide_caller = NULL;
 static coord_def tide_caller_pos;
 static long tide_called_turns = 0L;
 static int tide_called_peak = 0;
+static int shoals_plant_quota = 0;
 
 static dungeon_feature_type _shoals_feature_by_height(int height)
 {
@@ -582,9 +584,13 @@ static coord_def _shoals_pick_region(
 
 static void _shoals_make_plant_at(coord_def p)
 {
-    // [ds] Why is hostile_at() saddled with unnecessary parameters
-    // related to summoning?
-    mons_place(mgen_data::hostile_at(MONS_PLANT, "", false, 0, 0, p));
+    if (shoals_plant_quota > 0)
+    {
+        // [ds] Why is hostile_at() saddled with unnecessary parameters
+        // related to summoning?
+        mons_place(mgen_data::hostile_at(MONS_PLANT, "", false, 0, 0, p));
+        --shoals_plant_quota;
+    }
 }
 
 static bool _shoals_plantworthy_feat(dungeon_feature_type feat)
@@ -596,6 +602,9 @@ static void _shoals_make_plant_near(coord_def c, int radius,
                                     dungeon_feature_type preferred_feat,
                                     grid_bool *verboten)
 {
+    if (shoals_plant_quota <= 0)
+        return;
+
     const int ntries = 5;
     for (int i = 0; i < ntries; ++i)
     {
@@ -627,7 +636,7 @@ static void _shoals_plant_supercluster(coord_def c,
                                        dungeon_feature_type favoured_feat,
                                        grid_bool *verboten = NULL)
 {
-    _shoals_plant_cluster(c, random_range(10, 25, 2),
+    _shoals_plant_cluster(c, random_range(10, 17, 2),
                           random_range(3, 9), favoured_feat,
                           verboten);
 
@@ -637,7 +646,7 @@ static void _shoals_plant_supercluster(coord_def c,
         const coord_def satellite(
             _random_point_from(c, random_range(2, 12)));
         if (!satellite.origin())
-            _shoals_plant_cluster(satellite, random_range(5, 23, 2),
+            _shoals_plant_cluster(satellite, random_range(5, 12, 2),
                                   random_range(2, 7),
                                   favoured_feat,
                                   verboten);
@@ -751,6 +760,8 @@ static void _shoals_generate_flora()
     //
     const int n_water_clusters = std::max(0, random_range(-1, 6, 2));
     const int n_wind_clusters = std::max(0, random_range(-2, 2, 2));
+
+    shoals_plant_quota = MAX_SHOAL_PLANTS;
 
     if (n_water_clusters)
     {
