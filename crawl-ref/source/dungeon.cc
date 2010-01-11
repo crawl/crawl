@@ -1834,12 +1834,6 @@ static void _build_dungeon_level(int level_number, int level_type)
     if (!player_in_branch(BRANCH_DIS) && !player_in_branch(BRANCH_VAULTS))
         _hide_doors();
 
-    // Change pre-rock to rock, and pre-floor to floor.
-    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_WALL,
-                     DNGN_ROCK_WALL);
-    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_FLOOR,
-                     DNGN_FLOOR);
-
     if (player_in_branch(BRANCH_LAIR))
     {
         int depth = player_branch_depth() + 1;
@@ -1849,6 +1843,12 @@ static void _build_dungeon_level(int level_number, int level_type)
             depth -= 3;
         } while (depth > 0);
     }
+
+    // Change pre-rock to rock, and pre-floor to floor.
+    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_WALL,
+                     DNGN_ROCK_WALL);
+    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_FLOOR,
+                     DNGN_FLOOR);
 
     const unsigned nvaults = Level_Vaults.size();
 
