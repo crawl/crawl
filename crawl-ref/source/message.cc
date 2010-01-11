@@ -324,7 +324,10 @@ public:
             return;
         msgs.push_back(prev_msg);
         bool newturn = (prev_msg.turn > msgs[-2].turn);
-        msgwin.add_item(prev_msg.text, newturn ? '-' : ' ', false);
+        std::string repeats = "";
+        if (prev_msg.repeats > 1)
+            repeats = make_stringf(" x%d", prev_msg.repeats);
+        msgwin.add_item(prev_msg.text + repeats, newturn ? '-' : ' ', false);
         prev_msg = message_item();
     }
 
