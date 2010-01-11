@@ -4510,6 +4510,26 @@ void tile_init_flavour()
         tile_init_flavour(*ri);
 }
 
+static int _pick_random_dngn_tile(unsigned int idx)
+{
+    ASSERT(idx >= 0 && idx < TILE_DNGN_MAX);
+    const int count = tile_dngn_count(idx);
+    if (count == 1)
+        return (idx);
+
+    const int total = tile_dngn_probs(idx + count - 1);
+    const int rand  = random2(total);
+
+    for (int i = 0; i < count; ++i)
+    {
+        int curr = idx + i;
+        if (rand < tile_dngn_probs(curr))
+            return (curr);
+    }
+
+    return (idx);
+}
+
 void tile_init_flavour(const coord_def &gc)
 {
     if (!map_bounds(gc))
@@ -4521,8 +4541,7 @@ void tile_init_flavour(const coord_def &gc)
         int colour = env.grid_colours(gc);
         if (colour)
             floor_base = tile_dngn_coloured(floor_base, colour);
-        int floor_rnd = random2(tile_dngn_count(floor_base));
-        env.tile_flv(gc).floor = floor_base + floor_rnd;
+        env.tile_flv(gc).floor = _pick_random_dngn_tile(floor_base);
     }
 
     if (!env.tile_flv(gc).wall)
@@ -4531,8 +4550,7 @@ void tile_init_flavour(const coord_def &gc)
         int colour = env.grid_colours(gc);
         if (colour)
             wall_base = tile_dngn_coloured(wall_base, colour);
-        int wall_rnd = random2(tile_dngn_count(wall_base));
-        env.tile_flv(gc).wall = wall_base + wall_rnd;
+        env.tile_flv(gc).wall = _pick_random_dngn_tile(wall_base);
     }
 
     if (feat_is_door(grd(gc)))

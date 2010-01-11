@@ -9,13 +9,16 @@ dngn_unseen DNGN_UNSEEN
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
 
+%weight 5
 wall/brick_brown0 WALL_NORMAL WALL_BRICK WALL_BRICK_BROWN
 wall/brick_brown1
 wall/brick_brown2
-wall/brick_brown3
 wall/brick_brown4
 wall/brick_brown5
+%weight 2
+wall/brick_brown3
 wall/brick_brown6
+%weight 1
 wall/brick_brown7
 
 %variation WALL_BRICK blue
@@ -604,14 +607,17 @@ floor/rough_red3
 %repeat FLOOR_ROUGH FLOOR_ROUGH_WHITE
 %resetcol
 
+%weight 5
 floor/floor_sand_stone0 FLOOR_SAND_STONE
 floor/floor_sand_stone1
 floor/floor_sand_stone2
 floor/floor_sand_stone3
+%weight 2
 floor/floor_sand_stone4
 floor/floor_sand_stone5
-floor/floor_sand_stone6
 floor/floor_sand_stone7
+%weight 1
+floor/floor_sand_stone6
 
 wall/wall_yellow_rock0 WALL_YELLOW_ROCK
 wall/wall_yellow_rock1
