@@ -6103,13 +6103,14 @@ void monsters::react_to_damage(int damage, beam_type flavour, kill_category whos
 
 static const char *enchant_names[] =
 {
-    "none", "slow", "haste", "might", "fear", "conf", "inv", "pois", "bers",
-    "rot", "summon", "abj", "backlit", "charm", "fire",
-    "gloshifter", "shifter", "tp", "wary", "submerged",
-    "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
-    "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
-    "soul-ripe", "decay", "hungry", "flopping", "spore-producing",
-    "downtrodden", "swift", "tide", "frenzied", "bug"
+    "none", "berserk", "haste", "might", "fatigue", "slow", "fear",
+    "confusion", "invis", "poison", "rot", "summon", "abj", "corona",
+    "charm", "sticky_flame", "glowing_shapeshifter", "shapeshifter", "tp",
+    "sleep_wary", "submerged", "short_lived", "paralysis", "sick",
+    "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
+    "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
+    "aquatic_land", "spore_production", "slouch", "swift", "tide",
+    "insane", "buggy"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
