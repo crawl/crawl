@@ -2,21 +2,21 @@
 local niters = 150
 local output_file = "monster-report.out"
 
-local excluded_things = util.set({ "plant", "fungus", "bush" })
+local excluded_things = util.set({}) -- "plant", "fungus", "bush" })
 
 local function count_monsters_at(place, set)
   debug.goto_place(place)
   test.regenerate_level()
 
-  local monster_set = set or { }
+  local monsters_here = set or { }
   for mons in test.level_monster_iterator() do
     local mname = mons.name
     if not excluded_things[mname] then
-      local count = monster_set[mname] or 0
-      monster_set[mname] = count + 1
+      local count = monsters_here[mname] or 0
+      monsters_here[mname] = count + 1
     end
   end
-  return monster_set
+  return monsters_here
 end
 
 local function report_monster_counts_at(place, mcount_map)
@@ -27,18 +27,21 @@ local function report_monster_counts_at(place, mcount_map)
 
   local monster_counts = util.pairs(mcount_map)
   table.sort(monster_counts, function (a, b)
-                               return a[2] > b[2]
+                               return a[2].total > b[2].total
                              end)
 
   local total = 0
   for _, monster_pop in ipairs(monster_counts) do
-    total = total + monster_pop[2]
+    total = total + monster_pop[2].total
   end
 
   for _, monster_pop in ipairs(monster_counts) do
-    text = text .. string.format("%6.2f (%6.2f%%)   %s\n",
-                                 monster_pop[2] * 1.0 / niters,
-                                 monster_pop[2] * 100.0 / total,
+    text = text .. string.format("%5.2f (min: %2d, max: %2d, sd: %6.2f, %%: %6.2f%%)   %s\n",
+                                 monster_pop[2].mean,
+                                 monster_pop[2].min,
+                                 monster_pop[2].max,
+                                 monster_pop[2].sigma,
+                                 monster_pop[2].total * 100.0 / total,
                                  monster_pop[1])
   end
   return text
@@ -56,18 +59,56 @@ local function report_monster_counts(mcounts)
   crawl.mpr("Dumped monster stats to " .. output_file)
 end
 
+local function calculate_monster_stats(iter_mpops)
+  local final_stats = { }
+  local n = #iter_mpops
+  for _, mpop in ipairs(iter_mpops) do
+    for mons, count in pairs(mpop) do
+      local mstats =
+        final_stats[mons] or { total = 0, max = 0, min = 0, pops = { } }
+
+      mstats.total = mstats.total + count
+      if count > mstats.max then
+        mstats.max = count
+      end
+      if count < mstats.min then
+        mstats.min = count
+      end
+      table.insert(mstats.pops, count)
+      final_stats[mons] = mstats
+    end
+  end
+
+  for mons, stat in pairs(final_stats) do
+    stat.mean = stat.total / n
+
+    local totaldelta2 = 0
+    local mean = stat.mean
+    for _, count in ipairs(stat.pops) do
+      local delta = count - mean
+      totaldelta2 = totaldelta2 + delta * delta
+    end
+    stat.sigma = math.sqrt(totaldelta2 / n)
+  end
+  return final_stats
+end
+
 local function count_monsters_from(start_place, end_place)
   local place = start_place
   local mcounts = { }
   while place do
     local mset = { }
+
+    local iter_mpops = { }
     for i = 1, niters do
       crawl.mesclr()
       crawl.mpr("Counting monsters at " .. place .. " (" ..
                 i .. "/" .. niters .. ")")
-      count_monsters_at(place, mset)
+      local res = count_monsters_at(place)
+      table.insert(iter_mpops, res)
     end
-    mcounts[place] = mset
+
+    mcounts[place] = calculate_monster_stats(iter_mpops)
 
     if place == end_place then
       break
