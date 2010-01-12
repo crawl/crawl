@@ -275,6 +275,9 @@ int main( int argc, char *argv[] )
     // Activate markers only after the welcome message, so the
     // player can see any resulting messages.
     env.markers.activate_all();
+    // Call again to make Ctrl-X work correctly for items
+    // in los on turn 0.
+    maybe_update_stashes();
 
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
