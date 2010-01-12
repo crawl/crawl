@@ -6041,7 +6041,8 @@ void tile_item_use(int idx)
 
         case OBJ_BOOKS:
             if (item.sub_type == BOOK_MANUAL
-                || item.sub_type == BOOK_DESTRUCTION)
+                || item.sub_type == BOOK_DESTRUCTION
+                || you.skills[SK_SPELLCASTING] == 0)
             {
                 if (check_warning_inscriptions(item, OPER_READ))
                     handle_read_book(idx);

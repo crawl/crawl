@@ -2821,7 +2821,8 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             case OBJ_BOOKS:
                 if (item_type_known(item)
                     && item.sub_type != BOOK_MANUAL
-                    && item.sub_type != BOOK_DESTRUCTION)
+                    && item.sub_type != BOOK_DESTRUCTION
+                    && you.skills[SK_SPELLCASTING] > 0)
                 {
                     tip += "Memorise (M)";
                     if (wielded)
