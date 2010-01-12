@@ -1378,6 +1378,8 @@ static std::string _killer_type_name(killer_type killer)
         return ("mon_missile");
     case KILL_YOU_CONF:
         return ("you_conf");
+    case KILL_MISCAST:
+        return ("miscast");
     case KILL_MISC:
         return ("misc");
     case KILL_RESET:
