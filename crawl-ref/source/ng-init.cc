@@ -60,7 +60,7 @@ void initialise_branch_depths()
     branches[BRANCH_ELVEN_HALLS].startdepth       = random_range(3, 4);
     branches[BRANCH_LAIR].startdepth              = random_range(8, 13);
     branches[BRANCH_HIVE].startdepth              = random_range(11, 16);
-    branches[BRANCH_SLIME_PITS].startdepth        = random_range(5, 8);
+    branches[BRANCH_SLIME_PITS].startdepth        = random_range(6, 8);
 #ifndef SHOALS_TESTING
     if ( coinflip() )
     {
