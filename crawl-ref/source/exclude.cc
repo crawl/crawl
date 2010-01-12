@@ -485,6 +485,16 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
             {
                 desc = mons_type_name(m->type, DESC_PLAIN);
             }
+            else
+            {
+                // Maybe it's a staircase?
+                const dungeon_feature_type feat = env.map_knowledge(p).feat();
+                const command_type dir = feat_stair_direction(feat);
+                if (dir == CMD_GO_UPSTAIRS)
+                    desc = "upstairs";
+                else if (dir == CMD_GO_DOWNSTAIRS)
+                    desc = "downstairs";
+            }
         }
         else
         {
