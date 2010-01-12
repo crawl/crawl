@@ -1440,6 +1440,9 @@ int tile_known_weapon_brand(const item_def item)
 
 int tile_corpse_brand(const item_def item)
 {
+    if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
+        return (0);
+
     // Brands are mostly meaningless to herbivores.
     // Could still be interesting for Fulsome Distillation, though.
     if (player_mutation_level(MUT_HERBIVOROUS) == 3)
