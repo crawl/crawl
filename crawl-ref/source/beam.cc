@@ -1928,6 +1928,21 @@ void bolt::nuke_wall_effect()
 
         obvious_effect = true;
     }
+    else if (feat == DNGN_TREES)
+    {
+        grd(pos()) = DNGN_FLOOR;
+
+        // Blood does not transfer onto floor.
+        if (is_bloodcovered(pos()))
+            env.pgrid(pos()) &= ~(FPROP_BLOODY);
+
+        if (you.see_cell(pos()))
+            mpr("The tree breaks and falls down!");
+        else if (player_can_hear(pos()))
+            mpr("You hear timber falling.", MSGCH_SOUND);
+
+        obvious_effect = true;
+    }
     finish_beam();
 }
 
