@@ -3749,6 +3749,17 @@ static bool _initialise(void)
     // Set up the Lua interpreter for the dungeon builder.
     init_dungeon_lua();
 
+#ifdef USE_TILE
+    // Draw the splash screen before the database gets initialised as that
+    // may take awhile and it's better if the player can look at a pretty
+    // screen while this happens.
+    if (!crawl_state.map_stat_gen && !crawl_state.test
+        && Options.tile_title_screen)
+    {
+        tiles.draw_title();
+    }
+#endif
+
     // Initialise internal databases.
     databaseSystemInit();
 

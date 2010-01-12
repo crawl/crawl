@@ -14,12 +14,6 @@ extern std::string init_file_error; // defined in main.cc
 // Eventually, this should be something more grand. {dlb}
 void opening_screen(void)
 {
-#ifdef USE_TILE
-    // More grand... Like this? ;)
-    if (Options.tile_title_screen)
-        tiles.draw_title();
-#endif
-
     std::string msg =
     "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>" EOL
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
