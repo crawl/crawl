@@ -990,10 +990,25 @@ dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
 dngn_shallow_water_murky2
 dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 dngn_shallow_water_murky_disturbance2
+# Make all base variants equally likely, but their special ones less so.
+%weight 4
 dngn_shoals_deep_water1 SHOALS_DEEP_WATER
+%weight 2
+dngn_shoals_deep_water1_shape
+%weight 4
 dngn_shoals_deep_water2
+%weight 1
+dngn_shoals_deep_water2_shape
+dngn_shoals_deep_water2_bubbles
+%weight 4
 dngn_shoals_deep_water3
+%weight 2
+dngn_shoals_deep_water3_bubbles
+%weight 4
 dngn_shoals_deep_water4
+%weight 2
+dngn_shoals_deep_water4_bubbles
+%weight 1
 dngn_shoals_shallow_water1 SHOALS_SHALLOW_WATER
 dngn_shoals_shallow_water2
 dngn_shoals_shallow_water3
