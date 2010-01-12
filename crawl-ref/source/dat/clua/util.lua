@@ -242,6 +242,14 @@ function util.expand_entity(entity, msg)
                      end)
 end
 
+function util.range(start, stop)
+  local rt
+  for i = start, stop do
+    table.insert(rt, i)
+  end
+  return rt
+end
+
 ----------------------------------------------------------
 
 util.Timer = { CLASS = "Timer" }

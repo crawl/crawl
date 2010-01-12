@@ -190,6 +190,29 @@ LUAFN(dgn_count_neighbors)
     PLUARET(number, lines.count_feature_in_box(tl, br, feat));
 }
 
+LUAFN(dgn_is_valid_coord)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x, -1);
+    TABLE_INT(ls, y, -1);
+
+    if (x < 0 || x >= lines.width())
+    {
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+
+    if (y < 0 || y >= lines.height())
+    {
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+
+    lua_pushboolean(ls, true);
+    return (1);
+}
+
 LUAFN(dgn_extend_map)
 {
     LINES(ls, 1, lines);
@@ -261,6 +284,53 @@ LUAFN(dgn_fill_disconnected)
     }
 
     return (0);
+}
+
+LUAFN(dgn_is_passable_coord)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x, -1);
+    TABLE_INT(ls, y, -1);
+    TABLE_STR(ls, passable, traversable_glyphs);
+
+    if (!_valid_coord(ls, lines, x, y))
+        return (0);
+
+    if (strchr(passable, lines(x, y)))
+        lua_pushboolean(ls, true);
+    else
+        lua_pushboolean(ls, false);
+
+    return (1);
+}
+
+LUAFN(dgn_find_in_area)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x1, -1);
+    TABLE_INT(ls, y1, -1);
+    TABLE_INT(ls, x2, -1);
+    TABLE_INT(ls, y2, -1);
+
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
+
+    TABLE_CHAR(ls, find, 'x');
+
+    int x, y;
+
+    for (x = x1; x <= x2; x++)
+        for (y = y1; y <= y2; y++)
+            if (lines(x, y) == find)
+            {
+                lua_pushboolean(ls, true);
+                return (1);
+            }
+
+    lua_pushboolean(ls, false);
+    return (1);
 }
 
 LUAFN(dgn_height)
@@ -690,9 +760,12 @@ const struct luaL_reg dgn_build_dlib[] =
     { "count_feature_in_box", &dgn_count_feature_in_box },
     { "count_antifeature_in_box", &dgn_count_antifeature_in_box },
     { "count_neighbors", &dgn_count_neighbors },
+    { "is_valid_coord", &dgn_is_valid_coord },
+    { "is_passable_coord", &dgn_is_passable_coord },
     { "extend_map", &dgn_extend_map },
     { "fill_area", &dgn_fill_area },
     { "fill_disconnected", &dgn_fill_disconnected },
+    { "find_in_area", &dgn_find_in_area },
     { "height", dgn_height },
     { "join_the_dots", &dgn_join_the_dots },
     { "make_circle", &dgn_make_circle },
