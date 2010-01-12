@@ -1499,7 +1499,8 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_YOU_MISSILE,
     KILL_MON_MISSILE,
     KILL_YOU_CONF,
-    KILL_MISC,                         //    5
+    KILL_MISCAST,                      //    5
+    KILL_MISC,                         // miscellany
     KILL_RESET,                        // abjuration, etc.
     KILL_DISMISSED                     // only on new game startup
 };
