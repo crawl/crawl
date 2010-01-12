@@ -1607,12 +1607,14 @@ void append_spells(std::string &desc, const item_def &item)
         for (unsigned int i = 0; i < 35 - name.length(); ++i)
              desc += " ";
 
+        std::string schools;
         if (item.base_type == OBJ_STAVES)
-            desc += "Evocations";
+            schools = "Evocations";
         else
-            desc += spell_schools_string(stype);
+            schools = spell_schools_string(stype);
 
-        for (unsigned int i = 36; i < 65 - name.length(); ++i)
+        desc += schools;
+        for (unsigned int i = 36; i < 65 - schools.length(); ++i)
              desc += " ";
 
         char sval[3];
