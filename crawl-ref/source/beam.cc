@@ -1865,6 +1865,17 @@ void bolt::fire_wall_effect()
     finish_beam();
 }
 
+void bolt::elec_wall_effect()
+{
+    const dungeon_feature_type feat = grd(pos());
+    if (feat == DNGN_TREES)
+    {
+        fire_wall_effect();
+        return;
+    }
+    finish_beam();
+}
+
 void bolt::nuke_wall_effect()
 {
     if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
@@ -1934,6 +1945,8 @@ void bolt::affect_wall()
         digging_wall_effect();
     else if (is_fiery())
         fire_wall_effect();
+    else if (flavour == BEAM_ELECTRICITY)
+        elec_wall_effect();
     else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
         nuke_wall_effect();
 
@@ -3010,8 +3023,11 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
     if (is_enchantment())
         return (false);
 
-    if (flavour == BEAM_ELECTRICITY && feat != DNGN_METAL_WALL)
+    if (flavour == BEAM_ELECTRICITY && feat != DNGN_METAL_WALL
+        && feat != DNGN_TREES)
+    {
         return (true);
+    }
 
     if ((flavour == BEAM_FIRE || flavour == BEAM_COLD)
         && feat == DNGN_GREEN_CRYSTAL_WALL )
@@ -3285,12 +3301,13 @@ bool bolt::is_fiery() const
 
 bool bolt::is_superhot() const
 {
-    if (!is_fiery())
+    if (!is_fiery() && flavour != BEAM_ELECTRICITY)
         return (false);
 
     return (name == "bolt of fire"
             || name == "bolt of magma"
             || name == "fireball"
+            || name == "bolt of lightning"
             || name.find("hellfire") != std::string::npos
                && in_explosion_phase);
 }
@@ -3305,6 +3322,9 @@ bool bolt::affects_wall(dungeon_feature_type wall) const
         return (true);
 
     if (is_fiery() && (wall == DNGN_WAX_WALL || wall == DNGN_TREES))
+        return (true);
+
+    if (flavour == BEAM_ELECTRICITY && wall == DNGN_TREES)
         return (true);
 
     // eye of devastation?
