@@ -2117,15 +2117,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     int  ammo_brand = get_ammo_brand(item);
     bool poisoned   = ammo_brand == SPMSL_POISONED;
 
-    if (bow_brand == SPWPN_VENOM && ammo_brand != SPMSL_CURARE)
-    {
-        // Don't perma-poison with a temp-branded weapon.
-        if (ammo_brand == SPMSL_NORMAL && !you.duration[DUR_WEAPON_BRAND])
-            item.special = SPMSL_POISONED;
-
-        poisoned = true;
-    }
-
     const bool exploding    = ammo_brand == SPMSL_EXPLODING;
     const bool penetrating  = (!exploding
                                && (bow_brand  == SPWPN_PENETRATION
@@ -2139,8 +2130,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 || ammo_brand == SPMSL_ELECTRIC;
     const bool blessed      = bow_brand == SPWPN_HOLY_WRATH
                               && ammo_brand != SPMSL_REAPING;
-    const bool flaming      = bow_brand == SPWPN_FLAME
-                                || ammo_brand == SPMSL_FLAME;
 
     const bool paralysis    = ammo_brand == SPMSL_PARALYSIS;
     const bool slow         = ammo_brand == SPMSL_SLOW;
@@ -2152,13 +2141,19 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     ASSERT(!exploding || !is_artefact(item));
 
-    if (flaming && poisoned)
-        ; // Do nothing. A specific exclusion to launcher not overwriting
-          // ammunition brands.
-    else
-        // XXX: Launcher brand does not affect its ammunition. This may change.
-        if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
+    // Launcher brand does not affect ammunition.
+    if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
+    {
+        // But not for Nessos.
+        if (agent->atype() == ACT_MONSTER)
+        {
+            const monsters* mon = static_cast<const monsters*>(agent);
+            if (mon->type != MONS_NESSOS)
+                bow_brand = SPWPN_NORMAL;
+        }
+        else
             bow_brand = SPWPN_NORMAL;
+    }
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
 
@@ -2262,9 +2257,9 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         ammo_name = "dispersing " + ammo_name;
     }
 
+    // XXX: This doesn't make sense, but it works.
     if (poisoned && ammo.special != SPMSL_POISONED)
     {
-        beam.name = "poison "   + beam.name;
         ammo_name = "poisoned " + ammo_name;
     }
 
