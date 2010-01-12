@@ -1003,6 +1003,18 @@ dngn_shoals_shallow_water_disturbance2
 dngn_shoals_shallow_water_disturbance3
 
 # corner waves (diagonals)
+deep_water_wave_corner_NE WAVE_DEEP_CORNER_NE
+deep_water_wave_corner_NW WAVE_DEEP_CORNER_NW
+deep_water_wave_corner_SE WAVE_DEEP_CORNER_SE
+deep_water_wave_corner_SW WAVE_DEEP_CORNER_SW
+
+# orthogonal waves
+deep_water_wave_N WAVE_DEEP_N
+deep_water_wave_S WAVE_DEEP_S
+deep_water_wave_E WAVE_DEEP_E
+deep_water_wave_W WAVE_DEEP_W
+
+# corner waves (diagonals)
 shallow_water_wave_corner_NE WAVE_CORNER_NE
 shallow_water_wave_corner_NW WAVE_CORNER_NW
 shallow_water_wave_corner_SE WAVE_CORNER_SE
