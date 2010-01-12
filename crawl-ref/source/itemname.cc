@@ -1213,9 +1213,6 @@ std::string item_def::name_aux(description_level_type desc,
             case SPMSL_DISPERSAL:
                 buff << ((terse) ? " (disperse)" : " of dispersal");
                 break;
-            case SPMSL_ELECTRIC:
-                buff << ((terse) ? " (shock)" : " of electricity");
-                break;
 
             default:
                 buff << " (buggy)";

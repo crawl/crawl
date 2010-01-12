@@ -1043,8 +1043,6 @@ static std::string _describe_ammo(const item_def &item)
         case SPMSL_FROST:
             description += "It turns into a bolt of frost.";
             break;
-        case SPMSL_ELECTRIC:
-            description += "The electricity stored in it may find a path to the ground.";
             break;
         case SPMSL_CHAOS:
             if (bolt_name.empty())
