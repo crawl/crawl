@@ -414,16 +414,20 @@ wall/zot_blue3
 %repeat WALL_ZOT WALL_ZOT_WHITE
 %resetcol
 
+%weight 2
 wall/wall_flesh0 WALL_FLESH
 wall/wall_flesh1
 wall/wall_flesh2
 wall/wall_flesh3
+%weight 1
 wall/wall_flesh4
 wall/wall_flesh5
 wall/wall_flesh6
+%weight 2
 wall/transparent_flesh1 WALL_TRANSPARENT_FLESH
 wall/transparent_flesh2
 wall/transparent_flesh3
+%weight 1
 wall/transparent_flesh4
 wall/transparent_flesh5
 wall/transparent_flesh6
