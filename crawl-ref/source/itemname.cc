@@ -2609,11 +2609,16 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!item_type_known(item))
             return (false);
 
-        switch (get_weapon_brand(item))
+        if (you.undead_or_demonic() && is_holy_item(item))
         {
-        case SPWPN_HOLY_WRATH:
-            return (you.is_undead);
+            if (!temp && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH
+                && you.species != SP_DEMONSPAWN)
+            {
+                return (false);
+            }
+            return (true);
         }
+
         return (false);
 
     case OBJ_MISSILES:
