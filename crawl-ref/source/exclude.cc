@@ -458,7 +458,14 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
 
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (exc->radius == radius)
+        if (exc->desc.empty() && defer_updates)
+        {
+            int cl = env.cgrid(p);
+
+            if (env.cgrid(p) != EMPTY_CLOUD)
+                exc->desc = cloud_name(cl) + " cloud";
+        }
+        else if (exc->radius == radius)
             return;
 
         exc->radius   = radius;
