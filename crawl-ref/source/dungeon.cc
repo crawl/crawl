@@ -2561,10 +2561,10 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
 
     if (player_in_branch( BRANCH_VAULTS ))
     {
-        if (one_chance_in(3))
-            _city_level(level_number);
-        else
-            _plan_main(level_number, 4);
+        //if (one_chance_in(3))
+        _city_level(level_number);
+        //else
+        //    _plan_main(level_number, 4);
         return BUILD_SKIP;
     }
 
@@ -7122,77 +7122,11 @@ static void _city_level(int level_number)
     dgn_Build_Method += make_stringf(" city_level [%d]", level_number);
     dgn_Layout_Type   = "city";
 
-    int temp_rand;          // probability determination {dlb}
-    // Remember, can have many wall types in one level.
-    dungeon_feature_type wall_type;
-    // Simplifies logic of innermost loop. {dlb}
-    dungeon_feature_type wall_type_room;
+    const map_def *vault = find_map_by_name("layout_city");
+    ASSERT(vault);
 
-    int xs = 0, ys = 0;
-    int x1 = 0, x2 = 0;
-    int y1 = 0, y2 = 0;
-    int i,j;
-
-    temp_rand = random2(8);
-
-    wall_type = ((temp_rand > 4) ? DNGN_ROCK_WALL :     // 37.5% {dlb}
-                 (temp_rand > 1) ? DNGN_STONE_WALL      // 37.5% {dlb}
-                                 : DNGN_METAL_WALL);    // 25.0% {dlb}
-
-    if (one_chance_in(100))
-        wall_type = DNGN_GREEN_CRYSTAL_WALL;
-
-    _make_box( 7, 7, GXM-7, GYM-7, DNGN_FLOOR );
-
-    for (i = 0; i < 5; i++)
-        for (j = 0; j < 4; j++)
-        {
-            xs = 8 + (i * 13);
-            ys = 8 + (j * 14);
-            x1 = xs + random2avg(5, 2);
-            y1 = ys + random2avg(5, 2);
-            x2 = xs + 11 - random2avg(5, 2);
-            y2 = ys + 11 - random2avg(5, 2);
-
-            temp_rand = random2(280);
-
-            if (temp_rand > 39) // 85.7% draw room(s) {dlb}
-            {
-                wall_type_room = ((temp_rand > 63) ? wall_type :       // 77.1%
-                                  (temp_rand > 54) ? DNGN_STONE_WALL : //  3.2%
-                                  (temp_rand > 45) ? DNGN_ROCK_WALL    //  3.2%
-                                                   : DNGN_METAL_WALL); //  2.1%
-
-                if (one_chance_in(250))
-                    wall_type_room = DNGN_GREEN_CRYSTAL_WALL;
-
-                _box_room(x1, x2, y1, y2, wall_type_room);
-
-                // Inner room - neat.
-                if (x2 - x1 > 5 && y2 - y1 > 5 && one_chance_in(8))
-                {
-                    _box_room(x1 + 2, x2 - 2, y1 + 2, y2 - 2, wall_type);
-
-                    // Treasure area... neat.
-                    if (one_chance_in(3))
-                    {
-                        _treasure_area(level_number, x1 + 3, x2 - 3,
-                                       y1 + 3, y2 - 3);
-                    }
-                }
-            }
-        }
-
-    int stair_count = coinflip() ? 4 : 3;
-
-    for (j = 0; j < stair_count; j++)
-        for (i = 0; i < 2; i++)
-        {
-            _place_specific_stair( static_cast<dungeon_feature_type>(
-                                    j + ((i == 0) ? DNGN_STONE_STAIRS_DOWN_I
-                                                  : DNGN_STONE_STAIRS_UP_I)) );
-        }
-
+    bool success = _build_vaults(level_number, vault);
+    dgn_ensure_vault_placed(success, false);
 }
 
 static bool _treasure_area(int level_number, unsigned char ta1_x,
