@@ -606,8 +606,22 @@ LUAFN(dgn_make_box_doors)
 
         int index = random2avg(total_points, 2 + random2(number));
 
-        if (_count_passable_neighbors(ls, lines, points[index]) < 3)
+        int tries = 50;
+
+        while (_count_passable_neighbors(ls, lines, points[index]) <= 3)
+        {
+            tries--;
             index = random2(total_points);
+
+            if (tries == 0)
+                break;
+        }
+
+        if (tries == 0)
+        {
+            door_count--;
+            continue;
+        }
 
         sides[current_side]++;
         lines(points[index]) = '+';
