@@ -1119,6 +1119,7 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "%s", "<tr><td>Image</td><td>Vault String</td><td>Enum</td><td>Path</td></tr>\n");
 
+        int total_prob = 0;
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
         {
             fprintf(fp, "<tr>");
@@ -1132,8 +1133,9 @@ bool tile_list_processor::write_data()
                     fprintf(fp, "<td></td><td></td>");
                 else
                 {
-                    const int prob = m_page.m_probs[i] - m_page.m_probs[i-1];
-                    fprintf(fp, "<td>(%d)</td><td></td>", prob);
+                    const float prob = m_page.m_probs[i] - m_page.m_probs[i-1];
+                    const float perc = (prob * 100)/(float)total_prob;
+                    fprintf(fp, "<td>(%.1f%%)</td><td></td>", perc);
                 }
             }
             else
@@ -1149,8 +1151,10 @@ bool tile_list_processor::write_data()
                 }
                 else
                 {
-                    const int prob = m_page.m_probs[i];
-                    fprintf(fp, "<td>%s (%d)</td>", lcenum.c_str(), prob);
+                    total_prob = m_page.m_probs[i + m_page.m_counts[i] - 1];
+                    const float prob = m_page.m_probs[i];
+                    const float perc = (prob * 100)/(float)total_prob;
+                    fprintf(fp, "<td>%s (%.1f%%)</td>", lcenum.c_str(), perc);
                 }
 
                 const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
