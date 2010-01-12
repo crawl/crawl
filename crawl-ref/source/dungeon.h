@@ -176,10 +176,18 @@ void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
 bool builder(int level_number, int level_type);
+void dgn_veto_level();
 
 void dgn_flush_map_memory();
 
 double dgn_degrees_to_radians(int degrees);
+bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat);
+coord_def dgn_random_point_in_bounds(
+    dungeon_feature_type searchfeat,
+    unsigned mapmask = MMT_VAULT,
+    dungeon_feature_type adjacent = DNGN_UNSEEN,
+    bool monster_free = false,
+    int tries = 1500);
 coord_def dgn_random_point_from(const coord_def &c, int radius, int margin = 1);
 coord_def dgn_random_point_visible_from(const coord_def &c,
                                         int radius,
@@ -276,6 +284,7 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
                       unsigned mmask = 0, bool needs_update = false);
 
 void dgn_excavate(coord_def dig_at, coord_def dig_dir);
+void dgn_dig_vault_loose(vault_placement &vp);
 coord_def dgn_random_direction();
 
 bool dgn_ensure_vault_placed(bool vault_success,

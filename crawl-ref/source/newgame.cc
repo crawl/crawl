@@ -4515,7 +4515,7 @@ bool _give_items_skills()
         you.skills[SK_STEALTH]  = 2;
         you.skills[SK_STABBING] = 2;
         you.skills[SK_TRAPS_DOORS] = 2;
-        you.skills[SK_CROSSBOWS] = 1;
+        you.skills[SK_THROWING] = 2;
         break;
 
     case JOB_ASSASSIN:
@@ -4586,6 +4586,11 @@ bool _give_items_skills()
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
                                30, 1);
 
+            // Give them a buckler, as well; sling users + bucklers is an ideal
+            // combination.
+            _newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER);
+            you.skills[SK_SHIELDS] = 2;
+
             // Wield the sling instead.
             you.equip[EQ_WEAPON] = 1;
             break;
@@ -4641,9 +4646,17 @@ bool _give_items_skills()
 
         // If an offensive wand or the rod of striking was chosen,
         // don't hand out a weapon.
-        if (you.inv[3].base_type != OBJ_WANDS
-            || you.inv[3].sub_type != WAND_CONFUSION
-               && you.inv[3].sub_type != WAND_ENSLAVEMENT)
+        if (item_is_rod(you.inv[2]))
+        {
+            // If the rod of striking was chosen, put it in the first
+            // slot and wield it.
+            you.inv[0] = you.inv[2];
+            you.equip[EQ_WEAPON] = 0;
+            _newgame_clear_item(2);
+        }
+        else if (you.inv[3].base_type != OBJ_WANDS
+                 || you.inv[3].sub_type != WAND_CONFUSION
+                    && you.inv[3].sub_type != WAND_ENSLAVEMENT)
         {
             _newgame_clear_item(0);
         }

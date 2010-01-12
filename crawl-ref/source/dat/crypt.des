@@ -601,6 +601,25 @@ MONS:   flying skull / skeletal warrior / w:40 nothing
 KFEAT:  ^ = alarm trap
 SUBST:  F = G:100 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue
+{{
+lua_marker("m", portal_desc { wall_phase =1 })
+
+function drop_walls (data, triggerable, triggerer, marker, ev)
+    if data.trig == true then
+        return
+    else
+        data.trig = true
+    end
+
+    crawl.mpr("The liches are set free!", "warning")
+    for slave in iter.slave_iterator("wall_phase", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+    end
+end
+
+lua_marker("|", Triggerable.synchronized_markers(function_at_spot(drop_walls,
+            { trig = false}, true, { only_at_slave = true, listen_to_slaves = true })))
+}}
 MAP
 .....................
 .....................

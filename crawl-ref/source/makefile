@@ -706,19 +706,27 @@ endif
 EXTRA_OBJECTS += version.o
 
 LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
-GAME_DEPENDS := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
-SRC_PKG_BASE := stone_soup
-SRC_VERSION  := $(shell git describe --tags --long 2>/dev/null || cat util/release_ver)
-PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)
-SRC_PKG_TAR  := $(PKG_SRC_DIR).tar.bz2
-SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
+
+DOC_BASE      := ../docs
+DOC_TEMPLATES := $(DOC_BASE)/template
+GENERATE_DOCS := $(DOC_BASE)/aptitudes.txt
+
+GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
+SRC_PKG_BASE  := stone_soup
+SRC_VERSION   := $(shell git describe --tags --long 2>/dev/null || cat util/release_ver)
+PKG_SRC_DIR   := $(SRC_PKG_BASE)-$(SRC_VERSION)
+SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
+SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source
 
-all: $(GAME)
+all: $(GAME) $(GENERATE_DOCS)
 
 test:
 	./$(GAME) -test > /dev/null
+
+
+ifeq (,$(findstring clean,$(MAKECMDGOALS)))
 
 #
 # CFLAGS difference check
@@ -744,9 +752,11 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 ##########################################################################
 # Dependencies
 
-DEPS := $(OBJECTS:.o=.d)
+DEPS := $(shell ls $(OBJECTS:.o=.d) 2> /dev/null)
 
 -include $(DEPS)
+
+endif
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
@@ -757,6 +767,13 @@ build.h: $(OBJECTS:.o=.cc)
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
 version.cc: build.h compflag.h
+
+##########################################################################
+# Documentation
+#
+$(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt player.cc skills2.cc \
+						   util/gen-apt.pl
+	$(QUIET_GEN)./util/gen-apt.pl $@ $^
 
 ##########################################################################
 # The level compiler
@@ -797,7 +814,7 @@ endif
 ##########################################################################
 # The actual build targets
 #
-install: $(GAME)
+install: all
 ifeq ($(DESTDIR)$(prefix),)
 	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
 	@exit 1
@@ -851,21 +868,21 @@ clean-contrib:
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
-	$(RM) scores $(GAME) core *.0* *.lab $(DEPENDENCY_MKF)
+	$(RM) scores $(GAME) core $(DEPENDENCY_MKF)
 
 $(GAME): $(GAME_DEPENDS)
 	$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
-debug: $(GAME)
-profile: $(GAME)
-wizard: $(GAME)
+debug: all
+profile: all
+wizard: all
 
 # [ds] Note we don't use the standard CFLAGS here; that's intentional, most
 # flex/bison combos I've tried don't produce code that passes the warnings
 # test.
 
 $(UTIL)%.o: $(UTIL)%.cc .cflags
-	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -Wp,-MD,$(subst .o,.d,$@) -c $< -o $@
+	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -Wp,-MD,$(UTIL)$*.d -c $< -o $(UTIL)$*.o
 
 ifdef PCH
 %.h.gch: %.h
@@ -876,11 +893,14 @@ endif
 
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
+%.d: %.cc .cflags
+	$(QUIET_DEPEND)$(CXX) -MM $(ALL_CFLAGS) $< > $*.d
+
 %.o: %.m .cflags
-	$(QUIET_CXX)$(CC) $(ALL_CFLAGS) -Wp,-MD,$(subst .o,.d,$@) -c $< -o $@
+	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
 
 %.o: %.cc .cflags
-	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$(subst .o,.d,$@) -c $< -o $@
+	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
 
 icon.o: util/crawl.rc util/crawl.ico
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o

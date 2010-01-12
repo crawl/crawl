@@ -17,12 +17,15 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "random.h"
+#include "shout.h"
 #include "spl-util.h"
 #include "state.h"
 #ifdef USE_TILE
 #include "tiledef-dngn.h"
 #endif
 #include "view.h"
+
+const char *VAULT_PLACEMENT_METATABLE = "crawl.vault-placement";
 
 ///////////////////////////////////////////////////////////////////////////
 // Lua dungeon bindings (in the dgn table).
@@ -653,7 +656,7 @@ static int dgn_has_exit_from(lua_State *ls)
     return dgn_map_pathfind(ls, 3, &map_flood_finder::has_exit_from);
 }
 
-static void dlua_push_coord(lua_State *ls, const coord_def &c)
+static void dlua_push_coordinates(lua_State *ls, const coord_def &c)
 {
     lua_pushnumber(ls, c.x);
     lua_pushnumber(ls, c.y);
@@ -665,7 +668,7 @@ static int dgn_gly_point(lua_State *ls)
     coord_def c = map->find_first_glyph(*luaL_checkstring(ls, 2));
     if (c.x != -1 && c.y != -1)
     {
-        dlua_push_coord(ls, c);
+        dlua_push_coordinates(ls, c);
         return (2);
     }
     return (0);
@@ -677,7 +680,7 @@ static int dgn_gly_points(lua_State *ls)
     std::vector<coord_def> cs = map->find_glyph(*luaL_checkstring(ls, 2));
 
     for (int i = 0, size = cs.size(); i < size; ++i)
-        dlua_push_coord(ls, cs[i]);
+        dlua_push_coordinates(ls, cs[i]);
     return (cs.size() * 2);
 }
 
@@ -1129,7 +1132,7 @@ static int dgn_random_walk(lua_State *ls)
         dist_left -= (dir % 2 == 0) ? 1.0 : SQRT_2;
     }
 
-    dlua_push_coord(ls, pos);
+    dlua_push_coordinates(ls, pos);
 
     return (2);
 }
@@ -1330,6 +1333,16 @@ static int dgn_place_cloud(lua_State *ls)
     return (0);
 }
 
+// XXX: Doesn't allow for messages or specifying the noise source.
+LUAFN(dgn_noisy)
+{
+    const int loudness = luaL_checkint(ls, 1);
+    COORDS(pos, 2, 3);
+
+    noisy(loudness, pos);
+
+    return (0);
+}
 
 static int _dgn_is_passable(lua_State *ls)
 {
@@ -1377,8 +1390,8 @@ static bool _lua_map_place_valid(const map_def &map,
 
     // Push map, pos.x, pos.y, size.x, size.y
     clua_push_map(ls, const_cast<map_def*>(&map));
-    clua_push_coord(ls, c);
-    clua_push_coord(ls, size);
+    dlua_push_coordinates(ls, c);
+    dlua_push_coordinates(ls, size);
 
     const int err = lua_pcall(ls, 5, 1, 0);
 
@@ -1527,6 +1540,16 @@ LUAFN(_dgn_map_parameters)
     return clua_stringtable(ls, map_parameters);
 }
 
+int dgn_push_vault_placement(lua_State *ls, const vault_placement &vp)
+{
+    return dlua_push_object_type(ls, VAULT_PLACEMENT_METATABLE, vp);
+}
+
+LUAFN(_dgn_maps_used_here)
+{
+    return clua_gentable(ls, Level_Vaults, dgn_push_vault_placement);
+}
+
 LUAFN(_dgn_find_marker_position_by_prop)
 {
     const char *prop = luaL_checkstring(ls, 1);
@@ -1534,7 +1557,7 @@ LUAFN(_dgn_find_marker_position_by_prop)
                             lua_gettop(ls) >= 2 ? luaL_checkstring(ls, 2) : "");
     const coord_def place = find_marker_position_by_prop(prop, value);
     if (map_bounds(place))
-        clua_push_coord(ls, place);
+        dlua_push_coordinates(ls, place);
     else
     {
         lua_pushnil(ls);
@@ -1602,8 +1625,8 @@ LUAFN(dgn_get_special_room_info)
     }
 
     lua_pushnumber(ls,  lua_special_room_level);
-    dlua_push_coord(ls, lua_special_room_spec.tl);
-    dlua_push_coord(ls, lua_special_room_spec.br);
+    dlua_push_coordinates(ls, lua_special_room_spec.tl);
+    dlua_push_coordinates(ls, lua_special_room_spec.br);
 
     return (5);
 }
@@ -1772,6 +1795,7 @@ const struct luaL_reg dgn_dlib[] =
 { "random_walk", dgn_random_walk },
 { "apply_area_cloud", dgn_apply_area_cloud },
 { "place_cloud", dgn_place_cloud },
+{ "noisy", dgn_noisy },
 
 { "is_passable", _dgn_is_passable },
 
@@ -1792,6 +1816,8 @@ const struct luaL_reg dgn_dlib[] =
 
 { "map_parameters", _dgn_map_parameters },
 
+{ "maps_used_here", _dgn_maps_used_here },
+
 { "find_marker_position_by_prop", _dgn_find_marker_position_by_prop },
 { "find_marker_positions_by_prop", _dgn_find_marker_positions_by_prop },
 { "find_markers_by_prop", _dgn_find_markers_by_prop },
@@ -1805,3 +1831,95 @@ const struct luaL_reg dgn_dlib[] =
 
 { NULL, NULL }
 };
+
+#define VP(name) \
+    vault_placement &name =                                             \
+        **clua_get_userdata<vault_placement*>(                          \
+            ls, VAULT_PLACEMENT_METATABLE)
+
+LUAFN(_vp_pos)
+{
+    VP(vp);
+    clua_pushpoint(ls, vp.pos);
+    return 1;
+}
+
+LUAFN(_vp_size)
+{
+    VP(vp);
+    clua_pushpoint(ls, vp.size);
+    return 1;
+}
+
+LUAFN(_vp_orient)
+{
+    VP(vp);
+    PLUARET(number, vp.orient)
+}
+
+LUAFN(_vp_map)
+{
+    VP(vp);
+    clua_push_map(ls, &vp.map);
+    return 1;
+}
+
+LUAFN(_vp_exits)
+{
+    VP(vp);
+    return clua_gentable(ls, vp.exits, clua_pushpoint);
+}
+
+LUAFN(_vp_level_number)
+{
+    VP(vp);
+    PLUARET(number, vp.level_number)
+}
+
+LUAFN(_vp_num_runes)
+{
+    VP(vp);
+    PLUARET(number, vp.num_runes)
+}
+
+LUAFN(_vp_rune_subst)
+{
+    VP(vp);
+    PLUARET(number, vp.rune_subst)
+}
+
+static const luaL_reg dgn_vaultplacement_ops[] =
+{
+    { "pos", _vp_pos },
+    { "size", _vp_size },
+    { "orient", _vp_orient },
+    { "map", _vp_map },
+    { "exits", _vp_exits },
+    { "level_number", _vp_level_number },
+    { "num_runes", _vp_num_runes },
+    { "rune_subst", _vp_rune_subst },
+    { NULL, NULL }
+};
+
+static void _dgn_register_metatables(lua_State *ls)
+{
+    clua_register_metatable(ls,
+                            VAULT_PLACEMENT_METATABLE,
+                            dgn_vaultplacement_ops,
+                            lua_object_gc<vault_placement*>);
+}
+
+void dluaopen_dgn(lua_State *ls)
+{
+    _dgn_register_metatables(ls);
+
+    luaL_openlib(ls, "dgn", dgn_dlib, 0);
+    luaL_openlib(ls, "dgn", dgn_build_dlib, 0);
+    luaL_openlib(ls, "dgn", dgn_event_dlib, 0);
+    luaL_openlib(ls, "dgn", dgn_grid_dlib, 0);
+    luaL_openlib(ls, "dgn", dgn_item_dlib, 0);
+    luaL_openlib(ls, "dgn", dgn_level_dlib, 0);
+    luaL_openlib(ls, "dgn", dgn_mons_dlib, 0);
+    luaL_openlib(ls, "dgn", dgn_subvault_dlib, 0);
+    luaL_openlib(ls, "dgn", dgn_tile_dlib, 0);
+}

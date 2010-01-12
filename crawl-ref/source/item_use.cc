@@ -73,7 +73,7 @@
 #include "stuff.h"
 #include "areas.h"
 #include "teleport.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
@@ -411,21 +411,6 @@ static const char *shield_impact_degree(int impact)
                          : NULL);
 }
 
-static void warn_rod_shield_interference(const item_def &)
-{
-    const int leakage = rod_shield_leakage();
-    const char *leak_degree = shield_impact_degree(leakage);
-
-    // Any way to avoid the double entendre? :-)
-    if (leak_degree)
-    {
-        mprf(MSGCH_WARN,
-                "Your %s %sreduces the effectiveness of your rod.",
-                shield_base_name(you.shield()),
-                leak_degree);
-    }
-}
-
 static void warn_launcher_shield_slowdown(const item_def &launcher)
 {
     const int slowspeed =
@@ -455,14 +440,12 @@ void warn_shield_penalties()
     if (!you.shield())
         return;
 
-    // Warnings are limited to rods, bows, and quarterstaves at the moment.
+    // Warnings are limited to bows and quarterstaves at the moment.
     const item_def *weapon = you.weapon();
     if (!weapon)
         return;
 
-    if (item_is_rod(*weapon))
-        warn_rod_shield_interference(*weapon);
-    else if (is_range_weapon(*weapon))
+    if (is_range_weapon(*weapon))
         warn_launcher_shield_slowdown(*weapon);
     else if (weapon->base_type == OBJ_WEAPONS
              && weapon_skill(*weapon) == SK_STAVES)
@@ -630,6 +613,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     mpr("You feel protected!");
                     break;
 
+                case SPWPN_EVASION:
+                    mpr("You feel nimbler!");
+                    break;
+
                 case SPWPN_DRAINING:
                     mpr("You sense an unholy aura.");
                     break;
@@ -671,7 +658,12 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_PAIN:
-                    mpr("A searing pain shoots up your arm!");
+                    if(you.skills[SK_NECROMANCY] == 0)
+                        mpr("You have a feeling of ineptitude.");
+                    else if(you.skills[SK_NECROMANCY] <= 4)
+                        mpr("Pain shudders through your arm!");
+                    else
+                        mpr("A searing pain shoots up your arm!");
                     break;
 
                 case SPWPN_CHAOS:
@@ -1687,16 +1679,6 @@ bool elemental_missile_beam(int launcher_brand, int ammo_brand)
     return (element != 0);
 }
 
-static int _item_to_skill_level(const item_def *item)
-{
-    skill_type type = range_skill(*item);
-
-    if (type == SK_SLINGS)
-        return (you.skills[type] + you.skills[SK_THROWING]);
-
-    return (2 * you.skills[type]);
-}
-
 static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
 {
     if (!victim->alive() || victim->res_poison() > 0)
@@ -1709,43 +1691,10 @@ static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
 
     actor* agent = beam.agent();
 
-    if (agent->atype() == ACT_MONSTER)
+    if (dmg > 0 || beam.ench_power == AUTOMATIC_HIT
+                   && x_chance_in_y(90 - 3 * victim->armour_class(), 100))
     {
-        if (dmg > 0 || beam.ench_power == AUTOMATIC_HIT
-                       && x_chance_in_y(90 - 3 * victim->armour_class(), 100))
-        {
-            levels = 1 + random2(3);
-        }
-    }
-    else
-    {
-        if (beam.ench_power == AUTOMATIC_HIT
-            && x_chance_in_y(90 - 3 * victim->armour_class(), 100))
-        {
-            levels = 2;
-        }
-        else if (random2(dmg) > random2(victim->armour_class()))
-            levels = 1;
-
-        int num_success = 0;
-        if (YOU_KILL(beam.thrower))
-        {
-            const int skill_level = _item_to_skill_level(beam.item);
-            if (x_chance_in_y(skill_level + 25, 50))
-                num_success++;
-            if (x_chance_in_y(skill_level, 50))
-                num_success++;
-        }
-        else
-            num_success = 1;
-
-        if (num_success == 0)
-            return (false);
-        else
-        {
-            if (num_success == 2)
-                levels++;
-        }
+        levels = 1 + random2(3);
     }
 
     if (levels <= 0)
@@ -1943,6 +1892,147 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
     return (false);
 }
 
+int _blowgun_power_roll (bolt &beam)
+{
+    actor* agent = beam.agent();
+    int base_power = 0;
+    int blowgun_base = 0;
+
+    if (agent->atype() == ACT_MONSTER)
+    {
+        monsters* mons = static_cast<monsters*>(agent);
+        base_power += mons->hit_dice;
+        blowgun_base += (*mons).launcher()->plus;
+    }
+    else
+    {
+        base_power += you.skills[SK_THROWING];
+        blowgun_base += (you.weapon())->plus;
+    }
+
+    return (base_power + blowgun_base);
+}
+
+bool _blowgun_check (bolt &beam, actor* victim, bool message = true)
+{
+    actor* agent = beam.agent();
+
+    if (agent->atype() == ACT_MONSTER)
+        return (true);
+
+    monsters* mons = static_cast<monsters*>(victim);
+
+    int skill = you.skills[SK_THROWING];
+    int enchantment = (you.weapon())->plus;
+
+    // You have a really minor chance of hitting with no skills or good
+    // enchants.
+    if (mons->hit_dice < 15 && random2(100) <= 2)
+        return (true);
+
+    int resist_roll = 2 + random2(4 + skill + enchantment);
+
+    dprf("Brand rolled %d against monster HD: %d.", resist_roll, mons->hit_dice);
+
+    if (resist_roll < mons->hit_dice)
+    {
+        simple_monster_message(mons, " resists!");
+        return (false);
+    }
+
+    return (true);
+}
+
+static bool _paralysis_hit_victim (bolt& beam, actor* victim, int dmg,
+                                  int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    if (!_blowgun_check(beam, victim))
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->paralyse(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _sleep_hit_victim (bolt& beam, actor* victim, int dmg,
+                                  int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    if (!_blowgun_check(beam, victim))
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->put_to_sleep(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _confusion_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    if (!_blowgun_check(beam, victim))
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->confuse(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _slow_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    if (!_blowgun_check(beam, victim))
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->slow_down(beam.agent(), 5 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _sickness_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    if (!_blowgun_check(beam, victim))
+        return (false);
+
+    int blowgun_power = _blowgun_power_roll(beam);
+    victim->sicken(40 + random2(blowgun_power));
+    return (true);
+}
+
+static bool _rage_hit_victim (bolt &beam, actor* victim, int dmg,
+                                   int corpse)
+{
+    if (beam.is_tracer)
+        return (false);
+
+    if (!_blowgun_check(beam, victim))
+        return (false);
+
+    if (victim->atype() == ACT_MONSTER)
+    {
+        monsters* mons = static_cast<monsters*>(victim);
+        mons->go_frenzy();
+    }
+    else
+        victim->go_berserk(false);
+
+    return (true);
+}
+
 bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                         std::string &ammo_name, bool &returning)
 {
@@ -2027,14 +2117,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     int  ammo_brand = get_ammo_brand(item);
     bool poisoned   = ammo_brand == SPMSL_POISONED;
 
-    if (bow_brand == SPWPN_VENOM && ammo_brand != SPMSL_CURARE)
-    {
-        if (ammo_brand == SPMSL_NORMAL)
-            item.special = SPMSL_POISONED;
-
-        poisoned = true;
-    }
-
     const bool exploding    = ammo_brand == SPMSL_EXPLODING;
     const bool penetrating  = (!exploding
                                && (bow_brand  == SPWPN_PENETRATION
@@ -2048,18 +2130,30 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 || ammo_brand == SPMSL_ELECTRIC;
     const bool blessed      = bow_brand == SPWPN_HOLY_WRATH
                               && ammo_brand != SPMSL_REAPING;
-    const bool flaming      = bow_brand == SPWPN_FLAME
-                                || ammo_brand == SPMSL_FLAME;
+
+    const bool paralysis    = ammo_brand == SPMSL_PARALYSIS;
+    const bool slow         = ammo_brand == SPMSL_SLOW;
+    const bool sleep        = ammo_brand == SPMSL_SLEEP;
+    const bool confusion    = ammo_brand == SPMSL_CONFUSION;
+    const bool sickness     = ammo_brand == SPMSL_SICKNESS;
+    const bool rage         = ammo_brand == SPMSL_RAGE;
+
 
     ASSERT(!exploding || !is_artefact(item));
 
-    if (flaming && poisoned)
-        ; // Do nothing. A specific exclusion to launcher not overwriting
-          // ammunition brands.
-    else
-        // XXX: Launcher brand does not affect its ammunition. This may change.
-        if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
+    // Launcher brand does not affect ammunition.
+    if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
+    {
+        // But not for Nessos.
+        if (agent->atype() == ACT_MONSTER)
+        {
+            const monsters* mon = static_cast<const monsters*>(agent);
+            if (mon->type != MONS_NESSOS)
+                bow_brand = SPWPN_NORMAL;
+        }
+        else
             bow_brand = SPWPN_NORMAL;
+    }
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
 
@@ -2088,7 +2182,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.effect_known = false;
 
         beam.flavour = BEAM_CHAOS;
-        beam.name    = "chaos";
+        beam.name    += " of chaos";
         beam.colour  = ETC_RANDOM;
 
         ammo.special = SPMSL_CHAOS;
@@ -2097,7 +2191,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
              && ammo_brand != SPMSL_FROST && bow_brand != SPWPN_FROST)
     {
         beam.flavour = BEAM_FIRE;
-        beam.name    = "flame";
+        beam.name    += " of flame";
         beam.colour  = RED;
 
         ammo.special = SPMSL_FLAME;
@@ -2106,7 +2200,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
              && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
     {
         beam.flavour = BEAM_COLD;
-        beam.name    = "frost";
+        beam.name    += " of frost";
         beam.colour  = WHITE;
 
         ammo.special = SPMSL_FROST;
@@ -2123,7 +2217,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (penetrating)
     {
         beam.range_funcs.push_back(_item_penetrates_victim);
-        beam.hit_verb = "passes through";
+        beam.hit_verb = "pierces through";
     }
     if (reaping)
         beam.hit_funcs.push_back(_reaping_hit_victim);
@@ -2133,6 +2227,23 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.damage_funcs.push_back(_charged_hit_victim);
     if (blessed)
         beam.damage_funcs.push_back(_blessed_hit_victim);
+
+    // New needle brands have no affect when thrown without launcher.
+    if (launcher != NULL)
+    {
+        if (paralysis)
+            beam.hit_funcs.push_back(_paralysis_hit_victim);
+        if (slow)
+            beam.hit_funcs.push_back(_slow_hit_victim);
+        if (sleep)
+            beam.hit_funcs.push_back(_sleep_hit_victim);
+        if (confusion)
+            beam.hit_funcs.push_back(_confusion_hit_victim);
+        if (sickness)
+            beam.hit_funcs.push_back(_sickness_hit_victim);
+        if (rage)
+            beam.hit_funcs.push_back(_rage_hit_victim);
+    }
 
     if (reaping && ammo.special != SPMSL_REAPING)
     {
@@ -2146,9 +2257,9 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         ammo_name = "dispersing " + ammo_name;
     }
 
+    // XXX: This doesn't make sense, but it works.
     if (poisoned && ammo.special != SPMSL_POISONED)
     {
-        beam.name = "poison "   + beam.name;
         ammo_name = "poisoned " + ammo_name;
     }
 
@@ -2215,7 +2326,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         returning = false;
 
         beam.type = dchar_glyph(DCHAR_FIRED_BOLT);
-        beam.name = "bolt of " + beam.name;
     }
 
     if (!is_artefact(item))
@@ -2757,16 +2867,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             break;
         }
 
-        // Slings and Darts train Throwing a bit.
-        if (launcher_skill == SK_SLINGS)
-        {
-            if (coinflip())
-                exercise(SK_THROWING, 1);
-
-            // They also get a minor tohit boost from throwing skill.
-            exHitBonus += you.skills[SK_THROWING] / 5;
-        }
-
         if (bow_brand == SPWPN_VORPAL)
         {
             // Vorpal brand adds 30% damage bonus. Increased from 25%
@@ -3126,6 +3226,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         bow_brand == SPWPN_REAPING || ammo_brand_known);
     }
 
+    if (ammo_brand == SPMSL_RAGE)
+    {
+        did_god_conduct(DID_HASTY, 6 + random2(3), ammo_brand_known);
+    }
+
     if (did_return)
     {
         // Fire beam in reverse.
@@ -3273,7 +3378,6 @@ void jewellery_wear_effects(item_def &item)
     case RING_SUSTENANCE:
     case RING_SLAYING:
     case RING_WIZARDRY:
-    case RING_REGENERATION:
     case RING_TELEPORT_CONTROL:
         break;
 
@@ -3408,6 +3512,14 @@ void jewellery_wear_effects(item_def &item)
         }
         break;
 
+    case AMU_FAITH:
+        if (you.religion != GOD_NO_GOD)
+        {
+            mpr("You feel a surge of divine interest.", MSGCH_GOD);
+            ident = ID_KNOWN_TYPE;
+        }
+        break;
+
     case AMU_THE_GOURMAND:
         // What's this supposed to achieve? (jpeg)
         you.duration[DUR_GOURMAND] = 0;
@@ -3430,6 +3542,13 @@ void jewellery_wear_effects(item_def &item)
                 mpr("Now linked to your health, your magic stops regenerating.");
             ident = ID_KNOWN_TYPE;
         }
+        break;
+
+    case RING_REGENERATION:
+        // To be exact, bloodless vampires should get the id only after they
+        // drink anything.  Not worth complicating the code, IMHO. [1KB]
+        if (player_mutation_level(MUT_SLOW_HEALING) < 3)
+            ident = ID_KNOWN_TYPE;
         break;
 
     }
@@ -3895,6 +4014,27 @@ bool puton_ring(int slot)
     return puton_item(item_slot);
 }
 
+void remove_amulet_of_faith(item_def &item)
+{
+    if (you.religion != GOD_NO_GOD
+        && you.religion != GOD_XOM)
+    {
+        simple_god_message(" seems less interested in you.");
+
+        const int piety_loss = div_rand_round(you.piety, 3);
+        // Piety penalty for removing the Amulet of Faith.
+        if (you.piety - piety_loss > 10)
+        {
+            mprf(MSGCH_GOD,
+                 "%s leaches power out of you as you remove it.",
+                 item.name(DESC_CAP_YOUR).c_str());
+            dprf("%s: piety leach: %d",
+                 item.name(DESC_PLAIN).c_str(), piety_loss);
+            lose_piety(piety_loss);
+        }
+    }
+}
+
 void jewellery_remove_effects(item_def &item, bool mesg)
 {
     // The ring/amulet must already be removed from you.equip at this point.
@@ -3966,6 +4106,10 @@ void jewellery_remove_effects(item_def &item, bool mesg)
 
     case AMU_THE_GOURMAND:
         you.duration[DUR_GOURMAND] = 0;
+        break;
+
+    case AMU_FAITH:
+        remove_amulet_of_faith(item);
         break;
 
     case AMU_GUARDIAN_SPIRIT:
@@ -4062,7 +4206,7 @@ bool remove_ring(int slot, bool announce)
     }
 
     if (!check_warning_inscriptions(you.inv[you.equip[hand_used]],
-                                         OPER_REMOVE))
+                                    OPER_REMOVE))
     {
         canned_msg(MSG_OK);
         return (false);
@@ -4288,7 +4432,8 @@ void zap_wand(int slot)
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;
 
-    beam.source = you.pos();
+    beam.source   = you.pos();
+    beam.attitude = ATT_FRIENDLY;
     beam.set_target(zap_wand);
 
     bool aimed_at_self = (beam.target == you.pos());
@@ -5708,6 +5853,49 @@ bool wearing_slot(int inv_slot)
         if (inv_slot == you.equip[i])
             return (true);
 
+    return (false);
+}
+
+bool item_blocks_teleport(bool permit_id)
+{
+    return (scan_artefacts(ARTP_PREVENT_TELEPORTATION)
+            || stasis_blocks_effect(permit_id, NULL));
+}
+
+bool stasis_blocks_effect(bool identify,
+                          const char *msg, int noise,
+                          const char *silenced_msg)
+{
+    if (wearing_amulet(AMU_STASIS))
+    {
+        item_def *amulet = you.slot_item(EQ_AMULET);
+
+        if (msg)
+        {
+            const std::string name(amulet? amulet->name(DESC_CAP_YOUR) :
+                                   "Something");
+            const std::string message =
+                make_stringf(msg, name.c_str());
+
+            if (noise)
+            {
+                if (!noisy(noise, you.pos(), message.c_str())
+                    && silenced_msg)
+                {
+                    mprf(silenced_msg, name.c_str());
+                }
+            }
+            else
+            {
+                mpr(message.c_str());
+            }
+        }
+
+        // In all cases, the amulet auto-ids if requested.
+        if (amulet && identify)
+            set_ident_type(*amulet, ID_KNOWN_TYPE);
+        return (true);
+    }
     return (false);
 }
 

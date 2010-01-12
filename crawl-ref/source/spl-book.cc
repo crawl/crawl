@@ -485,10 +485,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of Brands
     {SPELL_CORONA,
      SPELL_SWIFTNESS,
-     SPELL_CAUSE_FEAR,
      SPELL_FIRE_BRAND,
      SPELL_FREEZING_AURA,
      SPELL_POISON_WEAPON,
+     SPELL_CAUSE_FEAR,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
@@ -1535,7 +1535,8 @@ static spell_type _choose_mem_spell(spell_list &spells,
     std::string more_str = make_stringf("<lightgreen>%d spell level%s left"
                                         "<lightgreen>",
                                         player_spell_levels(),
-                                        player_spell_levels() > 1 ? "s" : "");
+                                        (player_spell_levels() > 1
+                                         || player_spell_levels() == 0) ? "s" : "");
 
     if (num_unreadable > 0)
     {
@@ -1554,6 +1555,14 @@ static spell_type _choose_mem_spell(spell_list &spells,
     }
 
     spell_menu.set_more(formatted_string::parse_string(more_str));
+
+    // Don't make a menu so tall that we recycle hotkeys on the same page.
+    if (spells.size() > 52
+        && (spell_menu.maxpagesize() > 52 || spell_menu.maxpagesize() == 0))
+    {
+        spell_menu.set_maxpagesize(52);
+    }
+
 
     for (unsigned int i = 0; i < spells.size(); i++)
     {
@@ -1866,33 +1875,13 @@ int count_staff_spells(const item_def &item, bool need_id)
     return (nspel);
 }
 
-// Returns a measure of the rod spell power disrupted by a worn shield.
-int rod_shield_leakage()
-{
-    const item_def *shield = you.shield();
-    int leakage = 100;
-
-    if (shield)
-    {
-        const int shield_type = shield->sub_type;
-        leakage = shield_type == ARM_BUCKLER? 125 :
-                  shield_type == ARM_SHIELD ? 150 :
-                                              200;
-        // Adjust for shields skill.
-        leakage -= ((leakage - 100) * 5 / 10) * you.skills[SK_SHIELDS] / 27;
-    }
-    return (leakage);
-}
-
 int staff_spell( int staff )
 {
     item_def& istaff(you.inv[staff]);
     // Spell staves are mostly for the benefit of non-spellcasters, so we're
     // not going to involve INT or Spellcasting skills for power. -- bwr
     int powc = (5 + you.skills[SK_EVOCATIONS]
-                 + roll_dice( 2, you.skills[SK_EVOCATIONS] ))
-                * 100
-                / rod_shield_leakage();
+                 + roll_dice( 2, you.skills[SK_EVOCATIONS] ));
 
     if (!item_is_rod(istaff))
     {

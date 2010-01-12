@@ -928,7 +928,7 @@ SUBST:  $ = | * $
 KFEAT:  l = teleport trap
 KFEAT:  z = zot trap
 KFEAT:  a = alarm trap
-SUBST:  s = .:250 =:1
+SUBST:  s = x:250 =:1
 SUBST:  a = x.
 : vault8_loot(_G)
 : vault8_rune(_G)
@@ -963,10 +963,10 @@ ENDMAP
 # about 21 |
 NAME:   vault8_construction
 TAGS:   vault8_quadrant_prize
-SUBST:  Q = 8 9 .
 NSUBST: $ = 1:O / *:$
 SUBST:  $ = |*$.
 SUBST:  c = xnQ.
+SUBST:  Q = 8 9 .
 NSUBST: D = 1:+ / *:x
 SUBST:  a = xn..
 : vault8_loot(_G)

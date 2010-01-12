@@ -9,13 +9,16 @@ dngn_unseen DNGN_UNSEEN
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
 
+%weight 5
 wall/brick_brown0 WALL_NORMAL WALL_BRICK WALL_BRICK_BROWN
 wall/brick_brown1
 wall/brick_brown2
-wall/brick_brown3
 wall/brick_brown4
 wall/brick_brown5
+%weight 2
+wall/brick_brown3
 wall/brick_brown6
+%weight 1
 wall/brick_brown7
 
 %variation WALL_BRICK blue
@@ -604,14 +607,17 @@ floor/rough_red3
 %repeat FLOOR_ROUGH FLOOR_ROUGH_WHITE
 %resetcol
 
+%weight 5
 floor/floor_sand_stone0 FLOOR_SAND_STONE
 floor/floor_sand_stone1
 floor/floor_sand_stone2
 floor/floor_sand_stone3
+%weight 2
 floor/floor_sand_stone4
 floor/floor_sand_stone5
-floor/floor_sand_stone6
 floor/floor_sand_stone7
+%weight 1
+floor/floor_sand_stone6
 
 wall/wall_yellow_rock0 WALL_YELLOW_ROCK
 wall/wall_yellow_rock1
@@ -958,27 +964,29 @@ floor/lava3
 
 ## water
 %sdir dc-dngn/water
+%weight 3
 dngn_open_sea DNGN_OPEN_SEA
-dngn_open_sea
-dngn_open_sea
+%weight 1
 dngn_open_sea2
 
+%weight 2
 dngn_deep_water DNGN_DEEP_WATER
-dngn_deep_water
+%weight 1
 dngn_deep_water2
 
+%weight 3
 dngn_shallow_water DNGN_SHALLOW_WATER
-dngn_shallow_water
-dngn_shallow_water
+%weight 1
 dngn_shallow_water2
 dngn_shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE
 dngn_shallow_water_disturbance2
+%weight 2
 dngn_deep_water_murky DNGN_DEEP_WATER_MURKY
-dngn_deep_water_murky
+%weight 1
 dngn_deep_water_murky2
+%weight 3
 dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
-dngn_shallow_water_murky
-dngn_shallow_water_murky
+%weight 1
 dngn_shallow_water_murky2
 dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 dngn_shallow_water_murky_disturbance2

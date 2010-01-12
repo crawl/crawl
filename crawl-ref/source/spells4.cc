@@ -52,7 +52,7 @@
 #include "areas.h"
 #include "teleport.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "view.h"
 #include "shout.h"
@@ -915,7 +915,7 @@ bool cast_passwall(const coord_def& delta, int pow)
     int maxrange = shallow + pow / 25;
 
     coord_def dest;
-    for (dest = you.pos() + delta; 
+    for (dest = you.pos() + delta;
          in_bounds(dest) && _feat_is_passwallable(grd(dest));
          dest += delta) ;
 
@@ -1255,9 +1255,9 @@ void cast_fulsome_distillation(int /*pow*/)
 
     for (int nattk = 0; nattk < 4; ++nattk)
     {
-        if (smc->attack[nattk].flavour == AF_POISON_MEDIUM ||
-                smc->attack[nattk].flavour == AF_POISON_STRONG ||
-                smc->attack[nattk].flavour == AF_POISON_STR)
+        if (smc->attack[nattk].flavour == AF_POISON_MEDIUM
+            || smc->attack[nattk].flavour == AF_POISON_STRONG
+            || smc->attack[nattk].flavour == AF_POISON_STR)
         {
             pot_type = POT_STRONG_POISON;
         }

@@ -50,8 +50,10 @@ struct game_state
                             // suspended.
 
     bool test;              // Set if we want to run self-tests and exit.
+    bool script;            // Set if we want to run a Lua script and exit.
     bool build_db;          // Set if we want to rebuild the db and exit.
     std::vector<std::string> tests_selected; // Tests to be run.
+    std::vector<std::string> script_args;    // Arguments to scripts.
 
     bool unicode_ok;        // Is unicode support available?
 

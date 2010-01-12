@@ -295,8 +295,10 @@ public:
 
     void attacking(actor *other);
     bool can_go_berserk() const;
-    void go_berserk(bool intentional);
+    void go_berserk(bool intentional, bool potion = false);
+    void go_frenzy();
     bool berserk() const;
+    bool frenzied() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed() const;
@@ -394,6 +396,7 @@ public:
                   bool wizard_tele = false);
 
     void hibernate(int power = 0);
+    void put_to_sleep(actor *attacker, int power = 0);
     void check_awaken(int disturbance);
 
     int stat_hp() const    { return hit_points; }

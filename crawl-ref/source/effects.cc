@@ -70,6 +70,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
+#include "travel.h"
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
@@ -1283,8 +1284,7 @@ static bool _try_give_plain_armour(item_def &arm)
             {
                 const item_def weapon = you.inv[you.equip[EQ_WEAPON]];
                 const hands_reqd_type hand = hands_reqd(weapon, you.body_size());
-                if (hand == HANDS_TWO || item_is_rod(weapon)
-                    || is_range_weapon(weapon))
+                if (hand == HANDS_TWO || is_range_weapon(weapon))
                 {
                     continue;
                 }
@@ -1374,7 +1374,7 @@ void _acquirement_determine_food(int& type_wanted, int& quantity,
     }
 }
 
-static int _acquirement_weapon_subtype()
+static int _acquirement_weapon_subtype(bool divine)
 {
     // Asking for a weapon is biased towards your skills.
     // First pick a skill, weighting towards those you have.
@@ -1418,10 +1418,26 @@ static int _acquirement_weapon_subtype()
         if (!acqweight)
             continue;
 
-        if (hands_reqd(item_considered, you.body_size()) >= HANDS_TWO) // HANDS_DOUBLE > HANDS_TWO
+        // HANDS_DOUBLE > HANDS_TWO
+        const bool two_handed = hands_reqd(item_considered, you.body_size()) >= HANDS_TWO;
+
+        // For non-Trog/Okawaru acquirements, give a boost to high-end items.
+        if (!divine && !is_range_weapon(item_considered))
+        {
+            int damage = property(item_considered, PWPN_DAMAGE);
+            if (!two_handed)
+                damage = damage * 3 / 2;
+            damage *= damage * damage;
+            acqweight *= damage / property(item_considered, PWPN_SPEED);
+        }
+
+        if (two_handed)
             acqweight = acqweight * dont_shield / want_shield;
         else
             acqweight = acqweight * want_shield / dont_shield;
+
+        if (!you.seen_weapon[i])
+            acqweight *= 5; // strong emphasis on type variety, brands go only second
 
         int wskill = range_skill(OBJ_WEAPONS, i);
         if (wskill == SK_THROWING)
@@ -1466,17 +1482,9 @@ static missile_type _acquirement_missile_subtype()
 
     switch (skill)
     {
-    case SK_SLINGS: result = MI_STONE; break;
-    case SK_BOWS:   result = MI_ARROW; break;
-
-    case SK_CROSSBOWS:
-        // Assuming that crossbow in inventory means that they
-        // want bolts for it (not darts for a hand crossbow)...
-        // perhaps we should check for both and compare ammo
-        // amounts on hand?
-        result = (_have_item_with_types(OBJ_WEAPONS, WPN_CROSSBOW) ? MI_BOLT
-                                                                   : MI_DART);
-        break;
+    case SK_SLINGS:    result = MI_SLING_BULLET; break;
+    case SK_BOWS:      result = MI_ARROW; break;
+    case SK_CROSSBOWS: result = MI_BOLT; break;
 
     case SK_THROWING:
         // Assuming that blowgun in inventory means that they
@@ -1679,6 +1687,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
     do
     {
+        const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM);
         switch (class_wanted)
         {
         case OBJ_FOOD:
@@ -1686,14 +1695,9 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
             _acquirement_determine_food(type_wanted, quantity, already_has);
             break;
 
-        case OBJ_WEAPONS:  type_wanted = _acquirement_weapon_subtype();  break;
-        case OBJ_MISSILES: type_wanted = _acquirement_missile_subtype(); break;
-        case OBJ_ARMOUR:
-        {
-            const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM);
-            type_wanted = _acquirement_armour_subtype(divine);
-            break;
-        }
+        case OBJ_WEAPONS:    type_wanted = _acquirement_weapon_subtype(divine);  break;
+        case OBJ_MISSILES:   type_wanted = _acquirement_missile_subtype(); break;
+        case OBJ_ARMOUR:     type_wanted = _acquirement_armour_subtype(divine); break;
         case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype(); break;
         case OBJ_WANDS:      type_wanted = _acquirement_wand_subtype(); break;
         case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype(already_has);
@@ -2023,6 +2027,18 @@ int acquirement_create_item(object_class_type class_wanted,
 
         item_def &doodad(mitm[thing_created]);
 
+        // Try to not generate brands that were already seen, although unlike
+        // jewelry and books, this is not absolute.
+        while (!is_artefact(doodad)
+               && (doodad.base_type == OBJ_WEAPONS
+                     && you.seen_weapon[doodad.sub_type] & (1<<get_weapon_brand(doodad))
+                   || doodad.base_type == OBJ_ARMOUR
+                     && you.seen_armour[doodad.sub_type] & (1<<get_weapon_brand(doodad)))
+               && !one_chance_in(5))
+        {
+            reroll_brand(doodad, MAKE_GOOD_ITEM);
+        }
+
         // For plain armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.
         if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad))
@@ -2159,10 +2175,7 @@ int acquirement_create_item(object_class_type class_wanted,
     // Easier to read this way.
     item_def& thing(mitm[thing_created]);
 
-    // Give some more gold.
-    if (class_wanted == OBJ_GOLD)
-        thing.quantity += 150;
-    else if (class_wanted == OBJ_WANDS)
+    if (class_wanted == OBJ_WANDS)
         thing.plus = std::max((int) thing.plus, 3 + random2(3));
     else if (quant > 1)
         thing.quantity = quant;
@@ -2480,7 +2493,7 @@ bool recharge_wand(int item_slot)
 
             if (wand.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
             {
-                wand.plus2 += ROD_CHARGE_MULT;
+                wand.plus2 += ROD_CHARGE_MULT * random_range(1,2);
 
                 if (wand.plus2 > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
                     wand.plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
@@ -2491,6 +2504,17 @@ bool recharge_wand(int item_slot)
             if (wand.plus < wand.plus2)
             {
                 wand.plus = wand.plus2;
+                work = true;
+            }
+
+            if (short(wand.props["rod_enchantment"]) < MAX_WPN_ENCHANT)
+            {
+                static_cast<short&>(wand.props["rod_enchantment"])
+                    += random_range(1,2);
+
+                if (short(wand.props["rod_enchantment"]) > MAX_WPN_ENCHANT)
+                    wand.props["rod_enchantment"] = short(MAX_WPN_ENCHANT);
+
                 work = true;
             }
 
@@ -4240,6 +4264,7 @@ void update_level(double elapsedTime)
 
     update_corpses(elapsedTime);
     shoals_apply_tides(turns);
+    recharge_rods((long)turns, true);
 
     if (env.sanctuary_time)
     {
@@ -4846,5 +4871,56 @@ void update_corpses(double elapsedTime)
                 _maybe_restart_fountain_flow(*ri, fountain_checks);
             }
         }
+    }
+}
+
+static void _recharge_rod( item_def &rod, long aut, bool in_inv )
+{
+    if (!item_is_rod(rod) || rod.plus >= rod.plus2)
+        return;
+
+    long rate = 4 + short(rod.props["rod_enchantment"]);
+
+    rate *= (10 + skill_bump( SK_EVOCATIONS ));
+    rate *= aut;
+    rate = div_rand_round( rate, 100 );
+
+    if (rate > rod.plus2 - rod.plus) // Prevent overflow
+        rate = rod.plus2 - rod.plus;
+
+    // With this, a +0 rod with no skill gets 1 mana per 25.0 turns
+
+    if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
+    {
+        if (item_is_equipped( rod, true ))
+            you.wield_change = true;
+    }
+
+    rod.plus += rate;
+
+    if (in_inv && rod.plus == rod.plus2)
+    {
+        msg::stream << "Your " << rod.name(DESC_QUALNAME) << " has recharged."
+                    << std::endl;
+        if (is_resting())
+            stop_running();
+    }
+
+    return;
+}
+
+void recharge_rods(long aut, bool level_only)
+{
+    if (!level_only)
+    {
+        for (int item = 0; item < ENDOFPACK; ++item)
+        {
+            _recharge_rod( you.inv[item], aut, true );
+        }
+    }
+
+    for (int item = 0; item < MAX_ITEMS; ++item)
+    {
+        _recharge_rod( mitm[item], aut, false );
     }
 }

@@ -299,11 +299,11 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Jiyva to remove your harmful mutations"
     },
     // Fedhas
-    { "call sunshine",
+    { "induce evolution",
+      "call sunshine",
       "cause a ring of plants to grow",
-      "control the weather",
       "spawn explosive spores",
-      "induce evolution"
+      "control the weather"
     },
     // Cheibriados
     { "Cheibriados is slowing your {biology}.",
@@ -406,11 +406,11 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Jiyva to remove your harmful mutations"
     },
     // Fedhas
-    { "call sunshine",
+    { "induce evolution",
+      "call sunshine",
       "cause a ring of plants to grow",
-      "control the weather",
       "spawn explosive spores",
-      "induce evolution"
+      "control the weather"
     },
     // Cheibriados
     { "Cheibriados will no longer slow your {biology}.",
@@ -1169,13 +1169,13 @@ static const item_def* _find_missile_launcher(int skill)
     return (NULL);
 }
 
-static bool _need_missile_gift()
+static bool _need_missile_gift(bool forced)
 {
     const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
-    return (you.piety > 80
+    return ((you.piety > 80
             && random2( you.piety ) > 70
-            && one_chance_in(8)
+            && one_chance_in(8) || forced)
             && you.skills[ best_missile_skill ] >= 8
             && (launcher || best_missile_skill == SK_THROWING));
 }
@@ -1260,13 +1260,13 @@ static void _show_pure_deck_chances()
 }
 #endif
 
-static void _give_nemelex_gift()
+static void _give_nemelex_gift(bool forced = false)
 {
     // Nemelex will give at least one gift early.
     if (!you.num_gifts[GOD_NEMELEX_XOBEH]
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
         || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY)
-           && !you.attribute[ATTR_CARD_COUNTDOWN])
+           && !you.attribute[ATTR_CARD_COUNTDOWN] || forced)
     {
         misc_item_type gift_type;
 
@@ -1995,7 +1995,7 @@ static void _delayed_gift_callback(const mgen_data &mg, int &midx,
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 }
 
-static void _do_god_gift(bool prayed_for)
+void do_god_gift(bool prayed_for, bool forced)
 {
     ASSERT(you.religion != GOD_NO_GOD);
 
@@ -2013,7 +2013,8 @@ static void _do_god_gift(bool prayed_for)
     // Consider a gift if we don't have a timeout and weren't already
     // praying when we prayed.
     if (!player_under_penance() && !you.gift_timeout
-        || (prayed_for && you.religion == GOD_ZIN || you.religion == GOD_JIYVA))
+        || (prayed_for && you.religion == GOD_ZIN || you.religion == GOD_JIYVA)
+            || forced)
     {
         bool success = false;
 
@@ -2035,13 +2036,13 @@ static void _do_god_gift(bool prayed_for)
             break;
 
         case GOD_NEMELEX_XOBEH:
-            _give_nemelex_gift();
+            _give_nemelex_gift(forced);
             break;
 
         case GOD_OKAWARU:
         case GOD_TROG:
-            if (you.piety > 130
-                && random2(you.piety) > 120
+            if ((you.piety > 130
+                && random2(you.piety) > 120 || forced)
                 && one_chance_in(4))
             {
                 if (you.religion == GOD_TROG
@@ -2069,7 +2070,7 @@ static void _do_god_gift(bool prayed_for)
                 break;
             }
 
-            if (_need_missile_gift())
+            if (_need_missile_gift(forced))
             {
                 success = acquirement(OBJ_MISSILES, you.religion);
                 if (success)
@@ -2086,7 +2087,7 @@ static void _do_god_gift(bool prayed_for)
             break;
 
         case GOD_YREDELEMNUL:
-            if (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(4))
+            if (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(4) || forced)
             {
                 // The maximum threshold occurs at piety_breakpoint(5).
                 int threshold = (you.piety - piety_breakpoint(2)) * 20 / 9;
@@ -2098,7 +2099,7 @@ static void _do_god_gift(bool prayed_for)
             break;
 
         case GOD_JIYVA:
-            if (prayed_for && jiyva_grant_jelly())
+            if (prayed_for && jiyva_grant_jelly() || forced)
             {
                 int jelly_count = 0;
                 for (radius_iterator ri(you.pos(), 9); ri; ++ri)
@@ -2164,7 +2165,7 @@ static void _do_god_gift(bool prayed_for)
                     && !you.had_book[BOOK_UNLIFE])
                     gift = BOOK_UNLIFE;
             }
-            else if (you.piety > 160 && random2(you.piety) > 100)
+            else if (you.piety > 160 && random2(you.piety) > 100 || forced)
             {
                 if (you.religion == GOD_SIF_MUNA)
                     gift = OBJ_RANDOM;
@@ -2255,7 +2256,9 @@ static void _do_god_gift(bool prayed_for)
 
 static bool _is_risky_sacrifice(const item_def& item)
 {
-    return item.base_type == OBJ_ORBS || is_rune(item);
+    return (item.base_type == OBJ_ORBS || is_rune(item)
+            || item.base_type == OBJ_MISCELLANY
+               && item.sub_type == MISC_HORN_OF_GERYON);
 }
 
 static bool _confirm_pray_sacrifice(god_type god)
@@ -2460,7 +2463,7 @@ void pray()
     }
 
     if (!was_praying)
-        _do_god_gift(true);
+        do_god_gift(true);
 
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis );
 }
@@ -2810,6 +2813,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_FRIEND_DIED:
             switch (you.religion)
             {
+
+            case GOD_FEDHAS:
+                // Toadstools are exempt from this conduct
+                if (victim && fedhas_protects(victim)
+                    && victim->mons_species() != MONS_TOADSTOOL)
+                {
+                    // level is (1 + monsterHD/2) for this conduct,
+                    // trying a fixed cost since plant HD aren't that
+                    // meaningful. -cao
+                    piety_change = -1;
+                    retval = true;
+                    break;
+                }
+                break;
+
             case GOD_ELYVILON: // healer god cares more about this
                 // Converted allies (marked as TSOites) can be martyrs.
                 if (victim && victim->god == GOD_SHINING_ONE)
@@ -2825,17 +2843,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 // Converted allies (marked as TSOites) can be martyrs.
                 if (victim && victim->god == GOD_SHINING_ONE)
                     break;
-                // fall through
-
-            case GOD_FEDHAS:
-                // double-check god because of fall-throughs from other gods
-                // Toadstools are an exception for this conduct
-                if (you.religion == GOD_FEDHAS && (!victim
-                        || !fedhas_protects(victim)
-                        || victim->mons_species() == MONS_TOADSTOOL))
-                {
-                    break;
-                }
                 // fall through
 
             case GOD_OKAWARU:
@@ -3597,6 +3604,9 @@ static void _dock_piety(int piety_loss, int penance)
     if (piety_loss <= 0 && penance <= 0)
         return;
 
+    piety_loss = piety_scale(piety_loss);
+    penance    = piety_scale(penance);
+
     if (piety_loss)
     {
         if (last_piety_lecture != you.num_turns)
@@ -3627,14 +3637,28 @@ static void _dock_piety(int piety_loss, int penance)
     }
 }
 
-void gain_piety(int pgn)
+// Scales a piety number, applying boosters (amulet of faith).
+int piety_scale(int piety)
 {
-    if (pgn <= 0)
+    if (piety < 0)
+        return (-piety_scale(-piety));
+
+    if (wearing_amulet(AMU_FAITH))
+        return (piety + div_rand_round(piety, 3));
+
+    return (piety);
+}
+
+void gain_piety(int original_gain)
+{
+    if (original_gain <= 0)
         return;
 
     // Xom uses piety differently...
     if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
         return;
+
+    int pgn = piety_scale(original_gain);
 
     // check to see if we owe anything first
     if (you.penance[you.religion] > 0)
@@ -3667,7 +3691,7 @@ void gain_piety(int pgn)
             || you.piety > 150 && one_chance_in(3)
             || you.piety > 100 && one_chance_in(3))
         {
-            _do_god_gift(false);
+            do_god_gift();
             return;
         }
     }
@@ -3678,7 +3702,7 @@ void gain_piety(int pgn)
         if (you.piety >= MAX_PIETY
             || you.piety > 150 && one_chance_in(5))
         {
-            _do_god_gift(false);
+            do_god_gift();
             return;
         }
     }
@@ -3695,7 +3719,8 @@ void gain_piety(int pgn)
 
 #if DEBUG_PIETY
         mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from "
-                                "hysteresis)", pgn, pgn_borrowed);
+                                "hysteresis, %d original)",
+             pgn, pgn_borrowed, original_gain);
 #endif
     }
 
@@ -3772,7 +3797,7 @@ void gain_piety(int pgn)
             holy_beings_attitude_change();
     }
 
-    _do_god_gift(false);
+    do_god_gift();
 }
 
 // Is the destroyed weapon valuable enough to gain piety by doing so?
@@ -3921,13 +3946,17 @@ void lose_piety(int pgn)
             redraw_skill(you.your_name, player_title());
 
             if (you.religion == GOD_ZIN)
-                simple_god_message(" is no longer ready to cure all your mutations.");
+                simple_god_message(
+                    " is no longer ready to cure all your mutations.");
             else if (you.religion == GOD_SHINING_ONE)
-                simple_god_message(" is no longer ready to bless your weapon.");
+                simple_god_message(
+                    " is no longer ready to bless your weapon.");
             else if (you.religion == GOD_KIKUBAAQUDGHA)
-                simple_god_message(" is no longer ready to enhance your necromancy.");
+                simple_god_message(
+                    " is no longer ready to enhance your necromancy.");
             else if (you.religion == GOD_LUGONU)
-                simple_god_message(" is no longer ready to corrupt your weapon.");
+                simple_god_message(
+                    " is no longer ready to corrupt your weapon.");
         }
 
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
@@ -4894,6 +4923,21 @@ bool player_can_join_god(god_type which_god)
     return (true);
 }
 
+// Identify any interesting equipment when the player signs up with a
+// new Service Pro^W^Wdeity.
+void god_welcome_identify_gear()
+{
+    // Check for amulets of faith.
+    item_def *amulet = you.slot_item(EQ_AMULET);
+    if (amulet && amulet->sub_type == AMU_FAITH)
+    {
+        // The flash happens independent of item id.
+        mpr("Your amulet flashes!", MSGCH_GOD);
+        flash_view_delay(god_colour(you.religion), 300);
+        set_ident_type(*amulet, ID_KNOWN_TYPE);
+    }
+}
+
 void god_pitch(god_type which_god)
 {
     mprf("You %s the altar of %s.",
@@ -4975,6 +5019,8 @@ void god_pitch(god_type which_god)
         make_stringf(" welcomes you%s!",
                      you.worshipped[which_god] ? " back" : "").c_str());
     more();
+
+    god_welcome_identify_gear();
 
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
@@ -5156,9 +5202,10 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
 {
     const int min_piety = piety_breakpoint(0);
     bool praying = (you.duration[DUR_PRAYER]
-                    && random2(you.piety) >= min_piety);
+                    && random2(piety_scale(you.piety)) >= min_piety);
     bool reliable = (you.piety > 130);
-    bool anytime = (one_chance_in(10) || x_chance_in_y(you.piety, 1000));
+    bool anytime = (one_chance_in(10) ||
+                    x_chance_in_y(piety_scale(you.piety), 1000));
     bool penance = (you.penance[god] > 0);
 
     // If actual is true, return HPT_NONE if the given god can protect

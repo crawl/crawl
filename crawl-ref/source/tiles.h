@@ -123,6 +123,7 @@ void save_doll_file(FILE *dollf);
 
 int item_unid_type(const item_def &item);
 int tile_known_weapon_brand(const item_def item);
+int tile_corpse_brand(const item_def item);
 
 int get_clean_map_idx(int tile_idx);
 
@@ -133,14 +134,15 @@ enum tile_flags
     TILE_FLAG_S_UNDER    = 0x00000800,
     TILE_FLAG_FLYING     = 0x00001000,
     TILE_FLAG_PET        = 0x00002000,
-    TILE_FLAG_NEUTRAL    = 0x00004000,
-    TILE_FLAG_STAB       = 0x00008000,
-    TILE_FLAG_MAY_STAB   = 0x0000C000,
-    TILE_FLAG_NET        = 0x00010000,
-    TILE_FLAG_POISON     = 0x00020000,
-    TILE_FLAG_FLAME      = 0x00040000,
-    TILE_FLAG_ANIM_WEP   = 0x00080000,
-    TILE_FLAG_BERSERK    = 0x00100000,
+    TILE_FLAG_GD_NEUTRAL = 0x00004000,
+    TILE_FLAG_NEUTRAL    = 0x00008000,
+    TILE_FLAG_STAB       = 0x00010000,
+    TILE_FLAG_MAY_STAB   = 0x00020000,
+    TILE_FLAG_NET        = 0x00040000,
+    TILE_FLAG_POISON     = 0x00080000,
+    TILE_FLAG_ANIM_WEP   = 0x00100000,
+    TILE_FLAG_FLAME      = 0x00200000,
+    TILE_FLAG_BERSERK    = 0x00400000,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x03800000,

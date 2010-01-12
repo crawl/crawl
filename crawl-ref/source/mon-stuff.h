@@ -148,7 +148,8 @@ int mons_missile_damage(monsters *mons, const item_def *launch,
                         const item_def *missile);
 int mons_pick_best_missile(monsters *mons, item_def **launcher,
                            bool ignore_melee = false);
-int mons_thrown_weapon_damage(const item_def *weap);
+int mons_thrown_weapon_damage(const item_def *weap,
+                              bool only_returning_weapons = false);
 
 int mons_natural_regen_rate(monsters *monster);
 

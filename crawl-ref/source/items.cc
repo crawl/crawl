@@ -635,10 +635,6 @@ int item_name_specialness(const item_def& item)
         return ( branded ? 1 : 0 );
     }
 
-    // Missiles don't get name descriptors.
-    if (item.base_type == OBJ_MISSILES)
-        return 0;
-
     std::string itname = item.name(DESC_PLAIN, false, false, false);
     lowercase(itname);
 
@@ -1266,7 +1262,7 @@ bool is_stackable_item( const item_def &item )
         return (false);
 
     if (item.base_type == OBJ_MISSILES
-        || (item.base_type == OBJ_FOOD && item.sub_type != FOOD_CHUNK)
+        || item.base_type == OBJ_FOOD
         || item.base_type == OBJ_SCROLLS
         || item.base_type == OBJ_POTIONS
         || item.base_type == OBJ_UNKNOWN_II
@@ -1303,11 +1299,16 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
     // These classes also require pluses and special.
     if (item1.base_type == OBJ_WEAPONS         // only throwing weapons
         || item1.base_type == OBJ_MISSILES
-        || item1.base_type == OBJ_MISCELLANY)  // only runes
+        || item1.base_type == OBJ_MISCELLANY   // only runes
+        || item1.base_type == OBJ_FOOD)        // chunks
     {
         if (item1.plus != item2.plus
             || item1.plus2 != item2.plus2
-            || item1.special != item2.special)
+            || ((item1.base_type == OBJ_FOOD && item2.sub_type == FOOD_CHUNK) ?
+                // Reject chunk merge if chunk ages differ by more than 5
+                abs(item1.special - item2.special) > 5
+                // Non-chunk item specials must match exactly.
+                : item1.special != item2.special))
         {
             return (false);
         }
@@ -1461,6 +1462,7 @@ int find_free_slot(const item_def &i)
 
 static void _got_item(item_def& item, int quant)
 {
+    seen_item(item);
     shopping_list.cull_identical_items(item);
 
     if (!is_rune(item))

@@ -472,15 +472,15 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
 
             // These stack with conservation; they're supposed to be good.
             if (target_class == OBJ_SCROLLS
-                    && you.mutation[MUT_CONSERVE_SCROLLS]
-                    && !one_chance_in(10))
+                && you.mutation[MUT_CONSERVE_SCROLLS]
+                && !one_chance_in(10))
             {
                 continue;
             }
 
             if (target_class == OBJ_POTIONS
-                    && you.mutation[MUT_CONSERVE_POTIONS]
-                    && !one_chance_in(10))
+                && you.mutation[MUT_CONSERVE_POTIONS]
+                && !one_chance_in(10))
             {
                 continue;
             }

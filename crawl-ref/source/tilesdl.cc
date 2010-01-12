@@ -7,6 +7,7 @@
 #include "coord.h"
 #include "directn.h"
 #include "env.h"
+#include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "files.h"
@@ -1275,6 +1276,19 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
     TextRegion::cgotoxy(x, y);
 }
 
+GotoRegion TilesFramework::get_cursor_region() const
+{
+    if (TextRegion::text_mode == m_region_crt)
+        return (GOTO_CRT);
+    if (TextRegion::text_mode == m_region_msg)
+        return (GOTO_MSG);
+    if (TextRegion::text_mode == m_region_stat)
+        return (GOTO_STAT);
+
+    ASSERT(!"Bogus region");
+    return (GOTO_CRT);
+}
+
 // #define DEBUG_TILES_REDRAW
 void TilesFramework::redraw()
 {
@@ -1299,7 +1313,8 @@ void TilesFramework::redraw()
         FTFont *font = m_fonts[m_tip_font].font;
 
         font->render_string(m_mouse.x, m_mouse.y - 2, m_tooltip.c_str(),
-                            min_pos, m_windowsz, WHITE, false, 220, BLUE, 5);
+                            min_pos, m_windowsz, WHITE, false, 220, BLUE, 5,
+                            true);
     }
 
     SDL_GL_SwapBuffers();
@@ -1335,6 +1350,8 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
         const monsters *mon = monster_at(gc);
         if (mon->friendly())
             f = MF_MONS_FRIENDLY;
+        else if (mon->good_neutral())
+            f = MF_MONS_PEACEFUL;
         else if (mon->neutral())
             f = MF_MONS_NEUTRAL;
         else if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
@@ -1402,10 +1419,47 @@ int tile_known_weapon_brand(const item_def item)
             return TILE_BRAND_CHAOS;
         case SPMSL_REAPING:
             return TILE_BRAND_REAPING;
+        case SPMSL_ELECTRIC:
+            return TILE_BRAND_ELECTRIC;
+        case SPMSL_CONFUSION:
+            return TILE_BRAND_CONFUSION;
+        case SPMSL_PARALYSIS:
+            return TILE_BRAND_PARALYSIS;
+        case SPMSL_SLOW:
+            return TILE_BRAND_SLOWING;
+        case SPMSL_SICKNESS:
+            return TILE_BRAND_SICKNESS;
+        case SPMSL_RAGE:
+            return TILE_BRAND_RAGE;
         default:
             break;
         }
     }
+    return 0;
+}
+
+int tile_corpse_brand(const item_def item)
+{
+    // Brands are mostly meaningless to herbivores.
+    // Could still be interesting for Fulsome Distillation, though.
+    if (player_mutation_level(MUT_HERBIVOROUS) == 3)
+        return (0);
+
+    if (is_poisonous(item))
+        return TILE_FOOD_POISONED;
+
+    if (is_mutagenic(item))
+        return TILE_FOOD_MUTAGENIC;
+
+    if (causes_rot(item))
+        return TILE_FOOD_ROTTING;
+
+    if (is_forbidden_food(item))
+        return TILE_FOOD_FORBIDDEN;
+
+    if (is_contaminated(item))
+        return TILE_FOOD_CONTAMINATED;
+
     return 0;
 }
 
@@ -1431,7 +1485,11 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     else
         desc.quantity = -1;
 
-    desc.special = tile_known_weapon_brand(item);
+    if (type == OBJ_WEAPONS || type == OBJ_MISSILES)
+        desc.special = tile_known_weapon_brand(item);
+    else if (type == OBJ_CORPSES)
+        desc.special = tile_corpse_brand(item);
+
     desc.flag = 0;
     if (item.cursed() && item_ident(item, ISFLAG_KNOW_CURSE))
         desc.flag |= TILEI_FLAG_CURSE;

@@ -151,7 +151,7 @@ public:
 
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;
-    virtual void go_berserk(bool intentional) = 0;
+    virtual void go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_bleed() const = 0;
@@ -174,6 +174,7 @@ public:
     virtual void petrify(actor *attacker, int strength) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
+    virtual void put_to_sleep(actor *attacker, int strength) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
     virtual void drain_stat(int stat, int amount, actor* attacker) { }
     virtual bool can_hibernate(bool holi_only = false) const;

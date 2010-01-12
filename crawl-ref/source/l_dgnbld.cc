@@ -123,22 +123,89 @@ static bool _coords(lua_State *ls, map_lines &lines,
 }
 
 // Check if a given coordiante is valid for lines.
-static bool _valid_coord(lua_State *ls, map_lines &lines, int x, int y)
+static bool _valid_coord(lua_State *ls, map_lines &lines, int x, int y, bool error = true)
 {
     if (x < 0 || x >= lines.width())
     {
-        luaL_error(ls, "Invalid x coordinate: %d", x);
+        if (error)
+            luaL_error(ls, "Invalid x coordinate: %d", x);
         return false;
     }
 
     if (y < 0 || y >= lines.height())
     {
-        luaL_error(ls, "Invalid y coordinate: %d", y);
+        if (error)
+            luaL_error(ls, "Invalid y coordinate: %d", y);
         return false;
     }
 
     return true;
 }
+
+// Does what fill_area did, but here, so that it can be used through
+// multiple functions (including make_box).
+static int _fill_area (lua_State *ls, map_lines &lines, int x1, int y1, int x2, int y2, char fill)
+{
+    for (int y = y1; y <= y2; ++y)
+        for (int x = x1; x <= x2; ++x)
+        {
+            lines(x, y) = fill;
+        }
+
+    return (0);
+}
+
+// Specifically only deals with horizontal lines.
+std::vector<coord_def> _box_side (int x1, int y1, int x2, int y2, int side)
+{
+    std::vector<coord_def> line;
+
+    int start_x, start_y, stop_x, stop_y, x, y;
+
+    switch (side)
+    {
+    case 0: start_x = x1; start_y = y1; stop_x = x2; stop_y = y1; break;
+    case 1: start_x = x2; start_y = y1; stop_x = x2; stop_y = y2; break;
+    case 2: start_x = x1; start_y = y2; stop_x = x2; stop_y = y2; break;
+    case 3: start_x = x1; start_y = y1; stop_x = x1; stop_y = y2; break;
+    default: ASSERT(!"invalid _box_side"); return (line);
+    }
+
+    x = start_x; y = start_y;
+
+    if (start_x == stop_x)
+        for (y = start_y+1; y < stop_y; y++)
+            line.push_back(coord_def(x, y));
+    else
+        for (x = start_x+1; x < stop_x; x++)
+            line.push_back(coord_def(x, y));
+
+    return (line);
+}
+
+// Does what count_passable_neighbors does, but in C++ form.
+static int _count_passable_neighbors (lua_State *ls, map_lines &lines, int x,
+                                      int y, const char *passable = traversable_glyphs)
+{
+    coord_def tl(x, y);
+    int count = 0;
+
+    for (adjacent_iterator ai(tl); ai; ++ai)
+    {
+        if (_valid_coord(ls, lines, ai->x, ai->y, false))
+            if (strchr(passable, lines(*ai)))
+                count++;
+    }
+
+    return (count);
+}
+
+static int _count_passable_neighbors (lua_State *ls, map_lines &lines, coord_def point,
+                                      const char *passable = traversable_glyphs)
+{
+    return (_count_passable_neighbors(ls, lines, point.x, point.y, passable));
+}
+
 
 LUAFN(dgn_count_feature_in_box)
 {
@@ -190,6 +257,48 @@ LUAFN(dgn_count_neighbors)
     PLUARET(number, lines.count_feature_in_box(tl, br, feat));
 }
 
+LUAFN(dgn_count_passable_neighbors)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_STR(ls, passable, traversable_glyphs);
+    TABLE_INT(ls, x, -1);
+    TABLE_INT(ls, y, -1);
+
+    if (!_valid_coord(ls, lines, x, y))
+    {
+        lua_pushnumber(ls, 0);
+        return (1);
+    }
+
+    lua_pushnumber(ls, _count_passable_neighbors(ls, lines, x, y, passable));
+    return (1);
+}
+
+
+LUAFN(dgn_is_valid_coord)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x, -1);
+    TABLE_INT(ls, y, -1);
+
+    if (x < 0 || x >= lines.width())
+    {
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+
+    if (y < 0 || y >= lines.height())
+    {
+        lua_pushboolean(ls, false);
+        return (1);
+    }
+
+    lua_pushboolean(ls, true);
+    return (1);
+}
+
 LUAFN(dgn_extend_map)
 {
     LINES(ls, 1, lines);
@@ -213,11 +322,7 @@ LUAFN(dgn_fill_area)
 
     TABLE_CHAR(ls, fill, 'x');
 
-    for (int y = y1; y <= y2; ++y)
-        for (int x = x1; x <= x2; ++x)
-        {
-            lines(x, y) = fill;
-        }
+    _fill_area (ls, lines, x1, y1, x2, y2, fill);
 
     return (0);
 }
@@ -261,6 +366,53 @@ LUAFN(dgn_fill_disconnected)
     }
 
     return (0);
+}
+
+LUAFN(dgn_is_passable_coord)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x, -1);
+    TABLE_INT(ls, y, -1);
+    TABLE_STR(ls, passable, traversable_glyphs);
+
+    if (!_valid_coord(ls, lines, x, y))
+        return (0);
+
+    if (strchr(passable, lines(x, y)))
+        lua_pushboolean(ls, true);
+    else
+        lua_pushboolean(ls, false);
+
+    return (1);
+}
+
+LUAFN(dgn_find_in_area)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, x1, -1);
+    TABLE_INT(ls, y1, -1);
+    TABLE_INT(ls, x2, -1);
+    TABLE_INT(ls, y2, -1);
+
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
+
+    TABLE_CHAR(ls, find, 'x');
+
+    int x, y;
+
+    for (x = x1; x <= x2; x++)
+        for (y = y1; y <= y2; y++)
+            if (lines(x, y) == find)
+            {
+                lua_pushboolean(ls, true);
+                return (1);
+            }
+
+    lua_pushboolean(ls, false);
+    return (1);
 }
 
 LUAFN(dgn_height)
@@ -408,6 +560,75 @@ LUAFN(dgn_make_square)
             lines(x + rx, y + ry) = fill;
 
     return (0);
+}
+
+LUAFN(dgn_make_box)
+{
+    LINES(ls, 1, lines);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
+
+    TABLE_CHAR(ls, floor, '.');
+    TABLE_CHAR(ls, wall, 'x');
+    TABLE_INT(ls, width, 1);
+
+    _fill_area(ls, lines, x1, y1, x2, y2, wall);
+    _fill_area(ls, lines, x1+width, y1+width, x2-width, y2-width, floor);
+
+    return (0);
+}
+
+LUAFN(dgn_make_box_doors)
+{
+    LINES(ls, 1, lines);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return (0);
+
+    TABLE_INT(ls, number, 1);
+
+    int sides[4] = {0, 0, 0, 0};
+
+    int door_count;
+
+    for (door_count = 0; door_count < number; door_count++)
+    {
+        int current_side = random2(4);
+        if (sides[current_side] >= 2)
+            current_side = random2(4);
+
+        std::vector<coord_def> points = _box_side(x1, y1, x2, y2, current_side);
+
+        int total_points = int(points.size());
+
+        int index = random2avg(total_points, 2 + random2(number));
+
+        int tries = 50;
+
+        while (_count_passable_neighbors(ls, lines, points[index]) <= 3)
+        {
+            tries--;
+            index = random2(total_points);
+
+            if (tries == 0)
+                break;
+        }
+
+        if (tries == 0)
+        {
+            door_count--;
+            continue;
+        }
+
+        sides[current_side]++;
+        lines(points[index]) = '+';
+    }
+
+    lua_pushnumber(ls, door_count);
+    return (1);
 }
 
 // Return a metatable for a point on the map_lines grid.
@@ -690,15 +911,21 @@ const struct luaL_reg dgn_build_dlib[] =
     { "count_feature_in_box", &dgn_count_feature_in_box },
     { "count_antifeature_in_box", &dgn_count_antifeature_in_box },
     { "count_neighbors", &dgn_count_neighbors },
+    { "count_passable_neighbors", &dgn_count_passable_neighbors },
+    { "is_valid_coord", &dgn_is_valid_coord },
+    { "is_passable_coord", &dgn_is_passable_coord },
     { "extend_map", &dgn_extend_map },
     { "fill_area", &dgn_fill_area },
     { "fill_disconnected", &dgn_fill_disconnected },
+    { "find_in_area", &dgn_find_in_area },
     { "height", dgn_height },
     { "join_the_dots", &dgn_join_the_dots },
     { "make_circle", &dgn_make_circle },
     { "make_diamond", &dgn_make_diamond },
     { "make_rounded_square", &dgn_make_rounded_square },
     { "make_square", &dgn_make_square },
+    { "make_box", &dgn_make_box },
+    { "make_box_doors", &dgn_make_box_doors },
     { "mapgrd_table", dgn_mapgrd_table },
     { "octa_room", &dgn_octa_room },
     { "replace_area", &dgn_replace_area },

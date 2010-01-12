@@ -104,10 +104,14 @@ inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
 }
 
 template <class T>
-static void dlua_push_object_type(lua_State *ls, const char *meta, const T &data)
+static int dlua_push_object_type(lua_State *ls, const char *meta, const T &data)
 {
     T **ptr = clua_new_userdata<T*>(ls, meta);
-    *ptr = new T(data);
+    if (ptr)
+        *ptr = new T(data);
+    else
+        lua_pushnil(ls);
+    return (1);
 }
 
 /*

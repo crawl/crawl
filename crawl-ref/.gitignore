@@ -23,6 +23,9 @@ DEADJOE
 # Vim can generate extra swap files for the same file
 *.sw[nop]
 
+# Generated documentation
+docs/aptitudes.txt
+
 # Crawl generated junk
 arena.result
 saves
@@ -30,6 +33,7 @@ morgue
 *.map
 map.dump
 mapgen.log
+*.out
 *.stat
 
 # Tile copied files

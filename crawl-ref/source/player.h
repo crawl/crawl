@@ -14,6 +14,7 @@
 #include "species.h"
 
 #include <vector>
+#include <stdint.h>
 
 #ifdef USE_TILE
 struct dolls_data
@@ -234,6 +235,8 @@ public:
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;
   FixedVector<bool, NUM_SPELLS>      seen_spell;
+  FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
+  FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
 
   unsigned char normal_vision;        // how far the species gets to see
   unsigned char current_vision;       // current sight radius (cells)
@@ -416,8 +419,8 @@ public:
 
     void attacking(actor *other);
     bool can_go_berserk() const;
-    bool can_go_berserk(bool intentional) const;
-    void go_berserk(bool intentional);
+    bool can_go_berserk(bool intentional, bool potion = false) const;
+    void go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
@@ -490,7 +493,7 @@ public:
 
     bool asleep() const;
     void hibernate(int power = 0);
-    void put_to_sleep(int power = 0);
+    void put_to_sleep(actor *, int power = 0);
     void awake();
     void check_awaken(int disturbance);
 
@@ -768,7 +771,7 @@ void dec_napalm_player(int delay);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 
-void haste_player(int turns);
+bool haste_player(int turns);
 void dec_haste_player(int delay);
 
 void dec_disease_player(int delay);

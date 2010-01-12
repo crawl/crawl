@@ -1,12 +1,12 @@
 /*
- *  File:       transfor.cc
+ *  File:       transform.cc
  *  Summary:    Misc function related to player transformations.
  *  Written by: Linley Henzell
  */
 
 #include "AppHdr.h"
 
-#include "transfor.h"
+#include "transform.h"
 
 #include <stdio.h>
 #include <string.h>

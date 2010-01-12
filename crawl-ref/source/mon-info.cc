@@ -65,7 +65,7 @@ monster_info::monster_info(const monsters *m)
 // Needed because gcc 4.3 sort does not like comparison functions that take
 // more than 2 arguments.
 bool monster_info::less_than_wrapper(const monster_info& m1,
-                                          const monster_info& m2)
+                                     const monster_info& m2)
 {
     return monster_info::less_than(m1, m2, true);
 }
@@ -152,7 +152,7 @@ bool monster_info::less_than(const monster_info& m1,
     }
 
     if (m1.m_fullname && m2.m_fullname || m1type == MONS_PLAYER_GHOST)
-        return (m1.m_mon->name(DESC_PLAIN) < m1.m_mon->name(DESC_PLAIN));
+        return (m1.m_mon->name(DESC_PLAIN) < m2.m_mon->name(DESC_PLAIN));
 
 #if 0 // for now, sort brands together.
     // By descending brands, so no brands sorts to the end
@@ -245,12 +245,12 @@ void monster_info::to_string(int count, std::string& desc,
         // Don't differentiate between dancing weapons, mimics, (very)
         // ugly things or draconians of different types.
         else if (m_fullname
-            && type != MONS_DANCING_WEAPON
-            && mons_genus(type) != MONS_DRACONIAN
-            && type != MONS_UGLY_THING
-            && type != MONS_VERY_UGLY_THING
-            && !mons_is_mimic(type)
-            && m_mon->mname.empty())
+                 && type != MONS_DANCING_WEAPON
+                 && mons_genus(type) != MONS_DRACONIAN
+                 && type != MONS_UGLY_THING
+                 && type != MONS_VERY_UGLY_THING
+                 && !mons_is_mimic(type)
+                 && m_mon->mname.empty())
         {
             out << count << " "
                 << pluralise(m_mon->name(DESC_PLAIN));
@@ -275,7 +275,9 @@ void monster_info::to_string(int count, std::string& desc,
 
     if (count == 1)
     {
-        if (m_mon->berserk())
+        if (m_mon->frenzied())
+            out << " (frenzied)";
+        else if (m_mon->berserk())
             out << " (berserk)";
         else if (Options.verbose_monster_pane)
             out << _verbose_info(m_mon);
@@ -349,4 +351,3 @@ void get_monster_info(std::vector<monster_info>& mons)
     }
     std::sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
 }
-

@@ -270,9 +270,8 @@ NAME:    shoal_ilsuiw
 PLACE:   Shoal:$
 TAGS:    mini_float
 KMONS:   1 = Ilsuiw band, siren
-KITEM:   1 = |
 KMONS:   2 = merfolk impaler / merfolk javelineer
-KFEAT:   2 = w
+KFEAT:   12 = w
 LROCKTILE:  wall_vines
 MAP
  wxwxw

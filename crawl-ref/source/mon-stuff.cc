@@ -50,7 +50,7 @@
 #include "env.h"
 #include "areas.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
@@ -1154,12 +1154,19 @@ static void _elven_twin_died(monsters* twin, bool in_transit)
     }
     else if (found_dowan)
     {
-        // Doesn't provide any message, so needs one, but only if visible.
-        // Doesn't matter if has been polymorphed or not.
         if (monster->observable())
-            simple_monster_message(monster, " turns to flee.");
-        monster->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU));
-        behaviour_event(monster, ME_SCARE, MHITNOT);
+        {
+            monster->add_ench(ENCH_HASTE);
+            simple_monster_message(monster, " seems to find hidden reserves of power!");
+        }
+        else
+            monster->props["dowan_upgrade"] = bool(true);
+
+        monster->spells[0] = SPELL_THROW_ICICLE;
+        monster->spells[1] = SPELL_BLINK;
+        monster->spells[3] = SPELL_STONE_ARROW;
+        monster->spells[4] = SPELL_HASTE;
+        // Nothing with 6.
     }
 }
 
@@ -2672,7 +2679,7 @@ bool monster_blink(monsters *monster, bool quiet)
     coord_def near = _random_monster_nearby_habitable_space(*monster, false,
                                                             true);
 
-    return (monster->blink_to(near));
+    return (monster->blink_to(near, quiet));
 }
 
 bool mon_can_be_slimified(monsters *monster)
@@ -3277,10 +3284,14 @@ bool mons_avoids_cloud(const monsters *monster, int cloud_num,
 }
 
 // Returns a rough estimate of damage from throwing the wielded weapon.
-int mons_thrown_weapon_damage(const item_def *weap)
+int mons_thrown_weapon_damage(const item_def *weap,
+                              bool only_returning_weapons)
 {
-    if (!weap || get_weapon_brand(*weap) != SPWPN_RETURNING)
+    if (!weap ||
+        (only_returning_weapons && get_weapon_brand(*weap) != SPWPN_RETURNING))
+    {
         return (0);
+    }
 
     return std::max(0, (property(*weap, PWPN_DAMAGE) + weap->plus2 / 2));
 }
@@ -3314,6 +3325,7 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
 {
     *launcher = NULL;
     item_def *melee = NULL, *launch = NULL;
+    int melee_weapon_count = 0;
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
@@ -3321,7 +3333,10 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
             if (is_range_weapon(*item))
                 launch = item;
             else if (!ignore_melee)
+            {
                 melee = item;
+                ++melee_weapon_count;
+            }
         }
     }
 
@@ -3329,7 +3344,12 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
     if (launch && missiles && !missiles->launched_by(*launch))
         launch = NULL;
 
-    const int tdam = mons_thrown_weapon_damage(melee);
+    const int n_usable_melee_weapons(mons_wields_two_weapons(mons) ? 2 : 1);
+    const int tdam =
+        mons_thrown_weapon_damage(
+            melee,
+            melee_weapon_count == n_usable_melee_weapons
+            && melee->quantity == 1);
     const int fdam = mons_missile_damage(mons, launch, missiles);
 
     if (!tdam && !fdam)

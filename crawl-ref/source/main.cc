@@ -117,7 +117,7 @@
 #include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -347,6 +347,7 @@ static void _show_commandline_options_help()
 #if DEBUG_DIAGNOSTICS
     puts("");
     puts("  -test            run test cases in ./test");
+    puts("  -script <name>   run script matching <name> in ./scripts");
 #endif
 }
 
@@ -541,6 +542,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '@': wizard_set_stats();                    break;
     case '^': wizard_gain_piety();                   break;
     case '_': wizard_get_religion();                 break;
+    case '-': wizard_get_god_gift();                 break;
     case '\'': wizard_list_items();                  break;
     case 'd': wizard_level_travel(true);             break;
     case 'D': wizard_detect_creatures();             break;
@@ -717,68 +719,6 @@ static void _start_running( int dir, int mode )
 
     if (i_feel_safe(true))
         you.running.initialise(dir, mode);
-}
-
-static bool _recharge_rod( item_def &rod, bool wielded )
-{
-    if (!item_is_rod(rod) || rod.plus >= rod.plus2 || !enough_mp(1, true))
-        return (false);
-
-    const int charge = rod.plus / ROD_CHARGE_MULT;
-
-    int rate = ((charge + 1) * ROD_CHARGE_MULT) / 10;
-
-    rate *= (10 + skill_bump( SK_EVOCATIONS ));
-    rate = div_rand_round( rate, 100 );
-
-    if (rate < 5)
-        rate = 5;
-    else if (rate > ROD_CHARGE_MULT / 2)
-        rate = ROD_CHARGE_MULT / 2;
-
-    // If not wielded, the rod charges far more slowly.
-    if (!wielded)
-        rate /= 5;
-    // Shields hamper recharging for wielded rods.
-    else if (you.shield())
-        rate /= 2;
-
-    if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
-    {
-        dec_mp(1);
-        if (wielded)
-            you.wield_change = true;
-    }
-
-    rod.plus += rate;
-    if (rod.plus > rod.plus2)
-        rod.plus = rod.plus2;
-
-    if (wielded && rod.plus == rod.plus2)
-    {
-        mpr("Your rod has recharged.");
-        if (is_resting())
-            stop_running();
-    }
-
-    return (true);
-}
-
-static void _recharge_rods()
-{
-    const int wielded = you.equip[EQ_WEAPON];
-    if (wielded != -1 && _recharge_rod( you.inv[wielded], true ))
-        return;
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (i != wielded && you.inv[i].is_valid()
-            && one_chance_in(3)
-            && _recharge_rod( you.inv[i], false ))
-        {
-            return;
-        }
-    }
 }
 
 static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
@@ -2342,6 +2282,13 @@ static void _decrement_durations()
         }
     }
 
+    // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
+    if (you.duration[DUR_TRANSFORMATION] <= 0
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+    {
+        you.duration[DUR_TRANSFORMATION] = 1;
+    }
+
     // Vampire bat transformations are permanent (until ended).
     if (you.species != SP_VAMPIRE || !player_in_bat_form()
         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY)
@@ -2557,26 +2504,8 @@ static void _decrement_durations()
             // slowing, exhaustion still ends haste.
             if (you.duration[DUR_HASTE] > 0)
             {
-                if (wearing_amulet(AMU_RESIST_SLOW))
-                {
-                    if (you.duration[DUR_HASTE] > 3 * BASELINE_DELAY)
-                    {
-                        you.set_duration(DUR_HASTE, div_rand_round(2 + coinflip(), 2));
-                        mpr("Your extra speed is starting to run out.",
-                            MSGCH_DURATION);
-                    }
-                    else
-                    {
-                        mpr("You feel yourself slow down.", MSGCH_DURATION);
-                        you.duration[DUR_HASTE] = 0;
-                    }
-                    did_god_conduct(DID_HASTY, 3, true);
-                }
-                else
-                {
-                    // Silently cancel haste, then slow player.
-                    you.duration[DUR_HASTE] = 0;
-                }
+                // Silently cancel haste, then slow player.
+                you.duration[DUR_HASTE] = 0;
             }
             slow_player(dur);
         }
@@ -2585,7 +2514,7 @@ static void _decrement_durations()
         you.hunger = std::max(50, you.hunger);
 
         // 1KB: No berserk healing.
-        you.hp = (you.hp + 1) / 2;
+        you.hp = (you.hp + 1) * 2 / 3;
         calc_hp();
 
         learned_something_new(TUT_POSTBERSERK);
@@ -2880,7 +2809,7 @@ void world_reacts()
     _regenerate_hp_and_mp(you.time_taken);
 
     // If you're wielding a rod, it'll gradually recharge.
-    _recharge_rods();
+    recharge_rods(you.time_taken, false);
 
     viewwindow(true);
 
@@ -3498,7 +3427,7 @@ static void _open_door(coord_def move, bool check_confused)
             if (!door_open_verb.empty())
                verb = door_open_verb.c_str();
             else
-               verb = "You open the %s%s";
+               verb = "You open the %s%s.";
         }
 
         mprf(verb, adj, noun);
@@ -3708,14 +3637,14 @@ static void _close_door(coord_def move)
                 if (!door_airborne.empty())
                     verb = door_airborne.c_str();
                 else
-                    verb = "You reach down and cloose the %s%s.";
+                    verb = "You reach down and close the %s%s.";
             }
             else
             {
                 if (!door_close_verb.empty())
                    verb = door_close_verb.c_str();
                 else
-                    verb = "You close the %s%s";
+                    verb = "You close the %s%s.";
             }
 
             mprf(verb, adj, noun);
@@ -3854,7 +3783,6 @@ static bool _initialise(void)
         tiles.initialise_items();
 #endif
         Options.show_more_prompt = false;
-        makeitem_tests();
         crawl_tests::run_tests(true);
         // Superfluous, just to make it clear that this is the end of
         // the line.
@@ -4321,6 +4249,13 @@ static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
     return reader.read_line(true);
 }
 
+static void _cancel_cmd_repeat()
+{
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+    flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
+}
+
 static void _setup_cmd_repeat()
 {
     if (is_processing_macro())
@@ -4349,9 +4284,7 @@ static void _setup_cmd_repeat()
         {
             // Was just a single ESCAPE key, so not a macro trigger.
             canned_msg( MSG_OK );
-            crawl_state.cancel_cmd_again();
-            crawl_state.cancel_cmd_repeat();
-            flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
+            _cancel_cmd_repeat();
             return;
         }
         ch = getchm();
@@ -4374,9 +4307,7 @@ static void _setup_cmd_repeat()
                 // Wasn't a macro trigger, just an ordinary escape.
                 canned_msg( MSG_OK );
 
-            crawl_state.cancel_cmd_again();
-            crawl_state.cancel_cmd_repeat();
-            flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
+            _cancel_cmd_repeat();
             return;
         }
         // *WAS* a macro trigger, keep going.
@@ -4385,11 +4316,7 @@ static void _setup_cmd_repeat()
     if (strlen(buf) == 0)
     {
         mpr("You must enter the number of times for the command to repeat.");
-
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
-
+        _cancel_cmd_repeat();
         return;
     }
 
@@ -4401,9 +4328,7 @@ static void _setup_cmd_repeat()
     if (count <= 0)
     {
         canned_msg( MSG_OK );
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
+        _cancel_cmd_repeat();
         return;
     }
 
@@ -4432,7 +4357,7 @@ static void _setup_cmd_repeat()
         if (!crawl_state.doing_prev_cmd_again)
             repeat_again_rec.keys.pop_back();
 
-        mpr("Enter command to be repeated: ");
+        mpr("Enter command to be repeated: ", MSGCH_PROMPT);
         // Enable the cursor to read input.
         cursor_control con(true);
 
@@ -4450,9 +4375,7 @@ static void _setup_cmd_repeat()
 
     if (!is_processing_macro() && !_cmd_is_repeatable(cmd))
     {
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
+        _cancel_cmd_repeat();
         return;
     }
 
@@ -4475,7 +4398,12 @@ static void _setup_cmd_repeat()
         while (isdigit(ch) || ch == ' ' || ch == CK_ENTER)
         {
             keys.pop_back();
-            ASSERT(keys.size() > 0);
+            // Handle the case where the user has macroed enter to itself.
+            if (keys.empty())
+            {
+                _cancel_cmd_repeat();
+                return;
+            }
             ch = keys[keys.size() - 1];
         }
     }
@@ -4631,7 +4559,7 @@ static void _compile_time_asserts()
 {
     // Check that the numbering comments in enum.h haven't been
     // disturbed accidentally.
-    COMPILE_CHECK(SK_UNARMED_COMBAT == 18       , c1);
+    COMPILE_CHECK(SK_UNARMED_COMBAT == 17       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 38           , c2);
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
@@ -4649,6 +4577,12 @@ static void _compile_time_asserts()
     // Non-artefact brands and unrandart indexes both go into
     // item.special, so make sure they don't overlap.
     COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START, c10);
+
+    // We have space for 32 brands in the bitfield.
+    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]), c11);
+    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]), c12);
+    COMPILE_CHECK(NUM_SPECIAL_WEAPONS <= SP_UNKNOWN_BRAND, c13);
+    COMPILE_CHECK(NUM_SPECIAL_ARMOURS <= SP_UNKNOWN_BRAND, c14);
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

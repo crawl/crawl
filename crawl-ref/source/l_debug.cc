@@ -9,6 +9,7 @@
 #include "l_libs.h"
 
 #include "beam.h"
+#include "branch.h"
 #include "chardump.h"
 #include "coordit.h"
 #include "dungeon.h"
@@ -24,16 +25,31 @@
 #include "wiz-dgn.h"
 
 // WARNING: This is a very low-level call.
+//
+// Usage: goto_place("placename", <bind_entrance>)
+// "placename" is the name of the place as used in maps, such as "Lair:2",
+// "Vault:$", etc.
+//
+// If <bind_entrance> is specified, the entrance point of
+// the branch specified in place_name is bound to the given level in the
+// parent branch (the entrance level should be 1-based). This can be helpful
+// when testing scenarios that depend on the absolute depth of the current
+// place.
 LUAFN(debug_goto_place)
 {
     try
     {
         const level_id id = level_id::parse_level_id(luaL_checkstring(ls, 1));
+        const int bind_entrance =
+            lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
         you.level_type = id.level_type;
         if (id.level_type == LEVEL_DUNGEON)
         {
             you.where_are_you = static_cast<branch_type>(id.branch);
             you.your_level = absdungeon_depth(id.branch, id.depth);
+
+            if (bind_entrance != -1)
+                branches[you.where_are_you].startdepth = bind_entrance;
         }
     }
     catch (const std::string &err)

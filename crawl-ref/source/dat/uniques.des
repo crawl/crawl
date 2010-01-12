@@ -216,7 +216,7 @@ DEPTH:  14-16
 : place_unique(_G, "Maud")
 
 NAME:   uniq_mara
-DEPTH:  22-27, !Lair, !Slime
+DEPTH:  18-25, !Lair, !Slime
 : place_unique(_G, "Mara")
 
 NAME:   uniq_maurice

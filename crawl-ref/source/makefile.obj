@@ -162,7 +162,7 @@ stuff.o \
 tags.o \
 teleport.o \
 terrain.o \
-transfor.o \
+transform.o \
 traps.o \
 travel.o \
 tutorial.o \

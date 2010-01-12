@@ -317,9 +317,8 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
 // Slime creatures can split but not merge under these conditions.
 static bool _unoccupied_slime(monsters *thing)
 {
-     return (thing->asleep()
-            || mons_is_wandering(thing)
-            || thing->foe == MHITNOT);
+     return (thing->asleep() || mons_is_wandering(thing)
+             || thing->foe == MHITNOT);
 }
 
 // Slime creatures cannot split or merge under these conditions.
@@ -402,22 +401,29 @@ static bool _slime_merge(monsters *thing)
 // we can find a square to place the new slime creature on.
 static bool _slime_split(monsters *thing)
 {
-    if (!thing
-        || !_unoccupied_slime(thing)
-        || _disabled_slime(thing)
-        || thing->number <= 1)
+    if (!thing || thing->number <= 1
+        || coinflip() // Don't make splitting quite so reliable. (jpeg)
+        || _disabled_slime(thing))
     {
         return (false);
     }
 
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
     std::random_shuffle(compass_idx, compass_idx + 8);
-    coord_def origin = thing->pos();
+    const coord_def origin  = thing->pos();
+
+    const actor* foe = thing->get_foe();
+    const bool has_foe = (foe != NULL && thing->can_see(foe));
+    const coord_def foe_pos = (has_foe ? foe->position : coord_def(0,0));
 
     // Anywhere we can place an offspring?
     for (int i = 0; i < 8; ++i)
     {
         coord_def target = origin + Compass[compass_idx[i]];
+
+        // Don't split if this increases the distance to the target.
+        if (has_foe && distance(target, foe_pos) > distance(origin,foe_pos))
+            continue;
 
         if (mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target))
             && !actor_at(target))
@@ -765,10 +771,8 @@ bool mon_special_ability(monsters *monster, bolt & beem)
                                   : static_cast<monster_type>( monster->type );
 
     // Slime creatures can split while out of sight.
-    if ((!mons_near(monster)
-         || monster->asleep()
-         || monster->submerged())
-             && monster->type != MONS_SLIME_CREATURE)
+    if ((!mons_near(monster) || monster->asleep() || monster->submerged())
+        && monster->type != MONS_SLIME_CREATURE)
     {
         return (false);
     }

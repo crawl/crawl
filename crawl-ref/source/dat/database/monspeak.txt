@@ -1826,7 +1826,7 @@ _Dowan_Duvessa_dies_
 
 @The_monster@ screams, "No! No!"
 
-@The_monster@ starts to cry.
+@The_monster@ seems overcome with grief, but rights himself soon after.
 
 @The_monster@ screams, "No! Oh no!"
 %%%%

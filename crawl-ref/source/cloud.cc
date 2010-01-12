@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
@@ -41,6 +42,8 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
 
     switch (type)
     {
+    case CLOUD_GLOOM:
+        return 50;
     case CLOUD_STEAM:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
@@ -227,6 +230,22 @@ void manage_clouds()
             dissipate *= 4;
         else if ((cloud.type == CLOUD_COLD || cloud.type == CLOUD_RAIN) && grd(cloud.pos) == DNGN_LAVA)
             dissipate *= 4;
+        else if (cloud.type == CLOUD_GLOOM)
+        {
+            int count = 0;
+            for (adjacent_iterator ai(cloud.pos); ai; ++ai)
+                if (env.cgrid(*ai) != EMPTY_CLOUD)
+                    if (env.cloud[env.cgrid(*ai)].type == CLOUD_GLOOM)
+                        count++;
+
+            if (!haloers(cloud.pos).empty() && !silenced(cloud.pos))
+                count = 0;
+
+            if (count < 4)
+                dissipate *= 50;
+            else
+                dissipate /= 20;
+        }
 
         expose_items_to_element(cloud2beam(cloud.type), cloud.pos, 2);
 
@@ -514,6 +533,8 @@ cloud_type beam2cloud(beam_type flavour)
         return CLOUD_RAIN;
     case BEAM_POTION_MUTAGENIC:
         return CLOUD_MUTAGENIC;
+    case BEAM_GLOOM:
+        return CLOUD_GLOOM;
     case BEAM_RANDOM:
         return CLOUD_RANDOM;
     }
@@ -539,6 +560,7 @@ beam_type cloud2beam(cloud_type flavour)
     case CLOUD_CHAOS:        return BEAM_CHAOS;
     case CLOUD_RAIN:         return BEAM_POTION_RAIN;
     case CLOUD_MUTAGENIC:    return BEAM_POTION_MUTAGENIC;
+    case CLOUD_GLOOM:        return BEAM_GLOOM;
     case CLOUD_RANDOM:       return BEAM_RANDOM;
     }
 }
@@ -833,6 +855,11 @@ void in_a_cloud()
         }
         break;
 
+    case CLOUD_GLOOM:
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "a thick gloom");
+
+        break;
+
     default:
         break;
     }
@@ -887,6 +914,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_MIST:
     case CLOUD_RAIN:
     case CLOUD_MAGIC_TRAIL:
+    case CLOUD_GLOOM:
     case CLOUD_DEBUGGING:
         return (true);
     default:
@@ -963,6 +991,8 @@ std::string cloud_name(cloud_type type)
         return "mutagenic fog";
     case CLOUD_MAGIC_TRAIL:
         return "magical condensation";
+    case CLOUD_GLOOM:
+        return "gloom";
     default:
         return "buggy goodness";
     }
@@ -1078,6 +1108,7 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_PURPLE_SMOKE:
     case CLOUD_TLOC_ENERGY:
+    case CLOUD_GLOOM:
         which_colour = MAGENTA;
         break;
 

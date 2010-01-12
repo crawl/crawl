@@ -41,7 +41,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
-#include "transfor.h"
+#include "transform.h"
 
 
 id_arr type_ids;
@@ -308,6 +308,7 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_DRAGON_SLAYING: return ((terse) ? " (slay drac)":" of dragon slaying");
     case SPWPN_VENOM: return ((terse) ? " (venom)" : " of venom");
     case SPWPN_PROTECTION: return ((terse) ? " (protect)" : " of protection");
+    case SPWPN_EVASION: return ((terse) ? " (evade)" : " of evasion");
     case SPWPN_DRAINING: return ((terse) ? " (drain)" : " of draining");
     case SPWPN_SPEED: return ((terse) ? " (speed)" : " of speed");
     case SPWPN_PAIN: return ((terse) ? " (pain)" : " of pain");
@@ -584,7 +585,6 @@ static const char* jewellery_type_name(int jeweltype)
     case RING_ICE:                   return "ring of ice";
     case RING_TELEPORT_CONTROL:      return "ring of teleport control";
     case AMU_RAGE:              return "amulet of rage";
-    case AMU_RESIST_SLOW:       return "amulet of resist slowing";
     case AMU_CLARITY:           return "amulet of clarity";
     case AMU_WARDING:           return "amulet of warding";
     case AMU_RESIST_CORROSION:  return "amulet of resist corrosion";
@@ -594,6 +594,8 @@ static const char* jewellery_type_name(int jeweltype)
     case AMU_INACCURACY:        return "amulet of inaccuracy";
     case AMU_RESIST_MUTATION:   return "amulet of resist mutation";
     case AMU_GUARDIAN_SPIRIT:   return "amulet of guardian spirit";
+    case AMU_FAITH:             return "amulet of faith";
+    case AMU_STASIS:            return "amulet of stasis";
     default: return "buggy jewellery";
     }
 }
@@ -1123,7 +1125,7 @@ std::string item_def::name_aux(description_level_type desc,
             case SPMSL_CURARE:
                 buff << ((terse) ? "curare " : "curare-tipped ");
                 break;
-            case SPMSL_EXPLODING:
+           case SPMSL_EXPLODING:
                 buff << ((terse) ? "explode " : "exploding ");
                 break;
             case SPMSL_STEEL:
@@ -1137,6 +1139,17 @@ std::string item_def::name_aux(description_level_type desc,
                 break;
             }
 
+        }
+
+        if (know_cosmetic && !know_brand)
+        {
+            switch (get_equip_desc(*this))
+            {
+            case ISFLAG_GLOWING:
+                if (!testbits(ignore_flags, ISFLAG_GLOWING))
+                    buff << "glowing ";
+                break;
+            }
         }
 
         if (know_pluses)
@@ -1166,6 +1179,24 @@ std::string item_def::name_aux(description_level_type desc,
             case SPMSL_EXPLODING:
             case SPMSL_STEEL:
             case SPMSL_SILVER:
+                break;
+            case SPMSL_PARALYSIS:
+                buff << ((terse) ? " (paralysis)" : " of paralysis");
+                break;
+            case SPMSL_SLOW:
+                buff << ((terse) ? " (slow)" : " of slowing");
+                break;
+            case SPMSL_SLEEP:
+                buff << ((terse) ? " (sleep)" : " of sleeping");
+                break;
+            case SPMSL_CONFUSION:
+                buff << ((terse) ? " (conf)" : " of confusion");
+                break;
+            case SPMSL_SICKNESS:
+                buff << ((terse) ? " (sick)" : " of sickening");
+                break;
+            case SPMSL_RAGE:
+                buff << ((terse) ? " (frenzy)" : " of frenzy");
                 break;
             case SPMSL_RETURNING:
                 buff << ((terse) ? " (return)" : " of returning");
@@ -1618,6 +1649,17 @@ std::string item_def::name_aux(description_level_type desc,
         }
         else
         {
+            if (item_is_rod(*this) && know_type && know_pluses
+                && !basename && !qualname && !dbname)
+            {
+                short rmod = 0;
+                if (props.exists("rod_enchantment"))
+                    rmod = props["rod_enchantment"];
+
+                output_with_sign(buff, rmod);
+                buff << " ";
+            }
+
             buff << (item_is_rod(*this) ? "rod" : "staff")
                  << " of " << staff_type_name(item_typ);
         }
@@ -1783,6 +1825,7 @@ bool item_type_known( const item_def& item )
         int ammo_brand = get_ammo_brand(item);
         if (ammo_brand == SPMSL_POISONED
             || ammo_brand == SPMSL_CURARE
+            || (ammo_brand >= SPMSL_PARALYSIS && ammo_brand <= SPMSL_RAGE)
             || ammo_brand == SPMSL_STEEL
             || ammo_brand == SPMSL_SILVER)
         {
@@ -2570,8 +2613,6 @@ bool is_useless_item(const item_def &item, bool temp)
         {
         case SPWPN_HOLY_WRATH:
             return (you.is_undead);
-        case SPWPN_PAIN:
-            return (temp && !you.skills[SK_NECROMANCY] && !is_artefact(item));
         }
         return (false);
 
@@ -2691,6 +2732,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return (player_likes_chunks(true)
                        || (player_mutation_level(MUT_HERBIVOROUS) == 3)
                        || you.species == SP_MUMMY);
+
+        case AMU_FAITH:
+            return (you.species == SP_DEMIGOD);
 
         case RING_LIFE_PROTECTION:
             return (player_prot_life(false, temp, false) == 3);

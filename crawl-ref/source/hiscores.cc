@@ -1140,11 +1140,7 @@ void scorefile_entry::init()
     gold_found = you.attribute[ATTR_GOLD_FOUND];
     gold_spent = you.attribute[ATTR_PURCHASES];
 
-#ifdef WIZARD
     wiz_mode = (you.wizard ? 1 : 0);
-#else
-    wiz_mode = 0;
-#endif
 }
 
 std::string scorefile_entry::hiscore_line(death_desc_verbosity verbosity) const

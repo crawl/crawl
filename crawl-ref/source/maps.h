@@ -17,6 +17,10 @@ class map_def;
 struct map_file_place;
 struct vault_placement;
 
+bool map_safe_vault_place(const map_def &md,
+                          const coord_def &c,
+                          const coord_def &size);
+
 int vault_main(vault_placement &vp, const map_def *vault,
                bool check_place = false);
 
@@ -48,6 +52,7 @@ std::vector<map_def> find_maps_for_tag (const std::string tag,
 int weight_map_vector (std::vector<map_def> maps);
 
 void read_maps();
+void sanity_check_maps();
 void read_map(const std::string &file);
 void run_map_preludes();
 void reset_map_parser();

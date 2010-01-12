@@ -44,7 +44,7 @@
 #include "spells2.h"
 #include "state.h"
 #include "stuff.h"
-#include "transfor.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "xom.h"
 
@@ -2433,7 +2433,8 @@ bool is_preferred_food(const item_def &food)
     if (food.base_type != OBJ_FOOD)
         return (false);
 
-    if (is_poisonous(food))
+    // Poisoned, mutagenic, etc. food should never be marked as "preferred".
+    if (_is_bad_food(food))
         return (false);
 
     // Honeycombs are tasty for everyone.

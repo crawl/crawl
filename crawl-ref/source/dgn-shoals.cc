@@ -62,6 +62,7 @@ const int CALL_TIDE_VELOCITY = 21;
 // The area around the user of a call tide spell that is subject to
 // local tide elevation.
 const int TIDE_CALL_RADIUS = 8;
+const int MAX_SHOAL_PLANTS = 180;
 
 const int _shoals_margin = 6;
 
@@ -85,6 +86,7 @@ static monsters *tide_caller = NULL;
 static coord_def tide_caller_pos;
 static long tide_called_turns = 0L;
 static int tide_called_peak = 0;
+static int shoals_plant_quota = 0;
 
 static dungeon_feature_type _shoals_feature_by_height(int height)
 {
@@ -294,14 +296,6 @@ static void _shoals_apply_level()
         grd(*ri) = _shoals_feature_at(*ri);
 }
 
-static bool _has_adjacent_feat(coord_def c, dungeon_feature_type feat)
-{
-    for (adjacent_iterator ai(c); ai; ++ai)
-        if (grd(*ai) == feat)
-            return true;
-    return false;
-}
-
 // Returns all points in deep water with an adjacent square in shallow water.
 static std::vector<coord_def> _shoals_water_depth_change_points()
 {
@@ -310,7 +304,7 @@ static std::vector<coord_def> _shoals_water_depth_change_points()
     {
         coord_def c(*ri);
         if (grd(c) == DNGN_DEEP_WATER
-            && _has_adjacent_feat(c, DNGN_SHALLOW_WATER))
+            && dgn_has_adjacent_feat(c, DNGN_SHALLOW_WATER))
             points.push_back(c);
     }
     return points;
@@ -367,28 +361,26 @@ static coord_def _pick_shoals_island()
     return c;
 }
 
-struct point_sort_distance_from
+void place_feature_at_random_floor_square(dungeon_feature_type feat,
+                                          unsigned mask = MMT_VAULT)
 {
-    coord_def bad_place;
-    point_sort_distance_from(coord_def c) : bad_place(c) { }
-    bool operator () (coord_def a, coord_def b) const
+    const coord_def place =
+        dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
+    if (place.origin())
+        dgn_veto_level();
+    else
+        grd(place) = feat;
+}
+
+static void _shoals_place_stairs()
+{
+    for (int i = 0; i < 3; ++i)
     {
-        const int dista = (a - bad_place).abs(), distb = (b - bad_place).abs();
-        return dista >= distb;
+        place_feature_at_random_floor_square(
+            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
+        place_feature_at_random_floor_square(
+            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i));
     }
-};
-
-static coord_def _pick_shoals_island_distant_from(coord_def bad_place)
-{
-    ASSERT(!_shoals_islands.empty());
-
-    std::sort(_shoals_islands.begin(), _shoals_islands.end(),
-              point_sort_distance_from(bad_place));
-    const int top_picks = std::min(4, int(_shoals_islands.size()));
-    const int choice = random2(top_picks);
-    coord_def chosen = _shoals_islands[choice];
-    _shoals_islands.erase(_shoals_islands.begin() + choice);
-    return chosen;
 }
 
 static void _shoals_furniture(int margin)
@@ -398,15 +390,9 @@ static void _shoals_furniture(int margin)
         unwind_var<dungeon_feature_set> vault_exc(dgn_Vault_Excavatable_Feats);
         dgn_Vault_Excavatable_Feats.insert(DNGN_STONE_WALL);
 
-        const coord_def c = _pick_shoals_island();
-        // Put all the stairs on one island.
-        grd(c) = DNGN_STONE_STAIRS_UP_I;
-        grd(c + coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_II;
-        grd(c - coord_def(1, 0)) = DNGN_STONE_STAIRS_UP_III;
-        dgn_excavate(c, dgn_random_direction());
-
-        const coord_def p = _pick_shoals_island_distant_from(c);
-        const map_def *vault = random_map_for_tag("shoal_rune");
+        const coord_def p = _pick_shoals_island();
+        const char *SHOAL_RUNE_HUT = "shoal_rune";
+        const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
         {
             // Place the rune
             dgn_map_parameters mp("rune");
@@ -425,36 +411,19 @@ static void _shoals_furniture(int margin)
                 vault = random_map_for_tag("shoal_rune");
             while (!vault && --tries > 0);
             if (vault)
-                dgn_place_map(vault, false, true, _pick_shoals_island(), 0);
+                dgn_place_map(vault, false, false, _pick_shoals_island(), 0);
         }
-    }
-    else
-    {
-        // Place stairs randomly. No elevators.
-        for (int i = 0; i < 3; ++i)
+
+        // Fixup pass to connect vaults.
+        for (int i = 0, size = Level_Vaults.size(); i < size; ++i)
         {
-            int x, y;
-            do
-            {
-                x = margin + random2(GXM - 2*margin);
-                y = margin + random2(GYM - 2*margin);
-            }
-            while (grd[x][y] != DNGN_FLOOR);
-
-            grd[x][y]
-              = static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i);
-
-            do
-            {
-                x = margin + random2(GXM - 2*margin);
-                y = margin + random2(GYM - 2*margin);
-            }
-            while (grd[x][y] != DNGN_FLOOR);
-
-            grd[x][y]
-                = static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i);
+            vault_placement &vp(Level_Vaults[i]);
+            if (vp.map.has_tag(SHOAL_RUNE_HUT))
+                dgn_dig_vault_loose(vp);
         }
     }
+
+    _shoals_place_stairs();
 }
 
 static void _shoals_deepen_edges()
@@ -615,9 +584,13 @@ static coord_def _shoals_pick_region(
 
 static void _shoals_make_plant_at(coord_def p)
 {
-    // [ds] Why is hostile_at() saddled with unnecessary parameters
-    // related to summoning?
-    mons_place(mgen_data::hostile_at(MONS_PLANT, "", false, 0, 0, p));
+    if (shoals_plant_quota > 0)
+    {
+        // [ds] Why is hostile_at() saddled with unnecessary parameters
+        // related to summoning?
+        mons_place(mgen_data::hostile_at(MONS_PLANT, "", false, 0, 0, p));
+        --shoals_plant_quota;
+    }
 }
 
 static bool _shoals_plantworthy_feat(dungeon_feature_type feat)
@@ -629,6 +602,9 @@ static void _shoals_make_plant_near(coord_def c, int radius,
                                     dungeon_feature_type preferred_feat,
                                     grid_bool *verboten)
 {
+    if (shoals_plant_quota <= 0)
+        return;
+
     const int ntries = 5;
     for (int i = 0; i < ntries; ++i)
     {
@@ -660,7 +636,7 @@ static void _shoals_plant_supercluster(coord_def c,
                                        dungeon_feature_type favoured_feat,
                                        grid_bool *verboten = NULL)
 {
-    _shoals_plant_cluster(c, random_range(10, 25, 2),
+    _shoals_plant_cluster(c, random_range(10, 17, 2),
                           random_range(3, 9), favoured_feat,
                           verboten);
 
@@ -670,7 +646,7 @@ static void _shoals_plant_supercluster(coord_def c,
         const coord_def satellite(
             _random_point_from(c, random_range(2, 12)));
         if (!satellite.origin())
-            _shoals_plant_cluster(satellite, random_range(5, 23, 2),
+            _shoals_plant_cluster(satellite, random_range(5, 12, 2),
                                   random_range(2, 7),
                                   favoured_feat,
                                   verboten);
@@ -753,8 +729,8 @@ static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
     {
         const coord_def p(*ri);
         if (!windy(p) && grd(p) == DNGN_FLOOR
-            && (_has_adjacent_feat(p, DNGN_STONE_WALL)
-                || _has_adjacent_feat(p, DNGN_ROCK_WALL)))
+            && (dgn_has_adjacent_feat(p, DNGN_STONE_WALL)
+                || dgn_has_adjacent_feat(p, DNGN_ROCK_WALL)))
             wind_shadows.push_back(p);
     }
     return wind_shadows;
@@ -784,6 +760,8 @@ static void _shoals_generate_flora()
     //
     const int n_water_clusters = std::max(0, random_range(-1, 6, 2));
     const int n_wind_clusters = std::max(0, random_range(-2, 2, 2));
+
+    shoals_plant_quota = MAX_SHOAL_PLANTS;
 
     if (n_water_clusters)
     {

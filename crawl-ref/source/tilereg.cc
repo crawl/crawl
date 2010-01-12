@@ -43,7 +43,7 @@
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "transfor.h"
+#include "transform.h"
 #include "travel.h"
 #include "viewgeom.h"
 
@@ -918,17 +918,22 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
         m_buf_main.add(TILE_HEART, x, y);
         status_shift += 10;
     }
-    else if ((fg & TILE_FLAG_MAY_STAB) == TILE_FLAG_NEUTRAL)
+    else if (fg & TILE_FLAG_GD_NEUTRAL)
+    {
+        m_buf_main.add(TILE_GOOD_NEUTRAL, x, y);
+        status_shift += 8;
+    }
+    else if (fg & TILE_FLAG_NEUTRAL)
     {
         m_buf_main.add(TILE_NEUTRAL, x, y);
         status_shift += 8;
     }
-    else if ((fg & TILE_FLAG_MAY_STAB) == TILE_FLAG_STAB)
+    else if (fg & TILE_FLAG_STAB)
     {
         m_buf_main.add(TILE_STAB_BRAND, x, y);
         status_shift += 8;
     }
-    else if ((fg & TILE_FLAG_MAY_STAB) == TILE_FLAG_MAY_STAB)
+    else if (fg & TILE_FLAG_MAY_STAB)
     {
         m_buf_main.add(TILE_MAY_STAB_BRAND, x, y);
         status_shift += 5;
@@ -2169,8 +2174,9 @@ void InventoryRegion::render()
 
         bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
 
-        int x = m_cursor.x * dx + sx + ox + dx / 2;
-        int y = m_cursor.y * dy + sy + oy;
+        // Always draw the description in the inventory header. (jpeg)
+        int x = sx + ox + dx / 2;
+        int y = sy + oy;
 
         const coord_def min_pos(sx, sy - dy);
         const coord_def max_pos(ex, ey);
@@ -2942,9 +2948,10 @@ void MapRegion::init_colours()
     m_colours[MF_MAP_WALL]      = (map_colour)Options.tile_mapped_wall_col;
     m_colours[MF_DOOR]          = (map_colour)Options.tile_door_col;
     m_colours[MF_ITEM]          = (map_colour)Options.tile_item_col;
-    m_colours[MF_MONS_HOSTILE]  = (map_colour)Options.tile_monster_col;
     m_colours[MF_MONS_FRIENDLY] = (map_colour)Options.tile_friendly_col;
+    m_colours[MF_MONS_PEACEFUL] = (map_colour)Options.tile_peaceful_col;
     m_colours[MF_MONS_NEUTRAL]  = (map_colour)Options.tile_neutral_col;
+    m_colours[MF_MONS_HOSTILE]  = (map_colour)Options.tile_monster_col;
     m_colours[MF_MONS_NO_EXP]   = (map_colour)Options.tile_plant_col;
     m_colours[MF_STAIR_UP]      = (map_colour)Options.tile_upstairs_col;
     m_colours[MF_STAIR_DOWN]    = (map_colour)Options.tile_downstairs_col;

@@ -1,5 +1,5 @@
 /*
- *  File:       transfor.h
+ *  File:       transform.h
  *  Summary:    Misc function related to player transformations.
  *  Written by: Linley Henzell
  */

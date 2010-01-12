@@ -87,6 +87,7 @@ int god_colour(god_type god);
 bool player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);
+int piety_scale(int piety_change);
 void offer_items();
 bool god_hates_your_god(god_type god,
                         god_type your_god = you.religion);
@@ -133,6 +134,8 @@ void religion_turn_start();
 void religion_turn_end();
 
 int get_tension(god_type god = you.religion, bool count_travelling = true);
+
+void do_god_gift(bool prayed_for = false, bool force = false);
 
 std::vector<god_type> temple_god_list();
 #endif

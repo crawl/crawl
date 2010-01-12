@@ -46,12 +46,6 @@ void clua_push_map(lua_State *ls, map_def *map)
     *mapref = map;
 }
 
-void clua_push_coord(lua_State *ls, const coord_def &c)
-{
-    lua_pushnumber(ls, c.x);
-    lua_pushnumber(ls, c.y);
-}
-
 void clua_push_dgn_event(lua_State *ls, const dgn_event *devent)
 {
     const dgn_event **de =
@@ -110,6 +104,8 @@ int clua_stringtable(lua_State *ls, const std::vector<std::string> &s)
     return clua_gentable(ls, s, clua_pushcxxstring);
 }
 
+// Pushes a coord_def as a dgn.point Lua object. Note that this is quite
+// different from dlua_pushcoord.
 int clua_pushpoint(lua_State *ls, const coord_def &pos)
 {
     lua_pushnumber(ls, pos.x);

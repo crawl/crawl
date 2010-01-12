@@ -487,8 +487,8 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
 void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
                                   unsigned char force_colour)
 {
-    // Midpoint: 10, as in mon-data.h.
-    speed = 9 + random2(3);
+    // Move speed: 11, the same as in mon-data.h.
+    speed = 11;
 
     // Midpoint: 10, as in mon-data.h.
     ev = 9 + random2(3);

@@ -366,7 +366,7 @@ static int Missile_index[NUM_MISSILES];
 static missile_def Missile_prop[NUM_MISSILES] =
 {
     { MI_NEEDLE,        "needle",        0,    1, false },
-    { MI_STONE,         "stone",         4,    2, true  },
+    { MI_STONE,         "stone",         4,    6, true  },
     { MI_DART,          "dart",          5,    3, true  },
     { MI_ARROW,         "arrow",         7,    5, false },
     { MI_BOLT,          "bolt",          9,    5, false },
@@ -582,6 +582,14 @@ void set_ident_flags( item_def &item, unsigned long flags )
         // Sometimes (e.g. shops) you can ID an item before you get it;
         // don't note twice in those cases.
         item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+    }
+
+    if (item.flags & ISFLAG_KNOW_TYPE && !is_artefact(item))
+    {
+        if (item.base_type == OBJ_WEAPONS)
+            you.seen_weapon[item.sub_type] |= 1 << item.special;
+        if (item.base_type == OBJ_ARMOUR)
+            you.seen_armour[item.sub_type] |= 1 << item.special;
     }
 }
 
@@ -1096,7 +1104,9 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
         if (item_ident(it, ISFLAG_KNOW_PLUSES))
         {
             return (it.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT
-                    || it.plus < it.plus2);
+                    || it.plus < it.plus2
+                    || !it.props.exists("rod_enchantment")
+                    || short(it.props["rod_enchantment"]) < MAX_WPN_ENCHANT);
         }
         return (true);
     }
@@ -1305,6 +1315,8 @@ int get_damage_type(const item_def &item)
 {
     int ret = DAM_BASH;
 
+    if (item_is_rod(item))
+        ret = DAM_BLUDGEON;
     if (item.base_type == OBJ_WEAPONS)
         ret = (Weapon_prop[Weapon_index[item.sub_type]].dam_type & DAM_MASK);
 
@@ -1384,7 +1396,8 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
         // Adjust handedness for size only for non-whip melee weapons.
         if (!is_range_weapon(item)
             && item.sub_type != WPN_WHIP
-            && item.sub_type != WPN_DEMON_WHIP)
+            && item.sub_type != WPN_DEMON_WHIP
+            && item.sub_type != WPN_HOLY_SCOURGE)
         {
             fit = cmp_weapon_size(item, size);
 
@@ -1633,6 +1646,8 @@ skill_type weapon_skill( const item_def &item )
 {
     if (item.base_type == OBJ_WEAPONS && !is_range_weapon( item ))
         return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
+    else if (item_is_rod( item ))
+        return (SK_MACES_FLAILS); // Rods are short and stubby
     else if (item.base_type == OBJ_STAVES)
         return (SK_STAVES);
 
@@ -1836,7 +1851,8 @@ const char *ammo_name(const item_def &bow)
 bool has_launcher(const item_def &ammo)
 {
     ASSERT(ammo.base_type == OBJ_MISSILES);
-    return (ammo.sub_type != MI_LARGE_ROCK
+    return (ammo.sub_type != MI_DART
+            && ammo.sub_type != MI_LARGE_ROCK
             && ammo.sub_type != MI_JAVELIN
             && ammo.sub_type != MI_THROWING_NET);
 }
@@ -2061,6 +2077,8 @@ int corpse_freshness(const item_def &item)
 //
 int property(const item_def &item, int prop_type)
 {
+    weapon_type weapon_sub;
+
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
@@ -2087,12 +2105,14 @@ int property(const item_def &item, int prop_type)
         break;
 
     case OBJ_STAVES:
+        weapon_sub = item_is_rod(item) ? WPN_CLUB : WPN_QUARTERSTAFF;
+
         if (prop_type == PWPN_DAMAGE)
-            return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].dam);
+            return (Weapon_prop[ Weapon_index[weapon_sub] ].dam);
         else if (prop_type == PWPN_HIT)
-            return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].hit);
+            return (Weapon_prop[ Weapon_index[weapon_sub] ].hit);
         else if (prop_type == PWPN_SPEED)
-            return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].speed);
+            return (Weapon_prop[ Weapon_index[weapon_sub] ].speed);
         break;
 
     default:
@@ -2482,4 +2502,16 @@ std::string item_base_name(const item_def &item)
 const char* weapon_base_name(unsigned char subtype)
 {
     return Weapon_prop[Weapon_index[subtype]].name;
+}
+
+void seen_item(const item_def &item)
+{
+    if (!is_artefact(item))
+    {
+        // Known brands will be set in set_item_flags().
+        if (item.base_type == OBJ_WEAPONS)
+            you.seen_weapon[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
+        if (item.base_type == OBJ_ARMOUR)
+            you.seen_armour[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
+    }
 }

@@ -40,7 +40,7 @@
 #include "spl-mis.h"
 #include "stash.h"
 #include "state.h"
-#include "transfor.h"
+#include "transform.h"
 #include "shout.h"
 #include "xom.h"
 
@@ -91,8 +91,9 @@ static bool _okawaru_random_servant()
                                  : MONS_TITAN);            //  5%
 
     return (create_monster(
-                    mgen_data::hostile_at(mon_type, "the fury of Okawaru",
-                        true, 0, 0, you.pos(), 0, GOD_OKAWARU)) != -1);
+                mgen_data::hostile_at(mon_type, "the fury of Okawaru",
+                                      true, 6, MON_SUMM_WRATH, you.pos(), 0,
+                                      GOD_OKAWARU)) != -1);
 }
 
 static bool _tso_retribution()
@@ -336,7 +337,7 @@ static bool _cheibriados_retribution()
     case 2:
     case 3:
         mpr("You lose track of time.");
-        you.put_to_sleep(50);
+        you.put_to_sleep(NULL, 50);
         break;
 
     case 4:

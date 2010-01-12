@@ -136,6 +136,11 @@ function iter.rect_iterator(top_corner, bottom_corner, filter, rvi)
   return iter.rectangle_iterator:new(top_corner, bottom_corner, filter, rvi)
 end
 
+function iter.rect_size_iterator(top_corner, size, filter, rvi)
+  return iter.rect_iterator(top_corner, top_corner + size - dgn.point(1, 1),
+                            filter, rvi)
+end
+
 function iter.mons_rect_iterator (top_corner, bottom_corner, filter)
   return iter.rect_iterator(top_corner, bottom_corner, iter.monster_filter(filter), true)
 end
@@ -212,7 +217,7 @@ function iter.adjacent_iterator (ic, filter, center, rvi)
 
   local function check_adj (point)
     local _x, _y = point:xy()
-    local npoint = nil
+    local npoint = point
 
     if filter ~= nil then
       if rvi then
@@ -246,8 +251,12 @@ function iter.mons_adjacent_iterator (ic, filter, center)
   return iter.adjacent_iterator(ic, iter.monster_filter(filter), center, true)
 end
 
+function iter.adjacent_iterator_to(center, include_center, filter)
+  return iter.adjacent_iterator(include_center, filter, center, true)
+end
+
 -------------------------------------------------------------------------------
--- circle_iterator
+-- Circle_iterator
 -------------------------------------------------------------------------------
 
 function iter.circle_iterator (radius, ic, filter, center, rvi)
@@ -329,7 +338,7 @@ function iter.stack_search (coord, term, extra)
 
   local stack = dgn.items_at(_x, _y)
   if #stack == 0 then
-    error("no stack at " .. _x .. "/" .. _y)
+    return nil
   end
 
   for _, item in ipairs(stack) do
@@ -338,7 +347,7 @@ function iter.stack_search (coord, term, extra)
     end
   end
 
-  return false
+  return nil
 end
 
 function iter.stack_destroy(coord, extra)
@@ -449,7 +458,7 @@ end
 function iter.point_iterator:check_filter(point)
   if self.filter ~= nil then
     if self.filter(point) then
-      if self.rvi then 
+      if self.rvi then
         return self.filter(point)
       else
         return point
@@ -513,7 +522,7 @@ end
 function iter.invent_iterator:check_filter(item)
   if self.filter ~= nil then
     if self.filter(item) then
-      if self.rvi then 
+      if self.rvi then
         return self.filter(item)
       else
         return item

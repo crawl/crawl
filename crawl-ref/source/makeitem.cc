@@ -22,6 +22,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "food.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "misc.h"
@@ -598,7 +599,7 @@ void item_colour(item_def &item)
             break;
         }
 
-        if (item.sub_type >= AMU_RAGE)
+        if (item.sub_type >= AMU_FIRST_AMULET)
         {
             switch (switchnum)
             {
@@ -1419,7 +1420,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             else if (tmp < 880 && (item.sub_type == WPN_BOW || item.sub_type == WPN_LONGBOW))
                 rc = SPWPN_REAPING;
             else if (tmp < 880)
-                rc = SPWPN_PROTECTION;
+                rc = SPWPN_EVASION;
             else if (tmp < 990)
                 rc = SPWPN_VORPAL;
 
@@ -1441,7 +1442,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VORPAL;
 
-            if (one_chance_in(5))
+            if (one_chance_in(6))
                 rc = SPWPN_PROTECTION;
             break;
 
@@ -1567,6 +1568,7 @@ bool is_weapon_brand_ok(int type, int brand)
     case SPWPN_FLAME:
     case SPWPN_FROST:
     case SPWPN_PENETRATION:
+    case SPWPN_EVASION:
         if (!is_range_weapon(item))
             return (false);
         break;
@@ -1824,7 +1826,18 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     switch (item.sub_type)
     {
     case MI_NEEDLE:
-        rc = got_curare_roll(item_level) ? SPMSL_CURARE : SPMSL_POISONED;
+        // Curare is special cased, all the others aren't.
+        if (got_curare_roll(item_level))
+        {
+            rc = SPMSL_CURARE;
+            break;
+        }
+
+        rc = static_cast<special_missile_type>(
+                         random_choose_weighted(30, SPMSL_PARALYSIS, 30, SPMSL_SLOW,
+                                                30, SPMSL_SLEEP, 40, SPMSL_CONFUSION,
+                                                20, SPMSL_SICKNESS, 10, SPMSL_RAGE,
+                                                nw, SPMSL_POISONED, 0));
         break;
     case MI_DART:
         rc = static_cast<special_missile_type>(
@@ -1838,25 +1851,25 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_ARROW:
         rc = static_cast<special_missile_type>(
                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED, 10, SPMSL_CHAOS,
-                                               10, SPMSL_REAPING, 10, SPMSL_DISPERSAL,
+                                               20, SPMSL_POISONED, 15, SPMSL_REAPING,
+                                               15, SPMSL_DISPERSAL,
                                                nw, SPMSL_NORMAL,
                                                0));
         break;
     case MI_BOLT:
         rc = static_cast<special_missile_type>(
                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED, 10, SPMSL_PENETRATION,
-                                               10, SPMSL_CHAOS, 10, SPMSL_SILVER,
+                                               20, SPMSL_POISONED, 15, SPMSL_PENETRATION,
+                                               15, SPMSL_SILVER,
                                                10, SPMSL_STEEL, nw, SPMSL_NORMAL,
                                                0));
         break;
     case MI_JAVELIN:
         rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_RETURNING, 30, SPMSL_PENETRATION,
-                                               30, SPMSL_POISONED,
-                                               20, SPMSL_STEEL, 20, SPMSL_SILVER,
-                                               10, SPMSL_CHAOS, nw, SPMSL_NORMAL,
+                        random_choose_weighted(30, SPMSL_RETURNING, 32, SPMSL_PENETRATION,
+                                               32, SPMSL_POISONED,
+                                               21, SPMSL_STEEL, 20, SPMSL_SILVER,
+                                               nw, SPMSL_NORMAL,
                                                0));
         break;
     case MI_STONE:
@@ -1868,15 +1881,15 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_SLING_BULLET:
         rc = static_cast<special_missile_type>(
                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED, 10, SPMSL_CHAOS,
-                                               10, SPMSL_STEEL, 10, SPMSL_SILVER,
+                                               20, SPMSL_POISONED,
+                                               15, SPMSL_STEEL, 15, SPMSL_SILVER,
                                                20, SPMSL_EXPLODING, nw, SPMSL_NORMAL,
                                                0));
         break;
     case MI_THROWING_NET:
         rc = static_cast<special_missile_type>(
                         random_choose_weighted(30, SPMSL_STEEL, 30, SPMSL_SILVER,
-                                               20, SPMSL_CHAOS, nw, SPMSL_NORMAL,
+                                               nw, SPMSL_NORMAL,
                                                0));
         break;
     }
@@ -1885,11 +1898,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
         rc = SPMSL_POISONED;
 
-    bool missile_brand_ok = is_missile_brand_ok(item.sub_type, rc);
-    if (!missile_brand_ok)
-    {
-        ASSERT(false);
-    }
+    ASSERT(is_missile_brand_ok(item.sub_type, rc));
 
     return rc;
 }
@@ -1901,8 +1910,16 @@ bool is_missile_brand_ok(int type, int brand)
         return (false);
 
     // In contrast, needles should always be branded.
-    if (type == MI_NEEDLE && (brand == SPMSL_POISONED || brand == SPMSL_CURARE))
-        return (true);
+    if (type == MI_NEEDLE)
+    {
+        switch (brand)
+        {
+        case SPMSL_POISONED: case SPMSL_CURARE: case SPMSL_PARALYSIS:
+        case SPMSL_SLOW: case SPMSL_SLEEP: case SPMSL_CONFUSION:
+        case SPMSL_SICKNESS: case SPMSL_RAGE: return (true);
+        default: return (false);
+        }
+    }
 
     // Everything else doesn't matter.
     if (brand == SPMSL_NORMAL)
@@ -1942,6 +1959,7 @@ bool is_missile_brand_ok(int type, int brand)
     case SPMSL_SILVER:
         return (type == MI_BOLT || type == MI_SLING_BULLET
                 || type == MI_JAVELIN || type == MI_THROWING_NET);
+    default: break;
     }
 
     // Assume yes, if we've gotten this far.
@@ -1966,8 +1984,8 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    20, MI_DART,
                                    20, MI_ARROW,
                                    12, MI_BOLT,
+                                   12, MI_SLING_BULLET,
                                    10, MI_NEEDLE,
-                                   5,  MI_SLING_BULLET,
                                    2,  MI_JAVELIN,
                                    1,  MI_THROWING_NET,
                                    0);
@@ -2000,8 +2018,9 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     // Reduced quantity if special.
     if (item.sub_type == MI_JAVELIN
-        || get_ammo_brand( item ) == SPMSL_CURARE
-        || get_ammo_brand( item ) == SPMSL_RETURNING)
+        || get_ammo_brand( item ) == SPMSL_RETURNING
+        || (item.sub_type == MI_NEEDLE
+            && get_ammo_brand( item ) != SPMSL_POISONED))
     {
         item.quantity = random_range(2, 8);
     }
@@ -2876,7 +2895,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
     }
 }
 
-static void _generate_staff_item(item_def& item, int force_type)
+static void _generate_staff_item(item_def& item, int force_type, int item_level)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -2899,7 +2918,7 @@ static void _generate_staff_item(item_def& item, int force_type)
     }
 
     if (item_is_rod(item))
-        init_rod_mp(item);
+        init_rod_mp(item, -1, item_level);
 }
 
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
@@ -3198,7 +3217,7 @@ int items(int allow_uniques,       // not just true-false,
         break;
 
     case OBJ_STAVES:
-        _generate_staff_item(item, force_type);
+        _generate_staff_item(item, force_type, item_level);
         break;
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
@@ -3214,8 +3233,13 @@ int items(int allow_uniques,       // not just true-false,
         item.base_type = OBJ_GOLD;
         if (force_good)
         {
-            item.quantity = 150 + random2(150)
-                            + random2(random2(random2(2000)));
+            // New gold acquirement formula from dpeg.
+	    // Min=220, Max=5520, Mean=1218, Std=911
+            item.quantity = 10 * (20
+                                  + roll_dice(1, 20)
+                                  + (roll_dice(1, 8)
+                                     * roll_dice(1, 8)
+                                     * roll_dice(1, 8)));
         }
         else
             item.quantity = 1 + random2avg(19, 2) + random2(item_level);
@@ -3270,19 +3294,65 @@ int items(int allow_uniques,       // not just true-false,
     return (p);
 }
 
-void init_rod_mp(item_def &item, int ncharges)
+void reroll_brand(item_def &item, int item_level)
+{
+    ASSERT(!is_artefact(item));
+    switch(item.base_type)
+    {
+    case OBJ_WEAPONS:
+        item.special = _determine_weapon_brand(item, item_level);
+        break;
+    case OBJ_MISSILES:
+        item.special = _determine_missile_brand(item, item_level);
+        break;
+    case OBJ_ARMOUR:
+        // Robe of the Archmagi has an ugly hack of unknown purpose,
+        // as one of side effects it won't ever generate here.
+        item.special = _determine_armour_ego(item, OBJ_ARMOUR, item_level);
+        break;
+    default:
+        ASSERT(!"can't reroll brands of this type");
+    }
+}
+
+static int _roll_rod_enchant(int item_level)
+{
+    int value = 0;
+
+    if (one_chance_in(4))
+        value -= random_range(1, 3);
+
+    if (item_level == MAKE_GOOD_ITEM)
+        value += 2;
+
+    int pr = 20 + item_level * 2;
+
+    if (pr > 80)
+        pr = 80;
+
+    while (random2(100) < pr) value++;
+
+    return stepdown_value(value, 4, 4, 4, 9);
+}
+
+void init_rod_mp(item_def &item, int ncharges, int item_level)
 {
     if (!item_is_rod(item))
         return;
 
     if (ncharges != -1)
+    {
         item.plus2 = ncharges * ROD_CHARGE_MULT;
+        item.props["rod_enchantment"] = (short)0;
+    }
     else
     {
         if (item.sub_type == STAFF_STRIKING)
             item.plus2 = random_range(6, 9) * ROD_CHARGE_MULT;
         else
             item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
+
+        item.props["rod_enchantment"] = (short)_roll_rod_enchant(item_level);
     }
 
     item.plus = item.plus2;
@@ -3326,6 +3396,25 @@ static bool _armour_is_visibly_special(const item_def &item)
         return (false);
 
     if (item.plus && !one_chance_in(3))
+        return (true);
+
+    return (false);
+}
+
+static bool _missile_is_visibly_special(const item_def &item)
+{
+    const int brand = item.special;
+
+    // Obviously branded missiles don't get any special stuff.
+    if (item_type_known(item))
+        return (false);
+
+    // All ego missiles do.
+    if (brand != SPMSL_NORMAL)
+        return (true);
+
+    // And positively enchanted do, too.
+    if (item.plus)
         return (true);
 
     return (false);
@@ -3488,6 +3577,11 @@ void item_set_appearance(item_def &item)
 
             set_equip_desc(item, RANDOM_ELEMENT(descs));
         }
+        break;
+
+    case OBJ_MISSILES:
+        if (_missile_is_visibly_special(item))
+            set_equip_desc(item, ISFLAG_GLOWING);
         break;
 
     default:

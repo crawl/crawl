@@ -51,7 +51,7 @@
 #include "env.h"
 #include "spl-cast.h"
 #include "spl-util.h"
-#include "transfor.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "xom.h"
 
@@ -144,7 +144,6 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_FIRE:              return "Fire";
     case RING_ICE:               return "Ice";
     case RING_TELEPORT_CONTROL:  return "cTele";
-    case AMU_RESIST_SLOW:        return "rSlow";
     case AMU_CLARITY:            return "Clar";
     case AMU_WARDING:            return "Ward";
     case AMU_RESIST_CORROSION:   return "rCorr";
@@ -153,6 +152,8 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_CONTROLLED_FLIGHT:  return "cFly";
     case AMU_RESIST_MUTATION:    return "rMut";
     case AMU_GUARDIAN_SPIRIT:    return "Spirit";
+    case AMU_FAITH:              return "Faith";
+    case AMU_STASIS:             return "Stasis";
     }
     return "";
 }
@@ -776,6 +777,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += "It protects the one who wields it against "
                 "injury (+5 to AC).";
             break;
+        case SPWPN_EVASION:
+            description += "It affects your evasion (+5 to EV).";
+            break;
         case SPWPN_DRAINING:
             description += "A truly terrible weapon, it drains the "
                 "life of those it strikes.";
@@ -1069,7 +1073,25 @@ static std::string _describe_ammo(const item_def &item)
         case SPMSL_CURARE:
             description += "It is tipped with asphyxiating poison.";
             break;
-        case SPMSL_RETURNING:
+        case SPMSL_PARALYSIS:
+            description += "It is tipped with a paralyzing poison.";
+            break;
+        case SPMSL_SLOW:
+            description += "It is coated with a poison that causes slowness of the body.";
+            break;
+        case SPMSL_SLEEP:
+            description += "It is coated with a fast-acting tranquilizer.";
+            break;
+        case SPMSL_CONFUSION:
+            description += "It is tipped with a substance that causes confusion.";
+            break;
+        case SPMSL_SICKNESS:
+            description += "It has been contaminated by something likely to cause disease.";
+            break;
+        case SPMSL_RAGE:
+            description += "It is tipped with a substance that causes a mindless, berserk rage.";
+            break;
+       case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
                 "that it will return to its owner.";
             break;
@@ -1923,6 +1945,10 @@ std::string get_item_description( const item_def &item, bool verbose,
                 else
                     description << desc;
             }
+            std::string stats = "";
+            append_weapon_stats(stats, item);
+            description << stats;
+            description << "$$It falls into the 'Maces & Flails' category.";
         }
         else
         {
@@ -2891,7 +2917,10 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     }
 
     case MONS_PLAYER_GHOST:
-        inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
+        if (mons.is_summoned())
+            inf.body << "An illusion of " << get_ghost_description(mons) << ".$";
+        else
+            inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
@@ -3233,7 +3262,7 @@ static std::string _religion_help(god_type god)
             && !you.num_gifts[god])
         {
             result += "You can pray at an altar to have your weapon "
-                      "blessed.";
+                      "corrupted.";
         }
         break;
 
@@ -3343,11 +3372,9 @@ const char *divine_title[NUM_GODS][8] =
     {"Scum",               "Jelly",                 "Squelcher",                "Dissolver",
      "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"},
 
-    // Fedhas Madash -- nature theme.  Titles could use some work, but the
-    // progression is generally from nature lover to walking disaster.
-    // -cao
-    {"Walking Fertiliser", "Green %s",              "Photosynthesist",          "Planter",
-     "Nimbus",             "Sporadic Warrior",      "Green Death",              "Force of Nature"},
+    // Fedhas Madash -- nature theme.  Titles could use some work
+    {"Walking Fertiliser", "Green %s",           "Inducer",                  "Photosynthesist",
+     "Planter",            "Sporadic Warrior",   "Nimbus",                   "Force of Nature"},
 
     // Cheibriados -- slow theme
     {"Unwound %s",         "Timekeeper",            "Righteous Timekeeper",     "Chronographer",

@@ -23,6 +23,7 @@ public:
     std::vector<unsigned int> m_counts;
     std::vector<int> m_texcoords;
     std::vector<int> m_offsets;
+    std::vector<unsigned int> m_probs;
 
 protected:
     int m_width;

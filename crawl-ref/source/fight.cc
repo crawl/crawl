@@ -62,7 +62,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
-#include "transfor.h"
+#include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -90,7 +90,7 @@ static inline int player_weapon_dex_weight( void );
 static inline int calc_stat_to_hit_base( void );
 static inline int calc_stat_to_dam_base( void );
 static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
-                                    int which_attack);
+                                    int which_attack, int effective_attack);
 
 /*
  **************************************************
@@ -1551,7 +1551,7 @@ int melee_attack::player_apply_water_attack_bonus(int damage)
 int melee_attack::player_apply_weapon_skill(int damage)
 {
     if (weapon && (weapon->base_type == OBJ_WEAPONS
-                   || item_is_staff( *weapon )))
+                   || weapon->base_type == OBJ_STAVES))
     {
         damage *= 25 + (random2( you.skills[ wpn_skill ] + 1 ));
         damage /= 25;
@@ -1583,9 +1583,13 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 
 int melee_attack::player_apply_weapon_bonuses(int damage)
 {
-    if (weapon && weapon->base_type == OBJ_WEAPONS)
+    if (weapon && (weapon->base_type == OBJ_WEAPONS
+                   || item_is_rod( *weapon )))
     {
         int wpn_damage_plus = weapon->plus2;
+
+        if (item_is_rod( *weapon ))
+            wpn_damage_plus = (short)weapon->props["rod_enchantment"];
 
         damage += (wpn_damage_plus > -1) ? (random2(1 + wpn_damage_plus))
                                          : -(1 + random2(-wpn_damage_plus));
@@ -1767,6 +1771,8 @@ int melee_attack::player_weapon_type_modify(int damage)
         weap_type = WPN_UNARMED;
     else if (item_is_staff(*weapon))
         weap_type = WPN_QUARTERSTAFF;
+    else if (item_is_rod(*weapon))
+        weap_type = WPN_CLUB;
     else if (weapon->base_type == OBJ_WEAPONS)
         weap_type = weapon->sub_type;
 
@@ -3905,10 +3911,13 @@ int melee_attack::player_to_hit(bool random_factor)
             }
 
         }
-        else if (item_is_staff( *weapon ))
+        else if (weapon->base_type == OBJ_STAVES)
         {
             // magical staff
             your_to_hit += property( *weapon, PWPN_HIT );
+
+            if (item_is_rod( *weapon ))
+                your_to_hit += (short)weapon->props["rod_enchantment"];
         }
     }
 
@@ -3986,7 +3995,7 @@ int melee_attack::player_to_hit(bool random_factor)
     // Check for backlight (Corona).
     if (defender && defender->atype() == ACT_MONSTER)
     {
-        if (defender->backlit())
+        if (defender->backlit() && !defender->halo_radius())
             your_to_hit += 2 + random2(8);
         // Invisible monsters are hard to hit.
         else if (!defender->visible_to(&you))
@@ -4068,7 +4077,7 @@ int melee_attack::player_weapon_speed()
     int attack_delay = 0;
 
     if (weapon && (weapon->base_type == OBJ_WEAPONS
-                   || item_is_staff( *weapon )))
+                   || weapon->base_type == OBJ_STAVES))
     {
         attack_delay = property( *weapon, PWPN_SPEED );
         attack_delay -= you.skills[ wpn_skill ] / 2;
@@ -4212,7 +4221,7 @@ int melee_attack::player_calc_base_weapon_damage()
 {
     int damage = 0;
 
-    if (weapon->base_type == OBJ_WEAPONS || item_is_staff( *weapon ))
+    if (weapon->base_type == OBJ_WEAPONS || weapon->base_type == OBJ_STAVES)
         damage = property( *weapon, PWPN_DAMAGE );
 
     // Staves can be wielded with a worn shield, but are much less
@@ -4533,7 +4542,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
     return (attack_types[attk.type]);
 }
 
-std::string melee_attack::mons_weapon_desc()
+std::string melee_attack::mons_attack_desc(const mon_attack_def &attk)
 {
     if (!you.can_see(attacker))
         return ("");
@@ -4555,6 +4564,11 @@ std::string melee_attack::mons_weapon_desc()
         }
 
         return (result);
+    }
+    else if (attk.flavour == AF_REACH
+             && grid_distance(attacker->pos(), defender->pos()) == 2)
+    {
+        return " from afar";
     }
 
     return ("");
@@ -4583,7 +4597,7 @@ void melee_attack::mons_announce_hit(const mon_attack_def &attk)
              attacker->conj_verb( mons_attack_verb(attk) ).c_str(),
              mons_defender_name().c_str(),
              debug_damage_number().c_str(),
-             mons_weapon_desc().c_str(),
+             mons_attack_desc(attk).c_str(),
              attack_strength_punctuation().c_str());
     }
 }
@@ -5171,17 +5185,29 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_STEAL_FOOD:
+    {
         // Monsters don't carry food.
         if (defender->atype() != ACT_PLAYER)
             break;
 
-        if (expose_player_to_element(BEAM_STEAL_FOOD, 10) && needs_message)
+        const bool stolen = expose_player_to_element(BEAM_STEAL_FOOD, 10);
+        const bool ground = expose_items_to_element(BEAM_STEAL_FOOD, you.pos(),
+                                                    10);
+        if (needs_message)
         {
-            mprf("%s steals some of your food!",
-                 atk_name(DESC_CAP_THE).c_str());
+            if (stolen)
+            {
+                mprf("%s steals some of your food!",
+                     atk_name(DESC_CAP_THE).c_str());
+            }
+            else if (ground)
+            {
+                mprf("%s steals some of the food from beneath you!",
+                     atk_name(DESC_CAP_THE).c_str());
+            }
         }
         break;
-
+    }
     case AF_CRUSH:
         mprf("%s %s being crushed%s",
              def_name(DESC_CAP_THE).c_str(),
@@ -5202,10 +5228,12 @@ void melee_attack::mons_perform_attack_rounds()
     attacker_as_monster()->wield_melee_weapon();
 
     monsters* def_copy = NULL;
-    for (attack_number = 0; attack_number < nrounds; ++attack_number)
+    int effective_attack_number = 0;
+    for (attack_number = 0; attack_number < nrounds;
+         ++attack_number, ++effective_attack_number)
     {
         // Handle noise from previous round.
-        if(attack_number > 0)
+        if (effective_attack_number > 0)
             handle_noise(pos);
 
         // Monster went away?
@@ -5269,17 +5297,18 @@ void melee_attack::mons_perform_attack_rounds()
         {
             // Make sure the monster uses up some energy, even
             // though it didn't actually attack.
-            if (attack_number == 0)
+            if (effective_attack_number == 0)
                 attacker_as_monster()->lose_energy(EUT_ATTACK);
-
             break;
         }
 
-        if (attk.type != AT_HIT && !unarmed_ok)
+        // Skip dummy attacks.
+        if ((!unarmed_ok && attk.type != AT_HIT && attk.flavour != AF_REACH)
+            || attk.type == AT_SHOOT)
+        {
+            --effective_attack_number;
             continue;
-
-        if (attk.type == AT_SHOOT)
-            continue;
+        }
 
         if (weapon == NULL)
         {
@@ -5359,7 +5388,9 @@ void melee_attack::mons_perform_attack_rounds()
             final_attack_delay = final_attack_delay / 2 + 1;
 
         mons_lose_attack_energy(attacker_as_monster(),
-                                final_attack_delay, attack_number);
+                                final_attack_delay,
+                                attack_number,
+                                effective_attack_number);
 
         bool shield_blocked = false;
         bool this_round_hit = false;
@@ -5660,7 +5691,7 @@ int melee_attack::mons_to_hit()
     if (attacker->confused())
         mhit -= 5;
 
-    if (defender->backlit())
+    if (defender->backlit() && !defender->halo_radius())
         mhit += 2 + random2(8);
 
     // Invisible defender is hard to hit if you can't see invis. Note
@@ -5760,19 +5791,20 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     return (true);
 }
 
-// Lose attack energy for attacking with a weapon. The monster has already lost
-// the base attack cost by this point.
+// Lose attack energy for attacking with a weapon. which_attack is the actual
+// attack number, effective_attack is the attack number excluding synthetic
+// attacks (i.e. excluding M_ARCHER monsters' AT_SHOOT attacks).
 static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
-                                    int which_attack)
+                                    int which_attack, int effective_attack)
 {
     // Initial attack causes energy to be used for all attacks.  No
     // additional energy is used for unarmed attacks.
-    if (which_attack == 0)
+    if (effective_attack == 0)
         attacker->lose_energy(EUT_ATTACK);
 
     // Monsters lose additional energy only for the first two weapon
     // attacks; subsequent hits are free.
-    if (which_attack > 1)
+    if (effective_attack > 1)
         return;
 
     // speed adjustment for weapon using monsters
@@ -5780,13 +5812,23 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
     {
         const int atk_speed = attacker->action_energy(EUT_ATTACK);
         // only get one third penalty/bonus for second weapons.
-        if (which_attack > 0)
+        if (effective_attack > 0)
             wpn_speed = div_rand_round( (2 * atk_speed + wpn_speed), 3 );
 
         int delta = div_rand_round( (wpn_speed - 10 + (atk_speed - 10)), 2 );
         if (delta > 0)
             attacker->speed_increment -= delta;
     }
+}
+
+bool monster_attack_actor(monsters *attacker, actor *defender,
+                          bool allow_unarmed)
+{
+    ASSERT(defender == &you || defender->atype() == ACT_MONSTER);
+    return (defender->atype() == ACT_PLAYER ?
+              monster_attack(attacker, allow_unarmed)
+            : monsters_fight(attacker, dynamic_cast<monsters*>(defender),
+                             allow_unarmed));
 }
 
 // A monster attacking the player.

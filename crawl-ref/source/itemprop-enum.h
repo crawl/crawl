@@ -71,6 +71,7 @@ enum boot_type          // used in pluses2
 
 const int SP_FORBID_EGO   = -1;
 const int SP_FORBID_BRAND = -1;
+const int SP_UNKNOWN_BRAND = 31; // seen_weapon/armour is a 32-bit bitfield
 
 enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
 {
@@ -95,8 +96,9 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_REACHING,
     SPWPN_RETURNING,                   //   18
     SPWPN_CHAOS,
+    SPWPN_EVASION,
 
-    MAX_PAN_LORD_BRANDS = SPWPN_CHAOS,
+    MAX_PAN_LORD_BRANDS = SPWPN_EVASION,
 
     SPWPN_CONFUSE,                     //   20
     SPWPN_PENETRATION,
@@ -176,7 +178,6 @@ enum jewellery_type
 
     AMU_FIRST_AMULET = 35,
     AMU_RAGE = AMU_FIRST_AMULET,       //   35
-    AMU_RESIST_SLOW,
     AMU_CLARITY,
     AMU_WARDING,
     AMU_RESIST_CORROSION,
@@ -186,6 +187,8 @@ enum jewellery_type
     AMU_INACCURACY,
     AMU_RESIST_MUTATION,
     AMU_GUARDIAN_SPIRIT,
+    AMU_FAITH,
+    AMU_STASIS,
 
     NUM_JEWELLERY
 };
@@ -343,7 +346,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_FLAME,
     SPMSL_FROST,
     SPMSL_POISONED,
-    SPMSL_CURARE,
+    SPMSL_CURARE,                      // Needle-only brand
     SPMSL_RETURNING,                   //    5
     SPMSL_CHAOS,
     SPMSL_PENETRATION,
@@ -353,7 +356,13 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_STEEL,
     SPMSL_SILVER,
     SPMSL_ELECTRIC,
-    NUM_SPECIAL_MISSILES               //   13
+    SPMSL_PARALYSIS,                   // paralysis, needle only from here in
+    SPMSL_SLOW,                        // makes slow
+    SPMSL_SLEEP,                       // sleep
+    SPMSL_CONFUSION,                   // confusing
+    SPMSL_SICKNESS,                    // sickness/disease
+    SPMSL_RAGE,                        // berserk rage
+    NUM_SPECIAL_MISSILES               // 20
 };
 
 enum special_ring_type // jewellery mitm[].special values
@@ -566,4 +575,3 @@ enum zap_count_type
 };
 
 #endif
-

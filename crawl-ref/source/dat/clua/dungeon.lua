@@ -182,6 +182,16 @@ function dgn.fnum_map(map)
   return fnmap
 end
 
+-- Given a list of feature names, returns a dictionary mapping feature
+-- numbers to true.
+function dgn.feature_number_set(feature_names)
+  local dict = { }
+  for _, name in ipairs(feature_names) do
+    dict[dgn.fnum(name)] = true
+  end
+  return dict
+end
+
 -- Replaces all features matching
 function dgn.replace_feat(rmap)
   local cmap = dgn.fnum_map(rmap)
@@ -195,6 +205,27 @@ function dgn.replace_feat(rmap)
       end
     end
   end
+end
+
+function dgn.feature_set_fn(...)
+  local chosen_features = dgn.feature_number_set({ ... })
+  return function (fnum)
+           return chosen_features[fnum]
+         end
+end
+
+-- Finds all points in the map satisfying the supplied predicate.
+function dgn.find_points(predicate)
+  local points = { }
+  for x = 0, dgn.GXM - 1 do
+    for y = 0, dgn.GYM - 1 do
+      local p = dgn.point(x, y)
+      if predicate(p) then
+        table.insert(points, p)
+      end
+    end
+  end
+  return points
 end
 
 -- Returns a function that returns true if the point specified is
@@ -395,7 +426,7 @@ dgn.good_scrolls = [[
     w:10  scroll of acquirement / scroll of acquirement q:2 w:4 /
                                   scroll of acquirement q:3 w:1/
     w:5   scroll of vorpalise weapon /
-    w:5   scroll of immolation / 
+    w:5   scroll of immolation /
     w:5   scroll of vulnerability
     ]]
 
