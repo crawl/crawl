@@ -168,6 +168,7 @@ std::vector<coord_def> _box_side (int x1, int y1, int x2, int y2, int side)
     case 1: start_x = x2; start_y = y1; stop_x = x2; stop_y = y2; break;
     case 2: start_x = x1; start_y = y2; stop_x = x2; stop_y = y2; break;
     case 3: start_x = x1; start_y = y1; stop_x = x1; stop_y = y2; break;
+    default: ASSERT(!"invalid _box_side"); return (line);
     }
 
     x = start_x; y = start_y;
