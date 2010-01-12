@@ -1221,7 +1221,150 @@ NAME:       wizlab_zonguldrok
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Zonguldrok's Shrine")
+SUBST:      ? = txxx
+SUBST:      ! = t..
+SUBST:      G = G...
+MONS:       patrolling skeletal warrior
+COLOUR:     t = darkgrey / lightgrey
+LFLOORCOL:  darkgrey
+LROCKCOL:   darkgrey
+NSUBST:     d = 1:e / *:d
+ITEM:       any scroll / any potion
+ITEM:       long sword unrand:sword_of_zonguldrok
+{{
+lua_marker("G", portal_desc { grave = 1 })
+lua_marker("W", portal_desc { wizard_grave = 1 })
+
+function spawn_zombie (x, y, spec)
+    dgn.terrain_changed(x, y, "floor", false, false, false)
+    dgn.create_monster(x, y, spec)
+end
+
+function spawn_zombies (data, triggerable, triggerer, marker, ev)
+    if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+        return
+    end
+
+    local graves = dgn.find_markers_by_prop("grave", 1)
+    local x, y
+    for _, gmarker in ipairs(graves) do
+        x, y = gmarker:pos()
+        if (you.see_cell(x, y) and crawl.one_chance_in(3)) or
+            crawl.one_chance_in(8) then
+            spawn_zombie(x, y, "generate_awake human zombie")
+            gmarker:remove()
+        end
+    end
+end
+
+function killed_zombie (data, triggerable, triggerer, marker, ev)
+    local mons = dgn.mons_from_index(ev:arg1())
+    if not string.find(mons.full_name, "zombie") then
+        return
+    end
+
+    data.number_killed = data.number_killed + 1
+    if #dgn.find_markers_by_prop("grave", 1) < data.number_killed then
+        local x, y = marker:pos()
+        dgn.terrain_changed(x, y, "closed_door", false, false, false)
+    end
+end
+
+function awaken_wizard (data, triggerable, triggerer, marker, ev)
+    if data.awoke == true then
+        return
+    end
+
+    local graves = dgn.find_marker_positions_by_prop("wizard_grave", 1)
+    for _, pos in ipairs(graves) do
+        spawn_zombie(pos.x, pos.y, "generate_awake ancient lich "
+                 .."col:brown")
+    end
+
+    data.awoke = true
+end
+
+local zombies_appear_marker = TriggerableFunction:new {
+    func = spawn_zombies,
+    repeated = true
+}
+
+local zombies_killed_marker = TriggerableFunction:new {
+    data = {
+        number_killed = 0
+    },
+    func = killed_zombie,
+    repeated = true
+}
+
+local wizard_appear_marker = TriggerableFunction:new {
+    data = {
+        awoke = 0
+    },
+    func = awaken_wizard,
+    repeated = true,
+    props = {listen_to_slaves = true, only_at_slave = true }
+    }
+
+wizard_appear_marker:add_triggerer(DgnTriggerer:new {
+    type = "player_move" })
+
+zombies_appear_marker:add_triggerer(DgnTriggerer:new {
+    type = "turn",
+    delay_min = 200,
+    delay_max = 300
+})
+
+zombies_killed_marker:add_triggerer(DgnTriggerer:new {
+    type = "monster_dies",
+    target = "any"
+})
+
+lua_marker("M", zombies_appear_marker)
+lua_marker("D", zombies_killed_marker)
+lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
+
+}}
+:           dgn.set_feature_desc_short("granite statue", "gravestone")
+:           dgn.set_feature_desc_long("granite statue", "A nameless grave.")
+:           dgn.set_feature_desc_short("floor", "ground")
+:           dgn.set_feature_desc_long("floor", "It looks dead.")
+#:          dgn.set_feature_desc_short("granite statue", "Zonguldrok's gravestone")
+#:          dgn.set_feature_desc_long("granite statue", "A gravestone.  The name " ..
+#:                          "'Zonguldrok' is ingraved unto it in golden letters.")
+SUBST:      M = x
+SUBST:      D = c
+COLOUR:     W = yellow
+SUBST:      W = G
+SUBST:      L = .
 MAP
+M   xxxxxxxxxxxxxxxxxxx
+   xx?????????????????xx
+  xx?!!!!!!!!!!!!!!!!!?xx
+ xx?!!.G.G.G.G.G.G.G.!!?xx
+xx?!!.G.G.G.G.G.G.G.G.!!?xx
+x?!!.G.G.G.G.G.G.G.G.G.!!?x
+x?!.G.G.GcccccccccG.G.G.!?x
+x?!G.G.G.cdddcdddc.G.G.G!?x
+x?!.G.G.ccdddcdddcc.G.G.!?x
+x?!G.Gcccddcc+ccddcccG.G!?x
+x?!.G.cddddcLLLcddddc.G.!?x
+x?!G.Gcddccc...cccddcG.G!?x
+x?!.G.cddc.......cddc.G.!?x
+x?!G.Gcccc...W...ccccG.G!?x
+x?!.G.c..+.......+..c.G.!?x
+x?!G.Gc.1ccc...ccc1.cG.G!?x
+x?!.G.c..1.c...c.1..c.G.!?x
+x?!G.Gccc.1ccccc1.cccG.G!?x
+x?!.G.G.cc.1.c.1.cc.G.G.!?x
+x?!G.G.G.c...c...c.G.G.G!?x
+x?!.G.G.GccccDccccG.G.G.!?x
+x?!!.G.G.G.G...G.G.G.G.!!?x
+xx?!!.G.G.G..<..G.G.G.!!?xx
+ xx?!!.G.G.G.A.G.G.G.!!?xx
+  xx?!!!!!!!!!!!!!!!!!?xx
+   xx?????????????????xx
+    xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ###############################################################################
