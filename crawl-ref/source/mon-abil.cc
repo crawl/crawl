@@ -397,6 +397,12 @@ static bool _slime_merge(monsters *thing)
     return (false);
 }
 
+static bool _slime_can_spawn(const coord_def target)
+{
+    return (mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target))
+            && !actor_at(target));
+}
+
 // See if slime creature 'thing' can split, and carry out the split if
 // we can find a square to place the new slime creature on.
 static bool _slime_split(monsters *thing)
@@ -408,13 +414,24 @@ static bool _slime_split(monsters *thing)
         return (false);
     }
 
-    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    std::random_shuffle(compass_idx, compass_idx + 8);
     const coord_def origin  = thing->pos();
 
-    const actor* foe = thing->get_foe();
-    const bool has_foe = (foe != NULL && thing->can_see(foe));
+    const actor* foe        = thing->get_foe();
+    const bool has_foe      = (foe != NULL && thing->can_see(foe));
     const coord_def foe_pos = (has_foe ? foe->position : coord_def(0,0));
+    const int old_dist      = (has_foe ? distance(origin, foe_pos) : 0);
+
+    if (has_foe && old_dist > 1)
+    {
+        // If we're not already adjacent to the foe, check whether we can
+        // move any closer. If so, do that rather than splitting.
+        for (radius_iterator ri(origin, 1, true, false, true); ri; ++ri)
+            if (_slime_can_spawn(*ri) && distance(*ri, foe_pos) < old_dist)
+                return (false);
+    }
+
+    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    std::random_shuffle(compass_idx, compass_idx + 8);
 
     // Anywhere we can place an offspring?
     for (int i = 0; i < 8; ++i)
@@ -422,11 +439,10 @@ static bool _slime_split(monsters *thing)
         coord_def target = origin + Compass[compass_idx[i]];
 
         // Don't split if this increases the distance to the target.
-        if (has_foe && distance(target, foe_pos) > distance(origin,foe_pos))
+        if (has_foe && distance(target, foe_pos) > old_dist)
             continue;
 
-        if (mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target))
-            && !actor_at(target))
+        if (_slime_can_spawn(target))
         {
             // This can fail if placing a new monster fails.  That
             // probably means we have too many monsters on the level,
