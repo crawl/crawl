@@ -1539,7 +1539,7 @@ void cheibriados_time_bend(int pow)
 
 void cheibriados_time_step(int pow) // pow is the number of turns to skip
 {
-    coord_def old_pos = you.pos();
+    const coord_def old_pos = you.pos();
 
     mpr("You step out of the flow of time.");
     flash_view(LIGHTBLUE);

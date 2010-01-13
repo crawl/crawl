@@ -126,12 +126,9 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
 // care of by calling wield_effects().    {gdl}
 void weapon_switch(int targ)
 {
-    if (you.equip[EQ_WEAPON] != -1
-        && !check_old_item_warning(you.inv[you.equip[EQ_WEAPON]],
-                                   OPER_WIELD))
-    {
+    // Give the player an option to abort.
+    if (you.weapon() && !check_old_item_warning(*you.weapon(), OPER_WIELD))
         return;
-    }
 
     if (targ == -1) // Unarmed Combat.
     {

@@ -3854,9 +3854,9 @@ std::string get_skill_description(int skill, bool need_title)
             unarmed_attacks.push_back("deliver a kick");
         }
 
-        if (you.equip[EQ_WEAPON] == -1)
+        if (!you.weapon())
             unarmed_attacks.push_back("throw a punch");
-        else if (you.equip[EQ_SHIELD] == -1)
+        else if (!you.shield())
             unarmed_attacks.push_back("punch with your free hand");
 
         if (!unarmed_attacks.empty())

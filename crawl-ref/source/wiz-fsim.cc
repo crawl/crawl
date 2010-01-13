@@ -265,33 +265,28 @@ static std::string _fsim_wskill(int missile_slot)
 
 static std::string _fsim_weapon(int missile_slot)
 {
-    std::string item_buf;
-    if (you.equip[EQ_WEAPON] != -1 || missile_slot != -1)
+    if (const item_def* weapon = you.weapon())
     {
-        if (you.equip[EQ_WEAPON] != -1)
-        {
-            const item_def &weapon = you.inv[ you.equip[EQ_WEAPON] ];
-            item_buf = weapon.name(DESC_PLAIN, true);
-            if (is_range_weapon(weapon))
-            {
-                const int missile =
-                    (missile_slot == -1 ? you.m_quiver->get_fire_item()
-                                        : missile_slot);
+        std::string item_buf = weapon->name(DESC_PLAIN, true);
 
-                if (missile < ENDOFPACK && missile >= 0)
-                {
-                    return item_buf + " with "
-                           + you.inv[missile].name(DESC_PLAIN);
-                }
-            }
+        // If it's a ranged weapon, add the description of the missile
+        // if applicable.
+        if (is_range_weapon(*weapon))
+        {
+            const int missile =
+                (missile_slot == -1 ? you.m_quiver->get_fire_item()
+                                    : missile_slot);
+
+            if (missile < ENDOFPACK && missile >= 0)
+                item_buf += " with " + you.inv[missile].name(DESC_PLAIN);
         }
-        else
-            return you.inv[missile_slot].name(DESC_PLAIN);
+
+        return item_buf;
     }
+    else if (missile_slot != -1)
+        return you.inv[missile_slot].name(DESC_PLAIN);
     else
         return "unarmed";
-
-    return item_buf;
 }
 
 static std::string _fsim_time_string()
@@ -518,7 +513,7 @@ int fsim_kit_equip(const std::string &kit)
             }
         }
     }
-    else if (you.equip[EQ_WEAPON] != -1)
+    else if (you.weapon())
         unwield_item(false);
 
     if (!missile.empty())

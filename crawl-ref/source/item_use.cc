@@ -321,15 +321,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (item_slot == PROMPT_GOT_SPECIAL)  // '-' or bare hands
     {
-        if (you.equip[EQ_WEAPON] != -1)
+        if (const item_def* wpn = you.weapon())
         {
-            item_def& wpn = *you.weapon();
             // Can we safely unwield this item?
-            if (has_warning_inscription(wpn, OPER_WIELD))
+            if (has_warning_inscription(*wpn, OPER_WIELD))
             {
-                std::string prompt = "Really unwield ";
-                prompt += wpn.name(DESC_INVENTORY);
-                prompt += '?';
+                const std::string prompt =
+                    "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
                 if (!yesno(prompt.c_str(), false, 'n'))
                     return (false);
             }
@@ -367,12 +365,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (!safe_to_remove_or_wear(new_wpn, false))
         return (false);
 
-    // Go ahead and wield the weapon.
-    if (you.equip[EQ_WEAPON] != -1 && !unwield_item(show_weff_messages))
+    // Unwield any old weapon.
+    if (you.weapon() && !unwield_item(show_weff_messages))
         return (false);
 
     const unsigned int old_talents = your_talents(false).size();
 
+    // Go ahead and wield the weapon.
     you.equip[EQ_WEAPON] = item_slot;
 
     // Any oddness on wielding taken care of here.
