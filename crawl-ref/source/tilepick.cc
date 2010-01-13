@@ -1012,7 +1012,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_SONJA:
         return TILEP_MONS_SONJA;
     case MONS_PIKEL:
-        return TILEP_MONS_BIG_KOBOLD;       // TODO
+        return TILEP_MONS_PIKEL;
 
     // lich ('L')
     case MONS_BORIS:

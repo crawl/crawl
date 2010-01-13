@@ -470,6 +470,7 @@ acid_blob MONS_ACID_BLOB
 ## Kobolds ('K')
 %sdir dc-mon/unique
 sonja MONS_SONJA
+pikel MONS_PIKEL
 %sdir dc-mon
 kobold MONS_KOBOLD
 big_kobold MONS_BIG_KOBOLD
