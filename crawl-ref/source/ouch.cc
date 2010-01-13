@@ -52,7 +52,6 @@
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "notes.h"
 #include "output.h"

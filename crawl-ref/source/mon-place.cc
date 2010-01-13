@@ -22,7 +22,6 @@
 #include "options.h"
 #include "ghost.h"
 #include "lev-pand.h"
-#include "makeitem.h"
 #include "message.h"
 #include "mislead.h"
 #include "mon-behv.h"

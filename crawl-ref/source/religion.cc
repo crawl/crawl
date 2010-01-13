@@ -69,7 +69,6 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
-#include "quiver.h"
 #include "shopping.h"
 #include "skills2.h"
 #include "spells1.h"

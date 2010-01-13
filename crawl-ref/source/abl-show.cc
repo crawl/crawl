@@ -15,7 +15,6 @@
 #include <ctype.h>
 
 #include "externs.h"
-#include "options.h"
 
 #include "abyss.h"
 #include "artefact.h"
@@ -30,14 +29,12 @@
 #include "food.h"
 #include "godabil.h"
 #include "it_use2.h"
-#include "itemprop.h"
 #include "macro.h"
 #include "message.h"
 #include "menu.h"
 #include "misc.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"

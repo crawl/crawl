@@ -36,7 +36,6 @@
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "view.h"
 
 #ifdef WIZARD
 static void _make_all_books()

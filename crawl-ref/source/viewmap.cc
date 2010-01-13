@@ -21,7 +21,6 @@
 #include "files.h"
 #include "format.h"
 #include "macro.h"
-#include "mon-util.h"
 #include "options.h"
 #include "place.h"
 #include "player.h"

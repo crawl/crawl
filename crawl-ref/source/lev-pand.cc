@@ -15,7 +15,6 @@
 #include "env.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-pick.h"
 #include "random.h"
 

@@ -39,7 +39,6 @@
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
-#include "options.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"

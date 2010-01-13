@@ -86,7 +86,6 @@
 #include "mon-act.h"
 #include "mon-cast.h"
 #include "mon-iter.h"
-#include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"

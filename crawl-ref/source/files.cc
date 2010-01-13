@@ -51,7 +51,6 @@
 #include "env.h"
 #include "ghost.h"
 #include "initfile.h"
-#include "itemprop.h"
 #include "items.h"
 #include "jobs.h"
 #include "kills.h"

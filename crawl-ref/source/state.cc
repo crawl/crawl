@@ -7,7 +7,6 @@
 #include "AppHdr.h"
 
 #include "externs.h"
-#include "options.h"
 
 #include "dbg-util.h"
 #include "delay.h"

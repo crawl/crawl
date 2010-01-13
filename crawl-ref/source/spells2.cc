@@ -30,7 +30,6 @@
 #include "goditem.h"
 #include "invent.h"
 #include "itemprop.h"
-#include "itemname.h"
 #include "items.h"
 #include "it_use2.h"
 #include "makeitem.h"

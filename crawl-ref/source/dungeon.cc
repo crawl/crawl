@@ -32,7 +32,6 @@
 #include "flood_find.h"
 #include "fprop.h"
 #include "externs.h"
-#include "options.h"
 #include "dbg-maps.h"
 #include "dbg-scan.h"
 #include "directn.h"

@@ -10,25 +10,17 @@
 
 #include "showsymb.h"
 
-#include <stdint.h> // For uint32_t
-
-#include "areas.h"
 #include "colour.h"
 #include "env.h"
 #include "map_knowledge.h"
-#include "fprop.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
-#include "overmap.h"
-#include "random.h"
 #include "show.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "viewchar.h"
 #include "viewgeom.h"
-#include "viewmap.h"
 
 glyph get_show_glyph(show_type object)
 {

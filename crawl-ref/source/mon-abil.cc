@@ -8,7 +8,6 @@
 #include "mon-abil.h"
 
 #include "externs.h"
-#include "options.h"
 
 #include "arena.h"
 #include "beam.h"

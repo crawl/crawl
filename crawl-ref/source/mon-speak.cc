@@ -21,7 +21,6 @@
 #include "dlua.h"
 #include "ghost.h"
 #include "message.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "jobs.h"
 #include "player.h"
