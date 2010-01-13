@@ -67,7 +67,8 @@ trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
 
 ## Turtles ('t')
-turtle.png MONS_TURTLE
+snapping_turtle.png MONS_SNAPPING_TURTLE
+alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 
 ## Worms and larvae ('w')
 killer_bee_larva MONS_ANT_LARVA

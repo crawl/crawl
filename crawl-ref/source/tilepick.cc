@@ -360,8 +360,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // turtles ('t')
     case MONS_SNAPPING_TURTLE:
-    case MONS_ALLIGATOR_SNAPPING_TURTLE: // TODO
-        return TILEP_MONS_TURTLE;
+        return TILEP_MONS_SNAPPING_TURTLE;
+    case MONS_ALLIGATOR_SNAPPING_TURTLE:
+        return TILEP_MONS_ALLIGATOR_SNAPPING_TURTLE;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
