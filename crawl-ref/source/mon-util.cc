@@ -33,6 +33,7 @@
 #include "stuff.h"
 #include "env.h"
 #include "terrain.h"
+#include "viewchar.h"
 
 //jmf: moved from inside function
 static FixedVector < int, NUM_MONSTERS > mon_entry;
@@ -247,6 +248,12 @@ void init_monster_symbols()
         if (md.colour)
             monster_symbols[md.type].colour = md.colour;
     }
+
+    monster_symbols[MONS_GOLD_MIMIC].glyph   = dchar_glyph(DCHAR_ITEM_GOLD);
+    monster_symbols[MONS_WEAPON_MIMIC].glyph = dchar_glyph(DCHAR_ITEM_WEAPON);
+    monster_symbols[MONS_ARMOUR_MIMIC].glyph = dchar_glyph(DCHAR_ITEM_ARMOUR);
+    monster_symbols[MONS_SCROLL_MIMIC].glyph = dchar_glyph(DCHAR_ITEM_SCROLL);
+    monster_symbols[MONS_POTION_MIMIC].glyph = dchar_glyph(DCHAR_ITEM_POTION);
 }
 
 const mon_resist_def &get_mons_class_resists(int mc)
