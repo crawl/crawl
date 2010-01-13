@@ -1702,7 +1702,7 @@ enum monster_type                      // (int) menv[].type
     MONS_BEAST,
     MONS_IRON_DEVIL,
     MONS_SIXFIRHY,                     //   90
-    //
+    MONS_MERGED_SLIME_CREATURE, // used only for recoloring
     //
     //
     //

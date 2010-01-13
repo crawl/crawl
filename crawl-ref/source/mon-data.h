@@ -2540,6 +2540,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
+{   // not an actual monster, it's here just to allow recoloring
+    MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
+    M_NO_FLAGS,
+    MR_RES_POISON | MR_RES_ASPHYX,
+    0, 5, MONS_JELLY, MONS_SLIME_CREATURE, MH_NATURAL, -3,
+    { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 11, 3, 5, 0 },
+    1, 4, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_PLANT, HT_AMPHIBIOUS_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
+},
+
 {
     MONS_PULSATING_LUMP, 'J', RED, "pulsating lump",
     M_SENSE_INVIS,
@@ -2603,7 +2615,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_ACID_BLOB, 'J', LIGHTGREEN, "acid blob",
+    MONS_ACID_BLOB, 'J', LIGHTCYAN, "acid blob",
     M_SENSE_INVIS | M_SPECIAL_ABILITY | M_ACID_SPLASH,
     MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
     0, 12, MONS_JELLY, MONS_ACID_BLOB, MH_NATURAL, -7,

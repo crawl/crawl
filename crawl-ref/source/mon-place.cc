@@ -1127,6 +1127,8 @@ static int _place_monster_aux(const mgen_data &mg,
             return (-1);
         }
     }
+    else if (mon->type == MONS_MERGED_SLIME_CREATURE) // shouldn't ever happen
+        mon->type = MONS_SLIME_CREATURE;
 
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
