@@ -737,7 +737,7 @@ void cast_ignite_poison(int pow)
     apply_area_visible(_ignite_poison_objects, pow);
     apply_area_visible(_ignite_poison_monsters, pow);
 
-#ifndef USE_TILES
+#ifndef USE_TILE
     delay(100); // show a brief flash
 #endif
     flash_view(0);
