@@ -182,6 +182,7 @@ void dgn_flush_map_memory();
 
 double dgn_degrees_to_radians(int degrees);
 bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat);
+coord_def dgn_random_point_in_margin(int margin);
 coord_def dgn_random_point_in_bounds(
     dungeon_feature_type searchfeat,
     unsigned mapmask = MMT_VAULT,

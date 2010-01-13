@@ -2934,6 +2934,12 @@ bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat)
     return false;
 }
 
+coord_def dgn_random_point_in_margin(int margin)
+{
+    return coord_def(random_range(margin, GXM - margin - 1),
+                     random_range(margin, GYM - margin - 1));
+}
+
 static inline bool _point_matches_feat(coord_def c,
                                        dungeon_feature_type searchfeat,
                                        unsigned mapmask,

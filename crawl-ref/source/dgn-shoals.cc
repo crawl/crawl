@@ -6,6 +6,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "dgn-shoals.h"
+#include "dgn-height.h"
 #include "env.h"
 #include "flood_find.h"
 #include "items.h"
@@ -28,22 +29,7 @@ typedef FixedArray<short, GXM, GYM> grid_short;
 const char *ENVP_SHOALS_TIDE_KEY = "shoals-tide-height";
 const char *ENVP_SHOALS_TIDE_VEL = "shoals-tide-velocity";
 
-inline short &shoals_heights(const coord_def &c)
-{
-    return (*env.heightmap)(c);
-}
-
-static std::vector<coord_def> _shoals_islands;
-
-const int ISLAND_COLLIDE_DIST2 = 5 * 5;
-const int N_PERTURB_ISLAND_CENTER = 50;
-const int ISLAND_CENTER_RADIUS_LOW = 3;
-const int ISLAND_CENTER_RADIUS_HIGH = 10;
-
-const int N_PERTURB_OFFSET_LOW  = 25;
-const int N_PERTURB_OFFSET_HIGH = 45;
-const int PERTURB_OFFSET_RADIUS_LOW = 2;
-const int PERTURB_OFFSET_RADIUS_HIGH = 7;
+static dgn_island_plan _shoals_islands;
 
 // The raw tide height / TIDE_MULTIPLIER is the actual tide height. The higher
 // the tide multiplier, the slower the tide advances and recedes. A multiplier
@@ -99,7 +85,7 @@ static dungeon_feature_type _shoals_feature_by_height(int height)
 
 static dungeon_feature_type _shoals_feature_at(const coord_def &c)
 {
-    const int height = shoals_heights(c);
+    const int height = dgn_height_at(c);
     return _shoals_feature_by_height(height);
 }
 
@@ -139,108 +125,37 @@ static inline bool _shoals_tide_passable_feat(dungeon_feature_type feat)
 
 static void _shoals_init_heights()
 {
-    env.heightmap.reset(new grid_heightmap);
-    for (rectangle_iterator ri(0); ri; ++ri)
-        shoals_heights(*ri) = SHT_SHALLOW_WATER - 3;
-}
-
-static coord_def _random_point_from(const coord_def &c, int radius)
-{
-    return dgn_random_point_from(c, radius, _shoals_margin);
-}
-
-static coord_def _random_point(int offset = 0)
-{
-    return coord_def(random_range(offset, GXM - offset - 1),
-                     random_range(offset, GYM - offset - 1));
-}
-
-static void _shoals_island_center(const coord_def &c, int n_perturb, int radius,
-                                  int bounce_low, int bounce_high,
-                                  bool make_atoll = false)
-{
-    for (int i = 0; i < n_perturb; ++i) {
-        const int thisrad = make_atoll? radius : random2(1 + radius);
-        coord_def p = _random_point_from(c, thisrad);
-        if (!p.origin())
-            shoals_heights(p) += random_range(bounce_low, bounce_high);
-    }
-}
-
-static coord_def _shoals_pick_island_spot()
-{
-    coord_def c;
-    for (int i = 0; i < 15; ++i)
-    {
-        c = _random_point(_shoals_margin * 2);
-
-        bool collides = false;
-        for (int j = 0, size = _shoals_islands.size(); j < size; ++j)
-        {
-            const coord_def island = _shoals_islands[j];
-            const coord_def dist = island - c;
-            if (dist.abs() < ISLAND_COLLIDE_DIST2)
-            {
-                collides = true;
-                break;
-            }
-        }
-        if (!collides)
-            break;
-    }
-    _shoals_islands.push_back(c);
-    return c;
-}
-
-static void _shoals_build_island()
-{
-    coord_def c = _shoals_pick_island_spot();
-    _shoals_island_center(c, N_PERTURB_ISLAND_CENTER,
-                          random_range(ISLAND_CENTER_RADIUS_LOW,
-                                       ISLAND_CENTER_RADIUS_HIGH),
-                          40, 60, one_chance_in(10));
-    const int additional_heights = random2(4);
-    for (int i = 0; i < additional_heights; ++i) {
-        const int addition_offset = random_range(2, 10);
-
-        coord_def offsetC = _random_point_from(c, addition_offset);
-        if (!offsetC.origin())
-            _shoals_island_center(offsetC, random_range(N_PERTURB_OFFSET_LOW,
-                                                        N_PERTURB_OFFSET_HIGH),
-                                  random_range(PERTURB_OFFSET_RADIUS_LOW,
-                                               PERTURB_OFFSET_RADIUS_HIGH),
-                                  25, 35, one_chance_in(10));
-    }
+    dgn_initialise_heightmap(SHT_SHALLOW_WATER - 3);
 }
 
 static void _shoals_init_islands(int depth)
 {
     const int nislands = 20 - depth * 2;
-    for (int i = 0; i < nislands; ++i)
-        _shoals_build_island();
+    _shoals_islands = dgn_island_plan::shoals_islands(_shoals_margin);
+    _shoals_islands.build(nislands);
 }
 
-// Cliffs are usually constructed in shallow water adjacent to deep
-// water (for effect).
 static void _shoals_build_cliff()
 {
-    coord_def cliffc = _random_point(_shoals_margin * 2);
-    if (in_bounds(cliffc))
+    const coord_def cliffc = dgn_random_point_in_margin(_shoals_margin * 2);
+    const int length = random_range(6, 15);
+    const double angle = dgn_degrees_to_radians(random2(360));
+    const int_range n_cliff_points(40, 60);
+    const int cliff_point_radius = 3;
+    const int_range cliff_height_increment(100, 130);
+
+    for (int i = 0; i < length; i += 3)
     {
-        const int length = random_range(6, 15);
-        double angle = dgn_degrees_to_radians(random2(360));
-        for (int i = 0; i < length; i += 3)
-        {
-            int distance = i - length / 2;
-            coord_def place =
-                cliffc + coord_def(static_cast<int>(distance * cos(angle)),
-                                   static_cast<int>(distance * sin(angle)));
-            coord_def fuzz = coord_def(random_range(-2, 2),
-                                       random_range(-2, 2));
-            place += fuzz;
-            _shoals_island_center(place, random_range(40, 60), 3,
-                                  100, 130);
-        }
+        const int distance = i - length / 2;
+        coord_def place =
+            cliffc + coord_def(static_cast<int>(distance * cos(angle)),
+                               static_cast<int>(distance * sin(angle)));
+        const coord_def fuzz = coord_def(random_range(-2, 2),
+                                         random_range(-2, 2));
+        place += fuzz;
+        dgn_island_centred_at(place, resolve_range(n_cliff_points),
+                              cliff_point_radius, cliff_height_increment,
+                              _shoals_margin);
     }
 }
 
@@ -251,43 +166,10 @@ static void _shoals_cliffs()
         _shoals_build_cliff();
 }
 
-static void _shoals_smooth_at(const coord_def &c, int radius,
-                              int max_height = SHT_UNDEFINED)
-{
-    const int height = shoals_heights(c);
-    if (max_height != SHT_UNDEFINED && height > max_height)
-        return;
-
-    int max_delta = radius * radius * 2 + 2;
-    int divisor = 0;
-    int total = 0;
-    for (int y = c.y - radius; y <= c.y + radius; ++y) {
-        for (int x = c.x - radius; x <= c.x + radius; ++x) {
-            const coord_def p(x, y);
-            if (!in_bounds(p))
-                continue;
-            const int nheight = shoals_heights(p);
-            if (max_height != SHT_UNDEFINED && nheight > max_height)
-                continue;
-            const coord_def off = c - p;
-            int weight = max_delta - off.abs();
-            divisor += weight;
-            total += nheight * weight;
-        }
-    }
-    shoals_heights(c) = total / divisor;
-}
-
-static void _shoals_smooth()
-{
-    for (rectangle_iterator ri(0); ri; ++ri)
-        _shoals_smooth_at(*ri, 1);
-}
-
 static void _shoals_smooth_water()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
-        _shoals_smooth_at(*ri, 1, SHT_SHALLOW_WATER - 1);
+        dgn_smooth_height_at(*ri, 1, SHT_SHALLOW_WATER - 1);
 }
 
 static void _shoals_apply_level()
@@ -312,7 +194,7 @@ static std::vector<coord_def> _shoals_water_depth_change_points()
 
 static inline void _shoals_deepen_water_at(coord_def p, int distance)
 {
-    shoals_heights(p) -= distance * 7;
+    dgn_height_at(p) -= distance * 7;
 }
 
 static void _shoals_deepen_water()
@@ -355,10 +237,7 @@ static void _shoals_deepen_water()
 
 static coord_def _pick_shoals_island()
 {
-    const int lucky_island = random2(_shoals_islands.size());
-    const coord_def c = _shoals_islands[lucky_island];
-    _shoals_islands.erase(_shoals_islands.begin() + lucky_island);
-    return c;
+    return _shoals_islands.pick_and_remove_random_island();
 }
 
 void place_feature_at_random_floor_square(dungeon_feature_type feat,
@@ -400,7 +279,7 @@ static void _shoals_furniture(int margin)
                                     false);
         }
 
-        const int nhuts = std::min(8, int(_shoals_islands.size()));
+        const int nhuts = std::min(8, int(_shoals_islands.islands.size()));
         for (int i = 2; i < nhuts; ++i)
         {
             // Place (non-rune) minivaults on the other islands. We
@@ -434,16 +313,16 @@ static void _shoals_deepen_edges()
     {
         for (int x = 1; x <= edge; ++x)
         {
-            shoals_heights(coord_def(x, y)) -= 800;
-            shoals_heights(coord_def(GXM - 1 - x, y)) -= 800;
+            dgn_height_at(coord_def(x, y)) -= 800;
+            dgn_height_at(coord_def(GXM - 1 - x, y)) -= 800;
         }
     }
     for (int x = 1; x < GXM - 2; ++x)
     {
         for (int y = 1; y <= edge; ++y)
         {
-            shoals_heights(coord_def(x, y)) -= 800;
-            shoals_heights(coord_def(x, GYM - 1 - y)) -= 800;
+            dgn_height_at(coord_def(x, y)) -= 800;
+            dgn_height_at(coord_def(x, GYM - 1 - y)) -= 800;
         }
     }
 }
@@ -608,7 +487,8 @@ static void _shoals_make_plant_near(coord_def c, int radius,
     const int ntries = 5;
     for (int i = 0; i < ntries; ++i)
     {
-        const coord_def plant_place(_random_point_from(c, random2(1 + radius)));
+        const coord_def plant_place(
+            dgn_random_point_from(c, random2(1 + radius), _shoals_margin));
         if (!plant_place.origin()
             && !monster_at(plant_place))
         {
@@ -644,7 +524,7 @@ static void _shoals_plant_supercluster(coord_def c,
     for (int i = 0; i < nadditional_clusters; ++i)
     {
         const coord_def satellite(
-            _random_point_from(c, random_range(2, 12)));
+            dgn_random_point_from(c, random_range(2, 12), _shoals_margin));
         if (!satellite.origin())
             _shoals_plant_cluster(satellite, random_range(5, 12, 2),
                                   random_range(2, 7),
@@ -793,10 +673,9 @@ void prepare_shoals(int level_number)
     const int shoals_depth = level_id::current().depth - 1;
     dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
     _shoals_init_heights();
-    _shoals_islands.clear();
     _shoals_init_islands(shoals_depth);
     _shoals_cliffs();
-    _shoals_smooth();
+    dgn_smooth_heights();
     _shoals_apply_level();
     _shoals_deepen_water();
     _shoals_deepen_edges();
@@ -828,7 +707,7 @@ void shoals_postprocess_level()
         // It would be nice to do actual height contours within
         // vaults, but for now, keep it simple.
         if (feat != expected_feat)
-            shoals_heights(c) = _shoals_feature_height(feat);
+            dgn_height_at(c) = _shoals_feature_height(feat);
     }
 }
 
@@ -868,9 +747,9 @@ static coord_def _shoals_escape_place_from(coord_def bad_place,
 
         if (!act || !actor_at(p))
         {
-            if (best_height == -1000 || shoals_heights(p) > best_height)
+            if (best_height == -1000 || dgn_height_at(p) > best_height)
             {
-                best_height = shoals_heights(p);
+                best_height = dgn_height_at(p);
                 chosen = p;
             }
         }
@@ -967,7 +846,7 @@ static tide_direction _shoals_feature_tide_height_change(
 
 static void _shoals_apply_tide_at(coord_def c, int tide)
 {
-    const int effective_height = shoals_heights(c) - tide;
+    const int effective_height = dgn_height_at(c) - tide;
     dungeon_feature_type newfeat =
         _shoals_feature_by_height(effective_height);
     // Make sure we're not sprouting new walls.
