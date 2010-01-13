@@ -308,7 +308,7 @@ static void _print_stats_mp(int x, int y)
     for (int i = 11-col; i > 0; i--)
         cprintf(" ");
 
-    if (! Options.classic_hud)
+    if (!Options.classic_hud)
         MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
 }
 
