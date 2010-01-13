@@ -2020,7 +2020,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     }
     else if (you.species == SP_VAMPIRE
              && damage_brand == SPWPN_VAMPIRICISM
-             && you.equip[EQ_WEAPON] != -1
+             && you.weapon()
              && _player_vampire_draws_blood(defender_as_monster(),
                                             damage_done, false,
                                             (mondied ? 1 : 10)))
@@ -2029,7 +2029,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     }
     // Vampiric *weapon* effects for the killing blow.
     else if (mondied && damage_brand == SPWPN_VAMPIRICISM
-             && you.equip[EQ_WEAPON] != -1
+             && you.weapon()
              && you.species != SP_VAMPIRE) // vampires get their bonus elsewhere
     {
         if (defender->holiness() == MH_NATURAL

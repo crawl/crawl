@@ -67,7 +67,8 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
             return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF);
 
         case KC_OTHER:
-            return (killer == KILL_MON_MISSILE || killer == KILL_MISC);
+            return (killer == KILL_MON_MISSILE || killer == KILL_MISCAST
+                    || killer == KILL_MISC);
 
         case KC_NCATEGORIES:
             ASSERT(false);

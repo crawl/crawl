@@ -383,6 +383,7 @@ Evolution
 
 Use fruit to turn some plants and fungi in your line of sight into stronger species.
 %%%%
+# Cheibriados
 Make Ponderous
 
 Alter a piece of body armour of your choice so it slows the wearer down.  This is generally bad for hasty people, those who appreciate taking the time may benefit from Cheibriados's favour when they are not so fast.
@@ -391,7 +392,7 @@ Bend Time
 
 Slow down everyone who's standing just next to you.
 %%%%
-Ruinous Time
+Slouch
 
 Cause damage to everyone in sight who is moving faster than you.  Those magically hasted will be hurt particularly painfully.
 %%%%

@@ -1,6 +1,8 @@
 #ifndef ITEMPROP_ENUM_H
 #define ITEMPROP_ENUM_H
 
+#include "tags.h"
+
 enum armour_type
 {
     ARM_ROBE,                    //    0
@@ -355,7 +357,9 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_EXPLODING,                   //   10
     SPMSL_STEEL,
     SPMSL_SILVER,
-    SPMSL_ELECTRIC,
+#if TAG_MAJOR_VERSION == 16
+    SPMSL_ELECTRIC, // removed
+#endif
     SPMSL_PARALYSIS,                   // paralysis, needle only from here in
     SPMSL_SLOW,                        // makes slow
     SPMSL_SLEEP,                       // sleep

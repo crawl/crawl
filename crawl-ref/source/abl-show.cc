@@ -347,7 +347,7 @@ static const ability_def Ability_List[] =
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
 
-const struct ability_def & get_ability_def( ability_type abil )
+const ability_def & get_ability_def(ability_type abil)
 {
     for (unsigned int i = 0;
          i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)
@@ -359,7 +359,7 @@ const struct ability_def & get_ability_def( ability_type abil )
     return (Ability_List[0]);
 }
 
-bool string_matches_ability_name(const std::string key)
+bool string_matches_ability_name(const std::string& key)
 {
     for (int i = ABIL_SPIT_POISON; i <= ABIL_RENOUNCE_RELIGION; ++i)
     {
@@ -367,7 +367,7 @@ bool string_matches_ability_name(const std::string key)
         if (abil.ability == ABIL_NON_ABILITY)
             continue;
 
-        std::string name = lowercase_string(ability_name(abil.ability));
+        const std::string name = lowercase_string(ability_name(abil.ability));
         if (name.find(key) != std::string::npos)
             return (true);
     }
@@ -846,11 +846,11 @@ std::vector<const char*> get_ability_names()
     return result;
 }
 
-static void _print_talent_description(talent tal)
+static void _print_talent_description(const talent& tal)
 {
     clrscr();
 
-    std::string name   = get_ability_def(tal.which).name;
+    const std::string& name = get_ability_def(tal.which).name;
 
     // XXX: The suffix is necessary to distinguish between similarly
     // named spells.  Yes, this is a hack.
@@ -2025,17 +2025,9 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_JIYVA_SLIMIFY:
     {
-        std::string msg;
-        int has_weapon = you.equip[EQ_WEAPON];
-
-        if (has_weapon == -1)
-            msg = "your " + you.hand_name(true);
-        else
-        {
-            item_def& weapon = *you.weapon();
-            msg = weapon.name(DESC_NOCAP_YOUR);
-        }
-
+        const item_def* const weapon = you.weapon();
+        const std::string msg = (weapon) ? weapon->name(DESC_NOCAP_YOUR)
+                                         : ("your " + you.hand_name(true));
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
                               you.skills[SK_INVOCATIONS] * 3 / 2 + 3,

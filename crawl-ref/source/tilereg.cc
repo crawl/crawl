@@ -281,6 +281,13 @@ void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy
     place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
 }
 
+enum wave_type
+{
+    WV_NONE = 0,
+    WV_SHALLOW,
+    WV_DEEP
+};
+
 void DungeonRegion::pack_background(unsigned int bg, int x, int y)
 {
     unsigned int bg_idx = bg & TILE_FLAG_MASK;
@@ -309,67 +316,102 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
             // Add wave tiles on floor adjacent to shallow water.
             const coord_def pos = coord_def(x + m_cx_to_gx, y + m_cy_to_gy);
             const dungeon_feature_type feat = env.map_knowledge(pos).feat();
-            if (feat == DNGN_FLOOR || feat == DNGN_UNDISCOVERED_TRAP)
+            if (feat == DNGN_FLOOR || feat == DNGN_UNDISCOVERED_TRAP
+                || feat == DNGN_SHALLOW_WATER)
             {
-                bool north = false, south = false, east = false, west = false;
-                bool ne = false, nw = false, se = false, sw = false;
+                wave_type north = WV_NONE, south = WV_NONE,
+                          east = WV_NONE, west = WV_NONE,
+                          ne = WV_NONE, nw = WV_NONE,
+                          se = WV_NONE, sw = WV_NONE;
+
                 for (radius_iterator ri(pos, 1, true, false, true); ri; ++ri)
                 {
-                    if (env.map_knowledge(*ri).feat() != DNGN_SHALLOW_WATER)
+                    if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
                         continue;
 
-                    if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
+                    bool shallow = false;
+                    if (env.map_knowledge(*ri).feat() == DNGN_SHALLOW_WATER)
+                    {
+                        // Adjacent shallow water is only interesting for
+                        // floor cells.
+                        if (feat == DNGN_SHALLOW_WATER)
+                            continue;
+
+                        shallow = true;
+                    }
+                    else if (env.map_knowledge(*ri).feat() != DNGN_DEEP_WATER)
                         continue;
 
                     if (ri->x == pos.x) // orthogonals
                     {
                         if (ri->y < pos.y)
-                            north = true;
+                            north = (shallow ? WV_SHALLOW : WV_DEEP);
                         else
-                            south = true;
+                            south = (shallow ? WV_SHALLOW : WV_DEEP);
                     }
                     else if (ri->y == pos.y)
                     {
                         if (ri->x < pos.x)
-                            west = true;
+                            west = (shallow ? WV_SHALLOW : WV_DEEP);
                         else
-                            east = true;
+                            east = (shallow ? WV_SHALLOW : WV_DEEP);
                     }
                     else // diagonals
                     {
                         if (ri->x < pos.x)
                         {
                             if (ri->y < pos.y)
-                                nw = true;
+                                nw = (shallow ? WV_SHALLOW : WV_DEEP);
                             else
-                                sw = true;
+                                sw = (shallow ? WV_SHALLOW : WV_DEEP);
                         }
                         else
                         {
                             if (ri->y < pos.y)
-                                ne = true;
+                                ne = (shallow ? WV_SHALLOW : WV_DEEP);
                             else
-                                se = true;
+                                se = (shallow ? WV_SHALLOW : WV_DEEP);
                         }
                     }
                 }
 
-                if (north)
+                // First check for shallow water.
+                if (north == WV_SHALLOW)
                     m_buf_dngn.add(TILE_WAVE_N, x, y);
-                if (south)
+                if (south == WV_SHALLOW)
                     m_buf_dngn.add(TILE_WAVE_S, x, y);
-                if (east)
+                if (east == WV_SHALLOW)
                     m_buf_dngn.add(TILE_WAVE_E, x, y);
-                if (west)
+                if (west == WV_SHALLOW)
                     m_buf_dngn.add(TILE_WAVE_W, x, y);
-                if (ne && !north && !east)
+
+                // Then check for deep water, overwriting shallow
+                // corner waves, if necessary.
+                if (north == WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_N, x, y);
+                if (south == WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_S, x, y);
+                if (east == WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_E, x, y);
+                if (west == WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_W, x, y);
+
+                if (ne == WV_SHALLOW && !north && !east)
                     m_buf_dngn.add(TILE_WAVE_CORNER_NE, x, y);
-                if (nw && !north && !west)
+                else if (ne == WV_DEEP && north != WV_DEEP && east != WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_NE, x, y);
+                if (nw == WV_SHALLOW && !north && !west)
                     m_buf_dngn.add(TILE_WAVE_CORNER_NW, x, y);
-                if (se && !south && !east)
+                else if (nw == WV_DEEP && north != WV_DEEP && west != WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_NW, x, y);
+                if (se == WV_SHALLOW && !south && !east)
                     m_buf_dngn.add(TILE_WAVE_CORNER_SE, x, y);
-                if (sw && !south && !west)
+                else if (se == WV_DEEP && south != WV_DEEP && east != WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_SE, x, y);
+                if (sw == WV_SHALLOW && !south && !west)
                     m_buf_dngn.add(TILE_WAVE_CORNER_SW, x, y);
+                else if (sw == WV_DEEP && south != WV_DEEP && west != WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_SW, x, y);
             }
         }
 
@@ -2779,7 +2821,8 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             case OBJ_BOOKS:
                 if (item_type_known(item)
                     && item.sub_type != BOOK_MANUAL
-                    && item.sub_type != BOOK_DESTRUCTION)
+                    && item.sub_type != BOOK_DESTRUCTION
+                    && you.skills[SK_SPELLCASTING] > 0)
                 {
                     tip += "Memorise (M)";
                     if (wielded)

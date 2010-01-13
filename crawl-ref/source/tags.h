@@ -37,11 +37,8 @@ enum tag_file_type   // file types supported by tag system
     TAGTYPE_PLAYER_NAME         // Used only to read the player name
 };
 
-enum tag_major_version
-{
-    TAG_MAJOR_START   = 5,
-    TAG_MAJOR_VERSION = 16
-};
+#define TAG_MAJOR_START     5
+#define TAG_MAJOR_VERSION  16
 
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version

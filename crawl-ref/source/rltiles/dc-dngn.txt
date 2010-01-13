@@ -414,16 +414,20 @@ wall/zot_blue3
 %repeat WALL_ZOT WALL_ZOT_WHITE
 %resetcol
 
+%weight 2
 wall/wall_flesh0 WALL_FLESH
 wall/wall_flesh1
 wall/wall_flesh2
 wall/wall_flesh3
+%weight 1
 wall/wall_flesh4
 wall/wall_flesh5
 wall/wall_flesh6
+%weight 2
 wall/transparent_flesh1 WALL_TRANSPARENT_FLESH
 wall/transparent_flesh2
 wall/transparent_flesh3
+%weight 1
 wall/transparent_flesh4
 wall/transparent_flesh5
 wall/transparent_flesh6
@@ -990,10 +994,25 @@ dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
 dngn_shallow_water_murky2
 dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 dngn_shallow_water_murky_disturbance2
+# Make all base variants equally likely, but their special ones less so.
+%weight 4
 dngn_shoals_deep_water1 SHOALS_DEEP_WATER
+%weight 2
+dngn_shoals_deep_water1_shape
+%weight 4
 dngn_shoals_deep_water2
+%weight 1
+dngn_shoals_deep_water2_shape
+dngn_shoals_deep_water2_bubbles
+%weight 4
 dngn_shoals_deep_water3
+%weight 2
+dngn_shoals_deep_water3_bubbles
+%weight 4
 dngn_shoals_deep_water4
+%weight 2
+dngn_shoals_deep_water4_bubbles
+%weight 1
 dngn_shoals_shallow_water1 SHOALS_SHALLOW_WATER
 dngn_shoals_shallow_water2
 dngn_shoals_shallow_water3
@@ -1001,6 +1020,18 @@ dngn_shoals_shallow_water4
 dngn_shoals_shallow_water_disturbance1 SHOALS_SHALLOW_WATER_DISTURBANCE
 dngn_shoals_shallow_water_disturbance2
 dngn_shoals_shallow_water_disturbance3
+
+# corner waves (diagonals)
+deep_water_wave_corner_NE WAVE_DEEP_CORNER_NE
+deep_water_wave_corner_NW WAVE_DEEP_CORNER_NW
+deep_water_wave_corner_SE WAVE_DEEP_CORNER_SE
+deep_water_wave_corner_SW WAVE_DEEP_CORNER_SW
+
+# orthogonal waves
+deep_water_wave_N WAVE_DEEP_N
+deep_water_wave_S WAVE_DEEP_S
+deep_water_wave_E WAVE_DEEP_E
+deep_water_wave_W WAVE_DEEP_W
 
 # corner waves (diagonals)
 shallow_water_wave_corner_NE WAVE_CORNER_NE

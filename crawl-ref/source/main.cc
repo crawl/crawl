@@ -275,6 +275,12 @@ int main( int argc, char *argv[] )
     // Activate markers only after the welcome message, so the
     // player can see any resulting messages.
     env.markers.activate_all();
+    // Call again to make Ctrl-X work correctly for items
+    // in los on turn 0.
+    maybe_update_stashes();
+#ifdef USE_TILE
+    viewwindow(false);
+#endif
 
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
@@ -3743,6 +3749,17 @@ static bool _initialise(void)
     // Set up the Lua interpreter for the dungeon builder.
     init_dungeon_lua();
 
+#ifdef USE_TILE
+    // Draw the splash screen before the database gets initialised as that
+    // may take awhile and it's better if the player can look at a pretty
+    // screen while this happens.
+    if (!crawl_state.map_stat_gen && !crawl_state.test
+        && Options.tile_title_screen)
+    {
+        tiles.draw_title();
+    }
+#endif
+
     // Initialise internal databases.
     databaseSystemInit();
 
@@ -3897,8 +3914,6 @@ static bool _initialise(void)
     new_level();
     update_turn_count();
 
-    trackers_init_new_level(false);
-
     // Reset lava/water nearness check to unknown, so it'll be
     // recalculated for the next monster that tries to reach us.
     you.lava_in_sight = you.water_in_sight = -1;
@@ -3906,6 +3921,8 @@ static bool _initialise(void)
     // Set vision radius to player's current vision.
     set_los_radius(you.current_vision);
     init_exclusion_los();
+
+    trackers_init_new_level(false);
 
     if (newc) // start a new game
     {

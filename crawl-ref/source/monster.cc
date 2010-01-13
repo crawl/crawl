@@ -3134,6 +3134,9 @@ bool monsters::is_holy() const
 
 bool monsters::is_unholy() const
 {
+    if (type == MONS_SILVER_STATUE)
+        return (true);
+
     if (holiness() == MH_DEMONIC)
         return (true);
 

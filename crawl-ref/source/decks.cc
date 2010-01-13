@@ -1868,7 +1868,7 @@ static void _blade_card(int power, deck_rarity_type rarity)
 
         if (!brand_weapon(RANDOM_ELEMENT(brands), random2(power/4)))
         {
-            if (you.equip[EQ_WEAPON] == -1)
+            if (!you.weapon())
                 mprf("Your %s twitch.", your_hand(true).c_str());
             else
                 mpr("Your weapon vibrates for a moment.");

@@ -194,7 +194,7 @@ void MiscastEffect::init()
         act_source = target;
 
         kc = KC_OTHER;
-        kt = KILL_MISC;
+        kt = KILL_MISCAST;
 
         if (source == ZOT_TRAP_MISCAST)
         {
