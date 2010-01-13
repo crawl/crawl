@@ -1069,12 +1069,12 @@ COLOUR:     c = lightmagenta
 LFLOORCOL:  magenta
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
-cAc<cc.c.c.c.c.c.c.cc.cc.c.c.c.c.c.c.cc.c.c
-cc.cc.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.cc.cc
-c<c..c..............c.c..............cc.c.c
-ccc....................................cccc
-cc.c......2.....................2......c.cc
-c.c..............v.vv.vv.v..............c.c
+cAc..c.c.c.c.c.c.c.cc.cc.c.c.c.c.c.c.cc.c.c
+cc.cc<c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.cc.cc
+c.c.ccc.............c.c..............cc.c.c
+c.cc...................................cccc
+cc<c......2.....................2......c.cc
+c.cc.............v.vv.vv.v..............c.c
 cc..............vvv.1.1.vvv..............cc
 c.c............v.v.1v1v1.v.v............c.c
 cc............vvvv1vvvvv1vvvv............cc
