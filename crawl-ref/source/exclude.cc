@@ -302,7 +302,7 @@ exclude_set::const_iterator exclude_set::end() const
 
 exclude_set::iterator exclude_set::begin()
 {
-    return exclude_roots.end();
+    return exclude_roots.begin();
 }
 
 exclude_set::iterator exclude_set::end()
