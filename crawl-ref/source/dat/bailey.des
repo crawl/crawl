@@ -744,6 +744,7 @@ ENDMAP
 #
 NAME:    bailey_polearm_3
 ORIENT:  encompass
+WEIGHT:  5
 TAGS:    bailey_polearm no_rotate
 SHUFFLE: DF/EG
 SUBST:   D : d, E = 1.., F : 3, G : .
@@ -754,7 +755,7 @@ ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
          any good_item book w:30 /\
          book of annihilations w:1 / book of demonology w:1 / necronomicon w:1
 MONS:    deep elf soldier / deep elf fighter
-MONS:    deep elf conjurer / deep elf summoner / nothing
+MONS:    deep elf summoner / deep elf priest / nothing
 MONS:    deep elf knight
 : bailey_setup(_G)
 MAP
