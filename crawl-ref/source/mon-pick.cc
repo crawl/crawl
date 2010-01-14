@@ -1712,12 +1712,12 @@ int mons_shoals_level(int mcls)
 
     case MONS_MANTICORE:
     case MONS_SNAPPING_TURTLE:
+    case MONS_HARPY:
         mlev += 2;
         break;
 
     case MONS_CYCLOPS:          // will have a sheep band
     case MONS_SIREN:
-    case MONS_HARPY:
     case MONS_MERFOLK_IMPALER:
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_MERFOLK_JAVELINEER:
@@ -1755,10 +1755,10 @@ int mons_shoals_rare(int mcls)
         return 35;
 
     case MONS_SIREN:
+    case MONS_HARPY:
         return 24;
 
     case MONS_CYCLOPS:
-    case MONS_HARPY:
     case MONS_CENTAUR:
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_MERFOLK_IMPALER:
