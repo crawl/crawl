@@ -1862,8 +1862,9 @@ static int _tileidx_corpse(const item_def &item)
 
     // turtles ('t')
     case MONS_SNAPPING_TURTLE:
-    case MONS_ALLIGATOR_SNAPPING_TURTLE: // TODO
-        return TILE_CORPSE_TURTLE;
+        return TILE_CORPSE_SNAPPING_TURTLE;
+    case MONS_ALLIGATOR_SNAPPING_TURTLE:
+        return TILE_CORPSE_ALLIGATOR_SNAPPING_TURTLE;
 
     // ugly things ('u')
     case MONS_UGLY_THING:

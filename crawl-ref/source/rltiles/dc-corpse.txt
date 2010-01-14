@@ -69,7 +69,8 @@ redback CORPSE_REDBACK
 
 ## Turtles ('t')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-snapping_turtle CORPSE_TURTLE
+snapping_turtle CORPSE_SNAPPING_TURTLE
+alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
 
 ## Worms ('w')
 %back dc-misc/blood_green
