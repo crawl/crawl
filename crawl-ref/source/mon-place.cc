@@ -40,6 +40,9 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#ifdef USE_TILE
+#include "tiledef-player.h"
+#endif
 
 band_type active_monster_band = BAND_NO_BAND;
 
@@ -1128,6 +1131,15 @@ static int _place_monster_aux(const mgen_data &mg,
     }
     else if (mon->type == MONS_MERGED_SLIME_CREATURE) // shouldn't ever happen
         mon->type = MONS_SLIME_CREATURE;
+#ifdef USE_TILE
+    else if (mon->type == MONS_SLAVE && !mon->props.exists("monster_tile")
+             && coinflip())
+    {
+        // When placing the slave monster, there's a 50% chance the
+        // default tile is replaced with an alternative one.
+        mon->props["monster_tile"] = short(TILEP_MONS_SLAVE_SMALL);
+    }
+#endif
 
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
@@ -2600,9 +2612,10 @@ int mons_place(mgen_data mg)
     }
 
     if (mg.behaviour == BEH_COPY)
-        mg.behaviour = mg.summoner == &you
-            ? BEH_FRIENDLY
-            : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+    {
+        mg.behaviour = (mg.summoner == &you) ? BEH_FRIENDLY
+                            : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+    }
 
     int mid = place_monster(mg);
     if (mid == -1)
