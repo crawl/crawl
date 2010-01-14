@@ -1169,9 +1169,9 @@ static bool _need_missile_gift(bool forced)
 {
     const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
-    return ((you.piety > 80
-            && random2( you.piety ) > 70
-            && one_chance_in(8) || forced)
+    return ((forced || you.piety > 80
+                       && random2( you.piety ) > 70
+                       && one_chance_in(8))
             && you.skills[ best_missile_skill ] >= 8
             && (launcher || best_missile_skill == SK_THROWING));
 }
