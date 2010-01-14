@@ -3198,7 +3198,10 @@ bool monsters::is_unclean() const
 
 bool monsters::is_chaotic() const
 {
-    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
+    if (type == MONS_UGLY_THING
+        || type == MONS_VERY_UGLY_THING
+        || type == MONS_ABOMINATION_SMALL
+        || type == MONS_ABOMINATION_LARGE)
     {
         return (true);
     }
