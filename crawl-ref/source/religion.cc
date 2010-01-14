@@ -774,9 +774,6 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     std::vector<std::string> dislikes;
 
-    if (god_hates_butchery(which_god))
-        dislikes.push_back("you butcher corpses while praying");
-
     if (god_hates_cannibalism(which_god))
         dislikes.push_back("you perform cannibalism");
 
