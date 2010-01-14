@@ -2854,22 +2854,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        case DID_DEDICATED_BUTCHERY:
-            switch (you.religion)
-            {
-            case GOD_ELYVILON:
-                simple_god_message(" does not appreciate your butchering the "
-                                   "dead during prayer!");
-                retval = true;
-                piety_change = -level;
-                penance = level;
-                break;
-
-            default:
-                break;
-            }
-            break;
-
         case DID_KILL_LIVING:
             switch (you.religion)
             {
@@ -5190,11 +5174,6 @@ bool god_likes_fresh_corpses(god_type god)
             || god == GOD_TROG
             || god == GOD_LUGONU
             || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
-}
-
-bool god_hates_butchery(god_type god)
-{
-    return (false);
 }
 
 harm_protection_type god_protects_from_harm(god_type god, bool actual)

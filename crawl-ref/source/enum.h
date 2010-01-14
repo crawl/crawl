@@ -736,7 +736,7 @@ enum conduct_type
     DID_STABBING,                         // unused
     DID_UNCHIVALRIC_ATTACK,
     DID_POISON,
-    DID_DEDICATED_BUTCHERY,
+    DID_DEDICATED_BUTCHERY,               // unused
     // killings need no longer be dedicated (JPEG)
     DID_KILL_LIVING,
     DID_KILL_UNDEAD,
