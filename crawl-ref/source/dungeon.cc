@@ -2560,10 +2560,10 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
 
     if (player_in_branch( BRANCH_VAULTS ))
     {
-        //if (one_chance_in(3))
-        _city_level(level_number);
-        //else
-        //    _plan_main(level_number, 4);
+        if (one_chance_in(3))
+            _city_level(level_number);
+        else
+            _plan_main(level_number, 4);
         return BUILD_SKIP;
     }
 
