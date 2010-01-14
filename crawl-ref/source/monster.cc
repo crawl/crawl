@@ -3185,13 +3185,20 @@ bool monsters::is_unclean() const
         return (true);
     }
 
+    // Zin considers insanity unclean. And slugs that speak.
+    if (type == MONS_CRAZY_YIUF
+        || type == MONS_PSYCHE
+        || type == MONS_GASTRONOK)
+    {
+        return (true);
+    }
+
     return (false);
 }
 
 bool monsters::is_chaotic() const
 {
-    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-        || type == MONS_CRAZY_YIUF)
+    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
         return (true);
     }
