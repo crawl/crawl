@@ -53,18 +53,34 @@ Levels
 * The pandemonium lords' levels get special announcements.
 * Many new vaults.
 
-Items
------
+Ranged combat
+-------------
 * Removed hand crossbows and Darts skill.
-* Removed amulet of resist slowing.
-* Fixed occasional permanent stat loss/gain with stat-modifying equipment.
+* New profession: Arcane Marksman, combining Crusader, Warper and Hunter.
 * Fixed wall-stopped item beams getting two chances to hit their target.
-* Added scroll of silence.
-* Added potions of brilliance and agility.
-* Added shields of reflection.
 * New missile materials: silver, steel.
 * New missile brands: dispersal, electricity, exploding, penetration, reaping.
 * New needle brands: sleep, slow, paralysis, confusion, frenzy and sickness
+* Slings are one-handed and no longer delayed by shields.
+* Reduced weight of large rocks; stones are a bit heavier.
+* More generous stacking of ammunition.
+* Lowered mulch rate for branded ammunition.
+* Rings of slaying also apply to missile launchers.
+* Branded ammunition is described as "glowing".
+* Poisoned ammunition is more effective.
+* On launchers, the protection brand is replaced with evasion, providing +5 EV.
+* Except for Nessos, launchers of flame can't be combined with poisoned ammo.
+* Hunter starting ammunition starts out at +1; sling-based Hunters get bucklers.
+* Branding spells will also affect launchers.
+* Removed Poison Ammunition in favour of Poison Weapon and temporary brands.
+
+Items
+-----
+* Removed amulet of resist slowing.
+* Fixed occasional permanent stat loss/gain with stat-modifying equipment.
+* Added scroll of silence.
+* Added potions of brilliance and agility.
+* Added shields of reflection.
 * New amulets: guardian spirit, faith, stasis.
 * Amulet of clarity prevents unvoluntary berserk.
 * Lowered gold dragon armour's AC value.
@@ -72,8 +88,6 @@ Items
 * All randart weapons get a brand.
 * The speed brand is only created randomly for artefacts.
 * Halved damage bonus of the vorpal brand to 12.5%.
-* Post-berserk exhaustion cancels Haste, even with an amulet of resist slowing.
-* Slings are one-handed and no longer delayed by shields.
 * Armour acquirement is more likely to fill secondary slots.
 * Non-divine acquirement tries to avoid handing out armour/weapons already seen.
 * Book acquirement doesn't give manuals to spellcasting specialists anymore.
@@ -82,13 +96,9 @@ Items
 * Weapons of holy wrath cannot be cursed.
 * Improvements to whips and demon whips; the latter can be blessed by TSO.
 * Reduce the chances for artefacts with only one stat property.
-* Reduced weight of large rocks; stones are a bit heavier.
-* More generous stacking of ammunition.
-* Lowered mulch rate for branded ammunition.
 * Weapons of electrocution discharge in water.
 * Remove evocable mapping/teleportation from artefacts.
 * Removing +Lev items cancels levitation and is disallowed over water.
-* Rings of slaying also apply to missile launchers.
 * Clubs and spears get moderate stabbing bonus.
 * Clubs may stun target upon successful stabbing.
 * Vampiric weapons can only be wielded at full and cause hunger when wielded.
@@ -97,12 +107,8 @@ Items
 * Rods identify on wielding and use the Maces & Flails skill.
 * Rod recharging no longer depends on player MP or being in inventory.
 * Enchanting rods increases their recharge rate.
-* Branded ammunition is described as "glowing".
-* Poisoned ammunition is more effective.
-* On launchers, the protection brand is replaced with evasion, providing +5 EV.
 * Let chunks stack, if their age is similar.
 * Deep water doesn't destroy items, lava only flammable ones.
-* Except for Nessos, launchers of flame can't be combined with poisoned ammo.
 
 Monsters
 --------
@@ -131,7 +137,6 @@ Monsters
 
 Characters
 ----------
-* New profession: Arcane Marksman, combining Crusader, Warper and Hunter.
 * Strength effect on carrying capacity greatly increased.
 * Base carrying capacity depends on weight of the player species.
 * Demonspawn have been overhauled, mutations no longer depend on skill sets.
@@ -149,7 +154,6 @@ Characters
 * Shield value SH transparently reflects blocking chance.
 * Changed Magic mapping mutation to work passively.
 * Sticky flame negates invisibility.
-* Hunter starting ammunition starts out at +1; sling-based Hunters get bucklers.
 
 Interface
 ---------
@@ -186,8 +190,6 @@ Spells
 * Summon Small Mammals doesn't summon green or orange rats anymore.
 * Fulsome Distillation non-randomly depends on corpse type, but not rottenness.
 * Tukima's Dance weapon strength depends on spell power and weapon weight.
-* Branding spells will also affect launchers.
-* Removed Poison Ammunition in favour of Poison Weapon and temporary brands.
 * Summon Wraiths is replaced by Haunt, a smite-targetted summoning spell.
 * Directed non-enchantment spells make noise when they hit something.
 * Spell miscasts and hell effects are noisy.
