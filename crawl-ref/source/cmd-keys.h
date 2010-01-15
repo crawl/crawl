@@ -1,3 +1,6 @@
+#ifndef CMD_KEYS_H
+#define CMD_KEYS_H
+
 #ifdef USE_TILE
 {'-', CMD_EDIT_PLAYER_TILE},
 {'_', CMD_TOGGLE_SPELL_DISPLAY},
@@ -348,3 +351,5 @@
 #endif
 
 {'\0', CMD_NO_CMD}
+
+#endif // CMD_KEY_H
