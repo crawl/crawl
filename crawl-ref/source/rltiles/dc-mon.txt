@@ -611,8 +611,14 @@ boggart MONS_BOGGART
 ilsuiw MONS_ILSUIW
 ilsuiw_water MONS_ILSUIW_WATER
 %sdir dc-mon
-merfolk_fighter MONS_MERFOLK_FIGHTER
-merfolk_fighter_water MONS_MERFOLK_FIGHTER_WATER
+merfolk_fighter MONS_MERFOLK
+merfolk_fighter_water MONS_MERFOLK_WATER
+merfolk_javelineer MONS_MERFOLK_JAVELINEER
+merfolk_javelineer_water MONS_MERFOLK_JAVELINEER_WATER
+merfolk_impaler MONS_MERFOLK_IMPALER
+merfolk_impaler_water MONS_MERFOLK_IMPALER_WATER
+merfolk_aquamancer MONS_MERFOLK_AQUAMANCER
+merfolk_aquamancer_water MONS_MERFOLK_AQUAMANCER_WATER
 mermaid MONS_MERMAID
 mermaid_water MONS_MERMAID_WATER
 siren MONS_SIREN

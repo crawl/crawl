@@ -276,13 +276,25 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // merfolk ('m')
     case MONS_MERFOLK:
-    case MONS_MERFOLK_IMPALER:      // TODO
-    case MONS_MERFOLK_AQUAMANCER:   // TODO
-    case MONS_MERFOLK_JAVELINEER:   // TODO
         if (in_water)
-            return TILEP_MONS_MERFOLK_FIGHTER_WATER;
+            return TILEP_MONS_MERFOLK_WATER;
         else
-            return TILEP_MONS_MERFOLK_FIGHTER;
+            return TILEP_MONS_MERFOLK;
+    case MONS_MERFOLK_IMPALER:
+        if (in_water)
+            return TILEP_MONS_MERFOLK_IMPALER_WATER;
+        else
+            return TILEP_MONS_MERFOLK_IMPALER;
+    case MONS_MERFOLK_AQUAMANCER:
+        if (in_water)
+            return TILEP_MONS_MERFOLK_AQUAMANCER_WATER;
+        else
+            return TILEP_MONS_MERFOLK_AQUAMANCER;
+    case MONS_MERFOLK_JAVELINEER:
+        if (in_water)
+            return TILEP_MONS_MERFOLK_JAVELINEER_WATER;
+        else
+            return TILEP_MONS_MERFOLK_JAVELINEER;
     case MONS_MERMAID:
         if (in_water)
             return TILEP_MONS_MERMAID_WATER;
@@ -1811,7 +1823,7 @@ static int _tileidx_corpse(const item_def &item)
 
     // merfolk ('m')
     case MONS_MERFOLK:
-        return TILE_CORPSE_MERFOLK_FIGHTER;
+        return TILE_CORPSE_MERFOLK;
     case MONS_MERMAID:
         return TILE_CORPSE_MERMAID;
     case MONS_SIREN:

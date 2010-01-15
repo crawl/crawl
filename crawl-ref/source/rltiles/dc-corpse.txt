@@ -155,7 +155,7 @@ hobgoblin CORPSE_HOBGOBLIN
 gnoll CORPSE_GNOLL
 
 ## Merfolk ('m')
-merfolk_fighter_water CORPSE_MERFOLK_FIGHTER
+merfolk_plain_water CORPSE_MERFOLK
 mermaid_water CORPSE_MERMAID
 siren_water CORPSE_SIREN
 
