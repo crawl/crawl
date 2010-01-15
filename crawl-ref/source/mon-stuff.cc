@@ -3127,7 +3127,7 @@ bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
     // Berserk monsters are less careful and will blindly plow through any
     // dangerous cloud, just to kill you. {due}
     if (!extra_careful && monster->berserk())
-        return (true);
+        return (false);
 
     switch (cl_type)
     {
