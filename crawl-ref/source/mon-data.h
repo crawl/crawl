@@ -1320,7 +1320,7 @@ static monsterentry mondata[] = {
 // dangerous, but still come out at 200+ XP
 {
     MONS_PHANTOM, 'p', BLUE, "phantom",
-    M_SPECIAL_ABILITY,
+    M_SPECIAL_ABILITY | M_INSUBSTANTIAL,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     0, 5, MONS_PLAYER_GHOST, MONS_PHANTOM, MH_UNDEAD, -4,
     { {AT_HIT, AF_BLINK, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1344,7 +1344,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_FLAYED_GHOST, 'p', RED, "flayed ghost",
-    M_SPEAKS,
+    M_SPEAKS | M_INSUBSTANTIAL,
     MR_RES_POISON,
     0, 10, MONS_PLAYER_GHOST, MONS_FLAYED_GHOST, MH_UNDEAD, -4,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2318,7 +2318,7 @@ static monsterentry mondata[] = {
 // eyes and spores ('G')
 {
     MONS_GIANT_SPORE, 'G', GREEN, "giant spore",
-    M_INSUBSTANTIAL,
+    M_NO_FLAGS,
     MR_RES_POISON,
     0, 10, MONS_PLANT, MONS_GIANT_SPORE, MH_PLANT, -3,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2891,7 +2891,7 @@ static monsterentry mondata[] = {
 // fake R - conjured by the R's illusion spell.
 {
     MONS_RAKSHASA_FAKE, 'R', YELLOW, "rakshasa",
-    M_NO_FLAGS,
+    M_INSUBSTANTIAL,
     MR_RES_POISON,
     0, 10, MONS_RAKSHASA_FAKE, MONS_RAKSHASA_FAKE, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 0}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3148,7 +3148,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_WRAITH, 'W', WHITE, "wraith",
-    M_SEE_INVIS,
+    M_SEE_INVIS | M_INSUBSTANTIAL,
     MR_RES_POISON | MR_RES_COLD,
     0, 11, MONS_WRAITH, MONS_WRAITH, MH_UNDEAD, -7,
     { {AT_HIT, AF_DRAIN_XP, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3172,7 +3172,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_FREEZING_WRAITH, 'W', LIGHTBLUE, "freezing wraith",
-    M_SEE_INVIS,
+    M_SEE_INVIS | M_INSUBSTANTIAL,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     0, 10, MONS_WRAITH, MONS_FREEZING_WRAITH, MH_UNDEAD, -4,
     { {AT_HIT, AF_COLD, 19}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3184,7 +3184,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SPECTRAL_WARRIOR, 'W', LIGHTGREEN, "spectral warrior",
-    M_SEE_INVIS | M_GLOWS,
+    M_SEE_INVIS | M_GLOWS | M_INSUBSTANTIAL,
     MR_RES_POISON | MR_RES_COLD,
     0, 13, MONS_WRAITH, MONS_SPECTRAL_WARRIOR, MH_UNDEAD, -6,
     { {AT_HIT, AF_DRAIN_XP, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3197,7 +3197,7 @@ static monsterentry mondata[] = {
 // spectral thing - similar to zombies/skeletons
 {
     MONS_SPECTRAL_THING, 'W', GREEN, "spectral thing",
-    M_SEE_INVIS | M_GLOWS,
+    M_SEE_INVIS | M_GLOWS | M_INSUBSTANTIAL,
     MR_RES_POISON | MR_RES_COLD,
     0, 11, MONS_WRAITH, MONS_SPECTRAL_THING, MH_UNDEAD, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3942,7 +3942,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_CHAOS_SPAWN, '3', ETC_RANDOM, "chaos spawn",
-    M_SEE_INVIS | M_INSUBSTANTIAL,
+    M_SEE_INVIS,
     MR_NO_FLAGS,
     0, 12, MONS_CHAOS_SPAWN, MONS_CHAOS_SPAWN, MH_DEMONIC, -7,
     { {AT_RANDOM, AF_CHAOS, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
