@@ -360,13 +360,14 @@ default-depth:
 #
 # It's not human and it's got an axe.
 #                 -- The Prey (1981)
+#
+# Loot consists of approximately six good items.
 NAME:   bailey_axe_1
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen
 LFLAGS: no_tele_control
 #
-# Loot consists of approximately six good items.
 ITEM:   any good_item w:10 / nothing w:5
 #
 : kobold_axe_returning(_G)
@@ -434,7 +435,7 @@ ENDMAP
 #
 # Apart from weapons and armours left by the monsters, there are about 10
 # potions useful in battle. If those monsters drink them first, of course...
-#
+# And there is always one stack of very good potions
 NAME:   bailey_axe_2
 ORIENT: encompass
 TAGS:   bailey_axe no_rotate
@@ -442,8 +443,12 @@ MONS:   generate_awake kobold ; hand axe ego:returning /\
         generate_awake goblin ; hand axe ego:returning
 MONS:   gnoll ; halberd ego:reaching | halberd ego:electrocution
 MONS:   orc warrior / orc knight
+NSUBST: e = 1:e / *:d
 ITEM:   potion of healing / potion of heal wounds / potion of magic / nothing /\
         potion of might w:5 / potion of speed w:2 / potion of berserk rage w:3
+ITEM:   potion of experience q:2 w:30 / potion of cure mutation q:3 w:30 /\
+        potion of gain intelligence q:8 / potion of gain strength q:8 /\
+        potion of gain dexterity q:8
 : bailey_setup(_G)
 MAP
 ccc ccc ccccc ccc ccc
@@ -459,11 +464,11 @@ c1ccc1ccc2c2ccc1ccc2c
 ccc ccc ccncc ccc c+c
 c1ccc1ccc2c2ccc1ccc2c
 cc+cc=cc+ccc+cc=cc+cc
- ccd.d.dcc ccd....cc
-ccc.d2d.ccccc.....ccc
-c1=d2U3d=1c1=..Y..=1c
-ccc.d2d.ccccc.....ccc
- ccd.d.dcc cc.....cc
+ cce.e.ecc ccd....cc
+ccc.e2e.ccccc.....ccc
+c1=e2U3e=1c1=..Y..=1c
+ccc.e2e.ccccc.....ccc
+ cce.e.ecc cc.....cc
 cc+cc=cc+ccc+cc=cc+cc
 c<ccc1ccc2+2ccc1ccc1c
 ccc ccc ccccc ccc ccc
@@ -472,6 +477,7 @@ ENDMAP
 ############################################################################
 # Another actual bailey.
 #
+# six good items
 NAME:   bailey_axe_3
 WEIGHT: 10
 ORIENT: encompass
@@ -628,9 +634,9 @@ NSUBST: E = 1:= / *:c
 : orc_knight_with_reaching(_G)
 SUBST:  2 = 223.
 SUBST:  1 = 1 2:1 .
-ITEM:   good_item crystal plate mail w:5 / good_item plate mail race:orcish /\
-        good_item gold dragon armour w:5 / good_item ice dragon armour /\
-        good_item dragon armour / good_item steam dragon armour
+ITEM:   good_item crystal plate mail / good_item plate mail race:orcish /\
+        good_item gold dragon armour w:5 / good_item ice dragon armour w:5 /\
+        good_item dragon armour w:5 / good_item steam dragon armour w:5
 # XXX: Which armour pieces can be orcish?
 ITEM:   good_item cloak race:orcish / good_item pair of gloves race:orcish /\
         good_item helmet race:orcish / good_item pair of boots race:orcish /\
@@ -688,9 +694,8 @@ KFEAT:  C = altar_beogh
 SUBST:  = : = l w
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche race:orcish / good_item executioner's axe race:orcish
-ITEM:   potion of experience /\
-        scroll of acquirement q:2 / scroll of enchant armour q:4 /\
-        scroll of enchant weapon III q:3
+ITEM:   potion of experience / scroll of acquirement q:2 /\
+        scroll of enchant armour q:4 / scroll of enchant weapon III q:3
 # XXX: I had "legendary deck of Wonders" here but it does not work. Anybody
 #      can help?
 SUBST:  d = de|
@@ -748,6 +753,7 @@ WEIGHT:  5
 TAGS:    bailey_polearm no_rotate
 SHUFFLE: DF/EG
 SUBST:   D : d, E = 1.., F : 3, G : .
+NSUBST:  d = 3:d / *:$
 ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
          scroll of acquirement q:2 w:5 / scroll of silence q:3 /\
          scroll of fog q:3 / scroll of vulnerability q:3 /\
