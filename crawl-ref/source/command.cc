@@ -2124,18 +2124,117 @@ void show_butchering_help()
     show_specific_help( getHelpString("butchering") );
 }
 
-static void _add_command(column_composer &cols,
-                         const int column, const command_type cmd,
+static void _add_command(column_composer &cols, const int column,
+                         const command_type cmd,
                          const std::string desc,
                          const unsigned int space_to_colon = 7)
 {
-    const std::string command_name = command_to_string(cmd);
+    std::string command_name = command_to_string(cmd);
+    if (strcmp(command_name.c_str(), "<") == 0)
+        command_name += "<";
+
     const int cmd_len = command_name.length();
     std::string line = "<w>" + command_name + "</w>";
     for (unsigned int i = cmd_len; i < space_to_colon; ++i)
         line += " ";
     line += ": " + desc;
 
+    cols.add_formatted(
+            column,
+            line.c_str(),
+            false, true, _cmdhelp_textfilter);
+}
+
+static void _insert_commands(std::string &desc, std::vector<command_type> cmds)
+{
+    for (unsigned int i = 0; i < cmds.size(); ++i)
+    {
+        const std::string::size_type found = desc.find("%");
+        if (found == std::string::npos)
+            break;
+
+        std::string command_name = command_to_string(cmds[i]);
+        if (strcmp(command_name.c_str(), "<") == 0)
+            command_name += "<";
+
+        desc.replace(found, 1, command_name);
+    }
+    desc += "\n";
+}
+
+static void _insert_commands(std::string &desc, const int first, ...)
+{
+    std::vector<command_type> cmd_vector;
+    cmd_vector.push_back((command_type) first);
+
+    va_list args;
+    va_start(args, first);
+    int nargs = 10;
+
+    while (nargs-- > 0)
+    {
+        int value = va_arg(args, int);
+        if (!value)
+            break;
+
+        cmd_vector.push_back((command_type) value);
+    }
+    ASSERT(nargs > 0);
+    va_end(args);
+
+    _insert_commands(desc, cmd_vector);
+}
+
+static void _add_insert_commands(column_composer &cols, const int column,
+                                 const unsigned int space_to_colon,
+                                 const std::string &desc, const int first, ...)
+{
+    const command_type cmd = (command_type) first;
+
+    va_list args;
+    va_start(args, first);
+    int nargs = 10;
+
+    std::vector<command_type> cmd_vector;
+    while (nargs-- > 0)
+    {
+        int value = va_arg(args, int);
+        if (!value)
+            break;
+
+        cmd_vector.push_back((command_type) value);
+    }
+    ASSERT(nargs > 0);
+    va_end(args);
+
+    std::string line = desc;
+    _insert_commands(line, cmd_vector);
+    _add_command(cols, column, cmd, line, space_to_colon);
+}
+
+static void _insert_commands(column_composer &cols, const int column,
+                             const std::string desc, const int first, ...)
+{
+    std::vector<command_type> cmd_vector;
+    cmd_vector.push_back((command_type) first);
+
+    va_list args;
+    va_start(args, first);
+    int nargs = 10;
+
+    while (nargs-- > 0)
+    {
+        int value = va_arg(args, int);
+        if (!value)
+            break;
+
+        cmd_vector.push_back((command_type) value);
+    }
+    ASSERT(nargs > 0);
+    va_end(args);
+
+    std::string line = desc;
+    _insert_commands(line, cmd_vector);
     cols.add_formatted(
             column,
             line.c_str(),
@@ -2160,14 +2259,22 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             0,
-            "<h>Rest/Search:\n"
-            "<w>s</w> : wait a turn; searches adjacent\n"
-            "    squares (also <w>numpad-5</w>, <w>.</w>, <w>Del</w>)\n"
-            "<w>5</w> : rest and long search; stops when\n"
+            "<h>Rest/Search:\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 0, CMD_SEARCH, "wait a turn; searches adjacent", 2);
+    cols.add_formatted(
+            0,
+            "    squares (also <w>numpad-5</w>, <w>.</w>, <w>Del</w>)\n",
+            false, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 0, CMD_REST, "rest and long search; stops when", 2);
+    cols.add_formatted(
+            0,
             "    Health or Magic become full,\n"
             "    something is detected, or after\n"
             "    100 turns over (<w>Shift-numpad-5</w>)\n",
-            true, true, _cmdhelp_textfilter);
+            false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
@@ -2205,26 +2312,36 @@ static void _add_formatted_keyhelp(column_composer &cols)
     item_types +=
         "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise, <w>z</w>ap, <w>Z</w>ap)\n"
         "<brown>\\</brown> : staves and rods (<w>w</w>ield and e<w>v</w>oke)\n"
-        "<lightgreen>}</lightgreen> : miscellaneous items (e<w>v</w>oke)\n"
-        "<yellow>$</yellow> : gold (<w>$</w> counts gold)\n"
-        "<lightmagenta>0</lightmagenta> : the Orb of Zot\n"
-        "    Carry it to the surface and win!\n",
+        "<lightgreen>}</lightgreen> : miscellaneous items (e<w>v</w>oke)\n";
 
     cols.add_formatted(
             0, item_types,
             true, true, _cmdhelp_textfilter);
+
+    _insert_commands(cols, 0, "<yellow>$</yellow> : gold (<w>%</w> counts gold)",
+                     CMD_LIST_GOLD, 0);
+
+    cols.add_formatted(
+            0,
+            "<lightmagenta>0</lightmagenta> : the Orb of Zot\n"
+            "    Carry it to the surface and win!\n",
+            false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
             "<h>Other Gameplay Actions:\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 0, CMD_USE_ABILITY, "use special Ability (<w>a!</w> for help)", 2);
-    _add_command(cols, 0, CMD_PRAY, "Pray (<w>^</w> and <w>^!</w> for help)", 2);
+    _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
+                         CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
+    _add_insert_commands(cols, 0, 2, "Pray (<w>%</w> and <w>%!</w> for help)",
+                         CMD_PRAY, CMD_DISPLAY_RELIGION, CMD_DISPLAY_RELIGION, 0);
     _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
     _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
     _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all spells", 2);
-    _add_command(cols, 0, CMD_SHOUT, "tell allies (<w>tt</w> to shout)", 2);
+
+    _add_insert_commands(cols, 0, 2, "tell allies (<w>%t</w> to shout)",
+                         CMD_SHOUT, CMD_SHOUT, 0);
     _add_command(cols, 0, CMD_PREV_CMD_AGAIN, "re-do previous command", 2);
     _add_command(cols, 0, CMD_REPEAT_CMD, "repeat next command # of times", 2);
 
@@ -2238,7 +2355,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 0, CMD_CLEAR_MAP, "Clear main and level maps");
     _add_command(cols, 0, CMD_ANNOTATE_LEVEL, "annotate the dungeon level", 2);
     _add_command(cols, 0, CMD_CHARACTER_DUMP, "dump character to file", 2);
-    _add_command(cols, 0, CMD_MAKE_NOTE, "add note (use <w>?:</w> to read notes)", 2);
+    _add_insert_commands(cols, 0, 2, "add note (use <w>%:</w> to read notes)",
+                         CMD_MAKE_NOTE, CMD_DISPLAY_COMMANDS, 0);
     _add_command(cols, 0, CMD_MACRO_ADD, "add macro (also <w>Ctrl-D</w>)", 2);
     _add_command(cols, 0, CMD_ADJUST_INVENTORY, "reassign inventory/spell letters", 2);
 // No online play for tiles, so this replacement is reasonable. (jpeg)
@@ -2265,7 +2383,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "display character status", 2);
     _add_command(cols, 1, CMD_DISPLAY_SKILLS, "show skill screen", 2);
-    _add_command(cols, 1, CMD_SAVE_GAME, "show resistances", 2);
+    _add_command(cols, 1, CMD_RESISTS_SCREEN, "show resistances", 2);
     _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion screen", 2);
     _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
     _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
@@ -2277,14 +2395,19 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             1,
-            "<h>Dungeon Interaction and Information:\n"
-            "<w>O</w>/<w>C</w> : Open/Close door\n"
-            "<w><<</w>/<w>></w> : use staircase (<w><<</w> enter shop)\n",
+            "<h>Dungeon Interaction and Information:\n",
             true, true, _cmdhelp_textfilter);
+
+    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Open/Close door",
+                     CMD_OPEN_DOOR, CMD_CLOSE_DOOR, 0);
+    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : use staircase",
+                     CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
+
 
     _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile");
     _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
-    _add_command(cols, 1, CMD_DISPLAY_MAP, "eXamine level map (<w>X?</w> for help)");
+    _add_insert_commands(cols, 1, 7, "eXamine level map (<w>%?</w> for help)",
+                         CMD_DISPLAY_MAP, CMD_DISPLAY_MAP, 0);
     _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features in view");
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
@@ -2303,15 +2426,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be quivered", 2);
 
     {
-        std::string interact = "<w>e</w> : ";
-
-        interact += (you.species == SP_VAMPIRE ? "Drain corpses" : "Eat food");
-        interact +=
-                " (tries floor first)\n";
-
-        cols.add_formatted(
-                1, interact,
-                false, true, _cmdhelp_textfilter);
+        std::string interact = (you.species == SP_VAMPIRE ? "Drain corpses"
+                                                          : "Eat food");
+        interact += " (tries floor first)\n";
+        _add_command(cols, 1, CMD_EAT, interact, 2);
     }
 
     _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);
@@ -2320,18 +2438,16 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item ( <w>-</w> for none)", 2);
     _add_command(cols, 1, CMD_WEAPON_SWAP, "wield item a, or switch to b", 2);
 
-    cols.add_formatted(
-            1, "    (use <w>=</w> to assign slots)\n",
-            false, true, _cmdhelp_textfilter);
+    _insert_commands(cols, 1, "    (use <w>%</w> to assign slots)",
+                     CMD_ADJUST_INVENTORY, 0);
 
     _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
     _add_command(cols, 1, CMD_EVOKE, "eVoke wand", 2);
 
-    cols.add_formatted(
-            1,
-            "<w>W</w>/<w>T</w> : Wear or Take off armour\n"
-            "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n",
-            false, true, _cmdhelp_textfilter);
+    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
+                     CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
+    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Put on or Remove jewellery",
+                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
 
     cols.add_formatted(
             1,
@@ -2346,11 +2462,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             false, true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
-
-    cols.add_formatted(
-            1,
-            "<w>d#</w>: Drop exact number of items\n",
-            false, true, _cmdhelp_textfilter);
+    _insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
+                     CMD_DROP, 0);
 
     {
         std::string interact = "Chop up a corpse";
@@ -2363,15 +2476,25 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             1,
-            "<h>Additional help:\n"
-            "Many commands have context sensitive \n"
-            "help, among them <w>X</w>, <w>x</w>, <w>f</w> (or any \n"
-            "form of targetting), <w>Ctrl-G</w> or <w>G</w>, and \n"
-            "<w>Ctrl-F</w>.\n"
-            "You can read descriptions of your \n"
-            "current spells (<w>I</w>), skills (<w>m?</w>) and \n"
-            "abilities (<w>a!</w>).",
+            "<h>Additional help:\n",
             true, true, _cmdhelp_textfilter);
+
+    std::string text =
+            "Many commands have context sensitive "
+            "help, among them <w>%</w>, <w>%</w>, <w>%</w> (or any "
+            "form of targetting), <w>%</w>, and <w>%</w>.\n"
+            "You can read descriptions of your "
+            "current spells (<w>%</w>), skills (<w>%?</w>) and "
+            "abilities (<w>%!</w>).";
+    _insert_commands(text, CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
+                     CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
+                     CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS, CMD_USE_ABILITY,
+                     0);
+    linebreak_string2(text, 40);
+
+    cols.add_formatted(
+            1, text,
+            false, true, _cmdhelp_textfilter);
 }
 
 static void _add_formatted_tutorial_help(column_composer &cols)
