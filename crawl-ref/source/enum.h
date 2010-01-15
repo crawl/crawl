@@ -1629,9 +1629,9 @@ enum monster_type                      // (int) menv[].type
     MONS_PHANTOM,                      //   15
     MONS_QUASIT,
     MONS_RAT,
-    MONS_SCORPION,                     //   18
-    //MONS_TUNNELING_WORM,      // deprecated and now officially removed {dlb}
-    MONS_UGLY_THING = 20,              //   20
+    MONS_SCORPION,
+    MONS_DWARF, // only for corpses
+    MONS_UGLY_THING,                   //   20
     MONS_FIRE_VORTEX,
     MONS_WORM,
     MONS_ABOMINATION_SMALL,
