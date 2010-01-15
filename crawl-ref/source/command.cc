@@ -2123,7 +2123,6 @@ void show_butchering_help()
     show_specific_help( getHelpString("butchering") );
 }
 
-
 static void _add_formatted_keyhelp(column_composer &cols)
 {
     cols.add_formatted(
