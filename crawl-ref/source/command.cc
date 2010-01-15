@@ -2210,18 +2210,22 @@ static void _add_formatted_keyhelp(column_composer &cols)
         "<lightmagenta>0</lightmagenta> : the Orb of Zot\n"
         "    Carry it to the surface and win!\n",
 
-
-
     cols.add_formatted(
             0, item_types,
             true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
-            "<h>Other Gameplay Actions:\n"
+            "<h>Other Gameplay Actions:\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 0, CMD_USE_ABILITY, "use special Ability (<w>a!</w> for help)", 2);
+    _add_command(cols, 0, CMD_PRAY, "Pray (<w>^</w> and <w>^!</w> for help)", 2);
+
+/*
             "<w>a</w> : use special Ability (<w>a!</w> for help)\n"
             "<w>p</w> : Pray (<w>^</w> and <w>^!</w> for help)\n",
-            true, true, _cmdhelp_textfilter);
+*/
 
     _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
     _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
@@ -2292,20 +2296,53 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_FRIENDLY_PICKUP, "change ally pickup behaviour");
 
-    std::string interact =
-            "<h>Item Interaction (inventory):\n"
+    cols.add_formatted(
+            1,
+            "<h>Item Interaction (inventory):\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "show Inventory list", 2);
+    _add_command(cols, 1, CMD_LIST_EQUIPMENT, "show inventory of equipped items", 2);
+    _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
+    _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
+    _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
+    _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be quivered", 2);
+
+/*
             "<w>i</w> : show Inventory list\n"
             "<w>]</w> : show inventory of equipped items\n"
             "<w>{</w> : inscribe item\n"
             "<w>f</w> : Fire next appropriate item\n"
             "<w>F</w> : select an item and Fire it\n"
             "<w>Q</w> : select item slot to be quivered\n"
-            "<w>(</w>, <w>)</w> : cycle current ammunition\n"
-            "<w>e</w> : ";
+*/
 
-    interact += (you.species == SP_VAMPIRE ? "Drain corpses" : "Eat food");
-    interact +=
-            " (tries floor first)\n"
+    {
+        std::string interact = "<w>e</w> : ";
+
+        interact += (you.species == SP_VAMPIRE ? "Drain corpses" : "Eat food");
+        interact +=
+                " (tries floor first)\n";
+
+        cols.add_formatted(
+                1, interact,
+                false, true, _cmdhelp_textfilter);
+    }
+
+    _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);
+    _add_command(cols, 1, CMD_READ, "Read a scroll or book", 2);
+    _add_command(cols, 1, CMD_MEMORISE_SPELL, "Memorise a spell from a book", 2);
+    _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item ( <w>-</w> for none)", 2);
+    _add_command(cols, 1, CMD_WEAPON_SWAP, "wield item a, or switch to b", 2);
+
+    cols.add_formatted(
+            1, "    (use <w>=</w> to assign slots)\n",
+            false, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
+    _add_command(cols, 1, CMD_EVOKE, "eVoke wand", 2);
+
+/*
             "<w>q</w> : Quaff a potion\n"
             "<w>r</w> : Read a scroll or book\n"
             "<w>M</w> : Memorise a spell from a book\n"
@@ -2314,31 +2351,50 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "    (use <w>=</w> to assign slots)\n"
             "<w>v</w> : eVoke power of wielded item\n"
             "<w>V</w> : eVoke wand\n"
+*/
+
+    cols.add_formatted(
+            1,
             "<w>W</w>/<w>T</w> : Wear or Take off armour\n"
-            "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n";
+            "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n",
+            false, true, _cmdhelp_textfilter);
 
-            cols.add_formatted(
-                  1, interact,
-                  true, true, _cmdhelp_textfilter);
+    cols.add_formatted(
+            1,
+            "<h>Item Interaction (floor):\n",
+            true, true, _cmdhelp_textfilter);
 
-    interact =
-            "<h>Item Interaction (floor):\n"
+    _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
+
+    cols.add_formatted(
+            1,
+            "    (press twice for pick up menu)\n",
+            false, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
+
+    cols.add_formatted(
+            1,
+            "<w>d#</w>: Drop exact number of items\n",
+            false, true, _cmdhelp_textfilter);
+
+    {
+        std::string interact = "Chop up a corpse";
+        if (you.species == SP_VAMPIRE && you.experience_level >= 6)
+            interact += " or bottle its blood";
+        _add_command(cols, 1, CMD_BUTCHER, interact, 2);
+    }
+
+    _add_command(cols, 1, CMD_EAT, "Eat food from floor", 2);
+
+/*
             "<w>,</w> : pick up items (also <w>g</w>) \n"
             "    (press twice for pick up menu)\n"
             "<w>d</w> : Drop an item\n"
             "<w>d#</w>: Drop exact number of items\n"
             "<w>c</w> : Chop up a corpse";
-
-    if (you.species == SP_VAMPIRE && you.experience_level >= 6)
-        interact += " or bottle its blood";
-
-    interact +=
-            "\n"
             "<w>e</w> : Eat food from floor\n";
-
-    cols.add_formatted(
-            1, interact,
-            true, true, _cmdhelp_textfilter);
+*/
 
     cols.add_formatted(
             1,
