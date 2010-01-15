@@ -2112,30 +2112,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         bow_brand = get_weapon_brand(*launcher);
 
     int  ammo_brand = get_ammo_brand(item);
-    bool poisoned   = ammo_brand == SPMSL_POISONED;
-
-    const bool exploding    = ammo_brand == SPMSL_EXPLODING;
-    const bool penetrating  = (!exploding
-                               && (bow_brand  == SPWPN_PENETRATION
-                                   || ammo_brand == SPMSL_PENETRATION));
-    const bool silver       = (ammo_brand == SPMSL_SILVER);
-    const bool disperses    = (ammo_brand == SPMSL_DISPERSAL);
-    const bool reaping      = (bow_brand  == SPWPN_REAPING
-                               || ammo_brand == SPMSL_REAPING)
-                              && bow_brand != SPWPN_HOLY_WRATH;
-    const bool charged      = bow_brand  == SPWPN_ELECTROCUTION;
-    const bool blessed      = bow_brand == SPWPN_HOLY_WRATH
-                              && ammo_brand != SPMSL_REAPING;
-
-    const bool paralysis    = ammo_brand == SPMSL_PARALYSIS;
-    const bool slow         = ammo_brand == SPMSL_SLOW;
-    const bool sleep        = ammo_brand == SPMSL_SLEEP;
-    const bool confusion    = ammo_brand == SPMSL_CONFUSION;
-    const bool sickness     = ammo_brand == SPMSL_SICKNESS;
-    const bool rage         = ammo_brand == SPMSL_RAGE;
-
-
-    ASSERT(!exploding || !is_artefact(item));
 
     // Launcher brand does not affect ammunition.
     if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
@@ -2150,6 +2126,28 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         else
             bow_brand = SPWPN_NORMAL;
     }
+
+    bool poisoned   = (bow_brand == SPWPN_VENOM 
+                        || ammo_brand == SPMSL_POISONED);
+
+    const bool exploding    = (ammo_brand == SPMSL_EXPLODING);
+    const bool penetrating  = (bow_brand  == SPWPN_PENETRATION
+                                || ammo_brand == SPMSL_PENETRATION);
+    const bool silver       = (ammo_brand == SPMSL_SILVER);
+    const bool disperses    = (ammo_brand == SPMSL_DISPERSAL);
+    const bool reaping      = (bow_brand  == SPWPN_REAPING
+                               || ammo_brand == SPMSL_REAPING);
+    const bool charged      = bow_brand  == SPWPN_ELECTROCUTION;
+    const bool blessed      = bow_brand == SPWPN_HOLY_WRATH;
+
+    const bool paralysis    = ammo_brand == SPMSL_PARALYSIS;
+    const bool slow         = ammo_brand == SPMSL_SLOW;
+    const bool sleep        = ammo_brand == SPMSL_SLEEP;
+    const bool confusion    = ammo_brand == SPMSL_CONFUSION;
+    const bool sickness     = ammo_brand == SPMSL_SICKNESS;
+    const bool rage         = ammo_brand == SPMSL_RAGE;
+
+    ASSERT(!exploding || !is_artefact(item));
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
 
