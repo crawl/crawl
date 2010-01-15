@@ -2221,12 +2221,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_command(cols, 0, CMD_USE_ABILITY, "use special Ability (<w>a!</w> for help)", 2);
     _add_command(cols, 0, CMD_PRAY, "Pray (<w>^</w> and <w>^!</w> for help)", 2);
-
-/*
-            "<w>a</w> : use special Ability (<w>a!</w> for help)\n"
-            "<w>p</w> : Pray (<w>^</w> and <w>^!</w> for help)\n",
-*/
-
     _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
     _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
     _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all spells", 2);
@@ -2308,15 +2302,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
     _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be quivered", 2);
 
-/*
-            "<w>i</w> : show Inventory list\n"
-            "<w>]</w> : show inventory of equipped items\n"
-            "<w>{</w> : inscribe item\n"
-            "<w>f</w> : Fire next appropriate item\n"
-            "<w>F</w> : select an item and Fire it\n"
-            "<w>Q</w> : select item slot to be quivered\n"
-*/
-
     {
         std::string interact = "<w>e</w> : ";
 
@@ -2341,17 +2326,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
     _add_command(cols, 1, CMD_EVOKE, "eVoke wand", 2);
-
-/*
-            "<w>q</w> : Quaff a potion\n"
-            "<w>r</w> : Read a scroll or book\n"
-            "<w>M</w> : Memorise a spell from a book\n"
-            "<w>w</w> : Wield an item ( <w>-</w> for none)\n"
-            "<w>'</w> : wield item a, or switch to b \n"
-            "    (use <w>=</w> to assign slots)\n"
-            "<w>v</w> : eVoke power of wielded item\n"
-            "<w>V</w> : eVoke wand\n"
-*/
 
     cols.add_formatted(
             1,
@@ -2386,15 +2360,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     }
 
     _add_command(cols, 1, CMD_EAT, "Eat food from floor", 2);
-
-/*
-            "<w>,</w> : pick up items (also <w>g</w>) \n"
-            "    (press twice for pick up menu)\n"
-            "<w>d</w> : Drop an item\n"
-            "<w>d#</w>: Drop exact number of items\n"
-            "<w>c</w> : Chop up a corpse";
-            "<w>e</w> : Eat food from floor\n";
-*/
 
     cols.add_formatted(
             1,
