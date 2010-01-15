@@ -3410,6 +3410,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_EAT_MEAT:                          // unused
         case DID_CREATE_LIFE:                       // unused
         case DID_SPELL_NONUTILITY:                  // unused
+        case DID_DEDICATED_BUTCHERY:                // unused
         case NUM_CONDUCTS:
             break;
         }
