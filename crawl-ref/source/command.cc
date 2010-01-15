@@ -2179,13 +2179,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 0, CMD_SEARCH_STASHES, "Find items");
     _add_command(cols, 0, CMD_FIX_WAYPOINT, "set Waypoint");
     _add_command(cols, 0, CMD_FORGET_STASH, "Exclude square from searches");
-/*
-            "<w>o</w> : auto-explore\n"
-            "<w>G</w> : interlevel travel (also <w>Ctrl-G</w>)\n"
-            "<w>Ctrl-F</w> : Find items\n"
-            "<w>Ctrl-W</w> : set Waypoint\n"
-            "<w>Ctrl-E</w> : Exclude square from searches\n"
-*/
+
     cols.add_formatted(
             0,
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
@@ -2235,14 +2229,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 0, CMD_SHOUT, "tell allies (<w>tt</w> to shout)", 2);
     _add_command(cols, 0, CMD_PREV_CMD_AGAIN, "re-do previous command", 2);
     _add_command(cols, 0, CMD_REPEAT_CMD, "repeat next command # of times", 2);
-/*
-            "<w>z</w> : cast spell, abort without targets\n"
-            "<w>Z</w> : cast spell, no matter what\n"
-            "<w>I</w> : list all spells\n"
-            "<w>t</w> : tell allies (<w>tt</w> to shout)\n"
-            "<w>`</w> : re-do previous command\n"
-            "<w>0</w> : repeat next command # of times\n"
-*/
 
     cols.add_formatted(
             0,
@@ -2265,24 +2251,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 0, CMD_READ_MESSAGES, "read messages (online play only)", 2);
 #endif
 
-/*
-            "<w>Ctrl-P</w> : show Previous messages\n"
-            "<w>Ctrl-R</w> : Redraw screen\n"
-            "<w>Ctrl-C</w> : Clear main and level maps\n"
-            "<w>!</w> : annotate the dungeon level\n"
-            "<w>#</w> : dump character to file\n"
-            "<w>:</w> : add note (use <w>?:</w> to read notes)\n"
-            "<w>~</w> : add macro (also <w>Ctrl-D</w>)\n"
-            "<w>=</w> : reassign inventory/spell letters\n"
-// No online play for tiles, so this replacement is reasonable. (jpeg)
-#ifdef USE_TILE
-            "<w>_</w> : toggle inventory/spells\n"
-            "<w>-</w> : select player doll"
-#else
-            "<w>_</w> : read messages (online play only)"
-#endif
-*/
-
     cols.add_formatted(
             1,
             "<h>Game Saving and Quitting:\n",
@@ -2291,11 +2259,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_SAVE_GAME, "Save game and exit");
     _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save and exit without query");
     _add_command(cols, 1, CMD_QUIT, "Quit without saving");
-/*
-            "<w>S</w> : Save game and exit\n"
-            "<w>Ctrl-S</w> : Save and exit without query\n"
-            "<w>Ctrl-Q</w> : Quit without saving\n",
-*/
 
     cols.add_formatted(
             1,
@@ -2313,19 +2276,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
     _add_command(cols, 1, CMD_LIST_GOLD, "display gold in possession", 2);
     _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "display experience info", 2);
-/*
-            "<w>@</w> : display character status\n"
-            "<w>m</w> : show skill screen\n"
-            "<w>%</w> : show resistances\n"
-            "<w>^</w> : show religion screen\n"
-            "<w>A</w> : show Abilities/mutations\n"
-            "<w>\\</w> : show item knowledge\n"
-            "<w>[</w> : display worn armour\n"
-            "<w>}</w> : display current weapons\n"
-            "<w>\"</w> : display worn jewellery\n"
-            "<w>$</w> : display gold in possession\n"
-            "<w>E</w> : display experience info\n",
-*/
 
     cols.add_formatted(
             1,
@@ -2341,16 +2291,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_FRIENDLY_PICKUP, "change ally pickup behaviour");
-
-/*
-            "<w>;</w>   : examine occupied tile\n"
-            "<w>x</w>   : eXamine surroundings/targets\n"
-            "<w>X</w>   : eXamine level map (<w>X?</w> for help)\n"
-            "<w>Ctrl-X</w> : list monsters, items, features in view\n"
-            "<w>Ctrl-O</w> : show dungeon Overview\n"
-            "<w>Ctrl-A</w> : toggle auto-pickup\n"
-            "<w>Ctrl-T</w> : change ally pickup behaviour\n",
-*/
 
     std::string interact =
             "<h>Item Interaction (inventory):\n"
