@@ -2891,7 +2891,7 @@ static monsterentry mondata[] = {
 // fake R - conjured by the R's illusion spell.
 {
     MONS_RAKSHASA_FAKE, 'R', YELLOW, "rakshasa",
-    M_INSUBSTANTIAL,
+    M_NO_FLAGS,
     MR_RES_POISON,
     0, 10, MONS_RAKSHASA_FAKE, MONS_RAKSHASA_FAKE, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 0}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
