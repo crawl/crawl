@@ -115,6 +115,16 @@ static int _bow_offset(const monsters *mon)
     }
 }
 
+static int _get_random_monster_tile(const monsters *mon, const int base_tile)
+{
+    if (!mon->props.exists("tile_num"))
+        return (base_tile);
+
+    const int variants = tile_player_count(base_tile);
+    return base_tile + (mon->props["tile_num"].get_short() % variants);
+}
+
+
 int tileidx_monster_base(const monsters *mon, bool detected)
 {
     bool in_water = feat_is_water(grd(mon->pos()));
@@ -202,7 +212,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
             return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
         return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
     case MONS_TOADSTOOL:
-        return TILEP_MONS_TOADSTOOL;
+        return _get_random_monster_tile(mon, TILEP_MONS_TOADSTOOL);
     case MONS_FUNGUS:
         return TILEP_MONS_FUNGUS;
     case MONS_WANDERING_MUSHROOM:
@@ -788,7 +798,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_KILLER_KLOWN:
         return TILEP_MONS_KILLER_KLOWN;
     case MONS_SLAVE:
-        return TILEP_MONS_SLAVE;
+        return _get_random_monster_tile(mon, TILEP_MONS_SLAVE);
 
     // mimics
     case MONS_GOLD_MIMIC:
@@ -1116,7 +1126,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_KIRKE:
         return TILEP_MONS_KIRKE;
     case MONS_NIKOLA:
-        return TILEP_MONS_NIKOLA;                  // TODO
+        return TILEP_MONS_NIKOLA;
     case MONS_MAURICE:
         return TILEP_MONS_MAURICE;
 
