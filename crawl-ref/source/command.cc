@@ -31,6 +31,7 @@
 #include "itemname.h"
 #include "items.h"
 #include "libutil.h"
+#include "macro.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-pick.h"
@@ -2123,6 +2124,24 @@ void show_butchering_help()
     show_specific_help( getHelpString("butchering") );
 }
 
+static void _add_command(column_composer &cols,
+                         const int column, const command_type cmd,
+                         const std::string desc,
+                         const unsigned int space_to_colon = 7)
+{
+    const std::string command_name = command_to_string(cmd);
+    const int cmd_len = command_name.length();
+    std::string line = "<w>" + command_name + "</w>";
+    for (unsigned int i = cmd_len; i < space_to_colon; ++i)
+        line += " ";
+    line += ": " + desc;
+
+    cols.add_formatted(
+            column,
+            line.c_str(),
+            false, true, _cmdhelp_textfilter);
+}
+
 static void _add_formatted_keyhelp(column_composer &cols)
 {
     cols.add_formatted(
@@ -2152,16 +2171,27 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             0,
-            "<h>Extended Movement:\n"
+            "<h>Extended Movement:\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 0, CMD_EXPLORE, "auto-explore");
+    _add_command(cols, 0, CMD_INTERLEVEL_TRAVEL, "interlevel travel");
+    _add_command(cols, 0, CMD_SEARCH_STASHES, "Find items");
+    _add_command(cols, 0, CMD_FIX_WAYPOINT, "set Waypoint");
+    _add_command(cols, 0, CMD_FORGET_STASH, "Exclude square from searches");
+/*
             "<w>o</w> : auto-explore\n"
             "<w>G</w> : interlevel travel (also <w>Ctrl-G</w>)\n"
             "<w>Ctrl-F</w> : Find items\n"
             "<w>Ctrl-W</w> : set Waypoint\n"
             "<w>Ctrl-E</w> : Exclude square from searches\n"
+*/
+    cols.add_formatted(
+            0,
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
             "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : open/close door, \n"
             "         untrap, attack without move\n",
-            true, true, _cmdhelp_textfilter);
+            false, true, _cmdhelp_textfilter);
 
     std::string item_types =
         "\n"
@@ -2196,18 +2226,46 @@ static void _add_formatted_keyhelp(column_composer &cols)
             0,
             "<h>Other Gameplay Actions:\n"
             "<w>a</w> : use special Ability (<w>a!</w> for help)\n"
-            "<w>p</w> : Pray (<w>^</w> and <w>^!</w> for help)\n"
+            "<w>p</w> : Pray (<w>^</w> and <w>^!</w> for help)\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
+    _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
+    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all spells", 2);
+    _add_command(cols, 0, CMD_SHOUT, "tell allies (<w>tt</w> to shout)", 2);
+    _add_command(cols, 0, CMD_PREV_CMD_AGAIN, "re-do previous command", 2);
+    _add_command(cols, 0, CMD_REPEAT_CMD, "repeat next command # of times", 2);
+/*
             "<w>z</w> : cast spell, abort without targets\n"
             "<w>Z</w> : cast spell, no matter what\n"
             "<w>I</w> : list all spells\n"
             "<w>t</w> : tell allies (<w>tt</w> to shout)\n"
             "<w>`</w> : re-do previous command\n"
-            "<w>0</w> : repeat next command # of times\n",
-            true, true, _cmdhelp_textfilter);
+            "<w>0</w> : repeat next command # of times\n"
+*/
 
     cols.add_formatted(
             0,
-            "<h>Non-Gameplay Commands / Info\n"
+            "<h>Non-Gameplay Commands / Info\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 0, CMD_REPLAY_MESSAGES, "show Previous messages");
+    _add_command(cols, 0, CMD_REDRAW_SCREEN, "Redraw screen");
+    _add_command(cols, 0, CMD_CLEAR_MAP, "Clear main and level maps");
+    _add_command(cols, 0, CMD_ANNOTATE_LEVEL, "annotate the dungeon level", 2);
+    _add_command(cols, 0, CMD_CHARACTER_DUMP, "dump character to file", 2);
+    _add_command(cols, 0, CMD_MAKE_NOTE, "add note (use <w>?:</w> to read notes)", 2);
+    _add_command(cols, 0, CMD_MACRO_ADD, "add macro (also <w>Ctrl-D</w>)", 2);
+    _add_command(cols, 0, CMD_ADJUST_INVENTORY, "reassign inventory/spell letters", 2);
+// No online play for tiles, so this replacement is reasonable. (jpeg)
+#ifdef USE_TILE
+    _add_command(cols, 0, CMD_TOGGLE_SPELL_DISPLAY, "toggle inventory/spells", 2);
+    _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "edit player doll", 2);
+#else
+    _add_command(cols, 0, CMD_READ_MESSAGES, "read messages (online play only)", 2);
+#endif
+
+/*
             "<w>Ctrl-P</w> : show Previous messages\n"
             "<w>Ctrl-R</w> : Redraw screen\n"
             "<w>Ctrl-C</w> : Clear main and level maps\n"
@@ -2223,20 +2281,39 @@ static void _add_formatted_keyhelp(column_composer &cols)
 #else
             "<w>_</w> : read messages (online play only)"
 #endif
-            " \n",
-            true, true, _cmdhelp_textfilter);
+*/
 
     cols.add_formatted(
             1,
-            "<h>Game Saving and Quitting:\n"
+            "<h>Game Saving and Quitting:\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_SAVE_GAME, "Save game and exit");
+    _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save and exit without query");
+    _add_command(cols, 1, CMD_QUIT, "Quit without saving");
+/*
             "<w>S</w> : Save game and exit\n"
             "<w>Ctrl-S</w> : Save and exit without query\n"
             "<w>Ctrl-Q</w> : Quit without saving\n",
-            true, true, _cmdhelp_textfilter);
+*/
 
     cols.add_formatted(
             1,
-            "<h>Player Character Information:\n"
+            "<h>Player Character Information:\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "display character status", 2);
+    _add_command(cols, 1, CMD_DISPLAY_SKILLS, "show skill screen", 2);
+    _add_command(cols, 1, CMD_SAVE_GAME, "show resistances", 2);
+    _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion screen", 2);
+    _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
+    _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
+    _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
+    _add_command(cols, 1, CMD_LIST_WEAPONS, "display current weapons", 2);
+    _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
+    _add_command(cols, 1, CMD_LIST_GOLD, "display gold in possession", 2);
+    _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "display experience info", 2);
+/*
             "<w>@</w> : display character status\n"
             "<w>m</w> : show skill screen\n"
             "<w>%</w> : show resistances\n"
@@ -2248,13 +2325,24 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>\"</w> : display worn jewellery\n"
             "<w>$</w> : display gold in possession\n"
             "<w>E</w> : display experience info\n",
-            true, true, _cmdhelp_textfilter);
+*/
 
     cols.add_formatted(
             1,
             "<h>Dungeon Interaction and Information:\n"
             "<w>O</w>/<w>C</w> : Open/Close door\n"
-            "<w><<</w>/<w>></w> : use staircase (<w><<</w> enter shop)\n"
+            "<w><<</w>/<w>></w> : use staircase (<w><<</w> enter shop)\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile");
+    _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
+    _add_command(cols, 1, CMD_DISPLAY_MAP, "eXamine level map (<w>X?</w> for help)");
+    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features in view");
+    _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
+    _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
+    _add_command(cols, 1, CMD_TOGGLE_FRIENDLY_PICKUP, "change ally pickup behaviour");
+
+/*
             "<w>;</w>   : examine occupied tile\n"
             "<w>x</w>   : eXamine surroundings/targets\n"
             "<w>X</w>   : eXamine level map (<w>X?</w> for help)\n"
@@ -2262,7 +2350,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>Ctrl-O</w> : show dungeon Overview\n"
             "<w>Ctrl-A</w> : toggle auto-pickup\n"
             "<w>Ctrl-T</w> : change ally pickup behaviour\n",
-            true, true, _cmdhelp_textfilter);
+*/
 
     std::string interact =
             "<h>Item Interaction (inventory):\n"

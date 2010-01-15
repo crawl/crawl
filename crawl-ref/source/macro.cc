@@ -1276,7 +1276,7 @@ static std::string _special_keys_to_string(int key)
     return (cmd);
 }
 
-static std::string _command_to_string(command_type cmd)
+std::string command_to_string(command_type cmd)
 {
     const int key = command_to_key(cmd);
 
@@ -1318,7 +1318,7 @@ void list_all_commands(std::string &commands)
             continue;
 
         snprintf(info, INFO_SIZE, "%s: %s\n",
-                 command_name.c_str(), _command_to_string(cmd).c_str());
+                 command_name.c_str(), command_to_string(cmd).c_str());
         commands += info;
     }
     commands += "\n";

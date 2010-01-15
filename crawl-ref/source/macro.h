@@ -94,5 +94,7 @@ int           command_to_key(command_type cmd);
 KeymapContext context_for_command(command_type cmd);
 
 void bind_command_to_key(command_type cmd, int key);
+
+std::string command_to_string(command_type cmd);
 void list_all_commands(std::string &commands);
 #endif
