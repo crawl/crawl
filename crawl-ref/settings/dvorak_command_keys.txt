@@ -1,0 +1,111 @@
+# keymap with working vi keys for dvorak keyboards
+
+bindkey = [d] CMD_MOVE_LEFT
+bindkey = [h] CMD_MOVE_DOWN
+bindkey = [t] CMD_MOVE_UP
+bindkey = [n] CMD_MOVE_RIGHT
+bindkey = [f] CMD_MOVE_UP_LEFT
+bindkey = [g] CMD_MOVE_UP_RIGHT
+bindkey = [x] CMD_MOVE_DOWN_LEFT
+bindkey = [b] CMD_MOVE_DOWN_RIGHT
+
+bindkey = [D] CMD_RUN_LEFT
+bindkey = [H] CMD_RUN_DOWN
+bindkey = [T] CMD_RUN_UP
+bindkey = [N] CMD_RUN_RIGHT
+bindkey = [F] CMD_RUN_UP_LEFT
+bindkey = [G] CMD_RUN_UP_RIGHT
+bindkey = [X] CMD_RUN_DOWN_LEFT
+bindkey = [B] CMD_RUN_DOWN_RIGHT
+
+bindkey = [d] CMD_TARGET_LEFT
+bindkey = [h] CMD_TARGET_DOWN
+bindkey = [t] CMD_TARGET_UP
+bindkey = [n] CMD_TARGET_RIGHT
+bindkey = [f] CMD_TARGET_UP_LEFT
+bindkey = [g] CMD_TARGET_UP_RIGHT
+bindkey = [x] CMD_TARGET_DOWN_LEFT
+bindkey = [b] CMD_TARGET_DOWN_RIGHT
+
+bindkey = [D] CMD_TARGET_DIR_LEFT
+bindkey = [H] CMD_TARGET_DIR_DOWN
+bindkey = [T] CMD_TARGET_DIR_UP
+bindkey = [N] CMD_TARGET_DIR_RIGHT
+bindkey = [F] CMD_TARGET_DIR_UP_LEFT
+bindkey = [G] CMD_TARGET_DIR_UP_RIGHT
+bindkey = [X] CMD_TARGET_DIR_DOWN_LEFT
+bindkey = [B] CMD_TARGET_DIR_DOWN_RIGHT
+
+bindkey = [d] CMD_MAP_MOVE_LEFT
+bindkey = [h] CMD_MAP_MOVE_DOWN
+bindkey = [t] CMD_MAP_MOVE_UP
+bindkey = [n] CMD_MAP_MOVE_RIGHT
+bindkey = [f] CMD_MAP_MOVE_UP_LEFT
+bindkey = [g] CMD_MAP_MOVE_UP_RIGHT
+bindkey = [x] CMD_MAP_MOVE_DOWN_LEFT
+bindkey = [b] CMD_MAP_MOVE_DOWN_RIGHT
+
+bindkey = [D] CMD_MAP_JUMP_LEFT
+bindkey = [H] CMD_MAP_JUMP_DOWN
+bindkey = [T] CMD_MAP_JUMP_UP
+bindkey = [N] CMD_MAP_JUMP_RIGHT
+bindkey = [F] CMD_MAP_JUMP_UP_LEFT
+bindkey = [G] CMD_MAP_JUMP_UP_RIGHT
+bindkey = [X] CMD_MAP_JUMP_DOWN_LEFT
+bindkey = [B] CMD_MAP_JUMP_DOWN_RIGHT
+
+bindkey = [^D] CMD_OPEN_DOOR_LEFT
+bindkey = [^H] CMD_OPEN_DOOR_DOWN
+bindkey = [^T] CMD_OPEN_DOOR_UP
+bindkey = [^N] CMD_OPEN_DOOR_RIGHT
+bindkey = [^F] CMD_OPEN_DOOR_UP_LEFT
+bindkey = [^G] CMD_OPEN_DOOR_UP_RIGHT
+bindkey = [^X] CMD_OPEN_DOOR_DOWN_LEFT
+bindkey = [^B] CMD_OPEN_DOOR_DOWN_RIGHT
+
+# drop -> (j)unk
+bindkey = [j] CMD_DROP
+# tell -> (y)ell
+bindkey = [y] CMD_SHOUT
+# fire -> (k)ill from afar
+bindkey = [k] CMD_FIRE
+# e(x)amine -> (l)ook
+bindkey = [l] CMD_LOOK_AROUND
+# Take off armour -> 'U'nequip
+bindkey = [U] CMD_REMOVE_ARMOUR
+# Fire without quiver -> (K)ill from afar without quiver
+bindkey = [K] CMD_THROW_ITEM_NO_QUIVER
+# Goto level -> J for no reason
+bindkey = [J] CMD_INTERLEVEL_TRAVEL
+# e(X)amine map -> (L)ook at map
+bindkey = [L] CMD_DISPLAY_MAP
+
+# ^D, add macro -> ^M for macro
+bindkey = [^M] CMD_MACRO_ADD
+# ^T, toggle friendly pickup -> ^Y to keep with (y)ell
+bindkey = [^Y] CMD_TOGGLE_FRIENDLY_PICKUP
+# ^F, search stashes -> ^K for no reason
+bindkey = [^K] CMD_SEARCH_STASHES
+# ^G, interlevel travel -> ^J for no reason
+bindkey = [^J] CMD_INTERLEVEL_TRAVEL
+# ^X, list items and feature -> (^L)ist items and features
+bindkey = [^L] CMD_FULL_VIEW
+
+# map (F)ind -> K for no reason
+bindkey = [K] CMD_MAP_FIND_F
+# map (G)oto level -> J for no reason
+bindkey = [J] CMD_MAP_GOTO_LEVEL
+
+# target maybe prev target -> k
+bindkey = [k] CMD_TARGET_MAYBE_PREV_TARGET
+
+# target wizard (D)ebug monster -> J rather than K because small k is used for
+# firing
+bindkey = [J] CMD_TARGET_WIZARD_DEBUG_MONSTER
+# target wizard make (F)riendly -> make the monster (L)oyal
+bindkey = [L] CMD_TARGET_WIZARD_MAKE_FRIENDLY
+# target wizard (G)ain level -> make the monster go (U)p a level
+bindkey = [U] CMD_TARGET_WIZARD_GAIN_LEVEL
+
+# FIXME: Consider mapping vi keiys for the doll editor. It doesn't use
+# diagonals, so it might not be worth the effort.
