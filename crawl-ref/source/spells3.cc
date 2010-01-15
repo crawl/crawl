@@ -58,7 +58,6 @@
 #include "travel.h"
 #include "view.h"
 #include "shout.h"
-#include "viewgeom.h"
 #include "xom.h"
 
 bool cast_selective_amnesia(bool force)

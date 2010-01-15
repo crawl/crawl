@@ -21,12 +21,10 @@
 #include "message.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "monster.h"
 #include "mon-stuff.h"
 #include "options.h"
 #include "player.h"
-#include "quiver.h"
 #include "skills2.h"
 #include "species.h"
 

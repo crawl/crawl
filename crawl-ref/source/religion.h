@@ -97,7 +97,6 @@ bool god_hates_cannibalism(god_type god);
 bool god_hates_killing(god_type god, const monsters* mon);
 bool god_likes_fresh_corpses(god_type god);
 bool god_likes_butchery(god_type god);
-bool god_hates_butchery(god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
 
 bool jiyva_is_dead();

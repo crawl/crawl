@@ -22,7 +22,6 @@
 #include "options.h"
 #include "ghost.h"
 #include "lev-pand.h"
-#include "makeitem.h"
 #include "message.h"
 #include "mislead.h"
 #include "mon-behv.h"
@@ -41,6 +40,9 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#ifdef USE_TILE
+#include "tiledef-player.h"
+#endif
 
 band_type active_monster_band = BAND_NO_BAND;
 
@@ -1057,6 +1059,22 @@ monsters* get_free_monster()
     return (NULL);
 }
 
+#ifdef USE_TILE
+// For some tiles, always use the fixed same variant out of a set
+// of tiles. (Where this is not handled by number or colour already.)
+static void _maybe_init_tilenum_props(monsters *mon)
+{
+    // Not necessary.
+    if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))
+        return;
+
+    // Only add the property for tiles that have several variants.
+    const int base_tile = tileidx_monster_base(mon);
+    if (tile_player_count(base_tile) > 1)
+        mon->props["tile_num"] = short(random2(256));
+}
+#endif
+
 static int _place_monster_aux(const mgen_data &mg,
                               bool first_band_member, bool force_pos)
 {
@@ -1127,6 +1145,12 @@ static int _place_monster_aux(const mgen_data &mg,
             return (-1);
         }
     }
+    else if (mon->type == MONS_MERGED_SLIME_CREATURE) // shouldn't ever happen
+        mon->type = MONS_SLIME_CREATURE;
+#ifdef USE_TILE
+    else
+        _maybe_init_tilenum_props(mon);
+#endif
 
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
@@ -2599,9 +2623,10 @@ int mons_place(mgen_data mg)
     }
 
     if (mg.behaviour == BEH_COPY)
-        mg.behaviour = mg.summoner == &you
-            ? BEH_FRIENDLY
-            : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+    {
+        mg.behaviour = (mg.summoner == &you) ? BEH_FRIENDLY
+                            : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+    }
 
     int mid = place_monster(mg);
     if (mid == -1)

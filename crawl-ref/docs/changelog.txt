@@ -13,7 +13,7 @@ Breaks saves compatibility.
 * Altars for dungeon gods may now appear on levels 2 to 9 instead of the Temple.
 * New water based branch: the Shoals, sometimes replacing the Swamp.
 * Strength has a much greater effect on carrying capacity.
-* Nerf Summon Small Mammals, amulet of resist slowing, and gold dragon armour.
+* Nerf Summon Small Mammals and gold dragon armour.
 * Slime creatures and ugly things are more interesting and dangerous.
 * Many cool new monsters, portal vaults and ammunition brands.
 
@@ -37,6 +37,7 @@ Gods
 Levels
 ------
 * New branch: the Shoals, with a 50% chance of replacing the Swamp.
+* Fix branch ends rarely being generated without a rune.
 * Shorten Lair to eight levels.
 * New portal vaults: Bailey, Trove, Volcanoes, Wizard Laboratory.
 * Most escape hatches are replaced by (single-use) shafts.
@@ -52,25 +53,41 @@ Levels
 * The pandemonium lords' levels get special announcements.
 * Many new vaults.
 
+Ranged combat
+-------------
+* Removed hand crossbows and Darts skill.
+* New profession: Arcane Marksman, combining Crusader, Warper and Hunter.
+* Fixed wall-stopped item beams getting two chances to hit their target.
+* New missile materials: silver, steel.
+* New missile brands: dispersal, electricity, exploding, penetration, reaping.
+* New needle brands: sleep, slow, paralysis, confusion, frenzy and sickness
+* Slings are one-handed and no longer delayed by shields.
+* Reduced weight of large rocks; stones are a bit heavier.
+* More generous stacking of ammunition.
+* Lowered mulch rate for branded ammunition.
+* Rings of slaying also apply to missile launchers.
+* Branded ammunition is described as "glowing".
+* Poisoned ammunition is more effective.
+* On launchers, the protection brand is replaced with evasion, providing +5 EV.
+* Except for Nessos, launchers of flame can't be combined with poisoned ammo.
+* Hunter starting ammunition starts out at +1; sling-based Hunters get bucklers.
+* Branding spells will also affect launchers.
+* Removed Poison Ammunition in favour of Poison Weapon and temporary brands.
+
 Items
 -----
-* Removed hand crossbows and Darts skill.
+* Removed amulet of resist slowing.
 * Fixed occasional permanent stat loss/gain with stat-modifying equipment.
-* Fixed wall-stopped item beams getting two chances to hit their target.
 * Added scroll of silence.
 * Added potions of brilliance and agility.
 * Added shields of reflection.
-* New missile materials: silver, steel.
-* New missile brands: dispersal, electricity, exploding, penetration, reaping.
-* Added amulet of the guardian spirit, making you take damage from mp, not hp.
+* New amulets: guardian spirit, faith, stasis.
 * Amulet of clarity prevents unvoluntary berserk.
 * Lowered gold dragon armour's AC value.
 * Removed several randart armour brands like mapping and levitation.
 * All randart weapons get a brand.
 * The speed brand is only created randomly for artefacts.
 * Halved damage bonus of the vorpal brand to 12.5%.
-* Post-berserk exhaustion cancels Haste, even with an amulet of resist slowing.
-* Slings are one-handed and no longer delayed by shields.
 * Armour acquirement is more likely to fill secondary slots.
 * Non-divine acquirement tries to avoid handing out armour/weapons already seen.
 * Book acquirement doesn't give manuals to spellcasting specialists anymore.
@@ -79,13 +96,9 @@ Items
 * Weapons of holy wrath cannot be cursed.
 * Improvements to whips and demon whips; the latter can be blessed by TSO.
 * Reduce the chances for artefacts with only one stat property.
-* Reduced weight of large rocks.
-* More generous stacking of ammunition.
-* Lowered mulch rate for branded ammunition.
 * Weapons of electrocution discharge in water.
 * Remove evocable mapping/teleportation from artefacts.
 * Removing +Lev items cancels levitation and is disallowed over water.
-* Rings of slaying also apply to missile launchers.
 * Clubs and spears get moderate stabbing bonus.
 * Clubs may stun target upon successful stabbing.
 * Vampiric weapons can only be wielded at full and cause hunger when wielded.
@@ -94,10 +107,6 @@ Items
 * Rods identify on wielding and use the Maces & Flails skill.
 * Rod recharging no longer depends on player MP or being in inventory.
 * Enchanting rods increases their recharge rate.
-* New needle brands: sleep, slow, paralysis, confusion, rage and sickness
-* Branded ammunition is described as "glowing".
-* Poisoned ammunition is more effective.
-* On launchers, the protection brand is replaced with evasion, providing +5 EV.
 * Let chunks stack, if their age is similar.
 * Deep water doesn't destroy items, lava only flammable ones.
 
@@ -107,6 +116,7 @@ Monsters
 * New plant: bush, can be fired through, two or more block vision.
 * New monsters for the Shoals: merfolk, kraken, mermaid, siren, harpy, shark.
 * Other new monsters: toadstool, giant leech, golden eye, new demon sixfirhy.
+* Fixed mimics not using the correct item glyph if it was redefined.
 * (Very) ugly things get random resistances and attack flavours.
 * Slime creatures can merge to become larger and more powerful.
 * All spectral things can use stairs again.
@@ -121,12 +131,12 @@ Monsters
 * Berserk monsters get doubled hit points, similar to the player.
 * Bears go berserk, but mindless monsters can't.
 * Hungry ghosts eat corpses.
+* Monsters get saner experience values.
 * Bashing plants or fungi will only train Fighting/Unarmed Combat up to level 1.
 * Glyph changes for minotaurs and some insects. See 052_monster_glyphs.txt.
 
 Characters
 ----------
-* New profession: Arcane Marksman, combining Crusader, Warper and Hunter.
 * Strength effect on carrying capacity greatly increased.
 * Base carrying capacity depends on weight of the player species.
 * Demonspawn have been overhauled, mutations no longer depend on skill sets.
@@ -144,7 +154,6 @@ Characters
 * Shield value SH transparently reflects blocking chance.
 * Changed Magic mapping mutation to work passively.
 * Sticky flame negates invisibility.
-* Hunter starting ammunition starts out at +1; sling-based Hunters get bucklers.
 
 Interface
 ---------
@@ -152,7 +161,7 @@ Interface
 * Add a shopping list ('$') to notify you when you can afford a listed item.
 * New memorisation interface listing all spells contained in carried books.
 * Autotravel doesn't cut corners and tries to avoid ambushes.
-* Exclusions are displayed in the overview screen ('Ctrl-O' command).
+* Exclusions are displayed on the overview screen ('Ctrl-O' command).
 * Show explored depth for all branches in the overview screen ('Ctrl-O').
 * Autoexclusions get removed again once the trigger monster is no longer there.
 * Dangerous clouds that are generated by the dungeon itself ("fog machines")
@@ -181,8 +190,6 @@ Spells
 * Summon Small Mammals doesn't summon green or orange rats anymore.
 * Fulsome Distillation non-randomly depends on corpse type, but not rottenness.
 * Tukima's Dance weapon strength depends on spell power and weapon weight.
-* Branding spells will also affect launchers.
-* Removed Poison Ammunition in favour of Poison Weapon and temporary brands.
 * Summon Wraiths is replaced by Haunt, a smite-targetted summoning spell.
 * Directed non-enchantment spells make noise when they hit something.
 * Spell miscasts and hell effects are noisy.
@@ -204,9 +211,11 @@ Tiles
   * Alt-Left-Click: zap wand at target (monster or player)
 * When applicable, left-clicking on a monster within reaching range attacks it.
 * Added an icon designating berserk monsters.
+* Added icons for chunk/corpse eating effects.
 * Add some "animations" whenever the screen is redrawn.
 * Vaults can specify custom tiles for features or monsters.
 * Tiles can be recoloured dynamically.
+* The Shoals branch is our testing ground for a smoother level layout.
 
 Code cleanup
 ------------

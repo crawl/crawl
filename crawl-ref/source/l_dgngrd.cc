@@ -13,7 +13,6 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
-#include "religion.h"
 #include "terrain.h"
 
 static int dgn_feature_number(lua_State *ls)

@@ -14,7 +14,6 @@
 #include <algorithm>
 
 #include "externs.h"
-#include "options.h"
 
 #include "areas.h"
 #include "artefact.h"

@@ -39,7 +39,6 @@
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
-#include "options.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -1461,7 +1460,7 @@ static bool _handle_throw(monsters *monster, bolt & beem)
         return (false);
 
     const bool archer = mons_class_flag(monster->type, M_ARCHER);
-    // Highly-specialised archers are more likely to shoot than talk.
+    // Highly-specialised archers are more likely to shoot than talk. (?)
     if (one_chance_in(archer? 9 : 5))
         return (false);
 
@@ -1472,6 +1471,10 @@ static bool _handle_throw(monsters *monster, bolt & beem)
     // Monsters won't shoot in melee range, largely for balance reasons.
     // Specialist archers are an exception to this rule.
     if (!archer && adjacent(beem.target, monster->pos()))
+        return (false);
+
+    // If the monster is a spellcaster, don't bother throwing stuff.
+    if (mons_has_ranged_spell(monster, true, false))
         return (false);
 
     // Greatly lowered chances if the monster is fleeing or pacified and

@@ -29,7 +29,6 @@
 #include "env.h"
 #include "terrain.h"
 #ifdef USE_TILE
-#include "tiles.h"
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
 #endif

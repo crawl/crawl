@@ -37,8 +37,6 @@ void set_random_target(monsters* mon);
 
 void make_mons_leave_level(monsters *mon);
 
-bool message_current_target(void);
-
 bool monster_can_hit_monster(monsters *monster, const monsters *targ);
 
 bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,

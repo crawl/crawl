@@ -1445,6 +1445,10 @@ bool monsters::pickup_throwable_weapon(item_def &item, int near)
 
     ASSERT(slot == MSLOT_MISSILE);
 
+    // Spellcasters shouldn't bother with missiles.
+    if (mons_has_ranged_spell(this, true, false))
+        return (false);
+
     // If occupied, don't pick up a throwable weapons if it would just
     // stack with an existing one. (Upgrading is possible.)
     if (mslot_item(slot)

@@ -576,7 +576,6 @@ eye_green
 %shrink 0
 ### ID-ed amulet
 i-rage AMU_RAGE
-i-r-slow AMU_RESIST_SLOW
 i-clarity AMU_CLARITY
 i-warding AMU_WARDING
 i-r-corrosion AMU_RESIST_CORROSION
@@ -586,6 +585,8 @@ i-c-flight AMU_CONTROLLED_FLIGHT
 i-inaccuracy AMU_INACCURACY
 i-r-mutation AMU_RESIST_MUTATION
 i-spirit AMU_SPIRIT_SHIELD
+i-faith AMU_FAITH
+i-stasis AMU_STASIS
 %rim 1
 %shrink 1
 

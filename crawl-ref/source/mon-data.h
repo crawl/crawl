@@ -1123,10 +1123,10 @@ static monsterentry mondata[] = {
     M_WARM_BLOOD,
     MR_NO_FLAGS,
     500, 8, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -3,
-    { {AT_HIT, AF_PLAIN, 28}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { {AT_HIT, AF_PLAIN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 12, 5, 4, 0 },
     // Impalers prefer light armour, and are dodging experts.
-    0, 23, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
+    0, 18, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
     I_NORMAL, HT_AMPHIBIOUS_WATER, FL_NONE, 10, ATTACK_ENERGY(6),
     MONUSE_MAGIC_ITEMS, MONEAT_NOTHING, SIZE_MEDIUM
 },
@@ -1138,7 +1138,7 @@ static monsterentry mondata[] = {
     500, 8, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -4,
     { {AT_SHOOT, AF_PLAIN, 16}, {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK },
     { 13, 5, 2, 0 },
-    0, 15, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
+    0, 14, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
     I_NORMAL, HT_AMPHIBIOUS_WATER, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_MAGIC_ITEMS, MONEAT_NOTHING, SIZE_MEDIUM
 },
@@ -1320,7 +1320,7 @@ static monsterentry mondata[] = {
 // dangerous, but still come out at 200+ XP
 {
     MONS_PHANTOM, 'p', BLUE, "phantom",
-    M_SPECIAL_ABILITY,
+    M_SPECIAL_ABILITY | M_INSUBSTANTIAL,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
     0, 5, MONS_PLAYER_GHOST, MONS_PHANTOM, MH_UNDEAD, -4,
     { {AT_HIT, AF_BLINK, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1344,7 +1344,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_FLAYED_GHOST, 'p', RED, "flayed ghost",
-    M_SPEAKS,
+    M_SPEAKS | M_INSUBSTANTIAL,
     MR_RES_POISON,
     0, 10, MONS_PLAYER_GHOST, MONS_FLAYED_GHOST, MH_UNDEAD, -4,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1548,8 +1548,8 @@ static monsterentry mondata[] = {
         MH_NATURAL, -3,
     { {AT_BITE, AF_REACH, 50}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 16, 7, 4, 0 },
-    19, 2, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_HISS,
-    I_ANIMAL, HT_AMPHIBIOUS_LAND, FL_NONE, 8, ACTION_ENERGY(8),
+    19, 1, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_HISS,
+    I_ANIMAL, HT_AMPHIBIOUS_LAND, FL_NONE, 8, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
@@ -2318,7 +2318,7 @@ static monsterentry mondata[] = {
 // eyes and spores ('G')
 {
     MONS_GIANT_SPORE, 'G', GREEN, "giant spore",
-    M_INSUBSTANTIAL,
+    M_NO_FLAGS,
     MR_RES_POISON,
     0, 10, MONS_PLANT, MONS_GIANT_SPORE, MH_PLANT, -3,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2540,6 +2540,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
+{   // not an actual monster, it's here just to allow recoloring
+    MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
+    M_NO_FLAGS,
+    MR_RES_POISON | MR_RES_ASPHYX,
+    0, 5, MONS_JELLY, MONS_SLIME_CREATURE, MH_NATURAL, -3,
+    { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 11, 3, 5, 0 },
+    1, 4, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_PLANT, HT_AMPHIBIOUS_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
+},
+
 {
     MONS_PULSATING_LUMP, 'J', RED, "pulsating lump",
     M_SENSE_INVIS,
@@ -2603,7 +2615,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_ACID_BLOB, 'J', LIGHTGREEN, "acid blob",
+    MONS_ACID_BLOB, 'J', LIGHTCYAN, "acid blob",
     M_SENSE_INVIS | M_SPECIAL_ABILITY | M_ACID_SPLASH,
     MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
     0, 12, MONS_JELLY, MONS_ACID_BLOB, MH_NATURAL, -7,
@@ -2958,7 +2970,7 @@ static monsterentry mondata[] = {
     { {AT_BITE, AF_POISON_STRONG, 24}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 4, 5, 0 },
     2, 15, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_HISS,
-    I_INSECT, HT_AMPHIBIOUS_WATER, FL_NONE, 14, DEFAULT_ENERGY,
+    I_INSECT, HT_AMPHIBIOUS_WATER, FL_NONE, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
@@ -3136,7 +3148,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_WRAITH, 'W', WHITE, "wraith",
-    M_SEE_INVIS,
+    M_SEE_INVIS | M_INSUBSTANTIAL,
     MR_RES_POISON | MR_RES_COLD,
     0, 11, MONS_WRAITH, MONS_WRAITH, MH_UNDEAD, -7,
     { {AT_HIT, AF_DRAIN_XP, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3160,7 +3172,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_FREEZING_WRAITH, 'W', LIGHTBLUE, "freezing wraith",
-    M_SEE_INVIS,
+    M_SEE_INVIS | M_INSUBSTANTIAL,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     0, 10, MONS_WRAITH, MONS_FREEZING_WRAITH, MH_UNDEAD, -4,
     { {AT_HIT, AF_COLD, 19}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3172,7 +3184,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SPECTRAL_WARRIOR, 'W', LIGHTGREEN, "spectral warrior",
-    M_SEE_INVIS | M_GLOWS,
+    M_SEE_INVIS | M_GLOWS | M_INSUBSTANTIAL,
     MR_RES_POISON | MR_RES_COLD,
     0, 13, MONS_WRAITH, MONS_SPECTRAL_WARRIOR, MH_UNDEAD, -6,
     { {AT_HIT, AF_DRAIN_XP, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3185,7 +3197,7 @@ static monsterentry mondata[] = {
 // spectral thing - similar to zombies/skeletons
 {
     MONS_SPECTRAL_THING, 'W', GREEN, "spectral thing",
-    M_SEE_INVIS | M_GLOWS,
+    M_SEE_INVIS | M_GLOWS | M_INSUBSTANTIAL,
     MR_RES_POISON | MR_RES_COLD,
     0, 11, MONS_WRAITH, MONS_SPECTRAL_THING, MH_UNDEAD, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3573,6 +3585,18 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+{   // another dummy monster
+    MONS_DWARF, '@', BROWN, "dwarf",
+    M_WARM_BLOOD | M_SPEAKS,
+    MR_NO_FLAGS,
+    550, 10, MONS_DWARF, MONS_DWARF, MH_NATURAL, -3,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 5, 3, 5, 0 },
+    2, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // mimics
 {
     // Gold mimics are the only mimics that actually use their name. - bwr
@@ -3930,7 +3954,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_CHAOS_SPAWN, '3', ETC_RANDOM, "chaos spawn",
-    M_SEE_INVIS | M_INSUBSTANTIAL,
+    M_SEE_INVIS,
     MR_NO_FLAGS,
     0, 12, MONS_CHAOS_SPAWN, MONS_CHAOS_SPAWN, MH_DEMONIC, -7,
     { {AT_RANDOM, AF_CHAOS, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5078,7 +5102,7 @@ static monsterentry mondata[] = {
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SEE_INVIS
         | M_SPEAKS,
     MR_NO_FLAGS,
-    550, 4, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -5,
+    550, 4, MONS_DWARF, MONS_DWARF, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 17, 0, 0, 140 },
     1, 10, MST_ORC_PRIEST, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,

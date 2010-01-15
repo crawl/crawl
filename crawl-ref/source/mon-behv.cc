@@ -8,17 +8,14 @@
 #include "mon-behv.h"
 
 #include "externs.h"
-#include "options.h"
 
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
-#include "los.h"
 #include "mon-iter.h"
 #include "mon-movetarget.h"
-#include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-stuff.h"
 #include "mon-util.h"

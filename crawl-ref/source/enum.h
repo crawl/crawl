@@ -736,7 +736,7 @@ enum conduct_type
     DID_STABBING,                         // unused
     DID_UNCHIVALRIC_ATTACK,
     DID_POISON,
-    DID_DEDICATED_BUTCHERY,
+    DID_DEDICATED_BUTCHERY,               // unused
     // killings need no longer be dedicated (JPEG)
     DID_KILL_LIVING,
     DID_KILL_UNDEAD,
@@ -1629,9 +1629,9 @@ enum monster_type                      // (int) menv[].type
     MONS_PHANTOM,                      //   15
     MONS_QUASIT,
     MONS_RAT,
-    MONS_SCORPION,                     //   18
-    //MONS_TUNNELING_WORM,      // deprecated and now officially removed {dlb}
-    MONS_UGLY_THING = 20,              //   20
+    MONS_SCORPION,
+    MONS_DWARF, // only for corpses
+    MONS_UGLY_THING,                   //   20
     MONS_FIRE_VORTEX,
     MONS_WORM,
     MONS_ABOMINATION_SMALL,
@@ -1702,7 +1702,7 @@ enum monster_type                      // (int) menv[].type
     MONS_BEAST,
     MONS_IRON_DEVIL,
     MONS_SIXFIRHY,                     //   90
-    //
+    MONS_MERGED_SLIME_CREATURE, // used only for recoloring
     //
     //
     //

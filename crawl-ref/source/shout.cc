@@ -22,7 +22,6 @@
 #include "mon-pathfind.h"
 #include "monster.h"
 #include "mon-stuff.h"
-#include "options.h"
 #include "player.h"
 #include "random.h"
 #include "skills.h"

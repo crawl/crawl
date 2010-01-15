@@ -26,7 +26,6 @@
 #include "godabil.h"
 #include "initfile.h"
 #include "itemname.h"
-#include "itemprop.h"
 #include "item_use.h"
 #include "menu.h"
 #include "message.h"
@@ -38,7 +37,6 @@
 #include "ouch.h"
 #include "player.h"
 #include "place.h"
-#include "quiver.h"
 #include "religion.h"
 #include "skills2.h"
 #include "stuff.h"
@@ -308,7 +306,7 @@ static void _print_stats_mp(int x, int y)
     for (int i = 11-col; i > 0; i--)
         cprintf(" ");
 
-    if (! Options.classic_hud)
+    if (!Options.classic_hud)
         MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
 }
 

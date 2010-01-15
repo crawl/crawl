@@ -24,8 +24,13 @@ mon_glyph = trapdoor spider : brown
 mon_glyph = wolf spider : brown
 
 # tier 4 demons
-mon_glpyh = smoke demon : lightgrey 4
+mon_glyph = smoke demon : lightgrey 4
 
 # tier 3 demons
 mon_glyph = hellion : fire 3
 mon_glyph = ynoxinul : cyan 3
+
+# jellies
+mon_glyph = acid blob : lightgreen
+# not in 0.5, but it would conflict with acid blobs
+mon_glyph = merged slime creature : green

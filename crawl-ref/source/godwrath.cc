@@ -31,7 +31,6 @@
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "ouch.h"
-#include "quiver.h"
 #include "religion.h"
 #include "spells1.h"
 #include "spells2.h"

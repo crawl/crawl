@@ -34,6 +34,7 @@ dgnevent.o \
 directn.o \
 dlua.o \
 dungeon.o \
+dgn-height.o \
 dgn-shoals.o \
 effects.o \
 exclude.o \

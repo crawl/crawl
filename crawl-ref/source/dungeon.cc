@@ -32,7 +32,6 @@
 #include "flood_find.h"
 #include "fprop.h"
 #include "externs.h"
-#include "options.h"
 #include "dbg-maps.h"
 #include "dbg-scan.h"
 #include "directn.h"
@@ -2561,10 +2560,10 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
 
     if (player_in_branch( BRANCH_VAULTS ))
     {
-        //if (one_chance_in(3))
-        _city_level(level_number);
-        //else
-        //    _plan_main(level_number, 4);
+        if (one_chance_in(3))
+            _city_level(level_number);
+        else
+            _plan_main(level_number, 4);
         return BUILD_SKIP;
     }
 
@@ -2932,6 +2931,12 @@ bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat)
         if (grd(*ai) == feat)
             return true;
     return false;
+}
+
+coord_def dgn_random_point_in_margin(int margin)
+{
+    return coord_def(random_range(margin, GXM - margin - 1),
+                     random_range(margin, GYM - margin - 1));
 }
 
 static inline bool _point_matches_feat(coord_def c,

@@ -99,7 +99,7 @@ DEPTH:  12-18, !Lair, !Slime
 : place_unique(_G, "Agnes")
 
 NAME:   uniq_aizul
-DEPTH:  13-25, !Lair, !Slime
+DEPTH:  14-20, !Lair, !Slime
 : place_unique(_G, "Aizul")
 
 NAME:   uniq_azrael

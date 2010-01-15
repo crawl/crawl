@@ -34,7 +34,6 @@
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
-#include "quiver.h"
 #include "religion.h"
 #include "species.h"
 #include "spl-book.h"

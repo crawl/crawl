@@ -37,6 +37,7 @@ enum tag_file_type   // file types supported by tag system
     TAGTYPE_PLAYER_NAME         // Used only to read the player name
 };
 
+// Let CDO updaters know if the syntax changes.
 #define TAG_MAJOR_START     5
 #define TAG_MAJOR_VERSION  16
 

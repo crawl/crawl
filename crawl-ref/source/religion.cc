@@ -69,7 +69,6 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
-#include "quiver.h"
 #include "shopping.h"
 #include "skills2.h"
 #include "spells1.h"
@@ -775,9 +774,6 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     std::vector<std::string> dislikes;
 
-    if (god_hates_butchery(which_god))
-        dislikes.push_back("you butcher corpses while praying");
-
     if (god_hates_cannibalism(which_god))
         dislikes.push_back("you perform cannibalism");
 
@@ -1173,9 +1169,9 @@ static bool _need_missile_gift(bool forced)
 {
     const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
-    return ((you.piety > 80
-            && random2( you.piety ) > 70
-            && one_chance_in(8) || forced)
+    return ((forced || you.piety > 80
+                       && random2( you.piety ) > 70
+                       && one_chance_in(8))
             && you.skills[ best_missile_skill ] >= 8
             && (launcher || best_missile_skill == SK_THROWING));
 }
@@ -2855,22 +2851,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        case DID_DEDICATED_BUTCHERY:
-            switch (you.religion)
-            {
-            case GOD_ELYVILON:
-                simple_god_message(" does not appreciate your butchering the "
-                                   "dead during prayer!");
-                retval = true;
-                piety_change = -level;
-                penance = level;
-                break;
-
-            default:
-                break;
-            }
-            break;
-
         case DID_KILL_LIVING:
             switch (you.religion)
             {
@@ -3430,6 +3410,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_EAT_MEAT:                          // unused
         case DID_CREATE_LIFE:                       // unused
         case DID_SPELL_NONUTILITY:                  // unused
+        case DID_DEDICATED_BUTCHERY:                // unused
         case NUM_CONDUCTS:
             break;
         }
@@ -5191,11 +5172,6 @@ bool god_likes_fresh_corpses(god_type god)
             || god == GOD_TROG
             || god == GOD_LUGONU
             || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
-}
-
-bool god_hates_butchery(god_type god)
-{
-    return (false);
 }
 
 harm_protection_type god_protects_from_harm(god_type god, bool actual)
