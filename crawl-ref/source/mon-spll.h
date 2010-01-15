@@ -1267,11 +1267,11 @@
     {  MST_AIZUL,
       {
        SPELL_VENOM_BOLT,
-       SPELL_BLINK_OTHER,
+       SPELL_SLEEP,
        SPELL_SLEEP,
        SPELL_POISON_ARROW,
-       SPELL_POISON_ARROW,
-       SPELL_MINOR_HEALING
+       SPELL_VENOM_BOLT,
+       SPELL_BLINK_OTHER
       }
     },
 
