@@ -859,6 +859,11 @@ plate mail
 
 A suit of mail and large plates of metal.
 %%%%
+potion of agility
+
+A magic potion which greatly increases the dexterity and evasiveness
+of one who drinks it.
+%%%%
 potion of berserk rage
 
 A potion which can send one into an incoherent rage.
@@ -867,6 +872,11 @@ potion of blood
 
 A potion containing the essence of life. Vital for all living
 creatures, as well as some undead ones.
+%%%%
+potion of brilliance
+
+A magic potion which greatly increases the intelligence and magical power
+of one who drinks it.
 %%%%
 potion of coagulated blood
 
@@ -938,16 +948,6 @@ energy.
 potion of might
 
 A magic potion which greatly increases the strength and physical power
-of one who drinks it.
-%%%%
-potion of brilliance
-
-A magic potion which greatly increases the intelligence and magical power
-of one who drinks it.
-%%%%
-potion of agility
-
-A magic potion which greatly increases the dexterity and evasiveness
 of one who drinks it.
 %%%%
 potion of mutation
