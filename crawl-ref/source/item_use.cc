@@ -1390,10 +1390,8 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
 
     beh.message_ammo_prompt();
 
-    // XXX: This stuff should be done by direction()!
-    message_current_target();
-    direction( target, DIR_NONE, TARG_HOSTILE, -1, false, !teleport, true, false,
-               NULL, &beh );
+    direction(target, DIR_NONE, TARG_HOSTILE, -1, false, !teleport, true, false,
+              NULL, &beh);
 
     if (beh.m_slot == -1)
     {
@@ -2496,7 +2494,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         thr = *target;
     else
     {
-        message_current_target();
         direction(thr, DIR_NONE, TARG_HOSTILE);
 
         if (!thr.isValid)
@@ -4383,7 +4380,6 @@ void zap_wand(int slot)
 
     int tracer_range = (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
                         _wand_range(type_zapped) : _max_wand_range();
-    message_current_target();
     direction(zap_wand, DIR_NONE, targ_mode, tracer_range);
 
     if (!zap_wand.isValid)

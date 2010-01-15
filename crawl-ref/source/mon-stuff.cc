@@ -3522,32 +3522,16 @@ bool monster_descriptor(int which_class, mon_desc_type which_descriptor)
     return (false);
 }
 
-bool message_current_target()
+monsters *get_current_target()
 {
-    if (crawl_state.is_replaying_keys())
-    {
-        if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
-            return (false);
+    if (invalid_monster_index(you.prev_targ))
+        return NULL;
 
-        return (you.can_see(&menv[you.prev_targ]));
-    }
-
-    if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
-    {
-        const monsters *montarget = &menv[you.prev_targ];
-
-        if (you.can_see(montarget))
-        {
-            mprf(MSGCH_PROMPT, "Current target: %s "
-                 "(use p or f to fire at it again.)",
-                 montarget->name(DESC_PLAIN).c_str());
-            return (true);
-        }
-
-        mpr("You have no current target.");
-    }
-
-    return (false);
+    monsters* mon = &menv[you.prev_targ];
+    if (mon->alive() && you.can_see(mon))
+        return mon;
+    else
+        return NULL;
 }
 
 void seen_monster(monsters *monster)
