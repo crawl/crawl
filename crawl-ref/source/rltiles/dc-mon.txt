@@ -589,7 +589,8 @@ deformed_elf MONS_DEFORMED_ELF
 
 ## Fungi ('f')
 %sdir dc-mon/fungi_plants
-fungus MONS_TOADSTOOL
+toadstool_left MONS_TOADSTOOL1
+toadstool_right MONS_TOADSTOOL2
 fungus MONS_FUNGUS
 ballistomycete MONS_BALLISTOMYCETE_INACTIVE
 active_ballistomycete MONS_BALLISTOMYCETE_ACTIVE
