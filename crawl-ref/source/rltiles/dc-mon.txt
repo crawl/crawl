@@ -375,7 +375,7 @@ shapeshifter MONS_SHAPESHIFTER
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 killer_klown MONS_KILLER_KLOWN
 slave MONS_SLAVE
-human_slave MONS_SLAVE_SMALL
+human_slave
 ## From the Wucad Mu wizlab
 human_monk_ghost MONS_HUMAN_MONK
 ## From the Cigotuvi wizlab
@@ -589,8 +589,8 @@ deformed_elf MONS_DEFORMED_ELF
 
 ## Fungi ('f')
 %sdir dc-mon/fungi_plants
-toadstool_left MONS_TOADSTOOL1
-toadstool_right MONS_TOADSTOOL2
+toadstool_left MONS_TOADSTOOL
+toadstool_right
 fungus MONS_FUNGUS
 ballistomycete MONS_BALLISTOMYCETE_INACTIVE
 active_ballistomycete MONS_BALLISTOMYCETE_ACTIVE
