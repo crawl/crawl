@@ -1124,7 +1124,7 @@ static void _draw_beam(ray_def ray, const coord_def& beam_target, int range)
 #ifdef USE_TILE
     const bool in_range = (range < 0
                            || grid_distance(ray.pos(), you.pos()) <= range);
-    tile_place_ray(moves.target, in_range);
+    tile_place_ray(beam_target, in_range);
 #endif
 }
 
