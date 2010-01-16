@@ -2147,6 +2147,7 @@ static void _add_command(column_composer &cols, const int column,
 
 static void _insert_commands(std::string &desc, std::vector<command_type> cmds)
 {
+    desc = replace_all(desc, "%%", "percent_sign");
     for (unsigned int i = 0; i < cmds.size(); ++i)
     {
         const std::string::size_type found = desc.find("%");
@@ -2160,6 +2161,7 @@ static void _insert_commands(std::string &desc, std::vector<command_type> cmds)
         desc.replace(found, 1, command_name);
     }
     desc += "\n";
+    desc = replace_all(desc, "percent_sign", "%");
 }
 
 static void _insert_commands(std::string &desc, const int first, ...)
@@ -2248,14 +2250,25 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Movement:\n"
             "To move in a direction or to attack, \n"
             "use the numpad (try Numlock off and \n"
-            "on) or vi keys:\n"
+            "on) or vi keys:\n",
+            true, true, _cmdhelp_textfilter);
+
+    _insert_commands(cols, 0, "                 <w>1 2 3      % % %",
+                     CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
+    _insert_commands(cols, 0, "                  \\|/        \\|/", 0);
+    _insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
+                     CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
+    _insert_commands(cols, 0, "                  /|\\        /|\\", 0);
+    _insert_commands(cols, 0, "                 <w>7 8 9      % % %",
+                     CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
+/*
             "                 <w>1 2 3      y k u\n"
             "                  \\|/        \\|/\n"
             "                 <w>4</w>-<w>5</w>-<w>6</w>"
                      "      <w>h</w>-<w>.</w>-<w>l</w>\n"
             "                  /|\\        /|\\\n"
-            "                 <w>7 8 9      b j n\n",
-            true, true, _cmdhelp_textfilter);
+            "                 <w>7 8 9      b j n\n"
+*/
 
     cols.add_formatted(
             0,
@@ -2294,30 +2307,47 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "         untrap, attack without move\n",
             false, true, _cmdhelp_textfilter);
 
-    std::string item_types =
-        "\n"
-        "<h>Item types (and common commands)\n"
-        "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-        "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>()</w> cycle)\n"
-        "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
-        "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
-        "<w>?</w> : scrolls (<w>r</w>ead)\n"
-        "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
-        "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
-        "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
-        "<lightgrey>/</lightgrey> : wands (e<w>V</w>oke)\n"
-        "<lightcyan>";
-
-    item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
-    item_types +=
-        "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise, <w>z</w>ap, <w>Z</w>ap)\n"
-        "<brown>\\</brown> : staves and rods (<w>w</w>ield and e<w>v</w>oke)\n"
-        "<lightgreen>}</lightgreen> : miscellaneous items (e<w>v</w>oke)\n";
-
     cols.add_formatted(
-            0, item_types,
+            0,
+            "\n"
+            "<h>Item types (and common commands)\n",
             true, true, _cmdhelp_textfilter);
 
+    _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
+                         CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
+
+    _insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
+                     CMD_WIELD_WEAPON, 0);
+    _insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
+                              "<w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
+                     CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
+                     CMD_CYCLE_QUIVER_BACKWARD, 0);
+    _insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
+                     CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
+    _insert_commands(cols, 0, "<brown>%%</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
+                     CMD_BUTCHER, CMD_EAT, 0);
+    _insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
+                     CMD_READ, 0);
+    _insert_commands(cols, 0, "<magenta>!</magenta> : potions (<w>%</w>uaff)",
+                     CMD_QUAFF, 0);
+    _insert_commands(cols, 0, "<blue>=</blue> : rings (<w>%</w>ut on and <w>%</w>emove)",
+                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
+                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
+                     CMD_EVOKE, 0);
+
+    std::string item_types = "<lightcyan>";
+    item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
+    item_types +=
+        "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
+    _insert_commands(cols, 0, item_types,
+                     CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
+                     CMD_FORCE_CAST_SPELL, 0);
+    _insert_commands(cols, 0, "<brown>\\</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)",
+                     CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
+    _insert_commands(cols, 0, "<lightgreen>}</lightgreen> : miscellaneous items (e<w>%</w>oke)",
+                     CMD_EVOKE, 0);
     _insert_commands(cols, 0, "<yellow>$</yellow> : gold (<w>%</w> counts gold)",
                      CMD_LIST_GOLD, 0);
 
