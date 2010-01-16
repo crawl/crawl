@@ -36,6 +36,7 @@ dlua.o \
 dungeon.o \
 dgn-height.o \
 dgn-shoals.o \
+dgn-swamp.o \
 effects.o \
 exclude.o \
 feature.o \

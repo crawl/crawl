@@ -89,10 +89,6 @@ public:
     int_range island_aux_point_height_increment;
 
 public:
-    static dgn_island_plan shoals_islands(int margin);
-    static dgn_island_plan snake_chambers(int margin);
-
-public:
     void build(int nislands);
     coord_def pick_and_remove_random_island();
 

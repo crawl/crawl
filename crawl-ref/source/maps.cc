@@ -323,7 +323,7 @@ static bool _may_overwrite_feature(const dungeon_feature_type grid,
         return (false);
     }
 
-    if (feat_is_wall(grid))
+    if (feat_is_wall(grid) || grid == DNGN_TREES)
         return (wall_ok);
 
     // Otherwise, feel free to clobber this feature.
