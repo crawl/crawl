@@ -1,18 +1,16 @@
 #ifndef CMD_KEYS_H
 #define CMD_KEYS_H
 
+// If there are several keys assigned to the same command, the last one
+// will be the one displayed on the command help screen. Keys assigned
+// via keybindings will take precedence. (jpeg)
 #ifdef USE_TILE
 {'-', CMD_EDIT_PLAYER_TILE},
 {'_', CMD_TOGGLE_SPELL_DISPLAY},
 #endif
-{'b', CMD_MOVE_DOWN_LEFT},
-{'h', CMD_MOVE_LEFT},
-{'j', CMD_MOVE_DOWN},
-{'k', CMD_MOVE_UP},
-{'l', CMD_MOVE_RIGHT},
-{'n', CMD_MOVE_DOWN_RIGHT},
-{'u', CMD_MOVE_UP_RIGHT},
-{'y', CMD_MOVE_UP_LEFT},
+// movement keys
+{CK_CLEAR, CMD_MOVE_NOWHERE},
+{'.', CMD_MOVE_NOWHERE},
 {CK_END, CMD_MOVE_DOWN_LEFT},
 {CK_LEFT, CMD_MOVE_LEFT},
 {CK_DOWN, CMD_MOVE_DOWN},
@@ -30,6 +28,15 @@
 {1009, CMD_MOVE_UP_RIGHT},
 {1007, CMD_MOVE_UP_LEFT},
 {1005, CMD_REST},
+{'b', CMD_MOVE_DOWN_LEFT},
+{'h', CMD_MOVE_LEFT},
+{'j', CMD_MOVE_DOWN},
+{'k', CMD_MOVE_UP},
+{'l', CMD_MOVE_RIGHT},
+{'n', CMD_MOVE_DOWN_RIGHT},
+{'u', CMD_MOVE_UP_RIGHT},
+{'y', CMD_MOVE_UP_LEFT},
+// other commands
 {'a', CMD_USE_ABILITY},
 {'c', CMD_BUTCHER},
 {'d', CMD_DROP},
@@ -83,8 +90,6 @@
 {'T', CMD_REMOVE_ARMOUR},
 {'W', CMD_WEAR_ARMOUR},
 {'X', CMD_DISPLAY_MAP},
-{'.', CMD_MOVE_NOWHERE},
-{CK_CLEAR, CMD_MOVE_NOWHERE},
 {'<', CMD_GO_UPSTAIRS},
 {'>', CMD_GO_DOWNSTAIRS},
 {'@', CMD_DISPLAY_CHARACTER_STATUS},
