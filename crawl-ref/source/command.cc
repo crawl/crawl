@@ -2147,7 +2147,6 @@ static void _add_command(column_composer &cols, const int column,
 
 static void _insert_commands(std::string &desc, std::vector<command_type> cmds)
 {
-    desc = replace_all(desc, "%%", "percent_sign");
     for (unsigned int i = 0; i < cmds.size(); ++i)
     {
         const std::string::size_type found = desc.find("%");
@@ -2161,7 +2160,7 @@ static void _insert_commands(std::string &desc, std::vector<command_type> cmds)
         desc.replace(found, 1, command_name);
     }
     desc += "\n";
-    desc = replace_all(desc, "percent_sign", "%");
+    desc = replace_all(desc, "percent", "%");
 }
 
 static void _insert_commands(std::string &desc, const int first, ...)
@@ -2324,7 +2323,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                      CMD_CYCLE_QUIVER_BACKWARD, 0);
     _insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
                      CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
-    _insert_commands(cols, 0, "<brown>%%</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
+    _insert_commands(cols, 0, "<brown>percent</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
                      CMD_BUTCHER, CMD_EAT, 0);
     _insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
                      CMD_READ, 0);
@@ -2529,58 +2528,95 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
 static void _add_formatted_tutorial_help(column_composer &cols)
 {
-    std::ostringstream text;
-    text <<
-        "<h>Item types (and common commands)\n"
-        "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-        "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>()</w> to cycle ammo)\n"
-        "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
-        "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
-        "<w>?</w> : scrolls (<w>r</w>ead)\n"
-        "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
-        "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
-        "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
-        "<darkgrey>/</darkgrey> : wands (e<w>V</w>oke)\n"
-        "<lightcyan>";
-    text << static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
-    text << "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and "
-        "<w>z</w>ap)\n"
-        "<brown>";
-    text << static_cast<char>(get_item_symbol(SHOW_ITEM_STAVE));
-    text << "</brown> : staves, rods (<w>w</w>ield and e<w>v</w>oke)\n"
-            "\n"
-            "<h>Movement and attacking\n"
-            "Use the <w>numpad</w> for movement (try both\n"
-            "Numlock on and off). You can also use\n"
-            "     <w>hjkl</w> : left, down, up, right and\n"
-            "     <w>yubn</w> : diagonal movement.\n"
-            "Walking into a monster will attack it\n"
-            "with the wielded weapon or barehanded.\n"
-            "For ranged attacks use either\n"
-            "<w>f</w> to launch missiles (like arrows)\n"
-            "<w>z</w>/<w>Z</w> to cast spells (<w>z?</w> lists spells).\n",
+    cols.add_formatted(
+            0, "<h>Item types (and common commands)\n",
+            true, true, _cmdhelp_textfilter);
+
+    _insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
+                     CMD_WIELD_WEAPON, 0);
+    _insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
+                              "<w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
+                     CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
+                     CMD_CYCLE_QUIVER_BACKWARD, 0);
+    _insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
+                     CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
+    _insert_commands(cols, 0, "<brown>percent</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
+                     CMD_BUTCHER, CMD_EAT, 0);
+    _insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
+                     CMD_READ, 0);
+    _insert_commands(cols, 0, "<magenta>!</magenta> : potions (<w>%</w>uaff)",
+                     CMD_QUAFF, 0);
+    _insert_commands(cols, 0, "<blue>=</blue> : rings (<w>%</w>ut on and <w>%</w>emove)",
+                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
+                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
+                     CMD_EVOKE, 0);
+
+    std::string item_types = "<lightcyan>";
+    item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
+    item_types +=
+        "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
+    _insert_commands(cols, 0, item_types,
+                     CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
+                     CMD_FORCE_CAST_SPELL, 0);
+
+    item_types = "<brown>";
+    item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_STAVE));
+    item_types +=
+        "</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)";
+    _insert_commands(cols, 0, item_types,
+                     CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
 
     cols.add_formatted(
-            0, text.str(),
+            0,
+            "<h>Movement and attacking\n"
+            "Use the <w>numpad</w> for movement (try both\n"
+            "Numlock on and off). You can also use\n",
             true, true, _cmdhelp_textfilter);
+
+    _insert_commands(cols, 0, "     <w>%%%%</w> : left, down, up, right and",
+                     CMD_MOVE_LEFT, CMD_MOVE_DOWN, CMD_MOVE_UP,
+                     CMD_MOVE_RIGHT, 0);
+    _insert_commands(cols, 0, "     <w>%%%%</w> : diagonal movement.",
+                     CMD_MOVE_UP_LEFT, CMD_MOVE_UP_RIGHT, CMD_MOVE_DOWN_LEFT,
+                     CMD_MOVE_DOWN_RIGHT, 0);
+
+    cols.add_formatted(
+            0,
+            "Walking into a monster will attack it\n"
+            "with the wielded weapon or barehanded.\n"
+            "For ranged attacks use either\n",
+            false, true, _cmdhelp_textfilter);
+
+    _insert_commands(cols, 0, "<w>%</w> to launch missiles (like arrows)",
+                     CMD_FIRE, 0);
+    _insert_commands(cols, 0, "<w>%</w>/<w>%</w> to cast spells "
+                              "(<w>%?</w> lists spells).",
+                     CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL, CMD_CAST_SPELL, 0);
 
     cols.add_formatted(
             1,
-            "<h>Additional important commands\n"
-            "<w>S</w> : Save the game and exit\n"
-            "\n"
-            "<w>s</w> : search for one turn (also <w>.</w> and <w>Del</w>)\n"
-            "<w>5</w> : rest full/search longer (<w>Shift-Num 5</w>)\n"
-            "<w>x</w> : examine surroundings\n"
-            "<w>i</w> : list inventory (select item to view it)\n"
-            "<w>g</w> : pick up item from ground (also <w>,</w>)\n"
-            "<w>d</w> : drop item\n"
-            "<w><<</w> or <w>></w> : ascend/descend the stairs\n"
-            "<w>Ctrl-P</w> : show previous messages\n"
-            "<w>X</w> : show map of the whole level\n"
-            "<w>Ctrl-X</w> : list monsters, items, features in sight\n"
-            "\n"
-            "<h>targetting (for spells and missiles)\n"
+            "<h>Additional important commands\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save the game and exit", 2);
+    cols.add_formatted(1, " ", false, true, _cmdhelp_textfilter);
+    _add_command(cols, 1, CMD_SEARCH, "search for one turn (also <w>.</w> and <w>Del</w>)", 2);
+    _add_command(cols, 1, CMD_REST, "rest full/search longer (<w>Shift-Num 5</w>)", 2);
+    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "list inventory (select item to view it)", 2);
+    _add_command(cols, 1, CMD_PICKUP, "pick up item from ground (also <w>g</w>)", 2);
+    _add_command(cols, 1, CMD_DROP, "drop item", 2);
+    _insert_commands(cols, 0, "<w>%</w> or <w>%</w> : ascend/descend the stairs",
+                     CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
+    cols.add_formatted(1, " ", false, true, _cmdhelp_textfilter);
+    _add_command(cols, 1, CMD_REPLAY_MESSAGES, "show previous messages", 2);
+    _add_command(cols, 1, CMD_DISPLAY_MAP, "show map of the whole level", 2);
+    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features in sight", 2);
+
+    cols.add_formatted(
+            1,
+            "<h>Targetting (for spells and missiles)\n"
             "Use <w>+</w> (or <w>=</w>) and <w>-</w> to cycle between\n"
             "hostile monsters. <w>Enter</w> or <w>.</w> or <w>Del</w>\n"
             "all fire at the selected target.\n"
