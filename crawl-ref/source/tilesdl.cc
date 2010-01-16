@@ -1431,6 +1431,8 @@ int tile_known_weapon_brand(const item_def item)
             return TILE_BRAND_SICKNESS;
         case SPMSL_RAGE:
             return TILE_BRAND_RAGE;
+        case SPMSL_SLEEP:
+            return TILE_BRAND_SLEEP;
         default:
             break;
         }
