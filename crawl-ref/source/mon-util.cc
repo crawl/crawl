@@ -1684,6 +1684,7 @@ void define_monster(monsters &mons)
         ghost.init_random_demon();
         mons.set_ghost(ghost);
         mons.pandemon_init();
+        mons.bind_spell_flags();
         break;
     }
 
@@ -1693,6 +1694,7 @@ void define_monster(monsters &mons)
         ghost.init_player_ghost();
         mons.set_ghost(ghost);
         mons.ghost_init();
+        mons.bind_spell_flags();
         break;
     }
 
