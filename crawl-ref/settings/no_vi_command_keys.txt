@@ -1,0 +1,28 @@
+# Keybindings to override the vi movement keys.
+# CMD_NO_CMD_DEFAULT results in "Unknown command."
+# See docs/keybind.txt for other commands.
+
+bindkey = [h] CMD_NO_CMD_DEFAULT
+bindkey = [j] CMD_NO_CMD_DEFAULT
+bindkey = [k] CMD_NO_CMD_DEFAULT
+bindkey = [l] CMD_NO_CMD_DEFAULT
+bindkey = [H] CMD_NO_CMD_DEFAULT
+bindkey = [J] CMD_NO_CMD_DEFAULT
+bindkey = [K] CMD_NO_CMD_DEFAULT
+bindkey = [L] CMD_NO_CMD_DEFAULT
+bindkey = [^H] CMD_NO_CMD_DEFAULT
+bindkey = [^J] CMD_NO_CMD_DEFAULT
+bindkey = [^K] CMD_NO_CMD_DEFAULT
+bindkey = [^L] CMD_NO_CMD_DEFAULT
+bindkey = [y] CMD_NO_CMD_DEFAULT
+bindkey = [u] CMD_NO_CMD_DEFAULT
+bindkey = [b] CMD_NO_CMD_DEFAULT
+bindkey = [n] CMD_NO_CMD_DEFAULT
+bindkey = [Y] CMD_NO_CMD_DEFAULT
+bindkey = [U] CMD_NO_CMD_DEFAULT
+bindkey = [B] CMD_NO_CMD_DEFAULT
+bindkey = [N] CMD_NO_CMD_DEFAULT
+bindkey = [^Y] CMD_NO_CMD_DEFAULT
+bindkey = [^U] CMD_NO_CMD_DEFAULT
+bindkey = [^B] CMD_NO_CMD_DEFAULT
+bindkey = [^N] CMD_NO_CMD_DEFAULT

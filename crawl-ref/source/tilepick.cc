@@ -649,6 +649,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     // plants ('P')
     case MONS_PLANT:
         return TILEP_MONS_PLANT;
+    case MONS_BUSH:
+        return TILEP_MONS_BUSH;
     case MONS_OKLOB_PLANT:
         return TILEP_MONS_OKLOB_PLANT;
 
