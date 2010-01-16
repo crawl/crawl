@@ -1,4 +1,4 @@
-# Keybindings to override the vi keys.
+# Keybindings to override the vi movement keys.
 # CMD_NO_CMD_DEFAULT results in "Unknown command."
 # See docs/keybind.txt for other commands.
 
