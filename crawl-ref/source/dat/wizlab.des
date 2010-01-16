@@ -1061,7 +1061,7 @@ NAME:       wizlab_iskenderun
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Iskenderun's Mystic Tower")
-MONS:       purple draconian / naga mage
+MONS:       purple draconian / naga mage name:naga_mystic name_replace name_descriptor
 MONS:       statue tile:mons_statue_mage spells:iskenderun's_mystic_blast;orb_of\
                 _destruction col:lightmagenta
 COLOUR:     v = magenta
@@ -1626,10 +1626,13 @@ KITEM:      $ = wand of lightning / staff of air / ring of levitation /\
 KFEAT:      # = deep_water
 NSUBST:     $ = 1:? / *:$
 SUBST:      $ = $%
-COLOUR:     .+<co = white
+COLOUR:     +<co = white
+LFLOORCOL:  lightblue
 COLOUR:     wW# = silver
 :           set_border_fill_type('open_sea')
 :           wizlab_setup(_G, "The Cloud Mage's Chambers")
+#           Map is ugly because border_fill_type doesn't allow for (yet)
+#           recolouring.
 MAP
 #####################################################################
 #####################################################################
