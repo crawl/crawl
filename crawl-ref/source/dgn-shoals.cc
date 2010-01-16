@@ -40,7 +40,7 @@ const int LOW_TIDE = -18 * TIDE_MULTIPLIER;
 const int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
 
 // The highest a tide can be called by a tide caller such as Ilsuiw.
-const int HIGH_CALLED_TIDE = 25;
+const int HIGH_CALLED_TIDE = 50;
 const int TIDE_DECEL_MARGIN = 8;
 const int PEAK_TIDE_VELOCITY = 2;
 const int CALL_TIDE_VELOCITY = 21;
