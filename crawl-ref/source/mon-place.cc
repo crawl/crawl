@@ -1068,6 +1068,11 @@ static void _maybe_init_tilenum_props(monsters *mon)
     if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))
         return;
 
+    // FIXME: special-case hack to prevent dancing weapons from causing
+    // a crash.
+    if (mon->type == MONS_DANCING_WEAPON)
+        return;
+
     // Only add the property for tiles that have several variants.
     const int base_tile = tileidx_monster_base(mon);
     if (tile_player_count(base_tile) > 1)
