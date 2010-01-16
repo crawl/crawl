@@ -1488,11 +1488,11 @@ local function summon_monks (data, triggerable, triggerer, marker, ev)
             " nas:old_memories tile:human_monk seen / rock troll name:monk n_suf"..
             " dur:2 seen sum:shadow_creatures nas:old_memories tile:rock_troll_monk" ..
             " / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures " ..
-            " nas:old_memories seen tile:iron_troll_monk"
+            " nas:old_memories seen tile:iron_troll_monk w:5"
 
   local count = 0
   for point in iter.circle_iterator(3) do
-    if crawl.one_chance_in(11) then
+    if crawl.one_chance_in(8) and count < 3 then
       if feat.is_solid(point.x, point.y) or not feat.has_solid_floor(point.x, point.y) then
       else
        local mon = dgn.create_monster(point.x, point.y, msp)
