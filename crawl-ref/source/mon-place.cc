@@ -712,9 +712,8 @@ static int _is_near_stairs(coord_def &p)
 // is true, then we'll be less rigorous in our checks, in particular
 // allowing land monsters to be placed in shallow water and water
 // creatures in fountains.
-static bool _valid_monster_generation_location(
-    const mgen_data &mg,
-    const coord_def &mg_pos)
+static bool _valid_monster_generation_location( const mgen_data &mg,
+                                                const coord_def &mg_pos)
 {
     if (!in_bounds(mg_pos) || actor_at(mg_pos))
         return (false);
@@ -1056,6 +1055,7 @@ monsters* get_free_monster()
             env.mons[i].reset();
             return (&env.mons[i]);
         }
+
     return (NULL);
 }
 
@@ -1068,9 +1068,8 @@ static void _maybe_init_tilenum_props(monsters *mon)
     if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))
         return;
 
-    // FIXME: special-case hack to prevent dancing weapons from causing
-    // a crash.
-    if (mon->type == MONS_DANCING_WEAPON)
+    // Special-case for monsters masquerading as items.
+    if (mon->type == MONS_DANCING_WEAPON || mons_is_mimic(mon->type))
         return;
 
     // Only add the property for tiles that have several variants.
