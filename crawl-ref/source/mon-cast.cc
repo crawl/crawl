@@ -1575,28 +1575,6 @@ void mons_cast_haunt(monsters *monster)
                           _pick_random_wraith, random_range(3, 6), GOD_NO_GOD, &fpos);
 }
 
-int _count_mara_fakes()
-{
-    int count = 0;
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->type == MONS_MARA_FAKE)
-            count++;
-    }
-
-    return count;
-}
-
-bool _find_players_ghost ()
-{
-    bool found = false;
-    for (monster_iterator mi; mi; ++mi)
-        if (mi->type == MONS_PLAYER_GHOST && mi->mname == you.your_name)
-            found = true;
-
-    return found;
-}
-
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                bool do_noise, bool special_ability)
 {
@@ -1785,10 +1763,6 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         if (crawl_state.arena)
             return;
 
-        // Only summon one ghost.
-        if (_find_players_ghost())
-            return;
-
         mpr("There is a horrible, sudden wrenching feeling in your soul!", MSGCH_WARN);
 
         create_monster(
@@ -1849,7 +1823,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         // We only want there to be two fakes, which, plus Mara, means
         // a total of three Maras; if we already have two, give up, otherwise
         // we want to summon either one more or two more.
-        sumcount2 = 2 - _count_mara_fakes();
+        sumcount2 = 2 - count_mara_fakes();
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {

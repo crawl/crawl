@@ -1,5 +1,5 @@
 /*  File:       mislead.cc
- *  Summary:    Handling of the Mislead spell and stats
+ *  Summary:    Handling of Mara's Mislead spell and stats, plus fakes.
  */
 
 #include "AppHdr.h"
@@ -83,9 +83,7 @@ void mons_cast_mislead(monsters *monster)
     if (monster->foe != MHITYOU)
         return;
 
-    // Prevents Mislead spam by Mara and co. {due}
-    if (you.duration[DUR_MISLED] > 10 && one_chance_in(3))
-        return;
+    // We deal with pointless misleads in the right place now.
 
     if (wearing_amulet(AMU_CLARITY))
     {
@@ -124,4 +122,14 @@ void mons_cast_mislead(monsters *monster)
     return;
 }
 
+int count_mara_fakes()
+{
+    int count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_MARA_FAKE)
+            count++;
+    }
 
+    return count;
+}
