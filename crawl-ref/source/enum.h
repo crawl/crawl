@@ -439,6 +439,7 @@ enum cloud_type
 enum command_type
 {
     CMD_NO_CMD = 1000,
+    CMD_NO_CMD_DEFAULT, // hack to allow assignment of keys to CMD_NO_CMD
     CMD_MOVE_NOWHERE,
     CMD_MOVE_LEFT,
     CMD_MOVE_DOWN,

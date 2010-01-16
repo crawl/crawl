@@ -853,6 +853,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
         return (true);
 
     case CMD_NO_CMD:
+    case CMD_NO_CMD_DEFAULT:
         mpr("Unknown command, not repeating.");
         return (false);
 

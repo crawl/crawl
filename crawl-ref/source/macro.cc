@@ -1243,19 +1243,18 @@ static std::string _special_keys_to_string(int key)
 
     std::string cmd = "";
 
-    int newkey = key;
     if (shift)
     {
-        newkey -= (CK_SHIFT_UP - CK_UP);
+        key -= (CK_SHIFT_UP - CK_UP);
         cmd = "Shift-";
     }
     else if (ctrl)
     {
-        newkey -= (CK_CTRL_UP - CK_UP);
+        key -= (CK_CTRL_UP - CK_UP);
         cmd = "Ctrl-";
     }
 
-    switch (newkey)
+    switch (key)
     {
     case CK_ENTER:  cmd += "Enter"; break;
     case CK_BKSP:   cmd += "Backspace"; break;
