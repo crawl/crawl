@@ -3585,7 +3585,7 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-{   // another dummy monster
+{   // another dummy monster.  This one is not a valid polymorph target.
     MONS_DWARF, '@', BROWN, "dwarf",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
