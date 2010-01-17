@@ -638,20 +638,22 @@ wall/stone_gray1
 wall/stone_gray2
 wall/stone_gray3
 
-floor/grass0 FLOOR_GRASS
-floor/grass1
-floor/grass2
+%sdir dc-dngn/floor/grass
+grass0 FLOOR_GRASS
+grass1
+grass2
 
-floor/grass_n HALO_GRASS
-floor/grass_ne
-floor/grass_e
-floor/grass_se
-floor/grass_s
-floor/grass_sw
-floor/grass_w
-floor/grass_nw
-floor/grass_full
+grass_n HALO_GRASS
+grass_ne
+grass_e
+grass_se
+grass_s
+grass_sw
+grass_w
+grass_nw
+grass_full
 
+%sdir dc-dngn
 wall/undead0 WALL_UNDEAD
 wall/undead1
 wall/undead2
@@ -666,35 +668,35 @@ floor/floor_nerves5
 floor/floor_nerves6
 
 %start
-%compose floor/grass0
+%compose floor/grass/grass0
 %compose floor/pedestal_n
 %finish HALO_GRASS2
 %start
-%compose floor/grass1
+%compose floor/grass/grass1
 %compose floor/pedestal_ne
 %finish
 %start
-%compose floor/grass2
+%compose floor/grass/grass2
 %compose floor/pedestal_e
 %finish
 %start
-%compose floor/grass1
+%compose floor/grass/grass1
 %compose floor/pedestal_se
 %finish
 %start
-%compose floor/grass0
+%compose floor/grass/grass0
 %compose floor/pedestal_s
 %finish
 %start
-%compose floor/grass1
+%compose floor/grass/grass1
 %compose floor/pedestal_sw
 %finish
 %start
-%compose floor/grass2
+%compose floor/grass/grass2
 %compose floor/pedestal_w
 %finish
 %start
-%compose floor/grass0
+%compose floor/grass/grass0
 %compose floor/pedestal_nw
 %finish
 floor/pedestal_full
