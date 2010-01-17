@@ -1,5 +1,5 @@
 ################################################################################
-# lair.des: All maps relating to the Lair branch. Branches off of Lair can be 
+# lair.des: All maps relating to the Lair branch. Branches off of Lair can be
 #           found in their relevant file:
 #               Shoals - shoals.des
 #               Snake Pit - snake.des
@@ -333,18 +333,17 @@ NAME:   strawberry_fields_big
 ORIENT: float
 WEIGHT: 1
 DEPTH:  Lair
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
 SUBST:  .= d .:150 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-SUBST:  G = .
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  B = .
 MAP
 .....................
 .....................
@@ -368,18 +367,17 @@ NAME:   strawberry_fields_big_rounded
 ORIENT: float
 WEIGHT: 1
 DEPTH:  Lair
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
 SUBST:  .= d .:140 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-SUBST:  G = .
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  B = .
 MAP
        .......
      ...........
@@ -404,18 +402,17 @@ ORIENT: float
 WEIGHT: 4
 TAGS:   allow_dup
 DEPTH:  Lair
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-SUBST:  G = .
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  B = .
 MAP
    ....
  ........
@@ -431,18 +428,17 @@ NAME:   strawberry_fields_patches_spacepadded
 ORIENT: float
 WEIGHT: 4
 DEPTH:  Lair
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-SUBST:  G = .
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  B = .
 MAP
    ..
  ......
