@@ -393,7 +393,7 @@ ENDMAP
 # Another Ice Statue vault
 #
 NAME:  ice2_lemuel
-DEPTH: D:12-26, Lair, Swamp, Coc
+DEPTH: D:12-26, Lair, Coc
 TAGS:  no_pool_fixup no_monster_gen
 SUBST: T = TU
 SUBST: W = w:20 W .:5
@@ -1270,7 +1270,7 @@ ENDMAP
 # Worms!
 #
 NAME:  worms_lemuel
-DEPTH: D:6-15, Lair, Swamp, Hive
+DEPTH: D:6-15, Lair, Hive
 TAGS:  no_rotate
 SUBST: W = W:20 w
 : if you.absdepth() > 13 then
@@ -1598,7 +1598,7 @@ ENDMAP
 # Secret library minivault
 #
 NAME:   library
-DEPTH:  1-27
+DEPTH:  1-27, !Swamp
 TAGS:   mini_float allow_dup extra luniq_mini
 ITEM:   any book w:20 / any scroll / nothing
 MAP
