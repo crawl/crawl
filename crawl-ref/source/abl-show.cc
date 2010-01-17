@@ -60,17 +60,18 @@
 
 enum ability_flag_type
 {
-    ABFLAG_NONE         = 0x00000000,
-    ABFLAG_BREATH       = 0x00000001, // ability uses DUR_BREATH_WEAPON
-    ABFLAG_DELAY        = 0x00000002, // ability has its own delay (ie recite)
-    ABFLAG_PAIN         = 0x00000004, // ability must hurt player (ie torment)
-    ABFLAG_PIETY        = 0x00000008, // ability has its own piety cost
-    ABFLAG_EXHAUSTION   = 0x00000010, // fails if you.exhausted
-    ABFLAG_INSTANT      = 0x00000020, // doesn't take time to use
-    ABFLAG_PERMANENT_HP = 0x00000040, // costs permanent HPs
-    ABFLAG_PERMANENT_MP = 0x00000080, // costs permanent MPs
-    ABFLAG_CONF_OK      = 0x00000100, // can use even if confused
-    ABFLAG_FRUIT        = 0x00000200  // ability requires fruit
+    ABFLAG_NONE           = 0x00000000,
+    ABFLAG_BREATH         = 0x00000001, // ability uses DUR_BREATH_WEAPON
+    ABFLAG_DELAY          = 0x00000002, // ability has its own delay (ie recite)
+    ABFLAG_PAIN           = 0x00000004, // ability must hurt player (ie torment)
+    ABFLAG_PIETY          = 0x00000008, // ability has its own piety cost
+    ABFLAG_EXHAUSTION     = 0x00000010, // fails if you.exhausted
+    ABFLAG_INSTANT        = 0x00000020, // doesn't take time to use
+    ABFLAG_PERMANENT_HP   = 0x00000040, // costs permanent HPs
+    ABFLAG_PERMANENT_MP   = 0x00000080, // costs permanent MPs
+    ABFLAG_CONF_OK        = 0x00000100, // can use even if confused
+    ABFLAG_FRUIT          = 0x00000200, // ability requires fruit
+    ABFLAG_VARIABLE_FRUIT = 0x00000400  // ability requires fruit or piety
 };
 
 static int  _find_ability_slot( ability_type which_ability );
@@ -324,7 +325,7 @@ static const ability_def Ability_List[] =
 
     // Fedhas
     { ABIL_FEDHAS_FUNGAL_BLOOM, "Decomposition", 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_FEDHAS_EVOLUTION, "Evolution", 2, 0, 0, 0, ABFLAG_FRUIT},
+    { ABIL_FEDHAS_EVOLUTION, "Evolution", 2, 0, 0, 0, ABFLAG_VARIABLE_FRUIT},
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight", 2, 0, 0, 0, ABFLAG_NONE},
     { ABIL_FEDHAS_PLANT_RING, "Growth", 2, 0, 0, 0, ABFLAG_FRUIT},
     { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction", 4, 0, 50, 2, ABFLAG_NONE},
@@ -481,10 +482,17 @@ const std::string make_cost_description(ability_type ability)
     }
     if (abil.flags & ABFLAG_FRUIT)
     {
-        if(!ret.str().empty())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << "Fruit";
+    }
+    if (abil.flags & ABFLAG_VARIABLE_FRUIT)
+    {
+        if (!ret.str().empty())
+            ret << ", ";
+
+        ret << "Fruit or Piety";
     }
 
     // If we haven't output anything so far, then the effect has no cost
