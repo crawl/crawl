@@ -394,10 +394,32 @@ int fungal_bloom()
                     if (mons_zombie_size(mons_zombie_base(mons)) == Z_SMALL)
                         skele_type = MONS_SKELETON_SMALL;
 
+                    // Killing and replacing the zombie since upgrade_type
+                    // doesn't get skeleton speed right (and doesn't
+                    // reduce the victim's HP). This is awkward. -cao
+                    mgen_data mg(skele_type, mons->behaviour, NULL, 0, 0,
+                                 mons->pos(),
+                                 mons->foe,
+                                 MG_FORCE_BEH | MG_FORCE_PLACE,
+                                 mons->god,
+                                 mons_zombie_base(mons),
+                                 mons->number);
+
+                    unsigned monster_flags = mons->flags;
+                    int current_hp = mons->hit_points;
+                    mon_enchant_list ench = mons->enchantments;
+
                     simple_monster_message(mons, "'s flesh rots away.");
 
-                    mons->upgrade_type(skele_type, true, true);
-                    behaviour_event(mons, ME_ALERT, MHITYOU);
+                    monster_die(mons, KILL_MISC, NON_MONSTER, true);
+                    int monster = create_monster(mg);
+                    env.mons[monster].flags = monster_flags;
+                    env.mons[monster].enchantments = ench;
+
+                    if (env.mons[monster].hit_points > current_hp)
+                        env.mons[monster].hit_points = current_hp;
+
+                    behaviour_event(&env.mons[monster], ME_ALERT, MHITYOU);
 
                     continue;
                 }
