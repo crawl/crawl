@@ -410,6 +410,11 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
                 colour, name, tile);
 }
 
+bool cloud_is_inferior(cloud_type inf, cloud_type superior)
+{
+    return (inf == CLOUD_STINK && superior == CLOUD_POISON);
+}
+
 //   Places a cloud with the given stats. May delete old clouds to
 //   make way if there are too many on level. Will overwrite an old
 //   cloud under some circumstances.
@@ -428,7 +433,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         // There's already a cloud here. See if we can overwrite it.
         cloud_struct& old_cloud = env.cloud[target_cgrid];
         if (old_cloud.type >= CLOUD_GREY_SMOKE && old_cloud.type <= CLOUD_STEAM
-            || old_cloud.type == CLOUD_STINK
+            || cloud_is_inferior(old_cloud.type, cl_type)
             || old_cloud.type == CLOUD_BLACK_SMOKE
             || old_cloud.type == CLOUD_MIST
             || old_cloud.decay <= 20) // soon gone
@@ -453,7 +458,6 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         {
             cloud_struct& cloud = env.cloud[ci];
             if (cloud.type >= CLOUD_GREY_SMOKE && cloud.type <= CLOUD_STEAM
-                || cloud.type == CLOUD_STINK
                 || cloud.type == CLOUD_BLACK_SMOKE
                 || cloud.type == CLOUD_MIST
                 || cloud.decay <= 20) // soon gone
