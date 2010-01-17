@@ -693,9 +693,16 @@ std::string map_lines::add_colour(const std::string &sub)
 
 bool map_fprop_list::parse(const std::string &fp, int weight)
 {
-    const int fprop = fp == "none" ? FPROP_NONE : str_to_fprop(fp);
-    if (fprop == -1)
+    unsigned long fprop;
+
+    if (fp == "nothing")
+        fprop = FPROP_NONE;
+    else if (fp.empty())
+        return (false);
+    else if (str_to_fprop(fp) == FPROP_NONE)
         return false;
+    else
+        fprop = str_to_fprop(fp);
 
     push_back(map_weighted_fprop(fprop, weight));
     return true;
@@ -4289,12 +4296,12 @@ int colour_spec::get_colour()
 //////////////////////////////////////////////////////////////////////////
 // fprop_spec
 
-int fprop_spec::get_property()
+unsigned long fprop_spec::get_property()
 {
     if (fixed_prop != FPROP_NONE)
         return (fixed_prop);
 
-    int chosen = FPROP_NONE;
+    unsigned long chosen = FPROP_NONE;
     int cweight = 0;
     for (int i = 0, size = fprops.size(); i < size; ++i)
         if (x_chance_in_y(fprops[i].second, cweight += fprops[i].second))

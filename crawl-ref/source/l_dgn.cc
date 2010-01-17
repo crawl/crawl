@@ -916,7 +916,7 @@ static int dgn_fprop_changed(lua_State *ls)
     if (lua_isnumber(ls, 3))
         prop = static_cast<feature_property_type>(luaL_checkint(ls, 3));
     else if (lua_isstring(ls, 3))
-        prop = static_cast<feature_property_type>(str_to_fprop(lua_tostring(ls, 3)));
+        prop = str_to_fprop(lua_tostring(ls, 3));
 
     coord_def pos = coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
 
@@ -948,18 +948,14 @@ static int dgn_fprop_at (lua_State *ls)
     if (lua_isnumber(ls, 3))
         prop = static_cast<feature_property_type>(luaL_checkint(ls, 3));
     else if (lua_isstring(ls, 3))
-        prop = static_cast<feature_property_type>(str_to_fprop(lua_tostring(ls, 3)));
+        prop = str_to_fprop(lua_tostring(ls, 3));
 
     coord_def pos = coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
 
     if (in_bounds(pos) && prop != FPROP_NONE)
-    {
         lua_pushboolean(ls, testbits(env.pgrid(pos), prop));
-    }
     else
-    {
         lua_pushboolean(ls, false);
-    }
 
     return (1);
 }
