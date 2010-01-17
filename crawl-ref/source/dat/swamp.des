@@ -3,7 +3,7 @@
 ###############################################################################
 
 ###############################################################################
-# Swamp specific non-ending vaults
+# Swamp entries
 ##############################################################################3
 # The only Swamp entry... mist leaking from the stairs.
 NAME:   swamp_mist
@@ -13,6 +13,109 @@ MARKER: O = lua:fog_machine { \
              size = 1, walk_dist = 1, spread_rate= 33 }
 MAP
 O
+ENDMAP
+
+# No longer the only swamp entry! This one gives a taste of what's "to come".
+NAME:   swamp_mist_pool
+TAGS:   swamp_entry no_pool_fixup
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+SUBST:  '= t.., "= tw, t=ttw, w=Ww
+validate {{ return glyphs_connected("O", "@") }}
+MAP
+       @
+   't"wwt@
+  't"wwwwt'
+ 't"wwwww"t'
+ t"wwwOwww"t
+ 't"wwwww"t'
+  't"www"t'
+   't"wt@
+ENDMAP
+
+###############################################################################
+# Swamp non-entry and non-ending vaults
+###############################################################################
+
+###############################################################################
+# A series of pools by Jude.
+###############################################################################
+NAME:   swamp_pool1
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
+DEPTH:  Swamp
+WEIGHT: 1000
+{{ smear_map({iterations=5, smear='w', onto='wwt"', boxy=false}) }}
+SUBST:  "=ttw
+MAP
+     ""
+   "www"
+  "wwwww"
+  wwwwwww"
+  "wwwww"
+   "www"
+    "w"
+ENDMAP
+
+NAME:   swamp_pool2
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
+DEPTH:  Swamp
+WEIGHT: 500
+SUBST:  "=ttttw
+MAP
+     ""
+   "www"
+  "wwwww"
+  wwwwwww"
+  "wwwww"
+   "www"
+    "w"
+ENDMAP
+
+NAME:   swamp_pool3
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
+DEPTH:  Swamp
+WEIGHT: 500
+SUBST:  '=Wt, "=wwt
+MAP
+"'ttt'
+'""w"tt
+twwww"t
+'""wwtt
+ ttw"t'
+  'tt'
+ENDMAP
+
+NAME:   swamp_pool4
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
+DEPTH:  Swamp
+WEIGHT: 500
+SUBST:  "=ttttw
+MAP
+  t""tt
+ ""www"t
+"twwwwwtt
+ wwwww"tt
+"twww"tt"
+ ttwww"tt
+  ttw"tt
+ENDMAP
+
+NAME:   swamp_pool5
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
+DEPTH:  Swamp
+KMONS:  1 = patrolling swamp drake
+KFEAT:  1 = deep_water
+WEIGHT: 500
+SUBST:  "=ttttw, '=ttW
+MAP
+  't't'
+ tt"""t'
+ t"w1w"tt
+ ww1ww"t'
+ t"w1t"t
+ tt"w"ttt
+  tt"t'
 ENDMAP
 
 ################################################################################
