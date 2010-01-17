@@ -369,7 +369,7 @@ Call sunlight down over a small area of the dungeon. Monsters illuminated by the
 %%%%
 Growth
 
-Use fruit to grow a ring of plants around yourself. If a complete ring cannot be formed (because you do not have enough fruit), plants will grow on squares adjacent to you that are close to monsters.
+Use fruit to grow a ring of plants around yourself. If a complete ring cannot be formed (because you do not have enough fruit), plants will grow on squares adjacent to you that are close to monsters. The plants you create gain bonus HP proportional to your invocations skill.
 %%%%
 Rain
 
@@ -381,7 +381,7 @@ Create giant spores from corpses in your line of sight. The spores will explode,
 %%%%
 Evolution
 
-Use fruit to turn some plants and fungi in your line of sight into stronger species.
+Turn plants and fungi adjacent to you iinto stronger species. Upgrading fungi requires piety, upgrading plants requires fruit.
 %%%%
 # Cheibriados
 Make Ponderous
