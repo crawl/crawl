@@ -521,7 +521,6 @@ plant MONS_PLANT
 plant_crypt MONS_WITHERED_PLANT
 %rim 1
 bush MONS_BUSH
-%rim 0
 oklob_plant MONS_OKLOB_PLANT
 
 ## Trolls ('T')
