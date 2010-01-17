@@ -9,6 +9,7 @@
 #include "dgn-height.h"
 #include "env.h"
 #include "flood_find.h"
+#include "fprop.h"
 #include "items.h"
 #include "maps.h"
 #include "mgen_data.h"
@@ -846,6 +847,9 @@ static tide_direction _shoals_feature_tide_height_change(
 
 static void _shoals_apply_tide_at(coord_def c, int tide)
 {
+    if (is_tide_immune(c))
+        return;
+
     const int effective_height = dgn_height_at(c) - tide;
     dungeon_feature_type newfeat =
         _shoals_feature_by_height(effective_height);

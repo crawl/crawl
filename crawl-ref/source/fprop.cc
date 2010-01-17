@@ -24,7 +24,12 @@ bool is_bloodcovered(const coord_def& p)
     return (testbits(env.pgrid(p), FPROP_BLOODY));
 }
 
-int str_to_fprop ( const std::string &str)
+bool is_tide_immune(const coord_def &p)
+{
+    return (env.pgrid(p) & FPROP_NO_TIDE);
+}
+
+feature_property_type str_to_fprop(const std::string &str)
 {
     if (str == "bloody")
         return (FPROP_BLOODY);
@@ -36,8 +41,8 @@ int str_to_fprop ( const std::string &str)
         return (FPROP_NO_CTELE_INTO);
     if (str == "no_tele_into")
         return (FPROP_NO_TELE_INTO);
+    if (str == "no_tide")
+        return (FPROP_NO_TIDE);
 
     return (FPROP_NONE);
 }
-
-

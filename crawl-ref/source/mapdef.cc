@@ -996,7 +996,8 @@ void map_lines::overlay_fprops(fprop_spec &spec)
     for (int y = 0, ysize = lines.size(); y < ysize; ++y)
     {
         std::string::size_type pos = 0;
-        while ((pos = lines[y].find_first_of(spec.key, pos)) != std::string::npos)
+        while ((pos = lines[y].find_first_of(spec.key, pos))
+               != std::string::npos)
         {
             (*overlay)(pos, y).property |= spec.get_property();
             ++pos;
@@ -3147,7 +3148,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             summon_type = static_cast<int>(str_to_summon_type(s_type));
             if (summon_type == SPELL_NO_SPELL)
             {
-                error = make_stringf("bad monster summon type: \"%s\"", 
+                error = make_stringf("bad monster summon type: \"%s\"",
                                 s_type.c_str());
                 return (slot);
             }
