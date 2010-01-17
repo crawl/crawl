@@ -1,0 +1,125 @@
+###############################################################################
+# snake.des: All maps and branch endings relating to the Snake Pit.
+###############################################################################
+
+################################################################################
+# Snake endings
+################################################################################
+
+################################################################################
+# Snake Pit: the hunt
+#
+NAME:    snake_hunt
+PLACE:   Snake:5
+TAGS:    no_rotate
+ORIENT:  northwest
+KFEAT:   Z = weight:2 teleport trap / .
+KFEAT:   z = teleport trap / Zot trap / weight:20 .
+MONS:    naga / nothing
+MONS:    greater naga / nothing
+MONS:    guardian serpent / nothing
+MONS:    naga warrior / nothing
+MONS:    naga mage / nothing
+MONS:    greater naga / guardian serpent
+SHUFFLE: 'X / "Y
+SHUFFLE: 'X / 'X / AB, "Y / CD
+SUBST:   A=x, B=x, C=x, D=x
+SUBST:   ' = .:250 1 2 3 4:15 5:5
+SUBST:   " = .:250 1 2 3 4:5  5:15
+SUBST:   X=xc..++, Y=xc++
+SUBST:   T : T U V .:30 b
+SUBST:   _:.!, !:!.x, !=x .:2
+SHUFFLE: 123, 45, ([<
+#
+validate {{ return glyphs_connected('{', 'O') }}
+#
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx''''''x4O4x""""""xxxxxxxxxxx
+xxxxxxxxxxx''''''xxxx664z466xxxx""""""xxxxxx
+xxxxxxxx''''xxxxxxxx.5665665.xxxxxxxx""""xxx
+xxxxxxx''xxxx''''xxx..45554..xxx""""xxxx""xx
+xxxxxx''xxx''''''''xxx.666.xxx""""""""xxx""x
+xxxxxx'xxx''''''''''xxxcXcxxx""""""""""xxx"x
+xxxxxx''x''''''''''''xx.3.xx""""""""""""x""x
+xxxxxxx'Y'''''''''''''45354"""""""""""""Y"xx
+xxxxxxxxxx''''''''''xx.....xx""""""""""xxxxx
+xxxxxxxxxxx''''''''xxxxx.xxxxx""""""""xxxxxx
+xxxxxxxxxxxxx''''xxxxxxx.xxxxxxx""""xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx!.!xxxxxx.....xxxxxx!.!xxxxxxxx
+xxxxxxxxxx!....._xx...43335...xx_...!!!xxxxx
+xxxxxxxx!......_x.11.4..3..5.22.x_......!xxx
+xxxxxxx!...2...x..11.........22..x...1...!xx
+xxxxxxx!..2..._x......T...T......x_...1..!xx
+xxxxxx!...2...x..2.............1..x...1...!x
+xxxxxx!..2....x.........{.........x....1...!
+xxxxxx!.......x....T...(.[...T.............@
+xxxxxx!..2....x.......ZZZZZ.......x....1...!
+xxxxxxx!..2..._x.................x_...1..!xx
+xxxxxxx!...2..._xx....T.}.T....xx_...1...!xx
+xxxxxxx!........._xx.........xx_.........!xx
+xxxxxxxx!.........._xxx...xxx_..........!xxx
+xxxxxxxxx!.............x.x.............!xxxx
+xxxxxxxxxx!!.........................!!xxxxx
+xxxxxxxxxxxx!!!.....3.......3.....!!!xxxxxxx
+xxxxxxxxxxxxxxx!!!!!..3...3..!!!!!xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx!!!...!!!xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx!@!xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Snake Pit: old level
+#
+NAME:   snake_pit
+PLACE:  Snake:5
+ORIENT: southwest
+TAGS:   no_rotate
+MONS:   greater naga / nothing
+MONS:   naga
+MONS:   naga mage / nothing
+MONS:   naga warrior / nothing
+SUBST:  c = c .:1
+SUBST:  v = v .:1
+SUBST:  v = x
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.............xxxxxxxx
+xxxxxxxxxxxxxx....v.............v..xxxxx
+xxxxxxxxxxxx....2.v.............v.2..xxx
+xxxxxxxxxxx.....2.v....v.....v..v.33.xxx
+xxxxxxxxxxx.....22v.............vv.2..xx
+xxxxxxxxxxx.......vv..v........vv.33..xx
+xxxxxxxxxx.....x233vv....T...vvv4444..xx
+xxxxxxxxxx......4444v.........v.333....x
+xxxxxxxxxx......33v4...v.......4x4.....x
+xxxxxxxxxx.......334.....v.....4333....x
+xxxxxxxxxx..c......3.3..4.4..v.......c.x
+xxxxxxxxx...cc.....1...1.1.1...133..cc.x
+xxxxxxxxx...cc....3.....4.4.........cc.x
+xxxxxxxxx...cc...3...v........2.....cc.x
+xxxxxxxxx...cc.........1...1.......cc..x
+xxxxxxxxxx..cc.....1.....1.....1..ccc.xx
+xxxxxxxxxx...ccc......3333333.....cc..xx
+xxxxxxxxxx....cccc....3333333.....cc..xx
+xxxxxxxxxx.....cccccc............cc...xx
+xxxxxxxxxx........ccccc..O....cccc....xx
+xxxxxxxxxxx........cccccccccccccc....xxx
+xxxxxxxxxxx..........ccccccccccc.....xxx
+xxxxxxxxxxxxx.......................xxxx
+xxxxxxxxxxxxxxxx..................xxxxxx
+xxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
