@@ -226,6 +226,8 @@ int dgn_place_monster(mons_spec &mspec,
                       bool force_pos = false, bool generate_awake = false,
                       bool patrolling = false);
 
+dungeon_feature_type dgn_tree_base_feature_at(coord_def c);
+
 class item_list;
 void dgn_place_multiple_items(item_list &list,
                               const coord_def& where,

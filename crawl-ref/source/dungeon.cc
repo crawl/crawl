@@ -8151,6 +8151,13 @@ void dgn_set_lt_callback(std::string level_type_tag,
     level_type_post_callbacks[level_type_tag] = callback_name;
 }
 
+dungeon_feature_type dgn_tree_base_feature_at(coord_def c)
+{
+    return (player_in_branch(BRANCH_SWAMP)?
+            DNGN_SHALLOW_WATER :
+            DNGN_FLOOR);
+}
+
 ////////////////////////////////////////////////////////////////////
 // dgn_region
 
