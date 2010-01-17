@@ -574,6 +574,10 @@ yaktaur_captain MONS_YAKTAUR_CAPTAIN
 yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
 
 ## Elves ('e')
+%sdir dc-mon/unique
+dowan MONS_DOWAN
+duvessa MONS_DUVESSA
+%sdir dc-mon
 elf MONS_ELF
 deep_elf_fighter MONS_DEEP_ELF_FIGHTER
 deep_elf_soldier MONS_DEEP_ELF_SOLDIER

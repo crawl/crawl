@@ -972,9 +972,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // elves ('e')
     case MONS_DOWAN:
-        return TILEP_MONS_DEEP_ELF_MAGE;    // TODO
+        return TILEP_MONS_DOWAN;
     case MONS_DUVESSA:
-        return TILEP_MONS_DEEP_ELF_FIGHTER; // TODO
+        return TILEP_MONS_DUVESSA;
 
     // goblins and gnolls ('g')
     case MONS_IJYB:
