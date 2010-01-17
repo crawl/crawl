@@ -30,7 +30,7 @@ MONS:    swamp dragon / nothing
 MONS:    swamp drake / nothing
 MONS:    hydra / nothing
 SHUFFLE: 12
-SUBST:   ' = xc
+SUBST:   ' = t
 MAP
        @
        2
@@ -39,8 +39,8 @@ MAP
       2 2
         .
      cc.cc
-    cc3.2cc
-   'c3.2.3c'
+   'cc3.2cc'
+   cc3.2.3cc
   'c11.3322c''
  'cc...21.1ccc
  'c.13321.1.cc'
@@ -65,7 +65,7 @@ MONS:    swamp dragon, swamp drake, hydra, fire drake
 ITEM:    nothing
 SUBST:   1=1., 2=2., 3=3., 4=4., L=l.
 SHUFFLE: Od, 123, lw
-SUBST:   l=l .:2, '=.x, "=cx, _=c.
+SUBST:   l=l .:2, '=.t, "=tc, _=c.
 MAP
    @       @
    1'       2'
@@ -82,7 +82,9 @@ MAP
   "ccll.llll34lcc"
    "cccO.lld3ccc"
     ""cccccccc""
-      """"""""
+     """"""""""
+       "" """
+           "
 ENDMAP
 
 ###############################################################################
@@ -95,7 +97,7 @@ MONS:    dragon, mottled dragon / hydra, fire drake / swamp drake / steam dragon
 MONS:    fire drake / lindwurm w:3
 SHUFFLE: OX
 SUBST:   S = llw, L = ll.
-SUBST:   ' = x., " = cx
+SUBST:   ' = t., " = t
 MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
              pow_max = 12, delay_min = 40, delay_max = 70, \
              size = 1, walk_dist = 1, spread_rate= 3 }
@@ -134,41 +136,41 @@ MARKER:  Q = lua:fog_machine { cloud_type = "freezing vapour", \
              size = 1, walk_dist = 1, spread_rate= 33 }
 KMONS:   ? = swamp worm simulacrum / giant goldfish simulacrum / electric eel \
              simulacrum
-MONS:    ice dragon, hydra simulacrum, freezing wraith, azure jelly / ice dragon
-SUBST:   X = cc., RY = wWwww., Q=c
+MONS:    ice dragon, hydra simulacrum, freezing wraith, azure jelly / ice dragon w:5
+SUBST:   X = tt., RY = wWwww., Q=t
 MAP
-               wwxxxxxxxxx
-        @.  @ wwxxccccccxx
-          .  ..wwcc3c3ccxx
-           ..w?.wXXc..Xcxx
-            ?ww....Q.cXcxx
-           www.wwXc3c3Xcxx
-            w?.wXcXc.3ccxx
-             ww.wccc..ccxx
-               @xxcc..ccxx
-                 xcc2.ccxx
-                xxc..cccxx
-   @        x   xxcc2Xccxx
-    .      xxx   xcc.2.cxx
-     .    xxxxx  xc..cccxx
-      .   xxxxxxxxcc2.ccxx
-     .    .wwxxxxxccX2.cxx
-      .  ...?wxxxxccc2.ccx
-       .2..wwwwxxxxcc.2ccx
-    ? ....ww?wxxxxccc..ccx
-   xxww.wwwwwxxxxxcc..ccxx
-   xxw?ww?wwxxxcccc.2ccxxx
-  xxxxwwwwxxxcccccc2Xcxxxx
-  xxxxxxxxxcccwwwY2.Yccxxx
-  xxxxxxxcccwwQww.YY.wccxx
-   xxxxxccwwwww22Yww2wwcxx
-     xxccwwww22YwwwwY2wcxx
-    xxccwww.2YwwQwwwY2wcxx
-   xxccYw1.YwwwwwwwY2wwcxx
-  xxcccwRwwwwcccwY1.wwccxx
- xxcccccwwwwcw4wwOYYcccxxx
-xxxccccccccccccccccccxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx
+               wwttttttttt
+        @.  @ wwttcccccctt
+          .  ..wwcc3c3cctt
+           ..w?.wXXc..Xctt
+            ?ww....Q.cXctt
+           www.wwXc3c3Xctt
+            w?.wXcXc.3cctt
+             ww.wccc..cctt
+               @ttcc..cctt
+                 tcc2.cctt
+                ttc..ccctt
+   @        t   ttcc2Xcctt
+    .      ttt   tcc.2.ctt
+     .    ttttt  tc..ccctt
+      .   ttttttttcc2.cctt
+     .    .wwtttttccX2.ctt
+      .  ...?wttttccc2.cct
+       .2..wwwwttttcc.2cct
+    ? ....ww?wttttccc..cct
+   ttww.wwwwwtttttcc..cctt
+   ttw?ww?wwtttcccc.2ccttt
+  ttttwwwwtttcccccc2Xctttt
+  tttttttttcccwwwY2.Yccttt
+  tttttttcccwwQww.YY.wcctt
+   tttttccwwwww22Yww2wwctt
+     ttccwwww22YwwwwY2wctt
+    ttccwww.2YwwQwwwY2wctt
+   ttccYw1.YwwwwwwwY2wwctt
+  ttcccwRwwwwcccwY1.wwcctt
+ ttcccccwwwwcw4wwOYYcccttt
+tttccccccccccccccccccttttt
+tttttttttttttttttttttttttt
 ENDMAP
 
 ##################################################################
@@ -198,31 +200,31 @@ KMONS:   ? = big fish zombie
 KMONS:   ! = swamp worm zombie
 KFEAT:   ? = deep_water
 KFEAT:   ! = deep_water
-SUBST:   X=. , Y:w , 6=66. , 1=13 , .=W... , "=xc , '=.wW
+SUBST:   X=. , Y:w , 6=66. , 1=13 , .=W... , "=tc, '=.w
 MAP
-    ?w......w?w"xx     xx
-    w?ww..ww?wwc"xx   xxx
-    "wWWwww?w?cc"xxx xxxx
-   '""cWw?w?ccc"xxxxxxxxx
-   'x"c..wwcccc"""xxxxxxx
-   xxxc...ccccccccccc"xxx
-  xxx"cc....cccc6666c"xxx
-  xxx"cc....cccO6666cc"xx
- xxxxcccc...cc6666665c"xx
-  x'"cccc...ccc666666ccxx
-   'cc1Xcc...cc6666666cxx
-   xc211ccc..cccc5.666c"x
-   ccc2.1cc.Y.cccc..6cc"x
-   '"c.1.ccc...ccc...cc"x
-   'xcc.1.ccc...cc....cxx
-   'x"c2.21ccc..ccc5.ccxx
-   xxxcc...ccc..c....c"xx
-   xxx"cc.1.2c...5.cccxxx
-   xxxx"c2......?wcc""xxx
-  xxxxxxccc2.wwwwcc""xxxx
-  xxxxxxx"cc?w?wcc""xxxxx
-  xxxxxxxx"cc4wcc"xxxxxxx
- xxxxxxxxxx"cccc"xxxxxxxx
-xxxxxxxxxxxxx""xxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxx
+    ?w......w?w"tt     tt
+    w?ww..ww?wwc"tt   ttt
+    "wWWwww?w?cc"ttt tttt
+   '""cWw?w?ccc"ttttttttt
+   't"c..wwcccc"""ttttttt
+   tttc...ccccccccccc"ttt
+  ttt"cc....cccc6666c"ttt
+  ttt"cc....cccO6666cc"tt
+ ttttcccc...cc6666665c"tt
+  t'"cccc...ccc666666cctt
+   'cc1Xcc...cc6666666ctt
+   tc211ccc..cccc5.666c"t
+   ccc2.1cc.Y.cccc..6cc"t
+   '"c.1.ccc...ccc...cc"t
+   'tcc.1.ccc...cc....ctt
+   't"c2.21ccc..ccc5.cctt
+   tttcc...ccc..c....c"tt
+   ttt"cc.1.2c...5.cccttt
+   tttt"c2......?wcc""ttt
+  ttttttccc2.wwwwcc""tttt
+  ttttttt"cc?w?wcc""ttttt
+  tttttttt"cc4wcc"ttttttt
+ tttttttttt"cccc"tttttttt
+ttttttttttttt""tttttttttt
+ttttttttttttttttttttttttt
 ENDMAP
