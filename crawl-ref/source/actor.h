@@ -32,7 +32,7 @@ public:
     // grids, such as mgrd.
     virtual void moveto(const coord_def &c) = 0;
 
-    // High-level actor movement. If in doubt, use this. Returns true if the
+    // High-level actor movement. If in doubt, use this. Returns false if the
     // actor cannot be moved to the target, possibly because it is already
     // occupied.
     virtual bool move_to_pos(const coord_def &c) = 0;
