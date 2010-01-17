@@ -331,3 +331,47 @@ MAP
 ttttttttttttt""tttttttttt
 ttttttttttttttttttttttttt
 ENDMAP
+
+##################################################################
+# "Old school" swamp end, by Jude
+#
+NAME:    swamp_old_school
+PLACE:   Swamp:5
+TAGS:    no_pool_fixup
+ORIENT:  southeast
+MONS:    swamp dragon, hydra, swamp drake
+MONS:    the lernaean hydra / hydra
+SHUFFLE: ab
+SUBST:   a=c, b=', " = ttw, u = wwwwwWWWWxxx., ' = W.
+SHUFFLE: 12
+SUBST:   1=1111., 2=2222., 3=3333.
+MAP
+               t
+    x   "t     t"   x        t
+       "ttt"  tt"    "t"    tt   ttt
+ x    "ttttt"tttt"  tttt"  tttt ttttt
+    ""tttttttttttttttttttttttttttttttt
+ @  "ttt.wtcccccttcccttccttttttccctttt
+.WW"tt.wcccccwwccccwcccccccttcccOccctt
+ .W""'ccccuuwuuwuuwuwuuwccccccwu'ucctt
+ 3.''''ccuu3uuuuuuuuuu3uuwcccwu'uwcctt
+ ....'''''''''''''''''''uuwwccw'cccctt
+ .""'''cc'uuuuu'uuuuuuu'uuuuwccabccttt
+@"tt.ccccccu2uu'u1uuu1u'uuuwwccabctttt
+  "tt.wccccc12u'uu2uu2u'u2uwccabcctttt
+  w"tt.wccccuuu'u1uu1uu'uuwccccabccttt
+  w.""ttccwwuuu'uuuuu1u'u2uccccc'ccctt
+   .xw"tccwuuuu'uuuuuuu'uuccccuu'ccctt
+x  .ww"ttccwu2u'u1uuu2u'u2ucc2u'uucctt
+  WxW"ttccwuuuu'uu2uuuu'uuuuuu'1uccttt
+  ww"tttcwuu''''''''''''''''''uucctttt
+   ww""tccwuuuu2uuuuuuu'uuuuu2uu3ccttt
+ 3 WwwW"tccccuuuu1''''''uuuuuuuucctttt
+   xwwWxttcccu1uuu2uuuu''''''uuccctttt
+   Wwww"ttccwuuu3uuuu3u'uuuuuuuuuccttt
+   wWW"ttccwuuwuuccuuuu'ucccuccucctttt
+   ""tttccwuuwcccccccucccu4ccccccttttt
+ "tttttttccwwcccttttcccccccctttttttttt
+""ttttttttcccctttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttt
+ENDMAP
