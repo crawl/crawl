@@ -58,6 +58,9 @@ static void _swamp_apply_features(int margin)
 
 void dgn_build_swamp_level(int level)
 {
+    dgn_Build_Method += " swamp";
+    dgn_Layout_Type   = "swamp";
+
     const int swamp_depth = level_id::current().depth - 1;
     dgn_initialise_heightmap(-17);
     _swamp_slushy_patches(swamp_depth * 3);
