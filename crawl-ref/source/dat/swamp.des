@@ -166,7 +166,7 @@ TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    swamp dragon, swamp drake, hydra, fire drake
 ITEM:    nothing
-SUBST:   1=1., 2=2., 3=3., 4=4., L=l.
+SUBST:   1=111., 2=2., 3=333., 4=4., L=l.
 SHUFFLE: Od, 123, lw
 SUBST:   l=l .:2, '=.t, "=tc, _=c.
 MAP
