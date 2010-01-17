@@ -18,6 +18,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "externs.h"
 #include "options.h"
 #include "ghost.h"
@@ -715,7 +716,9 @@ static int _is_near_stairs(coord_def &p)
 static bool _valid_monster_generation_location( const mgen_data &mg,
                                                 const coord_def &mg_pos)
 {
-    if (!in_bounds(mg_pos) || actor_at(mg_pos))
+    if (!in_bounds(mg_pos)
+        || monster_at(mg_pos)
+        || you.pos() == mg_pos && !fedhas_passthrough_class(mg.cls))
         return (false);
 
     const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
@@ -1097,7 +1100,8 @@ static int _place_monster_aux(const mgen_data &mg,
     // If the space is occupied, try some neighbouring square instead.
     if (first_band_member && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos))
-        && actor_at(mg.pos) == NULL
+        && !monster_at(mg.pos)
+        && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
         && (force_pos || monster_habitable_grid(montype, grd(mg.pos))))
     {
         fpos = mg.pos;
@@ -2878,7 +2882,8 @@ int create_monster(mgen_data mg, bool fail_msg)
 
     if (!mg.force_place()
         || !in_bounds(mg.pos)
-        || actor_at(mg.pos)
+        || monster_at(mg.pos)
+        || you.pos() == mg.pos && !fedhas_passthrough_class(mg.cls)
         || !mons_class_can_pass(montype, grd(mg.pos)))
     {
         mg.pos = find_newmons_square(montype, mg.pos);

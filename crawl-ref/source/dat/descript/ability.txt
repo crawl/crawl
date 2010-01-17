@@ -361,7 +361,7 @@ Recall your orcish followers from anywhere on the level to your immediate surrou
 # Fedhas
 Decomposition
 
-Cause corpses in your field of vision to rapidly decay. Corpses with a monster (or you) on top of them will not be affected.
+Cause corpses in your field of vision to rapidly decay. Corpses with a monster on top of them will not be affected.
 %%%%
 Sunlight
 
