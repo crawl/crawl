@@ -20,7 +20,6 @@ enum drop_mode_type
 };
 
 god_type str_to_god(std::string god);
-int str_to_fprop (const std::string &str);
 int str_to_summon_type (const std::string &str);
 
 std::string read_init_file(bool runscript = false);

@@ -218,22 +218,6 @@ static int _str_to_wand( const std::string& str )
     return (SWT_NO_SELECTION);
 }
 
-int str_to_fprop ( const std::string &str)
-{
-    if (str == "bloody")
-        return (FPROP_BLOODY);
-    if (str == "no_cloud_gen")
-        return (FPROP_NO_CLOUD_GEN);
-    if (str == "no_rtele_into")
-        return (FPROP_NO_RTELE_INTO);
-    if (str == "no_ctele_into")
-        return (FPROP_NO_CTELE_INTO);
-    if (str == "no_tele_into")
-        return (FPROP_NO_TELE_INTO);
-
-    return (FPROP_NONE);
-}
-
 // Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
 // spell.
 int str_to_summon_type (const std::string &str)

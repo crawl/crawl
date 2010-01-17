@@ -5,6 +5,7 @@ struct coord_def;
 
 bool is_sanctuary( const coord_def& p );
 bool is_bloodcovered( const coord_def& p );
+int str_to_fprop (const std::string &str);
 
 enum feature_property_type
 {
