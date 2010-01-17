@@ -845,8 +845,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_SMOKE_DEMON:
         return TILEP_MONS_SMOKE_DEMON;
     case MONS_SIXFIRHY:
-        return _get_random_monster_tile(mon, TILEP_MONS_SIXFIRHY);
-//         return TILEP_MONS_SIXFIRHY;
+        return TILEP_MONS_SIXFIRHY;
     case MONS_HELLWING:
         return TILEP_MONS_HELLWING;
 

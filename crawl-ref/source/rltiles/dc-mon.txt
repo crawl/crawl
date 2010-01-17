@@ -220,9 +220,6 @@ rotting_devil MONS_ROTTING_DEVIL
 smoke_demon MONS_SMOKE_DEMON
 %rim 0
 sixfirhy MONS_SIXFIRHY
-sixfirhy_new1
-sixfirhy_new2
-sixfirhy_new3
 %rim 1
 hellwing MONS_HELLWING
 
