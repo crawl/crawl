@@ -754,7 +754,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
     case ABIL_FEDHAS_SPAWN_SPORES:
-    case ABIL_FEDHAS_RAIN:
     case ABIL_YRED_DRAIN_LIFE:
     case ABIL_CHEIBRIADOS_SLOUCH:
         invoc = true;
@@ -766,6 +765,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_OKAWARU_HASTE:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
+    case ABIL_FEDHAS_RAIN:
         invoc = true;
         failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
