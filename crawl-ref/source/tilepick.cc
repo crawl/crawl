@@ -784,6 +784,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // humans ('@')
     case MONS_HUMAN:
+    case MONS_DWARF:
         return TILEP_MONS_HUMAN;
     case MONS_HELL_KNIGHT:
         return TILEP_MONS_HELL_KNIGHT;
