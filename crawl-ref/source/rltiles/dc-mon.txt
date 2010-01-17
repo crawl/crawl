@@ -218,7 +218,12 @@ hairy_devil MONS_HAIRY_DEVIL
 red_devil MONS_RED_DEVIL
 rotting_devil MONS_ROTTING_DEVIL
 smoke_demon MONS_SMOKE_DEMON
-#sixfirhy MONS_SIXFIRHY
+%rim 0
+sixfirhy MONS_SIXFIRHY
+sixfirhy_new1
+sixfirhy_new2
+sixfirhy_new3
+%rim 1
 hellwing MONS_HELLWING
 
 # type '5' demons
