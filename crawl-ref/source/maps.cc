@@ -337,7 +337,8 @@ bool map_safe_vault_place(const map_def &map,
     if (size.zero())
         return (true);
 
-    const bool water_ok = map.has_tag("water_ok");
+    const bool water_ok =
+        map.has_tag("water_ok") || player_in_branch(BRANCH_SWAMP);
     const std::vector<std::string> &lines = map.map.get_lines();
 
     for (rectangle_iterator ri(c, c + size - 1); ri; ++ri)
