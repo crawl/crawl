@@ -2115,6 +2115,9 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_GLOWING_SHAPESHIFTER:
         return TILE_CORPSE_GLOWING_SHAPESHIFTER;
 
+    case MONS_DWARF:
+        return TILE_CORPSE_DWARF;
+
     default:
         return TILE_ERROR;
     }
