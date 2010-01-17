@@ -34,7 +34,9 @@ local function report_monster_counts_at(place, mcount_map)
 
   local total = 0
   for _, monster_pop in ipairs(monster_counts) do
-    total = total + monster_pop[2].total
+    if monster_pop[1] ~= 'TOTAL' then
+      total = total + monster_pop[2].total
+    end
   end
 
   text = text .. "Count  | XPAv  | XPMin | XPMax | XPSigma | CountMin | CountMax | CountSigma |    %    | Monster\n"
