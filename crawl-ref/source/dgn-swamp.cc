@@ -63,6 +63,7 @@ void dgn_build_swamp_level(int level)
     _swamp_slushy_patches(swamp_depth * 3);
     dgn_smooth_heights();
     _swamp_apply_features(2);
+    env.heightmap.reset(NULL);
 
     dgn_place_stone_stairs();
     process_disconnected_zones(0, 0, GXM - 1, GYM - 1, true, DNGN_TREES);
