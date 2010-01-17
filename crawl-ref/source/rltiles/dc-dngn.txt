@@ -639,9 +639,20 @@ wall/stone_gray2
 wall/stone_gray3
 
 %sdir dc-dngn/floor/grass
+%weight 15
 grass0 FLOOR_GRASS
 grass1
 grass2
+%weight 1
+grass_flowers_blue1
+grass_flowers_blue2
+grass_flowers_blue3
+grass_flowers_red1
+grass_flowers_red2
+grass_flowers_red3
+grass_flowers_yellow1
+grass_flowers_yellow2
+grass_flowers_yellow3
 
 grass_n HALO_GRASS
 grass_ne
