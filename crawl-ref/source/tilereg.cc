@@ -114,19 +114,6 @@ const VColour map_colours[MAX_MAP_COL] =
     VColour(165,  91,   0, 255), // BROWN
 };
 
-const int dir_dx[9] = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
-const int dir_dy[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
-
-const int cmd_normal[9] = {CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT,
-                           CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT,
-                           CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT};
-const int cmd_shift[9]  = {CMD_RUN_DOWN_LEFT, CMD_RUN_DOWN, CMD_RUN_DOWN_RIGHT,
-                           CMD_RUN_LEFT, CMD_REST, CMD_RUN_RIGHT,
-                           CMD_RUN_UP_LEFT, CMD_RUN_UP, CMD_RUN_UP_RIGHT};
-const int cmd_ctrl[9]   = {CMD_OPEN_DOOR_DOWN_LEFT, CMD_OPEN_DOOR_DOWN, CMD_OPEN_DOOR_DOWN_RIGHT,
-                           CMD_OPEN_DOOR_LEFT, CMD_DISPLAY_MAP, CMD_OPEN_DOOR_RIGHT,
-                           CMD_OPEN_DOOR_UP_LEFT, CMD_OPEN_DOOR_UP, CMD_OPEN_DOOR_UP_RIGHT};
-
 
 Region::Region() :
     ox(0),
@@ -1230,22 +1217,32 @@ void DungeonRegion::on_resize()
     // TODO enne
 }
 
+// (0,0) = same position is handled elsewhere.
+const int dir_dx[8] = {-1, 0, 1, -1, 1, -1,  0,  1};
+const int dir_dy[8] = { 1, 1, 1,  0, 0, -1, -1, -1};
+
+const int cmd_array[8] = {CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT,
+                          CMD_MOVE_LEFT, CMD_MOVE_RIGHT,
+                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT};
+
+
 static int _adjacent_cmd(const coord_def &gc, const MouseEvent &event)
 {
     const coord_def dir = gc - you.pos();
     const bool shift = (event.mod & MOD_SHIFT);
     const bool ctrl  = (event.mod & MOD_CTRL);
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 8; i++)
     {
         if (dir_dx[i] != dir.x || dir_dy[i] != dir.y)
             continue;
 
+        int cmd = cmd_array[i];
         if (shift)
-            command_to_key((command_type) cmd_shift[i]);
+            cmd += CMD_RUN_LEFT - CMD_MOVE_LEFT;
         else if (ctrl)
-            command_to_key((command_type) cmd_ctrl[i]);
-        else
-            command_to_key((command_type) cmd_normal[i]);
+            cmd += CMD_OPEN_DOOR_LEFT - CMD_MOVE_LEFT;
+
+        return command_to_key((command_type) cmd);
     }
 
     return 0;
@@ -1757,6 +1754,9 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         if (_handle_distant_monster(mon, event))
             return (CK_MOUSE_CMD);
     }
+
+    if ((event.mod & (MOD_SHIFT | MOD_CTRL)) && adjacent(you.pos(), gc))
+        return _click_travel(gc, event);
 
     // Don't move if we've tried to fire/cast/evoke when there's nothing
     // available.
