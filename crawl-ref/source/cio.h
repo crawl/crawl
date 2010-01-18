@@ -54,9 +54,6 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap = KMC_DEFAULT,
 
 void get_input_line( char *const buff, int len );
 
-// In view.cc, declared here for default argument to cancelable_get_line()
-int get_number_of_cols(void);
-
 int nowrapcprintf( int wrapcol, const char *s, ... );
 int nowrap_eol_cprintf( const char *s, ... );
 
@@ -68,7 +65,6 @@ int nowrap_eol_cprintf( const char *s, ... );
 // pressed Escape
 int cancelable_get_line( char *buf,
                          int len,
-                         int wrapcol = get_number_of_cols(),
                          input_history *mh = NULL,
                          int (*keyproc)(int &c) = NULL );
 
@@ -76,7 +72,7 @@ int cancelable_get_line( char *buf,
 template<int> static int cancelable_get_line_autohist_temp(char *buf, int len)
 {
     static input_history hist(10);
-    return cancelable_get_line(buf, len, get_number_of_cols(), &hist);
+    return cancelable_get_line(buf, len, &hist);
 }
 
 // This version of cancelable_get_line will automatically retain its own

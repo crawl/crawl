@@ -296,12 +296,11 @@ int wrapcprintf( int wrapcol, const char *s, ... )
     return (olen);
 }
 
-int cancelable_get_line( char *buf, int len, int maxcol,
-                         input_history *mh, int (*keyproc)(int &ch) )
+int cancelable_get_line(char *buf, int len, input_history *mh, int (*keyproc)(int &ch))
 {
     flush_prev_message();
 
-    line_reader reader(buf, len, maxcol);
+    line_reader reader(buf, len, get_number_of_cols());
     reader.set_input_history(mh);
     reader.set_keyproc(keyproc);
 
