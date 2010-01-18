@@ -48,6 +48,20 @@ int msgwin_get_line(std::string prompt,
                     input_history *mh = NULL,
                     int (*keyproc)(int &c) = NULL);
 
+
+// Do not use this templated function directly.  Use the macro below instead.
+template<int> static int msgwin_get_line_autohist_temp(std::string prompt,
+                                                       char *buf, int len)
+{
+    static input_history hist(10);
+    return msgwin_get_line(prompt, buf, len, &hist);
+}
+
+// This version of mswgin_get_line will automatically retain its own
+// input history, independent of other calls to msgwin_get_line.
+#define msgwin_get_line_autohist(prompt, buf, len) \
+    msgwin_get_line_autohist_temp<__LINE__>(prompt, buf, len)
+
 class no_messages
 {
 public:
