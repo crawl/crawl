@@ -87,8 +87,19 @@ Dissolution
 The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god.  When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God.  Dissolution become a tremendous mass of acidic ooze, yet retained his intelligence.  He is filled with hatred for anything that can hold a form.
 %%%%
 Donald
+{{
+local descript = "An adventurer just like you, trying to find the Orb."
 
-An adventurer like you, trying to find the Orb.
+if you.race() ~= "Merfolk" then
+    descript = descript .. " Unlike you, and d"
+else
+    descript = descript .. " D"
+end
+
+descript = descript .. "espite his hatred of it, he takes to water like a fowl."
+
+return descript
+}}
 %%%%
 Dowan
 

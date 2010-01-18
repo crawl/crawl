@@ -732,6 +732,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_HELL_KNIGHT:
     case MONS_MAUD:
+    case MONS_DONALD:
     case MONS_FREDERICK:
     case MONS_MARGERY:
         force_item = true;
@@ -827,7 +828,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_NECROMANCER:
     case MONS_WIZARD:
     case MONS_PSYCHE:
-    case MONS_DONALD:
     case MONS_JOSEPHINE:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_DAGGER;
@@ -1392,6 +1392,7 @@ void give_armour(monsters *mon, int level)
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
     case MONS_MARGERY:
+    case MONS_DONALD:
     case MONS_MAUD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAULT_GUARD:
@@ -1504,7 +1505,6 @@ void give_armour(monsters *mon, int level)
     case MONS_DOWAN:
         item_race = MAKE_ITEM_ELVEN;
         // intentional fall-through
-    case MONS_DONALD:
     case MONS_JESSICA:
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_OGRE_MAGE:
