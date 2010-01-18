@@ -1118,7 +1118,7 @@ static std::string _describe_ammo(const item_def &item)
         case SPMSL_STEEL:
             description += "Compared to normal ammo, it does 50% more "
                 "damage, is destroyed upon impact only 1/10th of the "
-                "time, and weighs three three times as much.";
+                "time, and weighs three times as much.";
             break;
         case SPMSL_SILVER:
             description += "Compared to normal ammo, it does twice as "
