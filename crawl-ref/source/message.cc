@@ -3,7 +3,6 @@
  *  Summary:    Functions used to print messages.
  *
  * Todo:
- *   - Prompt-entered text needs to be merged into the message item
  *   - Optionally really clear message windw.
  *   - --more-- for full message window
  *   - --more-- for user-forced more (these two should be somewhat indep)
