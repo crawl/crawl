@@ -814,9 +814,9 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
     }
 }
 
-bool player_can_hear(const coord_def& p)
+bool player_can_hear(const coord_def& p, int hear_distance)
 {
-    return (!silenced(p) && !silenced(you.pos()));
+    return (!silenced(p) && !silenced(you.pos()) && you.pos().distance_from(p) <= hear_distance);
 }
 
 char index_to_letter(int the_index)

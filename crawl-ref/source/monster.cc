@@ -2727,7 +2727,7 @@ bool monsters::fumbles_attack(bool verbose)
                 mprf("%s splashes around in the water.",
                      this->name(DESC_CAP_THE).c_str());
             }
-            else if (player_can_hear(pos()))
+            else if (player_can_hear(pos()), 20)
                 mpr("You hear a splashing noise.", MSGCH_SOUND);
         }
 

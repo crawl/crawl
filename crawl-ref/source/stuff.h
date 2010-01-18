@@ -69,7 +69,7 @@ int yesnoquit( const char* str, bool safe = true, int safeanswer = 0,
                bool allow_all = false, bool clear_after = true,
                char alt_yes = 'Y', char alt_yes2 = 'Y' );
 
-bool player_can_hear(const coord_def& p);
+bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
 char index_to_letter (int the_index);
 
