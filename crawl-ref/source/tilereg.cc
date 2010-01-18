@@ -1320,7 +1320,7 @@ static const bool _is_appropriate_spell(spell_type spell,
     if (flags & SPFLAG_GRID)
         return (false);
 
-    // Monst spells are blocked by transparent walls.
+    // Most spells are blocked by transparent walls.
     if (targeted && !you.see_cell_no_trans(target->pos()))
     {
         switch(spell)
@@ -1385,7 +1385,7 @@ static const bool _is_appropriate_evokable(const item_def& item,
     if (spell == SPELL_TELEPORT_OTHER && target->atype() == ACT_PLAYER)
         spell = SPELL_TELEPORT_SELF;
 
-    return(_is_appropriate_spell(spell, target));
+    return (_is_appropriate_spell(spell, target));
 }
 
 static const bool _have_appropriate_evokable(const actor* target)

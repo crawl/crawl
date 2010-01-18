@@ -2145,47 +2145,6 @@ static void _add_command(column_composer &cols, const int column,
             false, true, _cmdhelp_textfilter);
 }
 
-static void _insert_commands(std::string &desc, std::vector<command_type> cmds)
-{
-    for (unsigned int i = 0; i < cmds.size(); ++i)
-    {
-        const std::string::size_type found = desc.find("%");
-        if (found == std::string::npos)
-            break;
-
-        std::string command_name = command_to_string(cmds[i]);
-        if (strcmp(command_name.c_str(), "<") == 0)
-            command_name += "<";
-
-        desc.replace(found, 1, command_name);
-    }
-    desc += "\n";
-    desc = replace_all(desc, "percent", "%");
-}
-
-static void _insert_commands(std::string &desc, const int first, ...)
-{
-    std::vector<command_type> cmd_vector;
-    cmd_vector.push_back((command_type) first);
-
-    va_list args;
-    va_start(args, first);
-    int nargs = 10;
-
-    while (nargs-- > 0)
-    {
-        int value = va_arg(args, int);
-        if (!value)
-            break;
-
-        cmd_vector.push_back((command_type) value);
-    }
-    ASSERT(nargs > 0);
-    va_end(args);
-
-    _insert_commands(desc, cmd_vector);
-}
-
 static void _add_insert_commands(column_composer &cols, const int column,
                                  const unsigned int space_to_colon,
                                  const std::string &desc, const int first, ...)
@@ -2209,12 +2168,12 @@ static void _add_insert_commands(column_composer &cols, const int column,
     va_end(args);
 
     std::string line = desc;
-    _insert_commands(line, cmd_vector);
+    insert_commands(line, cmd_vector);
     _add_command(cols, column, cmd, line, space_to_colon);
 }
 
-static void _insert_commands(column_composer &cols, const int column,
-                             const std::string desc, const int first, ...)
+static void _add_insert_commands(column_composer &cols, const int column,
+                                 const std::string desc, const int first, ...)
 {
     std::vector<command_type> cmd_vector;
     cmd_vector.push_back((command_type) first);
@@ -2235,7 +2194,7 @@ static void _insert_commands(column_composer &cols, const int column,
     va_end(args);
 
     std::string line = desc;
-    _insert_commands(line, cmd_vector);
+    insert_commands(line, cmd_vector);
     cols.add_formatted(
             column,
             line.c_str(),
@@ -2252,14 +2211,14 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "on) or vi keys:\n",
             true, true, _cmdhelp_textfilter);
 
-    _insert_commands(cols, 0, "                 <w>1 2 3      % % %",
-                     CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
-    _insert_commands(cols, 0, "                  \\|/        \\|/", 0);
-    _insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
-                     CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
-    _insert_commands(cols, 0, "                  /|\\        /|\\", 0);
-    _insert_commands(cols, 0, "                 <w>7 8 9      % % %",
-                     CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
+    _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
+                         CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
+    _add_insert_commands(cols, 0, "                  \\|/        \\|/", 0);
+    _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
+                         CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
+    _add_insert_commands(cols, 0, "                  /|\\        /|\\", 0);
+    _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %",
+                         CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
 /*
             "                 <w>1 2 3      y k u\n"
             "                  \\|/        \\|/\n"
@@ -2315,40 +2274,40 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
                          CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
 
-    _insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
-                     CMD_WIELD_WEAPON, 0);
-    _insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
-                              "<w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
-                     CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
-                     CMD_CYCLE_QUIVER_BACKWARD, 0);
-    _insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
-                     CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
-    _insert_commands(cols, 0, "<brown>percent</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
-                     CMD_BUTCHER, CMD_EAT, 0);
-    _insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
-                     CMD_READ, 0);
-    _insert_commands(cols, 0, "<magenta>!</magenta> : potions (<w>%</w>uaff)",
-                     CMD_QUAFF, 0);
-    _insert_commands(cols, 0, "<blue>=</blue> : rings (<w>%</w>ut on and <w>%</w>emove)",
-                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
-    _insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
-                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
-    _insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
-                     CMD_EVOKE, 0);
+    _add_insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
+                         CMD_WIELD_WEAPON, 0);
+    _add_insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
+                                  "<w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
+                         CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
+                         CMD_CYCLE_QUIVER_BACKWARD, 0);
+    _add_insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
+                         CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
+    _add_insert_commands(cols, 0, "<brown>percent</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
+                         CMD_BUTCHER, CMD_EAT, 0);
+    _add_insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
+                         CMD_READ, 0);
+    _add_insert_commands(cols, 0, "<magenta>!</magenta> : potions (<w>%</w>uaff)",
+                         CMD_QUAFF, 0);
+    _add_insert_commands(cols, 0, "<blue>=</blue> : rings (<w>%</w>ut on and <w>%</w>emove)",
+                         CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _add_insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
+                         CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _add_insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
+                         CMD_EVOKE, 0);
 
     std::string item_types = "<lightcyan>";
     item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
         "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
-    _insert_commands(cols, 0, item_types,
-                     CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
-                     CMD_FORCE_CAST_SPELL, 0);
-    _insert_commands(cols, 0, "<brown>\\</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)",
-                     CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
-    _insert_commands(cols, 0, "<lightgreen>}</lightgreen> : miscellaneous items (e<w>%</w>oke)",
-                     CMD_EVOKE, 0);
-    _insert_commands(cols, 0, "<yellow>$</yellow> : gold (<w>%</w> counts gold)",
-                     CMD_LIST_GOLD, 0);
+    _add_insert_commands(cols, 0, item_types,
+                         CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
+                         CMD_FORCE_CAST_SPELL, 0);
+    _add_insert_commands(cols, 0, "<brown>\\</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)",
+                         CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
+    _add_insert_commands(cols, 0, "<lightgreen>}</lightgreen> : miscellaneous items (e<w>%</w>oke)",
+                         CMD_EVOKE, 0);
+    _add_insert_commands(cols, 0, "<yellow>$</yellow> : gold (<w>%</w> counts gold)",
+                         CMD_LIST_GOLD, 0);
 
     cols.add_formatted(
             0,
@@ -2427,10 +2386,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Dungeon Interaction and Information:\n",
             true, true, _cmdhelp_textfilter);
 
-    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Open/Close door",
-                     CMD_OPEN_DOOR, CMD_CLOSE_DOOR, 0);
-    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : use staircase",
-                     CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Open/Close door",
+                         CMD_OPEN_DOOR, CMD_CLOSE_DOOR, 0);
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : use staircase",
+                         CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
 
 
     _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile");
@@ -2467,16 +2426,16 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item ( <w>-</w> for none)", 2);
     _add_command(cols, 1, CMD_WEAPON_SWAP, "wield item a, or switch to b", 2);
 
-    _insert_commands(cols, 1, "    (use <w>%</w> to assign slots)",
-                     CMD_ADJUST_INVENTORY, 0);
+    _add_insert_commands(cols, 1, "    (use <w>%</w> to assign slots)",
+                         CMD_ADJUST_INVENTORY, 0);
 
     _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
     _add_command(cols, 1, CMD_EVOKE, "eVoke wand", 2);
 
-    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
-                     CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
-    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Put on or Remove jewellery",
-                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
+                         CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Put on or Remove jewellery",
+                         CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
 
     cols.add_formatted(
             1,
@@ -2491,8 +2450,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             false, true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
-    _insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
-                     CMD_DROP, 0);
+    _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
+                         CMD_DROP, 0);
 
     {
         std::string interact = "Chop up a corpse";
@@ -2515,10 +2474,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "You can read descriptions of your "
             "current spells (<w>%</w>), skills (<w>%?</w>) and "
             "abilities (<w>%!</w>).";
-    _insert_commands(text, CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
-                     CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
-                     CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS, CMD_USE_ABILITY,
-                     0);
+    insert_commands(text, CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
+                    CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
+                    CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS, CMD_USE_ABILITY,
+                    0);
     linebreak_string2(text, 40);
 
     cols.add_formatted(
@@ -2532,41 +2491,41 @@ static void _add_formatted_tutorial_help(column_composer &cols)
             0, "<h>Item types (and common commands)\n",
             true, true, _cmdhelp_textfilter);
 
-    _insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
-                     CMD_WIELD_WEAPON, 0);
-    _insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
-                              "<w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
-                     CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
-                     CMD_CYCLE_QUIVER_BACKWARD, 0);
-    _insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
-                     CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
-    _insert_commands(cols, 0, "<brown>percent</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
-                     CMD_BUTCHER, CMD_EAT, 0);
-    _insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
-                     CMD_READ, 0);
-    _insert_commands(cols, 0, "<magenta>!</magenta> : potions (<w>%</w>uaff)",
-                     CMD_QUAFF, 0);
-    _insert_commands(cols, 0, "<blue>=</blue> : rings (<w>%</w>ut on and <w>%</w>emove)",
-                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
-    _insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
-                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
-    _insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
-                     CMD_EVOKE, 0);
+    _add_insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
+                         CMD_WIELD_WEAPON, 0);
+    _add_insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
+                                  "<w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
+                         CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
+                         CMD_CYCLE_QUIVER_BACKWARD, 0);
+    _add_insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
+                         CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
+    _add_insert_commands(cols, 0, "<brown>percent</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
+                         CMD_BUTCHER, CMD_EAT, 0);
+    _add_insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
+                         CMD_READ, 0);
+    _add_insert_commands(cols, 0, "<magenta>!</magenta> : potions (<w>%</w>uaff)",
+                         CMD_QUAFF, 0);
+    _add_insert_commands(cols, 0, "<blue>=</blue> : rings (<w>%</w>ut on and <w>%</w>emove)",
+                         CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _add_insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
+                         CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _add_insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
+                         CMD_EVOKE, 0);
 
     std::string item_types = "<lightcyan>";
     item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
         "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
-    _insert_commands(cols, 0, item_types,
-                     CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
-                     CMD_FORCE_CAST_SPELL, 0);
+    _add_insert_commands(cols, 0, item_types,
+                         CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
+                         CMD_FORCE_CAST_SPELL, 0);
 
     item_types = "<brown>";
     item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_STAVE));
     item_types +=
         "</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)";
-    _insert_commands(cols, 0, item_types,
-                     CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
+    _add_insert_commands(cols, 0, item_types,
+                         CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
 
     cols.add_formatted(
             0,
@@ -2575,12 +2534,12 @@ static void _add_formatted_tutorial_help(column_composer &cols)
             "Numlock on and off). You can also use\n",
             true, true, _cmdhelp_textfilter);
 
-    _insert_commands(cols, 0, "     <w>%%%%</w> : left, down, up, right and",
-                     CMD_MOVE_LEFT, CMD_MOVE_DOWN, CMD_MOVE_UP,
-                     CMD_MOVE_RIGHT, 0);
-    _insert_commands(cols, 0, "     <w>%%%%</w> : diagonal movement.",
-                     CMD_MOVE_UP_LEFT, CMD_MOVE_UP_RIGHT, CMD_MOVE_DOWN_LEFT,
-                     CMD_MOVE_DOWN_RIGHT, 0);
+    _add_insert_commands(cols, 0, "     <w>%%%%</w> : left, down, up, right and",
+                         CMD_MOVE_LEFT, CMD_MOVE_DOWN, CMD_MOVE_UP,
+                         CMD_MOVE_RIGHT, 0);
+    _add_insert_commands(cols, 0, "     <w>%%%%</w> : diagonal movement.",
+                         CMD_MOVE_UP_LEFT, CMD_MOVE_UP_RIGHT, CMD_MOVE_DOWN_LEFT,
+                         CMD_MOVE_DOWN_RIGHT, 0);
 
     cols.add_formatted(
             0,
@@ -2589,11 +2548,11 @@ static void _add_formatted_tutorial_help(column_composer &cols)
             "For ranged attacks use either\n",
             false, true, _cmdhelp_textfilter);
 
-    _insert_commands(cols, 0, "<w>%</w> to launch missiles (like arrows)",
-                     CMD_FIRE, 0);
-    _insert_commands(cols, 0, "<w>%</w>/<w>%</w> to cast spells "
-                              "(<w>%?</w> lists spells).",
-                     CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL, CMD_CAST_SPELL, 0);
+    _add_insert_commands(cols, 0, "<w>%</w> to launch missiles (like arrows)",
+                         CMD_FIRE, 0);
+    _add_insert_commands(cols, 0, "<w>%</w>/<w>%</w> to cast spells "
+                                  "(<w>%?</w> lists spells).",
+                         CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL, CMD_CAST_SPELL, 0);
 
     cols.add_formatted(
             1,
@@ -2607,8 +2566,8 @@ static void _add_formatted_tutorial_help(column_composer &cols)
     _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "list inventory (select item to view it)", 2);
     _add_command(cols, 1, CMD_PICKUP, "pick up item from ground (also <w>g</w>)", 2);
     _add_command(cols, 1, CMD_DROP, "drop item", 2);
-    _insert_commands(cols, 0, "<w>%</w> or <w>%</w> : ascend/descend the stairs",
-                     CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
+    _add_insert_commands(cols, 0, "<w>%</w> or <w>%</w> : ascend/descend the stairs",
+                         CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
     cols.add_formatted(1, " ", false, true, _cmdhelp_textfilter);
     _add_command(cols, 1, CMD_REPLAY_MESSAGES, "show previous messages", 2);
     _add_command(cols, 1, CMD_DISPLAY_MAP, "show map of the whole level", 2);
