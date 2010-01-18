@@ -1229,7 +1229,6 @@ const int cmd_array[8] = {CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT
 static int _adjacent_cmd(const coord_def &gc, const MouseEvent &event)
 {
     const coord_def dir = gc - you.pos();
-    const bool shift = (event.mod & MOD_SHIFT);
     const bool ctrl  = (event.mod & MOD_CTRL);
     for (int i = 0; i < 8; i++)
     {
@@ -1237,9 +1236,7 @@ static int _adjacent_cmd(const coord_def &gc, const MouseEvent &event)
             continue;
 
         int cmd = cmd_array[i];
-        if (shift)
-            cmd += CMD_RUN_LEFT - CMD_MOVE_LEFT;
-        else if (ctrl)
+        if (ctrl)
             cmd += CMD_OPEN_DOOR_LEFT - CMD_MOVE_LEFT;
 
         return command_to_key((command_type) cmd);
@@ -1755,22 +1752,13 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             return (CK_MOUSE_CMD);
     }
 
-    if ((event.mod & (MOD_SHIFT | MOD_CTRL)) && adjacent(you.pos(), gc))
+    if ((event.mod & MOD_CTRL) && adjacent(you.pos(), gc))
         return _click_travel(gc, event);
 
     // Don't move if we've tried to fire/cast/evoke when there's nothing
     // available.
     if (event.mod & (MOD_SHIFT | MOD_CTRL | MOD_ALT))
-    {
-        // Ctrl-Click on adjacent open doors closes them.
-        if ((event.mod & MOD_CTRL) && grd(gc) == DNGN_OPEN_DOOR
-            && adjacent(you.pos(), gc) && (mon == NULL || !you.can_see(mon)))
-        {
-            return _click_travel(gc, event);
-        }
-        else
-            return (CK_MOUSE_CMD);
-    }
+        return (CK_MOUSE_CMD);
 
     return _click_travel(gc, event);
 }
