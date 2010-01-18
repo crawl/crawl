@@ -259,6 +259,9 @@ public:
     // write to screen (without refresh)
     void show()
     {
+        // XXX: this should not be necessary as formatted_string should
+        //      already do it
+        textcolor(LIGHTGREY);
         for (size_t i = 0; i < lines.size(); ++i)
             out_line(lines[i], i);
         place_cursor();
