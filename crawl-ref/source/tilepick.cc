@@ -5087,6 +5087,10 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                     }
                 }
 
+                dungeon_feature_type feat = grd(gc);
+                if (feat_is_water(feat) || feat == DNGN_LAVA)
+                    tileb[count+1] |= TILE_FLAG_WATER;
+
                 if (print_blood && is_bloodcovered(gc))
                     tileb[count+1] |= TILE_FLAG_BLOOD;
 

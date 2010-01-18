@@ -104,6 +104,8 @@ public:
 
     virtual void construct(writer &th);
 
+    virtual bool transparent() const;
+
 protected:
     dolls_data m_doll;
 };
@@ -816,6 +818,11 @@ void mcache_ghost::construct(writer &th)
     mcache_entry::construct(th);
 
     marshallDoll(th, m_doll);
+}
+
+bool mcache_ghost::transparent() const
+{
+    return (true);
 }
 
 /////////////////////////////////////////////////////////////////////////////

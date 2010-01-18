@@ -76,12 +76,13 @@ public:
 
     void set_info(int max, tile_info_func *info);
     inline const tile_info &get_info(int idx) const;
-    inline void get_coords(int idx, int ofs_x, int ofs_y,
+    inline bool get_coords(int idx, int ofs_x, int ofs_y,
                            float &pos_sx, float &pos_sy,
                            float &pos_ex, float &pos_ey,
                            float &tex_sx, float &tex_sy,
                            float &tex_ex, float &tex_ey,
-                           bool centre = true, int ymax = -1) const;
+                           bool centre = true, int ymin = -1, int ymax = -1,
+                           float tile_x = TILE_X, float tile_y = TILE_Y) const;
 
 protected:
     int m_tile_max;
@@ -94,12 +95,13 @@ inline const tile_info &TilesTexture::get_info(int idx) const
     return m_info_func(idx);
 }
 
-inline void TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
+inline bool TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
                                      float &pos_sx, float &pos_sy,
                                      float &pos_ex, float &pos_ey,
                                      float &tex_sx, float &tex_sy,
                                      float &tex_ex, float &tex_ey,
-                                     bool centre, int ymax) const
+                                     bool centre, int ymin, int ymax,
+                                     float tile_x, float tile_y) const
 {
     const tile_info &inf = get_info(idx);
 
@@ -110,19 +112,32 @@ inline void TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
     int size_ox = centre ? TILE_X / 2 - inf.width / 2 : 0;
     int size_oy = centre ? TILE_Y - inf.height : 0;
 
-    int ey = inf.ey;
-    if (ymax > 0)
-        ey = std::min(inf.sy + ymax - inf.offset_y, ey);
+    int pos_sy_adjust = ofs_y + inf.offset_y + size_oy;
+    int pos_ey_adjust = pos_sy_adjust + inf.ey - inf.sy;
 
-    pos_sx += (ofs_x + inf.offset_x + size_ox) / (float) TILE_X;
-    pos_sy += (ofs_y + inf.offset_y + size_oy) / (float) TILE_Y;
-    pos_ex = pos_sx + (inf.ex - inf.sx) / (float)TILE_X;
-    pos_ey = pos_sy + (ey - inf.sy) / (float)TILE_Y;
+    int sy = pos_sy_adjust;
+    if (ymin >= 0)
+        sy = std::max(ymin, sy);
+
+    int ey = pos_ey_adjust;
+    if (ymax >= 0)
+        ey = std::min(ymax, ey);
+
+    // Nothing to draw.
+    if (sy >= ey)
+        return (false);
+
+    pos_sx += (ofs_x + inf.offset_x + size_ox) / tile_x;
+    pos_sy += sy / tile_y;
+    pos_ex = pos_sx + (inf.ex - inf.sx) / tile_x;
+    pos_ey = pos_sy + (ey - sy) / tile_y;
 
     tex_sx = inf.sx / fwidth;
-    tex_sy = inf.sy / fheight;
+    tex_sy = (inf.sy + sy - pos_sy_adjust) / fheight;
     tex_ex = inf.ex / fwidth;
-    tex_ey = ey / fheight;
+    tex_ey = (inf.ey + ey - pos_ey_adjust) / fheight;
+
+    return (true);
 }
 
 #endif
