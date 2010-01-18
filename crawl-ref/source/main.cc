@@ -2750,15 +2750,6 @@ void world_reacts()
     }
 #endif
 
-    if (you.num_turns != -1)
-    {
-        if (you.num_turns < LONG_MAX)
-            you.num_turns++;
-        if (env.turns_on_level < INT_MAX)
-            env.turns_on_level++;
-        update_turn_count();
-    }
-
     _check_banished();
     _check_shafts();
     _check_sanctuary();
@@ -2868,6 +2859,15 @@ void world_reacts()
     if (you.religion != GOD_NO_GOD)
         mprf(MSGCH_DIAGNOSTICS, "TENSION = %d", get_tension());
 #endif
+
+    if (you.num_turns != -1)
+    {
+        if (you.num_turns < LONG_MAX)
+            you.num_turns++;
+        if (env.turns_on_level < INT_MAX)
+            env.turns_on_level++;
+        update_turn_count();
+    }
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
