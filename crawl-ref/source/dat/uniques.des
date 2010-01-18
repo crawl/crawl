@@ -340,7 +340,7 @@ DEPTH:  Shoal:1-5
 : place_unique(_G, "Polyphemus band")
 
 NAME:   uniq_ilsuiw
-DEPTH:  Shoal:1-5
+DEPTH:  Shoal:3-5
 : place_unique(_G, "Ilsuiw band")
 
 NAME:   uniq_khufu
