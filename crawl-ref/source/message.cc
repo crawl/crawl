@@ -667,6 +667,12 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
     return ret;
 }
 
+void msgwin_new_turn()
+{
+    flush_prev_message();
+    msgwin.add_item(" ", '-', true);
+}
+
 // mpr() an arbitrarily long list of strings without truncation or risk
 // of overflow.
 void mpr_comma_separated_list(const std::string prefix,

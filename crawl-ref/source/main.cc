@@ -2867,6 +2867,7 @@ void world_reacts()
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
         update_turn_count();
+        msgwin_new_turn();
     }
 }
 
