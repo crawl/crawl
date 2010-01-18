@@ -23,7 +23,6 @@
 #include "map_knowledge.h"
 #include "feature.h"
 #include "goditem.h"
-#include "hiscores.h"
 #include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"
@@ -45,7 +44,6 @@
 #include "ouch.h"
 #include "item_use.h" // for safe_to_remove_or_wear()
 #include "output.h"   // for the monster list
-#include "quiver.h"   // to update the quiver if necessary
 #include "player.h"
 #include "religion.h"
 #include "spells2.h"

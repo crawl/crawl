@@ -136,6 +136,9 @@ std::string get_wounds_description(const monsters *monster);
 void print_wounds(const monsters *monster);
 bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 
+// Return your target, if it still exists and is visible to you.
+monsters *get_current_target();
+
 void mons_get_damage_level(const monsters*, std::string& desc,
                            mon_dam_level_type&);
 

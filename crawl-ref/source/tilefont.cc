@@ -576,7 +576,8 @@ void FTFont::render_string(unsigned int px, unsigned int py,
                            unsigned char font_colour, bool drop_shadow,
                            unsigned char box_alpha,
                            unsigned char box_colour,
-                           unsigned int outline)
+                           unsigned int outline,
+                           bool tooltip)
 {
     ASSERT(text);
 
@@ -626,13 +627,22 @@ void FTFont::render_string(unsigned int px, unsigned int py,
     int wx = string_width(text);
     int wy = max_rows * char_height();
 
-    // text starting location
-    int tx = px - wx / 2;
-    int ty = py - wy - outline;
+    int sx, sy; // box starting location, uses extra buffer
+    int tx, ty; // text starting location
 
-    // box with extra buffer to test against min_pos/max_pos window size
-    int sx = tx - buffer;
-    int sy = ty - buffer;
+    tx = px - wx / 2;
+    sx = tx - buffer;
+    if (tooltip)
+    {
+        sy = py + outline;
+        ty = sy + buffer;
+    }
+    else
+    {
+        ty = py - wy - outline;
+        sy = ty - buffer;
+    }
+    // box ending position
     int ex = tx + wx + buffer;
     int ey = ty + wy + buffer;
 

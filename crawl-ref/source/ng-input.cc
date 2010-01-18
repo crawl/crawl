@@ -14,12 +14,6 @@ extern std::string init_file_error; // defined in main.cc
 // Eventually, this should be something more grand. {dlb}
 void opening_screen(void)
 {
-#ifdef USE_TILE
-    // More grand... Like this? ;)
-    if (Options.tile_title_screen)
-        tiles.draw_title();
-#endif
-
     std::string msg =
     "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>" EOL
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
@@ -184,17 +178,15 @@ static bool _read_player_name(std::string &name,
         if (ret == CK_ESCAPE)
             return (false);
 
-        if (ret != CK_ESCAPE && existing.size())
+        if (!existing.empty())
         {
             menu.set_search(name);
             menu.show();
             const MenuEntry *sel = menu.selected_entry();
             if (sel)
             {
-                const player_save_info &p =
-                *static_cast<player_save_info*>( sel->data );
-                name = p.name;
-                return (true);
+                name = static_cast<player_save_info*>(sel->data)->name;
+                return true;
             }
         }
 

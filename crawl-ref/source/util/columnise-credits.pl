@@ -3,28 +3,36 @@
 use strict;
 use warnings;
 
+my $CREDITS = 'CREDITS.txt';
+
 my $NAMEHEAD = qr/contributed to .*Stone Soup:\s*$/;
 
 binmode STDOUT, ':utf8';
-open my $inf, '<:utf8', 'CREDITS.txt'
-    or die "Unable to read CREDITS.txt: $!\n";
+open my $inf, '<:utf8', $CREDITS
+    or die "Unable to read $CREDITS: $!\n";
 my @text = <$inf>;
 close $inf;
 
 my @recol = recolumnise(@text);
 
+open my $outf, '>:utf8', $CREDITS or die "Can't write CREDITS.txt: $!\n";
 for (@text) {
-  print;
+  print $outf $_;
 
   if (/$NAMEHEAD/o) {
-    print "\n";
-    print @recol, "\n";
+    print $outf "\n";
+    print $outf @recol, "\n";
     last;
   }
 }
+close $outf;
+
+warn "Wrote new $CREDITS\n";
 
 sub last_word {
   my $s = shift;
+  # Remove qualifiers after name, such as ", Jr.":
+  $s =~ s/,.*$//;
   my ($word) = $s =~ /.* (\S+)$/;
   $word ||= $s;
   lc($word)

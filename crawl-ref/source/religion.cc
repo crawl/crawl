@@ -69,7 +69,6 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
-#include "quiver.h"
 #include "shopping.h"
 #include "skills2.h"
 #include "spells1.h"
@@ -775,9 +774,6 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     std::vector<std::string> dislikes;
 
-    if (god_hates_butchery(which_god))
-        dislikes.push_back("you butcher corpses while praying");
-
     if (god_hates_cannibalism(which_god))
         dislikes.push_back("you perform cannibalism");
 
@@ -1169,13 +1165,13 @@ static const item_def* _find_missile_launcher(int skill)
     return (NULL);
 }
 
-static bool _need_missile_gift()
+static bool _need_missile_gift(bool forced)
 {
     const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
-    return (you.piety > 80
-            && random2( you.piety ) > 70
-            && one_chance_in(8)
+    return ((forced || you.piety > 80
+                       && random2( you.piety ) > 70
+                       && one_chance_in(8))
             && you.skills[ best_missile_skill ] >= 8
             && (launcher || best_missile_skill == SK_THROWING));
 }
@@ -1260,13 +1256,13 @@ static void _show_pure_deck_chances()
 }
 #endif
 
-static void _give_nemelex_gift()
+static void _give_nemelex_gift(bool forced = false)
 {
     // Nemelex will give at least one gift early.
     if (!you.num_gifts[GOD_NEMELEX_XOBEH]
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
         || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY)
-           && !you.attribute[ATTR_CARD_COUNTDOWN])
+           && !you.attribute[ATTR_CARD_COUNTDOWN] || forced)
     {
         misc_item_type gift_type;
 
@@ -1995,7 +1991,7 @@ static void _delayed_gift_callback(const mgen_data &mg, int &midx,
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 }
 
-static void _do_god_gift(bool prayed_for)
+void do_god_gift(bool prayed_for, bool forced)
 {
     ASSERT(you.religion != GOD_NO_GOD);
 
@@ -2013,7 +2009,8 @@ static void _do_god_gift(bool prayed_for)
     // Consider a gift if we don't have a timeout and weren't already
     // praying when we prayed.
     if (!player_under_penance() && !you.gift_timeout
-        || (prayed_for && you.religion == GOD_ZIN || you.religion == GOD_JIYVA))
+        || (prayed_for && you.religion == GOD_ZIN || you.religion == GOD_JIYVA)
+            || forced)
     {
         bool success = false;
 
@@ -2035,13 +2032,13 @@ static void _do_god_gift(bool prayed_for)
             break;
 
         case GOD_NEMELEX_XOBEH:
-            _give_nemelex_gift();
+            _give_nemelex_gift(forced);
             break;
 
         case GOD_OKAWARU:
         case GOD_TROG:
-            if (you.piety > 130
-                && random2(you.piety) > 120
+            if ((you.piety > 130
+                && random2(you.piety) > 120 || forced)
                 && one_chance_in(4))
             {
                 if (you.religion == GOD_TROG
@@ -2069,7 +2066,7 @@ static void _do_god_gift(bool prayed_for)
                 break;
             }
 
-            if (_need_missile_gift())
+            if (_need_missile_gift(forced))
             {
                 success = acquirement(OBJ_MISSILES, you.religion);
                 if (success)
@@ -2086,7 +2083,7 @@ static void _do_god_gift(bool prayed_for)
             break;
 
         case GOD_YREDELEMNUL:
-            if (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(4))
+            if (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(4) || forced)
             {
                 // The maximum threshold occurs at piety_breakpoint(5).
                 int threshold = (you.piety - piety_breakpoint(2)) * 20 / 9;
@@ -2098,7 +2095,7 @@ static void _do_god_gift(bool prayed_for)
             break;
 
         case GOD_JIYVA:
-            if (prayed_for && jiyva_grant_jelly())
+            if (prayed_for && jiyva_grant_jelly() || forced)
             {
                 int jelly_count = 0;
                 for (radius_iterator ri(you.pos(), 9); ri; ++ri)
@@ -2164,7 +2161,7 @@ static void _do_god_gift(bool prayed_for)
                     && !you.had_book[BOOK_UNLIFE])
                     gift = BOOK_UNLIFE;
             }
-            else if (you.piety > 160 && random2(you.piety) > 100)
+            else if (you.piety > 160 && random2(you.piety) > 100 || forced)
             {
                 if (you.religion == GOD_SIF_MUNA)
                     gift = OBJ_RANDOM;
@@ -2462,7 +2459,7 @@ void pray()
     }
 
     if (!was_praying)
-        _do_god_gift(true);
+        do_god_gift(true);
 
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis );
 }
@@ -2847,22 +2844,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_OKAWARU:
                 piety_change = -level;
                 retval = true;
-                break;
-
-            default:
-                break;
-            }
-            break;
-
-        case DID_DEDICATED_BUTCHERY:
-            switch (you.religion)
-            {
-            case GOD_ELYVILON:
-                simple_god_message(" does not appreciate your butchering the "
-                                   "dead during prayer!");
-                retval = true;
-                piety_change = -level;
-                penance = level;
                 break;
 
             default:
@@ -3429,6 +3410,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_EAT_MEAT:                          // unused
         case DID_CREATE_LIFE:                       // unused
         case DID_SPELL_NONUTILITY:                  // unused
+        case DID_DEDICATED_BUTCHERY:                // unused
         case NUM_CONDUCTS:
             break;
         }
@@ -3690,7 +3672,7 @@ void gain_piety(int original_gain)
             || you.piety > 150 && one_chance_in(3)
             || you.piety > 100 && one_chance_in(3))
         {
-            _do_god_gift(false);
+            do_god_gift();
             return;
         }
     }
@@ -3701,7 +3683,7 @@ void gain_piety(int original_gain)
         if (you.piety >= MAX_PIETY
             || you.piety > 150 && one_chance_in(5))
         {
-            _do_god_gift(false);
+            do_god_gift();
             return;
         }
     }
@@ -3796,7 +3778,7 @@ void gain_piety(int original_gain)
             holy_beings_attitude_change();
     }
 
-    _do_god_gift(false);
+    do_god_gift();
 }
 
 // Is the destroyed weapon valuable enough to gain piety by doing so?
@@ -5190,11 +5172,6 @@ bool god_likes_fresh_corpses(god_type god)
             || god == GOD_TROG
             || god == GOD_LUGONU
             || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
-}
-
-bool god_hates_butchery(god_type god)
-{
-    return (false);
 }
 
 harm_protection_type god_protects_from_harm(god_type god, bool actual)

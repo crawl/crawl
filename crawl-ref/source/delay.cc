@@ -802,11 +802,6 @@ void handle_delay()
                                                    : "butchering"),
                  mitm[delay.parm1].name(DESC_PLAIN).c_str());
 
-            // Also for bottling blood - just in case.
-            if (you.duration[DUR_PRAYER] && god_hates_butchery(you.religion))
-                did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
-            break;
-
         case DELAY_MEMORISE:
             mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
             break;

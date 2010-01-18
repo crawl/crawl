@@ -1,0 +1,221 @@
+###############################################################################
+# slime.des: All maps and branch endings relating to the Slime Pits
+###############################################################################
+
+##############################################################################
+# Slime Pit specific non-ending vaults
+##############################################################################
+
+# Weight balancer
+NAME: slime_dummy
+TAGS: slime_entry
+MAP
+O
+ENDMAP
+
+# Slime entries featuring an altar to Jiyva
+NAME:   slime_altar_1
+TAGS:   slime_entry
+WEIGHT: 5
+KFEAT:  Z = altar_jiyva
+MAP
+....
+.OZ.
+....
+ENDMAP
+
+NAME:   slime_altar_2
+TAGS:   slime_entry
+WEIGHT: 2
+KFEAT:  Z = altar_jiyva
+SUBST:  1 : 111223
+NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
+MONS:   jelly / ooze / brown ooze / giant amoeba
+MONS:   acid blob / slime creature
+MONS:   azure jelly
+MAP
+ccccc
+c111c.
+cO1_+@
+c111c.
+ccccc
+ENDMAP
+
+################################################################################
+# Slime Pit
+#
+NAME:    slime_pit
+PLACE:   Slime:6
+ORIENT:  encompass
+TAGS:    no_rotate no_dump
+MONS:    the royal jelly
+MONS:    acid blob
+MONS:    great orb of eyes / nothing
+SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
+SUBST:   " : " .:3,  " = .c
+NSUBST:  P = O / *|
+KMASK:   | = no_monster_gen
+KFEAT:   Z = altar_jiyva
+SHUFFLE: ([{
+LFLAGS:  no_tele_control
+
+{{
+-- Attach function to the royal jelly itself.  This will follow it wherever
+-- it goes, even through polymorphs, and set dgn.persist.royal_jelly_dead
+-- when it dies through means other than being banished.
+local function monster_die(monster, killer_type, killer_index, silent, wizard)
+    if killer_type == "reset" then
+       if monster.you_can_see then
+          crawl.mpr("You feel a great sense of loss.")
+       else
+          crawl.mpr("You feel a great sense of loss, and a brush of " ..
+                    "the abyss.")
+       end
+    else
+      dgn.persist.fix_slime_vaults = true
+    end
+end
+}}
+MARKER: 1 = lua: MonPropsMarker:new {monster_dies_lua_key = monster_die}
+
+{{
+local function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
+  if not dgn.persist.fix_slime_vaults then
+    return
+  end
+
+  -- Restore teleport control.
+  dgn.change_level_flags("!no_tele_control")
+
+  local to_feat
+  if you.god() == "Jiyva" then
+    to_feat = "floor"
+  else
+    to_feat = "clear_rock_wall"
+  end
+
+  local seen = dgn.seen_replace_feat("stone_wall", to_feat)
+        seen = dgn.seen_replace_feat("clear_stone_wall", to_feat) or seen
+
+  if you.god() == "Jiyva" then
+    if you.silenced() then
+        crawl.mpr("An unexplained breeze blows through the dungeon.", "god")
+    else
+        crawl.mpr("You hear the sound of toppling stones.", "god")
+    end
+  else
+    if seen then
+        crawl.mpr("Suddenly, all colour oozes out of the stone walls.",
+                  "monster_enchant")
+    else
+        crawl.mpr("You feel a strange vibration for a moment.",
+                  "monster_enchant")
+    end
+  end
+
+  -- We're done.
+  dgn.persist.slime_fixup_done = true
+
+  triggerable:remove(marker)
+end
+
+local fixup_marker = TriggerableFunction:new(
+  {
+    func=fixup_slime_vaults,
+    repeated=true
+  }
+)
+
+fixup_marker:add_triggerer(DgnTriggerer:new {
+  type="monster_dies",
+  target="any"
+})
+
+fixup_marker:add_triggerer(DgnTriggerer:new {
+  type="entered_level"
+})
+
+}}
+# Doesn't matter where thisw marker goes, so we might as well chose
+# the altar.
+: lua_marker("Z", fixup_marker)
+
+{{
+    dgn.set_feature_desc_short("stone wall", "rune carved stone wall")
+    dgn.set_feature_desc_long("stone wall",
+"This strangely slime-free stone wall is carved all over with countless "..
+"mystical runes.  One often repeated set of runes seems to refer to "..
+"'the royal jelly.'")
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''xxxx''''...''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx'''..'''''........'''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx'.....................'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx'.......................''x'xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx'..........................'.xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx'............................'xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx'.............................'''xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx'...............................''xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx''..(..............................''xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx'''....................................''xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx'.........................................'xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx''.........................................'xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx'...........................................'xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx''xx'..........................................'xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx'..''................""""."""""...........]....''xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx'x.................."cccc2ccccc".................'xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx'.'................"cc*cc..cc*cc".................''xxxxxxxxxxxxxxx
+xxxxxxxxxxxxx'................."cc***cc4c***cc".................xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx'................"cc*|*cc..cc*|*cc"................'xxxxxxxxxxxxxxx
+xxxxxxxxxxxx''..............."cc*|P|*c4cc*|P|*cc"...............'xxxxxxxxxxxxxxx
+xxxxxxxxxxxx'................"cc**|*cc..cc*|**cc"................'''xxxxxxxxxxxx
+xxxxxxxxxxxx'................"ccc**c|cc4c|c**ccc"..................xxxxxxxxxxxxx
+xxxxxxxxxxx'................."cccccccc.3cccccccc"..................'xxxxxxxxxxxx
+xxxxxxxxxxx'................."c.4.c.4.1..4.c.4.c"..................''xxxxxxxxxxx
+xxxxxxxxxxx'..................2.c.4.c..Z.c.4.c.2....................'xxxxxxxxxxx
+xxxxxxxxxx'..........)......."cccccccc3.cccccccc"...................'xxxxxxxxxxx
+xxxxxxxxxx'.................."ccc**c|cc4c|c**ccc"...................'xxxxxxxxxxx
+xxxxxxxxxx'.................."cc**|*cc..cc*|**cc"..................'xxxxxxxxxxxx
+xxxxxxxxx'..................."cc*|P|*c4cc*|P|*cc"..................'xxxxxxxxxxxx
+xxxxxxxxx''..................."cc*|*cc..cc*|*cc"..................'xxxxxxxxxxxxx
+xxxxxxxxxxx'..................."cc***cc4c***cc"...................'xxxxxxxxxxxxx
+xxxxxxxxxxxx'..................."cc*cc..cc*cc"....................'xxxxxxxxxxxxx
+xxxxxxxxxxxx'...................."cccc2ccccc"....................'xxxxxxxxxxxxxx
+xxxxxxxxxxxxx'...................."""".""""".....................'xxxxxxxxxxxxxx
+xxxxxxxxxxxxx'...........................................[........'xxxxxxxxxxxxx
+xxxxxxxxxxxx''..............................................'''....'xxxxxxxxxxxx
+xxxxxxxxxxxx'.............................................''xxx''.'xxxxxxxxxxxxx
+xxxxxxxxxxxxx'..........................................''xxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxx'''.......................................'xxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx'......................................'xxxxxxxxx'xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx'.......................................'xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx''.....................................'xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx'.....................................'xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx''....................................'xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx'...................................'xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx'............................}......'xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx''................................'xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx'.............................''xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx'.............................'xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx'......................''...'xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx'''''........{.......'xx'..xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'''............'xxxx''xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''....'....'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''''x...''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

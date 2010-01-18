@@ -1558,6 +1558,7 @@ int mons_swamp_level(int mcls)
     case MONS_SWAMP_DRAKE:
     case MONS_WORM:
     case MONS_SWAMP_WORM:
+    case MONS_GIANT_LEECH:
         mlev++;
         break;
 
@@ -1591,7 +1592,6 @@ int mons_swamp_level(int mcls)
     case MONS_SLIME_CREATURE:
     case MONS_VERY_UGLY_THING:
     case MONS_VAPOUR:
-    case MONS_GIANT_LEECH:
     case MONS_TENTACLED_MONSTROSITY:
         mlev += 4;
         break;
@@ -1633,6 +1633,7 @@ int mons_swamp_rare(int mcls)
         return 70;
 
     case MONS_RAT:
+    case MONS_GIANT_LEECH:
         return 61;
 
     case MONS_SLIME_CREATURE:
@@ -1681,7 +1682,6 @@ int mons_swamp_rare(int mcls)
     case MONS_GIANT_NEWT:
     case MONS_GIANT_SLUG:
     case MONS_GIANT_SNAIL:
-    case MONS_GIANT_LEECH:
         return 10;
 
     case MONS_TENTACLED_MONSTROSITY:
@@ -1712,20 +1712,23 @@ int mons_shoals_level(int mcls)
 
     case MONS_MANTICORE:
     case MONS_SNAPPING_TURTLE:
+    case MONS_HARPY:
         mlev += 2;
         break;
 
     case MONS_CYCLOPS:          // will have a sheep band
     case MONS_SIREN:
-    case MONS_HARPY:
     case MONS_MERFOLK_IMPALER:
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_MERFOLK_JAVELINEER:
-    case MONS_ALLIGATOR_SNAPPING_TURTLE:
     case MONS_OKLOB_PLANT:
     case MONS_SHARK:
     case MONS_KRAKEN:
         mlev += 3;
+        break;
+
+    case MONS_ALLIGATOR_SNAPPING_TURTLE:
+        mlev += 4;
         break;
 
     default:
@@ -1755,23 +1758,24 @@ int mons_shoals_rare(int mcls)
         return 35;
 
     case MONS_SIREN:
-    case MONS_MERFOLK_AQUAMANCER:
-    case MONS_MERFOLK_IMPALER:
-    case MONS_MERFOLK_JAVELINEER:
+    case MONS_HARPY:
         return 24;
 
     case MONS_CYCLOPS:
-    case MONS_HARPY:
     case MONS_CENTAUR:
+    case MONS_MERFOLK_AQUAMANCER:
+    case MONS_MERFOLK_IMPALER:
+    case MONS_MERFOLK_JAVELINEER:
         return 20;
 
     case MONS_SHARK:
-    case MONS_ALLIGATOR_SNAPPING_TURTLE:
         return 18;
 
     case MONS_OKLOB_PLANT:
     case MONS_KRAKEN:
+    case MONS_ALLIGATOR_SNAPPING_TURTLE:
         return 10;
+
     default:
         return 0;
     }

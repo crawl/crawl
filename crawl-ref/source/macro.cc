@@ -1235,3 +1235,90 @@ void bind_command_to_key(command_type cmd, int key)
     key_map[key] = cmd;
     cmd_map[cmd] = key;
 }
+
+static std::string _special_keys_to_string(int key)
+{
+    const bool shift = (key >= CK_SHIFT_UP && key <= CK_SHIFT_PGDN);
+    const bool ctrl  = (key >= CK_CTRL_UP && key <= CK_CTRL_PGDN);
+
+    std::string cmd = "";
+
+    if (shift)
+    {
+        key -= (CK_SHIFT_UP - CK_UP);
+        cmd = "Shift-";
+    }
+    else if (ctrl)
+    {
+        key -= (CK_CTRL_UP - CK_UP);
+        cmd = "Ctrl-";
+    }
+
+    switch (key)
+    {
+    case CK_ENTER:  cmd += "Enter"; break;
+    case CK_BKSP:   cmd += "Backspace"; break;
+    case CK_ESCAPE: cmd += "Esc"; break;
+    case CK_DELETE: cmd += "Del"; break;
+    case CK_UP:     cmd += "Up"; break;
+    case CK_DOWN:   cmd += "Down"; break;
+    case CK_LEFT:   cmd += "Left"; break;
+    case CK_RIGHT:  cmd += "Right"; break;
+    case CK_INSERT: cmd += "Ins"; break;
+    case CK_HOME:   cmd += "Home"; break;
+    case CK_END:    cmd += "End"; break;
+    case CK_CLEAR:  cmd += "Clear"; break;
+    case CK_PGUP:   cmd += "PgUp"; break;
+    case CK_PGDN:   cmd += "PgDn"; break;
+    }
+
+    return (cmd);
+}
+
+std::string command_to_string(command_type cmd)
+{
+    const int key = command_to_key(cmd);
+
+    const std::string desc = _special_keys_to_string(key);
+    if (!desc.empty())
+        return (desc);
+
+    if (key >= 32 && key < 256)
+        snprintf(info, INFO_SIZE, "%c", (char) key);
+    else if (key > 1000 && key <= 1009)
+    {
+        const int numpad = (key - 1000);
+        snprintf(info, INFO_SIZE, "Numpad %d", numpad);
+    }
+    else
+    {
+        const int ch = key + 'A' - 1;
+        if (ch >= 'A' && ch <= 'Z')
+            snprintf(info, INFO_SIZE, "Ctrl-%c", (char) ch);
+        else
+            snprintf(info, INFO_SIZE, "%d", key);
+    }
+
+    std::string result = info;
+    return (result);
+}
+
+void list_all_commands(std::string &commands)
+{
+    for (int i = CMD_NO_CMD; i < CMD_MAX_CMD; i++)
+    {
+        const command_type cmd = (command_type) i;
+
+        const std::string command_name = command_to_name(cmd);
+        if (command_name == "CMD_NO_CMD")
+            continue;
+
+        if (context_for_command(cmd) != KMC_DEFAULT)
+            continue;
+
+        snprintf(info, INFO_SIZE, "%s: %s\n",
+                 command_name.c_str(), command_to_string(cmd).c_str());
+        commands += info;
+    }
+    commands += "\n";
+}

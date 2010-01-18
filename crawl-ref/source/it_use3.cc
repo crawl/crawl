@@ -90,12 +90,12 @@ void noisy_equipment()
 
     // Disallow anything with VISUAL in it.
     if (!msg.empty() && msg.find("VISUAL") != std::string::npos)
-        msg = "";
+        msg.clear();
 
     if (!msg.empty())
     {
-        std::string param = "";
-        std::string::size_type pos = msg.find(":");
+        std::string param;
+        const std::string::size_type pos = msg.find(":");
 
         if (pos != std::string::npos)
             param = msg.substr(0, pos);
@@ -113,7 +113,7 @@ void noisy_equipment()
             else if (param == "PLAIN")
                 channel = MSGCH_PLAIN;
             else if (param == "SPELL" || param == "ENCHANT")
-                msg = ""; // disallow these as well, channel stays TALK
+                msg.clear(); // disallow these as well, channel stays TALK
             else if (param != "TALK")
                 match = false;
 
@@ -484,11 +484,14 @@ void tome_of_power(int slot)
     msg::stream << "The book opens to a page covered in "
                 << weird_writing() << '.' << std::endl;
 
-    set_ident_flags(you.inv[slot], ISFLAG_KNOW_TYPE);
     you.turn_is_over = true;
+    if (!item_ident(you.inv[slot], ISFLAG_KNOW_TYPE))
+    {
+        set_ident_flags(you.inv[slot], ISFLAG_KNOW_TYPE);
 
-    if (!yesno("Read it?", false, 'n'))
-        return;
+        if (!yesno("Read it?", false, 'n'))
+            return;
+    }
 
     if (player_mutation_level(MUT_BLURRY_VISION) > 0
         && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))

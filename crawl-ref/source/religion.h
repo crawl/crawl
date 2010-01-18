@@ -98,7 +98,6 @@ bool god_hates_cannibalism(god_type god);
 bool god_hates_killing(god_type god, const monsters* mon);
 bool god_likes_fresh_corpses(god_type god);
 bool god_likes_butchery(god_type god);
-bool god_hates_butchery(god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
 
 bool jiyva_is_dead();
@@ -135,6 +134,8 @@ void religion_turn_start();
 void religion_turn_end();
 
 int get_tension(god_type god = you.religion, bool count_travelling = true);
+
+void do_god_gift(bool prayed_for = false, bool force = false);
 
 std::vector<god_type> temple_god_list();
 #endif

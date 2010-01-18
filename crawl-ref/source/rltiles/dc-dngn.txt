@@ -9,13 +9,16 @@ dngn_unseen DNGN_UNSEEN
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
 
+%weight 5
 wall/brick_brown0 WALL_NORMAL WALL_BRICK WALL_BRICK_BROWN
 wall/brick_brown1
 wall/brick_brown2
-wall/brick_brown3
 wall/brick_brown4
 wall/brick_brown5
+%weight 2
+wall/brick_brown3
 wall/brick_brown6
+%weight 1
 wall/brick_brown7
 
 %variation WALL_BRICK blue
@@ -411,16 +414,20 @@ wall/zot_blue3
 %repeat WALL_ZOT WALL_ZOT_WHITE
 %resetcol
 
+%weight 2
 wall/wall_flesh0 WALL_FLESH
 wall/wall_flesh1
 wall/wall_flesh2
 wall/wall_flesh3
+%weight 1
 wall/wall_flesh4
 wall/wall_flesh5
 wall/wall_flesh6
+%weight 2
 wall/transparent_flesh1 WALL_TRANSPARENT_FLESH
 wall/transparent_flesh2
 wall/transparent_flesh3
+%weight 1
 wall/transparent_flesh4
 wall/transparent_flesh5
 wall/transparent_flesh6
@@ -604,14 +611,17 @@ floor/rough_red3
 %repeat FLOOR_ROUGH FLOOR_ROUGH_WHITE
 %resetcol
 
+%weight 5
 floor/floor_sand_stone0 FLOOR_SAND_STONE
 floor/floor_sand_stone1
 floor/floor_sand_stone2
 floor/floor_sand_stone3
+%weight 2
 floor/floor_sand_stone4
 floor/floor_sand_stone5
-floor/floor_sand_stone6
 floor/floor_sand_stone7
+%weight 1
+floor/floor_sand_stone6
 
 wall/wall_yellow_rock0 WALL_YELLOW_ROCK
 wall/wall_yellow_rock1
@@ -628,20 +638,33 @@ wall/stone_gray1
 wall/stone_gray2
 wall/stone_gray3
 
-floor/grass0 FLOOR_GRASS
-floor/grass1
-floor/grass2
+%sdir dc-dngn/floor/grass
+%weight 15
+grass0 FLOOR_GRASS
+grass1
+grass2
+%weight 1
+grass_flowers_blue1
+grass_flowers_blue2
+grass_flowers_blue3
+grass_flowers_red1
+grass_flowers_red2
+grass_flowers_red3
+grass_flowers_yellow1
+grass_flowers_yellow2
+grass_flowers_yellow3
 
-floor/grass_n HALO_GRASS
-floor/grass_ne
-floor/grass_e
-floor/grass_se
-floor/grass_s
-floor/grass_sw
-floor/grass_w
-floor/grass_nw
-floor/grass_full
+grass_n HALO_GRASS
+grass_ne
+grass_e
+grass_se
+grass_s
+grass_sw
+grass_w
+grass_nw
+grass_full
 
+%sdir dc-dngn
 wall/undead0 WALL_UNDEAD
 wall/undead1
 wall/undead2
@@ -656,35 +679,35 @@ floor/floor_nerves5
 floor/floor_nerves6
 
 %start
-%compose floor/grass0
+%compose floor/grass/grass0
 %compose floor/pedestal_n
 %finish HALO_GRASS2
 %start
-%compose floor/grass1
+%compose floor/grass/grass1
 %compose floor/pedestal_ne
 %finish
 %start
-%compose floor/grass2
+%compose floor/grass/grass2
 %compose floor/pedestal_e
 %finish
 %start
-%compose floor/grass1
+%compose floor/grass/grass1
 %compose floor/pedestal_se
 %finish
 %start
-%compose floor/grass0
+%compose floor/grass/grass0
 %compose floor/pedestal_s
 %finish
 %start
-%compose floor/grass1
+%compose floor/grass/grass1
 %compose floor/pedestal_sw
 %finish
 %start
-%compose floor/grass2
+%compose floor/grass/grass2
 %compose floor/pedestal_w
 %finish
 %start
-%compose floor/grass0
+%compose floor/grass/grass0
 %compose floor/pedestal_nw
 %finish
 floor/pedestal_full
@@ -958,34 +981,51 @@ floor/lava3
 
 ## water
 %sdir dc-dngn/water
+%weight 3
 dngn_open_sea DNGN_OPEN_SEA
-dngn_open_sea
-dngn_open_sea
+%weight 1
 dngn_open_sea2
 
+%weight 2
 dngn_deep_water DNGN_DEEP_WATER
-dngn_deep_water
+%weight 1
 dngn_deep_water2
 
+%weight 3
 dngn_shallow_water DNGN_SHALLOW_WATER
-dngn_shallow_water
-dngn_shallow_water
+%weight 1
 dngn_shallow_water2
 dngn_shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE
 dngn_shallow_water_disturbance2
+%weight 2
 dngn_deep_water_murky DNGN_DEEP_WATER_MURKY
-dngn_deep_water_murky
+%weight 1
 dngn_deep_water_murky2
+%weight 3
 dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
-dngn_shallow_water_murky
-dngn_shallow_water_murky
+%weight 1
 dngn_shallow_water_murky2
 dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 dngn_shallow_water_murky_disturbance2
+# Make all base variants equally likely, but their special ones less so.
+%weight 4
 dngn_shoals_deep_water1 SHOALS_DEEP_WATER
+%weight 2
+dngn_shoals_deep_water1_shape
+%weight 4
 dngn_shoals_deep_water2
+%weight 1
+dngn_shoals_deep_water2_shape
+dngn_shoals_deep_water2_bubbles
+%weight 4
 dngn_shoals_deep_water3
+%weight 2
+dngn_shoals_deep_water3_bubbles
+%weight 4
 dngn_shoals_deep_water4
+%weight 2
+dngn_shoals_deep_water4_bubbles
+%weight 1
 dngn_shoals_shallow_water1 SHOALS_SHALLOW_WATER
 dngn_shoals_shallow_water2
 dngn_shoals_shallow_water3
@@ -993,6 +1033,18 @@ dngn_shoals_shallow_water4
 dngn_shoals_shallow_water_disturbance1 SHOALS_SHALLOW_WATER_DISTURBANCE
 dngn_shoals_shallow_water_disturbance2
 dngn_shoals_shallow_water_disturbance3
+
+# corner waves (diagonals)
+deep_water_wave_corner_NE WAVE_DEEP_CORNER_NE
+deep_water_wave_corner_NW WAVE_DEEP_CORNER_NW
+deep_water_wave_corner_SE WAVE_DEEP_CORNER_SE
+deep_water_wave_corner_SW WAVE_DEEP_CORNER_SW
+
+# orthogonal waves
+deep_water_wave_N WAVE_DEEP_N
+deep_water_wave_S WAVE_DEEP_S
+deep_water_wave_E WAVE_DEEP_E
+deep_water_wave_W WAVE_DEEP_W
 
 # corner waves (diagonals)
 shallow_water_wave_corner_NE WAVE_CORNER_NE

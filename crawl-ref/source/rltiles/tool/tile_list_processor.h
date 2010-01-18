@@ -41,6 +41,7 @@ protected:
     tile m_compose;
     int m_variation_idx;
     int m_variation_col;
+    int m_weight;
 
     typedef std::pair<tile_colour, tile_colour> palette_entry;
     typedef std::vector<palette_entry> palette_list;

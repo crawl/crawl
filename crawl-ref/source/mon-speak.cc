@@ -15,13 +15,13 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "branch.h"
 #include "cluautil.h"
 #include "database.h"
 #include "debug.h"
 #include "dlua.h"
 #include "ghost.h"
 #include "message.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "jobs.h"
 #include "player.h"
@@ -515,6 +515,11 @@ bool mons_speaks(monsters *monster)
         else if (god == GOD_XOM)
             prefixes.push_back("Xom");
     }
+
+    // Include our current branch, too. It can make speech vary by branch for
+    // uniques and other monsters! Specifically, Donald.
+    prefixes.push_back(std::string(branches[you.where_are_you].shortname));
+
 
 #ifdef DEBUG_MONSPEAK
     {

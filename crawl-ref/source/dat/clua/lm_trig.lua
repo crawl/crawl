@@ -585,6 +585,10 @@ end
 -- * wall_hit: Wait for the wall to be "hit", either with a weapon (Ctrl+Dir),
 --      with a MMISSILE spell (magic dart, crystal spear), or with a ranged
 --      missile (stones, etc).
+--
+-- * door_opened, door_closed: Called whenever doors are opened and closed by
+--      the player, or whenever they are closed by monsters (monsters do not
+--      open doors).
 
 DgnTriggerer = { CLASS = "DgnTriggerer" }
 DgnTriggerer.__index = DgnTriggerer
@@ -763,6 +767,14 @@ function DgnTriggerer:player_los(triggerable, marker, ev)
 end
 
 function DgnTriggerer:wall_hit(triggerable, marker, ev)
+  triggerable:do_trigger(self, marker, ev)
+end
+
+function DgnTriggerer:door_opened(triggerable, marker, ev)
+  triggerable:do_trigger(self, marker, ev)
+end
+
+function DgnTriggerer:door_closed(triggerable, marker, ev)
   triggerable:do_trigger(self, marker, ev)
 end
 

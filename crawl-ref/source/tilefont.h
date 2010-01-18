@@ -42,7 +42,8 @@ public:
                        const coord_def &min_pos, const coord_def &max_pos,
                        unsigned char font_colour, bool drop_shadow = false,
                        unsigned char box_alpha = 0,
-                       unsigned char box_colour = 0, unsigned int outline = 0);
+                       unsigned char box_colour = 0, unsigned int outline = 0,
+                       bool tooltip = false);
 
     // FontBuffer helper functions
     void store(FontBuffer &buf, float &x, float &y,

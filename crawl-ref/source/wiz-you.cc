@@ -881,5 +881,13 @@ void wizard_set_xl()
         debug_uptick_xl(newxl);
 }
 
+void wizard_get_god_gift (void)
+{
+    if (you.religion == GOD_NO_GOD)
+    {
+        mpr("You are not religious!");
+        return;
+    }
 
-
+    do_god_gift(false, true);
+}

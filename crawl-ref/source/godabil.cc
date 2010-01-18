@@ -315,13 +315,19 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     }
 }
 
+bool fedhas_passthrough_class(const monster_type mc)
+{
+    return (you.religion == GOD_FEDHAS
+            && mons_class_is_plant(mc)
+            && mons_class_is_stationary(mc));
+}
+
 // Fedhas allows worshipers to walk on top of stationary plants and
 // fungi.
 bool fedhas_passthrough(const monsters * target)
 {
-    return (target && you.religion == GOD_FEDHAS
-            && mons_is_plant(target)
-            && mons_is_stationary(target)
+    return (target
+            && fedhas_passthrough_class(target->type)
             && (target->type != MONS_OKLOB_PLANT
                 || target->attitude != ATT_HOSTILE));
 }
@@ -371,33 +377,50 @@ int fungal_bloom()
 
     for (radius_iterator i(you.pos(), LOS_RADIUS); i; ++i)
     {
-        actor *target = actor_at(*i);
-        if (target && (target->atype() == ACT_PLAYER
-                       || target->is_summoned()))
-        {
+        monsters * target = monster_at(*i);
+        if (target && target->is_summoned())
             continue;
-        }
 
-        monsters * mons = monster_at(*i);
-
-        if (mons && mons->mons_species() != MONS_TOADSTOOL)
+        if (target && target->mons_species() != MONS_TOADSTOOL)
         {
-            switch (mons_genus(mons->mons_species()))
+            switch (mons_genus(target->mons_species()))
             {
             case MONS_ZOMBIE_SMALL:
                 // Maybe turn a zombie into a skeleton.
-                if (mons_skeleton(mons_zombie_base(mons)))
+                if (mons_skeleton(mons_zombie_base(target)))
                 {
                     processed_count++;
 
                     monster_type skele_type = MONS_SKELETON_LARGE;
-                    if (mons_zombie_size(mons_zombie_base(mons)) == Z_SMALL)
+                    if (mons_zombie_size(mons_zombie_base(target)) == Z_SMALL)
                         skele_type = MONS_SKELETON_SMALL;
 
-                    simple_monster_message(mons, "'s flesh rots away.");
+                    // Killing and replacing the zombie since upgrade_type
+                    // doesn't get skeleton speed right (and doesn't
+                    // reduce the victim's HP). This is awkward. -cao
+                    mgen_data mg(skele_type, target->behaviour, NULL, 0, 0,
+                                 target->pos(),
+                                 target->foe,
+                                 MG_FORCE_BEH | MG_FORCE_PLACE,
+                                 target->god,
+                                 mons_zombie_base(target),
+                                 target->number);
 
-                    mons->upgrade_type(skele_type, true, true);
-                    behaviour_event(mons, ME_ALERT, MHITYOU);
+                    unsigned monster_flags = target->flags;
+                    int current_hp = target->hit_points;
+                    mon_enchant_list ench = target->enchantments;
+
+                    simple_monster_message(target, "'s flesh rots away.");
+
+                    monster_die(target, KILL_MISC, NON_MONSTER, true);
+                    int monster = create_monster(mg);
+                    env.mons[monster].flags = monster_flags;
+                    env.mons[monster].enchantments = ench;
+
+                    if (env.mons[monster].hit_points > current_hp)
+                        env.mons[monster].hit_points = current_hp;
+
+                    behaviour_event(&env.mons[monster], ME_ALERT, MHITYOU);
 
                     continue;
                 }
@@ -405,11 +428,11 @@ int fungal_bloom()
                 // Ghoul-type monsters are always destroyed.
             case MONS_GHOUL:
             {
-                simple_monster_message(mons, " rots away and dies.");
+                simple_monster_message(target, " rots away and dies.");
 
-                coord_def pos = mons->pos();
-                int colour    = mons->colour;
-                int corpse    = monster_die(mons, KILL_MISC, NON_MONSTER, true);
+                coord_def pos = target->pos();
+                int colour    = target->colour;
+                int corpse    = monster_die(target, KILL_MISC, NON_MONSTER, true);
                 kills = true;
 
                 // If a corpse didn't drop, create a toadstool.
@@ -529,11 +552,9 @@ bool sunlight()
     dist spelld;
 
     bolt temp_bolt;
-
     temp_bolt.colour = YELLOW;
     direction(spelld, DIR_TARGET, TARG_HOSTILE, LOS_RADIUS, false, false,
-              false, true, "Select sunlight destination", NULL,
-              true);
+              false, false, "Select sunlight destination");
 
     if (!spelld.isValid)
         return (false);
@@ -1539,7 +1560,7 @@ void cheibriados_time_bend(int pow)
 
 void cheibriados_time_step(int pow) // pow is the number of turns to skip
 {
-    coord_def old_pos = you.pos();
+    const coord_def old_pos = you.pos();
 
     mpr("You step out of the flow of time.");
     flash_view(LIGHTBLUE);

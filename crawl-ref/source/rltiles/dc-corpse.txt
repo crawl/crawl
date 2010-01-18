@@ -69,7 +69,8 @@ redback CORPSE_REDBACK
 
 ## Turtles ('t')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-turtle CORPSE_TURTLE
+snapping_turtle CORPSE_SNAPPING_TURTLE
+alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
 
 ## Worms ('w')
 %back dc-misc/blood_green
@@ -154,7 +155,7 @@ hobgoblin CORPSE_HOBGOBLIN
 gnoll CORPSE_GNOLL
 
 ## Merfolk ('m')
-merfolk_fighter_water CORPSE_MERFOLK_FIGHTER
+merfolk_plain_water CORPSE_MERFOLK
 mermaid_water CORPSE_MERMAID
 siren_water CORPSE_SIREN
 
@@ -253,6 +254,7 @@ iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
 
 ## Human shaped ('@')
+unique/wayne CORPSE_DWARF
 human CORPSE_HUMAN
 %back dc-misc/blood_green
 shapeshifter CORPSE_SHAPESHIFTER

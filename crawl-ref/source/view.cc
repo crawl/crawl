@@ -33,15 +33,12 @@
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
-#include "debug.h"
 #include "delay.h"
 #include "directn.h"
-#include "dungeon.h"
 #include "exclude.h"
 #include "feature.h"
 #include "files.h"
 #include "godabil.h"
-#include "itemprop.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -711,6 +708,7 @@ static int player_view_update_at(const coord_def &gc)
         cloud_struct &cl   = env.cloud[cloudidx];
         cloud_type   ctype = cl.type;
 
+        bool did_exclude = false;
         if (!is_harmless_cloud(ctype)
             && cl.whose  == KC_OTHER
             && cl.killer == KILL_MISC)
@@ -718,10 +716,12 @@ static int player_view_update_at(const coord_def &gc)
             for (adjacent_iterator ai(gc, false); ai; ++ai)
             {
                 // Optionally add exclude, deferring updates.
-                if (!cell_is_solid(*ai) && !is_exclude_root(*ai))
+                if (!cell_is_solid(*ai))
                 {
+                    bool was_exclusion = is_exclude_root(*ai);
                     set_exclude(*ai, 0, false, false, true);
-                    ret |= UF_ADDED_EXCLUDE;
+                    if (!did_exclude && !was_exclusion)
+                        ret |= UF_ADDED_EXCLUDE;
                 }
             }
         }

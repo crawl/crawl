@@ -361,7 +361,7 @@ Recall your orcish followers from anywhere on the level to your immediate surrou
 # Fedhas
 Decomposition
 
-Cause corpses in your field of vision to rapidly decay. Corpses with a monster (or you) on top of them will not be affected.
+Cause corpses in your field of vision to rapidly decay. Corpses with a monster on top of them will not be affected.
 %%%%
 Sunlight
 
@@ -369,7 +369,7 @@ Call sunlight down over a small area of the dungeon. Monsters illuminated by the
 %%%%
 Growth
 
-Use fruit to grow a ring of plants around yourself. If a complete ring cannot be formed (because you do not have enough fruit), plants will grow on squares adjacent to you that are close to monsters.
+Use fruit to grow a ring of plants around yourself. If a complete ring cannot be formed (because you do not have enough fruit), plants will grow on squares adjacent to you that are close to monsters. The plants you create gain bonus HP proportional to your invocations skill.
 %%%%
 Rain
 
@@ -381,8 +381,9 @@ Create giant spores from corpses in your line of sight. The spores will explode,
 %%%%
 Evolution
 
-Use fruit to turn some plants and fungi in your line of sight into stronger species.
+Turn plants and fungi adjacent to you iinto stronger species. Upgrading fungi requires piety, upgrading plants requires fruit.
 %%%%
+# Cheibriados
 Make Ponderous
 
 Alter a piece of body armour of your choice so it slows the wearer down.  This is generally bad for hasty people, those who appreciate taking the time may benefit from Cheibriados's favour when they are not so fast.
@@ -391,7 +392,7 @@ Bend Time
 
 Slow down everyone who's standing just next to you.
 %%%%
-Ruinous Time
+Slouch
 
 Cause damage to everyone in sight who is moving faster than you.  Those magically hasted will be hurt particularly painfully.
 %%%%

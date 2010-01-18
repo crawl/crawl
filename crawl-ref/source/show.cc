@@ -366,8 +366,14 @@ void show_def::_update_monster(const monsters* mons)
         _set_backup(e);
 
     grid(e).cls = SH_MONSTER;
-    grid(e).mons = (!crawl_state.arena && you.misled()) ?
-                        mons->get_mislead_type() : mons->type;
+    if (!crawl_state.arena && you.misled())
+        grid(e).mons = mons->get_mislead_type();
+#ifndef USE_TILE
+    else if (mons->type == MONS_SLIME_CREATURE && mons->number > 1)
+        grid(e).mons = MONS_MERGED_SLIME_CREATURE;
+#endif
+    else
+        grid(e).mons = mons->type;
     grid(e).colour = get_mons_glyph(mons).col;
 
 #ifdef USE_TILE

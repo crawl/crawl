@@ -159,6 +159,6 @@ patches for bug fixes as well as implementation of new features are very much
 welcome. If you want to code a cool feature that is likely to be accepted but
 unlikely to be coded by the devteam, search the Feature Requests tracker on
 the Sourceforge site for Groups "Patches Welcome".
-Please be sure to read docs/coding_conventions.txt first.
+Please be sure to read docs/develop/coding_conventions.txt first.
 
 Thank you, and have fun crawling!

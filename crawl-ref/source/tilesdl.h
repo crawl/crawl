@@ -11,24 +11,6 @@
 #include "externs.h"
 #include "tilereg.h"
 
-// This struct defines all of the state that any particular rendering needs.
-// If other rendering states are needed, they should be added here so that
-// they do not introduce unneeded side effects for other parts of the code
-// that have not thought about turning that new state off.
-struct GLState
-{
-    GLState();
-
-    // vertex arrays
-    bool array_vertex;
-    bool array_texcoord;
-    bool array_colour;
-
-    // render state
-    bool blend;
-    bool texture;
-};
-
 enum key_mod
 {
     MOD_SHIFT = 0x1,
@@ -66,13 +48,6 @@ struct MouseEvent
     // location of events in pixels and in window coordinate space
     unsigned int px;
     unsigned int py;
-};
-
-class GLStateManager
-{
-public:
-    static void init();
-    static void set(const GLState& state);
 };
 
 class SDL_Surface;

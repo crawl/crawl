@@ -57,11 +57,9 @@
 #include "losparam.h"
 #include "player.h"
 #include "ray.h"
-#include "state.h"
 #include "stuff.h"
 #include "env.h"
 #include "terrain.h"
-#include "viewgeom.h"
 
 // This determines which cells are considered out of range during
 // precalculations (only positive quadrant used).

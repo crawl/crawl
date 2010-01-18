@@ -84,7 +84,7 @@ int choose_ability_menu(const std::vector<talent>& talents);
 
 bool activate_ability();
 std::vector<talent> your_talents(bool check_confused);
-bool string_matches_ability_name(const std::string key);
+bool string_matches_ability_name(const std::string& key);
 std::string print_abilities(void);
 
 void set_god_ability_slots(void);

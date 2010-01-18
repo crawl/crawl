@@ -1445,6 +1445,10 @@ bool monsters::pickup_throwable_weapon(item_def &item, int near)
 
     ASSERT(slot == MSLOT_MISSILE);
 
+    // Spellcasters shouldn't bother with missiles.
+    if (mons_has_ranged_spell(this, true, false))
+        return (false);
+
     // If occupied, don't pick up a throwable weapons if it would just
     // stack with an existing one. (Upgrading is possible.)
     if (mslot_item(slot)
@@ -2210,9 +2214,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     }
 
     if (type == MONS_BALLISTOMYCETE && desc != DESC_DBNAME)
-    {
         result += mon.number ? "active " : "";
-    }
 
     // Done here to cover cases of undead versions of hydras.
     if (mons_species(nametype) == MONS_HYDRA
@@ -3136,6 +3138,9 @@ bool monsters::is_holy() const
 
 bool monsters::is_unholy() const
 {
+    if (type == MONS_SILVER_STATUE)
+        return (true);
+
     if (holiness() == MH_DEMONIC)
         return (true);
 
@@ -4714,7 +4719,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_CONFUSION:
             if (!mons_class_flag(type, M_CONFUSED))
                 del_ench(i->first);
-            blink();
+            monster_blink(this, true);
             break;
 
         case ENCH_HELD:

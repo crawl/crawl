@@ -39,7 +39,6 @@
 #include "coord.h"
 #include "mon-speak.h"
 #include "notes.h"
-#include "options.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -1378,6 +1377,8 @@ static std::string _killer_type_name(killer_type killer)
         return ("mon_missile");
     case KILL_YOU_CONF:
         return ("you_conf");
+    case KILL_MISCAST:
+        return ("miscast");
     case KILL_MISC:
         return ("misc");
     case KILL_RESET:
@@ -2279,7 +2280,9 @@ static bool _valid_morph(monsters *monster, monster_type new_mclass)
 
         // Other poly-unsuitable things.
         || new_mclass == MONS_ORB_GUARDIAN
+        || new_mclass == MONS_DWARF
         || mons_is_statue(new_mclass)
+        || mons_is_projectile(new_mclass)
 
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN && monster->type == MONS_PRINCE_RIBBIT))
@@ -2679,7 +2682,7 @@ bool monster_blink(monsters *monster, bool quiet)
     coord_def near = _random_monster_nearby_habitable_space(*monster, false,
                                                             true);
 
-    return (monster->blink_to(near));
+    return (monster->blink_to(near, quiet));
 }
 
 bool mon_can_be_slimified(monsters *monster)
@@ -3126,7 +3129,7 @@ bool mons_avoids_cloud(const monsters *monster, cloud_struct cloud,
     // Berserk monsters are less careful and will blindly plow through any
     // dangerous cloud, just to kill you. {due}
     if (!extra_careful && monster->berserk())
-        return (true);
+        return (false);
 
     switch (cl_type)
     {
@@ -3521,32 +3524,16 @@ bool monster_descriptor(int which_class, mon_desc_type which_descriptor)
     return (false);
 }
 
-bool message_current_target()
+monsters *get_current_target()
 {
-    if (crawl_state.is_replaying_keys())
-    {
-        if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
-            return (false);
+    if (invalid_monster_index(you.prev_targ))
+        return NULL;
 
-        return (you.can_see(&menv[you.prev_targ]));
-    }
-
-    if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
-    {
-        const monsters *montarget = &menv[you.prev_targ];
-
-        if (you.can_see(montarget))
-        {
-            mprf(MSGCH_PROMPT, "Current target: %s "
-                 "(use p or f to fire at it again.)",
-                 montarget->name(DESC_PLAIN).c_str());
-            return (true);
-        }
-
-        mpr("You have no current target.");
-    }
-
-    return (false);
+    monsters* mon = &menv[you.prev_targ];
+    if (mon->alive() && you.can_see(mon))
+        return mon;
+    else
+        return NULL;
 }
 
 void seen_monster(monsters *monster)

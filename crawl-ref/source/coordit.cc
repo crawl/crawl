@@ -7,7 +7,6 @@
 
 #include "coordit.h"
 
-#include "coord.h"
 #include "coord-circle.h"
 #include "player.h"
 

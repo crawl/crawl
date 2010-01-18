@@ -41,8 +41,6 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
@@ -64,6 +62,7 @@
 #include "terrain.h"
 #include "travel.h"
 #include "tutorial.h"
+#include "viewchar.h"
 #include "viewgeom.h"
 #include "xom.h"
 
@@ -688,7 +687,7 @@ void item_check(bool verbose)
 
     if (static_cast<int>(items.size()) >= Options.item_stack_summary_minimum)
     {
-        std::vector<unsigned short int> item_chars;
+        std::vector<unsigned int> item_chars;
         for (unsigned int i = 0; i < items.size() && i < 50; ++i)
         {
             glyph g = get_item_glyph(items[i]);
@@ -714,7 +713,7 @@ void item_check(bool verbose)
                 cur_state = specialness;
             }
 
-            out_string += static_cast<unsigned char>(item_chars[i] / 0x100);
+            out_string += stringize_glyph(item_chars[i] / 0x100);
             if (i + 1 < item_chars.size()
                 && (item_chars[i] / 0x100) != (item_chars[i+1] / 0x100))
             {

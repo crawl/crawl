@@ -70,7 +70,6 @@
 #include "files.h"
 #include "ghost.h"
 #include "itemname.h"
-#include "itemprop.h"
 #include "mapmark.h"
 #include "mon-util.h"
 #include "mon-transit.h"
@@ -83,7 +82,6 @@
 #include "tiles.h"
 #include "tilemcache.h"
 #include "travel.h"
-#include "view.h"
 
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
 #include "coord.h"

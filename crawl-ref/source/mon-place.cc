@@ -18,11 +18,11 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "externs.h"
 #include "options.h"
 #include "ghost.h"
 #include "lev-pand.h"
-#include "makeitem.h"
 #include "message.h"
 #include "mislead.h"
 #include "mon-behv.h"
@@ -41,6 +41,9 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#ifdef USE_TILE
+#include "tiledef-player.h"
+#endif
 
 band_type active_monster_band = BAND_NO_BAND;
 
@@ -710,11 +713,12 @@ static int _is_near_stairs(coord_def &p)
 // is true, then we'll be less rigorous in our checks, in particular
 // allowing land monsters to be placed in shallow water and water
 // creatures in fountains.
-static bool _valid_monster_generation_location(
-    const mgen_data &mg,
-    const coord_def &mg_pos)
+static bool _valid_monster_generation_location( const mgen_data &mg,
+                                                const coord_def &mg_pos)
 {
-    if (!in_bounds(mg_pos) || actor_at(mg_pos))
+    if (!in_bounds(mg_pos)
+        || monster_at(mg_pos)
+        || you.pos() == mg_pos && !fedhas_passthrough_class(mg.cls))
         return (false);
 
     const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
@@ -1054,8 +1058,29 @@ monsters* get_free_monster()
             env.mons[i].reset();
             return (&env.mons[i]);
         }
+
     return (NULL);
 }
+
+#ifdef USE_TILE
+// For some tiles, always use the fixed same variant out of a set
+// of tiles. (Where this is not handled by number or colour already.)
+static void _maybe_init_tilenum_props(monsters *mon)
+{
+    // Not necessary.
+    if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))
+        return;
+
+    // Special-case for monsters masquerading as items.
+    if (mon->type == MONS_DANCING_WEAPON || mons_is_mimic(mon->type))
+        return;
+
+    // Only add the property for tiles that have several variants.
+    const int base_tile = tileidx_monster_base(mon);
+    if (tile_player_count(base_tile) > 1)
+        mon->props["tile_num"] = short(random2(256));
+}
+#endif
 
 static int _place_monster_aux(const mgen_data &mg,
                               bool first_band_member, bool force_pos)
@@ -1075,7 +1100,8 @@ static int _place_monster_aux(const mgen_data &mg,
     // If the space is occupied, try some neighbouring square instead.
     if (first_band_member && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos))
-        && actor_at(mg.pos) == NULL
+        && !monster_at(mg.pos)
+        && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
         && (force_pos || monster_habitable_grid(montype, grd(mg.pos))))
     {
         fpos = mg.pos;
@@ -1127,6 +1153,12 @@ static int _place_monster_aux(const mgen_data &mg,
             return (-1);
         }
     }
+    else if (mon->type == MONS_MERGED_SLIME_CREATURE) // shouldn't ever happen
+        mon->type = MONS_SLIME_CREATURE;
+#ifdef USE_TILE
+    else
+        _maybe_init_tilenum_props(mon);
+#endif
 
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
@@ -1352,6 +1384,13 @@ static int _place_monster_aux(const mgen_data &mg,
     else if (mg.abjuration_duration > 0)
     {
         blame_prefix = "summoned by ";
+
+        if (mg.summoner != NULL && mg.summoner->alive()
+            && mg.summoner->atype() == ACT_MONSTER 
+            && static_cast<const monsters*>(mg.summoner)->type == MONS_MARA)
+        {
+                blame_prefix = "woven by ";
+        }
     }
     else if (mons_class_is_zombified(mg.cls))
     {
@@ -2599,9 +2638,10 @@ int mons_place(mgen_data mg)
     }
 
     if (mg.behaviour == BEH_COPY)
-        mg.behaviour = mg.summoner == &you
-            ? BEH_FRIENDLY
-            : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+    {
+        mg.behaviour = (mg.summoner == &you) ? BEH_FRIENDLY
+                            : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+    }
 
     int mid = place_monster(mg);
     if (mid == -1)
@@ -2849,7 +2889,8 @@ int create_monster(mgen_data mg, bool fail_msg)
 
     if (!mg.force_place()
         || !in_bounds(mg.pos)
-        || actor_at(mg.pos)
+        || monster_at(mg.pos)
+        || you.pos() == mg.pos && !fedhas_passthrough_class(mg.cls)
         || !mons_class_can_pass(montype, grd(mg.pos)))
     {
         mg.pos = find_newmons_square(montype, mg.pos);

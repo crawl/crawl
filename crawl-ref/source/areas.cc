@@ -26,7 +26,6 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "viewgeom.h"
 
 ///////////////
 // Sanctuary

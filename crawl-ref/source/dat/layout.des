@@ -383,3 +383,128 @@ TAGS: layout allow_dup
 }}
 MAP
 ENDMAP
+
+##############################################################
+# layout_city
+#
+# This replaces dungeon.cc:_city_level().
+#
+NAME: layout_city
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    function treasure_area (x1, y1, x2, y2)
+        x2 = x2 + 1
+        y2 = y2 + 1
+
+        if x2 <= x2 or y2 <= y2 then
+            return false
+        end
+
+        if (x2 - x1) * (y2 - y1) >= 40 then
+            return false
+        end
+
+        local tl = dgn.point(x1, y1)
+        local br = dgn.point(x2 - 1, y2 - 1)
+
+        for point in iter.rect_iterator(tl, br) do
+            if is_valid_coord {x = point.x, y = point.y } then
+                if is_passable_coord { x=point.x, y=point.y } or crawl.coinflip() then 
+                    mapgrd[point.x][point.y] = "|"
+                end
+            end
+        end
+
+        return true
+    end
+
+    local gxm, gym = dgn.max_bounds()
+
+    extend_map{width = gxm, height = gym, fill = 'x'}
+    fill_area{fill = 'x'}
+
+
+    local temp_rand = crawl.random2(8)
+    local wall_type_room
+    local wall_type
+    local rooms = {}
+
+    local xs = 0
+    local ys = 0
+    local ax1 = 0
+    local bx2 = 0
+    local ay1 = 0
+    local by2 = 0
+    local i, j
+
+    if temp_rand > 4 then
+        wall_type = 'x'
+    elseif temp_rand  > 2 then
+        wall_type = 'c'
+    else
+        wall_type = 'v'
+    end
+
+    if crawl.one_chance_in(100) then
+        wall_type = 'b'
+    end
+
+    fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
+
+    for i = 0, 5 do
+        for j = 0, 4 do
+            xs = 8 + (i * 13)
+            ys = 8 + (j * 14)
+            a1 = xs + crawl.random2avg(5, 2);
+            a2 = ys + crawl.random2avg(5, 2);
+            b1 = xs + 11 - crawl.random2avg(5, 2);
+            b2 = ys + 11 - crawl.random2avg(5, 2);
+
+            temp_rand = crawl.random2(280);
+
+            if temp_rand > 39 and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2} then
+                if temp_rand > 63 then
+                    wall_type_room = wall_type
+                elseif temp_rand > 54 then
+                    wall_type_room = "c"
+                elseif temp_rand > 45 then
+                    wall_type_room = "x"
+                else
+                    wall_type_room = "v"
+                end
+
+                if crawl.one_chance_in(250) then
+                    wall_type_room = "b"
+                end
+
+                table.insert(rooms, {a1, a2, b1, b2})
+                make_box { x1=a1, y1=a2, x2=b1, y2=b2, wall=wall_type_room }
+
+                if b1 - a1 > 5 and b2 - a2 > 5 and crawl.one_chance_in(8) then
+                    table.insert(rooms, {a1+2, a2+2, b1-2, b2-2})
+                    make_box { x1=a1+2, y1=a2+2, x2=b1-2, y2=b2-2, wall=wall_type_room }
+
+                    if crawl.one_chance_in(3) then
+                        treasure_area(a1+3, a2+3, b1-3, b2-3)
+                    end
+                end
+            end
+        end
+    end
+
+    for _, room in ipairs(rooms) do
+        local doors = 1 + crawl.random2(5) - crawl.random2(3)
+        if doors < 1 then
+            doors = 1
+        end
+
+        if doors > 3 and crawl.one_chance_in(3) then
+            doors = 2
+        end
+
+        make_box_doors {x1=room[1], y1=room[2], x2=room[3], y2=room[4], number=doors}
+    end
+}}
+MAP
+ENDMAP

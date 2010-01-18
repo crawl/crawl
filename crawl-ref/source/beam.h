@@ -275,6 +275,7 @@ public:
     void fake_flavour();
     void digging_wall_effect();
     void fire_wall_effect();
+    void elec_wall_effect();
     void nuke_wall_effect();
     void drop_object();
     void finish_beam();

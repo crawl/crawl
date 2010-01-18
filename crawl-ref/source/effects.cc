@@ -1275,19 +1275,18 @@ static bool _try_give_plain_armour(item_def &arm)
         // Consider shield slot filled in some cases.
         if (armour_slots[i] == EQ_SHIELD)
         {
-            if (you.equip[EQ_WEAPON] == -1)
+            const item_def* weapon = you.weapon();
+
+            // Unarmed fighters don't need shields.
+            if (!weapon && you.skills[SK_UNARMED_COMBAT] > random2(8))
+                continue;
+
+            // Two-handed weapons and ranged weapons conflict with shields.
+            if (weapon
+                && (hands_reqd(*weapon, you.body_size()) == HANDS_TWO)
+                    || is_range_weapon(*weapon))
             {
-                if (you.skills[SK_UNARMED_COMBAT] > random2(8))
-                    continue;
-            }
-            else
-            {
-                const item_def weapon = you.inv[you.equip[EQ_WEAPON]];
-                const hands_reqd_type hand = hands_reqd(weapon, you.body_size());
-                if (hand == HANDS_TWO || is_range_weapon(weapon))
-                {
-                    continue;
-                }
+                continue;
             }
         }
 
@@ -1482,17 +1481,9 @@ static missile_type _acquirement_missile_subtype()
 
     switch (skill)
     {
-    case SK_SLINGS: result = MI_STONE; break;
-    case SK_BOWS:   result = MI_ARROW; break;
-
-    case SK_CROSSBOWS:
-        // Assuming that crossbow in inventory means that they
-        // want bolts for it (not darts for a hand crossbow)...
-        // perhaps we should check for both and compare ammo
-        // amounts on hand?
-        result = (_have_item_with_types(OBJ_WEAPONS, WPN_CROSSBOW) ? MI_BOLT
-                                                                   : MI_DART);
-        break;
+    case SK_SLINGS:    result = MI_SLING_BULLET; break;
+    case SK_BOWS:      result = MI_ARROW; break;
+    case SK_CROSSBOWS: result = MI_BOLT; break;
 
     case SK_THROWING:
         // Assuming that blowgun in inventory means that they
@@ -4652,16 +4643,18 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
         fringe.pop();
 
-        actor * occupant = NULL;
+        monsters * monster = monster_at(current);
+
+        bool player_occupant = you.pos() == current;
 
         // Is this square occupied by a non mushroom?
-        if ((occupant = actor_at(current))
-            && occupant->mons_species() != MONS_TOADSTOOL)
+        if (monster && monster->mons_species() != MONS_TOADSTOOL
+            || player_occupant && you.religion != GOD_FEDHAS)
         {
             continue;
         }
 
-        if (!occupant)
+        if (!monster)
         {
             const int mushroom = create_monster(
                         mgen_data(MONS_TOADSTOOL,
@@ -4702,7 +4695,12 @@ int spawn_corpse_mushrooms(item_def &corpse,
                 }
 
                 placed_targets++;
-                if (you.see_cell(current))
+                if (current == you.pos())
+                {
+                    mprf("A toadstool grows at your feet.");
+                    current=  env.mons[mushroom].pos();
+                }
+                else if (you.see_cell(current))
                     seen_targets++;
             }
             else

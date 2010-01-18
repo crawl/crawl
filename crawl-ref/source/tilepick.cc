@@ -115,6 +115,16 @@ static int _bow_offset(const monsters *mon)
     }
 }
 
+static int _get_random_monster_tile(const monsters *mon, const int base_tile)
+{
+    if (!mon->props.exists("tile_num"))
+        return (base_tile);
+
+    const int variants = tile_player_count(base_tile);
+    return base_tile + (mon->props["tile_num"].get_short() % variants);
+}
+
+
 int tileidx_monster_base(const monsters *mon, bool detected)
 {
     bool in_water = feat_is_water(grd(mon->pos()));
@@ -202,7 +212,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
             return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
         return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
     case MONS_TOADSTOOL:
-        return TILEP_MONS_TOADSTOOL;
+        return _get_random_monster_tile(mon, TILEP_MONS_TOADSTOOL);
     case MONS_FUNGUS:
         return TILEP_MONS_FUNGUS;
     case MONS_WANDERING_MUSHROOM:
@@ -276,13 +286,25 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // merfolk ('m')
     case MONS_MERFOLK:
-    case MONS_MERFOLK_IMPALER:      // TODO
-    case MONS_MERFOLK_AQUAMANCER:   // TODO
-    case MONS_MERFOLK_JAVELINEER:   // TODO
         if (in_water)
-            return TILEP_MONS_MERFOLK_FIGHTER_WATER;
+            return TILEP_MONS_MERFOLK_WATER;
         else
-            return TILEP_MONS_MERFOLK_FIGHTER;
+            return TILEP_MONS_MERFOLK;
+    case MONS_MERFOLK_IMPALER:
+        if (in_water)
+            return TILEP_MONS_MERFOLK_IMPALER_WATER;
+        else
+            return TILEP_MONS_MERFOLK_IMPALER;
+    case MONS_MERFOLK_AQUAMANCER:
+        if (in_water)
+            return TILEP_MONS_MERFOLK_AQUAMANCER_WATER;
+        else
+            return TILEP_MONS_MERFOLK_AQUAMANCER;
+    case MONS_MERFOLK_JAVELINEER:
+        if (in_water)
+            return TILEP_MONS_MERFOLK_JAVELINEER_WATER;
+        else
+            return TILEP_MONS_MERFOLK_JAVELINEER;
     case MONS_MERMAID:
         if (in_water)
             return TILEP_MONS_MERMAID_WATER;
@@ -360,8 +382,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // turtles ('t')
     case MONS_SNAPPING_TURTLE:
-    case MONS_ALLIGATOR_SNAPPING_TURTLE: // TODO
-        return TILEP_MONS_TURTLE;
+        return TILEP_MONS_SNAPPING_TURTLE;
+    case MONS_ALLIGATOR_SNAPPING_TURTLE:
+        return TILEP_MONS_ALLIGATOR_SNAPPING_TURTLE;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -626,6 +649,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     // plants ('P')
     case MONS_PLANT:
         return TILEP_MONS_PLANT;
+    case MONS_BUSH:
+        return TILEP_MONS_BUSH;
     case MONS_OKLOB_PLANT:
         return TILEP_MONS_OKLOB_PLANT;
 
@@ -759,6 +784,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // humans ('@')
     case MONS_HUMAN:
+    case MONS_DWARF:
         return TILEP_MONS_HUMAN;
     case MONS_HELL_KNIGHT:
         return TILEP_MONS_HELL_KNIGHT;
@@ -775,7 +801,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_KILLER_KLOWN:
         return TILEP_MONS_KILLER_KLOWN;
     case MONS_SLAVE:
-        return TILEP_MONS_SLAVE;
+        return _get_random_monster_tile(mon, TILEP_MONS_SLAVE);
 
     // mimics
     case MONS_GOLD_MIMIC:
@@ -819,8 +845,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_ROTTING_DEVIL;
     case MONS_SMOKE_DEMON:
         return TILEP_MONS_SMOKE_DEMON;
-//     case MONS_SIXFIRHY:              // TODO
-//         return TILEP_MONS_SIXFIRHY;
+    case MONS_SIXFIRHY:
+        return TILEP_MONS_SIXFIRHY;
     case MONS_HELLWING:
         return TILEP_MONS_HELLWING;
 
@@ -947,9 +973,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // elves ('e')
     case MONS_DOWAN:
-        return TILEP_MONS_DEEP_ELF_MAGE;    // TODO
+        return TILEP_MONS_DOWAN;
     case MONS_DUVESSA:
-        return TILEP_MONS_DEEP_ELF_FIGHTER; // TODO
+        return TILEP_MONS_DUVESSA;
 
     // goblins and gnolls ('g')
     case MONS_IJYB:
@@ -1012,7 +1038,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_SONJA:
         return TILEP_MONS_SONJA;
     case MONS_PIKEL:
-        return TILEP_MONS_BIG_KOBOLD;       // TODO
+        return TILEP_MONS_PIKEL;
 
     // lich ('L')
     case MONS_BORIS:
@@ -1103,7 +1129,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_KIRKE:
         return TILEP_MONS_KIRKE;
     case MONS_NIKOLA:
-        return TILEP_MONS_NIKOLA;                  // TODO
+        return TILEP_MONS_NIKOLA;
     case MONS_MAURICE:
         return TILEP_MONS_MAURICE;
 
@@ -1810,7 +1836,7 @@ static int _tileidx_corpse(const item_def &item)
 
     // merfolk ('m')
     case MONS_MERFOLK:
-        return TILE_CORPSE_MERFOLK_FIGHTER;
+        return TILE_CORPSE_MERFOLK;
     case MONS_MERMAID:
         return TILE_CORPSE_MERMAID;
     case MONS_SIREN:
@@ -1861,8 +1887,9 @@ static int _tileidx_corpse(const item_def &item)
 
     // turtles ('t')
     case MONS_SNAPPING_TURTLE:
-    case MONS_ALLIGATOR_SNAPPING_TURTLE: // TODO
-        return TILE_CORPSE_TURTLE;
+        return TILE_CORPSE_SNAPPING_TURTLE;
+    case MONS_ALLIGATOR_SNAPPING_TURTLE:
+        return TILE_CORPSE_ALLIGATOR_SNAPPING_TURTLE;
 
     // ugly things ('u')
     case MONS_UGLY_THING:
@@ -2088,6 +2115,9 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SHAPESHIFTER;
     case MONS_GLOWING_SHAPESHIFTER:
         return TILE_CORPSE_GLOWING_SHAPESHIFTER;
+
+    case MONS_DWARF:
+        return TILE_CORPSE_DWARF;
 
     default:
         return TILE_ERROR;
@@ -3228,6 +3258,26 @@ int _get_door_offset (int base_tile, bool opened = false,
     return offset + gateway_type;
 }
 
+static int _pick_random_dngn_tile(unsigned int idx, int value = -1)
+{
+    ASSERT(idx >= 0 && idx < TILE_DNGN_MAX);
+    const int count = tile_dngn_count(idx);
+    if (count == 1)
+        return (idx);
+
+    const int total = tile_dngn_probs(idx + count - 1);
+    const int rand  = (value == -1 ? random2(total) : value % total);
+
+    for (int i = 0; i < count; ++i)
+    {
+        int curr = idx + i;
+        if (rand < tile_dngn_probs(curr))
+            return (curr);
+    }
+
+    return (idx);
+}
+
 // Modify wall tile index depending on floor/wall flavour.
 static inline void _finalise_tile(unsigned int *tile,
                                   unsigned int wall_flv,
@@ -3272,7 +3322,7 @@ static inline void _finalise_tile(unsigned int *tile,
         if (orig >= TILE_DNGN_LAVA && orig < TILE_BLOOD && you.see_cell(gc))
             env.tile_flv(gc).special = random2(256);
 
-        (*tile) = orig + (special_flv % tile_dngn_count(orig));
+        (*tile) = _pick_random_dngn_tile(orig, special_flv);
     }
 
     (*tile) |= flag;
@@ -4521,8 +4571,7 @@ void tile_init_flavour(const coord_def &gc)
         int colour = env.grid_colours(gc);
         if (colour)
             floor_base = tile_dngn_coloured(floor_base, colour);
-        int floor_rnd = random2(tile_dngn_count(floor_base));
-        env.tile_flv(gc).floor = floor_base + floor_rnd;
+        env.tile_flv(gc).floor = _pick_random_dngn_tile(floor_base);
     }
 
     if (!env.tile_flv(gc).wall)
@@ -4531,8 +4580,7 @@ void tile_init_flavour(const coord_def &gc)
         int colour = env.grid_colours(gc);
         if (colour)
             wall_base = tile_dngn_coloured(wall_base, colour);
-        int wall_rnd = random2(tile_dngn_count(wall_base));
-        env.tile_flv(gc).wall = wall_base + wall_rnd;
+        env.tile_flv(gc).wall = _pick_random_dngn_tile(wall_base);
     }
 
     if (feat_is_door(grd(gc)))
@@ -5038,6 +5086,10 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                         }
                     }
                 }
+
+                dungeon_feature_type feat = grd(gc);
+                if (feat_is_water(feat) || feat == DNGN_LAVA)
+                    tileb[count+1] |= TILE_FLAG_WATER;
 
                 if (print_blood && is_bloodcovered(gc))
                     tileb[count+1] |= TILE_FLAG_BLOOD;

@@ -46,12 +46,6 @@ static unsigned char _random_potion_description()
     return static_cast<unsigned char>(desc);
 }
 
-// [dshaligram] FIXME: This is to push more playtesting towards Shoals,
-// should be removed before release.
-#ifdef DGAMELAUNCH
-#define SHOALS_TESTING
-#endif
-
 // Determine starting depths of branches.
 void initialise_branch_depths()
 {
@@ -60,24 +54,21 @@ void initialise_branch_depths()
     branches[BRANCH_ELVEN_HALLS].startdepth       = random_range(3, 4);
     branches[BRANCH_LAIR].startdepth              = random_range(8, 13);
     branches[BRANCH_HIVE].startdepth              = random_range(11, 16);
-    branches[BRANCH_SLIME_PITS].startdepth        = random_range(5, 8);
-#ifndef SHOALS_TESTING
-    if ( coinflip() )
-    {
-        branches[BRANCH_SWAMP].startdepth  = random_range(2, 5);
-        branches[BRANCH_SHOALS].startdepth = -1;
-    }
-    else
-#endif
-    {
-        branches[BRANCH_SWAMP].startdepth  = -1;
-        branches[BRANCH_SHOALS].startdepth = random_range(2, 5);
-    }
-    branches[BRANCH_SNAKE_PIT].startdepth      = random_range(3, 6);
-    branches[BRANCH_VAULTS].startdepth         = random_range(14, 19);
-    branches[BRANCH_CRYPT].startdepth          = random_range(2, 4);
-    branches[BRANCH_HALL_OF_BLADES].startdepth = random_range(4, 6);
-    branches[BRANCH_TOMB].startdepth           = random_range(2, 3);
+    branches[BRANCH_SLIME_PITS].startdepth        = random_range(6, 8);
+    branches[BRANCH_SWAMP].startdepth             = random_range(2, 5);
+    branches[BRANCH_SHOALS].startdepth            = random_range(3, 6);
+    branches[BRANCH_SNAKE_PIT].startdepth         = random_range(3, 6);
+    branches[BRANCH_VAULTS].startdepth            = random_range(14, 19);
+    branches[BRANCH_CRYPT].startdepth             = random_range(2, 4);
+    branches[BRANCH_HALL_OF_BLADES].startdepth    = random_range(4, 6);
+    branches[BRANCH_TOMB].startdepth              = random_range(2, 3);
+
+    // Disable one of the Swamp/Shoals/Snake Pit.
+    const branch_type disabled_branch =
+        static_cast<branch_type>(
+            random_choose(BRANCH_SWAMP, BRANCH_SHOALS, BRANCH_SNAKE_PIT, -1));
+    dprf("Disabling branch: %s", branches[disabled_branch].shortname);
+    branches[disabled_branch].startdepth = -1;
 }
 
 #define MAX_OVERFLOW_LEVEL 9

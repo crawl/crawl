@@ -455,15 +455,12 @@ SUBST:   8 = 8o
 COLOUR:  o : cyan
 : dis_setup(_G)
 # Use master/slave setup.
-MARKER:  1 = lua:monster_on_death { \
+MARKER:  o = lua:monster_on_death { \
             death_monster="Dispater", new_monster="generate_awake iron golem", \
             message_seen="The iron statue comes to life!", \
             message_unseen="You hear a grinding sound.", \
-            master_name="dispater" \
-         }
-MARKER:  o = lua:props_marker { \
+            master_name="dispater", \
             veto_fragmentation="veto", veto_disintegrate="veto", \
-            slaved_to="dispater" \
          }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

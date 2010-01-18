@@ -233,7 +233,6 @@ stash_filter = ring of hunger, amulet of inaccuracy
 # sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
 sort_menus = inv: true : equipped, freshness, charged
 
-
 ##### 4-j	Messages and Display Enhancements #####
 #
 # hp_warning = 10
@@ -346,7 +345,6 @@ autoinscribe = distortion:!w
 # All tiles specific options are in the external file
 include = tiles_options.txt
 
-
 ##### 5-  Dump File #################################################
 #
 ##### 5-a	Items and Kill List ###################
@@ -404,8 +402,15 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # dos_use_background_intensity = true
 # background = black
 
-
 ##### 6-c   Unix ##################################
 #
 # use_fake_cursor = false
 # use_fake_player_cursor = true
+
+##### 6-d   Alternative keybinding files ##########
+#
+# Alternative vi bindings for Dvorak users.
+# include = dvorak_command_keys.txt
+#
+# Override the vi movement keys with a non-command.
+# include = no_vi_command_keys.txt

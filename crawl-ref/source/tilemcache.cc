@@ -104,6 +104,8 @@ public:
 
     virtual void construct(writer &th);
 
+    virtual bool transparent() const;
+
 protected:
     dolls_data m_doll;
 };
@@ -338,7 +340,6 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
     case TILEP_MONS_DEEP_ELF_BLADEMASTER:
     case TILEP_MONS_IMP:
-    case TILEP_MONS_ANGEL:
     case TILEP_MONS_NORRIS:
     case TILEP_MONS_MAUD:
     case TILEP_MONS_DUANE:
@@ -355,10 +356,16 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_RAKSHASA_FAKE:
     case TILEP_MONS_VAMPIRE_KNIGHT:
     case TILEP_MONS_SKELETAL_WARRIOR:
+    case TILEP_MONS_MERFOLK:
+    case TILEP_MONS_MERFOLK_WATER:
+    case TILEP_MONS_MERFOLK_JAVELINEER:
+    case TILEP_MONS_MERFOLK_JAVELINEER_WATER:
+    case TILEP_MONS_MERFOLK_IMPALER:
+    case TILEP_MONS_MERFOLK_IMPALER_WATER:
+    case TILEP_MONS_MERFOLK_AQUAMANCER:
+    case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
     case TILEP_MONS_MERMAID:
     case TILEP_MONS_MERMAID_WATER:
-    case TILEP_MONS_MERFOLK_FIGHTER:
-    case TILEP_MONS_MERFOLK_FIGHTER_WATER:
     case TILEP_MONS_SIREN:
     case TILEP_MONS_SIREN_WATER:
     case TILEP_MONS_ILSUIW:
@@ -811,6 +818,11 @@ void mcache_ghost::construct(writer &th)
     mcache_entry::construct(th);
 
     marshallDoll(th, m_doll);
+}
+
+bool mcache_ghost::transparent() const
+{
+    return (true);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,10 @@
 ################################################################################
-# lair.des: All maps relating to the Lair system, including entries and end
-#           branch endings for Snake Pit, Slime Pit and Swamp.
+# lair.des: All maps relating to the Lair branch. Branches off of Lair can be
+#           found in their relevant file:
+#               Shoals - shoals.des
+#               Snake Pit - snake.des
+#               Swamp - swamp.des
+#               Pits of Slime - slime.des
 ################################################################################
 
 ################################################################################
@@ -329,18 +333,17 @@ NAME:   strawberry_fields_big
 ORIENT: float
 WEIGHT: 1
 DEPTH:  Lair
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
 SUBST:  .= d .:150 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-SUBST:  G = .
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  B = .
 MAP
 .....................
 .....................
@@ -364,18 +367,17 @@ NAME:   strawberry_fields_big_rounded
 ORIENT: float
 WEIGHT: 1
 DEPTH:  Lair
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
 SUBST:  .= d .:140 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-SUBST:  G = .
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  B = .
 MAP
        .......
      ...........
@@ -400,18 +402,17 @@ ORIENT: float
 WEIGHT: 4
 TAGS:   allow_dup
 DEPTH:  Lair
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-SUBST:  G = .
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  B = .
 MAP
    ....
  ........
@@ -427,18 +428,17 @@ NAME:   strawberry_fields_patches_spacepadded
 ORIENT: float
 WEIGHT: 4
 DEPTH:  Lair
+SUBST:  . = G:20 B:15 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
 ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
         strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-SUBST:  G = .
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  B = .
 MAP
    ..
  ......
@@ -649,574 +649,4 @@ MAP
  ;wwww..wwww;
   ;wwwwwwww;
    ;;wwww;;
-ENDMAP
-
-##############################################################################
-# Swamp specific non-ending vaults
-##############################################################################
-
-# The only Swamp entry... mist leaking from the stairs.
-NAME:   swamp_mist
-TAGS:   swamp_entry
-MARKER: O = lua:fog_machine { \
-             pow_min = 8, pow_max = 12, delay = 25, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
-MAP
-O
-ENDMAP
-
-##############################################################################
-# Snake Pit specific non-ending vaults
-##############################################################################
-
-##############################################################################
-# Slime Pit specific non-ending vaults
-##############################################################################
-
-# Weight balancer
-NAME: slime_dummy
-TAGS: slime_entry
-MAP
-O
-ENDMAP
-
-# Slime entries featuring an altar to Jiyva
-NAME:   slime_altar_1
-TAGS:   slime_entry
-WEIGHT: 5
-KFEAT:  Z = altar_jiyva
-MAP
-....
-.OZ.
-....
-ENDMAP
-
-NAME:   slime_altar_2
-TAGS:   slime_entry
-WEIGHT: 2
-KFEAT:  Z = altar_jiyva
-SUBST:  1 : 111223
-NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
-MONS:   jelly / ooze / brown ooze / giant amoeba
-MONS:   acid blob / slime creature
-MONS:   azure jelly
-MAP
-ccccc
-c111c.
-cO1_+@
-c111c.
-ccccc
-ENDMAP
-
-##############################################################################
-# Branch ends: Slime Pit, Snake Pit, Swamp
-# Note that the Shoals usually have a randomised end map; predrawn maps
-# (which need not be encompassing) are sometimes used, though.
-##############################################################################
-
-################################################################################
-# Slime Pit
-#
-NAME:    slime_pit
-PLACE:   Slime:6
-ORIENT:  encompass
-TAGS:    no_rotate no_dump
-MONS:    the royal jelly
-MONS:    acid blob
-MONS:    great orb of eyes / nothing
-SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
-SUBST:   " : " .:3,  " = .c
-NSUBST:  P = O / *|
-KMASK:   | = no_monster_gen
-KFEAT:   Z = altar_jiyva
-SHUFFLE: ([{
-LFLAGS:  no_tele_control
-
-{{
--- Attach function to the royal jelly itself.  This will follow it wherever
--- it goes, even through polymorphs, and set dgn.persist.royal_jelly_dead
--- when it dies through means other than being banished.
-local function monster_die(monster, killer_type, killer_index, silent, wizard)
-    if killer_type == "reset" then
-       if monster.you_can_see then
-          crawl.mpr("You feel a great sense of loss.")
-       else
-          crawl.mpr("You feel a great sense of loss, and a brush of " ..
-                    "the abyss.")
-       end
-    else
-      dgn.persist.fix_slime_vaults = true
-    end
-end
-}}
-MARKER: 1 = lua: MonPropsMarker:new {monster_dies_lua_key = monster_die}
-
-{{
-local function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
-  if not dgn.persist.fix_slime_vaults then
-    return
-  end
-
-  -- Restore teleport control.
-  dgn.change_level_flags("!no_tele_control")
-
-  local to_feat
-  if you.god() == "Jiyva" then
-    to_feat = "floor"
-  else
-    to_feat = "clear_rock_wall"
-  end
-
-  local seen = dgn.seen_replace_feat("stone_wall", to_feat)
-        seen = dgn.seen_replace_feat("clear_stone_wall", to_feat) or seen
-
-  if you.god() == "Jiyva" then
-    if you.silenced() then
-        crawl.mpr("An unexplained breeze blows through the dungeon.", "god")
-    else
-        crawl.mpr("You hear the sound of toppling stones.", "god")
-    end
-  else
-    if seen then
-        crawl.mpr("Suddenly, all colour oozes out of the stone walls.",
-                  "monster_enchant")
-    else
-        crawl.mpr("You feel a strange vibration for a moment.",
-                  "monster_enchant")
-    end
-  end
-
-  -- We're done.
-  dgn.persist.slime_fixup_done = true
-
-  triggerable:remove(marker)
-end
-
-local fixup_marker = TriggerableFunction:new(
-  {
-    func=fixup_slime_vaults,
-    repeated=true
-  }
-)
-
-fixup_marker:add_triggerer(DgnTriggerer:new {
-  type="monster_dies",
-  target="any"
-})
-
-fixup_marker:add_triggerer(DgnTriggerer:new {
-  type="entered_level"
-})
-
-}}
-# Doesn't matter where thisw marker goes, so we might as well chose
-# the altar.
-: lua_marker("Z", fixup_marker)
-
-{{
-    dgn.set_feature_desc_short("stone wall", "rune carved stone wall")
-    dgn.set_feature_desc_long("stone wall",
-"This strangely slime-free stone wall is carved all over with countless "..
-"mystical runes.  One often repeated set of runes seems to refer to "..
-"'the royal jelly.'")
-}}
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''xxxx''''...''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx'''..'''''........'''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx'.....................'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx'.......................''x'xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxx'..........................'.xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx'............................'xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx'.............................'''xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx'...............................''xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx''..(..............................''xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx'''....................................''xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx'.........................................'xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx''.........................................'xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx'...........................................'xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx''xx'..........................................'xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx'..''................""""."""""...........]....''xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx'x.................."cccc2ccccc".................'xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx'.'................"cc*cc..cc*cc".................''xxxxxxxxxxxxxxx
-xxxxxxxxxxxxx'................."cc***cc4c***cc".................xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx'................"cc*|*cc..cc*|*cc"................'xxxxxxxxxxxxxxx
-xxxxxxxxxxxx''..............."cc*|P|*c4cc*|P|*cc"...............'xxxxxxxxxxxxxxx
-xxxxxxxxxxxx'................"cc**|*cc..cc*|**cc"................'''xxxxxxxxxxxx
-xxxxxxxxxxxx'................"ccc**c|cc4c|c**ccc"..................xxxxxxxxxxxxx
-xxxxxxxxxxx'................."cccccccc.3cccccccc"..................'xxxxxxxxxxxx
-xxxxxxxxxxx'................."c.4.c.4.1..4.c.4.c"..................''xxxxxxxxxxx
-xxxxxxxxxxx'..................2.c.4.c..Z.c.4.c.2....................'xxxxxxxxxxx
-xxxxxxxxxx'..........)......."cccccccc3.cccccccc"...................'xxxxxxxxxxx
-xxxxxxxxxx'.................."ccc**c|cc4c|c**ccc"...................'xxxxxxxxxxx
-xxxxxxxxxx'.................."cc**|*cc..cc*|**cc"..................'xxxxxxxxxxxx
-xxxxxxxxx'..................."cc*|P|*c4cc*|P|*cc"..................'xxxxxxxxxxxx
-xxxxxxxxx''..................."cc*|*cc..cc*|*cc"..................'xxxxxxxxxxxxx
-xxxxxxxxxxx'..................."cc***cc4c***cc"...................'xxxxxxxxxxxxx
-xxxxxxxxxxxx'..................."cc*cc..cc*cc"....................'xxxxxxxxxxxxx
-xxxxxxxxxxxx'...................."cccc2ccccc"....................'xxxxxxxxxxxxxx
-xxxxxxxxxxxxx'...................."""".""""".....................'xxxxxxxxxxxxxx
-xxxxxxxxxxxxx'...........................................[........'xxxxxxxxxxxxx
-xxxxxxxxxxxx''..............................................'''....'xxxxxxxxxxxx
-xxxxxxxxxxxx'.............................................''xxx''.'xxxxxxxxxxxxx
-xxxxxxxxxxxxx'..........................................''xxxxxxx.xxxxxxxxxxxxxx
-xxxxxxxxxxxxx'''.......................................'xxxxxxxxx.xxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx'......................................'xxxxxxxxx'xxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx'.......................................'xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx''.....................................'xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx'.....................................'xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx''....................................'xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx'...................................'xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx'............................}......'xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx''................................'xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx'.............................''xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx'.............................'xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxx'......................''...'xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx'''''........{.......'xx'..xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'''............'xxxx''xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''....'....'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''''x...''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-
-################################################################################
-# Snake Pit: the hunt
-#
-NAME:    snake_hunt
-PLACE:   Snake:5
-TAGS:    no_rotate
-ORIENT:  northwest
-KFEAT:   Z = weight:2 teleport trap / .
-KFEAT:   z = teleport trap / Zot trap / weight:20 .
-MONS:    naga / nothing
-MONS:    greater naga / nothing
-MONS:    guardian serpent / nothing
-MONS:    naga warrior / nothing
-MONS:    naga mage / nothing
-MONS:    greater naga / guardian serpent
-SHUFFLE: 'X / "Y
-SHUFFLE: 'X / 'X / AB, "Y / CD
-SUBST:   A=x, B=x, C=x, D=x
-SUBST:   ' = .:250 1 2 3 4:15 5:5
-SUBST:   " = .:250 1 2 3 4:5  5:15
-SUBST:   X=xc..++, Y=xc++
-SUBST:   T : T U V .:30 b
-SUBST:   _:.!, !:!.x, !=x .:2
-SHUFFLE: 123, 45, ([<
-#
-validate {{ return glyphs_connected('{', 'O') }}
-#
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx''''''x4O4x""""""xxxxxxxxxxx
-xxxxxxxxxxx''''''xxxx664z466xxxx""""""xxxxxx
-xxxxxxxx''''xxxxxxxx.5665665.xxxxxxxx""""xxx
-xxxxxxx''xxxx''''xxx..45554..xxx""""xxxx""xx
-xxxxxx''xxx''''''''xxx.666.xxx""""""""xxx""x
-xxxxxx'xxx''''''''''xxxcXcxxx""""""""""xxx"x
-xxxxxx''x''''''''''''xx.3.xx""""""""""""x""x
-xxxxxxx'Y'''''''''''''45354"""""""""""""Y"xx
-xxxxxxxxxx''''''''''xx.....xx""""""""""xxxxx
-xxxxxxxxxxx''''''''xxxxx.xxxxx""""""""xxxxxx
-xxxxxxxxxxxxx''''xxxxxxx.xxxxxxx""""xxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx!.!xxxxxx.....xxxxxx!.!xxxxxxxx
-xxxxxxxxxx!....._xx...43335...xx_...!!!xxxxx
-xxxxxxxx!......_x.11.4..3..5.22.x_......!xxx
-xxxxxxx!...2...x..11.........22..x...1...!xx
-xxxxxxx!..2..._x......T...T......x_...1..!xx
-xxxxxx!...2...x..2.............1..x...1...!x
-xxxxxx!..2....x.........{.........x....1...!
-xxxxxx!.......x....T...(.[...T.............@
-xxxxxx!..2....x.......ZZZZZ.......x....1...!
-xxxxxxx!..2..._x.................x_...1..!xx
-xxxxxxx!...2..._xx....T.}.T....xx_...1...!xx
-xxxxxxx!........._xx.........xx_.........!xx
-xxxxxxxx!.........._xxx...xxx_..........!xxx
-xxxxxxxxx!.............x.x.............!xxxx
-xxxxxxxxxx!!.........................!!xxxxx
-xxxxxxxxxxxx!!!.....3.......3.....!!!xxxxxxx
-xxxxxxxxxxxxxxx!!!!!..3...3..!!!!!xxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx!!!...!!!xxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxx!@!xxxxxxxxxxxxxxxxxx
-ENDMAP
-
-################################################################################
-# Snake Pit: old level
-#
-NAME:   snake_pit
-PLACE:  Snake:5
-ORIENT: southwest
-TAGS:   no_rotate
-MONS:   greater naga / nothing
-MONS:   naga
-MONS:   naga mage / nothing
-MONS:   naga warrior / nothing
-SUBST:  c = c .:1
-SUBST:  v = v .:1
-SUBST:  v = x
-MAP
-xxxxxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx.............xxxxxxxx
-xxxxxxxxxxxxxx....v.............v..xxxxx
-xxxxxxxxxxxx....2.v.............v.2..xxx
-xxxxxxxxxxx.....2.v....v.....v..v.33.xxx
-xxxxxxxxxxx.....22v.............vv.2..xx
-xxxxxxxxxxx.......vv..v........vv.33..xx
-xxxxxxxxxx.....x233vv....T...vvv4444..xx
-xxxxxxxxxx......4444v.........v.333....x
-xxxxxxxxxx......33v4...v.......4x4.....x
-xxxxxxxxxx.......334.....v.....4333....x
-xxxxxxxxxx..c......3.3..4.4..v.......c.x
-xxxxxxxxx...cc.....1...1.1.1...133..cc.x
-xxxxxxxxx...cc....3.....4.4.........cc.x
-xxxxxxxxx...cc...3...v........2.....cc.x
-xxxxxxxxx...cc.........1...1.......cc..x
-xxxxxxxxxx..cc.....1.....1.....1..ccc.xx
-xxxxxxxxxx...ccc......3333333.....cc..xx
-xxxxxxxxxx....cccc....3333333.....cc..xx
-xxxxxxxxxx.....cccccc............cc...xx
-xxxxxxxxxx........ccccc..O....cccc....xx
-xxxxxxxxxxx........cccccccccccccc....xxx
-xxxxxxxxxxx..........ccccccccccc.....xxx
-xxxxxxxxxxxxx.......................xxxx
-xxxxxxxxxxxxxxxx..................xxxxxx
-xxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-
-################################################################################
-# Swamp:5 standard
-#
-NAME:    swamp
-PLACE:   Swamp:5
-ORIENT:  float
-TAGS:    no_rotate
-MONS:    swamp dragon / nothing
-MONS:    swamp drake / nothing
-MONS:    hydra / nothing
-SHUFFLE: 12
-SUBST:   ' = xc
-MAP
-       @
-       2
-      2
-       .
-      2 2
-        .
-     cc.cc
-    cc3.2cc
-   'c3.2.3c'
-  'c11.3322c''
- 'cc...21.1ccc
- 'c.13321.1.cc'
-'cc31333.113cc'
-'cc22113.223cc
- 'cc3333113cc'
- 'cccc3O3ccc'
-  'cccccccc'
-   ''ccccc'
-     ''cc'
-       '
-ENDMAP
-
-################################################################################
-# Swamp:5 alternative (dp)
-#
-NAME:    swamp_alternative
-PLACE:   Swamp:5
-TAGS:    no_pool_fixup no_rotate
-ORIENT:  float
-MONS:    swamp dragon, swamp drake, hydra, fire drake
-ITEM:    nothing
-SUBST:   1=1., 2=2., 3=3., 4=4., L=l.
-SHUFFLE: Od, 123, lw
-SUBST:   l=l .:2, '=.x, "=cx, _=c.
-MAP
-   @       @
-   1'       2'
-    1      2'
-    .      .
-  '2 3. ''3
-  '' "c..1""""
-    ""c".ccccc""   '3
-   "cc_.2LLl.ccc""2.'3
-  "cc..33LL..2._c1'   @
- "cc1122lLL...1.1""
- "c....llllll21.2c"
- "cc33l4llllll2.cc"
-  "ccll.llll34lcc"
-   "cccO.lld3ccc"
-    ""cccccccc""
-      """"""""
-ENDMAP
-
-###############################################################################
-# Swamp:5 alternative (due)
-NAME:    swamp_fiery
-PLACE:   Swamp:5
-TAGS:    no_pool_fixup no_rotate
-ORIENT:  float
-MONS:    dragon, mottled dragon / hydra, fire drake / swamp drake / steam dragon
-MONS:    fire drake / lindwurm w:3
-SHUFFLE: OX
-SUBST:   S = llw, L = ll.
-SUBST:   ' = x., " = cx
-MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
-             pow_max = 12, delay_min = 40, delay_max = 70, \
-             size = 1, walk_dist = 1, spread_rate= 3 }
-KFEAT:   XR = lava
-MAP
-                             @      .@
-                       lS     .  3.'
-              '.@    SlRl      '.
-              3       lS      '.
-          "cc.'              3'
-        ""cc3c"               .
-       "ccc2cc" """       "cc.c"
-       "c.L.2cc"cccc""""""ccLcc"
-      "ccL3ll.ccc34cccccccc2Lc""
-       "cc.LLl...Ll.33cc.c.L3ccc"
-      "cccc3llLLlllLLl..L2Lll.Lc"
-       "cc.LllllclllllLlllllL.cc"
-        "cc2LllRcclLllRll.332cc"
-        "ccL.Lllllccllll2lcccc"
-         "ccc2Lllcc"ccX2lcc"""
-          ""cc1Occ" "ccccc"
-            "cccc"   """"
-             """"
-ENDMAP
-
-###############################################################################
-# The way to icy death!
-#
-NAME:    swamp_icy
-PLACE:   Swamp:5
-TAGS:    no_pool_fixup no_rotate
-ORIENT:  southeast
-SHUFFLE: OR
-MARKER:  Q = lua:fog_machine { cloud_type = "freezing vapour", \
-             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
-KMONS:   ? = swamp worm simulacrum / giant goldfish simulacrum / electric eel \
-             simulacrum
-MONS:    ice dragon, hydra simulacrum, freezing wraith, azure jelly / ice dragon
-SUBST:   X = cc., RY = wWwww., Q=c
-MAP
-               wwxxxxxxxxx
-        @.  @ wwxxccccccxx
-          .  ..wwcc3c3ccxx
-           ..w?.wXXc..Xcxx
-            ?ww....Q.cXcxx
-           www.wwXc3c3Xcxx
-            w?.wXcXc.3ccxx
-             ww.wccc..ccxx
-               @xxcc..ccxx
-                 xcc2.ccxx
-                xxc..cccxx
-   @        x   xxcc2Xccxx
-    .      xxx   xcc.2.cxx
-     .    xxxxx  xc..cccxx
-      .   xxxxxxxxcc2.ccxx
-     .    .wwxxxxxccX2.cxx
-      .  ...?wxxxxccc2.ccx
-       .2..wwwwxxxxcc.2ccx
-    ? ....ww?wxxxxccc..ccx
-   xxww.wwwwwxxxxxcc..ccxx
-   xxw?ww?wwxxxcccc.2ccxxx
-  xxxxwwwwxxxcccccc2Xcxxxx
-  xxxxxxxxxcccwwwY2.Yccxxx
-  xxxxxxxcccwwQww.YY.wccxx
-   xxxxxccwwwww22Yww2wwcxx
-     xxccwwww22YwwwwY2wcxx
-    xxccwww.2YwwQwwwY2wcxx
-   xxccYw1.YwwwwwwwY2wwcxx
-  xxcccwRwwwwcccwY1.wwccxx
- xxcccccwwwwcw4wwOYYcccxxx
-xxxccccccccccccccccccxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##################################################################
-# Alternative swamp end, by Lemuel
-#
-NAME:    swamp_pestilence
-PLACE:   Swamp:5
-TAGS:    no_pool_fixup
-ORIENT:  southeast
-MONS:    spectral swamp dragon / spectral hydra
-MONS:    hydra zombie / swamp dragon zombie
-MONS:    spectral swamp drake / swamp drake zombie
-MONS:    death drake / plant / w:5 oklob plant
-MONS:    insubstantial wisp
-MONS:    phantom
-SHUFFLE: OX
-MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
-             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
-MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", \
-             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
-KMONS:   O = skeletal dragon
-KFEAT:   O = O
-SUBST:   ? = ? ! w
-KMONS:   ? = big fish zombie
-KMONS:   ! = swamp worm zombie
-KFEAT:   ? = deep_water
-KFEAT:   ! = deep_water
-SUBST:   X=. , Y:w , 6=66. , 1=13 , .=W... , "=xc , '=.wW
-MAP
-    ?w......w?w"xx     xx
-    w?ww..ww?wwc"xx   xxx
-    "wWWwww?w?cc"xxx xxxx
-   '""cWw?w?ccc"xxxxxxxxx
-   'x"c..wwcccc"""xxxxxxx
-   xxxc...ccccccccccc"xxx
-  xxx"cc....cccc6666c"xxx
-  xxx"cc....cccO6666cc"xx
- xxxxcccc...cc6666665c"xx
-  x'"cccc...ccc666666ccxx
-   'cc1Xcc...cc6666666cxx
-   xc211ccc..cccc5.666c"x
-   ccc2.1cc.Y.cccc..6cc"x
-   '"c.1.ccc...ccc...cc"x
-   'xcc.1.ccc...cc....cxx
-   'x"c2.21ccc..ccc5.ccxx
-   xxxcc...ccc..c....c"xx
-   xxx"cc.1.2c...5.cccxxx
-   xxxx"c2......?wcc""xxx
-  xxxxxxccc2.wwwwcc""xxxx
-  xxxxxxx"cc?w?wcc""xxxxx
-  xxxxxxxx"cc4wcc"xxxxxxx
- xxxxxxxxxx"cccc"xxxxxxxx
-xxxxxxxxxxxxx""xxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

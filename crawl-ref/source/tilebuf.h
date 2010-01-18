@@ -8,6 +8,34 @@
 
 #include "tiles.h"
 
+// This struct defines all of the state that any particular rendering needs.
+// If other rendering states are needed, they should be added here so that
+// they do not introduce unneeded side effects for other parts of the code
+// that have not thought about turning that new state off.
+struct GLState
+{
+    GLState();
+
+    // vertex arrays
+    bool array_vertex;
+    bool array_texcoord;
+    bool array_colour;
+
+    // render state
+    bool blend;
+    bool texture;
+    bool depthtest;
+    bool alphatest;
+    unsigned char alpharef;
+};
+
+class GLStateManager
+{
+public:
+    static void init();
+    static void set(const GLState& state);
+};
+
 class FTFont;
 class formatted_string;
 class GenericTexture;
@@ -36,6 +64,16 @@ struct PTCVert
 {
     float pos_x;
     float pos_y;
+    float tex_x;
+    float tex_y;
+    VColour col;
+};
+
+struct P3TCVert
+{
+    float pos_x;
+    float pos_y;
+    float pos_z;
     float tex_x;
     float tex_y;
     VColour col;
@@ -70,9 +108,14 @@ public:
     V& get_next();
     void draw() const;
 
+    GLState &state() { return m_state; }
+
 protected:
+    void init_state();
+
     const GenericTexture *m_tex;
     int m_prim;
+    GLState m_state;
 };
 
 class FontBuffer : public VertBuffer<PTCVert>
@@ -99,6 +142,51 @@ public:
     void set_tex(const TilesTexture *tex);
 };
 
+class ColouredTileBuffer : public VertBuffer<P3TCVert>
+{
+public:
+    ColouredTileBuffer(const TilesTexture *tex = NULL);
+
+    void add(int idx, int x, int y, int z,
+             int ox, int oy, int ymin, int ymax,
+             int alpha_top, int alpha_bottom);
+};
+
+// Helper class for tiles submerged in water.
+class SubmergedTileBuffer
+{
+public:
+    // mask_idx is the tile index in tex of the mask texture
+    // It should be opaque white for water and fully transparent above.
+    //
+    // above_max is the maximum height (from the top of the tile) where
+    // there are still pixels above water.
+    //
+    // below_min is the minimum height (from the top of the tile) where
+    // there are still pixels below water.
+    //
+    // All heights are from 0 (top of the tile) to TILE_Y-1 (bottom of the tile)
+    SubmergedTileBuffer(const TilesTexture *tex,
+        int mask_idx, int above_max, int below_min);
+
+    void add(int idx, int x, int y, int z = 0, bool submerged = false,
+             bool ghost = false, int ox = 0, int oy = 0, int ymax = -1);
+
+    void draw() const;
+    void clear();
+
+protected:
+    int m_mask_idx;
+    int m_above_max;
+    int m_below_min;
+
+    int m_max_z;
+
+    ColouredTileBuffer m_below_water;
+    ColouredTileBuffer m_mask;
+    ColouredTileBuffer m_above_water;
+};
+
 class ShapeBuffer : public VertBuffer<PCVert>
 {
 public:
@@ -121,6 +209,7 @@ template<class V>
 inline VertBuffer<V>::VertBuffer(const GenericTexture *tex, int prim) :
     m_tex(tex), m_prim(prim)
 {
+    init_state();
 }
 
 template<class V>

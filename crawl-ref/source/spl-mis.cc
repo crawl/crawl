@@ -22,7 +22,6 @@
 #include "misc.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -194,7 +193,7 @@ void MiscastEffect::init()
         act_source = target;
 
         kc = KC_OTHER;
-        kt = KILL_MISC;
+        kt = KILL_MISCAST;
 
         if (source == ZOT_TRAP_MISCAST)
         {

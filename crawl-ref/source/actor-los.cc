@@ -4,7 +4,6 @@
 #include "player.h"
 #include "monster.h"
 #include "state.h"
-#include "viewgeom.h"
 
 bool actor::observable() const
 {

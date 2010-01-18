@@ -39,7 +39,6 @@
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
-#include "options.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -1461,7 +1460,7 @@ static bool _handle_throw(monsters *monster, bolt & beem)
         return (false);
 
     const bool archer = mons_class_flag(monster->type, M_ARCHER);
-    // Highly-specialised archers are more likely to shoot than talk.
+    // Highly-specialised archers are more likely to shoot than talk. (?)
     if (one_chance_in(archer? 9 : 5))
         return (false);
 
@@ -1472,6 +1471,10 @@ static bool _handle_throw(monsters *monster, bolt & beem)
     // Monsters won't shoot in melee range, largely for balance reasons.
     // Specialist archers are an exception to this rule.
     if (!archer && adjacent(beem.target, monster->pos()))
+        return (false);
+
+    // If the monster is a spellcaster, don't bother throwing stuff.
+    if (mons_has_ranged_spell(monster, true, false))
         return (false);
 
     // Greatly lowered chances if the monster is fleeing or pacified and
@@ -2703,6 +2706,8 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
     }
 
     monster->lose_energy(EUT_MOVE);
+
+    dungeon_events.fire_position_event(DET_DOOR_OPENED, pos);
 }
 
 static bool _habitat_okay(const monsters *monster, dungeon_feature_type targ)
@@ -3271,10 +3276,14 @@ static bool _monster_move(monsters *monster)
     // Now we know where we _can_ move.
 
     const coord_def newpos = monster->pos() + mmov;
+    bool restricted = (env.markers.property_at(newpos,
+                        MAT_ANY, "door_restrict") == "veto");
     // Normal/smart monsters know about secret doors, since they live in
-    // the dungeon.
-    if (grd(newpos) == DNGN_CLOSED_DOOR
+    // the dungeon, unless they're marked specifically not to be opened unless
+    // already opened by the player {bookofjude}.
+    if ((grd(newpos) == DNGN_CLOSED_DOOR
         || feat_is_secret_door(grd(newpos)) && mons_intel(monster) >= I_NORMAL)
+        && !restricted)
     {
         if (mons_is_zombified(monster))
         {
@@ -3297,7 +3306,8 @@ static bool _monster_move(monsters *monster)
     if ((grd(newpos) == DNGN_CLOSED_DOOR || grd(newpos) == DNGN_OPEN_DOOR)
          && mons_itemeat(monster) == MONEAT_ITEMS
          // Doors with permarock marker cannot be eaten.
-         && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL))
+         && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL)
+         && !restricted)
     {
         grd(newpos) = DNGN_FLOOR;
 

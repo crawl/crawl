@@ -273,18 +273,55 @@ static command_type shift_direction(command_type cmd)
     }
 }
 
-static const char *target_mode_help_text(int mode)
+// Print the proper prompt while in targetting mode.
+// mode indicates the targetting mode we are in, and cell is where we are
+// currently looking at (so that we can describe it, if necessary.)
+static void _target_mode_prompt(const char* prompt_prefix,
+                                targetting_type mode,
+                                const coord_def& cell)
 {
+    if (prompt_prefix == NULL)
+        prompt_prefix = "Aim";  // default if none given
+
+    // Find out what we're looking at.
+    const monsters* mon_in_cell = monster_at(cell);
+    if (mon_in_cell && !you.can_see(mon_in_cell))
+        mon_in_cell = NULL;
+
+    // Is it our target?
+    const bool looking_at_target = mon_in_cell
+                                   && (get_current_target() == mon_in_cell);
+
+    // Work out what keys we can use to hit this target (if any.)
+    std::string hint_string;
+    if (looking_at_target)
+        hint_string = ", p/t - " + mon_in_cell->name(DESC_PLAIN);
+    else if (mon_in_cell)
+        hint_string = ", t - " + mon_in_cell->name(DESC_PLAIN);
+
+
+    // All preparatory work done, build the prompt string.
+    std::string prompt = prompt_prefix;
+    prompt += " (? - help";
+
     switch (mode)
     {
     case DIR_NONE:
-        return (Options.target_unshifted_dirs ? "? - help" :
-                "? - help, Shift-Dir - shoot in a straight line");
+        if (Options.target_unshifted_dirs)
+            prompt += ", Shift-Dir - straight line";
+        prompt += hint_string;
+        break;
     case DIR_TARGET:
-        return "? - help, Dir - move target cursor";
+        prompt += ", Dir - move target cursor";
+        prompt += hint_string;
+        break;
     default:
-        return "? - help";
+        break;
     }
+    prompt += ")";
+
+    // Display the prompt.
+    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
 }
 
 #ifndef USE_TILE
@@ -1001,6 +1038,96 @@ bool _init_mlist()
 }
 #endif
 
+// Find a good square to start targetting from.
+static coord_def _find_default_target(targetting_type restricts,
+                                      targ_mode_type mode,
+                                      int range,
+                                      bool needs_path)
+{
+    coord_def result = you.pos();
+    bool success = false;
+
+    if (restricts == DIR_TARGET_OBJECT)
+    {
+        // Try to find an object.
+        success = _find_square_wrapper(result, 1, _find_object,
+                                       needs_path, TARG_ANY, range, true,
+                                       LOS_FLIPVH);
+    }
+    else if (mode == TARG_ENEMY || mode == TARG_HOSTILE)
+    {
+        // Try to find an enemy monster.
+
+        // First try to pick our previous target.
+        const monsters *mon_target = get_current_target();
+        if (mon_target
+            // not made friendly since then
+            && (mons_attitude(mon_target) == ATT_HOSTILE
+                || mode == TARG_ENEMY && !mon_target->friendly())
+            // still in range
+            && _is_target_in_range(mon_target->pos(), range))
+        {
+            result = mon_target->pos();
+            success = true;
+        }
+        else
+        {
+            // The previous target is no good. Try to find one from scratch.
+            success = _find_square_wrapper(result, 1, _find_monster,
+                                           needs_path, mode, range, true);
+
+            // If we couldn't, maybe it was because of line-of-fire issues.
+            // Check if that's happening, and inform the user (because it's
+            // pretty confusing.)
+            if (!success
+                && needs_path
+                && _find_square_wrapper(result, 1, _find_monster,
+                                        false, mode, range, true))
+            {
+                mpr("All monsters which could be auto-targeted are covered by "
+                    "a wall or statue which interrupts your line of fire, even "
+                    "though it doesn't interrupt your line of sight.",
+                    MSGCH_PROMPT);
+            }
+        }
+    }
+
+    if (!success)
+        result = you.pos();
+
+    return result;
+}
+
+static void _draw_beam(ray_def ray, const coord_def& beam_target, int range)
+{
+    // Draw the new ray with magenta '*'s, not including your square
+    // or the target square.  Out-of-range cells get grey '*'s instead.
+    while (ray.pos() != beam_target)
+    {
+        if (ray.pos() != you.pos())
+        {
+            ASSERT(in_los(ray.pos()));
+
+            const bool in_range = (range < 0)
+                || grid_distance(ray.pos(), you.pos()) <= range;
+#ifdef USE_TILE
+            tile_place_ray(ray.pos(), in_range);
+#else
+            const int bcol = in_range ? MAGENTA : DARKGREY;
+            _draw_ray_glyph(ray.pos(), bcol, '*',
+                            bcol | COLFLAG_REVERSE, in_range);
+#endif
+        }
+        ray.advance();
+    }
+    textcolor(LIGHTGREY);
+#ifdef USE_TILE
+    const bool in_range = (range < 0
+                           || grid_distance(ray.pos(), you.pos()) <= range);
+    tile_place_ray(beam_target, in_range);
+#endif
+}
+
 void direction(dist& moves, const targetting_type restricts,
                targ_mode_type mode, const int range, const bool just_looking,
                const bool needs_path, const bool may_target_monster,
@@ -1057,44 +1184,26 @@ void direction(dist& moves, const targetting_type restricts,
     moves.delta.reset();
     moves.target = objfind_pos = monsfind_pos = you.pos();
 
-    // If we show the beam on startup, we have to initialise it.
+    // Find a default target.
+    if (Options.default_target)
+        moves.target = _find_default_target(restricts, mode, range, needs_path);
+
+    // If requested, show the beam on startup.
     if (show_beam)
     {
         have_beam = find_ray(you.pos(), moves.target, ray);
-        beam_target = moves.target;
+        beam_target = objfind_pos = monsfind_pos = moves.target;
+        if (have_beam)
+        {
+            _draw_beam(ray, beam_target, range);
+#ifdef USE_TILE
+            // In tiles, we need to refresh the window to get the beam drawn.
+            viewwindow(false, true);
+#endif
+        }
     }
 
-    bool skip_iter = false;
-    bool found_autotarget = false;
     bool target_unshifted = Options.target_unshifted_dirs;
-
-    // Find a default target.
-    if (Options.default_target)
-    {
-        if (restricts == DIR_TARGET_OBJECT)
-        {
-             skip_iter = true;
-             found_autotarget = true;
-        }
-        else if (mode == TARG_ENEMY || mode == TARG_HOSTILE)
-        {
-            skip_iter = true;   // Skip first iteration...XXX mega-hack
-            if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
-            {
-                const monsters *montarget = &menv[you.prev_targ];
-                if (you.can_see(montarget)
-                        // not made friendly since then
-                    && (mons_attitude(montarget) == ATT_HOSTILE
-                        || mode == TARG_ENEMY && !montarget->friendly())
-                    && _is_target_in_range(montarget->pos(), range))
-                {
-                    found_autotarget = true;
-                    moves.target = montarget->pos();
-                }
-            }
-        }
-    }
-
     bool show_prompt = true;
     bool moved_with_keys = true;
 
@@ -1119,8 +1228,7 @@ void direction(dist& moves, const targetting_type restricts,
         // We'll live with that.
         if (!just_looking && (show_prompt || beh->should_redraw()))
         {
-            mprf(MSGCH_PROMPT, "%s (%s)", prompt ? prompt : "Aim",
-                 target_mode_help_text(restricts));
+            _target_mode_prompt(prompt, restricts, moves.target);
 
             if ((mode == TARG_ANY || mode == TARG_FRIEND)
                 && moves.target == you.pos())
@@ -1143,19 +1251,7 @@ void direction(dist& moves, const targetting_type restricts,
         if (moved_with_keys)
             cursorxy(grid2viewX(moves.target.x), grid2viewY(moves.target.y));
 
-        command_type key_command;
-
-        if (skip_iter)
-        {
-            if (restricts == DIR_TARGET_OBJECT)
-                key_command = CMD_TARGET_OBJ_CYCLE_FORWARD;
-            else if (found_autotarget)
-                key_command = CMD_NO_CMD;
-            else
-                key_command = CMD_TARGET_CYCLE_FORWARD; // Find closest target.
-        }
-        else
-                key_command = beh->get_command();
+        command_type key_command = beh->get_command();
 
 #ifdef USE_TILE
         // If a mouse command, update location to mouse position.
@@ -1210,8 +1306,6 @@ void direction(dist& moves, const targetting_type restricts,
         bool loop_done        = false;
 
         coord_def old_target = moves.target;
-        if (skip_iter)
-            old_target.x += 500; // hmmm...hack
 
         int i;
 
@@ -1228,8 +1322,10 @@ void direction(dist& moves, const targetting_type restricts,
             {
                 moves.target = monsfind_pos;
             }
-            else if (!skip_iter)
+            else
+            {
                 flush_input_buffer(FLUSH_ON_FAILURE);
+            }
         }
 #endif
 
@@ -1280,8 +1376,7 @@ void direction(dist& moves, const targetting_type restricts,
             break;
 
         case CMD_TARGET_SHOW_PROMPT:
-            mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
-                 target_mode_help_text(restricts));
+            _target_mode_prompt(prompt, restricts, moves.target);
             break;
 
 #ifndef USE_TILE
@@ -1345,8 +1440,7 @@ void direction(dist& moves, const targetting_type restricts,
             }
             else
             {
-                if (!skip_iter)
-                    flush_input_buffer(FLUSH_ON_FAILURE);
+                flush_input_buffer(FLUSH_ON_FAILURE);
             }
             break;
         }
@@ -1435,8 +1529,10 @@ void direction(dist& moves, const targetting_type restricts,
             {
                 moves.target = objfind_pos;
             }
-            else if (!skip_iter)
+            else
+            {
                 flush_input_buffer(FLUSH_ON_FAILURE);
+            }
 
             break;
 
@@ -1448,21 +1544,10 @@ void direction(dist& moves, const targetting_type restricts,
             {
                 moves.target = monsfind_pos;
             }
-            else if (skip_iter)
-            {
-                if (needs_path && !just_looking
-                    && _find_square_wrapper(monsfind_pos, dir, _find_monster,
-                                            false, mode, range, true))
-                {
-                    mpr("All monsters which could be auto-targeted "
-                        "are covered by a wall or statue which interrupts "
-                        "your line of fire, even though it doesn't "
-                        "interrupt your line of sight.",
-                        MSGCH_PROMPT);
-                }
-            }
             else
+            {
                 flush_input_buffer(FLUSH_ON_FAILURE);
+            }
             break;
 
         case CMD_TARGET_CANCEL:
@@ -1552,7 +1637,6 @@ void direction(dist& moves, const targetting_type restricts,
             wizard_move_player_or_monster(moves.target);
 
             loop_done = true;
-            skip_iter = true;
 
             break;
 
@@ -1666,8 +1750,7 @@ void direction(dist& moves, const targetting_type restricts,
 
         if (have_moved || force_redraw)
         {
-            if (!skip_iter)     // Don't clear before we get a chance to see.
-                mesclr(true);   // Maybe not completely necessary.
+            mesclr(true);   // Maybe not completely necessary.
 
             bool in_range = (range < 0
                              || grid_distance(moves.target,you.pos()) <= range);
@@ -1687,43 +1770,12 @@ void direction(dist& moves, const targetting_type restricts,
             viewwindow(false, false);
 #endif
             if (show_beam && have_beam)
-            {
-                // Draw the new ray with magenta '*'s, not including
-                // your square or the target square.
-                // Out-of-range cells get grey '*'s instead.
-                ray_def raycopy = ray; // temporary copy to work with
-                // XXX: should have moves.target == beam_target, but don't.
-                while (raycopy.pos() != beam_target)
-                {
-                    if (raycopy.pos() != you.pos())
-                    {
-                        ASSERT(in_los(raycopy.pos()));
+                _draw_beam(ray, beam_target, range);
 
-                        const bool in_range = (range < 0)
-                            || grid_distance(raycopy.pos(), you.pos()) <= range;
-#ifdef USE_TILE
-                        tile_place_ray(raycopy.pos(), in_range);
-#else
-                        const int bcol = in_range ? MAGENTA : DARKGREY;
-                        _draw_ray_glyph(raycopy.pos(), bcol, '*',
-                                        bcol | COLFLAG_REVERSE, in_range);
-#endif
-                    }
-                    raycopy.advance();
-                }
-                textcolor(LIGHTGREY);
-#ifdef USE_TILE
-                const bool in_range
-                        = (range < 0
-                           || grid_distance(raycopy.pos(), you.pos()) <= range);
-                tile_place_ray(moves.target, in_range);
-#endif
-            }
 #ifdef USE_TILE
             viewwindow(false, true);
 #endif
         }
-        skip_iter = false;      // Only skip one iteration at most.
     }
     moves.isMe = (moves.target == you.pos());
     mesclr();

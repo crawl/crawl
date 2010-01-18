@@ -86,7 +86,6 @@
 #include "mon-act.h"
 #include "mon-cast.h"
 #include "mon-iter.h"
-#include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -275,6 +274,12 @@ int main( int argc, char *argv[] )
     // Activate markers only after the welcome message, so the
     // player can see any resulting messages.
     env.markers.activate_all();
+    // Call again to make Ctrl-X work correctly for items
+    // in los on turn 0.
+    maybe_update_stashes();
+#ifdef USE_TILE
+    viewwindow(false);
+#endif
 
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
@@ -542,6 +547,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '@': wizard_set_stats();                    break;
     case '^': wizard_gain_piety();                   break;
     case '_': wizard_get_religion();                 break;
+    case '-': wizard_get_god_gift();                 break;
     case '\'': wizard_list_items();                  break;
     case 'd': wizard_level_travel(true);             break;
     case 'D': wizard_detect_creatures();             break;
@@ -847,6 +853,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
         return (true);
 
     case CMD_NO_CMD:
+    case CMD_NO_CMD_DEFAULT:
         mpr("Unknown command, not repeating.");
         return (false);
 
@@ -3284,7 +3291,7 @@ static void _open_door(coord_def move, bool check_confused)
         }
         switch (feat)
         {
-        // This doesn't ever sem to be triggered.
+        // This doesn't ever seem to be triggered.
         case DNGN_OPEN_DOOR:
             if (!door_already_open.empty())
                 mpr(door_already_open.c_str());
@@ -3458,6 +3465,7 @@ static void _open_door(coord_def move, bool check_confused)
             }
         }
         grd(dc) = DNGN_OPEN_DOOR;
+        dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
         if (is_excluded(dc))
             excludes.push_back(dc);
     }
@@ -3657,6 +3665,8 @@ static void _close_door(coord_def move)
             // Once opened, formerly secret doors become normal doors.
             grd(dc) = DNGN_CLOSED_DOOR;
 
+            dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
+
             // Even if some of the door is out of LOS once it's closed
             // (or even if some of it is out of LOS when it's open), we
             // want the entire door to be updated.
@@ -3672,7 +3682,6 @@ static void _close_door(coord_def move)
         }
 
         update_exclusion_los(excludes);
-
         you.turn_is_over = true;
     }
     else if (you.confused())
@@ -3741,6 +3750,17 @@ static bool _initialise(void)
 
     // Set up the Lua interpreter for the dungeon builder.
     init_dungeon_lua();
+
+#ifdef USE_TILE
+    // Draw the splash screen before the database gets initialised as that
+    // may take awhile and it's better if the player can look at a pretty
+    // screen while this happens.
+    if (!crawl_state.map_stat_gen && !crawl_state.test
+        && Options.tile_title_screen)
+    {
+        tiles.draw_title();
+    }
+#endif
 
     // Initialise internal databases.
     databaseSystemInit();
@@ -3896,8 +3916,6 @@ static bool _initialise(void)
     new_level();
     update_turn_count();
 
-    trackers_init_new_level(false);
-
     // Reset lava/water nearness check to unknown, so it'll be
     // recalculated for the next monster that tries to reach us.
     you.lava_in_sight = you.water_in_sight = -1;
@@ -3905,6 +3923,8 @@ static bool _initialise(void)
     // Set vision radius to player's current vision.
     set_los_radius(you.current_vision);
     init_exclusion_los();
+
+    trackers_init_new_level(false);
 
     if (newc) // start a new game
     {

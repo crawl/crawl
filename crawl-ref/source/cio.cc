@@ -401,7 +401,7 @@ void line_reader::cursorto(int ncx)
 {
     int x = (start_x + ncx - 1) % wrapcol + 1;
     int y = start_y + (start_x + ncx - 1) / wrapcol;
-    ::cgotoxy(x, y, get_cursor_region());
+    cgotoxy(x, y, get_cursor_region());
 }
 
 int line_reader::read_line(bool clear_previous)
@@ -416,6 +416,12 @@ int line_reader::read_line(bool clear_previous)
 
     start_x = wherex();
     start_y = wherey();
+
+#ifndef USE_TILE
+    // FIXME: what exactly is going on here?
+    // Update the active region.
+    cgotoxy(start_x, start_y, GOTO_CRT);
+#endif
 
     length = strlen(buffer);
 
@@ -479,7 +485,7 @@ void line_reader::backspace()
         char *c = cur;
         while (*c)
         {
-            *c = c[1];
+            *c = *(c+1);
             c++;
         }
         --pos;

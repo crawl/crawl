@@ -2,6 +2,8 @@ Here's a list of all commands, in the form they are parsed by the
 bindkey option, with their default key and a short explanation
 (where necessary).
 
+CMD_NO_CMD_DEFAULT can be used to bind any key to the "Unknown command."
+
 Movement
 --------
 Moving one grid into a given direction:

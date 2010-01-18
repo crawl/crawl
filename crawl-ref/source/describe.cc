@@ -1043,8 +1043,6 @@ static std::string _describe_ammo(const item_def &item)
         case SPMSL_FROST:
             description += "It turns into a bolt of frost.";
             break;
-        case SPMSL_ELECTRIC:
-            description += "The electricity stored in it may find a path to the ground.";
             break;
         case SPMSL_CHAOS:
             if (bolt_name.empty())
@@ -1609,12 +1607,14 @@ void append_spells(std::string &desc, const item_def &item)
         for (unsigned int i = 0; i < 35 - name.length(); ++i)
              desc += " ";
 
+        std::string schools;
         if (item.base_type == OBJ_STAVES)
-            desc += "Evocations";
+            schools = "Evocations";
         else
-            desc += spell_schools_string(stype);
+            schools = spell_schools_string(stype);
 
-        for (unsigned int i = 36; i < 65 - name.length(); ++i)
+        desc += schools;
+        for (unsigned int i = 36; i < 65 - schools.length(); ++i)
              desc += " ";
 
         char sval[3];
@@ -3854,9 +3854,9 @@ std::string get_skill_description(int skill, bool need_title)
             unarmed_attacks.push_back("deliver a kick");
         }
 
-        if (you.equip[EQ_WEAPON] == -1)
+        if (!you.weapon())
             unarmed_attacks.push_back("throw a punch");
-        else if (you.equip[EQ_SHIELD] == -1)
+        else if (!you.shield())
             unarmed_attacks.push_back("punch with your free hand");
 
         if (!unarmed_attacks.empty())

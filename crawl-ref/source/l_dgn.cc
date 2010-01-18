@@ -909,6 +909,57 @@ static int dgn_terrain_changed(lua_State *ls)
     return (0);
 }
 
+static int dgn_fprop_changed(lua_State *ls)
+{
+    feature_property_type prop = FPROP_NONE;
+
+    if (lua_isnumber(ls, 3))
+        prop = static_cast<feature_property_type>(luaL_checkint(ls, 3));
+    else if (lua_isstring(ls, 3))
+        prop = str_to_fprop(lua_tostring(ls, 3));
+
+    coord_def pos = coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
+
+    if (in_bounds(pos) && prop != FPROP_NONE)
+    {
+        if (testbits(env.pgrid(pos), prop))
+        {
+            env.pgrid(pos) &= ~prop;
+            lua_pushboolean(ls, true);
+        }
+        else if (!testbits(env.pgrid(pos), prop))
+        {
+            env.pgrid(pos) |= prop;
+            lua_pushboolean(ls, true);
+        }
+        else
+            lua_pushboolean(ls, false);
+    }
+    else
+        lua_pushboolean(ls, false);
+
+    return (1);
+}
+
+static int dgn_fprop_at (lua_State *ls)
+{
+    feature_property_type prop = FPROP_NONE;
+
+    if (lua_isnumber(ls, 3))
+        prop = static_cast<feature_property_type>(luaL_checkint(ls, 3));
+    else if (lua_isstring(ls, 3))
+        prop = str_to_fprop(lua_tostring(ls, 3));
+
+    coord_def pos = coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
+
+    if (in_bounds(pos) && prop != FPROP_NONE)
+        lua_pushboolean(ls, testbits(env.pgrid(pos), prop));
+    else
+        lua_pushboolean(ls, false);
+
+    return (1);
+}
+
 static int lua_dgn_set_lt_callback(lua_State *ls)
 {
     const char *level_type = luaL_checkstring(ls, 1);
@@ -1769,8 +1820,10 @@ const struct luaL_reg dgn_dlib[] =
 { "subvault", dgn_subvault },
 
 { "colour_at", dgn_colour_at },
+{ "fprop_at", dgn_fprop_at },
 
 { "terrain_changed", dgn_terrain_changed },
+{ "fprop_changed", dgn_fprop_changed },
 { "points_connected", dgn_points_connected },
 { "any_point_connected", dgn_any_point_connected },
 { "has_exit_from", dgn_has_exit_from },

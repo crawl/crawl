@@ -31,6 +31,7 @@
 #include "itemname.h"
 #include "items.h"
 #include "libutil.h"
+#include "macro.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-pick.h"
@@ -38,7 +39,6 @@
 #include "ouch.h"
 #include "place.h"
 #include "player.h"
-#include "quiver.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "skills2.h"
@@ -2124,6 +2124,123 @@ void show_butchering_help()
     show_specific_help( getHelpString("butchering") );
 }
 
+static void _add_command(column_composer &cols, const int column,
+                         const command_type cmd,
+                         const std::string desc,
+                         const unsigned int space_to_colon = 7)
+{
+    std::string command_name = command_to_string(cmd);
+    if (strcmp(command_name.c_str(), "<") == 0)
+        command_name += "<";
+
+    const int cmd_len = command_name.length();
+    std::string line = "<w>" + command_name + "</w>";
+    for (unsigned int i = cmd_len; i < space_to_colon; ++i)
+        line += " ";
+    line += ": " + desc;
+
+    cols.add_formatted(
+            column,
+            line.c_str(),
+            false, true, _cmdhelp_textfilter);
+}
+
+static void _insert_commands(std::string &desc, std::vector<command_type> cmds)
+{
+    for (unsigned int i = 0; i < cmds.size(); ++i)
+    {
+        const std::string::size_type found = desc.find("%");
+        if (found == std::string::npos)
+            break;
+
+        std::string command_name = command_to_string(cmds[i]);
+        if (strcmp(command_name.c_str(), "<") == 0)
+            command_name += "<";
+
+        desc.replace(found, 1, command_name);
+    }
+    desc += "\n";
+    desc = replace_all(desc, "percent", "%");
+}
+
+static void _insert_commands(std::string &desc, const int first, ...)
+{
+    std::vector<command_type> cmd_vector;
+    cmd_vector.push_back((command_type) first);
+
+    va_list args;
+    va_start(args, first);
+    int nargs = 10;
+
+    while (nargs-- > 0)
+    {
+        int value = va_arg(args, int);
+        if (!value)
+            break;
+
+        cmd_vector.push_back((command_type) value);
+    }
+    ASSERT(nargs > 0);
+    va_end(args);
+
+    _insert_commands(desc, cmd_vector);
+}
+
+static void _add_insert_commands(column_composer &cols, const int column,
+                                 const unsigned int space_to_colon,
+                                 const std::string &desc, const int first, ...)
+{
+    const command_type cmd = (command_type) first;
+
+    va_list args;
+    va_start(args, first);
+    int nargs = 10;
+
+    std::vector<command_type> cmd_vector;
+    while (nargs-- > 0)
+    {
+        int value = va_arg(args, int);
+        if (!value)
+            break;
+
+        cmd_vector.push_back((command_type) value);
+    }
+    ASSERT(nargs > 0);
+    va_end(args);
+
+    std::string line = desc;
+    _insert_commands(line, cmd_vector);
+    _add_command(cols, column, cmd, line, space_to_colon);
+}
+
+static void _insert_commands(column_composer &cols, const int column,
+                             const std::string desc, const int first, ...)
+{
+    std::vector<command_type> cmd_vector;
+    cmd_vector.push_back((command_type) first);
+
+    va_list args;
+    va_start(args, first);
+    int nargs = 10;
+
+    while (nargs-- > 0)
+    {
+        int value = va_arg(args, int);
+        if (!value)
+            break;
+
+        cmd_vector.push_back((command_type) value);
+    }
+    ASSERT(nargs > 0);
+    va_end(args);
+
+    std::string line = desc;
+    _insert_commands(line, cmd_vector);
+    cols.add_formatted(
+            column,
+            line.c_str(),
+            false, true, _cmdhelp_textfilter);
+}
 
 static void _add_formatted_keyhelp(column_composer &cols)
 {
@@ -2132,255 +2249,374 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Movement:\n"
             "To move in a direction or to attack, \n"
             "use the numpad (try Numlock off and \n"
-            "on) or vi keys:\n"
+            "on) or vi keys:\n",
+            true, true, _cmdhelp_textfilter);
+
+    _insert_commands(cols, 0, "                 <w>1 2 3      % % %",
+                     CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
+    _insert_commands(cols, 0, "                  \\|/        \\|/", 0);
+    _insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
+                     CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
+    _insert_commands(cols, 0, "                  /|\\        /|\\", 0);
+    _insert_commands(cols, 0, "                 <w>7 8 9      % % %",
+                     CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
+/*
             "                 <w>1 2 3      y k u\n"
             "                  \\|/        \\|/\n"
             "                 <w>4</w>-<w>5</w>-<w>6</w>"
                      "      <w>h</w>-<w>.</w>-<w>l</w>\n"
             "                  /|\\        /|\\\n"
-            "                 <w>7 8 9      b j n\n",
-            true, true, _cmdhelp_textfilter);
+            "                 <w>7 8 9      b j n\n"
+*/
 
     cols.add_formatted(
             0,
-            "<h>Rest/Search:\n"
-            "<w>s</w> : wait a turn; searches adjacent\n"
-            "    squares (also <w>numpad-5</w>, <w>.</w>, <w>Del</w>)\n"
-            "<w>5</w> : rest and long search; stops when\n"
+            "<h>Rest/Search:\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 0, CMD_SEARCH, "wait a turn; searches adjacent", 2);
+    cols.add_formatted(
+            0,
+            "    squares (also <w>numpad-5</w>, <w>.</w>, <w>Del</w>)\n",
+            false, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 0, CMD_REST, "rest and long search; stops when", 2);
+    cols.add_formatted(
+            0,
             "    Health or Magic become full,\n"
             "    something is detected, or after\n"
             "    100 turns over (<w>Shift-numpad-5</w>)\n",
-            true, true, _cmdhelp_textfilter);
+            false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
-            "<h>Extended Movement:\n"
-            "<w>o</w> : auto-explore\n"
-            "<w>G</w> : interlevel travel (also <w>Ctrl-G</w>)\n"
-            "<w>Ctrl-F</w> : Find items\n"
-            "<w>Ctrl-W</w> : set Waypoint\n"
-            "<w>Ctrl-E</w> : Exclude square from searches\n"
+            "<h>Extended Movement:\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 0, CMD_EXPLORE, "auto-explore");
+    _add_command(cols, 0, CMD_INTERLEVEL_TRAVEL, "interlevel travel");
+    _add_command(cols, 0, CMD_SEARCH_STASHES, "Find items");
+    _add_command(cols, 0, CMD_FIX_WAYPOINT, "set Waypoint");
+    _add_command(cols, 0, CMD_FORGET_STASH, "Exclude square from searches");
+
+    cols.add_formatted(
+            0,
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
             "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : open/close door, \n"
             "         untrap, attack without move\n",
+            false, true, _cmdhelp_textfilter);
+
+    cols.add_formatted(
+            0,
+            "\n"
+            "<h>Item types (and common commands)\n",
             true, true, _cmdhelp_textfilter);
 
-    std::string item_types =
-        "\n"
-        "<h>Item types (and common commands)\n"
-        "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-        "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>()</w> cycle)\n"
-        "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
-        "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
-        "<w>?</w> : scrolls (<w>r</w>ead)\n"
-        "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
-        "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
-        "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
-        "<lightgrey>/</lightgrey> : wands (e<w>V</w>oke)\n"
-        "<lightcyan>";
+    _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
+                         CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
 
+    _insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
+                     CMD_WIELD_WEAPON, 0);
+    _insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
+                              "<w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
+                     CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
+                     CMD_CYCLE_QUIVER_BACKWARD, 0);
+    _insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
+                     CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
+    _insert_commands(cols, 0, "<brown>percent</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
+                     CMD_BUTCHER, CMD_EAT, 0);
+    _insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
+                     CMD_READ, 0);
+    _insert_commands(cols, 0, "<magenta>!</magenta> : potions (<w>%</w>uaff)",
+                     CMD_QUAFF, 0);
+    _insert_commands(cols, 0, "<blue>=</blue> : rings (<w>%</w>ut on and <w>%</w>emove)",
+                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
+                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
+                     CMD_EVOKE, 0);
+
+    std::string item_types = "<lightcyan>";
     item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
-        "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise, <w>z</w>ap, <w>Z</w>ap)\n"
-        "<brown>\\</brown> : staves and rods (<w>w</w>ield and e<w>v</w>oke)\n"
-        "<lightgreen>}</lightgreen> : miscellaneous items (e<w>v</w>oke)\n"
-        "<yellow>$</yellow> : gold (<w>$</w> counts gold)\n"
-        "<lightmagenta>0</lightmagenta> : the Orb of Zot\n"
-        "    Carry it to the surface and win!\n",
-
-
-
-    cols.add_formatted(
-            0, item_types,
-            true, true, _cmdhelp_textfilter);
+        "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
+    _insert_commands(cols, 0, item_types,
+                     CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
+                     CMD_FORCE_CAST_SPELL, 0);
+    _insert_commands(cols, 0, "<brown>\\</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)",
+                     CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
+    _insert_commands(cols, 0, "<lightgreen>}</lightgreen> : miscellaneous items (e<w>%</w>oke)",
+                     CMD_EVOKE, 0);
+    _insert_commands(cols, 0, "<yellow>$</yellow> : gold (<w>%</w> counts gold)",
+                     CMD_LIST_GOLD, 0);
 
     cols.add_formatted(
             0,
-            "<h>Other Gameplay Actions:\n"
-            "<w>a</w> : use special Ability (<w>a!</w> for help)\n"
-            "<w>p</w> : Pray (<w>^</w> and <w>^!</w> for help)\n"
-            "<w>z</w> : cast spell, abort without targets\n"
-            "<w>Z</w> : cast spell, no matter what\n"
-            "<w>I</w> : list all spells\n"
-            "<w>t</w> : tell allies (<w>tt</w> to shout)\n"
-            "<w>`</w> : re-do previous command\n"
-            "<w>0</w> : repeat next command # of times\n",
-            true, true, _cmdhelp_textfilter);
+            "<lightmagenta>0</lightmagenta> : the Orb of Zot\n"
+            "    Carry it to the surface and win!\n",
+            false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
-            "<h>Non-Gameplay Commands / Info\n"
-            "<w>Ctrl-P</w> : show Previous messages\n"
-            "<w>Ctrl-R</w> : Redraw screen\n"
-            "<w>Ctrl-C</w> : Clear main and level maps\n"
-            "<w>!</w> : annotate the dungeon level\n"
-            "<w>#</w> : dump character to file\n"
-            "<w>:</w> : add note (use <w>?:</w> to read notes)\n"
-            "<w>~</w> : add macro (also <w>Ctrl-D</w>)\n"
-            "<w>=</w> : reassign inventory/spell letters\n"
+            "<h>Other Gameplay Actions:\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
+                         CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
+    _add_insert_commands(cols, 0, 2, "Pray (<w>%</w> and <w>%!</w> for help)",
+                         CMD_PRAY, CMD_DISPLAY_RELIGION, CMD_DISPLAY_RELIGION, 0);
+    _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
+    _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
+    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all spells", 2);
+
+    _add_insert_commands(cols, 0, 2, "tell allies (<w>%t</w> to shout)",
+                         CMD_SHOUT, CMD_SHOUT, 0);
+    _add_command(cols, 0, CMD_PREV_CMD_AGAIN, "re-do previous command", 2);
+    _add_command(cols, 0, CMD_REPEAT_CMD, "repeat next command # of times", 2);
+
+    cols.add_formatted(
+            0,
+            "<h>Non-Gameplay Commands / Info\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 0, CMD_REPLAY_MESSAGES, "show Previous messages");
+    _add_command(cols, 0, CMD_REDRAW_SCREEN, "Redraw screen");
+    _add_command(cols, 0, CMD_CLEAR_MAP, "Clear main and level maps");
+    _add_command(cols, 0, CMD_ANNOTATE_LEVEL, "annotate the dungeon level", 2);
+    _add_command(cols, 0, CMD_CHARACTER_DUMP, "dump character to file", 2);
+    _add_insert_commands(cols, 0, 2, "add note (use <w>%:</w> to read notes)",
+                         CMD_MAKE_NOTE, CMD_DISPLAY_COMMANDS, 0);
+    _add_command(cols, 0, CMD_MACRO_ADD, "add macro (also <w>Ctrl-D</w>)", 2);
+    _add_command(cols, 0, CMD_ADJUST_INVENTORY, "reassign inventory/spell letters", 2);
 // No online play for tiles, so this replacement is reasonable. (jpeg)
 #ifdef USE_TILE
-            "<w>_</w> : toggle inventory/spells\n"
-            "<w>-</w> : select player doll"
+    _add_command(cols, 0, CMD_TOGGLE_SPELL_DISPLAY, "toggle inventory/spells", 2);
+    _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "edit player doll", 2);
 #else
-            "<w>_</w> : read messages (online play only)"
+    _add_command(cols, 0, CMD_READ_MESSAGES, "read messages (online play only)", 2);
 #endif
-            " \n",
-            true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
-            "<h>Game Saving and Quitting:\n"
-            "<w>S</w> : Save game and exit\n"
-            "<w>Ctrl-S</w> : Save and exit without query\n"
-            "<w>Ctrl-Q</w> : Quit without saving\n",
+            "<h>Game Saving and Quitting:\n",
             true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_SAVE_GAME, "Save game and exit");
+    _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save and exit without query");
+    _add_command(cols, 1, CMD_QUIT, "Quit without saving");
 
     cols.add_formatted(
             1,
-            "<h>Player Character Information:\n"
-            "<w>@</w> : display character status\n"
-            "<w>m</w> : show skill screen\n"
-            "<w>%</w> : show resistances\n"
-            "<w>^</w> : show religion screen\n"
-            "<w>A</w> : show Abilities/mutations\n"
-            "<w>\\</w> : show item knowledge\n"
-            "<w>[</w> : display worn armour\n"
-            "<w>}</w> : display current weapons\n"
-            "<w>\"</w> : display worn jewellery\n"
-            "<w>$</w> : display gold in possession\n"
-            "<w>E</w> : display experience info\n",
+            "<h>Player Character Information:\n",
             true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "display character status", 2);
+    _add_command(cols, 1, CMD_DISPLAY_SKILLS, "show skill screen", 2);
+    _add_command(cols, 1, CMD_RESISTS_SCREEN, "show resistances", 2);
+    _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion screen", 2);
+    _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
+    _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
+    _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
+    _add_command(cols, 1, CMD_LIST_WEAPONS, "display current weapons", 2);
+    _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
+    _add_command(cols, 1, CMD_LIST_GOLD, "display gold in possession", 2);
+    _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "display experience info", 2);
 
     cols.add_formatted(
             1,
-            "<h>Dungeon Interaction and Information:\n"
-            "<w>O</w>/<w>C</w> : Open/Close door\n"
-            "<w><<</w>/<w>></w> : use staircase (<w><<</w> enter shop)\n"
-            "<w>;</w>   : examine occupied tile\n"
-            "<w>x</w>   : eXamine surroundings/targets\n"
-            "<w>X</w>   : eXamine level map (<w>X?</w> for help)\n"
-            "<w>Ctrl-X</w> : list monsters, items, features in view\n"
-            "<w>Ctrl-O</w> : show dungeon Overview\n"
-            "<w>Ctrl-A</w> : toggle auto-pickup\n"
-            "<w>Ctrl-T</w> : change ally pickup behaviour\n",
+            "<h>Dungeon Interaction and Information:\n",
             true, true, _cmdhelp_textfilter);
 
-    std::string interact =
-            "<h>Item Interaction (inventory):\n"
-            "<w>i</w> : show Inventory list\n"
-            "<w>]</w> : show inventory of equipped items\n"
-            "<w>{</w> : inscribe item\n"
-            "<w>f</w> : Fire next appropriate item\n"
-            "<w>F</w> : select an item and Fire it\n"
-            "<w>Q</w> : select item slot to be quivered\n"
-            "<w>(</w>, <w>)</w> : cycle current ammunition\n"
-            "<w>e</w> : ";
+    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Open/Close door",
+                     CMD_OPEN_DOOR, CMD_CLOSE_DOOR, 0);
+    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : use staircase",
+                     CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
 
-    interact += (you.species == SP_VAMPIRE ? "Drain corpses" : "Eat food");
-    interact +=
-            " (tries floor first)\n"
-            "<w>q</w> : Quaff a potion\n"
-            "<w>r</w> : Read a scroll or book\n"
-            "<w>M</w> : Memorise a spell from a book\n"
-            "<w>w</w> : Wield an item ( <w>-</w> for none)\n"
-            "<w>'</w> : wield item a, or switch to b \n"
-            "    (use <w>=</w> to assign slots)\n"
-            "<w>v</w> : eVoke power of wielded item\n"
-            "<w>V</w> : eVoke wand\n"
-            "<w>W</w>/<w>T</w> : Wear or Take off armour\n"
-            "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n";
 
-            cols.add_formatted(
-                  1, interact,
-                  true, true, _cmdhelp_textfilter);
-
-    interact =
-            "<h>Item Interaction (floor):\n"
-            "<w>,</w> : pick up items (also <w>g</w>) \n"
-            "    (press twice for pick up menu)\n"
-            "<w>d</w> : Drop an item\n"
-            "<w>d#</w>: Drop exact number of items\n"
-            "<w>c</w> : Chop up a corpse";
-
-    if (you.species == SP_VAMPIRE && you.experience_level >= 6)
-        interact += " or bottle its blood";
-
-    interact +=
-            "\n"
-            "<w>e</w> : Eat food from floor\n";
-
-    cols.add_formatted(
-            1, interact,
-            true, true, _cmdhelp_textfilter);
+    _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile");
+    _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
+    _add_insert_commands(cols, 1, 7, "eXamine level map (<w>%?</w> for help)",
+                         CMD_DISPLAY_MAP, CMD_DISPLAY_MAP, 0);
+    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features in view");
+    _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
+    _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
+    _add_command(cols, 1, CMD_TOGGLE_FRIENDLY_PICKUP, "change ally pickup behaviour");
 
     cols.add_formatted(
             1,
-            "<h>Additional help:\n"
-            "Many commands have context sensitive \n"
-            "help, among them <w>X</w>, <w>x</w>, <w>f</w> (or any \n"
-            "form of targetting), <w>Ctrl-G</w> or <w>G</w>, and \n"
-            "<w>Ctrl-F</w>.\n"
-            "You can read descriptions of your \n"
-            "current spells (<w>I</w>), skills (<w>m?</w>) and \n"
-            "abilities (<w>a!</w>).",
+            "<h>Item Interaction (inventory):\n",
             true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "show Inventory list", 2);
+    _add_command(cols, 1, CMD_LIST_EQUIPMENT, "show inventory of equipped items", 2);
+    _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
+    _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
+    _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
+    _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be quivered", 2);
+
+    {
+        std::string interact = (you.species == SP_VAMPIRE ? "Drain corpses"
+                                                          : "Eat food");
+        interact += " (tries floor first)\n";
+        _add_command(cols, 1, CMD_EAT, interact, 2);
+    }
+
+    _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);
+    _add_command(cols, 1, CMD_READ, "Read a scroll or book", 2);
+    _add_command(cols, 1, CMD_MEMORISE_SPELL, "Memorise a spell from a book", 2);
+    _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item ( <w>-</w> for none)", 2);
+    _add_command(cols, 1, CMD_WEAPON_SWAP, "wield item a, or switch to b", 2);
+
+    _insert_commands(cols, 1, "    (use <w>%</w> to assign slots)",
+                     CMD_ADJUST_INVENTORY, 0);
+
+    _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
+    _add_command(cols, 1, CMD_EVOKE, "eVoke wand", 2);
+
+    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
+                     CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
+    _insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Put on or Remove jewellery",
+                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+
+    cols.add_formatted(
+            1,
+            "<h>Item Interaction (floor):\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
+
+    cols.add_formatted(
+            1,
+            "    (press twice for pick up menu)\n",
+            false, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
+    _insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
+                     CMD_DROP, 0);
+
+    {
+        std::string interact = "Chop up a corpse";
+        if (you.species == SP_VAMPIRE && you.experience_level >= 6)
+            interact += " or bottle its blood";
+        _add_command(cols, 1, CMD_BUTCHER, interact, 2);
+    }
+
+    _add_command(cols, 1, CMD_EAT, "Eat food from floor", 2);
+
+    cols.add_formatted(
+            1,
+            "<h>Additional help:\n",
+            true, true, _cmdhelp_textfilter);
+
+    std::string text =
+            "Many commands have context sensitive "
+            "help, among them <w>%</w>, <w>%</w>, <w>%</w> (or any "
+            "form of targetting), <w>%</w>, and <w>%</w>.\n"
+            "You can read descriptions of your "
+            "current spells (<w>%</w>), skills (<w>%?</w>) and "
+            "abilities (<w>%!</w>).";
+    _insert_commands(text, CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
+                     CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
+                     CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS, CMD_USE_ABILITY,
+                     0);
+    linebreak_string2(text, 40);
+
+    cols.add_formatted(
+            1, text,
+            false, true, _cmdhelp_textfilter);
 }
 
 static void _add_formatted_tutorial_help(column_composer &cols)
 {
-    std::ostringstream text;
-    text <<
-        "<h>Item types (and common commands)\n"
-        "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-        "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>()</w> to cycle ammo)\n"
-        "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
-        "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
-        "<w>?</w> : scrolls (<w>r</w>ead)\n"
-        "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
-        "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
-        "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
-        "<darkgrey>/</darkgrey> : wands (e<w>V</w>oke)\n"
-        "<lightcyan>";
-    text << static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
-    text << "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and "
-        "<w>z</w>ap)\n"
-        "<brown>";
-    text << static_cast<char>(get_item_symbol(SHOW_ITEM_STAVE));
-    text << "</brown> : staves, rods (<w>w</w>ield and e<w>v</w>oke)\n"
-            "\n"
-            "<h>Movement and attacking\n"
-            "Use the <w>numpad</w> for movement (try both\n"
-            "Numlock on and off). You can also use\n"
-            "     <w>hjkl</w> : left, down, up, right and\n"
-            "     <w>yubn</w> : diagonal movement.\n"
-            "Walking into a monster will attack it\n"
-            "with the wielded weapon or barehanded.\n"
-            "For ranged attacks use either\n"
-            "<w>f</w> to launch missiles (like arrows)\n"
-            "<w>z</w>/<w>Z</w> to cast spells (<w>z?</w> lists spells).\n",
+    cols.add_formatted(
+            0, "<h>Item types (and common commands)\n",
+            true, true, _cmdhelp_textfilter);
+
+    _insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
+                     CMD_WIELD_WEAPON, 0);
+    _insert_commands(cols, 0, "<brown>(</brown> : missiles (<w>%</w>uiver, "
+                              "<w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
+                     CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
+                     CMD_CYCLE_QUIVER_BACKWARD, 0);
+    _insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
+                     CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
+    _insert_commands(cols, 0, "<brown>percent</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
+                     CMD_BUTCHER, CMD_EAT, 0);
+    _insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
+                     CMD_READ, 0);
+    _insert_commands(cols, 0, "<magenta>!</magenta> : potions (<w>%</w>uaff)",
+                     CMD_QUAFF, 0);
+    _insert_commands(cols, 0, "<blue>=</blue> : rings (<w>%</w>ut on and <w>%</w>emove)",
+                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
+                     CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
+    _insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
+                     CMD_EVOKE, 0);
+
+    std::string item_types = "<lightcyan>";
+    item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
+    item_types +=
+        "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
+    _insert_commands(cols, 0, item_types,
+                     CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
+                     CMD_FORCE_CAST_SPELL, 0);
+
+    item_types = "<brown>";
+    item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_STAVE));
+    item_types +=
+        "</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)";
+    _insert_commands(cols, 0, item_types,
+                     CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
 
     cols.add_formatted(
-            0, text.str(),
+            0,
+            "<h>Movement and attacking\n"
+            "Use the <w>numpad</w> for movement (try both\n"
+            "Numlock on and off). You can also use\n",
             true, true, _cmdhelp_textfilter);
+
+    _insert_commands(cols, 0, "     <w>%%%%</w> : left, down, up, right and",
+                     CMD_MOVE_LEFT, CMD_MOVE_DOWN, CMD_MOVE_UP,
+                     CMD_MOVE_RIGHT, 0);
+    _insert_commands(cols, 0, "     <w>%%%%</w> : diagonal movement.",
+                     CMD_MOVE_UP_LEFT, CMD_MOVE_UP_RIGHT, CMD_MOVE_DOWN_LEFT,
+                     CMD_MOVE_DOWN_RIGHT, 0);
+
+    cols.add_formatted(
+            0,
+            "Walking into a monster will attack it\n"
+            "with the wielded weapon or barehanded.\n"
+            "For ranged attacks use either\n",
+            false, true, _cmdhelp_textfilter);
+
+    _insert_commands(cols, 0, "<w>%</w> to launch missiles (like arrows)",
+                     CMD_FIRE, 0);
+    _insert_commands(cols, 0, "<w>%</w>/<w>%</w> to cast spells "
+                              "(<w>%?</w> lists spells).",
+                     CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL, CMD_CAST_SPELL, 0);
 
     cols.add_formatted(
             1,
-            "<h>Additional important commands\n"
-            "<w>S</w> : Save the game and exit\n"
-            "\n"
-            "<w>s</w> : search for one turn (also <w>.</w> and <w>Del</w>)\n"
-            "<w>5</w> : rest full/search longer (<w>Shift-Num 5</w>)\n"
-            "<w>x</w> : examine surroundings\n"
-            "<w>i</w> : list inventory (select item to view it)\n"
-            "<w>g</w> : pick up item from ground (also <w>,</w>)\n"
-            "<w>d</w> : drop item\n"
-            "<w><<</w> or <w>></w> : ascend/descend the stairs\n"
-            "<w>Ctrl-P</w> : show previous messages\n"
-            "<w>X</w> : show map of the whole level\n"
-            "<w>Ctrl-X</w> : list monsters, items, features in sight\n"
-            "\n"
-            "<h>targetting (for spells and missiles)\n"
+            "<h>Additional important commands\n",
+            true, true, _cmdhelp_textfilter);
+
+    _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save the game and exit", 2);
+    cols.add_formatted(1, " ", false, true, _cmdhelp_textfilter);
+    _add_command(cols, 1, CMD_SEARCH, "search for one turn (also <w>.</w> and <w>Del</w>)", 2);
+    _add_command(cols, 1, CMD_REST, "rest full/search longer (<w>Shift-Num 5</w>)", 2);
+    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "list inventory (select item to view it)", 2);
+    _add_command(cols, 1, CMD_PICKUP, "pick up item from ground (also <w>g</w>)", 2);
+    _add_command(cols, 1, CMD_DROP, "drop item", 2);
+    _insert_commands(cols, 0, "<w>%</w> or <w>%</w> : ascend/descend the stairs",
+                     CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
+    cols.add_formatted(1, " ", false, true, _cmdhelp_textfilter);
+    _add_command(cols, 1, CMD_REPLAY_MESSAGES, "show previous messages", 2);
+    _add_command(cols, 1, CMD_DISPLAY_MAP, "show map of the whole level", 2);
+    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features in sight", 2);
+
+    cols.add_formatted(
+            1,
+            "<h>Targetting (for spells and missiles)\n"
             "Use <w>+</w> (or <w>=</w>) and <w>-</w> to cycle between\n"
             "hostile monsters. <w>Enter</w> or <w>.</w> or <w>Del</w>\n"
             "all fire at the selected target.\n"

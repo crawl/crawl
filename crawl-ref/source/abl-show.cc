@@ -15,7 +15,6 @@
 #include <ctype.h>
 
 #include "externs.h"
-#include "options.h"
 
 #include "abyss.h"
 #include "artefact.h"
@@ -30,14 +29,12 @@
 #include "food.h"
 #include "godabil.h"
 #include "it_use2.h"
-#include "itemprop.h"
 #include "macro.h"
 #include "message.h"
 #include "menu.h"
 #include "misc.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
@@ -63,17 +60,18 @@
 
 enum ability_flag_type
 {
-    ABFLAG_NONE         = 0x00000000,
-    ABFLAG_BREATH       = 0x00000001, // ability uses DUR_BREATH_WEAPON
-    ABFLAG_DELAY        = 0x00000002, // ability has its own delay (ie recite)
-    ABFLAG_PAIN         = 0x00000004, // ability must hurt player (ie torment)
-    ABFLAG_PIETY        = 0x00000008, // ability has its own piety cost
-    ABFLAG_EXHAUSTION   = 0x00000010, // fails if you.exhausted
-    ABFLAG_INSTANT      = 0x00000020, // doesn't take time to use
-    ABFLAG_PERMANENT_HP = 0x00000040, // costs permanent HPs
-    ABFLAG_PERMANENT_MP = 0x00000080, // costs permanent MPs
-    ABFLAG_CONF_OK      = 0x00000100, // can use even if confused
-    ABFLAG_FRUIT        = 0x00000200  // ability requires fruit
+    ABFLAG_NONE           = 0x00000000,
+    ABFLAG_BREATH         = 0x00000001, // ability uses DUR_BREATH_WEAPON
+    ABFLAG_DELAY          = 0x00000002, // ability has its own delay (ie recite)
+    ABFLAG_PAIN           = 0x00000004, // ability must hurt player (ie torment)
+    ABFLAG_PIETY          = 0x00000008, // ability has its own piety cost
+    ABFLAG_EXHAUSTION     = 0x00000010, // fails if you.exhausted
+    ABFLAG_INSTANT        = 0x00000020, // doesn't take time to use
+    ABFLAG_PERMANENT_HP   = 0x00000040, // costs permanent HPs
+    ABFLAG_PERMANENT_MP   = 0x00000080, // costs permanent MPs
+    ABFLAG_CONF_OK        = 0x00000100, // can use even if confused
+    ABFLAG_FRUIT          = 0x00000200, // ability requires fruit
+    ABFLAG_VARIABLE_FRUIT = 0x00000400  // ability requires fruit or piety
 };
 
 static int  _find_ability_slot( ability_type which_ability );
@@ -327,7 +325,7 @@ static const ability_def Ability_List[] =
 
     // Fedhas
     { ABIL_FEDHAS_FUNGAL_BLOOM, "Decomposition", 0, 0, 0, 0, ABFLAG_NONE },
-    { ABIL_FEDHAS_EVOLUTION, "Evolution", 2, 0, 0, 0, ABFLAG_FRUIT},
+    { ABIL_FEDHAS_EVOLUTION, "Evolution", 2, 0, 0, 0, ABFLAG_VARIABLE_FRUIT},
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight", 2, 0, 0, 0, ABFLAG_NONE},
     { ABIL_FEDHAS_PLANT_RING, "Growth", 2, 0, 0, 0, ABFLAG_FRUIT},
     { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction", 4, 0, 50, 2, ABFLAG_NONE},
@@ -347,7 +345,7 @@ static const ability_def Ability_List[] =
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
 
-const struct ability_def & get_ability_def( ability_type abil )
+const ability_def & get_ability_def(ability_type abil)
 {
     for (unsigned int i = 0;
          i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)
@@ -359,7 +357,7 @@ const struct ability_def & get_ability_def( ability_type abil )
     return (Ability_List[0]);
 }
 
-bool string_matches_ability_name(const std::string key)
+bool string_matches_ability_name(const std::string& key)
 {
     for (int i = ABIL_SPIT_POISON; i <= ABIL_RENOUNCE_RELIGION; ++i)
     {
@@ -367,7 +365,7 @@ bool string_matches_ability_name(const std::string key)
         if (abil.ability == ABIL_NON_ABILITY)
             continue;
 
-        std::string name = lowercase_string(ability_name(abil.ability));
+        const std::string name = lowercase_string(ability_name(abil.ability));
         if (name.find(key) != std::string::npos)
             return (true);
     }
@@ -484,10 +482,17 @@ const std::string make_cost_description(ability_type ability)
     }
     if (abil.flags & ABFLAG_FRUIT)
     {
-        if(!ret.str().empty())
+        if (!ret.str().empty())
             ret << ", ";
 
         ret << "Fruit";
+    }
+    if (abil.flags & ABFLAG_VARIABLE_FRUIT)
+    {
+        if (!ret.str().empty())
+            ret << ", ";
+
+        ret << "Fruit or Piety";
     }
 
     // If we haven't output anything so far, then the effect has no cost
@@ -757,7 +762,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
     case ABIL_FEDHAS_SPAWN_SPORES:
-    case ABIL_FEDHAS_RAIN:
     case ABIL_YRED_DRAIN_LIFE:
     case ABIL_CHEIBRIADOS_SLOUCH:
         invoc = true;
@@ -769,6 +773,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_OKAWARU_HASTE:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
+    case ABIL_FEDHAS_RAIN:
         invoc = true;
         failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
         break;
@@ -846,11 +851,11 @@ std::vector<const char*> get_ability_names()
     return result;
 }
 
-static void _print_talent_description(talent tal)
+static void _print_talent_description(const talent& tal)
 {
     clrscr();
 
-    std::string name   = get_ability_def(tal.which).name;
+    const std::string& name = get_ability_def(tal.which).name;
 
     // XXX: The suffix is necessary to distinguish between similarly
     // named spells.  Yes, this is a hack.
@@ -2025,17 +2030,9 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_JIYVA_SLIMIFY:
     {
-        std::string msg;
-        int has_weapon = you.equip[EQ_WEAPON];
-
-        if (has_weapon == -1)
-            msg = "your " + you.hand_name(true);
-        else
-        {
-            item_def& weapon = *you.weapon();
-            msg = weapon.name(DESC_NOCAP_YOUR);
-        }
-
+        const item_def* const weapon = you.weapon();
+        const std::string msg = (weapon) ? weapon->name(DESC_NOCAP_YOUR)
+                                         : ("your " + you.hand_name(true));
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
                               you.skills[SK_INVOCATIONS] * 3 / 2 + 3,

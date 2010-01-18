@@ -302,7 +302,7 @@ exclude_set::const_iterator exclude_set::end() const
 
 exclude_set::iterator exclude_set::begin()
 {
-    return exclude_roots.end();
+    return exclude_roots.begin();
 }
 
 exclude_set::iterator exclude_set::end()
@@ -458,7 +458,14 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
 
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (exc->radius == radius)
+        if (exc->desc.empty() && defer_updates)
+        {
+            int cl = env.cgrid(p);
+
+            if (env.cgrid(p) != EMPTY_CLOUD)
+                exc->desc = cloud_name(cl) + " cloud";
+        }
+        else if (exc->radius == radius)
             return;
 
         exc->radius   = radius;
@@ -477,6 +484,16 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
                                         && testbits(m->flags, MF_SEEN)))
             {
                 desc = mons_type_name(m->type, DESC_PLAIN);
+            }
+            else
+            {
+                // Maybe it's a staircase?
+                const dungeon_feature_type feat = env.map_knowledge(p).feat();
+                const command_type dir = feat_stair_direction(feat);
+                if (dir == CMD_GO_UPSTAIRS)
+                    desc = "upstairs";
+                else if (dir == CMD_GO_DOWNSTAIRS)
+                    desc = "downstairs";
             }
         }
         else

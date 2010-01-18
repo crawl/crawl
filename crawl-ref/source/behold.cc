@@ -11,14 +11,12 @@
 #include "debug.h"
 #include "env.h"
 #include "fprop.h"
-#include "los.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "random.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
-#include "view.h"
 
 // Add a monster to the list of beholders.
 void player::add_beholder(const monsters* mon)

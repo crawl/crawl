@@ -21,7 +21,6 @@
 #include "files.h"
 #include "format.h"
 #include "macro.h"
-#include "mon-util.h"
 #include "options.h"
 #include "place.h"
 #include "player.h"
@@ -412,10 +411,7 @@ static void _reset_travel_colours(std::vector<coord_def> &features,
     features.clear();
 
     if (on_level)
-    {
-        find_travel_pos((on_level ? you.pos() : coord_def()),
-                NULL, NULL, &features);
-    }
+        find_travel_pos(you.pos(), NULL, NULL, &features);
     else
     {
         travel_pathfind tp;

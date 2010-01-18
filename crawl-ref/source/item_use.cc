@@ -321,15 +321,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (item_slot == PROMPT_GOT_SPECIAL)  // '-' or bare hands
     {
-        if (you.equip[EQ_WEAPON] != -1)
+        if (const item_def* wpn = you.weapon())
         {
-            item_def& wpn = *you.weapon();
             // Can we safely unwield this item?
-            if (has_warning_inscription(wpn, OPER_WIELD))
+            if (has_warning_inscription(*wpn, OPER_WIELD))
             {
-                std::string prompt = "Really unwield ";
-                prompt += wpn.name(DESC_INVENTORY);
-                prompt += '?';
+                const std::string prompt =
+                    "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
                 if (!yesno(prompt.c_str(), false, 'n'))
                     return (false);
             }
@@ -367,12 +365,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (!safe_to_remove_or_wear(new_wpn, false))
         return (false);
 
-    // Go ahead and wield the weapon.
-    if (you.equip[EQ_WEAPON] != -1 && !unwield_item(show_weff_messages))
+    // Unwield any old weapon.
+    if (you.weapon() && !unwield_item(show_weff_messages))
         return (false);
 
     const unsigned int old_talents = your_talents(false).size();
 
+    // Go ahead and wield the weapon.
     you.equip[EQ_WEAPON] = item_slot;
 
     // Any oddness on wielding taken care of here.
@@ -658,7 +657,12 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_PAIN:
-                    mpr("A searing pain shoots up your arm!");
+                    if(you.skills[SK_NECROMANCY] == 0)
+                        mpr("You have a feeling of ineptitude.");
+                    else if(you.skills[SK_NECROMANCY] <= 4)
+                        mpr("Pain shudders through your arm!");
+                    else
+                        mpr("A searing pain shoots up your arm!");
                     break;
 
                 case SPWPN_CHAOS:
@@ -1386,10 +1390,8 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
 
     beh.message_ammo_prompt();
 
-    // XXX: This stuff should be done by direction()!
-    message_current_target();
-    direction( target, DIR_NONE, TARG_HOSTILE, -1, false, !teleport, true, false,
-               NULL, &beh );
+    direction(target, DIR_NONE, TARG_HOSTILE, -1, false, !teleport, true, false,
+              NULL, &beh);
 
     if (beh.m_slot == -1)
     {
@@ -2110,32 +2112,33 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         bow_brand = get_weapon_brand(*launcher);
 
     int  ammo_brand = get_ammo_brand(item);
-    bool poisoned   = ammo_brand == SPMSL_POISONED;
 
-    if (bow_brand == SPWPN_VENOM && ammo_brand != SPMSL_CURARE)
+    // Launcher brand does not affect ammunition.
+    if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
     {
-        // Don't perma-poison with a temp-branded weapon.
-        if (ammo_brand == SPMSL_NORMAL && !you.duration[DUR_WEAPON_BRAND])
-            item.special = SPMSL_POISONED;
-
-        poisoned = true;
+        // But not for Nessos.
+        if (agent->atype() == ACT_MONSTER)
+        {
+            const monsters* mon = static_cast<const monsters*>(agent);
+            if (mon->type != MONS_NESSOS)
+                bow_brand = SPWPN_NORMAL;
+        }
+        else
+            bow_brand = SPWPN_NORMAL;
     }
 
-    const bool exploding    = ammo_brand == SPMSL_EXPLODING;
-    const bool penetrating  = (!exploding
-                               && (bow_brand  == SPWPN_PENETRATION
-                                   || ammo_brand == SPMSL_PENETRATION));
+    bool poisoned   = (bow_brand == SPWPN_VENOM 
+                        || ammo_brand == SPMSL_POISONED);
+
+    const bool exploding    = (ammo_brand == SPMSL_EXPLODING);
+    const bool penetrating  = (bow_brand  == SPWPN_PENETRATION
+                                || ammo_brand == SPMSL_PENETRATION);
     const bool silver       = (ammo_brand == SPMSL_SILVER);
     const bool disperses    = (ammo_brand == SPMSL_DISPERSAL);
     const bool reaping      = (bow_brand  == SPWPN_REAPING
-                               || ammo_brand == SPMSL_REAPING)
-                              && bow_brand != SPWPN_HOLY_WRATH;
-    const bool charged      = bow_brand  == SPWPN_ELECTROCUTION
-                                || ammo_brand == SPMSL_ELECTRIC;
-    const bool blessed      = bow_brand == SPWPN_HOLY_WRATH
-                              && ammo_brand != SPMSL_REAPING;
-    const bool flaming      = bow_brand == SPWPN_FLAME
-                                || ammo_brand == SPMSL_FLAME;
+                               || ammo_brand == SPMSL_REAPING);
+    const bool charged      = bow_brand  == SPWPN_ELECTROCUTION;
+    const bool blessed      = bow_brand == SPWPN_HOLY_WRATH;
 
     const bool paralysis    = ammo_brand == SPMSL_PARALYSIS;
     const bool slow         = ammo_brand == SPMSL_SLOW;
@@ -2144,16 +2147,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     const bool sickness     = ammo_brand == SPMSL_SICKNESS;
     const bool rage         = ammo_brand == SPMSL_RAGE;
 
-
     ASSERT(!exploding || !is_artefact(item));
-
-    if (flaming && poisoned)
-        ; // Do nothing. A specific exclusion to launcher not overwriting
-          // ammunition brands.
-    else
-        // XXX: Launcher brand does not affect its ammunition. This may change.
-        if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
-            bow_brand = SPWPN_NORMAL;
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
 
@@ -2257,9 +2251,9 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         ammo_name = "dispersing " + ammo_name;
     }
 
+    // XXX: This doesn't make sense, but it works.
     if (poisoned && ammo.special != SPMSL_POISONED)
     {
-        beam.name = "poison "   + beam.name;
         ammo_name = "poisoned " + ammo_name;
     }
 
@@ -2273,12 +2267,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     {
         beam.name = "silvery " + beam.name;
         ammo_name = "silvery " + ammo_name;
-    }
-
-    if (charged && ammo.special != SPMSL_ELECTRIC)
-    {
-        beam.name = "charged " + beam.name;
-        ammo_name = "charged " + ammo_name;
     }
 
     if (blessed)
@@ -2504,7 +2492,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         thr = *target;
     else
     {
-        message_current_target();
         direction(thr, DIR_NONE, TARG_HOSTILE);
 
         if (!thr.isValid)
@@ -4391,7 +4378,6 @@ void zap_wand(int slot)
 
     int tracer_range = (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
                         _wand_range(type_zapped) : _max_wand_range();
-    message_current_target();
     direction(zap_wand, DIR_NONE, targ_mode, tracer_range);
 
     if (!zap_wand.isValid)
@@ -6048,7 +6034,8 @@ void tile_item_use(int idx)
 
         case OBJ_BOOKS:
             if (item.sub_type == BOOK_MANUAL
-                || item.sub_type == BOOK_DESTRUCTION)
+                || item.sub_type == BOOK_DESTRUCTION
+                || you.skills[SK_SPELLCASTING] == 0)
             {
                 if (check_warning_inscriptions(item, OPER_READ))
                     handle_read_book(idx);

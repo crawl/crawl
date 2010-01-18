@@ -21,7 +21,9 @@
 #include "goditem.h"
 #include "itemname.h"
 #include "kills.h"
+#include "mislead.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "coord.h"
 #include "mon-stuff.h"
@@ -33,6 +35,7 @@
 #include "stuff.h"
 #include "env.h"
 #include "terrain.h"
+#include "viewchar.h"
 
 //jmf: moved from inside function
 static FixedVector < int, NUM_MONSTERS > mon_entry;
@@ -247,6 +250,12 @@ void init_monster_symbols()
         if (md.colour)
             monster_symbols[md.type].colour = md.colour;
     }
+
+    monster_symbols[MONS_GOLD_MIMIC].glyph   = dchar_glyph(DCHAR_ITEM_GOLD);
+    monster_symbols[MONS_WEAPON_MIMIC].glyph = dchar_glyph(DCHAR_ITEM_WEAPON);
+    monster_symbols[MONS_ARMOUR_MIMIC].glyph = dchar_glyph(DCHAR_ITEM_ARMOUR);
+    monster_symbols[MONS_SCROLL_MIMIC].glyph = dchar_glyph(DCHAR_ITEM_SCROLL);
+    monster_symbols[MONS_POTION_MIMIC].glyph = dchar_glyph(DCHAR_ITEM_POTION);
 }
 
 const mon_resist_def &get_mons_class_resists(int mc)
@@ -1675,6 +1684,7 @@ void define_monster(monsters &mons)
         ghost.init_random_demon();
         mons.set_ghost(ghost);
         mons.pandemon_init();
+        mons.bind_spell_flags();
         break;
     }
 
@@ -1684,6 +1694,7 @@ void define_monster(monsters &mons)
         ghost.init_player_ghost();
         mons.set_ghost(ghost);
         mons.ghost_init();
+        mons.bind_spell_flags();
         break;
     }
 
@@ -2226,6 +2237,17 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     }
 }
 
+// For SUMMON_PLAYER_GHOST.
+bool _find_players_ghost ()
+{
+    bool found = false;
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->type == MONS_PLAYER_GHOST && mi->mname == you.your_name)
+            found = true;
+
+    return found;
+}
+
 bool mons_should_fire(struct bolt &beam)
 {
 #ifdef DEBUG_DIAGNOSTICS
@@ -2574,6 +2596,25 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
             ret = true;
         break;
     }
+
+    case SPELL_MISLEAD:
+        if (you.duration[DUR_MISLED] > 10 && one_chance_in(3))
+            ret = true;
+
+        break;
+
+    case SPELL_SUMMON_PLAYER_GHOST:
+        // Only ever want one at a time.
+        if (_find_players_ghost())
+            ret = true;
+
+        break;
+
+    case SPELL_FAKE_MARA_SUMMON:
+        if (count_mara_fakes() == 2)
+            ret = true;
+
+        break;
 
     case SPELL_NO_SPELL:
         ret = true;

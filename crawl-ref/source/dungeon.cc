@@ -25,6 +25,7 @@
 #include "coordit.h"
 #include "defines.h"
 #include "dgn-shoals.h"
+#include "dgn-swamp.h"
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
@@ -32,7 +33,6 @@
 #include "flood_find.h"
 #include "fprop.h"
 #include "externs.h"
-#include "options.h"
 #include "dbg-maps.h"
 #include "dbg-scan.h"
 #include "directn.h"
@@ -134,7 +134,6 @@ static void _place_minivaults(const std::string &tag = "",
 static int _place_uniques(int level_number, char level_type);
 static void _place_traps( int level_number );
 static void _place_fog_machines( int level_number );
-static void _prepare_swamp();
 static void _prepare_water( int level_number );
 static void _check_doors();
 static void _hide_doors();
@@ -1822,9 +1821,11 @@ static void _build_dungeon_level(int level_number, int level_type)
     // Stairs must exist by this point (except in Shoals where they are
     // yet to be placed). Some items and monsters already exist.
 
+#if OLD_SWAMP_LAYOUT
     // Time to make the swamp or shoals {dlb}:
     if (player_in_branch(BRANCH_SWAMP))
-        _prepare_swamp();
+        dgn_prepare_swamp();
+#endif
 
     if (dgn_level_vetoed)
         return;
@@ -2077,42 +2078,6 @@ static void _connected_flood(int margin, int i, int j, bool taken[GXM][GYM])
     for (int idelta = -1; idelta <= 1; ++idelta)
         for (int jdelta = -1; jdelta <= 1; ++jdelta)
             _connected_flood(margin, i + idelta, j + jdelta, taken);
-}
-
-static void _prepare_swamp()
-{
-    dgn_Build_Method += " swamp";
-    dgn_Layout_Type   = "swamp";
-
-    const int margin = 5;
-
-    for (int i = margin; i < (GXM - margin); i++)
-        for (int j = margin; j < (GYM - margin); j++)
-        {
-            // Don't apply Swamp prep in vaults.
-            if (!unforbidden(coord_def(i, j), MMT_VAULT))
-                continue;
-
-            // doors -> floors {dlb}
-            if (grd[i][j] == DNGN_CLOSED_DOOR || grd[i][j] == DNGN_SECRET_DOOR)
-                grd[i][j] = DNGN_FLOOR;
-
-            // floors -> shallow water 1 in 3 times {dlb}
-            if (grd[i][j] == DNGN_FLOOR && one_chance_in(3))
-                grd[i][j] = DNGN_SHALLOW_WATER;
-
-            // walls -> deep/shallow water or remain unchanged {dlb}
-            if (grd[i][j] == DNGN_ROCK_WALL)
-            {
-                const int temp_rand = random2(6);
-
-                if (temp_rand > 0)      // 17% chance unchanged {dlb}
-                {
-                    grd[i][j] = ((temp_rand > 2) ? DNGN_SHALLOW_WATER // 50%
-                                                 : DNGN_DEEP_WATER);  // 33%
-                }
-            }
-        }
 }
 
 // Gives water which is next to ground/shallow water a chance of being
@@ -2452,6 +2417,8 @@ static builder_rc_type _builder_by_branch(int level_number)
     {
         dgn_Build_Method += " random_map_for_place";
         _ensure_vault_placed_ex( _build_vaults(level_number, vault), vault );
+        if (!dgn_level_vetoed && player_in_branch(BRANCH_SWAMP))
+            dgn_build_swamp_level(level_number);
         return BUILD_SKIP;
     }
 
@@ -2469,8 +2436,13 @@ static builder_rc_type _builder_by_branch(int level_number)
         spotty_level(false, iterations, false);
         return BUILD_SKIP;
     }
+
     case BRANCH_SHOALS:
-        prepare_shoals(level_number);
+        dgn_build_shoals_level(level_number);
+        return BUILD_SKIP;
+
+    case BRANCH_SWAMP:
+        dgn_build_swamp_level(level_number);
         return BUILD_SKIP;
 
     default:
@@ -2926,12 +2898,41 @@ static void _place_fog_machines(int level_number)
     }
 }
 
+void dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
+                                              unsigned mask = MMT_VAULT)
+{
+    const coord_def place =
+        dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
+    if (place.origin())
+        dgn_veto_level();
+    else
+        grd(place) = feat;
+}
+
+// Create randomly-placed stone stairs.
+void dgn_place_stone_stairs()
+{
+    for (int i = 0; i < 3; ++i)
+    {
+        dgn_place_feature_at_random_floor_square(
+            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
+        dgn_place_feature_at_random_floor_square(
+            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i));
+    }
+}
+
 bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat)
 {
     for (adjacent_iterator ai(c); ai; ++ai)
         if (grd(*ai) == feat)
             return true;
     return false;
+}
+
+coord_def dgn_random_point_in_margin(int margin)
+{
+    return coord_def(random_range(margin, GXM - margin - 1),
+                     random_range(margin, GYM - margin - 1));
 }
 
 static inline bool _point_matches_feat(coord_def c,
@@ -3544,9 +3545,7 @@ static void _place_aquatic_monsters(int level_number, char level_type)
                     swimming_things[i] = MONS_MERFOLK;
                 else if (one_chance_in(5))
                     swimming_things[i] = MONS_MERMAID;
-                else if (one_chance_in(8))
-                    swimming_things[i] = MONS_SIREN;
-                else if (one_chance_in(20))
+                else if (one_chance_in(24))
                     swimming_things[i] = MONS_KRAKEN;
             }
             else if (player_in_branch( BRANCH_COCYTUS ))
@@ -7124,77 +7123,11 @@ static void _city_level(int level_number)
     dgn_Build_Method += make_stringf(" city_level [%d]", level_number);
     dgn_Layout_Type   = "city";
 
-    int temp_rand;          // probability determination {dlb}
-    // Remember, can have many wall types in one level.
-    dungeon_feature_type wall_type;
-    // Simplifies logic of innermost loop. {dlb}
-    dungeon_feature_type wall_type_room;
+    const map_def *vault = find_map_by_name("layout_city");
+    ASSERT(vault);
 
-    int xs = 0, ys = 0;
-    int x1 = 0, x2 = 0;
-    int y1 = 0, y2 = 0;
-    int i,j;
-
-    temp_rand = random2(8);
-
-    wall_type = ((temp_rand > 4) ? DNGN_ROCK_WALL :     // 37.5% {dlb}
-                 (temp_rand > 1) ? DNGN_STONE_WALL      // 37.5% {dlb}
-                                 : DNGN_METAL_WALL);    // 25.0% {dlb}
-
-    if (one_chance_in(100))
-        wall_type = DNGN_GREEN_CRYSTAL_WALL;
-
-    _make_box( 7, 7, GXM-7, GYM-7, DNGN_FLOOR );
-
-    for (i = 0; i < 5; i++)
-        for (j = 0; j < 4; j++)
-        {
-            xs = 8 + (i * 13);
-            ys = 8 + (j * 14);
-            x1 = xs + random2avg(5, 2);
-            y1 = ys + random2avg(5, 2);
-            x2 = xs + 11 - random2avg(5, 2);
-            y2 = ys + 11 - random2avg(5, 2);
-
-            temp_rand = random2(280);
-
-            if (temp_rand > 39) // 85.7% draw room(s) {dlb}
-            {
-                wall_type_room = ((temp_rand > 63) ? wall_type :       // 77.1%
-                                  (temp_rand > 54) ? DNGN_STONE_WALL : //  3.2%
-                                  (temp_rand > 45) ? DNGN_ROCK_WALL    //  3.2%
-                                                   : DNGN_METAL_WALL); //  2.1%
-
-                if (one_chance_in(250))
-                    wall_type_room = DNGN_GREEN_CRYSTAL_WALL;
-
-                _box_room(x1, x2, y1, y2, wall_type_room);
-
-                // Inner room - neat.
-                if (x2 - x1 > 5 && y2 - y1 > 5 && one_chance_in(8))
-                {
-                    _box_room(x1 + 2, x2 - 2, y1 + 2, y2 - 2, wall_type);
-
-                    // Treasure area... neat.
-                    if (one_chance_in(3))
-                    {
-                        _treasure_area(level_number, x1 + 3, x2 - 3,
-                                       y1 + 3, y2 - 3);
-                    }
-                }
-            }
-        }
-
-    int stair_count = coinflip() ? 4 : 3;
-
-    for (j = 0; j < stair_count; j++)
-        for (i = 0; i < 2; i++)
-        {
-            _place_specific_stair( static_cast<dungeon_feature_type>(
-                                    j + ((i == 0) ? DNGN_STONE_STAIRS_DOWN_I
-                                                  : DNGN_STONE_STAIRS_UP_I)) );
-        }
-
+    bool success = _build_vaults(level_number, vault);
+    dgn_ensure_vault_placed(success, false);
 }
 
 static bool _treasure_area(int level_number, unsigned char ta1_x,
@@ -7948,8 +7881,8 @@ coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
         const coord_def res =
             c + coord_def(static_cast<int>(radius * cos(angle)),
                           static_cast<int>(radius * sin(angle)));
-        if (res.x >= margin && res.x < GXM - margin
-            && res.y >= margin && res.y < GYM - margin)
+        if (res.x >= margin && res.x < GXM - margin - 1
+            && res.y >= margin && res.y < GYM - margin - 1)
         {
             return res;
         }
@@ -8216,6 +8149,13 @@ void dgn_set_lt_callback(std::string level_type_tag,
     ASSERT(!callback_name.empty());
 
     level_type_post_callbacks[level_type_tag] = callback_name;
+}
+
+dungeon_feature_type dgn_tree_base_feature_at(coord_def c)
+{
+    return (player_in_branch(BRANCH_SWAMP)?
+            DNGN_SHALLOW_WATER :
+            DNGN_FLOOR);
 }
 
 ////////////////////////////////////////////////////////////////////

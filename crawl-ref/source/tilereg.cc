@@ -34,7 +34,6 @@
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
-#include "quiver.h"
 #include "religion.h"
 #include "species.h"
 #include "spl-book.h"
@@ -250,7 +249,8 @@ DungeonRegion::DungeonRegion(ImageManager* im, FTFont *tag_font,
     m_cx_to_gx(0),
     m_cy_to_gy(0),
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
-    m_buf_doll(&im->m_textures[TEX_PLAYER]),
+    m_buf_doll(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16),
+    m_buf_main_trans(&im->m_textures[TEX_DEFAULT], TILE_MASK_SUBMERGED, 18, 16),
     m_buf_main(&im->m_textures[TEX_DEFAULT])
 {
     for (int i = 0; i < CURSOR_MAX; i++)
@@ -281,6 +281,13 @@ void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy
     place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
 }
 
+enum wave_type
+{
+    WV_NONE = 0,
+    WV_SHALLOW,
+    WV_DEEP
+};
+
 void DungeonRegion::pack_background(unsigned int bg, int x, int y)
 {
     unsigned int bg_idx = bg & TILE_FLAG_MASK;
@@ -309,67 +316,102 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
             // Add wave tiles on floor adjacent to shallow water.
             const coord_def pos = coord_def(x + m_cx_to_gx, y + m_cy_to_gy);
             const dungeon_feature_type feat = env.map_knowledge(pos).feat();
-            if (feat == DNGN_FLOOR || feat == DNGN_UNDISCOVERED_TRAP)
+            if (feat == DNGN_FLOOR || feat == DNGN_UNDISCOVERED_TRAP
+                || feat == DNGN_SHALLOW_WATER)
             {
-                bool north = false, south = false, east = false, west = false;
-                bool ne = false, nw = false, se = false, sw = false;
+                wave_type north = WV_NONE, south = WV_NONE,
+                          east = WV_NONE, west = WV_NONE,
+                          ne = WV_NONE, nw = WV_NONE,
+                          se = WV_NONE, sw = WV_NONE;
+
                 for (radius_iterator ri(pos, 1, true, false, true); ri; ++ri)
                 {
-                    if (env.map_knowledge(*ri).feat() != DNGN_SHALLOW_WATER)
+                    if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
                         continue;
 
-                    if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
+                    bool shallow = false;
+                    if (env.map_knowledge(*ri).feat() == DNGN_SHALLOW_WATER)
+                    {
+                        // Adjacent shallow water is only interesting for
+                        // floor cells.
+                        if (feat == DNGN_SHALLOW_WATER)
+                            continue;
+
+                        shallow = true;
+                    }
+                    else if (env.map_knowledge(*ri).feat() != DNGN_DEEP_WATER)
                         continue;
 
                     if (ri->x == pos.x) // orthogonals
                     {
                         if (ri->y < pos.y)
-                            north = true;
+                            north = (shallow ? WV_SHALLOW : WV_DEEP);
                         else
-                            south = true;
+                            south = (shallow ? WV_SHALLOW : WV_DEEP);
                     }
                     else if (ri->y == pos.y)
                     {
                         if (ri->x < pos.x)
-                            west = true;
+                            west = (shallow ? WV_SHALLOW : WV_DEEP);
                         else
-                            east = true;
+                            east = (shallow ? WV_SHALLOW : WV_DEEP);
                     }
                     else // diagonals
                     {
                         if (ri->x < pos.x)
                         {
                             if (ri->y < pos.y)
-                                nw = true;
+                                nw = (shallow ? WV_SHALLOW : WV_DEEP);
                             else
-                                sw = true;
+                                sw = (shallow ? WV_SHALLOW : WV_DEEP);
                         }
                         else
                         {
                             if (ri->y < pos.y)
-                                ne = true;
+                                ne = (shallow ? WV_SHALLOW : WV_DEEP);
                             else
-                                se = true;
+                                se = (shallow ? WV_SHALLOW : WV_DEEP);
                         }
                     }
                 }
 
-                if (north)
+                // First check for shallow water.
+                if (north == WV_SHALLOW)
                     m_buf_dngn.add(TILE_WAVE_N, x, y);
-                if (south)
+                if (south == WV_SHALLOW)
                     m_buf_dngn.add(TILE_WAVE_S, x, y);
-                if (east)
+                if (east == WV_SHALLOW)
                     m_buf_dngn.add(TILE_WAVE_E, x, y);
-                if (west)
+                if (west == WV_SHALLOW)
                     m_buf_dngn.add(TILE_WAVE_W, x, y);
-                if (ne && !north && !east)
+
+                // Then check for deep water, overwriting shallow
+                // corner waves, if necessary.
+                if (north == WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_N, x, y);
+                if (south == WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_S, x, y);
+                if (east == WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_E, x, y);
+                if (west == WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_W, x, y);
+
+                if (ne == WV_SHALLOW && !north && !east)
                     m_buf_dngn.add(TILE_WAVE_CORNER_NE, x, y);
-                if (nw && !north && !west)
+                else if (ne == WV_DEEP && north != WV_DEEP && east != WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_NE, x, y);
+                if (nw == WV_SHALLOW && !north && !west)
                     m_buf_dngn.add(TILE_WAVE_CORNER_NW, x, y);
-                if (se && !south && !east)
+                else if (nw == WV_DEEP && north != WV_DEEP && west != WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_NW, x, y);
+                if (se == WV_SHALLOW && !south && !east)
                     m_buf_dngn.add(TILE_WAVE_CORNER_SE, x, y);
-                if (sw && !south && !west)
+                else if (se == WV_DEEP && south != WV_DEEP && east != WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_SE, x, y);
+                if (sw == WV_SHALLOW && !south && !west)
                     m_buf_dngn.add(TILE_WAVE_CORNER_SW, x, y);
+                else if (sw == WV_DEEP && south != WV_DEEP && west != WV_DEEP)
+                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_SW, x, y);
             }
         }
 
@@ -764,14 +806,14 @@ void save_doll_file(FILE *dollf)
         fprintf(dollf, "net\n");
 }
 
-void DungeonRegion::pack_player(int x, int y)
+void DungeonRegion::pack_player(int x, int y, bool submerged)
 {
     dolls_data result = player_doll;
     _fill_doll_equipment(result);
-    pack_doll(result, x, y);
+    pack_doll(result, x, y, submerged, false);
 }
 
-void pack_doll_buf(TileBuffer& buf, const dolls_data &doll, int x, int y)
+void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int y, bool submerged, bool ghost)
 {
     int p_order[TILEP_PART_MAX] =
     {
@@ -824,11 +866,20 @@ void pack_doll_buf(TileBuffer& buf, const dolls_data &doll, int x, int y)
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    for (int i = 0; i < TILEP_PART_MAX; i++)
+    // A higher index here means that the part should be drawn on top.
+    // This is drawn in reverse order because this could be a ghost
+    // or being drawn in water, in which case we want the top-most part
+    // to blend with the background underneath and not with the parts
+    // underneath.  Parts drawn afterwards will not obscure parts drawn
+    // previously, because "i" is passed as the depth below.
+    for (int i = TILEP_PART_MAX - 1; i >= 0; --i)
     {
         int p = p_order[i];
 
         if (!doll.parts[p] || flags[p] == TILEP_FLAG_HIDE)
+            continue;
+
+        if (p == TILEP_PART_SHADOW && (submerged || ghost))
             continue;
 
         int ymax = TILE_Y;
@@ -839,68 +890,51 @@ void pack_doll_buf(TileBuffer& buf, const dolls_data &doll, int x, int y)
             ymax = 18;
         }
 
-        buf.add(doll.parts[p], x, y, 0, 0, true, ymax);
+        buf.add(doll.parts[p], x, y, i, submerged, ghost, 0, 0, ymax);
     }
 }
 
-void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y)
+void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y, bool submerged, bool ghost)
 {
-    pack_doll_buf(m_buf_doll, doll, x, y);
+    pack_doll_buf(m_buf_doll, doll, x, y, submerged, ghost);
 }
 
 
-void DungeonRegion::pack_mcache(mcache_entry *entry, int x, int y)
+void DungeonRegion::pack_mcache(mcache_entry *entry, int x, int y, bool submerged)
 {
     ASSERT(entry);
 
+    bool trans = entry->transparent();
+
     const dolls_data *doll = entry->doll();
     if (doll)
-        pack_doll(*doll, x, y);
+        pack_doll(*doll, x, y, submerged, trans);
 
     tile_draw_info dinfo[3];
     unsigned int draw_info_count = entry->info(&dinfo[0]);
     ASSERT(draw_info_count <= sizeof(dinfo) / (sizeof(dinfo[0])));
 
     for (unsigned int i = 0; i < draw_info_count; i++)
-        m_buf_doll.add(dinfo[i].idx, x, y, dinfo[i].ofs_x, dinfo[i].ofs_y);
+    {
+        m_buf_doll.add(dinfo[i].idx, x, y, 0, submerged, trans,
+                       dinfo[i].ofs_x, dinfo[i].ofs_y);
+    }
 }
 
 void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int y)
 {
     unsigned int fg_idx = fg & TILE_FLAG_MASK;
-    unsigned int bg_idx = bg & TILE_FLAG_MASK;
 
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
-        m_buf_main.add(fg_idx, x, y);
-
-    if (fg_idx && !(fg & TILE_FLAG_FLYING))
     {
-        if (tile_dngn_equal(TILE_DNGN_LAVA, bg_idx))
-            m_buf_main.add(TILE_MASK_LAVA, x, y);
-        else if (tile_dngn_equal(TILE_DNGN_SHALLOW_WATER, bg_idx)
-                 || tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_DISTURBANCE,
-                                    bg_idx))
-        {
-            m_buf_main.add(TILE_MASK_SHALLOW_WATER, x, y);
-        }
-        else if (tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_MURKY, bg_idx)
-                 || tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_MURKY_DISTURBANCE,
-                                    bg_idx))
-        {
-            m_buf_main.add(TILE_MASK_SHALLOW_WATER_MURKY, x, y);
-        }
-        else if (tile_dngn_equal(TILE_DNGN_DEEP_WATER, bg_idx))
-            m_buf_main.add(TILE_MASK_DEEP_WATER, x, y);
-        else if (tile_dngn_equal(TILE_DNGN_DEEP_WATER_MURKY, bg_idx))
-            m_buf_main.add(TILE_MASK_DEEP_WATER_MURKY, x, y);
-        else if (tile_dngn_equal(TILE_SHOALS_DEEP_WATER, bg_idx))
-            m_buf_main.add(TILE_MASK_DEEP_WATER_SHOALS, x, y);
-        else if (tile_dngn_equal(TILE_SHOALS_SHALLOW_WATER, bg_idx))
-            m_buf_main.add(TILE_MASK_SHALLOW_WATER_SHOALS, x, y);
+        if (bg & TILE_FLAG_WATER && !(fg & TILE_FLAG_FLYING))
+            m_buf_main_trans.add(fg_idx, x, y, 0, true, false);
+        else
+            m_buf_main.add(fg_idx, x, y);
     }
 
     if (fg & TILE_FLAG_NET)
-        m_buf_doll.add(TILEP_TRAP_NET, x, y);
+        m_buf_doll.add(TILEP_TRAP_NET, x, y, 0, bg & TILE_FLAG_WATER, false);
 
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
@@ -1017,6 +1051,7 @@ void DungeonRegion::pack_buffers()
 {
     m_buf_dngn.clear();
     m_buf_doll.clear();
+    m_buf_main_trans.clear();
     m_buf_main.clear();
 
     if (m_tileb.empty())
@@ -1036,17 +1071,20 @@ void DungeonRegion::pack_buffers()
             {
                 mcache_entry *entry = mcache.get(fg_idx);
                 if (entry)
-                    pack_mcache(entry, x, y);
+                    pack_mcache(entry, x, y, bg & TILE_FLAG_WATER);
                 else
-                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y);
+                {
+                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0,
+                                   bg & TILE_FLAG_WATER, false);
+                }
             }
             else if (fg_idx == TILEP_PLAYER)
             {
-                pack_player(x, y);
+                pack_player(x, y, bg & TILE_FLAG_WATER);
             }
             else if (fg_idx >= TILE_MAIN_MAX)
             {
-                m_buf_doll.add(fg_idx, x, y);
+                m_buf_doll.add(fg_idx, x, y, 0, bg & TILE_FLAG_WATER, false);
             }
 
             pack_foreground(bg, fg, x, y);
@@ -1105,6 +1143,7 @@ void DungeonRegion::render()
     set_transform();
     m_buf_dngn.draw();
     m_buf_doll.draw();
+    m_buf_main_trans.draw();
     m_buf_main.draw();
 
     if (you.berserk())
@@ -2174,8 +2213,9 @@ void InventoryRegion::render()
 
         bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
 
-        int x = m_cursor.x * dx + sx + ox + dx / 2;
-        int y = m_cursor.y * dy + sy + oy;
+        // Always draw the description in the inventory header. (jpeg)
+        int x = sx + ox + dx / 2;
+        int y = sy + oy;
 
         const coord_def min_pos(sx, sy - dy);
         const coord_def max_pos(ex, ey);
@@ -2778,7 +2818,8 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             case OBJ_BOOKS:
                 if (item_type_known(item)
                     && item.sub_type != BOOK_MANUAL
-                    && item.sub_type != BOOK_DESTRUCTION)
+                    && item.sub_type != BOOK_DESTRUCTION
+                    && you.skills[SK_SPELLCASTING] > 0)
                 {
                     tip += "Memorise (M)";
                     if (wielded)
@@ -3986,7 +4027,9 @@ void TitleRegion::run()
 }
 
 DollEditRegion::DollEditRegion(ImageManager *im, FTFont *font) :
-    m_font_buf(font)
+    m_font_buf(font),
+    m_tile_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16),
+    m_cur_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16)
 {
     sx = sy = 0;
     dx = dy = 32;
@@ -3997,9 +4040,6 @@ DollEditRegion::DollEditRegion(ImageManager *im, FTFont *font) :
     m_doll_idx = 0;
     m_cat_idx = TILEP_PART_BASE;
     m_copy_valid = false;
-
-    m_tile_buf.set_tex(&im->m_textures[TEX_PLAYER]);
-    m_cur_buf.set_tex(&im->m_textures[TEX_PLAYER]);
 }
 
 void DollEditRegion::clear()
@@ -4145,7 +4185,7 @@ void DollEditRegion::render()
     {
         dolls_data temp = m_dolls[m_doll_idx];
         _fill_doll_equipment(temp);
-        pack_doll_buf(m_cur_buf, temp, 0, 0);
+        pack_doll_buf(m_cur_buf, temp, 0, 0, false, false);
     }
 
     // Draw set of dolls.
@@ -4159,7 +4199,7 @@ void DollEditRegion::render()
 
         dolls_data temp = m_dolls[i];
         _fill_doll_equipment(temp);
-        pack_doll_buf(m_tile_buf, temp, x, y);
+        pack_doll_buf(m_tile_buf, temp, x, y, false, false);
 
         m_shape_buf.add(x, y, x + 1, y + 1, grey);
     }
@@ -4218,12 +4258,12 @@ void DollEditRegion::render()
         dolls_data temp;
         temp = m_job_default;
         _fill_doll_equipment(temp);
-        pack_doll_buf(m_cur_buf, temp, 2, 0);
+        pack_doll_buf(m_cur_buf, temp, 2, 0, false, false);
 
         for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
             temp.parts[i] = TILEP_SHOW_EQUIP;
         _fill_doll_equipment(temp);
-        pack_doll_buf(m_cur_buf, temp, 4, 0);
+        pack_doll_buf(m_cur_buf, temp, 4, 0, false, false);
 
         if (m_mode == TILEP_MODE_LOADING)
             m_cur_buf.add(TILEP_CURSOR, 0, 0);

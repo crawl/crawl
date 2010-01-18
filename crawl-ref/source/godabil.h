@@ -20,6 +20,7 @@ bool jiyva_remove_bad_mutation();
 bool beogh_water_walk();
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
                              bool quiet = false, bool unrestricted = false);
+bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monsters * target);
 bool fedhas_shoot_through(const bolt & beam, const monsters * victim);
 int fungal_bloom();
