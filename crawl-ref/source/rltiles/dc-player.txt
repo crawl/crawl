@@ -7,8 +7,11 @@
 
 effect/net_trap TRAP_NET
 dc-misc/cursor CURSOR
-
+%rim 0
+%shrink 0
+dc-misc/mask_submerged MASK_SUBMERGED
 %rim 1
+%shrink 1
 
 ###BASE
 %parts_ctg BASE

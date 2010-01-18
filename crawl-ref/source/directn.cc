@@ -1192,9 +1192,15 @@ void direction(dist& moves, const targetting_type restricts,
     if (show_beam)
     {
         have_beam = find_ray(you.pos(), moves.target, ray);
-        beam_target = moves.target;
+        beam_target = objfind_pos = monsfind_pos = moves.target;
         if (have_beam)
+        {
             _draw_beam(ray, beam_target, range);
+#ifdef USE_TILE
+            // In tiles, we need to refresh the window to get the beam drawn.
+            viewwindow(false, true);
+#endif
+        }
     }
 
     bool target_unshifted = Options.target_unshifted_dirs;

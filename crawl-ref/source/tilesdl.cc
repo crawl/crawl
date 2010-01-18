@@ -49,59 +49,6 @@ static int _screen_sizes[4][8] =
     {800, 480, 3, 13, 12, 10, 13, 11}
 };
 
-// Note: these defaults should match the OpenGL defaults
-GLState::GLState() :
-    array_vertex(false),
-    array_texcoord(false),
-    array_colour(false),
-    blend(false),
-    texture(false)
-{
-}
-
-void GLStateManager::init()
-{
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glClearColor(0.0, 0.0, 0.0, 1.0f);
-}
-
-void GLStateManager::set(const GLState& state)
-{
-    if (state.array_vertex)
-        glEnableClientState(GL_VERTEX_ARRAY);
-    else
-        glDisableClientState(GL_VERTEX_ARRAY);
-
-    if (state.array_texcoord)
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    else
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    if (state.array_colour)
-    {
-        glEnableClientState(GL_COLOR_ARRAY);
-    }
-    else
-    {
-        glDisableClientState(GL_COLOR_ARRAY);
-
-        // [enne] This should *not* be necessary, but the Linux OpenGL
-        // driver that I'm using sets this to the last colour of the
-        // colour array.  So, we need to unset it here.
-        glColor3f(1.0f, 1.0f, 1.0f);
-    }
-
-    if (state.texture)
-        glEnable(GL_TEXTURE_2D);
-    else
-        glDisable(GL_TEXTURE_2D);
-
-    if (state.blend)
-        glEnable(GL_BLEND);
-    else
-        glDisable(GL_BLEND);
-}
-
 TilesFramework tiles;
 
 TilesFramework::TilesFramework() :
@@ -486,7 +433,7 @@ void TilesFramework::resize()
     glLoadIdentity();
 
     // For ease, vertex positions are pixel positions.
-    glOrtho(0, m_windowsz.x, m_windowsz.y, 0, 0, 100);
+    glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
 }
 
 static unsigned char _get_modifiers(SDL_keysym &keysym)

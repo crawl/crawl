@@ -3291,7 +3291,7 @@ static void _open_door(coord_def move, bool check_confused)
         }
         switch (feat)
         {
-        // This doesn't ever sem to be triggered.
+        // This doesn't ever seem to be triggered.
         case DNGN_OPEN_DOOR:
             if (!door_already_open.empty())
                 mpr(door_already_open.c_str());
@@ -3465,6 +3465,7 @@ static void _open_door(coord_def move, bool check_confused)
             }
         }
         grd(dc) = DNGN_OPEN_DOOR;
+        dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
         if (is_excluded(dc))
             excludes.push_back(dc);
     }
@@ -3664,6 +3665,8 @@ static void _close_door(coord_def move)
             // Once opened, formerly secret doors become normal doors.
             grd(dc) = DNGN_CLOSED_DOOR;
 
+            dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
+
             // Even if some of the door is out of LOS once it's closed
             // (or even if some of it is out of LOS when it's open), we
             // want the entire door to be updated.
@@ -3679,7 +3682,6 @@ static void _close_door(coord_def move)
         }
 
         update_exclusion_los(excludes);
-
         you.turn_is_over = true;
     }
     else if (you.confused())

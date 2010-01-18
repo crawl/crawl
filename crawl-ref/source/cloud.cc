@@ -112,8 +112,9 @@ static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
 
 static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
                              kill_category whose, killer_type killer,
-                             int spread_rate, int colour, std::string name,
-                             std::string tile)
+                             int spread_rate = -1, int colour = -1,
+                             std::string name = "",
+                             std::string tile = "")
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
@@ -185,13 +186,32 @@ static void _spread_fire(const cloud_struct &cloud)
         {
             if (you.see_cell(*ai))
                 mpr("The forest fire spreads!");
-            grd(*ai) = DNGN_FLOOR;
+            grd(*ai) = dgn_tree_base_feature_at(*ai);
             _place_new_cloud( cloud.type, *ai, random2(30)+25, cloud.whose,
                               cloud.killer, cloud.spread_rate, cloud.colour,
                               cloud.name, cloud.tile );
         }
 
     }
+}
+
+static void _cloud_fire_interacts_with_terrain(const cloud_struct &cloud)
+{
+    for (adjacent_iterator ai(cloud.pos); ai; ++ai)
+    {
+        const coord_def p(*ai);
+        if (feat_is_watery(grd(p)) && env.cgrid(p) == EMPTY_CLOUD)
+        {
+            _place_new_cloud(CLOUD_STEAM, p, cloud.decay / 2 + 1,
+                             cloud.whose, cloud.killer);
+        }
+    }
+}
+
+void cloud_interacts_with_terrain(const cloud_struct &cloud)
+{
+    if (cloud.type == CLOUD_FIRE || cloud.type == CLOUD_FOREST_FIRE)
+        _cloud_fire_interacts_with_terrain(cloud);
 }
 
 static void _dissipate_cloud(int cloudidx, int dissipate)
@@ -228,7 +248,8 @@ void manage_clouds()
         // rain and cold clouds dissipate faster over lava.
         if (cloud.type == CLOUD_FIRE && grd(cloud.pos) == DNGN_DEEP_WATER)
             dissipate *= 4;
-        else if ((cloud.type == CLOUD_COLD || cloud.type == CLOUD_RAIN) && grd(cloud.pos) == DNGN_LAVA)
+        else if ((cloud.type == CLOUD_COLD || cloud.type == CLOUD_RAIN)
+                 && grd(cloud.pos) == DNGN_LAVA)
             dissipate *= 4;
         else if (cloud.type == CLOUD_GLOOM)
         {
@@ -247,6 +268,7 @@ void manage_clouds()
                 dissipate /= 20;
         }
 
+        cloud_interacts_with_terrain(cloud);
         expose_items_to_element(cloud2beam(cloud.type), cloud.pos, 2);
 
         _dissipate_cloud(i, dissipate);
@@ -388,6 +410,11 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
                 colour, name, tile);
 }
 
+bool cloud_is_inferior(cloud_type inf, cloud_type superior)
+{
+    return (inf == CLOUD_STINK && superior == CLOUD_POISON);
+}
+
 //   Places a cloud with the given stats. May delete old clouds to
 //   make way if there are too many on level. Will overwrite an old
 //   cloud under some circumstances.
@@ -406,7 +433,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         // There's already a cloud here. See if we can overwrite it.
         cloud_struct& old_cloud = env.cloud[target_cgrid];
         if (old_cloud.type >= CLOUD_GREY_SMOKE && old_cloud.type <= CLOUD_STEAM
-            || old_cloud.type == CLOUD_STINK
+            || cloud_is_inferior(old_cloud.type, cl_type)
             || old_cloud.type == CLOUD_BLACK_SMOKE
             || old_cloud.type == CLOUD_MIST
             || old_cloud.decay <= 20) // soon gone
@@ -431,7 +458,6 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         {
             cloud_struct& cloud = env.cloud[ci];
             if (cloud.type >= CLOUD_GREY_SMOKE && cloud.type <= CLOUD_STEAM
-                || cloud.type == CLOUD_STINK
                 || cloud.type == CLOUD_BLACK_SMOKE
                 || cloud.type == CLOUD_MIST
                 || cloud.decay <= 20) // soon gone

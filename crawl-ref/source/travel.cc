@@ -2008,7 +2008,9 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                     std::string msg;
 
                     if (target.startdepth == -1
-                        && (i == BRANCH_SWAMP || i == BRANCH_SHOALS ))
+                        && (i == BRANCH_SWAMP
+                            || i == BRANCH_SHOALS
+                            || i == BRANCH_SNAKE_PIT))
                     {
                         msg += "Branch not generated this game.  ";
                     }

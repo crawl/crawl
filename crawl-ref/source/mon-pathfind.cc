@@ -411,6 +411,8 @@ bool monster_pathfind::mons_traversable(const coord_def p)
     {
         if (mons->is_habitable_feat(DNGN_FLOOR))
         {
+            if (env.markers.property_at(p, MAT_ANY, "door_restrict") == "veto")
+                return (false);
             if (mons_eats_items(mons))
                 return (true);
             else if (mons_is_zombified(mons))
@@ -470,8 +472,11 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     ASSERT(grid_distance(pos, npos) <= 1);
 
     // Doors need to be opened.
-    if (feat_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR)
+    if (feat_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR 
+        && env.markers.property_at(npos, MAT_ANY, "door_restict") != "veto")
+    {
         return 2;
+    }
 
     const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
                                                 : mons->type;

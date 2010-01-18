@@ -691,10 +691,9 @@ SUBST:  W : W..
 KFEAT:  T = teleport trap
 SUBST:  X = I G C
 KFEAT:  C = altar_beogh
-SUBST:  = : = l w
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche race:orcish / good_item executioner's axe race:orcish
-ITEM:   potion of experience / scroll of acquirement q:2 /\
+ITEM:   potion of experience q:2 / scroll of acquirement q:2 /\
         scroll of enchant armour q:4 / scroll of enchant weapon III q:3
 # XXX: I had "legendary deck of Wonders" here but it does not work. Anybody
 #      can help?

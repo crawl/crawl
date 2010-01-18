@@ -4536,7 +4536,7 @@ int get_real_hp(bool trans, bool rotted)
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
-        hitp *= 2;
+        hitp = hitp * 3 / 2;
 
     if (trans)
     {

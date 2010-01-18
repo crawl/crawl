@@ -18,6 +18,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "externs.h"
 #include "options.h"
 #include "ghost.h"
@@ -712,11 +713,12 @@ static int _is_near_stairs(coord_def &p)
 // is true, then we'll be less rigorous in our checks, in particular
 // allowing land monsters to be placed in shallow water and water
 // creatures in fountains.
-static bool _valid_monster_generation_location(
-    const mgen_data &mg,
-    const coord_def &mg_pos)
+static bool _valid_monster_generation_location( const mgen_data &mg,
+                                                const coord_def &mg_pos)
 {
-    if (!in_bounds(mg_pos) || actor_at(mg_pos))
+    if (!in_bounds(mg_pos)
+        || monster_at(mg_pos)
+        || you.pos() == mg_pos && !fedhas_passthrough_class(mg.cls))
         return (false);
 
     const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
@@ -1056,6 +1058,7 @@ monsters* get_free_monster()
             env.mons[i].reset();
             return (&env.mons[i]);
         }
+
     return (NULL);
 }
 
@@ -1068,9 +1071,8 @@ static void _maybe_init_tilenum_props(monsters *mon)
     if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))
         return;
 
-    // FIXME: special-case hack to prevent dancing weapons from causing
-    // a crash.
-    if (mon->type == MONS_DANCING_WEAPON)
+    // Special-case for monsters masquerading as items.
+    if (mon->type == MONS_DANCING_WEAPON || mons_is_mimic(mon->type))
         return;
 
     // Only add the property for tiles that have several variants.
@@ -1098,7 +1100,8 @@ static int _place_monster_aux(const mgen_data &mg,
     // If the space is occupied, try some neighbouring square instead.
     if (first_band_member && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos))
-        && actor_at(mg.pos) == NULL
+        && !monster_at(mg.pos)
+        && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
         && (force_pos || monster_habitable_grid(montype, grd(mg.pos))))
     {
         fpos = mg.pos;
@@ -1381,6 +1384,13 @@ static int _place_monster_aux(const mgen_data &mg,
     else if (mg.abjuration_duration > 0)
     {
         blame_prefix = "summoned by ";
+
+        if (mg.summoner != NULL && mg.summoner->alive()
+            && mg.summoner->atype() == ACT_MONSTER 
+            && static_cast<const monsters*>(mg.summoner)->type == MONS_MARA)
+        {
+                blame_prefix = "woven by ";
+        }
     }
     else if (mons_class_is_zombified(mg.cls))
     {
@@ -2879,7 +2889,8 @@ int create_monster(mgen_data mg, bool fail_msg)
 
     if (!mg.force_place()
         || !in_bounds(mg.pos)
-        || actor_at(mg.pos)
+        || monster_at(mg.pos)
+        || you.pos() == mg.pos && !fedhas_passthrough_class(mg.cls)
         || !mons_class_can_pass(montype, grd(mg.pos)))
     {
         mg.pos = find_newmons_square(montype, mg.pos);

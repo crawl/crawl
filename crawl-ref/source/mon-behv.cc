@@ -253,12 +253,19 @@ void handle_behaviour(monsters *mon)
         actor* afoe = mon->get_foe();
         proxFoe = afoe && mon->can_see(afoe);
 
+        if (mon->foe == MHITYOU)
+        {
+            // monsters::get_foe returns NULL for friendly monsters with
+            // foe == MHITYOU, so make afoe point to the player here.
+            // -cao
+            afoe = &you;
+            proxFoe = proxPlayer;   // Take invis into account.
+        }
+
         coord_def foepos = coord_def(0,0);
         if (afoe)
             foepos = afoe->pos();
 
-        if (mon->foe == MHITYOU)
-            proxFoe = proxPlayer;   // Take invis into account.
 
         // Track changes to state; attitude never changes here.
         beh_type new_beh       = mon->behaviour;

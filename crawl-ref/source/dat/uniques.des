@@ -120,7 +120,8 @@ DEPTH:  20-27, !Lair, !Slime
 : place_unique(_G, "Boris")
 
 NAME:   uniq_donald
-DEPTH:  10-13
+# XXX: add Vaults:1-4 when finished re-do of vaults.
+DEPTH:  Swamp, Snake, Shoal, Slime, Crypt:1-4, Blade, Elf:2-6, Orc:3-4
 : place_unique(_G, "Donald")
 
 NAME:   uniq_duane
@@ -340,7 +341,7 @@ DEPTH:  Shoal:1-5
 : place_unique(_G, "Polyphemus band")
 
 NAME:   uniq_ilsuiw
-DEPTH:  Shoal:1-5
+DEPTH:  Shoal:3-5
 : place_unique(_G, "Ilsuiw band")
 
 NAME:   uniq_khufu

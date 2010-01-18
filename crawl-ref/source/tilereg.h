@@ -276,10 +276,10 @@ public:
 
 protected:
     void pack_background(unsigned int bg, int x, int y);
-    void pack_mcache(mcache_entry *entry, int x, int y);
-    void pack_player(int x, int y);
+    void pack_mcache(mcache_entry *entry, int x, int y, bool submerged);
+    void pack_player(int x, int y, bool submerged);
     void pack_foreground(unsigned int bg, unsigned int fg, int x, int y);
-    void pack_doll(const dolls_data &doll, int x, int y);
+    void pack_doll(const dolls_data &doll, int x, int y, bool submerged, bool ghost);
     void pack_cursor(cursor_type type, unsigned int tile);
     void pack_buffers();
 
@@ -293,7 +293,8 @@ protected:
     std::vector<TextTag> m_tags[TAG_MAX];
 
     TileBuffer m_buf_dngn;
-    TileBuffer m_buf_doll;
+    SubmergedTileBuffer m_buf_doll;
+    SubmergedTileBuffer m_buf_main_trans;
     TileBuffer m_buf_main;
 
     struct tile_overlay
@@ -489,8 +490,8 @@ protected:
 
     ShapeBuffer m_shape_buf;
     FontBuffer m_font_buf;
-    TileBuffer m_tile_buf;
-    TileBuffer m_cur_buf;
+    SubmergedTileBuffer m_tile_buf;
+    SubmergedTileBuffer m_cur_buf;
 };
 
 #endif

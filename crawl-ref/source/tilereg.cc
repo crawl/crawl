@@ -249,7 +249,8 @@ DungeonRegion::DungeonRegion(ImageManager* im, FTFont *tag_font,
     m_cx_to_gx(0),
     m_cy_to_gy(0),
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
-    m_buf_doll(&im->m_textures[TEX_PLAYER]),
+    m_buf_doll(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16),
+    m_buf_main_trans(&im->m_textures[TEX_DEFAULT], TILE_MASK_SUBMERGED, 18, 16),
     m_buf_main(&im->m_textures[TEX_DEFAULT])
 {
     for (int i = 0; i < CURSOR_MAX; i++)
@@ -805,14 +806,14 @@ void save_doll_file(FILE *dollf)
         fprintf(dollf, "net\n");
 }
 
-void DungeonRegion::pack_player(int x, int y)
+void DungeonRegion::pack_player(int x, int y, bool submerged)
 {
     dolls_data result = player_doll;
     _fill_doll_equipment(result);
-    pack_doll(result, x, y);
+    pack_doll(result, x, y, submerged, false);
 }
 
-void pack_doll_buf(TileBuffer& buf, const dolls_data &doll, int x, int y)
+void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int y, bool submerged, bool ghost)
 {
     int p_order[TILEP_PART_MAX] =
     {
@@ -865,11 +866,20 @@ void pack_doll_buf(TileBuffer& buf, const dolls_data &doll, int x, int y)
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    for (int i = 0; i < TILEP_PART_MAX; i++)
+    // A higher index here means that the part should be drawn on top.
+    // This is drawn in reverse order because this could be a ghost
+    // or being drawn in water, in which case we want the top-most part
+    // to blend with the background underneath and not with the parts
+    // underneath.  Parts drawn afterwards will not obscure parts drawn
+    // previously, because "i" is passed as the depth below.
+    for (int i = TILEP_PART_MAX - 1; i >= 0; --i)
     {
         int p = p_order[i];
 
         if (!doll.parts[p] || flags[p] == TILEP_FLAG_HIDE)
+            continue;
+
+        if (p == TILEP_PART_SHADOW && (submerged || ghost))
             continue;
 
         int ymax = TILE_Y;
@@ -880,68 +890,51 @@ void pack_doll_buf(TileBuffer& buf, const dolls_data &doll, int x, int y)
             ymax = 18;
         }
 
-        buf.add(doll.parts[p], x, y, 0, 0, true, ymax);
+        buf.add(doll.parts[p], x, y, i, submerged, ghost, 0, 0, ymax);
     }
 }
 
-void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y)
+void DungeonRegion::pack_doll(const dolls_data &doll, int x, int y, bool submerged, bool ghost)
 {
-    pack_doll_buf(m_buf_doll, doll, x, y);
+    pack_doll_buf(m_buf_doll, doll, x, y, submerged, ghost);
 }
 
 
-void DungeonRegion::pack_mcache(mcache_entry *entry, int x, int y)
+void DungeonRegion::pack_mcache(mcache_entry *entry, int x, int y, bool submerged)
 {
     ASSERT(entry);
 
+    bool trans = entry->transparent();
+
     const dolls_data *doll = entry->doll();
     if (doll)
-        pack_doll(*doll, x, y);
+        pack_doll(*doll, x, y, submerged, trans);
 
     tile_draw_info dinfo[3];
     unsigned int draw_info_count = entry->info(&dinfo[0]);
     ASSERT(draw_info_count <= sizeof(dinfo) / (sizeof(dinfo[0])));
 
     for (unsigned int i = 0; i < draw_info_count; i++)
-        m_buf_doll.add(dinfo[i].idx, x, y, dinfo[i].ofs_x, dinfo[i].ofs_y);
+    {
+        m_buf_doll.add(dinfo[i].idx, x, y, 0, submerged, trans,
+                       dinfo[i].ofs_x, dinfo[i].ofs_y);
+    }
 }
 
 void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int y)
 {
     unsigned int fg_idx = fg & TILE_FLAG_MASK;
-    unsigned int bg_idx = bg & TILE_FLAG_MASK;
 
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
-        m_buf_main.add(fg_idx, x, y);
-
-    if (fg_idx && !(fg & TILE_FLAG_FLYING))
     {
-        if (tile_dngn_equal(TILE_DNGN_LAVA, bg_idx))
-            m_buf_main.add(TILE_MASK_LAVA, x, y);
-        else if (tile_dngn_equal(TILE_DNGN_SHALLOW_WATER, bg_idx)
-                 || tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_DISTURBANCE,
-                                    bg_idx))
-        {
-            m_buf_main.add(TILE_MASK_SHALLOW_WATER, x, y);
-        }
-        else if (tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_MURKY, bg_idx)
-                 || tile_dngn_equal(TILE_DNGN_SHALLOW_WATER_MURKY_DISTURBANCE,
-                                    bg_idx))
-        {
-            m_buf_main.add(TILE_MASK_SHALLOW_WATER_MURKY, x, y);
-        }
-        else if (tile_dngn_equal(TILE_DNGN_DEEP_WATER, bg_idx))
-            m_buf_main.add(TILE_MASK_DEEP_WATER, x, y);
-        else if (tile_dngn_equal(TILE_DNGN_DEEP_WATER_MURKY, bg_idx))
-            m_buf_main.add(TILE_MASK_DEEP_WATER_MURKY, x, y);
-        else if (tile_dngn_equal(TILE_SHOALS_DEEP_WATER, bg_idx))
-            m_buf_main.add(TILE_MASK_DEEP_WATER_SHOALS, x, y);
-        else if (tile_dngn_equal(TILE_SHOALS_SHALLOW_WATER, bg_idx))
-            m_buf_main.add(TILE_MASK_SHALLOW_WATER_SHOALS, x, y);
+        if (bg & TILE_FLAG_WATER && !(fg & TILE_FLAG_FLYING))
+            m_buf_main_trans.add(fg_idx, x, y, 0, true, false);
+        else
+            m_buf_main.add(fg_idx, x, y);
     }
 
     if (fg & TILE_FLAG_NET)
-        m_buf_doll.add(TILEP_TRAP_NET, x, y);
+        m_buf_doll.add(TILEP_TRAP_NET, x, y, 0, bg & TILE_FLAG_WATER, false);
 
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
@@ -1058,6 +1051,7 @@ void DungeonRegion::pack_buffers()
 {
     m_buf_dngn.clear();
     m_buf_doll.clear();
+    m_buf_main_trans.clear();
     m_buf_main.clear();
 
     if (m_tileb.empty())
@@ -1077,17 +1071,20 @@ void DungeonRegion::pack_buffers()
             {
                 mcache_entry *entry = mcache.get(fg_idx);
                 if (entry)
-                    pack_mcache(entry, x, y);
+                    pack_mcache(entry, x, y, bg & TILE_FLAG_WATER);
                 else
-                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y);
+                {
+                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0,
+                                   bg & TILE_FLAG_WATER, false);
+                }
             }
             else if (fg_idx == TILEP_PLAYER)
             {
-                pack_player(x, y);
+                pack_player(x, y, bg & TILE_FLAG_WATER);
             }
             else if (fg_idx >= TILE_MAIN_MAX)
             {
-                m_buf_doll.add(fg_idx, x, y);
+                m_buf_doll.add(fg_idx, x, y, 0, bg & TILE_FLAG_WATER, false);
             }
 
             pack_foreground(bg, fg, x, y);
@@ -1146,6 +1143,7 @@ void DungeonRegion::render()
     set_transform();
     m_buf_dngn.draw();
     m_buf_doll.draw();
+    m_buf_main_trans.draw();
     m_buf_main.draw();
 
     if (you.berserk())
@@ -4029,7 +4027,9 @@ void TitleRegion::run()
 }
 
 DollEditRegion::DollEditRegion(ImageManager *im, FTFont *font) :
-    m_font_buf(font)
+    m_font_buf(font),
+    m_tile_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16),
+    m_cur_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16)
 {
     sx = sy = 0;
     dx = dy = 32;
@@ -4040,9 +4040,6 @@ DollEditRegion::DollEditRegion(ImageManager *im, FTFont *font) :
     m_doll_idx = 0;
     m_cat_idx = TILEP_PART_BASE;
     m_copy_valid = false;
-
-    m_tile_buf.set_tex(&im->m_textures[TEX_PLAYER]);
-    m_cur_buf.set_tex(&im->m_textures[TEX_PLAYER]);
 }
 
 void DollEditRegion::clear()
@@ -4188,7 +4185,7 @@ void DollEditRegion::render()
     {
         dolls_data temp = m_dolls[m_doll_idx];
         _fill_doll_equipment(temp);
-        pack_doll_buf(m_cur_buf, temp, 0, 0);
+        pack_doll_buf(m_cur_buf, temp, 0, 0, false, false);
     }
 
     // Draw set of dolls.
@@ -4202,7 +4199,7 @@ void DollEditRegion::render()
 
         dolls_data temp = m_dolls[i];
         _fill_doll_equipment(temp);
-        pack_doll_buf(m_tile_buf, temp, x, y);
+        pack_doll_buf(m_tile_buf, temp, x, y, false, false);
 
         m_shape_buf.add(x, y, x + 1, y + 1, grey);
     }
@@ -4261,12 +4258,12 @@ void DollEditRegion::render()
         dolls_data temp;
         temp = m_job_default;
         _fill_doll_equipment(temp);
-        pack_doll_buf(m_cur_buf, temp, 2, 0);
+        pack_doll_buf(m_cur_buf, temp, 2, 0, false, false);
 
         for (unsigned int i = 0; i < TILEP_PART_MAX; ++i)
             temp.parts[i] = TILEP_SHOW_EQUIP;
         _fill_doll_equipment(temp);
-        pack_doll_buf(m_cur_buf, temp, 4, 0);
+        pack_doll_buf(m_cur_buf, temp, 4, 0, false, false);
 
         if (m_mode == TILEP_MODE_LOADING)
             m_cur_buf.add(TILEP_CURSOR, 0, 0);

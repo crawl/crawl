@@ -104,6 +104,8 @@ public:
 
     virtual void construct(writer &th);
 
+    virtual bool transparent() const;
+
 protected:
     dolls_data m_doll;
 };
@@ -338,7 +340,6 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
     case TILEP_MONS_DEEP_ELF_BLADEMASTER:
     case TILEP_MONS_IMP:
-    case TILEP_MONS_ANGEL:
     case TILEP_MONS_NORRIS:
     case TILEP_MONS_MAUD:
     case TILEP_MONS_DUANE:
@@ -817,6 +818,11 @@ void mcache_ghost::construct(writer &th)
     mcache_entry::construct(th);
 
     marshallDoll(th, m_doll);
+}
+
+bool mcache_ghost::transparent() const
+{
+    return (true);
 }
 
 /////////////////////////////////////////////////////////////////////////////

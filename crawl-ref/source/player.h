@@ -62,8 +62,6 @@ public:
 
   char max_level;
 
-  coord_def youpos;
-
   coord_def prev_move;
 
   int hunger;

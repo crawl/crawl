@@ -784,6 +784,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // humans ('@')
     case MONS_HUMAN:
+    case MONS_DWARF:
         return TILEP_MONS_HUMAN;
     case MONS_HELL_KNIGHT:
         return TILEP_MONS_HELL_KNIGHT;
@@ -844,8 +845,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_ROTTING_DEVIL;
     case MONS_SMOKE_DEMON:
         return TILEP_MONS_SMOKE_DEMON;
-//     case MONS_SIXFIRHY:              // TODO
-//         return TILEP_MONS_SIXFIRHY;
+    case MONS_SIXFIRHY:
+        return TILEP_MONS_SIXFIRHY;
     case MONS_HELLWING:
         return TILEP_MONS_HELLWING;
 
@@ -972,9 +973,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // elves ('e')
     case MONS_DOWAN:
-        return TILEP_MONS_DEEP_ELF_MAGE;    // TODO
+        return TILEP_MONS_DOWAN;
     case MONS_DUVESSA:
-        return TILEP_MONS_DEEP_ELF_FIGHTER; // TODO
+        return TILEP_MONS_DUVESSA;
 
     // goblins and gnolls ('g')
     case MONS_IJYB:
@@ -2114,6 +2115,9 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SHAPESHIFTER;
     case MONS_GLOWING_SHAPESHIFTER:
         return TILE_CORPSE_GLOWING_SHAPESHIFTER;
+
+    case MONS_DWARF:
+        return TILE_CORPSE_DWARF;
 
     default:
         return TILE_ERROR;
@@ -5082,6 +5086,10 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                         }
                     }
                 }
+
+                dungeon_feature_type feat = grd(gc);
+                if (feat_is_water(feat) || feat == DNGN_LAVA)
+                    tileb[count+1] |= TILE_FLAG_WATER;
 
                 if (print_blood && is_bloodcovered(gc))
                     tileb[count+1] |= TILE_FLAG_BLOOD;

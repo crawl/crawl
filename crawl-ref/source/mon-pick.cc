@@ -1558,6 +1558,7 @@ int mons_swamp_level(int mcls)
     case MONS_SWAMP_DRAKE:
     case MONS_WORM:
     case MONS_SWAMP_WORM:
+    case MONS_GIANT_LEECH:
         mlev++;
         break;
 
@@ -1591,7 +1592,6 @@ int mons_swamp_level(int mcls)
     case MONS_SLIME_CREATURE:
     case MONS_VERY_UGLY_THING:
     case MONS_VAPOUR:
-    case MONS_GIANT_LEECH:
     case MONS_TENTACLED_MONSTROSITY:
         mlev += 4;
         break;
@@ -1633,6 +1633,7 @@ int mons_swamp_rare(int mcls)
         return 70;
 
     case MONS_RAT:
+    case MONS_GIANT_LEECH:
         return 61;
 
     case MONS_SLIME_CREATURE:
@@ -1681,7 +1682,6 @@ int mons_swamp_rare(int mcls)
     case MONS_GIANT_NEWT:
     case MONS_GIANT_SLUG:
     case MONS_GIANT_SNAIL:
-    case MONS_GIANT_LEECH:
         return 10;
 
     case MONS_TENTACLED_MONSTROSITY:

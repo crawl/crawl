@@ -218,7 +218,9 @@ hairy_devil MONS_HAIRY_DEVIL
 red_devil MONS_RED_DEVIL
 rotting_devil MONS_ROTTING_DEVIL
 smoke_demon MONS_SMOKE_DEMON
-#sixfirhy MONS_SIXFIRHY
+%rim 0
+sixfirhy MONS_SIXFIRHY
+%rim 1
 hellwing MONS_HELLWING
 
 # type '5' demons
@@ -519,7 +521,6 @@ plant MONS_PLANT
 plant_crypt MONS_WITHERED_PLANT
 %rim 1
 bush MONS_BUSH
-%rim 0
 oklob_plant MONS_OKLOB_PLANT
 
 ## Trolls ('T')
@@ -572,6 +573,10 @@ yaktaur_captain MONS_YAKTAUR_CAPTAIN
 yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
 
 ## Elves ('e')
+%sdir dc-mon/unique
+dowan MONS_DOWAN
+duvessa MONS_DUVESSA
+%sdir dc-mon
 elf MONS_ELF
 deep_elf_fighter MONS_DEEP_ELF_FIGHTER
 deep_elf_soldier MONS_DEEP_ELF_SOLDIER

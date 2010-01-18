@@ -4643,16 +4643,18 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
         fringe.pop();
 
-        actor * occupant = NULL;
+        monsters * monster = monster_at(current);
+
+        bool player_occupant = you.pos() == current;
 
         // Is this square occupied by a non mushroom?
-        if ((occupant = actor_at(current))
-            && occupant->mons_species() != MONS_TOADSTOOL)
+        if (monster && monster->mons_species() != MONS_TOADSTOOL
+            || player_occupant && you.religion != GOD_FEDHAS)
         {
             continue;
         }
 
-        if (!occupant)
+        if (!monster)
         {
             const int mushroom = create_monster(
                         mgen_data(MONS_TOADSTOOL,
@@ -4693,7 +4695,12 @@ int spawn_corpse_mushrooms(item_def &corpse,
                 }
 
                 placed_targets++;
-                if (you.see_cell(current))
+                if (current == you.pos())
+                {
+                    mprf("A toadstool grows at your feet.");
+                    current=  env.mons[mushroom].pos();
+                }
+                else if (you.see_cell(current))
                     seen_targets++;
             }
             else

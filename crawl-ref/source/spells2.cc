@@ -1090,7 +1090,8 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             || wpn.sub_type == WPN_ANKUS
             || wpn.sub_type == WPN_HALBERD
             || wpn.sub_type == WPN_GLAIVE
-            || wpn.sub_type == WPN_BLOWGUN))
+            || wpn.sub_type == WPN_BLOWGUN)
+        && !is_artefact(wpn))
     {
         // Upsizing Snakes to Water Moccasins as the base class for using
         // the really big sticks (so bonus applies really only to trolls
