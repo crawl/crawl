@@ -3467,6 +3467,13 @@ static bool _monster_move(monsters *monster)
     }
     else
     {
+        monsters* targ = monster_at(monster->pos() + mmov);
+        if (!mmov.origin() && targ && mons_is_firewood(targ))
+        {
+            monsters_fight(monster, targ);
+            ret = true;
+        }
+
         mmov.reset();
 
         // Fleeing monsters that can't move will panic and possibly

@@ -31,6 +31,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "kills.h"
+#include "macro.h"
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
@@ -303,12 +304,12 @@ void tutorial_zap_secret_doors()
 // Prints the tutorial welcome screen.
 static formatted_string _tut_starting_info(unsigned int width)
 {
-    std::ostringstream istr;
+    std::string text;
 
-    istr << "<white>Welcome to Dungeon Crawl!</white>" EOL EOL
-         << "Your object is to lead a <w>"
-         << species_name(you.species, 1) << " " << you.class_name
-         <<
+    text  = "<white>Welcome to Dungeon Crawl!</white>" EOL EOL;
+    text += "Your object is to lead a <w>"
+         + species_name(you.species, 1) + " " + you.class_name
+         +
         "</w> safely through the depths of the dungeon, retrieving the "
         "fabled Orb of Zot and returning it to the surface. "
         "In the beginning, however, let discovery be your "
@@ -316,10 +317,10 @@ static formatted_string _tut_starting_info(unsigned int width)
         "death lurks around every corner." EOL EOL
         "For the moment, just remember the following keys "
         "and their functions:" EOL
-        "  <white>?\?</white> - shows the items and the commands" EOL
-        "  <white>S</white>  - saves the game, to be resumed later "
+        "  <white>%?</white> - shows the items and the commands" EOL
+        "  <white>%</white>  - saves the game, to be resumed later "
         "(but note that death is permanent)" EOL
-        "  <white>x</white>  - examines something in your vicinity" EOL EOL
+        "  <white>%</white>  - examines something in your vicinity" EOL EOL
         "This tutorial will help you play Crawl without reading any "
         "documentation. If you feel intrigued, there is more information "
         "available in the following files from the docs/ folder (all of "
@@ -337,9 +338,9 @@ static formatted_string _tut_starting_info(unsigned int width)
         "(the screen division and movement)." EOL
         "Press <white>Esc</white> to fast forward to the game start.";
 
-    std::string broken = istr.str();
-    linebreak_string2(broken, width);
-    return formatted_string::parse_block(broken);
+    insert_commands(text, CMD_DISPLAY_COMMANDS, CMD_SAVE_GAME, CMD_LOOK_AROUND, 0);
+    linebreak_string2(text, width);
+    return formatted_string::parse_block(text);
 }
 
 #ifdef TUTORIAL_DEBUG
@@ -642,11 +643,12 @@ static void _tutorial_message_intro()
               "part of the screen is reserved for messages. "
               "Everything related to the tutorial is shown in this colour. If "
               "you missed something, previous messages can be read again with "
-              "<w>Ctrl-P</w>"
+              "<w>%</w>"
 #ifdef USE_TILE
               " or by <w>clicking into the message area</w>"
 #endif
               "." EOL;
+    insert_commands(result, CMD_REPLAY_MESSAGES, 0);
 
 #ifdef USE_TILE
     result += EOL;
@@ -667,7 +669,7 @@ static void _tutorial_movement_info()
     std::string text =
         "To move your character, use the numpad; try Numlock both on and off. "
         "If your system has no number pad, or if you are familiar with the vi "
-        "keys, movement is also possible with <w>hjklyubn</w>. "
+        "keys, movement is also possible with <w>%%%%%%%%</w>. "
 #ifdef USE_TILE
         "You can also move by clicking somewhere on the map. If this is "
         "considered safe, i.e. there are no monsters around, you'll move "
@@ -677,6 +679,9 @@ static void _tutorial_movement_info()
         "A basic command list can be found under <w>?\?</w>, and the most "
         "important commands will be explained to you as it becomes necessary.";
     mesclr();
+    insert_commands(text, CMD_MOVE_LEFT, CMD_MOVE_DOWN, CMD_MOVE_UP,
+                    CMD_MOVE_RIGHT, CMD_MOVE_UP_LEFT, CMD_MOVE_UP_RIGHT,
+                    CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN_RIGHT, 0);
     mpr(text, MSGCH_TUTORIAL, 0);
 }
 
@@ -906,8 +911,9 @@ void tutorial_finished()
     Tutorial.tutorial_left = 0;
     text =  "Congrats! You survived until the end of this tutorial - be sure "
             "to try the other ones as well. Note that the command help screen "
-            "(<w>?\?</w>) will look very different from now on. Here's a last "
+            "(<w>%?</w>) will look very different from now on. Here's a last "
             "playing hint:";
+    insert_commands(text, CMD_DISPLAY_COMMANDS, 0);
 
     mpr(text, MSGCH_TUTORIAL, 0);
     more();
@@ -915,66 +921,72 @@ void tutorial_finished()
     if (Tutorial.tut_explored)
     {
         text =  "Walking around and exploring levels gets easier by using "
-                "auto-explore (<w>o</w>). Crawl will let you automatically "
+                "auto-explore (<w>%</w>). Crawl will let you automatically "
                 "move to and pick up interesting items.";
+        insert_commands(text, CMD_EXPLORE, 0);
     }
     else if (Tutorial.tut_travel)
     {
         text =  "There is a convenient way for travelling between far away "
-                "dungeon levels: press <w>Ctrl-G</w> or <w>G</w> and enter "
+                "dungeon levels: press <w>%</w> or <w>G</w> and enter "
                 "the desired destination. If your travel gets interrupted, "
-                "issuing <w>Ctrl-G Enter</w> or <w>G Enter</w> will continue "
+                "issuing <w>% Enter</w> or <w>G Enter</w> will continue "
                 "it.";
+        insert_commands(text, CMD_INTERLEVEL_TRAVEL, CMD_INTERLEVEL_TRAVEL, 0);
     }
     else if (Tutorial.tut_stashes)
     {
         text =  "You can search among all items existing in the dungeon with "
-                "the <w>Ctrl-F</w> command. For example, "
-                "<w>Ctrl-F \"knife\"</w> will list all knives. You can then "
+                "the <w>%</w> command. For example, "
+                "<w>% \"knife\"</w> will list all knives. You can then "
                 "travel to one of the spots. It is even possible to enter "
                 "words like <w>\"shop\"</w> or <w>\"altar\"</w>.";
+        insert_commands(text, CMD_SEARCH_STASHES, CMD_SEARCH_STASHES, 0);
     }
     else
     {
         int hint = random2(4);
         switch (hint)
         {
-          case 0:
-              text = "The game keeps an automated logbook for your characters. "
-                     "Use <w>?:</w> to read it. You can enter notes manually "
-                     "with the <w>:</w> command. Once your character perishes, "
-                     "two morgue files are left in the <w>morgue/</w> "
-                     "directory. The one ending in .txt contains a copy of "
-                     "your logbook. During play, you can create a dump file "
-                     "with <w>#</w>.";
-              break;
+        case 0:
+            text = "The game keeps an automated logbook for your characters. "
+                   "Use <w>%:</w> to read it. You can enter notes manually "
+                   "with the <w>%</w> command. Once your character perishes, "
+                   "two morgue files are left in the <w>morgue/</w> "
+                   "directory. The one ending in .txt contains a copy of "
+                   "your logbook. During play, you can create a dump file "
+                   "with <w>%</w>.";
+            insert_commands(text, CMD_DISPLAY_COMMANDS, CMD_MAKE_NOTE,
+                            CMD_CHARACTER_DUMP, 0);
+            break;
 
-          case 1:
-              text = "Crawl has a macro function built in: press <w>~m</w> "
-                     "to define a macro by first specifying a trigger key "
-                     "(say, <w>F1</w>) and a command sequence, for example "
-                     "<w>za+.</w>. The latter will make the <w>F1</w> "
-                     "key always zap the spell in slot a at the nearest "
-                     "monster. For more information on macros, type <w>?~</w>.";
-              break;
+        case 1:
+            text = "Crawl has a macro function built in: press <w>~m</w> "
+                   "to define a macro by first specifying a trigger key "
+                   "(say, <w>F1</w>) and a command sequence, for example "
+                   "<w>za+.</w>. The latter will make the <w>F1</w> "
+                   "key always zap the spell in slot a at the nearest "
+                   "monster. For more information on macros, type <w>%~</w>.";
+            insert_commands(text, CMD_DISPLAY_COMMANDS, 0);
+            break;
 
-          case 2:
-              text = "The interface can be greatly customised. All options are "
-                     "explained in the file <w>options_guide.txt</w> which "
-                     "can be found in the <w>docs</w> directory. The options "
-                     "themselves are set in <w>init.txt</w> or "
-                     "<w>.crawlrc</w>. Crawl will complain if it can't find "
-                     "either file.";
-               break;
+        case 2:
+            text = "The interface can be greatly customised. All options are "
+                   "explained in the file <w>options_guide.txt</w> which "
+                   "can be found in the <w>docs</w> directory. The options "
+                   "themselves are set in <w>init.txt</w> or "
+                   "<w>.crawlrc</w>. Crawl will complain if it can't find "
+                   "either file.";
+            break;
 
-          case 3:
-               text = "You can ask other Crawl players for advice and help "
-                      "on the <w>#crawl</w> IRC (Internet Relay Chat) "
-                      "channel on freenode (<w>irc.freenode.net</w>).";
-               break;
+        case 3:
+            text = "You can ask other Crawl players for advice and help "
+                   "on the <w>#crawl</w> IRC (Internet Relay Chat) "
+                   "channel on freenode (<w>irc.freenode.net</w>).";
+            break;
 
-          default:
-              text =  "Oops... No hint for now. Better luck next time!";
+        default:
+            text =  "Oops... No hint for now. Better luck next time!";
         }
     }
     mpr(text, MSGCH_TUTORIAL, 0);
