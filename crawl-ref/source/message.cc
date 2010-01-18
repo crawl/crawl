@@ -230,12 +230,11 @@ class message_window
     {
     }
 
-    void add_line(const formatted_string& line, bool inc)
+    void add_line(const formatted_string& line)
     {
         resize(); // TODO: get rid of this
         lines[next_line] = line;
-        if (inc)
-            next_line++;
+        next_line++;
     }
 
 public:
@@ -272,6 +271,7 @@ public:
     {
         std::vector<std::string> newlines = linebreak(text, out_width());
         make_space(newlines.size());
+        int old = next_line;
         for (size_t i = 0; i < newlines.size(); ++i)
         {
             std::string fc = "";
@@ -281,9 +281,10 @@ public:
                 if (i == 0)
                     fc[0] = first_col;
             }
-            bool inc = !(temporary && i == newlines.size() - 1);
-            add_line(formatted_string::parse_string(fc + newlines[i]), inc);
+            add_line(formatted_string::parse_string(fc + newlines[i]));
         }
+        if (temporary)
+            next_line = old;
         show();
     }
 };
