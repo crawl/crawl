@@ -43,7 +43,8 @@ void mpr_comma_separated_list(const std::string prefix,
 
 class input_history;
 
-int msgwin_get_line(char *buf, int len,
+int msgwin_get_line(std::string prompt,
+                    char *buf, int len,
                     input_history *mh = NULL,
                     int (*keyproc)(int &c) = NULL);
 
