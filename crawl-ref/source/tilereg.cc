@@ -117,12 +117,16 @@ const VColour map_colours[MAX_MAP_COL] =
 const int dir_dx[9] = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
 const int dir_dy[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
 
-const int cmd_normal[9] = {'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u'};
-const int cmd_shift[9]  = {'B', 'J', 'N', 'H', '5', 'L', 'Y', 'K', 'U'};
-const int cmd_ctrl[9]   = {CONTROL('B'), CONTROL('J'), CONTROL('N'),
-                           CONTROL('H'), 'X', CONTROL('L'),
-                           CONTROL('Y'), CONTROL('K'), CONTROL('U')};
-const int cmd_dir[9]    = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+const int cmd_normal[9] = {CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT,
+                           CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT,
+                           CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT};
+const int cmd_shift[9]  = {CMD_RUN_DOWN_LEFT, CMD_RUN_DOWN, CMD_RUN_DOWN_RIGHT,
+                           CMD_RUN_LEFT, CMD_REST, CMD_RUN_RIGHT,
+                           CMD_RUN_UP_LEFT, CMD_RUN_UP, CMD_RUN_UP_RIGHT};
+const int cmd_ctrl[9]   = {CMD_OPEN_DOOR_DOWN_LEFT, CMD_OPEN_DOOR_DOWN, CMD_OPEN_DOOR_DOWN_RIGHT,
+                           CMD_OPEN_DOOR_LEFT, CMD_DISPLAY_MAP, CMD_OPEN_DOOR_RIGHT,
+                           CMD_OPEN_DOOR_UP_LEFT, CMD_OPEN_DOOR_UP, CMD_OPEN_DOOR_UP_RIGHT};
+
 
 Region::Region() :
     ox(0),
@@ -1228,18 +1232,21 @@ void DungeonRegion::on_resize()
 
 static int _adjacent_cmd(const coord_def &gc, const MouseEvent &event)
 {
-    coord_def dir = gc - you.pos();
+    const coord_def dir = gc - you.pos();
+    const bool shift = (event.mod & MOD_SHIFT);
+    const bool ctrl  = (event.mod & MOD_CTRL);
     for (int i = 0; i < 9; i++)
     {
         if (dir_dx[i] != dir.x || dir_dy[i] != dir.y)
             continue;
 
-        if (event.mod & MOD_SHIFT)
-            return cmd_shift[i];
-        else if (event.mod & MOD_CTRL)
-            return cmd_ctrl[i];
+        if (shift)
+            command_to_key((command_type) cmd_shift[i]);
+        else if (ctrl)
+            return (cmd_ctrl[i]);
+//             command_to_key((command_type) cmd_ctrl[i]);
         else
-            return cmd_normal[i];
+            command_to_key((command_type) cmd_normal[i]);
     }
 
     return 0;
@@ -1706,29 +1713,28 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             }
 
             if (!(event.mod & MOD_SHIFT))
-                return 'g';
+                return command_to_key(CMD_PICKUP);
 
             const dungeon_feature_type feat = grd(gc);
             switch (feat_stair_direction(feat))
             {
             case CMD_GO_DOWNSTAIRS:
-                return ('>');
             case CMD_GO_UPSTAIRS:
-                return ('<');
+                return command_to_key(feat_stair_direction(feat));
             default:
                 if (feat_is_altar(feat)
                     && player_can_join_god(feat_altar_god(feat)))
                 {
-                    return ('p');
+                    return command_to_key(CMD_PRAY);
                 }
                 return 0;
             }
         }
         case MouseEvent::RIGHT:
             if (!(event.mod & MOD_SHIFT))
-                return '%'; // Character overview.
+                return command_to_key(CMD_RESISTS_SCREEN); // Character overview.
             if (you.religion != GOD_NO_GOD)
-                return '^'; // Religion screen.
+                return command_to_key(CMD_DISPLAY_RELIGION); // Religion screen.
 
             // fall through...
         default:
@@ -3466,7 +3472,7 @@ int StatRegion::handle_mouse(MouseEvent &event)
         return 0;
 
     // Resting
-    return '5';
+    return command_to_key(CMD_REST);
 }
 
 bool StatRegion::update_tip_text(std::string& tip)
@@ -3496,7 +3502,7 @@ int MessageRegion::handle_mouse(MouseEvent &event)
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return 0;
 
-    return CONTROL('P');
+    return command_to_key(CMD_REPLAY_MESSAGES);
 }
 
 bool MessageRegion::update_tip_text(std::string& tip)
