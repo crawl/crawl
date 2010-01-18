@@ -1100,10 +1100,11 @@ void more(bool user_forced)
 
         if (Tutorial.tutorial_left)
         {
-            message_out(&line, LIGHTGREY,
-                        "--more--                        "
-                        "Press Ctrl-P to reread old messages.",
-                        2);
+            std::string more_str = "--more--                        "
+                                   "Press % to reread old messages.";
+            insert_commands(more_str, CMD_REPLAY_MESSAGES, 0);
+
+            message_out(&line, LIGHTGREY, more_str.c_str(), 2);
         }
         else
         {
