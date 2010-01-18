@@ -2706,6 +2706,8 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
     }
 
     monster->lose_energy(EUT_MOVE);
+
+    dungeon_events.fire_position_event(DET_DOOR_OPENED, pos);
 }
 
 static bool _habitat_okay(const monsters *monster, dungeon_feature_type targ)
@@ -3274,10 +3276,14 @@ static bool _monster_move(monsters *monster)
     // Now we know where we _can_ move.
 
     const coord_def newpos = monster->pos() + mmov;
+    bool restricted = (env.markers.property_at(newpos,
+                        MAT_ANY, "door_restrict") == "veto");
     // Normal/smart monsters know about secret doors, since they live in
-    // the dungeon.
-    if (grd(newpos) == DNGN_CLOSED_DOOR
+    // the dungeon, unless they're marked specifically not to be opened unless
+    // already opened by the player {bookofjude}.
+    if ((grd(newpos) == DNGN_CLOSED_DOOR
         || feat_is_secret_door(grd(newpos)) && mons_intel(monster) >= I_NORMAL)
+        && !restricted)
     {
         if (mons_is_zombified(monster))
         {
@@ -3300,7 +3306,8 @@ static bool _monster_move(monsters *monster)
     if ((grd(newpos) == DNGN_CLOSED_DOOR || grd(newpos) == DNGN_OPEN_DOOR)
          && mons_itemeat(monster) == MONEAT_ITEMS
          // Doors with permarock marker cannot be eaten.
-         && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL))
+         && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL)
+         && !restricted)
     {
         grd(newpos) = DNGN_FLOOR;
 
