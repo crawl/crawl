@@ -41,6 +41,12 @@ void mpr_comma_separated_list(const std::string prefix,
                               const msg_channel_type channel = MSGCH_PLAIN,
                               const int param = 0);
 
+class input_history;
+
+int msgwin_get_line(char *buf, int len,
+                    input_history *mh = NULL,
+                    int (*keyproc)(int &c) = NULL);
+
 class no_messages
 {
 public:

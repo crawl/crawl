@@ -645,6 +645,20 @@ void mpr(std::string text, msg_channel_type channel, int param)
     messages.add(message_item(text, channel, param));
 }
 
+int msgwin_get_line(std::string prompt, char *buf, int len,
+                    input_history *mh, int (*keyproc)(int& c))
+{
+    msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
+    std::string col = colour_to_str(colour_msg(colour));
+    std::string text = "<" + col + ">" + prompt + "</" + col + ">"; // XXX
+    msgwin.add_item(text, ' ', true);
+    int ret = cancelable_get_line(buf, len, mh, keyproc);
+    if (ret >= 0)
+        text += buf;
+    messages.add(message_item(text, MSGCH_PROMPT, 0));
+    return ret;
+}
+
 // mpr() an arbitrarily long list of strings without truncation or risk
 // of overflow.
 void mpr_comma_separated_list(const std::string prefix,
