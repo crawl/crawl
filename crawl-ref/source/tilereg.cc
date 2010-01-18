@@ -1243,8 +1243,7 @@ static int _adjacent_cmd(const coord_def &gc, const MouseEvent &event)
         if (shift)
             command_to_key((command_type) cmd_shift[i]);
         else if (ctrl)
-            return (cmd_ctrl[i]);
-//             command_to_key((command_type) cmd_ctrl[i]);
+            command_to_key((command_type) cmd_ctrl[i]);
         else
             command_to_key((command_type) cmd_normal[i]);
     }
