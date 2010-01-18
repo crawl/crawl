@@ -1834,9 +1834,9 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         }
 
         rc = static_cast<special_missile_type>(
-                         random_choose_weighted(30, SPMSL_PARALYSIS, 30, SPMSL_SLOW,
-                                                30, SPMSL_SLEEP, 40, SPMSL_CONFUSION,
-                                                20, SPMSL_SICKNESS, 10, SPMSL_RAGE,
+                         random_choose_weighted(20, SPMSL_SLEEP, 20, SPMSL_SLOW,
+                                                20, SPMSL_SICKNESS, 20, SPMSL_CONFUSION,
+                                                10, SPMSL_PARALYSIS, 10, SPMSL_RAGE,
                                                 nw, SPMSL_POISONED, 0));
         break;
     case MI_DART:
@@ -2018,9 +2018,9 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     // Reduced quantity if special.
     if (item.sub_type == MI_JAVELIN
-        || get_ammo_brand( item ) == SPMSL_RETURNING
-        || (item.sub_type == MI_NEEDLE
-            && get_ammo_brand( item ) != SPMSL_POISONED))
+        || item.sub_type == MI_NEEDLE
+        || get_ammo_brand(item) == SPMSL_RETURNING
+        || (item.sub_type == MI_DART && get_ammo_brand(item) == SPMSL_POISONED))
     {
         item.quantity = random_range(2, 8);
     }
