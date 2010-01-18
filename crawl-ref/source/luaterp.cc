@@ -19,6 +19,7 @@
 #include "cio.h"
 #include "clua.h"
 #include "dlua.h"
+#include "message.h"
 #include "options.h"
 
 #ifdef WIZARD
@@ -44,8 +45,8 @@ static int _pushline(lua_State *ls, int firstline)
     char buffer[80];
     char *b = buffer;
     size_t l;
-    mpr(firstline ? "> " : ". ", MSGCH_PROMPT);
-    if (cancelable_get_line_autohist(buffer, sizeof(buffer)))
+    std::string prompt = firstline ? "> " : ". ";
+    if (msgwin_get_line_autohist(prompt, buffer, sizeof(buffer)))
         return (0);
     l = strlen(b);
 
