@@ -1346,7 +1346,9 @@ void insert_commands(std::string &desc, const int first, ...)
     insert_commands(desc, cmd_vector);
 }
 
-void list_all_commands(std::string &commands)
+#if 0
+// Currently unused, might be useful somewhere.
+static void _list_all_commands(std::string &commands)
 {
     for (int i = CMD_NO_CMD; i < CMD_MAX_CMD; i++)
     {
@@ -1365,3 +1367,4 @@ void list_all_commands(std::string &commands)
     }
     commands += "\n";
 }
+#endif

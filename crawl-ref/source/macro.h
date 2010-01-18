@@ -99,5 +99,4 @@ std::string command_to_string(command_type cmd);
 void insert_commands(std::string &desc, std::vector<command_type> cmds,
                      bool add_eol = true);
 void insert_commands(std::string &desc, const int first, ...);
-void list_all_commands(std::string &commands);
 #endif
