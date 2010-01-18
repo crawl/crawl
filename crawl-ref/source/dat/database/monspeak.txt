@@ -1759,9 +1759,335 @@ w:2
 ## END Dissolution ##
 %%%%
 ############ DONALD ### An adventurer hating competition
-Donald
+# XXX: todo, add God and generic complaining speech.
+Orcish Mines Donald
 
-@_hostile_adventurer_@
+@The_monster@ says, "Orcs complain a lot, don't they? I hate it."
+
+@The_monster@ says, "Orcs smell really bad. Yuck."
+
+@The_monster@ says, "At least there's gold. That doesn't make up for it."
+
+@The_monster@ says, "What do they mine anyway? I've never seen them mine anything."
+
+@The_monster@ says, "Have you ever seen an orcish miner? Me neither."
+
+VISUAL:@The_monster@ kicks a rock and scowls.
+
+@The_monster@ says, "Why is it so dark? Have they never heard of torches?"
+
+@The_monster@ says, "I bought a lantern at a shop, but it didn't work. I hate that."
+
+@The_monster@ ponders. "They're ugly as hell, too!"
+
+@The_monster@ says, "I ran into an orc. He called himself a warlord, and I asked what war?"
+
+@The_monster@ says, "These orcs are so stupid, they must've eaten the rune."
+
+@The_monster@ says, "I asked for directions to the rune, but they belched at me."
+
+@The_monster@ says, "Maybe, with this gold, I'll be able to afford that Trove..."
+
+@The_monster@ says, "Isn't it odd how gold doesn't weight anything? Maybe it's fake gold."
+
+@The_monster@ says, "I prefer the Lair of the Beasts, to be honest. At least animals don't complain."
+
+@The_monster@ says, "I hate complainers so much."
+%%%%
+Elven Halls Donald
+
+@The_monster@ says, "They're so pretty, I think it must be a glamour."
+
+@The_monster@ says, "This place goes on forever. I hate that."
+
+@The_monster@ says, "This place goes down forever. Maybe there's turtles at the bottom."
+
+@The_monster@ says, "Why would you have your front door in a mine? Stupid."
+
+@The_monster@ says, "I hope this rune is worth it!"
+
+@The_monster@ says, "Why did I leave my potions and scrolls outside? I need a drink."
+
+@The_monster@ says, "I thought elves might be good for a party. Nope."
+
+@The_monster@ says, "Really pretty, but really, really boring. I hate that."
+
+@The_monster@ says, "What's with all the gesturing? I hate that."
+
+@The_monster@ says, "I don't get the difference between high elves and deep elves."
+
+@The_monster@ says, "What sort of sludge, anyway?"
+
+@The_monster@ says, "I thought I saw a grey elf earlier. I hate greys."
+
+
+%%%%
+Swamp Donald
+
+@The_monster@ says, "What's that horrible smell? It's like... yuck."
+
+@The_monster@ says, "If there's anything I hate more than water, it's brackish swamp water."
+
+@The_monster@ says, "I hate trees. I hate swamp water. I hate this place."
+
+@The_monster@ says, "I'd like to genocide mosquitoes."
+
+@The_monster@ says, "That buzzing noise? I hate that the most."
+
+@The_monster@ says, "What could mosquitoes possibly want with my blood?"
+
+@The_monster@ says, "I hope these swamp worms drown."
+
+@The_monster@ says, "Damn it, I left my flaming sword at home."
+
+@The_monster@ says, "Don't you hate leeches? I know I do."
+
+@The_monster@ says, "I hate mosquitoes. Almost as much as I hate swamp water."
+
+@The_monster@ says, "At least there's some dry land and pathways, now."
+
+@The_monster@ says, "Is there a plague of frogs happening, or something? At least it's not locusts."
+%%%%
+Shoals Donald
+
+@The_monster@ says, "Tides? What were they thinking? I hate tides!"
+
+@The_monster@ says, "I like turtle soup. I hate turtles."
+
+@The_monster@ says, "Harpies stole my lunch. I hate harpies."
+
+@The_monster@ says, "I haven't seen any pirates yet. I hate pirates."
+
+@The_monster@ says, "At least this place doesn't smell as bad as the Swamp."
+
+@The_monster@ says, "The Sirens are starting to hurt my ears."
+
+@The_monster@ says, "Are sirens supposed to sound like that? I can sing better than that!"
+
+@The_monster@ says, "Where'd the sea come from? I thought this place was underground."
+
+@The_monster@ says, "I like the beach, but I hate the sea."
+
+@The_monster@ says, "These tides are fast. That can't be natural!"
+
+@The_monster@ says, "At least there aren't any ducks around. I hate ducks."
+
+@The_monster@ says, "I'm soaked through. I hate being wet!"
+
+@The_monster@ says, "Those Krakens don't even look real."
+
+@The_monster@ says, "I'm looking for Ms Medusa. Have you seen her?"
+
+@The_monster@ says, "I don't understand half of what these people say. It's all Greek to me."
+
+@The_monster@ says, "And I thought they were famous for their poetry."
+
+@The_monster@ says, "I slipped earlier. I hate that."
+
+@The_monster@ says, "I wish these tides would just make up their mind. In and out, in and out..."
+
+@The_monster@ says, "A turtle bit me. I hate turtles."
+
+@The_monster@ says, "This tentacle just came out of nowhere and touched me. I hate tentacles!"
+%%%%
+Slime Pits Donald
+
+@The_monster@ says, "I forgot my corrosion kit. Damn, I hate that!"
+
+@The_monster@ says, "Those eyeballs are creepy."
+
+@The_monster@ says, "Where's all the loot?"
+
+@The_monster@ says, "A jelly ate my lunch. I hate jellies."
+
+@The_monster@ says, "I feel like a jelly sandwich, now."
+
+@The_monster@ says, "This place is the pits."
+
+@The_monster@ says, "I hate the colour green. I hate light green even more."
+
+@The_monster@ says, "I can't smell anything here. I hate that."
+
+@The_monster@ says, "I can't get this icky slime off my feet."
+
+@The_monster@ says, "My other sword rusted away completely. I hate that!"
+
+@The_monster@ says, "I keep getting this feeling like someone's watching me. Creepy."
+
+@The_monster@ says, "I used up all my cure mutation potions. I hate that."
+
+@The_monster@ says, "I always freeze up when I think I'm being watched."
+
+@The_monster@ says, "I dropped a potion and a jelly ate it. I hate jellies!"
+
+@The_monster@ says, "A death ooze jiggled at me. That's naff."
+
+@The_monster@ says, "Acid blobs make me think of reflux. I hate reflux."
+
+@The_monster@ says, "What's up with all this goo? It's like a world of goo. I hate goo."
+
+@The_monster@ says, "Those amoeba are huge. I never liked protozoans."
+
+@The_monster@ says, "Someone said I could use acid to solve all my problems. It just made them worse."
+
+@The_monster@ says, "I hope the rune isn't sticky."
+%%%%
+Snake Pit Donald
+
+@The_monster@ says, "You know that hissing noise? I hate that."
+
+@The_monster@ says, "You know that slithering noise? I hate that."
+
+@The_monster@ says, "I'd like to make these snakes into gloves, but I hate gloves."
+
+@The_monster@ says, "This place is the pits."
+
+@The_monster@ says, "What do I need a naga barding for?"
+
+@The_monster@ says, "What's a barding, anyway? Does it sing for its supper?"
+
+@The_monster@ says, "Robes are for wimps. Real warriors wear heavy armour!"
+
+@The_monster@ says, "Nagas are pretty ugly. I hate nagas."
+
+@The_monster@ says, "What sort of name is moccasin? Sounds like a pair of shoes."
+
+@The_monster@ says, "There's a difference between guardian serpents and nagas? I never noticed."
+
+@The_monster@ says, "Brown snakes? Black snakes? Grey snakes? This guide is useless!"
+
+@The_monster@ says, "Did all the warriors here go to shield school or something?"
+
+@The_monster@ says, "So, are the fast ones nagas, or not?"
+
+@The_monster@ says, "What sort of name is 'naga' anyway? They're not even good at nagging."
+
+@The_monster@ says, "You'd think there'd be more pits. I haven't seen any."
+
+@The_monster@ says, "I'm sick of this place. Or maybe that's poison..."
+
+@The_monster@ says, "At least the fast ones don't have weapons."
+
+@The_monster@ says, "So, naga are stealthy? Don't make me laugh."
+
+@The_monster@ says, "I wish they'd hurry up and stop blocking the corridors."
+
+@The_monster@ says, "Man, snails must be faster than these guys."
+%%%%
+# Commented out for now, as the branch is subject to change.
+#Vaults Donald
+#
+#@The_monster@ says, "This place is boring."
+#
+#@The_monster@ says, "They never drop hides for me, either."
+#
+#@The_monster@ says, "The Vaults? They should've called it the Dumps."
+#
+#@The_monster@ says, "Don't bother, there's only junk at the bottom."
+#
+#
+#%%%%
+Hall of Blades Donald
+
+@The_monster@ says, "A great mace doesn't even have a blade."
+
+@The_monster@ says, "They may as well put a portal to the Abyss at the bottom of the stairs."
+
+@The_monster@ says, "How can an animated sword scowl?"
+
+@The_monster@ says, "I feel like half the man I was before coming here."
+
+@The_monster@ says, "I thought dancing weapons might, you know, dance?"
+
+@The_monster@ says, "How did I get over here?"
+
+@The_monster@ says, "How does space distort wildly around something?"
+
+@The_monster@ says, "That sword's pretty flaming."
+
+@The_monster@ says, "What's a bardiche?"
+
+@The_monster@ says, "I didn't find what I was looking for. Maybe they'll restock."
+
+@The_monster@ says, "Why would anyone bother coming here? It's boring."
+
+@The_monster@ says, "I hate weapons. I hate dancing weapons even more."
+
+@The_monster@ says, "That axe looks sharp."
+
+@The_monster@ says, "Animated weapons are so last century."
+
+@The_monster@ says, "One of these has to be speed."
+
+@The_monster@ says, "I'm hungry."
+
+@The_monster@ says, "I've been waiting here for ages. Nothing new."
+%%%%
+Crypt Donald
+
+@The_monster@ says, "Zombies are pretty boring."
+
+@The_monster@ says, "I'm hungry."
+
+@The_monster@ says, "Man, I can't wait until I find the rune."
+
+@The_monster@ says, "They must've been making zombies for centuries to fill this place."
+
+@The_monster@ says, "My neck hurts."
+
+@The_monster@ says, "Is it cursed, or does it curse? I can never tell."
+
+@The_monster@ says, "Curse skulls, curse toes... What next?"
+
+@The_monster@ says, "Why would someone inter a butterfly?"
+
+@The_monster@ says, "This isn't even all that spooky."
+
+@The_monster@ says, "This place is pretty cryptic."
+
+@The_monster@ says, "Skeletons give me the creeps."
+
+@The_monster@ says, "I hate skeletons."
+
+@The_monster@ says, "I hate zombies."
+
+@The_monster@ says, "I hate vampires."
+
+@The_monster@ says, "What is up with vampires and their rat fetish?"
+
+@The_monster@ says, "How did they even end up in those cages?"
+
+@The_monster@ says, "That ghoul gave me heartburn."
+
+@The_monster@ says, "What sort of name is 'necrophage', anyway?"
+
+@The_monster@ says, "Where are all the doors?"
+
+@The_monster@ says, "You know, I thought there'd be more coffins in a crypt..."
+
+@The_monster@ says, "Have you seen a sarcophagus full of treasure around? Me neither."
+
+@The_monster@ says, "I just hope they don't have the liches behind glass, I hate that."
+
+@The_monster@ says, "The mummy wasn't that great."
+
+@The_monster@ says, "This place has the same junk as everywhere else. I hate that."
+
+@The_monster@ says, "There's nothing to eat here. I hate that."
+
+@The_monster@ says, "Why is it so quiet?"
+
+@The_monster@ says, "So much for the uneasy undead."
+
+@The_monster@ says, "They don't shamble much, do they? I hate that."
+
+@The_monster@ says, "They don't even play music."
+
+@The_monster@ says, "Some mausoleum."
+
+@The_monster@ says, "I saw a sphinx earlier. I hate that."
+
+@The_monster@ says, "The Crypt, the Tomb, what's next? The Coffin?"
 %%%%
 ############ DOWAN ### A vain elf caster, twin brother of Duvessa
 twin_died Dowan

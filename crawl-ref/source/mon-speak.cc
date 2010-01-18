@@ -355,10 +355,11 @@ void maybe_mons_speaks (monsters *monster)
     {
         mons_speaks(monster);
     }
-    else if (monster->type == MONS_CRAZY_YIUF
+    else if ((monster->type == MONS_CRAZY_YIUF || monster->type == MONS_DONALD)
         && one_chance_in(MON_SPEAK_CHANCE / 3))
     {
         // Yiuf gets an extra chance to speak!
+        // So does Donald.
         mons_speaks(monster);
     }
     else if (get_mon_shape(monster) >= MON_SHAPE_QUADRUPED)
