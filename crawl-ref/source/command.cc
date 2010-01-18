@@ -2137,7 +2137,7 @@ static void _add_command(column_composer &cols, const int column,
     std::string line = "<w>" + command_name + "</w>";
     for (unsigned int i = cmd_len; i < space_to_colon; ++i)
         line += " ";
-    line += ": " + desc;
+    line += ": " + desc + "\n";
 
     cols.add_formatted(
             column,
@@ -2169,6 +2169,7 @@ static void _add_insert_commands(column_composer &cols, const int column,
 
     std::string line = desc;
     insert_commands(line, cmd_vector);
+    line += "\n";
     _add_command(cols, column, cmd, line, space_to_colon);
 }
 
@@ -2195,6 +2196,7 @@ static void _add_insert_commands(column_composer &cols, const int column,
 
     std::string line = desc;
     insert_commands(line, cmd_vector);
+    line += "\n";
     cols.add_formatted(
             column,
             line.c_str(),
@@ -2282,7 +2284,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_CYCLE_QUIVER_BACKWARD, 0);
     _add_insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
                          CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
-    _add_insert_commands(cols, 0, "<brown>percent</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
+    _add_insert_commands(cols, 0, "<brown>percent</brown> : corpses and food "
+                                  "(<w>%</w>hop up and <w>%</w>at)",
                          CMD_BUTCHER, CMD_EAT, 0);
     _add_insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
                          CMD_READ, 0);
@@ -2499,7 +2502,8 @@ static void _add_formatted_tutorial_help(column_composer &cols)
                          CMD_CYCLE_QUIVER_BACKWARD, 0);
     _add_insert_commands(cols, 0, "<cyan>[</cyan> : armour (<w>%</w>ear and <w>%</w>ake off)",
                          CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
-    _add_insert_commands(cols, 0, "<brown>percent</brown> : corpses and food (<w>%</w>hop up and <w>%</w>at)",
+    _add_insert_commands(cols, 0, "<brown>percent</brown> : corpses and food "
+                                  "(<w>%</w>hop up and <w>%</w>at)",
                          CMD_BUTCHER, CMD_EAT, 0);
     _add_insert_commands(cols, 0, "<w>?</w> : scrolls (<w>%</w>ead)",
                          CMD_READ, 0);
