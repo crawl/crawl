@@ -552,11 +552,9 @@ bool sunlight()
     dist spelld;
 
     bolt temp_bolt;
-
     temp_bolt.colour = YELLOW;
     direction(spelld, DIR_TARGET, TARG_HOSTILE, LOS_RADIUS, false, false,
-              false, true, "Select sunlight destination", NULL,
-              true);
+              false, false, "Select sunlight destination");
 
     if (!spelld.isValid)
         return (false);
