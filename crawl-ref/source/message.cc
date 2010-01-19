@@ -3,14 +3,12 @@
  *  Summary:    Functions used to print messages.
  *
  * Todo:
- *   - Optionally really clear message windw.
  *   - --more-- for full message window
  *   - --more-- for user-forced more (these two should be somewhat indep)
  *   - MSGCH_ERROR issuing interrupt.
  *   - Ctrl-P should start at end of messages
  *   - saving and restoring and dumping messages
  *   - filtering of messages for various purposes
- *   - implement Options.clear_messages
  *   - Handle resizing properly, in particular initial resize.
  *   - Optionally initialize message window from message history.
  *   - Get rid of print_formatted_paragraph.
@@ -834,7 +832,17 @@ void flush_prev_message()
 
 void mesclr(bool force)
 {
+    // Unflushed message will be lost with clear_messages,
+    // so they shouldn't really exist, but some of the delay
+    // code appears to do this intentionally.
+    // ASSERT(!messages.have_prev());
     flush_prev_message();
+
+    if (Options.clear_messages)
+        msgwin.clear();
+
+    // TODO: we could indicate indicate mesclr with a different
+    //       leading character than '-'.
 }
 
 void more(bool user_forced)
