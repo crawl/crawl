@@ -239,7 +239,7 @@ public:
     message_window()
         : next_line(0)
     {
-        clear(); // initialize this->lines
+        clear_lines(); // initialize this->lines
     }
 
     void resize()
@@ -248,7 +248,7 @@ public:
         lines.resize(out_height());
     }
 
-    void clear()
+    void clear_lines()
     {
         lines.clear();
         lines.resize(out_height());
@@ -257,6 +257,19 @@ public:
     bool use_first_col() const
     {
         return (!Options.clear_messages);
+    }
+
+    void set_starting_line()
+    {
+        // TODO: start at end (sometimes?)
+        next_line = 0;
+    }
+
+    void clear()
+    {
+        clear_lines();
+        set_starting_line();
+        show();
     }
 
     // write to screen (without refresh)
