@@ -2279,7 +2279,7 @@ _Trog_Donald_
 %%%%
 _Nemelex_Xobeh_Donald_
 
-@The_monster@ says, "What's all in the card? Your future?"
+@The_monster@ says, "What's all in the cards? Your future?"
 
 @The_monster@ says, "You missed a spot upstairs."
 
