@@ -228,7 +228,7 @@ class message_window
     {
         // TODO: implementation of more() is incomplete for
         //       !Options.clear_messages.
-        return (Options.show_more_prompt && Options.clear_messages);
+        return (crawl_state.show_more_prompt && Options.clear_messages);
     }
 
     void make_space(int n)
@@ -936,7 +936,7 @@ void more(bool user_forced)
     }
 #endif
 
-    if (Options.show_more_prompt && !suppress_messages)
+    if (crawl_state.show_more_prompt && !suppress_messages)
     {
         mpr("--more--", MSGCH_PROMPT);
         getch();
@@ -990,7 +990,7 @@ void save_messages(writer& outf)
 
 void load_messages(reader& inf)
 {
-    unwind_var<bool> save_more(Options.show_more_prompt, false);
+    unwind_var<bool> save_more(crawl_state.show_more_prompt, false);
 
     int num = unmarshallLong(inf);
     for (int i = 0; i < num; ++i)

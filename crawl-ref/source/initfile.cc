@@ -631,7 +631,6 @@ void game_options::reset_options()
 
     autopickup_on    = 1;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
-    show_more_prompt = true;
 
     show_gold_turns = false;
     show_beam       = true;

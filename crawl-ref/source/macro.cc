@@ -740,7 +740,7 @@ void flush_input_buffer( int reason )
             const int key = Buffer.front();
             Buffer.pop_front();
             if (key == KEY_MACRO_ENABLE_MORE)
-                Options.show_more_prompt = true;
+                crawl_state.show_more_prompt = true;
         }
         macro_keys_left = -1;
     }

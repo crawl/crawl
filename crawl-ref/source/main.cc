@@ -1494,11 +1494,11 @@ void process_command( command_type cmd )
         break;
 
     case CMD_DISABLE_MORE:
-        Options.show_more_prompt = false;
+        crawl_state.show_more_prompt = false;
         break;
 
     case CMD_ENABLE_MORE:
-        Options.show_more_prompt = true;
+        crawl_state.show_more_prompt = true;
         break;
 
     case CMD_REPEAT_KEYS:
@@ -3802,7 +3802,7 @@ static bool _initialise(void)
         init_player_doll();
         tiles.initialise_items();
 #endif
-        Options.show_more_prompt = false;
+        crawl_state.show_more_prompt = false;
         crawl_tests::run_tests(true);
         // Superfluous, just to make it clear that this is the end of
         // the line.

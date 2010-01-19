@@ -87,7 +87,6 @@ public:
 
     int         autopickup_on;
     int         default_friendly_pickup;
-    bool        show_more_prompt;
 
     bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_beam;       // Show targetting beam by default.
