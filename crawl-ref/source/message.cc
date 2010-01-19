@@ -6,11 +6,10 @@
  *   - --more-- for full message window
  *   - --more-- for user-forced more (these two should be somewhat indep)
  *   - Ctrl-P should start at end of messages
- *   - saving and restoring messages
  *   - filtering of messages for various purposes
  *   - Handle resizing properly, in particular initial resize.
- *   - Optionally initialize message window from message history.
  *   - Get rid of print_formatted_paragraph.
+ *   - Don't forget to bump save version when merging.
  */
 
 #include "AppHdr.h"
@@ -64,6 +63,13 @@ struct message_item
     message_item(std::string msg, msg_channel_type chan, int par)
         : channel(chan), param(par), text(msg), repeats(1),
           turn(you.num_turns)
+    {
+    }
+
+    message_item(std::string msg, msg_channel_type chan, int par,
+                 int rep, int trn)
+        : channel(chan), param(par), text(msg), repeats(rep),
+          turn(trn)
     {
     }
 
@@ -335,19 +341,25 @@ public:
         return (prev_msg);
     }
 
+    void store_msg(const message_item& msg)
+    {
+        bool newturn = (msg.turn > msgs[-1].turn);
+        msgs.push_back(msg);
+        std::string repeats = "";
+        if (msg.repeats > 1)
+            repeats = make_stringf(" x%d", msg.repeats);
+        msgwin.add_item(msg.text + repeats, newturn ? '-' : ' ', false);
+    }
+
     void flush_prev()
     {
         if (!prev_msg)
             return;
-        msgs.push_back(prev_msg);
-        bool newturn = (prev_msg.turn > msgs[-2].turn);
-        std::string repeats = "";
-        if (prev_msg.repeats > 1)
-            repeats = make_stringf(" x%d", prev_msg.repeats);
-        msgwin.add_item(prev_msg.text + repeats, newturn ? '-' : ' ', false);
+        store_msg(prev_msg);
         prev_msg = message_item();
     }
 
+    // XXX: this should not need to exist
     const store_t& get_store()
     {
         return msgs;
@@ -912,9 +924,20 @@ std::string get_last_messages(int mcount)
     return text;
 }
 
+// We just write out the whole message store including empty/unused
+// messages. They'll be ignored when restoring.
 void save_messages(writer& outf)
 {
-    marshallLong(outf, 0);
+    store_t msgs = messages.get_store();
+    marshallLong(outf, msgs.size());
+    for (int i = 0; i < msgs.size(); ++i)
+    {
+        marshallString4(outf, msgs[i].text);
+        marshallLong(outf, msgs[i].channel);
+        marshallLong(outf, msgs[i].param);
+        marshallLong(outf, msgs[i].repeats);
+        marshallLong(outf, msgs[i].turn);
+    }
 }
 
 void load_messages(reader& inf)
@@ -923,13 +946,20 @@ void load_messages(reader& inf)
     for (int i = 0; i < num; ++i)
     {
         std::string text;
-        unmarshallString4( inf, text );
+        unmarshallString4(inf, text);
 
         msg_channel_type channel = (msg_channel_type) unmarshallLong(inf);
         int           param      = unmarshallLong(inf);
-        unsigned char colour     = unmarshallByte(inf);
         int           repeats    = unmarshallLong(inf);
+        int           turn       = unmarshallLong(inf);
+
+        message_item msg(message_item(text, channel, param, repeats, turn));
+        if (msg)
+            messages.store_msg(msg);
     }
+    // With Options.message_clear, we don't want the message window
+    // pre-filled.
+    mesclr();
 }
 
 void replay_messages(void)
