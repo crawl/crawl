@@ -21,6 +21,7 @@
 #include "debug.h"
 #include "dlua.h"
 #include "ghost.h"
+#include "initfile.h"
 #include "message.h"
 #include "mon-util.h"
 #include "jobs.h"
@@ -32,18 +33,21 @@
 #include "view.h"
 
 // Try the exact key lookup along with the entire prefix list.
-// If that fails, start ignoring hostile/religion/silence, in that order,
-// first skipping hostile, then hostile *and* religion, then all three.
+// If that fails, start ignoring hostile/religion/branch/silence, in that order,
+// first skipping hostile, then hostile *and* religion, then hostile, religion
+// *and* branch, then finally all five..
 static std::string __try_exact_string(const std::vector<std::string> &prefixes,
                                       const std::string &key,
                                       bool ignore_hostile  = false,
                                       bool ignore_related  = false,
                                       bool ignore_religion = false,
+                                      bool ignore_branch   = false,
                                       bool ignore_silenced = false)
 {
     bool hostile  = false;
     bool related  = false;
     bool religion = false;
+    bool branch   = false;
     bool silenced = false;
 
     std::string prefix = "";
@@ -70,11 +74,20 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
              silenced = true;
          }
          else if (prefixes[i] == "beogh" || prefixes[i] == "good god"
-                  || prefixes[i] == "evil god")
+                  || prefixes[i] == "evil god"
+                  || prefixes[i] == "No God"
+                  || (str_to_god(prefixes[i]) != GOD_NO_GOD
+                     && prefixes[i] != "random"))
          {
              if (ignore_religion)
                  continue;
              religion = true;
+         }
+         else if (str_to_branch(prefixes[i]) != NUM_BRANCHES)
+         {
+            if (ignore_branch)
+                continue;
+            branch = true;
          }
          prefix += prefixes[i];
          prefix += " ";
@@ -94,10 +107,12 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
         }
         else if (religion) // skip hostile, related and religion
             msg = __try_exact_string(prefixes, key, true, true, true);
+        else if (branch) // skip hostile, related, religion and branch
+            msg = __try_exact_string(prefixes, key, true, true, true, true);
         // 50% use non-verbal monster speech,
         // 50% try for more general silenced monster message instead
         else if (silenced && coinflip()) // skip all
-            msg = __try_exact_string(prefixes, key, true, true, true, true);
+            msg = __try_exact_string(prefixes, key, true, true, true, true, true);
     }
     return msg;
 }
@@ -157,6 +172,7 @@ static std::string _try_exact_string(const std::vector<std::string> &prefixes,
                                      bool ignore_hostile  = false,
                                      bool ignore_related  = false,
                                      bool ignore_religion = false,
+                                     bool ignore_branch   = false,
                                      bool ignore_silenced = false)
 {
     std::string msg;
@@ -164,7 +180,7 @@ static std::string _try_exact_string(const std::vector<std::string> &prefixes,
     {
         msg =
             __try_exact_string(prefixes, key, ignore_hostile, ignore_related,
-                               ignore_religion, ignore_silenced);
+                               ignore_religion, ignore_branch, ignore_silenced);
 
         // If the first message was non-empty and discarded then discard
         // all subsequent empty messages, so as to not replace an
@@ -517,10 +533,13 @@ bool mons_speaks(monsters *monster)
             prefixes.push_back("Xom");
     }
 
+    // Include our god's current name, too. This means that uniques can have
+    // speech that is tailored to your specific god.
+    prefixes.push_back(god_name(you.religion));
+
     // Include our current branch, too. It can make speech vary by branch for
     // uniques and other monsters! Specifically, Donald.
     prefixes.push_back(std::string(branches[you.where_are_you].shortname));
-
 
 #ifdef DEBUG_MONSPEAK
     {

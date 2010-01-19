@@ -264,14 +264,14 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     // Only consider terrain if player is not levitating.
     if (!you.airborne())
     {
-        bool merfolk_check = false;
-        if (you.species == SP_MERFOLK)
+        bool swimming_check = false;
+        if (you.can_swim())
         {
             if (feat_is_water(new_grid))
-                merfolk_check = true;
+                swimming_check = true;
 
-            // Safer water effects.
-            if (feat_is_water(new_grid) && !feat_is_water(old_grid))
+            // Safer water effects for merfolk.
+            if (you.species == SP_MERFOLK&& feat_is_water(new_grid) && !feat_is_water(old_grid))
             {
                 // Check for fatal stat loss due to transforming.
                 // Also handles the warning message.
@@ -292,7 +292,8 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 need_doll_update = true;
 #endif
             }
-            else if (!feat_is_water(new_grid) && feat_is_water(old_grid)
+            else if (you.species == SP_MERFOLK && !feat_is_water(new_grid) 
+                     && feat_is_water(old_grid)
                      && !is_feat_dangerous(new_grid))
             {
                 unmeld_one_equip(EQ_BOOTS);
@@ -303,7 +304,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
             }
         }
 
-        if (!merfolk_check)
+        if (!swimming_check)
         {
             // XXX: at some point we're going to need to fix the swimming
             // code to handle burden states.
@@ -1842,7 +1843,8 @@ int player_movement_speed(void)
 {
     int mv = 10;
 
-    if (you.swimming())
+    // But only merfolk get a speed bonus in water.
+    if (you.swimming() && you.species == SP_MERFOLK)
     {
         // This is swimming... so it doesn't make sense to really
         // apply the other things (the mutation is "cover ground",
@@ -5545,7 +5547,8 @@ bool player::can_swim() const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return (species == SP_MERFOLK && merfolk_change_is_safe(true));
+    return ((species == SP_MERFOLK && merfolk_change_is_safe(true)
+             || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
 }
 
 int player::visible_igrd(const coord_def &where) const

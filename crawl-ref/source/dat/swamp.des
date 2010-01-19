@@ -340,7 +340,7 @@ PLACE:   Swamp:5
 TAGS:    no_pool_fixup
 ORIENT:  southeast
 MONS:    swamp dragon, hydra, swamp drake
-MONS:    the lernaean hydra / hydra
+MONS:    the lernaean hydra, hydra
 SHUFFLE: ab
 SUBST:   a=c, b=', " = ttw, u = wwwwwWWWWxxx., ' = W.
 SHUFFLE: 12
