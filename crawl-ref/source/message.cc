@@ -6,7 +6,7 @@
  *   - --more-- for full message window
  *   - --more-- for user-forced more (these two should be somewhat indep)
  *   - Ctrl-P should start at end of messages
- *   - saving and restoring and dumping messages
+ *   - saving and restoring messages
  *   - filtering of messages for various purposes
  *   - Handle resizing properly, in particular initial resize.
  *   - Optionally initialize message window from message history.
@@ -895,22 +895,20 @@ static bool is_channel_dumpworthy(msg_channel_type channel)
 std::string get_last_messages(int mcount)
 {
     std::string text = EOL;
-/*
-    for (message_store::reverse_iterator msg = message_history.rbegin();
-         msg != message_history.rend() && mcount > 0; ++msg)
+    message_item msg;
+    // XXX: should be using iterators here
+    for (int i = 0; i < mcount && (msg = messages.get_store()[-i-1]); ++i)
     {
-        if (!msg->text.empty() && is_channel_dumpworth(msg->channel))
+        if (is_channel_dumpworthy(msg.channel))
         {
-            text = formatted_string::parse_string(msg->text).tostring()
+            text = formatted_string::parse_string(msg.text).tostring()
                  + EOL + text;
-            mcount--;
         }
     }
 
     // An extra line of clearance.
     if (!text.empty())
         text += EOL;
-*/
     return text;
 }
 
