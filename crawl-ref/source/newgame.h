@@ -60,8 +60,6 @@ undead_state_type get_undead_state(const species_type sp);
 bool new_game();
 
 int give_first_conjuration_book();
-bool choose_race(void);
-bool choose_class(void);
 
 void give_basic_mutations(species_type speci);
 

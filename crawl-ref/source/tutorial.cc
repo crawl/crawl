@@ -257,7 +257,7 @@ void print_tutorial_menu(unsigned int type)
 
     cprintf("%c - %s %s %s" EOL,
             letter, species_name(_get_tutorial_species(type), 1).c_str(),
-                    get_class_name(_get_tutorial_job(type)), desc);
+                    get_job_name(_get_tutorial_job(type)), desc);
 }
 
 static species_type _get_tutorial_species(unsigned int type)

@@ -65,6 +65,8 @@ static void _give_last_paycheck(job_type which_job);
 static void _init_player(void);
 static void _jobs_stat_init(job_type which_job);
 static void _species_stat_init(species_type which_species);
+bool _choose_species(void);
+bool _choose_job(void);
 
 static void _create_wanderer(void);
 static bool _give_items_skills(void);
@@ -113,7 +115,7 @@ static void _reset_newgame_options(void)
 
 static void _save_newgame_options(void)
 {
-    // Note that we store race and class directly here, whereas up until
+    // Note that we store species and job directly here, whereas up until
     // now we've been storing the hotkey.
     Options.prev_race       = ng_race;
     Options.prev_cls        = ng_cls;
@@ -147,16 +149,16 @@ static bool _prev_startup_options_set(void)
     return (Options.prev_race && Options.prev_cls);
 }
 
-static std::string _get_opt_race_name(char race)
+static std::string _get_opt_species_name(char species)
 {
-    species_type prace = get_species(letter_to_index(race));
-    return (prace == SP_UNKNOWN ? "Random" : species_name(prace, 1));
+    species_type pspecies = get_species(letter_to_index(species));
+    return (pspecies == SP_UNKNOWN ? "Random" : species_name(pspecies, 1));
 }
 
-static std::string _get_opt_class_name(char oclass)
+static std::string _get_opt_job_name(char ojob)
 {
-    job_type pclass = get_class(letter_to_index(oclass));
-    return (pclass == JOB_UNKNOWN ? "Random" : get_class_name(pclass));
+    job_type pjob = get_job(letter_to_index(ojob));
+    return (pjob == JOB_UNKNOWN ? "Random" : get_job_name(pjob));
 }
 
 static std::string _prev_startup_description(void)
@@ -168,10 +170,10 @@ static std::string _prev_startup_description(void)
         return "Random character";
 
     if (Options.prev_cls == '?')
-        return "Random " + _get_opt_race_name(Options.prev_race);
+        return "Random " + _get_opt_species_name(Options.prev_race);
 
-    return _get_opt_race_name(Options.prev_race) + " " +
-           _get_opt_class_name(Options.prev_cls);
+    return _get_opt_species_name(Options.prev_race) + " " +
+           _get_opt_job_name(Options.prev_cls);
 }
 
 // Output full character info when weapons/books/religion are chosen.
@@ -179,14 +181,15 @@ static void _print_character_info()
 {
     clrscr();
 
-    // At this point all of name, species and class should be decided.
+    // At this point all of name, species and job should be decided.
     if (!you.your_name.empty()
         && you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN)
     {
         cprintf("Welcome, ");
         textcolor( YELLOW );
-        cprintf("%s the %s %s." EOL, you.your_name.c_str(), species_name(you.species, 1).c_str(),
-                get_class_name(you.char_class));
+        cprintf("%s the %s %s." EOL, you.your_name.c_str(),
+                species_name(you.species, 1).c_str(),
+                get_job_name(you.char_class));
     }
 }
 
@@ -238,9 +241,9 @@ static bool _is_species_valid_choice(species_type species, bool display = true)
     return (!display);
 }
 
-static void _pick_random_species_and_class( bool unrestricted_only )
+static void _pick_random_species_and_job( bool unrestricted_only )
 {
-    // We pick both species and class at the same time to give each
+    // We pick both species and job at the same time to give each
     // valid possibility a fair chance.  For proof that this will
     // work correctly see the proof in religion.cc:handle_god_time().
     int job_count = 0;
@@ -248,7 +251,7 @@ static void _pick_random_species_and_class( bool unrestricted_only )
     species_type species = SP_UNKNOWN;
     job_type job = JOB_UNKNOWN;
 
-    // For each valid (species, class) choose one randomly.
+    // For each valid (species, job) choose one randomly.
     for (int sp = 0; sp < NUM_SPECIES; sp++)
     {
         // We only want draconians counted once in this loop...
@@ -704,28 +707,28 @@ game_start:
     _reset_newgame_options();
     if (Options.random_pick)
     {
-        _pick_random_species_and_class(Options.good_random);
+        _pick_random_species_and_job(Options.good_random);
         ng_random = true;
     }
     else
     {
         if (Options.race != 0 && Options.cls != 0
             && Options.race != '*' && Options.cls != '*'
-            && !class_allowed(get_species(letter_to_index(Options.race)),
-                               get_class(letter_to_index(Options.cls))))
+            && !job_allowed(get_species(letter_to_index(Options.race)),
+                            get_job(letter_to_index(Options.cls))))
         {
             end(1, false,
                 "Incompatible species and job specified in options file.");
         }
-        // Repeat until valid race/class combination found.
-        while (choose_race() && !choose_class());
+        // Repeat until valid species/job combination found.
+        while (_choose_species() && !_choose_job());
     }
 
     // Pick random draconian type.
     if (you.species == SP_RED_DRACONIAN)
         you.species = random_draconian_player_species();
 
-    strcpy( you.class_name, get_class_name(you.char_class) );
+    strcpy( you.class_name, get_job_name(you.char_class) );
 
     if (Options.random_pick)
     {
@@ -749,7 +752,7 @@ game_start:
             goto game_start;
     }
 
-    // New: pick name _after_ race and class choices.
+    // New: pick name _after_ species and job choices.
     if (you.your_name.empty())
     {
         clrscr();
@@ -1029,7 +1032,7 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
 
         textcolor(BROWN);
         cprintf(EOL "* - Random choice; + - Good random choice; "
-                    "Bksp - Back to species and class selection; "
+                    "Bksp - Back to species and job selection; "
                     "X - Quit" EOL);
 
         if (Options.prev_book != SBT_NO_SELECTION)
@@ -1224,7 +1227,7 @@ static bool _choose_weapon()
 
         textcolor(BROWN);
         cprintf(EOL "* - Random choice; + - Good random choice; "
-                    "Bksp - Back to species and class selection; "
+                    "Bksp - Back to species and job selection; "
                     "X - Quit" EOL);
 
         if (prevmatch || Options.prev_weapon == WPN_RANDOM)
@@ -1436,7 +1439,7 @@ static void _jobs_stat_init(job_type which_job)
     int hp = 0;  // HP base
     int mp = 0;  // MP base
 
-    // Note: Wanderers are correct, they're a challenging class. -- bwr
+    // Note: Wanderers are correct, they're a challenging job. -- bwr
     switch (which_job)
     {
     case JOB_FIGHTER:           s =  8; i =  0; d =  4; hp = 15; mp = 0; break;
@@ -2320,7 +2323,7 @@ void _wanderer_good_equipment(skill_type & skill, int & slot)
         break;
 
     case SK_ARMOUR:
-        // Deformed races aren't given armor skill, so there's no need
+        // Deformed species aren't given armor skill, so there's no need
         // to worry about scale mail's not fitting.
         _newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL);
         slot++;
@@ -2708,10 +2711,10 @@ static void _create_wanderer(void)
     _wanderer_cover_equip_holes(equip_slot);
 }
 
-// choose_race returns true if the player should also pick a class.
+// choose_species returns true if the player should also pick a job.
 // This is done because of the '!' option which will pick a random
 // character, obviating the necessity of choosing a class.
-bool choose_race()
+bool _choose_species()
 {
     char keyn;
 
@@ -2719,7 +2722,7 @@ bool choose_race()
 
     if (Options.cls)
     {
-        you.char_class = get_class(letter_to_index(Options.cls));
+        you.char_class = get_job(letter_to_index(Options.cls));
         ng_cls = Options.cls;
     }
 
@@ -2727,7 +2730,7 @@ bool choose_race()
         printed = true;
 
 spec_query:
-    bool prevraceok = (Options.prev_race == '*');
+    bool prevspeciesok = (Options.prev_race == '*');
     if (!printed)
     {
         clrscr();
@@ -2752,7 +2755,7 @@ spec_query:
                     cprintf(" the ");
             }
             if (you.char_class != JOB_UNKNOWN)
-                cprintf("%s", get_class_name(you.char_class));
+                cprintf("%s", get_job_name(you.char_class));
 
             if (!shortgreet)
                 cprintf(".");
@@ -2783,16 +2786,16 @@ spec_query:
 
             // Dim text for restricted species
             if (you.char_class == JOB_UNKNOWN
-                || class_allowed(si, you.char_class) == CC_UNRESTRICTED)
+                || job_allowed(si, you.char_class) == CC_UNRESTRICTED)
             {
                 textcolor(LIGHTGREY);
             }
             else
                 textcolor(DARKGREY);
 
-            // Show banned races as "unavailable".
+            // Show banned species as "unavailable".
             if (you.char_class != JOB_UNKNOWN
-                && class_allowed(si, you.char_class) == CC_BANNED)
+                && job_allowed(si, you.char_class) == CC_BANNED)
             {
                 cprintf("    %s N/A", species_name(si, 1).c_str());
             }
@@ -2801,7 +2804,7 @@ spec_query:
                 char sletter = index_to_letter(i);
 
                 if (sletter == Options.prev_race)
-                    prevraceok = true;
+                    prevspeciesok = true;
 
                 cprintf("%c - %s", sletter, species_name(si, 1).c_str());
             }
@@ -2834,15 +2837,15 @@ spec_query:
 
         if (Options.prev_race)
         {
-            if (prevraceok)
+            if (prevspeciesok)
             {
                 cprintf("Enter - %s",
-                        _get_opt_race_name(Options.prev_race).c_str());
+                        _get_opt_species_name(Options.prev_race).c_str());
             }
             if (_prev_startup_options_set())
             {
                 cprintf("%sTab - %s",
-                        prevraceok? "; " : "",
+                        prevspeciesok? "; " : "",
                         _prev_startup_description().c_str());
             }
             cprintf(EOL);
@@ -2877,7 +2880,7 @@ spec_query:
         good_random = true;
         // intentional fall-through
     case '!':
-        _pick_random_species_and_class(good_random);
+        _pick_random_species_and_job(good_random);
         Options.random_pick = true; // used to give random weapon/god as well
         ng_random = true;
         if (good_random)
@@ -2885,7 +2888,7 @@ spec_query:
         return (false);
     case '\r':
     case '\n':
-        if (Options.prev_race && prevraceok)
+        if (Options.prev_race && prevspeciesok)
             keyn = Options.prev_race;
         break;
     case '\t':
@@ -2896,7 +2899,7 @@ spec_query:
             {
                 Options.random_pick = true;
                 ng_random = true;
-                _pick_random_species_and_class(Options.good_random);
+                _pick_random_species_and_job(Options.good_random);
                 return (false);
             }
             _set_startup_options();
@@ -2908,10 +2911,10 @@ spec_query:
     // access to the help files
     case '?':
         list_commands('1');
-        return choose_race();
+        return _choose_species();
     case '%':
         list_commands('%');
-        return choose_race();
+        return _choose_species();
     default:
         break;
     }
@@ -2921,12 +2924,12 @@ spec_query:
     if (keyn == CONTROL('T') || keyn == 'T') // easy to set in init.txt
         return !pick_tutorial();
 
-    bool good_randrace = (keyn == '+');
-    bool randrace = (good_randrace || keyn == '*');
-    if (randrace)
+    bool good_randspecies = (keyn == '+');
+    bool randspecies = (good_randspecies || keyn == '*');
+    if (randspecies)
     {
         if (you.char_class == JOB_THIEF || you.char_class == JOB_WANDERER)
-            good_randrace = false;
+            good_randspecies = false;
 
         int index;
         do
@@ -2936,7 +2939,7 @@ spec_query:
         while (!_is_species_valid_choice(get_species(index), false)
                || you.char_class != JOB_UNKNOWN
                   && !is_good_combination(get_species(index), you.char_class,
-                                           good_randrace));
+                                          good_randspecies));
 
         keyn = index_to_letter(index);
     }
@@ -2955,22 +2958,22 @@ spec_query:
     }
 
     if (you.species != SP_UNKNOWN && you.char_class != JOB_UNKNOWN
-        && !class_allowed(you.species, you.char_class))
+        && !job_allowed(you.species, you.char_class))
     {
         goto spec_query;
     }
 
-    // Set to 0 in case we come back from choose_class().
+    // Set to 0 in case we come back from choose_job().
     Options.race = 0;
-    ng_race = (randrace ? (good_randrace? '+' : '*')
-                        : keyn);
+    ng_race = (randspecies ? (good_randspecies? '+' : '*')
+                           : keyn);
 
     return (true);
 }
 
-// Returns true if a class was chosen, false if we should go back to
-// race selection.
-bool choose_class(void)
+// Returns true if a job was chosen, false if we should go back to
+// species selection.
+bool _choose_job(void)
 {
     char keyn;
 
@@ -2984,7 +2987,7 @@ bool choose_class(void)
     ng_cls = 0;
 
 job_query:
-    bool prevclassok = (Options.prev_cls == '*');
+    bool prevjobok = (Options.prev_cls == '*');
     if (!printed)
     {
         clrscr();
@@ -3014,36 +3017,36 @@ job_query:
 
         int j = 0;
         job_type which_job;
-        for (int i = 0; i < ng_num_classes(); i++)
+        for (int i = 0; i < ng_num_jobs(); i++)
         {
-            which_job = get_class(i);
+            which_job = get_job(i);
 
-            // Dim text for restricted classes.
-            // Thief and wanderer are general challenge classes in that there's
+            // Dim text for restricted jobs.
+            // Thief and wanderer are general challenge jobs in that there's
             // no species that's unrestricted in combination with them.
             if (you.species == SP_UNKNOWN
                    && which_job != JOB_THIEF && which_job != JOB_WANDERER
                 || you.species != SP_UNKNOWN
-                   && class_allowed(you.species, which_job) == CC_UNRESTRICTED)
+                   && job_allowed(you.species, which_job) == CC_UNRESTRICTED)
             {
                 textcolor(LIGHTGREY);
             }
             else
                 textcolor(DARKGREY);
 
-            // Show banned races as "unavailable".
-            if (class_allowed(you.species, which_job) == CC_BANNED)
+            // Show banned species as "unavailable".
+            if (job_allowed(you.species, which_job) == CC_BANNED)
             {
-                cprintf("    %s N/A", get_class_name(which_job));
+                cprintf("    %s N/A", get_job_name(which_job));
             }
             else
             {
                 char sletter = index_to_letter(i);
 
                 if (sletter == Options.prev_cls)
-                    prevclassok = true;
+                    prevjobok = true;
 
-                cprintf("%c - %s", sletter, get_class_name(which_job));
+                cprintf("%c - %s", sletter, get_job_name(which_job));
             }
 
             if (j % 2)
@@ -3078,15 +3081,15 @@ job_query:
 
         if (Options.prev_cls)
         {
-            if (prevclassok)
+            if (prevjobok)
             {
                 cprintf("Enter - %s",
-                        _get_opt_class_name(Options.prev_cls).c_str());
+                        _get_opt_job_name(Options.prev_cls).c_str());
             }
             if (_prev_startup_options_set())
             {
                 cprintf("%sTab - %s",
-                        prevclassok? "; " : "",
+                        prevjobok? "; " : "",
                         _prev_startup_description().c_str());
             }
             cprintf(EOL);
@@ -3126,7 +3129,7 @@ job_query:
         good_random = true;
         // intentional fall-through
     case '!':
-        _pick_random_species_and_class(good_random);
+        _pick_random_species_and_job(good_random);
         // used to give random weapon/god as well
         Options.random_pick = true;
         ng_random = true;
@@ -3135,7 +3138,7 @@ job_query:
         return (true);
     case '\r':
     case '\n':
-        if (Options.prev_cls && prevclassok)
+        if (Options.prev_cls && prevjobok)
             keyn = Options.prev_cls;
         break;
     case '\t':
@@ -3146,7 +3149,7 @@ job_query:
             {
                 Options.random_pick = true;
                 ng_random = true;
-                _pick_random_species_and_class(Options.good_random);
+                _pick_random_species_and_job(Options.good_random);
                 return (true);
             }
             _set_startup_options();
@@ -3160,10 +3163,10 @@ job_query:
     // help files
     case '?':
         list_commands('2');
-        return choose_class();
+        return _choose_job();
     case '%':
         list_commands('%');
-        return choose_class();
+        return _choose_job();
     default:
         break;
     }
@@ -3194,7 +3197,7 @@ job_query:
         ASSERT( chosen_job != JOB_UNKNOWN );
     }
     else if (keyn >= 'a' && keyn <= 'z' || keyn >= 'A' && keyn <= 'Z')
-        chosen_job = get_class(letter_to_index(keyn));
+        chosen_job = get_job(letter_to_index(keyn));
 
     if (chosen_job == JOB_UNKNOWN)
     {
@@ -3207,7 +3210,7 @@ job_query:
     }
 
     if (you.species != SP_UNKNOWN
-        && !class_allowed(you.species, chosen_job))
+        && !job_allowed(you.species, chosen_job))
     {
         if (Options.cls != 0)
         {
@@ -3377,7 +3380,7 @@ static bool _choose_wand()
 
         textcolor(BROWN);
         cprintf(EOL "* - Random choice; "
-                    "Bksp - Back to species and class selection; "
+                    "Bksp - Back to species and job selection; "
                     "X - Quit" EOL);
 
         if (prevmatch || Options.prev_wand == SWT_RANDOM)
@@ -3536,7 +3539,7 @@ bool _give_items_skills()
             curr++;
         }
 
-        // Small races get stones, the others nets.
+        // Small species get stones, the others nets.
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
             _newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
         else
@@ -3575,7 +3578,7 @@ bool _give_items_skills()
             you.equip[EQ_WEAPON] = -1; // Trolls/Ghouls fight unarmed.
         else
         {
-            // Races skilled with maces/flails get one, the others axes.
+            // Species skilled with maces/flails get one, the others axes.
             weapon_type startwep = WPN_HAND_AXE;
             if (species_skills(SK_MACES_FLAILS, you.species) <
                 species_skills(SK_AXES, you.species))
@@ -3698,7 +3701,7 @@ bool _give_items_skills()
 
                 textcolor( BROWN );
                 cprintf(EOL "* - Random choice; + - Good random choice" EOL
-                            "Bksp - Back to species and class selection; "
+                            "Bksp - Back to species and job selection; "
                             "X - Quit" EOL);
 
                 if (religion_restriction(Options.prev_pr, ng) == CC_BANNED)
@@ -3879,7 +3882,7 @@ bool _give_items_skills()
 
             textcolor( BROWN );
             cprintf(EOL "* - Random choice; + - Good random choice" EOL
-                        "Bksp - Back to species and class selection; "
+                        "Bksp - Back to species and job selection; "
                         "X - Quit" EOL);
 
             if (Options.prev_ck != GOD_NO_GOD)
@@ -4070,7 +4073,7 @@ bool _give_items_skills()
 
             textcolor( BROWN );
             cprintf(EOL "* - Random choice; + - Good random choice " EOL
-                        "Bksp - Back to species and class selection; "
+                        "Bksp - Back to species and job selection; "
                         "X - Quit" EOL);
 
             if (Options.prev_dk != DK_NO_SELECTION)
@@ -4354,7 +4357,7 @@ bool _give_items_skills()
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CHARMS);
 
-        // Gets some darts - this class is difficult to start off with.
+        // Gets some darts - this job is difficult to start off with.
         _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16, 1);
 
         // Spriggans used to get a rod of striking, but now that anyone

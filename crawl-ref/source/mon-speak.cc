@@ -324,13 +324,13 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
     return (msg);
 }
 
-// Player ghosts with different classes can potentially speak different
+// Player ghosts with different jobs can potentially speak different
 // things.
 static std::string _player_ghost_speak_str(const monsters *monster,
                                      const std::vector<std::string> prefixes)
 {
     const ghost_demon &ghost = *(monster->ghost);
-    std::string ghost_class = get_class_name(ghost.job);
+    std::string ghost_job    = get_job_name(ghost.job);
 
     std::string prefix = "";
     for (int i = 0, size = prefixes.size(); i < size; i++)
@@ -339,10 +339,10 @@ static std::string _player_ghost_speak_str(const monsters *monster,
         prefix += " ";
     }
 
-    // first try together with class name
-    std::string msg = getSpeakString(prefix + ghost_class + " player ghost");
+    // first try together with job name
+    std::string msg = getSpeakString(prefix + ghost_job + " player ghost");
 
-    // else try without class name
+    // else try without job name
     if (msg.empty() || msg == "__NEXT")
         msg = getSpeakString(prefix + "player ghost");
 

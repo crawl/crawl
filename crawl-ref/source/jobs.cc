@@ -49,21 +49,21 @@ static job_type new_jobs_order[] = {
     JOB_ARCANE_MARKSMAN,    JOB_WANDERER
 };
 
-job_type get_class(const int index)
+job_type get_job(const int index)
 {
-    if (index < 0 || index >= ng_num_classes())
+    if (index < 0 || index >= ng_num_jobs())
         return (JOB_UNKNOWN);
 
     return (Options.use_old_selection_order? old_jobs_order[index]
                                            : new_jobs_order[index]);
 }
 
-static const char * Class_Abbrev_List[ NUM_JOBS ] =
+static const char * Job_Abbrev_List[ NUM_JOBS ] =
     { "Fi", "Wz", "Pr", "Th", "Gl", "Ne", "Pa", "As", "Be", "Hu",
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr", "DK", "VM",
       "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar", "AM" };
 
-static const char * Class_Name_List[ NUM_JOBS ] =
+static const char * Job_Name_List[ NUM_JOBS ] =
     { "Fighter", "Wizard", "Priest", "Thief", "Gladiator", "Necromancer",
       "Paladin", "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
@@ -71,9 +71,9 @@ static const char * Class_Name_List[ NUM_JOBS ] =
       "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
       "Monk", "Warper", "Wanderer", "Artificer", "Arcane Marksman" };
 
-int get_class_index_by_abbrev(const char *abbrev)
+int get_job_index_by_abbrev(const char *abbrev)
 {
-    COMPILE_CHECK(ARRAYSZ(Class_Abbrev_List) == NUM_JOBS, c1);
+    COMPILE_CHECK(ARRAYSZ(Job_Abbrev_List) == NUM_JOBS, c1);
 
     unsigned int job;
     for (unsigned int i = 0; i < ARRAYSZ(old_jobs_order); i++)
@@ -81,8 +81,8 @@ int get_class_index_by_abbrev(const char *abbrev)
         job = (Options.use_old_selection_order ? old_jobs_order[i]
                                                : new_jobs_order[i]);
 
-        if (tolower( abbrev[0] ) == tolower( Class_Abbrev_List[job][0] )
-            && tolower( abbrev[1] ) == tolower( Class_Abbrev_List[job][1] ))
+        if (tolower( abbrev[0] ) == tolower( Job_Abbrev_List[job][0] )
+            && tolower( abbrev[1] ) == tolower( Job_Abbrev_List[job][1] ))
         {
             return i;
         }
@@ -91,21 +91,21 @@ int get_class_index_by_abbrev(const char *abbrev)
     return (-1);
 }
 
-const char *get_class_abbrev(int which_job)
+const char *get_job_abbrev(int which_job)
 {
     ASSERT(which_job >= 0 && which_job < NUM_JOBS);
 
-    return (Class_Abbrev_List[which_job]);
+    return (Job_Abbrev_List[which_job]);
 }
 
-job_type get_class_by_abbrev(const char *abbrev)
+job_type get_job_by_abbrev(const char *abbrev)
 {
     int i;
 
     for (i = 0; i < NUM_JOBS; i++)
     {
-        if (tolower(abbrev[0]) == tolower(Class_Abbrev_List[i][0])
-            && tolower(abbrev[1]) == tolower(Class_Abbrev_List[i][1]))
+        if (tolower(abbrev[0]) == tolower(Job_Abbrev_List[i][0])
+            && tolower(abbrev[1]) == tolower(Job_Abbrev_List[i][1]))
         {
             break;
         }
@@ -114,13 +114,13 @@ job_type get_class_by_abbrev(const char *abbrev)
     return ((i < NUM_JOBS) ? static_cast<job_type>(i) : JOB_UNKNOWN);
 }
 
-int get_class_index_by_name(const char *name)
+int get_job_index_by_name(const char *name)
 {
-    COMPILE_CHECK(ARRAYSZ(Class_Name_List) == NUM_JOBS, c1);
+    COMPILE_CHECK(ARRAYSZ(Job_Name_List) == NUM_JOBS, c1);
 
     char *ptr;
     char lowered_buff[80];
-    char lowered_class[80];
+    char lowered_job[80];
 
     strncpy(lowered_buff, name, sizeof(lowered_buff));
     strlwr(lowered_buff);
@@ -132,14 +132,14 @@ int get_class_index_by_name(const char *name)
         job = (Options.use_old_selection_order ? old_jobs_order[i]
                                                : new_jobs_order[i]);
 
-        strncpy( lowered_class, Class_Name_List[job], sizeof( lowered_class ) );
-        strlwr( lowered_class );
+        strncpy( lowered_job, Job_Name_List[job], sizeof( lowered_job ) );
+        strlwr( lowered_job );
 
-        ptr = strstr( lowered_class, lowered_buff );
+        ptr = strstr( lowered_job, lowered_buff );
         if (ptr != NULL)
         {
             cl = i;
-            if (ptr == lowered_class)  // prefix takes preference
+            if (ptr == lowered_job)  // prefix takes preference
                 break;
         }
     }
@@ -147,35 +147,35 @@ int get_class_index_by_name(const char *name)
     return (cl);
 }
 
-const char *get_class_name( int which_job )
+const char *get_job_name( int which_job )
 {
     ASSERT(which_job >= 0 && which_job < NUM_JOBS);
 
-    return (Class_Name_List[which_job]);
+    return (Job_Name_List[which_job]);
 }
 
-job_type get_class_by_name(const char *name)
+job_type get_job_by_name(const char *name)
 {
     int i;
     job_type cl = JOB_UNKNOWN;
 
     char *ptr;
     char lowered_buff[80];
-    char lowered_class[80];
+    char lowered_job[80];
 
     strncpy(lowered_buff, name, sizeof(lowered_buff));
     strlwr(lowered_buff);
 
     for (i = 0; i < NUM_JOBS; i++)
     {
-        strncpy(lowered_class, Class_Name_List[i], sizeof(lowered_class));
-        strlwr(lowered_class);
+        strncpy(lowered_job, Job_Name_List[i], sizeof(lowered_job));
+        strlwr(lowered_job);
 
-        ptr = strstr(lowered_class, lowered_buff);
+        ptr = strstr(lowered_job, lowered_buff);
         if (ptr != NULL)
         {
             cl = static_cast<job_type>(i);
-            if (ptr == lowered_class)  // prefix takes preference
+            if (ptr == lowered_job)  // prefix takes preference
                 break;
         }
     }
@@ -183,9 +183,9 @@ job_type get_class_by_name(const char *name)
     return (cl);
 }
 
-int ng_num_classes()
+int ng_num_jobs()
 {
-    // The list musn't be longer than the number of actual classes.
+    // The list musn't be longer than the number of actual jobs.
     COMPILE_CHECK(ARRAYSZ(old_jobs_order) <= NUM_JOBS, c1);
     // Check whether the two lists have the same size.
     COMPILE_CHECK(ARRAYSZ(old_jobs_order) == ARRAYSZ(new_jobs_order), c2);

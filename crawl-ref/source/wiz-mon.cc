@@ -204,17 +204,17 @@ void wizard_create_spec_monster_name()
         mpr("Make player ghost which job? ", MSGCH_PROMPT);
         get_input_line( input_str, sizeof( input_str ) );
 
-        int class_id = get_class_by_abbrev(input_str);
+        int job_id = get_job_by_abbrev(input_str);
 
-        if (class_id == JOB_UNKNOWN)
-            class_id = get_class_by_name(input_str);
+        if (job_id == JOB_UNKNOWN)
+            job_id = get_job_by_name(input_str);
 
-        if (class_id == JOB_UNKNOWN)
+        if (job_id == JOB_UNKNOWN)
         {
             mpr("No such job, making it a Fighter.");
-            class_id = JOB_FIGHTER;
+            job_id = JOB_FIGHTER;
         }
-        ghost.job = static_cast<job_type>(class_id);
+        ghost.job = static_cast<job_type>(job_id);
         ghost.xl = 7;
 
         mon.set_ghost(ghost);

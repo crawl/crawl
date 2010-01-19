@@ -1850,7 +1850,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         tip = you.your_name;
         tip += " (";
         tip += get_species_abbrev(you.species);
-        tip += get_class_abbrev(you.char_class);
+        tip += get_job_abbrev(you.char_class);
         tip += ")";
 
         if (you.visible_igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM)
@@ -4554,7 +4554,7 @@ void DollEditRegion::run()
             for (int i = 0; i < TILEP_PART_MAX; i++)
                 m_dolls[m_doll_idx].parts[i] = TILEP_SHOW_EQUIP;
             break;
-        case CMD_DOLL_CLASS_DEFAULT:
+        case CMD_DOLL_JOB_DEFAULT:
             m_dolls[m_doll_idx] = m_job_default;
             break;
         case CMD_DOLL_CHANGE_MODE:
