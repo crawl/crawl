@@ -5207,7 +5207,7 @@ VISUAL:@The_monster@ sucks @possessive@ thumb.
 @The_monster@ whispers @to_foe@, "Hold me, thrill me, kiss me, kill me."
 ## END Psyche ##
 %%%%
-############ PURGED ### A teased troll
+############ PURGY ### A teased troll
 Purgy
 
 @_Purgy_common_@
