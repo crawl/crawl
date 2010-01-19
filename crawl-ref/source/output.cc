@@ -530,38 +530,34 @@ static void _print_stats_wp(int y)
 
 static void _print_stats_qv(int y)
 {
-    cgotoxy(1, y, GOTO_STAT);
-    textcolor(Options.status_caption_colour);
-    cprintf("Qv: ");
+    int col;
+    std::string text;
 
     int q = you.m_quiver->get_fire_item();
-
     ASSERT(q >= -1 && q < ENDOFPACK);
     if (q != -1)
     {
         const item_def& quiver = you.inv[q];
-        textcolor(quiver.colour);
-
+        col = quiver.colour;
         const std::string prefix = menu_colour_item_prefix(quiver);
         const int prefcol =
             menu_colour(quiver.name(DESC_INVENTORY), prefix);
-
         if (prefcol != -1)
-            textcolor(prefcol);
-
-        cprintf("%s",
-                quiver.name(DESC_INVENTORY, true)
-                .substr(0, crawl_view.hudsz.x - 4)
-                .c_str());
+            col = prefcol;
+        text = quiver.name(DESC_INVENTORY, true);
     }
     else
     {
-        textcolor(LIGHTGREY);
-        cprintf("Nothing quivered");
+        col = LIGHTGREY;
+        text = "Nothing quivered";
     }
-
+    cgotoxy(1, y, GOTO_STAT);
+    textcolor(Options.status_caption_colour);
+    cprintf("Qv: ");
+    textcolor(col);
+    int w = crawl_view.hudsz.x - 4;
+    cprintf("%-*s", w, text.substr(0, w).c_str());
     textcolor(LIGHTGREY);
-    clear_to_end_of_line();
 }
 
 struct status_light
