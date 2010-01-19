@@ -1137,6 +1137,31 @@ void DungeonRegion::render()
     m_buf_main_trans.draw();
     m_buf_main.draw();
 
+    if (you.hp < you.hp_max || you.magic_points < you.max_magic_points)
+    {
+        ShapeBuffer buff;
+        VColour healthy(0, 255, 0, 255);
+        VColour damaged(255, 0, 0, 255);
+        VColour magic(0, 0, 255, 255);
+        VColour magic_spent(0, 0, 0, 255);
+
+        const float health_divider = (float) you.hp / (float) you.hp_max;
+        const float magic_divider = (float) you.magic_points / (float) you.max_magic_points;
+
+        // Tiles are 32x32 pixels; 1/32 = 0.03125.
+        buff.add(mx / 2, my / 2 + 0.875,
+                 mx / 2 + health_divider, my / 2 + 0.9375, healthy);
+        buff.add(mx / 2 + health_divider, my / 2 + 0.875,
+                 mx / 2 + 1, my / 2 + 0.9375, damaged);
+
+        buff.add(mx / 2, my / 2 + 0.9375,
+                 mx / 2 + magic_divider, my / 2 + 1, magic);
+        buff.add(mx / 2 + magic_divider, my / 2 + 0.9375,
+                 mx / 2 + 1, my / 2 + 1, magic_spent);
+
+        buff.draw();
+    }
+
     if (you.berserk())
     {
         ShapeBuffer buff;
