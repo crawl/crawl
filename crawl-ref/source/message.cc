@@ -171,12 +171,22 @@ static std::vector<std::string> linebreak(std::string text, int col)
 class message_window
 {
     int next_line;
+    int turn_line; // line with the last new-turn dash
     std::vector<formatted_string> lines;
+
+    int height() const
+    {
+        return crawl_view.msgsz.y;
+    }
 
     int out_height() const
     {
-        // TODO: -1 if we want to keep a line for --more--
-        return crawl_view.msgsz.y;
+        return (height() - (use_last_line() ? 0 : 1));
+    }
+
+    int use_last_line() const
+    {
+        return (!more_enabled() || use_first_col());
     }
 
     int out_width() const
@@ -207,31 +217,58 @@ class message_window
 
     void scroll(int n)
     {
-        for (int i = 0; i < out_height() - n; ++i)
+        for (int i = 0; i < height() - n; ++i)
             lines[i] = lines[i + n];
         next_line -= n;
+        turn_line -= n;
     }
 
-    bool more_enabled()
+    // Whether to show msgwin-full more prompts.
+    bool more_enabled() const
     {
-        return false;
+        // TODO: implementation of more() is incomplete for
+        //       !Options.clear_messages.
+        return (Options.show_more_prompt && Options.clear_messages);
     }
 
     void make_space(int n)
     {
-        int diff = out_height() - next_line - n;
-        if (diff >= 0)
+        int space = height() - next_line;
+
+        // We could use the last line anyway if we know we're
+        // showing the last message, but that would require
+        // only calling message_window::show when reading
+        // input -- that's not currently the case.
+        if (!use_last_line())
+            space--;
+
+        if (space >= n)
             return;
-        if (more_enabled())
-            more();
-//        if (Options.clear_messages)
-//            clear();
+
+        if (!more_enabled()
+            || !Options.clear_messages && turn_line >= n - space)
+        {
+            scroll(n - space);
+        }
         else
-            scroll(-diff);
+        {
+            more();
+            clear();
+        }
     }
 
     void more()
     {
+        int last_row = crawl_view.msgsz.y;
+        cgotoxy(1, last_row, GOTO_MSG);
+        textcolor(LIGHTGREY);
+        if (use_first_col())
+            cprintf("+");
+        else
+            cprintf("--more--");
+        // XXX: getch() calls flush_prev_message -- we
+        //      need something raw.
+        getch_ck();
     }
 
     void add_line(const formatted_string& line)
@@ -243,7 +280,7 @@ class message_window
 
 public:
     message_window()
-        : next_line(0)
+        : next_line(0), turn_line(0)
     {
         clear_lines(); // initialize this->lines
     }
@@ -251,13 +288,13 @@ public:
     void resize()
     {
         // XXX: broken (why?)
-        lines.resize(out_height());
+        lines.resize(height());
     }
 
     void clear_lines()
     {
         lines.clear();
-        lines.resize(out_height());
+        lines.resize(height());
     }
 
     bool use_first_col() const
@@ -311,6 +348,14 @@ public:
         if (temporary)
             next_line = old;
         show();
+    }
+
+    void new_turn()
+    {
+        // Ensure we don't cause a more prompt.
+        turn_line = 1;
+        add_item(" ", '-', true);
+        turn_line = next_line;
     }
 };
 
@@ -701,7 +746,7 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
 void msgwin_new_turn()
 {
     flush_prev_message();
-    msgwin.add_item(" ", '-', true);
+    msgwin.new_turn();
 }
 
 // mpr() an arbitrarily long list of strings without truncation or risk
@@ -945,6 +990,8 @@ void save_messages(writer& outf)
 
 void load_messages(reader& inf)
 {
+    unwind_var<bool> save_more(Options.show_more_prompt, false);
+
     int num = unmarshallLong(inf);
     for (int i = 0; i < num; ++i)
     {
