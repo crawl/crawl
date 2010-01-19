@@ -329,7 +329,7 @@ public:
 
     // temporary: to be overwritten with next item, e.g. new turn
     //            leading dash or prompt without response
-    void add_item(std::string text, char first_col = ' ', bool temporary)
+    void add_item(std::string text, char first_col = ' ', bool temporary = false)
     {
         std::vector<std::string> newlines = linebreak(text, out_width());
         make_space(newlines.size());
