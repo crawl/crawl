@@ -260,7 +260,7 @@ public:
     }
 
     // write to screen (without refresh)
-    void show()
+    void show() const
     {
         // XXX: this should not be necessary as formatted_string should
         //      already do it
