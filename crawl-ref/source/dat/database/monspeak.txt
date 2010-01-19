@@ -1759,8 +1759,8 @@ w:2
 ## END Dissolution ##
 %%%%
 ############ DONALD ### An adventurer hating competition
-# XXX: todo, add God and generic complaining speech.
-Orcish Mines Donald
+#################################################################### BRANCHES #
+_Orcish_Mines_Donald_
 
 @The_monster@ says, "Orcs complain a lot, don't they? I hate it."
 
@@ -1788,13 +1788,13 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 
 @The_monster@ says, "Maybe, with this gold, I'll be able to afford that Trove..."
 
-@The_monster@ says, "Isn't it odd how gold doesn't weight anything? Maybe it's fake gold."
+@The_monster@ says, "Isn't it odd how gold doesn't weigh anything? Maybe it's fake gold."
 
 @The_monster@ says, "I prefer the Lair of the Beasts, to be honest. At least animals don't complain."
 
 @The_monster@ says, "I hate complainers so much."
 %%%%
-Elven Halls Donald
+_Elven_Halls_Donald_
 
 @The_monster@ says, "They're so pretty, I think it must be a glamour."
 
@@ -1818,11 +1818,9 @@ Elven Halls Donald
 
 @The_monster@ says, "What sort of sludge, anyway?"
 
-@The_monster@ says, "I thought I saw a grey elf earlier. I hate greys."
-
-
+@The_monster@ says, "Some of those elves look a bit grey in the face."
 %%%%
-Swamp Donald
+_Swamp_Donald_
 
 @The_monster@ says, "What's that horrible smell? It's like... yuck."
 
@@ -1848,7 +1846,7 @@ Swamp Donald
 
 @The_monster@ says, "Is there a plague of frogs happening, or something? At least it's not locusts."
 %%%%
-Shoals Donald
+_Shoals_Donald_
 
 @The_monster@ says, "Tides? What were they thinking? I hate tides!"
 
@@ -1890,7 +1888,7 @@ Shoals Donald
 
 @The_monster@ says, "This tentacle just came out of nowhere and touched me. I hate tentacles!"
 %%%%
-Slime Pits Donald
+_Slime_Pits_Donald_
 
 @The_monster@ says, "I forgot my corrosion kit. Damn, I hate that!"
 
@@ -1932,7 +1930,7 @@ Slime Pits Donald
 
 @The_monster@ says, "I hope the rune isn't sticky."
 %%%%
-Snake Pit Donald
+_Snake_Pit_Donald_
 
 @The_monster@ says, "You know that hissing noise? I hate that."
 
@@ -1975,7 +1973,7 @@ Snake Pit Donald
 @The_monster@ says, "Man, snails must be faster than these guys."
 %%%%
 # Commented out for now, as the branch is subject to change.
-#Vaults Donald
+#_Vaults_Donald_
 #
 #@The_monster@ says, "This place is boring."
 #
@@ -1987,7 +1985,7 @@ Snake Pit Donald
 #
 #
 #%%%%
-Hall of Blades Donald
+_Hall_of_Blades_Donald_
 
 @The_monster@ says, "A great mace doesn't even have a blade."
 
@@ -2023,7 +2021,7 @@ Hall of Blades Donald
 
 @The_monster@ says, "I've been waiting here for ages. Nothing new."
 %%%%
-Crypt Donald
+_Crypt_Donald_
 
 @The_monster@ says, "Zombies are pretty boring."
 
@@ -2088,6 +2086,1584 @@ Crypt Donald
 @The_monster@ says, "I saw a sphinx earlier. I hate that."
 
 @The_monster@ says, "The Crypt, the Tomb, what's next? The Coffin?"
+%%%%
+######################################################################## GODS #
+%%%%
+_Zin_Donald_
+
+@The_monster@ says, "At least you won't get hungry."
+
+@The_monster@ says, "Zin? Why would you even bother?"
+
+@The_monster@ says, "So much for spreading the word, you get punched in the face instead."
+
+@The_monster@ says, "This pamphlet doesn't say what the point to Recitation is."
+
+@The_monster@ says, "I wanna be an adventurer, not a preacher!"
+
+@The_monster@ says, "What does he need our gold for, anyway?"
+
+@The_monster@ says, "Something seems a little bit odd about a God who wants you to pay him."
+
+@The_monster@ says, "Most gods give you gifts. Zin asks you to give him gifts. I hate that."
+
+@The_monster@ says, "That's really confusing. What's the point of divine satiation if you're not allowed to eat?"
+
+@The_monster@ says, "At least you'll get really skinny."
+
+@The_monster@ says, "I hate stupid dietary laws! If I wanna to eat a cow, I'll eat a cow!"
+
+@The_monster@ says, "I've got two hundred gold pieces, is that enough to cure these mutations?"
+
+@The_monster@ says, "Didn't you like your horns?"
+
+@The_monster@ says, "Don't you hate it when everyone gets mad at you?"
+
+@The_monster@ says, "Damn, I left my potions of berserk rage outside."
+
+@The_monster@ says, "If I give you twenty gold pieces, can you get rid of this nasty case of scales I've got?"
+%%%%
+_The_Shining_One_Donald_
+
+@The_monster@ says, "What's the point of being chivalric if nobody's going to be chivalric back?"
+
+@The_monster@ says, "I opened the door for a goblin, he punched me in the face. I hate chivalry."
+
+@The_monster@ says, "I think I'll have a nap."
+
+@The_monster@ says, "Hah! I saw you coming a mile away."
+
+@The_monster@ says, "You stick out like a sore thumb. Or at least, a shining one."
+
+@The_monster@ says, "Won't need this ring of poison resistance, then, will I?"
+
+@The_monster@ says, "Can you turn the glow down a bit? I can't see you to hit you."
+
+@The_monster@ says, "Cleansing flame? What's it supposed to be cleansing? The floor?"
+%%%%
+_Kikubaaqudgha_Donald_
+
+@The_monster@ says, "Kikuba-what? How do you even say that?"
+
+@The_monster@ says, "Sorry, didn't catch that. You worship who? How do you spell it?"
+
+@The_monster@ says, "Can you spell it for me--slowly?"
+
+@The_monster@ says, "How do you pronounce that?"
+
+@The_monster@ says, "At least you'll get some reading material."
+
+@The_monster@ says, "I hate zombies."
+
+@The_monster@ says, "Butchering is such a pain, isn't it?"
+
+@The_monster@ says, "You strike me as a masochist."
+
+@The_monster@ says, "I'm hungry. Can you summon some snacks?"
+%%%%
+_Yredelemnul_Donald_
+
+@The_monster@ says, "How does a skeletal dragon fly, anyway?"
+
+@The_monster@ says, "Pah! You're not even a real necromancer."
+
+@The_monster@ says, "Did you drop out of Necromancy School?"
+
+@The_monster@ says, "Ah. You're responsible for all those zombies upstairs."
+
+@The_monster@ says, "I hate zombies."
+
+@The_monster@ says, "A hungry ghost just ate my lunch. I hate that."
+
+@The_monster@ says, "Zombies? Skeletons? Don't you get bored for real company?"
+
+@The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
+%%%%
+_Okawaru_Donald_
+
+@The_monster@ says, "Okawaru always makes me think of chokos."
+
+@The_monster@ says, "Okawaru? Yawn."
+
+@The_monster@ says, "Oh, hey! I could use a new animal skin. Have you got any spares?"
+
+@The_monster@ says, "Nice kit."
+
+@The_monster@ says, "Can I have your spare potions?"
+
+VISUAL:@The_monster@ yawns.
+
+@The_monster@ asks, "How many innocent creatures did you kill for those shoes?"
+
+@The_monster@ says, "Okawaru's gifts are murder."
+
+@The_monster@ says, "Don't you get bored of animal skins after a while?"
+
+@The_monster@ says, "You can only wear one cloak at a time, you know?"
+%%%%
+_Makhleb_Donald_
+
+@The_monster@ says, "At least you've got demons for company."
+
+@The_monster@ says, "Are you sure that summoning demons is a good idea?"
+
+@The_monster@ says, "Don't you ever wonder where those demons come from?"
+
+@The_monster@ says, "What's so minor about destruction?"
+
+@The_monster@ says, "Hey, watch where you throw those lightning balls!"
+
+@The_monster@ says, "Don't blow yourself up now."
+
+@The_monster@ says, "I hate demons."
+%%%%
+_Sif_Muna_Donald_
+
+@The_monster@ says, "Don't you wish for a portable bookcase?"
+
+@The_monster@ says, "Imagine how many trees were cut down to fuel your hobby."
+
+@The_monster@ says, "Man, that must be some big library."
+
+@The_monster@ says, "Found the spell you wanted yet?"
+
+@The_monster@ says, "If you wanted to read so much, why didn't you become a librarian?"
+
+@The_monster@ says, "Did you remember that thing that you forgot? I hate that."
+
+@The_monster@ says, "It's like an all you can read... something."
+
+@The_monster@ says, "What was that you just said? I forgot."
+
+@The_monster@ says, "I hate books."
+
+@The_monster@ says, "Surely there's a limit to the number of books you can carry. Right?"
+
+@The_monster@ says, "That skill training requirement sounds like a real pain."
+
+@The_monster@ says, "Did I just see you do a victory dance?"
+
+@The_monster@ says, "What did that wall do to you?"
+
+@The_monster@ says, "I hate spells."
+
+@The_monster@ says, "Don't you just hate miscasts?"
+
+@The_monster@ says, "You'll go blind if you keep casting by yourself."
+%%%%
+_Trog_Donald_
+
+@The_monster@ says, "So, are you allowed to read books?"
+
+@The_monster@ says, "You troglodyte!"
+
+@The_monster@ says, "I heard Trog has abandonment issues."
+
+@The_monster@ says, "I bet his next axe will take you to the Abyss."
+
+@The_monster@ says, "I considered Trog, but the aftereffects of berserk scare me."
+
+@The_monster@ says, "Fainting that often must mean something's wrong, right?"
+
+@The_monster@ says, "I bet you wish you could cast spells now, right?"
+
+@The_monster@ says, "Are you sure you're allowed to read scrolls?"
+
+@The_monster@ says, "Hey, I thought wands weren't allowed!"
+
+@The_monster@ says, "What about rods?"
+
+@The_monster@ says, "If I tell you I hate magic, will you worship me?"
+
+@The_monster@ says, "I hate ogres."
+%%%%
+_Nemelex_Xobeh_Donald_
+
+@The_monster@ says, "What's all in the card? Your future?"
+
+@The_monster@ says, "You missed a spot upstairs."
+
+@The_monster@ says, "You forgot to sacrifice a pile of trash back there."
+
+@The_monster@ says, "Accidentally sacrificed anything yet?"
+
+@The_monster@ says, "I bet you're feeling stupid now, huh?"
+
+@The_monster@ says, "If I draw a card, can you tell me which one it is?"
+
+@The_monster@ says, "Where do you keep all those decks?"
+
+@The_monster@ says, "Do you even have room for potions with all those cards?"
+
+@The_monster@ says, "I'm sure I saw a card fall out of that deck."
+
+@The_monster@ syas, "I've seen this trick before. You've got the ace up your sleeve, right?"
+
+@The_monster@ says, "You need to come to terms with your gambling problem, mate."
+%%%%
+_Elyvilon_Donald_
+
+@The_monster@ says, "Whatever happened to, 'First, do no harm'?"
+
+@The_monster@ says, "Hungry yet?"
+
+@The_monster@ says, "Doesn't healing your enemies sound rather pointless?"
+
+@The_monster@ says, "Maybe you should start praying."
+
+@The_monster@ says, "If I give you my weapon, will you leave me alone?"
+
+@The_monster@ says, "Come on. Make me an offer of peace that I can't refuse!"
+%%%%
+_Lugonu_Donald_
+
+@The_monster@ says, "I'd pick a mace for blessing, if I were you."
+
+@The_monster@ says, "Why would you want to visit the Abyss? For a holiday?"
+
+@The_monster@ says, "I never knew blinking was supposed to hurt."
+
+@The_monster@ says, "Nothing ever attacks me when I'm in the Abyss."
+
+@The_monster@ says, "So, why can't you enter the Abyss from Pandemonium? Bad signal?"
+
+@The_monster@ says, "You must be some kind of masochist."
+
+@The_monster@ says, "Why would a God hurt you out of love? I hate that."
+
+@The_monster@ says, "What's the point of distortion, anyway? I don't want me food blinking away from me."
+%%%%
+_Beogh_Donald_
+
+@The_monster@ says, "Beogh's pretty racist."
+
+@The_monster@ says, "So, how long did it take you to find an altar to Beogh?"
+
+@The_monster@ says, "You think walking on water is cool? I can swim."
+
+@The_monster@ says, "Isn't it annoying when people just start following you around?"
+
+@The_monster@ says, "I'd get sick of organising so many troops."
+
+@The_monster@ says, "How do you feed them all? Five loaves and a few fishes?"
+
+@The_monster@ says, "You'll need more than orcs to take me on."
+
+@The_monster@ says, "Do you like preaching on mountaintops?"
+
+@The_monster@ says, "What is divine providence, anyway? I hate that."
+
+@The_monster@ says, "You'd better watch out. The one of the left looks like he gets lost easily."
+
+@The_monster@ says, "You think you're the Messiah? I met another guy who thought that, too."
+
+@The_monster@ says, "Messiah? I hate messiahs."
+%%%%
+_Jiyva_Donald_
+
+@The_monster@ says, "Come slime with me!"
+
+@The_monster@ says, "You look a bit slimey."
+
+@The_monster@ says, "Ah. That explains where all the items went."
+
+@The_monster@ says, "Are you going to open a jelly farm when you find the Orb?"
+
+@The_monster@ says, "I hate it when jellies take over a level."
+
+@The_monster@ says, "Your jellies ate my lunch. I hate that."
+
+@The_monster@ says, "I hate slime."
+
+@The_monster@ says, "You must hate doors a lot."
+
+@The_monster@ says, "If I pretend to be a jelly, can I have your stuff?"
+%%%%
+_Fedhas_Donald_
+
+@The_monster@ says, "What's with all that fungus?"
+
+@The_monster@ says, "I can make a puddle of water on the floor, too."
+
+@The_monster@ says, "I hate trees."
+
+@The_monster@ says, "I hate plants."
+
+@The_monster@ says, "I hate fruit."
+
+@The_monster@ says, "You're like a walking fruit salad. I hate that."
+
+@The_monster@ says, "Where does that sunlight come from, anyway?"
+
+@The_monster@ says, "Do you like gardening? I hate gardening."
+
+@The_monster@ says, "So, how do you deal with the weeds?"
+
+@The_monster@ says, "I guess weed-killer is off the menu."
+
+@The_monster@ says, "I'm sure I've got some anti-fungal cream around here."
+
+@The_monster@ says, "Damn. I left my rain coat at home."
+%%%%
+_Cheibriados_Donald_
+
+@The_monster@ says, "Slow down, man!"
+
+@The_monster@ says, "You're not very quick on the up-take, are you?"
+
+@The_monster@ says, "Am I talking too fast for you?"
+
+@The_monster@ says, "So, what's up with all the snails? I hate them."
+
+@The_monster@ says, "Look at me! I'm running, I'm running!"
+
+@The_monster@ says, "Cheibriados just sounds stupid, anyway."
+
+@The_monster@ says, "What kind of name is Cheibriados?"
+
+@The_monster@ says, "How do you spell that?"
+
+@The_monster@ says, "How do you pronounce that?"
+
+@The_monster@ says, "Tummy is such a puerile word."
+%%%%
+_Xom_Donald_
+
+@The_monster@ says, "Xom? Are you insane?"
+
+@The_monster@ says, "I don't get Xom."
+
+@The_monster@ says, "I hate Xom."
+
+@The_monster@ says, "If it's mutations you're wanting, wouldn't Jiyva be a better deal?"
+
+@The_monster@ says, "I hope you love dancing weapons. I hate them."
+
+@The_monster@ says, "Been surrounded by packs of demons recently? I hate that."
+
+@The_monster@ says, "Xom just doesn't make any sense. I hate that."
+
+@The_monster@ says, "What kind of name is 'Xom', anyway?"
+
+@The_monster@ says, "What is a 'random number god' anyway?"
+
+@The_monster@ says, "I had a teddy bear once. I hated it."
+%%%%
+_No_God_Donald_
+
+@The_monster@ says, "Don't you get lonely without a god?"
+
+@The_monster@ says, "I hate the gods."
+
+@The_monster@ says, "And the gods hate me."
+
+@The_monster@ says, "So, what do you do with all of your corpses? Leave them to rot?"
+
+@The_monster@ says, "You must run out of Gods to curse by."
+
+@The_monster@ says, "You missed the Ecumenical Temple, mate."
+%%%%
+##################################################################### GENERIC #
+_generic_Donald_
+
+@The_monster@ says, "You're really ugly. Did you know that?"
+
+@The_monster@ says, "This is such a pointless quest."
+
+@The_monster@ says, "They wouldn't let me join their adventuring club without the Orb."
+
+@The_monster@ says, "I hate this place."
+
+@The_monster@ says, "I hate you, too."
+
+@The_monster@ says, "My feet hurt."
+
+@The_monster@ says, "My hands hurt, too."
+
+@The_monster@ says, "I think I'm starting to get a cough. I hate that."
+
+@The_monster@ says, "I've got a headache. I hate that."
+
+@The_monster@ says, "That colour you're wearing? I hate that."
+
+@The_monster@ says, "Like I always say, the jar is half empty."
+
+@The_monster@ says, "And you think you've got it bad..."
+
+@The_monster@ says, "I wonder if there's an end to this place."
+
+@The_monster@ says, "Is it turtles all the way down?"
+
+@The_monster@ says, "The people that built this place? They must be crazy."
+
+@The_monster@ says, "The air in here stinks. I hate that."
+
+@The_monster@ says, "I bet the Orb isn't even all that great."
+
+@The_monster@ says, "So, what is this Orb thing, anyway?"
+
+@The_monster@ says, "I hope I haven't come all this way for a glorified paperweight."
+
+@The_monster@ says, "I don't got what's so special about the number twenty-seven."
+
+@The_monster@ says, "The other people here are really rude."
+
+@The_monster@ says, "Maybe I'll visit Hell next."
+
+@The_monster@ says, "The Vaults look kind of boring."
+
+@The_monster@ says, "Why do the shops only ever sell food? I could get that at home."
+
+@The_monster@ says, "I can never work out what any of these scrolls mean."
+
+@The_monster@ says, "I'm hungry."
+
+@The_monster@ sighs.
+
+VISUAL:@The_monster@ winces.
+
+VISUAL:@The_monster@ makes a rude gesture at you.
+
+VISUAL:@The_monster@ shakes his head.
+
+@The_monster@ says, "What lunatic would build a room out of doors?"
+
+@The_monster@ says, "Why would someone put a sword in a little box?"
+
+@The_monster@ says, "I think I hate rivers, but I can't remember why."
+
+@The_monster@ says, "That guy with the scythe is really mean."
+
+w:1
+@The_monster@ says, "Why kind of a name is Fauntleroy?"
+
+w:1
+@The_monster@ says, "What's the big idea?!"
+%%%%
+default hostile confused Donald
+
+@The_monster@ says, "I suppose everything's okay, then?"
+
+@The_monster@ says, "Actually, I like you."
+
+@The_monster@ says, "Oh boy, oh boy, oh boy!"
+
+@The_monster@ says, "Aw, phooey!"
+
+@The_monster@ says, "But I've got a wife! And kids! Have I?"
+
+@The_monster@ screams.
+
+@The_monster@ makes quacking noises.
+
+@The_monster@ says, "My legs! My legs! What happened to my legs?"
+
+@The_monster@ sings badly, off-key.
+
+VISUAL:@The_monster@ does a happy little dance.
+
+VISUAL:@The_monster@ sticks a finger up his nose.
+
+VISUAL:@The_monster@ tugs at his hair.
+
+VISUAL:@The_monster@ twirls gently on the spot.
+%%%%
+######################################################################## GLUE #
+# Orcish mines combos
+Zin Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Zin_Donald_@
+%%%%
+The Shining One Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_The_Shining_One_Donald_@
+%%%%
+Kikubaaqudgha Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Kikubaaqudgha_Donald_@
+%%%%
+Yredelemnul Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Yredelemnul_Donald_@
+%%%%
+Okawaru Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Okawaru_Donald_@
+%%%%
+Makhleb Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Makhleb_Donald_@
+%%%%
+Sif Muna Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Sif_Muna_Donald_@
+%%%%
+Trog Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Trog_Donald_@
+%%%%
+Nemelex Xobeh Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Nemelex_Xobeh_Donald_@
+%%%%
+Elyvilon Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Elyvilon_Donald_@
+%%%%
+Lugonu Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Lugonu_Donald_@
+%%%%
+Beogh Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Beogh_Donald_@
+%%%%
+Jiyva Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Jiyva_Donald_@
+%%%%
+Fedhas Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Fedhas_Donald_@
+%%%%
+Cheibriados Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Cheibriados_Donald_@
+%%%%
+Xom Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_Xom_Donald_@
+%%%%
+No God Orcish Mines Donald
+
+@_generic_Donald_@
+
+@_Orcish_Mines_Donald_@
+
+@_No_God_Donald_@
+%%%%
+# Elven Halls
+Zin Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Zin_Donald_@
+%%%%
+The Shining One Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_The_Shining_One_Donald_@
+%%%%
+Kikubaaqudgha Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Kikubaaqudgha_Donald_@
+%%%%
+Yredelemnul Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Yredelemnul_Donald_@
+%%%%
+Okawaru Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Okawaru_Donald_@
+%%%%
+Makhleb Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Makhleb_Donald_@
+%%%%
+Sif Muna Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Sif_Muna_Donald_@
+%%%%
+Trog Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Trog_Donald_@
+%%%%
+Nemelex Xobeh Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Nemelex_Xobeh_Donald_@
+%%%%
+Elyvilon Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Elyvilon_Donald_@
+%%%%
+Lugonu Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Lugonu_Donald_@
+%%%%
+Beogh Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Beogh_Donald_@
+%%%%
+Jiyva Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Jiyva_Donald_@
+%%%%
+Fedhas Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Fedhas_Donald_@
+%%%%
+Cheibriados Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Cheibriados_Donald_@
+%%%%
+Xom Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_Xom_Donald_@
+%%%%
+No God Elven Halls Donald
+
+@_generic_Donald_@
+
+@_Elven_Halls_Donald_@
+
+@_No_God_Donald_@
+%%%%
+# Swmap
+Zin Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Zin_Donald_@
+%%%%
+The Shining One Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_The_Shining_One_Donald_@
+%%%%
+Kikubaaqudgha Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Kikubaaqudgha_Donald_@
+%%%%
+Yredelemnul Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Yredelemnul_Donald_@
+%%%%
+Okawaru Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Okawaru_Donald_@
+%%%%
+Makhleb Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Makhleb_Donald_@
+%%%%
+Sif Muna Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Sif_Muna_Donald_@
+%%%%
+Trog Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Trog_Donald_@
+%%%%
+Nemelex Xobeh Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Nemelex_Xobeh_Donald_@
+%%%%
+Elyvilon Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Elyvilon_Donald_@
+%%%%
+Lugonu Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Lugonu_Donald_@
+%%%%
+Beogh Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Beogh_Donald_@
+%%%%
+Jiyva Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Jiyva_Donald_@
+%%%%
+Fedhas Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Fedhas_Donald_@
+%%%%
+Cheibriados Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Cheibriados_Donald_@
+%%%%
+Xom Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_Xom_Donald_@
+%%%%
+No God Swamp Donald
+
+@_generic_Donald_@
+
+@_Swamp_Donald_@
+
+@_No_God_Donald_@
+%%%%
+# Shoals
+Zin Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Zin_Donald_@
+%%%%
+The Shining One Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_The_Shining_One_Donald_@
+%%%%
+Kikubaaqudgha Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Kikubaaqudgha_Donald_@
+%%%%
+Yredelemnul Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Yredelemnul_Donald_@
+%%%%
+Okawaru Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Okawaru_Donald_@
+%%%%
+Makhleb Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Makhleb_Donald_@
+%%%%
+Sif Muna Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Sif_Muna_Donald_@
+%%%%
+Trog Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Trog_Donald_@
+%%%%
+Nemelex Xobeh Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Nemelex_Xobeh_Donald_@
+%%%%
+Elyvilon Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Elyvilon_Donald_@
+%%%%
+Lugonu Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Lugonu_Donald_@
+%%%%
+Beogh Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Beogh_Donald_@
+%%%%
+Jiyva Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Jiyva_Donald_@
+%%%%
+Fedhas Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Fedhas_Donald_@
+%%%%
+Cheibriados Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Cheibriados_Donald_@
+%%%%
+Xom Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_Xom_Donald_@
+%%%%
+No God Shoals Donald
+
+@_generic_Donald_@
+
+@_Shoals_Donald_@
+
+@_No_God_Donald_@
+%%%%
+# Slime Pits
+Zin Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Zin_Donald_@
+%%%%
+The Shining One Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_The_Shining_One_Donald_@
+%%%%
+Kikubaaqudgha Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Kikubaaqudgha_Donald_@
+%%%%
+Yredelemnul Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Yredelemnul_Donald_@
+%%%%
+Okawaru Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Okawaru_Donald_@
+%%%%
+Makhleb Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Makhleb_Donald_@
+%%%%
+Sif Muna Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Sif_Muna_Donald_@
+%%%%
+Trog Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Trog_Donald_@
+%%%%
+Nemelex Xobeh Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Nemelex_Xobeh_Donald_@
+%%%%
+Elyvilon Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Elyvilon_Donald_@
+%%%%
+Lugonu Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Lugonu_Donald_@
+%%%%
+Beogh Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Beogh_Donald_@
+%%%%
+Jiyva Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Jiyva_Donald_@
+%%%%
+Fedhas Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Fedhas_Donald_@
+%%%%
+Cheibriados Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Cheibriados_Donald_@
+%%%%
+Xom Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_Xom_Donald_@
+%%%%
+No God Slime Pits Donald
+
+@_generic_Donald_@
+
+@_Slime_Pits_Donald_@
+
+@_No_God_Donald_@
+%%%%
+# Snake Pit
+Zin Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Zin_Donald_@
+%%%%
+The Shining One Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_The_Shining_One_Donald_@
+%%%%
+Kikubaaqudgha Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Kikubaaqudgha_Donald_@
+%%%%
+Yredelemnul Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Yredelemnul_Donald_@
+%%%%
+Okawaru Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Okawaru_Donald_@
+%%%%
+Makhleb Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Makhleb_Donald_@
+%%%%
+Sif Muna Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Sif_Muna_Donald_@
+%%%%
+Trog Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Trog_Donald_@
+%%%%
+Nemelex Xobeh Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Nemelex_Xobeh_Donald_@
+%%%%
+Elyvilon Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Elyvilon_Donald_@
+%%%%
+Lugonu Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Lugonu_Donald_@
+%%%%
+Beogh Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Beogh_Donald_@
+%%%%
+Jiyva Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Jiyva_Donald_@
+%%%%
+Fedhas Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Fedhas_Donald_@
+%%%%
+Cheibriados Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Cheibriados_Donald_@
+%%%%
+Xom Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_Xom_Donald_@
+%%%%
+No God Snake Pit Donald
+
+@_generic_Donald_@
+
+@_Snake_Pit_Donald_@
+
+@_No_God_Donald_@
+%%%%
+# Hall of Blades
+Zin Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Zin_Donald_@
+%%%%
+The Shining One Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_The_Shining_One_Donald_@
+%%%%
+Kikubaaqudgha Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Kikubaaqudgha_Donald_@
+%%%%
+Yredelemnul Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Yredelemnul_Donald_@
+%%%%
+Okawaru Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Okawaru_Donald_@
+%%%%
+Makhleb Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Makhleb_Donald_@
+%%%%
+Sif Muna Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Sif_Muna_Donald_@
+%%%%
+Trog Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Trog_Donald_@
+%%%%
+Nemelex Xobeh Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Nemelex_Xobeh_Donald_@
+%%%%
+Elyvilon Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Elyvilon_Donald_@
+%%%%
+Lugonu Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Lugonu_Donald_@
+%%%%
+Beogh Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Beogh_Donald_@
+%%%%
+Jiyva Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Jiyva_Donald_@
+%%%%
+Fedhas Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Fedhas_Donald_@
+%%%%
+Cheibriados Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Cheibriados_Donald_@
+%%%%
+Xom Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_Xom_Donald_@
+%%%%
+No God Hall of Blades Donald
+
+@_generic_Donald_@
+
+@_Hall_of_Blades_Donald_@
+
+@_No_God_Donald_@
+%%%%
+# Crypt
+Zin Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Zin_Donald_@
+%%%%
+The Shining One Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_The_Shining_One_Donald_@
+%%%%
+Kikubaaqudgha Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Kikubaaqudgha_Donald_@
+%%%%
+Yredelemnul Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Yredelemnul_Donald_@
+%%%%
+Okawaru Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Okawaru_Donald_@
+%%%%
+Makhleb Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Makhleb_Donald_@
+%%%%
+Sif Muna Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Sif_Muna_Donald_@
+%%%%
+Trog Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Trog_Donald_@
+%%%%
+Nemelex Xobeh Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Nemelex_Xobeh_Donald_@
+%%%%
+Elyvilon Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Elyvilon_Donald_@
+%%%%
+Lugonu Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Lugonu_Donald_@
+%%%%
+Beogh Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Beogh_Donald_@
+%%%%
+Jiyva Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Jiyva_Donald_@
+%%%%
+Fedhas Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Fedhas_Donald_@
+%%%%
+Cheibriados Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Cheibriados_Donald_@
+%%%%
+Xom Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_Xom_Donald_@
+%%%%
+No God Crypt Donald
+
+@_generic_Donald_@
+
+@_Crypt_Donald_@
+
+@_No_God_Donald_@
 %%%%
 ############ DOWAN ### A vain elf caster, twin brother of Duvessa
 twin_died Dowan
