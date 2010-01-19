@@ -3108,14 +3108,14 @@ std::string get_ghost_description(const monsters &mons, bool concise)
     if (concise)
     {
         gstr << get_species_abbrev(gspecies)
-             << get_class_abbrev(ghost.job);
+             << get_job_abbrev(ghost.job);
     }
     else
     {
         gstr << species_name(gspecies,
                              ghost.xl)
              << " "
-             << get_class_name(ghost.job);
+             << get_job_name(ghost.job);
     }
 
     if (ghost.religion != GOD_NO_GOD)

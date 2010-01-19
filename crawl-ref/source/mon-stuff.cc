@@ -1689,7 +1689,9 @@ int monster_die(monsters *monster, killer_type killer,
                                     monster->hit_dice, true, monster);
                 }
 
-                if (monster->is_chaotic())
+                // is_chaotic() doesn't cover actual spellcasters with
+                // chaotic spells.
+                if (monster->is_chaotic() || monster->has_chaotic_spell())
                 {
                     did_god_conduct(DID_KILL_CHAOTIC,
                                     monster->hit_dice, true, monster);

@@ -1000,9 +1000,9 @@ void print_stats_level()
     clear_to_end_of_line();
 }
 
-void redraw_skill(const std::string &your_name, const std::string &class_name)
+void redraw_skill(const std::string &your_name, const std::string &job_name)
 {
-    std::string title = your_name + " the " + class_name;
+    std::string title = your_name + " the " + job_name;
 
     unsigned int in_len = title.length();
     const unsigned int WIDTH = crawl_view.hudsz.x;
@@ -1020,7 +1020,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
                 trimmed_name.substr(0, name_len - (in_len - WIDTH) - 1);
         }
 
-        title = trimmed_name + ", " + class_name;
+        title = trimmed_name + ", " + job_name;
     }
 
     // Line 1: Foo the Bar    *WIZARD*
@@ -1579,8 +1579,8 @@ static std::string _overview_screen_title()
     char title[50];
     snprintf(title, sizeof title, " the %s ", player_title().c_str());
 
-    char race_class[50];
-    snprintf(race_class, sizeof race_class,
+    char species_job[50];
+    snprintf(species_job, sizeof species_job,
              "(%s %s)",
              species_name(you.species, you.experience_level).c_str(),
              you.class_name);
@@ -1596,17 +1596,17 @@ static std::string _overview_screen_title()
     }
 
     int linelength = you.your_name.length() + strlen(title)
-                     + strlen(race_class) + strlen(time_turns);
+                     + strlen(species_job) + strlen(time_turns);
     for (int count = 0; linelength >= get_number_of_cols() && count < 2;
          count++)
     {
         switch (count)
         {
           case 0:
-              snprintf(race_class, sizeof race_class,
+              snprintf(species_job, sizeof species_job,
                        "(%s%s)",
                        get_species_abbrev(you.species),
-                       get_class_abbrev(you.char_class) );
+                       get_job_abbrev(you.char_class) );
               break;
           case 1:
               strcpy(title, "");
@@ -1615,14 +1615,14 @@ static std::string _overview_screen_title()
               break;
         }
         linelength = you.your_name.length() + strlen(title)
-                     + strlen(race_class) + strlen(time_turns);
+                     + strlen(species_job) + strlen(time_turns);
     }
 
     std::string text;
     text = "<yellow>";
     text += you.your_name;
     text += title;
-    text += race_class;
+    text += species_job;
     text += std::string(get_number_of_cols() - linelength - 1, ' ');
     text += time_turns;
     text += "</yellow>\n";

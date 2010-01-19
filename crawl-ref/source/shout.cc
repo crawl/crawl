@@ -127,13 +127,13 @@ void handle_monster_shouts(monsters* monster, bool force)
     // Pandemonium demons have random names, so use "pandemonium lord"
     if (monster->type == MONS_PANDEMONIUM_DEMON)
         key = "pandemonium lord";
-    // Search for player ghost shout by the ghost's class.
+    // Search for player ghost shout by the ghost's job.
     else if (monster->type == MONS_PLAYER_GHOST)
     {
         const ghost_demon &ghost = *(monster->ghost);
-        std::string ghost_class = get_class_name(ghost.job);
+        std::string ghost_job    = get_job_name(ghost.job);
 
-        key = ghost_class + " player ghost";
+        key = ghost_job + " player ghost";
 
         default_msg_key = "player ghost";
     }

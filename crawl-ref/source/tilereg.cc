@@ -1137,6 +1137,31 @@ void DungeonRegion::render()
     m_buf_main_trans.draw();
     m_buf_main.draw();
 
+    if (you.hp < you.hp_max || you.magic_points < you.max_magic_points)
+    {
+        ShapeBuffer buff;
+        VColour healthy(0, 255, 0, 255);
+        VColour damaged(255, 0, 0, 255);
+        VColour magic(0, 0, 255, 255);
+        VColour magic_spent(0, 0, 0, 255);
+
+        const float health_divider = (float) you.hp / (float) you.hp_max;
+        const float magic_divider = (float) you.magic_points / (float) you.max_magic_points;
+
+        // Tiles are 32x32 pixels; 1/32 = 0.03125.
+        buff.add(mx / 2, my / 2 + 0.875,
+                 mx / 2 + health_divider, my / 2 + 0.9375, healthy);
+        buff.add(mx / 2 + health_divider, my / 2 + 0.875,
+                 mx / 2 + 1, my / 2 + 0.9375, damaged);
+
+        buff.add(mx / 2, my / 2 + 0.9375,
+                 mx / 2 + magic_divider, my / 2 + 1, magic);
+        buff.add(mx / 2 + magic_divider, my / 2 + 0.9375,
+                 mx / 2 + 1, my / 2 + 1, magic_spent);
+
+        buff.draw();
+    }
+
     if (you.berserk())
     {
         ShapeBuffer buff;
@@ -1850,7 +1875,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         tip = you.your_name;
         tip += " (";
         tip += get_species_abbrev(you.species);
-        tip += get_class_abbrev(you.char_class);
+        tip += get_job_abbrev(you.char_class);
         tip += ")";
 
         if (you.visible_igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM)
@@ -4554,7 +4579,7 @@ void DollEditRegion::run()
             for (int i = 0; i < TILEP_PART_MAX; i++)
                 m_dolls[m_doll_idx].parts[i] = TILEP_SHOW_EQUIP;
             break;
-        case CMD_DOLL_CLASS_DEFAULT:
+        case CMD_DOLL_JOB_DEFAULT:
             m_dolls[m_doll_idx] = m_job_default;
             break;
         case CMD_DOLL_CHANGE_MODE:

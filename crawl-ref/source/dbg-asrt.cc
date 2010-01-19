@@ -112,13 +112,13 @@ static void _dump_player(FILE *file)
 
     if (name_overrun)
     {
-        fprintf(file, "class_name runs past end of buffer." EOL);
+        fprintf(file, "job_name runs past end of buffer." EOL);
         you.class_name[29] = '\0';
     }
 
     fprintf(file, "Name:       [%s]" EOL, you.your_name.c_str());
     fprintf(file, "Species:    %s" EOL, species_name(you.species, 27).c_str());
-    fprintf(file, "Class:      %s" EOL EOL, get_class_name(you.char_class));
+    fprintf(file, "Job:        %s" EOL EOL, get_job_name(you.char_class));
     fprintf(file, "class_name: %s" EOL EOL, you.class_name);
 
     fprintf(file, "HP: %d/%d; base: %d/%d" EOL, you.hp, you.hp_max,

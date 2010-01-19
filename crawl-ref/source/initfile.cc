@@ -294,7 +294,7 @@ static fire_type _str_to_fire_types( const std::string &str )
     return (FIRE_NONE);
 }
 
-static char _str_to_race( const std::string &str )
+static char _str_to_species( const std::string &str )
 {
     if (str == "random")
         return '*';
@@ -316,7 +316,7 @@ static char _str_to_race( const std::string &str )
     return ((index != -1) ? index_to_letter( index ) : 0);
 }
 
-static int _str_to_class( const std::string &str )
+static int _str_to_job( const std::string &str )
 {
     if (str == "random")
         return '*';
@@ -326,11 +326,11 @@ static int _str_to_class( const std::string &str )
     if (str.length() == 1)      // old system of using menu letter
         return (str[0]);
     else if (str.length() == 2) // scan abbreviations
-        index = get_class_index_by_abbrev( str.c_str() );
+        index = get_job_index_by_abbrev( str.c_str() );
 
     // if we don't have a match, scan the full names
     if (index == -1)
-        index = get_class_index_by_name( str.c_str() );
+        index = get_job_index_by_name( str.c_str() );
 
     if (index == -1)
         fprintf( stderr, "Unknown job choice: %s\n", str.c_str() );
@@ -2253,17 +2253,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else COLOUR_OPTION(status_caption_colour);
     else if (key == "weapon")
     {
-        // Choose this weapon for classes that get choice.
+        // Choose this weapon for jobs that get choice.
         weapon = _str_to_weapon( field );
     }
     else if (key == "book")
     {
-        // Choose this book for classes that get choice.
+        // Choose this book for jobs that get choice.
         book = _str_to_book( field );
     }
     else if (key == "wand")
     {
-        // Choose this wand for classes that get choice.
+        // Choose this wand for jobs that get choice.
         wand = _str_to_wand( field );
     }
     else if (key == "chaos_knight")
@@ -2289,7 +2289,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "priest")
     {
-        // choose this weapon for classes that get choice
+        // Choose this weapon for jobs that get choice.
         priest = str_to_god(field);
         if (!is_priest_god(priest))
             priest = GOD_RANDOM;
@@ -2397,11 +2397,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
     else if (key == "species" || key == "race")
     {
-        race = _str_to_race( field );
+        race = _str_to_species( field );
     }
     else if (key == "job" || key == "class")
     {
-        cls = _str_to_class( field );
+        cls = _str_to_job( field );
     }
     else BOOL_OPTION(auto_list);
     else if (key == "default_target")
@@ -3842,10 +3842,10 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!rc_only)
             {
                 if (o == 2)
-                    Options.race = _str_to_race( std::string( next_arg ) );
+                    Options.race = _str_to_species( std::string( next_arg ) );
 
                 if (o == 3)
-                    Options.cls = _str_to_class( std::string( next_arg ) );
+                    Options.cls = _str_to_job( std::string( next_arg ) );
             }
             nextUsed = true;
             break;
