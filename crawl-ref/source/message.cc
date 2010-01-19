@@ -194,7 +194,7 @@ class message_window
     //       and then just writing the actual non-empty lines.
     void place_cursor() const
     {
-        size_t i;
+        int i;
         for (i = lines.size() - 1; i >= 0 && lines[i].length() == 0; --i);
         if (i >= 0)
             cgotoxy(lines[i].length() + 1, i + 1, GOTO_MSG);
