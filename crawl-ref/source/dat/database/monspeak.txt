@@ -1778,7 +1778,7 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 
 @The_monster@ says, "I bought a lantern at a shop, but it didn't work. I hate that."
 
-@The_monster@ ponders. "They're ugly as hell, too!"
+@The_monster@ ponders, "They're ugly as hell, too!"
 
 @The_monster@ says, "I ran into an orc. He called himself a warlord, and I asked what war?"
 
@@ -1858,7 +1858,7 @@ _Shoals_Donald_
 
 @The_monster@ says, "At least this place doesn't smell as bad as the Swamp."
 
-@The_monster@ says, "The Sirens are starting to hurt my ears."
+@The_monster@ says, "The sirens are starting to hurt my ears."
 
 @The_monster@ says, "Are sirens supposed to sound like that? I can sing better than that!"
 
@@ -1872,9 +1872,9 @@ _Shoals_Donald_
 
 @The_monster@ says, "I'm soaked through. I hate being wet!"
 
-@The_monster@ says, "Those Krakens don't even look real."
+@The_monster@ says, "Those krakens don't even look real."
 
-@The_monster@ says, "I'm looking for Ms Medusa. Have you seen her?"
+@The_monster@ says, "I'm looking for Ms. Medusa. Have you seen her?"
 
 @The_monster@ says, "I don't understand half of what these people say. It's all Greek to me."
 
@@ -1924,7 +1924,7 @@ _Slime_Pits_Donald_
 
 @The_monster@ says, "What's up with all this goo? It's like a world of goo. I hate goo."
 
-@The_monster@ says, "Those amoeba are huge. I never liked protozoans."
+@The_monster@ says, "Those amoebae are huge. I never liked protozoans."
 
 @The_monster@ says, "Someone said I could use acid to solve all my problems. It just made them worse."
 
@@ -2111,7 +2111,7 @@ _Zin_Donald_
 
 @The_monster@ says, "At least you'll get really skinny."
 
-@The_monster@ says, "I hate stupid dietary laws! If I wanna to eat a cow, I'll eat a cow!"
+@The_monster@ says, "I hate stupid dietary laws! If I wanna eat a cow, I'll eat a cow!"
 
 @The_monster@ says, "I've got two hundred gold pieces, is that enough to cure these mutations?"
 
@@ -2143,11 +2143,11 @@ _The_Shining_One_Donald_
 %%%%
 _Kikubaaqudgha_Donald_
 
-@The_monster@ says, "Kikuba-what? How do you even say that?"
+@The_monster@ says, "Kikubaa-what? How do you even say that?"
 
 @The_monster@ says, "Sorry, didn't catch that. You worship who? How do you spell it?"
 
-@The_monster@ says, "Can you spell it for me--slowly?"
+@The_monster@ says, "Can you spell it for me - slowly?"
 
 @The_monster@ says, "How do you pronounce that?"
 
@@ -2331,7 +2331,7 @@ _Lugonu_Donald_
 
 @The_monster@ says, "Why would a God hurt you out of love? I hate that."
 
-@The_monster@ says, "What's the point of distortion, anyway? I don't want me food blinking away from me."
+@The_monster@ says, "What's the point of distortion, anyway? I don't want my food blinking away from me."
 %%%%
 _Beogh_Donald_
 
@@ -2363,7 +2363,7 @@ _Jiyva_Donald_
 
 @The_monster@ says, "Come slime with me!"
 
-@The_monster@ says, "You look a bit slimey."
+@The_monster@ says, "You look a bit slimy."
 
 @The_monster@ says, "Ah. That explains where all the items went."
 
