@@ -13,7 +13,6 @@
  *     (yesno() god prompt for example)
  *   - change uses of cancelable_get_line to msgwin_get_line
  *   - Redraw message window at same places that cause refresh?
- *   - Don't forget to bump save version when merging.
  */
 
 #include "AppHdr.h"
@@ -997,6 +996,9 @@ void save_messages(writer& outf)
 
 void load_messages(reader& inf)
 {
+    if (inf.getMinorVersion() < TAG_MINOR_MSGWIN)
+        return;
+
     unwind_var<bool> save_more(crawl_state.show_more_prompt, false);
 
     int num = unmarshallLong(inf);
