@@ -5,7 +5,6 @@
  * Todo:
  *   - --more-- for full message window
  *   - --more-- for user-forced more (these two should be somewhat indep)
- *   - MSGCH_ERROR issuing interrupt.
  *   - Ctrl-P should start at end of messages
  *   - saving and restoring and dumping messages
  *   - filtering of messages for various purposes
@@ -661,6 +660,9 @@ void mpr(std::string text, msg_channel_type channel, int param)
     std::string col = colour_to_str(colour_msg(colour));
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
     messages.add(message_item(text, channel, param));
+
+    if (channel == MSGCH_ERROR)
+        interrupt_activity(AI_FORCE_INTERRUPT);
 }
 
 int msgwin_get_line(std::string prompt, char *buf, int len,
@@ -819,11 +821,6 @@ static msg_colour_type prepare_message(const std::string& imsg,
 
     return colour;
 }
-
-/* TODO
-    if (channel == MSGCH_ERROR)
-        interrupt_activity(AI_FORCE_INTERRUPT);
-*/
 
 void flush_prev_message()
 {
