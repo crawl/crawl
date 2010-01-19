@@ -9,6 +9,10 @@
  *   - filtering of messages for various purposes
  *   - Handle resizing properly, in particular initial resize.
  *   - Get rid of print_formatted_paragraph.
+ *   - force parameter for mesclr: either get rid of it or
+ *     implement it
+ *   - Fix things that use mpr when the messagewindow isn't displayed
+ *     (yesno() god prompt for example)
  *   - Don't forget to bump save version when merging.
  */
 
