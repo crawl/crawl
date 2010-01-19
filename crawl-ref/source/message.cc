@@ -4,7 +4,6 @@
  *
  * Todo:
  *   - --more-- for full message window
- *   - --more-- for user-forced more (these two should be somewhat indep)
  *   - Ctrl-P should start at end of messages
  *   - filtering of messages for various purposes
  *   - Handle resizing properly, in particular initial resize.
@@ -894,8 +893,8 @@ void more(bool user_forced)
 
     if (Options.show_more_prompt && !suppress_messages)
     {
-        flush_prev_message();
-        // XXX: show more prompt here and wait for key
+        mpr("--more--", MSGCH_PROMPT);
+        getch();
     }
 
     mesclr(true);
