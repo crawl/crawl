@@ -723,6 +723,12 @@ void mpr(std::string text, msg_channel_type channel, int param)
 
     if (channel == MSGCH_ERROR)
         interrupt_activity(AI_FORCE_INTERRUPT);
+
+    if (check_more(formatted_string::parse_string(text).tostring(),
+                   channel))
+    {
+        more();
+    }
 }
 
 int msgwin_get_line(std::string prompt, char *buf, int len,
