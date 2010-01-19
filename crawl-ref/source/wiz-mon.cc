@@ -206,10 +206,10 @@ void wizard_create_spec_monster_name()
 
         int class_id = get_class_by_abbrev(input_str);
 
-        if (class_id == -1)
+        if (class_id == JOB_UNKNOWN)
             class_id = get_class_by_name(input_str);
 
-        if (class_id == -1)
+        if (class_id == JOB_UNKNOWN)
         {
             mpr("No such job, making it a Fighter.");
             class_id = JOB_FIGHTER;
