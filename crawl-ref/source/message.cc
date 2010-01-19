@@ -166,7 +166,6 @@ class message_window
 {
     int next_line;
     std::vector<formatted_string> lines;
-    bool use_first_col;
 
     int out_height() const
     {
@@ -177,7 +176,7 @@ class message_window
     int out_width() const
     {
         int w = crawl_view.msgsz.x;
-        if (use_first_col)
+        if (use_first_col())
             w--;
         return w;
     }
@@ -238,7 +237,7 @@ class message_window
 
 public:
     message_window()
-        : next_line(0), use_first_col(true)
+        : next_line(0)
     {
         clear(); // initialize this->lines
     }
@@ -253,6 +252,11 @@ public:
     {
         lines.clear();
         lines.resize(out_height());
+    }
+
+    bool use_first_col() const
+    {
+        return (!Options.clear_messages);
     }
 
     // write to screen (without refresh)
@@ -277,7 +281,7 @@ public:
         for (size_t i = 0; i < newlines.size(); ++i)
         {
             std::string fc = "";
-            if (use_first_col)
+            if (use_first_col())
             {
                 fc = " ";
                 if (i == 0)
