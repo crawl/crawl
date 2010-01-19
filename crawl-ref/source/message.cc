@@ -3,7 +3,7 @@
  *  Summary:    Functions used to print messages.
  *
  * Todo:
- *   - --more-- for full message window
+ *   - --more-- for full message window (partial)
  *   - Ctrl-P should start at end of messages
  *   - filtering of messages for various purposes
  *   - Handle resizing properly, in particular initial resize.
@@ -12,6 +12,8 @@
  *     implement it
  *   - Fix things that use mpr when the messagewindow isn't displayed
  *     (yesno() god prompt for example)
+ *   - change uses of cancelable_get_line to msgwin_get_line
+ *   - Redraw message window at same places that cause refresh?
  *   - Don't forget to bump save version when merging.
  */
 
