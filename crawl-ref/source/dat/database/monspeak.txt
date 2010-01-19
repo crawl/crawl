@@ -2140,6 +2140,8 @@ _The_Shining_One_Donald_
 @The_monster@ says, "Can you turn the glow down a bit? I can't see you to hit you."
 
 @The_monster@ says, "Cleansing flame? What's it supposed to be cleansing? The floor?"
+
+@The_monster@ says, "I hate haloes."
 %%%%
 _Kikubaaqudgha_Donald_
 
@@ -2165,6 +2167,8 @@ _Yredelemnul_Donald_
 
 @The_monster@ says, "How does a skeletal dragon fly, anyway?"
 
+@The_monster@ says, "How do you flay a ghost, anyway?"
+
 @The_monster@ says, "Pah! You're not even a real necromancer."
 
 @The_monster@ says, "Did you drop out of Necromancy School?"
@@ -2174,6 +2178,10 @@ _Yredelemnul_Donald_
 @The_monster@ says, "I hate zombies."
 
 @The_monster@ says, "A hungry ghost just ate my lunch. I hate that."
+
+@The_monster@ says, "A freezing wraith just broke my potions. I hate that."
+
+@The_monster@ says, "A flaming corpse just burned my scrolls. I hate that."
 
 @The_monster@ says, "Zombies? Skeletons? Don't you get bored for real company?"
 
@@ -2435,11 +2443,17 @@ _Xom_Donald_
 
 @The_monster@ says, "I hate Xom."
 
+@The_monster@ says, "I hate maniacal laughter."
+
+@The_monster@ says, "I hate divine lightning."
+
 @The_monster@ says, "If it's mutations you're wanting, wouldn't Jiyva be a better deal?"
 
 @The_monster@ says, "I hope you love dancing weapons. I hate them."
 
 @The_monster@ says, "Been surrounded by packs of demons recently? I hate that."
+
+@The_monster@ says, "Demons and angels working together? I hate that."
 
 @The_monster@ says, "Xom just doesn't make any sense. I hate that."
 
