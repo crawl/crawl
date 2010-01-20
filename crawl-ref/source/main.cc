@@ -55,6 +55,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgn-shoals.h"
 #include "dlua.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -539,8 +540,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'I': wizard_unidentify_pack();              break;
     case 'Z':
     case 'z': wizard_cast_spec_spell();              break;
-    case '(':
-    case ')': wizard_create_feature();               break;
+    case '(': wizard_create_feature();               break;
+    case ')': wizard_mod_tide();                     break;
     case ':': wizard_list_branches();                break;
     case '{': wizard_map_level();                    break;
     case '}': wizard_reveal_traps();                 break;
