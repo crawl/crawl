@@ -934,15 +934,16 @@ KMONS:      d = orc name:sickly name_adjective tile:mons_deformed_orc     / \
             orc name:hideous name_adjective tile:mons_deformed_orc        / \
             orc name:febrile name_adjective tile:mons_deformed_orc
 KMONS:      u = ugly thing / w:2 very ugly thing
+KMONS:      U = very ugly thing
 KMONS:      J = pulsating lump
 KMONS:      x = small abomination
 KMONS:      X = large abomination
-KMONS:      e = giant eyeball
+KMONS:      e = generate_awake giant eyeball
 SUBST:      " = J:1 / .:6
 KMONS:      8 = col:red clay golem name:flesh_golem name_replace \
             tile:mons_flesh_golem name_descriptor
 KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
-            name_replace
+            name_replace hp:250
 MARKER:     M = lua:MonPropsMarker:new {description="This terrifying creation " \
             .. "looks to have been constructed from the bodyparts of every monstrous " \
             .. "creature imaginable.\n", quote="\"I beheld the wretch -- the "    \
@@ -1004,9 +1005,8 @@ KITEM:      $ = potion of degeneration / potion of decay / \
             w:2 potion of poison / w:5 potion of healing / \
             w:3 potion of heal wounds / w:1 potion of cure mutation
 KITEM:      * = gold
-KITEM:      % = amulet of resist mutation
-KITEM:      : = randbook disc:transmutation owner:Cigotuvi / any book / \
-                acquire book
+KITEM:      % = amulet of resist mutation good_item
+KITEM:      : = randbook disc:transmutation owner:Cigotuvi
 KITEM:      ^ = book of morphology / randbook disc:transmutation \
                 owner:Cigotuvi spell:cigotuvi's_degeneration
 KITEM:      | = staff of death
@@ -1015,9 +1015,9 @@ NSUBST:     L = 1:| / *:l
 :           wizlab_setup(_G, "Cigotuvi's Fleshworks")
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
-ccLLLcccc.cccccccccccAccccccccccccWWWW.u:cccc
-c.....c.....ccc...ccc+cccccccccccW......u^ccc
-c.X.........cc.u...m...m..ccccccW........u:cc
+ccLLLcccc.cccccccccccAccccccccccccWWWW.U:cccc
+c.....c.....ccc...ccc+cccccccccccW.....uU^ccc
+c.X.........cc.u...m...m..ccccccW.......uU:cc
 c.M........cc...b..m.x.m.a.cccccW..........cc
 c.X........cc...d..m...m.u..ccccW.........Wcc
 c..........cc.cccccm...mc...ccccc........Wccc
@@ -1025,7 +1025,7 @@ c.....ccc+ccccc..cccc+cccccccccccc......Wcccc
 ccLLLccc..ccccuuu.cm...m..d..ccccc+cccccccccc
 cccccccc..ccc..!...m.x.m.a..cccccc""ccccccccc
 cc$$cccc..ccc.uuu..m...m...ccccccc""cc**%**cc
-c$$$$cc...cccc....cm...m.cccWccccc""c.e.c.e.c
+c$$$$cc...cccc....cm...m.cccWccccc""c...cee.c
 c$$$$+...cccccc..cccc+cccc...Wcccc""c...c...c
 c$$$$c...ccccccccc.m...m.xx...Wccc""cmm+c+mmc
 cc$ccccc+cccccccc..m.x.m...u..Wccc""c.......c
