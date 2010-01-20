@@ -157,17 +157,6 @@ public:
     }
 };
 
-static std::vector<std::string> linebreak(std::string text, int col)
-{
-    linebreak_string2(text, col);
-    std::vector<std::string> ret;
-    std::istringstream ss(text);
-    std::string item;
-    while (std::getline(ss, item))
-        ret.push_back(item);
-    return ret;
-}
-
 class message_window
 {
     int next_line;
@@ -331,7 +320,9 @@ public:
     //            leading dash or prompt without response
     void add_item(std::string text, char first_col = ' ', bool temporary = false)
     {
-        std::vector<std::string> newlines = linebreak(text, out_width());
+        std::vector<formatted_string> newlines;
+        linebreak_string2(text, out_width());
+        formatted_string::parse_string_to_multiple(text, newlines);
         make_space(newlines.size());
         int old = next_line;
         for (size_t i = 0; i < newlines.size(); ++i)
@@ -343,7 +334,9 @@ public:
                 if (i == 0)
                     fc[0] = first_col;
             }
-            add_line(formatted_string::parse_string(fc + newlines[i]));
+            formatted_string line = formatted_string(fc);
+            line += newlines[i];
+            add_line(line);
         }
         if (temporary)
             next_line = old;
