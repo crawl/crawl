@@ -420,15 +420,20 @@ static bool _slime_split(monsters *thing)
     const actor* foe        = thing->get_foe();
     const bool has_foe      = (foe != NULL && thing->can_see(foe));
     const coord_def foe_pos = (has_foe ? foe->position : coord_def(0,0));
-    const int old_dist      = (has_foe ? distance(origin, foe_pos) : 0);
+    const int old_dist      = (has_foe ? grid_distance(origin, foe_pos) : 0);
 
     if (has_foe && old_dist > 1)
     {
         // If we're not already adjacent to the foe, check whether we can
         // move any closer. If so, do that rather than splitting.
         for (radius_iterator ri(origin, 1, true, false, true); ri; ++ri)
-            if (_slime_can_spawn(*ri) && distance(*ri, foe_pos) < old_dist)
+        {
+            if (_slime_can_spawn(*ri)
+                && grid_distance(*ri, foe_pos) < old_dist)
+            {
                 return (false);
+            }
+        }
     }
 
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -440,7 +445,7 @@ static bool _slime_split(monsters *thing)
         coord_def target = origin + Compass[compass_idx[i]];
 
         // Don't split if this increases the distance to the target.
-        if (has_foe && distance(target, foe_pos) > old_dist)
+        if (has_foe && grid_distance(target, foe_pos) > old_dist)
             continue;
 
         if (_slime_can_spawn(target))
