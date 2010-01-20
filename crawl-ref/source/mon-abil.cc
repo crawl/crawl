@@ -181,10 +181,11 @@ static void _merge_ench_durations(monsters *initial_slime, monsters *merge_to)
 }
 
 // Calculate slime creature hp based on how many are merged.
-static void _stats_from_blob_count(monsters *slime, float hp_per_blob)
+static void _stats_from_blob_count(monsters *slime, float max_per_blob,
+                                   float current_per_blob)
 {
-    slime->max_hit_points = (int)(slime->number * hp_per_blob);
-    slime->hit_points = slime->max_hit_points;
+    slime->max_hit_points = (int)(slime->number * max_per_blob);
+    slime->hit_points = (int)(slime->number * current_per_blob);
 }
 
 // Create a new slime creature at 'target', and split 'thing''s hp and
@@ -220,15 +221,16 @@ static bool _do_split(monsters *thing, coord_def & target)
         mprf("%s splits.", thing->name(DESC_CAP_A).c_str());
 
     int split_off = thing->number / 2;
-    float hp_per_blob = thing->max_hit_points / float(thing->number);
+    float max_per_blob = thing->max_hit_points / float(thing->number);
+    float current_per_blob = thing->hit_points / float(thing->number);
 
     thing->number -= split_off;
     new_slime->number = split_off;
 
     new_slime->hit_dice = thing->hit_dice;
 
-    _stats_from_blob_count(thing, hp_per_blob);
-    _stats_from_blob_count(new_slime, hp_per_blob);
+    _stats_from_blob_count(thing, max_per_blob, current_per_blob);
+    _stats_from_blob_count(new_slime, max_per_blob, current_per_blob);
 
     if (crawl_state.arena)
         arena_split_monster(thing, new_slime);
@@ -245,7 +247,7 @@ static bool _do_merge(monsters *initial_slime, monsters *merge_to)
 
     merge_to->number += initial_slime->number;
     merge_to->max_hit_points += initial_slime->max_hit_points;
-    merge_to->hit_points += initial_slime->max_hit_points;
+    merge_to->hit_points += initial_slime->hit_points;
 
     // Merge monster flags (mostly so that MF_CREATED_NEUTRAL, etc. are
     // passed on if the merged slime subsequently splits.  Hopefully
