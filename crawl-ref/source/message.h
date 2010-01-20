@@ -83,9 +83,7 @@ inline bool any_messages()
 
 void replay_messages();
 
-inline void set_more_autoclear(bool on)
-{
-}
+void set_more_autoclear(bool on);
 
 std::string get_last_messages(int mcount);
 

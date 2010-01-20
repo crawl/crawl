@@ -724,6 +724,9 @@ void mpr(std::string text, msg_channel_type channel, int param)
     if (channel == MSGCH_ERROR)
         interrupt_activity(AI_FORCE_INTERRUPT);
 
+    if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
+        set_more_autoclear(true);
+
     if (check_more(formatted_string::parse_string(text).tostring(),
                    channel))
     {
@@ -908,6 +911,13 @@ void mesclr(bool force)
     //       leading character than '-'.
 }
 
+static bool autoclear_more = false;
+
+void set_more_autoclear(bool on)
+{
+    autoclear_more = on;
+}
+
 void more(bool user_forced)
 {
     if (crawl_state.game_crashed || crawl_state.seen_hups)
@@ -945,7 +955,18 @@ void more(bool user_forced)
     if (crawl_state.show_more_prompt && !suppress_messages)
     {
         mpr("--more--", MSGCH_PROMPT);
-        getch();
+        int keypress;
+        mouse_control mc(MOUSE_MODE_MORE);
+        do
+        {
+            keypress = getch();
+        }
+        while (keypress != ' ' && keypress != '\r' && keypress != '\n'
+               && keypress != ESCAPE && keypress != -1
+               && (user_forced || keypress != CK_MOUSE_CLICK));
+
+        if (keypress == ESCAPE)
+            autoclear_more = true;
     }
 
     mesclr(true);
