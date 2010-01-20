@@ -4,7 +4,6 @@
  *
  * Todo:
  *   - --more-- for full message window (partial)
- *   - Ctrl-P should start at end of messages
  *   - Handle resizing properly, in particular initial resize.
  *   - Get rid of print_formatted_paragraph.
  *   - force parameter for mesclr: either get rid of it or
@@ -1037,7 +1036,7 @@ void load_messages(reader& inf)
 
 void replay_messages(void)
 {
-    formatted_scroller hist;
+    formatted_scroller hist(MF_START_AT_END, "");
     const store_t msgs = messages.get_store();
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
