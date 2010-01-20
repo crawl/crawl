@@ -1118,7 +1118,7 @@ static std::string _describe_ammo(const item_def &item)
         case SPMSL_STEEL:
             description += "Compared to normal ammo, it does 50% more "
                 "damage, is destroyed upon impact only 1/10th of the "
-                "time, and weighs three three times as much.";
+                "time, and weighs three times as much.";
             break;
         case SPMSL_SILVER:
             description += "Compared to normal ammo, it does twice as "
@@ -3108,14 +3108,14 @@ std::string get_ghost_description(const monsters &mons, bool concise)
     if (concise)
     {
         gstr << get_species_abbrev(gspecies)
-             << get_class_abbrev(ghost.job);
+             << get_job_abbrev(ghost.job);
     }
     else
     {
         gstr << species_name(gspecies,
                              ghost.xl)
              << " "
-             << get_class_name(ghost.job);
+             << get_job_name(ghost.job);
     }
 
     if (ghost.religion != GOD_NO_GOD)

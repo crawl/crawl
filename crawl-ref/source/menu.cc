@@ -306,6 +306,9 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
         pagesize = max_pagesize;
 #endif
 
+    if (is_set(MF_START_AT_END))
+        while(page_down());
+
     do_menu();
 
     return (sel);
@@ -440,7 +443,7 @@ bool Menu::process_key( int keyin )
         textcolor(WHITE);
         cprintf("Select what? (regex) ");
         textcolor(LIGHTGREY);
-        bool validline = !cancelable_get_line(linebuf, sizeof linebuf, 80);
+        bool validline = !cancelable_get_line(linebuf, sizeof linebuf);
         if (validline && linebuf[0])
         {
             text_pattern tpat(linebuf, true);
@@ -1893,25 +1896,7 @@ std::string get_linebreak_string(const std::string& s, int maxcol)
 // prints it into the given message channel.
 void print_formatted_paragraph(std::string &s, msg_channel_type channel)
 {
-    int maxcol = get_number_of_cols();
-    if (Options.delay_message_clear)
-        --maxcol;
-
-    linebreak_string2(s,maxcol);
-    std::string text;
-
-    size_t loc = 0, oldloc = 0;
-    while ( loc < s.size() )
-    {
-        if (s[loc] == '\n')
-        {
-            text = s.substr(oldloc, loc-oldloc);
-            formatted_message_history( text, channel );
-            oldloc = ++loc;
-        }
-        loc++;
-    }
-    formatted_message_history( s.substr(oldloc, loc-oldloc), channel );
+    mpr(s, channel);
 }
 
 bool formatted_scroller::jump_to( int i )

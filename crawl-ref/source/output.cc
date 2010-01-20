@@ -530,38 +530,34 @@ static void _print_stats_wp(int y)
 
 static void _print_stats_qv(int y)
 {
-    cgotoxy(1, y, GOTO_STAT);
-    textcolor(Options.status_caption_colour);
-    cprintf("Qv: ");
+    int col;
+    std::string text;
 
     int q = you.m_quiver->get_fire_item();
-
     ASSERT(q >= -1 && q < ENDOFPACK);
     if (q != -1)
     {
         const item_def& quiver = you.inv[q];
-        textcolor(quiver.colour);
-
+        col = quiver.colour;
         const std::string prefix = menu_colour_item_prefix(quiver);
         const int prefcol =
             menu_colour(quiver.name(DESC_INVENTORY), prefix);
-
         if (prefcol != -1)
-            textcolor(prefcol);
-
-        cprintf("%s",
-                quiver.name(DESC_INVENTORY, true)
-                .substr(0, crawl_view.hudsz.x - 4)
-                .c_str());
+            col = prefcol;
+        text = quiver.name(DESC_INVENTORY, true);
     }
     else
     {
-        textcolor(LIGHTGREY);
-        cprintf("Nothing quivered");
+        col = LIGHTGREY;
+        text = "Nothing quivered";
     }
-
+    cgotoxy(1, y, GOTO_STAT);
+    textcolor(Options.status_caption_colour);
+    cprintf("Qv: ");
+    textcolor(col);
+    int w = crawl_view.hudsz.x - 4;
+    cprintf("%-*s", w, text.substr(0, w).c_str());
     textcolor(LIGHTGREY);
-    clear_to_end_of_line();
 }
 
 struct status_light
@@ -1000,9 +996,9 @@ void print_stats_level()
     clear_to_end_of_line();
 }
 
-void redraw_skill(const std::string &your_name, const std::string &class_name)
+void redraw_skill(const std::string &your_name, const std::string &job_name)
 {
-    std::string title = your_name + " the " + class_name;
+    std::string title = your_name + " the " + job_name;
 
     unsigned int in_len = title.length();
     const unsigned int WIDTH = crawl_view.hudsz.x;
@@ -1020,7 +1016,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
                 trimmed_name.substr(0, name_len - (in_len - WIDTH) - 1);
         }
 
-        title = trimmed_name + ", " + class_name;
+        title = trimmed_name + ", " + job_name;
     }
 
     // Line 1: Foo the Bar    *WIZARD*
@@ -1579,8 +1575,8 @@ static std::string _overview_screen_title()
     char title[50];
     snprintf(title, sizeof title, " the %s ", player_title().c_str());
 
-    char race_class[50];
-    snprintf(race_class, sizeof race_class,
+    char species_job[50];
+    snprintf(species_job, sizeof species_job,
              "(%s %s)",
              species_name(you.species, you.experience_level).c_str(),
              you.class_name);
@@ -1596,17 +1592,17 @@ static std::string _overview_screen_title()
     }
 
     int linelength = you.your_name.length() + strlen(title)
-                     + strlen(race_class) + strlen(time_turns);
+                     + strlen(species_job) + strlen(time_turns);
     for (int count = 0; linelength >= get_number_of_cols() && count < 2;
          count++)
     {
         switch (count)
         {
           case 0:
-              snprintf(race_class, sizeof race_class,
+              snprintf(species_job, sizeof species_job,
                        "(%s%s)",
                        get_species_abbrev(you.species),
-                       get_class_abbrev(you.char_class) );
+                       get_job_abbrev(you.char_class) );
               break;
           case 1:
               strcpy(title, "");
@@ -1615,14 +1611,14 @@ static std::string _overview_screen_title()
               break;
         }
         linelength = you.your_name.length() + strlen(title)
-                     + strlen(race_class) + strlen(time_turns);
+                     + strlen(species_job) + strlen(time_turns);
     }
 
     std::string text;
     text = "<yellow>";
     text += you.your_name;
     text += title;
-    text += race_class;
+    text += species_job;
     text += std::string(get_number_of_cols() - linelength - 1, ' ');
     text += time_turns;
     text += "</yellow>\n";

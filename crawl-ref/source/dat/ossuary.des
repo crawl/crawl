@@ -432,6 +432,8 @@ ITEM:    any scroll / any potion
 ITEM:    any scroll / any potion / nothing
 KITEM:   x = any scroll / any potion
 KMONS:   x = guardian mummy
+: local x = {}
+: lua_marker("=", restrict_door(x))
 : ossuary_setup_features(_G)
 : ossuary_milestone(_G)
 : crawl.mpr("You feel the presence of a powerful and evil guardian...", "warning")

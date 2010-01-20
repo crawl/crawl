@@ -49,7 +49,7 @@ enum msg_channel_type
 
 enum msg_colour_type
 {
-    MSGCOL_BLACK        = 0,    // the order of these colours is important
+    MSGCOL_BLACK        = 0,
     MSGCOL_BLUE,
     MSGCOL_GREEN,
     MSGCOL_CYAN,
@@ -61,16 +61,20 @@ enum msg_colour_type
     MSGCOL_LIGHTBLUE,
     MSGCOL_LIGHTGREEN,
     MSGCOL_LIGHTCYAN,
+    MSGCOL_LIGHTRED,
     MSGCOL_LIGHTMAGENTA,
     MSGCOL_YELLOW,
     MSGCOL_WHITE,
     MSGCOL_DEFAULT,             // use default colour
     MSGCOL_ALTERNATE,           // use secondary default colour scheme
     MSGCOL_MUTED,               // don't print messages
-    MSGCOL_PLAIN                // same as plain channel
+    MSGCOL_PLAIN,               // same as plain channel
+    MSGCOL_NONE                 // parsing failure, etc
 };
 
-void mpr(const char *inf, msg_channel_type channel = MSGCH_PLAIN, int param=0);
+msg_colour_type msg_colour(int colour);
+
+void mpr(std::string text, msg_channel_type channel = MSGCH_PLAIN, int param=0);
 
 // 4.1-style mpr, currently named mprf for minimal disruption.
 void mprf( msg_channel_type channel, int param, const char *format, ... );

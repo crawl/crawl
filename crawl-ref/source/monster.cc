@@ -223,7 +223,7 @@ bool monsters::wants_submerge() const
     if (tfoe && grid_distance(tfoe->pos(), pos()) > 1 && !has_ranged_attack)
         roll /= 2;
 
-    // Don't submerge if we just unsubmerged to shout
+    // Don't submerge if we just unsubmerged to shout.
     return (one_chance_in(roll) && seen_context != "bursts forth shouting");
 }
 
@@ -3185,13 +3185,23 @@ bool monsters::is_unclean() const
         return (true);
     }
 
+    // Zin considers insanity unclean.  And slugs that speak.
+    if (type == MONS_CRAZY_YIUF
+        || type == MONS_PSYCHE
+        || type == MONS_GASTRONOK)
+    {
+        return (true);
+    }
+
     return (false);
 }
 
 bool monsters::is_chaotic() const
 {
-    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-        || type == MONS_CRAZY_YIUF)
+    if (type == MONS_UGLY_THING
+        || type == MONS_VERY_UGLY_THING
+        || type == MONS_ABOMINATION_SMALL
+        || type == MONS_ABOMINATION_LARGE)
     {
         return (true);
     }
@@ -4854,6 +4864,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_SLEEP_WARY:
     case ENCH_LOWERED_MR:
     case ENCH_SOUL_RIPE:
+    case ENCH_TIDE:
         decay_enchantment(me);
         break;
 

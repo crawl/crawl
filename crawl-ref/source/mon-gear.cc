@@ -730,9 +730,45 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.plus2 = 1 + random2(3);
         break;
 
+    case MONS_DONALD:
+        force_item = true;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = coinflip() ? WPN_LONG_SWORD : WPN_SCIMITAR;
+
+        if (one_chance_in(7))
+            item.sub_type = WPN_WAR_AXE;
+        if (one_chance_in(7))
+            item.sub_type = WPN_BROAD_AXE;
+        if (one_chance_in(7))
+            item.sub_type = WPN_DEMON_WHIP;
+        if (one_chance_in(7))
+            item.sub_type = WPN_DEMON_BLADE;
+        if (one_chance_in(7))
+            item.sub_type = WPN_DEMON_TRIDENT;
+
+        if (one_chance_in(3))
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
+        else if (one_chance_in(3))
+        {
+            set_item_ego_type(item, OBJ_WEAPONS,
+                              random_choose(SPWPN_DRAINING, SPWPN_VORPAL,
+                                            SPWPN_PAIN,     SPWPN_DISTORTION,
+                                            SPWPN_SPEED,    -1));
+        }
+
+        item.plus  += random2(6);
+        item.plus2 += random2(6);
+
+        item.colour = BLUE;
+
+        if (one_chance_in(3))
+            item.colour = DARKGREY;
+        if (one_chance_in(5))
+            item.colour = CYAN;
+        break;
+
     case MONS_HELL_KNIGHT:
     case MONS_MAUD:
-    case MONS_DONALD:
     case MONS_FREDERICK:
     case MONS_MARGERY:
         force_item = true;
@@ -1257,13 +1293,21 @@ void give_shield(monsters *mon, int level)
     case MONS_DONALD:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
+
+        if (coinflip())
+        {
+            item_def *shield = mon->shield();
+            if (shield)
+                set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_REFLECTION);
+        }
+
         break;
     case MONS_NIKOLA:
         {
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_GLOVES,
                                   level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
 
-            item_def *gaunt = mon->mslot_item(MSLOT_SHIELD);
+            item_def *gaunt = mon->shield();
             if (gaunt)
                 gaunt->plus2 = TGLOV_DESC_GAUNTLETS;
         }

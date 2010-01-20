@@ -107,5 +107,5 @@ bindkey = [L] CMD_TARGET_WIZARD_MAKE_FRIENDLY
 # target wizard (G)ain level -> make the monster go (U)p a level
 bindkey = [U] CMD_TARGET_WIZARD_GAIN_LEVEL
 
-# FIXME: Consider mapping vi keiys for the doll editor. It doesn't use
+# FIXME: Consider mapping vi keys for the doll editor. It doesn't use
 # diagonals, so it might not be worth the effort.

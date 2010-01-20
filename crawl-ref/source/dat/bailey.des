@@ -231,7 +231,7 @@ MONS:   goblin ; hand axe ego:returning / hobgoblin ; hand axe ego:returning /\
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
 MONS:   goblin ; spear / hobgoblin ; spear / orc ; spear race:orcish
-MONS:   goblin ; spear ego:reaching / hobgoblin ; hand axe ego:reaching /\
+MONS:   goblin ; spear ego:reaching / hobgoblin ; spear ego:reaching /\
         orc ; spear race:orcish ego:reaching
 :   bailey_portal_polearm(_G)
 : end
@@ -255,7 +255,7 @@ TAGS: uniq_bailey
 MONS: goblin ; hand axe ego:returning
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-MONS: goblin ; hand axe ego:reaching
+MONS: goblin ; spear ego:reaching
 :   bailey_portal_polearm(_G)
 : end
 MAP

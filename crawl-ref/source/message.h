@@ -14,12 +14,14 @@
 #include "enum.h"
 #include "mpr.h"
 
+// Write the message window contents out.
+void display_message_window();
+
 void mesclr(bool force = false);
 
 void flush_prev_message();
 
 void more(bool user_forced = false);
-
 
 class formatted_string;
 
@@ -39,6 +41,29 @@ void mpr_comma_separated_list(const std::string prefix,
                               const msg_channel_type channel = MSGCH_PLAIN,
                               const int param = 0);
 
+class input_history;
+
+int msgwin_get_line(std::string prompt,
+                    char *buf, int len,
+                    input_history *mh = NULL,
+                    int (*keyproc)(int &c) = NULL);
+
+
+// Do not use this templated function directly.  Use the macro below instead.
+template<int> static int msgwin_get_line_autohist_temp(std::string prompt,
+                                                       char *buf, int len)
+{
+    static input_history hist(10);
+    return msgwin_get_line(prompt, buf, len, &hist);
+}
+
+// This version of mswgin_get_line will automatically retain its own
+// input history, independent of other calls to msgwin_get_line.
+#define msgwin_get_line_autohist(prompt, buf, len) \
+    msgwin_get_line_autohist_temp<__LINE__>(prompt, buf, len)
+
+void msgwin_new_turn();
+
 class no_messages
 {
 public:
@@ -51,20 +76,26 @@ private:
 void save_messages(writer& outf);
 void load_messages(reader& inf);
 
-bool any_messages();
-void replay_messages();
+inline bool any_messages()
+{
+    return true;
+}
 
-void set_colour(char set_message_colour);
+void replay_messages();
 
 void set_more_autoclear(bool on);
 
 std::string get_last_messages(int mcount);
 
-std::vector<std::string> get_recent_messages(int &message_pos,
+inline std::vector<std::string> get_recent_messages(int &message_pos,
                                              bool dumpworthy_only = true,
-                                             std::vector<int> *channels = NULL);
+                                             std::vector<int> *channels = NULL)
+{
+    return std::vector<std::string>();
+}
 
-int channel_to_colour( msg_channel_type channel, int param = 0 );
+
+msg_colour_type channel_to_colour(msg_channel_type channel, int param = 0);
 
 namespace msg
 {

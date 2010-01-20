@@ -729,7 +729,7 @@ struct colour_mapping
 struct message_colour_mapping
 {
     message_filter message;
-    int colour;
+    msg_colour_type colour;
 };
 
 class InvEntry;

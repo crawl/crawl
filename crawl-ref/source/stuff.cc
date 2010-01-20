@@ -432,8 +432,7 @@ void redraw_screen(void)
 
     print_stats();
 
-    if (Options.delay_message_clear)
-        mesclr(true);
+    display_message_window();
 
     bool note_status = notes_are_active();
     activate_notes(false);

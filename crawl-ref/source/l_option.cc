@@ -47,7 +47,7 @@ static option_handler handlers[] =
     { "default_target",       &Options.default_target, option_hboolean },
     { "autopickup_no_burden", &Options.autopickup_no_burden, option_hboolean },
     { "note_skill_max",       &Options.note_skill_max, option_hboolean },
-    { "delay_message_clear",  &Options.delay_message_clear, option_hboolean },
+    { "clear_messages",  &Options.clear_messages, option_hboolean },
     { "no_dark_brand",   &Options.no_dark_brand, option_hboolean },
     { "auto_list",       &Options.auto_list, option_hboolean },
     { "pickup_thrown",   &Options.pickup_thrown, option_hboolean },

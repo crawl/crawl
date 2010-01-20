@@ -655,7 +655,7 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
 
     if (!success) // Use default doll instead.
     {
-        job_type job = get_class_by_name(p.class_name.c_str());
+        job_type job = get_job_by_name(p.class_name.c_str());
         if (job == -1)
             job = JOB_FIGHTER;
 

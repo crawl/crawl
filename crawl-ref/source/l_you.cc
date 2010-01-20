@@ -59,7 +59,7 @@ LUARET1(you_turn_is_over, boolean, you.turn_is_over)
 LUARET1(you_name, string, you.your_name.c_str())
 LUARET1(you_race, string,
         species_name(you.species, you.experience_level).c_str())
-LUARET1(you_class, string, get_class_name(you.char_class))
+LUARET1(you_class, string, get_job_name(you.char_class))
 LUARET1(you_god, string, god_name(you.religion).c_str())
 LUARET1(you_good_god, boolean,
         lua_isstring(ls, 1) ? is_good_god(str_to_god(lua_tostring(ls, 1)))

@@ -68,13 +68,10 @@ public:
     void calculate_default_options();
     void clrscr();
 
-    void message_out(int *which_line, int colour, const char *s, int firstcol);
-
     void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
     GotoRegion get_cursor_region() const;
     int get_number_of_lines();
     int get_number_of_cols();
-    void clear_message_window();
 
     void update_minimap(int gx, int gy);
     void update_minimap(int gx, int gy, map_feature f);

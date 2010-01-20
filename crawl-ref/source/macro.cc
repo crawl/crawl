@@ -740,7 +740,7 @@ void flush_input_buffer( int reason )
             const int key = Buffer.front();
             Buffer.pop_front();
             if (key == KEY_MACRO_ENABLE_MORE)
-                Options.show_more_prompt = true;
+                crawl_state.show_more_prompt = true;
         }
         macro_keys_left = -1;
     }
@@ -837,15 +837,8 @@ void macro_add_query( void )
         }
     }
 
-    mpr( "Input Macro Action: ", MSGCH_PROMPT );
-
-    // Using _getch_mul() here isn't very useful...  We'd like the
-    // flexibility to define multicharacter macros without having
-    // to resort to editing files and restarting the game.  -- bwr
-    // keyseq act = _getch_mul();
-
     char    buff[4096];
-    get_input_line(buff, sizeof buff);
+    msgwin_get_line_autohist("Input Macro Action: ", buff, sizeof(buff));
 
     if (Options.macro_meta_entry)
         macro_add( mapref, key, parse_keyseq(buff) );
@@ -1303,7 +1296,49 @@ std::string command_to_string(command_type cmd)
     return (result);
 }
 
-void list_all_commands(std::string &commands)
+void insert_commands(std::string &desc, std::vector<command_type> cmds)
+{
+    for (unsigned int i = 0; i < cmds.size(); ++i)
+    {
+        const std::string::size_type found = desc.find("%");
+        if (found == std::string::npos)
+            break;
+
+        std::string command_name = command_to_string(cmds[i]);
+        if (strcmp(command_name.c_str(), "<") == 0)
+            command_name += "<";
+
+        desc.replace(found, 1, command_name);
+    }
+    desc = replace_all(desc, "percent", "%");
+}
+
+void insert_commands(std::string &desc, const int first, ...)
+{
+    std::vector<command_type> cmd_vector;
+    cmd_vector.push_back((command_type) first);
+
+    va_list args;
+    va_start(args, first);
+    int nargs = 10;
+
+    while (nargs-- > 0)
+    {
+        int value = va_arg(args, int);
+        if (!value)
+            break;
+
+        cmd_vector.push_back((command_type) value);
+    }
+    ASSERT(nargs > 0);
+    va_end(args);
+
+    insert_commands(desc, cmd_vector);
+}
+
+#if 0
+// Currently unused, might be useful somewhere.
+static void _list_all_commands(std::string &commands)
 {
     for (int i = CMD_NO_CMD; i < CMD_MAX_CMD; i++)
     {
@@ -1322,3 +1357,4 @@ void list_all_commands(std::string &commands)
     }
     commands += "\n";
 }
+#endif

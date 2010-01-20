@@ -16,7 +16,7 @@
 # use_old_selection_order = true
 # always_confirm_butcher  = true
 # target_unshifted_dirs   = true
-# delay_message_clear     = false
+# clear_messages          = true
 
 # Crawl Init file
 #
@@ -251,7 +251,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # mlist_targetting             = true
 # show_gold_turns              = true
 
-# delay_message_clear        = false
+# clear_messages             = true
 # show_inventory_weights     = true
 # item_stack_summary_minimum = 5
 # list_rotten                = false

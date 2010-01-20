@@ -4375,7 +4375,7 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
     msg.insert(0, itname);
     msg = tag_start + msg + tag_end;
 
-    formatted_message_history(msg, MSGCH_GOD);
+    mpr(msg, MSGCH_GOD);
 }
 
 static bool _altar_prayer()
@@ -5415,6 +5415,74 @@ int god_colour(god_type god) // mv - added
     }
 
     return (YELLOW);
+}
+
+char god_message_altar_colour(god_type god)
+{
+    int rnd;
+
+    switch (god)
+    {
+    case GOD_SHINING_ONE:
+        return (YELLOW);
+
+    case GOD_ZIN:
+        return (WHITE);
+
+    case GOD_ELYVILON:
+        return (LIGHTBLUE);     // Really, LIGHTGREY but that's plain text.
+
+    case GOD_OKAWARU:
+        return (CYAN);
+
+    case GOD_YREDELEMNUL:
+        return (coinflip() ? DARKGREY : RED);
+
+    case GOD_BEOGH:
+        return (coinflip() ? BROWN : LIGHTRED);
+
+    case GOD_KIKUBAAQUDGHA:
+        return (DARKGREY);
+
+    case GOD_FEDHAS:
+        return (coinflip() ? BROWN : GREEN);
+
+    case GOD_XOM:
+        return (random2(15) + 1);
+
+    case GOD_VEHUMET:
+        rnd = random2(3);
+        return ((rnd == 0) ? LIGHTMAGENTA :
+                (rnd == 1) ? LIGHTRED
+                           : LIGHTBLUE);
+
+    case GOD_MAKHLEB:
+        rnd = random2(3);
+        return ((rnd == 0) ? RED :
+                (rnd == 1) ? LIGHTRED
+                           : YELLOW);
+
+    case GOD_TROG:
+        return (RED);
+
+    case GOD_NEMELEX_XOBEH:
+        return (LIGHTMAGENTA);
+
+    case GOD_SIF_MUNA:
+        return (BLUE);
+
+    case GOD_LUGONU:
+        return (LIGHTRED);
+
+    case GOD_CHEIBRIADOS:
+        return (LIGHTCYAN);
+
+    case GOD_JIYVA:
+        return (coinflip() ? GREEN : LIGHTGREEN);
+
+    default:
+        return (YELLOW);
+    }
 }
 
 int piety_rank(int piety)

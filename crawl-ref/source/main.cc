@@ -55,6 +55,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgn-shoals.h"
 #include "dlua.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -539,8 +540,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'I': wizard_unidentify_pack();              break;
     case 'Z':
     case 'z': wizard_cast_spec_spell();              break;
-    case '(':
-    case ')': wizard_create_feature();               break;
+    case '(': wizard_create_feature();               break;
+    case ')': wizard_mod_tide();                     break;
     case ':': wizard_list_branches();                break;
     case '{': wizard_map_level();                    break;
     case '}': wizard_reveal_traps();                 break;
@@ -1494,11 +1495,11 @@ void process_command( command_type cmd )
         break;
 
     case CMD_DISABLE_MORE:
-        Options.show_more_prompt = false;
+        crawl_state.show_more_prompt = false;
         break;
 
     case CMD_ENABLE_MORE:
-        Options.show_more_prompt = true;
+        crawl_state.show_more_prompt = true;
         break;
 
     case CMD_REPEAT_KEYS:
@@ -2750,15 +2751,6 @@ void world_reacts()
     }
 #endif
 
-    if (you.num_turns != -1)
-    {
-        if (you.num_turns < LONG_MAX)
-            you.num_turns++;
-        if (env.turns_on_level < INT_MAX)
-            env.turns_on_level++;
-        update_turn_count();
-    }
-
     _check_banished();
     _check_shafts();
     _check_sanctuary();
@@ -2868,6 +2860,16 @@ void world_reacts()
     if (you.religion != GOD_NO_GOD)
         mprf(MSGCH_DIAGNOSTICS, "TENSION = %d", get_tension());
 #endif
+
+    if (you.num_turns != -1)
+    {
+        if (you.num_turns < LONG_MAX)
+            you.num_turns++;
+        if (env.turns_on_level < INT_MAX)
+            env.turns_on_level++;
+        update_turn_count();
+        msgwin_new_turn();
+    }
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
@@ -3801,7 +3803,7 @@ static bool _initialise(void)
         init_player_doll();
         tiles.initialise_items();
 #endif
-        Options.show_more_prompt = false;
+        crawl_state.show_more_prompt = false;
         crawl_tests::run_tests(true);
         // Superfluous, just to make it clear that this is the end of
         // the line.

@@ -484,6 +484,14 @@ bool mons_is_stationary(const monsters *mon)
     return (mons_class_is_stationary(mon->type));
 }
 
+// Monsters that other monsters may cut down to get to their foe
+// regardless of alignment.
+bool mons_is_firewood(const monsters *mon)
+{
+    return (mons_is_stationary(mon)
+            && mons_class_flag(mon->type, M_NO_EXP_GAIN));
+}
+
 bool mons_is_fast(const monsters *mon)
 {
     int pspeed = 1000/player_movement_speed()/player_speed();
@@ -1415,8 +1423,9 @@ monster_type random_draconian_monster_species()
 //     (is_unclean_spell() || is_chaotic_spell())
 //
 // FIXME: This is not true for one set of spellbooks; MST_WIZARD_IV
-// contains the unholy Banishment spell, but the other MST_WIZARD-type
-// spellbooks contain no unholy or evil spells.
+// contains the unholy and chaotic Banishment spell, but the other
+// MST_WIZARD-type spellbooks contain no unholy, evil, unclean or
+// chaotic spells.
 static bool _get_spellbook_list(mon_spellbook_type book[6],
                                 monster_type mon_type)
 {

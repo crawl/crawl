@@ -33,48 +33,6 @@ void init_libdos()
     intensevideo();
 }
 
-void clear_message_window()
-{
-    window(crawl_view.msgp.x, crawl_view.msgp.y,
-           get_number_of_cols(), get_number_of_lines());
-    clrscr();
-    window(1, 1, get_number_of_cols(), get_number_of_lines());
-}
-
-static void scroll_message_window()
-{
-    const int x = wherex(), y = wherey();
-
-    textcolor(LIGHTGREY);
-    movetext(crawl_view.msgp.x, crawl_view.msgp.y + 1,
-             get_number_of_cols(), get_number_of_lines(),
-             crawl_view.msgp.x, crawl_view.msgp.y);
-    cgotoxy(1, get_number_of_lines());
-    clreol();
-
-    // Cursor also scrolls up so prompts don't look brain-damaged.
-    if (y == get_number_of_lines())
-        cgotoxy(x, y - 1);
-}
-
-void message_out(int *which_line, int colour, const char *s, int firstcol)
-{
-    if (!firstcol)
-        firstcol = Options.delay_message_clear? 2 : 1;
-
-    while (*which_line > crawl_view.msgsz.y - 1)
-    {
-        scroll_message_window();
-        (*which_line)--;
-    }
-
-    cgotoxy(firstcol + crawl_view.msgp.x - 1,
-           (*which_line) + crawl_view.msgp.y);
-    textcolor(colour);
-
-    cprintf("%s", s);
-}
-
 void set_cursor_enabled(bool enabled)
 {
     cursor_is_enabled = enabled;

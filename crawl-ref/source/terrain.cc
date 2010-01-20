@@ -1103,7 +1103,7 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
     }
 
     // sanity check
-    if (terrain != DNGN_LAVA && beogh_water_walk())
+    if (terrain != DNGN_LAVA && (beogh_water_walk() || you.can_swim()))
         return (false);
 
     mprf("You fall into the %s!",

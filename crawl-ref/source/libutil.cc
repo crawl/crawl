@@ -683,12 +683,8 @@ void usleep(unsigned long time)
 #endif
 
 #ifndef USE_TILE
-static GotoRegion _current_region = GOTO_CRT;
-
 void cgotoxy(int x, int y, GotoRegion region)
 {
-    _current_region = region;
-
     ASSERT(x >= 1);
     ASSERT(y >= 1);
     switch (region)
@@ -717,7 +713,7 @@ void cgotoxy(int x, int y, GotoRegion region)
 
 GotoRegion get_cursor_region()
 {
-    return (_current_region);
+    return (GOTO_CRT);
 }
 #endif
 ///////////////////////////////////////////////////////////////////////

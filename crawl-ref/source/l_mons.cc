@@ -196,6 +196,71 @@ static int l_mons_do_set_prop(lua_State *ls)
 
 MDEFN(set_prop, do_set_prop)
 
+static int l_mons_do_get_prop(lua_State *ls)
+{
+    // We should only be able to set properties from dlua.
+    ASSERT_DLUA;
+
+    monsters *mons =
+        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+
+    const char *prop_name = luaL_checkstring(ls, 1);
+
+    if (!mons->props.exists(prop_name))
+    {
+        if (lua_isboolean(ls, 2))
+        {
+            std::string err = make_stringf("Don't have a property called '%s'.", prop_name);
+            luaL_argerror(ls, 2, err.c_str());
+        }
+
+        return (0);
+    }
+
+    CrawlStoreValue prop = mons->props[prop_name];
+    int num_pushed = 1;
+
+    switch (prop.get_type())
+    {
+    case SV_NONE: lua_pushnil(ls); break;
+    case SV_BOOL: lua_pushboolean(ls, prop.get_bool()); break;
+    case SV_BYTE: lua_pushboolean(ls, prop.get_byte()); break;
+    case SV_SHORT: lua_pushnumber(ls, prop.get_short()); break;
+    case SV_LONG: lua_pushnumber(ls, prop.get_long()); break;
+    case SV_FLOAT: lua_pushnumber(ls, prop.get_float()); break;
+    case SV_STR: lua_pushstring(ls, prop.get_string().c_str()); break;
+    case SV_COORD:
+        num_pushed++;
+        lua_pushnumber(ls, prop.get_coord().x);
+        lua_pushnumber(ls, prop.get_coord().y);
+        break;
+    default:
+        // Do nothing for some things.
+        lua_pushnil(ls);
+        break;
+    }
+
+    return (num_pushed);
+}
+
+MDEFN(get_prop, do_get_prop)
+
+static int l_mons_do_has_prop(lua_State *ls)
+{
+    // We should only be able to get properties from dlua.
+    ASSERT_DLUA;
+
+    monsters *mons =
+        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+
+    const char *prop_name = luaL_checkstring(ls, 1);
+
+    lua_pushboolean(ls, mons->props.exists(prop_name));
+    return (1);
+}
+
+MDEFN(has_prop, do_has_prop)
+
 MDEF(you_can_see)
 {
     ASSERT_DLUA;
@@ -226,6 +291,8 @@ static MonsAccessor mons_attrs[] =
     { "experience",      l_mons_experience      },
     { "random_teleport", l_mons_random_teleport },
     { "set_prop",        l_mons_set_prop        },
+    { "get_prop",        l_mons_get_prop        },
+    { "has_prop",        l_mons_has_prop        },
     { "you_can_see",     l_mons_you_can_see     }
 };
 
