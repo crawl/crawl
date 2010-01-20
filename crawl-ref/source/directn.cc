@@ -788,6 +788,12 @@ void full_describe_view()
 
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
             {
+                describe_monsters(*m);
+                redraw_screen();
+                mesclr(true);
+            }
+            else // ACT_EXECUTE, here used to view database entry
+            {
                 describe_info inf;
                 get_square_desc(m->pos(), inf, true);
 #ifndef USE_TILE
@@ -800,12 +806,6 @@ void full_describe_view()
 #endif
                 if (getch() == 0)
                     getch();
-            }
-            else // ACT_EXECUTE, here used to view database entry
-            {
-                describe_monsters(*m);
-                redraw_screen();
-                mesclr(true);
             }
         }
         else if (quant == 2)
