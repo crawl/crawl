@@ -2,6 +2,7 @@
 #define OPTIONS_H
 
 #include "feature.h"
+#include "pattern.h"
 
 class InitLineInput;
 struct game_options
