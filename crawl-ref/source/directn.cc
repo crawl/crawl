@@ -3262,8 +3262,12 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
         if (print_attitude)
         {
             std::string str = "";
-            if (mon->friendly())
+            if (mon->has_ench(ENCH_CHARM))
+                str = "charmed";
+            else if (mon->friendly())
                 str = "friendly";
+            else if (mon->good_neutral())
+                str = "peaceful";
             else if (mon->neutral())
                 str = "neutral";
 
