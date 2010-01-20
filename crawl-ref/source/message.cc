@@ -726,17 +726,21 @@ void mpr(std::string text, msg_channel_type channel, int param)
     }
 }
 
-int msgwin_get_line(std::string prompt, char *buf, int len,
-                    input_history *mh, int (*keyproc)(int& c))
+static std::string show_prompt(std::string prompt)
 {
-    // XXX: cancelable_get_line also flushes, which messes things
-    //      up if we haven't flushed already
     flush_prev_message();
     msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
     std::string col = colour_to_str(colour_msg(colour));
     std::string text = "<" + col + ">" + prompt + "</" + col + ">"; // XXX
     msgwin.add_item(text, ' ', true);
     msgwin.show();
+    return text;
+}
+
+int msgwin_get_line(std::string prompt, char *buf, int len,
+                    input_history *mh, int (*keyproc)(int& c))
+{
+    std::string text = show_prompt(prompt);
     int ret = cancelable_get_line(buf, len, mh, keyproc);
     if (ret >= 0)
         text += buf;
