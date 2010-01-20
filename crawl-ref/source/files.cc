@@ -686,7 +686,7 @@ std::vector<player_save_info> find_saved_characters()
     {
         std::string filename = allfiles[i];
 
-        std::string::size_type point_pos = filename.find_last_of('.');
+        std::string::size_type point_pos = filename.find_first_of('.');
         std::string basename = filename.substr(0, point_pos);
 
 #ifdef LOAD_UNPACKAGE_CMD
@@ -1718,7 +1718,7 @@ static void _save_game_exit()
               (dirname+basename).c_str(), (dirname+basename).c_str());
 # else
     No save package defined.
-#endif
+# endif
 #endif
 
     if (system( cmd_buff ) != 0)
