@@ -700,6 +700,32 @@ void cgotoxy(int x, int y, GotoRegion region)
     }
 }
 
+coord_def cgetpos(GotoRegion region)
+{
+    const coord_def where = coord_def(wherex(), wherey());
+    coord_def topleft;
+    switch (region)
+    {
+    case GOTO_MLIST:
+        topleft = crawl_view.mlistp;
+        break;
+    case GOTO_STAT:
+        topleft = crawl_view.hudp;
+        break;
+    case GOTO_MSG:
+        topleft = crawl_view.msgp;
+        break;
+    case GOTO_DNGN:
+        topleft = crawl_view.viewp;
+        break;
+    case GOTO_CRT:
+        topleft = coord_def(1, 1);
+        break;
+    }
+    topleft -= coord_def(1, 1);
+    return (where - topleft);
+}
+
 GotoRegion get_cursor_region()
 {
     return (GOTO_CRT);

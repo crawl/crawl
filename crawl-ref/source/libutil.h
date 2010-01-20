@@ -150,6 +150,7 @@ void usleep( unsigned long time );
 
 #ifndef USE_TILE
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
+coord_def cgetpos(GotoRegion region = GOTO_CRT);
 GotoRegion get_cursor_region();
 #endif
 
