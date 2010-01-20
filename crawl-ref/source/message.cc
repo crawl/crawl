@@ -199,7 +199,7 @@ class message_window
     {
         int i;
         for (i = lines.size() - 1; i >= 0 && lines[i].length() == 0; --i);
-        if (i >= 0 && lines[i].length() < crawl_view.msgsz.x)
+        if (i >= 0 && (int) lines[i].length() < crawl_view.msgsz.x)
             cgotoxy(lines[i].length() + 1, i + 1, GOTO_MSG);
     }
 
@@ -1041,7 +1041,7 @@ void replay_messages(void)
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
             hist.add_text(msgs[i].text);
-    hist.show();    
+    hist.show();
 }
 
 void set_msg_dump_file(FILE* file)
@@ -1055,4 +1055,3 @@ void formatted_mpr(const formatted_string& fs,
 {
     mpr(fs.to_colour_string(), channel, param);
 }
-
