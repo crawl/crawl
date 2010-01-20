@@ -306,6 +306,9 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
         pagesize = max_pagesize;
 #endif
 
+    if (is_set(MF_START_AT_END))
+        while(page_down());
+
     do_menu();
 
     return (sel);
