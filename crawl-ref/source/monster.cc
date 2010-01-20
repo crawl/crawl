@@ -4864,6 +4864,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_SLEEP_WARY:
     case ENCH_LOWERED_MR:
     case ENCH_SOUL_RIPE:
+    case ENCH_TIDE:
         decay_enchantment(me);
         break;
 
