@@ -742,7 +742,7 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
 {
     std::string text = show_prompt(prompt);
     int ret = cancelable_get_line(buf, len, mh, keyproc);
-    if (ret >= 0)
+    if (ret == 0)
         text += buf;
     messages.add(message_item(text, MSGCH_PROMPT, 0));
     return ret;
