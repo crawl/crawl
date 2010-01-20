@@ -54,7 +54,8 @@ level_range set_range(const char *s, int start, int end)
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS KMASK KPROP
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE WEIGHT MONS ITEM MARKER COLOUR
 %token <i>      PRELUDE MAIN VALIDATE VETO NSUBST WELCOME LFLAGS BFLAGS
-%token <i>      LFLOORCOL LROCKCOL LFLOORTILE LROCKTILE FTILE RTILE TILE SUBVAULT
+%token <i>      LFLOORCOL LROCKCOL LFLOORTILE LROCKTILE FTILE RTILE TILE
+%token <i>      SUBVAULT FHEIGHT
 
 %token <i>      COMMA COLON PERC INTEGER CHARACTER
 
@@ -176,6 +177,7 @@ metaline        : place
                 | kmons
                 | kmask
                 | kprop
+                | fheight
                 | subvault
                 | main_lua
                 | prelude_lua
@@ -395,6 +397,7 @@ lfloortile      : LFLOORTILE { }
                         make_stringf("lfloortile(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
+                ;
 
 lrocktile       : LROCKTILE { }
                 | LROCKTILE STRING
@@ -404,7 +407,22 @@ lrocktile       : LROCKTILE { }
                         make_stringf("lrocktile(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
+                ;
 
+fheight         : FHEIGHT fheight_specifiers
+
+fheight_specifiers: fheight_specifier
+                    | fheight_specifiers COMMA fheight_specifier
+                    ;
+
+fheight_specifier : ITEM_INFO
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("fheight(\"%s\")",
+                            quote_lua_string($1).c_str()));
+                }
+                ;
 
 ftile           : FTILE ftile_specifiers
                 ;
