@@ -704,8 +704,12 @@ void cgotoxy(int x, int y, GotoRegion region)
         ASSERT(y <= crawl_view.msgsz.y);
         gotoxy_sys(x + crawl_view.msgp.x - 1, y + crawl_view.msgp.y - 1);
         break;
+    case GOTO_DNGN:
+        ASSERT(x <= crawl_view.viewsz.x);
+        ASSERT(y <= crawl_view.viewsz.y);
+        gotoxy_sys(x + crawl_view.viewp.x - 1, y + crawl_view.viewp.y - 1);
+        break;
     case GOTO_CRT:
-    default:
         gotoxy_sys(x, y);
         break;
     }
