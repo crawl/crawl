@@ -837,15 +837,8 @@ void macro_add_query( void )
         }
     }
 
-    mpr( "Input Macro Action: ", MSGCH_PROMPT );
-
-    // Using _getch_mul() here isn't very useful...  We'd like the
-    // flexibility to define multicharacter macros without having
-    // to resort to editing files and restarting the game.  -- bwr
-    // keyseq act = _getch_mul();
-
     char    buff[4096];
-    get_input_line(buff, sizeof buff);
+    msgwin_get_line_autohist("Input Macro Action: ", buff, sizeof(buff));
 
     if (Options.macro_meta_entry)
         macro_add( mapref, key, parse_keyseq(buff) );
