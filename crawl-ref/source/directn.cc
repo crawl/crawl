@@ -789,22 +789,15 @@ void full_describe_view()
 
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
             {
+                // View database entry.
                 describe_monsters(*m);
                 redraw_screen();
                 mesclr(true);
             }
-            else // ACT_EXECUTE, here used to view database entry
+            else // ACT_EXECUTE, here used to display monster status.
             {
-                describe_info inf;
-                get_square_desc(m->pos(), inf, true);
-#ifndef USE_TILE
-                // Hmpf. This was supposed to work for both ASCII *and* Tiles!
-                view_desc_proc proc;
-                process_description<view_desc_proc>(proc, inf);
-#else
-                mesclr();
                 _describe_monster(m);
-#endif
+
                 if (getch() == 0)
                     getch();
             }
