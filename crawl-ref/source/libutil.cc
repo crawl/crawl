@@ -10,6 +10,7 @@
 #include "libutil.h"
 #include "externs.h"
 #include "macro.h"
+#include "message.h"
 #include "stuff.h"
 #include "viewgeom.h"
 
@@ -668,66 +669,67 @@ void usleep(unsigned long time)
 #endif
 
 #ifndef USE_TILE
-static GotoRegion _current_region = GOTO_CRT;
-
-void cgotoxy(int x, int y, GotoRegion region)
+coord_def cgettopleft(GotoRegion region)
 {
-    _current_region = region;
-
-    ASSERT(x >= 1);
-    ASSERT(y >= 1);
     switch (region)
     {
     case GOTO_MLIST:
-        ASSERT(x <= crawl_view.mlistsz.x);
-        ASSERT(y <= crawl_view.mlistsz.y);
-        gotoxy_sys(x + crawl_view.mlistp.x - 1, y + crawl_view.mlistp.y - 1);
-        break;
+        return crawl_view.mlistp;
     case GOTO_STAT:
-        ASSERT(x <= crawl_view.hudsz.x);
-        ASSERT(y <= crawl_view.hudsz.y);
-        gotoxy_sys(x + crawl_view.hudp.x - 1, y + crawl_view.hudp.y - 1);
-        break;
+        return crawl_view.hudp;
     case GOTO_MSG:
-        ASSERT(x <= crawl_view.msgsz.x);
-        ASSERT(y <= crawl_view.msgsz.y);
-        gotoxy_sys(x + crawl_view.msgp.x - 1, y + crawl_view.msgp.y - 1);
-        break;
+        return crawl_view.msgp;
     case GOTO_DNGN:
-        ASSERT(x <= crawl_view.viewsz.x);
-        ASSERT(y <= crawl_view.viewsz.y);
-        gotoxy_sys(x + crawl_view.viewp.x - 1, y + crawl_view.viewp.y - 1);
-        break;
+        return crawl_view.viewp;
     case GOTO_CRT:
-        gotoxy_sys(x, y);
-        break;
+    default:
+        return crawl_view.termp;
+    }
+}
+
+coord_def cgetsize(GotoRegion region)
+{
+    switch (region)
+    {
+    case GOTO_MLIST:
+        return crawl_view.mlistsz;
+    case GOTO_STAT:
+        return crawl_view.hudsz;
+    case GOTO_MSG:
+        return crawl_view.msgsz;
+    case GOTO_DNGN:
+        return crawl_view.viewsz;
+    case GOTO_CRT:
+    default:
+        return crawl_view.termsz;
     }
 }
 
 coord_def cgetpos(GotoRegion region)
 {
     const coord_def where = coord_def(wherex(), wherey());
-    coord_def topleft;
-    switch (region)
-    {
-    case GOTO_MLIST:
-        topleft = crawl_view.mlistp;
-        break;
-    case GOTO_STAT:
-        topleft = crawl_view.hudp;
-        break;
-    case GOTO_MSG:
-        topleft = crawl_view.msgp;
-        break;
-    case GOTO_DNGN:
-        topleft = crawl_view.viewp;
-        break;
-    case GOTO_CRT:
-        topleft = coord_def(1, 1);
-        break;
-    }
-    topleft -= coord_def(1, 1);
-    return (where - topleft);
+    return (where - cgettopleft(region) + coord_def(1, 1));
+}
+
+static GotoRegion _current_region = GOTO_CRT;
+
+void cgotoxy(int x, int y, GotoRegion region)
+{
+    _current_region = region;
+    const coord_def tl = cgettopleft(region);
+    const coord_def sz = cgetsize(region);
+
+    ASSERT(x >= 1 && x <= sz.x);
+    ASSERT(y >= 1 && y <= sz.y);
+
+    gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
+}
+
+void cscroll(int n, GotoRegion region)
+{
+    // only implemented for the message window right now
+    ASSERT(region == GOTO_MSG);
+    scroll_message_window(n);
 }
 
 GotoRegion get_cursor_region()

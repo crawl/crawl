@@ -149,8 +149,11 @@ void usleep( unsigned long time );
 #endif
 
 #ifndef USE_TILE
-void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
+coord_def cgettopleft(GotoRegion region = GOTO_CRT);
+coord_def cgetsize(GotoRegion region = GOTO_CRT);
 coord_def cgetpos(GotoRegion region = GOTO_CRT);
+void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
+void cscroll(int n, GotoRegion region);
 GotoRegion get_cursor_region();
 #endif
 
