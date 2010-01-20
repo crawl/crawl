@@ -201,7 +201,7 @@ void wizard_create_spec_monster_name()
         }
         ghost.species = static_cast<species_type>(sp_id);
 
-        mpr("Make player ghost which job? ", MSGCH_PROMPT);
+        mpr("Give player ghost which background? ", MSGCH_PROMPT);
         get_input_line( input_str, sizeof( input_str ) );
 
         int job_id = get_job_by_abbrev(input_str);
@@ -211,7 +211,7 @@ void wizard_create_spec_monster_name()
 
         if (job_id == JOB_UNKNOWN)
         {
-            mpr("No such job, making it a Fighter.");
+            mpr("No such background, making it a Fighter.");
             job_id = JOB_FIGHTER;
         }
         ghost.job = static_cast<job_type>(job_id);

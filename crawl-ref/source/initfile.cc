@@ -333,7 +333,7 @@ static int _str_to_job( const std::string &str )
         index = get_job_index_by_name( str.c_str() );
 
     if (index == -1)
-        fprintf( stderr, "Unknown job choice: %s\n", str.c_str() );
+        fprintf( stderr, "Unknown background choice: %s\n", str.c_str() );
 
     return ((index != -1) ? index_to_letter( index ) : 0);
 }
@@ -1308,7 +1308,7 @@ static void write_newgame_options(FILE *f)
     if (Options.prev_race)
         fprintf(f, "species = %c\n", Options.prev_race);
     if (Options.prev_cls)
-        fprintf(f, "job = %c\n", Options.prev_cls);
+        fprintf(f, "background = %c\n", Options.prev_cls);
 
     if (Options.prev_weapon != WPN_UNKNOWN)
         fprintf(f, "weapon = %s\n", _weapon_to_str(Options.prev_weapon).c_str());
@@ -1992,7 +1992,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     const std::string orig_field = field;
 
     if (key != "name" && key != "crawl_dir" && key != "macro_dir"
-        && key != "species" && key != "job" && key != "ban_pickup"
+        && key != "species" && key != "background" && key != "job"
+        && key != "race" && key != "class" && key != "ban_pickup"
         && key != "autopickup_exceptions"
         && key != "explore_stop_pickup_ignore"
         && key != "stop_travel" && key != "sound"
@@ -2253,17 +2254,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else COLOUR_OPTION(status_caption_colour);
     else if (key == "weapon")
     {
-        // Choose this weapon for jobs that get choice.
+        // Choose this weapon for backgrounds that get choice.
         weapon = _str_to_weapon( field );
     }
     else if (key == "book")
     {
-        // Choose this book for jobs that get choice.
+        // Choose this book for backgrounds that get choice.
         book = _str_to_book( field );
     }
     else if (key == "wand")
     {
-        // Choose this wand for jobs that get choice.
+        // Choose this wand for backgrounds that get choice.
         wand = _str_to_wand( field );
     }
     else if (key == "chaos_knight")
@@ -2289,7 +2290,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "priest")
     {
-        // Choose this weapon for jobs that get choice.
+        // Choose this weapon for backgrounds that get choice.
         priest = str_to_god(field);
         if (!is_priest_god(priest))
             priest = GOD_RANDOM;
@@ -2399,7 +2400,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         race = _str_to_species( field );
     }
-    else if (key == "job" || key == "class")
+    else if (key == "background" || key == "job" || key == "class")
     {
         cls = _str_to_job( field );
     }
@@ -3472,7 +3473,7 @@ enum commandline_option_type {
 };
 
 static const char *cmd_ops[] = {
-    "scores", "name", "species", "job", "plain", "dir", "rc",
+    "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "test", "script", "builddb", "help", "version",
     "save-version", "extra-opt-first", "extra-opt-last"

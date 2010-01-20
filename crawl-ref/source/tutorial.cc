@@ -142,7 +142,7 @@ bool pick_tutorial()
 
     formatted_string::parse_string(
         EOL
-        "<brown>SPACE - Back to job selection; "
+        "<brown>SPACE - Back to background selection; "
         "Bksp - Back to species selection; X - Quit"
         EOL "* - Random tutorial"
         "</brown>" EOL).display();
