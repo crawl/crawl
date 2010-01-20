@@ -950,7 +950,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_ORB_OF_FIRE:
         return TILEP_MONS_ORB_OF_FIRE;
     case MONS_ORB_OF_DESTRUCTION:
-        return TILEP_MONS_ORB_OF_DESTRUCTION;
+        // Pick a random tile.
+        return TILEP_MONS_ORB_OF_DESTRUCTION
+               + random2(tile_player_count(TILEP_MONS_ORB_OF_DESTRUCTION));
 
     // other symbols
     case MONS_VAPOUR:
@@ -2827,6 +2829,12 @@ static int _tileidx_cloud(cloud_struct cl)
 
             case CLOUD_RAIN:
                 ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
+                break;
+
+            case CLOUD_MAGIC_TRAIL:
+                if (decay/20 > 2)
+                    dur = 3;
+                ch = TILE_CLOUD_MAGIC_TRAIL_0 + dur;
                 break;
 
             case CLOUD_GLOOM:

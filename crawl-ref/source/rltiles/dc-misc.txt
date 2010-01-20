@@ -38,10 +38,14 @@ cloud_mutagenic_large1 CLOUD_MUTAGENIC_2
 cloud_mutagenic_large2
 cloud_mutagenic_large3
 cloud_mutagenic_large4
+# orb of destruction
+cloud_magic_trail0 CLOUD_MAGIC_TRAIL_0
+cloud_magic_trail1 CLOUD_MAGIC_TRAIL_1
+cloud_magic_trail2 CLOUD_MAGIC_TRAIL_2
+cloud_magic_trail3 CLOUD_MAGIC_TRAIL_3
 cloud_rain1 CLOUD_RAIN
 cloud_rain2
 cloud_grey_smoke CLOUD_MIST
-
 cloud_gloom CLOUD_GLOOM
 
 #########MAP
