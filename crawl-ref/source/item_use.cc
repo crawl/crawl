@@ -3612,7 +3612,7 @@ static int _prompt_ring_to_remove(int new_ring)
          "You're wearing two rings. Remove which one? (%c/%c/<</>/Esc)",
          lslot, rslot);
 
-    mprf(" < or %s", left->name(DESC_INVENTORY).c_str());
+    mprf(" << or %s", left->name(DESC_INVENTORY).c_str());
     mprf(" > or %s", right->name(DESC_INVENTORY).c_str());
 
     // Deactivate choice from tile inventory.
