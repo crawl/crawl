@@ -200,7 +200,7 @@ class message_window
     {
         int i;
         for (i = lines.size() - 1; i >= 0 && lines[i].length() == 0; --i);
-        if (i >= 0)
+        if (i >= 0 && lines[i].length() < crawl_view.msgsz.x)
             cgotoxy(lines[i].length() + 1, i + 1, GOTO_MSG);
     }
 
