@@ -12,6 +12,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "libutil.h"
 #include "map_knowledge.h"
 #include "mon-util.h"
 #include "options.h"

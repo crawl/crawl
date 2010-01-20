@@ -16,6 +16,7 @@
 #include "database.h"
 #include "directn.h"
 #include "env.h"
+#include "libutil.h"
 #include "los.h"
 #include "message.h"
 #include "misc.h"

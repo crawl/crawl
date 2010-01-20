@@ -12,6 +12,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "items.h"
+#include "libutil.h"
 #include "mapdef.h"
 #include "stash.h"
 

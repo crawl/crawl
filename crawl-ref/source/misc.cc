@@ -50,6 +50,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "lev-pand.h"
+#include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "mapmark.h"

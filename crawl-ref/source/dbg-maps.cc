@@ -16,6 +16,7 @@
 #include "flood_find.h"
 #include "map_knowledge.h"
 #include "initfile.h"
+#include "libutil.h"
 #include "maps.h"
 #include "message.h"
 #include "place.h"

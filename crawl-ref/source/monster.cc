@@ -22,6 +22,7 @@
 #include "itemname.h"
 #include "items.h"
 #include "kills.h"
+#include "libutil.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"

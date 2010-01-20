@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "dungeon.h"
 #include "env.h"
+#include "libutil.h"
 #include "terrain.h"
 
 #define FEATF(name, val) \

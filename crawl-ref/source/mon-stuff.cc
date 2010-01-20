@@ -28,6 +28,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "kills.h"
+#include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"

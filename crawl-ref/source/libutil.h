@@ -80,20 +80,6 @@ int count_occurrences(const std::string &text, const std::string &searchfor);
 
 void play_sound(const char *file);
 
-// Pattern matching
-void *compile_pattern(const char *pattern, bool ignore_case = false);
-void free_compiled_pattern(void *cp);
-bool pattern_match(void *compiled_pattern, const char *text, int length);
-
-// Globs are always available.
-void *compile_glob_pattern(const char *pattern, bool ignore_case = false);
-void free_compiled_glob_pattern(void *cp);
-bool glob_pattern_match(void *compiled_pattern, const char *text, int length);
-
-typedef void *(*p_compile)(const char *pattern, bool ignore_case);
-typedef void (*p_free)(void *cp);
-typedef bool (*p_match)(void *compiled_pattern, const char *text, int length);
-
 std::string &trim_string( std::string &str );
 std::string &trim_string_right( std::string &str );
 std::string trimmed_string( std::string s );
@@ -166,41 +152,6 @@ void usleep( unsigned long time );
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
 GotoRegion get_cursor_region();
 #endif
-
-template <typename T>
-class unwind_var
-{
-public:
-    unwind_var(T &val_, T newval, T reset_to) : val(val_), oldval(reset_to)
-    {
-        val = newval;
-    }
-    unwind_var(T &val_, T newval) : val(val_), oldval(val_)
-    {
-        val = newval;
-    }
-    unwind_var(T &val_) : val(val_), oldval(val_) { }
-    ~unwind_var()
-    {
-        val = oldval;
-    }
-
-    T value() const
-    {
-        return val;
-    }
-
-    T original_value() const
-    {
-        return oldval;
-    }
-
-private:
-    T &val;
-    T oldval;
-};
-
-typedef unwind_var<bool> unwind_bool;
 
 class mouse_control
 {

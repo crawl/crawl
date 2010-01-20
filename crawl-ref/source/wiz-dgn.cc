@@ -19,6 +19,7 @@
 #include "files.h"
 #include "items.h"
 #include "l_defs.h"
+#include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"

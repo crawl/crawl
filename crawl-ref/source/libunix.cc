@@ -30,6 +30,7 @@
 #include "delay.h"
 #include "enum.h"
 #include "externs.h"
+#include "libutil.h"
 #include "options.h"
 #include "files.h"
 #include "state.h"

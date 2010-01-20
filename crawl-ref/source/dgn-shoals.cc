@@ -12,6 +12,7 @@
 #include "flood_find.h"
 #include "fprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"

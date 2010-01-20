@@ -15,6 +15,7 @@
 #include "env.h"
 #include "flood_find.h"
 #include "l_defs.h"
+#include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "random.h"

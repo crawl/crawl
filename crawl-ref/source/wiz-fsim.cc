@@ -18,6 +18,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "it_use2.h"
+#include "libutil.h"
 #include "message.h"
 #include "mon-place.h"
 #include "mgen_data.h"

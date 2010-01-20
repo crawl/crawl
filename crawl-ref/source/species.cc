@@ -2,6 +2,7 @@
 
 #include "species.h"
 
+#include "libutil.h"
 #include "options.h"
 #include "random.h"
 

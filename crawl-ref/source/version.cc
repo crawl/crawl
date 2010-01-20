@@ -8,6 +8,7 @@
 
 #include "build.h"
 #include "compflag.h"
+#include "libutil.h"
 
 namespace Version
 {

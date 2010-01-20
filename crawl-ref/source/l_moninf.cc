@@ -10,6 +10,7 @@
 #include "cluautil.h"
 #include "coord.h"
 #include "env.h"
+#include "libutil.h"
 #include "mon-info.h"
 
 #define MONINF_METATABLE "monster.info"

@@ -38,6 +38,7 @@
 #include "item_use.h"
 #include "it_use2.h"
 #include "kills.h"
+#include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"

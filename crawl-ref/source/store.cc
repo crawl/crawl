@@ -11,6 +11,7 @@
 
 #include "dlua.h"
 #include "externs.h"
+#include "libutil.h"
 #include "monster.h"
 #include "tags.h"
 #include "travel.h"

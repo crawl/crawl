@@ -12,6 +12,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "itemname.h"
+#include "libutil.h"
 #include "maps.h"
 #include "player.h"
 #include "random.h"

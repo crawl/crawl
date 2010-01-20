@@ -17,6 +17,7 @@
 #include "hiscores.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "notes.h"
