@@ -128,7 +128,7 @@ public:
     confirm_prompt_type allow_self_target;      // yes, no, prompt
 
     int         colour[16];      // macro fg colours to other colours
-    int         background;      // select default background colour
+    int         background_colour; // select default background colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     bool        darken_beyond_range; // for whether targetting is out of range
 

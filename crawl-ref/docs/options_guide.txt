@@ -121,7 +121,7 @@ The contents of this text are:
 6-b     DOS and Windows.
                 dos_use_background_intensity
 6-c     Unix.
-                background, use_fake_cursor
+                background_colour, use_fake_cursor
 
 7-  Inline Lua.
 7-a     Executing lua.
@@ -2130,7 +2130,7 @@ dos_use_background_intensity = false
 6-c     Unix.
 -------------
 
-background = black
+background_colour = black
         Sets the default background colour by name (defaults to BLACK).
         This may be useful if you're using a terminal with a background
         colour other than black (such as an xterm), but this option is

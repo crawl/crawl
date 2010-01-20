@@ -2203,7 +2203,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (col == MSGCOL_NONE)
             fprintf( stderr, "Bad colour -- %s\n", field.c_str() );
     }
-    else COLOUR_OPTION(background);
+    else COLOUR_OPTION(background_colour);
     else COLOUR_OPTION(detected_item_colour);
     else COLOUR_OPTION(detected_monster_colour);
     else if (key.find(interrupt_prefix) == 0)
