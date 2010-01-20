@@ -17,6 +17,8 @@
 // Write the message window contents out.
 void display_message_window();
 
+void scroll_message_window(int n);
+
 void mesclr(bool force = false);
 
 void flush_prev_message();

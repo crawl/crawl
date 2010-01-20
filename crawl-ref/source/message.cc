@@ -203,14 +203,6 @@ class message_window
             cgotoxy(lines[i].length() + 1, i + 1, GOTO_MSG);
     }
 
-    void scroll(int n)
-    {
-        for (int i = 0; i < height() - n; ++i)
-            lines[i] = lines[i + n];
-        next_line -= n;
-        turn_line -= n;
-    }
-
     // Whether to show msgwin-full more prompts.
     bool more_enabled() const
     {
@@ -303,6 +295,14 @@ public:
         show();
     }
 
+    void scroll(int n)
+    {
+        for (int i = 0; i < height() - n; ++i)
+            lines[i] = lines[i + n];
+        next_line -= n;
+        turn_line -= n;
+    }
+
     // write to screen (without refresh)
     void show() const
     {
@@ -355,6 +355,12 @@ message_window msgwin;
 
 void display_message_window()
 {
+    msgwin.show();
+}
+
+void scroll_message_window(int n)
+{
+    msgwin.scroll(n);
     msgwin.show();
 }
 
