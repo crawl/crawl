@@ -712,7 +712,8 @@ function DgnTriggerer:monster_dies(triggerable, marker, ev)
     error("DgnTriggerer:monster_dies() didn't get a valid monster index")
   end
 
-  if self.target == "any" or mons.full_name == self.target then
+  if self.target == "any" or mons.full_name == self.target or
+      (mons.has_prop(self.target) and mons.get_prop(self.target) == self.target) then
     triggerable:do_trigger(self, marker, ev)
   end
 end

@@ -94,6 +94,58 @@ MAP
   ...
 ENDMAP
 
+NAME:   shoals_atoll
+DEPTH:  Shoal
+KMONS:  1 = patrolling kraken
+KFEAT:  1 = deep_water
+KITEM:  1 = star_item, star_item, star_item, star_item, star_item
+KPROP:  1Wgw. = no_tide
+MARKER: 1 = lua:MonPropsMarker:new {ancient_kraken="ancient_kraken"}
+MARKER: 1 = lua:portal_desc { water_marker = 1 }
+MARKER: W = lua:portal_desc { water_marker = 1 }
+MARKER: w = lua:portal_desc { water_marker = 1 }
+MARKER: . = lua:portal_desc { water_marker = 1 }
+SUBST:  g = WWw, X = ccc., x = c
+{{
+-- When the kraken dies, the tides will control the water, so the items will be accessible!
+function kraken_death (data, triggerable, triggerer, marker, ev)
+    crawl.mpr("The surface of the water vibrates, and then calms...", "warning")
+
+    local points = dgn.find_marker_positions_by_prop("water_marker", 1)
+
+    for _, point in ipairs(points) do
+        dgn.fprop_changed(point.x, point.y, "no_tide")
+    end
+end
+
+local kraken_death_marker = TriggerableFunction:new {
+  func=kraken_death,
+  repeated=false,
+  props= {water_marker="1"} }
+
+kraken_death_marker:add_triggerer(DgnTriggerer:new {
+  type="monster_dies",
+  target="ancient_kraken" })
+
+lua_marker("*", kraken_death_marker)
+
+}}
+MAP
+     XXXXXXXX
+    XxxxxxxxxX
+   Xx...WWWGxxX
+  Xx.gggggW*GxX
+ Xx.ggwwwggWWxX
+Xx.ggwwwwwggWxX
+Xx.ggww1wwgg.xX
+Xx.ggwwwwwgg.xX
+XW..ggwwwgg.xX
+ WW..ggggg.xX
+  WW......xX
+   WWWWxxxX
+      XXXX
+ENDMAP
+
 NAME:   yaktaur_hedge
 DEPTH:  Shoal
 MONS:   bush
