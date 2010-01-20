@@ -223,7 +223,7 @@ bool monsters::wants_submerge() const
     if (tfoe && grid_distance(tfoe->pos(), pos()) > 1 && !has_ranged_attack)
         roll /= 2;
 
-    // Don't submerge if we just unsubmerged to shout
+    // Don't submerge if we just unsubmerged to shout.
     return (one_chance_in(roll) && seen_context != "bursts forth shouting");
 }
 
@@ -3185,7 +3185,7 @@ bool monsters::is_unclean() const
         return (true);
     }
 
-    // Zin considers insanity unclean. And slugs that speak.
+    // Zin considers insanity unclean.  And slugs that speak.
     if (type == MONS_CRAZY_YIUF
         || type == MONS_PSYCHE
         || type == MONS_GASTRONOK)
