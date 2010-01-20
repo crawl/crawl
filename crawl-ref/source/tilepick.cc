@@ -4053,7 +4053,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
     case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
     case WPN_ANKUS:             return TILEP_HAND1_MACE;
-    case WPN_HOLY_SCOURGE:      // TODO
+    case WPN_HOLY_SCOURGE:      return TILEP_HAND1_HOLY_SCOURGE;
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
     case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
 
