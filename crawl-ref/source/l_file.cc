@@ -4,6 +4,7 @@
 #include "cluautil.h"
 #include "dlua.h"
 #include "l_libs.h"
+#include "libutil.h"
 #include "files.h"
 
 #include "tags.h"

@@ -16,6 +16,7 @@
 #include "env.h"
 #include "initfile.h"
 #include "godwrath.h"
+#include "libutil.h"
 #include "message.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"

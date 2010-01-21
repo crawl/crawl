@@ -20,6 +20,7 @@
 #include "feature.h"
 #include "files.h"
 #include "format.h"
+#include "libutil.h"
 #include "macro.h"
 #include "options.h"
 #include "place.h"

@@ -23,6 +23,9 @@
 #include "makeitem.h"
 #include "travel_defs.h"
 
+// Invalid heightmap height.
+static const int INVALID_HEIGHT = -31999;
+
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
 // a suitable mirror.
 enum map_section_type                  // see maps.cc and dungeon.cc {dlb}
@@ -161,6 +164,14 @@ class map_fprop_list : public std::vector<map_weighted_fprop>
 public:
     bool parse(const std::string &fp, int weight);
 };
+
+typedef std::pair<int, int> map_weighted_fheight;
+class map_featheight_list : public std::vector<map_weighted_fheight>
+{
+public:
+    bool parse(const std::string &fp, int weight);
+};
+
 class fprop_spec
 {
 public:
@@ -176,6 +187,23 @@ public:
     bool fix;
     unsigned long fixed_prop;
     map_fprop_list fprops;
+};
+
+class fheight_spec
+{
+public:
+    fheight_spec(std::string _key, bool _fix,
+                 const map_featheight_list &_fheights)
+        : key(_key), fix(_fix), fixed_height(INVALID_HEIGHT),
+          fheights(_fheights)
+    {
+    }
+    int get_height();
+public:
+    std::string key;
+    bool fix;
+    int fixed_height;
+    map_featheight_list fheights;
 };
 
 #ifdef USE_TILE
@@ -262,6 +290,22 @@ struct keyed_mapspec;
 class map_lines
 {
 public:
+    class iterator {
+    public:
+        iterator(map_lines &ml, const std::string &key);
+        operator bool () const;
+        coord_def operator ++ ();
+        coord_def operator ++ (int);
+        coord_def operator * () const;
+    private:
+        void advance();
+    private:
+        map_lines &maplines;
+        std::string key;
+        coord_def p;
+    };
+
+public:
     map_lines();
     map_lines(const map_lines &);
     ~map_lines();
@@ -276,6 +320,7 @@ public:
     std::string add_shuffle(const std::string &s);
     std::string add_colour(const std::string &col);
     std::string add_fproperty(const std::string &sub);
+    std::string add_fheight(const std::string &arg);
     void clear_markers();
 
 #ifdef USE_TILE
@@ -377,8 +422,10 @@ private:
     void subst(std::string &s, subst_spec &spec);
     void subst(subst_spec &);
     void nsubst(nsubst_spec &);
+    void bind_overlay();
     void overlay_colours(colour_spec &);
     void overlay_fprops(fprop_spec &);
+    void overlay_fheights(fheight_spec &);
 
     // Merge cell (vx, vy) from vault onto this map's (x, y) cell.
     typedef FixedVector<int, 256> keyspec_map;
@@ -428,14 +475,18 @@ private:
 
     struct overlay_def
     {
-        overlay_def() : colour(0), rocktile(0), floortile(0), tile(0),
-                        no_random(false), property(0), keyspec_idx(0) {}
+        overlay_def() :
+            colour(0), rocktile(0), floortile(0), tile(0),
+            no_random(false), property(0), height(INVALID_HEIGHT),
+            keyspec_idx(0)
+        {}
         int colour;
         int rocktile;
         int floortile;
         int tile;
         bool no_random;
         int property;
+        int height;      // heightmap height
         int keyspec_idx;
     };
     typedef Matrix<overlay_def> overlay_matrix;
@@ -573,7 +624,7 @@ class mons_spec
           quantity(1), genweight(gw), mlevel(ml), fix_mons(_fixmons),
           generate_awake(awaken), patrolling(false), band(false),
           colour(BLACK), hd(0), hp(0), abjuration_duration(0), summon_type(0),
-          items(), monname(""), non_actor_summoner(""), explicit_spells(false), 
+          items(), monname(""), non_actor_summoner(""), explicit_spells(false),
           spells(), extra_monster_flags(0L), props()
     {
     }
@@ -694,6 +745,7 @@ public:
     std::string set_mons(const std::string &s, bool fix);
     std::string set_item(const std::string &s, bool fix);
     std::string set_mask(const std::string &s, bool garbage);
+    std::string set_height(const std::string &s, bool garbage);
 
     // Copy from the given mapspec.  If that entry is fixed,
     // it should be pre-selected prior to the copy.
@@ -701,6 +753,7 @@ public:
     void copy_mons(const keyed_mapspec &spec);
     void copy_item(const keyed_mapspec &spec);
     void copy_mask(const keyed_mapspec &spec);
+    void copy_height(const keyed_mapspec &spec);
 
     feature_spec get_feat();
     mons_list   &get_monsters();

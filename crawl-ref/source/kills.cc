@@ -13,6 +13,7 @@
 #include "mon-stuff.h"
 #include "files.h"
 #include "ghost.h"
+#include "libutil.h"
 #include "place.h"
 #include "travel.h"
 #include "tags.h"

@@ -39,6 +39,7 @@
 #include "feature.h"
 #include "files.h"
 #include "godabil.h"
+#include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"

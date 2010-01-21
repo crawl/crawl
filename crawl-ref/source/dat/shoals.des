@@ -100,8 +100,9 @@ KMONS:  1 = patrolling kraken
 KFEAT:  1 = deep_water
 KITEM:  1 = star_item, star_item, star_item, star_item, star_item
 KPROP:  1Wgw. = no_tide
+FHEIGHT: gw1 = 40
 MARKER: 1 = lua:MonPropsMarker:new {ancient_kraken="ancient_kraken"}
-MARKER: 1 = lua:portal_desc { water_marker = 1 }
+MARKER: 1 = lua:portal_desc { water_marker = 1, tide_seed = 1 }
 MARKER: W = lua:portal_desc { water_marker = 1 }
 MARKER: w = lua:portal_desc { water_marker = 1 }
 MARKER: . = lua:portal_desc { water_marker = 1 }
@@ -109,13 +110,16 @@ SUBST:  g = WWw, X = ccc., x = c
 {{
 -- When the kraken dies, the tides will control the water, so the items will be accessible!
 function kraken_death (data, triggerable, triggerer, marker, ev)
-    crawl.mpr("The surface of the water vibrates, and then calms...", "warning")
+    crawl.mpr("The surface of the water froths suddenly, and then rushes away.", "warning")
 
     local points = dgn.find_marker_positions_by_prop("water_marker", 1)
 
     for _, point in ipairs(points) do
         dgn.fprop_changed(point.x, point.y, "no_tide")
     end
+
+    -- Force tide effects to be applied immediately.
+    dgn.apply_tide()
 end
 
 local kraken_death_marker = TriggerableFunction:new {

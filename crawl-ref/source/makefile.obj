@@ -134,6 +134,7 @@ notes.o \
 ouch.o \
 output.o \
 overmap.o \
+pattern.o \
 place.o \
 player.o \
 quiver.o \

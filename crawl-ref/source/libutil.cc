@@ -10,6 +10,7 @@
 #include "libutil.h"
 #include "externs.h"
 #include "macro.h"
+#include "message.h"
 #include "stuff.h"
 #include "viewgeom.h"
 
@@ -27,21 +28,6 @@
     #ifdef WINMM_PLAY_SOUNDS
         #include <mmsystem.h>
     #endif
-#endif
-
-#ifdef REGEX_PCRE
-    // Statically link pcre on Windows
-    #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS)
-        #define PCRE_STATIC
-    #endif
-
-    #include <pcre.h>
-#endif
-
-#ifdef REGEX_POSIX
-    // Do we still need to include sys/types.h?
-    #include <sys/types.h>
-    #include <regex.h>
 #endif
 
 description_level_type description_type_by_name(const char *desc)
@@ -683,208 +669,73 @@ void usleep(unsigned long time)
 #endif
 
 #ifndef USE_TILE
-void cgotoxy(int x, int y, GotoRegion region)
+coord_def cgettopleft(GotoRegion region)
 {
-    ASSERT(x >= 1);
-    ASSERT(y >= 1);
     switch (region)
     {
     case GOTO_MLIST:
-        ASSERT(x <= crawl_view.mlistsz.x);
-        ASSERT(y <= crawl_view.mlistsz.y);
-        gotoxy_sys(x + crawl_view.mlistp.x - 1, y + crawl_view.mlistp.y - 1);
-        break;
+        return crawl_view.mlistp;
     case GOTO_STAT:
-        ASSERT(x <= crawl_view.hudsz.x);
-        ASSERT(y <= crawl_view.hudsz.y);
-        gotoxy_sys(x + crawl_view.hudp.x - 1, y + crawl_view.hudp.y - 1);
-        break;
+        return crawl_view.hudp;
     case GOTO_MSG:
-        ASSERT(x <= crawl_view.msgsz.x);
-        ASSERT(y <= crawl_view.msgsz.y);
-        gotoxy_sys(x + crawl_view.msgp.x - 1, y + crawl_view.msgp.y - 1);
-        break;
+        return crawl_view.msgp;
+    case GOTO_DNGN:
+        return crawl_view.viewp;
     case GOTO_CRT:
     default:
-        gotoxy_sys(x, y);
-        break;
+        return crawl_view.termp;
     }
+}
+
+coord_def cgetsize(GotoRegion region)
+{
+    switch (region)
+    {
+    case GOTO_MLIST:
+        return crawl_view.mlistsz;
+    case GOTO_STAT:
+        return crawl_view.hudsz;
+    case GOTO_MSG:
+        return crawl_view.msgsz;
+    case GOTO_DNGN:
+        return crawl_view.viewsz;
+    case GOTO_CRT:
+    default:
+        return crawl_view.termsz;
+    }
+}
+
+coord_def cgetpos(GotoRegion region)
+{
+    const coord_def where = coord_def(wherex(), wherey());
+    return (where - cgettopleft(region) + coord_def(1, 1));
+}
+
+static GotoRegion _current_region = GOTO_CRT;
+
+void cgotoxy(int x, int y, GotoRegion region)
+{
+    _current_region = region;
+    const coord_def tl = cgettopleft(region);
+    const coord_def sz = cgetsize(region);
+
+    ASSERT(x >= 1 && x <= sz.x);
+    ASSERT(y >= 1 && y <= sz.y);
+
+    gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
+}
+
+void cscroll(int n, GotoRegion region)
+{
+    // only implemented for the message window right now
+    ASSERT(region == GOTO_MSG);
+    scroll_message_window(n);
 }
 
 GotoRegion get_cursor_region()
 {
-    return (GOTO_CRT);
+    return (_current_region);
 }
-#endif
-///////////////////////////////////////////////////////////////////////
-// Pattern matching
-
-inline int pm_lower(int ch, bool icase)
-{
-    return icase? tolower(ch) : ch;
-}
-
-// Determines whether the pattern specified by 'pattern' matches the given
-// text. A pattern is a simple glob, with the traditional * and ? wildcards.
-static bool glob_match( const char *pattern, const char *text, bool icase )
-{
-    char p, t;
-    bool special;
-
-    while (true)
-    {
-        p = pm_lower(*pattern++, icase);
-        t = pm_lower(*text++, icase);
-        special = true;
-
-        if (!p)
-            return (t == 0);
-
-        if (p == '\\' && *pattern)
-        {
-            p       = pm_lower(*pattern++, icase);
-            special = false;
-        }
-
-        if (p == '*' && special)
-        {
-            // Try to match exactly at the current text position...
-            if (!*pattern || glob_match(pattern, text - 1, icase))
-                return (true);
-
-            // Or skip one character in the text and try the wildcard match
-            // again. If this is the end of the text, the match has failed.
-            return (t ? glob_match(pattern - 1, text, icase) : false);
-        }
-        else if (!t || p != t && (p != '?' || !special))
-            return (false);
-    }
-}
-
-////////////////////////////////////////////////////////////////////
-// Basic glob (always available)
-
-struct glob_info
-{
-    std::string s;
-    bool ignore_case;
-};
-
-void *compile_glob_pattern(const char *pattern, bool icase)
-{
-    // If we're using simple globs, we need to box the pattern with '*'
-    std::string s = std::string("*") + pattern + "*";
-    glob_info *gi = new glob_info;
-    if (gi)
-    {
-        gi->s = s;
-        gi->ignore_case = icase;
-    }
-    return gi;
-}
-
-void free_compiled_glob_pattern(void *compiled_pattern)
-{
-    delete static_cast<glob_info *>( compiled_pattern );
-}
-
-bool glob_pattern_match(void *compiled_pattern, const char *text, int length)
-{
-    glob_info *gi = static_cast<glob_info *>( compiled_pattern );
-    return glob_match(gi->s.c_str(), text, gi->ignore_case);
-}
-////////////////////////////////////////////////////////////////////
-
-#if defined(REGEX_PCRE)
-////////////////////////////////////////////////////////////////////
-// Perl Compatible Regular Expressions
-
-void *compile_pattern(const char *pattern, bool icase)
-{
-    const char *error;
-    int erroffset;
-    int flags = icase? PCRE_CASELESS : 0;
-    return pcre_compile(pattern,
-                        flags,
-                        &error,
-                        &erroffset,
-                        NULL);
-}
-
-void free_compiled_pattern(void *cp)
-{
-    if (cp)
-        pcre_free(cp);
-}
-
-bool pattern_match(void *compiled_pattern, const char *text, int length)
-{
-    int ovector[42];
-    int pcre_rc = pcre_exec(static_cast<pcre *>(compiled_pattern),
-                            NULL,
-                            text, length, 0, 0,
-                            ovector, sizeof(ovector) / sizeof(*ovector));
-    return (pcre_rc >= 0);
-}
-
-////////////////////////////////////////////////////////////////////
-#elif defined(REGEX_POSIX)
-////////////////////////////////////////////////////////////////////
-// POSIX regular expressions
-
-void *compile_pattern(const char *pattern, bool icase)
-{
-    regex_t *re = new regex_t;
-    if (!re)
-        return NULL;
-
-    int flags = REG_EXTENDED | REG_NOSUB;
-    if (icase)
-        flags |= REG_ICASE;
-    int rc = regcomp(re, pattern, flags);
-    // Nonzero return code == failure
-    if (rc)
-    {
-        delete re;
-        return NULL;
-    }
-    return re;
-}
-
-void free_compiled_pattern(void *cp)
-{
-    if (cp)
-    {
-        regex_t *re = static_cast<regex_t *>( cp );
-        regfree(re);
-        delete re;
-    }
-}
-
-bool pattern_match(void *compiled_pattern, const char *text, int length)
-{
-    regex_t *re = static_cast<regex_t *>( compiled_pattern );
-    return !regexec(re, text, 0, NULL, 0);
-}
-
-////////////////////////////////////////////////////////////////////
-#else
-
-void *compile_pattern(const char *pattern, bool icase)
-{
-    return compile_glob_pattern(pattern, icase);
-}
-
-void free_compiled_pattern(void *cp)
-{
-    free_compiled_glob_pattern(cp);
-}
-
-bool pattern_match(void *compiled_pattern, const char *text, int length)
-{
-    return glob_pattern_match(compiled_pattern, text, length);
-}
-
 #endif
 
 mouse_mode mouse_control::ms_current_mode = MOUSE_MODE_NORMAL;

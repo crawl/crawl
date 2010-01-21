@@ -58,6 +58,7 @@ extern "C" int getch();
 int getch_ck();
 int clrscr();
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
+coord_def cgetpos(GotoRegion region = GOTO_CRT);
 GotoRegion get_cursor_region();
 void delay(int ms);
 void update_screen();

@@ -18,9 +18,17 @@ public:
     {
         return data[x + y * mwidth];
     }
+    Z &operator () (coord_def c)
+    {
+        return (*this)(c.x, c.y);
+    }
     const Z &operator () (int x, int y) const
     {
         return data[x + y * mwidth];
+    }
+    const Z &operator () (coord_def c) const
+    {
+        return (*this)(c.x, c.y);
     }
 
     int width() const { return mwidth; }

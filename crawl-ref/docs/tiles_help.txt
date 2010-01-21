@@ -176,5 +176,5 @@ t                          Remove current equipped part.
 T                          Remove all equipped parts
 *                          Toggle "show equipment".
 Ctrl + E                   Set all to show "show equipment".
-Ctrl + D                   Set current doll to job defaults.
+Ctrl + D                   Set current doll to character background defaults.
 Escape                     Quit doll editing screen.

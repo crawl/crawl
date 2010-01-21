@@ -10,6 +10,7 @@
 #include "mon-info.h"
 
 #include "fight.h"
+#include "libutil.h"
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-util.h"

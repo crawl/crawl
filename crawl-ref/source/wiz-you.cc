@@ -11,6 +11,7 @@
 #include "cio.h"
 #include "dbg-util.h"
 #include "food.h"
+#include "libutil.h"
 #include "message.h"
 #include "mutation.h"
 #include "newgame.h"

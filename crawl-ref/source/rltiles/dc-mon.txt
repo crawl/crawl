@@ -161,7 +161,9 @@ spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
 %rim 0
 vapour MONS_VAPOUR /*'#'*/
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
-orb_of_destruction MONS_ORB_OF_DESTRUCTION /*'*'*/
+orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
+orb_of_destruction2
+orb_of_destruction3
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %sdir dc-mon/undead

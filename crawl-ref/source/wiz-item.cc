@@ -175,7 +175,7 @@ void wizard_create_spec_object()
 
         if (mon >= MONS_DRACONIAN_CALLER && mon <= MONS_DRACONIAN_SCORCHER)
         {
-            mpr("You can't make a draconian corpse by its job.");
+            mpr("You can't make a draconian corpse by its background.");
             mon = MONS_DRACONIAN;
         }
 

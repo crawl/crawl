@@ -21,8 +21,8 @@
 #include "defines.h"
 #include "enum.h"
 #include "fixedarray.h"
-#include "libutil.h"
 #include "mpr.h"
+#include "pattern.h"
 #include "store.h"
 
 #ifdef USE_TILE

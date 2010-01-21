@@ -23,6 +23,7 @@
 #include "items.h"
 #include "itemprop.h"
 #include "kills.h"
+#include "libutil.h"
 #include "macro.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -949,7 +950,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_ORB_OF_FIRE:
         return TILEP_MONS_ORB_OF_FIRE;
     case MONS_ORB_OF_DESTRUCTION:
-        return TILEP_MONS_ORB_OF_DESTRUCTION;
+        // Pick a random tile.
+        return TILEP_MONS_ORB_OF_DESTRUCTION
+               + random2(tile_player_count(TILEP_MONS_ORB_OF_DESTRUCTION));
 
     // other symbols
     case MONS_VAPOUR:
@@ -2828,6 +2831,12 @@ static int _tileidx_cloud(cloud_struct cl)
                 ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
                 break;
 
+            case CLOUD_MAGIC_TRAIL:
+                if (decay/20 > 2)
+                    dur = 3;
+                ch = TILE_CLOUD_MAGIC_TRAIL_0 + dur;
+                break;
+
             case CLOUD_GLOOM:
                 ch = TILE_CLOUD_GLOOM;
                 break;
@@ -4052,6 +4061,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
     case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
     case WPN_ANKUS:             return TILEP_HAND1_MACE;
+    case WPN_HOLY_SCOURGE:      return TILEP_HAND1_HOLY_SCOURGE;
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
     case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
 

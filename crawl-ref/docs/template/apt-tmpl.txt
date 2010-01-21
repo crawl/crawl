@@ -6,7 +6,7 @@ neither explicit nor implicit. The qualitative information behind this
 sheet (i.e., which species is good at which tasks) can be obtained in
 two other, less sophisticated ways:
 - Read the species section in the manual about strengths and weaknesses.
-- Look at which combinations of species and job are recommended
+- Look at which combinations of species and background are recommended
   (lightgrey).
 
 If you consider figuring out such things yourself to be fun, stop

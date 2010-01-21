@@ -21,6 +21,7 @@
 #include "godabil.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-place.h"

@@ -16,6 +16,7 @@
 #include "directn.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "libutil.h"
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"

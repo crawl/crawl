@@ -262,8 +262,8 @@ static void _pick_random_species_and_job( bool unrestricted_only )
         for (int cl = JOB_FIGHTER; cl < NUM_JOBS; cl++)
         {
             if (is_good_combination(static_cast<species_type>(sp),
-                                     static_cast<job_type>(cl),
-                                     unrestricted_only))
+                                    static_cast<job_type>(cl),
+                                    unrestricted_only))
             {
                 job_count++;
                 if (one_chance_in(job_count))
@@ -718,9 +718,9 @@ game_start:
                             get_job(letter_to_index(Options.cls))))
         {
             end(1, false,
-                "Incompatible species and job specified in options file.");
+                "Incompatible species and background specified in options file.");
         }
-        // Repeat until valid species/job combination found.
+        // Repeat until valid species/background combination found.
         while (_choose_species() && !_choose_job());
     }
 
@@ -752,7 +752,7 @@ game_start:
             goto game_start;
     }
 
-    // New: pick name _after_ species and job choices.
+    // New: pick name _after_ species and background choices.
     if (you.your_name.empty())
     {
         clrscr();
@@ -1032,7 +1032,7 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
 
         textcolor(BROWN);
         cprintf(EOL "* - Random choice; + - Good random choice; "
-                    "Bksp - Back to species and job selection; "
+                    "Bksp - Back to species and background selection; "
                     "X - Quit" EOL);
 
         if (Options.prev_book != SBT_NO_SELECTION)
@@ -1227,7 +1227,7 @@ static bool _choose_weapon()
 
         textcolor(BROWN);
         cprintf(EOL "* - Random choice; + - Good random choice; "
-                    "Bksp - Back to species and job selection; "
+                    "Bksp - Back to species and background selection; "
                     "X - Quit" EOL);
 
         if (prevmatch || Options.prev_weapon == WPN_RANDOM)
@@ -1439,7 +1439,7 @@ static void _jobs_stat_init(job_type which_job)
     int hp = 0;  // HP base
     int mp = 0;  // MP base
 
-    // Note: Wanderers are correct, they're a challenging job. -- bwr
+    // Note: Wanderers are correct, they've got a challenging background. -- bwr
     switch (which_job)
     {
     case JOB_FIGHTER:           s =  8; i =  0; d =  4; hp = 15; mp = 0; break;
@@ -2711,7 +2711,7 @@ static void _create_wanderer(void)
     _wanderer_cover_equip_holes(equip_slot);
 }
 
-// choose_species returns true if the player should also pick a job.
+// choose_species returns true if the player should also pick a background.
 // This is done because of the '!' option which will pick a random
 // character, obviating the necessity of choosing a class.
 bool _choose_species()
@@ -2824,14 +2824,14 @@ spec_query:
         cprintf(EOL EOL);
         if (you.char_class == JOB_UNKNOWN)
         {
-            cprintf("Space - Choose job first; * - Random species" EOL
+            cprintf("Space - Choose background first; * - Random species" EOL
                     "! - Random character; # - Good random character; X - Quit"
                     EOL);
         }
         else
         {
             cprintf("* - Random; + - Good random; "
-                    "Bksp - Back to job selection; X - Quit"
+                    "Bksp - Back to background selection; X - Quit"
                     EOL);
         }
 
@@ -3021,9 +3021,9 @@ job_query:
         {
             which_job = get_job(i);
 
-            // Dim text for restricted jobs.
-            // Thief and wanderer are general challenge jobs in that there's
-            // no species that's unrestricted in combination with them.
+            // Dim text for restricted backgrounds.
+            // Thief and wanderer are general challenge backgrounds in that
+            // there's no species that's unrestricted in combination with them.
             if (you.species == SP_UNKNOWN
                    && which_job != JOB_THIEF && which_job != JOB_WANDERER
                 || you.species != SP_UNKNOWN
@@ -3066,8 +3066,8 @@ job_query:
         if (you.species == SP_UNKNOWN)
         {
             cprintf(EOL
-                    "Space - Choose species first; * - Random job; "
-                    "+ - Good random job" EOL
+                    "Space - Choose species first; * - Random background; "
+                    "+ - Good random background" EOL
                     "! - Random character; # - Good random character; X - Quit"
                     EOL);
         }
@@ -3380,7 +3380,7 @@ static bool _choose_wand()
 
         textcolor(BROWN);
         cprintf(EOL "* - Random choice; "
-                    "Bksp - Back to species and job selection; "
+                    "Bksp - Back to species and background selection; "
                     "X - Quit" EOL);
 
         if (prevmatch || Options.prev_wand == SWT_RANDOM)
@@ -3701,7 +3701,7 @@ bool _give_items_skills()
 
                 textcolor( BROWN );
                 cprintf(EOL "* - Random choice; + - Good random choice" EOL
-                            "Bksp - Back to species and job selection; "
+                            "Bksp - Back to species and background selection; "
                             "X - Quit" EOL);
 
                 if (religion_restriction(Options.prev_pr, ng) == CC_BANNED)
@@ -3882,7 +3882,7 @@ bool _give_items_skills()
 
             textcolor( BROWN );
             cprintf(EOL "* - Random choice; + - Good random choice" EOL
-                        "Bksp - Back to species and job selection; "
+                        "Bksp - Back to species and background selection; "
                         "X - Quit" EOL);
 
             if (Options.prev_ck != GOD_NO_GOD)
@@ -4073,7 +4073,7 @@ bool _give_items_skills()
 
             textcolor( BROWN );
             cprintf(EOL "* - Random choice; + - Good random choice " EOL
-                        "Bksp - Back to species and job selection; "
+                        "Bksp - Back to species and background selection; "
                         "X - Quit" EOL);
 
             if (Options.prev_dk != DK_NO_SELECTION)

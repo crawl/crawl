@@ -11,6 +11,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "files.h"
+#include "libutil.h"
 #include "macro.h"
 #include "map_knowledge.h"
 #include "message.h"

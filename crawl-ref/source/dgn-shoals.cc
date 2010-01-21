@@ -12,6 +12,8 @@
 #include "flood_find.h"
 #include "fprop.h"
 #include "items.h"
+#include "libutil.h"
+#include "mapmark.h"
 #include "maps.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -702,6 +704,10 @@ void shoals_postprocess_level()
         if (!(dgn_Map_Mask(c) & MMT_VAULT))
             continue;
 
+        // Don't mess with tide immune squares at all.
+        if (is_tide_immune(c))
+            continue;
+
         const dungeon_feature_type feat(grd(c));
         if (!_shoals_tide_susceptible_feat(feat))
             continue;
@@ -887,6 +893,11 @@ static int _shoals_tide_at(coord_def pos, int base_tide)
     return (base_tide + std::max(0, tide_called_peak - distance * 3));
 }
 
+static std::vector<coord_def> _shoals_extra_tide_seeds()
+{
+    return find_marker_positions_by_prop("tide_seed");
+}
+
 static void _shoals_apply_tide(int tide)
 {
     std::vector<coord_def> pages[2];
@@ -897,6 +908,11 @@ static void _shoals_apply_tide(int tide)
     pages[current_page].push_back(coord_def(GXM - 2, 1));
     pages[current_page].push_back(coord_def(1, GYM - 2));
     pages[current_page].push_back(coord_def(GXM - 2, GYM - 2));
+
+    // Find any extra seeds -- markers with tide_seed="y".
+    const std::vector<coord_def> extra_seeds(_shoals_extra_tide_seeds());
+    pages[current_page].insert(pages[current_page].end(),
+                               extra_seeds.begin(), extra_seeds.end());
 
     FixedArray<bool, GXM, GYM> seen_points(false);
 

@@ -789,6 +789,32 @@ MONS:     (list of monsters)
           source/dat/database/monspell.txt.
 
 
+FHEIGHT:  xyz = 40
+
+          FHEIGHT sets the height in the level's heightmap for any
+          specified features. If the level does not already have a heightmap,
+          a heightmap will be attached to it when the dungeon builder
+          sees FHEIGHT used.
+
+          Heightmaps are currently only useful in the Shoals, as a means of
+          influencing how the tide interacts with your vault. The Shoals
+          heightmap uses these heights when the tide's height is 0, i.e.
+          at neutral tide:
+               >= 0     Floor
+               >= -14   Shallow water
+               <= -15   Deep water
+
+          In general, you do not need to use explicit FHEIGHT lines in
+          your vaults. The Shoals dungeon builder will automatically
+          assign suitable heights to features in vaults. FHEIGHT is
+          primarily useful to override the default heights of
+          features. If you use FHEIGHT to set nonstandard heights for
+          features such as deep water (if you want deep water at
+          heights > 0, for instance), you must also use KPROP to set
+          the no_tide flag on that square, or the Shoals level builder
+          will undo your height changes.
+
+
 COLOUR:   . = green / blue:5 / red / none
           COLOUR: allows you to attach explicit colours to any feature.
           Explicit colours will override the default colour for that
@@ -1052,6 +1078,7 @@ KPROP:    x = bloody
              you back!". Should be used sparingly.
           * "no_tele_into": Combines the above no_rtele_into and no_ctele_into
              in one flag, and disallows both random and controlled teleports.
+          * "no_tide": Shoals tides will not affect this square.
 
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the

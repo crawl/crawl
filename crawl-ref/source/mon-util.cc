@@ -21,6 +21,7 @@
 #include "goditem.h"
 #include "itemname.h"
 #include "kills.h"
+#include "libutil.h"
 #include "mislead.h"
 #include "mon-behv.h"
 #include "mon-iter.h"

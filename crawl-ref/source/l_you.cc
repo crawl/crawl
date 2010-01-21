@@ -10,6 +10,7 @@
 #include "delay.h"
 #include "food.h"
 #include "initfile.h"
+#include "libutil.h"
 #include "los.h"
 #include "mapmark.h"
 #include "mon-util.h"

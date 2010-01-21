@@ -19,6 +19,7 @@
 #include "env.h"
 #include "it_use2.h"
 #include "kills.h"
+#include "libutil.h"
 #include "misc.h"
 #include "mon-place.h"
 #include "mgen_data.h"

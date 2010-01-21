@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "dungeon.h"
 #include "env.h"
+#include "libutil.h"
 #include "mon-stuff.h"
 #include "religion.h"
 #include "shopping.h"

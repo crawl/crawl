@@ -6,6 +6,7 @@
 #include "delay.h"
 #include "dlua.h"
 #include "initfile.h"
+#include "libutil.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 

@@ -21,6 +21,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "dgn-height.h"
 #include "exclude.h"
 #include "files.h"
 #include "initfile.h"
@@ -500,6 +501,15 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             if (property >= FPROP_BLOODY)
                  // Over-ride whatever property is already there.
                 env.pgrid(gc) |= property;
+
+            const int fheight = (*overlay)(x, y).height;
+            if (fheight != INVALID_HEIGHT)
+            {
+                if (!env.heightmap.get())
+                    dgn_initialise_heightmap();
+                dgn_height_at(gc) = fheight;
+            }
+
 #ifdef USE_TILE
             int floor = (*overlay)(x, y).floortile;
             if (floor)
@@ -708,6 +718,15 @@ bool map_fprop_list::parse(const std::string &fp, int weight)
     return true;
 }
 
+bool map_featheight_list::parse(const std::string &fp, int weight)
+{
+    const int thisheight = strict_aton(fp.c_str(), INVALID_HEIGHT);
+    if (thisheight == INVALID_HEIGHT)
+        return (false);
+    push_back(map_weighted_fheight(thisheight, weight));
+    return (true);
+}
+
 std::string map_lines::add_fproperty(const std::string &sub)
 {
     std::string s = trimmed_string(sub);
@@ -730,6 +749,31 @@ std::string map_lines::add_fproperty(const std::string &sub)
 
     fprop_spec spec(key, sep == ':', fprops);
     overlay_fprops(spec);
+
+    return ("");
+}
+
+std::string map_lines::add_fheight(const std::string &sub)
+{
+    std::string s = trimmed_string(sub);
+    if (s.empty())
+        return ("");
+
+    int sep = 0;
+    std::string key;
+    std::string substitute;
+
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
+    if (!err.empty())
+        return (err);
+
+    map_featheight_list fheights;
+    err = parse_weighted_str(substitute, fheights);
+    if (!err.empty())
+        return (err);
+
+    fheight_spec spec(key, sep == ':', fheights);
+    overlay_fheights(spec);
 
     return ("");
 }
@@ -979,37 +1023,31 @@ void map_lines::subst(subst_spec &spec)
         subst(lines[y], spec);
 }
 
-void map_lines::overlay_colours(colour_spec &spec)
+void map_lines::bind_overlay()
 {
     if (!overlay.get())
         overlay.reset(new overlay_matrix(width(), height()));
+}
 
-    for (int y = 0, ysize = lines.size(); y < ysize; ++y)
-    {
-        std::string::size_type pos = 0;
-        while ((pos = lines[y].find_first_of(spec.key, pos)) != std::string::npos)
-        {
-            (*overlay)(pos, y).colour = spec.get_colour();
-            ++pos;
-        }
-    }
+void map_lines::overlay_colours(colour_spec &spec)
+{
+    bind_overlay();
+    for (iterator mi(*this, spec.key); mi; ++mi)
+        (*overlay)(*mi).colour = spec.get_colour();
 }
 
 void map_lines::overlay_fprops(fprop_spec &spec)
 {
-    if (!overlay.get())
-        overlay.reset(new overlay_matrix(width(), height()));
+    bind_overlay();
+    for (iterator mi(*this, spec.key); mi; ++mi)
+        (*overlay)(*mi).property |= spec.get_property();
+}
 
-    for (int y = 0, ysize = lines.size(); y < ysize; ++y)
-    {
-        std::string::size_type pos = 0;
-        while ((pos = lines[y].find_first_of(spec.key, pos))
-               != std::string::npos)
-        {
-            (*overlay)(pos, y).property |= spec.get_property();
-            ++pos;
-        }
-    }
+void map_lines::overlay_fheights(fheight_spec &spec)
+{
+    bind_overlay();
+    for (iterator mi(*this, spec.key); mi; ++mi)
+        (*overlay)(*mi).height = spec.get_height();
 }
 
 void map_lines::fill_mask_matrix(const std::string &glyphs,
@@ -1574,7 +1612,6 @@ std::string map_lines::add_key_mask(const std::string &s)
                          &keyed_mapspec::copy_mask);
 }
 
-
 std::vector<coord_def> map_lines::find_glyph(int gly) const
 {
     std::vector<coord_def> points;
@@ -1818,6 +1855,59 @@ int tile_spec::get_tile()
 }
 
 #endif
+
+//////////////////////////////////////////////////////////////////////////
+// map_lines::iterator
+
+map_lines::iterator::iterator(map_lines &_maplines, const std::string &_key)
+    : maplines(_maplines), key(_key), p(0, 0)
+{
+    advance();
+}
+
+void map_lines::iterator::advance()
+{
+    const int height = maplines.height();
+    while (p.y < height)
+    {
+        std::string::size_type place = p.x;
+        if (place < maplines.lines[p.y].length())
+        {
+            place = maplines.lines[p.y].find_first_of(key, place);
+            if (place != std::string::npos)
+            {
+                p.x = place;
+                break;
+            }
+        }
+        ++p.y;
+        p.x = 0;
+    }
+}
+
+map_lines::iterator::operator bool() const
+{
+    return (p.y < maplines.height());
+}
+
+coord_def map_lines::iterator::operator *() const
+{
+    return (p);
+}
+
+coord_def map_lines::iterator::operator ++ ()
+{
+    p.x++;
+    advance();
+    return **this;
+}
+
+coord_def map_lines::iterator::operator ++ (int)
+{
+    coord_def here(**this);
+    ++*this;
+    return (here);
+}
 
 ///////////////////////////////////////////////
 // dlua_set_map
@@ -4308,6 +4398,24 @@ unsigned long fprop_spec::get_property()
             chosen = fprops[i].first;
     if (fix)
         fixed_prop = chosen;
+    return (chosen);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// fheight_spec
+
+int fheight_spec::get_height()
+{
+    if (fixed_height != INVALID_HEIGHT)
+        return (fixed_height);
+
+    int chosen = INVALID_HEIGHT;
+    int cweight = 0;
+    for (int i = 0, size = fheights.size(); i < size; ++i)
+        if (x_chance_in_y(fheights[i].second, cweight += fheights[i].second))
+            chosen = fheights[i].first;
+    if (fix)
+        fixed_height = chosen;
     return (chosen);
 }
 

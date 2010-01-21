@@ -30,6 +30,7 @@
 #include "delay.h"
 #include "enum.h"
 #include "externs.h"
+#include "libutil.h"
 #include "options.h"
 #include "files.h"
 #include "state.h"
@@ -149,16 +150,14 @@ static void setup_colour_pairs( void )
     short i, j;
 
     for (i = 0; i < 8; i++)
-    {
         for (j = 0; j < 8; j++)
         {
             if (( i > 0 ) || ( j > 0 ))
                 init_pair(i * 8 + j, j, i);
         }
-    }
 
-    init_pair(63, COLOR_BLACK, Options.background);
-}          // end setup_colour_pairs()
+    init_pair(63, COLOR_BLACK, Options.background_colour);
+}
 
 #ifdef UNICODE_GLYPHS
 static std::string unix_glyph2string(unsigned gly)
@@ -819,7 +818,8 @@ static int curs_fg_attr(int col)
 
     FG_COL = col & 0x00ff;
     fg = translate_colour( macro_colour( FG_COL ) );
-    bg = translate_colour( (BG_COL == BLACK) ? Options.background : BG_COL );
+    bg = translate_colour( BG_COL == BLACK ? Options.background_colour
+                                           : BG_COL );
 
     // calculate which curses flags we need...
     unsigned int flags = 0;
@@ -881,7 +881,8 @@ static int curs_bg_attr(int col)
 
     BG_COL = col & 0x00ff;
     fg = translate_colour( macro_colour( FG_COL ) );
-    bg = translate_colour( (BG_COL == BLACK) ? Options.background : BG_COL );
+    bg = translate_colour( BG_COL == BLACK ? Options.background_colour
+                                           : BG_COL );
 
     unsigned int flags = 0;
 

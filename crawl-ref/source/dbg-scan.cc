@@ -15,6 +15,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "itemname.h"
+#include "libutil.h"
 #include "message.h"
 #include "mon-util.h"
 #include "state.h"

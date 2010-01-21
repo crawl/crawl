@@ -23,6 +23,7 @@
 #include "env.h"
 #include "initfile.h"
 #include "jobs.h"
+#include "libutil.h"
 #include "mapmark.h"
 #include "message.h"
 #include "monster.h"

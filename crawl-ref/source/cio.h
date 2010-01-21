@@ -252,7 +252,8 @@ protected:
     char            *buffer;
     size_t          bufsz;
     input_history   *history;
-    int             start_x, start_y;
+    GotoRegion      region;
+    coord_def       start;
     keyproc         keyfn;
     int             wrapcol;
 

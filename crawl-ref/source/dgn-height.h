@@ -1,8 +1,6 @@
 #ifndef DGN_HEIGHT_H
 #define DGN_HEIGHT_H
 
-#include "AppHdr.h"
-#include "externs.h"
 #include "env.h"
 #include "fixedarray.h"
 #include <vector>
