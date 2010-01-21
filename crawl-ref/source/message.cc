@@ -241,6 +241,7 @@ class message_window
 
     void more()
     {
+        show();
         int last_row = crawl_view.msgsz.y;
         cgotoxy(1, last_row, GOTO_MSG);
         textcolor(LIGHTGREY);
