@@ -177,19 +177,21 @@ class message_window
         return (!more_enabled() || use_first_col());
     }
 
+    int width() const
+    {
+        return crawl_view.msgsz.x;
+    }
+
     int out_width() const
     {
-        int w = crawl_view.msgsz.x;
-        if (use_first_col())
-            w--;
-        return w;
+        return (width() - (use_first_col() ? 1 : 0));
     }
 
     void out_line(const formatted_string& line, int n) const
     {
         cgotoxy(1, n + 1, GOTO_MSG);
         line.display();
-        cprintf("%*s", out_width() - line.length(), "");
+        cprintf("%*s", width() - line.length(), "");
     }
 
     // Place cursor at end of last non-empty line to handle prompts.
