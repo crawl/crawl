@@ -12,3 +12,11 @@ function echoall(...)
 end
 
 __echo = echoall
+
+-- A wrapper for the low-level sequence of commands needed to produce
+-- message output.
+function crawl.message(message, channel)
+  crawl.mpr(message, channel)
+  crawl.flush_prev_message()
+  crawl.delay(0)
+end

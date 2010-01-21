@@ -1052,7 +1052,8 @@ int wherey()
 void delay( unsigned long time )
 {
     refresh();
-    usleep( time * 1000 );
+    if (time)
+        usleep( time * 1000 );
 }
 
 

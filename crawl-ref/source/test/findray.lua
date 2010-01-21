@@ -4,8 +4,6 @@ local FAILMAP = 'rayfail.map'
 local checks = 0
 
 local function test_findray()
-  -- Clear messages to prevent them accumulating and forcing a --more--
-  crawl.mesclr()
   -- Send the player to a random spot on the level.
   you.random_teleport()
 
@@ -67,7 +65,7 @@ end
 
 local function run_findray_tests(depth, nlevels, tests_per_level)
   local place = "D:" .. depth
-  crawl.mpr("Running find_ray tests on " .. place)
+  crawl.message("Running find_ray tests on " .. place)
   debug.goto_place(place)
 
   for lev_i = 1, nlevels do

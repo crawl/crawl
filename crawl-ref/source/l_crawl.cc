@@ -91,7 +91,9 @@ static int crawl_formatted_mpr(lua_State *ls)
     return (0);
 }
 
+LUAWRAP(crawl_delay, delay(luaL_checkint(ls, 1)))
 LUAWRAP(crawl_more, more())
+LUAWRAP(crawl_flush_prev_message, flush_prev_message())
 LUAWRAP(crawl_mesclr, mesclr())
 LUAWRAP(crawl_redraw_screen, redraw_screen())
 
@@ -609,7 +611,9 @@ static const struct luaL_reg crawl_clib[] =
     { "formatted_mpr",  crawl_formatted_mpr },
     { "more",           crawl_more },
     { "more_autoclear", crawl_set_more_autoclear },
+    { "flush_prev_message", crawl_flush_prev_message },
     { "mesclr",         crawl_mesclr },
+    { "delay",          crawl_delay },
     { "random2",        crawl_random2 },
     { "one_chance_in",  crawl_one_chance_in },
     { "random2avg"   ,  crawl_random2avg },

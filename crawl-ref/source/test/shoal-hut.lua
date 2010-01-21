@@ -88,8 +88,7 @@ end
 local function test_shoal_huts(nlevels)
   debug.goto_place("Shoal:$")
   for i = 1, nlevels do
-    crawl.mesclr()
-    crawl.mpr("Shoal test " .. i .. " of " .. nlevels)
+    crawl.message("Shoal test " .. i .. " of " .. nlevels)
     test.regenerate_level()
     verify_stair_connectivity()
     verify_hut_connectivity()
