@@ -1387,7 +1387,7 @@ static int _place_monster_aux(const mgen_data &mg,
         blame_prefix = "summoned by ";
 
         if (mg.summoner != NULL && mg.summoner->alive()
-            && mg.summoner->atype() == ACT_MONSTER 
+            && mg.summoner->atype() == ACT_MONSTER
             && static_cast<const monsters*>(mg.summoner)->type == MONS_MARA)
         {
                 blame_prefix = "woven by ";

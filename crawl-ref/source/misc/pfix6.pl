@@ -7,7 +7,7 @@ use Term::ANSIColor qw(:constants);
 
 use Getopt::Std;
 local( $opt_p, $opt_P );
-getopts( "p:P:" );  
+getopts( "p:P:" );
 
 $light_pattern = $opt_p || "";
 $heavy_pattern = $opt_P || "\\b";
@@ -41,7 +41,7 @@ while( <DATA> )
     s/,//;   # usually a comma
 
     # possibly a number on the line
-    ( $term, undef, $i ) = split; 
+    ( $term, undef, $i ) = split;
     $string = $term;
 
     if ( defined $i && $i =~ m/^\d+$/ )
@@ -81,7 +81,7 @@ foreach $k ( @key )
   $lk = length $k;
   $klen = $lk if $lk > $klen;
 }
-    
+
 $klen += 1;
 $klen = 20 if $klen > 20;
 
@@ -128,7 +128,7 @@ LINE:
     $target = $buff[ $line ];
     %poslist = ();
 
-    while ( $target =~ m/$heavy_pattern(\d+)\b/go ) 
+    while ( $target =~ m/$heavy_pattern(\d+)\b/go )
     {
 
       $number = $1;
@@ -140,16 +140,16 @@ LINE:
 
       next if $pre =~ m#[\-+*/%] ?$#;
 
-      # skip some unlikely numbers 
+      # skip some unlikely numbers
       # you[0]
       next if $number eq "0" && $pre =~ m/you ?\[ ?$/;
       # arithmetic
       next if $number eq "1" && $pre =~ m/\D-$/;
 
-         
+
       $poslist{ $pos } = $number;
     }
-      
+
     $longer = 0;
     foreach $pos ( sort { $a <=> $b } keys %poslist )
     {
@@ -191,7 +191,7 @@ LINE:
         ReadMode('cbreak');
         $ans = ReadKey(0);
         ReadMode('normal');
- 
+
         print $ans;
       }
       else
@@ -230,7 +230,7 @@ LINE:
         $more = <STDIN>;
         print $more;
         chop $more;
-       
+
         $cmd = substr $more, 0, 1;
         if ( $cmd eq "u" )
         {
@@ -238,9 +238,9 @@ LINE:
           if ( @lines_changed )
           {
             $line_changed = pop @lines_changed;
-          
+
             $buff[ $line_changed ] = $save_buff[ $line_changed ];
-            $line = $line_changed; 
+            $line = $line_changed;
             redo LINE;
           }
           else

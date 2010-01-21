@@ -38,7 +38,7 @@ local function test_findray()
       dgn.grid(x, y, "floor_special")
       debug.dump_map(FAILMAP)
       assert(false, "Can't find ray to " .. p ..
-                    " although it's in unobstructed view. (#" .. 
+                    " although it's in unobstructed view. (#" ..
                     checks .. ")")
     end
     local rx, ry = ray:pos()

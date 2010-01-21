@@ -1,4 +1,4 @@
-%name gui 
+%name gui
 %prefix TILEG
 %startvalue 0
 

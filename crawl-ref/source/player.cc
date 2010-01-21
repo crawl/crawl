@@ -293,7 +293,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 need_doll_update = true;
 #endif
             }
-            else if (you.species == SP_MERFOLK && !feat_is_water(new_grid) 
+            else if (you.species == SP_MERFOLK && !feat_is_water(new_grid)
                      && feat_is_water(old_grid)
                      && !is_feat_dangerous(new_grid))
             {

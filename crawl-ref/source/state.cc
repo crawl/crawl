@@ -39,7 +39,6 @@ game_state::game_state()
       mlist_targetting(false),
 #endif
       darken_range(-1)
-     
 {
     reset_cmd_repeat();
     reset_cmd_again();

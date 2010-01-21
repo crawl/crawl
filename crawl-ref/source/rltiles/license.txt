@@ -1,10 +1,10 @@
-Part of the graphic tiles used in this program are from the public 
+Part of the graphic tiles used in this program are from the public
 domain roguelike tileset "RLTiles". Some of the tiles have been modified.
 
 You can find the original tileset at:
 http://rltiles.sf.net
 
-Part of the source code used in this program is from the public 
+Part of the source code used in this program is from the public
 domain program "RLTiles". Some of the source code has been modified.
 
 You can find the original source code at:

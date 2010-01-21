@@ -472,7 +472,7 @@ class feature_list
         if (feat == DNGN_TRAP_NATURAL)
             return G_DOWN;
         if (feat_is_altar(feat) || feat == DNGN_ENTER_SHOP)
-            return G_OTHER; 
+            return G_OTHER;
         if (get_feature_dchar(feat) == DCHAR_ARCH)
             return G_PORTAL;
         return G_NONE;

@@ -33,7 +33,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     int mtarg = mgrd(beam->target);
     if (beam->target == you.pos())
         mtarg = MHITYOU;
-    
+
     int mind = -1;
     for(int i=0; i < 10 && mind == -1; i++)
     {
