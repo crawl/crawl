@@ -1,0 +1,43 @@
+##############################################################################
+# The Hall of Blades
+##############################################################################
+
+NAME:    hall_of_blades
+PLACE:   Blade
+ORIENT:  north
+TAGS:    no_rotate no_dump
+MONS:    dancing weapon
+SHUFFLE: cv
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
+xxxccc....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxx
+xxxcc......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxx
+xxxc..............................................................cxxx
+xxxc..........c..............c..............c..............c......cxxx
+xxxc.........ccc............ccc............ccc............ccc.....cxxx
+xxxc........ccccc..........ccccc..........ccccc..........ccccc....cxxx
+xxxc.........ccc............ccc............ccc...........ccccc....cxxx
+xxxc..........c..............c..............c.............ccc.....cxxx
+xxxc......................................................ccc.....cxxx
+xxxc.......................................................c......cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc.......................................................c......cxxx
+xxxc......................................................ccc.....cxxx
+xxxc..........c..............c..............c.............ccc.....cxxx
+xxxc.........ccc............ccc............ccc...........ccccc....cxxx
+xxxc........ccccc..........ccccc..........ccccc..........ccccc....cxxx
+xxxc.........ccc............ccc............ccc............ccc.....cxxx
+xxxc..........c..............c..............c..............c......cxxx
+xxxc..............................................................cxxx
+xxxc.......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxx
+xxxcc.....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxx
+xxxccc...ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
+xxxcccc.............................cccccccccccccccccccccccccccccccxxx
+xxxcccccccccccccccccccccccccccccc.@.cccccccccccccccccccccccccccccccxxx
+ENDMAP
