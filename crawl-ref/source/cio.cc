@@ -658,13 +658,11 @@ int line_reader::process_key(int ch)
             }
             *cur++ = (char) ch;
             ++length;
+            buffer[length] = 0;
             ++pos;
             putch(ch);
             if (pos < length)
-            {
-                buffer[length] = 0;
-                wrapcprintf( wrapcol, "%s", cur );
-            }
+                wrapcprintf(wrapcol, "%s", cur);
             cursorto(pos);
         }
         break;
