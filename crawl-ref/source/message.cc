@@ -297,8 +297,11 @@ public:
 
     void scroll(int n)
     {
-        for (int i = 0; i < height() - n; ++i)
+        int i;
+        for (i = 0; i < height() - n; ++i)
             lines[i] = lines[i + n];
+        for (; i < height(); ++i)
+            lines[i].clear();
         next_line -= n;
         turn_line -= n;
     }
