@@ -111,9 +111,9 @@ end
 
 function orc_warrior_with_reaching(e)
   e.mons("orc warrior ; \
-          spear w:5 ego:reaching    | spear w:5 ego:reaching race:orcish |\ 
+          spear w:5 ego:reaching    | spear w:5 ego:reaching race:orcish |\
           trident w:5 ego:reaching  | trident w:5 ego:reaching race:orcish |\
-          halberd ego:reaching      | halberd ego:reaching race:orcish |\ 
+          halberd ego:reaching      | halberd ego:reaching race:orcish |\
           glaive ego:reaching       | glaive ego:reaching race:orcish |\
           bardiche w:1 ego:reaching | bardiche w:1 ego:reaching race:orcish .\
           scale mail race:orcish    | scale mail |\
@@ -127,7 +127,7 @@ end
 function orc_knight_with_reaching(e)
   e.mons("orc knight ; \
           trident w:5 ego:reaching  | trident w:5 ego:reaching race:orcish |\
-          halberd ego:reaching      | halberd ego:reaching race:orcish |\ 
+          halberd ego:reaching      | halberd ego:reaching race:orcish |\
           glaive ego:reaching       | glaive ego:reaching race:orcish |\
           bardiche w:1 ego:reaching | bardiche w:1 ego:reaching race:orcish .\
           ring mail race:orcish     | ring mail |\
@@ -140,7 +140,7 @@ end
 -- defined but not used, since the depth for the current entry vaults is 7-16
 function orc_warlord_with_reaching(e)
   e.mons("orc warlord ; \
-          halberd ego:reaching      | halberd ego:reaching race:orcish |\ 
+          halberd ego:reaching      | halberd ego:reaching race:orcish |\
           glaive ego:reaching       | glaive ego:reaching race:orcish |\
           bardiche w:1 ego:reaching | bardiche w:1 ego:reaching race:orcish . \
           splint mail race:orcish   | splint mail |\

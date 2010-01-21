@@ -2,13 +2,13 @@
 " Language:	Dungeon Crawl level design (.des) files.
 " Maintainer:	Darshan Shaligram <scintilla@gmail.com>
 " Last Change:	2007 Jun 28
-" Remark:	Basic Vim syntax highlighting for Dungeon Crawl Stone Soup 
+" Remark:	Basic Vim syntax highlighting for Dungeon Crawl Stone Soup
 "               level design (.des) files.
 "
 " How to use this:
 " * Put levdes.vim (this file) under ~/.vim/syntax (or similar directory for
 "   your system - usually C:\Program Files\Vim\vimfiles\syntax on Windows).
-" * In your .vimrc, add this line: 
+" * In your .vimrc, add this line:
 "     au BufRead,BufNewFile *.des set syntax=levdes
 " Thereafter, any .des files you edit in (g)vim will use syntax highlighting.
 
@@ -62,7 +62,7 @@ syn keyword desOrientation D: contained
 syn match desComment "^\s*#.*$"
 
 syn match desEntry "\<\w*_entry\>"
-" 'transparent' is a Vim syntax keyword??? 
+" 'transparent' is a Vim syntax keyword???
 syn match desTransparent "transparent"
 syn match desRange "\d*-\d*"
 syn match desNumber "\s\d*"

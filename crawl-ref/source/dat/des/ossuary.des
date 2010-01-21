@@ -152,14 +152,14 @@ NSUBST: = = 1:= / *:c
 SUBST:  c : cx
 : ossuary_portal(_G)
 MAP
-   ...   
-  ..c..  
- ..=c=.. 
+   ...
+  ..c..
+ ..=c=..
 ..=c'c=..
 .cc'O'cc.
 ..=c'c=..
- ..=c=.. 
-  ..c..  
+ ..=c=..
+  ..c..
    ...
 ENDMAP
 
@@ -520,7 +520,7 @@ ccc cc+cc   cc''=cccccc''+''''+.x.+Xc
      c.cc  cc1'cc'cdDd.1ccccccc...ccc
      c1cc cc..cccc'cdd.cc     cc+cc
      c''cccc+cc  cc'cc+cc      cXc
-     cc''cc...cccccc=yyyccccc  ccc 
+     cc''cc...cccccc=yyyccccc  ccc
       cc'+..x..+'''+yyyyy+.1cc
        cccc...cccxcccyyyccc''cc
           cc=cc ccc cc+cc cc''ccccc
@@ -632,15 +632,15 @@ c..........<.A.<..........c
 ccccccccccccccccccccccccccc
 ENDMAP
 
-# A larger ossuary than usual: there is a corridor with some monsters (and 
+# A larger ossuary than usual: there is a corridor with some monsters (and
 # chances of wights) to get past, and then a little treasure room at the end.
 #
 # A hidden door in the treasure room leads to another corridor this one flanked
-# with a guardian mummy (a hint of what's to come) on one side, and a flying 
+# with a guardian mummy (a hint of what's to come) on one side, and a flying
 # skull on the other: the flying skull is basically an intelligent alarm trap,
 # both behind glass.
 #
-# At the end of the corridor is a second treasure room, this one also 
+# At the end of the corridor is a second treasure room, this one also
 # containing more flying skeleton alarm traps, plus guardian mummies inside
 # 3x3 rooms with secret doors.
 #
@@ -658,10 +658,10 @@ TAGS:    ossuary no_item_gen no_monster_gen
 MONS:    centaur zombie w:1 / orc zombie / hobgoblin zombie /\
          kobold zombie / snake zombie / orc skeleton / hobgoblin skeleton /\
          small snake skeleton / nothing w:5
-MONS:    wight 
+MONS:    wight
 MONS:    flying skull
 MONS:    guardian mummy / mummy w:2
-ITEM:    any scroll / any potion 
+ITEM:    any scroll / any potion
 ITEM:    any scroll / any potion / any wand w:4
 KMONS:   V = guardian mummy
 KMONS:   X = flying skull
@@ -689,7 +689,7 @@ cc.......cc
      cc.cc
      cc.cc
      cc.cc
-    cc.cc 
+    cc.cc
    cc.cc                          ccccccccccccccccc
    cc..ccc                        c...............c
     cc...cc                       c.=cc..xxx..cc=.c

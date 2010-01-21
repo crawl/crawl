@@ -46,7 +46,7 @@
 # From spells:
 #
 # Alistair's Brewery: mutated wizards, mephitic cloud generators,
-#    cupboards full of potions, confused monsters. 
+#    cupboards full of potions, confused monsters.
 # Borgnjor's Mortuary: liches, miasma clouds, potions of decay, slaves that are
 #    having their life forces drained, vampire (knights, mages).
 # Iskenderun's Mystic Bastion: purple draconians, purple wizards with mystic
@@ -356,7 +356,7 @@ function tukima_machine (data, triggerable, triggerer, marker, ev)
   end
 end
 
-local tukima_marker = TriggerableFunction:new { 
+local tukima_marker = TriggerableFunction:new {
     func = tukima_machine,
     repeated = true,
     data = {weapon_count=0},
@@ -498,7 +498,7 @@ function grow (data, triggerable, triggerer, marker, ev)
   if crawl.one_chance_in(10) then
     -- Fruit!
     for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and not feat.has_solid_floor(spot:xy()) 
+      if not feat.is_solid(spot:xy()) and not feat.has_solid_floor(spot:xy())
          and crawl.one_chance_in(3) then
         -- Do nothing.
         dgn.create_item(spot.x, spot.y, "pear / apple / choko / apricot / orange"
@@ -529,14 +529,14 @@ end
 
 local grow_marker = TriggerableFunction:new { func = grow, repeated = true }
 
-grow_marker:add_triggerer(DgnTriggerer:new { type="turn", 
+grow_marker:add_triggerer(DgnTriggerer:new { type="turn",
         delay_min=500, delay_max=800, })
 
 lua_marker("_", grow_marker)
 }}
 :           set_border_fill_type("stone_wall")
 :           wizlab_setup(_G, "Erinya's Formal Garden")
-:           dgn.set_feature_desc_short("empty arch of ancient stone", 
+:           dgn.set_feature_desc_short("empty arch of ancient stone",
 :                                      "rose-covered archway")
 :           dgn.set_feature_desc_long("empty arch of ancient stone",
 :                                "The roses look beautiful!\n")
@@ -687,7 +687,7 @@ SUBST:      d = .
 NSUBST:     X = 1=. / *=!:20 .:1
 NSUBST:     Y = 1=. / *=!:30 .:1
 NSUBST:     Z = 1=. / *=!:50 .:1
-#           For the other boxes, prepare same setup as for the 
+#           For the other boxes, prepare same setup as for the
 #           round layout (i.e. six *'s)
 SHUFFLE:    nqru
 SUBST:      e=%, f=%, g=%, h=%, i=%, j=%, k=%, l=%, m=%, n=%
@@ -724,7 +724,7 @@ KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 KITEM:      | = scroll of acquirement / scroll of enchant weapon III q:2 /\
                 scroll of blinking q:2, scroll of fog q:2, scroll of holy word q:2
 :           elseif lrnd == 1 then
-KITEM:      % = any armour 
+KITEM:      % = any armour
 KITEM:      * = any good_item armour
 KITEM:      | = cursed robe ego:resistance / cursed gold dragon armour
 :           else
@@ -839,7 +839,7 @@ ENDMAP
 # Todo: work out what happens next???
 NAME:       wizlab_alistair
 ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup 
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 # unfinished
 :           wizlab_setup(_G, "Alistair's Brewery")
 SHUFFLE:    CYHB
@@ -1052,7 +1052,7 @@ cc.JJccccuuucccccWW..8..WWcc""""""ccc""""""cc
 ccJJ.cccc.a.ccccccWWWWWWWccc""ccccccccccc""cc
 cc.dccccccuuccccccccWWWccccc"""""""""""""""cc
 ccccccccccccccccccccccccccccc"""""""""""""ccc
-ccccccccccccccccccccccccccccccccccccccccccccc 
+ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
@@ -1170,7 +1170,7 @@ end
 
 local fridge_marker = TriggerableFunction:new { func = fridge, repeated = true }
 
-fridge_marker:add_triggerer(DgnTriggerer:new { type="turn", 
+fridge_marker:add_triggerer(DgnTriggerer:new { type="turn",
         delay_min=500, delay_max=800, })
 
 lua_marker("Q", fridge_marker)

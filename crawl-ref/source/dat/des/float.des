@@ -679,7 +679,7 @@ MARKER: F = lua:fog_machine { \
 MONS:   death yak w:5 / sheep w:3 / yak w:7
 MONS:   generate_awake human ; knife | hand axe
 SUBST:  F=d, 2=2.
-ITEM:   meat ration w:5 / sausage / nothing 
+ITEM:   meat ration w:5 / sausage / nothing
 MAP
  cccccc       ccccccc
  cddddcxxxxxxxxcddddc
@@ -710,7 +710,7 @@ ORIENT:  north
 TAGS:    no_monster_gen
 DEPTH:   D:12-20, Elf, Vault
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
-      ego:flame . bolt q:30 
+      ego:flame . bolt q:30
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
       ego:frost . bolt q:30
 MONS: statue name:warrior name_adjective tile:mons_statue_axe ; battleaxe \
@@ -831,7 +831,7 @@ MAP
   xX%?Wwwww_wwwwW=|Xx
   xXXXxWwww_wwwWxXXXx
   xxxXxxWWw_wWWxxXxxx
-   xXXxxxx._.xxxxXXx 
+   xXXxxxx._.xxxxXXx
    xxXxxxx---xxxxXxx
     xX...........Xx
     xX...........Xx

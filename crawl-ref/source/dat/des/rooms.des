@@ -227,7 +227,7 @@ NAME:   special_room_orc_c
 DEPTH:  17, !Lair, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 40
-: sroom_orc_lair() 
+: sroom_orc_lair()
 MAP
 ENDMAP
 
@@ -391,4 +391,4 @@ ENDMAP
 #27|  0.00 |  14.96 |   7.28 |  32.06 |  45.70 |
 #28|  0.00 |  15.12 |   7.88 |  32.11 |  44.89 |
 #29|  0.00 |  15.48 |   7.40 |  33.17 |  43.95 |
-#30|  0.00 |  15.08 |   7.84 |  31.97 |  45.11 |  
+#30|  0.00 |  15.08 |   7.84 |  31.97 |  45.11 |

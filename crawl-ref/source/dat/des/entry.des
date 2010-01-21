@@ -3762,7 +3762,7 @@ MAP
           x.+{+.x
         xxx.xxx.xxx
         x.+x+.+x+.x
-        x@xxx@xxx@x  
+        x@xxx@xxx@x
 ENDMAP
 
 NAME:   erik_entry_002_b
@@ -3778,7 +3778,7 @@ MAP
         x.+x+.+x+.x
       xxx.xxx.xxx.xxx
       x.+x+.+x+.+x+.x
-      x@xxx@xxx@xxx@x  
+      x@xxx@xxx@xxx@x
 ENDMAP
 
 NAME:   erik_entry_002_c
@@ -3796,7 +3796,7 @@ MAP
       x.+x+.+x+.+x+.x
     xxx.xxx.xxx.xxx.xxx
     x.+x+.+x+.+x+.+x+.x
-    x@xxx@xxx@xxx@xxx@x  
+    x@xxx@xxx@xxx@xxx@x
 ENDMAP
 
 NAME:   erik_entry_002_d
@@ -4952,7 +4952,7 @@ SUBST:  ' = .
 }}
 SUBST: W:xw
 MAP
- xxxxxxxxxxxxx 
+ xxxxxxxxxxxxx
 x.............x
 x.............x
 x.............x
@@ -4966,5 +4966,5 @@ x.............x
 x.............x
 x.............x
 x.............x
- xxxxxxxxxxxxx 
+ xxxxxxxxxxxxx
 ENDMAP

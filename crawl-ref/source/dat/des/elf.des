@@ -22,7 +22,7 @@
 # Note that designing can be a challenge with the eight space LOS. What might
 # make the player realize it's better to flee: facing a nasty summon, taking
 # a few hits from conjurations.. they might engage melee opponents, at which
-# point it's quite difficult to flee. Please keep that in mind. Note also, 
+# point it's quite difficult to flee. Please keep that in mind. Note also,
 # that a corridor is usually easier for the player than an open space.
 #
 # This is an instance where an entry (arrival) vault really does benefit from
@@ -405,7 +405,7 @@ KMONS:   | = weight:290 nothing / deep elf sorcerer
 KFEAT:   $ = $
 KFEAT:   * = *
 KFEAT:   | = |
-SUBST:   | = | *:2 
+SUBST:   | = | *:2
 SUBST:   * = * |:3
 KITEM:   6 = |
 KITEM:   7 = |

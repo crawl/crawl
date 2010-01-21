@@ -6,19 +6,19 @@
 #            altars; these should always be in entry.des.
 #
 # Altar vaults do not just provide flavour. They are crucial for ensuring
-# that granted gods without altars in the Temple will be present in the 
+# that granted gods without altars in the Temple will be present in the
 # early part of the dungeon. Such altars are called "overflow temples".
 # Sometimes, ordinary altar maps featuring a single C glyph (random altar)
-# are used. However, there are also vaults dedicated to a special god. 
+# are used. However, there are also vaults dedicated to a special god.
 # These look much more interesting, of course.
 # There are two TAGs to be used for single-altar maps with a specified god:
 #
-# TAG: temple_overflow_FOO        
+# TAG: temple_overflow_FOO
 #      Says the map will only ever be used for overflow temples to god FOO.
 # TAG: uniq_altar_FOO
-#      If you also add this, then the map can be placed randomly even if 
+#      If you also add this, then the map can be placed randomly even if
 #      that altar has been chosen at new-game time to be an overflow temple
-#      on a specific level. If it happens to be randomly placed before being 
+#      on a specific level. If it happens to be randomly placed before being
 #      generated specifically then it will only be placed once, rather than
 #      being placed a second time at the location chosen at new-game time.
 #
@@ -453,7 +453,7 @@ KFEAT:      P = enter_abyss
 :       "w:80 ; short sword | sabre | quick blade w:3")
 : else
 KFEAT:      _ = altar_xom
-:   if crawl.one_chance_in(4) then 
+:   if crawl.one_chance_in(4) then
 KMONS:      P = orange crystal statue
 :   else
 KFEAT:      P = enter_abyss / fountain_sparkling / stone_arch
@@ -505,7 +505,7 @@ MONS:    human; falchion / human; falchion ego:holy_wrath w:1 \
          / human; quarterstaff / human; quarterstaff ego:holy_wrath w:1 \
          / human
 MONS:    gnoll; falchion / gnoll; falchion ego:holy_wrath w:1 / gnoll; \
-         quarterstaff / gnoll; quarterstaff ego:holy_wrath w:1 / gnoll 
+         quarterstaff / gnoll; quarterstaff ego:holy_wrath w:1 / gnoll
 MONS:    orc; falchion / orc; falchion ego:holy_wrath w:1 \
          / orc; quarterstaff / orc; quarterstaff ego:holy_wrath w:1 / orc
 SUBST:   M = 123
@@ -573,7 +573,7 @@ ENDMAP
 #
 # These must feature one of the temple_overflow_* TAGs (see header).
 # Altars are sorted alphabetically by god, with The Shining One coming
-# after Zin. At the end, there are altar vaults which can be used for 
+# after Zin. At the end, there are altar vaults which can be used for
 # more than just one god.
 #
 ######################################
@@ -625,7 +625,7 @@ ENDMAP
 # Golems are slow and they protect an altar to the slow god. (Lemuel)
 NAME:  golem_altar_1
 DEPTH: 8-12
-TAGS:  patrolling no_monster_gen no_item_gen 
+TAGS:  patrolling no_monster_gen no_item_gen
 TAGS:  uniq_golem_altar temple_overflow_cheibriados
 KMONS: _ = iron golem
 KFEAT: _ = altar_cheibriados
@@ -646,7 +646,7 @@ ENDMAP
 
 NAME:    golem_altar_2
 DEPTH:   8-12
-TAGS:    patrolling no_monster_gen no_item_gen 
+TAGS:    patrolling no_monster_gen no_item_gen
 TAGS:    uniq_golem_altar temple_overflow_cheibriados
 KMONS:   _ = iron golem
 KFEAT:   _ = altar_cheibriados
@@ -1067,7 +1067,7 @@ ENDMAP
 
 # The cloud seems to be okay: automatic exclusion should prevent deaths.
 # You can safely step on a square diagonally adjacent to the altar.
-# Maximal damage is 32 per turn (at speed 10). If you want to go safe, 
+# Maximal damage is 32 per turn (at speed 10). If you want to go safe,
 # wait for resistance (or have more than 32 HP).
 NAME:   fiery_altar_vehumet
 DEPTH:  2-10
@@ -1184,7 +1184,7 @@ ENDMAP
 # TSO's small temple (1KB)
 # Idea stolen from protected_by_tso_3.
 NAME:     tso_altar
-TAGS:     no_item_gen no_rotate 
+TAGS:     no_item_gen no_rotate
 TAGS:     temple_overflow_the_shining_one uniq_altar_the_shining_one
 COLOUR:   _ = yellow
 SUBST:    _ = .

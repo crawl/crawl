@@ -290,10 +290,10 @@ ENDMAP
 # it.
 NAME:       the_teleporter
 {{
--- Find the slave of the teleporter and move to it. 
+-- Find the slave of the teleporter and move to it.
 local function teleporter (data, triggerable, triggerer, marker, ev)
   local position = dgn.point(marker:pos())
-  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot", 
+  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
     data.teleport_spot)
 
   if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
@@ -327,11 +327,11 @@ DEPTH:      Vault:3-7
 TAGS:       no_secret_doors no_monster_gen no_item_gen uniq_the_teleporter \
             patrolling
 COLOUR:     ME = yellow
-MONS:       iron golem / crystal golem / stone golem 
+MONS:       iron golem / crystal golem / stone golem
 SUBST:      EM = .
 SUBST:      em = U
 MARKER:     v = lua:props_marker { veto_shatter="veto" }
-MAP     
+MAP
 .........                                   .........
 .vvvvvvv.                                   .ccccccc.
 .vvvEvvv.                                   .cccMccc.
@@ -801,7 +801,7 @@ ENDMAP
 # Vault:8 - Not Diamond Quadrant (by Mu.)
 # about 8 |
 NAME:   vault8_not_diamond
-TAGS:   vault8_quadrant 
+TAGS:   vault8_quadrant
 SUBST:  Q = 8 9 *:20
 : vault8_loot(_G)
 : vault8_rune(_G)
@@ -917,7 +917,7 @@ ENDMAP
 
 ##############################################################################
 # Vault:8 - Flips Quadrant (by Mu.)
-# about 21 | 
+# about 21 |
 NAME:   vault8_flips
 TAGS:   vault8_quadrant_prize
 NSUBST: ; = 3:l / 3:z / 3:a / *:.

@@ -14,10 +14,10 @@
 #
 # This assumes that the unique is defined as a monster in the files
 #   enum.h, mon-gear.cc, mon-data.h,  mon-spll.h, tilemcache.cc, tilepick.cc
-# Their speech is defined in 
+# Their speech is defined in
 #   dat/database/monspeak.txt
 #
-# Vaults tagged as "place_unique" are assumed to place only one unique. If the 
+# Vaults tagged as "place_unique" are assumed to place only one unique. If the
 # unique is in a band, specify "unique band", (see uniq_duvessa, etc). Names of
 # vault don't matter, except for the Boris vault.
 #
@@ -38,14 +38,14 @@
 # * You want different WEIGHTS. In this case, just add a WEIGHT line.
 #
 # If you want to weight uniques differently for some vaults, the weights for
-# these vaults should all add up to 10 (the default weight for uniques), 
+# these vaults should all add up to 10 (the default weight for uniques),
 # unless you want to make that unique appear more or less frequent on purpose.
-# You can use multiple vaults that are tagged "uniq_<name>", with different 
+# You can use multiple vaults that are tagged "uniq_<name>", with different
 # weights for each of the vaults. See uniq_ribbit for examples of all this.
 #
 # As a final caveat, you.branches[you.where_are_you].has_uniques is still
 # checked before vaults are even considered; unique vaults with depths that
-# could go in Lair should be specified !Lair, !Slime (unless you want them in 
+# could go in Lair should be specified !Lair, !Slime (unless you want them in
 # lair).
 #
 # You can define DEBUG_UNIQUE_PLACEMENT and get a per-level unique generation

@@ -16,8 +16,8 @@ TAGS:   luniq_lab chance_lab transparent trowel_portal allow_dup extra
 CHANCE: 50 : 285
 DEPTH:  12-27
 {{
-  local messager = 
-    timed_msg { 
+  local messager =
+    timed_msg {
       initmsg = { "You hear a distant snort.",
                   "Hark! There is an entrance to a minotaur's labyrinth "
                   .. "on this level. Find the entrance quickly before "
@@ -63,7 +63,7 @@ x
 ENDMAP
 
 #############################################################################
-# Watery exit 
+# Watery exit
 NAME:    labyrinth_watery
 TAGS:    minotaur generate_loot no_pool_fixup allow_dup
 MONS:    patrolling minotaur
@@ -194,7 +194,7 @@ MAP
 ENDMAP
 
 #############################################################################
-# Another trapped exit - most evil again! 
+# Another trapped exit - most evil again!
 NAME:    labyrinth_trapped_2
 TAGS:    minotaur allow_dup generate_loot
 ITEM:    potion of porridge
