@@ -448,16 +448,16 @@ NAME:   david_glass_crypt
 ORIENT: float
 TAGS:   no_item_gen no_rotate
 PLACE:  Crypt:5
+MARKER: m = lua:portal_desc {wall_phase = 1}
 SUBST:  m : mnn
 MONS:   lich / ancient lich
 MONS:   skeletal dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
+WEIGHT: 1000
 KFEAT:  ^ = alarm trap
 SUBST:  F = G:100 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue
 {{
-lua_marker("m", portal_desc { wall_phase =1 })
-
 function drop_walls (data, triggerable, triggerer, marker, ev)
     if data.trig == true then
         return
@@ -465,7 +465,7 @@ function drop_walls (data, triggerable, triggerer, marker, ev)
         data.trig = true
     end
 
-    crawl.mpr("The liches are set free!", "warning")
+    crawl.mpr("There is a click. Suddenly, the liches are set free!", "warning")
     for slave in iter.slave_iterator("wall_phase", 1) do
         dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
     end
