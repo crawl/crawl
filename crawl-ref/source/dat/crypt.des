@@ -453,7 +453,7 @@ SUBST:  m : mnn
 MONS:   lich / ancient lich
 MONS:   skeletal dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
-WEIGHT: 1000
+WEIGHT: 10
 KFEAT:  ^ = alarm trap
 SUBST:  F = G:100 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue
