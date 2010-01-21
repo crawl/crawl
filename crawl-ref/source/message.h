@@ -45,6 +45,9 @@ void mpr_comma_separated_list(const std::string prefix,
 
 class input_history;
 
+void msgwin_prompt(std::string prompt);
+void msgwin_reply(std::string reply);
+
 int msgwin_get_line(std::string prompt,
                     char *buf, int len,
                     input_history *mh = NULL,

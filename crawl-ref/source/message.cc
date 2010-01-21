@@ -746,14 +746,23 @@ static std::string show_prompt(std::string prompt)
     return text;
 }
 
+static std::string _prompt;
+void msgwin_prompt(std::string prompt)
+{
+    _prompt = show_prompt(prompt);
+}
+
+void msgwin_reply(std::string reply)
+{
+    messages.add(message_item(_prompt + reply, MSGCH_PROMPT, 0));
+}
+
 int msgwin_get_line(std::string prompt, char *buf, int len,
                     input_history *mh, int (*keyproc)(int& c))
 {
-    std::string text = show_prompt(prompt);
+    msgwin_prompt(prompt);
     int ret = cancelable_get_line(buf, len, mh, keyproc);
-    if (ret == 0)
-        text += buf;
-    messages.add(message_item(text, MSGCH_PROMPT, 0));
+    msgwin_reply(ret == 0 ? buf : "");
     return ret;
 }
 
