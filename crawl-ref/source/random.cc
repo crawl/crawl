@@ -12,10 +12,8 @@ int random_range(int low, int high)
 int random_range(int low, int high, int nrolls)
 {
     ASSERT(nrolls > 0);
-    int sum = 0;
-    for (int i = 0; i < nrolls; ++i)
-        sum += random_range(low, high);
-    return (sum / nrolls);
+    const int roll = random2avg(high - low + 1, nrolls);
+    return low + roll;
 }
 
 // Chooses one of the numbers passed in at random. The list of numbers

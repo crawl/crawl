@@ -13,13 +13,13 @@ function test.map_assert(condition, message)
   return condition
 end
 
-function test.regenerate_level(place)
+function test.regenerate_level(place, use_random_maps)
   if place then
     debug.goto_place(place)
   end
   debug.flush_map_memory()
   dgn.reset_level()
-  debug.generate_level()
+  debug.generate_level(use_random_maps)
 end
 
 function test.level_contains_item(item)

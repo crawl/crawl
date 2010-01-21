@@ -175,7 +175,7 @@ void init_level_connectivity();
 void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
-bool builder(int level_number, int level_type);
+bool builder(int level_number, int level_type, bool enable_random_maps = true);
 void dgn_veto_level();
 
 void dgn_flush_map_memory();
@@ -239,7 +239,7 @@ bool unset_level_flags(unsigned long flags, bool silent = false);
 void dgn_set_lt_callback(std::string level_type_name,
                          std::string callback_name);
 
-void dgn_reset_level();
+void dgn_reset_level(bool enable_random_maps = true);
 
 // Returns true if the given square is okay for use by any character,
 // but always false for squares in non-transparent vaults. This

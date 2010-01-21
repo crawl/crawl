@@ -214,6 +214,42 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     }
 }
 
+
+bool is_spawn_scaled_area(const level_id &here)
+{
+    return (here.level_type == LEVEL_DUNGEON
+            && !is_hell_subbranch(here.branch)
+            && here.branch != BRANCH_HALL_OF_ZOT);
+}
+
+// Scale monster generation parameter with time spent on level. Note:
+// (target_value - base_value) * dropoff_ramp_turns must be < INT_MAX!
+static int _scale_spawn_parameter(int base_value,
+                                  int target_value,
+                                  int final_value,
+                                  int dropoff_start_turns = 3000,
+                                  int dropoff_ramp_turns  = 12000)
+{
+    if (!is_spawn_scaled_area(level_id::current()))
+        return base_value;
+
+    const int turns_on_level = env.turns_on_level;
+    return (turns_on_level <= dropoff_start_turns ? base_value :
+            turns_on_level > dropoff_start_turns + dropoff_ramp_turns ?
+            final_value :
+
+            // Actual scaling, strictly linear at the moment:
+            (base_value +
+             (target_value - base_value)
+             * (turns_on_level - dropoff_start_turns)
+             / dropoff_ramp_turns));
+}
+
+static inline int _scale_spawn_parameter(int base_value, int target_value)
+{
+    return _scale_spawn_parameter(base_value, target_value, target_value);
+}
+
 // This applies only to D:1
 static bool _need_moderate_ood(int lev_mons)
 {
@@ -223,15 +259,28 @@ static bool _need_moderate_ood(int lev_mons)
 static bool _need_super_ood(int lev_mons)
 {
     return (env.turns_on_level > 1400 - lev_mons * 117
-            && one_chance_in(env.turns_on_level ? 1000 : 5000));
+            && one_chance_in(_scale_spawn_parameter(500, 2, 1, 3000, 9000)));
 }
 
 static int _fuzz_mons_level(int level)
 {
-    if (one_chance_in(env.turns_on_level ? 2 : 7))
+    // [ds] Was 1 in 7 chance for level-generation monster creation,
+    // 50% for respawns, and the fuzz was limited to +4. The new rate
+    // is 1 in 7 for level-generation, scaling up to 80% for respawns
+    // as the player lingers on the level, but only after at least
+    // 1.8k turns spent on the level. Monster fuzz is now up to +7,
+    // YHBW.
+    if (x_chance_in_y(_scale_spawn_parameter(140, 1000, 1000, 3000, 4800),
+                      1000))
     {
-        const int fuzz = random2avg(9, 2);
-        return (fuzz > 4? level + fuzz - 4 : level);
+        const int fuzzspan = 7;
+        const int fuzz = std::max(0, random_range(-fuzzspan, fuzzspan, 2));
+#ifdef DEBUG_DIAGNOSTICS
+        if (fuzz)
+            dprf("Monster level fuzz: %d (old: %d, new: %d)",
+                 fuzz, level, level + fuzz);
+#endif
+        return level + fuzz;
     }
     return (level);
 }
@@ -287,14 +336,21 @@ void spawn_random_monsters()
     }
 
     const int rate = (you.char_direction == GDT_DESCENDING) ?
-                     env.spawn_random_rate : 8;
+        _scale_spawn_parameter(env.spawn_random_rate, 2000, 0)
+        : 8;
+
+    if (rate == 0)
+    {
+        dprf("random monster gen scaled off, %d turns on level",
+             env.turns_on_level);
+        return;
+    }
 
     // Place normal dungeon monsters,  but not in player LOS.
     if (you.level_type == LEVEL_DUNGEON && x_chance_in_y(5, rate))
     {
-#ifdef DEBUG_MON_CREATION
-        mpr("Create wandering monster...", MSGCH_DIAGNOSTICS);
-#endif
+        dprf("Placing monster, rate: %d, turns here: %d",
+             rate, env.turns_on_level);
         proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS
                                                  : PROX_AWAY_FROM_PLAYER);
 
@@ -352,6 +408,22 @@ monster_type pick_random_monster(const level_id &place)
     return pick_random_monster(place, level, level);
 }
 
+std::vector<monster_type> _find_valid_monster_types(const level_id &place)
+{
+    static std::vector<monster_type> valid_monster_types;
+    static level_id last_monster_type_place;
+
+    if (last_monster_type_place == place)
+        return (valid_monster_types);
+
+    valid_monster_types.clear();
+    for (int i = 0; i < NUM_MONSTERS; ++i)
+        if (mons_rarity(static_cast<monster_type>(i), place) > 0)
+            valid_monster_types.push_back(static_cast<monster_type>(i));
+    last_monster_type_place = place;
+    return (valid_monster_types);
+}
+
 monster_type pick_random_monster(const level_id &place, int power,
                                  int &lev_mons)
 {
@@ -395,8 +467,12 @@ monster_type pick_random_monster(const level_id &place, int power,
         lev_mons = random2(power);
     }
 
-    if (place == BRANCH_MAIN_DUNGEON
-        && lev_mons <= 27)
+#ifdef DEBUG_DIAGNOSTICS
+    const int original_level = lev_mons;
+#endif
+
+    // OODs do not apply to the Abyss, Pan, etc.
+    if (you.level_type == LEVEL_DUNGEON && lev_mons <= 27)
     {
         // If on D:1, allow moderately out-of-depth monsters only after
         // a certain elapsed turn count on the level (currently 700 turns).
@@ -405,14 +481,13 @@ monster_type pick_random_monster(const level_id &place, int power,
 
         // Potentially nasty surprise, but very rare.
         if (_need_super_ood(lev_mons))
-            lev_mons += random2(12);
+        {
+            const int new_level = lev_mons + random2avg(27, 2);
+            dprf("Super OOD roll: Old: %d, New: %d", lev_mons, new_level);
+            lev_mons = new_level;
+        }
 
-        // Slightly out of depth monsters are more common:
-        // [ds] Replaced with a fuzz above for a more varied mix.
-        //if (need_moderate_ood(lev_mons))
-        //    lev_mons += random2(5);
-
-        lev_mons = std::min(27, lev_mons);
+        lev_mons = std::min(30, lev_mons);
     }
 
     // Abyss or Pandemonium. Almost never called from Pan; probably only
@@ -447,38 +522,51 @@ monster_type pick_random_monster(const level_id &place, int power,
 
         lev_mons = std::min(30, lev_mons);
 
-        int i;
-        for (i = 0; i < 10000; ++i)
+        const int n_pick_tries   = 10000;
+        const int n_relax_margin = n_pick_tries / 10;
+        int monster_pick_tries = 10000;
+        const std::vector<monster_type> valid_monster_types =
+            _find_valid_monster_types(place);
+
+        if (valid_monster_types.empty())
+            return MONS_PROGRAM_BUG;
+
+        while (monster_pick_tries-- > 0)
         {
-            int count = 0;
-
-            do
-            {
-                mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
-                count++;
-            }
-            while (mons_rarity(mon_type, place) == 0 && count < 2000);
-
-            if (count == 2000)
-                return (MONS_PROGRAM_BUG);
+            mon_type = valid_monster_types[random2(valid_monster_types.size())];
 
             if (crawl_state.arena && arena_veto_random_monster(mon_type))
                 continue;
 
             level  = mons_level(mon_type, place);
             diff   = level - lev_mons;
+
+            // If we're running low on tries, ignore level differences.
+            if (monster_pick_tries < n_relax_margin)
+                diff = 0;
+
             chance = mons_rarity(mon_type, place) - (diff * diff);
 
-            if ((lev_mons >= level - 5 && lev_mons <= level + 5)
+            // If we're running low on tries, remove level restrictions.
+            if ((monster_pick_tries < n_relax_margin
+                 || std::abs(lev_mons - level) <= 5)
                 && random2avg(100, 2) <= chance)
             {
                 break;
             }
         }
 
-        if (i == 10000)
+        if (monster_pick_tries <= 0)
             return (MONS_PROGRAM_BUG);
     }
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (lev_mons > original_level)
+        dprf("Orginal level: %d, Final level: %d, Monster: %s",
+             original_level, lev_mons,
+             mon_type == MONS_NO_MONSTER || mon_type == MONS_PROGRAM_BUG ?
+             "NONE" : get_monster_data(mon_type)->name);
+#endif
 
     return (mon_type);
 }

@@ -300,7 +300,7 @@ static callback_map level_type_post_callbacks;
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
-bool builder(int level_number, int level_type)
+bool builder(int level_number, int level_type, bool enable_random_maps)
 {
     const std::set<std::string> uniq_tags  = you.uniq_map_tags;
     const std::set<std::string> uniq_names = you.uniq_map_names;
@@ -320,7 +320,7 @@ bool builder(int level_number, int level_type)
         mapgen_report_map_build_start();
 #endif
 
-        dgn_reset_level();
+        dgn_reset_level(enable_random_maps);
 
         if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
             _setup_temple_altars(you.props);
@@ -986,7 +986,7 @@ void dgn_veto_level()
     dgn_level_vetoed = true;
 }
 
-void dgn_reset_level()
+void dgn_reset_level(bool enable_random_maps)
 {
     dgn_level_vetoed = false;
     Level_Unique_Maps.clear();
@@ -1005,7 +1005,7 @@ void dgn_reset_level()
     _dgn_init_vault_excavatable_feats();
 
     can_create_vault = true;
-    use_random_maps  = true;
+    use_random_maps  = enable_random_maps;
     dgn_check_connectivity = false;
     dgn_zones        = 0;
 

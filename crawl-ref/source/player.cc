@@ -437,9 +437,7 @@ bool player_in_hell(void)
     COMPILE_CHECK(BRANCH_LAST_HELL  == BRANCH_TARTARUS, b);
 
     return (you.level_type == LEVEL_DUNGEON
-            && you.where_are_you >= BRANCH_FIRST_HELL
-            && you.where_are_you <= BRANCH_LAST_HELL
-            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
+            && is_hell_subbranch(you.where_are_you));
 }
 
 bool player_likes_water(bool permanently)
