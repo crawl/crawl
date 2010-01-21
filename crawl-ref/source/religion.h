@@ -138,4 +138,7 @@ int get_tension(god_type god = you.religion, bool count_travelling = true);
 void do_god_gift(bool prayed_for = false, bool force = false);
 
 std::vector<god_type> temple_god_list();
+
+extern const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES];
+std::string adjust_abil_message(const char *pmsg);
 #endif

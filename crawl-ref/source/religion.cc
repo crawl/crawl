@@ -3546,19 +3546,16 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
         conduct[i].enabled = false;
 }
 
-static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
+std::string adjust_abil_message(const char *pmsg)
 {
     int pos;
-
-    if (!*pmsg)
-        return false;
-
     std::string pm = pmsg;
+
     if ((pos = pm.find("{biology}")) != -1)
         switch(you.is_undead)
         {
         case US_UNDEAD:      // mummies -- time has no meaning!
-            return false;
+            return "";
         case US_HUNGRY_DEAD: // ghouls
             pm.replace(pos, 9, "decay");
             break;
@@ -3567,6 +3564,15 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
             pm.replace(pos, 9, "biology");
             break;
         }
+    return (pm);
+}
+
+static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
+{
+    if (!*pmsg)
+        return false;
+
+    std::string pm = adjust_abil_message(pmsg);
 
     if (isupper(pmsg[0]))
         god_speaks(you.religion, pm.c_str());

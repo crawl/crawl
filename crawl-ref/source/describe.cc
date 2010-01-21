@@ -3157,15 +3157,12 @@ static bool _print_god_abil_desc(int god, int numpower)
     if (!pmsg[0])
         return (false);
 
-    std::string buf;
-    if (isupper(pmsg[0]))
-        buf = pmsg;             // Complete sentence given.
-    else
-    {
-        buf = "You can ";
-        buf += pmsg;
-        buf += ".";
-    }
+    std::string buf = adjust_abil_message(pmsg);
+    if (buf.empty())
+        return (false);
+
+    if (!isupper(pmsg[0])) // Complete sentence given?
+        buf = "You can " + buf + ".";
 
     // This might be ABIL_NON_ABILITY for passive abilities.
     const ability_type abil = god_abilities[god][numpower];

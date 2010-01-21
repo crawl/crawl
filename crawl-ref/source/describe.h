@@ -89,8 +89,6 @@ void add_autoinscription( item_def &item, std::string ainscrip);
 const char *trap_name(trap_type trap);
 int str_to_trap(const std::string &s);
 
-extern const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES];
-
 int count_desc_lines(const std::string _desc, const int width);
 
 /* ***********************************************************************
