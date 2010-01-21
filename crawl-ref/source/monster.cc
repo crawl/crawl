@@ -3215,7 +3215,10 @@ bool monsters::is_chaotic() const
     if (is_priest() && is_chaotic_god(god))
         return (true);
 
-    if (has_chaotic_spell())
+    // Knowing chaotic spells is not enough to make you "essentially"
+    // chaotic (i.e. silver doesn't hurt you), although Zin will still
+    // enjoy your death elsewhere in the code.
+    if (has_chaotic_spell() && !is_actual_spellcaster())
         return (true);
 
     if (has_attack_flavour(AF_MUTATE)
