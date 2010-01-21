@@ -32,6 +32,7 @@
 #include "itemprop.h"
 #include "item_use.h"
 #include "it_use2.h"
+#include "macro.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -1918,7 +1919,8 @@ void autotoggle_autopickup(bool off)
         {
             Options.autopickup_on = -1;
             mprf(MSGCH_WARN,
-                "Deactivating autopickup; reactivate with <w>Ctrl+A</w>.");
+                 "Deactivating autopickup; reactivate with <w>%s</w>.",
+                 command_to_string(CMD_TOGGLE_AUTOPICKUP).c_str());
         }
         if (Tutorial.tutorial_left)
         {

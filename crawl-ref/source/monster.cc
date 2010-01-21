@@ -5132,8 +5132,10 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (feat_is_watery(grd(pos())))
         {
             if (mons_near(this) && visible_to(&you))
+            {
                 mprf("The flames covering %s go out.",
                      this->name(DESC_NOCAP_THE, false).c_str());
+            }
             del_ench(ENCH_STICKY_FLAME);
             break;
         }
