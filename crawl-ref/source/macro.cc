@@ -802,20 +802,22 @@ void macro_add_query( void )
     // reference to the appropriate mapping
     macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
 
-    mprf(MSGCH_PROMPT, "Input %s%s trigger key: ",
+    std::string prompt = make_stringf("Input %s%s trigger key: ",
          keymap ? (keymc == KMC_DEFAULT    ? "default " :
                    keymc == KMC_LEVELMAP   ? "level-map " :
                    keymc == KMC_TARGETTING ? "targetting " :
                    keymc == KMC_CONFIRM    ? "confirm " :
                    keymc == KMC_MENU       ? "menu "
                                            : "buggy") : "",
-         (keymap ? "keymap" : "macro") );
+         (keymap ? "keymap" : "macro"));
+
+    msgwin_prompt(prompt);
 
     keyseq key;
     mouse_control mc(MOUSE_MODE_MACRO);
     key = _getch_mul();
 
-    cprintf( "%s" EOL, (vtostr( key )).c_str() ); // echo key to screen
+    msgwin_reply(vtostr(key));
 
     if (mapref[key].size() > 0)
     {
