@@ -2127,7 +2127,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             bow_brand = SPWPN_NORMAL;
     }
 
-    bool poisoned   = (bow_brand == SPWPN_VENOM 
+    bool poisoned   = (bow_brand == SPWPN_VENOM
                         || ammo_brand == SPMSL_POISONED);
 
     const bool exploding    = (ammo_brand == SPMSL_EXPLODING);

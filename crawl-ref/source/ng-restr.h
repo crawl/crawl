@@ -21,4 +21,3 @@ char_choice_restriction religion_restriction(god_type god,
                                              const newgame_def &ng);
 
 #endif
-

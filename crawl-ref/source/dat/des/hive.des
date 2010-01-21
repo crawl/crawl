@@ -558,7 +558,7 @@ ENDMAP
 #
 # A wand of fire is available at the bottom to melt wax, either to enter the
 # hive by the back (much easier fight) or in the middle to reveal the items
-# stuck in wax 
+# stuck in wax
 NAME:   beehive2
 PLACE:  Hive:2
 ORIENT: encompass

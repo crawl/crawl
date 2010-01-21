@@ -382,11 +382,11 @@ ENDMAP
 # Temple maps
 ##############################################################################
 
-# Maps for the main temple (Ecumenical Temple branch) come here, use 
+# Maps for the main temple (Ecumenical Temple branch) come here, use
 # PLACE:  Temple
 # ORIENT: encompass
 # Altars are to be placed as B glyphs, modification a la SUBST or SHUFFLE are
-# allowed. You could place any number of altars between one and the number 
+# allowed. You could place any number of altars between one and the number
 # guaranteed gods. However, don't make temple maps with less than six altars.
 #
 # Guaranteed gods not present in a temple will get altars in the dungeon.

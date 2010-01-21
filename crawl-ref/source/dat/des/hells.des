@@ -163,20 +163,20 @@ MAP
    .....     .......     ..??.
   ..??...   ....l?..    ......
  ..?ll?........?l?..   .......
-..?lll?.........l.... .....   
-...?l........??l?.........    
- ..........??lll?.........    
- ........?lllllll?........    
-  .....?llllllllll??.....     
-  ....?lll111111llll?....     
-   ...?llll12Ad1lll.......    
-   ....?lll11111ll?.......    
-   .....?lllll1ll?.........   
- ........??llllll......?....  
-...........?llll?.....ll?...  
-..?..  .....?ll?.......ll?..  
-.?...   ...................   
-....      ........??..        
+..?lll?.........l.... .....
+...?l........??l?.........
+ ..........??lll?.........
+ ........?lllllll?........
+  .....?llllllllll??.....
+  ....?lll111111llll?....
+   ...?llll12Ad1lll.......
+   ....?lll11111ll?.......
+   .....?lllll1ll?.........
+ ........??llllll......?....
+...........?llll?.....ll?...
+..?..  .....?ll?.......ll?..
+.?...   ...................
+....      ........??..
 ENDMAP
 
 
@@ -889,7 +889,7 @@ xc.......wwwwwwwwwwwwwwwwwwwwwwwwww..........wwwwwwwwwwwwwwww^wwwwcccx
 xcc.......wwwwwwwwwwwwwwwwwwwww........333......wwwwwwwwwww^wwwwwwcccx
 xcc.........wwwwwwwwwwwwwwwww.........33.33.......wwwwwww^...wwwwccccx
 xccccc.........wwwwwwwwwww............................wwww^^^wwwwccccx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
@@ -995,65 +995,65 @@ KITEM:   % = | / $
 SUBST:   4 = 3333444455566778
 : tar_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  
-xxxx..............................................................xxxx  
-xxxx..............................................................xxxx  
-xxxx..cccccccccccccccccccccccccccccc..............................xxxx  
-xxxx..cccccccccccccccccccccccccccccc..............................xxxx  
-xxxx..cc..c.......................cc..............................xxxx  
-xxxx..cc..F.......................cc..............................xxxx  
-xxxx..cc..ccGcccccccccccccccccccGFcc..............................xxxx  
-xxxx..cc..H.................f..c..cc..............ccccccc.........xxxx  
-xxxx..cc..f.................h..H..cc............ccccccccccc.......xxxx  
-xxxx..cc..chgccccHccccccccGgc..c..cc...........ccccc$$$ccccc......xxxx  
-xxxx..cc..c..F.G............c..c..cc..........cccc$$$$$$$cccc.....xxxx  
-xxxx..cc..f..c.ccgcccccccccHc..c..cc..........ccc$$$$$$$$$ccc.....xxxx  
-xxxx..cc..c..c.c..........c.c..c..cc.........ccc$$$$$$$$$$$ccc....xxxx  
-xxxx..cc..c..c.h...xnnx...f.c..c..cc.........ccc.2.$$$$$.2.ccc....xxxx  
-xxxx..cc..c..c.c...x$$x...c.c..c..cc........ccc....xxxxx....ccc...xxxx  
-xxxx..cc..c..c.c...x||x...c.c..h..cc........ccc..xxxxxxxxx..ccc...xxxx  
-xxxx..cc..c..h.c.xxx..xxx.c.c..c..cc........cc..xxxxxxxxxxx..cc...xxxx  
-xxxx..cc..c..c.c.nO..2.1n.c.c..c..cc........cc=cxxxxxxxxxxxc=cc...xxxx  
-xxxx..cc..c..c.c.xxx..xxx.c.c..c..cc........cc.c...........c.cc...xxxx  
-xxxx..cc..c..c.c...x||x...c.c..c..cc........cc.c.xxxxxxxxx.c.cc...xxxx  
-xxxx..cc..c..c.c...x$$x...c.c..c..cc........cc.c=xxxxxxxxc=c.cc...xxxx  
-xxxx..cc..c..G.c...xnnx...c.c..g..cc........cc.c.xx.444.xc.c.cc...xxxx  
-xxxx..cc..c..c.c..........c.c..c..cc........cc.c.cx.444.xc.c.cc...xxxx  
-xxxx..cc..c..cFccHccccGcFcc.H..f..cc........cc.c.cxxxxxxxc.c.cc...xxxx  
-xxxx..cc..c..G............c.c..c..cc........cc.c.cccxxxccc.c.cc...xxxx  
-xxxx..cc..c..cccccccccccHccfcgcc..cc........cc.c...cxxxc...c.cc...xxxx  
-xxxx..cc..F..c.................c..cc........cc.c.cccxxxccc.c.cc...xxxx  
-xxxx..cc..c..g.................c..cc........cc.c.cx|2.2|xc.c.cc...xxxx  
-xxxx..cccHcfcccHcccccccccccccfcc==cc........cc.c.cx|$$$|xc.c.cc...xxxx  
-xxxx..cc.......................c..cc........cc.c.ccccxcccc.c.cc...xxxx  
-xxxx..cc.......................c..cc........cc.c....cxc....c.cc...xxxx  
-xxxx..cccccccccccccccccccccccccc++cc........cc.c.ccccxcccc.c.cc...xxxx  
-xxxx..cccccccccccccccccccccccccc++cc........cc.c.cxx|||xxc.c.cc...xxxx  
-xxxx........................................cc.c.cxx|||xxc.c.cc...xxxx  
-xxxx.........................xx....xx.......cc=c.ccccccccc.c=cc...xxxx  
-xxxx.........................xx....xx........c.c.....c.....c.c....xxxx  
-xxxx...........................................c...........c......xxxx  
-xxxx..............................................................xxxx  
-xxxx..............4..........xx....xx.............................xxxx  
-xxxx...4..4..................xx....xx.............................xxxx  
-xxxx....44...................................xx.................xxxxxx  
-xxxx..........4..............................xxx...............xxxxxxx  
-xxxx.........................xx....xx.......xxxxxx"xxxxxxxxx"xxxxxxxxx  
-xxxx.........................xx....xx.......xxxxxx.xxx.2.xxx.xxxxxxxxx  
-xxxx........44..............................xxxxxx.xxx2.2xxx.xxxAAAAxx  
-xxxx.......................................xxxxxxx.xxxxxxxxx.xxxAAAAxx  
-xxxx......4...................x....x.......xxxxxxx..xxxxxxx..xxxAAAAxx  
-xxxx.......................................xxxxxxxx.........xxxxAAAAxx  
-xxxx......................................xxxxxxxxxx.......xxxxxxxxxxx  
-xxxx..........................x....x......xxxxxxxxxxx.....xxAAAAAAAAxx  
-xxxx.....................................xxBBBBBBBxxxx...xxxAAAAAAAAxx  
-xxxx.....................................xxBBBBBBBxxxxx.xxxxAAAAAAAAxx  
-xxxx..........................x....x....xxxBBBBBBBxxxxx=xxxxxxxxxxxxxx  
-xxxx....................................xxxxxxxxxxxx..............$$xx  
-xxxx...................................xxxBBBBxBBBBx.4...4.......$$$xx  
-xxxx..........................x....x...xxxBBBBxBBBBx...4..4.....$$$$xx  
-xxxx.................................{xxxxBBBBxBBBBx.2..4..4...$$$$$xx  
-xxxx................................[xxxxxBBBBxBBBBx..........$$$$$$xx  
-xxxx...............................(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx..............................................................xxxx
+xxxx..............................................................xxxx
+xxxx..cccccccccccccccccccccccccccccc..............................xxxx
+xxxx..cccccccccccccccccccccccccccccc..............................xxxx
+xxxx..cc..c.......................cc..............................xxxx
+xxxx..cc..F.......................cc..............................xxxx
+xxxx..cc..ccGcccccccccccccccccccGFcc..............................xxxx
+xxxx..cc..H.................f..c..cc..............ccccccc.........xxxx
+xxxx..cc..f.................h..H..cc............ccccccccccc.......xxxx
+xxxx..cc..chgccccHccccccccGgc..c..cc...........ccccc$$$ccccc......xxxx
+xxxx..cc..c..F.G............c..c..cc..........cccc$$$$$$$cccc.....xxxx
+xxxx..cc..f..c.ccgcccccccccHc..c..cc..........ccc$$$$$$$$$ccc.....xxxx
+xxxx..cc..c..c.c..........c.c..c..cc.........ccc$$$$$$$$$$$ccc....xxxx
+xxxx..cc..c..c.h...xnnx...f.c..c..cc.........ccc.2.$$$$$.2.ccc....xxxx
+xxxx..cc..c..c.c...x$$x...c.c..c..cc........ccc....xxxxx....ccc...xxxx
+xxxx..cc..c..c.c...x||x...c.c..h..cc........ccc..xxxxxxxxx..ccc...xxxx
+xxxx..cc..c..h.c.xxx..xxx.c.c..c..cc........cc..xxxxxxxxxxx..cc...xxxx
+xxxx..cc..c..c.c.nO..2.1n.c.c..c..cc........cc=cxxxxxxxxxxxc=cc...xxxx
+xxxx..cc..c..c.c.xxx..xxx.c.c..c..cc........cc.c...........c.cc...xxxx
+xxxx..cc..c..c.c...x||x...c.c..c..cc........cc.c.xxxxxxxxx.c.cc...xxxx
+xxxx..cc..c..c.c...x$$x...c.c..c..cc........cc.c=xxxxxxxxc=c.cc...xxxx
+xxxx..cc..c..G.c...xnnx...c.c..g..cc........cc.c.xx.444.xc.c.cc...xxxx
+xxxx..cc..c..c.c..........c.c..c..cc........cc.c.cx.444.xc.c.cc...xxxx
+xxxx..cc..c..cFccHccccGcFcc.H..f..cc........cc.c.cxxxxxxxc.c.cc...xxxx
+xxxx..cc..c..G............c.c..c..cc........cc.c.cccxxxccc.c.cc...xxxx
+xxxx..cc..c..cccccccccccHccfcgcc..cc........cc.c...cxxxc...c.cc...xxxx
+xxxx..cc..F..c.................c..cc........cc.c.cccxxxccc.c.cc...xxxx
+xxxx..cc..c..g.................c..cc........cc.c.cx|2.2|xc.c.cc...xxxx
+xxxx..cccHcfcccHcccccccccccccfcc==cc........cc.c.cx|$$$|xc.c.cc...xxxx
+xxxx..cc.......................c..cc........cc.c.ccccxcccc.c.cc...xxxx
+xxxx..cc.......................c..cc........cc.c....cxc....c.cc...xxxx
+xxxx..cccccccccccccccccccccccccc++cc........cc.c.ccccxcccc.c.cc...xxxx
+xxxx..cccccccccccccccccccccccccc++cc........cc.c.cxx|||xxc.c.cc...xxxx
+xxxx........................................cc.c.cxx|||xxc.c.cc...xxxx
+xxxx.........................xx....xx.......cc=c.ccccccccc.c=cc...xxxx
+xxxx.........................xx....xx........c.c.....c.....c.c....xxxx
+xxxx...........................................c...........c......xxxx
+xxxx..............................................................xxxx
+xxxx..............4..........xx....xx.............................xxxx
+xxxx...4..4..................xx....xx.............................xxxx
+xxxx....44...................................xx.................xxxxxx
+xxxx..........4..............................xxx...............xxxxxxx
+xxxx.........................xx....xx.......xxxxxx"xxxxxxxxx"xxxxxxxxx
+xxxx.........................xx....xx.......xxxxxx.xxx.2.xxx.xxxxxxxxx
+xxxx........44..............................xxxxxx.xxx2.2xxx.xxxAAAAxx
+xxxx.......................................xxxxxxx.xxxxxxxxx.xxxAAAAxx
+xxxx......4...................x....x.......xxxxxxx..xxxxxxx..xxxAAAAxx
+xxxx.......................................xxxxxxxx.........xxxxAAAAxx
+xxxx......................................xxxxxxxxxx.......xxxxxxxxxxx
+xxxx..........................x....x......xxxxxxxxxxx.....xxAAAAAAAAxx
+xxxx.....................................xxBBBBBBBxxxx...xxxAAAAAAAAxx
+xxxx.....................................xxBBBBBBBxxxxx.xxxxAAAAAAAAxx
+xxxx..........................x....x....xxxBBBBBBBxxxxx=xxxxxxxxxxxxxx
+xxxx....................................xxxxxxxxxxxx..............$$xx
+xxxx...................................xxxBBBBxBBBBx.4...4.......$$$xx
+xxxx..........................x....x...xxxBBBBxBBBBx...4..4.....$$$$xx
+xxxx.................................{xxxxBBBBxBBBBx.2..4..4...$$$$$xx
+xxxx................................[xxxxxBBBBxBBBBx..........$$$$$$xx
+xxxx...............................(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

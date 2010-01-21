@@ -119,4 +119,3 @@ int choose_random_weighted(Iterator beg, const Iterator end)
 }
 
 #endif
-

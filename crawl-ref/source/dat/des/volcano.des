@@ -66,7 +66,7 @@
 
 function volcano_portal (e)
     local desc_long = "Leading directly into the rock is a dark and " ..
-                      "forbidding tunnel. Every so often air, hot enough " .. 
+                      "forbidding tunnel. Every so often air, hot enough " ..
                       "to singe your face, blasts from within, and, as " ..
                       "though triggered by the air, rocks fall from the roof " ..
                       "and sides of the tunnel, slowly filling the entry."
@@ -133,9 +133,9 @@ function volcano_setup (e, metal)
         e.lfloorcol("red")
         e.lfloortile("floor_rough_red")
     end
-    e.set_random_mon_list([[hog / fire elemental / fire vortex / giant ant / 
+    e.set_random_mon_list([[hog / fire elemental / fire vortex / giant ant /
                             bumblebee / fire drake / lindwurm / imp / redback /
-                            manticore / hell hound / hell hog / ghoul / 
+                            manticore / hell hound / hell hog / ghoul /
                             flayed ghost / pulsating lump / toenail golem /
                             efreet / vampire]])
     crawl.mark_milestone("br.enter", "entered a Volcano.")
@@ -187,7 +187,7 @@ end
 function place_lake_volcano (e, glyph)
     e.kfeat(glyph .. " = l")
     e.lua_marker(glyph, chained_fog_machine { cloud_type = "flame", walk_dist=0,
-                            pow_max=6, delay_min = 300, delay_max = 800, 
+                            pow_max=6, delay_min = 300, delay_max = 800,
                             size = 300, spread_rate = 5,
                             listener = small_warning})
 end
@@ -263,7 +263,7 @@ end
 --  orc warrior, Blork the orc; orc warrior, orc warrior, orc warrior,
 --  orc warrior/orc knight.
 --  human, human, human, Edmund; human, human, human, human.
---  big kobold, big kobold, big kobold, Sonja; big kobold, big kobold, 
+--  big kobold, big kobold, big kobold, Sonja; big kobold, big kobold,
 --  big kobold, big kobold.
 --  gnoll, gnoll, gnoll, Grum + war dogs; gnoll, gnoll, gnoll, gnoll.
 --  (in "Tomb") mummy, mummy, mummy, Menkaure; mummy, mummy, mummy,
@@ -329,7 +329,7 @@ function fiery_guardians (e)
             e.mons("big kobold ; short sword ego:flaming . leather armour ego:fire_resistance")
             e.mons("Sonja / big kobold ; long sword ego:flaming . ring mail ego:fire_resistance")
         elseif unq_weight <= 40 then
-            e.mons("gnoll ; halberd ego:flaming | w:2 scythe ego:flaming . scale mail ego:fire_resistance | \ 
+            e.mons("gnoll ; halberd ego:flaming | w:2 scythe ego:flaming . scale mail ego:fire_resistance | \
                     banded mail ego:fire_resistance")
             e.mons(grum .. " / gnoll ; glaive ego:flaming . banded mail \
                             ego:fire_resistance | plate mail ego:fire_resistance")
@@ -343,7 +343,7 @@ function fiery_guardians (e)
                 orc knight ; scythe race:orcish ego:flaming . banded mail ego:fire_resistance")
         return
     end
- 
+
     -- No unique, minotaur!
     if crawl.one_chance_in(10) then
         -- It's a lone minotaur! labyrinth-esque.
@@ -358,7 +358,7 @@ function fiery_guardians (e)
             e.mons("big kobold ; long sword ego:flaming . ring mail ego:fire_resistance / kobold demonologist w:2")
         else
             e.mons("deep elf fighter ; sabre ego:flaming race:elven")
-            e.mons("deep elf fighter ; sabre ego:flaming race:elven . chain mail ego:fire_resistance \ 
+            e.mons("deep elf fighter ; sabre ego:flaming race:elven . chain mail ego:fire_resistance \
                     race:elven / deep elf knight w:3 ; sabre ego:flaming race:elven . chain mail \
                     ego:fire_resistance race:elven")
         end
@@ -410,7 +410,7 @@ TAGS: uniq_volcano
 ORIENT: float
 WEIGHT: 0
 {{
-  local fog = chained_fog_machine { 
+  local fog = chained_fog_machine {
                             cloud_type = 'flame',
                             size = 3, pow_min=2,
                             pow_max = 5, delay_min = 22, delay_max = 120

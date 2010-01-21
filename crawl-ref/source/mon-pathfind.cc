@@ -472,7 +472,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     ASSERT(grid_distance(pos, npos) <= 1);
 
     // Doors need to be opened.
-    if (feat_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR 
+    if (feat_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR
         && env.markers.property_at(npos, MAT_ANY, "door_restict") != "veto")
     {
         return 2;

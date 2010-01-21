@@ -36,11 +36,10 @@ local function generate_map()
 
     for iter_i = 1, checks do
         debug.flush_map_memory()
-        crawl.mesclr()
         dgn.reset_level()
         dgn.tags(map, "no_rotate no_vmirror no_hmirror no_pool_fixup")
         dgn.place_map(map, true, true)
-        crawl.mpr("Placed " .. map_to_test .. ":" .. iter_i .. ", dumping to " .. output_to .. "." .. iter_i)
+        crawl.message("Placed " .. map_to_test .. ":" .. iter_i .. ", dumping to " .. output_to .. "." .. iter_i)
         debug.dump_map(output_to .. "." .. iter_i)
     end
 end
@@ -48,5 +47,5 @@ end
 if run_test then
     generate_map()
 else
-    crawl.mpr("Not running vault generation test.")
+    crawl.message("Not running vault generation test.")
 end

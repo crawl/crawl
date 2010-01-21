@@ -187,14 +187,14 @@ KITEM:    f = potion of levitation q:2, \
 KFEAT:    f = shallow_water
 MONS:     rat / grey rat / green rat w:2 / nothing w:3
 MAP
-        cccCCCCCCCCCCCC               
-        cwXvvvvvvvvvvvCCC         CCC   
-        cwccCCCCCCCCCvvVCCCC      C*CCC 
-        cwwc        CCCvvvvCCCC  CCvvvC 
-        ccwc          CCCCvvvvCCCCvvvvC 
-         cwcc            CCCCvvvvvvvvvC 
+        cccCCCCCCCCCCCC
+        cwXvvvvvvvvvvvCCC         CCC
+        cwccCCCCCCCCCvvVCCCC      C*CCC
+        cwwc        CCCvvvvCCCC  CCvvvC
+        ccwc          CCCCvvvvCCCCvvvvC
+         cwcc            CCCCvvvvvvvvvC
         ccwwc               CCCCCCCCCCC
-        cwwwc                           
+        cwwwc
         cwwwc
         cwwwc
         cWwwc

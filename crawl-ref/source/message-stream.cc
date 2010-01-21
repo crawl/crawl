@@ -100,5 +100,3 @@ std::ostream& operator<<(std::ostream& os, const msg::setparam& sp)
     ps->set_param(sp.m_param);
     return os;
 }
-
-

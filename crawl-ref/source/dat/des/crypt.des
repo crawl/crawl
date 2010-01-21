@@ -54,8 +54,8 @@ MONS:   necromancer
 MONS:   large zombie/small zombie/large skeleton/small skeleton
 MONS:   flying skull
 MAP
-  ccccccc  
- cc2c2c2cc 
+  ccccccc
+ cc2c2c2cc
 ccc+c+c+ccc
 c2+.....+2c
 ccc..1..ccc
@@ -213,7 +213,6 @@ cc.cqSsrsNnc.cc
 ENDMAP
 
 
-
 ##############################################################################
 # Crypt ends
 
@@ -281,15 +280,15 @@ MONS:   mummy / guardian mummy / w:5 nothing
 SUBST:  ; = .:6 ~:2 ^:1
 NSUBST: / = 1:| / 2:* / *:%
 MAP
-           xxxxvvvvvvvvvvvvvvvvvxxxx           
-           xxxvv..WWWWWWWWWWW..vvxxx           
-           xxvv..WWWWWWWWWWWWW..vvxx           
-           xxv...WWWb.b.b.bWWW...vxx           
-           xxv...WWb$$|*|$$bWW...vxx           
-     xxxxxxxxv...WW.$/|1|/$.WW...vxxxxxxxx     
-     xxccccccv...WWb$$|*|$$bWW...vccccccxx     
-     xxc/;cccv...WWWb.b.b.bWWW...vccc;/cxx     
-     xxc;;;ccvv..WWWWWWWWWWWWW..vvcc;;;cxx     
+           xxxxvvvvvvvvvvvvvvvvvxxxx
+           xxxvv..WWWWWWWWWWW..vvxxx
+           xxvv..WWWWWWWWWWWWW..vvxx
+           xxv...WWWb.b.b.bWWW...vxx
+           xxv...WWb$$|*|$$bWW...vxx
+     xxxxxxxxv...WW.$/|1|/$.WW...vxxxxxxxx
+     xxccccccv...WWb$$|*|$$bWW...vccccccxx
+     xxc/;cccv...WWWb.b.b.bWWW...vccc;/cxx
+     xxc;;;ccvv..WWWWWWWWWWWWW..vvcc;;;cxx
 xxxxxxxc;;;/ccvv..WWWWWWWWWWW..vvcc/;;;cxxxxxxx
 xxccccccc=cccccv...............vccccc=cccccccxx
 xxcU......cxxxxvv....2...2....vvxxxxc......Ucxx
@@ -299,12 +298,12 @@ xxc.......cxxxxxvvvvv.....vvvvvxxxxxc.......cxx
 xxc...5.5.cxxxxxvvvvvvv+vvvvvvvxxxxxc.5.5...cxx
 xxccccc+cccxxxxxvcccccU.Ucccccvxxxxxccc+cccccxx
 xxxxxxc;cxxxxxxxvc.U.cc+cc.U.cvxxxxxxxc;cxxxxxx
-    xxc.cxxxxxccccG..F;^;F..Gccccxxxxxc.cxx    
-    xxc;cccccccG....45...54....Gccccccc;cxx    
-    xxc.;;;;;;+.................+;;;;;;.cxx    
-    xxc;cccccccG.......C.......Gccccccc;cxx    
-    xxc.c;;;+;ccc56.........65cccxxxxcc.cxx    
-  xxxxc;c/;;c;ccc5...........5cccxxxxcc;cxxxx  
+    xxc.cxxxxxccccG..F;^;F..Gccccxxxxxc.cxx
+    xxc;cccccccG....45...54....Gccccccc;cxx
+    xxc.;;;;;;+.................+;;;;;;.cxx
+    xxc;cccccccG.......C.......Gccccccc;cxx
+    xxc.c;;;+;ccc56.........65cccxxxxcc.cxx
+  xxxxc;c/;;c;ccc5...........5cccxxxxcc;cxxxx
 xxxxccc+ccc/c;=7+.............+7ccccccc+cccxxxx
 xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
 xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
@@ -316,17 +315,17 @@ xxccc.....ccccccc..c6.6.6.6c..ccccccc.....cccxx
 xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
 xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
 xxxxccc+cccxxxc7+.............+7=;;cccc+cccxxxx
-   xxc...cxxxxccc..c.......c..ccc;/ccc...cxx   
-   xxc.4.cxxxxc7+.............+7cccccc.4.cxx   
-   xxc./.cxxxxccc..c.......c..cccxxxxc./.cxx   
-   xxcccccxxxxc7+.............+7cxxxxcccccxx   
-   xxxxxxxxxxxccc....c...c....cccxxxxxxxxxxx   
-            xxxxc5.Vcc...ccV.5cxxxx            
-              xxcccccc...ccccccxx              
-              xxc..;;;...;;;..cxx              
-              xxc;;vcccccccv;;cxx              
-                c..;;;...;;;..c                
-                cccccc@c@cccccc                
+   xxc...cxxxxccc..c.......c..ccc;/ccc...cxx
+   xxc.4.cxxxxc7+.............+7cccccc.4.cxx
+   xxc./.cxxxxccc..c.......c..cccxxxxc./.cxx
+   xxcccccxxxxc7+.............+7cxxxxcccccxx
+   xxxxxxxxxxxccc....c...c....cccxxxxxxxxxxx
+            xxxxc5.Vcc...ccV.5cxxxx
+              xxcccccc...ccccccxx
+              xxc..;;;...;;;..cxx
+              xxc;;vcccccccv;;cxx
+                c..;;;...;;;..c
+                cccccc@c@cccccc
 ENDMAP
 
 
@@ -370,7 +369,7 @@ COLOUR: r = red
 SUBST:  r = v
 # emergency exits; most are closed
 NSUBST: ? = 3:= / *:v
-SUBST:  / = |** 
+SUBST:  / = |**
 SUBST:  * = *%
 SUBST:  % = %$
 MAP
@@ -453,7 +452,7 @@ SUBST:  m : mnn
 MONS:   lich / ancient lich
 MONS:   skeletal dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
-WEIGHT: 1000
+WEIGHT: 10
 KFEAT:  ^ = alarm trap
 SUBST:  F = G:100 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue

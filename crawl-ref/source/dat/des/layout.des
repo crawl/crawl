@@ -18,7 +18,7 @@
 
             func(x + rx, y + ry)
         end
-    end 
+    end
 
 }}
 
@@ -410,7 +410,7 @@ TAGS: layout allow_dup
 
         for point in iter.rect_iterator(tl, br) do
             if is_valid_coord {x = point.x, y = point.y } then
-                if is_passable_coord { x=point.x, y=point.y } or crawl.coinflip() then 
+                if is_passable_coord { x=point.x, y=point.y } or crawl.coinflip() then
                     mapgrd[point.x][point.y] = "|"
                 end
             end

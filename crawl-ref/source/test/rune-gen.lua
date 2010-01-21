@@ -3,8 +3,8 @@ local niters = 100
 local function test_item_level(place, item, nlevels)
   debug.goto_place(place)
   for i = 1, nlevels do
-    crawl.mesclr()
-    crawl.mpr(place .. " rune test " .. i .. " of " .. nlevels)
+    crawl.message(place .. " rune test " .. i .. " of " .. nlevels)
+    crawl.delay(0)
     test.regenerate_level()
     test.map_assert(test.level_contains_item(item),
                     "No " .. item .. " created at " .. place)

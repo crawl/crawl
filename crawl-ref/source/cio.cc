@@ -402,6 +402,21 @@ void line_reader::cursorto(int ncx)
 {
     int x = (start.x + ncx - 1) % wrapcol + 1;
     int y = start.y + (start.x + ncx - 1) / wrapcol;
+    int diff = y - cgetsize(region).y;
+    if (diff > 0)
+    {
+        // There's no space left in the region, so we scroll it.
+        // XXX: cscroll only implemented for GOTO_MSG.
+        // XXX: wrapcprintf works in GOTO_SCREEN; in particular
+        //      it wraps to the screen's first column, so this
+        //      won't work for regions that don't start at the
+        //      left edge.
+        cscroll(diff, region);
+        start.y -= diff;
+        y -= diff;
+        cgotoxy(start.x, start.y, region);
+        wrapcprintf(wrapcol, "%s", buffer);
+    }
     cgotoxy(x, y, region);
 }
 
@@ -658,13 +673,11 @@ int line_reader::process_key(int ch)
             }
             *cur++ = (char) ch;
             ++length;
+            buffer[length] = 0;
             ++pos;
             putch(ch);
             if (pos < length)
-            {
-                buffer[length] = 0;
-                wrapcprintf( wrapcol, "%s", cur );
-            }
+                wrapcprintf(wrapcol, "%s", cur);
             cursorto(pos);
         }
         break;

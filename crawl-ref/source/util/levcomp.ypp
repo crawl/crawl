@@ -444,7 +444,7 @@ rtile           : RTILE rtile_specifiers
                 ;
 
 rtile_specifiers: rtile_specifier
-                | rtile_specifiers COMMA rtile_specifier 
+                | rtile_specifiers COMMA rtile_specifier
                 ;
 
 rtile_specifier : ITEM_INFO

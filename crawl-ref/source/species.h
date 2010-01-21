@@ -34,4 +34,3 @@ species_type str_to_species(const std::string &species);
 bool is_valid_species(species_type);
 
 #endif
-

@@ -687,24 +687,6 @@ coord_def cgettopleft(GotoRegion region)
     }
 }
 
-coord_def cgetsize(GotoRegion region)
-{
-    switch (region)
-    {
-    case GOTO_MLIST:
-        return crawl_view.mlistsz;
-    case GOTO_STAT:
-        return crawl_view.hudsz;
-    case GOTO_MSG:
-        return crawl_view.msgsz;
-    case GOTO_DNGN:
-        return crawl_view.viewsz;
-    case GOTO_CRT:
-    default:
-        return crawl_view.termsz;
-    }
-}
-
 coord_def cgetpos(GotoRegion region)
 {
     const coord_def where = coord_def(wherex(), wherey());
@@ -725,6 +707,30 @@ void cgotoxy(int x, int y, GotoRegion region)
     gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
 }
 
+GotoRegion get_cursor_region()
+{
+    return (_current_region);
+}
+#endif // USE_TILE
+
+coord_def cgetsize(GotoRegion region)
+{
+    switch (region)
+    {
+    case GOTO_MLIST:
+        return crawl_view.mlistsz;
+    case GOTO_STAT:
+        return crawl_view.hudsz;
+    case GOTO_MSG:
+        return crawl_view.msgsz;
+    case GOTO_DNGN:
+        return crawl_view.viewsz;
+    case GOTO_CRT:
+    default:
+        return crawl_view.termsz;
+    }
+}
+
 void cscroll(int n, GotoRegion region)
 {
     // only implemented for the message window right now
@@ -732,10 +738,5 @@ void cscroll(int n, GotoRegion region)
     scroll_message_window(n);
 }
 
-GotoRegion get_cursor_region()
-{
-    return (_current_region);
-}
-#endif
 
 mouse_mode mouse_control::ms_current_mode = MOUSE_MODE_NORMAL;

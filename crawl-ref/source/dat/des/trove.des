@@ -16,7 +16,7 @@
 function trove_portal(e)
     local d = crawl.roll_dice
     local entry_fee = 5 * math.floor(200 + d(3,200) / 3 + d(10) * d(10) * d(10))
-    local a = you.absdepth()    
+    local a = you.absdepth()
     local timeout_turns = crawl.random_range(1600, 3000) + 5 * (30 - a) * (30 - a)
     local dur = "n exceptionally long"
     if timeout_turns < 2000 then
@@ -97,7 +97,7 @@ function place_fog(e, type, strength)
 end
 }}
 
-default-depth: D:10-, Elf:1-, Vault:1- 
+default-depth: D:10-, Elf:1-, Vault:1-
 
 ##############################################################################
 #
@@ -145,7 +145,7 @@ SUBST:  x = c:20 =:6
 MAP
 cxxxc
 x...x
-x.O.x 
+x.O.x
 x...x
 cxxxc
 ENDMAP
@@ -162,7 +162,7 @@ KMONS:  e = gnoll
 KMONS:  l = gnoll / nothing w:5
 : elseif you.xl() <= 15 then
 # Got drafted in from Vaults:8, while the mages try and close the portal down.
-KMONS:  e = vault guard 
+KMONS:  e = vault guard
 : elseif you.xl() <= 20 then
 # And this time he brought some friends...
 KMONS:  e = vault guard
@@ -593,6 +593,3 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
-
-
-

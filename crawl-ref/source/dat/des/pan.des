@@ -498,7 +498,7 @@ COLOUR: . = red / none w:40
 # not sure which FTILE to use here
 SUBST:  '=. , "=.
 MAP
- ... 
+ ...
 .'''.
 .'Y'.
 .'''.

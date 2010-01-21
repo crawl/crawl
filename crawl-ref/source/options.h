@@ -454,4 +454,3 @@ private:
 extern game_options  Options;
 
 #endif
-

@@ -37,4 +37,3 @@ private:
 typedef unwind_var<bool> unwind_bool;
 
 #endif
-
