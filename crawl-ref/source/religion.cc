@@ -5288,13 +5288,6 @@ void handle_god_time()
                 gain_piety(1);
             return;
 
-        case GOD_CHEIBRIADOS:
-            if (you.hunger_state < HS_FULL)
-                return;
-            if (_need_free_piety() && one_chance_in(12))
-                gain_piety(1);
-            return;
-
         case GOD_SHINING_ONE:
             if (_need_free_piety() && one_chance_in(15))
                 gain_piety(1);
@@ -5349,6 +5342,7 @@ void handle_god_time()
             break;
 
         case GOD_FEDHAS:
+        case GOD_CHEIBRIADOS:
             // Fedhas's piety is stable over time but we need a case here to
             // avoid the error message below.
             break;
