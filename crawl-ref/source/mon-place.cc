@@ -214,6 +214,7 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     }
 }
 
+// This applies only to D:1
 static bool _need_moderate_ood(int lev_mons)
 {
     return (env.turns_on_level > 700 - lev_mons * 117);
@@ -222,12 +223,12 @@ static bool _need_moderate_ood(int lev_mons)
 static bool _need_super_ood(int lev_mons)
 {
     return (env.turns_on_level > 1400 - lev_mons * 117
-            && one_chance_in(5000));
+            && one_chance_in(env.turns_on_level ? 1000 : 5000));
 }
 
 static int _fuzz_mons_level(int level)
 {
-    if (one_chance_in(7))
+    if (one_chance_in(env.turns_on_level ? 2 : 7))
     {
         const int fuzz = random2avg(9, 2);
         return (fuzz > 4? level + fuzz - 4 : level);
