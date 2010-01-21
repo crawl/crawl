@@ -1682,10 +1682,8 @@ int mons_swamp_rare(int mcls)
     case MONS_GIANT_NEWT:
     case MONS_GIANT_SLUG:
     case MONS_GIANT_SNAIL:
-        return 10;
-
     case MONS_TENTACLED_MONSTROSITY:
-        return 5;
+        return 10;
 
     default:
         return 0;
