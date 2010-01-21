@@ -331,7 +331,9 @@ void spawn_random_monsters()
     }
 
     const int rate = (you.char_direction == GDT_DESCENDING) ?
-        _scale_spawn_parameter(env.spawn_random_rate, 2000, 0)
+        _scale_spawn_parameter(env.spawn_random_rate,
+                               6 * env.spawn_random_rate,
+                               0)
         : 8;
 
     if (rate == 0)

@@ -1078,7 +1078,7 @@ void dgn_reset_level(bool enable_random_maps)
         if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE)
             env.spawn_random_rate = 0;
         else
-            env.spawn_random_rate = 480;
+            env.spawn_random_rate = 240;
     }
     else if (you.level_type == LEVEL_ABYSS
              || you.level_type == LEVEL_PANDEMONIUM)
