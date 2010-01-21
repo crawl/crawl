@@ -328,10 +328,10 @@ public:
         std::vector<formatted_string> newlines;
         linebreak_string2(text, out_width());
         formatted_string::parse_string_to_multiple(text, newlines);
-        make_space(newlines.size());
         int old = next_line;
         for (size_t i = 0; i < newlines.size(); ++i)
         {
+            make_space(1);
             std::string fc = "";
             if (use_first_col())
             {
