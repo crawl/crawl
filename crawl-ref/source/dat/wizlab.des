@@ -1059,43 +1059,63 @@ ENDMAP
 #
 NAME:       wizlab_iskenderun
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup patrolling
 :           wizlab_setup(_G, "Iskenderun's Mystic Tower")
-MONS:       purple draconian / naga mage name:naga_mystic name_replace name_descriptor
+MONS:       purple draconian / naga mage name:naga_mystic name_replace name_descriptor \
+            spells:iskenderun's_mystic_blast;iskenderun's_mystic_blast;iskenderun's_\
+            mystic_blast
 MONS:       statue tile:mons_statue_mage spells:iskenderun's_mystic_blast;orb_of\
-                _destruction col:lightmagenta
+            _destruction col:lightmagenta
+MONS:       shadow dragon spells:iskenderun's_mystic_blast;iskenderun's_mystic_blast \
+            name:purple_dragon name_replace name_descriptor
+KITEM:      D = star_item, star_item / superb_item, star_item
+KITEM:      E = randbook disc:conjuration owner:Iskenderun spell:iskenderun's_mystic\
+                _blast, randbook disc:conjuration owner:Iskenderun, any book
+KITEM:      F = any book good_item, any book good_item, any book
+KMONS:      DEF = purple draconian / naga mage name:naga_mystic name_replace name_descriptor \
+            spells:iskenderun's_mystic_blast;iskenderun's_mystic_blast;iskenderun's_\
+            mystic_blast
 COLOUR:     v = magenta
-COLOUR:     c = lightmagenta
+COLOUR:     Uc = lightmagenta
 LFLOORCOL:  magenta
+MARKER:     + = lua:restrict_door()
+MARKER:     R = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 15, cloud_type = "purple smoke" \
+            }
+SUBST:      R = .
+KFEAT:      - = altar_sif_muna
+KFEAT:      _ = altar_vehumet
+SHUFFLE:    DEF
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
-cAc..c.c.c.c.c.c.c.cc.cc.c.c.c.c.c.c.cc.c.c
+cAc..c.c.c.c.c.c.c.ccRcc.c.c.c.c.c.c.cc.cRc
 cc.cc<c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.cc.cc
 c.c.ccc.............c.c..............cc.c.c
 c.cc...................................cccc
 cc<c......2.....................2......c.cc
 c.cc.............v.vv.vv.v..............c.c
-cc..............vvv.1.1.vvv..............cc
-c.c............v.v.1v1v1.v.v............c.c
-cc............vvvv1vvvvv1vvvv............cc
-c.c..........v..v1vv...vv1v..v..........c.c
+cc..............vvv.1R1.vvv..............cc
+c.c............v.v.1vvv1.v.v............c.c
+cc............vvvv1vvEvv1vvvv............cc
+c.c..........v..v1vvv+vvv1v..v..........c.c
 cc..........vv.v1vv.....vv1v.vv..........cc
 c.c........v.vv1vv.......vv1vv.v........c.c
-cccc.......vvv1vv.........vv1vvv.......cccc
-c......2.......1v.........+1.......2......c
-cccc.......vvv1vv.........vv1vvv.......cccc
+cccc.......vvv1vvv.......vvv1vvv.......cccc
+cR.....2......RvD+...2...+1+R......2.....Rc
+cccc.......vvv1vvv.......vvv1vvv.......cccc
 c.c........v.vv1vv.......vv1vv.v........c.c
 cc..........vv.v1vv.....vv11.vv..........cc
-c.c..........v..v1vv...vv1v..v..........c.c
-cc............vvvv1vvvvv1vvvv............cc
-c.c............v.v.1v1v1.v.v............c.c
-cc..............vvv.1.1.vvv..............cc
+c.c..........v..v1vvv+vvv1v..v..........c.c
+cc............vvvv1vvFvv1vvvv............cc
+c.c............v.v.1vvv1.v.v............c.c
+cc..............vvv.1R1.vvv..............cc
 c.c..............v.vv.vv.v..............c.c
 cc.c......2.....................2......c.cc
 cccc...................................cccc
 c.c.cc..............c.c..............cc.c.c
 cc.cc.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.cc.cc
-c.c.cc.c.c.c.c.c.c.cc.cc.c.c.c.c.c.c.cc.c.c
+cRc.cc.c.c.c.c.c.c.ccRcc.c.c.c.c.c.c.cc.cRc
 ccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
