@@ -24,6 +24,7 @@
 #include "cio.h"
 #include "debug.h"
 #include "decks.h"
+#include "delay.h"
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
@@ -2259,16 +2260,16 @@ static bool _describe_spells(const item_def &item)
 // Describes all items in the game.
 //
 //---------------------------------------------------------------
-void describe_item( item_def &item, bool allow_inscribe, bool shopping )
+bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
 {
     if (!item.is_valid())
-        return;
+        return (true);
 
     while (true)
     {
         // Memorised spell while reading a spellbook.
-        if (you.turn_is_over && !shopping)
-            return;
+        if (already_learning_spell(-1))
+            return (false);
 
         const bool spells_shown = _show_item_description(item);
 
@@ -2277,7 +2278,8 @@ void describe_item( item_def &item, bool allow_inscribe, bool shopping )
             cgotoxy(1, wherey());
             textcolor(LIGHTGREY);
 
-            if (item.base_type == OBJ_BOOKS && in_inventory(item))
+            if (item.base_type == OBJ_BOOKS && in_inventory(item)
+                && !crawl_state.player_is_dead())
             {
                 cprintf("Select a spell to read its description or to "
                         "memorise it.");
@@ -2287,7 +2289,7 @@ void describe_item( item_def &item, bool allow_inscribe, bool shopping )
 
             if (_describe_spells(item))
                 continue;
-            return;
+            return (true);
         }
         break;
     }
@@ -2300,6 +2302,8 @@ void describe_item( item_def &item, bool allow_inscribe, bool shopping )
     }
     else if (getch() == 0)
         getch();
+
+    return (true);
 }
 
 // There are currently two ways to inscribe an item:
@@ -2453,6 +2457,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
 
 }
 
+// Returns true if you can memorise the spell.
 bool _get_spell_description(const spell_type spell, std::string &description,
                             const item_def* item = NULL)
 {
@@ -2474,6 +2479,9 @@ bool _get_spell_description(const spell_type spell, std::string &description,
                        "Please file a bug report.";
 #endif
     }
+
+    if (crawl_state.player_is_dead())
+        return (false);
 
     if (you_cannot_memorise(spell))
     {

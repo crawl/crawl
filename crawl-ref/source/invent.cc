@@ -917,7 +917,10 @@ unsigned char get_invent(int invent_type)
         {
             const int invidx = letter_to_index(select);
             if (you.inv[invidx].is_valid())
-                describe_item( you.inv[invidx], true );
+            {
+                if (!describe_item( you.inv[invidx], true ))
+                    break;
+            }
         }
         else
             break;
@@ -927,7 +930,7 @@ unsigned char get_invent(int invent_type)
         redraw_screen();
 
     return select;
-}                               // end get_invent()
+}
 
 std::string item_class_name( int type, bool terse )
 {

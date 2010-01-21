@@ -2286,7 +2286,7 @@ static bool _confirm_pray_sacrifice(god_type god)
 std::string god_prayer_reaction()
 {
     std::string result = god_name(you.religion);
-    if (!crawl_state.need_save && crawl_state.updating_scores)
+    if (crawl_state.player_is_dead())
         result += " was ";
     else
         result += " is ";

@@ -149,6 +149,7 @@ public:
     void      mon_gone(monsters* mon);
 
     void dump();
+    bool player_is_dead();
 
     friend class mon_acting;
 };

@@ -713,7 +713,7 @@ bool already_learning_spell(int spell)
         if (you.delay_queue[i].type != DELAY_MEMORISE)
             continue;
 
-        if (you.delay_queue[i].parm1 == spell)
+        if (spell == -1 || you.delay_queue[i].parm1 == spell)
             return (true);
     }
     return (false);

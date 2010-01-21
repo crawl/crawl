@@ -549,3 +549,8 @@ void game_state::dump()
                     debug_mon_str(mon_act_stack[i]).c_str());
     }
 }
+
+bool game_state::player_is_dead()
+{
+    return (updating_scores && !need_save);
+}
