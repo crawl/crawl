@@ -3202,7 +3202,8 @@ bool monsters::is_chaotic() const
     if (type == MONS_UGLY_THING
         || type == MONS_VERY_UGLY_THING
         || type == MONS_ABOMINATION_SMALL
-        || type == MONS_ABOMINATION_LARGE)
+        || type == MONS_ABOMINATION_LARGE
+        || type == MONS_TIAMAT) // For her colour-changing.
     {
         return (true);
     }
