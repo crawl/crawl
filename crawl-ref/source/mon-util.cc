@@ -1398,6 +1398,9 @@ int exper_value(const monsters *monster)
     if (x_val > 1000)
         x_val = 1000 + (x_val - 1000) / 2;
 
+    // Having killed hundreds means the monster is no longer a threat.
+    x_val >>= you.kills->num_kills(monster) / 100;
+
     // Guarantee the value is within limits.
     if (x_val <= 0)
         x_val = 1;

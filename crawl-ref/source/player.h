@@ -167,7 +167,7 @@ public:
 
   // NOTE: The kills member is a pointer to a KillMaster object,
   // rather than the object itself, so that we can get away with
-  // just a foward declare of the KillMaster class, rather than
+  // just a forward declare of the KillMaster class, rather than
   // having to #include kills.h and thus make every single .cc file
   // dependant on kills.h.  Having a pointer means that we have
   // to do our own implementations of copying the player object,
