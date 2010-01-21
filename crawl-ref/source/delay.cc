@@ -802,6 +802,7 @@ void handle_delay()
                  (delay.type == DELAY_BOTTLE_BLOOD ? "bottling blood from"
                                                    : "butchering"),
                  mitm[delay.parm1].name(DESC_PLAIN).c_str());
+            break;
 
         case DELAY_MEMORISE:
             mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
