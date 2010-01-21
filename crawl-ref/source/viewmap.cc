@@ -370,13 +370,16 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
             }
             else
             {
-                buffer2[bufcount2] = env.map_knowledge(c).glyph();
-                buffer2[bufcount2 + 1] = real_colour(get_map_col(c, travel_mode));
+                buffer2[bufcount2] =
+                    env.map_knowledge(c).glyph(Options.clean_map);
+                buffer2[bufcount2 + 1] =
+                    real_colour(get_map_col(c, travel_mode));
 
                 if (c == you.pos() && !crawl_state.arena_suspended && on_level)
                 {
-                    // [dshaligram] Draw the @ symbol on the level-map. It's no
-                    // longer saved into the env.map_knowledge, so we need to draw it
+                    // [dshaligram] Draw the @ symbol on the
+                    // level-map. It's no longer saved into the
+                    // env.map_knowledge, so we need to draw it
                     // directly.
                     buffer2[bufcount2 + 1] = WHITE;
                     buffer2[bufcount2]     = you.symbol;
@@ -1176,7 +1179,12 @@ static bool _travel_colour_override(const coord_def& p)
     if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
         return (true);
 #endif
+
+    // [ds] Elaborate dance to get map colouring right if
+    // Options.clean_map is set.
     show_type obj = get_map_knowledge_obj(p);
+    if (Options.clean_map && obj.is_cleanable_monster())
+        obj.cls = SH_FEATURE;
     return (obj.cls == SH_FEATURE && (obj.feat == DNGN_FLOOR ||
                                       obj.feat == DNGN_LAVA ||
                                       obj.feat == DNGN_DEEP_WATER ||

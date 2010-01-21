@@ -12,6 +12,10 @@ static feat_map Features;
 
 const feature_def &get_feature_def(show_type object)
 {
+    // If this is a monster that is hidden explicitly, show items if
+    // any instead, or the base feature if there are no items.
+    if (object.cls == SH_MONSTER)
+        object.cls = (object.item != SHOW_ITEM_NONE)? SH_ITEM : SH_FEATURE;
     return (Features[object]);
 }
 

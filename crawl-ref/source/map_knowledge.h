@@ -15,7 +15,7 @@ struct map_cell
     map_cell() : object(), flags(0) { }
     void clear() { flags = 0; object = show_type(); }
 
-    unsigned glyph() const;
+    unsigned glyph(bool clean_map = false) const;
     dungeon_feature_type feat() const;
     show_item_type item() const;
     bool known() const;
