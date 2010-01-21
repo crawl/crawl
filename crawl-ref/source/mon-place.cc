@@ -245,11 +245,6 @@ static int _scale_spawn_parameter(int base_value,
              / dropoff_ramp_turns));
 }
 
-static inline int _scale_spawn_parameter(int base_value, int target_value)
-{
-    return _scale_spawn_parameter(base_value, target_value, target_value);
-}
-
 // This applies only to D:1
 static bool _need_moderate_ood(int lev_mons)
 {
