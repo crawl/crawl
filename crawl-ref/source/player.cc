@@ -3908,9 +3908,9 @@ static int _species_exp_mod(species_type species)
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_DEMONSPAWN:
+        case SP_MUMMY:
             return 14;
         case SP_HIGH_ELF:
-        case SP_MUMMY:
         case SP_VAMPIRE:
         case SP_TROLL:
             return 15;

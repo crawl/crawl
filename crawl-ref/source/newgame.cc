@@ -1412,7 +1412,7 @@ static void _species_stat_init(species_type which_species)
     case SP_HALFLING:           sb =  3; ib =  6; db =  9;      break;  // 18
     case SP_SPRIGGAN:           sb =  2; ib =  7; db =  9;      break;  // 18
 
-    case SP_MUMMY:              sb =  7; ib =  3; db =  3;      break;  // 13
+    case SP_MUMMY:              sb =  9; ib =  5; db =  5;      break;  // 19
     case SP_GHOUL:              sb =  9; ib =  1; db =  2;      break;  // 13
     case SP_VAMPIRE:            sb =  5; ib =  8; db =  7;      break;  // 20
 
