@@ -1090,5 +1090,3 @@ extern "C" {
         return (str);
     }
 }
-
-

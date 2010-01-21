@@ -140,6 +140,3 @@ inline coord_def show2grid(const coord_def &pos)
 }
 
 #endif
-
-
-

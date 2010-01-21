@@ -11,4 +11,3 @@ void cf_setseed();
 unsigned long random_int();
 
 #endif
-

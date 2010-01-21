@@ -114,4 +114,3 @@ void pop_rng_state()
     pop_sha256_state();
 #endif
 }
-

@@ -8,4 +8,3 @@ void pop_sha256_state();
 void reset_sha256_state();
 
 #endif
-

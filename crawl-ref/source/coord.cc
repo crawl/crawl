@@ -108,4 +108,3 @@ coord_def grid2player(const coord_def &gc)
 {
     return (gc - you.pos());
 }
-

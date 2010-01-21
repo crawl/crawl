@@ -535,4 +535,3 @@ void ray_def::set_degrees(double d)
 {
     r.dir = geom::degree_to_vector(d);
 }
-

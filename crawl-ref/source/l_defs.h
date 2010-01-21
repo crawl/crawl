@@ -17,4 +17,3 @@ bool in_show_bounds(const coord_def &c);
 coord_def player2grid(const coord_def &p);
 
 #endif
-
