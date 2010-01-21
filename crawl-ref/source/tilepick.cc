@@ -1401,6 +1401,9 @@ static int _tileidx_weapon_base(const item_def &item)
     case WPN_WHIP:
         return TILE_WPN_WHIP;
 
+    case WPN_HOLY_SCOURGE:
+        return TILE_WPN_HOLY_SCOURGE;
+
     case WPN_DEMON_BLADE:
         return TILE_WPN_DEMON_BLADE;
 

@@ -39,6 +39,7 @@ hammer WPN_HAMMER
 hammer2
 ankus WPN_ANKUS
 bullwhip WPN_WHIP
+holy_scourge WPN_HOLY_SCOURGE
 demon_whip WPN_DEMON_WHIP
 giant_club WPN_GIANT_CLUB
 giant_spiked_club WPN_GIANT_SPIKED_CLUB
