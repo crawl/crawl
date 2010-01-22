@@ -254,7 +254,9 @@ static bool _need_moderate_ood(int lev_mons)
 static bool _need_super_ood(int lev_mons)
 {
     return (env.turns_on_level > 1400 - lev_mons * 117
-            && one_chance_in(_scale_spawn_parameter(500, 2, 1, 3000, 9000)));
+            && x_chance_in_y(
+                _scale_spawn_parameter(2, 1000, 1000, 3000, 6000),
+                1000));
 }
 
 static int _fuzz_mons_level(int level)
@@ -735,6 +737,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             int tries = 0;
             while (tries++ < 300)
             {
+                const int original_level = *lev_mons;
                 // Now pick a monster of the given branch and level.
                 mon_type = pick_random_monster(place, *lev_mons, *lev_mons);
 
@@ -746,6 +749,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 {
                     break;
                 }
+                *lev_mons = original_level;
             }
 
             if (proximity == PROX_NEAR_STAIRS && tries >= 300)
