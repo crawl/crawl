@@ -2258,7 +2258,7 @@ static bool _describe_spells(const item_def &item)
 // describe_item
 //
 // Describes all items in the game.
-//
+// Returns false if we should break out of the inventory loop.
 //---------------------------------------------------------------
 bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
 {
