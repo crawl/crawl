@@ -1,6 +1,8 @@
 #ifndef MON_RESIST_DEF_H
 #define MON_RESIST_DEF_H
 
+#include "mon-enum.h"
+
 struct mon_resist_def
 {
     // All values are actually saved as single-bytes, so practical

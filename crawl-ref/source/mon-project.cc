@@ -23,6 +23,7 @@
 #include "mgen_data.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "shout.h"
 #include "stuff.h"
 #include "terrain.h"

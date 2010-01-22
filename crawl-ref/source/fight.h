@@ -9,9 +9,8 @@
 #define FIGHT_H
 
 
-#include "externs.h"
 #include "artefact.h"
-#include "mon-util.h"
+#include "mon-enum.h"
 
 enum unarmed_attack_type
 {

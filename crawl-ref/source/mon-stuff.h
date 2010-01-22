@@ -8,8 +8,6 @@
 #ifndef MONSTUFF_H
 #define MONSTUFF_H
 
-#include "mon-util.h"
-
 #define ORIG_MONSTER_KEY "orig_monster_key"
 
 enum mon_dam_level_type
@@ -58,8 +56,6 @@ public:
 
 #define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
 
-// for definition of type monsters {dlb}
-#include "externs.h"
 
 const item_def *give_mimic_item(monsters *mimic);
 const item_def &get_mimic_item(const monsters *mimic);
