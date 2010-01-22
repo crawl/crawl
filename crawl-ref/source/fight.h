@@ -74,16 +74,6 @@ class melee_attack
 public:
     actor     *attacker, *defender;
 
-    monsters* attacker_as_monster()
-    {
-        return dynamic_cast<monsters*>(attacker);
-    }
-
-    monsters* defender_as_monster()
-    {
-        return dynamic_cast<monsters*>(defender);
-    }
-
     bool      cancel_attack;
     bool      did_hit, perceived_attack, obvious_effect;
 

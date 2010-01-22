@@ -374,6 +374,8 @@ public:
     int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
+    monsters* as_monster() { return NULL; }
+    player* as_player() { return this; }
 
     god_type  deity() const;
     bool      alive() const;

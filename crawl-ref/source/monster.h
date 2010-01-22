@@ -408,6 +408,8 @@ public:
     int shield_bypass_ability(int tohit) const;
 
     actor_type atype() const { return ACT_MONSTER; }
+    monsters* as_monster() { return this; }
+    player* as_player() { return NULL; }
 
     // Hacks, with a capital H.
     void fix_speed();
