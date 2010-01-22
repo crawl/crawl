@@ -921,7 +921,7 @@ void mesclr(bool force)
     // ASSERT(!messages.have_prev());
     flush_prev_message();
 
-    if (Options.clear_messages)
+    if (Options.clear_messages || force)
         msgwin.clear();
 
     // TODO: we could indicate indicate mesclr with a different
