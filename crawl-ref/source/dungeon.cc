@@ -2753,8 +2753,13 @@ static void _builder_extras( int level_number, int level_type )
 
     if (level_number > 6 && one_chance_in(10))
     {
-        _many_pools(level_number < 11 || coinflip() ? DNGN_DEEP_WATER
-                                                    : DNGN_LAVA);
+        dungeon_feature_type pool_type = (level_number < 11
+                                          || coinflip()) ? DNGN_DEEP_WATER
+                                                         : DNGN_LAVA;
+        if (one_chance_in(15))
+            pool_type = DNGN_TREES;
+
+        _many_pools(pool_type);
         return;
     }
 
@@ -6097,7 +6102,12 @@ static void _bigger_room()
                 grd[i][j] = DNGN_FLOOR;
         }
 
-    _many_pools(DNGN_DEEP_WATER);
+    dungeon_feature_type pool_type = DNGN_DEEP_WATER;
+
+    if (one_chance_in(15))
+        pool_type = DNGN_TREES;
+
+    _many_pools(pool_type);
 
     if (one_chance_in(3))
     {
