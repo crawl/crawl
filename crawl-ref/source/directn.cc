@@ -3228,14 +3228,14 @@ static void _describe_monster(const monsters *mon)
 {
     // First print type and equipment.
     std::string text = get_monster_equipment_desc(mon) + ".";
-    print_formatted_paragraph(text, MSGCH_EXAMINE);
+    mpr(text, MSGCH_EXAMINE);
 
     print_wounds(mon);
 
     // Print the rest of the description.
     text = _get_monster_desc(mon);
     if (!text.empty())
-        print_formatted_paragraph(text, MSGCH_EXAMINE);
+        mpr(text, MSGCH_EXAMINE);
 }
 
 // This method is called in two cases:
@@ -3455,7 +3455,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
             msg = "(Press <w>v</w> for more information.)";
 #endif
-            print_formatted_paragraph(msg);
+            mpr(msg);
         }
     }
 
@@ -3545,7 +3545,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
         feature_desc += " (Press <w>v</w> for more information.)";
 #endif
-        print_formatted_paragraph(feature_desc);
+        mpr(feature_desc);
     }
     else
     {

@@ -1879,7 +1879,7 @@ void process_command( command_type cmd )
             // exists, give a message to explain what's going on.
             std::string str = "Move the cursor to view the level map, or "
                               "type <w>?</w> for a list of commands.";
-            print_formatted_paragraph(str);
+            mpr(str);
 #endif
 
             show_map(pos, true);
@@ -2079,7 +2079,7 @@ void process_command( command_type cmd )
         {
            std::string msg = "Unknown command. (For a list of commands type "
                              "<w>?\?<lightgrey>.)";
-           print_formatted_paragraph(msg);
+           mpr(msg);
         }
         else // well, not examine, but...
            mpr("Unknown command.", MSGCH_EXAMINE_FILTER);
