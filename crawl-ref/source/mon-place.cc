@@ -196,22 +196,21 @@ bool monster_habitable_grid(monster_type montype,
 // Returns true if the monster can submerge in the given grid.
 bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
 {
-    if (mons->type == MONS_TRAPDOOR_SPIDER && grid == DNGN_FLOOR)
-        return (!find_trap(mons->pos()));
-
-    switch (mons_primary_habitat(mons))
-    {
-    case HT_WATER:
-        // Monsters can submerge in shallow water - this is intentional.
-        return (feat_is_watery(grid)
-                && mons_genus(mons_base_type(mons)) != MONS_MERFOLK);
-
-    case HT_LAVA:
-        return (grid == DNGN_LAVA);
-
-    default:
+    if (mons_class_flag(mons->type, M_SUBMERGES))
+        switch (mons_primary_habitat(mons))
+        {
+        case HT_WATER:
+            return (feat_is_watery(grid));
+        case HT_LAVA:
+            return (grid == DNGN_LAVA);
+        case HT_LAND:
+            // Currently, trapdoor spider only.
+            return (!find_trap(mons->pos()));
+        default:
+            return (false);
+        }
+    else
         return (false);
-    }
 }
 
 

@@ -210,9 +210,7 @@ bool monsters::wants_submerge() const
     }
 
     const bool has_ranged_attack = (type == MONS_ELECTRIC_EEL
-                                    || type == MONS_LAVA_SNAKE
-                                    || mons_genus(type) == MONS_MERMAID
-                                       && you.species != SP_MERFOLK);
+                                    || type == MONS_LAVA_SNAKE);
 
     int roll = 8;
     // Shallow water takes a little more effort to submerge in, so we're

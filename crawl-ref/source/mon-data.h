@@ -1510,7 +1510,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_TRAPDOOR_SPIDER, 's', LIGHTCYAN, "trapdoor spider",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_SUBMERGES,
     MR_VUL_POISON,
     800, 10, MONS_TRAPDOOR_SPIDER, MONS_TRAPDOOR_SPIDER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1708,7 +1708,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SWAMP_WORM, 'w', BROWN, "swamp worm",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_SUBMERGES,
     MR_NO_FLAGS,
     350, 12, MONS_WORM, MONS_SWAMP_WORM, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3328,7 +3328,7 @@ static monsterentry mondata[] = {
 // water monsters
 {
     MONS_BIG_FISH, ';', LIGHTGREEN, "big fish",
-    M_COLD_BLOOD,
+    M_COLD_BLOOD | M_SUBMERGES,
     MR_NO_FLAGS,
     300, 7, MONS_BIG_FISH, MONS_BIG_FISH, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3340,7 +3340,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GIANT_GOLDFISH, ';', LIGHTRED, "giant goldfish",
-    M_COLD_BLOOD,
+    M_COLD_BLOOD | M_SUBMERGES,
     MR_NO_FLAGS,
     500, 5, MONS_BIG_FISH, MONS_GIANT_GOLDFISH, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3352,7 +3352,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ELECTRIC_EEL, ';', LIGHTBLUE, "electric eel",
-    M_COLD_BLOOD | M_SPECIAL_ABILITY,
+    M_COLD_BLOOD | M_SPECIAL_ABILITY | M_SUBMERGES,
     MR_RES_ELEC,
     700, 19, MONS_ELECTRIC_EEL, MONS_ELECTRIC_EEL, MH_NATURAL, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3364,7 +3364,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_JELLYFISH, 'J', CYAN, "jellyfish",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_SUBMERGES,
     MR_RES_POISON,
     1000, 10, MONS_JELLYFISH, MONS_JELLYFISH, MH_NATURAL, -3,
     { {AT_STING, AF_POISON_STR, 1}, {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK,
@@ -3380,7 +3380,7 @@ static monsterentry mondata[] = {
 // of bone or similar materials (e.g. chitin)
 {
     MONS_SHARK, ';', WHITE, "shark",
-    M_NO_SKELETON | M_COLD_BLOOD | M_BLOOD_SCENT,
+    M_NO_SKELETON | M_COLD_BLOOD | M_BLOOD_SCENT | M_SUBMERGES,
     MR_NO_FLAGS,
     2000, 10, MONS_SHARK, MONS_SHARK, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 15}, {AT_BITE, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK },
@@ -3393,7 +3393,7 @@ static monsterentry mondata[] = {
 // A kraken and its tentacles get a random colour from ETC_KRAKEN.
 {
     MONS_KRAKEN, 'X', BLACK, "kraken",
-    M_NO_SKELETON | M_COLD_BLOOD | M_SPELLCASTER,
+    M_NO_SKELETON | M_COLD_BLOOD | M_SPELLCASTER | M_SUBMERGES,
     MR_NO_FLAGS,
     3500, 5, MONS_KRAKEN, MONS_KRAKEN, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 50}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3418,7 +3418,7 @@ static monsterentry mondata[] = {
 // lava monsters
 {
     MONS_LAVA_WORM, 'w', RED, "lava worm",
-    M_NO_FLAGS,
+    M_NO_FLAGS | M_SUBMERGES,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 6, MONS_LAVA_WORM, MONS_LAVA_WORM, MH_NATURAL, -3,
     { {AT_BITE, AF_FIRE, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3430,7 +3430,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_LAVA_FISH, ';', RED, "lava fish",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_SUBMERGES,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 10, MONS_BIG_FISH, MONS_LAVA_FISH, MH_NATURAL, -3,
     { {AT_BITE, AF_FIRE, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3442,7 +3442,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_LAVA_SNAKE, 'S', RED, "lava snake",
-    M_WARM_BLOOD | M_SPECIAL_ABILITY,
+    M_WARM_BLOOD | M_SPECIAL_ABILITY | M_SUBMERGES,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 17, MONS_SNAKE, MONS_LAVA_SNAKE, MH_NATURAL, -3,
     { {AT_BITE, AF_FIRE, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3454,7 +3454,7 @@ static monsterentry mondata[] = {
 
 {   // mv: was another lava thing
     MONS_SALAMANDER, 'S', LIGHTRED, "salamander",
-    M_FIGHTER | M_WARM_BLOOD,
+    M_FIGHTER | M_WARM_BLOOD | M_SUBMERGES,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 10, MONS_SALAMANDER, MONS_SALAMANDER, MH_NATURAL, -3,
     { {AT_HIT, AF_FIRE, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
