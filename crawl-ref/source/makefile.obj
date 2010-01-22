@@ -123,6 +123,7 @@ mon-util.o \
 mon-speak.o \
 mon-stuff.o \
 mon-transit.o \
+mon_resist_def.o \
 monster.o \
 mt19937ar.o \
 mutation.o \
