@@ -7,7 +7,7 @@
 --   lua_file = lua/stash.lua
 --
 -- Available annotations:
--- {artefact} for identified artefacs.
+-- {artefact} for artefacts.
 -- {ego} for identified branded items.
 -- { <skill> } - the relevant weapon skill for weapons.
 -- { <class> } - item class: gold, weapon, missile, armour, wand, carrion,
