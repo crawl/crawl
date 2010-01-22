@@ -300,7 +300,7 @@ roxanne MONS_ROXANNE
 %sdir dc-mon/statues
 ice_statue MONS_ICE_STATUE
 silver_statue MONS_SILVER_STATUE
-orange_crystal_statue MONS_ORANGE_CRYSTAL_STATUE
+orange_crystal_statue MONS_ORANGE_STATUE
 
 %back statue_base
 overlay_axe MONS_STATUE_AXE

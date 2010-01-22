@@ -930,7 +930,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_SILVER_STATUE:
         return TILEP_MONS_SILVER_STATUE;
     case MONS_ORANGE_STATUE:
-        return TILEP_MONS_ORANGE_CRYSTAL_STATUE;
+        return TILEP_MONS_ORANGE_STATUE;
 
     // gargoyles ('9')
     case MONS_GARGOYLE:
