@@ -28,6 +28,7 @@
 #include "coord.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "random.h"
 #include "spl-mis.h"
 #include "spl-util.h"

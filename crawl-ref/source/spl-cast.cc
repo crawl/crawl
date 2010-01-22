@@ -39,6 +39,7 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"

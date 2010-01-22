@@ -15,6 +15,7 @@
 #include "env.h"
 #include "libutil.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"

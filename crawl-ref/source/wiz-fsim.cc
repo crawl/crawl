@@ -24,6 +24,7 @@
 #include "mgen_data.h"
 #include "monster.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "options.h"
 #include "player.h"
 #include "skills2.h"

@@ -11,6 +11,7 @@
 #include "externs.h"
 #include "enum.h"
 #include "mon-enum.h"
+#include "mon_resist_def.h"
 #include "player.h"
 #include "monster.h"
 
