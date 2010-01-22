@@ -100,7 +100,8 @@ The contents of this text are:
                 tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
                 tile_font_tip_file, tile_font_lbl_file, tile_font_crt_size,
                 tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
-                tile_font_lbl_size
+                tile_font_lbl_size, tile_show_minihealthbar,
+                tile_show_minimagicbar
 5-  Character Dump.
 5-a     Items and Kills.
                 kill_map, dump_kill_places, dump_item_origins,
@@ -1758,6 +1759,11 @@ tile_font_msg_size  = 14
 tile_font_tip_size  = 15
 tile_font_lbl_size  = 14
         Font size for the screen regions listed above.
+
+tile_show_minihealthbar = true
+tile_show_minimagicbar  = true
+        Will show health and magic bars on top of the player tile when the
+        player gets hurt or spends magic.
 
 5-  Character Dump.
 ===================

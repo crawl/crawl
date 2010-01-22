@@ -1137,29 +1137,61 @@ void DungeonRegion::render()
     m_buf_main_trans.draw();
     m_buf_main.draw();
 
-    if (you.hp < you.hp_max || you.magic_points < you.max_magic_points)
+    if ((Options.tile_show_minihealthbar && you.hp < you.hp_max)
+        || (Options.tile_show_minimagicbar && you.magic_points < you.max_magic_points))
     {
-        ShapeBuffer buff;
-        VColour healthy(0, 255, 0, 255);
-        VColour damaged(255, 0, 0, 255);
-        VColour magic(0, 0, 255, 255);
-        VColour magic_spent(0, 0, 0, 255);
-
-        const float health_divider = (float) you.hp / (float) you.hp_max;
-        const float magic_divider = (float) you.magic_points / (float) you.max_magic_points;
 
         // Tiles are 32x32 pixels; 1/32 = 0.03125.
-        buff.add(mx / 2, my / 2 + 0.875,
-                 mx / 2 + health_divider, my / 2 + 0.9375, healthy);
-        buff.add(mx / 2 + health_divider, my / 2 + 0.875,
-                 mx / 2 + 1, my / 2 + 0.9375, damaged);
+        // The bars are two pixels high each.
+        const float bar_height = 0.0625;
+        float healthbar_offset = 0.875;
 
-        buff.add(mx / 2, my / 2 + 0.9375,
-                 mx / 2 + magic_divider, my / 2 + 1, magic);
-        buff.add(mx / 2 + magic_divider, my / 2 + 0.9375,
-                 mx / 2 + 1, my / 2 + 1, magic_spent);
+        ShapeBuffer buff;
+
+        if (Options.tile_show_minimagicbar)
+        {
+            static const VColour magic(0, 0, 255, 255);
+            static const VColour magic_spent(0, 0, 0, 255);
+
+            const float magic_divider = (float) you.magic_points / (float) you.max_magic_points;
+
+            buff.add(mx / 2,
+                     my / 2 + healthbar_offset + bar_height,
+                     mx / 2 + magic_divider,
+                     my / 2 + 1,
+                     magic);
+            buff.add(mx / 2 + magic_divider,
+                     my / 2 + healthbar_offset + bar_height,
+                     mx / 2 + 1,
+                     my / 2 + 1,
+                     magic_spent);
+        }
+        else
+        {
+            healthbar_offset += bar_height;
+        }
+
+        if (Options.tile_show_minihealthbar)
+        {
+            static const VColour healthy(0, 255, 0, 255);
+            static const VColour damaged(255, 0, 0, 255);
+
+            const float health_divider = (float) you.hp / (float) you.hp_max;
+
+            buff.add(mx / 2,
+                     my / 2 + healthbar_offset,
+                     mx / 2 + health_divider,
+                     my / 2 + healthbar_offset + bar_height,
+                     healthy);
+            buff.add(mx / 2 + health_divider,
+                     my / 2 + healthbar_offset,
+                     mx / 2 + 1,
+                     my / 2 + healthbar_offset + bar_height,
+                     damaged);
+        }
 
         buff.draw();
+
     }
 
     if (you.berserk())
