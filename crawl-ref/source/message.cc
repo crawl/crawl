@@ -156,6 +156,8 @@ public:
     }
 };
 
+static void readkey_more(bool user_forced=false);
+
 class message_window
 {
     int next_line;
@@ -249,9 +251,7 @@ class message_window
             cprintf("+");
         else
             cprintf("--more--");
-        // XXX: getch() calls flush_prev_message -- we
-        //      need something raw.
-        getch_ck();
+        readkey_more();
     }
 
     void add_line(const formatted_string& line)
@@ -729,7 +729,7 @@ void mpr(std::string text, msg_channel_type channel, int param)
         interrupt_activity(AI_FORCE_INTERRUPT);
 
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
-        set_more_autoclear(true);
+        set_more_autoclear(false);
 
     if (check_more(formatted_string::parse_string(text).tostring(),
                    channel))
@@ -935,6 +935,24 @@ void set_more_autoclear(bool on)
     autoclear_more = on;
 }
 
+static void readkey_more(bool user_forced)
+{
+    if (autoclear_more)
+        return;
+    int keypress;
+    mouse_control mc(MOUSE_MODE_MORE);
+    do
+    {
+        keypress = c_getch();
+    }
+    while (keypress != ' ' && keypress != '\r' && keypress != '\n'
+           && keypress != ESCAPE && keypress != -1
+           && (user_forced || keypress != CK_MOUSE_CLICK));
+
+    if (keypress == ESCAPE)
+        set_more_autoclear(true);
+}
+
 void more(bool user_forced)
 {
     if (crawl_state.game_crashed || crawl_state.seen_hups)
@@ -971,19 +989,8 @@ void more(bool user_forced)
 
     if (crawl_state.show_more_prompt && !suppress_messages)
     {
-        mpr("--more--", MSGCH_PROMPT);
-        int keypress;
-        mouse_control mc(MOUSE_MODE_MORE);
-        do
-        {
-            keypress = getch();
-        }
-        while (keypress != ' ' && keypress != '\r' && keypress != '\n'
-               && keypress != ESCAPE && keypress != -1
-               && (user_forced || keypress != CK_MOUSE_CLICK));
-
-        if (keypress == ESCAPE)
-            autoclear_more = true;
+        mpr("--more--");
+        readkey_more(user_forced);
     }
 
     mesclr();

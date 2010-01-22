@@ -979,7 +979,10 @@ static void _input()
 
     // Stop autoclearing more now that we have control back.
     if (!you_are_delayed())
+    {
+        flush_prev_message();
         set_more_autoclear(false);
+    }
 
     if (need_to_autopickup())
         autopickup();
