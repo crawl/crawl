@@ -3,11 +3,9 @@
  *  Summary:    Functions used to print messages.
  *
  * Todo:
- *   - --more-- for full message window (partial)
+ *   - --more-- for full message window with clear_messages=false
  *   - Handle resizing properly, in particular initial resize.
  *   - Get rid of print_formatted_paragraph.
- *   - force parameter for mesclr: either get rid of it or
- *     implement it
  *   - Fix things that use mpr when the messagewindow isn't displayed
  *     (yesno() god prompt for example)
  *   - change uses of cancelable_get_line to msgwin_get_line
