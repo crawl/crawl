@@ -788,6 +788,9 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
         // Cycle the radius of an exclude.
         case CMD_MAP_EXCLUDE_AREA:
         {
+            if (you.level_type == LEVEL_LABYRINTH)
+                break;
+
             const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
             cycle_exclude_radius(p);
 
@@ -855,7 +858,8 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             break;
 
         case CMD_MAP_PREV_LEVEL:
-        case CMD_MAP_NEXT_LEVEL: {
+        case CMD_MAP_NEXT_LEVEL:
+        {
             level_id next;
 
             next = (cmd == CMD_MAP_PREV_LEVEL)
@@ -871,7 +875,8 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             break;
         }
 
-        case CMD_MAP_GOTO_LEVEL: {
+        case CMD_MAP_GOTO_LEVEL:
+        {
             std::string name;
             const level_pos pos =
                 prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
