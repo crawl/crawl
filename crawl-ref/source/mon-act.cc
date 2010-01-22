@@ -3471,8 +3471,18 @@ static bool _monster_move(monsters *monster)
         monsters* targ = monster_at(monster->pos() + mmov);
         if (!mmov.origin() && targ && mons_is_firewood(targ))
         {
-            monsters_fight(monster, targ);
-            ret = true;
+            if (monster->attitude == ATT_GOOD_NEUTRAL
+                && targ->attitude == ATT_FRIENDLY)
+                ; // Do nothing: good neutral should not attack friendlies.
+            else if (monster->attitude == ATT_FRIENDLY
+                && targ->attitude > ATT_HOSTILE)
+                ; // Likewise do nothing: friendlies should never attack neutrals
+                  // or other friendlies.
+            else
+            {
+                monsters_fight(monster, targ);
+                ret = true;
+            }
         }
 
         mmov.reset();
