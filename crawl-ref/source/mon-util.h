@@ -177,8 +177,7 @@ enum habitat_type
 {
     // Flying monsters will appear in all categories except rock walls
     HT_LAND = 0,         // Land critters
-    HT_AMPHIBIOUS_LAND,  // Amphibious land-preferring critters
-    HT_AMPHIBIOUS_WATER, // Amphibious water-preferring critters
+    HT_AMPHIBIOUS,       // Amphibious creatures
     HT_WATER,            // Water critters
     HT_LAVA,             // Lava critters
     HT_ROCK,             // Rock critters
@@ -331,10 +330,11 @@ public:
     {
     }
 
-    static mon_energy_usage attack_cost(int cost)
+    static mon_energy_usage attack_cost(int cost, int sw = 10)
     {
         mon_energy_usage me;
         me.attack = cost;
+        me.swim = sw;
         return me;
     }
 
@@ -342,6 +342,13 @@ public:
     {
         mon_energy_usage me;
         me.missile = cost;
+        return me;
+    }
+
+    static mon_energy_usage swim_cost (int cost)
+    {
+        mon_energy_usage me;
+        me.swim = cost;
         return me;
     }
 

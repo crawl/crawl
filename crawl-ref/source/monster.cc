@@ -3378,7 +3378,7 @@ int monsters::res_water_drowning() const
     switch (mons_habitat(this))
     {
     case HT_WATER:
-    case HT_AMPHIBIOUS_WATER:
+    case HT_AMPHIBIOUS:
         return 1;
     default:
         return 0;
@@ -5853,17 +5853,9 @@ int monsters::action_energy(energy_use_type et) const
         switch (et)
         {
         case EUT_MOVE:    return mu.move - (swift ? 2 : 0);
-        case EUT_SWIM:
-            // [ds] Amphibious monsters get a significant speed boost
-            // when swimming, as discussed with dpeg. We do not
-            // distinguish between amphibians that favour land
-            // (HT_AMPHIBIOUS_LAND, such as hydras) and those that
-            // favour water (HT_AMPHIBIOUS_WATER, such as merfolk), but
-            // that's something we can think about.
-            if (mons_amphibious(this))
-                return div_rand_round(mu.swim * 7, 10) - (swift ? 2 : 0);
-            else
-                return mu.swim - (swift ? 2 : 0);
+        // Amphibious monster speed boni are now dealt with using swim_energy,
+        // rather than here.
+        case EUT_SWIM:    return mu.swim - (swift ? 2 : 0);
         case EUT_MISSILE: return mu.missile;
         case EUT_ITEM:    return mu.item;
         case EUT_SPECIAL: return mu.special;

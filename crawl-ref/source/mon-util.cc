@@ -79,7 +79,6 @@ dungeon_feature_type habitat2grid(habitat_type ht)
 {
     switch (ht)
     {
-    case HT_AMPHIBIOUS_WATER:
     case HT_WATER:
         return (DNGN_DEEP_WATER);
     case HT_LAVA:
@@ -87,7 +86,7 @@ dungeon_feature_type habitat2grid(habitat_type ht)
     case HT_ROCK:
         return (DNGN_ROCK_WALL);
     case HT_LAND:
-    case HT_AMPHIBIOUS_LAND:
+    case HT_AMPHIBIOUS:
     default:
         return (DNGN_FLOOR);
     }
@@ -1186,8 +1185,7 @@ flight_type mons_flies(const monsters *mon, bool randarts)
 
 bool mons_class_amphibious(int mc)
 {
-    habitat_type ht = mons_class_habitat(mc);
-    return (ht == HT_AMPHIBIOUS_LAND || ht == HT_AMPHIBIOUS_WATER);
+    return (mons_class_habitat(mc) == HT_AMPHIBIOUS);
 }
 
 bool mons_amphibious(const monsters *mon)
@@ -1955,10 +1953,8 @@ habitat_type mons_habitat(const monsters *mon)
 habitat_type mons_class_primary_habitat(int mc)
 {
     habitat_type ht = mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS_LAND)
+    if (ht == HT_AMPHIBIOUS)
         ht = HT_LAND;
-    else if (ht == HT_AMPHIBIOUS_WATER)
-        ht = HT_WATER;
     return (ht);
 }
 
@@ -1971,9 +1967,9 @@ habitat_type mons_primary_habitat(const monsters *mon)
 habitat_type mons_class_secondary_habitat(int mc)
 {
     habitat_type ht = mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS_LAND)
+    if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
-    else if (ht == HT_AMPHIBIOUS_WATER || ht == HT_ROCK)
+    else if (ht == HT_ROCK)
         ht = HT_LAND;
     return (ht);
 }
