@@ -3136,6 +3136,23 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     return (true);
 }
 
+// May mons attack targ if it's in its way, despite
+// possibly aligned attitudes?
+// The aim of this is to have monsters cut down plants
+// to get to the player if necessary.
+static bool _may_cutdown(monsters* mons, monsters* targ)
+{
+    // Is the target a worthless obstacle?
+    bool is_firewood = mons_is_stationary(mons)
+                       && mons_class_flag(mons->type, M_NO_EXP_GAIN);
+    // Save friendly plants from allies.
+    bool bad_align = mons->attitude == ATT_GOOD_NEUTRAL
+                     && targ->attitude == ATT_FRIENDLY
+                  || mons->attitude == ATT_FRIENDLY
+                     && targ->attitude > ATT_HOSTILE;
+    return (is_firewood && !bad_align);
+}
+
 static bool _monster_move(monsters *monster)
 {
     FixedArray<bool, 3, 3> good_move;
@@ -3469,20 +3486,10 @@ static bool _monster_move(monsters *monster)
     else
     {
         monsters* targ = monster_at(monster->pos() + mmov);
-        if (!mmov.origin() && targ && mons_is_firewood(targ))
+        if (!mmov.origin() && targ && _may_cutdown(monster, targ))
         {
-            if (monster->attitude == ATT_GOOD_NEUTRAL
-                && targ->attitude == ATT_FRIENDLY)
-                ; // Do nothing: good neutral should not attack friendlies.
-            else if (monster->attitude == ATT_FRIENDLY
-                && targ->attitude > ATT_HOSTILE)
-                ; // Likewise do nothing: friendlies should never attack neutrals
-                  // or other friendlies.
-            else
-            {
-                monsters_fight(monster, targ);
-                ret = true;
-            }
+            monsters_fight(monster, targ);
+            ret = true;
         }
 
         mmov.reset();
