@@ -59,7 +59,7 @@ First, you might want to read the philosophy section in the manual ('?N') to
 read about general important principles in Crawl Stonesoup game design.
 
 As for specific differences, the most important are probably the following:
-* Species is *much* more important the starting profession (or "class").
+* Species is *much* more important than the character background (or "class").
 * Bones files only contain ghosts, never the dead character's equipment.
 * You cannot sell items to shops or elsewhere.
 * Resistances can be gained via mutations or items, never through eating.
