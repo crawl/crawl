@@ -200,7 +200,9 @@ static void _cloud_fire_interacts_with_terrain(const cloud_struct &cloud)
     for (adjacent_iterator ai(cloud.pos); ai; ++ai)
     {
         const coord_def p(*ai);
-        if (feat_is_watery(grd(p)) && env.cgrid(p) == EMPTY_CLOUD)
+        if (feat_is_watery(grd(p))
+            && env.cgrid(p) == EMPTY_CLOUD
+            && one_chance_in(5))
         {
             _place_new_cloud(CLOUD_STEAM, p, cloud.decay / 2 + 1,
                              cloud.whose, cloud.killer);
