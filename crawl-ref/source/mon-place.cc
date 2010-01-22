@@ -255,8 +255,8 @@ static bool _need_super_ood(int lev_mons)
 {
     return (env.turns_on_level > 1400 - lev_mons * 117
             && x_chance_in_y(
-                _scale_spawn_parameter(2, 1000, 1000, 3000, 6000),
-                1000));
+                _scale_spawn_parameter(2, 10000, 10000, 3000, 9000),
+                10000));
 }
 
 static int _fuzz_mons_level(int level)
