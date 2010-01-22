@@ -207,9 +207,9 @@ void cursorxy(int x, int y)
     if (Options.use_fake_cursor)
         fakecursorxy(x, y);
     else
-        cgotoxy(x, y, GOTO_DNGN);
+        cgotoxy(x, y, GOTO_CRT);
 #else
-    cgotoxy(x, y, GOTO_DNGN);
+    cgotoxy(x, y, GOTO_CRT);
 #endif
 }
 
