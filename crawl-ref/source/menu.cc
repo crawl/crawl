@@ -1892,13 +1892,6 @@ std::string get_linebreak_string(const std::string& s, int maxcol)
     return r;
 }
 
-// Takes a (possibly tagged) string, breaks it into lines and
-// prints it into the given message channel.
-void print_formatted_paragraph(std::string &s, msg_channel_type channel)
-{
-    mpr(s, channel);
-}
-
 bool formatted_scroller::jump_to( int i )
 {
     if (i == first_entry + 1)

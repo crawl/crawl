@@ -5,7 +5,6 @@
  * Todo:
  *   - --more-- for full message window with clear_messages=false
  *   - Handle resizing properly, in particular initial resize.
- *   - Get rid of print_formatted_paragraph.
  *   - Fix things that use mpr when the messagewindow isn't displayed
  *     (yesno() god prompt for example)
  *   - change uses of cancelable_get_line to msgwin_get_line
