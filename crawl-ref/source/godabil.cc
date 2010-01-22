@@ -1409,50 +1409,32 @@ bool evolve_flora()
     return (true);
 }
 
+bool is_ponderousifiable(const item_def& item)
+{
+    return (is_enchantable_armour(item, true, true)
+            && get_armour_ego_type(item) == SPARM_NORMAL
+            && !is_shield(item));
+}
+
 bool ponderousify_armour()
 {
-    int item_slot = -1;
-    do
-    {
-        if (item_slot == -1)
-        {
-            item_slot = prompt_invent_item("Make which item ponderous?",
-                            MT_INVLIST, OSEL_PONDER_ARM, true, true, false);
-        }
+    int item_slot = prompt_invent_item("Make which item ponderous?",
+                        MT_INVLIST, OSEL_PONDER_ARM, true, true, false);
 
-        if (prompt_failed(item_slot))
-            return (false);
+    if (prompt_failed(item_slot))
+        return (false);
 
-        item_def& arm(you.inv[item_slot]);
+    item_def& arm(you.inv[item_slot]);
+    ASSERT(is_ponderousifiable(arm));
 
-        if (!is_enchantable_armour(arm, true, true)
-            || get_armour_ego_type(arm) != SPARM_NORMAL
-            || get_armour_slot(arm) != EQ_BODY_ARMOUR)
-        {
-            mpr("This armour can't be made ponderous. "
-                "Choose a different one, or Esc to abort.");
-            if (Options.auto_list)
-                more();
+    //make item desc runed if desc was vanilla?
+    set_item_ego_type(arm, OBJ_ARMOUR, SPARM_PONDEROUSNESS);
 
-            item_slot = -1;
-            mpr("You can't enchant that."); //does not appear
-            continue;
-        }
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
 
-        //make item desc runed if desc was vanilla?
-
-        set_item_ego_type(arm, OBJ_ARMOUR, SPARM_PONDEROUSNESS);
-
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-
-        simple_god_message(" says: Use this wisely!");
-
-        return (true);
-    }
-    while (true);
-
-    return true;
+    simple_god_message(" says: Use this wisely!");
+    return (true);
 }
 
 static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
