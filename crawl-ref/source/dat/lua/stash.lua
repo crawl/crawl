@@ -12,6 +12,7 @@
 -- { <skill> } - the relevant weapon skill for weapons.
 -- { <class> } - item class: gold, weapon, missile, armour, wand, carrion,
 --               food, scroll, jewellery, potion, book, staff, orb, misc
+-- {stick} for items suitable for "sticks to snakes"
 --
 -- You can optionally disable annotate items with the item class name 
 -- (such as "weapon" for weapons) by setting
@@ -41,6 +42,10 @@ function ch_stash_search_annotate_item(it)
     annot = annot .. "{artefact} "
   elseif item.branded(it) then
     annot = annot .. "{ego} "
+  end
+
+  if item.snakable(it) then
+    annot = annot .. "{stick} "
   end
 
   local skill = item.weap_skill(it)
