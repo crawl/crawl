@@ -215,7 +215,7 @@ class message_window
         return (crawl_state.show_more_prompt && Options.clear_messages);
     }
 
-    void make_space(int n)
+    int make_space(int n)
     {
         int space = height() - next_line;
 
@@ -227,17 +227,19 @@ class message_window
             space--;
 
         if (space >= n)
-            return;
+            return 0;
 
         if (!more_enabled()
             || !Options.clear_messages && turn_line >= n - space)
         {
             scroll(n - space);
+            return (n - space);
         }
         else
         {
             more();
             clear();
+            return (height()); // XXX: unused; perhaps height()-1 ?
         }
     }
 
@@ -331,7 +333,7 @@ public:
         int old = next_line;
         for (size_t i = 0; i < newlines.size(); ++i)
         {
-            make_space(1);
+            old -= make_space(1);
             std::string fc = "";
             if (use_first_col())
             {
@@ -344,7 +346,7 @@ public:
             add_line(line);
         }
         if (temporary)
-            next_line = old;
+            next_line = std::max(old, 0);
         show();
     }
 
