@@ -2650,9 +2650,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RANDOM_USELESSNESS:
         case SCR_NOISE:
             return (true);
-        case SCR_TORMENT:
-            return (player_mutation_level(MUT_TORMENT_RESISTANCE)
-                    || !temp && you.species == SP_VAMPIRE);
         default:
             return (false);
         }
