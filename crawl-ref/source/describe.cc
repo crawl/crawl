@@ -958,7 +958,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    if (!is_known_artefact(item))
+    if (!is_artefact(item))
     {
         if (item_ident(item, ISFLAG_KNOW_PLUSES)
             && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
@@ -1358,7 +1358,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         }
     }
 
-    if (!is_known_artefact(item))
+    if (!is_artefact(item))
     {
         const int max_ench = armour_max_enchant(item);
         if (armour_is_hide(item))
@@ -2020,7 +2020,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                         << "." << (mass % 10)
                         << " aum. "; // arbitrary unit of mass
 
-            if (is_dumpable_artefact(item, false))
+            if (is_artefact(item))
             {
                 if (item.base_type == OBJ_ARMOUR
                     || item.base_type == OBJ_WEAPONS)
