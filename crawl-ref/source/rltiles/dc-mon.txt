@@ -717,18 +717,17 @@ test_spawner MONS_TEST_SPAWNER
 dc-misc/unseen PLAYER
 
 ## Transformations
-%sdir dc-mon/animals
-giant_bat TRAN_BAT
-wolf_spider TRAN_SPIDER
-hog_player TRAN_PIG
-%sdir dc-mon
-ice_beast TRAN_ICE_BEAST
-nonliving/stone_golem TRAN_STATUE
-dragon TRAN_DRAGON
-undead/lich TRAN_LICH
+%sdir player/transform
+bat_form TRAN_BAT
+spider_form TRAN_SPIDER
+pig_form TRAN_PIG
+ice_form TRAN_ICE_BEAST
+statue_form TRAN_STATUE
+dragon_form TRAN_DRAGON
+lich_form TRAN_LICH
 
-dc-misc/unseen_monster MONS_UNKNOWN
-dc-misc/unseen_monster MCACHE_START
 %sdir dc-misc
+unseen_monster MONS_UNKNOWN
+unseen_monster MCACHE_START
 todo TODO
 error ERROR
