@@ -433,8 +433,6 @@ void redraw_screen(void)
 
     print_stats();
 
-    display_message_window();
-
     bool note_status = notes_are_active();
     activate_notes(false);
     print_stats_level();
@@ -445,6 +443,10 @@ void redraw_screen(void)
     activate_notes(note_status);
 
     viewwindow(false);
+
+    // Display the message window at the end because it places
+    // the cursor behind possible prompts.
+    display_message_window();
 }
 
 // STEPDOWN FUNCTION to replace conditional chains in spells2.cc 12jan2000 {dlb}
