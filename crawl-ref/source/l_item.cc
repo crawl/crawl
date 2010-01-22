@@ -638,8 +638,8 @@ static int l_item_artefact(lua_State *ls)
     if (!item || !item->is_valid())
         return (0);
 
-    lua_pushboolean(ls, item_ident(*item, ISFLAG_KNOW_PROPERTIES)
-                && is_artefact(*item));
+    lua_pushboolean(ls, is_artefact(*item));
+
     return (1);
 }
 
