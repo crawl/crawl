@@ -1611,7 +1611,7 @@ void StashTracker::update_visible_stashes(
 static std::string lastsearch;
 static input_history search_history(15);
 
-void StashTracker::show_stash_search_prompt()
+std::string StashTracker::stash_search_prompt()
 {
     std::vector<std::string> opts;
     if (!lastsearch.empty())
@@ -1629,10 +1629,7 @@ void StashTracker::show_stash_search_prompt()
     if (!prompt_qual.empty())
         prompt_qual = " [" + prompt_qual + "]";
 
-    mprf(MSGCH_PROMPT, "Search for what%s?", prompt_qual.c_str());
-    // Push the cursor down to the next line. Newline on the prompt will not
-    // do the trick on DOS.
-    mpr("", MSGCH_PROMPT);
+    return (make_stringf("Search for what%s? ", prompt_qual.c_str()));
 }
 
 class stash_search_reader : public line_reader
@@ -1711,9 +1708,9 @@ void StashTracker::search_stashes()
     stash_search_reader reader(buf, sizeof buf);
 
     bool validline = false;
+    msgwin_prompt(stash_search_prompt());
     while (true)
     {
-        show_stash_search_prompt();
 
         int ret = reader.read_line();
         if (!ret)
@@ -1731,6 +1728,7 @@ void StashTracker::search_stashes()
             break;
         }
     }
+    msgwin_reply(validline ? buf : "");
 
     mesclr();
     if (!validline || (!*buf && !lastsearch.length()))
