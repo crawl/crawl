@@ -4176,7 +4176,10 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     }
 
     if (ptr_stat == &you.strength)
+    {
         burden_change();
+        you.redraw_armour_class = true; // This includes shields.
+    }
     if (ptr_stat == &you.dex)
         you.redraw_evasion = true;
 }
