@@ -361,7 +361,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     special_damage_flavour(BEAM_NONE),
     shield(NULL), defender_shield(NULL),
     heavy_armour_penalty(0), can_do_unarmed(false),
-    water_attack(false), miscast_level(-1), miscast_type(SPTYP_NONE),
+    miscast_level(-1), miscast_type(SPTYP_NONE),
     miscast_target(NULL), final_effects()
 {
     init_attack();
@@ -413,7 +413,6 @@ void melee_attack::init_attack()
     if (defender)
         defender_shield = defender->shield();
 
-    water_attack       = is_water_attack(attacker, defender);
     attacker_visible   = attacker->observable();
     attacker_invisible = (!attacker_visible && you.see_cell(attacker->pos()));
     defender_visible   = defender && defender->observable();
@@ -541,12 +540,6 @@ bool melee_attack::is_banished(const actor *a) const
         return (you.banished);
     else
         return (dynamic_cast<const monsters*>(a)->flags & MF_BANISHED);
-}
-
-bool melee_attack::is_water_attack(const actor *attk,
-                                   const actor *defn) const
-{
-    return (defn && attk->swimming() && defn->floundering());
 }
 
 void melee_attack::check_autoberserk()
@@ -1531,20 +1524,6 @@ int melee_attack::player_aux_stat_modify_damage(int damage)
     damage /= 10;
 
     return (damage);
-}
-
-int melee_attack::player_apply_water_attack_bonus(int damage)
-{
-    // Yes, this isn't the *2 damage that monsters get, but since
-    // monster hps and player hps are different (as are the sizes
-    // of the attacks) it just wouldn't be fair to give merfolk
-    // that gross a potential... still they do get something for
-    // making use of the water.  -- bwr
-    // return (damage + random2avg(10,2));
-
-    // [dshaligram] Experimenting with the full double damage bonus since
-    // it takes real effort to set up a water attack and it's very situational.
-    return (damage * 2);
 }
 
 int melee_attack::player_apply_weapon_skill(int damage)
@@ -3808,9 +3787,6 @@ void melee_attack::player_calc_hit_damage()
 
     potential_damage = player_stat_modify_damage(potential_damage);
 
-    if (water_attack)
-        potential_damage = player_apply_water_attack_bonus(potential_damage);
-
     //  apply damage bonus from ring of slaying
     // (before randomization -- some of these rings
     //  are stupidly powerful) -- GDL
@@ -3855,9 +3831,6 @@ int melee_attack::player_to_hit(bool random_factor)
 #ifdef DEBUG_DIAGNOSTICS
     const int base_to_hit = your_to_hit;
 #endif
-
-    if (water_attack)
-        your_to_hit += 5;
 
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
@@ -4434,9 +4407,6 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
 #endif
     }
 
-    if (water_attack)
-        damage *= 2;
-
     // If the defender is asleep, the attacker gets a stab.
     if (defender && defender->asleep())
     {
@@ -4583,12 +4553,6 @@ std::string melee_attack::mons_defender_name()
 
 void melee_attack::mons_announce_hit(const mon_attack_def &attk)
 {
-    if (water_attack && attacker_visible && attacker != defender)
-    {
-        mprf("%s uses the watery terrain to its advantage.",
-             attacker->name(DESC_CAP_THE).c_str());
-    }
-
     if (needs_message)
     {
         mprf("%s %s %s%s%s%s",
@@ -5680,9 +5644,6 @@ int melee_attack::mons_to_hit()
 #ifdef DEBUG_DIAGNOSTICS
     const int base_hit = mhit;
 #endif
-
-    if (water_attack)
-        mhit += 5;
 
     if (weapon && weapon->base_type == OBJ_WEAPONS)
         mhit += weapon->plus + property(*weapon, PWPN_HIT);

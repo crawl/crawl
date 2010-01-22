@@ -139,10 +139,6 @@ public:
     int       heavy_armour_penalty;
     bool      can_do_unarmed;
 
-    // Attacker uses watery terrain to advantage vs defender. Implies that
-    // both attacker and defender are in water.
-    bool      water_attack;
-
     // Miscast to cause after special damage is done.  If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
     int    miscast_level;
@@ -169,7 +165,6 @@ public:
 private:
     void init_attack();
     bool is_banished(const actor *) const;
-    bool is_water_attack(const actor *, const actor *) const;
     void check_hand_half_bonus_eligible();
     void check_autoberserk();
     bool check_unrand_effects(bool mondied = false);
@@ -251,7 +246,6 @@ private:
     int  player_aux_stat_modify_damage(int damage);
     int  player_to_hit(bool random_factor);
     void player_apply_attack_delay();
-    int  player_apply_water_attack_bonus(int damage);
     int  player_apply_weapon_bonuses(int damage);
     int  player_apply_weapon_skill(int damage);
     int  player_apply_fighting_skill(int damage, bool aux);
