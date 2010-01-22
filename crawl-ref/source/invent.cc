@@ -24,6 +24,7 @@
 #include "describe.h"
 #include "env.h"
 #include "food.h"
+#include "godabil.h"
 #include "initfile.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -1060,8 +1061,8 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (item_is_evokable(i, true, true));
 
     case OSEL_PONDER_ARM:
-        if (itype != OBJ_ARMOUR || get_armour_slot(i) != EQ_BODY_ARMOUR)
-            return (false);
+        return (is_ponderousifiable(i));
+
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true, true));
 
