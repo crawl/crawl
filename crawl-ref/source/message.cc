@@ -991,7 +991,11 @@ void more(bool user_forced)
 
     if (crawl_state.show_more_prompt && !suppress_messages)
     {
+        // Really a prompt, but writing to MSGCH_PROMPT clears
+        // autoclear_more.
         mpr("--more--");
+        // And since it's not a prompt, we need to flush manually.
+        flush_prev_message();
         readkey_more(user_forced);
     }
 
