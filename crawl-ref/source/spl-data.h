@@ -2577,6 +2577,19 @@
 },
 
 {
+    SPELL_INK_CLOUD, "Ink Cloud",
+     SPTYP_CONJURATION | SPTYP_ICE, // it's a water spell
+     SPFLAG_MONSTER,
+     7,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

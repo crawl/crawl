@@ -876,6 +876,19 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
 
         if (you.see_cell(mon->pos()))
             learned_something_new(TUT_FLEEING_MONSTER);
+
+        if (mon->type == MONS_KRAKEN)
+        {
+            int headnum = mon->mindex();
+            for (monster_iterator mi; mi; ++mi)
+                if (mi->type == MONS_KRAKEN_TENTACLE 
+                    && (int)mi->number == headnum)
+                {
+                    mi->add_ench(ENCH_FEAR);
+                    behaviour_event(*mi, ME_SCARE, src, src_pos);
+                }
+        }
+
         break;
 
     case ME_CORNERED:
@@ -895,7 +908,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
                 mon->foe = MHITYOU;
                 simple_monster_message(mon, " returns to your side!");
             }
-            else
+            else if (mon->type != MONS_KRAKEN_TENTACLE)
                 simple_monster_message(mon, " turns to fight!");
         }
 
