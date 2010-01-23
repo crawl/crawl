@@ -1032,7 +1032,9 @@ int place_monster(mgen_data mg, bool force_pos)
         return (-1);
 
     monsters *mon = &menv[id];
-    if (mg.needs_patrol_point())
+    if (mg.needs_patrol_point()
+        || (mon->type == MONS_ALLIGATOR
+            && !testbits(mon->flags, MF_BAND_MEMBER)))
     {
         mon->patrol_point = mon->pos();
 #ifdef DEBUG_PATHFIND
