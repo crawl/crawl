@@ -9,7 +9,7 @@ end
 
 local function assert_place_monster_on(monster, feature)
   dgn.dismiss_monsters()
-  crawl.mpr("Placing " .. monster .. " on " .. feature)
+  crawl.message("Placing " .. monster .. " on " .. feature)
   assert(place_monster_on(place.x, place.y, monster, feature),
          "Could not place monster " .. monster .. " on " .. feature)
 end

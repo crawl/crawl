@@ -92,6 +92,15 @@ bool show_type::operator < (const show_type &other) const
     }
 }
 
+// Returns true if this is a monster that can be hidden for clean_map
+// purposes. All non-immobile monsters are hidden when out of LOS with
+// Options.clean_map, or removed from the map when the clear-map
+// command (^C) is used.
+bool show_type::is_cleanable_monster() const
+{
+    return (cls == SH_MONSTER && !mons_class_is_stationary(mons));
+}
+
 void show_def::_set_backup(const coord_def &ep)
 {
     backup(ep) = grid(ep);

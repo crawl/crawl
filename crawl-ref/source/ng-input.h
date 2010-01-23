@@ -8,4 +8,3 @@ bool validate_player_name(const std::string &name, bool verbose);
 void enter_player_name(newgame_def &ng, bool blankOK);
 
 #endif
-

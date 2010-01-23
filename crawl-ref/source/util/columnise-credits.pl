@@ -31,6 +31,8 @@ warn "Wrote new $CREDITS\n";
 
 sub last_word {
   my $s = shift;
+  # Remove qualifiers after name, such as ", Jr.":
+  $s =~ s/,.*$//;
   my ($word) = $s =~ /.* (\S+)$/;
   $word ||= $s;
   lc($word)

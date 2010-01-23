@@ -13,6 +13,7 @@
 #include "mon-stuff.h"
 #include "files.h"
 #include "ghost.h"
+#include "libutil.h"
 #include "place.h"
 #include "travel.h"
 #include "tags.h"
@@ -279,7 +280,7 @@ void Kills::merge(const Kills &k)
 
 void Kills::record_kill(const struct monsters *mon)
 {
-    // Handle player ghosts separately, but don't handle summoned 
+    // Handle player ghosts separately, but don't handle summoned
     // ghosts at all. {due}
     if (mon->type == MONS_PLAYER_GHOST && !mon->is_summoned())
     {

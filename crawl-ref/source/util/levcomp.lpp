@@ -252,6 +252,7 @@ LROCKTILE:          { CBEGIN(ARGUMENT); return LROCKTILE; }
 FTILE:              { CBEGIN(ITEM_LIST); return FTILE; }
 RTILE:              { CBEGIN(ITEM_LIST); return RTILE; }
 TILE:               { CBEGIN(ITEM_LIST); return TILE; }
+FHEIGHT:            { CBEGIN(ITEM_LIST); return FHEIGHT; }
 MONS:               { CBEGIN(MNAME); return MONS; }
 ITEM:               { CBEGIN(ITEM_LIST); return ITEM; }
 MARKER:             { CBEGIN(ARGUMENT); return MARKER; }

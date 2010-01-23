@@ -18,4 +18,3 @@ glyph get_show_glyph(show_type object);
 unsigned get_screen_glyph( const coord_def &p );
 
 #endif
-

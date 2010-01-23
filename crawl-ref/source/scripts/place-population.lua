@@ -3,17 +3,20 @@ local niters = 150
 local output_file = "monster-report.out"
 
 local excluded_things = util.set({}) -- "plant", "fungus", "bush" })
+local use_random_maps = true
 
 local function count_monsters_at(place, set)
   debug.goto_place(place)
-  test.regenerate_level()
+  test.regenerate_level(nil, use_random_maps)
 
-  local monsters_here = set or { }
+  local monsters_here = set or {  }
   for mons in test.level_monster_iterator() do
     local mname = mons.name
     if not excluded_things[mname] then
-      local count = monsters_here[mname] or 0
-      monsters_here[mname] = count + 1
+      local mstat = monsters_here[mname] or { count = 0, exp = 0 }
+      mstat.count = mstat.count + 1
+      mstat.exp   = mstat.exp + mons.experience
+      monsters_here[mname] = mstat
     end
   end
   return monsters_here
@@ -22,7 +25,9 @@ end
 local function report_monster_counts_at(place, mcount_map)
   local text = ''
   text = text .. "\n-------------------------------------------\n"
-  text = text .. place .. " monsters per-level\n"
+  text = text .. place .. " monsters per-level ("
+  text = text .. (use_random_maps and "using random maps"
+                  or "NO random maps") .. ")\n"
   text = text .. "-------------------------------------------\n"
 
   local monster_counts = util.pairs(mcount_map)
@@ -32,12 +37,19 @@ local function report_monster_counts_at(place, mcount_map)
 
   local total = 0
   for _, monster_pop in ipairs(monster_counts) do
-    total = total + monster_pop[2].total
+    if monster_pop[1] ~= 'TOTAL' then
+      total = total + monster_pop[2].total
+    end
   end
 
+  text = text .. "Count  | XPAv  | XPMin | XPMax | XPSigma | CountMin | CountMax | CountSigma |    %    | Monster\n"
   for _, monster_pop in ipairs(monster_counts) do
-    text = text .. string.format("%5.2f (min: %2d, max: %2d, sd: %6.2f, %%: %6.2f%%)   %s\n",
+    text = text .. string.format("%6.2f | %5d | %5d | %5d | %7d | %8d | %8d | %10.2f | %6.2f%% | %s\n",
                                  monster_pop[2].mean,
+                                 monster_pop[2].emean,
+                                 monster_pop[2].emin,
+                                 monster_pop[2].emax,
+                                 monster_pop[2].esigma,
                                  monster_pop[2].min,
                                  monster_pop[2].max,
                                  monster_pop[2].sigma,
@@ -60,35 +72,81 @@ local function report_monster_counts(mcounts)
 end
 
 local function calculate_monster_stats(iter_mpops)
-  local final_stats = { }
-  local n = #iter_mpops
-  for _, mpop in ipairs(iter_mpops) do
-    for mons, count in pairs(mpop) do
-      local mstats =
-        final_stats[mons] or { total = 0, max = 0, min = 0, pops = { } }
-
-      mstats.total = mstats.total + count
-      if count > mstats.max then
-        mstats.max = count
-      end
-      if count < mstats.min then
-        mstats.min = count
-      end
-      table.insert(mstats.pops, count)
-      final_stats[mons] = mstats
-    end
+  local function blank_stats()
+    return {
+      total = 0, max = 0, min = 10 ^ 10,
+      etotal = 0, emax = 0, emin = 10 ^ 10, eiters = { },
+      pops = { } }
   end
 
-  for mons, stat in pairs(final_stats) do
-    stat.mean = stat.total / n
+  local function update_mons_stats(stat, instance_stat)
+    local function update_total_max_min(value, total, max, min)
+      stat[total] = stat[total] + value
+      if value > stat[max] then
+        stat[max] = value
+      end
+      if value < stat[min] then
+        stat[min] = value
+      end
+    end
+    update_total_max_min(instance_stat.count, 'total', 'max', 'min')
+    update_total_max_min(instance_stat.exp, 'etotal', 'emax', 'emin')
+    table.insert(stat.pops, instance_stat.count)
+    table.insert(stat.eiters, instance_stat.exp)
+    return stat
+  end
 
+  local function sum(list)
+    local total = 0
+    for _, num in ipairs(list) do
+      total = total + num
+    end
+    return total
+  end
+
+  local function combine_stats(target, src)
+    local total = sum(src.pops)
+    local etotal = sum(src.eiters)
+    table.insert(target.pops, total)
+    table.insert(target.eiters, etotal)
+    target.total = target.total + total
+    target.etotal = target.etotal + etotal
+    target.max = math.max(target.max, total)
+    target.min = math.min(target.min, total)
+    target.emax = math.max(target.emax, etotal)
+    target.emin = math.min(target.emin, etotal)
+  end
+
+  local final_stats = { TOTAL = blank_stats() }
+  local n = #iter_mpops
+  for _, mpop in ipairs(iter_mpops) do
+    local global_stat = blank_stats()
+    for mons, istat in pairs(mpop) do
+      local mstats = final_stats[mons] or blank_stats()
+      final_stats[mons] = update_mons_stats(mstats, istat)
+      update_mons_stats(global_stat, istat)
+    end
+    combine_stats(final_stats.TOTAL, global_stat)
+  end
+
+  local function calc_mean_sigma(total, instances)
+    local mean = total / n
     local totaldelta2 = 0
-    local mean = stat.mean
-    for _, count in ipairs(stat.pops) do
+    for _, count in ipairs(instances) do
       local delta = count - mean
       totaldelta2 = totaldelta2 + delta * delta
     end
-    stat.sigma = math.sqrt(totaldelta2 / n)
+    -- There will be no instances with count 0, handle those:
+    for extra = 1, (n - #instances) do
+      totaldelta2 = totaldelta2 + mean * mean
+    end
+    local sigma = math.sqrt(totaldelta2 / n)
+    return mean, sigma
+  end
+
+  for mons, stat in pairs(final_stats) do
+    stat.mean, stat.sigma = calc_mean_sigma(stat.total, stat.pops)
+    stat.emean, stat.esigma = calc_mean_sigma(stat.etotal, stat.eiters)
   end
   return final_stats
 end
@@ -101,9 +159,8 @@ local function count_monsters_from(start_place, end_place)
 
     local iter_mpops = { }
     for i = 1, niters do
-      crawl.mesclr()
-      crawl.mpr("Counting monsters at " .. place .. " (" ..
-                i .. "/" .. niters .. ")")
+      crawl.message("Counting monsters at " .. place .. " (" ..
+                    i .. "/" .. niters .. ")")
       local res = count_monsters_at(place)
       table.insert(iter_mpops, res)
     end
@@ -138,6 +195,9 @@ local function branch_resets()
     if rawresets then
       util.append(resets, parse_resets(rawresets))
     end
+    if arg == '-nomaps' then
+      use_random_maps = false
+    end
   end
   return resets
 end
@@ -162,11 +222,14 @@ with:
 
 With the general form:
 
-                 -reset=<place>=<depth>[,<place>=<depth>,...]
+               -reset=<place>=<depth>[,<place>=<depth>,...]
 
 where <place> is a valid place name as used in .des files, and <depth> is the
 depth of the branch's entrance in its parent branch. Thus -reset=Snake:1=3
 implies that the entrance of the Snake Pit is assumed to be on Lair:3.
+
+You can also disable the use of random maps during level generation with:
+               -nomaps
 ]])
   end
   return args[1], args[2] or args[1]

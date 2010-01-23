@@ -55,6 +55,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgn-shoals.h"
 #include "dlua.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -319,8 +320,8 @@ static void _show_commandline_options_help()
     puts("Command line options:");
     puts("  -help                 prints this list of options");
     puts("  -name <string>        character name");
-    puts("  -species <arg>        preselect race (by letter, abbreviation, or name)");
-    puts("  -job <arg>            preselect class (by letter, abbreviation, or name)");
+    puts("  -species <arg>        preselect character species (by letter, abbreviation, or name)");
+    puts("  -background <arg>     preselect character background (by letter, abbreviation, or name)");
     puts("  -plain                don't use IBM extended characters");
     puts("  -dir <path>           crawl directory");
     puts("  -rc <file>            init file name");
@@ -539,8 +540,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'I': wizard_unidentify_pack();              break;
     case 'Z':
     case 'z': wizard_cast_spec_spell();              break;
-    case '(':
-    case ')': wizard_create_feature();               break;
+    case '(': wizard_create_feature();               break;
+    case ')': wizard_mod_tide();                     break;
     case ':': wizard_list_branches();                break;
     case '{': wizard_map_level();                    break;
     case '}': wizard_reveal_traps();                 break;
@@ -978,7 +979,10 @@ static void _input()
 
     // Stop autoclearing more now that we have control back.
     if (!you_are_delayed())
+    {
+        flush_prev_message();
         set_more_autoclear(false);
+    }
 
     if (need_to_autopickup())
         autopickup();
@@ -1494,11 +1498,11 @@ void process_command( command_type cmd )
         break;
 
     case CMD_DISABLE_MORE:
-        Options.show_more_prompt = false;
+        crawl_state.show_more_prompt = false;
         break;
 
     case CMD_ENABLE_MORE:
-        Options.show_more_prompt = true;
+        crawl_state.show_more_prompt = true;
         break;
 
     case CMD_REPEAT_KEYS:
@@ -1875,7 +1879,7 @@ void process_command( command_type cmd )
             // exists, give a message to explain what's going on.
             std::string str = "Move the cursor to view the level map, or "
                               "type <w>?</w> for a list of commands.";
-            print_formatted_paragraph(str);
+            mpr(str);
 #endif
 
             show_map(pos, true);
@@ -2075,7 +2079,7 @@ void process_command( command_type cmd )
         {
            std::string msg = "Unknown command. (For a list of commands type "
                              "<w>?\?<lightgrey>.)";
-           print_formatted_paragraph(msg);
+           mpr(msg);
         }
         else // well, not examine, but...
            mpr("Unknown command.", MSGCH_EXAMINE_FILTER);
@@ -2750,15 +2754,6 @@ void world_reacts()
     }
 #endif
 
-    if (you.num_turns != -1)
-    {
-        if (you.num_turns < LONG_MAX)
-            you.num_turns++;
-        if (env.turns_on_level < INT_MAX)
-            env.turns_on_level++;
-        update_turn_count();
-    }
-
     _check_banished();
     _check_shafts();
     _check_sanctuary();
@@ -2868,6 +2863,16 @@ void world_reacts()
     if (you.religion != GOD_NO_GOD)
         mprf(MSGCH_DIAGNOSTICS, "TENSION = %d", get_tension());
 #endif
+
+    if (you.num_turns != -1)
+    {
+        if (you.num_turns < LONG_MAX)
+            you.num_turns++;
+        if (env.turns_on_level < INT_MAX)
+            env.turns_on_level++;
+        update_turn_count();
+        msgwin_new_turn();
+    }
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
@@ -3291,7 +3296,7 @@ static void _open_door(coord_def move, bool check_confused)
         }
         switch (feat)
         {
-        // This doesn't ever sem to be triggered.
+        // This doesn't ever seem to be triggered.
         case DNGN_OPEN_DOOR:
             if (!door_already_open.empty())
                 mpr(door_already_open.c_str());
@@ -3465,6 +3470,7 @@ static void _open_door(coord_def move, bool check_confused)
             }
         }
         grd(dc) = DNGN_OPEN_DOOR;
+        dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
         if (is_excluded(dc))
             excludes.push_back(dc);
     }
@@ -3664,6 +3670,8 @@ static void _close_door(coord_def move)
             // Once opened, formerly secret doors become normal doors.
             grd(dc) = DNGN_CLOSED_DOOR;
 
+            dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
+
             // Even if some of the door is out of LOS once it's closed
             // (or even if some of it is out of LOS when it's open), we
             // want the entire door to be updated.
@@ -3679,7 +3687,6 @@ static void _close_door(coord_def move)
         }
 
         update_exclusion_los(excludes);
-
         you.turn_is_over = true;
     }
     else if (you.confused())
@@ -3799,7 +3806,7 @@ static bool _initialise(void)
         init_player_doll();
         tiles.initialise_items();
 #endif
-        Options.show_more_prompt = false;
+        crawl_state.show_more_prompt = false;
         crawl_tests::run_tests(true);
         // Superfluous, just to make it clear that this is the end of
         // the line.

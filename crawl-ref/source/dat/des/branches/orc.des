@@ -1,0 +1,591 @@
+##############################################################################
+# orc.des: Entries to the Orcish Mines, and (mini)vaults which appear _only_
+#          in the Mines. General (mini)vaults, which can also appear in the
+#          Mines, should go to vaults.des.
+##############################################################################
+
+##############################################################################
+# Orcish Mines entries
+##############################################################################
+# Dummy Orc entry
+
+NAME:   orc_0_dummy
+TAGS:   orc_entry
+WEIGHT: 50
+ORIENT: float
+MAP
+O
+ENDMAP
+
+##############################################################################
+# Freedom of Choice
+#
+NAME: david_orc_1_choice
+TAGS: orc_entry
+MONS: orc, warg / orc priest / orc warrior, orc warrior / orc
+ITEM: % / scroll of teleportation / scroll of remove curse / scroll of identify
+ITEM: % / w:2 * / scroll of blinking / scroll of recharging / scroll of fear
+SHUFFLE: %1
+ORIENT: float
+MAP
+           xxx
+        xxxxOxxxx
+     xxxx.......xxxx
+   xxx.............xxx
+  xx....x.......x....xx
+ xx....xxx.....xxx....xx
+xx.....xxx.I.I.xxx..I..x
+xx......x.......x......xx
+x..x.x..x..x=x..x..x+x..x
+x.xx.xx.x.xx=xx.x.xx~xx.x
+x.x%1.x.x.x2e2x.x.x3d3x.x
+x.x.%1x.x.x2e2x.x.xd3dx.x
+x.xx.xx.x.xx=xx.x.xx~xx.x
+x..x.x..x..x=x..x..x+x..x
+x.......+.......+.......x
+xx.....xxx.I.I.xxx..I..xx
+ xx...xx xx...xx xx...xx
+  x.@.x   xxxxx   x.@.x
+ENDMAP
+
+##############################################################################
+# Generic Orc entry
+#
+NAME: david_orc_2
+TAGS: orc_entry no_rotate
+MONS: weight:50 orc / orc warrior / nothing
+ORIENT: float
+MAP
+xxxx..@..xxxx
+x.....I.....x
+x...........x
+.....111.....
+@I...1O1...I@
+.....111.....
+x...........x
+x.....I.....x
+xxxx..@..xxxx
+ENDMAP
+
+##############################################################################
+# Orcish monsters near stair
+#
+NAME: david_orc_3
+TAGS: orc_entry
+MONS: weight:80 nothing / weight:50 orc / orc priest / orc wizard / orc warrior
+MONS: nothing / orc warrior / warg / orc priest
+ORIENT: float
+MAP
+1.....@....11
+1............
+.............
+......21.....
+@.....O.....@
+.....12......
+.............
+.............
+11..@......11
+ENDMAP
+
+#############################################################################
+# The Orc Outfitter
+#
+NAME: orc_david_3
+TAGS: orc_entry
+ORIENT: float
+#
+: if you.absdepth() >= 10 then
+MONS: weight:20 orc / orc warrior / weight:1 orc knight
+: else
+MONS: weight:30 orc / orc warrior
+: end
+#
+KFEAT: X = armour shop / .
+KFEAT: Y = weapon shop / .
+SUBST: ? = 1 $
+MAP
+@.........@
+...??..??..
+.?.........
+.?.X.O.Y.?.
+.........?.
+...??...?..
+@.........@
+ENDMAP
+
+#############################################################################
+# Wary orcs
+#
+NAME: david_orc_4
+TAGS: orc_entry no_rotate
+ORIENT: float
+SHUFFLE: XYZ
+SUBST: ? = I F
+# around 4% of these entries have a dangerous statue
+SUBST: a = ~:4  .
+SUBST: b = ~:8  .
+SUBST: c = ~:12 .
+SUBST: d = ~:16 .
+KFEAT: X = .
+KFEAT: Y = blade trap
+KFEAT: Z = blade trap
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xx?xxx?xxx?xxx?xxxxxxx
+xaaaxbbbxcccxdddx.lllx
+.aaaabbbbccccdddx.Xllx
+@aaaabbbbccccddd+.YOlx
+.aaaabbbbccccdddx.Zllx
+xaaaxbbbxcccxdddx.lllx
+xx?xxx?xxx?xxx?xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#############################################################################
+# The Mess
+#
+NAME:    david_orc_5
+TAGS:    orc_entry
+ORIENT:  float
+KFEAT:   C = altar_beogh
+SHUFFLE: EFGH
+SUBST:   E=3
+SUBST:   F=1, G=1, H=1
+MONS:    orc priest / nothing
+: if you.absdepth() >= 10 then
+MONS:    orc w:32 / w:7 orc warrior / w:1 orc knight
+: elseif you.absdepth() >= 8 then
+MONS:    orc w:40 / orc warrior
+: else
+MONS:    orc w:80 / orc warrior
+: end
+MONS:    orc priest
+: if you.absdepth() >= 10 then
+MONS:    orc w:32 / w:7 orc warrior / w:1 orc knight
+: else
+MONS:    orc w:32 / w:7 orc warrior
+: end
+SUBST:   x : cxv
+MAP
+xxxxxxxxxxxxxxx
+x......O......x
+x......F......x
+x2..T.ECG.T..2x
+x2222..H..2222x
+x42222.I.22224x
+xxI+IxxxxxI+Ixx
+...@.......@...
+ENDMAP
+
+##############################################################################
+# Caught partying
+#
+NAME:    erik_orc_1
+TAGS:    orc_entry no_rotate
+ORIENT:  float
+MONS:    orc, orc priest / orc wizard
+MONS:    w:50 orc warrior / ogre, swamp drake
+# The drake's name is Bobby. Since you did ask.
+KITEM:   1 = sausage / nothing / animal skin / potion of confusion /\
+             potion of paralysis / potion of slowing /\
+             potion of degeneration / w:2 potion of speed / w:2 potion of might
+KFEAT:   1 = 1
+ITEM:    club, potion of confusion, slice of pizza, sausage / weight:40 nothing
+ITEM:    potion of confusion / potion of water
+SHUFFLE: defO
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.........g..........2x...w4xxx
+x.....1...32...1......x1...wxxx
+x.........xx.....e..........xxx
+@.......f...1g............3.x$x
+x..x1.................O...x.xhx
+x..x1...1........2..1....gx.xhx
+x......2....g.........d.1.x1+hx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# C'mon, you *gotta* have a *fort*!
+#
+NAME:  erik_orc_2
+TAGS:  orc_entry no_pool_fixup no_rotate
+ORIENT: float
+MONS:  orc warrior, orc priest/orc wizard, weight:100 orc / orc warrior
+: if you.absdepth() >= 10 and crawl.one_chance_in(10) then
+MONS: orc knight
+SUBST: G = .
+: else
+MONS:  orc warrior
+SUBST: G = 4
+: end
+SUBST: c = c:1000 x
+MAP
+.............................
+.Iwwwwwwwwwwwwwwwwwwwwwwwwww.
+.wIwwwwwwwwwwwwwwwwwwwwwwwww.
+.ww2=cccccccccccccccccccccww.
+.ww.c.......3.3.3......w2cww.
+.wwxx........3.3.......cccww.
+.122........3.I.3.....G4Ocww.
+.wwxx........3.3.......cccww.
+.ww.c.......3.3.3......w2cww.
+.ww2=cccccccccccccccccccccww.
+.wIwwwwwwwwwwwwwwwwwwwwwwwww.
+.Iwwwwwwwwwwwwwwwwwwwwwwwwww.
+.............................
+ENDMAP
+
+
+##############################################################################
+# Just like home
+#
+NAME:   erik_orc_3
+TAGS:   orc_entry no_item_gen
+MONS:   orc / w:2 goblin / w:2 hobgoblin / nothing
+MONS:   orc warrior / orc priest / orc wizard / nothing
+MONS:   warg / ogre / nothing
+ORIENT: float
+SUBST:  ? = x . $:1
+MAP
+xxx.xxxxxxxxxxxxxxxxxxx
+xxx?.x?x?xx?xxx??xx?xxx
+xx..xxx..1.xxx....13xxx
+xx.x??x.x1xx?x.21xx?..x
+xx...x..xxx.2..1.x.x??.
+xx?x.....?x.x..x.x1?.xx
+xx..??12x?x.1.1?x.x??xx
+xxx..x..x??O.x..x.xx.xx
+x?..?x......x?.x.??x.xx
+xx.x??.x.x..?x..xx.x?xx
+x?xx?xx.x??...x.1x.1??x
+xx..xxx...x.x.x.1?1.xxx
+x?.2....xx2.x...xx.x??x
+xxx??xx..xx.xx.x?..xxxx
+xx..1.x.x.3...x2.x1..xx
+..x??x.xxx..xxxx??.??xx
+xx?.??.11.x?xxx..x..xxx
+x??xxxx???xx?xxx??x.?xx
+xxxxxxxxxxxxxxxxxxxx.xx
+ENDMAP
+
+##############################################################################
+# Orc-henge
+#
+NAME: erik_orc_4
+TAGS: orc_entry no_rotate
+MONS: human / goblin / hobgoblin / w:2 orc
+MONS: orc priest
+MONS: orc
+MONS: orc priest / orc wizard / w:2 goblin / nothing
+MONS: orc warrior / warg
+ORIENT: float
+SUBST: ? : c:60 .
+SUBST: Z : c:60 .
+SUBST: X : c:60 .
+SUBST: v : c:60 .
+SUBST: b : c:60 .
+KITEM: 2 = knife
+KFEAT: 2 = 2
+#
+MAP
+..............................
+...............ZZ.............
+.........??....ZZ....vv.......
+.........??..........vv.......
+....XX.......33533............
+....XX........1.2........bb...
+.........4....xxx...4....bb...
+.............33533............
+..bb..........................
+..bb...........O..........??..
+........4.............4...??..
+..................4...........
+...ZZ.........................
+...ZZ......4............vv....
+........................vv....
+.......cc..........vv.........
+.......cc....??....vv.........
+.............??...............
+..............................
+ENDMAP
+
+#########################
+# Orcs are a clue, episode I
+#
+NAME:   hiddenorc1_lemuel
+TAGS:   orc_entry
+ORIENT: float
+MONS:   orc w:40 / orc wizard w:2 / orc priest w:2, orc warrior
+SUBST:  ? = .x
+SUBST:  ! : .$
+MAP
+x??@....@....@??x
+xx??.........??xx
+ xx??1111111??xx
+  xx??11111??xx
+   xx??111??xx
+    xx??1??xx
+     xx?2?xx
+      xv=vx
+      x!!!x
+      x!O!x
+      x!!!x
+      xxxxx
+ENDMAP
+
+#########################
+# Orcs are a clue, episode II
+#
+NAME:   hiddenorc2_lemuel
+TAGS:   orc_entry
+ORIENT: float
+MONS:   orc w:20 / orc wizard w:2 / orc priest w:2 / orc warrior w:1
+SUBST:  a : x. , b : x. , c : x. , d : x.
+COLOUR: 1 = none / brown w:5
+FTILE:  1 = floor_normal / floor_orc w:5
+COLOUR: . = none / brown
+FTILE:  . = floor_normal / floor_orc
+SUBST:  ? = @ x:20 + =
+COLOUR: ! = brown
+FTILE:  ! = floor_orc
+SUBST:  ! : .$
+MAP
+xx?xxxxxxx?xx
+x111xxxxx111x
+?111aaaaa111?
+x111xxxxx111x
+xxbx=xxx=xcxx
+xxbxx!!!xxcxx
+xxbxx!O!xxcxx
+xxbxx!!!xxcxx
+xxbx=xxx=xcxx
+x111xxxxx111x
+?111ddddd111x
+x111xxxxx111?
+xx?xxxxxxx@xx
+ENDMAP
+
+#######################
+# Haunted orc entrance
+#
+NAME:   zombieorc1_lemuel
+TAGS:   orc_entry
+ORIENT: float
+DEPTH:  11
+MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
+        hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
+MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   hungry ghost / phantom / w:1 wraith
+MONS:   w:1 orc sorcerer / orc priest / nothing
+SUBST:  ? = x . $:1
+MAP
+xxx.xxxxxxxxxxxxxxxxxxx
+xxx?.x?x?xx?xxx??xx?xxx
+xx..xxx..1.xxx....11xxx
+xx.x??x.x1xx?x.21xx?..x
+xx...x..xxx.2..1.x.x??.
+xx?x.....?x.x..x.x1?.xx
+xx..??12x?x31.1?x.x??xx
+xxx..x..x??O3x..x.xx.xx
+x?..?x....34x?.x.??x.xx
+xx.x??.x.x..?x..xx.x?xx
+x?xx?xx.x??...x.1x.1??x
+xx..xxx...x.x.x.1?1.xxx
+x?.2....xx2.x...xx.x??x
+xxx??xx..xx.xx.x?..xxxx
+xx..1.x.x.1...x2.x1..xx
+..x??x.xxx..xxxx??.??xx
+xx?.??.11.x?xxx..x..xxx
+x??xxxx???xx?xxx??x.?xx
+xxxxxxxxxxxxxxxxxxxx.xx
+ENDMAP
+
+#######################
+# Haunted orc entrance
+#
+NAME:   zombieorc2_lemuel
+TAGS:   orc_entry
+ORIENT: float
+DEPTH:  11
+MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
+        hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
+MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   hungry ghost / phantom / w:1 wraith
+MONS:   w:1 orc sorcerer / orc priest
+SUBST:  4 = 34
+SUBST:  ? = x . $:1
+MAP
+xxxxx..@..xxxxx
+x21....I....12x
+x11...111...11x
+x.............x
+..1...343...1..
+@I1...2O2...1I@
+..1...212...1..
+x.............x
+x11...111...11x
+x21....I....12x
+xxxxx..@..xxxxx
+ENDMAP
+
+
+############################################################################
+# (Mini)vaults specific to the Orcish Mines
+############################################################################
+
+default-depth: Orc:*
+
+##################################
+# Dummy Orc minivault balancer.
+#
+NAME: mines_dummy
+TAGS: dummy
+WEIGHT: 60
+MAP
+x
+ENDMAP
+
+###################################
+# mage tower -- either orc with assistants, or ogre with guards
+NAME:    mines4_lemuel
+TAGS:    mini_float no_rotate
+SUBST:   ? = +=
+SUBST:   d = $d
+SUBST:   I = IG
+SHUFFLE: 112/334
+MONS:    orc sorcerer, orc / orc wizard, ogre mage, ogre / nothing
+ITEM:    any book
+MAP
+  xxxx?xxxx
+ xx2.....2xx
+xx.2xxxxx2.xx
+x..xxd1dxx..x
+x.Ix$$G$$xI.x
+x..xx222xx..x
+xx.2xx?xx2.xx
+ xx..2.2..xx
+  xxxxxxxxx
+ENDMAP
+
+###################################
+# warg stables, with goblin stableboy
+NAME:  mines5_lemuel
+TAGS:  mini_float
+SUBST: ?: wx
+MONS:  warg / wolf,goblin
+MAP
+x???????x
+xwwwwwwwx
+xwwwwwwwx
+x1.1.1.1x
+x.1.1.1.x
+x1.2...1x
+xxxx+xxxx
+ENDMAP
+
+###################################
+# Beogh 1
+NAME:   mines1_david
+TAGS:   allow_dup
+KFEAT:  C = altar_beogh
+WEIGHT: 20
+MAP
+...........
+.xxxx.xxxx.
+.xx.....xx.
+.x.......x.
+.x.......x.
+.....C.....
+.x.......x.
+.x.......x.
+.xx.....xx.
+.xxxx.xxxx.
+...........
+ENDMAP
+
+###################################
+# Beogh 2
+NAME:   mines2_david
+TAGS:   allow_dup
+KFEAT:  C = altar_beogh
+MONS:   orc / orc warrior w:1
+SUBST:  . = . 1:2
+WEIGHT: 20
+MAP
+.......
+.......
+...C...
+.......
+.......
+ENDMAP
+
+###################################
+# hidden treasure chamber
+#
+NAME: mines2_lemuel
+TAGS: mini_float
+SUBST: ? = x.
+MAP
+  ?x=x?
+ ?xx.xx?
+?xx$$$xx?
+?xx$$$xx?
+ ?xxxxx?
+   ???
+ENDMAP
+
+###################################
+# treasure chamber with oklob plant
+#
+NAME:  mines3_lemuel
+TAGS:  mini_float
+SUBST: ? = +=.
+SUBST: ! = x.
+SUBST: $ = $:30 *
+MONS:  oklob plant
+MAP
+    !.!
+   !x?x!
+   !x.xx!
+  !xx..xx!
+  !xxx..xx!
+   !xxx.1x!
+   !xxxx.x!
+  !xxxxx.xx!
+ !xx$$x..xxx
+!!xx$$?.xxxx
+!xxx$$xxxx!
+ !xxxxxxx!
+ENDMAP
+
+##################################################
+# Some deep elves on a diplomatic mission (Shiori)
+# They have brought some of their enchanted armaments as gifts
+NAME:    elf_legates
+DEPTH:   Orc:3-4
+SHUFFLE: 23
+SUBST:   6 : 6 .
+NSUBST:  0 = 3=9. / *=0.
+SUBST:   X = xx. b:2 I:1 $:1 *:1
+MONS:    patrolling orc warlord
+MONS:    patrolling orc sorcerer
+MONS:    patrolling orc high priest
+MONS:    deep elf fighter / deep elf summoner / deep elf conjurer / deep elf priest
+MONS:    deep elf soldier / deep elf mage / deep elf priest
+MONS:    deep elf soldier
+ITEM:    good_item scimitar race:elven / good_item chain mail race:elven
+MAP
+ xxxxx=xxx
+xxXXXI1IXXx
+xX..02.3XXx
+xXX000.00Xx
+xXX000.00Xx
+xX.000.00Xx
+xXX00...0Xx
+xX.X.d4d.Xx
+xXX.65556Xx
+xxXX.6.6XXx
+xxxXX..XXxx
+ xxxx@@@xx
+ENDMAP

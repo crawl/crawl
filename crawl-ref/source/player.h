@@ -62,8 +62,6 @@ public:
 
   char max_level;
 
-  coord_def youpos;
-
   coord_def prev_move;
 
   int hunger;
@@ -169,7 +167,7 @@ public:
 
   // NOTE: The kills member is a pointer to a KillMaster object,
   // rather than the object itself, so that we can get away with
-  // just a foward declare of the KillMaster class, rather than
+  // just a forward declare of the KillMaster class, rather than
   // having to #include kills.h and thus make every single .cc file
   // dependant on kills.h.  Having a pointer means that we have
   // to do our own implementations of copying the player object,
@@ -376,6 +374,8 @@ public:
     int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
+    monsters* as_monster() { return NULL; }
+    player* as_player() { return this; }
 
     god_type  deity() const;
     bool      alive() const;

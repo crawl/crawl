@@ -87,11 +87,11 @@ god_type str_to_god(std::string god)
 }
 
 // Returns -1 if unmatched else returns 0-15.
-static int _str_to_channel_colour( const std::string &str )
+static msg_colour_type _str_to_channel_colour(const std::string &str)
 {
-    int ret = str_to_colour( str );
-
-    if (ret == -1)
+    int col = str_to_colour(str);
+    msg_colour_type ret = MSGCOL_NONE;
+    if (col == -1)
     {
         if (str == "mute")
             ret = MSGCOL_MUTED;
@@ -102,6 +102,8 @@ static int _str_to_channel_colour( const std::string &str )
         else if (str == "alternate")
             ret = MSGCOL_ALTERNATE;
     }
+    else
+        ret = msg_colour(str_to_colour(str));
 
     return (ret);
 }
@@ -218,22 +220,6 @@ static int _str_to_wand( const std::string& str )
     return (SWT_NO_SELECTION);
 }
 
-int str_to_fprop ( const std::string &str)
-{
-    if (str == "bloody")
-        return (FPROP_BLOODY);
-    if (str == "no_cloud_gen")
-        return (FPROP_NO_CLOUD_GEN);
-    if (str == "no_rtele_into")
-        return (FPROP_NO_RTELE_INTO);
-    if (str == "no_ctele_into")
-        return (FPROP_NO_CTELE_INTO);
-    if (str == "no_tele_into")
-        return (FPROP_NO_TELE_INTO);
-
-    return (FPROP_NONE);
-}
-
 // Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
 // spell.
 int str_to_summon_type (const std::string &str)
@@ -308,7 +294,7 @@ static fire_type _str_to_fire_types( const std::string &str )
     return (FIRE_NONE);
 }
 
-static char _str_to_race( const std::string &str )
+static char _str_to_species( const std::string &str )
 {
     if (str == "random")
         return '*';
@@ -330,7 +316,7 @@ static char _str_to_race( const std::string &str )
     return ((index != -1) ? index_to_letter( index ) : 0);
 }
 
-static int _str_to_class( const std::string &str )
+static int _str_to_job( const std::string &str )
 {
     if (str == "random")
         return '*';
@@ -340,14 +326,14 @@ static int _str_to_class( const std::string &str )
     if (str.length() == 1)      // old system of using menu letter
         return (str[0]);
     else if (str.length() == 2) // scan abbreviations
-        index = get_class_index_by_abbrev( str.c_str() );
+        index = get_job_index_by_abbrev( str.c_str() );
 
     // if we don't have a match, scan the full names
     if (index == -1)
-        index = get_class_index_by_name( str.c_str() );
+        index = get_job_index_by_name( str.c_str() );
 
     if (index == -1)
-        fprintf( stderr, "Unknown job choice: %s\n", str.c_str() );
+        fprintf( stderr, "Unknown background choice: %s\n", str.c_str() );
 
     return ((index != -1) ? index_to_letter( index ) : 0);
 }
@@ -645,7 +631,6 @@ void game_options::reset_options()
 
     autopickup_on    = 1;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
-    show_more_prompt = true;
 
     show_gold_turns = false;
     show_beam       = true;
@@ -715,7 +700,7 @@ void game_options::reset_options()
     // [ds] Grumble grumble.
     auto_list              = true;
 
-    delay_message_clear    = true;
+    clear_messages         = false;
     pickup_dropped         = false;
     pickup_thrown          = true;
 
@@ -900,6 +885,9 @@ void game_options::reset_options()
     tile_tooltip_ms       = 500;
     tile_tag_pref         = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
     tile_display          = TDSP_INVENT;
+
+    tile_show_minihealthbar = true;
+    tile_show_minimagicbar  = true;
 #endif
 
     // map each colour to itself as default
@@ -1323,7 +1311,7 @@ static void write_newgame_options(FILE *f)
     if (Options.prev_race)
         fprintf(f, "species = %c\n", Options.prev_race);
     if (Options.prev_cls)
-        fprintf(f, "job = %c\n", Options.prev_cls);
+        fprintf(f, "background = %c\n", Options.prev_cls);
 
     if (Options.prev_weapon != WPN_UNKNOWN)
         fprintf(f, "weapon = %s\n", _weapon_to_str(Options.prev_weapon).c_str());
@@ -1758,13 +1746,17 @@ void game_options::add_message_colour_mapping(const std::string &field)
     if (cmap.size() != 2)
         return;
 
-    const int col = (cmap[0] == "mute") ? MSGCOL_MUTED
-                                        : str_to_colour(cmap[0]);
-    if (col == -1)
+    const int col = str_to_colour(cmap[0]);
+    msg_colour_type mcol;
+    if (cmap[0] == "mute")
+        mcol = MSGCOL_MUTED;
+    else if (col == -1)
         return;
+    else
+        mcol = msg_colour(col);
 
-    message_colour_mapping m = { parse_message_filter( cmap[1] ), col };
-    message_colour_mappings.push_back( m );
+    message_colour_mapping m = { parse_message_filter(cmap[1]), mcol };
+    message_colour_mappings.push_back(m);
 }
 
 // Option syntax is:
@@ -2003,7 +1995,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     const std::string orig_field = field;
 
     if (key != "name" && key != "crawl_dir" && key != "macro_dir"
-        && key != "species" && key != "job" && key != "ban_pickup"
+        && key != "species" && key != "background" && key != "job"
+        && key != "race" && key != "class" && key != "ban_pickup"
         && key != "autopickup_exceptions"
         && key != "explore_stop_pickup_ignore"
         && key != "stop_travel" && key != "sound"
@@ -2204,16 +2197,16 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "channel")
     {
         const int chnl = str_to_channel( subkey );
-        const int col  = _str_to_channel_colour( field );
+        const msg_colour_type col  = _str_to_channel_colour( field );
 
         if (chnl != -1 && col != -1)
             channels[chnl] = col;
         else if (chnl == -1)
             fprintf( stderr, "Bad channel -- %s\n", subkey.c_str() );
-        else if (col == -1)
+        else if (col == MSGCOL_NONE)
             fprintf( stderr, "Bad colour -- %s\n", field.c_str() );
     }
-    else COLOUR_OPTION(background);
+    else COLOUR_OPTION(background_colour);
     else COLOUR_OPTION(detected_item_colour);
     else COLOUR_OPTION(detected_monster_colour);
     else if (key.find(interrupt_prefix) == 0)
@@ -2264,17 +2257,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else COLOUR_OPTION(status_caption_colour);
     else if (key == "weapon")
     {
-        // Choose this weapon for classes that get choice.
+        // Choose this weapon for backgrounds that get choice.
         weapon = _str_to_weapon( field );
     }
     else if (key == "book")
     {
-        // Choose this book for classes that get choice.
+        // Choose this book for backgrounds that get choice.
         book = _str_to_book( field );
     }
     else if (key == "wand")
     {
-        // Choose this wand for classes that get choice.
+        // Choose this wand for backgrounds that get choice.
         wand = _str_to_wand( field );
     }
     else if (key == "chaos_knight")
@@ -2300,7 +2293,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "priest")
     {
-        // choose this weapon for classes that get choice
+        // Choose this weapon for backgrounds that get choice.
         priest = str_to_god(field);
         if (!is_priest_god(priest))
             priest = GOD_RANDOM;
@@ -2408,11 +2401,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
     else if (key == "species" || key == "race")
     {
-        race = _str_to_race( field );
+        race = _str_to_species( field );
     }
-    else if (key == "job" || key == "class")
+    else if (key == "background" || key == "job" || key == "class")
     {
-        cls = _str_to_class( field );
+        cls = _str_to_job( field );
     }
     else BOOL_OPTION(auto_list);
     else if (key == "default_target")
@@ -2477,7 +2470,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(note_skill_max);
     else BOOL_OPTION(note_all_spells);
     else BOOL_OPTION(note_xom_effects);
-    else BOOL_OPTION(delay_message_clear);
+    else BOOL_OPTION(clear_messages);
     else if (key == "flush")
     {
         if (subkey == "failure")
@@ -3217,6 +3210,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
+    else BOOL_OPTION(tile_show_minihealthbar);
+    else BOOL_OPTION(tile_show_minimagicbar);
     else if (key == "tile_tag_pref")
     {
         tile_tag_pref = string2tag_pref(field.c_str());
@@ -3483,7 +3478,7 @@ enum commandline_option_type {
 };
 
 static const char *cmd_ops[] = {
-    "scores", "name", "species", "job", "plain", "dir", "rc",
+    "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "test", "script", "builddb", "help", "version",
     "save-version", "extra-opt-first", "extra-opt-last"
@@ -3853,10 +3848,10 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!rc_only)
             {
                 if (o == 2)
-                    Options.race = _str_to_race( std::string( next_arg ) );
+                    Options.race = _str_to_species( std::string( next_arg ) );
 
                 if (o == 3)
-                    Options.cls = _str_to_class( std::string( next_arg ) );
+                    Options.cls = _str_to_job( std::string( next_arg ) );
             }
             nextUsed = true;
             break;

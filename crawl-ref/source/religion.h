@@ -67,7 +67,7 @@ std::string get_god_dislikes(god_type which_god, bool verbose = false);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
-bool did_god_conduct(conduct_type thing_done, int pgain, bool known = true,
+bool did_god_conduct(conduct_type thing_done, int level, bool known = true,
                      const monsters *victim = NULL);
 void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
                          bool known = true);
@@ -84,6 +84,7 @@ void pray();
 void end_prayer();
 void handle_god_time(void);
 int god_colour(god_type god);
+char god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);
@@ -137,4 +138,7 @@ int get_tension(god_type god = you.religion, bool count_travelling = true);
 void do_god_gift(bool prayed_for = false, bool force = false);
 
 std::vector<god_type> temple_god_list();
+
+extern const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES];
+std::string adjust_abil_message(const char *pmsg);
 #endif

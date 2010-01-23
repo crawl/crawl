@@ -171,4 +171,3 @@ struct mgen_data
 };
 
 #endif
-

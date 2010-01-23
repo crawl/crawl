@@ -20,7 +20,7 @@ N.      Philosophy
 
 Appendices
 1.      List of Character Species
-2.      List of Jobs
+2.      List of Character Backgrounds
 3.      List of Skills
 4.      List of Keys and Commands
 5.      List of Enchantments
@@ -38,10 +38,10 @@ and hideous creatures.
 
 If you have never played Crawl (or a similar game) before, you may want
 to try out a tutorial. In order to do so, press 'Ctrl-T' in the species
-or job selection screens. You can choose among three popular and rather
-straightforward combinations: a Minotaur fighter following a mighty war
-god, a Centaur hunter using a bow and arrows, and an Elven magician. The
-prime aim of the tutorial is to explain Crawl's interface. They do not
+or background selection screens. You can choose among three popular and
+rather straightforward combinations: a Minotaur fighter following a mighty
+war god, a Centaur hunter using a bow and arrows, and an Elven magician.
+The prime aim of the tutorial is to explain Crawl's interface. They do not
 focus on 'optimal' gameplay (also, many experienced players will share
 different views on the latter). The tutorial has a special help screen
 (viewed by pressing '??') and ends when you reach the seventh experience
@@ -89,17 +89,17 @@ B.                      STARTING SCREEN
 ------------------------------------------------------------------------
 
 After starting Crawl, you'll be asked to type in a name. Press Enter if
-you wish to choose a name after deciding on the species and job of your
-new character. The full list of saved games is also displayed, which you
-can navigate with the cursor Up and Down keys, and entering a name that
-is already attached to a save game will continue that game. Otherwise,
-enter a new name, and you will proceed to choose a species and job for a
-new character.
+you wish to choose a name after deciding on the species and background of
+your new character. The full list of saved games is also displayed, which
+you can navigate with the cursor Up and Down keys, and entering a name
+that is already attached to a save game will continue that game.
+Otherwise, enter a new name, and you will proceed to choose a species and
+background for a new character.
 
 You can make these two choices in either order, and you can randomize
-your choice of job, species, or both if you would rather have the game
-decide for you. If both are randomized, you will be prompted with the
-chosen combination before the game starts.
+your choice of background, species, or both if you would rather have the
+game decide for you. If both are randomized, you will be prompted with
+the chosen combination before the game starts.
 
 The choice of species affects several important characteristics, in
 particular the speed at which you learn different skills. This is very
@@ -109,44 +109,45 @@ The following factors are species-dependent:
 Major:
 *  Your rate of level advancement
 *  Your rate of skill advancement
-*  Your initial primary attributes (this also depends on job)
+*  Your initial primary attributes (this also depends on background)
 
 Minor:
 *  Occasional bonus points added to some primary attributes
 *  The amount of hit points you get each level
 *  The amount of magic points you get each level
-*  Your initial equipment (this also depends on job)
+*  Your initial equipment (this also depends on background)
 *  Various special abilities, powers and limitations
 
 Note that Humans are the average to which all other species are compared.
 
-The choice of job is definitely less decisive than that of species
-in Crawl. Basically, the job determines what the character has learned
-prior to entering the dungeon (i.e. the starting skills), and also helps
-determine equipment and hit/magic points at start.
+The choice of character background is definitely less decisive than that
+of species in Crawl. Basically, the background determines what the
+character has learned prior to entering the dungeon (i.e. the starting
+skills), and also helps determine equipment and hit/magic points at start.
 
-Some species are slower than humans in most/all skills. For some jobs
-these species may seem to have very few starting skills because they
-haven't quite  earned the first level of several of their skills
-(Centaurs are notable in this regard... although non-human Wanderers can
-appear to start with no skills at all). This isn't a bug or an
-oversight, these species are just particularly weaker than humans at
-these jobs. They may have other advantages beyond skill development,
-though in some cases they may not.
+Some species are slower than humans in most/all skills. For some
+backgrounds these species may seem to have very few starting skills
+because they haven't quite  earned the first level of several of their
+skills (Centaurs are notable in this regard... although non-human
+Wanderers can appear to start with no skills at all). This isn't a bug
+or an oversight, these species with these backgrounds are just
+particularly weaker than humans. They may have other advantages beyond
+skill development, though in some cases they may not.
 
-You will notice that a different set of jobs will be recommended
-(light grey) for all species. Although you are free to pick any job
-with almost any species (the only restrictions are for jobs that
-start with a religion that may not be open to all species), looking at
-the recommended combinations should give you a rough impression about
-the weaknesses and strengths of the different species.
+You will notice that a different set of backgrounds will be recommended
+(light grey) for all species. Although you are free to pick any
+background with almost any species (the only restrictions are for
+backgrounds that feature a religion that may not be open to all species),
+looking at the recommended combinations should give you a rough
+impression about the weaknesses and strengths of the different species.
 
-For some combinations of species and jobs, you must make further choices
-before starting the game: For example, you must pick a starting god for
-Chaos Knights, and a starting weapon for Gladiators.
+For some combinations of species and background, you must make further
+choices before starting the game: For example, you must pick a starting
+god for Chaos Knights, and a starting weapon for Gladiators.
 
-You can choose a tutorial from the species and job selection screens by
-pressing 'Ctrl-T'. Three different tutorial combinations are available.
+You can choose a tutorial from the species and background selection
+screens by pressing 'Ctrl-T'. Three different tutorial combinations are
+available.
 
 When you start a new character and want to get a rough impression, you
 may examine it with the following commands:
@@ -501,8 +502,8 @@ it is not necessary to bother with the numbers in order to win!
 You can see your character's skills by pressing the 'm' key; the higher
 the level of a skill, the better you are at it. Almost all characters
 start with a few skills already trained (which depends essentially on
-their job), those which are not present have to be learned from scratch.
-Each skill can go up to 27.
+their background), those which are not present have to be learned from
+scratch. Each skill can go up to 27.
 
 Each time your character gains experience points, those points become
 available to increase skills. You convert experience points into skill
@@ -1123,18 +1124,18 @@ be used to sacrifice things at altars.
 To use any powers which your god deems you fit for, access the abilities
 menu via the 'a' command; god-given abilities are listed as invocations.
 
-Some jobs start out religious; others have to pray at an altar to
-dedicate themselves to a life of servitude. There are altars scattered
-all over the dungeon, and your character has heard rumours of a special
-temple somewhere near the surface. At an altar, you can read a
-description of that god's general attitude by pressing 'p'. You will be
-asked afterwards if you really want to attend this circle.
+Depending on background, some characters start out religious; others have
+to pray at an altar to dedicate themselves to a life of servitude. There
+are altars scattered all over the dungeon, and your character has heard
+rumours of a special temple somewhere near the surface. At an altar, you
+can read a description of that god's general attitude by pressing 'p'.
+You will be asked afterwards if you really want to attend this circle.
 
 Note that the good gods will not accept demonic or undead devotees.
 
-If you like to start the game with a religion, choose your job from
-Healer, Priest, Paladin, Berserker, Chaos Knight or Death Knight (the
-last only if you draw your power from your god, instead of from
+If you like to start the game with a religion, choose your background
+from Healer, Priest, Paladin, Berserker, Chaos Knight or Death Knight
+(the last only if you draw your power from your god, instead of from
 necromancy).
 
 
@@ -1421,15 +1422,16 @@ points helping to make playing Crawl fun over and over again:
 Diversity: whenever there are choices to the player, be that choice of
 species, god, weapon or spell, the various options should be genuinely
 different. It is no good to provide dozens of weapons with different
-names (and perhaps even numbers) if, in the end, they all play the 
+names (and perhaps even numbers) if, in the end, they all play the
 same.
 
 Many different species: This is partly due to the skills and aptitude
 system. Similarly important are the built-in starting bonuses/handicaps
 of species; these often have great impact on play. To us, balance does
-not mean that all combinations of job and species play equally well!
-Some are much more challenging than others, and this is fine with us.
-Each species has at least some jobs playing rather well, though.
+not mean that all combinations of background and species play equally
+well! Some are much more challenging than others, and this is fine with
+us. Each species has at least some backgrounds playing rather well,
+though.
 
 Dungeon layout: Even veteran players will find the Tomb or the Hells
 exciting (which are construed such that life endangering situations can
@@ -1442,8 +1444,8 @@ choosing a god becomes the first major task of most games. But religion
 is also a point in favour of replayability for experienced players,
 since the choice of god can matter as much as species does.
 
-Playing styles: Related to, but encompassing, species, job, god are
-fundamentally different playing styles like melee oriented fighter,
+Playing styles: Related to, but encompassing, species, background, god
+are fundamentally different playing styles like melee oriented fighter,
 stabber, etc. Deciding on whether (and when!) to make a transition of
 style can make or break games.
 
@@ -1468,8 +1470,8 @@ Humans
 ------
 Humans tend to be hardworking and industrious, and learn new things
 quickly. The Human species is the most versatile of all the species
-available to players: Humans can be of any job. Humans advance quickly
-in levels and have equal abilities in all skills.
+available to players. Humans advance quickly in levels and have equal
+abilities in all skills.
 
 Elves
 -----
@@ -1869,21 +1871,21 @@ Note: Use 'A' to check for which particular peculiarities a species
 
 
 ------------------------------------------------------------------------
-2.                      LIST OF JOBS
+2.                      LIST OF CHARACTER BACKGROUNDS
 ------------------------------------------------------------------------
 
 In your quest, you play as one of a large number of different types of
 characters. Although each has its own strengths and weaknesses, some are
-definitely easier than others, at least to begin with. The best jobs for
-a beginner are probably Fighters, Gladiators and Berserkers; if you
-really want to play a magician, try a Conjurer. However, not all species
-are equally well suited for all jobs. The lighter coloured choices
-on the selection screen are generally considered to be the more
-accessible ones.
+definitely easier than others, at least to begin with. The best
+backgrounds for a beginner are probably Fighters, Gladiators and
+Berserkers; if you really want to play a magician, try a Conjurer. However,
+not all species are equally well suited for all backgrounds. The lighter
+coloured choices on the selection screen are generally considered to be
+the more accessible ones.
 
-Each job starts out with a different set of skills and items, but from
-there you can shape them as you will. Note that due to peculiarities of
-size or body shape, some characters start with a different inventory.
+Each background starts out with a different set of skills and items, but
+from there you can shape them as you will. Note that due to peculiarities
+of size or body shape, some characters start with a different inventory.
 
 Fighters:
 ---------
@@ -1903,7 +1905,7 @@ Monks:
 The Monk is a member of an ascetic order dedicated to the perfection
 of one's body and soul through the discipline of the martial arts.
 Monks start with very little equipment, but can survive without the
-weighty weapons and spellbooks needed by other jobs.
+weighty weapons and spellbooks needed by characters of other backgrounds.
 
 Berserkers:
 -----------
@@ -1977,11 +1979,12 @@ translocation effects. Additionally, they have spells which will aid
 in staying at a distance and defend against other ranged weapon users.
 
 
-Magicians: A magician is not a job by itself, but a type of job,
-including Wizards, Conjurers, Enchanters, Summoners, Necromancers,
-Transmuters, various Elementalists and Venom Mages. Magicians are the
-best at using magic. Among other things, they start with a robe and a
-book of spells which should see them through the first several levels.
+Magicians: A magician is not an available character background by itself,
+but a type of background, encompassing Wizards, Conjurers, Enchanters,
+Summoners, Necromancers, Transmuters, various Elementalists and Venom
+Mages. Magicians are the best at using magic. Among other things, they
+start with a robe and a book of spells which should see them through the
+first several levels.
 
 Wizards:
 --------
@@ -2053,10 +2056,10 @@ The Stalker is an Assassin who has trained in the use of poison magic.
 
 Thieves:
 --------
-The Thief is one of the trickiest jobs to play. Thieves start out with
-a large variety of useful skills, and need to use all of them to
-survive. They enter the Dungeon with a short sword, a hand crossbow,
-some darts and light armour.
+The Thief is one of the trickiest backgrounds to play. Thieves start
+out with a large variety of useful skills, and need to use all of them
+to survive. They enter the Dungeon with a short sword, some darts and
+light armour.
 
 Assassins:
 ----------
@@ -2087,8 +2090,8 @@ some small items they picked up along the way, but, other than that,
 they're pretty much on their own. Non-human wanderers might not even
 know which skills they have (since they haven't quite learned enough
 for one full level), and therefore make for an additional challenge.
-You shouldn't expect Human Wanderers to be easy, either, as this job
-is typically harder to play than the others.
+You shouldn't expect Human Wanderers to be easy, either, as this
+background is typically harder to play than the others.
 
 
 ------------------------------------------------------------------------

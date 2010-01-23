@@ -29,6 +29,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -1915,7 +1916,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
     level_id curr = level_id::current();
     while (true)
     {
-        mesclr(true);
+        mesclr();
 
         if (waypoint_list)
             travel_cache.list_waypoints();
@@ -2008,7 +2009,9 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                     std::string msg;
 
                     if (target.startdepth == -1
-                        && (i == BRANCH_SWAMP || i == BRANCH_SHOALS ))
+                        && (i == BRANCH_SWAMP
+                            || i == BRANCH_SHOALS
+                            || i == BRANCH_SNAKE_PIT))
                     {
                         msg += "Branch not generated this game.  ";
                     }
@@ -2186,7 +2189,7 @@ static travel_target _prompt_travel_depth(const level_id &id,
     target.p.id.depth = _get_nearest_level_depth(target.p.id.branch);
     while (true)
     {
-        mesclr(true);
+        mesclr();
         mprf(MSGCH_PROMPT, "What level of %s? "
              "(default %s, ? - help) ",
              branches[target.p.id.branch].longname,
@@ -2194,8 +2197,7 @@ static travel_target _prompt_travel_depth(const level_id &id,
 
         char buf[100];
         const int response =
-            cancelable_get_line( buf, sizeof buf, get_number_of_cols(),
-                                 NULL, _travel_depth_keyfilter );
+            cancelable_get_line(buf, sizeof buf, NULL, _travel_depth_keyfilter);
 
         if (!response)
             return _parse_travel_target(buf, target);

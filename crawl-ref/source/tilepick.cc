@@ -23,6 +23,7 @@
 #include "items.h"
 #include "itemprop.h"
 #include "kills.h"
+#include "libutil.h"
 #include "macro.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -784,6 +785,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // humans ('@')
     case MONS_HUMAN:
+    case MONS_DWARF:
         return TILEP_MONS_HUMAN;
     case MONS_HELL_KNIGHT:
         return TILEP_MONS_HELL_KNIGHT;
@@ -844,8 +846,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_ROTTING_DEVIL;
     case MONS_SMOKE_DEMON:
         return TILEP_MONS_SMOKE_DEMON;
-//     case MONS_SIXFIRHY:              // TODO
-//         return TILEP_MONS_SIXFIRHY;
+    case MONS_SIXFIRHY:
+        return TILEP_MONS_SIXFIRHY;
     case MONS_HELLWING:
         return TILEP_MONS_HELLWING;
 
@@ -928,7 +930,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_SILVER_STATUE:
         return TILEP_MONS_SILVER_STATUE;
     case MONS_ORANGE_STATUE:
-        return TILEP_MONS_ORANGE_CRYSTAL_STATUE;
+        return TILEP_MONS_ORANGE_STATUE;
 
     // gargoyles ('9')
     case MONS_GARGOYLE:
@@ -948,7 +950,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_ORB_OF_FIRE:
         return TILEP_MONS_ORB_OF_FIRE;
     case MONS_ORB_OF_DESTRUCTION:
-        return TILEP_MONS_ORB_OF_DESTRUCTION;
+        // Pick a random tile.
+        return TILEP_MONS_ORB_OF_DESTRUCTION
+               + random2(tile_player_count(TILEP_MONS_ORB_OF_DESTRUCTION));
 
     // other symbols
     case MONS_VAPOUR:
@@ -972,9 +976,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 
     // elves ('e')
     case MONS_DOWAN:
-        return TILEP_MONS_DEEP_ELF_MAGE;    // TODO
+        return TILEP_MONS_DOWAN;
     case MONS_DUVESSA:
-        return TILEP_MONS_DEEP_ELF_FIGHTER; // TODO
+        return TILEP_MONS_DUVESSA;
 
     // goblins and gnolls ('g')
     case MONS_IJYB:
@@ -1396,6 +1400,9 @@ static int _tileidx_weapon_base(const item_def &item)
 
     case WPN_WHIP:
         return TILE_WPN_WHIP;
+
+    case WPN_HOLY_SCOURGE:
+        return TILE_WPN_HOLY_SCOURGE;
 
     case WPN_DEMON_BLADE:
         return TILE_WPN_DEMON_BLADE;
@@ -2115,6 +2122,9 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_GLOWING_SHAPESHIFTER:
         return TILE_CORPSE_GLOWING_SHAPESHIFTER;
 
+    case MONS_DWARF:
+        return TILE_CORPSE_DWARF;
+
     default:
         return TILE_ERROR;
     }
@@ -2822,6 +2832,12 @@ static int _tileidx_cloud(cloud_struct cl)
 
             case CLOUD_RAIN:
                 ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
+                break;
+
+            case CLOUD_MAGIC_TRAIL:
+                if (decay/20 > 2)
+                    dur = 3;
+                ch = TILE_CLOUD_MAGIC_TRAIL_0 + dur;
                 break;
 
             case CLOUD_GLOOM:
@@ -4048,6 +4064,7 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
     case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
     case WPN_ANKUS:             return TILEP_HAND1_MACE;
+    case WPN_HOLY_SCOURGE:      return TILEP_HAND1_HOLY_SCOURGE;
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
     case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
 
@@ -5082,6 +5099,10 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                         }
                     }
                 }
+
+                dungeon_feature_type feat = grd(gc);
+                if (feat_is_water(feat) || feat == DNGN_LAVA)
+                    tileb[count+1] |= TILE_FLAG_WATER;
 
                 if (print_blood && is_bloodcovered(gc))
                     tileb[count+1] |= TILE_FLAG_BLOOD;

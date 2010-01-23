@@ -1,8 +1,6 @@
 #ifndef DGN_HEIGHT_H
 #define DGN_HEIGHT_H
 
-#include "AppHdr.h"
-#include "externs.h"
 #include "env.h"
 #include "fixedarray.h"
 #include <vector>
@@ -87,10 +85,6 @@ public:
     int_range island_aux_radius_range;
 
     int_range island_aux_point_height_increment;
-
-public:
-    static dgn_island_plan shoals_islands(int margin);
-    static dgn_island_plan snake_chambers(int margin);
 
 public:
     void build(int nislands);

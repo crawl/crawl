@@ -84,4 +84,3 @@ void monster_iterator::advance(bool may_stay)
     while (curr_mid < MAX_MONSTERS && !valid(curr_mid))
         ++curr_mid;
 }
-

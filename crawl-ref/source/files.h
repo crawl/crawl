@@ -39,6 +39,11 @@ void assert_read_safe_path(const std::string &path) throw (std::string);
 std::vector<std::string> get_dir_files(const std::string &dir);
 std::vector<std::string> get_dir_files_ext(const std::string &dir,
                                            const std::string &ext);
+std::vector<std::string> get_dir_files_recursive(
+    const std::string &dirname,
+    const std::string &ext = "",
+    int recursion_depth = -1,
+    bool include_directories = false);
 
 std::string datafile_path(
     std::string basename,

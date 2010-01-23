@@ -32,6 +32,7 @@
 #include "itemprop.h"
 #include "item_use.h"
 #include "it_use2.h"
+#include "macro.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -712,7 +713,7 @@ bool already_learning_spell(int spell)
         if (you.delay_queue[i].type != DELAY_MEMORISE)
             continue;
 
-        if (you.delay_queue[i].parm1 == spell)
+        if (spell == -1 || you.delay_queue[i].parm1 == spell)
             return (true);
     }
     return (false);
@@ -801,6 +802,7 @@ void handle_delay()
                  (delay.type == DELAY_BOTTLE_BLOOD ? "bottling blood from"
                                                    : "butchering"),
                  mitm[delay.parm1].name(DESC_PLAIN).c_str());
+            break;
 
         case DELAY_MEMORISE:
             mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
@@ -1542,7 +1544,7 @@ void armour_wear_effects(const int item_slot)
             {
                 set_mp(0, false);
                 mpr("You feel spirits watching over you.");
-                if (you.species == SP_DEEP_DWARF) 
+                if (you.species == SP_DEEP_DWARF)
                     mpr("Now linked to your health, your magic stops regenerating.");
            }
             break;
@@ -1893,7 +1895,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                 text += " " + mon->pronoun(PRONOUN_CAP)
                         + " is" + mweap + ".";
             }
-            print_formatted_paragraph(text, MSGCH_WARN);
+            mpr(text, MSGCH_WARN);
             const_cast<monsters*>(mon)->seen_context = "just seen";
         }
 
@@ -1918,7 +1920,8 @@ void autotoggle_autopickup(bool off)
         {
             Options.autopickup_on = -1;
             mprf(MSGCH_WARN,
-                "Deactivating autopickup; reactivate with <w>Ctrl+A</w>.");
+                 "Deactivating autopickup; reactivate with <w>%s</w>.",
+                 command_to_string(CMD_TOGGLE_AUTOPICKUP).c_str());
         }
         if (Tutorial.tutorial_left)
         {

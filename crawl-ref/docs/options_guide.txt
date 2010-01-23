@@ -16,7 +16,7 @@ The contents of this text are:
 1-  Starting Screen.
                 name, remember_name, use_old_selection_order,
                 weapon, book, wand, chaos_knight, death_knight, priest,
-                species, job, random_pick, good_random
+                species, background, random_pick, good_random
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Lua files.
@@ -64,7 +64,7 @@ The contents of this text are:
                 easy_exit_menu, sort_menus
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
-                status_caption_colour, delay_message_clear,
+                status_caption_colour, clear_messages,
                 show_inventory_weights, show_gold_turns, show_beam,
                 item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_min_height, msg_max_height,
@@ -100,7 +100,8 @@ The contents of this text are:
                 tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
                 tile_font_tip_file, tile_font_lbl_file, tile_font_crt_size,
                 tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
-                tile_font_lbl_size
+                tile_font_lbl_size, tile_show_minihealthbar,
+                tile_show_minimagicbar
 5-  Character Dump.
 5-a     Items and Kills.
                 kill_map, dump_kill_places, dump_item_origins,
@@ -121,7 +122,7 @@ The contents of this text are:
 6-b     DOS and Windows.
                 dos_use_background_intensity
 6-c     Unix.
-                background, use_fake_cursor
+                background_colour, use_fake_cursor
 
 7-  Inline Lua.
 7-a     Executing lua.
@@ -216,7 +217,7 @@ Note that, in the tutorial, some of your options settings may get
 overwritten to facilitate the explanations. This concerns the
 following options, and their enforced setting for tutorial games
 are as follows:
-   delay_message_clear = false
+   clear_messages      = true
    auto_list           = true
    weapon              = hand axe, for Berserkers
    book                = random, for Conjurers
@@ -258,21 +259,22 @@ name = Delilah
         If set, that's the name all your Crawl characters will get.
 
 remember_name = true
-        Crawl remembers the options (species, job etc.) you used to
-        create your last character. You may recycle them in the
+        Crawl remembers the options (species, background etc.) you used
+        to create your last character. You may recycle them in the
         starting screen for a new character. If this option is set to
         true, Crawl will also remember the last name you used.
 
         If you use this option and want to enter a name _after_
-        choosing your species and job, you must enter . at the initial
-        name prompt - hitting Enter at the name prompt will simply
-        reuse your old name if remember_name is set.
+        choosing your species and background, you must enter . at the
+        initial name prompt - hitting Enter at the name prompt will
+        simply reuse your old name if remember_name is set.
 
 use_old_selection_order = false
         If set to true, the character selection screen will offer
-        species and jobs in the order of version 0.3 and earlier.
-        Note that this needs to be set before the "species" or "job"
-        options (see below), or they won't be interpreted correctly.
+        species and backgrounds in the order of version 0.3 and earlier.
+        Note that this needs to be set before the "species" or
+        "background" options (see below), or they won't be interpreted
+        correctly.
 
 weapon = (random | short sword | hand axe | spear | mace | trident)
         Specifying the weapon option allows you to bypass the weapon
@@ -281,8 +283,8 @@ weapon = (random | short sword | hand axe | spear | mace | trident)
         illegal cases.
 
 book = (flame | fire | ice | cold | summ | summoning | random)
-        Several spellcasting jobs can choose their starting
-        spellbook. Note flame=fire and ice=cold and summ=summoning.
+        Several characters of spellcasting background can choose their
+        starting spellbook. Note flame=fire and ice=cold and summ=summoning.
 
 wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
         Artificers can start with either a wand of random effects and another
@@ -300,18 +302,18 @@ priest = (Zin | Yredelemnul | Beogh | random)
 species = (Human |...| Vampire | random)
         The usual abbreviations (Hu, HE, etc.) work.
 
-job = (Fighter |...| Wanderer | random)
+background = (Fighter |...| Wanderer | random)
         Here again the abbreviations (Fi, Wi, Pr, etc.) can be used.
 
 random_pick = false
         The random_pick option will randomly generate a character.
-        The above options (weapons and species/job options) will override
-        where appropriate.
+        The above options (weapons and species/background options) will
+        override where appropriate.
 
 good_random = true
-        Whenever random_pick is used, species or job are set random,
-        or a remembered random choice is executed in the character
-        selection, the game will only pick good combinations.
+        Whenever random_pick is used, species or background are set
+        random, or a remembered random choice is executed in the
+        character selection, the game will only pick good combinations.
 
 2-  File System.
 ================
@@ -659,7 +661,7 @@ neutral_brand = hi:lightgrey
         there are no darkgrey monster glyphs anymore, this works fine.
 
 stab_brand = hi:blue
-        Some deities object to you stabbing monsters. Certain jobs
+        Some deities object to you stabbing monsters. Certain backgrounds
         specialise in stabbing monsters. Still other characters are
         happy if they spot a monster before the monster spots them. In
         all these cases, it helps to identify monsters that are unaware
@@ -1279,9 +1281,9 @@ status_caption_colour = brown
         Sets the colour that is used to display the captions in the status
         area (for instance the "Health:" in "Health: 10/10").
 
-delay_message_clear = true
-        Setting this option to false will cause messages to cleared
-        between player actions (default is false which will  delay the
+clear_messages = false
+        Setting this option to true will cause messages to cleared
+        between player actions (default is false which will delay the
         clearing of messages until the message space is full).
 
 show_inventory_weights = false
@@ -1335,8 +1337,8 @@ msg_max_height = 10
 
 messages_at_top = false
         Put the message window at the top of the screen. This moves
-        the last message close to the center of the view in conjunction
-        with delay_message_clear.
+        the last message close to the center of the view when not
+        using clear_messages=true.
 
 mlist_allow_alternate_layout = false
         Display the monster list wherever Crawl may find space on
@@ -1758,6 +1760,11 @@ tile_font_tip_size  = 15
 tile_font_lbl_size  = 14
         Font size for the screen regions listed above.
 
+tile_show_minihealthbar = true
+tile_show_minimagicbar  = true
+        Will show health and magic bars on top of the player tile when the
+        player gets hurt or spends magic.
+
 5-  Character Dump.
 ===================
 
@@ -2129,7 +2136,7 @@ dos_use_background_intensity = false
 6-c     Unix.
 -------------
 
-background = black
+background_colour = black
         Sets the default background colour by name (defaults to BLACK).
         This may be useful if you're using a terminal with a background
         colour other than black (such as an xterm), but this option is

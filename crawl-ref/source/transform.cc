@@ -909,6 +909,10 @@ void untransform(bool skip_wielding)
             you.duration[DUR_ICY_ARMOUR] = 1;
 
         hp_downscale = 12;
+
+        // Re-enter the terrain, it might kill us.
+        move_player_to_grid(you.pos(), false, true, true);
+
         break;
 
     case TRAN_DRAGON:

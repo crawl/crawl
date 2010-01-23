@@ -2286,7 +2286,7 @@ static bool _confirm_pray_sacrifice(god_type god)
 std::string god_prayer_reaction()
 {
     std::string result = god_name(you.religion);
-    if (!crawl_state.need_save && crawl_state.updating_scores)
+    if (crawl_state.player_is_dead())
         result += " was ";
     else
         result += " is ";
@@ -2811,9 +2811,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
 
             case GOD_FEDHAS:
-                // Toadstools are exempt from this conduct
-                if (victim && fedhas_protects(victim)
-                    && victim->mons_species() != MONS_TOADSTOOL)
+                if (victim && fedhas_protects(victim))
                 {
                     // level is (1 + monsterHD/2) for this conduct,
                     // trying a fixed cost since plant HD aren't that
@@ -2996,7 +2994,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 simple_god_message(" appreciates the change of pace.");
                 retval = true;
-                if (random2(level + 18) > 3)
+                // Disallow returning to D:1 for free piety.
+                if (you.experience_level < you.your_level + 2 + level / 2 + random2(5))
                     piety_change = 1;
             }
             break;
@@ -3404,6 +3403,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_UNPONDEROUS:
+            if (you.religion == GOD_CHEIBRIADOS)
+                piety_change = -you.piety / 3;
+            break;
+
         case DID_NOTHING:
         case DID_STABBING:                          // unused
         case DID_STIMULANTS:                        // unused
@@ -3442,7 +3446,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Deliberate Mutation", "Cause Glowing", "Use Unclean",
                 "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
                 "Create Life", "Kill Slime", "Kill Plant", "Ally Kill Plant",
-                "Was Hasty"
+                "Was Hasty", "Unponderous"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
@@ -3545,19 +3549,16 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
         conduct[i].enabled = false;
 }
 
-static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
+std::string adjust_abil_message(const char *pmsg)
 {
     int pos;
-
-    if (!*pmsg)
-        return false;
-
     std::string pm = pmsg;
+
     if ((pos = pm.find("{biology}")) != -1)
         switch(you.is_undead)
         {
         case US_UNDEAD:      // mummies -- time has no meaning!
-            return false;
+            return "";
         case US_HUNGRY_DEAD: // ghouls
             pm.replace(pos, 9, "decay");
             break;
@@ -3566,6 +3567,15 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
             pm.replace(pos, 9, "biology");
             break;
         }
+    return (pm);
+}
+
+static bool _abil_chg_message(const char *pmsg, const char *youcanmsg)
+{
+    if (!*pmsg)
+        return false;
+
+    std::string pm = adjust_abil_message(pmsg);
 
     if (isupper(pmsg[0]))
         god_speaks(you.religion, pm.c_str());
@@ -4375,7 +4385,7 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
     msg.insert(0, itname);
     msg = tag_start + msg + tag_end;
 
-    formatted_message_history(msg, MSGCH_GOD);
+    mpr(msg, MSGCH_GOD);
 }
 
 static bool _altar_prayer()
@@ -5288,13 +5298,6 @@ void handle_god_time()
                 gain_piety(1);
             return;
 
-        case GOD_CHEIBRIADOS:
-            if (you.hunger_state < HS_FULL)
-                return;
-            if (_need_free_piety() && one_chance_in(12))
-                gain_piety(1);
-            return;
-
         case GOD_SHINING_ONE:
             if (_need_free_piety() && one_chance_in(15))
                 gain_piety(1);
@@ -5349,6 +5352,7 @@ void handle_god_time()
             break;
 
         case GOD_FEDHAS:
+        case GOD_CHEIBRIADOS:
             // Fedhas's piety is stable over time but we need a case here to
             // avoid the error message below.
             break;
@@ -5415,6 +5419,74 @@ int god_colour(god_type god) // mv - added
     }
 
     return (YELLOW);
+}
+
+char god_message_altar_colour(god_type god)
+{
+    int rnd;
+
+    switch (god)
+    {
+    case GOD_SHINING_ONE:
+        return (YELLOW);
+
+    case GOD_ZIN:
+        return (WHITE);
+
+    case GOD_ELYVILON:
+        return (LIGHTBLUE);     // Really, LIGHTGREY but that's plain text.
+
+    case GOD_OKAWARU:
+        return (CYAN);
+
+    case GOD_YREDELEMNUL:
+        return (coinflip() ? DARKGREY : RED);
+
+    case GOD_BEOGH:
+        return (coinflip() ? BROWN : LIGHTRED);
+
+    case GOD_KIKUBAAQUDGHA:
+        return (DARKGREY);
+
+    case GOD_FEDHAS:
+        return (coinflip() ? BROWN : GREEN);
+
+    case GOD_XOM:
+        return (random2(15) + 1);
+
+    case GOD_VEHUMET:
+        rnd = random2(3);
+        return ((rnd == 0) ? LIGHTMAGENTA :
+                (rnd == 1) ? LIGHTRED
+                           : LIGHTBLUE);
+
+    case GOD_MAKHLEB:
+        rnd = random2(3);
+        return ((rnd == 0) ? RED :
+                (rnd == 1) ? LIGHTRED
+                           : YELLOW);
+
+    case GOD_TROG:
+        return (RED);
+
+    case GOD_NEMELEX_XOBEH:
+        return (LIGHTMAGENTA);
+
+    case GOD_SIF_MUNA:
+        return (BLUE);
+
+    case GOD_LUGONU:
+        return (LIGHTRED);
+
+    case GOD_CHEIBRIADOS:
+        return (LIGHTCYAN);
+
+    case GOD_JIYVA:
+        return (coinflip() ? GREEN : LIGHTGREEN);
+
+    default:
+        return (YELLOW);
+    }
 }
 
 int piety_rank(int piety)

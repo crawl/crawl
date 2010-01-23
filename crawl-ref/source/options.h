@@ -2,6 +2,7 @@
 #define OPTIONS_H
 
 #include "feature.h"
+#include "pattern.h"
 
 class InitLineInput;
 struct game_options
@@ -87,7 +88,6 @@ public:
 
     int         autopickup_on;
     int         default_friendly_pickup;
-    bool        show_more_prompt;
 
     bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_beam;       // Show targetting beam by default.
@@ -129,8 +129,8 @@ public:
     confirm_prompt_type allow_self_target;      // yes, no, prompt
 
     int         colour[16];      // macro fg colours to other colours
-    int         background;      // select default background colour
-    int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
+    int         background_colour; // select default background colour
+    msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     bool        darken_beyond_range; // for whether targetting is out of range
 
     bool        use_old_selection_order; // use old order of species/classes in
@@ -148,7 +148,7 @@ public:
     int         magic_point_warning;    // percentage mp for danger warning
     char        race;            // preselected race
     char        cls;             // preselected class
-    bool        delay_message_clear;    // avoid clearing messages each turn
+    bool        clear_messages;   // clear messages each turn
     unsigned    friend_brand;     // Attribute for branding friendly monsters
     unsigned    neutral_brand;    // Attribute for branding neutral monsters
     bool        no_dark_brand;    // Attribute for branding friendly monsters
@@ -370,6 +370,9 @@ public:
     int         tile_tooltip_ms;
     tag_pref    tile_tag_pref;
     tile_display_type  tile_display;
+
+    bool        tile_show_minihealthbar;
+    bool        tile_show_minimagicbar;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;
@@ -454,4 +457,3 @@ private:
 extern game_options  Options;
 
 #endif
-

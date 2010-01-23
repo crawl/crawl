@@ -21,7 +21,10 @@
 #include "goditem.h"
 #include "itemname.h"
 #include "kills.h"
+#include "libutil.h"
+#include "mislead.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "coord.h"
 #include "mon-stuff.h"
@@ -76,7 +79,6 @@ dungeon_feature_type habitat2grid(habitat_type ht)
 {
     switch (ht)
     {
-    case HT_AMPHIBIOUS_WATER:
     case HT_WATER:
         return (DNGN_DEEP_WATER);
     case HT_LAVA:
@@ -84,7 +86,7 @@ dungeon_feature_type habitat2grid(habitat_type ht)
     case HT_ROCK:
         return (DNGN_ROCK_WALL);
     case HT_LAND:
-    case HT_AMPHIBIOUS_LAND:
+    case HT_AMPHIBIOUS:
     default:
         return (DNGN_FLOOR);
     }
@@ -280,21 +282,6 @@ mon_resist_def get_mons_resists(const monsters *mon)
             resists |= get_mons_class_resists(draco_species);
     }
     return (resists);
-}
-
-short mon_resist_def::get_resist_level(mon_resist_flags res_type) const
-{
-    switch (res_type)
-    {
-    case MR_RES_ELEC:    return elec;
-    case MR_RES_POISON:  return poison;
-    case MR_RES_FIRE:    return fire;
-    case MR_RES_STEAM:   return steam;
-    case MR_RES_COLD:    return cold;
-    case MR_RES_ACID:    return acid;
-    case MR_RES_ROTTING: return rotting;
-    default:             return (0);
-    }
 }
 
 monsters *monster_at(const coord_def &pos)
@@ -1186,8 +1173,7 @@ flight_type mons_flies(const monsters *mon, bool randarts)
 
 bool mons_class_amphibious(int mc)
 {
-    habitat_type ht = mons_class_habitat(mc);
-    return (ht == HT_AMPHIBIOUS_LAND || ht == HT_AMPHIBIOUS_WATER);
+    return (mons_class_habitat(mc) == HT_AMPHIBIOUS);
 }
 
 bool mons_amphibious(const monsters *mon)
@@ -1390,6 +1376,9 @@ int exper_value(const monsters *monster)
     if (x_val > 1000)
         x_val = 1000 + (x_val - 1000) / 2;
 
+    // Having killed hundreds means the monster is no longer a threat.
+    x_val >>= you.kills->num_kills(monster) / 100;
+
     // Guarantee the value is within limits.
     if (x_val <= 0)
         x_val = 1;
@@ -1416,8 +1405,9 @@ monster_type random_draconian_monster_species()
 //     (is_unclean_spell() || is_chaotic_spell())
 //
 // FIXME: This is not true for one set of spellbooks; MST_WIZARD_IV
-// contains the unholy Banishment spell, but the other MST_WIZARD-type
-// spellbooks contain no unholy or evil spells.
+// contains the unholy and chaotic Banishment spell, but the other
+// MST_WIZARD-type spellbooks contain no unholy, evil, unclean or
+// chaotic spells.
 static bool _get_spellbook_list(mon_spellbook_type book[6],
                                 monster_type mon_type)
 {
@@ -1685,6 +1675,7 @@ void define_monster(monsters &mons)
         ghost.init_random_demon();
         mons.set_ghost(ghost);
         mons.pandemon_init();
+        mons.bind_spell_flags();
         break;
     }
 
@@ -1694,6 +1685,7 @@ void define_monster(monsters &mons)
         ghost.init_player_ghost();
         mons.set_ghost(ghost);
         mons.ghost_init();
+        mons.bind_spell_flags();
         break;
     }
 
@@ -1949,10 +1941,8 @@ habitat_type mons_habitat(const monsters *mon)
 habitat_type mons_class_primary_habitat(int mc)
 {
     habitat_type ht = mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS_LAND)
+    if (ht == HT_AMPHIBIOUS)
         ht = HT_LAND;
-    else if (ht == HT_AMPHIBIOUS_WATER)
-        ht = HT_WATER;
     return (ht);
 }
 
@@ -1965,9 +1955,9 @@ habitat_type mons_primary_habitat(const monsters *mon)
 habitat_type mons_class_secondary_habitat(int mc)
 {
     habitat_type ht = mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS_LAND)
+    if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
-    else if (ht == HT_AMPHIBIOUS_WATER || ht == HT_ROCK)
+    else if (ht == HT_ROCK)
         ht = HT_LAND;
     return (ht);
 }
@@ -2234,6 +2224,17 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     default:
         return (false);
     }
+}
+
+// For SUMMON_PLAYER_GHOST.
+bool _find_players_ghost ()
+{
+    bool found = false;
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->type == MONS_PLAYER_GHOST && mi->mname == you.your_name)
+            found = true;
+
+    return found;
 }
 
 bool mons_should_fire(struct bolt &beam)
@@ -2584,6 +2585,25 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
             ret = true;
         break;
     }
+
+    case SPELL_MISLEAD:
+        if (you.duration[DUR_MISLED] > 10 && one_chance_in(3))
+            ret = true;
+
+        break;
+
+    case SPELL_SUMMON_PLAYER_GHOST:
+        // Only ever want one at a time.
+        if (_find_players_ghost())
+            ret = true;
+
+        break;
+
+    case SPELL_FAKE_MARA_SUMMON:
+        if (count_mara_fakes() == 2)
+            ret = true;
+
+        break;
 
     case SPELL_NO_SPELL:
         ret = true;
@@ -3671,99 +3691,6 @@ std::string get_mon_shape_str(const mon_body_shape shape)
     };
 
     return (shape_names[shape]);
-}
-
-/////////////////////////////////////////////////////////////////////////
-// mon_resist_def
-
-mon_resist_def::mon_resist_def()
-    : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0), acid(0),
-      asphyx(false), sticky_flame(false), rotting(false), pierce(0), slice(0),
-      bludgeon(0)
-{
-}
-
-short mon_resist_def::get_default_res_level(int resist, short level) const
-{
-    if (level != -100)
-        return level;
-    switch (resist)
-    {
-    case MR_RES_STEAM:
-    case MR_RES_ACID:
-        return 3;
-    case MR_RES_ELEC:
-        return 2;
-    default:
-        return 1;
-    }
-}
-
-mon_resist_def::mon_resist_def(int flags, short level)
-    : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0), acid(0),
-      asphyx(false), sticky_flame(false), rotting(false), pierce(0), slice(0),
-      bludgeon(0)
-{
-    for (int i = 0; i < 32; ++i)
-    {
-        const short nl = get_default_res_level(1 << i, level);
-        switch (flags & (1 << i))
-        {
-        // resistances
-        case MR_RES_STEAM:    steam      =    3; break;
-        case MR_RES_ELEC:     elec       =   nl; break;
-        case MR_RES_POISON:   poison     =   nl; break;
-        case MR_RES_FIRE:     fire       =   nl; break;
-        case MR_RES_HELLFIRE: hellfire   =   nl; break;
-        case MR_RES_COLD:     cold       =   nl; break;
-        case MR_RES_ASPHYX:   asphyx     = true; break;
-        case MR_RES_ACID:     acid       =   nl; break;
-
-        // vulnerabilities
-        case MR_VUL_ELEC:     elec       = -nl;  break;
-        case MR_VUL_POISON:   poison     = -nl;  break;
-        case MR_VUL_FIRE:     fire       = -nl;  break;
-        case MR_VUL_COLD:     cold       = -nl;  break;
-
-        // resistance to certain damage types
-        case MR_RES_PIERCE:   pierce     = nl;   break;
-        case MR_RES_SLICE:    slice      = nl;   break;
-        case MR_RES_BLUDGEON: bludgeon   = nl;   break;
-
-        // vulnerability to certain damage types
-        case MR_VUL_PIERCE:   pierce     = -nl;  break;
-        case MR_VUL_SLICE:    slice      = -nl;  break;
-        case MR_VUL_BLUDGEON: bludgeon   = -nl;  break;
-
-        case MR_RES_STICKY_FLAME: sticky_flame = true; break;
-        case MR_RES_ROTTING:      rotting      = true; break;
-
-        default: break;
-        }
-    }
-}
-
-const mon_resist_def &mon_resist_def::operator |= (const mon_resist_def &o)
-{
-    elec        += o.elec;
-    poison      += o.poison;
-    fire        += o.fire;
-    cold        += o.cold;
-    hellfire    += o.hellfire;
-    asphyx       = asphyx       || o.asphyx;
-    acid        += o.acid;
-    pierce      += o.pierce;
-    slice       += o.slice;
-    bludgeon    += o.bludgeon;
-    sticky_flame = sticky_flame || o.sticky_flame;
-    rotting      = rotting      || o.rotting;
-    return (*this);
-}
-
-mon_resist_def mon_resist_def::operator | (const mon_resist_def &o) const
-{
-    mon_resist_def c(*this);
-    return (c |= o);
 }
 
 bool player_or_mon_in_sanct(const monsters* monster)

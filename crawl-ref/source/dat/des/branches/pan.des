@@ -1,0 +1,605 @@
+##############################################################################
+# pan.des: Minivaults particular to Pan, and the lairs of the Pan Demon Lords
+##############################################################################
+
+# The generic pan lord warning message.
+
+{{
+function pan_lord_warning(e)
+  crawl.mpr("You feel a terrible weight on your shoulders! A mighty lord of Pandemonium must reside here.", "warning")
+end
+}}
+
+##############################################################################
+# Pan Demon Lairs
+#
+# NOTE: The Pandemonium demonlord levels are requested by tag; if you change
+# the tag, also update dungeon.cc.
+#
+# You can define alternate levels for a Pandemonium lord by using the same
+# TAGS: and a different NAME:
+##############################################################################
+
+###########################################################################
+# mnoleg.
+#
+NAME:      mnoleg
+TAGS:      mnoleg
+ORIENT:    northeast
+LFLOORCOL: yellow
+LROCKCOL:  red
+MONS:      patrolling Mnoleg, neqoxec
+: crawl.mpr("The air here is shimmering with an eerie glow.")
+: pan_lord_warning(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.................2............xxxx
+x.....2........................xxxx
+x..cccccccc...ccccccc..ccccccc.xxxx
+x..ccccccccc.2.ccccccc..cccccc.xxxx
+x..cccccccccc...ccccccc..ccccc.xxxx
+x..ccccccccccc.1.ccccccc..cccc.xxxx
+x2.cccccccccc.2..Occccccc2.ccc.xxxx
+x..ccccccccc.....ccccccccc..cc.xxxx
+x..cccccccc...c...ccccccccc..c.xxxx
+x..ccccccc...ccc...ccccccccc...xxxx
+x..cccccc...ccccc...ccccccccc..xxxx
+x..ccccc...ccccccc...ccccccccc.xxxx
+x..cccc...ccccccccc...ccccccc..xxxx
+x..ccc.2.ccccccccccc.2.ccccc...xxxx
+x..cc.....ccccccccccc...ccc....xxxx
+x..c...c...ccccccccccc...c.2...xxxx
+x.....ccc.2.ccccccccccc......c.xxxx
+x....ccccc...ccccccccccc....cc.xxxx
+x.2.ccccccc...ccccccccccc..ccc.xxxx
+x.................2.......cccc.xxxx
+x...c..ccccccc.ccccccc...ccccc.xxxx
+x..ccc......2c.c2cccc...cccccc.xxxx
+x.ccccc..ccc.c.c2ccc.2.ccccccc.xxxx
+x.cccccc..cc.c.c.cc...cccccccc.xxxx
+x.ccccccc..c.c.c.c...ccccccccc.xxxx
+x.cccccccc...c.c....cccccccccc.xxxx
+x.ccccccccc..c.c...ccccccccccc.xxxx
+x..............................xxxx
+xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#######################################################################
+# lom_lobon
+#
+NAME:      lom_lobon
+TAGS:      lom_lobon
+ORIENT:    north
+LFLOORCOL: lightgrey
+TAGS:      no_rotate
+LROCKCOL:  white
+MONS:      patrolling Lom Lobon, giant orange brain, rakshasa, wizard
+: crawl.mpr("You sense a powerful magical presence. It is not pleased.")
+: pan_lord_warning(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwww.......wwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwbbbwwwwwww.......wwwwwwwxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxwwwwwwwwwwwwbbbbbbbbbbbwwwwww.........wwwwwwxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxwwwwwwwwwwwwbbbbwwwwwwwwwbbbbwwwwww.........wwwwwwxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxwwwwwwwbbbbbbbbwwwwwwwwwwwwwwwbbbwwwww...........wwwwwxxxxxxxxxxxxx
+xxxxxxxxxxxxwwwwwbbbb......bbbwwwwwwwwwwww...bbwwwww.............wwwxxxxxxxxxxxx
+xxxxxxxxxxxxwwwbbb...........bbbwwwwww........bbwwwww.............wwxxxxxxxxxxxx
+xxxxxxxxxxxwwwbb...............bbwwww..........bwwwwww.............wwxxxxxxxxxxx
+xxxxxxxxxxxwwbb........1O.......bbww...........bbwwww..............wwxxxxxxxxxxx
+xxxxxxxxxxwwwb...................bw......2......bwww.....U....2.....wwxxxxxxxxxx
+xxxxxxxxxxwwbb...................bb.............bww.................wwxxxxxxxxxx
+xxxxxxxxxxwwbb..3................bbb............bbw..............4..wwxxxxxxxxxx
+xxxxxxxxxwwbbb...................b.b............4....................wwxxxxxxxxx
+xxxxxxxxxwwbwbb.................bb.......U......4..........U..........wxxxxxxxxx
+xxxxxxxxxwwbwwbb...............bb..b............bbw..............4.....xxxxxxxxx
+xxxxxxxxxwwbbwwbbb...........bbb..bb............bwww...................xxxxxxxxx
+xxxxxxxxxwwwbwwwwb..b..2..bbbb....b.............bwww...................xxxxxxxxx
+xxxxxxxxxxwwbwwww...bbbbbbb.......bw.....3.....bbwwww...U.....3.......xxxxxxxxxx
+xxxxxxxxxxwwbbww.................bbww........wwbwwwww.................xxxxxxxxxx
+xxxxxxxxxxwwwbbw................bbwwwww....wwwbbwwww..................xxxxxxxxxx
+xxxxxxxxxxwwwwbb...4...U........bwwwwwwwwwwwwbbwww....................xxxxxxxxxx
+xxxxxxxxxxxwwwwbbb...........bbbbbwwwwwwwwwbbbwww....................xxxxxxxxxxx
+xxxxxxxxxxxwwwwwwbbbb.....bbbbwwwbbbbwwwbbbbwwww....................xxxxxxxxxxxx
+xxxxxxxxxxxwwwwwwwwwbbbbbbbwwwwwwwwwbbbbbwwwww......4.....4........xxxxxxxxxxxxx
+xxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww......................xxxxxxxxxxxxxx
+xxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwww.......................xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwww........................xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxwwwwwww......................xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...@.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#############################################################################
+# cerebov
+#
+NAME:      cerebov
+TAGS:      cerebov
+ORIENT:    northeast
+LFLOORCOL: red
+LROCKCOL:  red
+MONS:      patrolling Cerebov, Balrug, Pit Fiend
+#
+# you might not want to teleport too much on this level - unless you can
+# reliably teleport away again.
+#
+: crawl.mpr("Searing heat pours from the floors and walls of this place.")
+: pan_lord_warning(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+...............................xxxx
+.............vvvvv.............xxxx
+.............v$$$v.............xxxx
+.............v|||v.............xxxx
+.............v$$$v.............xxxx
+.vvvvv...vvvvvvvvvvvvv...vvvvv.xxxx
+.v|$|vvvvv...........vvvvv$|$v.xxxx
+.v$|$v.....vvvvvvvvv.....v|$|v.xxxx
+.v|$|v.vvvvvvvvOvvvvvvvv.v$|$v.xxxx
+.vvvvv.vvvvvv..3..vvvvvv.vvvvv.xxxx
+...v...vv.....vvv.....vv...v...xxxx
+...v.vvvv....vv1vv....vvvv.v...xxxx
+...v.vv......v...v......vv.v...xxxx
+...v.vvvv.............vvvv.v...xxxx
+...v...vv..2.......2..vv...v...xxxx
+.vvvvv.vv..2.......2..vv.vvvvv.xxxx
+.v|$|v.vv.............vv.v$|$v.xxxx
+.v|$|v.vv...vv...vv...vv.v$|$v.xxxx
+.v|$|v.vv...vv+++vv...vv.v$|$v.xxxx
+.vvvvv.vvvvvvv...vvvvvvv.vvvvv.xxxx
+....v..vvvvvvv...vvvvvvv..v....xxxx
+....vv...................vv....xxxx
+.....vv.vvvvv..2..vvvvv.vv.....xxxx
+......vvv|||v.....v$$$vvv......xxxx
+........v|$|vv...vv$|$v........xxxx
+........v|||v.....v$$$v........xxxx
+........vvvvv.....vvvvv........xxxx
+...............................xxxx
+...............@...............xxxx
+ENDMAP
+
+##############################################################################
+# Gloorx Vloq
+#
+NAME:      gloorx_vloq
+TAGS:      gloorx_vloq
+ORIENT:    southwest
+LFLOORCOL: darkgrey
+LROCKCOL:  darkgrey
+MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow demon
+: crawl.mpr("Shadowy figures dance across your vision.")
+: pan_lord_warning(_G)
+MAP
+xxxxxxxxxxxxxxxxxx@.xxxxxxxxxxxxxxx
+xxxx..............................x
+xxxx..............................x
+xxxx..............................x
+xxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
+xxxx..............................x
+xxxx.x.xxxx=xxxxxxxxxxxx=xxxxxx.x.x
+xxxx...xx....................xx...x
+xxxx.x.x..ccccc..4..4..ccccc..x.x.x
+xxxx...x.cc.3............3.cc.x...x
+xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
+xxxx...x.c.cc.....cc.....cc.c.x...x
+xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
+xxxx...x...c...ccc..ccc...c...=...x
+xxxx.x.x.3.....2..1O..2.....3.x.x.x
+xxxx...=...c...ccc..ccc...c...x...x
+xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
+xxxx...x.c.cc.....cc.....cc.c.x...x
+xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
+xxxx...x.cc.3............3.cc.x...x
+xxxx.x.x..ccccc..4..4..ccccc..=.x.x
+xxxx...xx....................xx...x
+xxxx.x.xxxx=xxxx=xxxxxxxx=xxxxx.x.x
+xxxx..............................x
+xxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
+xxxx..............................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+#############################################################################
+# Pandemonium lesser demon vaults
+#############################################################################
+# Pandemonium demon vaults are selected by tag. They must have the tag "pan",
+# or they won't even be considered. Tags are case-sensitive.
+#
+# Tagging these levels also ensures they won't be generated in the main
+# dungeon.
+
+NAME: rand_demon_1
+TAGS: pan allow_dup
+MONS: pandemonium demon, random, random, random, random, random
+MAP
+............
+.xx.xx.x.xx.
+..x.x..x.x..
+..x.x..x.x..
+..x.x..x.x..
+..x.x..x.x..
+..x.x1.x.x..
+..x.x..x.x..
+..x.x..x.x..
+..x.x..x.x..
+.xx.x.xx.xx.
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_2
+TAGS: pan allow_dup
+MONS: pandemonium demon, greater demon, common demon
+MONS: common demon, random, random
+MAP
+............
+.xxxxxxxx3x.
+.3.....xx.x.
+.xxxxxx4x.x.
+.xx4x..xx.x.
+.x.x.22.x.x.
+.x.x.12.x.x.
+.x.xx..x4xx.
+.x.x4xxxxxx.
+.x.xx.....3.
+.x3xxxxxxxx.
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_3
+TAGS: pan allow_dup
+MONS: pandemonium demon, common demon, common demon
+MAP
+............
+.x.x.x3x.x..
+..x.x3x3x.x.
+.x.x.x2x.x..
+..x3x2x2x3x.
+.x3x2x1x2x3.
+..x3x2x2x3x.
+.x.x.x2x3x..
+..x.x3x3x.x.
+.x.x.x3x.x..
+..x.x.x.x.x.
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_4
+TAGS: pan allow_dup
+MONS: pandemonium demon, any demon, any demon
+SUBST: P = O..
+MAP
+............
+.xxxxxxxxx..
+.x$=*=3=|x..
+.xxxxxxx=x..
+.x2=3=2x|x..
+.x=xxxxx=x..
+.x3=*x1=Px..
+.x=x=xxxxx..
+.x*x2=3=2=..
+.xxxxxxxxx..
+............
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_5
+TAGS: pan allow_dup
+MONS: pandemonium demon, any demon, any demon
+SUBST: P = O..
+MAP
+............
+...xxxxxx...
+..xx....xx..
+.xx......xx.
+.x..3232..x.
+.x..2|P3..x.
+.x..3P|2..x.
+.x..2123..x.
+.xx......xx.
+..xx....xx..
+...xxxxxx...
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_6
+TAGS: pan allow_dup
+MONS: pandemonium demon, any demon, any demon
+MAP
+............
+............
+......2.....
+............
+.3..........
+..........2.
+.....1......
+............
+............
+.2.......3..
+............
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_7
+TAGS: pan allow_dup
+MONS: pandemonium demon, any demon, greater demon
+MAP
+............
+.xxx....xxx.
+.x|xx=xxx|x.
+.xx=....=xx.
+..x.x==x.x..
+..x.=12=.=..
+..=.=23=.x..
+..x.x==x.x..
+.xx=....=xx.
+.x|xxx=xx|x.
+.xxx....xxx.
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_8
+TAGS: pan allow_dup
+MONS: pandemonium demon, greater demon, any demon
+MAP
+............
+....xxxxxxx.
+..xxx....1x.
+.xx..2....x.
+.x........x.
+.xx.......x.
+..xx33..2.x.
+....33...xx.
+.....x...x..
+..F..xx.xx..
+......xxx...
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_9
+TAGS: pan allow_dup
+MONS: pandemonium demon, any demon, greater demon
+SUBST: P = O..
+MAP
+............
+.xxxxxxxxxx.
+.x2=3=3=3xx.
+.x=xxxxxx2x.
+.x3x^^^^x=x.
+.x=x^P^^x2x.
+.x3x^^1^x=x.
+.x=x^^^^x3x.
+.x2xxxx=x=x.
+.xx2=2=3x3x.
+.xxxxxxxx=x.
+............
+ENDMAP
+
+###################################
+
+NAME:    lemuel_draining_boxes
+TAGS:    pan
+MONS:    pandemonium demon, eye of draining, any demon
+SHUFFLE: aA/bB/cC/dD/eE/fF, eE/gG, fF/hH
+SUBST:   a=m, b=m, c=m, d=m, e=m, f=m, g=., h=.
+SUBST:   A=2, B=2, C=2, D=2, E=2, F=2, G=., H=.
+# the two center boxes are granted;
+# of the six outer boxes, one or two may be missing
+SUBST:   n=n =:1
+SUBST:   m:mn
+KMONS:   O = eye of draining
+KFEAT:   O = O
+MAP
+                  ....bbb..
+.......           ....bBb..
+.aaa...           ....bbb..
+.aAa...           .........
+.aaa.......................
+...........................
+.............mmm.............
+    .........m2m..........ccc
+    .........mmm3.........cCc
+...............333........ccc
+..............33133nnn.......
+.fff...........333.nOn.......
+.fFf............3..nnn...
+.fff.....................
+.........................
+.............................
+  .........        ...ddd....
+  ...eee...        ...dDd....
+  ...eEe...        ...ddd....
+  ...eee...        ..........
+ENDMAP
+
+###################################
+
+NAME:  lemuel_hellion_island
+TAGS:  pan
+MONS:  pandemonium demon, hellion
+SUBST: L=l.
+MAP
+    ..LlllL..
+  ..LlllllllL..
+ .LlllllllllllL.
+.LlllllL2LlllllL.
+.LllllL2.2LllllL.
+LllllL2|2|2LllllL
+llllL2.212.2Lllll
+llllL.2|2|2.Lllll
+LllllL.2.2.LllllL
+.LllllL.2.LllllL.
+.LlllllLLLlllllL.
+ .LlllllllllllL.
+  ..LlllllllL.
+    ..LlllL..
+ENDMAP
+
+###################################
+
+NAME:    lemuel_hall_of_pain
+TAGS:    pan
+MONS:    pandemonium demon, any demon
+MONS:    smoke demon / weight:1 fiend
+SHUFFLE: mx/nc
+SHUFFLE: O1/AB
+SUBST:   A=|, B=|
+# has a rune!
+MAP
+.......@.......
+xxxxxx+++xxxxxx
+xOx.xl...lx.xAx
+x1x3xl.2.lx3xBx
+x.x.ml...lm.x.x
+x2x.xl...lx.x2x
+x.x3xl...lx3x.x
+x2x.ml...lm.x2x
+x.x3xl...lx3x.x
+x2x.xl.2.lx.x2x
+x.x.ml...lm.x.x
+x.x3xl...lx3x.x
+x2x.xl...lx.x2x
+x.x.ml...lm.x.x
+x.x3xl.2.lx3x.x
+x2xxxl2.2lxxx2x
+x....2.2.2....x
+xxxxxxxxxxxxxxx
+ENDMAP
+
+###################################
+# A couple of small vaults featuring blood fountains.
+
+NAME:   pan_blood_fountain
+TAGS:   pan
+SUBST:  ' : '"
+COLOUR: ' = red / none
+COLOUR: " = red / none w:5 / lightred w:2
+COLOUR: . = red / none w:40
+# not sure which FTILE to use here
+SUBST:  '=. , "=.
+MAP
+ ...
+.'''.
+.'Y'.
+.'''.
+ ...@
+ENDMAP
+
+NAME:   pan_blood_fountain_2
+TAGS:   pan
+SUBST:  ' : '"
+SUBST:  Y = YYV
+COLOUR: ' = red / none
+COLOUR: " = red / none w:5 / lightred w:2
+COLOUR: . = red / none w:80
+# not sure which FTILE to use here
+SUBST:  '=. , "=.
+MAP
+ @.....
+ '''.'''
+.'Y'.'Y'.
+.'''''''.
+ ..'Y'..
+  .'''.
+   ...
+ENDMAP
+
+###################################
+
+NAME:   pan_surprise
+TAGS:   pan
+KMONS: 1 = executioner
+KITEM: 1 = executioner's axe
+# It may be a surprise for the executioner as well if the player has high
+# stealth -- an alarm trap would be found by most chars who dare Pan and thus
+# spoil the fun.
+MAP
+xxxx
+xx.x
+x1x@
+xxx
+ENDMAP
+
+###################################
+
+# Sadly, this vault works well only in text.  If we could get changing tiles,
+# it would be great, but for now, these are static.
+#
+NAME:   pan_disco_hall
+TAGS:   pan no_rotate
+ORIENT: float
+SUBST:  - = 0:1 / .:10
+COLOUR: .x = random
+COLOUR: 0123456789 = random
+MONS:   col:random name:demonic name_adjective plant
+MONS:   red devil ; demon trident good_item ego:distortion
+MONS:   red devil ; lajatang good_item ego:distortion
+MONS:   red devil ; katana good_item ego:distortion
+RTILE:  x = wall_zot_blue / wall_zot_green / wall_zot_cyan / wall_zot_red /\
+            wall_zot_magenta / wall_zot_yellow
+# alas, floor tiles are not distinguished from walls enough, commenting out:
+# FTILE: . = floor_lair / floor_dirt / floor_hive / floor_rough_red /\
+#            floor_snake / floor_swamp
+KFEAT:  _ = floor
+FTILE:  _ = floor_hall
+MAP
+                   xx@xx
+                   x1.1x
+                   x...x
+   xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
+   x........................x---------------x
+   x.x.x.x.x.x.x.x.x.x.x.x..x---------------x
+   x........................x---------------xxxxxx
+   x.x.x.x.x.x.x.x.x.x.x.x..x---------------_....x
+xxxx.........................---------------_..2.x
+x1.x.........................---------------_....x
+@............................---------------_..3.x
+x1.x.........................---------------_....x
+xxxx.........................---------------_..4.x
+   x.xxxxxxxxxxxxxxxxxxxxx..x---------------_....x
+   x.x0.0x..0x0.0x0.0x..0x..x---------------xxxxxx
+   x.x0..x0..x...x0..x...x..x---------------x
+   x........................x---------------x
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# Random vault and minivault balancers for Pan.
+
+NAME: pan_mini_dummy_balancer
+DEPTH: Pan
+TAGS: dummy
+WEIGHT: 100
+MAP
+x
+ENDMAP
+
+NAME: pan_dummy_balancer
+DEPTH: Pan
+TAGS: dummy
+ORIENT: float
+WEIGHT: 100
+MAP
+x
+ENDMAP

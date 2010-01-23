@@ -56,3 +56,6 @@
 # tile_font_tip_size  = 15
 # tile_font_lbl_file  = Vera.ttf
 # tile_font_lbl_size  = 14
+
+# tile_show_minihealthbar = true
+# tile_show_minimagicbar  = true

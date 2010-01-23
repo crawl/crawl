@@ -1,0 +1,1250 @@
+###############################################################################
+# large.des: All large regular vaults go here (these are defined by having an
+#            ORIENT line with argument encompassing, north, northwest etc.
+#
+# Note that all maps for the Vault branch system (including Vault:8) reside in
+# vaults.des.
+###############################################################################
+
+default-depth: D:12-26
+# be careful to adapt these numbers for new vaults (using DEPTH)
+
+###############################################################################
+# Rats! (Lemuel), slightly easier now
+# There another, harder version for the Lair.
+#
+NAME:    RatsNest_Dungeon
+ORIENT:  northeast
+TAGS:    uniq_rats_nest
+WEIGHT:  5
+DEPTH:   D:5-9
+SHUFFLE: 23, 34
+MONS:    rat / nothing, grey rat / nothing
+MONS:    green rat / nothing, orange rat / w:40 rat
+ITEM:    cheese w:100 / apple / orange / pear / apricot / choko
+ITEM:    cheese w:100 / apple / orange / pear / apricot / choko
+SUBST:   d = d....
+SUBST:   e = e.
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.eexxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx343dxx.xxxxxxxxd334433xxxxxxxxx23..exx
+xxd222...xxxxxxxx..224422xxxxxx1111...xxx
+xd.111..xxxxxxxxx..111111.xxx.111...xxxxx
+xx.111..xxxxxxxxxx.11111..x......xxxxxxxx
+xxxx..xx.x.xxxxxx.xx..........xxxxxxxxxxx
+xxxxx.xxx.x..x.xx.x.xx....x.xxxxxxxxxxxxx
+xxxxx...x.xxx.x33xx.xxxx.xxxxxxxxxxxxxxxx
+xxxxxxx.x.xxxx221x.xxx...xxxxxxxxxxxxxxxx
+xxxxxxxx.xxxxx111.xxxx.xxxxxxxxxxxxxxxxxx
+xxxxxxxxx..xxx.x.x.xxx.xxxxxxxxxxxxxxxxxx
+xxxxxxxxxx..x.xx.x.xx.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx..xx.xx.x.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.xxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+#hidden cave vault, possibly with statue
+#
+NAME:    statuecave_lemuel
+ORIENT:  northeast
+DEPTH:   D:7-27, Lair, Crypt
+MONS:    ice statue / orange crystal statue
+SHUFFLE: 1|/!*
+SUBST:   *:*$, ?:x., !:., '=w.
+ITEM:    ring of teleportation / ring of levitation
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxwwwxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxwwwwwwwxxxxxxxxx
+xxxxxxxxxxxxxxxwwwwwwwwwwwxxxxxxx
+xxxxxxxxxxxxxwwwwwwxxxwwwwwxxxxxx
+xxxxxxxxxxxxwwwwwwxxxxxxwww.1xxxx
+xxxxxxxxxxxwwwwxxxxxxxxxxwwW??xxx
+xxxxxxxxxwwwwwxxxxxxxxxxxwwwW??xx
+xxxxxxxxwwwwxxxxxxxxxxxxxxww|||xx
+xxxxxxxxwwwxxxxxxxxxxxxxxxxw||dxx
+xxxxxxxwwwxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxwwwwwxxxxxxxxxxxxxxxxxxxxxxx
+xxxwwwwwwwwwxxxxxxxxxxxxxxxxxxxxx
+wwwwwwwwwww''..................xx
+.'wwwwwww''....................xx
+..''wwww'......................xx
+.....'w........................xx
+ENDMAP
+
+
+###############################################################################
+# Black bear nests (Eino)
+# Bears are wimpy when you meet them, so here's an early challenge.
+#
+NAME:   black_bear_nest_1
+ORIENT: northwest
+WEIGHT: 5
+TAGS:   uniq_black_bear_nest
+DEPTH:  D:4-8
+NSUBST: ' = 1:1 / 2:R / *:.
+KITEM:  R = w:2 honeycomb / w:1 royal jelly
+MONS:   patrolling black bear
+MAP
+xxxxxxxxxxxxxxx
+xx''.xxxxxxxxxx
+x''.......xxxxx
+x''...xx....xxx
+xx''xxxxxxx..xx
+xxxxxxxxxxxxx.x
+xxxxxxxxxxxxxx@
+ENDMAP
+
+NAME:   black_bear_nest_2
+ORIENT: southeast
+WEIGHT: 5
+TAGS:   uniq_black_bear_nest
+DEPTH:  D:4-8
+NSUBST: ' = 1:1 / 2:R / *:.
+KITEM:  R = w:2 honeycomb / w:1 royal jelly
+MONS:   patrolling black bear
+MAP
+xxxxxxxx@xx
+xxxxxxxx.xx
+xxxxxxxx.xx
+xxxxxxx..xx
+xxxxxx...xx
+xxxxx...xxx
+xxxx...xxxx
+xxx...xx'xx
+xxx..xx'.xx
+xxx..x''.xx
+@....xx'.xx
+xxx...xx.xx
+xxxx.....xx
+xxxxx....xx
+xxxxxxxxxxx
+xxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+# Dragon's cave
+#
+NAME:    dragon1_lemuel
+ORIENT:  northeast
+DEPTH:   D:9-20, Lair
+MONS:    patrolling dragon, patrolling ice dragon
+ITEM:    potion of levitation / scroll of teleportation
+SUBST:   ! : ?x
+SHUFFLE: 1?/2W
+SUBST:   2=2:20 1
+SUBST:   ? : wl
+SUBST:   * : $*|
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx!!!xxxxxxxxx
+xxxxxxxxxxxxxxxxx..????....dxxxx
+xxxxxxxxxxxxxxx....???...1d**xxx
+xxxxxxxxxxxxxx......???..$$**xxx
+xxxxxxxxxxxx.........????$$!!xxx
+xxxxxxxx.............??????!!!xx
+xxx......xxxxx........????!!!!xx
+xxx.xxxxxxxxxxx.......???!!!!!!x
+xx..xxxxxxxxxxxxxx...????!!!!!!x
+xx.xxxxxxxxxxxxxxxxxxxx!!!!!!!!x
+xx.xxxxxxxxxxxxxxxxxxx!!!!!!!xxx
+xx....xxxxxxxxxxxxxxxxxxx!!!xxxx
+xxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx@xxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Steading of the Giant Chief
+#
+NAME:    Giant_Chief_Lemuel
+DEPTH:   D:11-22, Orc:3-4
+ORIENT:  north
+MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
+MONS:    hill giant, cyclops
+MONS:    w:50 ogre / w:5 ogre mage / two-headed ogre
+MONS:    wolf / warg
+SHUFFLE: ae / bB / gG / dD
+SUBST:   ; = .'
+SHUFFLE: 'F1/ww2
+SHUFFLE: w2/l3
+SUBST:   C = ?5
+SUBST:   a:. , e:. , b:x. , g:x. , d:x. , B:x. , G:x. , D:x. , ? = x.
+SUBST:   0 = 4 7 8:20 .:20
+SUBST:   T = .:50 ~
+SUBST:   | : |:30 Z
+SUBST:   ! = =+x
+KFEAT:   Z = floor
+KMONS:   Z = hill giant zombie / stone giant zombie / cyclops zombie /\
+             titan zombie
+KFEAT:   ( = . w:25 / ~
+KITEM:   ( = any weapon good_item
+KMONS:   8 = plant
+KFEAT:   8 = floor
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxccccccccccccx
+xxxx???xxxxxx?***??xxxxxxxxxxxxx.........7...c...444..cccc..........cx
+xx$$$$$$?xxxx?.6..?xxxxxxxxxeeee..7..........+........+TT+.........5cx
+x?$$$$$$.?xx?.666.xxxxxxee0eexxx7....7.......c........cccc.........1cx
+x.$$$$$$..?x...6..eeeeeeexxxxxxx............7ccccc+ccccccc.........5cx
+x....<.....=?....xxxxxxxxx$$$TTcccc+ccccccccccccccTc(((((+..........cx
+x?........?xxxx.xxxxxxxx<=$$$TT+.......+TTTTTTTTTTTc(((((c.......***cx
+xx........?xx...xxxxxxxxxxx!xxxc..4.4..ccccccccccccccccccc444....***cx
+xxxx?...?xxxx.xxxxxxxxxxxxxCxxxc...4...cxxxCxxxxxxxxxxxxxxxxxxxxx=xxxx
+xxxxxx!xxxxxx.xxxxxxxbbb;''''''c..4.4..c'''''';ddddddddddxxxxxxxx||xxx
+xxx....xxxxx..xaaaaabbb0;''''''c.......c'''''';0ggggdddddd????xxx||xxx
+x...xxxxx???0?aaaaabbbb..;'''''ccc+++ccc''''';...ggggggdddddd???xxxxxx
+xx.xxx???......aaaabbbbb...;''F,''''''',F'';........ggggggdddd.???xxxx
+x?!??.....0...aaaa..bbb........;''''''';.........ggggggg.ddd..0...?xxx
+xx..........aaaaa....bbbbb.........4...ggggggggggggggg...dddd......??x
+xx?...aaaaaaaaaa.......bbbbbbbbb..0..ggggggggggggggg...0....dd......?x
+xxaaaaaaaaaaaa.....0.....bbbbbbbbbggggggggggggggg...........dd......?x
+xxaaaaaaaa[....@..........bbbbb..@..gggggggg........@.......d.....@..x
+ENDMAP
+
+
+###############################################################################
+# Medium gnoll camp
+#
+# There are also two small camps (with weight 5).
+NAME:   eino_medium_gnoll_camp
+ORIENT: north
+TAGS:   uniq_gnoll_camp
+WEIGHT: 3
+DEPTH:  D:3-14
+# This chooses between closed+populated and open+deserted variations -
+# the populated version is more fun, the deserted version is easier.
+# Shallow vaults and some deeper ones get the deserted version:
+: if you.absdepth()<7 or crawl.one_chance_in(6) then
+SUBST:  T=., A=., a=., M=., m=., H=., h=., F=., f=., S=., s=., B=.
+SUBST:  b=., W=., w=., Z=., z=., G=., D=., d=.
+: end
+# Walling:
+SUBST:  A=x , a=+
+SUBST:  g = 1 2:3 3:1 4:3
+SUBST:  G = 1 2:3 3:1 4:3
+MONS:   gnoll
+MONS:   gnoll ; potion of healing . halberd | glaive | whip ego:reaching w:2 | \
+                spear | spear ego:reaching w:2 . ring mail | scale mail
+MONS:   gnoll ; potion of healing | potion of heal wounds . \
+                whip ego:reaching w:2 | whip good_item no_uniq w:1 | \
+                spear ego:reaching w:2 | glaive . scale mail | chain mail
+MONS:   gnoll ; javelin q:3 | throwing net q:2 . spear | halberd . \
+                leather armour | ring mail
+# Juggle positions of the rest of the population and remove placeholders:
+SHUFFLE: M/m, H/h, F/f, S/s, B/b, W/w, Z/z, D/d
+SUBST:  m=. , h=. , f=. , s=. , b=. , w=. , z=., d=.
+KMONS:  M = gnoll ; whip | whip ego:reaching w:2 | spear ego:reaching w:2 . \
+                    leather armour | ring mail
+KMONS:  H = jackal / hound
+KMONS:  B = gnoll ; potion of healing | potion of heal wounds . \
+                    whip ego:reaching w:2 | whip good_item no_uniq w:1 | \
+                    spear ego:reaching w:2 |glaive . scale mail | chain mail / \
+        w:4 gnoll ; potion of heal wounds . spear good_item | \
+                    halberd good_item | glaive ego:reaching w:5 .chain mail | \
+                    banded mail
+KITEM:  F = meat ration / beef jerky / sausage / potion of water
+KITEM:  S = javelin q:4 w:5 / javelin q:3 w:5 / cloak / sausage /\
+            potion of water / leather armour / pair of gloves / hand axe
+KITEM:  W = spear good_item no_uniq w:2 / halberd / glaive / javelin q:4 w:5 /\
+            javelin q:3 w:5 / throwing net
+KFEAT:  Z = $
+KITEM:  D = potion of confusion / potion of speed / potion of berserk rage /\
+            potion of might
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+xxxfFFxsSSxBWdxzZZxxxxx
+xxx.f.x.s.xbDDxBZZxxxxx
+xxxF.fAS.sAdBwAbzzxxxxx
+xxxxxaAAaAAAaAAaxxxxxxx
+xhMTx...........xHwWxxx
+xHhHa.g.AAaAA.g.ahzZxxx
+xhHmA.g.AGbGA g.AHZhxxx
+AAAAA.  A.GGA  .AAAAA.@
+@.....  Aw.WA  ........
+        AAAAA
+ENDMAP
+
+
+###############################################################################
+# The Castle
+# With depth-appropriate inhabitants and loot
+#
+NAME:   lemuel_castle
+DEPTH:  D:3-27
+ORIENT: northwest
+TAGS:   no_monster_gen no_rotate
+: if you.absdepth() < 7 then
+MONS:   gnoll, gnoll, ogre, jackal
+SUBST:  *=*. , *=$ , |=* , *=*.
+: elseif you.absdepth() < 16 then
+MONS:   orc, w:5 orc knight / orc warrior
+MONS:   orc sorcerer / orc warlord / orc knight, warg
+SUBST:  *:*$ , |:*$
+: elseif you.absdepth() < 25 then
+MONS:   deep elf soldier / deep elf fighter
+MONS:   deep elf knight / deep elf mage / deep elf summoner / deep elf priest
+MONS:   deep elf annihilator / deep elf sorcerer / deep elf demonologist /\
+        deep elf blademaster/deep elf master archer
+MONS:   nothing
+SUBST:  *:*$, |=|.
+: else
+MONS:   red draconian / green draconian / yellow draconian / pale draconian /\
+        black draconian / purple draconian
+MONS:   pale draconian knight / green draconian annihilator /\
+        purple draconian knight
+MONS:   red draconian scorcher / white draconian zealot /\
+        yellow draconian caller / black draconian shifter
+MONS:   lindwurm / death drake / swamp drake
+MONS:   plant / w:1 oklob plant
+SUBST:  w:wl
+SUBST:  *:*$
+: end
+COLOUR: ? = brown
+FTILE:  ? = floor_hive
+SUBST:  ? = .
+SUBST:  X = c =:1
+SUBST:  ~ = ~:2 .
+SUBST:  8 = 89
+MONS:   plant
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x......5.................4.4......5............
+x.......................4.4.4...5.............5
+x....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+x....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+x....wwccnccwwwwwwwwwwwwwwwwwwwwwwwwwwwwccnccww
+x....wwc1.1c......4.............4.......c1.1cww
+x....wwc.1.cXccccccccccccXXccccccccccccXc.1.cww
+x....wwccc+c....+~~~~~~~+..+~~~~~~~+.***c+cccww
+x....www.X.c||..ccccccccc++ccccccccc.***c.X.www
+x....www.c1c||2.c1...1..1321..1...1c.***c1c.www
+x....www.c.cccccc..1...211112...1..cccccc.c.www
+x....www.c.+....+....1...22...1....+....+.c.www
+x.5..www.c.+....+..1...1....1...1..+....+.c.www
+x....www.c.cccccccccccccc++cccccccccccXcc.c.www
+x....www.c1c1.1..ccccccc....ccccccc..m..c1c.www
+x....www.X.c.2...+.....=....=.....+..m.8c.X.www
+x....wwccc+c1.1..ccccccc....ccccccc..m..c+cccww
+x...5wwc.1.cXccccccccccc++++cccccccccccXc.1.cww
+x....wwc1.1c4..4..4..4..4..4..4..4..4..4c1.1cww
+x....wwccnccwwwwwwwwwwww????wwwwwwwwwwwwccnccww
+x....wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww
+x5...wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww
+x..................414..@.....414............5.
+ENDMAP
+
+
+##############################################################
+# The River Lethe
+#
+# Should be turned into a timed, non-announced portal vault
+# using the maprot (or unmappable) flag.
+#
+# The two orange statues are placed for maximum pain -- one you're
+# likely to first see while levitating, the other is hard to target
+# with disintegration through its protective plants.
+#
+# The place is also full of amnesia traps. Have fun!
+#
+# Lemuel
+#
+NAME:    River_Lethe
+ORIENT:  encompass
+TAGS:    no_rotate
+DEPTH:   D:16-26
+SUBST:   + = +=
+SUBST:   . = .:100 !:1 6:4
+SUBST:   ; = .:200 !:1 1:3
+SUBST:   1 = 1:20 .
+SUBST:   3 = 3:20 .
+#KFEAT:   ! = amnesia trap
+KFEAT:   ! = ^
+MONS:    plant
+MONS:    wolf / warg / hell hound
+MONS:    nothing
+MONS:    wight w:50 / wraith / shadow wraith / spectral warrior /\
+         skeletal warrior / flayed ghost
+MONS:    dancing weapon
+MONS:    human simulacrum w:60 / elf simulacrum / ogre simulacrum /\
+         centaur simulacrum / troll simulacrum / vampire / wraith / hungry ghost
+MONS:    eye of draining / brain worm / death drake w:5 / shadow /\
+         shadow dragon w:1
+KITEM:   A = potion of experience / any good_item
+KMONS:   A = Maud
+KFEAT:   A = >
+KFEAT:   B = |
+KMONS:   B = neqoxec
+KFEAT:   C = b
+KMONS:   C = lich w:20/shadow fiend
+SUBST:   b = b|
+SUBST:   | = |*
+SUBST:   _ = x=
+ITEM:    any scroll, potion of experience
+SHUFFLE: dD/eE/fF/gG
+SUBST:   D==, d=|, E=x, e=%%*, F=x, f=%, G=x, g=%
+SHUFFLE: PQ
+SUBST:   Q=xw
+KMONS:   P = orange crystal statue
+KFEAT:   P = floor
+KMONS:   k = giant eyeball
+KITEM:   k = potion of experience / any good_item
+SHUFFLE: rstu, RST
+SUBST:   r==, s=x, t=x, u=x, R==, S=x, T=x
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccxxxxxx
+xxAB.r$xxxwwwxxxxcccccccccccccccccccccccccccxxxxxxxxcc..1....|kcxxxxxx
+xwBB.s$$RRwwwxxxxc.....+...+...........c***c;;xxxxx;cc.....1.||cxxxxxx
+xw...t$$Sxwwwxxxxc..C..ccccc...........c***c;;;xxx;;cc.1.1...1.cxxxxxx
+xww..u$$xSwwwwxxxc.....cxxxc...........c***c;;;;xx;;++.....1..1cxxxxxx
+xww..xxxTwwww;xxxc..}..cxxxc...........c...c;;;;xx;;cc..1.111..cxxxxxx
+xwww.xxxwww;;;;xxccccccccxxcc+ccc+ccccccc+cc;;;;xx;;cc.11111...cxxxxxx
+xwwwxxxwwww;;;;;xxxxxxxxxxxc...c...c.......c;;;;x;;;cc..111H..1cxxxxxx
+xwwwxxxwwwww;;7;;xxxxxxxxxxc...c...c.w.....c;;;;;;;;cc.111111..cxxxxxx
+xwwwxxxwwwww;;;;;;;xxxxxxxxc...+...c.w.....+;;;;;;;;cc..111..1.cxxxxxx
+xwwwxxxwwww;;7;;;;;;;;xxx;;c...c...c.w.....c;;;;;;;;ccccccccccccxxxxxx
+xwwwxxxwww;;;;;;;;;;;;;;;;;cc+ccc+cc..w....c;;;;;;;;;;xxxxxxxxxxxxxxxx
+xwwwxxxwww;;7;;;;;;;;;;;;;;+.......+..w....cccc;;;;;;xxxxxxxxxxxxxxxxx
+xwwwwxx;ww;;;;;;;;;;;;;;;;;cccc+cccc...w...c$$c;;;;;;;;xxxxxxxxxxxxxxx
+xwwwwxx;w;;7;;;;xxx;;;;;;;;c.......c...w...c$$c;;;;;;;;;;;xxxxxxxxxxwx
+xwwwwxx;;;;;;;;xxxxx;;;;;;;c.......c+ccwwccc+cc;;;;;;;;;;;;;xxxxxxxxwx
+xwwwwxx;;;7;;;xx*4.+;;;;;;;c.......c.c..ww....c;;;;;7;;;;;;;;xxxxxxwwx
+xxwwwwx;;;;;;;;xxxxx;;;;;;;c6.6.6.6c.c...ww...c;;;;;;;;;;;;;;;xxxxxwwx
+xxxwwwxx;;;;;;;;xxx;;;;;;;;ccccccccc.c...ww...c;;;;;;;;;;;;;;;xxxxxwwx
+xxxwwwxx;;;;;;;;;;;;;;;;;;;c$$+....+.c....www.c;;;;;;;ccccccccxxxxxwwx
+xxxwwxx;;xxx;;;;;;;;;;;;;;;c$$cccccc.c.....wwwc;;;;;;;c.....$$Dddxwwwx
+xxxwwwx;xxxxx;;;;;;;xx;;;;;c$$c....c+cccccccwww;;;;;;;c.....$$xdd_wwwx
+xxxwwwxxx*4.+;;;;;;xxxx;;;;cccc....c.....c...www;;ccccc.......xxxxwwwx
+xxxwwwxxxxxxx;;;;;xxxxx;;;;;;;c....c.....+...www;;c...c.......xeexwwwx
+xxxwwwxx;xx;;;;;;xxxxxx;;;;;;;c....c.....c...www;;c.66c.......Eee_wwwx
+xxxwwwxx;;;;;;;;xxx5..c;;;;;;;cccccc.....cccwww;;;+.66+.......xxxxwwwx
+xxxwwwxx;;;;;;;;;xx5..c;;;;;;;;;;;;c.....c;wwww;;;c.66c.......Fffxwwwx
+xxxwwwxx;;;;;;;;;;x5..+;;;;;;;;;;;;cccccccwwww;;;;c...c.......xff_wwwx
+xxxwwwxx;xxx;;;;;xxx..c;;;;;;;;;;;;;;;;;wwwwww;;;;ccccc.......xxxxwwwx
+xxxwwwxxxxxxx;;;;;;xx.c;;;;;;;;;;;;;;;;wwwwwww;;;;;;;;c.....$$xggxwwwx
+xxxwwwxxx*4.+;;;;;;xxxx;;;;;;;;;;;;;;;wwwwwwwww;;;;;;;c.....$$Ggg_wwwx
+xxxwwwxxxxxxx;;;;;xxxwxx;;;;;;x;;;;;wwwwwwwwwww;;;;;;;ccccccccxxxxwwwx
+xxxwwwxxxxxx;;;x;;;xwwxxx;;;;;xx7wwwwwwwwwwwwww;;;;;;;;;;;;;;;xwwwwwwx
+xxxwwwxxxxwww;;;;;;wwwwxw;;;;xxxwwwwwwwwwwwxxwww;;;;7;;;;;wwwwwwwwwwwx
+xxxwwwxxxxxwwwwwwwxwwwwwwwwwxxxwwwwwwwwwwwwxxxwwwwww;;wwwwwwwwwwwwwwxx
+xxxxwwwwxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxwwwwwwwwwwwwwwwwwwwwwxxx
+xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxwwwwwwwxxxxxwwwwwwwwwwwwwwwwwwwxxxxx
+xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxwwwwwwwwwwwwwwwwwwxxxxxxx
+xxxxxwwwwwwwwwwwwwwwwQxwwwwwwwxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxx
+xxxxxxwwwwwwwwwwwwwxxxxwwwwwwwwwwwwwxxxPwwwwwwwwwwxxwwwwwwwwxxxxxxxxxx
+xxxxxxxwwwwwxxxxxxxxxxwwwwwwwxxwwwwxxxxxwwwwwwwwwxxxwwxwwwwxxxxxxxxxxx
+xxxxxxxx;7;;xxx222xxxxxxwwwwxxwww2222xxxxx22wwwwwwxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx;;;xxx;;;;;xx2222wwwwww;;;;;;;;xxxx22;;;;wwwwxxxxxxxxxxxxxxxxx
+xxxxxxxxx;xxxx;;;;;;;;;;;;ww;;;;;;;;;;;;;;;;;;;;;;;;wwwxxxxxxxxxxxxxxx
+xxxxxxxxxxxx;;;;2;;;;;;;;;;;;;;;;;);;;;;;2;;;;;;;;;;wwwxxxxxxxxxxxxxxx
+xxxxxxxxxxxx;;;;;;;;;;;;;;;;;;;;;[](;;;;;;;;;;;;;;;;2wxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#############################################################################
+
+NAME:    vault_1
+ORIENT:  north
+DEPTH:   D:16-26
+MONS:    shapeshifter, shapeshifter, glowing shapeshifter
+MONS:    silver statue, nothing
+SUBST:   E=E.
+SHUFFLE: abcd, $*, |ABCDE, nm, 45
+SUBST:   A=., B=., C=., D=*, E=%, n=9, m=0
+SUBST:   a = = x:8, b = = x:30, c=x, d=x
+SUBST:   * = * |:1
+SHUFFLE: opq
+SUBST:   o=+
+SHUFFLE: pqrs
+SUBST:   p=+, q=+, r=x, s=x
+SHUFFLE: xxxxc
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx....xE.......x........x.................................xxxx
+x%E+3...x........+........x......x....x1...x2...x2...x3...x..Dxx
+x%Ex....x........x.......Ex..................................DDx
+xxxxxxxx+xxx+xxxxxxxxxxxxxx..................................xxx
+x.......x.................+.5................................8Dx
+x.......x.................x..................................xxx
+x.......+........8........xx+xx..............................DDx
+x.......x.................x...x..x....x1...x2...x2...x3...x..Dxx
+x.......x.................x...x.............................xxxx
+xx+xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxaxaxaxbxbxbxcxcxcxxxxx
+x.........................x.4.x...xxxxxxEEE...............|||||x
+x...xxxxxxxxxxxxxxxxxxx...x...x......xxxxxx..................||x
+x...x....$$$$x****.mmmx...x...x.........xxxxxx.................x
+x...+....$$$$x****....x...x...+............xxxxxx.........8....x
+x...x....$$$$x****....+...x...x...............xxxxxx...........x
+x...xnnn.$$$$x****....x...x999x..................xxxxxx........x
+x...xxxxxxxxxxxxxxxxxxx...x...xxx...................xxxxxx.....x
+x.........................x...xxxxxx...................xxxxxx..x
+xxxxxx+xxxxxxx+xxxxxxx+xxxx...xxxxxxoxxxxxxxxpxxxxxxxxqxxxxxdxdx
+xxx.......x.......x.......x...x.........xE.......x.............x
+xxx.......x.......x.......x...x.........x........x.............x
+xxx.......x.......x.......x...x.........x........x.............x
+xxx...1...x...2...x...3...x...x....3....r....2...s......1......x
+xxx.......x.......x.......x...x.........x........x.............x
+xxxE.....ExE.....ExE.....Ex...x.........x........x.............x
+xxxAAAAAAAxBBBBBBBxCCCCCCCx...xE.......ExE.......x............Ex
+xxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# A cell vault
+#
+NAME:    cell_vault
+ORIENT:  northwest
+DEPTH:   D:16-26
+SHUFFLE: 890
+KITEM:   8 = | / nothing w:50
+KITEM:   9 = * / nothing w:50
+KITEM:   0 = % / nothing w:50
+KFEAT:   8 = 8
+KFEAT:   9 = 9
+KFEAT:   0 = 0
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccccccccc
+xccw......~......w......~......wc
+xcc.ccccccccccccc.ccccccccccccc.c
+xcc.c....c.c....c.c....c.c....c.c
+xcc.c.8..+.c....c.c....+.c..9.c.c
+xcc.c....c.+..9.c.c.9..c.+....c.c
+xcc.c....c.c....c.c....c.c....c.c
+xcc.cccccc.cccccc.cccccc.cccccc.c
+xcc~c....c.c....c.c....c.c....c.c
+xcc.c....c.c....c.c....+.c....c.c
+xcc.c8...+.+..8.c.c.8..c.+....c.c
+xcc.c....c.c....c.c....c.c....c.c
+xcc.cccccc.cccccc.cccccc.cccccc.c
+xcc.c....c.c....c.c....c.c....c.c
+xcc.c....+.c....c.c.0..c.c....c.c
+xcc.c..9.c.+.8..c~c....+.+.0..c.c
+xcc.c....c.c....c.c....c.c....c.c
+xcc.cccccc.cccccc.cccccc.cccccc.c
+xcc.c....c.c....c.c....c.c....c.c
+xcc.c.0..+.+.0..c.c....+.+....c.c
+xcc.c....c.c....c.c.0..c.c.8..c.c
+xcc.cccccc.c....c.c....c.cccccc.c
+xcc.c....c.cccccc.cccccc.c....c~c
+xcc.c....c.c....c.c..9.+.+....c.c
+xcc.c.0..+.+....c.c9...c.c.0..c.c
+xcc.c....c.c.8..c.c....c.c....c.c
+xcc.cccccc~cccccc.cccccc~cccccc.c
+xccw.......Twwwwc.cwwwwT.......wc
+xcccccccccccccccc.ccccccccccccccc
+xxxxxxxxxxxxxxxxc@cxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# A little maze vault
+#
+NAME:   little_maze_vault
+DEPTH:  D:16-26
+ORIENT: northeast
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x900x..............x..........x
+x999x.xxxxxxxxxxxx.x.xxxxxxxx.x
+x000x.x............x.x......x.x
+xx.xx.xxxxxxxxxxxxxx.x.xxxx.x.x
+xx.x..............xx.x.88|x.x.x
+xx.x.x.xxxxxxxxxx.xx.xxxxxx.x.x
+xx.x.x.x........x...........x.x
+xx.x.x.x.xxxxxx.xxxxxxxxxxxxx.x
+xx.xxx.x.x$$$$x...............x
+xx.....x.x$$$$x.xxxxxxxxxxxxxxx
+xxxxxxxx.x$$$$x...............x
+x........x$$$$x.xxxxxxxxxxxxx.x
+x.xxxxxx.xxxx.x.............x.x
+x.xxxxxx.xxxx.xxxxxxxxxxxxx.x.x
+x.x.......xxx.x...........x.x.x
+x.x.xxxxx.....x.x.xxxxx...x.x.x
+x.x.x999xxxxxxx.x.x***x...x.x.x
+x.x.x889........x.x|||xxxxx.x.x
+x.x.x899x.xxxxx.x.x***xxxxx.x.x
+x.x.xxxxx.xxxxx.x.xx.xxxxxx.x.x
+x.x..........xx.x.xx........x.x
+x.xxxxxxx.xx.xx.x.xxxxx.xxxxx.x
+x.xxx000x.xx.xx.x.x$$$x.xxxxx.x
+x|||x000x.x$$$x.x.x$$$x%%x%%%.x
+x|||x000..x$8$x.x.x$$$x%%x%8%xx
+x|||xxxxxxx$$$x.x..$$$xxxx%%%xx
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# thingy vault.
+#
+NAME:   thingy_vault
+DEPTH:  D:12-26
+ORIENT: southwest
+TAGS:   no_rotate
+NSUBST: ^ = 3:^ / *:.
+MAP
+xxxxxxxxxxxxx@xxxxxx
+xxxxxxxxxxxxx^xxxxxx
+xxxxxxxxxxxx^^^xxxxx
+xxxxxxxxxxx^^^^^xxxx
+xxxxxxxxxxxx...xxxxx
+xxxxxxxxxxxx...xxxxx
+xxxxxxxxxxx.....xxxxxxxxxxxx
+xxxxxxxxx.........xxxxxxxxxx
+xxxxx......0...0......xxxxxx
+xx.......................xxx
+xx.........0...0.........xxx
+x8......0.........0......8xx
+xx.........0...0.........xxx
+xx.......................xxx
+xxx........0...0........xxxx
+xxxxxxxx...........xxxxxxxxx
+xxxxxxxxxxxx...xxxxxxxxxxxxx
+xxxxxxxxxxxx...xxxxxxxxxxxxx
+xxxxxxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxx.....xxxxxxxxxxxx
+xxxxxx...............xxxxxxx
+xxxx8.................8xxxxx
+xxxxxxx.............xxxxxxxx
+xxxxxxxxxxxx999xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# hourglass vault.
+#
+NAME:   hourglass_vault
+ORIENT: southeast
+DEPTH:  D:12-26
+TAGS:   no_rotate no_hmirror
+MAP
+xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
+xxxxxx.................xxxxxxxx
+xxxxx...................xxxxxxx
+xxxxx...................xxxxxxx
+xxxxxx.................xxxxxxxx
+xxxxxx.................xxxxxxxx
+xxxxxx.................xxxxxxxx
+xxxxxxx...............xxxxxxxxx
+xxxxxxx...............xxxxxxxxx
+xxxxxxxx.............xxxxxxxxxx
+xxxxxxxxx.....8.....xxxxxxxxxxx
+xxxxxxxxxx...999...xxxxxxxxxxxx
+xxxxxxxxxxxx00000xxxxxxxxxxxxxx
+xxxxxxxxxxxxx===xxxxxxxxxxxxxxx
+xxxxxxxxxxxx.....xxxxxxxxxxxxxx
+xxxxxxxxxx.........xxxxxxxxxxxx
+xxxxxxxxx...........xxxxxxxxxxx
+xxxxxxxx......|......xxxxxxxxxx
+xxxxxxx...............xxxxxxxxx
+xxxxxxx...............xxxxxxxxx
+xxxxxx........$........xxxxxxxx
+xxxxxx.......$$$.......xxxxxxxx
+xxxxxx....$$$$$$$$$....xxxxxxxx
+xxxxx$$$$$$$$$$$$$$$$$$$xxxxxxx
+xxxxx$$$$$$$$$$$$$$$$$$$xxxxxxx
+xxxxxx$$$$$$$$$$$$$$$$$xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##########################################################################
+# A more Angbandy vault
+#
+NAME:   Angbandy_vault
+ORIENT: northeast
+DEPTH:  D:16-26
+SUBST:  ^ = ^.
+SUBST:  "=.", '=.', '=$, "=*, *=* |:1
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ccccccccccccccccccccccccccccccccx
+c*******cc..9...cc.+8c0c"c.c"c8cx
+c******cc..cc..cc..cc0c.c.c'c8ccx
+c*****cc..cc..cc..cc'c'c"c.c8c.cx
+c****cc9.cc..cc8.cc"c.c.c'c"c0ccx
+c***cc..cc..cc..cc.c.c"c.c.c.c'cx
+c**cc..cc8.cc..cc.c"c.c.c.c"c.ccx
+c+cc9.cc..cc..cc"c.c.c.c"c.c.c.cx
+c^c..cc..cc..cc.c'c.c.c.c.c"c"ccx
+c^^.cc..cc..cc.c.c.c9c'c"c.c.c9cx
+c..cc..cc..cc'c.c.c"c.c.c.c9c9ccx
+c.cc..cc..cc.c.c"c.c.c.c.c'c"c9cx
+ccc..cc..cc.c.c.c.c.c"c.c.c.cc+cx
+cc..cc..cc'c"c'c.c.c.c.c'c.cc..cx
+c0.cc..cc.c.c.c.c8c.c"c.c.cc0.ccx
+c^cc..cc"c.c.c'c.c'c.c.c.cc..cccx
+c^c..cc.c.c9c.c.c.c'c.c.cc..cc.cx
+c0..cc'c.c.c"c0c.c.c.c.cc..cc.0cx
+c..cc.c.c9c'c.c.c'c'c.cc.9cc...cx
+c.cc9c.c.c"c.c.c.c.c.cc..cc..c^cx
+ccc.c'c'c.c.c.c'c.c'cc..cc..cc^cx
+cc'c.c.c.c'c'c.c0c.cc..cc..cc..cx
+c.c.c"c.c.c.c.c'c.cc9.cc..cc..ccx
+cc.c8c.c.c'c.c'c.cc..cc..cc0.cccx
+c.c'c.c'c0c.c.c"cc..cc..cc..cc$cx
+cc.c.c.c.c.c"c.cc..cc..cc..cc$$cx
+c"c.c.c.c'c.c.cc..cc0.cc..cc$$$cx
+cc.c.c.c.c"c'cc..cc..cc..cc$$$$cx
+c'c.c.c'c.c.cc.8.^^.cc...^+$$$$cx
+cccc@cccccccccccccccccccccccccccx
+ENDMAP
+
+############################################################################
+# four-leaf vault
+#
+NAME:   four-leaf_vault
+DEPTH:  D:12-26
+ORIENT: northwest
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx.........^..^.........xxxxx
+xxxxx...xxxxxxxx..xxxxxxxx...xxxx
+xxxx...xxxxxxxxx..xxxxxxxxx...xxx
+xxx...xx$*....xx..xx....$$xx...xx
+xx...xx$*$....xx..xx....$*$xx...x
+xx..xx*$*$....xx..xx....*$$$xx..x
+xx..xx$$$.00..xx..xx..00.*$*xx..x
+xx..xx....09..xx..xx..90....xx..x
+xx..xx......+xx....xx+......xx..x
+xx..xx......x^......^x......xx..x
+xx..xxxxxxxxx........xxxxxxxxx..x
+xx..xxxxxxxx..........xxxxxxxx..x
+xx..............TT..............x
+xx..............TT..............x
+xx..xxxxxxxx..........xxxxxxxx..x
+xx..xxxxxxxxx........xxxxxxxxx..x
+xx..xx......x^......^x......xx..x
+xx..xx......+xx....xx+......xx..x
+xx..xx....09..xx..xx..90....xx..x
+xx..xx$$*.00..xx..xx..00.*$$xx..x
+xx..xx*$*$....xx..xx....*$$*xx..x
+xx...xx*$*....xx..xx....$$$xx...x
+xxx...xx*$....xx..xx....*$xx...xx
+xxxx...xxxxxxxxx..xxxxxxxxx...xxx
+xxxxx...xxxxxxxx..xxxxxxxx...xxxx
+xxxxxx..^................^..xxxxx
+xxxxxxxxxxxxxxxx~~xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx++xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
+ENDMAP
+
+############################################################################
+# Cross-vault
+#
+NAME:   cross_vault
+DEPTH:  D:12-26
+ORIENT: northwest
+SUBST:  ~=.~, ^=^.
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx............xxxxxxxxxx
+xxxxxxxx..................xxxxxxx
+xxxxxx......................xxxxx
+xxxxx..........w^^w..........xxxx
+xxxx........wwww++wwww........xxx
+xxxx......wwwvvv^^vvvwww......xxx
+xxx......wwwwv.9..9.vwwww......xx
+xxx.....wwwwwv......vwwwww.....xx
+xxx....wwwwwvv......vvwwwww....xx
+xx....wwwwwvv........vvwwwww....x
+xx....wwvvvv....vv....vvvvww....x
+xx...wwwv......vvvv......vwww...x
+xx...wwwv....vv8vv8vv....vwww...x
+xx..wwwwv...vvvv||vvvv...vwwww..x
+xx~~wwwwv...vvvv||vvvv...vwwww~~x
+xx..wwwwv....vv8vv8vv....vwwww..x
+xx...wwwv......vvvv......vwww...x
+xx...wwwvvvv....vv....vvvvwww...x
+xx....wwwwwvv........vvwwwww....x
+xxx...wwwwwwvv......vvwwwwww...xx
+xxx....wwwwwwv......vwwwwww....xx
+xxx.....wwwwwv......vwwwww.....xx
+xxxx.....wwwwvvvvvvvvwwww.....xxx
+xxxx.......wwwwwwwwwwww.......xxx
+xxxxx.........wwwwww.........xxxx
+xxxxxx........^~~~~^........xxxxx
+xxxxxxxx......^x++x^......xxxxxxx
+xxxxxxxxxxx...xx..xx...xxxxxxxxxx
+xxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxx
+ENDMAP
+
+############################################################################
+# Another thingy vault
+#
+NAME:   thingy_vault_2
+DEPTH:  D:14-26
+ORIENT: southeast
+SUBST:  ' = ^ .:50
+MONS:   orange crystal statue
+MAP
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx^xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
+xx.....''''''''.''''''''.....xxx
+x..bb..xxxxxxxxxxxxxxxxx..bb..xx
+x..b...xxxxxxxxxxxxxxxxx...b..xx
+x...b..xxxxbbbbbbbbbxxxx..b...xx
+x..bb..xxbbb.......bbbxx..bb..xx
+x......xxb....9.9....bxx......xx
+x..bb..xbb..%$$$$$%..bbx..bb..xx
+x...b..xb..0%$***$%0..bx..b...xx
+x..b...xb..0%$*1*$%0..bx...b..xx
+x...b..xb..0%$***$%0..bx..b...xx
+x..b...xb...%$$$$$%...bx...b..xx
+x...b..xbb.900000009.bbx..b...xx
+x..b...xxb...........bxx...b..xx
+x..bb..xxbbb..9.9..bbbxx..bb..xx
+x......xxxxbbbb'bbbbxxxx......xx
+x..bb..xxxxxxxb=bxxxxxxx..bb..xx
+x..b...xxxxxxxx=xxxxxxxx...b..xx
+x...b..xxxxxxxx'xxxxxxxx..b...xx
+x..b....xxxxxxx=xxxxxxx....b..xx
+x...b...'''''''.'''''''...b...xx
+x..b....xxxxxxxxxxxxxxx....b..xx
+x..bb..xxxxxxxxxxxxxxxxx..bb..xx
+xx....xxxxxxxxxxxxxxxxxxx....xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+############################################################################
+# Impenetrable vault
+#
+NAME:   impenetrable_vault
+DEPTH:  D:16-26
+ORIENT: southeast
+MAP
+       .......@................x
+       ........................x
+       ........................x
+...............................x
+...............................x
+.....cccccccccccccccc..........x
+.....c[^...........9cc.........x
+.....c^xxxxx=xxxxxx..cc........x
+.....c.x9..^^^...9xx..cc.......x
+.....c.x.xxx=xxxx..xx..cc......x
+.....c.x^x$$$$$$xx..xx.9c......x
+.....c.=^=$*|||*$xx..xx.c......x
+.....c.x^xx$*|||*$xx.9x.c......x
+.....c.x9.xx$*|||*$xx^x.c......x
+.....c.xx..xx$*|||*$=^=.c......x
+.....c9.xx..xx$$$$$$x^x.c......x
+.....cc..xx..xxxx=xxx.x.c......x
+......cc..xx9...^^^..9x.c......x
+.......cc..xxxxxx=xxxxx^c......x
+........cc9...........^]c......x
+.........cccccccccccccccc......x
+...............................x
+      .........................x
+      .........................x
+      .........................x
+      .........................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#########################################################################
+# Orc temple
+#
+NAME:   orc_temple
+ORIENT: southwest
+TAGS:   no_rotate
+DEPTH:  D:14-26, Orc:2-4
+MONS:   orc warlord, patrolling orc priest, patrolling orc high priest
+MONS:   orc warrior, orc wizard, orc knight, orc sorcerer
+KFEAT:  C = altar_beogh
+MAP
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx...xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx4.4xxxxxxxxxxxxxxx
+x**..........x414x..........**xx
+x**..........x4.4x..........**xx
+x............+...+....4.......xx
+x....4..4....x...x............xx
+x............x...x.......4....xx
+x............xx.xx............xx
+x...4......xxxx+xxxx......6...xx
+x........xxx.......xxx........xx
+xxx...xxxx..2.....2..xxxx...xxxx
+xxxx+xxxx.............xxxx+xxxxx
+xxx...xxx.............xxx...xxxx
+x......x...............x......xx
+x..4...x...2...C...2...x...5..xx
+x......x...............x......xx
+x...4..xx.............xx..5...xx
+x$......x....2...2....x......$xx
+x$6..5..xx.....3.....xx.5...7$xx
+x$$$.....xxx.......xxx.....$$$xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+#############################################################################
+# Matthew Ludivico
+#
+NAME:   mludivico_vault
+ORIENT: southwest
+DEPTH:  D:18-27
+MONS:   hell hound, necromancer, wizard, orange demon, rotting devil
+MONS:   hell knight, great orb of eyes
+MAP
+xx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx...xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx..........................xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx..xx
+x.^^..........................xx
+xx.^^xx+xxxxxxxxxxxxxxxxxxxxxxxx
+xxx.^...11....xxxxxxxx..xxxxxxxx
+xxxx..x.1..6..xxx........xx..xxx
+xxxxx.xxxxxxxxx...vvvvv...x...xx
+x6..1...x.........+1..v.......xx
+x..1....x.........vvvvv........x
+x..5...xx......................x
+xxxxxx^++...........vvvvvvv....x
+xxxxxx^xx...xx=xx...vv$%$vvvvv.x
+xxxxxx^x...xxv1vxx...vvv*2...v.x
+xxxxxx^x..vvvv7.vvvv...vv.vv+v^x
+x..xxx^..vvvb....bvvv...vvv^...x
+x%%.xx..vvvvb....bvvvv.......xxx
+xx.....vvbbb......bbbvv.....xxxx
+xxx....vvb....66....bvvxxxxxxxxx
+xxxxxxvvvb..llllll..bvvvxxxxxxxx
+xvvvvvvvvb..ll45ll..bvvvvvvvvxxx
+xccc***+==..l3.2.l..cccccccccxxx
+xccc+cccbb....ll....c..$$$$+$*cx
+xcc|||cbb...3llll2...cc%*%*c$|cx
+xcccccccbbbbbbbbbbbccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+#############################################################################
+# Fort Yaktaur (Matthew Ludivico)
+#
+NAME:   fort_yaktaur
+ORIENT: southeast
+DEPTH:  D:14-26
+MONS:   yaktaur, death yak, minotaur, random
+MONS:   yak, gnoll, random
+MAP
+.........@....wwwwwwwwwwwwwwwwwxx
+.ccccc.......ww....wwww....wwwwxx
+.c$c%c......ww.ccccccccc.......xx
+.c+c+c......ww.c.%$....ccccccccxx
+.c...+......ww.c*.115..c$$+|*|cxx
+.c1..c.....ww..c...55+ccc+cxx=cxx
+.ccccc.....ww..ccccccc....c|=*cxx
+............ww.......c5...cxx=cxx
+....6.ccccc.ww.w...2.+51..c|1.cxx
+....63+...c..wwww..21+51..c2.2cxx
+....6.ccccc..wwwwww..c5...cc+ccxx
+............wwwwwww..c........cxx
+............wwwwwww..ccccccccccxx
+...........ww1w..www...........xx
+.......566.www.....www.........xx
+.........1ww....ccccc..........xx
+.....566.w......+...c..........xx
+.........www....ccccc..........xx
+...........ww............wwwwwwxx
+.......3....wwwww......www.....xx
+......666.......ww...www.......xx
+.....cc+cc.......wwwww.........xx
+.....c...c.....................xx
+.....ccccc.....................xx
+...............................xx
+...............................xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# The New Box Level (dp)
+#
+NAME:    box_level_dp
+DEPTH:   D:20-26
+ORIENT:  encompass
+TAGS:    no_pool_fixup no_rotate
+SHUFFLE: zZ
+NSUBST:  A = 1:= / *:b
+NSUBST:  B = 1:= / *:b
+NSUBST:  C = 1:= / *:b
+NSUBST:  D = 1:= / *:b
+NSUBST:  E = 1:= / *:b
+KFEAT:   ^ = teleport trap / Zot trap
+SUBST:   ':''l. , '=l.
+SUBST:   ":""W. , "=Ww..
+ITEM:    ring of teleportation
+ITEM:    royal jelly / honeycomb w:20 / nothing w:30
+ITEM:    scroll of teleportation
+KFEAT:   T = teleport trap
+KMONS:   w = electric eel / jellyfish / nothing w:120
+KFEAT:   w = w
+KMONS:   l = fire vortex / lava snake / lava fish / fire elemental w:1 /\
+             nothing w:50
+KFEAT:   l = l
+KMONS:   z = killer bee
+KMONS:   Z = bumblebee
+KITEM:   z = royal jelly / honeycomb w:20 / nothing w:120
+KITEM:   Z = royal jelly / honeycomb w:20 / nothing w:120
+: if crawl.one_chance_in(3) then
+KMONS:   ! = orc / orc warrior / orc knight / nothing w:30
+KMONS:   & = orc warlord / orc knight / nothing w:20
+: elseif crawl.coinflip() then
+KMONS:   ! = yaktaur / nothing
+KMONS:   & = yaktaur captain / nothing
+: else
+KMONS:   ! = naga / nothing
+KMONS:   & = naga warrior / greater naga
+: end
+SUBST:   * = * % % $ $ f
+SUBST:   ; = 9 0
+SUBST:   !=%$, &=*%
+SUBST:   _ : _+ , _ = +=
+SUBST:   V = *
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.......xccccccxxxxxxx.........................................w"..xxx
+x.{...{.xc....cbbbbbxx................xxx...................."w......x
+x.......++.U..++.].++.....'''....'l'....xxx................."ww".....x
+x...[...xc....cbbbbbxx...'''..''lllll'....xx...bbEbbEb......"ww"....xx
+x.......xcccccccxxxxxx.......'llllllll.....x...bd...9b...."www".....xx
+xxxxxxxxxxxxxxxxxxxxxx.......'lllllll'.....x...E.....E.."ww.w".....xxx
+x.............................'lllll'.....xx...b9...Vb.www..w".....xxx
+x....""w.............".xxx......'ll'......x....bbEEEEbwww.www.....xxxx
+x.."wwwww"..........w....xxxx............xx....."wwwwwwww.ww"....xxxxx
+x.wwwwwwww"........w........xxxxxxx....xxx........"www"...ww"...xxxxxx
+x..wwwwwww"......"ww......""......xxxxxx....."...........ww"....xxxxxx
+xx..""ww".......www....."wwwwwwwwww........."www"......wwwww"....xxxxx
+xxx.........."wwww"..""wwwwwwwwwwwwwwwwww".www"...wwwwwwwwwwww.....xxx
+xxxxx....""wwwwwwwwwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwww.....xx....xx
+xxx..""wwwwwwwwwwwwwwww"....xx...x....."wwwwxxww".........xxxxx.....xx
+x."wwwwwwwwwwwwwxxx__xxxxxxxxxx=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....x
+xwwwwwwww".."wwwxww.."w........................................>xx...x
+xxwwww""....."xwxw"...ww........................................xx...x
+xxww".........xxxw..............................................xx..xx
+xww............xx"w...ccccccccccccccccccccccccccccccccccccc.....xx..xx
+xw"...xxx.......x..w..c^..*...*...*...*...*...*...*...*...c.....x...xx
+xw....x!x..xxx..x..w..c...................................c.....x...xx
+xxx...x+x..x!x..x.....c*..;...;...;...;...;...;...;...;..*c.....xx..xx
+xxx....1..1+!x..x.....c...................................c.....xx...x
+x..........xxx.xx.....c.......bbbbbbbbbbbbbbbbbbbbb.......c.....xx..xx
+x..xxxx........xx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....x...xx
+x..x!!+1..xxxx..x.....c*..;...bTbbbAbbbTbTbbbBbbbTb...;..*c.....x..xxx
+x..xxxx..1+!!x..x.....c.......bTb8...|bTbTb|...8bTb.......c.....xx.xxx
+x.........xxxx..x.....c.......bTA|...|ATbTB|...|BTb.......c.....xx.xxx
+x.......1.......x.....c.......bTb|...8bTbTb8...|bTb.......c.....x...xx
+xxx....121....xxx.....c*..;...bTbbbAbbbTbTbbbBbbbTb...;..*c.....x...xx
+x!x...cc+cc...xxx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....xx..xx
+x&+1..c!2!c...xxx.....c.......bbbbbbbbbbbbbbbbbbbbb.......c.....x..xxx
+x!x...c&&&c...xxx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....x..xxx
+xxx...ccccc...xxx.....c*..;...bTbbbDbbbTbTbbbCbbbTb...;..*c.....x.xxxx
+x...............x.....c.......bTb|...8bTbTb|...8bTb.......c.....x.xxxx
+xx...1...xxxx...x.....c.......bTD|...|DTbTC|...|CTb.......c.....x..x.x
+xx..x+x.1+!!x...x.....c.......bTb8...|bTbTb8...|bTb.......c.....xx...x
+x...x!x..xxxx...x.....c*..;...bTbbbDbbbTbTbbbCbbbTb...;..*c.....xxx.xx
+x...xxx.........x.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....xxx.xx
+x.........xxxxxxx.....c.......bbbbbbbbbbbbbbbbbbbbb.......c.....xxx..x
+xxxx......x***99+.....c...................................c.....xxxx.x
+xxxx..xx..xxxxxxx.....c*..;...;...;...;...;...;...;...;..*c.....x....x
+x.....xx........x.....c...................................c.....x.xx.x
+x.xx.....xxx....x.....c...*...*...*...*...*...*...*...*..^c.....x.xx=x
+x.xx....1+!x..xxx.....ccccccccccccccccccccccccccccccccccccc.....xxx..x
+x....xx..xxx..xxx...............................................xx..xx
+x....xx.......xxx.........................................z..z..x....x
+xx............xxx<.............................................zxa...x
+xx..x......xx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_x_x_xxazzxx
+xxx........xx.....xxx...xx.x..xx...xxaaaaaaaeaaea.a..aaaaaaa.aaaaazzxx
+xxxx..xx..............x...x...xx.xx.xaaazazzaaza.a.aa.za.z.aaaa.a.aazx
+xxxxxxxxxxx....x..xx.x.xx.x..x..xx}..xaeazaazzazzaa..aa..aa....z.aeaxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# Rubicon
+#
+NAME:    erik_rubicon_a
+DEPTH:   D:10-16
+ORIENT:  south
+TAGS:    no_pool_fixup no_rotate uniq_rubicon
+WEIGHT:  6
+ITEM:    ring of levitation / potion of levitation / nothing
+ITEM:    potion of levitation / nothing, nothing, nothing, nothing
+SHUFFLE: {[(, )gh
+SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
+MAP
+xxxxxxxxxcccccccc????w.@??ww.@www???w...@???wwww.@ww??@..?ccccxxxxxxxxxxx
+xxxxxccccwwwwwwwww..wwwww.wwwwwwww.wwwwwww.wwwwwwwwwwww??wwwwcccccccxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxccwwwwwwwwwwwwwwwwwwwcccwwwwwwwwwcwwwwwwwwwwwwwwwwwwwwwwcccwcccxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxcwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwwwwwwwwwwwwwwwwwwwwwcccccxxxxx
+xxxxxcwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwcxxxxx
+xxxxxccwcwwwwwwwwwwwwwwwxwwwwww???wwwwwwwww???wwwwwwwww.wwwwwwwcccccxxxxx
+xxxxxcccccc????w??.w????xw??w??...?wwww???w????w?w???w???w??cccccxxxxxxxx
+xxxxxxxxxcxx...''....?..xx........??w??...c''....??.....???..cxccxxxxxxxx
+xxxxxxxxxcx..(cc[.''..'xx...x.''.x..?xx.xcc..cxcx...xxx.'...chxxcxxxxxxxx
+xxxxxxxxxcx..cc{c..xx.....xx...cc..xx....xcc....''xxx..x.xxc...cxxxxxxxxx
+xxxxxxxxxccx....e.xx....x..x.....c....cx..x...x......c......cxcxxxxxxxxxx
+xxxxxxxxxxcxexxx.x.x.xx.x.xx.xcc.xx.xccxx....xx.x.xxxccxx.xcccxxxxxxxxxxx
+xxxxxxxxxxccx.gxxx..x..xdx..x.xxxx.x...xx.xx...xx.xxxx)..xxcxxxxxxxxxxxxx
+xxxxxxxxxxxcxxxxxxxx...xxxxxxxxxccccccc..xxxxccccccccxxxccccxxxxxxxxxxxxx
+xxxxxxxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    erik_rubicon_b
+DEPTH:   D:10-16
+ORIENT:  south
+TAGS:    no_rotate uniq_rubicon
+WEIGHT:  4
+ITEM:    ring of levitation / potion of levitation / nothing
+ITEM:    potion of levitation, nothing, nothing, nothing, nothing
+SHUFFLE: {[(, fgW, )hi
+SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
+MAP
+xxxxxcccccccc?gw?f.@wgf?.@w??g?fw...@gwfw???.@wwww@..?ccccxxxxxxx
+xccccwwwwwww??..f????.ww???www.???ww??.wwwwwwwwwwwffgg?wwcccccccx
+xcwwwwwwwwwwww??wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww??wwwwwwwwwcx
+xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
+xccwwwwwwwwwwwwwwwgwwwcccwwwfwwwwwcwwwwgwwwwwwwwwwwwwwwwwcccwcccx
+xcwwwwwwwwwwwwwwgwwwwwwwwwwwwfwwwwwwwwwwwwwfwwwwwwwwwwwwwwwwwwwcx
+xcwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwww?wwwwwwwwwwwwwwwwwcccccx
+xcwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwcx
+xccwcwwwwwg?wwwfwwwwxwwwwwwwwwwwwwwwwwwwfgwwwgwwwww.wwwwwwwcccccx
+xccccccwffwg??fw?ww?gx??ww?..??wwwww??w?fwgw?fwgw??fg??gcccccxxxx
+xxxxxcxx...'''...?..xx.....''.?ww??...c.'....??...'.?gg.xcxccxxxx
+xxxxxcx..(cc[.'.'.xx..'.x.'..x..?...xcc..cxcx.x..x..''..cxhxcxxxx
+xxxxxxcc..c{c..x.x...c.xxx.x.xx.'.'xx..cc..c.xx''.cc..xxx...xxxxx
+xxxxxccx....e.xx...x...x.....c...c....cc....x...x....x....cxxxxxx
+xxxxxxcxexxxxx.x.xxxx.x..xcc.xx..cc.x....xx.x.x.xccxx.xcccxxxxxxx
+xxxxxxccx..xi.x.x.xxdxxxx...x..xx..xxxxx...x).xx..xc.xxcxxxxxxxxx
+xxxxxxxcxxxxxx...x....xxxxxxcccccccxxxxxxccccccccx..ccccxxxxxxxxx
+xxxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#############################################################################
+# The Lair of the Golden Dragon (by Mu.)
+#
+NAME:   gold_lair_mu
+ORIENT: southeast
+TAGS:   no_monster_gen
+DEPTH:  D:20-26
+MONS:   golden dragon, any draconian, fungus, plant, oklob plant
+KMONS:  6 = fire drake / swamp drake / lindwurm
+KMONS:  D = fire drake w:5 / swamp drake w:5 / death drake / lindwurm w:5
+KITEM:  D = $
+SUBST:  $ = $|
+SUBST:  f : A B
+SUBST:  A = 3:30 .:90 5:1
+SUBST:  B = 4:30 .:120 5:1
+SUBST:  m = W:20 w:10
+KFEAT:  o = granite_statue
+MAP
+        ...........ffffmmmmmmmxxx
+       ..........ffmmmwwwwwwwmxxx
+      .........ffmmwwwwwwwwwxxxxx
+     ..6....ffffmmwwwwwxxxxxxxxxx
+    ..9...ffffmmwwwwwxxxxxxxxxxxx
+   ..9..ffffmmwwwwwwxxxxxxxxxxxxx
+  ..6..fffmmwwwwwwwxxxxx.2x.2xxxx
+ .....fffmwwwwwwwwxxx........xxxx
+......ffmwwwwwwwwxxx.....xx...xxx
+.....fffmwwwwwwxxxxx...xxxxx..xxx
+.....ffmwwwwwwxxxxxx..xxxxxxx..xx
+....fffmwwwwwxxxx.....xxxoxxxx.xx
+....ffmwwwwwxxxx..6..xx....xx..xx
+...fffmwwwwxxxxx..xxxx...6....cxx
+...ffmwwwwwxxxx..xxxxx..xxxx2xxxx
+..fffmwwwwxxxx...xxxx...ccccccccx
+.fffmwwwwwxxx....xxx..ccccccccccx
+..ffmwwwwxxxx..x..xx.cccc.6..cccx
+.fffmwwwxxxxx..xx..xc.c.......ocx
+.fffmwwwxxxx..xxx..ccc....lllllcx
+..ffmwwxxxx..xxxx.xcc....llllllcx
+.fffwwxxxx..xxxxx.ccc...llll$$Dcx
+.fffwwxxx..x..2xx.cc...llll$$$$cx
+..ffwwxxx....xxx..cc6.llll$$$$$cx
+.ffffwxxxx..xxx..xcc..lll$$$$$$cx
+..8ffwwxxx...xx2xxcc..ll$$$$$$$cx
+.6.fffwwxxx..xxxxxccc.ll$$$$$1ccx
+....fffmwwwxxxxxxxcccollD$$$$cccx
+.....fffmmwwwwwwwwccccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# The Golem Gauntlet (by Mu.)
+#
+# Each room is progressively more challenging; both the golems, and their
+# creators.
+#
+NAME:   golem_gauntlet_mu
+DEPTH:  D:16-26
+FLAGS:  no_monster_gen no_item_gen no_pool_fixup
+ORIENT: east
+MARKER: m = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 1, size_buildup_amnt = 1, \
+                size_buildup_time = 25, cloud_type = "flame" \
+            }
+MARKER: z = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 1, size_buildup_amnt = 1, \
+                size_buildup_time = 25, cloud_type = "freezing vapour" \
+            }
+MONS:   wood golem, clay golem, toenail golem, stone golem, iron golem, crystal golem
+KFEAT:  o = granite_statue
+KFEAT:  m = .
+KFEAT:  z = .
+KMONS:  A = orc sorcerer / Nergalle, orc sorcerer
+KMONS:  B = wizard
+KMONS:  C = ogre mage / Erolcha, ogre mage
+KMONS:  D = deep elf sorcerer
+KMONS:  E = lich / Boris, lich
+KMONS:  F = ancient lich
+MAP
+ cccccccccccccccccccccccccccccc
+ cccccccccccccccccccccccccccccc
+ cc......=.....cc......=....$cc
+ ccmcccccc..5..cczcccccc.6.6$cc
+ cc.....cc*5E5.cc.....cc..F.$cc
+ ccccccmcc|.5..cccccczcc.6.6$cc
+ cc.....cc*$$..=......cc|||||cc
+ cc.ccccccccccccccccccccccccccc
+ cc=ccccccccccccccccccccccccccc
+ cc.....cllllllcc%$$..cwwwwwwcc
+ cc.4.4.clcccclcc$.3..cwccccwcc
+ cc..D..=.cllllcc$3C3.=.cwwwwcc
+ cc%4.4.ccclccccc..3..cccwccccc
+ cc$$$%%ccclllll=.....cccwwwwcc
+ cccccccccccccccccccccccccccwcc
+ ccccccccccccccccccccccccccc=cc
+.cc......=...$$ccWWWWWW=.....cc
+.cc.cccccc..1.$ccWcccccc.2.2.cc
+.cc.....cc.1A1.ccWWWWWWc..B..cc
+occcccc.cc..1..cccccccWc.2.2$cc
+@=......cc.....=WWWWWWWc...$%cc
+occcccccccccccccccccccccccccccc
+ cccccccccccccccccccccccccccccc
+ENDMAP

@@ -11,4 +11,3 @@ bool silenced(const coord_def& p);
 std::list<actor*> haloers(const coord_def &c);
 
 #endif
-

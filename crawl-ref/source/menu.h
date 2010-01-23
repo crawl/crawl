@@ -227,7 +227,8 @@ enum MenuFlag
                                     // select the appropriate items.
     MF_ALLOW_FORMATTING = 0x0100,   // Parse index for formatted-string
     MF_SHOW_PAGENUMBERS = 0x0200,   // Show "(page X of Y)" when appropriate
-    MF_EASY_EXIT        = 0x1000
+    MF_EASY_EXIT        = 0x1000,
+    MF_START_AT_END     = 0x2000
 };
 
 class MenuDisplay
@@ -550,8 +551,6 @@ protected:
 
 int linebreak_string( std::string& s, int wrapcol, int maxcol );
 int linebreak_string2( std::string& s, int maxcol );
-void print_formatted_paragraph(std::string &s,
-                               msg_channel_type channel = MSGCH_PLAIN);
 std::string get_linebreak_string(const std::string& s, int maxcol);
 
 #endif

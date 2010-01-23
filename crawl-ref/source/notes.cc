@@ -18,6 +18,7 @@
 #include "files.h"
 #include "kills.h"
 #include "hiscores.h"
+#include "message.h"
 #include "mutation.h"
 #include "options.h"
 #include "place.h"
@@ -529,9 +530,8 @@ void load_notes(reader& inf)
 
 void make_user_note()
 {
-    mpr("Enter note: ", MSGCH_PROMPT);
     char buf[400];
-    bool validline = !cancelable_get_line(buf, sizeof(buf));
+    bool validline = !msgwin_get_line("Enter note: ", buf, sizeof(buf));
     if (!validline || (!*buf))
         return;
     Note unote(NOTE_USER_NOTE);

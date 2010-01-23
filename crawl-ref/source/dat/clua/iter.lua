@@ -477,7 +477,12 @@ end
 
 -- An easier and more posh way of interfacing with find_marker_positions_by_prop.
 function iter.slave_iterator (prop, value)
-  return iter.point_iterator:new(dgn.find_marker_positions_by_prop(prop, value))
+  local ptable = dgn.find_marker_positions_by_prop(prop, value)
+  if #ptable == 0 then
+    error("Didn't find any props for " .. prop .. "=" .. value)
+  else
+    return iter.point_iterator:new(ptable)
+  end
 end
 
 -------------------------------------------------------------------------------

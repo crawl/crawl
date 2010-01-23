@@ -11,9 +11,11 @@
 #include "coord.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "dgn-shoals.h"
 #include "env.h"
 #include "flood_find.h"
 #include "l_defs.h"
+#include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "random.h"
@@ -569,6 +571,11 @@ static int dgn_kprop(lua_State *ls)
     return dgn_map_add_transform(ls, &map_lines::add_fproperty);
 }
 
+static int dgn_fheight(lua_State *ls)
+{
+    return dgn_map_add_transform(ls, &map_lines::add_fheight);
+}
+
 static int dgn_map_size(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -907,6 +914,57 @@ static int dgn_terrain_changed(lua_State *ls)
                             type, affect_player,
                             preserve_features, preserve_items );
     return (0);
+}
+
+static int dgn_fprop_changed(lua_State *ls)
+{
+    feature_property_type prop = FPROP_NONE;
+
+    if (lua_isnumber(ls, 3))
+        prop = static_cast<feature_property_type>(luaL_checkint(ls, 3));
+    else if (lua_isstring(ls, 3))
+        prop = str_to_fprop(lua_tostring(ls, 3));
+
+    coord_def pos = coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
+
+    if (in_bounds(pos) && prop != FPROP_NONE)
+    {
+        if (testbits(env.pgrid(pos), prop))
+        {
+            env.pgrid(pos) &= ~prop;
+            lua_pushboolean(ls, true);
+        }
+        else if (!testbits(env.pgrid(pos), prop))
+        {
+            env.pgrid(pos) |= prop;
+            lua_pushboolean(ls, true);
+        }
+        else
+            lua_pushboolean(ls, false);
+    }
+    else
+        lua_pushboolean(ls, false);
+
+    return (1);
+}
+
+static int dgn_fprop_at (lua_State *ls)
+{
+    feature_property_type prop = FPROP_NONE;
+
+    if (lua_isnumber(ls, 3))
+        prop = static_cast<feature_property_type>(luaL_checkint(ls, 3));
+    else if (lua_isstring(ls, 3))
+        prop = str_to_fprop(lua_tostring(ls, 3));
+
+    coord_def pos = coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
+
+    if (in_bounds(pos) && prop != FPROP_NONE)
+        lua_pushboolean(ls, testbits(env.pgrid(pos), prop));
+    else
+        lua_pushboolean(ls, false);
+
+    return (1);
 }
 
 static int lua_dgn_set_lt_callback(lua_State *ls)
@@ -1732,6 +1790,12 @@ LUAFN(dgn_fill_grd_area)
     return (0);
 }
 
+LUAFN(dgn_apply_tide)
+{
+    shoals_apply_tides(0, true);
+    return (0);
+}
+
 const struct luaL_reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
@@ -1767,10 +1831,13 @@ const struct luaL_reg dgn_dlib[] =
 { "kmask", dgn_kmask },
 { "mapsize", dgn_map_size },
 { "subvault", dgn_subvault },
+{ "fheight", dgn_fheight },
 
 { "colour_at", dgn_colour_at },
+{ "fprop_at", dgn_fprop_at },
 
 { "terrain_changed", dgn_terrain_changed },
+{ "fprop_changed", dgn_fprop_changed },
 { "points_connected", dgn_points_connected },
 { "any_point_connected", dgn_any_point_connected },
 { "has_exit_from", dgn_has_exit_from },
@@ -1828,6 +1895,8 @@ const struct luaL_reg dgn_dlib[] =
 { "is_validating", dgn_is_validating },
 
 { "fill_grd_area", dgn_fill_grd_area },
+
+{ "apply_tide", dgn_apply_tide },
 
 { NULL, NULL }
 };

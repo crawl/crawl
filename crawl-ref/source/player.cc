@@ -38,6 +38,7 @@
 #include "item_use.h"
 #include "it_use2.h"
 #include "kills.h"
+#include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
@@ -264,14 +265,14 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     // Only consider terrain if player is not levitating.
     if (!you.airborne())
     {
-        bool merfolk_check = false;
-        if (you.species == SP_MERFOLK)
+        bool swimming_check = false;
+        if (you.can_swim())
         {
             if (feat_is_water(new_grid))
-                merfolk_check = true;
+                swimming_check = true;
 
-            // Safer water effects.
-            if (feat_is_water(new_grid) && !feat_is_water(old_grid))
+            // Safer water effects for merfolk.
+            if (you.species == SP_MERFOLK&& feat_is_water(new_grid) && !feat_is_water(old_grid))
             {
                 // Check for fatal stat loss due to transforming.
                 // Also handles the warning message.
@@ -292,7 +293,8 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 need_doll_update = true;
 #endif
             }
-            else if (!feat_is_water(new_grid) && feat_is_water(old_grid)
+            else if (you.species == SP_MERFOLK && !feat_is_water(new_grid)
+                     && feat_is_water(old_grid)
                      && !is_feat_dangerous(new_grid))
             {
                 unmeld_one_equip(EQ_BOOTS);
@@ -303,7 +305,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
             }
         }
 
-        if (!merfolk_check)
+        if (!swimming_check)
         {
             // XXX: at some point we're going to need to fix the swimming
             // code to handle burden states.
@@ -435,9 +437,7 @@ bool player_in_hell(void)
     COMPILE_CHECK(BRANCH_LAST_HELL  == BRANCH_TARTARUS, b);
 
     return (you.level_type == LEVEL_DUNGEON
-            && you.where_are_you >= BRANCH_FIRST_HELL
-            && you.where_are_you <= BRANCH_LAST_HELL
-            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
+            && is_hell_subbranch(you.where_are_you));
 }
 
 bool player_likes_water(bool permanently)
@@ -1842,7 +1842,8 @@ int player_movement_speed(void)
 {
     int mv = 10;
 
-    if (you.swimming())
+    // But only merfolk get a speed bonus in water.
+    if (you.swimming() && you.species == SP_MERFOLK)
     {
         // This is swimming... so it doesn't make sense to really
         // apply the other things (the mutation is "cover ground",
@@ -3905,9 +3906,9 @@ static int _species_exp_mod(species_type species)
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_DEMONSPAWN:
+        case SP_MUMMY:
             return 14;
         case SP_HIGH_ELF:
-        case SP_MUMMY:
         case SP_VAMPIRE:
         case SP_TROLL:
             return 15;
@@ -4175,7 +4176,10 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     }
 
     if (ptr_stat == &you.strength)
+    {
         burden_change();
+        you.redraw_armour_class = true; // This includes shields.
+    }
     if (ptr_stat == &you.dex)
         you.redraw_evasion = true;
 }
@@ -4536,7 +4540,7 @@ int get_real_hp(bool trans, bool rotted)
 
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
-        hitp *= 2;
+        hitp = hitp * 3 / 2;
 
     if (trans)
     {
@@ -5545,7 +5549,8 @@ bool player::can_swim() const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return (species == SP_MERFOLK && merfolk_change_is_safe(true));
+    return ((species == SP_MERFOLK && merfolk_change_is_safe(true)
+             || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
 }
 
 int player::visible_igrd(const coord_def &where) const

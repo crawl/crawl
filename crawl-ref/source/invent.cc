@@ -24,6 +24,7 @@
 #include "describe.h"
 #include "env.h"
 #include "food.h"
+#include "godabil.h"
 #include "initfile.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -917,7 +918,10 @@ unsigned char get_invent(int invent_type)
         {
             const int invidx = letter_to_index(select);
             if (you.inv[invidx].is_valid())
-                describe_item( you.inv[invidx], true );
+            {
+                if (!describe_item( you.inv[invidx], true ))
+                    break;
+            }
         }
         else
             break;
@@ -927,7 +931,7 @@ unsigned char get_invent(int invent_type)
         redraw_screen();
 
     return select;
-}                               // end get_invent()
+}
 
 std::string item_class_name( int type, bool terse )
 {
@@ -1057,8 +1061,8 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (item_is_evokable(i, true, true));
 
     case OSEL_PONDER_ARM:
-        if (itype != OBJ_ARMOUR || get_armour_slot(i) != EQ_BODY_ARMOUR)
-            return (false);
+        return (is_ponderousifiable(i));
+
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true, true));
 
@@ -1240,7 +1244,7 @@ std::vector<SelItem> prompt_invent_items(
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
-            mesclr( true );
+            mesclr();
         }
 
         if (need_prompt)
@@ -1292,7 +1296,7 @@ std::vector<SelItem> prompt_invent_items(
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
-                    mesclr(true);
+                    mesclr();
                 }
 
                 for (unsigned int i = 0; i < items.size(); ++i)
@@ -1613,7 +1617,7 @@ int prompt_invent_item( const char *prompt,
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
-            mesclr( true );
+            mesclr();
         }
 
         if (need_prompt)
@@ -1673,7 +1677,7 @@ int prompt_invent_item( const char *prompt,
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
-                    mesclr( true );
+                    mesclr();
                 }
             }
         }

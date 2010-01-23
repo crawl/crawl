@@ -11,8 +11,6 @@
 #include "dungeon.h"
 #include "random.h"
 
-const int SHOALS_ISLAND_COLLIDE_DIST2 = 5 * 5;
-
 void dgn_initialise_heightmap(int height)
 {
     env.heightmap.reset(new grid_heightmap);
@@ -70,34 +68,22 @@ void dgn_smooth_heights(int radius, int npasses)
 {
     for (int i = 0; i < npasses; ++i)
     {
-        for (rectangle_iterator ri(0); ri; ++ri)
-            dgn_smooth_height_at(*ri, radius);
+        const int xspan = GXM / 2, yspan = GYM / 2;
+        for (int y = yspan - 1; y >= 0; --y)
+            for (int x = xspan - 1; x >= 0; --x)
+            {
+                dgn_smooth_height_at(coord_def(x, y), radius);
+                dgn_smooth_height_at(coord_def(2 * xspan - x - 1, y), radius);
+                dgn_smooth_height_at(coord_def(x, 2 * yspan - y - 1), radius);
+                dgn_smooth_height_at(coord_def(2 * xspan - x - 1,
+                                               2 * yspan - y - 1),
+                                     radius);
+           }
     }
 }
 
 //////////////////////////////////////////////////////////////////////
 // dgn_island_plan
-
-dgn_island_plan dgn_island_plan::shoals_islands(int margin)
-{
-    dgn_island_plan plan;
-    plan.level_border_depth = margin;
-    plan.n_aux_centres = int_range(0, 3);
-    plan.aux_centre_offset_range = int_range(2, 10);
-
-    plan.atoll_roll = 10;
-    plan.island_separation_dist2 = SHOALS_ISLAND_COLLIDE_DIST2;
-
-    plan.n_island_centre_delta_points = int_range(50, 60);
-    plan.island_centre_radius_range = int_range(3, 10);
-    plan.island_centre_point_height_increment = int_range(40, 60);
-
-    plan.n_island_aux_delta_points = int_range(25, 45);
-    plan.island_aux_radius_range = int_range(2, 7);
-    plan.island_aux_point_height_increment = int_range(25, 35);
-
-    return (plan);
-}
 
 void dgn_island_plan::build(int nislands)
 {

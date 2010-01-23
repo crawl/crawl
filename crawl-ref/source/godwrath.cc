@@ -20,6 +20,7 @@
 #include "ghost.h"
 #include "godabil.h"
 #include "it_use2.h"
+#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"

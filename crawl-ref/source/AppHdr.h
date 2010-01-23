@@ -501,8 +501,6 @@
 
 #ifdef __cplusplus
 
-// Must include libutil.h here if one of the above is defined.
-#include "libutil.h"
 
 template < class T >
 inline void UNUSED(const volatile T &)
@@ -511,6 +509,7 @@ inline void UNUSED(const volatile T &)
 
 // And now headers we want precompiled
 #include "externs.h"
+#include "unwind.h"
 #include "version.h"
 
 #ifdef TARGET_COMPILER_VC

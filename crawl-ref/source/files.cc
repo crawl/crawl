@@ -266,15 +266,65 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
     return (files);
 }
 
+// Returns a vector of files (including directories if requested) in
+// the given directory, recursively. All filenames returned are
+// relative to the start directory. If an extension is supplied, all
+// filenames (and directory names if include_directories is set)
+// returned must be suffixed with the extension (the extension is not
+// modified in any way, so if you want, say, ".des", you must include
+// the "." as well).
+//
+// If recursion_depth is -1, the recursion is infinite, as far as the
+// directory structure and filesystem allows. If recursion_depth is 0,
+// only files in the start directory are returned.
+std::vector<std::string> get_dir_files_recursive(const std::string &dirname,
+                                                 const std::string &ext,
+                                                 int recursion_depth,
+                                                 bool include_directories)
+{
+    std::vector<std::string> files;
+
+    const std::vector<std::string> thisdirfiles = get_dir_files(dirname);
+    const int next_recur_depth =
+        recursion_depth == -1? -1 : recursion_depth - 1;
+    const bool recur = recursion_depth == -1 || recursion_depth > 0;
+
+    for (int i = 0, size = thisdirfiles.size(); i < size; ++i)
+    {
+        const std::string filename(thisdirfiles[i]);
+        if (dir_exists(catpath(dirname, filename)))
+        {
+            if (include_directories
+                && (ext.empty() || ends_with(filename, ext)))
+            {
+                files.push_back(filename);
+            }
+
+            if (recur)
+            {
+                const std::vector<std::string> subdirfiles =
+                    get_dir_files_recursive(catpath(dirname, filename),
+                                            ext,
+                                            next_recur_depth);
+                // Each filename in a subdirectory has to be prefixed
+                // with the subdirectory name.
+                for (int j = 0, ssize = subdirfiles.size(); j < ssize; ++j)
+                    files.push_back(catpath(filename, subdirfiles[j]));
+            }
+        }
+        else
+        {
+            if (ext.empty() || ends_with(filename, ext))
+                files.push_back(filename);
+        }
+    }
+    return (files);
+}
+
 std::vector<std::string> get_dir_files_ext(const std::string &dir,
                                            const std::string &ext)
 {
-    const std::vector<std::string> allfiles(get_dir_files(dir));
-    std::vector<std::string> filtered;
-    for (int i = 0, size = allfiles.size(); i < size; ++i)
-        if (ends_with(allfiles[i], ext))
-            filtered.push_back(allfiles[i]);
-    return (filtered);
+    return get_dir_files_recursive(dir, ext, 0);
 }
 
 std::string get_parent_directory(const std::string &filename)
@@ -655,7 +705,7 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
 
     if (!success) // Use default doll instead.
     {
-        job_type job = get_class_by_name(p.class_name.c_str());
+        job_type job = get_job_by_name(p.class_name.c_str());
         if (job == -1)
             job = JOB_FIGHTER;
 
@@ -686,7 +736,7 @@ std::vector<player_save_info> find_saved_characters()
     {
         std::string filename = allfiles[i];
 
-        std::string::size_type point_pos = filename.find_last_of('.');
+        std::string::size_type point_pos = filename.find_first_of('.');
         std::string basename = filename.substr(0, point_pos);
 
 #ifdef LOAD_UNPACKAGE_CMD
@@ -1718,7 +1768,7 @@ static void _save_game_exit()
               (dirname+basename).c_str(), (dirname+basename).c_str());
 # else
     No save package defined.
-#endif
+# endif
 #endif
 
     if (system( cmd_buff ) != 0)

@@ -1,0 +1,510 @@
+###############################################################################
+# layout.des: All large layout vaults go here.  These are defined by having
+#             both ORIENT: encompass and TAGS: layout.  These are not true
+#             vaults, in that the dungeon builder can add other vaults on
+#             top of them.
+#
+###############################################################################
+
+{{
+    -- Call func num times around a circle of radius centered at (x, y)
+    function apply_circle(x, y, num, radius, scale_x, scale_y, func)
+        radius = math.floor(radius)
+        for n = 1, num do
+            local rad = n * 2 * math.pi / num
+
+            local rx = math.floor(math.cos(rad) * radius * scale_x + 0.5)
+            local ry = math.floor(math.sin(rad) * radius * scale_y + 0.5)
+
+            func(x + rx, y + ry)
+        end
+    end
+
+}}
+
+##############################################################
+# layout_forbidden_doughnut
+#
+# This replaces dungeon.cc:_plan_1().  It usually creates a
+# room with a large hole in the middle.
+#
+NAME:   layout_forbidden_donut
+ORIENT: encompass
+TAGS:   layout allow_dup
+{{
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width=gxm, height=gym, fill='x'}
+    fill_area{fill='x'}
+
+    local width = (10 - crawl.random2(7))
+
+    local floor = '.'
+    local wall = 'x'
+
+    -- construct donut
+    fill_area{x1=10, y1=10, x2=gxm-10, y2=10+width, fill=floor}
+    fill_area{x1=10, y1=60-width, x2=gxm-10, y2=gym-10, fill=floor}
+    fill_area{x1=10, y1=10, x2=10+width, y2=gym-10, fill=floor}
+    fill_area{x1=60-width, y1=10, x2=gxm-10, y2=gym-10, fill=floor}
+
+    local spotty = crawl.coinflip()
+    local smears = crawl.random2(300)
+
+    -- sometimes add a hallway cross through center
+    if crawl.coinflip() then
+        local width2 = 1 + crawl.random2(5)
+
+        fill_area{x1=10, y1=gym/2-width2, x2=gxm-10, y2=gym/2+width2, fill=floor}
+        fill_area{x1=gxm/2-width2, y1=10, x2=gxm/2+width2, y2=gym-10, fill=floor}
+
+        -- sometimes add a small octagon room
+        if crawl.coinflip() then
+            local obl = 0
+            if crawl.coinflip() then
+                obl = 5 + crawl.random2(20)
+            end
+
+            local fill = crawl.random_element({
+                ["."] = 10,
+                ["w"] = 5,
+                ["l"] = 1,
+            })
+            octa_room{x1=25, y1=25, x2=gxm-25, y2=gym-25, oblique=obl, replace='x', inside=fill}
+
+            -- decrease spotty chance
+            spotty = crawl.one_chance_in(5)
+        end
+    end
+
+    local spotty_boxy = crawl.coinflip()
+    local smear_boxy = crawl.coinflip()
+
+    if spotty then
+        spotty_map{boxy=spotty_boxy}
+    end
+    if not spotty and crawl.one_chance_in(4) or spotty then
+        smear_map{iterations=smears, smear='x', onto='.', boxy=smear_boxy}
+    end
+}}
+MAP
+ENDMAP
+
+##############################################################
+# layout_cross
+#
+# This replaces dungeon.cc:_plan_2().  It creates a large cross
+# of varying width.
+#
+NAME:    layout_cross
+ORIENT:  encompass
+TAGS:    layout allow_dup
+
+{{
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'}
+
+    local floor = '.'
+    local wall = 'x'
+
+    local width = 5 - crawl.random2(5)
+    local height = 5 - crawl.random2(5)
+
+    -- Include a small possibility of adding windows around the cross.
+    -- This layout can get used with spotty_level, so don't make this
+    -- chance too large as lava/water prevents that from happening.
+    local window = crawl.one_chance_in(20)
+
+    if window then
+        if crawl.coinflip() then
+            wall = 'l'
+        else
+            wall = 'w'
+        end
+    end
+
+    fill_area{fill=wall}
+
+    -- create window
+    if window then
+        local clear = 'm'
+        fill_area{x1=10, y1=gym/2-height-1, x2=gxm-10, y2=gym/2-height-1, fill=clear}
+        fill_area{x1=10, y1=gym/2+height+1, x2=gxm-10, y2=gym/2+height+1, fill=clear}
+        fill_area{x1=gxm/2-width-1, y1=10, x2=gxm/2-width-1, y2=gym-10, fill=clear}
+        fill_area{x1=gxm/2+width+1, y1=10, x2=gxm/2+width+1, y2=gym-10, fill=clear}
+    end
+
+    -- create a cross
+    fill_area{x1=10, y1=gym/2-height, x2=gxm-10, y2=gym/2+height, fill=floor}
+    fill_area{x1=gxm/2-width, y1=10, x2=gxm/2+width, y2=gym-10, fill=floor}
+
+    if not crawl.one_chance_in(4) then
+        spotty_map{boxy = crawl.coinflip()}
+    end
+}}
+MAP
+ENDMAP
+
+#############################################################
+# layout_big_octagon
+#
+# This replaces dungeon.cc:_plan_6().  It has an octagonal
+# room with some number of pillars in the middle.  The stairs
+# are generally all grouped together.
+#
+
+NAME: layout_big_octagon
+ORIENT:  encompass
+TAGS:    layout allow_dup
+
+{{
+    -- Step 1: Big octagon.
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'}
+    fill_area{fill = 'x'}
+
+    local oblique = 10 + crawl.random2(20)
+    octa_room{
+        x1 = 10,
+        y1 = 10,
+        x2 = gxm-10,
+        y2 = gym-10,
+        oblique = oblique,
+        replace = 'x',
+        inside = '.'}
+
+    local do_smear = crawl.coinflip()
+    if do_smear then
+        local iterations = 100 + crawl.random2(800)
+        smear_map{iterations = iterations, boxy = false}
+
+        --Fill in disconnected zones now, prior to adding the stairs.
+        --Temporarily set a (passable) unique symbol in the middle of the map,
+        --to guarantee everything is connected to it after smearing.
+        mapgrd[gxm/2][gym/2] = '@'
+        fill_disconnected{wanted = '@'}
+        mapgrd[gxm/2][gym/2] = '.'
+    end
+
+    -- Step 2: Add pillars
+
+    -- pillar types and relative weights
+    local pillar_fill = {
+        ["x"] = 15,
+        ["b"] = 5,
+        ["v"] = 4,
+        ["m"] = 3,
+        ["w"] = 2,
+        ["l"] = 1,
+    }
+    if (you.in_branch("lair")) then
+        pillar_fill["t"] = 15
+    end
+
+    -- Potential pillar drawing routines
+    local pillar_func = {
+        make_circle,
+        make_diamond,
+        make_square,
+        make_rounded_square}
+
+    -- Pillar size params
+    -- NOTE: Be careful about tweaking the ranges here.  Pillars that are
+    -- too large, close, or large in number can entirely surround the center.
+
+    local pfunc = pillar_func[crawl.random2(#pillar_func) + 1]
+    pfunc = make_diamond
+    local num = 3 + crawl.random2(9)
+    local pillar_radius = 1 + crawl.random2(3)
+    local circle_radius = 2 + crawl.random2(6) + pillar_radius * 2 + num / 2
+    local fill = crawl.random_element(pillar_fill)
+
+    -- beautification hack: no "circle" pillars of radius 1
+    if pfunc == make_circle and pillar_radius == 1 then
+        fill = crawl.random_element({"G", "X", "t"})
+        kfeat("X = stone_arch")
+    end
+
+    -- Finally, make the pillars
+    local make_pillar = function(x, y)
+        return pfunc({
+            x = x,
+            y = y,
+            radius = pillar_radius,
+            fill = fill})
+    end
+    apply_circle(gxm/2, gym/2, num, circle_radius, 1, 1, make_pillar)
+
+    -- Step 3: Create stairs
+
+    -- Potential stair locations
+    -- 0) random
+    -- 1) inside
+    -- 2) up
+    -- 3) right
+    -- 4) down
+    -- 5) left
+
+    local up_loc = crawl.random2(6)
+    local down_loc = crawl.random2(6)
+    while up_loc == down_loc do
+        down_loc = crawl.random2(6)
+    end
+
+    local up_stairs = {"{", "(", "["}
+    local down_stairs = {"}", ")", "]"}
+    local full_stair_set = {[up_loc] = up_stairs, [down_loc] = down_stairs}
+
+    for loc, stair_list in pairs (full_stair_set) do
+        for i = 1, #stair_list do
+            local st = stair_list[i]
+
+            if loc == 0 then
+                replace_random({find = ".", replace = st, required = true})
+            elseif loc == 1 then
+                mapgrd[gxm/2 + i - 2][gym/2 + 1 - math.abs(i - 2)] = st
+            elseif loc == 2 then
+                replace_first({
+                    required = true,
+                    x = gxm/2 + i - 2,
+                    y = 0,
+                    xdir = 0,
+                    ydir = 1,
+                    find = ".",
+                    replace = st})
+            elseif loc == 3 then
+                replace_first({
+                    required = true,
+                    x = gxm - 1,
+                    y = gym/2 + i - 2,
+                    xdir = -1,
+                    ydir = 0,
+                    find = ".",
+                    replace = st})
+            elseif loc == 4 then
+                replace_first({
+                    required = true,
+                    x = gxm/2 + i - 2,
+                    y = gym - 1,
+                    xdir = 0,
+                    ydir = -1,
+                    find = ".",
+                    replace = st})
+            elseif loc == 5 then
+                replace_first({
+                    required = true,
+                    x = 0,
+                    y = gym/2 + i - 2,
+                    xdir = 1,
+                    ydir = 0,
+                    find = ".",
+                    replace = st})
+            end
+        end
+    end
+}}
+MAP
+ENDMAP
+
+##############################################################
+# layout_rooms
+#
+# This replaces dungeon.cc:_plan_3().
+#
+NAME: layout_rooms
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    function random_room_point(room)
+        return dgn.point(room.x1 + crawl.random2(room.x2 - room.x1),
+                         room.y1 + crawl.random2(room.y2 - room.y1))
+    end
+
+    function join_the_dots_p(start, finish)
+        return join_the_dots({
+            x1 = start.x,
+            y1 = start.y,
+            x2 = finish.x,
+            y2 = finish.y})
+    end
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'}
+    fill_area{fill = 'x'}
+
+    local num_rooms = 30 + crawl.random2(90)
+    local exclusive = not crawl.one_chance_in(10)
+    local exclusive2 = crawl.coinflip()
+
+    local rooms = {}
+
+    for i = 0, num_rooms do
+        local new_room = {
+            x1 = 10 + crawl.random2(50),
+            y1 = 10 + crawl.random2(40)
+        }
+        new_room.x2 = new_room.x1 + 2 + crawl.random2(8)
+        new_room.y2 = new_room.y1 + 2 + crawl.random2(8)
+
+        local not_walls = count_antifeature_in_box({
+            x1 = new_room.x1,
+            y1 = new_room.y1,
+            x2 = new_room.x2,
+            y2 = new_room.y2,
+            feat = "x"})
+
+        if (not exclusive or not_walls == 0) then
+            replace_area({
+                x1 = new_room.x1,
+                y1 = new_room.y1,
+                x2 = new_room.x2,
+                y2 = new_room.y2,
+                find = "x",
+                replace = "."})
+
+            if #rooms > 0 and not exclusive2 then
+                join_the_dots_p(random_room_point(new_room),
+                                random_room_point(rooms[#rooms]))
+            end
+
+            table.insert(rooms, new_room)
+            if #rooms >= 30 then
+                break
+            end
+        end
+    end
+
+    if exclusive2 then
+        for i = 2, #rooms do
+          join_the_dots_p(random_room_point(rooms[i]),
+                          random_room_point(rooms[i - 1]))
+        end
+    end
+}}
+MAP
+ENDMAP
+
+##############################################################
+# layout_city
+#
+# This replaces dungeon.cc:_city_level().
+#
+NAME: layout_city
+ORIENT: encompass
+TAGS: layout allow_dup
+{{
+    function treasure_area (x1, y1, x2, y2)
+        x2 = x2 + 1
+        y2 = y2 + 1
+
+        if x2 <= x2 or y2 <= y2 then
+            return false
+        end
+
+        if (x2 - x1) * (y2 - y1) >= 40 then
+            return false
+        end
+
+        local tl = dgn.point(x1, y1)
+        local br = dgn.point(x2 - 1, y2 - 1)
+
+        for point in iter.rect_iterator(tl, br) do
+            if is_valid_coord {x = point.x, y = point.y } then
+                if is_passable_coord { x=point.x, y=point.y } or crawl.coinflip() then
+                    mapgrd[point.x][point.y] = "|"
+                end
+            end
+        end
+
+        return true
+    end
+
+    local gxm, gym = dgn.max_bounds()
+
+    extend_map{width = gxm, height = gym, fill = 'x'}
+    fill_area{fill = 'x'}
+
+
+    local temp_rand = crawl.random2(8)
+    local wall_type_room
+    local wall_type
+    local rooms = {}
+
+    local xs = 0
+    local ys = 0
+    local ax1 = 0
+    local bx2 = 0
+    local ay1 = 0
+    local by2 = 0
+    local i, j
+
+    if temp_rand > 4 then
+        wall_type = 'x'
+    elseif temp_rand  > 2 then
+        wall_type = 'c'
+    else
+        wall_type = 'v'
+    end
+
+    if crawl.one_chance_in(100) then
+        wall_type = 'b'
+    end
+
+    fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
+
+    for i = 0, 5 do
+        for j = 0, 4 do
+            xs = 8 + (i * 13)
+            ys = 8 + (j * 14)
+            a1 = xs + crawl.random2avg(5, 2);
+            a2 = ys + crawl.random2avg(5, 2);
+            b1 = xs + 11 - crawl.random2avg(5, 2);
+            b2 = ys + 11 - crawl.random2avg(5, 2);
+
+            temp_rand = crawl.random2(280);
+
+            if temp_rand > 39 and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2} then
+                if temp_rand > 63 then
+                    wall_type_room = wall_type
+                elseif temp_rand > 54 then
+                    wall_type_room = "c"
+                elseif temp_rand > 45 then
+                    wall_type_room = "x"
+                else
+                    wall_type_room = "v"
+                end
+
+                if crawl.one_chance_in(250) then
+                    wall_type_room = "b"
+                end
+
+                table.insert(rooms, {a1, a2, b1, b2})
+                make_box { x1=a1, y1=a2, x2=b1, y2=b2, wall=wall_type_room }
+
+                if b1 - a1 > 5 and b2 - a2 > 5 and crawl.one_chance_in(8) then
+                    table.insert(rooms, {a1+2, a2+2, b1-2, b2-2})
+                    make_box { x1=a1+2, y1=a2+2, x2=b1-2, y2=b2-2, wall=wall_type_room }
+
+                    if crawl.one_chance_in(3) then
+                        treasure_area(a1+3, a2+3, b1-3, b2-3)
+                    end
+                end
+            end
+        end
+    end
+
+    for _, room in ipairs(rooms) do
+        local doors = 1 + crawl.random2(5) - crawl.random2(3)
+        if doors < 1 then
+            doors = 1
+        end
+
+        if doors > 3 and crawl.one_chance_in(3) then
+            doors = 2
+        end
+
+        make_box_doors {x1=room[1], y1=room[2], x2=room[3], y2=room[4], number=doors}
+    end
+}}
+MAP
+ENDMAP

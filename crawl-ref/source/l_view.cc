@@ -10,6 +10,7 @@
 
 #include "cluautil.h"
 #include "env.h"
+#include "libutil.h"
 #include "player.h"
 #include "terrain.h"
 
