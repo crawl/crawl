@@ -5375,6 +5375,8 @@ void player::init()
     worshipped.init(0);
     num_gifts.init(0);
 
+    che_saved_ponderousness = 0;
+
     equip.init(-1);
 
     spells.init(SPELL_NO_SPELL);
