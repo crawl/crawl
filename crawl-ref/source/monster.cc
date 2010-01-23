@@ -4390,7 +4390,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_SWIFT:
         if (!quiet)
-            simple_monster_message(this, " is no longer moving somewhat quickly.");
+            if (type == MONS_ALLIGATOR)
+                simple_monster_message(this, " slows down.");
+            else
+                simple_monster_message(this, " is no longer moving somewhat quickly.");
         break;
 
     case ENCH_MIGHT:
@@ -4448,7 +4451,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
         }
-        else
+        else if (type != MONS_KRAKEN_TENTACLE)
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
                      this->pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
@@ -6224,8 +6227,12 @@ int mon_enchant::calc_duration(const monsters *mons,
     // monster HD via modded_speed(). Use mod_speed instead!
     switch (ench)
     {
-    case ENCH_HASTE:
     case ENCH_SWIFT:
+        cturn = 1000 / _mod_speed(25, mons->speed);
+
+        break;
+
+    case ENCH_HASTE:
     case ENCH_MIGHT:
     case ENCH_INVIS:
         cturn = 1000 / _mod_speed(25, mons->speed);

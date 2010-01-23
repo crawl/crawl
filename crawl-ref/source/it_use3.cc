@@ -629,7 +629,7 @@ static bool _box_of_beasts(item_def &box)
                       (temp_rand == 6) ? MONS_YAK :
                       (temp_rand == 7) ? MONS_BUTTERFLY :
                       (temp_rand == 8) ? MONS_WATER_MOCCASIN :
-                      (temp_rand == 9) ? MONS_GIANT_LIZARD
+                      (temp_rand == 9) ? MONS_CROCODILE
                                        : MONS_HELL_HOUND);
         }
         while (player_will_anger_monster(beasty));
