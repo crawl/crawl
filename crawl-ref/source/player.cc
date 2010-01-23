@@ -1867,9 +1867,7 @@ int player_movement_speed(void)
             mv -= 2;
 
         // ponderous brand
-        int ponder = player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
-        ponder = std::max(ponder, you.che_saved_ponderousness);
-        mv += 2 * ponder;
+        mv += 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
         // In the air, can fly fast (should be lightly burdened).
         if (you.light_flight())
