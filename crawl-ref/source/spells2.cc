@@ -779,7 +779,8 @@ bool vampiric_drain(int pow, const dist &vmove)
     if (monster == NULL)
     {
         mpr("There isn't anything there!");
-        return (false);
+        // Cost to disallow freely locating invisible monsters.
+        return (true);
     }
 
     god_conduct_trigger conducts[3];
