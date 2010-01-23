@@ -45,6 +45,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
+#include "viewgeom.h"
 
 bool yred_injury_mirror(bool actual)
 {
@@ -682,7 +683,8 @@ bool sunlight()
 
 #ifndef USE_TILE
     // Move the cursor out of the way (it looks weird).
-    cgotoxy(base.x, base.y, GOTO_DNGN);
+    coord_def temp = grid2show(base);
+    cgotoxy(temp.x, temp.y, GOTO_DNGN);
 #endif
     delay(200);
 
