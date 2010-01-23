@@ -2110,7 +2110,8 @@ void bolt::affect_cell()
     const bool still_wall = (was_solid && old_pos == pos());
     if ((!hit_player || is_beam || is_explosion) && !still_wall)
         if (monsters* m = monster_at(pos()))
-            affect_monster(m);
+            if (!m->submerged())
+                affect_monster(m);
 
     if (!feat_is_solid(grd(pos())))
         affect_ground();
@@ -4536,26 +4537,6 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     if (!apply_dmg_funcs(mon, preac, messages))
         return (false);
 
-    // Submerged monsters get some perks.
-    if (mon->submerged())
-    {
-        // The beam will pass overhead unless it's aimed at them.
-        if (!aimed_at_spot)
-            return (false);
-
-        // Electricity is ineffective.
-        if (flavour == BEAM_ELECTRICITY)
-        {
-            if (!is_tracer && you.see_cell(mon->pos()))
-                mprf("The %s arcs harmlessly into the water.", name.c_str());
-            finish_beam();
-            return (false);
-        }
-
-        // Otherwise, 1/3 damage reduction.
-        preac = (preac * 2) / 3;
-    }
-
     postac = preac - maybe_random2(1 + mon->ac, !is_tracer);
 
     // Fragmentation has triple AC reduction.
@@ -4668,10 +4649,6 @@ void bolt::tracer_affect_monster(monsters* mon)
 
 void bolt::enchantment_affect_monster(monsters* mon)
 {
-    // Submerged monsters are unaffected by enchantments.
-    if (mon->submerged())
-        return;
-
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
@@ -4952,9 +4929,6 @@ void bolt::affect_monster(monsters* mon)
         return;
     }
 
-    if (mon->submerged() && !aimed_at_spot)
-        return;                 // passes overhead
-
     if (is_explosion && !in_explosion_phase)
     {
         // It hit a monster, so the beam should terminate.
@@ -5131,7 +5105,7 @@ void bolt::affect_monster(monsters* mon)
         // (Earth magic) we might bleed on the floor.
         if (!engulfs
             && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE)
-            && !mon->is_summoned() && !mon->submerged())
+            && !mon->is_summoned())
         {
             // Using raw_damage instead of the flavoured one!
             // assumes DVORP_PIERCING, factor: 0.5
