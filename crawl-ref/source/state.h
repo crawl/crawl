@@ -57,6 +57,8 @@ struct game_state
 
     bool unicode_ok;        // Is unicode support available?
 
+    bool show_more_prompt;  // Set to false to disable --more-- prompts.
+
     std::string (*glyph2strfn)(unsigned glyph);
     int  (*multibyte_strlen)(const std::string &s);
     void (*terminal_resize_handler)();
@@ -147,6 +149,7 @@ public:
     void      mon_gone(monsters* mon);
 
     void dump();
+    bool player_is_dead();
 
     friend class mon_acting;
 };

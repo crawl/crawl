@@ -170,6 +170,7 @@ enum tile_flags
     TILE_FLAG_TUT_CURSOR = 0x00800000,
     TILE_FLAG_RAY_OOR    = 0x01000000,
     TILE_FLAG_OOR        = 0x02000000,
+    TILE_FLAG_WATER      = 0x04000000,
 
     // General
     TILE_FLAG_MASK       = 0x000007FF

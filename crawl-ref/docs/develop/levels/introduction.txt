@@ -74,55 +74,27 @@ in detail in the syntax.txt file.
 C.   The .des files
 ===================
 
-All fixed level information resides in various .des files to be found in the
-dat directory. If you are interested in adding some vaults, say, start with
-the existing ones and modify them. If you are new to vault making, look at
+All fixed level information resides in various .des files to be found inside
+a folder of the dat/des directory. If you are interested in adding some vaults,
+say, start with the existing ones and modify them. If you are new to vault 
+making, look at the following files:
 
- entry.des    - entry vaults (each game - but not tutorial games - uses one of
+  dat/des/variable 
+    entry.des - entry vaults (each game - but not tutorial games - uses one of
                 these premade maps for the vicinity of the entrance)
- float.des    - floating vaults
- large.des    - all regular vaults which have ORIENT:encompass/northwest etc
- mini.des     - minivaults (no ORIENT line at all)
+    float.des - floating vaults
+    large.des - all regular vaults which have ORIENT:encompass/northwest etc
+    mini.des  - minivaults (no ORIENT line at all)
 
-The following contain vaults for special branches:
+There are also the following other directories:
 
- crypt.des    - random vaults for Crypt, the Crypt:5 branch ends, and the
-                predefined maps for Tomb:1, Tomb:2 and Tomb:3
- elf.des      - arrival and random vaults for Elf, and Elf:7 branch ends
- hells.des    - hell entrances, Geryon's vestibule, Coc:7, Tar:7, Dis:7, Geh:7
- hive.des     - hive entrances, random hive vaults, Hive:2
- lair.des     - lair entrances, random vaults for lair proper and sub-branches,
-                and the branch ends: Shoals:5, Swamp:5, Snake:5, Slime:6
- orc.des      - orcish mine entrances, orc only vaults
- pan.des      - vaults of the Pan demon lords, Pan minivaults
- temple.des   - Ecumenical Temples, and Temple entrances
- vaults.des   - entrances for the Vaults, Vaults-specific vaults, the
-                Hall of Blades, and Vaults:8
- zot.des      - vaults for the Zot branch and the maps for Zot:5
+  dat/des/branches - contains vaults for special branches
+  dat/des/portals  - contains all maps and lua for portal vaults
+  dat/des/builder  - uniques.des etc.; look, don't touch
 
-There are a number of portal vaults. The following files contain a lot more
-technology. Look into them if you want to make portal vaults of your own, or
-just see lua applied.
-
- altar.des    - minivaults containing altars
- bailey.des   - the bailey portal vault
- bazaar.des   - entrances to bazaar portal vaults, and bazaars proper
- icecave.des  - the ice cave portal vault
- lab.des      - labyrinths exits and flavour vaults
- ossuary.des  - the ossuary portal vault
- sewer.des    - the sewer portal vault
- shrine.des   - the shrine portal vault
- volcano.des  - the volcano portal vault
- ziggurat.des - the ziggurat entry vaults, pillars and arenas
-
-The following .des files are rather special. Look, don't touch.
-
- arena.des    - arenas for the arena mode
- didact.des   - lua and vaults for syntax checking - not used in-game
- dummy.des    - global dummy balancers
- layout.des   - level layout code that has been moved from dungeon.cc and
-                rewritten in Lua.
- rooms.des    - special monster rooms, such as orc, kobold and jelly rooms
+If you feel comfortable with vault making in general, you may want to turn to
+branch ends or even portal vaults. Poke into the relevant files to get an
+impression, or to find examples of how lua is applied.
 
 
 D.   Kinds of Vaults
@@ -162,7 +134,7 @@ vaults) in most respects. The differences are:
 
 1. Floating vaults may be placed before the rest of the level layout
    is generated, and the rest of the level may be built around the floating
-   vault. This is never the case for minivaults.
+  vault. This is never the case for minivaults.
 
 2. Floating vaults may be placed anywhere in the map, including places
    completely separated from the rest of the level by rock. The

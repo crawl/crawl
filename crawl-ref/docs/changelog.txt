@@ -56,7 +56,7 @@ Levels
 Ranged combat
 -------------
 * Removed hand crossbows and Darts skill.
-* New profession: Arcane Marksman, combining Crusader, Warper and Hunter.
+* New background: Arcane Marksman, combining Crusader, Warper and Hunter.
 * Fixed wall-stopped item beams getting two chances to hit their target.
 * New missile materials: silver, steel.
 * New missile brands: dispersal, electricity, exploding, penetration, reaping.

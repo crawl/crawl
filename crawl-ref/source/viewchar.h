@@ -12,4 +12,3 @@ int multibyte_strlen(const std::string &s);
 dungeon_char_type dchar_by_name(const std::string &name);
 
 #endif
-

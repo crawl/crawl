@@ -28,11 +28,11 @@ After starting the program you will be greeted with a message asking for your
 name. Don't spend too much time over this, as your first character will *not*
 last very long (sorry, but it's true).
 
-Next you are given menus of species and jobs from which to choose. A dwarf,
-orc, ogre or troll Fighter is a good bet. Elves are quite fragile, humans are
-pretty average at everything, and the weirder species are mostly too tricky
-for beginning players. Finally, you may be given a choice of weapons. I
-suggest an axe (axes are fun).
+Next you are given menus of species and backgrounds from which to choose.
+A dwarf, orc, ogre or troll Fighter is a good bet. Elves are quite fragile,
+humans are pretty average at everything, and the weirder species are mostly
+too tricky for beginning players. Finally, you may be given a choice of
+weapons. I suggest an axe (axes are fun).
 
 Now you are in the game. The game screen has three parts:
  - the Map takes up the upper left part of the screen. In its very centre is

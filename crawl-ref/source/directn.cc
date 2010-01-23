@@ -362,8 +362,8 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
         }
     }
     const coord_def vp = grid2view(pos);
-    cgotoxy(vp.x, vp.y, GOTO_DNGN);
-    textcolor( real_colour(colour) );
+    cgotoxy(vp.x, vp.y, GOTO_CRT);
+    textcolor(real_colour(colour));
     putch(glych);
 }
 #endif
@@ -716,6 +716,7 @@ void full_describe_view()
     desc_menu.set_tag("pickup");
     desc_menu.set_type(MT_PICKUP); // necessary for sorting of the item submenu
     desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
+    desc_menu.menu_action  = InvMenu::ACT_EXECUTE;
 
     // Don't make a menu so tall that we recycle hotkeys on the same page.
     if (list_mons.size() + list_items.size() + list_features.size() > 52
@@ -865,24 +866,17 @@ void full_describe_view()
 
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
             {
-                describe_info inf;
-                get_square_desc(m->pos(), inf, true);
-#ifndef USE_TILE
-                // Hmpf. This was supposed to work for both ASCII *and* Tiles!
-                view_desc_proc proc;
-                process_description<view_desc_proc>(proc, inf);
-#else
-                mesclr();
-                _describe_monster(m);
-#endif
-                if (getch() == 0)
-                    getch();
-            }
-            else // ACT_EXECUTE, here used to view database entry
-            {
+                // View database entry.
                 describe_monsters(*m);
                 redraw_screen();
-                mesclr(true);
+                mesclr();
+            }
+            else // ACT_EXECUTE, here used to display monster status.
+            {
+                _describe_monster(m);
+
+                if (getch() == 0)
+                    getch();
             }
         }
         else if (quant == 2)
@@ -1698,8 +1692,8 @@ bool direction_chooser::do_main_loop()
         behaviour->mark_ammo_nonchosen();
         break;
 
-    case CMD_TARGET_DESCRIBE: describe_target(); need_all_redraw = true; break;
-    case CMD_TARGET_HELP: show_help();           need_all_redraw = true; break;
+    case CMD_TARGET_DESCRIBE: describe_target();  need_all_redraw = true; break;
+    case CMD_TARGET_HELP: show_targetting_help(); need_all_redraw = true; break;
 
     default:
         // Some blocks of keys with similar handling.
@@ -1914,7 +1908,7 @@ void full_describe_square(const coord_def &c)
     }
 
     redraw_screen();
-    mesclr(true);
+    mesclr();
 }
 
 static void _extend_move_to_edge(dist &moves)
@@ -3241,12 +3235,12 @@ static void _describe_monster(const monsters *mon)
     if (!wounds_desc.empty())
         text += " " + mon->pronoun(PRONOUN_CAP) + wounds_desc;
 
-    print_formatted_paragraph(text, MSGCH_EXAMINE);
+    mpr(text, MSGCH_EXAMINE);
 
     // Print the rest of the description.
     text = _get_monster_desc(mon);
     if (!text.empty())
-        print_formatted_paragraph(text, MSGCH_EXAMINE);
+        mpr(text, MSGCH_EXAMINE);
 }
 
 // This method is called in two cases:
@@ -3267,8 +3261,12 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
         if (print_attitude)
         {
             std::string str = "";
-            if (mon->friendly())
+            if (mon->has_ench(ENCH_CHARM))
+                str = "charmed";
+            else if (mon->friendly())
                 str = "friendly";
+            else if (mon->good_neutral())
+                str = "peaceful";
             else if (mon->neutral())
                 str = "neutral";
 
@@ -3463,7 +3461,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
             msg = "(Press <w>v</w> for more information.)";
 #endif
-            print_formatted_paragraph(msg);
+            mpr(msg);
         }
     }
 
@@ -3551,7 +3549,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
         feature_desc += " (Press <w>v</w> for more information.)";
 #endif
-        print_formatted_paragraph(feature_desc);
+        mpr(feature_desc);
     }
     else
     {

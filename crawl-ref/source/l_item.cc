@@ -8,6 +8,7 @@
 #include "artefact.h"
 #include "colour.h"
 #include "command.h"
+#include "env.h"
 #include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -15,8 +16,8 @@
 #include "output.h"
 #include "player.h"
 #include "skills2.h"
+#include "spells2.h"
 #include "stuff.h"
-#include "env.h"
 
 /////////////////////////////////////////////////////////////////////
 // User bindings to get information on items. We must be careful
@@ -638,8 +639,8 @@ static int l_item_artefact(lua_State *ls)
     if (!item || !item->is_valid())
         return (0);
 
-    lua_pushboolean(ls, item_ident(*item, ISFLAG_KNOW_PROPERTIES)
-                && is_artefact(*item));
+    lua_pushboolean(ls, is_artefact(*item));
+
     return (1);
 }
 
@@ -665,6 +666,17 @@ static int l_item_branded(lua_State *ls)
         break;
     }
     lua_pushboolean(ls, branded);
+    return (1);
+}
+
+static int l_item_snakable(lua_State *ls)
+{
+    LUA_ITEM(item, 1);
+    if (!item || !item->is_valid())
+        return (0);
+
+    lua_pushboolean(ls, item_is_snakable(*item));
+
     return (1);
 }
 
@@ -755,6 +767,7 @@ static const struct luaL_reg item_lib[] =
 {
     { "artefact",          l_item_artefact },
     { "branded",           l_item_branded },
+    { "snakable",          l_item_snakable },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
     { "cursed",            l_item_cursed },

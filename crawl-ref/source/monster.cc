@@ -9,6 +9,7 @@
 #include "areas.h"
 #include "beam.h"
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
 #include "delay.h"
 #include "dgnevent.h"
@@ -22,21 +23,22 @@
 #include "itemname.h"
 #include "items.h"
 #include "kills.h"
+#include "libutil.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-place.h"
-#include "terrain.h"
-#include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
+#include "mon-util.h"
+#include "mgen_data.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
@@ -209,9 +211,7 @@ bool monsters::wants_submerge() const
     }
 
     const bool has_ranged_attack = (type == MONS_ELECTRIC_EEL
-                                    || type == MONS_LAVA_SNAKE
-                                    || mons_genus(type) == MONS_MERMAID
-                                       && you.species != SP_MERFOLK);
+                                    || type == MONS_LAVA_SNAKE);
 
     int roll = 8;
     // Shallow water takes a little more effort to submerge in, so we're
@@ -223,7 +223,7 @@ bool monsters::wants_submerge() const
     if (tfoe && grid_distance(tfoe->pos(), pos()) > 1 && !has_ranged_attack)
         roll /= 2;
 
-    // Don't submerge if we just unsubmerged to shout
+    // Don't submerge if we just unsubmerged to shout.
     return (one_chance_in(roll) && seen_context != "bursts forth shouting");
 }
 
@@ -2727,7 +2727,7 @@ bool monsters::fumbles_attack(bool verbose)
                 mprf("%s splashes around in the water.",
                      this->name(DESC_CAP_THE).c_str());
             }
-            else if (player_can_hear(pos()))
+            else if (player_can_hear(pos(), LOS_RADIUS))
                 mpr("You hear a splashing noise.", MSGCH_SOUND);
         }
 
@@ -3185,13 +3185,24 @@ bool monsters::is_unclean() const
         return (true);
     }
 
+    // Zin considers insanity unclean.  And slugs that speak.
+    if (type == MONS_CRAZY_YIUF
+        || type == MONS_PSYCHE
+        || type == MONS_GASTRONOK)
+    {
+        return (true);
+    }
+
     return (false);
 }
 
 bool monsters::is_chaotic() const
 {
-    if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-        || type == MONS_CRAZY_YIUF)
+    if (type == MONS_UGLY_THING
+        || type == MONS_VERY_UGLY_THING
+        || type == MONS_ABOMINATION_SMALL
+        || type == MONS_ABOMINATION_LARGE
+        || type == MONS_TIAMAT) // For her colour-changing.
     {
         return (true);
     }
@@ -3203,7 +3214,10 @@ bool monsters::is_chaotic() const
     if (is_priest() && is_chaotic_god(god))
         return (true);
 
-    if (has_chaotic_spell())
+    // Knowing chaotic spells is not enough to make you "essentially"
+    // chaotic (i.e. silver doesn't hurt you), although Zin will still
+    // enjoy your death elsewhere in the code.
+    if (has_chaotic_spell() && !is_actual_spellcaster())
         return (true);
 
     if (has_attack_flavour(AF_MUTATE)
@@ -3363,7 +3377,7 @@ int monsters::res_water_drowning() const
     switch (mons_habitat(this))
     {
     case HT_WATER:
-    case HT_AMPHIBIOUS_WATER:
+    case HT_AMPHIBIOUS:
         return 1;
     default:
         return 0;
@@ -4854,6 +4868,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_SLEEP_WARY:
     case ENCH_LOWERED_MR:
     case ENCH_SOUL_RIPE:
+    case ENCH_TIDE:
         decay_enchantment(me);
         break;
 
@@ -5116,8 +5131,10 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (feat_is_watery(grd(pos())))
         {
             if (mons_near(this) && visible_to(&you))
+            {
                 mprf("The flames covering %s go out.",
                      this->name(DESC_NOCAP_THE, false).c_str());
+            }
             del_ench(ENCH_STICKY_FLAME);
             break;
         }
@@ -5835,17 +5852,9 @@ int monsters::action_energy(energy_use_type et) const
         switch (et)
         {
         case EUT_MOVE:    return mu.move - (swift ? 2 : 0);
-        case EUT_SWIM:
-            // [ds] Amphibious monsters get a significant speed boost
-            // when swimming, as discussed with dpeg. We do not
-            // distinguish between amphibians that favour land
-            // (HT_AMPHIBIOUS_LAND, such as hydras) and those that
-            // favour water (HT_AMPHIBIOUS_WATER, such as merfolk), but
-            // that's something we can think about.
-            if (mons_amphibious(this))
-                return div_rand_round(mu.swim * 7, 10) - (swift ? 2 : 0);
-            else
-                return mu.swim - (swift ? 2 : 0);
+        // Amphibious monster speed boni are now dealt with using swim_energy,
+        // rather than here.
+        case EUT_SWIM:    return mu.swim - (swift ? 2 : 0);
         case EUT_MISSILE: return mu.missile;
         case EUT_ITEM:    return mu.item;
         case EUT_SPECIAL: return mu.special;

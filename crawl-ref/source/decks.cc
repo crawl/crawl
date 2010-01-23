@@ -34,6 +34,7 @@
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "mgen_data.h"
 #include "coord.h"
 #include "mon-stuff.h"

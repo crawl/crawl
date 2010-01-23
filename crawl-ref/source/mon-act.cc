@@ -25,6 +25,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "libutil.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -37,6 +38,7 @@
 #include "mgen_data.h"
 #include "coord.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
 #include "player.h"
@@ -2706,6 +2708,8 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
     }
 
     monster->lose_energy(EUT_MOVE);
+
+    dungeon_events.fire_position_event(DET_DOOR_OPENED, pos);
 }
 
 static bool _habitat_okay(const monsters *monster, dungeon_feature_type targ)
@@ -3133,6 +3137,23 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     return (true);
 }
 
+// May mons attack targ if it's in its way, despite
+// possibly aligned attitudes?
+// The aim of this is to have monsters cut down plants
+// to get to the player if necessary.
+static bool _may_cutdown(monsters* mons, monsters* targ)
+{
+    // Is the target a worthless obstacle?
+    bool is_firewood = mons_is_stationary(mons)
+                       && mons_class_flag(mons->type, M_NO_EXP_GAIN);
+    // Save friendly plants from allies.
+    bool bad_align = mons->attitude == ATT_GOOD_NEUTRAL
+                     && targ->attitude == ATT_FRIENDLY
+                  || mons->attitude == ATT_FRIENDLY
+                     && targ->attitude > ATT_HOSTILE;
+    return (is_firewood && !bad_align);
+}
+
 static bool _monster_move(monsters *monster)
 {
     FixedArray<bool, 3, 3> good_move;
@@ -3274,10 +3295,14 @@ static bool _monster_move(monsters *monster)
     // Now we know where we _can_ move.
 
     const coord_def newpos = monster->pos() + mmov;
+    bool restricted = (env.markers.property_at(newpos,
+                        MAT_ANY, "door_restrict") == "veto");
     // Normal/smart monsters know about secret doors, since they live in
-    // the dungeon.
-    if (grd(newpos) == DNGN_CLOSED_DOOR
+    // the dungeon, unless they're marked specifically not to be opened unless
+    // already opened by the player {bookofjude}.
+    if ((grd(newpos) == DNGN_CLOSED_DOOR
         || feat_is_secret_door(grd(newpos)) && mons_intel(monster) >= I_NORMAL)
+        && !restricted)
     {
         if (mons_is_zombified(monster))
         {
@@ -3300,7 +3325,8 @@ static bool _monster_move(monsters *monster)
     if ((grd(newpos) == DNGN_CLOSED_DOOR || grd(newpos) == DNGN_OPEN_DOOR)
          && mons_itemeat(monster) == MONEAT_ITEMS
          // Doors with permarock marker cannot be eaten.
-         && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL))
+         && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL)
+         && !restricted)
     {
         grd(newpos) = DNGN_FLOOR;
 
@@ -3460,6 +3486,13 @@ static bool _monster_move(monsters *monster)
     }
     else
     {
+        monsters* targ = monster_at(monster->pos() + mmov);
+        if (!mmov.origin() && targ && _may_cutdown(monster, targ))
+        {
+            monsters_fight(monster, targ);
+            ret = true;
+        }
+
         mmov.reset();
 
         // Fleeing monsters that can't move will panic and possibly

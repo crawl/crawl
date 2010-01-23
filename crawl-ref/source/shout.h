@@ -10,4 +10,3 @@ void handle_monster_shouts(monsters* monster, bool force = false);
 bool check_awaken(monsters* monster);
 
 #endif
-

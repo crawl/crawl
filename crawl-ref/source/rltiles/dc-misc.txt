@@ -38,10 +38,14 @@ cloud_mutagenic_large1 CLOUD_MUTAGENIC_2
 cloud_mutagenic_large2
 cloud_mutagenic_large3
 cloud_mutagenic_large4
+# orb of destruction
+cloud_magic_trail0 CLOUD_MAGIC_TRAIL_0
+cloud_magic_trail1 CLOUD_MAGIC_TRAIL_1
+cloud_magic_trail2 CLOUD_MAGIC_TRAIL_2
+cloud_magic_trail3 CLOUD_MAGIC_TRAIL_3
 cloud_rain1 CLOUD_RAIN
 cloud_rain2
 cloud_grey_smoke CLOUD_MIST
-
 cloud_gloom CLOUD_GLOOM
 
 #########MAP
@@ -65,6 +69,9 @@ mask_shallow_water_murky MASK_SHALLOW_WATER_MURKY
 mask_deep_water_shoals MASK_DEEP_WATER_SHOALS
 mask_shallow_water_shoals MASK_SHALLOW_WATER_SHOALS
 mask_lava MASK_LAVA
+%shrink 0
+mask_submerged MASK_SUBMERGED
+%shrink 1
 cursor CURSOR
 cursor_red CURSOR2
 cursor_green CURSOR3

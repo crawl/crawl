@@ -1,0 +1,725 @@
+##############################################################################
+# hive.des: Entries to the Hive, and maps for Hive:4
+##############################################################################
+
+
+##############################################################################
+# Hive entries
+##############################################################################
+# Dummy entry
+#
+NAME: hive_0
+TAGS: hive_entry
+ORIENT: float
+WEIGHT: 60
+MAP
+O
+ENDMAP
+
+##############################################################################
+# Standard hive
+#
+NAME: david_hive_1
+TAGS: hive_entry
+MONS: queen bee, killer bee, killer bee larva
+KITEM: R = w:2 honeycomb / w:1 royal jelly
+ORIENT: float
+MAP
+............
+....aaaa....
+..a2a2aaaa..
+..aaRa3a2a..
+.aa2aRa2aaa.
+.a3aOa1aRa2.
+.aa3aRaRa2a.
+.aaa2a2a3aa.
+..a3aRa2aa..
+...aa2aa2a..
+....aaaa....
+............
+ENDMAP
+
+##############################################################################
+# Hive monsters near stair
+#
+NAME: david_hive_2
+TAGS: hive_entry generate_awake
+MONS: nothing / killer bee / killer bee larva
+MONS: queen bee
+ORIENT: float
+MAP
+1111..@.
+1211....
+1111....
+............1
+@.....O.....@
+   ..........
+   ......1
+   .......
+   1@.....
+ENDMAP
+
+#############################################################################
+# Cooperation Not Competition (Rot)
+#
+NAME:    hive_david_3
+TAGS:    hive_entry
+ORIENT:  float
+ITEM:    honeycomb, honeycomb, honeycomb / royal jelly, royal jelly
+MONS:    killer bee larva / killer bee, queen bee
+MONS:    giant ant / soldier ant, queen ant
+MONS:    yellow wasp / nothing, red wasp / yellow wasp
+MONS:    bumblebee
+SHUFFLE: XY, VW, defgOR, 34/56
+SUBST:   V==, W=a, X==, Y=a
+SUBST:   ? = a .:20
+SUBST:   1 : 1 7:2
+SUBST:   7 = 7 .
+MAP
+   .......   ...............
+   ..??...   ..??aaa?aaa???.
+...?aaa?..   .?aaOaaaadaa?..
+.?aaa.aa??.....?aa=.aa=eaa?.
+.aa333.aaa.......a?a11aaa?..
+.aaR43..=...T...a.1aea1.a?..
+.?a.33.aaa......aa.1a2a1aa?.
+.?aa.3aa??.....aaaVa1a1aYaa.
+..?aaaa?.......?aagW..aXfaa.
+   ????.........?aaaaaaaaa?.
+   ......     ...??aaa?a??
+   ......     ............
+ENDMAP
+
+##############################################################################
+# Bears Won't Share
+#
+NAME:    erik_hive_1
+TAGS:    hive_entry
+ORIENT:  float
+MONS:    w:200 bear / polar bear / w:100 grizzly bear / w:100 black bear
+MONS:    killer bee, queen bee, killer bee larva
+ITEM:    honeycomb, royal jelly
+SUBST:   ? = a.
+SUBST:   ; = 1:1 .
+SHUFFLE: deO
+
+MAP
+  ...............
+ ;;;;;...?aaa???.
+.;;;;;..aaa2aaaaa..
+.;;;;;.?a2e4d342a?.
+.;;;;;.?a4?2?4O4a?.
+.;;;;;..?a42?a2a...
+.;;;;;..?aaaaaa?
+ ;;;;;....????..
+  ..............
+ENDMAP
+
+##############################################################################
+# Bucolic
+#
+NAME:   erik_hive_2
+TAGS:   hive_entry
+ORIENT: float
+MONS:   plant, killer bee
+SUBST:  1 = 1.
+SUBST:  2 = 2.
+MAP
+ 1.....2.......1.1
+ ..1.....1...2..1.
+ ....2.........1..
+ 1.2....1....2.....2
+ .....2.....1....21
+ 1...1...1.........
+  ...2.....1.21...2
+  .....1.O......21.
+  .1.......1.......
+  .2.....1....1..2.
+  ...11.2....2...11
+  .1..1....1......
+    2.......2....1
+    1...1.....1
+ENDMAP
+
+##############################################################################
+# Object lesson
+#
+NAME:    erik_hive_3
+TAGS:    hive_entry
+MONS:    killer bee larva, killer bee, queen bee
+MONS:    fire drake / w:5 nothing
+SHUFFLE: UVTXYZ, lL4/lL4/lL4/wW5
+SUBST:   l=.l, L=l, w=.w, W=w, U==, V=a, T=a, X=a, Y=a, Z=a, '=.a
+KMONS:   l = fire drake / w:200 nothing
+KFEAT:   l = l
+ORIENT:  float
+MAP
+ .............
+.'.aa'aa.'.'....
+..aaRa'...a'.'a..
+.'a2'Y.aaaX.aa.'..
+.aV.1aaa'1aaa.'.a.
+..aa21'2O2aaa4.aa.
+.'.Zaa2131Waaaa...
+.'aaaaaRaUa..aa'..
+..aa.4aaa.a.'.a...
+.aa...aaa.aa......
+.a..aaaa.'........
+..''..a..a.llllll
+ ...'..aaa.lLLLLl
+    ...''..llllll
+       ........
+ENDMAP
+
+#############################################################################
+# Another hive entry (Eino)
+# This one appeared to me in a dream.
+#
+NAME:      eino_hive_1
+TAGS:      hive_entry no_monster_gen
+ORIENT:    float
+MONS:      killer bee / killer bee larva w:2
+MONS:      queen bee / killer bee w:2
+MONS:      oklob plant / plant w:1
+MONS:      plant / nothing
+KITEM:     R = w:2 honeycomb / w:1 royal jelly
+KMONS:     R = killer bee / killer bee larva w:2
+KFEAT:     R = .
+KMONS:     M = plant
+KMONS:     N = plant
+KFEAT:     M = *
+KFEAT:     N = | / * w:20
+KMONS:     Z = plant / nothing
+: if crawl.coinflip() then
+SUBST:     W : .
+SUBST:     w : .
+KFEAT:     Z = W
+: else
+KFEAT:     Z = .
+: end
+SUBST:     q=w
+MAP
+   x   x
+ xxx...xxx
+xx4.a1a.4xx
+x4.aRaRa.4x
+x441aOa244x
+x4.aRaRa.4x
+xx4.a1a.4xx
+ x4.....4x
+ xxZ4.44xx
+  xZWW.4x
+  xxZWZxx
+   xxWxx
+    xWx
+xxxxxWxxxxx
+@....W....@
+xxxxxWxxxxx
+    xWx
+   xxWxx
+  xx4W4xx
+  x4.WW4x
+ xx4.WWZxx
+ xM4WWww4x
+xxN3wwwwwxx
+xM4wwwwwqqx
+x4.wwwwqqqx
+x4..wwqqqqx
+xx...44qqxx
+ xxx..4xxx
+   x   x
+ENDMAP
+
+##########################################
+# Bees in trees by the pond
+NAME:      eino_hive_2
+TAGS:      hive_entry
+ORIENT:    float
+KFEAT:     N = w / w:5 .
+KFEAT:     Z = w
+KMONS:     Z = plant / w:3 nothing
+KFEAT:     V = w
+KMONS:     V = killer bee w:20 / nothing w:6 / giant blowfly w:1
+MONS:      plant / nothing w:3
+MONS:      killer bee w:20 / nothing w:6 / giant blowfly w:1
+MAP
+     ....  ...NNNZNN.
+  ....11.....NZZwwZZNN.
+ . 11.2111.1NZwwVwwwwwN
+.1.1.11.22ZZw.wwwwVwwwZN
+..1212211ZZOZwwwwwwwVZZ.
+.1..111.21wV1.ZwVwwwZNN
+ ..1.2211.1Zw1.ZwwZNN.
+  ...11.1...  11.NN..
+     ....
+ENDMAP
+
+##############################################################################
+# Hive vaults
+##############################################################################
+
+NAME:   Hive_Balancer
+DEPTH:  Hive:*
+TAGS:   dummy
+WEIGHT: 200
+MAP
+x
+ENDMAP
+# Note the higher weight to the empty vault:
+# this is because vaults in the Hive should be rare
+
+NAME:  lemuel_Hive_Pool
+DEPTH: Hive:*
+SUBST: W=W. ,  ?:W. , !:W.
+MAP
+        WwwwW
+      ??wwwwwwW
+   ????wwwwwwwwW
+ ????wwwwwwwwwW
+????wwwwwwwwWW
+??..WwwwwwwW
+ ?!.WwwwwwW
+ !...Wwwwww
+ !!!..WwwwW
+  !!!..Wwwww
+    !!!WwwW
+     !!!wwW
+      !!!w
+        WW
+ENDMAP
+
+NAME:   lemuel_Hive_Moat
+DEPTH:  Hive:*
+ORIENT: float
+MAP
+      www
+    wwwwwww
+   wwww.wwww
+  wwww. .wwww
+  wwww. .wwww
+ wwww.).].wwww
+ wwww..}..wwww
+  wwww. .wwww
+  wwww. .wwww
+   wwww.wwww
+    wwwwwww
+      www
+ENDMAP
+
+NAME:    lemuel_Hive_Zombies
+DEPTH:   Hive:1
+ORIENT:  float
+TAGS:    no_monster_gen
+MONS:    killer bee zombie / weight:2 killer bee larva zombie
+MONS:    necromancer
+MONS:    plant
+SHUFFLE: {}
+SUBST:   . = .:50 1:4 3:1
+SUBST:   > = <>
+SUBST:   }=} .:3
+SUBST:   {={ .:3
+SUBST:   == +:5 = .:3
+SUBST:   ? = a.
+MAP
+       aaaaaa
+      aa?..?aa
+aaaaaaa?....?aa
+a{...........?aaa
+aaaaaa?........?aaaa
+     aa...........?aaaa
+      a?..111........?aa
+      a?.11111........?a
+      aa.11111........?aa
+       a?.111..........?aaaaaaaa
+       a?.....................}a
+ccccccca...............?aaaaaaaa
+c|..=2.+...........??aaaa
+cccccccaa?.......?aaaa
+        aa?....?aaa
+         aaa...aa
+           a?.?a
+         aaa??aa
+       aaa????a
+     aaa....?aa
+    aa?.>..aaa
+    a?....aa
+    aa..?aa
+     a?aaa
+     aaa
+ENDMAP
+
+NAME:  lemuel_Hive_Oklob
+DEPTH: Hive:*
+MONS:  oklob plant
+MAP
+1
+ENDMAP
+
+NAME: lemuel_Big_Bunch_of_Bees
+DEPTH: Hive:*
+MONS: killer bee / weight:1 killer bee larva
+MAP
+      11111
+    111111111
+   11111111111
+   11111111111
+  1111111111111
+  1111111111111
+  1111111111111
+   11111111111
+   11111111111
+    111111111
+      11111
+ENDMAP
+
+NAME:  lemuel_troublesome_eels
+DEPTH: Hive:*
+KFEAT: X = deep_water
+KMONS: X = electric eel
+SUBST: W=w1.
+SUBST: . = 1:1 .
+SUBST: 1 = 1 .:5
+MONS:  plant
+MAP
+  ....111....
+ ...1111111...
+...11WwwwW11...
+..11WwwXwwW11..
+.11WwwXwXwwW11.
+11WwwXwXwXwwW11
+11WwXwXwXwXwW11
+11WwwXwXwXwwW11
+.11WwwXwXwwW11.
+..11WwwXwwW11..
+...11WwwwW11...
+ ...1111111...
+  ....111....
+ENDMAP
+
+NAME:   lemuel_wasp_nest
+DEPTH:  Hive:*
+MONS:   yellow wasp / weight:2 red wasp
+WEIGHT: 1
+SUBST:  1=1 .:15
+SUBST:  ?=a.
+MAP
+     a?@?a
+     a?.?a
+  aaaaa.aaaaa
+ aa111a.a111aa
+aa111aa.aa111aa
+a111aaa.aaa111a
+a?1.??a.a??.1?a
+aa?...a.a...?aa
+ aaa?.....?aaa
+   aaa?.?aaa
+     aa.aa
+      a.a
+      a.a
+      a*a
+      aaa
+ENDMAP
+
+NAME:   lemuel_hive_grid_a
+DEPTH:  Hive:*
+WEIGHT: 4
+MAP
+a.a.a.a.a.a.a.a.a
+aa.a.a.a.a.a.a.aa
+a.a.a.a.a.a.a.a.a
+aa.a.a.a.a.a.a.aa
+a.a.a.a.a.a.a.a.a
+aa.a.a.a.a.a.a.aa
+a.a.a.a.a.a.a.a.a
+aa.a.a.a.a.a.a.aa
+a.a.a.a.a.a.a.a.a
+aa.a.a.a.a.a.a.aa
+a.a.a.a.a.a.a.a.a
+ENDMAP
+
+NAME:   lemuel_hive_grid_b
+DEPTH:  Hive:*
+WEIGHT: 6
+MAP
+a.a.a.a.aa
+aa.a.a.a.a
+a.a.a.a.aa
+aa.a.a.a.a
+a.a.a.a.aa
+aa.a.a.a.a
+a.a.a.a.aa
+ENDMAP
+
+NAME:   lemuel_hive_grid_c
+DEPTH:  Hive:*
+WEIGHT: 10
+MAP
+     aa.aa
+    aa.a.aa
+   aa.a.a.aa
+  aa.a.a.a.aa
+ aa.a.a.a.a.aa
+  aa.a.a.a.aa
+   aa.a.a.aa
+    aa.a.aa
+     aa.aa
+ENDMAP
+
+
+##############################################################################
+# Hive branch end maps
+##############################################################################
+
+############################################################################
+# Hive:2 beehive
+#
+NAME:   beehive
+PLACE:  Hive:2
+ORIENT: encompass
+TAGS:   no_dump
+MONS:   queen bee, killer bee, killer bee larva, plant, yellow wasp
+MONS:   random, random
+KITEM:  R = w:2 honeycomb / w:1 royal jelly
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxaaaaaaaaaaaRaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxaaaaaaaaaaRa2aaR1RaaRa2aaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxaaaaaaaaaaRa2a3R3aRaRaRaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxaaaaRaRaRaaa3aaa3aRa.a.aaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxaaaaaaRa.aRa2a2a2a2aRaRa.a.a3aaaaaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.4aaaaaaaaa.aaRaRaa2aa2aaRaaa.aa3a33aaaaaaaaaa.44xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.4aaaaaaa.222a3a.aaaRaaa.aaa.R3aa3a3aaaaaaaa.....4xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx....aaaaaaa.aRa.a3aRaRa.a3a.a.a.a.aRa2aaaaaa....xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx...aaaaaa3a3a.a.a.a3aRa2aRa3a.a.aRaRa.aaaaa...xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx...aa2aRa3a3a3aRa.a3a.a.a.a.a.a.a.a3a.aaa...xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx...aaa.a.a.a2a.aaa.aRaRa2a.a2a3a.a2aaaa..T..xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.....a2a.a2a.aRaaaaa3a.a.aaa3a3a3a3a.a.........xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.4...aaRRaa.a2a.a3a3a3a.aaa.a.aRa.a.aa..4.......xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx......a.a.aaa.a3a.a.a.a.aaa2a.a2a.a.aRaa.....4...xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....aa3a2aaa.a.a.a3a3a3a3aRaaa.a2a.a2aa........xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx...aaaa.a2aRa.a.a2aaa.a.a.a.aaa.a.aaaa.....xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx..aaa.a.a.a.a.a.a.aaa2a.a3a2a.a2aaa.....xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.aaaa3a.a2aRa.a.aaaRa.a.aa.a.aaa....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx...aaaaRa.a3a3a.a.a.aaa.aa.aa....4xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx........aa.a2a.a.aaa2aa.aa.aaa....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx....4.....a.a2a2a.a2a.a2a.......4.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.............a.a.a.a.a.a.....4....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx..............4..a.a.a......4...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.................a.a.........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx........................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.....4...T............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.......................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.........................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.................T.........xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.......4.....................xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx..............xx...............xxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx............xxxxx........4......xxxx..4....xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx..T..........xxx................xxxxx...T.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx............xxx........T.........xxx........xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx....4........xx....................x..........xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx...............x.x...xxx...............xx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.........4...........xxx..................xxxxxxxxxxxxxxxxxxaaaaaxxxxx
+xxxxxxxxx.....4.....................4......4...........4...xxxxxxxxxxaa5a5aaxxxx
+xxxxxxxxx.................................................wwwwwwwwxxxa5*|*5axxxx
+xxxxxxxxx............x...x...T.....xxxx.................wwwwwwwwwwwwxaa*|*aaxxxx
+xxxxxxxxxx.........xx.............xxxxx................wwwwwwwwwwwwwwxaa5aaxxxxx
+xxxxxxxxxxx.......x..................xxx....4..........wwwwwwwwwwwwwwwxa5axxxxxx
+xxxxxxxxxxx.....xxx...4...........................xxxx.4wwwwwwwwwwwwwwwa=axxxxxx
+xxxxxxxxxxxx..xxx.............xx....(.........xxxxxxxx....wwwwwwwwwwwwwwaaxxxxxx
+xxxxxxxxxxxxxxxx.............xxxx..................xxxx......wwwwwwwwwwxxxxxxxxx
+xxxxxxxxxxxxxxxxx....{..<..xxxxxx..<......xxx...........4.wwwwwwwwwwwwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx........xxx........xxxxxx....4....wwwwwwwwwwwwwwxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx..[.xxx........xxx<....wwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+# Alternate hive bottoms by R1.
+#
+# A wand of fire is available at the bottom to melt wax, either to enter the
+# hive by the back (much easier fight) or in the middle to reveal the items
+# stuck in wax
+NAME:   beehive2
+PLACE:  Hive:2
+ORIENT: encompass
+MONS:   queen bee, killer bee, killer bee larva, plant
+MONS:   random, random
+ITEM:   wand of fire
+NSUBST: M = 10:N / *:a
+SUBST:  N = *:30 |
+SUBST:  X = xx.
+KITEM:  R = w:2 honeycomb / w:1 royal jelly
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxXXXXX...................Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxX........................XXxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxXXXXXxXX.......{.......(........XXXXxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxX...............<.......<............XXXXxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxXXXXXXXX.....................P...................XXxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX...............4.....4.............................Xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxXXXXX........................P.4......4....4.......Xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.a................................................Xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxXXa.a............4............................a.a..a.axxxxxxxxxxxxxxx
+xxxxxxxxxxX.a.a..a.a.a..................................a.a.aa.aXxxxxxxxxxxxxxxx
+xxxxxxxxX.......a.aaa.a......a.a.a.........a.a.a.......aRaaaaRa.Xxxxxxxxxxxxxxxx
+xxxxxxxxXX....a..aaMaa....a.a.aaa.a.......a.aaa.a.....a.a3aMaa.aXxxxxxxxxxxxxxxx
+xxxxxxxxxX...a.aRaaaa.a..a.a.aaMaa.......a.aaMaa.a3a.a.aXxxxxXXXxxxxxxxxxxxxxxxx
+xxxxxxxMa.a.a.aaa2a..a....a.a2aaa.a.a...a.aRaaaRa.a.aXXXxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxaaa.a.aaMaa3a.......a3aRa.a.a.a.a.a3a.a.a.a.a...Xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxa.a.a.aaaRa....4..a.aRa2a.....aaa.a.a3a.a......XXXXxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxa.a...a.a.a.aa......aaaaa.....aaMaa.a.aaaa........a.XXXxxxxxxxxxxxxxxxxxx
+xxxxxxxxxX........aa.a....a.aMa.a.....aaa.a3aRaMaa........a.a.Xxxxxxxxxxxxxxxxxx
+xxxxxxxXa.a.......a.aRa.a..aaaaa.....a.a.a.a.aaaa.a.a.a..a.aaaXxxxxxxxxxxxxxxxxx
+xxxxxxxa.a.........a2aaa.a..a.a.a.....aaaaa.a2a..a.aaa....aXXxxxxxxxxxxxxxxxxxxx
+xxxxxxxxXXa...4.....aaMaa............a.aMa.aa.a.aRaaMa.....a.Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxX.........a.aaa.a..a.........aaaaa.aa.a3a.aaa....a.a.Xxxxxxxxxxxxxxxxxx
+xxxxxxxxxX..........a.a.a.a...a.a......a.a....aaaaa3a.a....aXXxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxXXX........a.a2a.a.aRa.a...........a3aMa.a......XXxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxX.....4.......a.aaa.a.............aaaaa.a.....a.Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxXX..........a.aaMaa...............aaMaa.....a.aXxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxX...........a.aaa...............a.aaa.a.a.a.a.Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxX.....P...........aaa..aaaaaa....a.a.a...XXXXXxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX...4...........aaaaaa3..aaaaaaa..........Xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxX...............aaa.a.a.a2a.a.a2aaa..........Xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxX............aaa.a.aRa.a.a.a.a.aaaaa.........XXxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxX...........aaaaRa.a2a.a3a.a.a2a.a.aaaa.........XXxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX.........aaaaaa.a3a.a.a.aRa.aRa.aRa.aaaa...4......Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX.......aaaaa3a.a.a.a3a2a.a.a3a.a.aRa.aaaa.........Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxX.........aaaa.a.a3aRa.a2a.a2a2a3a.a.a2a3aaaa........Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxX.........aaa.a2aRa.a2a.a.a.a3aRa.a.aRa.a.aaa........Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxX........aa.a.a.a.a.aRa.a3a.a.a2a3a.a.a.aaaa......XXxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX...4..aaaa.a.a3a.a.a.a.aRa3aRa2aRa.a2a.aaa......Xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxX......aa.a2a.a.aRa2a.a.a3a.a.a.a.aRa.3.aa......Xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxX....aa...2a.aRa.a2a.a.a.aRa.a2a3a.a.a..aa..4....Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX...aaaaa.a.a2a.a.a2a.a.a.a.a.a.a.aRaa.........Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX......aaa.a.a.a.a3a2aRa3a.a3a.a.a3aaaa.......Xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX.......aaa.aRaRa.a.a.a2a.a.aRa2aRaaaa........Xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxX........aaaa.a.a3a.aRa.a2aRa.a.a.a.aa..........Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX...4...aaa.a.a.a.a.a2a.a.a.a.a3a.aa............Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxX........aaa.aRaRa.a2a.a.a.a.aRa.aa......4....XXXxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxXXX......aaa.a2aRaRaRa.aRa.a.aaaa............Xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxXXXX....aaaaaR3RRRRRR232aaaa..........XXXXxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxXXX..aaaaR3R2R13R.3aaaaaXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxXXaaaaaR23R2R3Raaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx.4...<.[..4..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx......d......xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Engaging in the tunnels may be slightly dangerous as they are dead-ends and
+# are large enough to allow bees to surround you, but there might be some nice
+# items there.
+###
+NAME:   beehive_tunnels
+PLACE:  Hive:2
+ORIENT: encompass
+MONS:   queen bee, killer bee larva, killer bee, plant
+MONS:   random, random
+NSUBST: M = 1:. / *:a
+NSUBST: N = 10:% / 6:* / 2:| / *:.
+SUBST:  X = xx.
+KITEM:  R = w:2 honeycomb / w:1 royal jelly
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxXXXXxxXXxxxxxxxxxxxxxxxxxxxxxxxxxxXXxxXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX.........XxxxxxxxxxxxxxxxxxxxxxxxX......Xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX..{..<.4..XxxxxxxxxxxxxxxxxxxxxX...NNN...Xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxX.........XxxxxxxxxxxxxxxxxxxxxX...4.334...Xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxWwwWxxXXXxxxxxxxxxxxxxxxxxxxxxxX.........Xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxWwwWxxxxxxxxxxxxxxxxxxxxxxxxxxxX.3...Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxWwwWWWWxxxxxxxxxxxxxxxxxxxxxxxX...Xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxWwwwwWWxxxxxxxxxxxxxxxxxxxx.....Xxxxxxxxxxxxxxxxxwwwwwwwwxxxxxxxx
+xxxxxxxxxxxxxxxxxxWWwwWWWxxxxxxxxxxxxxxxx...XxxxxxxxxxxxxxxxxxwwwWWWwwWWwwxxxxxx
+xxxxxxxxxxxxxxxxxxxxxWwwwWWWxxxxxxxxxxxx..3XxxxxxxxxxxxxxxxxxwwW......3.Wwwxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxWWwWWWxxxxxxxx...XxxxxxxxxxxxxxxxxxxwwW.N4NNN4N.Wwwxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxWwwwWxxxxxxX.3.XxxxxxxxxxxxxxxxxxxxwwW..33...WWwxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxWwwWxxxxxx....xxxxxxxxxxxxxxxxxxxxxwwWW..33Wwwwwxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxWwwWxxxxxxxxX....xxxxxxxxxxxxxxxxxxxxwwwwWWWwWwxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxWWwwWxxxxxxxxxxxX....XxxxxxxxxxxxxxxxxxxxxwWWWwWxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxWwwwWxxxxxxxxxxxxxxX....XxxxxxxxxxxxxxxxxxxxWwwWxxxxxxxx
+xxxXX.4WWWwxxxxxxxxxxxWWwwWWxxxxxxxxxxxxxxxxxX3..XxxxxxxxxxxxxxxxxxWwwWxxxxxxxxx
+xxx..334WWwwxxxxxxxxWWwwwWxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxWwwWxxxxxxxxxx
+xxX.NNN.4WwwwxxxxxxxxWwwwWxxxxxxxxxxxxxxxxxxxxX.3.XxxxxxxxxxxxxxxWwwWxxxxxxxxxxx
+xxxXX..34WWwxxxxxxxxxxWWwwWxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxWwwWxxxxxxxxxxxx
+xxxxxxX3.WWwxxxxxxxxxxxxxWwWWWxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxWwwWxxxxxxxxxxxxx
+xxxxxxx.WWwxxxxxxxxxxxxxxxWWWwWWWxxxxxxxxxxxxxX...xxxxxxxxxxxxxWwwWxxxxxxxxxxxxx
+xxxxx.W.wwxxxxxxxxxxxxxxxxxxx..WWWWxxxxxxxxxx....XxxxxxxxxxxxxWwwWxxxxxxxxxxxxxx
+xxxx.WWwxxxxxxxxxxxxxxxxxxxxxxW..W.WW..xXXX.......XxxxxxxxxxWWwwwWxxxxxxxxxxxxxx
+xxxx.WwxxxxxxxxxxxxxxxxxxxxxxxxxW...WW.aaa..........XXXXXxxWww.wWWXxxxxxxxxxxxxx
+xxxx3WwxxxxxxxxxxxxxxxxxxxxXXXxa......aaaaaaa............WWW.3.XxXxxxxxxxxxxxxxx
+xxxx..WwwxxxxxxxxxxxxxxxXX...aaaaa....aaaaaaaaaaa.......WW....Xxxxxxxxxxxxxxxxxx
+xxxxx.3WWwxxxxxxxxxxxxX.......aaaaaa....a..aaaaaaa...........Xxxxxxxxxxxxxxxxxxx
+xxxxxxX..WwwxXXXXXXXx..........aaaa.aa.a.aa.aa.Raaaa.........Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxX.....................aaa..a.Ra.a.3a.a.a.aaa.....4...Xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxX.............4........a.aaa..a.aa.a2a.a.a...a.......XxxxxxxxXXXXxxxxxx
+xxxxxxxxxxxX...............aaa.a.a.a2aa.a3.a.aRa.a.aaaaa.......XxxxxxX.....Xxxxx
+xxxxxxxxxxxxww............aaaa.a.a.aa.RaaMaa.2a.a.a..aaaaa.......xxxX...4...xxxx
+xxxxxxxxxxwwwwxxX....4....aaa.aRa.a..aaa23Raaa.Ra.a.a..aaa......XxxX...NNN..Xxxx
+xxxxxxxxxwwwxxxxx........aaa.a.a3a.a.aR2R2R23aaa.a.a.aaaaaa.....XxxxX...33..xxxx
+xxxxxxxxwwwxxxxxxX.......aaa.a.a2aaaaaRR2R23RRa.a3aRa.a3aaa.....xxxxxxX....Xxxxx
+xxxxxx.4444xxxxxxxx......aaaa.a3aRa.MR32R1R2RRMa.a.aaa.aaaaaaaXXxxxxxxX....xxxxx
+xxxxxx..3.33xxxxxxX.....aaaa.a.a.a.aaaRR2R2R3Ra.a2a.a.a.aaaaaaaxxxxxxX....Xxxxxx
+xxxxx.NNNN.xxxxxxxX...aaaaaa2a3a.aa.aaR23232Raa.a.a.aaRaaaaaaaxxxxxX.....Xxxxxxx
+xxxxxxNNNNxxxxxxxxxxxaaaa.aa.aRa3a.a.aaaR3Raaa.a.aRa.3a.aaa...XXxXx...XXxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxa...aaa.a.a.a.aR.aaMaa.Raaa3a.aa.aaaa.........XXxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxX....aaaa.a2a.a.aa.a.a.aa...a.32.aaaaa........Xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxX.........aaa.a.a.a.aRaa.a2a.3aaa.a.aa........XXxXxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.3..XxX....aa.a.a2a.aa.a.a.a.a.3.a.aR.a.....Xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxX..WW..XxxxxX...aaaaa.a.a..a.a3aRa.aaa.a.aaaaa.3.Xxxxxxxxxxxxxxxxxxxx
+xxxxxN3WWWWWWW3.XxxxxxX.....aaa.a.a.aa.a.a.a.a...aaaaaaa.....Xxxxxxxxxxxxxxxxxxx
+xxxxN43wwWWW.xxxxxxxxxxX.4........aaaaaaaa....aaaaaa.......wwwxxxxxxxxxxxxxxxxxx
+xxxx.NwwwWxxxxxxxxxxxxX............aaaaaaa...aaaaaaaa....3.Wwwwwxxxxxxxxxxxxxxxx
+xxxxxxWWWWxxxxxxxxxxxxxxxxX........aaa.............aaa....wwWWWwwxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxW.....WWWXXxxxWWWW...4...WWxxxaxXXxxwwwWwwxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxW...WWxxxxxxxxxxxxxWWW...WWWxxxxxxxxxxxxxwWwwxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxW3.WWxxxxxxxxxxxxxxxxxxWWWWWWxxxxxxxxxxxxxxxwWWwxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxW..WxxxxxxxxxxxxxxxxxxxxxxWWWWWxxxxxxxxxxxxxxxwwWwxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxW..WxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxwwWwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxWW.WxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWxxxxxxxxxxxxxxxwwWwxxxxxxxxx
+xxxxxxxxxxxxxxxxWW.3WxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxwWwwxxxxxxx
+xxxxxxxxxxxxxxWW..4WWxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxWwwwxxxxxx
+xxxxxxxxxxxxxW..334..WxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWxxxxxxxxxxxxxxxxxxxWwwxxxxxx
+xxxxxxxxxxxxxxW.NNN.WxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWxxxxxxxxxxxxxxxxxxxwWwwxxxxxx
+xxxxxxxxxxxxxxx..W.WxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxX..4Wwxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxX..(...wwxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxxxxX..<.Xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.WWWWWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.4[..4WWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....<..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

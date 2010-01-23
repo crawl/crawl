@@ -175,7 +175,7 @@ void init_level_connectivity();
 void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
-bool builder(int level_number, int level_type);
+bool builder(int level_number, int level_type, bool enable_random_maps = true);
 void dgn_veto_level();
 
 void dgn_flush_map_memory();
@@ -195,6 +195,9 @@ coord_def dgn_random_point_visible_from(const coord_def &c,
                                         int margin = 1,
                                         int tries = 5);
 coord_def dgn_find_feature_marker(dungeon_feature_type feat);
+
+// Generate 3 stone stairs in both directions.
+void dgn_place_stone_stairs();
 
 // Set floor/wall colour based on the mons_alloc array. Used for
 // Abyss and Pan.
@@ -223,6 +226,8 @@ int dgn_place_monster(mons_spec &mspec,
                       bool force_pos = false, bool generate_awake = false,
                       bool patrolling = false);
 
+dungeon_feature_type dgn_tree_base_feature_at(coord_def c);
+
 class item_list;
 void dgn_place_multiple_items(item_list &list,
                               const coord_def& where,
@@ -234,7 +239,7 @@ bool unset_level_flags(unsigned long flags, bool silent = false);
 void dgn_set_lt_callback(std::string level_type_name,
                          std::string callback_name);
 
-void dgn_reset_level();
+void dgn_reset_level(bool enable_random_maps = true);
 
 // Returns true if the given square is okay for use by any character,
 // but always false for squares in non-transparent vaults. This

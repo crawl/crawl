@@ -7,4 +7,3 @@ void initialise_temples();
 void initialise_item_descriptions();
 
 #endif
-

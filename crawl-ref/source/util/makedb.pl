@@ -4,7 +4,7 @@ use DB_File;
 open(TEXT,"../dat/descriptions.txt");
 unlink("../dat/descriptions.db");
 tie %descriptions, 'DB_File', "../dat/descriptions.db";
- 
+
 my $state = 0;
 my $title = "";
 my $entry = "";
@@ -36,7 +36,7 @@ while(<TEXT>) {
     if (2 == $state) {
         $entry .= $thisLine;
         next;
-    }; 
+    };
 
 }
 $descriptions{"$title"} = "$entry";

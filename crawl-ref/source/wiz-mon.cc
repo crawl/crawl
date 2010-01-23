@@ -201,20 +201,20 @@ void wizard_create_spec_monster_name()
         }
         ghost.species = static_cast<species_type>(sp_id);
 
-        mpr("Make player ghost which job? ", MSGCH_PROMPT);
+        mpr("Give player ghost which background? ", MSGCH_PROMPT);
         get_input_line( input_str, sizeof( input_str ) );
 
-        int class_id = get_class_by_abbrev(input_str);
+        int job_id = get_job_by_abbrev(input_str);
 
-        if (class_id == -1)
-            class_id = get_class_by_name(input_str);
+        if (job_id == JOB_UNKNOWN)
+            job_id = get_job_by_name(input_str);
 
-        if (class_id == -1)
+        if (job_id == JOB_UNKNOWN)
         {
-            mpr("No such job, making it a Fighter.");
-            class_id = JOB_FIGHTER;
+            mpr("No such background, making it a Fighter.");
+            job_id = JOB_FIGHTER;
         }
-        ghost.job = static_cast<job_type>(class_id);
+        ghost.job = static_cast<job_type>(job_id);
         ghost.xl = 7;
 
         mon.set_ghost(ghost);
@@ -469,8 +469,7 @@ void debug_stethoscope(int mon)
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) god=%s",
          ((hab == HT_LAND)                       ? "land" :
-          (hab == HT_AMPHIBIOUS_LAND)            ? "land (amphibious)" :
-          (hab == HT_AMPHIBIOUS_WATER)           ? "water (amphibious)" :
+          (hab == HT_AMPHIBIOUS)                 ? "amphibious" :
           (hab == HT_WATER)                      ? "water" :
           (hab == HT_LAVA)                       ? "lava" :
           (hab == HT_ROCK)                       ? "rock"

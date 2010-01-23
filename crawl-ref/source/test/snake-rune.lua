@@ -20,8 +20,7 @@ end
 
 local function visit_branch_end_from(start, stair_places, final_predicate)
   while true do
-    crawl.mesclr()
-    crawl.mpr("Visiting (" .. current_iter .. ") " .. start)
+    crawl.message("Visiting (" .. current_iter .. ") " .. start)
     debug.goto_place(start)
 
     dgn.reset_level()
@@ -58,7 +57,7 @@ local function visit_branch_end_from(start, stair_places, final_predicate)
 end
 
 for i = 1, niters do
-  crawl.mpr("Visiting Snake:$ the hard way")
+  crawl.message("Visiting Snake:$ the hard way")
   current_iter = i
   debug.flush_map_memory()
   visit_branch_end_from("D:1",

@@ -104,6 +104,8 @@ public:
 
     virtual void construct(writer &th);
 
+    virtual bool transparent() const;
+
 protected:
     dolls_data m_doll;
 };
@@ -321,7 +323,7 @@ mcache_monster::mcache_monster(const monsters *mon)
 
     m_mon_tile = tileidx_monster(mon, false) & TILE_FLAG_MASK;
 
-    int mon_wep = mon->inv[MSLOT_WEAPON];
+    const int mon_wep = mon->inv[MSLOT_WEAPON];
     m_equ_tile = tilep_equ_weapon(mitm[mon_wep]);
 }
 
@@ -338,7 +340,6 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
     case TILEP_MONS_DEEP_ELF_BLADEMASTER:
     case TILEP_MONS_IMP:
-    case TILEP_MONS_ANGEL:
     case TILEP_MONS_NORRIS:
     case TILEP_MONS_MAUD:
     case TILEP_MONS_DUANE:
@@ -355,6 +356,7 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_RAKSHASA_FAKE:
     case TILEP_MONS_VAMPIRE_KNIGHT:
     case TILEP_MONS_SKELETAL_WARRIOR:
+    case TILEP_MONS_ANGEL:
     case TILEP_MONS_MERFOLK:
     case TILEP_MONS_MERFOLK_WATER:
     case TILEP_MONS_MERFOLK_JAVELINEER:
@@ -515,8 +517,10 @@ unsigned int mcache_monster::info(tile_draw_info *dinfo) const
     int ofs_x, ofs_y;
     get_weapon_offset(m_mon_tile, ofs_x, ofs_y);
 
-    dinfo[0].set(m_mon_tile);
-    dinfo[1].set(m_equ_tile, ofs_x, ofs_y);
+    int count = 0;
+    dinfo[count++].set(m_mon_tile);
+    if (m_equ_tile)
+        dinfo[count++].set(m_equ_tile, ofs_x, ofs_y);
 
     // In some cases, overlay a second weapon tile...
     if (m_mon_tile == TILEP_MONS_DEEP_ELF_BLADEMASTER)
@@ -536,11 +540,11 @@ unsigned int mcache_monster::info(tile_draw_info *dinfo) const
                 break;
         };
 
-        dinfo[2].set(eq2, -ofs_x, ofs_y);
-        return 3;
+        if (eq2)
+            dinfo[count++].set(eq2, -ofs_x, ofs_y);
     }
-    else
-        return 2;
+
+    return (count);
 }
 
 bool mcache_monster::valid(const monsters *mon)
@@ -817,6 +821,11 @@ void mcache_ghost::construct(writer &th)
     mcache_entry::construct(th);
 
     marshallDoll(th, m_doll);
+}
+
+bool mcache_ghost::transparent() const
+{
+    return (true);
 }
 
 /////////////////////////////////////////////////////////////////////////////

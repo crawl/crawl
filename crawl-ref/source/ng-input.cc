@@ -71,7 +71,7 @@ static void _show_name_prompt(int where, bool blankOK,
         {
             cprintf(EOL
                     "Press <Enter> to answer this after species and "
-                    "job are chosen." EOL);
+                    "background are chosen." EOL);
         }
     }
 

@@ -632,6 +632,7 @@ void unwear_armour(int slot)
 
     case SPARM_PONDEROUSNESS:
         mpr("That put a bit of spring back into your step.");
+        did_god_conduct(DID_UNPONDEROUS, 1);
         break;
 
     case SPARM_LEVITATION:

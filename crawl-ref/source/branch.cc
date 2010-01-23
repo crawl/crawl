@@ -23,6 +23,15 @@ bool at_branch_bottom()
     return your_branch().depth == player_branch_depth();
 }
 
+
+bool is_hell_subbranch(branch_type branch)
+{
+    return (branch >= BRANCH_FIRST_HELL
+            && branch <= BRANCH_LAST_HELL
+            && branch != BRANCH_VESTIBULE_OF_HELL);
+
+}
+
 branch_type str_to_branch(const std::string &branch, branch_type err)
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)

@@ -702,7 +702,7 @@ enum command_type
     CMD_DOLL_TAKE_OFF_ALL,
     CMD_DOLL_TOGGLE_EQUIP,
     CMD_DOLL_TOGGLE_EQUIP_ALL,
-    CMD_DOLL_CLASS_DEFAULT,
+    CMD_DOLL_JOB_DEFAULT,
     CMD_DOLL_CHANGE_MODE,
     CMD_DOLL_QUIT,
     CMD_MAX_DOLL = CMD_DOLL_QUIT,
@@ -781,6 +781,7 @@ enum conduct_type
     DID_KILL_PLANT,                       // Fedhas
     DID_ALLY_KILLED_PLANT,                // Fedhas
     DID_HASTY,                            // Cheibriados
+    DID_UNPONDEROUS,                      // Cheibriados
 
     NUM_CONDUCTS
 };

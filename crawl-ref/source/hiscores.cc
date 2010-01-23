@@ -588,7 +588,7 @@ void scorefile_entry::init_with_fields()
     name    = fields->str_field("name");
     uid     = fields->int_field("uid");
     race    = str_to_species(fields->str_field("race"));
-    cls     = get_class_by_name(fields->str_field("cls").c_str());
+    cls     = get_job_by_name(fields->str_field("cls").c_str());
     lvl     = fields->int_field("xl");
 
     best_skill     = str_to_skill(fields->str_field("sk"));
@@ -645,9 +645,9 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("uid",  "%d", uid);
     fields->add_field("race", "%s",
                       species_name(race, lvl).c_str());
-    fields->add_field("cls",  "%s", get_class_name(cls));
+    fields->add_field("cls",  "%s", get_job_name(cls));
     fields->add_field("char", "%s%s",
-                      get_species_abbrev(race), get_class_abbrev(cls));
+                      get_species_abbrev(race), get_job_abbrev(cls));
     fields->add_field("xl",    "%d", lvl);
     fields->add_field("sk",    "%s", skill_name(best_skill));
     fields->add_field("sklev", "%d", best_skill_lvl);
@@ -1314,7 +1314,7 @@ std::string scorefile_entry::single_cdesc() const
     if (race_class_name.empty())
     {
         char_desc = make_stringf("%s%s", get_species_abbrev( race ),
-                                         get_class_abbrev( cls ) );
+                                         get_job_abbrev( cls ) );
     }
     else
         char_desc = race_class_name;
@@ -1354,7 +1354,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s %s (level %d",
                   points, name.c_str(),
                   species_name(static_cast<species_type>(race), lvl).c_str(),
-                  get_class_name(cls), lvl );
+                  get_job_name(cls), lvl );
         desc = buf;
     }
 
@@ -1381,7 +1381,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         snprintf( scratch, INFO_SIZE, "Began as a%s %s %s",
                   is_vowel(srace[0]) ? "n" : "",
                   srace.c_str(),
-                  get_class_name(cls) );
+                  get_job_name(cls) );
         desc += scratch;
 
         if (birth_time > 0)

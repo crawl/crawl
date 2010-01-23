@@ -103,4 +103,3 @@ void marshallExcludes(writer& outf, const exclude_set& excludes);
 void unmarshallExcludes(reader& inf, char minorVersion, exclude_set& excludes);
 
 #endif
-

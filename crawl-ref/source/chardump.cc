@@ -163,7 +163,6 @@ static void dump_section(dump_params &par)
     }
 }
 
-// #define DEBUG_DUMP_COMMANDS
 bool dump_char(const std::string &fname, bool show_prices, bool full_id,
                const scorefile_entry *se)
 {
@@ -178,9 +177,6 @@ bool dump_char(const std::string &fname, bool show_prices, bool full_id,
         par.section = Options.dump_order[i];
         dump_section(par);
     }
-#ifdef DEBUG_DUMP_COMMANDS
-    list_all_commands(par.text);
-#endif
 
     return write_dump(fname, par);
 }

@@ -13,9 +13,9 @@
 #include "directn.h"
 #include "exclude.h"
 #include "macro.h"
-#include "misc.h"
-#include "menu.h" // For print_formatted_paragraph()
+#include "menu.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
@@ -28,7 +28,8 @@ game_state::game_state()
       terminal_resized(false), io_inited(false), need_save(false),
       saving_game(false), updating_scores(false), seen_hups(0),
       map_stat_gen(false), arena(false), arena_suspended(false), build_db(false),
-      unicode_ok(false), glyph2strfn(NULL), multibyte_strlen(NULL),
+      unicode_ok(false), show_more_prompt(true),
+      glyph2strfn(NULL), multibyte_strlen(NULL),
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
       doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
       repeat_cmd(CMD_NO_CMD), cmd_repeat_count(0), cmd_repeat_goal(0),
@@ -38,7 +39,6 @@ game_state::game_state()
       mlist_targetting(false),
 #endif
       darken_range(-1)
-     
 {
     reset_cmd_repeat();
     reset_cmd_again();
@@ -220,7 +220,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 
             std::string text = get_monster_equipment_desc(mon, false);
             text += " comes into view.";
-            print_formatted_paragraph(text, MSGCH_WARN);
+            mpr(text, MSGCH_WARN);
         }
 
         if (Tutorial.tutorial_left)
@@ -548,4 +548,9 @@ void game_state::dump()
             fprintf(stderr, "    %s" EOL,
                     debug_mon_str(mon_act_stack[i]).c_str());
     }
+}
+
+bool game_state::player_is_dead()
+{
+    return (updating_scores && !need_save);
 }

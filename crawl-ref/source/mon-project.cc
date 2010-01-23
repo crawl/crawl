@@ -23,6 +23,7 @@
 #include "mgen_data.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "shout.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -33,8 +34,11 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     int mtarg = mgrd(beam->target);
     if (beam->target == you.pos())
         mtarg = MHITYOU;
-    
-    int mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
+
+    int mind = -1;
+    for(int i=0; i < 10 && mind == -1; i++)
+    {
+        mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :
                     ((monsters*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 caster,
@@ -44,9 +48,11 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
                 mtarg,
                 0,
                 GOD_NO_GOD));
+    }
     if (mind == -1)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        mpr("Failed to spawn projectile.", MSGCH_WARN);
+        /*canned_msg(MSG_NOTHING_HAPPENS);*/
         return (false);
     }
 

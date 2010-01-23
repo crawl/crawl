@@ -19,6 +19,7 @@
 #include "files.h"
 #include "items.h"
 #include "l_defs.h"
+#include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -289,12 +290,23 @@ void wizard_create_feature()
             feat = dungeon_feature_by_name(name);
             if (feat == DNGN_UNSEEN) // no exact match
             {
-                std::vector<std::string> matches = dungeon_feature_matches(name);
+                std::vector<std::string> matches =
+                    dungeon_feature_matches(name);
 
                 if (matches.empty())
                 {
-                    mprf(MSGCH_DIAGNOSTICS, "No features matching '%s'",
-                         name.c_str());
+                    const feature_property_type fprop(str_to_fprop(name));
+                    if (fprop != FPROP_NONE)
+                    {
+                        env.pgrid(you.pos()) |= fprop;
+                        mprf("Set fprops \"%s\" at (%d,%d)",
+                             name.c_str(), you.pos().x, you.pos().y);
+                    }
+                    else
+                    {
+                        mprf(MSGCH_DIAGNOSTICS, "No features matching '%s'",
+                             name.c_str());
+                    }
                     return;
                 }
 

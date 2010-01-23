@@ -82,6 +82,7 @@ CC = $(GCC)
 CXX = $(GXX)
 RM = rm -f
 COPY = cp
+COPY_R = cp -r
 STRIP = strip
 WINDRES = windres
 CHMOD = chmod 2>/dev/null
@@ -824,6 +825,7 @@ endif
 	$(STRIP) -s $(prefix_fp)/$(bin_prefix)/$(GAME)
 	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+	mkdir -p $(datadir_fp)/dat/des
 	mkdir -p $(datadir_fp)/dat/clua
 	mkdir -p $(datadir_fp)/dat/lua
 	mkdir -p $(datadir_fp)/dat/database
@@ -832,11 +834,11 @@ endif
 	mkdir -p $(datadir_fp)/docs/develop/levels
 	mkdir -p $(datadir_fp)/docs/license
 	mkdir -p $(datadir_fp)/settings
-	$(COPY) dat/*.des $(datadir_fp)/dat/
-	$(COPY) dat/clua/*.lua $(datadir_fp)/dat/clua/
-	$(COPY) dat/lua/*.lua $(datadir_fp)/dat/lua/
-	$(COPY) dat/database/*.txt $(datadir_fp)/dat/database/
-	$(COPY) dat/descript/*.txt $(datadir_fp)/dat/descript/
+	$(COPY_R) dat/des/* $(datadir_fp)/dat/des/
+	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
+	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/lua/
+	$(COPY)   dat/database/*.txt $(datadir_fp)/dat/database/
+	$(COPY)   dat/descript/*.txt $(datadir_fp)/dat/descript/
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/

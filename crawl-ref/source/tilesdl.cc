@@ -11,6 +11,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "files.h"
+#include "libutil.h"
 #include "macro.h"
 #include "map_knowledge.h"
 #include "message.h"
@@ -48,59 +49,6 @@ static int _screen_sizes[4][8] =
     // Eee PC
     {800, 480, 3, 13, 12, 10, 13, 11}
 };
-
-// Note: these defaults should match the OpenGL defaults
-GLState::GLState() :
-    array_vertex(false),
-    array_texcoord(false),
-    array_colour(false),
-    blend(false),
-    texture(false)
-{
-}
-
-void GLStateManager::init()
-{
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glClearColor(0.0, 0.0, 0.0, 1.0f);
-}
-
-void GLStateManager::set(const GLState& state)
-{
-    if (state.array_vertex)
-        glEnableClientState(GL_VERTEX_ARRAY);
-    else
-        glDisableClientState(GL_VERTEX_ARRAY);
-
-    if (state.array_texcoord)
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    else
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    if (state.array_colour)
-    {
-        glEnableClientState(GL_COLOR_ARRAY);
-    }
-    else
-    {
-        glDisableClientState(GL_COLOR_ARRAY);
-
-        // [enne] This should *not* be necessary, but the Linux OpenGL
-        // driver that I'm using sets this to the last colour of the
-        // colour array.  So, we need to unset it here.
-        glColor3f(1.0f, 1.0f, 1.0f);
-    }
-
-    if (state.texture)
-        glEnable(GL_TEXTURE_2D);
-    else
-        glDisable(GL_TEXTURE_2D);
-
-    if (state.blend)
-        glEnable(GL_BLEND);
-    else
-        glDisable(GL_BLEND);
-}
 
 TilesFramework tiles;
 
@@ -486,7 +434,7 @@ void TilesFramework::resize()
     glLoadIdentity();
 
     // For ease, vertex positions are pixel positions.
-    glOrtho(0, m_windowsz.x, m_windowsz.y, 0, 0, 100);
+    glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
 }
 
 static unsigned char _get_modifiers(SDL_keysym &keysym)
@@ -1208,30 +1156,6 @@ void TilesFramework::clrscr()
         m_region_menu->clear();
 
     cgotoxy(1,1);
-}
-
-void TilesFramework::message_out(int *which_line, int colour, const char *s,
-                                 int firstcol)
-{
-    if (!firstcol)
-        firstcol = Options.delay_message_clear ? 2 : 1;
-
-    while (*which_line > crawl_view.msgsz.y - 1)
-    {
-        m_region_msg->scroll();
-        (*which_line)--;
-    }
-
-    cgotoxy(firstcol, (*which_line) + 1, GOTO_MSG);
-    textcolor(colour);
-
-    cprintf("%s", s);
-}
-
-void TilesFramework::clear_message_window()
-{
-    m_region_msg->clear();
-    m_active_layer = LAYER_NORMAL;
 }
 
 int TilesFramework::get_number_of_lines()

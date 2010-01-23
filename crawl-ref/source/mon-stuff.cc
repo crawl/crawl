@@ -28,6 +28,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "kills.h"
+#include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -35,6 +36,7 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "mgen_data.h"
 #include "coord.h"
 #include "mon-speak.h"
@@ -1689,7 +1691,9 @@ int monster_die(monsters *monster, killer_type killer,
                                     monster->hit_dice, true, monster);
                 }
 
-                if (monster->is_chaotic())
+                // is_chaotic() doesn't cover actual spellcasters with
+                // chaotic spells.
+                if (monster->is_chaotic() || monster->has_chaotic_spell())
                 {
                     did_god_conduct(DID_KILL_CHAOTIC,
                                     monster->hit_dice, true, monster);
@@ -2146,8 +2150,10 @@ int monster_die(monsters *monster, killer_type killer,
 
     unsigned int exp_gain = 0, avail_gain = 0;
     if (!mons_reset)
+    {
         _give_adjusted_experience(monster, killer, pet_kill, killer_index,
                                   &exp_gain, &avail_gain);
+    }
 
     if (!mons_reset && !crawl_state.arena)
     {
@@ -2196,7 +2202,11 @@ int monster_die(monsters *monster, killer_type killer,
     }
 
     // If we kill an invisible monster reactivate autopickup.
-    if (mons_near(monster) && !monster->visible_to(&you))
+    // We need to check for actual invisibility rather than whether we
+    // can see the monster. There are several edge cases where a monster
+    // is visible to the player but we still need to turn autopickup
+    // back on, such as TSO's halo or sticky flame. (jpeg)
+    if (mons_near(monster) && monster->has_ench(ENCH_INVIS))
         autotoggle_autopickup(false);
 
     crawl_state.dec_mon_acting(monster);

@@ -3,6 +3,7 @@
 #include "colour.h"
 
 #include "env.h"
+#include "libutil.h"
 #include "options.h"
 #include "player.h"
 #include "random.h"

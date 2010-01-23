@@ -1300,7 +1300,7 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
             << "</" << colour << ">";
     }
 
-    formatted_message_history(tagged_string_substr(msg.str(),
+    mpr(tagged_string_substr(msg.str(),
                                                    0, crawl_view.msgsz.x),
                               MSGCH_PROMPT);
 }
@@ -1716,7 +1716,7 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
-    if (victim->undead_or_demonic() || victim->is_chaotic())
+    if (victim->holiness() == MH_UNDEAD || victim->is_chaotic())
     {
         dmg *= 2;
 
@@ -2127,7 +2127,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             bow_brand = SPWPN_NORMAL;
     }
 
-    bool poisoned   = (bow_brand == SPWPN_VENOM 
+    bool poisoned   = (bow_brand == SPWPN_VENOM
                         || ammo_brand == SPMSL_POISONED);
 
     const bool exploding    = (ammo_brand == SPMSL_EXPLODING);
@@ -3612,7 +3612,7 @@ static int _prompt_ring_to_remove(int new_ring)
          "You're wearing two rings. Remove which one? (%c/%c/<</>/Esc)",
          lslot, rslot);
 
-    mprf(" < or %s", left->name(DESC_INVENTORY).c_str());
+    mprf(" << or %s", left->name(DESC_INVENTORY).c_str());
     mprf(" > or %s", right->name(DESC_INVENTORY).c_str());
 
     // Deactivate choice from tile inventory.
@@ -5130,7 +5130,7 @@ static void handle_read_book(int item_slot)
 
         if (ltr < 'a' || ltr > 'h')     //jmf: was 'g', but 8=h
         {
-            mesclr(true);
+            mesclr();
             return;
         }
 
@@ -5138,7 +5138,7 @@ static void handle_read_book(int item_slot)
                                                      letter_to_index(ltr));
         if (spell == SPELL_NO_SPELL)
         {
-            mesclr(true);
+            mesclr();
             return;
         }
 
@@ -5701,7 +5701,7 @@ void examine_object(void)
 
     describe_item( you.inv[item_slot], true );
     redraw_screen();
-    mesclr(true);
+    mesclr();
 }                               // end original_name()
 
 void use_artefact(unsigned char item_wield_2, bool *show_msgs)

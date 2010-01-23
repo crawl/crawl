@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 
 #include "branch.h"
+#include "cio.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
@@ -9,8 +10,12 @@
 #include "dgn-height.h"
 #include "env.h"
 #include "flood_find.h"
+#include "fprop.h"
 #include "items.h"
+#include "libutil.h"
+#include "mapmark.h"
 #include "maps.h"
+#include "message.h"
 #include "mgen_data.h"
 #include "mon-iter.h"
 #include "mon-place.h"
@@ -23,7 +28,6 @@
 #include <vector>
 #include <cmath>
 
-typedef FixedArray<bool, GXM, GYM> grid_bool;
 typedef FixedArray<short, GXM, GYM> grid_short;
 
 const char *ENVP_SHOALS_TIDE_KEY = "shoals-tide-height";
@@ -31,16 +35,18 @@ const char *ENVP_SHOALS_TIDE_VEL = "shoals-tide-velocity";
 
 static dgn_island_plan _shoals_islands;
 
+const int SHOALS_ISLAND_COLLIDE_DIST2 = 5 * 5;
+
 // The raw tide height / TIDE_MULTIPLIER is the actual tide height. The higher
 // the tide multiplier, the slower the tide advances and recedes. A multiplier
 // of X implies that the tide will advance visibly about once in X turns.
-const int TIDE_MULTIPLIER = 30;
+int TIDE_MULTIPLIER = 30;
 
-const int LOW_TIDE = -18 * TIDE_MULTIPLIER;
-const int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
+int LOW_TIDE = -18 * TIDE_MULTIPLIER;
+int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
 
 // The highest a tide can be called by a tide caller such as Ilsuiw.
-const int HIGH_CALLED_TIDE = 25;
+const int HIGH_CALLED_TIDE = 50;
 const int TIDE_DECEL_MARGIN = 8;
 const int PEAK_TIDE_VELOCITY = 2;
 const int CALL_TIDE_VELOCITY = 21;
@@ -128,10 +134,31 @@ static void _shoals_init_heights()
     dgn_initialise_heightmap(SHT_SHALLOW_WATER - 3);
 }
 
+static dgn_island_plan _shoals_island_plan()
+{
+    dgn_island_plan plan;
+    plan.level_border_depth = _shoals_margin;
+    plan.n_aux_centres = int_range(0, 3);
+    plan.aux_centre_offset_range = int_range(2, 10);
+
+    plan.atoll_roll = 10;
+    plan.island_separation_dist2 = SHOALS_ISLAND_COLLIDE_DIST2;
+
+    plan.n_island_centre_delta_points = int_range(50, 60);
+    plan.island_centre_radius_range = int_range(3, 10);
+    plan.island_centre_point_height_increment = int_range(40, 60);
+
+    plan.n_island_aux_delta_points = int_range(25, 45);
+    plan.island_aux_radius_range = int_range(2, 7);
+    plan.island_aux_point_height_increment = int_range(25, 35);
+
+    return (plan);
+}
+
 static void _shoals_init_islands(int depth)
 {
     const int nislands = 20 - depth * 2;
-    _shoals_islands = dgn_island_plan::shoals_islands(_shoals_margin);
+    _shoals_islands = _shoals_island_plan();
     _shoals_islands.build(nislands);
 }
 
@@ -240,28 +267,6 @@ static coord_def _pick_shoals_island()
     return _shoals_islands.pick_and_remove_random_island();
 }
 
-void place_feature_at_random_floor_square(dungeon_feature_type feat,
-                                          unsigned mask = MMT_VAULT)
-{
-    const coord_def place =
-        dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
-    if (place.origin())
-        dgn_veto_level();
-    else
-        grd(place) = feat;
-}
-
-static void _shoals_place_stairs()
-{
-    for (int i = 0; i < 3; ++i)
-    {
-        place_feature_at_random_floor_square(
-            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
-        place_feature_at_random_floor_square(
-            static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i));
-    }
-}
-
 static void _shoals_furniture(int margin)
 {
     if (at_branch_bottom())
@@ -302,7 +307,7 @@ static void _shoals_furniture(int margin)
         }
     }
 
-    _shoals_place_stairs();
+    dgn_place_stone_stairs();
 }
 
 static void _shoals_deepen_edges()
@@ -665,7 +670,7 @@ static void _shoals_generate_flora()
     }
 }
 
-void prepare_shoals(int level_number)
+void dgn_build_shoals_level(int level_number)
 {
     dgn_Build_Method += make_stringf(" shoals+ [%d]", level_number);
     dgn_Layout_Type   = "shoals";
@@ -697,6 +702,10 @@ void shoals_postprocess_level()
     {
         const coord_def c(*ri);
         if (!(dgn_Map_Mask(c) & MMT_VAULT))
+            continue;
+
+        // Don't mess with tide immune squares at all.
+        if (is_tide_immune(c))
             continue;
 
         const dungeon_feature_type feat(grd(c));
@@ -846,6 +855,9 @@ static tide_direction _shoals_feature_tide_height_change(
 
 static void _shoals_apply_tide_at(coord_def c, int tide)
 {
+    if (is_tide_immune(c))
+        return;
+
     const int effective_height = dgn_height_at(c) - tide;
     dungeon_feature_type newfeat =
         _shoals_feature_by_height(effective_height);
@@ -881,6 +893,11 @@ static int _shoals_tide_at(coord_def pos, int base_tide)
     return (base_tide + std::max(0, tide_called_peak - distance * 3));
 }
 
+static std::vector<coord_def> _shoals_extra_tide_seeds()
+{
+    return find_marker_positions_by_prop("tide_seed");
+}
+
 static void _shoals_apply_tide(int tide)
 {
     std::vector<coord_def> pages[2];
@@ -891,6 +908,11 @@ static void _shoals_apply_tide(int tide)
     pages[current_page].push_back(coord_def(GXM - 2, 1));
     pages[current_page].push_back(coord_def(1, GYM - 2));
     pages[current_page].push_back(coord_def(GXM - 2, GYM - 2));
+
+    // Find any extra seeds -- markers with tide_seed="y".
+    const std::vector<coord_def> extra_seeds(_shoals_extra_tide_seeds());
+    pages[current_page].insert(pages[current_page].end(),
+                               extra_seeds.begin(), extra_seeds.end());
 
     FixedArray<bool, GXM, GYM> seen_points(false);
 
@@ -1018,3 +1040,62 @@ void shoals_release_tide(monsters *mons)
         shoals_apply_tides(0, true);
     }
 }
+
+#ifdef WIZARD
+static void _shoals_change_tide_granularity(int newval)
+{
+    LOW_TIDE        = LOW_TIDE * newval / TIDE_MULTIPLIER;
+    HIGH_TIDE       = HIGH_TIDE * newval / TIDE_MULTIPLIER;
+    TIDE_MULTIPLIER = newval;
+}
+
+static int _tidemod_keyfilter(int &c)
+{
+    return (c == '+' || c == '-'? -1 : 1);
+}
+
+static void _shoals_force_tide(int increment)
+{
+    int tide = env.properties[ENVP_SHOALS_TIDE_KEY].get_short();
+    tide += increment * TIDE_MULTIPLIER;
+    tide = std::min(HIGH_TIDE, std::max(LOW_TIDE, tide));
+    env.properties[ENVP_SHOALS_TIDE_KEY] = short(tide);
+    _shoals_tide_direction = increment > 0 ? TIDE_RISING : TIDE_FALLING;
+    _shoals_apply_tide(tide / TIDE_MULTIPLIER);
+}
+
+void wizard_mod_tide()
+{
+    if (!player_in_branch(BRANCH_SHOALS) || !env.heightmap.get())
+    {
+        mprf(MSGCH_WARN, "Not in Shoals or no heightmap; tide not available.");
+        return;
+    }
+
+    char buf[80];
+    while (true)
+    {
+        mprf(MSGCH_PROMPT,
+             "Tide inertia: %d. New value "
+             "(smaller = faster tide) or use +/- to change tide: ",
+             TIDE_MULTIPLIER);
+        mpr("");
+        const int res =
+            cancelable_get_line(buf, sizeof buf, NULL, _tidemod_keyfilter);
+        mesclr(true);
+        if (res == ESCAPE)
+            break;
+        if (!res)
+        {
+            const int newgran = atoi(buf);
+            if (newgran > 0 && newgran < 3000)
+                _shoals_change_tide_granularity(newgran);
+        }
+        if (res == '+' || res == '-')
+        {
+            _shoals_force_tide(res == '+'? 2 : -2);
+            viewwindow(false, true);
+        }
+    }
+}
+#endif

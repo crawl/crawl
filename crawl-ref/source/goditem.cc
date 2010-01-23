@@ -232,6 +232,9 @@ bool is_chaotic_item(const item_def& item)
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_MUTATION);
         break;
+    case OBJ_SCROLLS:
+        retval = (item.sub_type == SCR_SUMMONING);
+        break;
     case OBJ_BOOKS:
         retval = is_chaotic_spellbook(item);
         break;

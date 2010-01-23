@@ -47,6 +47,8 @@ public:
 
     virtual void construct(writer &th);
 
+    virtual bool transparent() const { return false; }
+
 protected:
     mcache_entry(reader &th);
 

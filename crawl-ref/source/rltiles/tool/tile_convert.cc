@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// This is a standalone utility to convert old-style palettized BMPs 
+// This is a standalone utility to convert old-style palettized BMPs
 // to transparent PNGs.
 
 #include "tile.h"

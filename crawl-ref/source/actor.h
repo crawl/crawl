@@ -20,6 +20,9 @@ public:
     virtual int       mindex() const = 0;
     virtual actor_type atype() const = 0;
 
+    virtual monsters* as_monster() = 0;
+    virtual player* as_player() = 0;
+
     virtual kill_category kill_alignment() const = 0;
     virtual god_type  deity() const = 0;
 
@@ -32,7 +35,7 @@ public:
     // grids, such as mgrd.
     virtual void moveto(const coord_def &c) = 0;
 
-    // High-level actor movement. If in doubt, use this. Returns true if the
+    // High-level actor movement. If in doubt, use this. Returns false if the
     // actor cannot be moved to the target, possibly because it is already
     // occupied.
     virtual bool move_to_pos(const coord_def &c) = 0;

@@ -311,24 +311,20 @@ int clrscr()
     return 0;
 }
 
-void message_out(int *which_line, int colour, const char *s, int firstcol)
-{
-    tiles.message_out(which_line, colour, s, firstcol);
-}
-
 void cgotoxy(int x, int y, GotoRegion region)
 {
     tiles.cgotoxy(x, y, region);
 }
 
+coord_def cgetpos(GotoRegion region)
+{
+    ASSERT(region == get_cursor_region());
+    return (coord_def(wherex(), wherey()));
+}
+
 GotoRegion get_cursor_region()
 {
     return (tiles.get_cursor_region());
-}
-
-void clear_message_window()
-{
-    tiles.clear_message_window();
 }
 
 void delay(int ms)

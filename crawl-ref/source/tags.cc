@@ -70,6 +70,7 @@
 #include "files.h"
 #include "ghost.h"
 #include "itemname.h"
+#include "libutil.h"
 #include "mapmark.h"
 #include "mon-util.h"
 #include "mon-transit.h"

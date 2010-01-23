@@ -30,6 +30,7 @@
 #include "delay.h"
 #include "enum.h"
 #include "externs.h"
+#include "libutil.h"
 #include "options.h"
 #include "files.h"
 #include "state.h"
@@ -149,16 +150,14 @@ static void setup_colour_pairs( void )
     short i, j;
 
     for (i = 0; i < 8; i++)
-    {
         for (j = 0; j < 8; j++)
         {
             if (( i > 0 ) || ( j > 0 ))
                 init_pair(i * 8 + j, j, i);
         }
-    }
 
-    init_pair(63, COLOR_BLACK, Options.background);
-}          // end setup_colour_pairs()
+    init_pair(63, COLOR_BLACK, Options.background_colour);
+}
 
 #ifdef UNICODE_GLYPHS
 static std::string unix_glyph2string(unsigned gly)
@@ -387,69 +386,10 @@ void sighup_save_and_exit()
 
 #endif // USE_UNIX_SIGNALS
 
-static WINDOW *Message_Window;
-static void setup_message_window()
-{
-    Message_Window = newwin( crawl_view.msgsz.y, crawl_view.msgsz.x,
-                             crawl_view.msgp.y - 1, crawl_view.msgp.x - 1 );
-    if (!Message_Window)
-    {
-        if (crawl_state.need_save)
-            save_game(true);
-
-        // Never reaches here unless the game didn't need saving.
-        end(1, false, "Unable to create message window!");
-    }
-
-    scrollok(Message_Window, true);
-    idlok(Message_Window, true);
-}
-
 static void unix_handle_terminal_resize()
 {
     unixcurses_shutdown();
     unixcurses_startup();
-}
-
-void clear_message_window()
-{
-    (void)wattrset( Message_Window, curs_fg_attr(LIGHTGREY) );
-    werase( Message_Window );
-    refresh();
-    wrefresh( Message_Window );
-}
-
-void message_out(int *which_line, int color, const char *s, int firstcol)
-{
-    (void)wattrset( Message_Window, curs_fg_attr(color) );
-
-    if (!firstcol)
-        firstcol = Options.delay_message_clear? 1 : 0;
-    else
-        firstcol--;
-
-    while (*which_line >= crawl_view.msgsz.y)
-    {
-        int x, y;
-        getyx(Message_Window, y, x);
-        scroll(Message_Window);
-        wmove(Message_Window, y - 1, x);
-        (*which_line)--;
-    }
-
-    wmove(Message_Window, *which_line, firstcol);
-    waddstr_with_altcharset(Message_Window, s);
-
-    // Fix stdscr cursor to same place as Message_Window cursor. This
-    // is necessary because when reading input we use stdscr.
-    {
-        int x, y;
-        getyx(Message_Window, y, x);
-        move(y + crawl_view.msgp.y - 1, crawl_view.msgp.x - 1 + x);
-    }
-
-    refresh();
-    wrefresh(Message_Window);
 }
 
 static void unixcurses_defkeys( void )
@@ -583,19 +523,12 @@ void unixcurses_startup( void )
     scrollok(stdscr, FALSE);
 
     crawl_view.init_geometry();
-    setup_message_window();
 
     set_mouse_enabled(false);
 }
 
 void unixcurses_shutdown()
 {
-    if (Message_Window)
-    {
-        delwin(Message_Window);
-        Message_Window = NULL;
-    }
-
     // resetty();
     endwin();
 
@@ -885,7 +818,8 @@ static int curs_fg_attr(int col)
 
     FG_COL = col & 0x00ff;
     fg = translate_colour( macro_colour( FG_COL ) );
-    bg = translate_colour( (BG_COL == BLACK) ? Options.background : BG_COL );
+    bg = translate_colour( BG_COL == BLACK ? Options.background_colour
+                                           : BG_COL );
 
     // calculate which curses flags we need...
     unsigned int flags = 0;
@@ -947,7 +881,8 @@ static int curs_bg_attr(int col)
 
     BG_COL = col & 0x00ff;
     fg = translate_colour( macro_colour( FG_COL ) );
-    bg = translate_colour( (BG_COL == BLACK) ? Options.background : BG_COL );
+    bg = translate_colour( BG_COL == BLACK ? Options.background_colour
+                                           : BG_COL );
 
     unsigned int flags = 0;
 
@@ -1117,7 +1052,8 @@ int wherey()
 void delay( unsigned long time )
 {
     refresh();
-    usleep( time * 1000 );
+    if (time)
+        usleep( time * 1000 );
 }
 
 
@@ -1155,5 +1091,3 @@ extern "C" {
         return (str);
     }
 }
-
-

@@ -1,0 +1,340 @@
+################################################################################
+# shoals.des: All vaults for the Shoals.
+################################################################################
+
+##############################################################################
+# Non-ending vaults
+##############################################################################
+
+
+###########################
+# Shoal Ruins - nothing special, just some flavor (Enne)
+# Appear rarely.
+#
+NAME:   overgrown_hall
+DEPTH:  Shoal
+WEIGHT: 2
+MONS:   plant, fungus
+MONS:   cyclops / stone giant w:2
+SUBST:  x = x:20 .
+SUBST:  G = G:40 .
+SUBST:  . = .:90 1:19 x:1
+SUBST:  1 = 1 2:1
+MAP
+xxxxxxxxxxx
+x.........x
+x.G.G.G.G.x
++....3....+
+x.G.G.G.G.x
+x.........x
+xxxxxxxxxxx
+ENDMAP
+
+NAME:   overgrown_tower
+DEPTH:  Shoal
+WEIGHT: 2
+MONS:   plant, fungus
+SUBST:  + = x +
+SUBST:  x = x:60 . '
+SUBST:  ' = ' 1:5
+SUBST:  . = . 2:1
+SUBST:  ' = .
+MAP
+ '''''''''
+'''xx+xx'''
+''xx...xx''
+'xx.....xx'
+'x.......x'
+'x...<...x'
+'x.......x'
+'xx.....xx'
+''xx...xx''
+'''xxxxx'''
+ '''''''''
+ENDMAP
+
+NAME:   overgrown_statue
+DEPTH:  Shoal
+WEIGHT: 1
+MONS:   plant
+MONS:   ice statue / orange crystal statue / silver statue
+SUBST:  . = 1:1 .:30
+SUBST:  p = 1:2 .
+SUBST:  P = 1:20 .
+SUBST:  G = G 2
+MAP
+  ........
+ ..........
+....ppp.....
+...ppppp....
+..ppPPPpp...
+..ppPGPpp...
+..ppPPPpp...
+...ppppp....
+....ppp.....
+ ..........
+  ........
+ENDMAP
+
+NAME:   shoals_oasis
+DEPTH:  Shoal
+WEIGHT: 1
+MONS:   plant
+SUBST:  . = 1:1 .
+SUBST:  W = W .
+SUBST:  w = W w
+SUBST:  _ = w
+MAP
+  ...
+ ..W..
+..WwW..
+.Ww_wW.
+..WwW..
+ ..W..
+  ...
+ENDMAP
+
+NAME:   shoals_atoll
+DEPTH:  Shoal
+KMONS:  1 = patrolling kraken
+KFEAT:  1 = deep_water
+KITEM:  1 = star_item, star_item, star_item, star_item, star_item
+KPROP:  1Wgw. = no_tide
+FHEIGHT: gw1 = 40
+MARKER: 1 = lua:MonPropsMarker:new {ancient_kraken="ancient_kraken"}
+MARKER: 1 = lua:portal_desc { water_marker = 1, tide_seed = 1 }
+MARKER: W = lua:portal_desc { water_marker = 1 }
+MARKER: w = lua:portal_desc { water_marker = 1 }
+MARKER: . = lua:portal_desc { water_marker = 1 }
+SUBST:  g = WWw, X = ccc., x = c
+{{
+-- When the kraken dies, the tides will control the water, so the items will be accessible!
+function kraken_death (data, triggerable, triggerer, marker, ev)
+    crawl.mpr("The surface of the water froths suddenly, and then rushes away.", "warning")
+
+    local points = dgn.find_marker_positions_by_prop("water_marker", 1)
+
+    for _, point in ipairs(points) do
+        dgn.fprop_changed(point.x, point.y, "no_tide")
+    end
+
+    -- Force tide effects to be applied immediately.
+    dgn.apply_tide()
+end
+
+local kraken_death_marker = TriggerableFunction:new {
+  func=kraken_death,
+  repeated=false,
+  props= {water_marker="1"} }
+
+kraken_death_marker:add_triggerer(DgnTriggerer:new {
+  type="monster_dies",
+  target="ancient_kraken" })
+
+lua_marker("*", kraken_death_marker)
+
+}}
+MAP
+     XXXXXXXX
+    XxxxxxxxxX
+   Xx...WWWGxxX
+  Xx.gggggW*GxX
+ Xx.ggwwwggWWxX
+Xx.ggwwwwwggWxX
+Xx.ggww1wwgg.xX
+Xx.ggwwwwwgg.xX
+XW..ggwwwgg.xX
+ WW..ggggg.xX
+  WW......xX
+   WWWWxxxX
+      XXXX
+ENDMAP
+
+NAME:   yaktaur_hedge
+DEPTH:  Shoal
+MONS:   bush
+MONS:   yaktaur
+MAP
+.......
+.11111.
+.1...1.
+.1.1.1.
+.1.121.
+.1.111.
+.......
+ENDMAP
+
+##############################################################################
+# Branch ends.
+# Note that the Shoals usually have a randomised end map; predrawn maps
+# (which need not be encompassing) are sometimes used, though.
+##############################################################################
+
+##############################################################################
+# Shoals: ranged attackers
+#
+NAME:   Shoal_1
+PLACE:  Shoal:5
+TAGS:   water_ok
+WEIGHT: 0
+MONS:   cyclops, yaktaur, yaktaur captain
+MAP
+wwwwwwwwcccccccccccccwwwwwww
+wwwwwcccc...wwwwwwwwcccwwwww
+wwwccc......wwwwwwwwwwcccwww
+wwcc.......wwwwwwwwwwwwwccww
+wwc........wwwwwwwwwwwwwwcww
+wcc........wwwwwwwwwwwwwwccw
+wc........wwwwwwwwwwwwwwwwcw
+wc........wwwwwwwwwwwwwwwwcw
+cc.2.2.2.2wwwwwwwwwwwwwwwwcc
+c.2.2.2.2.cwwwwwwwwwwwwwwwwc
+c2.3.3.2.ccwwwwwwwwwwwwwwwwc
+c.2.3.2.ccwwwwwwwwwwwwwwww.c
+c2.3.3.ccwwwwwww...wwwwww..c
+ccccccccwwwwwww..1..wwwww..c
+wwwwwwwwwwwwwww..1..wwwww.Oc
+ccccccccwwwwwww..1..wwwww..c
+c..3.3.ccwwwwwww...wwwwww..c
+c.2.3.2.ccwwwwwwwwwwwwwwww.c
+c2.3.3.2.ccwwwwwwwwwwwwwwwwc
+c.2.2.2.2.cwwwwwwwwwwwwwwwwc
+cc.2.2.2.2wwwwwwwwwwwwwwwwcc
+wc........wwwwwwwwwwwwwwwwcw
+wc........wwwwwwwwwwwwwwwwcw
+wcc........wwwwwwwwwwwwwwccw
+wwc........wwwwwwwwwwwwwwcww
+wwcc.......wwwwwwwwwwwwwccww
+wwwccc......wwwwwwwwwwwccwww
+wwwwwcccc...wwwwwwwwcccwwwww
+wwwwwwwwcccccccccccccwwwwwww
+ENDMAP
+
+##############################################################################
+# Shoals: fish
+#
+NAME:   Shoal_2
+PLACE:  Shoal:5
+TAGS:   water_ok
+WEIGHT: 0
+MONS:   cyclops,stone giant
+SUBST:  1 = 1.
+SUBST:  W = W:2 w
+SUBST:  . = . w:3
+KMONS:  W = giant goldfish/big fish/electric eel
+KFEAT:  W = w
+MAP
+wwwww......11......wwwww
+www.....1WWWWWW1.....www
+ww....WWWWWWWWWWWW....ww
+w..1WWWWWWWWWWWWWWWW1..w
+w..WWWWWWWWWWWWWWWWWW..w
+...WWWWWWWWWWWWWWWWWW...
+..WWWWWWWWWWWWWWWWWWWW..
+..WWWWWWWWWWWWWWWWWWWW..
+.1WWWWWWWWWWWWWWWWWWWW1.
+.WWWWWWWWWWWWWWWWWWWWWW.
+.WWWWWWWWWWWWWWWWWWWWWW.
+1WWWWWWWWWWO2WWWWWWWWWW1
+1WWWWWWWWWW22WWWWWWWWWW1
+.WWWWWWWWWWWWWWWWWWWWWW.
+.WWWWWWWWWWWWWWWWWWWWWW.
+.1WWWWWWWWWWWWWWWWWWWW1.
+..WWWWWWWWWWWWWWWWWWWW..
+..WWWWWWWWWWWWWWWWWWWW..
+w..WWWWWWWWWWWWWWWWWW..w
+w..1WWWWWWWWWWWWWWWW1..w
+ww....WWWWWWWWWWWW....ww
+www.....1WWWWWW1.....www
+wwwww......11......wwwww
+ENDMAP
+
+##############################################################################
+# Shoals: statue on rune
+#
+NAME:   Shoal_3
+PLACE:  Shoal:5
+TAGS:   water_ok
+WEIGHT: 0
+KMONS:  x : ice statue / orange crystal statue / silver statue
+KFEAT:  x : O
+MAP
+x
+ENDMAP
+
+##############################################################################
+# Shoals: swimming rune
+#
+# You may need controlled flight or apportation to get the liquid rune
+#
+NAME:   Shoal_4
+PLACE:  Shoal:5
+TAGS:   water_ok
+WEIGHT: 0
+KFEAT:  O = w
+### KITEM: O = liquid rune of Zot
+MAP
+....wwwww....
+..wwwwwww..
+.wwwwwwww.
+.wwwwwwww.
+wwwwwwwww
+wwwwwwwww
+wwwwOwwww
+wwwwwwwww
+wwwwwwwww
+.wwwwwwww.
+.wwwwwwww.
+..wwwwwww..
+....wwwww....
+ENDMAP
+
+################################################################################
+# Shoal hut with rune inside.
+#
+# This hut is also used for the decoy huts, with the rune replaced with a good
+# item.
+#
+NAME:      shoalhut_rune
+TAGS:      shoal_rune water_ok no_dump allow_dup
+SHUFFLE:   ABCD
+SUBST:     A:x, B:x, C:x=, D=+
+SUBST:     0 = 0.
+KMONS:     g = merfolk impaler / merfolk javelineer / merfolk aquamancer
+LROCKTILE:  wall_vines
+{{
+  local mapmode = unpack(dgn.map_parameters())
+  if mapmode ~= 'rune' then
+    subst("g = .")
+  end
+}}
+MAP
+ xxCxx
+xx.0.xx
+x.0g0.x
+B0gOg0D
+x.0g0.x
+xx.0.xx
+ xxAxx
+ENDMAP
+
+################################################################################
+# Shoal hangout of Ilsuiw. Using PLACE: makes this quite likely to turn up.
+# The hut itself may be empty if Ilsuiw had other engagements.
+
+NAME:    shoal_ilsuiw
+PLACE:   Shoal:$
+TAGS:    mini_float
+KMONS:   1 = Ilsuiw band, siren
+KMONS:   2 = merfolk impaler / merfolk javelineer
+KFEAT:   12 = w
+LROCKTILE:  wall_vines
+MAP
+ wxwxw
+wxw2wxw
+xwwWwwx
+wwW1Www
+xwwWwwx
+wxw2wxw
+ wxwxw
+ENDMAP

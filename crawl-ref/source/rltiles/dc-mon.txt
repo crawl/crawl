@@ -67,7 +67,7 @@ trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
 
 ## Turtles ('t')
-snapping_turtle.png MONS_SNAPPING_TURTLE
+snapping_turtle MONS_SNAPPING_TURTLE
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 
 ## Worms and larvae ('w')
@@ -161,7 +161,9 @@ spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
 %rim 0
 vapour MONS_VAPOUR /*'#'*/
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
-orb_of_destruction MONS_ORB_OF_DESTRUCTION /*'*'*/
+orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
+orb_of_destruction2
+orb_of_destruction3
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %sdir dc-mon/undead
@@ -218,7 +220,9 @@ hairy_devil MONS_HAIRY_DEVIL
 red_devil MONS_RED_DEVIL
 rotting_devil MONS_ROTTING_DEVIL
 smoke_demon MONS_SMOKE_DEMON
-#sixfirhy MONS_SIXFIRHY
+%rim 0
+sixfirhy MONS_SIXFIRHY
+%rim 1
 hellwing MONS_HELLWING
 
 # type '5' demons
@@ -296,7 +300,7 @@ roxanne MONS_ROXANNE
 %sdir dc-mon/statues
 ice_statue MONS_ICE_STATUE
 silver_statue MONS_SILVER_STATUE
-orange_crystal_statue MONS_ORANGE_CRYSTAL_STATUE
+orange_crystal_statue MONS_ORANGE_STATUE
 
 %back statue_base
 overlay_axe MONS_STATUE_AXE
@@ -519,7 +523,6 @@ plant MONS_PLANT
 plant_crypt MONS_WITHERED_PLANT
 %rim 1
 bush MONS_BUSH
-%rim 0
 oklob_plant MONS_OKLOB_PLANT
 
 ## Trolls ('T')
@@ -572,6 +575,10 @@ yaktaur_captain MONS_YAKTAUR_CAPTAIN
 yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
 
 ## Elves ('e')
+%sdir dc-mon/unique
+dowan MONS_DOWAN
+duvessa MONS_DUVESSA
+%sdir dc-mon
 elf MONS_ELF
 deep_elf_fighter MONS_DEEP_ELF_FIGHTER
 deep_elf_soldier MONS_DEEP_ELF_SOLDIER
@@ -710,18 +717,17 @@ test_spawner MONS_TEST_SPAWNER
 dc-misc/unseen PLAYER
 
 ## Transformations
-%sdir dc-mon/animals
-giant_bat TRAN_BAT
-wolf_spider TRAN_SPIDER
-hog_player TRAN_PIG
-%sdir dc-mon
-ice_beast TRAN_ICE_BEAST
-nonliving/stone_golem TRAN_STATUE
-dragon TRAN_DRAGON
-undead/lich TRAN_LICH
+%sdir player/transform
+bat_form TRAN_BAT
+spider_form TRAN_SPIDER
+pig_form TRAN_PIG
+ice_form TRAN_ICE_BEAST
+statue_form TRAN_STATUE
+dragon_form TRAN_DRAGON
+lich_form TRAN_LICH
 
-dc-misc/unseen_monster MONS_UNKNOWN
-dc-misc/unseen_monster MCACHE_START
 %sdir dc-misc
+unseen_monster MONS_UNKNOWN
+unseen_monster MCACHE_START
 todo TODO
 error ERROR

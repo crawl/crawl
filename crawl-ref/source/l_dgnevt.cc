@@ -74,7 +74,7 @@ static const char *dgn_event_type_names[] =
 "none", "turn", "mons_move", "player_move", "leave_level",
 "entering_level", "entered_level", "player_los", "player_climb",
 "monster_dies", "item_pickup", "item_moved", "feat_change",
-"wall_hit"
+"wall_hit", "door_opened", "door_closed"
 };
 
 static dgn_event_type dgn_event_type_by_name(const std::string &name)

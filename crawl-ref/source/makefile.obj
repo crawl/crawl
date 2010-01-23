@@ -36,6 +36,7 @@ dlua.o \
 dungeon.o \
 dgn-height.o \
 dgn-shoals.o \
+dgn-swamp.o \
 effects.o \
 exclude.o \
 feature.o \
@@ -101,6 +102,7 @@ mapmark.o \
 maps.o \
 menu.o \
 message.o \
+message-stream.o \
 mgen_data.o \
 misc.o \
 mislead.o \
@@ -121,6 +123,7 @@ mon-util.o \
 mon-speak.o \
 mon-stuff.o \
 mon-transit.o \
+mon_resist_def.o \
 monster.o \
 mt19937ar.o \
 mutation.o \
@@ -132,6 +135,7 @@ notes.o \
 ouch.o \
 output.o \
 overmap.o \
+pattern.o \
 place.o \
 player.o \
 quiver.o \
