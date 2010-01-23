@@ -1032,7 +1032,9 @@ int place_monster(mgen_data mg, bool force_pos)
         return (-1);
 
     monsters *mon = &menv[id];
-    if (mg.needs_patrol_point())
+    if (mg.needs_patrol_point()
+        || (mon->type == MONS_ALLIGATOR
+            && !testbits(mon->flags, MF_BAND_MEMBER)))
     {
         mon->patrol_point = mon->pos();
 #ifdef DEBUG_PATHFIND
@@ -2158,6 +2160,16 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         }
         break;
 
+    case MONS_ALLIGATOR:
+        // Alligators with kids!
+        if (one_chance_in(5))
+        {
+            natural_leader = true;
+            band = BAND_ALLIGATOR;
+            band_size = 2 + random2(3);
+        }
+        break;
+
     case MONS_POLYPHEMUS:
         natural_leader = true;
         band = BAND_DEATH_YAKS;
@@ -2563,6 +2575,10 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_DUVESSA:
         mon_type = MONS_DOWAN;
+        break;
+
+    case BAND_ALLIGATOR:
+        mon_type = MONS_BABY_ALLIGATOR;
         break;
 
     case BAND_KHUFU:

@@ -336,8 +336,8 @@ ORIENT:   encompass
 WEIGHT:   5
 : sewer_setup(_G)
 SUBST:    2 = 23
-KMONS:    2 = giant lizard
-KMONS:    3 = Purgy, giant lizard
+KMONS:    2 = crocodile
+KMONS:    3 = Purgy, crocodile
 ITEM:     potion of berserk rage / potion of speed w:5
 MONS:     giant bat / giant mosquito w:2
 MAP
@@ -369,7 +369,7 @@ ENDMAP
 
 ###############################################################################
 # Another one with a big bad monster. Likely to be a giant slug, which hits
-# slightly harder than the giant lizard, but is much slower. On land, that is.
+# slightly harder than the crocodile, but is much slower. On land, that is.
 #
 NAME:   sewer_the_slug
 TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup

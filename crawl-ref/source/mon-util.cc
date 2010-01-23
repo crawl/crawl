@@ -2370,6 +2370,9 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
         return true;
     case SPELL_NO_SPELL:
         return false;
+    case SPELL_INK_CLOUD:
+        if (mon->type == MONS_KRAKEN)
+            return true;
     default:
         return !targ_adj && spell_typematch(monspell, SPTYP_SUMMONING);
     }

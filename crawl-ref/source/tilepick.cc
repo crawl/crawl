@@ -268,8 +268,6 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GIANT_GECKO;
     case MONS_GIANT_IGUANA:
         return TILEP_MONS_GIANT_IGUANA;
-    case MONS_GIANT_LIZARD:
-        return TILEP_MONS_GIANT_LIZARD;
     case MONS_GILA_MONSTER:
         return TILEP_MONS_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
@@ -381,7 +379,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_REDBACK:
         return TILEP_MONS_REDBACK;
 
-    // turtles ('t')
+    // turtles and crocodiles ('t')
+    case MONS_CROCODILE:
+        return TILEP_MONS_CROCODILE;
     case MONS_SNAPPING_TURTLE:
         return TILEP_MONS_SNAPPING_TURTLE;
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
@@ -1823,8 +1823,6 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_GECKO;
     case MONS_GIANT_IGUANA:
         return TILE_CORPSE_GIANT_IGUANA;
-    case MONS_GIANT_LIZARD:
-        return TILE_CORPSE_GIANT_LIZARD;
     case MONS_GILA_MONSTER:
         return TILE_CORPSE_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
@@ -1891,7 +1889,9 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_REDBACK:
         return TILE_CORPSE_REDBACK;
 
-    // turtles ('t')
+    // turtles and crocodiles ('t')
+    case MONS_CROCODILE:
+        return TILE_CORPSE_CROCODILE;
     case MONS_SNAPPING_TURTLE:
         return TILE_CORPSE_SNAPPING_TURTLE;
     case MONS_ALLIGATOR_SNAPPING_TURTLE:

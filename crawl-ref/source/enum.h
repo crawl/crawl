@@ -255,6 +255,7 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_PURPLE_SMOKE,
     BEAM_POTION_RAIN,
     BEAM_GLOOM,
+    BEAM_INK,
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
@@ -422,9 +423,10 @@ enum cloud_type
     CLOUD_FOREST_FIRE,
     CLOUD_STEAM,
     CLOUD_GLOOM,
+    CLOUD_INK,
 
     CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
-    CLOUD_OPAQUE_LAST  = CLOUD_GLOOM,
+    CLOUD_OPAQUE_LAST  = CLOUD_INK,
 
     CLOUD_MIASMA,
     CLOUD_MIST,
@@ -1742,7 +1744,7 @@ enum monster_type                      // (int) menv[].type
     MONS_ICE_FIEND,
     MONS_SHADOW_FIEND,
     MONS_WATER_MOCCASIN,
-    MONS_GIANT_LIZARD,
+    MONS_CROCODILE,
     MONS_SPECTRAL_WARRIOR,             //  130
     MONS_PULSATING_LUMP,
     MONS_STORM_DRAGON,
@@ -2070,6 +2072,8 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT_LEECH,
     MONS_MARA,
     MONS_MARA_FAKE,
+    MONS_ALLIGATOR,
+    MONS_BABY_ALLIGATOR,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2327,6 +2331,7 @@ enum mon_spellbook_type
     MST_MARA,
     MST_MARA_FAKE,
     MST_MERFOLK_AQUAMANCER,
+    MST_ALLIGATOR,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2923,6 +2928,7 @@ enum spell_type
     SPELL_PRIMAL_WAVE,
     SPELL_CALL_TIDE,
     SPELL_IOOD,
+    SPELL_INK_CLOUD,
 
     NUM_SPELLS
 };
