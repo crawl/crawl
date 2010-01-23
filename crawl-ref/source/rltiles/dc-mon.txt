@@ -39,7 +39,6 @@ killer_bee MONS_KILLER_BEE
 giant_newt MONS_GIANT_NEWT
 giant_gecko MONS_GIANT_GECKO
 giant_iguana MONS_GIANT_IGUANA
-giant_lizard MONS_GIANT_LIZARD
 gila_monster MONS_GILA_MONSTER
 komodo_dragon MONS_KOMODO_DRAGON
 
@@ -66,7 +65,8 @@ wolf_spider MONS_WOLF_SPIDER
 trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
 
-## Turtles ('t')
+## Turtles and crocodiles ('t')
+crocodile MONS_CROCODILE
 snapping_turtle MONS_SNAPPING_TURTLE
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 

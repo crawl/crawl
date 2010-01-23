@@ -26,6 +26,10 @@ Agnes
 
 A lanky warrior, she moves at a great pace and carries an exotic weapon.
 %%%%
+alligator
+
+A reptile that's quite happy to ignore you. If you don't, or you get too close, it'll put on a great burst of speed and crush you in its massive jaws!
+%%%%
 Angel
 
 A divine agent of the Shining One, it is a towering winged figure of unnatural beauty with an aura of brilliant white light.
@@ -41,6 +45,10 @@ One of the arch-demons who dwell in the depths of Hell.
 Azrael
 
 A powerful, belligerent Efreet.  (Is there any other kind?)
+%%%%
+baby alligator
+
+While this juvenile form of the alligator does not have crushing jaws, nor does it have the strength to put on massive bursts of speed, it is more limber than the adult form, and its milk-tooth is still very sharp.
 %%%%
 Balrug
 
@@ -494,6 +502,10 @@ clay golem
 
 A huge animated clay statue.
 %%%%
+crocodile
+
+A crocodile with great crunching jaws.
+%%%%
 crystal golem
 
 A huge animated crystal statue.
@@ -776,10 +788,6 @@ A huge lizard with great crunching jaws.
 giant leech
 
 A huge blood-sucking leech. How horrible!
-%%%%
-giant lizard
-
-A huge lizard with great crunching jaws.
 %%%%
 giant mite
 

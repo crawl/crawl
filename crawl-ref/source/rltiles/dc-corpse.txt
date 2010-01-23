@@ -40,7 +40,6 @@ killer_bee CORPSE_KILLER_BEE
 giant_newt CORPSE_GIANT_NEWT
 giant_gecko CORPSE_GIANT_GECKO
 giant_iguana CORPSE_GIANT_IGUANA
-giant_lizard CORPSE_GIANT_LIZARD
 gila_monster CORPSE_GILA_MONSTER
 komodo_dragon CORPSE_KOMODO_DRAGON
 
@@ -67,8 +66,9 @@ wolf_spider CORPSE_WOLF_SPIDER
 trapdoor_spider CORPSE_TRAPDOOR_SPIDER
 redback CORPSE_REDBACK
 
-## Turtles ('t')
+## Turtles and crocodiles ('t')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+crocodile CORPSE_CROCODILE
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
 
