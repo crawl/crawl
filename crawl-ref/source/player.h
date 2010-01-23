@@ -217,6 +217,7 @@ public:
   FixedVector<unsigned char, MAX_NUM_GODS>  worshipped;
   FixedVector<short,         MAX_NUM_GODS>  num_gifts;
 
+  char che_saved_ponderousness;
 
   FixedVector<unsigned char, NUM_MUTATIONS> mutation;
   FixedVector<unsigned char, NUM_MUTATIONS> demon_pow;
