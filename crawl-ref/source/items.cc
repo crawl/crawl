@@ -32,6 +32,7 @@
 #include "effects.h"
 #include "env.h"
 #include "food.h"
+#include "godprayer.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "it_use2.h"

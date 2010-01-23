@@ -18,6 +18,12 @@
 
 #define MAX_PENANCE    200
 
+enum piety_gain_t
+{
+    PIETY_NONE, PIETY_SOME, PIETY_LOTS,
+    NUM_PIETY_GAIN
+};
+
 enum harm_protection_type
 {
     HPT_NONE = 0,
@@ -51,9 +57,6 @@ void gain_piety(int pgn);
 void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
-std::string god_prayer_reaction();
-void pray();
-void end_prayer();
 void handle_god_time(void);
 int god_colour(god_type god);
 char god_message_altar_colour(god_type god);
@@ -61,7 +64,6 @@ bool player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);
 int piety_scale(int piety_change);
-void offer_items();
 bool god_hates_your_god(god_type god,
                         god_type your_god = you.religion);
 std::string god_hates_your_god_reaction(god_type god,
@@ -71,13 +73,14 @@ bool god_hates_killing(god_type god, const monsters* mon);
 bool god_likes_fresh_corpses(god_type god);
 bool god_likes_butchery(god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
-
 bool jiyva_is_dead();
 bool remove_all_jiyva_altars();
 bool fedhas_protects(const monsters * target);
 bool fedhas_protects_species(int mc);
 bool fedhas_neutralises(const monsters * target);
 bool ely_destroy_weapons();
+void print_sacrifice_message(god_type, const item_def &,
+                             piety_gain_t, bool = false);
 
 bool tso_unchivalric_attack_safe_monster(const monsters *mon);
 
@@ -100,7 +103,10 @@ bool bless_follower(monsters *follower = NULL,
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
 bool god_hates_attacking_friend(god_type god, int species);
+bool god_likes_item(god_type god, const item_def& item);
 bool god_likes_items(god_type god);
+
+void get_pure_deck_weights(int weights[]);
 
 void religion_turn_start();
 void religion_turn_end();
