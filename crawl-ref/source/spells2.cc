@@ -776,10 +776,11 @@ bool vampiric_drain(int pow, const dist &vmove)
 {
     monsters *monster = monster_at(you.pos() + vmove.delta);
 
-    if (monster == NULL)
+    if (monster == NULL || monster->submerged())
     {
         mpr("There isn't anything there!");
-        return (false);
+        // Cost to disallow freely locating invisible monsters.
+        return (true);
     }
 
     god_conduct_trigger conducts[3];
@@ -853,7 +854,7 @@ bool burn_freeze(int pow, beam_type flavour, monsters *monster)
 {
     pow = std::min(25, pow);
 
-    if (monster == NULL)
+    if (monster == NULL || monster->submerged())
     {
         mpr("There isn't anything close enough!");
         // If there's no monster there, you still pay the costs in
