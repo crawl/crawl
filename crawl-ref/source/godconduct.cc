@@ -883,8 +883,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         if (piety_change > 0)
             gain_piety(piety_change);
         else
-            _dock_piety(-piety_change, penance);
-        
+            dock_piety(-piety_change, penance);
+
 #if DEBUG_DIAGNOSTICS
         if (retval)
         {
