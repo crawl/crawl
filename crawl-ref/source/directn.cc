@@ -1984,13 +1984,15 @@ static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
         return (false);
     }
 
+    // Don't target submerged monsters.
+    if (mon->submerged())
+        return (false);
+
     // Don't usually target unseen monsters...
     if (!mon->visible_to(&you))
     {
         // ...unless it creates a "disturbance in the water".
         // Since you can't see the monster, assume it's not a friend.
-        // Also, don't target submerged monsters if there are other
-        // targets in sight.  (This might be too restrictive.)
         return (mode != TARG_FRIEND
                 && _mon_exposed(mon)
                 && i_feel_safe(false, false, true, range));
