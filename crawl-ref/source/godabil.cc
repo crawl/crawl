@@ -443,7 +443,7 @@ int fungal_bloom()
                 {
                     const int mushroom = create_monster(
                                 mgen_data(MONS_TOADSTOOL,
-                                          BEH_FRIENDLY,
+                                          BEH_GOOD_NEUTRAL,
                                           &you,
                                           0,
                                           0,
@@ -484,7 +484,7 @@ int fungal_bloom()
 
                 int seen_per;
                 spawn_corpse_mushrooms(*j, target_count, seen_per,
-                                       BEH_FRIENDLY, true);
+                                       BEH_GOOD_NEUTRAL, true);
 
                 seen_mushrooms += seen_per;
 
