@@ -4451,7 +4451,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
         }
-        else
+        else if (type != MONS_KRAKEN_TENTACLE)
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
                      this->pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
