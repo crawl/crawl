@@ -299,6 +299,9 @@ short mon_resist_def::get_resist_level(mon_resist_flags res_type) const
 
 monsters *monster_at(const coord_def &pos)
 {
+    if (!in_bounds(pos))
+        return NULL;
+
     const int mindex = mgrd(pos);
     return (mindex != NON_MONSTER ? &menv[mindex] : NULL);
 }

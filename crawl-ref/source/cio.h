@@ -37,6 +37,7 @@ private:
 };
 
 void cursorxy(int x, int y);
+inline void cursorxy(const coord_def& p) { cursorxy(p.x, p.y); }
 
 // Read one key, flag it as a mouse event if appropriate, but apply no
 // other conversions. Defined in lib$OS.cc, not in cio.cc.

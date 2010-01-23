@@ -64,9 +64,9 @@
 #include "tutorial.h"
 #include "view.h"
 
-stack_iterator::stack_iterator(const coord_def& pos, bool accesible)
+stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
 {
-    cur_link = accesible ? you.visible_igrd(pos) : igrd(pos);
+    cur_link = accessible ? you.visible_igrd(pos) : igrd(pos);
     if ( cur_link != NON_ITEM )
         next_link = mitm[cur_link].link;
     else
