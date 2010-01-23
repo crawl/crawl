@@ -47,6 +47,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "spells1.h"
 #include "spells4.h"
 #include "spl-cast.h"

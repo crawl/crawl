@@ -43,6 +43,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "skills2.h"
 #include "spells1.h"
 #include "spells2.h"
