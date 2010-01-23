@@ -198,84 +198,6 @@ int calc_your_to_hit( bool random_factor )
     return attk.calc_to_hit(random_factor);
 }
 
-// Calculates your heavy armour penalty. If random_factor is true,
-// be stochastic; if false, deterministic (e.g. for chardumps.)
-int calc_heavy_armour_penalty( bool random_factor )
-{
-    const bool ur_armed = (you.weapon() != NULL);
-    int heavy_armour = 0;
-
-    // Heavy armour modifiers for shield borne.
-    if (player_wearing_slot(EQ_SHIELD))
-    {
-        switch (you.shield()->sub_type)
-        {
-        case ARM_SHIELD:
-            if (you.skills[SK_SHIELDS] < maybe_random2(7, random_factor))
-                heavy_armour++;
-            break;
-        case ARM_LARGE_SHIELD:
-            if (player_genus(GENPC_OGRE) || you.species == SP_TROLL
-                || player_genus(GENPC_DRACONIAN))
-            {
-                if (you.skills[SK_SHIELDS] < maybe_random2(13, random_factor))
-                    heavy_armour++;     // was potentially "+= 3" {dlb}
-            }
-            else
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    if (you.skills[SK_SHIELDS] < maybe_random2(13,
-                                                               random_factor))
-                    {
-                        heavy_armour += maybe_random2(3, random_factor);
-                    }
-                }
-            }
-            break;
-        default:
-            break;
-        }
-    }
-
-    // Heavy armour modifiers for PARM_EVASION.
-    if (player_wearing_slot(EQ_BODY_ARMOUR))
-    {
-        int ev_pen = property( you.inv[you.equip[EQ_BODY_ARMOUR]],
-                               PARM_EVASION );
-
-        // Wearing heavy armour in water is particularly cumbersome.
-        if (you.species == SP_MERFOLK && grd(you.pos()) == DNGN_DEEP_WATER
-            && you.swimming())
-        {
-            ev_pen *= 2;
-        }
-
-        if (ev_pen < 0 && maybe_random2(you.skills[SK_ARMOUR],
-                                        random_factor) < abs(ev_pen))
-        {
-            heavy_armour += maybe_random2( abs(ev_pen), random_factor );
-        }
-    }
-
-    // ??? what is the reasoning behind this ??? {dlb}
-    // My guess is that its supposed to encourage monk-style play -- bwr
-    if (!ur_armed && heavy_armour)
-    {
-        if (random_factor)
-        {
-            heavy_armour *= (coinflip() ? 3 : 2);
-        }
-        else
-        {
-            // avg. value: (2+3)/2
-            heavy_armour *= 5;
-            heavy_armour /= 2;
-        }
-    }
-    return (heavy_armour);
-}
-
 static bool player_fights_well_unarmed(int heavy_armour_penalty)
 {
     return (you.burden_state == BS_UNENCUMBERED
@@ -361,7 +283,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     no_damage_message(), special_damage_message(), unarmed_attack(),
     special_damage_flavour(BEAM_NONE),
     shield(NULL), defender_shield(NULL),
-    heavy_armour_penalty(0), can_do_unarmed(false),
+    player_body_armour_penalty(0), player_shield_penalty(0),
+    player_armshld_tohit_penalty(0), can_do_unarmed(false),
     miscast_level(-1), miscast_type(SPTYP_NONE),
     miscast_target(NULL), final_effects()
 {
@@ -420,6 +343,16 @@ void melee_attack::init_attack()
     defender_invisible = (!defender_visible && defender
                           && you.see_cell(defender->pos()));
     needs_message      = (attacker_visible || defender_visible);
+
+    if (attacker && attacker->atype() == ACT_PLAYER)
+    {
+        player_body_armour_penalty =
+            player_adjusted_body_armour_evasion_penalty();
+        player_shield_penalty =
+            player_adjusted_shield_evasion_penalty();
+        dprf("Player body armour penalty: %d, shield penalty: %d",
+             player_body_armour_penalty, player_shield_penalty);
+    }
 
     if (defender && defender->atype() == ACT_MONSTER)
         defender_starting_attitude = defender->as_monster()->temp_attitude();
@@ -1444,8 +1377,8 @@ void melee_attack::player_announce_hit()
 
 std::string melee_attack::player_why_missed()
 {
-    if (heavy_armour_penalty > 0
-        && (to_hit + heavy_armour_penalty/2
+    if (player_armshld_tohit_penalty > 0
+        && (to_hit + player_armshld_tohit_penalty / 2
             >= defender->melee_evasion(attacker)))
     {
         return "Your armour prevents you from hitting ";
@@ -1572,11 +1505,6 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
 
         damage += (wpn_damage_plus > -1) ? (random2(1 + wpn_damage_plus))
                                          : -(1 + random2(-wpn_damage_plus));
-
-        // removed 2-handed weapons from here... their "bonus" is
-        // already included in the damage stat for the weapon -- bwr
-        if (hand_half_bonus)
-            damage += random2(3);
 
         if (get_equip_race(*weapon) == ISFLAG_DWARVEN
             && player_genus(GENPC_DWARVEN))
@@ -3786,6 +3714,14 @@ void melee_attack::player_calc_hit_damage()
         !weapon ? player_calc_base_unarmed_damage()
                 : player_calc_base_weapon_damage();
 
+    // [0.6 AC/EV overhaul] Shields don't go well with hand-and-half weapons.
+    if (weapon && hands == HANDS_HALF)
+    {
+        potential_damage =
+            std::max(1,
+                     potential_damage - roll_dice(1, player_shield_penalty));
+    }
+
     potential_damage = player_stat_modify_damage(potential_damage);
 
     //  apply damage bonus from ring of slaying
@@ -3815,16 +3751,33 @@ int melee_attack::calc_to_hit(bool random)
                                             : mons_to_hit());
 }
 
+// Calculates your armour+shield penalty. If random_factor is true,
+// be stochastic; if false, deterministic (e.g. for chardumps.)
+int melee_attack::player_armour_shield_tohit_penalty(bool random_factor)
+    const
+{
+    if (weapon && hands == HANDS_HALF)
+        return (maybe_roll_dice(1, player_body_armour_penalty, random_factor)
+                + maybe_roll_dice(2, player_shield_penalty, random_factor));
+    else
+        return (maybe_roll_dice(1, player_body_armour_penalty, random_factor)
+                + maybe_roll_dice(1, player_shield_penalty, random_factor));
+}
+
 int melee_attack::player_to_hit(bool random_factor)
 {
-    heavy_armour_penalty = calc_heavy_armour_penalty(random_factor);
-    can_do_unarmed = player_fights_well_unarmed(heavy_armour_penalty);
+    player_armshld_tohit_penalty =
+        player_armour_shield_tohit_penalty(random_factor);
+
+    dprf("Armour/shield to-hit penalty: %d", player_armshld_tohit_penalty);
+
+    can_do_unarmed = player_fights_well_unarmed(player_armshld_tohit_penalty);
 
     hand_half_bonus = unarmed_ok
                       && !can_do_unarmed
                       && !shield
                       && weapon
-                      && !weapon ->cursed()
+                      && !weapon->cursed()
                       && hands == HANDS_HALF;
 
     int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
@@ -3902,7 +3855,7 @@ int melee_attack::player_to_hit(bool random_factor)
         your_to_hit -= 3;
 
     // armour penalty
-    your_to_hit -= heavy_armour_penalty;
+    your_to_hit -= player_armshld_tohit_penalty;
 
 #if DEBUG_DIAGNOSTICS
     int roll_hit = your_to_hit;
@@ -3915,9 +3868,6 @@ int melee_attack::player_to_hit(bool random_factor)
     dprf( "to hit die: %d; rolled value: %d; base: %d",
           roll_hit, your_to_hit, base_to_hit );
 #endif
-
-    if (hand_half_bonus)
-        your_to_hit += maybe_random2(3, random_factor);
 
     if (weapon && wpn_skill == SK_SHORT_BLADES && you.duration[DUR_SURE_BLADE])
     {
@@ -4031,7 +3981,17 @@ void melee_attack::player_stab_check()
 void melee_attack::player_apply_attack_delay()
 {
     int attack_delay = weapon ? player_weapon_speed() : player_unarmed_speed();
-    attack_delay = player_apply_shield_delay(attack_delay);
+
+    if (weapon && hands == HANDS_HALF)
+    {
+        attack_delay += std::min(roll_dice(1, player_body_armour_penalty)
+                                 + roll_dice(1, player_shield_penalty),
+                                 roll_dice(1, player_body_armour_penalty)
+                                 + roll_dice(1, player_shield_penalty));
+    }
+    else if (player_body_armour_penalty)
+        attack_delay += std::min(roll_dice(1, player_body_armour_penalty),
+                                 roll_dice(1, player_body_armour_penalty));
 
     if (attack_delay < 3)
         attack_delay = 3;
@@ -4053,6 +4013,12 @@ int melee_attack::player_weapon_speed()
                    || weapon->base_type == OBJ_STAVES))
     {
         attack_delay = property( *weapon, PWPN_SPEED );
+
+        if (player_body_armour_penalty)
+            attack_delay = std::max(attack_delay,
+                                    (roll_dice(1, 10) +
+                                     roll_dice(1, player_body_armour_penalty)));
+
         attack_delay -= you.skills[ wpn_skill ] / 2;
 
         min_delay = property( *weapon, PWPN_SPEED ) / 2;
@@ -4072,11 +4038,6 @@ int melee_attack::player_weapon_speed()
         if (min_delay < 3)
             min_delay = 3;
 
-        // Hand and a half bonus only helps speed up to a point, any more
-        // than speed 10 must come from skill and the weapon
-        if (hand_half_bonus && attack_delay > 10)
-            attack_delay--;
-
         // apply minimum to weapon skill modification
         if (attack_delay < min_delay)
             attack_delay = min_delay;
@@ -4093,42 +4054,25 @@ int melee_attack::player_weapon_speed()
 
 int melee_attack::player_unarmed_speed()
 {
-    int unarmed_delay = 10;
+    int unarmed_delay =
+        std::max(10,
+                 (roll_dice(1, 10) +
+                  roll_dice(2, player_body_armour_penalty)));
 
     // Not even bats can attack faster than this.
     min_delay = 5;
 
     // Unarmed speed.
-    if (you.burden_state == BS_UNENCUMBERED
-        && one_chance_in(heavy_armour_penalty + 1))
+    if (you.burden_state == BS_UNENCUMBERED)
     {
         unarmed_delay =
-            std::max(10 - you.skills[SK_UNARMED_COMBAT]
-                        / (player_in_bat_form() ? 3 : 5), min_delay);
+            std::max(unarmed_delay
+                     - (you.skills[SK_UNARMED_COMBAT]
+                        / (player_in_bat_form() ? 3 : 5)),
+                     min_delay);
     }
 
     return (unarmed_delay);
-}
-
-int melee_attack::player_apply_shield_delay(int attack_delay)
-{
-    if (shield)
-    {
-        switch (shield->sub_type)
-        {
-        case ARM_LARGE_SHIELD:
-            if (you.skills[SK_SHIELDS] <= 10 + random2(17))
-                attack_delay++;
-            // [dshaligram] Fall-through
-
-        case ARM_SHIELD:
-            if (you.skills[SK_SHIELDS] <= 3 + random2(17))
-                attack_delay++;
-            break;
-        }
-    }
-
-    return (attack_delay);
 }
 
 int melee_attack::player_calc_base_unarmed_damage()
@@ -4424,34 +4368,38 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
 
 int melee_attack::mons_apply_defender_ac(int damage, int damage_max)
 {
-    int ac = defender->armour_class();
+    const int ac = defender->armour_class();
     if (ac > 0)
     {
         int damage_reduction = random2(ac + 1);
-        if (!defender->wearing_light_armour())
+        int guaranteed_damage_reduction = 0;
+
+        if (const item_def *body_armour = defender->slot_item(EQ_BODY_ARMOUR))
         {
-            if (const item_def *arm = defender->slot_item(EQ_BODY_ARMOUR))
+            if (defender->atype() == ACT_PLAYER)
             {
-                const int armac = property(*arm, PARM_AC);
-                int perc = 2 * (defender->skill(SK_ARMOUR) + armac);
-                if (perc > 50)
-                    perc = 50;
+                const int body_base_AC = property(*body_armour, PARM_AC);
+                const int gdr_perc =
+                    body_base_AC * (13 + defender->skill(SK_ARMOUR)) / 17;
+                // [ds] ac / 2 cap is nearly redundant now.
+                guaranteed_damage_reduction =
+                    std::min(damage_max * gdr_perc / 100, ac / 2);
 
-                int min = 1 + (damage_max * perc) / 100;
-                if (min > ac / 2)
-                    min = ac / 2;
-
-                if (damage_reduction < min)
-                    damage_reduction = min;
+                damage_reduction =
+                    std::max(guaranteed_damage_reduction, damage_reduction);
             }
         }
+
+        dprf("AC: at: %s, df: %s, dam: %d (max %d), DR: %d (GDR %d), "
+             "rdam: %d",
+             attacker->name(DESC_PLAIN, true).c_str(),
+             defender->name(DESC_PLAIN, true).c_str(),
+             damage, damage_max, damage_reduction, guaranteed_damage_reduction,
+             damage - damage_reduction);
+
         damage -= damage_reduction;
     }
-
-    if (damage < 1)
-        damage = 0;
-
-    return damage;
+    return std::max(0, damage);
 }
 
 static const char *klown_attack[] =
