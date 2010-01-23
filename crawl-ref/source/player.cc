@@ -898,9 +898,9 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
 // Returns number of matches (jewellery returns zero -- no ego type).
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-int player_equip_ego_type( int slot, int special )
+int player_equip_ego_type(int slot, int special, bool ignore_melded)
 {
-    if (!you_tran_can_wear(slot))
+    if (ignore_melded && !you_tran_can_wear(slot))
         return (0);
 
     int ret = 0;
@@ -934,7 +934,7 @@ int player_equip_ego_type( int slot, int special )
         for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
         {
             // ... but skip ones you can't currently use!
-            if (!you_tran_can_wear(i))
+            if (ignore_melded && !you_tran_can_wear(i))
                 continue;
 
             if (you.equip[i] != -1
