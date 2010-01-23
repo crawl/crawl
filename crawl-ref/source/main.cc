@@ -67,6 +67,7 @@
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
+#include "godprayer.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
