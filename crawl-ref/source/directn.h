@@ -88,12 +88,16 @@ private:
     void object_cycle(int dir);
     void monster_cycle(int dir);
     void feature_cycle_forward(int feature);
+    void update_previous_target() const;
     // Finalise the current choice of target. Return true if
     // successful, false if failed (e.g. out of range.)
     bool select(bool allow_out_of_range, bool endpoint);
     bool handle_signals();
     void reinitialize_move_flags();
     bool select_compass_direction(const coord_def& delta);
+
+    const coord_def& target() const;
+    void set_target(const coord_def& new_target);
 
     // Functions which print things to the user.
     // Each one is commented with a sample output.

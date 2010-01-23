@@ -306,7 +306,7 @@ static command_type shift_direction(command_type cmd)
 // explicitly requested by the user.
 void direction_chooser::print_aim_prompt() const
 {
-    const coord_def& cell = moves.target;
+    const coord_def& cell = target();
 
     // Find out what we're looking at.
     const monsters* mon_in_cell = monster_at(cell);
@@ -554,13 +554,13 @@ bool direction_chooser::choose_again()
             return false;
         }
 
-        moves.target = you.prev_grd_targ;
+        set_target(you.prev_grd_targ);
 
-        moves.choseRay = find_ray(you.pos(), moves.target, moves.ray);
+        moves.choseRay = find_ray(you.pos(), target(), moves.ray);
     }
     else if (you.prev_targ == MHITYOU)
     {
-        moves.target = you.pos();
+        set_target(you.pos());
 
         // Discard 'Y' player gave to yesno()
         // Changed this, was that necessary? -cao
@@ -587,9 +587,9 @@ bool direction_chooser::choose_again()
             return false;
         }
 
-        moves.target = montarget->pos();
+        set_target(montarget->pos());
 
-        moves.choseRay = find_ray(you.pos(), moves.target, moves.ray);
+        moves.choseRay = find_ray(you.pos(), target(), moves.ray);
     }
 
     moves.isValid  = true;
@@ -1013,7 +1013,7 @@ bool direction_chooser::move_is_ok() const
 {
     if (!moves.isCancel && moves.isTarget)
     {
-        if (!you.see_cell(moves.target))
+        if (!you.see_cell(target()))
         {
             mpr("Sorry, you can't target what you can't see.",
                 MSGCH_EXAMINE_FILTER);
@@ -1158,6 +1158,16 @@ coord_def direction_chooser::find_default_target() const
     return result;
 }
 
+const coord_def& direction_chooser::target() const
+{
+    return moves.target;
+}
+
+void direction_chooser::set_target(const coord_def& new_target)
+{
+    moves.target = new_target;
+}
+
 void direction_chooser::draw_beam_if_needed()
 {
     if (!need_beam_redraw)
@@ -1175,24 +1185,25 @@ void direction_chooser::draw_beam_if_needed()
 
     // Draw the new ray with magenta '*'s, not including your square
     // or the target square.  Out-of-range cells get grey '*'s instead.
-    for (; ray.pos() != moves.target; ray.advance())
+    for (; ray.pos() != target(); ray.advance())
     {
-        ASSERT(in_los(ray.pos()));
+        const coord_def p = ray.pos();
+        ASSERT(in_los(p));
 
-        if (ray.pos() == you.pos())
+        if (p == you.pos())
             continue;
 
-        const bool inrange = in_range(ray.pos());
+        const bool inrange = in_range(p);
 #ifdef USE_TILE
-        tile_place_ray(ray.pos(), inrange);
+        tile_place_ray(p, inrange);
 #else
         const int bcol = inrange ? MAGENTA : DARKGREY;
-        _draw_ray_glyph(ray.pos(), bcol, '*', bcol | COLFLAG_REVERSE, inrange);
+        _draw_ray_glyph(p, bcol, '*', bcol | COLFLAG_REVERSE, inrange);
 #endif
     }
     textcolor(LIGHTGREY);
 #ifdef USE_TILE
-    tile_place_ray(moves.target, in_range(ray.pos()));
+    tile_place_ray(target(), in_range(ray.pos()));
 
     // In tiles, we need to refresh the window to get the beam drawn.
     viewwindow(false, true);
@@ -1215,7 +1226,7 @@ void direction_chooser::object_cycle(int dir)
                              needs_path, TARG_ANY, range, true,
                              (dir > 0 ? LOS_FLIPVH : LOS_FLIPHV)))
     {
-        moves.target = objfind_pos;
+        set_target(objfind_pos);
         target_unshifted = false;
     }
     else
@@ -1229,7 +1240,7 @@ void direction_chooser::monster_cycle(int dir)
     if (_find_square_wrapper(monsfind_pos, dir, _find_monster,
                              needs_path, mode, range, true))
     {
-        moves.target = monsfind_pos;
+        set_target(monsfind_pos);
         target_unshifted = false;
     }
     else
@@ -1241,10 +1252,9 @@ void direction_chooser::monster_cycle(int dir)
 void direction_chooser::feature_cycle_forward(int feature)
 {
     if (_find_square_wrapper(objfind_pos, 1, _find_feature,
-                             needs_path, feature, range, true,
-                             LOS_FLIPVH))
+                             needs_path, feature, range, true, LOS_FLIPVH))
     {
-        moves.target = objfind_pos;
+        set_target(objfind_pos);
     }
     else
     {
@@ -1252,29 +1262,33 @@ void direction_chooser::feature_cycle_forward(int feature)
     }
 }
 
+void direction_chooser::update_previous_target() const
+{
+    you.prev_grd_targ.reset();
+
+    // Maybe we should except just_looking here?
+    const monsters* m = monster_at(target());
+    if (m && you.can_see(m))
+        you.prev_targ = m->mindex();
+    else if (looking_at_you())
+        you.prev_targ = MHITYOU;
+    else
+        you.prev_grd_targ = target();
+}
+
 bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 {
-    if (!allow_out_of_range && !in_range(moves.target))
+    if (!allow_out_of_range && !in_range(target()))
     {
         mpr("That is beyond the maximum range.", MSGCH_EXAMINE_FILTER);
         return false;
     }
 
-    const monsters* m = monster_at(moves.target);
+    const monsters* m = monster_at(target());
     moves.isEndpoint = endpoint || (m && _mon_exposed(m));
     moves.isValid  = true;
     moves.isTarget = true;
-
-    you.prev_grd_targ.reset();
-
-    // Maybe we should except just_looking here?
-    if (m && you.can_see(m))
-        you.prev_targ = m->mindex();
-    else if (moves.target == you.pos())
-        you.prev_targ = MHITYOU;
-    else
-        you.prev_grd_targ = moves.target;
-
+    update_previous_target();
     return true;
 }
 
@@ -1316,7 +1330,7 @@ void direction_chooser::show_initial_prompt() const
 void direction_chooser::print_target_description() const
 {
     // Do we see anything?
-    const monsters* mon = monster_at(moves.target);
+    const monsters* mon = monster_at(target());
     if (mon == NULL || mons_is_unknown_mimic(mon) || !you.can_see(mon))
         return;
 
@@ -1332,42 +1346,38 @@ void direction_chooser::print_target_description() const
 
 void direction_chooser::print_items_description() const
 {
-    const item_def* item = top_item_at(moves.target, true);
-    if (item)
-    {
-        // Print the first item.
-        mprf(MSGCH_FLOOR_ITEMS, "%s.",
-             get_menu_colour_prefix_tags(*item, DESC_NOCAP_A).c_str());
+    const item_def* item = top_item_at(target(), true);
+    if (!item)
+        return;
 
-        if (multiple_items_at(moves.target, true))
-        {
-            mprf(MSGCH_FLOOR_ITEMS,
-                 "There is something else lying underneath.");
-        }
-    }
+    // Print the first item.
+    mprf(MSGCH_FLOOR_ITEMS, "%s.",
+         get_menu_colour_prefix_tags(*item, DESC_NOCAP_A).c_str());
+
+    if (multiple_items_at(target(), true))
+        mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
 
     flush_prev_message();
 }
 
 void direction_chooser::print_floor_description(bool boring_too) const
 {
-    const dungeon_feature_type feat = grd(moves.target);
+    const dungeon_feature_type feat = grd(target());
     if (!boring_too && (feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL))
         return;
 
     mprf(MSGCH_EXAMINE_FILTER, "%s",
-         feature_description(moves.target,
-                             is_bloodcovered(moves.target)).c_str());
+         feature_description(target(), is_bloodcovered(target())).c_str());
     flush_prev_message();
 }
 
 void direction_chooser::reinitialize_move_flags()
 {
-    moves.isValid       = false;
-    moves.isTarget      = false;
-    moves.isCancel      = false;
-    moves.isEndpoint    = false;
-    moves.choseRay      = false;
+    moves.isValid    = false;
+    moves.isTarget   = false;
+    moves.isCancel   = false;
+    moves.isEndpoint = false;
+    moves.choseRay   = false;
 }
 
 // Returns true if we've completed targetting.
@@ -1378,7 +1388,7 @@ bool direction_chooser::select_compass_direction(const coord_def& delta)
         // A direction is allowed, and we've selected it.
         moves.delta    = delta;
         // Needed for now...eventually shouldn't be necessary
-        moves.target   = you.pos() + moves.delta;
+        set_target(you.pos() + moves.delta);
         moves.isValid  = true;
         moves.isTarget = false;
         have_beam      = false;
@@ -1390,7 +1400,7 @@ bool direction_chooser::select_compass_direction(const coord_def& delta)
     {
         // Direction not allowed, so just move in that direction.
         // Maybe make this a bigger jump?
-        moves.target += delta * 3;
+        set_target(target() + delta * 3);
         return false;
     }
 }
@@ -1407,7 +1417,7 @@ void direction_chooser::toggle_beam()
     need_beam_redraw = true;
 
     if (show_beam)
-        have_beam = find_ray(you.pos(), moves.target, beam);
+        have_beam = find_ray(you.pos(), target(), beam);
 }
 
 bool direction_chooser::select_previous_target()
@@ -1417,7 +1427,7 @@ bool direction_chooser::select_previous_target()
         // We have all the information we need.
         moves.isValid  = true;
         moves.isTarget = true;
-        moves.target   = mon_target->pos();
+        set_target(mon_target->pos());
         if (!just_looking)
             have_beam = false;
 
@@ -1433,7 +1443,7 @@ bool direction_chooser::select_previous_target()
 
 bool direction_chooser::looking_at_you() const
 {
-    return moves.target == you.pos();
+    return target() == you.pos();
 }
 
 void direction_chooser::handle_movement_key(command_type key_command,
@@ -1445,7 +1455,7 @@ void direction_chooser::handle_movement_key(command_type key_command,
         const coord_def& delta = Compass[compass_idx];
         const bool unshifted = (shift_direction(key_command) != key_command);
         if (unshifted)
-            moves.target += delta;
+            set_target(target() + delta);
         else
             *loop_done = select_compass_direction(delta);
     }
@@ -1458,27 +1468,27 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     if (!you.wizard)
         return;
 
-    monsters* const m = monster_at(moves.target);
+    monsters* const m = monster_at(target());
 
     // These commands do something even if there's no monster there.
     switch (key_command)
     {
     case CMD_TARGET_WIZARD_MOVE:
-        wizard_move_player_or_monster(moves.target);
+        wizard_move_player_or_monster(target());
         *loop_done = true;
         return;
 
     case CMD_TARGET_WIZARD_MISCAST:
         if (m)
             debug_miscast(m->mindex());
-        else if (you.pos() == moves.target)
+        else if (looking_at_you())
             debug_miscast(NON_MONSTER);
         return;
 
     // Note that this is a wizard-only command.
     case CMD_TARGET_CYCLE_BEAM:
         show_beam = true;
-        have_beam = find_ray(you.pos(), moves.target, beam,
+        have_beam = find_ray(you.pos(), target(), beam,
                              opc_solid, BDS_DEFAULT, show_beam);
         need_beam_redraw = true;
         return;
@@ -1547,7 +1557,7 @@ void direction_chooser::do_redraws()
 
     if (need_cursor_redraw)
     {
-        cursorxy(grid2view(moves.target));
+        cursorxy(grid2view(target()));
         need_cursor_redraw = false;
     }
 }
@@ -1558,7 +1568,7 @@ bool direction_chooser::tiles_update_target()
     const coord_def& gc = tiles.get_cursor();
     if (gc != Region::NO_CURSOR && map_bounds(gc))
     {
-        moves.target = gc;
+        set_target(gc);
         return true;
     }
 #endif
@@ -1585,7 +1595,7 @@ void direction_chooser::handle_mlist_cycle_command(command_type key_command)
         if (_find_square_wrapper(monsfind_pos, 1,
                                  _find_mlist, needs_path, idx, range, true))
         {
-            moves.target = monsfind_pos;
+            set_target(monsfind_pos);
         }
         else
         {
@@ -1599,16 +1609,14 @@ void direction_chooser::move_to_you()
 {
     moves.isValid  = true;
     moves.isTarget = true;
-    moves.target   = you.pos();
+    set_target(you.pos());
     moves.delta.reset();
 }
 
 void direction_chooser::describe_target()
 {
-    full_describe_square(moves.target);
-    need_text_redraw = true;
-    if (crawl_state.arena_suspended)
-        need_beam_redraw = true;
+    full_describe_square(target());
+    need_all_redraw = true;
 }
 
 void direction_chooser::show_help()
@@ -1616,7 +1624,7 @@ void direction_chooser::show_help()
     show_targetting_help();
     redraw_screen();
     mesclr(true);
-    need_text_redraw = true;
+    need_all_redraw = true;
 }
 
 // Return false if we should continue looping, true if we're done.
@@ -1628,7 +1636,7 @@ bool direction_chooser::do_main_loop()
     // This needs to be done every loop iteration.
     reinitialize_move_flags();
 
-    const coord_def old_target = moves.target;
+    const coord_def old_target = target();
     const command_type key_command = massage_command(behaviour->get_command());
     bool loop_done = false;
 
@@ -1692,8 +1700,8 @@ bool direction_chooser::do_main_loop()
         behaviour->mark_ammo_nonchosen();
         break;
 
-    case CMD_TARGET_DESCRIBE: describe_target();  need_all_redraw = true; break;
-    case CMD_TARGET_HELP: show_targetting_help(); need_all_redraw = true; break;
+    case CMD_TARGET_DESCRIBE: describe_target(); break;
+    case CMD_TARGET_HELP:     show_help();       break;
 
     default:
         // Some blocks of keys with similar handling.
@@ -1703,19 +1711,17 @@ bool direction_chooser::do_main_loop()
         break;
     }
 
-    flush_prev_message();
-
     // Don't allow going out of bounds.
-    if (!in_viewport_bounds(grid2view(moves.target)))
-        moves.target = old_target;
+    if (!in_viewport_bounds(grid2view(target())))
+        set_target(old_target);
 
     if (loop_done && (just_looking || move_is_ok()))
         return true;
 
     // Redraw whatever is necessary.
-    if (old_target != moves.target)
+    if (old_target != target())
     {
-        have_beam = show_beam && find_ray(you.pos(), moves.target, beam);
+        have_beam = show_beam && find_ray(you.pos(), target(), beam);
         need_text_redraw = true;
         need_beam_redraw = true;
         need_cursor_redraw = true;
@@ -1767,12 +1773,12 @@ bool direction_chooser::choose_direction()
     moves.delta.reset();
 
     // Find a default target.
-    moves.target = Options.default_target ? find_default_target() : you.pos();
-    objfind_pos = monsfind_pos = moves.target;
+    set_target(Options.default_target ? find_default_target() : you.pos());
+    objfind_pos = monsfind_pos = target();
 
     // If requested, show the beam on startup.
     if (show_beam)
-        need_beam_redraw = have_beam = find_ray(you.pos(), moves.target, beam);
+        need_beam_redraw = have_beam = find_ray(you.pos(), target(), beam);
 
     show_initial_prompt();
     need_text_redraw = false;
@@ -1783,10 +1789,7 @@ bool direction_chooser::choose_direction()
         ;
 
     finalize_moves();
-    // XXX FIXME bool isok = moves.isValid;
-
-    //return isok;
-    return true;
+    return moves.isValid;
 }
 
 std::string get_terse_square_desc(const coord_def &gc)

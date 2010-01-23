@@ -1270,9 +1270,8 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
         msg << "Firing ";
     else
     {
-        const item_def& item_def = you.inv[m_slot];
-        const launch_retval projected = is_launched(&you, you.weapon(),
-                                                    item_def);
+        const item_def& item = you.inv[m_slot];
+        const launch_retval projected = is_launched(&you, you.weapon(), item);
 
         if (projected == LRET_FUMBLED)
             msg << "Awkwardly throwing ";
@@ -1300,9 +1299,7 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
             << "</" << colour << ">";
     }
 
-    mpr(tagged_string_substr(msg.str(),
-                                                   0, crawl_view.msgsz.x),
-                              MSGCH_PROMPT);
+    mpr(tagged_string_substr(msg.str(), 0, crawl_view.msgsz.x), MSGCH_PROMPT);
 }
 
 bool fire_target_behaviour::should_redraw()
