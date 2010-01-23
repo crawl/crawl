@@ -2811,9 +2811,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
 
             case GOD_FEDHAS:
-                // Toadstools are exempt from this conduct
-                if (victim && fedhas_protects(victim)
-                    && victim->mons_species() != MONS_TOADSTOOL)
+                if (victim && fedhas_protects(victim))
                 {
                     // level is (1 + monsterHD/2) for this conduct,
                     // trying a fixed cost since plant HD aren't that
