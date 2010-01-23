@@ -1352,7 +1352,7 @@ void direction_chooser::print_items_description() const
 
     // Print the first item.
     mprf(MSGCH_FLOOR_ITEMS, "%s.",
-         get_menu_colour_prefix_tags(*item, DESC_NOCAP_A).c_str());
+         get_menu_colour_prefix_tags(*item, DESC_CAP_A).c_str());
 
     if (multiple_items_at(target(), true))
         mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
@@ -1552,6 +1552,8 @@ void direction_chooser::do_redraws()
         mesclr(true);
         print_aim_prompt();
         print_target_description();
+        if (just_looking)
+            print_items_description();
         need_text_redraw = false;
     }
 

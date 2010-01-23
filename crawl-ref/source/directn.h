@@ -75,27 +75,47 @@ public:
     bool choose_direction();
 
 private:
-    bool choose_again();
-    bool choose_compass();
+    bool choose_again();        // Used when replaying keys
+    bool choose_compass();      // Used when we only need to choose a direction
+
     bool do_main_loop();
+
+    // Return the location where targetting should start.
     coord_def find_default_target() const;
-    void draw_beam_if_needed();
+
     void handle_mlist_cycle_command(command_type key_command);
     void handle_wizard_command(command_type key_command, bool* loop_done);
     void handle_movement_key(command_type key_command, bool* loop_done);
+
     bool in_range(const coord_def& p) const;
+
+    // Jump to the player.
     void move_to_you();
+
+    // Cycle to the next (dir == 1) or previous (dir == -1) object.
     void object_cycle(int dir);
+
+    // Cycle to the next (dir == 1) or previous (dir == -1) monster.
     void monster_cycle(int dir);
+
+    // Cycle to the next feature of the given type.
     void feature_cycle_forward(int feature);
+
+    // Set the remembered target to be the current target.
     void update_previous_target() const;
+
     // Finalise the current choice of target. Return true if
     // successful, false if failed (e.g. out of range.)
     bool select(bool allow_out_of_range, bool endpoint);
-    bool handle_signals();
-    void reinitialize_move_flags();
     bool select_compass_direction(const coord_def& delta);
+    bool select_previous_target();
 
+    // Return true if we need to abort targetting due to a signal.
+    bool handle_signals();
+
+    void reinitialize_move_flags();
+
+    // Return or set the current target.
     const coord_def& target() const;
     void set_target(const coord_def& new_target);
 
@@ -123,15 +143,23 @@ private:
     // Returns whether the move was valid, i.e., whether the mouse
     // pointer is in bounds.
     bool tiles_update_target();
-    
+
+    // Display the prompt when beginning targetting.
     void show_initial_prompt() const;
-    bool select_previous_target();
+
     void toggle_beam();
+
     void finalize_moves();
     command_type massage_command(command_type key_command) const;
+    void draw_beam_if_needed();
     void do_redraws();
+
+    // Whether the current target is you.
     bool looking_at_you() const;
+
+    // Whether the current target is valid.
     bool move_is_ok() const;
+
     void describe_target();
     void show_help();
 
@@ -153,10 +181,13 @@ private:
     bool show_beam;             // Does the user want the beam displayed?
     bool have_beam;             // Is the currently stored beam valid?
     coord_def objfind_pos, monsfind_pos; // Cycling memory
+
+    // What we need to redraw.
     bool need_beam_redraw;
     bool need_cursor_redraw;
     bool need_text_redraw;
-    bool need_all_redraw;
+    bool need_all_redraw;       // All of the above.
+
     bool target_unshifted;      // Do unshifted direction keys fire?
 
     // Default behaviour, saved across instances.
