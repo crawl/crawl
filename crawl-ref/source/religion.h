@@ -28,28 +28,6 @@ enum harm_protection_type
     NUM_HPTS
 };
 
-// Calls did_god_conduct() when the object goes out of scope.
-struct god_conduct_trigger
-{
-    conduct_type conduct;
-    int pgain;
-    bool known;
-    bool enabled;
-    std::auto_ptr<monsters> victim;
-
-    god_conduct_trigger(conduct_type c = NUM_CONDUCTS,
-                        int pg = 0,
-                        bool kn = true,
-                        const monsters *vict = NULL);
-
-    void set(conduct_type c = NUM_CONDUCTS,
-             int pg = 0,
-             bool kn = true,
-             const monsters *vict = NULL);
-
-    ~god_conduct_trigger();
-};
-
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
@@ -67,16 +45,10 @@ std::string get_god_dislikes(god_type which_god, bool verbose = false);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
-bool did_god_conduct(conduct_type thing_done, int level, bool known = true,
-                     const monsters *victim = NULL);
-void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
-                         bool known = true);
-void enable_attack_conducts(god_conduct_trigger conduct[3]);
-void disable_attack_conducts(god_conduct_trigger conduct[3]);
-
 void excommunication(god_type new_god = GOD_NO_GOD);
 
 void gain_piety(int pgn);
+void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
 std::string god_prayer_reaction();

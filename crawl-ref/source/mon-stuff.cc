@@ -44,6 +44,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"

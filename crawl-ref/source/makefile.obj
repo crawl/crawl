@@ -48,6 +48,7 @@ fprop.o \
 geom2d.o \
 ghost.o \
 godabil.o \
+godconduct.o \
 goditem.o \
 godwrath.o \
 hiscores.o \
