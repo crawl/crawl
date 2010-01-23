@@ -345,7 +345,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 
 // Unseen monsters in shallow water show a "strange disturbance".
 // (Unless flying!)
-static bool _mon_submerged_in_water(const monsters *mon)
+static bool _mon_exposed_in_water(const monsters *mon)
 {
     if (!mon)
         return (false);
@@ -368,7 +368,7 @@ static bool _mon_exposed_in_cloud(const monsters *mon)
 
 static bool _mon_exposed(const monsters* mon)
 {
-    return (_mon_submerged_in_water(mon) || _mon_exposed_in_cloud(mon));
+    return (_mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon));
 }
 
 static bool _is_target_in_range(const coord_def& where, int range)
@@ -3400,7 +3400,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
     if (const monsters* mon = monster_at(where))
     {
-        if (_mon_submerged_in_water(mon))
+        if (_mon_exposed_in_water(mon))
         {
             mpr("There is a strange disturbance in the water here.",
                 MSGCH_EXAMINE_FILTER);
