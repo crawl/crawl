@@ -3609,8 +3609,9 @@ static void _dock_piety(int piety_loss, int penance)
             mprf("You feel%sguilty.",
                  (piety_loss == 1) ? " a little " :
                  (piety_loss <  5) ? " " :
-                 (piety_loss < 10) ? " very "
-                                   : " extremely ");
+                 (piety_loss < 10) ? " very " :
+                 (piety_loss < 25) ? " extremely "
+                                   : " overwhelmingly ");
         }
 
         last_piety_lecture = you.num_turns;
