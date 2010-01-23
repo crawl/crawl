@@ -34,7 +34,7 @@
 # In addition, some volcanos have extra items taken from:
 #   "Random item"
 #   "Bad items"                (see setup_loot() for the list)
-#   "Fruit"                    (only in volano_6)
+#   "Fruit"                    
 #
 # See setup_loot() for more information.
 #
@@ -271,7 +271,7 @@ end
 --  (no-unique packs, but still "intelligent")
 --  deep elf fighter, deep elf fighter, deep elf fighter, deep elf
 --  knight;
---  nothing, minotuar (all on its lonesome)
+--  nothing, minotaur (all on its lonesome)
 --
 -- Natural "packs" usually consist of a few fire/red-themed monsters
 -- surrounding either a lindwurm, fire drake, or manticore.
@@ -643,7 +643,7 @@ TAGS:       volcano no_item_gen no_monster_gen no_rotate
 #           Sets up the temple guardians.
 :           fiery_guardians(_G)
 MONS:       clay golem w:50 / molten gargoyle w:2
-#           Loot: 10 items, 6 gold; done in volano_setup.
+#           Loot: 10 items, 6 gold; done in volcano_setup.
 SHUFFLE:    T/Q/B/Y/R
 #           Do the loot first, 10 objects: two monsters (1, 2)
 NSUBST:     T = 2:1 / 1:2 / 1:d / 1:e / 2:$ / 2:f / 2:g
@@ -1069,7 +1069,7 @@ function convert_lava (data, triggerable, triggerer, marker, ev)
     crawl.mpr("The ground shudders ominously.", "warning")
   elseif lp == 2 then
     my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 2)
-    crawl.mpr("In the distance, the volano explodes with a roar! Lava spreads "
+    crawl.mpr("In the distance, the volcano explodes with a roar! Lava spreads "
                .. "onto the path.", "warning")
     convert_slaves_to_lava(my_slaves)
   elseif lp == 3 then
