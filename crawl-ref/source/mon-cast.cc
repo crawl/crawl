@@ -1222,6 +1222,14 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                     continue;
                 }
 
+                // Alligators shouldn't spam swiftness.
+                if (spell_cast == SPELL_SWIFTNESS && monster->type == MONS_ALLIGATOR)
+                    if ((long) monster->number + random2avg(170, 5) >= you.num_turns)
+                    {
+                        spell_cast = SPELL_NO_SPELL;
+                        continue;
+                    }
+
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
                 {
@@ -1660,7 +1668,13 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_SWIFTNESS:
         monster->add_ench(ENCH_SWIFT);
-        simple_monster_message(monster, " seems to move somewhat quicker.");
+        if (monster->type == MONS_ALLIGATOR)
+        {
+            monster->number = you.num_turns;
+            simple_monster_message(monster, " puts on a burst of speed!");
+        }
+        else
+            simple_monster_message(monster, " seems to move somewhat quicker.");
         return;
 
     case SPELL_CALL_TIDE:

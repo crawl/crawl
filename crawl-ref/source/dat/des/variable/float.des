@@ -563,7 +563,7 @@ ENDMAP
 NAME:    reptile_caves
 DEPTH:   D:10-13, Lair, Snake
 ORIENT:  float
-MONS:    giant gecko / giant newt, giant lizard, giant iguana
+MONS:    giant gecko / giant newt, crocodile, giant iguana
 MONS:    fire drake / swamp drake
 MONS:    snake, water moccasin, viper
 SUBST:   4 = 34

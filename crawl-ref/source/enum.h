@@ -1742,7 +1742,7 @@ enum monster_type                      // (int) menv[].type
     MONS_ICE_FIEND,
     MONS_SHADOW_FIEND,
     MONS_WATER_MOCCASIN,
-    MONS_GIANT_LIZARD,
+    MONS_CROCODILE,
     MONS_SPECTRAL_WARRIOR,             //  130
     MONS_PULSATING_LUMP,
     MONS_STORM_DRAGON,
@@ -2070,6 +2070,8 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT_LEECH,
     MONS_MARA,
     MONS_MARA_FAKE,
+    MONS_ALLIGATOR,
+    MONS_BABY_ALLIGATOR,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2327,6 +2329,7 @@ enum mon_spellbook_type
     MST_MARA,
     MST_MARA_FAKE,
     MST_MERFOLK_AQUAMANCER,
+    MST_ALLIGATOR,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
