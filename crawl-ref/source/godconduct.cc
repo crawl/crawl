@@ -864,11 +864,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case DID_UNPONDEROUS:
                 if (you.religion == GOD_CHEIBRIADOS)
                 {
-                    simple_god_message(" is deeply saddened by you removing this blessed item.");
-                    piety_change = -you.piety / 3;
+                    simple_god_message(" is deeply saddened by you removing"
+                                       " your blessed armour.");
+                    // For each piece of armour removed, cut piety by a third.
+                    // XXX: This is clumsy.
+                    const int n0 = 2; const int d0 = 3;
+                    int n = 1; int d = 1;
+                    for (int i = 0; i < level; i++)
+                    {
+                        n *= n0;
+                        d *= d0;
+                    }
+                    piety_change = (you.piety * n / d) - you.piety;
                 }
                 break;
-                
+
             case DID_NOTHING:
             case DID_STABBING:                          // unused
             case DID_STIMULANTS:                        // unused
