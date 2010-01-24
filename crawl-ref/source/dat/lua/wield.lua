@@ -20,7 +20,7 @@ function ch_item_wieldable(it)
     local spells = make_hash( you.spells() )
 
     if spells["Bone Shards"]
-            and string.find( item.name(it, "a"), " skeleton" )
+            and string.find( it.name("a"), " skeleton" )
     then
         return true
     end
@@ -32,15 +32,15 @@ function ch_item_wieldable(it)
     end
 
     if spells["Sandblast"]
-            and item.class(it, true) == "missile"
-            and string.find( item.name(it, "a"), " stones?" )
+            and it.class(true) == "missile"
+            and string.find( it.name("a"), " stones?" )
     then
         return true
     end
 
     if spells["Sticks to Snakes"]
-            and item.class(it, true) == "missile"
-            and string.find( item.name(it, "a"), " arrows?" )
+            and it.class(true) == "missile"
+            and string.find( it.name("a"), " arrows?" )
     then
         return true
     end

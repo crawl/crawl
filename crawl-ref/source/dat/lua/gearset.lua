@@ -28,31 +28,31 @@
 function scan_kit()
     local kit = { }
     for i = 9, 0, -1 do
-        local it = item.equipped_at(i)
+        local it = items.equipped_at(i)
         if it then
-            table.insert(kit, item.slot(it))
+            table.insert(kit, it.slot)
         end
     end
     return kit
 end
 
 function kit_items(kit)
-    local items = { }
-    local inv = item.inventory()
+    local items_table = { }
+    local inv = items.inventory()
 
     for _, slot in ipairs(kit) do
         for _, it in ipairs(inv) do
-            if slot == item.slot(it) then
-                table.insert(items, it)
+            if slot == it.slot then
+                table.insert(items_table, it)
             end
         end
     end
-    return items
+    return items_table
 end
 
 function getkey(vkeys)
     local key
-    
+
     while true do
         key = crawl.getch()
         if key == 27 then return "escape" end
@@ -81,7 +81,7 @@ function rememberkit()
     else
         g_kit_battle = kit
     end
-    
+
     return false
 end
 
@@ -120,13 +120,13 @@ function matchkit(kit1, kit2)
 end
 
 function wear(it)
-    local _, eqt = item.equip_type(it)
+    local _, eqt = it.equip_type
     if eqt == "Weapon" then
-        return item.wield(it)
+        return it.wield()
     elseif eqt == "Amulet" or eqt == "Ring" then
-        return item.puton(it)
+        return it.puton()
     elseif eqt ~= "" then
-        return item.wear(it)
+        return it.wear()
     else
         return false
     end
@@ -137,7 +137,7 @@ function wearkit(kit)
     local currkit = scan_kit()
     local toremove = { }
     local noop = true
-    
+
     for _, v in ipairs(currkit) do
         local found = false
         for _, v1 in ipairs(kit) do
@@ -154,7 +154,7 @@ function wearkit(kit)
     local remitems = kit_items(toremove)
     for _, it in ipairs(remitems) do
         noop = false
-        if not item.remove(it) then
+        if not it.remove() then
             coroutine.yield(false)
         end
         coroutine.yield(true)
@@ -163,7 +163,7 @@ function wearkit(kit)
     local kitems = kit_items(kit)
 
     for _, it in ipairs(kitems) do
-        if not item.worn(it) then
+        if not it.worn then
             noop = false
             if not wear(it) then
                 coroutine.yield(false)
