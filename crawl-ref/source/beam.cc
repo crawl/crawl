@@ -6009,7 +6009,7 @@ void bolt::explosion_draw_cell(const coord_def& p)
         // bounds check
         if (in_los_bounds(drawpos))
         {
-            cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
+            cgotoxy(drawpos.x, drawpos.y, GOTO_CRT);
             put_colour_ch(colour == BLACK ? random_colour() : colour,
                           dchar_glyph(DCHAR_EXPLOSION));
         }
