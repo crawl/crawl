@@ -3146,15 +3146,12 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
 // to get to the player if necessary.
 static bool _may_cutdown(monsters* mons, monsters* targ)
 {
-    // Is the target a worthless obstacle?
-    bool is_firewood = mons_is_stationary(mons)
-                       && mons_class_flag(mons->type, M_NO_EXP_GAIN);
     // Save friendly plants from allies.
     bool bad_align = mons->attitude == ATT_GOOD_NEUTRAL
                      && targ->attitude == ATT_FRIENDLY
                   || mons->attitude == ATT_FRIENDLY
                      && targ->attitude > ATT_HOSTILE;
-    return (is_firewood && !bad_align);
+    return (mons_is_firewood(targ) && !bad_align);
 }
 
 static bool _monster_move(monsters *monster)
