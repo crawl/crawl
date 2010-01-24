@@ -778,13 +778,19 @@ std::vector<player_save_info> find_saved_characters()
                     std::string dollname = basename + ".tdl";
                     const std::string dollpath = get_savedir_path(dollname);
  #ifdef LOAD_UNPACKAGE_CMD
-                    escape_path_spaces(dollname);
-                    snprintf( cmd_buff, sizeof(cmd_buff),
-                              UNPACK_SPECIFIC_FILE_CMD,
-                              zipname.c_str(),
-                              dir.c_str(),
-                              dollname.c_str() );
-                    system(cmd_buff);
+                    // Don't go looking for a file that's not in the archive.
+                    const std::string tmp =
+                        canonicalise_file_separator(path + "\\" + dollname);
+                    if (file_exists(tmp))
+                    {
+                        escape_path_spaces(dollname);
+                        snprintf( cmd_buff, sizeof(cmd_buff),
+                                  UNPACK_SPECIFIC_FILE_CMD,
+                                  zipname.c_str(),
+                                  dir.c_str(),
+                                  dollname.c_str() );
+                        system(cmd_buff);
+                    }
  #endif
                     _fill_player_doll(p, dollpath);
  #ifdef LOAD_UNPACKAGE_CMD
