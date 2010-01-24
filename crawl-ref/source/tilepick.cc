@@ -1257,19 +1257,20 @@ static int _apply_variations(const item_def &item, int tile)
 {
     static const int etable[5][5] =
     {
-      {0, 0, 0, 0, 0},
-      {0, 1, 1, 1, 1},
-      {0, 1, 1, 1, 2},
-      {0, 1, 1, 2, 3},
-      {0, 1, 2, 3, 4}
+      {0, 0, 0, 0, 0},  // all variants look the same
+      {0, 1, 1, 1, 1},  // normal, ego/randart
+      {0, 1, 1, 1, 2},  // normal, ego, randart
+      {0, 1, 1, 2, 3},  // normal, ego (shiny/runed), ego (glowing), randart
+      {0, 1, 2, 3, 4}   // normal, shiny, runed, glowing, randart
     };
 
-    int etype = _get_etype(item);
-    int idx = tile_main_count(tile) - 1;
+    const int etype = _get_etype(item);
+    const int idx   = tile_main_count(tile) - 1;
     ASSERT(idx < 5);
+
     tile += etable[idx][etype];
 
-    return tile;
+    return (tile);
 }
 
 static int _tileidx_weapon_base(const item_def &item)
