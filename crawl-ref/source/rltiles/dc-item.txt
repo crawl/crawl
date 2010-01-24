@@ -21,21 +21,21 @@
 %rim 1
 ##Blunt
 club WPN_CLUB
-mace WPN_MACE
+mace1 WPN_MACE
 mace2
-mace_large WPN_GREAT_MACE
+mace_large1 WPN_GREAT_MACE
 mace_large2
-flail WPN_FLAIL
+flail1 WPN_FLAIL
 flail2
-spiked_flail WPN_SPIKED_FLAIL
+spiked_flail1 WPN_SPIKED_FLAIL
 spiked_flail2
-great_flail WPN_GREAT_FLAIL
+great_flail1 WPN_GREAT_FLAIL
 great_flail2
-morningstar WPN_MORNINGSTAR
+morningstar1 WPN_MORNINGSTAR
 morningstar2
-eveningstar WPN_EVENINGSTAR
+eveningstar1 WPN_EVENINGSTAR
 eveningstar2
-hammer WPN_HAMMER
+hammer1 WPN_HAMMER
 hammer2
 ankus WPN_ANKUS
 bullwhip WPN_WHIP
@@ -53,33 +53,33 @@ dagger WPN_DAGGER
 orcish_dagger WPN_DAGGER_ORC
 elven_dagger WPN_DAGGER_ELF
 
-short_sword WPN_SHORT_SWORD
+short_sword1 WPN_SHORT_SWORD
 short_sword2
 orcish_short_sword WPN_SHORT_SWORD_ORC
 elven_short_sword WPN_SHORT_SWORD_ELF
 
-long_sword2 WPN_LONG_SWORD
+long_sword1 WPN_LONG_SWORD
 %rim 0
-long_sword3
+long_sword2
 %rim 1
 orcish_long_sword WPN_LONG_SWORD_ORC
 
-greatsword WPN_GREAT_SWORD
+greatsword1 WPN_GREAT_SWORD
 greatsword2
 orcish_great_sword WPN_GREAT_SWORD_ORC
 
-falchion WPN_FALCHION
+falchion1 WPN_FALCHION
 falchion2
-scimitar WPN_SCIMITAR
+scimitar1 WPN_SCIMITAR
 scimitar2
 
-silver_saber WPN_SABRE
+sabre1_silver WPN_SABRE
 sabre2
 
 quickblade WPN_QUICK_BLADE
 
-katana2 WPN_KATANA
-katana3
+katana1 WPN_KATANA
+katana2
 
 double_sword WPN_DOUBLE_SWORD
 triple_sword WPN_TRIPLE_SWORD
@@ -89,49 +89,49 @@ blessed_blade WPN_BLESSED_BLADE
 %rim 1
 
 ##Axe
-hand_axe WPN_HAND_AXE
+hand_axe1 WPN_HAND_AXE
 hand_axe2
-war_axe WPN_WAR_AXE
+war_axe1 WPN_WAR_AXE
 war_axe2
-broad_axe WPN_BROAD_AXE
+broad_axe1 WPN_BROAD_AXE
 broad_axe2
 broad_axe3
-battle_axe WPN_BATTLEAXE
+battle_axe1 WPN_BATTLEAXE
 battle_axe2
 battle_axe3
-executioner_axe WPN_EXECUTIONERS_AXE
+executioner_axe1 WPN_EXECUTIONERS_AXE
 executioner_axe2
 
 ##Polearm
-elven_spear WPN_SPEAR
+spear1_elven WPN_SPEAR
 spear2
-trident WPN_TRIDENT
+trident1 WPN_TRIDENT
 trident2
 demon_trident WPN_DEMON_TRIDENT
-halberd WPN_HALBERD
+halberd1 WPN_HALBERD
 halberd2
-scythe WPN_SCYTHE
+scythe1 WPN_SCYTHE
 scythe2
-glaive WPN_GLAIVE
+glaive1 WPN_GLAIVE
 glaive2
 orcish_glaive WPN_GLAIVE_ORC
-bardiche WPN_BARDICHE
+bardiche1 WPN_BARDICHE
 bardiche2
 
 ##Staff
 quarterstaff WPN_QUARTERSTAFF
-lajatang WPN_LAJATANG
+lajatang1 WPN_LAJATANG
 lajatang2
 
 
 ##Ranged
 %sdir item/weapon/ranged
-blowgun WPN_BLOWGUN
+blowgun1 WPN_BLOWGUN
 blowgun2
 sling WPN_SLING
-bow WPN_BOW
+bow1 WPN_BOW
 bow2
-crossbow WPN_CROSSBOW
+crossbow1 WPN_CROSSBOW
 crossbow2
 longbow WPN_LONGBOW
 
