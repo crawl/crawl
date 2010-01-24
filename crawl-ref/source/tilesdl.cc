@@ -715,7 +715,6 @@ struct cursor_loc
 
 int TilesFramework::getch_ck()
 {
-    flush_prev_message();
     SDL_Event event;
     cursor_loc cur_loc;
     cursor_loc tip_loc;
