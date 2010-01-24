@@ -2901,6 +2901,11 @@ static bool _mon_can_move_to_pos(const monsters *monster,
             return (false); // blocks square
         }
 
+        // Cut down plants only when no alternative, or they're
+        // our target.
+        if (mons_is_firewood(targmonster) && monster->target != targ)
+            return (false);
+
         if (mons_aligned(monster->mindex(), targmonster->mindex())
             && !_mons_can_displace(monster, targmonster))
         {
