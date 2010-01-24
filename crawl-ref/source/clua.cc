@@ -670,7 +670,7 @@ CLua &CLua::get_vm(lua_State *ls)
 {
     lua_stack_cleaner clean(ls);
     _getregistry(ls, "__clua");
-    CLua *vm = util_get_userdata<CLua>(ls, -1);
+    CLua *vm = clua_get_lightuserdata<CLua>(ls, -1);
     if (!vm)
         end(1, false, "Failed to find CLua for lua state %p", ls);
     return (*vm);

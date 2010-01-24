@@ -65,7 +65,7 @@ int clua_stringtable(lua_State *ls, const std::vector<std::string> &s);
  */
 
 template <class T>
-inline static T *util_get_userdata(lua_State *ls, int ndx)
+inline static T *clua_get_lightuserdata(lua_State *ls, int ndx)
 {
     return (lua_islightuserdata(ls, ndx))?
             static_cast<T *>( lua_touserdata(ls, ndx) )

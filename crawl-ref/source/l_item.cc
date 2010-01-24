@@ -27,20 +27,29 @@
 /////////////////////////////////////////////////////////////////////
 // Item handling
 
-#define UDATA_ITEM(name) \
-    item_def *item = util_get_userdata<item_def>(ls, lua_upvalueindex(1))
-
-static const item_def *excl_item = NULL;
-
-void push_item(lua_State *ls, item_def *item)
+struct item_wrapper
 {
-    item_def **iw = clua_new_userdata<item_def *>(ls, ITEM_METATABLE);
-    *iw = item;
+    item_def *item;
+    long turn;
+
+    bool valid() const { return turn == you.num_turns; }
+};
+
+void clua_push_item(lua_State *ls, item_def *item)
+{
+
+    item_wrapper *iw = clua_new_userdata<item_wrapper>(ls, ITEM_METATABLE);
+    iw->item = item;
+    iw->turn = you.num_turns;
 }
 
-void lua_set_exclusive_item(const item_def *item)
+item_def *clua_get_item(lua_State *ls, int ndx)
 {
-    excl_item = item;
+    item_wrapper *iwrap =
+        clua_get_userdata<item_wrapper>(ls, ITEM_METATABLE, ndx);
+    if (CLua::get_vm(ls).managed_vm && !iwrap->valid())
+        luaL_error(ls, "Invalid item");
+    return iwrap->item;
 }
 
 void lua_push_floor_items(lua_State *ls, int link)
@@ -49,7 +58,7 @@ void lua_push_floor_items(lua_State *ls, int link)
     int index = 0;
     for ( ; link != NON_ITEM; link = mitm[link].link)
     {
-        push_item(ls, &mitm[link]);
+        clua_push_item(ls, &mitm[link]);
         lua_rawseti(ls, -2, ++index);
     }
 }
@@ -64,7 +73,7 @@ void lua_push_inv_items(lua_State *ls = NULL)
     {
         if (you.inv[slot].is_valid())
         {
-            push_item(ls, &you.inv[slot]);
+            clua_push_item(ls, &you.inv[slot]);
             lua_rawseti(ls, -2, ++index);
         }
     }
@@ -77,17 +86,22 @@ void lua_push_inv_items(lua_State *ls = NULL)
 #define IDEFN(name, closure)                    \
     static int l_item_##name(lua_State *ls, item_def *item, const char *attrs) \
     {                                                                   \
-    lua_pushlightuserdata(ls, item);                                    \
-    lua_pushcclosure(ls, l_item_##closure, 1);                          \
-    return (1);                                                         \
+        clua_push_item(ls, item);                                            \
+        lua_pushcclosure(ls, l_item_##closure, 1);                      \
+        return (1);                                                     \
     }
+
+#define ITEM(name, ndx) \
+    item_def *name = clua_get_item(ls, ndx)
+
+#define UDATA_ITEM(name) ITEM(name, lua_upvalueindex(1))
 
 static int l_item_do_wield(lua_State *ls)
 {
     if (you.turn_is_over)
         return (0);
 
-    item_def *item = util_get_userdata<item_def>(ls, lua_upvalueindex(1));
+    UDATA_ITEM(item);
 
     int slot = -1;
     if (item && item->is_valid() && in_inventory(*item))
@@ -667,12 +681,12 @@ static item_def *dmx_get_item(lua_State *ls, int ndx, int subndx)
     if (lua_istable(ls, ndx))
     {
         lua_rawgeti(ls, ndx, subndx);
-        item_def *item = util_get_userdata<item_def>(ls, -1);
+        ITEM(item, -1);
         lua_pop(ls, 1);
-
         return (item);
     }
-    return util_get_userdata<item_def>(ls, ndx);
+    ITEM(item, ndx);
+    return item;
 }
 
 static int dmx_get_qty(lua_State *ls, int ndx, int subndx)
@@ -709,9 +723,9 @@ static int l_item_pickup(lua_State *ls)
     if (you.turn_is_over)
         return (0);
 
-    if (lua_islightuserdata(ls, 1))
+    if (lua_isuserdata(ls, 1))
     {
-        UDATA_ITEM(item);
+        ITEM(item, 1);
         int qty = item->quantity;
         if (lua_isnumber(ls, 2))
             qty = luaL_checkint(ls, 2);
@@ -767,7 +781,7 @@ static int l_item_equipped_at(lua_State *ls)
         return (0);
 
     if (you.equip[eq] != -1)
-        push_item(ls, &you.inv[you.equip[eq]]);
+        clua_push_item(ls, &you.inv[you.equip[eq]]);
     else
         lua_pushnil(ls);
 
@@ -778,7 +792,7 @@ static int l_item_inslot(lua_State *ls)
 {
     int index = luaL_checkint(ls, 1);
     if (index >= 0 && index < 52 && you.inv[index].is_valid())
-        push_item(ls, &you.inv[index]);
+        clua_push_item(ls, &you.inv[index]);
     else
         lua_pushnil(ls);
     return (1);
@@ -822,8 +836,7 @@ static ItemAccessor item_attrs[] =
 
 static int item_get(lua_State *ls)
 {
-    item_def **iw = clua_get_userdata<item_def*>(ls, ITEM_METATABLE);
-
+    ITEM(iw, 1);
     if (!iw)
         return (0);
 
@@ -833,7 +846,7 @@ static int item_get(lua_State *ls)
 
     for (unsigned i = 0; i < sizeof(item_attrs) / sizeof(item_attrs[0]); ++i)
         if (!strcmp(attr, item_attrs[i].attribute))
-            return (item_attrs[i].accessor(ls, *iw, attr));
+            return (item_attrs[i].accessor(ls, iw, attr));
 
     return (0);
 }
