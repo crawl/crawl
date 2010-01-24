@@ -21,6 +21,7 @@
 #include "invent.h"
 #include "items.h"
 #include "kills.h"
+#include "l_libs.h"
 #include "libutil.h"
 #include "menu.h"
 #include "message.h"
@@ -65,13 +66,13 @@ std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive)
 {
 #ifdef CLUA_BINDINGS
-    if (exclusive)
-        lua_set_exclusive_item(item);
-    std::string ann;
-    if (!clua.callfn(s, "u>s", item, &ann) && !clua.error.empty())
+    lua_stack_cleaner cleaner(clua);
+    clua_push_item(clua, const_cast<item_def*>(item));
+    if (!clua.callfn(s, 1, 1) && !clua.error.empty())
         mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-    if (exclusive)
-        lua_set_exclusive_item(NULL);
+    std::string ann;
+    if (lua_isstring(clua, -1))
+        ann = luaL_checkstring(clua, -1);
     return (ann);
 #else
     return ("");

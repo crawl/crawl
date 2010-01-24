@@ -64,7 +64,7 @@ static int food_prompt_inventory_menu(lua_State *ls)
 
 static int food_can_eat(lua_State *ls)
 {
-    LUA_ITEM(item, 1);
+    LUA_ITEM(ls, item, 1);
     bool hungercheck = true;
 
     if (lua_isboolean(ls, 2))
@@ -101,7 +101,7 @@ static bool eat_item(const item_def &item)
 
 static int food_eat(lua_State *ls)
 {
-    LUA_ITEM(item, 1);
+    LUA_ITEM(ls, item, 1);
 
     bool eaten = false;
     if (!you.turn_is_over)
@@ -121,7 +121,7 @@ static int food_eat(lua_State *ls)
 
 static int food_rotting(lua_State *ls)
 {
-    LUA_ITEM(item, 1);
+    LUA_ITEM(ls, item, 1);
 
     bool rotting = false;
     if (item && item->base_type == OBJ_FOOD && item->sub_type == FOOD_CHUNK)
@@ -133,7 +133,7 @@ static int food_rotting(lua_State *ls)
 
 static int food_dangerous(lua_State *ls)
 {
-    LUA_ITEM(item, 1);
+    LUA_ITEM(ls, item, 1);
 
     bool dangerous = false;
     if (item)
@@ -147,7 +147,7 @@ static int food_dangerous(lua_State *ls)
 
 static int food_ischunk(lua_State *ls)
 {
-    LUA_ITEM(item, 1);
+    LUA_ITEM(ls, item, 1);
     lua_pushboolean(ls,
             item && item->base_type == OBJ_FOOD
                  && item->sub_type == FOOD_CHUNK);

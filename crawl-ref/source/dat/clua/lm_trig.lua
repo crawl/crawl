@@ -667,7 +667,7 @@ function DgnTriggerer:activate(triggerable, marker, x, y)
       elseif #items > 1 then
         error("Too many vault items for " .. self.type)
       end
-      self.target = item.name(items[1])
+      self.target = items[1].name()
     end
   end
 
@@ -736,7 +736,7 @@ function DgnTriggerer:item_moved(triggerable, marker, ev)
     error("DgnTriggerer:item_moved() didn't get a valid item index")
   end
 
-  if item.name(it) == self.target then
+  if it.name() == self.target then
     if self.marker_mover then
       -- We only exist to move the triggerable if the item moves
       triggerable:move(marker, ev:dest())
@@ -754,7 +754,7 @@ function DgnTriggerer:item_pickup(triggerable, marker, ev)
     error("DgnTriggerer:item_pickup() didn't get a valid item index")
   end
 
-  if item.name(it) == self.target then
+  if it.name() == self.target then
     triggerable:do_trigger(self, marker, ev)
   end
 end

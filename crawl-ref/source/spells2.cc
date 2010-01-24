@@ -46,6 +46,7 @@
 #include "player.h"
 #include "quiver.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "stuff.h"
 #include "teleport.h"
 #ifdef USE_TILE

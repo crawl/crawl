@@ -126,7 +126,7 @@ static int l_mons_do_dismiss(lua_State *ls)
     // dismiss is only callable from dlua, not from managed VMs (i.e.
     // end-user scripts cannot dismiss monsters).
     ASSERT_DLUA;
-    monsters *mons = util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+    monsters *mons = clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
 
     if (mons->alive())
     {
@@ -143,7 +143,7 @@ static int l_mons_do_random_teleport(lua_State *ls)
     // We should only be able to teleport monsters from dlua.
     ASSERT_DLUA;
 
-    monsters *mons = util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+    monsters *mons = clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
 
     if (mons->alive())
         mons->teleport(true);
@@ -165,7 +165,7 @@ static int l_mons_do_set_prop(lua_State *ls)
     ASSERT_DLUA;
 
     monsters *mons =
-        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+        clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
 
     const char *prop_name = luaL_checkstring(ls, 1);
 
@@ -203,7 +203,7 @@ static int l_mons_do_get_prop(lua_State *ls)
     ASSERT_DLUA;
 
     monsters *mons =
-        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+        clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
 
     const char *prop_name = luaL_checkstring(ls, 1);
 
@@ -252,7 +252,7 @@ static int l_mons_do_has_prop(lua_State *ls)
     ASSERT_DLUA;
 
     monsters *mons =
-        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+        clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
 
     const char *prop_name = luaL_checkstring(ls, 1);
 

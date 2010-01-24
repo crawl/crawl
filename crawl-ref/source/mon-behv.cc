@@ -635,7 +635,8 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
             && !mons_is_projectile(foe->type)
             && (friendly || !is_sanctuary(p))
             && (foe->friendly() != friendly
-                || (neutral && !foe->neutral())))
+                || neutral && !foe->neutral())
+            && !mons_is_firewood(foe))
         {
             return (true);
         }

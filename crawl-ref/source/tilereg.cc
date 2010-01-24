@@ -916,16 +916,18 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
 {
     unsigned int fg_idx = fg & TILE_FLAG_MASK;
 
+    bool in_water = (bg & TILE_FLAG_WATER) && !(fg & TILE_FLAG_FLYING);
+
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
     {
-        if (bg & TILE_FLAG_WATER && !(fg & TILE_FLAG_FLYING))
+        if (in_water)
             m_buf_main_trans.add(fg_idx, x, y, 0, true, false);
         else
             m_buf_main.add(fg_idx, x, y);
     }
 
     if (fg & TILE_FLAG_NET)
-        m_buf_doll.add(TILEP_TRAP_NET, x, y, 0, bg & TILE_FLAG_WATER, false);
+        m_buf_doll.add(TILEP_TRAP_NET, x, y, 0, in_water, false);
 
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
@@ -1058,24 +1060,22 @@ void DungeonRegion::pack_buffers()
 
             pack_background(bg, x, y);
 
+            bool in_water = (bg & TILE_FLAG_WATER) && !(fg & TILE_FLAG_FLYING);
             if (fg_idx >= TILEP_MCACHE_START)
             {
                 mcache_entry *entry = mcache.get(fg_idx);
                 if (entry)
-                    pack_mcache(entry, x, y, bg & TILE_FLAG_WATER);
+                    pack_mcache(entry, x, y, in_water);
                 else
-                {
-                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0,
-                                   bg & TILE_FLAG_WATER, false);
-                }
+                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, in_water, false);
             }
             else if (fg_idx == TILEP_PLAYER)
             {
-                pack_player(x, y, bg & TILE_FLAG_WATER);
+                pack_player(x, y, in_water);
             }
             else if (fg_idx >= TILE_MAIN_MAX)
             {
-                m_buf_doll.add(fg_idx, x, y, 0, bg & TILE_FLAG_WATER, false);
+                m_buf_doll.add(fg_idx, x, y, 0, in_water, false);
             }
 
             pack_foreground(bg, fg, x, y);
@@ -1137,10 +1137,10 @@ void DungeonRegion::render()
     m_buf_main_trans.draw();
     m_buf_main.draw();
 
-    if ((Options.tile_show_minihealthbar && you.hp < you.hp_max)
-        || (Options.tile_show_minimagicbar && you.magic_points < you.max_magic_points))
+    if (Options.tile_show_minihealthbar && you.hp < you.hp_max
+        || Options.tile_show_minimagicbar
+           && you.magic_points < you.max_magic_points)
     {
-
         // Tiles are 32x32 pixels; 1/32 = 0.03125.
         // The bars are two pixels high each.
         const float bar_height = 0.0625;
@@ -1148,12 +1148,14 @@ void DungeonRegion::render()
 
         ShapeBuffer buff;
 
-        if (Options.tile_show_minimagicbar)
+        if (Options.tile_show_minimagicbar
+            && you.magic_points < you.max_magic_points)
         {
             static const VColour magic(0, 0, 255, 255);
             static const VColour magic_spent(0, 0, 0, 255);
 
-            const float magic_divider = (float) you.magic_points / (float) you.max_magic_points;
+            const float magic_divider = (float) you.magic_points
+                                        / (float) you.max_magic_points;
 
             buff.add(mx / 2,
                      my / 2 + healthbar_offset + bar_height,
@@ -1173,21 +1175,35 @@ void DungeonRegion::render()
 
         if (Options.tile_show_minihealthbar)
         {
-            static const VColour healthy(0, 255, 0, 255);
-            static const VColour damaged(255, 0, 0, 255);
+            const float min_hp = std::max(0, you.hp);
+            const float health_divider = min_hp / (float) you.hp_max;
 
-            const float health_divider = (float) you.hp / (float) you.hp_max;
+            const int hp_percent = (you.hp * 100) / you.hp_max;
+
+            int hp_colour = GREEN;
+            for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
+                if (hp_percent <= Options.hp_colour[i].first)
+                    hp_colour = Options.hp_colour[i].second;
+
+            static const VColour healthy(0,   255, 0, 255);
+            static const VColour damaged(255, 255, 0, 255);
+            static const VColour wounded(0, 0, 0, 255);
+            static const VColour hp_spent(255,   0, 0, 255);
 
             buff.add(mx / 2,
                      my / 2 + healthbar_offset,
                      mx / 2 + health_divider,
                      my / 2 + healthbar_offset + bar_height,
-                     healthy);
+                     hp_colour == RED    ? wounded :
+                     hp_colour == YELLOW ? damaged
+                                         : healthy);
+
+
             buff.add(mx / 2 + health_divider,
                      my / 2 + healthbar_offset,
                      mx / 2 + 1,
                      my / 2 + healthbar_offset + bar_height,
-                     damaged);
+                     hp_spent);
         }
 
         buff.draw();

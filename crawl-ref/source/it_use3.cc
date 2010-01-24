@@ -39,6 +39,7 @@
 #include "misc.h"
 #include "player.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spells1.h"

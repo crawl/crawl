@@ -58,6 +58,7 @@
 #include "player.h"
 #include "quiver.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"

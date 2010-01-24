@@ -115,6 +115,9 @@ void init_tutorial_options()
     if (!Tutorial.tutorial_left)
         return;
 
+    // Clear possible debug messages before messing
+    // with messaging options.
+    mesclr(true);
     Options.clear_messages = true;
     Options.auto_list = true;
 

@@ -1,0 +1,38 @@
+/*
+ * File:     godconduct.h
+ * Summary:  Stuff related to conducts.
+ */
+
+#ifndef GODCONDUCT_H
+#define GODCONDUCT_H
+
+// Calls did_god_conduct() when the object goes out of scope.
+struct god_conduct_trigger
+{
+    conduct_type conduct;
+    int pgain;
+    bool known;
+    bool enabled;
+    std::auto_ptr<monsters> victim;
+
+    god_conduct_trigger(conduct_type c = NUM_CONDUCTS,
+                        int pg = 0,
+                        bool kn = true,
+                        const monsters *vict = NULL);
+
+    void set(conduct_type c = NUM_CONDUCTS,
+             int pg = 0,
+             bool kn = true,
+             const monsters *vict = NULL);
+
+    ~god_conduct_trigger();
+};
+
+bool did_god_conduct(conduct_type thing_done, int level, bool known = true,
+                     const monsters *victim = NULL);
+void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
+                         bool known = true);
+void enable_attack_conducts(god_conduct_trigger conduct[3]);
+void disable_attack_conducts(god_conduct_trigger conduct[3]);
+
+#endif

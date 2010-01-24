@@ -177,7 +177,9 @@ flight_type mons_class_flies(int mc);
 flight_type mons_flies(const monsters *mon, bool randarts = true);
 
 bool mons_class_amphibious(int mc);
+bool mons_class_flattens_trees(int mc);
 bool mons_amphibious(const monsters *mon);
+bool mons_flattens_trees(const monsters *mon);
 bool mons_class_wall_shielded(int mc);
 bool mons_wall_shielded(const monsters *mon);
 
@@ -351,6 +353,7 @@ bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monsters *mon);
+bool mons_is_firewood(const monsters *mon);
 
 bool mons_is_fast( const monsters *mon );
 bool mons_is_projectile(int mc);

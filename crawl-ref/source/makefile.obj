@@ -48,7 +48,9 @@ fprop.o \
 geom2d.o \
 ghost.o \
 godabil.o \
+godconduct.o \
 goditem.o \
+godprayer.o \
 godwrath.o \
 hiscores.o \
 initfile.o \

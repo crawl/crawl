@@ -125,7 +125,13 @@ public:
     item_def  *defender_shield;
 
     // Armour penalties?
-    int       heavy_armour_penalty;
+    // Adjusted EV penalty for body armour and shields.
+    int       player_body_armour_penalty;
+    int       player_shield_penalty;
+
+    // Combined to-hit penalty from armour and shield.
+    int       player_armshld_tohit_penalty;
+
     bool      can_do_unarmed;
 
     // Miscast to cause after special damage is done.  If miscast_level == 0
@@ -234,6 +240,7 @@ private:
     int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
     int  player_to_hit(bool random_factor);
+    int  player_armour_shield_tohit_penalty(bool random_factor) const;
     void player_apply_attack_delay();
     int  player_apply_weapon_bonuses(int damage);
     int  player_apply_weapon_skill(int damage);
@@ -259,7 +266,6 @@ private:
     void player_stab_check();
     int  player_weapon_speed();
     int  player_unarmed_speed();
-    int  player_apply_shield_delay(int attack_delay);
     void player_announce_hit();
     std::string player_why_missed();
     void player_warn_miss();
