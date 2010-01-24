@@ -2063,8 +2063,8 @@ int player_adjusted_shield_evasion_penalty()
     const int base_shield_penalty = -property(*shield, PARM_EVASION);
     return std::max(0,
                     (base_shield_penalty
-                     - (1 + you.skills[SK_SHIELDS])
-                     / (2 * (5 + player_evasion_size_factor()))));
+                     - you.skills[SK_SHIELDS]
+                     / (5 + player_evasion_size_factor())));
 }
 
 // The EV penalty to the player for their worn body armour.
@@ -2244,8 +2244,8 @@ int player_body_armour_racial_spellcasting_bonus()
 // the player's worn body armour and shield.
 int player_armour_shield_spell_penalty()
 {
-    return (25 * (player_adjusted_body_armour_evasion_penalty()
-                  + player_adjusted_shield_evasion_penalty())
+    return (25 * player_adjusted_body_armour_evasion_penalty()
+            + 25 * player_adjusted_shield_evasion_penalty()
             - 20
             - player_body_armour_racial_spellcasting_bonus());
 }
