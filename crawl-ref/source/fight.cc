@@ -346,9 +346,9 @@ void melee_attack::init_attack()
     if (attacker && attacker->atype() == ACT_PLAYER)
     {
         player_body_armour_penalty =
-            player_adjusted_body_armour_evasion_penalty();
+            player_adjusted_body_armour_evasion_penalty(1);
         player_shield_penalty =
-            player_adjusted_shield_evasion_penalty();
+            player_adjusted_shield_evasion_penalty(1);
         dprf("Player body armour penalty: %d, shield penalty: %d",
              player_body_armour_penalty, player_shield_penalty);
     }
