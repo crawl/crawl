@@ -1343,6 +1343,11 @@ void _acquirement_determine_food(int& type_wanted, int& quantity,
         type_wanted = POT_BLOOD;
         quantity = 2 + random2(4);
     }
+    else if (you.religion == GOD_FEDHAS)
+    {
+        // Fedhas worshippers get fruit to use for growth and evolution
+        type_wanted = one_chance_in(3) ? FOOD_BANANA : FOOD_ORANGE;
+    }
     else
     {
         // Meat is better than bread (except for herbivores), and
@@ -1366,8 +1371,12 @@ void _acquirement_determine_food(int& type_wanted, int& quantity,
 
     quantity = 3 + random2(5);
 
+    if (type_wanted == FOOD_BANANA || type_wanted == FOOD_ORANGE)
+    {
+        quantity = 8 + random2avg(15, 2);
+    }
     // giving more of the lower food value items
-    if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
+    else if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
     {
         quantity += random2avg(10, 2);
     }
