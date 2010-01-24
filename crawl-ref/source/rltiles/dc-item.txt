@@ -273,10 +273,13 @@ chain_mail2
 chain_mail3 ARM_CHAIN_MAIL_ELF
 orcish_chain_mail ARM_CHAIN_MAIL_ORC
 
-splint_mail ARM_SPLINT_MAIL
-banded_mail ARM_BANDED_MAIL
+splint_mail1 ARM_SPLINT_MAIL
+splint_mail2
+banded_mail1 ARM_BANDED_MAIL
+banded_mail2
 
-plate_mail2 ARM_PLATE_MAIL
+plate_mail1 ARM_PLATE_MAIL
+plate_mail2
 orcish_platemail ARM_PLATE_MAIL_ORC
 
 crystal_plate_mail ARM_CRYSTAL_PLATE_MAIL
