@@ -248,23 +248,23 @@ effect/rock0 MI_LARGE_ROCK0
 
 ######OBJ_ARMOUR
 %sdir item/armour
-robe ARM_ROBE
+robe1 ARM_ROBE
 robe2
 robe3
 
-leather_armor2 ARM_LEATHER_ARMOUR
-breast_plate2
-leather_armor4
+leather_armour1 ARM_LEATHER_ARMOUR
+leather_armour2
+leather_armour3
 orcish_leather_armor ARM_LEATHER_ARMOUR_ORC
 elven_leather_armor ARM_LEATHER_ARMOUR_ELF
 
-ring_mail ARM_RING_MAIL
+ring_mail1 ARM_RING_MAIL
 ring_mail2
 orcish_ringmail ARM_RING_MAIL_ORC
 elven_ringmail ARM_RING_MAIL_ELF
 dwarven_ringmail ARM_RING_MAIL_DWA
 
-scale_mail ARM_SCALE_MAIL
+scale_mail1 ARM_SCALE_MAIL
 scale_mail2
 elven_scalemail ARM_SCALE_MAIL_ELF
 
@@ -284,7 +284,7 @@ orcish_platemail ARM_PLATE_MAIL_ORC
 
 crystal_plate_mail ARM_CRYSTAL_PLATE_MAIL
 
-animal_skin ARM_ANIMAL_SKIN
+animal_skin1 ARM_ANIMAL_SKIN
 animal_skin2
 
 troll_hide ARM_TROLL_HIDE
@@ -304,7 +304,7 @@ gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
 swamp_dragon_hide ARM_SWAMP_DRAGON_HIDE
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
 
-leather_cloak ARM_CLOAK
+cloak1_leather ARM_CLOAK
 cloak2
 cloak3
 cloak4
@@ -320,44 +320,43 @@ centaur_barding_magenta
 centaur_barding_red
 
 %sdir item/armour/shields
-#dwarvish_roundshield ARM_BUCKLER
 %rim 0
-buckler ARM_BUCKLER
+buckler1 ARM_BUCKLER
 buckler2
 buckler3
 %rim 1
 
-elven_shield ARM_SHIELD
-shield_kite2
-shield_round2
+shield1_elven ARM_SHIELD
+shield2_kite
+shield3_round
 
-large_shield ARM_LARGE_SHIELD
-shield_large2
-shield_kite3
+large_shield1 ARM_LARGE_SHIELD
+large_shield2
+large_shield3
 
 %sdir item/armour/headgear
 #####ARM_HELMET
 elven_leather_helm THELM_CAP
-wizard_hat THELM_WIZARD_HAT
+wizard_hat1 THELM_WIZARD_HAT
 wizard_hat2
 
-visored_helmet THELM_HELM
-etched_helmet
-helm3
-helm_visor1
+helmet1_visored THELM_HELM
+helmet2_etched
+helmet3
+helmet4_visor
 
 %sdir item/armour
 ###### GLOVES
 glove1 ARM_GLOVES
+glove2
 glove3
-glove5
-gauntlet2
+glove4_gauntlets
 
 ###### BOOTS
-boots_brown1 ARM_BOOTS
-jackboots
-boots_stripe1
-boots_green2
+boots1_brown ARM_BOOTS
+boots2_jackboots
+boots3_stripe
+boots4_green
 
 ###########OBJ_WANDS
 %sdir item/wand
