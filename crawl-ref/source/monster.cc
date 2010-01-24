@@ -2217,7 +2217,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         result += mon.number ? "active " : "";
 
     // Done here to cover cases of undead versions of hydras.
-    if (mons_species(nametype) == MONS_HYDRA
+    if (mons_genus(nametype) == MONS_HYDRA
         && mon.number > 0 && desc != DESC_DBNAME)
     {
         if (nametype == MONS_LERNAEAN_HYDRA)

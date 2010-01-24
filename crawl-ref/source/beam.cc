@@ -1842,7 +1842,8 @@ void bolt::fire_wall_effect()
                 emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
             else if (you.can_smell())
                 emit_message(MSGCH_PLAIN, "You smell burning wax.");
-            place_cloud(CLOUD_FIRE, pos(), random2(10)+15, whose_kill(), killer());
+            place_cloud(CLOUD_FIRE, pos(), random2(10)+15,
+                        whose_kill(), killer());
             obvious_effect = true;
         }
     }
@@ -1860,7 +1861,8 @@ void bolt::fire_wall_effect()
                 did_god_conduct(DID_KILL_PLANT, 1, effect_known);
             else if (whose_kill() == KC_FRIENDLY)
                 did_god_conduct(DID_ALLY_KILLED_PLANT, 1, effect_known, 0);
-            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, whose_kill(), killer(), 5);
+            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25,
+                        whose_kill(), killer(), 5);
             obvious_effect = true;
         }
     }

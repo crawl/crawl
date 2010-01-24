@@ -1175,10 +1175,17 @@ bool mons_class_amphibious(int mc)
 
 bool mons_amphibious(const monsters *mon)
 {
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
+    return (mons_class_amphibious(mons_base_type(mon)));
+}
 
-    return (mons_class_amphibious(montype));
+bool mons_class_flattens_trees(int mc)
+{
+    return (mc == MONS_LERNAEAN_HYDRA);
+}
+
+bool mons_flattens_trees(const monsters *mon)
+{
+    return mons_class_flattens_trees(mons_base_type(mon));
 }
 
 bool mons_class_wall_shielded(int mc)
