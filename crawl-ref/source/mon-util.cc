@@ -286,6 +286,9 @@ mon_resist_def get_mons_resists(const monsters *mon)
 
 monsters *monster_at(const coord_def &pos)
 {
+    if (!in_bounds(pos))
+        return NULL;
+
     const int mindex = mgrd(pos);
     return (mindex != NON_MONSTER ? &menv[mindex] : NULL);
 }

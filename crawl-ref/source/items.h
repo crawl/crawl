@@ -83,6 +83,14 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
 
 bool move_top_item( const coord_def &src, const coord_def &dest );
 
+// Get the top item in a given cell. If allow_mimic_item is true and
+// an unknown mimic is inhabiting the square, get that mimic's item.
+// If there are no items, return NULL.
+const item_def* top_item_at(const coord_def& where, bool allow_mimic_item);
+
+// Returns whether there is more than one item in a given cell.
+bool multiple_items_at(const coord_def& where, bool allow_mimic_item);
+
 void drop(void);
 
 int inv_count(void);

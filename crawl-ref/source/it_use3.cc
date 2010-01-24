@@ -208,7 +208,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (!beam.isValid)
         return (false);
 
-    if (beam.isMe)
+    if (beam.isMe())
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return (false);
