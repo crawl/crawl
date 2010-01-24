@@ -2054,7 +2054,7 @@ int player_evasion_size_factor()
 }
 
 // The EV penalty to the player for wearing their current shield.
-int player_adjusted_shield_evasion_penalty()
+int player_adjusted_shield_evasion_penalty(int scale)
 {
     const item_def *shield = you.slot_item(EQ_SHIELD);
     if (!shield)
@@ -2062,13 +2062,13 @@ int player_adjusted_shield_evasion_penalty()
 
     const int base_shield_penalty = -property(*shield, PARM_EVASION);
     return std::max(0,
-                    (base_shield_penalty
-                     - you.skills[SK_SHIELDS]
+                    (base_shield_penalty * scale
+                     - you.skills[SK_SHIELDS] * scale
                      / (5 + player_evasion_size_factor())));
 }
 
 // The EV penalty to the player for their worn body armour.
-int player_adjusted_body_armour_evasion_penalty()
+int player_adjusted_body_armour_evasion_penalty(int scale)
 {
     const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
     if (!body_armour)
@@ -2080,13 +2080,14 @@ int player_adjusted_body_armour_evasion_penalty()
 
     return ((base_ev_penalty + std::max(0, 3 * base_ev_penalty - you.strength))
             * (45 - you.skills[SK_ARMOUR])
+            * scale
             / 45);
 }
 
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
 // not as a randart property).
-int player_adjusted_evasion_penalty()
+int player_adjusted_evasion_penalty(const int scale)
 {
     int piece_armour_evasion_penalty = 0;
 
@@ -2103,8 +2104,8 @@ int player_adjusted_evasion_penalty()
             piece_armour_evasion_penalty += penalty;
     }
 
-    return (piece_armour_evasion_penalty +
-            player_adjusted_body_armour_evasion_penalty());
+    return (piece_armour_evasion_penalty * scale +
+            player_adjusted_body_armour_evasion_penalty(scale));
 }
 
 // Player EV bonuses for various effects and transformations. This
@@ -2149,7 +2150,7 @@ int player_evasion_bonuses(ev_ignore_type evit)
 }
 
 // Player EV scaling for being flying kenku or swimming merfolk.
-int player_scale_evasion(const int prescaled_ev)
+int player_scale_evasion(const int prescaled_ev, const int scale)
 {
     switch (you.species)
     {
@@ -2158,7 +2159,9 @@ int player_scale_evasion(const int prescaled_ev)
         if (you.swimming())
         {
             const int ev_bonus =
-                std::min(9, std::max(2, prescaled_ev / 4));
+                std::min(9 * scale,
+                         std::max(2 * scale,
+                                  prescaled_ev * scale / 4));
             return (prescaled_ev + ev_bonus);
         }
         break;
@@ -2168,7 +2171,9 @@ int player_scale_evasion(const int prescaled_ev)
         if (you.flight_mode() == FL_FLY)
         {
             const int ev_bonus =
-                std::min(9, std::max(1, prescaled_ev / 5));
+                std::min(9 * scale,
+                         std::max(1 * scale,
+                                  prescaled_ev * scale / 5));
             return (prescaled_ev + ev_bonus);
         }
         break;
@@ -2183,8 +2188,6 @@ int player_scale_evasion(const int prescaled_ev)
 int player_evasion(ev_ignore_type evit)
 {
     const int size_factor = player_evasion_size_factor();
-    const int size_base_ev = 10 + size_factor;
-
     // Repulsion fields and size are all that matters when paralysed.
     if (you.cannot_move() && !(evit & EV_IGNORE_HELPLESS))
     {
@@ -2194,26 +2197,35 @@ int player_evasion(ev_ignore_type evit)
         return std::max(1, paralysed_base_ev + repulsion_ev);
     }
 
-    const int adjusted_evasion_penalty = player_adjusted_evasion_penalty();
+    const int scale = 100;
+    const int size_base_ev = (10 + size_factor) * scale;
+
+    const int adjusted_evasion_penalty =
+        player_adjusted_evasion_penalty(scale);
 
     const int dodge_bonus =
-        (7 + you.skills[SK_DODGING] * you.dex)
-        / (20 + adjusted_evasion_penalty - size_factor);
+        (7 + you.skills[SK_DODGING] * you.dex) * scale * scale
+        / (20 * scale + adjusted_evasion_penalty - size_factor * scale);
 
     const int adjusted_shield_penalty =
-        player_adjusted_shield_evasion_penalty();
+        player_adjusted_shield_evasion_penalty(scale);
+
+    const int evasion_bonuses = player_evasion_bonuses(evit) * scale;
 
     const int prescaled_evasion =
-        size_base_ev + dodge_bonus + player_evasion_bonuses(evit)
+        size_base_ev
+        + dodge_bonus
+        + evasion_bonuses
         - adjusted_evasion_penalty
         - adjusted_shield_penalty;
 
-    const int final_evasion = player_scale_evasion(prescaled_evasion);
+    const int final_evasion =
+        player_scale_evasion(prescaled_evasion, scale);
 
-    return (final_evasion);
+    return (unscale_round_up(final_evasion, scale));
 }
 
-int player_body_armour_racial_spellcasting_bonus()
+int player_body_armour_racial_spellcasting_bonus(const int scale)
 {
     const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
     if (!body_armour)
@@ -2237,17 +2249,19 @@ int player_body_armour_racial_spellcasting_bonus()
     if (armour_race & player_race)
         armour_racial_spellcasting_bonus += 15;
 
-    return (armour_racial_spellcasting_bonus);
+    return (armour_racial_spellcasting_bonus * scale);
 }
 
 // Returns the spellcasting penalty (increase in spell failure) for
 // the player's worn body armour and shield.
 int player_armour_shield_spell_penalty()
 {
-    return (25 * player_adjusted_body_armour_evasion_penalty()
-            + 25 * player_adjusted_shield_evasion_penalty()
-            - 20
-            - player_body_armour_racial_spellcasting_bonus());
+    const int scale = 100;
+    return ((25 * player_adjusted_body_armour_evasion_penalty(scale)
+             + 25 * player_adjusted_shield_evasion_penalty(scale)
+             - 20 * scale
+             - player_body_armour_racial_spellcasting_bonus(scale))
+            / scale);
 }
 
 int player_magical_power(void)
