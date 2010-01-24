@@ -916,16 +916,18 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
 {
     unsigned int fg_idx = fg & TILE_FLAG_MASK;
 
+    bool in_water = (bg & TILE_FLAG_WATER) && !(fg & TILE_FLAG_FLYING);
+
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
     {
-        if (bg & TILE_FLAG_WATER && !(fg & TILE_FLAG_FLYING))
+        if (in_water) 
             m_buf_main_trans.add(fg_idx, x, y, 0, true, false);
         else
             m_buf_main.add(fg_idx, x, y);
     }
 
     if (fg & TILE_FLAG_NET)
-        m_buf_doll.add(TILEP_TRAP_NET, x, y, 0, bg & TILE_FLAG_WATER, false);
+        m_buf_doll.add(TILEP_TRAP_NET, x, y, 0, in_water, false);
 
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
@@ -1058,24 +1060,22 @@ void DungeonRegion::pack_buffers()
 
             pack_background(bg, x, y);
 
+            bool in_water = (bg & TILE_FLAG_WATER) && !(fg & TILE_FLAG_FLYING);
             if (fg_idx >= TILEP_MCACHE_START)
             {
                 mcache_entry *entry = mcache.get(fg_idx);
                 if (entry)
-                    pack_mcache(entry, x, y, bg & TILE_FLAG_WATER);
+                    pack_mcache(entry, x, y, in_water);
                 else
-                {
-                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0,
-                                   bg & TILE_FLAG_WATER, false);
-                }
+                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, in_water, false);
             }
             else if (fg_idx == TILEP_PLAYER)
             {
-                pack_player(x, y, bg & TILE_FLAG_WATER);
+                pack_player(x, y, in_water);
             }
             else if (fg_idx >= TILE_MAIN_MAX)
             {
-                m_buf_doll.add(fg_idx, x, y, 0, bg & TILE_FLAG_WATER, false);
+                m_buf_doll.add(fg_idx, x, y, 0, in_water, false);
             }
 
             pack_foreground(bg, fg, x, y);
