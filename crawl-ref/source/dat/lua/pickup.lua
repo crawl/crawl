@@ -37,7 +37,7 @@ function pickup_butcher(it, name)
     end
 
     -- Same if you don't ever need to butcher corpses.
-    if not you.can_consume_corpses() and not you.god_likes_butchery() then
+    if not you.can_consume_corpses() then
         return false
     end
 
