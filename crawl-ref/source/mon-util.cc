@@ -469,8 +469,9 @@ bool mons_is_stationary(const monsters *mon)
     return (mons_class_is_stationary(mon->type));
 }
 
-// Monsters that other monsters may cut down to get to their foe
-// regardless of alignment.
+// Monsters that are worthless obstacles: not to
+// be attacked by default, but may be cut down to
+// get to target even if coaligned.
 bool mons_is_firewood(const monsters *mon)
 {
     return (mons_is_stationary(mon)
