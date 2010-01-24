@@ -897,7 +897,7 @@ static void _move_monster(const coord_def& where, int mid1)
 {
     dist moves;
     direction(moves, DIR_NONE, TARG_ANY, -1, false, false, true, true,
-              "Move monster to where?");
+              NULL, "Move monster to where?");
 
     if (!moves.isValid || !in_bounds(moves.target))
         return;

@@ -1202,8 +1202,12 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
         const int range = calc_spell_range(spell, powc, false);
 
+        std::string title = "Casting: ";
+        title += spell_title(spell);
+
         if (!spell_direction(spd, beam, dir, targ, range,
                              needs_path, true, dont_cancel_me, prompt,
+                             title.c_str(),
                              testbits(flags, SPFLAG_NOT_SELF)))
         {
             return (SPRET_ABORT);

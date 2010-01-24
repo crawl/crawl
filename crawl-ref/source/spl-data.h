@@ -69,7 +69,7 @@
      1000,
      LOS_RADIUS, LOS_RADIUS,
      0,
-     "Pull items from where?",
+     "Apport",
      false,
      false
 },

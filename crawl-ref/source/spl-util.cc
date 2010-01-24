@@ -743,15 +743,15 @@ bool spell_direction( dist &spelld, bolt &pbolt,
                       targetting_type restrict, targ_mode_type mode,
                       int range,
                       bool needs_path, bool may_target_monster,
-                      bool may_target_self, const char *prompt,
-                      bool cancel_at_self )
+                      bool may_target_self, const char *target_prefix,
+                      const char* top_prompt, bool cancel_at_self )
 {
     if (range < 1)
         range = (pbolt.range < 1) ? LOS_RADIUS : pbolt.range;
 
-    direction( spelld, restrict, mode, range, false, needs_path,
-               may_target_monster, may_target_self, prompt, NULL,
-               cancel_at_self );
+    direction(spelld, restrict, mode, range, false, needs_path,
+              may_target_monster, may_target_self, target_prefix,
+              top_prompt, NULL, cancel_at_self);
 
     if (!spelld.isValid)
     {
