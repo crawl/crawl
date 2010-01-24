@@ -2371,8 +2371,9 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         ASSERT(!quiet);
         mesclr();
-        mpr("[a] Weapon  [b] Armour  [c] Jewellery      [d] Book");
-        mpr("[e] Staff   [f] Wand    [g] Miscellaneous  [h] Food  [i] Gold");
+        mpr ("[a] Weapon  [b] Armour  [c] Jewellery      [d] Book");
+        mprf("[e] Staff   [f] Wand    [g] Miscellaneous  [h] %s [i] Gold",
+            (you.religion == GOD_FEDHAS ? "Fruit" : "Food "));
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
         const int keyin = tolower( get_ch() );
