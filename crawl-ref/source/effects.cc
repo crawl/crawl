@@ -2709,8 +2709,9 @@ void yell(bool force)
                 return;
             }
         }
-
-        mpr("Gang up on whom?", MSGCH_PROMPT);
+        
+        // FIXME XXX move the prompt into direction()
+        mpr("Gang up on whom?");
         direction(targ, DIR_TARGET, TARG_HOSTILE, -1, false, false);
 
         if (targ.isCancel)

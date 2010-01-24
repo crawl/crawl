@@ -69,7 +69,8 @@ public:
                       bool needs_path_ = true,
                       bool may_target_monster_ = true,
                       bool may_target_self_ = false,
-                      const char *prompt_prefix_ = NULL,
+                      const char *target_prefix_ = NULL,
+                      const char *top_prompt_ = NULL,
                       targetting_behaviour *mod_ = NULL,
                       bool cancel_at_self_ = false);
     bool choose_direction();
@@ -119,15 +120,30 @@ private:
     const coord_def& target() const;
     void set_target(const coord_def& new_target);
 
+    std::string build_targetting_hint_string() const;
+
+    actor* targetted_actor() const;
+    monsters* targetted_monster() const;
+
     // Functions which print things to the user.
     // Each one is commented with a sample output.
 
-    // Aim (? - help, Shift-Dir - straight line, p/t - orc wizard)
-    void print_aim_prompt() const;
+    // Whatever the caller defines. Typically something like:
+    // Casting: Venom Bolt
+    void print_top_prompt() const;
 
-    // An almost dead orc wizard, wielding a glowing orcish dagger,
-    // and wearing an orcish robe.
+    // Press: ? - help, Shift-Dir - straight line, t - giant bat
+    void print_key_hints() const;
+
+    // Here: An almost dead orc wizard, wielding a glowing orcish
+    // dagger, and wearing an orcish robe.
+    // OR:
+    // Apport: A short sword.
     void print_target_description() const;
+
+    // Helper functions for the above.
+    void print_target_monster_description() const;
+    void print_target_object_description() const;
 
     // You see 2 +3 dwarven bolts here.
     // There is something else lying underneath.
@@ -138,6 +154,8 @@ private:
     // If boring_too is false, then don't print anything on boring
     // terrain (i.e. floor.)
     void print_floor_description(bool boring_too) const;
+
+    void describe_cell() const;
 
     // Move the target to where the mouse pointer is (on tiles.)
     // Returns whether the move was valid, i.e., whether the mouse
@@ -160,6 +178,8 @@ private:
     // Whether the current target is valid.
     bool move_is_ok() const;
 
+    void cycle_targetting_mode();
+
     void describe_target();
     void show_help();
 
@@ -172,7 +192,8 @@ private:
     bool needs_path;            // Determine a ray while we're at it?
     bool may_target_monster;
     bool may_target_self;       // ?? XXX Used only for _init_mlist() currently
-    const char *prompt_prefix;  // Initial prompt to show (or NULL)
+    const char *target_prefix;  // A string displayed before describing target
+    const char *top_prompt;     // Shown at the top of the message window
     targetting_behaviour *behaviour; // Can be NULL for default
     bool cancel_at_self;        // Disallow self-targetting?
 
@@ -188,6 +209,7 @@ private:
     bool need_text_redraw;
     bool need_all_redraw;       // All of the above.
 
+    bool show_items_once;       // Should we show items this time?
     bool target_unshifted;      // Do unshifted direction keys fire?
 
     // Default behaviour, saved across instances.
@@ -199,7 +221,8 @@ void direction( dist &moves, targetting_type restricts = DIR_NONE,
                 targ_mode_type mode = TARG_ANY, int range = -1,
                 bool just_looking = false, bool needs_path = true,
                 bool may_target_monster = true, bool may_target_self = false,
-                const char *prompt_prefix = NULL,
+                const char *target_prefix = NULL,
+                const char *top_prompt = NULL,
                 targetting_behaviour *mod = NULL, bool cancel_at_self = false );
 
 bool in_los_bounds(const coord_def& p);

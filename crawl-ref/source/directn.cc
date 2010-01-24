@@ -67,8 +67,7 @@
 #include "viewgeom.h"
 #include "wiz-mon.h"
 
-
-#define SHORT_DESC_KEY "short_desc_key"
+const std::string SHORT_DESC_KEY = "short_desc_key";
 
 typedef std::map<std::string, std::string> desc_map;
 
@@ -301,51 +300,102 @@ static command_type shift_direction(command_type cmd)
     }
 }
 
-// Print out the caller-defined prompt with the most relevant keys.
-// This is shown in two cases: (1) when starting targetting; (2) when
-// explicitly requested by the user.
-void direction_chooser::print_aim_prompt() const
+actor* direction_chooser::targetted_actor() const
 {
-    const coord_def& cell = target();
+    if (target() == you.pos())
+        return &you;
+    else
+        return targetted_monster();
+}
 
-    // Find out what we're looking at.
-    const monsters* mon_in_cell = monster_at(cell);
-    if (mon_in_cell && !you.can_see(mon_in_cell))
-        mon_in_cell = NULL;
+monsters* direction_chooser::targetted_monster() const
+{
+    monsters* m = monster_at(target());
+    if (m && you.can_see(m) && !mons_is_unknown_mimic(m))
+        return m;
+    else
+        return NULL;
+}
 
-    // Is it our target?
-    const bool looking_at_target = mon_in_cell
-                                   && (get_current_target() == mon_in_cell);
-
-    // Work out what keys we can use to hit this target (if any.)
+std::string direction_chooser::build_targetting_hint_string() const
+{
     std::string hint_string;
-    if (looking_at_target)
-        hint_string = ", p/t - " + mon_in_cell->name(DESC_PLAIN);
-    else if (mon_in_cell)
-        hint_string = ", t - " + mon_in_cell->name(DESC_PLAIN);
 
-    // All preparatory work done, build the prompt string.
-    std::string prompt = (prompt_prefix ? prompt_prefix : "Aim");
-    prompt += " (? - help";
+    // Hint for 'p' - previous target, and for 'f' - current cell, if
+    // applicable.
+    const actor*    f_target = targetted_actor();
+    const monsters* p_target = get_current_target();
 
-    switch (restricts)
+    if (f_target && f_target == p_target)
     {
-    case DIR_NONE:
-        if (!target_unshifted)
-            prompt += ", Shift-Dir - straight line";
-        prompt += hint_string;
-        break;
-    case DIR_TARGET:
-        prompt += ", Dir - move target cursor";
-        prompt += hint_string;
-        break;
-    default:
-        break;
+        hint_string = ", f/p - " + f_target->name(DESC_PLAIN);
     }
-    prompt += ")";
+    else
+    {
+        if (f_target)
+            hint_string += ", f - " + f_target->name(DESC_PLAIN);
+        if (p_target)
+            hint_string += ", p - " + p_target->name(DESC_PLAIN);
+    }
+
+    return hint_string;
+}
+
+void direction_chooser::print_top_prompt() const
+{
+    if (top_prompt)
+        mpr(top_prompt, MSGCH_PROMPT);
+}
+
+void direction_chooser::print_key_hints() const
+{
+    std::string prompt = "Press: ? - help";
+
+    if (just_looking)
+    {
+        prompt += ", v - describe, . - travel";
+    }
+    else
+    {
+        const std::string hint_string = build_targetting_hint_string();
+        switch (restricts)
+        {
+        case DIR_NONE:
+            if (!target_unshifted)
+                prompt += ", Shift-Dir - straight line";
+            prompt += hint_string;
+            break;
+        case DIR_TARGET:
+            prompt += ", Dir - move target cursor";
+            prompt += hint_string;
+            break;
+        case DIR_DIR:
+        case DIR_TARGET_OBJECT:
+            break;
+        }
+    }
 
     // Display the prompt.
-    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+    mpr(prompt, MSGCH_PROMPT);
+}
+
+void direction_chooser::describe_cell() const
+{
+    if (!you.see_cell(target()))
+    {
+        _describe_oos_square(target());
+    }
+    else
+    {
+        print_top_prompt();
+        print_key_hints();
+        print_target_description();
+        if (just_looking || (show_items_once && restricts != DIR_TARGET_OBJECT))
+            print_items_description();
+        if (just_looking)
+            print_floor_description(false);
+    }
+
     flush_prev_message();
 }
 
@@ -408,12 +458,13 @@ void direction(dist &moves, targetting_type restricts,
                targ_mode_type mode, int range,
                bool just_looking, bool needs_path,
                bool may_target_monster, bool may_target_self,
-               const char *prompt_prefix,
+               const char *target_prefix, const char *top_prompt,
                targetting_behaviour *mod, bool cancel_at_self)
 {
     direction_chooser(moves, restricts, mode, range, just_looking,
                       needs_path, may_target_monster, may_target_self,
-                      prompt_prefix, mod, cancel_at_self).choose_direction();
+                      target_prefix, top_prompt,
+                      mod, cancel_at_self).choose_direction();
 }
 
 
@@ -425,7 +476,8 @@ direction_chooser::direction_chooser(dist& moves_,
                                      bool needs_path_,
                                      bool may_target_monster_,
                                      bool may_target_self_,
-                                     const char *prompt_prefix_,
+                                     const char *target_prefix_,
+                                     const char *top_prompt_,
                                      targetting_behaviour *behaviour_,
                                      bool cancel_at_self_) :
     moves(moves_),
@@ -436,7 +488,8 @@ direction_chooser::direction_chooser(dist& moves_,
     needs_path(needs_path_),
     may_target_monster(may_target_monster_),
     may_target_self(may_target_self_),
-    prompt_prefix(prompt_prefix_),
+    target_prefix(target_prefix_),
+    top_prompt(top_prompt_),
     behaviour(behaviour_),
     cancel_at_self(cancel_at_self_)
 {
@@ -457,6 +510,7 @@ direction_chooser::direction_chooser(dist& moves_,
 #endif
     need_all_redraw = false;
 
+    show_items_once = false;
     target_unshifted = Options.target_unshifted_dirs;
 }
 
@@ -1227,6 +1281,7 @@ void direction_chooser::object_cycle(int dir)
                              (dir > 0 ? LOS_FLIPVH : LOS_FLIPHV)))
     {
         set_target(objfind_pos);
+        show_items_once = true;
         target_unshifted = false;
     }
     else
@@ -1314,20 +1369,18 @@ bool direction_chooser::handle_signals()
 // we'll live with that.
 void direction_chooser::show_initial_prompt() const
 {
-    if (just_looking)
-    {
-        print_target_description();
-        print_items_description();
-        print_floor_description(true);
-    }
-    else
-    {
-        print_aim_prompt();
-        print_target_description();
-    }
+    describe_cell();
 }
 
 void direction_chooser::print_target_description() const
+{
+    if (restricts == DIR_TARGET_OBJECT)
+        print_target_object_description();
+    else
+        print_target_monster_description();
+}
+
+void direction_chooser::print_target_monster_description() const
 {
     // Do we see anything?
     const monsters* mon = monster_at(target());
@@ -1339,7 +1392,23 @@ void direction_chooser::print_target_description() const
     const std::string wounds_desc = get_wounds_description(mon);
     if (!wounds_desc.empty())
         text += " " + mon->pronoun(PRONOUN_CAP) + wounds_desc;
-    mprf(MSGCH_EXAMINE_FILTER, "%s", text.c_str());
+    mprf(MSGCH_EXAMINE_FILTER, "%s: %s",
+         target_prefix ? target_prefix : "Aim",
+         text.c_str());
+
+    flush_prev_message();
+}
+
+void direction_chooser::print_target_object_description() const
+{
+    const item_def* item = top_item_at(target(), true);
+    if (!item)
+        return;
+
+    // FIXME: remove the duplication with print_items_description().
+    mprf(MSGCH_EXAMINE_FILTER, "%s: %s",
+         target_prefix ? target_prefix : "Aim",
+         get_menu_colour_prefix_tags(*item, DESC_CAP_A).c_str());
 
     flush_prev_message();
 }
@@ -1550,11 +1619,9 @@ void direction_chooser::do_redraws()
     if (need_text_redraw)
     {
         mesclr(true);
-        print_aim_prompt();
-        print_target_description();
-        if (just_looking)
-            print_items_description();
+        describe_cell();
         need_text_redraw = false;
+        show_items_once = false;
     }
 
     if (need_cursor_redraw)
@@ -1629,6 +1696,12 @@ void direction_chooser::show_help()
     need_all_redraw = true;
 }
 
+void direction_chooser::cycle_targetting_mode()
+{
+    mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
+    mprf("Targetting mode is now: %s", _targ_mode_name(mode).c_str());
+}
+
 // Return false if we should continue looping, true if we're done.
 bool direction_chooser::do_main_loop()
 {
@@ -1644,7 +1717,7 @@ bool direction_chooser::do_main_loop()
 
     switch (key_command)
     {
-    case CMD_TARGET_SHOW_PROMPT: print_aim_prompt(); break;
+    case CMD_TARGET_SHOW_PROMPT: describe_cell(); break;
 
 #ifndef USE_TILE
     case CMD_TARGET_TOGGLE_MLIST:
@@ -1664,10 +1737,7 @@ bool direction_chooser::do_main_loop()
     case CMD_TARGET_FIND_UPSTAIR:   feature_cycle_forward('<');  break;
     case CMD_TARGET_FIND_DOWNSTAIR: feature_cycle_forward('>');  break;
 
-    case CMD_TARGET_CYCLE_TARGET_MODE:
-        mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
-        mprf("Targetting mode is now: %s", _targ_mode_name(mode).c_str());
-        break;
+    case CMD_TARGET_CYCLE_TARGET_MODE: cycle_targetting_mode(); break;
 
     case CMD_TARGET_MAYBE_PREV_TARGET:
         loop_done = looking_at_you() ? select_previous_target()
@@ -1782,6 +1852,7 @@ bool direction_chooser::choose_direction()
     if (show_beam)
         need_beam_redraw = have_beam = find_ray(you.pos(), target(), beam);
 
+    mesclr(true);
     show_initial_prompt();
     need_text_redraw = false;
 
@@ -1934,13 +2005,9 @@ static void _extend_move_to_edge(dist &moves)
     if (moves.delta.y < 0)
         my = you.pos().y;
 
-    if (!(mx == 0 || my == 0))
-    {
-        if (mx < my)
-            my = mx;
-        else
-            mx = my;
-    }
+    if (mx != 0 && my != 0)
+        mx = my = std::min(mx, my);
+
     moves.target.x = you.pos().x + moves.delta.x * mx;
     moves.target.y = you.pos().y + moves.delta.y * my;
 }

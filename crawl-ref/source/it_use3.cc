@@ -200,9 +200,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 {
     dist beam;
 
-    mpr("Attack whom?", MSGCH_PROMPT);
-
-    direction(beam, DIR_TARGET, TARG_HOSTILE, 2);
+    direction(beam, DIR_TARGET, TARG_HOSTILE, 2,
+              false, true, true, false, NULL, "Attack whom?");
 
     if (!beam.isValid)
         return (false);

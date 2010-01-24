@@ -1388,7 +1388,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
     beh.message_ammo_prompt();
 
     direction(target, DIR_NONE, TARG_HOSTILE, -1, false, !teleport, true, false,
-              NULL, &beh);
+              NULL, NULL, &beh);
 
     if (beh.m_slot == -1)
     {
