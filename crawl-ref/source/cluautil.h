@@ -65,7 +65,7 @@ int clua_stringtable(lua_State *ls, const std::vector<std::string> &s);
  */
 
 template <class T>
-inline static T *util_get_userdata(lua_State *ls, int ndx)
+inline static T *clua_get_lightuserdata(lua_State *ls, int ndx)
 {
     return (lua_islightuserdata(ls, ndx))?
             static_cast<T *>( lua_touserdata(ls, ndx) )
@@ -131,12 +131,11 @@ void clua_push_dgn_event(lua_State *ls, const dgn_event *devent);
 // XXX: These are currently defined outside cluautil.cc.
 class monsters;
 void push_monster(lua_State *ls, monsters* mons);
-void lua_push_items(lua_State *ls, int link);
+void lua_push_floor_items(lua_State *ls, int link);
 dungeon_feature_type check_lua_feature(lua_State *ls, int idx);
-item_def *clua_check_item(lua_State *ls, int n);
 unsigned int get_tile_idx(lua_State *ls, int arg);
 level_id dlua_level_id(lua_State *ls, int ndx);
-
+void push_item(lua_State *ls, item_def *item);
 
 #define GETCOORD(c, p1, p2, boundfn)                      \
     coord_def c;                                          \
@@ -159,9 +158,6 @@ level_id dlua_level_id(lua_State *ls, int ndx);
 #define FEAT(f, pos) \
 dungeon_feature_type f = check_lua_feature(ls, pos)
 
-#define LUA_ITEM(name, n) \
-    item_def *name = clua_check_item(ls, n);
-
 #define LEVEL(lev, br, pos)                                             \
 const char *level_name = luaL_checkstring(ls, pos);                 \
 level_area_type lev = str_to_level_area_type(level_name);           \
@@ -180,7 +176,8 @@ map_lines &var = (*(map_def **) luaL_checkudata(ls, n, MAP_METATABLE))->map
 dgn_event *var = *(dgn_event **) luaL_checkudata(ls, n, DEVENT_METATABLE)
 #define MAPMARKER(ls, n, var) \
 map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE)
-
+#define LUA_ITEM(ls, name, n) \
+item_def *item = *(item_def **) luaL_checkudata(ls, n, ITEM_METATABLE)
 
 template <typename list, typename lpush>
 static int clua_gentable(lua_State *ls, const list &strings, lpush push)

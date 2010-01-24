@@ -122,6 +122,14 @@ int maybe_random2(int x, bool random_factor)
         return (x / 2);
 }
 
+int maybe_roll_dice(int num, int size, bool random)
+{
+    if (random)
+        return (roll_dice(num, size));
+    else
+        return ((num + num * size) / 2);
+}
+
 int roll_dice(int num, int size)
 {
     int ret = 0;

@@ -472,6 +472,15 @@ bool mons_is_stationary(const monsters *mon)
     return (mons_class_is_stationary(mon->type));
 }
 
+// Monsters that are worthless obstacles: not to
+// be attacked by default, but may be cut down to
+// get to target even if coaligned.
+bool mons_is_firewood(const monsters *mon)
+{
+    return (mons_is_stationary(mon)
+            && mons_class_flag(mon->type, M_NO_EXP_GAIN));
+}
+
 bool mons_is_fast(const monsters *mon)
 {
     int pspeed = 1000/player_movement_speed()/player_speed();
@@ -1178,10 +1187,17 @@ bool mons_class_amphibious(int mc)
 
 bool mons_amphibious(const monsters *mon)
 {
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
+    return (mons_class_amphibious(mons_base_type(mon)));
+}
 
-    return (mons_class_amphibious(montype));
+bool mons_class_flattens_trees(int mc)
+{
+    return (mc == MONS_LERNAEAN_HYDRA);
+}
+
+bool mons_flattens_trees(const monsters *mon)
+{
+    return mons_class_flattens_trees(mons_base_type(mon));
 }
 
 bool mons_class_wall_shielded(int mc)
@@ -1375,9 +1391,6 @@ int exper_value(const monsters *monster)
         x_val = 100 + ((x_val - 100) * 3) / 4;
     if (x_val > 1000)
         x_val = 1000 + (x_val - 1000) / 2;
-
-    // Having killed hundreds means the monster is no longer a threat.
-    x_val >>= you.kills->num_kills(monster) / 100;
 
     // Guarantee the value is within limits.
     if (x_val <= 0)

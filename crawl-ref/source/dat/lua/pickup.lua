@@ -7,17 +7,17 @@
 ---------------------------------------------------------------------------
 local function can_butcher(it, name)
     -- Item can't be used to cut meat.
-    if not item.can_cut_meat(it) then
+    if not it.can_cut_meat then
         return false
     end
 
     -- If we're already wielding a weapon capable of butchering, okay.
-    if item.equipped(it) then
+    if it.equipped then
         return true
     end
 
     -- Don't make the user wield a known cursed weapon.
-    if item.cursed(it) then
+    if it.cursed then
         return false
     end
 
@@ -37,7 +37,7 @@ function pickup_butcher(it, name)
     end
 
     -- Same if you don't ever need to butcher corpses.
-    if not you.can_consume_corpses() and not you.god_likes_butchery() then
+    if not you.can_consume_corpses() then
         return false
     end
 
@@ -47,8 +47,8 @@ function pickup_butcher(it, name)
     end
 
     -- Do we already have a butchering tool?
-    for _, inv_it in pairs(item.inventory()) do
-        if can_butcher(inv_it, item.name(inv_it)) then
+    for _, inv_it in pairs(items.inventory()) do
+        if can_butcher(inv_it, inv_it.name()) then
             return false
         end
     end

@@ -1075,7 +1075,11 @@ void replay_messages(void)
     const store_t msgs = messages.get_store();
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
-            hist.add_text(msgs[i].text);
+        {
+            std::string text = msgs[i].text;
+            linebreak_string2(text, cgetsize(GOTO_CRT).x);
+            hist.add_text(text);
+        }
     hist.show();
 }
 

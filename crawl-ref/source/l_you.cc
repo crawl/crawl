@@ -8,6 +8,7 @@
 #include "chardump.h"
 #include "coord.h"
 #include "delay.h"
+#include "env.h"
 #include "food.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -108,10 +109,10 @@ LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
 
-void lua_push_floor_items(lua_State *ls);
+void lua_push_floor_items(lua_State *ls, int link);
 static int you_floor_items(lua_State *ls)
 {
-    lua_push_floor_items(ls);
+    lua_push_floor_items(ls, env.igrid(you.pos()));
     return (1);
 }
 

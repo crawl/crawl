@@ -16,6 +16,7 @@
 #include "dbg-scan.h"
 #include "delay.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "map_knowledge.h"
 #include "food.h"
@@ -2032,7 +2033,8 @@ static void _handle_monster_move(monsters *monster)
                     continue;
                 }
                 // Figure out if they fight.
-                else if (monsters_fight(monster, targ))
+                else if (!mons_is_firewood(targ)
+                         && monsters_fight(monster, targ))
                 {
                     if (mons_is_batty(monster))
                     {
@@ -2814,9 +2816,11 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     if (mons_avoids_cloud(monster, targ_cloud_num, &targ_cloud_type))
         return (false);
 
-    if (mons_class_flag(monster->type, M_BURROWS)
-        && (target_grid == DNGN_ROCK_WALL
-            || target_grid == DNGN_CLEAR_ROCK_WALL))
+    const bool burrows = mons_class_flag(monster->type, M_BURROWS);
+    const bool flattens_trees = mons_flattens_trees(monster);
+    if ((burrows && (target_grid == DNGN_ROCK_WALL
+                     || target_grid == DNGN_CLEAR_ROCK_WALL))
+        || (flattens_trees && target_grid == DNGN_TREES))
     {
         // Don't burrow out of bounds.
         if (!in_bounds(targ))
@@ -2896,6 +2900,11 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
             return (false); // blocks square
         }
+
+        // Cut down plants only when no alternative, or they're
+        // our target.
+        if (mons_is_firewood(targmonster) && monster->target != targ)
+            return (false);
 
         if (mons_aligned(monster->mindex(), targmonster->mindex())
             && !_mons_can_displace(monster, targmonster))
@@ -3143,15 +3152,12 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
 // to get to the player if necessary.
 static bool _may_cutdown(monsters* mons, monsters* targ)
 {
-    // Is the target a worthless obstacle?
-    bool is_firewood = mons_is_stationary(mons)
-                       && mons_class_flag(mons->type, M_NO_EXP_GAIN);
     // Save friendly plants from allies.
     bool bad_align = mons->attitude == ATT_GOOD_NEUTRAL
                      && targ->attitude == ATT_FRIENDLY
                   || mons->attitude == ATT_FRIENDLY
                      && targ->attitude > ATT_HOSTILE;
-    return (is_firewood && !bad_align);
+    return (mons_is_firewood(targ) && !bad_align);
 }
 
 static bool _monster_move(monsters *monster)
@@ -3386,17 +3392,45 @@ static bool _monster_move(monsters *monster)
     // If we haven't found a good move by this point, we're not going to.
     // ------------------------------------------------------------------
 
+    const bool burrows = mons_class_flag(monster->type, M_BURROWS);
+    const bool flattens_trees = mons_flattens_trees(monster);
     // Take care of beetle burrowing.
-    if (mons_class_flag(monster->type, M_BURROWS))
+    if (burrows || flattens_trees)
     {
         const dungeon_feature_type feat = grd(monster->pos() + mmov);
-        if ((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
+
+        if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
+              && burrows)
+             || (feat == DNGN_TREES && flattens_trees))
             && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
-            grd(monster->pos() + mmov) = DNGN_FLOOR;
-            set_terrain_changed(monster->pos() + mmov);
+            const coord_def target(monster->pos() + mmov);
 
-            if (player_can_hear(monster->pos() + mmov))
+            const dungeon_feature_type newfeat =
+                (feat == DNGN_TREES? dgn_tree_base_feature_at(target)
+                 : DNGN_FLOOR);
+            grd(target) = newfeat;
+            set_terrain_changed(target);
+
+            if (flattens_trees)
+            {
+                // Flattening trees has a movement cost to the monster
+                // - 100% over and above its normal move cost.
+                _swim_or_move_energy(monster);
+                if (you.see_cell(target))
+                {
+                    const bool actor_visible = you.can_see(monster);
+                    mprf("%s knocks down a tree!",
+                         actor_visible?
+                         monster->name(DESC_CAP_THE).c_str() : "Something");
+                    noisy(25, target);
+                }
+                else
+                {
+                    noisy(25, target, "You hear a crashing sound.");
+                }
+            }
+            else if (player_can_hear(monster->pos() + mmov))
             {
                 // Message depends on whether caused by boring beetle or
                 // acid (Dissolution).

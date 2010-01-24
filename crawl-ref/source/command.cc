@@ -1684,7 +1684,7 @@ static bool _find_description(bool &again, std::string& error_inout)
         else
         {
             std::ostringstream os;
-            os << "Too many matching " << type << "s (" << key_list.size()
+            os << "Too many matching " << pluralise(type) << " (" << key_list.size()
                << ") to display.";
             error_inout = os.str();
         }

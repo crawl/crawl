@@ -47,6 +47,7 @@
 #include "output.h"   // for the monster list
 #include "player.h"
 #include "religion.h"
+#include "shout.h"
 #include "spells2.h"
 #include "spells3.h"
 #include "spl-book.h"
@@ -1987,18 +1988,95 @@ static int _xom_throw_divine_lightning(bool debug = false)
 static int _xom_change_scenery(bool debug = false)
 {
     std::vector<coord_def> candidates;
+    std::vector<coord_def> closed_doors;
+    std::vector<coord_def> open_doors;
     for (radius_iterator ri(&you.get_los()); ri; ++ri)
     {
+        if (!you.see_cell(*ri))
+            continue;
+
         dungeon_feature_type feat = grd(*ri);
         if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN_BLOOD)
-            candidates.push_back(*ri);
-        else if (feat >= DNGN_CLOSED_DOOR && feat <= DNGN_SECRET_DOOR
-                 || feat == DNGN_OPEN_DOOR && !actor_at(*ri)
-                     && igrd(*ri) == NON_ITEM)
         {
             candidates.push_back(*ri);
         }
+        else if (feat >= DNGN_CLOSED_DOOR && feat <= DNGN_SECRET_DOOR)
+        {
+            // Check whether this door is already included in a gate.
+            bool found_door = false;
+            for (unsigned int k = 0; k < closed_doors.size(); ++k)
+            {
+                if (closed_doors[k] == *ri)
+                {
+                    found_door = true;
+                    break;
+                }
+            }
+
+            if (!found_door)
+            {
+                // If it's a gate, add all doors belonging to the gate.
+                std::set<coord_def> all_door;
+                find_connected_identical(*ri, grd(*ri), all_door);
+                for (std::set<coord_def>::const_iterator dc = all_door.begin();
+                     dc != all_door.end(); ++dc)
+                {
+                    closed_doors.push_back(*dc);
+                }
+            }
+        }
+        else if (feat == DNGN_OPEN_DOOR && !actor_at(*ri)
+                 && igrd(*ri) == NON_ITEM)
+        {
+            // Check whether this door is already included in a gate.
+            bool found_door = false;
+            for (unsigned int k = 0; k < open_doors.size(); ++k)
+            {
+                if (open_doors[k] == *ri)
+                {
+                    found_door = true;
+                    break;
+                }
+            }
+
+            if (!found_door)
+            {
+                // Check whether any of the doors belonging to a gate is
+                // blocked by an item or monster.
+                std::set<coord_def> all_door;
+                find_connected_identical(*ri, grd(*ri), all_door);
+                bool is_blocked = false;
+                for (std::set<coord_def>::const_iterator dc = all_door.begin();
+                     dc != all_door.end(); ++dc)
+                {
+                    if (actor_at(*dc) || igrd(*dc) != NON_ITEM)
+                    {
+                        is_blocked = true;
+                        break;
+                    }
+                }
+
+                // If the doorway isn't blocked, add all doors
+                // belonging to the gate.
+                if (!is_blocked)
+                {
+                    for (std::set<coord_def>::const_iterator dc = all_door.begin();
+                         dc != all_door.end(); ++dc)
+                    {
+                        open_doors.push_back(*dc);
+                    }
+                }
+            }
+        }
     }
+    // Order needs to be the same as messaging below, else the messages might
+    // not make sense.
+    // FIXME: Changed fountains behind doors are not properly remembered.
+    //        (At least in tiles.)
+    for (unsigned int k = 0; k < open_doors.size(); ++k)
+        candidates.push_back(open_doors[k]);
+    for (unsigned int k = 0; k < closed_doors.size(); ++k)
+        candidates.push_back(closed_doors[k]);
 
     const std::string speech = _get_xom_speech("scenery");
     if (candidates.empty())
@@ -2014,7 +2092,7 @@ static int _xom_change_scenery(bool debug = false)
         {
             if ((random_near_space(you.pos(), place)
                     || random_near_space(you.pos(), place, true))
-                 && grd(place) == DNGN_FLOOR && you.see_cell(place))
+                && grd(place) == DNGN_FLOOR && you.see_cell(place))
             {
                 if (debug)
                     return (XOM_GOOD_SCENERY);
@@ -2037,11 +2115,10 @@ static int _xom_change_scenery(bool debug = false)
 
     const int fountain_diff = (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE);
 
-    std::random_shuffle(candidates.begin(), candidates.end());
-    int doors_open      = 0;
-    int doors_close     = 0;
     int fountains_flow  = 0;
     int fountains_blood = 0;
+    int doors_open      = 0;
+    int doors_close     = 0;
     for (unsigned int i = 0; i < candidates.size(); ++i)
     {
         coord_def pos = candidates[i];
@@ -2051,11 +2128,13 @@ static int _xom_change_scenery(bool debug = false)
         case DNGN_DETECTED_SECRET_DOOR:
         case DNGN_SECRET_DOOR:
             grd(pos) = DNGN_OPEN_DOOR;
-            doors_open++;
+            if (you.see_cell(pos))
+                doors_open++;
             break;
         case DNGN_OPEN_DOOR:
             grd(pos) = DNGN_CLOSED_DOOR;
-            doors_close++;
+            if (you.see_cell(pos))
+                doors_close++;
             break;
         case DNGN_DRY_FOUNTAIN_BLUE:
         case DNGN_DRY_FOUNTAIN_SPARKLING:
@@ -2065,7 +2144,8 @@ static int _xom_change_scenery(bool debug = false)
                 continue;
 
             grd(pos) = (dungeon_feature_type) (grd(pos) - fountain_diff);
-            fountains_flow++;
+            if (you.see_cell(pos))
+                fountains_flow++;
             break;
         }
         case DNGN_FOUNTAIN_BLUE:
@@ -2073,7 +2153,8 @@ static int _xom_change_scenery(bool debug = false)
                 continue;
 
             grd(pos) = DNGN_FOUNTAIN_BLOOD;
-            fountains_blood++;
+            if (you.see_cell(pos))
+                fountains_blood++;
             break;
         default:
             break;
@@ -2085,39 +2166,6 @@ static int _xom_change_scenery(bool debug = false)
     god_speaks(GOD_XOM, speech.c_str());
 
     std::vector<std::string> effects;
-    if (doors_open > 0)
-    {
-        snprintf(info, INFO_SIZE, "%s door%s burst%s open",
-                 doors_open == 1 ? "A"    :
-                 doors_open == 2 ? "Two"
-                                 : "Several",
-                 doors_open == 1 ? ""  : "s",
-                 doors_open == 1 ? "s" : "");
-        effects.push_back(info);
-    }
-    if (doors_close > 0)
-    {
-        snprintf(info, INFO_SIZE, "%s%s door%s slam%s shut",
-                 doors_close == 1 ? "a"    :
-                 doors_close == 2 ? "two"
-                                  : "several",
-                 doors_open > 0   ? (doors_close == 1 ? "nother" : " other")
-                                  : "",
-                 doors_close == 1 ? ""  : "s",
-                 doors_close == 1 ? "s" : "");
-        std::string closed = info;
-        if (effects.empty())
-            closed = uppercase_first(closed);
-        effects.push_back(closed);
-    }
-    if (!effects.empty())
-    {
-        mprf("%s!",
-             comma_separated_line(effects.begin(), effects.end(),
-                                  ", and ").c_str());
-        effects.clear();
-    }
-
     if (fountains_flow > 0)
     {
         snprintf(info, INFO_SIZE,
@@ -2148,7 +2196,43 @@ static int _xom_change_scenery(bool debug = false)
         mprf("%s!",
              comma_separated_line(effects.begin(), effects.end(),
                                   ", and ").c_str());
+        effects.clear();
     }
+
+    if (doors_open > 0)
+    {
+        snprintf(info, INFO_SIZE, "%s door%s burst%s open",
+                 doors_open == 1 ? "A"    :
+                 doors_open == 2 ? "Two"
+                                 : "Several",
+                 doors_open == 1 ? ""  : "s",
+                 doors_open == 1 ? "s" : "");
+        effects.push_back(info);
+    }
+    if (doors_close > 0)
+    {
+        snprintf(info, INFO_SIZE, "%s%s door%s slam%s shut",
+                 doors_close == 1 ? "a"    :
+                 doors_close == 2 ? "two"
+                                  : "several",
+                 doors_open > 0   ? (doors_close == 1 ? "nother" : " other")
+                                  : "",
+                 doors_close == 1 ? ""  : "s",
+                 doors_close == 1 ? "s" : "");
+        std::string closed = info;
+        if (effects.empty())
+            closed = uppercase_first(closed);
+        effects.push_back(closed);
+    }
+    if (!effects.empty())
+    {
+        mprf("%s!",
+             comma_separated_line(effects.begin(), effects.end(),
+                                  ", and ").c_str());
+    }
+
+    if (doors_open || doors_close)
+        noisy(10, you.pos());
 
     return (XOM_GOOD_SCENERY);
 }

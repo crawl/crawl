@@ -67,6 +67,7 @@
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
+#include "godprayer.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
@@ -101,6 +102,7 @@
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
@@ -3280,8 +3282,10 @@ static void _open_door(coord_def move, bool check_confused)
                                                           : DNGN_UNSEEN);
     std::string door_already_open = "";
     if (in_bounds(doorpos))
+    {
         door_already_open = env.markers.property_at(doorpos, MAT_ANY,
                                 "door_verb_already_open");
+    }
 
     if (!feat_is_closed_door(feat))
     {
@@ -3417,8 +3421,10 @@ static void _open_door(coord_def move, bool check_confused)
         if (!door_open_creak.empty())
             mprf(MSGCH_SOUND, door_open_creak.c_str(), adj, noun);
         else
+        {
             mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
                  adj, noun);
+        }
         noisy(10, you.pos());
     }
     else
