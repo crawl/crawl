@@ -78,4 +78,6 @@ class map_lines;
 int dgn_map_add_transform(lua_State *ls,
           std::string (map_lines::*add)(const std::string &s));
 
+void clua_push_item(lua_State *ls, item_def *item);
+
 #endif
