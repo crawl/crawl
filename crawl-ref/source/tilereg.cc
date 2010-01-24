@@ -1141,7 +1141,6 @@ void DungeonRegion::render()
         || Options.tile_show_minimagicbar
            && you.magic_points < you.max_magic_points)
     {
-
         // Tiles are 32x32 pixels; 1/32 = 0.03125.
         // The bars are two pixels high each.
         const float bar_height = 0.0625;
@@ -1155,7 +1154,8 @@ void DungeonRegion::render()
             static const VColour magic(0, 0, 255, 255);
             static const VColour magic_spent(0, 0, 0, 255);
 
-            const float magic_divider = (float) you.magic_points / (float) you.max_magic_points;
+            const float magic_divider = (float) you.magic_points
+                                        / (float) you.max_magic_points;
 
             buff.add(mx / 2,
                      my / 2 + healthbar_offset + bar_height,
@@ -1175,22 +1175,35 @@ void DungeonRegion::render()
 
         if (Options.tile_show_minihealthbar)
         {
-            static const VColour healthy(0, 255, 0, 255);
-            static const VColour damaged(255, 0, 0, 255);
-
             const float min_hp = std::max(0, you.hp);
             const float health_divider = min_hp / (float) you.hp_max;
+
+            const int hp_percent = (you.hp * 100) / you.hp_max;
+
+            int hp_colour = GREEN;
+            for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
+                if (hp_percent <= Options.hp_colour[i].first)
+                    hp_colour = Options.hp_colour[i].second;
+
+            static const VColour healthy(0,   255, 0, 255);
+            static const VColour damaged(255, 255, 0, 255);
+            static const VColour wounded(0, 0, 0, 255);
+            static const VColour hp_spent(255,   0, 0, 255);
 
             buff.add(mx / 2,
                      my / 2 + healthbar_offset,
                      mx / 2 + health_divider,
                      my / 2 + healthbar_offset + bar_height,
-                     healthy);
+                     hp_colour == RED    ? wounded :
+                     hp_colour == YELLOW ? damaged
+                                         : healthy);
+
+
             buff.add(mx / 2 + health_divider,
                      my / 2 + healthbar_offset,
                      mx / 2 + 1,
                      my / 2 + healthbar_offset + bar_height,
-                     damaged);
+                     hp_spent);
         }
 
         buff.draw();
