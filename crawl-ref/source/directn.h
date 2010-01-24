@@ -45,27 +45,162 @@ class dist
 public:
     dist();
 
-public:
+    bool isMe() const;
+
     bool isValid;       // valid target chosen?
     bool isTarget;      // target (true), or direction (false)?
-    bool isMe;          // selected self (convenience: target == you.pos())
     bool isEndpoint;    // Does the player want the attack to stop at target?
     bool isCancel;      // user cancelled (usually <ESC> key)
     bool choseRay;      // user wants a specific beam
     coord_def target;   // target x,y or logical extension of beam to map edge
     coord_def delta;    // delta x and y if direction - always -1,0,1
     ray_def ray;        // ray chosen if necessary
+};
 
-    // internal use - ignore
-    int  prev_target;   // previous target
+class direction_chooser
+{
+public:
+    // FIXME: wrap all these parameters in a struct.
+    direction_chooser(dist& moves_,
+                      targetting_type restricts_ = DIR_NONE,
+                      targ_mode_type mode_ = TARG_ANY,
+                      int range_ = -1,
+                      bool just_looking_ = false,
+                      bool needs_path_ = true,
+                      bool may_target_monster_ = true,
+                      bool may_target_self_ = false,
+                      const char *prompt_prefix_ = NULL,
+                      targetting_behaviour *mod_ = NULL,
+                      bool cancel_at_self_ = false);
+    bool choose_direction();
+
+private:
+    bool choose_again();        // Used when replaying keys
+    bool choose_compass();      // Used when we only need to choose a direction
+
+    bool do_main_loop();
+
+    // Return the location where targetting should start.
+    coord_def find_default_target() const;
+
+    void handle_mlist_cycle_command(command_type key_command);
+    void handle_wizard_command(command_type key_command, bool* loop_done);
+    void handle_movement_key(command_type key_command, bool* loop_done);
+
+    bool in_range(const coord_def& p) const;
+
+    // Jump to the player.
+    void move_to_you();
+
+    // Cycle to the next (dir == 1) or previous (dir == -1) object.
+    void object_cycle(int dir);
+
+    // Cycle to the next (dir == 1) or previous (dir == -1) monster.
+    void monster_cycle(int dir);
+
+    // Cycle to the next feature of the given type.
+    void feature_cycle_forward(int feature);
+
+    // Set the remembered target to be the current target.
+    void update_previous_target() const;
+
+    // Finalise the current choice of target. Return true if
+    // successful, false if failed (e.g. out of range.)
+    bool select(bool allow_out_of_range, bool endpoint);
+    bool select_compass_direction(const coord_def& delta);
+    bool select_previous_target();
+
+    // Return true if we need to abort targetting due to a signal.
+    bool handle_signals();
+
+    void reinitialize_move_flags();
+
+    // Return or set the current target.
+    const coord_def& target() const;
+    void set_target(const coord_def& new_target);
+
+    // Functions which print things to the user.
+    // Each one is commented with a sample output.
+
+    // Aim (? - help, Shift-Dir - straight line, p/t - orc wizard)
+    void print_aim_prompt() const;
+
+    // An almost dead orc wizard, wielding a glowing orcish dagger,
+    // and wearing an orcish robe.
+    void print_target_description() const;
+
+    // You see 2 +3 dwarven bolts here.
+    // There is something else lying underneath.
+    void print_items_description() const;
+
+    // Lava.
+    //
+    // If boring_too is false, then don't print anything on boring
+    // terrain (i.e. floor.)
+    void print_floor_description(bool boring_too) const;
+
+    // Move the target to where the mouse pointer is (on tiles.)
+    // Returns whether the move was valid, i.e., whether the mouse
+    // pointer is in bounds.
+    bool tiles_update_target();
+
+    // Display the prompt when beginning targetting.
+    void show_initial_prompt() const;
+
+    void toggle_beam();
+
+    void finalize_moves();
+    command_type massage_command(command_type key_command) const;
+    void draw_beam_if_needed();
+    void do_redraws();
+
+    // Whether the current target is you.
+    bool looking_at_you() const;
+
+    // Whether the current target is valid.
+    bool move_is_ok() const;
+
+    void describe_target();
+    void show_help();
+
+    // Parameters.
+    dist& moves;                // Output.
+    targetting_type restricts;  // What kind of target do we want?
+    targ_mode_type mode;        // Hostiles or friendlies?
+    int range;                  // Max range to consider
+    bool just_looking;
+    bool needs_path;            // Determine a ray while we're at it?
+    bool may_target_monster;
+    bool may_target_self;       // ?? XXX Used only for _init_mlist() currently
+    const char *prompt_prefix;  // Initial prompt to show (or NULL)
+    targetting_behaviour *behaviour; // Can be NULL for default
+    bool cancel_at_self;        // Disallow self-targetting?
+
+    // Internal data.
+    ray_def beam;               // The (possibly invalid) beam.
+    bool show_beam;             // Does the user want the beam displayed?
+    bool have_beam;             // Is the currently stored beam valid?
+    coord_def objfind_pos, monsfind_pos; // Cycling memory
+
+    // What we need to redraw.
+    bool need_beam_redraw;
+    bool need_cursor_redraw;
+    bool need_text_redraw;
+    bool need_all_redraw;       // All of the above.
+
+    bool target_unshifted;      // Do unshifted direction keys fire?
+
+    // Default behaviour, saved across instances.
+    static targetting_behaviour stock_behaviour;
+    
 };
 
 void direction( dist &moves, targetting_type restricts = DIR_NONE,
                 targ_mode_type mode = TARG_ANY, int range = -1,
                 bool just_looking = false, bool needs_path = true,
                 bool may_target_monster = true, bool may_target_self = false,
-                const char *prompt = NULL, targetting_behaviour *mod = NULL,
-                bool cancel_at_self = false );
+                const char *prompt_prefix = NULL,
+                targetting_behaviour *mod = NULL, bool cancel_at_self = false );
 
 bool in_los_bounds(const coord_def& p);
 bool in_viewport_bounds(int x, int y);
