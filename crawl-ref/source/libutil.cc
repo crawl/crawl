@@ -409,6 +409,10 @@ std::string pluralise(const std::string &name,
     {
         return name.substr(0, name.length() - 1) + "es";
     }
+    else if (ends_with(name, "s"))
+    {
+        return name;
+    }
     else if (ends_with(name, "y"))
     {
         if (name == "y")
