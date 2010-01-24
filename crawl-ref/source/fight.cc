@@ -294,7 +294,6 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 void melee_attack::check_hand_half_bonus_eligible()
 {
     hand_half_bonus = (unarmed_ok
-                       && !can_do_unarmed
                        && !shield
                        && weapon
                        && !weapon->cursed()
@@ -3772,13 +3771,7 @@ int melee_attack::player_to_hit(bool random_factor)
     dprf("Armour/shield to-hit penalty: %d", player_armshld_tohit_penalty);
 
     can_do_unarmed = player_fights_well_unarmed(player_armshld_tohit_penalty);
-
-    hand_half_bonus = unarmed_ok
-                      && !can_do_unarmed
-                      && !shield
-                      && weapon
-                      && !weapon->cursed()
-                      && hands == HANDS_HALF;
+    check_hand_half_bonus_eligible();
 
     int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
 
