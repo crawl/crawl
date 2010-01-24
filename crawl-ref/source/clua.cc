@@ -388,6 +388,9 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
         case 'u':       // Light userdata
             lua_pushlightuserdata(ls, va_arg(args, void*));
             break;
+        case 'i':
+            clua_push_item(ls, va_arg(args, item_def*));
+            break;
         case 's':       // String
         {
             const char *s = va_arg(args, const char *);

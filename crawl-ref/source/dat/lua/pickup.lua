@@ -7,7 +7,7 @@
 ---------------------------------------------------------------------------
 local function can_butcher(it, name)
     -- Item can't be used to cut meat.
-    if not it.can_cut_meat() then
+    if not it.can_cut_meat then
         return false
     end
 
