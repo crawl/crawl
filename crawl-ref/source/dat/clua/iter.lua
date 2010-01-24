@@ -342,7 +342,7 @@ function iter.stack_search (coord, term, extra)
   end
 
   for _, item in ipairs(stack) do
-    if string.find(items.name(item), (term)) then
+    if string.find(item.name(), (term)) then
       return item
     end
   end
@@ -364,15 +364,15 @@ function iter.stack_destroy(coord, extra)
   local stack = dgn.items_at(_x, _y)
 
   while #stack ~= 0 do
-    if items.destroy(stack[1]) then
+    if stack[1].destroy() then
       if #stack >= dgn.items_at(_x, _y) then
-        error("destroyed an item ('" .. items.name(stack[1]) .. "'), but the "
+        error("destroyed an item ('" .. stack[1].name() .. "'), but the "
               .. "stack size is the same")
         return
       end
       stack = dgn.items_at(_x, _y)
     else
-      error("couldn't destroy item '" .. items.name(stack[1]) .. "'")
+      error("couldn't destroy item '" .. stack[1].name() .. "'")
       return false
     end
   end
