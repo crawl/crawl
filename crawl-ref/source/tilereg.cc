@@ -920,7 +920,7 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
 
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
     {
-        if (in_water) 
+        if (in_water)
             m_buf_main_trans.add(fg_idx, x, y, 0, true, false);
         else
             m_buf_main.add(fg_idx, x, y);
@@ -1137,8 +1137,9 @@ void DungeonRegion::render()
     m_buf_main_trans.draw();
     m_buf_main.draw();
 
-    if ((Options.tile_show_minihealthbar && you.hp < you.hp_max)
-        || (Options.tile_show_minimagicbar && you.magic_points < you.max_magic_points))
+    if (Options.tile_show_minihealthbar && you.hp < you.hp_max
+        || Options.tile_show_minimagicbar
+           && you.magic_points < you.max_magic_points)
     {
 
         // Tiles are 32x32 pixels; 1/32 = 0.03125.
@@ -1148,7 +1149,8 @@ void DungeonRegion::render()
 
         ShapeBuffer buff;
 
-        if (Options.tile_show_minimagicbar)
+        if (Options.tile_show_minimagicbar
+            && you.magic_points < you.max_magic_points)
         {
             static const VColour magic(0, 0, 255, 255);
             static const VColour magic_spent(0, 0, 0, 255);
@@ -1176,7 +1178,8 @@ void DungeonRegion::render()
             static const VColour healthy(0, 255, 0, 255);
             static const VColour damaged(255, 0, 0, 255);
 
-            const float health_divider = (float) you.hp / (float) you.hp_max;
+            const float min_hp = std::max(0, you.hp);
+            const float health_divider = min_hp / (float) you.hp_max;
 
             buff.add(mx / 2,
                      my / 2 + healthbar_offset,
