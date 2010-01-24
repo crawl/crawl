@@ -2710,9 +2710,8 @@ void yell(bool force)
             }
         }
         
-        // FIXME XXX move the prompt into direction()
-        mpr("Gang up on whom?");
-        direction(targ, DIR_TARGET, TARG_HOSTILE, -1, false, false);
+        direction(targ, DIR_TARGET, TARG_HOSTILE, -1, false, false,
+                  false, false, NULL, "Gang up on whom?");
 
         if (targ.isCancel)
         {
