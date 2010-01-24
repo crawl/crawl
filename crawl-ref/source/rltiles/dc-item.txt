@@ -161,7 +161,7 @@ i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
 i-evasion BRAND_EVASION
 i-confusion BRAND_CONFUSION
-# penetration
+i-penetration BRAND_PENETRATION
 i-reaping BRAND_REAPING
 # missile-only brands, order doesn't matter
 i-venom BRAND_POISONED
