@@ -399,6 +399,11 @@ public:
     {
         mesclr_line = next_line;
     }
+
+    void new_cmd(bool new_turn)
+    {
+        output_prefix(new_turn ? P_NEW_TURN : P_MESCLR);
+    }
 };
 
 message_window msgwin;
@@ -813,6 +818,16 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
     int ret = cancelable_get_line(buf, len, mh, keyproc);
     msgwin_reply(ret == 0 ? buf : "");
     return ret;
+}
+
+static long _last_turn = -1;
+
+void msgwin_new_cmd()
+{
+    flush_prev_message();
+    bool new_turn = (you.num_turns > _last_turn);
+    _last_turn = you.num_turns;
+    msgwin.new_cmd(new_turn);
 }
 
 // mpr() an arbitrarily long list of strings without truncation or risk
