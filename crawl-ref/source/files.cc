@@ -1708,14 +1708,17 @@ static void _save_game_base()
     }
 
     /* tutorial */
-    std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
-    FILE *tutorf = fopen(tutorFile.c_str(), "wb");
-    if (tutorf)
+    if (Tutorial.tutorial_left)
     {
-        writer outf(tutorf);
-        save_tutorial(outf);
-        fclose(tutorf);
-        DO_CHMOD_PRIVATE(tutorFile.c_str());
+        std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
+        FILE *tutorf = fopen(tutorFile.c_str(), "wb");
+        if (tutorf)
+        {
+            writer outf(tutorf);
+            save_tutorial(outf);
+            fclose(tutorf);
+            DO_CHMOD_PRIVATE(tutorFile.c_str());
+        }
     }
 
     /* messages */
