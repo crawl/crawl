@@ -1768,6 +1768,8 @@ _Orcish_Mines_Donald_
 
 @The_monster@ says, "At least there's gold. That doesn't make up for it."
 
+@The_monster@ says, "I'll never be able to carry all this gold! I hate that."
+
 @The_monster@ says, "What do they mine anyway? I've never seen them mine anything."
 
 @The_monster@ says, "Have you ever seen an orcish miner? Me neither."
@@ -1787,8 +1789,6 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 @The_monster@ says, "I asked for directions to the rune, but they belched at me."
 
 @The_monster@ says, "Maybe, with this gold, I'll be able to afford that Trove..."
-
-@The_monster@ says, "Isn't it odd how gold doesn't weigh anything? Maybe it's fake gold."
 
 @The_monster@ says, "I prefer the Lair of the Beasts, to be honest. At least animals don't complain."
 
@@ -1902,7 +1902,7 @@ _Slime_Pits_Donald_
 
 @The_monster@ says, "This place is the pits."
 
-@The_monster@ says, "I hate the colour green. I hate light green even more."
+@The_monster@ says, "I hate the colour green."
 
 @The_monster@ says, "I can't smell anything here. I hate that."
 
@@ -1948,7 +1948,7 @@ _Snake_Pit_Donald_
 
 @The_monster@ says, "Nagas are pretty ugly. I hate nagas."
 
-@The_monster@ says, "What sort of name is moccasin? Sounds like a pair of shoes."
+@The_monster@ says, "I really didn't expect a pair of shoes to bite me."
 
 @The_monster@ says, "There's a difference between guardian serpents and nagas? I never noticed."
 
@@ -1999,11 +1999,9 @@ _Hall_of_Blades_Donald_
 
 @The_monster@ says, "How did I get over here?"
 
-@The_monster@ says, "How does space distort wildly around something?"
-
 @The_monster@ says, "That sword's pretty flaming."
 
-@The_monster@ says, "What's a bardiche?"
+@The_monster@ says, "What do you do with a bardiche, anyway?"
 
 @The_monster@ says, "I didn't find what I was looking for. Maybe they'll restock."
 
@@ -2014,8 +2012,6 @@ _Hall_of_Blades_Donald_
 @The_monster@ says, "That axe looks sharp."
 
 @The_monster@ says, "Animated weapons are so last century."
-
-@The_monster@ says, "One of these has to be speed."
 
 @The_monster@ says, "I'm hungry."
 
