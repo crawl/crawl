@@ -327,6 +327,8 @@ public:
         std::vector<formatted_string> newlines;
         linebreak_string2(text, out_width());
         formatted_string::parse_string_to_multiple(text, newlines);
+
+        // Save starting line if this is temporary.
         int old = next_line;
         for (size_t i = 0; i < newlines.size(); ++i)
         {
