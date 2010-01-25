@@ -161,7 +161,7 @@ static void readkey_more(bool user_forced=false);
 enum prefix_type
 {
     P_NONE,
-    P_MESCLR,
+    P_NEW_CMD, // new command, but no new turn
     P_NEW_TURN
 };
 
@@ -175,7 +175,7 @@ glyph prefix_glyph(prefix_type p)
         g.ch = '-';
         g.col = LIGHTGRAY;
         break;
-    case P_MESCLR:
+    case P_NEW_CMD:
         g.ch = '-';
         g.col = DARKGRAY;
         break;
@@ -402,7 +402,7 @@ public:
 
     void new_cmd(bool new_turn)
     {
-        output_prefix(new_turn ? P_NEW_TURN : P_MESCLR);
+        output_prefix(new_turn ? P_NEW_TURN : P_NEW_CMD);
     }
 
     bool any_messages()
