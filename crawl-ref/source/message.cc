@@ -190,7 +190,7 @@ glyph prefix_glyph(prefix_type p)
 class message_window
 {
     int next_line;
-    int turn_line; // line with the last new-turn dash
+    int mesclr_line;    // last line-after-mesclr
     std::vector<formatted_string> lines;
     prefix_type prompt; // current prefix prompt
 
@@ -260,7 +260,7 @@ class message_window
             return 0;
 
         if (!more_enabled()
-            || !Options.clear_messages && turn_line >= n - space)
+            || !Options.clear_messages && mesclr_line >= n - space)
         {
             scroll(n - space);
             return (n - space);
@@ -303,7 +303,7 @@ class message_window
 
 public:
     message_window()
-        : next_line(0), turn_line(0), prompt(P_NONE)
+        : next_line(0), mesclr_line(0), prompt(P_NONE)
     {
         clear_lines(); // initialize this->lines
     }
@@ -346,7 +346,7 @@ public:
         for (; i < height(); ++i)
             lines[i].clear();
         next_line -= n;
-        turn_line -= n;
+        mesclr_line -= n;
     }
 
     // write to screen (without refresh)
@@ -395,12 +395,9 @@ public:
         show();
     }
 
-    void new_turn()
+    void mesclr()
     {
-        // Ensure we don't cause a more prompt.
-        turn_line = 1;
-        add_item(" ", '-', true);
-        turn_line = next_line;
+        mesclr_line = next_line;
     }
 };
 
@@ -818,12 +815,6 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
     return ret;
 }
 
-void msgwin_new_turn()
-{
-    flush_prev_message();
-    msgwin.new_turn();
-}
-
 // mpr() an arbitrarily long list of strings without truncation or risk
 // of overflow.
 void mpr_comma_separated_list(const std::string prefix,
@@ -969,6 +960,8 @@ void mesclr(bool force)
     // code appears to do this intentionally.
     // ASSERT(!messages.have_prev());
     flush_prev_message();
+
+    msgwin.mesclr(); // Output new leading dash.
 
     if (Options.clear_messages || force)
         msgwin.clear();
