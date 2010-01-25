@@ -1567,6 +1567,14 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     delay(1000);
 #endif
 
+    monsters *mon;
+    if (mon = monster_at(old_pos))
+    {
+        mon->blink();
+        if (mon = monster_at(old_pos))
+            mon->teleport(true);
+    }
+
     you.moveto(old_pos);
     you.duration[DUR_TIME_STEP] = 0;
 
