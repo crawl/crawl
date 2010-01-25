@@ -67,6 +67,9 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.termp.x = 1;
     geom.termp.y = 1;
 
+    geom.termsz.x = 80;
+    geom.termsz.y = 24;
+
     geom.viewp.x = 1;
     geom.viewp.y = 1;
 
