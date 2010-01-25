@@ -40,6 +40,7 @@ public:
     formatted_string substr(size_t index, size_t length=std::string::npos) const;
 
     void clear();
+    bool empty();
 
     void swap(formatted_string& other);
 

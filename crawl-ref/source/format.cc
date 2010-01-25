@@ -513,6 +513,11 @@ void formatted_string::clear()
     ops.clear();
 }
 
+bool formatted_string::empty()
+{
+    return (ops.empty());
+}
+
 void formatted_string::cprintf(const char *s, ...)
 {
     va_list args;
