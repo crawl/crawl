@@ -354,7 +354,8 @@ public:
 
     // temporary: to be overwritten with next item, e.g. new turn
     //            leading dash or prompt without response
-    void add_item(std::string text, char first_col = ' ', bool temporary = false)
+    void add_item(std::string text, prefix_type first_col = P_NONE,
+                  bool temporary = false)
     {
         std::vector<formatted_string> newlines;
         linebreak_string2(text, out_width());
@@ -365,14 +366,9 @@ public:
         for (size_t i = 0; i < newlines.size(); ++i)
         {
             old -= make_space(1);
-            std::string fc = "";
+            formatted_string line;
             if (use_first_col())
-            {
-                fc = " ";
-                if (i == 0)
-                    fc[0] = first_col;
-            }
-            formatted_string line = formatted_string(fc);
+                line.add_glyph(prefix_glyph(first_col));
             line += newlines[i];
             add_line(line);
         }
@@ -428,12 +424,14 @@ public:
 
     void store_msg(const message_item& msg)
     {
-        bool newturn = (msg.turn > msgs[-1].turn);
+        prefix_type p = P_NONE;
+        if (msg.turn > msgs[-1].turn)
+            p = P_NEW_TURN;
         msgs.push_back(msg);
         std::string repeats = "";
         if (msg.repeats > 1)
             repeats = make_stringf(" x%d", msg.repeats);
-        msgwin.add_item(msg.text + repeats, newturn ? '-' : ' ', false);
+        msgwin.add_item(msg.text + repeats, p, false);
     }
 
     void flush_prev()
@@ -777,7 +775,7 @@ static std::string show_prompt(std::string prompt)
     msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
     std::string col = colour_to_str(colour_msg(colour));
     std::string text = "<" + col + ">" + prompt + "</" + col + ">"; // XXX
-    msgwin.add_item(text, ' ', true);
+    msgwin.add_item(text, P_NONE, true);
     msgwin.show();
     return text;
 }
