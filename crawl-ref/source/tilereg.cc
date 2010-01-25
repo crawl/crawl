@@ -4308,10 +4308,10 @@ void DollEditRegion::render()
     const int max_show = 9;
 
     // Layout options (units are in 32x32 squares)
-    const int left_gutter = 2;
-    const int item_line = 2;
+    const int left_gutter    = 2;
+    const int item_line      = 2;
     const int edit_doll_line = 5;
-    const int doll_line = 8;
+    const int doll_line      = 8;
     const int info_offset =
         left_gutter + std::max(max_show, (int)NUM_MAX_DOLLS) + 1;
 
@@ -4500,7 +4500,8 @@ void DollEditRegion::render()
         m_font_buf.add("Change category    up/down                 Copy doll           Ctrl-C", VColour::white, 0.0f, start_y + height * 1);
         m_font_buf.add("Change doll        0-9, Shift + arrows     Paste copied doll   Ctrl-V", VColour::white, 0.0f, start_y + height * 2);
         m_font_buf.add("Change doll mode   m                       Randomise doll      Ctrl-R", VColour::white, 0.0f, start_y + height * 3);
-        m_font_buf.add("Quit menu          q, Escape, Ctrl-S       Toggle equipment    *", VColour::white, 0.0f, start_y + height * 4);
+        m_font_buf.add("Save menu          Escape, Ctrl-S          Toggle equipment    *", VColour::white, 0.0f, start_y + height * 4);
+        m_font_buf.add("Quit menu          q, Ctrl-Q", VColour::white, 0.0f, start_y + height * 5);
     }
 
     m_font_buf.draw();
@@ -4554,16 +4555,22 @@ void DollEditRegion::run()
 
         switch (cmd)
         {
+        case CMD_DOLL_QUIT:
+            return;
         case CMD_DOLL_RANDOMIZE:
             _create_random_doll(m_dolls[m_doll_idx]);
             break;
         case CMD_DOLL_SELECT_NEXT_DOLL:
             m_doll_idx = (m_doll_idx + 1) % NUM_MAX_DOLLS;
             update_part_idx = true;
+            if (m_mode != TILEP_MODE_LOADING)
+                m_mode = TILEP_MODE_LOADING;
             break;
         case CMD_DOLL_SELECT_PREV_DOLL:
             m_doll_idx = (m_doll_idx + NUM_MAX_DOLLS - 1) % NUM_MAX_DOLLS;
             update_part_idx = true;
+            if (m_mode != TILEP_MODE_LOADING)
+                m_mode = TILEP_MODE_LOADING;
             break;
         case CMD_DOLL_SELECT_NEXT_PART:
             m_cat_idx = (m_cat_idx + 1) % TILEP_PART_MAX;
@@ -4637,11 +4644,16 @@ void DollEditRegion::run()
                 m_doll_idx = 0;
             else if (key >= '1' && key <= '9')
                 m_doll_idx = key - '1' + 1;
+            else
+                break;
+
+            if (m_mode != TILEP_MODE_LOADING)
+                m_mode = TILEP_MODE_LOADING;
             ASSERT(m_doll_idx < NUM_MAX_DOLLS);
             break;
         }
     }
-    while (cmd != CMD_DOLL_QUIT);
+    while (cmd != CMD_DOLL_SAVE);
 
     _save_doll_data(m_mode, m_doll_idx, &m_dolls[0]);
 
