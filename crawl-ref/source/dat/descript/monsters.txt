@@ -1047,7 +1047,7 @@ A vaguely humanoid blob of putrid white flesh.
 %%%%
 lich
 
-A wizard who didn't want to die, a Lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy.  These undead creatures can wield great magic and are best avoided by all but the most confident.
+A wizard who didn't want to die, a lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy.  This undead creature can wield great magic and is best avoided by all but the most confident.
 %%%%
 lindwurm
 
