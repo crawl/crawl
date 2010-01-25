@@ -2569,8 +2569,6 @@ void level_change(bool skip_attribute_increase)
         {
             mprf(MSGCH_INTRINSIC_GAIN,
                  "Welcome back to level %d!", new_exp);
-            if (!skip_more)
-                more();
 
             // No more prompts for this XL past this point.
 
@@ -2594,8 +2592,6 @@ void level_change(bool skip_attribute_increase)
 
             if (!(new_exp % 3) && !skip_attribute_increase)
                 _attribute_increase();
-            else if (!skip_more)
-                more();
 
             // No more prompts for this XL past this point.
 
@@ -3106,6 +3102,9 @@ void level_change(bool skip_attribute_increase)
 
         xom_is_stimulated(16);
 
+        if (!skip_more && any_messages())
+            more();
+
         learned_something_new(TUT_NEW_LEVEL);
     }
 
@@ -3241,11 +3240,7 @@ static void _attribute_increase()
 {
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
-
     learned_something_new(TUT_CHOOSE_STAT);
-    more();
-    mesclr();
-
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
 
     while (true)
