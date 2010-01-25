@@ -2720,7 +2720,7 @@ static monsterentry mondata[] = {
 {
     MONS_LICH, 'L', LIGHTGREY, "lich",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_SPEAKS,
-    MR_RES_POISON | mrd(MR_RES_COLD, 2) | MR_RES_ELEC,
+    MR_RES_POISON | mrd(MR_RES_COLD, 2),
     0, 16, MONS_LICH, MONS_LICH, MH_UNDEAD, -11,
     { {AT_TOUCH, AF_DRAIN_XP, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 20, 2, 4, 0 },
