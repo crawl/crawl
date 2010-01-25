@@ -2669,7 +2669,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>P</w>      : make a portal\n"
                        "<w>T</w>      : make a trap\n"
                        "<w><<</w>/<w>></w>    : create up/down staircase\n"
-                       "<w>(</w>/<w>)</w>    : make feature by number/name\n"
+                       "<w>(</w>      : make feature\n"
                        "<w>\\</w>      : make a shop\n"
                        "\n"
                        "<yellow>Other level related commands</yellow>\n"
