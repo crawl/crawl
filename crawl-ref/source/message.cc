@@ -192,6 +192,7 @@ class message_window
     int next_line;
     int turn_line; // line with the last new-turn dash
     std::vector<formatted_string> lines;
+    prefix_type prompt; // current prefix prompt
 
     int height() const
     {
@@ -292,9 +293,17 @@ class message_window
         next_line++;
     }
 
+    void output_prefix(prefix_type p)
+    {
+        if (p <= prompt)
+            return;
+        prompt = p;
+        add_item("", p, true);
+    }
+
 public:
     message_window()
-        : next_line(0), turn_line(0)
+        : next_line(0), turn_line(0), prompt(P_NONE)
     {
         clear_lines(); // initialize this->lines
     }
@@ -357,6 +366,15 @@ public:
     void add_item(std::string text, prefix_type first_col = P_NONE,
                   bool temporary = false)
     {
+        // XXX: using empty "text" to say we're doing a temp prefix.
+        if (text.empty())
+            text = " ";  // So the line_break doesn't return empty.
+        else
+        {
+            // Overwriting old prefix.
+            prompt = P_NONE;
+        }
+
         std::vector<formatted_string> newlines;
         linebreak_string2(text, out_width());
         formatted_string::parse_string_to_multiple(text, newlines);
