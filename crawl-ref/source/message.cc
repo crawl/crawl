@@ -155,6 +155,15 @@ public:
 
 static void readkey_more(bool user_forced=false);
 
+// Types of message prefixes.
+// Higher values override lower.
+enum prefix_type
+{
+    P_NONE,
+    P_MESCLR,
+    P_NEW_TURN
+};
+
 class message_window
 {
     int next_line;
