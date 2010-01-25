@@ -1792,6 +1792,8 @@ void bolt::digging_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
+        if (is_sporecovered(pos()))
+            env.pgrid(pos()) &= ~(FPROP_SPORES);
 
         if (!msg_generated)
         {
@@ -1898,6 +1900,8 @@ void bolt::nuke_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
+        if (is_sporecovered(pos()))
+            env.pgrid(pos()) &= ~(FPROP_SPORES);
 
         grd(pos()) = DNGN_FLOOR;
         if (player_can_hear(pos()))
@@ -1913,6 +1917,8 @@ void bolt::nuke_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
+        if (is_sporecovered(pos()))
+            env.pgrid(pos()) &= ~(FPROP_SPORES);
 
         if (player_can_hear(pos()))
         {
@@ -1939,6 +1945,7 @@ void bolt::nuke_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
+        env.pgrid(pos()) &= ~(FPROP_BLOODY);
 
         if (you.see_cell(pos()))
             mpr("The tree breaks and falls down!");

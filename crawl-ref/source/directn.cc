@@ -2502,7 +2502,7 @@ void describe_floor()
         break;
     }
 
-    feat = feature_description(you.pos(), is_bloodcovered(you.pos()),
+    feat = feature_description(you.pos(), true,
                                DESC_NOCAP_A, false);
     if (feat.empty())
         return;
@@ -2561,11 +2561,13 @@ std::string thing_do_grammar(description_level_type dtype,
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap, bool bloody,
                                 description_level_type dtype,
-                                bool add_stop, bool base_desc)
+                                bool add_stop, bool base_desc, bool spores)
 {
     std::string desc = raw_feature_description(grid, trap, base_desc);
     if (bloody)
         desc += ", spattered with blood";
+    else if (spores)
+        desc += ", covered in spores";
 
     return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
@@ -2901,17 +2903,22 @@ static bool _interesting_feature(dungeon_feature_type feat)
 }
 #endif
 
-std::string feature_description(const coord_def& where, bool bloody,
+std::string feature_description(const coord_def& where, bool covering,
                                 description_level_type dtype, bool add_stop,
                                 bool base_desc)
 {
     std::string marker_desc =
         env.markers.property_at(where, MAT_ANY, "feature_description");
 
+    bool bloody = covering && is_bloodcovered(where);
+    bool spores = covering && is_sporecovered(where);
+
     if (!marker_desc.empty())
     {
         if (bloody)
             marker_desc += ", spattered with blood";
+        else if (spores)
+            marker_desc += ", covered in spores";
 
         return thing_do_grammar(dtype, add_stop, false, marker_desc);
     }
@@ -2967,6 +2974,8 @@ std::string feature_description(const coord_def& where, bool bloody,
 
         if (bloody)
             desc += ", spattered with blood";
+        else if (spores)
+            desc += ", covered in spores";
 
         return thing_do_grammar(dtype, add_stop, false, desc);
     }
@@ -2987,7 +2996,7 @@ std::string feature_description(const coord_def& where, bool bloody,
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
         return (feature_description(grid, get_trap_type(where), bloody,
-                                    dtype, add_stop, base_desc));
+                                    dtype, add_stop, base_desc, spores));
     case DNGN_ABANDONED_SHOP:
         return thing_do_grammar(dtype, add_stop, false, "An abandoned shop");
 
@@ -3001,7 +3010,7 @@ std::string feature_description(const coord_def& where, bool bloody,
                     "UNAMED PORTAL VAULT ENTRY"));
     default:
         return (feature_description(grid, NUM_TRAPS, bloody, dtype, add_stop,
-                                    base_desc));
+                                    base_desc, spores));
     }
 }
 
@@ -3515,7 +3524,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
     if (is_bloodcovered(where))
         bloody = true;
 
-    std::string feature_desc = feature_description(where, bloody);
+    std::string feature_desc = feature_description(where, true);
 #ifdef DEBUG_DIAGNOSTICS
     std::string marker;
     if (map_marker *mark = env.markers.find(where, MAT_ANY))
