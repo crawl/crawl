@@ -4827,9 +4827,9 @@ int dgn_place_monster(mons_spec &mspec,
         mg.summon_type         = mspec.summon_type;
         mg.non_actor_summoner  = mspec.non_actor_summoner;
 
-        // XXX: hack.
+        // XXX: hack (also, never hand out darkgrey)
         if (mg.colour == -1)
-            mg.colour = random_colour();
+            mg.colour = random_monster_colour();
 
         coord_def place(where);
         if (!force_pos && monster_at(place)

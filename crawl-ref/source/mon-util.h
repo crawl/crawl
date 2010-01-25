@@ -370,6 +370,7 @@ bool monster_senior(const monsters *first, const monsters *second,
                     bool fleeing = false);
 monster_type draco_subspecies(const monsters *mon);
 unsigned char ugly_thing_random_colour();
+unsigned char random_monster_colour ();
 int ugly_thing_colour_offset(const unsigned char colour);
 std::string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const std::string &colour);
@@ -400,4 +401,5 @@ int scan_mon_inv_randarts(const monsters *mon,
                           artefact_prop_type ra_prop);
 
 bool player_or_mon_in_sanct(const monsters* monster);
+
 #endif

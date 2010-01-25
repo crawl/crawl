@@ -1519,6 +1519,17 @@ void define_monster(int midx)
     define_monster(menv[midx]);
 }
 
+// Never hand out DARKGREY as a monster colour, even if it is randomly
+// chosen.
+unsigned char random_monster_colour ()
+{
+    unsigned char col = DARKGREY;
+    while (col == DARKGREY)
+        col = random_colour();
+
+    return (col);
+}
+
 // Generate a shiny new and unscarred monster.
 void define_monster(monsters &mons)
 {
@@ -1547,7 +1558,7 @@ void define_monster(monsters &mons)
         hd = 4 + random2(4);
         ac = 3 + random2(7);
         ev = 7 + random2(6);
-        col = random_colour();
+        col = random_monster_colour();
         break;
 
     case MONS_ZOMBIE_SMALL:
@@ -1558,7 +1569,7 @@ void define_monster(monsters &mons)
         hd = 8 + random2(4);
         ac = 5 + random2avg(9, 2);
         ev = 3 + random2(5);
-        col = random_colour();
+        col = random_monster_colour();
         break;
 
     case MONS_ZOMBIE_LARGE:
@@ -1637,8 +1648,8 @@ void define_monster(monsters &mons)
         break;
     }
 
-    if (col == BLACK)
-        col = random_colour();
+    if (col == BLACK) // but never give out darkgrey to monsters
+        col = random_monster_colour();
 
     // Some calculations.
     hp     = hit_points(hd, m->hpdice[1], m->hpdice[2]);
