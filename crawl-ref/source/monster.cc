@@ -1291,12 +1291,15 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         {
         case UNRAND_ASMODEUS:
             return (monster->type == MONS_ASMODEUS);
+
         case UNRAND_DISPATER:
             return (monster->type == MONS_DISPATER);
+
         case UNRAND_CEREBOV:
             return (monster->type == MONS_CEREBOV);
         }
     }
+
     return (false);
 }
 
@@ -1314,10 +1317,16 @@ static int _ego_damage_bonus(item_def &item)
 
 static bool _item_race_matches_monster(const item_def &item, monsters *mons)
 {
-    return (get_equip_race(item) == ISFLAG_ELVEN
-                && mons_genus(mons->type) == MONS_ELF
-            || get_equip_race(item) == ISFLAG_ORCISH
-                && mons_genus(mons->type) == MONS_ORC);
+    if (get_equip_race(item) == ISFLAG_ELVEN)
+        return (mons_genus(mons->type) == MONS_ELF);
+
+    if (get_equip_race(item) == ISFLAG_DWARVEN)
+        return (mons_genus(mons->type) == MONS_DWARF);
+
+    if (get_equip_race(item) == ISFLAG_ORCISH)
+        return (mons_genus(mons->type) == MONS_ORC);
+
+    return (false);
 }
 
 bool monsters::pickup_melee_weapon(item_def &item, int near)
