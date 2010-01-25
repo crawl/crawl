@@ -83,10 +83,8 @@ private:
 void save_messages(writer& outf);
 void load_messages(reader& inf);
 
-inline bool any_messages()
-{
-    return true;
-}
+// Have any messages been printed since the last clear?
+bool any_messages();
 
 void replay_messages();
 

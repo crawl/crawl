@@ -404,6 +404,11 @@ public:
     {
         output_prefix(new_turn ? P_NEW_TURN : P_MESCLR);
     }
+
+    bool any_messages()
+    {
+        return (next_line > mesclr_line);
+    }
 };
 
 message_window msgwin;
@@ -417,6 +422,11 @@ void scroll_message_window(int n)
 {
     msgwin.scroll(n);
     msgwin.show();
+}
+
+bool any_messages()
+{
+    return msgwin.any_messages();
 }
 
 typedef circ_vec<message_item, NUM_STORED_MESSAGES> store_t;
