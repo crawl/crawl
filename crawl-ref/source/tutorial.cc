@@ -23,6 +23,7 @@
 #include "command.h"
 #include "decks.h"
 #include "describe.h"
+#include "files.h"
 #include "food.h"
 #include "format.h"
 #include "fprop.h"
@@ -996,6 +997,11 @@ void tutorial_finished()
     more();
 
     Tutorial.tutorial_events.init(false);
+
+    // Unlink tutorial file.
+    const std::string basename = get_savedir_filename(you.your_name, "", "");
+    const std::string tmpname = basename + ".tut";
+    unlink( tmpname.c_str() );
 }
 
 // Occasionally remind religious characters of sacrifices.
