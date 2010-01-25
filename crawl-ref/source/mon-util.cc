@@ -1521,7 +1521,7 @@ void define_monster(int midx)
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly
 // chosen.
-unsigned char random_monster_colour ()
+unsigned char random_monster_colour()
 {
     unsigned char col = DARKGREY;
     while (col == DARKGREY)
@@ -1530,7 +1530,7 @@ unsigned char random_monster_colour ()
     return (col);
 }
 
-// Generate a shiny new and unscarred monster.
+// Generate a shiny, new and unscarred monster.
 void define_monster(monsters &mons)
 {
     int mcls                  = mons.type;
