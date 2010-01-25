@@ -28,7 +28,7 @@ Erik Inge Bolsø              Mitsuhiro Itakura         Will Rogers
 Peter Borgmann               Mikko Juola               David Rose
 Trent W. Buck                Jarmo Kielosto            Sebastian Salman
 Robert Burnham               Kornel Kisielewicz        Brett Scarborough
-Joseph Buzzelli              Daniel Klein              Darshan Shaligram
+Joe Buzzelli                 Daniel Klein              Darshan Shaligram
 Terje Bø                     Vambola Kotkas            Robert Shimmin
 Aaron Curtis                 Ryan Kusnery              Sigurd
 Denzi                        Jukka Kuusisto            Edgar Simo
