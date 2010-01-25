@@ -1172,7 +1172,7 @@ static void _elven_twin_died(monsters* twin, bool in_transit)
     }
 }
 
-void pikel_band_neutralise ()
+void pikel_band_neutralise (bool check_tagged)
 {
     bool message_made = false;
 
@@ -1180,11 +1180,20 @@ void pikel_band_neutralise ()
     {
         if (mi->type == MONS_SLAVE
             && testbits(mi->flags, MF_BAND_MEMBER)
-            && mi->props.exists("pikel_band"))
+            && mi->props.exists("pikel_band")
+            && mi->mname != "freed slave")
         {
+            // Don't neutralise band members that are leaving the level with us.
+            if (check_tagged && testbits(mi->flags, MF_TAKING_STAIRS))
+                continue;
+
             if (mi->observable() && !message_made)
             {
-                mpr("With Pikel's spell broken, the former slaves thank you for their freedom.");
+                if (check_tagged)
+                    mprf("With Pikel's spell partly broken, some of the slaves are set free!");
+                else
+                    mprf("With Pikel's spell broken, the former slaves thank you for their freedom.");
+
                 message_made = true;
             }
             mi->flags |= MF_NAME_DESCRIPTOR | MF_NAME_REPLACE;

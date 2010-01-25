@@ -1124,6 +1124,7 @@ static void _grab_followers()
     int non_stair_using_allies = 0;
     monsters *dowan = NULL;
     monsters *duvessa = NULL;
+    monsters *pikel = NULL;
 
     // Handle nearby ghosts.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
@@ -1157,6 +1158,14 @@ static void _grab_followers()
             if (fmenv->visible_to(&you))
                 mpr("The ghost fades into the shadows.");
             monster_teleport(fmenv, true);
+        }
+
+        // From here, we can't fail, so check to see if we've got Pikel
+        if (fmenv->type == MONS_PIKEL
+            || (fmenv->props.exists("original_name")
+                && fmenv->props["original_name"].get_string() == "Pikel"))
+        {
+            pikel = fmenv;
         }
     }
 
@@ -1224,6 +1233,11 @@ static void _grab_followers()
         if (!mons->alive())
             continue;
         mons->flags &= ~MF_TAKING_STAIRS;
+    }
+
+    if (pikel && !pikel->alive())
+    {
+        pikel_band_neutralise(true);
     }
 }
 
