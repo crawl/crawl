@@ -1232,6 +1232,14 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                         continue;
                     }
 
+                // And Mara shouldn't cast player ghost if he can't see the player
+                if (spell_cast == SPELL_SUMMON_PLAYER_GHOST && monster->type == MONS_MARA)
+                    if (!monster->mon_see_cell(you.pos()))
+                    {
+                        spell_cast = SPELL_NO_SPELL;
+                        continue;
+                    }
+
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
                 {
