@@ -1425,7 +1425,11 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
 {
     if (monster->type == MONS_GIANT_SPORE)
     {
-        env.pgrid(monster->pos()) |= FPROP_SPORES;
+        dungeon_feature_type ftype = env.grid(monster->pos());
+
+        if (ftype >= DNGN_FLOOR_MIN && ftype <= DNGN_FLOOR_MAX)
+            env.pgrid(monster->pos()) |= FPROP_SPORES;
+
         // The number field is used as a cooldown timer for this behavior.
         if (monster->number <= 0)
         {
