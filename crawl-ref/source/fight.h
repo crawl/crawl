@@ -33,7 +33,8 @@ enum unchivalric_attack_type
     UCAT_PETRIFYING,
     UCAT_PETRIFIED,
     UCAT_PARALYSED,
-    UCAT_SLEEPING
+    UCAT_SLEEPING,
+    UCAT_ALLY
 };
 
 enum attack_final_effect_flavor

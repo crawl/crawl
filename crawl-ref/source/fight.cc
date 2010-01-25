@@ -233,6 +233,10 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
         unchivalric = UCAT_CONFUSED;
     }
 
+    // allies
+    if (def && def->friendly())
+        unchivalric = UCAT_ALLY;
+
     // fleeing
     if (def && mons_is_fleeing(def))
         unchivalric = UCAT_FLEEING;
@@ -3956,6 +3960,7 @@ void melee_attack::player_stab_check()
     case UCAT_INVISIBLE:
     case UCAT_CONFUSED:
     case UCAT_FLEEING:
+    case UCAT_ALLY:
         stab_bonus = 4;
         break;
     case UCAT_DISTRACTED:
