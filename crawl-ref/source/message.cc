@@ -28,6 +28,7 @@
 #include "options.h"
 #include "player.h"
 #include "religion.h"
+#include "showsymb.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -163,6 +164,28 @@ enum prefix_type
     P_MESCLR,
     P_NEW_TURN
 };
+
+// Could also go with coloured glyphs.
+glyph prefix_glyph(prefix_type p)
+{
+    glyph g;
+    switch (p)
+    {
+    case P_NEW_TURN:
+        g.ch = '-';
+        g.col = LIGHTGRAY;
+        break;
+    case P_MESCLR:
+        g.ch = '-';
+        g.col = DARKGRAY;
+        break;
+    default:
+        g.ch = ' ';
+        g.col = LIGHTGRAY;
+        break;
+    }
+    return (g);
+}
 
 class message_window
 {
