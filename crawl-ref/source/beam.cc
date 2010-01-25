@@ -5445,6 +5445,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         return (MON_AFFECTED);
 
     case BEAM_HASTE:
+        if (YOU_KILL(thrower))
+            did_god_conduct(DID_HASTY, 6, effect_known);
         if (mon->del_ench(ENCH_SLOW, true))
         {
             if (simple_monster_message(mon, " is no longer moving slowly."))
