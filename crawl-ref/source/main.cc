@@ -1017,7 +1017,7 @@ static void _input()
     crawl_state.input_line_curr = 0;
 
     {
-        flush_prev_message();
+        msgwin_new_cmd();
 
         clear_macro_process_key_delay();
 
