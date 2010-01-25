@@ -14,11 +14,11 @@
 #include "AppHdr.h"
 
 #include "message.h"
-#include "format.h"
 
 #include "cio.h"
 #include "colour.h"
 #include "delay.h"
+#include "format.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "macro.h"
