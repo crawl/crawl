@@ -337,5 +337,9 @@ reflected:
         return (true);
     }
 
+    // move_to_pos() just trashed the coords, set them again
+    mon.props["iood_x"] = x;
+    mon.props["iood_y"] = y;
+
     return (false);
 }
