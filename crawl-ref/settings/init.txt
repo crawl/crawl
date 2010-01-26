@@ -252,6 +252,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # show_gold_turns              = true
 
 # clear_messages             = true
+# show_more                  = false
 # show_inventory_weights     = true
 # item_stack_summary_minimum = 5
 # list_rotten                = false
