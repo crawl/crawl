@@ -649,10 +649,11 @@ bool yes_or_no( const char* fmt, ... )
 
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
-bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
-            bool interrupt_delays, bool noprompt,
-            const explicit_keymap *map )
+bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
+           bool interrupt_delays, bool noprompt,
+           const explicit_keymap *map, GotoRegion region)
 {
+    bool message = (region == GOTO_MSG);
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity( AI_FORCE_INTERRUPT );
 
@@ -661,7 +662,12 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
     while (true)
     {
         if (!noprompt)
-            mpr(prompt.c_str(), MSGCH_PROMPT);
+        {
+            if (message)
+                mpr(prompt.c_str(), MSGCH_PROMPT);
+            else
+                cprintf(prompt.c_str());
+        }
 
         int tmp = getchm(KMC_CONFIRM);
 
@@ -691,7 +697,7 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
             tmp = toupper( tmp );
         }
 
-        if (clear_after)
+        if (clear_after && message)
             mesclr();
 
         if (tmp == 'N')
@@ -699,7 +705,13 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
         else if (tmp == 'Y')
             return (true);
         else if (!noprompt)
-            mpr("[Y]es or [N]o only, please.");
+        {
+            const std::string pr = "[Y]es or [N]o only, please.";
+            if (message)
+                mpr(pr);
+            else
+                cprintf((EOL + pr + EOL).c_str());
+        }
     }
 }
 
