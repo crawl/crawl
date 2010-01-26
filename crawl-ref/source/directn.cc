@@ -353,7 +353,9 @@ void direction_chooser::print_key_hints() const
 
     if (just_looking)
     {
-        prompt += ", v - describe, . - travel";
+        if (you.see_cell(target()))
+            prompt += ", v - describe";
+        prompt += ", . - travel";
     }
     else
     {
@@ -383,6 +385,9 @@ void direction_chooser::describe_cell() const
 {
     if (!you.see_cell(target()))
     {
+        print_top_prompt();
+        print_key_hints();
+        // FIXME: make this better integrated.
         _describe_oos_square(target());
     }
     else
@@ -1405,6 +1410,9 @@ void direction_chooser::print_target_monster_description() const
 
 void direction_chooser::print_target_object_description() const
 {
+    if (!you.see_cell(target()))
+        return;
+
     const item_def* item = top_item_at(target(), true);
     if (!item)
         return;
@@ -2034,7 +2042,7 @@ static void _describe_oos_square(const coord_def& where)
     if (!in_bounds(where) || !is_terrain_seen(where))
         return;
 
-    describe_stash(where.x, where.y);
+    describe_stash(where);
     _describe_feature(where, true);
 }
 
@@ -2535,7 +2543,7 @@ static void _describe_feature(const coord_def& where, bool oos)
     std::string desc;
     desc = feature_description(grid);
 
-    if (desc.length())
+    if (!desc.empty())
     {
         if (oos)
             desc = "[" + desc + "]";

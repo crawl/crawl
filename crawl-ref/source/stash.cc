@@ -111,23 +111,23 @@ void maybe_update_stashes()
     }
 }
 
-bool is_stash(int x, int y)
+bool is_stash(const coord_def& p)
 {
     LevelStashes *ls = StashTrack.find_current_level();
     if (ls)
     {
-        Stash *s = ls->find_stash(x, y);
+        Stash *s = ls->find_stash(p.x, p.y);
         return (s && s->enabled);
     }
     return (false);
 }
 
-std::string get_stash_desc(int x, int y)
+std::string get_stash_desc(const coord_def& p)
 {
     LevelStashes *ls = StashTrack.find_current_level();
     if (ls)
     {
-        Stash *s = ls->find_stash(x, y);
+        Stash *s = ls->find_stash(p.x, p.y);
         if (s)
         {
             const std::string desc = s->description();
@@ -138,9 +138,9 @@ std::string get_stash_desc(int x, int y)
     return "";
 }
 
-void describe_stash(int x, int y)
+void describe_stash(const coord_def& p)
 {
-    std::string desc = get_stash_desc(x, y);
+    std::string desc = get_stash_desc(p);
     if (!desc.empty())
         mpr(desc.c_str(), MSGCH_EXAMINE_FILTER);
 }
