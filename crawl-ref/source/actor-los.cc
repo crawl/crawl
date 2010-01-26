@@ -18,7 +18,11 @@ bool actor::see_cell(const coord_def &p) const
 
 void actor::update_los()
 {
-    los.update();
+    if (changed_los_center || observable())
+    {
+        los.update();
+        changed_los_center = false;
+    }
 }
 
 bool actor::can_see(const actor *target) const
