@@ -3234,7 +3234,9 @@ void god_pitch(god_type which_god)
     snprintf(info, INFO_SIZE, "Do you wish to %sjoin this religion?",
              (you.worshipped[which_god]) ? "re" : "");
 
-    if (!yesno(info, false, 'n') || !yesno("Are you sure?", false, 'n'))
+    cgotoxy(1, 18, GOTO_CRT);
+    textcolor(channel_to_colour(MSGCH_PROMPT));
+    if (!yesno(info, false, 'n', true, true, false, NULL, GOTO_CRT))
     {
         you.turn_is_over = false; // Okay, opt out.
         redraw_screen();
