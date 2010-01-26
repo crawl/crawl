@@ -3067,7 +3067,7 @@ std::string get_ghost_description(const monsters &mons, bool concise)
 
     // We're fudging stats so that unarmed combat gets based off
     // of the ghost's species, not the player's stats... exact
-    // stats aren't required anyways, all that matters is whether
+    // stats aren't required anyway, all that matters is whether
     // dex >= str. -- bwr
     const int dex = 10;
     int str = 5;

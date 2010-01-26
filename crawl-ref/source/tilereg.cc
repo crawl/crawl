@@ -1345,7 +1345,7 @@ static int _click_travel(const coord_def &gc, MouseEvent &event)
 }
 
 // FIXME: If the player is targeted, the game asks the player to target
-// something with the mouse, then targets the player anyways and treats
+// something with the mouse, then targets the player anyway and treats
 // mouse click as if it hadn't come during targeting (moves the player
 // to the clicked cell, whatever).
 static void _add_targeting_commands(const coord_def& pos)

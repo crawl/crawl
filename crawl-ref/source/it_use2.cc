@@ -288,7 +288,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (you.haloed())
         {
             // You can't turn invisible while haloed, but identify the
-            // effect anyways.
+            // effect anyway.
             mpr("You briefly turn translucent.");
 
             // And also cancel backlight (for whatever good that will

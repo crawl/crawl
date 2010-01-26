@@ -459,7 +459,7 @@ void stop_delay( bool stop_stair_travel )
 
     case DELAY_INTERRUPTIBLE:
         // Always stoppable by definition...
-        // try using a more specific type anyways. -- bwr
+        // try using a more specific type anyway. -- bwr
         _pop_delay();
         break;
 
