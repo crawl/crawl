@@ -88,7 +88,7 @@ static bool _handle_enchant_weapon( enchant_stat_type which_stat,
                                     bool quiet = false, int item_slot = -1 );
 static bool _handle_enchant_armour( int item_slot = -1 );
 
-static int  _fire_prompt_for_item(std::string& err);
+static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, std::string& err);
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
@@ -1256,8 +1256,10 @@ public:
     bool chosen_ammo;
 
 private:
-    void set_prompt(const std::string* pre_text = NULL);
+    void set_prompt();
     void cycle_fire_item(bool forward);
+    void pick_fire_item_from_inventory();
+    void display_help();
 
     std::string prompt;
     std::string m_noitem_reason;
@@ -1279,7 +1281,7 @@ const item_def* fire_target_behaviour::active_item() const
         return &you.inv[m_slot];
 }
 
-void fire_target_behaviour::set_prompt(const std::string* pre_text)
+void fire_target_behaviour::set_prompt()
 {
     std::string old_prompt = internal_prompt; // Keep for comparison at the end.
     internal_prompt.clear();
@@ -1287,13 +1289,6 @@ void fire_target_behaviour::set_prompt(const std::string* pre_text)
     // Figure out if we have anything else to cycle to.
     const int next_item = get_next_fire_item(m_slot, +1);
     const bool no_other_items = (next_item == -1 || next_item == m_slot);
-
-    // Start with the prefix, if requested.
-    if (pre_text)
-    {
-        internal_prompt += *pre_text;
-        internal_prompt += '\n';
-    }
 
     std::ostringstream msg;
 
@@ -1355,6 +1350,33 @@ void fire_target_behaviour::cycle_fire_item(bool forward)
     set_prompt();
 }
 
+void fire_target_behaviour::pick_fire_item_from_inventory()
+{
+    need_redraw = true;
+    std::string err;
+    const int selected = _fire_prompt_for_item();
+    if (selected >= 0 && _fire_validate_item(selected, err))
+    {
+        m_slot = selected;
+        selected_from_inventory = true;
+        chosen_ammo = true;
+    }
+    else if (!err.empty())
+    {
+        mpr(err);
+        more();
+    }
+    set_prompt();
+}
+
+void fire_target_behaviour::display_help()
+{
+    show_targetting_help();
+    redraw_screen();
+    need_redraw = true;
+    set_prompt();
+}
+
 command_type fire_target_behaviour::get_command(int key)
 {
     if (key == -1)
@@ -1364,30 +1386,9 @@ command_type fire_target_behaviour::get_command(int key)
     {
     case '(': case CONTROL('N'): cycle_fire_item(true);  return (CMD_NO_CMD);
     case ')': case CONTROL('P'): cycle_fire_item(false); return (CMD_NO_CMD);
-
+    case 'i': pick_fire_item_from_inventory(); return (CMD_NO_CMD);
+    case '?': display_help(); return (CMD_NO_CMD);
     case CMD_TARGET_CANCEL: chosen_ammo = false; break;
-
-    case 'i':
-    {
-        std::string err;
-        const int selected = _fire_prompt_for_item(err);
-        if (selected >= 0 && _fire_validate_item(selected, err))
-        {
-            m_slot = selected;
-            selected_from_inventory = true;
-            chosen_ammo = true;
-        }
-        if (!err.empty())
-            err += '\n';
-        set_prompt(&err);
-        return (CMD_NO_CMD);
-    }
-    case '?':
-        show_targetting_help();
-        redraw_screen();
-        need_redraw = true;
-        set_prompt();
-        return (CMD_NO_CMD);
     }
 
     return targetting_behaviour::get_command(key);
@@ -1436,14 +1437,10 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
 // Bring up an inventory screen and have user choose an item.
 // Returns an item slot, or -1 on abort/failure
 // On failure, returns error text, if any.
-static int _fire_prompt_for_item(std::string& err)
+static int _fire_prompt_for_item()
 {
     if (inv_count() < 1)
-    {
-        // canned_msg(MSG_NOTHING_CARRIED);         // Hmmm...
-        err = "You aren't carrying anything.";
         return -1;
-    }
 
     int slot = prompt_invent_item( "Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
@@ -1451,10 +1448,8 @@ static int _fire_prompt_for_item(std::string& err)
                                    NULL, OPER_FIRE );
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
-    {
-        err = "Nothing selected.";
         return -1;
-    }
+
     return slot;
 }
 
@@ -1569,7 +1564,7 @@ void throw_item_no_quiver()
     }
 
     std::string warn;
-    int slot = _fire_prompt_for_item(warn);
+    int slot = _fire_prompt_for_item();
 
     if (slot == -1)
     {
