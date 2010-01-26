@@ -31,8 +31,17 @@ public:
     // Returns a keystroke for the prompt.
     virtual int get_key();
     virtual command_type get_command(int key = -1);
-    virtual bool should_redraw();
-    virtual void mark_ammo_nonchosen();
+
+    // Should we force a redraw?
+    virtual bool should_redraw() const { return false; }
+    // Clear the bit set above.
+    virtual void clear_redraw()  { return; }
+
+    // Update the prompt shown at top.
+    virtual void update_top_prompt(std::string* p_top_prompt) {}
+
+ private:
+    std::string prompt;
 
 public:
     bool just_looking;
@@ -62,17 +71,17 @@ class direction_chooser
 public:
     // FIXME: wrap all these parameters in a struct.
     direction_chooser(dist& moves_,
-                      targetting_type restricts_ = DIR_NONE,
-                      targ_mode_type mode_ = TARG_ANY,
-                      int range_ = -1,
-                      bool just_looking_ = false,
-                      bool needs_path_ = true,
-                      bool may_target_monster_ = true,
-                      bool may_target_self_ = false,
-                      const char *target_prefix_ = NULL,
-                      const char *top_prompt_ = NULL,
-                      targetting_behaviour *mod_ = NULL,
-                      bool cancel_at_self_ = false);
+                      targetting_type restricts_,
+                      targ_mode_type mode_,
+                      int range_,
+                      bool just_looking_,
+                      bool needs_path_,
+                      bool may_target_monster_,
+                      bool may_target_self_,
+                      const char *target_prefix_,
+                      const std::string& top_prompt_,
+                      targetting_behaviour *mod_,
+                      bool cancel_at_self_);
     bool choose_direction();
 
 private:
@@ -129,7 +138,8 @@ private:
     // Each one is commented with a sample output.
 
     // Whatever the caller defines. Typically something like:
-    // Casting: Venom Bolt
+    // Casting: Venom Bolt.
+    // Can be modified by the targetting_behaviour.
     void print_top_prompt() const;
 
     // Press: ? - help, Shift-Dir - straight line, t - giant bat
@@ -163,7 +173,7 @@ private:
     bool tiles_update_target();
 
     // Display the prompt when beginning targetting.
-    void show_initial_prompt() const;
+    void show_initial_prompt();
 
     void toggle_beam();
 
@@ -193,7 +203,7 @@ private:
     bool may_target_monster;
     bool may_target_self;       // ?? XXX Used only for _init_mlist() currently
     const char *target_prefix;  // A string displayed before describing target
-    const char *top_prompt;     // Shown at the top of the message window
+    std::string top_prompt;     // Shown at the top of the message window
     targetting_behaviour *behaviour; // Can be NULL for default
     bool cancel_at_self;        // Disallow self-targetting?
 
@@ -217,13 +227,13 @@ private:
     
 };
 
-void direction( dist &moves, targetting_type restricts = DIR_NONE,
-                targ_mode_type mode = TARG_ANY, int range = -1,
-                bool just_looking = false, bool needs_path = true,
-                bool may_target_monster = true, bool may_target_self = false,
-                const char *target_prefix = NULL,
-                const char *top_prompt = NULL,
-                targetting_behaviour *mod = NULL, bool cancel_at_self = false );
+void direction(dist &moves, targetting_type restricts = DIR_NONE,
+               targ_mode_type mode = TARG_ANY, int range = -1,
+               bool just_looking = false, bool needs_path = true,
+               bool may_target_monster = true, bool may_target_self = false,
+               const char *target_prefix = NULL,
+               const char *top_prompt = NULL,
+               targetting_behaviour *mod = NULL, bool cancel_at_self = false);
 
 bool in_los_bounds(const coord_def& p);
 bool in_viewport_bounds(int x, int y);
