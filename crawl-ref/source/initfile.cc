@@ -610,7 +610,7 @@ void game_options::reset_options()
 
     view_max_width   = std::max(33, VIEW_MIN_WIDTH);
     view_max_height  = std::max(21, VIEW_MIN_HEIGHT);
-    mlist_min_height = 5;
+    mlist_min_height = 4;
     msg_min_height   = std::max(6, MSG_MIN_HEIGHT);
     msg_max_height   = std::max(10, MSG_MIN_HEIGHT);
     mlist_allow_alternate_layout = false;
