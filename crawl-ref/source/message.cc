@@ -82,6 +82,15 @@ struct message_item
         return (repeats > 0);
     }
 
+    std::string with_repeats() const
+    {
+        // TODO: colour the repeats indicator?
+        std::string rep = "";
+        if (repeats > 1)
+            rep = make_stringf(" x%d", repeats);
+        return (text + rep);
+    }
+
     // Tries to condense the argument into this message.
     // Either *this needs to be an empty item, or it must be the
     // same as the argument.
@@ -457,10 +466,7 @@ public:
         if (msg.turn > msgs[-1].turn)
             p = P_NEW_TURN;
         msgs.push_back(msg);
-        std::string repeats = "";
-        if (msg.repeats > 1)
-            repeats = make_stringf(" x%d", msg.repeats);
-        msgwin.add_item(msg.text + repeats, p, false);
+        msgwin.add_item(msg.with_repeats(), p, false);
     }
 
     void flush_prev()
