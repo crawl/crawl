@@ -40,5 +40,6 @@ mon_glyph = merged slime creature : green
 
 # insubstantials
 mon_glyph = insubstantial wisp : lightgrey p
-mon_glpyh = shadow : darkgrey _
+mon_glyph = shadow : darkgrey x20
 mon_glyph = vapour : lightgrey #
+mon_glyph = shadow wraith : blue W
