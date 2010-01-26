@@ -3493,14 +3493,9 @@ static void _describe_cell(const coord_def& where, bool in_range)
             mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
         else
         {
-            if (mitm[ targ_item ].base_type == OBJ_GOLD)
-                mprf(MSGCH_FLOOR_ITEMS, "A pile of gold coins.");
-            else
-            {
-                std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
-                                                               DESC_NOCAP_A);
-                mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
-            }
+            std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
+                                                           DESC_NOCAP_A);
+            mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
             if (mitm[ targ_item ].link != NON_ITEM)
             {
