@@ -2722,6 +2722,13 @@ void monsters::moveto(const coord_def& c)
     if (c != pos() && in_bounds(pos()))
         mons_clear_trapping_net(this);
 
+    if (mons_is_projectile(type))
+    {
+        // Assume some means of displacement, normal moves will overwrite this.
+        props["iood_x"].get_float() += c.x - pos().x;
+        props["iood_y"].get_float() += c.y - pos().y;
+    }
+
     set_position(c);
 }
 
