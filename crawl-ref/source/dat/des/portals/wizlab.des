@@ -37,6 +37,19 @@
 #            NOTHING THAT LOOKS PRETTY
 #    colour: lightred walls, red doors, magenta floor, yellow 'glass'
 #
+# Iskenderun's Mystic Tower
+#    threat: naga mystics, statues with IOOD and IMB, purple draconians
+#    loot:   conjurations-themed randart books
+#    xp:     20000+
+#    layout: weird fortress tower thing with strange corners
+#    colour: purple.
+#
+# Zonguldrok's Mausoleum
+#    threat: zombies, ancient lich, skele warriors
+#    loot:   scrolls, potions, spell books and zonguldrok's sword
+#    xp:     20000+
+#    layout: graveyard
+#    colour: darkgrey, lightgrey
 ###
 
 ##
@@ -49,9 +62,6 @@
 #    cupboards full of potions, confused monsters.
 # Borgnjor's Mortuary: liches, miasma clouds, potions of decay, slaves that are
 #    having their life forces drained, vampire (knights, mages).
-# Iskenderun's Mystic Bastion: purple draconians, purple wizards with mystic
-#    blast, naga mages with mystic blast, purple fog and smoke outside windows,
-#    robes and cloaks of magic resistance as the loot.
 # Lee's Rapid Deconstructor: golems and "monk" or otherwise unarmed creatures,
 #    exploding features and exploding corpses. It's a timed vault, so you have
 #    to get to the loot quickly and avoid the hordes of monsters.
@@ -72,7 +82,6 @@
 # Cekugob's Oubliette: a randomised maze (though not a labyrinth) with skeletal
 #    guards, and with occasionally hidden. Cekugob's amulet as the loot,
 #    possibly.
-# Zonguldrok's Mausoleum: regenerating zombie monsters, sword as the loot.
 # Botono's Bayou: A bay-like area with small huts, wizards that cast negative
 #    related spells, shadow dragons, rebranded swamp worms, wraiths, spectrals.
 # Ukta's Hut: phantoms, other "ghosts", ogre mages and ogres, druidic style,
@@ -83,11 +92,12 @@
 #
 # TO-DO:
 #
-# We've currently got working vaults for Tukima and Erinya and Doroklohe.
 # The flavour messages for the portal vault require flavour, while the actual
 # portals themselves could do with an overhaul and some new ones.
 #
 # *MUST* make these look awesome in tiles, too.
+#
+# Overall todo: random monster lists for each vault (shadows for Wucad Mu)
 #
 ##
 
@@ -147,7 +157,7 @@ function wizlab_setup (e, wizlab_desc)
 end
 }}
 
-default-depth: Vault:2-7, Crypt, D:22-27
+default-depth: Vault:2-7, Crypt, D:22-27, Elf:5-7
 
 ###############################################################################
 # Portal entrances.
@@ -312,7 +322,7 @@ default-depth:
 ###############################################################################
 # Firstly, we have Tukima's Dance Studio.
 #
-# Todo: clean up the code
+# Todo: Mostly done, just improve the tiles.
 NAME:       wizlab_tukima
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -393,8 +403,7 @@ else
 end
 }}
 SUBST:      ? = .
-COLOUR:     c = darkgrey
-COLOUR:     = = darkgrey
+COLOUR:     =cA< = darkgrey
 COLOUR:     mMV = silver
 KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
                     blink_other;blink_other;major_healing name:strange_machine \
@@ -468,6 +477,8 @@ ENDMAP
 #          /58/Plan_du_ch%C3%A2teau_et_des_jardins_de_Clagny_dessin%C3%A9_par_
 #          Maraine_XVIIe_si%C3%A8cle.jpg (concat it back together to get the
 #          full link).
+#
+# TODO: Tiles. Tiles galore!
 NAME:       wizlab_erinya
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -477,7 +488,7 @@ MONS:       stone golem name:vine_covered name_adjective col:lightgreen \
             tile:mons_vine_golem
 MONS:       toadstool col:any name:flowers n_rpl n_des n_the
 SUBST:      y = ct
-COLOUR:     G = yellow
+COLOUR:     G = lightgrey
 KFEAT:      / = stone_arch
 KFEAT:      _ = altar_fedhas
 MARKER:     A = feat:stone_arch
@@ -577,9 +588,9 @@ cttty...1...yttt..ty..2..yt..ttty...1...ytttc
 cttttyyy/yyyttt..ttty...yttt..tttyyy/yyyttttc
 ctttttt.tttttt..tttttcccttttt..tttttt.ttttttc
 cttttt.tttttt..ttttttttttttttt..tttttt.tttttc
-ctttt.tttttt..ttttt.wwWww.ttttt..tttttt.ttttc
-cttt.tttttt..ttttt.wwG_Gww.ttttt..tttttt.tttc
-cttt.ttttt..ttttt....4.4....ttttt..ttttt.tttc
+ctttt.tttttt..ttttt.G._.G.ttttt..tttttt.ttttc
+cttt.tttttt..ttttt...4.4...ttttt..tttttt.tttc
+cttt.ttttt..ttttt...........ttttt..ttttt.tttc
 ctttt.ttty/ytttt....cc=cc....tttty/yttt.ttttc
 cttttt.ty...yttttttcc...cctttttty...yt.tttttc
 ctttttt./.1./.ttttcc..2..cctttt./.1./.ttttttc
@@ -600,6 +611,8 @@ ENDMAP
 # Breakfast is served in the Manchester Morgue
 # The beginning of a horrifying day
 #                                    Impetigo 1992
+#
+# TODO: Tiles.
 NAME:       wizlab_doroklohe
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -834,59 +847,88 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Alistair's Brewery
-#
-# Todo: work out what happens next???
-NAME:       wizlab_alistair
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Alistair's Brewery")
-SHUFFLE:    CYHB
-KFEAT:      CYHB = .
-KPROP:      B = bloody / nothing
-KMONS:      CYH = swamp drake name:mutated_drake n_des n_rpl col:magenta w:30 \
-                spells:mephitic_cloud;mephitic_cloud;blink;mephitic_cloud;\
-                mephitic_cloud;blink /  wizard name:mutated name_adjective \
-                col:lightmagenta w:10 / nothing w:130
-COLOUR:     =c = magenta, w = poison, n = blue
-LFLOORCOL:  white
-:           dgn.set_feature_desc_short("deep water", "toxic goo")
-:           dgn.set_feature_desc_long("deep water",  "It stinks.  Drinking it "
-:                    .. "might seem to be a good idea after a bottle or two.\n")
-ITEM:       potion of confusion w:20 / any potion
-MAP
-          ccccccc
-          c.....c
-    ccccccc..A..ccccccc
-    cCCCCC+.....cBBBBBc
-    cCCCCCc..<..cBBBBBc
-    cCCCCCc.....cBBBBBc
-    cCCCCCcccncccBBBBBc
-    cCCCCCc.....+BBBBBc
-  ccccc+ccc.....ccccc+ccc
-  c.....c...ccc..<c.....c
-  c.www.c..ccdcc..c.www.c
-  c.www.n..cdddc..n.www.c
-  c.www.c..ccdcc..c.www.c
-  c.....c...c+c...c.....c
-  ccc+ccccc.....ccc+ccccc
-    cYYYYYc.....cHHHHHc
-    cYYYYYcccncccHHHHHc
-    cYYYYY+.....cHHHHHc
-    cYYYYYc.www.cHHHHHc
-    cYYYYYc.www.+HHHHHc
-    ccccccc.www.ccccccc
-          c.....c
-          ccccccc
-ENDMAP
-
-###############################################################################
 # Borgnjor's Mortuary
 #
+# TODO:
+#       * rebrand features and make pretty
+#       * tiles
 NAME:       wizlab_borgnjor
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+LFLOORCOL:  magenta
+COLOUR:     =c = white
+COLOUR:     n = darkgrey
+COLOUR:     " = red
+KMONS:      a = human
+KMONS:      b = slave att:neutral
+KMONS:      p = vampire knight spells:bolt_of_draining;paralyse;haste;invisibility\
+                ;miasma;minor_healing / w:15 vampire spells:bolt_of_draining;confuse;\
+                invisibility
+KMONS:      V = vampire mage
+KMONS:      L = patrolling lich / w:1 patrolling ancient lich
+KMONS:      u = patrolling mummy / w:1 patrolling guardian mummy
+KMONS:      M = patrolling mummy priest / w:1 patrolling greater mummy
+MARKER:     u = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "foul pestilence" \
+             }
+MARKER:     M = lua:fog_machine { \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 5, \
+                 size_buildup_time = 25, cloud_type = "foul pestilence" \
+             }
+KITEM:      $ = potion of healing / potion of heal wounds / potion of decay / \
+            scroll of torment / potion of blood / w:20 gold
+KITEM:      | = ring of regeneration / ring of life protection / amulet of warding / \
+            wand of draining / wand of healing / any book / acquire book / \
+            staff of death / potion of healing / potion of heal wounds / \
+            potion of decay / potion of blood
+KITEM:      : = randbook disc:necromancy owner:Borgnjor
+SUBST:      | = |$:
 :           wizlab_setup(_G, "Borgnjor's Mortuary")
+MAP
+cccccccccccccccccccccccccccccccccccccccccccccc
+ccc....LccccccccccccucM.cucccccccccccccccccccc
+ccc.....c...c$$$cccc.c..c.cccccccccccccc.....c
+ccc.....+.<..$$$cccc.c..c.c..................c
+ccc.....c...c$$$cccc+c++c+c.cccccccccccc.....c
+ccc.....cccccccccccc......c+cccccccccccc.....c
+cccc.ccccccccccc...c......c....ccccccccc....Lc
+cccc.ccccccc.......+......+........ccccccc+ccc
+cccc.ccccc.........c......c......p...cccc...cc
+cccc.cccc....nnnnnncccccccc...........ccc.<.cc
+cccc.ccc.p..nnb.bbccc|||||ccc..........cc...cc
+cccc.ccc....n..cccc...nnn...ccccnnnn...ccc.ccc
+cccc.cc....nnbcc......nbn......ccbbnn...c$$$cc
+cccc.cc....n..c..nnn..nnn..nnn..c..bn...c$$$cc
+cccc.cc....nbcc..nbn..."...nbn..ccbbn...c$$$cc
+cccc..+....n.c...nnn..."...nnn...cccc+cccccccc
+ccccccccc+cccc......"..".."......cc......+..uc
+ccu..+......c|......."V"V".......|c......ccccc
+cccccc......c|.nnn...V"""V...nnn.|c......+..Mc
+ccM..+......c|.nbn"""""Y"""""nbn.|c......+...c
+cc...+......c|.nnn...V"""V...nnn.|c......ccccc
+cccccc......c|.......".".".......|c......+..uc
+ccu..+......cc......"..".."......cccc+cccccccc
+ccccccccc+cccc...nnn..."...nnn...c.n....+...cc
+cc...cc...n.bcc..nbn..."...nbn..cc.n....ccc.cc
+cc.A.cc...n.b.c..nnn..nnn..nnn..c.bn....ccc.cc
+cc...cc...nn.bcc......nbn......cc.nn....ccc.cc
+ccc.cccc...nnnncccc...nnn...cccc.bn....cccc.cc
+cc...ccc..........ccc.....cccb...nn....cccc.cc
+cc.<.cccc...........ccc+ccccnnnnnn..p.ccccc.cc
+cc...ccccc....p.....c......c.........cccccc.cc
+ccc+cccccccc........c......+.......cccccccc.cc
+c.....cccccccccc....c......c...cccccccccccc.cc
+c.aaa.ccccccccccccc+c......ccccccccccccc.....c
+c..p..ccccccccccccc.c+c++c+ccccc$$$c...c.....c
+c..p................c.c..c.ccccc$$$..<.+.....c
+c.....ccccccccccccccc.c..c.ccccc$$$c...c.....c
+cccccccccccccccccccccuc.McucccccccccccccL....c
+cccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
 MAP
 ENDMAP
 
@@ -905,8 +947,12 @@ ENDMAP
 # The central, circular chamber houses Cigotuvi's flesh golem.
 # The Eastern half of his lab is dominated by a snaking passageway filled with
 # pulsating lumps and the occasional ugly thing.
+#
 # The western half of his lab is full of abominations, including the terrible
 # "Cigotuvi's Monster".
+#
+# TODO: Finish tweaking tiles. Cigotuvi's Monster further buff?
+#
 NAME:       wizlab_cigotuvi
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -987,7 +1033,6 @@ COLOUR:     W = green
 :           dgn.set_feature_desc_short("Floor", "pulsating floor")
 :           dgn.set_feature_desc_long("Floor", "This slick floor seems to pulse"
 :            .. " to an unknown beat.\n")
-# Changing door descriptions like this currently doesn't work, needs fixing.
 : lua_marker('+', props_marker {
 :              door_description_noun="fleshy orifice",
 :              door_berserk_verb_open="You part the %s%s",
@@ -1057,24 +1102,20 @@ ENDMAP
 ###############################################################################
 # Iskenderun's Mystic Tower
 #
+# TODO: Fix up the tiles to make them pretty. It's really quite boring.
 NAME:       wizlab_iskenderun
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup patrolling
 :           wizlab_setup(_G, "Iskenderun's Mystic Tower")
-MONS:       purple draconian / naga mage name:naga_mystic name_replace name_descriptor \
-            spells:iskenderun's_mystic_blast;iskenderun's_mystic_blast;iskenderun's_\
-            mystic_blast
+MONS:       purple draconian / deep elf mage spells:iskenderun's_mystic_blast \
+            / nothing
 MONS:       statue tile:mons_statue_mage spells:iskenderun's_mystic_blast;orb_of\
             _destruction col:lightmagenta
-MONS:       shadow dragon spells:iskenderun's_mystic_blast;iskenderun's_mystic_blast \
-            name:purple_dragon name_replace name_descriptor
 KITEM:      D = star_item, star_item / superb_item, star_item
 KITEM:      E = randbook disc:conjuration owner:Iskenderun spell:iskenderun's_mystic\
                 _blast, randbook disc:conjuration owner:Iskenderun, any book
 KITEM:      F = any book good_item, any book good_item, any book
-KMONS:      DEF = purple draconian / naga mage name:naga_mystic name_replace name_descriptor \
-            spells:iskenderun's_mystic_blast;iskenderun's_mystic_blast;iskenderun's_\
-            mystic_blast
+KMONS:      DEF = purple draconian
 COLOUR:     v = magenta
 COLOUR:     Uc = lightmagenta
 LFLOORCOL:  magenta
@@ -1120,158 +1161,9 @@ ccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
-# Lee's Rapid Deconstructor
-#
-NAME:       wizlab_lee
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Lee's Rapid Deconstructor")
-MAP
-ENDMAP
-
-###############################################################################
-# Lehudib's Crystal Spire
-#
-NAME:       wizlab_lehudib
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Lehudib's Crystal Spire")
-MAP
-ENDMAP
-
-###############################################################################
-# Maxwell's Forge
-#
-NAME:       wizlab_maxwell
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Maxwell's Forge")
-MAP
-ENDMAP
-
-###############################################################################
-# Olgreb's Toxic Laboratory
-#
-NAME:       wizlab_olgreb
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Olgreb's Toxic Laboratory")
-MAP
-ENDMAP
-
-###############################################################################
-# Ozocubu's Refrigerator
-#
-NAME:       wizlab_ozocubu
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-MONS:       skeletal warrior patrolling col:lightblue ; any weapon good_item \
-            . ice dragon armour
-MONS:       ice statue spells:ice_storm col:darkgrey name:black name_adjective
-MONS:       polar bear, white imp / wraith / freezing wraith, ice beast
-MONS:       ice dragon, nothing
-SHUFFLE:    BC
-:           local int = crawl.random2(3)
-:           if int == 0 then
-SUBST:      B = 3
-SUBST:      C = 4
-:           elseif int == 1 then
-SUBST:      B = 4
-SUBST:      C = 5
-:           elseif int == 2 then
-SUBST:      B = 3
-SUBST:      C = 5
-:           end
-LROCKCOL:   white
-LFLOORCOL:  lightblue
-LROCKTILE:  wall_ice
-LFLOORTILE: floor_ice
-KFEAT:      XQ = rock_wall
-KFEAT:      R = closed_door
-COLOUR:     =c = darkgrey
-MARKER:     U = lua:fog_machine { \
-                 pow_max = 10, delay_min = 30, delay_max = 40, \
-                 size = 6, cloud_type = "freezing vapour" \
-             }
-{{
--- Map prettyfication
-smear_map({iterations=20, smear='x', onto='.xx', boxy=false})
-smear_map({iterations=40, smear='x', onto='.xx', boxy=false})
---fill_disconnected({fill='x'})
-
-function fridge (data, triggerable, triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
-
-  local loudlines = {'A voice screams, "Out, out, out!"',
-                     'There is a horrible grinding noise.',
-                     'There is a sudden noise, like that of ice cracking.',
-                     'A voice screams, "Freeze!"'}
-
-  local speechlines = {'You feel a sudden draft.',
-                       'Snow coalesces in the air in front of you.',
-                       'You feel a sudden chill.',
-                       'The air becomes thick with cold.'}
-
-  if not (you.silenced()) then
-    speechlines = util.append(speechlines, loudlines)
-  end
-  crawl.mpr(util.random_from(speechlines), "warning")
-  spells.refrigeration(crawl.random2avg(40, 6))
-end
-
-local fridge_marker = TriggerableFunction:new { func = fridge, repeated = true }
-
-fridge_marker:add_triggerer(DgnTriggerer:new { type="turn",
-        delay_min=500, delay_max=800, })
-
-lua_marker("Q", fridge_marker)
-}}
-validate {{ return glyphs_connected('A', 'R') and glyphs_connected('A', '<')}}
-:           wizlab_setup(_G, "Ozocubu's Refrigerator")
-MAP
-       xxxx
-     xxx..xxx
-    xxx.....xx
-   xx........xx   xxxx     xxx
-  xx....A.....xx xx..xx  xxx.xx   xxx
-  xx...<.......xxx....xxxx....xx xx.xx
-   xx..........................xxx...xx
-    xxx................c...........c..xx
-      xx..............cccccccRccccccc..xx
-       xx..............cBBBBc.cCCCCc....xx
-        xx.............cBBBBc.cCCCCc.....xx
-       xx..............cBBBBc.cCCCCc....xx
-      xx.............c.cBBBBc.cCCCCc.c...xx
-     xx.............2ccc=cccc+cccc=cccc.xx
-      xx.....www.....c...c.......c...c.xx    cccc
-      xxx...wwxww....c.1.c...<...c.1.c.xx   cccxxx
-        xxx.xxxwxx...c...c.......c...c..xxcccxxx$xx
-          xxxxwwwx...cc+ccccc+ccccc+cc...xccxx$$$$xx
-           Qxxwwxx...c...c.......c...c..xxcccxx$$$$x
-        xxxxxwwxx....c.1.c...U...c.1.c.xxccccxxx$$xx
-       xx.xxwwwxxx..cc...c.......c...ccxccxxxx333xx
-      xx...x.wwwxxccccc+ccccc+ccccc+cccccxx.....xx
-      x..6..xwwwwxc.......c.....c.......cx.......xx
-      xx...xxxwwww+.1.....+..1..+.....1.=.xxx.....xx
-       xx.xxxxxwxxc.......c.....c.......cxx xxx.xxx
-        xxxx xxxxxcccccccccccccccccccccccxx   xxx
-ENDMAP
-
-###############################################################################
-# Cekugob's Oubliette
-#
-NAME:       wizlab_cekugob
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Cekugob's Oubliette")
-MAP
-ENDMAP
-
-###############################################################################
 # Zonguldrok's Shrine
 #
+# TODO: Colours, tiles, redescriptions.
 NAME:       wizlab_zonguldrok
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -1581,36 +1473,6 @@ tttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 ###############################################################################
-# Boton's Bayou
-#
-NAME:       wizlab_botono
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Botono's Bayou")
-MAP
-ENDMAP
-
-###############################################################################
-# Ukta's Hut
-#
-NAME:       wizlab_ukta
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "Ukta's Hut")
-MAP
-ENDMAP
-
-###############################################################################
-# The Alchemist's Tower
-#
-NAME:       wizlab_alchemist
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-:           wizlab_setup(_G, "The Alchemist's Tower")
-MAP
-ENDMAP
-
-###############################################################################
 # Random and semi-random Wizard vaults
 ###############################################################################
 
@@ -1621,12 +1483,16 @@ ENDMAP
 NAME:       wizlab_cloud
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-KMONS:      1 = col:silver patrolling wizard name:Cloud_Mage name_replace \
-            name_definite spells:mephitic_cloud;freezing_cloud;poisonous_cloud;\
-            airstrike;blink_range;blink_range hd:20 hp:150 ; \
-            robe unrand:robe_of_clouds . quick blade ego:electrocution | \
-            quick blade ego:freezing | dagger ego:speed | dagger ego:electrocution \
-            | dagger ego:freezing
+{{
+local wizname = crawl.make_name()
+
+kmons ("    1 = col:silver patrolling wizard name:" .. wizname .. " name_replace"
+         .. " name_definite spells:mephitic_cloud;freezing_cloud;poisonous_cloud;"
+         .. "airstrike;blink_range;blink_range hd:20 hp:150 ;"
+         .. " robe unrand:robe_of_clouds . quick blade ego:electrocution |"
+         .. " quick blade ego:freezing | dagger ego:speed | dagger ego:electrocution"
+         .. " | dagger ego:freezing")
+}}
 KMONS:      * = w:5 vapour / w:20 air elemental
 SUBST:      . = .:120 *
 MARKER:     ! = lua:fog_machine { \
@@ -1650,7 +1516,7 @@ COLOUR:     +<co = white
 LFLOORCOL:  lightblue
 COLOUR:     wW# = silver
 :           set_border_fill_type('open_sea')
-:           wizlab_setup(_G, "The Cloud Mage's Chambers")
+:           wizlab_setup(_G, wizname .. "'s Chambers")
 #           Map is ugly because border_fill_type doesn't allow for (yet)
 #           recolouring.
 MAP
@@ -1715,84 +1581,6 @@ MAP
 #####################################################################
 #####################################################################
 #####################################################################
-ENDMAP
-
-###############################################################################
-# Random wizlab (death theme) (by Mu.)
-#
-NAME:       wizlab_random1
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-LFLOORCOL:  darkgrey
-COLOUR:     =c = white
-COLOUR:     " = red
-KMONS:      a = slave
-KMONS:      b = human
-KMONS:      d = troll
-NSUBST:     b = 3:d / *:b
-KMONS:      p = vampire knight / w:5 vampire
-KMONS:      V = vampire mage
-KMONS:      L = patrolling lich / w:5 patrolling ancient lich
-KMONS:      u = patrolling mummy / w:2 patrolling guardian mummy
-KMONS:      M = patrolling mummy priest / w:2 patrolling greater mummy
-MARKER:     u = lua:fog_machine { \
-                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
-                 size_buildup_time = 25, cloud_type = "foul pestilence" \
-             }
-MARKER:     M = lua:fog_machine { \
-                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
-                 size_buildup_time = 25, cloud_type = "foul pestilence" \
-             }
-KITEM:      $ = potion of healing / potion of heal wounds / potion of decay / \
-            scroll of torment / potion of blood / w:20 gold
-KITEM:      | = ring of regeneration / ring of life protection / amulet of warding / \
-            wand of draining / wand of healing / any book / acquire book / \
-            staff of death / potion of healing / potion of heal wounds / \
-            potion of decay / potion of blood
-SUBST:    | = |$
-:           wizlab_setup(_G, "Random1")
-MAP
-cccccccccccccccccccccccccccccccccccccccccccccc
-ccc....LccccccccccccucM.cucccccccccccccccccccc
-ccc.....c...c$$$cccc.c..c.cccccccccccccc.....c
-ccc.....+.<..$$$cccc.c..c.c..................c
-ccc.....c...c$$$cccc+c++c+c.cccccccccccc.....c
-ccc.....cccccccccccc......c+cccccccccccc.....c
-cccc.ccccccccccc...c......c....ccccccccc....Lc
-cccc.ccccccc.......+......+........ccccccc+ccc
-cccc.ccccc.........c......c......p...cccc...cc
-cccc.cccc....nnnnnncccccccc...........ccc.<.cc
-cccc.ccc.p..nna.aaccc|||||ccc..........cc...cc
-cccc.ccc....n..cccc...nnn...ccccnnnnn..ccc.ccc
-cccc.cc....nnacc......nbn......ccaaan...c$$$cc
-cccc.cc....n..c..nnn..nnn..nnn..c..an...c$$$cc
-cccc.cc....nacc..nbn..."...nbn..cca.n...c$$$cc
-cccc..+....n.c...nnn..."...nnn...cccc+cccccccc
-ccccccccc+cccc......"..".."......cc......+..uc
-ccu..+......c|......."V"V".......|c......ccccc
-cccccc......c|.nnn...V"""V...nnn.|c......+..Mc
-ccM..+......c|.nbn"""""Y"""""nbn.|c......+...c
-cc...+......c|.nnn...V"""V...nnn.|c......ccccc
-cccccc......c|.......".".".......|c......+..uc
-ccu..+......cc......"..".."......cccc+cccccccc
-ccccccccc+cccc...nnn..."...nnn...c.n....+...cc
-cc...cc...n.acc..nbn..."...nbn..cc.n....ccc.cc
-cc.A.cc...n.a.c..nnn..nnn..nnn..c.an....ccc.cc
-cc...cc...na..cc......nbn......cc.nn....ccc.cc
-ccc.cccc..nnnnncccc...nnn...cccc.an....cccc.cc
-cc...ccc..........ccc.....ccca...nn....cccc.cc
-cc.<.cccc...........ccc+ccccnnnnnn..p.ccccc.cc
-cc...ccccc....p.....c......c.........cccccc.cc
-ccc+cccccccc........c......+.......cccccccc.cc
-c.....cccccccccc....c......c...cccccccccccc.cc
-c.aaa.ccccccccccccc+c......ccccccccccccc.....c
-c..p..ccccccccccccc.c+c++c+ccccc$$$c...c.....c
-c..p................c.c..c.ccccc$$$..<.+.....c
-c.....ccccccccccccccc.c..c.ccccc$$$c...c.....c
-cccccccccccccccccccccuc.McucccccccccccccL....c
-cccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
@@ -1892,4 +1680,119 @@ cccccccccccc|..."..".xxxxx.".."...|ccccccccccc
 cccccccccccc||..."".........""...||ccccccccccc
 cccccccccccc|||.................|||ccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# Incomplete and TODO work area.
+#
+# See git history for previous versions of Ozocubu, Alistair.
+###############################################################################
+
+###############################################################################
+# Alistair's Brewery
+#
+# TODO: Do.
+NAME:       wizlab_alistair
+ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "Alistair's Brewery")
+MAP
+ENDMAP
+
+###############################################################################
+# Lee's Rapid Deconstructor
+#
+# TODO: Do.
+NAME:       wizlab_lee
+ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "Lee's Rapid Deconstructor")
+MAP
+ENDMAP
+
+###############################################################################
+# Lehudib's Crystal Spire
+#
+# TODO: Do.
+NAME:       wizlab_lehudib
+ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "Lehudib's Crystal Spire")
+MAP
+ENDMAP
+
+###############################################################################
+# Maxwell's Forge
+#
+# TODO: Do.
+NAME:       wizlab_maxwell
+ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "Maxwell's Forge")
+MAP
+ENDMAP
+
+###############################################################################
+# Olgreb's Toxic Laboratory
+#
+# TODO: Do.
+NAME:       wizlab_olgreb
+ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "Olgreb's Toxic Laboratory")
+MAP
+ENDMAP
+
+###############################################################################
+# Ozocubu's Refrigerator
+#
+# TODO: Do.
+NAME:       wizlab_ozocubu
+ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+MAP
+ENDMAP
+
+###############################################################################
+# Cekugob's Oubliette
+#
+# TODO: Do.
+NAME:       wizlab_cekugob
+ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "Cekugob's Oubliette")
+MAP
+ENDMAP
+
+###############################################################################
+# Botono's Bayou
+#
+# TODO: Do.
+NAME:       wizlab_botono
+ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "Botono's Bayou")
+MAP
+ENDMAP
+
+###############################################################################
+# Ukta's Hut
+#
+# TODO: Do.
+NAME:       wizlab_ukta
+ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "Ukta's Hut")
+MAP
+ENDMAP
+
+###############################################################################
+# The Alchemist's Tower
+#
+# TODO: Do.
+NAME:       wizlab_alchemist
+ORIENT:     encompass
+#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "The Alchemist's Tower")
+MAP
 ENDMAP
