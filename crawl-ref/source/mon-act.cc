@@ -1256,10 +1256,6 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
                 pbolt.hit++;
         }
 
-        // POISON brand launchers poison ammo
-        if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_NORMAL)
-            set_item_ego_type(item, OBJ_MISSILES, SPMSL_POISONED);
-
         // Vorpal brand increases damage dice size.
         if (bow_brand == SPWPN_VORPAL)
             diceMult = diceMult * 130 / 100;
@@ -1316,7 +1312,7 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
     else
     {
         // build shoot message
-        msg += item.name(DESC_NOCAP_A);
+        msg += item.name(DESC_NOCAP_A, false, false, false);
 
         // build beam name
         pbolt.name = item.name(DESC_PLAIN, false, false, false);
