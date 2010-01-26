@@ -48,6 +48,7 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     case CLOUD_BLACK_SMOKE:
         return 22;
     case CLOUD_RAIN:
+    case CLOUD_INK:
         return 11;
     default:
         return 0;
@@ -150,6 +151,9 @@ static int _spread_cloud(const cloud_struct &cloud)
             continue;
         }
 
+        if (cloud.type == CLOUD_INK && !feat_is_watery(grd(*ai)))
+            continue;
+
         int newdecay = cloud.decay / 2 + 1;
         if (newdecay >= cloud.decay)
             newdecay = cloud.decay - 1;
@@ -200,7 +204,9 @@ static void _cloud_fire_interacts_with_terrain(const cloud_struct &cloud)
     for (adjacent_iterator ai(cloud.pos); ai; ++ai)
     {
         const coord_def p(*ai);
-        if (feat_is_watery(grd(p)) && env.cgrid(p) == EMPTY_CLOUD)
+        if (feat_is_watery(grd(p))
+            && env.cgrid(p) == EMPTY_CLOUD
+            && one_chance_in(5))
         {
             _place_new_cloud(CLOUD_STEAM, p, cloud.decay / 2 + 1,
                              cloud.whose, cloud.killer);
@@ -251,6 +257,9 @@ void manage_clouds()
         else if ((cloud.type == CLOUD_COLD || cloud.type == CLOUD_RAIN)
                  && grd(cloud.pos) == DNGN_LAVA)
             dissipate *= 4;
+        // Ink cloud doesn't appear outside of water.
+        else if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
+            dissipate *= 40;
         else if (cloud.type == CLOUD_GLOOM)
         {
             int count = 0;
@@ -368,6 +377,9 @@ void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
     if (!in_bounds(p) || env.cgrid(p) != EMPTY_CLOUD)
         return;
 
+    if (cl_type == CLOUD_INK && !feat_is_watery(grd(p)))
+        return;
+
     place_cloud( cl_type, p, lifetime, whose, killer, spread_rate, colour,
                  name, tile );
 }
@@ -423,6 +435,9 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
                  int colour, std::string name, std::string tile)
 {
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
+        return;
+
+    if (cl_type == CLOUD_INK && !feat_is_watery(grd(ctarget)))
         return;
 
     int cl_new = -1;
@@ -563,6 +578,8 @@ cloud_type beam2cloud(beam_type flavour)
         return CLOUD_GLOOM;
     case BEAM_RANDOM:
         return CLOUD_RANDOM;
+    case BEAM_INK:
+        return CLOUD_INK;
     }
 }
 
@@ -587,6 +604,7 @@ beam_type cloud2beam(cloud_type flavour)
     case CLOUD_RAIN:         return BEAM_POTION_RAIN;
     case CLOUD_MUTAGENIC:    return BEAM_POTION_MUTAGENIC;
     case CLOUD_GLOOM:        return BEAM_GLOOM;
+    case CLOUD_INK:          return BEAM_INK;
     case CLOUD_RANDOM:       return BEAM_RANDOM;
     }
 }
@@ -941,6 +959,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_RAIN:
     case CLOUD_MAGIC_TRAIL:
     case CLOUD_GLOOM:
+    case CLOUD_INK:
     case CLOUD_DEBUGGING:
         return (true);
     default:
@@ -1019,6 +1038,8 @@ std::string cloud_name(cloud_type type)
         return "magical condensation";
     case CLOUD_GLOOM:
         return "gloom";
+    case CLOUD_INK:
+        return "ink";
     default:
         return "buggy goodness";
     }
@@ -1140,6 +1161,7 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_MIASMA:
     case CLOUD_BLACK_SMOKE:
+    case CLOUD_INK:
         which_colour = DARKGREY;
         break;
 

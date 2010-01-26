@@ -182,7 +182,7 @@ enum attribute_type
 
 enum beam_type                  // beam[].flavour
 {
-    BEAM_NONE,                    // 0
+    BEAM_NONE,
 
     BEAM_MISSILE,
     BEAM_MMISSILE,                //    and similarly irresistible things
@@ -255,6 +255,7 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_PURPLE_SMOKE,
     BEAM_POTION_RAIN,
     BEAM_GLOOM,
+    BEAM_INK,
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
@@ -334,7 +335,7 @@ enum book_type
 
 enum branch_type                // you.where_are_you
 {
-    BRANCH_MAIN_DUNGEON,        //    0
+    BRANCH_MAIN_DUNGEON,
     BRANCH_ECUMENICAL_TEMPLE,
     BRANCH_ORCISH_MINES,
     BRANCH_ELVEN_HALLS,
@@ -422,9 +423,10 @@ enum cloud_type
     CLOUD_FOREST_FIRE,
     CLOUD_STEAM,
     CLOUD_GLOOM,
+    CLOUD_INK,
 
     CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
-    CLOUD_OPAQUE_LAST  = CLOUD_GLOOM,
+    CLOUD_OPAQUE_LAST  = CLOUD_INK,
 
     CLOUD_MIASMA,
     CLOUD_MIST,
@@ -704,6 +706,7 @@ enum command_type
     CMD_DOLL_TOGGLE_EQUIP_ALL,
     CMD_DOLL_JOB_DEFAULT,
     CMD_DOLL_CHANGE_MODE,
+    CMD_DOLL_SAVE,
     CMD_DOLL_QUIT,
     CMD_MAX_DOLL = CMD_DOLL_QUIT,
 #endif
@@ -727,7 +730,7 @@ enum command_type
 enum conduct_type
 {
     DID_NOTHING,
-    DID_NECROMANCY = 1,                   // vamp/drain/pain/reap, Zong/Curses
+    DID_NECROMANCY,                       // vamp/drain/pain/reap, Zong/Curses
     DID_HOLY,                             // holy wrath, holy word scrolls
     DID_UNHOLY,                           // demon weapons, demon spells
     DID_ATTACK_HOLY,
@@ -781,6 +784,7 @@ enum conduct_type
     DID_KILL_PLANT,                       // Fedhas
     DID_ALLY_KILLED_PLANT,                // Fedhas
     DID_HASTY,                            // Cheibriados
+    DID_UNPONDEROUS,                      // Cheibriados
 
     NUM_CONDUCTS
 };
@@ -840,16 +844,16 @@ enum delay_type
 
 enum description_level_type
 {
-    DESC_CAP_THE,                      // 0
-    DESC_NOCAP_THE,                    // 1
-    DESC_CAP_A,                        // 2
-    DESC_NOCAP_A,                      // 3
-    DESC_CAP_YOUR,                     // 4
-    DESC_NOCAP_YOUR,                   // 5
-    DESC_PLAIN,                        // 6
-    DESC_NOCAP_ITS,                    // 7
-    DESC_INVENTORY_EQUIP,              // 8
-    DESC_INVENTORY,                    // 9
+    DESC_CAP_THE,
+    DESC_NOCAP_THE,
+    DESC_CAP_A,
+    DESC_NOCAP_A,
+    DESC_CAP_YOUR,
+    DESC_NOCAP_YOUR,
+    DESC_PLAIN,
+    DESC_NOCAP_ITS,
+    DESC_INVENTORY_EQUIP,
+    DESC_INVENTORY,
 
     // Partial item names.
     DESC_BASENAME,                     // Base name of item subtype
@@ -881,38 +885,38 @@ enum level_flag_type
 // [dshaligram] If adding/removing from this list, also update view.cc!
 enum dungeon_char_type
 {
-    DCHAR_WALL,                 //  0
+    DCHAR_WALL,
     DCHAR_WALL_MAGIC,
     DCHAR_FLOOR,
     DCHAR_FLOOR_MAGIC,
     DCHAR_DOOR_OPEN,
-    DCHAR_DOOR_CLOSED,          //  5
+    DCHAR_DOOR_CLOSED,
     DCHAR_TRAP,
     DCHAR_STAIRS_DOWN,
     DCHAR_STAIRS_UP,
     DCHAR_ALTAR,
-    DCHAR_ARCH,                 // 10
+    DCHAR_ARCH,
     DCHAR_FOUNTAIN,
     DCHAR_WAVY,
     DCHAR_STATUE,
     DCHAR_INVIS_EXPOSED,
-    DCHAR_ITEM_DETECTED,        // 15
+    DCHAR_ITEM_DETECTED,
     DCHAR_ITEM_ORB,
     DCHAR_ITEM_WEAPON,
     DCHAR_ITEM_ARMOUR,
     DCHAR_ITEM_WAND,
-    DCHAR_ITEM_FOOD,            // 20
+    DCHAR_ITEM_FOOD,
     DCHAR_ITEM_SCROLL,
     DCHAR_ITEM_RING,
     DCHAR_ITEM_POTION,
     DCHAR_ITEM_MISSILE,
-    DCHAR_ITEM_BOOK,            // 25
+    DCHAR_ITEM_BOOK,
     DCHAR_ITEM_STAVE,
     DCHAR_ITEM_MISCELLANY,
     DCHAR_ITEM_CORPSE,
     DCHAR_ITEM_GOLD,
-    DCHAR_ITEM_AMULET,          // 30
-    DCHAR_CLOUD,                // 31
+    DCHAR_ITEM_AMULET,
+    DCHAR_CLOUD,
     DCHAR_TREES,
 
     DCHAR_SPACE,
@@ -954,17 +958,17 @@ enum dungeon_char_type
 //
 enum dungeon_feature_type
 {
-    DNGN_UNSEEN,                       //    0
+    DNGN_UNSEEN,
     DNGN_CLOSED_DOOR,
     DNGN_DETECTED_SECRET_DOOR,
     DNGN_SECRET_DOOR,
     DNGN_WAX_WALL,
-    DNGN_METAL_WALL,                   //    5
+    DNGN_METAL_WALL,
     DNGN_GREEN_CRYSTAL_WALL,
     DNGN_ROCK_WALL,
     DNGN_STONE_WALL,
-    DNGN_PERMAROCK_WALL,               //    9 - for undiggable walls
-    DNGN_CLEAR_ROCK_WALL,              //   10 - transparent walls
+    DNGN_PERMAROCK_WALL,               // for undiggable walls
+    DNGN_CLEAR_ROCK_WALL,              // transparent walls
     DNGN_CLEAR_STONE_WALL,
     DNGN_CLEAR_PERMAROCK_WALL,
 
@@ -990,7 +994,7 @@ enum dungeon_feature_type
     // Can be seen through and reached past.
     DNGN_TREES,
     DNGN_ORCISH_IDOL = 15,
-    DNGN_GRANITE_STATUE = 21,          //   21
+    DNGN_GRANITE_STATUE = 21,
     DNGN_STATUE_RESERVED,
 
     // Highest solid grid value.
@@ -999,10 +1003,10 @@ enum dungeon_feature_type
     // Lowest grid value which can be passed by walking etc.
     DNGN_MINMOVE = 31,
 
-    DNGN_LAVA = 61,                    //   61
-    DNGN_DEEP_WATER,                   //   62
+    DNGN_LAVA = 61,
+    DNGN_DEEP_WATER,
 
-    DNGN_SHALLOW_WATER = 65,           //   65
+    DNGN_SHALLOW_WATER = 65,
     DNGN_WATER_RESERVED,
 
     // Lowest grid value that an item can be placed on.
@@ -1207,42 +1211,42 @@ enum duration_type
 //     berserk -> haste, might; fatigue -> slow
 enum enchant_type
 {
-    ENCH_NONE = 0,                     //    0
+    ENCH_NONE = 0,
     ENCH_BERSERK,
     ENCH_HASTE,
     ENCH_MIGHT,
     ENCH_FATIGUE,        // Post-berserk fatigue.
-    ENCH_SLOW,                         //    5
+    ENCH_SLOW,
     ENCH_FEAR,
     ENCH_CONFUSION,
     ENCH_INVIS,
     ENCH_POISON,
-    ENCH_ROT,                          //   10
+    ENCH_ROT,
     ENCH_SUMMON,
     ENCH_ABJ,
     ENCH_CORONA,
     ENCH_CHARM,
-    ENCH_STICKY_FLAME,                 //   15
+    ENCH_STICKY_FLAME,
     ENCH_GLOWING_SHAPESHIFTER,
     ENCH_SHAPESHIFTER,
     ENCH_TP,
     ENCH_SLEEP_WARY,
-    ENCH_SUBMERGED,                    //   20
+    ENCH_SUBMERGED,
     ENCH_SHORT_LIVED,
     ENCH_PARALYSIS,
     ENCH_SICK,
     ENCH_SLEEPY,         //   Monster can't wake until this wears off.
-    ENCH_HELD,           //   25 -- Caught in a net.
+    ENCH_HELD,           //   Caught in a net.
     ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy
     ENCH_TEMP_PACIF,
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
-    ENCH_LOWERED_MR,                   //   30
+    ENCH_LOWERED_MR,
     ENCH_SOUL_RIPE,
     ENCH_SLOWLY_DYING,
     ENCH_EAT_ITEMS,
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
-    ENCH_SPORE_PRODUCTION,             //   35
+    ENCH_SPORE_PRODUCTION,
     ENCH_SLOUCH,
     ENCH_SWIFT,
     ENCH_TIDE,
@@ -1250,7 +1254,7 @@ enum enchant_type
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
-    NUM_ENCHANTMENTS                   //   36
+    NUM_ENCHANTMENTS
 };
 
 enum enchant_retval
@@ -1276,12 +1280,12 @@ enum equipment_type
 {
     EQ_NONE = -1,
 
-    EQ_WEAPON,                         //    0
+    EQ_WEAPON,
     EQ_CLOAK,
     EQ_HELMET,
     EQ_GLOVES,
     EQ_BOOTS,
-    EQ_SHIELD,                         //    5
+    EQ_SHIELD,
     EQ_BODY_ARMOUR,
     EQ_LEFT_RING,
     EQ_RIGHT_RING,
@@ -1323,22 +1327,22 @@ enum flush_reason_type
 // The order of this enum must match the order of DNGN_ALTAR_FOO.
 enum god_type
 {
-    GOD_NO_GOD,                        //    0  -- must be zero
+    GOD_NO_GOD,
     GOD_ZIN,
     GOD_SHINING_ONE,
     GOD_KIKUBAAQUDGHA,
     GOD_YREDELEMNUL,
-    GOD_XOM,                           //    5
+    GOD_XOM,
     GOD_VEHUMET,
     GOD_OKAWARU,
     GOD_MAKHLEB,
     GOD_SIF_MUNA,
-    GOD_TROG,                          //   10
+    GOD_TROG,
     GOD_NEMELEX_XOBEH,
     GOD_ELYVILON,
     GOD_LUGONU,
     GOD_BEOGH,
-    GOD_JIYVA,                         //   15
+    GOD_JIYVA,
     GOD_FEDHAS,
     GOD_CHEIBRIADOS,
     NUM_GODS,                          // always after last god
@@ -1358,14 +1362,14 @@ enum holy_word_source_type
 
 enum hunger_state                  // you.hunger_state
 {
-    HS_STARVING,                       //    0
+    HS_STARVING,
     HS_NEAR_STARVING,
     HS_VERY_HUNGRY,
     HS_HUNGRY,
     HS_SATIATED,                       // "not hungry" state
     HS_FULL,
     HS_VERY_FULL,
-    HS_ENGORGED                        //    8
+    HS_ENGORGED
 };
 
 enum immolation_source_type
@@ -1432,35 +1436,35 @@ enum item_type_id_state_type
 
 enum job_type
 {
-    JOB_FIGHTER,                       //    0
+    JOB_FIGHTER,
     JOB_WIZARD,
     JOB_PRIEST,
     JOB_THIEF,
     JOB_GLADIATOR,
-    JOB_NECROMANCER,                   //    5
+    JOB_NECROMANCER,
     JOB_PALADIN,
     JOB_ASSASSIN,
     JOB_BERSERKER,
     JOB_HUNTER,
-    JOB_CONJURER,                      //   10
+    JOB_CONJURER,
     JOB_ENCHANTER,
     JOB_FIRE_ELEMENTALIST,
     JOB_ICE_ELEMENTALIST,
     JOB_SUMMONER,
-    JOB_AIR_ELEMENTALIST,              //   15
+    JOB_AIR_ELEMENTALIST,
     JOB_EARTH_ELEMENTALIST,
     JOB_CRUSADER,
     JOB_DEATH_KNIGHT,
     JOB_VENOM_MAGE,
-    JOB_CHAOS_KNIGHT,                  //   20
+    JOB_CHAOS_KNIGHT,
     JOB_TRANSMUTER,
     JOB_HEALER,
     JOB_REAVER,
     JOB_STALKER,
-    JOB_MONK,                          //   25
+    JOB_MONK,
     JOB_WARPER,
-    JOB_WANDERER,                      //   27
-    JOB_ARTIFICER,                     //   28 -Greenberg/Bane
+    JOB_WANDERER,
+    JOB_ARTIFICER,                     //   Greenberg/Bane
     JOB_ARCANE_MARKSMAN,
     NUM_JOBS,                          // always after the last job
 
@@ -1494,13 +1498,13 @@ enum kill_category
 
 enum killer_type                       // monster_die(), thing_thrown
 {
-    KILL_NONE = 0,
-    KILL_YOU,                          //    1
+    KILL_NONE,
+    KILL_YOU,
     KILL_MON,
     KILL_YOU_MISSILE,
     KILL_MON_MISSILE,
     KILL_YOU_CONF,
-    KILL_MISCAST,                      //    5
+    KILL_MISCAST,
     KILL_MISC,                         // miscellany
     KILL_RESET,                        // abjuration, etc.
     KILL_DISMISSED                     // only on new game startup
@@ -1515,7 +1519,7 @@ enum flight_type
 
 enum level_area_type                   // you.level_type
 {
-    LEVEL_DUNGEON,                     //    0
+    LEVEL_DUNGEON,
     LEVEL_LABYRINTH,
     LEVEL_ABYSS,
     LEVEL_PANDEMONIUM,
@@ -1553,31 +1557,31 @@ enum map_marker_type
 
 enum map_feature
 {
-    MF_UNSEEN,          //  0
+    MF_UNSEEN,
     MF_FLOOR,
     MF_WALL,
     MF_MAP_FLOOR,
     MF_MAP_WALL,
-    MF_DOOR,            //  5
+    MF_DOOR,
     MF_ITEM,
     MF_MONS_FRIENDLY,
     MF_MONS_PEACEFUL,
     MF_MONS_NEUTRAL,
-    MF_MONS_HOSTILE,    // 10
+    MF_MONS_HOSTILE,
     MF_MONS_NO_EXP,
     MF_STAIR_UP,
     MF_STAIR_DOWN,
     MF_STAIR_BRANCH,
-    MF_FEATURE,         // 15
+    MF_FEATURE,
     MF_WATER,
     MF_LAVA,
     MF_TRAP,
     MF_EXCL_ROOT,
-    MF_EXCL,            // 20
+    MF_EXCL,
     MF_PLAYER,
     MF_MAX,
 
-    MF_SKIP             // 23
+    MF_SKIP
 };
 
 enum menu_type
@@ -1592,12 +1596,12 @@ enum menu_type
 
 enum mon_holy_type
 {
-    MH_HOLY,                           //  0
-    MH_NATURAL,                        //  1
-    MH_UNDEAD,                         //  2
-    MH_DEMONIC,                        //  3
-    MH_NONLIVING,                      //  4, golems and other constructs
-    MH_PLANT                           //  5, plants
+    MH_HOLY,
+    MH_NATURAL,
+    MH_UNDEAD,
+    MH_DEMONIC,
+    MH_NONLIVING, // golems and other constructs
+    MH_PLANT
 };
 
 enum targ_mode_type
@@ -1741,7 +1745,7 @@ enum monster_type                      // (int) menv[].type
     MONS_ICE_FIEND,
     MONS_SHADOW_FIEND,
     MONS_WATER_MOCCASIN,
-    MONS_GIANT_LIZARD,
+    MONS_CROCODILE,
     MONS_SPECTRAL_WARRIOR,             //  130
     MONS_PULSATING_LUMP,
     MONS_STORM_DRAGON,
@@ -2069,6 +2073,8 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT_LEECH,
     MONS_MARA,
     MONS_MARA_FAKE,
+    MONS_ALLIGATOR,
+    MONS_BABY_ALLIGATOR,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2097,7 +2103,7 @@ enum monster_type                      // (int) menv[].type
 
 enum beh_type
 {
-    BEH_SLEEP,                         //    0
+    BEH_SLEEP,
     BEH_WANDER,
     BEH_SEEK,
     BEH_FLEE,
@@ -2326,6 +2332,7 @@ enum mon_spellbook_type
     MST_MARA,
     MST_MARA_FAKE,
     MST_MERFOLK_AQUAMANCER,
+    MST_ALLIGATOR,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2440,17 +2447,17 @@ enum mutation_type
 
 enum object_class_type                 // mitm[].base_type
 {
-    OBJ_WEAPONS,                       //    0
+    OBJ_WEAPONS,
     OBJ_MISSILES,
     OBJ_ARMOUR,
     OBJ_WANDS,
-    OBJ_FOOD,                          //    4
-    OBJ_UNKNOWN_I = 5, // (use unknown) labeled as books in invent.cc {dlb}
-    OBJ_SCROLLS = 6,                   //    6
+    OBJ_FOOD,
+    OBJ_UNKNOWN_I, // (use unknown) labeled as books in invent.cc {dlb}
+    OBJ_SCROLLS,
     OBJ_JEWELLERY,
-    OBJ_POTIONS,                       //    8
-    OBJ_UNKNOWN_II = 9, // (use unknown, stackable) labeled as gems in invent.cc {dlb}
-    OBJ_BOOKS = 10,                    //   10
+    OBJ_POTIONS,
+    OBJ_UNKNOWN_II, // (use unknown, stackable) labeled as gems in invent.cc {dlb}
+    OBJ_BOOKS,
     OBJ_STAVES,
     OBJ_ORBS,
     OBJ_MISCELLANY,
@@ -2488,7 +2495,7 @@ enum operation_types
 
 enum orb_type
 {
-    ORB_ZOT                            //    0
+    ORB_ZOT
 };
 
 enum size_part_type
@@ -2500,80 +2507,80 @@ enum size_part_type
 
 enum potion_type
 {
-    POT_HEALING,                       //    0
+    POT_HEALING,
     POT_HEAL_WOUNDS,
     POT_SPEED,
     POT_MIGHT,
     POT_BRILLIANCE,
     POT_AGILITY,
     POT_GAIN_STRENGTH,
-    POT_GAIN_DEXTERITY,                //    5
+    POT_GAIN_DEXTERITY,
     POT_GAIN_INTELLIGENCE,
     POT_LEVITATION,
     POT_POISON,
     POT_SLOWING,
-    POT_PARALYSIS,                     //   10
+    POT_PARALYSIS,
     POT_CONFUSION,
     POT_INVISIBILITY,
     POT_PORRIDGE,
     POT_DEGENERATION,
-    POT_DECAY,                         //   15
+    POT_DECAY,
     POT_WATER,
     POT_EXPERIENCE,
     POT_MAGIC,
     POT_RESTORE_ABILITIES,
-    POT_STRONG_POISON,                 //   20
+    POT_STRONG_POISON,
     POT_BERSERK_RAGE,
     POT_CURE_MUTATION,
     POT_MUTATION,
     POT_RESISTANCE,
-    POT_BLOOD,                         //   25
+    POT_BLOOD,
     POT_BLOOD_COAGULATED,
-    NUM_POTIONS                        //   27
+    NUM_POTIONS
 };
 
 enum pronoun_type
 {
-    PRONOUN_CAP,                        // 0
-    PRONOUN_NOCAP,                      // 1
-    PRONOUN_CAP_POSSESSIVE,             // 2
-    PRONOUN_NOCAP_POSSESSIVE,           // 3
-    PRONOUN_REFLEXIVE,                  // 4 (reflexive is always lowercase)
-    PRONOUN_OBJECTIVE                   // 5 (objective is always lowercase)
+    PRONOUN_CAP,
+    PRONOUN_NOCAP,
+    PRONOUN_CAP_POSSESSIVE,
+    PRONOUN_NOCAP_POSSESSIVE,
+    PRONOUN_REFLEXIVE,                  // reflexive is always lowercase
+    PRONOUN_OBJECTIVE                   // objective is always lowercase
 };
 
 enum artefact_prop_type
 {
-    ARTP_BRAND,                         //    0
+    ARTP_BRAND,
     ARTP_AC,
     ARTP_EVASION,
     ARTP_STRENGTH,
     ARTP_INTELLIGENCE,
-    ARTP_DEXTERITY,                     //    5
+    ARTP_DEXTERITY,
     ARTP_FIRE,
     ARTP_COLD,
     ARTP_ELECTRICITY,
     ARTP_POISON,
-    ARTP_NEGATIVE_ENERGY,               //   10
+    ARTP_NEGATIVE_ENERGY,
     ARTP_MAGIC,
     ARTP_EYESIGHT,
     ARTP_INVISIBLE,
     ARTP_LEVITATE,
-    ARTP_BLINK,                         //   15
+    ARTP_BLINK,
     ARTP_BERSERK,
     ARTP_NOISES,
     ARTP_PREVENT_SPELLCASTING,
     ARTP_CAUSE_TELEPORTATION,
-    ARTP_PREVENT_TELEPORTATION,         //   20
+    ARTP_PREVENT_TELEPORTATION,
     ARTP_ANGRY,
     ARTP_METABOLISM,
     ARTP_MUTAGENIC,
     ARTP_ACCURACY,
-    ARTP_DAMAGE,                        //   25
+    ARTP_DAMAGE,
     ARTP_CURSED,
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,
-    ARTP_NUM_PROPERTIES                 //   30
+    ARTP_NUM_PROPERTIES
 };
 
 enum score_format_type
@@ -2585,17 +2592,17 @@ enum score_format_type
 
 enum shop_type // (unsigned char) env.sh_type[], item_in_shop(), in_a_shop()
 {
-    SHOP_WEAPON,                       //    0
+    SHOP_WEAPON,
     SHOP_ARMOUR,
     SHOP_WEAPON_ANTIQUE,
     SHOP_ARMOUR_ANTIQUE,
     SHOP_GENERAL_ANTIQUE,
-    SHOP_JEWELLERY,                    //    5
+    SHOP_JEWELLERY,
     SHOP_WAND,
     SHOP_BOOK,
     SHOP_FOOD,
     SHOP_DISTILLERY,
-    SHOP_SCROLL,                       //   10
+    SHOP_SCROLL,
     SHOP_GENERAL,
     NUM_SHOPS, // must remain last 'regular' member {dlb}
     SHOP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
@@ -2879,7 +2886,7 @@ enum spell_type
     SPELL_PETRIFY,
 
     // Mostly monster-only spells after this point:
-    SPELL_HELLFIRE_BURST = 155,
+    SPELL_HELLFIRE_BURST,
     SPELL_VAMPIRE_SUMMON,
     SPELL_BRAIN_FEED,
     SPELL_FAKE_RAKSHASA_SUMMON,
@@ -2922,6 +2929,7 @@ enum spell_type
     SPELL_PRIMAL_WAVE,
     SPELL_CALL_TIDE,
     SPELL_IOOD,
+    SPELL_INK_CLOUD,
 
     NUM_SPELLS
 };
@@ -2963,17 +2971,17 @@ enum torment_source_type
 
 enum trap_type                         // env.trap_type[]
 {
-    TRAP_DART,                         //    0
+    TRAP_DART,
     TRAP_ARROW,
     TRAP_SPEAR,
     TRAP_AXE,
     TRAP_TELEPORT,
-    TRAP_ALARM,                        //    5
+    TRAP_ALARM,
     TRAP_BLADE,
     TRAP_BOLT,
     TRAP_NET,
     TRAP_ZOT,
-    TRAP_NEEDLE,                       //   10
+    TRAP_NEEDLE,
     TRAP_SHAFT,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
@@ -2986,93 +2994,93 @@ enum trap_type                         // env.trap_type[]
 // tutorial.cc.
 enum tutorial_event_type
 {
-    TUT_SEEN_FIRST_OBJECT,    // 0
+    TUT_SEEN_FIRST_OBJECT,
     // seen certain items
     TUT_SEEN_POTION,
     TUT_SEEN_SCROLL,
     TUT_SEEN_WAND,
     TUT_SEEN_SPBOOK,
-    TUT_SEEN_JEWELLERY,       // 5
+    TUT_SEEN_JEWELLERY,
     TUT_SEEN_MISC,
     TUT_SEEN_STAFF,
     TUT_SEEN_WEAPON,
     TUT_SEEN_MISSILES,
-    TUT_SEEN_ARMOUR,          // 10
+    TUT_SEEN_ARMOUR,
     TUT_SEEN_RANDART,
     TUT_SEEN_FOOD,
     TUT_SEEN_CARRION,
     TUT_SEEN_GOLD,
     // encountered dungeon features
-    TUT_SEEN_STAIRS,          // 15
+    TUT_SEEN_STAIRS,
     TUT_SEEN_ESCAPE_HATCH,
     TUT_SEEN_BRANCH,
     TUT_SEEN_PORTAL,
     TUT_SEEN_TRAP,
-    TUT_SEEN_ALTAR,           // 20
+    TUT_SEEN_ALTAR,
     TUT_SEEN_SHOP,
     TUT_SEEN_DOOR,
     TUT_SEEN_SECRET_DOOR,
     // other 'first events'
     TUT_SEEN_MONSTER,
-    TUT_SEEN_ZERO_EXP_MON,    // 25
+    TUT_SEEN_ZERO_EXP_MON,
     TUT_SEEN_TOADSTOOL,
     TUT_MONSTER_BRAND,
     TUT_MONSTER_FRIENDLY,
     TUT_MONSTER_SHOUT,
-    TUT_MONSTER_LEFT_LOS,     // 30
+    TUT_MONSTER_LEFT_LOS,
     TUT_KILLED_MONSTER,
     TUT_NEW_LEVEL,
     TUT_SKILL_RAISE,
     TUT_GAINED_MAGICAL_SKILL,
-    TUT_GAINED_MELEE_SKILL,   // 35
+    TUT_GAINED_MELEE_SKILL,
     TUT_GAINED_RANGED_SKILL,
     TUT_CHOOSE_STAT,
     TUT_MAKE_CHUNKS,
     TUT_OFFER_CORPSE,
-    TUT_NEW_ABILITY_GOD,      // 40
+    TUT_NEW_ABILITY_GOD,
     TUT_NEW_ABILITY_MUT,
     TUT_NEW_ABILITY_ITEM,
     TUT_FLEEING_MONSTER,
     TUT_ROTTEN_FOOD,
-    TUT_CONVERT,              // 45
+    TUT_CONVERT,
     TUT_GOD_DISPLEASED,
     TUT_EXCOMMUNICATE,
     TUT_SPELL_MISCAST,
     TUT_SPELL_HUNGER,
-    TUT_GLOWING,              // 50
+    TUT_GLOWING,
     TUT_YOU_RESIST,
     // status changes
     TUT_YOU_ENCHANTED,
     TUT_YOU_SICK,
     TUT_YOU_POISON,
-    TUT_YOU_ROTTING,          // 55
+    TUT_YOU_ROTTING,
     TUT_YOU_CURSED,
     TUT_YOU_HUNGRY,
     TUT_YOU_STARVING,
     TUT_YOU_MUTATED,
-    TUT_CAN_BERSERK,          // 60
+    TUT_CAN_BERSERK,
     TUT_POSTBERSERK,
     TUT_CAUGHT_IN_NET,
     // warning
     TUT_RUN_AWAY,
     TUT_RETREAT_CASTER,
-    TUT_WIELD_WEAPON,         // 65
+    TUT_WIELD_WEAPON,
     TUT_NEED_HEALING,
     TUT_NEED_POISON_HEALING,
     TUT_INVISIBLE_DANGER,
     TUT_NEED_HEALING_INVIS,
-    TUT_ABYSS,                // 70
+    TUT_ABYSS,
     // interface
     TUT_MULTI_PICKUP,
     TUT_HEAVY_LOAD,
     TUT_SHIFT_RUN,
     TUT_MAP_VIEW,
-    TUT_AUTO_EXPLORE,         // 75
+    TUT_AUTO_EXPLORE,
     TUT_DONE_EXPLORE,
     TUT_AUTO_EXCLUSION,
     TUT_STAIR_BRAND,
     TUT_HEAP_BRAND,
-    TUT_TRAP_BRAND,           // 80
+    TUT_TRAP_BRAND,
     TUT_LOAD_SAVED_GAME,
     TUT_EVENTS_NUM            // 82
 };

@@ -92,6 +92,15 @@ bool show_type::operator < (const show_type &other) const
     }
 }
 
+// Returns true if this is a monster that can be hidden for clean_map
+// purposes. All non-immobile monsters are hidden when out of LOS with
+// Options.clean_map, or removed from the map when the clear-map
+// command (^C) is used.
+bool show_type::is_cleanable_monster() const
+{
+    return (cls == SH_MONSTER && !mons_class_is_stationary(mons));
+}
+
 void show_def::_set_backup(const coord_def &ep)
 {
     backup(ep) = grid(ep);
@@ -115,7 +124,9 @@ static unsigned short _tree_colour(const coord_def& where)
     h += where.y;
     h+=h<<10; h^=h>>6;
     h+=h<<3; h^=h>>11; h+=h<<15;
-    return (h>>30) ? GREEN : LIGHTGREEN;
+    return (h>>30) ? GREEN :
+           (you.where_are_you == BRANCH_SWAMP) ? BROWN
+                   : LIGHTGREEN;
 }
 
 static unsigned short _feat_colour(const coord_def &where,
@@ -272,10 +283,9 @@ void show_def::_update_cloud(int cloudno)
     const coord_def e = grid2show(env.cloud[cloudno].pos);
     int which_colour = get_cloud_colour(cloudno);
     _set_backup(e);
-    if (env.cloud[cloudno].type != CLOUD_GLOOM)
-    {
+    cloud_type cloud = env.cloud[cloudno].type;
+    if (cloud != CLOUD_GLOOM)
         grid(e).cls = SH_CLOUD;
-    }
 
     grid(e).colour = which_colour;
 

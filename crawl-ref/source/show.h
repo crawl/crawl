@@ -53,6 +53,7 @@ struct show_type
     operator bool() const { return (cls != SH_NOTHING); }
 
     bool operator < (const show_type &other) const;
+    bool is_cleanable_monster() const;
 };
 
 struct show_info

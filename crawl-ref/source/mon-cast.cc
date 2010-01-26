@@ -846,6 +846,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_BUTTERFLIES:
     case SPELL_MISLEAD:
     case SPELL_CALL_TIDE:
+    case SPELL_INK_CLOUD:
         return (true);
     default:
         if (check_validity)
@@ -1113,9 +1114,10 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
         }
 
         // Promote the casting of useful spells for low-HP monsters.
+        // (kraken should always cast their escape spell of inky).
         if (!finalAnswer
             && monster->hit_points < monster->max_hit_points / 4
-            && !one_chance_in(4))
+            && (!one_chance_in(4) || monster->type == MONS_KRAKEN))
         {
             // Note: There should always be at least some chance we don't
             // get here... even if the monster is on its last HP.  That
@@ -1221,6 +1223,22 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                     spell_cast = SPELL_NO_SPELL;
                     continue;
                 }
+
+                // Alligators shouldn't spam swiftness.
+                if (spell_cast == SPELL_SWIFTNESS && monster->type == MONS_ALLIGATOR)
+                    if ((long) monster->number + random2avg(170, 5) >= you.num_turns)
+                    {
+                        spell_cast = SPELL_NO_SPELL;
+                        continue;
+                    }
+
+                // And Mara shouldn't cast player ghost if he can't see the player
+                if (spell_cast == SPELL_SUMMON_PLAYER_GHOST && monster->type == MONS_MARA)
+                    if (!monster->mon_see_cell(you.pos()))
+                    {
+                        spell_cast = SPELL_NO_SPELL;
+                        continue;
+                    }
 
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
@@ -1347,7 +1365,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
             mons_cast(monster, beem, spell_cast);
             monster->lose_energy(EUT_SPELL);
         }
-    } // end "if mons_class_flag(monster->type, M_SPELLCASTER) ...
+    } // end "if mons_class_flag(monster->type, M_SPELLCASTER)
 
     return (true);
 }
@@ -1660,7 +1678,13 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_SWIFTNESS:
         monster->add_ench(ENCH_SWIFT);
-        simple_monster_message(monster, " seems to move somewhat quicker.");
+        if (monster->type == MONS_ALLIGATOR)
+        {
+            monster->number = you.num_turns;
+            simple_monster_message(monster, " puts on a burst of speed!");
+        }
+        else
+            simple_monster_message(monster, " seems to move somewhat quicker.");
         return;
 
     case SPELL_CALL_TIDE:
@@ -1677,6 +1701,13 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 flash_view_delay(ETC_WATER, 300);
             }
         }
+        return;
+
+    case SPELL_INK_CLOUD:
+        big_cloud (CLOUD_INK, monster->kill_alignment(), monster->pos(), 30, 30);
+
+        simple_monster_message(monster, " squirts a massive cloud of ink into the water!");
+
         return;
 
     case SPELL_SUMMON_SMALL_MAMMALS:

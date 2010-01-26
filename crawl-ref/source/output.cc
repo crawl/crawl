@@ -853,6 +853,7 @@ static short _get_exp_pool_colour(int pool)
 
 void print_stats(void)
 {
+    cursor_control coff(false);
     textcolor(LIGHTGREY);
 
     // Displayed evasion is now tied to dex.
@@ -978,7 +979,6 @@ static std::string _level_description_string_hud()
     return short_name;
 }
 
-// For some odd reason, only redrawn on level change.
 void print_stats_level()
 {
     int ypos = 8;

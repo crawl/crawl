@@ -11,7 +11,9 @@
 
 class bolt;
 
+bool is_ponderousifiable(const item_def& item);
 bool ponderousify_armour();
+
 bool zin_sustenance(bool actual = true);
 bool zin_remove_all_mutations();
 bool yred_injury_mirror(bool actual = true);

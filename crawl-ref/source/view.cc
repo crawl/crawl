@@ -753,9 +753,6 @@ static int player_view_update_at(const coord_def &gc)
     env.tile_bk_bg(gc) = env.tile_bg(ep);
 #endif
 
-    if (Options.clean_map && env.show.get_backup(ep))
-        set_map_knowledge_obj(gc, to_knowledge(env.show.get_backup(ep)));
-
     return (ret);
 }
 

@@ -8,8 +8,6 @@
 #ifndef MONSTUFF_H
 #define MONSTUFF_H
 
-#include "mon-util.h"
-
 #define ORIG_MONSTER_KEY "orig_monster_key"
 
 enum mon_dam_level_type
@@ -58,8 +56,6 @@ public:
 
 #define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
 
-// for definition of type monsters {dlb}
-#include "externs.h"
 
 const item_def *give_mimic_item(monsters *mimic);
 const item_def &get_mimic_item(const monsters *mimic);
@@ -178,6 +174,6 @@ std::string summoned_poof_msg(const monsters* monster, bool plural = false);
 std::string summoned_poof_msg(const int midx, const item_def &item);
 std::string summoned_poof_msg(const monsters* monster, const item_def &item);
 
-void pikel_band_neutralise();
+void pikel_band_neutralise(bool check_tagged = false);
 bool mons_reaped(actor *killer, monsters *victim);
 #endif

@@ -1026,6 +1026,10 @@ function convert_book (data, triggerable, triggerer, marker, ev)
     return
   end
 
+  if data.triggered == true then
+    return
+  end
+
   local m = dgn.find_marker_positions_by_prop("slave_name", "trog_book")[1]
   if m ~= nil then
     local _x, _y = m:xy()
@@ -1037,18 +1041,18 @@ function convert_book (data, triggerable, triggerer, marker, ev)
     end
 
     for book in iter.stash_iterator(_x, _y) do
-      if string.find(items.name(book), 'book') then
-        items.destroy(book)
+      if string.find(book.name(), 'book') then
+        book.destroy()
         dgn.place_cloud(_x, _y, "flame", 15)
         crawl.god_speaks("Trog", "The book bursts into flames! "
                               .. "Trog roars with delight!")
       end
     end
-    triggerable:remove(marker)
+    data.triggered = true
   end
 end
 
-local tm = TriggerableFunction:new{func=convert_book, repeated=true, data={turns=you.turns(), tc=0} }
+local tm = TriggerableFunction:new{func=convert_book, repeated=true, data={turns=you.turns(), tc=0, triggered=false} }
 tm:add_triggerer(DgnTriggerer:new{type="player_los"})
 lua_marker('_', tm)
 }}

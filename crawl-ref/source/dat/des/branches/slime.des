@@ -31,13 +31,18 @@ KFEAT:  Z = altar_jiyva
 SUBST:  1 : 111223
 NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
 MONS:   jelly / ooze / brown ooze / giant amoeba
-MONS:   acid blob / slime creature
+MONS:   acid blob / slime creature w:5
 MONS:   azure jelly
+MARKER: + = lua:restrict_door({ \
+            door_open_prompt="This door is covered in warnings.  Open " .. \
+                             "it anyway?", \
+            door_description_prefix="warning scrawled " \
+         })
 MAP
 ccccc
-c111c.
+c111m.
 cO1_+@
-c111c.
+c111m.
 ccccc
 ENDMAP
 

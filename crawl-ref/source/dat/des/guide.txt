@@ -1,0 +1,14 @@
+Guide to des files
+==================
+
+des files are mostly used for creating parts of maps. Typical examples are
+entry vaults or most branch ends. They are organised in four subfolders of
+dat/des, namely
+
+branches  = maps special to a branch, and branch ends
+portals   = maps needed for portal vaults like labyrinths or bazaars
+variable  = entry vaults, floating vaults etc.
+builder   = various lua code and map snippets for technical purposes, also
+            contains uniques.des and dummy.des
+
+

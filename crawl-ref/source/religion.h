@@ -18,6 +18,12 @@
 
 #define MAX_PENANCE    200
 
+enum piety_gain_t
+{
+    PIETY_NONE, PIETY_SOME, PIETY_LOTS,
+    NUM_PIETY_GAIN
+};
+
 enum harm_protection_type
 {
     HPT_NONE = 0,
@@ -26,28 +32,6 @@ enum harm_protection_type
     HPT_PRAYING_PLUS_ANYTIME,
     HPT_RELIABLE_PRAYING_PLUS_ANYTIME,
     NUM_HPTS
-};
-
-// Calls did_god_conduct() when the object goes out of scope.
-struct god_conduct_trigger
-{
-    conduct_type conduct;
-    int pgain;
-    bool known;
-    bool enabled;
-    std::auto_ptr<monsters> victim;
-
-    god_conduct_trigger(conduct_type c = NUM_CONDUCTS,
-                        int pg = 0,
-                        bool kn = true,
-                        const monsters *vict = NULL);
-
-    void set(conduct_type c = NUM_CONDUCTS,
-             int pg = 0,
-             bool kn = true,
-             const monsters *vict = NULL);
-
-    ~god_conduct_trigger();
 };
 
 bool is_evil_god(god_type god);
@@ -67,21 +51,12 @@ std::string get_god_dislikes(god_type which_god, bool verbose = false);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
-bool did_god_conduct(conduct_type thing_done, int pgain, bool known = true,
-                     const monsters *victim = NULL);
-void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
-                         bool known = true);
-void enable_attack_conducts(god_conduct_trigger conduct[3]);
-void disable_attack_conducts(god_conduct_trigger conduct[3]);
-
 void excommunication(god_type new_god = GOD_NO_GOD);
 
 void gain_piety(int pgn);
+void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
-std::string god_prayer_reaction();
-void pray();
-void end_prayer();
 void handle_god_time(void);
 int god_colour(god_type god);
 char god_message_altar_colour(god_type god);
@@ -89,7 +64,6 @@ bool player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);
 int piety_scale(int piety_change);
-void offer_items();
 bool god_hates_your_god(god_type god,
                         god_type your_god = you.religion);
 std::string god_hates_your_god_reaction(god_type god,
@@ -99,13 +73,14 @@ bool god_hates_killing(god_type god, const monsters* mon);
 bool god_likes_fresh_corpses(god_type god);
 bool god_likes_butchery(god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
-
 bool jiyva_is_dead();
 bool remove_all_jiyva_altars();
 bool fedhas_protects(const monsters * target);
 bool fedhas_protects_species(int mc);
 bool fedhas_neutralises(const monsters * target);
 bool ely_destroy_weapons();
+void print_sacrifice_message(god_type, const item_def &,
+                             piety_gain_t, bool = false);
 
 bool tso_unchivalric_attack_safe_monster(const monsters *mon);
 
@@ -128,14 +103,20 @@ bool bless_follower(monsters *follower = NULL,
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
 bool god_hates_attacking_friend(god_type god, int species);
+bool god_likes_item(god_type god, const item_def& item);
 bool god_likes_items(god_type god);
+
+void get_pure_deck_weights(int weights[]);
 
 void religion_turn_start();
 void religion_turn_end();
 
 int get_tension(god_type god = you.religion, bool count_travelling = true);
 
-void do_god_gift(bool prayed_for = false, bool force = false);
+bool do_god_gift(bool prayed_for = false, bool forced = false);
 
 std::vector<god_type> temple_god_list();
+
+extern const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES];
+std::string adjust_abil_message(const char *pmsg);
 #endif

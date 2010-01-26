@@ -59,6 +59,7 @@ extern Branch branches[];
 Branch& your_branch();
 
 bool at_branch_bottom();
+bool is_hell_subbranch(branch_type branch);
 
 branch_type str_to_branch(const std::string &branch,
                           branch_type err = NUM_BRANCHES);

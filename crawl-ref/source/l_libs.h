@@ -34,6 +34,7 @@ void cluaopen_globals(lua_State *ls);
 #define MAPMARK_METATABLE "dgn.mapmark"
 #define MAPGRD_METATABLE "dgn.mapgrd"
 #define MAPGRD_COL_METATABLE "dgn.mapgrdcol"
+#define ITEM_METATABLE "item.itemaccess"
 
 /*
  * Libraries and loaders for dlua, accessed from init_dungeon_lua().
@@ -76,5 +77,7 @@ void dluaopen_dgn(lua_State *ls);
 class map_lines;
 int dgn_map_add_transform(lua_State *ls,
           std::string (map_lines::*add)(const std::string &s));
+
+void clua_push_item(lua_State *ls, item_def *item);
 
 #endif

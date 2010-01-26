@@ -25,6 +25,7 @@
 #include "effects.h"  // For Sceptre of Torment tormenting
 #include "env.h"      // For storm bow env.cgrid
 #include "food.h"     // For evokes
+#include "godconduct.h" // did_god_conduct.
 #include "mgen_data.h" // For Sceptre of Asmodeus evoke
 #include "mon-place.h" // For Sceptre of Asmodeus evoke
 #include "mon-stuff.h" // For Scythe of Curses cursing items

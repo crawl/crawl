@@ -9,6 +9,7 @@
 #include "areas.h"
 #include "beam.h"
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
 #include "delay.h"
 #include "dgnevent.h"
@@ -27,17 +28,17 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-place.h"
-#include "terrain.h"
-#include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
+#include "mon-util.h"
+#include "mgen_data.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "traps.h"
 #include "tutorial.h"
 #include "view.h"
@@ -210,9 +211,7 @@ bool monsters::wants_submerge() const
     }
 
     const bool has_ranged_attack = (type == MONS_ELECTRIC_EEL
-                                    || type == MONS_LAVA_SNAKE
-                                    || mons_genus(type) == MONS_MERMAID
-                                       && you.species != SP_MERFOLK);
+                                    || type == MONS_LAVA_SNAKE);
 
     int roll = 8;
     // Shallow water takes a little more effort to submerge in, so we're
@@ -1292,12 +1291,15 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         {
         case UNRAND_ASMODEUS:
             return (monster->type == MONS_ASMODEUS);
+
         case UNRAND_DISPATER:
             return (monster->type == MONS_DISPATER);
+
         case UNRAND_CEREBOV:
             return (monster->type == MONS_CEREBOV);
         }
     }
+
     return (false);
 }
 
@@ -1315,10 +1317,16 @@ static int _ego_damage_bonus(item_def &item)
 
 static bool _item_race_matches_monster(const item_def &item, monsters *mons)
 {
-    return (get_equip_race(item) == ISFLAG_ELVEN
-                && mons_genus(mons->type) == MONS_ELF
-            || get_equip_race(item) == ISFLAG_ORCISH
-                && mons_genus(mons->type) == MONS_ORC);
+    if (get_equip_race(item) == ISFLAG_ELVEN)
+        return (mons_genus(mons->type) == MONS_ELF);
+
+    if (get_equip_race(item) == ISFLAG_DWARVEN)
+        return (mons_genus(mons->type) == MONS_DWARF);
+
+    if (get_equip_race(item) == ISFLAG_ORCISH)
+        return (mons_genus(mons->type) == MONS_ORC);
+
+    return (false);
 }
 
 bool monsters::pickup_melee_weapon(item_def &item, int near)
@@ -2218,7 +2226,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         result += mon.number ? "active " : "";
 
     // Done here to cover cases of undead versions of hydras.
-    if (mons_species(nametype) == MONS_HYDRA
+    if (mons_genus(nametype) == MONS_HYDRA
         && mon.number > 0 && desc != DESC_DBNAME)
     {
         if (nametype == MONS_LERNAEAN_HYDRA)
@@ -2728,7 +2736,7 @@ bool monsters::fumbles_attack(bool verbose)
                 mprf("%s splashes around in the water.",
                      this->name(DESC_CAP_THE).c_str());
             }
-            else if (player_can_hear(pos()))
+            else if (player_can_hear(pos(), LOS_RADIUS))
                 mpr("You hear a splashing noise.", MSGCH_SOUND);
         }
 
@@ -3202,7 +3210,8 @@ bool monsters::is_chaotic() const
     if (type == MONS_UGLY_THING
         || type == MONS_VERY_UGLY_THING
         || type == MONS_ABOMINATION_SMALL
-        || type == MONS_ABOMINATION_LARGE)
+        || type == MONS_ABOMINATION_LARGE
+        || type == MONS_TIAMAT) // For her colour-changing.
     {
         return (true);
     }
@@ -3214,7 +3223,10 @@ bool monsters::is_chaotic() const
     if (is_priest() && is_chaotic_god(god))
         return (true);
 
-    if (has_chaotic_spell())
+    // Knowing chaotic spells is not enough to make you "essentially"
+    // chaotic (i.e. silver doesn't hurt you), although Zin will still
+    // enjoy your death elsewhere in the code.
+    if (has_chaotic_spell() && !is_actual_spellcaster())
         return (true);
 
     if (has_attack_flavour(AF_MUTATE)
@@ -3374,7 +3386,7 @@ int monsters::res_water_drowning() const
     switch (mons_habitat(this))
     {
     case HT_WATER:
-    case HT_AMPHIBIOUS_WATER:
+    case HT_AMPHIBIOUS:
         return 1;
     default:
         return 0;
@@ -4387,7 +4399,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_SWIFT:
         if (!quiet)
-            simple_monster_message(this, " is no longer moving somewhat quickly.");
+            if (type == MONS_ALLIGATOR)
+                simple_monster_message(this, " slows down.");
+            else
+                simple_monster_message(this, " is no longer moving somewhat quickly.");
         break;
 
     case ENCH_MIGHT:
@@ -4445,7 +4460,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
         }
-        else
+        else if (type != MONS_KRAKEN_TENTACLE)
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
                      this->pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
@@ -5128,8 +5143,10 @@ void monsters::apply_enchantment(const mon_enchant &me)
         if (feat_is_watery(grd(pos())))
         {
             if (mons_near(this) && visible_to(&you))
+            {
                 mprf("The flames covering %s go out.",
                      this->name(DESC_NOCAP_THE, false).c_str());
+            }
             del_ench(ENCH_STICKY_FLAME);
             break;
         }
@@ -5847,17 +5864,9 @@ int monsters::action_energy(energy_use_type et) const
         switch (et)
         {
         case EUT_MOVE:    return mu.move - (swift ? 2 : 0);
-        case EUT_SWIM:
-            // [ds] Amphibious monsters get a significant speed boost
-            // when swimming, as discussed with dpeg. We do not
-            // distinguish between amphibians that favour land
-            // (HT_AMPHIBIOUS_LAND, such as hydras) and those that
-            // favour water (HT_AMPHIBIOUS_WATER, such as merfolk), but
-            // that's something we can think about.
-            if (mons_amphibious(this))
-                return div_rand_round(mu.swim * 7, 10) - (swift ? 2 : 0);
-            else
-                return mu.swim - (swift ? 2 : 0);
+        // Amphibious monster speed boni are now dealt with using swim_energy,
+        // rather than here.
+        case EUT_SWIM:    return mu.swim - (swift ? 2 : 0);
         case EUT_MISSILE: return mu.missile;
         case EUT_ITEM:    return mu.item;
         case EUT_SPECIAL: return mu.special;
@@ -6227,8 +6236,12 @@ int mon_enchant::calc_duration(const monsters *mons,
     // monster HD via modded_speed(). Use mod_speed instead!
     switch (ench)
     {
-    case ENCH_HASTE:
     case ENCH_SWIFT:
+        cturn = 1000 / _mod_speed(25, mons->speed);
+
+        break;
+
+    case ENCH_HASTE:
     case ENCH_MIGHT:
     case ENCH_INVIS:
         cturn = 1000 / _mod_speed(25, mons->speed);

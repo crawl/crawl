@@ -26,6 +26,7 @@
 #include "mutation.h"
 #include "player.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "skills2.h"
 #include "spells2.h"
 #include "spl-mis.h"
@@ -632,6 +633,9 @@ void unwear_armour(int slot)
 
     case SPARM_PONDEROUSNESS:
         mpr("That put a bit of spring back into your step.");
+        // Cheibriados allows taking off ponderous armour during prayer.
+        if (!you.duration[DUR_PRAYER])
+            did_god_conduct(DID_UNPONDEROUS, 1);
         break;
 
     case SPARM_LEVITATION:

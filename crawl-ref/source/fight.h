@@ -9,9 +9,8 @@
 #define FIGHT_H
 
 
-#include "externs.h"
 #include "artefact.h"
-#include "mon-util.h"
+#include "mon-enum.h"
 
 enum unarmed_attack_type
 {
@@ -34,7 +33,8 @@ enum unchivalric_attack_type
     UCAT_PETRIFYING,
     UCAT_PETRIFIED,
     UCAT_PARALYSED,
-    UCAT_SLEEPING
+    UCAT_SLEEPING,
+    UCAT_ALLY
 };
 
 enum attack_final_effect_flavor
@@ -73,16 +73,6 @@ class melee_attack
 {
 public:
     actor     *attacker, *defender;
-
-    monsters* attacker_as_monster()
-    {
-        return dynamic_cast<monsters*>(attacker);
-    }
-
-    monsters* defender_as_monster()
-    {
-        return dynamic_cast<monsters*>(defender);
-    }
 
     bool      cancel_attack;
     bool      did_hit, perceived_attack, obvious_effect;
@@ -136,12 +126,14 @@ public:
     item_def  *defender_shield;
 
     // Armour penalties?
-    int       heavy_armour_penalty;
-    bool      can_do_unarmed;
+    // Adjusted EV penalty for body armour and shields.
+    int       player_body_armour_penalty;
+    int       player_shield_penalty;
 
-    // Attacker uses watery terrain to advantage vs defender. Implies that
-    // both attacker and defender are in water.
-    bool      water_attack;
+    // Combined to-hit penalty from armour and shield.
+    int       player_armshld_tohit_penalty;
+
+    bool      can_do_unarmed;
 
     // Miscast to cause after special damage is done.  If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
@@ -169,7 +161,6 @@ public:
 private:
     void init_attack();
     bool is_banished(const actor *) const;
-    bool is_water_attack(const actor *, const actor *) const;
     void check_hand_half_bonus_eligible();
     void check_autoberserk();
     bool check_unrand_effects(bool mondied = false);
@@ -250,8 +241,8 @@ private:
     int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
     int  player_to_hit(bool random_factor);
+    int  player_armour_shield_tohit_penalty(bool random_factor) const;
     void player_apply_attack_delay();
-    int  player_apply_water_attack_bonus(int damage);
     int  player_apply_weapon_bonuses(int damage);
     int  player_apply_weapon_skill(int damage);
     int  player_apply_fighting_skill(int damage, bool aux);
@@ -276,7 +267,6 @@ private:
     void player_stab_check();
     int  player_weapon_speed();
     int  player_unarmed_speed();
-    int  player_apply_shield_delay(int attack_delay);
     void player_announce_hit();
     std::string player_why_missed();
     void player_warn_miss();

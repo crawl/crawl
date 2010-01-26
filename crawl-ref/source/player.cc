@@ -51,6 +51,7 @@
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
@@ -230,6 +231,11 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 else if (new_grid != DNGN_TRAP_MAGICAL && you.airborne())
                 {
                     // No prompt (shaft and mechanical traps ineffective, if flying)
+                }
+                else if (type == TRAP_TELEPORT && (player_equip(EQ_AMULET, AMU_STASIS, true)
+                         || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)))
+                {
+                    // No prompt (teleport traps are ineffective if wearing an amulet of stasis)
                 }
                 else
 #ifdef CLUA_BINDINGS
@@ -437,9 +443,7 @@ bool player_in_hell(void)
     COMPILE_CHECK(BRANCH_LAST_HELL  == BRANCH_TARTARUS, b);
 
     return (you.level_type == LEVEL_DUNGEON
-            && you.where_are_you >= BRANCH_FIRST_HELL
-            && you.where_are_you <= BRANCH_LAST_HELL
-            && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
+            && is_hell_subbranch(you.where_are_you));
 }
 
 bool player_likes_water(bool permanently)
@@ -899,9 +903,9 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
 // Returns number of matches (jewellery returns zero -- no ego type).
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-int player_equip_ego_type( int slot, int special )
+int player_equip_ego_type(int slot, int special, bool ignore_melded)
 {
-    if (!you_tran_can_wear(slot))
+    if (ignore_melded && !you_tran_can_wear(slot))
         return (0);
 
     int ret = 0;
@@ -935,7 +939,7 @@ int player_equip_ego_type( int slot, int special )
         for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
         {
             // ... but skip ones you can't currently use!
-            if (!you_tran_can_wear(i))
+            if (ignore_melded && !you_tran_can_wear(i))
                 continue;
 
             if (you.equip[i] != -1
@@ -2047,137 +2051,123 @@ bool player_is_shapechanged(void)
     return (true);
 }
 
-// New and improved 4.1 evasion model, courtesy Brent Ross.
-int player_evasion(ev_ignore_type evit)
+int player_evasion_size_factor()
 {
     // XXX: you.body_size() implementations are incomplete, fix.
     const size_type size  = you.body_size(PSIZE_BODY);
-    const size_type torso = you.body_size(PSIZE_TORSO);
+    return 2 * (SIZE_MEDIUM - size);
+}
 
-    const int size_factor = SIZE_MEDIUM - size;
-    int ev = 10 + 2 * size_factor;
+// The EV penalty to the player for wearing their current shield.
+int player_adjusted_shield_evasion_penalty(int scale)
+{
+    const item_def *shield = you.slot_item(EQ_SHIELD);
+    if (!shield)
+        return (0);
 
-    // Repulsion fields and size are all that matters when paralysed.
-    if (you.cannot_move() && !(evit & EV_IGNORE_HELPLESS))
-    {
-        ev = 2 + size_factor;
-        if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
-            ev += (player_mutation_level(MUT_REPULSION_FIELD) * 2) - 1;
-        return ((ev < 1) ? 1 : ev);
-    }
+    const int base_shield_penalty = -property(*shield, PARM_EVASION);
+    return std::max(0,
+                    (base_shield_penalty * scale
+                     - you.skills[SK_SHIELDS] * scale
+                     / (5 + player_evasion_size_factor())));
+}
 
-    // Calculate the base bonus here, but it may be reduced by heavy
-    // armour below.
-    int dodge_bonus = (you.skills[SK_DODGING] * you.dex + 7)
-                      / (20 - size_factor);
+// The EV penalty to the player for their worn body armour.
+int player_adjusted_body_armour_evasion_penalty(int scale)
+{
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (!body_armour)
+        return (0);
 
-    // Limit on bonus from dodging:
-    const int max_bonus = (you.skills[SK_DODGING] * (7 + size_factor)) / 9;
-    if (dodge_bonus > max_bonus)
-        dodge_bonus = max_bonus;
+    const int base_ev_penalty = -property(*body_armour, PARM_EVASION);
+    if (!base_ev_penalty)
+        return (0);
 
-    // Some lesser armours have small penalties now (shields, barding).
+    return ((base_ev_penalty + std::max(0, 3 * base_ev_penalty - you.strength))
+            * (45 - you.skills[SK_ARMOUR])
+            * scale
+            / 45);
+}
+
+// The total EV penalty to the player for all their worn armour items
+// with a base EV penalty (i.e. EV penalty as a base armour property,
+// not as a randart property).
+int player_adjusted_evasion_penalty(const int scale)
+{
+    int piece_armour_evasion_penalty = 0;
+
+    // Some lesser armours have small penalties now (barding).
     for (int i = EQ_CLOAK; i < EQ_BODY_ARMOUR; i++)
     {
-        if (!player_wearing_slot(i))
+        if (i == EQ_SHIELD || !player_wearing_slot(i))
             continue;
 
-        int pen = property( you.inv[ you.equip[i] ], PARM_EVASION );
-
-        // Reducing penalty of larger shields for larger characters.
-        if (i == EQ_SHIELD && torso > SIZE_MEDIUM)
-            pen += (torso - SIZE_MEDIUM);
-
-        if (pen < 0)
-            ev += pen;
+        // [ds] Evasion modifiers for armour are negatives, change
+        // those to positive for penalty calc.
+        const int penalty = -property( you.inv[ you.equip[i] ], PARM_EVASION );
+        if (penalty > 0)
+            piece_armour_evasion_penalty += penalty;
     }
 
-    // Handle main body armour penalty.
-    if (you.equip[EQ_BODY_ARMOUR] != -1)
-    {
-        // XXX: magnify arm_penalty for weak characters?
-        // Remember: arm_penalty and ev_change are negative.
-        int arm_penalty = property( you.inv[ you.equip[EQ_BODY_ARMOUR] ],
-                                          PARM_EVASION );
+    return (piece_armour_evasion_penalty * scale +
+            player_adjusted_body_armour_evasion_penalty(scale));
+}
 
-        // The very large races take a penalty to AC for not being able
-        // to fully cover, and in compensation we give back some freedom
-        // of movement here.  Likewise, the very small are extra encumbered
-        // by armour (which partially counteracts their size bonus above).
-        if (size < SIZE_SMALL || size > SIZE_LARGE)
-        {
-            arm_penalty -= ((size - SIZE_MEDIUM) * arm_penalty) / 4;
-
-            if (arm_penalty > 0)
-                arm_penalty = 0;
-        }
-
-        int ev_change = arm_penalty;
-        ev_change += (you.skills[SK_ARMOUR] * you.strength) / 60;
-
-        if (ev_change > arm_penalty / 2)
-            ev_change = arm_penalty / 2;
-
-        ev += ev_change;
-
-        // This reduces dodging ability in heavy armour.
-        if (!player_light_armour())
-            dodge_bonus += (arm_penalty * 30 + 15) / you.strength;
-    }
-
-    if (dodge_bonus > 0)                // always a bonus
-        ev += dodge_bonus;
+// Player EV bonuses for various effects and transformations. This
+// does not include kenku/merfolk EV bonuses for flight/swimming.
+int player_evasion_bonuses(ev_ignore_type evit)
+{
+    int evbonus = 0;
 
     if (you.duration[DUR_AGILITY])
-        ev += 5;
+        evbonus += 5;
 
     if (you.duration[DUR_PHASE_SHIFT] && !(evit & EV_IGNORE_PHASESHIFT))
-        ev += 8;
+        evbonus += 8;
 
     if (you.duration[DUR_STONEMAIL])
-        ev -= 2;
+        evbonus -= 2;
 
-    ev += player_equip( EQ_RINGS_PLUS, RING_EVASION );
+    evbonus += player_equip( EQ_RINGS_PLUS, RING_EVASION );
 
     if (player_equip_ego_type( EQ_WEAPON, SPWPN_EVASION ))
-        ev += 5;
+        evbonus += 5;
 
-    ev += scan_artefacts( ARTP_EVASION );
+    evbonus += scan_artefacts( ARTP_EVASION );
 
     // ponderous ev mod
-    ev -= 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
+    evbonus -= 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
     if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
-        ev += (player_mutation_level(MUT_REPULSION_FIELD) * 2) - 1;
+        evbonus += (player_mutation_level(MUT_REPULSION_FIELD) * 2) - 1;
 
     // transformation penalties/bonuses not covered by size alone:
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
     case TRAN_STATUE:
-        ev -= 5;                // stiff
+        evbonus -= 5;                // stiff
         break;
-
     default:
         break;
     }
 
+    return (evbonus);
+}
+
+// Player EV scaling for being flying kenku or swimming merfolk.
+int player_scale_evasion(const int prescaled_ev, const int scale)
+{
     switch (you.species)
     {
     case SP_MERFOLK:
         // Merfolk get an evasion bonus in water.
         if (you.swimming())
         {
-            // ... though a bit less so if swimming in heavy armour.
-            int factor = 4;
-            int min_bonus = 2;
-            if (grd(you.pos()) == DNGN_DEEP_WATER && !player_light_armour())
-            {
-                factor = 6;
-                min_bonus = 1;
-            }
-
-            const int ev_bonus = std::min(9, std::max(min_bonus, ev / factor));
-            ev += ev_bonus;
+            const int ev_bonus =
+                std::min(9 * scale,
+                         std::max(2 * scale,
+                                  prescaled_ev * scale / 4));
+            return (prescaled_ev + ev_bonus);
         }
         break;
 
@@ -2185,110 +2175,99 @@ int player_evasion(ev_ignore_type evit)
         // Flying Kenku get an evasion bonus.
         if (you.flight_mode() == FL_FLY)
         {
-            const int ev_bonus = std::min(9, std::max(1, ev / 5));
-            ev += ev_bonus;
+            const int ev_bonus =
+                std::min(9 * scale,
+                         std::max(1 * scale,
+                                  prescaled_ev * scale / 5));
+            return (prescaled_ev + ev_bonus);
         }
         break;
 
     default:
         break;
     }
-
-    return (ev);
+    return (prescaled_ev);
 }
 
-// Obsolete evasion calc.
-#if 0
-int old_player_evasion(void)
+// Total EV for player using the revised 0.6 evasion model.
+int player_evasion(ev_ignore_type evit)
 {
-    int ev = 10;
-
-    int armour_ev_penalty;
-
-    if (you.equip[EQ_BODY_ARMOUR] == -1)
-        armour_ev_penalty = 0;
-    else
+    const int size_factor = player_evasion_size_factor();
+    // Repulsion fields and size are all that matters when paralysed.
+    if (you.cannot_move() && !(evit & EV_IGNORE_HELPLESS))
     {
-        armour_ev_penalty = property( you.inv[you.equip[EQ_BODY_ARMOUR]],
-                                      PARM_EVASION );
+        const int paralysed_base_ev = 2 + size_factor / 2;
+        const int repulsion_ev =
+            std::max(0, player_mutation_level(MUT_REPULSION_FIELD) * 2 - 1);
+        return std::max(1, paralysed_base_ev + repulsion_ev);
     }
 
-    // We return 2 here to give the player some chance of not being hit,
-    // repulsion fields still work while paralysed
-    if (you.duration[DUR_PARALYSIS])
-        return (2 + player_mutation_level(MUT_REPULSION_FIELD) * 2);
+    const int scale = 100;
+    const int size_base_ev = (10 + size_factor) * scale;
 
-    if (you.species == SP_CENTAUR)
-        ev -= 3;
+    const int adjusted_evasion_penalty =
+        player_adjusted_evasion_penalty(scale);
 
-    if (you.equip[EQ_BODY_ARMOUR] != -1)
-    {
-        int ev_change = 0;
+    const int dodge_bonus =
+        (7 + you.skills[SK_DODGING] * you.dex) * scale * scale
+        / (20 * scale + adjusted_evasion_penalty - size_factor * scale);
 
-        ev_change = armour_ev_penalty;
-        ev_change += you.skills[SK_ARMOUR] / 3;
+    const int adjusted_shield_penalty =
+        player_adjusted_shield_evasion_penalty(scale);
 
-        if (ev_change > armour_ev_penalty / 3)
-            ev_change = armour_ev_penalty / 3;
+    const int evasion_bonuses = player_evasion_bonuses(evit) * scale;
 
-        ev += ev_change;        // remember that it's negative
-    }
+    const int prescaled_evasion =
+        size_base_ev
+        + dodge_bonus
+        + evasion_bonuses
+        - adjusted_evasion_penalty
+        - adjusted_shield_penalty;
 
-    ev += player_equip( EQ_RINGS_PLUS, RING_EVASION );
+    const int final_evasion =
+        player_scale_evasion(prescaled_evasion, scale);
 
-    if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_PONDEROUSNESS ))
-        ev -= 2;
-
-    if (you.duration[DUR_STONEMAIL])
-        ev -= 2;
-
-    if (you.duration[DUR_PHASE_SHIFT])
-        ev += 8;                //jmf: is this a reasonable value?
-
-    int emod = 0;
-
-    if (!player_light_armour())
-    {
-        // meaning that the armour evasion modifier is often effectively
-        // applied twice, but not if you're wearing elven armour
-        emod += (armour_ev_penalty * 14) / 10;
-    }
-
-    emod += you.skills[SK_DODGING] / 2;
-
-    if (emod > 0)
-        ev += emod;
-
-    if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
-        ev += (player_mutation_level(MUT_REPULSION_FIELD) * 2) - 1;
-
-    switch (you.attribute[ATTR_TRANSFORMATION])
-    {
-    case TRAN_DRAGON:
-        ev -= 3;
-        break;
-
-    case TRAN_STATUE:
-        ev -= 5;
-        break;
-
-    case TRAN_SPIDER:
-        ev += 3;
-        break;
-
-    case TRAN_BAT:
-        ev += 20 + (you.experience_level - 10);
-        break;
-
-    default:
-        break;
-    }
-
-    ev += scan_artefacts(ARTP_EVASION);
-
-    return (ev);
+    return (unscale_round_up(final_evasion, scale));
 }
-#endif
+
+int player_body_armour_racial_spellcasting_bonus(const int scale)
+{
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (!body_armour)
+        return (0);
+
+    const unsigned long armour_race = get_equip_race(*body_armour);
+
+    // get the armour race value that corresponds to the character's race:
+    const unsigned long player_race
+                            = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
+                               (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
+                               (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
+                                                             : 0);
+    int armour_racial_spellcasting_bonus = 0;
+    if (armour_race & ISFLAG_ELVEN)
+        armour_racial_spellcasting_bonus += 25;
+
+    if (armour_race & ISFLAG_DWARVEN)
+        armour_racial_spellcasting_bonus -= 15;
+
+    if (armour_race & player_race)
+        armour_racial_spellcasting_bonus += 15;
+
+    return (armour_racial_spellcasting_bonus * scale);
+}
+
+// Returns the spellcasting penalty (increase in spell failure) for
+// the player's worn body armour and shield.
+int player_armour_shield_spell_penalty()
+{
+    const int scale = 100;
+    return ((25 * player_adjusted_body_armour_evasion_penalty(scale)
+             + 25 * player_adjusted_shield_evasion_penalty(scale)
+             - 20 * scale
+             - player_body_armour_racial_spellcasting_bonus(scale))
+            / scale);
+}
 
 int player_magical_power(void)
 {
@@ -2595,8 +2574,6 @@ void level_change(bool skip_attribute_increase)
         {
             mprf(MSGCH_INTRINSIC_GAIN,
                  "Welcome back to level %d!", new_exp);
-            if (!skip_more)
-                more();
 
             // No more prompts for this XL past this point.
 
@@ -2620,8 +2597,6 @@ void level_change(bool skip_attribute_increase)
 
             if (!(new_exp % 3) && !skip_attribute_increase)
                 _attribute_increase();
-            else if (!skip_more)
-                more();
 
             // No more prompts for this XL past this point.
 
@@ -3132,6 +3107,9 @@ void level_change(bool skip_attribute_increase)
 
         xom_is_stimulated(16);
 
+        if (!skip_more && any_messages())
+            more();
+
         learned_something_new(TUT_NEW_LEVEL);
     }
 
@@ -3267,11 +3245,7 @@ static void _attribute_increase()
 {
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
-
     learned_something_new(TUT_CHOOSE_STAT);
-    more();
-    mesclr();
-
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
 
     while (true)
@@ -3908,9 +3882,9 @@ static int _species_exp_mod(species_type species)
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_DEMONSPAWN:
+        case SP_MUMMY:
             return 14;
         case SP_HIGH_ELF:
-        case SP_MUMMY:
         case SP_VAMPIRE:
         case SP_TROLL:
             return 15;
@@ -4178,7 +4152,10 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     }
 
     if (ptr_stat == &you.strength)
+    {
         burden_change();
+        you.redraw_armour_class = true; // This includes shields.
+    }
     if (ptr_stat == &you.dex)
         you.redraw_evasion = true;
 }
@@ -5413,6 +5390,8 @@ void player::init()
     worshipped.init(0);
     num_gifts.init(0);
 
+    che_saved_ponderousness = 0;
+
     equip.init(-1);
 
     spells.init(SPELL_NO_SPELL);
@@ -6197,12 +6176,13 @@ int player::armour_class() const
         if (!player_wearing_slot(eq))
             continue;
 
-        const item_def& item = inv[equip[eq]];
-        const int ac_value = property(item, PARM_AC ) * 100;
-        int racial_bonus   = _player_armour_racial_bonus(item);
+        const item_def& item   = inv[equip[eq]];
+        const int ac_value     = property(item, PARM_AC ) * 100;
+        const int racial_bonus = _player_armour_racial_bonus(item);
 
-        AC += ac_value * (30 + 2 * skills[SK_ARMOUR] + racial_bonus) / 30;
-
+        // [ds] effectively: ac_value * (23 + Arm) / 23, where Arm =
+        // Armour Skill + racial_skill_bonus / 2.
+        AC += ac_value * (46 + 2 * skills[SK_ARMOUR] + racial_bonus) / 46;
         AC += item.plus * 100;
 
         // The deformed don't fit into body armour very well.

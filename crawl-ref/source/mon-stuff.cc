@@ -36,6 +36,7 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "mgen_data.h"
 #include "coord.h"
 #include "mon-speak.h"
@@ -43,6 +44,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
@@ -1170,7 +1172,7 @@ static void _elven_twin_died(monsters* twin, bool in_transit)
     }
 }
 
-void pikel_band_neutralise ()
+void pikel_band_neutralise (bool check_tagged)
 {
     bool message_made = false;
 
@@ -1178,11 +1180,20 @@ void pikel_band_neutralise ()
     {
         if (mi->type == MONS_SLAVE
             && testbits(mi->flags, MF_BAND_MEMBER)
-            && mi->props.exists("pikel_band"))
+            && mi->props.exists("pikel_band")
+            && mi->mname != "freed slave")
         {
+            // Don't neutralise band members that are leaving the level with us.
+            if (check_tagged && testbits(mi->flags, MF_TAKING_STAIRS))
+                continue;
+
             if (mi->observable() && !message_made)
             {
-                mpr("With Pikel's spell broken, the former slaves thank you for their freedom.");
+                if (check_tagged)
+                    mprf("With Pikel's spell partly broken, some of the slaves are set free!");
+                else
+                    mprf("With Pikel's spell broken, the former slaves thank you for their freedom.");
+
                 message_made = true;
             }
             mi->flags |= MF_NAME_DESCRIPTOR | MF_NAME_REPLACE;
@@ -2149,8 +2160,10 @@ int monster_die(monsters *monster, killer_type killer,
 
     unsigned int exp_gain = 0, avail_gain = 0;
     if (!mons_reset)
+    {
         _give_adjusted_experience(monster, killer, pet_kill, killer_index,
                                   &exp_gain, &avail_gain);
+    }
 
     if (!mons_reset && !crawl_state.arena)
     {
@@ -2199,7 +2212,11 @@ int monster_die(monsters *monster, killer_type killer,
     }
 
     // If we kill an invisible monster reactivate autopickup.
-    if (mons_near(monster) && !monster->visible_to(&you))
+    // We need to check for actual invisibility rather than whether we
+    // can see the monster. There are several edge cases where a monster
+    // is visible to the player but we still need to turn autopickup
+    // back on, such as TSO's halo or sticky flame. (jpeg)
+    if (mons_near(monster) && monster->has_ench(ENCH_INVIS))
         autotoggle_autopickup(false);
 
     crawl_state.dec_mon_acting(monster);

@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include "artefact.h"
 #include "decks.h"
+#include "cloud.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
@@ -268,8 +269,6 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GIANT_GECKO;
     case MONS_GIANT_IGUANA:
         return TILEP_MONS_GIANT_IGUANA;
-    case MONS_GIANT_LIZARD:
-        return TILEP_MONS_GIANT_LIZARD;
     case MONS_GILA_MONSTER:
         return TILEP_MONS_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
@@ -381,7 +380,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_REDBACK:
         return TILEP_MONS_REDBACK;
 
-    // turtles ('t')
+    // turtles and crocodiles ('t')
+    case MONS_CROCODILE:
+        return TILEP_MONS_CROCODILE;
     case MONS_SNAPPING_TURTLE:
         return TILEP_MONS_SNAPPING_TURTLE;
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
@@ -651,6 +652,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_PLANT:
         return TILEP_MONS_PLANT;
     case MONS_BUSH:
+        if (cloud_type_at(mon->pos()) == CLOUD_FIRE)
+            return TILEP_MONS_BUSH_BURNING;
         return TILEP_MONS_BUSH;
     case MONS_OKLOB_PLANT:
         return TILEP_MONS_OKLOB_PLANT;
@@ -930,7 +933,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_SILVER_STATUE:
         return TILEP_MONS_SILVER_STATUE;
     case MONS_ORANGE_STATUE:
-        return TILEP_MONS_ORANGE_CRYSTAL_STATUE;
+        return TILEP_MONS_ORANGE_STATUE;
 
     // gargoyles ('9')
     case MONS_GARGOYLE:
@@ -1254,19 +1257,20 @@ static int _apply_variations(const item_def &item, int tile)
 {
     static const int etable[5][5] =
     {
-      {0, 0, 0, 0, 0},
-      {0, 1, 1, 1, 1},
-      {0, 1, 1, 1, 2},
-      {0, 1, 1, 2, 3},
-      {0, 1, 2, 3, 4}
+      {0, 0, 0, 0, 0},  // all variants look the same
+      {0, 1, 1, 1, 1},  // normal, ego/randart
+      {0, 1, 1, 1, 2},  // normal, ego, randart
+      {0, 1, 1, 2, 3},  // normal, ego (shiny/runed), ego (glowing), randart
+      {0, 1, 2, 3, 4}   // normal, shiny, runed, glowing, randart
     };
 
-    int etype = _get_etype(item);
-    int idx = tile_main_count(tile) - 1;
+    const int etype = _get_etype(item);
+    const int idx   = tile_main_count(tile) - 1;
     ASSERT(idx < 5);
+
     tile += etable[idx][etype];
 
-    return tile;
+    return (tile);
 }
 
 static int _tileidx_weapon_base(const item_def &item)
@@ -1400,6 +1404,9 @@ static int _tileidx_weapon_base(const item_def &item)
 
     case WPN_WHIP:
         return TILE_WPN_WHIP;
+
+    case WPN_HOLY_SCOURGE:
+        return TILE_WPN_HOLY_SCOURGE;
 
     case WPN_DEMON_BLADE:
         return TILE_WPN_DEMON_BLADE;
@@ -1820,8 +1827,6 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_GECKO;
     case MONS_GIANT_IGUANA:
         return TILE_CORPSE_GIANT_IGUANA;
-    case MONS_GIANT_LIZARD:
-        return TILE_CORPSE_GIANT_LIZARD;
     case MONS_GILA_MONSTER:
         return TILE_CORPSE_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
@@ -1888,7 +1893,9 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_REDBACK:
         return TILE_CORPSE_REDBACK;
 
-    // turtles ('t')
+    // turtles and crocodiles ('t')
+    case MONS_CROCODILE:
+        return TILE_CORPSE_CROCODILE;
     case MONS_SNAPPING_TURTLE:
         return TILE_CORPSE_SNAPPING_TURTLE;
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
@@ -3049,7 +3056,7 @@ int tileidx_spell(spell_type spell)
     case SPELL_OZOCUBUS_REFRIGERATION:   return TILEG_OZOCUBUS_REFRIGERATION;
     case SPELL_BOLT_OF_COLD:             return TILEG_BOLT_OF_COLD;
     case SPELL_FREEZING_CLOUD:           return TILEG_FREEZING_CLOUD;
-    case SPELL_ENGLACIATION:               return TILEG_METABOLIC_ENGLACIATION;
+    case SPELL_ENGLACIATION:             return TILEG_METABOLIC_ENGLACIATION;
     case SPELL_SIMULACRUM:               return TILEG_SIMULACRUM;
     case SPELL_ICE_STORM:                return TILEG_ICE_STORM;
 

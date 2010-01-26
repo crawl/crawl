@@ -22,6 +22,7 @@
 #include "monster.h"
 #include "player.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"

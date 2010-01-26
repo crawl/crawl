@@ -205,6 +205,28 @@ inline bool is_trap(const coord_def& c)
     return feat_is_trap(env.map_knowledge(c).feat());
 }
 
+inline bool _is_safe_trap (const coord_def& c)
+{
+#ifdef CLUA_BINDINGS
+    if (clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(c)))
+    {
+        return  (true);
+    }
+#endif
+
+    const trap_type trap = get_trap_type(c);
+
+    // Teleport traps are safe to travel through with -TELE
+    if (trap == TRAP_TELEPORT && (player_equip(EQ_AMULET, AMU_STASIS, true)
+        || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)))
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
+
 // Returns an estimate for the time needed to cross this feature.
 // This is done, so traps etc. will usually be circumvented where possible.
 inline int feature_traverse_cost(dungeon_feature_type feature)
@@ -362,14 +384,18 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
         return (true);
     }
 
-    return (feat_is_traversable(static_cast<dungeon_feature_type>(grid))
-#ifdef CLUA_BINDINGS
-                || (is_trap(c)
-                    && clua.callbooleanfn(false, "ch_cross_trap",
-                                          "s", trap_name(c)))
-#endif
-            )
-            && !is_excluded(c);
+    // Excluded squares are never safe.
+    if (is_excluded(c))
+    {
+        return (false);
+    }
+
+    if (is_trap(c) && _is_safe_trap(c))
+    {
+        return (true);
+    }
+
+    return (feat_is_traversable(grid));
 }
 
 // Returns true if the location at (x,y) is monster-free and contains no clouds.
@@ -392,15 +418,8 @@ static bool _is_safe_move(const coord_def& c)
         //    should have been aborted already by the checks in view.cc.
     }
 
-    if (is_trap(c)
-#ifdef CLUA_BINDINGS
-        && !clua.callbooleanfn(false, "ch_cross_trap",
-                               "s", trap_name(c))
-#endif
-        )
-    {
-        return (false);
-    }
+    if (is_trap(c))
+        return (_is_safe_trap(c));
 
     const int cloud = env.cgrid(c);
     if (cloud == EMPTY_CLOUD)
@@ -1916,7 +1935,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
     level_id curr = level_id::current();
     while (true)
     {
-        mesclr(true);
+        mesclr();
 
         if (waypoint_list)
             travel_cache.list_waypoints();
@@ -2189,7 +2208,7 @@ static travel_target _prompt_travel_depth(const level_id &id,
     target.p.id.depth = _get_nearest_level_depth(target.p.id.branch);
     while (true)
     {
-        mesclr(true);
+        mesclr();
         mprf(MSGCH_PROMPT, "What level of %s? "
              "(default %s, ? - help) ",
              branches[target.p.id.branch].longname,

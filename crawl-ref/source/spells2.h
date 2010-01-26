@@ -33,7 +33,10 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
 bool summon_animals(int pow);
 bool cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_small_mammals(int pow, god_type god = GOD_NO_GOD);
+
+bool item_is_snakable(const item_def& item);
 bool cast_sticks_to_snakes(int pow, god_type god = GOD_NO_GOD);
+
 bool cast_summon_scorpions(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_swarm(int pow, god_type god = GOD_NO_GOD);
 bool cast_call_canine_familiar(int pow, god_type god = GOD_NO_GOD);

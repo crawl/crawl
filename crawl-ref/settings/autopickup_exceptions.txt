@@ -28,6 +28,6 @@ ae = dangerous_item
 # subtype that means you already have one of it.) Also for some rings.
 # Some items may already be excluded as bad_item, e.g. inaccuracy.
 ae = amulet of (inaccuracy|the gourmand|controlled flight|warding)
-ae = amulet of (resist .*|clarity|rage|conservation|guardian spirit)
+ae = amulet of (resist .*|clarity|rage|conservation|guardian spirit|faith|stasis)
 ae = ring of (see invisible|levitation|poison resistance|hunger)
 ae = ring of (invisibility)

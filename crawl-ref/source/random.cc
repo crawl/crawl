@@ -12,10 +12,8 @@ int random_range(int low, int high)
 int random_range(int low, int high, int nrolls)
 {
     ASSERT(nrolls > 0);
-    int sum = 0;
-    for (int i = 0; i < nrolls; ++i)
-        sum += random_range(low, high);
-    return (sum / nrolls);
+    const int roll = random2avg(high - low + 1, nrolls);
+    return low + roll;
 }
 
 // Chooses one of the numbers passed in at random. The list of numbers
@@ -122,6 +120,14 @@ int maybe_random2(int x, bool random_factor)
         return (random2(x));
     else
         return (x / 2);
+}
+
+int maybe_roll_dice(int num, int size, bool random)
+{
+    if (random)
+        return (roll_dice(num, size));
+    else
+        return ((num + num * size) / 2);
 }
 
 int roll_dice(int num, int size)

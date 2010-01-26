@@ -13,9 +13,9 @@
 #include "directn.h"
 #include "exclude.h"
 #include "macro.h"
-#include "misc.h"
-#include "menu.h" // For print_formatted_paragraph()
+#include "menu.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
@@ -220,7 +220,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 
             std::string text = get_monster_equipment_desc(mon, false);
             text += " comes into view.";
-            print_formatted_paragraph(text, MSGCH_WARN);
+            mpr(text, MSGCH_WARN);
         }
 
         if (Tutorial.tutorial_left)
@@ -548,4 +548,9 @@ void game_state::dump()
             fprintf(stderr, "    %s" EOL,
                     debug_mon_str(mon_act_stack[i]).c_str());
     }
+}
+
+bool game_state::player_is_dead()
+{
+    return (updating_scores && !need_save);
 }

@@ -66,7 +66,7 @@ static int dgn_item_from_index(lua_State *ls)
 static int dgn_items_at(lua_State *ls)
 {
     COORDS(c, 1, 2);
-    lua_push_items(ls, env.igrid(c));
+    lua_push_floor_items(ls, env.igrid(c));
     return (1);
 }
 

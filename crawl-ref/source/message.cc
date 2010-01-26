@@ -3,11 +3,8 @@
  *  Summary:    Functions used to print messages.
  *
  * Todo:
- *   - --more-- for full message window (partial)
+ *   - --more-- for full message window with clear_messages=false
  *   - Handle resizing properly, in particular initial resize.
- *   - Get rid of print_formatted_paragraph.
- *   - force parameter for mesclr: either get rid of it or
- *     implement it
  *   - Fix things that use mpr when the messagewindow isn't displayed
  *     (yesno() god prompt for example)
  *   - change uses of cancelable_get_line to msgwin_get_line
@@ -17,11 +14,11 @@
 #include "AppHdr.h"
 
 #include "message.h"
-#include "format.h"
 
 #include "cio.h"
 #include "colour.h"
 #include "delay.h"
+#include "format.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "macro.h"
@@ -31,6 +28,7 @@
 #include "options.h"
 #include "player.h"
 #include "religion.h"
+#include "showsymb.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -156,11 +154,45 @@ public:
     }
 };
 
+static void readkey_more(bool user_forced=false);
+
+// Types of message prefixes.
+// Higher values override lower.
+enum prefix_type
+{
+    P_NONE,
+    P_NEW_CMD, // new command, but no new turn
+    P_NEW_TURN
+};
+
+// Could also go with coloured glyphs.
+glyph prefix_glyph(prefix_type p)
+{
+    glyph g;
+    switch (p)
+    {
+    case P_NEW_TURN:
+        g.ch = '-';
+        g.col = LIGHTGRAY;
+        break;
+    case P_NEW_CMD:
+        g.ch = '-';
+        g.col = DARKGRAY;
+        break;
+    default:
+        g.ch = ' ';
+        g.col = LIGHTGRAY;
+        break;
+    }
+    return (g);
+}
+
 class message_window
 {
     int next_line;
-    int turn_line; // line with the last new-turn dash
+    int mesclr_line;    // last line-after-mesclr
     std::vector<formatted_string> lines;
+    prefix_type prompt; // current prefix prompt
 
     int height() const
     {
@@ -177,19 +209,21 @@ class message_window
         return (!more_enabled() || use_first_col());
     }
 
+    int width() const
+    {
+        return crawl_view.msgsz.x;
+    }
+
     int out_width() const
     {
-        int w = crawl_view.msgsz.x;
-        if (use_first_col())
-            w--;
-        return w;
+        return (width() - (use_first_col() ? 1 : 0));
     }
 
     void out_line(const formatted_string& line, int n) const
     {
         cgotoxy(1, n + 1, GOTO_MSG);
         line.display();
-        cprintf("%*s", out_width() - line.length(), "");
+        cprintf("%*s", width() - line.length(), "");
     }
 
     // Place cursor at end of last non-empty line to handle prompts.
@@ -211,7 +245,7 @@ class message_window
         return (crawl_state.show_more_prompt && Options.clear_messages);
     }
 
-    void make_space(int n)
+    int make_space(int n)
     {
         int space = height() - next_line;
 
@@ -223,22 +257,25 @@ class message_window
             space--;
 
         if (space >= n)
-            return;
+            return 0;
 
         if (!more_enabled()
-            || !Options.clear_messages && turn_line >= n - space)
+            || !Options.clear_messages && mesclr_line >= n - space)
         {
             scroll(n - space);
+            return (n - space);
         }
         else
         {
             more();
             clear();
+            return (height()); // XXX: unused; perhaps height()-1 ?
         }
     }
 
     void more()
     {
+        show();
         int last_row = crawl_view.msgsz.y;
         cgotoxy(1, last_row, GOTO_MSG);
         textcolor(LIGHTGREY);
@@ -246,9 +283,7 @@ class message_window
             cprintf("+");
         else
             cprintf("--more--");
-        // XXX: getch() calls flush_prev_message -- we
-        //      need something raw.
-        getch_ck();
+        readkey_more();
     }
 
     void add_line(const formatted_string& line)
@@ -258,9 +293,17 @@ class message_window
         next_line++;
     }
 
+    void output_prefix(prefix_type p)
+    {
+        if (p <= prompt)
+            return;
+        prompt = p;
+        add_item("", p, true);
+    }
+
 public:
     message_window()
-        : next_line(0), turn_line(0)
+        : next_line(0), mesclr_line(0), prompt(P_NONE)
     {
         clear_lines(); // initialize this->lines
     }
@@ -303,7 +346,7 @@ public:
         for (; i < height(); ++i)
             lines[i].clear();
         next_line -= n;
-        turn_line -= n;
+        mesclr_line -= n;
     }
 
     // write to screen (without refresh)
@@ -320,37 +363,51 @@ public:
 
     // temporary: to be overwritten with next item, e.g. new turn
     //            leading dash or prompt without response
-    void add_item(std::string text, char first_col = ' ', bool temporary = false)
+    void add_item(std::string text, prefix_type first_col = P_NONE,
+                  bool temporary = false)
     {
+        // XXX: using empty "text" to say we're doing a temp prefix.
+        if (text.empty())
+            text = " ";  // So the line_break doesn't return empty.
+        else
+        {
+            // Overwriting old prefix.
+            prompt = P_NONE;
+        }
+
         std::vector<formatted_string> newlines;
         linebreak_string2(text, out_width());
         formatted_string::parse_string_to_multiple(text, newlines);
-        make_space(newlines.size());
+
+        // Save starting line if this is temporary.
         int old = next_line;
         for (size_t i = 0; i < newlines.size(); ++i)
         {
-            std::string fc = "";
+            old -= make_space(1);
+            formatted_string line;
             if (use_first_col())
-            {
-                fc = " ";
-                if (i == 0)
-                    fc[0] = first_col;
-            }
-            formatted_string line = formatted_string(fc);
+                line.add_glyph(prefix_glyph(first_col));
             line += newlines[i];
             add_line(line);
         }
         if (temporary)
-            next_line = old;
+            next_line = std::max(old, 0);
         show();
     }
 
-    void new_turn()
+    void mesclr()
     {
-        // Ensure we don't cause a more prompt.
-        turn_line = 1;
-        add_item(" ", '-', true);
-        turn_line = next_line;
+        mesclr_line = next_line;
+    }
+
+    void new_cmd(bool new_turn)
+    {
+        output_prefix(new_turn ? P_NEW_TURN : P_NEW_CMD);
+    }
+
+    bool any_messages()
+    {
+        return (next_line > mesclr_line);
     }
 };
 
@@ -365,6 +422,11 @@ void scroll_message_window(int n)
 {
     msgwin.scroll(n);
     msgwin.show();
+}
+
+bool any_messages()
+{
+    return msgwin.any_messages();
 }
 
 typedef circ_vec<message_item, NUM_STORED_MESSAGES> store_t;
@@ -392,12 +454,14 @@ public:
 
     void store_msg(const message_item& msg)
     {
-        bool newturn = (msg.turn > msgs[-1].turn);
+        prefix_type p = P_NONE;
+        if (msg.turn > msgs[-1].turn)
+            p = P_NEW_TURN;
         msgs.push_back(msg);
         std::string repeats = "";
         if (msg.repeats > 1)
             repeats = make_stringf(" x%d", msg.repeats);
-        msgwin.add_item(msg.text + repeats, newturn ? '-' : ' ', false);
+        msgwin.add_item(msg.text + repeats, p, false);
     }
 
     void flush_prev()
@@ -726,7 +790,7 @@ void mpr(std::string text, msg_channel_type channel, int param)
         interrupt_activity(AI_FORCE_INTERRUPT);
 
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
-        set_more_autoclear(true);
+        set_more_autoclear(false);
 
     if (check_more(formatted_string::parse_string(text).tostring(),
                    channel))
@@ -741,26 +805,39 @@ static std::string show_prompt(std::string prompt)
     msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
     std::string col = colour_to_str(colour_msg(colour));
     std::string text = "<" + col + ">" + prompt + "</" + col + ">"; // XXX
-    msgwin.add_item(text, ' ', true);
+    msgwin.add_item(text, P_NONE, true);
     msgwin.show();
     return text;
+}
+
+static std::string _prompt;
+void msgwin_prompt(std::string prompt)
+{
+    _prompt = show_prompt(prompt);
+}
+
+void msgwin_reply(std::string reply)
+{
+    messages.add(message_item(_prompt + reply, MSGCH_PROMPT, 0));
 }
 
 int msgwin_get_line(std::string prompt, char *buf, int len,
                     input_history *mh, int (*keyproc)(int& c))
 {
-    std::string text = show_prompt(prompt);
+    msgwin_prompt(prompt);
     int ret = cancelable_get_line(buf, len, mh, keyproc);
-    if (ret == 0)
-        text += buf;
-    messages.add(message_item(text, MSGCH_PROMPT, 0));
+    msgwin_reply(ret == 0 ? buf : "");
     return ret;
 }
 
-void msgwin_new_turn()
+static long _last_turn = -1;
+
+void msgwin_new_cmd()
 {
     flush_prev_message();
-    msgwin.new_turn();
+    bool new_turn = (you.num_turns > _last_turn);
+    _last_turn = you.num_turns;
+    msgwin.new_cmd(new_turn);
 }
 
 // mpr() an arbitrarily long list of strings without truncation or risk
@@ -909,7 +986,9 @@ void mesclr(bool force)
     // ASSERT(!messages.have_prev());
     flush_prev_message();
 
-    if (Options.clear_messages)
+    msgwin.mesclr(); // Output new leading dash.
+
+    if (Options.clear_messages || force)
         msgwin.clear();
 
     // TODO: we could indicate indicate mesclr with a different
@@ -921,6 +1000,24 @@ static bool autoclear_more = false;
 void set_more_autoclear(bool on)
 {
     autoclear_more = on;
+}
+
+static void readkey_more(bool user_forced)
+{
+    if (autoclear_more)
+        return;
+    int keypress;
+    mouse_control mc(MOUSE_MODE_MORE);
+    do
+    {
+        keypress = c_getch();
+    }
+    while (keypress != ' ' && keypress != '\r' && keypress != '\n'
+           && keypress != ESCAPE && keypress != -1
+           && (user_forced || keypress != CK_MOUSE_CLICK));
+
+    if (keypress == ESCAPE)
+        set_more_autoclear(true);
 }
 
 void more(bool user_forced)
@@ -959,22 +1056,15 @@ void more(bool user_forced)
 
     if (crawl_state.show_more_prompt && !suppress_messages)
     {
-        mpr("--more--", MSGCH_PROMPT);
-        int keypress;
-        mouse_control mc(MOUSE_MODE_MORE);
-        do
-        {
-            keypress = getch();
-        }
-        while (keypress != ' ' && keypress != '\r' && keypress != '\n'
-               && keypress != ESCAPE && keypress != -1
-               && (user_forced || keypress != CK_MOUSE_CLICK));
-
-        if (keypress == ESCAPE)
-            autoclear_more = true;
+        // Really a prompt, but writing to MSGCH_PROMPT clears
+        // autoclear_more.
+        mpr("--more--");
+        // And since it's not a prompt, we need to flush manually.
+        flush_prev_message();
+        readkey_more(user_forced);
     }
 
-    mesclr(true);
+    mesclr();
 }
 
 static bool is_channel_dumpworthy(msg_channel_type channel)
@@ -1053,7 +1143,11 @@ void replay_messages(void)
     const store_t msgs = messages.get_store();
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
-            hist.add_text(msgs[i].text);
+        {
+            std::string text = msgs[i].text;
+            linebreak_string2(text, cgetsize(GOTO_CRT).x);
+            hist.add_text(text);
+        }
     hist.show();
 }
 

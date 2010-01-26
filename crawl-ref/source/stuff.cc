@@ -433,11 +433,9 @@ void redraw_screen(void)
 
     print_stats();
 
-    display_message_window();
-
     bool note_status = notes_are_active();
     activate_notes(false);
-    new_level();
+    print_stats_level();
 #ifdef DGL_SIMPLE_MESSAGING
     update_message_status();
 #endif
@@ -445,6 +443,10 @@ void redraw_screen(void)
     activate_notes(note_status);
 
     viewwindow(false);
+
+    // Display the message window at the end because it places
+    // the cursor behind possible prompts.
+    display_message_window();
 }
 
 // STEPDOWN FUNCTION to replace conditional chains in spells2.cc 12jan2000 {dlb}
@@ -812,9 +814,11 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
     }
 }
 
-bool player_can_hear(const coord_def& p)
+bool player_can_hear(const coord_def& p, int hear_distance)
 {
-    return (!silenced(p) && !silenced(you.pos()));
+    return (!silenced(p)
+            && !silenced(you.pos())
+            && you.pos().distance_from(p) <= hear_distance);
 }
 
 char index_to_letter(int the_index)

@@ -26,6 +26,7 @@
 #include "debug.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "godprayer.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "itemprop.h"

@@ -124,6 +124,7 @@ Orb of Destruction cast
 @The_monster@ conjures an orb of pure magic.
 
 @The_monster@ launches a ball of destructive magic.
+%%%%
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################

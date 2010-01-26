@@ -1,7 +1,7 @@
 
 The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Jude Brown,
-Matthew Cline, Paul Du Bois, Eino Keskitalo, Vsevolod Kozlov, Nat Lanza, 
-Jesse Luehrs, Steven Noonan, Haran Pilpel, David Ploog, Johanna Ploog, 
+Matthew Cline, Paul Du Bois, Eino Keskitalo, Vsevolod Kozlov, Nat Lanza,
+Jesse Luehrs, Steven Noonan, Haran Pilpel, David Ploog, Johanna Ploog,
 Stefan O'Rear, Charles Otto, David Lawrence Ramsey, Robert Vollmert, Enne
 Walker) would like to thank:
 
@@ -17,17 +17,18 @@ Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              Brendan Hickey            Yuuma Oohara
-Juha Arpiainen               Benoit Hudson             Pedro
-Roy Axenov                   Sylvia 'Onia' Hörnke      Erik Piper
-Max Bane                     Iainuki                   Lemuel Pitkin
-Bill Beher                   Ilyak                     Derek Ray
-Alexander Beisig             Matthew Ince              Remsleep
-Stu Black                    Mitsuhiro Itakura         Will Rogers
-Erik Inge Bolsø              Mikko Juola               David Rose
-Peter Borgmann               Jarmo Kielosto            Sebastian Salman
-Trent W. Buck                Kornel Kisielewicz        Brett Scarborough
-Robert Burnham               Daniel Klein              Darshan Shaligram
+Warwick Allison              R. Dan Henry              Dylan O'Donnell
+Juha Arpiainen               Brendan Hickey            Yuuma Oohara
+Roy Axenov                   Benoit Hudson             Pedro
+Max Bane                     Sylvia 'Onia' Hörnke      Erik Piper
+Bill Beher                   Iainuki                   Lemuel Pitkin
+Alexander Beisig             Ilyak                     Derek Ray
+Stu Black                    Matthew Ince              Remsleep
+Erik Inge Bolsø              Mitsuhiro Itakura         Will Rogers
+Peter Borgmann               Mikko Juola               David Rose
+Trent W. Buck                Jarmo Kielosto            Sebastian Salman
+Robert Burnham               Kornel Kisielewicz        Brett Scarborough
+Joe Buzzelli                 Daniel Klein              Darshan Shaligram
 Terje Bø                     Vambola Kotkas            Robert Shimmin
 Aaron Curtis                 Ryan Kusnery              Sigurd
 Denzi                        Jukka Kuusisto            Edgar Simo
@@ -45,5 +46,4 @@ Brian Haase                  Wille Mäntylä             Jeremey Wilson
 Shayne Halvorson             Erkki Nurmi               Yelve Yakut
 Ciaran Hamilton              Mattias Nyberg            Zooko
 Chris Hamons                 nyra
-R. Dan Henry                 Dylan O'Donnell
 

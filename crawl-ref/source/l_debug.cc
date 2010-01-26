@@ -76,7 +76,8 @@ LUAFN(debug_generate_level)
     tile_clear_flavour();
     TileNewLevel(true);
 #endif
-    builder(you.your_level, you.level_type);
+    builder(you.your_level, you.level_type,
+            lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
     return (0);
 }
 

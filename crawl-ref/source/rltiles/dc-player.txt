@@ -508,7 +508,8 @@ morningstar2 MORNINGSTAR
 eveningstar EVENINGSTAR
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
-holy_scourge HOLY_SCOURGE
+holy_scourge1 HOLY_SCOURGE
+holy_scourge2 HOLY_SCOURGE2
 hammer3 HAMMER
 hammer HAMMER1
 hammer2 HAMMER2
@@ -612,7 +613,18 @@ blowgun BLOWGUN
 ##missiles
 dart DART
 
-## misc
+## lotr
+aragorn ARAGORN
+arwen ARWEN
+boromir BOROMIR
+frodo FRODO
+gandalf GANDALF
+gimli GIMLI
+legolas LEGOLAS
+saruman SARUMAN
+
+## misc items
+%sdir player/hand1/misc
 bone_lantern BONE_LANTERN
 fan FAN
 bottle BOTTLE
@@ -625,6 +637,7 @@ lantern LANTERN
 orb ORB
 stone STONE
 
+## other non-weapons
 fire_red FIRE_RED
 fire_blue FIRE_BLUE
 skull SKULL
@@ -638,16 +651,6 @@ light_yellow LIGHT_YELLOW
 spark SPARK
 fire_dark FIRE_DARK
 fire_white2 FIRE_WHITE2
-
-## lotr
-aragorn ARAGORN
-arwen ARWEN
-boromir BOROMIR
-frodo FRODO
-gandalf GANDALF
-gimli GIMLI
-legolas LEGOLAS
-saruman SARUMAN
 
 bladehands BLADEHAND
 %end_ctg
@@ -695,6 +698,8 @@ shield_of_resistance SHIELD_OF_RESISTANCE
 shield_of_ignorance SHIELD_OF_IGNORANCE
 gil-galad
 
+## books
+%sdir player/hand2/misc
 book_black BOOK_BLACK
 book_blue BOOK_BLUE
 book_red BOOK_RED
@@ -711,6 +716,7 @@ book_magenta_dim BOOK_MAGENTA_DIM
 book_red_dim BOOK_RED_DIM
 book_yellow_dim BOOK_YELLOW_DIM
 
+## other non-shields
 fire_green FIRE_GREEN
 fire_cyan FIRE_CYAN
 fire_white FIRE_WHITE
@@ -723,7 +729,7 @@ fire_white2 FIRE_WHITE2
 lantern LANTERN
 torch TORCH
 pj PJ
-torsh2 TORCH2
+torch2 TORCH2
 
 bladehands BLADEHAND
 dagger DAGGER

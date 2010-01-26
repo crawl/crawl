@@ -1684,7 +1684,7 @@ static bool _find_description(bool &again, std::string& error_inout)
         else
         {
             std::ostringstream os;
-            os << "Too many matching " << type << "s (" << key_list.size()
+            os << "Too many matching " << pluralise(type) << " (" << key_list.size()
                << ") to display.";
             error_inout = os.str();
         }
@@ -1856,7 +1856,7 @@ static int _keyhelp_keyfilter(int ch)
                 getch();
 
             if (again)
-                mesclr(true);
+                mesclr();
         }
         while (again);
 
@@ -1874,7 +1874,7 @@ static int _keyhelp_keyfilter(int ch)
             // resets 'again'
             again = _handle_FAQ();
             if (again)
-                mesclr(true);
+                mesclr();
         }
         while (again);
 
@@ -2630,8 +2630,9 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-L</w> : change experience level\n"
                        "<w>$</w>      : get 1000 gold\n"
                        "<w>]</w>      : get a mutation\n"
-                       "<w>^</w>      : gain piety\n"
                        "<w>_</w>      : gain religion\n"
+                       "<w>^</w>      : set piety to a value\n"
+                       "<w>-</w>      : get a god gift\n"
                        "<w>@</w>      : set Str Int Dex\n"
                        "<w>Ctrl-D</w> : change enchantments/durations\n"
                        "\n"
@@ -2669,7 +2670,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>P</w>      : make a portal\n"
                        "<w>T</w>      : make a trap\n"
                        "<w><<</w>/<w>></w>    : create up/down staircase\n"
-                       "<w>(</w>/<w>)</w>    : make feature by number/name\n"
+                       "<w>(</w>      : make feature\n"
                        "<w>\\</w>      : make a shop\n"
                        "\n"
                        "<yellow>Other level related commands</yellow>\n"
