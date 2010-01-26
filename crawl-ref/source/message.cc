@@ -291,17 +291,22 @@ class message_window
         cgotoxy(1, last_row, GOTO_MSG);
         if (first_col_more())
         {
+            cursor_control con(true);
             glyph g = prefix_glyph(P_MORE);
             formatted_string f;
             f.add_glyph(g);
             f.display();
+            // Move cursor back for nicer display.
+            cgotoxy(1, last_row, GOTO_MSG);
+            // Need to read_key while cursor_control in scope.
+            readkey_more();
         }
         else
         {
             textcolor(channel_to_colour(MSGCH_PROMPT));
             cprintf("--more--");
+            readkey_more();
         }
-        readkey_more();
     }
 
     void add_line(const formatted_string& line)
