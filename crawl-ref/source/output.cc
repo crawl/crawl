@@ -673,6 +673,8 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.duration[DUR_INVIS])
     {
         int color = _dur_colour( BLUE, dur_expiring(DUR_INVIS) );
+        if (you.backlit())
+            color = DARKGREY;
         out.push_back(status_light(color, "Invis"));
     }
 
