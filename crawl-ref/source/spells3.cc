@@ -1510,7 +1510,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     // in case something happened in the exact turn that we teleported
     // (like picking up/dropping an item).
     viewwindow(false, true);
-    StashTrack.update_stash();
+    StashTrack.update_stash(you.pos());
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
         remove_condensation_shield();

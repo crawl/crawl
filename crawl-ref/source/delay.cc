@@ -1324,7 +1324,7 @@ static void _finish_delay(const delay_queue_item &delay)
             _pop_delay();
             handle_delay();
         }
-        StashTrack.update_stash(); // Stash-track the generated item(s).
+        StashTrack.update_stash(you.pos()); // Stash-track the generbated items.
         break;
     }
 
