@@ -274,6 +274,7 @@ public:
 
 protected:
     los_def los;
+    bool changed_los_center; // hack to reduce monster los recalculations
     los_def los_no_trans; // only being updated for player
 };
 

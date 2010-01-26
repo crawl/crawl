@@ -112,6 +112,7 @@ bool actor::check_res_magic(int power)
 void actor::set_position(const coord_def &c)
 {
     position = c;
+    changed_los_center = (c == los.get_center());
     los.set_center(c);
     los_no_trans.set_center(c);
 }
