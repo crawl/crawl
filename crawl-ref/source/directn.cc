@@ -1396,7 +1396,7 @@ void direction_chooser::print_target_monster_description() const
     const std::string wounds_desc = get_wounds_description(mon);
     if (!wounds_desc.empty())
         text += " " + mon->pronoun(PRONOUN_CAP) + wounds_desc;
-    mprf(MSGCH_EXAMINE_FILTER, "%s: %s",
+    mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
          target_prefix ? target_prefix : "Aim",
          text.c_str());
 
@@ -1410,7 +1410,7 @@ void direction_chooser::print_target_object_description() const
         return;
 
     // FIXME: remove the duplication with print_items_description().
-    mprf(MSGCH_EXAMINE_FILTER, "%s: %s",
+    mprf(MSGCH_PROMPT, "%s: %s",
          target_prefix ? target_prefix : "Aim",
          get_menu_colour_prefix_tags(*item, DESC_CAP_A).c_str());
 
