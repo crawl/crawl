@@ -1121,7 +1121,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 //
 // Hides and other "animal part" items are intentionally left out, it's
 // unrequired complexity, and fresh flesh makes more "sense" for a spell
-// reforming the original monster out of ice anyways.
+// reforming the original monster out of ice anyway.
 bool cast_simulacrum(int pow, god_type god)
 {
     int count = 0;

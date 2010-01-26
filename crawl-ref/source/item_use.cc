@@ -4288,7 +4288,7 @@ static bool _dont_use_invis()
     }
     else if (get_contamination_level() > 0
              && !yesno("Invisibility will do you no good right now; "
-                       "use anyways?", false, 'n'))
+                       "use anyway?", false, 'n'))
     {
         return (true);
     }

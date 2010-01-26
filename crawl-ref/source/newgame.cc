@@ -4155,7 +4155,7 @@ bool _give_items_skills()
 
         switch (choice)
         {
-        default:  // This shouldn't happen anyways. -- bwr
+        default:  // This shouldn't happen anyway. -- bwr
         case DK_NECROMANCY:
             _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
 
