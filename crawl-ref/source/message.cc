@@ -82,11 +82,6 @@ struct message_item
         return (repeats > 0);
     }
 
-    operator std::string() const
-    {
-        return ""; // should strip tags from text
-    }
-
     // Tries to condense the argument into this message.
     // Either *this needs to be an empty item, or it must be the
     // same as the argument.
