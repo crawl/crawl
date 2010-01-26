@@ -232,6 +232,11 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 {
                     // No prompt (shaft and mechanical traps ineffective, if flying)
                 }
+                else if (type == TRAP_TELEPORT && (player_equip(EQ_AMULET, AMU_STASIS, true)
+                         || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)))
+                {
+                    // No prompt (teleport traps are ineffective if wearing an amulet of stasis)
+                }
                 else
 #ifdef CLUA_BINDINGS
                      // Prompt for any trap where you might not have enough hp
