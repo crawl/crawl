@@ -343,7 +343,7 @@ std::string direction_chooser::build_targetting_hint_string() const
 
 void direction_chooser::print_top_prompt() const
 {
-    if (top_prompt)
+    if (!top_prompt.empty())
         mpr(top_prompt, MSGCH_PROMPT);
 }
 
@@ -461,9 +461,12 @@ void direction(dist &moves, targetting_type restricts,
                const char *target_prefix, const char *top_prompt,
                targetting_behaviour *mod, bool cancel_at_self)
 {
+    std::string str_top_prompt;
+    if (top_prompt)
+        str_top_prompt = top_prompt;
     direction_chooser(moves, restricts, mode, range, just_looking,
                       needs_path, may_target_monster, may_target_self,
-                      target_prefix, top_prompt,
+                      target_prefix, str_top_prompt,
                       mod, cancel_at_self).choose_direction();
 }
 
@@ -477,7 +480,7 @@ direction_chooser::direction_chooser(dist& moves_,
                                      bool may_target_monster_,
                                      bool may_target_self_,
                                      const char *target_prefix_,
-                                     const char *top_prompt_,
+                                     const std::string& top_prompt_,
                                      targetting_behaviour *behaviour_,
                                      bool cancel_at_self_) :
     moves(moves_),
@@ -1367,8 +1370,9 @@ bool direction_chooser::handle_signals()
 // Print out the initial prompt when targetting starts.
 // Prompts might get scrolled off if you have too few lines available;
 // we'll live with that.
-void direction_chooser::show_initial_prompt() const
+void direction_chooser::show_initial_prompt()
 {
+    behaviour->update_top_prompt(&top_prompt);
     describe_cell();
 }
 
@@ -1594,7 +1598,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
 
     case CMD_TARGET_WIZARD_HURT_MONSTER:
         m->hit_points = 1;
-        mpr("Brought the mon down to near death.");
+        mpr("Brought monster down to 1 HP.");
         flush_prev_message();
         break;
 
@@ -1606,6 +1610,13 @@ void direction_chooser::handle_wizard_command(command_type key_command,
 
 void direction_chooser::do_redraws()
 {
+    // Check if our targetting behaviour forces a redraw.
+    if (behaviour->should_redraw())
+    {
+        need_all_redraw = true;
+        behaviour->clear_redraw();
+    }
+
     if (need_all_redraw)
     {
         need_beam_redraw = true;
@@ -1624,7 +1635,7 @@ void direction_chooser::do_redraws()
         show_items_once = false;
     }
 
-    if (need_cursor_redraw)
+    if (need_cursor_redraw || Options.use_fake_cursor)
     {
         cursorxy(grid2view(target()));
         need_cursor_redraw = false;
@@ -1713,6 +1724,7 @@ bool direction_chooser::do_main_loop()
 
     const coord_def old_target = target();
     const command_type key_command = massage_command(behaviour->get_command());
+    behaviour->update_top_prompt(&top_prompt);
     bool loop_done = false;
 
     switch (key_command)
@@ -1769,7 +1781,6 @@ bool direction_chooser::do_main_loop()
     case CMD_TARGET_CANCEL:
         loop_done = true;
         moves.isCancel = true;
-        behaviour->mark_ammo_nonchosen();
         break;
 
     case CMD_TARGET_DESCRIBE: describe_target(); break;
@@ -3647,8 +3658,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         }
 
         msg_channel_type channel = MSGCH_EXAMINE;
-        if (feat == DNGN_FLOOR
-            || feat == DNGN_FLOOR_SPECIAL
+        if (feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL
             || feat_is_water(feat))
         {
             channel = MSGCH_EXAMINE_FILTER;
@@ -3692,7 +3702,7 @@ command_type targetting_behaviour::get_command(int key)
 #ifndef USE_TILE
     // Overrides the movement keys while mlist_targetting is active.
     if (crawl_state.mlist_targetting && islower(key))
-        return static_cast<command_type> (CMD_TARGET_CYCLE_MLIST + (key - 'a'));
+        return static_cast<command_type>(CMD_TARGET_CYCLE_MLIST + (key - 'a'));
 #endif
 
     // XXX: hack
@@ -3700,14 +3710,4 @@ command_type targetting_behaviour::get_command(int key)
         cmd = CMD_TARGET_CANCEL;
 
     return (cmd);
-}
-
-bool targetting_behaviour::should_redraw()
-{
-    return (false);
-}
-
-void targetting_behaviour::mark_ammo_nonchosen()
-{
-    // Nothing to be done.
 }

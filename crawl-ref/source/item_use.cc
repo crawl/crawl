@@ -1223,7 +1223,7 @@ int get_next_fire_item(int current, int direction)
     {
         if (fire_order[i] == current)
         {
-            unsigned next =
+            unsigned int next =
                 (i + direction + fire_order.size()) % fire_order.size();
             return fire_order[next];
         }
@@ -1235,60 +1235,92 @@ class fire_target_behaviour : public targetting_behaviour
 {
 public:
     fire_target_behaviour()
-        : m_slot(-1), selected_from_inventory(false), need_prompt(false),
-          chosen_ammo(false)
+        : chosen_ammo(false),
+          selected_from_inventory(false),
+          need_redraw(false)
     {
         m_slot = you.m_quiver->get_fire_item(&m_noitem_reason);
+        set_prompt();
     }
 
     // targetting_behaviour API
     virtual command_type get_command(int key = -1);
-    virtual bool should_redraw();
-    virtual void mark_ammo_nonchosen();
-
-    void message_ammo_prompt(const std::string* pre_text = 0);
+    virtual bool should_redraw() const { return need_redraw; }
+    virtual void clear_redraw()        { need_redraw = false; }
+    virtual void update_top_prompt(std::string* p_top_prompt);
 
 public:
+    const item_def* active_item() const;
+    // FIXME: these should be privatized and given accessors.
     int m_slot;
-    std::string m_noitem_reason;
-    bool selected_from_inventory;
-    bool need_prompt;
     bool chosen_ammo;
+
+private:
+    void set_prompt(const std::string* pre_text = NULL);
+    void cycle_fire_item(bool forward);
+
+    std::string prompt;
+    std::string m_noitem_reason;
+    std::string internal_prompt;
+    bool selected_from_inventory;
+    bool need_redraw;
 };
 
-void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
+void fire_target_behaviour::update_top_prompt(std::string* p_top_prompt)
 {
-    const int next_item = get_next_fire_item(m_slot, +1);
-    bool no_other_items = (next_item == -1 || next_item == m_slot);
+    *p_top_prompt = internal_prompt;
+}
 
-    mesclr();
-
-    if (pre_text)
-        mpr(pre_text->c_str());
-
-    std::ostringstream msg;
+const item_def* fire_target_behaviour::active_item() const
+{
     if (m_slot == -1)
-        msg << "Firing ";
+        return NULL;
     else
-    {
-        const item_def& item = you.inv[m_slot];
-        const launch_retval projected = is_launched(&you, you.weapon(), item);
+        return &you.inv[m_slot];
+}
 
-        if (projected == LRET_FUMBLED)
-            msg << "Awkwardly throwing ";
-        else if (projected == LRET_LAUNCHED)
-            msg << "Firing ";
-        else if (projected == LRET_THROWN)
-            msg << "Throwing ";
-        else
-            msg << "Buggy ";
+void fire_target_behaviour::set_prompt(const std::string* pre_text)
+{
+    std::string old_prompt = internal_prompt; // Keep for comparison at the end.
+    internal_prompt.clear();
+
+    // Figure out if we have anything else to cycle to.
+    const int next_item = get_next_fire_item(m_slot, +1);
+    const bool no_other_items = (next_item == -1 || next_item == m_slot);
+
+    // Start with the prefix, if requested.
+    if (pre_text)
+    {
+        internal_prompt += *pre_text;
+        internal_prompt += '\n';
     }
 
+    std::ostringstream msg;
+
+    // Build the action.
+    if (!active_item())
+    {
+        msg << "Firing ";
+    }
+    else
+    {
+        const launch_retval projected = is_launched(&you, you.weapon(),
+                                                    *active_item());
+        switch (projected)
+        {
+        case LRET_FUMBLED:  msg << "Awkwardly throwing "; break;
+        case LRET_LAUNCHED: msg << "Firing ";             break;
+        case LRET_THROWN:   msg << "Throwing ";           break;
+        }
+    }
+
+    // And a key hint.
     msg << (no_other_items ? "(i - inventory)"
                            : "(i - inventory. (,) - cycle)")
         << ": ";
 
-    if (m_slot == -1)
+    // Describe the selected item for firing.
+    if (!active_item())
     {
         msg << "<red>" << m_noitem_reason << "</red>";
     }
@@ -1296,26 +1328,31 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
     {
         const char* colour = (selected_from_inventory ? "lightgrey" : "w");
         msg << "<" << colour << ">"
-            << you.inv[m_slot].name(DESC_INVENTORY_EQUIP)
+            << active_item()->name(DESC_INVENTORY_EQUIP)
             << "</" << colour << ">";
     }
 
-    mpr(tagged_string_substr(msg.str(), 0, crawl_view.msgsz.x), MSGCH_PROMPT);
+    // Write it out.
+    internal_prompt += tagged_string_substr(msg.str(), 0, crawl_view.msgsz.x);
+
+    // Never unset need_redraw here, because we might have cleared the
+    // screen or something else which demands a redraw.
+    if (internal_prompt != old_prompt)
+        need_redraw = true;
 }
 
-bool fire_target_behaviour::should_redraw()
+// Cycle to the next (forward == true) or previous (forward == false)
+// fire item.
+void fire_target_behaviour::cycle_fire_item(bool forward)
 {
-    if (need_prompt)
+    const int next = get_next_fire_item(m_slot, forward ? 1 : -1);
+    if (next != m_slot && next != -1)
     {
-        need_prompt = false;
-        return (true);
+        m_slot = next;
+        selected_from_inventory = false;
+        chosen_ammo = true;
     }
-    return (false);
-}
-
-void fire_target_behaviour::mark_ammo_nonchosen()
-{
-    chosen_ammo = false;
+    set_prompt();
 }
 
 command_type fire_target_behaviour::get_command(int key)
@@ -1325,24 +1362,11 @@ command_type fire_target_behaviour::get_command(int key)
 
     switch (key)
     {
-    case '(':
-    case CONTROL('N'):
-    case ')':
-    case CONTROL('P'):
-    {
-        const int direction = (key == CONTROL('P') || key == ')') ? -1 : +1;
-        const int next = get_next_fire_item(m_slot, direction);
-        if (next != m_slot && next != -1)
-        {
-            m_slot = next;
-            selected_from_inventory = false;
-            chosen_ammo = true;
-        }
-        // Do this stuff unconditionally to make the prompt redraw.
-        message_ammo_prompt();
-        need_prompt = true;
-        return (CMD_NO_CMD);
-    }
+    case '(': case CONTROL('N'): cycle_fire_item(true);  return (CMD_NO_CMD);
+    case ')': case CONTROL('P'): cycle_fire_item(false); return (CMD_NO_CMD);
+
+    case CMD_TARGET_CANCEL: chosen_ammo = false; break;
+
     case 'i':
     {
         std::string err;
@@ -1353,15 +1377,16 @@ command_type fire_target_behaviour::get_command(int key)
             selected_from_inventory = true;
             chosen_ammo = true;
         }
-        message_ammo_prompt( err.length() ? &err : NULL );
-        need_prompt = true;
+        if (!err.empty())
+            err += '\n';
+        set_prompt(&err);
         return (CMD_NO_CMD);
     }
     case '?':
         show_targetting_help();
         redraw_screen();
-        message_ammo_prompt();
-        need_prompt = true;
+        need_redraw = true;
+        set_prompt();
         return (CMD_NO_CMD);
     }
 
@@ -1386,12 +1411,10 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         beh.m_slot = slot;
     }
 
-    beh.message_ammo_prompt();
-
     direction(target, DIR_NONE, TARG_HOSTILE, -1, false, !teleport, true, false,
               NULL, NULL, &beh);
 
-    if (beh.m_slot == -1)
+    if (!beh.active_item())
     {
         canned_msg(MSG_OK);
         return (false);
@@ -1403,7 +1426,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         return (false);
     }
 
-    you.m_quiver->on_item_fired(you.inv[beh.m_slot], beh.chosen_ammo);
+    you.m_quiver->on_item_fired(*beh.active_item(), beh.chosen_ammo);
     you.redraw_quiver = true;
     slot = beh.m_slot;
 
