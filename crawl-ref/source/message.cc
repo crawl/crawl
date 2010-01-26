@@ -3,7 +3,6 @@
  *  Summary:    Functions used to print messages.
  *
  * Todo:
- *   - indicate repeats in replay_messages
  *   - --more-- for full message window with clear_messages=false
  *   - Fix things that use mpr when the messagewindow isn't displayed
  *     (yesno() god prompt for example)
@@ -1149,7 +1148,7 @@ void replay_messages(void)
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
         {
-            std::string text = msgs[i].text;
+            std::string text = msgs[i].with_repeats();
             linebreak_string2(text, cgetsize(GOTO_CRT).x - 1);
             std::vector<formatted_string> parts;
             formatted_string::parse_string_to_multiple(text, parts);
