@@ -1704,7 +1704,6 @@ void direction(dist& moves, const targetting_type restricts,
             break;
         }
 
-        flush_prev_message();
         if (loop_done)
         {
             // Confirm that the loop is really done. If it is,
@@ -1749,7 +1748,6 @@ void direction(dist& moves, const targetting_type restricts,
             bool in_range = (range < 0
                              || grid_distance(moves.target,you.pos()) <= range);
             terse_describe_square(moves.target, in_range);
-            flush_prev_message();
         }
 
 #ifdef USE_TILE

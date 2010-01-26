@@ -1969,7 +1969,6 @@ static void _delete_shop(int i)
 
 void shop()
 {
-    flush_prev_message();
     int i;
 
     for (i = 0; i < MAX_SHOPS; i++)
