@@ -1149,8 +1149,19 @@ void replay_messages(void)
         if (channel_message_history(msgs[i].channel))
         {
             std::string text = msgs[i].text;
-            linebreak_string2(text, cgetsize(GOTO_CRT).x);
-            hist.add_text(text);
+            linebreak_string2(text, cgetsize(GOTO_CRT).x - 1);
+            std::vector<formatted_string> parts;
+            formatted_string::parse_string_to_multiple(text, parts);
+            for (unsigned int j = 0; j < parts.size(); ++j)
+            {
+                formatted_string line;
+                prefix_type p = P_NONE;
+                if (j == 0 && msgs[i].turn > msgs[i-1].turn)
+                    p = P_NEW_TURN;
+                line.add_glyph(prefix_glyph(p));
+                line += parts[j];
+                hist.add_item_formatted_string(line);
+            }
         }
     hist.show();
 }
