@@ -1314,6 +1314,13 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
         }
     }
 
+    // Missiles need to be of the same brand, not just plusses.
+    if (item1.base_type == OBJ_MISSILES
+        && get_ammo_brand(item1) != get_ammo_brand(item2))
+    {
+        return (false);
+    }
+
     // Check the ID flags.
     if (!ignore_ident && ident_flags(item1) != ident_flags(item2))
         return (false);
