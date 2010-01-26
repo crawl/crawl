@@ -56,6 +56,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "skills.h"
 #include "spells1.h"
 #include "spells3.h"
@@ -1841,7 +1842,8 @@ void bolt::fire_wall_effect()
                 emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
             else if (you.can_smell())
                 emit_message(MSGCH_PLAIN, "You smell burning wax.");
-            place_cloud(CLOUD_FIRE, pos(), random2(10)+15, whose_kill(), killer());
+            place_cloud(CLOUD_FIRE, pos(), random2(10)+15,
+                        whose_kill(), killer());
             obvious_effect = true;
         }
     }
@@ -1859,7 +1861,8 @@ void bolt::fire_wall_effect()
                 did_god_conduct(DID_KILL_PLANT, 1, effect_known);
             else if (whose_kill() == KC_FRIENDLY)
                 did_god_conduct(DID_ALLY_KILLED_PLANT, 1, effect_known, 0);
-            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, whose_kill(), killer(), 5);
+            place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25,
+                        whose_kill(), killer(), 5);
             obvious_effect = true;
         }
     }
@@ -2110,7 +2113,8 @@ void bolt::affect_cell()
     const bool still_wall = (was_solid && old_pos == pos());
     if ((!hit_player || is_beam || is_explosion) && !still_wall)
         if (monsters* m = monster_at(pos()))
-            affect_monster(m);
+            if (!m->submerged())
+                affect_monster(m);
 
     if (!feat_is_solid(grd(pos())))
         affect_ground();
@@ -4536,26 +4540,6 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     if (!apply_dmg_funcs(mon, preac, messages))
         return (false);
 
-    // Submerged monsters get some perks.
-    if (mon->submerged())
-    {
-        // The beam will pass overhead unless it's aimed at them.
-        if (!aimed_at_spot)
-            return (false);
-
-        // Electricity is ineffective.
-        if (flavour == BEAM_ELECTRICITY)
-        {
-            if (!is_tracer && you.see_cell(mon->pos()))
-                mprf("The %s arcs harmlessly into the water.", name.c_str());
-            finish_beam();
-            return (false);
-        }
-
-        // Otherwise, 1/3 damage reduction.
-        preac = (preac * 2) / 3;
-    }
-
     postac = preac - maybe_random2(1 + mon->ac, !is_tracer);
 
     // Fragmentation has triple AC reduction.
@@ -4668,10 +4652,6 @@ void bolt::tracer_affect_monster(monsters* mon)
 
 void bolt::enchantment_affect_monster(monsters* mon)
 {
-    // Submerged monsters are unaffected by enchantments.
-    if (mon->submerged())
-        return;
-
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
@@ -4952,9 +4932,6 @@ void bolt::affect_monster(monsters* mon)
         return;
     }
 
-    if (mon->submerged() && !aimed_at_spot)
-        return;                 // passes overhead
-
     if (is_explosion && !in_explosion_phase)
     {
         // It hit a monster, so the beam should terminate.
@@ -5131,7 +5108,7 @@ void bolt::affect_monster(monsters* mon)
         // (Earth magic) we might bleed on the floor.
         if (!engulfs
             && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE)
-            && !mon->is_summoned() && !mon->submerged())
+            && !mon->is_summoned())
         {
             // Using raw_damage instead of the flavoured one!
             // assumes DVORP_PIERCING, factor: 0.5
@@ -5468,6 +5445,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         return (MON_AFFECTED);
 
     case BEAM_HASTE:
+        if (YOU_KILL(thrower))
+            did_god_conduct(DID_HASTY, 6, effect_known);
         if (mon->del_ench(ENCH_SLOW, true))
         {
             if (simple_monster_message(mon, " is no longer moving slowly."))
@@ -6032,7 +6011,7 @@ void bolt::explosion_draw_cell(const coord_def& p)
         // bounds check
         if (in_los_bounds(drawpos))
         {
-            cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
+            cgotoxy(drawpos.x, drawpos.y, GOTO_CRT);
             put_colour_ch(colour == BLACK ? random_colour() : colour,
                           dchar_glyph(DCHAR_EXPLOSION));
         }
@@ -6433,6 +6412,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_TORMENT_DAMAGE:       return ("torment damage");
     case BEAM_STEAL_FOOD:           return ("steal food");
     case BEAM_GLOOM:                return ("gloom");
+    case BEAM_INK:                  return ("ink");
 
     case NUM_BEAMS:                 DEBUGSTR("invalid beam type");
                                     return ("INVALID");

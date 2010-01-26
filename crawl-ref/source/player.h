@@ -167,7 +167,7 @@ public:
 
   // NOTE: The kills member is a pointer to a KillMaster object,
   // rather than the object itself, so that we can get away with
-  // just a foward declare of the KillMaster class, rather than
+  // just a forward declare of the KillMaster class, rather than
   // having to #include kills.h and thus make every single .cc file
   // dependant on kills.h.  Having a pointer means that we have
   // to do our own implementations of copying the player object,
@@ -217,6 +217,7 @@ public:
   FixedVector<unsigned char, MAX_NUM_GODS>  worshipped;
   FixedVector<short,         MAX_NUM_GODS>  num_gifts;
 
+  char che_saved_ponderousness;
 
   FixedVector<unsigned char, NUM_MUTATIONS> mutation;
   FixedVector<unsigned char, NUM_MUTATIONS> demon_pow;
@@ -374,6 +375,8 @@ public:
     int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
+    monsters* as_monster() { return NULL; }
+    player* as_player() { return this; }
 
     god_type  deity() const;
     bool      alive() const;
@@ -588,7 +591,7 @@ bool player_in_hell(void);
 
 bool berserk_check_wielded_weapon(void);
 int player_equip( equipment_type slot, int sub_type, bool calc_unid = true );
-int player_equip_ego_type( int slot, int sub_type );
+int player_equip_ego_type(int slot, int sub_type, bool ignore_melded = true);
 bool player_equip_unrand( int unrand_index );
 bool player_can_hit_monster(const monsters *mon);
 
@@ -611,6 +614,9 @@ int check_stealth(void);
 
 int player_energy(void);
 
+int player_adjusted_shield_evasion_penalty(int scale);
+int player_adjusted_body_armour_evasion_penalty(int scale);
+int player_armour_shield_spell_penalty();
 int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 
 int player_movement_speed(void);

@@ -39,10 +39,12 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spells1.h"
@@ -389,63 +391,15 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 int spell_fail(spell_type spell)
 {
     int chance = 60;
-    int chance2 = 0, armour = 0;
+    int chance2 = 0;
 
     // Don't cap power for failure rate purposes.
     chance -= 6 * calc_spell_power(spell, false, true, false);
     chance -= (you.intel * 2);
 
-    //chance -= (you.intel - 10) * abs(you.intel - 10);
-    //chance += spell_difficulty(spell) * spell_difficulty(spell) * 3; //spell_difficulty(spell);
-
-    if (you.equip[EQ_BODY_ARMOUR] != -1)
-    {
-
-        int ev_penalty = abs(property( you.inv[you.equip[EQ_BODY_ARMOUR]],
-                                       PARM_EVASION ));
-
-        // The minus 15 is to make the -1 light armours not so bad
-        armour += (20 * ev_penalty) - 15;
-
-        //jmf: armour skill now reduces failure due to armour
-        //bwr: this was far too good, an armour skill of 5 was
-        //     completely negating plate mail.  Plate mail should
-        //     hardly be completely negated, it should still be
-        //     an important consideration for even high level characters.
-        //     Truth is, even a much worse penalty than the above can
-        //     easily be overcome by gaining spell skills... and a lot
-        //     faster than any reasonable rate of bonus here.
-        int lim_str = (you.strength > 30) ? 30 :
-                      (you.strength < 10) ? 10 : you.strength;
-
-        armour -= ((you.skills[SK_ARMOUR] * lim_str) / 15);
-
-        int race_arm = get_equip_race( you.inv[you.equip[EQ_BODY_ARMOUR]] );
-        int racial_type = 0;
-
-        if (player_genus(GENPC_DWARVEN))
-            racial_type = ISFLAG_DWARVEN;
-        else if (player_genus(GENPC_ELVEN))
-            racial_type = ISFLAG_ELVEN;
-        else if (you.species == SP_HILL_ORC)
-            racial_type = ISFLAG_ORCISH;
-
-        // Elven armour gives everyone some benefit to spellcasting,
-        // Dwarven armour hinders everyone.
-        switch (race_arm)
-        {
-        case ISFLAG_ELVEN:   armour -= 20; break;
-        case ISFLAG_DWARVEN: armour += 10; break;
-        default:                           break;
-        }
-
-        // Armour of the same racial type reduces penalty.
-        if (racial_type && race_arm == racial_type)
-            armour -= 10;
-
-        if (armour > 0)
-            chance += armour;
-    }
+    const int armour_shield_penalty = player_armour_shield_spell_penalty();
+    dprf("Armour+Shield spell failure penalty: %d", armour_shield_penalty);
+    chance += std::max(0, armour_shield_penalty);
 
     if (you.weapon() && you.weapon()->base_type == OBJ_WEAPONS)
     {
@@ -453,31 +407,6 @@ int spell_fail(spell_type spell)
 
         if (wpn_penalty > 0)
             chance += wpn_penalty;
-    }
-
-    if (you.shield())
-    {
-        switch (you.shield()->sub_type)
-        {
-        case ARM_BUCKLER:
-            chance += 5;
-            break;
-
-        case ARM_SHIELD:
-            chance += 15;
-            break;
-
-        case ARM_LARGE_SHIELD:
-            // *BCR* Large chars now get a lower penalty for large shields
-            if (player_genus(GENPC_OGRE) || you.species == SP_TROLL
-                || player_genus(GENPC_DRACONIAN))
-            {
-                chance += 20;
-            }
-            else
-                chance += 30;
-            break;
-        }
     }
 
     switch (spell_difficulty(spell))

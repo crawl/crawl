@@ -55,7 +55,7 @@ void set_feature_desc_long(const std::string &raw_name,
 void set_feature_quote(const std::string &raw_name,
                        const std::string &quote);
 
-void describe_item(item_def &item, bool allow_inscribe = false,
+bool describe_item(item_def &item, bool allow_inscribe = false,
                    bool shopping = false);
 void get_item_desc(const item_def &item, describe_info &inf,
                    bool terse = false);
@@ -88,8 +88,6 @@ void add_autoinscription( item_def &item, std::string ainscrip);
 
 const char *trap_name(trap_type trap);
 int str_to_trap(const std::string &s);
-
-extern const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES];
 
 int count_desc_lines(const std::string _desc, const int width);
 

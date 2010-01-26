@@ -43,6 +43,7 @@
 #include "player.h"
 #include "quiver.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "skills.h"
 #include "spells1.h"
 #include "spells4.h"

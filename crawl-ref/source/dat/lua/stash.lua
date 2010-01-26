@@ -7,11 +7,12 @@
 --   lua_file = lua/stash.lua
 --
 -- Available annotations:
--- {artefact} for identified artefacs.
+-- {artefact} for artefacts.
 -- {ego} for identified branded items.
 -- { <skill> } - the relevant weapon skill for weapons.
 -- { <class> } - item class: gold, weapon, missile, armour, wand, carrion,
 --               food, scroll, jewellery, potion, book, staff, orb, misc
+-- {stick} for items suitable for "sticks to snakes"
 --
 -- You can optionally disable annotate items with the item class name 
 -- (such as "weapon" for weapons) by setting
@@ -32,18 +33,22 @@ function ch_stash_search_annotate_item(it)
   if ch_annotate_item_dropped == nil then
     ch_annotate_item_dropped = opt_boolean("annotate_item_dropped", false)
   end
-  
-  if ch_annotate_item_dropped and item.dropped(it) then
+
+  if ch_annotate_item_dropped and it.dropped then
     annot = annot .. "{dropped} "
   end
-  
-  if item.artefact(it) then
+
+  if it.artefact then
     annot = annot .. "{artefact} "
-  elseif item.branded(it) then
+  elseif it.branded then
     annot = annot .. "{ego} "
   end
 
-  local skill = item.weap_skill(it)
+  if it.snakable then
+    annot = annot .. "{stick} "
+  end
+
+  local skill = it.weap_skill
   if skill then
     annot = annot .. "{" .. skill .. "} "
   end
@@ -51,9 +56,9 @@ function ch_stash_search_annotate_item(it)
   if ch_annotate_item_class == nil then
     ch_annotate_item_class = opt_boolean("annotate_item_class", true)
   end
-  
+
   if ch_annotate_item_class then
-    annot = annot .. "{" .. item.class(it, true) .. "}"
+    annot = annot .. "{" .. it.class(true) .. "}"
   end
 
   return annot

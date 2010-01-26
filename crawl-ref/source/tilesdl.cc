@@ -715,7 +715,6 @@ struct cursor_loc
 
 int TilesFramework::getch_ck()
 {
-    flush_prev_message();
     SDL_Event event;
     cursor_loc cur_loc;
     cursor_loc tip_loc;
@@ -1320,8 +1319,6 @@ int tile_known_weapon_brand(const item_def item)
     if (item.base_type == OBJ_WEAPONS)
     {
         const int brand = get_weapon_brand(item);
-        if (brand == SPWPN_REAPING)
-            return TILE_BRAND_REAPING;
         if (brand != SPWPN_NORMAL)
             return (TILE_BRAND_FLAMING + get_weapon_brand(item) - 1);
     }
@@ -1341,6 +1338,8 @@ int tile_known_weapon_brand(const item_def item)
             return TILE_BRAND_RETURNING;
         case SPMSL_CHAOS:
             return TILE_BRAND_CHAOS;
+        case SPMSL_PENETRATION:
+            return TILE_BRAND_PENETRATION;
         case SPMSL_REAPING:
             return TILE_BRAND_REAPING;
         case SPMSL_ELECTRIC:

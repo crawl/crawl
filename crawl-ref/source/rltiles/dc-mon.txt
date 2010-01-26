@@ -39,7 +39,6 @@ killer_bee MONS_KILLER_BEE
 giant_newt MONS_GIANT_NEWT
 giant_gecko MONS_GIANT_GECKO
 giant_iguana MONS_GIANT_IGUANA
-giant_lizard MONS_GIANT_LIZARD
 gila_monster MONS_GILA_MONSTER
 komodo_dragon MONS_KOMODO_DRAGON
 
@@ -66,8 +65,9 @@ wolf_spider MONS_WOLF_SPIDER
 trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
 
-## Turtles ('t')
-snapping_turtle.png MONS_SNAPPING_TURTLE
+## Turtles and crocodiles ('t')
+crocodile MONS_CROCODILE
+snapping_turtle MONS_SNAPPING_TURTLE
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 
 ## Worms and larvae ('w')
@@ -300,7 +300,7 @@ roxanne MONS_ROXANNE
 %sdir dc-mon/statues
 ice_statue MONS_ICE_STATUE
 silver_statue MONS_SILVER_STATUE
-orange_crystal_statue MONS_ORANGE_CRYSTAL_STATUE
+orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 
 %back statue_base
@@ -524,6 +524,9 @@ plant MONS_PLANT
 plant_crypt MONS_WITHERED_PLANT
 %rim 1
 bush MONS_BUSH
+%rim 0
+bush_burning MONS_BUSH_BURNING
+%rim 1
 oklob_plant MONS_OKLOB_PLANT
 
 ## Trolls ('T')
@@ -718,18 +721,17 @@ test_spawner MONS_TEST_SPAWNER
 dc-misc/unseen PLAYER
 
 ## Transformations
-%sdir dc-mon/animals
-giant_bat TRAN_BAT
-wolf_spider TRAN_SPIDER
-hog_player TRAN_PIG
-%sdir dc-mon
-ice_beast TRAN_ICE_BEAST
-nonliving/stone_golem TRAN_STATUE
-dragon TRAN_DRAGON
-undead/lich TRAN_LICH
+%sdir player/transform
+bat_form TRAN_BAT
+spider_form TRAN_SPIDER
+pig_form TRAN_PIG
+ice_form TRAN_ICE_BEAST
+statue_form TRAN_STATUE
+dragon_form TRAN_DRAGON
+lich_form TRAN_LICH
 
-dc-misc/unseen_monster MONS_UNKNOWN
-dc-misc/unseen_monster MCACHE_START
 %sdir dc-misc
+unseen_monster MONS_UNKNOWN
+unseen_monster MCACHE_START
 todo TODO
 error ERROR

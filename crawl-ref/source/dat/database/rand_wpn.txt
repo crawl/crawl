@@ -105,7 +105,8 @@ Blood
 
 Fear
 
-Pain
+# was Pain, clashing with the brand
+Insufficient Pleasure
 
 Agony
 

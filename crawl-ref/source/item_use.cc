@@ -58,6 +58,7 @@
 #include "player.h"
 #include "quiver.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
@@ -2111,7 +2112,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (launcher != NULL)
         bow_brand = get_weapon_brand(*launcher);
 
-    int  ammo_brand = get_ammo_brand(item);
+    int ammo_brand = get_ammo_brand(item);
 
     // Launcher brand does not affect ammunition.
     if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
@@ -2151,17 +2152,12 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
 
-    // Print type of item as influenced by launcher.
-    item_def ammo = item;
-
     // The chief advantage here is the extra damage this does
     // against susceptible creatures.
 
-    // Note: weapons & ammo of eg fire are not cumulative
-    // ammo of fire and weapons of frost don't work together,
-    // and vice versa.
-
     // Note that bow_brand is known since the bow is equipped.
+
+    bool beam_changed = false;
 
     // Chaos overides flame and frost/ice.
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
@@ -2176,33 +2172,58 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.effect_known = false;
 
         beam.flavour = BEAM_CHAOS;
-        beam.name    += " of chaos";
+        if (ammo_brand != SPMSL_CHAOS)
+        {
+            beam.name    += " of chaos";
+            ammo_name    += " of chaos";
+        }
+        else
+        {
+            set_ident_flags (item, ISFLAG_KNOW_TYPE);
+            beam_changed = true;
+        }
         beam.colour  = ETC_RANDOM;
-
-        ammo.special = SPMSL_CHAOS;
     }
     else if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
              && ammo_brand != SPMSL_FROST && bow_brand != SPWPN_FROST)
     {
         beam.flavour = BEAM_FIRE;
-        beam.name    += " of flame";
-        beam.colour  = RED;
+        if (ammo_brand != SPMSL_FLAME)
+        {
+            beam.name    += " of flame";
+            ammo_name    += " of flame";
+        }
+        else
+        {
+            set_ident_flags (item, ISFLAG_KNOW_TYPE);
+            beam_changed = true;
+        }
 
-        ammo.special = SPMSL_FLAME;
+        beam.colour  = RED;
     }
     else if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_FROST)
              && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
     {
         beam.flavour = BEAM_COLD;
-        beam.name    += " of frost";
+        if (ammo_brand != SPMSL_FROST)
+        {
+            beam.name    += " of frost";
+            ammo_name   += " of frost";
+        }
+        else
+        {
+            set_ident_flags (item, ISFLAG_KNOW_TYPE);
+            beam_changed = true;
+        }
         beam.colour  = WHITE;
-
-        ammo.special = SPMSL_FROST;
     }
 
-    ASSERT(beam.flavour == BEAM_MISSILE || !is_artefact(item));
+    if (beam_changed)
+        beam.name = item.name(DESC_PLAIN, false, false, false);
 
-    ammo_name = ammo.name(DESC_PLAIN);
+    ammo_name = item.name(DESC_PLAIN);
+
+    ASSERT(beam.flavour == BEAM_MISSILE || !is_artefact(item));
 
     if (silver)
         beam.damage_funcs.push_back(_silver_damages_victim);
@@ -2239,31 +2260,32 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             beam.hit_funcs.push_back(_rage_hit_victim);
     }
 
-    if (reaping && ammo.special != SPMSL_REAPING)
+    if (reaping && item.special != SPMSL_REAPING)
     {
         beam.name = "shadowy " + beam.name;
         ammo_name = "shadowy " + ammo_name;
     }
 
-    if (disperses && ammo.special != SPMSL_DISPERSAL)
+    if (disperses && item.special != SPMSL_DISPERSAL)
     {
         beam.name = "dispersing " + beam.name;
         ammo_name = "dispersing " + ammo_name;
     }
 
     // XXX: This doesn't make sense, but it works.
-    if (poisoned && ammo.special != SPMSL_POISONED)
+    if (poisoned && item.special != SPMSL_POISONED)
     {
+        beam.name = "poisoned " + beam.name;
         ammo_name = "poisoned " + ammo_name;
     }
 
-    if (penetrating && ammo.special != SPMSL_PENETRATION)
+    if (penetrating && item.special != SPMSL_PENETRATION)
     {
         beam.name = "penetrating " + beam.name;
         ammo_name = "penetrating " + ammo_name;
     }
 
-    if (silver && ammo.special != SPMSL_SILVER)
+    if (silver && item.special != SPMSL_SILVER)
     {
         beam.name = "silvery " + beam.name;
         ammo_name = "silvery " + ammo_name;
@@ -2291,11 +2313,11 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
              expl->name   += " fragments";
 
              const std::string short_name =
-                 ammo.name(DESC_PLAIN, false, false, false, false,
+                 item.name(DESC_PLAIN, false, false, false, false,
                            ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
                            | ISFLAG_RACIAL_MASK);
 
-             expl->name = replace_all(expl->name, ammo.name(DESC_PLAIN),
+             expl->name = replace_all(expl->name, item.name(DESC_PLAIN),
                                       short_name);
          }
          expl->name = "explosion of " + expl->name;
@@ -2303,7 +2325,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
          beam.special_explosion = expl;
     }
 
-    if (exploding && ammo.special != SPMSL_EXPLODING)
+    if (exploding && item.special != SPMSL_EXPLODING)
     {
         beam.name = "exploding " + beam.name;
         ammo_name = "exploding " + ammo_name;
@@ -5130,7 +5152,7 @@ static void handle_read_book(int item_slot)
 
         if (ltr < 'a' || ltr > 'h')     //jmf: was 'g', but 8=h
         {
-            mesclr(true);
+            mesclr();
             return;
         }
 
@@ -5138,7 +5160,7 @@ static void handle_read_book(int item_slot)
                                                      letter_to_index(ltr));
         if (spell == SPELL_NO_SPELL)
         {
-            mesclr(true);
+            mesclr();
             return;
         }
 
@@ -5701,7 +5723,7 @@ void examine_object(void)
 
     describe_item( you.inv[item_slot], true );
     redraw_screen();
-    mesclr(true);
+    mesclr();
 }                               // end original_name()
 
 void use_artefact(unsigned char item_wield_2, bool *show_msgs)

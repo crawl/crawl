@@ -21,6 +21,7 @@
 #include "invent.h"
 #include "items.h"
 #include "kills.h"
+#include "l_libs.h"
 #include "libutil.h"
 #include "menu.h"
 #include "message.h"
@@ -65,13 +66,13 @@ std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive)
 {
 #ifdef CLUA_BINDINGS
-    if (exclusive)
-        lua_set_exclusive_item(item);
-    std::string ann;
-    if (!clua.callfn(s, "u>s", item, &ann) && !clua.error.empty())
+    lua_stack_cleaner cleaner(clua);
+    clua_push_item(clua, const_cast<item_def*>(item));
+    if (!clua.callfn(s, 1, 1) && !clua.error.empty())
         mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-    if (exclusive)
-        lua_set_exclusive_item(NULL);
+    std::string ann;
+    if (lua_isstring(clua, -1))
+        ann = luaL_checkstring(clua, -1);
     return (ann);
 #else
     return ("");
@@ -1611,7 +1612,7 @@ void StashTracker::update_visible_stashes(
 static std::string lastsearch;
 static input_history search_history(15);
 
-void StashTracker::show_stash_search_prompt()
+std::string StashTracker::stash_search_prompt()
 {
     std::vector<std::string> opts;
     if (!lastsearch.empty())
@@ -1629,10 +1630,7 @@ void StashTracker::show_stash_search_prompt()
     if (!prompt_qual.empty())
         prompt_qual = " [" + prompt_qual + "]";
 
-    mprf(MSGCH_PROMPT, "Search for what%s?", prompt_qual.c_str());
-    // Push the cursor down to the next line. Newline on the prompt will not
-    // do the trick on DOS.
-    mpr("", MSGCH_PROMPT);
+    return (make_stringf("Search for what%s? ", prompt_qual.c_str()));
 }
 
 class stash_search_reader : public line_reader
@@ -1711,9 +1709,9 @@ void StashTracker::search_stashes()
     stash_search_reader reader(buf, sizeof buf);
 
     bool validline = false;
+    msgwin_prompt(stash_search_prompt());
     while (true)
     {
-        show_stash_search_prompt();
 
         int ret = reader.read_line();
         if (!ret)
@@ -1731,6 +1729,7 @@ void StashTracker::search_stashes()
             break;
         }
     }
+    msgwin_reply(validline ? buf : "");
 
     mesclr();
     if (!validline || (!*buf && !lastsearch.length()))

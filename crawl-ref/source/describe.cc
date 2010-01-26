@@ -24,6 +24,7 @@
 #include "cio.h"
 #include "debug.h"
 #include "decks.h"
+#include "delay.h"
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
@@ -957,7 +958,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    if (!is_known_artefact(item))
+    if (!is_artefact(item))
     {
         if (item_ident(item, ISFLAG_KNOW_PLUSES)
             && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
@@ -1357,7 +1358,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         }
     }
 
-    if (!is_known_artefact(item))
+    if (!is_artefact(item))
     {
         const int max_ench = armour_max_enchant(item);
         if (armour_is_hide(item))
@@ -2019,7 +2020,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                         << "." << (mass % 10)
                         << " aum. "; // arbitrary unit of mass
 
-            if (is_dumpable_artefact(item, false))
+            if (is_artefact(item))
             {
                 if (item.base_type == OBJ_ARMOUR
                     || item.base_type == OBJ_WEAPONS)
@@ -2237,7 +2238,7 @@ static bool _describe_spells(const item_def &item)
     int c = getch();
     if (c < 'a' || c > 'h')     //jmf: was 'g', but 8=h
     {
-        mesclr( true );
+        mesclr();
         return (false);
     }
 
@@ -2257,18 +2258,18 @@ static bool _describe_spells(const item_def &item)
 // describe_item
 //
 // Describes all items in the game.
-//
+// Returns false if we should break out of the inventory loop.
 //---------------------------------------------------------------
-void describe_item( item_def &item, bool allow_inscribe, bool shopping )
+bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
 {
     if (!item.is_valid())
-        return;
+        return (true);
 
     while (true)
     {
         // Memorised spell while reading a spellbook.
-        if (you.turn_is_over && !shopping)
-            return;
+        if (already_learning_spell(-1))
+            return (false);
 
         const bool spells_shown = _show_item_description(item);
 
@@ -2277,7 +2278,8 @@ void describe_item( item_def &item, bool allow_inscribe, bool shopping )
             cgotoxy(1, wherey());
             textcolor(LIGHTGREY);
 
-            if (item.base_type == OBJ_BOOKS && in_inventory(item))
+            if (item.base_type == OBJ_BOOKS && in_inventory(item)
+                && !crawl_state.player_is_dead())
             {
                 cprintf("Select a spell to read its description or to "
                         "memorise it.");
@@ -2287,7 +2289,7 @@ void describe_item( item_def &item, bool allow_inscribe, bool shopping )
 
             if (_describe_spells(item))
                 continue;
-            return;
+            return (true);
         }
         break;
     }
@@ -2300,6 +2302,8 @@ void describe_item( item_def &item, bool allow_inscribe, bool shopping )
     }
     else if (getch() == 0)
         getch();
+
+    return (true);
 }
 
 // There are currently two ways to inscribe an item:
@@ -2453,6 +2457,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
 
 }
 
+// Returns true if you can memorise the spell.
 bool _get_spell_description(const spell_type spell, std::string &description,
                             const item_def* item = NULL)
 {
@@ -2474,6 +2479,9 @@ bool _get_spell_description(const spell_type spell, std::string &description,
                        "Please file a bug report.";
 #endif
     }
+
+    if (crawl_state.player_is_dead())
+        return (false);
 
     if (you_cannot_memorise(spell))
     {
@@ -3157,15 +3165,12 @@ static bool _print_god_abil_desc(int god, int numpower)
     if (!pmsg[0])
         return (false);
 
-    std::string buf;
-    if (isupper(pmsg[0]))
-        buf = pmsg;             // Complete sentence given.
-    else
-    {
-        buf = "You can ";
-        buf += pmsg;
-        buf += ".";
-    }
+    std::string buf = adjust_abil_message(pmsg);
+    if (buf.empty())
+        return (false);
+
+    if (!isupper(pmsg[0])) // Complete sentence given?
+        buf = "You can " + buf + ".";
 
     // This might be ABIL_NON_ABILITY for passive abilities.
     const ability_type abil = god_abilities[god][numpower];

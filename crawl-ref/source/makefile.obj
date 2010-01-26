@@ -48,7 +48,9 @@ fprop.o \
 geom2d.o \
 ghost.o \
 godabil.o \
+godconduct.o \
 goditem.o \
+godprayer.o \
 godwrath.o \
 hiscores.o \
 initfile.o \
@@ -123,6 +125,7 @@ mon-util.o \
 mon-speak.o \
 mon-stuff.o \
 mon-transit.o \
+mon_resist_def.o \
 monster.o \
 mt19937ar.o \
 mutation.o \

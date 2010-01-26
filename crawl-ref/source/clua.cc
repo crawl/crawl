@@ -388,6 +388,9 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
         case 'u':       // Light userdata
             lua_pushlightuserdata(ls, va_arg(args, void*));
             break;
+        case 'i':
+            clua_push_item(ls, va_arg(args, item_def*));
+            break;
         case 's':       // String
         {
             const char *s = va_arg(args, const char *);
@@ -670,9 +673,9 @@ CLua &CLua::get_vm(lua_State *ls)
 {
     lua_stack_cleaner clean(ls);
     _getregistry(ls, "__clua");
-    CLua *vm = util_get_userdata<CLua>(ls, -1);
+    CLua *vm = clua_get_lightuserdata<CLua>(ls, -1);
     if (!vm)
-        end(1, false, "Failed to find CLua for lua state %p", ls);
+        luaL_error(ls, "Could not find matching clua for lua state");
     return (*vm);
 }
 

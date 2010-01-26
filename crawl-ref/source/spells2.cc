@@ -46,6 +46,7 @@
 #include "player.h"
 #include "quiver.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "stuff.h"
 #include "teleport.h"
 #ifdef USE_TILE
@@ -776,10 +777,11 @@ bool vampiric_drain(int pow, const dist &vmove)
 {
     monsters *monster = monster_at(you.pos() + vmove.delta);
 
-    if (monster == NULL)
+    if (monster == NULL || monster->submerged())
     {
         mpr("There isn't anything there!");
-        return (false);
+        // Cost to disallow freely locating invisible monsters.
+        return (true);
     }
 
     god_conduct_trigger conducts[3];
@@ -853,7 +855,7 @@ bool burn_freeze(int pow, beam_type flavour, monsters *monster)
 {
     pow = std::min(25, pow);
 
-    if (monster == NULL)
+    if (monster == NULL || monster->submerged())
     {
         mpr("There isn't anything close enough!");
         // If there's no monster there, you still pay the costs in
@@ -1023,6 +1025,34 @@ bool cast_summon_small_mammals(int pow, god_type god)
     return (success);
 }
 
+static bool _snakable_missile(const item_def& item)
+{
+    return (item.base_type == OBJ_MISSILES && item.sub_type == MI_ARROW);
+}
+
+static bool _snakable_weapon(const item_def& item)
+{
+    return (item.base_type == OBJ_WEAPONS
+           && (item.sub_type == WPN_CLUB
+            || item.sub_type == WPN_SPEAR
+            || item.sub_type == WPN_QUARTERSTAFF
+            || item.sub_type == WPN_SCYTHE
+            || item.sub_type == WPN_GIANT_CLUB
+            || item.sub_type == WPN_GIANT_SPIKED_CLUB
+            || item.sub_type == WPN_BOW
+            || item.sub_type == WPN_LONGBOW
+            || item.sub_type == WPN_ANKUS
+            || item.sub_type == WPN_HALBERD
+            || item.sub_type == WPN_GLAIVE
+            || item.sub_type == WPN_BLOWGUN)
+           && !is_artefact(item));
+}
+
+bool item_is_snakable(const item_def& item)
+{
+    return (_snakable_missile(item) || _snakable_weapon(item));
+}
+
 bool cast_sticks_to_snakes(int pow, god_type god)
 {
     if (!you.weapon())
@@ -1049,7 +1079,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
 
     int count = 0;
 
-    if (wpn.base_type == OBJ_MISSILES && wpn.sub_type == MI_ARROW)
+    if (_snakable_missile(wpn))
     {
         if (wpn.quantity < how_many_max)
             how_many_max = wpn.quantity;
@@ -1078,20 +1108,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
         }
     }
 
-    if (wpn.base_type == OBJ_WEAPONS
-        && (wpn.sub_type == WPN_CLUB
-            || wpn.sub_type == WPN_SPEAR
-            || wpn.sub_type == WPN_QUARTERSTAFF
-            || wpn.sub_type == WPN_SCYTHE
-            || wpn.sub_type == WPN_GIANT_CLUB
-            || wpn.sub_type == WPN_GIANT_SPIKED_CLUB
-            || wpn.sub_type == WPN_BOW
-            || wpn.sub_type == WPN_LONGBOW
-            || wpn.sub_type == WPN_ANKUS
-            || wpn.sub_type == WPN_HALBERD
-            || wpn.sub_type == WPN_GLAIVE
-            || wpn.sub_type == WPN_BLOWGUN)
-        && !is_artefact(wpn))
+    if (_snakable_weapon(wpn))
     {
         // Upsizing Snakes to Water Moccasins as the base class for using
         // the really big sticks (so bonus applies really only to trolls

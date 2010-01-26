@@ -45,6 +45,9 @@ void mpr_comma_separated_list(const std::string prefix,
 
 class input_history;
 
+void msgwin_prompt(std::string prompt);
+void msgwin_reply(std::string reply);
+
 int msgwin_get_line(std::string prompt,
                     char *buf, int len,
                     input_history *mh = NULL,
@@ -64,7 +67,9 @@ template<int> static int msgwin_get_line_autohist_temp(std::string prompt,
 #define msgwin_get_line_autohist(prompt, buf, len) \
     msgwin_get_line_autohist_temp<__LINE__>(prompt, buf, len)
 
-void msgwin_new_turn();
+// Tell the message window that the game is about to read a new
+// command from the player.
+void msgwin_new_cmd();
 
 class no_messages
 {
@@ -78,10 +83,8 @@ private:
 void save_messages(writer& outf);
 void load_messages(reader& inf);
 
-inline bool any_messages()
-{
-    return true;
-}
+// Have any messages been printed since the last clear?
+bool any_messages();
 
 void replay_messages();
 

@@ -370,6 +370,9 @@ public:
     int         tile_tooltip_ms;
     tag_pref    tile_tag_pref;
     tile_display_type  tile_display;
+
+    bool        tile_show_minihealthbar;
+    bool        tile_show_minimagicbar;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;

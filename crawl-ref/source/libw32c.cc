@@ -768,7 +768,6 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
 
 int getch_ck(void)
 {
-    flush_prev_message();
     INPUT_RECORD ir;
     DWORD nread;
     int key = 0;

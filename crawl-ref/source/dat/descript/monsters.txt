@@ -26,6 +26,10 @@ Agnes
 
 A lanky warrior, she moves at a great pace and carries an exotic weapon.
 %%%%
+alligator
+
+A reptile that's quite happy to ignore you. If you don't, or you get too close, it'll put on a great burst of speed and crush you in its massive jaws!
+%%%%
 Angel
 
 A divine agent of the Shining One, it is a towering winged figure of unnatural beauty with an aura of brilliant white light.
@@ -41,6 +45,10 @@ One of the arch-demons who dwell in the depths of Hell.
 Azrael
 
 A powerful, belligerent Efreet.  (Is there any other kind?)
+%%%%
+baby alligator
+
+While this juvenile form of the alligator does not have crushing jaws, nor does it have the strength to put on massive bursts of speed, it is more limber than the adult form, and its milk-tooth is still very sharp.
 %%%%
 Balrug
 
@@ -239,9 +247,9 @@ Louise
 
 An unusually heavily armoured spellcaster.
 %%%%
-Lernaean hydra
+the Lernaean hydra
 
-An ancient nameless serpent-like water beast that possesses numerous heads.  The poets mention more heads than vase-painters can paint, poisonous venom coming out of its eyes, and that this hydra is a guardian of an entrance to the Underworld.  What of this is true, you do not know.
+An ancient, outsized serpent-like water beast that possesses numerous heads.  The poets mention more heads than vase-painters can paint, poisonous venom coming out of its eyes, and that this hydra is a guardian of an entrance to the Underworld.  What of this is true, you do not know.
 %%%%
 Margery
 
@@ -493,6 +501,10 @@ A hybrid with the torso of a human atop the body of a large horse.  It looks str
 clay golem
 
 A huge animated clay statue.
+%%%%
+crocodile
+
+A crocodile with great crunching jaws.
 %%%%
 crystal golem
 
@@ -777,10 +789,6 @@ giant leech
 
 A huge blood-sucking leech. How horrible!
 %%%%
-giant lizard
-
-A huge lizard with great crunching jaws.
-%%%%
 giant mite
 
 A large arachnid with vicious poisoned mouth-parts.
@@ -1039,7 +1047,7 @@ A vaguely humanoid blob of putrid white flesh.
 %%%%
 lich
 
-A wizard who didn't want to die, a Lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy.  These undead creatures can wield great magic and are best avoided by all but the most confident.
+A wizard who didn't want to die, a lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy.  This undead creature can wield great magic and is best avoided by all but the most confident.
 %%%%
 lindwurm
 

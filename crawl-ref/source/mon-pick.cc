@@ -637,7 +637,7 @@ int mons_standard_level(int mcls)
     case MONS_WIGHT:
         return 10;
 
-    case MONS_GIANT_LIZARD:
+    case MONS_CROCODILE:
     case MONS_HIPPOGRIFF:
     case MONS_HUNGRY_GHOST:
     case MONS_KILLER_BEE:
@@ -969,7 +969,7 @@ int mons_standard_rare(int mcls)
     case MONS_DRAGON:
     case MONS_ETTIN:
     case MONS_FIRE_VORTEX:
-    case MONS_GIANT_LIZARD:
+    case MONS_CROCODILE:
     case MONS_GIANT_MITE:
     case MONS_GNOLL:
     case MONS_GOLD_MIMIC:
@@ -1349,7 +1349,7 @@ int mons_lair_level(int mcls)
 
     case MONS_FUNGUS:
     case MONS_GIANT_TOAD:
-    case MONS_GIANT_LIZARD:
+    case MONS_CROCODILE:
     case MONS_GIANT_MITE:
     case MONS_GREEN_RAT:
     case MONS_SCORPION:
@@ -1433,7 +1433,7 @@ int mons_lair_rare(int mcls)
         return 99;
 
     case MONS_WATER_MOCCASIN:
-    case MONS_GIANT_LIZARD:
+    case MONS_CROCODILE:
         return 90;
 
     case MONS_PLANT:
@@ -1559,6 +1559,7 @@ int mons_swamp_level(int mcls)
     case MONS_WORM:
     case MONS_SWAMP_WORM:
     case MONS_GIANT_LEECH:
+    case MONS_ALLIGATOR:
         mlev++;
         break;
 
@@ -1568,7 +1569,7 @@ int mons_swamp_level(int mcls)
     case MONS_PLANT:
     case MONS_SNAKE:
     case MONS_BUTTERFLY:
-    case MONS_GIANT_LIZARD:
+    case MONS_CROCODILE:
     case MONS_GIANT_MOSQUITO:
     case MONS_GIANT_SNAIL:
     case MONS_HYDRA:
@@ -1614,6 +1615,7 @@ int mons_swamp_rare(int mcls)
         return 200;
 
     case MONS_GIANT_FROG:
+    case MONS_ALLIGATOR:
         return 150;
 
     case MONS_GIANT_BLOWFLY:
@@ -1655,7 +1657,7 @@ int mons_swamp_rare(int mcls)
 
     case MONS_JELLY:
     case MONS_BUTTERFLY:
-    case MONS_GIANT_LIZARD:
+    case MONS_CROCODILE:
         return 25;
 
     case MONS_WORM:
@@ -1664,7 +1666,6 @@ int mons_swamp_rare(int mcls)
     case MONS_KOMODO_DRAGON:
     case MONS_VERY_UGLY_THING:
     case MONS_VAPOUR:
-    case MONS_MERMAID:
         return 15;
 
     case MONS_PHANTOM:
@@ -1682,10 +1683,8 @@ int mons_swamp_rare(int mcls)
     case MONS_GIANT_NEWT:
     case MONS_GIANT_SLUG:
     case MONS_GIANT_SNAIL:
-        return 10;
-
     case MONS_TENTACLED_MONSTROSITY:
-        return 5;
+        return 10;
 
     default:
         return 0;

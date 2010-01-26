@@ -300,7 +300,7 @@ static callback_map level_type_post_callbacks;
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
-bool builder(int level_number, int level_type)
+bool builder(int level_number, int level_type, bool enable_random_maps)
 {
     const std::set<std::string> uniq_tags  = you.uniq_map_tags;
     const std::set<std::string> uniq_names = you.uniq_map_names;
@@ -320,7 +320,7 @@ bool builder(int level_number, int level_type)
         mapgen_report_map_build_start();
 #endif
 
-        dgn_reset_level();
+        dgn_reset_level(enable_random_maps);
 
         if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
             _setup_temple_altars(you.props);
@@ -986,7 +986,7 @@ void dgn_veto_level()
     dgn_level_vetoed = true;
 }
 
-void dgn_reset_level()
+void dgn_reset_level(bool enable_random_maps)
 {
     dgn_level_vetoed = false;
     Level_Unique_Maps.clear();
@@ -1005,7 +1005,7 @@ void dgn_reset_level()
     _dgn_init_vault_excavatable_feats();
 
     can_create_vault = true;
-    use_random_maps  = true;
+    use_random_maps  = enable_random_maps;
     dgn_check_connectivity = false;
     dgn_zones        = 0;
 
@@ -2753,8 +2753,13 @@ static void _builder_extras( int level_number, int level_type )
 
     if (level_number > 6 && one_chance_in(10))
     {
-        _many_pools(level_number < 11 || coinflip() ? DNGN_DEEP_WATER
-                                                    : DNGN_LAVA);
+        dungeon_feature_type pool_type = (level_number < 11
+                                          || coinflip()) ? DNGN_DEEP_WATER
+                                                         : DNGN_LAVA;
+        if (one_chance_in(15))
+            pool_type = DNGN_TREES;
+
+        _many_pools(pool_type);
         return;
     }
 
@@ -4822,9 +4827,9 @@ int dgn_place_monster(mons_spec &mspec,
         mg.summon_type         = mspec.summon_type;
         mg.non_actor_summoner  = mspec.non_actor_summoner;
 
-        // XXX: hack.
+        // XXX: hack (also, never hand out darkgrey)
         if (mg.colour == -1)
-            mg.colour = random_colour();
+            mg.colour = random_monster_colour();
 
         coord_def place(where);
         if (!force_pos && monster_at(place)
@@ -6097,7 +6102,12 @@ static void _bigger_room()
                 grd[i][j] = DNGN_FLOOR;
         }
 
-    _many_pools(DNGN_DEEP_WATER);
+    dungeon_feature_type pool_type = DNGN_DEEP_WATER;
+
+    if (one_chance_in(15))
+        pool_type = DNGN_TREES;
+
+    _many_pools(pool_type);
 
     if (one_chance_in(3))
     {

@@ -1343,6 +1343,11 @@ void _acquirement_determine_food(int& type_wanted, int& quantity,
         type_wanted = POT_BLOOD;
         quantity = 2 + random2(4);
     }
+    else if (you.religion == GOD_FEDHAS)
+    {
+        // Fedhas worshippers get fruit to use for growth and evolution
+        type_wanted = one_chance_in(3) ? FOOD_BANANA : FOOD_ORANGE;
+    }
     else
     {
         // Meat is better than bread (except for herbivores), and
@@ -1366,8 +1371,12 @@ void _acquirement_determine_food(int& type_wanted, int& quantity,
 
     quantity = 3 + random2(5);
 
+    if (type_wanted == FOOD_BANANA || type_wanted == FOOD_ORANGE)
+    {
+        quantity = 8 + random2avg(15, 2);
+    }
     // giving more of the lower food value items
-    if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
+    else if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
     {
         quantity += random2avg(10, 2);
     }
@@ -2362,8 +2371,9 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         ASSERT(!quiet);
         mesclr();
-        mpr("[a] Weapon  [b] Armour  [c] Jewellery      [d] Book");
-        mpr("[e] Staff   [f] Wand    [g] Miscellaneous  [h] Food  [i] Gold");
+        mpr ("[a] Weapon  [b] Armour  [c] Jewellery      [d] Book");
+        mprf("[e] Staff   [f] Wand    [g] Miscellaneous  [h] %s [i] Gold",
+            (you.religion == GOD_FEDHAS ? "Fruit" : "Food "));
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
         const int keyin = tolower( get_ch() );

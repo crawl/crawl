@@ -337,15 +337,15 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
         }
     }
     const coord_def vp = grid2view(pos);
-    cgotoxy(vp.x, vp.y, GOTO_DNGN);
-    textcolor( real_colour(colour) );
+    cgotoxy(vp.x, vp.y, GOTO_CRT);
+    textcolor(real_colour(colour));
     putch(glych);
 }
 #endif
 
 // Unseen monsters in shallow water show a "strange disturbance".
 // (Unless flying!)
-static bool _mon_submerged_in_water(const monsters *mon)
+static bool _mon_exposed_in_water(const monsters *mon)
 {
     if (!mon)
         return (false);
@@ -368,7 +368,7 @@ static bool _mon_exposed_in_cloud(const monsters *mon)
 
 static bool _mon_exposed(const monsters* mon)
 {
-    return (_mon_submerged_in_water(mon) || _mon_exposed_in_cloud(mon));
+    return (_mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon));
 }
 
 static bool _is_target_in_range(const coord_def& where, int range)
@@ -792,7 +792,7 @@ void full_describe_view()
                 // View database entry.
                 describe_monsters(*m);
                 redraw_screen();
-                mesclr(true);
+                mesclr();
             }
             else // ACT_EXECUTE, here used to display monster status.
             {
@@ -1696,7 +1696,7 @@ void direction(dist& moves, const targetting_type restricts,
             show_targetting_help();
             force_redraw = true;
             redraw_screen();
-            mesclr(true);
+            mesclr();
             show_prompt = true;
             break;
 
@@ -1744,7 +1744,7 @@ void direction(dist& moves, const targetting_type restricts,
 
         if (have_moved || force_redraw)
         {
-            mesclr(true);   // Maybe not completely necessary.
+            mesclr();   // Maybe not completely necessary.
 
             bool in_range = (range < 0
                              || grid_distance(moves.target,you.pos()) <= range);
@@ -1902,7 +1902,7 @@ void full_describe_square(const coord_def &c)
     }
 
     redraw_screen();
-    mesclr(true);
+    mesclr();
 }
 
 static void _extend_move_to_edge(dist &moves)
@@ -1984,13 +1984,15 @@ static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
         return (false);
     }
 
+    // Don't target submerged monsters.
+    if (mon->submerged())
+        return (false);
+
     // Don't usually target unseen monsters...
     if (!mon->visible_to(&you))
     {
         // ...unless it creates a "disturbance in the water".
         // Since you can't see the monster, assume it's not a friend.
-        // Also, don't target submerged monsters if there are other
-        // targets in sight.  (This might be too restrictive.)
         return (mode != TARG_FRIEND
                 && _mon_exposed(mon)
                 && i_feel_safe(false, false, true, range));
@@ -3228,14 +3230,14 @@ static void _describe_monster(const monsters *mon)
 {
     // First print type and equipment.
     std::string text = get_monster_equipment_desc(mon) + ".";
-    print_formatted_paragraph(text, MSGCH_EXAMINE);
+    mpr(text, MSGCH_EXAMINE);
 
     print_wounds(mon);
 
     // Print the rest of the description.
     text = _get_monster_desc(mon);
     if (!text.empty())
-        print_formatted_paragraph(text, MSGCH_EXAMINE);
+        mpr(text, MSGCH_EXAMINE);
 }
 
 // This method is called in two cases:
@@ -3400,7 +3402,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
     if (const monsters* mon = monster_at(where))
     {
-        if (_mon_submerged_in_water(mon))
+        if (_mon_exposed_in_water(mon))
         {
             mpr("There is a strange disturbance in the water here.",
                 MSGCH_EXAMINE_FILTER);
@@ -3455,7 +3457,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
             msg = "(Press <w>v</w> for more information.)";
 #endif
-            print_formatted_paragraph(msg);
+            mpr(msg);
         }
     }
 
@@ -3545,7 +3547,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
         feature_desc += " (Press <w>v</w> for more information.)";
 #endif
-        print_formatted_paragraph(feature_desc);
+        mpr(feature_desc);
     }
     else
     {

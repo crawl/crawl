@@ -916,16 +916,18 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
 {
     unsigned int fg_idx = fg & TILE_FLAG_MASK;
 
+    bool in_water = (bg & TILE_FLAG_WATER) && !(fg & TILE_FLAG_FLYING);
+
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
     {
-        if (bg & TILE_FLAG_WATER && !(fg & TILE_FLAG_FLYING))
+        if (in_water)
             m_buf_main_trans.add(fg_idx, x, y, 0, true, false);
         else
             m_buf_main.add(fg_idx, x, y);
     }
 
     if (fg & TILE_FLAG_NET)
-        m_buf_doll.add(TILEP_TRAP_NET, x, y, 0, bg & TILE_FLAG_WATER, false);
+        m_buf_doll.add(TILEP_TRAP_NET, x, y, 0, in_water, false);
 
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
@@ -1058,24 +1060,22 @@ void DungeonRegion::pack_buffers()
 
             pack_background(bg, x, y);
 
+            bool in_water = (bg & TILE_FLAG_WATER) && !(fg & TILE_FLAG_FLYING);
             if (fg_idx >= TILEP_MCACHE_START)
             {
                 mcache_entry *entry = mcache.get(fg_idx);
                 if (entry)
-                    pack_mcache(entry, x, y, bg & TILE_FLAG_WATER);
+                    pack_mcache(entry, x, y, in_water);
                 else
-                {
-                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0,
-                                   bg & TILE_FLAG_WATER, false);
-                }
+                    m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, in_water, false);
             }
             else if (fg_idx == TILEP_PLAYER)
             {
-                pack_player(x, y, bg & TILE_FLAG_WATER);
+                pack_player(x, y, in_water);
             }
             else if (fg_idx >= TILE_MAIN_MAX)
             {
-                m_buf_doll.add(fg_idx, x, y, 0, bg & TILE_FLAG_WATER, false);
+                m_buf_doll.add(fg_idx, x, y, 0, in_water, false);
             }
 
             pack_foreground(bg, fg, x, y);
@@ -1137,29 +1137,77 @@ void DungeonRegion::render()
     m_buf_main_trans.draw();
     m_buf_main.draw();
 
-    if (you.hp < you.hp_max || you.magic_points < you.max_magic_points)
+    if (Options.tile_show_minihealthbar && you.hp < you.hp_max
+        || Options.tile_show_minimagicbar
+           && you.magic_points < you.max_magic_points)
     {
-        ShapeBuffer buff;
-        VColour healthy(0, 255, 0, 255);
-        VColour damaged(255, 0, 0, 255);
-        VColour magic(0, 0, 255, 255);
-        VColour magic_spent(0, 0, 0, 255);
-
-        const float health_divider = (float) you.hp / (float) you.hp_max;
-        const float magic_divider = (float) you.magic_points / (float) you.max_magic_points;
-
         // Tiles are 32x32 pixels; 1/32 = 0.03125.
-        buff.add(mx / 2, my / 2 + 0.875,
-                 mx / 2 + health_divider, my / 2 + 0.9375, healthy);
-        buff.add(mx / 2 + health_divider, my / 2 + 0.875,
-                 mx / 2 + 1, my / 2 + 0.9375, damaged);
+        // The bars are two pixels high each.
+        const float bar_height = 0.0625;
+        float healthbar_offset = 0.875;
 
-        buff.add(mx / 2, my / 2 + 0.9375,
-                 mx / 2 + magic_divider, my / 2 + 1, magic);
-        buff.add(mx / 2 + magic_divider, my / 2 + 0.9375,
-                 mx / 2 + 1, my / 2 + 1, magic_spent);
+        ShapeBuffer buff;
+
+        if (Options.tile_show_minimagicbar
+            && you.magic_points < you.max_magic_points)
+        {
+            static const VColour magic(0, 0, 255, 255);
+            static const VColour magic_spent(0, 0, 0, 255);
+
+            const float magic_divider = (float) you.magic_points
+                                        / (float) you.max_magic_points;
+
+            buff.add(mx / 2,
+                     my / 2 + healthbar_offset + bar_height,
+                     mx / 2 + magic_divider,
+                     my / 2 + 1,
+                     magic);
+            buff.add(mx / 2 + magic_divider,
+                     my / 2 + healthbar_offset + bar_height,
+                     mx / 2 + 1,
+                     my / 2 + 1,
+                     magic_spent);
+        }
+        else
+        {
+            healthbar_offset += bar_height;
+        }
+
+        if (Options.tile_show_minihealthbar)
+        {
+            const float min_hp = std::max(0, you.hp);
+            const float health_divider = min_hp / (float) you.hp_max;
+
+            const int hp_percent = (you.hp * 100) / you.hp_max;
+
+            int hp_colour = GREEN;
+            for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
+                if (hp_percent <= Options.hp_colour[i].first)
+                    hp_colour = Options.hp_colour[i].second;
+
+            static const VColour healthy(0,   255, 0, 255);
+            static const VColour damaged(255, 255, 0, 255);
+            static const VColour wounded(0, 0, 0, 255);
+            static const VColour hp_spent(255,   0, 0, 255);
+
+            buff.add(mx / 2,
+                     my / 2 + healthbar_offset,
+                     mx / 2 + health_divider,
+                     my / 2 + healthbar_offset + bar_height,
+                     hp_colour == RED    ? wounded :
+                     hp_colour == YELLOW ? damaged
+                                         : healthy);
+
+
+            buff.add(mx / 2 + health_divider,
+                     my / 2 + healthbar_offset,
+                     mx / 2 + 1,
+                     my / 2 + healthbar_offset + bar_height,
+                     hp_spent);
+        }
 
         buff.draw();
+
     }
 
     if (you.berserk())
@@ -4260,10 +4308,10 @@ void DollEditRegion::render()
     const int max_show = 9;
 
     // Layout options (units are in 32x32 squares)
-    const int left_gutter = 2;
-    const int item_line = 2;
+    const int left_gutter    = 2;
+    const int item_line      = 2;
     const int edit_doll_line = 5;
-    const int doll_line = 8;
+    const int doll_line      = 8;
     const int info_offset =
         left_gutter + std::max(max_show, (int)NUM_MAX_DOLLS) + 1;
 
@@ -4452,7 +4500,8 @@ void DollEditRegion::render()
         m_font_buf.add("Change category    up/down                 Copy doll           Ctrl-C", VColour::white, 0.0f, start_y + height * 1);
         m_font_buf.add("Change doll        0-9, Shift + arrows     Paste copied doll   Ctrl-V", VColour::white, 0.0f, start_y + height * 2);
         m_font_buf.add("Change doll mode   m                       Randomise doll      Ctrl-R", VColour::white, 0.0f, start_y + height * 3);
-        m_font_buf.add("Quit menu          q, Escape, Ctrl-S       Toggle equipment    *", VColour::white, 0.0f, start_y + height * 4);
+        m_font_buf.add("Save menu          Escape, Ctrl-S          Toggle equipment    *", VColour::white, 0.0f, start_y + height * 4);
+        m_font_buf.add("Quit menu          q, Ctrl-Q", VColour::white, 0.0f, start_y + height * 5);
     }
 
     m_font_buf.draw();
@@ -4506,16 +4555,22 @@ void DollEditRegion::run()
 
         switch (cmd)
         {
+        case CMD_DOLL_QUIT:
+            return;
         case CMD_DOLL_RANDOMIZE:
             _create_random_doll(m_dolls[m_doll_idx]);
             break;
         case CMD_DOLL_SELECT_NEXT_DOLL:
             m_doll_idx = (m_doll_idx + 1) % NUM_MAX_DOLLS;
             update_part_idx = true;
+            if (m_mode != TILEP_MODE_LOADING)
+                m_mode = TILEP_MODE_LOADING;
             break;
         case CMD_DOLL_SELECT_PREV_DOLL:
             m_doll_idx = (m_doll_idx + NUM_MAX_DOLLS - 1) % NUM_MAX_DOLLS;
             update_part_idx = true;
+            if (m_mode != TILEP_MODE_LOADING)
+                m_mode = TILEP_MODE_LOADING;
             break;
         case CMD_DOLL_SELECT_NEXT_PART:
             m_cat_idx = (m_cat_idx + 1) % TILEP_PART_MAX;
@@ -4589,11 +4644,16 @@ void DollEditRegion::run()
                 m_doll_idx = 0;
             else if (key >= '1' && key <= '9')
                 m_doll_idx = key - '1' + 1;
+            else
+                break;
+
+            if (m_mode != TILEP_MODE_LOADING)
+                m_mode = TILEP_MODE_LOADING;
             ASSERT(m_doll_idx < NUM_MAX_DOLLS);
             break;
         }
     }
-    while (cmd != CMD_DOLL_QUIT);
+    while (cmd != CMD_DOLL_SAVE);
 
     _save_doll_data(m_mode, m_doll_idx, &m_dolls[0]);
 

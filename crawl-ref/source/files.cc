@@ -1124,6 +1124,7 @@ static void _grab_followers()
     int non_stair_using_allies = 0;
     monsters *dowan = NULL;
     monsters *duvessa = NULL;
+    monsters *pikel = NULL;
 
     // Handle nearby ghosts.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
@@ -1157,6 +1158,14 @@ static void _grab_followers()
             if (fmenv->visible_to(&you))
                 mpr("The ghost fades into the shadows.");
             monster_teleport(fmenv, true);
+        }
+
+        // From here, we can't fail, so check to see if we've got Pikel
+        if (fmenv->type == MONS_PIKEL
+            || (fmenv->props.exists("original_name")
+                && fmenv->props["original_name"].get_string() == "Pikel"))
+        {
+            pikel = fmenv;
         }
     }
 
@@ -1224,6 +1233,11 @@ static void _grab_followers()
         if (!mons->alive())
             continue;
         mons->flags &= ~MF_TAKING_STAIRS;
+    }
+
+    if (pikel && !pikel->alive())
+    {
+        pikel_band_neutralise(true);
     }
 }
 
@@ -1694,14 +1708,17 @@ static void _save_game_base()
     }
 
     /* tutorial */
-    std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
-    FILE *tutorf = fopen(tutorFile.c_str(), "wb");
-    if (tutorf)
+    if (Tutorial.tutorial_left)
     {
-        writer outf(tutorf);
-        save_tutorial(outf);
-        fclose(tutorf);
-        DO_CHMOD_PRIVATE(tutorFile.c_str());
+        std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
+        FILE *tutorf = fopen(tutorFile.c_str(), "wb");
+        if (tutorf)
+        {
+            writer outf(tutorf);
+            save_tutorial(outf);
+            fclose(tutorf);
+            DO_CHMOD_PRIVATE(tutorFile.c_str());
+        }
     }
 
     /* messages */

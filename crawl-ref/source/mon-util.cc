@@ -79,7 +79,6 @@ dungeon_feature_type habitat2grid(habitat_type ht)
 {
     switch (ht)
     {
-    case HT_AMPHIBIOUS_WATER:
     case HT_WATER:
         return (DNGN_DEEP_WATER);
     case HT_LAVA:
@@ -87,7 +86,7 @@ dungeon_feature_type habitat2grid(habitat_type ht)
     case HT_ROCK:
         return (DNGN_ROCK_WALL);
     case HT_LAND:
-    case HT_AMPHIBIOUS_LAND:
+    case HT_AMPHIBIOUS:
     default:
         return (DNGN_FLOOR);
     }
@@ -285,21 +284,6 @@ mon_resist_def get_mons_resists(const monsters *mon)
     return (resists);
 }
 
-short mon_resist_def::get_resist_level(mon_resist_flags res_type) const
-{
-    switch (res_type)
-    {
-    case MR_RES_ELEC:    return elec;
-    case MR_RES_POISON:  return poison;
-    case MR_RES_FIRE:    return fire;
-    case MR_RES_STEAM:   return steam;
-    case MR_RES_COLD:    return cold;
-    case MR_RES_ACID:    return acid;
-    case MR_RES_ROTTING: return rotting;
-    default:             return (0);
-    }
-}
-
 monsters *monster_at(const coord_def &pos)
 {
     const int mindex = mgrd(pos);
@@ -485,8 +469,9 @@ bool mons_is_stationary(const monsters *mon)
     return (mons_class_is_stationary(mon->type));
 }
 
-// Monsters that other monsters may cut down to get to their foe
-// regardless of alignment.
+// Monsters that are worthless obstacles: not to
+// be attacked by default, but may be cut down to
+// get to target even if coaligned.
 bool mons_is_firewood(const monsters *mon)
 {
     return (mons_is_stationary(mon)
@@ -1194,16 +1179,22 @@ flight_type mons_flies(const monsters *mon, bool randarts)
 
 bool mons_class_amphibious(int mc)
 {
-    habitat_type ht = mons_class_habitat(mc);
-    return (ht == HT_AMPHIBIOUS_LAND || ht == HT_AMPHIBIOUS_WATER);
+    return (mons_class_habitat(mc) == HT_AMPHIBIOUS);
 }
 
 bool mons_amphibious(const monsters *mon)
 {
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
+    return (mons_class_amphibious(mons_base_type(mon)));
+}
 
-    return (mons_class_amphibious(montype));
+bool mons_class_flattens_trees(int mc)
+{
+    return (mc == MONS_LERNAEAN_HYDRA);
+}
+
+bool mons_flattens_trees(const monsters *mon)
+{
+    return mons_class_flattens_trees(mons_base_type(mon));
 }
 
 bool mons_class_wall_shielded(int mc)
@@ -1528,7 +1519,18 @@ void define_monster(int midx)
     define_monster(menv[midx]);
 }
 
-// Generate a shiny new and unscarred monster.
+// Never hand out DARKGREY as a monster colour, even if it is randomly
+// chosen.
+unsigned char random_monster_colour()
+{
+    unsigned char col = DARKGREY;
+    while (col == DARKGREY)
+        col = random_colour();
+
+    return (col);
+}
+
+// Generate a shiny, new and unscarred monster.
 void define_monster(monsters &mons)
 {
     int mcls                  = mons.type;
@@ -1556,7 +1558,7 @@ void define_monster(monsters &mons)
         hd = 4 + random2(4);
         ac = 3 + random2(7);
         ev = 7 + random2(6);
-        col = random_colour();
+        col = random_monster_colour();
         break;
 
     case MONS_ZOMBIE_SMALL:
@@ -1567,7 +1569,7 @@ void define_monster(monsters &mons)
         hd = 8 + random2(4);
         ac = 5 + random2avg(9, 2);
         ev = 3 + random2(5);
-        col = random_colour();
+        col = random_monster_colour();
         break;
 
     case MONS_ZOMBIE_LARGE:
@@ -1646,8 +1648,8 @@ void define_monster(monsters &mons)
         break;
     }
 
-    if (col == BLACK)
-        col = random_colour();
+    if (col == BLACK) // but never give out darkgrey to monsters
+        col = random_monster_colour();
 
     // Some calculations.
     hp     = hit_points(hd, m->hpdice[1], m->hpdice[2]);
@@ -1960,10 +1962,8 @@ habitat_type mons_habitat(const monsters *mon)
 habitat_type mons_class_primary_habitat(int mc)
 {
     habitat_type ht = mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS_LAND)
+    if (ht == HT_AMPHIBIOUS)
         ht = HT_LAND;
-    else if (ht == HT_AMPHIBIOUS_WATER)
-        ht = HT_WATER;
     return (ht);
 }
 
@@ -1976,9 +1976,9 @@ habitat_type mons_primary_habitat(const monsters *mon)
 habitat_type mons_class_secondary_habitat(int mc)
 {
     habitat_type ht = mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS_LAND)
+    if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
-    else if (ht == HT_AMPHIBIOUS_WATER || ht == HT_ROCK)
+    else if (ht == HT_ROCK)
         ht = HT_LAND;
     return (ht);
 }
@@ -2391,6 +2391,9 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
         return true;
     case SPELL_NO_SPELL:
         return false;
+    case SPELL_INK_CLOUD:
+        if (mon->type == MONS_KRAKEN)
+            return true;
     default:
         return !targ_adj && spell_typematch(monspell, SPTYP_SUMMONING);
     }
@@ -3712,99 +3715,6 @@ std::string get_mon_shape_str(const mon_body_shape shape)
     };
 
     return (shape_names[shape]);
-}
-
-/////////////////////////////////////////////////////////////////////////
-// mon_resist_def
-
-mon_resist_def::mon_resist_def()
-    : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0), acid(0),
-      asphyx(false), sticky_flame(false), rotting(false), pierce(0), slice(0),
-      bludgeon(0)
-{
-}
-
-short mon_resist_def::get_default_res_level(int resist, short level) const
-{
-    if (level != -100)
-        return level;
-    switch (resist)
-    {
-    case MR_RES_STEAM:
-    case MR_RES_ACID:
-        return 3;
-    case MR_RES_ELEC:
-        return 2;
-    default:
-        return 1;
-    }
-}
-
-mon_resist_def::mon_resist_def(int flags, short level)
-    : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0), acid(0),
-      asphyx(false), sticky_flame(false), rotting(false), pierce(0), slice(0),
-      bludgeon(0)
-{
-    for (int i = 0; i < 32; ++i)
-    {
-        const short nl = get_default_res_level(1 << i, level);
-        switch (flags & (1 << i))
-        {
-        // resistances
-        case MR_RES_STEAM:    steam      =    3; break;
-        case MR_RES_ELEC:     elec       =   nl; break;
-        case MR_RES_POISON:   poison     =   nl; break;
-        case MR_RES_FIRE:     fire       =   nl; break;
-        case MR_RES_HELLFIRE: hellfire   =   nl; break;
-        case MR_RES_COLD:     cold       =   nl; break;
-        case MR_RES_ASPHYX:   asphyx     = true; break;
-        case MR_RES_ACID:     acid       =   nl; break;
-
-        // vulnerabilities
-        case MR_VUL_ELEC:     elec       = -nl;  break;
-        case MR_VUL_POISON:   poison     = -nl;  break;
-        case MR_VUL_FIRE:     fire       = -nl;  break;
-        case MR_VUL_COLD:     cold       = -nl;  break;
-
-        // resistance to certain damage types
-        case MR_RES_PIERCE:   pierce     = nl;   break;
-        case MR_RES_SLICE:    slice      = nl;   break;
-        case MR_RES_BLUDGEON: bludgeon   = nl;   break;
-
-        // vulnerability to certain damage types
-        case MR_VUL_PIERCE:   pierce     = -nl;  break;
-        case MR_VUL_SLICE:    slice      = -nl;  break;
-        case MR_VUL_BLUDGEON: bludgeon   = -nl;  break;
-
-        case MR_RES_STICKY_FLAME: sticky_flame = true; break;
-        case MR_RES_ROTTING:      rotting      = true; break;
-
-        default: break;
-        }
-    }
-}
-
-const mon_resist_def &mon_resist_def::operator |= (const mon_resist_def &o)
-{
-    elec        += o.elec;
-    poison      += o.poison;
-    fire        += o.fire;
-    cold        += o.cold;
-    hellfire    += o.hellfire;
-    asphyx       = asphyx       || o.asphyx;
-    acid        += o.acid;
-    pierce      += o.pierce;
-    slice       += o.slice;
-    bludgeon    += o.bludgeon;
-    sticky_flame = sticky_flame || o.sticky_flame;
-    rotting      = rotting      || o.rotting;
-    return (*this);
-}
-
-mon_resist_def mon_resist_def::operator | (const mon_resist_def &o) const
-{
-    mon_resist_def c(*this);
-    return (c |= o);
 }
 
 bool player_or_mon_in_sanct(const monsters* monster)

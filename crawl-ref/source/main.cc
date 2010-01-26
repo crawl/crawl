@@ -67,6 +67,7 @@
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
+#include "godprayer.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
@@ -101,6 +102,7 @@
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
+#include "godconduct.h"
 #include "shopping.h"
 #include "skills.h"
 #include "skills2.h"
@@ -546,7 +548,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '{': wizard_map_level();                    break;
     case '}': wizard_reveal_traps();                 break;
     case '@': wizard_set_stats();                    break;
-    case '^': wizard_gain_piety();                   break;
+    case '^': wizard_set_piety();                    break;
     case '_': wizard_get_religion();                 break;
     case '-': wizard_get_god_gift();                 break;
     case '\'': wizard_list_items();                  break;
@@ -979,7 +981,10 @@ static void _input()
 
     // Stop autoclearing more now that we have control back.
     if (!you_are_delayed())
+    {
+        flush_prev_message();
         set_more_autoclear(false);
+    }
 
     if (need_to_autopickup())
         autopickup();
@@ -1012,7 +1017,7 @@ static void _input()
     crawl_state.input_line_curr = 0;
 
     {
-        flush_prev_message();
+        msgwin_new_cmd();
 
         clear_macro_process_key_delay();
 
@@ -1876,7 +1881,7 @@ void process_command( command_type cmd )
             // exists, give a message to explain what's going on.
             std::string str = "Move the cursor to view the level map, or "
                               "type <w>?</w> for a list of commands.";
-            print_formatted_paragraph(str);
+            mpr(str);
 #endif
 
             show_map(pos, true);
@@ -2076,7 +2081,7 @@ void process_command( command_type cmd )
         {
            std::string msg = "Unknown command. (For a list of commands type "
                              "<w>?\?<lightgrey>.)";
-           print_formatted_paragraph(msg);
+           mpr(msg);
         }
         else // well, not examine, but...
            mpr("Unknown command.", MSGCH_EXAMINE_FILTER);
@@ -2868,7 +2873,6 @@ void world_reacts()
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
         update_turn_count();
-        msgwin_new_turn();
     }
 }
 
@@ -3279,8 +3283,10 @@ static void _open_door(coord_def move, bool check_confused)
                                                           : DNGN_UNSEEN);
     std::string door_already_open = "";
     if (in_bounds(doorpos))
+    {
         door_already_open = env.markers.property_at(doorpos, MAT_ANY,
                                 "door_verb_already_open");
+    }
 
     if (!feat_is_closed_door(feat))
     {
@@ -3416,8 +3422,10 @@ static void _open_door(coord_def move, bool check_confused)
         if (!door_open_creak.empty())
             mprf(MSGCH_SOUND, door_open_creak.c_str(), adj, noun);
         else
+        {
             mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
                  adj, noun);
+        }
         noisy(10, you.pos());
     }
     else
@@ -4585,7 +4593,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
     COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 198             , c6);
+    COMPILE_CHECK(NUM_SPELLS == 199             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

@@ -9,10 +9,10 @@
 #ifndef GHOST_H
 #define GHOST_H
 
-#include "externs.h"
 #include "enum.h"
 #include "itemprop.h"
-#include "mon-util.h"
+#include "mon-enum.h"
+#include "mon_resist_def.h"
 
 class ghost_demon
 {

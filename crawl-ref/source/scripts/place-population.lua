@@ -3,10 +3,11 @@ local niters = 150
 local output_file = "monster-report.out"
 
 local excluded_things = util.set({}) -- "plant", "fungus", "bush" })
+local use_random_maps = true
 
 local function count_monsters_at(place, set)
   debug.goto_place(place)
-  test.regenerate_level()
+  test.regenerate_level(nil, use_random_maps)
 
   local monsters_here = set or {  }
   for mons in test.level_monster_iterator() do
@@ -24,7 +25,9 @@ end
 local function report_monster_counts_at(place, mcount_map)
   local text = ''
   text = text .. "\n-------------------------------------------\n"
-  text = text .. place .. " monsters per-level\n"
+  text = text .. place .. " monsters per-level ("
+  text = text .. (use_random_maps and "using random maps"
+                  or "NO random maps") .. ")\n"
   text = text .. "-------------------------------------------\n"
 
   local monster_counts = util.pairs(mcount_map)
@@ -156,9 +159,8 @@ local function count_monsters_from(start_place, end_place)
 
     local iter_mpops = { }
     for i = 1, niters do
-      crawl.mesclr()
-      crawl.mpr("Counting monsters at " .. place .. " (" ..
-                i .. "/" .. niters .. ")")
+      crawl.message("Counting monsters at " .. place .. " (" ..
+                    i .. "/" .. niters .. ")")
       local res = count_monsters_at(place)
       table.insert(iter_mpops, res)
     end
@@ -193,6 +195,9 @@ local function branch_resets()
     if rawresets then
       util.append(resets, parse_resets(rawresets))
     end
+    if arg == '-nomaps' then
+      use_random_maps = false
+    end
   end
   return resets
 end
@@ -217,11 +222,14 @@ with:
 
 With the general form:
 
-                 -reset=<place>=<depth>[,<place>=<depth>,...]
+               -reset=<place>=<depth>[,<place>=<depth>,...]
 
 where <place> is a valid place name as used in .des files, and <depth> is the
 depth of the branch's entrance in its parent branch. Thus -reset=Snake:1=3
 implies that the entrance of the Snake Pit is assumed to be on Lair:3.
+
+You can also disable the use of random maps during level generation with:
+               -nomaps
 ]])
   end
   return args[1], args[2] or args[1]
