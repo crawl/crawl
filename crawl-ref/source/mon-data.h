@@ -3212,7 +3212,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SHADOW_WRAITH, 'W', BLUE, "shadow wraith",
+    MONS_SHADOW_WRAITH, 'W', MAGENTA, "shadow wraith",
     M_SEE_INVIS | M_INVIS | M_INSUBSTANTIAL,
     MR_RES_POISON,
     0, 15, MONS_WRAITH, MONS_SHADOW_WRAITH, MH_UNDEAD, -8,
