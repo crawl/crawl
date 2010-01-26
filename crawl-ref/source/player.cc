@@ -3632,7 +3632,13 @@ void display_char_status()
     if (you.duration[DUR_SEE_INVISIBLE])
         mpr("You can see invisible.");
 
-    _output_expiring_message(DUR_INVIS, "You are invisible.");
+    std::string invis_mes = "You are invisible";
+    if (you.backlit())
+        invis_mes += " (but backlit and visible).";
+    else
+        invis_mes += ".";
+
+    _output_expiring_message(DUR_INVIS, invis_mes.c_str());
 
     if (you.confused())
         mpr("You are confused.");
