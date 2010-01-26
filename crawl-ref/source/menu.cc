@@ -307,7 +307,7 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 #endif
 
     if (is_set(MF_START_AT_END))
-        while(page_down());
+        first_entry = std::max((int)items.size() - pagesize, 0);
 
     do_menu();
 
