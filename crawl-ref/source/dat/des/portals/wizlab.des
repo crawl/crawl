@@ -1606,10 +1606,14 @@ KMONS:      3 = blue devil / iron devil / shadow demon / neqoxec /\
             w:5 tormentor / ynoxinul
 KMONS:      4 = kobold demonologist / deep elf demonologist
 KMONS:      5 = blue death / green death / cacodemon
-KMONS:      1 = col:fire patrolling wizard name:Hellbinder name_replace \
-                name_definite spells:call_imp;summon_demon;haste;\
-                hellfire;blink_away;throw_flame hd:20 hp:150 ; demon blade \
-                . robe
+{{
+local wizname = crawl.make_name()
+
+kmons     ("1 = col:fire patrolling wizard name:" .. wizname .." name_replace"
+              .." name_definite spells:call_imp;summon_demon;haste;"
+              .."hellfire;blink_away;throw_flame hd:20 hp:150 ; demon blade"
+              .." . robe")
+}}
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
 KITEM:      | = rod of demonology / ring of fire / ring of protection from fire /\
             amulet of conservation / scroll of torment / scroll of summoning /\
@@ -1619,6 +1623,7 @@ KITEM:      B = randbook disc:summoning
 NSUBST:     | = 1:B / *:|
 :           set_random_mon_list([[imp / shadow imp / lemure / manes / quasit / white imp / ]]
 :                        .. [[ufetubus / midge / red devil / rotting devil / hairy devil / ]])
+:           wizlab_setup(_G, wizname .. "'s Lair")
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccc
 ccccccc.cccccc...................cccccc.cccccc
