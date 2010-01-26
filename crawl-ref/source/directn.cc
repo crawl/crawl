@@ -1404,8 +1404,6 @@ void direction_chooser::print_target_monster_description() const
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
          target_prefix ? target_prefix : "Aim",
          text.c_str());
-
-    flush_prev_message();
 }
 
 void direction_chooser::print_target_object_description() const
@@ -1421,8 +1419,6 @@ void direction_chooser::print_target_object_description() const
     mprf(MSGCH_PROMPT, "%s: %s",
          target_prefix ? target_prefix : "Aim",
          get_menu_colour_prefix_tags(*item, DESC_CAP_A).c_str());
-
-    flush_prev_message();
 }
 
 void direction_chooser::print_items_description() const
@@ -1437,8 +1433,6 @@ void direction_chooser::print_items_description() const
 
     if (multiple_items_at(target(), true))
         mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
-
-    flush_prev_message();
 }
 
 void direction_chooser::print_floor_description(bool boring_too) const
@@ -1449,7 +1443,6 @@ void direction_chooser::print_floor_description(bool boring_too) const
 
     mprf(MSGCH_EXAMINE_FILTER, "%s",
          feature_description(target(), is_bloodcovered(target())).c_str());
-    flush_prev_message();
 }
 
 void direction_chooser::reinitialize_move_flags()
