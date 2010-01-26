@@ -223,6 +223,13 @@ inline bool _is_safe_trap (const coord_def& c)
         return (true);
     }
 
+    // Known shafts can be side-stepped and thus are safe for auto-travel.
+    if (trap == TRAP_SHAFT)
+    {
+        trap_def* shaft = find_trap(c);
+        return (shaft->is_known());
+    }
+
     return (false);
 }
 
