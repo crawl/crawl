@@ -1326,7 +1326,7 @@ list_rotten = true
         Additionally, this option will make a default message appear
         for Trolls, as well.
 
-mlist_min_height = 5
+mlist_min_height = 4
         If there is extra space available for the message area and
         monster list, the monster list will expand to this height
         before letting the message area get more.
