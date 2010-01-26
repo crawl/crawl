@@ -149,6 +149,7 @@ public:
     char        race;            // preselected race
     char        cls;             // preselected class
     bool        clear_messages;   // clear messages each turn
+    bool        show_more;        // Show message-full more prompts.
     unsigned    friend_brand;     // Attribute for branding friendly monsters
     unsigned    neutral_brand;    // Attribute for branding neutral monsters
     bool        no_dark_brand;    // Attribute for branding friendly monsters
