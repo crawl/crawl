@@ -3,12 +3,16 @@
  *  Summary:    Functions used to print messages.
  *
  * Todo:
+ *   - indicate repeats in replay_messages
  *   - --more-- for full message window with clear_messages=false
- *   - Handle resizing properly, in particular initial resize.
  *   - Fix things that use mpr when the messagewindow isn't displayed
  *     (yesno() god prompt for example)
  *   - change uses of cancelable_get_line to msgwin_get_line
+ *   - Handle resizing properly, in particular initial resize.
+ *
+ * Maybe:
  *   - Redraw message window at same places that cause refresh?
+ *   - condensing across turns?
  */
 
 #include "AppHdr.h"
