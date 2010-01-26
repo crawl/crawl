@@ -63,7 +63,8 @@ typedef std::map<int, int> explicit_keymap;
 bool yesno( const char * str, bool safe = true, int safeanswer = 0,
             bool clear_after = true, bool interrupt_delays = true,
             bool noprompt = false,
-            const explicit_keymap *map = NULL );
+            const explicit_keymap *map = NULL,
+            GotoRegion = GOTO_MSG);
 
 int yesnoquit( const char* str, bool safe = true, int safeanswer = 0,
                bool allow_all = false, bool clear_after = true,
