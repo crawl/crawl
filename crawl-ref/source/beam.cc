@@ -172,7 +172,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
         tiles.add_overlay(p, tileidx_zap(colour));
 #else
         view_update();
-        cgotoxy(drawp.x, drawp.y, GOTO_DNGN);
+        cgotoxy(drawp.x, drawp.y, GOTO_CRT);
         put_colour_ch(colour, dchar_glyph(DCHAR_FIRED_ZAP));
 #endif
 
