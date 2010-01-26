@@ -1,6 +1,6 @@
 ###
 #
-# "Wizard"-themed portals.
+## Maps from named Wizards, unrand and fixedarts
 #
 # Tukima's Studio
 #    threat: 6 dancing weapons, dancing weapon machine generating up to 5 more
@@ -50,45 +50,31 @@
 #    xp:     20000+
 #    layout: graveyard
 #    colour: darkgrey, lightgrey
-###
-
+#
+# Borgnjor's Mortuary
+#    threat: miasma, vampires, liches
+#    loot:   necromancy book, potions, gold
+#    xp:     20000+
+#    layout: concentric circles
+#    colour: magenta, white
+#
+## Random maps
+#
+# Cloud Mage's Chambers
+#    threat: cloud mage (random name), vapours, air elementals
+#    loot:   potions, robe of clouds, air-related spells
+#    xp:     20000+
+#    layout: "cloud"-esque, clouds.
+#    colour: white, silver, lightblue
+#
+# Hellbinder's Lair:
+#    threat: demons, Hellbinder
+#    loot:   demonology-related items
+#    xp:     15000+
+#    layout: sigils, triangles and circles
+#    colour: red, darkgrey
+#
 ##
-#
-# PLANNING AREA:
-#
-# From spells:
-#
-# Alistair's Brewery: mutated wizards, mephitic cloud generators,
-#    cupboards full of potions, confused monsters.
-# Borgnjor's Mortuary: liches, miasma clouds, potions of decay, slaves that are
-#    having their life forces drained, vampire (knights, mages).
-# Lee's Rapid Deconstructor: golems and "monk" or otherwise unarmed creatures,
-#    exploding features and exploding corpses. It's a timed vault, so you have
-#    to get to the loot quickly and avoid the hordes of monsters.
-# Lehudib's Crystal Spire:  crystal walls and crystal golems, crystal monsters,
-#    spear throwers (statues with crystal spear), possibly the unrand as the
-#    loot.
-# Maxwell's Forge: Maxwell employs a bunch of angels to churn out weapons;
-#    stashes of hammers, flame clouds, other "smithy" styled themes, with black
-#    smoke.
-# Olgreb's Toxic Laboratory: poisonous clouds, a toxic radiance effect,
-#    poisonous monsters, possibly even a "poison" effect that bypasses rPois,
-#    potions of poison and potions dropped converting into potions of poison.
-# Ozocubu's Refrigerator: simulacra, refrigeration effect, a solid stone room
-#    inside of an "ice cave", freezing clouds.
-#
-# From unrands:
-#
-# Cekugob's Oubliette: a randomised maze (though not a labyrinth) with skeletal
-#    guards, and with occasionally hidden. Cekugob's amulet as the loot,
-#    possibly.
-# Botono's Bayou: A bay-like area with small huts, wizards that cast negative
-#    related spells, shadow dragons, rebranded swamp worms, wraiths, spectrals.
-# Ukta's Hut: phantoms, other "ghosts", ogre mages and ogres, druidic style,
-#    wooden walls set in a forest (more "earthy" than Erinya's Garden)
-# The Alchemist's Tower: gold turned into things, things turned into gold.
-#
-# Random named Wizard portals.
 #
 # TO-DO:
 #
@@ -1691,7 +1677,39 @@ ENDMAP
 # Incomplete and TODO work area.
 #
 # See git history for previous versions of Ozocubu, Alistair.
-###############################################################################
+#
+# PLANNING AREA:
+#
+# From spells:
+#
+# Alistair's Brewery: mutated wizards, mephitic cloud generators,
+#    cupboards full of potions, confused monsters.
+# Lee's Rapid Deconstructor: golems and "monk" or otherwise unarmed creatures,
+#    exploding features and exploding corpses. It's a timed vault, so you have
+#    to get to the loot quickly and avoid the hordes of monsters.
+# Lehudib's Crystal Spire:  crystal walls and crystal golems, crystal monsters,
+#    spear throwers (statues with crystal spear), possibly the unrand as the
+#    loot.
+# Maxwell's Forge: Maxwell employs a bunch of angels to churn out weapons;
+#    stashes of hammers, flame clouds, other "smithy" styled themes, with black
+#    smoke.
+# Olgreb's Toxic Laboratory: poisonous clouds, a toxic radiance effect,
+#    poisonous monsters, possibly even a "poison" effect that bypasses rPois,
+#    potions of poison and potions dropped converting into potions of poison.
+# Ozocubu's Refrigerator: simulacra, refrigeration effect, a solid stone room
+#    inside of an "ice cave", freezing clouds.
+#
+# From unrands:
+#
+# Cekugob's Oubliette: a randomised maze (though not a labyrinth) with skeletal
+#    guards, and with occasionally hidden. Cekugob's amulet as the loot,
+#    possibly.
+# Botono's Bayou: A bay-like area with small huts, wizards that cast negative
+#    related spells, shadow dragons, rebranded swamp worms, wraiths, spectrals.
+# Ukta's Hut: phantoms, other "ghosts", ogre mages and ogres, druidic style,
+#    wooden walls set in a forest (more "earthy" than Erinya's Garden)
+# The Alchemist's Tower: gold turned into things, things turned into gold.
+#
 
 ###############################################################################
 # Alistair's Brewery
