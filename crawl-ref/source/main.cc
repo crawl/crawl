@@ -896,7 +896,6 @@ static void _input()
 
     // Currently only set if Xom accidentally kills the player.
     you.reset_escaped_death();
-    flush_prev_message();
 
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
@@ -906,6 +905,7 @@ static void _input()
         crawl_state.cancel_cmd_repeat("Key pressed, interrupting command "
                                       "repetition.");
         crawl_state.prev_cmd = CMD_NO_CMD;
+        flush_prev_message();
         getchm();
         return;
     }
@@ -981,10 +981,7 @@ static void _input()
 
     // Stop autoclearing more now that we have control back.
     if (!you_are_delayed())
-    {
-        flush_prev_message();
         set_more_autoclear(false);
-    }
 
     if (need_to_autopickup())
         autopickup();
@@ -2087,8 +2084,6 @@ void process_command( command_type cmd )
            mpr("Unknown command.", MSGCH_EXAMINE_FILTER);
         break;
     }
-
-    flush_prev_message();
 }
 
 static void _prep_input()
