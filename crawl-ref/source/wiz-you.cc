@@ -274,10 +274,11 @@ void wizard_set_piety()
         mpr("Piety needs to be between 0 and 200.");
         return;
     }
-    you.piety = newpiety;
 
     if (you.religion == GOD_XOM)
     {
+        you.piety = newpiety;
+
         // For Xom, also allow setting interest.
         mprf(MSGCH_PROMPT, "Enter new interest (current = %d, Enter for 0): ",
              you.gift_timeout);
@@ -300,7 +301,24 @@ void wizard_set_piety()
         god_speaks(you.religion, msg.c_str());
         return;
     }
+
+    if (newpiety < 1)
+    {
+        if (yesno("Are you sure you want to be excommunicated?", false, 'n'))
+        {
+            you.piety = 0;
+            excommunication();
+        }
+        else
+            canned_msg(MSG_OK);
+        return;
+    }
+    you.piety = newpiety;
     mprf("Set piety to %d.", you.piety);
+
+    // Automatically reduce penance to 0.
+    if (you.penance[you.religion] > 0)
+        dec_penance(you.penance[you.religion]);
 }
 
 //---------------------------------------------------------------
