@@ -4,11 +4,14 @@
  *
  * Todo:
  *   - --more-- for full message window with clear_messages=false
- *   - Handle resizing properly, in particular initial resize.
  *   - Fix things that use mpr when the messagewindow isn't displayed
  *     (yesno() god prompt for example)
  *   - change uses of cancelable_get_line to msgwin_get_line
+ *   - Handle resizing properly, in particular initial resize.
+ *
+ * Maybe:
  *   - Redraw message window at same places that cause refresh?
+ *   - condensing across turns?
  */
 
 #include "AppHdr.h"
@@ -78,9 +81,13 @@ struct message_item
         return (repeats > 0);
     }
 
-    operator std::string() const
+    std::string with_repeats() const
     {
-        return ""; // should strip tags from text
+        // TODO: colour the repeats indicator?
+        std::string rep = "";
+        if (repeats > 1)
+            rep = make_stringf(" x%d", repeats);
+        return (text + rep);
     }
 
     // Tries to condense the argument into this message.
@@ -458,10 +465,7 @@ public:
         if (msg.turn > msgs[-1].turn)
             p = P_NEW_TURN;
         msgs.push_back(msg);
-        std::string repeats = "";
-        if (msg.repeats > 1)
-            repeats = make_stringf(" x%d", msg.repeats);
-        msgwin.add_item(msg.text + repeats, p, false);
+        msgwin.add_item(msg.with_repeats(), p, false);
     }
 
     void flush_prev()
@@ -1144,9 +1148,20 @@ void replay_messages(void)
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
         {
-            std::string text = msgs[i].text;
-            linebreak_string2(text, cgetsize(GOTO_CRT).x);
-            hist.add_text(text);
+            std::string text = msgs[i].with_repeats();
+            linebreak_string2(text, cgetsize(GOTO_CRT).x - 1);
+            std::vector<formatted_string> parts;
+            formatted_string::parse_string_to_multiple(text, parts);
+            for (unsigned int j = 0; j < parts.size(); ++j)
+            {
+                formatted_string line;
+                prefix_type p = P_NONE;
+                if (j == 0 && msgs[i].turn > msgs[i-1].turn)
+                    p = P_NEW_TURN;
+                line.add_glyph(prefix_glyph(p));
+                line += parts[j];
+                hist.add_item_formatted_string(line);
+            }
         }
     hist.show();
 }
