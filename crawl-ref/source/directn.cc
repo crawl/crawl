@@ -2229,7 +2229,8 @@ static bool _find_object(const coord_def& where, int mode,
     if (need_path && (!you.see_cell(where) || _blocked_ray(where)))
         return (false);
 
-    return (env.map_knowledge(where).item() != SHOW_ITEM_NONE);
+    return (env.map_knowledge(where).item() != SHOW_ITEM_NONE
+            || (you.see_cell(where) && top_item_at(where, true)));
 }
 
 static int _next_los(int dir, int los, bool wrap)
@@ -2305,8 +2306,6 @@ static char _find_square(coord_def &mfp, int direction,
                          bool need_path, int mode, int range, bool wrap,
                          int los)
 {
-    // the day will come when [unsigned] chars will be consigned to
-    // the fires of Gehenna. Not quite yet, though.
     int temp_xps = mfp.x;
     int temp_yps = mfp.y;
     int x_change = 0;
